@@ -86,6 +86,11 @@ class DataPreviewMap extends React.Component {
     showMap: PropTypes.bool
   };
 
+  @action
+  setPreviewBadgeText(text) {
+    this.previewBadgeText = text;
+  }
+
   constructor(props) {
     super(props);
 
@@ -138,9 +143,9 @@ class DataPreviewMap extends React.Component {
     this.previewViewer.attach(container);
     this._disposePreviewBadgeTextUpdater = autorun(() => {
       if (this.props.showMap && this.props.previewed !== undefined) {
-        this.previewBadgeText = "PREVIEW LOADING...";
+        this.setPreviewBadgeText("PREVIEW LOADING...");
         this.props.previewed.loadMapItems().then(() => {
-          this.previewBadgeText = "DATA PREVIEW";
+          this.setPreviewBadgeText("DATA PREVIEW");
         });
       }
     });

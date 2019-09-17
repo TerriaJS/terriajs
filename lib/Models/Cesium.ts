@@ -1,4 +1,4 @@
-import { autorun, computed } from "mobx";
+import { autorun, computed, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
@@ -48,7 +48,12 @@ import CameraView from "./CameraView";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import hasTraits from "./hasTraits";
-import Mappable, { ImageryParts, isCesium3DTileset, MapItem } from "./Mappable";
+import Mappable, {
+  ImageryParts,
+  isCesium3DTileset,
+  isTerrainProvider,
+  MapItem
+} from "./Mappable";
 import Terria from "./Terria";
 
 // Intermediary
@@ -121,7 +126,6 @@ export default class Cesium extends GlobeOrMap {
     const options = {
       dataSources: this.dataSources,
       clock: this.terria.timelineClock,
-      terrainProvider: this._terrainProvider,
       imageryProvider: new SingleTileImageryProvider({ url: img }),
       scene3DOnly: true,
       shadows: true
@@ -135,7 +139,6 @@ export default class Cesium extends GlobeOrMap {
         }
       : undefined;
 
-    //create CesiumViewer
     this.cesiumWidget = new CesiumWidget(
       container,
       Object.assign({}, options, firefoxBugOptions)
@@ -315,20 +318,23 @@ export default class Cesium extends GlobeOrMap {
     destroyObject(this);
   }
 
+  @computed
+  private get _allMapItems() {
+    const catalogItems = [
+      ...this.terriaViewer.items.get(),
+      this.terriaViewer.baseMap
+    ];
+    // Flatmap
+    return ([] as MapItem[]).concat(
+      ...catalogItems.filter(isDefined).map(item => item.mapItems)
+    );
+  }
+
   private observeModelLayer() {
     return autorun(() => {
-      const catalogItems = [
-        ...this.terriaViewer.items.get(),
-        this.terriaViewer.baseMap
-      ];
-      // Flatmap
-      const allMapItems = ([] as MapItem[]).concat(
-        ...catalogItems.filter(isDefined).map(item => item.mapItems)
-      );
       // TODO: Look up the type in a map and call the associated function.
       //       That way the supported types of map items is extensible.
-
-      const allDataSources = allMapItems.filter(isDataSource);
+      const allDataSources = this._allMapItems.filter(isDataSource);
 
       // Remove deleted data sources
       let dataSources = this.dataSources;
@@ -346,7 +352,7 @@ export default class Cesium extends GlobeOrMap {
         }
       });
 
-      const allImageryParts = allMapItems
+      const allImageryParts = this._allMapItems
         .filter(ImageryParts.is)
         .map(this._makeImageryLayerFromParts.bind(this));
 
@@ -381,7 +387,7 @@ export default class Cesium extends GlobeOrMap {
         }
       }
 
-      const allCesium3DTilesets = allMapItems.filter(isCesium3DTileset);
+      const allCesium3DTilesets = this._allMapItems.filter(isCesium3DTileset);
 
       // Remove deleted tilesets
       const primitives = this.scene.primitives;
@@ -688,16 +694,27 @@ export default class Cesium extends GlobeOrMap {
     );
   }
 
+  @computed
+  private get _firstMapItemTerrainProviders():
+    | Cesium.TerrainProvider
+    | undefined {
+    // Get the top map item that is a terrain provider, if any are
+    return this._allMapItems.find(isTerrainProvider);
+  }
+
   // It's nice to co-locate creation of Ion TerrainProvider and Credit, but not necessary
   @computed
   private get _terrainWithCredits(): {
     terrain: Cesium.TerrainProvider;
     credit?: Cesium.Credit;
   } {
-    if (
-      this.terriaViewer.viewerOptions.useTerrain &&
-      this.terria.configParameters.useCesiumIonTerrain
-    ) {
+    if (!this.terriaViewer.viewerOptions.useTerrain) {
+      return { terrain: new EllipsoidTerrainProvider() };
+    }
+    // Check if there's a TerrainProvider in map items and use that if there is
+    if (this._firstMapItemTerrainProviders) {
+      return { terrain: this._firstMapItemTerrainProviders };
+    } else if (this.terria.configParameters.useCesiumIonTerrain) {
       const logo = require("terriajs-cesium/Source/Assets/Images/ion-credit.png");
       const ionCredit = new Credit(
         '<a href="https://cesium.com/" target="_blank" rel="noopener noreferrer"><img src="' +
@@ -769,7 +786,9 @@ export default class Cesium extends GlobeOrMap {
     //     mapInteractionModeStack.length - 1
     //   ].pickedFeatures = result;
     // } else {
-    this.terria.pickedFeatures = result;
+    runInAction(() => {
+      this.terria.pickedFeatures = result;
+    });
     // }
   }
 
@@ -919,63 +938,66 @@ export default class Cesium extends GlobeOrMap {
 
     result.allFeaturesAvailablePromise = Promise.all(featurePromises)
       .then(allFeatures => {
-        result.isLoading = false;
-
-        result.features = allFeatures.reduce(
-          (resultFeaturesSoFar, imageryLayerFeatures, i) => {
-            if (!isDefined(imageryLayerFeatures)) {
-              return resultFeaturesSoFar;
-            }
-
-            let features = imageryLayerFeatures.map(feature => {
-              if (isDefined(imageryLayers)) {
-                (<any>feature).imageryLayer = imageryLayers[i];
+        runInAction(() => {
+          result.isLoading = false;
+          result.features = allFeatures.reduce(
+            (resultFeaturesSoFar, imageryLayerFeatures, i) => {
+              if (!isDefined(imageryLayerFeatures)) {
+                return resultFeaturesSoFar;
               }
 
-              if (!isDefined(feature.position)) {
-                feature.position = Ellipsoid.WGS84.cartesianToCartographic(
-                  pickPosition
-                );
-              }
+              let features = imageryLayerFeatures.map(feature => {
+                if (isDefined(imageryLayers)) {
+                  (<any>feature).imageryLayer = imageryLayers[i];
+                }
 
-              // If the picked feature does not have a height, use the height of the picked location.
-              // This at least avoids major parallax effects on the selection indicator.
-              if (
-                !isDefined(feature.position.height) ||
-                feature.position.height === 0.0
-              ) {
-                feature.position.height = defaultHeight;
-              }
-              return this._createFeatureFromImageryLayerFeature(feature);
-            });
+                if (!isDefined(feature.position)) {
+                  feature.position = Ellipsoid.WGS84.cartesianToCartographic(
+                    pickPosition
+                  );
+                }
 
-            if (this.terria.showSplitter && isDefined(result.pickPosition)) {
-              // Select only features from the same side or both sides of the splitter
-              const screenPosition = this._computePositionOnScreen(
-                result.pickPosition
-              );
-              const pickedSide = this._getSplitterSideForScreenPosition(
-                screenPosition
-              );
-
-              features = features.filter(feature => {
-                const splitDirection = (<any>feature).imageryLayer
-                  .splitDirection;
-                return (
-                  splitDirection === pickedSide ||
-                  splitDirection === ImagerySplitDirection.NONE
-                );
+                // If the picked feature does not have a height, use the height of the picked location.
+                // This at least avoids major parallax effects on the selection indicator.
+                if (
+                  !isDefined(feature.position.height) ||
+                  feature.position.height === 0.0
+                ) {
+                  feature.position.height = defaultHeight;
+                }
+                return this._createFeatureFromImageryLayerFeature(feature);
               });
-            }
 
-            return resultFeaturesSoFar.concat(features);
-          },
-          defaultValue(existingFeatures, [])
-        );
+              if (this.terria.showSplitter && isDefined(result.pickPosition)) {
+                // Select only features from the same side or both sides of the splitter
+                const screenPosition = this._computePositionOnScreen(
+                  result.pickPosition
+                );
+                const pickedSide = this._getSplitterSideForScreenPosition(
+                  screenPosition
+                );
+
+                features = features.filter(feature => {
+                  const splitDirection = (<any>feature).imageryLayer
+                    .splitDirection;
+                  return (
+                    splitDirection === pickedSide ||
+                    splitDirection === ImagerySplitDirection.NONE
+                  );
+                });
+              }
+
+              return resultFeaturesSoFar.concat(features);
+            },
+            defaultValue(existingFeatures, [])
+          );
+        });
       })
       .catch(() => {
-        result.isLoading = false;
-        result.error = "An unknown error occurred while picking features.";
+        runInAction(() => {
+          result.isLoading = false;
+          result.error = "An unknown error occurred while picking features.";
+        });
       });
 
     return result;

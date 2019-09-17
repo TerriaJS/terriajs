@@ -1,5 +1,5 @@
 import createReactClass from "create-react-class";
-import { reaction } from "mobx";
+import { reaction, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
@@ -53,7 +53,9 @@ const SidePanel = observer(
 
     onAddDataClicked(event) {
       event.stopPropagation();
-      this.props.viewState.topElement = "AddData";
+      runInAction(() => {
+        this.props.viewState.topElement = "AddData";
+      });
       this.props.viewState.openAddData();
     },
 
@@ -62,7 +64,9 @@ const SidePanel = observer(
     },
 
     changeSearchText(newText) {
-      this.props.viewState.searchState.locationSearchText = newText;
+      runInAction(() => {
+        this.props.viewState.searchState.locationSearchText = newText;
+      });
 
       if (newText.length === 0) {
         removeMarker(this.props.terria);
@@ -74,7 +78,9 @@ const SidePanel = observer(
     },
 
     startLocationSearch() {
-      this.props.viewState.searchState.showLocationSearchResults = true;
+      runInAction(() => {
+        this.props.viewState.searchState.showLocationSearchResults = true;
+      });
     },
 
     render() {

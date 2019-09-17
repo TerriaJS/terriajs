@@ -14,6 +14,7 @@ import Terria from "../../Models/Terria";
 import ViewState from "../../ReactViewModels/ViewState";
 
 import Styles from "./mobile-menu.scss";
+import { runInAction } from "mobx";
 
 const MobileMenu = observer(
   createReactClass({
@@ -35,8 +36,10 @@ const MobileMenu = observer(
     },
 
     toggleMenu() {
-      this.props.viewState.mobileMenuVisible = !this.props.viewState
-        .mobileMenuVisible;
+      runInAction(() => {
+        this.props.viewState.mobileMenuVisible = !this.props.viewState
+          .mobileMenuVisible;
+      });
     },
 
     getInitialState() {
@@ -44,12 +47,16 @@ const MobileMenu = observer(
     },
 
     onFeedbackFormClick() {
-      this.props.viewState.feedbackFormIsVisible = true;
-      this.props.viewState.mobileMenuVisible = false;
+      runInAction(() => {
+        this.props.viewState.feedbackFormIsVisible = true;
+        this.props.viewState.mobileMenuVisible = false;
+      });
     },
 
     hideMenu() {
-      this.props.viewState.mobileMenuVisible = false;
+      runInAction(() => {
+        this.props.viewState.mobileMenuVisible = false;
+      });
     },
 
     render() {

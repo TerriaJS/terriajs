@@ -1,16 +1,14 @@
-"use strict";
-
-import proj4 from "proj4/lib/index.js";
+const proj4 = require("proj4/lib/index.js");
 
 /**
  * Turns the longitude / latitude in degrees into a human readable pretty UTM zone representation.
  */
-function prettifyProjection(
-  longitude,
-  latitude,
-  proj4Projection,
-  proj4longlat,
-  projectionUnits
+export default function prettifyProjection(
+  longitude: number,
+  latitude: number,
+  proj4Projection: string,
+  proj4longlat: string,
+  projectionUnits: string
 ) {
   const zone = 1 + Math.floor((longitude + 180) / 6);
 
@@ -25,5 +23,3 @@ function prettifyProjection(
     east: projPoint[0].toFixed(2) + projectionUnits
   };
 }
-
-module.exports = prettifyProjection;

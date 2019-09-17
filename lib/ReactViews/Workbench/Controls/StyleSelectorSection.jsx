@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import Styles from "./style-selector-section.scss";
 import CommonStrata from "../../../Models/CommonStrata";
+import { runInAction } from "mobx";
 
 const StyleSelectorSection = createReactClass({
   displayName: "StyleSelectorSection",
@@ -16,7 +17,9 @@ const StyleSelectorSection = createReactClass({
   },
 
   changeStyle(styleSelector, event) {
-    styleSelector.chooseActiveStyle(CommonStrata.user, event.target.value);
+    runInAction(() => {
+      styleSelector.chooseActiveStyle(CommonStrata.user, event.target.value);
+    });
   },
 
   render() {

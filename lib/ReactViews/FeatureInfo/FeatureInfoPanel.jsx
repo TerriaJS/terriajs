@@ -23,7 +23,7 @@ import raiseErrorToUser from "../../Models/raiseErrorToUser";
 import Styles from "./feature-info-panel.scss";
 import classNames from "classnames";
 import { observer, disposeOnUnmount } from "mobx-react";
-import { reaction } from "mobx";
+import { action, reaction, runInAction } from "mobx";
 
 const FeatureInfoPanel = observer(
   createReactClass({
@@ -80,16 +80,19 @@ const FeatureInfoPanel = observer(
                   const featuresShownAtAll = pickedFeatures.features.filter(x =>
                     defined(determineCatalogItem(terria.workbench, x))
                   );
-                  terria.selectedFeature = featuresShownAtAll.filter(
+                  let selectedFeature = featuresShownAtAll.filter(
                     featureHasInfo
                   )[0];
                   if (
-                    !defined(terria.selectedFeature) &&
+                    !defined(selectedFeature) &&
                     featuresShownAtAll.length > 0
                   ) {
                     // Handles the case when no features have info - still want something to be open.
-                    terria.selectedFeature = featuresShownAtAll[0];
+                    selectedFeature = featuresShownAtAll[0];
                   }
+                  runInAction(() => {
+                    terria.selectedFeature = selectedFeature;
+                  });
                 });
               }
             }
@@ -121,34 +124,45 @@ const FeatureInfoPanel = observer(
     },
 
     close() {
-      this.props.viewState.featureInfoPanelIsVisible = false;
+      runInAction(() => {
+        this.props.viewState.featureInfoPanelIsVisible = false;
+      });
 
       // give the close animation time to finish before unselecting, to avoid jumpiness
-      setTimeout(() => {
-        this.props.terria.pickedFeatures = undefined;
-        this.props.terria.selectedFeature = undefined;
-      }, 200);
+      setTimeout(
+        action(() => {
+          this.props.terria.pickedFeatures = undefined;
+          this.props.terria.selectedFeature = undefined;
+        }),
+        200
+      );
     },
 
     toggleCollapsed(event) {
-      this.props.viewState.featureInfoPanelIsCollapsed = !this.props.viewState
-        .featureInfoPanelIsCollapsed;
+      runInAction(() => {
+        this.props.viewState.featureInfoPanelIsCollapsed = !this.props.viewState
+          .featureInfoPanelIsCollapsed;
+      });
     },
 
     toggleOpenFeature(feature) {
       const terria = this.props.terria;
-      if (feature === terria.selectedFeature) {
-        terria.selectedFeature = undefined;
-      } else {
-        terria.selectedFeature = feature;
-      }
+      runInAction(() => {
+        if (feature === terria.selectedFeature) {
+          terria.selectedFeature = undefined;
+        } else {
+          terria.selectedFeature = feature;
+        }
+      });
     },
 
     getMessageForNoResults() {
       if (this.props.terria.workbench.items.length > 0) {
         // feature info shows up becuase data has been added for the first time
         if (this.props.viewState.firstTimeAddingData) {
-          this.props.viewState.firstTimeAddingData = false;
+          runInAction(() => {
+            this.props.viewState.firstTimeAddingData = false;
+          });
           return "Click on the map to learn more about a location";
         }
         // if clicking on somewhere that has no data
