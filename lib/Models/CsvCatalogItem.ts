@@ -55,32 +55,6 @@ export default class CsvCatalogItem extends TableMixin(
     this._csvFile = file;
   }
 
-  protected get loadMapItemsPromise(): Promise<void> {
-    return this.loadMapItems()
-      .then(() => {
-        if (this.csvString !== undefined) {
-          return Csv.parseString(this.csvString, true);
-        } else if (this._csvFile !== undefined) {
-          return Csv.parseFile(this._csvFile, true);
-        } else if (this.url !== undefined) {
-          return Csv.parseUrl(proxyCatalogItemUrl(this, this.url, "1d"), true);
-        } else {
-          throw new TerriaError({
-            sender: this,
-            title: "No CSV available",
-            message:
-              "The CSV catalog item cannot be loaded because it was not configured " +
-              "with a `url` or `csvString` property."
-          });
-        }
-      })
-      .then(dataColumnMajor => {
-        runInAction(() => {
-          this.dataColumnMajor = dataColumnMajor;
-        });
-      });
-  }
-
   protected forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
@@ -90,6 +64,8 @@ export default class CsvCatalogItem extends TableMixin(
       return Csv.parseString(this.csvString, true);
     } else if (this.url !== undefined) {
       return Csv.parseUrl(proxyCatalogItemUrl(this, this.url, "1d"), true);
+    } else if (this._csvFile !== undefined) {
+      return Csv.parseFile(this._csvFile, true);
     } else {
       return Promise.reject(
         new TerriaError({
