@@ -1,10 +1,15 @@
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import "terriajs-cesium/Source/Scene/ImageryProvider";
+import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import MappableTraits from "../Traits/MappableTraits";
 import Model, { BaseModel } from "./Model";
 
-export type MapItem = ImageryParts | DataSource | Cesium3DTileset;
+export type MapItem =
+  | ImageryParts
+  | DataSource
+  | Cesium3DTileset
+  | TerrainProvider;
 
 // Shouldn't this be a class?
 export interface ImageryParts {
@@ -38,6 +43,12 @@ export function isCesium3DTileset(
   mapItem: MapItem
 ): mapItem is Cesium3DTileset {
   return "allTilesLoaded" in mapItem;
+}
+
+export function isTerrainProvider(
+  mapItem: MapItem
+): mapItem is TerrainProvider {
+  return "hasVertexNormals" in mapItem;
 }
 
 export default Mappable;

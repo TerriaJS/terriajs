@@ -1,4 +1,4 @@
-import { computed, observable, runInAction, trace } from "mobx";
+import { computed, observable, runInAction, trace, action } from "mobx";
 import { getObjectId } from "../Traits/ArrayNestedStrataMap";
 import { ModelId } from "../Traits/ModelReference";
 import ModelTraits from "../Traits/ModelTraits";
@@ -79,6 +79,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
       return StratumOrder.sortBottomToTop(this.strata);
     }
 
+    @action
     setTrait<Key extends keyof StratumTraits>(
       stratumId: string,
       trait: Key,

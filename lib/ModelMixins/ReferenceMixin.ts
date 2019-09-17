@@ -37,7 +37,9 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
             "The model returned by `forceLoadReference` must have the same `id` as the `ReferenceMixin` itself."
           );
         }
-        this._dereferenced = target;
+        runInAction(() => {
+          this._dereferenced = target;
+        });
       });
     });
 

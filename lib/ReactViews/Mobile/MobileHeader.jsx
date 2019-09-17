@@ -11,6 +11,7 @@ import MobileMenu from "./MobileMenu";
 import classNames from "classnames";
 import { removeMarker } from "../../Models/LocationMarkerUtils";
 import { observer } from "mobx-react";
+import { runInAction, action } from "mobx";
 
 const MobileHeader = observer(
   createReactClass({
@@ -34,26 +35,32 @@ const MobileHeader = observer(
       const mobileView = viewState.mobileView;
       const mobileViewOptions = viewState.mobileViewOptions;
       const searchState = viewState.searchState;
-      if (
-        mobileView === mobileViewOptions.data ||
-        mobileView === mobileViewOptions.preview
-      ) {
-        searchState.showMobileCatalogSearch = true;
-      } else {
-        searchState.showMobileLocationSearch = true;
-        this.showLocationSearchResults();
-      }
+      runInAction(() => {
+        if (
+          mobileView === mobileViewOptions.data ||
+          mobileView === mobileViewOptions.preview
+        ) {
+          searchState.showMobileCatalogSearch = true;
+        } else {
+          searchState.showMobileLocationSearch = true;
+          this.showLocationSearchResults();
+        }
+      });
     },
 
     closeLocationSearch() {
-      this.props.viewState.searchState.showMobileLocationSearch = false;
-      this.props.viewState.explorerPanelIsVisible = false;
-      this.props.viewState.switchMobileView(null);
+      runInAction(() => {
+        this.props.viewState.searchState.showMobileLocationSearch = false;
+        this.props.viewState.explorerPanelIsVisible = false;
+        this.props.viewState.switchMobileView(null);
+      });
     },
 
     closeCatalogSearch() {
-      this.props.viewState.searchState.showMobileCatalogSearch = false;
-      this.props.viewState.searchState.catalogSearchText = "";
+      runInAction(() => {
+        this.props.viewState.searchState.showMobileCatalogSearch = false;
+        this.props.viewState.searchState.catalogSearchText = "";
+      });
     },
 
     onMobileDataCatalogClicked() {
@@ -65,7 +72,9 @@ const MobileHeader = observer(
     },
 
     changeLocationSearchText(newText) {
-      this.props.viewState.searchState.locationSearchText = newText;
+      runInAction(() => {
+        this.props.viewState.searchState.locationSearchText = newText;
+      });
 
       if (newText.length === 0) {
         removeMarker(this.props.terria);
@@ -75,19 +84,23 @@ const MobileHeader = observer(
     },
 
     showLocationSearchResults() {
-      const text = this.props.viewState.searchState.locationSearchText;
-      if (text && text.length > 0) {
-        this.props.viewState.explorerPanelIsVisible = true;
-        this.props.viewState.mobileView = this.props.viewState.mobileViewOptions.locationSearchResults;
-      } else {
-        // TODO: return to the preview mobileView, rather than dropping back to the map
-        this.props.viewState.explorerPanelIsVisible = false;
-        this.props.viewState.mobileView = null;
-      }
+      runInAction(() => {
+        const text = this.props.viewState.searchState.locationSearchText;
+        if (text && text.length > 0) {
+          this.props.viewState.explorerPanelIsVisible = true;
+          this.props.viewState.mobileView = this.props.viewState.mobileViewOptions.locationSearchResults;
+        } else {
+          // TODO: return to the preview mobileView, rather than dropping back to the map
+          this.props.viewState.explorerPanelIsVisible = false;
+          this.props.viewState.mobileView = null;
+        }
+      });
     },
 
     changeCatalogSearchText(newText) {
-      this.props.viewState.searchState.catalogSearchText = newText;
+      runInAction(() => {
+        this.props.viewState.searchState.catalogSearchText = newText;
+      });
     },
 
     searchLocations() {
@@ -99,18 +112,22 @@ const MobileHeader = observer(
     },
 
     toggleView(viewname) {
-      if (this.props.viewState.mobileView !== viewname) {
-        this.props.viewState.explorerPanelIsVisible = true;
-        this.props.viewState.switchMobileView(viewname);
-      } else {
-        this.props.viewState.explorerPanelIsVisible = false;
-        this.props.viewState.switchMobileView(null);
-      }
+      runInAction(() => {
+        if (this.props.viewState.mobileView !== viewname) {
+          this.props.viewState.explorerPanelIsVisible = true;
+          this.props.viewState.switchMobileView(viewname);
+        } else {
+          this.props.viewState.explorerPanelIsVisible = false;
+          this.props.viewState.switchMobileView(null);
+        }
+      });
     },
 
     onClickFeedback(e) {
       e.preventDefault();
-      this.props.viewState.feedbackFormIsVisible = true;
+      runInAction(() => {
+        this.props.viewState.feedbackFormIsVisible = true;
+      });
       this.setState({
         menuIsOpen: false
       });
@@ -136,9 +153,9 @@ const MobileHeader = observer(
                 <div className={Styles.groupLeft}>
                   <button
                     type="button"
-                    onClick={() =>
-                      (this.props.viewState.mobileMenuVisible = true)
-                    }
+                    onClick={action(
+                      () => (this.props.viewState.mobileMenuVisible = true)
+                    )}
                     className={Styles.btnMenu}
                     title="toggle navigation"
                   >

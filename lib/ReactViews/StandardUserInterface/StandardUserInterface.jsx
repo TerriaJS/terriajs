@@ -28,6 +28,7 @@ import "inobounce";
 
 import Styles from "./standard-user-interface.scss";
 import { observer } from "mobx-react";
+import { action, runInAction } from "mobx";
 
 const animationDuration = 250;
 /** blah */
@@ -75,7 +76,9 @@ const StandardUserInterface = observer(
       };
 
       this.resizeListener = () => {
-        this.props.viewState.useSmallScreenInterface = this.shouldUseMobileInterface();
+        runInAction(() => {
+          this.props.viewState.useSmallScreenInterface = this.shouldUseMobileInterface();
+        });
       };
 
       window.addEventListener("resize", this.resizeListener, false);
@@ -93,12 +96,12 @@ const StandardUserInterface = observer(
           message: "Would you like to view it now?",
           confirmText: "Yes",
           denyText: "Maybe later",
-          confirmAction: () => {
+          confirmAction: action(() => {
             this.props.viewState.storyShown = true;
-          },
-          denyAction: () => {
+          }),
+          denyAction: action(() => {
             this.props.viewState.storyShown = false;
-          },
+          }),
           type: "story",
           width: 300
         });
@@ -118,7 +121,9 @@ const StandardUserInterface = observer(
     },
 
     acceptDragDropFile() {
-      this.props.viewState.isDraggingDroppingFile = true;
+      runInAction(() => {
+        this.props.viewState.isDraggingDroppingFile = true;
+      });
       // if explorer window is already open, we open my data tab
       if (this.props.viewState.explorerPanelIsVisible) {
         this.props.viewState.openUserData();
@@ -180,9 +185,9 @@ const StandardUserInterface = observer(
                         }
                       )}
                       tabIndex={0}
-                      onClick={() => {
+                      onClick={action(() => {
                         this.props.viewState.topElement = "SidePanel";
-                      }}
+                      })}
                     >
                       <Branding terria={terria} version={this.props.version} />
                       <SidePanel
@@ -287,9 +292,9 @@ const StandardUserInterface = observer(
                 }
               )}
               tabIndex={0}
-              onClick={() => {
+              onClick={action(() => {
                 this.props.viewState.topElement = "FeatureInfo";
-              }}
+              })}
             >
               <FeatureInfoPanel
                 terria={terria}

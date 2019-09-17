@@ -9,6 +9,7 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import Styles from "./data-preview.scss";
 import { observer } from "mobx-react";
+import { runInAction } from "mobx";
 
 /**
  * Data preview section, for the preview map see DataPreviewMap
@@ -24,7 +25,9 @@ const DataPreview = observer(
     },
 
     backToMap() {
-      this.props.viewState.explorerPanelIsVisible = false;
+      runInAction(() => {
+        this.props.viewState.explorerPanelIsVisible = false;
+      });
     },
 
     render() {

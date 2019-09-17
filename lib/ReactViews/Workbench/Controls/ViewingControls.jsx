@@ -18,6 +18,7 @@ import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Styles from "./viewing-controls.scss";
 import addUserCatalogMember from "../../../Models/addUserCatalogMember";
 import getAncestors from "../../../Models/getAncestors";
+import { runInAction } from "mobx";
 
 const ViewingControls = observer(
   createReactClass({
@@ -72,19 +73,21 @@ const ViewingControls = observer(
       const newItemId = createGuid();
       const newItem = item.duplicateModel(newItemId);
 
-      item.setTrait(
-        CommonStrata.user,
-        "splitDirection",
-        ImagerySplitDirection.RIGHT
-      );
-      newItem.setTrait(CommonStrata.user, "name", item.name + " (copy)");
-      newItem.setTrait(
-        CommonStrata.user,
-        "splitDirection",
-        ImagerySplitDirection.LEFT
-      );
+      runInAction(() => {
+        item.setTrait(
+          CommonStrata.user,
+          "splitDirection",
+          ImagerySplitDirection.RIGHT
+        );
+        newItem.setTrait(CommonStrata.user, "name", item.name + " (copy)");
+        newItem.setTrait(
+          CommonStrata.user,
+          "splitDirection",
+          ImagerySplitDirection.LEFT
+        );
 
-      terria.showSplitter = true;
+        terria.showSplitter = true;
+      });
 
       // Add it to terria.catalog, which is required so the new item can be shared.
       addUserCatalogMember(terria, newItem, { open: false, zoomTo: false });
@@ -98,7 +101,9 @@ const ViewingControls = observer(
       }
       // Open up all the parents (doesn't matter that this sets it to enabled as well because it already is).
       getAncestors(this.props.item.terria, this.props.item).forEach(group => {
-        group.setTrait(CommonStrata.user, "isOpen", true);
+        runInAction(() => {
+          group.setTrait(CommonStrata.user, "isOpen", true);
+        });
       });
       this.props.viewState.viewCatalogMember(item);
       this.props.viewState.switchMobileView(

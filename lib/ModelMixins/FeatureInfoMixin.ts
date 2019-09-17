@@ -40,8 +40,8 @@ export default function FeatureInfoMixin<T extends Constructor<Target>>(
         if (isDefined(this.featureInfoUrlTemplate)) {
           (async () => {
             const resource = new Resource({
-              url: proxyCatalogItemUrl(this.featureInfoUrlTemplate, "0d"),
-              templateValues: feature.properties
+              url: proxyCatalogItemUrl(this, this.featureInfoUrlTemplate, "0d"),
+              templateValues: feature.properties.getValue()
             });
             try {
               const featureInfo = await loadJson(resource);

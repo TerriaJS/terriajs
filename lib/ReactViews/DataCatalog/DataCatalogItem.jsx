@@ -6,6 +6,7 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import addedByUser from "../../Core/addedByUser";
 import removeUserAddedData from "../../Models/removeUserAddedData";
 import CatalogItem from "./CatalogItem";
+import { runInAction } from "mobx";
 
 const STATE_TO_TITLE = {
   loading: "Loading...",
@@ -77,8 +78,10 @@ const DataCatalogItem = observer(
         !event.shiftKey &&
         !event.ctrlKey
       ) {
-        this.props.viewState.explorerPanelIsVisible = false;
-        this.props.viewState.mobileView = null;
+        runInAction(() => {
+          this.props.viewState.explorerPanelIsVisible = false;
+          this.props.viewState.mobileView = null;
+        });
       }
     },
 

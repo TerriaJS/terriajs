@@ -10,6 +10,12 @@
     box-sizing: border-box;
   }
 }
+.map__innerChrome {
+  // Chrome only :( hack until
+  // https://bugs.chromium.org/p/chromium/issues/detail?id=1001663 gets resolved
+  display: flex;
+  flex-flow: column;
+}
 
 .map__row {
   display: table-row;
@@ -24,6 +30,12 @@
   display: table-cell;
   position: relative;
   width: 100%;
+}
+.map__cellChrome {
+  // Chrome only :( hack until
+  // https://bugs.chromium.org/p/chromium/issues/detail?id=1001663 gets resolved
+  display: block;
+  height: 100%;
 }
 
 @include empty-module("map-cell-map");

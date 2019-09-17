@@ -1,23 +1,17 @@
 import { runInAction } from "mobx";
 import TerriaError from "../Core/TerriaError";
+import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../ModelMixins/TableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import Csv from "../Table/Csv";
-import TableColumnType from "../Table/TableColumnType";
+import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 import CsvCatalogItemTraits from "../Traits/CsvCatalogItemTraits";
-import TableColorStyleTraits from "../Traits/TableColorStyleTraits";
-import TableStyleTraits from "../Traits/TableStyleTraits";
 import CreateModel from "./CreateModel";
-import createStratumInstance from "./createStratumInstance";
-import LoadableStratum from "./LoadableStratum";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
-import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
-import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
 
 // Types of CSVs:
 // - Points - Latitude and longitude columns or address
@@ -43,6 +37,8 @@ export default class CsvCatalogItem extends TableMixin(
     return "csv";
   }
 
+  private _csvFile?: File;
+
   constructor(id: string | undefined, terria: Terria) {
     super(id, terria);
     this.strata.set(
@@ -55,6 +51,10 @@ export default class CsvCatalogItem extends TableMixin(
     return CsvCatalogItem.type;
   }
 
+  setFileInput(file: File) {
+    this._csvFile = file;
+  }
+
   protected forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
@@ -64,6 +64,8 @@ export default class CsvCatalogItem extends TableMixin(
       return Csv.parseString(this.csvString, true);
     } else if (this.url !== undefined) {
       return Csv.parseUrl(proxyCatalogItemUrl(this, this.url, "1d"), true);
+    } else if (this._csvFile !== undefined) {
+      return Csv.parseFile(this._csvFile, true);
     } else {
       return Promise.reject(
         new TerriaError({

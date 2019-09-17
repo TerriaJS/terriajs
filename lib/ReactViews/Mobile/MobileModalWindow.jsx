@@ -11,6 +11,7 @@ import WorkbenchList from "../Workbench/WorkbenchList";
 import Icon from "../Icon";
 
 import Styles from "./mobile-modal-window.scss";
+import { runInAction } from "mobx";
 
 const MobileModalWindow = observer(
   createReactClass({
@@ -70,11 +71,13 @@ const MobileModalWindow = observer(
     },
 
     onClearMobileUI() {
-      this.props.viewState.switchMobileView(null);
-      this.props.viewState.explorerPanelIsVisible = false;
-      this.props.viewState.searchState.showMobileLocationSearch = false;
-      this.props.viewState.searchState.showMobileCatalogSearch = false;
-      this.props.viewState.searchState.catalogSearchText = "";
+      runInAction(() => {
+        this.props.viewState.switchMobileView(null);
+        this.props.viewState.explorerPanelIsVisible = false;
+        this.props.viewState.searchState.showMobileLocationSearch = false;
+        this.props.viewState.searchState.showMobileCatalogSearch = false;
+        this.props.viewState.searchState.catalogSearchText = "";
+      });
     },
 
     /* eslint-disable-next-line camelcase */
@@ -85,13 +88,17 @@ const MobileModalWindow = observer(
         this.props.viewState.mobileView ===
           this.props.viewState.mobileViewOptions.nowViewing
       ) {
-        this.props.viewState.switchMobileView(null);
-        this.props.viewState.explorerPanelIsVisible = false;
+        runInAction(() => {
+          this.props.viewState.switchMobileView(null);
+          this.props.viewState.explorerPanelIsVisible = false;
+        });
       }
     },
 
     goBack() {
-      this.props.viewState.mobileView = this.props.viewState.mobileViewOptions.data;
+      this.props.viewState.switchMobileView(
+        this.props.viewState.mobileViewOptions.data
+      );
     },
 
     render() {

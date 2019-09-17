@@ -15,6 +15,7 @@ import { getShareData } from "../Map/Panels/SharePanel/BuildShareLink";
 import Styles from "./story-builder.scss";
 import Story from "./Story.jsx";
 import StoryEditor from "./StoryEditor.jsx";
+import { runInAction } from "mobx";
 
 const StoryBuilder = observer(
   createReactClass({
@@ -37,16 +38,20 @@ const StoryBuilder = observer(
     },
 
     removeStory(index, story) {
-      this.props.terria.stories = this.props.terria.stories.filter(
-        st => st.id !== story.id
-      );
-      if (index < this.props.viewState.currentStoryId) {
-        this.props.viewState.currentStoryId -= 1;
-      }
+      runInAction(() => {
+        this.props.terria.stories = this.props.terria.stories.filter(
+          st => st.id !== story.id
+        );
+        if (index < this.props.viewState.currentStoryId) {
+          this.props.viewState.currentStoryId -= 1;
+        }
+      });
     },
 
     removeAllStories() {
-      this.props.terria.stories = [];
+      runInAction(() => {
+        this.props.terria.stories = [];
+      });
     },
     onSave(_story) {
       const story = {
@@ -63,11 +68,13 @@ const StoryBuilder = observer(
         const oldStory = this.props.terria.stories[storyIndex];
         // replace the old story, we need to replace the stories array so that
         // it is observable
-        this.props.terria.stories = [
-          ...this.props.terria.stories.slice(0, storyIndex),
-          combine(story, oldStory),
-          ...this.props.terria.stories.slice(storyIndex + 1)
-        ];
+        runInAction(() => {
+          this.props.terria.stories = [
+            ...this.props.terria.stories.slice(0, storyIndex),
+            combine(story, oldStory),
+            ...this.props.terria.stories.slice(storyIndex + 1)
+          ];
+        });
       } else {
         this.captureStory(story);
       }
@@ -85,11 +92,13 @@ const StoryBuilder = observer(
           })
         )
       );
-      if (this.props.terria.stories === undefined) {
-        this.props.terria.stories = [story];
-      } else {
-        this.props.terria.stories.push(story);
-      }
+      runInAction(() => {
+        if (this.props.terria.stories === undefined) {
+          this.props.terria.stories = [story];
+        } else {
+          this.props.terria.stories.push(story);
+        }
+      });
     },
 
     toggleVideoGuide() {
@@ -127,11 +136,13 @@ const StoryBuilder = observer(
             })
           )
         );
-        this.props.terria.stories = [
-          ...this.props.terria.stories.slice(0, storyIndex),
-          story,
-          ...this.props.terria.stories.slice(storyIndex + 1)
-        ];
+        runInAction(() => {
+          this.props.terria.stories = [
+            ...this.props.terria.stories.slice(0, storyIndex),
+            story,
+            ...this.props.terria.stories.slice(storyIndex + 1)
+          ];
+        });
         this.setState({
           recaptureSuccessful: story.id
         });
@@ -149,8 +160,10 @@ const StoryBuilder = observer(
     },
 
     runStories() {
-      this.props.viewState.storyBuilderShown = false;
-      this.props.viewState.storyShown = true;
+      runInAction(() => {
+        this.props.viewState.storyBuilderShown = false;
+        this.props.viewState.storyShown = true;
+      });
       setTimeout(function() {
         triggerResize();
       }, this.props.animationDuration || 1);
@@ -158,8 +171,10 @@ const StoryBuilder = observer(
     },
 
     editStory(story) {
-      this.props.viewState.storyBuilderShow = true;
-      this.props.viewState.storyShown = false;
+      runInAction(() => {
+        this.props.viewState.storyBuilderShow = true;
+        this.props.viewState.storyShown = false;
+      });
       this.setState({
         editingMode: true,
         currentStory: story
@@ -167,12 +182,16 @@ const StoryBuilder = observer(
     },
 
     viewStory(index, story) {
-      this.props.viewState.currentStoryId = index;
+      runInAction(() => {
+        this.props.viewState.currentStoryId = index;
+      });
       this.runStories();
     },
 
     onSort(sortedArray, currentDraggingSortData, currentDraggingIndex) {
-      this.props.terria.stories = sortedArray;
+      runInAction(() => {
+        this.props.terria.stories = sortedArray;
+      });
     },
 
     componentWillUnmount() {
