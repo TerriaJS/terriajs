@@ -1,19 +1,19 @@
 "use strict";
 
-import React from "react";
-
 import createReactClass from "create-react-class";
-
+import { runInAction } from "mobx";
+import { observer } from "mobx-react";
 import PropTypes from "prop-types";
-
+import React from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
-import Chart from "./NewChart";
+import Chartable from "../../../Models/Chartable";
+import CommonStrata from "../../../Models/CommonStrata";
+import raiseErrorOnRejectedPromise from "../../../Models/raiseErrorOnRejectedPromise";
+import Icon from "../../Icon";
 // import ChartPanelDownloadButton from "./ChartPanelDownloadButton";
 import Loader from "../../Loader";
-import Icon from "../../Icon";
 import Styles from "./chart-panel.scss";
-import { observer } from "mobx-react";
-import raiseErrorOnRejectedPromise from "../../../Models/raiseErrorOnRejectedPromise";
+import Chart from "./NewChart";
 
 const height = 300;
 
@@ -29,7 +29,11 @@ const ChartPanel = observer(
     },
 
     closePanel() {
-      this.props.viewState.chartIsOpen = false;
+      this.chartableItems().forEach(item =>
+        runInAction(() => {
+          item.setTrait(CommonStrata.user, "show", false);
+        })
+      );
     },
 
     componentDidUpdate() {
@@ -38,7 +42,17 @@ const ChartPanel = observer(
       }
     },
 
+    chartableItems() {
+      return this.props.terria.workbench.items
+        .filter(Chartable.is)
+        .filter(c => c.chartItems.length > 0);
+    },
+
     render() {
+      if (this.chartableItems().length === 0) {
+        return null;
+      }
+
       // const chartableItems = this.props.terria.catalog.chartableItems;
       // if (this.props.viewState.chartIsOpen === false) {
       //   return null;
