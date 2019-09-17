@@ -95,10 +95,17 @@ const SettingPanel = createReactClass({
 
   render() {
     const that = this;
+    const useNativeResolution = this.props.terria.useNativeResolution;
     const currentViewer = this.props.terria.viewerMode;
     const currentBaseMap = this.props.terria.baseMap
       ? this.props.terria.baseMap.name
       : "(None)";
+
+    const nativeResolutionLabel = `Press to stop using ${
+      useNativeResolution ? "native" : "screen"
+    } resolution and start using ${
+      useNativeResolution ? "screen" : "native"
+    } resolution`;
 
     const dropdownTheme = {
       outer: Styles.settingPanel,
@@ -172,14 +179,42 @@ const SettingPanel = createReactClass({
         </div>
         <If condition={this.props.terria.viewerMode !== ViewerMode.Leaflet}>
           <div className={DropdownStyles.section}>
+            <label className={DropdownStyles.heading}>Image Optimisation</label>
+            <section
+              className={Styles.nativeResolutionWrapper}
+              title={qualityLabels[this.props.terria.quality]}
+            >
+              <button
+                id="mapUseNativeResolution"
+                type="button"
+                onClick={() =>
+                  (this.props.terria.useNativeResolution = !useNativeResolution)
+                }
+                title={nativeResolutionLabel}
+                className={Styles.btnNativeResolution}
+              >
+                {useNativeResolution ? (
+                  <Icon glyph={Icon.GLYPHS.checkboxOn} />
+                ) : (
+                  <Icon glyph={Icon.GLYPHS.checkboxOff} />
+                )}
+              </button>
+              <label
+                title={nativeResolutionLabel}
+                htmlFor="mapUseNativeResolution"
+                className={classNames(
+                  DropdownStyles.subHeading,
+                  Styles.qualityHeading
+                )}
+              >
+                Use native device resolution
+              </label>
+            </section>
             <label
               htmlFor="mapQuality"
-              className={classNames(
-                DropdownStyles.subHeading,
-                Styles.qualityHeading
-              )}
+              className={classNames(DropdownStyles.subHeading)}
             >
-              Image optimisation:
+              Raster Map Quality:
             </label>
             <section
               className={Styles.qualityWrapper}
@@ -191,16 +226,19 @@ const SettingPanel = createReactClass({
                   Styles.qualityLabel
                 )}
               >
-                Performance
+                Quality
               </label>
               <Slider
-                id="mapQuality"
+                id="mapMaximumScreenSpaceError"
                 className={Styles.opacitySlider}
-                min={0}
-                max={2}
-                value={this.props.terria.quality}
-                onChange={val => (this.props.terria.quality = val)}
-                marks={{ 1: "" }}
+                min={1}
+                max={3}
+                step={0.1}
+                value={this.props.terria.baseMaximumScreenSpaceError}
+                onChange={val =>
+                  (this.props.terria.baseMaximumScreenSpaceError = val)
+                }
+                marks={{ 2: "" }}
                 // Awaiting https://github.com/react-component/slider/pull/420
                 // aria-valuetext={qualityLabels[this.props.terria.quality]}
               />
@@ -210,7 +248,7 @@ const SettingPanel = createReactClass({
                   Styles.qualityLabel
                 )}
               >
-                Quality
+                Performance
               </label>
             </section>
           </div>
