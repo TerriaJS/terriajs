@@ -81,7 +81,7 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
     this._geoJsonFile = file;
   }
 
-  protected get loadMapItemsPromise(): Promise<void> {
+  protected forceLoadMapItems(): Promise<void> {
     const createLoadError = () =>
       new TerriaError({
         sender: this,

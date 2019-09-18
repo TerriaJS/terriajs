@@ -47,8 +47,10 @@ import upsertModelFromJson from "./upsertModelFromJson";
 import Workbench from "./Workbench";
 import CorsProxy from "../Core/CorsProxy";
 import MapInteractionMode from "./MapInteractionMode";
+import TimeVarying from "../ModelMixins/TimeVarying";
 
 interface ConfigParameters {
+  [key: string]: ConfigParameters[keyof ConfigParameters];
   defaultMaximumShownFeatureInfos?: number;
   regionMappingDefinitionsUrl: string;
   conversionServiceBaseUrl?: string;
@@ -68,6 +70,7 @@ interface ConfigParameters {
   useCesiumIonBingImagery?: boolean;
   bingMapsKey?: string;
   brandBarElements?: string[];
+  disableMyLocation?: boolean;
 }
 
 interface StartOptions {
@@ -276,28 +279,24 @@ export default class Terria {
 
     return loadJson5(options.configUrl)
       .then((config: any) => {
-        if (config.parameters) {
-          Object.keys(config.parameters).forEach(key => {
-            if (this.configParameters.hasOwnProperty(key)) {
-              (<any>this.configParameters)[key] = config.parameters[key];
-            }
-          });
-        }
-
-        if (config.aspects) {
-          return this.loadMagdaConfig(config);
-        }
-
-        const initializationUrls: string[] = config.initializationUrls;
-        const initSources = initializationUrls.map(url =>
-          generateInitializationUrl(
-            baseUri,
-            this.configParameters.initFragmentPaths,
-            url
-          )
-        );
-
         runInAction(() => {
+          if (config.parameters) {
+            this.updateParameters(config.parameters);
+          }
+
+          if (config.aspects) {
+            return this.loadMagdaConfig(config);
+          }
+
+          const initializationUrls: string[] = config.initializationUrls;
+          const initSources = initializationUrls.map(url =>
+            generateInitializationUrl(
+              baseUri,
+              this.configParameters.initFragmentPaths,
+              url
+            )
+          );
+
           this.initSources.push(...initSources);
         });
       })
@@ -345,6 +344,15 @@ export default class Terria {
         .hash("")
     ).then(() => {
       return this.loadInitSources();
+    });
+  }
+
+  @action
+  updateParameters(parameters: ConfigParameters): void {
+    Object.keys(parameters).forEach((key: string) => {
+      if (this.configParameters.hasOwnProperty(key)) {
+        this.configParameters[key] = parameters[key];
+      }
     });
   }
 
@@ -476,7 +484,6 @@ export default class Terria {
     replaceStratum = false
   }: ApplyInitDataOptions): Promise<void> {
     initData = toJS(initData);
-
     const stratumId =
       typeof initData.stratum === "string"
         ? initData.stratum
@@ -531,6 +538,10 @@ export default class Terria {
       ? initData.workbench.slice().reverse()
       : [];
 
+    const timeline = Array.isArray(initData.timeline)
+      ? initData.timeline.slice()
+      : [];
+
     // Load the models
     let promise: Promise<void>;
 
@@ -571,6 +582,13 @@ export default class Terria {
 
         this.workbench.items = newItems;
 
+        this.timelineStack.items = this.workbench.items
+          .filter(item => {
+            return item.uniqueId && timeline.indexOf(item.uniqueId) >= 0;
+            // && TODO: what is a good way to test if an item is of type TimeVarying.
+          })
+          .map(item => <TimeVarying>item);
+
         // Load the items on the workbench
         for (let model of newItems) {
           if (ReferenceMixin.is(model)) {
@@ -590,6 +608,12 @@ export default class Terria {
 
   loadMagdaConfig(config: any) {
     const aspects = config.aspects;
+    const configParams =
+      aspects["terria-config"] && aspects["terria-config"].parameters;
+
+    if (configParams) {
+      this.updateParameters(configParams);
+    }
     if (aspects.group && aspects.group.members) {
       // Transform the Magda catalog structure to the Terria one.
       const members = aspects.group.members.map((member: any) => {
@@ -609,7 +633,7 @@ export default class Terria {
     // All the "proxyableDomains" bits here are due to a pre-serverConfig mechanism for whitelisting domains.
     // We should deprecate it.s
 
-    // If a URL was specified in the config paramaters to get the proxyable domains from, get them from that
+    // If a URL was specified in the config parameters to get the proxyable domains from, get them from that
     var pdu = this.configParameters.proxyableDomainsUrl;
     const proxyableDomainsPromise: Promise<JsonValue | void> = pdu
       ? loadJson5(pdu)
@@ -735,30 +759,31 @@ function interpretHash(
       : Promise.resolve({});
 
   return promise.then((shareProps: any) => {
-    Object.keys(hashProperties).forEach(function(property) {
-      const propertyValue = hashProperties[property];
+    runInAction(() => {
+      Object.keys(hashProperties).forEach(function(property) {
+        const propertyValue = hashProperties[property];
+        if (property === "clean") {
+          terria.initSources.splice(0, terria.initSources.length);
+        } else if (property === "start") {
+          // a share link that hasn't been shortened: JSON embedded in URL (only works for small quantities of JSON)
+          const startData = JSON.parse(propertyValue);
+          interpretStartData(terria, startData);
+        } else if (defined(propertyValue) && propertyValue.length > 0) {
+          userProperties.set(property, propertyValue);
+        } else {
+          const initSourceFile = generateInitializationUrl(
+            baseUri,
+            terria.configParameters.initFragmentPaths,
+            property
+          );
+          terria.initSources.push(initSourceFile);
+        }
+      });
 
-      if (property === "clean") {
-        terria.initSources.splice(0, terria.initSources.length);
-      } else if (property === "start") {
-        // a share link that hasn't been shortened: JSON embedded in URL (only works for small quantities of JSON)
-        const startData = JSON.parse(propertyValue);
-        interpretStartData(terria, startData);
-      } else if (defined(propertyValue) && propertyValue.length > 0) {
-        userProperties.set(property, propertyValue);
-      } else {
-        const initSourceFile = generateInitializationUrl(
-          baseUri,
-          terria.configParameters.initFragmentPaths,
-          property
-        );
-        terria.initSources.push(initSourceFile);
+      if (shareProps) {
+        interpretStartData(terria, shareProps);
       }
     });
-
-    if (shareProps) {
-      interpretStartData(terria, shareProps);
-    }
   });
 }
 

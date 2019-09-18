@@ -65,13 +65,6 @@ export default class CatalogMemberTraits extends ModelTraits {
   })
   nameInCatalog?: string;
 
-  @objectTrait({
-    type: InfoSectionTraits,
-    name: "Favorite Info Section",
-    description: "Yay"
-  })
-  favoriteInfoSection?: InfoSectionTraits;
-
   @objectArrayTrait({
     type: InfoSectionTraits,
     name: "Info",

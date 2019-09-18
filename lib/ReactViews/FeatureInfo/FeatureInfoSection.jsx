@@ -16,7 +16,7 @@ import isArray from "terriajs-cesium/Source/Core/isArray";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import { observer } from "mobx-react";
 
-import CustomComponents from "../Custom/CustomComponents";
+import CustomComponent from "../Custom/CustomComponent";
 import FeatureInfoDownload from "./FeatureInfoDownload";
 import formatNumberForLocale from "../../Core/formatNumberForLocale";
 import Icon from "../Icon";
@@ -383,7 +383,7 @@ function setSubscriptionsAndTimeouts(featureInfoSection, feature) {
     )
   });
 
-  setTimeoutsForUpdatingCustomComponents(featureInfoSection);
+  // setTimeoutsForUpdatingCustomComponents(featureInfoSection);
 }
 
 /**
@@ -724,7 +724,7 @@ function getTimeSeriesChartContext(catalogItem, feature, getChartDetails) {
     defined(getChartDetails) &&
     defined(catalogItem) &&
     catalogItem.isSampled &&
-    CustomComponents.isRegistered("chart")
+    CustomComponent.isRegistered("chart")
   ) {
     const chartDetails = getChartDetails();
     const distinguishingId = catalogItem.dataViewId;
@@ -777,6 +777,7 @@ function getInfoAsReactComponent(that) {
     : undefined;
   const updateCounters = that.props.feature.updateCounters;
   const context = {
+    terria: that.props.viewState.terria,
     catalogItem: that.props.catalogItem,
     feature: that.props.feature,
     updateCounters: updateCounters
@@ -820,64 +821,64 @@ function getInfoAsReactComponent(that) {
   };
 }
 
-function setTimeoutsForUpdatingCustomComponents(that) {
-  // eslint-disable-line require-jsdoc
-  const { info } = getInfoAsReactComponent(that);
-  const foundCustomComponents = CustomComponents.find(info);
-  foundCustomComponents.forEach((match, componentNumber) => {
-    const updateSeconds = match.type.selfUpdateSeconds(match.reactComponent);
-    if (updateSeconds > 0) {
-      setTimeoutForUpdatingCustomComponent(
-        that,
-        match.reactComponent,
-        updateSeconds,
-        componentNumber
-      );
-    }
-  });
-}
+// function setTimeoutsForUpdatingCustomComponents(that) {
+//   // eslint-disable-line require-jsdoc
+//   const { info } = getInfoAsReactComponent(that);
+//   const foundCustomComponents = CustomComponent.find(info);
+//   foundCustomComponents.forEach((match, componentNumber) => {
+//     const updateSeconds = match.type.selfUpdateSeconds(match.reactComponent);
+//     if (updateSeconds > 0) {
+//       setTimeoutForUpdatingCustomComponent(
+//         that,
+//         match.reactComponent,
+//         updateSeconds,
+//         componentNumber
+//       );
+//     }
+//   });
+// }
 
-function setTimeoutForUpdatingCustomComponent(
-  that,
-  reactComponent,
-  updateSeconds,
-  componentNumber
-) {
-  // eslint-disable-line require-jsdoc
-  const timeoutId = setTimeout(() => {
-    // Update the counter for this component. Handle various undefined cases.
-    const updateCounters = that.props.feature.updateCounters;
-    const counterObject = {
-      reactComponent: reactComponent,
-      counter:
-        defined(updateCounters) && defined(updateCounters[componentNumber])
-          ? updateCounters[componentNumber].counter + 1
-          : 1
-    };
-    if (!defined(that.props.feature.updateCounters)) {
-      const counters = {};
-      counters[componentNumber] = counterObject;
-      that.props.feature.updateCounters = counters;
-    } else {
-      that.props.feature.updateCounters[componentNumber] = counterObject;
-    }
-    // And finish by triggering the next timeout, but do this in another timeout so we aren't nesting setStates.
-    setTimeout(() => {
-      setTimeoutForUpdatingCustomComponent(
-        that,
-        reactComponent,
-        updateSeconds,
-        componentNumber
-      );
-      // console.log('Removing ' + timeoutId + ' from', that.state.timeoutIds);
-      that.setState({
-        timeoutIds: that.state.timeoutIds.filter(id => timeoutId !== id)
-      });
-    }, 5);
-  }, updateSeconds * 1000);
-  const timeoutIds = that.state.timeoutIds;
-  that.setState({ timeoutIds: timeoutIds.concat(timeoutId) });
-}
+// function setTimeoutForUpdatingCustomComponent(
+//   that,
+//   reactComponent,
+//   updateSeconds,
+//   componentNumber
+// ) {
+//   // eslint-disable-line require-jsdoc
+//   const timeoutId = setTimeout(() => {
+//     // Update the counter for this component. Handle various undefined cases.
+//     const updateCounters = that.props.feature.updateCounters;
+//     const counterObject = {
+//       reactComponent: reactComponent,
+//       counter:
+//         defined(updateCounters) && defined(updateCounters[componentNumber])
+//           ? updateCounters[componentNumber].counter + 1
+//           : 1
+//     };
+//     if (!defined(that.props.feature.updateCounters)) {
+//       const counters = {};
+//       counters[componentNumber] = counterObject;
+//       that.props.feature.updateCounters = counters;
+//     } else {
+//       that.props.feature.updateCounters[componentNumber] = counterObject;
+//     }
+//     // And finish by triggering the next timeout, but do this in another timeout so we aren't nesting setStates.
+//     setTimeout(() => {
+//       setTimeoutForUpdatingCustomComponent(
+//         that,
+//         reactComponent,
+//         updateSeconds,
+//         componentNumber
+//       );
+//       // console.log('Removing ' + timeoutId + ' from', that.state.timeoutIds);
+//       that.setState({
+//         timeoutIds: that.state.timeoutIds.filter(id => timeoutId !== id)
+//       });
+//     }, 5);
+//   }, updateSeconds * 1000);
+//   const timeoutIds = that.state.timeoutIds;
+//   that.setState({ timeoutIds: timeoutIds.concat(timeoutId) });
+// }
 
 // See if text contains the number (to a precision number of digits (after the dp) either fixed up or down on the last digit).
 function contains(text, number, precision) {

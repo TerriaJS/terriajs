@@ -39,9 +39,10 @@ export default class ShareDataService {
 
   get isUsable(): boolean {
     return (
-      this.url !== undefined &&
-      typeof this._serverConfig === "object" &&
-      typeof this._serverConfig.newShareUrlPrefix === "string"
+      (this.url !== undefined &&
+        typeof this._serverConfig === "object" &&
+        typeof this._serverConfig.newShareUrlPrefix === "string") ||
+      this.url !== "share"
     );
   }
 

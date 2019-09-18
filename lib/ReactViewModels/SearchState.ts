@@ -1,4 +1,4 @@
-import CatalogItemNameSearchProviderViewModel from "../ViewModels/CatalogItemNameSearchProviderViewModel";
+// import CatalogItemNameSearchProviderViewModel from "../ViewModels/CatalogItemNameSearchProviderViewModel";
 import {
   observable,
   reaction,
@@ -9,6 +9,7 @@ import {
 import Terria from "../Models/Terria";
 import SearchProviderResults from "../Models/SearchProviderResults";
 import SearchProvider from "../Models/SearchProvider";
+import filterOutUndefined from "../Core/filterOutUndefined";
 
 interface SearchStateOptions {
   terria: Terria;
@@ -18,7 +19,7 @@ interface SearchStateOptions {
 
 export default class SearchState {
   @observable
-  catalogSearchProvider: SearchProvider;
+  catalogSearchProvider: SearchProvider | undefined;
 
   @observable locationSearchProviders: SearchProvider[];
 
@@ -44,16 +45,18 @@ export default class SearchState {
   private _unifiedSearchDisposer: IReactionDisposer;
 
   constructor(options: SearchStateOptions) {
-    this.catalogSearchProvider =
-      options.catalogSearchProvider ||
-      new CatalogItemNameSearchProviderViewModel({ terria: options.terria });
+    // this.catalogSearchProvider =
+    //   options.catalogSearchProvider ||
+    //   new CatalogItemNameSearchProviderViewModel({ terria: options.terria });
     this.locationSearchProviders = options.locationSearchProviders || [];
 
     this._catalogSearchDisposer = reaction(
       () => this.catalogSearchText,
       () => {
         this.isWaitingToStartCatalogSearch = true;
-        this.catalogSearchResults = this.catalogSearchProvider.search("");
+        if (this.catalogSearchProvider) {
+          this.catalogSearchResults = this.catalogSearchProvider.search("");
+        }
       }
     );
 
@@ -90,7 +93,9 @@ export default class SearchState {
 
   @computed
   get unifiedSearchProviders() {
-    return [this.catalogSearchProvider].concat(this.locationSearchProviders);
+    return filterOutUndefined(
+      [this.catalogSearchProvider].concat(this.locationSearchProviders)
+    );
   }
 
   @action
@@ -100,9 +105,11 @@ export default class SearchState {
       if (this.catalogSearchResults) {
         this.catalogSearchResults.isCanceled = true;
       }
-      this.catalogSearchResults = this.catalogSearchProvider.search(
-        this.catalogSearchText
-      );
+      if (this.catalogSearchProvider) {
+        this.catalogSearchResults = this.catalogSearchProvider.search(
+          this.catalogSearchText
+        );
+      }
     }
   }
 

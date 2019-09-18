@@ -1,12 +1,18 @@
 import countBy from "lodash-es/countBy";
 import { computed } from "mobx";
-import RegionProvider from "../Map/RegionProvider";
-import RegionProviderList from "../Map/RegionProviderList";
+import JSRegionProvider from "../Map/RegionProvider";
+import JSRegionProviderList from "../Map/RegionProviderList";
 import createCombinedModel from "../Models/createCombinedModel";
 import Model from "../Models/Model";
 import TableColumnTraits from "../Traits/TableColumnTraits";
 import TableTraits from "../Traits/TableTraits";
 import TableColumnType, { stringToTableColumnType } from "./TableColumnType";
+
+// TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
+//   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
+// This is a dodgy workaround.
+class RegionProviderList extends JSRegionProviderList {}
+class RegionProvider extends JSRegionProvider {}
 
 interface TableModel extends Model<TableTraits> {
   readonly dataColumnMajor: string[][] | undefined;
@@ -20,6 +26,14 @@ export interface ColumnValuesAsNumbers {
   readonly maximum: number | undefined;
   readonly numberOfValidNumbers: number;
   readonly numberOfNonNumbers: number;
+}
+
+export interface ColumnValuesAsDates {
+  readonly values: ReadonlyArray<Date | null>;
+  readonly minimum: Date | undefined;
+  readonly maximum: Date | undefined;
+  readonly numberOfValidDates: number;
+  readonly numberOfNonDates: number;
 }
 
 export interface ColumnValuesAsRegions {
@@ -133,6 +147,59 @@ export default class TableColumn {
   }
 
   /**
+   * Gets the column values as dates, and returns information about how many
+   * rows were successfully converted to dates and the range of values.
+   */
+  @computed
+  get valuesAsDates(): ColumnValuesAsDates {
+    // See ECMA-262 section 15.9.1.1
+    // http://ecma-international.org/ecma-262/5.1/#sec-15.9.1.1
+    const maxDate = new Date(8.64e15);
+    const minDate = new Date(-8.64e15);
+
+    const dates: (Date | null)[] = [];
+    let minimum = maxDate;
+    let maximum = minDate;
+    let numberOfValidDates = 0;
+    let numberOfNonDates = 0;
+
+    const replaceWithNull = this.traits.replaceWithNullValues;
+
+    const values = this.values;
+    for (let i = 0; i < values.length; ++i) {
+      const value = values[i];
+
+      let d: Date | null;
+      if (replaceWithNull && replaceWithNull.indexOf(value) >= 0) {
+        d = null;
+      } else if (value.length === 0) {
+        d = null;
+      } else {
+        d = toDate(values[i]);
+        if (d === null) {
+          ++numberOfNonDates;
+        }
+      }
+
+      if (d !== null) {
+        ++numberOfValidDates;
+        minimum = d < minimum ? d : minimum;
+        maximum = d > maximum ? d : maximum;
+      }
+
+      dates.push(d);
+    }
+
+    return {
+      values: dates,
+      minimum: minimum === maxDate ? undefined : minimum,
+      maximum: maximum === minDate ? undefined : maximum,
+      numberOfValidDates: numberOfValidDates,
+      numberOfNonDates: numberOfNonDates
+    };
+  }
+
+  /**
    * Gets the unique values in this column.
    */
   @computed
@@ -225,7 +292,7 @@ export default class TableColumn {
   }
 
   findMatchingRegion(
-    regionType: typeof RegionProvider,
+    regionType: RegionProvider,
     rowValue: string
   ): string | null {
     // TODO: validate that the rowValue is actually a valid region, if possible.
@@ -257,12 +324,13 @@ export default class TableColumn {
    */
   @computed
   get traits(): Model<TableColumnTraits> {
-    if (
-      this.columnNumber >= 0 &&
-      this.columnNumber < this.tableModel.columns.length
-    ) {
+    // It is important to match on column name and not column number because the column numbers can vary between stratum
+    const thisColumn = this.tableModel.columns.find(
+      column => column.name === this.name
+    );
+    if (thisColumn !== undefined) {
       const result = createCombinedModel(
-        this.tableModel.columns[this.columnNumber],
+        thisColumn,
         this.tableModel.defaultColumn
       );
       return result;
@@ -328,7 +396,7 @@ export default class TableColumn {
   }
 
   @computed
-  get regionType(): typeof RegionProvider | undefined {
+  get regionType(): RegionProvider | undefined {
     const regions = this.tableModel.regionProviderList;
     if (regions === undefined) {
       return undefined;
@@ -342,7 +410,7 @@ export default class TableColumn {
 
     // No region type specified, so match the column name against the region
     // aliases.
-    const details = regions.getRegionDetails([this.name]);
+    const details = regions.getRegionDetails([this.name], undefined, undefined);
     if (details.length > 0) {
       return details[0].regionProvider;
     }
@@ -465,6 +533,15 @@ function toNumber(value: string): number | null {
   const asNumber = Number(withoutCommas);
   if (!Number.isNaN(asNumber)) {
     return asNumber;
+  }
+  return null;
+}
+
+function toDate(value: string): Date | null {
+  // TODO: Add much more sophisticated date parsing from old TableColumn.convertToDates.
+  const ms = Date.parse(value);
+  if (!Number.isNaN(ms)) {
+    return new Date(ms);
   }
   return null;
 }
