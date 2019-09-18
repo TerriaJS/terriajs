@@ -296,9 +296,10 @@ export default class Terria {
         this.serverConfig = new ServerConfig();
         return this.serverConfig
           .init(this.configParameters.serverConfigUrl)
-          .then((serverConfig: any) =>
-            this.initCorsProxy(this.configParameters, serverConfig)
-          );
+          .then((serverConfig: any) => {
+            this.initCorsProxy(this.configParameters, serverConfig);
+            return serverConfig;
+          });
       })
       .then(serverConfig => {
         if (this.shareDataService && serverConfig) {
