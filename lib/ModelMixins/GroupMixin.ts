@@ -63,17 +63,19 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
      */
     loadMembers(): Promise<void> {
       return this._memberLoader.load().finally(() => {
-        runInAction(() => {
-          if (this.uniqueId) {
-            for (let memberModel of this.memberModels) {
-              if (
-                memberModel.knownContainerUniqueIds.indexOf(this.uniqueId) < 0
-              ) {
-                memberModel.knownContainerUniqueIds.push(this.uniqueId);
-              }
-            }
-          }
-        });
+        if (this.uniqueId) {
+          this.refreshKnownContainerUniqueIds(this.uniqueId);
+        }
+      });
+    }
+
+    @action
+    refreshKnownContainerUniqueIds(uniqueId: string | undefined): void {
+      if (!uniqueId) return;
+      this.memberModels.forEach((model: BaseModel) => {
+        if (model.knownContainerUniqueIds.indexOf(uniqueId) < 0) {
+          model.knownContainerUniqueIds.push(uniqueId);
+        }
       });
     }
 

@@ -1,5 +1,6 @@
 import { runInAction, computed } from "mobx";
 import TerriaError from "../Core/TerriaError";
+import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../ModelMixins/TableMixin";
@@ -26,16 +27,22 @@ import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 
 const automaticTableStylesStratumName = "automaticTableStyles";
 
-export default class CsvCatalogItem extends AsyncMappableMixin(
-  AutoRefreshingMixin(
-    TableMixin(UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits))))
+export default class CsvCatalogItem extends TableMixin(
+  AsyncChartableMixin(
+    AsyncMappableMixin(
+      AutoRefreshingMixin(
+        UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
+      )
+    )
   )
 ) {
   static get type() {
     return "csv";
   }
 
-  constructor(id: string, terria: Terria) {
+  private _csvFile?: File;
+
+  constructor(id: string | undefined, terria: Terria) {
     super(id, terria);
     this.strata.set(
       automaticTableStylesStratumName,
@@ -45,6 +52,10 @@ export default class CsvCatalogItem extends AsyncMappableMixin(
 
   get type() {
     return CsvCatalogItem.type;
+  }
+
+  setFileInput(file: File) {
+    this._csvFile = file;
   }
 
   /*
@@ -88,32 +99,28 @@ export default class CsvCatalogItem extends AsyncMappableMixin(
     );
   }
 
-  protected get loadMapItemsPromise(): Promise<void> {
-    return this.loadTableMixin()
-      .then(() => {
-        if (this.csvString !== undefined) {
-          return Csv.parseString(this.csvString, true);
-        } else if (this.url !== undefined) {
-          return Csv.parseUrl(proxyCatalogItemUrl(this, this.url, "1d"), true);
-        } else {
-          throw new TerriaError({
-            sender: this,
-            title: "No CSV available",
-            message:
-              "The CSV catalog item cannot be loaded because it was not configured " +
-              "with a `url` or `csvString` property."
-          });
-        }
-      })
-      .then(dataColumnMajor => {
-        runInAction(() => {
-          this.dataColumnMajor = dataColumnMajor;
-        });
-      });
-  }
-
   protected forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
+  }
+
+  protected forceLoadTableData(): Promise<string[][]> {
+    if (this.csvString !== undefined) {
+      return Csv.parseString(this.csvString, true);
+    } else if (this.url !== undefined) {
+      return Csv.parseUrl(proxyCatalogItemUrl(this, this.url, "1d"), true);
+    } else if (this._csvFile !== undefined) {
+      return Csv.parseFile(this._csvFile, true);
+    } else {
+      return Promise.reject(
+        new TerriaError({
+          sender: this,
+          title: "No CSV available",
+          message:
+            "The CSV catalog item cannot be loaded because it was not configured " +
+            "with a `url` or `csvString` property."
+        })
+      );
+    }
   }
 }
 

@@ -1,17 +1,20 @@
+import { computed } from "mobx";
+import { createTransformer } from "mobx-utils";
+import DiscreteColorMap from "../Map/DiscreteColorMap";
+import EnumColorMap from "../Map/EnumColorMap";
 import createStratumInstance from "../Models/createStratumInstance";
 import CsvCatalogItem from "../Models/CsvCatalogItem";
 import LoadableStratum from "../Models/LoadableStratum";
 import StratumFromTraits from "../Models/StratumFromTraits";
 import CsvCatalogItemTraits from "../Traits/CsvCatalogItemTraits";
+import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
+import TableChartStyleTraits, {
+  TableChartLineStyleTraits
+} from "../Traits/TableChartStyleTraits";
 import TableColorStyleTraits from "../Traits/TableColorStyleTraits";
 import TableStyleTraits from "../Traits/TableStyleTraits";
 import TableColumnType from "./TableColumnType";
-import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
-import { computed } from "mobx";
-import { createTransformer } from "mobx-utils";
-import DiscreteColorMap from "../Map/DiscreteColorMap";
 import TableStyle from "./TableStyle";
-import EnumColorMap from "../Map/EnumColorMap";
 
 export default class TableAutomaticStylesStratum extends LoadableStratum(
   CsvCatalogItemTraits
@@ -34,13 +37,42 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
       TableColumnType.region
     );
 
-    return createStratumInstance(TableStyleTraits, {
-      longitudeColumn:
-        longitudeColumn && latitudeColumn ? longitudeColumn.name : undefined,
-      latitudeColumn:
-        longitudeColumn && latitudeColumn ? latitudeColumn.name : undefined,
-      regionColumn: regionColumn ? regionColumn.name : undefined
-    });
+    if (
+      regionColumn !== undefined ||
+      (longitudeColumn !== undefined && latitudeColumn !== undefined)
+    ) {
+      return createStratumInstance(TableStyleTraits, {
+        longitudeColumn:
+          longitudeColumn && latitudeColumn ? longitudeColumn.name : undefined,
+        latitudeColumn:
+          longitudeColumn && latitudeColumn ? latitudeColumn.name : undefined,
+        regionColumn: regionColumn ? regionColumn.name : undefined
+      });
+    }
+
+    // This dataset isn't spatial, so try to find some columns to
+    // plot on a chart.
+    const scalarColumns = this.catalogItem.tableColumns.filter(
+      column =>
+        column.type === TableColumnType.scalar ||
+        column.type === TableColumnType.time
+    );
+
+    if (scalarColumns.length >= 2) {
+      return createStratumInstance(TableStyleTraits, {
+        chart: createStratumInstance(TableChartStyleTraits, {
+          xAxisColumn: scalarColumns[0].name,
+          lines: scalarColumns.slice(1).map(column =>
+            createStratumInstance(TableChartLineStyleTraits, {
+              yAxisColumn: column.name
+            })
+          )
+        })
+      });
+    }
+
+    // Can't do much with this dataset.
+    return createStratumInstance(TableStyleTraits);
   }
 
   @computed

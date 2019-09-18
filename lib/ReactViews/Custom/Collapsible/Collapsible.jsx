@@ -52,4 +52,5 @@ const Collapsible = createReactClass({
     );
   }
 });
-module.exports = Collapsible;
+
+export default Collapsible;
