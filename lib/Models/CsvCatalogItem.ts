@@ -1,4 +1,4 @@
-import { runInAction } from "mobx";
+import { runInAction, computed } from "mobx";
 import TerriaError from "../Core/TerriaError";
 import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
@@ -12,6 +12,7 @@ import CreateModel from "./CreateModel";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
+import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 
 // Types of CSVs:
 // - Points - Latitude and longitude columns or address
@@ -29,7 +30,9 @@ const automaticTableStylesStratumName = "automaticTableStyles";
 export default class CsvCatalogItem extends TableMixin(
   AsyncChartableMixin(
     AsyncMappableMixin(
-      UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
+      AutoRefreshingMixin(
+        UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
+      )
     )
   )
 ) {
@@ -53,6 +56,47 @@ export default class CsvCatalogItem extends TableMixin(
 
   setFileInput(file: File) {
     this._csvFile = file;
+  }
+
+  /*
+   * The polling URL to use for refreshing data.
+   */
+  @computed get refreshUrl() {
+    return this.polling.url || this.url;
+  }
+
+  /*
+   * Called by AutoRefreshingMixin to get the polling interval
+   */
+  @computed get refreshInterval() {
+    if (this.refreshUrl) {
+      return this.polling.seconds;
+    }
+  }
+
+  /*
+   * Hook called by AutoRefreshingMixin to refresh data.
+   *
+   * The refresh happens only if a `refreshUrl` is defined.
+   * If `shouldReplaceData` is true, then the new data replaces current data,
+   * otherwise new data is appended to current data.
+   */
+  refreshData() {
+    if (!this.refreshUrl) {
+      return;
+    }
+
+    Csv.parseUrl(proxyCatalogItemUrl(this, this.refreshUrl, "1d"), true).then(
+      dataColumnMajor => {
+        runInAction(() => {
+          if (this.polling.shouldReplaceData) {
+            this.dataColumnMajor = dataColumnMajor;
+          } else {
+            this.append(dataColumnMajor);
+          }
+        });
+      }
+    );
   }
 
   protected forceLoadMetadata(): Promise<void> {

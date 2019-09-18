@@ -1,7 +1,8 @@
-import { computed, observable, runInAction } from "mobx";
+import { computed, observable, runInAction, action } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
+import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
@@ -252,6 +253,31 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
 
     protected forceLoadMapItems() {
       return this._dataLoader.load();
+    }
+
+    /*
+     * Appends new table data in column major format to this table.
+     * It is assumed that thhe column order is the same for both the tables.
+     */
+    @action
+    append(dataColumnMajor2: string[][]) {
+      if (
+        this.dataColumnMajor !== undefined &&
+        this.dataColumnMajor.length !== dataColumnMajor2.length
+      ) {
+        throw new DeveloperError(
+          "Cannot add tables with different numbers of columns."
+        );
+      }
+
+      const appended = this.dataColumnMajor || [];
+      dataColumnMajor2.forEach((newRows, col) => {
+        if (appended[col] === undefined) {
+          appended[col] = [];
+        }
+        appended[col].push(...newRows);
+      });
+      this.dataColumnMajor = appended;
     }
 
     private readonly createLongitudeLatitudeDataSource = createTransformer(
