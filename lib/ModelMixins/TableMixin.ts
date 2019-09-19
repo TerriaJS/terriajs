@@ -186,7 +186,11 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
     }
 
     @computed
-    get styleSelector(): SelectableStyle {
+    get styleSelector(): SelectableStyle | undefined {
+      if (this.mapItems.length === 0) {
+        return;
+      }
+
       const tableModel = this;
       return {
         get id(): string {
@@ -213,8 +217,12 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
     }
 
     get legends(): readonly ModelPropertiesFromTraits<LegendTraits>[] {
-      const colorLegend = this.activeTableStyle.colorTraits.legend;
-      return filterOutUndefined([colorLegend]);
+      if (this.mapItems.length > 0) {
+        const colorLegend = this.activeTableStyle.colorTraits.legend;
+        return filterOutUndefined([colorLegend]);
+      } else {
+        return [];
+      }
     }
 
     findFirstColumnByType(type: TableColumnType): TableColumn | undefined {
