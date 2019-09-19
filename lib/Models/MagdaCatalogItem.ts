@@ -36,7 +36,7 @@ export default class MagdaCatalogItem extends MagdaMixin(
     }),
     createStratumInstance(MagdaDistributionFormatTraits, {
       id: "EsriMapServer",
-      formatRegex: "^esri rest$",
+      formatRegex: "^esri (rest|tiled map service)$",
       urlRegex: "MapServer",
       definition: {
         type: "esri-mapServer"

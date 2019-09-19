@@ -47,6 +47,7 @@ import upsertModelFromJson from "./upsertModelFromJson";
 import Workbench from "./Workbench";
 import CorsProxy from "../Core/CorsProxy";
 import TimeVarying from "../ModelMixins/TimeVarying";
+import MagdaCatalogGroup from "./MagdaCatalogGroup";
 
 interface ConfigParameters {
   [key: string]: ConfigParameters[keyof ConfigParameters];
@@ -277,7 +278,7 @@ export default class Terria {
           }
 
           if (config.aspects) {
-            return this.loadMagdaConfig(config);
+            return this.loadMagdaConfig(options.configUrl, config);
           }
 
           const initializationUrls: string[] = config.initializationUrls;
@@ -599,7 +600,7 @@ export default class Terria {
     });
   }
 
-  loadMagdaConfig(config: any) {
+  loadMagdaConfig(configUrl: string, config: any) {
     const aspects = config.aspects;
     const configParams =
       aspects["terria-config"] && aspects["terria-config"].parameters;
@@ -611,8 +612,10 @@ export default class Terria {
       // Transform the Magda catalog structure to the Terria one.
       const members = aspects.group.members.map((member: any) => {
         return magdaRecordToCatalogMemberDefinition({
-          magdaBaseUrl: "http://saas.terria.io",
-          record: member
+          magdaBaseUrl: new URI(configUrl).path("").query("").toString(),
+          record: member,
+          // TODO: it'd be nice to actually use MagdaCatalogGroup rather than this hackery
+          distributionFormats: new MagdaCatalogGroup("", this).preparedDistributionFormats
         });
       });
 
@@ -753,7 +756,7 @@ function interpretHash(
 
   return promise.then((shareProps: any) => {
     runInAction(() => {
-      Object.keys(hashProperties).forEach(function(property) {
+      Object.keys(hashProperties).forEach(function (property) {
         const propertyValue = hashProperties[property];
         if (property === "clean") {
           terria.initSources.splice(0, terria.initSources.length);

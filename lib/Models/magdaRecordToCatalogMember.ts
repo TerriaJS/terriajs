@@ -1,7 +1,9 @@
-import { isJsonObject, JsonObject } from "../Core/Json";
+import { isJsonObject, JsonObject, isJsonString } from "../Core/Json";
 import MagdaDistributionFormatTraits from "../Traits/MagdaDistributionFormatTraits";
 import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
 import { toJS } from "mobx";
+import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
+import StratumFromTraits from "./StratumFromTraits";
 
 interface MagdaPreparedDistributionFormat {
   readonly formatRegex: RegExp | undefined;
@@ -70,6 +72,7 @@ export default function magdaRecordToCatalogMemberDefinition(
   const datasetDistributions = isJsonObject(maybeDatasetDistributions)
     ? maybeDatasetDistributions
     : {};
+  const datasetDcat = aspects["dcat-dataset-strings"];
 
   if (group && group.members) {
     // Represent as a Magda catalog group so that we can load members when
@@ -124,6 +127,20 @@ export default function magdaRecordToCatalogMemberDefinition(
     const distributions = Array.isArray(datasetDistributions.distributions)
       ? datasetDistributions.distributions
       : [];
+
+    // If the distributions haven't been dereferenced, we'll need to do that first,
+    // so create a Magda catalog item.
+    if (
+      distributions.length > 0 &&
+      !distributions.some(distribution => isJsonObject(distribution))
+    ) {
+      return {
+        name: record.name,
+        type: "magda",
+        url: options.magdaBaseUrl,
+        datasetId: record.id
+      };
+    }
 
     for (let i = 0; i < distributionFormats.length; ++i) {
       const distributionFormat = distributionFormats[i];
@@ -180,11 +197,31 @@ export default function magdaRecordToCatalogMemberDefinition(
           continue;
         }
 
+        const info: StratumFromTraits<InfoSectionTraits>[] = [];
+
+        if (
+          isJsonObject(datasetDcat) &&
+          isJsonString(datasetDcat.description)
+        ) {
+          info.push({
+            name: "Dataset Description",
+            content: datasetDcat.description
+          });
+        }
+
+        if (isJsonObject(dcatJson) && isJsonString(dcatJson.description)) {
+          info.push({
+            name: "Distribution Description",
+            content: dcatJson.description
+          });
+        }
+
         const completeDefinition = Object.assign(
           {
             name: options.name || record.name,
             localId: record.id,
-            url: url
+            url: url,
+            info: info
           },
           toJS(definition),
           toJS(distributionFormat.definition)
