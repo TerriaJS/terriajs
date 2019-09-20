@@ -53,6 +53,14 @@ interface ChartRendererProps {
   axisLabel?: { x: string; y: string };
 }
 
+type SelectedChartData = {
+  point: { x: any; y: any };
+  units: string | undefined;
+  color: string | undefined;
+  name: string | undefined;
+  onClick?: (x: number, y: number) => void | undefined;
+};
+
 class ChartRenderer {
   readonly element: HTMLElement;
 
@@ -207,7 +215,7 @@ class ChartRenderer {
    */
   @computed
   get chartItems() {
-    return this.props.items.reduce(
+    const x = this.props.items.reduce(
       (p, c) => {
         if (Chartable.is(c)) {
           return p.concat(c.chartItems);
@@ -216,6 +224,7 @@ class ChartRenderer {
       },
       [] as ChartData[]
     );
+    return x;
   }
 
   /**
@@ -500,7 +509,6 @@ class ChartRenderer {
         axis = axis
           .attr("class", "y axis")
           .attr("id", (unit: any) => `${unit}`);
-
         // subelement groups
         d3Sync(
           axis,
@@ -715,11 +723,10 @@ class ChartRenderer {
 function findSelectedData(
   chartItems: ChartData[],
   x: string | number | undefined
-) {
+): SelectedChartData[] | undefined {
   if (x === undefined) {
     return undefined;
   }
-
   // For each chart line (pointArray), find the point with the closest x to the mouse.
   const closestXPoints = chartItems.map(line =>
     line.points.reduce((previous, current) =>
@@ -739,14 +746,15 @@ function findSelectedData(
 
   const isSelectedArray = closestXPoints.map(nearlyEqualX);
   const selectedData = chartItems.filter((line, i) => isSelectedArray[i]);
-  // selectedData.forEach((line, i) => {
-  //   line.point = selectedPoints[i];
-  // }); // TODO: this adds the property to the original data - bad.
-  return selectedData;
+
+  // Add .point to each of the selectedData
+  return selectedData.map((line, i) => {
+    return { ...line, point: selectedPoints[i] };
+  });
 }
 
 function hilightData(
-  selectedData: ChartData[],
+  selectedData: SelectedChartData[],
   scales: {
     x: any;
     y: {

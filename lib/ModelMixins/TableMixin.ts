@@ -147,7 +147,6 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
 
       const xColumn = style.xAxisColumn;
       const lines = style.chartTraits.lines;
-      console.log("**lines**", lines);
       if (xColumn === undefined || lines.length === 0) {
         return [];
       }
