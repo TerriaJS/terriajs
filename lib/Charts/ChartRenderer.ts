@@ -354,10 +354,10 @@ class ChartRenderer {
     size.yAxesWidth = totalOffset;
 
     Title.enterUpdateAndExit(
-      chartSVGContainer,
+      d3Select(this.element),
       this.titleSettings,
       this.margin,
-      this.props.items,
+      chartItems,
       transitionDuration
     );
 
