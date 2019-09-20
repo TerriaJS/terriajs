@@ -214,7 +214,7 @@ class ChartRenderer {
    */
   @computed
   get chartItems() {
-    const x = this.props.items.reduce(
+    return this.props.items.reduce(
       (p, c) => {
         if (Chartable.is(c)) {
           return p.concat(c.chartItems);
@@ -223,7 +223,6 @@ class ChartRenderer {
       },
       [] as ChartData[]
     );
-    return x;
   }
 
   /**

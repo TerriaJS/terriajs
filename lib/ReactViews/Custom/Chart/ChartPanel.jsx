@@ -99,6 +99,7 @@ const ChartPanel = observer(
             // data={data}
             axisLabel={{ x: xUnits, y: undefined }}
             height={height - 34}
+            grid={{ x: true, y: true }}
           />
         );
       }
