@@ -147,6 +147,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
 
       const xColumn = style.xAxisColumn;
       const lines = style.chartTraits.lines;
+      console.log("**lines**", lines);
       if (xColumn === undefined || lines.length === 0) {
         return [];
       }
@@ -157,7 +158,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
           : xColumn.valuesAsNumbers.values;
 
       return filterOutUndefined(
-        lines.map(line => {
+        lines.map((line, lineId) => {
           const yColumn = line.yAxisColumn
             ? this.findColumnByName(line.yAxisColumn)
             : undefined;
@@ -176,8 +177,17 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
             points.push({ x, y });
           }
 
+          const color =
+            line.color !== undefined
+              ? line.color
+              : this.activeTableStyle.colorPalette
+                  .selectColor(lineId)
+                  .toCssColorString();
           const chartData = new ChartData({
-            points: points
+            name: yColumn.name,
+            categoryName: this.name,
+            points,
+            color
           });
 
           return chartData;
