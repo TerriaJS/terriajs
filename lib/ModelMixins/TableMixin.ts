@@ -186,6 +186,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
             name: yColumn.name,
             categoryName: this.name,
             points,
+            units: yColumn.traits.units,
             color
           });
 

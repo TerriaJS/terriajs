@@ -12,7 +12,6 @@ import { autorun, computed, IReactionDisposer, observable, trace } from "mobx";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
-import filterOutUndefined from "../Core/filterOutUndefined";
 import Chartable from "../Models/Chartable";
 import { BaseModel } from "../Models/Model";
 import raiseErrorOnRejectedPromise from "../Models/raiseErrorOnRejectedPromise";
@@ -232,12 +231,10 @@ class ChartRenderer {
    */
   @computed
   get units() {
-    return filterOutUndefined(
-      uniq(
-        this.chartItems
-          .filter(data => data.type !== "moment")
-          .map(data => data.units)
-      )
+    return uniq(
+      this.chartItems
+        .filter(data => data.type !== "moment")
+        .map(data => data.units)
     );
   }
 
@@ -537,7 +534,7 @@ class ChartRenderer {
       .forEach((node: any, yNodeIndex: number) => {
         const yNode = d3Select(node);
         const unit = this.units[yNodeIndex];
-        const scale = this.scales.y[unit];
+        const scale = this.scales.y[<any>unit];
 
         const numYTicks = Math.min(
           6,
@@ -635,7 +632,7 @@ class ChartRenderer {
       this.styling === "feature-info"
         ? this.size.plotHeight
         : Math.min(
-            Math.max(this.scales.y[this.units[0]](0), 0),
+            Math.max(this.scales.y[<any>this.units[0]](0), 0),
             this.size.plotHeight
           );
 
@@ -698,11 +695,15 @@ class ChartRenderer {
     }
   }
 
-  private computeYOffset(units: string[], scales: any, size: any) {
+  private computeYOffset(
+    units: (string | undefined)[],
+    scales: any,
+    size: any
+  ) {
     const numYTicks = Math.min(6, Math.floor(size.plotHeight / 30) + 1);
     const totalOffset: number[] = [];
     units.map((unit, index) => {
-      const scale = unit === undefined ? undefined : scales.y[unit];
+      const scale = scales.y[<any>unit];
       const tickFormat = scale.tickFormat();
       const tickValues =
         this.styling === "feature-info"
