@@ -14,7 +14,7 @@ export default class KmlCatalogItemTraits extends mixTraits(
 ) {
   @anyTrait({
     name: "kmlData",
-    description: "A DOM document"
+    description: "A kml document"
   })
   kmlData?: Document;
 

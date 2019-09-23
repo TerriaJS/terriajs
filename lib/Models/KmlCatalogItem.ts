@@ -2,8 +2,10 @@ import { computed } from "mobx";
 
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import isDefined from "../Core/isDefined";
 import KmlDataSource from "terriajs-cesium/Source/DataSources/KmlDataSource";
 import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
+import readXml from "../Core/readXml";
 import sampleTerrain from "terriajs-cesium/Source/Core/sampleTerrain";
 import TerriaError from "../Core/TerriaError";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
@@ -11,12 +13,7 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import CreateModel from "./CreateModel";
 import KmlCatalogItemTraits from "../Traits/KmlCatalogItemTraits"
 import UrlMixin from "../ModelMixins/UrlMixin";
-import isDefined from "../Core/isDefined";
-
 import Terria from "./Terria";
-
-const proxyCatalogItemUrl = require("./proxyCatalogItemUrl");
-import readXml from "../Core/readXml";
 
 const kmzRegex = /\.kmz$/i;
 
@@ -53,46 +50,55 @@ class KmlCatalogItem extends AsyncMappableMixin(
             `information, please email us at ` +
             `<a href="mailto:${this.terria.supportEmail}">${this.terria.supportEmail}></a>.`
         });
-      
-      this._dataSource = new KmlDataSource({
-        // Currently we don't pass camera and canvas, which are technically required as of Cesium v1.23.
-        // We get away with it because A) the code to check that they're supplied is removed
-        // in release builds of Cesium, and B) the code that actually uses them (building network
-        // link URLs) has guards so it won't totally fail if they're not supplied.  But for
-        // proper network link support, we'll need to figure out how to get those things in here,
-        // even though a single KmlCatalogItem can be shown on multiple maps.  Some refactoring of
-        // Cesium will be required.
-        proxy: {
-          // Don't cache resources referenced by the KML.
-          getURL: (url: string) =>
-            this.terria.corsProxy.getURLProxyIfNecessary(url, "0d")
-        }
-      });
 
-      return new Promise((resolve, reject) => {
+      return new Promise<string | Document | Blob>((resolve, reject) => {
         if (isDefined(this.kmlData)) {
-          return this._dataSource
-            .load(this.kmlData, proxyCatalogItemUrl(this, this.url, "1d"))
-            .then((kmlDataSource: KmlDataSource) => {
-              return doneLoading(kmlDataSource);
-            })
-            .catch(function() {
-              return createLoadError();
-            })
+          // TODO: fix type problem
+          resolve(this.kmlData);
         } else if (isDefined(this.kmlString)) {
-          var parser = new DOMParser();
+          const parser = new DOMParser();
           resolve(parser.parseFromString(this.kmlString, "text/xml"));
         } else if (isDefined(this._kmlFile)) {
-          resolve(readXml(this._kmlFile));
+          if (this.url && this.url.match(kmzRegex)) {
+            resolve(this.url);
+          } else {
+            resolve(readXml(this._kmlFile));
+          }
         } else if (isDefined(this.url)) {
-          resolve()
+          resolve(this.url);
+        } else {
+          throw new TerriaError({
+            sender: this,
+            title: "No CZML available",
+            message:
+              `The KML/KMZ catalog item cannot be loaded because it was not configured ` +
+              `with a \`url\`, \`kmlData\` or \`kmlString\` property.`
+          });
         }
       })
+        .then(kmlLoadInput => {
+          return KmlDataSource.load(kmlLoadInput);
+        })
+        .then(dataSource => {
+          this._dataSource = dataSource;
+          this.doneLoading(dataSource); // Unsure if this is necessary
+        })
+        .catch(e => {
+          if (e instanceof TerriaError) {
+            throw e;
+          } else {
+            throw createLoadError();
+          }
+        })
   }
 
   @computed
   get mapItems() {
-
+    if (this.isLoadingMapItems || this._dataSource === undefined) {
+      return [];
+    }
+    this._dataSource.show = this.show;
+    return [this._dataSource];
   }
 
   protected forceLoadMetadata(): Promise<void> {
@@ -102,17 +108,17 @@ class KmlCatalogItem extends AsyncMappableMixin(
   private doneLoading(kmlDataSource: KmlDataSource) {
     // Clamp features to terrain.
     if (isDefined(this.terria.cesium)) {
-      var positionsToSample : Cartesian3[] = [];
-      var correspondingCartesians : Cartesian3[] = [];
+      const positionsToSample : Cartesian3[] = [];
+      const correspondingCartesians : Cartesian3[] = [];
 
-      var entities = kmlDataSource.entities.values;
-      for (var i = 0; i < entities.length; ++i) {
-        var entity = entities[i];
+      const entities = kmlDataSource.entities.values;
+      for (let i = 0; i < entities.length; ++i) {
+        const entity = entities[i];
 
-        var polygon = entity.polygon;
+        const polygon = entity.polygon;
         if (isDefined(polygon)) {
           polygon.perPositionHeight = true;
-          var polygonHierarchy = polygon.hierarchy.getValue(); // assuming hierarchy is not time-varying
+          const polygonHierarchy = polygon.hierarchy.getValue(); // assuming hierarchy is not time-varying
           samplePolygonHierarchyPositions(
             polygonHierarchy,
             positionsToSample,
@@ -120,11 +126,10 @@ class KmlCatalogItem extends AsyncMappableMixin(
           );
         }
       }
-      var terrainProvider = this.terria.cesium.scene.globe.terrainProvider;
+      const terrainProvider = this.terria.cesium.scene.globe.terrainProvider;
       sampleTerrain(terrainProvider, 11, positionsToSample).then(function() {
-        var i;
-        for (i = 0; i < positionsToSample.length; ++i) {
-          var position = positionsToSample[i];
+        for (let i = 0; i < positionsToSample.length; ++i) {
+          const position = positionsToSample[i];
           if (!isDefined(position.height)) {
             continue;
           }
@@ -136,13 +141,13 @@ class KmlCatalogItem extends AsyncMappableMixin(
         }
 
         // Force the polygons to be rebuilt.
-        for (i = 0; i < entities.length; ++i) {
-          var polygon = entities[i].polygon;
+        for (let i = 0; i < entities.length; ++i) {
+          const polygon = entities[i].polygon;
           if (!isDefined(polygon)) {
             continue;
           }
 
-          var existingHierarchy = polygon.hierarchy.getValue();
+          const existingHierarchy = polygon.hierarchy.getValue();
           polygon.hierarchy = new PolygonHierarchy(
             existingHierarchy.positions,
             existingHierarchy.holes
@@ -160,6 +165,21 @@ function samplePolygonHierarchyPositions(
   positionsToSample: Cartesian3[],
   correspondingCartesians: Cartesian3[]
 ) {
-  
+  const positions = polygonHierarchy.positions;
+
+  for (let i = 0; i < positions.length; ++i) {
+    const position = positions[i];
+    correspondingCartesians.push(position);
+    positionsToSample.push(Ellipsoid.WGS84.cartesianToCartographic(position));
+  }
+
+  const holes = polygonHierarchy.holes;
+  for (let i = 0; i < holes.length; ++i) {
+    samplePolygonHierarchyPositions(
+      holes[i],
+      positionsToSample,
+      correspondingCartesians
+    );
+  }
 }
 
