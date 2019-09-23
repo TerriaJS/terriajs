@@ -118,6 +118,24 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       return ret;
     }
 
+    @computed
+    get xColumn(): TableColumn | undefined {
+      const x = this.activeTableStyle.xAxisColumn;
+      return this.activeTableStyle.xAxisColumn;
+    }
+
+    @computed
+    get yColumns(): TableColumn[] {
+      const lines = this.activeTableStyle.chartTraits.lines;
+      return filterOutUndefined(
+        lines.map(line =>
+          line.yAxisColumn === undefined
+            ? undefined
+            : this.findColumnByName(line.yAxisColumn)
+        )
+      );
+    }
+
     /**
      * Gets the items to show on the map.
      */
