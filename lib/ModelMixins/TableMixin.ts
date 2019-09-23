@@ -176,18 +176,19 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
             points.push({ x, y });
           }
 
-          const color =
-            line.color !== undefined
-              ? line.color
-              : this.activeTableStyle.colorPalette
-                  .selectColor(lineId)
-                  .toCssColorString();
+          let colorString = line.color;
+          if (colorString === undefined) {
+            const color = this.activeTableStyle.colorPalette.selectColor(
+              lineId
+            );
+            colorString = color ? color.toCssColorString() : undefined;
+          }
           const chartData = new ChartData({
             name: yColumn.name,
             categoryName: this.name,
             points,
             units: yColumn.traits.units,
-            color
+            color: colorString
           });
 
           return chartData;
