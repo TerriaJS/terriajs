@@ -24,12 +24,6 @@ export default class NewChart extends React.PureComponent {
     }
   }
 
-  componentDidUpdate() {
-    runInAction(() => {
-      this._chartRenderer.props = this.props;
-    });
-  }
-
   componentWillUnmount() {
     this.destroyChart();
   }
