@@ -1,6 +1,29 @@
 Change Log
 ==========
 
+### next patch
+
+* Allow MapboxMapCatalogItems to be specified in catalog files using type "mapbox-map".
+
+### v7.6.11
+
+* Added a workaround for a bug in Google Chrome v76 and v77 that caused problems with sizing of the bottom dock, such as cutting off the timeline and flickering on and off over the map.
+* Set cesium rendering resolution to CSS pixel resolution. This is required because Cesium renders in native device resolution since 1.61.0.
+
+### v7.6.10
+
+* Fixed error when opening a URL shared from an explorer tab. #3614
+* Resolve a bug with `SdmxJsonCatalogItem`'s v2.0 where they were being redrawn when dimensions we're changed. #3659
+* Upgrades terriajs-cesium to 1.61.0
+
+### v7.6.9
+
+* Automatically set `linkedWcsCoverage` on a WebMapServiceCatalogItem.
+
+### v7.6.8
+
+* Added ability in TerriaJsonCatalogFunction to handle long requests via HTTP:202 Accepted.
+
 ### v7.6.7
 
 * Fixed share disclaimer to warn only when user has added items that cannot be shared.
