@@ -3,8 +3,8 @@ import UrlTraits from "./UrlTraits";
 import MappableTraits from "./MappableTraits";
 import mixTraits from "./mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import anyTrait from "./anyTrait";
 import primitiveTrait from "./primitiveTrait";
+import anyTrait from "./anyTrait";
 
 export default class KmlCatalogItemTraits extends mixTraits(
   FeatureInfoTraits,
@@ -14,7 +14,7 @@ export default class KmlCatalogItemTraits extends mixTraits(
 ) {
   @anyTrait({
     name: "kmlData",
-    description: "A kml document"
+    description: "An XML document"
   })
   kmlData?: Document;
 
