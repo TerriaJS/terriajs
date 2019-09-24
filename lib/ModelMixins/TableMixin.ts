@@ -118,6 +118,24 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       return ret;
     }
 
+    @computed
+    get xColumn(): TableColumn | undefined {
+      const x = this.activeTableStyle.xAxisColumn;
+      return this.activeTableStyle.xAxisColumn;
+    }
+
+    @computed
+    get yColumns(): TableColumn[] {
+      const lines = this.activeTableStyle.chartTraits.lines;
+      return filterOutUndefined(
+        lines.map(line =>
+          line.yAxisColumn === undefined
+            ? undefined
+            : this.findColumnByName(line.yAxisColumn)
+        )
+      );
+    }
+
     /**
      * Gets the items to show on the map.
      */
@@ -157,7 +175,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
           : xColumn.valuesAsNumbers.values;
 
       return filterOutUndefined(
-        lines.map(line => {
+        lines.map((line, lineId) => {
           const yColumn = line.yAxisColumn
             ? this.findColumnByName(line.yAxisColumn)
             : undefined;
@@ -176,8 +194,19 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
             points.push({ x, y });
           }
 
+          let colorString = line.color;
+          if (colorString === undefined) {
+            const color = this.activeTableStyle.colorPalette.selectColor(
+              lineId
+            );
+            colorString = color ? color.toCssColorString() : undefined;
+          }
           const chartData = new ChartData({
-            points: points
+            name: yColumn.name,
+            categoryName: this.name,
+            points,
+            units: yColumn.traits.units,
+            color: colorString
           });
 
           return chartData;
@@ -186,7 +215,11 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
     }
 
     @computed
-    get styleSelector(): SelectableStyle {
+    get styleSelector(): SelectableStyle | undefined {
+      if (this.mapItems.length === 0) {
+        return;
+      }
+
       const tableModel = this;
       return {
         get id(): string {
@@ -213,8 +246,12 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
     }
 
     get legends(): readonly ModelPropertiesFromTraits<LegendTraits>[] {
-      const colorLegend = this.activeTableStyle.colorTraits.legend;
-      return filterOutUndefined([colorLegend]);
+      if (this.mapItems.length > 0) {
+        const colorLegend = this.activeTableStyle.colorTraits.legend;
+        return filterOutUndefined([colorLegend]);
+      } else {
+        return [];
+      }
     }
 
     findFirstColumnByType(type: TableColumnType): TableColumn | undefined {
