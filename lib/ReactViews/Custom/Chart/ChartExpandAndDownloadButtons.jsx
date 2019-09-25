@@ -73,25 +73,6 @@ const ChartExpandAndDownloadButtons = createReactClass({
       return null;
     }
 
-    // This feels very smelly but it works for the AREMI layers
-    // chartData for a catalogItem returns stuff like
-    // {x: "Butlers Gorge Power Station", y: 67.33}
-    // Occassionally y is null so we know we can't plot it
-    // {x: "Some Station", y: null}
-    // But there isn't a good way to get the chartData for a feature
-    // which is what we ideally need
-    // It doesn't work for SensorObservationService data where chartData is undefined
-    let btnsShouldBeDisabled = false;
-    const f = this.props.feature;
-    const chartData = this.props.catalogItem.chartData();
-    if (defined(chartData) && defined(chartData[0])) {
-      chartData[0].points.forEach(function(p) {
-        if (p.x === f._name && p.y === null) {
-          btnsShouldBeDisabled = true;
-        }
-      });
-    }
-
     // The downloads and download names default to the sources and source names if not defined.
     const downloads = this.props.downloads || this.props.sources;
     const downloadNames = this.props.downloadNames || this.props.sourceNames;
@@ -121,7 +102,6 @@ const ChartExpandAndDownloadButtons = createReactClass({
             selectOption={this.downloadDropdown}
             options={nameAndHrefObjects}
             theme={downloadDropdownTheme}
-            disabled={btnsShouldBeDisabled}
           >
             Download&nbsp;▾
           </Dropdown>
@@ -139,7 +119,6 @@ const ChartExpandAndDownloadButtons = createReactClass({
               selectOption={this.expandDropdown}
               options={sourceNameObjects}
               theme={dropdownTheme}
-              disabled={btnsShouldBeDisabled}
             >
               Expand&nbsp;▾
             </Dropdown>
@@ -165,7 +144,6 @@ const ChartExpandAndDownloadButtons = createReactClass({
           type="button"
           className={Styles.btnChartExpand}
           onClick={this.expandButton}
-          disabled={btnsShouldBeDisabled}
         >
           Expand
         </button>
