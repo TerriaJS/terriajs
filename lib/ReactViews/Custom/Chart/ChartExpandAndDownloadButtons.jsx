@@ -6,6 +6,8 @@ import clone from "terriajs-cesium/Source/Core/clone";
 import raiseErrorOnRejectedPromise from "../../../Models/raiseErrorOnRejectedPromise";
 import Dropdown from "../../Generic/Dropdown";
 import Styles from "./chart-expand-and-download-buttons.scss";
+import Icon from "../../Icon";
+import defined from "terriajs-cesium/Source/Core/defined";
 
 export default class ChartExpandAndDownloadButtons extends React.Component {
   static propTypes = {
