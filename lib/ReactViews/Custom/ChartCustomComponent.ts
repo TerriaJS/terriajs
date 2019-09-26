@@ -137,7 +137,7 @@ export default class ChartCustomComponent extends CustomComponent {
 
     const attrs = parseNodeAttrs(node.attribs);
     const chartElements = [];
-    if (node.attribs["hide-buttons"] !== "true") {
+    if (!attrs.hideButtons) {
       // Build expand/download buttons
       const sourceItems = (attrs.sources || []).map(
         (source: string, i: number) => {
@@ -339,7 +339,6 @@ function parseNodeAttrs(nodeAttrs: { [name: string]: string | undefined }) {
     }
   }
   const sourceNames = splitStringIfDefined(nodeAttrs["source-names"]);
-
   const downloads = splitStringIfDefined(nodeAttrs.downloads) || sources;
   const downloadNames =
     splitStringIfDefined(nodeAttrs["download-names"]) || sourceNames;
@@ -367,6 +366,7 @@ function parseNodeAttrs(nodeAttrs: { [name: string]: string | undefined }) {
 
   return {
     title: nodeAttrs["title"],
+    hideButtons: nodeAttrs["hide-buttons"] === "true",
     sources,
     sourceNames,
     canDownload: !(nodeAttrs["can-download"] === "false"),
