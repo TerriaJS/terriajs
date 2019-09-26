@@ -357,12 +357,9 @@ function parseNodeAttrs(nodeAttrs: { [name: string]: string | undefined }) {
     })
   );
 
-  let yColumns;
-  if (nodeAttrs["y-column"] || nodeAttrs["y-columns"]) {
-    yColumns = (nodeAttrs["y-column"] || nodeAttrs["y-columns"] || "").split(
-      ","
-    );
-  }
+  const yColumns = splitStringIfDefined(
+    nodeAttrs["y-columns"] || nodeAttrs["y-column"]
+  );
 
   return {
     title: nodeAttrs["title"],
