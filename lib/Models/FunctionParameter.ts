@@ -24,7 +24,7 @@ export default abstract class FunctionParameter {
 
   @observable value?: unknown;
 
-  geoJsonFeature?: Promise<Feature> | Feature | undefined;
+  readonly geoJsonFeature?: Promise<Feature> | Feature | undefined;
 
   constructor(options: Options) {
     this.id = options.id;
