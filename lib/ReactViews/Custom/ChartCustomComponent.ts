@@ -194,6 +194,13 @@ export default class ChartCustomComponent extends CustomComponent {
     attrs: ReturnType<typeof parseNodeAttrs>,
     sourceIndex: number
   ) {
+    // Set url
+    item.setTrait(
+      CommonStrata.user,
+      "url",
+      attrs.sources && attrs.sources[sourceIndex]
+    );
+
     // Set name
     let name = attrs.title;
     if (attrs.sourceNames && attrs.sourceNames[sourceIndex]) {
