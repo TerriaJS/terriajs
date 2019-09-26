@@ -151,7 +151,10 @@ const ZoomControl = createReactClass({
 
   zoomReset() {
     this.props.terria.analytics.logEvent("navigation", "click", "reset");
-    this.props.terria.currentViewer.zoomTo(this.props.terria.mainViewer.homeCamera, 1.5);
+    this.props.terria.currentViewer.zoomTo(
+      this.props.terria.mainViewer.homeCamera,
+      1.5
+    );
   },
 
   render() {

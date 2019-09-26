@@ -1,27 +1,35 @@
-import { computed, observable, runInAction } from "mobx";
+import { computed, observable, runInAction, action } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
+import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
+import ChartData, { ChartPoint } from "../Charts/ChartData";
+import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import { JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
-import RegionProviderList from "../Map/RegionProviderList";
+import JSRegionProviderList from "../Map/RegionProviderList";
 import { ImageryParts } from "../Models/Mappable";
 import Model from "../Models/Model";
+import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import SelectableStyle, { AvailableStyle } from "../Models/SelectableStyle";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
-import TableTraits from "../Traits/TableTraits";
-import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import LegendTraits from "../Traits/LegendTraits";
-import { JsonObject } from "../Core/Json";
+import TableTraits from "../Traits/TableTraits";
+
+// TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
+//   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
+// This is a dodgy workaround.
+class RegionProviderList extends JSRegionProviderList {}
 
 export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
   Base: T
@@ -39,6 +47,8 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
      */
     @observable
     regionProviderList: RegionProviderList | undefined;
+
+    private _dataLoader = new AsyncLoader(this.forceLoadTableMixin.bind(this));
 
     /**
      * Gets a {@link TableColumn} for each of the columns in the raw data.
@@ -108,6 +118,24 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       return ret;
     }
 
+    @computed
+    get xColumn(): TableColumn | undefined {
+      const x = this.activeTableStyle.xAxisColumn;
+      return this.activeTableStyle.xAxisColumn;
+    }
+
+    @computed
+    get yColumns(): TableColumn[] {
+      const lines = this.activeTableStyle.chartTraits.lines;
+      return filterOutUndefined(
+        lines.map(line =>
+          line.yAxisColumn === undefined
+            ? undefined
+            : this.findColumnByName(line.yAxisColumn)
+        )
+      );
+    }
+
     /**
      * Gets the items to show on the map.
      */
@@ -121,8 +149,70 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       ]);
     }
 
+    /**
+     * Gets the items to show on a chart.
+     */
     @computed
-    get styleSelector(): SelectableStyle {
+    get chartItems(): ChartData[] {
+      if (this.show === false) {
+        return [];
+      }
+
+      const style = this.activeTableStyle;
+      if (style === undefined || !style.isChart()) {
+        return [];
+      }
+
+      const xColumn = style.xAxisColumn;
+      const lines = style.chartTraits.lines;
+      if (xColumn === undefined || lines.length === 0) {
+        return [];
+      }
+
+      const xValues: readonly (Date | number | null)[] =
+        xColumn.type === TableColumnType.time
+          ? xColumn.valuesAsDates.values
+          : xColumn.valuesAsNumbers.values;
+
+      return filterOutUndefined(
+        lines.map((line, lineId) => {
+          const yColumn = line.yAxisColumn
+            ? this.findColumnByName(line.yAxisColumn)
+            : undefined;
+          if (yColumn === undefined) {
+            return undefined;
+          }
+          const yValues = yColumn.valuesAsNumbers.values;
+
+          const points: ChartPoint[] = [];
+          for (let i = 0; i < xValues.length; ++i) {
+            const x = xValues[i];
+            const y = yValues[i];
+            if (x === null || y === null) {
+              continue;
+            }
+            points.push({ x, y });
+          }
+
+          const chartData = new ChartData({
+            name: yColumn.name,
+            categoryName: this.name,
+            points,
+            units: yColumn.traits.units,
+            color: line.color
+          });
+
+          return chartData;
+        })
+      );
+    }
+
+    @computed
+    get styleSelector(): SelectableStyle | undefined {
+      if (this.mapItems.length === 0) {
+        return;
+      }
+
       const tableModel = this;
       return {
         get id(): string {
@@ -149,8 +239,12 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
     }
 
     get legends(): readonly ModelPropertiesFromTraits<LegendTraits>[] {
-      const colorLegend = this.activeTableStyle.colorTraits.legend;
-      return filterOutUndefined([colorLegend]);
+      if (this.mapItems.length > 0) {
+        const colorLegend = this.activeTableStyle.colorTraits.legend;
+        return filterOutUndefined([colorLegend]);
+      } else {
+        return [];
+      }
     }
 
     findFirstColumnByType(type: TableColumnType): TableColumn | undefined {
@@ -161,18 +255,59 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       return this.tableColumns.find(column => column.name === name);
     }
 
-    protected loadTableMixin(): Promise<void> {
-      // TODO: pass proxy to fromUrl
-      return makeRealPromise(
+    protected abstract forceLoadTableData(): Promise<string[][]>;
+
+    private forceLoadTableMixin(): Promise<void> {
+      const regionProvidersPromise: Promise<
+        RegionProviderList | undefined
+      > = makeRealPromise(
         RegionProviderList.fromUrl(
           this.terria.configParameters.regionMappingDefinitionsUrl,
-          undefined
+          this.terria.corsProxy
         )
-      ).then(regionProviderList => {
-        runInAction(() => {
-          this.regionProviderList = regionProviderList;
-        });
+      );
+      const dataPromise = this.forceLoadTableData();
+      return Promise.all([regionProvidersPromise, dataPromise]).then(
+        ([regionProviderList, dataColumnMajor]) => {
+          runInAction(() => {
+            this.regionProviderList = regionProviderList;
+            this.dataColumnMajor = dataColumnMajor;
+          });
+        }
+      );
+    }
+
+    protected forceLoadChartItems() {
+      return this._dataLoader.load();
+    }
+
+    protected forceLoadMapItems() {
+      return this._dataLoader.load();
+    }
+
+    /*
+     * Appends new table data in column major format to this table.
+     * It is assumed that thhe column order is the same for both the tables.
+     */
+    @action
+    append(dataColumnMajor2: string[][]) {
+      if (
+        this.dataColumnMajor !== undefined &&
+        this.dataColumnMajor.length !== dataColumnMajor2.length
+      ) {
+        throw new DeveloperError(
+          "Cannot add tables with different numbers of columns."
+        );
+      }
+
+      const appended = this.dataColumnMajor || [];
+      dataColumnMajor2.forEach((newRows, col) => {
+        if (appended[col] === undefined) {
+          appended[col] = [];
+        }
+        appended[col].push(...newRows);
       });
+      this.dataColumnMajor = appended;
     }
 
     private readonly createLongitudeLatitudeDataSource = createTransformer(
@@ -213,7 +348,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
               position: Cartesian3.fromDegrees(longitude, latitude, 0.0),
               point: new PointGraphics({
                 color: colorMap.mapValueToColor(value),
-                pixelSize: 5,
+                pixelSize: 15,
                 outlineWidth: 1,
                 outlineColor: outlineColor
               })
@@ -222,8 +357,8 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
           entity.properties = this.getRowValues(i);
         }
 
+        dataSource.show = this.show;
         dataSource.entities.resumeEvents();
-
         return dataSource;
       }
     );

@@ -127,14 +127,6 @@ export default class TableStyle {
   }
 
   /**
-   * Gets the chart Y-axis column for this style, if any.
-   */
-  @computed
-  get yAxisColumn(): TableColumn | undefined {
-    return this.resolveColumn(this.chartTraits.yAxisColumn);
-  }
-
-  /**
    * Gets the color column for this style, if any.
    */
   @computed
@@ -174,9 +166,8 @@ export default class TableStyle {
    */
   isChart(): this is {
     readonly xAxisColumn: TableColumn;
-    readonly yAxisColumn: TableColumn;
   } {
-    return this.xAxisColumn !== undefined && this.yAxisColumn !== undefined;
+    return this.xAxisColumn !== undefined && this.chartTraits.lines.length > 0;
   }
 
   @computed

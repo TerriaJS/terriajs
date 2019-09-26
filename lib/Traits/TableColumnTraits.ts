@@ -21,6 +21,13 @@ export default class TableColumnTraits extends ModelTraits {
   title?: string;
 
   @primitiveTrait({
+    name: "Units",
+    description: "The units for the column values.",
+    type: "string"
+  })
+  units?: string;
+
+  @primitiveTrait({
     name: "Type",
     description:
       "The type of the column. If not specified, the type is guessed from " +

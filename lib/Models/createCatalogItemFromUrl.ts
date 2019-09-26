@@ -11,6 +11,24 @@ export default function createCatalogItemFromUrl(
   allowLoad: boolean,
   _index?: number
 ): Promise<BaseModel | undefined> {
+  return createCatalogItemFromUrlWithOptions(
+    url,
+    terria,
+    allowLoad,
+    {},
+    _index
+  );
+}
+
+export function createCatalogItemFromUrlWithOptions(
+  url: string,
+  terria: Terria,
+  allowLoad: boolean,
+  options: {
+    id?: string;
+  },
+  _index?: number
+): Promise<BaseModel | undefined> {
   const index = _index || 0;
   if (index >= mapping.length) {
     return Promise.resolve(undefined);
@@ -19,7 +37,13 @@ export default function createCatalogItemFromUrl(
     (mapping[index].matcher && !mapping[index].matcher(url)) ||
     (mapping[index].requiresLoad && !allowLoad)
   ) {
-    return createCatalogItemFromUrl(url, terria, allowLoad, index + 1);
+    return createCatalogItemFromUrlWithOptions(
+      url,
+      terria,
+      allowLoad,
+      options,
+      index + 1
+    );
   } else {
     var item = upsertModelFromJson(
       CatalogMemberFactory,
@@ -27,7 +51,7 @@ export default function createCatalogItemFromUrl(
       "",
       undefined,
       CommonStrata.definition,
-      { type: mapping[index].type, name: url, url: url }
+      { type: mapping[index].type, name: url, url: url, id: options.id }
     );
 
     if (allowLoad && CatalogMemberMixin.isMixedInto(item)) {
@@ -35,7 +59,13 @@ export default function createCatalogItemFromUrl(
         .loadMetadata()
         .then(() => item)
         .catch(e => {
-          return createCatalogItemFromUrl(url, terria, allowLoad, index + 1);
+          return createCatalogItemFromUrlWithOptions(
+            url,
+            terria,
+            allowLoad,
+            options,
+            index + 1
+          );
         });
     } else {
       return Promise.resolve(item);

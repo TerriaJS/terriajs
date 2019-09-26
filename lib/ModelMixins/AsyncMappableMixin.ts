@@ -3,72 +3,43 @@ import Constructor from "../Core/Constructor";
 import Mappable, { MapItem } from "../Models/Mappable";
 import Model from "../Models/Model";
 import MappableTraits from "../Traits/MappableTraits";
+import AsyncLoader from "../Core/AsyncLoader";
 
 export default function AsyncMappableMixin<
   T extends Constructor<Model<MappableTraits>>
 >(Base: T) {
   abstract class AsyncMappableMixin extends Base implements Mappable {
-    // TODO
     get isMappable() {
       return true;
     }
 
+    private _mapItemsLoader = new AsyncLoader(
+      this.forceLoadMapItems.bind(this)
+    );
+
+    /**
+     * Gets a value indicating whether map items are currently loading.
+     */
     get isLoadingMapItems(): boolean {
-      return this._isLoadingMapItems;
+      return this._mapItemsLoader.isLoading;
     }
 
-    @observable
-    private _isLoadingMapItems = false;
-
-    private _mapItemsPromise: Promise<void> | undefined = undefined;
+    /**
+     * Loads the map items. It is safe to call this as often as necessary.
+     * If the map items are already loaded or already loading, it will
+     * return the existing promise.
+     */
+    loadMapItems(): Promise<void> {
+      return this._mapItemsLoader.load();
+    }
 
     abstract get mapItems(): MapItem[];
 
     /**
-     * Gets a promise for loaded map items. This method does _not_ need to consider
-     * whether the map items already loaded.
+     * Forces load of the maps items. This method does _not_ need to consider
+     * whether the map items are already loaded.
      */
-    protected abstract get loadMapItemsPromise(): Promise<void>;
-
-    @computed({ keepAlive: true })
-    private get loadMapItemsKeepAlive(): Promise<void> {
-      return this.loadMapItemsPromise;
-    }
-
-    /**
-     * Asynchronously loads map items. When the returned promise resolves,
-     * {@link AsyncMappableMixin#mapItems} should return all map items.
-     */
-    loadMapItems(): Promise<void> {
-      const newPromise = this.loadMapItemsKeepAlive;
-      if (newPromise !== this._mapItemsPromise) {
-        if (this._mapItemsPromise) {
-          // TODO - cancel old promise
-          //this._mapItemsPromise.cancel();
-        }
-
-        this._mapItemsPromise = newPromise;
-
-        runInAction(() => {
-          this._isLoadingMapItems = true;
-        });
-        newPromise
-          .then(result => {
-            runInAction(() => {
-              this._isLoadingMapItems = false;
-            });
-            return result;
-          })
-          .catch(e => {
-            runInAction(() => {
-              this._isLoadingMapItems = false;
-            });
-            throw e;
-          });
-      }
-
-      return newPromise;
-    }
+    protected abstract forceLoadMapItems(): Promise<void>;
   }
 
   return AsyncMappableMixin;
