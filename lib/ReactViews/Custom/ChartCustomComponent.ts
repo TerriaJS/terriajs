@@ -1,13 +1,14 @@
 import { DomElement } from "domhandler";
+import { action } from "mobx";
 import React, { ReactElement } from "react";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import filterOutUndefined from "../../Core/filterOutUndefined";
 import CommonStrata from "../../Models/CommonStrata";
 import CsvCatalogItem from "../../Models/CsvCatalogItem";
-import Chart from "./Chart/NewChart";
 import ChartPreviewStyles from "./Chart/chart-preview.scss";
 import ChartExpandAndDownloadButtons from "./Chart/ChartExpandAndDownloadButtons";
+import Chart from "./Chart/NewChart";
 import CustomComponent, { ProcessNodeContext } from "./CustomComponent";
-import { runInAction } from "mobx";
 
 /**
  * A `<chart>` custom component. It displays an interactive chart along with
@@ -22,10 +23,8 @@ import { runInAction } from "mobx";
  * - [y-column]:     The y column name or number to show in the preview, if not the first scalar column.
  * - [y-columns]:    Comma-separated list of y column names or numbers to show in the preview. Overrides "y-column" if provided.
  * - [colors]:       Comma-separated list of css colors to apply to data columns.
- * - [column-names]: Comma-separated list of column names to override those in the source data; empty strings retain the original column name.
- *                   Eg. column-names="Time,Height,Speed"
- * - [column-units]: Comma-separated list of the units for each column. Empty strings are ok.
- *                   Eg. column-units=",m,km/h"
+ * - [column-titles]: Maps column names to titles. Eg. column-names="time:Time,height:Height,speed:Speed"
+ * - [column-units]: Maps column names to units. Eg. column-units="height:m,speed:km/h"
  * - [preview-x-label]: The preview chart x-axis label. Defaults to empty string. Eg. long-names="Last 24 hours,Last 5 days,Time".
  * - [id]:           An id for the chart; give different charts from the same feature different ids. The actual catalogItem.id used for the expanded chart will
  *                   also incorporate the chart title and the catalog item name it came from.
@@ -61,37 +60,35 @@ import { runInAction } from "mobx";
  *                   or  `<chart>[["x","y","z"],[1,10,3],[2,15,9],[3,8,12],[5,25,4]]</chart>`.
  */
 export default class ChartCustomComponent extends CustomComponent {
+  readonly attributes = [
+    "src",
+    "src-preview",
+    "sources",
+    "source-names",
+    "downloads",
+    "download-names",
+    "preview-x-label",
+    "data",
+    "id",
+    "x-column",
+    "y-column",
+    "y-columns",
+    "colors",
+    "column-titles",
+    "column-units",
+    "styling",
+    "highlight-x",
+    "poll-seconds",
+    "poll-sources",
+    "poll-id-columns",
+    "poll-replace",
+    "title",
+    "can-download",
+    "hide-buttons"
+  ];
+
   get name(): string {
     return "chart";
-  }
-
-  get attributes(): string[] {
-    return [
-      "src",
-      "src-preview",
-      "sources",
-      "source-names",
-      "downloads",
-      "download-names",
-      "preview-x-label",
-      "data",
-      "id",
-      "x-column",
-      "y-column",
-      "y-columns",
-      "colors",
-      "column-names",
-      "column-units",
-      "styling",
-      "highlight-x",
-      "poll-seconds",
-      "poll-sources",
-      "poll-id-columns",
-      "poll-replace",
-      "title",
-      "can-download",
-      "hide-buttons"
-    ];
   }
 
   shouldProcessNode(context: ProcessNodeContext, node: DomElement): boolean {
@@ -137,143 +134,46 @@ export default class ChartCustomComponent extends CustomComponent {
     }
 
     checkAllPropertyKeys(node.attribs, this.attributes);
-    const columnNames = splitStringIfDefined(node.attribs["column-names"]);
-    const columnUnits = splitStringIfDefined(node.attribs["column-units"]);
-    const styling = node.attribs["styling"] || "feature-info";
 
-    // Present src and src-preview as if they came from sources.
-    let sources = splitStringIfDefined(node.attribs.sources);
-    const sourceNames = splitStringIfDefined(node.attribs["source-names"]);
-    if (sources === undefined && node.attribs.src !== undefined) {
-      // [src-preview, src], or [src] if src-preview is not defined.
-      sources = [node.attribs.src];
-      if (node.attribs["src-preview"] !== undefined) {
-        sources.unshift(node.attribs["src-preview"]);
-      }
-    }
-    const downloads = splitStringIfDefined(node.attribs.downloads) || sources;
-    const downloadNames =
-      splitStringIfDefined(node.attribs["download-names"]) || sourceNames;
-    const pollSources = splitStringIfDefined(node.attribs["poll-sources"]);
-
-    const id = node.attribs.id;
-    const xColumn = node.attribs["x-column"];
-    let yColumns = splitStringIfDefined(node.attribs["y-columns"]);
-    if (yColumns === undefined && node.attribs["y-column"] !== undefined) {
-      yColumns = [node.attribs["y-column"]];
-    }
-    const url = sources !== undefined ? sources[0] : undefined;
-
-    const colors = splitStringIfDefined(node.attribs["colors"]);
-    const title = node.attribs["title"];
-    // const updateCounterKeyProps = {
-    //   url: url,
-    //   xColumn: xColumn,
-    //   yColumns: yColumns
-    // };
-    // const updateCounter = CustomComponents.getUpdateCounter(
-    //   context.updateCounters,
-    //   Chart,
-    //   updateCounterKeyProps
-    // );
-
-    // If any of these attributes change, change the key so that React knows to re-render the chart.
-    // const reactKeys = [
-    //   title || "",
-    //   id || "",
-    //   (sources && sources.join("|")) || "",
-    //   xColumn || "",
-    //   defined(yColumns) ? yColumns.join("|") : "",
-    //   colors || ""
-    // ];
-
-    const sourceItems = (sources || []).map((source, i) => {
-      const id = `${context.catalogItem.uniqueId}:${
-        context.feature.id
-      }:${source}`;
-      const item = new CsvCatalogItem(id, context.terria);
-
-      let name = title;
-      if (sourceNames && sourceNames[i]) {
-        name += " - " + sourceNames[i];
-      }
-
-      runInAction(() => {
-        item.setTrait(CommonStrata.user, "name", name);
-
-        item.setTrait(CommonStrata.user, "url", source);
-        const chartStyle = item.addObject(
-          CommonStrata.user,
-          "styles",
-          "chart"
-        )!;
-        chartStyle.chart.setTrait(CommonStrata.user, "xAxisColumn", xColumn);
-        if (yColumns) {
-          yColumns.forEach(column => {
-            chartStyle.chart.addObject(CommonStrata.user, "lines", column);
-          });
-        }
-        item.setTrait(CommonStrata.user, "activeStyle", "chart");
-      });
-      return item;
-    });
-
+    const attrs = parseNodeAttrs(node.attribs);
     const chartElements = [];
     if (node.attribs["hide-buttons"] !== "true") {
+      // Build expand/download buttons
+      const sourceItems = (attrs.sources || []).map(
+        (source: string, i: number) => {
+          const id = [
+            context.catalogItem.uniqueId,
+            context.feature.id,
+            source
+          ].join(":");
+          const item = new CsvCatalogItem(id, context.terria);
+          this.setTraitsFromAttrs(item, attrs, i);
+          return item;
+        }
+      );
       chartElements.push(
         React.createElement(ChartExpandAndDownloadButtons, {
           key: "button",
           terria: context.terria,
-          catalogItem: context.catalogItem,
-          title: title,
-          colors: colors, // The colors are used when the chart is expanded.
-          feature: context.feature,
-          sources: sourceItems,
-          sourceNames: sourceNames,
-          downloads: downloads,
-          downloadNames: downloadNames,
-          //tableStructure: tableStructure,
-          columnNames: columnNames,
-          columnUnits: columnUnits,
-          xColumn: node.attribs["x-column"],
-          yColumns: yColumns,
-          id: id,
-          canDownload: !(node.attribs["can-download"] === "false"),
-          raiseToTitle: !!getInsertedTitle(node),
-          pollSources: pollSources,
-          pollSeconds: node.attribs["poll-seconds"],
-          pollReplace: node.attribs["poll-replace"] === "true"
-          // updateCounter: updateCounter // Change this to trigger an update.
+          sourceItems: sourceItems,
+          sourceNames: attrs.sourceNames,
+          canDownload: attrs.canDownload,
+          downloads: attrs.downloads,
+          downloadNames: attrs.downloadNames,
+          raiseToTitle: !!getInsertedTitle(node)
         })
       );
     }
 
+    // Build chart item to show in the info panel
     const chartItem = new CsvCatalogItem(undefined, context.terria);
-    runInAction(() => {
-      chartItem.setTrait(CommonStrata.user, "url", url);
-      const chartStyle = chartItem.addObject(
-        CommonStrata.user,
-        "styles",
-        "chart"
-      )!;
-
-      chartStyle.chart.setTrait(CommonStrata.user, "xAxisColumn", xColumn);
-
-      if (yColumns) {
-        yColumns.forEach(column => {
-          chartStyle.chart.addObject(CommonStrata.user, "lines", column);
-        });
-      }
-
-      chartItem.setTrait(CommonStrata.user, "activeStyle", "chart");
-    });
-
+    this.setTraitsFromAttrs(chartItem, attrs, 0);
     chartElements.push(
       React.createElement(Chart, {
         key: "chart",
         items: [chartItem],
-        styling: styling,
-        highlightX: node.attribs["highlight-x"],
+        styling: attrs.styling,
+        highlightX: attrs.highlightX,
         transitionDuration: 300
       })
     );
@@ -286,6 +186,60 @@ export default class ChartCustomComponent extends CustomComponent {
       },
       chartElements
     );
+  }
+
+  @action
+  private setTraitsFromAttrs(
+    item: CsvCatalogItem,
+    attrs: ReturnType<typeof parseNodeAttrs>,
+    sourceIndex: number
+  ) {
+    // Set name
+    let name = attrs.title;
+    if (attrs.sourceNames && attrs.sourceNames[sourceIndex]) {
+      name = `${name} - ${attrs.sourceNames[sourceIndex]}`;
+    }
+    item.setTrait(CommonStrata.user, "name", name);
+
+    // Set polling traits
+    if (attrs.pollSeconds) {
+      const pollUrl = attrs.pollSources && attrs.pollSources[sourceIndex];
+      item.polling.setTrait(CommonStrata.user, "seconds", attrs.pollSeconds);
+      item.polling.setTrait(CommonStrata.user, "url", pollUrl);
+      item.polling.setTrait(
+        CommonStrata.user,
+        "shouldReplaceData",
+        attrs.pollReplace
+      );
+    }
+
+    // Set column titles
+    attrs.columnTitles.forEach(({ name, title }) => {
+      const column = item.addObject(CommonStrata.user, "columns", name)!;
+      column.setTrait(CommonStrata.user, "title", title);
+    });
+
+    // Set column units
+    attrs.columnUnits.forEach(({ name, units }) => {
+      const column = item.addObject(CommonStrata.user, "columns", name)!;
+      column.setTrait(CommonStrata.user, "units", units);
+    });
+
+    // Set chart axes
+    if (attrs.xColumn || attrs.yColumns) {
+      const chartStyle = item.addObject(CommonStrata.user, "styles", "chart")!;
+      chartStyle.chart.setTrait(
+        CommonStrata.user,
+        "xAxisColumn",
+        attrs.xColumn
+      );
+
+      (attrs.yColumns || []).forEach(y => {
+        chartStyle.chart.addObject(CommonStrata.user, "lines", y)!;
+      });
+
+      item.setTrait(CommonStrata.user, "activeStyle", "chart");
+    }
   }
 
   /**
@@ -364,8 +318,63 @@ export default class ChartCustomComponent extends CustomComponent {
   }
 }
 
-function splitStringIfDefined(s: string) {
-  return s !== undefined ? s.split(",") : undefined;
+/**
+ * Parse node attrs to an easier to process structure.
+ */
+function parseNodeAttrs(nodeAttrs: { [name: string]: string | undefined }) {
+  let sources = splitStringIfDefined(nodeAttrs.sources);
+  if (sources === undefined && nodeAttrs.src !== undefined) {
+    // [src-preview, src], or [src] if src-preview is not defined.
+    sources = [nodeAttrs.src];
+    const srcPreview = nodeAttrs["src-preview"];
+    if (srcPreview !== undefined) {
+      sources.unshift(srcPreview);
+    }
+  }
+  const sourceNames = splitStringIfDefined(nodeAttrs["source-names"]);
+
+  const downloads = splitStringIfDefined(nodeAttrs.downloads) || sources;
+  const downloadNames =
+    splitStringIfDefined(nodeAttrs["download-names"]) || sourceNames;
+
+  const columnTitles = filterOutUndefined(
+    (nodeAttrs["column-titles"] || "").split(",").map(s => {
+      const [name, title] = s.split(":");
+      return name ? { name, title } : undefined;
+    })
+  );
+
+  const columnUnits = filterOutUndefined(
+    (nodeAttrs["column-units"] || "").split(",").map(s => {
+      const [name, units] = s.split(":");
+      return name ? { name, units } : undefined;
+    })
+  );
+
+  let yColumns;
+  if (nodeAttrs["y-column"] || nodeAttrs["y-columns"]) {
+    yColumns = (nodeAttrs["y-column"] || nodeAttrs["y-columns"] || "").split(
+      ","
+    );
+  }
+
+  return {
+    title: nodeAttrs["title"],
+    sources,
+    sourceNames,
+    canDownload: !(nodeAttrs["can-download"] === "false"),
+    downloads,
+    downloadNames,
+    styling: nodeAttrs["styling"] || "feature-info",
+    highlightX: nodeAttrs["highlight-x"],
+    pollSeconds: parseIntOrUndefined(nodeAttrs["poll-seconds"]),
+    pollSources: splitStringIfDefined(nodeAttrs["poll-sources"]),
+    pollReplace: nodeAttrs["poll-replace"] === "true",
+    columnTitles,
+    columnUnits,
+    xColumn: nodeAttrs["x-column"],
+    yColumns
+  };
 }
 
 function checkAllPropertyKeys(object: any, allowedKeys: string[]) {
@@ -377,6 +386,15 @@ function checkAllPropertyKeys(object: any, allowedKeys: string[]) {
       }
     }
   }
+}
+
+function splitStringIfDefined(s: string | undefined) {
+  return s !== undefined ? s.split(",") : undefined;
+}
+
+function parseIntOrUndefined(s: string | undefined): number | undefined {
+  const maybeInt = parseInt(s || "");
+  return isNaN(maybeInt) ? undefined : maybeInt;
 }
 
 function getInsertedTitle(node: DomElement) {
