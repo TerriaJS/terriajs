@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, runInAction, observable } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
@@ -70,8 +70,8 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
 
   readonly canZoomTo = true;
 
-  // The final data after all transformations are applied
-  readyData?: JsonObject;
+  @observable
+  private _readyData?: JsonObject;
 
   constructor(id: string, terria: Terria) {
     super(id, terria);
@@ -79,6 +79,14 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
 
   setFileInput(file: File) {
     this._geoJsonFile = file;
+  }
+
+  /**
+   * Returns the final raw data after all transformations are applied.
+   */
+  @computed
+  get readyData() {
+    return this._readyData;
   }
 
   protected forceLoadMapItems(): Promise<void> {
@@ -152,7 +160,9 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
         );
       })
       .then((geoJsonWgs84: JsonObject) => {
-        this.readyData = geoJsonWgs84;
+        runInAction(() => {
+          this._readyData = geoJsonWgs84;
+        });
         return this.loadDataSource(geoJsonWgs84);
       })
       .then(dataSource => {
