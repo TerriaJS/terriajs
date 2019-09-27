@@ -16,8 +16,8 @@ import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
 import PolylineGlowMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineGlowMaterialProperty";
 import Property from "terriajs-cesium/Source/DataSources/Property";
 
-const destroyObject = require("terriajs-cesium/Source/Core/destroyObject");
-const writeTextToCanvas = require("terriajs-cesium/Source/Core/writeTextToCanvas");
+const destroyObject = require("terriajs-cesium/Source/Core/destroyObject").default;
+const writeTextToCanvas = require("terriajs-cesium/Source/Core/writeTextToCanvas").default;
 
 interface PointDetails {
   layer?: L.CircleMarker;

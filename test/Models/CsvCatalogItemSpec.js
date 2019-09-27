@@ -1,10 +1,10 @@
 "use strict";
 
 /*global require,describe,it,expect,beforeEach,fail*/
-var clone = require("terriajs-cesium/Source/Core/clone");
-var Color = require("terriajs-cesium/Source/Core/Color");
-var JulianDate = require("terriajs-cesium/Source/Core/JulianDate");
-var Rectangle = require("terriajs-cesium/Source/Core/Rectangle");
+var clone = require("terriajs-cesium/Source/Core/clone").default;
+var Color = require("terriajs-cesium/Source/Core/Color").default;
+var JulianDate = require("terriajs-cesium/Source/Core/JulianDate").default;
+var Rectangle = require("terriajs-cesium/Source/Core/Rectangle").default;
 
 var CatalogItem = require("../../lib/Models/CatalogItem");
 var CsvCatalogItem = require("../../lib/Models/CsvCatalogItem");
@@ -13,7 +13,7 @@ var ImageryProviderHooks = require("../../lib/Map/ImageryProviderHooks");
 var loadAndStubTextResources = require("../Utility/loadAndStubTextResources");
 var TableStyle = require("../../lib/Models/TableStyle");
 var Terria = require("../../lib/Models/Terria");
-var TimeInterval = require("terriajs-cesium/Source/Core/TimeInterval");
+var TimeInterval = require("terriajs-cesium/Source/Core/TimeInterval").default;
 var VarType = require("../../lib/Map/VarType");
 
 var greenTableStyle = new TableStyle({

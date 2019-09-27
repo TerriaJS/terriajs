@@ -715,7 +715,7 @@ export default class Cesium extends GlobeOrMap {
     if (this._firstMapItemTerrainProviders) {
       return { terrain: this._firstMapItemTerrainProviders };
     } else if (this.terria.configParameters.useCesiumIonTerrain) {
-      const logo = require("terriajs-cesium/Source/Assets/Images/ion-credit.png");
+      const logo = require("terriajs-cesium/Source/Assets/Images/ion-credit.png").default;
       const ionCredit = new Credit(
         '<a href="https://cesium.com/" target="_blank" rel="noopener noreferrer"><img src="' +
           logo +

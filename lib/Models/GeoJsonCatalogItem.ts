@@ -36,7 +36,7 @@ const loadBlob = require("../Core/loadBlob");
 const loadJson = require("../Core/loadJson");
 const proxyCatalogItemUrl = require("./proxyCatalogItemUrl");
 const Reproject = require("../Map/Reproject");
-const zip = require("terriajs-cesium/Source/ThirdParty/zip");
+const zip = require("terriajs-cesium/Source/ThirdParty/zip").default;
 
 type Coordinates = number[];
 

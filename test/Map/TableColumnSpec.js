@@ -1,7 +1,7 @@
 "use strict";
 
 /*global require,describe,it,expect*/
-var JulianDate = require("terriajs-cesium/Source/Core/JulianDate");
+var JulianDate = require("terriajs-cesium/Source/Core/JulianDate").default;
 var TableColumn = require("../../lib/Map/TableColumn");
 var VarType = require("../../lib/Map/VarType");
 var VarSubType = require("../../lib/Map/VarSubType");

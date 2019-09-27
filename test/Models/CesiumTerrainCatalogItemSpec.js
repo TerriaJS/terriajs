@@ -2,7 +2,7 @@
 
 /*global require*/
 var CesiumTerrainCatalogItem = require("../../lib/Models/CesiumTerrainCatalogItem");
-var CesiumTerrainProvider = require("terriajs-cesium/Source/Core/CesiumTerrainProvider");
+var CesiumTerrainProvider = require("terriajs-cesium/Source/Core/CesiumTerrainProvider").default;
 var loadWithXhr = require("../../lib/Core/loadWithXhr");
 var Terria = require("../../lib/Models/Terria");
 
