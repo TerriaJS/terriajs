@@ -1,6 +1,7 @@
 import { computed } from "mobx";
 
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import isDefined from "../Core/isDefined";
 import KmlDataSource from "terriajs-cesium/Source/DataSources/KmlDataSource";
@@ -14,6 +15,8 @@ import CreateModel from "./CreateModel";
 import KmlCatalogItemTraits from "../Traits/KmlCatalogItemTraits"
 import UrlMixin from "../ModelMixins/UrlMixin";
 import Terria from "./Terria";
+import { JulianDate } from "cesium";
+import Property from "terriajs-cesium/Source/Core/Property";
 
 const kmzRegex = /\.kmz$/i;
 
@@ -52,10 +55,7 @@ class KmlCatalogItem extends AsyncMappableMixin(
         });
 
       return new Promise<string | Document | Blob>((resolve, reject) => {
-        if (isDefined(this.kmlData)) {
-          // TODO: fix type problem
-          resolve(this.kmlData);
-        } else if (isDefined(this.kmlString)) {
+        if (isDefined(this.kmlString)) {
           const parser = new DOMParser();
           resolve(parser.parseFromString(this.kmlString, "text/xml"));
         } else if (isDefined(this._kmlFile)) {
@@ -108,7 +108,7 @@ class KmlCatalogItem extends AsyncMappableMixin(
   private doneLoading(kmlDataSource: KmlDataSource) {
     // Clamp features to terrain.
     if (isDefined(this.terria.cesium)) {
-      const positionsToSample : Cartesian3[] = [];
+      const positionsToSample : Cartographic[] = [];
       const correspondingCartesians : Cartesian3[] = [];
 
       const entities = kmlDataSource.entities.values;
@@ -117,8 +117,8 @@ class KmlCatalogItem extends AsyncMappableMixin(
 
         const polygon = entity.polygon;
         if (isDefined(polygon)) {
-          polygon.perPositionHeight = true;
-          const polygonHierarchy = polygon.hierarchy.getValue(); // assuming hierarchy is not time-varying
+          polygon.perPositionHeight = (true as unknown) as Property;
+          const polygonHierarchy = getPropertyValue<PolygonHierarchy>(polygon.hierarchy);
           samplePolygonHierarchyPositions(
             polygonHierarchy,
             positionsToSample,
@@ -147,7 +147,7 @@ class KmlCatalogItem extends AsyncMappableMixin(
             continue;
           }
 
-          const existingHierarchy = polygon.hierarchy.getValue();
+          const existingHierarchy = getPropertyValue<PolygonHierarchy>(polygon.hierarchy);
           polygon.hierarchy = new PolygonHierarchy(
             existingHierarchy.positions,
             existingHierarchy.holes
@@ -160,9 +160,13 @@ class KmlCatalogItem extends AsyncMappableMixin(
 
 export default KmlCatalogItem;
 
+function getPropertyValue<T>(property: Property): T {
+  return property.getValue(JulianDate.now());
+}
+
 function samplePolygonHierarchyPositions(
   polygonHierarchy: PolygonHierarchy,
-  positionsToSample: Cartesian3[],
+  positionsToSample: Cartographic[],
   correspondingCartesians: Cartesian3[]
 ) {
   const positions = polygonHierarchy.positions;

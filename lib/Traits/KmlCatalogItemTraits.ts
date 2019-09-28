@@ -12,12 +12,6 @@ export default class KmlCatalogItemTraits extends mixTraits(
   MappableTraits,
   CatalogMemberTraits
 ) {
-  @anyTrait({
-    name: "kmlData",
-    description: "An XML document"
-  })
-  kmlData?: Document;
-
   @primitiveTrait({
     type: "string",
     name: "kmlString",
