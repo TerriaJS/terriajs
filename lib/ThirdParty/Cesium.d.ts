@@ -750,13 +750,12 @@ declare module "terriajs-cesium/Source/DataSources/KmlDataSource" {
     entities: EntityCollection;
     static load(
       kml: Resource | Document | string | object,
-      options?: { 
-        camera?: Camera,
-        canvas?: HTMLCanvasElement,
-        sourceUri?: string,
-        clampToGround?: boolean,
-        ellipsoid?: Ellipsoid
-
+      options?: {
+        camera?: Camera;
+        canvas?: HTMLCanvasElement;
+        sourceUri?: string;
+        clampToGround?: boolean;
+        ellipsoid?: Ellipsoid;
       }
     ): Promise<KmlDataSource>;
   }

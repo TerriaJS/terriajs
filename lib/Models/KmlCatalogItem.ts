@@ -13,7 +13,7 @@ import TerriaError from "../Core/TerriaError";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import CreateModel from "./CreateModel";
-import KmlCatalogItemTraits from "../Traits/KmlCatalogItemTraits"
+import KmlCatalogItemTraits from "../Traits/KmlCatalogItemTraits";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import Terria from "./Terria";
 import Property from "terriajs-cesium/Source/Core/Property";
@@ -27,7 +27,7 @@ class KmlCatalogItem extends AsyncMappableMixin(
   get type() {
     return KmlCatalogItem.type;
   }
-  
+
   private _dataSource: KmlDataSource | undefined;
 
   private _kmlFile?: File;
@@ -35,7 +35,7 @@ class KmlCatalogItem extends AsyncMappableMixin(
   readonly canZoomTo = true;
 
   constructor(id: string, terria: Terria) {
-      super(id, terria);
+    super(id, terria);
   }
 
   setFileInput(file: File) {
@@ -43,53 +43,57 @@ class KmlCatalogItem extends AsyncMappableMixin(
   }
 
   protected forceLoadMapItems(): Promise<void> {
-      const createLoadError = () =>
-        new TerriaError({
-          sender: this,
-          title: "Error loading KML or KMZ",
-          message:
-            `An error occurred while loading a KML or KMZ file. This may indicate that the file is invalid or ` +
-            `that it is not supported by ${this.terria.appName}. If you would like assistance or further ` +
-            `information, please email us at ` +
-            `<a href="mailto:${this.terria.supportEmail}">${this.terria.supportEmail}></a>.`
-        });
+    const createLoadError = () =>
+      new TerriaError({
+        sender: this,
+        title: "Error loading KML or KMZ",
+        message:
+          `An error occurred while loading a KML or KMZ file. This may indicate that the file is invalid or ` +
+          `that it is not supported by ${
+            this.terria.appName
+          }. If you would like assistance or further ` +
+          `information, please email us at ` +
+          `<a href="mailto:${this.terria.supportEmail}">${
+            this.terria.supportEmail
+          }></a>.`
+      });
 
-      return new Promise<string | Document | Blob>((resolve, reject) => {
-        if (isDefined(this.kmlString)) {
-          const parser = new DOMParser();
-          resolve(parser.parseFromString(this.kmlString, "text/xml"));
-        } else if (isDefined(this._kmlFile)) {
-          if (this.url && this.url.match(kmzRegex)) {
-            resolve(this.url);
-          } else {
-            resolve(readXml(this._kmlFile));
-          }
-        } else if (isDefined(this.url)) {
+    return new Promise<string | Document | Blob>((resolve, reject) => {
+      if (isDefined(this.kmlString)) {
+        const parser = new DOMParser();
+        resolve(parser.parseFromString(this.kmlString, "text/xml"));
+      } else if (isDefined(this._kmlFile)) {
+        if (this.url && this.url.match(kmzRegex)) {
           resolve(this.url);
         } else {
-          throw new TerriaError({
-            sender: this,
-            title: "No KML available",
-            message:
-              `The KML/KMZ catalog item cannot be loaded because it was not configured ` +
-              `with a \`url\`, \`kmlData\` or \`kmlString\` property.`
-          });
+          resolve(readXml(this._kmlFile));
         }
+      } else if (isDefined(this.url)) {
+        resolve(this.url);
+      } else {
+        throw new TerriaError({
+          sender: this,
+          title: "No KML available",
+          message:
+            `The KML/KMZ catalog item cannot be loaded because it was not configured ` +
+            `with a \`url\`, \`kmlData\` or \`kmlString\` property.`
+        });
+      }
+    })
+      .then(kmlLoadInput => {
+        return KmlDataSource.load(kmlLoadInput);
       })
-        .then(kmlLoadInput => {
-          return KmlDataSource.load(kmlLoadInput);
-        })
-        .then(dataSource => {
-          this._dataSource = dataSource;
-          this.doneLoading(dataSource); // Unsure if this is necessary
-        })
-        .catch(e => {
-          if (e instanceof TerriaError) {
-            throw e;
-          } else {
-            throw createLoadError();
-          }
-        })
+      .then(dataSource => {
+        this._dataSource = dataSource;
+        this.doneLoading(dataSource); // Unsure if this is necessary
+      })
+      .catch(e => {
+        if (e instanceof TerriaError) {
+          throw e;
+        } else {
+          throw createLoadError();
+        }
+      });
   }
 
   @computed
@@ -102,14 +106,14 @@ class KmlCatalogItem extends AsyncMappableMixin(
   }
 
   protected forceLoadMetadata(): Promise<void> {
-      return Promise.resolve();
+    return Promise.resolve();
   }
 
   private doneLoading(kmlDataSource: KmlDataSource) {
     // Clamp features to terrain.
     if (isDefined(this.terria.cesium)) {
-      const positionsToSample : Cartographic[] = [];
-      const correspondingCartesians : Cartesian3[] = [];
+      const positionsToSample: Cartographic[] = [];
+      const correspondingCartesians: Cartesian3[] = [];
 
       const entities = kmlDataSource.entities.values;
       for (let i = 0; i < entities.length; ++i) {
@@ -118,7 +122,9 @@ class KmlCatalogItem extends AsyncMappableMixin(
         const polygon = entity.polygon;
         if (isDefined(polygon)) {
           polygon.perPositionHeight = (true as unknown) as Property;
-          const polygonHierarchy = getPropertyValue<PolygonHierarchy>(polygon.hierarchy);
+          const polygonHierarchy = getPropertyValue<PolygonHierarchy>(
+            polygon.hierarchy
+          );
           samplePolygonHierarchyPositions(
             polygonHierarchy,
             positionsToSample,
@@ -147,7 +153,9 @@ class KmlCatalogItem extends AsyncMappableMixin(
             continue;
           }
 
-          const existingHierarchy = getPropertyValue<PolygonHierarchy>(polygon.hierarchy);
+          const existingHierarchy = getPropertyValue<PolygonHierarchy>(
+            polygon.hierarchy
+          );
           polygon.hierarchy = new PolygonHierarchy(
             existingHierarchy.positions,
             existingHierarchy.holes
@@ -186,4 +194,3 @@ function samplePolygonHierarchyPositions(
     );
   }
 }
-
