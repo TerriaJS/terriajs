@@ -3,20 +3,20 @@ import { computed } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import isDefined from "../Core/isDefined";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import KmlDataSource from "terriajs-cesium/Source/DataSources/KmlDataSource";
 import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
-import readXml from "../Core/readXml";
+import Property from "terriajs-cesium/Source/Core/Property";
 import sampleTerrain from "terriajs-cesium/Source/Core/sampleTerrain";
+import isDefined from "../Core/isDefined";
+import readXml from "../Core/readXml";
 import TerriaError from "../Core/TerriaError";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import CreateModel from "./CreateModel";
-import KmlCatalogItemTraits from "../Traits/KmlCatalogItemTraits";
 import UrlMixin from "../ModelMixins/UrlMixin";
+import KmlCatalogItemTraits from "../Traits/KmlCatalogItemTraits";
+import CreateModel from "./CreateModel";
 import Terria from "./Terria";
-import Property from "terriajs-cesium/Source/Core/Property";
 
 const kmzRegex = /\.kmz$/i;
 
