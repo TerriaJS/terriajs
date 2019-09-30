@@ -4,6 +4,7 @@ import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import isDefined from "../Core/isDefined";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import KmlDataSource from "terriajs-cesium/Source/DataSources/KmlDataSource";
 import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
 import readXml from "../Core/readXml";
@@ -15,7 +16,6 @@ import CreateModel from "./CreateModel";
 import KmlCatalogItemTraits from "../Traits/KmlCatalogItemTraits"
 import UrlMixin from "../ModelMixins/UrlMixin";
 import Terria from "./Terria";
-import { JulianDate } from "cesium";
 import Property from "terriajs-cesium/Source/Core/Property";
 
 const kmzRegex = /\.kmz$/i;
@@ -69,7 +69,7 @@ class KmlCatalogItem extends AsyncMappableMixin(
         } else {
           throw new TerriaError({
             sender: this,
-            title: "No CZML available",
+            title: "No KML available",
             message:
               `The KML/KMZ catalog item cannot be loaded because it was not configured ` +
               `with a \`url\`, \`kmlData\` or \`kmlString\` property.`

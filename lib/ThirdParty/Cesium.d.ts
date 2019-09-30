@@ -742,7 +742,25 @@ declare module "terriajs-cesium/Source/DataSources/ImageMaterialProperty" {
   export default Cesium.ImageMaterialProperty;
 }
 declare module "terriajs-cesium/Source/DataSources/KmlDataSource" {
-  export default Cesium.KmlDataSource;
+  import Camera from "terriajs-cesium/Source/Scene/Camera";
+  import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+  import EntityCollection from "terriajs-cesium/Source/DataSources/EntityCollection";
+  import Resource from "terriajs-cesium/Source/Core/Resource";
+  class KmlDataSource extends Cesium.KmlDataSource {
+    entities: EntityCollection;
+    static load(
+      kml: Resource | Document | string | object,
+      options?: { 
+        camera?: Camera,
+        canvas?: HTMLCanvasElement,
+        sourceUri?: string,
+        clampToGround?: boolean,
+        ellipsoid?: Ellipsoid
+
+      }
+    ): Promise<KmlDataSource>;
+  }
+  export default KmlDataSource;
 }
 declare module "terriajs-cesium/Source/DataSources/LabelGraphics" {
   export default Cesium.LabelGraphics;
