@@ -63,8 +63,8 @@ class KmlCatalogItem extends AsyncMappableMixin(
         const parser = new DOMParser();
         resolve(parser.parseFromString(this.kmlString, "text/xml"));
       } else if (isDefined(this._kmlFile)) {
-        if (this.url && this.url.match(kmzRegex)) {
-          resolve(this.url);
+        if (this._kmlFile.name && this._kmlFile.name.match(kmzRegex)) {
+          resolve(this._kmlFile);
         } else {
           resolve(readXml(this._kmlFile));
         }
