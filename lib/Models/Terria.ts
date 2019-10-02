@@ -114,6 +114,7 @@ export default class Terria {
     )
   );
 
+  parameters?: any;
   appName?: string;
   supportEmail?: string;
 
