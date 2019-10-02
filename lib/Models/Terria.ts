@@ -606,6 +606,7 @@ export default class Terria {
 
     if (configParams) {
       this.updateParameters(configParams);
+      this.parameters = configParams;
     }
     if (aspects.group && aspects.group.members) {
       // Transform the Magda catalog structure to the Terria one.

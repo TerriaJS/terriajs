@@ -11,6 +11,16 @@ import Workbench from "../Workbench/Workbench";
 import FullScreenButton from "./FullScreenButton";
 import Styles from "./side-panel.scss";
 
+import { useStore } from "terrace/ViewModels/StoreContext";
+import styled from "styled-components";
+const Button = styled.button`
+  ${props =>
+    props.editorState.theme &&
+    `background-color: ${props.editorState.theme.primary};`}
+  ${props =>
+    props.editorState.theme && `color: ${props.editorState.theme.text};`}
+`;
+
 const SidePanel = observer(
   createReactClass({
     displayName: "SidePanel",
@@ -86,6 +96,36 @@ const SidePanel = observer(
     render() {
       const searchState = this.props.viewState.searchState;
 
+      const TestButton = () => {
+        const store = useStore();
+        return (
+          <Button
+            type="button"
+            onClick={this.onAddDataClicked}
+            className={Styles.button}
+            title="Add data"
+            editorState={store.editorState}
+          >
+            <Icon glyph={Icon.GLYPHS.add} />
+            Add data
+          </Button>
+        );
+      };
+      const TestUploadButton = () => {
+        const store = useStore();
+        return (
+          <Button
+            type="button"
+            onClick={this.onAddLocalDataClicked}
+            className={Styles.uploadData}
+            title="Load local/web data"
+            editorState={store.editorState}
+          >
+            <Icon glyph={Icon.GLYPHS.upload} />
+          </Button>
+        );
+      };
+
       return (
         <div className={Styles.workBench}>
           <div className={Styles.header}>
@@ -104,23 +144,8 @@ const SidePanel = observer(
               placeholder="Search for locations"
             />
             <div className={Styles.addData}>
-              <button
-                type="button"
-                onClick={this.onAddDataClicked}
-                className={Styles.button}
-                title="Add data"
-              >
-                <Icon glyph={Icon.GLYPHS.add} />
-                Add data
-              </button>
-              <button
-                type="button"
-                onClick={this.onAddLocalDataClicked}
-                className={Styles.uploadData}
-                title="Load local/web data"
-              >
-                <Icon glyph={Icon.GLYPHS.upload} />
-              </button>
+              <TestButton />
+              <TestUploadButton />
             </div>
           </div>
           <div className={Styles.body}>

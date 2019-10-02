@@ -29,6 +29,13 @@ import "inobounce";
 import Styles from "./standard-user-interface.scss";
 import { observer } from "mobx-react";
 import { action, runInAction } from "mobx";
+import styled from "styled-components";
+
+const PanelTest = styled.div`
+  ${props =>
+    props.editorState.theme &&
+    `background-color: ${props.editorState.theme.secondary};`}
+`;
 
 const animationDuration = 250;
 /** blah */
@@ -41,6 +48,7 @@ const StandardUserInterface = observer(
        * Terria instance
        */
       terria: PropTypes.object.isRequired,
+      editorState: PropTypes.object.isRequired,
       /**
        * All the base maps.
        */
@@ -141,6 +149,7 @@ const StandardUserInterface = observer(
       );
 
       const terria = this.props.terria;
+      const editorState = this.props.editorState;
       const allBaseMaps = this.props.allBaseMaps;
 
       const showStoryBuilder =
@@ -173,7 +182,7 @@ const StandardUserInterface = observer(
                     />
                   </Small>
                   <Medium>
-                    <div
+                    <PanelTest
                       className={classNames(
                         Styles.sidePanel,
                         this.props.viewState.topElement === "SidePanel"
@@ -184,6 +193,7 @@ const StandardUserInterface = observer(
                             .isMapFullScreen
                         }
                       )}
+                      editorState={editorState}
                       tabIndex={0}
                       onClick={action(() => {
                         this.props.viewState.topElement = "SidePanel";
@@ -194,7 +204,7 @@ const StandardUserInterface = observer(
                         terria={terria}
                         viewState={this.props.viewState}
                       />
-                    </div>
+                    </PanelTest>
                   </Medium>
                 </If>
                 <Medium>
