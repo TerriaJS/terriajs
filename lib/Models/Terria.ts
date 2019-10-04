@@ -627,14 +627,12 @@ export default class Terria {
     }
     if (aspects.group && aspects.group.members) {
       // Transform the Magda catalog structure to the Terria one.
-      const members = filterOutUndefined(
-        aspects.group.members.map((member: any) => {
-          return magdaRecordToCatalogMemberDefinition({
-            magdaBaseUrl: "http://saas.terria.io",
-            record: member
-          });
-        })
-      );
+      const members = aspects.group.members.map((member: any) => {
+        return magdaRecordToCatalogMemberDefinition({
+          magdaBaseUrl: "http://saas.terria.io",
+          record: member
+        });
+      });
 
       updateModelFromJson(this.catalog.group, CommonStrata.definition, {
         members: members
