@@ -13,7 +13,7 @@ import Icon from "../../Icon";
 import ChartPanelDownloadButton from "./ChartPanelDownloadButton";
 import Loader from "../../Loader";
 import Styles from "./chart-panel.scss";
-import Chart from "./NewChart";
+import Chart from "./BottomDockChart";
 
 const height = 300;
 
@@ -96,10 +96,11 @@ const ChartPanel = observer(
         chart = (
           <Chart
             items={this.props.terria.workbench.items}
-            // data={data}
-            axisLabel={{ x: xUnits, y: undefined }}
             height={height - 34}
-            grid={{ x: true, y: true }}
+            // data={data}
+            // axisLabel={{ x: xUnits, y: undefined }}
+            // height={height - 34}
+            // grid={{ x: true, y: true }}
           />
         );
       }

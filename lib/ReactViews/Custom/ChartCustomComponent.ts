@@ -7,7 +7,7 @@ import CommonStrata from "../../Models/CommonStrata";
 import CsvCatalogItem from "../../Models/CsvCatalogItem";
 import ChartPreviewStyles from "./Chart/chart-preview.scss";
 import ChartExpandAndDownloadButtons from "./Chart/ChartExpandAndDownloadButtons";
-import Chart from "./Chart/NewChart";
+import Chart from "./Chart/FeatureInfoPanelChart";
 import CustomComponent, { ProcessNodeContext } from "./CustomComponent";
 
 /**
@@ -172,9 +172,10 @@ export default class ChartCustomComponent extends CustomComponent {
       React.createElement(Chart, {
         key: "chart",
         items: [chartItem],
-        styling: attrs.styling,
-        highlightX: attrs.highlightX,
-        transitionDuration: 300
+        xAxisLabel: attrs.previewXLabel
+        // styling: attrs.styling,
+        // highlightX: attrs.highlightX,
+        // transitionDuration: 300
       })
     );
 
@@ -377,6 +378,7 @@ function parseNodeAttrs(nodeAttrs: { [name: string]: string | undefined }) {
     columnTitles,
     columnUnits,
     xColumn: nodeAttrs["x-column"],
+    previewXLabel: nodeAttrs["preview-x-label"],
     yColumns
   };
 }
