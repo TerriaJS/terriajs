@@ -58,7 +58,7 @@ const ChartPanel = observer(
       //   return null;
       // }
       const data = [];
-      let xUnits;
+      // let xUnits;
       // chartableItems.forEach(item => {
       //   const thisData = item.chartData();
       //   if (!defined(thisData)) {
