@@ -12,7 +12,8 @@ import {
 } from "victory";
 import Chartable from "../../../Models/Chartable";
 
-const minWidth = 110; // Required to prevent https://github.com/FormidableLabs/victory-native/issues/132
+const chartMinWidth = 110; // Required to prevent https://github.com/FormidableLabs/victory-native/issues/132
+const defaultAxis = { scale: "linear" };
 
 /**
  * A chart component that implements the charting behavior common to
@@ -45,20 +46,28 @@ class NewChart extends React.Component {
     )
   };
 
+  /**
+   * Returns items that contains chartable data.
+   */
   @computed
-  get chartData() {
-    return this.props.items.reduce((p, c) => {
-      if (Chartable.is(c)) {
-        return p.concat(c.chartItems);
-      }
-      return p;
-    }, []);
+  get chartableItems() {
+    return this.props.items.filter(
+      item => Chartable.is(item) && item.chartItems.length > 0
+    );
   }
 
+  /**
+   * Returns the xAxis for the chart. For now, this is same as the axis of the
+   * first item with chartable data.
+   */
   @computed
   get xAxis() {
-    // TODO: Derive this from the chart items
-    return { scale: "time", units: "Date" };
+    const firstChartableItem = this.chartableItems[0];
+    if (firstChartableItem && firstChartableItem.chartAxis) {
+      return firstChartableItem.chartAxis;
+    } else {
+      return defaultAxis;
+    }
   }
 
   @computed
@@ -68,6 +77,19 @@ class NewChart extends React.Component {
         units: data.units
       }))
     );
+  }
+
+  /**
+   * Returns data for all items with the same x-axis as the charts x-axis.
+   */
+  @computed
+  get chartData() {
+    return this.chartableItems.reduce((p, c) => {
+      const axis = c.chartAxis || defaultAxis;
+      const isAxisSame =
+        axis.scale === this.xAxis.scale && axis.units === this.xAxis.units;
+      return isAxisSame ? p.concat(c.chartItems) : p;
+    }, []);
   }
 
   @computed
@@ -120,7 +142,7 @@ class NewChart extends React.Component {
       <Sized>
         {({ width: parentWidth }) =>
           this.renderChart(
-            Math.max(minWidth, this.props.width || parentWidth),
+            Math.max(chartMinWidth, this.props.width || parentWidth),
             this.props.height
           )
         }

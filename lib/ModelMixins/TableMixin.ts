@@ -1,4 +1,4 @@
-import { computed, observable, runInAction, action } from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -16,6 +16,7 @@ import { JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import JSRegionProviderList from "../Map/RegionProviderList";
+import { ChartAxis } from "../Models/Chartable";
 import { ImageryParts } from "../Models/Mappable";
 import Model from "../Models/Model";
 import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
@@ -120,7 +121,6 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
 
     @computed
     get xColumn(): TableColumn | undefined {
-      const x = this.activeTableStyle.xAxisColumn;
       return this.activeTableStyle.xAxisColumn;
     }
 
@@ -205,6 +205,18 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
           return chartData;
         })
       );
+    }
+
+    /**
+     * Describes the x-axis of the chart
+     */
+    @computed
+    get chartAxis(): ChartAxis | undefined {
+      if (!this.xColumn) return;
+      const scale =
+        this.xColumn.type === TableColumnType.time ? "time" : "linear";
+      const units = this.xColumn.traits.units;
+      return { scale, units };
     }
 
     @computed
