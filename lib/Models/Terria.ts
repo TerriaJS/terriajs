@@ -609,19 +609,31 @@ export default class Terria {
       this.updateParameters(configParams);
     }
     if (aspects.group && aspects.group.members) {
-      // Transform the Magda catalog structure to the Terria one.
-      const members = aspects.group.members.map((member: any) => {
-        return magdaRecordToCatalogMemberDefinition({
-          magdaBaseUrl: new URI(configUrl).path("").query("").toString(),
-          record: member,
-          // TODO: it'd be nice to actually use MagdaCatalogGroup rather than this hackery
-          distributionFormats: new MagdaCatalogGroup("", this).preparedDistributionFormats
-        });
+      const magdaGroup = new MagdaCatalogGroup("/", this);
+      magdaGroup.setTrait(CommonStrata.definition, "name", "Root Group");
+      magdaGroup.setTrait(
+        CommonStrata.definition,
+        "url",
+        "https://nsw.dt.terria.io" // TODO
+      );
+      magdaGroup.setTrait(CommonStrata.definition, "groupId", config.id);
+      magdaGroup.loadReference().then(() => {
+        this.catalog.group = magdaGroup.dereferenced;
       });
 
-      updateModelFromJson(this.catalog.group, CommonStrata.definition, {
-        members: members
-      });
+      // // Transform the Magda catalog structure to the Terria one.
+      // const members = aspects.group.members.map((member: any) => {
+      //   return magdaRecordToCatalogMemberDefinition({
+      //     magdaBaseUrl: new URI(configUrl).path("").query("").toString(),
+      //     record: member,
+      //     // TODO: it'd be nice to actually use MagdaCatalogGroup rather than this hackery
+      //     distributionFormats: new MagdaCatalogGroup("", this).preparedDistributionFormats
+      //   });
+      // });
+
+      // updateModelFromJson(this.catalog.group, CommonStrata.definition, {
+      //   members: members
+      // });
     }
   }
 
@@ -756,7 +768,7 @@ function interpretHash(
 
   return promise.then((shareProps: any) => {
     runInAction(() => {
-      Object.keys(hashProperties).forEach(function (property) {
+      Object.keys(hashProperties).forEach(function(property) {
         const propertyValue = hashProperties[property];
         if (property === "clean") {
           terria.initSources.splice(0, terria.initSources.length);

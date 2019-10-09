@@ -11,7 +11,7 @@ export default class GroupTraits extends ModelTraits {
       "True if this group is open and its contents are visible; otherwise, false.",
     type: "boolean"
   })
-  isOpen?: boolean;
+  isOpen: boolean = false;
 
   @modelReferenceArrayTrait({
     name: "Members",

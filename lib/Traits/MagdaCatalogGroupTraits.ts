@@ -4,8 +4,7 @@ import mixTraits from "./mixTraits";
 import primitiveTrait from "./primitiveTrait";
 
 export default class MagdaCatalogGroupTraits extends mixTraits(
-  MagdaTraits,
-  GroupTraits
+  MagdaTraits
 ) {
   @primitiveTrait({
     name: "Group ID",

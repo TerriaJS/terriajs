@@ -18,12 +18,11 @@ import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import Terria from "./Terria";
 import updateModelFromJson from "./updateModelFromJson";
+import CatalogGroup from "./CatalogGroupNew";
 
 export default class MagdaCatalogGroup extends MagdaMixin(
-  GroupMixin(
-    ReferenceMixin(
-      UrlMixin(CatalogMemberMixin(CreateModel(MagdaCatalogGroupTraits)))
-    )
+  ReferenceMixin(
+    UrlMixin(CatalogMemberMixin(CreateModel(MagdaCatalogGroupTraits)))
   )
 ) {
   static readonly type = "magda-group";
@@ -39,6 +38,10 @@ export default class MagdaCatalogGroup extends MagdaMixin(
       "distributionFormats",
       MagdaCatalogItem.defaultDistributionFormats
     );
+  }
+
+  get dereferenced() {
+    return super.dereferenced as CatalogGroup;
   }
 
   protected forceLoadReference(
