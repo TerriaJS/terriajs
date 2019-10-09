@@ -18,7 +18,8 @@ const Dropdown = createReactClass({
     selectOption: PropTypes.func, // The callback function; its arguments are the chosen object and its index.
     textProperty: PropTypes.string, // property to display as text
     matchWidth: PropTypes.bool,
-    children: PropTypes.any
+    children: PropTypes.any,
+    disabled: PropTypes.bool
   },
 
   getDefaultProps() {
@@ -27,6 +28,7 @@ const Dropdown = createReactClass({
       selected: undefined,
       textProperty: "name",
       align: "left",
+      disabled: false,
       theme: {}
     };
   },
@@ -124,6 +126,7 @@ const Dropdown = createReactClass({
           ref={element => {
             this.buttonElement = element;
           }}
+          disabled={this.props.disabled}
         >
           {defined(this.props.selected)
             ? this.props.selected[this.props.textProperty]
