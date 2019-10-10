@@ -602,16 +602,16 @@ class ChartRenderer {
           )[0];
           axis
             .selectAll("line")
-            .style("stroke", dataset.color || "white")
+            .style("stroke", dataset.getColor() || "white")
             .style("opacity", "0.25");
-          axis.selectAll("text").style("fill", dataset.color || "white");
+          axis.selectAll("text").style("fill", dataset.getColor() || "white");
           axis
             .selectAll("path.domain")
-            .style("stroke", dataset.color || "white");
+            .style("stroke", dataset.getColor() || "white");
           // matching unit color to the yaxis it represent
           yNode
             .selectAll(".units-label")
-            .style("fill", dataset.color || "white");
+            .style("fill", dataset.getColor() || "white");
         } else {
           axis
             .selectAll("line")
@@ -749,7 +749,7 @@ function findSelectedData(
 
   // Add .point to each of the selectedData
   return selectedData.map((line, i) => {
-    return { ...line, point: selectedPoints[i] };
+    return { ...line, color: line.getColor(), point: selectedPoints[i] };
   });
 }
 

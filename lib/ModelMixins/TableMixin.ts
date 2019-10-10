@@ -26,6 +26,7 @@ import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
 import LegendTraits from "../Traits/LegendTraits";
 import TableTraits from "../Traits/TableTraits";
+import getNextChartColor from "../Charts/getNextChartColor";
 
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
 //   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
@@ -194,12 +195,15 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
             points.push({ x, y });
           }
 
+          const colorId = `color-${this.name}-${yColumn.name}`;
           const chartData = new ChartData({
             name: yColumn.name,
             categoryName: this.name,
             points,
             units: yColumn.traits.units,
-            color: line.color
+            getColor: () => {
+              return line.color || getNextChartColor(colorId);
+            }
           });
 
           return chartData;

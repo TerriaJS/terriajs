@@ -63,6 +63,7 @@ class FeatureInfoPanelChart extends React.Component {
         renderLegends={() => null}
         renderYAxis={this.renderYAxis.bind(this)}
         renderXAxis={this.renderXAxis.bind(this)}
+        lineStyle={() => this.theme.line.style}
       />
     );
   }
