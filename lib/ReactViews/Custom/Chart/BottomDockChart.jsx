@@ -29,12 +29,14 @@ class BottomDockChart extends React.Component {
     const fontSize = 10;
     return merge({}, VictoryTheme.grayscale, {
       axis: {
+        // Default theme applies to both x & y axes.
         style: {
           axis: {
             stroke: "white"
           },
           axisLabel: {
-            fill: "white"
+            fill: "white",
+            padding: -15
           },
           grid: {
             stroke: "white",
@@ -42,12 +44,13 @@ class BottomDockChart extends React.Component {
             opacity: 0.086
           },
           ticks: {
-            size: 5,
-            stroke: "white"
+            stroke: "white",
+            size: 5
           },
           tickLabels: {
             fill: "white",
-            fontSize
+            fontSize,
+            padding: 1
           }
         }
       }
@@ -67,8 +70,7 @@ class BottomDockChart extends React.Component {
     const Container = combineContainerMixins(mixins, VictoryContainer);
 
     const getTooltipValue = ({ datum }) => {
-      const name = datum.childName.split(":")[1];
-      return `${name}: ${datum.y}`;
+      return `${datum.name}: ${datum.y} ${datum.units}`;
     };
 
     return (
@@ -84,10 +86,24 @@ class BottomDockChart extends React.Component {
     );
   }
 
-  renderYAxis(label, i) {
+  renderYAxis({ units, color }, i, yAxisCount) {
     const tickCount = Math.min(8, Math.round(this.props.height / 30));
+    // If this is the only yAxis, then color it white
+    const axisColor = yAxisCount === 1 ? "white" : color;
     return (
-      <VictoryAxis dependentAxis key={i} label={label} tickCount={tickCount} />
+      <VictoryAxis
+        dependentAxis
+        key={i}
+        offsetX={50 + i * 50}
+        label={units}
+        tickCount={tickCount}
+        style={{
+          axis: { stroke: axisColor },
+          axisLabel: { fill: axisColor },
+          ticks: { stroke: axisColor },
+          tickLabels: { fill: axisColor }
+        }}
+      />
     );
   }
 

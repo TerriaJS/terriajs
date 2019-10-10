@@ -1,4 +1,4 @@
-import uniq from "lodash/uniq";
+import uniqBy from "lodash/uniqBy";
 import { action, computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
@@ -39,7 +39,7 @@ class NewChart extends React.Component {
     height: 110,
     theme: VictoryTheme.material,
     renderXAxis: label => <VictoryAxis label={label} />,
-    renderYAxis: (label, i) => (
+    renderYAxis: ({ label }, i) => (
       <VictoryAxis dependentAxis key={i} label={label} />
     ),
     renderLegends: (legends, width) => (
@@ -77,11 +77,10 @@ class NewChart extends React.Component {
 
   @computed
   get yAxes() {
-    return uniq(
-      this.chartData.map(data => ({
-        units: data.units
-      }))
-    );
+    return uniqBy(this.chartData, ({ units }) => units).map(data => ({
+      units: data.units,
+      color: data.getColor()
+    }));
   }
 
   /**
@@ -116,9 +115,12 @@ class NewChart extends React.Component {
   renderLine(data, index) {
     return (
       <VictoryLine
-        name={`line:${data.name}`}
         key={index}
-        data={data.points}
+        data={data.points.map(p => ({
+          ...p,
+          units: data.units,
+          name: data.name
+        }))}
         style={this.props.lineStyle(data)}
       />
     );
@@ -141,7 +143,7 @@ class NewChart extends React.Component {
         {this.props.renderLegends(this.legends, width)}
         {this.props.renderXAxis(this.xAxis.units)}
         <For each="yAxis" index="i" of={this.yAxes}>
-          {this.props.renderYAxis(yAxis.units, i)}
+          {this.props.renderYAxis(yAxis, i, this.yAxes.length)}
         </For>
         <For each="data" index="i" of={this.chartData}>
           {this.renderData(data, i)}

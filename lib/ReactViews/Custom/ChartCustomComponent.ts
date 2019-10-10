@@ -23,8 +23,8 @@ import CustomComponent, { ProcessNodeContext } from "./CustomComponent";
  * - [y-column]:     The y column name or number to show in the preview, if not the first scalar column.
  * - [y-columns]:    Comma-separated list of y column names or numbers to show in the preview. Overrides "y-column" if provided.
  * - [colors]:       Comma-separated list of css colors to apply to data columns.
- * - [column-titles]: Maps column names to titles. Eg. column-names="time:Time,height:Height,speed:Speed"
- * - [column-units]: Maps column names to units. Eg. column-units="height:m,speed:km/h"
+ * - [column-titles]: Maps column names to titles. Eg. column-names="time:Time,height#Height,speed#Speed"
+ * - [column-units]: Maps column names to units. Eg. column-units="height#m,speed#km/h"
  * - [preview-x-label]: The preview chart x-axis label. Defaults to empty string. Eg. long-names="Last 24 hours,Last 5 days,Time".
  * - [id]:           An id for the chart; give different charts from the same feature different ids. The actual catalogItem.id used for the expanded chart will
  *                   also incorporate the chart title and the catalog item name it came from.
@@ -353,7 +353,7 @@ function parseNodeAttrs(nodeAttrs: { [name: string]: string | undefined }) {
 
   const columnUnits = filterOutUndefined(
     (nodeAttrs["column-units"] || "").split(",").map(s => {
-      const [name, units] = s.split(":");
+      const [name, units] = s.split("#");
       return name ? { name, units } : undefined;
     })
   );
