@@ -28,6 +28,7 @@ class BottomDockChart extends React.Component {
   get theme() {
     const fontSize = 10;
     return merge({}, VictoryTheme.grayscale, {
+      chart: { padding: { top: 30, bottom: 30, left: 50, right: 50 } },
       axis: {
         // Default theme applies to both x & y axes.
         style: {
