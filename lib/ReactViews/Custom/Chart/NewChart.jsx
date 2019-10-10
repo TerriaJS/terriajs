@@ -32,7 +32,7 @@ class NewChart extends React.Component {
     renderLegends: PropTypes.func,
     renderXAxis: PropTypes.func,
     renderYAxis: PropTypes.func,
-    lineStyle: PropTypes.func
+    renderLine: PropTypes.func
   };
 
   static defaultProps = {
@@ -44,11 +44,7 @@ class NewChart extends React.Component {
     ),
     renderLegends: (legends, width) => (
       <VictoryLegend x={width / 2} orientation="horizontal" data={legends} />
-    ),
-    lineStyle: data => ({
-      data: { stroke: data.getColor() },
-      labels: { fill: data.getColor() } // Color of the tooltip labels
-    })
+    )
   };
 
   /**
@@ -121,14 +117,18 @@ class NewChart extends React.Component {
           units: data.units,
           name: data.name
         }))}
-        style={this.props.lineStyle(data)}
+        style={{
+          data: { stroke: data.getColor() },
+          labels: { fill: data.getColor() }
+        }}
       />
     );
   }
 
   renderData(data, index) {
     // TODO: render data based on data.type
-    return this.renderLine(data, index);
+    const renderLine = this.props.renderLine || this.renderLine;
+    return renderLine(data, index);
   }
 
   renderChart(width, height) {

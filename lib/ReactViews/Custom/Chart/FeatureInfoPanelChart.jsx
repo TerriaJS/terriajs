@@ -3,7 +3,7 @@ import { computed } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
-import { VictoryAxis, VictoryTheme } from "victory";
+import { VictoryAxis, VictoryTheme, VictoryLine } from "victory";
 import Chart from "./NewChart";
 
 @observer
@@ -53,6 +53,10 @@ class FeatureInfoPanelChart extends React.Component {
     return <VictoryAxis dependentAxis key={index} tickCount={2} />;
   }
 
+  renderLine(data, index) {
+    return <VictoryLine key={index} data={data.points} />;
+  }
+
   render() {
     return (
       <Chart
@@ -63,7 +67,7 @@ class FeatureInfoPanelChart extends React.Component {
         renderLegends={() => null}
         renderYAxis={this.renderYAxis.bind(this)}
         renderXAxis={this.renderXAxis.bind(this)}
-        lineStyle={() => this.theme.line.style}
+        renderLine={this.renderLine.bind(this)}
       />
     );
   }
