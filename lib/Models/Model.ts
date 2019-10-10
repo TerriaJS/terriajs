@@ -12,6 +12,7 @@ export interface ModelConstructor<T> {
     strata?: Map<string, StratumFromTraits<ModelTraits>>
   ): T;
   prototype: T;
+  TraitsClass: TraitsConstructor<ModelTraits>
 }
 
 export abstract class BaseModel {

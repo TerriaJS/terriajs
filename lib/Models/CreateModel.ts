@@ -24,6 +24,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
 
   abstract class Model extends BaseModel implements ModelInterface<Traits> {
     abstract get type(): string;
+    static readonly TraitsClass = Traits;
     static readonly traits = Traits.traits;
     readonly traits = Traits.traits;
     readonly TraitsClass: TraitsConstructor<InstanceType<T>> = <any>Traits;

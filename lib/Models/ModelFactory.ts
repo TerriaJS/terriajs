@@ -21,4 +21,8 @@ export default class ModelFactory {
     }
     return new Constructor(uniqueId, terria);
   }
+
+  find(type: string): ModelConstructor<BaseModel> | undefined {
+    return this.constructors.get(type);
+  }
 }
