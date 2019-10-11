@@ -5,6 +5,7 @@ import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
 import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
 import CatalogGroup from "../../lib/Models/CatalogGroupNew";
 import GroupMixin from "../../lib/ModelMixins/GroupMixin";
+import { runInAction } from "mobx";
 
 describe("MagdaCatalogReference", function() {
   const recordGroupWithOneCsv = {
@@ -100,6 +101,44 @@ describe("MagdaCatalogReference", function() {
       const group = model.dereferenced as CatalogGroup;
       const csv = group.memberModels[0] as CsvCatalogItem;
       expect(csv.url).toBe("somethingelse.csv");
+    }).then(done).catch(done.fail);
+  });
+
+  it("changes to override trait affect members of a dereferenced group", async function(done) {
+    const terria = new Terria();
+    CatalogMemberFactory.register(CsvCatalogItem.type, CsvCatalogItem);
+
+    const model = new MagdaCatalogReference(undefined, terria);
+    model.setTrait(CommonStrata.definition, "recordId", "test-group");
+    model.setTrait(CommonStrata.definition, "magdaRecord", recordGroupWithOneCsv);
+    model.setTrait(CommonStrata.definition, "override", {
+      members: [
+        {
+          id: "thing-in-group",
+          type: "csv",
+          url: "first.csv"
+        }
+      ]
+    });
+
+    Promise.resolve().then(async () => {
+      await model.loadReference();
+
+      const group = model.dereferenced as CatalogGroup;
+      const csv = group.memberModels[0] as CsvCatalogItem;
+      expect(csv.url).toBe("first.csv");
+
+      runInAction(() => {
+        const override: any = model.override;
+        override.members[0].url = "second.csv";
+      });
+
+      await model.loadReference();
+
+      const group2 = model.dereferenced as CatalogGroup;
+      const csv2 = group2.memberModels[0] as CsvCatalogItem;
+      expect(csv2.url).toBe("second.csv");
+  
     }).then(done).catch(done.fail);
   });
 });
