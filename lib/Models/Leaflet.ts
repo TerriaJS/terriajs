@@ -1,5 +1,5 @@
 import L from "leaflet";
-import { autorun, action } from "mobx";
+import { autorun, action, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
@@ -172,19 +172,7 @@ export default class Leaflet extends GlobeOrMap {
         map.dragging,
         map.tap
       ]);
-      const pickLocation = (e: L.LeafletEvent) => {
-        const mouseEvent = <L.LeafletMouseEvent>e;
-
-        // Handle click events that cross the anti-meridian
-        if (mouseEvent.latlng.lng > 180 || mouseEvent.latlng.lng < -180) {
-          mouseEvent.latlng = mouseEvent.latlng.wrap();
-        }
-
-        // if (!this._dragboxcompleted && that.map.dragging.enabled()) {
-        this._pickFeatures(mouseEvent.latlng);
-        // }
-        // this._dragboxcompleted = false;
-      };
+      const pickLocation = this.pickLocation.bind(this);
       const pickFeature = (entity: Entity, event: L.LeafletMouseEvent) => {
         this._featurePicked(entity, event);
       };
@@ -205,6 +193,23 @@ export default class Leaflet extends GlobeOrMap {
         });
       }
     });
+  }
+
+  /**
+   * Pick feature from mouse click event.
+   */
+  private pickLocation(e: L.LeafletEvent) {
+    const mouseEvent = <L.LeafletMouseEvent>e;
+
+    // Handle click events that cross the anti-meridian
+    if (mouseEvent.latlng.lng > 180 || mouseEvent.latlng.lng < -180) {
+      mouseEvent.latlng = mouseEvent.latlng.wrap();
+    }
+
+    // if (!this._dragboxcompleted && that.map.dragging.enabled()) {
+    this._pickFeatures(mouseEvent.latlng);
+    // }
+    // this._dragboxcompleted = false;
   }
 
   getContainer() {
@@ -456,19 +461,22 @@ export default class Leaflet extends GlobeOrMap {
       const newPickLocation = Ellipsoid.WGS84.cartographicToCartesian(
         pickedLocation
       );
-      // TODO
-      // const mapInteractionModeStack = this.terria.mapInteractionModeStack;
-      // if (
-      //   defined(mapInteractionModeStack) &&
-      //   mapInteractionModeStack.length > 0
-      // ) {
-      //   mapInteractionModeStack[
-      //     mapInteractionModeStack.length - 1
-      //   ].pickedFeatures.pickPosition = newPickLocation;
-      // } else
-      if (isDefined(this.terria.pickedFeatures)) {
-        this.terria.pickedFeatures.pickPosition = newPickLocation;
-      }
+      runInAction(() => {
+        const mapInteractionModeStack = this.terria.mapInteractionModeStack;
+        if (
+          isDefined(mapInteractionModeStack) &&
+          mapInteractionModeStack.length > 0
+        ) {
+          const pickedFeatures =
+            mapInteractionModeStack[mapInteractionModeStack.length - 1]
+              .pickedFeatures;
+          if (isDefined(pickedFeatures)) {
+            pickedFeatures.pickPosition = newPickLocation;
+          }
+        } else if (isDefined(this.terria.pickedFeatures)) {
+          this.terria.pickedFeatures.pickPosition = newPickLocation;
+        }
+      });
 
       // Unset this so that the next click will start building features from scratch.
       this._pickedFeatures = undefined;
@@ -531,7 +539,10 @@ export default class Leaflet extends GlobeOrMap {
           coords: ProviderCoords;
         }[] = results.slice(1);
 
-        pickedFeatures.isLoading = false;
+        runInAction(() => {
+          pickedFeatures.isLoading = false;
+        });
+
         pickedFeatures.providerCoords = {};
 
         const filteredResults = promiseResult.filter(function(result) {
@@ -548,68 +559,70 @@ export default class Leaflet extends GlobeOrMap {
         },
         {});
 
-        pickedFeatures.features = filteredResults.reduce(
-          (allFeatures, result) => {
-            if (
-              this.terria.showSplitter &&
-              isDefined(pickedFeatures.pickPosition)
-            ) {
-              // Skip this feature, unless the imagery layer is on the picked side or
-              // belongs to both sides of the splitter
-              const screenPosition = this._computePositionOnScreen(
-                pickedFeatures.pickPosition
-              );
-              const pickedSide = this._getSplitterSideForScreenPosition(
-                screenPosition
-              );
-              const layerDirection = result.imageryLayer.splitDirection;
-
-              if (
-                !(
-                  layerDirection === pickedSide ||
-                  layerDirection === ImagerySplitDirection.NONE
-                )
-              ) {
-                return allFeatures;
-              }
-            }
-
-            return allFeatures.concat(
-              result.features.map(feature => {
-                (<any>feature).imageryLayer = result.imageryLayer;
-
-                // For features without a position, use the picked location.
-                if (!isDefined(feature.position)) {
-                  feature.position = pickedLocation;
-                }
-
-                return this._createFeatureFromImageryLayerFeature(feature);
-              })
+        const features = filteredResults.reduce((allFeatures, result) => {
+          if (
+            this.terria.showSplitter &&
+            isDefined(pickedFeatures.pickPosition)
+          ) {
+            // Skip this feature, unless the imagery layer is on the picked side or
+            // belongs to both sides of the splitter
+            const screenPosition = this._computePositionOnScreen(
+              pickedFeatures.pickPosition
             );
-          },
-          pickedFeatures.features
-        );
+            const pickedSide = this._getSplitterSideForScreenPosition(
+              screenPosition
+            );
+            const layerDirection = result.imageryLayer.splitDirection;
+
+            if (
+              !(
+                layerDirection === pickedSide ||
+                layerDirection === ImagerySplitDirection.NONE
+              )
+            ) {
+              return allFeatures;
+            }
+          }
+
+          return allFeatures.concat(
+            result.features.map(feature => {
+              (<any>feature).imageryLayer = result.imageryLayer;
+
+              // For features without a position, use the picked location.
+              if (!isDefined(feature.position)) {
+                feature.position = pickedLocation;
+              }
+
+              return this._createFeatureFromImageryLayerFeature(feature);
+            })
+          );
+        }, pickedFeatures.features);
+        runInAction(() => {
+          pickedFeatures.features = features;
+        });
       })
       .catch(e => {
-        pickedFeatures.isLoading = false;
-        pickedFeatures.error =
-          "An unknown error occurred while picking features.";
-
+        runInAction(() => {
+          pickedFeatures.isLoading = false;
+          pickedFeatures.error =
+            "An unknown error occurred while picking features.";
+        });
         throw e;
       });
 
-    // TODO
-    // const mapInteractionModeStack = this.terria.mapInteractionModeStack;
-    // if (
-    //   defined(mapInteractionModeStack) &&
-    //   mapInteractionModeStack.length > 0
-    // ) {
-    //   mapInteractionModeStack[
-    //     mapInteractionModeStack.length - 1
-    //   ].pickedFeatures = this._pickedFeatures;
-    // } else {
-    this.terria.pickedFeatures = this._pickedFeatures;
-    // }
+    runInAction(() => {
+      const mapInteractionModeStack = this.terria.mapInteractionModeStack;
+      if (
+        isDefined(mapInteractionModeStack) &&
+        mapInteractionModeStack.length > 0
+      ) {
+        mapInteractionModeStack[
+          mapInteractionModeStack.length - 1
+        ].pickedFeatures = this._pickedFeatures;
+      } else {
+        this.terria.pickedFeatures = this._pickedFeatures;
+      }
+    });
   }
 
   _reactToSplitterChanges() {

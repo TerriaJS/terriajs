@@ -13,6 +13,6 @@ export default function runLater(
       } catch (e) {
         reject(e);
       }
-    });
+    }, milliseconds);
   });
 }

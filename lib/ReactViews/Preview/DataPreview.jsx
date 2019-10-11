@@ -3,6 +3,7 @@
 import Chart from "../Custom/Chart/Chart";
 import Description from "./Description";
 import GroupPreview from "./GroupPreview";
+import InvokeFunction from "../Analytics/InvokeFunction";
 import MappablePreview from "./MappablePreview";
 import React from "react";
 import createReactClass from "create-react-class";
@@ -66,12 +67,15 @@ const DataPreview = observer(
                 <Description item={previewed} />
               </div>
             </When>
-            {/* <When condition={previewed && typeof previewed.invoke !== 'undefined'}>
-                        <InvokeFunction previewed={previewed}
-                                        terria={this.props.terria}
-                                        viewState={this.props.viewState}
-                        />
-                    </When> */}
+            <When
+              condition={previewed && typeof previewed.invoke !== "undefined"}
+            >
+              <InvokeFunction
+                previewed={previewed}
+                terria={this.props.terria}
+                viewState={this.props.viewState}
+              />
+            </When>
             <When condition={previewed && previewed.isGroup}>
               <div className={Styles.previewInner}>
                 <GroupPreview

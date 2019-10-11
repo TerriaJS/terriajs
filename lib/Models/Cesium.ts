@@ -777,19 +777,20 @@ export default class Cesium extends GlobeOrMap {
       undefined,
       pickPositionCartographic.height
     );
-    // const mapInteractionModeStack = this.terria.mapInteractionModeStack;
-    // if (
-    //   defined(mapInteractionModeStack) &&
-    //   mapInteractionModeStack.length > 0
-    // ) {
-    //   mapInteractionModeStack[
-    //     mapInteractionModeStack.length - 1
-    //   ].pickedFeatures = result;
-    // } else {
+
+    const mapInteractionModeStack = this.terria.mapInteractionModeStack;
     runInAction(() => {
-      this.terria.pickedFeatures = result;
+      if (
+        isDefined(mapInteractionModeStack) &&
+        mapInteractionModeStack.length > 0
+      ) {
+        mapInteractionModeStack[
+          mapInteractionModeStack.length - 1
+        ].pickedFeatures = result;
+      } else {
+        this.terria.pickedFeatures = result;
+      }
     });
-    // }
   }
 
   /**

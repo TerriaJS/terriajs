@@ -8,57 +8,59 @@ import PropTypes from "prop-types";
 
 import defined from "terriajs-cesium/Source/Core/defined";
 
-import ObserveModelMixin from "../ObserveModelMixin";
 import Styles from "./parameter-editors.scss";
 
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import UserDrawing from "../../Models/UserDrawing";
+import { observer } from "mobx-react";
+import { runInAction } from "mobx";
 
-const PolygonParameterEditor = createReactClass({
-  displayName: "PolygonParameterEditor",
-  mixins: [ObserveModelMixin],
+const PolygonParameterEditor = observer(
+  createReactClass({
+    displayName: "PolygonParameterEditor",
 
-  propTypes: {
-    previewed: PropTypes.object,
-    parameter: PropTypes.object,
-    viewState: PropTypes.object
-  },
+    propTypes: {
+      previewed: PropTypes.object,
+      parameter: PropTypes.object,
+      viewState: PropTypes.object
+    },
 
-  setValueFromText(e) {
-    PolygonParameterEditor.setValueFromText(e, this.props.parameter);
-  },
+    setValueFromText(e) {
+      PolygonParameterEditor.setValueFromText(e, this.props.parameter);
+    },
 
-  selectPolygonOnMap() {
-    PolygonParameterEditor.selectOnMap(
-      this.props.previewed.terria,
-      this.props.viewState,
-      this.props.parameter
-    );
-  },
+    selectPolygonOnMap() {
+      PolygonParameterEditor.selectOnMap(
+        this.props.previewed.terria,
+        this.props.viewState,
+        this.props.parameter
+      );
+    },
 
-  render() {
-    return (
-      <div>
-        <input
-          className={Styles.field}
-          type="text"
-          onChange={this.setValueFromText}
-          value={PolygonParameterEditor.getDisplayValue(
-            this.props.parameter.value
-          )}
-        />
-        <button
-          type="button"
-          onClick={this.selectPolygonOnMap}
-          className={Styles.btnSelector}
-        >
-          Click to draw polygon
-        </button>
-      </div>
-    );
-  }
-});
+    render() {
+      return (
+        <div>
+          <input
+            className={Styles.field}
+            type="text"
+            onChange={this.setValueFromText}
+            value={PolygonParameterEditor.getDisplayValue(
+              this.props.parameter.value
+            )}
+          />
+          <button
+            type="button"
+            onClick={this.selectPolygonOnMap}
+            className={Styles.btnSelector}
+          >
+            Click to draw polygon
+          </button>
+        </div>
+      );
+    }
+  })
+);
 
 /**
  * Triggered when user types value directly into field.
@@ -108,7 +110,7 @@ function getPointsLongLats(pointEntities, terria) {
   for (let i = 0; i < pointEnts.length; i++) {
     const currentPoint = pointEnts[i];
     const currentPointPos = currentPoint.position.getValue(
-      terria.clock.currentTime
+      terria.timelineClock.currentTime
     );
     const cartographic = Ellipsoid.WGS84.cartesianToCartographic(
       currentPointPos
@@ -137,13 +139,17 @@ PolygonParameterEditor.selectOnMap = function(terria, viewState, parameter) {
   const userDrawing = new UserDrawing({
     terria: terria,
     onPointClicked: function(pointEntities) {
-      parameter.value = [getPointsLongLats(pointEntities, terria)];
+      runInAction(() => {
+        parameter.value = [getPointsLongLats(pointEntities, terria)];
+      });
     },
     onCleanUp: function() {
       viewState.openAddData();
     },
     onPointMoved: function(customDataSource) {
-      parameter.value = [getPointsLongLats(customDataSource, terria)];
+      runInAction(() => {
+        parameter.value = [getPointsLongLats(customDataSource, terria)];
+      });
     }
   });
   viewState.explorerPanelIsVisible = false;

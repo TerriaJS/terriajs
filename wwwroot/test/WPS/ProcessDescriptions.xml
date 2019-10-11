@@ -1,0 +1,65 @@
+<wps:ProcessDescriptions xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsDescribeProcess_response.xsd" service="WPS" version="1.0.0" xml:lang="en-US">
+<ProcessDescription wps:processVersion="2" storeSupported="true" statusSupported="true">
+	<ows:Identifier>geometryDrill</ows:Identifier>
+	<ows:Title>Geometry Drill (Means)</ows:Title>
+	<ows:Abstract>TODO</ows:Abstract>
+	<ows:Metadata xlink:title="TimeSeries Extractor"/>
+	<DataInputs>
+
+		<Input minOccurs="0" maxOccurs="1">
+			<ows:Identifier>geometry_id</ows:Identifier>
+			<ows:Title>Geometry ID</ows:Title>
+			<ows:Abstract></ows:Abstract>
+			<LiteralData>
+				<ows:DataType ows:reference=""></ows:DataType>
+
+				<ows:AnyValue />
+
+			</LiteralData>
+		</Input>
+
+
+		<Input minOccurs="1" maxOccurs="1">
+			<ows:Identifier>geometry</ows:Identifier>
+			<ows:Title>Geometry</ows:Title>
+			<ows:Abstract>TODO</ows:Abstract>
+			<ComplexData>
+				<Default>
+					<Format>
+						<MimeType>application/vnd.geo+json</MimeType>
+						<Schema>http://geojson.org/geojson-spec.html#geojson</Schema>
+					</Format>
+				</Default>
+				<Supported>
+					<Format>
+						<MimeType>application/vnd.geo+json</MimeType>
+						<Schema>http://geojson.org/geojson-spec.html#geojson</Schema>
+					</Format>
+				</Supported>
+			</ComplexData>
+		</Input>
+
+	</DataInputs>
+	<ProcessOutputs>
+		<Output>
+			<ows:Identifier>Result</ows:Identifier>
+			<ows:Title>Time Series Output</ows:Title>
+			<ows:Abstract>Time series data for location.</ows:Abstract>
+			<ComplexOutput>
+				<Default>
+					<Format>
+						<MimeType>application/vnd.terriajs.catalog-member+json</MimeType>
+						<Schema>https://tools.ietf.org/html/rfc7159</Schema>
+					</Format>
+				</Default>
+				<Supported>
+					<Format>
+						<MimeType>application/vnd.terriajs.catalog-member+json</MimeType>
+						<Schema>https://tools.ietf.org/html/rfc7159</Schema>
+					</Format>
+				</Supported>
+			</ComplexOutput>
+		</Output>
+	</ProcessOutputs>
+</ProcessDescription>
+</wps:ProcessDescriptions>

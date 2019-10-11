@@ -46,6 +46,7 @@ import updateModelFromJson from "./updateModelFromJson";
 import upsertModelFromJson from "./upsertModelFromJson";
 import Workbench from "./Workbench";
 import CorsProxy from "../Core/CorsProxy";
+import MapInteractionMode from "./MapInteractionMode";
 import TimeVarying from "../ModelMixins/TimeVarying";
 
 interface ConfigParameters {
@@ -174,6 +175,13 @@ export default class Terria {
 
   @observable
   selectedFeature: Feature | undefined;
+
+  /**
+   * Gets or sets the stack of map interactions modes.  The mode at the top of the stack
+   * (highest index) handles click interactions with the map
+   */
+  @observable
+  mapInteractionModeStack: MapInteractionMode[] = [];
 
   baseMapContrastColor: string = "#ffffff";
 
