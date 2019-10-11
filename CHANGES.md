@@ -1,6 +1,8 @@
 Change Log
 ==========
 
+### Next Release
+* Add quality slider for 3d map (toggles Cesium's maximumScreenSpaceError & resolutionScale)
 ### next patch
 
 * Allow MapboxMapCatalogItems to be specified in catalog files using type "mapbox-map".
