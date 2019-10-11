@@ -31,8 +31,9 @@ export default class StratumOrder {
 
   constructor() {
     this.addDefinitionStratum(CommonStrata.defaults);
-    this.addDefinitionStratum(CommonStrata.inheritedFromParentGroup);
+    this.addDefinitionStratum(CommonStrata.underride);
     this.addDefinitionStratum(CommonStrata.definition);
+    this.addDefinitionStratum(CommonStrata.override);
     this.addUserStratum(CommonStrata.user);
   }
 
