@@ -34,6 +34,7 @@ import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
 import ModelTraits from "../Traits/ModelTraits";
 import Terria from "./Terria";
 import StratumFromTraits from "./StratumFromTraits";
+import DerivedStrataMap from "../Traits/DerivedStrataMap";
 
 export interface RecordOptions {
   id: string | undefined;
@@ -78,12 +79,12 @@ export class MagdaReferenceTraits extends mixTraits(UrlTraits) {
   magdaRecord?: JsonObject;
 
   @anyTrait({
-    name: "Definition",
+    name: "Override",
     description:
-      "The definition of the dereferenced item, overriding properties that " +
+      "The properties to apply to the dereferenced item, overriding properties that " +
       "come from Magda itself."
   })
-  definition?: JsonObject;
+  override?: JsonObject;
 
   // @primitiveArrayTrait({
   //   name: "Magda Record Aspects",
@@ -134,14 +135,14 @@ export default class MagdaCatalogReference extends UrlMixin(
       : undefined;
 
     const magdaUri = this.uri;
+    const override = toJS(this.override);
 
     const target = MagdaCatalogReference.createMemberFromRecord(
       this.terria,
       magdaUri,
       this.uniqueId,
       existingRecord,
-      this.strata,
-      "definition",
+      override,
       previousTarget
     );
     if (target !== undefined) {
@@ -165,8 +166,7 @@ export default class MagdaCatalogReference extends UrlMixin(
         magdaUri,
         this.uniqueId,
         record,
-        this.strata,
-        "definition",
+        override,
         previousTarget
       );
     });
@@ -177,8 +177,7 @@ export default class MagdaCatalogReference extends UrlMixin(
     magdaUri: uri.URI | undefined,
     id: string | undefined,
     record: JsonObject | undefined,
-    overrideStrata: Map<string, StratumFromTraits<ModelTraits>> | undefined,
-    overrideStrataProperty: string | undefined,
+    override: JsonObject | undefined,
     previousTarget: BaseModel | undefined
   ): BaseModel | undefined {
     if (record === undefined) {
@@ -199,8 +198,7 @@ export default class MagdaCatalogReference extends UrlMixin(
           magdaUri,
           id,
           record,
-          overrideStrata,
-          overrideStrataProperty,
+          override,
           previousTarget
         );
       } else {
@@ -223,8 +221,7 @@ export default class MagdaCatalogReference extends UrlMixin(
           id,
           record,
           aspects.terria,
-          overrideStrata,
-          overrideStrataProperty,
+          override,
           previousTarget
         );
       }
@@ -274,8 +271,7 @@ export default class MagdaCatalogReference extends UrlMixin(
     magdaUri: uri.URI | undefined,
     id: string | undefined,
     record: JsonObject,
-    overrideStrata: Map<string, StratumFromTraits<ModelTraits>> | undefined,
-    overrideStrataProperty: string | undefined,
+    override: JsonObject | undefined,
     previousTarget: BaseModel | undefined
   ): BaseModel | undefined {
     const aspects = record.aspects;
@@ -287,26 +283,14 @@ export default class MagdaCatalogReference extends UrlMixin(
     //        because it uses a NestedStrataMap.
     // bottom -> stuff loaded from magda, needs the new values loaded from magda
 
-    let combined: CatalogGroup;
-    let bottom: Model<CatalogGroupTraits>;
+    let group: CatalogGroup;
     if (previousTarget && previousTarget instanceof CatalogGroup) {
-      combined = previousTarget;
-      bottom = extractBottomModel(previousTarget)!;
+      group = previousTarget;
     } else {
-      const ModelClass = traitsClassToModelClass(CatalogGroupTraits);
-      const top = new ModelClass(
-        id,
-        terria,
-        new NestedStrataMap(
-          this.TraitsClass,
-          overrideStrata!, // TODO
-          overrideStrataProperty!
-        )
-      );
-      bottom = new ModelClass(id, terria);
-      combined = createCombinedModel(top, bottom, CatalogGroup);
+      group = new CatalogGroup(id, terria);
     }
 
+    StratumOrder.addDefinitionStratum("override");
     StratumOrder.addLoadStratum("magda-group");
 
     if (isJsonObject(aspects.group) && Array.isArray(aspects.group.members)) {
@@ -317,13 +301,54 @@ export default class MagdaCatalogReference extends UrlMixin(
           return;
         }
 
+        // This member's traits come from:
+        // - This member itself??
+        // - This member's portion of the parent group's `definition`
+        // - This member's magda data (which may be a portion of the parent group's data from magda)
+        // - Properties that came from elsewhere but apply to this object by ID
+
+        // What does the catalog editor edit?
+        // What does the UI edit?
+        // What happens we need to re-create the model object completely? e.g. it's a different type
+
+        // combine(
+        //   own,
+        //   member's section of override (find by id),
+        //   member's section of loaded (find by id)
+        // )
+
+        // Just regular strata?!
+        // overrides -> override strata?!
+        // other strata from the terria aspect
+        const memberId = member.id;
+
+        // const overrideStrataMap = new DerivedStrataMap(
+        //   combined.TraitsClass,
+        //   () => combined.strata,
+        //   (stratum: any) => (stratum.members || []).find((member: any) => member.id === id),
+        //   (stratum: any, value) => {
+        //     const index = (stratum.members || []).findIndex((member: any) => member.id === id);
+        //     if (index >= 0) {
+        //       stratum.members[index] = value;
+        //     }
+        //   }
+        // );
+
+        // const loadedStrataMap = new Dervied
+
+        let overriddenMember: JsonObject | undefined;
+        if (override && Array.isArray(override.members)) {
+          overriddenMember = override.members.find(
+            member => isJsonObject(member) && member.id === memberId
+          ) as JsonObject | undefined;
+        }
+
         const model = MagdaCatalogReference.createMemberFromRecord(
           terria,
           magdaUri,
           member.id,
           member,
-          undefined,
-          undefined,
+          overriddenMember,
           terria.getModelById(BaseModel, member.id)
         );
 
@@ -333,32 +358,41 @@ export default class MagdaCatalogReference extends UrlMixin(
           if (magdaUri) {
             ref.setTrait(CommonStrata.definition, "url", magdaUri.toString());
           }
-          ref.setTrait(CommonStrata.definition, "recordId", member.id);
+          ref.setTrait(CommonStrata.definition, "recordId", memberId);
+
+          if (overriddenMember) {
+            ref.setTrait(
+              CommonStrata.definition,
+              "override",
+              overriddenMember
+            );
+          }
+
           terria.addModel(ref);
           return ref.uniqueId;
         } else {
-          terria.addModel(model);
+          if (terria.getModelById(BaseModel, member.id) === undefined) {
+            terria.addModel(model);
+          }
           return model.uniqueId;
         }
       });
-      bottom.setTrait("magda-group", "members", filterOutUndefined(ids));
+
+      group.setTrait("magda-group", "members", filterOutUndefined(ids));
     }
 
     if (isJsonObject(aspects.terria)) {
       const terriaStrata = aspects.terria;
       Object.keys(terriaStrata).forEach(stratum => {
-        updateModelFromJson(bottom, stratum, terriaStrata[stratum], true);
+        updateModelFromJson(group, stratum, terriaStrata[stratum], true);
       });
-
-      // Remove any strata that Magda is no longer providing
-      for (let stratum of bottom.strata.keys()) {
-        if (stratum !== "magda-group" && !terriaStrata[stratum]) {
-          bottom.strata.delete(stratum);
-        }
-      }
     }
 
-    return combined;
+    if (override) {
+      updateModelFromJson(group, "override", override, true);
+    }
+
+    return group;
   }
 
   private static createMemberFromTerriaAspect(
@@ -367,8 +401,7 @@ export default class MagdaCatalogReference extends UrlMixin(
     id: string | undefined,
     record: JsonObject,
     terriaAspect: JsonObject,
-    overrideStrata: Map<string, StratumFromTraits<ModelTraits>> | undefined,
-    overrideStrataProperty: string | undefined,
+    override: JsonObject | undefined,
     previousTarget: BaseModel | undefined
   ): BaseModel | undefined {
     // top -> dereference property of parent, never needs to change once created
@@ -379,85 +412,36 @@ export default class MagdaCatalogReference extends UrlMixin(
       return undefined;
     }
 
-    // The Model instance that will receive the traits from the terria aspect
-    let magdaModel: BaseModel | undefined;
-
-    // The overall Model intance, which may be the same as magdaModel, or it
-    // may be a combination of magdaModel and the traits from the overrideStrata.
-    let result: BaseModel | undefined;
+    let result: BaseModel;
 
     if (previousTarget && previousTarget.type === terriaAspect.type) {
-      if (overrideStrata && overrideStrataProperty) {
-        const potentialMagdaModel = extractBottomModel(previousTarget);
-        if (
-          potentialMagdaModel !== undefined &&
-          potentialMagdaModel.strata instanceof NestedStrataMap &&
-          potentialMagdaModel.strata.parent === overrideStrata &&
-          potentialMagdaModel.strata.parentProperty === overrideStrataProperty
-        ) {
-          // We can re-use the previous combined model.
-          result = previousTarget;
-          magdaModel = potentialMagdaModel;
-        }
-      } else if (!(previousTarget.strata instanceof NestedStrataMap)) {
-        // We can re-use the previous non-combined model.
-        result = previousTarget;
-        magdaModel = previousTarget;
-      }
-    }
-
-    if (result === undefined || magdaModel === undefined) {
+      result = previousTarget;
+    } else {
       // Couldn't re-use the previous target, so create a new one.
-      if (overrideStrata && overrideStrataProperty) {
-        const ModelClass = CatalogMemberFactory.find(terriaAspect.type);
-        if (ModelClass === undefined) {
-          throw new TerriaError({
-            sender: this,
-            title: "Unknown type",
-            message: `Could not create unknown model type ${terriaAspect.type}.`
-          });
-        }
-        const LayerClass = traitsClassToModelClass(ModelClass.TraitsClass);
-        const top = new LayerClass(
-          id,
-          terria,
-          new NestedStrataMap(
-            this.TraitsClass,
-            overrideStrata,
-            overrideStrataProperty
-          )
-        );
-        magdaModel = new LayerClass(id, terria);
-        result = createCombinedModel(top, magdaModel, ModelClass);
-      } else {
-        magdaModel = CatalogMemberFactory.create(
-          terriaAspect.type,
-          id,
-          terria
-        );
-        if (magdaModel === undefined) {
-          throw new TerriaError({
-            sender: this,
-            title: "Unknown type",
-            message: `Could not create unknown model type ${terriaAspect.type}.`
-          });
-        }
-        result = magdaModel;
+      const newMember = CatalogMemberFactory.create(
+        terriaAspect.type,
+        id,
+        terria
+      );
+      if (newMember === undefined) {
+        throw new TerriaError({
+          sender: this,
+          title: "Unknown type",
+          message: `Could not create unknown model type ${terriaAspect.type}.`
+        });
       }
+      result = newMember;
     }
 
     Object.keys(terriaAspect).forEach(stratum => {
       if (stratum === "type") {
         return;
       }
-      updateModelFromJson(magdaModel!, stratum, terriaAspect[stratum], true);
+      updateModelFromJson(result, stratum, terriaAspect[stratum], true);
     });
 
-    // Remove any strata that Magda is no longer providing
-    for (let stratum of magdaModel.strata.keys()) {
-      if (!terriaAspect[stratum]) {
-        magdaModel.strata.delete(stratum);
-      }
+    if (override) {
+      updateModelFromJson(result, "override", override, true);
     }
 
     return result;
