@@ -90,6 +90,14 @@ interface ApplyInitDataOptions {
   replaceStratum?: boolean;
 }
 
+interface HomeCameraInit {
+  [key: string]: HomeCameraInit[keyof HomeCameraInit];
+  north: number;
+  east: number;
+  south: number;
+  west: number;
+}
+
 export default class Terria {
   private models = observable.map<string, BaseModel>();
 
@@ -514,7 +522,7 @@ export default class Terria {
     }
 
     if (isJsonObject(initData.homeCamera)) {
-      this.mainViewer.homeCamera = CameraView.fromJson(initData.homeCamera);
+      this.loadHomeCamera(initData.homeCamera);
     }
 
     if (isJsonObject(initData.initialCamera)) {
@@ -599,10 +607,20 @@ export default class Terria {
     });
   }
 
+  @action
+  loadHomeCamera(homeCameraInit: JsonObject | HomeCameraInit) {
+    this.mainViewer.homeCamera = CameraView.fromJson(homeCameraInit);
+  }
+
   loadMagdaConfig(config: any) {
     const aspects = config.aspects;
     const configParams =
       aspects["terria-config"] && aspects["terria-config"].parameters;
+
+    const initObj = aspects["terria-init"];
+    if (isJsonObject(initObj.homeCamera)) {
+      this.loadHomeCamera(initObj.homeCamera);
+    }
 
     if (configParams) {
       this.updateParameters(configParams);
