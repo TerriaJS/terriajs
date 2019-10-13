@@ -22,7 +22,8 @@ const DataCatalogGroup = observer(
       onActionButtonClicked: PropTypes.func,
       removable: PropTypes.bool,
       terria: PropTypes.object,
-      ancestors: PropTypes.array
+      ancestors: PropTypes.array,
+      isTopLevel: PropTypes.bool
     },
 
     getDefaultProps() {
@@ -68,11 +69,6 @@ const DataCatalogGroup = observer(
       );
     },
 
-    isTopLevel() {
-      const parent = this.props.group.parent;
-      return !parent || !parent.parent;
-    },
-
     isSelected() {
       return addedByUser(this.props.group)
         ? this.props.viewState.userDataPreviewedItem === this.props.group
@@ -101,7 +97,7 @@ const DataCatalogGroup = observer(
           title={this.props.ancestors
             .map(member => member.nameInCatalog)
             .join(" → ")}
-          topLevel={this.isTopLevel()}
+          topLevel={this.props.isTopLevel}
           open={this.isOpen()}
           loading={group.isLoading || group.isLoadingMembers}
           emptyMessage="This group is empty"

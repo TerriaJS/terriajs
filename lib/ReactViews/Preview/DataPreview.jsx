@@ -32,8 +32,8 @@ const DataPreview = observer(
 
     render() {
       let previewed = this.props.previewed;
-      if (previewed !== undefined && previewed.dereferenced !== undefined) {
-        previewed = previewed.dereferenced;
+      if (previewed !== undefined && previewed.target !== undefined) {
+        previewed = previewed.target;
       }
 
       let chartData;

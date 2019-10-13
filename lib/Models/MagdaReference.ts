@@ -336,6 +336,19 @@ export default class MagdaReference extends UrlMixin(
           }
           ref.setTrait(CommonStrata.definition, "recordId", memberId);
 
+          if (isJsonObject(member.aspects) && isJsonObject(member.aspects.group)) {
+            // This is most likely a group.
+            ref.hints.setTrait(CommonStrata.definition, "isGroup", true);
+          } else {
+            // This is most likely a mappable or chartable item.
+            ref.hints.setTrait(CommonStrata.definition, "isMappable", true);
+            ref.hints.setTrait(CommonStrata.definition, "isChartable", true);
+          }
+
+          if (isJsonString(member.name)) {
+            ref.hints.setTrait(CommonStrata.definition, "name", member.name);
+          }
+
           if (overriddenMember) {
             ref.setTrait(CommonStrata.definition, "override", overriddenMember);
           }
@@ -363,6 +376,9 @@ export default class MagdaReference extends UrlMixin(
     if (isJsonObject(aspects.terria)) {
       const terriaStrata = aspects.terria;
       Object.keys(terriaStrata).forEach(stratum => {
+        if (stratum === "id" || stratum === "type") {
+          return;
+        }
         updateModelFromJson(group, stratum, terriaStrata[stratum], true);
       });
     }
@@ -413,7 +429,7 @@ export default class MagdaReference extends UrlMixin(
     }
 
     Object.keys(terriaAspect).forEach(stratum => {
-      if (stratum === "type") {
+      if (stratum === "type" || stratum === "id") {
         return;
       }
       updateModelFromJson(result, stratum, terriaAspect[stratum], true);

@@ -26,7 +26,8 @@ export default observer(
       onActionButtonClicked: PropTypes.func,
       removable: PropTypes.bool,
       terria: PropTypes.object,
-      ancestors: PropTypes.array
+      ancestors: PropTypes.array,
+      isTopLevel: PropTypes.bool
     },
 
     render() {
@@ -43,7 +44,8 @@ export default observer(
             viewState={this.props.viewState}
             terria={this.props.terria}
             ancestors={this.props.ancestors}
-            onActionButtonClicked={this.props.onActionButtonClicked}
+            onActionButtonClicked={this.props.onActionButtonClicked},
+            isTopLevel={this.props.isTopLevel}
           />
         );
       } else if (GroupMixin.isMixedInto(member)) {
@@ -57,6 +59,7 @@ export default observer(
             removable={this.props.removable}
             terria={this.props.terria}
             ancestors={this.props.ancestors}
+            isTopLevel={this.props.isTopLevel}
           />
         );
       } else {

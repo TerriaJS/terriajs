@@ -15,7 +15,8 @@ const DataCatalogReference = observer(
       viewState: PropTypes.object.isRequired,
       onActionButtonClicked: PropTypes.func,
       terria: PropTypes.object,
-      ancestors: PropTypes.array
+      ancestors: PropTypes.array,
+      isTopLevel: PropTypes.bool
     },
 
     setPreviewedItem() {
@@ -51,7 +52,8 @@ const DataCatalogReference = observer(
               title={this.props.ancestors
                 .map(member => member.nameInCatalog)
                 .join(" → ")}
-              onClick={this.onClick}
+              onClick={this.setPreviewedItem}
+              topLevel={this.props.isTopLevel}
             />
           </When>
           <When condition={hints.isFunction}>Function!</When>
@@ -64,7 +66,7 @@ const DataCatalogReference = observer(
                 .map(m => m.nameInCatalog)
                 .join(" -> ")}
               btnState="add"
-              onBtnClick={this.onClick}
+              onBtnClick={this.setPreviewedItem}
             />
           </Otherwise>
         </Choose>
