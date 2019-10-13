@@ -40,8 +40,8 @@ export default class MagdaCatalogGroup extends MagdaMixin(
     );
   }
 
-  get dereferenced() {
-    return super.dereferenced as CatalogGroup;
+  get target() {
+    return super.target as CatalogGroup;
   }
 
   protected forceLoadReference(

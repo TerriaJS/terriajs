@@ -125,8 +125,8 @@ export default class Workbench {
 }
 
 function dereferenceModel(model: BaseModel): BaseModel {
-  if (ReferenceMixin.is(model) && model.dereferenced !== undefined) {
-    return model.dereferenced;
+  if (ReferenceMixin.is(model) && model.target !== undefined) {
+    return model.target;
   }
   return model;
 }

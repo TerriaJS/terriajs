@@ -241,7 +241,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     return new ModelGraphics(options);
   }
 
-  constructor(id: string, terria: Terria) {
+  constructor(id: string | undefined, terria: Terria) {
     super(id, terria);
     // We should only poll when our map items have consumers
     onBecomeObserved(this, "mapItems", () => {

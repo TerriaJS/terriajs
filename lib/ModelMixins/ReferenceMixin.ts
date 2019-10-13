@@ -1,15 +1,15 @@
-import { computed, observable, runInAction, untracked } from "mobx";
+import { observable, runInAction, untracked } from "mobx";
+import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import Model, { BaseModel, ModelInterface } from "../Models/Model";
 import ModelTraits from "../Traits/ModelTraits";
-import AsyncLoader from "../Core/AsyncLoader";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 
 type RequiredTraits = ModelTraits;
 
 interface ReferenceInterface extends ModelInterface<RequiredTraits> {
   readonly isLoadingReference: boolean;
-  readonly dereferenced: BaseModel | undefined;
+  readonly target: BaseModel | undefined;
   loadReference(): Promise<void>;
 }
 /**
@@ -23,10 +23,10 @@ interface ReferenceInterface extends ModelInterface<RequiredTraits> {
 function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
   abstract class ReferenceMixin extends Base implements ReferenceInterface {
     @observable
-    private _dereferenced: BaseModel | undefined;
+    private _target: BaseModel | undefined;
 
     private _referenceLoader = new AsyncLoader(() => {
-      const previousTarget = untracked(() => this._dereferenced);
+      const previousTarget = untracked(() => this._target);
       return this.forceLoadReference(previousTarget).then(target => {
         if (
           target &&
@@ -38,7 +38,7 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
           );
         }
         runInAction(() => {
-          this._dereferenced = target;
+          this._target = target;
         });
       });
     });
@@ -62,8 +62,8 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
     /**
      * Gets the target model of the reference. This model must have the same `id` as this model.
      */
-    get dereferenced(): BaseModel | undefined {
-      return this._dereferenced;
+    get target(): BaseModel | undefined {
+      return this._target;
     }
 
     /**
@@ -79,7 +79,7 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
 }
 
 ReferenceMixin.is = function(model: BaseModel): model is ReferenceInterface {
-  return "loadReference" in model && "dereferenced" in model;
+  return "loadReference" in model && "target" in model;
 };
 
 export default ReferenceMixin;

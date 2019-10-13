@@ -7,6 +7,9 @@ import React from "react";
 import GroupMixin from "../../ModelMixins/GroupMixin";
 import DataCatalogGroup from "./DataCatalogGroup";
 import DataCatalogItem from "./DataCatalogItem";
+import DataCatalogReference from "./DataCatalogReference";
+import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
+
 
 /**
  * Component that is either a {@link CatalogItem} or a {@link DataCatalogMember} and encapsulated this choosing logic.
@@ -27,10 +30,26 @@ export default observer(
     },
 
     render() {
-      if (GroupMixin.isMixedInto(this.props.member)) {
+      const member =
+        ReferenceMixin.is(this.props.member) &&
+        this.props.member.target !== undefined
+          ? this.props.member.target
+          : this.props.member;
+
+      if (ReferenceMixin.is(member)) {
+        return (
+          <DataCatalogReference
+            reference={member}
+            viewState={this.props.viewState}
+            terria={this.props.terria}
+            ancestors={this.props.ancestors}
+            onActionButtonClicked={this.props.onActionButtonClicked}
+          />
+        );
+      } else if (GroupMixin.isMixedInto(member)) {
         return (
           <DataCatalogGroup
-            group={this.props.member}
+            group={member}
             viewState={this.props.viewState}
             manageIsOpenLocally={this.props.manageIsOpenLocally}
             overrideState={this.props.overrideState}
@@ -43,7 +62,7 @@ export default observer(
       } else {
         return (
           <DataCatalogItem
-            item={this.props.member}
+            item={member}
             viewState={this.props.viewState}
             overrideState={this.props.overrideState}
             onActionButtonClicked={this.props.onActionButtonClicked}

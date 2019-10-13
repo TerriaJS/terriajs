@@ -47,7 +47,8 @@ import upsertModelFromJson from "./upsertModelFromJson";
 import Workbench from "./Workbench";
 import CorsProxy from "../Core/CorsProxy";
 import TimeVarying from "../ModelMixins/TimeVarying";
-import MagdaCatalogGroup from "./MagdaCatalogGroup";
+import MagdaReference from "./MagdaReference";
+import CatalogGroup from "./CatalogGroupNew";
 
 interface ConfigParameters {
   [key: string]: ConfigParameters[keyof ConfigParameters];
@@ -437,7 +438,7 @@ export default class Terria {
         replaceStratum &&
         dereferenced === undefined &&
         ReferenceMixin.is(loadedModel) &&
-        loadedModel.dereferenced !== undefined
+        loadedModel.target !== undefined
       ) {
         dereferenced = {};
       }
@@ -451,7 +452,7 @@ export default class Terria {
                 CatalogMemberFactory,
                 this,
                 "/",
-                loadedModel.dereferenced,
+                loadedModel.target,
                 stratumId,
                 dereferenced,
                 replaceStratum
@@ -587,7 +588,7 @@ export default class Terria {
         for (let model of newItems) {
           if (ReferenceMixin.is(model)) {
             promises.push(model.loadReference());
-            model = model.dereferenced || model;
+            model = model.target || model;
           }
 
           if (Mappable.is(model)) {
@@ -609,16 +610,19 @@ export default class Terria {
       this.updateParameters(configParams);
     }
     if (aspects.group && aspects.group.members) {
-      const magdaGroup = new MagdaCatalogGroup("/", this);
-      magdaGroup.setTrait(CommonStrata.definition, "name", "Root Group");
+      const magdaGroup = new MagdaReference("/", this);
+      //magdaGroup.setTrait(CommonStrata.definition, "name", "Root Group");
       magdaGroup.setTrait(
         CommonStrata.definition,
         "url",
         "https://nsw.dt.terria.io" // TODO
       );
-      magdaGroup.setTrait(CommonStrata.definition, "groupId", config.id);
+      magdaGroup.setTrait(CommonStrata.definition, "recordId", config.id);
+      magdaGroup.setTrait(CommonStrata.definition, "magdaRecord", config);
       magdaGroup.loadReference().then(() => {
-        this.catalog.group = magdaGroup.dereferenced;
+        if (magdaGroup.target instanceof CatalogGroup) {
+          this.catalog.group = magdaGroup.target;
+        }
       });
 
       // // Transform the Magda catalog structure to the Terria one.
