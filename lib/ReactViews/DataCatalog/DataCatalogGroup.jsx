@@ -1,12 +1,12 @@
-import React from "react";
 import createReactClass from "create-react-class";
+import { observer } from "mobx-react";
 import PropTypes from "prop-types";
+import React from "react";
 import addedByUser from "../../Core/addedByUser";
+import openGroup from "../../Models/openGroup";
 import removeUserAddedData from "../../Models/removeUserAddedData";
 import CatalogGroup from "./CatalogGroup";
 import DataCatalogMember from "./DataCatalogMember";
-import { observer } from "mobx-react";
-import CommonStrata from "../../Models/CommonStrata";
 
 const DataCatalogGroup = observer(
   createReactClass({
@@ -56,8 +56,9 @@ const DataCatalogGroup = observer(
     toggleOpen() {
       if (this.props.manageIsOpenLocally) {
         this.toggleStateIsOpen();
+      } else {
+        openGroup(this.props.terria, this.props.group);
       }
-      this.props.group.toggleOpen(CommonStrata.user);
     },
 
     clickGroup() {
@@ -115,6 +116,7 @@ const DataCatalogGroup = observer(
               <DataCatalogMember
                 key={item.uniqueId}
                 member={item}
+                terria={this.props.terria}
                 viewState={this.props.viewState}
                 userData={this.props.userData}
                 overrideOpen={this.props.manageIsOpenLocally}

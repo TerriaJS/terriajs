@@ -1,4 +1,3 @@
-import undefined from "../CopyrightModule";
 import createStratumInstance from "../Models/createStratumInstance";
 import StratumFromTraits from "../Models/StratumFromTraits";
 import ModelTraits from "./ModelTraits";
