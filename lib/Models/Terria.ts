@@ -36,7 +36,6 @@ import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import InitSource, { isInitOptions, isInitUrl } from "./InitSource";
 import Leaflet from "./Leaflet";
-import magdaRecordToCatalogMemberDefinition from "./magdaRecordToCatalogMember";
 import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
 import NoViewer from "./NoViewer";
