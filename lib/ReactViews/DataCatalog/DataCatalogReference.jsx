@@ -112,7 +112,20 @@ const DataCatalogReference = observer(
               open={this.props.reference.isLoadingReference}
             />
           </When>
-          <When condition={hints.isFunction}>Function!</When>
+          <When condition={hints.isFunction}>
+          <CatalogItem
+              onTextClick={this.setPreviewedItem}
+              selected={this.isSelected()}
+              text={hints.name || "..."}
+              title={this.props.ancestors
+                .map(m => m.nameInCatalog)
+                .join(" -> ")}
+              btnState={
+                this.props.reference.isLoadingReference ? "loading" : "stats"
+              }
+              onBtnClick={this.setPreviewedItem}
+            />
+          </When>
           <Otherwise>
             <CatalogItem
               onTextClick={this.setPreviewedItem}
