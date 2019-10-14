@@ -43,7 +43,9 @@ const DataCatalogReference = observer(
       );
     },
 
-    add() {
+    add(event) {
+      const keepCatalogOpen = event.shiftKey || event.ctrlKey;
+
       if (this.props.onActionButtonClicked) {
         this.props.onActionButtonClicked(this.props.reference);
         return;
@@ -62,12 +64,11 @@ const DataCatalogReference = observer(
         const addPromise = addToWorkbench(
           this.props.terria.workbench,
           this.props.reference,
-          true
+          !this.props.terria.workbench.contains(this.props.reference)
         ).then(() => {
           if (
             this.props.terria.workbench.contains(this.props.reference) &&
-            !event.shiftKey &&
-            !event.ctrlKey
+            !keepCatalogOpen
           ) {
             runInAction(() => {
               this.props.viewState.explorerPanelIsVisible = false;

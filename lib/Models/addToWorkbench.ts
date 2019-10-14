@@ -22,6 +22,11 @@ export default function addToWorkbench(
   item: BaseModel,
   add: boolean = true
 ): Promise<void> {
+  if (!add) {
+    workbench.remove(item);
+    return Promise.resolve();
+  }
+
   workbench.add(item);
 
   if (ReferenceMixin.is(item)) {

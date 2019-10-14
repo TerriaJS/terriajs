@@ -55,15 +55,16 @@ const DataCatalogItem = observer(
     },
 
     toggleEnable(event) {
+      const keepCatalogOpen = event.shiftKey || event.ctrlKey;
+
       const addPromise = addToWorkbench(
         this.props.terria.workbench,
         this.props.item,
-        true
+        !this.props.terria.workbench.contains(this.props.item)
       ).then(() => {
         if (
           this.props.terria.workbench.contains(this.props.item) &&
-          !event.shiftKey &&
-          !event.ctrlKey
+          !keepCatalogOpen
         ) {
           runInAction(() => {
             this.props.viewState.explorerPanelIsVisible = false;
