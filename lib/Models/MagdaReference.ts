@@ -370,7 +370,9 @@ export default class MagdaReference extends UrlMixin(
             ref.setTrait(CommonStrata.definition, "override", overriddenMember);
           }
 
-          terria.addModel(ref);
+          if (terria.getModelById(BaseModel, member.id) === undefined) {
+            terria.addModel(ref);
+          }
           return ref.uniqueId;
         } else {
           if (terria.getModelById(BaseModel, member.id) === undefined) {
