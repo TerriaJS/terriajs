@@ -10,6 +10,7 @@ Change Log
   * Add momentPoints chart type to plot points along an available line chart
   * Add zooming on chart panel
   * Various preventative fixes to prevent charge crashes
+* Fixes to Sensor Observation Service related requests
 
 ### v7.6.11
 
