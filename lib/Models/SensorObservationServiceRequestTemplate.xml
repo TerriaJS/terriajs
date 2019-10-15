@@ -8,30 +8,30 @@
   xmlns:swes="http://www.opengis.net/swes/2.0"
   xsi:schemaLocation="http://www.w3.org/2003/05/soap-envelope http://www.w3.org/2003/05/soap-envelope/soap-envelope.xsd http://www.opengis.net/sos/2.0 http://schemas.opengis.net/sos/2.0/sos.xsd"
 >
-<soap12:Header>
-<wsa:To>http://www.ogc.org/SOS</wsa:To>
-<wsa:Action>http://www.opengis.net/def/serviceOperation/sos/{{actionClass}}/2.0/{{action}}</wsa:Action>
-<wsa:ReplyTo>
-<wsa:Address>http://www.w3.org/2005/08/addressing/anonymous</wsa:Address>
-</wsa:ReplyTo>
-<wsa:MessageID>0</wsa:MessageID>
-</soap12:Header>
-<soap12:Body>
-<sos:{{action}} service="SOS" version="2.0.0">
-{{#parameters}}
-<sos:{{name}}>{{value}}</sos:{{name}}>
-{{/parameters}}
-{{#temporalFilters}}
-<sos:temporalFilter>
-<fes:During>
-<fes:ValueReference>om:phenomenonTime</fes:ValueReference>
-<gml:TimePeriod gml:id="tp{{index}}">
-<gml:beginPosition>{{startDate}}</gml:beginPosition>
-<gml:endPosition>{{endDate}}</gml:endPosition>
-</gml:TimePeriod>
-</fes:During>
-</sos:temporalFilter>
-{{/temporalFilters}}
-</sos:{{action}}>
-</soap12:Body>
+    <soap12:Header>
+        <wsa:To>http://www.ogc.org/SOS</wsa:To>
+        <wsa:Action>http://www.opengis.net/def/serviceOperation/sos/{{actionClass}}/2.0/{{action}}</wsa:Action>
+        <wsa:ReplyTo>
+            <wsa:Address>http://www.w3.org/2005/08/addressing/anonymous</wsa:Address>
+        </wsa:ReplyTo>
+    <wsa:MessageID>0</wsa:MessageID>
+    </soap12:Header>
+    <soap12:Body>
+        <sos:{{action}} service="SOS" version="2.0.0">
+            {{#temporalFilters}}
+            <sos:temporalFilter>
+                <fes:During>
+                    <fes:ValueReference>om:phenomenonTime</fes:ValueReference>
+                    <gml:TimePeriod gml:id="tp{{index}}">
+                        <gml:beginPosition>{{startDate}}</gml:beginPosition>
+                        <gml:endPosition>{{endDate}}</gml:endPosition>
+                    </gml:TimePeriod>
+                </fes:During>
+            </sos:temporalFilter>
+            {{/temporalFilters}}
+            {{#parameters}}
+            <sos:{{name}}>{{value}}</sos:{{name}}>
+            {{/parameters}}
+        </sos:{{action}}>
+    </soap12:Body>
 </soap12:Envelope>
