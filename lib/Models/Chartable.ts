@@ -8,10 +8,24 @@ export interface ChartAxis {
   units?: string;
 }
 
+export function axesMatch(a1: ChartAxis, a2: ChartAxis) {
+  return a1.scale === a2.scale && a1.units === a2.units;
+}
+
+export interface ChartItem {
+  name: string;
+  item: Model<ModelTraits>;
+  showInChartPanel: boolean;
+  isSelectedInWorkbench: boolean;
+  xAxis: ChartAxis;
+  getColor: () => string; // Gets the color representing the chart item
+  updateIsSelectedInWorkbench: (isSelected: boolean) => void; // Unselect the chart item in workbench
+}
+
 interface Chartable extends Model<ModelTraits> {
   readonly chartItems: ReadonlyArray<ChartData>;
-  /* Description of the x-axis of the chartable item */
-  readonly chartAxis: Readonly<ChartAxis | undefined>;
+  readonly chartItems2: ReadonlyArray<ChartItem>; // TODO: rename to chartItems2
+  readonly chartAxis: Readonly<ChartAxis | undefined>; // TODO: remove
   loadChartItems(): Promise<void>;
 }
 

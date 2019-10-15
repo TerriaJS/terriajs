@@ -5,13 +5,15 @@ import PropTypes from "prop-types";
 import React from "react";
 import { VictoryAxis, VictoryTheme, VictoryLine } from "victory";
 import Chart from "./NewChart";
+import Chartable from "../../../Models/Chartable";
 
 @observer
 class FeatureInfoPanelChart extends React.Component {
   static propTypes = {
     width: PropTypes.number,
     height: PropTypes.number,
-    items: PropTypes.array.isRequired,
+    terria: PropTypes.object.isRequired,
+    item: PropTypes.object.isRequired,
     xAxisLabel: PropTypes.string
   };
 
@@ -58,12 +60,23 @@ class FeatureInfoPanelChart extends React.Component {
   }
 
   render() {
+    if (!Chartable.is(this.props.item)) {
+      return null;
+    }
+
+    this.props.item.loadChartItems();
+    const chartItem = this.props.item.chartItems2[0];
+    if (!chartItem) {
+      return null;
+    }
+
     return (
       <Chart
         width={this.props.width}
         height={this.props.height}
         theme={this.theme}
-        items={this.props.items}
+        chartItems={[chartItem]}
+        xAxis={chartItem.xAxis}
         renderLegends={() => null}
         renderYAxis={this.renderYAxis.bind(this)}
         renderXAxis={this.renderXAxis.bind(this)}

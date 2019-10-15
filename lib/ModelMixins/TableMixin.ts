@@ -16,7 +16,7 @@ import { JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import JSRegionProviderList from "../Map/RegionProviderList";
-import { ChartAxis } from "../Models/Chartable";
+import { ChartAxis, ChartItem } from "../Models/Chartable";
 import { ImageryParts } from "../Models/Mappable";
 import Model from "../Models/Model";
 import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
@@ -27,6 +27,7 @@ import TableStyle from "../Table/TableStyle";
 import LegendTraits from "../Traits/LegendTraits";
 import TableTraits from "../Traits/TableTraits";
 import getNextChartColor from "../Charts/getNextChartColor";
+import CommonStrata from "../Models/CommonStrata";
 
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
 //   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
@@ -148,6 +149,83 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
         this.createLongitudeLatitudeDataSource(this.activeTableStyle),
         this.createRegionMappedImageryLayer(this.activeTableStyle)
       ]);
+    }
+
+    /**
+     * Gets the items to show on a chart.
+     *
+     * TODO: rename to chartItems() when we have removed all references to the
+     * current implementation.
+     */
+    @computed
+    get chartItems2(): ChartItem[] {
+      const style = this.activeTableStyle;
+      if (style === undefined || !style.isChart()) {
+        return [];
+      }
+
+      const xColumn = style.xAxisColumn;
+      const lines = style.chartTraits.lines;
+      if (xColumn === undefined || lines.length === 0) {
+        return [];
+      }
+
+      const xValues: readonly (Date | number | null)[] =
+        xColumn.type === TableColumnType.time
+          ? xColumn.valuesAsDates.values
+          : xColumn.valuesAsNumbers.values;
+
+      const xAxis: ChartAxis = {
+        scale: xColumn.type === TableColumnType.time ? "time" : "linear",
+        units: xColumn.traits.units
+      };
+
+      return filterOutUndefined(
+        lines.map(line => {
+          const yColumn = line.yAxisColumn
+            ? this.findColumnByName(line.yAxisColumn)
+            : undefined;
+          if (yColumn === undefined) {
+            return undefined;
+          }
+          const yValues = yColumn.valuesAsNumbers.values;
+
+          const points: ChartPoint[] = [];
+          for (let i = 0; i < xValues.length; ++i) {
+            const x = xValues[i];
+            const y = yValues[i];
+            if (x === null || y === null) {
+              continue;
+            }
+            points.push({ x, y });
+          }
+
+          const colorId = `color-${this.name}-${yColumn.name}`;
+
+          return {
+            item: this,
+            name: yColumn.name,
+            categoryName: this.name,
+            xAxis,
+            points,
+            units: yColumn.traits.units,
+            isSelectedInWorkbench: line.isSelectedInWorkbench,
+            showInChartPanel: this.show && line.isSelectedInWorkbench,
+            updateIsSelectedInWorkbench: (isSelected: boolean) => {
+              runInAction(() => {
+                line.setTrait(
+                  CommonStrata.user,
+                  "isSelectedInWorkbench",
+                  isSelected
+                );
+              });
+            },
+            getColor: () => {
+              return line.color || getNextChartColor(colorId);
+            }
+          };
+        })
+      );
     }
 
     /**

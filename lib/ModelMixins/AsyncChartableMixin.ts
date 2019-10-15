@@ -1,7 +1,7 @@
 import ChartData from "../Charts/ChartData";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
-import Chartable, { ChartAxis } from "../Models/Chartable";
+import Chartable, { ChartAxis, ChartItem } from "../Models/Chartable";
 import Model from "../Models/Model";
 import MappableTraits from "../Traits/MappableTraits";
 
@@ -37,6 +37,11 @@ export default function AsyncChartableMixin<
      * Gets the items to show on a chart.
      */
     abstract get chartItems(): ChartData[];
+
+    /**
+     * Gets the items to show on a chart.
+     */
+    abstract get chartItems2(): ChartItem[];
 
     /**
      * Description of the x-axis of the chartable item

@@ -171,7 +171,8 @@ export default class ChartCustomComponent extends CustomComponent {
     chartElements.push(
       React.createElement(Chart, {
         key: "chart",
-        items: [chartItem],
+        terria: context.terria,
+        item: chartItem,
         xAxisLabel: attrs.previewXLabel
         // styling: attrs.styling,
         // highlightX: attrs.highlightX,

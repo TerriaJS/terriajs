@@ -21,7 +21,8 @@ class BottomDockChart extends React.Component {
   static propTypes = {
     width: PropTypes.number,
     height: PropTypes.number,
-    items: PropTypes.array.isRequired
+    chartItems: PropTypes.array.isRequired,
+    xAxis: PropTypes.object.isRequired
   };
 
   @computed
@@ -113,7 +114,8 @@ class BottomDockChart extends React.Component {
       <Chart
         width={this.props.width}
         height={this.props.height}
-        items={this.props.items}
+        chartItems={this.props.chartItems}
+        xAxis={this.props.xAxis}
         theme={this.theme}
         containerComponent={this.containerComponent}
         renderYAxis={this.renderYAxis.bind(this)}
