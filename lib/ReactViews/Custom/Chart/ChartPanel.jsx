@@ -10,7 +10,7 @@ import Chartable from "../../../Models/Chartable";
 import CommonStrata from "../../../Models/CommonStrata";
 import raiseErrorOnRejectedPromise from "../../../Models/raiseErrorOnRejectedPromise";
 import Icon from "../../Icon";
-// import ChartPanelDownloadButton from "./ChartPanelDownloadButton";
+import ChartPanelDownloadButton from "./ChartPanelDownloadButton";
 import Loader from "../../Loader";
 import Styles from "./chart-panel.scss";
 import Chart from "./NewChart";
@@ -99,6 +99,7 @@ const ChartPanel = observer(
             // data={data}
             axisLabel={{ x: xUnits, y: undefined }}
             height={height - 34}
+            grid={{ x: true, y: true }}
           />
         );
       }
@@ -111,9 +112,9 @@ const ChartPanel = observer(
                   <label className={Styles.sectionLabel}>
                     {loader || "Charts"}
                   </label>
-                  {/* <ChartPanelDownloadButton
-                    chartableItems={this.props.terria.catalog.chartableItems}
-                  /> */}
+                  <ChartPanelDownloadButton
+                    chartableItems={this.chartableItems()}
+                  />
                   <button
                     type="button"
                     title="Close Panel"
