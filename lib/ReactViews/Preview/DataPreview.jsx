@@ -112,15 +112,22 @@ const DataPreview = observer(
     renderUnloadedReference() {
       const isLoading = this.props.previewed.isLoadingReference;
       const hasTarget = this.props.previewed.target !== undefined;
-      return <div className={Styles.preview}>
-        <div className={Styles.previewInner}>
-          {isLoading && <Loader />}
-          {!isLoading && !hasTarget && <div className={Styles.placeholder}>
-            <h2>Unable to resolve reference</h2>
-            <p>This reference could not be resolved because it is invalid or because it points to something that cannot be visualised.</p>
-          </div>}
+      return (
+        <div className={Styles.preview}>
+          <div className={Styles.previewInner}>
+            {isLoading && <Loader />}
+            {!isLoading && !hasTarget && (
+              <div className={Styles.placeholder}>
+                <h2>Unable to resolve reference</h2>
+                <p>
+                  This reference could not be resolved because it is invalid or
+                  because it points to something that cannot be visualised.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
-      </div>;
+      );
     }
   })
 );

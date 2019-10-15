@@ -52,8 +52,5 @@ export default function registerCatalogMembers() {
     OpenStreetMapCatalogItem.type,
     OpenStreetMapCatalogItem
   );
-  CatalogMemberFactory.register(
-    MagdaReference.type,
-    MagdaReference
-  );
+  CatalogMemberFactory.register(MagdaReference.type, MagdaReference);
 }

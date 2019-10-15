@@ -114,7 +114,7 @@ const DataCatalogReference = observer(
             />
           </When>
           <When condition={hints.isFunction}>
-          <CatalogItem
+            <CatalogItem
               onTextClick={this.setPreviewedItem}
               selected={this.isSelected()}
               text={hints.name || "..."}

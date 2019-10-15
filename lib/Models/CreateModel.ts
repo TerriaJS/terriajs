@@ -44,7 +44,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
       id: string | undefined,
       terria: Terria,
       sourceReference: BaseModel | undefined,
-      strata: Map<string, StratumTraits> | undefined,
+      strata: Map<string, StratumTraits> | undefined
     ) {
       super(id, terria, sourceReference);
       this.strata = strata || observable.map<string, StratumTraits>();

@@ -18,14 +18,17 @@ import { ObjectTrait } from "../Traits/objectTrait";
  * @param bottom The bottom model to combine.
  * @returns The combined model.
  */
-export default function createCombinedModel<T extends ModelTraits, TModelClass extends ModelConstructor<Model<T>>>(
+export default function createCombinedModel<
+  T extends ModelTraits,
+  TModelClass extends ModelConstructor<Model<T>>
+>(
   top: Model<T>,
   bottom: Model<T>,
   ModelClass: TModelClass
 ): InstanceType<TModelClass>;
 export default function createCombinedModel<T extends ModelTraits>(
   top: Model<T>,
-  bottom: Model<T>,
+  bottom: Model<T>
 ): Model<T>;
 export default function createCombinedModel(
   top: BaseModel,
@@ -45,12 +48,14 @@ export default function createCombinedModel(
 
   const strata = new CombinedStrata(top, bottom);
   if (!ModelClass) {
-    ModelClass = traitsClassToModelClass(top.TraitsClass)
+    ModelClass = traitsClassToModelClass(top.TraitsClass);
   }
   return new ModelClass(top.uniqueId, top.terria, undefined, strata);
 }
 
-export function extractTopModel<T extends ModelTraits>(model: Model<T>): Model<T> | undefined;
+export function extractTopModel<T extends ModelTraits>(
+  model: Model<T>
+): Model<T> | undefined;
 export function extractTopModel(model: BaseModel): BaseModel | undefined;
 export function extractTopModel(model: BaseModel): BaseModel | undefined {
   if (model.strata instanceof CombinedStrata) {
@@ -59,17 +64,18 @@ export function extractTopModel(model: BaseModel): BaseModel | undefined {
   return undefined;
 }
 
-export function extractBottomModel<T extends ModelTraits>(model: Model<T>): Model<T> | undefined;
+export function extractBottomModel<T extends ModelTraits>(
+  model: Model<T>
+): Model<T> | undefined;
 export function extractBottomModel(model: BaseModel): BaseModel | undefined;
 export function extractBottomModel(model: BaseModel): BaseModel | undefined {
   if (model.strata instanceof CombinedStrata) {
     return model.strata.bottom;
   }
- return undefined;
+  return undefined;
 }
 
-class CombinedStrata
-  implements Map<string, StratumFromTraits<ModelTraits>> {
+class CombinedStrata implements Map<string, StratumFromTraits<ModelTraits>> {
   constructor(readonly top: BaseModel, readonly bottom: BaseModel) {}
 
   clear(): void {
@@ -103,7 +109,9 @@ class CombinedStrata
   get size(): number {
     return this.strata.size;
   }
-  [Symbol.iterator](): IterableIterator<[string, StratumFromTraits<ModelTraits>]> {
+  [Symbol.iterator](): IterableIterator<
+    [string, StratumFromTraits<ModelTraits>]
+  > {
     return this.strata.entries();
   }
   entries(): IterableIterator<[string, StratumFromTraits<ModelTraits>]> {
