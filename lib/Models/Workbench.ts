@@ -62,8 +62,10 @@ export default class Workbench {
       return;
     }
 
+    const targetItem: WorkbenchItem = dereferenceModel(item);
+
     // Keep reorderable data sources (e.g.: imagery layers) below non-orderable ones (e.g.: GeoJSON).
-    if (item.supportsReordering) {
+    if (targetItem.supportsReordering) {
       while (
         index < this.items.length &&
         !this.items[index].supportsReordering
@@ -80,11 +82,11 @@ export default class Workbench {
       }
     }
 
-    if (!item.keepOnTop) {
+    if (!targetItem.keepOnTop) {
       while (
         index < this.items.length &&
         this.items[index].keepOnTop &&
-        this.items[index].supportsReordering === item.supportsReordering
+        this.items[index].supportsReordering === targetItem.supportsReordering
       ) {
         ++index;
       }
@@ -93,13 +95,16 @@ export default class Workbench {
         index > 0 &&
         this.items.length > 0 &&
         this.items[index - 1].keepOnTop &&
-        this.items[index - 1].supportsReordering === item.supportsReordering
+        this.items[index - 1].supportsReordering ===
+          targetItem.supportsReordering
       ) {
         --index;
       }
     }
 
-    this._items.splice(index, 0, item);
+    // Make sure the reference, rather than the target, is added to the items list.
+    const referenceItem = item.sourceReference ? item.sourceReference : item;
+    this._items.splice(index, 0, referenceItem);
   }
 
   /**

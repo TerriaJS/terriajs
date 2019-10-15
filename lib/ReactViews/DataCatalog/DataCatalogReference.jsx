@@ -62,7 +62,7 @@ const DataCatalogReference = observer(
         this.setPreviewedItem();
       } else {
         const addPromise = addToWorkbench(
-          this.props.terria,
+          this.props.terria.workbench,
           this.props.reference,
           !this.props.terria.workbench.contains(this.props.reference)
         ).then(() => {

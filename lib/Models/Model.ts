@@ -9,10 +9,11 @@ export interface ModelConstructor<T> {
   new (
     uniqueId: string | undefined,
     terria: Terria,
+    sourceReference?: BaseModel,
     strata?: Map<string, StratumFromTraits<ModelTraits>>
   ): T;
   prototype: T;
-  TraitsClass: TraitsConstructor<ModelTraits>
+  TraitsClass: TraitsConstructor<ModelTraits>;
 }
 
 export abstract class BaseModel {
@@ -24,7 +25,16 @@ export abstract class BaseModel {
   abstract get knownContainerUniqueIds(): string[];
   abstract get strata(): Map<string, StratumFromTraits<ModelTraits>>;
 
-  constructor(readonly uniqueId: string | undefined, readonly terria: Terria) {}
+  constructor(
+    readonly uniqueId: string | undefined,
+    readonly terria: Terria,
+    /**
+     * The model whose {@link ReferenceMixin} references this model.
+     * This instance will also be that model's {@link ReferenceMixin#target}
+     * property. If undefined, this model is not the target of a reference.
+     */
+    readonly sourceReference: BaseModel | undefined
+  ) {}
 
   abstract get strataTopToBottom(): ReadonlyMap<
     string,
@@ -57,6 +67,13 @@ export interface ModelInterface<T extends ModelTraits> {
   readonly terria: Terria;
   readonly uniqueId: string | undefined;
   readonly knownContainerUniqueIds: string[];
+
+  /**
+   * The model whose {@link ReferenceMixin} references this model.
+   * This instance will also be that model's {@link ReferenceMixin#target}
+   * property. If undefined, this model is not the target of a reference.
+   */
+  readonly sourceReference: BaseModel | undefined;
 
   readonly strataTopToBottom: ReadonlyMap<string, StratumFromTraits<T>>;
   readonly strataBottomToTop: ReadonlyMap<string, StratumFromTraits<T>>;

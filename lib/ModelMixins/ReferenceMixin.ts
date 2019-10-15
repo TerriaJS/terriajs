@@ -30,11 +30,10 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
       return this.forceLoadReference(previousTarget).then(target => {
         if (
           target &&
-          target.uniqueId !== undefined &&
-          target.uniqueId !== this.uniqueId
+          (target.sourceReference !== this || target.uniqueId !== this.uniqueId)
         ) {
           throw new DeveloperError(
-            "The model returned by `forceLoadReference` must have the same `id` as the `ReferenceMixin` itself."
+            "The model returned by `forceLoadReference` must be constructed with its `sourceReference` set to the Reference model."
           );
         }
         runInAction(() => {
@@ -53,7 +52,7 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
 
     /**
      * Gets a value indicating whether the reference is currently loading. While this is true,
-     * {@link ModelMixin#dereferenced} may be undefined or stale.
+     * {@link ModelMixin#target} may be undefined or stale.
      */
     get isLoadingReference(): boolean {
       return this._referenceLoader.isLoading;
@@ -68,7 +67,7 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
 
     /**
      * Asynchronously loads the reference. When the returned promise resolves,
-     * {@link ReferenceMixin#dereferenced} should return the target of the reference.
+     * {@link ReferenceMixin#target} should return the target of the reference.
      */
     loadReference(): Promise<void> {
       return this._referenceLoader.load();

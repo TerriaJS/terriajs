@@ -47,7 +47,7 @@ export default function createCombinedModel(
   if (!ModelClass) {
     ModelClass = traitsClassToModelClass(top.TraitsClass)
   }
-  return new ModelClass(top.uniqueId, top.terria, strata);
+  return new ModelClass(top.uniqueId, top.terria, undefined, strata);
 }
 
 export function extractTopModel<T extends ModelTraits>(model: Model<T>): Model<T> | undefined;

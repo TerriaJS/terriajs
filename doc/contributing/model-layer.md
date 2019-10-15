@@ -107,11 +107,13 @@ When a dataset becomes the top of the timeline stack, or the top dataset's time-
 
 # ReferenceMixin
 
-`ReferenceMixin` is used to create models that act as references to other models. The target model is accessible via the `target` property, but it may be undefined until the promise returned by `loadReference` resolves. Some rules:
+`ReferenceMixin` is used to create models are references to other models. For example, a `MagdaReference` is a model that points to a particular record in a Magda catalog. The type of catalog item we need to use to access it is not known until we load that record from the Magda registry and see what kind of record it is. In fact, it may not even be a catalog item, it might be a group.
 
+Some rules:
+
+* The target model of a `ReferenceMixin` may be obtained from the `target` property, but it may be undefined until the promise returned by `loadReference` resolves. It may also be stale if a relevant trait of the reference has changed but `loadReference` hasn't yet been called or hasn't yet finished.
+* For simplicity, a particular model may _only_ be the target of a single reference. The reference that points to a particular model may be obtained from the model's `sourceReference` property.
 * The `id` of the `target` model must be the same as the `id` of the model with `ReferenceMixin`.
-* The model with `ReferenceMixin` must be in `terria.models`.
-* The target (`target`) model must _not_ be in `terria.models`.
-* Multiple references (i.e. models with different `id` properties) cannot point to the same target.
-
-Thus, for a given model that may or may not be the target of a reference, we can obtain the reference model by looking up the `id` in `terria.models`.
+* The model with `ReferenceMixin` _may_ be in `terria.models`.
+* The `target` model must _not_ be in `terria.models`.
+* Multiple references cannot point to the same target.

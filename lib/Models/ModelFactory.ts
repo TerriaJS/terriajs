@@ -13,13 +13,14 @@ export default class ModelFactory {
   create(
     type: string,
     uniqueId: string | undefined,
-    terria: Terria
+    terria: Terria,
+    sourceReference?: BaseModel
   ): BaseModel | undefined {
     const Constructor = this.constructors.get(type);
     if (Constructor === undefined) {
       return undefined;
     }
-    return new Constructor(uniqueId, terria);
+    return new Constructor(uniqueId, terria, sourceReference);
   }
 
   find(type: string): ModelConstructor<BaseModel> | undefined {

@@ -29,6 +29,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
     readonly traits = Traits.traits;
     readonly TraitsClass: TraitsConstructor<InstanceType<T>> = <any>Traits;
     readonly strata: Map<string, StratumTraits>;
+    readonly sourceReference: BaseModel | undefined;
 
     /**
      * Gets the uniqueIds of models that are known to contain this one.
@@ -42,9 +43,10 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
     constructor(
       id: string | undefined,
       terria: Terria,
-      strata?: Map<string, StratumTraits>
+      sourceReference: BaseModel | undefined,
+      strata: Map<string, StratumTraits> | undefined,
     ) {
-      super(id, terria);
+      super(id, terria, sourceReference);
       this.strata = strata || observable.map<string, StratumTraits>();
     }
 

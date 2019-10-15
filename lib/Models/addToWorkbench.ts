@@ -4,7 +4,7 @@ import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import Chartable from "./Chartable";
 import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
-import Terria from "./Terria";
+import Workbench from "./Workbench";
 
 /**
  * Adds or removes a model to/from the workbench. If the model is a reference,
@@ -18,21 +18,16 @@ import Terria from "./Terria";
  * @param add True to add the item to the workbench, false to remove it.
  */
 export default function addToWorkbench(
-  terria: Terria,
+  workbench: Workbench,
   item: BaseModel,
   add: boolean = true
 ): Promise<void> {
   if (!add) {
-    terria.workbench.remove(item);
+    workbench.remove(item);
     return Promise.resolve();
   }
 
-  const byId = item.uniqueId !== undefined && terria.getModelById(BaseModel, item.uniqueId);
-  if (byId && byId !== item && ReferenceMixin.is(byId) && byId.target === item) {
-    terria.workbench.add(byId);
-  } else {
-    terria.workbench.add(item);
-  }
+  workbench.add(item);
 
   if (ReferenceMixin.is(item)) {
     return item.loadReference().then(() => {
@@ -43,9 +38,9 @@ export default function addToWorkbench(
         !Mappable.is(target) &&
         !Chartable.is(target)
       ) {
-        terria.workbench.remove(item);
+        workbench.remove(item);
       } else if (target) {
-        return addToWorkbench(terria, target, add);
+        return addToWorkbench(workbench, target, add);
       }
     });
   }

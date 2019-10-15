@@ -24,6 +24,7 @@ import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
 import Terria from "./Terria";
 import updateModelFromJson from "./updateModelFromJson";
+import ModelTraits from "../Traits/ModelTraits";
 
 export default class MagdaReference extends UrlMixin(
   ReferenceMixin(CreateModel(MagdaReferenceTraits))
@@ -97,8 +98,13 @@ export default class MagdaReference extends UrlMixin(
     return MagdaReference.type;
   }
 
-  constructor(id: string | undefined, terria: Terria) {
-    super(id, terria);
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel,
+    strata?: Map<string, StratumFromTraits<ModelTraits>>
+  ) {
+    super(id, terria, sourceReference, strata);
 
     this.setTrait(
       CommonStrata.defaults,
@@ -137,6 +143,7 @@ export default class MagdaReference extends UrlMixin(
 
     const target = MagdaReference.createMemberFromRecord(
       this.terria,
+      this,
       distributionFormats,
       magdaUri,
       this.uniqueId,
@@ -162,6 +169,7 @@ export default class MagdaReference extends UrlMixin(
     }).then(record => {
       return MagdaReference.createMemberFromRecord(
         this.terria,
+        this,
         distributionFormats,
         magdaUri,
         this.uniqueId,
@@ -174,6 +182,7 @@ export default class MagdaReference extends UrlMixin(
 
   private static createMemberFromRecord(
     terria: Terria,
+    sourceReference: BaseModel | undefined,
     distributionFormats: readonly PreparedDistributionFormat[],
     magdaUri: uri.URI | undefined,
     id: string | undefined,
@@ -196,6 +205,7 @@ export default class MagdaReference extends UrlMixin(
         // Every member has been dereferenced, so we're good to go.
         return MagdaReference.createGroupFromRecord(
           terria,
+          sourceReference,
           distributionFormats,
           magdaUri,
           id,
@@ -219,6 +229,7 @@ export default class MagdaReference extends UrlMixin(
       } else {
         return MagdaReference.createMemberFromTerriaAspect(
           terria,
+          sourceReference,
           magdaUri,
           id,
           record,
@@ -266,6 +277,7 @@ export default class MagdaReference extends UrlMixin(
       ) {
         return MagdaReference.createMemberFromDistributionFormat(
           terria,
+          sourceReference,
           magdaUri,
           id,
           record,
@@ -282,6 +294,7 @@ export default class MagdaReference extends UrlMixin(
 
   private static createGroupFromRecord(
     terria: Terria,
+    sourceReference: BaseModel | undefined,
     distributionFormats: readonly PreparedDistributionFormat[],
     magdaUri: uri.URI | undefined,
     id: string | undefined,
@@ -313,7 +326,7 @@ export default class MagdaReference extends UrlMixin(
     if (previousTarget && previousTarget instanceof ModelClass) {
       group = previousTarget;
     } else {
-      group = new ModelClass(id, terria);
+      group = new ModelClass(id, terria, sourceReference);
     }
 
     if (isJsonObject(aspects.group) && Array.isArray(aspects.group.members)) {
@@ -334,6 +347,7 @@ export default class MagdaReference extends UrlMixin(
 
         const model = MagdaReference.createMemberFromRecord(
           terria,
+          undefined,
           distributionFormats,
           magdaUri,
           member.id,
@@ -344,7 +358,7 @@ export default class MagdaReference extends UrlMixin(
 
         if (!model) {
           // Can't create an item or group yet, so create a reference.
-          const ref = new MagdaReference(member.id, terria);
+          const ref = new MagdaReference(member.id, terria, undefined);
           if (magdaUri) {
             ref.setTrait(CommonStrata.definition, "url", magdaUri.toString());
           }
@@ -411,6 +425,7 @@ export default class MagdaReference extends UrlMixin(
 
   private static createMemberFromTerriaAspect(
     terria: Terria,
+    sourceReference: BaseModel | undefined,
     magdaUri: uri.URI | undefined,
     id: string | undefined,
     record: JsonObject,
@@ -431,7 +446,8 @@ export default class MagdaReference extends UrlMixin(
       const newMember = CatalogMemberFactory.create(
         terriaAspect.type,
         id,
-        terria
+        terria,
+        sourceReference
       );
       if (newMember === undefined) {
         throw new TerriaError({
@@ -463,6 +479,7 @@ export default class MagdaReference extends UrlMixin(
 
   private static createMemberFromDistributionFormat(
     terria: Terria,
+    sourceReference: BaseModel | undefined,
     magdaUri: uri.URI | undefined,
     id: string | undefined,
     datasetRecord: JsonObject,
@@ -487,7 +504,8 @@ export default class MagdaReference extends UrlMixin(
       const newMember = CatalogMemberFactory.create(
         format.definition.type,
         id,
-        terria
+        terria,
+        sourceReference
       );
       if (newMember === undefined) {
         throw new TerriaError({

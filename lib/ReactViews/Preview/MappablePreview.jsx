@@ -49,7 +49,7 @@ class MappablePreview extends React.Component {
     const keepCatalogOpen = event.shiftKey || event.ctrlKey;
 
     const addPromise = addToWorkbench(
-      this.props.terria,
+      this.props.terria.workbench,
       this.props.previewed,
       !this.props.terria.workbench.contains(this.props.previewed)
     ).then(() => {

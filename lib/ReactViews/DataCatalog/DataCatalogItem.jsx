@@ -58,7 +58,7 @@ const DataCatalogItem = observer(
       const keepCatalogOpen = event.shiftKey || event.ctrlKey;
 
       const addPromise = addToWorkbench(
-        this.props.terria,
+        this.props.terria.workbench,
         this.props.item,
         !this.props.terria.workbench.contains(this.props.item)
       ).then(() => {
