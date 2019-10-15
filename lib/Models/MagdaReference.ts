@@ -11,20 +11,19 @@ import loadJson from "../Core/loadJson";
 import TerriaError from "../Core/TerriaError";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
+import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import MagdaDistributionFormatTraits from "../Traits/MagdaDistributionFormatTraits";
 import MagdaReferenceTraits from "../Traits/MagdaReferenceTraits";
-import CatalogGroup from "./CatalogGroupNew";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
+import createStratumInstance from "./createStratumInstance";
 import { BaseModel } from "./Model";
 import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
+import StratumFromTraits from "./StratumFromTraits";
 import Terria from "./Terria";
 import updateModelFromJson from "./updateModelFromJson";
-import StratumFromTraits from "./StratumFromTraits";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
-import createStratumInstance from "./createStratumInstance";
 
 export default class MagdaReference extends UrlMixin(
   ReferenceMixin(CreateModel(MagdaReferenceTraits))
@@ -252,7 +251,7 @@ export default class MagdaReference extends UrlMixin(
     // A distribution is already ready to go
     if (isJsonObject(aspects["dcat-distribution-strings"])) {
       distributions = distributions ? distributions.slice() : [];
-      distributions.push(aspects["dcat-distribution-strings"]);
+      distributions.push(record);
     }
 
     if (distributions) {
@@ -295,11 +294,26 @@ export default class MagdaReference extends UrlMixin(
       return undefined;
     }
 
-    let group: CatalogGroup;
-    if (previousTarget && previousTarget instanceof CatalogGroup) {
+    const terriaAspect = aspects.terria;
+    const type =
+      isJsonObject(terriaAspect) && isJsonString(terriaAspect.type)
+        ? terriaAspect.type
+        : "group";
+
+    const ModelClass = CatalogMemberFactory.find(type);
+    if (ModelClass === undefined) {
+      throw new TerriaError({
+        sender: this,
+        title: "Unknown type",
+        message: `Could not create unknown model type ${type}.`
+      });
+    }
+
+    let group: BaseModel;
+    if (previousTarget && previousTarget instanceof ModelClass) {
       group = previousTarget;
     } else {
-      group = new CatalogGroup(id, terria);
+      group = new ModelClass(id, terria);
     }
 
     if (isJsonObject(aspects.group) && Array.isArray(aspects.group.members)) {
@@ -336,7 +350,10 @@ export default class MagdaReference extends UrlMixin(
           }
           ref.setTrait(CommonStrata.definition, "recordId", memberId);
 
-          if (isJsonObject(member.aspects) && isJsonObject(member.aspects.group)) {
+          if (
+            isJsonObject(member.aspects) &&
+            isJsonObject(member.aspects.group)
+          ) {
             // This is most likely a group.
             ref.hints.setTrait(CommonStrata.definition, "isGroup", true);
           } else {
@@ -483,7 +500,8 @@ export default class MagdaReference extends UrlMixin(
     }
 
     const datasetDcat = datasetRecord.aspects["dcat-dataset-strings"];
-    const distributionDcat = distributionRecord.aspects["dcat-distribution-strings"];
+    const distributionDcat =
+      distributionRecord.aspects["dcat-distribution-strings"];
 
     const info: StratumFromTraits<InfoSectionTraits>[] = [];
 
