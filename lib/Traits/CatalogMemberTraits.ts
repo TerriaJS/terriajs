@@ -25,6 +25,22 @@ export class InfoSectionTraits extends ModelTraits {
   }
 }
 
+export class ShortReportTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "string",
+    name: "Name",
+    description: "The name of the section."
+  })
+  name?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Content",
+    description: "The content of the section."
+  })
+  content?: string;
+}
+
 export default class CatalogMemberTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
@@ -56,4 +72,19 @@ export default class CatalogMemberTraits extends ModelTraits {
     idProperty: "name"
   })
   info: InfoSectionTraits[] = [];
+
+  @primitiveTrait({
+    type: "string",
+    name: "Short report",
+    description: "A short report to show on the now viewing tab."
+  })
+  shortReport?: string;
+
+  @objectArrayTrait({
+    type: ShortReportTraits,
+    idProperty: "name",
+    name: "Short report sections",
+    description: "A list of collapsible sections of the short report"
+  })
+  shortReportSections?: ShortReportTraits[];
 }

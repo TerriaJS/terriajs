@@ -1,4 +1,5 @@
 import { toJS } from "mobx";
+import runLater from "../Core/runLater";
 import JsonValue, { isJsonObject } from "../Core/Json";
 import loadJson from "../Core/loadJson";
 import makeRealPromise from "../Core/makeRealPromise";
@@ -167,10 +168,10 @@ export default class MagdaCatalogGroup extends MagdaMixin(
   }
 
   protected forceLoadMetadata(): Promise<void> {
-    return this.loadReference();
+    return Promise.resolve().then(() => this.loadReference());
   }
 
   protected forceLoadMembers(): Promise<void> {
-    return this.loadReference();
+    return Promise.resolve().then(() => this.loadReference());
   }
 }
