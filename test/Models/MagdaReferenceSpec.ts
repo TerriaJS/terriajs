@@ -30,9 +30,13 @@ describe("MagdaReference", function() {
     }
   };
 
+  beforeEach(function() {
+    CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
+    CatalogMemberFactory.register(CsvCatalogItem.type, CsvCatalogItem);
+  });
+
   it("can dereference to a group", function(done) {
     const terria = new Terria();
-    CatalogMemberFactory.register(CsvCatalogItem.type, CsvCatalogItem);
 
     const model = new MagdaReference(undefined, terria);
     model.setTrait(CommonStrata.definition, "recordId", "test-group");
@@ -55,7 +59,6 @@ describe("MagdaReference", function() {
 
   it("dereferenced group contains expected item", function(done) {
     const terria = new Terria();
-    CatalogMemberFactory.register(CsvCatalogItem.type, CsvCatalogItem);
 
     const model = new MagdaReference(undefined, terria);
     model.setTrait(CommonStrata.definition, "recordId", "test-group");
@@ -82,7 +85,6 @@ describe("MagdaReference", function() {
 
   it("definition trait can override traits of dereferenced member", function(done) {
     const terria = new Terria();
-    CatalogMemberFactory.register(CsvCatalogItem.type, CsvCatalogItem);
 
     const model = new MagdaReference(undefined, terria);
     model.setTrait(CommonStrata.definition, "recordId", "test-group");
@@ -107,7 +109,6 @@ describe("MagdaReference", function() {
 
   it("override trait can override traits of the members of a dereferenced group", function(done) {
     const terria = new Terria();
-    CatalogMemberFactory.register(CsvCatalogItem.type, CsvCatalogItem);
 
     const model = new MagdaReference(undefined, terria);
     model.setTrait(CommonStrata.definition, "recordId", "test-group");
@@ -139,7 +140,6 @@ describe("MagdaReference", function() {
 
   it("changes to override trait affect members of a dereferenced group", async function(done) {
     const terria = new Terria();
-    CatalogMemberFactory.register(CsvCatalogItem.type, CsvCatalogItem);
 
     const model = new MagdaReference(undefined, terria);
     model.setTrait(CommonStrata.definition, "recordId", "test-group");
@@ -186,7 +186,6 @@ describe("MagdaReference", function() {
 
   it("changes to Magda record affect members of a dereferenced group", async function(done) {
     const terria = new Terria();
-    CatalogMemberFactory.register(CsvCatalogItem.type, CsvCatalogItem);
 
     const model = new MagdaReference(undefined, terria);
     model.setTrait(CommonStrata.definition, "recordId", "test-group");
