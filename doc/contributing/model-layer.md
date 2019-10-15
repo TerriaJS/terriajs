@@ -107,13 +107,17 @@ When a dataset becomes the top of the timeline stack, or the top dataset's time-
 
 # ReferenceMixin
 
-`ReferenceMixin` is used to create models are references to other models. For example, a `MagdaReference` is a model that points to a particular record in a Magda catalog. The type of catalog item we need to use to access it is not known until we load that record from the Magda registry and see what kind of record it is. In fact, it may not even be a catalog item, it might be a group.
+`ReferenceMixin` is used to create models that are references to other models. For example, a `MagdaReference` is a model that points to a particular record in a Magda catalog. The type of catalog item we need to use to access it is not known until we load that record from the Magda registry and see what kind of record it is (e.g. a WMS, GeoJSON, etc.). In fact, it may not even be a catalog item, it might be a group.
+
+Our roughly object-oriented approach makes it difficult for a `MagdaReference` to _become_ another type after the Magda registry is read. But even if that were possible, we need to preserve access to the original traits and behavior that told us how to access the registry, too. For one thing, we'll need this to reload from the registry later.
+
+So, instead of trying to make a model change type upon load, `ReferenceMixin` creates/references a _separate_ model, called the `target`, that is not resolved until the reference is loaded.
 
 Some rules:
 
 * The target model of a `ReferenceMixin` may be obtained from the `target` property, but it may be undefined until the promise returned by `loadReference` resolves. It may also be stale if a relevant trait of the reference has changed but `loadReference` hasn't yet been called or hasn't yet finished.
-* For simplicity, a particular model may _only_ be the target of a single reference. The reference that points to a particular model may be obtained from the model's `sourceReference` property.
-* The `id` of the `target` model must be the same as the `id` of the model with `ReferenceMixin`.
+* For simplicity, a particular model may _only_ be the target of a single reference. Multiple references cannot point to the same target. The reference that points to a particular model may be obtained from the model's `sourceReference` property.
+* The `uniqueId` of the `target` model must be the same as the `uniqueId` of the model with `ReferenceMixin`.
 * The model with `ReferenceMixin` _may_ be in `terria.models`.
 * The `target` model must _not_ be in `terria.models`.
-* Multiple references cannot point to the same target.
+* The instance referred to by the `target` property should remain stable (the same instance) whenever possible. But if something drastic changes (e.g. we need an instance of a different model class), it's possible for the `target` property to switch to pointing at an entirely new instance. So it's important to only hold on to references to the `ReferenceMixin` model and access the `target` as needed, rather than holding a reference to the `target` directly.
