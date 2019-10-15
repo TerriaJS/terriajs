@@ -10,7 +10,6 @@ import DataCatalogItem from "./DataCatalogItem";
 import DataCatalogReference from "./DataCatalogReference";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
 
-
 /**
  * Component that is either a {@link CatalogItem} or a {@link DataCatalogMember} and encapsulated this choosing logic.
  */
@@ -44,7 +43,7 @@ export default observer(
             viewState={this.props.viewState}
             terria={this.props.terria}
             ancestors={this.props.ancestors}
-            onActionButtonClicked={this.props.onActionButtonClicked},
+            onActionButtonClicked={this.props.onActionButtonClicked}
             isTopLevel={this.props.isTopLevel}
           />
         );

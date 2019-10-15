@@ -1,8 +1,8 @@
 import classNames from "classnames";
 import createReactClass from "create-react-class";
-import ObserveModelMixin from "../ObserveModelMixin";
 import PropTypes from "prop-types";
 import React from "react";
+import ObserveModelMixin from "../ObserveModelMixin";
 import Styles from "./explorer-window.scss";
 
 const SLIDE_DURATION = 300;
@@ -26,7 +26,8 @@ const ModalPopup = createReactClass({
     };
   },
 
-  componentWillMount() {
+  /* eslint-disable-next-line camelcase */
+  UNSAFE_componentWillMount() {
     this.onVisibilityChange(this.props.isVisible);
   },
 
