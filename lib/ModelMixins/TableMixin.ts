@@ -26,7 +26,7 @@ import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
 import LegendTraits from "../Traits/LegendTraits";
 import TableTraits from "../Traits/TableTraits";
-import getNextChartColor from "../Charts/getNextChartColor";
+import getChartColorForId from "../Charts/getChartColorForId";
 import CommonStrata from "../Models/CommonStrata";
 
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
@@ -221,7 +221,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
               });
             },
             getColor: () => {
-              return line.color || getNextChartColor(colorId);
+              return line.color || getChartColorForId(colorId);
             }
           };
         })

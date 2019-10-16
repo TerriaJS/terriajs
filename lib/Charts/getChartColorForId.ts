@@ -13,7 +13,7 @@ const usedColors: { [c: string]: number | undefined } = {};
  * The transformer ensures that each `id` to color mapping is stable and if the
  * color is not used anymore, it is returned to the pool.
  */
-const getNextChartColor = createTransformer(
+const getChartColorForId = createTransformer(
   (id: string): string => {
     const nextColor = leastUsedColor();
     useColor(nextColor);
@@ -47,4 +47,4 @@ function freeColor(color: string) {
   }
 }
 
-export default getNextChartColor;
+export default getChartColorForId;
