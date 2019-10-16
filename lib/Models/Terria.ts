@@ -627,7 +627,7 @@ export default class Terria {
       aspects["terria-config"] && aspects["terria-config"].parameters;
 
     const initObj = aspects["terria-init"];
-    if (isJsonObject(initObj.homeCamera)) {
+    if (isJsonObject(initObj) && isJsonObject(initObj.homeCamera)) {
       this.loadHomeCamera(initObj.homeCamera);
     }
 
