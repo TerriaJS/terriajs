@@ -23,8 +23,8 @@ import CustomComponent, { ProcessNodeContext } from "./CustomComponent";
  * - [y-column]:     The y column name or number to show in the preview, if not the first scalar column.
  * - [y-columns]:    Comma-separated list of y column names or numbers to show in the preview. Overrides "y-column" if provided.
  * - [colors]:       Comma-separated list of css colors to apply to data columns.
- * - [column-titles]: Maps column names to titles. Eg. column-names="time:Time,height#Height,speed#Speed"
- * - [column-units]: Maps column names to units. Eg. column-units="height#m,speed#km/h"
+ * - [column-titles]: Maps column names to titles. Eg. column-names="time:Time,height:Height,speed:Speed"
+ * - [column-units]: Maps column names to units. Eg. column-units="height:m,speed:km/h"
  * - [preview-x-label]: The preview chart x-axis label. Defaults to empty string. Eg. long-names="Last 24 hours,Last 5 days,Time".
  * - [id]:           An id for the chart; give different charts from the same feature different ids. The actual catalogItem.id used for the expanded chart will
  *                   also incorporate the chart title and the catalog item name it came from.
@@ -347,14 +347,14 @@ function parseNodeAttrs(nodeAttrs: { [name: string]: string | undefined }) {
 
   const columnTitles = filterOutUndefined(
     (nodeAttrs["column-titles"] || "").split(",").map(s => {
-      const [name, title] = s.split(":");
+      const [name, title] = rsplit2(s, ":");
       return name ? { name, title } : undefined;
     })
   );
 
   const columnUnits = filterOutUndefined(
     (nodeAttrs["column-units"] || "").split(",").map(s => {
-      const [name, units] = s.split("#");
+      const [name, units] = rsplit2(s, ":");
       return name ? { name, units } : undefined;
     })
   );
@@ -397,6 +397,20 @@ function checkAllPropertyKeys(object: any, allowedKeys: string[]) {
 
 function splitStringIfDefined(s: string | undefined) {
   return s !== undefined ? s.split(",") : undefined;
+}
+
+/*
+ * Split string `s` from last using `sep` into 2 pieces.
+ */
+function rsplit2(s: string, sep: string) {
+  const pieces = s.split(sep);
+  if (pieces.length === 1) {
+    return pieces;
+  } else {
+    const head = pieces.slice(0, pieces.length - 1).join(sep);
+    const last = pieces[pieces.length - 1];
+    return [head, last];
+  }
 }
 
 function parseIntOrUndefined(s: string | undefined): number | undefined {
