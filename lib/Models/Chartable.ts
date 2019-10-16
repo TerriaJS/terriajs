@@ -25,7 +25,6 @@ export interface ChartItem {
 interface Chartable extends Model<ModelTraits> {
   readonly chartItems: ReadonlyArray<ChartData>;
   readonly chartItems2: ReadonlyArray<ChartItem>; // TODO: rename to chartItems2
-  readonly chartAxis: Readonly<ChartAxis | undefined>; // TODO: remove
   loadChartItems(): Promise<void>;
 }
 

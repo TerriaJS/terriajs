@@ -289,18 +289,6 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       );
     }
 
-    /**
-     * Describes the x-axis of the chart
-     */
-    @computed
-    get chartAxis(): ChartAxis | undefined {
-      if (!this.xColumn) return;
-      const scale =
-        this.xColumn.type === TableColumnType.time ? "time" : "linear";
-      const units = this.xColumn.traits.units;
-      return { scale, units };
-    }
-
     @computed
     get styleSelector(): SelectableStyle | undefined {
       if (this.mapItems.length === 0) {

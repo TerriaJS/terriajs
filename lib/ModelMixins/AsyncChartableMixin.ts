@@ -44,11 +44,6 @@ export default function AsyncChartableMixin<
     abstract get chartItems2(): ChartItem[];
 
     /**
-     * Description of the x-axis of the chartable item
-     */
-    abstract get chartAxis(): Readonly<ChartAxis | undefined>;
-
-    /**
      * Forces load of the chart items. This method does _not_ need to consider
      * whether the chart items are already loaded.
      */
