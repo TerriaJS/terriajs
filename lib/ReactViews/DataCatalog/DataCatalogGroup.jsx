@@ -57,7 +57,7 @@ const DataCatalogGroup = observer(
       if (this.props.manageIsOpenLocally) {
         this.toggleStateIsOpen();
       } else {
-        openGroup(this.props.terria, this.props.group);
+        openGroup(this.props.group, !this.props.group.isOpen);
       }
     },
 
