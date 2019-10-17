@@ -23,6 +23,8 @@ import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import StoryPanel from "./../Story/StoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 
+import GuidanceDot from "../Guidance/GuidanceDot.jsx";
+
 import { Small, Medium } from "../Generic/Responsive";
 import classNames from "classnames";
 import "inobounce";
@@ -189,6 +191,11 @@ const StandardUserInterface = createReactClass({
                       terria={terria}
                       viewState={this.props.viewState}
                     />
+                    <GuidanceDot />
+                    <GuidanceDot />
+                    <GuidanceDot />
+                    <GuidanceDot />
+                    <GuidanceDot />
                   </div>
                 </Medium>
               </If>
