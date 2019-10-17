@@ -10,6 +10,7 @@ Change Log
   * Add momentPoints chart type to plot points along an available line chart
   * Add zooming on chart panel
   * Various preventative fixes to prevent charge crashes
+* Fix a bug where differences in available dates for `ImageryLayerCatalogItem` from original list of dates vs a new list of dates, would cause a error.
 
 ### v7.6.11
 
