@@ -33,7 +33,9 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
           (target.sourceReference !== this || target.uniqueId !== this.uniqueId)
         ) {
           throw new DeveloperError(
-            "The model returned by `forceLoadReference` must be constructed with its `sourceReference` set to the Reference model."
+            "The model returned by `forceLoadReference` must be constructed " +
+            "with its `sourceReference` set to the Reference model and its " +
+            "`uniqueId` set to the same value as the Reference model."
           );
         }
         runInAction(() => {
@@ -68,9 +70,11 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
     /**
      * Asynchronously loads the reference. When the returned promise resolves,
      * {@link ReferenceMixin#target} should return the target of the reference.
+     * @param forceReload True to force the load to happen again, even if nothing
+     *        appears to have changed since the last time it was loaded.
      */
-    loadReference(): Promise<void> {
-      return this._referenceLoader.load();
+    loadReference(forceReload: boolean = false): Promise<void> {
+      return this._referenceLoader.load(forceReload);
     }
   }
 

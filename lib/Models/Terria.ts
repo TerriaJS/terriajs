@@ -622,6 +622,8 @@ export default class Terria {
   }
 
   loadMagdaConfig(configUrl: string, config: any) {
+    const magdaRoot = new URI(configUrl).path("").query("").toString();
+
     const aspects = config.aspects;
     const configParams =
       aspects["terria-config"] && aspects["terria-config"].parameters;
@@ -635,34 +637,28 @@ export default class Terria {
       this.updateParameters(configParams);
     }
     if (aspects.group && aspects.group.members) {
-      const magdaGroup = new MagdaReference("/", this);
-      //magdaGroup.setTrait(CommonStrata.definition, "name", "Root Group");
-      magdaGroup.setTrait(
+      const id = config.id;
+
+      let existingReference = this.getModelById(MagdaReference, id);
+      if (existingReference === undefined) {
+        existingReference = new MagdaReference(id, this);
+        this.addModel(existingReference);
+      }
+
+      const reference = existingReference;
+
+      reference.setTrait(
         CommonStrata.definition,
         "url",
-        "https://nsw.dt.terria.io" // TODO
+        magdaRoot
       );
-      magdaGroup.setTrait(CommonStrata.definition, "recordId", config.id);
-      magdaGroup.setTrait(CommonStrata.definition, "magdaRecord", config);
-      magdaGroup.loadReference().then(() => {
-        if (magdaGroup.target instanceof CatalogGroup) {
-          this.catalog.group = magdaGroup.target;
+      reference.setTrait(CommonStrata.definition, "recordId", config.id);
+      reference.setTrait(CommonStrata.definition, "magdaRecord", config);
+      reference.loadReference().then(() => {
+        if (reference.target instanceof CatalogGroup) {
+          this.catalog.group = reference.target;
         }
       });
-
-      // // Transform the Magda catalog structure to the Terria one.
-      // const members = aspects.group.members.map((member: any) => {
-      //   return magdaRecordToCatalogMemberDefinition({
-      //     magdaBaseUrl: new URI(configUrl).path("").query("").toString(),
-      //     record: member,
-      //     // TODO: it'd be nice to actually use MagdaCatalogGroup rather than this hackery
-      //     distributionFormats: new MagdaCatalogGroup("", this).preparedDistributionFormats
-      //   });
-      // });
-
-      // updateModelFromJson(this.catalog.group, CommonStrata.definition, {
-      //   members: members
-      // });
     }
   }
 
