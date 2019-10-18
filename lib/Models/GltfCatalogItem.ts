@@ -11,6 +11,8 @@ import UrlMixin from "../ModelMixins/UrlMixin";
 import CreateModel from "./CreateModel";
 import Mappable from "./Mappable";
 import GltfCatalogItemTraits from "../Traits/GltfCatalogItemTraits";
+import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
+import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
 
 export default class GltfCatalogItem
   extends UrlMixin(CatalogMemberMixin(CreateModel(GltfCatalogItemTraits)))
@@ -84,7 +86,7 @@ export default class GltfCatalogItem
     const options = {
       uri: this.url,
       upAxis: this._cesiumUpAxis,
-      forwardAxis: this._cesiumForwardAxis,
+      forwardAxis: Axis.Y,
       scale: this.scale !== undefined ? this.scale : 1,
       shadows: new ConstantProperty(this._cesiumShadows)
     };
@@ -99,19 +101,27 @@ export default class GltfCatalogItem
     }
     this._model.show = this.show;
 
-    let position;
-    if (this.origin !== undefined) {
+    let position: Cartesian3;
+    if (
+      this.origin !== undefined &&
+      this.origin.longitude !== undefined &&
+      this.origin.latitude !== undefined &&
+      this.origin.height !== undefined
+    ) {
       position = Cartesian3.fromDegrees(
-        this.origin.longitude || 0,
-        this.origin.latitude || 0,
-        this.origin.height || 0
+        this.origin.longitude,
+        this.origin.latitude,
+        this.origin.height
       );
+    } else {
+      position = Cartesian3.ZERO;
     }
 
-    const dataSource = new CustomDataSource(this.name || "glTF model");
+    const dataSource: CustomDataSource = new CustomDataSource(this.name || "glTF model");
     dataSource.entities.add(
       new Entity({
-        position,
+        position: new ConstantPositionProperty(position),
+        orientation: Quaternion.IDENTITY as any,
         model: this._model
       })
     );
