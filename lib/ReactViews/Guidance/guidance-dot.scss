@@ -86,7 +86,7 @@
   // animation-timing-function: cubic-bezier(0, 1, 1, 0.99);
   // animation-timing-function: cubic-bezier(0.77, 0.08, 0.25, 0.87);
   animation-timing-function: cubic-bezier(0.98, 0.72, 0.44, 0.99);
-  animation-duration: 4s;
+  animation-duration: 3s;
   animation-iteration-count: infinite;
   &:focus,
   &:hover {
@@ -99,6 +99,6 @@
   composes: inner;
   @include animation("fade-out-clone");
   animation-timing-function: cubic-bezier(0.98, 0.72, 0.44, 0.99);
-  animation-duration: 4s;
+  animation-duration: 3s;
   animation-iteration-count: infinite;
 }

@@ -23,7 +23,8 @@ import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import StoryPanel from "./../Story/StoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 
-import GuidanceDot from "../Guidance/GuidanceDot.jsx";
+// import GuidanceDot from "../Guidance/GuidanceDot.jsx";
+import Guidance from "../Guidance/Guidance.jsx";
 
 import { Small, Medium } from "../Generic/Responsive";
 import classNames from "classnames";
@@ -191,11 +192,15 @@ const StandardUserInterface = createReactClass({
                       terria={terria}
                       viewState={this.props.viewState}
                     />
-                    <GuidanceDot />
-                    <GuidanceDot />
-                    <GuidanceDot />
-                    <GuidanceDot />
-                    <GuidanceDot />
+                    <Guidance>
+                      <div>Well this is the first tour message</div>
+                    </Guidance>
+                    <Guidance>
+                      <div>Well this is the second tour message</div>
+                    </Guidance>
+                    <Guidance>
+                      <div>Well this is the third tour message</div>
+                    </Guidance>
                   </div>
                 </Medium>
               </If>
