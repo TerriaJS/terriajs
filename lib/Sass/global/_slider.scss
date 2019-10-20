@@ -4,6 +4,15 @@
     margin-right: 5px;
     margin-top: 5px;
   }
+  .rc-slider-dot {
+    width: 2px;
+    border-radius: 1px;
+    border: none;
+    background-color: #8b919b;
+    height: 10px;
+    bottom: -4px;
+    margin-left: -2px;
+  }
   .rc-slider-rail,
   .rc-slider-track,
   .rc-slider-step {
@@ -16,7 +25,7 @@
     height: 12px;
   }
   .rc-slider-rail {
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: #8b919b;
   }
   .rc-slider-track {
     background-color: #ffffff;

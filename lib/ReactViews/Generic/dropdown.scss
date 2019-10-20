@@ -52,6 +52,11 @@
     top: 12px;
     fill: $dark-lighter;
   }
+  &:disabled {
+    background: $text-light !important;
+    color: $text-dark;
+    opacity: 0.3;
+  }
 }
 
 .btn--option {

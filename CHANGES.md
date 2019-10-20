@@ -1,9 +1,15 @@
 Change Log
 ==========
 
+### Next Release
+* Add quality slider for 3d map (toggles Cesium's maximumScreenSpaceError & resolutionScale)
 ### next patch
 
 * Allow MapboxMapCatalogItems to be specified in catalog files using type "mapbox-map".
+* Chart related enhancements
+  * Add momentPoints chart type to plot points along an available line chart
+  * Add zooming on chart panel
+  * Various preventative fixes to prevent charge crashes
 
 ### v7.6.11
 
