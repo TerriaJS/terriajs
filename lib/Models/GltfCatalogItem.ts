@@ -86,7 +86,7 @@ export default class GltfCatalogItem
     const options = {
       uri: this.url,
       upAxis: this._cesiumUpAxis,
-      forwardAxis: Axis.Y,
+      forwardAxis: this._cesiumForwardAxis,
       scale: this.scale !== undefined ? this.scale : 1,
       shadows: new ConstantProperty(this._cesiumShadows)
     };
