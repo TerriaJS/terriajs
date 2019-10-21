@@ -4,6 +4,23 @@ Change Log
 ### v7.6.11
 
 * Improve support for leaflet rendered across the anti-meridian.
+### Next Release
+
+* Add quality slider for 3d map (toggles Cesium's maximumScreenSpaceError & resolutionScale)
+* Allow MapboxMapCatalogItems to be specified in catalog files using type "mapbox-map".
+* Chart related enhancements
+  * Add momentPoints chart type to plot points along an available line chart
+  * Add zooming and panning on chart panel
+  * Various preventative fixes to prevent chart crashes
+* Increased the tolerance for intermittent tile failures from time-varying raster layers. More failures will now be allowed before the layer is disabled.
+  * Add zooming on chart panel
+  * Various preventative fixes to prevent charge crashes
+* Fix a bug where differences in available dates for `ImageryLayerCatalogItem` from original list of dates vs a new list of dates, would cause a error.
+
+### v7.6.11
+
+* Added a workaround for a bug in Google Chrome v76 and v77 that caused problems with sizing of the bottom dock, such as cutting off the timeline and flickering on and off over the map.
+* Set cesium rendering resolution to CSS pixel resolution. This is required because Cesium renders in native device resolution since 1.61.0.
 
 ### v7.6.10
 
