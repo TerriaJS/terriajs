@@ -10,6 +10,9 @@ Change Log
   * Add zooming and panning on chart panel
   * Various preventative fixes to prevent chart crashes
 * Increased the tolerance for intermittent tile failures from time-varying raster layers. More failures will now be allowed before the layer is disabled.
+  * Add zooming on chart panel
+  * Various preventative fixes to prevent charge crashes
+* Fix a bug where differences in available dates for `ImageryLayerCatalogItem` from original list of dates vs a new list of dates, would cause a error.
 
 ### v7.6.11
 
