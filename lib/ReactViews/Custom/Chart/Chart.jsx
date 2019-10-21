@@ -94,6 +94,7 @@ const Chart = createReactClass({
     // The data id should be set to something unique, eg. its source id + column index.
     // If we're here, the data was downloaded from a single file or table, so the column index is unique by itself.
     const colors = this.props.colors;
+    if (pointArrays[0].length === 0) return [];
     return pointArrays.map(
       (points, index) =>
         new ChartData(points, {
@@ -162,7 +163,21 @@ const Chart = createReactClass({
     });
   },
 
-  componentDidUpdate() {
+  shouldComponentUpdate(nextProps) {
+    if (!defined(nextProps.data) || !defined(this.props.data)) return true;
+    if (nextProps.data.length !== this.props.data.length) return true;
+    for (let i = 0; i < nextProps.data.length; i++) {
+      if (
+        nextProps.data[i].points.length !== this.props.data[i].points.length ||
+        nextProps.data[i].color !== this.props.data[i].color
+      )
+        return true;
+    }
+    if (nextProps.axisLabel.x !== this.props.axisLabel.x) return true;
+    return false;
+  },
+
+  componentDidUpdate(prevProps) {
     // Update the chart with props.data or props.tableStructure, if present.
     // If the data came from a URL, there are three possibilities:
     // 1. The URL has changed.
@@ -187,6 +202,9 @@ const Chart = createReactClass({
       );
       promise.then(function(data) {
         chartParameters.data = data;
+        if (data[0].points.length === 0) {
+          chartParameters.data = [];
+        }
         ChartRenderer.update(element, chartParameters);
       });
     }
@@ -228,7 +246,7 @@ const Chart = createReactClass({
         className: Styles.toolTip,
         id: this._tooltipId,
         align: "prefer-right", // With right/left alignment, the offset is relative to the svg, so need to inset.
-        offset: { top: 40, left: 33, right: 30, bottom: 5 }
+        offset: { top: 45, left: 33, right: 50, bottom: 5 }
       };
       if (this.props.styling === "histogram") {
         titleSettings = undefined;
@@ -285,7 +303,8 @@ const Chart = createReactClass({
       tooltipSettings: tooltipSettings,
       titleSettings: titleSettings,
       grid: grid,
-      highlightX: this.props.highlightX
+      highlightX: this.props.highlightX,
+      supportsZooming: this.props.styling !== "feature-info"
     };
   },
 
