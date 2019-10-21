@@ -5,6 +5,7 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import ObserveModelMixin from "../../ObserveModelMixin";
+import Icon from "./../../Icon.jsx";
 
 import Styles from "./style-selector-section.scss";
 
@@ -88,6 +89,7 @@ const StyleSelectorSection = createReactClass({
             </option>
           ))}
         </select>
+        <Icon glyph={Icon.GLYPHS.opened} />
       </div>
     );
   }
