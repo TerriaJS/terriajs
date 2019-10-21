@@ -14,6 +14,7 @@ Change Log
   * Various preventative fixes to prevent charge crashes
 * Fixed a bug where differences in available dates for `ImageryLayerCatalogItem` from original list of dates vs a new list of dates, would cause a error.
 * Improved support for layers rendered across the anti-meridian in 2D (Leaflet).
+* Fixed a crash when splitting a layer with a `momentPoints` chart item.
 
 ### v7.6.11
 
