@@ -12,7 +12,7 @@ Change Log
 * Increased the tolerance for intermittent tile failures from time-varying raster layers. More failures will now be allowed before the layer is disabled.
   * Add zooming on chart panel
   * Various preventative fixes to prevent charge crashes
-* Fixes to Sensor Observation Service related requests
+* Sensor Observation Service `GetFeatureOfInterest` requests no longer erroneously include `temporalFilters`. Also improved the generated request XML to be more compliant with the specification.
 * Fixed a bug where differences in available dates for `ImageryLayerCatalogItem` from original list of dates vs a new list of dates, would cause a error.
 * Improved support for layers rendered across the anti-meridian in 2D (Leaflet).
 
