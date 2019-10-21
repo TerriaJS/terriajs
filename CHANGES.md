@@ -2,12 +2,14 @@ Change Log
 ==========
 
 ### Next Release
-* Add quality slider for 3d map (toggles Cesium's maximumScreenSpaceError & resolutionScale)
-### next patch
 
+* Add quality slider for 3d map (toggles Cesium's maximumScreenSpaceError & resolutionScale)
 * Allow MapboxMapCatalogItems to be specified in catalog files using type "mapbox-map".
 * Chart related enhancements
   * Add momentPoints chart type to plot points along an available line chart
+  * Add zooming and panning on chart panel
+  * Various preventative fixes to prevent chart crashes
+* Increased the tolerance for intermittent tile failures from time-varying raster layers. More failures will now be allowed before the layer is disabled.
   * Add zooming on chart panel
   * Various preventative fixes to prevent charge crashes
 * Fix a bug where differences in available dates for `ImageryLayerCatalogItem` from original list of dates vs a new list of dates, would cause a error.
