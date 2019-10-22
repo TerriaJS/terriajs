@@ -622,7 +622,10 @@ export default class Terria {
   }
 
   loadMagdaConfig(configUrl: string, config: any) {
-    const magdaRoot = new URI(configUrl).path("").query("").toString();
+    const magdaRoot = new URI(configUrl)
+      .path("")
+      .query("")
+      .toString();
 
     const aspects = config.aspects;
     const configParams =
@@ -647,11 +650,7 @@ export default class Terria {
 
       const reference = existingReference;
 
-      reference.setTrait(
-        CommonStrata.definition,
-        "url",
-        magdaRoot
-      );
+      reference.setTrait(CommonStrata.definition, "url", magdaRoot);
       reference.setTrait(CommonStrata.definition, "recordId", config.id);
       reference.setTrait(CommonStrata.definition, "magdaRecord", config);
       reference.loadReference().then(() => {
