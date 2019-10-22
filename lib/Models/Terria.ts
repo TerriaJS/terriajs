@@ -30,12 +30,10 @@ import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import Catalog from "./CatalogNew";
-import Cesium from "./Cesium";
 import CommonStrata from "./CommonStrata";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import InitSource, { isInitOptions, isInitUrl } from "./InitSource";
-import Leaflet from "./Leaflet";
 import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
 import NoViewer from "./NoViewer";
@@ -234,28 +232,26 @@ export default class Terria {
 
   @computed
   get currentViewer(): GlobeOrMap {
-    return (
-      (this.mainViewer && this.mainViewer.currentViewer) || new NoViewer(this)
-    );
+    return this.mainViewer.currentViewer;
   }
 
   @computed
-  get cesium(): Cesium | undefined {
+  get cesium(): import("./Cesium").default | undefined {
     if (
       isDefined(this.mainViewer) &&
-      this.mainViewer.currentViewer instanceof Cesium
+      this.mainViewer.currentViewer.type === "Cesium"
     ) {
-      return this.mainViewer.currentViewer;
+      return this.mainViewer.currentViewer as import("./Cesium").default;
     }
   }
 
   @computed
-  get leaflet(): Leaflet | undefined {
+  get leaflet(): import("./Leaflet").default | undefined {
     if (
       isDefined(this.mainViewer) &&
-      this.mainViewer.currentViewer instanceof Leaflet
+      this.mainViewer.currentViewer.type === "Leaflet"
     ) {
-      return this.mainViewer.currentViewer;
+      return this.mainViewer.currentViewer as import("./Leaflet").default;
     }
   }
 

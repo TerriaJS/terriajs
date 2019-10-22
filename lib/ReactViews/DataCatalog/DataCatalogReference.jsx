@@ -97,13 +97,12 @@ const DataCatalogReference = observer(
 
     render() {
       const reference = this.props.reference;
-      const hints = reference.hints || {};
 
       return (
         <Choose>
-          <When condition={hints.isGroup}>
+          <When condition={reference.isGroup}>
             <CatalogGroup
-              text={hints.name || "..."}
+              text={reference.name || "..."}
               title={this.props.ancestors
                 .map(member => member.nameInCatalog)
                 .join(" → ")}
@@ -113,11 +112,11 @@ const DataCatalogReference = observer(
               open={this.props.reference.isLoadingReference}
             />
           </When>
-          <When condition={hints.isFunction}>
+          <When condition={reference.isFunction}>
             <CatalogItem
               onTextClick={this.setPreviewedItem}
               selected={this.isSelected()}
-              text={hints.name || "..."}
+              text={reference.name || "..."}
               title={this.props.ancestors
                 .map(m => m.nameInCatalog)
                 .join(" -> ")}
@@ -131,7 +130,7 @@ const DataCatalogReference = observer(
             <CatalogItem
               onTextClick={this.setPreviewedItem}
               selected={this.isSelected()}
-              text={hints.name || "..."}
+              text={reference.name || "..."}
               title={this.props.ancestors
                 .map(m => m.nameInCatalog)
                 .join(" -> ")}

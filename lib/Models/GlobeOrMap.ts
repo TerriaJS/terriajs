@@ -4,16 +4,13 @@ import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 
 import isDefined from "../Core/isDefined";
 import featureDataToGeoJson from "../Map/featureDataToGeoJson";
-import MapboxVectorCanvasTileLayer from "../Map/MapboxVectorCanvasTileLayer";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
-import rectangleToLatLngBounds from "../Map/rectangleToLatLngBounds";
 import CommonStrata from "./CommonStrata";
 import Feature from "./Feature";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
@@ -22,6 +19,7 @@ import Terria from "./Terria";
 import CameraView from "./CameraView";
 
 export default abstract class GlobeOrMap {
+  abstract readonly type: string;
   abstract readonly terria: Terria;
   protected static _featureHighlightName = "___$FeatureHighlight&__";
 
@@ -92,6 +90,11 @@ export default abstract class GlobeOrMap {
     }
   }
 
+  abstract _addVectorTileHighlight(
+    imageryProvider: MapboxVectorTileImageryProvider,
+    rectangle: Cesium.Rectangle
+  ): () => void;
+
   _highlightFeature(feature: Feature | undefined) {
     if (isDefined(this._removeHighlightCallback)) {
       this._removeHighlightCallback();
@@ -161,49 +164,13 @@ export default abstract class GlobeOrMap {
           feature.imageryLayer.imageryProvider instanceof
             MapboxVectorTileImageryProvider
         ) {
-          if (isDefined(this.terria.cesium)) {
-            const result = new ImageryLayer(
-              feature.imageryLayer.imageryProvider.createHighlightImageryProvider(
-                feature.data.id
-              ),
-              {
-                show: true,
-                alpha: 1
-              }
-            );
-            const scene = this.terria.cesium.scene;
-            scene.imageryLayers.add(result);
-
-            this._removeHighlightCallback = function() {
-              scene.imageryLayers.remove(result);
-            };
-          } else if (isDefined(this.terria.leaflet)) {
-            const map = this.terria.leaflet.map;
-            const options: any = {
-              async: true,
-              opacity: 1,
-              bounds: rectangleToLatLngBounds(
-                feature.imageryLayer.imageryProvider.rectangle
-              )
-            };
-
-            if (isDefined(map.options.maxZoom)) {
-              options.maxZoom = map.options.maxZoom;
-            }
-
-            const layer = new MapboxVectorCanvasTileLayer(
-              feature.imageryLayer.imageryProvider.createHighlightImageryProvider(
-                feature.data.id
-              ),
-              options
-            );
-            layer.addTo(map);
-            layer.bringToFront();
-
-            this._removeHighlightCallback = function() {
-              map.removeLayer(layer);
-            };
-          }
+          const highlightImageryProvider = feature.imageryLayer.imageryProvider.createHighlightImageryProvider(
+            feature.data.id
+          );
+          this._removeHighlightCallback = this.terria.currentViewer._addVectorTileHighlight(
+            highlightImageryProvider,
+            feature.imageryLayer.imageryProvider.rectangle
+          );
         } else if (
           !isDefined(this.supportsPolylinesOnTerrain) ||
           this.supportsPolylinesOnTerrain

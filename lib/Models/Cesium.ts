@@ -55,6 +55,7 @@ import Mappable, {
   MapItem
 } from "./Mappable";
 import Terria from "./Terria";
+import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 
 // Intermediary
 var cartesian3Scratch = new Cartesian3();
@@ -77,6 +78,7 @@ interface CesiumSelectionIndicator {
 }
 
 export default class Cesium extends GlobeOrMap {
+  readonly type = "Cesium";
   readonly terria: Terria;
   readonly terriaViewer: TerriaViewer;
   readonly cesiumWidget: CesiumWidget;
@@ -1097,6 +1099,22 @@ export default class Cesium extends GlobeOrMap {
     this.scene.render(this.terria.timelineClock.currentTime);
 
     return deferred;
+  }
+
+  _addVectorTileHighlight(
+    imageryProvider: MapboxVectorTileImageryProvider,
+    rectangle: Cesium.Rectangle
+  ): () => void {
+    const result = new ImageryLayer(imageryProvider, {
+      show: true,
+      alpha: 1
+    });
+    const scene = this.scene;
+    scene.imageryLayers.add(result);
+
+    return function() {
+      scene.imageryLayers.remove(result);
+    };
   }
 }
 
