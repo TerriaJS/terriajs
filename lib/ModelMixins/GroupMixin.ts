@@ -7,9 +7,10 @@ import Model, { BaseModel } from "../Models/Model";
 import GroupTraits from "../Traits/GroupTraits";
 import ModelReference from "../Traits/ModelReference";
 import AsyncLoader from "../Core/AsyncLoader";
+import Group from "../Models/Group";
 
 function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
-  abstract class GroupMixin extends Base {
+  abstract class GroupMixin extends Base implements Group {
     private _memberLoader = new AsyncLoader(this.forceLoadMembers.bind(this));
 
     /**

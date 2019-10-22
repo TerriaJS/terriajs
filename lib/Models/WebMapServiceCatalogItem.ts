@@ -7,7 +7,7 @@
 // 3. Observable spaghetti
 //  Solution: think in terms of pipelines with computed observables, document patterns.
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
-import { autorun, computed, observable, runInAction, trace } from "mobx";
+import { computed, runInAction, trace } from "mobx";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
@@ -16,12 +16,12 @@ import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapSer
 import URI from "urijs";
 import containsAny from "../Core/containsAny";
 import createTransformerAllowUndefined from "../Core/createTransformerAllowUndefined";
+import filterOutUndefined from "../Core/filterOutUndefined";
 import isReadOnlyArray from "../Core/isReadOnlyArray";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin from "../ModelMixins/DiscretelyTimeVaryingMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
-import GroupMixin from "../ModelMixins/GroupMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import DiscreteTimeTraits from "../Traits/DiscreteTimeTraits";
@@ -34,16 +34,14 @@ import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import LoadableStratum from "./LoadableStratum";
 import Mappable, { ImageryParts } from "./Mappable";
+import Model from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
-import Terria from "./Terria";
 import WebMapServiceCapabilities, {
   CapabilitiesLayer,
   CapabilitiesStyle,
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
-import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
-import Model from "./Model";
 
 interface LegendUrl {
   url: string;
@@ -96,8 +94,71 @@ class GetCapabilitiesStratum extends LoadableStratum(
     super();
   }
 
-  @computed get supportsReordering() {
+  @computed
+  get supportsReordering() {
     return !this.keepOnTop;
+  }
+
+  @computed
+  get layers(): string | undefined {
+    let layers: string | undefined;
+
+    if (this.catalogItem.uri !== undefined) {
+      // Try to extract a layer from the URL
+      const query: any = this.catalogItem.uri.query(true);
+      layers = query.layers;
+    }
+
+    if (layers === undefined) {
+      // Use all the top-level, named layers
+      layers = filterOutUndefined(
+        this.capabilities.topLevelNamedLayers.map(layer => layer.Name)
+      ).join(",");
+    }
+
+    return layers;
+  }
+
+  @computed
+  get legends(): StratumFromTraits<LegendTraits>[] | undefined {
+    const availableStyles = this.catalogItem.availableStyles || [];
+    const layers = this.catalogItem.layersArray;
+    const styles = this.catalogItem.stylesArray;
+
+    const result: StratumFromTraits<LegendTraits>[] = [];
+
+    for (let i = 0; i < layers.length; ++i) {
+      const layer = layers[i];
+      const style = i < styles.length ? styles[i] : undefined;
+
+      const layerAvailableStyles = availableStyles.find(
+        candidate => candidate.layerName === layer
+      );
+      if (
+        layerAvailableStyles !== undefined &&
+        layerAvailableStyles.styles !== undefined
+      ) {
+        // Use the first style if none is explicitly specified.
+        // Note that the WMS 1.3.0 spec (section 7.3.3.4) explicitly says we can't assume this,
+        // but because the server has no other way of indicating the default style, let's hope that
+        // sanity prevails.
+        const layerStyle =
+          style === undefined
+            ? layerAvailableStyles.styles.length > 0
+              ? layerAvailableStyles.styles[0]
+              : undefined
+            : layerAvailableStyles.styles.find(
+                candidate => candidate.name === style
+              );
+        if (layerStyle !== undefined && layerStyle.legend !== undefined) {
+          result.push(<StratumFromTraits<LegendTraits>>(
+            (<unknown>layerStyle.legend)
+          ));
+        }
+      }
+    }
+
+    return result;
   }
 
   @computed
@@ -187,7 +248,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
       const suffix =
         this.capabilitiesLayers.size === 1 ? "" : ` - ${layer.Title}`;
-      const name = `Data Description${suffix}`;
+      const name = `Web Map Service Layer Description${suffix}`;
 
       const traits = createStratumInstance(InfoSectionTraits);
       traits.name = name;
@@ -210,7 +271,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
         service.Abstract !== firstDataDescription
       ) {
         const traits = createStratumInstance(InfoSectionTraits);
-        traits.name = "Service Description";
+        traits.name = "Web Map Service Description";
         traits.content = service.Abstract;
         result.push(traits);
       }
@@ -221,7 +282,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
         !/^none$/i.test(service.AccessConstraints)
       ) {
         const traits = createStratumInstance(InfoSectionTraits);
-        traits.name = "Access Constraints";
+        traits.name = "Web Map Service Access Constraints";
         traits.content = service.AccessConstraints;
         result.push(traits);
       }
@@ -368,34 +429,6 @@ class WebMapServiceCatalogItem
   }
 
   @computed
-  get layers(): string | undefined {
-    let layers = super.layers;
-
-    if (layers === undefined && this.uri !== undefined) {
-      // Try to extract a layer from the URL
-      const query: any = this.uri.query(true);
-      layers = query.layers;
-    }
-
-    if (layers === undefined) {
-      // Use the first layer with a name in GetCapabilities
-      const capabilitiesStratum = <GetCapabilitiesStratum | undefined>(
-        this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
-      );
-      if (capabilitiesStratum !== undefined) {
-        const firstLayerWithName = capabilitiesStratum.capabilities.allLayers.find(
-          layer => layer.Name !== undefined
-        );
-        if (firstLayerWithName !== undefined) {
-          return firstLayerWithName.Name;
-        }
-      }
-    }
-
-    return layers;
-  }
-
-  @computed
   get layersArray(): ReadonlyArray<string> {
     if (Array.isArray(this.layers)) {
       return this.layers;
@@ -415,51 +448,6 @@ class WebMapServiceCatalogItem
     } else {
       return [];
     }
-  }
-
-  @computed
-  get legends(): readonly Model<LegendTraits>[] {
-    const superLegends = super.legends;
-    if (superLegends !== undefined) {
-      return superLegends;
-    }
-
-    const availableStyles = this.availableStyles || [];
-    const layers = this.layersArray;
-    const styles = this.stylesArray;
-
-    const result: Model<LegendTraits>[] = [];
-
-    for (let i = 0; i < layers.length; ++i) {
-      const layer = layers[i];
-      const style = i < styles.length ? styles[i] : undefined;
-
-      const layerAvailableStyles = availableStyles.find(
-        candidate => candidate.layerName === layer
-      );
-      if (
-        layerAvailableStyles !== undefined &&
-        layerAvailableStyles.styles !== undefined
-      ) {
-        // Use the first style if none is explicitly specified.
-        // Note that the WMS 1.3.0 spec (section 7.3.3.4) explicitly says we can't assume this,
-        // but because the server has no other way of indicating the default style, let's hope that
-        // sanity prevails.
-        const layerStyle =
-          style === undefined
-            ? layerAvailableStyles.styles.length > 0
-              ? layerAvailableStyles.styles[0]
-              : undefined
-            : layerAvailableStyles.styles.find(
-                candidate => candidate.name === style
-              );
-        if (layerStyle !== undefined && layerStyle.legend !== undefined) {
-          result.push(layerStyle.legend);
-        }
-      }
-    }
-
-    return result;
   }
 
   protected get defaultGetCapabilitiesUrl(): string | undefined {
@@ -555,8 +543,24 @@ class WebMapServiceCatalogItem
 
       const maximumLevel = scaleDenominatorToLevel(this.minScaleDenominator);
 
+      const queryParametersToRemove = [
+        "request",
+        "service",
+        "x",
+        "y",
+        "width",
+        "height",
+        "bbox",
+        "layers"
+      ];
+
+      const baseUrl = queryParametersToRemove.reduce(
+        (url, parameter) => url.removeQuery(parameter),
+        new URI(this.url)
+      );
+
       const imageryOptions = {
-        url: proxyCatalogItemUrl(this, this.url),
+        url: proxyCatalogItemUrl(this, baseUrl.toString()),
         layers: this.layers || "",
         parameters: parameters,
         tilingScheme: /*defined(this.tilingScheme) ? this.tilingScheme :*/ new WebMercatorTilingScheme(),

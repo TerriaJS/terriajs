@@ -1,16 +1,16 @@
-import Terria from "./Terria";
-import CatalogGroup from "./CatalogGroupNew";
-import { computed } from "mobx";
+import { observable } from "mobx";
 import { USER_ADDED_CATEGORY_NAME } from "../Core/addedByUser";
 import isDefined from "../Core/isDefined";
-import hasTraits from "./hasTraits";
-import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
-import Model, { BaseModel } from "./Model";
+import CatalogGroup from "./CatalogGroupNew";
 import CommonStrata from "./CommonStrata";
-import ModelReference from "../Traits/ModelReference";
+import Terria from "./Terria";
+import Group from "./Group";
+import { BaseModel } from "./Model";
 
 export default class Catalog {
-  readonly group: CatalogGroup;
+  @observable
+  group: Group & BaseModel;
+
   readonly terria: Terria;
 
   constructor(terria: Terria) {

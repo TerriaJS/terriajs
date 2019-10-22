@@ -73,10 +73,6 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
   @observable
   private _readyData?: JsonObject;
 
-  constructor(id: string, terria: Terria) {
-    super(id, terria);
-  }
-
   setFileInput(file: File) {
     this._geoJsonFile = file;
   }

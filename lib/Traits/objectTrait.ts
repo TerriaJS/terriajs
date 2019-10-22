@@ -46,6 +46,7 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
     return new this.modelClass(
       undefined,
       model.terria,
+      undefined,
       new NestedStrataMap<T>(model.TraitsClass, model.strata, this.id)
     );
   }

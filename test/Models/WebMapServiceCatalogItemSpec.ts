@@ -56,7 +56,7 @@ describe("WebMapServiceCatalogItem", function() {
     const cleanup = autorun(() => {
       if (wms.info !== undefined) {
         const descSection = wms.info.find(
-          section => section.name === "Data Description"
+          section => section.name === "Web Map Service Layer Description"
         );
         if (
           descSection !== undefined &&

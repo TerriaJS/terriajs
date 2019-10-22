@@ -41,8 +41,8 @@ npm install request@^2.83.0
 
 # Clone and build TerriaMap, using this version of TerriaJS
 TERRIAJS_COMMIT_HASH=$(git rev-parse HEAD)
-# !!! REMOVE -b BRANCH AFTER audit-fix IS MERGED INTO TERRIAMAP
-git clone -b mobx https://github.com/TerriaJS/TerriaMap.git
+# !!! REMOVE -b BRANCH AFTER mobx-references IS MERGED INTO TERRIAMAP
+git clone -b mobx-references https://github.com/TerriaJS/TerriaMap.git
 cd TerriaMap
 TERRIAMAP_COMMIT_HASH=$(git rev-parse HEAD)
 sed -i -e 's@"terriajs": ".*"@"terriajs": "'$TRAVIS_REPO_SLUG'#'$TRAVIS_BRANCH'"@g' package.json

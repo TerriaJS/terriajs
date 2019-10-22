@@ -140,6 +140,7 @@ export default class WebMapServiceCapabilities {
 
   readonly rootLayers: CapabilitiesLayer[];
   readonly allLayers: CapabilitiesLayer[];
+  readonly topLevelNamedLayers: CapabilitiesLayer[];
   readonly layersByName: {
     readonly [name: string]: CapabilitiesLayer;
   };
@@ -150,11 +151,13 @@ export default class WebMapServiceCapabilities {
   private constructor(readonly xml: XMLDocument, readonly json: any) {
     this.allLayers = [];
     this.rootLayers = [];
+    this.topLevelNamedLayers = [];
     this.layersByName = {};
     this.layersByTitle = {};
 
     const allLayers = this.allLayers;
     const rootLayers = this.rootLayers;
+    const topLevelNamedLayers = this.topLevelNamedLayers;
     const layersByName: { [name: string]: CapabilitiesLayer } = this
       .layersByName;
     const layersByTitle: { [name: string]: CapabilitiesLayer } = this
@@ -162,11 +165,16 @@ export default class WebMapServiceCapabilities {
 
     function traverseLayer(
       layer: Mutable<CapabilitiesLayer>,
+      isTopLevel: boolean = false,
       parent?: CapabilitiesLayer | undefined
     ) {
       allLayers.push(layer);
       if (layer.Name) {
         layersByName[layer.Name] = layer;
+        if (isTopLevel) {
+          topLevelNamedLayers.push(layer);
+          isTopLevel = false;
+        }
       }
       if (layer.Title) {
         layersByTitle[layer.Title] = layer;
@@ -178,10 +186,10 @@ export default class WebMapServiceCapabilities {
 
       if (isReadOnlyArray(layers)) {
         for (let i = 0; i < layers.length; ++i) {
-          traverseLayer(layers[i], layer);
+          traverseLayer(layers[i], isTopLevel, layer);
         }
       } else if (layers !== undefined) {
-        traverseLayer(layers, layer);
+        traverseLayer(layers, isTopLevel, layer);
       }
     }
 
@@ -193,7 +201,7 @@ export default class WebMapServiceCapabilities {
         rootLayers.push(layerElements);
       }
 
-      rootLayers.forEach(layer => traverseLayer(layer));
+      rootLayers.forEach(layer => traverseLayer(layer, true));
     }
   }
 
