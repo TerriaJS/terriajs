@@ -374,15 +374,15 @@ export default class MagdaReference extends UrlMixin(
             isJsonObject(member.aspects.group)
           ) {
             // This is most likely a group.
-            ref.hints.setTrait(CommonStrata.definition, "isGroup", true);
+            ref.setTrait(CommonStrata.definition, "isGroup", true);
           } else {
             // This is most likely a mappable or chartable item.
-            ref.hints.setTrait(CommonStrata.definition, "isMappable", true);
-            ref.hints.setTrait(CommonStrata.definition, "isChartable", true);
+            ref.setTrait(CommonStrata.definition, "isMappable", true);
+            ref.setTrait(CommonStrata.definition, "isChartable", true);
           }
 
           if (isJsonString(member.name)) {
-            ref.hints.setTrait(CommonStrata.definition, "name", member.name);
+            ref.setTrait(CommonStrata.definition, "name", member.name);
           }
 
           if (overriddenMember) {

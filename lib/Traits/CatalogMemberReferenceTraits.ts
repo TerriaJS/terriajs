@@ -1,14 +1,43 @@
 import ModelTraits from "./ModelTraits";
-import objectTrait from "./objectTrait";
-import ReferenceHintTraits from "./ReferenceHintTraits";
+import primitiveTrait from "./primitiveTrait";
 
 export default class CatalogMemberReferenceTraits extends ModelTraits {
-  @objectTrait({
-    name: "Hints",
+  @primitiveTrait({
+    name: "Name",
     description:
-      "Hints that control how this reference is displayed in the " +
-      "user interface before it is loaded.",
-    type: ReferenceHintTraits
+      "The name to use for this catalog member before the reference is loaded.",
+    type: "string"
   })
-  hints?: ReferenceHintTraits;
+  name?: string;
+
+  @primitiveTrait({
+    name: "Is a Group",
+    description:
+      "Is the target of this reference expected to be a catalog group?",
+    type: "boolean"
+  })
+  isGroup?: boolean;
+
+  @primitiveTrait({
+    name: "Is a Function",
+    description:
+      "Is the target of this reference expected to be a catalog function?",
+    type: "boolean"
+  })
+  isFunction?: boolean;
+
+  @primitiveTrait({
+    name: "Is Mappable",
+    description: "Is the target of this reference expected to have map items?",
+    type: "boolean"
+  })
+  isMappable?: boolean;
+
+  @primitiveTrait({
+    name: "Is Chartable",
+    description:
+      "Is the target of this reference expected to have chart items?",
+    type: "boolean"
+  })
+  isChartable?: boolean;
 }
