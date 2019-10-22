@@ -1,0 +1,117 @@
+@import "~terriajs-variables";
+
+.guidance {
+  position: relative;
+  box-shadow: 0 6px 6px 0 rgba(0, 0, 0, 0.12), 0 10px 20px 0 rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+
+  position: fixed;
+  top: 6%;
+
+  right: 6%;
+  z-index: 1000;
+}
+
+.image {
+  height: 216px;
+  background-color: lightblue;
+}
+
+.body {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  align-items: space-between;
+
+  box-sizing: border-box;
+  // width: 256px;
+  width: 384px;
+  background-color: $modal-bg;
+  padding: $padding-small * 5;
+  color: $text-darker;
+
+  min-height: 244px;
+}
+
+.bodyFooter {
+  display: flex;
+  justify-content: flex-end;
+}
+.bodyProgress {
+  display: flex;
+  margin-right: auto;
+}
+
+.btn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../Sass/common/_buttons.scss";
+  width: initial;
+}
+.btn--tertiary {
+  composes: btn--tertiary from "../../Sass/common/_buttons.scss";
+  font-size: 0.85rem;
+}
+.btn-next {
+  margin-left: $padding-small;
+}
+
+.inner-close-btn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  position: absolute;
+  z-index: 10;
+  top: $padding-small * 3;
+  right: $padding-small * 3;
+
+  padding: 7px;
+
+  // background-color: #9ca2ac;
+  background-color: $text-light;
+  border-radius: 50%;
+
+  &:hover,
+  &:focus {
+    svg {
+      fill: $color-primary;
+    }
+  }
+
+  svg {
+    // fill: $grey;
+    fill: #9ca2ac;
+    height: 10px;
+    width: 10px;
+  }
+}
+
+.indicatorWrapper {
+  // float: right;
+  // margin-right: -8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.indicator {
+  display: inline-block;
+  box-sizing: border-box;
+  // height: 1px;
+  // height: 2px;
+  // width: 8px;
+
+  height: 7px;
+  width: 7px;
+
+  // border: 2px solid #519ac2;
+  background-color: $text-light;
+  border: 1px solid $color-primary;
+  // margin-left: 8px;
+
+  margin-right: 7px;
+  // border-radius: 4px;
+  border-radius: 50%;
+}
+
+.indicatorEnabled {
+  // opacity: 1;
+
+  background-color: $color-primary;
+}

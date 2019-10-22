@@ -25,6 +25,7 @@ import StoryBuilder from "./../Story/StoryBuilder.jsx";
 
 // import GuidanceDot from "../Guidance/GuidanceDot.jsx";
 import Guidance from "../Guidance/Guidance.jsx";
+import Guide from "../Guide/Guide.jsx";
 
 import { Small, Medium } from "../Generic/Responsive";
 import classNames from "classnames";
@@ -195,12 +196,13 @@ const StandardUserInterface = createReactClass({
                     <Guidance>
                       <div>Well this is the first tour message</div>
                     </Guidance>
-                    <Guidance>
+                    {/* <Guidance>
                       <div>Well this is the second tour message</div>
                     </Guidance>
                     <Guidance>
                       <div>Well this is the third tour message</div>
-                    </Guidance>
+                    </Guidance> */}
+                    <Guide />
                   </div>
                 </Medium>
               </If>
