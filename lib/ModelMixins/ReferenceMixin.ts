@@ -34,8 +34,8 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
         ) {
           throw new DeveloperError(
             "The model returned by `forceLoadReference` must be constructed " +
-            "with its `sourceReference` set to the Reference model and its " +
-            "`uniqueId` set to the same value as the Reference model."
+              "with its `sourceReference` set to the Reference model and its " +
+              "`uniqueId` set to the same value as the Reference model."
           );
         }
         runInAction(() => {

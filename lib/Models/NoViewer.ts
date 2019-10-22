@@ -9,43 +9,43 @@ import TerriaViewer from "../ViewModels/TerriaViewer";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 
 class NoViewer extends GlobeOrMap {
-    readonly type = "none";
-    readonly terria: Terria;
-    private _currentView: CameraView = new CameraView(Rectangle.MAX_VALUE);
+  readonly type = "none";
+  readonly terria: Terria;
+  private _currentView: CameraView = new CameraView(Rectangle.MAX_VALUE);
 
-    constructor(terriaViewer: TerriaViewer) {
-        super();
-        this.terria = terriaViewer.terria;
+  constructor(terriaViewer: TerriaViewer) {
+    super();
+    this.terria = terriaViewer.terria;
+  }
+
+  destroy() {}
+
+  zoomTo(v: CameraView | Cesium.Rectangle | Mappable, t: any) {
+    if (v instanceof CameraView) {
+      this._currentView = v;
+    } else if (v instanceof Rectangle) {
+      this._currentView = new CameraView(v);
     }
+  }
 
-    destroy() {}
+  notifyRepaintRequired() {}
 
-    zoomTo(v: CameraView | Cesium.Rectangle | Mappable, t: any) {
-        if (v instanceof CameraView) {
-            this._currentView = v;
-        } else if (v instanceof Rectangle) {
-            this._currentView = new CameraView(v);
-        }
-    }
+  getCurrentCameraView(): CameraView {
+    return this._currentView;
+  }
 
-    notifyRepaintRequired() {}
+  getContainer() {
+    return undefined;
+  }
 
-    getCurrentCameraView(): CameraView {
-        return this._currentView;
-    }
-
-    getContainer() {
-        return undefined;
-    }
-
-    pauseMapInteraction() {}
-    resumeMapInteraction() {}
-    _addVectorTileHighlight(
-        imageryProvider: MapboxVectorTileImageryProvider,
-        rectangle: Cesium.Rectangle
-    ) {
-        return () => {};
-    }
+  pauseMapInteraction() {}
+  resumeMapInteraction() {}
+  _addVectorTileHighlight(
+    imageryProvider: MapboxVectorTileImageryProvider,
+    rectangle: Cesium.Rectangle
+  ) {
+    return () => {};
+  }
 }
 
 export default NoViewer;
