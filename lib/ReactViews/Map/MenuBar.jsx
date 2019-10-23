@@ -4,6 +4,8 @@ import createReactClass from "create-react-class";
 
 import PropTypes from "prop-types";
 import classNames from "classnames";
+import HelpMenuPanelBasic from "../HelpScreens/HelpMenuPanelBasic.jsx";
+
 import SettingPanel from "./Panels/SettingPanel.jsx";
 import SharePanel from "./Panels/SharePanel/SharePanel.jsx";
 import ToolsPanel from "./Panels/ToolsPanel/ToolsPanel.jsx";
@@ -48,9 +50,23 @@ const MenuBar = createReactClass({
   dismissAction() {
     this.props.viewState.toggleFeaturePrompt("story", false, true);
   },
+  dismissSatelliteGuidanceAction() {
+    this.props.viewState.toggleFeaturePrompt(
+      "satelliteGuidanceHelpLocation",
+      true,
+      true
+    );
+  },
   render() {
+    const satelliteGuidancePrompted = this.props.terria.getLocalProperty(
+      "satelliteGuidancePrompted"
+    );
+    const satelliteGuidanceHelpLocationPrompted = this.props.terria.getLocalProperty(
+      "satelliteGuidanceHelpLocationPrompted"
+    );
     const storyEnabled = this.props.terria.configParameters.storyEnabled;
     const enableTools = this.props.terria.getUserProperty("tools") === "1";
+
     const promptHtml =
       this.props.terria.stories.length > 0 ? (
         <div>You can view and create stories at any time by clicking here.</div>
@@ -107,6 +123,27 @@ const MenuBar = createReactClass({
               terria={this.props.terria}
               viewState={this.props.viewState}
             />
+          </li>
+          <li className={Styles.menuItem}>
+            <HelpMenuPanelBasic
+              terria={this.props.terria}
+              viewState={this.props.viewState}
+            />
+            {satelliteGuidancePrompted &&
+              !satelliteGuidanceHelpLocationPrompted &&
+              !this.props.viewState.showSatelliteGuidance && (
+                <Prompt
+                  content={
+                    <div>
+                      You can access map guides at any time by looking in the{" "}
+                      <strong>help menu</strong>.
+                    </div>
+                  }
+                  displayDelay={1000}
+                  dismissText={"Got it, thanks!"}
+                  dismissAction={this.dismissSatelliteGuidanceAction}
+                />
+              )}
           </li>
           {enableTools && (
             <li className={Styles.menuItem}>

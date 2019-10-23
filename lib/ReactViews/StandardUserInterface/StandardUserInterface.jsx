@@ -23,8 +23,6 @@ import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import StoryPanel from "./../Story/StoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 
-// import GuidanceDot from "../Guidance/GuidanceDot.jsx";
-import Guidance from "../Guidance/Guidance.jsx";
 import Guide from "../Guide/Guide.jsx";
 import SatelliteGuideData from "../Guide/satellite-guidance.js";
 
@@ -194,32 +192,6 @@ const StandardUserInterface = createReactClass({
                       terria={terria}
                       viewState={this.props.viewState}
                     />
-                    <Guidance>
-                      <div>Well this is the first tour message</div>
-                    </Guidance>
-                    {/* <Guidance>
-                      <div>Well this is the second tour message</div>
-                    </Guidance>
-                    <Guidance>
-                      <div>Well this is the third tour message</div>
-                    </Guidance> */}
-                    <Guide
-                      hasIntroSlide
-                      viewState={this.props.viewState}
-                      guideData={SatelliteGuideData}
-                      showGuide={this.props.viewState.showSatelliteGuidance}
-                      setShowGuide={bool => {
-                        this.props.viewState.showSatelliteGuidance = bool;
-                      }}
-                    />
-                    <button
-                      onClick={() => {
-                        this.props.viewState.showSatelliteGuidance = !this.props
-                          .viewState.showSatelliteGuidance;
-                      }}
-                    >
-                      Toggle guidance
-                    </button>
                   </div>
                 </Medium>
               </If>
@@ -294,6 +266,15 @@ const StandardUserInterface = createReactClass({
           </If>
 
           <Notification viewState={this.props.viewState} />
+          <Guide
+            hasIntroSlide
+            viewState={this.props.viewState}
+            guideData={SatelliteGuideData}
+            showGuide={this.props.viewState.showSatelliteGuidance}
+            setShowGuide={bool => {
+              this.props.viewState.showSatelliteGuidance = bool;
+            }}
+          />
           <MapInteractionWindow
             terria={terria}
             viewState={this.props.viewState}

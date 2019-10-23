@@ -74,7 +74,8 @@ export const GuidePure = ({
   hasIntroSlide = false,
   guideData,
   showGuide,
-  setShowGuide
+  setShowGuide,
+  guideClassName
 }) => {
   // Handle index locally for now (unless we do a "open guide at X point" in the future?)
   const [currentGuideIndex, setCurrentGuideIndex] = useState(0);
@@ -111,7 +112,7 @@ export const GuidePure = ({
       isVisible={showGuide}
       onExited={() => setCurrentGuideIndex(0)}
     >
-      <div className={classNames(Styles.guidance, this.props.guideClassName)}>
+      <div className={classNames(Styles.guidance, guideClassName)}>
         <div className={Styles.image}>
           <img src={currentGuide.imageSrc} />
         </div>
