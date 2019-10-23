@@ -48,6 +48,7 @@ sed -i -e 's@"terriajs": ".*"@"terriajs": "'$TRAVIS_REPO_SLUG'#'$TRAVIS_BRANCH'"
 sync-dependencies --source terriajs
 git commit -a -m 'temporary commit' # so the version doesn't indicate local modifications
 git tag -a "TerriaMap-$TERRIAMAP_COMMIT_HASH--TerriaJS-$TERRIAJS_COMMIT_HASH" -m 'temporary tag'
+rm package-lock.json # because TerriaMap's package-lock.json won't reflect terriajs dependencies
 npm install
 npm run gulp build
 
