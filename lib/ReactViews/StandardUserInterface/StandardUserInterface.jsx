@@ -273,6 +273,14 @@ const StandardUserInterface = createReactClass({
             showGuide={this.props.viewState.showSatelliteGuidance}
             setShowGuide={bool => {
               this.props.viewState.showSatelliteGuidance = bool;
+              // If we're closing for any reason, set prompted to true
+              if (!bool) {
+                this.props.viewState.toggleFeaturePrompt(
+                  "satelliteGuidance",
+                  true,
+                  true
+                );
+              }
             }}
           />
           <MapInteractionWindow
