@@ -14,6 +14,9 @@ import { observer } from "mobx-react";
 import { action } from "mobx";
 import measureElement from "../measureElement";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
+import addToWorkbench from "../../Models/addToWorkbench";
+import { runInAction } from "mobx";
+import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
 
 /**
  * @typedef {object} Props
@@ -42,27 +45,26 @@ class MappablePreview extends React.Component {
     if (defined(this.props.viewState.storyShown)) {
       this.props.viewState.storyShown = false;
     }
-    const catalogItem = this.props.previewed;
-    if (catalogItem.loadReference) {
-      // TODO: handle promise rejection
-      catalogItem.loadReference();
-    }
-    const workbench = this.props.terria.workbench;
-    if (workbench.contains(catalogItem)) {
-      workbench.remove(catalogItem);
-    } else {
-      if (catalogItem.loadMapItems) {
-        // TODO: handle promise rejection.
-        catalogItem.loadMapItems();
+
+    const keepCatalogOpen = event.shiftKey || event.ctrlKey;
+
+    const addPromise = addToWorkbench(
+      this.props.terria.workbench,
+      this.props.previewed,
+      !this.props.terria.workbench.contains(this.props.previewed)
+    ).then(() => {
+      if (
+        this.props.terria.workbench.contains(this.props.previewed) &&
+        !keepCatalogOpen
+      ) {
+        runInAction(() => {
+          this.props.viewState.explorerPanelIsVisible = false;
+          this.props.viewState.mobileView = null;
+        });
       }
+    });
 
-      workbench.add(catalogItem);
-    }
-
-    if (workbench.contains(catalogItem) && !event.shiftKey && !event.ctrlKey) {
-      this.props.viewState.explorerPanelIsVisible = false;
-      this.props.viewState.mobileView = null;
-    }
+    raiseErrorOnRejectedPromise(addPromise);
   }
 
   backToMap() {

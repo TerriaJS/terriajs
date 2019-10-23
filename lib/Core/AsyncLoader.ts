@@ -1,13 +1,20 @@
-import { observable, computed, runInAction } from "mobx";
+import { observable, computed, runInAction, toJS } from "mobx";
 
 export default class AsyncLoader {
   @observable
   private _isLoading: boolean = false;
 
+  @observable
+  private _forceReloadCount: number = 0;
+
   private _promise: Promise<void> | undefined = undefined;
 
   @computed({ keepAlive: true })
   private get loadKeepAlive(): Promise<void> {
+    // Do don't do anything with _forceReloadCount directly, but
+    // by accessing it we will cause a new load to be triggered
+    // when it changes.
+    toJS(this._forceReloadCount);
     return this.loadCallback();
   }
 
@@ -20,7 +27,11 @@ export default class AsyncLoader {
     return this._isLoading;
   }
 
-  load(): Promise<void> {
+  load(forceReload: boolean = false): Promise<void> {
+    if (forceReload) {
+      ++this._forceReloadCount;
+    }
+
     const newPromise = this.loadKeepAlive;
     if (newPromise !== this._promise) {
       if (this._promise) {

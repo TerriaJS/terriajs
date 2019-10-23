@@ -30,13 +30,10 @@ import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import Catalog from "./CatalogNew";
-import Cesium from "./Cesium";
 import CommonStrata from "./CommonStrata";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import InitSource, { isInitOptions, isInitUrl } from "./InitSource";
-import Leaflet from "./Leaflet";
-import magdaRecordToCatalogMemberDefinition from "./magdaRecordToCatalogMember";
 import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
 import NoViewer from "./NoViewer";
@@ -48,6 +45,8 @@ import Workbench from "./Workbench";
 import CorsProxy from "../Core/CorsProxy";
 import MapInteractionMode from "./MapInteractionMode";
 import TimeVarying from "../ModelMixins/TimeVarying";
+import MagdaReference from "./MagdaReference";
+import CatalogGroup from "./CatalogGroupNew";
 
 interface ConfigParameters {
   [key: string]: ConfigParameters[keyof ConfigParameters];
@@ -233,28 +232,26 @@ export default class Terria {
 
   @computed
   get currentViewer(): GlobeOrMap {
-    return (
-      (this.mainViewer && this.mainViewer.currentViewer) || new NoViewer(this)
-    );
+    return this.mainViewer.currentViewer;
   }
 
   @computed
-  get cesium(): Cesium | undefined {
+  get cesium(): import("./Cesium").default | undefined {
     if (
       isDefined(this.mainViewer) &&
-      this.mainViewer.currentViewer instanceof Cesium
+      this.mainViewer.currentViewer.type === "Cesium"
     ) {
-      return this.mainViewer.currentViewer;
+      return this.mainViewer.currentViewer as import("./Cesium").default;
     }
   }
 
   @computed
-  get leaflet(): Leaflet | undefined {
+  get leaflet(): import("./Leaflet").default | undefined {
     if (
       isDefined(this.mainViewer) &&
-      this.mainViewer.currentViewer instanceof Leaflet
+      this.mainViewer.currentViewer.type === "Leaflet"
     ) {
-      return this.mainViewer.currentViewer;
+      return this.mainViewer.currentViewer as import("./Leaflet").default;
     }
   }
 
@@ -293,7 +290,7 @@ export default class Terria {
           }
 
           if (config.aspects) {
-            return this.loadMagdaConfig(config);
+            return this.loadMagdaConfig(options.configUrl, config);
           }
 
           const initializationUrls: string[] = config.initializationUrls;
@@ -452,7 +449,7 @@ export default class Terria {
         replaceStratum &&
         dereferenced === undefined &&
         ReferenceMixin.is(loadedModel) &&
-        loadedModel.dereferenced !== undefined
+        loadedModel.target !== undefined
       ) {
         dereferenced = {};
       }
@@ -466,7 +463,7 @@ export default class Terria {
                 CatalogMemberFactory,
                 this,
                 "/",
-                loadedModel.dereferenced,
+                loadedModel.target,
                 stratumId,
                 dereferenced,
                 replaceStratum
@@ -602,7 +599,7 @@ export default class Terria {
         for (let model of newItems) {
           if (ReferenceMixin.is(model)) {
             promises.push(model.loadReference());
-            model = model.dereferenced || model;
+            model = model.target || model;
           }
 
           if (Mappable.is(model)) {
@@ -620,13 +617,18 @@ export default class Terria {
     this.mainViewer.homeCamera = CameraView.fromJson(homeCameraInit);
   }
 
-  loadMagdaConfig(config: any) {
+  loadMagdaConfig(configUrl: string, config: any) {
+    const magdaRoot = new URI(configUrl)
+      .path("")
+      .query("")
+      .toString();
+
     const aspects = config.aspects;
     const configParams =
       aspects["terria-config"] && aspects["terria-config"].parameters;
 
     const initObj = aspects["terria-init"];
-    if (isJsonObject(initObj.homeCamera)) {
+    if (isJsonObject(initObj) && isJsonObject(initObj.homeCamera)) {
       this.loadHomeCamera(initObj.homeCamera);
     }
 
@@ -634,16 +636,23 @@ export default class Terria {
       this.updateParameters(configParams);
     }
     if (aspects.group && aspects.group.members) {
-      // Transform the Magda catalog structure to the Terria one.
-      const members = aspects.group.members.map((member: any) => {
-        return magdaRecordToCatalogMemberDefinition({
-          magdaBaseUrl: "http://saas.terria.io",
-          record: member
-        });
-      });
+      const id = config.id;
 
-      updateModelFromJson(this.catalog.group, CommonStrata.definition, {
-        members: members
+      let existingReference = this.getModelById(MagdaReference, id);
+      if (existingReference === undefined) {
+        existingReference = new MagdaReference(id, this);
+        this.addModel(existingReference);
+      }
+
+      const reference = existingReference;
+
+      reference.setTrait(CommonStrata.definition, "url", magdaRoot);
+      reference.setTrait(CommonStrata.definition, "recordId", config.id);
+      reference.setTrait(CommonStrata.definition, "magdaRecord", config);
+      reference.loadReference().then(() => {
+        if (reference.target instanceof CatalogGroup) {
+          this.catalog.group = reference.target;
+        }
       });
     }
   }

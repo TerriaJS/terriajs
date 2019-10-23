@@ -41,6 +41,8 @@ import GlobeOrMap from "./GlobeOrMap";
 import hasTraits from "./hasTraits";
 import Mappable, { ImageryParts, MapItem } from "./Mappable";
 import Terria from "./Terria";
+import MapboxVectorCanvasTileLayer from "../Map/MapboxVectorCanvasTileLayer";
+import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 
 interface SplitterClips {
   left: string;
@@ -65,6 +67,7 @@ const useClipUpdateWorkaround =
 // This class is an observer. It probably won't contain any observables itself
 
 export default class Leaflet extends GlobeOrMap {
+  readonly type = "Leaflet";
   readonly terria: Terria;
   readonly terriaViewer: TerriaViewer;
   readonly map: L.Map;
@@ -837,6 +840,30 @@ export default class Leaflet extends GlobeOrMap {
       this._attributionControl.addTo(this.map);
       return Promise.reject(e);
     }
+  }
+
+  _addVectorTileHighlight(
+    imageryProvider: MapboxVectorTileImageryProvider,
+    rectangle: Cesium.Rectangle
+  ): () => void {
+    const map = this.map;
+    const options: any = {
+      async: true,
+      opacity: 1,
+      bounds: rectangleToLatLngBounds(rectangle)
+    };
+
+    if (isDefined(map.options.maxZoom)) {
+      options.maxZoom = map.options.maxZoom;
+    }
+
+    const layer = new MapboxVectorCanvasTileLayer(imageryProvider, options);
+    layer.addTo(map);
+    layer.bringToFront();
+
+    return function() {
+      map.removeLayer(layer);
+    };
   }
 }
 
