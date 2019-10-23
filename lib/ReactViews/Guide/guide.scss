@@ -10,11 +10,16 @@
 
   right: 6%;
   z-index: 1000;
+
+  width: 384px;
 }
 
 .image {
   height: 216px;
   background-color: lightblue;
+  img {
+    width: 100%;
+  }
 }
 
 .body {
@@ -25,7 +30,6 @@
 
   box-sizing: border-box;
   // width: 256px;
-  width: 384px;
   background-color: $modal-bg;
   padding: $padding-small * 5;
   color: $text-darker;
