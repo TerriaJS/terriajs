@@ -109,7 +109,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
                     plugins: [
                         'babel-plugin-jsx-control-statements',
                         '@babel/plugin-transform-modules-commonjs',
-                        '@babel/plugin-syntax-dynamic-import'
+                        require.resolve('@babel/plugin-syntax-dynamic-import')
                     ]
                 }
             },
