@@ -1,4 +1,4 @@
-import { computed, observable, runInAction } from "mobx";
+import { computed, observable, runInAction, toJS } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import clone from "terriajs-cesium/Source/Core/clone";
 import IonResource from "terriajs-cesium/Source/Core/IonResource";
@@ -95,7 +95,7 @@ export default class Cesium3DTilesCatalogItem
       this.loadTileset();
     }
 
-    this.tileset.style = this.cesiumTileStyle;
+    this.tileset.style = toJS(this.cesiumTileStyle);
     this.tileset.shadows = this.cesiumShadows;
     this.tileset.show = this.show;
     return [this.tileset];
@@ -186,9 +186,9 @@ export default class Cesium3DTilesCatalogItem
     if (!isDefined(this.style) && !isDefined(this.showExpressionFromFilters)) {
       return;
     }
-    const style = clone(this.style || {});
+    const style = clone(toJS(this.style) || {});
     if (isDefined(this.showExpressionFromFilters)) {
-      style.show = this.showExpressionFromFilters;
+      style.show = toJS(this.showExpressionFromFilters);
     }
     return new Cesium3DTileStyle(style);
   }
