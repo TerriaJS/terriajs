@@ -1,16 +1,46 @@
 Change Log
 ==========
 
-### Next Release
+## Next Release
+* Remove comma dangle on `regionMapping.json`.
+
+### v7.4.0
+
+* Upgraded to Cesium v1.57.
+* Fixed a bug where all available styles were being retrieved from a `GetCapabilities` for each layer within a WMS Group resulting in memory crashes on WMSs with many layers.
+* Support State Electoral Districts 2018 and 2016 (SED_Code_2018, SED_Code_2016, SED_Name_2018, SED_Name_2016)
+
+### v7.3.0
+
+* Added `GltfCatalogItem` for displaying [glTF](https://www.khronos.org/gltf/) models on the 3D scene.
+* Fixed a bug where the Map settings '2D' button activated '3D Smooth' view when configured without support for '3D Terrain'.
+* Added `clampToTerrain` property to `GeoJsonCatalogItem`.
+* When clicking a polygon in 3D Terrain mode, the white outline is now correctly shown on the terrain surface. Note that Internet Explorer 11 and old GPU hardware cannot support drawing the highlight on terrain, so it will not be drawn at all in these environments.
+
+### v7.2.1
+
+* Removed an extra close curly brace from `regionMapping.json`.
+
+### v7.2.0
+
+* Added `hideLayerAfterMinScaleDenominator` property to `WebMapServiceCatalogItem`. When true, TerriaJS will show a message and display nothing rather than silently show a scaled-up version of the layer when the user zooms in past the layer's advertised `MinScaleDenominator`.
+* Added `GeoJsonParameterEditor`.
+* Fixed a bug that resulted in blank titles for catalog groups loaded from automatically detected (WMS) servers
+* Fixed a bug that caused some chart "Expand" options to be hidden.
+* Added `CED_CODE18` and `CED_NAME18` region types to `regionMapping.json`. These are now the default for CSV files that reference `ced`, `ced_code` and `ced_name` (previously the 2016 versions were used).
+* Improved support for WMTS, setting a maximum level to request tiles at.
+
+### v7.1.0
 
 * Support displaying availability for imagery layers on charts, by adding `"showOnChart": true" or clicking a button in the UI.
 * Added a `featureTimesProperty` property to all `ImageryLayerCatalogItem`s. This is useful for datasets that do not have data for all locations at all times, such as daily sensor swaths of near-real-time or historical satellite imagery. The property specifies the name of a property returned by the layer's feature information query that indicates the times when data is available at that particular location. When this property is set, TerriaJS will display an interface on the workbench to allow the user to filter the times to only those times where data is available at a particular location. It will also display a button at the bottom of the Feature Information panel allowing the user to filter for the selected location.
-* Preserve catalog item split state (left/right/both) when sharing CSV layers.
 * Added `disablePreview` option to all catalog items. This is useful when the preview map in the catalog will be slow to load.
-* When using splitter, Feature Info will now show only the features on the selected side.
-* Highlight polygon and polyline features.
-* Replace `getUniqueValues` with `lodash.uniq`
+* When using the splitter, the feature info panel will now show only the features on the clicked side of the splitter.
+* Vector polygons and polylines are now higlighted when clicked.
+* Fixed a bug that prevented catalog item split state (left/right/both) from being shared for CSV layers.
 * Fixed a bug where the 3D globe would not immediately refresh when toggling between the "Terrain" and "Smooth" viewer modes.
+* Fixed a bug that could cause the chart panel at the bottom to flicker on and off rapidly when there is an error loading chart data.
+* Fixed map tool button positioning on small-screen devices when viewing time series layers.
 
 ### v7.0.2
 
