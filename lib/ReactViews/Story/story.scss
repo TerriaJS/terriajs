@@ -1,0 +1,106 @@
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
+.story:global(.ui-sortable-item) {
+  background: $dark-with-overlay;
+  color: #ffffff;
+  margin: $padding $padding 0 $padding;
+  border-radius: 2px;
+  width: calc(100% - 20px);
+  h3 {
+    font-weight: normal;
+    margin: 0;
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+    max-height: 500px;
+  }
+}
+
+.storyHeader {
+  position: relative;
+  padding: $padding;
+  svg.recapture {
+    height: 20px;
+    width: 20px;
+    fill: #ffffff;
+    position: absolute;
+    right: 30px;
+    opacity: 0;
+    @include transition(all, 1.8s);
+
+    &.isSuccessful {
+      opacity: 1;
+    }
+  }
+}
+
+.body {
+  padding: $padding;
+  border-top: 1px solid $overlay;
+  font-size: 0.8rem;
+  a {
+    color: $color-primary;
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+    max-height: 200px;
+  }
+}
+.toggleBtn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  position: absolute;
+  top: $padding;
+  right: $padding;
+  svg {
+    width: 20px;
+    height: 20px;
+    fill: #9ca1aa;
+  }
+}
+.footer {
+  display: flex;
+}
+
+.viewBtn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../Sass/common/_buttons.scss";
+}
+
+.menu {
+  z-index: 99;
+  position: absolute;
+  right: $padding/2;
+  top: $padding/2;
+  border-radius: 2px;
+}
+
+.menuInner {
+  padding: 0;
+  margin: 0;
+  li {
+    display: block;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  li:last-child {
+    border-bottom: 0;
+  }
+}
+.menuBtn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn-tertiary from "../../Sass/common/_buttons.scss";
+  font-size: 0.8rem;
+  padding: $padding/2 $padding/2;
+  background: #7d8999;
+  width: 100%;
+  &:hover,
+  &:focus {
+    background: lighten(#7d8999, 10%);
+  }
+}
+
+.draggable {
+  font-size: 0.9rem;
+  cursor: move;
+}

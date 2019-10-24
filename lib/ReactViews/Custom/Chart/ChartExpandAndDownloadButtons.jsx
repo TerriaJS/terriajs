@@ -9,9 +9,13 @@ import createReactClass from "create-react-class";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
 import clone from "terriajs-cesium/Source/Core/clone";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
 
-import CatalogGroup from "../../../Models/CatalogGroup";
+import GeoJsonCatalogItem from "../../../Models/GeoJsonCatalogItem";
+import CompositeCatalogItem from "../../../Models/CompositeCatalogItem";
 import CsvCatalogItem from "../../../Models/CsvCatalogItem";
+import SensorObservationServiceCatalogItem from "../../../Models/SensorObservationServiceCatalogItem";
 import Dropdown from "../../Generic/Dropdown";
 import Polling from "../../../Models/Polling";
 import raiseErrorToUser from "../../../Models/raiseErrorToUser";
@@ -68,6 +72,7 @@ const ChartExpandAndDownloadButtons = createReactClass({
     if (!defined(this.props.sources) && !defined(this.props.tableStructure)) {
       return null;
     }
+
     // The downloads and download names default to the sources and source names if not defined.
     const downloads = this.props.downloads || this.props.sources;
     const downloadNames = this.props.downloadNames || this.props.sourceNames;
@@ -153,6 +158,7 @@ const ChartExpandAndDownloadButtons = createReactClass({
  * @private
  */
 function expand(props, sourceIndex) {
+  const feature = props.feature;
   function makeTableStyle() {
     // Set the table style so that the names and units of the columns appear immediately, not with a delay.
     const tableStyleOptions = {
@@ -201,8 +207,38 @@ function expand(props, sourceIndex) {
   function makeNewCatalogItem() {
     const url = defined(sourceIndex) ? props.sources[sourceIndex] : undefined;
     const newCatalogItem = new CsvCatalogItem(terria, url, {
-      tableStyle: makeTableStyle()
+      tableStyle: makeTableStyle(),
+      isCsvForCharting: true
     });
+    const newGeoJsonItem = new GeoJsonCatalogItem(terria, null);
+    newGeoJsonItem.isUserSupplied = true;
+    newGeoJsonItem.style = {
+      "stroke-width": 3,
+      "marker-size": 30,
+      stroke: "#ffffff",
+      "marker-color": newCatalogItem.colors[0],
+      "marker-opacity": 1
+    };
+
+    const carts = Ellipsoid.WGS84.cartesianToCartographic(
+      feature.position._value
+    );
+    newGeoJsonItem.data = {
+      type: "Feature",
+      properties: {},
+      geometry: {
+        type: "Point",
+        coordinates: [
+          CesiumMath.toDegrees(carts.longitude),
+          CesiumMath.toDegrees(carts.latitude)
+        ]
+      }
+    };
+
+    const compositeItem = new CompositeCatalogItem(terria, [
+      newCatalogItem,
+      newGeoJsonItem
+    ]);
     let tableStructure = props.tableStructure;
     if (
       defined(props.colors) &&
@@ -221,6 +257,23 @@ function expand(props, sourceIndex) {
       defined(props.catalogItem.loadIntoTableStructure)
     ) {
       tableStructure = props.catalogItem.loadIntoTableStructure(url);
+      // At least for SensorObservationServiceCatalogItems, store a reference to that item, on the chart item being generated
+      if (props.catalogItem.type === "sos") {
+        // debugger
+        newCatalogItem.sourceCatalogItemId = props.catalogItem.uniqueId;
+        if (
+          props.catalogItem.activeConcepts &&
+          props.catalogItem.activeConcepts.length === 1
+        ) {
+          const procedure = SensorObservationServiceCatalogItem.getObjectCorrespondingToSelectedConcept(
+            props.catalogItem,
+            "procedures"
+          );
+          newCatalogItem.regenerationOptions = {
+            procedure: procedure
+          };
+        }
+      }
     }
     newCatalogItem.data = tableStructure;
     // Without this, if the chart data comes via the proxy, it would be cached for the default period of 2 weeks.
@@ -233,12 +286,8 @@ function expand(props, sourceIndex) {
     );
     newCatalogItem.name =
       props.title || (props.feature && props.feature.name) || "Chart";
-    newCatalogItem.id =
-      newCatalogItem.name +
-      (props.id ? " " + props.id : "") +
-      " (" +
-      props.catalogItem.name +
-      ")";
+    const group = terria.catalog.chartDataGroup;
+    newCatalogItem.id = group.uniqueId + "/" + newCatalogItem.name;
 
     if (defined(props.pollSeconds)) {
       const pollSources = props.pollSources;
@@ -251,11 +300,6 @@ function expand(props, sourceIndex) {
         replace: props.pollReplace
       });
     }
-    const group = terria.catalog.upsertCatalogGroup(
-      CatalogGroup,
-      "Chart Data",
-      "A group for chart data."
-    );
     group.isOpen = true;
     const existingIndex = group.items
       .map(item => item.uniqueId)
@@ -281,12 +325,22 @@ function expand(props, sourceIndex) {
       group.remove(oldCatalogItem);
     }
     group.add(newCatalogItem);
+
     newCatalogItem.isLoading = true;
     newCatalogItem.isMappable = false;
-    terria.catalog.addChartableItem(newCatalogItem); // Notify the chart panel so it shows "loading".
-    newCatalogItem.isEnabled = true; // This loads it as well.
+    newCatalogItem.isEnabled = true;
+    newCatalogItem.creatorCatalogItem = compositeItem;
 
-    return newCatalogItem;
+    terria.catalog.addChartableItem(newCatalogItem); // Notify the chart panel so it shows "loading".
+
+    newGeoJsonItem.isMappable = true;
+
+    compositeItem.isEnabled = true;
+    compositeItem.nowViewingCatalogItem = newCatalogItem;
+
+    newGeoJsonItem.style["marker-color"] = newCatalogItem.getNextColor();
+
+    return compositeItem;
   }
 
   let existingColors;
@@ -298,7 +352,12 @@ function expand(props, sourceIndex) {
     // Enclose in try-catch rather than otherwise so that if load itself fails, we don't do this at all.
     try {
       newCatalogItem.sourceCatalogItem = props.catalogItem;
-      const tableStructure = newCatalogItem.tableStructure;
+      let csvItem = null;
+      for (let i = 0; i < newCatalogItem.items.length; i++) {
+        if (newCatalogItem.items[i].type === "csv")
+          csvItem = newCatalogItem.items[i];
+      }
+      const tableStructure = csvItem.tableStructure;
       tableStructure.sourceFeature = props.feature;
       if (defined(existingColors)) {
         tableStructure.columns.forEach((column, columnNumber) => {
@@ -310,7 +369,7 @@ function expand(props, sourceIndex) {
           column.isActive = activeConcepts[columnNumber];
         });
       }
-      newCatalogItem.setChartable();
+      csvItem.setChartable();
     } catch (e) {
       // This does not actually make it to the user.
       return raiseErrorToUser(terria, e);

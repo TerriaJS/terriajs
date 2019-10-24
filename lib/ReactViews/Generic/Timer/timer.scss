@@ -1,0 +1,14 @@
+.timer {
+  fill: currentColor;
+  height: fit-content;
+  line-height: 0;
+}
+
+.background-circle {
+  opacity: 0.4;
+}
+
+.elapsedTime {
+  /*! keep */
+  // We ask SASS not to delete this empty selector so that the Timer can import its class name
+}

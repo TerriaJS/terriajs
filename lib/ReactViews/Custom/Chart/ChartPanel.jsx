@@ -7,7 +7,6 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 
 import defined from "terriajs-cesium/Source/Core/defined";
-import findIndex from "../../../Core/findIndex";
 import Chart from "./Chart.jsx";
 import ChartPanelDownloadButton from "./ChartPanelDownloadButton";
 import Loader from "../../Loader.jsx";
@@ -30,15 +29,7 @@ const ChartPanel = createReactClass({
   },
 
   closePanel() {
-    const chartableItems = this.props.terria.catalog.chartableItems;
-    for (let i = chartableItems.length - 1; i >= 0; i--) {
-      const item = chartableItems[i];
-      if (item.isEnabled && defined(item.tableStructure)) {
-        item.tableStructure.columns
-          .filter(column => column.isActive)
-          .forEach(column => column.toggleActive());
-      }
-    }
+    this.props.viewState.chartIsOpen = false;
   },
 
   componentDidUpdate() {
@@ -49,10 +40,9 @@ const ChartPanel = createReactClass({
 
   render() {
     const chartableItems = this.props.terria.catalog.chartableItems;
-    if (findIndex(chartableItems, ci => !ci.dontChartAlone) < 0) {
+    if (this.props.viewState.chartIsOpen === false) {
       return null;
     }
-
     let data = [];
     let xUnits;
     chartableItems.forEach(item => {
@@ -75,17 +65,12 @@ const ChartPanel = createReactClass({
 
     this.props.terria.currentViewer.notifyRepaintRequired();
 
-    const isVisible = data.length > 0 || isLoading;
-    if (!isVisible) {
-      return null;
-    }
     let loader;
     let chart;
     if (isLoading) {
       loader = <Loader className={Styles.loader} />;
     }
     if (data.length > 0) {
-      // TODO: use a calculation for the 34 pixels taken off...
       chart = (
         <Chart
           data={data}
@@ -108,6 +93,7 @@ const ChartPanel = createReactClass({
                 />
                 <button
                   type="button"
+                  title="Close Panel"
                   className={Styles.btnCloseChartPanel}
                   onClick={this.closePanel}
                 >

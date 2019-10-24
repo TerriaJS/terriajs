@@ -1,0 +1,237 @@
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
+.story-panel {
+  font-family: $font-base;
+  flex-basis: 400px;
+  max-width: 400px;
+  color: $text-light;
+  font-size: $font-size-mid-small;
+  background: $dark;
+  display: block;
+  transition: all 0.25s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  &.isVisible {
+    visibility: visible;
+    margin-right: 0;
+  }
+  &.isHidden {
+    visibility: hidden;
+    margin-right: -400px;
+  }
+}
+.header {
+  .actions {
+    border-bottom: 1px solid $overlay;
+    padding: $padding;
+  }
+}
+
+.stories {
+  height: calc(100vh - 121px);
+  overflow: auto;
+  &.isActive {
+    opacity: 0.7;
+  }
+}
+
+.story {
+  padding: $padding-small;
+  margin: $padding-small;
+  background: #667080;
+  color: #ffffff;
+  margin: $padding;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  h3 {
+    font-weight: normal;
+    margin: 0;
+  }
+}
+
+.trashBtn,
+.removeBtn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn--map from "../../Sass/common/_buttons.scss";
+  margin-right: $padding;
+  background: #9ca1aa;
+  border-radius: 4px;
+  padding: $padding-small $padding;
+  svg {
+    height: 25px;
+    width: 25px;
+    fill: #ffffff;
+  }
+}
+
+.footer {
+  padding: $padding;
+}
+
+.captureBtn,
+.previewBtn {
+  position: relative;
+  padding-left: 35px;
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../Sass/common/_buttons.scss";
+  svg {
+    width: 25px;
+    height: 25px;
+    fill: #ffffff;
+    position: absolute;
+    left: $padding;
+    top: 8px;
+  }
+}
+
+.previewBtn {
+  margin-bottom: $padding;
+}
+
+.story:hover {
+  background-color: $dark-with-overlay;
+}
+
+.intro {
+  background: $dark-with-overlay;
+  color: $text-light;
+  font-family: $font-pop;
+  margin: $padding $padding 0 $padding;
+  border-radius: 4px;
+  text-align: center;
+  padding: 30px 10px;
+  color: $text-light-dimmed;
+  strong {
+    color: $text-light;
+  }
+  svg {
+    width: 70px;
+    height: 70px;
+    fill: $text-light-dimmed;
+    margin: 20px auto;
+  }
+}
+.remove-button {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  color: $text-light;
+  font-size: $font-size-mid-mini;
+  padding: 0;
+  svg {
+    height: 12px;
+    width: 12px;
+    margin: 4px;
+    fill: #ffffff;
+    vertical-align: bottom;
+    display: inline-block;
+  }
+}
+
+.tutBtn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  color: $text-light;
+  font-size: $font-size-button;
+  padding: $padding $padding * 2;
+  background: $overlay;
+  border-radius: $padding * 2;
+  margin-top: $padding;
+
+  svg {
+    height: 20px;
+    width: 20px;
+    margin: 0 4px;
+    fill: $faint-bg;
+    vertical-align: bottom;
+    display: inline-block;
+  }
+}
+
+@include keyframes(story-fade-in) {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@include keyframes(story-fade-out) {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@include keyframes(story-slide-up) {
+  0% {
+    @include transform(translate(-50%, 0%));
+  }
+  100% {
+    @include transform(translate(-50%, -50%));
+  }
+}
+@include keyframes(story-slide-down) {
+  0% {
+    @include transform(translate(-50%, -50%));
+  }
+  100% {
+    @include transform(translate(-50%, 0%));
+  }
+}
+.VideoGuideWrapper {
+  position: fixed;
+  z-index: 99999;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba($dark-with-overlay, 0.8);
+  opacity: 1;
+  @include animation("story-fade-in 0.3s");
+}
+.VideoGuideWrapper--closing {
+  @include animation("story-fade-out 0.3s");
+  & > div {
+    @include animation("story-slide-down 0.3s");
+  }
+}
+
+.videoGuide {
+  box-shadow: $box-shadow;
+  margin: 0;
+  width: 40%;
+  min-height: 31.5%;
+  background-color: black;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  max-width: 100%;
+  @include transform(translate(-50%, -50%));
+  @include animation("story-slide-up 0.3s");
+}
+.videoGuideRatio {
+  padding-bottom: 58.5%;
+  padding-top: 25px;
+}
+.videoGuideLoading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  svg {
+    fill: white;
+    width: 60px;
+    height: 60px;
+    top: -30px;
+    left: -30px;
+    position: absolute;
+  }
+}
+
+.videoGuide--iframe {
+  border: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}

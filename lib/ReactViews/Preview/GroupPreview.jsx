@@ -6,9 +6,11 @@ import PropTypes from "prop-types";
 
 import DataPreviewSections from "./DataPreviewSections";
 import DataPreviewUrl from "./DataPreviewUrl.jsx";
+import measureElement from "../measureElement";
 import ObserveModelMixin from "../ObserveModelMixin";
 import Styles from "./mappable-preview.scss";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
+import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
 
 /**
  * A "preview" for CatalogGroup.
@@ -20,7 +22,8 @@ const GroupPreview = createReactClass({
   propTypes: {
     previewed: PropTypes.object.isRequired,
     terria: PropTypes.object.isRequired,
-    viewState: PropTypes.object.isRequired
+    viewState: PropTypes.object.isRequired,
+    widthFromMeasureElementHOC: PropTypes.number
   },
 
   backToMap() {
@@ -33,7 +36,20 @@ const GroupPreview = createReactClass({
 
     return (
       <div>
-        <h3>{this.props.previewed.name}</h3>
+        <div
+          className={Styles.titleAndShareWrapper}
+          ref={component => (this.refToMeasure = component)}
+        >
+          <h3>{this.props.previewed.name}</h3>
+          <div className={Styles.shareLinkWrapper}>
+            <SharePanel
+              catalogShare
+              modalWidth={this.props.widthFromMeasureElementHOC}
+              terria={this.props.terria}
+              viewState={this.props.viewState}
+            />
+          </div>
+        </div>
         <div className={Styles.previewedInfo}>
           <div className={Styles.url}>
             <Choose>
@@ -80,4 +96,4 @@ const GroupPreview = createReactClass({
   }
 });
 
-export default GroupPreview;
+export default measureElement(GroupPreview);

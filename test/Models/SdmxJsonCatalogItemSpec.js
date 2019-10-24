@@ -16,6 +16,8 @@ describe("SdmxJsonCatalogItem", function() {
     terria = new Terria({
       baseUrl: "./"
     });
+    terria.configParameters.regionMappingDefinitionsUrl =
+      "test/SDMX-JSON/regionMappingSdmx.json";
     item = new SdmxJsonCatalogItem(terria);
   });
 
@@ -120,7 +122,9 @@ describe("SdmxJsonCatalogItem", function() {
               dataAsObsRepeated = text;
             }
           ),
-          loadText("data/regionMapping.json").then(function(text) {
+          loadText("test/SDMX-JSON/regionMappingSdmx.json").then(function(
+            text
+          ) {
             regionMappingJson = text;
           }),
           loadText(
@@ -164,9 +168,9 @@ describe("SdmxJsonCatalogItem", function() {
           jasmine.Ajax.stubRequest(
             "http://sdmx.example.com/sdmx-json/data/FOO-OBS-RPT/./all"
           ).andReturn({ responseText: dataAsObsRepeated });
-          jasmine.Ajax.stubRequest("data/regionMapping.json").andReturn({
-            responseText: regionMappingJson
-          });
+          jasmine.Ajax.stubRequest(
+            "test/SDMX-JSON/regionMappingSdmx.json"
+          ).andReturn({ responseText: regionMappingJson });
           jasmine.Ajax.stubRequest(
             "data/regionids/region_map-FID_LGA_2013_AUST_LGA_CODE13.json"
           ).andReturn({ responseText: lga13Data });
@@ -675,7 +679,7 @@ describe("SdmxJsonCatalogItem", function() {
         .then(done);
     });
 
-    it("is less than 2000 characters when serialised to JSON then URLEncoded", function(done) {
+    it("is less than 2300 characters when serialised to JSON then URLEncoded", function(done) {
       item.updateFromJson({
         name: "Name",
         description: "Description",
@@ -686,7 +690,7 @@ describe("SdmxJsonCatalogItem", function() {
         .load()
         .then(function() {
           var url = encodeURIComponent(JSON.stringify(item.serializeToJson()));
-          expect(url.length).toBeLessThan(2000);
+          expect(url.length).toBeLessThan(2300);
         })
         .otherwise(fail)
         .then(done);

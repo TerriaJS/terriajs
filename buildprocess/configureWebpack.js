@@ -253,6 +253,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
 
     // Make a terriajs-variables alias so it's really easy to override our sass variables by aliasing over the top of this.
     config.resolve.alias['terriajs-variables'] = config.resolve.alias['terriajs-variables'] || require.resolve('../lib/Sass/common/_variables.scss');
+    config.resolve.alias['terriajs-mixins'] = config.resolve.alias['terriajs-mixins'] || require.resolve('../lib/Sass/common/_mixins.scss');
 
     // Alias react and react-dom to the one used by the building folder - apparently we can rely on the dir always being
     // called node_modules https://github.com/npm/npm/issues/2734

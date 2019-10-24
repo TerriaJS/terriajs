@@ -50,6 +50,7 @@ Sites we're aware of that are using TerriaJS. These are not endorsements or test
 * [Innovisite France Beta](http://www.innovisite.com/map/france/)
 * [USGS The National Map Advanced Viewer](https://viewer.nationalmap.gov/advanced/terriajs-usgs/)
 * [Portale del suolo](http://www.sardegnaportalesuolo.it/webgis/)
+* [Find & Connect Map of Children's Homes](https://map.findandconnect.gov.au/)
 
 ### Technical
 
@@ -78,6 +79,10 @@ See [Getting Started](http://terria.io/Documentation/guide/getting-started/) in 
 * **[Catalog Editor](https://github.com/TerriaJS/catalog-editor)**, an automatically generated web interface for creating and editing catalog (init) files.
 * **[Generate-TerriaJS-Schema](https://github.com/TerriaJS/generate-terriajs-schema)**, a tool which automatically generates a schema for validating catalog files, and also the editor, by processing TerriaJS source code.
 * **[TerriaMapStatic](https://github.com/terriajs/terriamapstatic)**, a pre-built version of TerriaMap, which can be deployed as a static HTML website, such as on Github Pages.
+
+### Big Thanks
+
+Cross-browser Testing Platform and Open Source <3 Provided by [Sauce Labs](https://saucelabs.com)
 
 ### Join the community
 
