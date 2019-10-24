@@ -1,0 +1,42 @@
+// This tsconfig is used to build the model layer only for use in a node.js app.
+// Build with ./node_modules/.bin/tsc -p tsconfig-models.json
+{
+  "compilerOptions": {
+      "target": "es2018",
+      "experimentalDecorators": true,
+      "module": "esNext",
+      "moduleResolution": "node",
+      "sourceMap": true,
+      "strict": true,
+      "allowJs": true,
+      "jsx": "preserve",
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
+      "outDir": "dist",
+      "resolveJsonModule": true,
+      // "composite": true,
+      // "declaration": true,
+      "typeRoots": [
+          "./lib/ThirdParty",
+          "./node_modules/@types",
+          "../node_modules/@types"
+      ],
+      "types": [
+          "cesium",
+          "terriajs-cesium",
+          "mapbox__point-geometry",
+          "mapbox__vector-tile",
+          "terriajs-html2canvas",
+          "urijs"
+      ]
+  },
+  "include": [
+      "./lib/Core/**/*",
+      "./lib/Models/**/*",
+      "./lib/Map/**/*",
+      "./lib/ModelMixins/**/*",
+      "./lib/Traits/**/*",
+      "./wwwroot/data/colorbrewer.json",
+      "./wwwroot/data/regionMapping.json"
+  ]
+}
