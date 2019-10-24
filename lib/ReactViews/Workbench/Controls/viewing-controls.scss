@@ -1,7 +1,7 @@
-@import '~terriajs-variables';
+@import "~terriajs-variables";
 
 .control {
-  composes: list-reset from '../../../Sass/common/_base.scss';
+  composes: list-reset from "../../../Sass/common/_base.scss";
   height: 18px;
   position: relative;
   display: flex;
@@ -20,7 +20,7 @@
 
 .remove {
   text-align: right;
-  svg{
+  svg {
     height: 12px;
     width: 12px;
     margin: 4px;
@@ -31,7 +31,7 @@
 }
 
 .btn {
-  composes: btn from '../../../Sass/common/_buttons.scss';
+  composes: btn from "../../../Sass/common/_buttons.scss";
   color: $text-light;
 
   &.btn {

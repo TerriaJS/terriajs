@@ -35,12 +35,12 @@
   box-sizing: border-box;
 }
 
-.tabCenter{
+.tabCenter {
   text-align: center;
   margin: $padding 0;
 }
 
-.tabLeft{
+.tabLeft {
   text-align: left;
   padding: 0 $padding;
   border-top: 1px solid $grey-lighter;
@@ -53,7 +53,7 @@
   &__item {
     display: inline-block;
     margin-right: 15px;
-    svg{
+    svg {
       display: inline;
       width: 15px;
       height: 15px;
@@ -92,7 +92,7 @@
   width: 100%;
   margin: 6px 0;
   color: $dark-lighter;
-  div{
+  div {
     margin-top: 5%;
   }
 
@@ -118,7 +118,6 @@
   font-family: $font-base;
   font-size: $font-size-mid-small;
   margin: $padding;
-
 }
 
 .btn--back-to-my-data {
@@ -135,11 +134,12 @@
   border: 1px solid #ddd;
   color: $color-primary;
 
-  &:hover, &:focus{
+  &:hover,
+  &:focus {
     border: 1px solid $color-primary;
   }
 
-  svg{
+  svg {
     width: 10px;
     height: 10px;
     display: inline-block;
