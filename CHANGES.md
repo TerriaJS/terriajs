@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+### next release
+
+* Add ability to pass `leafletUpdateInterval` to an `ImageryLayerCatalogItem` to throttle the number of requests made to a server.
+
+
 ### v7.7.0
 
 * Added a quality slider for the 3D map to the Map panel, allowing control of Cesium's maximumScreenSpaceError and resolutionScale properties.
