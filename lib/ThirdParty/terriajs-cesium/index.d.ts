@@ -480,7 +480,7 @@ declare module "terriajs-cesium/Source/Core/createWorldTerrain" {
   export default Cesium.createWorldTerrain;
 }
 declare module "terriajs-cesium/Source/Core/defaultValue" {
-  export default Cesium.defaultValue;
+  export default function defaultValue(value: any, defaultValue: any): any;
 }
 declare module "terriajs-cesium/Source/Core/defined" {
   export default Cesium.defined;

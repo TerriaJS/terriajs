@@ -14,7 +14,6 @@ import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import isDefined from "../Core/isDefined";
 import pollToPromise from "../Core/pollToPromise";
-import Leaflet from "../Models/Leaflet";
 import getUrlForImageryTile from "./getUrlForImageryTile";
 
 const swScratch = new Cartographic();
