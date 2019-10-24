@@ -12,6 +12,7 @@ import Workbench from "../Workbench/Workbench.jsx";
 import Icon from "../Icon.jsx";
 import FullScreenButton from "./FullScreenButton.jsx";
 import { removeMarker } from "../../Models/LocationMarkerUtils";
+import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 
 import Styles from "./side-panel.scss";
 
@@ -82,6 +83,9 @@ const SidePanel = createReactClass({
 
   render() {
     const searchState = this.props.viewState.searchState;
+    const emptyWorkbench = parseCustomMarkdownToReact(
+      this.props.terria.language["EmptyWorkbenchMessage"]
+    );
 
     return (
       <div className={Styles.workBench}>
@@ -106,10 +110,10 @@ const SidePanel = createReactClass({
               type="button"
               onClick={this.onAddDataClicked}
               className={Styles.button}
-              title={this.props.terria.language.AddData}
+              title={this.props.terria.language.AddDataBtnText}
             >
               <Icon glyph={Icon.GLYPHS.add} />
-              {this.props.terria.language.AddData}
+              {this.props.terria.language.AddDataBtnText}
             </button>
             <button
               type="button"
@@ -149,13 +153,7 @@ const SidePanel = createReactClass({
               />
             </When>
             <Otherwise>
-              <div className={Styles.workbenchEmpty}>
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: this.props.terria.language["EmptyWorkbenchMessage"]
-                  }}
-                />
-              </div>
+              <div className={Styles.workbenchEmpty}>{emptyWorkbench}</div>
             </Otherwise>
           </Choose>
         </div>
