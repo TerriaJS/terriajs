@@ -22,7 +22,8 @@ const NotificationWindow = createReactClass({
     onDeny: PropTypes.func.isRequired,
     type: PropTypes.string,
     height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    width: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    viewState: PropTypes.object.isRequired
   },
 
   confirm(e) {
@@ -30,12 +31,20 @@ const NotificationWindow = createReactClass({
     if (this.props.onConfirm) {
       this.props.onConfirm();
     }
+    this.resetTopElement();
   },
 
   deny(e) {
     e.stopPropagation();
     if (this.props.onDeny) {
       this.props.onDeny();
+    }
+    this.resetTopElement();
+  },
+
+  resetTopElement() {
+    if (this.props.viewState.topElement === "NotificationWindow") {
+      this.props.viewState.topElement = "FeatureInfo";
     }
   },
 
@@ -50,7 +59,7 @@ const NotificationWindow = createReactClass({
       height: defined(this.props.height) ? this.props.height : "auto",
       width: defined(this.props.width) ? this.props.width : "500px"
     };
-
+    this.props.viewState.topElement = "NotificationWindow";
     return (
       <div className={classNames(Styles.wrapper, `${type}`, "top-element")}>
         <div className={Styles.notification}>

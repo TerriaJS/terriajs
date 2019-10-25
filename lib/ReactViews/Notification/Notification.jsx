@@ -58,6 +58,7 @@ const Notification = createReactClass({
           type={defined(notification.type) ? notification.type : "notification"}
           width={notification.width}
           height={notification.height}
+          viewState={this.props.viewState}
         />
       )
     );

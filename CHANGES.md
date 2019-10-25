@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+### next release
+
+* Ensure the NotificationWindow is rendered as the top element.
+
+
 ### v7.7.0
 
 * Added a quality slider for the 3D map to the Map panel, allowing control of Cesium's maximumScreenSpaceError and resolutionScale properties.
