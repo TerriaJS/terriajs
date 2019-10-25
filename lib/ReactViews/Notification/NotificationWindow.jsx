@@ -52,7 +52,7 @@ const NotificationWindow = createReactClass({
     };
 
     return (
-      <div className={classNames(Styles.wrapper, `${type}`)}>
+      <div className={classNames(Styles.wrapper, `${type}`, "top-element")}>
         <div className={Styles.notification}>
           <div className={Styles.inner} style={divStyle}>
             <h3 className="title">{title}</h3>
