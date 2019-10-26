@@ -45,7 +45,7 @@ export default class MagdaReference extends UrlMixin(
     }),
     createStratumInstance(MagdaDistributionFormatTraits, {
       id: "EsriMapServer",
-      formatRegex: "^esri (rest|tiled map service)$",
+      formatRegex: "^esri (mapserver|map server|rest|tiled map service)$",
       urlRegex: "MapServer",
       definition: {
         type: "esri-mapServer"

@@ -274,6 +274,10 @@ export default class ArcGisMapServerCatalogItem
   readonly showsInfo = true;
   readonly isMappable = true;
 
+  get type() {
+    return ArcGisMapServerCatalogItem.type;
+  }
+
   protected forceLoadMetadata(): Promise<void> {
     return MapServerStratum.load(this).then(stratum => {
       runInAction(() => {
