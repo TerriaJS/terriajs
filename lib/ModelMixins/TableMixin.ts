@@ -280,7 +280,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
             points,
             units: yColumn.traits.units,
             getColor: () => {
-              return line.color || getNextChartColor(colorId);
+              return line.color || getChartColorForId(colorId);
             }
           });
 
