@@ -60,6 +60,7 @@ const DataCatalog = observer(
                 removable={this.props.removable}
                 terria={this.props.terria}
                 ancestors={[]}
+                isTopLevel={true}
               />
             )}
           </For>

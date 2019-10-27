@@ -1,12 +1,14 @@
 import createReactClass from "create-react-class";
+import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import addedByUser from "../../Core/addedByUser";
+import addToWorkbench from "../../Models/addToWorkbench";
+import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
 import removeUserAddedData from "../../Models/removeUserAddedData";
 import CatalogItem from "./CatalogItem";
-import { runInAction } from "mobx";
 
 const STATE_TO_TITLE = {
   loading: "Loading...",
@@ -53,36 +55,25 @@ const DataCatalogItem = observer(
     },
 
     toggleEnable(event) {
-      const catalogItem = this.props.item;
-      if (catalogItem.loadReference) {
-        // TODO: handle promise rejection
-        catalogItem.loadReference();
-      }
-      const workbench = catalogItem.terria.workbench;
-      if (workbench.contains(catalogItem)) {
-        workbench.remove(catalogItem);
-      } else {
-        if (catalogItem.loadMapItems) {
-          // TODO: handle promise rejection.
-          catalogItem.loadMapItems();
+      const keepCatalogOpen = event.shiftKey || event.ctrlKey;
+
+      const addPromise = addToWorkbench(
+        this.props.terria.workbench,
+        this.props.item,
+        !this.props.terria.workbench.contains(this.props.item)
+      ).then(() => {
+        if (
+          this.props.terria.workbench.contains(this.props.item) &&
+          !keepCatalogOpen
+        ) {
+          runInAction(() => {
+            this.props.viewState.explorerPanelIsVisible = false;
+            this.props.viewState.mobileView = null;
+          });
         }
+      });
 
-        workbench.add(catalogItem);
-      }
-
-      // set preview as well
-      this.setPreviewedItem();
-
-      if (
-        workbench.contains(catalogItem) &&
-        !event.shiftKey &&
-        !event.ctrlKey
-      ) {
-        runInAction(() => {
-          this.props.viewState.explorerPanelIsVisible = false;
-          this.props.viewState.mobileView = null;
-        });
-      }
+      raiseErrorOnRejectedPromise(addPromise);
     },
 
     setPreviewedItem() {

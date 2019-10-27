@@ -56,6 +56,7 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
     return new this.modelClass(
       undefined,
       model.terria,
+      undefined,
       new ArrayNestedStrataMap(
         model,
         this.id,

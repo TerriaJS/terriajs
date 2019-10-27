@@ -480,7 +480,7 @@ declare module "terriajs-cesium/Source/Core/createWorldTerrain" {
   export default Cesium.createWorldTerrain;
 }
 declare module "terriajs-cesium/Source/Core/defaultValue" {
-  export default Cesium.defaultValue;
+  export default function defaultValue(value: any, defaultValue: any): any;
 }
 declare module "terriajs-cesium/Source/Core/defined" {
   export default Cesium.defined;
@@ -1354,8 +1354,9 @@ declare module "terriajs-cesium/Source/Scene/Cesium3DTileset" {
 declare module "terriajs-cesium/Source/Scene/Cesium3DTileStyle" {
   export default class Cesium3DTileStyle {
     constructor(style: {
-      show?: string | { conditions: string[] };
-      color?: string | { conditions: string[] };
+      defines?: { [key: string]: string };
+      show?: string | { conditions: string[][] };
+      color?: string | { conditions: string[][] };
       meta?: { [key: string]: string };
     });
   }

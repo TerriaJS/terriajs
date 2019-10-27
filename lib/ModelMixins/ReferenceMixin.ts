@@ -1,15 +1,15 @@
-import { computed, observable, runInAction, untracked } from "mobx";
+import { observable, runInAction, untracked } from "mobx";
+import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import Model, { BaseModel, ModelInterface } from "../Models/Model";
 import ModelTraits from "../Traits/ModelTraits";
-import AsyncLoader from "../Core/AsyncLoader";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 
 type RequiredTraits = ModelTraits;
 
 interface ReferenceInterface extends ModelInterface<RequiredTraits> {
   readonly isLoadingReference: boolean;
-  readonly dereferenced: BaseModel | undefined;
+  readonly target: BaseModel | undefined;
   loadReference(): Promise<void>;
 }
 /**
@@ -23,22 +23,23 @@ interface ReferenceInterface extends ModelInterface<RequiredTraits> {
 function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
   abstract class ReferenceMixin extends Base implements ReferenceInterface {
     @observable
-    private _dereferenced: BaseModel | undefined;
+    private _target: BaseModel | undefined;
 
     private _referenceLoader = new AsyncLoader(() => {
-      const previousTarget = untracked(() => this._dereferenced);
+      const previousTarget = untracked(() => this._target);
       return this.forceLoadReference(previousTarget).then(target => {
         if (
           target &&
-          target.uniqueId !== undefined &&
-          target.uniqueId !== this.uniqueId
+          (target.sourceReference !== this || target.uniqueId !== this.uniqueId)
         ) {
           throw new DeveloperError(
-            "The model returned by `forceLoadReference` must have the same `id` as the `ReferenceMixin` itself."
+            "The model returned by `forceLoadReference` must be constructed " +
+              "with its `sourceReference` set to the Reference model and its " +
+              "`uniqueId` set to the same value as the Reference model."
           );
         }
         runInAction(() => {
-          this._dereferenced = target;
+          this._target = target;
         });
       });
     });
@@ -53,7 +54,7 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
 
     /**
      * Gets a value indicating whether the reference is currently loading. While this is true,
-     * {@link ModelMixin#dereferenced} may be undefined or stale.
+     * {@link ModelMixin#target} may be undefined or stale.
      */
     get isLoadingReference(): boolean {
       return this._referenceLoader.isLoading;
@@ -62,16 +63,18 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
     /**
      * Gets the target model of the reference. This model must have the same `id` as this model.
      */
-    get dereferenced(): BaseModel | undefined {
-      return this._dereferenced;
+    get target(): BaseModel | undefined {
+      return this._target;
     }
 
     /**
      * Asynchronously loads the reference. When the returned promise resolves,
-     * {@link ReferenceMixin#dereferenced} should return the target of the reference.
+     * {@link ReferenceMixin#target} should return the target of the reference.
+     * @param forceReload True to force the load to happen again, even if nothing
+     *        appears to have changed since the last time it was loaded.
      */
-    loadReference(): Promise<void> {
-      return this._referenceLoader.load();
+    loadReference(forceReload: boolean = false): Promise<void> {
+      return this._referenceLoader.load(forceReload);
     }
   }
 
@@ -79,7 +82,7 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
 }
 
 ReferenceMixin.is = function(model: BaseModel): model is ReferenceInterface {
-  return "loadReference" in model && "dereferenced" in model;
+  return "loadReference" in model && "target" in model;
 };
 
 export default ReferenceMixin;

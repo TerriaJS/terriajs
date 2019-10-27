@@ -1,5 +1,5 @@
 import ModelTraits, { TraitDefinitions } from "../Traits/ModelTraits";
-import Model, { BaseModel } from "./Model";
+import Model, { BaseModel, ModelConstructor } from "./Model";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import traitsClassToModelClass from "../Traits/traitsClassToModelClass";
 import StratumFromTraits from "./StratumFromTraits";
@@ -18,24 +18,65 @@ import { ObjectTrait } from "../Traits/objectTrait";
  * @param bottom The bottom model to combine.
  * @returns The combined model.
  */
+export default function createCombinedModel<
+  T extends ModelTraits,
+  TModelClass extends ModelConstructor<Model<T>>
+>(
+  top: Model<T>,
+  bottom: Model<T>,
+  ModelClass: TModelClass
+): InstanceType<TModelClass>;
 export default function createCombinedModel<T extends ModelTraits>(
   top: Model<T>,
   bottom: Model<T>
-): Model<T> {
+): Model<T>;
+export default function createCombinedModel(
+  top: BaseModel,
+  bottom: BaseModel,
+  ModelClass?: ModelConstructor<BaseModel>
+): BaseModel;
+export default function createCombinedModel(
+  top: BaseModel,
+  bottom: BaseModel,
+  ModelClass?: ModelConstructor<BaseModel>
+): BaseModel {
   if (top.TraitsClass !== bottom.TraitsClass) {
     throw new DeveloperError(
       "The two models in createCombinedModel must have the same TraitsClass."
     );
   }
 
-  const strata = new CombinedStrata<T>(top, bottom);
-  const ModelClass = traitsClassToModelClass(top.TraitsClass);
-  return new ModelClass(undefined, top.terria, strata);
+  const strata = new CombinedStrata(top, bottom);
+  if (!ModelClass) {
+    ModelClass = traitsClassToModelClass(top.TraitsClass);
+  }
+  return new ModelClass(top.uniqueId, top.terria, undefined, strata);
 }
 
-class CombinedStrata<T extends ModelTraits>
-  implements Map<string, StratumFromTraits<T>> {
-  constructor(readonly top: Model<T>, readonly bottom: Model<T>) {}
+export function extractTopModel<T extends ModelTraits>(
+  model: Model<T>
+): Model<T> | undefined;
+export function extractTopModel(model: BaseModel): BaseModel | undefined;
+export function extractTopModel(model: BaseModel): BaseModel | undefined {
+  if (model.strata instanceof CombinedStrata) {
+    return model.strata.top;
+  }
+  return undefined;
+}
+
+export function extractBottomModel<T extends ModelTraits>(
+  model: Model<T>
+): Model<T> | undefined;
+export function extractBottomModel(model: BaseModel): BaseModel | undefined;
+export function extractBottomModel(model: BaseModel): BaseModel | undefined {
+  if (model.strata instanceof CombinedStrata) {
+    return model.strata.bottom;
+  }
+  return undefined;
+}
+
+class CombinedStrata implements Map<string, StratumFromTraits<ModelTraits>> {
+  constructor(readonly top: BaseModel, readonly bottom: BaseModel) {}
 
   clear(): void {
     this.top.strata.clear();
@@ -45,9 +86,9 @@ class CombinedStrata<T extends ModelTraits>
   }
   forEach(
     callbackfn: (
-      value: StratumFromTraits<T>,
+      value: StratumFromTraits<ModelTraits>,
       key: string,
-      map: Map<string, StratumFromTraits<T>>
+      map: Map<string, StratumFromTraits<ModelTraits>>
     ) => void,
     thisArg?: any
   ): void {
@@ -55,29 +96,31 @@ class CombinedStrata<T extends ModelTraits>
       callbackfn.call(thisArg, value, key, this);
     });
   }
-  get(key: string): StratumFromTraits<T> | undefined {
+  get(key: string): StratumFromTraits<ModelTraits> | undefined {
     return this.strata.get(key);
   }
   has(key: string): boolean {
     return this.strata.has(key);
   }
-  set(key: string, value: StratumFromTraits<T>): this {
+  set(key: string, value: StratumFromTraits<ModelTraits>): this {
     this.top.strata.set(key, value);
     return this;
   }
   get size(): number {
     return this.strata.size;
   }
-  [Symbol.iterator](): IterableIterator<[string, StratumFromTraits<T>]> {
+  [Symbol.iterator](): IterableIterator<
+    [string, StratumFromTraits<ModelTraits>]
+  > {
     return this.strata.entries();
   }
-  entries(): IterableIterator<[string, StratumFromTraits<T>]> {
+  entries(): IterableIterator<[string, StratumFromTraits<ModelTraits>]> {
     return this.strata.entries();
   }
   keys(): IterableIterator<string> {
     return this.strata.keys();
   }
-  values(): IterableIterator<StratumFromTraits<T>> {
+  values(): IterableIterator<StratumFromTraits<ModelTraits>> {
     return this.strata.values();
   }
   get [Symbol.toStringTag](): string {
@@ -85,8 +128,8 @@ class CombinedStrata<T extends ModelTraits>
   }
 
   @computed
-  private get strata(): ReadonlyMap<string, StratumFromTraits<T>> {
-    const result = new Map<string, StratumFromTraits<T>>();
+  private get strata(): ReadonlyMap<string, StratumFromTraits<ModelTraits>> {
+    const result = new Map<string, StratumFromTraits<ModelTraits>>();
 
     // Add the strata fro the top
     for (let key of this.top.strata.keys()) {

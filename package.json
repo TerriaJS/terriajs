@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.3.3",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/plugin-transform-modules-commonjs": "^7.2.0",
     "@babel/preset-env": "^7.3.1",
     "@babel/preset-react": "^7.0.0",
@@ -110,7 +111,7 @@
     "terriajs-html2canvas": "1.0.0-alpha.12-terriajs-1",
     "ts-loader": "^5.3.3",
     "ts-node": "^5.0.1",
-    "typescript": "^3.5.1",
+    "typescript": "^3.6.4",
     "urijs": "^1.18.12",
     "url-loader": "^1.1.2",
     "victory": "^33.1.0",

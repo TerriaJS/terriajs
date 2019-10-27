@@ -15,25 +15,42 @@ export default class StratumOrder {
   readonly priorities = new ObservableMap<string, number>();
 
   /**
+   * The next priority to assign to a default stratum.
+   */
+  nextDefault: number = 1 * million;
+
+  /**
    * The next priority to assign to a load stratum.
    */
-  nextLoad: number = 1 * million;
+  nextLoad: number = 2 * million;
 
   /**
    * The next priority to assign to a definition stratum.
    */
-  nextDefinition: number = 2 * million;
+  nextDefinition: number = 3 * million;
 
   /**
    * The next priority to assign to a user stratum.
    */
-  nextUser: number = 3 * million;
+  nextUser: number = 4 * million;
 
   constructor() {
-    this.addDefinitionStratum(CommonStrata.defaults);
-    this.addDefinitionStratum(CommonStrata.inheritedFromParentGroup);
+    this.addDefaultStratum(CommonStrata.defaults);
+    this.addDefinitionStratum(CommonStrata.underride);
     this.addDefinitionStratum(CommonStrata.definition);
+    this.addDefinitionStratum(CommonStrata.override);
     this.addUserStratum(CommonStrata.user);
+  }
+
+  /**
+   * Assigns a priority to a default stratum. If the stratum already has a priority, this function does nothing.
+   * @param id The ID of the stratum.
+   */
+  addDefaultStratum(id: string) {
+    if (this.priorities.get(id) === undefined) {
+      this.priorities.set(id, this.nextDefault);
+      this.nextDefault += 10;
+    }
   }
 
   /**
@@ -145,6 +162,14 @@ export default class StratumOrder {
   }
 
   static readonly instance = new StratumOrder();
+
+  /**
+   * Assigns a priority to a default stratum. If the stratum already has a priority, this function does nothing.
+   * @param id The ID of the stratum.
+   */
+  static addDefaultStratum(id: string) {
+    StratumOrder.instance.addDefaultStratum(id);
+  }
 
   /**
    * Assigns a priority to a load stratum. If the stratum already has a priority, this function does nothing.
