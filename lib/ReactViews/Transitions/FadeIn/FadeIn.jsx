@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import { CSSTransition } from "react-transition-group";
 
-import Styles from "./slide-up-fade-in.scss";
+import Styles from "./fade-in.scss";
 
 export function SlideUpFadeIn({
   isVisible,
