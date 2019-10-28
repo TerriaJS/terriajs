@@ -1,7 +1,7 @@
 import ChartData from "../Charts/ChartData";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
-import Chartable from "../Models/Chartable";
+import Chartable, { ChartAxis, ChartItem } from "../Models/Chartable";
 import Model from "../Models/Model";
 import MappableTraits from "../Traits/MappableTraits";
 
@@ -36,7 +36,7 @@ export default function AsyncChartableMixin<
     /**
      * Gets the items to show on a chart.
      */
-    abstract get chartItems(): ChartData[];
+    abstract get chartItems(): ChartItem[];
 
     /**
      * Forces load of the chart items. This method does _not_ need to consider

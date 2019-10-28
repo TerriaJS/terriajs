@@ -1,6 +1,7 @@
 import { computed } from "mobx";
 import { computedFn } from "mobx-utils";
 import TerriaError from "../Core/TerriaError";
+import createStratumInstance from "../Models/createStratumInstance";
 import Model, { BaseModel, ModelConstructor } from "../Models/Model";
 import saveStratumToJson from "../Models/saveStratumToJson";
 import StratumFromTraits from "../Models/StratumFromTraits";
@@ -131,7 +132,7 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
 
     return jsonValue.map(jsonElement => {
       const ResultType = this.type;
-      const result: any = new ResultType();
+      const result: any = createStratumInstance(ResultType);
 
       Object.keys(jsonElement).forEach(propertyName => {
         const trait = ResultType.traits[propertyName];
