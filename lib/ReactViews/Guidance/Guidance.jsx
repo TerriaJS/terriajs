@@ -1,4 +1,9 @@
+/**
+ * <Guidance /> is the (currently unused) "in app tour" where we have the dots,
+ * whereas <Guide /> is the generic "slider/static tour"
+ */
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import classNames from "classnames";
 
 import Styles from "./guidance.scss";
@@ -24,6 +29,11 @@ const GuidanceProgress = props => {
     </div>
   );
 };
+GuidanceProgress.propTypes = {
+  max: PropTypes.number.isRequired,
+  step: PropTypes.number.isRequired,
+  children: PropTypes.node.isRequired
+};
 
 const GuidanceContextModal = ({ children }) => {
   return (
@@ -36,16 +46,23 @@ const GuidanceContextModal = ({ children }) => {
   );
 };
 
+GuidanceContextModal.propTypes = {
+  children: PropTypes.node.isRequired
+};
+
 export const Guidance = ({ children }) => {
   const [showGuidance, setShowGuidance] = useState(false);
 
   return (
     <div className={Styles.guidance}>
       <GuidanceDot onClick={() => setShowGuidance(!showGuidance)} />
-      {/* {showGuidance && <div className={Styles.context}>{children}</div>} */}
       {showGuidance && <GuidanceContextModal>{children}</GuidanceContextModal>}
     </div>
   );
+};
+
+Guidance.propTypes = {
+  children: PropTypes.node.isRequired
 };
 
 export default Guidance;

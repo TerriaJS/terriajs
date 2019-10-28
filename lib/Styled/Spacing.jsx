@@ -12,6 +12,7 @@
 // export default Spacing;
 
 import React from "react";
+import PropTypes from "prop-types";
 // import classNames from "classnames";
 // import Styles from "./text.scss";
 
@@ -19,5 +20,8 @@ import React from "react";
 export const Spacing = props => (
   <div style={{ marginBottom: `${props.bottom * 4}px` }} />
 );
+Spacing.propTypes = {
+  bottom: PropTypes.number.isRequired
+};
 
 export default Spacing;

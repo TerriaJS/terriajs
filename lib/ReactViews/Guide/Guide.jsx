@@ -29,7 +29,7 @@ import SlideUpFadeIn from "../Transitions/SlideUpFadeIn/SlideUpFadeIn";
 import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";
 
-const GuidanceProgress = props => {
+const GuideProgress = props => {
   const countArray = Array.from(Array(props.maxStepCount).keys()).map(e => e++);
   const currentStep = props.currentStep;
   return (
@@ -46,6 +46,10 @@ const GuidanceProgress = props => {
       })}
     </div>
   );
+};
+GuideProgress.propTypes = {
+  maxStepCount: PropTypes.number.isRequired,
+  currentStep: PropTypes.number.isRequired
 };
 
 // const Guide = createReactClass({
@@ -135,7 +139,7 @@ export const GuidePure = ({
           </div>
           <div className={Styles.bodyFooter}>
             <div className={Styles.bodyProgress}>
-              <GuidanceProgress
+              <GuideProgress
                 currentStep={currentStepCount}
                 maxStepCount={maxStepCount}
               />

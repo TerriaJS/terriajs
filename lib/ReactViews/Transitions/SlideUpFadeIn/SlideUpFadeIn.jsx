@@ -26,7 +26,7 @@ export function SlideUpFadeIn({
 }
 
 SlideUpFadeIn.propTypes = {
-  children: PropTypes.element.isRequired,
+  children: PropTypes.node.isRequired,
   isVisible: PropTypes.bool.isRequired,
   onEnter: PropTypes.func,
   onExited: PropTypes.func

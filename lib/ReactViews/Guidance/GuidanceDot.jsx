@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Styles from "./guidance-dot.scss";
 
 export const GuidanceDot = ({ onClick }) => {
@@ -8,6 +9,9 @@ export const GuidanceDot = ({ onClick }) => {
       <div className={Styles.inner} />
     </button>
   );
+};
+GuidanceDot.propTypes = {
+  onClick: PropTypes.func.isRequired
 };
 
 export default GuidanceDot;
