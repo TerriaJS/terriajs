@@ -36,11 +36,6 @@ export default function AsyncChartableMixin<
     /**
      * Gets the items to show on a chart.
      */
-    abstract get chartItems(): ChartData[];
-
-    /**
-     * Gets the items to show on a chart.
-     */
     abstract get chartItems(): ChartItem[];
 
     /**
