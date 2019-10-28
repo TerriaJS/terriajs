@@ -1,14 +1,22 @@
 /** 
- * A generic Guide component, look at satellite-guidance.js for example data / usage
+ * A generic Guide component, look at
+ * `satellite-guidance.js` && `SatelliteGuide.jsx`
+ * for example data / usage
  * 
  * consume something like:
  
   <Guide
     hasIntroSlide
+    terria={terria}
+    guideKey={SATELLITE_GUIDE_KEY}
     guideData={SatelliteGuideData}
-    showGuide={this.props.viewState.showSatelliteGuidance}
+    showGuide={viewState.showSatelliteGuidance}
     setShowGuide={bool => {
-      this.props.viewState.showSatelliteGuidance = bool;
+      viewState.showSatelliteGuidance = bool;
+      // If we're closing for any reason, set prompted to true
+      if (!bool) {
+        viewState.toggleFeaturePrompt("satelliteGuidance", true, true);
+      }
     }}
   />
 
@@ -52,29 +60,28 @@ GuideProgress.propTypes = {
   currentStep: PropTypes.number.isRequired
 };
 
-// const Guide = createReactClass({
-//   displayName: "Guide",
-//   mixins: [ObserveModelMixin],
-//   propTypes: {
-//     viewState: PropTypes.object.isRequired,
-//     showGuide: PropTypes.bool.isRequired,
-//     setShowGuide: PropTypes.func.isRequired,
-//     guideData: PropTypes.array.isRequired
-//   },
-//   render() {
-//     const { guideData, showGuide, setShowGuide } = this.props;
+export const analyticsSetShowGuide = (
+  bool,
+  index,
+  guideKey,
+  terria,
+  options = {
+    setCalledFromInside: false
+  }
+) => {
+  const openOrClose = bool ? "Open" : "Close";
+  const actionSuffix = options.setCalledFromInside ? " from inside modal" : "";
 
-//     return (
-//       <GuidePure
-//         guideData={guideData}
-//         showGuide={showGuide}
-//         setShowGuide={setShowGuide}
-//       />
-//     );
-//   }
-// });
+  terria.analytics.logEvent(
+    "guide",
+    `Guide ${openOrClose}${actionSuffix}`,
+    `At index: ${index}, Guide: ${guideKey}`
+  );
+};
 
 export const GuidePure = ({
+  terria,
+  guideKey,
   hasIntroSlide = false,
   guideData,
   showGuide,
@@ -85,10 +92,16 @@ export const GuidePure = ({
   const [currentGuideIndex, setCurrentGuideIndex] = useState(0);
 
   const handlePrev = () => {
+    const newIndex = currentGuideIndex - 1;
+    terria.analytics.logEvent(
+      "guide",
+      "Navigate Previous",
+      `New index: ${newIndex}, Guide: ${guideKey}`
+    );
     if (currentGuideIndex === 0) {
-      setShowGuide(false);
+      handleSetShowGuide(false);
     } else {
-      setCurrentGuideIndex(currentGuideIndex - 1);
+      setCurrentGuideIndex(newIndex);
     }
   };
 
@@ -96,10 +109,23 @@ export const GuidePure = ({
     const newIndex = currentGuideIndex + 1;
 
     if (guideData[newIndex]) {
+      terria.analytics.logEvent(
+        "guide",
+        "Navigate Next",
+        `New index: ${newIndex}, Guide: ${guideKey}`
+      );
+
       setCurrentGuideIndex(newIndex);
     } else {
-      setShowGuide(false);
+      handleSetShowGuide(false);
     }
+  };
+
+  const handleSetShowGuide = bool => {
+    analyticsSetShowGuide(bool, currentGuideIndex, guideKey, terria, {
+      setCalledFromInside: true
+    });
+    setShowGuide(bool);
   };
 
   const currentGuide = guideData[currentGuideIndex] || {};
@@ -125,7 +151,7 @@ export const GuidePure = ({
         <button
           type="button"
           className={classNames(Styles.innerCloseBtn)}
-          onClick={() => setShowGuide(false)}
+          onClick={() => handleSetShowGuide(false)}
           title="Close"
           aria-label="Close"
         >
@@ -168,6 +194,8 @@ export const GuidePure = ({
 };
 
 GuidePure.propTypes = {
+  terria: PropTypes.object.isRequired,
+  guideKey: PropTypes.string.isRequired,
   guideClassName: PropTypes.string,
   hasIntroSlide: PropTypes.bool,
   guideData: PropTypes.array.isRequired,

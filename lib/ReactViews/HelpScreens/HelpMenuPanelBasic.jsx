@@ -16,7 +16,6 @@ const HelpMenuPanelBasic = createReactClass({
   mixins: [ObserveModelMixin],
 
   propTypes: {
-    helpSequences: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired
   },
 

@@ -23,8 +23,7 @@ import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import StoryPanel from "./../Story/StoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 
-import Guide from "../Guide/Guide.jsx";
-import SatelliteGuideData from "../Guide/satellite-guidance.js";
+import SatelliteGuide from "../Guide/SatelliteGuide.jsx";
 
 import { Small, Medium } from "../Generic/Responsive";
 import classNames from "classnames";
@@ -266,23 +265,7 @@ const StandardUserInterface = createReactClass({
           </If>
 
           <Notification viewState={this.props.viewState} />
-          <Guide
-            hasIntroSlide
-            viewState={this.props.viewState}
-            guideData={SatelliteGuideData}
-            showGuide={this.props.viewState.showSatelliteGuidance}
-            setShowGuide={bool => {
-              this.props.viewState.showSatelliteGuidance = bool;
-              // If we're closing for any reason, set prompted to true
-              if (!bool) {
-                this.props.viewState.toggleFeaturePrompt(
-                  "satelliteGuidance",
-                  true,
-                  true
-                );
-              }
-            }}
-          />
+          <SatelliteGuide terria={terria} viewState={this.props.viewState} />
           <MapInteractionWindow
             terria={terria}
             viewState={this.props.viewState}
