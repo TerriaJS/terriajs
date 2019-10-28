@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### Next release
+* Added ability to do in-app, "static guides" through `<Guide />`s
+* Added in-app Guide for time enabled WMS items
+
 ### v7.7.0
 
 * Added a quality slider for the 3D map to the Map panel, allowing control of Cesium's maximumScreenSpaceError and resolutionScale properties.

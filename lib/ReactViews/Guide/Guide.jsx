@@ -118,7 +118,9 @@ export const GuidePure = ({
     >
       <div className={classNames(Styles.guidance, guideClassName)}>
         <div className={Styles.image}>
-          <img src={currentGuide.imageSrc} />
+          <div className={Styles.imageWrapper}>
+            <img src={currentGuide.imageSrc} />
+          </div>
         </div>
         <button
           type="button"

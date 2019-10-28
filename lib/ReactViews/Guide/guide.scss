@@ -2,6 +2,7 @@
 
 .guidance {
   position: relative;
+  background-color: $modal-bg;
   // shadow from design
   // box-shadow: 0 6px 6px 0 rgba(0, 0, 0, 0.12), 0 10px 20px 0 rgba(0, 0, 0, 0.05);
   box-shadow: $box-shadow;
@@ -9,15 +10,29 @@
 
   position: fixed;
   top: 80px;
-  right: 70px;
+  right: 80px;
   z-index: 1000;
 
   width: 384px;
+
+  @media (max-width: $sm), (max-height: 559px) {
+    width: 100%;
+    transform: none;
+    left: 0;
+    // top: $mobile-header-height;
+    top: 0;
+    overflow: scroll;
+    height: 100vh;
+  }
 }
 
 .image {
   height: 216px;
-  background-color: lightblue;
+  background-color: $faint-bg;
+}
+.image-wrapper {
+  width: 384px;
+  margin: 0 auto;
   img {
     width: 100%;
   }
@@ -68,7 +83,7 @@
 
   padding: 7px;
 
-  background-color: $text-light;
+  background-color: $modal-bg;
   border-radius: 50%;
 
   &:hover,
@@ -79,7 +94,6 @@
   }
 
   svg {
-    // fill: $grey;
     fill: #9ca2ac;
     height: 10px;
     width: 10px;
@@ -98,7 +112,7 @@
   height: 7px;
   width: 7px;
 
-  background-color: $text-light;
+  background-color: $modal-bg;
   border: 1px solid $color-primary;
 
   margin-right: 7px;
