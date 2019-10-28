@@ -68,7 +68,7 @@ ChartItemSelector.propTypes = {
 function unselectChartItemsWithXAxisNotMatching(items, requiredAxis) {
   items.forEach(item => {
     if (Chartable.is(item)) {
-      item.chartItems2.forEach(chartItem => {
+      item.chartItems.forEach(chartItem => {
         if (!axesMatch(chartItem.xAxis, requiredAxis)) {
           chartItem.updateIsSelectedInWorkbench(false);
         }

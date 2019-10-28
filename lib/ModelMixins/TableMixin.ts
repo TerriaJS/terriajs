@@ -154,11 +154,9 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
     /**
      * Gets the items to show on a chart.
      *
-     * TODO: rename to chartItems() when we have removed all references to the
-     * current implementation.
      */
     @computed
-    get chartItems2(): ChartItem[] {
+    get chartItems(): ChartItem[] {
       const style = this.activeTableStyle;
       if (style === undefined || !style.isChart()) {
         return [];
@@ -224,67 +222,6 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
               return line.color || getChartColorForId(colorId);
             }
           };
-        })
-      );
-    }
-
-    /**
-     * Gets the items to show on a chart.
-     */
-    @computed
-    get chartItems(): ChartData[] {
-      if (this.show === false) {
-        return [];
-      }
-
-      const style = this.activeTableStyle;
-      if (style === undefined || !style.isChart()) {
-        return [];
-      }
-
-      const xColumn = style.xAxisColumn;
-      const lines = style.chartTraits.lines;
-      if (xColumn === undefined || lines.length === 0) {
-        return [];
-      }
-
-      const xValues: readonly (Date | number | null)[] =
-        xColumn.type === TableColumnType.time
-          ? xColumn.valuesAsDates.values
-          : xColumn.valuesAsNumbers.values;
-
-      return filterOutUndefined(
-        lines.map((line, lineId) => {
-          const yColumn = line.yAxisColumn
-            ? this.findColumnByName(line.yAxisColumn)
-            : undefined;
-          if (yColumn === undefined) {
-            return undefined;
-          }
-          const yValues = yColumn.valuesAsNumbers.values;
-
-          const points: ChartPoint[] = [];
-          for (let i = 0; i < xValues.length; ++i) {
-            const x = xValues[i];
-            const y = yValues[i];
-            if (x === null || y === null) {
-              continue;
-            }
-            points.push({ x, y });
-          }
-
-          const colorId = `color-${this.name}-${yColumn.name}`;
-          const chartData = new ChartData({
-            name: yColumn.name,
-            categoryName: this.name,
-            points,
-            units: yColumn.traits.units,
-            getColor: () => {
-              return line.color || getChartColorForId(colorId);
-            }
-          });
-
-          return chartData;
         })
       );
     }

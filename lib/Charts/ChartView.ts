@@ -13,7 +13,7 @@ export default class ChartView {
   get chartableItems(): Chartable[] {
     return <any>(
       this.terria.workbench.items.filter(
-        item => Chartable.is(item) && item.chartItems2.length > 0
+        item => Chartable.is(item) && item.chartItems.length > 0
       )
     );
   }
@@ -25,8 +25,8 @@ export default class ChartView {
   get xAxis() {
     // We just return the xAxis of the first chartItem selected in the workbench.
     for (let i = 0; i < this.chartableItems.length; i++) {
-      for (let j = 0; j < this.chartableItems[i].chartItems2.length; j++) {
-        const chartItem = this.chartableItems[i].chartItems2[j];
+      for (let j = 0; j < this.chartableItems[i].chartItems.length; j++) {
+        const chartItem = this.chartableItems[i].chartItems[j];
         if (chartItem.isSelectedInWorkbench && chartItem.showInChartPanel) {
           return chartItem.xAxis;
         }
@@ -45,7 +45,7 @@ export default class ChartView {
   get chartItems(): ChartItem[] {
     return this.chartableItems.reduce((acc: ChartItem[], item) => {
       return acc.concat(
-        item.chartItems2.map(chartItem => {
+        item.chartItems.map(chartItem => {
           if (this.xAxis && !axesMatch(this.xAxis, chartItem.xAxis)) {
             chartItem = {
               ...chartItem,

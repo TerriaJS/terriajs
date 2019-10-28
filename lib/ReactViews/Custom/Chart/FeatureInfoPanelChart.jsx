@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { VictoryAxis, VictoryTheme, VictoryLine } from "victory";
-import Chart from "./NewChart";
+import Chart from "./Chart";
 import Chartable from "../../../Models/Chartable";
 
 @observer
@@ -65,7 +65,7 @@ class FeatureInfoPanelChart extends React.Component {
     }
 
     this.props.item.loadChartItems();
-    const chartItem = this.props.item.chartItems2[0];
+    const chartItem = this.props.item.chartItems[0];
     if (!chartItem) {
       return null;
     }

@@ -14,7 +14,7 @@ import {
   voronoiContainerMixin,
   zoomContainerMixin
 } from "victory";
-import Chart from "./NewChart";
+import Chart from "./Chart";
 
 @observer
 class BottomDockChart extends React.Component {
