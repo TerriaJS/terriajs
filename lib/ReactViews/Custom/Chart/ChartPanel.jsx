@@ -5,7 +5,6 @@ import { computed } from "mobx";
 import PropTypes from "prop-types";
 import React from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
-import Chartable from "../../../Models/Chartable";
 import raiseErrorOnRejectedPromise from "../../../Models/raiseErrorOnRejectedPromise";
 import Icon from "../../Icon";
 import ChartPanelDownloadButton from "./ChartPanelDownloadButton";
