@@ -16,6 +16,14 @@ import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 
 import Styles from "./side-panel.scss";
 
+const getReactElementFromContents = contents => {
+  const emptyWorkbenchIsFn = typeof contents === "function";
+  const fnCalled = emptyWorkbenchIsFn ? contents() : undefined;
+  return React.isValidElement(fnCalled)
+    ? fnCalled
+    : parseCustomMarkdownToReact(contents);
+};
+
 const SidePanel = createReactClass({
   displayName: "SidePanel",
   mixins: [ObserveModelMixin],
@@ -83,9 +91,10 @@ const SidePanel = createReactClass({
 
   render() {
     const searchState = this.props.viewState.searchState;
-    const emptyWorkbench = parseCustomMarkdownToReact(
-      this.props.terria.language["EmptyWorkbenchMessage"]
-    );
+    const emptyWorkbenchValue = this.props.terria.language[
+      "EmptyWorkbenchMessage"
+    ];
+    const emptyWorkbench = getReactElementFromContents(emptyWorkbenchValue);
 
     return (
       <div className={Styles.workBench}>
