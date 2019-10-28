@@ -44,12 +44,6 @@ class ChartPanel extends React.Component {
     }
   }
 
-  chartableItems() {
-    return this.props.terria.workbench.items
-      .filter(c => Chartable.is(c) && c.chartItems2.length > 0)
-      .filter(c => c.showInChartPanel);
-  }
-
   render() {
     const chartItems = this.chartView.chartItems.filter(
       c => c.showInChartPanel
