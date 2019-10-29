@@ -42,19 +42,19 @@
   display: flex;
   flex-flow: column;
   justify-content: space-between;
-  align-items: space-between;
 
   box-sizing: border-box;
   background-color: $modal-bg;
   padding: $padding-small * 5;
   color: $text-darker;
 
+  // IE HACK!@!@!@!!@!@
+  height: 244px;
   min-height: 244px;
 }
 
 .bodyFooter {
   display: flex;
-  justify-content: flex-end;
 }
 .bodyProgress {
   display: flex;
@@ -64,6 +64,7 @@
 .btn {
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn-primary from "../../Sass/common/_buttons.scss";
+  width: auto;
   width: initial;
 }
 .btn--tertiary {

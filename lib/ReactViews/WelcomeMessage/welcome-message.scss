@@ -63,6 +63,7 @@
   position: relative;
   &:not(:root) {
     display: inline-block;
+    width: auto;
     width: initial;
     margin: 0 auto 10px;
     margin-right: auto;
