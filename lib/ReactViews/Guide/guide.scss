@@ -49,7 +49,9 @@
   color: $text-darker;
 
   // IE HACK!@!@!@!!@!@
-  height: 244px;
+  height: 243px;
+  height: initial;
+
   min-height: 244px;
 }
 
