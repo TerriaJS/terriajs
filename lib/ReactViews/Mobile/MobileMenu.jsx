@@ -11,6 +11,7 @@ import SettingPanel from "../Map/Panels/SettingPanel.jsx";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
 import HelpMenuPanelBasic from "../HelpScreens/HelpMenuPanelBasic.jsx";
 import Terria from "../../Models/Terria";
+import Prompt from "../Generic/Prompt";
 
 import ViewState from "../../ReactViewModels/ViewState";
 
@@ -58,13 +59,16 @@ const MobileMenu = createReactClass({
     this.props.viewState.storyShown = true;
     this.props.viewState.mobileMenuVisible = false;
   },
+  dismissSatelliteGuidanceAction() {
+    this.props.viewState.toggleFeaturePrompt("mapGuidesLocation", true, true);
+  },
 
   render() {
     const satelliteGuidancePrompted = this.props.terria.getLocalProperty(
       "satelliteGuidancePrompted"
     );
-    const satelliteGuidanceHelpLocationPrompted = this.props.terria.getLocalProperty(
-      "satelliteGuidanceHelpLocationPrompted"
+    const mapGuidesLocationPrompted = this.props.terria.getLocalProperty(
+      "mapGuidesLocation"
     );
     const hasStories =
       this.props.terria.configParameters.storyEnabled &&
@@ -100,7 +104,7 @@ const MobileMenu = createReactClass({
               viewState={this.props.viewState}
             />
             {satelliteGuidancePrompted &&
-              !satelliteGuidanceHelpLocationPrompted &&
+              !mapGuidesLocationPrompted &&
               !this.props.viewState.showSatelliteGuidance && (
                 <Prompt
                   content={

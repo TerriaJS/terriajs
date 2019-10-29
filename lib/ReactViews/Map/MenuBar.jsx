@@ -51,18 +51,14 @@ const MenuBar = createReactClass({
     this.props.viewState.toggleFeaturePrompt("story", false, true);
   },
   dismissSatelliteGuidanceAction() {
-    this.props.viewState.toggleFeaturePrompt(
-      "satelliteGuidanceHelpLocation",
-      true,
-      true
-    );
+    this.props.viewState.toggleFeaturePrompt("mapGuidesLocation", true, true);
   },
   render() {
     const satelliteGuidancePrompted = this.props.terria.getLocalProperty(
       "satelliteGuidancePrompted"
     );
-    const satelliteGuidanceHelpLocationPrompted = this.props.terria.getLocalProperty(
-      "satelliteGuidanceHelpLocationPrompted"
+    const mapGuidesLocationPrompted = this.props.terria.getLocalProperty(
+      "mapGuidesLocationPrompted"
     );
     const storyEnabled = this.props.terria.configParameters.storyEnabled;
     const enableTools = this.props.terria.getUserProperty("tools") === "1";
@@ -130,7 +126,7 @@ const MenuBar = createReactClass({
               viewState={this.props.viewState}
             />
             {satelliteGuidancePrompted &&
-              !satelliteGuidanceHelpLocationPrompted &&
+              !mapGuidesLocationPrompted &&
               !this.props.viewState.showSatelliteGuidance && (
                 <Prompt
                   content={
