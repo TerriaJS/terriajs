@@ -53,7 +53,6 @@ describe("Terria", function() {
           .then(done)
           .otherwise(done.fail);
       })
-      .then(done)
       .otherwise(done.fail);
   });
 });
