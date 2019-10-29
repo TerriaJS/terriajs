@@ -5,10 +5,10 @@ import Model, { BaseModel, ModelConstructor } from "../Models/Model";
 import saveStratumToJson from "../Models/saveStratumToJson";
 import StratumFromTraits from "../Models/StratumFromTraits";
 import ModelTraits from "./ModelTraits";
+import NestedStrataMap from "./NestedStrataMap";
 import Trait, { TraitOptions } from "./Trait";
 import traitsClassToModelClass from "./traitsClassToModelClass";
 import TraitsConstructor from "./TraitsConstructor";
-import NestedStrataMap from "./NestedStrataMap";
 
 export interface ObjectTraitOptions<T extends ModelTraits>
   extends TraitOptions {
@@ -57,7 +57,7 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
     jsonValue: any
   ): StratumFromTraits<T> {
     const ResultType = this.type;
-    const result: any = new ResultType();
+    const result: any = createStratumInstance(ResultType);
 
     if (this.isNullable && jsonValue === null) {
       return jsonValue;

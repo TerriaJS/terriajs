@@ -1,4 +1,4 @@
-import { computed, observable, runInAction, action } from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -16,6 +16,7 @@ import { JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import JSRegionProviderList from "../Map/RegionProviderList";
+import { ChartAxis, ChartItem } from "../Models/Chartable";
 import { ImageryParts } from "../Models/Mappable";
 import Model from "../Models/Model";
 import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
@@ -25,6 +26,8 @@ import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
 import LegendTraits from "../Traits/LegendTraits";
 import TableTraits from "../Traits/TableTraits";
+import getChartColorForId from "../Charts/getChartColorForId";
+import CommonStrata from "../Models/CommonStrata";
 
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
 //   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
@@ -120,7 +123,6 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
 
     @computed
     get xColumn(): TableColumn | undefined {
-      const x = this.activeTableStyle.xAxisColumn;
       return this.activeTableStyle.xAxisColumn;
     }
 
@@ -151,13 +153,10 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
 
     /**
      * Gets the items to show on a chart.
+     *
      */
     @computed
-    get chartItems(): ChartData[] {
-      if (this.show === false) {
-        return [];
-      }
-
+    get chartItems(): ChartItem[] {
       const style = this.activeTableStyle;
       if (style === undefined || !style.isChart()) {
         return [];
@@ -174,8 +173,13 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
           ? xColumn.valuesAsDates.values
           : xColumn.valuesAsNumbers.values;
 
+      const xAxis: ChartAxis = {
+        scale: xColumn.type === TableColumnType.time ? "time" : "linear",
+        units: xColumn.traits.units
+      };
+
       return filterOutUndefined(
-        lines.map((line, lineId) => {
+        lines.map(line => {
           const yColumn = line.yAxisColumn
             ? this.findColumnByName(line.yAxisColumn)
             : undefined;
@@ -194,15 +198,30 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
             points.push({ x, y });
           }
 
-          const chartData = new ChartData({
+          const colorId = `color-${this.name}-${yColumn.name}`;
+
+          return {
+            item: this,
             name: yColumn.name,
             categoryName: this.name,
+            xAxis,
             points,
             units: yColumn.traits.units,
-            color: line.color
-          });
-
-          return chartData;
+            isSelectedInWorkbench: line.isSelectedInWorkbench,
+            showInChartPanel: this.show && line.isSelectedInWorkbench,
+            updateIsSelectedInWorkbench: (isSelected: boolean) => {
+              runInAction(() => {
+                line.setTrait(
+                  CommonStrata.user,
+                  "isSelectedInWorkbench",
+                  isSelected
+                );
+              });
+            },
+            getColor: () => {
+              return line.color || getChartColorForId(colorId);
+            }
+          };
         })
       );
     }

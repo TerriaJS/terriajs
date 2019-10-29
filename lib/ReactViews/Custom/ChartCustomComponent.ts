@@ -7,7 +7,7 @@ import CommonStrata from "../../Models/CommonStrata";
 import CsvCatalogItem from "../../Models/CsvCatalogItem";
 import ChartPreviewStyles from "./Chart/chart-preview.scss";
 import ChartExpandAndDownloadButtons from "./Chart/ChartExpandAndDownloadButtons";
-import Chart from "./Chart/NewChart";
+import Chart from "./Chart/FeatureInfoPanelChart";
 import CustomComponent, { ProcessNodeContext } from "./CustomComponent";
 
 /**
@@ -171,10 +171,12 @@ export default class ChartCustomComponent extends CustomComponent {
     chartElements.push(
       React.createElement(Chart, {
         key: "chart",
-        items: [chartItem],
-        styling: attrs.styling,
-        highlightX: attrs.highlightX,
-        transitionDuration: 300
+        terria: context.terria,
+        item: chartItem,
+        xAxisLabel: attrs.previewXLabel
+        // styling: attrs.styling,
+        // highlightX: attrs.highlightX,
+        // transitionDuration: 300
       })
     );
 
@@ -345,14 +347,14 @@ function parseNodeAttrs(nodeAttrs: { [name: string]: string | undefined }) {
 
   const columnTitles = filterOutUndefined(
     (nodeAttrs["column-titles"] || "").split(",").map(s => {
-      const [name, title] = s.split(":");
+      const [name, title] = rsplit2(s, ":");
       return name ? { name, title } : undefined;
     })
   );
 
   const columnUnits = filterOutUndefined(
     (nodeAttrs["column-units"] || "").split(",").map(s => {
-      const [name, units] = s.split(":");
+      const [name, units] = rsplit2(s, ":");
       return name ? { name, units } : undefined;
     })
   );
@@ -377,6 +379,7 @@ function parseNodeAttrs(nodeAttrs: { [name: string]: string | undefined }) {
     columnTitles,
     columnUnits,
     xColumn: nodeAttrs["x-column"],
+    previewXLabel: nodeAttrs["preview-x-label"],
     yColumns
   };
 }
@@ -394,6 +397,20 @@ function checkAllPropertyKeys(object: any, allowedKeys: string[]) {
 
 function splitStringIfDefined(s: string | undefined) {
   return s !== undefined ? s.split(",") : undefined;
+}
+
+/*
+ * Split string `s` from last using `sep` into 2 pieces.
+ */
+function rsplit2(s: string, sep: string) {
+  const pieces = s.split(sep);
+  if (pieces.length === 1) {
+    return pieces;
+  } else {
+    const head = pieces.slice(0, pieces.length - 1).join(sep);
+    const last = pieces[pieces.length - 1];
+    return [head, last];
+  }
 }
 
 function parseIntOrUndefined(s: string | undefined): number | undefined {
