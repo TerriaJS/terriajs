@@ -3,8 +3,8 @@ Change Log
 
 ### next release
 
+* Initial implementation of language overrides to support setting custom text throughout the application.
 * Add ability to pass `leafletUpdateInterval` to an `ImageryLayerCatalogItem` to throttle the number of requests made to a server.
-
 
 ### v7.7.0
 

@@ -12,8 +12,17 @@ import Workbench from "../Workbench/Workbench.jsx";
 import Icon from "../Icon.jsx";
 import FullScreenButton from "./FullScreenButton.jsx";
 import { removeMarker } from "../../Models/LocationMarkerUtils";
+import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 
 import Styles from "./side-panel.scss";
+
+const getReactElementFromContents = contents => {
+  const emptyWorkbenchIsFn = typeof contents === "function";
+  const fnCalled = emptyWorkbenchIsFn ? contents() : undefined;
+  return React.isValidElement(fnCalled)
+    ? fnCalled
+    : parseCustomMarkdownToReact(contents);
+};
 
 const SidePanel = createReactClass({
   displayName: "SidePanel",
@@ -82,6 +91,10 @@ const SidePanel = createReactClass({
 
   render() {
     const searchState = this.props.viewState.searchState;
+    const emptyWorkbenchValue = this.props.terria.language[
+      "EmptyWorkbenchMessage"
+    ];
+    const emptyWorkbench = getReactElementFromContents(emptyWorkbenchValue);
 
     return (
       <div className={Styles.workBench}>
@@ -106,10 +119,10 @@ const SidePanel = createReactClass({
               type="button"
               onClick={this.onAddDataClicked}
               className={Styles.button}
-              title="Add data"
+              title={this.props.terria.language.AddDataBtnText}
             >
               <Icon glyph={Icon.GLYPHS.add} />
-              Add data
+              {this.props.terria.language.AddDataBtnText}
             </button>
             <button
               type="button"
@@ -149,21 +162,7 @@ const SidePanel = createReactClass({
               />
             </When>
             <Otherwise>
-              <div className={Styles.workbenchEmpty}>
-                <div>Your workbench is empty</div>
-                <p>
-                  <strong>Click &apos;Add data&apos; above to:</strong>
-                </p>
-                <ul>
-                  <li>Browse the Data Catalogue</li>
-                  <li>Load your own data onto the map</li>
-                </ul>
-                <p>
-                  <Icon glyph={Icon.GLYPHS.bulb} />
-                  <strong>TIP:</strong>{" "}
-                  <em>All your active data sets will be listed here</em>
-                </p>
-              </div>
+              <div className={Styles.workbenchEmpty}>{emptyWorkbench}</div>
             </Otherwise>
           </Choose>
         </div>
