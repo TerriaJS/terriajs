@@ -25,7 +25,12 @@ const HelpMenuPanelBasic = createReactClass({
     };
   },
 
+  toggleShowHelpMenu(bool) {
+    this.props.viewState.showHelpMenu = bool;
+  },
+
   onOpenChanged(open) {
+    this.toggleShowHelpMenu(open);
     this.setState({
       isOpen: open
     });
@@ -38,32 +43,40 @@ const HelpMenuPanelBasic = createReactClass({
       inner: Styles.dropdownInner,
       icon: helpIcon
     };
+    const isOpen = this.props.viewState.showHelpMenu;
 
     return (
       <MenuPanel
         theme={dropdownTheme}
         btnText="Help"
         viewState={this.props.viewState}
-        isOpen={this.state.isOpen}
+        isOpen={isOpen}
+        onDismissed={() => {
+          this.toggleShowHelpMenu(false);
+        }}
         btnTitle="get help"
         onOpenChanged={this.onOpenChanged}
-        forceClosed={this.props.viewState.showSatelliteGuidance}
+        // forceClosed={this.props.viewState.showSatelliteGuidance}
         smallScreen={this.props.viewState.useSmallScreenInterface}
       >
-        <If condition={this.state.isOpen}>
+        <If condition={isOpen}>
           <div className={classNames(Styles.viewer, DropdownStyles.section)}>
             <label className={DropdownStyles.heading}>
-              What would you like to do?
+              {this.props.viewState.terria.language.HelpMenuHeader}
             </label>
             <ul className={Styles.viewerSelector}>
               <li className={Styles.listItem}>
                 <button
-                  onClick={() =>
-                    (this.props.viewState.showSatelliteGuidance = true)
-                  }
+                  onClick={() => {
+                    this.toggleShowHelpMenu(false);
+                    this.props.viewState.showSatelliteGuidance = true;
+                  }}
                   className={Styles.btnViewer}
                 >
-                  View satellite imagery guide
+                  {
+                    this.props.viewState.terria.language
+                      .HelpMenuSatelliteGuideTitle
+                  }
                 </button>
               </li>
               <li className={Styles.listItem}>
@@ -72,7 +85,7 @@ const HelpMenuPanelBasic = createReactClass({
                   href="./help/help.html"
                   className={Styles.btnViewer}
                 >
-                  More help
+                  {this.props.viewState.terria.language.HelpMenuMoreHelpTitle}
                 </a>
               </li>
             </ul>

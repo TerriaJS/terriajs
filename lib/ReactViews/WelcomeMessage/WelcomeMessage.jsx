@@ -15,7 +15,8 @@ import Spacing from "terriajs/lib/Styled/Spacing";
 
 import { useKeyPress } from "../Hooks/useKeyPress.js";
 
-const LOCAL_PROPERTY_KEY = "welcomeMessagePrompted";
+export const WELCOME_MESSAGE_NAME = "welcomeMessage";
+export const LOCAL_PROPERTY_KEY = `${WELCOME_MESSAGE_NAME}Prompted`;
 
 const WelcomeMessage = createReactClass({
   displayName: "WelcomeMessage",
@@ -56,7 +57,10 @@ export const WelcomeMessagePure = ({
     WelcomeMessage,
     WelcomeMessagePrimaryBtn,
     WelcomeMessageSecondaryBtn,
-    WelcomeMessageDissmissText
+    WelcomeMessageDissmissText,
+
+    WelcomeMessagePrimaryBtnClick,
+    WelcomeMessageSecondaryBtnClick
   } = viewState.terria.language;
 
   const handleClose = (persist = false) => {
@@ -126,8 +130,12 @@ export const WelcomeMessagePure = ({
                     Styles.welcomeModalButtonPrimary
                   )}
                   onClick={() => {
-                    setShouldExploreData(true);
                     handleClose(true);
+                    if (WelcomeMessagePrimaryBtnClick) {
+                      WelcomeMessagePrimaryBtnClick();
+                    } else {
+                      setShouldExploreData(true);
+                    }
                   }}
                 >
                   {WelcomeMessagePrimaryBtn}
@@ -137,7 +145,16 @@ export const WelcomeMessagePure = ({
                     Styles.welcomeModalButton,
                     Styles.welcomeModalButtonTertiary
                   )}
-                  onClick={() => handleClose(true)}
+                  onClick={() => {
+                    handleClose(true);
+                    if (WelcomeMessageSecondaryBtnClick) {
+                      WelcomeMessageSecondaryBtnClick();
+                    } else {
+                      setTimeout(() => {
+                        viewState.showHelpMenu = true;
+                      }, 300);
+                    }
+                  }}
                 >
                   {WelcomeMessageSecondaryBtn}
                 </button>

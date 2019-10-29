@@ -37,7 +37,16 @@ export const language = {
     "Access rich spatial data from multiple data sources, all from one convenient location.",
   WelcomeMessagePrimaryBtn: ADD_DATA,
   WelcomeMessageSecondaryBtn: "Take a tour",
-  WelcomeMessageDissmissText: DISMISS_TEXT
+  WelcomeMessageDissmissText: DISMISS_TEXT,
+
+  // WelcomeMessagePrimaryBtnClick: () => {},
+  // WelcomeMessageSecondaryBtnClick: () => {}
+  WelcomeMessagePrimaryBtnClick: undefined,
+  WelcomeMessageSecondaryBtnClick: undefined,
+
+  HelpMenuHeader: "What would you like to do?",
+  HelpMenuSatelliteGuideTitle: "View satellite imagery guide",
+  HelpMenuMoreHelpTitle: "More help"
 };
 
 export default language;
