@@ -74,6 +74,7 @@ const HelpMenuPanelBasic = createReactClass({
                   onClick={() => {
                     this.toggleShowHelpMenu(false);
                     this.props.viewState.showWelcomeMessage = true;
+                    this.props.viewState.topElement = "WelcomeMessage";
                   }}
                   className={Styles.btnViewer}
                 >
@@ -87,6 +88,7 @@ const HelpMenuPanelBasic = createReactClass({
                   onClick={() => {
                     this.toggleShowHelpMenu(false);
                     this.props.viewState.showSatelliteGuidance = true;
+                    this.props.viewState.topElement = "Guide";
                   }}
                   className={Styles.btnViewer}
                 >
