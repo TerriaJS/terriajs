@@ -40,7 +40,13 @@ import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";
 
 const GuideProgress = props => {
-  const countArray = Array.from(Array(props.maxStepCount).keys()).map(e => e++);
+  // doesn't work for IE11
+  // const countArray = Array.from(Array(props.maxStepCount).keys()).map(e => e++);
+
+  const countArray = [];
+  for (let i = 0; i < props.maxStepCount; i++) {
+    countArray.push(i);
+  }
   const currentStep = props.currentStep;
   return (
     <div className={Styles.indicatorWrapper}>
