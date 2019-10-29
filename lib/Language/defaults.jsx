@@ -12,7 +12,7 @@ export const language = {
   /**
    * Alternatively, you can pass a message like:
    */
-  // EmptyWorkbenchMessage: () => <div>Inline JSX</div>
+  // EmptyWorkbenchMessage: () => <div>Inline JSX</div>,
 
   /** OR */
 

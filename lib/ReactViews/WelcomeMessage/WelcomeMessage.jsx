@@ -13,6 +13,7 @@ import SlideUpFadeIn from "../Transitions/SlideUpFadeIn/SlideUpFadeIn";
 
 import Spacing from "terriajs/lib/Styled/Spacing";
 
+import getReactElementFromContents from "../ReactHelpers/getReactElementFromContents";
 import { useKeyPress } from "../Hooks/useKeyPress.js";
 
 export const WELCOME_MESSAGE_NAME = "welcomeMessage";
@@ -116,7 +117,7 @@ export const WelcomeMessagePure = ({
               Spatial data made <span className={Styles.highlight}>easy.</span>
             </h1>
             <span className={Styles.welcomeModalBody}>
-              <div>{WelcomeMessage}</div>
+              <div>{getReactElementFromContents(WelcomeMessage)}</div>
               <If condition={!viewState.useSmallScreenInterface}>
                 <Spacing bottom={10} />
               </If>
@@ -138,7 +139,7 @@ export const WelcomeMessagePure = ({
                     }
                   }}
                 >
-                  {WelcomeMessagePrimaryBtn}
+                  {getReactElementFromContents(WelcomeMessagePrimaryBtn)}
                 </button>
                 <button
                   className={classNames(
@@ -156,14 +157,14 @@ export const WelcomeMessagePure = ({
                     }
                   }}
                 >
-                  {WelcomeMessageSecondaryBtn}
+                  {getReactElementFromContents(WelcomeMessageSecondaryBtn)}
                 </button>
               </div>
               <button
                 className={Styles.welcomeModalCloseLink}
                 onClick={() => handleClose(true)}
               >
-                {WelcomeMessageDissmissText}
+                {getReactElementFromContents(WelcomeMessageDissmissText)}
               </button>
             </span>
           </article>

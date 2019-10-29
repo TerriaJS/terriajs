@@ -12,17 +12,9 @@ import Workbench from "../Workbench/Workbench.jsx";
 import Icon from "../Icon.jsx";
 import FullScreenButton from "./FullScreenButton.jsx";
 import { removeMarker } from "../../Models/LocationMarkerUtils";
-import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
+import getReactElementFromContents from "../ReactHelpers/getReactElementFromContents";
 
 import Styles from "./side-panel.scss";
-
-const getReactElementFromContents = contents => {
-  const emptyWorkbenchIsFn = typeof contents === "function";
-  const fnCalled = emptyWorkbenchIsFn ? contents() : undefined;
-  return React.isValidElement(fnCalled)
-    ? fnCalled
-    : parseCustomMarkdownToReact(contents);
-};
 
 const SidePanel = createReactClass({
   displayName: "SidePanel",
@@ -122,7 +114,9 @@ const SidePanel = createReactClass({
               title={this.props.terria.language.AddDataBtnText}
             >
               <Icon glyph={Icon.GLYPHS.add} />
-              {this.props.terria.language.AddDataBtnText}
+              {getReactElementFromContents(
+                this.props.terria.language.AddDataBtnText
+              )}
             </button>
             <button
               type="button"
