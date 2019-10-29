@@ -71,7 +71,7 @@
 }
 .btn--tertiary {
   composes: btn--tertiary from "../../Sass/common/_buttons.scss";
-  font-size: 0.85rem;
+  font-size: $font-size-button;
 }
 .btn-next {
   margin-left: $padding-small;
@@ -92,14 +92,14 @@
   &:hover,
   &:focus {
     svg {
-      fill: $color-primary;
+      fill: $color-secondary;
     }
   }
 
   svg {
-    fill: #9ca2ac;
-    height: 10px;
-    width: 10px;
+    fill: $color-primary;
+    height: $padding;
+    width: $padding;
   }
 }
 
