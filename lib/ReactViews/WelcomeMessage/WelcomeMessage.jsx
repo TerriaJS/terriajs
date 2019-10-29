@@ -40,6 +40,7 @@ const WelcomeMessage = createReactClass({
         setShowWelcomeMessage={bool => {
           viewState.showWelcomeMessage = bool;
         }}
+        isTopElement={this.props.viewState.topElement === "WelcomeMessage"}
         viewState={this.props.viewState}
       />
     );
@@ -49,6 +50,7 @@ const WelcomeMessage = createReactClass({
 export const WelcomeMessagePure = ({
   showWelcomeMessage,
   setShowWelcomeMessage,
+  isTopElement,
   viewState
 }) => {
   // This is required so we can do nested animations
@@ -94,7 +96,8 @@ export const WelcomeMessagePure = ({
     >
       <div
         className={classNames({
-          [Styles.welcomeModalWrapper]: true
+          [Styles.welcomeModalWrapper]: true,
+          "top-element": isTopElement
         })}
         onClick={handleClose.bind(null, false)}
       >
@@ -102,7 +105,10 @@ export const WelcomeMessagePure = ({
           <article
             className={Styles.welcomeModal}
             // Allows interaction w/ modal without closing
-            onClick={e => e.stopPropagation()}
+            onClick={e => {
+              viewState.topElement = "WelcomeMessage";
+              e.stopPropagation();
+            }}
           >
             <button
               type="button"
@@ -177,6 +183,7 @@ export const WelcomeMessagePure = ({
 WelcomeMessagePure.propTypes = {
   showWelcomeMessage: PropTypes.bool.isRequired,
   setShowWelcomeMessage: PropTypes.func.isRequired,
+  isTopElement: PropTypes.bool.isRequired,
   viewState: PropTypes.object.isRequired
 };
 
