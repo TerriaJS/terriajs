@@ -5,9 +5,9 @@ import EmptyWorkbenchMessage from "../ReactViews/SidePanel/EmptyWorkbenchMessage
 // "Add Data" (?)
 
 // Current (20191029): "Explore Data"
-const ADD_DATA = "Explore Data";
+export const ADD_DATA = "Explore Data";
 
-const DISMISS_TEXT = "Don't show me this again";
+export const DISMISS_TEXT = "Don't show me this again";
 
 export const language = {
   AddDataBtnText: ADD_DATA,
