@@ -129,7 +129,10 @@ const MapColumn = createReactClass({
                   )
                 })}
               >
-                <FeedbackButton viewState={this.props.viewState} />
+                <FeedbackButton
+                  viewState={this.props.viewState}
+                  btnText={this.props.terria.language.FeedbackBtnText}
+                />
               </div>
             </If>
 

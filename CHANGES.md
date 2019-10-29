@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+### next release
+
+* Initial implementation of language overrides to support setting custom text throughout the application.
+
+
 ### v7.7.0
 
 * Added a quality slider for the 3D map to the Map panel, allowing control of Cesium's maximumScreenSpaceError and resolutionScale properties.
