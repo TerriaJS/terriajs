@@ -73,6 +73,19 @@ const HelpMenuPanelBasic = createReactClass({
                 <button
                   onClick={() => {
                     this.toggleShowHelpMenu(false);
+                    this.props.viewState.showWelcomeMessage = true;
+                  }}
+                  className={Styles.btnViewer}
+                >
+                  {getReactElementFromContents(
+                    this.props.viewState.terria.language.HelpMenuOpenWelcome
+                  )}
+                </button>
+              </li>
+              <li className={Styles.listItem}>
+                <button
+                  onClick={() => {
+                    this.toggleShowHelpMenu(false);
                     this.props.viewState.showSatelliteGuidance = true;
                   }}
                   className={Styles.btnViewer}

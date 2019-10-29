@@ -45,6 +45,9 @@ export const language = {
   WelcomeMessageSecondaryBtnClick: undefined,
 
   HelpMenuHeader: "What would you like to do?",
+
+  HelpMenuOpenWelcome: "Show welcome message",
+
   HelpMenuSatelliteGuideTitle: "View satellite imagery guide",
   HelpMenuMoreHelpTitle: "More help"
 };
