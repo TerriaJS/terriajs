@@ -1,7 +1,12 @@
 // import React from "react";
 import EmptyWorkbenchMessage from "../ReactViews/SidePanel/EmptyWorkbenchMessage";
 
-const ADD_DATA = "Add Data";
+// Previous descriptions:
+// "Add Data" (?)
+
+// Current (20191029): "Explore Data"
+const ADD_DATA = "Explore Data";
+
 const DISMISS_TEXT = "Don't show me this again";
 
 export const language = {

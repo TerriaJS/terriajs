@@ -11,7 +11,7 @@ import Icon from "../Icon.jsx";
 import FadeIn from "../Transitions/FadeIn/FadeIn";
 import SlideUpFadeIn from "../Transitions/SlideUpFadeIn/SlideUpFadeIn";
 
-import Spacing from "terriajs/lib/Styled/Spacing";
+import Spacing from "../../Styled/Spacing";
 
 import getReactElementFromContents from "../ReactHelpers/getReactElementFromContents";
 import { useKeyPress } from "../Hooks/useKeyPress.js";
