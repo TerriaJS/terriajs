@@ -45,8 +45,9 @@ export const language = {
   WelcomeMessageDissmissText: DISMISS_TEXT,
 
   // WelcomeMessagePrimaryBtnClick: () => {},
-  // WelcomeMessageSecondaryBtnClick: () => {}
+  // WelcomeMessageSecondaryBtnClick: () => {},
   WelcomeMessagePrimaryBtnClick: undefined,
+  // Pass a function to this to enable display of the secondary button on the welcome modal
   WelcomeMessageSecondaryBtnClick: undefined,
 
   HelpMenuHeader: "What would you like to do?",

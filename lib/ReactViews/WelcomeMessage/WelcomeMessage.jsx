@@ -147,24 +147,26 @@ export const WelcomeMessagePure = ({
                 >
                   {getReactElementFromContents(WelcomeMessagePrimaryBtn)}
                 </button>
-                <button
-                  className={classNames(
-                    Styles.welcomeModalButton,
-                    Styles.welcomeModalButtonTertiary
-                  )}
-                  onClick={() => {
-                    handleClose(true);
-                    if (WelcomeMessageSecondaryBtnClick) {
+                {WelcomeMessageSecondaryBtnClick && (
+                  <button
+                    className={classNames(
+                      Styles.welcomeModalButton,
+                      Styles.welcomeModalButtonTertiary
+                    )}
+                    onClick={() => {
+                      handleClose(true);
+                      // if (WelcomeMessageSecondaryBtnClick) {
                       WelcomeMessageSecondaryBtnClick();
-                    } else {
-                      setTimeout(() => {
-                        viewState.showHelpMenu = true;
-                      }, 300);
-                    }
-                  }}
-                >
-                  {getReactElementFromContents(WelcomeMessageSecondaryBtn)}
-                </button>
+                      // } else {
+                      //   setTimeout(() => {
+                      //     viewState.showHelpMenu = true;
+                      //   }, 300);
+                      // }
+                    }}
+                  >
+                    {getReactElementFromContents(WelcomeMessageSecondaryBtn)}
+                  </button>
+                )}
               </div>
               <button
                 className={Styles.welcomeModalCloseLink}
