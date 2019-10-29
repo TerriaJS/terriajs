@@ -4,6 +4,7 @@ Change Log
 ### Next release
 * Added ability to do in-app, "static guides" through `<Guide />`s
 * Added in-app Guide for time enabled WMS items
+* Fixed filter by available dates on ImageryLayerCatalogItem not copying to the clone when the item is split.
 ### next release
 
 * Initial implementation of language overrides to support setting custom text throughout the application.
