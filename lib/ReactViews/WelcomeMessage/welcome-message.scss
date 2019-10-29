@@ -43,10 +43,7 @@
     min-height: 300px;
   }
 
-  // fallback for bad image
-  background-color: #072734;
-  background-size: cover;
-  background-repeat: no-repeat;
+  background-color: $dark;
   border-radius: 4px;
 
   max-width: 100%;
