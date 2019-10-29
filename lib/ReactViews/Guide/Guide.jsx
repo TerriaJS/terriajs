@@ -7,6 +7,8 @@
  
   <Guide
     hasIntroSlide
+    // Use this as guide won't track viewstate
+    isTopElement={viewState.topElement === "Guide"}
     terria={terria}
     guideKey={SATELLITE_GUIDE_KEY}
     guideData={SatelliteGuideData}
@@ -82,6 +84,8 @@ export const analyticsSetShowGuide = (
 export const GuidePure = ({
   terria,
   guideKey,
+  isTopElement,
+  handleMakeTopElement,
   hasIntroSlide = false,
   guideData,
   showGuide,
@@ -142,7 +146,14 @@ export const GuidePure = ({
       isVisible={showGuide}
       onExited={() => setCurrentGuideIndex(0)}
     >
-      <div className={classNames(Styles.guidance, guideClassName)}>
+      <div
+        className={classNames(
+          Styles.guide,
+          guideClassName,
+          isTopElement ? "top-element" : ""
+        )}
+        onClick={handleMakeTopElement}
+      >
         <div className={Styles.image}>
           <div className={Styles.imageWrapper}>
             <img src={currentGuide.imageSrc} />
@@ -196,11 +207,14 @@ export const GuidePure = ({
 GuidePure.propTypes = {
   terria: PropTypes.object.isRequired,
   guideKey: PropTypes.string.isRequired,
-  guideClassName: PropTypes.string,
-  hasIntroSlide: PropTypes.bool,
+  isTopElement: PropTypes.bool.isRequired,
+  handleMakeTopElement: PropTypes.func.isRequired,
   guideData: PropTypes.array.isRequired,
   showGuide: PropTypes.bool.isRequired,
-  setShowGuide: PropTypes.func.isRequired
+  setShowGuide: PropTypes.func.isRequired,
+
+  guideClassName: PropTypes.string,
+  hasIntroSlide: PropTypes.bool
 };
 
 export default GuidePure;

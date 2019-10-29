@@ -22,6 +22,9 @@ const SatelliteGuide = createReactClass({
     return (
       <Guide
         hasIntroSlide
+        // Use this as guide won't track viewstate
+        isTopElement={viewState.topElement === "Guide"}
+        handleMakeTopElement={() => (this.props.viewState.topElement = "Guide")}
         terria={terria}
         guideKey={SATELLITE_GUIDE_KEY}
         guideData={SatelliteGuideData}
