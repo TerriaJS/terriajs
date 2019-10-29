@@ -11,7 +11,6 @@ import SettingPanel from "../Map/Panels/SettingPanel.jsx";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
 import HelpMenuPanelBasic from "../HelpScreens/HelpMenuPanelBasic.jsx";
 import Terria from "../../Models/Terria";
-import Prompt from "../Generic/Prompt";
 
 import ViewState from "../../ReactViewModels/ViewState";
 
@@ -64,12 +63,6 @@ const MobileMenu = createReactClass({
   },
 
   render() {
-    const satelliteGuidancePrompted = this.props.terria.getLocalProperty(
-      "satelliteGuidancePrompted"
-    );
-    const mapGuidesLocationPrompted = this.props.terria.getLocalProperty(
-      "mapGuidesLocation"
-    );
     const hasStories =
       this.props.terria.configParameters.storyEnabled &&
       defined(this.props.terria.stories) &&
@@ -103,21 +96,6 @@ const MobileMenu = createReactClass({
               terria={this.props.terria}
               viewState={this.props.viewState}
             />
-            {satelliteGuidancePrompted &&
-              !mapGuidesLocationPrompted &&
-              !this.props.viewState.showSatelliteGuidance && (
-                <Prompt
-                  content={
-                    <div>
-                      You can access map guides at any time by looking in the{" "}
-                      <strong>help menu</strong>.
-                    </div>
-                  }
-                  displayDelay={1000}
-                  dismissText={"Got it, thanks!"}
-                  dismissAction={this.dismissSatelliteGuidanceAction}
-                />
-              )}
           </div>
           <For each="menuItem" of={this.props.menuItems}>
             <div onClick={this.hideMenu} key={menuItem.key}>
