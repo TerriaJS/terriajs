@@ -1,11 +1,13 @@
 import React from "react";
 import Icon from "../Icon.jsx";
 
+import { ADD_DATA } from "../../Language/defaults.jsx";
+
 export const EmptyWorkbenchMessage = () => (
   <>
     <div>Your workbench is empty</div>
     <p>
-      <strong>Click &apos;Add Data&apos; above to:</strong>
+      <strong>Click &apos;{ADD_DATA}&apos; above to:</strong>
     </p>
     <ul>
       <li>Browse the Data Catalogue</li>

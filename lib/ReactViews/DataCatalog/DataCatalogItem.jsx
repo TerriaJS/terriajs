@@ -46,6 +46,7 @@ const DataCatalogItem = createReactClass({
 
   toggleEnable(event) {
     this.props.item.toggleEnabled();
+    this.props.viewState.terria.checkNowViewingForTimeWms();
     // set preview as well
     this.setPreviewedItem();
 

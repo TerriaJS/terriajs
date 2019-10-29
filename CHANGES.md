@@ -1,6 +1,9 @@
 Change Log
 ==========
 
+### Next release
+* Added ability to do in-app, "static guides" through `<Guide />`s
+* Added in-app Guide for time enabled WMS items
 ### next release
 
 * Initial implementation of language overrides to support setting custom text throughout the application.
