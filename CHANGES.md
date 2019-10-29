@@ -1,14 +1,16 @@
 Change Log
 ==========
 
-### Next release
-* Added ability to do in-app, "static guides" through `<Guide />`s
-* Added in-app Guide for time enabled WMS items
-* Fixed filter by available dates on ImageryLayerCatalogItem not copying to the clone when the item is split.
 ### next release
 
+* Fixed filter by available dates on ImageryLayerCatalogItem not copying to the clone when the item is split.
+
+### v7.8.0
+
+* Added ability to do in-app, "static guides" through `<Guide />`s
+* Added in-app Guide for time enabled WMS items
 * Initial implementation of language overrides to support setting custom text throughout the application.
-* Add ability to pass `leafletUpdateInterval` to an `ImageryLayerCatalogItem` to throttle the number of requests made to a server.
+* Added ability to pass `leafletUpdateInterval` to an `ImageryLayerCatalogItem` to throttle the number of requests made to a server.
 
 ### v7.7.0
 
