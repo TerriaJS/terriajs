@@ -62,7 +62,7 @@
   color: $color-primary;
 }
 .WelcomeModal-button {
-  composes: btn from "~terriajs/lib/Sass/common/_buttons.scss";
+  composes: btn from "../../Sass/common/_buttons.scss";
   position: relative;
   &:not(:root) {
     display: inline-block;
@@ -76,10 +76,10 @@
   }
 }
 .WelcomeModal-buttonPrimary {
-  composes: btn-primary from "~terriajs/lib/Sass/common/_buttons.scss";
+  composes: btn-primary from "../../Sass/common/_buttons.scss";
 }
 .WelcomeModal-buttonTertiary {
-  composes: btn--tertiary from "~terriajs/lib/Sass/common/_buttons.scss";
+  composes: btn--tertiary from "../../Sass/common/_buttons.scss";
 }
 
 .WelcomeModal-body {
@@ -105,7 +105,7 @@
 }
 
 .close-btn {
-  composes: btn from "~terriajs/lib/Sass/common/_buttons.scss";
+  composes: btn from "../../Sass/common/_buttons.scss";
   position: absolute;
   z-index: 10;
   top: $padding-small;
