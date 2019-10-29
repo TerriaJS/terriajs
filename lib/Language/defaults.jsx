@@ -1,10 +1,13 @@
 // import React from "react";
 import EmptyWorkbenchMessage from "../ReactViews/SidePanel/EmptyWorkbenchMessage";
 
+const ADD_DATA = "Add Data";
+const DISMISS_TEXT = "Don't show me this again";
+
 export const language = {
-  AddDataBtnText: "Add Data",
+  AddDataBtnText: ADD_DATA,
   FeedbackBtnText: "Give Feedback",
-  EmptyWorkbenchMessage: EmptyWorkbenchMessage
+  EmptyWorkbenchMessage: EmptyWorkbenchMessage,
 
   /**
    * Alternatively, you can pass a message like:
@@ -27,6 +30,14 @@ export const language = {
   //     <strong>TIP:</strong><em>All your active data sets will be listed here</em>
   //   </p>
   //   `
+
+  // WelcomeMessage:
+  //   "Access rich spatial data from multiple Australian government agencies, all from one convenient location.",
+  WelcomeMessage:
+    "Access rich spatial data from multiple data sources, all from one convenient location.",
+  WelcomeMessagePrimaryBtn: ADD_DATA,
+  WelcomeMessageSecondaryBtn: "Take a tour",
+  WelcomeMessageDissmissText: DISMISS_TEXT
 };
 
 export default language;

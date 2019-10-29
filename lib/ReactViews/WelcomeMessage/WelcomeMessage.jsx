@@ -27,7 +27,6 @@ const WelcomeMessage = createReactClass({
     const { viewState } = this.props;
     const shouldShow = !viewState.terria.getLocalProperty(LOCAL_PROPERTY_KEY);
     this.props.viewState.showWelcomeMessage = shouldShow;
-    // this.props.viewState.showWelcomeMessage = false;
     knockout.track(this.props.viewState, ["showWelcomeMessage"]);
   },
   render() {
@@ -53,6 +52,12 @@ export const WelcomeMessagePure = ({
   // This is required so we can do nested animations
   const [welcomeVisible, setWelcomeVisible] = useState(showWelcomeMessage);
   const [shouldExploreData, setShouldExploreData] = useState(false);
+  const {
+    WelcomeMessage,
+    WelcomeMessagePrimaryBtn,
+    WelcomeMessageSecondaryBtn,
+    WelcomeMessageDissmissText
+  } = viewState.terria.language;
 
   const handleClose = (persist = false) => {
     setShowWelcomeMessage(false);
@@ -107,10 +112,7 @@ export const WelcomeMessagePure = ({
               Spatial data made <span className={Styles.highlight}>easy.</span>
             </h1>
             <span className={Styles.welcomeModalBody}>
-              <div>
-                Access rich spatial data from multiple Australian government
-                agencies, all from one convenient location.
-              </div>
+              <div>{WelcomeMessage}</div>
               <If condition={!viewState.useSmallScreenInterface}>
                 <Spacing bottom={10} />
               </If>
@@ -128,8 +130,7 @@ export const WelcomeMessagePure = ({
                     handleClose(true);
                   }}
                 >
-                  {/* todo: use language once merged */}
-                  Explore Data
+                  {WelcomeMessagePrimaryBtn}
                 </button>
                 <button
                   className={classNames(
@@ -138,14 +139,15 @@ export const WelcomeMessagePure = ({
                   )}
                   onClick={() => handleClose(true)}
                 >
-                  {/* todo: use language once merged */}
-                  Take a tour
+                  {WelcomeMessageSecondaryBtn}
                 </button>
               </div>
               <button
                 className={Styles.welcomeModalCloseLink}
                 onClick={() => handleClose(true)}
-              >{`Don't show me this again`}</button>
+              >
+                {WelcomeMessageDissmissText}
+              </button>
             </span>
           </article>
         </SlideUpFadeIn>
