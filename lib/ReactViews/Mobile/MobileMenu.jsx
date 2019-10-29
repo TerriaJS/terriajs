@@ -11,7 +11,6 @@ import SettingPanel from "../Map/Panels/SettingPanel.jsx";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
 import HelpMenuPanelBasic from "../HelpScreens/HelpMenuPanelBasic.jsx";
 import Terria from "../../Models/Terria";
-import Prompt from "../Generic/Prompt";
 
 import ViewState from "../../ReactViewModels/ViewState";
 
