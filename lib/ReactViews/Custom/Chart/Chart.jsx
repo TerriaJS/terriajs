@@ -10,6 +10,7 @@ import {
   VictoryLine,
   VictoryTheme
 } from "victory";
+import Styles from "./chart.scss";
 
 const chartMinWidth = 110; // Required to prevent https://github.com/FormidableLabs/victory-native/issues/132
 
@@ -87,6 +88,15 @@ class Chart extends React.Component {
   renderChart(width, height) {
     if (!this.props.xAxis) {
       return null;
+    }
+
+    const hasData = this.props.chartItems.some(c => c.points.length > 0);
+    if (hasData === false) {
+      return (
+        <div className={Styles.noData} style={{ height }}>
+          No data available
+        </div>
+      );
     }
 
     return (
