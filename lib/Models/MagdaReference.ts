@@ -388,7 +388,11 @@ export default class MagdaReference extends UrlMixin(
             isJsonObject(member.aspects.terria.definition) &&
             isJsonString(member.aspects.terria.definition.name)
           ) {
-            ref.setTrait(CommonStrata.definition, "name", member.aspects.terria.definition.name);
+            ref.setTrait(
+              CommonStrata.definition,
+              "name",
+              member.aspects.terria.definition.name
+            );
           } else if (isJsonString(member.name)) {
             ref.setTrait(CommonStrata.definition, "name", member.name);
           }
