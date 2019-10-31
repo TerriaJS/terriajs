@@ -43,6 +43,8 @@ function DeltaTool({ terria, tool, onCloseTool }) {
   }
 
   function renderDatePickers() {
+    if (!item) return null;
+
     const availableDates = item.availableDates;
     const dateFormatting = item.dateFormat && item.dateFormat.currentTime;
     return (
@@ -85,7 +87,7 @@ function DeltaTool({ terria, tool, onCloseTool }) {
     const firstDateStr = dateFormat(primaryDate, "yyyy-mm-dd");
     const secondDateStr = dateFormat(secondDateStr, "yyyy-mm-dd");
 
-    item.name = `Change Detection: ${catalogItem.name}`;
+    item.name = `Change Detection: ${catalogItem.name}`; // TODO: set a name that is guaranteed to be unique
     item.featureTimesProperty = undefined; // Hide the location filter
     item.clock = undefined; // Make it a non-time-dynamic item
     item.intervals = undefined;
@@ -220,16 +222,19 @@ function DatePicker({ date, availableDates, setDate, dateFormatting }) {
           <Icon glyph={Icon.GLYPHS.next} />
         </button>
       </div>
-      <DateTimePicker
-        currentDate={date}
-        dates={availableDates}
-        onChange={setDate}
-        openDirection="none"
-        isOpen={isOpen}
-        showCalendarButton={false}
-        onOpen={() => setIsOpen(true)}
-        onClose={() => setIsOpen(false)}
-      />
+      <div className={Styles.picker}>
+        <DateTimePicker
+          currentDate={date}
+          dates={availableDates}
+          onChange={setDate}
+          popupStyle={Styles.datePickerPopup}
+          openDirection="none"
+          isOpen={isOpen}
+          showCalendarButton={false}
+          onOpen={() => setIsOpen(true)}
+          onClose={() => setIsOpen(false)}
+        />
+      </div>
     </div>
   );
 }

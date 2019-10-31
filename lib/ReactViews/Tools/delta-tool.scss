@@ -91,3 +91,16 @@
     border-left: 1px solid rgba(255, 255, 255, 0.15);
   }
 }
+
+.picker {
+  float: left;
+  position: relative;
+  width: 0;
+  height: 0;
+  margin-right: 5px;
+}
+
+.datePickerPopup {
+  top: 5px;
+  left: 0px;
+}
