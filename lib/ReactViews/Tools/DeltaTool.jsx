@@ -89,7 +89,7 @@ function DeltaTool({ terria, tool, onCloseTool }) {
     item.featureTimesProperty = undefined; // Hide the location filter
     item.clock = undefined; // Make it a non-time-dynamic item
     item.intervals = undefined;
-    item.supportsDelta = false;
+    item.supportsDeltaComparison = false;
     item.disableUserChanges = true; // Hide controls like the style selector
 
     // Trim lines to prevent <pre> wrapping during markdown conversion

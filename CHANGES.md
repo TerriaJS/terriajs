@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+### v7.8.0
+
+* Added ability to do in-app, "static guides" through `<Guide />`s
+* Added in-app Guide for time enabled WMS items
+* Initial implementation of language overrides to support setting custom text throughout the application.
+* Added ability to pass `leafletUpdateInterval` to an `ImageryLayerCatalogItem` to throttle the number of requests made to a server.
+
 ### v7.7.0
 
 * Added a quality slider for the 3D map to the Map panel, allowing control of Cesium's maximumScreenSpaceError and resolutionScale properties.

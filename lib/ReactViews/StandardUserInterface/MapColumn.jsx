@@ -12,6 +12,7 @@ import BottomDock from "../BottomDock/BottomDock.jsx";
 import defined from "terriajs-cesium/Source/Core/defined";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import classNames from "classnames";
+import getReactElementFromContents from "../ReactHelpers/getReactElementFromContents";
 
 import Styles from "./map-column.scss";
 
@@ -129,7 +130,12 @@ const MapColumn = createReactClass({
                   )
                 })}
               >
-                <FeedbackButton viewState={this.props.viewState} />
+                <FeedbackButton
+                  viewState={this.props.viewState}
+                  btnText={getReactElementFromContents(
+                    this.props.terria.language.FeedbackBtnText
+                  )}
+                />
               </div>
             </If>
 
