@@ -102,6 +102,10 @@ const ViewingControls = createReactClass({
     item.exportData();
   },
 
+  openDeltaTool() {
+    this.props.viewState.currentTool = { type: "delta", item: this.props.item };
+  },
+
   render() {
     const item = this.props.item;
     const canZoom =
@@ -182,6 +186,19 @@ const ViewingControls = createReactClass({
               title="Export map data"
             >
               Export
+            </button>
+          </li>
+          <span className={Styles.separator} />
+        </If>
+        <If condition={item.supportsDeltaComparison}>
+          <li className={classNames(Styles.delta, classList)}>
+            <button
+              type="button"
+              onClick={this.openDeltaTool}
+              className={Styles.btn}
+              title="Compare imagery from two dates"
+            >
+              Delta
             </button>
           </li>
           <span className={Styles.separator} />
