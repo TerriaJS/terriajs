@@ -182,6 +182,8 @@ DeltaTool.propTypes = {
   onCloseTool: PropTypes.func.isRequired
 };
 
+DeltaTool.displayName = "DeltaTool";
+
 function DatePicker({ date, availableDates, setDate, dateFormatting }) {
   const [isOpen, setIsOpen] = useState(false);
 
