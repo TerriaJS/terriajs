@@ -1,4 +1,5 @@
 import React from "react";
+import Mustache from "mustache";
 
 import createReactClass from "create-react-class";
 
@@ -11,6 +12,10 @@ import ObserveModelMixin from "../ObserveModelMixin";
 import Styles from "./data-preview.scss";
 
 naturalSort.insensitive = true;
+
+Mustache.escape = function(string) {
+  return string;
+};
 
 // Should get it from option
 const DEFAULT_SECTION_ORDER = [
@@ -73,9 +78,9 @@ const DataPreviewSections = createReactClass({
           <If condition={item.content && item.content.length > 0}>
             <div key={i}>
               <h4 className={Styles.h4}>{item.name}</h4>
-              {parseCustomMarkdownToReact(item.content, {
-                catalogItem: metadataItem
-              })}
+              {parseCustomMarkdownToReact(
+                Mustache.render(item.content, metadataItem)
+              )}
             </div>
           </If>
         </For>
