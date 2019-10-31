@@ -71,7 +71,6 @@ const DataPreviewSections = createReactClass({
     const items = metadataItem.hideSource
       ? metadataItem.infoWithoutSources
       : metadataItem.info.slice();
-
     return (
       <div>
         <For each="item" index="i" of={this.sortInfoSections(items)}>
@@ -79,7 +78,10 @@ const DataPreviewSections = createReactClass({
             <div key={i}>
               <h4 className={Styles.h4}>{item.name}</h4>
               {parseCustomMarkdownToReact(
-                Mustache.render(item.content, metadataItem)
+                Mustache.render(item.content, metadataItem),
+                {
+                  catalogItem: metadataItem
+                }
               )}
             </div>
           </If>
