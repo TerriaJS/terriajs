@@ -206,39 +206,41 @@ function expand(props, sourceIndex) {
   // Side-effect: sets activeConcepts and existingColors
   function makeNewCatalogItem() {
     const url = defined(sourceIndex) ? props.sources[sourceIndex] : undefined;
+
     const newCatalogItem = new CsvCatalogItem(terria, url, {
       tableStyle: makeTableStyle(),
       isCsvForCharting: true
     });
-    const newGeoJsonItem = new GeoJsonCatalogItem(terria, null);
-    newGeoJsonItem.isUserSupplied = true;
-    newGeoJsonItem.style = {
-      "stroke-width": 3,
-      "marker-size": 30,
-      stroke: "#ffffff",
-      "marker-color": newCatalogItem.colors[0],
-      "marker-opacity": 1
-    };
+    const items = [newCatalogItem];
+    if (defined(feature.position._value)) {
+      const newGeoJsonItem = new GeoJsonCatalogItem(terria, null);
+      newGeoJsonItem.isUserSupplied = true;
+      newGeoJsonItem.style = {
+        "stroke-width": 3,
+        "marker-size": 30,
+        stroke: "#ffffff",
+        "marker-color": newCatalogItem.colors[0],
+        "marker-opacity": 1
+      };
+      const carts = Ellipsoid.WGS84.cartesianToCartographic(
+        feature.position._value
+      );
+      newGeoJsonItem.data = {
+        type: "Feature",
+        properties: {},
+        geometry: {
+          type: "Point",
+          coordinates: [
+            CesiumMath.toDegrees(carts.longitude),
+            CesiumMath.toDegrees(carts.latitude)
+          ]
+        }
+      };
+      items.push(newGeoJsonItem);
+    }
 
-    const carts = Ellipsoid.WGS84.cartesianToCartographic(
-      feature.position._value
-    );
-    newGeoJsonItem.data = {
-      type: "Feature",
-      properties: {},
-      geometry: {
-        type: "Point",
-        coordinates: [
-          CesiumMath.toDegrees(carts.longitude),
-          CesiumMath.toDegrees(carts.latitude)
-        ]
-      }
-    };
+    const compositeItem = new CompositeCatalogItem(terria, items);
 
-    const compositeItem = new CompositeCatalogItem(terria, [
-      newCatalogItem,
-      newGeoJsonItem
-    ]);
     let tableStructure = props.tableStructure;
     if (
       defined(props.colors) &&
