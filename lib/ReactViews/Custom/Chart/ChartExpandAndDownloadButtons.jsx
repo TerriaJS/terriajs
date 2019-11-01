@@ -236,6 +236,8 @@ function expand(props, sourceIndex) {
           ]
         }
       };
+      newGeoJsonItem.isMappable = true;
+      newGeoJsonItem.style["marker-color"] = newCatalogItem.getNextColor();
       items.push(newGeoJsonItem);
     }
 
@@ -335,12 +337,8 @@ function expand(props, sourceIndex) {
 
     terria.catalog.addChartableItem(newCatalogItem); // Notify the chart panel so it shows "loading".
 
-    newGeoJsonItem.isMappable = true;
-
     compositeItem.isEnabled = true;
     compositeItem.nowViewingCatalogItem = newCatalogItem;
-
-    newGeoJsonItem.style["marker-color"] = newCatalogItem.getNextColor();
 
     return compositeItem;
   }

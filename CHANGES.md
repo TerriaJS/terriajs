@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### next release
+* Bug fix for expanding chart - avoid creating marker where no lat lon exists.
+
+
 ### v7.8.0
 
 * Added ability to do in-app, "static guides" through `<Guide />`s
