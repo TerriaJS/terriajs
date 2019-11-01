@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+### next release
+* Added a `asNestedObject` getter on Metadata Items to provide easier access to Metadata items using their `name` fields.
+* Allow Mustache templates to be used in `DataPreviewSections.jsx` that read from catalog item metadata.
+
+
 ### v7.8.0
 
 * Added ability to do in-app, "static guides" through `<Guide />`s
