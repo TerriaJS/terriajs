@@ -84,6 +84,14 @@ const FeatureInfoSection = observer(
     getTemplateData() {
       const propertyData = this.getPropertyValues();
       if (defined(propertyData)) {
+        // Properties accessible as {name, value} array; useful when you want
+        // to iterate anonymous property values in the mustache template.
+        propertyData.properties = Object.entries(propertyData).map(
+          ([name, value]) => ({
+            name,
+            value
+          })
+        );
         propertyData.terria = {
           formatNumber: mustacheFormatNumberFunction,
           formatDateTime: mustacheFormatDateTime,
