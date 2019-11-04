@@ -417,6 +417,7 @@ export default class Leaflet extends GlobeOrMap {
    * and when the next click is received, it is ignored - again, as desired.
    */
 
+  @action
   private _featurePicked(entity: Entity, event: L.LeafletMouseEvent) {
     this._pickFeatures(event.latlng);
 
