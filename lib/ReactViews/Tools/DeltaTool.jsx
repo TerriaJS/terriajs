@@ -84,8 +84,8 @@ function DeltaTool({ terria, tool, onCloseTool }) {
   function generateDelta() {
     terria.mapInteractionModeStack.pop();
 
-    const firstDateStr = dateFormat(primaryDate, "yyyy-mm-dd");
-    const secondDateStr = dateFormat(secondDateStr, "yyyy-mm-dd");
+    const firstDateStr = dateFormat(primaryDate, "dd-mm-yyyy");
+    const secondDateStr = dateFormat(secondDateStr, "dd-mm-yyyy");
 
     item.name = `Change Detection: ${catalogItem.name}`; // TODO: set a name that is guaranteed to be unique
     item.featureTimesProperty = undefined; // Hide the location filter
