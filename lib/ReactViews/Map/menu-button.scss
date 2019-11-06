@@ -4,7 +4,6 @@
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn--map from "../../Sass/common/_buttons.scss";
   border-radius: $radius-small;
-  border: 0;
   svg {
     fill: #9ca1aa;
     margin: 0 3px 0 4px;
@@ -17,7 +16,6 @@
 
   &:hover,
   &:focus {
-    border: 0;
     svg {
       fill: #ffffff;
     }
