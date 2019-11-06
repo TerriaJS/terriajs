@@ -1,6 +1,9 @@
 Change Log
 ==========
 
+### Next release
+* Fixed a bug where calling `openAddData()` or `closeCatalog()` on ViewState did not correctly apply the relevant `mobileViewOptions` for mobile views.
+
 ### v7.8.0
 
 * Added ability to do in-app, "static guides" through `<Guide />`s
