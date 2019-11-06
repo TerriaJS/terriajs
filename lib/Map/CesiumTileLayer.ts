@@ -88,7 +88,7 @@ export default class CesiumTileLayer extends L.TileLayer {
       }
 
       if (useClipUpdateWorkaround) {
-        container.style.display = display;
+        container.style.display = display!;
       }
     });
   }

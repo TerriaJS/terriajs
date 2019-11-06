@@ -69,14 +69,6 @@ var southeastCartographicScratch = new Cartographic();
 var northeastCartographicScratch = new Cartographic();
 var northwestCartographicScratch = new Cartographic();
 
-interface CesiumSelectionIndicator {
-  position: Cartesian3;
-  animateAppear(): void;
-  animateDepart(): void;
-  update(): void;
-  destroy(): void;
-}
-
 export default class Cesium extends GlobeOrMap {
   readonly type = "Cesium";
   readonly terria: Terria;

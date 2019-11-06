@@ -1,9 +1,12 @@
 import defined from "terriajs-cesium/Source/Core/defined";
+import destroyObject from "terriajs-cesium/Source/Core/destroyObject";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
+import TaskProcessor from "terriajs-cesium/Source/Core/TaskProcessor";
 import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget";
+import loadWithXhr from "../Core/loadWithXhr";
 
 export default class CesiumRenderLoopPauser {
   /**
@@ -28,6 +31,9 @@ export default class CesiumRenderLoopPauser {
   private _removePostRenderListener: CesiumEvent.RemoveCallback | undefined;
   private _lastCameraViewMatrix = new Matrix4();
   private _lastCameraMoveTime: number = -Number.MAX_VALUE;
+
+  private _originalLoadWithXhr: any;
+  private _originalScheduleTask: any;
 
   constructor(
     readonly cesiumWidget: CesiumWidget,
@@ -107,35 +113,66 @@ export default class CesiumRenderLoopPauser {
     window.addEventListener("resize", this._boundNotifyRepaintRequired, false);
 
     // // Hacky way to force a repaint when an async load request completes
-    // this._originalLoadWithXhr = loadWithXhr.load;
-    // loadWithXhr.load = function(url, responseType, method, data, headers, deferred, overrideMimeType, preferText, timeout) {
-    //     deferred.promise.always(that._boundNotifyRepaintRequired);
-    //     that._originalLoadWithXhr(url, responseType, method, data, headers, deferred, overrideMimeType, preferText, timeout);
-    // };
+    const anyLoadWithXhr: any = loadWithXhr;
+    this._originalLoadWithXhr = anyLoadWithXhr.load;
+    anyLoadWithXhr.load = (
+      url: any,
+      responseType: any,
+      method: any,
+      data: any,
+      headers: any,
+      deferred: any,
+      overrideMimeType: any,
+      preferText: any,
+      timeout: any
+    ) => {
+      deferred.promise.always(this._boundNotifyRepaintRequired);
+      this._originalLoadWithXhr(
+        url,
+        responseType,
+        method,
+        data,
+        headers,
+        deferred,
+        overrideMimeType,
+        preferText,
+        timeout
+      );
+    };
 
     // // Hacky way to force a repaint when a web worker sends something back.
-    // this._originalScheduleTask = TaskProcessor.prototype.scheduleTask;
-    // TaskProcessor.prototype.scheduleTask = function(parameters, transferableObjects) {
-    //     var result = that._originalScheduleTask.call(this, parameters, transferableObjects);
+    this._originalScheduleTask = TaskProcessor.prototype.scheduleTask;
+    const that = this;
+    TaskProcessor.prototype.scheduleTask = function(
+      this: any,
+      parameters,
+      transferableObjects
+    ) {
+      var result = that._originalScheduleTask.call(
+        this,
+        parameters,
+        transferableObjects
+      );
 
-    //     if (!defined(this._originalWorkerMessageSinkRepaint)) {
-    //         this._originalWorkerMessageSinkRepaint = this._worker.onmessage;
+      if (!defined(this._originalWorkerMessageSinkRepaint)) {
+        this._originalWorkerMessageSinkRepaint = this._worker.onmessage;
 
-    //         var taskProcessor = this;
-    //         this._worker.onmessage = function(event) {
-    //             taskProcessor._originalWorkerMessageSinkRepaint(event);
+        var taskProcessor = this;
+        this._worker.onmessage = function(event: any) {
+          taskProcessor._originalWorkerMessageSinkRepaint(event);
 
-    //             if (that.isDestroyed()) {
-    //                 taskProcessor._worker.onmessage = taskProcessor._originalWorkerMessageSinkRepaint;
-    //                 taskProcessor._originalWorkerMessageSinkRepaint = undefined;
-    //             } else {
-    //                 that.notifyRepaintRequired();
-    //             }
-    //         };
-    //     }
+          if (that.isDestroyed()) {
+            taskProcessor._worker.onmessage =
+              taskProcessor._originalWorkerMessageSinkRepaint;
+            taskProcessor._originalWorkerMessageSinkRepaint = undefined;
+          } else {
+            that.notifyRepaintRequired();
+          }
+        };
+      }
 
-    //     return result;
-    // };
+      return result;
+    };
   }
 
   destroy() {
@@ -207,6 +244,15 @@ export default class CesiumRenderLoopPauser {
         false
       );
     }
+
+    (loadWithXhr as any).load = this._originalLoadWithXhr;
+    TaskProcessor.prototype.scheduleTask = this._originalScheduleTask;
+
+    return destroyObject(this);
+  }
+
+  isDestroyed() {
+    return false;
   }
 
   notifyRepaintRequired() {
