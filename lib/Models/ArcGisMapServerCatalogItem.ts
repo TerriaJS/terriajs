@@ -469,11 +469,11 @@ function getRectangleFromLayer(thisLayerJson: Layer) {
     extent.spatialReference.wkid
   ) {
     const wkid = "EPSG:" + extent.spatialReference.wkid;
-    if (!isDefined(proj4definitions[wkid])) {
+    if (!isDefined((proj4definitions as any)[wkid])) {
       return undefined;
     }
 
-    const source = new proj4.Proj(proj4definitions[wkid]);
+    const source = new proj4.Proj((proj4definitions as any)[wkid]);
     const dest = new proj4.Proj("EPSG:4326");
 
     let p = proj4(source, dest, [extent.xmin, extent.ymin]);
