@@ -23,20 +23,25 @@ class FeatureInfoPanelChart extends React.Component {
     const textColor = "white";
     return merge({}, VictoryTheme.grayscale, {
       chart: { padding: { top: 15, bottom: 30, left: 50, right: 0 } },
-      axis: {
-        style: {
-          axis: { stroke: "none" } // hides all axis lines
-        }
-      },
       independentAxis: {
         style: {
+          axis: { stroke: "none" },
           axisLabel: { fontSize, padding: 15, fill: textColor },
-          tickLabels: { fontSize: 0, padding: 0 }
+          tickLabels: { fontSize: 0, padding: 0 },
+          grid: {
+            stroke: "none",
+            fill: "none"
+          }
         }
       },
       dependentAxis: {
         style: {
-          tickLabels: { fontSize, fill: textColor }
+          axis: { stroke: "none" },
+          tickLabels: { fontSize, fill: textColor },
+          grid: {
+            stroke: "none",
+            fill: "none"
+          }
         }
       },
       line: {
