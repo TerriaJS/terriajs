@@ -112,7 +112,7 @@ export default class Cesium3DTilesCatalogItem
   }
 
   private createNewTileset(
-    url: string,
+    url: Resource | string,
     ionAssetId: number | undefined,
     ionAccessToken: string | undefined,
     ionServer: string | undefined,
@@ -134,7 +134,11 @@ export default class Cesium3DTilesCatalogItem
         raiseErrorToUser(this.terria, e);
       });
     } else if (isDefined(url)) {
-      resource = new Resource({ url });
+      if (url instanceof Resource) {
+        resource = url;
+      } else {
+        resource = new Resource({ url });
+      }
     }
 
     if (!isDefined(resource)) {
