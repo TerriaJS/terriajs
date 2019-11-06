@@ -25,6 +25,7 @@ function DeltaTool({ terria, tool, onCloseTool }) {
   const [location, setLocation] = useState(undefined);
   const [primaryDate, setPrimaryDate] = useState(catalogItem.discreteTime);
   const [secondaryDate, setSecondaryDate] = useState(catalogItem.discreteTime);
+  const pickers = [useDatePickerState(), useDatePickerState()];
 
   useEffect(() => {
     const newItem = duplicateItem(catalogItem);
@@ -45,6 +46,16 @@ function DeltaTool({ terria, tool, onCloseTool }) {
   function renderDatePickers() {
     if (!item) return null;
 
+    // Set a pickers state. If the target picker opens, close the other.
+    const setIsOpen = (pickerId, isOpen) => {
+      const [thisPicker, otherPicker] =
+        pickerId === 0 ? pickers : [pickers[1], pickers[0]];
+      thisPicker.setIsOpen(isOpen);
+      if (isOpen) {
+        otherPicker.setIsOpen(false); // close other picker
+      }
+    };
+
     const availableDates = item.availableDates;
     const dateFormatting = item.dateFormat && item.dateFormat.currentTime;
     return (
@@ -57,6 +68,8 @@ function DeltaTool({ terria, tool, onCloseTool }) {
               setDate={setPrimaryDate}
               availableDates={availableDates}
               dateFormatting={dateFormatting}
+              isOpen={pickers[0].isOpen}
+              setIsOpen={isOpen => setIsOpen(0, isOpen)}
             />
           </div>
         </section>
@@ -68,6 +81,8 @@ function DeltaTool({ terria, tool, onCloseTool }) {
               setDate={setSecondaryDate}
               availableDates={availableDates}
               dateFormatting={dateFormatting}
+              isOpen={pickers[1].isOpen}
+              setIsOpen={isOpen => setIsOpen(1, isOpen)}
             />
           </div>
         </section>
@@ -123,13 +138,11 @@ function DeltaTool({ terria, tool, onCloseTool }) {
         raiseErrorToUser(terria, e);
       }
     } else {
-      console.log("**here**", feature);
       pickFeatures(
         terria,
         "Failed to resolve location! Please select a point again by clicking on the map",
         onFeaturesPicked
       );
-      console.log("**then here**");
     }
   }
 
@@ -184,9 +197,14 @@ DeltaTool.propTypes = {
 
 DeltaTool.displayName = "DeltaTool";
 
-function DatePicker({ date, availableDates, setDate, dateFormatting }) {
-  const [isOpen, setIsOpen] = useState(false);
-
+function DatePicker({
+  date,
+  availableDates,
+  setDate,
+  dateFormatting,
+  isOpen,
+  setIsOpen
+}) {
   const toggleOpen = e => {
     setIsOpen(!isOpen);
     e.stopPropagation();
@@ -245,7 +263,9 @@ DatePicker.propTypes = {
   date: PropTypes.object.isRequired,
   setDate: PropTypes.func.isRequired,
   availableDates: PropTypes.array.isRequired,
-  dateFormatting: PropTypes.string
+  dateFormatting: PropTypes.string,
+  isOpen: PropTypes.bool,
+  setIsOpen: PropTypes.func.isRequired
 };
 
 function pickFeatures(terria, message, callback) {
@@ -274,6 +294,11 @@ function pickFeatures(terria, message, callback) {
         callback(pickedFeatures);
       });
     });
+}
+
+function useDatePickerState() {
+  const [isOpen, setIsOpen] = useState(false);
+  return { isOpen, setIsOpen };
 }
 
 function duplicateItem(item) {
