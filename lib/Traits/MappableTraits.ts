@@ -1,6 +1,6 @@
 import ModelTraits from "./ModelTraits";
-import primitiveTrait from "./primitiveTrait";
 import objectTrait from "./objectTrait";
+import primitiveTrait from "./primitiveTrait";
 
 export class RectangleTraits extends ModelTraits {
   @primitiveTrait({

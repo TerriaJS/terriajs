@@ -1,4 +1,4 @@
-import { computed, runInAction, observable } from "mobx";
+import { computed, runInAction, observable, toJS } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
@@ -115,7 +115,7 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
 
     return new Promise<JsonValue | undefined>((resolve, reject) => {
       if (isDefined(this.geoJsonData)) {
-        resolve(this.geoJsonData);
+        resolve(toJS(this.geoJsonData));
       } else if (isDefined(this.geoJsonString)) {
         resolve(<JsonValue>JSON.parse(this.geoJsonString));
       } else if (isDefined(this._geoJsonFile)) {
