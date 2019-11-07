@@ -11,6 +11,9 @@ import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 import defined from "terriajs-cesium/Source/Core/defined";
 import { formatDateTime } from "../BottomDock/Timeline/DateFormats";
 import dateFormat from "dateformat";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import { addMarker, removeMarker } from "../../Models/LocationMarkerUtils.js";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
 
 function DeltaTool({ terria, tool, onCloseTool }) {
   const { type, item: catalogItem } = tool;
@@ -118,6 +121,7 @@ function DeltaTool({ terria, tool, onCloseTool }) {
 
   function cancelDeltaTool() {
     if (item) item.isEnabled = false;
+    removeMarker(terria);
     onCloseTool();
   }
 
@@ -274,16 +278,14 @@ DatePicker.propTypes = {
 };
 
 function userPickLocation(terria, initialMessage, callback) {
-  let pickPointMode;
-  let subscription;
-  let isDisposed;
+  let pickPointMode; // The map interaction mode
+  let subscription; // Knockout subscript for pickPointMode.pickedFeatures
+  let isDisposed; // Flag to track if the interaction has been cancelled
 
   const setupPicker = message => {
     isDisposed = false;
     pickPointMode = new MapInteractionMode({ message });
     terria.mapInteractionModeStack.push(pickPointMode);
-    console.log("**push**", terria.mapInteractionModeStack.length);
-
     subscription = knockout
       .getObservable(pickPointMode, "pickedFeatures")
       .subscribe(pickedFeatures => {
@@ -292,6 +294,10 @@ function userPickLocation(terria, initialMessage, callback) {
         };
 
         subscription.dispose();
+        addMarker(terria, {
+          name: "User Selection",
+          location: cartesianToDegrees(pickedFeatures.pickPosition)
+        });
         pickedFeatures.allFeaturesAvailablePromise.then(() => {
           if (!isDisposed) {
             disposer();
@@ -305,10 +311,7 @@ function userPickLocation(terria, initialMessage, callback) {
     subscription.dispose();
     isDisposed = true;
     const [currentMode] = terria.mapInteractionModeStack.slice(-1);
-    if (currentMode === pickPointMode) {
-      terria.mapInteractionModeStack.pop();
-    }
-    console.log("**dispose**", terria.mapInteractionModeStack.length);
+    if (currentMode === pickPointMode) terria.mapInteractionModeStack.pop();
   };
 
   setupPicker(initialMessage);
@@ -344,6 +347,14 @@ function trimLines(text) {
     .split("\n")
     .map(ln => ln.trim())
     .join("\n");
+}
+
+function cartesianToDegrees(cartesian) {
+  const carto = Ellipsoid.WGS84.cartesianToCartographic(cartesian);
+  return {
+    longitude: CesiumMath.toDegrees(carto.longitude),
+    latitude: CesiumMath.toDegrees(carto.latitude)
+  };
 }
 
 module.exports = DeltaTool;
