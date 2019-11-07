@@ -271,7 +271,8 @@ ParameterEditor.parameterTypeConverters = [
       if (type === this.id) {
         return (
           <div>
-            {parameterEditor.props.parameter.hasNamedStates && parameterEditor.renderLabel()}
+            {parameterEditor.props.parameter.hasNamedStates &&
+              parameterEditor.renderLabel()}
             <BooleanParameterEditor
               previewed={parameterEditor.props.previewed}
               parameter={parameterEditor.props.parameter}
