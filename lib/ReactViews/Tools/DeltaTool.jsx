@@ -133,6 +133,8 @@ function DeltaTool({ terria, tool, onCloseTool }) {
     if (feature) {
       try {
         item.filterIntervalsByFeature(feature, pickedFeatures);
+        if (item.availableDates)
+          setDatesFromAvailableDates(item.availableDates);
         setLocation(pickedFeatures.pickPosition);
       } catch (e) {
         raiseErrorToUser(terria, e);
@@ -143,6 +145,17 @@ function DeltaTool({ terria, tool, onCloseTool }) {
         "Failed to resolve location! Please select a point again by clicking on the map",
         onFeaturesPicked
       );
+    }
+  }
+
+  // Set primary & secondary dates to the last 2 available dates
+  function setDatesFromAvailableDates(availableDates) {
+    const [primaryDate, secondaryDate] = item.availableDates.slice(
+      item.availableDates.length - 2
+    );
+    if (primaryDate) {
+      setPrimaryDate(primaryDate);
+      setSecondaryDate(secondaryDate || primaryDate);
     }
   }
 
