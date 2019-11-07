@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import DateTimePicker from "../../ReactViews/BottomDock/Timeline/DateTimePicker.jsx";
 import PropTypes from "prop-types";
 import Styles from "./delta-tool.scss";
@@ -27,12 +27,38 @@ function DeltaTool({ terria, tool, onCloseTool }) {
   const [secondaryDate, setSecondaryDate] = useState(catalogItem.discreteTime);
   const pickers = [useDatePickerState(), useDatePickerState()];
 
-  useEffect(() => {
+  // Duplicate the catalog item
+  useLayoutEffect(() => {
     const newItem = duplicateItem(catalogItem);
     newItem.isEnabled = true;
     newItem.useOwnClock = true;
     setItem(newItem);
   }, [catalogItem]);
+
+  // Setup a map interaction mode to pick a location, retry on failure
+  useEffect(() => {
+    if (location === undefined && item) {
+      const message = "Select a point by clicking on the map";
+      return userPickLocation(terria, message, (picked, retry) => {
+        const feature = picked.features.find(
+          feature => feature.imageryLayer === item.imageryLayer
+        );
+        if (feature) {
+          try {
+            item.filterIntervalsByFeature(feature, picked);
+            setDatesFromAvailableDates(item.availableDates);
+            setLocation(picked.pickPosition);
+          } catch (e) {
+            raiseErrorToUser(terria, e);
+          }
+        } else {
+          retry(
+            "Failed to resolve location! Please select a point again by clicking on the map"
+          );
+        }
+      });
+    }
+  });
 
   function renderLocationPicker() {
     return (
@@ -92,13 +118,10 @@ function DeltaTool({ terria, tool, onCloseTool }) {
 
   function cancelDeltaTool() {
     if (item) item.isEnabled = false;
-    terria.mapInteractionModeStack.pop();
     onCloseTool();
   }
 
   function generateDelta() {
-    terria.mapInteractionModeStack.pop();
-
     const firstDateStr = dateFormat(primaryDate, "dd-mm-yyyy");
     const secondDateStr = dateFormat(secondDateStr, "dd-mm-yyyy");
 
@@ -125,46 +148,15 @@ function DeltaTool({ terria, tool, onCloseTool }) {
     onCloseTool();
   }
 
-  function onFeaturesPicked(pickedFeatures) {
-    const feature = pickedFeatures.features.find(feature => {
-      return feature.imageryLayer === item.imageryLayer;
-    });
-
-    if (feature) {
-      try {
-        item.filterIntervalsByFeature(feature, pickedFeatures);
-        if (item.availableDates)
-          setDatesFromAvailableDates(item.availableDates);
-        setLocation(pickedFeatures.pickPosition);
-      } catch (e) {
-        raiseErrorToUser(terria, e);
-      }
-    } else {
-      pickFeatures(
-        terria,
-        "Failed to resolve location! Please select a point again by clicking on the map",
-        onFeaturesPicked
-      );
-    }
-  }
-
   // Set primary & secondary dates to the last 2 available dates
   function setDatesFromAvailableDates(availableDates) {
-    const [primaryDate, secondaryDate] = item.availableDates.slice(
-      item.availableDates.length - 2
+    const [primaryDate, secondaryDate] = availableDates.slice(
+      availableDates.length - 2
     );
     if (primaryDate) {
       setPrimaryDate(primaryDate);
       setSecondaryDate(secondaryDate || primaryDate);
     }
-  }
-
-  if (location === undefined && item) {
-    pickFeatures(
-      terria,
-      "Select a point by clicking on the map",
-      onFeaturesPicked
-    );
   }
 
   return (
@@ -281,32 +273,46 @@ DatePicker.propTypes = {
   setIsOpen: PropTypes.func.isRequired
 };
 
-function pickFeatures(terria, message, callback) {
-  const pickPointMode = new MapInteractionMode({ message });
-  terria.mapInteractionModeStack.push(pickPointMode);
+function userPickLocation(terria, initialMessage, callback) {
+  let pickPointMode;
+  let subscription;
+  let isDisposed;
 
-  const subscription = knockout
-    .getObservable(pickPointMode, "pickedFeatures")
-    .subscribe(pickedFeatures => {
-      pickPointMode.customUi = function() {
-        return <Loader message="Querying position..." />;
-      };
+  const setupPicker = message => {
+    isDisposed = false;
+    pickPointMode = new MapInteractionMode({ message });
+    terria.mapInteractionModeStack.push(pickPointMode);
+    console.log("**push**", terria.mapInteractionModeStack.length);
 
-      subscription.dispose();
-      pickedFeatures.allFeaturesAvailablePromise.then(() => {
-        if (
-          terria.mapInteractionModeStack[
-            terria.mapInteractionModeStack.length - 1
-          ] !== pickPointMode
-        ) {
-          // Already canceled.
-          return;
-        }
+    subscription = knockout
+      .getObservable(pickPointMode, "pickedFeatures")
+      .subscribe(pickedFeatures => {
+        pickPointMode.customUi = function() {
+          return <Loader message="Querying position..." />;
+        };
 
-        terria.mapInteractionModeStack.pop();
-        callback(pickedFeatures);
+        subscription.dispose();
+        pickedFeatures.allFeaturesAvailablePromise.then(() => {
+          if (!isDisposed) {
+            disposer();
+            callback(pickedFeatures, setupPicker);
+          }
+        });
       });
-    });
+  };
+
+  const disposer = () => {
+    subscription.dispose();
+    isDisposed = true;
+    const [currentMode] = terria.mapInteractionModeStack.slice(-1);
+    if (currentMode === pickPointMode) {
+      terria.mapInteractionModeStack.pop();
+    }
+    console.log("**dispose**", terria.mapInteractionModeStack.length);
+  };
+
+  setupPicker(initialMessage);
+  return disposer;
 }
 
 function useDatePickerState() {
