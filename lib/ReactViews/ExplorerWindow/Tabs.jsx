@@ -21,6 +21,28 @@ const Tabs = observer(
       tabs: PropTypes.array
     },
 
+    getInitialState() {
+      return {
+        firstElementRef: React.createRef(),
+        containerRef: React.createRef()
+      };
+    },
+
+    componentDidMount() {
+      window.addEventListener("focus", this.focusListener, true);
+      this.state.firstElementRef.current.focus();
+    },
+
+    focusListener() {
+      if (!this.state.containerRef.current.contains(document.activeElement)) {
+        this.state.firstElementRef.current.focus();
+      }
+    },
+
+    componentWillUnmount() {
+      window.removeEventListener("focus", this.focusListener, true);
+    },
+
     getTabs() {
       // This can be passed in as prop
       if (this.props.tabs) {
@@ -115,7 +137,7 @@ const Tabs = observer(
         tabs[0];
 
       return (
-        <div className={Styles.tabs}>
+        <div className={Styles.tabs} ref={this.state.containerRef}>
           <ul className={Styles.tabList} role="tablist">
             <For each="item" index="i" of={tabs}>
               <li
@@ -136,6 +158,7 @@ const Tabs = observer(
                   className={classNames(Styles.btnTab, {
                     [Styles.btnSelected]: item === currentTab
                   })}
+                  ref={i === 0 ? this.state.firstElementRef : undefined}
                 >
                   {item.name}
                 </button>
