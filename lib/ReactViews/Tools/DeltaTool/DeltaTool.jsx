@@ -6,6 +6,7 @@ import raiseErrorToUser from "../../../Models/raiseErrorToUser";
 import Styles from "./delta-tool.scss";
 import DatePickers from "./DatePickers";
 import LocationPicker from "./LocationPicker";
+import prettifyCoordinates from "../../../Map/prettifyCoordinates";
 
 /**
  * A tool for comparing imagery at two points in time.
@@ -119,11 +120,7 @@ function DeltaTool({ terria, tool, onCloseTool }) {
             This tool visualizes the difference between imagery captured at two
             discrete points in time.
           </span>
-          {location && (
-            <div className={Styles.location}>
-              ${location.x}, ${location.y}
-            </div>
-          )}
+          {location && <PrettyLocation location={location} />}
           {location === undefined ? (
             <h3>
               To view available imagery, please select your location of interest
@@ -169,6 +166,27 @@ DeltaTool.propTypes = {
 };
 
 DeltaTool.displayName = "DeltaTool";
+
+function PrettyLocation({ location }) {
+  const prettyLocation = prettifyCoordinates(
+    location.longitude,
+    location.latitude
+  );
+  return (
+    <section>
+      <h4>Selected Location</h4>
+      <div className={Styles.location}>
+        {prettyLocation.latitude}, {prettyLocation.longitude}
+      </div>
+    </section>
+  );
+}
+
+PrettyLocation.propTypes = {
+  location: PropTypes.object.isRequired
+};
+
+PrettyLocation.displayName = "PrettyLocation";
 
 function duplicateItem(item) {
   const serializedItem = item.serializeToJson();
