@@ -113,7 +113,7 @@ function DeltaTool({ terria, tool, onCloseTool }) {
 
   return (
     <div className={Styles.deltaTool}>
-      <h1 className={Styles.title}>Change Detection: Timeseries Data</h1>
+      <h1 className={Styles.title}>Change Detection: {catalogItem.name}</h1>
       <div className={Styles.body}>
         <div>
           <span>
