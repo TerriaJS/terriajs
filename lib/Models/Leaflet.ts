@@ -696,6 +696,7 @@ export default class Leaflet extends GlobeOrMap {
             .getBounds()
             .contains(circleMarkerLayer.getLatLng())
         ) {
+          // We want this feature pick to be handled the same as clicking on a feature, so we fire the click event
           layer.fire("click", { latlng: layer.getLatLng() });
           this._pickedLeafletLayers.add(layer.getLatLng().toString());
         }
@@ -710,13 +711,15 @@ export default class Leaflet extends GlobeOrMap {
         this._pickedLeafletLayers.has(layer.getLatLng().toString())
       ) {
         const circleMarkerLayer = layer as L.CircleMarker;
-        // If this layer's features have gone out of bounds...
+        // If this layer's feature has gone out of bounds...
         if (
           !this._pickerRectangle
             .getBounds()
             .contains(circleMarkerLayer.getLatLng())
         ) {
+          // remove it from our picked leaflet layers
           this._pickedLeafletLayers.delete(layer.getLatLng().toString());
+          // remove it from pickedFeatures
           runInAction(() => {
             if (this._pickedFeatures !== undefined) {
               this._pickedFeatures.features = this._pickedFeatures.features.filter(
