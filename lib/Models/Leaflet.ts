@@ -1,4 +1,4 @@
-import L from "leaflet";
+import L, { CircleMarker } from "leaflet";
 import { autorun, action, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
@@ -43,6 +43,7 @@ import Mappable, { ImageryParts, MapItem } from "./Mappable";
 import Terria from "./Terria";
 import MapboxVectorCanvasTileLayer from "../Map/MapboxVectorCanvasTileLayer";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
+import { JulianDate } from "cesium";
 
 interface SplitterClips {
   left: string;
@@ -83,6 +84,14 @@ export default class Leaflet extends GlobeOrMap {
   private _cesiumReqAnimFrameId: number | undefined;
   private _pickedFeatures: PickedFeatures | undefined = undefined;
   private _pauseMapInteractionCount = 0;
+  private readonly _pickerRectangle: L.Rectangle = L.rectangle(
+    [[0, 0], [0, 0]],
+    { color: "#ff7800", weight: 5 }
+  );
+  /**
+   * Keeps track of which leaflet layers have been picked.
+   */
+  private _pickedLeafletLayers: Set<string> = new Set();
 
   /* Disposers */
   private readonly _disposeWorkbenchMapItemsSubscription: () => void;
@@ -176,19 +185,34 @@ export default class Leaflet extends GlobeOrMap {
         map.tap
       ]);
       const pickLocation = this.pickLocation.bind(this);
+      const movePickerRectangle = this.movePickerRectangle.bind(this);
       const pickFeature = (entity: Entity, event: L.LeafletMouseEvent) => {
-        this._featurePicked(entity, event);
+        // Add the leaflet latlng string to the cesium entity so that we can link leaflet layers to cesium entities
+        // This is required for "rectangle-mode" feature picking
+        runInAction(() => {
+          entity.addProperty("leafletLatLon");
+          entity.properties.leafletLatLon = event.latlng.toString();
+          this._featurePicked(entity, event);
+        });
       };
 
       if (this.terriaViewer.disableInteraction) {
+        this._pickerRectangle.removeFrom(map);
         interactions.forEach(handler => handler.disable());
         this.map.off("click", pickLocation);
+        this.map.off("move", movePickerRectangle);
         this.scene.featureClicked.removeEventListener(pickFeature);
         this._disposeSelectedFeatureSubscription &&
           this._disposeSelectedFeatureSubscription();
       } else {
+        const pickerBounds = this.computePickerRectangleBounds();
+        if (pickerBounds !== undefined) {
+          this._pickerRectangle.setBounds(pickerBounds);
+          this._pickerRectangle.addTo(map);
+        }
         interactions.forEach(handler => handler.enable());
         this.map.on("click", pickLocation);
+        this.map.on("move", movePickerRectangle);
         this.scene.featureClicked.addEventListener(pickFeature);
         this._disposeSelectedFeatureSubscription = autorun(() => {
           const feature = this.terria.selectedFeature;
@@ -213,6 +237,28 @@ export default class Leaflet extends GlobeOrMap {
     this._pickFeatures(mouseEvent.latlng);
     // }
     // this._dragboxcompleted = false;
+  }
+
+  private movePickerRectangle(e: L.LeafletEvent) {
+    const bounds = this.computePickerRectangleBounds();
+    if (bounds === undefined) {
+      return;
+    }
+    this._pickerRectangle.setBounds(bounds);
+
+    // pick features
+    this._pickFeaturesInRectangle();
+    this._unpickFeaturesOutsideRectangle();
+  }
+
+  private computePickerRectangleBounds(): L.LatLngBounds | undefined {
+    console.log(this.map.getZoom());
+
+    const width = this.map
+      .getBounds()
+      .getNorthWest()
+      .distanceTo(this.map.getBounds().getSouthEast());
+    return this.map.getCenter().toBounds(width / 10);
   }
 
   getContainer() {
@@ -482,8 +528,15 @@ export default class Leaflet extends GlobeOrMap {
         }
       });
 
-      // Unset this so that the next click will start building features from scratch.
-      this._pickedFeatures = undefined;
+      // If we're not in rectangle picking mode...
+      if (this._pickedLeafletLayers.size === 0) {
+        // Unset this so that the next click will start building features from scratch.
+        this._pickedFeatures = undefined;
+
+        // We don't want to do this in rectangle picking mode,
+        // because we want to have all features in a region selected at once,
+        // not just the ones near the mouse click
+      }
     });
 
     const imageryLayers: CesiumTileLayer[] = [];
@@ -625,6 +678,54 @@ export default class Leaflet extends GlobeOrMap {
         ].pickedFeatures = this._pickedFeatures;
       } else {
         this.terria.pickedFeatures = this._pickedFeatures;
+      }
+    });
+  }
+
+  private _pickFeaturesInRectangle() {
+    this.map.eachLayer(layer => {
+      // If the layer is a CircileMarker and we haven't picked this features already...
+      if (
+        layer instanceof L.CircleMarker &&
+        !this._pickedLeafletLayers.has(layer.getLatLng().toString())
+      ) {
+        const circleMarkerLayer = layer as L.CircleMarker;
+        // Check if the location of this point is in the picker rectangle
+        if (
+          this._pickerRectangle
+            .getBounds()
+            .contains(circleMarkerLayer.getLatLng())
+        ) {
+          layer.fire("click", { latlng: layer.getLatLng() });
+          this._pickedLeafletLayers.add(layer.getLatLng().toString());
+        }
+      }
+    });
+  }
+
+  private _unpickFeaturesOutsideRectangle() {
+    this.map.eachLayer(layer => {
+      if (
+        layer instanceof L.CircleMarker &&
+        this._pickedLeafletLayers.has(layer.getLatLng().toString())
+      ) {
+        const circleMarkerLayer = layer as L.CircleMarker;
+        // If this layer's features have gone out of bounds...
+        if (
+          !this._pickerRectangle
+            .getBounds()
+            .contains(circleMarkerLayer.getLatLng())
+        ) {
+          this._pickedLeafletLayers.delete(layer.getLatLng().toString());
+          runInAction(() => {
+            if (this._pickedFeatures !== undefined) {
+              this._pickedFeatures.features = this._pickedFeatures.features.filter(
+                entity =>
+                  this._pickedLeafletLayers.has(entity.properties.leafletLatLon)
+              );
+            }
+          });
+        }
       }
     });
   }
