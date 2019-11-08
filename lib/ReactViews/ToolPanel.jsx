@@ -1,4 +1,4 @@
-import DeltaTool from "./Tools/DeltaTool.jsx";
+import DeltaTool from "./Tools/DeltaTool/DeltaTool.jsx";
 import PropTypes from "prop-types";
 import React from "react";
 import Styles from "./tool-panel.scss";

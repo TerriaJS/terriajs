@@ -1,7 +1,7 @@
 @import "~terriajs-variables";
 
 .deltaTool {
-  composes: tool from "../tool-panel.scss";
+  composes: tool from "../../tool-panel.scss";
 }
 
 .title {
@@ -20,14 +20,14 @@
 }
 
 .cancelBtn {
-  composes: btn-grey from "../../Sass/common/_buttons.scss";
+  composes: btn-grey from "../../../Sass/common/_buttons.scss";
   width: 10vw;
   margin-right: 1em;
 }
 
 .generateDeltaBtn {
-  composes: btn from "../../Sass/common/_buttons.scss";
-  composes: btn-primary from "../../Sass/common/_buttons.scss";
+  composes: btn from "../../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../../Sass/common/_buttons.scss";
 }
 
 .datePickers {
@@ -52,7 +52,7 @@
 }
 
 .currentDate {
-  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn from "../../../Sass/common/_buttons.scss";
   flex-grow: 3;
   text-align: center;
   padding: 2px 8px;
@@ -61,7 +61,7 @@
 
 .previousDate,
 .nextDate {
-  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn from "../../../Sass/common/_buttons.scss";
   fill: #fff;
   cursor: pointer;
   padding: 12px;
