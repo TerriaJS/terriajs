@@ -18,8 +18,8 @@
       // "declaration": true,
       "typeRoots": [
           "./lib/ThirdParty",
-          "./node_modules/@types",
-          "../node_modules/@types"
+          //"./node_modules/@types",
+          //"../node_modules/@types"
       ],
       "types": [
           "cesium",
@@ -27,7 +27,8 @@
           "mapbox__point-geometry",
           "mapbox__vector-tile",
           "terriajs-html2canvas",
-          "urijs"
+          "urijs",
+          //"react"
       ]
   },
   "include": [

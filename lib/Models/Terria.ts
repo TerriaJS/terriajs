@@ -617,7 +617,7 @@ export default class Terria {
     this.mainViewer.homeCamera = CameraView.fromJson(homeCameraInit);
   }
 
-  loadMagdaConfig(configUrl: string, config: any) {
+  async loadMagdaConfig(configUrl: string, config: any) {
     const magdaRoot = new URI(configUrl)
       .path("")
       .query("")
@@ -627,14 +627,17 @@ export default class Terria {
     const configParams =
       aspects["terria-config"] && aspects["terria-config"].parameters;
 
-    const initObj = aspects["terria-init"];
-    if (isJsonObject(initObj) && isJsonObject(initObj.homeCamera)) {
-      this.loadHomeCamera(initObj.homeCamera);
-    }
-
     if (configParams) {
       this.updateParameters(configParams);
     }
+
+    const initObj = aspects["terria-init"];
+    if (isJsonObject(initObj)) {
+      await this.applyInitData({
+        initData: initObj as any
+      });
+    }
+
     if (aspects.group && aspects.group.members) {
       const id = config.id;
 
@@ -649,7 +652,7 @@ export default class Terria {
       reference.setTrait(CommonStrata.definition, "url", magdaRoot);
       reference.setTrait(CommonStrata.definition, "recordId", config.id);
       reference.setTrait(CommonStrata.definition, "magdaRecord", config);
-      reference.loadReference().then(() => {
+      await reference.loadReference().then(() => {
         if (reference.target instanceof CatalogGroup) {
           this.catalog.group = reference.target;
         }
