@@ -258,10 +258,10 @@ export default class Cesium extends GlobeOrMap {
     this._disposeSplitterReaction = this._reactToSplitterChanges();
 
     autorun(() => {
-      (this.cesiumWidget as any).useBrowserRecommendedResolution = !this.terria.useNativeResolution;
-      this.cesiumWidget.scene.globe.maximumScreenSpaceError =
-        this.terria.baseMaximumScreenSpaceError;
-    })
+      (this.cesiumWidget as any).useBrowserRecommendedResolution = !this.terria
+        .useNativeResolution;
+      this.cesiumWidget.scene.globe.maximumScreenSpaceError = this.terria.baseMaximumScreenSpaceError;
+    });
   }
 
   getContainer() {
