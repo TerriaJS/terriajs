@@ -9,10 +9,13 @@ import { getMountedInstance } from "./MoreShallowTools";
 import MeasureTool from "../../lib/ReactViews/Map/Navigation/MeasureTool";
 const Entity = require("terriajs-cesium/Source/DataSources/Entity.js").default;
 const Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid.js").default;
-const ConstantPositionProperty = require("terriajs-cesium/Source/DataSources/ConstantPositionProperty.js").default;
+const ConstantPositionProperty = require("terriajs-cesium/Source/DataSources/ConstantPositionProperty.js")
+  .default;
 const Cartesian3 = require("terriajs-cesium/Source/Core/Cartesian3").default;
-const Cartographic = require("terriajs-cesium/Source/Core/Cartographic").default;
-const CustomDataSource = require("terriajs-cesium/Source/DataSources/CustomDataSource").default;
+const Cartographic = require("terriajs-cesium/Source/Core/Cartographic")
+  .default;
+const CustomDataSource = require("terriajs-cesium/Source/DataSources/CustomDataSource")
+  .default;
 const CesiumMath = require("terriajs-cesium/Source/Core/Math").default;
 
 describe("MeasureTool-jsx", function() {

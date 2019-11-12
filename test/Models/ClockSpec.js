@@ -6,8 +6,10 @@ var ImageryLayerCatalogItem = require("../../lib/Models/ImageryLayerCatalogItem"
 var Terria = require("../../lib/Models/Terria");
 var JulianDate = require("terriajs-cesium/Source/Core/JulianDate").default;
 var TimeInterval = require("terriajs-cesium/Source/Core/TimeInterval").default;
-var DataSourceClock = require("terriajs-cesium/Source/DataSources/DataSourceClock").default;
-var TimeIntervalCollection = require("terriajs-cesium/Source/Core/TimeIntervalCollection").default;
+var DataSourceClock = require("terriajs-cesium/Source/DataSources/DataSourceClock")
+  .default;
+var TimeIntervalCollection = require("terriajs-cesium/Source/Core/TimeIntervalCollection")
+  .default;
 
 describe("Clock", function() {
   var clock, terria, catalogItem;

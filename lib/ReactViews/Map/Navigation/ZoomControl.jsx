@@ -4,7 +4,8 @@ const PropTypes = require("prop-types");
 import createReactClass from "create-react-class";
 const defined = require("terriajs-cesium/Source/Core/defined").default;
 const Ray = require("terriajs-cesium/Source/Core/Ray").default;
-const IntersectionTests = require("terriajs-cesium/Source/Core/IntersectionTests").default;
+const IntersectionTests = require("terriajs-cesium/Source/Core/IntersectionTests")
+  .default;
 const Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid").default;
 const Tween = require("terriajs-cesium/Source/ThirdParty/Tween").default;
 const CesiumMath = require("terriajs-cesium/Source/Core/Math").default;

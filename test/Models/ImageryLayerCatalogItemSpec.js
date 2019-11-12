@@ -2,16 +2,22 @@
 
 /*global require,beforeEach*/
 const CesiumEvent = require("terriajs-cesium/Source/Core/Event").default;
-const ImageryLayer = require("terriajs-cesium/Source/Scene/ImageryLayer").default;
-const ImageryProvider = require("terriajs-cesium/Source/Scene/ImageryProvider").default;
-const ImageryState = require("terriajs-cesium/Source/Scene/ImageryState").default;
+const ImageryLayer = require("terriajs-cesium/Source/Scene/ImageryLayer")
+  .default;
+const ImageryProvider = require("terriajs-cesium/Source/Scene/ImageryProvider")
+  .default;
+const ImageryState = require("terriajs-cesium/Source/Scene/ImageryState")
+  .default;
 const JulianDate = require("terriajs-cesium/Source/Core/JulianDate").default;
 const pollToPromise = require("../../lib/Core/pollToPromise");
-const RequestErrorEvent = require("terriajs-cesium/Source/Core/RequestErrorEvent").default;
+const RequestErrorEvent = require("terriajs-cesium/Source/Core/RequestErrorEvent")
+  .default;
 const Resource = require("terriajs-cesium/Source/Core/Resource").default;
 const runLater = require("../../lib/Core/runLater");
-const TimeIntervalCollection = require("terriajs-cesium/Source/Core/TimeIntervalCollection").default;
-const TimeInterval = require("terriajs-cesium/Source/Core/TimeInterval").default;
+const TimeIntervalCollection = require("terriajs-cesium/Source/Core/TimeIntervalCollection")
+  .default;
+const TimeInterval = require("terriajs-cesium/Source/Core/TimeInterval")
+  .default;
 const when = require("terriajs-cesium/Source/ThirdParty/when").default;
 
 const Terria = require("../../lib/Models/Terria");

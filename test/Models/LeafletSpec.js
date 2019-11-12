@@ -7,8 +7,10 @@ var CesiumTileLayer = require("../../lib/Map/CesiumTileLayer");
 var Color = require("terriajs-cesium/Source/Core/Color").default;
 var Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid").default;
 var Entity = require("terriajs-cesium/Source/DataSources/Entity").default;
-var GeoJsonDataSource = require("terriajs-cesium/Source/DataSources/GeoJsonDataSource").default;
-var ImageryLayerFeatureInfo = require("terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo").default;
+var GeoJsonDataSource = require("terriajs-cesium/Source/DataSources/GeoJsonDataSource")
+  .default;
+var ImageryLayerFeatureInfo = require("terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo")
+  .default;
 var L = require("leaflet");
 var Leaflet = require("../../lib/Models/Leaflet");
 var loadJson = require("../../lib/Core/loadJson");

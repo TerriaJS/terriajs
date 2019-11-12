@@ -4,21 +4,28 @@
 var Cartographic = require("terriajs-cesium/Source/Core/Cartographic").default;
 var Cesium = require("../../lib/Models/Cesium");
 var CesiumMath = require("terriajs-cesium/Source/Core/Math").default;
-var CesiumWidget = require("terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget").default;
+var CesiumWidget = require("terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget")
+  .default;
 var Color = require("terriajs-cesium/Source/Core/Color").default;
 var Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid").default;
 var Entity = require("terriajs-cesium/Source/DataSources/Entity").default;
-var FeatureDetection = require("terriajs-cesium/Source/Core/FeatureDetection").default;
-var GeoJsonDataSource = require("terriajs-cesium/Source/DataSources/GeoJsonDataSource").default;
+var FeatureDetection = require("terriajs-cesium/Source/Core/FeatureDetection")
+  .default;
+var GeoJsonDataSource = require("terriajs-cesium/Source/DataSources/GeoJsonDataSource")
+  .default;
 var ImageryLayer = require("terriajs-cesium/Source/Scene/ImageryLayer").default;
-var ImageryLayerFeatureInfo = require("terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo").default;
+var ImageryLayerFeatureInfo = require("terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo")
+  .default;
 var loadJson = require("../../lib/Core/loadJson");
 var Rectangle = require("terriajs-cesium/Source/Core/Rectangle").default;
-var SceneTransforms = require("terriajs-cesium/Source/Scene/SceneTransforms").default;
+var SceneTransforms = require("terriajs-cesium/Source/Scene/SceneTransforms")
+  .default;
 var supportsWebGL = require("../../lib/Core/supportsWebGL");
 var Terria = require("../../lib/Models/Terria");
-var TileBoundingRegion = require("terriajs-cesium/Source/Scene/TileBoundingRegion").default;
-var TileCoordinatesImageryProvider = require("terriajs-cesium/Source/Scene/TileCoordinatesImageryProvider").default;
+var TileBoundingRegion = require("terriajs-cesium/Source/Scene/TileBoundingRegion")
+  .default;
+var TileCoordinatesImageryProvider = require("terriajs-cesium/Source/Scene/TileCoordinatesImageryProvider")
+  .default;
 var when = require("terriajs-cesium/Source/ThirdParty/when").default;
 
 var describeIfSupported = supportsWebGL() ? describe : xdescribe;

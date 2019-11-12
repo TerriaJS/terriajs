@@ -7,8 +7,10 @@ var Cesium = require("../../lib/Models/Cesium");
 var PickedFeatures = require("../../lib/Map/PickedFeatures");
 var Cartesian3 = require("terriajs-cesium/Source/Core/Cartesian3").default;
 var Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid.js").default;
-var CesiumWidget = require("terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget").default;
-var TileCoordinatesImageryProvider = require("terriajs-cesium/Source/Scene/TileCoordinatesImageryProvider").default;
+var CesiumWidget = require("terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget")
+  .default;
+var TileCoordinatesImageryProvider = require("terriajs-cesium/Source/Scene/TileCoordinatesImageryProvider")
+  .default;
 var Cartographic = require("terriajs-cesium/Source/Core/Cartographic").default;
 var CesiumMath = require("terriajs-cesium/Source/Core/Math").default;
 var supportsWebGL = require("../../lib/Core/supportsWebGL");

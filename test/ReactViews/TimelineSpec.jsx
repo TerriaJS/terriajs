@@ -10,7 +10,8 @@ const Terria = require("../../lib/Models/Terria");
 const ImageryLayerCatalogItem = require("../../lib/Models/ImageryLayerCatalogItem");
 import Timeline from "../../lib/ReactViews/BottomDock/Timeline/Timeline";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-const DataSourceClock = require("terriajs-cesium/Source/DataSources/DataSourceClock").default;
+const DataSourceClock = require("terriajs-cesium/Source/DataSources/DataSourceClock")
+  .default;
 
 describe("Timeline", function() {
   describe("dateTime format", function() {

@@ -6,7 +6,8 @@ var Rectangle = require("terriajs-cesium/Source/Core/Rectangle").default;
 var CatalogItem = require("../../lib/Models/CatalogItem");
 var CatalogGroup = require("../../lib/Models/CatalogGroup");
 var Catalog = require("../../lib/Models/Catalog");
-var DataSourceClock = require("terriajs-cesium/Source/DataSources/DataSourceClock").default;
+var DataSourceClock = require("terriajs-cesium/Source/DataSources/DataSourceClock")
+  .default;
 var JulianDate = require("terriajs-cesium/Source/Core/JulianDate").default;
 var Terria = require("../../lib/Models/Terria");
 var createCatalogMemberFromType = require("../../lib/Models/createCatalogMemberFromType");
