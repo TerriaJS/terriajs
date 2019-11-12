@@ -7,14 +7,14 @@ import Styles from "./tool_button.scss";
 import Icon from "../../Icon.jsx";
 
 const UserDrawing = require("../../../Models/UserDrawing");
-const EllipsoidGeodesic = require("terriajs-cesium/Source/Core/EllipsoidGeodesic.js");
-const Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid.js");
-const EllipsoidTangentPlane = require("terriajs-cesium/Source/Core/EllipsoidTangentPlane.js");
-const CesiumMath = require("terriajs-cesium/Source/Core/Math.js");
-const PolygonGeometryLibrary = require("terriajs-cesium/Source/Core/PolygonGeometryLibrary.js");
-const PolygonHierarchy = require("terriajs-cesium/Source/Core/PolygonHierarchy.js");
-const Cartesian3 = require("terriajs-cesium/Source/Core/Cartesian3.js");
-const VertexFormat = require("terriajs-cesium/Source/Core/VertexFormat.js");
+const EllipsoidGeodesic = require("terriajs-cesium/Source/Core/EllipsoidGeodesic.js").default;
+const Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid.js").default;
+const EllipsoidTangentPlane = require("terriajs-cesium/Source/Core/EllipsoidTangentPlane.js").default;
+const CesiumMath = require("terriajs-cesium/Source/Core/Math.js").default;
+const PolygonGeometryLibrary = require("terriajs-cesium/Source/Core/PolygonGeometryLibrary.js").default;
+const PolygonHierarchy = require("terriajs-cesium/Source/Core/PolygonHierarchy.js").default;
+const Cartesian3 = require("terriajs-cesium/Source/Core/Cartesian3.js").default;
+const VertexFormat = require("terriajs-cesium/Source/Core/VertexFormat.js").default;
 
 const MeasureTool = createReactClass({
   displayName: "MeasureTool",
