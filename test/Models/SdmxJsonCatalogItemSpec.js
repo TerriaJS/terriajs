@@ -2,8 +2,8 @@
 
 /*global require, fail*/
 var loadText = require("../../lib/Core/loadText");
-var Rectangle = require("terriajs-cesium/Source/Core/Rectangle");
-var when = require("terriajs-cesium/Source/ThirdParty/when");
+var Rectangle = require("terriajs-cesium/Source/Core/Rectangle").default;
+var when = require("terriajs-cesium/Source/ThirdParty/when").default;
 
 var Terria = require("../../lib/Models/Terria");
 var SdmxJsonCatalogItem = require("../../lib/Models/SdmxJsonCatalogItem");
