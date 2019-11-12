@@ -4,6 +4,7 @@ import createReactClass from "create-react-class";
 
 import PropTypes from "prop-types";
 import classNames from "classnames";
+import HelpMenuPanelBasic from "../HelpScreens/HelpMenuPanelBasic";
 import SettingPanel from "./Panels/SettingPanel";
 import SharePanel from "./Panels/SharePanel/SharePanel";
 import ToolsPanel from "./Panels/ToolsPanel/ToolsPanel";

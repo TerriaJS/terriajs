@@ -3,28 +3,23 @@
 interface CssExports {
   'base-map-selector': string;
   'baseMapSelector': string;
-  'btn--base-map': string;
-  'btn--nativeResolution': string;
   'btn--viewer': string;
-  'btnBaseMap': string;
-  'btnNativeResolution': string;
   'btnViewer': string;
   'dropdown-inner': string;
   'dropdownInner': string;
+  'field': string;
   'is-active': string;
   'isActive': string;
+  'link': string;
+  'link-wrapper': string;
+  'linkWrapper': string;
   'list-item': string;
   'listItem': string;
-  'native-resolution-header': string;
-  'native-resolution-wrapper': string;
-  'nativeResolutionHeader': string;
-  'nativeResolutionWrapper': string;
-  'opacity-slider': string;
-  'opacitySlider': string;
-  'quality-label': string;
-  'quality-wrapper': string;
-  'qualityLabel': string;
-  'qualityWrapper': string;
+  'paragraph': string;
+  'share-panel': string;
+  'sharePanel': string;
+  'shorten-url': string;
+  'shortenUrl': string;
   'viewer-selector': string;
   'viewerSelector': string;
 }

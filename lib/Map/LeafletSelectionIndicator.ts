@@ -8,7 +8,7 @@ import isDefined from "../Core/isDefined";
 
 import Leaflet from "../Models/Leaflet";
 
-const TweenCollection = require("terriajs-cesium/Source/Scene/TweenCollection");
+const TweenCollection = require("terriajs-cesium/Source/Scene/TweenCollection").default;
 const selectionIndicatorUrl = require("../../wwwroot/images/NM-LocationTarget.svg");
 
 interface Tween {
