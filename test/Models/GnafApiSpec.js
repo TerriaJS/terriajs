@@ -1,7 +1,7 @@
 "use strict";
 
-var when = require("terriajs-cesium/Source/ThirdParty/when");
-var Rectangle = require("terriajs-cesium/Source/Core/Rectangle");
+var when = require("terriajs-cesium/Source/ThirdParty/when").default;
+var Rectangle = require("terriajs-cesium/Source/Core/Rectangle").default;
 var loadWithXhr = require("../../lib/Core/loadWithXhr");
 
 var GnafApi = require("../../lib/Models/GnafApi");

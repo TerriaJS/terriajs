@@ -1,8 +1,8 @@
-var when = require("terriajs-cesium/Source/ThirdParty/when");
+var when = require("terriajs-cesium/Source/ThirdParty/when").default;
 
 var Terria = require("../../lib/Models/Terria");
 var GnafSearchProviderViewModel = require("../../lib/ViewModels/GnafSearchProviderViewModel");
-var knockout = require("terriajs-cesium/Source/ThirdParty/knockout");
+var knockout = require("terriajs-cesium/Source/ThirdParty/knockout").default;
 
 var QUERY = "this is a search";
 var FLIGHT_DURATION_SECONDS = 2;
