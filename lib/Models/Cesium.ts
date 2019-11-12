@@ -122,7 +122,8 @@ export default class Cesium extends GlobeOrMap {
       clock: this.terria.timelineClock,
       imageryProvider: new SingleTileImageryProvider({ url: img }),
       scene3DOnly: true,
-      shadows: true
+      shadows: true,
+      useBrowserRecommendedResolution: !this.terria.useNativeResolution
     };
 
     // Workaround for Firefox bug with WebGL and printing:
@@ -255,6 +256,12 @@ export default class Cesium extends GlobeOrMap {
       this.scene.globe.terrainProvider = this._terrainProvider;
     });
     this._disposeSplitterReaction = this._reactToSplitterChanges();
+
+    autorun(() => {
+      (this.cesiumWidget as any).useBrowserRecommendedResolution = !this.terria.useNativeResolution;
+      this.cesiumWidget.scene.globe.maximumScreenSpaceError =
+        this.terria.baseMaximumScreenSpaceError;
+    })
   }
 
   getContainer() {

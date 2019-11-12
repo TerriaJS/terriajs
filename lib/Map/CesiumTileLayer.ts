@@ -49,19 +49,31 @@ export default class CesiumTileLayer extends L.TileLayer {
   private _zSubtract = 0;
   private _requestImageError?: TileProviderError;
   private _previousCredits: Credit[] = [];
+  private _leafletUpdateInterval: number;
 
   @observable splitDirection = ImagerySplitDirection.NONE;
   @observable splitPosition: number = 0.5;
 
   constructor(
     readonly imageryProvider: ImageryProvider,
-    options?: L.TileLayerOptions
+    options: L.TileLayerOptions = {}
   ) {
-    super(<any>undefined, options);
+    super(<any>undefined, {
+      ...options,
+      updateInterval: defined((imageryProvider as any)._leafletUpdateInterval)
+        ? (imageryProvider as any)._leafletUpdateInterval
+        : 100
+    });
     this.imageryProvider = imageryProvider;
 
     const disposeSplitterReaction = this._reactToSplitterChange();
     this.on("remove", disposeSplitterReaction);
+
+    this._leafletUpdateInterval = defined(
+      (imageryProvider as any)._leafletUpdateInterval
+    )
+      ? (imageryProvider as any)._leafletUpdateInterval
+      : 100;
   }
 
   _reactToSplitterChange() {
@@ -201,7 +213,7 @@ export default class CesiumTileLayer extends L.TileLayer {
         this._delayedUpdate = <any>setTimeout(() => {
           this._delayedUpdate = undefined;
           this._update();
-        }, 100);
+        }, this._leafletUpdateInterval);
       }
       return;
     }
@@ -261,7 +273,7 @@ export default class CesiumTileLayer extends L.TileLayer {
         this._usable = true;
 
         this._update();
-      }, 100);
+      }, this._leafletUpdateInterval);
     }
 
     if (this._usable) {

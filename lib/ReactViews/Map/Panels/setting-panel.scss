@@ -63,3 +63,35 @@
     border: 2px solid $turquoise-blue;
   }
 }
+.native-resolution-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  svg {
+    height: 14px;
+    width: 14px;
+    fill: #fff;
+  }
+}
+.native-resolution-header {
+  cursor: pointer;
+}
+.btn--nativeResolution {
+  composes: btn from "../../../Sass/common/_buttons.scss";
+  padding-right: 5px;
+}
+
+.quality-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+// .quality-heading {
+
+// }
+.quality-label {
+  display: inline-block;
+}
+.opacity-slider {
+  margin-left: 10px;
+}

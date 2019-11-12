@@ -348,6 +348,7 @@ export default class ArcGisMapServerCatalogItem
         return realRequestImage.call(imageryProvider, x, y, level);
       };
     }
+
     return imageryProvider;
   }
 

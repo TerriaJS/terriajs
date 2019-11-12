@@ -50,6 +50,7 @@ export default class BingMapsCatalogItem
       '<a href="http://www.bing.com" target="_blank">Bing</a>'
     );
     result.defaultGamma = 1.0;
+
     return result;
   }
 }

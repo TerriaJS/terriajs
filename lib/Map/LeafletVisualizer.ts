@@ -16,8 +16,10 @@ import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
 import PolylineGlowMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineGlowMaterialProperty";
 import Property from "terriajs-cesium/Source/DataSources/Property";
 
-const destroyObject = require("terriajs-cesium/Source/Core/destroyObject");
-const writeTextToCanvas = require("terriajs-cesium/Source/Core/writeTextToCanvas");
+const destroyObject = require("terriajs-cesium/Source/Core/destroyObject")
+  .default;
+const writeTextToCanvas = require("terriajs-cesium/Source/Core/writeTextToCanvas")
+  .default;
 
 interface PointDetails {
   layer?: L.CircleMarker;
@@ -243,6 +245,11 @@ class LeafletGeomVisualizer {
 
     let layer = details.layer;
 
+    let lastPoint: any;
+    featureGroup.eachLayer(function(layer) {
+      lastPoint = layer;
+    });
+
     if (!isDefined(layer)) {
       const pointOptions = {
         radius: pixelSize / 2.0,
@@ -254,7 +261,7 @@ class LeafletGeomVisualizer {
       };
 
       layer = details.layer = L.circleMarker(
-        positionToLatLng(position),
+        positionToLatLng(position, lastPoint),
         pointOptions
       );
       layer.on("click", featureClicked.bind(undefined, this, entity));
@@ -271,7 +278,7 @@ class LeafletGeomVisualizer {
     }
 
     if (!Cartesian3.equals(position, details.lastPosition)) {
-      layer.setLatLng(positionToLatLng(position));
+      layer.setLatLng(positionToLatLng(position, lastPoint));
       Cartesian3.clone(position, details.lastPosition);
     }
 
@@ -931,30 +938,28 @@ function cleanPolyline(
   }
 }
 
-function positionToLatLng(position: Cartesian3) {
+function positionToLatLng(
+  position: Cartesian3,
+  prevLayer?: { _latlng: { lng: number; lat: number } }
+) {
   const cartographic = Ellipsoid.WGS84.cartesianToCartographic(position);
-  return L.latLng(
-    CesiumMath.toDegrees(cartographic.latitude),
-    CesiumMath.toDegrees(cartographic.longitude)
-  );
+  let lon = CesiumMath.toDegrees(cartographic.longitude);
+  if (prevLayer) {
+    if (prevLayer._latlng.lng - lon > 180) {
+      lon = lon + 360;
+    } else if (prevLayer._latlng.lng - lon < -180) {
+      lon = lon - 360;
+    }
+  }
+
+  return L.latLng(CesiumMath.toDegrees(cartographic.latitude), lon);
 }
 
 function hierarchyToLatLngs(hierarchy: PolygonHierarchy) {
   // This function currently does not handle polygons with holes.
 
   const positions = Array.isArray(hierarchy) ? hierarchy : hierarchy.positions;
-  const carts = Ellipsoid.WGS84.cartesianArrayToCartographicArray(positions);
-  const latlngs = [];
-  for (let i = 0; i < carts.length; ++i) {
-    latlngs.push(
-      L.latLng(
-        CesiumMath.toDegrees(carts[i].latitude),
-        CesiumMath.toDegrees(carts[i].longitude)
-      )
-    );
-  }
-
-  return latlngs;
+  return convertEntityPositionsToLatLons(positions);
 }
 
 //Recolor an image using 2d canvas
@@ -1030,6 +1035,27 @@ function getValueOrUndefined(property: Property | undefined, time: JulianDate) {
   if (isDefined(property)) {
     return property.getValue(time);
   }
+}
+
+function convertEntityPositionsToLatLons(positions: Cartesian3[]) {
+  var carts = Ellipsoid.WGS84.cartesianArrayToCartographicArray(positions);
+  var latlngs = [];
+  let lastLongitude;
+  for (var p = 0; p < carts.length; p++) {
+    let lon = CesiumMath.toDegrees(carts[p].longitude);
+
+    if (lastLongitude !== undefined) {
+      if (lastLongitude - lon > 180) {
+        lon = lon + 360;
+      } else if (lastLongitude - lon < -180) {
+        lon = lon - 360;
+      }
+    }
+
+    latlngs.push(L.latLng(CesiumMath.toDegrees(carts[p].latitude), lon));
+    lastLongitude = lon;
+  }
+  return latlngs;
 }
 
 export default class LeafletVisualizer {

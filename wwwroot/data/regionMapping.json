@@ -1241,7 +1241,7 @@
             "description": "Commonwealth electoral districts for 2007 election (Australian Electoral Commission)",
             "regionIdsFile": "build/TerriaJS/data/regionids/region_map-CommonwealthElectoralDivision_2007_ced_name_2007.json"
         },
-        "SED_CODE16": {
+        "SED_CODE18": {
             "layerName": "SED_2018",
             "server": "https://tiles.terria.io/SED_2018/{z}/{x}/{y}.pbf",
             "serverType": "MVT",
@@ -1287,7 +1287,7 @@
               -9.14
             ]
         },
-        "SED_CODE18": {
+        "SED_CODE16": {
             "layerName": "SED_2016",
             "server": "https://tiles.terria.io/SED_2016/{z}/{x}/{y}.pbf",
             "serverType": "MVT",
