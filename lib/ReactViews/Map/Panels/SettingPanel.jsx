@@ -11,8 +11,16 @@ import Terria from "../../../Models/Terria";
 import ViewState from "../../../ReactViewModels/ViewState";
 import Icon from "../../Icon";
 import MenuPanel from "../../StandardUserInterface/customizable/MenuPanel";
+import Slider from "rc-slider";
+import ViewerMode from "../../../Models/ViewerMode";
 import DropdownStyles from "./panel.scss";
 import Styles from "./setting-panel.scss";
+
+const qualityLabels = {
+  0: "Maximum performance, lower quality",
+  1: "Balanced performance & quality",
+  2: "Maximum quality, lower performance"
+};
 
 // The basemap and viewer setting panel
 /**
@@ -96,7 +104,13 @@ class SettingPanel extends React.Component {
           ? "3D Terrain"
           : "3D Smooth"
         : "2D";
-    // const currentBaseMap = this.props.terria.baseMap ? this.props.terria.baseMap.name : '(None)';
+
+    const useNativeResolution = this.props.terria.useNativeResolution;
+    const nativeResolutionLabel = `Press to stop using ${
+      useNativeResolution ? "native" : "screen"
+    } resolution and start using ${
+      useNativeResolution ? "screen" : "native"
+    } resolution`;
 
     const dropdownTheme = {
       outer: Styles.settingPanel,
@@ -168,6 +182,82 @@ class SettingPanel extends React.Component {
             </For>
           </ul>
         </div>
+        <If condition={this.props.terria.viewerMode !== ViewerMode.Leaflet}>
+          <div className={DropdownStyles.section}>
+            <label className={DropdownStyles.heading}>Image Optimisation</label>
+            <section
+              className={Styles.nativeResolutionWrapper}
+              title={qualityLabels[this.props.terria.quality]}
+            >
+              <button
+                id="mapUseNativeResolution"
+                type="button"
+                onClick={() =>
+                  (this.props.terria.useNativeResolution = !useNativeResolution)
+                }
+                title={nativeResolutionLabel}
+                className={Styles.btnNativeResolution}
+              >
+                {useNativeResolution ? (
+                  <Icon glyph={Icon.GLYPHS.checkboxOn} />
+                ) : (
+                  <Icon glyph={Icon.GLYPHS.checkboxOff} />
+                )}
+              </button>
+              <label
+                title={nativeResolutionLabel}
+                htmlFor="mapUseNativeResolution"
+                className={classNames(
+                  DropdownStyles.subHeading,
+                  Styles.nativeResolutionHeader
+                )}
+              >
+                Use native device resolution
+              </label>
+            </section>
+            <label
+              htmlFor="mapQuality"
+              className={classNames(DropdownStyles.subHeading)}
+            >
+              Raster Map Quality:
+            </label>
+            <section
+              className={Styles.qualityWrapper}
+              title={qualityLabels[this.props.terria.quality]}
+            >
+              <label
+                className={classNames(
+                  DropdownStyles.subHeading,
+                  Styles.qualityLabel
+                )}
+              >
+                Quality
+              </label>
+              <Slider
+                id="mapMaximumScreenSpaceError"
+                className={Styles.opacitySlider}
+                min={1}
+                max={3}
+                step={0.1}
+                value={this.props.terria.baseMaximumScreenSpaceError}
+                onChange={val =>
+                  (this.props.terria.baseMaximumScreenSpaceError = val)
+                }
+                marks={{ 2: "" }}
+                // Awaiting https://github.com/react-component/slider/pull/420
+                // aria-valuetext={qualityLabels[this.props.terria.quality]}
+              />
+              <label
+                className={classNames(
+                  DropdownStyles.subHeading,
+                  Styles.qualityLabel
+                )}
+              >
+                Performance
+              </label>
+            </section>
+          </div>
+        </If>
       </MenuPanel>
     );
   }

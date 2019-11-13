@@ -50,6 +50,7 @@ Sites we're aware of that are using TerriaJS. These are not endorsements or test
 * [Innovisite France Beta](http://www.innovisite.com/map/france/)
 * [USGS The National Map Advanced Viewer](https://viewer.nationalmap.gov/advanced/terriajs-usgs/)
 * [Portale del suolo](http://www.sardegnaportalesuolo.it/webgis/)
+* [Find & Connect Map of Children's Homes](https://map.findandconnect.gov.au/)
 
 ### Technical
 

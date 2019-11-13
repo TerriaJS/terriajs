@@ -2,16 +2,18 @@
 const React = require("react");
 const PropTypes = require("prop-types");
 import createReactClass from "create-react-class";
-const CameraFlightPath = require("terriajs-cesium/Source/Scene/CameraFlightPath");
-const Cartesian2 = require("terriajs-cesium/Source/Core/Cartesian2");
-const Cartesian3 = require("terriajs-cesium/Source/Core/Cartesian3");
-const CesiumMath = require("terriajs-cesium/Source/Core/Math");
-const defined = require("terriajs-cesium/Source/Core/defined");
-const Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid");
-const getTimestamp = require("terriajs-cesium/Source/Core/getTimestamp");
-const Matrix4 = require("terriajs-cesium/Source/Core/Matrix4");
-const Ray = require("terriajs-cesium/Source/Core/Ray");
-const Transforms = require("terriajs-cesium/Source/Core/Transforms");
+const CameraFlightPath = require("terriajs-cesium/Source/Scene/CameraFlightPath")
+  .default;
+const Cartesian2 = require("terriajs-cesium/Source/Core/Cartesian2").default;
+const Cartesian3 = require("terriajs-cesium/Source/Core/Cartesian3").default;
+const CesiumMath = require("terriajs-cesium/Source/Core/Math").default;
+const defined = require("terriajs-cesium/Source/Core/defined").default;
+const Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid").default;
+const getTimestamp = require("terriajs-cesium/Source/Core/getTimestamp")
+  .default;
+const Matrix4 = require("terriajs-cesium/Source/Core/Matrix4").default;
+const Ray = require("terriajs-cesium/Source/Core/Ray").default;
+const Transforms = require("terriajs-cesium/Source/Core/Transforms").default;
 import Icon from "../../Icon.jsx";
 import Styles from "./compass.scss";
 import { runInAction } from "mobx";

@@ -33,7 +33,7 @@ import ResultPendingCatalogItem from "./ResultPendingCatalogItem";
 import StringParameter from "./StringParameter";
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
 
-const sprintf = require("terriajs-cesium/Source/ThirdParty/sprintf");
+const sprintf = require("terriajs-cesium/Source/ThirdParty/sprintf").default;
 const executeWpsTemplate = require("./ExecuteWpsTemplate.xml");
 
 type AllowedValues = {

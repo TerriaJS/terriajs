@@ -4,6 +4,7 @@ import createReactClass from "create-react-class";
 
 import PropTypes from "prop-types";
 import classNames from "classnames";
+import HelpMenuPanelBasic from "../HelpScreens/HelpMenuPanelBasic";
 import SettingPanel from "./Panels/SettingPanel";
 import SharePanel from "./Panels/SharePanel/SharePanel";
 import ToolsPanel from "./Panels/ToolsPanel/ToolsPanel";
@@ -49,15 +50,21 @@ const MenuBar = createReactClass({
     this.props.viewState.toggleFeaturePrompt("story", false, true);
   },
   dismissAction() {
-    this.props.viewState.toggleFeaturePrompt(
-      "story",
-      false,
-      Boolean(this.props.terria.stories.length)
-    );
+    this.props.viewState.toggleFeaturePrompt("story", false, true);
+  },
+  dismissSatelliteGuidanceAction() {
+    this.props.viewState.toggleFeaturePrompt("mapGuidesLocation", true, true);
   },
   render() {
+    const satelliteGuidancePrompted = this.props.terria.getLocalProperty(
+      "satelliteGuidancePrompted"
+    );
+    const mapGuidesLocationPrompted = this.props.terria.getLocalProperty(
+      "mapGuidesLocationPrompted"
+    );
     const storyEnabled = this.props.terria.configParameters.storyEnabled;
     const enableTools = this.props.terria.getUserProperty("tools") === "1";
+
     const promptHtml =
       this.props.terria.stories.length > 0 ? (
         <div>You can view and create stories at any time by clicking here.</div>
@@ -113,6 +120,27 @@ const MenuBar = createReactClass({
               terria={this.props.terria}
               viewState={this.props.viewState}
             />
+          </li>
+          <li className={Styles.menuItem}>
+            <HelpMenuPanelBasic
+              terria={this.props.terria}
+              viewState={this.props.viewState}
+            />
+            {satelliteGuidancePrompted &&
+              !mapGuidesLocationPrompted &&
+              !this.props.viewState.showSatelliteGuidance && (
+                <Prompt
+                  content={
+                    <div>
+                      You can access map guides at any time by looking in the{" "}
+                      <strong>help menu</strong>.
+                    </div>
+                  }
+                  displayDelay={1000}
+                  dismissText={"Got it, thanks!"}
+                  dismissAction={this.dismissSatelliteGuidanceAction}
+                />
+              )}
           </li>
           {enableTools && (
             <li className={Styles.menuItem}>

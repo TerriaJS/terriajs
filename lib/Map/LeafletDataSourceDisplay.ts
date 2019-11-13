@@ -12,8 +12,9 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import L from "leaflet";
 import LeafletScene from "./LeafletScene";
 
-const createGuid = require("terriajs-cesium/Source/Core/createGuid");
-const destroyObject = require("terriajs-cesium/Source/Core/destroyObject");
+const createGuid = require("terriajs-cesium/Source/Core/createGuid").default;
+const destroyObject = require("terriajs-cesium/Source/Core/destroyObject")
+  .default;
 
 interface Visualizer {
   update(time: JulianDate): boolean;

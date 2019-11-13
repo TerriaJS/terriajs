@@ -20,7 +20,7 @@ import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
 import upsertModelFromJson from "./upsertModelFromJson";
 
-const createGuid = require("terriajs-cesium/Source/Core/createGuid");
+const createGuid = require("terriajs-cesium/Source/Core/createGuid").default;
 
 class WpsLoadableStratum extends LoadableStratum(
   WebProcessingServiceCatalogItemTraits

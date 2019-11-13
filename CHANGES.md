@@ -1,6 +1,78 @@
 Change Log
 ==========
 
+### v7.9.0
+
+* Upgraded to Cesium v1.63.1. This upgrade may cause more problems than usual because Cesium has switched from AMD to ES6 modules. If you run into problems, please contact us: https://terria.io/contact
+
+### v7.8.0
+
+* Added ability to do in-app, "static guides" through `<Guide />`s
+* Added in-app Guide for time enabled WMS items
+* Initial implementation of language overrides to support setting custom text throughout the application.
+* Added ability to pass `leafletUpdateInterval` to an `ImageryLayerCatalogItem` to throttle the number of requests made to a server.
+
+### v7.7.0
+
+* Added a quality slider for the 3D map to the Map panel, allowing control of Cesium's maximumScreenSpaceError and resolutionScale properties.
+* Allowed MapboxMapCatalogItems to be specified in catalog files using type `mapbox-map`.
+* We now use styles derived from `drawingInfo` from Esri Feature Services.
+* Chart related enhancements:
+  * Added momentPoints chart type to plot points along an available line chart.
+  * Added zooming and panning on the chart panel.
+  * Various preventative fixes to prevent chart crashes.
+* Increased the tolerance for intermittent tile failures from time-varying raster layers. More failures will now be allowed before the layer is disabled.
+* Sensor Observation Service `GetFeatureOfInterest` requests no longer erroneously include `temporalFilters`. Also improved the generated request XML to be more compliant with the specification.
+* Fixed a bug where differences in available dates for `ImageryLayerCatalogItem` from original list of dates vs a new list of dates, would cause an error.
+* Improved support for layers rendered across the anti-meridian in 2D (Leaflet).
+* Fixed a crash when splitting a layer with a `momentPoints` chart item.
+* Fixed a crash when the specified Web Map Service (WMS) layer could not be found in the `GetCapabilities` document and an alternate legend was not explicitly specified.
+
+### v7.6.11
+
+* Added a workaround for a bug in Google Chrome v76 and v77 that caused problems with sizing of the bottom dock, such as cutting off the timeline and flickering on and off over the map.
+* Set cesium rendering resolution to CSS pixel resolution. This is required because Cesium renders in native device resolution since 1.61.0.
+
+### v7.6.10
+
+* Fixed error when opening a URL shared from an explorer tab. #3614
+* Resolve a bug with `SdmxJsonCatalogItem`'s v2.0 where they were being redrawn when dimensions we're changed. #3659
+* Upgrades terriajs-cesium to 1.61.0
+
+### v7.6.9
+
+* Automatically set `linkedWcsCoverage` on a WebMapServiceCatalogItem.
+
+### v7.6.8
+
+* Added ability in TerriaJsonCatalogFunction to handle long requests via HTTP:202 Accepted.
+
+### v7.6.7
+
+* Fixed share disclaimer to warn only when user has added items that cannot be shared.
+
+### v7.6.6
+
+* Basemaps are now loaded before being enabled & showed
+
+### v7.6.5
+
+* Add the filename to a workbench item from a drag'n'dropped file so it isn't undisplayed as 'Unnamed item'.
+* Fixed inability to share SOS items.
+* Added an option to the mobile menu to allow a story to be resumed after it is closed.
+* The "Introducing Data Stories" prompt now only needs to be dismissed once. Previously it would continue to appear on every load until you clicked the "Story" button.
+* Fixed a crash that could occur when the feature info panel has a chart but the selected feature has no chart data.
+* Fixed a bug where the feature info panel would show information on a vector tile region mapped dataset that had no match.
+
+### v7.6.4
+
+* Add scrollbar to dropdown boxes.
+* Add support for SDMX version 2.1 to existing `SdmxJsonCatalogItem`.
+* Add a warning when sharing a map describing datasets which will be missing.
+* Enable the story panel to be ordered to the front. 
+* Disable the autocomplete on the title field when adding a new scene to a story.
+* Fix SED codes for regionmapping
+
 ### v7.6.3
 
 * Fixed a bug with picking features that cross the anti-meridian in 2D mode .
@@ -24,6 +96,7 @@ Change Log
 ### v7.5.2
 
 * Upgraded to Cesium v1.58.1.
+* Charts are now shared in share & story links
 
 ### v7.5.1
 

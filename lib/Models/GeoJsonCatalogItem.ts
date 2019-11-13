@@ -29,6 +29,7 @@ import GeoJsonCatalogItemTraits, {
 } from "../Traits/GeoJsonCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import Terria from "./Terria";
+import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 
 const formatPropertyValue = require("../Core/formatPropertyValue");
 const hashFromString = require("../Core/hashFromString");
@@ -36,7 +37,7 @@ const loadBlob = require("../Core/loadBlob");
 const loadJson = require("../Core/loadJson");
 const proxyCatalogItemUrl = require("./proxyCatalogItemUrl");
 const Reproject = require("../Map/Reproject");
-const zip = require("terriajs-cesium/Source/ThirdParty/zip");
+const zip = require("terriajs-cesium/Source/ThirdParty/zip").default;
 
 type Coordinates = number[];
 
@@ -249,7 +250,10 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
       polylineStroke: defaultColor(style.stroke, this.name || ""),
       markerOpacity: style["marker-opacity"], // not in SimpleStyle spec or supported by Cesium but see below
       fill: defaultColor(style.fill, (this.name || "") + " fill"),
-      clampToGround: this.clampToGround
+      clampToGround: this.clampToGround,
+      markerUrl: style["marker-url"] // not in SimpleStyle spec but gives an alternate to maki marker symbols
+        ? proxyCatalogItemUrl(this, style["marker-url"])
+        : undefined
     };
 
     if (isDefined(style["stroke-opacity"])) {
@@ -269,10 +273,21 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
       for (let i = 0; i < entities.values.length; ++i) {
         const entity = entities.values[i];
 
-        /* If no marker symbol was provided but Cesium has generated one for a point, then turn it into
-               a filled circle instead of the default marker. */
         const properties = entity.properties || {};
-        if (
+        if (isDefined(entity.billboard) && isDefined(options.markerUrl)) {
+          entity.billboard = new BillboardGraphics({
+            image: options.markerUrl,
+            width: properties["marker-width"],
+            height: properties["marker-height"],
+            rotation: properties["marker-angle"],
+            heightReference: options.clampToGround
+              ? HeightReference.RELATIVE_TO_GROUND
+              : undefined
+          });
+
+          /* If no marker symbol was provided but Cesium has generated one for a point, then turn it into
+               a filled circle instead of the default marker. */
+        } else if (
           isDefined(entity.billboard) &&
           !isDefined(properties["marker-symbol"]) &&
           !isDefined(options.markerSymbol)
@@ -291,7 +306,10 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
             ),
             outlineColor: getColor(
               defaultValue(properties.stroke, options.polygonStroke)
-            )
+            ),
+            heightReference: options.clampToGround
+              ? HeightReference.RELATIVE_TO_GROUND
+              : undefined
           });
           if (isDefined(properties["marker-opacity"])) {
             // not part of SimpleStyle spec, but why not?

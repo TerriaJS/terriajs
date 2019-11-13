@@ -1,24 +1,25 @@
 "use strict";
 
+import classNames from "classnames";
+import createReactClass from "create-react-class";
+import { observer } from "mobx-react";
+import PropTypes from "prop-types";
+import React from "react";
+import defined from "terriajs-cesium/Source/Core/defined";
+import printWindow from "../../../../Core/printWindow";
+import Clipboard from "../../../Clipboard";
+import Icon from "../../../Icon.jsx";
+import Loader from "../../../Loader";
+import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
+import Input from "../../../Styled/Input/Input.jsx";
+import DropdownStyles from "../panel.scss";
 import {
+  addUserAddedCatalog,
   buildShareLink,
   buildShortShareLink,
   canShorten
 } from "./BuildShareLink";
-import classNames from "classnames";
-import Clipboard from "../../../Clipboard";
-import createReactClass from "create-react-class";
-import defined from "terriajs-cesium/Source/Core/defined";
-import { observer } from "mobx-react";
-import DropdownStyles from "../panel.scss";
-import Icon from "../../../Icon";
-import Input from "../../../Styled/Input/Input";
-import Loader from "../../../Loader";
-import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
 import PrintView from "./PrintView";
-import printWindow from "../../../../Core/printWindow";
-import PropTypes from "prop-types";
-import React from "react";
 import Styles from "./share-panel.scss";
 
 const SharePanel = observer(
@@ -285,8 +286,11 @@ const SharePanel = observer(
     },
 
     renderWarning() {
+      // Generate share data for user added catalog, then throw that away and use the returned
+      //  "rejected" items to display a disclaimer about what can't be shared
+      const unshareableItems = addUserAddedCatalog(this.props.terria, []);
       return (
-        <If condition={this.hasUserAddedData()}>
+        <If condition={unshareableItems.length > 0}>
           <div className={Styles.warning}>
             <p className={Styles.paragraph}>
               <strong>Note:</strong>
@@ -304,15 +308,13 @@ const SharePanel = observer(
               .
             </p>
             <ul className={Styles.paragraph}>
-              {this.props.terria.catalog.userAddedDataGroup.members.map(
-                (item, i) => {
-                  return (
-                    <li key={i}>
-                      <strong>{item.name}</strong>
-                    </li>
-                  );
-                }
-              )}
+              {unshareableItems.map((item, i) => {
+                return (
+                  <li key={i}>
+                    <strong>{item.name}</strong>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </If>

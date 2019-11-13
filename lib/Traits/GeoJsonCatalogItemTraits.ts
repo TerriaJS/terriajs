@@ -44,6 +44,13 @@ export class StyleTraits extends ModelTraits {
 
   @primitiveTrait({
     type: "string",
+    name: "marker-url",
+    description: "Marker URL."
+  })
+  "marker-url"?: string;
+
+  @primitiveTrait({
+    type: "string",
     name: "stroke",
     description: "Stroke color."
   })
