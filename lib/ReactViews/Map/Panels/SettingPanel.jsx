@@ -192,9 +192,11 @@ class SettingPanel extends React.Component {
               <button
                 id="mapUseNativeResolution"
                 type="button"
-                onClick={() =>
-                  (this.props.terria.useNativeResolution = !useNativeResolution)
-                }
+                onClick={() => {
+                  runInAction(() => {
+                    this.props.terria.useNativeResolution = !useNativeResolution;
+                  });
+                }}
                 title={nativeResolutionLabel}
                 className={Styles.btnNativeResolution}
               >
@@ -240,9 +242,11 @@ class SettingPanel extends React.Component {
                 max={3}
                 step={0.1}
                 value={this.props.terria.baseMaximumScreenSpaceError}
-                onChange={val =>
-                  (this.props.terria.baseMaximumScreenSpaceError = val)
-                }
+                onChange={val => {
+                  runInAction(() => {
+                    this.props.terria.baseMaximumScreenSpaceError = val;
+                  });
+                }}
                 marks={{ 2: "" }}
                 // Awaiting https://github.com/react-component/slider/pull/420
                 // aria-valuetext={qualityLabels[this.props.terria.quality]}
