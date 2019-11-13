@@ -47,7 +47,7 @@ const StyleSelectorSection = createReactClass({
     );
 
     return (
-      <div key={styleSelector.id}>
+      <div key={styleSelector.id} className={Styles.styleSelector}>
         {label}
         <select
           className={Styles.field}
