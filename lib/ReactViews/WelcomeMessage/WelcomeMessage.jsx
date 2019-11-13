@@ -15,6 +15,7 @@ import Spacing from "../../Styled/Spacing";
 
 import getReactElementFromContents from "../ReactHelpers/getReactElementFromContents";
 import { useKeyPress } from "../Hooks/useKeyPress.js";
+import { runInAction } from "mobx";
 
 export const WELCOME_MESSAGE_NAME = "welcomeMessage";
 export const LOCAL_PROPERTY_KEY = `${WELCOME_MESSAGE_NAME}Prompted`;
@@ -89,8 +90,10 @@ export const WelcomeMessagePure = ({
         onExited: () => {
           if (shouldExploreData) {
             setShouldExploreData(false);
-            viewState.topElement = "AddData";
-            viewState.openAddData();
+            runInAction(() => {
+              viewState.topElement = "AddData";
+              viewState.openAddData();
+            });
           }
         }
       }}
@@ -107,7 +110,9 @@ export const WelcomeMessagePure = ({
             className={Styles.welcomeModal}
             // Allows interaction w/ modal without closing
             onClick={e => {
-              viewState.topElement = "WelcomeMessage";
+              runInAction(() => {
+                viewState.topElement = "WelcomeMessage";
+              });
               e.stopPropagation();
             }}
           >
