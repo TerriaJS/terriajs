@@ -24,6 +24,7 @@ import propertyGetTimeValues from "../../Core/propertyGetTimeValues";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 
 import Styles from "./feature-info-section.scss";
+import { runInAction } from "mobx";
 
 // We use Mustache templates inside React views, where React does the escaping; don't escape twice, or eg. " => &quot;
 Mustache.escape = function(string) {
@@ -383,10 +384,12 @@ function setSubscriptionsAndTimeouts(featureInfoSection, feature) {
   featureInfoSection.setState({
     removeFeatureChangedSubscription: feature.definitionChanged.addEventListener(
       function(changedFeature) {
-        setCurrentFeatureValues(
-          changedFeature,
-          currentTimeIfAvailable(featureInfoSection)
-        );
+        runInAction(() => {
+          setCurrentFeatureValues(
+            changedFeature,
+            currentTimeIfAvailable(featureInfoSection)
+          );
+        });
       }
     )
   });
