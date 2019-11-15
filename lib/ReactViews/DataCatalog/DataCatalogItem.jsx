@@ -37,11 +37,13 @@ const DataCatalogItem = createReactClass({
       this.props.viewState.useSmallScreenInterface
     ) {
       this.setPreviewedItem();
-    } else if (this.props.removable) {
-      removeUserAddedData(this.props.terria, this.props.item);
     } else {
       this.toggleEnable(event);
     }
+  },
+
+  onTrashClicked() {
+    removeUserAddedData(this.props.terria, this.props.item);
   },
 
   toggleEnable(event) {
@@ -91,6 +93,14 @@ const DataCatalogItem = createReactClass({
           .join(" → ")}
         btnState={this.getState()}
         onBtnClick={this.onBtnClicked}
+        removable={this.props.removable}
+        onTrashClick={
+          this.props.removable
+            ? () => {
+                this.onTrashClicked();
+              }
+            : undefined
+        }
         titleOverrides={STATE_TO_TITLE}
       />
     );
@@ -101,10 +111,6 @@ const DataCatalogItem = createReactClass({
       return "loading";
     } else if (this.props.viewState.useSmallScreenInterface) {
       return "preview";
-    } else if (this.props.removable) {
-      return "trash";
-    } else if (addedByUser(this.props.item)) {
-      return null;
     } else if (this.props.item.isEnabled) {
       return "remove";
     } else if (!defined(this.props.item.invoke)) {
