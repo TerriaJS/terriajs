@@ -93,7 +93,9 @@ const DataCatalogItem = createReactClass({
           .join(" → ")}
         btnState={this.getState()}
         onBtnClick={this.onBtnClicked}
-        removable={this.props.removable}
+        // All things are "removable" - meaning add and remove from workbench,
+        //    but only user data is "trashable"
+        trashable={this.props.removable}
         onTrashClick={
           this.props.removable
             ? () => {

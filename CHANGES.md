@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### Next
+* Fixed bug where "User data" catalog did not have add-buttons
+* Added ability to re-add "User data" CSV items once removed from workbench
+
 ### v7.9.0
 
 * Upgraded to Cesium v1.63.1. This upgrade may cause more problems than usual because Cesium has switched from AMD to ES6 modules. If you run into problems, please contact us: https://terria.io/contact

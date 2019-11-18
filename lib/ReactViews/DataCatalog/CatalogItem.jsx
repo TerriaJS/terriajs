@@ -34,7 +34,7 @@ function CatalogItem(props) {
         title={props.title}
         className={classNames(Styles.btnCatalogItem, {
           [Styles.btnCatalogItemIsPreviewed]: props.selected,
-          [Styles.btnCatalogItemIsRemovable]: props.selected
+          [Styles.btnCatalogItemIsTrashable]: props.selected
         })}
       >
         {props.text}
@@ -47,7 +47,7 @@ function CatalogItem(props) {
       >
         {STATE_TO_ICONS[props.btnState]}
       </button>
-      {props.removable && (
+      {props.trashable && (
         <button
           type="button"
           onClick={props.onTrashClick}
@@ -66,7 +66,7 @@ CatalogItem.propTypes = {
   selected: PropTypes.bool,
   text: PropTypes.string,
   title: PropTypes.string,
-  removable: PropTypes.bool,
+  trashable: PropTypes.bool,
   onTrashClick: PropTypes.func,
   onBtnClick: PropTypes.func,
   btnState: PropTypes.oneOf(Object.keys(STATE_TO_ICONS)),
