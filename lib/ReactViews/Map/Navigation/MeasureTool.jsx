@@ -5,7 +5,7 @@ import createReactClass from "create-react-class";
 import ObserveModelMixin from "../../ObserveModelMixin";
 import Styles from "./tool_button.scss";
 import Icon from "../../Icon.jsx";
-import { withTranslation  } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 
 const UserDrawing = require("../../../Models/UserDrawing");
 const EllipsoidGeodesic = require("terriajs-cesium/Source/Core/EllipsoidGeodesic.js")
@@ -240,7 +240,7 @@ const MeasureTool = createReactClass({
         <button
           type="button"
           className={Styles.btn}
-          title={t('measure.measure-distance')}
+          title={t("measure.measure-distance")}
           onClick={this.handleClick}
         >
           <Icon glyph={Icon.GLYPHS.measure} />
