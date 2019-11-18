@@ -205,11 +205,7 @@ export default class Leaflet extends GlobeOrMap {
         this._disposeSelectedFeatureSubscription &&
           this._disposeSelectedFeatureSubscription();
       } else {
-        const pickerBounds = this.computePickerRectangleBounds();
-        if (pickerBounds !== undefined) {
-          this._pickerRectangle.setBounds(pickerBounds);
-          this._pickerRectangle.addTo(map);
-        }
+        this.showHidePickerRectangle();
         interactions.forEach(handler => handler.enable());
         this.map.on("click", pickLocation);
         this.map.on("move", movePickerRectangle);
@@ -220,6 +216,18 @@ export default class Leaflet extends GlobeOrMap {
         });
       }
     });
+  }
+
+  private showHidePickerRectangle() {
+    if (this.terriaViewer.keyboardInterfaceModeActive) {
+      const pickerBounds = this.computePickerRectangleBounds();
+      if (pickerBounds !== undefined) {
+        this._pickerRectangle.setBounds(pickerBounds);
+        this._pickerRectangle.addTo(this.map);
+      }
+    } else {
+      this._pickerRectangle.removeFrom(this.map);
+    }
   }
 
   /**
@@ -364,6 +372,7 @@ export default class Leaflet extends GlobeOrMap {
           dataSources.remove(d);
         }
       });
+      this.showHidePickerRectangle();
     });
   }
 
