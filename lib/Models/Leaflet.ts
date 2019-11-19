@@ -1,4 +1,4 @@
-import L from "leaflet";
+import L, { GridLayer } from "leaflet";
 import { autorun, action, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
@@ -92,8 +92,12 @@ export default class Leaflet extends GlobeOrMap {
 
   private _createImageryLayer: (
     ip: Cesium.ImageryProvider
-  ) => CesiumTileLayer = createTransformer((ip: Cesium.ImageryProvider) => {
-    return new CesiumTileLayer(ip);
+  ) => GridLayer = createTransformer((ip: Cesium.ImageryProvider) => {
+    if (ip instanceof MapboxVectorTileImageryProvider) {
+      return new MapboxVectorCanvasTileLayer(ip, {});
+    } else {
+      return new CesiumTileLayer(ip);
+    }
   });
 
   constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
@@ -272,7 +276,10 @@ export default class Leaflet extends GlobeOrMap {
 
       // Delete imagery layers no longer in the model
       this.map.eachLayer(mapLayer => {
-        if (isImageryLayer(mapLayer)) {
+        if (
+          isImageryLayer(mapLayer) ||
+          mapLayer instanceof MapboxVectorCanvasTileLayer
+        ) {
           const index = allImagery.findIndex(im => im.layer === mapLayer);
           if (index === -1) {
             this.map.removeLayer(mapLayer);
@@ -849,7 +856,6 @@ export default class Leaflet extends GlobeOrMap {
   ): () => void {
     const map = this.map;
     const options: any = {
-      async: true,
       opacity: 1,
       bounds: rectangleToLatLngBounds(rectangle)
     };
