@@ -9,7 +9,7 @@
       "sourceMap": true,
       "strict": true,
       "allowJs": true,
-      "jsx": "preserve",
+      "jsx": "react",
       "esModuleInterop": true,
       "allowSyntheticDefaultImports": true,
       "outDir": "dist",
@@ -37,6 +37,8 @@
       "./lib/Map/**/*",
       "./lib/ModelMixins/**/*",
       "./lib/Traits/**/*",
+      "./lib/Language/**/*",
+      "./lib/ReactViews/**/*",
       "./wwwroot/data/colorbrewer.json",
       "./wwwroot/data/regionMapping.json"
   ]

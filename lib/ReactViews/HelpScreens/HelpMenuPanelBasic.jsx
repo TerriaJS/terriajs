@@ -65,7 +65,7 @@ const HelpMenuPanelBasic = createReactClass({
           <div className={classNames(Styles.viewer, DropdownStyles.section)}>
             <label className={DropdownStyles.heading}>
               {getReactElementFromContents(
-                this.props.viewState.terria.language.HelpMenuHeader
+                this.props.viewState.language.HelpMenuHeader
               )}
             </label>
             <ul className={Styles.viewerSelector}>
@@ -79,7 +79,7 @@ const HelpMenuPanelBasic = createReactClass({
                   className={Styles.btnViewer}
                 >
                   {getReactElementFromContents(
-                    this.props.viewState.terria.language.HelpMenuOpenWelcome
+                    this.props.viewState.language.HelpMenuOpenWelcome
                   )}
                 </button>
               </li>
@@ -93,7 +93,7 @@ const HelpMenuPanelBasic = createReactClass({
                   className={Styles.btnViewer}
                 >
                   {getReactElementFromContents(
-                    this.props.viewState.terria.language
+                    this.props.viewState.language
                       .HelpMenuSatelliteGuideTitle
                   )}
                 </button>
@@ -105,7 +105,7 @@ const HelpMenuPanelBasic = createReactClass({
                   className={Styles.btnViewer}
                 >
                   {getReactElementFromContents(
-                    this.props.viewState.terria.language.HelpMenuMoreHelpTitle
+                    this.props.viewState.language.HelpMenuMoreHelpTitle
                   )}
                 </a>
               </li>

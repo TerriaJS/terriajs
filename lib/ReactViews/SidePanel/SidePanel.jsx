@@ -86,7 +86,7 @@ const SidePanel = observer(
 
     render() {
       const searchState = this.props.viewState.searchState;
-      const emptyWorkbenchValue = this.props.terria.language[
+      const emptyWorkbenchValue = this.props.viewState.language[
         "EmptyWorkbenchMessage"
       ];
       const emptyWorkbench = getReactElementFromContents(emptyWorkbenchValue);
@@ -113,11 +113,11 @@ const SidePanel = observer(
                 type="button"
                 onClick={this.onAddDataClicked}
                 className={Styles.button}
-                title={this.props.terria.language.AddDataBtnText}
+                title={this.props.viewState.language.AddDataBtnText}
               >
                 <Icon glyph={Icon.GLYPHS.add} />
                 {getReactElementFromContents(
-                  this.props.terria.language.AddDataBtnText
+                  this.props.viewState.language.AddDataBtnText
                 )}
               </button>
               <button

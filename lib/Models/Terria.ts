@@ -47,7 +47,6 @@ import MapInteractionMode from "./MapInteractionMode";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import MagdaReference from "./MagdaReference";
 import CatalogGroup from "./CatalogGroupNew";
-import { language } from "../Language/defaults";
 
 interface ConfigParameters {
   [key: string]: ConfigParameters[keyof ConfigParameters];
@@ -84,7 +83,6 @@ type Analytics = any;
 interface TerriaOptions {
   baseUrl?: string;
   analytics?: Analytics;
-  languageOverrides?: any;
 }
 
 interface ApplyInitDataOptions {
@@ -225,8 +223,6 @@ export default class Terria {
    */
   @observable useNativeResolution = false;
 
-  readonly language: any;
-
   constructor(options: TerriaOptions = {}) {
     if (options.baseUrl) {
       if (options.baseUrl.lastIndexOf("/") !== options.baseUrl.length - 1) {
@@ -235,11 +231,6 @@ export default class Terria {
         this.baseUrl = options.baseUrl;
       }
     }
-
-    this.language = {
-      ...language,
-      ...options.languageOverrides
-    };
 
     this.analytics = options.analytics;
     if (!defined(this.analytics)) {
