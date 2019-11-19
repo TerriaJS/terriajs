@@ -13,6 +13,7 @@ import GlobeOrMap from "../Models/GlobeOrMap";
 import Mappable from "../Models/Mappable";
 import NoViewer from "../Models/NoViewer";
 import Terria from "../Models/Terria";
+import ViewerMode from "../Models/ViewerMode";
 
 // A class that deals with initialising, destroying and switching between viewers
 // Each map-view should have it's own TerriaViewer
@@ -37,7 +38,7 @@ export default class TerriaViewer {
   readonly items: IComputedValue<Mappable[]> | IObservableValue<Mappable[]>;
 
   @observable
-  viewerMode: string | undefined = "cesium";
+  viewerMode: ViewerMode | undefined = ViewerMode.Cesium;
 
   // Set by UI
   @observable
@@ -79,10 +80,10 @@ export default class TerriaViewer {
     console.log(`Creating a viewer: ${viewerMode}`);
 
     let newViewer: GlobeOrMap;
-    if (this.mapContainer && viewerMode === "leaflet") {
+    if (this.mapContainer && viewerMode === ViewerMode.Leaflet) {
       const Leaflet = this._getLeafletIfLoaded();
       newViewer = new Leaflet(this, this.mapContainer);
-    } else if (this.mapContainer && viewerMode === "cesium") {
+    } else if (this.mapContainer && viewerMode === ViewerMode.Cesium) {
       const Cesium = this._getCesiumIfLoaded();
       newViewer = new Cesium(this, this.mapContainer);
     } else {
