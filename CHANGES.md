@@ -4,6 +4,8 @@ Change Log
 ### next minor
 
 * Fixed an error in `regionMapping.json` that causes some states to be mismatched when using Australian state codes in a column labelled "state". It is still recommended to use "ste", "ste_code" or "ste_code_2016" over "state" for column labels when matching against Australian state codes.
+* Fixed bug where "User data" catalog did not have add-buttons.
+* Added ability to re-add "User data" CSV items once removed from workbench.
 
 ### v7.9.0
 
