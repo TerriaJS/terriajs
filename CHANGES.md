@@ -1,6 +1,3 @@
-
-
-
 Change Log
 ==========
 
@@ -98,7 +95,7 @@ Change Log
 ### v7.6.0
 
 * Added video intro to building a story
-* Allow vector tiles for region mapping to return 404 for empty tiles. 
+* Allow vector tiles for region mapping to return 404 for empty tiles.
 
 ### v7.5.2
 
@@ -118,7 +115,7 @@ Change Log
 ### v7.4.1
 
 * Remove dangling comma in `regionMapping.json`.
-* `WebMapServicCatalogItem` now includes the current `style` in generated `GetLegendGraphic` URLs. 
+* `WebMapServicCatalogItem` now includes the current `style` in generated `GetLegendGraphic` URLs.
 
 ### v7.4.0
 
