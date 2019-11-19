@@ -93,8 +93,7 @@ const HelpMenuPanelBasic = createReactClass({
                   className={Styles.btnViewer}
                 >
                   {getReactElementFromContents(
-                    this.props.viewState.language
-                      .HelpMenuSatelliteGuideTitle
+                    this.props.viewState.language.HelpMenuSatelliteGuideTitle
                   )}
                 </button>
               </li>
