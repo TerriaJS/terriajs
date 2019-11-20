@@ -98,6 +98,7 @@ export default class Leaflet extends GlobeOrMap {
   private readonly _disposeDisableInteractionSubscription: () => void;
   private _disposeSelectedFeatureSubscription?: () => void;
   private _disposeSplitterReaction: () => void;
+  private _disposeKeyboardActiveReaction: () => void;
 
   private _createImageryLayer: (
     ip: Cesium.ImageryProvider
@@ -172,7 +173,13 @@ export default class Leaflet extends GlobeOrMap {
 
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
     this._disposeSplitterReaction = this._reactToSplitterChanges();
+    this._disposeKeyboardActiveReaction = autorun(() =>
+      this._showHidePickerRectangle()
+    );
 
+    // TODO: this shouldn't be an autorun, it should be a reaction
+    // Otherwise it'll run when anything in the state changes rather than just his.terriaViewer.disableInteraction
+    // Possibly move the function body outside the constructor for readability?
     this._disposeDisableInteractionSubscription = autorun(() => {
       const map = this.map;
       const interactions = filterOutUndefined([
@@ -184,14 +191,27 @@ export default class Leaflet extends GlobeOrMap {
         map.dragging,
         map.tap
       ]);
+
+      const eventsForKeyboardInterface = [
+        "move",
+        "zoom",
+        "resize",
+        "load",
+        "layeradd",
+        "layerremove",
+        "moveend",
+        "zoomend"
+      ];
       const pickLocation = this.pickLocation.bind(this);
-      const movePickerRectangle = this.movePickerRectangle.bind(this);
+      const updatePickerRectangle = this._updatePickerRectangle.bind(this);
       const pickFeature = (entity: Entity, event: L.LeafletMouseEvent) => {
         // Add the leaflet latlng string to the cesium entity so that we can link leaflet layers to cesium entities
         // This is required for "rectangle-mode" feature picking
         runInAction(() => {
-          entity.addProperty("leafletLatLon");
-          entity.properties.leafletLatLon = event.latlng.toString();
+          if (!entity.propertyNames.includes("leafletLatLon")) {
+            entity.addProperty("leafletLatLon");
+            entity.properties.leafletLatLon = event.latlng.toString();
+          }
           this._featurePicked(entity, event);
         });
       };
@@ -200,15 +220,23 @@ export default class Leaflet extends GlobeOrMap {
         this._pickerRectangle.removeFrom(map);
         interactions.forEach(handler => handler.disable());
         this.map.off("click", pickLocation);
-        this.map.off("move", movePickerRectangle);
+
+        eventsForKeyboardInterface.forEach((eventName: string) =>
+          this.map.off(eventName, updatePickerRectangle)
+        );
+
         this.scene.featureClicked.removeEventListener(pickFeature);
         this._disposeSelectedFeatureSubscription &&
           this._disposeSelectedFeatureSubscription();
       } else {
-        this.showHidePickerRectangle();
+        // this.showHidePickerRectangle();
         interactions.forEach(handler => handler.enable());
         this.map.on("click", pickLocation);
-        this.map.on("move", movePickerRectangle);
+
+        eventsForKeyboardInterface.forEach((eventName: string) =>
+          this.map.on(eventName, updatePickerRectangle)
+        );
+
         this.scene.featureClicked.addEventListener(pickFeature);
         this._disposeSelectedFeatureSubscription = autorun(() => {
           const feature = this.terria.selectedFeature;
@@ -218,15 +246,17 @@ export default class Leaflet extends GlobeOrMap {
     });
   }
 
-  private showHidePickerRectangle() {
+  private _showHidePickerRectangle() {
     if (this.terriaViewer.keyboardInterfaceModeActive) {
-      const pickerBounds = this.computePickerRectangleBounds();
+      const pickerBounds = this._computePickerRectangleBounds();
       if (pickerBounds !== undefined) {
         this._pickerRectangle.setBounds(pickerBounds);
         this._pickerRectangle.addTo(this.map);
       }
     } else {
+      this._pickedLeafletLayers.clear();
       this._pickerRectangle.removeFrom(this.map);
+      this._pickedFeatures = undefined;
     }
   }
 
@@ -247,21 +277,28 @@ export default class Leaflet extends GlobeOrMap {
     // this._dragboxcompleted = false;
   }
 
-  private movePickerRectangle(e: L.LeafletEvent) {
-    const bounds = this.computePickerRectangleBounds();
+  private _updatePickerRectangle(e: L.LeafletEvent) {
+    const bounds = this._computePickerRectangleBounds();
     if (bounds === undefined) {
       return;
     }
     this._pickerRectangle.setBounds(bounds);
 
-    // pick features
-    this._pickFeaturesInRectangle();
-    this._unpickFeaturesOutsideRectangle();
+    if (
+      e.type === "zoomend" ||
+      e.type === "moveend" ||
+      e.type === "layeradd" ||
+      e.type === "layerremove" ||
+      e.type === "load"
+    ) {
+      // only pick features when certain events are fired.
+      // we don't want to pick features every tick of the rectangle moving, only when it stops
+      this._pickFeaturesInRectangle();
+      this._unpickFeaturesOutsideRectangle();
+    }
   }
 
-  private computePickerRectangleBounds(): L.LatLngBounds | undefined {
-    console.log(this.map.getZoom());
-
+  private _computePickerRectangleBounds(): L.LatLngBounds | undefined {
     const width = this.map
       .getBounds()
       .getNorthWest()
@@ -309,6 +346,7 @@ export default class Leaflet extends GlobeOrMap {
   }
 
   private observeModelLayer() {
+    // TODO: split this into two separate autoruns, one for the imagery and one for the datasources so that they update seperately
     return autorun(() => {
       const catalogItems = [
         ...this.terriaViewer.items.get(),
@@ -372,7 +410,6 @@ export default class Leaflet extends GlobeOrMap {
           dataSources.remove(d);
         }
       });
-      this.showHidePickerRectangle();
     });
   }
 
@@ -497,6 +534,7 @@ export default class Leaflet extends GlobeOrMap {
     }
   }
 
+  // TODO: add more comments here to make this very tricky function easier to read
   private _pickFeatures(
     latlng: L.LatLng,
     tileCoordinates?: any,
@@ -537,15 +575,8 @@ export default class Leaflet extends GlobeOrMap {
         }
       });
 
-      // If we're not in rectangle picking mode...
-      if (this._pickedLeafletLayers.size === 0) {
-        // Unset this so that the next click will start building features from scratch.
-        this._pickedFeatures = undefined;
-
-        // We don't want to do this in rectangle picking mode,
-        // because we want to have all features in a region selected at once,
-        // not just the ones near the mouse click
-      }
+      this._pickedFeatures = undefined;
+      this._pickedLeafletLayers.clear();
     });
 
     const imageryLayers: CesiumTileLayer[] = [];
@@ -692,13 +723,16 @@ export default class Leaflet extends GlobeOrMap {
   }
 
   private _pickFeaturesInRectangle() {
+    let count = 0;
     this.map.eachLayer(layer => {
+      count++;
       // If the layer is a CircileMarker and we haven't picked this features already...
       if (
         layer instanceof L.CircleMarker &&
         !this._pickedLeafletLayers.has(layer.getLatLng().toString())
       ) {
         const circleMarkerLayer = layer as L.CircleMarker;
+        
         // Check if the location of this point is in the picker rectangle
         if (
           this._pickerRectangle
@@ -711,6 +745,8 @@ export default class Leaflet extends GlobeOrMap {
         }
       }
     });
+
+    console.log(count);
   }
 
   private _unpickFeaturesOutsideRectangle() {
