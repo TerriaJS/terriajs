@@ -2,5 +2,10 @@
   "measure" : {
     "Measure-tool" : "Measure tool",
     "measure-distance": "Measure distance between locations"
+  },
+  "data-catalog" : {
+    "group": {
+      "remove" : "remove this group"
+    }
   }
 }

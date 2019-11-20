@@ -22,23 +22,23 @@ const Cartesian3 = require("terriajs-cesium/Source/Core/Cartesian3.js").default;
 const VertexFormat = require("terriajs-cesium/Source/Core/VertexFormat.js")
   .default;
 
-const MeasureTool = createReactClass({
+export const MeasureTool = createReactClass({
   displayName: "MeasureTool",
   mixins: [ObserveModelMixin],
 
   propTypes: {
     terria: PropTypes.object,
-    t: PropTypes.func,
-    i18n: PropTypes.func
+    t: PropTypes.func
   },
 
   getInitialState() {
+    const { t } = this.props;
     return {
       totalDistanceMetres: 0,
       totalAreaMetresSquared: 0,
       userDrawing: new UserDrawing({
         terria: this.props.terria,
-        messageHeader: "Measure Tool",
+        messageHeader: t("measure.Measure-Tool"),
         allowPolygon: false,
         onPointClicked: this.onPointClicked,
         onPointMoved: this.onPointMoved,
@@ -249,5 +249,4 @@ const MeasureTool = createReactClass({
     );
   }
 });
-
 export default withTranslation()(MeasureTool);
