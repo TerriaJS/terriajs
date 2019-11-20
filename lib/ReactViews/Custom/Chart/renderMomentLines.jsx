@@ -36,33 +36,8 @@ export default function renderMomentLines(data, index) {
         {
           target: "data",
           eventHandlers: {
-            onMouseOver: () => {
-              return [
-                {
-                  target: "data",
-                  mutation: props => {
-                    return {
-                      style: {
-                        ...props.style,
-                        opacity: 1.0
-                      }
-                    };
-                  }
-                }
-              ];
-            },
-            onMouseOut: () => {
-              return [
-                {
-                  target: "data",
-                  mutation: props => {
-                    return {
-                      style: defaultDataStyle
-                    };
-                  }
-                }
-              ];
-            },
+            onMouseOver: updateStyle({ opacity: 1.0 }),
+            onMouseOut: updateStyle(defaultDataStyle),
             onClick: (_, props, index) => {
               if (data.onClick) {
                 data.onClick(data.points[index]);
@@ -85,4 +60,22 @@ class MomentLine extends React.Component {
     const { x, y, ...rest } = this.props;
     return <Bar {...rest} x={x} y={y * 10} y0={0} barWidth={2} />;
   }
+}
+
+function updateStyle(newStyle) {
+  return () => {
+    return [
+      {
+        target: "data",
+        mutation: props => {
+          return {
+            style: {
+              ...props.style,
+              ...newStyle
+            }
+          };
+        }
+      }
+    ];
+  };
 }
