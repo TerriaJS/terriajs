@@ -1,7 +1,12 @@
-import ModelTraits from "./ModelTraits";
 import primitiveTrait from "./primitiveTrait";
+import mixTraits from "./mixTraits";
+import CatalogMemberTraits from "./CatalogMemberTraits";
+import MappableTraits from "./MappableTraits";
 
-export default class TimeVaryingTraits extends ModelTraits {
+export default class TimeVaryingTraits extends mixTraits(
+  CatalogMemberTraits,
+  MappableTraits
+) {
   @primitiveTrait({
     name: "Current Time",
     description: "The current time at which to show this dataset.",

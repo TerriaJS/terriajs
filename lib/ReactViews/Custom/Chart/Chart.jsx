@@ -11,6 +11,8 @@ import {
   VictoryTheme
 } from "victory";
 import Styles from "./chart.scss";
+import { ChartItemType } from "../../../Models/Chartable.ts";
+import renderMomentLines from "./renderMomentLines";
 
 const chartMinWidth = 110; // Required to prevent https://github.com/FormidableLabs/victory-native/issues/132
 
@@ -80,9 +82,12 @@ class Chart extends React.Component {
   }
 
   renderChartItem(chartItem, index) {
-    // TODO: render data based on data.type
-    const renderLine = this.props.renderLine || this.renderLine;
-    return renderLine(chartItem, index);
+    if (chartItem.type === ChartItemType.line) {
+      const renderLine = this.props.renderLine || this.renderLine;
+      return renderLine(chartItem, index);
+    } else if (chartItem.type === ChartItemType.momentLines) {
+      return renderMomentLines(chartItem, index);
+    }
   }
 
   renderChart(width, height) {

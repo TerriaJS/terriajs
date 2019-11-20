@@ -16,7 +16,7 @@ import { JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import JSRegionProviderList from "../Map/RegionProviderList";
-import { ChartAxis, ChartItem } from "../Models/Chartable";
+import { ChartAxis, ChartItem, ChartItemType } from "../Models/Chartable";
 import { ImageryParts } from "../Models/Mappable";
 import Model from "../Models/Model";
 import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
@@ -204,6 +204,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
             item: this,
             name: yColumn.name,
             categoryName: this.name,
+            type: ChartItemType.line,
             xAxis,
             points,
             units: yColumn.traits.units,

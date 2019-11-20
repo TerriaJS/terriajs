@@ -1,4 +1,4 @@
-import { action, computed } from "mobx";
+import { action, computed, runInAction } from "mobx";
 import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Constructor from "../Core/Constructor";
@@ -7,6 +7,10 @@ import TerriaError from "../Core/TerriaError";
 import Model from "../Models/Model";
 import DiscretelyTimeVaryingTraits from "../Traits/DiscretelyTimeVaryingTraits";
 import TimeVarying from "./TimeVarying";
+import { ChartItem, ChartItemType } from "../Models/Chartable";
+import { ChartPoint } from "../Charts/ChartData";
+import CommonStrata from "../Models/CommonStrata";
+import getChartColorForId from "../Charts/getChartColorForId";
 
 type DiscretelyTimeVarying = Model<DiscretelyTimeVaryingTraits>;
 
@@ -246,6 +250,50 @@ export default function DiscretelyTimeVaryingMixin<
         "currentTime",
         JulianDate.toIso8601(this.discreteTimesAsSortedJulianDates![index].time)
       );
+    }
+
+    @computed get chartItems(): ChartItem[] {
+      if (!this.showInChartPanel || !this.discreteTimesAsSortedJulianDates)
+        return [];
+      const points: ChartPoint[] = this.discreteTimesAsSortedJulianDates.map(
+        dt => ({
+          x: JulianDate.toDate(dt.time),
+          y: 1,
+          isSelected: dt.time === this.currentDiscreteJulianDate
+        })
+      );
+      return [
+        {
+          item: this,
+          name: this.name || "",
+          type: ChartItemType.momentLines,
+          xAxis: { scale: "time" },
+          points,
+          showInChartPanel: this.show && this.showInChartPanel,
+          isSelectedInWorkbench: this.showInChartPanel,
+          updateIsSelectedInWorkbench: (isSelected: boolean) => {
+            runInAction(() => {
+              this.setTrait(CommonStrata.user, "showInChartPanel", isSelected);
+            });
+          },
+          getColor: () => {
+            return getChartColorForId(this.name || "");
+          },
+          onClick: (point: any) => {
+            runInAction(() => {
+              this.setTrait(
+                CommonStrata.user,
+                "currentTime",
+                point.x.toISOString()
+              );
+            });
+          }
+        }
+      ];
+    }
+
+    loadChartItems() {
+      return Promise.resolve();
     }
   }
 

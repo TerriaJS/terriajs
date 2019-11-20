@@ -22,4 +22,11 @@ export default class DiscretelyTimeVaryingTraits extends TimeVaryingTraits {
     type: "string"
   })
   fromContinuous: string = "nearest";
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Show in chart",
+    description: "Whether to show data availability on chart."
+  })
+  showInChartPanel = false;
 }

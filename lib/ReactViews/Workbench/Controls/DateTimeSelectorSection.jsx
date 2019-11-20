@@ -62,7 +62,13 @@ const DateTimeSelectorSection = observer(
 
     onShowOnChartButtonClicked() {
       const item = this.props.item;
-      item.showOnChart = !item.showOnChart;
+      runInAction(() => {
+        item.setTrait(
+          CommonStrata.user,
+          "showInChartPanel",
+          !item.showInChartPanel
+        );
+      });
     },
 
     onPreviousButtonClicked() {
@@ -193,7 +199,7 @@ const DateTimeSelectorSection = observer(
             </button>
             <button
               className={classNames(Styles.timelineButton, {
-                [Styles.timelineActive]: item.showOnChart
+                [Styles.timelineActive]: item.showInChartPanel
               })}
               type="button"
               onClick={this.onShowOnChartButtonClicked}

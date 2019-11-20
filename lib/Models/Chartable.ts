@@ -12,14 +12,28 @@ export function axesMatch(a1: ChartAxis, a2: ChartAxis) {
   return a1.scale === a2.scale && a1.units === a2.units;
 }
 
+export enum ChartItemType {
+  line,
+  momentLines
+}
+
+export interface ChartPoint {
+  x: number | Date;
+  y: number;
+  isSelected?: boolean;
+}
+
 export interface ChartItem {
   name: string;
   item: Model<ModelTraits>;
+  type: ChartItemType;
   showInChartPanel: boolean;
   isSelectedInWorkbench: boolean;
   xAxis: ChartAxis;
+  points: ChartPoint[];
   getColor: () => string; // Gets the color representing the chart item
   updateIsSelectedInWorkbench: (isSelected: boolean) => void; // Unselect the chart item in workbench
+  onClick?: any;
 }
 
 interface Chartable extends Model<ModelTraits> {

@@ -66,13 +66,15 @@ class BottomDockChart extends React.Component {
   get containerComponent() {
     const mixins = [
       voronoiContainerMixin,
-      zoomContainerMixin,
-      cursorContainerMixin
+      zoomContainerMixin
+      //cursorContainerMixin -- TODO: breaks eventHandlers used for moment charts
     ];
     const Container = combineContainerMixins(mixins, VictoryContainer);
 
     const getTooltipValue = ({ datum }) => {
-      return `${datum.name}: ${datum.y} ${datum.units || ""}`;
+      const tooltipValue = datum.tooltipValue || datum.y;
+      const units = datum.units || "";
+      return `${datum.name}: ${tooltipValue} ${units}`;
     };
 
     return (
