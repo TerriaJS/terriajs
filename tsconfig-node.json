@@ -38,8 +38,6 @@
       "./lib/ModelMixins/**/*",
       "./lib/Traits/**/*",
       "./lib/Language/**/*",
-      "./lib/ReactViews/**/*",
-      "./wwwroot/data/colorbrewer.json",
-      "./wwwroot/data/regionMapping.json"
+      "./lib/ReactViews/**/*"
   ]
 }
