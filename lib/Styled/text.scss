@@ -1,0 +1,13 @@
+.text {
+  // line-height is inconsistent with terrace 14px sizing, applying it anyway for <Guide /> & <Guidance />
+  font-size: 14px;
+  line-height: 24px;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.medium {
+  font-size: 16px;
+}

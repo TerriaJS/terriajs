@@ -10,6 +10,7 @@ import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import GltfCatalogItem from "./GltfCatalogItem";
 import GtfsCatalogItem from "./GtfsCatalogItem";
 import IonImageryCatalogItem from "./IonImageryCatalogItem";
+import KmlCatalogItem from "./KmlCatalogItem";
 import MagdaReference from "./MagdaReference";
 import OpenStreetMapCatalogItem from "./OpenStreetMapCatalogItem";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
@@ -53,4 +54,5 @@ export default function registerCatalogMembers() {
     OpenStreetMapCatalogItem
   );
   CatalogMemberFactory.register(MagdaReference.type, MagdaReference);
+  CatalogMemberFactory.register(KmlCatalogItem.type, KmlCatalogItem);
 }

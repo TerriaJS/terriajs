@@ -55,7 +55,10 @@ export default class AsyncLoader {
           runInAction(() => {
             this._isLoading = false;
           });
-          throw e;
+
+          // Do not re-throw the exception because it's guaranteed to be
+          // unhandled. We're returning the original `newPromise`, not the
+          // result of the `.then` and `.catch` above.
         });
     }
 

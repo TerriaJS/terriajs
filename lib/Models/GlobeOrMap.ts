@@ -228,7 +228,8 @@ export default abstract class GlobeOrMap {
               "marker-size": undefined,
               "marker-symbol": undefined,
               "marker-opacity": undefined,
-              "stroke-opacity": undefined
+              "stroke-opacity": undefined,
+              "marker-url": undefined
             });
 
             const removeCallback = (this._removeHighlightCallback = () => {

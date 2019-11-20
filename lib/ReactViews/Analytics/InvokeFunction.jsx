@@ -10,6 +10,7 @@ import Loader from "../Loader";
 import ParameterEditor from "./ParameterEditor";
 import Styles from "./invoke-function.scss";
 import { observer } from "mobx-react";
+import { runInAction } from "mobx";
 
 class FunctionViewModel {
   constructor(catalogFunction) {
@@ -74,12 +75,15 @@ const InvokeFunction = observer(
             }
           }
         );
-        // Close modal window
-        this.props.viewState.explorerPanelIsVisible = false;
-        // mobile switch to nowvewing
-        this.props.viewState.switchMobileView(
-          this.props.viewState.mobileViewOptions.preview
-        );
+
+        runInAction(() => {
+          // Close modal window
+          this.props.viewState.explorerPanelIsVisible = false;
+          // mobile switch to nowvewing
+          this.props.viewState.switchMobileView(
+            this.props.viewState.mobileViewOptions.preview
+          );
+        });
 
         return promise;
       } catch (e) {

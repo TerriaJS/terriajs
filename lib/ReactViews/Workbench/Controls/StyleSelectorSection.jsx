@@ -5,6 +5,7 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
+import Icon from "./../../Icon";
 import Styles from "./style-selector-section.scss";
 import CommonStrata from "../../../Models/CommonStrata";
 import { runInAction } from "mobx";
@@ -46,7 +47,7 @@ const StyleSelectorSection = createReactClass({
     );
 
     return (
-      <div key={styleSelector.id}>
+      <div key={styleSelector.id} className={Styles.styleSelector}>
         {label}
         <select
           className={Styles.field}
@@ -60,6 +61,7 @@ const StyleSelectorSection = createReactClass({
             </option>
           ))}
         </select>
+        <Icon glyph={Icon.GLYPHS.opened} />
       </div>
     );
   },

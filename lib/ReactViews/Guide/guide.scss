@@ -1,0 +1,127 @@
+@import "~terriajs-variables";
+
+.guide {
+  position: relative;
+  background-color: $modal-bg;
+  // shadow from design
+  // box-shadow: 0 6px 6px 0 rgba(0, 0, 0, 0.12), 0 10px 20px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: $box-shadow;
+  border-radius: 4px;
+
+  position: fixed;
+  top: 80px;
+  right: 80px;
+  z-index: 1000;
+
+  width: 384px;
+
+  @media (max-width: $sm), (max-height: 540px) {
+    width: 100%;
+    transform: none;
+    left: 0;
+    // top: $mobile-header-height;
+    top: 0;
+    overflow: scroll;
+    height: 100vh;
+  }
+}
+
+.image {
+  height: 216px;
+  background-color: $faint-bg;
+}
+.image-wrapper {
+  width: 384px;
+  margin: 0 auto;
+  img {
+    width: 100%;
+  }
+}
+
+.body {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+
+  box-sizing: border-box;
+  background-color: $modal-bg;
+  padding: $padding-small * 5;
+  color: $text-darker;
+
+  // IE HACK!@!@!@!!@!@
+  height: 243px;
+  height: initial;
+
+  min-height: 244px;
+}
+
+.bodyFooter {
+  display: flex;
+}
+.bodyProgress {
+  display: flex;
+  margin-right: auto;
+}
+
+.btn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../Sass/common/_buttons.scss";
+  width: auto;
+  width: initial;
+}
+.btn--tertiary {
+  composes: btn--tertiary from "../../Sass/common/_buttons.scss";
+  font-size: $font-size-button;
+}
+.btn-next {
+  margin-left: $padding-small;
+}
+
+.inner-close-btn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  position: absolute;
+  z-index: 10;
+  top: $padding-small * 3;
+  right: $padding-small * 3;
+
+  padding: 7px;
+
+  background-color: $modal-bg;
+  border-radius: 50%;
+
+  &:hover,
+  &:focus {
+    svg {
+      fill: $color-secondary;
+    }
+  }
+
+  svg {
+    fill: $color-primary;
+    height: $padding;
+    width: $padding;
+  }
+}
+
+.indicatorWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.indicator {
+  display: inline-block;
+  box-sizing: border-box;
+
+  height: 7px;
+  width: 7px;
+
+  background-color: $modal-bg;
+  border: 1px solid $color-primary;
+
+  margin-right: 7px;
+  border-radius: 50%;
+}
+
+.indicatorEnabled {
+  background-color: $color-primary;
+}

@@ -254,10 +254,15 @@ const Description = observer(
                   <Otherwise>
                     Use the link below to download the data directly.
                     <br />
-                    <Link
-                      url={catalogItem.dataUrl}
-                      text={catalogItem.dataUrl}
-                    />
+                    {catalogItem.dataUrl.startsWith("data:") && (
+                      <Link url={catalogItem.dataUrl} text="Download Data" />
+                    )}
+                    {!catalogItem.dataUrl.startsWith("data:") && (
+                      <Link
+                        url={catalogItem.dataUrl}
+                        text={catalogItem.dataUrl}
+                      />
+                    )}
                   </Otherwise>
                 </Choose>
               </p>

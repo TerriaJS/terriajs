@@ -2,9 +2,11 @@ import { JsonObject } from "../Core/Json";
 import anyTrait from "./anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
+import LegendTraits from "./LegendTraits";
 import MappableTraits from "./MappableTraits";
 import mixTraits from "./mixTraits";
 import ModelTraits from "./ModelTraits";
+import objectArrayTrait from "./objectArrayTrait";
 import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
 import UrlTraits from "./UrlTraits";
@@ -39,6 +41,13 @@ export class StyleTraits extends ModelTraits {
     description: "Marker opacity."
   })
   "marker-opacity"?: number;
+
+  @primitiveTrait({
+    type: "string",
+    name: "marker-url",
+    description: "Marker URL."
+  })
+  "marker-url"?: string;
 
   @primitiveTrait({
     type: "string",
@@ -109,4 +118,12 @@ export default class GeoJsonCatalogItemTraits extends mixTraits(
       "Whether the features in this GeoJSON should be clamped to the terrain surface."
   })
   clampToGround: boolean = false;
+
+  @objectArrayTrait({
+    name: "Legend URLs",
+    description: "The legends to display on the workbench.",
+    type: LegendTraits,
+    idProperty: "index"
+  })
+  legends?: LegendTraits[];
 }

@@ -98,6 +98,18 @@ export default class Cesium3DTilesCatalogItem
     this.tileset.style = toJS(this.cesiumTileStyle);
     this.tileset.shadows = this.cesiumShadows;
     this.tileset.show = this.show;
+
+    // default is 16 (baseMaximumScreenSpaceError @ 2)
+    // we want to reduce to 8 for higher levels of quality
+    // the slider goes from [quality] 1 to 3 [performance]
+    // in 0.1 steps
+    const tilesetBaseSse =
+      this.options.maximumScreenSpaceError !== undefined
+        ? this.options.maximumScreenSpaceError / 2.0
+        : 8;
+    this.tileset.maximumScreenSpaceError =
+      tilesetBaseSse * this.terria.baseMaximumScreenSpaceError;
+
     return [this.tileset];
   }
 

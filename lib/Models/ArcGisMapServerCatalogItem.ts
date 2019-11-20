@@ -302,7 +302,7 @@ export default class ArcGisMapServerCatalogItem
     const maximumLevel = maximumScaleToLevel(this.maximumScale);
     const dynamicRequired = this.layers && this.layers.length > 0;
     const imageryProvider = new ArcGisMapServerImageryProvider({
-      url: cleanAndProxyUrl(this, this.url),
+      url: cleanAndProxyUrl(this, getBaseURI(this).toString()),
       layers: this.layers,
       tilingScheme: new WebMercatorTilingScheme(),
       maximumLevel: maximumLevel,
@@ -348,6 +348,7 @@ export default class ArcGisMapServerCatalogItem
         return realRequestImage.call(imageryProvider, x, y, level);
       };
     }
+
     return imageryProvider;
   }
 

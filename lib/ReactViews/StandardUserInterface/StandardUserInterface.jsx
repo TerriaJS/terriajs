@@ -22,6 +22,9 @@ import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import StoryPanel from "./../Story/StoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 
+import SatelliteGuide from "../Guide/SatelliteGuide";
+import WelcomeMessage from "../WelcomeMessage/WelcomeMessage";
+
 import { Small, Medium } from "../Generic/Responsive";
 import classNames from "classnames";
 import "inobounce";
@@ -197,6 +200,7 @@ class StandardUserInterface extends React.Component {
       !this.props.viewState.storyBuilderShown;
     return (
       <div className={Styles.storyWrapper}>
+        <WelcomeMessage viewState={this.props.viewState} />
         <div
           className={classNames(Styles.uiRoot, {
             [Styles.withStoryBuilder]: showStoryBuilder
@@ -311,6 +315,7 @@ class StandardUserInterface extends React.Component {
           </If>
 
           <Notification viewState={this.props.viewState} />
+          <SatelliteGuide terria={terria} viewState={this.props.viewState} />
           <MapInteractionWindow
             terria={terria}
             viewState={this.props.viewState}
