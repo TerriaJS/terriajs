@@ -1,6 +1,6 @@
 {
   "measure" : {
-    "Measure-tool" : "Measure tool",
+    "measure-tool" : "Measure tool",
     "measure-distance": "Measure distance between locations"
   },
   "data-catalog" : {

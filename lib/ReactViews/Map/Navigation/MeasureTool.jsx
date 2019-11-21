@@ -38,7 +38,7 @@ export const MeasureTool = createReactClass({
       totalAreaMetresSquared: 0,
       userDrawing: new UserDrawing({
         terria: this.props.terria,
-        messageHeader: t("measure.Measure-Tool"),
+        messageHeader: t("measure.measure-tool"),
         allowPolygon: false,
         onPointClicked: this.onPointClicked,
         onPointMoved: this.onPointMoved,
