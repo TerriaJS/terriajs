@@ -76,6 +76,11 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
     loadReference(forceReload: boolean = false): Promise<void> {
       return this._referenceLoader.load(forceReload);
     }
+
+    dispose() {
+      super.dispose();
+      this._referenceLoader.dispose();
+    }
   }
 
   return ReferenceMixin;

@@ -304,6 +304,11 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       return this._dataLoader.load();
     }
 
+    dispose() {
+      super.dispose();
+      this._dataLoader.dispose();
+    }
+
     /*
      * Appends new table data in column major format to this table.
      * It is assumed that thhe column order is the same for both the tables.

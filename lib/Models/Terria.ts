@@ -347,6 +347,10 @@ export default class Terria {
     return this._initSourceLoader.load();
   }
 
+  dispose() {
+    this._initSourceLoader.dispose();
+  }
+
   updateApplicationUrl(newUrl: string) {
     const uri = new URI(newUrl);
     const hash = uri.fragment();

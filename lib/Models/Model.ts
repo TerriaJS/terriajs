@@ -36,6 +36,8 @@ export abstract class BaseModel {
     readonly sourceReference: BaseModel | undefined
   ) {}
 
+  dispose() {}
+
   abstract get strataTopToBottom(): ReadonlyMap<
     string,
     StratumFromTraits<ModelTraits>
@@ -77,6 +79,8 @@ export interface ModelInterface<T extends ModelTraits> {
 
   readonly strataTopToBottom: ReadonlyMap<string, StratumFromTraits<T>>;
   readonly strataBottomToTop: ReadonlyMap<string, StratumFromTraits<T>>;
+
+  dispose(): void;
 
   setTrait<Key extends keyof StratumFromTraits<T>>(
     stratumId: string,
