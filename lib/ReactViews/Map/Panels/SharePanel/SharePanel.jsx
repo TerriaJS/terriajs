@@ -286,6 +286,7 @@ const SharePanel = observer(
     },
 
     renderWarning() {
+      // Broken in mobx. See https://github.com/TerriaJS/terriajs/issues/3798
       // Generate share data for user added catalog, then throw that away and use the returned
       //  "rejected" items to display a disclaimer about what can't be shared
       const unshareableItems = addUserAddedCatalog(this.props.terria, []);
@@ -343,7 +344,7 @@ const SharePanel = observer(
                 source={this.getShareUrlInput("light")}
                 id="share-url"
               />
-              {this.renderWarning()}
+              {/* {this.renderWarning()} */}
             </div>
           </Otherwise>
         </Choose>
@@ -361,7 +362,7 @@ const SharePanel = observer(
         <div>
           <div className={DropdownStyles.section}>
             <Clipboard source={this.getShareUrlInput("dark")} id="share-url" />
-            {this.renderWarning()}
+            {/* {this.renderWarning()} */}
           </div>
           <div className={DropdownStyles.section}>
             <div>Print Map</div>
