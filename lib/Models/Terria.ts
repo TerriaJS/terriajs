@@ -47,6 +47,7 @@ import MapInteractionMode from "./MapInteractionMode";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import MagdaReference from "./MagdaReference";
 import CatalogGroup from "./CatalogGroupNew";
+import ViewerMode from "./ViewerMode";
 
 interface ConfigParameters {
   [key: string]: ConfigParameters[keyof ConfigParameters];
@@ -530,14 +531,14 @@ export default class Terria {
       switch (initData.viewerMode.toLowerCase()) {
         case "3d".toLowerCase():
           this.mainViewer.viewerOptions.useTerrain = true;
-          this.mainViewer.viewerMode = "cesium";
+          this.mainViewer.viewerMode = ViewerMode.Cesium;
           break;
         case "3dSmooth".toLowerCase():
           this.mainViewer.viewerOptions.useTerrain = false;
-          this.mainViewer.viewerMode = "cesium";
+          this.mainViewer.viewerMode = ViewerMode.Cesium;
           break;
         case "2d".toLowerCase():
-          this.mainViewer.viewerMode = "leaflet";
+          this.mainViewer.viewerMode = ViewerMode.Leaflet;
           break;
       }
     }

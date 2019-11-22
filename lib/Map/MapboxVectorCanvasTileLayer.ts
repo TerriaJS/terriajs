@@ -13,16 +13,12 @@ export default class MapboxVectorCanvasTileLayer extends L.GridLayer {
   readonly _delayedUpdate: unknown = undefined;
   readonly _zSubtract: number = 0;
   readonly _previousCredits: unknown[] = [];
-  readonly _ipReady: Promise<void>;
 
   constructor(
     readonly imageryProvider: MapboxVectorTileImageryProvider,
     options: L.GridLayerOptions
   ) {
-    super(Object.assign(options, { tileSize: 256 }));
-    this._ipReady = pollToPromise(() => {
-      return this.imageryProvider.ready;
-    });
+    super(Object.assign(options, { async: true, tileSize: 256 }));
   }
 
   createTile(tilePoint: L.Coords, done: L.DoneCallback) {
@@ -33,7 +29,7 @@ export default class MapboxVectorCanvasTileLayer extends L.GridLayer {
     canvas.width = size.x;
     canvas.height = size.y;
 
-    this._ipReady
+    this.imageryProvider.readyPromise
       .then(() => {
         const n = this.imageryProvider.tilingScheme.getNumberOfXTilesAtLevel(
           tilePoint.z
@@ -63,9 +59,7 @@ export default class MapboxVectorCanvasTileLayer extends L.GridLayer {
     );
     const level = Math.round(map.getZoom());
 
-    return pollToPromise(() => {
-      return this.imageryProvider.ready;
-    }).then(() => {
+    return this.imageryProvider.readyPromise.then(() => {
       const tilingScheme = this.imageryProvider.tilingScheme;
       const coords = tilingScheme.positionToTileXY(ll, level);
       return {
@@ -83,9 +77,7 @@ export default class MapboxVectorCanvasTileLayer extends L.GridLayer {
     longitudeRadians: number,
     latitudeRadians: number
   ) {
-    return pollToPromise(() => {
-      return this.imageryProvider.ready;
-    }).then(() => {
+    return this.imageryProvider.readyPromise.then(() => {
       return this.imageryProvider.pickFeatures(
         x,
         y,
