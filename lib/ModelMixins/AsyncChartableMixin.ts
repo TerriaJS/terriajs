@@ -43,6 +43,11 @@ export default function AsyncChartableMixin<
      * whether the chart items are already loaded.
      */
     protected abstract forceLoadChartItems(): Promise<void>;
+
+    dispose() {
+      super.dispose();
+      this._chartItemsLoader.dispose();
+    }
   }
 
   return AsyncChartableMixin;

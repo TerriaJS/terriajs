@@ -40,6 +40,11 @@ export default function AsyncMappableMixin<
      * whether the map items are already loaded.
      */
     protected abstract forceLoadMapItems(): Promise<void>;
+
+    dispose() {
+      super.dispose();
+      this._mapItemsLoader.dispose();
+    }
   }
 
   return AsyncMappableMixin;

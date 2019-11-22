@@ -127,6 +127,11 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
         }
       }
     }
+
+    dispose() {
+      super.dispose();
+      this._memberLoader.dispose();
+    }
   }
 
   return GroupMixin;

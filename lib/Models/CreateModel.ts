@@ -50,6 +50,8 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
       this.strata = strata || observable.map<string, StratumTraits>();
     }
 
+    dispose() {}
+
     private getOrCreateStratum(id: string): StratumTraits {
       let result = this.strata.get(id);
       if (!result) {
