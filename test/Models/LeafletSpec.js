@@ -13,7 +13,7 @@ var ImageryLayerFeatureInfo = require("terriajs-cesium/Source/Scene/ImageryLayer
   .default;
 var L = require("leaflet");
 var Leaflet = require("../../lib/Models/Leaflet");
-var loadJson = require("../../lib/Core/loadJson");
+var loadJson = require("../../lib/Core/loadJson").default;
 var Terria = require("../../lib/Models/Terria");
 var when = require("terriajs-cesium/Source/ThirdParty/when").default;
 
