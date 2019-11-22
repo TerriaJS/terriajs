@@ -16,7 +16,7 @@ var GeoJsonDataSource = require("terriajs-cesium/Source/DataSources/GeoJsonDataS
 var ImageryLayer = require("terriajs-cesium/Source/Scene/ImageryLayer").default;
 var ImageryLayerFeatureInfo = require("terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo")
   .default;
-var loadJson = require("../../lib/Core/loadJson");
+var loadJson = require("../../lib/Core/loadJson").default;
 var Rectangle = require("terriajs-cesium/Source/Core/Rectangle").default;
 var SceneTransforms = require("terriajs-cesium/Source/Scene/SceneTransforms")
   .default;

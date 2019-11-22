@@ -2,7 +2,7 @@
 
 /*global require,describe,it,expect,beforeEach*/
 var Terria = require("../../lib/Models/Terria");
-var loadJson = require("../../lib/Core/loadJson");
+var loadJson = require("../../lib/Core/loadJson").default;
 var CHART_DATA_CATEGORY_NAME = require("../../lib/Core/addedForCharts")
   .CHART_DATA_CATEGORY_NAME;
 
