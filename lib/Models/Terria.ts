@@ -407,7 +407,7 @@ export default class Terria {
     allModelStratumData: JsonObject,
     replaceStratum: boolean
   ): Promise<BaseModel> {
-    const thisModelStratumData = allModelStratumData[modelId];
+    const thisModelStratumData = allModelStratumData[modelId] || {};
     if (!isJsonObject(thisModelStratumData)) {
       throw new TerriaError({
         sender: this,
@@ -416,11 +416,14 @@ export default class Terria {
       });
     }
 
+    const cleanStratumData = { ...thisModelStratumData };
+    delete cleanStratumData.dereferenced;
+    delete cleanStratumData.knownContainerUniqueIds;
+
     let promise: Promise<void>;
 
     const containerIds = thisModelStratumData.knownContainerUniqueIds;
     if (Array.isArray(containerIds)) {
-      delete thisModelStratumData.knownContainerUniqueIds;
       // Groups that contain this item must be loaded before this item.
       const containerPromises = containerIds.map(containerId => {
         if (typeof containerId !== "string") {
@@ -432,8 +435,9 @@ export default class Terria {
           allModelStratumData,
           replaceStratum
         ).then(container => {
-          if (GroupMixin.isMixedInto(container)) {
-            return container.loadMembers();
+          const dereferenced = ReferenceMixin.is(container) ? container.target : container;
+          if (GroupMixin.isMixedInto(dereferenced)) {
+            return dereferenced.loadMembers();
           }
         });
       });
@@ -443,9 +447,6 @@ export default class Terria {
     }
 
     return promise.then(() => {
-      let dereferenced = thisModelStratumData.dereferenced;
-      delete thisModelStratumData.dereferenced;
-
       const loadedModel = upsertModelFromJson(
         CatalogMemberFactory,
         this,
@@ -453,7 +454,7 @@ export default class Terria {
         undefined,
         stratumId,
         {
-          ...thisModelStratumData,
+          ...cleanStratumData,
           id: modelId
         },
         replaceStratum
@@ -462,6 +463,7 @@ export default class Terria {
       // If we're replacing the stratum and the existing model is already
       // dereferenced, we need to replace the dereferenced stratum, too,
       // even if there's no trace of it it in the load data.
+      let dereferenced = thisModelStratumData.dereferenced;
       if (
         replaceStratum &&
         dereferenced === undefined &&
