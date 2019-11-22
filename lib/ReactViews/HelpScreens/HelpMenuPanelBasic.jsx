@@ -58,7 +58,7 @@ class HelpMenuPanelBasic extends React.Component {
           <div className={classNames(Styles.viewer, DropdownStyles.section)}>
             <label className={DropdownStyles.heading}>
               {getReactElementFromContents(
-                this.props.viewState.terria.language.HelpMenuHeader
+                this.props.viewState.language.HelpMenuHeader
               )}
             </label>
             <ul className={Styles.viewerSelector}>
@@ -72,7 +72,7 @@ class HelpMenuPanelBasic extends React.Component {
                   className={Styles.btnViewer}
                 >
                   {getReactElementFromContents(
-                    this.props.viewState.terria.language.HelpMenuOpenWelcome
+                    this.props.viewState.language.HelpMenuOpenWelcome
                   )}
                 </button>
               </li>
@@ -86,8 +86,7 @@ class HelpMenuPanelBasic extends React.Component {
                   className={Styles.btnViewer}
                 >
                   {getReactElementFromContents(
-                    this.props.viewState.terria.language
-                      .HelpMenuSatelliteGuideTitle
+                    this.props.viewState.language.HelpMenuSatelliteGuideTitle
                   )}
                 </button>
               </li>
@@ -98,7 +97,7 @@ class HelpMenuPanelBasic extends React.Component {
                   className={Styles.btnViewer}
                 >
                   {getReactElementFromContents(
-                    this.props.viewState.terria.language.HelpMenuMoreHelpTitle
+                    this.props.viewState.language.HelpMenuMoreHelpTitle
                   )}
                 </a>
               </li>

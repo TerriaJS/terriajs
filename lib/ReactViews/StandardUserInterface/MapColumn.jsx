@@ -137,7 +137,7 @@ const MapColumn = observer(
                   <FeedbackButton
                     viewState={this.props.viewState}
                     btnText={getReactElementFromContents(
-                      this.props.terria.language.FeedbackBtnText
+                      this.props.viewState.language.FeedbackBtnText
                     )}
                   />
                 </div>

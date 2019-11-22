@@ -1,4 +1,4 @@
-import colorBrewerTyped from "../../wwwroot/data/colorbrewer.json";
+import colorBrewerTyped from "./colorbrewer.json";
 import Color from "terriajs-cesium/Source/Core/Color";
 import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
 import StandardCssColors from "../Core/StandardCssColors";

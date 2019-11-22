@@ -1,7 +1,7 @@
 import React from "react";
-import Icon from "../Icon.jsx";
+import Icon from "../Icon";
 
-import { ADD_DATA } from "../../Language/defaults.jsx";
+import { ADD_DATA } from "../../Language/defaults";
 
 export const EmptyWorkbenchMessage = () => (
   <>

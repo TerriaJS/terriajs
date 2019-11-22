@@ -15,6 +15,7 @@ import {
 import { BaseModel } from "../Models/Model";
 import PickedFeatures from "../Map/PickedFeatures";
 import isDefined from "../Core/isDefined";
+import { language } from "../Language/defaults";
 
 export const DATA_CATALOG_NAME = "data-catalog";
 export const USER_DATA_NAME = "my-data";
@@ -23,6 +24,7 @@ interface ViewStateOptions {
   terria: Terria;
   catalogSearchProvider: any;
   locationSearchProviders: any[];
+  languageOverrides?: any;
 }
 
 /**
@@ -107,6 +109,8 @@ export default class ViewState {
    */
   @observable shareModelIsVisible: boolean = false;
 
+  readonly language: any;
+
   private _unsubscribeErrorListener: any;
   private _pickedFeaturesSubscription: IReactionDisposer;
   private _isMapFullScreenSubscription: IReactionDisposer;
@@ -118,6 +122,11 @@ export default class ViewState {
 
   constructor(options: ViewStateOptions) {
     const terria = options.terria;
+
+    this.language = {
+      ...language,
+      ...options.languageOverrides
+    };
 
     this.searchState = new SearchState({
       terria: terria,
