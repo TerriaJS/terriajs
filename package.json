@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "7.9.0-mobx-2",
+  "version": "7.9.0-mobx-3",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "engines": {
