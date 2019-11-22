@@ -46,7 +46,8 @@ const Compass = createReactClass({
       false
     );
     document.removeEventListener("mouseup", this.orbitMouseUpFunction, false);
-    this._unsubscribeFromClockTick && this._unsubscribeFromClockTick();
+    this._unsubscribeFromAnimationFrame &&
+      this._unsubscribeFromAnimationFrame();
     this._unsubscribeFromPostRender && this._unsubscribeFromPostRender();
     this._unsubscribeFromViewerChange && this._unsubscribeFromViewerChange();
   },
@@ -310,15 +311,13 @@ function orbit(viewModel, compassElement, cursorVector) {
     false
   );
 
-  if (defined(viewModel.orbitTickFunction)) {
-    viewModel.props.terria.clock.onTick.removeEventListener(
-      viewModel.orbitTickFunction
-    );
-  }
+  viewModel._unsubscribeFromAnimationFrame &&
+    viewModel._unsubscribeFromAnimationFrame();
+  viewModel._unsubscribeFromAnimationFrame = undefined;
 
   viewModel.orbitMouseMoveFunction = undefined;
   viewModel.orbitMouseUpFunction = undefined;
-  viewModel.orbitTickFunction = undefined;
+  viewModel.orbitAnimationFrameFunction = undefined;
 
   viewModel.isOrbiting = true;
   viewModel.orbitLastTimestamp = getTimestamp();
@@ -348,7 +347,7 @@ function orbit(viewModel, compassElement, cursorVector) {
     viewModel.orbitIsLook = false;
   }
 
-  viewModel.orbitTickFunction = function(e) {
+  viewModel.orbitAnimationFrameFunction = function(e) {
     const timestamp = getTimestamp();
     const deltaT = timestamp - viewModel.orbitLastTimestamp;
     const rate = ((viewModel.state.orbitCursorOpacity - 0.5) * 2.5) / 1000;
@@ -426,15 +425,13 @@ function orbit(viewModel, compassElement, cursorVector) {
       false
     );
 
-    if (defined(viewModel.orbitTickFunction)) {
-      viewModel.props.terria.clock.onTick.removeEventListener(
-        viewModel.orbitTickFunction
-      );
-    }
+    this._unsubscribeFromAnimationFrame &&
+      this._unsubscribeFromAnimationFrame();
+    this._unsubscribeFromAnimationFrame = undefined;
 
     viewModel.orbitMouseMoveFunction = undefined;
     viewModel.orbitMouseUpFunction = undefined;
-    viewModel.orbitTickFunction = undefined;
+    viewModel.orbitAnimationFrameFunction = undefined;
   };
 
   document.addEventListener(
@@ -443,13 +440,22 @@ function orbit(viewModel, compassElement, cursorVector) {
     false
   );
   document.addEventListener("mouseup", viewModel.orbitMouseUpFunction, false);
-  viewModel._unsubscribeFromClockTick = viewModel.props.terria.clock.onTick.addEventListener(
-    viewModel.orbitTickFunction
-  );
+
+  subscribeToAnimationFrame(viewModel);
 
   updateAngleAndOpacity(
     cursorVector,
     compassElement.getBoundingClientRect().width
+  );
+}
+
+function subscribeToAnimationFrame(viewModel) {
+  viewModel._unsubscribeFromAnimationFrame = (id => () =>
+    cancelAnimationFrame(id))(
+    requestAnimationFrame(() => {
+      viewModel.orbitAnimationFrameFunction();
+      subscribeToAnimationFrame(viewModel);
+    })
   );
 }
 
