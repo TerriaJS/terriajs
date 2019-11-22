@@ -55,8 +55,11 @@ export default class ViewState {
   @observable explorerPanelAnimating: boolean = false;
   @observable topElement: string = "FeatureInfo";
   @observable storyBuilderShown: boolean = false;
+
+  // Flesh out later
   @observable showHelpMenu: boolean = false;
   @observable showSatelliteGuidance: boolean = false;
+  @observable showWelcomeMessage: boolean = true;
 
   // default value is null, because user has not made decision to show or
   // not show story
