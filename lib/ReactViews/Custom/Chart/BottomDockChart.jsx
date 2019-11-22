@@ -60,12 +60,28 @@ class BottomDockChart extends React.Component {
   }
 
   /**
+   * Compute a single domain for all chartItems.
+   */
+  @computed
+  get domain() {
+    const chartItems = this.props.chartItems;
+    const xmin = Math.min(...chartItems.map(c => c.domain.x[0]));
+    const xmax = Math.max(...chartItems.map(c => c.domain.x[1]));
+    const ymin = Math.min(...chartItems.map(c => c.domain.y[0]));
+    const ymax = Math.max(...chartItems.map(c => c.domain.y[1]));
+    return {
+      x: [xmin, xmax],
+      y: [ymin, ymax]
+    };
+  }
+
+  /**
    * Returns a container component configured with the required mixins.
    */
   @computed
   get containerComponent() {
     const mixins = [
-      voronoiContainerMixin,
+      //voronoiContainerMixin,
       zoomContainerMixin
       //cursorContainerMixin -- TODO: breaks eventHandlers used for moment charts
     ];
@@ -80,12 +96,13 @@ class BottomDockChart extends React.Component {
     return (
       <Container
         zoomDimension="x"
+        zoomDomain={this.domain}
         cursorDimension="x"
         cursorComponent={
           <LineSegment style={{ stroke: "white", opacity: "0.5" }} />
         }
         labels={getTooltipValue}
-        labelComponent={<VictoryTooltip />}
+        labelComponent={<VictoryTooltip cornerRadius={0} />}
       />
     );
   }
@@ -112,11 +129,12 @@ class BottomDockChart extends React.Component {
   }
 
   render() {
+    const chartItems = sortChartItemsByType(this.props.chartItems);
     return (
       <Chart
         width={this.props.width}
         height={this.props.height}
-        chartItems={this.props.chartItems}
+        chartItems={chartItems}
         xAxis={this.props.xAxis}
         theme={this.theme}
         containerComponent={this.containerComponent}
@@ -124,6 +142,18 @@ class BottomDockChart extends React.Component {
       />
     );
   }
+}
+
+/**
+ * Sorts chartItems so that `momentPoints` are rendered on top then
+ * `momentLines` and then any other types.
+ * @param {ChartItem[]} chartItems array of chartItems to sort
+ */
+function sortChartItemsByType(chartItems) {
+  const order = ["momentLines", "momentPoints"];
+  return chartItems.slice().sort((a, b) => {
+    return order.indexOf(a.type) - order.indexOf(b.type);
+  });
 }
 
 export default BottomDockChart;

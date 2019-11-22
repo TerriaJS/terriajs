@@ -11,8 +11,8 @@ import {
   VictoryTheme
 } from "victory";
 import Styles from "./chart.scss";
-import { ChartItemType } from "../../../Models/Chartable.ts";
 import renderMomentLines from "./renderMomentLines";
+import renderMomentPoints from "./renderMomentPoints";
 
 const chartMinWidth = 110; // Required to prevent https://github.com/FormidableLabs/victory-native/issues/132
 
@@ -45,7 +45,12 @@ class Chart extends React.Component {
       <VictoryAxis dependentAxis key={i} label={label} />
     ),
     renderLegends: (legends, width) => (
-      <VictoryLegend x={width / 2} orientation="horizontal" data={legends} />
+      <VictoryLegend
+        x={width / 2}
+        orientation="horizontal"
+        data={legends}
+        centerTitle={true}
+      />
     )
   };
 
@@ -60,7 +65,11 @@ class Chart extends React.Component {
   @computed
   get legends() {
     return this.props.chartItems.map(({ name, getColor }) => {
-      return { name, symbol: { fill: getColor() } };
+      return {
+        name,
+        symbol: { fill: getColor(), type: "square" },
+        labels: { fill: "white" }
+      };
     });
   }
 
@@ -81,12 +90,14 @@ class Chart extends React.Component {
     );
   }
 
-  renderChartItem(chartItem, index) {
-    if (chartItem.type === ChartItemType.line) {
+  renderChartItem(chartItem, chartItems, index) {
+    if (chartItem.type === "line") {
       const renderLine = this.props.renderLine || this.renderLine;
       return renderLine(chartItem, index);
-    } else if (chartItem.type === ChartItemType.momentLines) {
+    } else if (chartItem.type === "momentLines") {
       return renderMomentLines(chartItem, index);
+    } else if (chartItem.type === "momentPoints") {
+      return renderMomentPoints(chartItem, chartItems, index);
     }
   }
 
@@ -103,7 +114,6 @@ class Chart extends React.Component {
         </div>
       );
     }
-
     return (
       <VictoryChart
         width={width}
@@ -118,7 +128,7 @@ class Chart extends React.Component {
           {this.props.renderYAxis(yAxis, i, this.yAxes.length)}
         </For>
         <For each="chartItem" index="i" of={this.props.chartItems}>
-          {this.renderChartItem(chartItem, i)}
+          {this.renderChartItem(chartItem, this.props.chartItems, i)}
         </For>
       </VictoryChart>
     );

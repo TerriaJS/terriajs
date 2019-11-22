@@ -9,17 +9,15 @@ import dateformat from "dateformat";
  * @param {Int} index of the item
  */
 export default function renderMomentLines(data, index) {
-  const selectedColor = "orange";
   const defaultDataStyle = {
-    fill: ({ datum }) => (datum.isSelected ? selectedColor : data.getColor()),
+    fill: data.getColor(),
     opacity: ({ datum }) => (datum.isSelected ? 1.0 : 0.3),
-    strokeWidth: 5,
+    strokeWidth: ({ datum }) => (datum.isSelected ? 7 : 5),
     stroke: "transparent"
   };
   return (
     <VictoryScatter
       key={index}
-      domain={{ y: [0, 1] }}
       data={data.points.map(p => ({
         ...p,
         y: 0.5,

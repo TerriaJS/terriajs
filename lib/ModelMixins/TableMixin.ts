@@ -8,7 +8,8 @@ import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSourc
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
-import ChartData, { ChartPoint } from "../Charts/ChartData";
+import { ChartPoint } from "../Charts/ChartData";
+import getChartColorForId from "../Charts/getChartColorForId";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
@@ -16,7 +17,8 @@ import { JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import JSRegionProviderList from "../Map/RegionProviderList";
-import { ChartAxis, ChartItem, ChartItemType } from "../Models/Chartable";
+import { calculateDomain, ChartAxis, ChartItem } from "../Models/Chartable";
+import CommonStrata from "../Models/CommonStrata";
 import { ImageryParts } from "../Models/Mappable";
 import Model from "../Models/Model";
 import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
@@ -26,8 +28,6 @@ import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
 import LegendTraits from "../Traits/LegendTraits";
 import TableTraits from "../Traits/TableTraits";
-import getChartColorForId from "../Charts/getChartColorForId";
-import CommonStrata from "../Models/CommonStrata";
 
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
 //   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
@@ -204,9 +204,10 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
             item: this,
             name: yColumn.name,
             categoryName: this.name,
-            type: ChartItemType.line,
+            type: "line",
             xAxis,
             points,
+            domain: calculateDomain(points),
             units: yColumn.traits.units,
             isSelectedInWorkbench: line.isSelectedInWorkbench,
             showInChartPanel: this.show && line.isSelectedInWorkbench,

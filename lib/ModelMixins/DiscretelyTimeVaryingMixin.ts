@@ -1,16 +1,16 @@
 import { action, computed, runInAction } from "mobx";
 import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import { ChartPoint } from "../Charts/ChartData";
+import getChartColorForId from "../Charts/getChartColorForId";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import TerriaError from "../Core/TerriaError";
+import { calculateDomain, ChartItem } from "../Models/Chartable";
+import CommonStrata from "../Models/CommonStrata";
 import Model from "../Models/Model";
 import DiscretelyTimeVaryingTraits from "../Traits/DiscretelyTimeVaryingTraits";
 import TimeVarying from "./TimeVarying";
-import { ChartItem, ChartItemType } from "../Models/Chartable";
-import { ChartPoint } from "../Charts/ChartData";
-import CommonStrata from "../Models/CommonStrata";
-import getChartColorForId from "../Charts/getChartColorForId";
 
 type DiscretelyTimeVarying = Model<DiscretelyTimeVaryingTraits>;
 
@@ -258,17 +258,20 @@ export default function DiscretelyTimeVaryingMixin<
       const points: ChartPoint[] = this.discreteTimesAsSortedJulianDates.map(
         dt => ({
           x: JulianDate.toDate(dt.time),
-          y: 1,
+          y: 0.5,
           isSelected: dt.time === this.currentDiscreteJulianDate
         })
       );
+
+      const colorId = `color-${this.name}`;
       return [
         {
           item: this,
           name: this.name || "",
-          type: ChartItemType.momentLines,
+          type: this.chartType || "momentLines",
           xAxis: { scale: "time" },
           points,
+          domain: { ...calculateDomain(points), y: [0, 1] },
           showInChartPanel: this.show && this.showInChartPanel,
           isSelectedInWorkbench: this.showInChartPanel,
           updateIsSelectedInWorkbench: (isSelected: boolean) => {
@@ -277,7 +280,7 @@ export default function DiscretelyTimeVaryingMixin<
             });
           },
           getColor: () => {
-            return getChartColorForId(this.name || "");
+            return getChartColorForId(colorId);
           },
           onClick: (point: any) => {
             runInAction(() => {

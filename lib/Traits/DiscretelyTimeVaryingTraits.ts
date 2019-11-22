@@ -2,6 +2,7 @@ import DiscreteTimeTraits from "./DiscreteTimeTraits";
 import objectArrayTrait from "./objectArrayTrait";
 import primitiveTrait from "./primitiveTrait";
 import TimeVaryingTraits from "./TimeVaryingTraits";
+import { ChartItemType } from "../Models/Chartable";
 
 export default class DiscretelyTimeVaryingTraits extends TimeVaryingTraits {
   @objectArrayTrait({
@@ -29,4 +30,12 @@ export default class DiscretelyTimeVaryingTraits extends TimeVaryingTraits {
     description: "Whether to show data availability on chart."
   })
   showInChartPanel = false;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Chart type",
+    description:
+      "Type determines how the data availibility will be plotted on chart. eg: momentLines, momentPoints"
+  })
+  chartType: ChartItemType = "momentLines";
 }
