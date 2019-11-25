@@ -121,7 +121,7 @@ export default class GltfCatalogItem
     dataSource.entities.add(
       new Entity({
         position: new ConstantPositionProperty(position),
-        orientation: Quaternion.IDENTITY as any,
+        orientation: new ConstantPositionProperty(Quaternion.IDENTITY),
         model: this._model
       })
     );
