@@ -17,7 +17,8 @@ import Terria from "../Models/Terria";
 // This is a dodgy workaround.
 class EarthGravityModel1996 extends JSEarthGravityModel1996 {}
 
-const sampleTerrainMostDetailed = require("terriajs-cesium/Source/Core/sampleTerrainMostDetailed");
+const sampleTerrainMostDetailed = require("terriajs-cesium/Source/Core/sampleTerrainMostDetailed")
+  .default;
 
 interface Cancelable {
   cancel: () => void;

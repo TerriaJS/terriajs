@@ -2,16 +2,18 @@
 const React = require("react");
 const PropTypes = require("prop-types");
 import createReactClass from "create-react-class";
-const CameraFlightPath = require("terriajs-cesium/Source/Scene/CameraFlightPath");
-const Cartesian2 = require("terriajs-cesium/Source/Core/Cartesian2");
-const Cartesian3 = require("terriajs-cesium/Source/Core/Cartesian3");
-const CesiumMath = require("terriajs-cesium/Source/Core/Math");
-const defined = require("terriajs-cesium/Source/Core/defined");
-const Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid");
-const getTimestamp = require("terriajs-cesium/Source/Core/getTimestamp");
-const Matrix4 = require("terriajs-cesium/Source/Core/Matrix4");
-const Ray = require("terriajs-cesium/Source/Core/Ray");
-const Transforms = require("terriajs-cesium/Source/Core/Transforms");
+const CameraFlightPath = require("terriajs-cesium/Source/Scene/CameraFlightPath")
+  .default;
+const Cartesian2 = require("terriajs-cesium/Source/Core/Cartesian2").default;
+const Cartesian3 = require("terriajs-cesium/Source/Core/Cartesian3").default;
+const CesiumMath = require("terriajs-cesium/Source/Core/Math").default;
+const defined = require("terriajs-cesium/Source/Core/defined").default;
+const Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid").default;
+const getTimestamp = require("terriajs-cesium/Source/Core/getTimestamp")
+  .default;
+const Matrix4 = require("terriajs-cesium/Source/Core/Matrix4").default;
+const Ray = require("terriajs-cesium/Source/Core/Ray").default;
+const Transforms = require("terriajs-cesium/Source/Core/Transforms").default;
 import Icon from "../../Icon.jsx";
 import Styles from "./compass.scss";
 import { runInAction } from "mobx";
@@ -44,7 +46,8 @@ const Compass = createReactClass({
       false
     );
     document.removeEventListener("mouseup", this.orbitMouseUpFunction, false);
-    this._unsubscribeFromClockTick && this._unsubscribeFromClockTick();
+    this._unsubscribeFromAnimationFrame &&
+      this._unsubscribeFromAnimationFrame();
     this._unsubscribeFromPostRender && this._unsubscribeFromPostRender();
     this._unsubscribeFromViewerChange && this._unsubscribeFromViewerChange();
   },
@@ -308,15 +311,13 @@ function orbit(viewModel, compassElement, cursorVector) {
     false
   );
 
-  if (defined(viewModel.orbitTickFunction)) {
-    viewModel.props.terria.clock.onTick.removeEventListener(
-      viewModel.orbitTickFunction
-    );
-  }
+  viewModel._unsubscribeFromAnimationFrame &&
+    viewModel._unsubscribeFromAnimationFrame();
+  viewModel._unsubscribeFromAnimationFrame = undefined;
 
   viewModel.orbitMouseMoveFunction = undefined;
   viewModel.orbitMouseUpFunction = undefined;
-  viewModel.orbitTickFunction = undefined;
+  viewModel.orbitAnimationFrameFunction = undefined;
 
   viewModel.isOrbiting = true;
   viewModel.orbitLastTimestamp = getTimestamp();
@@ -346,7 +347,7 @@ function orbit(viewModel, compassElement, cursorVector) {
     viewModel.orbitIsLook = false;
   }
 
-  viewModel.orbitTickFunction = function(e) {
+  viewModel.orbitAnimationFrameFunction = function(e) {
     const timestamp = getTimestamp();
     const deltaT = timestamp - viewModel.orbitLastTimestamp;
     const rate = ((viewModel.state.orbitCursorOpacity - 0.5) * 2.5) / 1000;
@@ -424,15 +425,13 @@ function orbit(viewModel, compassElement, cursorVector) {
       false
     );
 
-    if (defined(viewModel.orbitTickFunction)) {
-      viewModel.props.terria.clock.onTick.removeEventListener(
-        viewModel.orbitTickFunction
-      );
-    }
+    this._unsubscribeFromAnimationFrame &&
+      this._unsubscribeFromAnimationFrame();
+    this._unsubscribeFromAnimationFrame = undefined;
 
     viewModel.orbitMouseMoveFunction = undefined;
     viewModel.orbitMouseUpFunction = undefined;
-    viewModel.orbitTickFunction = undefined;
+    viewModel.orbitAnimationFrameFunction = undefined;
   };
 
   document.addEventListener(
@@ -441,13 +440,22 @@ function orbit(viewModel, compassElement, cursorVector) {
     false
   );
   document.addEventListener("mouseup", viewModel.orbitMouseUpFunction, false);
-  viewModel._unsubscribeFromClockTick = viewModel.props.terria.clock.onTick.addEventListener(
-    viewModel.orbitTickFunction
-  );
+
+  subscribeToAnimationFrame(viewModel);
 
   updateAngleAndOpacity(
     cursorVector,
     compassElement.getBoundingClientRect().width
+  );
+}
+
+function subscribeToAnimationFrame(viewModel) {
+  viewModel._unsubscribeFromAnimationFrame = (id => () =>
+    cancelAnimationFrame(id))(
+    requestAnimationFrame(() => {
+      viewModel.orbitAnimationFrameFunction();
+      subscribeToAnimationFrame(viewModel);
+    })
   );
 }
 

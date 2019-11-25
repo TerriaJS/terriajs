@@ -33,9 +33,12 @@ export interface ChartDataOptions {
   readonly units?: string;
 
   /**
-   * CSS color code for this set of points.
+   * A function that returns CSS color code for this set of points.
+   *
+   * We use a function instead of an immediate value so that colors can be
+   * assigned lazily; only when it is required.
    */
-  readonly color?: string;
+  readonly getColor: () => string | undefined;
 
   /**
    * Minimum value for Y axis to display, overriding minimum value in data.
@@ -101,9 +104,12 @@ export default class ChartData {
   readonly units: string | undefined;
 
   /**
-   * CSS color code for this set of points.
+   * A function that returns CSS color code for this set of points.
+   *
+   * We use a function instead of an immediate value so that colors can be
+   * assigned lazily; only when it is required.
    */
-  readonly color: string | undefined;
+  readonly getColor: () => string | undefined;
 
   /**
    * Minimum value for y axis to display, overriding minimum value in data.
@@ -140,7 +146,7 @@ export default class ChartData {
     this.categoryName = options.categoryName;
     this.name = options.name;
     this.units = options.units;
-    this.color = options.color;
+    this.getColor = options.getColor;
     this.yAxisMin = options.yAxisMin;
     this.yAxisMax = options.yAxisMax;
     this.type = options.type;

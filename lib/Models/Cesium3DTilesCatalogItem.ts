@@ -1,4 +1,4 @@
-import { computed, observable, runInAction } from "mobx";
+import { computed, observable, runInAction, toJS } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import clone from "terriajs-cesium/Source/Core/clone";
 import IonResource from "terriajs-cesium/Source/Core/IonResource";
@@ -95,9 +95,21 @@ export default class Cesium3DTilesCatalogItem
       this.loadTileset();
     }
 
-    this.tileset.style = this.cesiumTileStyle;
+    this.tileset.style = toJS(this.cesiumTileStyle);
     this.tileset.shadows = this.cesiumShadows;
     this.tileset.show = this.show;
+
+    // default is 16 (baseMaximumScreenSpaceError @ 2)
+    // we want to reduce to 8 for higher levels of quality
+    // the slider goes from [quality] 1 to 3 [performance]
+    // in 0.1 steps
+    const tilesetBaseSse =
+      this.options.maximumScreenSpaceError !== undefined
+        ? this.options.maximumScreenSpaceError / 2.0
+        : 8;
+    this.tileset.maximumScreenSpaceError =
+      tilesetBaseSse * this.terria.baseMaximumScreenSpaceError;
+
     return [this.tileset];
   }
 
@@ -112,7 +124,7 @@ export default class Cesium3DTilesCatalogItem
   }
 
   private createNewTileset(
-    url: string,
+    url: Resource | string,
     ionAssetId: number | undefined,
     ionAccessToken: string | undefined,
     ionServer: string | undefined,
@@ -134,7 +146,11 @@ export default class Cesium3DTilesCatalogItem
         raiseErrorToUser(this.terria, e);
       });
     } else if (isDefined(url)) {
-      resource = new Resource({ url });
+      if (url instanceof Resource) {
+        resource = url;
+      } else {
+        resource = new Resource({ url });
+      }
     }
 
     if (!isDefined(resource)) {
@@ -186,9 +202,9 @@ export default class Cesium3DTilesCatalogItem
     if (!isDefined(this.style) && !isDefined(this.showExpressionFromFilters)) {
       return;
     }
-    const style = clone(this.style || {});
+    const style = clone(toJS(this.style) || {});
     if (isDefined(this.showExpressionFromFilters)) {
-      style.show = this.showExpressionFromFilters;
+      style.show = toJS(this.showExpressionFromFilters);
     }
     return new Cesium3DTileStyle(style);
   }

@@ -12,6 +12,7 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import BottomDock from "../BottomDock/BottomDock";
 import classNames from "classnames";
+import getReactElementFromContents from "../ReactHelpers/getReactElementFromContents";
 
 import Styles from "./map-column.scss";
 import { observer } from "mobx-react";
@@ -133,7 +134,12 @@ const MapColumn = observer(
                     )
                   })}
                 >
-                  <FeedbackButton viewState={this.props.viewState} />
+                  <FeedbackButton
+                    viewState={this.props.viewState}
+                    btnText={getReactElementFromContents(
+                      this.props.viewState.language.FeedbackBtnText
+                    )}
+                  />
                 </div>
               </If>
 

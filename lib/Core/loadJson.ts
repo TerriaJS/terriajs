@@ -14,5 +14,3 @@ export default function loadJson(
   });
   return makeRealPromise<string>(jsonPromise);
 }
-
-module.exports = loadJson;

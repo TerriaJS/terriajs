@@ -1,7 +1,8 @@
 enum CommonStrata {
   defaults = "defaults",
-  inheritedFromParentGroup = "inheritedFromParentGroup",
+  underride = "underride",
   definition = "definition",
+  override = "override",
   user = "user"
 }
 

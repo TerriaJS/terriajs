@@ -1,6 +1,7 @@
 import { computed } from "mobx";
 import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
 import IonResource from "terriajs-cesium/Source/Core/IonResource";
+import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import CesiumTerrainCatalogItemTraits from "../Traits/CesiumTerrainCatalogItemTraits";
@@ -9,7 +10,9 @@ import Mappable from "./Mappable";
 
 export default class CesiumTerrainCatalogItem
   extends UrlMixin(
-    CatalogMemberMixin(CreateModel(CesiumTerrainCatalogItemTraits))
+    AsyncMappableMixin(
+      CatalogMemberMixin(CreateModel(CesiumTerrainCatalogItemTraits))
+    )
   )
   implements Mappable {
   static type = "cesium-terrain";
@@ -18,11 +21,11 @@ export default class CesiumTerrainCatalogItem
     return CesiumTerrainCatalogItem.type;
   }
 
-  forceLoadMetadata() {
+  protected forceLoadMetadata() {
     return Promise.resolve();
   }
 
-  loadMapItems() {
+  protected forceLoadMapItems() {
     return Promise.resolve();
   }
 

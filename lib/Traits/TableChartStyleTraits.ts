@@ -31,6 +31,13 @@ export class TableChartLineStyleTraits extends ModelTraits {
     type: "string"
   })
   color?: string;
+
+  @primitiveTrait({
+    name: "Is selected in workbench?",
+    description: "The selection state of the line in the workbench.",
+    type: "boolean"
+  })
+  isSelectedInWorkbench = true;
 }
 
 export default class TableChartStyleTraits extends ModelTraits {

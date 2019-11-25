@@ -1,19 +1,21 @@
 "use strict";
 
 /*global require,describe,it,expect,beforeEach*/
-var Cartographic = require("terriajs-cesium/Source/Core/Cartographic");
-var CesiumMath = require("terriajs-cesium/Source/Core/Math");
+var Cartographic = require("terriajs-cesium/Source/Core/Cartographic").default;
+var CesiumMath = require("terriajs-cesium/Source/Core/Math").default;
 var CesiumTileLayer = require("../../lib/Map/CesiumTileLayer");
-var Color = require("terriajs-cesium/Source/Core/Color");
-var Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid");
-var Entity = require("terriajs-cesium/Source/DataSources/Entity");
-var GeoJsonDataSource = require("terriajs-cesium/Source/DataSources/GeoJsonDataSource");
-var ImageryLayerFeatureInfo = require("terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo");
+var Color = require("terriajs-cesium/Source/Core/Color").default;
+var Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid").default;
+var Entity = require("terriajs-cesium/Source/DataSources/Entity").default;
+var GeoJsonDataSource = require("terriajs-cesium/Source/DataSources/GeoJsonDataSource")
+  .default;
+var ImageryLayerFeatureInfo = require("terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo")
+  .default;
 var L = require("leaflet");
 var Leaflet = require("../../lib/Models/Leaflet");
-var loadJson = require("../../lib/Core/loadJson");
+var loadJson = require("../../lib/Core/loadJson").default;
 var Terria = require("../../lib/Models/Terria");
-var when = require("terriajs-cesium/Source/ThirdParty/when");
+var when = require("terriajs-cesium/Source/ThirdParty/when").default;
 
 var DEFAULT_ZOOM_LEVEL = 5;
 

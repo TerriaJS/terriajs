@@ -7,11 +7,20 @@ import CreateModel from "./CreateModel";
 import Mappable from "./Mappable";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import URI from "urijs";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 
 export default class OpenStreetMapCatalogItem
-  extends CreateModel(OpenStreetMapCatalogItemTraits)
+  extends CatalogMemberMixin(CreateModel(OpenStreetMapCatalogItemTraits))
   implements Mappable {
   static readonly type = "open-street-map";
+
+  get isMappable() {
+    return true;
+  }
+
+  forceLoadMetadata() {
+    return Promise.resolve();
+  }
 
   loadMapItems() {
     return Promise.resolve();

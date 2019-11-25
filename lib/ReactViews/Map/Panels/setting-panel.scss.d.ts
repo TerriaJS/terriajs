@@ -4,8 +4,10 @@ interface CssExports {
   'base-map-selector': string;
   'baseMapSelector': string;
   'btn--base-map': string;
+  'btn--nativeResolution': string;
   'btn--viewer': string;
   'btnBaseMap': string;
+  'btnNativeResolution': string;
   'btnViewer': string;
   'dropdown-inner': string;
   'dropdownInner': string;
@@ -13,6 +15,16 @@ interface CssExports {
   'isActive': string;
   'list-item': string;
   'listItem': string;
+  'native-resolution-header': string;
+  'native-resolution-wrapper': string;
+  'nativeResolutionHeader': string;
+  'nativeResolutionWrapper': string;
+  'opacity-slider': string;
+  'opacitySlider': string;
+  'quality-label': string;
+  'quality-wrapper': string;
+  'qualityLabel': string;
+  'qualityWrapper': string;
   'viewer-selector': string;
   'viewerSelector': string;
 }

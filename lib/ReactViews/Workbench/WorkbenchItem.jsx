@@ -10,6 +10,7 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import CommonStrata from "../../Models/CommonStrata";
 import getAncestors from "../../Models/getAncestors";
 import Icon from "../Icon";
+import ChartItemSelector from "./Controls/ChartItemSelector";
 import ColorScaleRangeSection from "./Controls/ColorScaleRangeSection";
 import ConceptViewer from "./Controls/ConceptViewer";
 import DateTimeSelectorSection from "./Controls/DateTimeSelectorSection";
@@ -142,6 +143,7 @@ const WorkbenchItem = observer(
               >
                 <ConceptViewer item={workbenchItem} />
               </If>
+              <ChartItemSelector item={workbenchItem} />
               <FilterSection item={workbenchItem} />
               <ShadowSection item={workbenchItem} />
               <DimensionSelectorSection item={workbenchItem} />

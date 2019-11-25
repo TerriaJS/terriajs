@@ -55,6 +55,7 @@ import Mappable, {
   MapItem
 } from "./Mappable";
 import Terria from "./Terria";
+import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 
 // Intermediary
 var cartesian3Scratch = new Cartesian3();
@@ -68,15 +69,8 @@ var southeastCartographicScratch = new Cartographic();
 var northeastCartographicScratch = new Cartographic();
 var northwestCartographicScratch = new Cartographic();
 
-interface CesiumSelectionIndicator {
-  position: Cartesian3;
-  animateAppear(): void;
-  animateDepart(): void;
-  update(): void;
-  destroy(): void;
-}
-
 export default class Cesium extends GlobeOrMap {
+  readonly type = "Cesium";
   readonly terria: Terria;
   readonly terriaViewer: TerriaViewer;
   readonly cesiumWidget: CesiumWidget;
@@ -128,7 +122,8 @@ export default class Cesium extends GlobeOrMap {
       clock: this.terria.timelineClock,
       imageryProvider: new SingleTileImageryProvider({ url: img }),
       scene3DOnly: true,
-      shadows: true
+      shadows: true,
+      useBrowserRecommendedResolution: !this.terria.useNativeResolution
     };
 
     // Workaround for Firefox bug with WebGL and printing:
@@ -261,6 +256,12 @@ export default class Cesium extends GlobeOrMap {
       this.scene.globe.terrainProvider = this._terrainProvider;
     });
     this._disposeSplitterReaction = this._reactToSplitterChanges();
+
+    autorun(() => {
+      (this.cesiumWidget as any).useBrowserRecommendedResolution = !this.terria
+        .useNativeResolution;
+      this.cesiumWidget.scene.globe.maximumScreenSpaceError = this.terria.baseMaximumScreenSpaceError;
+    });
   }
 
   getContainer() {
@@ -1097,6 +1098,22 @@ export default class Cesium extends GlobeOrMap {
     this.scene.render(this.terria.timelineClock.currentTime);
 
     return deferred;
+  }
+
+  _addVectorTileHighlight(
+    imageryProvider: MapboxVectorTileImageryProvider,
+    rectangle: Cesium.Rectangle
+  ): () => void {
+    const result = new ImageryLayer(imageryProvider, {
+      show: true,
+      alpha: 1
+    });
+    const scene = this.scene;
+    scene.imageryLayers.add(result);
+
+    return function() {
+      scene.imageryLayers.remove(result);
+    };
   }
 }
 

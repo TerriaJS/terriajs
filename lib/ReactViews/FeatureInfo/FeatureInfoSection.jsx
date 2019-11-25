@@ -24,6 +24,7 @@ import propertyGetTimeValues from "../../Core/propertyGetTimeValues";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 
 import Styles from "./feature-info-section.scss";
+import { runInAction } from "mobx";
 
 // We use Mustache templates inside React views, where React does the escaping; don't escape twice, or eg. " => &quot;
 Mustache.escape = function(string) {
@@ -84,6 +85,14 @@ const FeatureInfoSection = observer(
     getTemplateData() {
       const propertyData = this.getPropertyValues();
       if (defined(propertyData)) {
+        // Properties accessible as {name, value} array; useful when you want
+        // to iterate anonymous property values in the mustache template.
+        propertyData.properties = Object.entries(propertyData).map(
+          ([name, value]) => ({
+            name,
+            value
+          })
+        );
         propertyData.terria = {
           formatNumber: mustacheFormatNumberFunction,
           formatDateTime: mustacheFormatDateTime,
@@ -375,10 +384,12 @@ function setSubscriptionsAndTimeouts(featureInfoSection, feature) {
   featureInfoSection.setState({
     removeFeatureChangedSubscription: feature.definitionChanged.addEventListener(
       function(changedFeature) {
-        setCurrentFeatureValues(
-          changedFeature,
-          currentTimeIfAvailable(featureInfoSection)
-        );
+        runInAction(() => {
+          setCurrentFeatureValues(
+            changedFeature,
+            currentTimeIfAvailable(featureInfoSection)
+          );
+        });
       }
     )
   });

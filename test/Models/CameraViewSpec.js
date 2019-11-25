@@ -2,13 +2,14 @@
 
 /*global require*/
 var CameraView = require("../../lib/Models/CameraView");
-var Cartesian3 = require("terriajs-cesium/Source/Core/Cartesian3");
-var Cartographic = require("terriajs-cesium/Source/Core/Cartographic");
-var CesiumMath = require("terriajs-cesium/Source/Core/Math");
+var Cartesian3 = require("terriajs-cesium/Source/Core/Cartesian3").default;
+var Cartographic = require("terriajs-cesium/Source/Core/Cartographic").default;
+var CesiumMath = require("terriajs-cesium/Source/Core/Math").default;
 var CustomMatchers = require("../Utility/CustomMatchers");
-var Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid");
-var HeadingPitchRange = require("terriajs-cesium/Source/Core/HeadingPitchRange");
-var Rectangle = require("terriajs-cesium/Source/Core/Rectangle");
+var Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid").default;
+var HeadingPitchRange = require("terriajs-cesium/Source/Core/HeadingPitchRange")
+  .default;
+var Rectangle = require("terriajs-cesium/Source/Core/Rectangle").default;
 
 describe("CameraView", function() {
   describe("fromJson", function() {

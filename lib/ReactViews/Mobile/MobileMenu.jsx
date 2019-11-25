@@ -1,5 +1,5 @@
 import React from "react";
-
+import defined from "terriajs-cesium/Source/Core/defined";
 import createReactClass from "create-react-class";
 import { observer } from "mobx-react";
 
@@ -59,7 +59,21 @@ const MobileMenu = observer(
       });
     },
 
+    runStories() {
+      this.props.viewState.storyBuilderShown = false;
+      this.props.viewState.storyShown = true;
+      this.props.viewState.mobileMenuVisible = false;
+    },
+
+    dismissSatelliteGuidanceAction() {
+      this.props.viewState.toggleFeaturePrompt("mapGuidesLocation", true, true);
+    },
+
     render() {
+      const hasStories =
+        this.props.terria.configParameters.storyEnabled &&
+        defined(this.props.terria.stories) &&
+        this.props.terria.stories.length > 0;
       // return this.props.viewState.mobileMenuVisible ? (
       return (
         <div>
@@ -83,6 +97,12 @@ const MobileMenu = observer(
                 viewState={this.props.viewState}
               />
             </div>
+            <div onClick={this.hideMenu}>
+              <HelpMenuPanelBasic
+                terria={this.props.terria}
+                viewState={this.props.viewState}
+              />
+            </div>
             <For each="menuItem" of={this.props.menuItems}>
               <div
                 onClick={this.hideMenu}
@@ -97,6 +117,12 @@ const MobileMenu = observer(
                 caption="Give Feedback"
               />
             </If>
+            <If condition={hasStories}>
+              <MobileMenuItem
+                onClick={this.runStories}
+                caption={`View Stories (${this.props.terria.stories.length})`}
+              />
+            </If>{" "}
           </div>
         </div>
       );

@@ -117,7 +117,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     }
 
     // Replace the stratum inherited from the parent group.
-    const stratum = CommonStrata.inheritedFromParentGroup;
+    const stratum = CommonStrata.underride;
 
     model.strata.delete(stratum);
 

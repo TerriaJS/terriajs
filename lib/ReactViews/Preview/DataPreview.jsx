@@ -11,6 +11,8 @@ import PropTypes from "prop-types";
 import Styles from "./data-preview.scss";
 import { observer } from "mobx-react";
 import { runInAction } from "mobx";
+import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
+import Loader from "../Loader";
 
 /**
  * Data preview section, for the preview map see DataPreviewMap
@@ -33,14 +35,19 @@ const DataPreview = observer(
 
     render() {
       let previewed = this.props.previewed;
-      if (previewed !== undefined && previewed.dereferenced !== undefined) {
-        previewed = previewed.dereferenced;
+      if (previewed !== undefined && ReferenceMixin.is(previewed)) {
+        if (previewed.target === undefined) {
+          // Reference is not available yet.
+          return this.renderUnloadedReference();
+        }
+        previewed = previewed.target;
       }
 
       let chartData;
       if (previewed && !previewed.isMappable && previewed.tableStructure) {
         chartData = previewed.chartData();
       }
+
       return (
         <div className={Styles.preview}>
           <Choose>
@@ -98,6 +105,27 @@ const DataPreview = observer(
               </div>
             </Otherwise>
           </Choose>
+        </div>
+      );
+    },
+
+    renderUnloadedReference() {
+      const isLoading = this.props.previewed.isLoadingReference;
+      const hasTarget = this.props.previewed.target !== undefined;
+      return (
+        <div className={Styles.preview}>
+          <div className={Styles.previewInner}>
+            {isLoading && <Loader />}
+            {!isLoading && !hasTarget && (
+              <div className={Styles.placeholder}>
+                <h2>Unable to resolve reference</h2>
+                <p>
+                  This reference could not be resolved because it is invalid or
+                  because it points to something that cannot be visualised.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       );
     }

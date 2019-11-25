@@ -1,4 +1,4 @@
-import L from "leaflet";
+import L, { GridLayer } from "leaflet";
 import { autorun, action, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
@@ -41,6 +41,8 @@ import GlobeOrMap from "./GlobeOrMap";
 import hasTraits from "./hasTraits";
 import Mappable, { ImageryParts, MapItem } from "./Mappable";
 import Terria from "./Terria";
+import MapboxVectorCanvasTileLayer from "../Map/MapboxVectorCanvasTileLayer";
+import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 
 interface SplitterClips {
   left: string;
@@ -65,6 +67,7 @@ const useClipUpdateWorkaround =
 // This class is an observer. It probably won't contain any observables itself
 
 export default class Leaflet extends GlobeOrMap {
+  readonly type = "Leaflet";
   readonly terria: Terria;
   readonly terriaViewer: TerriaViewer;
   readonly map: L.Map;
@@ -89,8 +92,12 @@ export default class Leaflet extends GlobeOrMap {
 
   private _createImageryLayer: (
     ip: Cesium.ImageryProvider
-  ) => CesiumTileLayer = createTransformer((ip: Cesium.ImageryProvider) => {
-    return new CesiumTileLayer(ip);
+  ) => GridLayer = createTransformer((ip: Cesium.ImageryProvider) => {
+    if (ip instanceof MapboxVectorTileImageryProvider) {
+      return new MapboxVectorCanvasTileLayer(ip, {});
+    } else {
+      return new CesiumTileLayer(ip);
+    }
   });
 
   constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
@@ -269,7 +276,10 @@ export default class Leaflet extends GlobeOrMap {
 
       // Delete imagery layers no longer in the model
       this.map.eachLayer(mapLayer => {
-        if (isImageryLayer(mapLayer)) {
+        if (
+          isImageryLayer(mapLayer) ||
+          mapLayer instanceof MapboxVectorCanvasTileLayer
+        ) {
           const index = allImagery.findIndex(im => im.layer === mapLayer);
           if (index === -1) {
             this.map.removeLayer(mapLayer);
@@ -414,6 +424,7 @@ export default class Leaflet extends GlobeOrMap {
    * and when the next click is received, it is ignored - again, as desired.
    */
 
+  @action
   private _featurePicked(entity: Entity, event: L.LeafletMouseEvent) {
     this._pickFeatures(event.latlng);
 
@@ -837,6 +848,29 @@ export default class Leaflet extends GlobeOrMap {
       this._attributionControl.addTo(this.map);
       return Promise.reject(e);
     }
+  }
+
+  _addVectorTileHighlight(
+    imageryProvider: MapboxVectorTileImageryProvider,
+    rectangle: Cesium.Rectangle
+  ): () => void {
+    const map = this.map;
+    const options: any = {
+      opacity: 1,
+      bounds: rectangleToLatLngBounds(rectangle)
+    };
+
+    if (isDefined(map.options.maxZoom)) {
+      options.maxZoom = map.options.maxZoom;
+    }
+
+    const layer = new MapboxVectorCanvasTileLayer(imageryProvider, options);
+    layer.addTo(map);
+    layer.bringToFront();
+
+    return function() {
+      map.removeLayer(layer);
+    };
   }
 }
 

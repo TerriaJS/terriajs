@@ -8,6 +8,7 @@
 .preview-chart-wrapper {
   position: relative;
   padding: 0;
+  min-height: 110px;
 
   :global {
     .line-chart text {

@@ -34,10 +34,6 @@ class KmlCatalogItem extends AsyncMappableMixin(
 
   readonly canZoomTo = true;
 
-  constructor(id: string, terria: Terria) {
-    super(id, terria);
-  }
-
   setFileInput(file: File) {
     this._kmlFile = file;
   }

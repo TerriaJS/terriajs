@@ -4,6 +4,7 @@ import IonImageryCatalogItemTraits from "../Traits/IonImageryCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import Mappable from "./Mappable";
 import isDefined from "../Core/isDefined";
+import { result } from "lodash-es";
 
 export default class IonImageryCatalogItem
   extends CreateModel(IonImageryCatalogItemTraits)

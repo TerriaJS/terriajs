@@ -274,6 +274,10 @@ export default class ArcGisMapServerCatalogItem
   readonly showsInfo = true;
   readonly isMappable = true;
 
+  get type() {
+    return ArcGisMapServerCatalogItem.type;
+  }
+
   protected forceLoadMetadata(): Promise<void> {
     return MapServerStratum.load(this).then(stratum => {
       runInAction(() => {
@@ -298,7 +302,7 @@ export default class ArcGisMapServerCatalogItem
     const maximumLevel = maximumScaleToLevel(this.maximumScale);
     const dynamicRequired = this.layers && this.layers.length > 0;
     const imageryProvider = new ArcGisMapServerImageryProvider({
-      url: cleanAndProxyUrl(this, this.url),
+      url: cleanAndProxyUrl(this, getBaseURI(this).toString()),
       layers: this.layers,
       tilingScheme: new WebMercatorTilingScheme(),
       maximumLevel: maximumLevel,
@@ -344,6 +348,7 @@ export default class ArcGisMapServerCatalogItem
         return realRequestImage.call(imageryProvider, x, y, level);
       };
     }
+
     return imageryProvider;
   }
 
@@ -465,11 +470,11 @@ function getRectangleFromLayer(thisLayerJson: Layer) {
     extent.spatialReference.wkid
   ) {
     const wkid = "EPSG:" + extent.spatialReference.wkid;
-    if (!isDefined(proj4definitions[wkid])) {
+    if (!isDefined((proj4definitions as any)[wkid])) {
       return undefined;
     }
 
-    const source = new proj4.Proj(proj4definitions[wkid]);
+    const source = new proj4.Proj((proj4definitions as any)[wkid]);
     const dest = new proj4.Proj("EPSG:4326");
 
     let p = proj4(source, dest, [extent.xmin, extent.ymin]);

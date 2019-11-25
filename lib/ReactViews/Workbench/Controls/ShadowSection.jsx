@@ -1,15 +1,15 @@
 "use strict";
 
-import defined from "terriajs-cesium/Source/Core/defined";
-import React from "react";
 import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
-import ObserveModelMixin from "../../ObserveModelMixin";
-
-import Styles from "./shadow-section.scss";
 import { runInAction } from "mobx";
-import CommonStrata from "../../../Models/CommonStrata";
 import { observer } from "mobx-react";
+import PropTypes from "prop-types";
+import React from "react";
+import defined from "terriajs-cesium/Source/Core/defined";
+import CommonStrata from "../../../Models/CommonStrata";
+import ObserveModelMixin from "../../ObserveModelMixin";
+import Icon from "./../../Icon";
+import Styles from "./shadow-section.scss";
 
 const ShadowSection = observer(
   createReactClass({
@@ -63,6 +63,7 @@ const ShadowSection = observer(
               Cast and Receive
             </option>
           </select>
+          <Icon glyph={Icon.GLYPHS.opened} />
         </div>
       );
     }

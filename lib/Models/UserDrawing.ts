@@ -16,13 +16,6 @@ import CreateModel from "./CreateModel";
 import MapInteractionMode from "./MapInteractionMode";
 import Terria from "./Terria";
 
-interface DragPoints {
-  updateDraggableObjects: (dataSource: DataSource) => void;
-  setUp: () => void;
-  getDragCount: () => number;
-  resetDragCount: () => void;
-}
-
 interface Options {
   terria: Terria;
   messageHeader?: string;

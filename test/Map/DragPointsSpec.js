@@ -4,7 +4,7 @@
 var DragPoints = require("../../lib/Map/DragPoints");
 var Terria = require("../../lib/Models/Terria");
 var ViewerMode = require("../../lib/Models/ViewerMode");
-var Entity = require("terriajs-cesium/Source/DataSources/Entity.js");
+var Entity = require("terriajs-cesium/Source/DataSources/Entity.js").default;
 
 describe("DragPoints", function() {
   var terria;

@@ -30,13 +30,10 @@ import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import Catalog from "./CatalogNew";
-import Cesium from "./Cesium";
 import CommonStrata from "./CommonStrata";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import InitSource, { isInitOptions, isInitUrl } from "./InitSource";
-import Leaflet from "./Leaflet";
-import magdaRecordToCatalogMemberDefinition from "./magdaRecordToCatalogMember";
 import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
 import NoViewer from "./NoViewer";
@@ -48,6 +45,9 @@ import Workbench from "./Workbench";
 import CorsProxy from "../Core/CorsProxy";
 import MapInteractionMode from "./MapInteractionMode";
 import TimeVarying from "../ModelMixins/TimeVarying";
+import MagdaReference from "./MagdaReference";
+import CatalogGroup from "./CatalogGroupNew";
+import ViewerMode from "./ViewerMode";
 
 interface ConfigParameters {
   [key: string]: ConfigParameters[keyof ConfigParameters];
@@ -212,6 +212,18 @@ export default class Terria {
    */
   @observable previewedItemId: string | undefined;
 
+  /**
+   * Base ratio for maximumScreenSpaceError
+   * @type {number}
+   */
+  @observable baseMaximumScreenSpaceError = 2;
+
+  /**
+   * Gets or sets whether to use the device's native resolution (sets cesium.viewer.resolutionScale to a ratio of devicePixelRatio)
+   * @type {boolean}
+   */
+  @observable useNativeResolution = false;
+
   constructor(options: TerriaOptions = {}) {
     if (options.baseUrl) {
       if (options.baseUrl.lastIndexOf("/") !== options.baseUrl.length - 1) {
@@ -233,28 +245,26 @@ export default class Terria {
 
   @computed
   get currentViewer(): GlobeOrMap {
-    return (
-      (this.mainViewer && this.mainViewer.currentViewer) || new NoViewer(this)
-    );
+    return this.mainViewer.currentViewer;
   }
 
   @computed
-  get cesium(): Cesium | undefined {
+  get cesium(): import("./Cesium").default | undefined {
     if (
       isDefined(this.mainViewer) &&
-      this.mainViewer.currentViewer instanceof Cesium
+      this.mainViewer.currentViewer.type === "Cesium"
     ) {
-      return this.mainViewer.currentViewer;
+      return this.mainViewer.currentViewer as import("./Cesium").default;
     }
   }
 
   @computed
-  get leaflet(): Leaflet | undefined {
+  get leaflet(): import("./Leaflet").default | undefined {
     if (
       isDefined(this.mainViewer) &&
-      this.mainViewer.currentViewer instanceof Leaflet
+      this.mainViewer.currentViewer.type === "Leaflet"
     ) {
-      return this.mainViewer.currentViewer;
+      return this.mainViewer.currentViewer as import("./Leaflet").default;
     }
   }
 
@@ -293,7 +303,7 @@ export default class Terria {
           }
 
           if (config.aspects) {
-            return this.loadMagdaConfig(config);
+            return this.loadMagdaConfig(options.configUrl, config);
           }
 
           const initializationUrls: string[] = config.initializationUrls;
@@ -336,6 +346,10 @@ export default class Terria {
    */
   loadInitSources(): Promise<void> {
     return this._initSourceLoader.load();
+  }
+
+  dispose() {
+    this._initSourceLoader.dispose();
   }
 
   updateApplicationUrl(newUrl: string) {
@@ -393,7 +407,7 @@ export default class Terria {
     allModelStratumData: JsonObject,
     replaceStratum: boolean
   ): Promise<BaseModel> {
-    const thisModelStratumData = allModelStratumData[modelId];
+    const thisModelStratumData = allModelStratumData[modelId] || {};
     if (!isJsonObject(thisModelStratumData)) {
       throw new TerriaError({
         sender: this,
@@ -402,11 +416,14 @@ export default class Terria {
       });
     }
 
+    const cleanStratumData = { ...thisModelStratumData };
+    delete cleanStratumData.dereferenced;
+    delete cleanStratumData.knownContainerUniqueIds;
+
     let promise: Promise<void>;
 
     const containerIds = thisModelStratumData.knownContainerUniqueIds;
     if (Array.isArray(containerIds)) {
-      delete thisModelStratumData.knownContainerUniqueIds;
       // Groups that contain this item must be loaded before this item.
       const containerPromises = containerIds.map(containerId => {
         if (typeof containerId !== "string") {
@@ -418,8 +435,9 @@ export default class Terria {
           allModelStratumData,
           replaceStratum
         ).then(container => {
-          if (GroupMixin.isMixedInto(container)) {
-            return container.loadMembers();
+          const dereferenced = ReferenceMixin.is(container) ? container.target : container;
+          if (GroupMixin.isMixedInto(dereferenced)) {
+            return dereferenced.loadMembers();
           }
         });
       });
@@ -429,9 +447,6 @@ export default class Terria {
     }
 
     return promise.then(() => {
-      let dereferenced = thisModelStratumData.dereferenced;
-      delete thisModelStratumData.dereferenced;
-
       const loadedModel = upsertModelFromJson(
         CatalogMemberFactory,
         this,
@@ -439,7 +454,7 @@ export default class Terria {
         undefined,
         stratumId,
         {
-          ...thisModelStratumData,
+          ...cleanStratumData,
           id: modelId
         },
         replaceStratum
@@ -448,11 +463,12 @@ export default class Terria {
       // If we're replacing the stratum and the existing model is already
       // dereferenced, we need to replace the dereferenced stratum, too,
       // even if there's no trace of it it in the load data.
+      let dereferenced = thisModelStratumData.dereferenced;
       if (
         replaceStratum &&
         dereferenced === undefined &&
         ReferenceMixin.is(loadedModel) &&
-        loadedModel.dereferenced !== undefined
+        loadedModel.target !== undefined
       ) {
         dereferenced = {};
       }
@@ -466,7 +482,7 @@ export default class Terria {
                 CatalogMemberFactory,
                 this,
                 "/",
-                loadedModel.dereferenced,
+                loadedModel.target,
                 stratumId,
                 dereferenced,
                 replaceStratum
@@ -517,14 +533,14 @@ export default class Terria {
       switch (initData.viewerMode.toLowerCase()) {
         case "3d".toLowerCase():
           this.mainViewer.viewerOptions.useTerrain = true;
-          this.mainViewer.viewerMode = "cesium";
+          this.mainViewer.viewerMode = ViewerMode.Cesium;
           break;
         case "3dSmooth".toLowerCase():
           this.mainViewer.viewerOptions.useTerrain = false;
-          this.mainViewer.viewerMode = "cesium";
+          this.mainViewer.viewerMode = ViewerMode.Cesium;
           break;
         case "2d".toLowerCase():
-          this.mainViewer.viewerMode = "leaflet";
+          this.mainViewer.viewerMode = ViewerMode.Leaflet;
           break;
       }
     }
@@ -602,7 +618,7 @@ export default class Terria {
         for (let model of newItems) {
           if (ReferenceMixin.is(model)) {
             promises.push(model.loadReference());
-            model = model.dereferenced || model;
+            model = model.target || model;
           }
 
           if (Mappable.is(model)) {
@@ -620,30 +636,45 @@ export default class Terria {
     this.mainViewer.homeCamera = CameraView.fromJson(homeCameraInit);
   }
 
-  loadMagdaConfig(config: any) {
+  async loadMagdaConfig(configUrl: string, config: any) {
+    const magdaRoot = new URI(configUrl)
+      .path("")
+      .query("")
+      .toString();
+
     const aspects = config.aspects;
     const configParams =
       aspects["terria-config"] && aspects["terria-config"].parameters;
 
-    const initObj = aspects["terria-init"];
-    if (isJsonObject(initObj.homeCamera)) {
-      this.loadHomeCamera(initObj.homeCamera);
-    }
-
     if (configParams) {
       this.updateParameters(configParams);
     }
-    if (aspects.group && aspects.group.members) {
-      // Transform the Magda catalog structure to the Terria one.
-      const members = aspects.group.members.map((member: any) => {
-        return magdaRecordToCatalogMemberDefinition({
-          magdaBaseUrl: "http://saas.terria.io",
-          record: member
-        });
-      });
 
-      updateModelFromJson(this.catalog.group, CommonStrata.definition, {
-        members: members
+    const initObj = aspects["terria-init"];
+    if (isJsonObject(initObj)) {
+      await this.applyInitData({
+        initData: initObj as any
+      });
+    }
+
+    if (aspects.group && aspects.group.members) {
+      const id = config.id;
+
+      let existingReference = this.getModelById(MagdaReference, id);
+      if (existingReference === undefined) {
+        existingReference = new MagdaReference(id, this);
+        this.addModel(existingReference);
+      }
+
+      const reference = existingReference;
+
+      reference.setTrait(CommonStrata.definition, "url", magdaRoot);
+      reference.setTrait(CommonStrata.definition, "recordId", config.id);
+      reference.setTrait(CommonStrata.definition, "magdaRecord", config);
+      await reference.loadReference().then(() => {
+        if (reference.target instanceof CatalogGroup) {
+          this.catalog.group = reference.target;
+        }
       });
     }
   }

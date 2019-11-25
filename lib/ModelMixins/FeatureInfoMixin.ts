@@ -5,8 +5,7 @@ import isDefined from "../Core/isDefined";
 import Feature from "../Models/Feature";
 import Model from "../Models/Model";
 import FeatureInfoTraits from "../Traits/FeatureInfoTraits";
-
-const loadJson = require("../Core/loadJson");
+import loadJson from "../Core/loadJson";
 const proxyCatalogItemUrl = require("../Models/proxyCatalogItemUrl");
 
 type Target = Model<FeatureInfoTraits>;

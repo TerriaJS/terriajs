@@ -55,3 +55,24 @@
     float: left;
   }
 }
+
+.dropdown {
+  &__list {
+    height: 250px;
+  }
+  @media (max-height: 800px) {
+    &__list {
+      height: 200px;
+    }
+  }
+  @media (max-height: 700px) {
+    &__list {
+      height: 150px;
+    }
+  }
+  @media (max-height: 600px) {
+    &__list {
+      height: 100px;
+    }
+  }
+}

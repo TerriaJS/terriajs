@@ -182,7 +182,10 @@ PointParameterEditor.selectOnMap = function(terria, viewState, parameter) {
       }
     }
   });
-  terria.mapInteractionModeStack.push(pickPointMode);
+
+  runInAction(() => {
+    terria.mapInteractionModeStack.push(pickPointMode);
+  });
 
   autorun(reaction => {
     pickedFeaturesSubscription = reaction;
@@ -202,7 +205,9 @@ PointParameterEditor.selectOnMap = function(terria, viewState, parameter) {
     }
   });
 
-  viewState.explorerPanelIsVisible = false;
+  runInAction(() => {
+    viewState.explorerPanelIsVisible = false;
+  });
 };
 
 module.exports = PointParameterEditor;
