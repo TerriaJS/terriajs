@@ -6,6 +6,7 @@ import BadgeBar from "../BadgeBar.jsx";
 import Styles from "./sidebar-search.scss";
 import LocationSearchResults from "./LocationSearchResults.jsx";
 import SideBarDatasetSearchResults from "./SideBarDatasetSearchResults.jsx";
+import { withTranslation } from "react-i18next";
 
 import { addMarker } from "../../Models/LocationMarkerUtils";
 
@@ -17,7 +18,8 @@ const SidebarSearch = createReactClass({
   propTypes: {
     viewState: PropTypes.object.isRequired,
     isWaitingForSearchToStart: PropTypes.bool,
-    terria: PropTypes.object.isRequired
+    terria: PropTypes.object.isRequired,
+    t: PropTypes.func.isRequired
   },
 
   backToNowViewing() {
@@ -30,16 +32,17 @@ const SidebarSearch = createReactClass({
   },
 
   render() {
+    const { t } = this.props;
     return (
       <div className={Styles.search}>
         <div className={Styles.results}>
-          <BadgeBar label="Search Results">
+          <BadgeBar label={t("search.resultsLabel")}>
             <button
               type="button"
               onClick={this.backToNowViewing}
               className={Styles.btnDone}
             >
-              Done
+              {t("search.done")}
             </button>
           </BadgeBar>
           <div className={Styles.resultsContent}>
@@ -73,4 +76,4 @@ const SidebarSearch = createReactClass({
   }
 });
 
-module.exports = SidebarSearch;
+module.exports = withTranslation()(SidebarSearch);

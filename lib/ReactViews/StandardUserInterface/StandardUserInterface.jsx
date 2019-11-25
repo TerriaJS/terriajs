@@ -30,11 +30,13 @@ import { Small, Medium } from "../Generic/Responsive";
 import classNames from "classnames";
 import "inobounce";
 
+import { withTranslation } from "react-i18next";
+
 import Styles from "./standard-user-interface.scss";
 
 const animationDuration = 250;
 /** blah */
-const StandardUserInterface = createReactClass({
+export const StandardUserInterface = createReactClass({
   displayName: "StandardUserInterface",
   mixins: [ObserveModelMixin],
 
@@ -53,7 +55,8 @@ const StandardUserInterface = createReactClass({
     children: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.element),
       PropTypes.element
-    ])
+    ]),
+    t: PropTypes.func.isRequired
   },
 
   getDefaultProps() {
@@ -62,6 +65,7 @@ const StandardUserInterface = createReactClass({
 
   /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillMount() {
+    const { t } = this.props;
     const that = this;
     // only need to know on initial load
     this.dragOverListener = e => {
@@ -92,10 +96,10 @@ const StandardUserInterface = createReactClass({
       !this.props.viewState.storyShown
     ) {
       this.props.viewState.notifications.push({
-        title: "This map contains a story",
-        message: "Would you like to view it now?",
-        confirmText: "Yes",
-        denyText: "Maybe later",
+        title: t("sui.notifications.title"),
+        message: t("sui.notifications.message"),
+        confirmText: t("sui.notifications.confirmText"),
+        denyText: t("sui.notifications.denyText"),
         confirmAction: () => {
           this.props.viewState.storyShown = true;
         },
@@ -133,6 +137,8 @@ const StandardUserInterface = createReactClass({
   },
 
   render() {
+    const { t } = this.props;
+
     const customElements = processCustomElements(
       this.props.viewState.useSmallScreenInterface,
       this.props.children
@@ -209,7 +215,7 @@ const StandardUserInterface = createReactClass({
                     terria={this.props.terria}
                     viewState={this.props.viewState}
                     minified={false}
-                    btnText="Show workbench"
+                    btnText={t("sui.showWorkbench")}
                     animationDuration={animationDuration}
                   />
                 </div>
@@ -313,6 +319,7 @@ const StandardUserInterface = createReactClass({
           <DragDropNotification
             lastUploadedFiles={this.props.viewState.lastUploadedFiles}
             viewState={this.props.viewState}
+            t={this.props.t}
           />
           {showStoryPanel && (
             <StoryPanel terria={terria} viewState={this.props.viewState} />
@@ -331,4 +338,4 @@ const StandardUserInterface = createReactClass({
   }
 });
 
-module.exports = StandardUserInterface;
+export default withTranslation()(StandardUserInterface);

@@ -5,6 +5,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
+import { useTranslation } from "react-i18next";
 
 import Styles from "./guidance.scss";
 import Text from "../../Styled/Text";
@@ -36,11 +37,13 @@ GuidanceProgress.propTypes = {
 };
 
 const GuidanceContextModal = ({ children }) => {
+  const { t } = useTranslation();
   return (
     <div className={Styles.context}>
       <Text>{children}</Text>
-      <button className={Styles.btn}>Next</button>
-      Skip{/* ? */}
+      <button className={Styles.btn}>{t("general.next")}</button>
+      {t("guidance.skip")}
+      {/* ? */}
       <GuidanceProgress step={2} max={4} />
     </div>
   );

@@ -30,7 +30,7 @@ import createCatalogMemberFromType from "../../lib/Models/createCatalogMemberFro
 import CatalogItem from "../../lib/Models/CatalogItem";
 import CatalogGroup from "../../lib/Models/CatalogGroup";
 import CzmlCatalogItem from "../../lib/Models/CzmlCatalogItem";
-import FeatureInfoSection from "../../lib/ReactViews/FeatureInfo/FeatureInfoSection";
+import { FeatureInfoSection } from "../../lib/ReactViews/FeatureInfo/FeatureInfoSection";
 import Terria from "../../lib/Models/Terria";
 
 import Styles from "../../lib/ReactViews/FeatureInfo/feature-info-section.scss";
@@ -101,6 +101,7 @@ describe("FeatureInfoSection", function() {
         feature={feature}
         isOpen={true}
         viewState={viewState}
+        t={() => {}}
       />
     );
     const result = getShallowRenderedOutput(section);
@@ -120,6 +121,7 @@ describe("FeatureInfoSection", function() {
         feature={feature}
         isOpen={true}
         viewState={viewState}
+        t={() => {}}
       />
     );
     const result = getShallowRenderedOutput(section);
@@ -157,6 +159,7 @@ describe("FeatureInfoSection", function() {
         isOpen={true}
         catalogItem={catalogItem}
         viewState={viewState}
+        t={() => {}}
       />
     );
     const result = getShallowRenderedOutput(section);
@@ -170,6 +173,7 @@ describe("FeatureInfoSection", function() {
         isOpen={true}
         catalogItem={catalogItem}
         viewState={viewState}
+        t={() => {}}
       />
     );
     const result2 = getShallowRenderedOutput(section2);
@@ -187,6 +191,7 @@ describe("FeatureInfoSection", function() {
         feature={feature}
         isOpen={true}
         viewState={viewState}
+        t={() => {}}
       />
     );
     const result = getShallowRenderedOutput(section);
@@ -205,6 +210,7 @@ describe("FeatureInfoSection", function() {
         feature={feature}
         isOpen={true}
         viewState={viewState}
+        t={() => {}}
       />
     );
     const result = getShallowRenderedOutput(section);
@@ -224,6 +230,7 @@ describe("FeatureInfoSection", function() {
         feature={feature}
         isOpen={true}
         viewState={viewState}
+        t={() => {}}
       />
     );
     const result = getShallowRenderedOutput(section);
@@ -241,6 +248,7 @@ describe("FeatureInfoSection", function() {
         feature={feature}
         isOpen={true}
         viewState={viewState}
+        t={() => {}}
       />
     );
     const result = getShallowRenderedOutput(section);
@@ -264,6 +272,7 @@ describe("FeatureInfoSection", function() {
         feature={feature}
         isOpen={true}
         viewState={viewState}
+        t={() => {}}
       />
     );
     const result = getShallowRenderedOutput(section);
@@ -280,6 +289,7 @@ describe("FeatureInfoSection", function() {
         feature={feature}
         isOpen={true}
         viewState={viewState}
+        t={() => {}}
       />
     );
     const result = getShallowRenderedOutput(section);
@@ -305,6 +315,7 @@ describe("FeatureInfoSection", function() {
         feature={feature}
         isOpen={true}
         viewState={viewState}
+        t={() => {}}
       />
     );
     const result = getShallowRenderedOutput(section);
@@ -324,6 +335,7 @@ describe("FeatureInfoSection", function() {
           isOpen={true}
           template={template}
           viewState={viewState}
+          t={() => {}}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -338,6 +350,7 @@ describe("FeatureInfoSection", function() {
           isOpen={true}
           template={template}
           viewState={viewState}
+          t={() => {}}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -354,6 +367,7 @@ describe("FeatureInfoSection", function() {
           isOpen={true}
           template={template}
           viewState={viewState}
+          t={() => {}}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -371,6 +385,7 @@ describe("FeatureInfoSection", function() {
           isOpen={true}
           template={template}
           viewState={viewState}
+          t={() => {}}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -393,6 +408,7 @@ describe("FeatureInfoSection", function() {
           isOpen={true}
           template={template}
           viewState={viewState}
+          t={() => {}}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -417,6 +433,7 @@ describe("FeatureInfoSection", function() {
           isOpen={true}
           template={template}
           viewState={viewState}
+          t={() => {}}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -443,6 +460,7 @@ describe("FeatureInfoSection", function() {
           isOpen={true}
           template={template}
           viewState={viewState}
+          t={() => {}}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -463,6 +481,7 @@ describe("FeatureInfoSection", function() {
           isOpen={true}
           template={template}
           viewState={viewState}
+          t={() => {}}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -483,6 +502,7 @@ describe("FeatureInfoSection", function() {
           isOpen={true}
           template={template}
           viewState={viewState}
+          t={() => {}}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -498,6 +518,7 @@ describe("FeatureInfoSection", function() {
           isOpen={true}
           template={template}
           viewState={viewState}
+          t={() => {}}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -528,6 +549,7 @@ describe("FeatureInfoSection", function() {
           isOpen={true}
           template={template}
           viewState={viewState}
+          t={() => {}}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -570,6 +592,7 @@ describe("FeatureInfoSection", function() {
           catalogItem={catalogItem}
           template={template}
           viewState={viewState}
+          t={() => {}}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -600,6 +623,7 @@ describe("FeatureInfoSection", function() {
           isOpen={true}
           template={template}
           viewState={viewState}
+          t={() => {}}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -615,6 +639,7 @@ describe("FeatureInfoSection", function() {
           isOpen={true}
           template={template}
           viewState={viewState}
+          t={() => {}}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -630,6 +655,7 @@ describe("FeatureInfoSection", function() {
           isOpen={true}
           template={template}
           viewState={viewState}
+          t={() => {}}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -646,6 +672,7 @@ describe("FeatureInfoSection", function() {
           isOpen={true}
           template={template}
           viewState={viewState}
+          t={() => {}}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -661,6 +688,7 @@ describe("FeatureInfoSection", function() {
           isOpen={true}
           template={template}
           viewState={viewState}
+          t={() => {}}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -676,6 +704,7 @@ describe("FeatureInfoSection", function() {
           isOpen={true}
           template={template}
           viewState={viewState}
+          t={() => {}}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -692,6 +721,7 @@ describe("FeatureInfoSection", function() {
           isOpen={true}
           template={template}
           viewState={viewState}
+          t={() => {}}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -711,6 +741,7 @@ describe("FeatureInfoSection", function() {
           isOpen={true}
           template={template}
           viewState={viewState}
+          t={() => {}}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -729,6 +760,7 @@ describe("FeatureInfoSection", function() {
           isOpen={false}
           template={template}
           viewState={viewState}
+          t={() => {}}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -751,6 +783,7 @@ describe("FeatureInfoSection", function() {
           template={template}
           viewState={viewState}
           position={position}
+          t={() => {}}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -786,6 +819,7 @@ describe("FeatureInfoSection", function() {
           template={template}
           viewState={viewState}
           catalogItem={catalogItem}
+          t={() => {}}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -841,6 +875,7 @@ describe("FeatureInfoSection", function() {
           isOpen={true}
           template={template}
           viewState={viewState}
+          t={() => {}}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -866,6 +901,7 @@ describe("FeatureInfoSection", function() {
           feature={feature}
           isOpen={true}
           viewState={viewState}
+          t={() => {}}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -881,6 +917,7 @@ describe("FeatureInfoSection", function() {
           isOpen={true}
           viewState={viewState}
           template={template}
+          t={() => {}}
         />
       );
       const result = getShallowRenderedOutput(section);
@@ -922,6 +959,7 @@ describe("FeatureInfoSection", function() {
               isOpen={true}
               viewState={viewState}
               template={item.featureInfoTemplate}
+              t={() => {}}
             />
           );
           const result = getShallowRenderedOutput(section);
@@ -957,6 +995,7 @@ describe("FeatureInfoSection", function() {
               catalogItem={catalogItem}
               viewState={viewState}
               template={timeVaryingItem.featureInfoTemplate}
+              t={() => {}}
             />
           );
           let result = getShallowRenderedOutput(section);
@@ -971,6 +1010,7 @@ describe("FeatureInfoSection", function() {
               catalogItem={catalogItem}
               viewState={viewState}
               template={timeVaryingItem.featureInfoTemplate}
+              t={() => {}}
             />
           );
           result = getShallowRenderedOutput(section);
@@ -985,6 +1025,7 @@ describe("FeatureInfoSection", function() {
               catalogItem={catalogItem}
               viewState={viewState}
               template={timeVaryingItem.featureInfoTemplate}
+              t={() => {}}
             />
           );
           result = getShallowRenderedOutput(section);

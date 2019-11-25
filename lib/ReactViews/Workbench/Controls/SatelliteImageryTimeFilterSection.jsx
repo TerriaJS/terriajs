@@ -10,6 +10,8 @@ import raiseErrorToUser from "../../../Models/raiseErrorToUser";
 import Loader from "../../Loader";
 import LocationItem from "../../LocationItem.jsx";
 import ObserveModelMixin from "../../ObserveModelMixin";
+import { withTranslation } from "react-i18next";
+
 import Styles from "./satellite-imagery-time-filter-section.scss";
 
 const SatelliteImageryTimeFilterSection = createReactClass({
@@ -17,7 +19,8 @@ const SatelliteImageryTimeFilterSection = createReactClass({
   mixins: [ObserveModelMixin],
 
   propTypes: {
-    item: PropTypes.object
+    item: PropTypes.object,
+    t: PropTypes.func.isRequired
   },
 
   removeFilter() {
@@ -44,11 +47,12 @@ const SatelliteImageryTimeFilterSection = createReactClass({
   },
 
   newLocation() {
+    const { t } = this.props;
     // Cancel any feature picking already in progress.
     const terria = this.props.item.terria;
 
     const pickPointMode = new MapInteractionMode({
-      message: "Select a point by clicking on the map.",
+      message: t("satellite.pickPoint"),
       onCancel: () => {
         terria.mapInteractionModeStack.pop();
       }
@@ -59,7 +63,7 @@ const SatelliteImageryTimeFilterSection = createReactClass({
       .getObservable(pickPointMode, "pickedFeatures")
       .subscribe(pickedFeatures => {
         pickPointMode.customUi = function() {
-          return <Loader message="Querying position..." />;
+          return <Loader message={t("satellite.querying")} />;
         };
 
         pickedFeatures.allFeaturesAvailablePromise.then(() => {
@@ -104,11 +108,12 @@ const SatelliteImageryTimeFilterSection = createReactClass({
   },
 
   renderNoFeatureSelected() {
+    const { t } = this.props;
     return (
       <div className={Styles.inactive}>
         <div className={Styles.btnGroup}>
           <button className={Styles.btn} onClick={this.newLocation}>
-            Filter by location
+            {t("satellite.filterByLocation")}
           </button>
         </div>
       </div>
@@ -116,6 +121,7 @@ const SatelliteImageryTimeFilterSection = createReactClass({
   },
 
   renderFeatureSelected(feature) {
+    const { t } = this.props;
     // TODO: if the feature itself doesn't have a position, we should be able to use the position the user clicked on.
     const position =
       feature.position !== undefined
@@ -125,18 +131,18 @@ const SatelliteImageryTimeFilterSection = createReactClass({
     return (
       <div className={Styles.active}>
         <div className={Styles.infoGroup}>
-          <div>Only showing available capture times for:</div>
+          <div>{t("satellite.infoGroup")}</div>
           <LocationItem position={position} />
         </div>
         <div className={Styles.btnGroup}>
           <button className={Styles.btn} onClick={this.removeFilter}>
-            Remove filter
+            {t("satellite.removeFilter")}
           </button>
           <button className={Styles.btn} onClick={this.zoomTo}>
-            Zoom to
+            {t("satellite.zoomTo")}
           </button>
           <button className={Styles.btn} onClick={this.newLocation}>
-            New location
+            {t("satellite.newLocation")}
           </button>
         </div>
       </div>
@@ -144,4 +150,4 @@ const SatelliteImageryTimeFilterSection = createReactClass({
   }
 });
 
-module.exports = SatelliteImageryTimeFilterSection;
+module.exports = withTranslation()(SatelliteImageryTimeFilterSection);

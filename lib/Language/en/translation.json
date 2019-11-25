@@ -1,11 +1,364 @@
 {
-  "measure" : {
-    "measure-tool" : "Measure tool",
-    "measure-distance": "Measure distance between locations"
+  "general" : {
+    "close" : "Close",
+    "open" : "Open",
+    "prev" : "Prev",
+    "next" : "Next"
   },
-  "data-catalog" : {
-    "group": {
-      "remove" : "remove this group"
+  "measure" : {
+    "measureTool" : "Measure Tool",
+    "measureDistance": "Measure distance between locations"
+  },
+  "location" : {
+    "errorGettingLocation" : "Error getting location",
+    "browserCannotProvide" : "Your browser cannot provide your location.",
+    "myLocation" : "My Location",
+    "location" : "Location",
+    "originError" : "Your browser can only provide your location when using https. You may be able to use {{secureUrl}} instead.",
+    "centreMap" : "Centre map at your current location"
+  },
+  "splitterTool" : {
+    "toggleSplitterTool" : "Enable side-by-side comparison between two different sets of data",
+    "title" : "Drag left or right to adjust views",
+    "workbench" : {
+      "goleftTitle" : "Show on the left side",
+      "goleft" : "Left",
+      "bothTitle" : "Show on both sides",
+      "both" : "Both",
+      "gorightTitle" : "Show on the right side",
+      "goright" : "Right",
+      "copyName" : "{{name}} (copy)"
     }
+  },
+  "zoomCotrol" : {
+    "zoomIn" : "Zoom in",
+    "zoomReset" : "Reset zoom",
+    "zoomOut" : "Zoom out"
+  },
+  "compass" : {
+    "description" : "Drag outer ring: rotate view.\nDrag inner gyroscope: free orbit.\nDouble-click: reset view.\nTIP: You can also free orbit by holding the CTRL key and dragging the map.",
+    "title" : "Click and drag to rotate the camera"
+  },
+  "AR" : {
+    "title" : "srExperimental Feature: Augmented Reality"
+  },
+  "legend" : {
+    "lat" : "Lat",
+    "lon" : "Lon",
+    "zone" : "ZONE",
+    "e" : "E",
+    "n" : "N",
+    "elev" : "Elev"
+  },
+  "share" : {
+    "browserPrint" : "For better printed results, please use {{appName}}'s Print button instead of your web browser's print feature.",
+    "shortLinkShortening" : "Shortening...",
+    "shortLinkError" : "An error occurred while attempting to shorten the URL.  Please check your internet connection and try again.",
+    "localDataNote" : "<0><3>Note:</3></0><1>The following data sources will NOT be shared because they include data from this local system. To share these data sources, publish their data on a web server and <2>add them using a url</2>.</1>",
+    "generatingUrl" : "Generating share URL...",
+    "printTitle" : "Print Map",
+    "printExplanation" : "Open a printable version of this map.",
+    "printButton" : "Print",
+    "printView" : "Show Print View",
+    "creatingPrintView" : "Creating print view...",
+    "btnAdvanced" : "Advanced options",
+    "embedTitle" : "To embed, copy this code to embed this map into an HTML page:",
+    "shortenUsingService" : "Shorten the share URL using a web service",
+    "btnCatalogShareText" : "Share",
+    "btnMapShareText" : "Share / Print",
+    "btnCatalogShareTitle" : "Share your catalogue with others",
+    "btnMapShareTitle" : "Share your map with others"
+  },
+  "countDatasets" : {
+    "btnText" : "Start",
+    "loadError" : "failed to load.",
+    "countingMessage" : "Counting, please wait...",
+    "totals" : "<div>The catalog contains {{items}} items in {{groups}} groups.</div>",
+    "subTotals" : "<div> {{name}}: {{items}} items / {{groups}} groups</div>",
+    "recount" : "Recount",
+    "title" : "Count Datasets",
+    "btnCount" : "Count datasets"
+  },
+  "toolsPanel" : {
+    "btnText" : "Tool",
+    "btnTitle" : "Advanced toolbox"
+  },
+  "settingPanel" : {
+    "none" : "(None)",
+    "viewerModeLabels" : {
+      "CesiumTerrain" : "3D Terrain",
+      "CesiumEllipsoid" : "3D Smooth",
+      "Leaflet" : "2D"
+    },
+    "qualityLabels" : {
+      "maximumPerformance": "Maximum performance, lower quality",
+      "balancedPerformance": "Balanced performance & quality",
+      "lowerPerformance": "Maximum quality, lower performance"
+    },
+    "nativeResolutionLabel" : "Press to stop using {{resolution1}} resolution and start using {{resolution2}} resolution",
+    "native" : "native",
+    "screen" : "screen",
+    "btnTitle" : "Change view",
+    "btnText" : "Map",
+    "mapView" : "Map View",
+    "baseMap" : "Base Map",
+    "imageOptimisation" : "Image Optimisation",
+    "nativeResolutionHeader" : "Use native device resolution",
+    "mapQuality" : "Raster Map Quality:",
+    "qualityLabel" : "Quality",
+    "performanceLabel" : "Performance"
+  },
+  "menuBar" :{
+    "a" : "a"
+  },
+  "feedback" : {
+    "feedbackPreamble" : "We would love to hear from you!",
+    "title" : "Feedback",
+    "close" : "close feedback",
+    "yourName" : "Your name (optional)",
+    "email" : "Email address (optional)<br/><2>We can't follow up without it!</2>",
+    "commentQuestion" : "Comment or question",
+    "shareWithDevelopers" : "Share my map view with {{appName}} developers",
+    "captionText" : "This helps us to troubleshoot issues by letting us see what you're seeing",
+    "cancel" : "Cancel",
+    "sending" : "Sending...",
+    "send" : "Send",
+    "feedbackBtnText" : "Give Feedback"
+  },
+  "helpMenu" : {
+    "btnText" : "Help",
+    "btnTitle" : "get help",
+    "helpMenuHeader" : "What would you like to do?",
+    "helpMenuOpenWelcome" : "Show welcome message",
+    "helpMenuSatelliteGuideTitle" : "View satellite imagery guide",
+    "helpMenuMoreHelpTitle" : "More help",
+    "done" : "DONE",
+    "next" : "NEXT"
+  },
+  "sui" : {
+    "notifications" : {
+      "title" :  "This map contains a story",
+      "message" : "Would you like to view it now?",
+      "confirmText" : "Yes",
+      "denyText" : "Maybe later"
+    },
+    "showWorkbench" : "Show Workbench",
+    "hideWorkbench" : "Hide Workbench"
+  },
+  "featureInfo" : {
+    "catalogItem" : {
+      "moreThanMax" : "More than {{maximum}} {{catalogItemName}} features were found.",
+      "featuresFound" : "{{featCount}} {catalogItemName} features were found.",
+      "featureInfoShown" : "The first {{maximum}} are shown below."
+    },
+    "download" : "Download this Table",
+    "pickLocation" : "Pick Location",
+    "clickMap" : "Click on the map to learn more about a location",
+    "noDataAvailable" : "No data is available here - try another location.",
+    "clickToAddData" : "Click 'Add Data' to add data to the map.",
+    "userSelection" : "User Selection",
+    "panelHeading" : "Feature Information",
+    "btnCloseFeature" : "Close data panel",
+    "satelliteSuggestionBtn" : "Show {{catalogItemName}} at this location",
+    "locationMarker" : "Location Marker",
+    "noInfoAvailable" : "No information available",
+    "siteData" : "Site Data",
+    "latLon" : "Lat / Lon "
+  },
+  "welcomeMessage" : {
+    "title" : "Spatial data made <1>easy.</1>",
+    "WelcomeMessage" : "Access rich spatial data from multiple data sources, all from one convenient location.",
+    "WelcomeMessagePrimaryBtn" : "Explore Data",
+    "WelcomeMessageSecondaryBtn" : "Take a tour",
+    "WelcomeMessageDissmissText" : "Don't show me this again"
+  },
+  "story" : {
+    "viewStory" : "view",
+    "view" : "View",
+    "editStory" : "edit",
+    "edit" : "Edit",
+    "recaptureStory" : "re-capture",
+    "recapture" : "Recapture",
+    "deleteStory" : "delete",
+    "delete" : "Delete",
+    "untitledScene" : "untitled scene",
+    "doesNotExist" : "Story does not exist",
+    "message" : "<2>This is your story editor</2><1>Create and share interactive stories directly from your map<1><0><0></0>Getting Started </0></1></1>",
+    "removeAllStories": "Remove All",
+    "preview" : "preview stories",
+    "play" : "Play Story",
+    "captureSceneTitle" : "capture current scene",
+    "captureScene" : "Capture Scene",
+    "editor" : {
+      "placeholder" : "Enter a title here",
+      "cancelBtn" : "cancel",
+      "cancelEditing" : "Cancel",
+      "saveBtn" : "save",
+      "saveStory" : "Save"
+    },
+    "locationBtn" : "center scene",
+    "exitBtn" : "exit story",
+    "previousBtn" : "go to previous scene",
+    "untitled" : "untitled scene",
+    "navBtn" : "go to story {{title}}",
+    "nextBtn" : "go to next scene",
+    "navBtnMobile" : "go to story {{title}}",
+    "promptHtml1" : "<0>You can view and create stories at any time by clicking here.</0>",
+    "promptHtml2" : "<0><0>INTRODUCING</0><1>Data Stories</1><2>Create and share interactive stories directly from your map.</2></0>",
+    "story" : "Story",
+    "dismissText" : "Got it, thanks!",
+    "mobileViewStory" : "View Stories {{storiesLength}}"
+  },
+  "guidance" : {
+    "satelliteGuidance" : "You can access map guides at any time by looking in the <0>help menu</0>.",
+    "skip" : "Skip",
+    "dismissText" : "Got it, thanks!"
+  },
+  "addData" : {
+    "addDataBtnText" : "Add Data",
+    "btnHide" : "Hide",
+    "load" : "Load local/web data",
+    "closeDataPanel" : "Close data panel",
+    "done" : "Done",
+    "myData" : "My Dasssta",
+    "dataCatalogue" : "Data Catalogue",
+    "searchPlaceholderWhole" : "Search whole catalogue",
+    "searchPlaceholder" : "Search the catalogue",
+    "localAdd" : "Add local file",
+    "localFileType" : "<0>Step 1:</0> Select file type (optional)",
+    "localFile" : "<0>Step 2:</0> Select file",
+    "webAdd" : "Add web data",
+    "webFileType" : "<0>Step 1:</0> Select file type (optional)",
+    "webFile" : "<0>Step 2:</0> Enter the URL of the data file or web service",
+    "urlInputBtn" : "Add",
+    "browse" : "Browse...",
+    "localTitle" : "Add Local Data",
+    "webTitle" : "Add Web Data",
+    "dragDrop" : "Drag and Drop",
+    "infoText" : "<0>Drag and drop a file here to view it locally on the map</0><1>(it won’t be saved or uploaded to the internet)</1>",
+    "back" : "Back",
+    "note" : "<0>Note: </0>Data added in this way is not saved or made visible to others."
+  },
+  "search" : {
+    "resultsLabel" : "Search Results",
+    "done" : "Done",
+    "data" : "data",
+    "search" : "Search for '{{searchText}}' in the Data Catalogue",
+    "viewLess" : "View less {{name}} results",
+    "viewMore" : "View more {{name}} results",
+    "placeholder" : "Search for locations",
+    "searchCatalogue" : "Search the catalogue"
+  },
+  "mobile" : {
+    "toggleNavigation" : "toggle navigation"
+  },
+  "preview" : {
+    "doesNotContainGeospatialData" : "This file does not contain geospatial data.",
+    "selectToPreview" : "<0>Select a dataset to see a preview </0><1>- OR -</1><2>Go to the map</2>",
+    "loading" : "PREVIEW LOADING...",
+    "preview" : "{{appName}} preview",
+    "noPreviewAvailable" : "NO PREVIEW AVAILABLE",
+    "dataPreviewLoading" : "DATA PREVIEW LOADING...",
+    "dataPreview" : "DATA PREVIEW",
+    "dataPreviewError" : "DATA PREVIEW ERROR"
+  },
+  "workbench" : {
+    "colorScaleRangeTitle" : "Invalid color scale range",
+    "colorScaleRangeMin" : "The minimum value must be a number.",
+    "colorScaleRangeMax" : "The maximum value must be a number.",
+    "colorScaleRangeMinSmallerThanMax" : "The minimum value of the color scale range must be less than the maximum value.",
+    "colorScaleRange" : "Color Scale Range",
+    "rangeMax" : "Maximum:",
+    "rangeMin" : "Minimum:",
+    "colorScaleUpdateRange" : "Update Range",
+    "displayPercent" : "Display as a percentage of regional total",
+    "opacity" : "Opacity: {{opacity}} %",
+    "zoomToTitle" : "Zoom to extent",
+    "zoomTo" : "Zoom To Extent",
+    "openFeatureTitle" : "Zoom to data",
+    "openFeature" : "Zoom to",
+    "previewItemTitle" : "info",
+    "previewItem" : "About This Data",
+    "splitItemTitle" : "Duplicate and show splitter",
+    "splitItem" : "Split",
+    "exportDataTitle" : "Export map data",
+    "exportData" : "Export",
+    "removeFromMapTitle" : "Remove this data",
+    "removeFromMap" : "Remove",
+    "label" : "Data Sets",
+    "removeAll" : "Remove All",
+    "toggleVisibility" : "Data show/hide"
+  },
+  "dateTime" : {
+    "previous" : "Previous time",
+    "selectTime" : "Select a time",
+    "outOfRange" : "Currently out of range.",
+    "next" : "Next time",
+    "useTimeline" : "Use timeline",
+    "availableTimeChart" : "Show available times on chart",
+    "timeline" : {
+      "textCell" : "Name of the dataset whose time range is shown",
+      "gotoStart" : "Go to beginning",
+      "togglePlay" : "Play",
+      "playSlower" : "Play Slower",
+      "playFaster" : "Play Faster"
+    }
+  },
+  "satellite" : {
+    "pickPoint" : "Select a point by clicking on the map.",
+    "querying" : "Querying position...",
+    "filterByLocation" : "Filter by location",
+    "infoGroup" : "Only showing available capture times for:",
+    "removeFilter" : "Remove filter",
+    "zoomTo" : "Zoom to",
+    "newLocation" : "New location"
+  },
+  "timer" : {
+    "nextScheduledUpdateTime" : "Next data update at {{scheduledUpdateTime}}",
+    "nextScheduledUpdateCountdown" : "Next data update in {{timeCountdown}}"
+  },
+  "concept" : {
+    "active" : {
+      "edit" : "Edit condition",
+      "remove" : "Remove condition"
+    },
+    "inactive" : {
+      "cancel" : "Cancel",
+      "newText" : "New condition"
+    },
+    "summary" : {
+      "addMoreText" : "Add a condition",
+      "addFirstText" : "Add new condition"
+    }
+  },
+  "clipboard" : {
+    "success" : "Copied to clipboard",
+    "unsuccessful" : "Copy unsuccessful...",
+    "shareURL" : "Share URL",
+    "shareExplanation" : "Anyone with this URL will be able to access this map.",
+    "copy" : "Copy"
+  },
+  "dragDrop" : {
+    "text" : "<0>Drag & Drop</0><1>Your data anywhere to view on the map<1>",
+    "not" : "<0>bbbb</0>"
+  },
+  "loader" : {
+    "loadingMessage" : "Loading"
+  },
+  "emptyWorkbenchMessage" : "<0><0>Your workbench is empty</0><1><strong>Click '$t(addData.addDataBtnText)' above to </strong></1><2><0>Browse the Data Catalogue</0><1>Load your own data onto the map</1></2><3><0></0><strong>TIP.</strong><2>All your active data sets will be listed here</2></3></0>",
+  "dataCatalog" : {
+    "groupRemove": "remove this group",
+    "groupEmpty": "This group is empty"
+  },
+  "catalogItem" : {
+    "loading" : "Loading...",
+    "remove" : "Remove",
+    "add" : "Add",
+    "trash": "Remove from catalogue",
+    "removeFromMap" : "Remove from map"
+  },
+  "chart" : {
+    "sectionLabel" : "Charts",
+    "closePanel" : "Close Panel"
   }
 }
