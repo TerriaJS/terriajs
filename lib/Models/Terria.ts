@@ -149,6 +149,8 @@ export default class Terria {
 
   @observable
   readonly configParameters: ConfigParameters = {
+    appName: "TerriaJS App",
+    supportEmail: "info@terria.io",
     defaultMaximumShownFeatureInfos: 100,
     regionMappingDefinitionsUrl: "build/TerriaJS/data/regionMapping.json",
     conversionServiceBaseUrl: "convert/",
@@ -303,15 +305,6 @@ export default class Terria {
         runInAction(() => {
           if (config.parameters) {
             this.updateParameters(config.parameters);
-
-            this.appName = defaultValue(
-              config.parameters.appName,
-              this.appName
-            );
-            this.supportEmail = defaultValue(
-              config.parameters.supportEmail,
-              this.supportEmail
-            );
           }
 
           if (config.aspects) {
@@ -389,6 +382,12 @@ export default class Terria {
         this.configParameters[key] = parameters[key];
       }
     });
+
+    this.appName = defaultValue(this.configParameters.appName, this.appName);
+    this.supportEmail = defaultValue(
+      this.configParameters.supportEmail,
+      this.supportEmail
+    );
   }
 
   protected forceLoadInitSources(): Promise<void> {
