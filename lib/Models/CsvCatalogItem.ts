@@ -1,4 +1,10 @@
-import { runInAction, computed } from "mobx";
+import {
+  runInAction,
+  computed,
+  observable,
+  IComputedValue,
+  IObservableValue
+} from "mobx";
 import TerriaError from "../Core/TerriaError";
 import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
@@ -13,6 +19,7 @@ import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
 import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
+import { BaseModel } from "./Model";
 
 // Types of CSVs:
 // - Points - Latitude and longitude columns or address
@@ -41,9 +48,16 @@ export default class CsvCatalogItem extends TableMixin(
   }
 
   private _csvFile?: File;
+  @observable csvData?:
+    | IComputedValue<string[][]>
+    | IObservableValue<string[][]>;
 
-  constructor(id: string | undefined, terria: Terria) {
-    super(id, terria);
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel
+  ) {
+    super(id, terria, sourceReference);
     this.strata.set(
       automaticTableStylesStratumName,
       new TableAutomaticStylesStratum(this)
@@ -104,7 +118,9 @@ export default class CsvCatalogItem extends TableMixin(
   }
 
   protected forceLoadTableData(): Promise<string[][]> {
-    if (this.csvString !== undefined) {
+    if (this.csvData !== undefined) {
+      return Promise.resolve(this.csvData.get());
+    } else if (this.csvString !== undefined) {
       return Csv.parseString(this.csvString, true);
     } else if (this.url !== undefined) {
       return Csv.parseUrl(proxyCatalogItemUrl(this, this.url, "1d"), true);

@@ -2,21 +2,18 @@
 
 import SummaryConcept from "./SummaryConcept/SummaryConcept";
 import Concept from "./Concept";
-import ObserveModelMixin from "../../ObserveModelMixin";
 import SummaryConceptModel from "../../../Map/SummaryConcept";
 
 import React from "react";
-import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import Styles from "./concept-viewer.scss";
+import { observer } from "mobx-react";
 
-const ConceptViewer = createReactClass({
-  displayName: "ConceptViewer",
-  mixins: [ObserveModelMixin],
-
-  propTypes: {
+@observer
+class ConceptViewer {
+  static propTypes = {
     item: PropTypes.object.isRequired
-  },
+  };
 
   render() {
     // All non-additive-conditions go in a single section. (If there are none, don't show a <div class=section> so we don't get an extra padding.)
@@ -64,6 +61,6 @@ const ConceptViewer = createReactClass({
       </div>
     );
   }
-});
+}
 
 module.exports = ConceptViewer;
