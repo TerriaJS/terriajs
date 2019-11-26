@@ -9,6 +9,10 @@
 .btn {
   composes: btn from "./feature-info-panel.scss";
   composes: btn-primary from "../../Sass/common/_buttons.scss";
+
+  &:focus {
+    border-color: $color-primary;
+  }
 }
 
 .icon--download {
@@ -53,4 +57,8 @@
 
 .dropdown__button {
   composes: btn--small from "../../Sass/common/_buttons.scss";
+
+  &:focus {
+    border-color: $color-primary;
+  }
 }

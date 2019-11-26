@@ -14,6 +14,10 @@
   composes: btn from "../../Sass/common/_buttons.scss";
   padding: 5px;
 
+  &:focus {
+    border: $focus-border;
+  }
+
   svg {
     width: 30px;
     height: 30px;

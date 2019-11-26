@@ -77,6 +77,11 @@
     &.is-active {
       color: $grey;
     }
+
+    &:focus {
+      border: $focus-border;
+      border-color: $color-primary;
+    }  
   }
 }
 

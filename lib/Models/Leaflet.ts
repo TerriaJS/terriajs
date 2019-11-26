@@ -1,4 +1,4 @@
-import L, { GridLayer } from "leaflet";
+import L, { CircleMarker, GridLayer } from "leaflet";
 import { autorun, action, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
@@ -43,6 +43,7 @@ import Mappable, { ImageryParts, MapItem } from "./Mappable";
 import Terria from "./Terria";
 import MapboxVectorCanvasTileLayer from "../Map/MapboxVectorCanvasTileLayer";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
+import { JulianDate } from "cesium";
 
 interface SplitterClips {
   left: string;
@@ -83,12 +84,21 @@ export default class Leaflet extends GlobeOrMap {
   private _cesiumReqAnimFrameId: number | undefined;
   private _pickedFeatures: PickedFeatures | undefined = undefined;
   private _pauseMapInteractionCount = 0;
+  private readonly _pickerRectangle: L.Rectangle = L.rectangle(
+    [[0, 0], [0, 0]],
+    { color: "#ff7800", weight: 5 }
+  );
+  /**
+   * Keeps track of which leaflet layers have been picked.
+   */
+  private _pickedLeafletLayers: Set<string> = new Set();
 
   /* Disposers */
   private readonly _disposeWorkbenchMapItemsSubscription: () => void;
   private readonly _disposeDisableInteractionSubscription: () => void;
   private _disposeSelectedFeatureSubscription?: () => void;
   private _disposeSplitterReaction: () => void;
+  private _disposeKeyboardActiveReaction: () => void;
 
   private _createImageryLayer: (
     ip: Cesium.ImageryProvider
@@ -167,7 +177,13 @@ export default class Leaflet extends GlobeOrMap {
 
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
     this._disposeSplitterReaction = this._reactToSplitterChanges();
+    this._disposeKeyboardActiveReaction = autorun(() =>
+      this._showHidePickerRectangle()
+    );
 
+    // TODO: this shouldn't be an autorun, it should be a reaction
+    // Otherwise it'll run when anything in the state changes rather than just his.terriaViewer.disableInteraction
+    // Possibly move the function body outside the constructor for readability?
     this._disposeDisableInteractionSubscription = autorun(() => {
       const map = this.map;
       const interactions = filterOutUndefined([
@@ -179,20 +195,52 @@ export default class Leaflet extends GlobeOrMap {
         map.dragging,
         map.tap
       ]);
+
+      const eventsForKeyboardInterface = [
+        "move",
+        "zoom",
+        "resize",
+        "load",
+        "layeradd",
+        "layerremove",
+        "moveend",
+        "zoomend"
+      ];
       const pickLocation = this.pickLocation.bind(this);
+      const updatePickerRectangle = this._updatePickerRectangle.bind(this);
       const pickFeature = (entity: Entity, event: L.LeafletMouseEvent) => {
-        this._featurePicked(entity, event);
+        // Add the leaflet latlng string to the cesium entity so that we can link leaflet layers to cesium entities
+        // This is required for "rectangle-mode" feature picking
+        runInAction(() => {
+          if (!entity.propertyNames.includes("leafletLatLon")) {
+            entity.addProperty("leafletLatLon");
+            entity.properties.leafletLatLon = event.latlng.toString();
+          }
+          this._featurePicked(entity, event);
+        });
       };
 
       if (this.terriaViewer.disableInteraction) {
+        this._pickerRectangle.removeFrom(map);
         interactions.forEach(handler => handler.disable());
         this.map.off("click", pickLocation);
+
+        eventsForKeyboardInterface.forEach((eventName: string) =>
+          this.map.off(eventName, updatePickerRectangle)
+        );
+
         this.scene.featureClicked.removeEventListener(pickFeature);
         this._disposeSelectedFeatureSubscription &&
           this._disposeSelectedFeatureSubscription();
       } else {
+        // this.showHidePickerRectangle();
         interactions.forEach(handler => handler.enable());
         this.map.on("click", pickLocation);
+
+        eventsForKeyboardInterface.forEach((eventName: string) =>
+          this.map.on(eventName, updatePickerRectangle)
+        );
+
         this.scene.featureClicked.addEventListener(pickFeature);
         this._disposeSelectedFeatureSubscription = autorun(() => {
           const feature = this.terria.selectedFeature;
@@ -200,6 +248,20 @@ export default class Leaflet extends GlobeOrMap {
         });
       }
     });
+  }
+
+  private _showHidePickerRectangle() {
+    if (this.terriaViewer.keyboardInterfaceModeActive) {
+      const pickerBounds = this._computePickerRectangleBounds();
+      if (pickerBounds !== undefined) {
+        this._pickerRectangle.setBounds(pickerBounds);
+        this._pickerRectangle.addTo(this.map);
+      }
+    } else {
+      this._pickedLeafletLayers.clear();
+      this._pickerRectangle.removeFrom(this.map);
+      this._pickedFeatures = undefined;
+    }
   }
 
   /**
@@ -217,6 +279,35 @@ export default class Leaflet extends GlobeOrMap {
     this._pickFeatures(mouseEvent.latlng);
     // }
     // this._dragboxcompleted = false;
+  }
+
+  private _updatePickerRectangle(e: L.LeafletEvent) {
+    const bounds = this._computePickerRectangleBounds();
+    if (bounds === undefined) {
+      return;
+    }
+    this._pickerRectangle.setBounds(bounds);
+
+    if (
+      e.type === "zoomend" ||
+      e.type === "moveend" ||
+      e.type === "layeradd" ||
+      e.type === "layerremove" ||
+      e.type === "load"
+    ) {
+      // only pick features when certain events are fired.
+      // we don't want to pick features every tick of the rectangle moving, only when it stops
+      this._pickFeaturesInRectangle();
+      this._unpickFeaturesOutsideRectangle();
+    }
+  }
+
+  private _computePickerRectangleBounds(): L.LatLngBounds | undefined {
+    const width = this.map
+      .getBounds()
+      .getNorthWest()
+      .distanceTo(this.map.getBounds().getSouthEast());
+    return this.map.getCenter().toBounds(width / 10);
   }
 
   getContainer() {
@@ -259,6 +350,7 @@ export default class Leaflet extends GlobeOrMap {
   }
 
   private observeModelLayer() {
+    // TODO: split this into two separate autoruns, one for the imagery and one for the datasources so that they update seperately
     return autorun(() => {
       const catalogItems = [
         ...this.terriaViewer.items.get(),
@@ -449,6 +541,7 @@ export default class Leaflet extends GlobeOrMap {
     }
   }
 
+  // TODO: add more comments here to make this very tricky function easier to read
   private _pickFeatures(
     latlng: L.LatLng,
     tileCoordinates?: any,
@@ -489,8 +582,8 @@ export default class Leaflet extends GlobeOrMap {
         }
       });
 
-      // Unset this so that the next click will start building features from scratch.
       this._pickedFeatures = undefined;
+      this._pickedLeafletLayers.clear();
     });
 
     const imageryLayers: CesiumTileLayer[] = [];
@@ -632,6 +725,62 @@ export default class Leaflet extends GlobeOrMap {
         ].pickedFeatures = this._pickedFeatures;
       } else {
         this.terria.pickedFeatures = this._pickedFeatures;
+      }
+    });
+  }
+
+  private _pickFeaturesInRectangle() {
+    let count = 0;
+    this.map.eachLayer(layer => {
+      count++;
+      // If the layer is a CircileMarker and we haven't picked this features already...
+      if (
+        layer instanceof L.CircleMarker &&
+        !this._pickedLeafletLayers.has(layer.getLatLng().toString())
+      ) {
+        const circleMarkerLayer = layer as L.CircleMarker;
+        
+        // Check if the location of this point is in the picker rectangle
+        if (
+          this._pickerRectangle
+            .getBounds()
+            .contains(circleMarkerLayer.getLatLng())
+        ) {
+          // We want this feature pick to be handled the same as clicking on a feature, so we fire the click event
+          layer.fire("click", { latlng: layer.getLatLng() });
+          this._pickedLeafletLayers.add(layer.getLatLng().toString());
+        }
+      }
+    });
+
+    console.log(count);
+  }
+
+  private _unpickFeaturesOutsideRectangle() {
+    this.map.eachLayer(layer => {
+      if (
+        layer instanceof L.CircleMarker &&
+        this._pickedLeafletLayers.has(layer.getLatLng().toString())
+      ) {
+        const circleMarkerLayer = layer as L.CircleMarker;
+        // If this layer's feature has gone out of bounds...
+        if (
+          !this._pickerRectangle
+            .getBounds()
+            .contains(circleMarkerLayer.getLatLng())
+        ) {
+          // remove it from our picked leaflet layers
+          this._pickedLeafletLayers.delete(layer.getLatLng().toString());
+          // remove it from pickedFeatures
+          runInAction(() => {
+            if (this._pickedFeatures !== undefined) {
+              this._pickedFeatures.features = this._pickedFeatures.features.filter(
+                entity =>
+                  this._pickedLeafletLayers.has(entity.properties.leafletLatLon)
+              );
+            }
+          });
+        }
       }
     });
   }

@@ -20,5 +20,16 @@
     // For some reason without this IE9 flips out and stretches the images.
     width: auto;
     height: auto;
+
+    // make unfocused img same size as focused img with border
+    border: $focus-border-width solid transparent;
+  }
+
+  a {
+    &:focus {
+      img {
+        border: $focus-border;
+      }
+    }
   }
 }

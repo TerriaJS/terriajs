@@ -54,6 +54,11 @@ export default class TerriaViewer {
   @observable
   mapContainer: string | HTMLElement | undefined;
 
+  /**
+   * Is the user using the keyboard to interact with the app?
+   */
+  @observable keyboardInterfaceModeActive = false;
+
   // TODO: hook these up
   readonly beforeViewerChanged = new CesiumEvent();
   readonly afterViewerChanged = new CesiumEvent();

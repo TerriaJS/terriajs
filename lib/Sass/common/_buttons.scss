@@ -10,7 +10,8 @@ $btn-setting-size: 35px;
 .btn {
   background-color: transparent;
   margin: 0;
-  border: 0;
+  // to keep border-collapsed box the same size when focused and unfocused
+  border: solid $focus-border-width transparent;
   padding: 0;
   box-sizing: border-box;
   font-weight: $font-weight-normal;
@@ -22,10 +23,13 @@ $btn-setting-size: 35px;
   font-size: $font-size-button;
   font-family: $font-base;
 
+  &:focus {
+    border: $focus-border;
+  }
+
   &:focus,
   &:hover {
     box-shadow: none;
-    border-color: transparent;
     outline: none;
     opacity: 0.9;
   }
@@ -101,9 +105,16 @@ $btn-setting-size: 35px;
   border: $color-primary;
   border-radius: 4px;
 
-  &:hover,
+  &:hover {
+    border: $focus-border;
+  }
+
   &:focus {
     border: 2px solid get-hover-color($color-primary);
+  }
+
+  &:hover,
+  &:focus {
     color: get-hover-color($color-primary);
   }
 }
@@ -115,10 +126,17 @@ $btn-setting-size: 35px;
   border-radius: 4px;
   padding: 8px 10px;
 
+  &:hover {
+    border: $focus-border;
+  }
+
+  &:focus {
+    border: 2px solid get-hover-color($color-primary);
+  }
+
   &:hover,
   &:focus {
-    border: 2px solid $color-primary;
-    color: $color-primary;
+    color: get-hover-color($color-primary);
   }
 }
 
@@ -128,10 +146,17 @@ $btn-setting-size: 35px;
   border-radius: 4px;
   padding: 8px 10px;
 
-  &:hover,
+  &:hover {
+    border: $focus-border;
+  }
+
   &:focus {
     border: 1px solid $color-primary;
-    color: $color-primary;
+  }
+
+  &:hover,
+  &:focus {
+    color: get-hover-color($color-primary);
   }
 }
 
@@ -238,6 +263,7 @@ $btn-setting-size: 35px;
   background-color: $charcoal-grey;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
   line-height: 1.3;
+
   &:hover,
   &:focus,
   .is-open &,

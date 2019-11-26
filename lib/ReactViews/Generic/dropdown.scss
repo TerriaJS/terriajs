@@ -36,12 +36,19 @@
   color: $text-dark;
   border: 1px solid $field-border;
   position: relative;
-  &:hover,
-  &:focus {
+  
+  &:hover {
     background: $text-light;
     color: $text-dark;
     border: 1px solid $color-primary;
   }
+
+  &:focus {
+    background: $text-light;
+    color: $text-dark;
+    border: $focus-border-dark;
+  }
+
   svg {
     width: 30px;
     height: 30px;

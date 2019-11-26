@@ -66,6 +66,10 @@
   right: 0;
   top: $mobile-header-height;
   bottom: 0;
+  
+  &:focus-within {
+    border: $focus-border;
+  }
 }
 
 .feedback {

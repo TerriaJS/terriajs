@@ -26,6 +26,10 @@
   text-align: center;
   //ie sizing fix
   height: 40px;
+
+  &:focus-within {
+      border: $focus-border;
+  }
 }
 
 .navs {

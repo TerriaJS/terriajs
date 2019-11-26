@@ -25,6 +25,11 @@
     }
   }
 
+  &:focus {
+    border: $focus-border;
+    border-color: $color-primary;
+  }
+
   &--is-previewed {
     color: $modal-highlight;
     font-weight: $font-weight-bold;
@@ -64,6 +69,11 @@
     svg {
       fill: $modal-highlight;
     }
+  }
+
+  &:focus {
+    border: $focus-border;
+    border-color: $color-primary;
   }
 
   &--stats-bars {
