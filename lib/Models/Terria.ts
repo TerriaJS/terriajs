@@ -304,7 +304,10 @@ export default class Terria {
           if (config.parameters) {
             this.updateParameters(config.parameters);
 
-            this.appName = defaultValue(config.parameters.appName, this.appName);
+            this.appName = defaultValue(
+              config.parameters.appName,
+              this.appName
+            );
             this.supportEmail = defaultValue(
               config.parameters.supportEmail,
               this.supportEmail
