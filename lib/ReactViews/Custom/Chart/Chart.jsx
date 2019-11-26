@@ -27,6 +27,7 @@ class Chart extends React.Component {
   static propTypes = {
     width: PropTypes.number,
     height: PropTypes.number,
+    domain: PropTypes.object,
     chartItems: PropTypes.array.isRequired,
     xAxis: PropTypes.object.isRequired,
     containerComponent: PropTypes.element,
@@ -118,8 +119,9 @@ class Chart extends React.Component {
       <VictoryChart
         width={width}
         height={height}
+        domain={this.props.domain}
         theme={this.props.theme}
-        scale={{ x: this.props.xAxis.scale }}
+        scale={this.props.xAxis.scale}
         containerComponent={this.props.containerComponent}
       >
         {this.props.renderLegends(this.legends, width)}

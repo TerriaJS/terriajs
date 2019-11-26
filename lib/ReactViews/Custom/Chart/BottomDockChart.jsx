@@ -1,5 +1,5 @@
 import merge from "lodash/merge";
-import { computed } from "mobx";
+import { computed, observable, toJS, action } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
@@ -18,12 +18,34 @@ import Chart from "./Chart";
 
 @observer
 class BottomDockChart extends React.Component {
+  @observable visibleDomain;
+
   static propTypes = {
     width: PropTypes.number,
     height: PropTypes.number,
     chartItems: PropTypes.array.isRequired,
     xAxis: PropTypes.object.isRequired
   };
+
+  /**
+   * Compute the entire domain for all chartItems.
+   */
+  @computed get chartDomain() {
+    const chartItems = this.props.chartItems;
+    const xmin = Math.min(...chartItems.map(c => c.domain.x[0]));
+    const xmax = Math.max(...chartItems.map(c => c.domain.x[1]));
+    const ymin = Math.min(...chartItems.map(c => c.domain.y[0]));
+    const ymax = Math.max(...chartItems.map(c => c.domain.y[1]));
+    return {
+      x: [xmin, xmax],
+      y: [ymin, ymax]
+    };
+  }
+
+  @action
+  onDomainChanged(newDomain) {
+    this.visibleDomain = newDomain;
+  }
 
   @computed
   get theme() {
@@ -60,28 +82,12 @@ class BottomDockChart extends React.Component {
   }
 
   /**
-   * Compute a single domain for all chartItems.
-   */
-  @computed
-  get domain() {
-    const chartItems = this.props.chartItems;
-    const xmin = Math.min(...chartItems.map(c => c.domain.x[0]));
-    const xmax = Math.max(...chartItems.map(c => c.domain.x[1]));
-    const ymin = Math.min(...chartItems.map(c => c.domain.y[0]));
-    const ymax = Math.max(...chartItems.map(c => c.domain.y[1]));
-    return {
-      x: [xmin, xmax],
-      y: [ymin, ymax]
-    };
-  }
-
-  /**
    * Returns a container component configured with the required mixins.
    */
   @computed
   get containerComponent() {
     const mixins = [
-      //voronoiContainerMixin,
+      voronoiContainerMixin,
       zoomContainerMixin
       //cursorContainerMixin -- TODO: breaks eventHandlers used for moment charts
     ];
@@ -96,13 +102,13 @@ class BottomDockChart extends React.Component {
     return (
       <Container
         zoomDimension="x"
-        zoomDomain={this.domain}
         cursorDimension="x"
         cursorComponent={
           <LineSegment style={{ stroke: "white", opacity: "0.5" }} />
         }
         labels={getTooltipValue}
         labelComponent={<VictoryTooltip cornerRadius={0} />}
+        onZoomDomainChange={this.onDomainChanged.bind(this)}
       />
     );
   }
@@ -128,13 +134,20 @@ class BottomDockChart extends React.Component {
     );
   }
 
+  @computed
+  get chartItems() {
+    return sortChartItemsByType(this.props.chartItems).map(c =>
+      clipPointsToVisibleDomain(c, this.visibleDomain || this.chartDomain)
+    );
+  }
+
   render() {
-    const chartItems = sortChartItemsByType(this.props.chartItems);
     return (
       <Chart
         width={this.props.width}
         height={this.props.height}
-        chartItems={chartItems}
+        domain={toJS(this.chartDomain)}
+        chartItems={this.chartItems}
         xAxis={this.props.xAxis}
         theme={this.theme}
         containerComponent={this.containerComponent}
@@ -154,6 +167,19 @@ function sortChartItemsByType(chartItems) {
   return chartItems.slice().sort((a, b) => {
     return order.indexOf(a.type) - order.indexOf(b.type);
   });
+}
+
+/**
+ * Removes data outside visible domain.
+ */
+function clipPointsToVisibleDomain(chartItem, domain) {
+  const startIndex = chartItem.points.findIndex(p => p.x >= domain.x[0]);
+  const endIndex = chartItem.points.findIndex(p => p.x > domain.x[1]);
+  const clippedPoints = chartItem.points.slice(startIndex, endIndex);
+  return {
+    ...chartItem,
+    points: clippedPoints
+  };
 }
 
 export default BottomDockChart;
