@@ -1080,6 +1080,7 @@ declare module "terriajs-cesium/Source/Scene/Scene" {
   import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
   class Scene extends Cesium.Scene {
     canvas: HTMLCanvasElement;
+    tweens: any;
     /**
      * NOTE: Private in Cesium, should only be called if there is no other alternative.
      * */
