@@ -77,7 +77,8 @@ function DeltaTool({ terria, tool, onCloseTool }) {
     const firstDateStr = dateFormat(primaryDate, "yyyy-mm-dd'T'HH:MM:ss.l'Z'", true);
     const secondDateStr = dateFormat(secondaryDate, "yyyy-mm-dd'T'HH:MM:ss.l'Z'", true);
 
-    item.name = `Change Detection: ${catalogItem.name}`; // TODO: set a name that is guaranteed to be unique
+    var timestamp = dateFormat(new Date(), "yyyy-mm-dd'T'HH:MM:ss.l'Z'");
+    item.name = `Change Detection: ${catalogItem.name} ${timestamp}`;
     item.featureTimesProperty = undefined; // Hide the location filter
     item.clock = undefined; // Make it a non-time-dynamic item
     item.intervals = undefined;
