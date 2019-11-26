@@ -1,51 +1,27 @@
+import { uniq } from "lodash-es";
 import {
-  computed,
-  toJS,
-  observable,
-  IObservableValue,
-  IComputedValue,
-  extendObservable,
   action,
-  runInAction,
-  autorun,
-  reaction
+  computed,
+  extendObservable,
+  IComputedValue,
+  IObservableValue,
+  observable,
+  reaction,
+  runInAction
 } from "mobx";
 import { createTransformer } from "mobx-utils";
-import filterOutUndefined from "../Core/filterOutUndefined";
-import {
-  isJsonObject,
-  isJsonString,
-  JsonArray,
-  JsonObject
-} from "../Core/Json";
-import loadJson from "../Core/loadJson";
+import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
-import MagdaDistributionFormatTraits from "../Traits/MagdaDistributionFormatTraits";
-import MagdaReferenceTraits from "../Traits/MagdaReferenceTraits";
-import CatalogMemberFactory from "./CatalogMemberFactory";
+import Csv from "../Table/Csv";
+import FilteredCsvReferenceTraits from "../Traits/FilteredCsvReferenceTraits";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
-import createStratumInstance from "./createStratumInstance";
-import { BaseModel } from "./Model";
-import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
-import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import StratumFromTraits from "./StratumFromTraits";
-import Terria from "./Terria";
-import updateModelFromJson from "./updateModelFromJson";
-import ModelTraits from "../Traits/ModelTraits";
-import StratumOrder from "./StratumOrder";
-import Csv from "../Table/Csv";
 import CsvCatalogItem from "./CsvCatalogItem";
-import FilteredCsvReferenceTraits, {
-  FilterTraits
-} from "../Traits/FilteredCsvReferenceTraits";
-import Concept from "../Map/Concept";
-import { uniq, extend } from "lodash-es";
-import { Model } from "cesium";
-import isDefined from "../Core/isDefined";
+import { BaseModel } from "./Model";
+import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
+import updateModelFromJson from "./updateModelFromJson";
 
 export default class FilteredCsvReference extends UrlMixin(
   ReferenceMixin(CreateModel(FilteredCsvReferenceTraits))
