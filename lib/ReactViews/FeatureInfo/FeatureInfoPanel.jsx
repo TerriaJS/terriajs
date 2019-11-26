@@ -12,7 +12,8 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import { withTranslation, useTranslation } from "react-i18next";
+import i18next from "i18next";
+import { withTranslation } from "react-i18next";
 import Icon from "../Icon.jsx";
 import {
   LOCATION_MARKER_DATA_SOURCE_NAME,
@@ -465,9 +466,8 @@ function determineCatalogItem(nowViewing, feature) {
     const dataSource = feature.entityCollection.owner;
 
     if (dataSource.name === LOCATION_MARKER_DATA_SOURCE_NAME) {
-      const { t } = useTranslation();
       return {
-        name: t("featureInfo.locationMarker")
+        name: i18next.t("featureInfo.locationMarker")
       };
     }
 

@@ -59,7 +59,7 @@
     "printTitle" : "Print Map",
     "printExplanation" : "Open a printable version of this map.",
     "printButton" : "Print",
-    "printView" : "Show Print View",
+    "printViewButton" : "Show Print View",
     "creatingPrintView" : "Creating print view...",
     "btnAdvanced" : "Advanced options",
     "embedTitle" : "To embed, copy this code to embed this map into an HTML page:",
@@ -155,7 +155,7 @@
     "pickLocation" : "Pick Location",
     "clickMap" : "Click on the map to learn more about a location",
     "noDataAvailable" : "No data is available here - try another location.",
-    "clickToAddData" : "Click 'Add Data' to add data to the map.",
+    "clickToAddData" : "Click '$t(addData.addDataBtnText)' to add data to the map.",
     "userSelection" : "User Selection",
     "panelHeading" : "Feature Information",
     "btnCloseFeature" : "Close data panel",
@@ -220,7 +220,7 @@
     "load" : "Load local/web data",
     "closeDataPanel" : "Close data panel",
     "done" : "Done",
-    "myData" : "My Dasssta",
+    "myData" : "My Data",
     "dataCatalogue" : "Data Catalogue",
     "searchPlaceholderWhole" : "Search whole catalogue",
     "searchPlaceholder" : "Search the catalogue",
@@ -360,5 +360,133 @@
   "chart" : {
     "sectionLabel" : "Charts",
     "closePanel" : "Close Panel"
+  },
+  "core" : {
+    "dataUri" : {
+      "errorTitle" : "Browser Does Not Support Data Download",
+      "errorMessage" : "Unfortunately Microsoft browsers (including all versions of Internet Explorer and Edge) do not support the data uri functionality needed to download data as a file. To download, copy the following uri into another browser such as Chrome, Firefox or Safari: {{href}}"
+    },
+    "findIndex" : {
+      "nullUndefined" : "findIndex called on null or undefined",
+      "array" : "findIndex only works on array",
+      "function" : "findIndex predicate must be a function"
+    },
+    "dataType" : {
+      "auto" : "Auto-detect (recommended)",
+      "wms-getCapabilities" : "Web Map Service (WMS) Server",
+      "wmts-getCapabilities" : "Web Map Tile Service (WMTS) Server",
+      "wfs-getCapabilities" : "Web Feature Service (WFS) Server",
+      "esri-group" : "Esri ArcGIS Server",
+      "esri-mapServer" : "Esri ArcGIS MapServer (single layer)",
+      "esri-featureServer" : "Esri ArcGIS FeatureServer (single layer)",
+      "open-street-map" : "Open Street Map Server",
+      "geojson" : "GeoJSON",
+      "kml" : "KML or KMZ",
+      "csv" : "CSV",
+      "czml" : "CZML",
+      "gpx" : "GPX",
+      "json" : "JSON",
+      "other" : "Other (use conversion service)"
+    },
+    "printWindow" : {
+      "errorTitle" : "Error printing",
+      "errorMessage" : "Printing did not start within 10 seconds. Maybe this web browser does not support printing?",
+      "printMediaStart" : "print media start",
+      "printMediaEnd" : "print media end",
+      "onbeforeprint" : "onbeforeprint",
+      "onafterprint" : "onafterprint"
+    },
+    "googleAnalytics" : {
+      "log" : "Google Analytics tracking is disabled because terria.configParameters.googleAnalyticsKey is not specified"
+    },
+    "readText" : {
+      "fileRequired" : "file is require"
+    },
+    "readXml" : {
+      "xmlError" : "The file does not contain valid XML."
+    },
+    "serverConfig" : {
+      "failedToGet" : "Failed to get server config from {{serverConfigUrl}}. This means services such as proxy, convert and URL shortening may not work."
+    },
+    "terriaError" : {
+      "defaultValue" : "An error occurred"
+    }
+  },
+  "map" : {
+    "addressGeocoder" : {
+      "devError" : "bulkConvertAddresses must be implemented in the derived class."
+    },
+    "cesium" : {
+      "devError" : "cesium is required.",
+      "failedToObtain" : "Failed to obtain image tile X: {{x}} Y: {{y}} Level: {{level}}.",
+      "notWebMercatorTilingScheme" : "This dataset cannot be displayed on the 2D map because it does not support the Web Mercator (EPSG:3857) projection.",
+      "unusalTilingScheme" :   "This dataset cannot be displayed on the 2D map because it uses an unusual tiling scheme that is not supported."
+    },
+    "computeRingWindingOrder" : {
+      "devError" : "Expected points of type {x:number, y:number}"
+    },
+    "displayVariablesConcept" : {
+      "defaultName" : "Display Variable"
+    },
+    "drawExtentHelper" : {
+      "drawExtent" : "Draw Extent",
+      "extent" : "Extent"
+    },
+    "gmlToGeoJson" : {
+      "missingPos" : "GML point element is missing a pos element.",
+      "missingExteriorRing" : "GML polygon is missing its exterior ring.",
+      "missingPosList" : "GML polygon's exterior ring is missing a posList.",
+      "containsUnsupportedFeatureType" : "GML contains unsupported feature type: {{type}}"
+    },
+    "gnafAddressGeocoder" : {
+      "noAddresses" : "This tableStructure has no addresses!",
+      "noAddresses2" : "Even though the tableStructure reports it has an address column, it has no addresses",
+      "suburb" : "Suburb",
+      "state" : "State",
+      "postcode" : "Postcode",
+      "matchedAddresses" : "Matched Address",
+      "lon" : "Lon",
+      "lat" : "Lat",
+      "score" : "Score",
+      "poBox" : "po box",
+      "postOfficeBox" : "post office box"
+    },
+    "imageryProviderHooks" : {
+      "devError" : "No context for image recoloring."
+    },
+    "leafletVisualizer" : {
+      "devError1" : "leafletScene is required.",
+      "devError2" : "entityCollection is required.",
+      "devError3" : "time is required."
+    },
+    "mapboxVectorTileImageryProvider" :  {
+      "requireLayerName" : "MapboxVectorTileImageryProvider requires a layer name passed as options.layerName",
+      "requireStyles" : "MapboxVectorTileImageryProvider requires a styling function passed as options.styleFunc",
+      "moreThanFourTiles" : "The imagery provider's rectangle and minimumLevel indicate that there are {{tileCount}} tiles at the minimum level. Imagery providers with more than four tiles at the minimum level are not supported.",
+      "maxLevelError" : "Maximum level too high for data set"
+    },
+    "regionProvider" : {
+      "csvRegionMappingTitle" : "CSV region mapping",
+      "csvRegionMappingMessageZeroFound" : "Zero region names found for region type {{regionType}}",
+      "csvRegionMappingMessageZeroBoundariesFound" : "Zero region boundaries found for region {{regionName}}",
+      "csvRegionMappingMessageLoadError" : "Couldn't load region boundaries for region {{regionName}} {{exception}}"
+    }
+  },
+  "models" : {
+    "userDrawing" : {
+      "devError" : "Terria instance is required.",
+      "messageHeader" : "Draw on Map",
+      "pointEntities" : "Points",
+      "otherEntities" : "Lines and polygons",
+      "line" : "Line",
+      "firstPoint" : "First Point",
+      "btnCancel" : "Cancel",
+      "btnDone" : "Done",
+      "clickToAddFirstPoint" : "Click to add a point",
+      "clickToAddAnotherPoint" : "Click to add another point",
+      "anotherPoint" : "Another Point",
+      "userPolygon" : "User polygon"
+    }
   }
+
 }
