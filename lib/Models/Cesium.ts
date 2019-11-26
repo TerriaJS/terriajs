@@ -237,6 +237,14 @@ export default class Cesium extends GlobeOrMap {
         ) {
           this._selectionIndicator.position =
             feature.cesiumPrimitive._clampedPosition;
+        } else if (
+          isDefined(feature.cesiumPrimitive) &&
+          isDefined(feature.cesiumPrimitive._clampedModelMatrix)
+        ) {
+          this._selectionIndicator.position = Matrix4.getTranslation(
+            feature.cesiumPrimitive._clampedModelMatrix,
+            this._selectionIndicator.position || new Cartesian3()
+          );
         } else if (isDefined(feature.position)) {
           this._selectionIndicator.position = feature.position.getValue(
             this.terria.timelineClock.currentTime
