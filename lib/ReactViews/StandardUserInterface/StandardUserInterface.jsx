@@ -7,7 +7,7 @@ import Branding from "../SidePanel/Branding";
 // import DragDropNotification from './../DragDropNotification';
 import ExplorerWindow from "../ExplorerWindow/ExplorerWindow";
 import FeatureInfoPanel from "../FeatureInfo/FeatureInfoPanel";
-// import FeedbackForm from '../Feedback/FeedbackForm';
+import FeedbackForm from "../Feedback/FeedbackForm";
 import MapColumn from "./MapColumn";
 import MapInteractionWindow from "../Notification/MapInteractionWindow";
 import MapNavigation from "../Map/MapNavigation";
@@ -279,11 +279,17 @@ const StandardUserInterface = observer(
               viewState={this.props.viewState}
             />
 
-            {/* <If condition={!customElements.feedback.length && this.props.terria.configParameters.feedbackUrl && !this.props.viewState.hideMapUi()}>
-                    <aside className={Styles.feedback}>
-                        <FeedbackForm viewState={this.props.viewState}/>
-                    </aside>
-                </If> */}
+            <If
+              condition={
+                !customElements.feedback.length &&
+                this.props.terria.configParameters.feedbackUrl &&
+                !this.props.viewState.hideMapUi()
+              }
+            >
+              <aside className={Styles.feedback}>
+                <FeedbackForm viewState={this.props.viewState} />
+              </aside>
+            </If>
 
             <div
               className={classNames(
