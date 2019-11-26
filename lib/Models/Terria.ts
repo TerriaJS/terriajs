@@ -48,9 +48,12 @@ import TimeVarying from "../ModelMixins/TimeVarying";
 import MagdaReference from "./MagdaReference";
 import CatalogGroup from "./CatalogGroupNew";
 import ViewerMode from "./ViewerMode";
+import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 
 interface ConfigParameters {
   [key: string]: ConfigParameters[keyof ConfigParameters];
+  appName?: string;
+  supportEmail?: string;
   defaultMaximumShownFeatureInfos?: number;
   regionMappingDefinitionsUrl: string;
   conversionServiceBaseUrl?: string;
@@ -123,8 +126,8 @@ export default class Terria {
     )
   );
 
-  appName?: string;
-  supportEmail?: string;
+  appName: string = "TerriaJS App";
+  supportEmail: string = "support@terria.io";
 
   /**
    * Gets or sets the {@link this.corsProxy} used to determine if a URL needs to be proxied and to proxy it if necessary.
@@ -300,6 +303,12 @@ export default class Terria {
         runInAction(() => {
           if (config.parameters) {
             this.updateParameters(config.parameters);
+
+            this.appName = defaultValue(config.parameters.appName, this.appName);
+            this.supportEmail = defaultValue(
+              config.parameters.supportEmail,
+              this.supportEmail
+            );
           }
 
           if (config.aspects) {
