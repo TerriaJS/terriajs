@@ -117,7 +117,9 @@ export default class GltfCatalogItem
       position = Cartesian3.ZERO;
     }
 
-    const dataSource: CustomDataSource = new CustomDataSource(this.name || "glTF model");
+    const dataSource: CustomDataSource = new CustomDataSource(
+      this.name || "glTF model"
+    );
     dataSource.entities.add(
       new Entity({
         position: new ConstantPositionProperty(position),
