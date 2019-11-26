@@ -435,7 +435,9 @@ export default class Terria {
           allModelStratumData,
           replaceStratum
         ).then(container => {
-          const dereferenced = ReferenceMixin.is(container) ? container.target : container;
+          const dereferenced = ReferenceMixin.is(container)
+            ? container.target
+            : container;
           if (GroupMixin.isMixedInto(dereferenced)) {
             return dereferenced.loadMembers();
           }
