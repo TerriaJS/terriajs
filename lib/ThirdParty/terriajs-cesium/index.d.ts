@@ -975,7 +975,11 @@ declare module "terriajs-cesium/Source/Scene/GetFeatureInfoFormat" {
   export default Cesium.GetFeatureInfoFormat;
 }
 declare module "terriajs-cesium/Source/Scene/Globe" {
-  export default Cesium.Globe;
+  import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+  class Globe extends Cesium.Globe {
+    splitDirection: ImagerySplitDirection;
+  }
+  export default Globe;
 }
 declare module "terriajs-cesium/Source/Scene/GoogleEarthEnterpriseImageryProvider" {
   export default Cesium.GoogleEarthEnterpriseImageryProvider;
@@ -1078,9 +1082,11 @@ declare module "terriajs-cesium/Source/Scene/PrimitiveCollection" {
 }
 declare module "terriajs-cesium/Source/Scene/Scene" {
   import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+  import Globe from "terriajs-cesium/Source/Scene/Globe";
   class Scene extends Cesium.Scene {
     canvas: HTMLCanvasElement;
     tweens: any;
+    readonly globe: Globe;
     /**
      * NOTE: Private in Cesium, should only be called if there is no other alternative.
      * */

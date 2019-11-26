@@ -20,7 +20,7 @@
   padding: $padding-mini;
 
   composes: col from "../../../Sass/common/_base.scss";
-  composes: col-4 from "../../../Sass/common/_base.scss";
+  composes: col-3 from "../../../Sass/common/_base.scss";
 }
 
 .btn--viewer {

@@ -1,15 +1,18 @@
 import { action, computed, observable, runInAction, toJS } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Clock from "terriajs-cesium/Source/Core/Clock";
+import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
+import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import URI from "urijs";
 import AsyncLoader from "../Core/AsyncLoader";
 import Class from "../Core/Class";
 import ConsoleAnalytics from "../Core/ConsoleAnalytics";
+import CorsProxy from "../Core/CorsProxy";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import GoogleAnalytics from "../Core/GoogleAnalytics";
 import instanceOf from "../Core/instanceOf";
@@ -25,30 +28,27 @@ import TerriaError from "../Core/TerriaError";
 import PickedFeatures from "../Map/PickedFeatures";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
+import TimeVarying from "../ModelMixins/TimeVarying";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
+import CatalogGroup from "./CatalogGroupNew";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import Catalog from "./CatalogNew";
 import CommonStrata from "./CommonStrata";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import InitSource, { isInitOptions, isInitUrl } from "./InitSource";
+import MagdaReference from "./MagdaReference";
+import MapInteractionMode from "./MapInteractionMode";
 import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
-import NoViewer from "./NoViewer";
 import ShareDataService from "./ShareDataService";
 import TimelineStack from "./TimelineStack";
 import updateModelFromJson from "./updateModelFromJson";
 import upsertModelFromJson from "./upsertModelFromJson";
-import Workbench from "./Workbench";
-import CorsProxy from "../Core/CorsProxy";
-import MapInteractionMode from "./MapInteractionMode";
-import TimeVarying from "../ModelMixins/TimeVarying";
-import MagdaReference from "./MagdaReference";
-import CatalogGroup from "./CatalogGroupNew";
 import ViewerMode from "./ViewerMode";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
+import Workbench from "./Workbench";
 
 interface ConfigParameters {
   [key: string]: ConfigParameters[keyof ConfigParameters];
@@ -206,6 +206,8 @@ export default class Terria {
   @observable showSplitter = false;
   @observable splitPosition = 0.5;
   @observable splitPositionVertical = 0.5;
+  @observable terrainSplitDirection: ImagerySplitDirection =
+    ImagerySplitDirection.NONE;
 
   @observable stories: any[] = [];
 
