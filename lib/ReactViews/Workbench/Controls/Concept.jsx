@@ -7,38 +7,38 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import Styles from "./concept-viewer.scss";
+import { observer } from "mobx-react";
 
-const Concept = createReactClass({
-  displayName: "Concept",
-  mixins: [ObserveModelMixin],
-
-  propTypes: {
+@observer
+class Concept extends React.Component{
+  static propTypes = {
     concept: PropTypes.object.isRequired,
     hideName: PropTypes.bool,
     isLoading: PropTypes.bool
-  },
+  }
 
-  toggleOpen() {
+
+  toggleOpen = () => {
     this.props.concept.toggleOpen();
-  },
+  }
 
-  toggleActive() {
+  toggleActive = () => {
     if (!this.props.isLoading) {
       this.props.concept.toggleActive();
     }
-  },
+  }
 
   getColorStyle() {
     if (this.props.concept.color) {
       return { color: this.props.concept.color };
     }
-  },
+  }
 
   getFillStyle() {
     if (this.props.concept.color) {
       return { fill: this.props.concept.color };
     }
-  },
+  }
 
   render() {
     const concept = this.props.concept;

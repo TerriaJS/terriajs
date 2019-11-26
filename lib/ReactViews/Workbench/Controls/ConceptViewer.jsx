@@ -10,7 +10,7 @@ import Styles from "./concept-viewer.scss";
 import { observer } from "mobx-react";
 
 @observer
-class ConceptViewer {
+class ConceptViewer extends React.Component {
   static propTypes = {
     item: PropTypes.object.isRequired
   };

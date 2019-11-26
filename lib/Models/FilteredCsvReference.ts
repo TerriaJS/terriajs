@@ -248,8 +248,9 @@ class FilterValueConcept {
 
   toggleActive() {
     if (this.parent && !this.parent.allowMultiple) {
+      const active = this.isActive;
       this.parent.deactivateAllChildren();
-      this.setActive(!this.isActive);
+      this.setActive(!active);
     }
   }
 }
@@ -259,7 +260,7 @@ class FilterColumnConcept {
   readonly isSelectable = false; // I think this is correct
   readonly hasChildren = true;
   @observable isVisible = true;
-  @observable isOpen = true;
+  @observable isOpen = false;
   readonly allowMultiple = false;
   constructor(readonly name: string, readonly items: FilterValueConcept[]) {
     this.id = name;
@@ -268,6 +269,7 @@ class FilterColumnConcept {
     });
   }
 
+  @action
   toggleOpen() {
     this.isOpen = !this.isOpen;
   }
