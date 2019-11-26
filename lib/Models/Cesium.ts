@@ -262,6 +262,7 @@ export default class Cesium extends GlobeOrMap {
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
     this._disposeTerrainReaction = autorun(() => {
       this.scene.globe.terrainProvider = this._terrainProvider;
+      this.scene.globe.splitDirection = this.terria.showSplitter ? this.terria.terrainSplitDirection : ImagerySplitDirection.NONE;
     });
     this._disposeSplitterReaction = this._reactToSplitterChanges();
 
