@@ -10,23 +10,22 @@ import Styles from "./concept-viewer.scss";
 import { observer } from "mobx-react";
 
 @observer
-class Concept extends React.Component{
+class Concept extends React.Component {
   static propTypes = {
     concept: PropTypes.object.isRequired,
     hideName: PropTypes.bool,
     isLoading: PropTypes.bool
-  }
-
+  };
 
   toggleOpen = () => {
     this.props.concept.toggleOpen();
-  }
+  };
 
   toggleActive = () => {
     if (!this.props.isLoading) {
       this.props.concept.toggleActive();
     }
-  }
+  };
 
   getColorStyle() {
     if (this.props.concept.color) {
@@ -130,7 +129,7 @@ class Concept extends React.Component{
       </li>
     );
   }
-});
+}
 
 /**
  * @param  {Concept} concept A concept.
