@@ -108,9 +108,6 @@
     "qualityLabel" : "Quality",
     "performanceLabel" : "Performance"
   },
-  "menuBar" :{
-    "a" : "a"
-  },
   "feedback" : {
     "feedbackPreamble" : "We would love to hear from you!",
     "title" : "Feedback",
@@ -242,7 +239,7 @@
   "search" : {
     "resultsLabel" : "Search Results",
     "done" : "Done",
-    "data" : "data",
+    "data" : "Data",
     "search" : "Search for '{{searchText}}' in the Data Catalogue",
     "viewLess" : "View less {{name}} results",
     "viewMore" : "View more {{name}} results",
@@ -260,7 +257,9 @@
     "noPreviewAvailable" : "NO PREVIEW AVAILABLE",
     "dataPreviewLoading" : "DATA PREVIEW LOADING...",
     "dataPreview" : "DATA PREVIEW",
-    "dataPreviewError" : "DATA PREVIEW ERROR"
+    "dataPreviewError" : "DATA PREVIEW ERROR",
+    "removeFromMap" : "Remove from the map",
+    "addToMap" : "Add to the map"
   },
   "workbench" : {
     "colorScaleRangeTitle" : "Invalid color scale range",
@@ -361,7 +360,35 @@
     "sectionLabel" : "Charts",
     "closePanel" : "Close Panel"
   },
+  "viewModels" : {
+    "searchNoLocations" : "Sorry, no locations match your search query.",
+    "searchErrorOccurred" : "An error occurred while searching.  Please check your internet connection or try again later.",
+    "searchAddresses" : "Addresses",
+    "searchPlaceNames" : "Official Place Names",
+    "searchNoPlaceNames" : "Sorry, no official place names match your search query",
+    "searchLocations" : "Locations",
+    "searchCatalogueItem" : "Catalogue Items",
+    "searchNoCatalogueItem" : "Sorry, no catalogue items match your search query.",
+    "inMultipleLocations" : "In multiple locations including: ",
+    "inDataCatalogue" : "In Data Catalogue",
+    "bingMapsAerialWithLabels" : "Bing Maps Aerial with Labels",
+    "bingMapsAerial" : "Bing Maps Aerial",
+    "bingMapRoads" : "Bing Maps Roads",
+    "naturalEarthII" : "Natural Earth II",
+    "nasaBlackMarble" : "NASA Black Marble",
+    "positronLight" : "Positron (Light)",
+    "positronAttribution" : "© OpenStreetMap contributors ODbL, © CartoDB CC-BY 3.0",
+    "darkMatter" : "Dark Matter",
+    "darkMatterAttribution": "© OpenStreetMap contributors ODbL, © CartoDB CC-BY 3.0"
+  },
+  "terriaViewer" : {
+    "slowWebGLAvailableTitle" : "Poor WebGL performance",
+    "slowWebGLAvailableMessage" : "Your web browser reports that it has performance issues displaying {{appName}} in 3D, so you will see a limited, 2D-only experience. For the full 3D experience, please try using a different web browser, upgrading your video drivers, or upgrading your operating system.",
+    "webGLNotSupportedTitle" : "WebGL not supported"
+  },
   "core" : {
+    "userAddedData" : "User-Added Data",
+    "chartData" : "Chart Data",
     "dataUri" : {
       "errorTitle" : "Browser Does Not Support Data Download",
       "errorMessage" : "Unfortunately Microsoft browsers (including all versions of Internet Explorer and Edge) do not support the data uri functionality needed to download data as a file. To download, copy the following uri into another browser such as Chrome, Firefox or Safari: {{href}}"
@@ -473,6 +500,113 @@
     }
   },
   "models" : {
+    "csv" : {
+      "name" : "Comma-Separated Values (CSV)",
+      "dataSourceErrorMessage" : "This data source does not have any details available.",
+      "serviceErrorMessage" : "This service does not have any details available.",
+      "unexpectedTypeTitle" : "Unexpected type of CSV data",
+      "unexpectedTypeMessage" : "CsvCatalogItem data is expected to be a Blob, File, or String, but it was not any of these. This may indicate a bug in terriajs or incorrect use of the terriajs API. If you believe it is a bug in {{appName}} please report it by emailing ",
+      "unableToLoadTitle" : "Unable to load CSV file",
+      "unableToLoadMessage" : "See the <a href=\"https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au\">csv-geo-au</a> specification for supported CSV formats.\n\n {{message}}",
+      "unableToLoadItemTitle" : "Unable to load CSV Catalog Item",
+      "unableToLoadItemMessage" : "CSV did not have data or url to load from."
+    },
+    "csw" : {
+      "name" : "Catalogue Service (CSW)",
+      "unknownError" : "The CSW server reported an unknown error.",
+      "exceptionMessage" : "The CSW server reported an error:\n\n {{exceptionText}}",
+      "notUseableTitle" : "Catalogue service is not useable",
+      "notUseableMessage" : "Invalid response obtained when invoking GetDomain on the CSW server. <p>This error may indicate that the catalogue server you specified is temporarily unavailable or there is a problem with your internet connection.  Try opening the processing server again, and if the problem persists, please report it by sending an email to ",
+      "checkCORSDomain" : "Couldn't execute GetDomain on this CSW server.<br/><br/> If you entered the URL manually, please double-check it.<br/><br/> If it's your server, make sure <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a> is enabled.<br/><br/> Otherwise, if reloading doesn't fix it, please report the problem by sending an email to {{email}} with the technical details below.  Thank you!",
+      "checkCORSRecords" : "Couldn't execute GetRecords on this CSW server.<br/><br/> If it's your server, make sure <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a> is enabled.<br/><br/> Otherwise, if reloading doesn't fix it, please report the problem by sending an email to {{email}} with the technical details below.  Thank you!",
+      "dataResponsibility" : "Data Responsibility",
+      "links" : "Links",
+      "metadataURL" : "Metadata Record URL"
+    },
+    "geoJson" : {
+      "errorLoadingTitle" : "srError loading GeoJSON",
+      "errorParsingMessage" : "sr2An error occurred parsing the provided data as JSON.  This may indicate that the file is invalid or that it is not supported by {{appName}}. If you would like assistance or further information, please email us at {{email}}",
+      "errorLoadingMessage" : "sr1An error occurred while loading a GeoJSON file.  This may indicate that the file is invalid or that it is not supported by {{appName}}. If you would like assistance or further information, please email us at {{email}}"
+    },
+    "raiseError": {
+      "errorTitle" : "An error occurred",
+      "errorMessage" : "{{appName}}  experienced an error.  Please report this by emailing {{email}}. Details of the error are below."
+    },
+    "regionMapping" : {
+      "noDataForDate" : "No data for the selected date.",
+      "noDataForRegion" : "No data for the selected region.",
+      "outdatedBrowserTitle" : "Outdated Web Browser",
+      "outdatedBrowserMessage" : "You are using a very old web browser that cannot display \"region mapped\" datasets such as this one.  Please upgrade to the latest version of Google Chrome, Mozilla Firefox, Microsoft Edge, Microsoft Internet Explorer 11, or Apple Safari as soon as possible.  Please contact us at {{email}} if you have any concerns.",
+      "invalidServerTypeTitle" : "Invalid serverType {{serverType}} in regionMapping.json",
+      "invalidServerTypeMessage" : "Expected serverType to be \"WMS\" or \"vector\" but got \"{{serverType}}\""
+    },
+    "feedback" : {
+      "thanksTitle" : "Thank you for your feedback!",
+      "thanksMessage" : "Your feedback helps make {{appName}} better",
+      "unableToSendTitle" : "Unable to send feedback",
+      "unableToSendMessage" : "This is really embarrassing, but an error occurred while attempting to send your feedback.  Please email it to {{email}} instead."
+    },
+    "sensorObservationService" : {
+      "alreadyLoadingTitle" : "Data already loading",
+      "alreadyLoadingMessage" : "Your data is still loading. You will be able to change the display once it has loaded",
+      "unknownError": "The server reported an unknown error.",
+      "exceptionMessage" : "The server reported an error: \n\n {{exceptionText}}",
+      "missingBody" : "The server responded with missing body.",
+      "noFeatures" : "There are no features matching your query.",
+      "unknownFormat" : "The server responded with an unknown feature format.",
+      "noMatchingFeatures" : "The Sensor Observation Service did not return any features matching your query."
+
+    },
+    "time" : {
+      "invalidDate" : "Invalid Date",
+      "invalidInitialTimeSource" : "Invalid initialTimeSource specified in config file: {{initialTimeSource}}"
+    },
+    "shareData" : {
+      "generateErrorTitle" : "Couldn't generate short URL.",
+      "generateErrorMessage" : "Something went wrong when trying to use the share data service to generate a short URL. If you believe it is a bug in {{appName}}, please report it by emailing {{email}}.",
+      "expandErrorTitle" : "Couldn't expand URL",
+      "expandErrorMessage" : "The share data service used to launch {{appName}} was not located. This may indicate an error in the link or that the service is unavailable at this time. If you believe it is a bug in {{appName}}, please report it by emailing {{email}}"
+    },
+    "socrataServer" : {
+      "name" : "Socrata Server",
+      "retrieveErrorMessage" : "Couldn't retrieve packages from this Socrata server.<br/><br/>If you entered the URL manually, please double-check it.<br/><br/> Otherwise, if reloading doesn't fix it, please report the problem by sending an email to {{email}} with the technical details below.  Thank you!<br/><br/><pre> {{formatError}}</pre>"
+    },
+    "tableData" : {
+      "unsupportedCharactersTitle" : "Invalid characters in latitude and longitude columns",
+      "unsupportedCharactersMessage" : "Could not interpret latitude and longitude pair {{longitude}}, {{latitude}}",
+      "bulkGeocoderInfoTitle" : "Bulk Geocoder Information",
+      "bulkGeocoderInfoMessage" : "The CSV contains addresses, but {{number}} can't be located on the map: ",
+      "bulkGeocoderInfo2Message" : "{{nullAddresses}} addresses are missing from the CSV."
+    },
+    "terrainCatalog" : {
+      "notSupportedErrorTitle" : "Not supported in 2D",
+      "notSupportedErrorMessage" : "{{name}} cannot be show in the 2D view.  Switch to 3D and try again"
+    },
+    "terria" : {
+      "initErrorTitle" : "Failed to initialize services",
+      "initErrorMessage" : "A problem occurred with the Terria server. This may cause some layers or the conversion service to be unavailable.",
+      "urlLoadErrorTitle" : "Problem loading URL",
+      "urlLoadErrorMessage" : "A problem occurred while initialising Terria with URL parameters."
+    },
+    "terriaJSONcatalog" : {
+      "name" : "Terria JSON Catalog Function",
+      "misconfiguredErrorTitle" : "Misconfigured init file",
+      "misconfiguredErrorMessage" : "Service not configured for TerriaJsonCatalogFunction HTTP 202.",
+      "misconfiguredError2Message" : "HTTP 202 configuration {{url}} not present in response {{xhr}}",
+      "serviceResponseErrorTitle" : "Service response not JSON string",
+      "serviceResponseErrorMessage" : "TerriaJsonCatalogFunction was supposed to receive a JSON string, received {{xhr}}",
+      "requestFailedTitle" : "Request Failed",
+      "requestFailedMessage" : "Request failed with status code {{status}}.",
+      "asyncResultDescription" : "This is the result of invoking the {{name}} process or service at {{timestamp}} with the input parameters below.",
+      "loadingInitSourceErrorTitle" : "Error loading initialization source",
+      "loadingInitSourceErrorMessage" : "Error loading initialization source {{fragment}} because no initFragmentPaths are defined.",
+      "loadingInitSourceError2Message" : "An error occurred while loading initialization information from {{loadSource}}. This may indicate that you followed an invalid link or that there is a problem with your Internet connection.",
+      "disclaimer" : "Disclaimer",
+      "buttonTitleConfirm" : "I Agree"
+    },
+    "urlTemplateMapServer" : {
+      "name" : "URL Template Map Server"
+    },
     "userDrawing" : {
       "devError" : "Terria instance is required.",
       "messageHeader" : "Draw on Map",
@@ -486,6 +620,73 @@
       "clickToAddAnotherPoint" : "Click to add another point",
       "anotherPoint" : "Another Point",
       "userPolygon" : "User polygon"
+    },
+    "webFeatureServiceCatalogGroup" : {
+      "wfsServer" : "Web Feature Service (WFS) Server",
+      "invalidWFSServerTitle" : "Invalid WFS server",
+      "invalidWFSServerMessage" : "An error occurred while invoking GetCapabilities on the WFS server.  The server's response does not appear to be a valid GetCapabilities document. <p>If you entered the link manually, please verify that the link is correct.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection. Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "groupNotAvailableTitle" : "Group is not available",
+      "groupNotAvailableMessage" : "An error occurred while invoking GetCapabilities on the WFS server. <p>If you entered the link manually, please verify that the link is correct.</p> <p>This error may also indicate that the server does not support <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' Map team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by '{{appName}}' itself.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection. Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>"
+    },
+    "webFeatureServiceCatalogItem" : {
+      "wfs" : "Web Feature Service (WFS)"
+    },
+    "webMapServiceCatalogGroup" : {
+      "wmsServer" : "Web Map Service (WMS) Server",
+      "invalidWMSServerTitle" : "Invalid WMS server",
+      "invalidWMSServerMessage" : "An error occurred while invoking GetCapabilities on the WMS server. The server's response does not appear to be a valid GetCapabilities document. <p>If you entered the link manually, please verify that the link is correct.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "groupNotAvailableTitle" : "Group is not available",
+      "groupNotAvailableMessage" : "An error occurred while invoking GetCapabilities on the WMS server. <p>If you entered the link manually, please verify that the link is correct.</p> <p>This error may also indicate that the server does not support <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' Map team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by '{{appName}}' itself.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection. Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>"
+    },
+    "webMapServiceCatalogItem" : {
+      "wms" : "Web Map Service (WMS)",
+      "noLayerFoundTitle" : "No layer found",
+      "noLayerFoundMessage" : "The WMS dataset '{{name}}' has no layers matching '{{layers}}'. {{suggested}} {{line}}{{line}}Either the catalog file has been set up incorrectly, or the WMS server has changed.{{line}}{{line}}Please report this error by sending an email to {{email}}.",
+      "datasetScaleErrorTitle" : "Dataset will not be shown at this scale",
+      "datasetScaleErrorMessage" : "The {{name}} dataset will not be shown when zoomed in this close to the map because the data custodian has indicated that the data is not intended or suitable for display at this scale.  Click the dataset's Info button on the Now Viewing tab for more information about the dataset and the data custodian.",
+      "badlyFormatedTitle" : "Badly formatted periodicity",
+      "badlyFormatedMessage" : "The '{{name}}' dataset has a badly formed periodicity, '{{isoSegments}}'. Click the dataset's Info button for more information about the dataset and the data custodian.",
+      "missingDataTitle" : "Missing data",
+      "missingDataMessage" : "The WMS dataset '{{name}}' did not return any data.{{line}}{{line}}Either the catalog file has been set up incorrectly, or the server address has changed.{{line}}{{line}}Please report this error by emailing {{email}}."
+    },
+    "webMapTileServiceCatalogGroup" : {
+      "wmtsServer" : "Web Map Tile Service (WMTS) Server",
+      "invalidWMTSServerTitle" : "Invalid WMTS server",
+      "invalidWMTSServerMessage" : "An error occurred while invoking GetCapabilities on the WMS server. The server's response does not appear to be a valid GetCapabilities document. <p>If you entered the link manually, please verify that the link is correct.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "groupNotAvailableTitle" : "Group is not available",
+      "groupNotAvailableMessage" : "An error occurred while invoking GetCapabilities on the WMTS server. <p>If you entered the link manually, please verify that the link is correct.</p> <p>This error may also indicate that the server does not support <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' Map team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by '{{appName}}' itself.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection. Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>"
+    },
+    "webMapTileServiceCatalogItem" : {
+      "wmts" : "Web Map Tile Service (WMTS)"
+    },
+    "webProcessingService" : {
+      "wps" : "Web Processing Service (WPS)",
+      "invalidWPSServerTitle" : "Invalid WPS server",
+      "invalidWPSServerMessage" : "An error occurred while invoking DescribeProcess on the WPS server for process name {{name}}.  The server's response does not appear to be a valid DescribeProcess document. <p>This error may also indicate that the processing server you specified is temporarily unavailable or there is a problem with your internet connection.  Try opening the processing server again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "processDescriptionErrorTitle" : "Process does not have a process description",
+      "processDescriptionErrorMessage" : "The WPS DescribeProcess for this process does not include a ProcessDescription.",
+      "processInputErrorTitle" : "Process does not have any inputs",
+      "processInputErrorMessage" : "This WPS process does not specify any inputs.",
+      "unsupportedParameterErrorTitle" : "Unsupported parameter type",
+      "unsupportedParameterErrorMessage" : "The parameter {{identifier}} is not a supported type of parameter.",
+      "invalidResponseErrorTitle" : "Invalid WPS server response",
+      "invalidResponseErrorMessage" : "An error occurred while accessing the status location on the WPS server for process name {{name}}.  The server's response does not appear to be a valid ExecuteResponse document. <p>This error may also indicate that the processing server you specified is temporarily unavailable or there is a problem with your internet connection.  If the problem persists, please report it by sending an email to {{email}}.</p>",
+      "invalidResponseError2Title" : "Invalid response from WPS server",
+      "invalidResponseError2Message" : "The response from the WPS server does not include a Status element.",
+      "failureReasonUnknowError" : "The reason for failure is unknown.",
+      "asyncShortReportFailed" : "Web Processing Service invocation failed.  More details are available on the Info panel.",
+      "errorDetails" : "Error Details",
+      "resultPendingDescription" : "This is the result of invoking the {{name}} process or service at {{timestamp}} with the input parameters below.",
+      "regionTypeDescription" : "The type of region to analyze.",
+      "wpsServer" : "Web Processing Service (WPS) Server",
+      "wpsResult" : "Web Processing Service Result"
+    },
+    "wfsFeatures" : {
+      "featuresGroup": "Group of features in a Web Feature Service (WFS) Server",
+      "queryErrorTitle" : "Error querying WFS server",
+      "queryErrorMessage" : "An error occurred while invoking GetFeature on the WFS server. The server's response does not appear to be a valid GeoJSON document. <p>If you entered the link manually, please verify that the link is correct.</p><p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "groupNotAvailableTitle" : "Group is not available",
+      "groupNotAvailableMessage" : "An error occurred while invoking GetFeature on the WFS server. <p>If you entered the link manually, please verify that the link is correct.</p><p>This error may also indicate that the server does not support <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  If this is your server, verify that CORS is enabled and enable it if it is not. If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' Map team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by '{{appName}}' itself.</p><p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>"
     }
   }
 
