@@ -2,9 +2,9 @@
 
 /*global require,describe,it,expect,beforeEach,fail*/
 
-var JulianDate = require("terriajs-cesium/Source/Core/JulianDate");
+var JulianDate = require("terriajs-cesium/Source/Core/JulianDate").default;
 var calculateImageryLayerIntervals = require("../../lib/Models/calculateImageryLayerIntervals");
-var TimeInterval = require("terriajs-cesium/Source/Core/TimeInterval");
+var TimeInterval = require("terriajs-cesium/Source/Core/TimeInterval").default;
 
 describe("calculateImageryLayerIntervals", function() {
   beforeEach(function() {});
