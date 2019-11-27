@@ -74,10 +74,11 @@ function DeltaTool({ terria, tool, onCloseTool }) {
   }
 
   function generateDelta() {
-    const firstDateStr = dateFormat(primaryDate, "dd-mm-yyyy");
-    const secondDateStr = dateFormat(secondDateStr, "dd-mm-yyyy");
+    const firstDateStr = dateFormat(primaryDate, "yyyy-mm-dd'T'HH:MM:ss.l'Z'", true);
+    const secondDateStr = dateFormat(secondaryDate, "yyyy-mm-dd'T'HH:MM:ss.l'Z'", true);
 
-    item.name = `Change Detection: ${catalogItem.name}`; // TODO: set a name that is guaranteed to be unique
+    var timestamp = dateFormat(new Date(), "yyyy-mm-dd'T'HH:MM:ss.l'Z'");
+    item.name = `Change Detection: ${catalogItem.name} ${timestamp}`;
     item.featureTimesProperty = undefined; // Hide the location filter
     item.clock = undefined; // Make it a non-time-dynamic item
     item.intervals = undefined;
@@ -95,7 +96,7 @@ function DeltaTool({ terria, tool, onCloseTool }) {
 
     // item.loadingMessage = "Loading difference map";
     // item.isLoading = true;
-    item.styles = "ndvi"; // TODO: remove
+
     item.showDeltaImagery(firstDateStr, secondDateStr);
     onCloseTool();
   }
