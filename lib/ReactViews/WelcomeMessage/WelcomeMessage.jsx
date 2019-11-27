@@ -28,7 +28,9 @@ const WelcomeMessage = createReactClass({
   /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillMount() {
     const { viewState } = this.props;
-    const shouldShow = !viewState.terria.getLocalProperty(LOCAL_PROPERTY_KEY);
+    const shouldShow =
+      viewState.terria.configParameters.showWelcomeMessage &&
+      !viewState.terria.getLocalProperty(LOCAL_PROPERTY_KEY);
     this.props.viewState.showWelcomeMessage = shouldShow;
     knockout.track(this.props.viewState, ["showWelcomeMessage"]);
   },

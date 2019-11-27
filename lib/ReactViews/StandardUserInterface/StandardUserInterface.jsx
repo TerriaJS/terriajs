@@ -110,7 +110,8 @@ const StandardUserInterface = createReactClass({
 
   componentDidMount() {
     this._wrapper.addEventListener("dragover", this.dragOverListener, false);
-    this.props.terria.configParameters.storyEnabled &&
+    this.props.terria.configParameters.showFeaturePrompts &&
+      this.props.terria.configParameters.storyEnabled &&
       this.props.terria.stories.length === 0 &&
       this.props.viewState.toggleFeaturePrompt("story", true);
   },
