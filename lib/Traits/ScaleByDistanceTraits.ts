@@ -4,8 +4,7 @@ import primitiveTrait from "./primitiveTrait";
 export default class ScaleByDistanceTraits extends ModelTraits {
   @primitiveTrait({
     name: "Near",
-    description:
-      "The lower bound of the camera distance range.",
+    description: "The lower bound of the camera distance range.",
     type: "number"
   })
   near: number = 0.0;
@@ -13,7 +12,7 @@ export default class ScaleByDistanceTraits extends ModelTraits {
   @primitiveTrait({
     name: "Near Scale Value",
     description:
-      "The scale value to use when the camera is at the `Near` distance (or "+
+      "The scale value to use when the camera is at the `Near` distance (or " +
       "closer). A value greater than 1.0 enlarges the image while a scale " +
       "less than 1.0 shrinks it.",
     type: "number"
@@ -22,8 +21,7 @@ export default class ScaleByDistanceTraits extends ModelTraits {
 
   @primitiveTrait({
     name: "Far",
-    description:
-      "The upper bound of the camera distance range.",
+    description: "The upper bound of the camera distance range.",
     type: "number"
   })
   far: number = 1.0;

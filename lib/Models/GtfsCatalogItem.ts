@@ -384,12 +384,14 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
           this.scaleImageByDistance.nearValue ===
           this.scaleImageByDistance.farValue
             ? undefined
-            : new ConstantProperty(new NearFarScalar(
-                this.scaleImageByDistance.near,
-                this.scaleImageByDistance.nearValue,
-                this.scaleImageByDistance.far,
-                this.scaleImageByDistance.farValue
-              )),
+            : new ConstantProperty(
+                new NearFarScalar(
+                  this.scaleImageByDistance.near,
+                  this.scaleImageByDistance.nearValue,
+                  this.scaleImageByDistance.far,
+                  this.scaleImageByDistance.farValue
+                )
+              ),
         pixelSize:
           this.scaleImageByDistance.nearValue ===
             this.scaleImageByDistance.farValue &&
