@@ -1,19 +1,15 @@
-import mixTraits from "./mixTraits";
-import UrlTraits from "./UrlTraits";
-import TableTraits from "./TableTraits";
+import AutoRefreshingTraits from "./AutoRefreshingTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import TimeVaryingTraits from "./TimeVaryingTraits";
-import RasterLayerTraits from "./RasterLayerTraits";
+import FeatureInfoTraits from "./FeatureInfoTraits";
+import GtfsModelTraits from "./GtfsModelTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
 import MappableTraits from "./MappableTraits";
-import primitiveTrait from "./primitiveTrait";
-import AutoRefreshingTraits from "./AutoRefreshingTraits";
-import GltfTraits from "./GltfTraits";
+import mixTraits from "./mixTraits";
 import objectTrait from "./objectTrait";
-import GltfCatalogItemTraits from "./GltfCatalogItemTraits";
-import GtfsModelTraits from "./GtfsModelTraits";
-import FeatureInfoTraits from "./FeatureInfoTraits";
-import FeatureInfoTemplateTraits from "./FeatureInfoTraits";
+import primitiveTrait from "./primitiveTrait";
+import RasterLayerTraits from "./RasterLayerTraits";
+import ScaleByDistanceTraits from "./ScaleByDistanceTraits";
+import UrlTraits from "./UrlTraits";
 
 export default class GtfsCatalogItemTraits extends mixTraits(
   UrlTraits,
@@ -39,6 +35,14 @@ export default class GtfsCatalogItemTraits extends mixTraits(
     type: "string"
   })
   image?: string;
+
+  @objectTrait({
+    name: "Scale Image by Distance",
+    description:
+      "Describes how marker images are scaled by distance from the viewer.",
+    type: ScaleByDistanceTraits
+  })
+  scaleImageByDistance?: ScaleByDistanceTraits;
 
   @objectTrait({
     name: "Model",

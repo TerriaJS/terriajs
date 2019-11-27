@@ -24,6 +24,7 @@ import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
 import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
 import Axis from "terriajs-cesium/Source/Scene/Axis";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
+import URI from "urijs";
 import loadArrayBuffer from "../Core/loadArrayBuffer";
 import TerriaError from "../Core/TerriaError";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
@@ -354,21 +355,48 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
     if (this.image !== undefined && this.image !== null) {
       billboard = new BillboardGraphics({
-        image: this.terria.baseUrl + this.image,
+        image: new URI(this.image).absoluteTo(this.terria.baseUrl).toString(),
         heightReference: HeightReference.RELATIVE_TO_GROUND,
-        // near and far distances are arbitrary, these ones look nice
-        scaleByDistance: new NearFarScalar(0.1, 1.0, 100000, 0.1),
+        scaleByDistance:
+          this.scaleImageByDistance.nearValue ===
+          this.scaleImageByDistance.farValue
+            ? undefined
+            : new NearFarScalar(
+                this.scaleImageByDistance.near,
+                this.scaleImageByDistance.nearValue,
+                this.scaleImageByDistance.far,
+                this.scaleImageByDistance.farValue
+              ),
+        scale:
+          this.scaleImageByDistance.nearValue ===
+            this.scaleImageByDistance.farValue &&
+          this.scaleImageByDistance.nearValue !== 1.0
+            ? this.scaleImageByDistance.nearValue
+            : undefined,
         color: new Color(1.0, 1.0, 1.0, this.opacity)
       });
     } else {
       point = new PointGraphics({
         color: Color.CYAN,
-        pixelSize: 32,
         outlineWidth: 1,
         outlineColor: Color.WHITE,
-        scaleByDistance: new ConstantProperty(
-          new NearFarScalar(0.1, 1.0, 100000, 0.1)
-        )
+        scaleByDistance:
+          this.scaleImageByDistance.nearValue ===
+          this.scaleImageByDistance.farValue
+            ? undefined
+            : new ConstantProperty(new NearFarScalar(
+                this.scaleImageByDistance.near,
+                this.scaleImageByDistance.nearValue,
+                this.scaleImageByDistance.far,
+                this.scaleImageByDistance.farValue
+              )),
+        pixelSize:
+          this.scaleImageByDistance.nearValue ===
+            this.scaleImageByDistance.farValue &&
+          this.scaleImageByDistance.nearValue !== 1.0
+            ? 32 * this.scaleImageByDistance.nearValue
+            : 32,
+        heightReference: HeightReference.RELATIVE_TO_GROUND
       });
     }
 
