@@ -4,7 +4,7 @@
 var CompositeCatalogItem = require("../../lib/Models/CompositeCatalogItem");
 var TerrainCatalogItem = require("../../lib/Models/TerrainCatalogItem");
 var Terria = require("../../lib/Models/Terria");
-var when = require("terriajs-cesium/Source/ThirdParty/when");
+var when = require("terriajs-cesium/Source/ThirdParty/when").default;
 
 describe("TerrainCatalogItem", function() {
   var terria;
