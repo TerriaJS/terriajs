@@ -32,6 +32,9 @@
       opacity: 1;
     }
   }
+  &--is-trashable {
+    padding-right: $padding * 5.7;
+  }
 
   @media (max-width: $sm) {
     font-size: $font-size-mid-small;
@@ -82,4 +85,8 @@
       position: absolute;
     }
   }
+}
+
+.btn-trash {
+  right: 32px;
 }

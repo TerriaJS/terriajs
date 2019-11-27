@@ -2,11 +2,13 @@
 
 /*global require,describe,it,expect,beforeEach,fail*/
 
-var JulianDate = require("terriajs-cesium/Source/Core/JulianDate");
-var Rectangle = require("terriajs-cesium/Source/Core/Rectangle");
-var TimeInterval = require("terriajs-cesium/Source/Core/TimeInterval");
-var TimeIntervalCollection = require("terriajs-cesium/Source/Core/TimeIntervalCollection");
-var WebMercatorTilingScheme = require("terriajs-cesium/Source/Core/WebMercatorTilingScheme");
+var JulianDate = require("terriajs-cesium/Source/Core/JulianDate").default;
+var Rectangle = require("terriajs-cesium/Source/Core/Rectangle").default;
+var TimeInterval = require("terriajs-cesium/Source/Core/TimeInterval").default;
+var TimeIntervalCollection = require("terriajs-cesium/Source/Core/TimeIntervalCollection")
+  .default;
+var WebMercatorTilingScheme = require("terriajs-cesium/Source/Core/WebMercatorTilingScheme")
+  .default;
 
 var ImageryLayerCatalogItem = require("../../lib/Models/ImageryLayerCatalogItem");
 var LegendUrl = require("../../lib/Map/LegendUrl");

@@ -1,9 +1,10 @@
 "use strict";
 
-const CesiumMath = require("terriajs-cesium/Source/Core/Math");
+const CesiumMath = require("terriajs-cesium/Source/Core/Math").default;
 const ConsoleAnalytics = require("../../Core/ConsoleAnalytics");
-const defaultValue = require("terriajs-cesium/Source/Core/defaultValue");
-const defined = require("terriajs-cesium/Source/Core/defined");
+const defaultValue = require("terriajs-cesium/Source/Core/defaultValue")
+  .default;
+const defined = require("terriajs-cesium/Source/Core/defined").default;
 const GeoJsonCatalogItem = require("../../Models/GeoJsonCatalogItem");
 const ObserveModelMixin = require("../ObserveModelMixin");
 const OpenStreetMapCatalogItem = require("../../Models/OpenStreetMapCatalogItem");
@@ -13,7 +14,7 @@ const PropTypes = require("prop-types");
 const Terria = require("../../Models/Terria");
 const TerriaViewer = require("../../ViewModels/TerriaViewer.js");
 const ViewerMode = require("../../Models/ViewerMode");
-const when = require("terriajs-cesium/Source/ThirdParty/when");
+const when = require("terriajs-cesium/Source/ThirdParty/when").default;
 import classNames from "classnames";
 
 import Styles from "./data-preview-map.scss";
@@ -118,7 +119,7 @@ const DataPreviewMap = createReactClass({
       this.props.terria.analytics.logEvent(
         "dataSource",
         "preview",
-        previewedCatalogItem.name
+        previewedCatalogItem.path
       );
     }
 
