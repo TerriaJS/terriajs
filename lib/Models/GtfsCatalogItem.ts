@@ -350,6 +350,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     for (let field of GtfsCatalogItem.FEATURE_INFO_TEMPLATE_FIELDS) {
       featureInfo.set(field, prettyPrintGtfsEntityField(field, entity));
     }
+    featureInfo.set("entity", entity);
     let billboard;
     let point;
 
