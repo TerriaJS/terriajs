@@ -68,7 +68,7 @@ const ViewingControls = createReactClass({
     const item = this.props.item;
     item.splitDirection = ImagerySplitDirection.RIGHT;
     const serializedItem = item.serializeToJson();
-    serializedItem.name = t("splitterTool.copyName", {
+    serializedItem.name = t("splitterTool.workbench.copyName", {
       name: serializedItem.name
     });
     serializedItem.splitDirection = ImagerySplitDirection.LEFT;

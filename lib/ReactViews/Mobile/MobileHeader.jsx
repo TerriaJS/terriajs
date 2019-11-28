@@ -189,7 +189,7 @@ const MobileHeader = createReactClass({
                       searchText={searchState.locationSearchText}
                       onSearchTextChanged={this.changeLocationSearchText}
                       onDoSearch={this.searchLocations}
-                      placeholder={t("addData.placeholder")}
+                      placeholder={t("search.placeholder")}
                       alwaysShowClear={true}
                       onClear={this.closeLocationSearch}
                       autoFocus={true}
@@ -200,7 +200,7 @@ const MobileHeader = createReactClass({
                       searchText={searchState.catalogSearchText}
                       onSearchTextChanged={this.changeCatalogSearchText}
                       onDoSearch={this.searchCatalog}
-                      placeholder={t("addData.searchCatalogue")}
+                      placeholder={t("search.searchCatalogue")}
                       onClear={this.closeCatalogSearch}
                       autoFocus={true}
                     />

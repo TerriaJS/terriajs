@@ -39,6 +39,7 @@ import SlideUpFadeIn from "../Transitions/SlideUpFadeIn/SlideUpFadeIn";
 import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";
 import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 const GuideProgress = props => {
   // doesn't work for IE11
@@ -78,8 +79,9 @@ export const analyticsSetShowGuide = (
     setCalledFromInside: false
   }
 ) => {
-  const { t } = this.props;
-  const openOrClose = bool ? t("general.open") : t("general.close");
+  const openOrClose = bool
+    ? i18next.t("general.open")
+    : i18next.t("general.close");
   const actionSuffix = options.setCalledFromInside ? " from inside modal" : "";
 
   terria.analytics.logEvent(
@@ -133,13 +135,13 @@ export const GuidePure = ({
     }
   };
 
+  const { t } = useTranslation();
   const handleSetShowGuide = bool => {
     analyticsSetShowGuide(bool, currentGuideIndex, guideKey, terria, {
       setCalledFromInside: true
     });
     setShowGuide(bool);
   };
-  const { t } = useTranslation();
   const currentGuide = guideData[currentGuideIndex] || {};
   const hidePrev = currentGuide.hidePrev || false;
   const prevButtonText = currentGuide.prevText || t("general.prev");

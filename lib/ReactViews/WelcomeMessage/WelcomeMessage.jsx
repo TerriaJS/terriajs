@@ -58,8 +58,10 @@ export const WelcomeMessagePure = ({
   // This is required so we can do nested animations
   const [welcomeVisible, setWelcomeVisible] = useState(showWelcomeMessage);
   const [shouldExploreData, setShouldExploreData] = useState(false);
-  const WelcomeMessagePrimaryBtnClick = undefined;
-  const WelcomeMessageSecondaryBtnClick = undefined;
+  const {
+    WelcomeMessagePrimaryBtnClick,
+    WelcomeMessageSecondaryBtnClick
+  } = viewState.terria.overrides;
   const handleClose = (persist = false) => {
     setShowWelcomeMessage(false);
     if (persist) {
