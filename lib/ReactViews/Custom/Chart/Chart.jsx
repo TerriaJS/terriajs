@@ -78,8 +78,20 @@ class Chart extends React.Component {
     return (
       <VictoryLine
         key={index}
+        x="_x"
+        y="_y"
+        y0="_y0"
+        // Tell victory that data is already sorted, this
+        // avoids expensive sorting operation during every
+        // render cycle. TODO: ensure our data is already sorted
+        sortKey={null}
         data={data.points.map(p => ({
-          ...p,
+          // the _x, _y is the option for passing in preformatted data, this tells
+          // victory-charts not format data during every render cycle. That
+          // greatly improves performance when using large datasets (> 300 points)
+          _x: p.x,
+          _y: p.y,
+          _y0: 0,
           units: data.units,
           name: data.name
         }))}

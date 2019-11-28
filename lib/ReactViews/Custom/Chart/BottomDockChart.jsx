@@ -1,4 +1,6 @@
 import merge from "lodash/merge";
+import debounce from "lodash/debounce";
+import sum from "lodash/sum";
 import { computed, observable, toJS, action } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
@@ -108,7 +110,7 @@ class BottomDockChart extends React.Component {
         }
         labels={getTooltipValue}
         labelComponent={<VictoryTooltip cornerRadius={0} />}
-        onZoomDomainChange={this.onDomainChanged.bind(this)}
+        onZoomDomainChange={debounce(this.onDomainChanged.bind(this))}
       />
     );
   }
