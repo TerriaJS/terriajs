@@ -11,6 +11,8 @@ import SettingPanel from "../Map/Panels/SettingPanel";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel";
 import Terria from "../../Models/Terria";
 
+import HelpMenuPanelBasic from "../HelpScreens/HelpMenuPanelBasic";
+
 import ViewState from "../../ReactViewModels/ViewState";
 
 import Styles from "./mobile-menu.scss";
