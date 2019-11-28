@@ -25,6 +25,8 @@ import raiseErrorToUser from "../../Models/raiseErrorToUser";
 import Styles from "./feature-info-panel.scss";
 import classNames from "classnames";
 
+import { ADD_DATA } from "../../Language/defaults.jsx";
+
 const FeatureInfoPanel = createReactClass({
   displayName: "FeatureInfoPanel",
   mixins: [ObserveModelMixin],
@@ -156,7 +158,7 @@ const FeatureInfoPanel = createReactClass({
       // if clicking on somewhere that has no data
       return "No data is available here - try another location.";
     } else {
-      return "Click 'Add Data' to add data to the map.";
+      return "Click '" + ADD_DATA + "' to add data to the map.";
     }
   },
 
