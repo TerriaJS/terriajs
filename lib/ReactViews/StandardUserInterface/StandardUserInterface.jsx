@@ -32,6 +32,12 @@ import "inobounce";
 
 import Styles from "./standard-user-interface.scss";
 
+export const showStoryPrompt = (viewState, terria) => {
+  terria.configParameters.showFeaturePrompts &&
+    terria.configParameters.storyEnabled &&
+    terria.stories.length === 0 &&
+    viewState.toggleFeaturePrompt("story", true);
+};
 const animationDuration = 250;
 /** blah */
 const StandardUserInterface = createReactClass({
@@ -110,10 +116,7 @@ const StandardUserInterface = createReactClass({
 
   componentDidMount() {
     this._wrapper.addEventListener("dragover", this.dragOverListener, false);
-    this.props.terria.configParameters.showFeaturePrompts &&
-      this.props.terria.configParameters.storyEnabled &&
-      this.props.terria.stories.length === 0 &&
-      this.props.viewState.toggleFeaturePrompt("story", true);
+    showStoryPrompt(this.props.viewState, this.props.terria);
   },
 
   componentWillUnmount() {
@@ -332,4 +335,4 @@ const StandardUserInterface = createReactClass({
   }
 });
 
-module.exports = StandardUserInterface;
+export default StandardUserInterface;
