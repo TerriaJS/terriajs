@@ -56,6 +56,7 @@ import Mappable, {
 } from "./Mappable";
 import Terria from "./Terria";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
+//import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
 // Intermediary
 var cartesian3Scratch = new Cartesian3();
@@ -139,6 +140,8 @@ export default class Cesium extends GlobeOrMap {
       Object.assign({}, options, firefoxBugOptions)
     );
     this.scene = this.cesiumWidget.scene;
+
+    //new Cesium3DTilesInspector(document.getElementsByClassName("cesium-widget").item(0), this.scene);
 
     this.dataSourceDisplay = new DataSourceDisplay({
       scene: this.scene,
@@ -265,6 +268,9 @@ export default class Cesium extends GlobeOrMap {
       this.scene.globe.splitDirection = this.terria.showSplitter
         ? this.terria.terrainSplitDirection
         : ImagerySplitDirection.NONE;
+      if (this.scene.skyAtmosphere) {
+        this.scene.skyAtmosphere.splitDirection = this.scene.globe.splitDirection;
+      }
     });
     this._disposeSplitterReaction = this._reactToSplitterChanges();
 

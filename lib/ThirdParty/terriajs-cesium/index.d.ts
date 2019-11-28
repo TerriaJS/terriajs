@@ -1083,10 +1083,12 @@ declare module "terriajs-cesium/Source/Scene/PrimitiveCollection" {
 declare module "terriajs-cesium/Source/Scene/Scene" {
   import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
   import Globe from "terriajs-cesium/Source/Scene/Globe";
+  import SkyAtmosphere from "terriajs-cesium/Source/Scene/SkyAtmosphere";
   class Scene extends Cesium.Scene {
     canvas: HTMLCanvasElement;
     tweens: any;
     readonly globe: Globe;
+    readonly skyAtmosphere: SkyAtmosphere;
     /**
      * NOTE: Private in Cesium, should only be called if there is no other alternative.
      * */
@@ -1113,7 +1115,11 @@ declare module "terriajs-cesium/Source/Scene/SingleTileImageryProvider" {
   export default Cesium.SingleTileImageryProvider;
 }
 declare module "terriajs-cesium/Source/Scene/SkyAtmosphere" {
-  export default Cesium.SkyAtmosphere;
+  import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+  class SkyAtmosphere extends Cesium.SkyAtmosphere {
+    splitDirection: ImagerySplitDirection;
+  }
+  export default SkyAtmosphere;
 }
 declare module "terriajs-cesium/Source/Scene/SkyBox" {
   export default Cesium.SkyBox;
@@ -1406,3 +1412,5 @@ declare module "terriajs-cesium/Source/Core/Ion" {
 
   export default Ion;
 }
+
+declare module "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
