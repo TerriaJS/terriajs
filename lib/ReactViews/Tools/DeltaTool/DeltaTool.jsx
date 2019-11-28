@@ -74,10 +74,7 @@ function DeltaTool({ terria, tool, onCloseTool }) {
   }
 
   function generateDelta() {
-    const firstDateStr = dateFormat(primaryDate, "yyyy-mm-dd'T'HH:MM:ss.l'Z'", true);
-    const secondDateStr = dateFormat(secondaryDate, "yyyy-mm-dd'T'HH:MM:ss.l'Z'", true);
-
-    var timestamp = dateFormat(new Date(), "yyyy-mm-dd'T'HH:MM:ss.l'Z'");
+    const timestamp = dateFormat(new Date(), "yyyy-mm-dd'T'HH:MM:ss.l'Z'");
     item.name = `Change Detection: ${catalogItem.name} ${timestamp}`;
     item.featureTimesProperty = undefined; // Hide the location filter
     item.clock = undefined; // Make it a non-time-dynamic item
@@ -85,19 +82,25 @@ function DeltaTool({ terria, tool, onCloseTool }) {
     item.supportsDeltaComparison = false;
     item.disableUserChanges = true; // Hide controls like the style selector
 
+    const firstDateStr = dateDisplayFormat(primaryDate);
+    const secondDateStr = dateDisplayFormat(secondaryDate);
+
     // Trim lines to prevent <pre> wrapping during markdown conversion
     item.shortReport = trimLines(`
       # Description
       This layer visualizes the difference between imagery captured at two discrete points in time.
 
-      **Primary image**: ${firstDateStr}<br/>
+      **Primary image**:   ${firstDateStr}<br/>
       **Secondary image**: ${secondDateStr}
     `);
 
     // item.loadingMessage = "Loading difference map";
     // item.isLoading = true;
 
-    item.showDeltaImagery(firstDateStr, secondDateStr);
+    item.showDeltaImagery(
+      dateParamFormat(primaryDate),
+      dateParamFormat(secondaryDate)
+    );
     onCloseTool();
   }
 
@@ -203,6 +206,14 @@ function trimLines(text) {
     .split("\n")
     .map(ln => ln.trim())
     .join("\n");
+}
+
+function dateParamFormat(date) {
+  return dateFormat(date, "yyyy-mm-dd'T'HH:MM:ss.l'Z'", true);
+}
+
+function dateDisplayFormat(date) {
+  return dateFormat(date, "dd-mm-yyyy", true);
 }
 
 module.exports = DeltaTool;
