@@ -40,7 +40,17 @@
     "title" : "Click and drag to rotate the camera"
   },
   "AR" : {
-    "title" : "srExperimental Feature: Augmented Reality"
+    "title" : "Experimental Feature: Augmented Reality",
+    "experimentalFeatureMessage" : "Augmented Reality mode is currently in beta. This mode is only designed for use on the latest high end mobile devices. <br /><br />WARNING: This mode can consume a lot of data, please be mindful of data usage charges from your network provider. <br /><br />The accuracy of this mode depends on the accuracy of your mobile devices internal compass.",
+    "confirmText" : "Got it",
+    "manualAlignmentTitle" : "Manual Alignment",
+    "manualAlignmentMessage" : "Align your mobile device so that it corresponds with the maps current alignment, then click the blinking compass. If no landmarks to align with are currently visible on the map, you can move the map using drag and pinch actions until a recognisable landmark is visible before aligning the device with the map. <br /><div>{{img}}</div> <br />Tip: The sun or moon are often good landmarks to align with if you are in a location you aren't familiar with (be careful not to look at the sun - it can hurt your eyes).",
+    "resetAlignmentTitle" : "Reset Alignment",
+    "resetAlignmentMessage" : "Resetting to compass alignment. If the alignment doesn't match the real world try waving your device in a figure 8 motion to recalibrate device. This can be done at any time.<br /> <br />Avoid locations with magnetic fields or metal objects as these may disorient the devices compass.",
+    "arTool" : "augmented reality tool",
+    "btnHover" : "toggle hover height",
+    "btnRealign" : "toggle manual alignment",
+    "btnResetRealign" : "reset compass alignment"
   },
   "legend" : {
     "lat" : "Lat",
@@ -209,7 +219,19 @@
   "guidance" : {
     "satelliteGuidance" : "You can access map guides at any time by looking in the <0>help menu</0>.",
     "skip" : "Skip",
-    "dismissText" : "Got it, thanks!"
+    "dismissText" : "Got it, thanks!",
+    "titleI" : "Satellite Imagery: How do I…?",
+    "bodyI" : "A super-quick guide to getting the most out of historical satellite imagery.",
+    "prevI" : "No thanks",
+    "nextI" : "View guide",
+    "titleII" : "Where is my satellite imagery?",
+    "bodyII" : "You may need to adjust your zoom level to make satellite imagery visible on the map.",
+    "titleIII" : "Loading historical imagery",
+    "bodyIII" : "In your data workbench, click on the capture date dropdown and select from available times to load historical imagery.",
+    "titleIV" : "Filtering imagery by location",
+    "bodyIV" : "Satellite imagery may not always be available at your preferred time and location. If you only want to view imagery for a particular location, click ‘filter by location’ in your data workbench.",
+    "titleV" : "How do I view false-colour imagery?",
+    "bodyV" : "You can apply a range of styles, such as false-colour, to satellite imagery by clicking on the styles dropdown in your data workbench."
   },
   "addData" : {
     "addDataBtnText" : "Add Data",
@@ -391,7 +413,9 @@
   },
   "chart" : {
     "sectionLabel" : "Charts",
-    "closePanel" : "Close Panel"
+    "closePanel" : "Close Panel",
+    "expand" : "Expand",
+    "download" : "Download"
   },
   "viewModels" : {
     "searchNoLocations" : "Sorry, no locations match your search query.",
@@ -425,6 +449,23 @@
     "webGLNotSupportedTitle" : "WebGL not supported",
     "webGLNotSupportedOrSlowTitle" : "WebGL not supported or too slow",
     "webGLNotSupportedOrSlowMessage" : "Your web browser cannot display the map in 3D, either because it does not support WebGL or because your web browser has reported that WebGL will be extremely slow. Please try a different web browser, such as the latest version of {{chrome}}, {{firefox}}, {{safari}}, {{internetExplorer}}.In some cases, you may need to upgrade your computer's video driver or operating system in order to get the 3D view in {{appName}}."
+  },
+  "analytics" : {
+    "selectLocation" : "Select Location",
+    "point" : "Point (lat/lon)",
+    "polygon" : "Polygon",
+    "existingPolygon" : "Existing Polygon",
+    "nothingSelected" : "Nothing has been selected, please use the buttons above to make a selection.",
+    "runAnalysis" : "Run Analysis",
+    "clickToDrawLine" : "Click to draw line",
+    "enterValidCoords" : "Please enter valid coordinates (e.g. 131.0361, -25.3450).",
+    "selectPoint" : "Select a point by clicking on the map.",
+    "clickToDrawPolygon" : "Click to draw polygon",
+    "shiftToDrawRectangle" : "Press the SHIFT key and hold down the left mouse button to draw a rectangle",
+    "clickToDrawRectangle" : "Click to draw rectangle",
+    "selectedPolygon" : "Selected Polygon",
+    "regionName" : "Region name",
+    "selectExistingPolygon" : "Select existing polygon"
   },
   "core" : {
     "userAddedData" : "User-Added Data",
