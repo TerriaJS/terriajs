@@ -116,7 +116,7 @@ export const WelcomeMessagePure = ({
             <button
               type="button"
               className={Styles.closeBtn}
-              onClick={() => handleClose(false)}
+              onClick={() => handleClose(true)} // persist close if they put the effort to clicking "X" instead of click-away-from-modal
               title="Close"
               aria-label="Close"
             >
