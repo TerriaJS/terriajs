@@ -7,7 +7,7 @@ Change Log
 * Fixed bug where "User data" catalog did not have add-buttons.
 * Added ability to re-add "User data" CSV items once removed from workbench.
 * Changed catalog item event labels to include the full catalog item path, rather than just the catalog item name.
-* Welcome message and new feature prompts are now disabled by default. These can be re-enabled by setting the `showFeaturePrompts` and `showWelcomeMessage` options in config.json. 
+* Welcome message, in-app guides & new feature prompts are now disabled by default. These can be re-enabled by setting the `showWelcomeMessage`, `showInAppGuides` & `showFeaturePrompts` options in config.json. 
 
 ### v7.9.0
 
