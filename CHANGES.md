@@ -7,6 +7,7 @@ Change Log
 * Fixed bug where "User data" catalog did not have add-buttons.
 * Added ability to re-add "User data" CSV items once removed from workbench.
 * Changed catalog item event labels to include the full catalog item path, rather than just the catalog item name.
+* Updated feature information prompt to instruct users to click "Explore Data" rather than "Add Data".
 
 ### v7.9.0
 
