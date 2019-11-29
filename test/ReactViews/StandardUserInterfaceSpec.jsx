@@ -4,7 +4,9 @@
 import React from "react";
 import { findWithClass } from "react-shallow-testutils";
 import { getShallowRenderedOutput } from "./MoreShallowTools";
-import StandardUserInterface from "../../lib/ReactViews/StandardUserInterface/StandardUserInterface";
+import StandardUserInterface, {
+  showStoryPrompt
+} from "../../lib/ReactViews/StandardUserInterface/StandardUserInterface";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 
@@ -59,5 +61,17 @@ describe("StandardUserInterface", function() {
       "tjs-standard-user-interface__featureInfo"
     );
     expect(featureInfo.props.className).not.toContain("top-element");
+  });
+
+  it("shows story prompt when showFeaturePrompts is set to true in config file", function() {
+    terria.configParameters.showFeaturePrompts = true;
+    showStoryPrompt(viewState, terria);
+    expect(viewState.featurePrompts).toContain("story");
+  });
+
+  it("does not show story prompt when showFeaturePrompts is set to false in config file", function() {
+    terria.configParameters.showFeaturePrompts = false;
+    showStoryPrompt(viewState, terria);
+    expect(viewState.featurePrompts).not.toContain("story");
   });
 });
