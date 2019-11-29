@@ -16,7 +16,9 @@ import FeatureInfoMixin from "../ModelMixins/FeatureInfoMixin";
 import Cesium3DTilesCatalogItemTraits, {
   OptionsTraits
 } from "../Traits/Cesium3DCatalogItemTraits";
+import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
+import createStratumInstance from "./createStratumInstance";
 import Feature from "./Feature";
 import Mappable from "./Mappable";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
@@ -65,7 +67,24 @@ export default class Cesium3DTilesCatalogItem
 
   protected forceLoadMapItems() {
     this.loadTileset();
-    return Promise.resolve();
+    if (this.tileset) {
+      return makeRealPromise<Cesium3DTileset>(this.tileset.readyPromise).then(
+        tileset => {
+          if (tileset.extras.style) {
+            runInAction(() => {
+              this.strata.set(
+                CommonStrata.defaults,
+                createStratumInstance(Cesium3DTilesCatalogItemTraits, {
+                  style: tileset.extras.style
+                })
+              );
+            });
+          }
+        }
+      );
+    } else {
+      return Promise.resolve();
+    }
   }
 
   private loadTileset() {
