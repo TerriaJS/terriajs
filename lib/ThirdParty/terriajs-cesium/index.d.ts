@@ -1353,6 +1353,8 @@ declare module "terriajs-cesium/Source/Scene/Cesium3DTileset" {
     maximumScreenSpaceError: number;
     style?: Cesium3DTileStyle;
     shadows?: Cesium.ShadowMode;
+    readyPromise: Promise<Cesium3DTileset>;
+    extras: any;
 
     constructor(options: {
       url: string | IonResource | Cesium.Resource;
