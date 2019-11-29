@@ -9,6 +9,7 @@ Change Log
 * Added proper basic internationalisation beginnings via i18next & react-i18next
 * Changed catalog item event labels to include the full catalog item path, rather than just the catalog item name.
 * Welcome message, in-app guides & new feature prompts are now disabled by default. These can be re-enabled by setting the `showWelcomeMessage`, `showInAppGuides` & `showFeaturePrompts` options in config.json. 
+* Updated Welcome Message to pass its props to `WelcomeMessagePrimaryBtnClick` & `WelcomeMessageSecondaryBtnClick` overrides
 
 ### v7.9.0
 

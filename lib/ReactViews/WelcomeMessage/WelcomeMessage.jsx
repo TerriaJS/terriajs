@@ -29,8 +29,9 @@ const WelcomeMessage = createReactClass({
   UNSAFE_componentWillMount() {
     const { viewState } = this.props;
     const shouldShow =
-      viewState.terria.configParameters.showWelcomeMessage &&
-      !viewState.terria.getLocalProperty(LOCAL_PROPERTY_KEY);
+      (viewState.terria.configParameters.showWelcomeMessage &&
+        !viewState.terria.getLocalProperty(LOCAL_PROPERTY_KEY)) ||
+      false;
     this.props.viewState.showWelcomeMessage = shouldShow;
     knockout.track(this.props.viewState, ["showWelcomeMessage"]);
   },
@@ -50,12 +51,13 @@ const WelcomeMessage = createReactClass({
   }
 });
 
-export const WelcomeMessagePure = ({
-  showWelcomeMessage,
-  setShowWelcomeMessage,
-  isTopElement,
-  viewState
-}) => {
+export const WelcomeMessagePure = props => {
+  const {
+    showWelcomeMessage,
+    setShowWelcomeMessage,
+    isTopElement,
+    viewState
+  } = props;
   // This is required so we can do nested animations
   const [welcomeVisible, setWelcomeVisible] = useState(showWelcomeMessage);
   const [shouldExploreData, setShouldExploreData] = useState(false);
@@ -142,7 +144,7 @@ export const WelcomeMessagePure = ({
                   onClick={() => {
                     handleClose(true);
                     if (WelcomeMessagePrimaryBtnClick) {
-                      WelcomeMessagePrimaryBtnClick();
+                      WelcomeMessagePrimaryBtnClick(props);
                     } else {
                       setShouldExploreData(true);
                     }
@@ -159,7 +161,7 @@ export const WelcomeMessagePure = ({
                     onClick={() => {
                       handleClose(true);
                       // if (WelcomeMessageSecondaryBtnClick) {
-                      WelcomeMessageSecondaryBtnClick();
+                      WelcomeMessageSecondaryBtnClick(props);
                       // } else {
                       //   setTimeout(() => {
                       //     viewState.showHelpMenu = true;
