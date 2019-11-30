@@ -97,10 +97,11 @@ function DeltaTool({ terria, tool, onCloseTool }) {
     // item.loadingMessage = "Loading difference map";
     // item.isLoading = true;
 
-    item.showDeltaImagery(
-      dateParamFormat(primaryDate),
-      dateParamFormat(secondaryDate)
-    );
+    const firstDateParam = dateParamFormat(primaryDate);
+    const secondDateParam = dateParamFormat(secondaryDate);
+    item.parameters['time'] = `${firstDateParam},${secondDateParam}`;
+
+    item.showDeltaImagery(firstDateParam, secondDateParam);
     onCloseTool();
   }
 
