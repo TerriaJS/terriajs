@@ -25,11 +25,7 @@ function LocationPicker({ terria, message, location, onPick }) {
       .getObservable(pickPointMode, "pickedFeatures")
       .subscribe(thisPick => {
         currentPick = thisPick;
-        pickPointMode.customUi = function() {
-          return (
-            <Loader message={`Querying ${location ? "new" : ""} position...`} />
-          );
-        };
+        pickPointMode.customUi = <LoaderMessage location={location} />;
 
         const position = cartesianToDegrees(thisPick.pickPosition);
         showMarker(position);
@@ -72,7 +68,18 @@ LocationPicker.propTypes = {
   onPick: PropTypes.func.isRequired
 };
 
+LocationPicker.displayName = "LocationPicker";
+
 module.exports = LocationPicker;
+
+const LoaderMessage = function({ location }) {
+  return <Loader message={`Querying ${location ? "new" : ""} position...`} />;
+};
+
+LoaderMessage.displayName = "LoaderMessage";
+LoaderMessage.propTypes = {
+  location: PropTypes.object.isRequired
+};
 
 function cartesianToDegrees(cartesian) {
   const carto = Ellipsoid.WGS84.cartesianToCartographic(cartesian);
