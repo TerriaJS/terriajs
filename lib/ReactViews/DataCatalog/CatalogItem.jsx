@@ -33,7 +33,8 @@ function CatalogItem(props) {
         onClick={props.onTextClick}
         title={props.title}
         className={classNames(Styles.btnCatalogItem, {
-          [Styles.btnCatalogItemIsPreviewed]: props.selected
+          [Styles.btnCatalogItemIsPreviewed]: props.selected,
+          [Styles.btnCatalogItemIsTrashable]: props.selected
         })}
       >
         {props.text}
@@ -46,6 +47,16 @@ function CatalogItem(props) {
       >
         {STATE_TO_ICONS[props.btnState]}
       </button>
+      {props.trashable && (
+        <button
+          type="button"
+          onClick={props.onTrashClick}
+          title={stateToTitle["trash"]}
+          className={classNames(Styles.btnAction, Styles.btnTrash)}
+        >
+          {STATE_TO_ICONS["trash"]}
+        </button>
+      )}
     </li>
   );
 }
@@ -56,6 +67,8 @@ CatalogItem.propTypes = {
   text: PropTypes.string,
   title: PropTypes.string,
   linkTo: PropTypes.string,
+  trashable: PropTypes.bool,
+  onTrashClick: PropTypes.func,
   onBtnClick: PropTypes.func,
   btnState: PropTypes.oneOf(Object.keys(STATE_TO_ICONS)),
   titleOverrides: PropTypes.object

@@ -32,16 +32,25 @@ import StoryPanel from "./../Story/StoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 
 import withRoutingTracker from "./withRoutingTracker";
+import SatelliteGuide from "../Guide/SatelliteGuide.jsx";
+import WelcomeMessage from "../WelcomeMessage/WelcomeMessage.jsx";
+
 import { Small, Medium } from "../Generic/Responsive";
 import classNames from "classnames";
 import "inobounce";
 
 import Styles from "./standard-user-interface.scss";
 
+export const showStoryPrompt = (viewState, terria) => {
+  terria.configParameters.showFeaturePrompts &&
+    terria.configParameters.storyEnabled &&
+    terria.stories.length === 0 &&
+    viewState.toggleFeaturePrompt("story", true);
+};
 const animationDuration = 250;
 /** blah */
-const StandardUserInterface = createReactClass({
-  displayName: "StandardUserInterface",
+export const StandardUserInterfaceRaw = createReactClass({
+  displayName: "StandardUserInterfaceRaw",
   mixins: [ObserveModelMixin],
 
   propTypes: {
@@ -116,9 +125,7 @@ const StandardUserInterface = createReactClass({
 
   componentDidMount() {
     this._wrapper.addEventListener("dragover", this.dragOverListener, false);
-    this.props.terria.configParameters.storyEnabled &&
-      this.props.terria.stories.length === 0 &&
-      this.props.viewState.toggleFeaturePrompt("story", true);
+    showStoryPrompt(this.props.viewState, this.props.terria);
   },
 
   componentWillUnmount() {
@@ -158,6 +165,7 @@ const StandardUserInterface = createReactClass({
       !this.props.viewState.storyBuilderShown;
     return (
       <div className={Styles.storyWrapper}>
+        <WelcomeMessage viewState={this.props.viewState} />
         <div
           className={classNames(Styles.uiRoot, {
             [Styles.withStoryBuilder]: showStoryBuilder
@@ -282,6 +290,7 @@ const StandardUserInterface = createReactClass({
           </If>
 
           <Notification viewState={this.props.viewState} />
+          <SatelliteGuide terria={terria} viewState={this.props.viewState} />
           <MapInteractionWindow
             terria={terria}
             viewState={this.props.viewState}
@@ -349,14 +358,18 @@ const StandardUserInterfaceWithRouter = withRouter(
   withRoutingTracker(StandardUserInterface)
 );
 
-const AppRouting = props => (
+// const AppRouting = props => (
+  // previously called "AppRouting"
+export const StandardUserInterface = props => (
   <Router>
     <StandardUserInterfaceWithRouter {...props} />
   </Router>
 );
 
-module.exports = {
-  default: AppRouting,
-  StandardUserInterface: AppRouting,
-  StandardUserInterfaceRaw: StandardUserInterface
-};
+// Previous exports for reference
+// module.exports = {
+//   default: AppRouting,
+//   StandardUserInterface: AppRouting,
+//   StandardUserInterfaceRaw: StandardUserInterface
+// };
+export default StandardUserInterface;

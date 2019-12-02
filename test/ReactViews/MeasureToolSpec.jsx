@@ -6,14 +6,17 @@ import React from "react";
 import Terria from "../../lib/Models/Terria";
 import { getMountedInstance } from "./MoreShallowTools";
 
-import MeasureTool from "../../lib/ReactViews/Map/Navigation/MeasureTool";
-const Entity = require("terriajs-cesium/Source/DataSources/Entity.js");
-const Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid.js");
-const ConstantPositionProperty = require("terriajs-cesium/Source/DataSources/ConstantPositionProperty.js");
-const Cartesian3 = require("terriajs-cesium/Source/Core/Cartesian3");
-const Cartographic = require("terriajs-cesium/Source/Core/Cartographic");
-const CustomDataSource = require("terriajs-cesium/Source/DataSources/CustomDataSource");
-const CesiumMath = require("terriajs-cesium/Source/Core/Math");
+import { MeasureTool } from "../../lib/ReactViews/Map/Navigation/MeasureTool";
+const Entity = require("terriajs-cesium/Source/DataSources/Entity.js").default;
+const Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid.js").default;
+const ConstantPositionProperty = require("terriajs-cesium/Source/DataSources/ConstantPositionProperty.js")
+  .default;
+const Cartesian3 = require("terriajs-cesium/Source/Core/Cartesian3").default;
+const Cartographic = require("terriajs-cesium/Source/Core/Cartographic")
+  .default;
+const CustomDataSource = require("terriajs-cesium/Source/DataSources/CustomDataSource")
+  .default;
+const CesiumMath = require("terriajs-cesium/Source/Core/Math").default;
 
 describe("MeasureTool-jsx", function() {
   let terria;
@@ -25,7 +28,7 @@ describe("MeasureTool-jsx", function() {
   });
 
   it("prettifies distance when distance is in metres", function() {
-    const measureTool = <MeasureTool terria={terria} />;
+    const measureTool = <MeasureTool terria={terria} t={() => {}} />;
     const instance = getMountedInstance(measureTool);
     let squared = false;
     const prettyDistance = instance.prettifyNumber(480, squared);
@@ -39,7 +42,7 @@ describe("MeasureTool-jsx", function() {
   });
 
   it("prettifies distance when distance is in kilometres", function() {
-    const measureTool = <MeasureTool terria={terria} />;
+    const measureTool = <MeasureTool terria={terria} t={() => {}} />;
     const instance = getMountedInstance(measureTool);
     const prettyDistance = instance.prettifyNumber(1280.23, false);
 
@@ -47,7 +50,7 @@ describe("MeasureTool-jsx", function() {
   });
 
   it("prettifies distance when distance is very large", function() {
-    const measureTool = <MeasureTool terria={terria} />;
+    const measureTool = <MeasureTool terria={terria} t={() => {}} />;
     const instance = getMountedInstance(measureTool);
     const prettyDistance = instance.prettifyNumber(123123280.23, false);
 
@@ -55,7 +58,7 @@ describe("MeasureTool-jsx", function() {
   });
 
   it("measures geodesic distance in 3D mode", function() {
-    const measureTool = <MeasureTool terria={terria} />;
+    const measureTool = <MeasureTool terria={terria} t={() => {}} />;
     const instance = getMountedInstance(measureTool);
 
     // Roughly Auckland
@@ -80,7 +83,7 @@ describe("MeasureTool-jsx", function() {
 
   it("measures geodesic distance in 2D mode", function() {
     terria.viewerMode = "2d";
-    const measureTool = <MeasureTool terria={terria} />;
+    const measureTool = <MeasureTool terria={terria} t={() => {}} />;
     const instance = getMountedInstance(measureTool);
 
     // Roughly Auckland
@@ -104,7 +107,7 @@ describe("MeasureTool-jsx", function() {
   });
 
   it("measures distance accurately", function() {
-    const measureTool = <MeasureTool terria={terria} />;
+    const measureTool = <MeasureTool terria={terria} t={() => {}} />;
     const instance = getMountedInstance(measureTool);
 
     // And by accurately, I mean similar to google maps. Points are visually distinguishable points on parliament
@@ -141,7 +144,7 @@ describe("MeasureTool-jsx", function() {
   });
 
   it("measures distance accurately with geoscience australia test", function() {
-    const measureTool = <MeasureTool terria={terria} />;
+    const measureTool = <MeasureTool terria={terria} t={() => {}} />;
     const instance = getMountedInstance(measureTool);
 
     const pointEntities = new CustomDataSource();
@@ -182,7 +185,7 @@ describe("MeasureTool-jsx", function() {
   });
 
   it("measures distance accurately with more points", function() {
-    const measureTool = <MeasureTool terria={terria} />;
+    const measureTool = <MeasureTool terria={terria} t={() => {}} />;
     const instance = getMountedInstance(measureTool);
 
     // And by accurately, I mean similar to google maps. Points are visually distinguishable points on parliament
@@ -260,7 +263,7 @@ describe("MeasureTool-jsx", function() {
   });
 
   it("updates distance when a point is removed", function() {
-    const measureTool = <MeasureTool terria={terria} />;
+    const measureTool = <MeasureTool terria={terria} t={() => {}} />;
     const instance = getMountedInstance(measureTool);
 
     const pointEntities = new CustomDataSource();
@@ -330,7 +333,7 @@ describe("MeasureTool-jsx", function() {
   });
 
   it("measures area correctly compared to hand-calculated area", function() {
-    const measureTool = <MeasureTool terria={terria} />;
+    const measureTool = <MeasureTool terria={terria} t={() => {}} />;
     const instance = getMountedInstance(measureTool);
 
     const pointEntities = new CustomDataSource();

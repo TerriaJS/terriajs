@@ -29,6 +29,7 @@ const MappablePreview = createReactClass({
 
   toggleOnMap(event) {
     this.props.previewed.toggleEnabled();
+    this.props.terria.checkNowViewingForTimeWms();
     if (defined(this.props.viewState.storyShown)) {
       this.props.viewState.storyShown = false;
     }

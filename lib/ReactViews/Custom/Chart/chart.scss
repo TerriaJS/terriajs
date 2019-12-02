@@ -62,7 +62,7 @@
 .tool-tip {
   color: $text-light;
   background-color: $chart-darker;
-  padding: 5px 5px 10px 10px;
+  padding: 5px 10px;
   font-family: monospace;
 
   :global {
@@ -76,14 +76,37 @@
     .color {
       width: 16px;
       height: 2px;
-      margin: 0 0 4px 0;
       display: inline-block;
-      margin-right: 11px;
+      margin-right: 10px;
       margin-left: -5px;
+    }
+
+    tr:nth-child(2) {
+      border-top: 1px solid rgba($text-light, 0.2);
+    }
+
+    .categoryTable {
+      tr:nth-child(2) {
+        border-top: none;
+      }
+    }
+
+    .dataRow {
+      .dataIcon {
+        max-width: 20px;
+        span {
+          vertical-align: middle;
+        }
+      }
+
+      .dataVal {
+        padding: 3px 1px 3px 0px;
+      }
     }
 
     .value {
       min-width: 80px;
+      text-align: right;
     }
 
     p {
@@ -91,16 +114,12 @@
     }
 
     .x-value {
-      margin-bottom: 10px;
+      font-weight: 700;
     }
 
     .category-name {
       margin-top: 5px;
-    }
-
-    td {
-      padding-top: 2px;
-      padding-bottom: 2px;
+      font-weight: 700;
     }
   }
 }
