@@ -99,7 +99,7 @@ function DeltaTool({ terria, tool, onCloseTool }) {
 
     const firstDateParam = dateParamFormat(primaryDate);
     const secondDateParam = dateParamFormat(secondaryDate);
-    item.parameters['time'] = `${firstDateParam},${secondDateParam}`;
+    item.parameters["time"] = `${firstDateParam},${secondDateParam}`;
 
     item.showDeltaImagery(firstDateParam, secondDateParam);
     onCloseTool();
