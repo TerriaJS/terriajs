@@ -1,5 +1,6 @@
 import createReactClass from "create-react-class";
 import { observer } from "mobx-react";
+import { runInAction } from "mobx";
 import PropTypes from "prop-types";
 import React from "react";
 import { addMarker } from "../../Models/LocationMarkerUtils";
@@ -19,7 +20,9 @@ const SidebarSearch = observer(
     },
 
     backToNowViewing() {
-      this.props.viewState.searchState.showLocationSearchResults = false;
+      runInAction(() => {
+        this.props.viewState.searchState.showLocationSearchResults = false;
+      });
     },
 
     onLocationClick(result) {
