@@ -196,6 +196,7 @@ PrettyLocation.displayName = "PrettyLocation";
 function duplicateItem(item) {
   const serializedItem = item.serializeToJson();
   serializedItem.name = serializedItem.name + " (copy)";
+  serializedItem.parameters = Object.assign({}, serializedItem.parameters);
   delete serializedItem.id;
   const newItem = createCatalogMemberFromType(item.type, item.terria);
   newItem.updateFromJson(serializedItem);
