@@ -10,6 +10,7 @@ Change Log
 * Added ability to re-add "User data" CSV items once removed from workbench.
 * Added proper basic internationalisation beginnings via i18next & react-i18next
 * Changed catalog item event labels to include the full catalog item path, rather than just the catalog item name.
+* Added support for `openAddData` option in config.json.  If true, the "Add Data" dialog is automatically opened at startup.
 * Welcome message, in-app guides & new feature prompts are now disabled by default. These can be re-enabled by setting the `showWelcomeMessage`, `showInAppGuides` & `showFeaturePrompts` options in config.json. 
 * Updated Welcome Message to pass its props to `WelcomeMessagePrimaryBtnClick` & `WelcomeMessageSecondaryBtnClick` overrides
 

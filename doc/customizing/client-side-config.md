@@ -46,6 +46,7 @@ Option                      | Meaning
 `"disableSplitter"`         | True to disable the use of the splitter control.
 `"tabbedCatalog"`           | True to create a separate explorer panel tab for each top-level catalog group to list its items in.
 `"interceptBrowserPrint"`   | True (the default) to intercept the browser's print feature and use a custom one accessible through the Share panel.
+`"openAddData"`             | True to automatically open Add Data dialog at startup.
 `"showWelcomeMessage"`      | True to display welcome message on startup.
 `"showInAppGuides"`         | True to display in-app guides.
 `"showFeaturePrompts"`      | True to display new feature popups.
