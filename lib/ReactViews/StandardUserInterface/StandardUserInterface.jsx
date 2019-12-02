@@ -355,11 +355,11 @@ export const StandardUserInterfaceRaw = createReactClass({
 });
 
 const StandardUserInterfaceWithRouter = withRouter(
-  withRoutingTracker(StandardUserInterface)
+  withRoutingTracker(StandardUserInterfaceRaw)
 );
 
 // const AppRouting = props => (
-  // previously called "AppRouting"
+// previously called "AppRouting"
 export const StandardUserInterface = props => (
   <Router>
     <StandardUserInterfaceWithRouter {...props} />
