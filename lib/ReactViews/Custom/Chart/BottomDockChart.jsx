@@ -100,11 +100,11 @@ class BottomDockChart extends React.Component {
       const units = datum.units || "";
       return `${datum.name}: ${tooltipValue} ${units}`;
     };
-
     return (
       <Container
         zoomDimension="x"
         cursorDimension="x"
+        zoomDomain={toJS(this.chartDomain)}
         cursorComponent={
           <LineSegment style={{ stroke: "white", opacity: "0.5" }} />
         }
