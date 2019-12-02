@@ -62,6 +62,11 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
           this.info.some(info => descriptionRegex.test(info.name || "")))
       );
     }
+
+    dispose() {
+      super.dispose();
+      this._metadataLoader.dispose();
+    }
   }
 
   return CatalogMemberMixin;

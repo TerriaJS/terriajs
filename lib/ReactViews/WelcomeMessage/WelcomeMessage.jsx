@@ -66,7 +66,7 @@ export const WelcomeMessagePure = ({
 
     WelcomeMessagePrimaryBtnClick,
     WelcomeMessageSecondaryBtnClick
-  } = viewState.terria.language;
+  } = viewState.language;
 
   const handleClose = (persist = false) => {
     setShowWelcomeMessage(false);

@@ -56,6 +56,7 @@ import Mappable, {
 } from "./Mappable";
 import Terria from "./Terria";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
+//import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
 // Intermediary
 var cartesian3Scratch = new Cartesian3();
@@ -139,6 +140,8 @@ export default class Cesium extends GlobeOrMap {
       Object.assign({}, options, firefoxBugOptions)
     );
     this.scene = this.cesiumWidget.scene;
+
+    //new Cesium3DTilesInspector(document.getElementsByClassName("cesium-widget").item(0), this.scene);
 
     this.dataSourceDisplay = new DataSourceDisplay({
       scene: this.scene,
@@ -237,6 +240,14 @@ export default class Cesium extends GlobeOrMap {
         ) {
           this._selectionIndicator.position =
             feature.cesiumPrimitive._clampedPosition;
+        } else if (
+          isDefined(feature.cesiumPrimitive) &&
+          isDefined(feature.cesiumPrimitive._clampedModelMatrix)
+        ) {
+          this._selectionIndicator.position = Matrix4.getTranslation(
+            feature.cesiumPrimitive._clampedModelMatrix,
+            this._selectionIndicator.position || new Cartesian3()
+          );
         } else if (isDefined(feature.position)) {
           this._selectionIndicator.position = feature.position.getValue(
             this.terria.timelineClock.currentTime
@@ -254,6 +265,12 @@ export default class Cesium extends GlobeOrMap {
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
     this._disposeTerrainReaction = autorun(() => {
       this.scene.globe.terrainProvider = this._terrainProvider;
+      this.scene.globe.splitDirection = this.terria.showSplitter
+        ? this.terria.terrainSplitDirection
+        : ImagerySplitDirection.NONE;
+      if (this.scene.skyAtmosphere) {
+        this.scene.skyAtmosphere.splitDirection = this.scene.globe.splitDirection;
+      }
     });
     this._disposeSplitterReaction = this._reactToSplitterChanges();
 

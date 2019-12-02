@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "7.9.0",
+  "version": "7.9.0-mobx-4",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "engines": {
@@ -110,7 +110,7 @@
     "string-replace-webpack-plugin": "^0.1.3",
     "style-loader": "^0.23.1",
     "svg-sprite-loader": "4.1.3",
-    "terriajs-cesium": "1.63.1",
+    "terriajs-cesium": "1.63.2",
     "terriajs-html2canvas": "1.0.0-alpha.12-terriajs-1",
     "ts-loader": "^5.3.3",
     "ts-node": "^5.0.1",
@@ -172,7 +172,9 @@
     "publish-doc": "bash -c \"rm -rf wwwroot/doc && mkdir wwwroot/doc && cp doc/index-built.html wwwroot/doc/index.html && cp doc/CNAME wwwroot/doc/CNAME && gulp docs && cd wwwroot/doc && git init && git remote add origin $npm_package_config_docRepo && git add . && git commit -m 'Generate Documentation' && git push -f origin HEAD:gh-pages\"",
     "prettier": "prettier --write \"**/*\"",
     "pretty-quick": "pretty-quick",
-    "prettier-check": "prettier --check \"**/*\""
+    "prettier-check": "prettier --check \"**/*\"",
+    "build-for-node": "tsc -b tsconfig-node.json",
+    "prepare": "npm run build-for-node"
   },
   "husky": {
     "hooks": {

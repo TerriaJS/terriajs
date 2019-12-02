@@ -1,15 +1,18 @@
 import { action, computed, observable, runInAction, toJS } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Clock from "terriajs-cesium/Source/Core/Clock";
+import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
+import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import URI from "urijs";
 import AsyncLoader from "../Core/AsyncLoader";
 import Class from "../Core/Class";
 import ConsoleAnalytics from "../Core/ConsoleAnalytics";
+import CorsProxy from "../Core/CorsProxy";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import GoogleAnalytics from "../Core/GoogleAnalytics";
 import instanceOf from "../Core/instanceOf";
@@ -25,32 +28,32 @@ import TerriaError from "../Core/TerriaError";
 import PickedFeatures from "../Map/PickedFeatures";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
+import TimeVarying from "../ModelMixins/TimeVarying";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
+import CatalogGroup from "./CatalogGroupNew";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import Catalog from "./CatalogNew";
 import CommonStrata from "./CommonStrata";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import InitSource, { isInitOptions, isInitUrl } from "./InitSource";
+import MagdaReference from "./MagdaReference";
+import MapInteractionMode from "./MapInteractionMode";
 import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
-import NoViewer from "./NoViewer";
 import ShareDataService from "./ShareDataService";
 import TimelineStack from "./TimelineStack";
 import updateModelFromJson from "./updateModelFromJson";
 import upsertModelFromJson from "./upsertModelFromJson";
+import ViewerMode from "./ViewerMode";
 import Workbench from "./Workbench";
-import CorsProxy from "../Core/CorsProxy";
-import MapInteractionMode from "./MapInteractionMode";
-import TimeVarying from "../ModelMixins/TimeVarying";
-import MagdaReference from "./MagdaReference";
-import CatalogGroup from "./CatalogGroupNew";
-import { language } from "../Language/defaults";
 
 interface ConfigParameters {
   [key: string]: ConfigParameters[keyof ConfigParameters];
+  appName?: string;
+  supportEmail?: string;
   defaultMaximumShownFeatureInfos?: number;
   regionMappingDefinitionsUrl: string;
   conversionServiceBaseUrl?: string;
@@ -84,7 +87,6 @@ type Analytics = any;
 interface TerriaOptions {
   baseUrl?: string;
   analytics?: Analytics;
-  languageOverrides?: any;
 }
 
 interface ApplyInitDataOptions {
@@ -124,8 +126,8 @@ export default class Terria {
     )
   );
 
-  appName?: string;
-  supportEmail?: string;
+  appName: string = "TerriaJS App";
+  supportEmail: string = "support@terria.io";
 
   /**
    * Gets or sets the {@link this.corsProxy} used to determine if a URL needs to be proxied and to proxy it if necessary.
@@ -147,6 +149,8 @@ export default class Terria {
 
   @observable
   readonly configParameters: ConfigParameters = {
+    appName: "TerriaJS App",
+    supportEmail: "info@terria.io",
     defaultMaximumShownFeatureInfos: 100,
     regionMappingDefinitionsUrl: "build/TerriaJS/data/regionMapping.json",
     conversionServiceBaseUrl: "convert/",
@@ -202,6 +206,8 @@ export default class Terria {
   @observable showSplitter = false;
   @observable splitPosition = 0.5;
   @observable splitPositionVertical = 0.5;
+  @observable terrainSplitDirection: ImagerySplitDirection =
+    ImagerySplitDirection.NONE;
 
   @observable stories: any[] = [];
 
@@ -225,8 +231,6 @@ export default class Terria {
    */
   @observable useNativeResolution = false;
 
-  readonly language: any;
-
   constructor(options: TerriaOptions = {}) {
     if (options.baseUrl) {
       if (options.baseUrl.lastIndexOf("/") !== options.baseUrl.length - 1) {
@@ -235,11 +239,6 @@ export default class Terria {
         this.baseUrl = options.baseUrl;
       }
     }
-
-    this.language = {
-      ...language,
-      ...options.languageOverrides
-    };
 
     this.analytics = options.analytics;
     if (!defined(this.analytics)) {
@@ -356,6 +355,10 @@ export default class Terria {
     return this._initSourceLoader.load();
   }
 
+  dispose() {
+    this._initSourceLoader.dispose();
+  }
+
   updateApplicationUrl(newUrl: string) {
     const uri = new URI(newUrl);
     const hash = uri.fragment();
@@ -381,6 +384,12 @@ export default class Terria {
         this.configParameters[key] = parameters[key];
       }
     });
+
+    this.appName = defaultValue(this.configParameters.appName, this.appName);
+    this.supportEmail = defaultValue(
+      this.configParameters.supportEmail,
+      this.supportEmail
+    );
   }
 
   protected forceLoadInitSources(): Promise<void> {
@@ -411,7 +420,7 @@ export default class Terria {
     allModelStratumData: JsonObject,
     replaceStratum: boolean
   ): Promise<BaseModel> {
-    const thisModelStratumData = allModelStratumData[modelId];
+    const thisModelStratumData = allModelStratumData[modelId] || {};
     if (!isJsonObject(thisModelStratumData)) {
       throw new TerriaError({
         sender: this,
@@ -420,11 +429,14 @@ export default class Terria {
       });
     }
 
+    const cleanStratumData = { ...thisModelStratumData };
+    delete cleanStratumData.dereferenced;
+    delete cleanStratumData.knownContainerUniqueIds;
+
     let promise: Promise<void>;
 
     const containerIds = thisModelStratumData.knownContainerUniqueIds;
     if (Array.isArray(containerIds)) {
-      delete thisModelStratumData.knownContainerUniqueIds;
       // Groups that contain this item must be loaded before this item.
       const containerPromises = containerIds.map(containerId => {
         if (typeof containerId !== "string") {
@@ -436,8 +448,11 @@ export default class Terria {
           allModelStratumData,
           replaceStratum
         ).then(container => {
-          if (GroupMixin.isMixedInto(container)) {
-            return container.loadMembers();
+          const dereferenced = ReferenceMixin.is(container)
+            ? container.target
+            : container;
+          if (GroupMixin.isMixedInto(dereferenced)) {
+            return dereferenced.loadMembers();
           }
         });
       });
@@ -447,9 +462,6 @@ export default class Terria {
     }
 
     return promise.then(() => {
-      let dereferenced = thisModelStratumData.dereferenced;
-      delete thisModelStratumData.dereferenced;
-
       const loadedModel = upsertModelFromJson(
         CatalogMemberFactory,
         this,
@@ -457,7 +469,7 @@ export default class Terria {
         undefined,
         stratumId,
         {
-          ...thisModelStratumData,
+          ...cleanStratumData,
           id: modelId
         },
         replaceStratum
@@ -466,6 +478,7 @@ export default class Terria {
       // If we're replacing the stratum and the existing model is already
       // dereferenced, we need to replace the dereferenced stratum, too,
       // even if there's no trace of it it in the load data.
+      let dereferenced = thisModelStratumData.dereferenced;
       if (
         replaceStratum &&
         dereferenced === undefined &&
@@ -535,14 +548,14 @@ export default class Terria {
       switch (initData.viewerMode.toLowerCase()) {
         case "3d".toLowerCase():
           this.mainViewer.viewerOptions.useTerrain = true;
-          this.mainViewer.viewerMode = "cesium";
+          this.mainViewer.viewerMode = ViewerMode.Cesium;
           break;
         case "3dSmooth".toLowerCase():
           this.mainViewer.viewerOptions.useTerrain = false;
-          this.mainViewer.viewerMode = "cesium";
+          this.mainViewer.viewerMode = ViewerMode.Cesium;
           break;
         case "2d".toLowerCase():
-          this.mainViewer.viewerMode = "leaflet";
+          this.mainViewer.viewerMode = ViewerMode.Leaflet;
           break;
       }
     }

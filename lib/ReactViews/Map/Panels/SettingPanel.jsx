@@ -4,15 +4,16 @@ import classNames from "classnames";
 import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
+import Slider from "rc-slider";
 import React from "react";
+import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 // eslint-disable-next-line no-unused-vars
 import Terria from "../../../Models/Terria";
+import ViewerMode from "../../../Models/ViewerMode";
 // eslint-disable-next-line no-unused-vars
 import ViewState from "../../../ReactViewModels/ViewState";
 import Icon from "../../Icon";
 import MenuPanel from "../../StandardUserInterface/customizable/MenuPanel";
-import Slider from "rc-slider";
-import ViewerMode from "../../../Models/ViewerMode";
 import DropdownStyles from "./panel.scss";
 import Styles from "./setting-panel.scss";
 
@@ -93,6 +94,27 @@ class SettingPanel extends React.Component {
     this.props.terria.currentViewer.notifyRepaintRequired();
   }
 
+  @action
+  showTerrainOnSide(side, event) {
+    event.stopPropagation();
+
+    switch (side) {
+      case "Left":
+        this.props.terria.terrainSplitDirection = ImagerySplitDirection.LEFT;
+        this.props.terria.showSplitter = true;
+        break;
+      case "Right":
+        this.props.terria.terrainSplitDirection = ImagerySplitDirection.RIGHT;
+        this.props.terria.showSplitter = true;
+        break;
+      case "Both":
+        this.props.terria.terrainSplitDirection = ImagerySplitDirection.NONE;
+        break;
+    }
+
+    this.props.terria.currentViewer.notifyRepaintRequired();
+  }
+
   render() {
     if (!this.props.terria.mainViewer) {
       return null;
@@ -119,6 +141,22 @@ class SettingPanel extends React.Component {
       icon: "map"
     };
 
+    const isCesiumWithTerrain =
+      this.props.terria.mainViewer.viewerMode === "cesium" &&
+      this.props.terria.mainViewer.viewerOptions.useTerrain &&
+      this.props.terria.currentViewer &&
+      this.props.terria.currentViewer.scene &&
+      this.props.terria.currentViewer.scene.globe;
+
+    const supportsDepthTestAgainstTerrain = isCesiumWithTerrain;
+    const depthTestAgainstTerrainEnabled =
+      supportsDepthTestAgainstTerrain &&
+      this.props.terria.currentViewer.scene.globe.depthTestAgainstTerrain;
+
+    const depthTestAgainstTerrainLabel = `Press to start ${
+      depthTestAgainstTerrainEnabled ? "showing" : "hiding"
+    } features that are underneath the terrain surface`;
+
     const viewerModes = [];
 
     if (
@@ -129,6 +167,21 @@ class SettingPanel extends React.Component {
     }
 
     viewerModes.push("3D Smooth", "2D");
+
+    const supportsSide = isCesiumWithTerrain;
+    const sides = ["Left", "Both", "Right"];
+
+    let currentSide = "Both";
+    if (supportsSide) {
+      switch (this.props.terria.terrainSplitDirection) {
+        case ImagerySplitDirection.LEFT:
+          currentSide = "Left";
+          break;
+        case ImagerySplitDirection.RIGHT:
+          currentSide = "Right";
+          break;
+      }
+    }
 
     return (
       <MenuPanel
@@ -155,6 +208,69 @@ class SettingPanel extends React.Component {
             </For>
           </ul>
         </div>
+        <If condition={supportsSide}>
+          <div className={classNames(Styles.viewer, DropdownStyles.section)}>
+            <label className={DropdownStyles.heading}>
+              Show Terrain on the
+            </label>
+            <ul className={Styles.viewerSelector}>
+              <For each="side" of={sides}>
+                <li key={side} className={Styles.listItem}>
+                  <button
+                    onClick={this.showTerrainOnSide.bind(this, side)}
+                    className={classNames(Styles.btnViewer, {
+                      [Styles.isActive]: side === currentSide
+                    })}
+                  >
+                    {side}
+                  </button>
+                </li>
+              </For>
+            </ul>
+          </div>
+        </If>
+        <If condition={supportsDepthTestAgainstTerrain}>
+          <div className={classNames(Styles.viewer, DropdownStyles.section)}>
+            <section
+              className={Styles.nativeResolutionWrapper}
+              title={qualityLabels[this.props.terria.quality]}
+            >
+              <button
+                id="depthTestAgainstTerrain"
+                type="button"
+                onClick={() => {
+                  runInAction(() => {
+                    const currentViewer = this.props.terria.currentViewer;
+                    if (currentViewer.scene && currentViewer.scene.globe) {
+                      currentViewer.scene.globe.depthTestAgainstTerrain = !currentViewer
+                        .scene.globe.depthTestAgainstTerrain;
+                      currentViewer.notifyRepaintRequired();
+                      this.forceUpdate();
+                    }
+                  });
+                }}
+                title={depthTestAgainstTerrainLabel}
+                className={Styles.btnNativeResolution}
+              >
+                {depthTestAgainstTerrainEnabled ? (
+                  <Icon glyph={Icon.GLYPHS.checkboxOn} />
+                ) : (
+                  <Icon glyph={Icon.GLYPHS.checkboxOff} />
+                )}
+              </button>
+              <label
+                title={depthTestAgainstTerrainLabel}
+                htmlFor="depthTestAgainstTerrain"
+                className={classNames(
+                  DropdownStyles.subHeading,
+                  Styles.nativeResolutionHeader
+                )}
+              >
+                Terrain hides underground features
+              </label>
+            </section>
+          </div>
+        </If>
         <div className={classNames(Styles.baseMap, DropdownStyles.section)}>
           <label className={DropdownStyles.heading}> Base Map </label>
           <label className={DropdownStyles.subHeading}>

@@ -1,7 +1,5 @@
 import Compass from "./Navigation/Compass";
-import createReactClass from "create-react-class";
 import MyLocation from "./Navigation/MyLocation";
-import ObserveModelMixin from "../ObserveModelMixin";
 import PropTypes from "prop-types";
 import React from "react";
 import { Medium } from "../Generic/Responsive";
@@ -11,24 +9,21 @@ import ViewerMode from "../../Models/ViewerMode";
 import ZoomControl from "./Navigation/ZoomControl";
 
 import classNames from "classnames";
+import { observer } from "mobx-react";
 import defined from "terriajs-cesium/Source/Core/defined";
 
 // The map navigation region
-const MapNavigation = createReactClass({
-  displayName: "MapNavigation",
-  mixins: [ObserveModelMixin],
-
-  propTypes: {
+@observer
+class MapNavigation extends React.Component {
+  static propTypes = {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
     navItems: PropTypes.arrayOf(PropTypes.element)
-  },
+  };
 
-  getDefaultProps() {
-    return {
-      navItems: []
-    };
-  },
+  static defaultProps = {
+    navItems: []
+  };
 
   render() {
     return (
@@ -41,7 +36,11 @@ const MapNavigation = createReactClass({
       >
         <Medium>
           <div className={Styles.navs}>
-            <If condition={this.props.terria.viewerMode !== ViewerMode.Leaflet}>
+            <If
+              condition={
+                this.props.terria.mainViewer.viewerMode === ViewerMode.Cesium
+              }
+            >
               <div className={Styles.control}>
                 <Compass terria={this.props.terria} />
               </div>
@@ -71,6 +70,6 @@ const MapNavigation = createReactClass({
       </div>
     );
   }
-});
+}
 
 export default MapNavigation;

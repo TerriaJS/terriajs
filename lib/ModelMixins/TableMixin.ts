@@ -8,6 +8,7 @@ import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSourc
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
+import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
 import AsyncLoader from "../Core/AsyncLoader";
@@ -306,6 +307,11 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       return this._dataLoader.load();
     }
 
+    dispose() {
+      super.dispose();
+      this._dataLoader.dispose();
+    }
+
     /*
      * Appends new table data in column major format to this table.
      * It is assumed that thhe column order is the same for both the tables.
@@ -371,7 +377,8 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
                 color: colorMap.mapValueToColor(value),
                 pixelSize: 15,
                 outlineWidth: 1,
-                outlineColor: outlineColor
+                outlineColor: outlineColor,
+                heightReference: HeightReference.CLAMP_TO_GROUND
               })
             })
           );
