@@ -93,24 +93,24 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     // so we'll only display the newest record.
     // Although technically the timestamp property is optional, if none is
     // present we'll show the record.
-    const vehicleMap = new Map()
+    const vehicleMap = new Map();
     for (var i = 0; i < feedEntities.length; ++i) {
-      const entity: FeedEntity = feedEntities[i]
-      const item: VehicleData = this.convertFeedEntityToBillboardData(entity)
+      const entity: FeedEntity = feedEntities[i];
+      const item: VehicleData = this.convertFeedEntityToBillboardData(entity);
 
       if (item && item.position && item.featureInfo) {
-        const vehicleInfo = item.featureInfo.get('entity').vehicle.vehicle
+        const vehicleInfo = item.featureInfo.get("entity").vehicle.vehicle;
         if (vehicleMap.has(vehicleInfo.id) && vehicleInfo.timestamp) {
-          let existingRecord = vehicleMap.get(vehicleInfo.id)
+          let existingRecord = vehicleMap.get(vehicleInfo.id);
           if (existingRecord.timestamp < vehicleInfo.timestamp) {
-            vehicleMap.set(vehicleInfo.id, item)
+            vehicleMap.set(vehicleInfo.id, item);
           }
         } else {
-          vehicleMap.set(vehicleInfo.id, item)
+          vehicleMap.set(vehicleInfo.id, item);
         }
       }
     }
-    return [ ...vehicleMap.values() ]
+    return [...vehicleMap.values()];
   });
 
   @computed
