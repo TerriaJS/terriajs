@@ -9,6 +9,7 @@ import classNames from "classnames";
 import MobileMenuItem from "./MobileMenuItem";
 import SettingPanel from "../Map/Panels/SettingPanel";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel";
+import HelpMenuPanelBasic from "../HelpScreens/HelpMenuPanelBasic";
 import Terria from "../../Models/Terria";
 
 import ViewState from "../../ReactViewModels/ViewState";
