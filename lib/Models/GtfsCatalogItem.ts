@@ -88,15 +88,29 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
   protected convertManyFeedEntitiesToBillboardData: ITransformer<
     FeedEntity[],
     VehicleData[]
-  > = createTransformer((feedEntity: FeedEntity[]) => {
-    return this.gtfsFeedEntities
-      .map((entity: FeedEntity) =>
-        this.convertFeedEntityToBillboardData(entity)
-      )
-      .filter(
-        (item: VehicleData) =>
-          item.position !== null && item.position !== undefined
-      );
+  > = createTransformer((feedEntities: FeedEntity[]) => {
+    // Sometimes the feed can contain many records for the same vehicle
+    // so we'll only display the newest record.
+    // Although technically the timestamp property is optional, if none is
+    // present we'll show the record.
+    const vehicleMap = new Map()
+    for (var i = 0; i < feedEntities.length; ++i) {
+      const entity: FeedEntity = feedEntities[i]
+      const item: VehicleData = this.convertFeedEntityToBillboardData(entity)
+
+      if (item && item.position && item.featureInfo) {
+        const vehicleInfo = item.featureInfo.get('entity').vehicle.vehicle
+        if (vehicleMap.has(vehicleInfo.id) && vehicleInfo.timestamp) {
+          let existingRecord = vehicleMap.get(vehicleInfo.id)
+          if (existingRecord.timestamp < vehicleInfo.timestamp) {
+            vehicleMap.set(vehicleInfo.id, item)
+          }
+        } else {
+          vehicleMap.set(vehicleInfo.id, item)
+        }
+      }
+    }
+    return [ ...vehicleMap.values() ]
   });
 
   @computed
@@ -107,7 +121,6 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     const vehicleData: VehicleData[] = this.convertManyFeedEntitiesToBillboardData(
       this.gtfsFeedEntities
     );
-
     for (let data of vehicleData) {
       if (data.sourceId === undefined) {
         continue;
@@ -316,7 +329,6 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     if (entity.id == undefined) {
       return {};
     }
-
     let position = undefined;
     let orientation = undefined;
     let featureInfo: Map<string, any> = new Map();
