@@ -117,7 +117,7 @@
     "typescript": "^3.7.0",
     "urijs": "^1.18.12",
     "url-loader": "^1.1.2",
-    "victory": "^33.1.0",
+    "victory": "^33.1.6",
     "webpack": "~4.39.0",
     "worker-loader": "^2.0.0"
   },
