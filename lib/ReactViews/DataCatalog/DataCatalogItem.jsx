@@ -3,7 +3,7 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 import defined from "terriajs-cesium/Source/Core/defined";
-import addedByUser from "../../Core/addedByUser";
+// import addedByUser from "../../Core/addedByUser";
 import removeUserAddedData from "../../Models/removeUserAddedData";
 import CatalogItem from "./CatalogItem";
 import getAncestors from "../../Models/getAncestors";
