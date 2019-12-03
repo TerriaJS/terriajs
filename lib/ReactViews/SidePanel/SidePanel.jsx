@@ -121,14 +121,15 @@ const SidePanel = createReactClass({
                 this.props.terria.language.AddDataBtnText
               )}
             </Link>
-            <button
+            <Link
+              to={CATALOG_ROUTE}
               type="button"
               onClick={this.onAddLocalDataClicked}
               className={Styles.uploadData}
               title="Load local/web data"
             >
               <Icon glyph={Icon.GLYPHS.upload} />
-            </button>
+            </Link>
           </div>
         </div>
         <div className={Styles.body}>
