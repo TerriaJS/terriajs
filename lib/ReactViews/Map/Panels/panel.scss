@@ -129,8 +129,14 @@
     line-height: 1.3;
   }
 
-  &:hover,
-  &:focus {
+  .is-open & {
+    background: $color-primary;
+    svg {
+      fill: #ffffff;
+    }
+  }
+
+  &:hover {
     border: 0;
     svg {
       fill: #ffffff;

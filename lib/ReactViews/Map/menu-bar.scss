@@ -40,8 +40,15 @@
     margin: 0 5px;
     line-height: 1.3;
   }
-  &:hover,
-  &:focus {
+
+  &[aria-open="true"] {
+    background: $color-primary;
+    svg {
+      fill: #ffffff;
+    }
+  }
+
+  &:hover {
     svg {
       fill: #ffffff;
     }

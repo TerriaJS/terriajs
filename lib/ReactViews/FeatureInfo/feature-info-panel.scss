@@ -52,8 +52,7 @@
 .btnToggleFeature {
   composes: btn from "../../Sass/common/_buttons.scss";
   vertical-align: middle;
-  &:hover,
-  &:focus {
+  &:hover {
     svg {
       fill: $color-primary;
     }

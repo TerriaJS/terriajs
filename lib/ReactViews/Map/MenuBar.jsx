@@ -92,6 +92,7 @@ const MenuBar = createReactClass({
                 className={Styles.storyBtn}
                 type="button"
                 onClick={this.onStoryButtonClick}
+                aria-open={this.props.viewState.storyBuilderShown}
               >
                 <Icon glyph={Icon.GLYPHS.story} />
                 <span>Story</span>
