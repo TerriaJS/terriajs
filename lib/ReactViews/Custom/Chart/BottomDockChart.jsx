@@ -1,13 +1,11 @@
 import merge from "lodash/merge";
 import debounce from "lodash/debounce";
-import sum from "lodash/sum";
 import { computed, observable, toJS, action } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import {
   combineContainerMixins,
-  cursorContainerMixin,
   LineSegment,
   VictoryAxis,
   VictoryContainer,
@@ -91,7 +89,7 @@ class BottomDockChart extends React.Component {
     const mixins = [
       voronoiContainerMixin,
       zoomContainerMixin
-      //cursorContainerMixin -- TODO: breaks eventHandlers used for moment charts
+      // cursorContainerMixin -- TODO: breaks eventHandlers used for moment charts
     ];
     const Container = combineContainerMixins(mixins, VictoryContainer);
 
