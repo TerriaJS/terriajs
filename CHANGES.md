@@ -13,6 +13,7 @@ Change Log
 * Added support for `openAddData` option in config.json.  If true, the "Add Data" dialog is automatically opened at startup.
 * Welcome message, in-app guides & new feature prompts are now disabled by default. These can be re-enabled by setting the `showWelcomeMessage`, `showInAppGuides` & `showFeaturePrompts` options in config.json. 
 * Updated Welcome Message to pass its props to `WelcomeMessagePrimaryBtnClick` & `WelcomeMessageSecondaryBtnClick` overrides
+* Bug fix: Prevent geojson files from appearing twice in the workbench when dropped with the .json extension
 
 ### v7.9.0
 
