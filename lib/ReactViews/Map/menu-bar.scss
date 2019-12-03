@@ -41,7 +41,7 @@
     line-height: 1.3;
   }
 
-  &[aria-open="true"] {
+  &[aria-expanded="true"] {
     background: $color-primary;
     svg {
       fill: #ffffff;
