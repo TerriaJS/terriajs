@@ -1,4 +1,5 @@
 import uniqBy from "lodash/uniqBy";
+import sum from "lodash/sum";
 import { action, computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
@@ -45,14 +46,20 @@ class Chart extends React.Component {
     renderYAxis: ({ label }, i) => (
       <VictoryAxis dependentAxis key={i} label={label} />
     ),
-    renderLegends: (legends, width) => (
-      <VictoryLegend
-        x={width / 2}
-        orientation="horizontal"
-        data={legends}
-        centerTitle={true}
-      />
-    )
+    renderLegends: (legends, chartWidth) => {
+      // Find an x so that legends appear centered
+      const numChars = sum(legends.map(l => l.name.length));
+      const legendWidth = numChars * 10; // assuming each char is roughly 10px wide;
+      const x = Math.max(0, (chartWidth - legendWidth) / 2);
+      return (
+        <VictoryLegend
+          x={x}
+          orientation="horizontal"
+          data={legends}
+          centerTitle={true}
+        />
+      );
+    }
   };
 
   @computed
