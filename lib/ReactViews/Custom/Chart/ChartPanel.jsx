@@ -12,6 +12,7 @@ import ChartPanelDownloadButton from "./ChartPanelDownloadButton";
 import Loader from "../../Loader.jsx";
 import ObserveModelMixin from "../../ObserveModelMixin";
 import Icon from "../../Icon.jsx";
+import { withTranslation } from "react-i18next";
 
 import Styles from "./chart-panel.scss";
 
@@ -25,7 +26,8 @@ const ChartPanel = createReactClass({
     terria: PropTypes.object.isRequired,
     onHeightChange: PropTypes.func,
     viewState: PropTypes.object.isRequired,
-    animationDuration: PropTypes.number
+    animationDuration: PropTypes.number,
+    t: PropTypes.func.isRequired
   },
 
   closePanel() {
@@ -79,6 +81,7 @@ const ChartPanel = createReactClass({
         />
       );
     }
+    const { t } = this.props;
     return (
       <div className={Styles.holder}>
         <div className={Styles.inner}>
@@ -86,14 +89,14 @@ const ChartPanel = createReactClass({
             <div className={Styles.body}>
               <div className={Styles.header}>
                 <label className={Styles.sectionLabel}>
-                  {loader || "Charts"}
+                  {loader || t("chart.sectionLabel")}
                 </label>
                 <ChartPanelDownloadButton
                   chartableItems={this.props.terria.catalog.chartableItems}
                 />
                 <button
                   type="button"
-                  title="Close Panel"
+                  title={t("chart.closePanel")}
                   className={Styles.btnCloseChartPanel}
                   onClick={this.closePanel}
                 >
@@ -109,4 +112,4 @@ const ChartPanel = createReactClass({
   }
 });
 
-module.exports = ChartPanel;
+module.exports = withTranslation()(ChartPanel);

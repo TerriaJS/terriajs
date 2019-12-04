@@ -10,6 +10,7 @@ import Loader from "../Loader";
 import ObserveModelMixin from "../ObserveModelMixin";
 import ParameterEditor from "./ParameterEditor";
 import Styles from "./invoke-function.scss";
+import { withTranslation } from "react-i18next";
 
 class FunctionViewModel {
   constructor(catalogFunction) {
@@ -49,7 +50,8 @@ const InvokeFunction = createReactClass({
   propTypes: {
     terria: PropTypes.object,
     previewed: PropTypes.object,
-    viewState: PropTypes.object
+    viewState: PropTypes.object,
+    t: PropTypes.func.isRequired
   },
 
   /* eslint-disable-next-line camelcase */
@@ -132,7 +134,7 @@ const InvokeFunction = createReactClass({
         this.validateParameter
       );
     }
-
+    const { t } = this.props;
     return (
       <div className={Styles.invokeFunction}>
         <div className={Styles.content}>
@@ -151,7 +153,7 @@ const InvokeFunction = createReactClass({
             onClick={this.submit}
             disabled={invalidParameters}
           >
-            Run Analysis
+            {t("analytics.runAnalysis")}
           </button>
         </div>
       </div>
@@ -159,4 +161,4 @@ const InvokeFunction = createReactClass({
   }
 });
 
-module.exports = InvokeFunction;
+module.exports = withTranslation()(InvokeFunction);
