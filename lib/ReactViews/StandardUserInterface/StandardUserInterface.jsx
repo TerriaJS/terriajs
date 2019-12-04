@@ -34,9 +34,15 @@ import { withTranslation } from "react-i18next";
 
 import Styles from "./standard-user-interface.scss";
 
+export const showStoryPrompt = (viewState, terria) => {
+  terria.configParameters.showFeaturePrompts &&
+    terria.configParameters.storyEnabled &&
+    terria.stories.length === 0 &&
+    viewState.toggleFeaturePrompt("story", true);
+};
 const animationDuration = 250;
 /** blah */
-export const StandardUserInterface = createReactClass({
+const StandardUserInterface = createReactClass({
   displayName: "StandardUserInterface",
   mixins: [ObserveModelMixin],
 
@@ -114,9 +120,7 @@ export const StandardUserInterface = createReactClass({
 
   componentDidMount() {
     this._wrapper.addEventListener("dragover", this.dragOverListener, false);
-    this.props.terria.configParameters.storyEnabled &&
-      this.props.terria.stories.length === 0 &&
-      this.props.viewState.toggleFeaturePrompt("story", true);
+    showStoryPrompt(this.props.viewState, this.props.terria);
   },
 
   componentWillUnmount() {
@@ -337,5 +341,7 @@ export const StandardUserInterface = createReactClass({
     );
   }
 });
+
+export const StandardUserInterfaceWithoutTranslation = StandardUserInterface;
 
 export default withTranslation()(StandardUserInterface);

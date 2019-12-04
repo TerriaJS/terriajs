@@ -134,7 +134,8 @@ const MenuBar = createReactClass({
               terria={this.props.terria}
               viewState={this.props.viewState}
             />
-            {satelliteGuidancePrompted &&
+            {this.props.terria.configParameters.showFeaturePrompts &&
+              satelliteGuidancePrompted &&
               !mapGuidesLocationPrompted &&
               !this.props.viewState.showSatelliteGuidance && (
                 <Prompt

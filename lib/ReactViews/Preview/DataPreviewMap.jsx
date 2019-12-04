@@ -124,7 +124,7 @@ const DataPreviewMap = createReactClass({
       this.props.terria.analytics.logEvent(
         "dataSource",
         "preview",
-        previewedCatalogItem.name
+        previewedCatalogItem.path
       );
     }
 
