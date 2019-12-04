@@ -98,7 +98,7 @@ class BottomDockChart extends React.Component {
     const Container = combineContainerMixins(mixins, VictoryContainer);
 
     const getTooltipValue = ({ datum }) => {
-      const tooltipValue = datum.tooltipValue || datum.y;
+      const tooltipValue = datum.tooltipValue || datum.y || datum._y;
       const units = datum.units || "";
       return `${datum.name}: ${tooltipValue} ${units}`;
     };
