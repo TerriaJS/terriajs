@@ -3,7 +3,8 @@
     "close" : "Close",
     "open" : "Open",
     "prev" : "Prev",
-    "next" : "Next"
+    "next" : "Next",
+    "skip" : "Skip"
   },
   "measure" : {
     "measureTool" : "Measure Tool",
@@ -216,9 +217,8 @@
     "dismissText" : "Got it, thanks!",
     "mobileViewStory" : "View Stories {{storiesLength}}"
   },
-  "guidance" : {
-    "satelliteGuidance" : "You can access map guides at any time by looking in the <0>help menu</0>.",
-    "skip" : "Skip",
+  "satelliteGuidance" : {
+    "menuTitle" : "You can access map guides at any time by looking in the <0>help menu</0>.",
     "dismissText" : "Got it, thanks!",
     "titleI" : "Satellite Imagery: How do I…?",
     "bodyI" : "A super-quick guide to getting the most out of historical satellite imagery.",

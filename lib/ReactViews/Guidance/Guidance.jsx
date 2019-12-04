@@ -42,7 +42,7 @@ const GuidanceContextModal = ({ children }) => {
     <div className={Styles.context}>
       <Text>{children}</Text>
       <button className={Styles.btn}>{t("general.next")}</button>
-      {t("guidance.skip")}
+      {t("general.skip")}
       {/* ? */}
       <GuidanceProgress step={2} max={4} />
     </div>

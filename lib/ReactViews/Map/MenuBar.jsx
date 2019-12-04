@@ -140,14 +140,14 @@ const MenuBar = createReactClass({
                 <Prompt
                   content={
                     <div>
-                      <Trans i18nKey="guidance.satelliteGuidance">
+                      <Trans i18nKey="satelliteGuidance.menuTitle">
                         You can access map guides at any time by looking in the{" "}
                         <strong>help menu</strong>.
                       </Trans>
                     </div>
                   }
                   displayDelay={1000}
-                  dismissText={t("guidance.dismissText")}
+                  dismissText={t("satelliteGuidance.dismissText")}
                   dismissAction={this.dismissSatelliteGuidanceAction}
                 />
               )}
