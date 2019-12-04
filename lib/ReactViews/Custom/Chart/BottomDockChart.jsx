@@ -18,7 +18,7 @@ import Chart from "./Chart";
 
 @observer
 class BottomDockChart extends React.Component {
-  @observable visibleDomain;
+  @observable _clipDomain;
 
   static propTypes = {
     width: PropTypes.number,
@@ -31,20 +31,24 @@ class BottomDockChart extends React.Component {
    * Compute the entire domain for all chartItems.
    */
   @computed get chartDomain() {
-    const chartItems = this.props.chartItems;
-    const xmin = Math.min(...chartItems.map(c => c.domain.x[0]));
-    const xmax = Math.max(...chartItems.map(c => c.domain.x[1]));
-    const ymin = Math.min(...chartItems.map(c => c.domain.y[0]));
-    const ymax = Math.max(...chartItems.map(c => c.domain.y[1]));
-    return {
-      x: [xmin, xmax],
-      y: [ymin, ymax]
-    };
+    return calculateDomain(this.props.chartItems);
+  }
+
+  @action
+  componentDidUpdate(prevProps) {
+    // Unset _clipDomain if chart domain changed
+    const prevDomain = calculateDomain(prevProps.chartItems);
+    if (!domainEquals(prevDomain, this.chartDomain))
+      this._clipDomain = undefined;
+  }
+
+  @computed get clipDomain() {
+    return this._clipDomain || this.chartDomain;
   }
 
   @action
   onDomainChanged(newDomain) {
-    this.visibleDomain = newDomain;
+    this._clipDomain = newDomain;
   }
 
   @computed
@@ -102,7 +106,7 @@ class BottomDockChart extends React.Component {
       <Container
         zoomDimension="x"
         cursorDimension="x"
-        zoomDomain={toJS(this.chartDomain)}
+        zoomDomain={toJS(this.chartDomain)} // the initial domain
         cursorComponent={
           <LineSegment style={{ stroke: "white", opacity: "0.5" }} />
         }
@@ -137,7 +141,7 @@ class BottomDockChart extends React.Component {
   @computed
   get chartItems() {
     return sortChartItemsByType(this.props.chartItems).map(c =>
-      clipPointsToVisibleDomain(c, this.visibleDomain || this.chartDomain)
+      clipPointsToVisibleDomain(c, this.clipDomain)
     );
   }
 
@@ -180,6 +184,27 @@ function clipPointsToVisibleDomain(chartItem, domain) {
     ...chartItem,
     points: clippedPoints
   };
+}
+
+/**
+ * Calculates a combined domain of all chartItems.
+ */
+function calculateDomain(chartItems) {
+  const xmin = Math.min(...chartItems.map(c => c.domain.x[0]));
+  const xmax = Math.max(...chartItems.map(c => c.domain.x[1]));
+  const ymin = Math.min(...chartItems.map(c => c.domain.y[0]));
+  const ymax = Math.max(...chartItems.map(c => c.domain.y[1]));
+  return {
+    x: [xmin, xmax],
+    y: [ymin, ymax]
+  };
+}
+
+/**
+ * Returns true if the two domains are equal
+ */
+function domainEquals({ x: x1, y: y1 }, { x: x2, y: y2 }) {
+  return x1 === x2 && y1 === y2;
 }
 
 export default BottomDockChart;
