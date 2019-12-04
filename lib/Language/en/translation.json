@@ -1,4 +1,9 @@
 {
+  "languageName" : {
+    "en" : "English",
+    "de" : "German",
+    "fr" : "French"
+  },
   "general" : {
     "close" : "Close",
     "open" : "Open",

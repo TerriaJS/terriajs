@@ -9,11 +9,14 @@ import HelpMenuPanelBasic from "../HelpScreens/HelpMenuPanelBasic.jsx";
 import SettingPanel from "./Panels/SettingPanel.jsx";
 import SharePanel from "./Panels/SharePanel/SharePanel.jsx";
 import ToolsPanel from "./Panels/ToolsPanel/ToolsPanel.jsx";
+import LanguageSwitcher from "./Panels/LanguagePanel/LanguageSwitcher.jsx";
 import Icon from "../Icon.jsx";
 import ObserveModelMixin from "../ObserveModelMixin";
 import Prompt from "../Generic/Prompt";
 import { withTranslation, Trans } from "react-i18next";
 import Styles from "./menu-bar.scss";
+import i18next from "i18next";
+import defined from "terriajs-cesium/Source/Core/defined";
 
 // The map navigation region
 const MenuBar = createReactClass({
@@ -153,6 +156,20 @@ const MenuBar = createReactClass({
                 />
               )}
           </li>
+          {console.log(i18next.options.resources.size)}
+          <If
+            condition={
+              defined(i18next.options.resources) &&
+              Object.keys(i18next.options.resources).length > 1
+            }
+          >
+            <li className={Styles.menuItem}>
+              <LanguageSwitcher
+                terria={this.props.terria}
+                viewState={this.props.viewState}
+              />
+            </li>
+          </If>
           {enableTools && (
             <li className={Styles.menuItem}>
               <ToolsPanel

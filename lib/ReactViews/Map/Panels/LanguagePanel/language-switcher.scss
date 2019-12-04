@@ -1,0 +1,70 @@
+@import "~terriajs-variables";
+@import "../../../../Sass/common/mixins";
+
+.language-panel {
+  font-size: $font-size-mid-small;
+}
+
+.dropdown-inner {
+  width: $language-switcher-panel;
+  @include transform-origin(50%, top);
+}
+
+@include empty-module("link-wrapper");
+
+.link {
+  @include link($overlay);
+}
+
+.language-selector {
+  composes: clearfix from "../../../../Sass/common/_base.scss";
+  composes: list-reset from "../../../../Sass/common/_base.scss";
+
+  margin: 0 -$padding-mini;
+}
+
+.list-item {
+  padding: $padding-mini;
+}
+
+.btn--language {
+  composes: btn from "../../../../Sass/common/_buttons.scss";
+  composes: btn-grey from "../../../../Sass/common/_buttons.scss";
+  display: block;
+
+  font-size: 0.8rem !important;
+  text-align: left !important;
+  line-height: 2 !important;
+
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  padding-left: 4px !important;
+  padding-right: 4px !important;
+
+  border-radius: $radius-small;
+
+  color: $text-light;
+
+  &:hover,
+  &:focus {
+    border: $border-style;
+    background: $turquoise-blue;
+  }
+
+  &.is-active {
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: $turquoise-blue;
+  }
+}
+
+.paragraph {
+  margin: $padding 0;
+  display: block;
+}
+
+.field {
+  composes: field from "../../../../Sass/common/_form.scss";
+
+  color: #ddd;
+  background: $overlay;
+}
