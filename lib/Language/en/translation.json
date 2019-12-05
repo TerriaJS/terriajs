@@ -427,16 +427,7 @@
     "searchCatalogueItem" : "Catalogue Items",
     "searchNoCatalogueItem" : "Sorry, no catalogue items match your search query.",
     "inMultipleLocations" : "In multiple locations including: ",
-    "inDataCatalogue" : "In Data Catalogue",
-    "bingMapsAerialWithLabels" : "Bing Maps Aerial with Labels",
-    "bingMapsAerial" : "Bing Maps Aerial",
-    "bingMapRoads" : "Bing Maps Roads",
-    "naturalEarthII" : "Natural Earth II",
-    "nasaBlackMarble" : "NASA Black Marble",
-    "positronLight" : "Positron (Light)",
-    "positronAttribution" : "© OpenStreetMap contributors ODbL, © CartoDB CC-BY 3.0",
-    "darkMatter" : "Dark Matter",
-    "darkMatterAttribution": "© OpenStreetMap contributors ODbL, © CartoDB CC-BY 3.0"
+    "inDataCatalogue" : "In Data Catalogue"
   },
   "terriaViewer" : {
     "slowWebGLAvailableTitle" : "Poor WebGL performance",
