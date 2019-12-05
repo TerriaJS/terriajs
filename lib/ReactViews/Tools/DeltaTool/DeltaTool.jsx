@@ -38,7 +38,7 @@ function DeltaTool({ terria, tool, onCloseTool }) {
   );
 
   // Duplicate the catalog item
-  useLayoutEffect(() => {
+  useEffect(() => {
     const newItem = duplicateItem(catalogItem);
     newItem.isEnabled = true;
     newItem.useOwnClock = true;
