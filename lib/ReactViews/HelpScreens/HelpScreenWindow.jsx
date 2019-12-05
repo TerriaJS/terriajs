@@ -9,13 +9,15 @@ import Styles from "./help-screen-window.scss";
 import classNames from "classnames";
 import defined from "terriajs-cesium/Source/Core/defined";
 import HelpViewState from "../../ReactViewModels/HelpViewState";
+import { withTranslation } from "react-i18next";
 
 const HelpScreenWindow = createReactClass({
   displayName: "HelpScreenWindow",
   mixins: [ObserverModelMixin],
 
   propTypes: {
-    helpViewState: PropTypes.object
+    helpViewState: PropTypes.object,
+    t: PropTypes.func.isRequired
   },
 
   render() {
@@ -26,11 +28,12 @@ const HelpScreenWindow = createReactClass({
     const windowClass = classNames(Styles.window, {
       [Styles.isActive]: currentScreen
     });
+    const { t } = this.props;
     const buttonText =
       currentScreen &&
       currentScreen.totalNumberOfScreens === currentScreen.currentScreenNumber
-        ? "DONE"
-        : "NEXT";
+        ? t("helpMenu.done")
+        : t("helpMenu.next");
     const positionLeft = calculateLeftPosition(currentScreen);
     const positionTop = calculateTopPosition(currentScreen);
 
@@ -132,4 +135,4 @@ function calculateTopPosition(helpScreen) {
   return topPosition;
 }
 
-module.exports = HelpScreenWindow;
+module.exports = withTranslation()(HelpScreenWindow);
