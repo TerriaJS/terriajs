@@ -6,6 +6,7 @@ import SearchResult from "./SearchResult.jsx";
 import classNames from "classnames";
 import Icon from "../Icon.jsx";
 import Styles from "./sidebar-dataset-search-results.scss";
+import { withTranslation } from "react-i18next";
 
 const SideBarDatasetSearchResults = createReactClass({
   displayName: "SideBarDatasetSearchResults",
@@ -14,7 +15,8 @@ const SideBarDatasetSearchResults = createReactClass({
   propTypes: {
     viewState: PropTypes.object.isRequired,
     terria: PropTypes.object.isRequired,
-    theme: PropTypes.string
+    theme: PropTypes.string,
+    t: PropTypes.func.isRequired
   },
 
   getDefaultProps() {
@@ -42,6 +44,7 @@ const SideBarDatasetSearchResults = createReactClass({
   },
 
   render() {
+    const { t } = this.props;
     return (
       <div
         key="data"
@@ -52,7 +55,7 @@ const SideBarDatasetSearchResults = createReactClass({
         })}
       >
         <button onClick={this.toggleGroup} className={Styles.heading}>
-          <span>Data</span>
+          <span>{t("search.data")}</span>
           <Icon
             glyph={this.state.isOpen ? Icon.GLYPHS.opened : Icon.GLYPHS.closed}
           />
@@ -61,9 +64,9 @@ const SideBarDatasetSearchResults = createReactClass({
           <SearchResult
             clickAction={this.searchInDataCatalog}
             icon="data"
-            name={`Search for "${
-              this.props.viewState.searchState.locationSearchText
-            }" in the Data Catalogue`}
+            name={t("search.search", {
+              searchText: this.props.viewState.searchState.locationSearchText
+            })}
           />
         </ul>
       </div>
@@ -71,4 +74,4 @@ const SideBarDatasetSearchResults = createReactClass({
   }
 });
 
-module.exports = SideBarDatasetSearchResults;
+module.exports = withTranslation()(SideBarDatasetSearchResults);
