@@ -40,6 +40,10 @@
     "description" : "Drag outer ring: rotate view.\nDrag inner gyroscope: free orbit.\nDouble-click: reset view.\nTIP: You can also free orbit by holding the CTRL key and dragging the map.",
     "title" : "Click and drag to rotate the camera"
   },
+  "historyControl" : {
+    "back" : "Back to previous view",
+    "forward" : "Forward to next view"
+  },
   "AR" : {
     "title" : "Experimental Feature: Augmented Reality",
     "experimentalFeatureMessage" : "Augmented Reality mode is currently in beta. This mode is only designed for use on the latest high end mobile devices. <br /><br />WARNING: This mode can consume a lot of data, please be mindful of data usage charges from your network provider. <br /><br />The accuracy of this mode depends on the accuracy of your mobile devices internal compass.",
