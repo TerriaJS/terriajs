@@ -13,6 +13,8 @@ Change Log
 * Added support for `openAddData` option in config.json.  If true, the "Add Data" dialog is automatically opened at startup.
 * Welcome message, in-app guides & new feature prompts are now disabled by default. These can be re-enabled by setting the `showWelcomeMessage`, `showInAppGuides` & `showFeaturePrompts` options in config.json. 
 * Updated Welcome Message to pass its props to `WelcomeMessagePrimaryBtnClick` & `WelcomeMessageSecondaryBtnClick` overrides
+* Bug fix for anti-meridian handling causing excessive memory use.
+* Handle coordinate conversion with GeoJson geometries which have an empty `coordinates` array.
 
 ### v7.9.0
 
