@@ -1,6 +1,6 @@
 import dateFormat from "dateformat";
 import PropTypes from "prop-types";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import createCatalogMemberFromType from "../../../Models/createCatalogMemberFromType";
 import raiseErrorToUser from "../../../Models/raiseErrorToUser";
 import Styles from "./delta-tool.scss";
@@ -218,4 +218,4 @@ function dateDisplayFormat(date) {
   return dateFormat(date, "dd-mm-yyyy", true);
 }
 
-module.exports = DeltaTool;
+export default DeltaTool;

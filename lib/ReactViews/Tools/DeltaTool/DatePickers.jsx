@@ -160,4 +160,4 @@ function useDatePickerState() {
   return { isOpen, setIsOpen };
 }
 
-module.exports = DatePickers;
+export default DatePickers;

@@ -29,4 +29,4 @@ ToolPanel.propTypes = {
   viewState: PropTypes.object.isRequired
 };
 
-module.exports = ToolPanel;
+export default ToolPanel;

@@ -74,8 +74,6 @@ LocationPicker.propTypes = {
 
 LocationPicker.displayName = "LocationPicker";
 
-module.exports = LocationPicker;
-
 function cartesianToDegrees(cartesian) {
   const carto = Ellipsoid.WGS84.cartesianToCartographic(cartesian);
   return {
@@ -83,3 +81,5 @@ function cartesianToDegrees(cartesian) {
     latitude: CesiumMath.toDegrees(carto.latitude)
   };
 }
+
+export default LocationPicker;
