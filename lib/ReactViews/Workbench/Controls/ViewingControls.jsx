@@ -126,7 +126,7 @@ const ViewingControls = createReactClass({
       [Styles.noSplit]: !canSplit,
       [Styles.noInfo]: !item.showsInfo
     };
-    const { t } = this.props;
+    const { t, viewState } = this.props;
     return (
       <ul className={Styles.control}>
         <If condition={item.canZoomTo}>
@@ -196,7 +196,12 @@ const ViewingControls = createReactClass({
           </li>
           <span className={Styles.separator} />
         </If>
-        <If condition={item.supportsDeltaComparison}>
+        <If
+          condition={
+            item.supportsDeltaComparison &&
+            viewState.useSmallScreenInterface === false
+          }
+        >
           <li className={classNames(Styles.delta, classList)}>
             <button
               type="button"
