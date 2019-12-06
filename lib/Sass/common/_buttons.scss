@@ -239,6 +239,7 @@ $btn-setting-size: 35px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
   line-height: 1.3;
   &:hover,
+  &:focus,
   .is-open &,
   &.is-active {
     background: $color-primary;

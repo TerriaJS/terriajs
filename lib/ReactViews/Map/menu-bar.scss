@@ -48,7 +48,8 @@
     }
   }
 
-  &:hover {
+  &:hover,
+  &:focus {
     svg {
       fill: #ffffff;
     }

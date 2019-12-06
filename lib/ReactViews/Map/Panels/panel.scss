@@ -136,7 +136,8 @@
     }
   }
 
-  &:hover {
+  &:hover,
+  &:focus {
     border: 0;
     svg {
       fill: #ffffff;
