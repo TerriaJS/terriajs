@@ -1,6 +1,9 @@
 Change Log
 ==========
 
+### Next release
+* Revert i18n changes from PR#3807
+
 ### v7.10.0
 
 * Added proper basic internationalisation beginnings via i18next & react-i18next
