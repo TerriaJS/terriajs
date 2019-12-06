@@ -13,10 +13,12 @@ import Loader from "../../Loader";
 /**
  * Allows user to pick a point on the map
  */
-function LocationPicker({ terria, message, location, onPick }) {
+function LocationPicker({ terria, messages, location, onPick }) {
   useEffect(() => {
     let currentPick;
-    const pickPointMode = new MapInteractionMode({ message });
+    const pickPointMode = new MapInteractionMode({
+      message: messages.beforePick
+    });
     terria.mapInteractionModeStack.push(pickPointMode);
 
     showMarker(location);
@@ -30,6 +32,8 @@ function LocationPicker({ terria, message, location, onPick }) {
             <Loader message={`Querying ${location ? "new" : ""} position...`} />
           );
         };
+
+        pickPointMode.message = () => messages.afterPick;
 
         const position = cartesianToDegrees(thisPick.pickPosition);
         showMarker(position);
@@ -67,7 +71,7 @@ function LocationPicker({ terria, message, location, onPick }) {
 
 LocationPicker.propTypes = {
   terria: PropTypes.object.isRequired,
-  message: PropTypes.string.isRequired,
+  messages: PropTypes.object.isRequired,
   location: PropTypes.object,
   onPick: PropTypes.func.isRequired
 };

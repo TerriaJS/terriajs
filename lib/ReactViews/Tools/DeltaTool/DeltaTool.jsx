@@ -33,9 +33,10 @@ function DeltaTool({ terria, tool, onCloseTool }) {
   const [location, setLocation] = useState(undefined);
   const [primaryDate, setPrimaryDate] = useState(catalogItem.discreteTime);
   const [secondaryDate, setSecondaryDate] = useState(catalogItem.discreteTime);
-  const [pickerMessage, setPickerMessage] = useState(
-    "Select a point by clicking on the map"
-  );
+  const [pickerMessages, setPickerMessages] = useState({
+    beforePick: "Select a point by clicking on the map",
+    afterPick: "Click another point to change the selection"
+  });
 
   // Duplicate the catalog item
   useEffect(() => {
@@ -57,14 +58,19 @@ function DeltaTool({ terria, tool, onCloseTool }) {
         item.filterIntervalsByFeature(feature, picked);
         setDatesFromAvailableDates(item.availableDates);
         setLocation(latLong);
-        setPickerMessage("Click another point to change the selection");
+        setPickerMessages({
+          beforePick: "Click another point to change the selection",
+          afterPick: "Click another point to change the selection"
+        });
       } catch (e) {
         raiseErrorToUser(terria, e);
       }
     } else {
-      setPickerMessage(
-        "Error when trying to resolve imagery at location! Please select a point again by clicking on the map."
-      );
+      setPickerMessages({
+        beforePick:
+          "Error when trying to resolve imagery at location! Please select a point again by clicking on the map.",
+        afterPick: "Click another point to change the selection"
+      });
     }
   }
 
@@ -158,7 +164,7 @@ function DeltaTool({ terria, tool, onCloseTool }) {
         terria={terria}
         location={location}
         onPick={onUserPickLocation}
-        message={pickerMessage}
+        messages={pickerMessages}
       />
     </div>
   );
