@@ -1,6 +1,9 @@
 Change Log
 ==========
 
+### v7.10.1
+* Re-release of v7.10.0 without i18next & react-i18next due to the introduction of multiple bugs including being unable to reorder items.
+
 ### v7.10.0
 
 * Added proper basic internationalisation beginnings via i18next & react-i18next
@@ -11,7 +14,7 @@ Change Log
 * Added ability to re-add "User data" CSV items once removed from workbench.
 * Changed catalog item event labels to include the full catalog item path, rather than just the catalog item name.
 * Added support for `openAddData` option in config.json.  If true, the "Add Data" dialog is automatically opened at startup.
-* Welcome message, in-app guides & new feature prompts are now disabled by default. These can be re-enabled by setting the `showWelcomeMessage`, `showInAppGuides` & `showFeaturePrompts` options in config.json. 
+* Welcome message, in-app guides & new feature prompts are now disabled by default. These can be re-enabled by setting the `showWelcomeMessage`, `showInAppGuides` & `showFeaturePrompts` options in config.json.
 * Updated Welcome Message to pass its props to `WelcomeMessagePrimaryBtnClick` & `WelcomeMessageSecondaryBtnClick` overrides
 * Fixed a bug in anti-meridian handling causing excessive memory use.
 * Handled coordinate conversion for GeoJson geometries with an empty `coordinates` array.
@@ -84,7 +87,7 @@ Change Log
 * Add scrollbar to dropdown boxes.
 * Add support for SDMX version 2.1 to existing `SdmxJsonCatalogItem`.
 * Add a warning when sharing a map describing datasets which will be missing.
-* Enable the story panel to be ordered to the front. 
+* Enable the story panel to be ordered to the front.
 * Disable the autocomplete on the title field when adding a new scene to a story.
 * Fix SED codes for regionmapping
 
