@@ -10,10 +10,21 @@ import ViewerMode from "../../../Models/ViewerMode";
 import ObserveModelMixin from "../../ObserveModelMixin";
 import MenuPanel from "../../StandardUserInterface/customizable/MenuPanel.jsx";
 import Icon from "../../Icon.jsx";
-import { withTranslation } from "react-i18next";
 
 import Styles from "./setting-panel.scss";
 import DropdownStyles from "./panel.scss";
+
+const viewerModeLabels = {
+  [ViewerMode.CesiumTerrain]: "3D Terrain",
+  [ViewerMode.CesiumEllipsoid]: "3D Smooth",
+  [ViewerMode.Leaflet]: "2D"
+};
+
+const qualityLabels = {
+  0: "Maximum performance, lower quality",
+  1: "Balanced performance & quality",
+  2: "Maximum quality, lower performance"
+};
 
 // The basemap and viewer setting panel
 const SettingPanel = createReactClass({
@@ -23,16 +34,14 @@ const SettingPanel = createReactClass({
   propTypes: {
     terria: PropTypes.object.isRequired,
     allBaseMaps: PropTypes.array,
-    viewState: PropTypes.object.isRequired,
-    t: PropTypes.func.isRequired
+    viewState: PropTypes.object.isRequired
   },
 
   getInitialState() {
-    const { t } = this.props;
     return {
       activeMap: this.props.terria.baseMap
         ? this.props.terria.baseMap.name
-        : t("settingPanel.none")
+        : "(None)"
     };
   },
 
@@ -53,11 +62,10 @@ const SettingPanel = createReactClass({
   },
 
   mouseLeaveBaseMap() {
-    const { t } = this.props;
     this.setState({
       activeMap: this.props.terria.baseMap
         ? this.props.terria.baseMap.name
-        : t("settingPanel.none")
+        : "(None)"
     });
   },
 
@@ -86,37 +94,19 @@ const SettingPanel = createReactClass({
   },
 
   render() {
-    const { t } = this.props;
-    const viewerModeLabels = {
-      [ViewerMode.CesiumTerrain]: t(
-        "settingPanel.viewerModeLabels.CesiumTerrain"
-      ),
-      [ViewerMode.CesiumEllipsoid]: t(
-        "settingPanel.viewerModeLabels.CesiumEllipsoid"
-      ),
-      [ViewerMode.Leaflet]: t("settingPanel.viewerModeLabels.Leaflet")
-    };
-
-    const qualityLabels = {
-      0: t("settingPanel.qualityLabels.maximumPerformance"),
-      1: t("settingPanel.qualityLabels.balancedPerformance"),
-      2: t("settingPanel.qualityLabels.lowerPerformance")
-    };
     const that = this;
     const useNativeResolution = this.props.terria.useNativeResolution;
     const currentViewer = this.props.terria.viewerMode;
     const currentBaseMap = this.props.terria.baseMap
       ? this.props.terria.baseMap.name
-      : t("settingPanel.none");
+      : "(None)";
 
-    const nativeResolutionLabel = t("settingPanel.nativeResolutionLabel", {
-      resolution1: useNativeResolution
-        ? t("settingPanel.native")
-        : t("settingPanel.screen"),
-      resolution2: useNativeResolution
-        ? t("settingPanel.screen")
-        : t("settingPanel.native")
-    });
+    const nativeResolutionLabel = `Press to stop using ${
+      useNativeResolution ? "native" : "screen"
+    } resolution and start using ${
+      useNativeResolution ? "screen" : "native"
+    } resolution`;
+
     const dropdownTheme = {
       outer: Styles.settingPanel,
       inner: Styles.dropdownInner,
@@ -138,16 +128,13 @@ const SettingPanel = createReactClass({
     return (
       <MenuPanel
         theme={dropdownTheme}
-        btnTitle={t("settingPanel.btnTitle")}
-        btnText={t("settingPanel.btnText")}
+        btnTitle="Change view"
+        btnText="Map"
         viewState={this.props.viewState}
         smallScreen={this.props.viewState.useSmallScreenInterface}
       >
         <div className={classNames(Styles.viewer, DropdownStyles.section)}>
-          <label className={DropdownStyles.heading}>
-            {" "}
-            {t("settingPanel.mapView")}{" "}
-          </label>
+          <label className={DropdownStyles.heading}> Map View </label>
           <ul className={Styles.viewerSelector}>
             <For each="viewerMode" of={viewerModes}>
               <li key={viewerMode} className={Styles.listItem}>
@@ -164,10 +151,7 @@ const SettingPanel = createReactClass({
           </ul>
         </div>
         <div className={classNames(Styles.baseMap, DropdownStyles.section)}>
-          <label className={DropdownStyles.heading}>
-            {" "}
-            {t("settingPanel.baseMap")}{" "}
-          </label>
+          <label className={DropdownStyles.heading}> Base Map </label>
           <label className={DropdownStyles.subHeading}>
             {this.state.activeMap}
           </label>
@@ -195,9 +179,7 @@ const SettingPanel = createReactClass({
         </div>
         <If condition={this.props.terria.viewerMode !== ViewerMode.Leaflet}>
           <div className={DropdownStyles.section}>
-            <label className={DropdownStyles.heading}>
-              {t("settingPanel.imageOptimisation")}
-            </label>
+            <label className={DropdownStyles.heading}>Image Optimisation</label>
             <section
               className={Styles.nativeResolutionWrapper}
               title={qualityLabels[this.props.terria.quality]}
@@ -225,14 +207,14 @@ const SettingPanel = createReactClass({
                   Styles.nativeResolutionHeader
                 )}
               >
-                {t("settingPanel.nativeResolutionHeader")}
+                Use native device resolution
               </label>
             </section>
             <label
               htmlFor="mapQuality"
               className={classNames(DropdownStyles.subHeading)}
             >
-              {t("settingPanel.mapQuality")}
+              Raster Map Quality:
             </label>
             <section
               className={Styles.qualityWrapper}
@@ -244,7 +226,7 @@ const SettingPanel = createReactClass({
                   Styles.qualityLabel
                 )}
               >
-                {t("settingPanel.qualityLabel")}
+                Quality
               </label>
               <Slider
                 id="mapMaximumScreenSpaceError"
@@ -266,7 +248,7 @@ const SettingPanel = createReactClass({
                   Styles.qualityLabel
                 )}
               >
-                {t("settingPanel.performanceLabel")}
+                Performance
               </label>
             </section>
           </div>
@@ -276,4 +258,4 @@ const SettingPanel = createReactClass({
   }
 });
 
-module.exports = withTranslation()(SettingPanel);
+module.exports = SettingPanel;

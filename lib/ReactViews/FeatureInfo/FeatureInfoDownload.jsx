@@ -7,8 +7,6 @@ import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 
 import DataUri from "../../Core/DataUri";
 import Dropdown from "../Generic/Dropdown";
-import { withTranslation } from "react-i18next";
-
 import Icon from "../Icon.jsx";
 
 import Styles from "./feature-info-download.scss";
@@ -18,8 +16,7 @@ const FeatureInfoDownload = createReactClass({
     data: PropTypes.object.isRequired,
     name: PropTypes.string.isRequired,
     viewState: PropTypes.object.isRequired,
-    canUseDataUri: PropTypes.bool,
-    t: PropTypes.func.isRequired
+    canUseDataUri: PropTypes.bool
   },
 
   getDefaultProps() {
@@ -47,7 +44,6 @@ const FeatureInfoDownload = createReactClass({
   },
 
   render() {
-    const { t } = this.props;
     const links = this.getLinks();
 
     const icon = (
@@ -69,7 +65,7 @@ const FeatureInfoDownload = createReactClass({
           }}
           buttonClassName={Styles.btn}
         >
-          {t("featureInfo.download")}
+          Download this Table&nbsp;
         </Dropdown>
       );
     } else {
@@ -122,4 +118,4 @@ function makeSafeForCsv(value) {
   return '"' + value.replace(/"/g, '""') + '"';
 }
 
-export default withTranslation()(FeatureInfoDownload);
+export default FeatureInfoDownload;

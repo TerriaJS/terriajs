@@ -9,7 +9,9 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import Styles from "./summary-concept.scss";
-import { withTranslation } from "react-i18next";
+
+const ADD_FIRST_TEXT = "Add a condition";
+const ADD_MORE_TEXT = "Add new condition";
 
 /*
  * SummaryConcept displays all the active and open nodes under a given
@@ -39,8 +41,7 @@ const SummaryConcept = createReactClass({
 
   propTypes: {
     concept: PropTypes.object.isRequired, // Must be a SummaryConcept.
-    isLoading: PropTypes.bool,
-    t: PropTypes.func.isRequired
+    isLoading: PropTypes.bool
   },
 
   render() {
@@ -58,7 +59,6 @@ const SummaryConcept = createReactClass({
       concept
     );
     const isLoading = this.props.isLoading;
-    const { t } = this.props;
     return (
       <div className={Styles.root}>
         <div className={Styles.title}>{concept.name}:</div>
@@ -97,7 +97,6 @@ const SummaryConcept = createReactClass({
           <AddButton
             rootConcept={concept}
             numberOfExisting={activeLeafNodesByParent.length}
-            t={t}
           />
         </If>
       </div>
@@ -174,8 +173,7 @@ const AddButton = createReactClass({
 
   propTypes: {
     rootConcept: PropTypes.object.isRequired,
-    numberOfExisting: PropTypes.number,
-    t: PropTypes.func.isRequired
+    numberOfExisting: PropTypes.number
   },
 
   addNew() {
@@ -184,11 +182,8 @@ const AddButton = createReactClass({
   },
 
   render() {
-    const { t } = this.props;
     const addText =
-      this.props.numberOfExisting > 0
-        ? t("concept.summary.addMoreText")
-        : t("concept.summary.addFirstText");
+      this.props.numberOfExisting > 0 ? ADD_MORE_TEXT : ADD_FIRST_TEXT;
     return (
       <div className={Styles.section}>
         <button onClick={this.addNew} className={Styles.btnAddNew}>
@@ -200,4 +195,4 @@ const AddButton = createReactClass({
   }
 });
 
-module.exports = withTranslation()(SummaryConcept);
+module.exports = SummaryConcept;

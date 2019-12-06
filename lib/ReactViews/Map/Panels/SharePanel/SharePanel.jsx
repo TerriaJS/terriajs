@@ -19,7 +19,6 @@ import {
   buildShortShareLink,
   canShorten
 } from "./BuildShareLink";
-import { withTranslation, Trans } from "react-i18next";
 import PrintView from "./PrintView";
 import Styles from "./share-panel.scss";
 
@@ -35,8 +34,7 @@ const SharePanel = createReactClass({
     catalogShare: PropTypes.bool,
     catalogShareWithoutText: PropTypes.bool,
     modalWidth: PropTypes.number,
-    viewState: PropTypes.object.isRequired,
-    t: PropTypes.func.isRequired
+    viewState: PropTypes.object.isRequired
   },
 
   getDefaultProps() {
@@ -99,12 +97,12 @@ const SharePanel = createReactClass({
   },
 
   beforeBrowserPrint() {
-    const { t } = this.props;
     this.afterBrowserPrint();
     this._message = document.createElement("div");
-    this._message.innerText = t("share.browserPrint", {
-      appName: this.props.terria.appName
-    });
+    this._message.innerText =
+      "For better printed results, please use " +
+      this.props.terria.appName +
+      "'s Print button instead of your web browser's print feature.";
     window.document.body.insertBefore(
       this._message,
       window.document.body.childNodes[0]
@@ -130,14 +128,13 @@ const SharePanel = createReactClass({
   },
 
   updateForShortening() {
-    const { t } = this.props;
     this.setState({
       shareUrl: ""
     });
 
     if (this.shouldShorten()) {
       this.setState({
-        placeholder: t("share.shortLinkShortening")
+        placeholder: "Shortening..."
       });
 
       buildShortShareLink(this.props.terria, this.props.viewState)
@@ -145,7 +142,8 @@ const SharePanel = createReactClass({
         .otherwise(() => {
           this.setUnshortenedUrl();
           this.setState({
-            errorMessage: t("share.shortLinkError")
+            errorMessage:
+              "An error occurred while attempting to shorten the URL.  Please check your internet connection and try again."
           });
         });
     } else {
@@ -288,23 +286,21 @@ const SharePanel = createReactClass({
     return (
       <If condition={unshareableItems.length > 0}>
         <div className={Styles.warning}>
-          <Trans i18nKey="share.localDataNote">
-            <p className={Styles.paragraph}>
-              <strong>Note:</strong>
-            </p>
-            <p className={Styles.paragraph}>
-              The following data sources will NOT be shared because they include
-              data from this local system. To share these data sources, publish
-              their data on a web server and{" "}
-              <a
-                className={Styles.warningLink}
-                onClick={this.onAddWebDataClicked}
-              >
-                add them using a url
-              </a>
-              .
-            </p>
-          </Trans>
+          <p className={Styles.paragraph}>
+            <strong>Note:</strong>
+          </p>
+          <p className={Styles.paragraph}>
+            The following data sources will NOT be shared because they include
+            data from this local system. To share these data sources, publish
+            their data on a web server and{" "}
+            <a
+              className={Styles.warningLink}
+              onClick={this.onAddWebDataClicked}
+            >
+              add them using a url
+            </a>
+            .
+          </p>
           <ul className={Styles.paragraph}>
             {unshareableItems.map((item, i) => {
               return (
@@ -328,11 +324,10 @@ const SharePanel = createReactClass({
   },
 
   renderContentForCatalogShare() {
-    const { t } = this.props;
     return (
       <Choose>
         <When condition={this.state.shareUrl === ""}>
-          <Loader message={t("share.generatingUrl")} />
+          <Loader message="Generating share URL..." />
         </When>
         <Otherwise>
           <div className={Styles.clipboardForCatalogShare}>
@@ -350,7 +345,6 @@ const SharePanel = createReactClass({
   },
 
   renderContentWithPrintAndEmbed() {
-    const { t } = this.props;
     const iframeCode = this.state.shareUrl.length
       ? `<iframe style="width: 720px; height: 600px; border: none;" src="${
           this.state.shareUrl
@@ -364,9 +358,9 @@ const SharePanel = createReactClass({
           {this.renderWarning()}
         </div>
         <div className={DropdownStyles.section}>
-          <div>{t("share.printTitle")}</div>
+          <div>Print Map</div>
           <div className={Styles.explanation}>
-            {t("share.printExplanation")}
+            Open a printable version of this map.
           </div>
           <div>
             <button
@@ -374,18 +368,18 @@ const SharePanel = createReactClass({
               onClick={this.print}
               disabled={this.state.creatingPrintView}
             >
-              {t("share.printButton")}
+              Print
             </button>
             <button
               className={Styles.printButton}
               onClick={this.showPrintView}
               disabled={this.state.creatingPrintView}
             >
-              {t("share.printViewButton")}
+              Show Print View
             </button>
             <div className={Styles.printViewLoader}>
               {this.state.creatingPrintView && (
-                <Loader message={t("share.creatingPrintView")} />
+                <Loader message="Creating print view..." />
               )}
             </div>
           </div>
@@ -397,7 +391,7 @@ const SharePanel = createReactClass({
               onClick={this.toggleAdvancedOptions}
               className={Styles.btnAdvanced}
             >
-              <span>{t("share.btnAdvanced")}</span>
+              <span>Advanced options</span>
               {this.advancedIsOpen() ? (
                 <Icon glyph={Icon.GLYPHS.opened} />
               ) : (
@@ -407,7 +401,9 @@ const SharePanel = createReactClass({
           </div>
           <If condition={this.advancedIsOpen()}>
             <div className={DropdownStyles.section}>
-              <p className={Styles.paragraph}>{t("share.embedTitle")}</p>
+              <p className={Styles.paragraph}>
+                To embed, copy this code to embed this map into an HTML page:
+              </p>
               <Input
                 large
                 dark
@@ -432,7 +428,7 @@ const SharePanel = createReactClass({
                   ) : (
                     <Icon glyph={Icon.GLYPHS.checkboxOff} />
                   )}
-                  {t("share.shortenUsingService")}
+                  Shorten the share URL using a web service
                 </button>
               </div>
             </If>
@@ -456,7 +452,6 @@ const SharePanel = createReactClass({
   },
 
   render() {
-    const { t } = this.props;
     const { catalogShare, catalogShareWithoutText, modalWidth } = this.props;
     const dropdownTheme = {
       btn: classNames({
@@ -472,12 +467,10 @@ const SharePanel = createReactClass({
       icon: "share"
     };
 
-    const btnText = catalogShare
-      ? t("share.btnCatalogShareText")
-      : t("share.btnMapShareText");
+    const btnText = catalogShare ? "Share" : "Share / Print";
     const btnTitle = catalogShare
-      ? t("share.btnCatalogShareTitle")
-      : t("share.btnMapShareTitle");
+      ? "Share your catalogue with others"
+      : "Share your map with others";
 
     return (
       <div>
@@ -502,4 +495,4 @@ const SharePanel = createReactClass({
   }
 });
 
-export default withTranslation()(SharePanel);
+export default SharePanel;

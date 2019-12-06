@@ -9,15 +9,13 @@ import sendFeedback from "../../Models/sendFeedback.js";
 import Styles from "./feedback-form.scss";
 import Icon from "../Icon.jsx";
 import classNames from "classnames";
-import { withTranslation, Trans } from "react-i18next";
 
 const FeedbackForm = createReactClass({
   displayName: "FeedbackForm",
   mixins: [ObserveModelMixin],
 
   propTypes: {
-    viewState: PropTypes.object.isRequired,
-    t: PropTypes.func.isRequired
+    viewState: PropTypes.object.isRequired
   },
 
   getInitialState() {
@@ -95,10 +93,9 @@ const FeedbackForm = createReactClass({
   },
 
   render() {
-    const { t } = this.props;
     const preamble = parseCustomMarkdownToReact(
       this.props.viewState.terria.configParameters.feedbackPreamble ||
-        t("feedback.feedbackPreamble")
+        "We would love to hear from you!"
     );
     const feedbackFormClassNames = classNames(Styles.form, {
       [Styles.isOpen]: this.props.viewState.feedbackFormIsVisible
@@ -107,18 +104,18 @@ const FeedbackForm = createReactClass({
       <div className="feedback__inner">
         <div className={feedbackFormClassNames}>
           <div className={Styles.header}>
-            <h4 className={Styles.title}>{t("feedback.title")}</h4>
+            <h4 className={Styles.title}>Feedback</h4>
             <button
               className={Styles.btnClose}
               onClick={this.onDismiss}
-              title={t("feedback.close")}
+              title="close feedback"
             >
               <Icon glyph={Icon.GLYPHS.close} />
             </button>
           </div>
           <form onSubmit={this.onSubmit}>
             <div className={Styles.description}>{preamble}</div>
-            <label className={Styles.label}>{t("feedback.yourName")}</label>
+            <label className={Styles.label}>Your name (optional)</label>
             <input
               type="text"
               name="name"
@@ -127,11 +124,9 @@ const FeedbackForm = createReactClass({
               onChange={this.handleChange}
             />
             <label className={Styles.label}>
-              <Trans i18nKey="feedback.email">
-                Email address (optional)
-                <br />
-                <em>We can&#39;t follow up without it!</em>
-              </Trans>
+              Email address (optional)
+              <br />
+              <em>We can&#39;t follow up without it!</em>
             </label>
             <input
               type="text"
@@ -140,9 +135,7 @@ const FeedbackForm = createReactClass({
               value={this.state.email}
               onChange={this.handleChange}
             />
-            <label className={Styles.label}>
-              {t("feedback.commentQuestion")}
-            </label>
+            <label className={Styles.label}>Comment or question</label>
             <textarea
               className={Styles.field}
               name="comment"
@@ -156,11 +149,13 @@ const FeedbackForm = createReactClass({
                 ) : (
                   <Icon glyph={Icon.GLYPHS.checkboxOff} />
                 )}
-                {t("feedback.shareWithDevelopers", {
-                  appName: this.props.viewState.terria.appName
-                })}
+                Share my map view with {this.props.viewState.terria.appName}{" "}
+                developers
                 <br />
-                <small>{t("feedback.captionText")}</small>
+                <small>
+                  This helps us to troubleshoot issues by letting us see what
+                  you&#39;re seeing
+                </small>
               </button>
             </div>
             <div className={Styles.action}>
@@ -169,16 +164,14 @@ const FeedbackForm = createReactClass({
                 className={Styles.btnCancel}
                 onClick={this.onDismiss}
               >
-                {t("feedback.cancel")}
+                Cancel
               </button>
               <button
                 type="submit"
                 className={Styles.btnSubmit}
                 disabled={this.state.isSending}
               >
-                {this.state.isSending
-                  ? t("feedback.sending")
-                  : t("feedback.send")}
+                {this.state.isSending ? "Sending..." : "Send"}
               </button>
             </div>
           </form>
@@ -188,4 +181,4 @@ const FeedbackForm = createReactClass({
   }
 });
 
-module.exports = withTranslation()(FeedbackForm);
+module.exports = FeedbackForm;

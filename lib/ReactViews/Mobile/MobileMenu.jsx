@@ -11,7 +11,6 @@ import SettingPanel from "../Map/Panels/SettingPanel.jsx";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
 import HelpMenuPanelBasic from "../HelpScreens/HelpMenuPanelBasic.jsx";
 import Terria from "../../Models/Terria";
-import { withTranslation } from "react-i18next";
 
 import ViewState from "../../ReactViewModels/ViewState";
 
@@ -26,8 +25,7 @@ const MobileMenu = createReactClass({
     viewState: PropTypes.instanceOf(ViewState).isRequired,
     showFeedback: PropTypes.bool,
     terria: PropTypes.instanceOf(Terria).isRequired,
-    allBaseMaps: PropTypes.array.isRequired,
-    t: PropTypes.func.isRequired
+    allBaseMaps: PropTypes.array.isRequired
   },
 
   getDefaultProps() {
@@ -65,7 +63,6 @@ const MobileMenu = createReactClass({
   },
 
   render() {
-    const { t } = this.props;
     const hasStories =
       this.props.terria.configParameters.storyEnabled &&
       defined(this.props.terria.stories) &&
@@ -108,15 +105,13 @@ const MobileMenu = createReactClass({
           <If condition={this.props.showFeedback}>
             <MobileMenuItem
               onClick={this.onFeedbackFormClick}
-              caption={t("feedback.feedbackBtnText")}
+              caption="Give Feedback"
             />
           </If>
           <If condition={hasStories}>
             <MobileMenuItem
               onClick={this.runStories}
-              caption={t("story.mobileViewStory", {
-                storiesLength: this.props.terria.stories.length
-              })}
+              caption={`View Stories (${this.props.terria.stories.length})`}
             />
           </If>
         </div>
@@ -125,4 +120,4 @@ const MobileMenu = createReactClass({
   }
 });
 
-export default withTranslation()(MobileMenu);
+export default MobileMenu;

@@ -12,7 +12,8 @@ import Workbench from "../Workbench/Workbench.jsx";
 import Icon from "../Icon.jsx";
 import FullScreenButton from "./FullScreenButton.jsx";
 import { removeMarker } from "../../Models/LocationMarkerUtils";
-import { withTranslation, Trans } from "react-i18next";
+import getReactElementFromContents from "../ReactHelpers/getReactElementFromContents";
+
 import Styles from "./side-panel.scss";
 
 const SidePanel = createReactClass({
@@ -21,8 +22,7 @@ const SidePanel = createReactClass({
 
   propTypes: {
     terria: PropTypes.object.isRequired,
-    viewState: PropTypes.object.isRequired,
-    t: PropTypes.func.isRequired
+    viewState: PropTypes.object.isRequired
   },
 
   componentDidMount() {
@@ -82,9 +82,12 @@ const SidePanel = createReactClass({
   },
 
   render() {
-    const { t } = this.props;
     const searchState = this.props.viewState.searchState;
-    const addData = t("addData.addDataBtnText");
+    const emptyWorkbenchValue = this.props.terria.language[
+      "EmptyWorkbenchMessage"
+    ];
+    const emptyWorkbench = getReactElementFromContents(emptyWorkbenchValue);
+
     return (
       <div className={Styles.workBench}>
         <div className={Styles.header}>
@@ -93,7 +96,7 @@ const SidePanel = createReactClass({
             viewState={this.props.viewState}
             minified={true}
             animationDuration={250}
-            btnText={t("addData.btnHide")}
+            btnText="Hide"
           />
 
           <SearchBox
@@ -101,23 +104,25 @@ const SidePanel = createReactClass({
             onDoSearch={this.search}
             onFocus={this.startLocationSearch}
             searchText={searchState.locationSearchText}
-            placeholder={t("search.placeholder")}
+            placeholder="Search for locations"
           />
           <div className={Styles.addData}>
             <button
               type="button"
               onClick={this.onAddDataClicked}
               className={Styles.button}
-              title={addData}
+              title={this.props.terria.language.AddDataBtnText}
             >
               <Icon glyph={Icon.GLYPHS.add} />
-              {addData}
+              {getReactElementFromContents(
+                this.props.terria.language.AddDataBtnText
+              )}
             </button>
             <button
               type="button"
               onClick={this.onAddLocalDataClicked}
               className={Styles.uploadData}
-              title={t("addData.load")}
+              title="Load local/web data"
             >
               <Icon glyph={Icon.GLYPHS.upload} />
             </button>
@@ -151,23 +156,7 @@ const SidePanel = createReactClass({
               />
             </When>
             <Otherwise>
-              <Trans i18nKey="emptyWorkbenchMessage">
-                <div className={Styles.workbenchEmpty}>
-                  <div>Your workbench is empty</div>
-                  <p>
-                    <strong>Click &apos;{addData}&apos; above to:</strong>
-                  </p>
-                  <ul>
-                    <li>Browse the Data Catalogue</li>
-                    <li>Load your own data onto the map</li>
-                  </ul>
-                  <p>
-                    <Icon glyph={Icon.GLYPHS.bulb} />
-                    <strong>TIP:</strong>
-                    <em>All your active data sets will be listed here</em>
-                  </p>
-                </div>
-              </Trans>
+              <div className={Styles.workbenchEmpty}>{emptyWorkbench}</div>
             </Otherwise>
           </Choose>
         </div>
@@ -176,4 +165,4 @@ const SidePanel = createReactClass({
   }
 });
 
-module.exports = withTranslation()(SidePanel);
+module.exports = SidePanel;

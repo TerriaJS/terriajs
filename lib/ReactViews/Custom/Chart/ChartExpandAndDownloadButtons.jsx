@@ -21,7 +21,6 @@ import Polling from "../../../Models/Polling";
 import raiseErrorToUser from "../../../Models/raiseErrorToUser";
 import TableStyle from "../../../Models/TableStyle";
 import Icon from "../../Icon.jsx";
-import { withTranslation } from "react-i18next";
 
 import Styles from "./chart-expand-and-download-buttons.scss";
 
@@ -54,8 +53,7 @@ const ChartExpandAndDownloadButtons = createReactClass({
     xColumn: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     yColumns: PropTypes.array,
     canDownload: PropTypes.bool,
-    raiseToTitle: PropTypes.bool,
-    t: PropTypes.func.isRequired
+    raiseToTitle: PropTypes.bool
   },
 
   expandButton() {
@@ -79,7 +77,6 @@ const ChartExpandAndDownloadButtons = createReactClass({
     const downloads = this.props.downloads || this.props.sources;
     const downloadNames = this.props.downloadNames || this.props.sourceNames;
     let downloadButton;
-    const { t } = this.props;
     if (defined(this.props.sourceNames)) {
       const dropdownTheme = {
         dropdown: Styles.dropdown,
@@ -106,7 +103,7 @@ const ChartExpandAndDownloadButtons = createReactClass({
             options={nameAndHrefObjects}
             theme={downloadDropdownTheme}
           >
-            {t("chart.download") + "&nbsp;▾"}
+            Download&nbsp;▾
           </Dropdown>
         );
       }
@@ -123,7 +120,7 @@ const ChartExpandAndDownloadButtons = createReactClass({
               options={sourceNameObjects}
               theme={dropdownTheme}
             >
-              {t("chart.expand") + "&nbsp;▾"}
+              Expand&nbsp;▾
             </Dropdown>
             {downloadButton}
           </div>
@@ -148,7 +145,7 @@ const ChartExpandAndDownloadButtons = createReactClass({
           className={Styles.btnChartExpand}
           onClick={this.expandButton}
         >
-          {t("chart.expand")}
+          Expand
         </button>
         {downloadButton}
       </div>
@@ -380,4 +377,4 @@ function expand(props, sourceIndex) {
   });
 }
 
-module.exports = withTranslation()(ChartExpandAndDownloadButtons);
+module.exports = ChartExpandAndDownloadButtons;

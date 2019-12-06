@@ -1,10 +1,10 @@
-/**
+/** 
  * A generic Guide component, look at
  * `satellite-guidance.js` && `SatelliteGuide.jsx`
  * for example data / usage
- *
+ * 
  * consume something like:
-
+ 
   <Guide
     hasIntroSlide
     // Use this as guide won't track viewstate
@@ -22,7 +22,7 @@
     }}
   />
 
- *
+ * 
  */
 import React, { useState } from "react";
 import PropTypes from "prop-types";
@@ -38,8 +38,6 @@ import SlideUpFadeIn from "../Transitions/SlideUpFadeIn/SlideUpFadeIn";
 
 import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";
-import { useTranslation } from "react-i18next";
-import i18next from "i18next";
 
 const GuideProgress = props => {
   // doesn't work for IE11
@@ -79,9 +77,7 @@ export const analyticsSetShowGuide = (
     setCalledFromInside: false
   }
 ) => {
-  const openOrClose = bool
-    ? i18next.t("general.open")
-    : i18next.t("general.close");
+  const openOrClose = bool ? "Open" : "Close";
   const actionSuffix = options.setCalledFromInside ? " from inside modal" : "";
 
   terria.analytics.logEvent(
@@ -135,17 +131,17 @@ export const GuidePure = ({
     }
   };
 
-  const { t } = useTranslation();
   const handleSetShowGuide = bool => {
     analyticsSetShowGuide(bool, currentGuideIndex, guideKey, terria, {
       setCalledFromInside: true
     });
     setShowGuide(bool);
   };
+
   const currentGuide = guideData[currentGuideIndex] || {};
   const hidePrev = currentGuide.hidePrev || false;
-  const prevButtonText = currentGuide.prevText || t("general.prev");
-  const nextButtonText = currentGuide.nextText || t("general.next");
+  const prevButtonText = currentGuide.prevText || "Prev";
+  const nextButtonText = currentGuide.nextText || "Next";
   const maxStepCount = hasIntroSlide ? guideData.length - 1 : guideData.length;
   const currentStepCount = hasIntroSlide
     ? currentGuideIndex
@@ -173,8 +169,8 @@ export const GuidePure = ({
           type="button"
           className={classNames(Styles.innerCloseBtn)}
           onClick={() => handleSetShowGuide(false)}
-          title={t("general.close")}
-          aria-label={t("general.close")}
+          title="Close"
+          aria-label="Close"
         >
           <Icon glyph={Icon.GLYPHS.close} />
         </button>

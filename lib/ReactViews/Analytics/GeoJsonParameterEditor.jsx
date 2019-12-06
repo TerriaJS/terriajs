@@ -11,7 +11,6 @@ import SelectAPolygonParameterEditor from "./SelectAPolygonParameterEditor";
 import RegionPicker from "./RegionPicker";
 import createReactClass from "create-react-class";
 import GeoJsonParameter from "../../Models/GeoJsonParameter";
-import { withTranslation } from "react-i18next";
 
 const GeoJsonParameterEditor = createReactClass({
   mixins: [ObserveModelMixin],
@@ -19,8 +18,7 @@ const GeoJsonParameterEditor = createReactClass({
   propTypes: {
     previewed: PropTypes.object,
     parameter: PropTypes.object,
-    viewState: PropTypes.object,
-    t: PropTypes.func.isRequired
+    viewState: PropTypes.object
   },
 
   onCleanUp() {
@@ -58,11 +56,10 @@ const GeoJsonParameterEditor = createReactClass({
   },
 
   render() {
-    const { t } = this.props;
     return (
       <div>
         <div>
-          <strong>{t("analytics.selectLocation")}</strong>
+          <strong>Select Location</strong>
         </div>
         <div
           className="container"
@@ -78,7 +75,7 @@ const GeoJsonParameterEditor = createReactClass({
             onClick={this.selectPointOnMap}
             className={Styles.btnLocationSelector}
           >
-            <strong>{t("analytics.point")}</strong>
+            <strong>Point (lat/lon)</strong>
           </button>
           <button
             type="button"
@@ -86,14 +83,14 @@ const GeoJsonParameterEditor = createReactClass({
             onClick={this.selectPolygonOnMap}
             className={Styles.btnLocationSelector}
           >
-            <strong>{t("analytics.polygon")}</strong>
+            <strong>Polygon</strong>
           </button>
           <button
             type="button"
             onClick={this.selectExistingPolygonOnMap}
             className={Styles.btnLocationSelector}
           >
-            <strong>{t("analytics.existingPolygon")}</strong>
+            <strong>Existing Polygon</strong>
           </button>
         </div>
         <input
@@ -113,7 +110,10 @@ const GeoJsonParameterEditor = createReactClass({
             ) === ""
           }
         >
-          <div>{t("analytics.nothingSelected")}</div>
+          <div>
+            Nothing has been selected, please use the buttons above to make a
+            selection.
+          </div>
         </If>
       </div>
     );
@@ -136,4 +136,4 @@ GeoJsonParameterEditor.getDisplayValue = function(value, parameter) {
   return RegionPicker.getDisplayValue(value, parameter);
 };
 
-module.exports = withTranslation()(GeoJsonParameterEditor);
+module.exports = GeoJsonParameterEditor;

@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 import SearchHeader from "./SearchHeader.jsx";
 import SearchResult from "./SearchResult.jsx";
 import classNames from "classnames";
-import { withTranslation } from "react-i18next";
 import Icon from "../Icon.jsx";
 import Styles from "./location-search-result.scss";
 
@@ -19,8 +18,7 @@ const LocationSearchResults = createReactClass({
     terria: PropTypes.object.isRequired,
     search: PropTypes.object.isRequired,
     onLocationClick: PropTypes.func.isRequired,
-    theme: PropTypes.string,
-    t: PropTypes.func.isRequired
+    theme: PropTypes.string
   },
 
   getInitialState() {
@@ -49,11 +47,10 @@ const LocationSearchResults = createReactClass({
   },
 
   renderResultsFooter() {
-    const { t } = this.props;
     if (this.state.isExpanded) {
-      return t("search.viewLess", { name: this.props.search.name });
+      return `View less ${this.props.search.name} results`;
     }
-    return t("search.viewMore", { name: this.props.search.name });
+    return `View more ${this.props.search.name} results`;
   },
 
   render() {
@@ -111,4 +108,4 @@ const LocationSearchResults = createReactClass({
   }
 });
 
-module.exports = withTranslation()(LocationSearchResults);
+module.exports = LocationSearchResults;

@@ -7,8 +7,6 @@ import ObserveModelMixin from "../../../ObserveModelMixin";
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import { withTranslation } from "react-i18next";
-
 import Styles from "./summary-concept.scss";
 
 /*
@@ -27,8 +25,7 @@ const ActiveConcept = createReactClass({
   propTypes: {
     activeLeafNodesWithParent: PropTypes.object.isRequired,
     rootConcept: PropTypes.object.isRequired,
-    isLoading: PropTypes.bool,
-    t: PropTypes.func.isRequired
+    isLoading: PropTypes.bool
   },
 
   open() {
@@ -54,7 +51,6 @@ const ActiveConcept = createReactClass({
 
   render() {
     const activeLeafNodesWithParent = this.props.activeLeafNodesWithParent;
-    const { t } = this.props;
     return (
       <div className={Styles.section}>
         <div
@@ -66,17 +62,14 @@ const ActiveConcept = createReactClass({
         >
           <div className={Styles.controls}>
             <If condition={!activeLeafNodesWithParent.parent.isOpen}>
-              <button
-                className={Styles.btnEdit}
-                title={t("concept.active.edit")}
-              >
+              <button className={Styles.btnEdit} title="Edit condition">
                 <Icon glyph={Icon.GLYPHS.settings} />
               </button>
               <If condition={this.props.rootConcept.allowMultiple}>
                 <button
                   className={Styles.btnRemove}
                   onClick={this.remove}
-                  title={t("concept.active.remove")}
+                  title="Remove condition"
                 >
                   <Icon glyph={Icon.GLYPHS.close} />
                 </button>
@@ -84,7 +77,7 @@ const ActiveConcept = createReactClass({
             </If>
             <If condition={activeLeafNodesWithParent.parent.isOpen}>
               <button className={Styles.btnClose} onClick={this.close}>
-                {t("general.close")}
+                Close
               </button>
             </If>
           </div>
@@ -113,4 +106,4 @@ const ActiveConcept = createReactClass({
   }
 });
 
-module.exports = withTranslation()(ActiveConcept);
+module.exports = ActiveConcept;

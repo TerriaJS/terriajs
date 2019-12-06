@@ -5,7 +5,6 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import ObserveModelMixin from "../../ObserveModelMixin";
 import defined from "terriajs-cesium/Source/Core/defined";
-import { withTranslation } from "react-i18next";
 import Styles from "./colorscalerange-section.scss";
 
 const ColorScaleRangeSection = createReactClass({
@@ -15,8 +14,7 @@ const ColorScaleRangeSection = createReactClass({
   propTypes: {
     item: PropTypes.object.isRequired,
     minValue: PropTypes.number,
-    maxValue: PropTypes.number,
-    t: PropTypes.func.isRequired
+    maxValue: PropTypes.number
   },
 
   getInitialState: function() {
@@ -43,14 +41,14 @@ const ColorScaleRangeSection = createReactClass({
 
   updateRange(e) {
     e.preventDefault();
-    const { t } = this.props;
+
     const min = parseFloat(this.state.minRange);
     if (min !== min) {
       // is NaN?
       this.props.item.terria.error.raiseEvent({
         sender: this.props.item,
-        title: t("workbench.colorScaleRangeTitle"),
-        message: t("workbench.colorScaleRangeMin")
+        title: "Invalid color scale range",
+        message: "The minimum value must be a number."
       });
       return;
     }
@@ -60,8 +58,8 @@ const ColorScaleRangeSection = createReactClass({
       // is NaN?
       this.props.item.terria.error.raiseEvent({
         sender: this.props.item,
-        title: t("workbench.colorScaleRangeTitle"),
-        message: t("workbench.colorScaleRangeMax")
+        title: "Invalid color scale range",
+        message: "The maximum value must be a number."
       });
       return;
     }
@@ -69,8 +67,9 @@ const ColorScaleRangeSection = createReactClass({
     if (max <= min) {
       this.props.item.terria.error.raiseEvent({
         sender: this.props.item,
-        title: t("workbench.colorScaleRangeTitle"),
-        message: t("workbench.colorScaleRangeMinSmallerThanMax")
+        title: "Invalid color scale range",
+        message:
+          "The minimum value of the color scale range must be less than the maximum value."
       });
       return;
     }
@@ -96,11 +95,10 @@ const ColorScaleRangeSection = createReactClass({
     if (!defined(item.colorScaleMinimum) || !defined(item.colorScaleMaximum)) {
       return null;
     }
-    const { t } = this.props;
     return (
       <form className={Styles.colorscalerange} onSubmit={this.updateRange}>
-        <div className={Styles.title}>{t("workbench.colorScaleRange")} </div>
-        <label htmlFor="rangeMax">{t("workbench.rangeMax")} </label>
+        <div className={Styles.title}>Color Scale Range </div>
+        <label htmlFor="rangeMax">Maximum: </label>
         <input
           className={Styles.field}
           type="text"
@@ -108,7 +106,7 @@ const ColorScaleRangeSection = createReactClass({
           value={this.state.maxRange}
           onChange={this.changeRangeMax}
         />
-        <label htmlFor="rangeMin">{t("workbench.rangeMin")} </label>
+        <label htmlFor="rangeMin">Minimum: </label>
         <input
           className={Styles.field}
           type="text"
@@ -116,15 +114,11 @@ const ColorScaleRangeSection = createReactClass({
           value={this.state.minRange}
           onChange={this.changeRangeMin}
         />
-        <button
-          type="submit"
-          title={t("workbench.colorScaleUpdateRange")}
-          className={Styles.btn}
-        >
-          {t("workbench.colorScaleUpdateRange")}
+        <button type="submit" title="Update Range" className={Styles.btn}>
+          Update Range
         </button>
       </form>
     );
   }
 });
-module.exports = withTranslation()(ColorScaleRangeSection);
+module.exports = ColorScaleRangeSection;

@@ -12,7 +12,6 @@ import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 
 import MapInteractionMode from "../../Models/MapInteractionMode";
 import ObserveModelMixin from "../ObserveModelMixin";
-import { withTranslation } from "react-i18next";
 
 import Styles from "./parameter-editors.scss";
 
@@ -23,8 +22,7 @@ const RectangleParameterEditor = createReactClass({
   propTypes: {
     previewed: PropTypes.object,
     parameter: PropTypes.object,
-    viewState: PropTypes.object,
-    t: PropTypes.func.isRequired
+    viewState: PropTypes.object
   },
 
   getInitialState() {
@@ -83,9 +81,10 @@ const RectangleParameterEditor = createReactClass({
     const that = this;
     // Cancel any feature picking already in progress.
     terria.pickedFeatures = undefined;
-    const { t } = this.props;
+
     const pickPointMode = new MapInteractionMode({
-      message: t("analytics.shiftToDrawRectangle"),
+      message:
+        "Press the SHIFT key and hold down the left mouse button to draw a rectangle",
       drawRectangle: true,
       onCancel: function() {
         terria.mapInteractionModeStack.pop();
@@ -111,7 +110,6 @@ const RectangleParameterEditor = createReactClass({
   },
 
   render() {
-    const { t } = this.props;
     return (
       <div>
         <input
@@ -125,11 +123,11 @@ const RectangleParameterEditor = createReactClass({
           onClick={this.selectRectangleOnMap}
           className={Styles.btnSelector}
         >
-          {t("analytics.clickToDrawRectangle")}
+          Click to draw rectangle
         </button>
       </div>
     );
   }
 });
 
-module.exports = withTranslation()(RectangleParameterEditor);
+module.exports = RectangleParameterEditor;

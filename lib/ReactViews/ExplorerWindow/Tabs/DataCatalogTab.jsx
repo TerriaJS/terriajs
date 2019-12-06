@@ -8,7 +8,6 @@ import DataCatalog from "../../DataCatalog/DataCatalog.jsx";
 import DataPreview from "../../Preview/DataPreview.jsx";
 import ObserveModelMixin from "../../ObserveModelMixin";
 import SearchBox from "../../Search/SearchBox.jsx";
-import { withTranslation } from "react-i18next";
 
 import Styles from "./data-catalog-tab.scss";
 
@@ -21,7 +20,13 @@ const DataCatalogTab = createReactClass({
     terria: PropTypes.object,
     viewState: PropTypes.object,
     items: PropTypes.array,
-    t: PropTypes.func.isRequired
+    searchPlaceholder: PropTypes.string
+  },
+
+  getDefaultProps() {
+    return {
+      searchPlaceholder: "Search the catalogue" // Let SearchBox set the default placeholder
+    };
   },
 
   changeSearchText(newText) {
@@ -33,7 +38,6 @@ const DataCatalogTab = createReactClass({
   },
 
   render() {
-    const { t } = this.props;
     const terria = this.props.terria;
     return (
       <div className={Styles.root}>
@@ -42,7 +46,7 @@ const DataCatalogTab = createReactClass({
             searchText={this.props.viewState.searchState.catalogSearchText}
             onSearchTextChanged={this.changeSearchText}
             onDoSearch={this.search}
-            placeholder={t("addData.searchPlaceholder")}
+            placeholder={this.props.searchPlaceholder}
           />
           <DataCatalog
             terria={this.props.terria}
@@ -60,4 +64,4 @@ const DataCatalogTab = createReactClass({
   }
 });
 
-module.exports = withTranslation()(DataCatalogTab);
+module.exports = DataCatalogTab;

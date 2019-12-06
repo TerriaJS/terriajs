@@ -4,7 +4,6 @@ import createReactClass from "create-react-class";
 import classNames from "classnames";
 
 import defined from "terriajs-cesium/Source/Core/defined";
-import { withTranslation } from "react-i18next";
 
 import Styles from "./panel.scss";
 import Icon from "../../Icon.jsx";
@@ -34,8 +33,7 @@ const InnerPanel = createReactClass({
     children: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.element),
       PropTypes.element
-    ]),
-    t: PropTypes.func.isRequired
+    ])
   },
 
   getDefaultProps() {
@@ -90,7 +88,6 @@ const InnerPanel = createReactClass({
   },
 
   render() {
-    const { t } = this.props;
     return (
       <div
         className={classNames(
@@ -114,8 +111,8 @@ const InnerPanel = createReactClass({
             [Styles.innerCloseBtnForModal]: this.props.showDropdownAsModal
           })}
           onClick={this.forceClose}
-          title={t("general.close")}
-          aria-label={t("general.close")}
+          title="Close"
+          aria-label="Close"
         >
           <Icon glyph={Icon.GLYPHS.close} />
         </button>
@@ -135,4 +132,4 @@ const InnerPanel = createReactClass({
   }
 });
 
-export default withTranslation()(InnerPanel);
+export default InnerPanel;

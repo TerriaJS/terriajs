@@ -14,15 +14,13 @@ const getTimestamp = require("terriajs-cesium/Source/Core/getTimestamp")
 const Matrix4 = require("terriajs-cesium/Source/Core/Matrix4").default;
 const Ray = require("terriajs-cesium/Source/Core/Ray").default;
 const Transforms = require("terriajs-cesium/Source/Core/Transforms").default;
-import { withTranslation } from "react-i18next";
 import Icon from "../../Icon.jsx";
 import Styles from "./compass.scss";
 
 // the compass on map
 const Compass = createReactClass({
   propTypes: {
-    terria: PropTypes.object,
-    t: PropTypes.func.isRequired
+    terria: PropTypes.object
   },
 
   getInitialState() {
@@ -151,8 +149,9 @@ const Compass = createReactClass({
       WebkitTransform: "rotate(-" + this.state.heading + "rad)",
       opacity: ""
     };
-    const { t } = this.props;
-    const description = t("compass.description");
+
+    const description =
+      "Drag outer ring: rotate view.\nDrag inner gyroscope: free orbit.\nDouble-click: reset view.\nTIP: You can also free orbit by holding the CTRL key and dragging the map.";
 
     return (
       <div
@@ -165,7 +164,10 @@ const Compass = createReactClass({
         <div className={Styles.outerRing} style={outerCircleStyle}>
           <Icon glyph={Icon.GLYPHS.compassOuter} />
         </div>
-        <div className={Styles.innerRing} title={t("compass.title")}>
+        <div
+          className={Styles.innerRing}
+          title="Click and drag to rotate the camera"
+        >
           <Icon glyph={Icon.GLYPHS.compassInner} />
         </div>
         <div className={Styles.rotationMarker} style={rotationMarkerStyle}>
@@ -473,4 +475,4 @@ function viewerChange(viewModel) {
   }
 }
 
-module.exports = withTranslation()(Compass);
+module.exports = Compass;

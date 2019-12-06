@@ -5,7 +5,6 @@ import ObserveModelMixin from "../../ObserveModelMixin";
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import { withTranslation } from "react-i18next";
 import Icon from "../../Icon.jsx";
 import Styles from "./display-as-percent.scss";
 
@@ -14,8 +13,7 @@ const DisplayAsPercentSection = createReactClass({
   mixins: [ObserveModelMixin],
 
   propTypes: {
-    item: PropTypes.object,
-    t: PropTypes.func.isRequired
+    item: PropTypes.object
   },
 
   togglePercentage() {
@@ -26,7 +24,7 @@ const DisplayAsPercentSection = createReactClass({
     if (!this.props.item.canDisplayPercent) {
       return null;
     }
-    const { t } = this.props;
+
     return (
       <label className={Styles.main}>
         <button
@@ -42,10 +40,10 @@ const DisplayAsPercentSection = createReactClass({
           ) : (
             <Icon glyph={Icon.GLYPHS.checkboxOff} />
           )}
-          <span>{t("workbench.displayPercent")}</span>
+          <span>Display as a percentage of regional total</span>
         </button>
       </label>
     );
   }
 });
-module.exports = withTranslation()(DisplayAsPercentSection);
+module.exports = DisplayAsPercentSection;

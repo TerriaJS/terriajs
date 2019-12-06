@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import createReactClass from "create-react-class";
 import classNames from "classnames";
-import { withTranslation } from "react-i18next";
 
 import Styles from "./file-input.scss";
 
@@ -11,14 +10,12 @@ import Styles from "./file-input.scss";
 const FileInput = createReactClass({
   propTypes: {
     onChange: PropTypes.func,
-    accept: PropTypes.string,
-    t: PropTypes.func.isRequired
+    accept: PropTypes.string
   },
 
   getInitialState() {
-    const { t } = this.props;
     return {
-      value: t("addData.browse"),
+      value: "Browse...",
       hovered: false
     };
   },
@@ -33,7 +30,6 @@ const FileInput = createReactClass({
   },
 
   render() {
-    const { t } = this.props;
     return (
       <form
         className={Styles.fileInput}
@@ -51,11 +47,11 @@ const FileInput = createReactClass({
             [Styles.btnHover]: this.state.hovered
           })}
         >
-          {this.state.value ? this.state.value : t("addData.browse")}
+          {this.state.value ? this.state.value : "Browse..."}
         </label>
       </form>
     );
   }
 });
 
-module.exports = withTranslation()(FileInput);
+module.exports = FileInput;

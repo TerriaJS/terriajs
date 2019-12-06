@@ -11,7 +11,23 @@ import ObserveModelMixin from "../ObserveModelMixin";
 import Styles from "./data-preview.scss";
 
 naturalSort.insensitive = true;
-import { withTranslation } from "react-i18next";
+
+// Should get it from option
+const DEFAULT_SECTION_ORDER = [
+  "Disclaimer",
+  "Description",
+  "Data Description",
+  "Dataset Description",
+  "Service Description",
+  "Resource Description",
+  "Licence",
+  "Access Constraints",
+  "Author",
+  "Contact",
+  "Created",
+  "Modified",
+  "Update Frequency"
+];
 
 /**
  * CatalogItem-defined sections that sit within the preview description. These are ordered according to the catalog item's
@@ -22,28 +38,10 @@ const DataPreviewSections = createReactClass({
   mixins: [ObserveModelMixin],
 
   propTypes: {
-    metadataItem: PropTypes.object.isRequired,
-    t: PropTypes.func.isRequired
+    metadataItem: PropTypes.object.isRequired
   },
 
   sortInfoSections(items) {
-    const { t } = this.props;
-    // Should get it from option
-    const DEFAULT_SECTION_ORDER = [
-      t("preview.disclaimer"),
-      t("description.name"),
-      t("preview.dataDescription"),
-      t("preview.datasetDescription"),
-      t("preview.serviceDescription"),
-      t("preview.resourceDescription"),
-      t("preview.licence"),
-      t("preview.accessConstraints"),
-      t("preview.author"),
-      t("preview.contact"),
-      t("preview.created"),
-      t("preview.modified"),
-      t("preview.updateFrequency")
-    ];
     const infoSectionOrder =
       this.props.metadataItem.infoSectionOrder || DEFAULT_SECTION_ORDER;
 
@@ -86,4 +84,4 @@ const DataPreviewSections = createReactClass({
   }
 });
 
-export default withTranslation()(DataPreviewSections);
+export default DataPreviewSections;

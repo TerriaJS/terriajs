@@ -23,7 +23,6 @@ import ShortReport from "./Controls/ShortReport";
 import StyleSelectorSection from "./Controls/StyleSelectorSection";
 import ViewingControls from "./Controls/ViewingControls";
 import TimerSection from "./Controls/TimerSection";
-import { withTranslation } from "react-i18next";
 
 import Styles from "./workbench-item.scss";
 import Icon from "../Icon.jsx";
@@ -39,8 +38,7 @@ const WorkbenchItem = createReactClass({
     onTouchStart: PropTypes.func.isRequired,
     item: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
-    setWrapperState: PropTypes.func,
-    t: PropTypes.func.isRequired
+    setWrapperState: PropTypes.func
   },
 
   toggleDisplay() {
@@ -61,7 +59,6 @@ const WorkbenchItem = createReactClass({
 
   render() {
     const workbenchItem = this.props.item;
-    const { t } = this.props;
     return (
       <li
         style={this.props.style}
@@ -75,7 +72,7 @@ const WorkbenchItem = createReactClass({
               <button
                 type="button"
                 onClick={this.toggleVisibility}
-                title={t("workbench.toggleVisibility")}
+                title="Data show/hide"
                 className={Styles.btnVisibility}
               >
                 {workbenchItem.isShown ? (
@@ -174,4 +171,4 @@ const WorkbenchItem = createReactClass({
   }
 });
 
-module.exports = withTranslation()(sortable(WorkbenchItem));
+module.exports = sortable(WorkbenchItem);

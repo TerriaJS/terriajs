@@ -12,13 +12,11 @@ const CesiumMath = require("terriajs-cesium/Source/Core/Math").default;
 const Cartesian3 = require("terriajs-cesium/Source/Core/Cartesian3").default;
 import Icon from "../../Icon.jsx";
 import Styles from "./zoom_control.scss";
-import { withTranslation } from "react-i18next";
 
 // Map zoom control
 const ZoomControl = createReactClass({
   propTypes: {
-    terria: PropTypes.object,
-    t: PropTypes.func.isRequired
+    terria: PropTypes.object
   },
 
   flyToPosition(scene, position, durationMilliseconds) {
@@ -158,7 +156,6 @@ const ZoomControl = createReactClass({
   },
 
   render() {
-    const { t } = this.props;
     return (
       <div className={Styles.zoomControl}>
         <ul className={Styles.list}>
@@ -167,7 +164,7 @@ const ZoomControl = createReactClass({
               type="button"
               onClick={this.zoomIn}
               className={Styles.increase}
-              title={t("zoomCotrol.zoomIn")}
+              title="Zoom in"
             >
               <Icon glyph={Icon.GLYPHS.increase} />
             </button>
@@ -177,7 +174,7 @@ const ZoomControl = createReactClass({
               type="button"
               onClick={this.zoomReset}
               className={Styles.refresh}
-              title={t("zoomCotrol.zoomReset")}
+              title="Reset zoom"
             >
               <Icon glyph={Icon.GLYPHS.refresh} />
             </button>
@@ -187,7 +184,7 @@ const ZoomControl = createReactClass({
               type="button"
               onClick={this.zoomOut}
               className={Styles.decrease}
-              title={t("zoomCotrol.zoomOut")}
+              title="Zoom out"
             >
               <Icon glyph={Icon.GLYPHS.decrease} />
             </button>
@@ -197,4 +194,4 @@ const ZoomControl = createReactClass({
     );
   }
 });
-module.exports = withTranslation()(ZoomControl);
+module.exports = ZoomControl;

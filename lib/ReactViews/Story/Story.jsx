@@ -5,7 +5,6 @@ import classNames from "classnames";
 import Icon from "../Icon.jsx";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import { sortable } from "react-anything-sortable";
-import { withTranslation } from "react-i18next";
 
 const findTextContent = content => {
   if (typeof content === "string") {
@@ -83,7 +82,6 @@ class Story extends React.Component {
   }
 
   renderMenu() {
-    const { t } = this.props;
     return (
       <div className={Styles.menu}>
         <ul className={Styles.menuInner}>
@@ -91,20 +89,20 @@ class Story extends React.Component {
             <button
               className={Styles.menuBtn}
               type="button"
-              title={t("story.viewStory")}
+              title="view"
               onClick={this.viewStory}
             >
-              {t("story.view")}
+              View
             </button>
           </li>
           <li>
             <button
               className={Styles.menuBtn}
               type="button"
-              title={t("story.editStory")}
+              title="edit"
               onClick={this.editStory}
             >
-              {t("story.edit")}
+              Edit
             </button>
           </li>
           <li>
@@ -114,20 +112,20 @@ class Story extends React.Component {
                 [Styles.isSuccessful]: this.props.recaptureStorySuccessful
               })}
               type="button"
-              title={t("story.recaptureStory")}
+              title="re-capture"
               onClick={this.recaptureStory}
             >
-              {t("story.recapture")}
+              Recapture
             </button>
           </li>
           <li>
             <button
               className={Styles.menuBtn}
               type="button"
-              title={t("story.deleteStory")}
+              title="delete"
               onClick={this.deleteStory}
             >
-              {t("story.delete")}
+              Delete
             </button>
           </li>
         </ul>
@@ -138,7 +136,7 @@ class Story extends React.Component {
   render() {
     const story = this.props.story;
     const bodyText = this.getTruncatedContent(story.text);
-    const { t } = this.props;
+
     return (
       <div
         className={classNames(this.props.className, Styles.story)}
@@ -157,7 +155,7 @@ class Story extends React.Component {
             />
             {story.title && story.title.length > 0
               ? story.title
-              : t("story.untitledScene")}
+              : "untitled scene"}
           </h3>
           <button className={Styles.toggleBtn} onClick={this.toggleMenu}>
             <Icon glyph={Icon.GLYPHS.menuDotted} />
@@ -182,8 +180,7 @@ Story.propTypes = {
   style: PropTypes.object,
   className: PropTypes.string,
   menuOpen: PropTypes.bool,
-  openMenu: PropTypes.func,
-  t: PropTypes.func.isRequired
+  openMenu: PropTypes.func
 };
 
-module.exports = withTranslation()(sortable(Story));
+module.exports = sortable(Story);

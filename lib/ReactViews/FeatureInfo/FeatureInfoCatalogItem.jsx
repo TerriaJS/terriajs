@@ -6,7 +6,6 @@ import React from "react";
 import createReactClass from "create-react-class";
 
 import PropTypes from "prop-types";
-import { withTranslation } from "react-i18next";
 
 import Styles from "./feature-info-catalog-item.scss";
 
@@ -21,12 +20,10 @@ const FeatureInfoCatalogItem = createReactClass({
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
     onToggleOpen: PropTypes.func.isRequired,
-    printView: PropTypes.bool,
-    t: PropTypes.func.isRequired
+    printView: PropTypes.bool
   },
 
   render() {
-    const { t } = this.props;
     const features = this.props.features;
     const catalogItem = this.props.catalogItem;
     const terria = this.props.terria;
@@ -75,29 +72,20 @@ const FeatureInfoCatalogItem = createReactClass({
           <If condition={hiddenNumber === 1}>
             <li className={Styles.messageItem}>
               <strong>
-                {t("featureInfo.catalogItem.moreThanMax", {
-                  maximum: maximumShownFeatureInfos,
-                  catalogItemName: catalogItem.name
-                })}
+                More than {maximumShownFeatureInfos} {catalogItem.name} features
+                were found.
               </strong>
               <br />
-              {t("featureInfo.catalogItem.featureInfoShown", {
-                maximum: maximumShownFeatureInfos
-              })}
+              The first {maximumShownFeatureInfos} are shown below.
             </li>
           </If>
           <If condition={hiddenNumber > 1}>
             <li className={Styles.messageItem}>
               <strong>
-                {t("featureInfo.catalogItem.featuresFound", {
-                  featCount: totalFeaturesCount,
-                  catalogItemName: catalogItem.name
-                })}
+                {totalFeaturesCount} {catalogItem.name} features were found.
               </strong>
               <br />
-              {t("featureInfo.catalogItem.featureInfoShown", {
-                maximum: maximumShownFeatureInfos
-              })}
+              The first {maximumShownFeatureInfos} are shown below.
             </li>
           </If>
 
@@ -108,4 +96,4 @@ const FeatureInfoCatalogItem = createReactClass({
   }
 });
 
-module.exports = withTranslation()(FeatureInfoCatalogItem);
+module.exports = FeatureInfoCatalogItem;

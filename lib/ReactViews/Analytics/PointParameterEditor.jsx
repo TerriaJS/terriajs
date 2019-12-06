@@ -16,7 +16,6 @@ import MapInteractionMode from "../../Models/MapInteractionMode";
 import ObserveModelMixin from "../ObserveModelMixin";
 
 import Styles from "./parameter-editors.scss";
-import { withTranslation, useTranslation } from "react-i18next";
 
 const PointParameterEditor = createReactClass({
   displayName: "PointParameterEditor",
@@ -26,8 +25,7 @@ const PointParameterEditor = createReactClass({
     previewed: PropTypes.object,
     parameter: PropTypes.object,
     viewState: PropTypes.object,
-    parameterViewModel: PropTypes.object,
-    t: PropTypes.func.isRequired
+    parameterViewModel: PropTypes.object
   },
 
   inputOnChange(e) {
@@ -70,12 +68,12 @@ const PointParameterEditor = createReactClass({
       !parameterViewModel.isValueValid &&
       parameterViewModel.wasEverBlurredWhileInvalid;
     const style = showErrorMessage ? Styles.fieldInvalid : Styles.field;
-    const { t } = this.props;
+
     return (
       <div>
         <If condition={showErrorMessage}>
           <div className={Styles.warningText}>
-            {t("analytics.enterValidCoords")}
+            Please enter valid coordinates (e.g. 131.0361, -25.3450).
           </div>
         </If>
         <input
@@ -91,7 +89,7 @@ const PointParameterEditor = createReactClass({
           onClick={this.selectPointOnMap}
           className={Styles.btnSelector}
         >
-          {t("analytics.selectLocation")}
+          Select location
         </button>
       </div>
     );
@@ -170,9 +168,9 @@ PointParameterEditor.getDisplayValue = function(value) {
 PointParameterEditor.selectOnMap = function(terria, viewState, parameter) {
   // Cancel any feature picking already in progress.
   terria.pickedFeatures = undefined;
-  const { t } = useTranslation();
+
   const pickPointMode = new MapInteractionMode({
-    message: t("analytics.selectLocation"),
+    message: "Select a point by clicking on the map.",
     onCancel: function() {
       terria.mapInteractionModeStack.pop();
       viewState.openAddData();
@@ -196,4 +194,4 @@ PointParameterEditor.selectOnMap = function(terria, viewState, parameter) {
   viewState.explorerPanelIsVisible = false;
 };
 
-module.exports = withTranslation()(PointParameterEditor);
+module.exports = PointParameterEditor;

@@ -7,8 +7,9 @@ import ObserveModelMixin from "../../../ObserveModelMixin";
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import { withTranslation } from "react-i18next";
 import Styles from "./summary-concept.scss";
+
+const NEW_TEXT = "New condition";
 
 const OpenInactiveConcept = createReactClass({
   displayName: "OpenInactiveConcept",
@@ -16,8 +17,7 @@ const OpenInactiveConcept = createReactClass({
 
   propTypes: {
     rootConcept: PropTypes.object.isRequired,
-    openInactiveConcept: PropTypes.object.isRequired,
-    t: PropTypes.func.isRequired
+    openInactiveConcept: PropTypes.object.isRequired
   },
 
   cancel() {
@@ -31,13 +31,12 @@ const OpenInactiveConcept = createReactClass({
 
   render() {
     const showControls = this.props.rootConcept.allowMultiple;
-    const { t } = this.props;
     return (
       <div className={Styles.section}>
         <div className={Styles.controls}>
           <If condition={showControls}>
             <button className={Styles.btnClose} onClick={this.cancel}>
-              {t("concept.inactive.cancel")}
+              Cancel
             </button>
           </If>
         </div>
@@ -61,7 +60,7 @@ const OpenInactiveConcept = createReactClass({
               this.props.rootConcept === this.props.openInactiveConcept
             }
           >
-            {t("concept.inactive.newText")}
+            {NEW_TEXT}
           </If>
         </div>
         <ul className={Styles.childrenList}>
@@ -110,4 +109,4 @@ const ConceptParent = createReactClass({
   }
 });
 
-module.exports = withTranslation()(OpenInactiveConcept);
+module.exports = OpenInactiveConcept;

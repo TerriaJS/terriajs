@@ -10,7 +10,6 @@ import { Swipeable } from "react-swipeable";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Styles from "./story-panel.scss";
-import { withTranslation } from "react-i18next";
 
 export function activateStory(story, terria) {
   if (story.shareData) {
@@ -43,8 +42,7 @@ const StoryPanel = createReactClass({
   mixins: [ObserveModelMixin],
   propTypes: {
     terria: PropTypes.object.isRequired,
-    viewState: PropTypes.object.isRequired,
-    t: PropTypes.func.isRequired
+    viewState: PropTypes.object.isRequired
   },
   slideInTimer: null,
   slideOutTimer: null,
@@ -145,13 +143,12 @@ const StoryPanel = createReactClass({
   },
 
   render() {
-    const { t } = this.props;
     const stories = this.props.terria.stories || [];
     const story = stories[this.props.viewState.currentStoryId];
     const locationBtn = (
       <button
         className={Styles.locationBtn}
-        title={t("story.locationBtn")}
+        title="center scene"
         onClick={this.onCenterScene.bind(this, story)}
       >
         <Icon glyph={Icon.GLYPHS.location} />
@@ -160,7 +157,7 @@ const StoryPanel = createReactClass({
     const exitBtn = (
       <button
         className={Styles.exitBtn}
-        title={t("story.exitBtn")}
+        title="exit story"
         onClick={this.slideOut}
       >
         <Icon glyph={Icon.GLYPHS.close} />
@@ -197,7 +194,7 @@ const StoryPanel = createReactClass({
                 <button
                   className={Styles.previousBtn}
                   disabled={this.props.terria.stories.length <= 1}
-                  title={t("story.previousBtn")}
+                  title="go to previous scene"
                   onClick={this.goToPrevStory}
                 >
                   <Icon glyph={Icon.GLYPHS.left} />
@@ -210,7 +207,7 @@ const StoryPanel = createReactClass({
                 {story.title && story.title.length > 0 ? (
                   <h3>{story.title}</h3>
                 ) : (
-                  <h3> {t("story.untitled")} </h3>
+                  <h3> untitled scene </h3>
                 )}
                 <Small>{exitBtn}</Small>
                 <If condition={this.props.terria.stories.length >= 2}>
@@ -219,7 +216,7 @@ const StoryPanel = createReactClass({
                       {" "}
                       {stories.map((story, i) => (
                         <button
-                          title={t("story.navBtn", { title: story.title })}
+                          title={`go to story ${story.title}`}
                           type="button"
                           key={story.id}
                           onClick={() => this.navigateStory(i)}
@@ -250,7 +247,7 @@ const StoryPanel = createReactClass({
                 <button
                   disabled={this.props.terria.stories.length <= 1}
                   className={Styles.nextBtn}
-                  title={t("story.nextBtn")}
+                  title="go to next scene"
                   onClick={this.goToNextStory}
                 >
                   <Icon glyph={Icon.GLYPHS.right} />
@@ -262,7 +259,7 @@ const StoryPanel = createReactClass({
                 {" "}
                 {stories.map((story, i) => (
                   <button
-                    title={t("story.navBtnMobile", { title: story.title })}
+                    title={`go to story ${story.title}`}
                     type="button"
                     key={story.id}
                     className={classNames(Styles.mobileNavBtn, {
@@ -283,4 +280,4 @@ const StoryPanel = createReactClass({
   }
 });
 
-export default withTranslation()(StoryPanel);
+export default StoryPanel;

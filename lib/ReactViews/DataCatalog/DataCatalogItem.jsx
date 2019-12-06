@@ -8,10 +8,16 @@ import CatalogItem from "./CatalogItem";
 import getAncestors from "../../Models/getAncestors";
 import ObserveModelMixin from "../ObserveModelMixin";
 import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
-import { withTranslation } from "react-i18next";
+
+const STATE_TO_TITLE = {
+  loading: "Loading...",
+  remove: "Remove from map",
+  add: 'Add this item. Hold down "shift" to keep the data catalogue open.',
+  trash: "Remove from catalogue"
+};
 
 // Individual dataset
-export const DataCatalogItem = createReactClass({
+const DataCatalogItem = createReactClass({
   displayName: "DataCatalogItem",
   mixins: [ObserveModelMixin],
 
@@ -19,8 +25,7 @@ export const DataCatalogItem = createReactClass({
     item: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
     removable: PropTypes.bool,
-    terria: PropTypes.object,
-    t: PropTypes.func.isRequired
+    terria: PropTypes.object
   },
 
   onBtnClicked(event) {
@@ -78,13 +83,6 @@ export const DataCatalogItem = createReactClass({
 
   render() {
     const item = this.props.item;
-    const { t } = this.props;
-    const STATE_TO_TITLE = {
-      loading: t("catalogItem.loading"),
-      remove: t("catalogItem.removeFromMap"),
-      add: t("catalogItem.add"),
-      trash: t("catalogItem.trash")
-    };
     return (
       <CatalogItem
         onTextClick={this.setPreviewedItem}
@@ -125,4 +123,4 @@ export const DataCatalogItem = createReactClass({
   }
 });
 
-export default withTranslation()(DataCatalogItem);
+module.exports = DataCatalogItem;

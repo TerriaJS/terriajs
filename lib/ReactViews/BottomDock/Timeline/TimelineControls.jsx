@@ -6,8 +6,6 @@ import PropTypes from "prop-types";
 import createReactClass from "create-react-class";
 
 import ClockRange from "terriajs-cesium/Source/Core/ClockRange";
-import { withTranslation } from "react-i18next";
-
 import Styles from "./timeline-controls.scss";
 import Icon from "../../Icon.jsx";
 
@@ -16,8 +14,7 @@ const TimelineControls = createReactClass({
     clock: PropTypes.object.isRequired,
     analytics: PropTypes.object.isRequired,
     currentViewer: PropTypes.object.isRequired,
-    locale: PropTypes.object,
-    t: PropTypes.func.isRequired
+    locale: PropTypes.object
   },
 
   getInitialState() {
@@ -85,14 +82,13 @@ const TimelineControls = createReactClass({
   },
 
   render() {
-    const { t } = this.props;
     return (
       <div className={Styles.controls}>
         <button
           type="button"
           className={Styles.timelineControl}
           onClick={this.gotoStart}
-          title={t("dateTime.timeline.gotoStart")}
+          title="Go to beginning"
         >
           <Icon glyph={Icon.GLYPHS.backToStart} />
         </button>
@@ -100,7 +96,7 @@ const TimelineControls = createReactClass({
           type="button"
           className={Styles.timelineControl}
           onClick={this.togglePlay}
-          title={t("dateTime.timeline.togglePlay")}
+          title="Play"
         >
           {this.isPlaying() ? (
             <Icon glyph={Icon.GLYPHS.pause} />
@@ -112,7 +108,7 @@ const TimelineControls = createReactClass({
           type="button"
           className={Styles.timelineControl}
           onClick={this.playSlower}
-          title={t("dateTime.timeline.playSlower")}
+          title="Play Slower"
         >
           <Icon glyph={Icon.GLYPHS.backward} />
         </button>
@@ -120,7 +116,7 @@ const TimelineControls = createReactClass({
           type="button"
           className={Styles.timelineControl}
           onClick={this.playFaster}
-          title={t("dateTime.timeline.playFaster")}
+          title="Play Faster"
         >
           <Icon glyph={Icon.GLYPHS.forward} />
         </button>
@@ -129,4 +125,4 @@ const TimelineControls = createReactClass({
   }
 });
 
-export default withTranslation()(TimelineControls);
+export default TimelineControls;

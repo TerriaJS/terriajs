@@ -11,7 +11,6 @@ import PropTypes from "prop-types";
 import Styles from "./parameter-editors.scss";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import createReactClass from "create-react-class";
-import { withTranslation } from "react-i18next";
 
 const SelectAPolygonParameterEditor = createReactClass({
   mixins: [ObserveModelMixin],
@@ -19,8 +18,7 @@ const SelectAPolygonParameterEditor = createReactClass({
   propTypes: {
     previewed: PropTypes.object,
     parameter: PropTypes.object,
-    viewState: PropTypes.object,
-    t: PropTypes.func.isRequired
+    viewState: PropTypes.object
   },
 
   setDisplayValue(e) {
@@ -36,7 +34,6 @@ const SelectAPolygonParameterEditor = createReactClass({
   },
 
   render() {
-    const { t } = this.props;
     return (
       <div>
         <input className={Styles.field} type="text" value={this.state.value} />
@@ -45,7 +42,7 @@ const SelectAPolygonParameterEditor = createReactClass({
           onClick={this.selectExistingPolygonOnMap}
           className={Styles.btnSelector}
         >
-          {t("analytics.selectExistingPolygon")}
+          Select existing polygon
         </button>
       </div>
     );
@@ -147,4 +144,4 @@ SelectAPolygonParameterEditor.getDisplayValue = function(value) {
     .join(", ");
 };
 
-module.exports = withTranslation()(SelectAPolygonParameterEditor);
+module.exports = SelectAPolygonParameterEditor;

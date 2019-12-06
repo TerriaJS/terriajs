@@ -2,10 +2,17 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import Icon from "../Icon.jsx";
-import { useTranslation } from "react-i18next";
+
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 
 import Styles from "./data-catalog-item.scss";
+
+const STATE_TO_TITLE = {
+  loading: "Loading...",
+  remove: "Remove",
+  add: "Add",
+  trash: "Remove from catalogue"
+};
 
 const STATE_TO_ICONS = {
   loading: <Icon glyph={Icon.GLYPHS.loader} />,
@@ -18,13 +25,6 @@ const STATE_TO_ICONS = {
 
 /** Dumb catalog item */
 function CatalogItem(props) {
-  const { t } = useTranslation();
-  const STATE_TO_TITLE = {
-    loading: t("catalogItem.loading"),
-    remove: t("catalogItem.remove"),
-    add: t("catalogItem.add"),
-    trash: t("catalogItem.trash")
-  };
   const stateToTitle = defaultValue(props.titleOverrides, STATE_TO_TITLE);
   return (
     <li className={classNames(Styles.root)}>

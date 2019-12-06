@@ -12,7 +12,6 @@ import ToolsPanel from "./Panels/ToolsPanel/ToolsPanel.jsx";
 import Icon from "../Icon.jsx";
 import ObserveModelMixin from "../ObserveModelMixin";
 import Prompt from "../Generic/Prompt";
-import { withTranslation, Trans } from "react-i18next";
 import Styles from "./menu-bar.scss";
 
 // The map navigation region
@@ -25,8 +24,7 @@ const MenuBar = createReactClass({
     viewState: PropTypes.object.isRequired,
     allBaseMaps: PropTypes.array,
     animationDuration: PropTypes.number,
-    menuItems: PropTypes.arrayOf(PropTypes.element),
-    t: PropTypes.func.isRequired
+    menuItems: PropTypes.arrayOf(PropTypes.element)
   },
 
   getDefaultProps() {
@@ -56,7 +54,6 @@ const MenuBar = createReactClass({
     this.props.viewState.toggleFeaturePrompt("mapGuidesLocation", true, true);
   },
   render() {
-    const { t } = this.props;
     const satelliteGuidancePrompted = this.props.terria.getLocalProperty(
       "satelliteGuidancePrompted"
     );
@@ -68,21 +65,15 @@ const MenuBar = createReactClass({
 
     const promptHtml =
       this.props.terria.stories.length > 0 ? (
-        <Trans i18nKey="story.promptHtml1">
-          <div>
-            You can view and create stories at any time by clicking here.
-          </div>
-        </Trans>
+        <div>You can view and create stories at any time by clicking here.</div>
       ) : (
-        <Trans i18nKey="story.promptHtml2">
+        <div>
+          <small>INTRODUCING</small>
+          <h3>Data Stories</h3>
           <div>
-            <small>INTRODUCING</small>
-            <h3>Data Stories</h3>
-            <div>
-              Create and share interactive stories directly from your map.
-            </div>
+            Create and share interactive stories directly from your map.
           </div>
-        </Trans>
+        </div>
       );
     const delayTime =
       storyEnabled && this.props.terria.stories.length > 0 ? 1000 : 2000;
@@ -103,14 +94,14 @@ const MenuBar = createReactClass({
                 onClick={this.onStoryButtonClick}
               >
                 <Icon glyph={Icon.GLYPHS.story} />
-                <span>{t("story.story")}</span>
+                <span>Story</span>
               </button>
               {storyEnabled &&
                 this.props.viewState.featurePrompts.indexOf("story") >= 0 && (
                   <Prompt
                     content={promptHtml}
                     displayDelay={delayTime}
-                    dismissText={t("story.dismissText")}
+                    dismissText={"Got it, thanks!"}
                     dismissAction={this.dismissAction}
                   />
                 )}
@@ -141,14 +132,12 @@ const MenuBar = createReactClass({
                 <Prompt
                   content={
                     <div>
-                      <Trans i18nKey="satelliteGuidance.menuTitle">
-                        You can access map guides at any time by looking in the{" "}
-                        <strong>help menu</strong>.
-                      </Trans>
+                      You can access map guides at any time by looking in the{" "}
+                      <strong>help menu</strong>.
                     </div>
                   }
                   displayDelay={1000}
-                  dismissText={t("satelliteGuidance.dismissText")}
+                  dismissText={"Got it, thanks!"}
                   dismissAction={this.dismissSatelliteGuidanceAction}
                 />
               )}
@@ -174,4 +163,4 @@ const MenuBar = createReactClass({
   }
 });
 
-export default withTranslation()(MenuBar);
+export default MenuBar;

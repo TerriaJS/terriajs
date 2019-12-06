@@ -27,34 +27,30 @@ const DataPreviewUrl = createReactClass({
         <h4 className={Styles.h4}>{this.props.metadataItem.typeName} URL</h4>
         <If condition={this.props.metadataItem.type === "wms"}>
           <p>
-            <Trans i18nKey="description.wms">
-              This is a
-              <a
-                href="https://en.wikipedia.org/wiki/Web_Map_Service"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                WMS service
-              </a>
-              , which generates map images on request. It can be used in GIS
-              software with this URL:
-            </Trans>
+            This is a{" "}
+            <a
+              href="https://en.wikipedia.org/wiki/Web_Map_Service"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              WMS service
+            </a>
+            , which generates map images on request. It can be used in GIS
+            software with this URL:
           </p>
         </If>
         <If condition={this.props.metadataItem.type === "wfs"}>
           <p>
-            <Trans i18nKey="description.wfs">
-              This is a
-              <a
-                href="https://en.wikipedia.org/wiki/Web_Feature_Service"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                WFS service
-              </a>
-              , which transfers raw spatial data on request. It can be used in
-              GIS software with this URL:
-            </Trans>
+            This is a{" "}
+            <a
+              href="https://en.wikipedia.org/wiki/Web_Feature_Service"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              WFS service
+            </a>
+            , which transfers raw spatial data on request. It can be used in GIS
+            software with this URL:
           </p>
         </If>
         <input

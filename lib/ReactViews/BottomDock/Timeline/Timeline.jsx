@@ -15,19 +15,17 @@ import TimelineControls from "./TimelineControls";
 import CesiumTimeline from "./CesiumTimeline";
 import DateTimePicker from "./DateTimePicker";
 import { formatDateTime } from "./DateFormats";
-import { withTranslation } from "react-i18next";
 
 import Styles from "./timeline.scss";
 
-export const Timeline = createReactClass({
+const Timeline = createReactClass({
   displayName: "Timeline",
   mixins: [ObserveModelMixin],
 
   propTypes: {
     terria: PropTypes.object.isRequired,
     autoPlay: PropTypes.bool,
-    locale: PropTypes.object,
-    t: PropTypes.func.isRequired
+    locale: PropTypes.object
   },
 
   getDefaultProps() {
@@ -135,13 +133,12 @@ export const Timeline = createReactClass({
     if (!defined(catalogItem)) {
       return null;
     }
-    const { t } = this.props;
     return (
       <div className={Styles.timeline}>
         <div className={Styles.textRow}>
           <div
             className={Styles.textCell}
-            title={t("dateTime.timeline.textCell")}
+            title="Name of the dataset whose time range is shown"
           >
             {catalogItem.name} {this.state.currentTimeString}
           </div>
@@ -176,4 +173,4 @@ export const Timeline = createReactClass({
   }
 });
 
-export default withTranslation()(Timeline);
+module.exports = Timeline;

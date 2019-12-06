@@ -22,7 +22,6 @@ import Icon from "../Icon.jsx";
 import ObserveModelMixin from "../ObserveModelMixin";
 import propertyGetTimeValues from "../../Core/propertyGetTimeValues";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
-import { withTranslation } from "react-i18next";
 
 import Styles from "./feature-info-section.scss";
 
@@ -32,7 +31,7 @@ Mustache.escape = function(string) {
 };
 
 // Individual feature info section
-export const FeatureInfoSection = createReactClass({
+const FeatureInfoSection = createReactClass({
   displayName: "FeatureInfoSection",
   mixins: [ObserveModelMixin],
 
@@ -44,8 +43,7 @@ export const FeatureInfoSection = createReactClass({
     catalogItem: PropTypes.object, // Note this may not be known (eg. WFS).
     isOpen: PropTypes.bool,
     onClickHeader: PropTypes.func,
-    printView: PropTypes.bool,
-    t: PropTypes.func.isRequired
+    printView: PropTypes.bool
   },
 
   getInitialState() {
@@ -127,7 +125,6 @@ export const FeatureInfoSection = createReactClass({
   },
 
   descriptionFromTemplate() {
-    const { t } = this.props;
     const template = this.props.template;
     const templateData = this.getTemplateData();
     // If property names were changed, let the template access the original property names too.
@@ -144,7 +141,7 @@ export const FeatureInfoSection = createReactClass({
         ? Mustache.render(template, templateData)
         : Mustache.render(template.template, templateData, template.partials);
     } else {
-      return t("featureInfo.noInfoAvailable");
+      return "No information available";
     }
   },
 
@@ -167,13 +164,12 @@ export const FeatureInfoSection = createReactClass({
   },
 
   renderDataTitle() {
-    const { t } = this.props;
     const template = this.props.template;
     if (typeof template === "object" && defined(template.name)) {
       return Mustache.render(template.name, this.getPropertyValues());
     }
     const feature = this.props.feature;
-    return (feature && feature.name) || t("featureInfo.siteData");
+    return (feature && feature.name) || "Site Data";
   },
 
   isFeatureTimeVarying(feature) {
@@ -202,7 +198,6 @@ export const FeatureInfoSection = createReactClass({
   },
 
   render() {
-    const { t } = this.props;
     const catalogItemName =
       (this.props.catalogItem && this.props.catalogItem.name) || "";
     let baseFilename = catalogItemName;
@@ -267,7 +262,7 @@ export const FeatureInfoSection = createReactClass({
                   <If condition={reactInfo.hasRawData}>{reactInfo.rawData}</If>
                   <If condition={!reactInfo.hasRawData}>
                     <div ref="no-info" key="no-info">
-                      {t("featureInfo.noInfoAvailable")}
+                      No information available.
                     </div>
                   </If>
                   <If
@@ -889,4 +884,4 @@ function contains(text, number, precision) {
  */
 FeatureInfoSection.extraComponents = [];
 
-export default withTranslation()(FeatureInfoSection);
+module.exports = FeatureInfoSection;

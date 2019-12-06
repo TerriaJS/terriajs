@@ -12,7 +12,6 @@ import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import classNames from "classnames";
 import Styles from "./viewing-controls.scss";
-import { withTranslation } from "react-i18next";
 
 import createCatalogMemberFromType from "../../../Models/createCatalogMemberFromType";
 import addUserCatalogMember from "../../../Models/addUserCatalogMember";
@@ -24,8 +23,7 @@ const ViewingControls = createReactClass({
 
   propTypes: {
     item: PropTypes.object.isRequired,
-    viewState: PropTypes.object.isRequired,
-    t: PropTypes.func.isRequired
+    viewState: PropTypes.object.isRequired
   },
 
   removeFromMap() {
@@ -64,13 +62,10 @@ const ViewingControls = createReactClass({
   },
 
   splitItem() {
-    const { t } = this.props;
     const item = this.props.item;
     item.splitDirection = ImagerySplitDirection.RIGHT;
     const serializedItem = item.serializeToJson();
-    serializedItem.name = t("splitterTool.workbench.copyName", {
-      name: serializedItem.name
-    });
+    serializedItem.name = serializedItem.name + " (copy)";
     serializedItem.splitDirection = ImagerySplitDirection.LEFT;
     delete serializedItem.id;
 
@@ -122,7 +117,6 @@ const ViewingControls = createReactClass({
       [Styles.noSplit]: !canSplit,
       [Styles.noInfo]: !item.showsInfo
     };
-    const { t } = this.props;
     return (
       <ul className={Styles.control}>
         <If condition={item.canZoomTo}>
@@ -130,10 +124,10 @@ const ViewingControls = createReactClass({
             <button
               type="button"
               onClick={this.zoomTo}
-              title={t("workbench.zoomToTitle")}
+              title="Zoom to extent"
               className={Styles.btn}
             >
-              {t("workbench.zoomTo")}
+              Zoom To Extent
             </button>
           </li>
           <span className={Styles.separator} />
@@ -145,10 +139,10 @@ const ViewingControls = createReactClass({
             <button
               type="button"
               onClick={this.openFeature}
-              title={t("workbench.openFeatureTitle")}
+              title="Zoom to data"
               className={Styles.btn}
             >
-              {t("workbench.openFeature")}
+              Zoom To
             </button>
           </li>
           <span className={Styles.separator} />
@@ -159,9 +153,9 @@ const ViewingControls = createReactClass({
               type="button"
               onClick={this.previewItem}
               className={Styles.btn}
-              title={t("workbench.previewItemTitle")}
+              title="info"
             >
-              {t("workbench.previewItem")}
+              About This Data
             </button>
           </li>
           <span className={Styles.separator} />
@@ -171,10 +165,10 @@ const ViewingControls = createReactClass({
             <button
               type="button"
               onClick={this.splitItem}
-              title={t("workbench.splitItemTitle")}
+              title="Duplicate and show splitter"
               className={Styles.btn}
             >
-              {t("workbench.splitItem")}
+              Split
             </button>
           </li>
           <span className={Styles.separator} />
@@ -185,9 +179,9 @@ const ViewingControls = createReactClass({
               type="button"
               onClick={this.exportData}
               className={Styles.btn}
-              title={t("workbench.exportDataTitle")}
+              title="Export map data"
             >
-              {t("workbench.exportData")}
+              Export
             </button>
           </li>
           <span className={Styles.separator} />
@@ -196,14 +190,14 @@ const ViewingControls = createReactClass({
           <button
             type="button"
             onClick={this.removeFromMap}
-            title={t("workbench.removeFromMapTitle")}
+            title="Remove this data"
             className={Styles.btn}
           >
-            {t("workbench.removeFromMap")} <Icon glyph={Icon.GLYPHS.remove} />
+            Remove <Icon glyph={Icon.GLYPHS.remove} />
           </button>
         </li>
       </ul>
     );
   }
 });
-module.exports = withTranslation()(ViewingControls);
+module.exports = ViewingControls;

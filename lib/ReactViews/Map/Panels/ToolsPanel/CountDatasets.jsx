@@ -7,7 +7,6 @@ import ObserverModelMixin from "../../../ObserveModelMixin";
 import defined from "terriajs-cesium/Source/Core/defined";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import Loader from "../../../Loader.jsx";
-import { withTranslation } from "react-i18next";
 
 import Styles from "./tools-panel.scss";
 
@@ -19,19 +18,16 @@ const CountDatasets = createReactClass({
 
   propTypes: {
     terria: PropTypes.object,
-    viewState: PropTypes.object.isRequired,
-    t: PropTypes.func.isRequired
+    viewState: PropTypes.object.isRequired
   },
 
   getInitialState() {
-    const { t } = this.props;
     return {
-      btnText: t("countDatasets.btnText")
+      btnText: "Start"
     };
   },
 
   countDatasets() {
-    const { t } = this.props;
     const totals = {
       name: undefined,
       groups: 0,
@@ -106,11 +102,11 @@ const CountDatasets = createReactClass({
     }
 
     function reportLoadError(item, stats, path) {
-      stats.messages.push(path.join(" -> ") + t("countDatasets.loadError"));
+      stats.messages.push(path.join(" -> ") + " failed to load.");
     }
 
     this.setState({
-      btnText: <Loader message={t("countDatasets.countingMessage")} />
+      btnText: <Loader message="Counting, please wait..." />
     });
 
     ++countValue;
@@ -119,19 +115,24 @@ const CountDatasets = createReactClass({
     const that = this;
 
     counter(root, totals, []).then(function() {
-      let info = t("countDatasets.totals", {
-        items: totals.items,
-        groups: totals.groups
-      });
+      let info =
+        "<div>The catalog contains " +
+        totals.items +
+        " items in " +
+        totals.groups +
+        " groups.</div>";
       that.props.updateResults(info);
       let i;
       const subTotals = totals.subTotals;
       for (i = 0; i < subTotals.length; ++i) {
-        info += t("countDatasets.subTotals", {
-          name: subTotals[i].name,
-          items: subTotals[i].items,
-          groups: subTotals[i].groups
-        });
+        info +=
+          "<div>" +
+          subTotals[i].name +
+          ": " +
+          subTotals[i].items +
+          " items / " +
+          subTotals[i].groups +
+          " groups</div>";
       }
 
       info += "<div>&nbsp;</div>";
@@ -141,7 +142,7 @@ const CountDatasets = createReactClass({
         info += "<div>" + messages[i] + "</div>";
       }
       that.setState({
-        btnText: t("countDatasets.recount")
+        btnText: "Recount"
       });
 
       that.props.updateResults(info);
@@ -149,15 +150,14 @@ const CountDatasets = createReactClass({
   },
 
   render() {
-    const { t } = this.props;
     return (
       <form>
-        {t("countDatasets.title")}
+        Count Datasets
         <button
           className={Styles.submit}
           onClick={this.countDatasets}
           type="button"
-          value={t("countDatasets.btnCount")}
+          value="Count datasets"
         >
           {this.state.btnText}
         </button>
@@ -166,4 +166,4 @@ const CountDatasets = createReactClass({
   }
 });
 
-export default withTranslation()(CountDatasets);
+export default CountDatasets;
