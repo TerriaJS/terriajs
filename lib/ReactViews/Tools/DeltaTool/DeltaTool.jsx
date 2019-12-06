@@ -20,15 +20,6 @@ function DeltaTool({ terria, tool, onCloseTool }) {
     return null;
   }
 
-  useEffect(() => {
-    // On mount; to avoid showing both imageries at once, we temporarily disable the parent catalog item.
-    catalogItem.isEnabled = false;
-    return () => {
-      // Re-enable on unmount
-      catalogItem.isEnabled = true;
-    };
-  }, []);
-
   const [item, setItem] = useState(undefined);
   const [location, setLocation] = useState(undefined);
   const [primaryDate, setPrimaryDate] = useState(catalogItem.discreteTime);
@@ -38,10 +29,20 @@ function DeltaTool({ terria, tool, onCloseTool }) {
     afterPick: "Click another point to change the selection"
   });
 
+  useEffect(() => {
+    // On mount; to avoid showing both imageries at once, we temporarily disable the parent catalog item.
+    catalogItem.isShown = false;
+    return () => {
+      // Re-enable on unmount
+      catalogItem.isShown = true;
+    };
+  }, []);
+
   // Duplicate the catalog item
   useEffect(() => {
     const newItem = duplicateItem(catalogItem);
     newItem.isEnabled = true;
+    newItem.isShown = true;
     newItem.useOwnClock = true;
     setItem(newItem);
   }, [catalogItem]);
@@ -68,7 +69,7 @@ function DeltaTool({ terria, tool, onCloseTool }) {
     } else {
       setPickerMessages({
         beforePick:
-          "Error when trying to resolve imagery at location! Please select a point again by clicking on the map.",
+          "Error when trying to resolve imagery at location! Please select a different location or zoom level.",
         afterPick: "Click another point to change the selection"
       });
     }
