@@ -7,11 +7,12 @@ import Styles from "./delta-tool.scss";
 import DatePickers from "./DatePickers";
 import LocationPicker from "./LocationPicker";
 import prettifyCoordinates from "../../../Map/prettifyCoordinates";
+import { withTranslation, useTranslation } from "react-i18next";
 
 /**
  * A tool for comparing imagery at two points in time.
  */
-function DeltaTool({ terria, tool, onCloseTool }) {
+function DeltaTool({ terria, tool, onCloseTool, t }) {
   const { type, item: catalogItem } = tool;
   if (
     type !== "delta" ||
@@ -94,11 +95,10 @@ function DeltaTool({ terria, tool, onCloseTool }) {
 
     // Trim lines to prevent <pre> wrapping during markdown conversion
     item.shortReport = trimLines(`
-      # Description
-      This layer visualizes the difference between imagery captured at two discrete points in time.
+      ${t("deltaTool.catalogItem.description")}
 
-      **Primary image**:   ${firstDateStr}<br/>
-      **Secondary image**: ${secondDateStr}
+      **${t("deltaTool.primaryImage")}**:   ${firstDateStr}<br/>
+      **${t("deltaTool.secondaryImage")}**: ${secondDateStr}
     `);
 
     // item.loadingMessage = "Loading difference map";
@@ -125,19 +125,15 @@ function DeltaTool({ terria, tool, onCloseTool }) {
 
   return (
     <div className={Styles.deltaTool}>
-      <h1 className={Styles.title}>Change Detection: {catalogItem.name}</h1>
+      <h1 className={Styles.title}>
+        {t("deltaTool.titlePrefix")}: {catalogItem.name}
+      </h1>
       <div className={Styles.body}>
         <div>
-          <span>
-            This tool visualizes the difference between imagery captured at two
-            discrete points in time.
-          </span>
+          <span>{t("deltaTool.description")}</span>
           {location && <PrettyLocation location={location} />}
           {location === undefined ? (
-            <h3>
-              To view available imagery, please select your location of interest
-              on the map opposite.
-            </h3>
+            <h3>{t("deltaTool.pickLocation")}</h3>
           ) : (
             <DatePickers
               item={item}
@@ -150,14 +146,14 @@ function DeltaTool({ terria, tool, onCloseTool }) {
         </div>
         <div className={Styles.buttons}>
           <button className={Styles.cancelBtn} onClick={cancelDeltaTool}>
-            Cancel
+            {t("deltaTool.cancelBtn")}
           </button>
           <button
             className={Styles.generateDeltaBtn}
             onClick={generateDelta}
             disabled={location === undefined}
           >
-            Generate Difference Map
+            {t("deltaTool.generateDeltaBtn")}
           </button>
         </div>
       </div>
@@ -174,19 +170,21 @@ function DeltaTool({ terria, tool, onCloseTool }) {
 DeltaTool.propTypes = {
   terria: PropTypes.object.isRequired,
   tool: PropTypes.object.isRequired,
-  onCloseTool: PropTypes.func.isRequired
+  onCloseTool: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired
 };
 
 DeltaTool.displayName = "DeltaTool";
 
 function PrettyLocation({ location }) {
+  const { t } = useTranslation();
   const prettyLocation = prettifyCoordinates(
     location.longitude,
     location.latitude
   );
   return (
     <section>
-      <h4>Selected Location</h4>
+      <h4>{t("deltaTool.selectedLocation")}</h4>
       <div className={Styles.location}>
         {prettyLocation.latitude}, {prettyLocation.longitude}
       </div>
@@ -225,4 +223,4 @@ function dateDisplayFormat(date) {
   return dateFormat(date, "dd-mm-yyyy", true);
 }
 
-export default DeltaTool;
+export default withTranslation()(DeltaTool);

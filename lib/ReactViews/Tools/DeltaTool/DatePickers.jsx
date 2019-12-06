@@ -6,6 +6,7 @@ import { formatDateTime } from "../../BottomDock/Timeline/DateFormats";
 import DateTimePicker from "../../../ReactViews/BottomDock/Timeline/DateTimePicker.jsx";
 import Icon from "../../Icon.jsx";
 import Styles from "./delta-tool.scss";
+import { withTranslation } from "react-i18next";
 
 /**
  * Primary and secondary date pickers for delta tool
@@ -15,7 +16,8 @@ function DatePickers({
   primaryDate,
   setPrimaryDate,
   secondaryDate,
-  setSecondaryDate
+  setSecondaryDate,
+  t
 }) {
   const pickers = [useDatePickerState(), useDatePickerState()];
 
@@ -34,7 +36,7 @@ function DatePickers({
   return (
     <div className={Styles.datePickers}>
       <section>
-        <h4>Primary image</h4>
+        <h4>{t("deltaTool.primaryImage")}</h4>
         <div title="Select a time">
           <DatePicker
             date={primaryDate}
@@ -47,7 +49,7 @@ function DatePickers({
         </div>
       </section>
       <section>
-        <h4>Secondary image</h4>
+        <h4>{t("deltaTool.secondaryImage")}</h4>
         <div title="Select a time">
           <DatePicker
             date={secondaryDate}
@@ -68,7 +70,8 @@ DatePickers.propTypes = {
   primaryDate: PropTypes.object.isRequired,
   setPrimaryDate: PropTypes.func.isRequired,
   secondaryDate: PropTypes.object.isRequired,
-  setSecondaryDate: PropTypes.func.isRequired
+  setSecondaryDate: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired
 };
 
 /**
@@ -160,4 +163,4 @@ function useDatePickerState() {
   return { isOpen, setIsOpen };
 }
 
-export default DatePickers;
+export default withTranslation()(DatePickers);
