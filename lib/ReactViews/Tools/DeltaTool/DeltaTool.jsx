@@ -1,11 +1,11 @@
 import dateFormat from "dateformat";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import createCatalogMemberFromType from "../../../Models/createCatalogMemberFromType";
 import raiseErrorToUser from "../../../Models/raiseErrorToUser";
 import Styles from "./delta-tool.scss";
 import DatePickers from "./DatePickers";
 import LocationPicker from "./LocationPicker";
+import duplicateItem from "../../../Models/duplicateItem";
 import prettifyCoordinates from "../../../Map/prettifyCoordinates";
 import { withTranslation, useTranslation } from "react-i18next";
 
@@ -41,7 +41,11 @@ function DeltaTool({ terria, tool, onCloseTool, t }) {
 
   // Duplicate the catalog item
   useEffect(() => {
-    const newItem = duplicateItem(catalogItem);
+    const newItem = duplicateItem(
+      catalogItem,
+      undefined,
+      catalogItem.name + " (copy)"
+    );
     newItem.isEnabled = true;
     newItem.isShown = true;
     newItem.useOwnClock = true;
@@ -197,16 +201,6 @@ PrettyLocation.propTypes = {
 };
 
 PrettyLocation.displayName = "PrettyLocation";
-
-function duplicateItem(item) {
-  const serializedItem = item.serializeToJson();
-  serializedItem.name = serializedItem.name + " (copy)";
-  serializedItem.parameters = Object.assign({}, serializedItem.parameters);
-  delete serializedItem.id;
-  const newItem = createCatalogMemberFromType(item.type, item.terria);
-  newItem.updateFromJson(serializedItem);
-  return newItem;
-}
 
 function trimLines(text) {
   return text

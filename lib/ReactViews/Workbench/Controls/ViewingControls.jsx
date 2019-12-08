@@ -14,7 +14,7 @@ import classNames from "classnames";
 import Styles from "./viewing-controls.scss";
 import { withTranslation } from "react-i18next";
 
-import createCatalogMemberFromType from "../../../Models/createCatalogMemberFromType";
+import duplicateItem from "../../../Models/duplicateItem";
 import addUserCatalogMember from "../../../Models/addUserCatalogMember";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 
@@ -66,17 +66,16 @@ const ViewingControls = createReactClass({
   splitItem() {
     const { t } = this.props;
     const item = this.props.item;
+
     item.splitDirection = ImagerySplitDirection.RIGHT;
-    const serializedItem = item.serializeToJson();
-    serializedItem.name = t("splitterTool.workbench.copyName", {
-      name: serializedItem.name
-    });
-    serializedItem.splitDirection = ImagerySplitDirection.LEFT;
-    delete serializedItem.id;
-
-    const newItem = createCatalogMemberFromType(item.type, item.terria);
-    newItem.updateFromJson(serializedItem);
-
+    const newItem = duplicateItem(
+      item,
+      undefined,
+      t("splitterTool.workbench.copyName", {
+        name: item.name
+      })
+    );
+    newItem.splitDirection = ImagerySplitDirection.LEFT;
     if (newItem.useOwnClock === false) {
       newItem.useOwnClock = true;
     }
@@ -84,7 +83,6 @@ const ViewingControls = createReactClass({
     // newItem is added to terria.nowViewing automatically by the "isEnabled" observable on CatalogItem (see isEnabledChanged).
     // However, nothing adds it to terria.catalog automatically, which is required so the new item can be shared.
     addUserCatalogMember(item.terria, newItem, { open: false, zoomTo: false });
-
     item.terria.showSplitter = true;
   },
 
