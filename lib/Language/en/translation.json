@@ -1091,6 +1091,10 @@
     },
     "catalogItem": {
       "description": "This layer visualizes the difference between imagery captured at two discrete points in time"
+    },
+    "loadingError": {
+      "title": "Error loading Delta Tool",
+      "message": "An error occurred while trying to load the delta tool from the server. Please try again."
     }
   }
 }

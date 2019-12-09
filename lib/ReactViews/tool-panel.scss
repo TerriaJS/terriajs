@@ -24,3 +24,14 @@ $tool-margin: $padding-small;
   margin: $tool-margin 0;
   border: 1px solid $overlay;
 }
+
+.loading {
+  display: block;
+  width: 100px;
+  margin: auto;
+  margin-top: 7em;
+  color: white;
+  svg {
+    fill: white;
+  }
+}
