@@ -70,7 +70,10 @@ export default class Cesium3DTilesCatalogItem
     if (this.tileset) {
       return makeRealPromise<Cesium3DTileset>(this.tileset.readyPromise).then(
         tileset => {
-          if (tileset.extras !== undefined && tileset.extras.style !== undefined) {
+          if (
+            tileset.extras !== undefined &&
+            tileset.extras.style !== undefined
+          ) {
             runInAction(() => {
               this.strata.set(
                 CommonStrata.defaults,
