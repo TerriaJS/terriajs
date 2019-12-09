@@ -1,6 +1,9 @@
 Change Log
 ==========
 
+### Next Release
+* Fix draggable workbench/story items with translation HOC
+
 ### v7.10.0
 
 * Added proper basic internationalisation beginnings via i18next & react-i18next

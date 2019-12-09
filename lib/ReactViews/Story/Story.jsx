@@ -186,4 +186,4 @@ Story.propTypes = {
   t: PropTypes.func.isRequired
 };
 
-module.exports = withTranslation()(sortable(Story));
+module.exports = sortable(withTranslation()(Story));
