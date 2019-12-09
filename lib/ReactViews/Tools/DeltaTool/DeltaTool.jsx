@@ -56,9 +56,15 @@ function DeltaTool({ terria, tool, onCloseTool, t }) {
     // TODO: If the item imagery has not loaded yet, features[] will be empty.
     // Ideally, pick location should be called only after the item imagery has been loaded
     // and we need some way to check that.
-    const feature = picked.features.find(
-      feature => feature.imageryLayer === item.imageryLayer
-    );
+
+    // IE has no array.find() so we use the clunkier for loop to find the feature.
+    let feature;
+    for (let i = 0; i < picked.features.length; i++) {
+      if (picked.features[i].imageryLayer === item.imageryLayer) {
+        feature = picked.features[i];
+        break;
+      }
+    }
     if (feature) {
       try {
         item.filterIntervalsByFeature(feature, picked);
