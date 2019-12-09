@@ -16,6 +16,7 @@ import triggerResize from "../../Core/triggerResize";
 import Loader from "../Loader";
 import Styles from "./story-builder.scss";
 import { withTranslation, Trans } from "react-i18next";
+import RemovePanel from "../RemovePanel/RemovePanel.jsx";
 
 const StoryBuilder = createReactClass({
   displayName: "StoryBuilder",
@@ -34,8 +35,15 @@ const StoryBuilder = createReactClass({
       currentStory: undefined,
       recaptureSuccessful: undefined,
       showVideoGuide: false, // for whether to actually render `renderVideoGuide()`
-      videoGuideVisible: false // for animating
+      videoGuideVisible: false, // for animating
+      showPopup: false // for removing
     };
+  },
+
+  togglePopup() {
+    this.setState({
+      showPopup: !this.state.showPopup
+    });
   },
 
   removeStory(index, story) {
@@ -49,6 +57,7 @@ const StoryBuilder = createReactClass({
 
   removeAllStories() {
     this.props.terria.stories = [];
+    this.togglePopup();
   },
   onSave(_story) {
     const story = {
@@ -239,6 +248,17 @@ const StoryBuilder = createReactClass({
     });
   },
 
+  hideStoryBuilder() {
+    this.props.viewState.storyBuilderShown = !this.props.viewState
+      .storyBuilderShown;
+    this.props.terria.currentViewer.notifyRepaintRequired();
+    // Allow any animations to finish, then trigger a resize.
+    setTimeout(function() {
+      triggerResize();
+    }, this.props.animationDuration || 1);
+    this.props.viewState.toggleFeaturePrompt("story", false, true);
+  },
+
   renderStories(editingMode) {
     const { t } = this.props;
     const stories = this.props.terria.stories || [];
@@ -247,35 +267,49 @@ const StoryBuilder = createReactClass({
       [Styles.isActive]: editingMode
     });
     return (
-      <div className={className}>
-        <BadgeBar label="Scenes" badge={this.props.terria.stories.length}>
-          <button
-            type="button"
-            onClick={this.removeAllStories}
-            className={Styles.removeButton}
-          >
-            {t("story.removeAllStories")} <Icon glyph={Icon.GLYPHS.remove} />
-          </button>
-        </BadgeBar>
-
-        <Sortable onSort={this.onSort} direction="vertical" dynamic={true}>
-          <For each="story" index="index" of={stories}>
-            <Story
-              key={story.id}
-              story={story}
-              sortData={story}
-              deleteStory={this.removeStory.bind(this, index)}
-              recaptureStory={this.recaptureScene}
-              recaptureStorySuccessful={Boolean(
-                story.id === this.state.recaptureSuccessful
-              )}
-              viewStory={this.viewStory.bind(this, index)}
-              menuOpen={this.state.storyWithOpenMenu === story}
-              openMenu={this.openMenu}
-              editStory={this.editStory}
+      <div>
+        <div className={className}>
+          {this.state.showPopup ? (
+            <RemovePanel
+              onConfirm={this.removeAllStories}
+              onCancel={this.togglePopup}
+              removeText={t("story.removeStoriesPanel", {
+                count: this.props.terria.stories.length
+              })}
+              confirmButtonTitle={t("story.confirmRemove")}
+              cancelButtonTitle={t("story.cancelRemove")}
             />
-          </For>
-        </Sortable>
+          ) : null}
+          <BadgeBar label="Scenes" badge={this.props.terria.stories.length}>
+            <button
+              type="button"
+              onClick={this.togglePopup}
+              className={Styles.removeButton}
+            >
+              {t("story.removeAllStories")} <Icon glyph={Icon.GLYPHS.remove} />
+            </button>
+          </BadgeBar>
+
+          <Sortable onSort={this.onSort} direction="vertical" dynamic={true}>
+            <For each="story" index="index" of={stories}>
+              <Story
+                key={story.id}
+                story={story}
+                sortData={story}
+                deleteStory={this.removeStory.bind(this, index)}
+                recaptureStory={this.recaptureScene}
+                recaptureStorySuccessful={Boolean(
+                  story.id === this.state.recaptureSuccessful
+                )}
+                viewStory={this.viewStory.bind(this, index)}
+                menuOpen={this.state.storyWithOpenMenu === story}
+                openMenu={this.openMenu}
+                editStory={this.editStory}
+                removePopupOpen={this.state.showPopup}
+              />
+            </For>
+          </Sortable>
+        </div>
       </div>
     );
   },
@@ -300,6 +334,20 @@ const StoryBuilder = createReactClass({
     return (
       <div className={className}>
         {this.state.showVideoGuide && this.renderVideoGuide()}
+        <ul className={Styles.title}>
+          <li>{t("story.storyEditor")}</li>
+          <li>
+            <button
+              type="button"
+              aria-label={t("story.hideStoryPanel")}
+              onClick={this.hideStoryBuilder}
+              className={Styles.hideButton}
+              title={t("story.hideStoryPanel")}
+            >
+              <Icon glyph={Icon.GLYPHS.right} />
+            </button>
+          </li>
+        </ul>
         <div className={Styles.header}>
           {!hasStories && this.renderIntro()}
           <div className={Styles.actions}>

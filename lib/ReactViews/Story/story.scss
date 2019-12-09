@@ -15,6 +15,9 @@
     height: auto;
     max-height: 500px;
   }
+  &.isRemoveOpen {
+    opacity: 0.5;
+  }
 }
 
 .storyHeader {

@@ -4,7 +4,9 @@
     "open" : "Open",
     "prev" : "Prev",
     "next" : "Next",
-    "skip" : "Skip"
+    "skip" : "Skip",
+    "delete" : "Delete",
+    "cancel" : "Cancel"
   },
   "measure" : {
     "measureTool" : "Measure Tool",
@@ -193,6 +195,10 @@
     "doesNotExist" : "Story does not exist",
     "message" : "<2>This is your story editor</2><1>Create and share interactive stories directly from your map<1><0><0></0>Getting Started </0></1></1>",
     "removeAllStories": "Remove All",
+    "removeStoriesPanel" : "Are you sure you wish to delete {{ count }} scene",
+    "removeStoriesPanel_plural" : "Are you sure you wish to delete {{ count }} scenes",
+    "confirmRemove" : "Delete",
+    "cancelRemove" : "Cancel",
     "preview" : "preview stories",
     "play" : "Play Story",
     "captureSceneTitle" : "capture current scene",
@@ -215,7 +221,9 @@
     "promptHtml2" : "<0><0>INTRODUCING</0><1>Data Stories</1><2>Create and share interactive stories directly from your map.</2></0>",
     "story" : "Story",
     "dismissText" : "Got it, thanks!",
-    "mobileViewStory" : "View Stories {{storiesLength}}"
+    "mobileViewStory" : "View Stories {{storiesLength}}",
+    "storyEditor": "Story Editor",
+    "hideStoryPanel": "hide story builder"
   },
   "satelliteGuidance" : {
     "menuTitle" : "You can access map guides at any time by looking in the <0>help menu</0>.",
@@ -341,6 +349,9 @@
     "removeFromMap" : "Remove",
     "label" : "Data Sets",
     "removeAll" : "Remove All",
+    "removeDataPanel" : "Are you sure you wish to remove all data from the map",
+    "confirmRemove" : "Remove",
+    "cancelRemove" : "Cancel",
     "toggleVisibility" : "Data show/hide"
   },
   "dateTime" : {

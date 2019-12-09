@@ -12,6 +12,10 @@
   @media (max-width: $sm) {
     height: calc(100% - #{$mobile-modal-top-height});
   }
+
+  &.isRemovePopupOpen {
+    opacity: 0.3;
+  }
 }
 
 .is-active {

@@ -2,6 +2,7 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import Sortable from "react-anything-sortable";
+import classNames from "classnames";
 
 import WorkbenchItem from "./WorkbenchItem.jsx";
 import ObserveModelMixin from "./../ObserveModelMixin";
@@ -15,7 +16,8 @@ const WorkbenchList = createReactClass({
 
   propTypes: {
     terria: PropTypes.object.isRequired,
-    viewState: PropTypes.object.isRequired
+    viewState: PropTypes.object.isRequired,
+    removePanelOpen: PropTypes.bool.isRequired
   },
 
   onSort(sortedArray, currentDraggingSortData, currentDraggingIndex) {
@@ -37,7 +39,11 @@ const WorkbenchList = createReactClass({
 
   render() {
     return (
-      <ul className={Styles.workbenchContent}>
+      <ul
+        className={classNames(Styles.workbenchContent, {
+          [Styles.isRemovePopupOpen]: this.props.removePanelOpen
+        })}
+      >
         <Sortable onSort={this.onSort} direction="vertical" dynamic={true}>
           <For each="item" of={this.props.terria.nowViewing.items}>
             <WorkbenchItem
@@ -45,6 +51,7 @@ const WorkbenchList = createReactClass({
               sortData={item}
               key={item.uniqueId}
               viewState={this.props.viewState}
+              removePanelOpen={this.props.removePanelOpen}
             />
           </For>
         </Sortable>
