@@ -3,6 +3,7 @@ Change Log
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
+* Added first revision of "delta feature" for change detection of WMS catalog items which indicate `supportsDeltaComparison`
 
 ### v7.10.0
 

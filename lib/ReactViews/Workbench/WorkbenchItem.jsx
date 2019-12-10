@@ -148,6 +148,15 @@ const WorkbenchItem = createReactClass({
               maxValue={workbenchItem.colorScaleMaximum}
             />
             <DisplayAsPercentSection item={workbenchItem} />
+            <If
+              condition={
+                workbenchItem.shortReport ||
+                (workbenchItem.shortReportSections &&
+                  workbenchItem.shortReportSections.length)
+              }
+            >
+              <ShortReport item={workbenchItem} />
+            </If>
             <Legend item={workbenchItem} />
             <If
               condition={
@@ -157,15 +166,6 @@ const WorkbenchItem = createReactClass({
               }
             >
               <ConceptViewer item={workbenchItem} />
-            </If>
-            <If
-              condition={
-                workbenchItem.shortReport ||
-                (workbenchItem.shortReportSections &&
-                  workbenchItem.shortReportSections.length)
-              }
-            >
-              <ShortReport item={workbenchItem} />
             </If>
           </div>
         </If>
