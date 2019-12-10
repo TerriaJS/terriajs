@@ -5,6 +5,7 @@ Change Log
 * Fix draggable workbench/story items with translation HOC
 * Added first revision of "delta feature" for change detection of WMS catalog items which indicate `supportsDeltaComparison`
 * Improve menu bar button hover/focus states when interacting with its panel contents
+* Add ability to set opacity on `GeoJsonCatalogItem` 
 
 ### v7.10.0
 
