@@ -5,6 +5,7 @@ import EnumColorMap from "../Map/EnumColorMap";
 import createStratumInstance from "../Models/createStratumInstance";
 import CsvCatalogItem from "../Models/CsvCatalogItem";
 import LoadableStratum from "../Models/LoadableStratum";
+import { BaseModel } from "../Models/Model";
 import StratumFromTraits from "../Models/StratumFromTraits";
 import CsvCatalogItemTraits from "../Traits/CsvCatalogItemTraits";
 import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
@@ -21,6 +22,10 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
 ) {
   constructor(readonly catalogItem: CsvCatalogItem) {
     super();
+  }
+
+  duplicateLoadableStratum(newModel: BaseModel): this {
+    return new TableAutomaticStylesStratum(newModel as CsvCatalogItem) as this;
   }
 
   @computed
@@ -105,6 +110,10 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
 class ColorStyleLegend extends LoadableStratum(LegendTraits) {
   constructor(readonly catalogItem: CsvCatalogItem, readonly index: number) {
     super();
+  }
+
+  duplicateLoadableStratum(newModel: BaseModel): this {
+    return new ColorStyleLegend(newModel as CsvCatalogItem, this.index) as this;
   }
 
   @computed

@@ -34,7 +34,7 @@ import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import LoadableStratum from "./LoadableStratum";
 import Mappable, { ImageryParts } from "./Mappable";
-import Model from "./Model";
+import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
 import WebMapServiceCapabilities, {
@@ -92,6 +92,13 @@ class GetCapabilitiesStratum extends LoadableStratum(
     readonly capabilities: WebMapServiceCapabilities
   ) {
     super();
+  }
+
+  duplicateLoadableStratum(model: BaseModel): this {
+    return new GetCapabilitiesStratum(
+      model as WebMapServiceCatalogItem,
+      this.capabilities
+    ) as this;
   }
 
   @computed
