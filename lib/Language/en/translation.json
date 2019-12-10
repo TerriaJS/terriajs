@@ -65,7 +65,7 @@
     "browserPrint": "For better printed results, please use {{appName}}'s Print button instead of your web browser's print feature.",
     "shortLinkShortening": "Shortening...",
     "shortLinkError": "An error occurred while attempting to shorten the URL.  Please check your internet connection and try again.",
-    "localDataNote": "<0><3>Note:</3></0><1>The following data sources will NOT be shared because they include data from this local system. To share these data sources, publish their data on a web server and <2>add them using a url</2>.</1>",
+    "localDataNote": "<0><0>Note:</0></0><1>The following data sources will NOT be shared because they include data from this local system. To share these data sources, publish their data on a web server and <2>add them using a url</2>.</1>",
     "generatingUrl": "Generating share URL...",
     "printTitle": "Print Map",
     "printExplanation": "Open a printable version of this map.",
@@ -174,7 +174,7 @@
     "latLon": "Lat / Lon "
   },
   "welcomeMessage": {
-    "title": "Spatial data made <1>easy.</1>",
+    "title": "Spatial data made <2>easy.</2>",
     "WelcomeMessage": "Access rich spatial data from multiple data sources, all from one convenient location.",
     "WelcomeMessagePrimaryBtn": "Explore Data",
     "WelcomeMessageSecondaryBtn": "Take a tour",
