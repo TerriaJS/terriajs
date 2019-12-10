@@ -9,11 +9,12 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import DataCatalogMember from "./DataCatalogMember.jsx";
 import ObserveModelMixin from "../ObserveModelMixin";
 import SearchHeader from "../Search/SearchHeader.jsx";
+import { withTranslation } from "react-i18next";
 
 import Styles from "./data-catalog.scss";
 
 // Displays the data catalog.
-const DataCatalog = createReactClass({
+export const DataCatalog = createReactClass({
   displayName: "DataCatalog",
   mixins: [ObserveModelMixin],
 
@@ -21,7 +22,8 @@ const DataCatalog = createReactClass({
     terria: PropTypes.object,
     viewState: PropTypes.object,
     items: PropTypes.array,
-    removable: PropTypes.bool
+    removable: PropTypes.bool,
+    t: PropTypes.func.isRequired
   },
 
   render() {
@@ -33,11 +35,11 @@ const DataCatalog = createReactClass({
         )
       : this.props.items
     ).filter(defined);
-
+    const { t } = this.props;
     return (
       <ul className={Styles.dataCatalog}>
         <If condition={isSearching}>
-          <label className={Styles.label}>Search results</label>
+          <label className={Styles.label}>{t("search.resultsLabel")}</label>
           <SearchHeader
             searchProvider={searchState.catalogSearchProvider}
             isWaitingForSearchToStart={
@@ -62,4 +64,4 @@ const DataCatalog = createReactClass({
   }
 });
 
-module.exports = DataCatalog;
+export default withTranslation()(DataCatalog);

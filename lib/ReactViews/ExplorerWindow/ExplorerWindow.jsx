@@ -3,6 +3,7 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import ko from "terriajs-cesium/Source/ThirdParty/knockout";
+import { withTranslation } from "react-i18next";
 
 import ObserveModelMixin from "../ObserveModelMixin";
 import Tabs from "./Tabs.jsx";
@@ -17,7 +18,8 @@ const ExplorerWindow = createReactClass({
 
   propTypes: {
     terria: PropTypes.object.isRequired,
-    viewState: PropTypes.object.isRequired
+    viewState: PropTypes.object.isRequired,
+    t: PropTypes.func.isRequired
   },
   close() {
     this.props.viewState.explorerPanelIsVisible = false;
@@ -98,6 +100,7 @@ const ExplorerWindow = createReactClass({
   },
 
   render() {
+    const { t } = this.props;
     const visible = this.state.visible;
 
     return visible ? (
@@ -128,10 +131,10 @@ const ExplorerWindow = createReactClass({
             type="button"
             onClick={this.close}
             className={Styles.btnCloseModal}
-            title="Close data panel"
+            title={t("addData.closeDataPanel")}
             data-target="close-modal"
           >
-            Done
+            {t("addData.done")}
           </button>
           <Tabs terria={this.props.terria} viewState={this.props.viewState} />
         </div>
@@ -140,4 +143,4 @@ const ExplorerWindow = createReactClass({
   }
 });
 
-module.exports = ExplorerWindow;
+module.exports = withTranslation()(ExplorerWindow);

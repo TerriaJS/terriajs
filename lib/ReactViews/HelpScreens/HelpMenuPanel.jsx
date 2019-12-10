@@ -11,6 +11,7 @@ import MenuPanel from "../StandardUserInterface/customizable/MenuPanel.jsx";
 import Styles from "./help-panel.scss";
 import DropdownStyles from "../Map/Panels/panel.scss";
 import helpIcon from "../../../wwwroot/images/icons/help.svg";
+import { withTranslation } from "react-i18next";
 
 const HelpMenuPanel = createReactClass({
   displayName: "HelpMenuPanel",
@@ -19,7 +20,8 @@ const HelpMenuPanel = createReactClass({
   propTypes: {
     helpViewState: PropTypes.object.isRequired,
     helpSequences: PropTypes.object.isRequired,
-    viewState: PropTypes.object.isRequired
+    viewState: PropTypes.object.isRequired,
+    t: PropTypes.func.isRequired
   },
 
   getInitialState() {
@@ -46,13 +48,15 @@ const HelpMenuPanel = createReactClass({
       icon: helpIcon
     };
 
+    const { t } = this.props;
+
     return (
       <MenuPanel
         theme={dropdownTheme}
-        btnText="Help"
+        btnText={t("helpMenu.btnText")}
         viewState={this.props.viewState}
         isOpen={this.state.isOpen}
-        btnTitle="get help"
+        btnTitle={t("helpMenu.btnTitle")}
         onOpenChanged={this.onOpenChanged}
         forceClosed={defined(this.props.helpViewState.currentSequence)}
         smallScreen={this.props.viewState.useSmallScreenInterface}
@@ -85,4 +89,4 @@ const HelpMenuPanel = createReactClass({
   }
 });
 
-export default HelpMenuPanel;
+export default withTranslation()(HelpMenuPanel);

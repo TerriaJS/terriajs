@@ -10,6 +10,7 @@ import Icon from "../Icon.jsx";
 import MobileMenu from "./MobileMenu";
 import classNames from "classnames";
 import { removeMarker } from "../../Models/LocationMarkerUtils";
+import { withTranslation } from "react-i18next";
 
 const MobileHeader = createReactClass({
   displayName: "MobileHeader",
@@ -20,7 +21,8 @@ const MobileHeader = createReactClass({
     viewState: PropTypes.object.isRequired,
     allBaseMaps: PropTypes.array,
     version: PropTypes.string,
-    menuItems: PropTypes.array
+    menuItems: PropTypes.array,
+    t: PropTypes.func.isRequired
   },
 
   getInitialState() {
@@ -117,6 +119,7 @@ const MobileHeader = createReactClass({
   render() {
     const searchState = this.props.viewState.searchState;
     const nowViewingLength = this.props.terria.nowViewing.items.length;
+    const { t } = this.props;
 
     return (
       <div className={Styles.ui}>
@@ -135,7 +138,7 @@ const MobileHeader = createReactClass({
                     (this.props.viewState.mobileMenuVisible = true)
                   }
                   className={Styles.btnMenu}
-                  title="toggle navigation"
+                  title={t("mobile.toggleNavigation")}
                 >
                   <Icon glyph={Icon.GLYPHS.menu} />
                 </button>
@@ -186,7 +189,7 @@ const MobileHeader = createReactClass({
                       searchText={searchState.locationSearchText}
                       onSearchTextChanged={this.changeLocationSearchText}
                       onDoSearch={this.searchLocations}
-                      placeholder="Search for locations"
+                      placeholder={t("search.placeholder")}
                       alwaysShowClear={true}
                       onClear={this.closeLocationSearch}
                       autoFocus={true}
@@ -197,7 +200,7 @@ const MobileHeader = createReactClass({
                       searchText={searchState.catalogSearchText}
                       onSearchTextChanged={this.changeCatalogSearchText}
                       onDoSearch={this.searchCatalog}
-                      placeholder="Search the catalogue"
+                      placeholder={t("search.searchCatalogue")}
                       onClear={this.closeCatalogSearch}
                       autoFocus={true}
                     />
@@ -222,4 +225,4 @@ const MobileHeader = createReactClass({
     );
   }
 });
-module.exports = MobileHeader;
+module.exports = withTranslation()(MobileHeader);

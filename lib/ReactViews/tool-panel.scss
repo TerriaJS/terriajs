@@ -1,0 +1,37 @@
+@import "~terriajs-variables";
+
+$tool-margin: $padding-small;
+
+.toolPanel {
+  font-family: $font-pop;
+  background: $dark;
+  width: $work-bench-width;
+  height: 100vh;
+  flex-basis: $work-bench-width;
+  max-width: $work-bench-width;
+  box-sizing: border-box;
+  font-size: $font-size-mid-mini;
+  padding: 0 $padding-small;
+  h1 {
+    margin: 0;
+  }
+}
+
+.tool {
+  background: $dark-with-overlay;
+  color: $text-light;
+  font-family: $font-pop;
+  margin: $tool-margin 0;
+  border: 1px solid $overlay;
+}
+
+.loading {
+  display: block;
+  width: 100px;
+  margin: auto;
+  margin-top: 7em;
+  color: white;
+  svg {
+    fill: white;
+  }
+}

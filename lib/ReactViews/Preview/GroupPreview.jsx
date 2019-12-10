@@ -11,6 +11,7 @@ import ObserveModelMixin from "../ObserveModelMixin";
 import Styles from "./mappable-preview.scss";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
+import { withTranslation } from "react-i18next";
 
 /**
  * A "preview" for CatalogGroup.
@@ -23,7 +24,8 @@ const GroupPreview = createReactClass({
     previewed: PropTypes.object.isRequired,
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
-    widthFromMeasureElementHOC: PropTypes.number
+    widthFromMeasureElementHOC: PropTypes.number,
+    t: PropTypes.func.isRequired
   },
 
   backToMap() {
@@ -33,7 +35,7 @@ const GroupPreview = createReactClass({
   render() {
     const metadataItem =
       this.props.previewed.nowViewingCatalogItem || this.props.previewed;
-
+    const { t } = this.props;
     return (
       <div>
         <div
@@ -60,7 +62,7 @@ const GroupPreview = createReactClass({
                 }
               >
                 <div>
-                  <h4 className={Styles.h4}>Description</h4>
+                  <h4 className={Styles.h4}>{t("description.name")}</h4>
                   {parseCustomMarkdownToReact(
                     this.props.previewed.description,
                     { catalogItem: this.props.previewed }
@@ -73,7 +75,7 @@ const GroupPreview = createReactClass({
 
             <If condition={metadataItem.dataCustodian}>
               <div>
-                <h4 className={Styles.h4}>Data Custodian</h4>
+                <h4 className={Styles.h4}>{t("preview.dataCustodian")}</h4>
                 {parseCustomMarkdownToReact(metadataItem.dataCustodian, {
                   catalogItem: metadataItem
                 })}
@@ -96,4 +98,4 @@ const GroupPreview = createReactClass({
   }
 });
 
-export default measureElement(GroupPreview);
+export default withTranslation()(measureElement(GroupPreview));
