@@ -1,5 +1,5 @@
-import { computed, observable, runInAction, trace, action } from "mobx";
-import LoadableStratum from "./LoadableStratum";
+import { action, computed, runInAction } from "mobx";
+import filterOutUndefined from "../Core/filterOutUndefined";
 import isReadOnlyArray from "../Core/isReadOnlyArray";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
@@ -10,13 +10,13 @@ import ModelReference from "../Traits/ModelReference";
 import WebMapServiceCatalogGroupTraits from "../Traits/WebMapServiceCatalogGroupTraits";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
+import LoadableStratum from "./LoadableStratum";
+import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import Terria from "./Terria";
 import WebMapServiceCapabilities, {
   CapabilitiesLayer
 } from "./WebMapServiceCapabilities";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
-import filterOutUndefined from "../Core/filterOutUndefined";
 
 class GetCapabilitiesStratum extends LoadableStratum(
   WebMapServiceCatalogGroupTraits
@@ -49,6 +49,13 @@ class GetCapabilitiesStratum extends LoadableStratum(
     readonly capabilities: WebMapServiceCapabilities
   ) {
     super();
+  }
+
+  duplicateLoadableStratum(model: BaseModel): this {
+    return new GetCapabilitiesStratum(
+      model as WebMapServiceCatalogGroup,
+      this.capabilities
+    ) as this;
   }
 
   @computed
