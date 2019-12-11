@@ -622,6 +622,8 @@ export default class Terria {
 
         this.workbench.items = newItems;
 
+        // TODO: the timelineStack should be populated from the `timeline` property,
+        // not from the workbench.
         this.timelineStack.items = this.workbench.items
           .filter(item => {
             return item.uniqueId && timeline.indexOf(item.uniqueId) >= 0;

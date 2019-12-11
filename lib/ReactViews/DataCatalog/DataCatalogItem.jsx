@@ -56,11 +56,18 @@ const DataCatalogItem = observer(
 
     toggleEnable(event) {
       const keepCatalogOpen = event.shiftKey || event.ctrlKey;
+      const toAdd = !this.props.terria.workbench.contains(this.props.item);
+
+      if (toAdd) {
+        this.props.terria.timelineStack.addToTop(this.props.item);
+      } else {
+        this.props.terria.timelineStack.remove(this.props.item);
+      }
 
       const addPromise = addToWorkbench(
         this.props.terria.workbench,
         this.props.item,
-        !this.props.terria.workbench.contains(this.props.item)
+        toAdd
       ).then(() => {
         if (
           this.props.terria.workbench.contains(this.props.item) &&

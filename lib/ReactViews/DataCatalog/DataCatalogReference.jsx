@@ -61,10 +61,20 @@ const DataCatalogReference = observer(
       ) {
         this.setPreviewedItem();
       } else {
+        const toAdd = !this.props.terria.workbench.contains(
+          this.props.reference
+        );
+
+        if (toAdd) {
+          this.props.terria.timelineStack.addToTop(this.props.reference);
+        } else {
+          this.props.terria.timelineStack.remove(this.props.reference);
+        }
+
         const addPromise = addToWorkbench(
           this.props.terria.workbench,
           this.props.reference,
-          !this.props.terria.workbench.contains(this.props.reference)
+          toAdd
         ).then(() => {
           if (
             this.props.terria.workbench.contains(this.props.reference) &&

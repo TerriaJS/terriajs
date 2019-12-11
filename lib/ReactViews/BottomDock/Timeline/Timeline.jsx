@@ -65,7 +65,7 @@ const Timeline = observer(
     render() {
       const terria = this.props.terria;
       const catalogItem = terria.timelineStack.top;
-      if (!defined(catalogItem)) {
+      if (!defined(catalogItem) || !defined(catalogItem.currentTimeAsJulianDate)) {
         return null;
       }
 
