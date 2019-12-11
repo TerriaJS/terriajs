@@ -33,54 +33,58 @@ const DataCatalogItem = observer(
     },
 
     onBtnClicked(event) {
-      if (this.props.onActionButtonClicked) {
-        this.props.onActionButtonClicked(this.props.item);
-        return;
-      }
+      runInAction(() => {
+        if (this.props.onActionButtonClicked) {
+          this.props.onActionButtonClicked(this.props.item);
+          return;
+        }
 
-      if (defined(this.props.viewState.storyShown)) {
-        this.props.viewState.storyShown = false;
-      }
+        if (defined(this.props.viewState.storyShown)) {
+          this.props.viewState.storyShown = false;
+        }
 
-      if (
-        defined(this.props.item.invoke) ||
-        this.props.viewState.useSmallScreenInterface
-      ) {
-        this.setPreviewedItem();
-      } else if (this.props.removable) {
-        removeUserAddedData(this.props.terria, this.props.item);
-      } else {
-        this.toggleEnable(event);
-      }
+        if (
+          defined(this.props.item.invoke) ||
+          this.props.viewState.useSmallScreenInterface
+        ) {
+          this.setPreviewedItem();
+        } else if (this.props.removable) {
+          removeUserAddedData(this.props.terria, this.props.item);
+        } else {
+          this.toggleEnable(event);
+        }
+      });
     },
 
     toggleEnable(event) {
-      const keepCatalogOpen = event.shiftKey || event.ctrlKey;
-      const toAdd = !this.props.terria.workbench.contains(this.props.item);
+      runInAction(() => {
+        const keepCatalogOpen = event.shiftKey || event.ctrlKey;
+        const toAdd = !this.props.terria.workbench.contains(this.props.item);
 
-      if (toAdd) {
-        this.props.terria.timelineStack.addToTop(this.props.item);
-      } else {
-        this.props.terria.timelineStack.remove(this.props.item);
-      }
-
-      const addPromise = addToWorkbench(
-        this.props.terria.workbench,
-        this.props.item,
-        toAdd
-      ).then(() => {
-        if (
-          this.props.terria.workbench.contains(this.props.item) &&
-          !keepCatalogOpen
-        ) {
-          runInAction(() => {
-            this.props.viewState.explorerPanelIsVisible = false;
-            this.props.viewState.mobileView = null;
-          });
+        if (toAdd) {
+          this.props.terria.timelineStack.addToTop(this.props.item);
+        } else {
+          this.props.terria.timelineStack.remove(this.props.item);
         }
-      });
 
-      raiseErrorOnRejectedPromise(addPromise);
+        const addPromise = addToWorkbench(
+          this.props.terria.workbench,
+          this.props.item,
+          toAdd
+        ).then(() => {
+          if (
+            this.props.terria.workbench.contains(this.props.item) &&
+            !keepCatalogOpen
+          ) {
+            runInAction(() => {
+              this.props.viewState.explorerPanelIsVisible = false;
+              this.props.viewState.mobileView = null;
+            });
+          }
+        });
+
+        raiseErrorOnRejectedPromise(addPromise);
+      });
     },
 
     setPreviewedItem() {
