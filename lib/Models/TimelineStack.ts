@@ -181,6 +181,11 @@ export default class TimelineStack {
       layer.setTrait(stratumId, "currentTime", currentTime);
       layer.setTrait(stratumId, "isPaused", isPaused);
     }
+
+    if (this.defaultTimeVarying) {
+      this.defaultTimeVarying.setTrait(stratumId, "currentTime", currentTime);
+      this.defaultTimeVarying.setTrait(stratumId, "isPaused", isPaused);
+    }
   }
 }
 
