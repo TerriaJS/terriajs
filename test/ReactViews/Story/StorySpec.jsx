@@ -1,15 +1,20 @@
-import Story from "../../../lib/ReactViews/Story/Story";
+import Story, { StoryRaw } from "../../../lib/ReactViews/Story/Story";
 import { getShallowRenderedOutput } from "../MoreShallowTools";
 import React from "react";
+import { sortable } from "react-anything-sortable";
 
 describe("Story", function() {
   it("should be wrapped with the sortable HOC as the first HOC", function() {
-    expect(Story.name).toBe("SortableItem");
-  });
-  it("should render the translation HOC as its child, so it is draggable", function() {
+    expect(Object.keys(sortable(StoryRaw).propTypes)).toEqual(
+      Object.keys(Story.propTypes)
+    );
+
     const story = <Story />;
     const result = getShallowRenderedOutput(story);
-    expect(result.type.name).toBe("I18nextWithTranslation");
-    expect(result.type.displayName).toBe("withI18nextTranslation(Story)");
+
+    expect(result.props.onSortableItemMount).toBeDefined();
+
+    expect(result.props.i18n).toBeUndefined();
+    expect(result.props.t).toBeUndefined();
   });
 });
