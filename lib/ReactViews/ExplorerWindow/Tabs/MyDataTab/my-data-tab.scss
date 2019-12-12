@@ -105,6 +105,11 @@
   }
 }
 
+.dataTypeTabWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
 .dataTypeTab {
   width: 100%;
   display: flex;

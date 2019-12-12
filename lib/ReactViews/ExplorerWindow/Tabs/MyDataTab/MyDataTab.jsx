@@ -78,10 +78,12 @@ const MyDataTab = createReactClass({
   renderPromptBox() {
     if (this.hasUserAddedData()) {
       return (
-        <div className={Styles.dataTypeTab}>
-          <div className={Styles.dndBox}>
-            <Icon glyph={Icon.GLYPHS.upload} />
-            Drag and Drop
+        <div className={Styles.dataTypeTabWrapper}>
+          <div className={Styles.dataTypeTab}>
+            <div className={Styles.dndBox}>
+              <Icon glyph={Icon.GLYPHS.upload} />
+              Drag and Drop
+            </div>
           </div>
         </div>
       );
@@ -127,8 +129,8 @@ const MyDataTab = createReactClass({
               resetTab={this.resetTab}
             />
           </If>
-          <If condition={showTwoColumn}>
-            <div className={Styles.addedData}>
+          <div className={Styles.addedData}>
+            <If condition={showTwoColumn}>
               <p className={Styles.explanation}>
                 <strong>Note: </strong>Data added in this way is not saved or
                 made visible to others.
@@ -143,9 +145,9 @@ const MyDataTab = createReactClass({
                   terria={this.props.terria}
                 />
               </ul>
-            </div>
-          </If>
-          <If condition={!this.state.activeTab}>{this.renderPromptBox()}</If>
+            </If>
+            <If condition={!this.state.activeTab}>{this.renderPromptBox()}</If>
+          </div>
         </div>
         <If condition={showTwoColumn}>
           <DataPreview
