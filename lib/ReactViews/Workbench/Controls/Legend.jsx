@@ -247,7 +247,7 @@ function makeAbsolute(url) {
   }
 
   const uri = new URI(url);
-  if (uri.protocol() !== "http" && uri.protocol() !== "https") {
+  if (uri.protocol() && uri.protocol() !== "http" && uri.protocol() !== "https") {
     return url;
   } else {
     return uri.absoluteTo(window.location.href).toString();
