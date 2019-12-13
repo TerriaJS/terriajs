@@ -583,7 +583,7 @@ class WebMapServiceCatalogItem
         this.rectangle !== undefined &&
         this.rectangle.east !== undefined &&
         this.rectangle.west !== undefined &&
-        this.rectangle.north !== undefined  &&
+        this.rectangle.north !== undefined &&
         this.rectangle.south !== undefined
       ) {
         rectangle = Rectangle.fromDegrees(
