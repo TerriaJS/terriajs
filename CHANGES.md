@@ -1,12 +1,28 @@
 Change Log
 ==========
 
-### next minor
+### Next Release
+* Fix draggable workbench/story items with translation HOC
+* Added first revision of "delta feature" for change detection of WMS catalog items which indicate `supportsDeltaComparison`
+* Improve menu bar button hover/focus states when interacting with its panel contents
+* Add ability to set opacity on `GeoJsonCatalogItem`
+* Expanded test cases to ensure WorkbenchItem & Story have the correct order of components composed
 
+### v7.10.0
+
+* Added proper basic internationalisation beginnings via i18next & react-i18next
+* Fixed a bug where calling `openAddData()` or `closeCatalog()` on ViewState did not correctly apply the relevant `mobileViewOptions` for mobile views.
+* Fixed filter by available dates on ImageryLayerCatalogItem not copying to the clone when the item is split.
 * Fixed an error in `regionMapping.json` that causes some states to be mismatched when using Australian state codes in a column labelled "state". It is still recommended to use "ste", "ste_code" or "ste_code_2016" over "state" for column labels when matching against Australian state codes.
 * Fixed bug where "User data" catalog did not have add-buttons.
 * Added ability to re-add "User data" CSV items once removed from workbench.
-* Fixed height of My Data drag and drop box in Safari.
+* Changed catalog item event labels to include the full catalog item path, rather than just the catalog item name.
+* Added support for `openAddData` option in config.json.  If true, the "Add Data" dialog is automatically opened at startup.
+* Welcome message, in-app guides & new feature prompts are now disabled by default. These can be re-enabled by setting the `showWelcomeMessage`, `showInAppGuides` & `showFeaturePrompts` options in config.json. 
+* Updated Welcome Message to pass its props to `WelcomeMessagePrimaryBtnClick` & `WelcomeMessageSecondaryBtnClick` overrides
+* Fixed a bug in anti-meridian handling causing excessive memory use.
+* Handled coordinate conversion for GeoJson geometries with an empty `coordinates` array.
+* Fixed height of My Data drag and drop box in Safari and IE.
 
 ### v7.9.0
 

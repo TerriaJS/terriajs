@@ -12,8 +12,9 @@ import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import classNames from "classnames";
 import Styles from "./viewing-controls.scss";
+import { withTranslation } from "react-i18next";
 
-import createCatalogMemberFromType from "../../../Models/createCatalogMemberFromType";
+import duplicateItem from "../../../Models/duplicateItem";
 import addUserCatalogMember from "../../../Models/addUserCatalogMember";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 
@@ -23,7 +24,8 @@ const ViewingControls = createReactClass({
 
   propTypes: {
     item: PropTypes.object.isRequired,
-    viewState: PropTypes.object.isRequired
+    viewState: PropTypes.object.isRequired,
+    t: PropTypes.func.isRequired
   },
 
   removeFromMap() {
@@ -62,16 +64,18 @@ const ViewingControls = createReactClass({
   },
 
   splitItem() {
+    const { t } = this.props;
     const item = this.props.item;
+
     item.splitDirection = ImagerySplitDirection.RIGHT;
-    const serializedItem = item.serializeToJson();
-    serializedItem.name = serializedItem.name + " (copy)";
-    serializedItem.splitDirection = ImagerySplitDirection.LEFT;
-    delete serializedItem.id;
-
-    const newItem = createCatalogMemberFromType(item.type, item.terria);
-    newItem.updateFromJson(serializedItem);
-
+    const newItem = duplicateItem(
+      item,
+      undefined,
+      t("splitterTool.workbench.copyName", {
+        name: item.name
+      })
+    );
+    newItem.splitDirection = ImagerySplitDirection.LEFT;
     if (newItem.useOwnClock === false) {
       newItem.useOwnClock = true;
     }
@@ -79,7 +83,6 @@ const ViewingControls = createReactClass({
     // newItem is added to terria.nowViewing automatically by the "isEnabled" observable on CatalogItem (see isEnabledChanged).
     // However, nothing adds it to terria.catalog automatically, which is required so the new item can be shared.
     addUserCatalogMember(item.terria, newItem, { open: false, zoomTo: false });
-
     item.terria.showSplitter = true;
   },
 
@@ -102,6 +105,10 @@ const ViewingControls = createReactClass({
     item.exportData();
   },
 
+  openDeltaTool() {
+    this.props.viewState.currentTool = { type: "delta", item: this.props.item };
+  },
+
   render() {
     const item = this.props.item;
     const canZoom =
@@ -117,6 +124,7 @@ const ViewingControls = createReactClass({
       [Styles.noSplit]: !canSplit,
       [Styles.noInfo]: !item.showsInfo
     };
+    const { t, viewState } = this.props;
     return (
       <ul className={Styles.control}>
         <If condition={item.canZoomTo}>
@@ -124,10 +132,10 @@ const ViewingControls = createReactClass({
             <button
               type="button"
               onClick={this.zoomTo}
-              title="Zoom to extent"
+              title={t("workbench.zoomToTitle")}
               className={Styles.btn}
             >
-              Zoom To Extent
+              {t("workbench.zoomTo")}
             </button>
           </li>
           <span className={Styles.separator} />
@@ -139,10 +147,10 @@ const ViewingControls = createReactClass({
             <button
               type="button"
               onClick={this.openFeature}
-              title="Zoom to data"
+              title={t("workbench.openFeatureTitle")}
               className={Styles.btn}
             >
-              Zoom To
+              {t("workbench.openFeature")}
             </button>
           </li>
           <span className={Styles.separator} />
@@ -153,9 +161,9 @@ const ViewingControls = createReactClass({
               type="button"
               onClick={this.previewItem}
               className={Styles.btn}
-              title="info"
+              title={t("workbench.previewItemTitle")}
             >
-              About This Data
+              {t("workbench.previewItem")}
             </button>
           </li>
           <span className={Styles.separator} />
@@ -165,10 +173,10 @@ const ViewingControls = createReactClass({
             <button
               type="button"
               onClick={this.splitItem}
-              title="Duplicate and show splitter"
+              title={t("workbench.splitItemTitle")}
               className={Styles.btn}
             >
-              Split
+              {t("workbench.splitItem")}
             </button>
           </li>
           <span className={Styles.separator} />
@@ -179,9 +187,27 @@ const ViewingControls = createReactClass({
               type="button"
               onClick={this.exportData}
               className={Styles.btn}
-              title="Export map data"
+              title={t("workbench.exportDataTitle")}
             >
-              Export
+              {t("workbench.exportData")}
+            </button>
+          </li>
+          <span className={Styles.separator} />
+        </If>
+        <If
+          condition={
+            item.supportsDeltaComparison &&
+            viewState.useSmallScreenInterface === false
+          }
+        >
+          <li className={classNames(Styles.delta, classList)}>
+            <button
+              type="button"
+              onClick={this.openDeltaTool}
+              className={Styles.btn}
+              title="Compare imagery from two dates"
+            >
+              Delta
             </button>
           </li>
           <span className={Styles.separator} />
@@ -190,14 +216,14 @@ const ViewingControls = createReactClass({
           <button
             type="button"
             onClick={this.removeFromMap}
-            title="Remove this data"
+            title={t("workbench.removeFromMapTitle")}
             className={Styles.btn}
           >
-            Remove <Icon glyph={Icon.GLYPHS.remove} />
+            {t("workbench.removeFromMap")} <Icon glyph={Icon.GLYPHS.remove} />
           </button>
         </li>
       </ul>
     );
   }
 });
-module.exports = ViewingControls;
+module.exports = withTranslation()(ViewingControls);

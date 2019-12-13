@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import ObserverModelMixin from "../../../ObserveModelMixin";
 import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel.jsx";
 import CountDatasets from "./CountDatasets";
+import { withTranslation } from "react-i18next";
 import Styles from "./tools-panel.scss";
 import DropdownStyles from "../panel.scss";
 
@@ -15,7 +16,8 @@ const ToolsPanel = createReactClass({
 
   propTypes: {
     terria: PropTypes.object,
-    viewState: PropTypes.object.isRequired
+    viewState: PropTypes.object.isRequired,
+    t: PropTypes.func.isRequired
   },
 
   getInitialState() {
@@ -44,13 +46,13 @@ const ToolsPanel = createReactClass({
       inner: Styles.dropdownInner,
       icon: "settings"
     };
-
+    const { t } = this.props;
     return (
       <MenuPanel
         theme={dropdownTheme}
-        btnText="Tool"
+        btnText={t("toolsPanel.btnText")}
         viewState={this.props.viewState}
-        btnTitle="Advanced toolbox"
+        btnTitle={t("toolsPanel.btnTitle")}
         onOpenChanged={this.onOpenChanged}
         isOpen={this.state.isOpen}
         smallScreen={this.props.viewState.useSmallScreenInterface}
@@ -76,4 +78,4 @@ const ToolsPanel = createReactClass({
   }
 });
 
-export default ToolsPanel;
+export default withTranslation()(ToolsPanel);

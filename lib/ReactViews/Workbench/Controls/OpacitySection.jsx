@@ -6,13 +6,15 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import ObserveModelMixin from "../../ObserveModelMixin";
 import Styles from "./opacity-section.scss";
+import { withTranslation } from "react-i18next";
 
 const OpacitySection = createReactClass({
   displayName: "OpacitySection",
   mixins: [ObserveModelMixin],
 
   propTypes: {
-    item: PropTypes.object.isRequired
+    item: PropTypes.object.isRequired,
+    t: PropTypes.func.isRequired
   },
 
   changeOpacity(value) {
@@ -21,13 +23,16 @@ const OpacitySection = createReactClass({
 
   render() {
     const item = this.props.item;
+    const { t } = this.props;
     if (!item.supportsOpacity) {
       return null;
     }
     return (
       <div className={Styles.opacity}>
         <label htmlFor="opacity">
-          Opacity: {parseInt(item.opacity * 100, 10)} %
+          {t("workbench.opacity", {
+            opacity: parseInt(item.opacity * 100, 10)
+          })}
         </label>
         <Slider
           className={Styles.opacitySlider}
@@ -40,4 +45,4 @@ const OpacitySection = createReactClass({
     );
   }
 });
-module.exports = OpacitySection;
+module.exports = withTranslation()(OpacitySection);

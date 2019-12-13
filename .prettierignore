@@ -9,6 +9,9 @@
 !lib/**/*.tsx
 !lib/**/*.scss
 
+# Format translation files
+!lib/Language/**/*.json
+
 !test/**/
 !test/**/*.js
 !test/**/*.jsx

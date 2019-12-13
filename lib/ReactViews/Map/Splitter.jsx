@@ -1,6 +1,7 @@
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
+import { withTranslation } from "react-i18next";
 import Icon from "../Icon.jsx";
 import Styles from "./splitter.scss";
 
@@ -30,7 +31,8 @@ const Splitter = createReactClass({
   propTypes: {
     terria: PropTypes.object.isRequired,
     thumbSize: PropTypes.number,
-    padding: PropTypes.number
+    padding: PropTypes.number,
+    t: PropTypes.func.isRequired
   },
 
   getDefaultProps() {
@@ -194,6 +196,8 @@ const Splitter = createReactClass({
       fontSize: thumbWidth - 12 + "px"
     };
 
+    const { t } = this.props;
+
     return (
       <div>
         <div className={Styles.dividerWrapper}>
@@ -205,7 +209,7 @@ const Splitter = createReactClass({
           onClick={e => e.preventDefault()}
           onMouseDown={this.startDrag}
           onTouchStart={this.startDrag}
-          title="Drag left or right to adjust views"
+          title={t("splitterTool.title")}
         >
           <Icon glyph={Icon.GLYPHS.splitter} />
         </button>
@@ -214,4 +218,4 @@ const Splitter = createReactClass({
   }
 });
 
-module.exports = Splitter;
+module.exports = withTranslation()(Splitter);
