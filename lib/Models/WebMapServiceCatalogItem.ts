@@ -566,20 +566,32 @@ class WebMapServiceCatalogItem
         new URI(this.url)
       );
 
+      let rectangle;
+
+      if (
+        this.rectangle !== undefined &&
+        this.rectangle.east !== undefined &&
+        this.rectangle.west !== undefined &&
+        this.rectangle.north !== undefined  &&
+        this.rectangle.south !== undefined
+      ) {
+        rectangle = Rectangle.fromDegrees(
+          this.rectangle.west,
+          this.rectangle.south,
+          this.rectangle.east,
+          this.rectangle.north
+        );
+      } else {
+        rectangle = undefined;
+      }
+
       const imageryOptions = {
         url: proxyCatalogItemUrl(this, baseUrl.toString()),
         layers: this.layers || "",
         parameters: parameters,
         tilingScheme: /*defined(this.tilingScheme) ? this.tilingScheme :*/ new WebMercatorTilingScheme(),
         maximumLevel: maximumLevel,
-        rectangle: this.rectangle
-          ? Rectangle.fromDegrees(
-              this.rectangle.west,
-              this.rectangle.south,
-              this.rectangle.east,
-              this.rectangle.north
-            )
-          : undefined
+        rectangle: rectangle
       };
 
       if (
