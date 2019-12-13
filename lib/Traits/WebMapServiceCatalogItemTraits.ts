@@ -126,4 +126,14 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
       "True to hide tiles when the `Minimum Scale Denominator` is exceeded. If false, we can zoom in arbitrarily close to the (increasingly blurry) layer."
   })
   hideLayerAfterMinScaleDenominator: boolean = false;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Maximum Refresh Intervals",
+    description:
+      "The maximum number of discrete times that can be created by a single " +
+      "date range, when specified in the format time/time/periodicity. E.g. " +
+      "`2015-04-27T16:15:00/2015-04-27T18:45:00/PT15M` has 11 times."
+  })
+  maxRefreshIntervals: number = 1000;
 }
