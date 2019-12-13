@@ -36,6 +36,12 @@ export class PrimitiveTrait<T> extends Trait {
       if (value !== undefined) {
         return value;
       }
+
+      // If this stratum replaces the ones below it, no need to look at the
+      // ones below it.
+      if (stratum.replace) {
+        break;
+      }
     }
 
     return undefined;

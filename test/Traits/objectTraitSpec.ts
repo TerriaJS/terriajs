@@ -48,6 +48,13 @@ class OuterTraits extends ModelTraits {
     description: "Other"
   })
   other?: string;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Some Number",
+    description: "Some Number"
+  })
+  someNumber?: number;
 }
 
 class TestModel extends CreateModel(OuterTraits) {}
@@ -147,5 +154,29 @@ describe("objectTrait", function() {
 
     expect(model.inner.bar).toBe(1);
     expect(model.inner.baz).toBe(true);
+  });
+
+  it("honors replace for primitives", function() {
+    const terria = new Terria();
+    const model = new TestModel("test", terria);
+
+    model.setTrait("definition", "other", "test");
+    model.setTrait("user", "someNumber", 42);
+    (model as any).setTrait("user", "replace", true);
+
+    expect(model.other).toBeUndefined();
+    expect(model.someNumber).toBe(42);
+  });
+
+  it("honors replace for nested objects", function() {
+    const terria = new Terria();
+    const model = new TestModel("test", terria);
+
+    model.inner.setTrait("definition", "foo", "test");
+    model.inner.setTrait("user", "bar", 42);
+    (model as any).setTrait("user", "replace", true);
+
+    expect(model.inner.foo).toBeUndefined();
+    expect(model.inner.bar).toBe(42);
   });
 });
