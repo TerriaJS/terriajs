@@ -1,4 +1,4 @@
-import { computed, runInAction, observable, toJS } from "mobx";
+import { computed, observable, runInAction, toJS } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
@@ -15,8 +15,10 @@ import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
 import PolygonGraphics from "terriajs-cesium/Source/DataSources/PolygonGraphics";
 import PolylineGraphics from "terriajs-cesium/Source/DataSources/PolylineGraphics";
 import Property from "terriajs-cesium/Source/DataSources/Property";
+import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import isDefined from "../Core/isDefined";
 import JsonValue, { isJsonObject, JsonObject } from "../Core/Json";
+import loadJson from "../Core/loadJson";
 import makeRealPromise from "../Core/makeRealPromise";
 import readJson from "../Core/readJson";
 import StandardCssColors from "../Core/StandardCssColors";
@@ -24,13 +26,8 @@ import TerriaError from "../Core/TerriaError";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import GeoJsonCatalogItemTraits, {
-  StyleTraits
-} from "../Traits/GeoJsonCatalogItemTraits";
+import GeoJsonCatalogItemTraits from "../Traits/GeoJsonCatalogItemTraits";
 import CreateModel from "./CreateModel";
-import Terria from "./Terria";
-import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
-import loadJson from "../Core/loadJson";
 
 const formatPropertyValue = require("../Core/formatPropertyValue");
 const hashFromString = require("../Core/hashFromString");
@@ -238,6 +235,7 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
     }
 
     const style = this.style;
+    const now = JulianDate.now();
 
     const options = {
       describe: describeWithoutUnderscores,
@@ -313,7 +311,7 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
           });
           if (isDefined(properties["marker-opacity"])) {
             // not part of SimpleStyle spec, but why not?
-            const color: Color = getPropertyValue(entity.point.color);
+            const color: Color = entity.point.color.getValue(now);
             color.alpha = parseFloat(properties["marker-opacity"]);
           }
 
@@ -333,31 +331,19 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
         // As a workaround for the special case where the polygon is unfilled anyway, change it to a polyline.
         if (
           isDefined(entity.polygon) &&
-          polygonHasWideOutline(entity.polygon) &&
+          polygonHasWideOutline(entity.polygon, now) &&
           !polygonIsFilled(entity.polygon)
         ) {
-          entity.polyline = new PolylineGraphics();
-          entity.polyline.show = entity.polygon.show;
-
-          if (isDefined(entity.polygon.outlineColor)) {
-            entity.polyline.material = new ColorMaterialProperty(
-              entity.polygon.outlineColor
-            );
-          }
-
-          const hierarchy: PolygonHierarchy = getPropertyValue(
-            entity.polygon.hierarchy
-          );
-
-          const positions = hierarchy.positions;
-          closePolyline(positions);
-
-          entity.polyline.positions = new ConstantProperty(positions);
-          entity.polyline.width = getPropertyValue(entity.polygon.outlineWidth);
-
-          createEntitiesFromHoles(entities, hierarchy.holes, entity);
-
+          createPolylineFromPolygon(entities, entity, now);
           entity.polygon = (undefined as unknown) as PolygonGraphics;
+        } else if (
+          isDefined(entity.polygon) &&
+          polygonHasOutline(entity.polygon, now) &&
+          isPolygonOnTerrain(entity.polygon, now)
+        ) {
+          // Polygons don't directly support outlines when they're on terrain.
+          // So create a manual outline.
+          createPolylineFromPolygon(entities, entity, now);
         }
       }
       return dataSource;
@@ -366,6 +352,36 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
 }
 
 export default GeoJsonCatalogItem;
+
+function createPolylineFromPolygon(
+  entities: EntityCollection,
+  entity: Entity,
+  now: JulianDate
+) {
+  entity.polyline = new PolylineGraphics();
+  entity.polyline.show = entity.polygon.show;
+
+  if (isPolygonOnTerrain(entity.polygon, now)) {
+    (entity.polyline as any).clampToGround = true;
+  }
+
+  if (isDefined(entity.polygon.outlineColor)) {
+    entity.polyline.material = new ColorMaterialProperty(
+      entity.polygon.outlineColor
+    );
+  }
+
+  const hierarchy: PolygonHierarchy = getPropertyValue(
+    entity.polygon.hierarchy
+  );
+
+  const positions = closePolyline(hierarchy.positions);
+
+  entity.polyline.positions = new ConstantProperty(positions);
+  entity.polyline.width = entity.polygon.outlineWidth.getValue(now);
+
+  createEntitiesFromHoles(entities, hierarchy.holes, entity);
+}
 
 function reprojectToGeographic(
   geoJson: JsonObject,
@@ -509,10 +525,15 @@ function describeWithoutUnderscores(
   return html;
 }
 
-function polygonHasWideOutline(polygon: PolygonGraphics) {
+function polygonHasOutline(polygon: PolygonGraphics, now: JulianDate) {
   return (
-    isDefined(polygon.outlineWidth) &&
-    getPropertyValue<number>(polygon.outlineWidth) > 1
+    isDefined(polygon.outlineWidth) && polygon.outlineWidth.getValue(now) > 0
+  );
+}
+
+function polygonHasWideOutline(polygon: PolygonGraphics, now: JulianDate) {
+  return (
+    isDefined(polygon.outlineWidth) && polygon.outlineWidth.getValue(now) > 1
   );
 }
 
@@ -556,8 +577,11 @@ function closePolyline(positions: Cartesian3[]) {
       1.0
     )
   ) {
-    positions.push(positions[0]);
+    const copy = positions.slice();
+    copy.push(positions[0]);
+    return copy;
   }
+  return positions;
 }
 
 function createEntitiesFromHoles(
@@ -648,4 +672,18 @@ function unwrapSinglePropertyObject(obj: any) {
     obj = obj[name];
   }
   return { name, obj };
+}
+
+function isPolygonOnTerrain(polygon: PolygonGraphics, now: JulianDate) {
+  const polygonAny: any = polygon;
+  const isClamped =
+    polygonAny.heightReference &&
+    polygonAny.heightReference.getValue(now) ===
+      HeightReference.CLAMP_TO_GROUND;
+  const hasPerPositionHeight =
+    polygon.perPositionHeight && polygon.perPositionHeight.getValue(now);
+  const hasPolygonHeight =
+    polygon.height && polygon.height.getValue(now) !== undefined;
+
+  return isClamped || (!hasPerPositionHeight && !hasPolygonHeight);
 }
