@@ -28,6 +28,7 @@ function createStratumInstance(
     (p, c) => ({ ...p, [c]: defaults[c] }),
     {}
   );
+  reduced.replace = false;
   return observable(reduced);
 }
 

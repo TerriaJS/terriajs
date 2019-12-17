@@ -19,7 +19,7 @@ type ArrayTrait<TTrait, TElement> = Array<SingleTrait<TElement>>;
  *
  * Nested traits classes follow the rules above.
  */
-type StratumFromTraits<TDefinition extends ModelTraits> = Complete<
+type StratumFromTraits<TDefinition extends ModelTraits> = { replace: boolean } & Complete<
   {
     [P in keyof TDefinition]: NotUndefined<TDefinition[P]> extends Array<
       infer TElement
