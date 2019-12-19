@@ -111,6 +111,8 @@ export default class Terria {
   readonly overlays = new Workbench();
   readonly catalog = new Catalog(this);
   readonly timelineClock = new Clock({ shouldAnimate: false });
+
+  @observable
   readonly mainViewer = new TerriaViewer(
     this,
     computed(() =>

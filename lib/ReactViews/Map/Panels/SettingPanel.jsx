@@ -1,7 +1,7 @@
 "use strict";
 
 import classNames from "classnames";
-import { action, runInAction } from "mobx";
+import { action, runInAction, observable, computed } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import Slider from "rc-slider";
@@ -45,11 +45,14 @@ class SettingPanel extends React.Component {
    */
   constructor(props) {
     super(props);
-    this.state = {
-      activeMapName: props.terria.mainViewer.baseMap
-        ? props.terria.mainViewer.baseMap.name
-        : "(None)"
-    };
+  }
+
+  @observable _hoverBaseMap = null;
+
+  @computed
+  get activeMapName () {
+    return this._hoverBaseMap ? this._hoverBaseMap :
+      this.props.terria.mainViewer.baseMap ? this.props.terria.mainViewer.baseMap.name : "(None)";
   }
 
   selectBaseMap(baseMap, event) {
@@ -65,16 +68,14 @@ class SettingPanel extends React.Component {
   }
 
   mouseEnterBaseMap(baseMap) {
-    this.setState({
-      activeMapName: baseMap.mappable.name
+    runInAction(() => {
+      this._hoverBaseMap = baseMap.mappable.name;
     });
   }
 
   mouseLeaveBaseMap() {
-    this.setState({
-      activeMapName: this.props.terria.mainViewer.baseMap
-        ? this.props.terria.mainViewer.baseMap.name
-        : "(None)"
+    runInAction(() => {
+      this._hoverBaseMap = null;
     });
   }
 
@@ -286,7 +287,7 @@ class SettingPanel extends React.Component {
         <div className={classNames(Styles.baseMap, DropdownStyles.section)}>
           <label className={DropdownStyles.heading}> Base Map </label>
           <label className={DropdownStyles.subHeading}>
-            {this.state.activeMapName}
+            {this.activeMapName}
           </label>
           <ul className={Styles.baseMapSelector}>
             <For each="baseMap" index="i" of={this.props.terria.baseMaps}>
