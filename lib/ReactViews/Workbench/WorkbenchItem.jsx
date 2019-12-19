@@ -44,7 +44,10 @@ const WorkbenchItem = observer(
     },
 
     toggleDisplay() {
-      this.props.item.isLegendVisible = !this.props.item.isLegendVisible;
+      const item = this.props.item;
+      runInAction(() => {
+        item.setTrait(CommonStrata.user, "isOpenInWorkbench", !item.isOpenInWorkbench);
+      });
     },
 
     openModal() {
@@ -71,7 +74,7 @@ const WorkbenchItem = observer(
         <li
           style={this.props.style}
           className={classNames(this.props.className, Styles.workbenchItem, {
-            [Styles.isOpen]: workbenchItem.isLegendVisible
+            [Styles.isOpen]: workbenchItem.isOpenInWorkbench
           })}
         >
           <ul className={Styles.header}>
@@ -115,7 +118,7 @@ const WorkbenchItem = observer(
                 className={Styles.btnToggle}
                 onClick={this.toggleDisplay}
               >
-                {workbenchItem.isLegendVisible ? (
+                {workbenchItem.isOpenInWorkbench ? (
                   <Icon glyph={Icon.GLYPHS.opened} />
                 ) : (
                   <Icon glyph={Icon.GLYPHS.closed} />
@@ -125,7 +128,7 @@ const WorkbenchItem = observer(
             <li className={Styles.headerClearfix} />
           </ul>
 
-          <If condition={true || workbenchItem.isLegendVisible}>
+          <If condition={workbenchItem.isOpenInWorkbench}>
             <div className={Styles.inner}>
               <ViewingControls
                 item={workbenchItem}
