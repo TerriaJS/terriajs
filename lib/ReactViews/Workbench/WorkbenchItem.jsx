@@ -44,9 +44,12 @@ const WorkbenchItem = observer(
     },
 
     toggleDisplay() {
-      const item = this.props.item;
       runInAction(() => {
-        item.setTrait(CommonStrata.user, "isOpenInWorkbench", !item.isOpenInWorkbench);
+        this.props.item.setTrait(
+          CommonStrata.user,
+          "isOpenInWorkbench",
+          !this.props.item.isOpenInWorkbench
+        );
       });
     },
 
