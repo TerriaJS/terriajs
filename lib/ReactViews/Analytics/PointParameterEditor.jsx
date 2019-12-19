@@ -16,8 +16,7 @@ import MapInteractionMode from "../../Models/MapInteractionMode";
 import ObserveModelMixin from "../ObserveModelMixin";
 
 import Styles from "./parameter-editors.scss";
-import { withTranslation, useTranslation } from "react-i18next";
-import i18n from "i18next";
+import { withTranslation } from "react-i18next";
 
 const PointParameterEditor = createReactClass({
   displayName: "PointParameterEditor",
