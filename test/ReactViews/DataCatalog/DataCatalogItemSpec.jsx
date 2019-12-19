@@ -6,7 +6,7 @@ import CatalogItem from "../../../lib/Models/CatalogItem";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import CatalogItemComponent from "../../../lib/ReactViews/DataCatalog/CatalogItem";
-import DataCatalogItem from "../../../lib/ReactViews/DataCatalog/DataCatalogItem";
+import { DataCatalogItem } from "../../../lib/ReactViews/DataCatalog/DataCatalogItem";
 import { getShallowRenderedOutput } from "../MoreShallowTools";
 
 function makeItemUserAdded(item, terria) {
@@ -149,18 +149,33 @@ describe("DataCatalogItem", () => {
         expect(getRenderedProp("btnState")).toBe("remove");
       });
 
-      it('"trash" if item removable', () => {
+      it('"add" if item removable but NOT enabled', () => {
+        // If removable, btnstate should still be add or remove
         item.isLoading = false;
         removable = true;
-        expect(getRenderedProp("btnState")).toBe("trash");
-      });
-
-      it("null is item is added by user but within a group and not loading and not on mobile", () => {
-        item.isLoading = false;
-        removable = false;
         item.parent = new CatalogItem(terria);
         makeItemUserAdded(item.parent, terria);
-        expect(getRenderedProp("btnState")).toBe(null);
+        expect(getRenderedProp("btnState")).toBe("add");
+        expect(getRenderedProp("trashable")).toBe(true);
+      });
+      it('"remove" if item removable but enabled', () => {
+        // If removable, btnstate should still be add or remove
+        item.isEnabled = true;
+        item.isLoading = false;
+        removable = true;
+        item.parent = new CatalogItem(terria);
+        makeItemUserAdded(item.parent, terria);
+        expect(getRenderedProp("btnState")).toBe("remove");
+        expect(getRenderedProp("trashable")).toBe(true);
+      });
+
+      it("add if item is added by user but within a group and not loading and not on mobile", () => {
+        item.isLoading = false;
+        // User data is always "removable"
+        removable = true;
+        item.parent = new CatalogItem(terria);
+        makeItemUserAdded(item.parent, terria);
+        expect(getRenderedProp("btnState")).toBe("add");
       });
 
       it('"add" if item is not invokeable, not enabled and not loading and not on mobile', () => {
@@ -247,6 +262,7 @@ describe("DataCatalogItem", () => {
         item={item}
         removable={removable}
         terria={terria}
+        t={() => {}}
       />
     );
   }

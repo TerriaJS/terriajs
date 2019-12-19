@@ -12,7 +12,7 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import BottomDock from "../BottomDock/BottomDock";
 import classNames from "classnames";
-import getReactElementFromContents from "../ReactHelpers/getReactElementFromContents";
+import { withTranslation } from "react-i18next";
 
 import Styles from "./map-column.scss";
 import { observer } from "mobx-react";
@@ -35,7 +35,8 @@ const MapColumn = observer(
     propTypes: {
       terria: PropTypes.object.isRequired,
       viewState: PropTypes.object.isRequired,
-      customFeedbacks: PropTypes.array.isRequired
+      customFeedbacks: PropTypes.array.isRequired,
+      t: PropTypes.func.isRequired
     },
 
     getInitialState() {
@@ -83,6 +84,7 @@ const MapColumn = observer(
     },
 
     render() {
+      const { t } = this.props;
       // TODO: remove? see: https://bugs.chromium.org/p/chromium/issues/detail?id=1001663
       const isAboveChrome75 =
         chromeVersion && chromeVersion[0] && Number(chromeVersion[0]) > 75;
@@ -136,9 +138,7 @@ const MapColumn = observer(
                 >
                   <FeedbackButton
                     viewState={this.props.viewState}
-                    btnText={getReactElementFromContents(
-                      this.props.viewState.language.FeedbackBtnText
-                    )}
+                    btnText={t("feedback.feedbackBtnText")}
                   />
                 </div>
               </If>
@@ -187,4 +187,4 @@ const MapColumn = observer(
   })
 );
 
-export default MapColumn;
+export default withTranslation()(MapColumn);

@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { computed } from "mobx";
 
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -42,16 +43,16 @@ class KmlCatalogItem extends AsyncMappableMixin(
     const createLoadError = () =>
       new TerriaError({
         sender: this,
-        title: "Error loading KML or KMZ",
-        message:
-          `An error occurred while loading a KML or KMZ file. This may indicate that the file is invalid or ` +
-          `that it is not supported by ${
-            this.terria.appName
-          }. If you would like assistance or further ` +
-          `information, please email us at ` +
-          `<a href="mailto:${this.terria.supportEmail}">${
-            this.terria.supportEmail
-          }></a>.`
+        title: i18next.t("models.kml.errorLoadingTitle"),
+        message: i18next.t("models.kml.errorLoadingMessage", {
+          appName: this.terria.appName,
+          email:
+            '<a href="mailto:' +
+            this.terria.supportEmail +
+            '">' +
+            this.terria.supportEmail +
+            "</a>."
+        })
       });
 
     return new Promise<string | Document | Blob>((resolve, reject) => {
@@ -69,10 +70,8 @@ class KmlCatalogItem extends AsyncMappableMixin(
       } else {
         throw new TerriaError({
           sender: this,
-          title: "No KML available",
-          message:
-            `The KML/KMZ catalog item cannot be loaded because it was not configured ` +
-            `with a \`url\`, \`kmlData\` or \`kmlString\` property.`
+          title: i18next.t("models.kml.unableToLoadItemTitle"),
+          message: i18next.t("models.kml.unableToLoadItemMessage")
         });
       }
     })

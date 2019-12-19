@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import uniqWith from "lodash-es/uniqWith";
 import { computed, runInAction } from "mobx";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -90,9 +91,10 @@ class MapServerStratum extends LoadableStratum(
   static async load(item: ArcGisMapServerCatalogItem) {
     if (!isDefined(item.uri)) {
       throw new TerriaError({
-        title: "Unable to load MapServer",
-        message:
-          "Could not load the ArcGis MapServer endpoint because the catalog item does not have a `url`."
+        title: i18next.t("models.arcGisMapServerCatalogItem.invalidUrlTitle"),
+        message: i18next.t(
+          "models.arcGisMapServerCatalogItem.invalidUrlMessage"
+        )
       });
     }
 
@@ -140,10 +142,14 @@ class MapServerStratum extends LoadableStratum(
       allLayers = [results[1]];
     } else {
       throw new TerriaError({
-        title: "ArcGIS Mapserver Error",
+        title: i18next.t(
+          "models.arcGisMapServerCatalogItem.unusableMetadataTitle"
+        ),
         message: isDefined(results[0].error)
           ? results[0].error.message
-          : "This dataset returned unusable metadata."
+          : i18next.t(
+              "models.arcGisMapServerCatalogItem.unusableMetadataDefaultMessage"
+            )
       });
     }
 
@@ -198,10 +204,16 @@ class MapServerStratum extends LoadableStratum(
     }
 
     return [
-      newInfo("Data Description", layer.description),
-      newInfo("Service Description", this._mapServer.description),
       newInfo(
-        "Copyright Text",
+        i18next.t("models.arcGisMapServerCatalogItem.dataDescription"),
+        layer.description
+      ),
+      newInfo(
+        i18next.t("models.arcGisMapServerCatalogItem.serviceDescription"),
+        this._mapServer.description
+      ),
+      newInfo(
+        i18next.t("models.arcGisMapServerCatalogItem.copyrightText"),
         isDefined(layer.copyrightText) && layer.copyrightText.length > 0
           ? layer.copyrightText
           : this._mapServer.copyrightText
@@ -267,7 +279,9 @@ export default class ArcGisMapServerCatalogItem
   )
   implements Mappable {
   static readonly type = "esri-mapServer";
-  readonly typeName = "Esri ArcGIS MapServer";
+  get typeName() {
+    return i18next.t("models.arcGisMapServerCatalogItem.name");
+  }
 
   readonly supportsSplitting = true;
   readonly canZoomTo = true;

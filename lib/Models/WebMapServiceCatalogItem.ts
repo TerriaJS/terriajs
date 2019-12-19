@@ -42,6 +42,7 @@ import WebMapServiceCapabilities, {
   CapabilitiesStyle,
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
+import i18next from "i18next";
 
 interface LegendUrl {
   url: string;
@@ -70,9 +71,10 @@ class GetCapabilitiesStratum extends LoadableStratum(
     if (catalogItem.getCapabilitiesUrl === undefined) {
       return Promise.reject(
         new TerriaError({
-          title: "Unable to load GetCapabilities",
-          message:
-            "Could not load the Web Map Service (WMS) GetCapabilities document because the catalog item does not have a `url`."
+          title: i18next.t("models.webMapServiceCatalogItem.missingUrlTitle"),
+          message: i18next.t(
+            "models.webMapServiceCatalogItem.missingUrlMessage"
+          )
         })
       );
     }
@@ -601,13 +603,13 @@ class WebMapServiceCatalogItem
             if (!messageDisplayed) {
               this.terria.error.raiseEvent(
                 new TerriaError({
-                  title: "Dataset will not be shown at this scale",
-                  message:
-                    'The "' +
-                    this.name +
-                    '" dataset will not be shown when zoomed in this close to the map because the data custodian has ' +
-                    "indicated that the data is not intended or suitable for display at this scale.  Click the dataset's Info button on the " +
-                    "Now Viewing tab for more information about the dataset and the data custodian."
+                  title: i18next.t(
+                    "models.webMapServiceCatalogItem.datasetScaleErrorTitle"
+                  ),
+                  message: i18next.t(
+                    "models.webMapServiceCatalogItem.datasetScaleErrorMessage",
+                    { name: this.name }
+                  )
                 })
               );
               messageDisplayed = true;

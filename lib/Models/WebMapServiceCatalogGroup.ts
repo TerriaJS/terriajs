@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { computed, observable, runInAction, trace, action } from "mobx";
 import LoadableStratum from "./LoadableStratum";
 import isReadOnlyArray from "../Core/isReadOnlyArray";
@@ -27,9 +28,10 @@ class GetCapabilitiesStratum extends LoadableStratum(
     if (catalogItem.getCapabilitiesUrl === undefined) {
       return Promise.reject(
         new TerriaError({
-          title: "Unable to load GetCapabilities",
-          message:
-            "Could not load the Web Map Service (WMS) GetCapabilities document because the catalog item does not have a `url`."
+          title: i18next.t("models.webMapServiceCatalogGroup.missingUrlTitle"),
+          message: i18next.t(
+            "models.webMapServiceCatalogGroup.missingUrlMessage"
+          )
         })
       );
     }

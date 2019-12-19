@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { computed, toJS } from "mobx";
 import { createTransformer } from "mobx-utils";
 import filterOutUndefined from "../Core/filterOutUndefined";
@@ -322,8 +323,8 @@ export default class MagdaReference extends UrlMixin(
     if (ModelClass === undefined) {
       throw new TerriaError({
         sender: this,
-        title: "Unknown type",
-        message: `Could not create unknown model type ${type}.`
+        title: i18next.t("models.catalog.unsupportedTypeTitle"),
+        message: i18next.t("models.catalog.unsupportedTypeMessage", { type })
       });
     }
 
@@ -522,10 +523,10 @@ export default class MagdaReference extends UrlMixin(
       if (newMember === undefined) {
         throw new TerriaError({
           sender: this,
-          title: "Unknown type",
-          message: `Could not create unknown model type ${
-            format.definition.type
-          }.`
+          title: i18next.t("models.catalog.unsupportedTypeTitle"),
+          message: i18next.t("models.catalog.unsupportedTypeMessage", {
+            type: format.definition.type
+          })
         });
       }
       result = newMember;
@@ -678,8 +679,8 @@ export default class MagdaReference extends UrlMixin(
       return Promise.reject(
         new TerriaError({
           sender: this,
-          title: "Cannot load Magda record",
-          message: "The Magda URL or the record ID is unknown."
+          title: i18next.t("models.magda.idsNotSpecifiedTitle"),
+          message: i18next.t("models.magda.idsNotSpecifiedMessage")
         })
       );
     }

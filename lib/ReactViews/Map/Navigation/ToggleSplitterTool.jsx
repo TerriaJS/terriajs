@@ -6,6 +6,7 @@ import { observer } from "mobx-react";
 
 import Icon from "../../Icon";
 import Styles from "./toggle_splitter_tool.scss";
+import { withTranslation } from "react-i18next";
 import { runInAction } from "mobx";
 
 const ToggleSplitterTool = observer(
@@ -13,7 +14,8 @@ const ToggleSplitterTool = observer(
     displayName: "ToggleSplitterTool",
 
     propTypes: {
-      terria: PropTypes.object
+      terria: PropTypes.object,
+      t: PropTypes.func.isRequired
     },
 
     handleClick() {
@@ -22,6 +24,7 @@ const ToggleSplitterTool = observer(
     },
 
     render() {
+      const { t } = this.props;
       if (!this.props.terria.currentViewer.canShowSplitter) {
         return null;
       }
@@ -30,7 +33,7 @@ const ToggleSplitterTool = observer(
           <button
             type="button"
             className={Styles.btn}
-            title="Enable side-by-side comparison between two different sets of data"
+            title={t("splitterTool.toggleSplitterTool")}
             onClick={this.handleClick}
           >
             <Icon
@@ -47,4 +50,4 @@ const ToggleSplitterTool = observer(
   })
 );
 
-export default ToggleSplitterTool;
+export default withTranslation()(ToggleSplitterTool);

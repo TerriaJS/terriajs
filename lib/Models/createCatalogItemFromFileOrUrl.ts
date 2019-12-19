@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { runInAction } from "mobx";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
@@ -88,12 +89,12 @@ function tryConversionService(
     // Don't allow conversion service. Duplicated in OgrCatalogItem.js
     terria.error.raiseEvent(
       new TerriaError({
-        title: "Unsupported file type",
-        message:
-          "This file format is not supported by " +
-          terria.appName +
-          ". Supported file formats include: " +
-          '<ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in <a href="https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au">csv-geo-au format</a>)</li></ul>'
+        title: i18next.t("models.catalog.unsupportedFileTypeTitle"),
+        message: i18next.t("models.catalog.unsupportedFileTypeMessage", {
+          appName: terria.appName,
+          link:
+            '<a href="https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au">csv-geo-au format</a>'
+        })
       })
     );
     return undefined;
@@ -104,14 +105,14 @@ function tryConversionService(
   ) {
     terria.error.raiseEvent(
       new TerriaError({
-        title: "Unsupported file type",
-        message:
-          "This file format is not supported by " +
-          terria.appName +
-          ". Directly supported file formats include: " +
-          '<ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in <a href="https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au">csv-geo-au format</a>)</li></ul>' +
-          "File formats supported through the online conversion service include: " +
-          '<ul><li>Shapefile (.zip)</li><li>MapInfo TAB (.zip)</li><li>Possibly other <a href="http://www.gdal.org/ogr_formats.html">OGR Vector Formats</a></li></ul>'
+        title: i18next.t("models.catalog.unsupportedFileTypeTitle"),
+        message: i18next.t("models.catalog.unsupportedFileTypeMessageII", {
+          appName: terria.appName,
+          link:
+            '<a href="https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au">csv-geo-au format</a>',
+          linkII:
+            '<a href="http://www.gdal.org/ogr_formats.html">OGR Vector Formats</a>'
+        })
       })
     );
     return undefined;
@@ -119,13 +120,9 @@ function tryConversionService(
   return getConfirmation(
     viewState,
     confirmConversion,
-    "This file is not directly supported by " +
-      terria.appName +
-      ".\n\n" +
-      "Do you want to try uploading it to the " +
-      terria.appName +
-      " conversion service? This may work for " +
-      "small, zipped Esri Shapefiles or MapInfo TAB files."
+    i18next.t("models.catalog.getConfirmationMessage", {
+      appName: terria.appName
+    })
   ).then(confirmed => {
     return undefined;
     // TODO
@@ -148,9 +145,9 @@ function getConfirmation(
   return new Promise(resolve => {
     runInAction(() => {
       viewState.notifications.push({
-        confirmText: "Upload",
-        denyText: "Cancel",
-        title: "Use conversion service?",
+        confirmText: i18next.t("models.catalog.upload"),
+        denyText: i18next.t("models.catalog.cancel"),
+        title: i18next.t("models.catalog.useConversion"),
         message: message,
         confirmAction: function() {
           resolve(true);

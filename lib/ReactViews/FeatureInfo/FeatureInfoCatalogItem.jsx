@@ -6,6 +6,7 @@ import React from "react";
 import createReactClass from "create-react-class";
 
 import PropTypes from "prop-types";
+import { withTranslation } from "react-i18next";
 
 import Styles from "./feature-info-catalog-item.scss";
 import { observer } from "mobx-react";
@@ -22,10 +23,12 @@ const FeatureInfoCatalogItem = observer(
       terria: PropTypes.object.isRequired,
       viewState: PropTypes.object.isRequired,
       onToggleOpen: PropTypes.func.isRequired,
-      printView: PropTypes.bool
+      printView: PropTypes.bool,
+      t: PropTypes.func.isRequired
     },
 
     render() {
+      const { t } = this.props;
       const features = this.props.features;
       const catalogItem = this.props.catalogItem;
       const terria = this.props.terria;
@@ -74,20 +77,29 @@ const FeatureInfoCatalogItem = observer(
             <If condition={hiddenNumber === 1}>
               <li className={Styles.messageItem}>
                 <strong>
-                  More than {maximumShownFeatureInfos} {catalogItem.name}{" "}
-                  features were found.
+                  {t("featureInfo.catalogItem.moreThanMax", {
+                    maximum: maximumShownFeatureInfos,
+                    catalogItemName: catalogItem.name
+                  })}
                 </strong>
                 <br />
-                The first {maximumShownFeatureInfos} are shown below.
+                {t("featureInfo.catalogItem.featureInfoShown", {
+                  maximum: maximumShownFeatureInfos
+                })}
               </li>
             </If>
             <If condition={hiddenNumber > 1}>
               <li className={Styles.messageItem}>
                 <strong>
-                  {totalFeaturesCount} {catalogItem.name} features were found.
+                  {t("featureInfo.catalogItem.featuresFound", {
+                    featCount: totalFeaturesCount,
+                    catalogItemName: catalogItem.name
+                  })}
                 </strong>
                 <br />
-                The first {maximumShownFeatureInfos} are shown below.
+                {t("featureInfo.catalogItem.featureInfoShown", {
+                  maximum: maximumShownFeatureInfos
+                })}
               </li>
             </If>
 
@@ -99,4 +111,4 @@ const FeatureInfoCatalogItem = observer(
   })
 );
 
-module.exports = FeatureInfoCatalogItem;
+module.exports = withTranslation()(FeatureInfoCatalogItem);

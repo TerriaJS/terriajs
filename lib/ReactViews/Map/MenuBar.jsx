@@ -10,6 +10,7 @@ import SharePanel from "./Panels/SharePanel/SharePanel";
 import ToolsPanel from "./Panels/ToolsPanel/ToolsPanel";
 import Icon from "../Icon";
 import Prompt from "../Generic/Prompt";
+import { withTranslation, Trans } from "react-i18next";
 import Styles from "./menu-bar.scss";
 import { runInAction } from "mobx";
 
@@ -22,7 +23,8 @@ const MenuBar = createReactClass({
     viewState: PropTypes.object.isRequired,
     allBaseMaps: PropTypes.array, // Not implemented yet
     animationDuration: PropTypes.number,
-    menuItems: PropTypes.arrayOf(PropTypes.element)
+    menuItems: PropTypes.arrayOf(PropTypes.element),
+    t: PropTypes.func.isRequired
   },
 
   getDefaultProps() {
@@ -56,6 +58,7 @@ const MenuBar = createReactClass({
     this.props.viewState.toggleFeaturePrompt("mapGuidesLocation", true, true);
   },
   render() {
+    const { t } = this.props;
     const satelliteGuidancePrompted = this.props.terria.getLocalProperty(
       "satelliteGuidancePrompted"
     );
@@ -67,15 +70,21 @@ const MenuBar = createReactClass({
 
     const promptHtml =
       this.props.terria.stories.length > 0 ? (
-        <div>You can view and create stories at any time by clicking here.</div>
-      ) : (
-        <div>
-          <small>INTRODUCING</small>
-          <h3>Data Stories</h3>
+        <Trans i18nKey="story.promptHtml1">
           <div>
-            Create and share interactive stories directly from your map.
+            You can view and create stories at any time by clicking here.
           </div>
-        </div>
+        </Trans>
+      ) : (
+        <Trans i18nKey="story.promptHtml2">
+          <div>
+            <small>INTRODUCING</small>
+            <h3>Data Stories</h3>
+            <div>
+              Create and share interactive stories directly from your map.
+            </div>
+          </div>
+        </Trans>
       );
     const delayTime =
       storyEnabled && this.props.terria.stories.length > 0 ? 1000 : 2000;
@@ -96,14 +105,14 @@ const MenuBar = createReactClass({
                 onClick={this.onStoryButtonClick}
               >
                 <Icon glyph={Icon.GLYPHS.story} />
-                <span>Story</span>
+                <span>{t("story.story")}</span>
               </button>
               {storyEnabled &&
                 this.props.viewState.featurePrompts.indexOf("story") >= 0 && (
                   <Prompt
                     content={promptHtml}
                     displayDelay={delayTime}
-                    dismissText={"Got it, thanks!"}
+                    dismissText={t("story.dismissText")}
                     dismissAction={this.dismissAction}
                   />
                 )}
@@ -126,18 +135,21 @@ const MenuBar = createReactClass({
               terria={this.props.terria}
               viewState={this.props.viewState}
             />
-            {satelliteGuidancePrompted &&
+            {this.props.terria.configParameters.showFeaturePrompts &&
+              satelliteGuidancePrompted &&
               !mapGuidesLocationPrompted &&
               !this.props.viewState.showSatelliteGuidance && (
                 <Prompt
                   content={
                     <div>
-                      You can access map guides at any time by looking in the{" "}
-                      <strong>help menu</strong>.
+                      <Trans i18nKey="satelliteGuidance.menuTitle">
+                        You can access map guides at any time by looking in the{" "}
+                        <strong>help menu</strong>.
+                      </Trans>
                     </div>
                   }
                   displayDelay={1000}
-                  dismissText={"Got it, thanks!"}
+                  dismissText={t("satelliteGuidance.dismissText")}
                   dismissAction={this.dismissSatelliteGuidanceAction}
                 />
               )}
@@ -163,4 +175,4 @@ const MenuBar = createReactClass({
   }
 });
 
-export default MenuBar;
+export default withTranslation()(MenuBar);

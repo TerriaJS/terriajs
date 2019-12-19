@@ -7,6 +7,7 @@ import openGroup from "../../Models/openGroup";
 import removeUserAddedData from "../../Models/removeUserAddedData";
 import CatalogGroup from "./CatalogGroup";
 import DataCatalogMember from "./DataCatalogMember";
+import { withTranslation } from "react-i18next";
 
 const DataCatalogGroup = observer(
   createReactClass({
@@ -22,6 +23,7 @@ const DataCatalogGroup = observer(
       onActionButtonClicked: PropTypes.func,
       removable: PropTypes.bool,
       terria: PropTypes.object,
+      t: PropTypes.func.isRequired,
       ancestors: PropTypes.array,
       isTopLevel: PropTypes.bool
     },
@@ -91,7 +93,7 @@ const DataCatalogGroup = observer(
 
     render() {
       const group = this.props.group;
-
+      const { t } = this.props;
       return (
         <CatalogGroup
           text={this.getNameOrPrettyUrl()}
@@ -101,7 +103,7 @@ const DataCatalogGroup = observer(
           topLevel={this.props.isTopLevel}
           open={this.isOpen()}
           loading={group.isLoading || group.isLoadingMembers}
-          emptyMessage="This group is empty"
+          emptyMessage={t("dataCatalog.groupEmpty")}
           onClick={this.clickGroup}
           removable={this.props.removable}
           removeUserAddedData={removeUserAddedData.bind(
@@ -132,4 +134,4 @@ const DataCatalogGroup = observer(
   })
 );
 
-module.exports = DataCatalogGroup;
+module.exports = withTranslation()(DataCatalogGroup);

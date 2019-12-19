@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { observable } from "mobx";
 import { USER_ADDED_CATEGORY_NAME } from "../Core/addedByUser";
 import isDefined from "../Core/isDefined";
@@ -25,10 +26,13 @@ export default class Catalog {
     }
     group = new CatalogGroup(USER_ADDED_CATEGORY_NAME, this.terria);
     group.setTrait(CommonStrata.definition, "name", USER_ADDED_CATEGORY_NAME);
+    const userAddedGroupDescription = i18next.t(
+      "models.catalog.userAddedDataGroup"
+    );
     group.setTrait(
       CommonStrata.definition,
       "description",
-      "The group for data that was added by the user via the Add Data panel."
+      i18next.t("models.catalog.userAddedDataGroup")
     );
     this.terria.addModel(group);
     this.group.add(CommonStrata.definition, group);

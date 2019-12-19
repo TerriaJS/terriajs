@@ -414,7 +414,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
 
         return {
           alpha: this.opacity,
-          imageryProvider: <any>new MapboxVectorTileImageryProvider({
+          imageryProvider: new MapboxVectorTileImageryProvider({
             url: regionType.server,
             layerName: regionType.layerName,
             styleFunc: function(feature: any) {

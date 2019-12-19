@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { computed, runInAction, observable, toJS } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -90,28 +91,16 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
     const createLoadError = () =>
       new TerriaError({
         sender: this,
-        title: "Could not load GeoJSON",
-        message:
-          `An error occurred while retrieving JSON data from the provided link.` +
-          `<p>If you entered the link manually, please verify that the link is correct.</p>` +
-          `<p>This error may also indicate that the server does not support ` +
-          `<a href="http://enable-cors.org/" target="_blank">CORS</a>. If this is your server, ` +
-          `verify that CORS is enabled and enable it if it is not.  If you do not control the ` +
-          `server, please contact the administrator of the server and ask them to enable CORS. Or, ` +
-          `contact the ${this.terria.appName} team by emailing ` +
-          `<a href="mailto:${this.terria.supportEmail}">${
-            this.terria.supportEmail
-          }</a> ` +
-          `and ask us to add this server to the list of non-CORS-supporting servers that may be ` +
-          `proxied by ${
-            this.terria.appName
-          } itself.</p><p>If you did not enter this link manually, ` +
-          `this error may indicate that the data source you're trying to add is temporarily unavailable ` +
-          `or there is a problem with your internet connection.  Try adding the data source again, and if ` +
-          `the problem persists, please report it by sending an email to ` +
-          `<a href="mailto:${this.terria.supportEmail}">${
-            this.terria.supportEmail
-          }</a>.</p>`
+        title: i18next.t("models.geoJson.errorLoadingTitle"),
+        message: i18next.t("models.geoJson.errorParsingMessage", {
+          appName: this.terria.appName,
+          email:
+            '<a href="mailto:' +
+            this.terria.supportEmail +
+            '">' +
+            this.terria.supportEmail +
+            "</a>."
+        })
       });
 
     return new Promise<JsonValue | undefined>((resolve, reject) => {
@@ -126,11 +115,22 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
         if (zipFileRegex.test(this.url)) {
           if (typeof FileReader === "undefined") {
             throw new TerriaError({
-              sender: this,
-              title: "Unsupported web browser",
-              message: `Sorry, your web browser does not support the File API, which ${
-                this.terria.appName
-              } requires in order to load this dataset. Please upgrade your web browser.  For the best experience, we recommend the latest versions of <a href="http://www.google.com/chrome" target="_blank">Google Chrome</a>, or <a href="http://www.mozilla.org/firefox" target="_blank">Mozilla Firefox</a>, or <a href="http://www.microsoft.com/ie" target="_blank">Internet Explorer 11</a>.`
+              title: i18next.t("models.userData.fileApiNotSupportedTitle"),
+              message: i18next.t("models.userData.fileApiNotSupportedTitle", {
+                appName: this.terria.appName,
+                internetExplorer:
+                  '<a href="http://www.microsoft.com/ie" target="_blank">' +
+                  i18next.t("models.userData.internetExplorer") +
+                  "</a>",
+                chrome:
+                  '<a href="http://www.google.com/chrome" target="_blank">' +
+                  i18next.t("models.userData.chrome") +
+                  "</a>",
+                firefox:
+                  '<a href="http://www.mozilla.org/firefox" target="_blank">' +
+                  i18next.t("models.userData.firefox") +
+                  "</a>"
+              })
             });
           }
           resolve(loadZipFile(proxyCatalogItemUrl(this, this.url, "1d")));
@@ -140,10 +140,8 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
       } else {
         throw new TerriaError({
           sender: this,
-          title: "No GeoJSON available",
-          message:
-            `The GeoJSON catalog item cannot be loaded because it was not configured ` +
-            `with a \`url\`, \`geoJsonData\`, or \`geoJsonString\` property.`
+          title: i18next.t("models.geoJson.unableToLoadItemTitle"),
+          message: i18next.t("models.geoJson.unableToLoadItemMessage")
         });
       }
     })

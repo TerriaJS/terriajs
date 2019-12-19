@@ -7,6 +7,7 @@ import { observer } from "mobx-react";
 import createReactClass from "create-react-class";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Timer from "../../Generic/Timer/Timer";
+import { withTranslation } from "react-i18next";
 
 import Styles from "./timer-section.scss";
 
@@ -15,7 +16,8 @@ const TimerSection = observer(
     displayName: "TimerSection",
 
     propTypes: {
-      item: PropTypes.object.isRequired
+      item: PropTypes.object.isRequired,
+      t: PropTypes.func.isRequired
     },
 
     isEnabled() {
@@ -110,21 +112,26 @@ const TimerSection = observer(
     },
 
     render() {
+      const { t } = this.props;
       return (
         <>
           <If condition={this.isEnabled()}>
             <div className={Styles.section}>
               <div className={Styles.timerContainer}>
                 <Timer
-                  tooltipText={`Next data update at ${
-                    this.props.item.nextScheduledUpdateTime
-                  }`}
+                  tooltipText={t("timer.nextScheduledUpdateTime", {
+                    scheduledUpdateTime: this.props.item.nextScheduledUpdateTime
+                  })}
                   radius={10}
                   start={this.getTimerStartTime().getTime()}
                   stop={this.props.item.nextScheduledUpdateTime.getTime()}
                 />
               </div>
-              <span>Next data update in {this.getCountdownString()}</span>
+              <span>
+                {t("timer.nextScheduledUpdateCountdown", {
+                  timeCountdown: this.getCountdownString()
+                })}
+              </span>
             </div>
           </If>
         </>
@@ -133,4 +140,4 @@ const TimerSection = observer(
   })
 );
 
-module.exports = TimerSection;
+module.exports = withTranslation()(TimerSection);

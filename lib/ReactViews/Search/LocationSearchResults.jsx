@@ -2,6 +2,7 @@ import { observer } from "mobx-react";
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
+import { withTranslation } from "react-i18next";
 import SearchHeader from "./SearchHeader";
 import SearchResult from "./SearchResult";
 import classNames from "classnames";
@@ -18,7 +19,8 @@ const LocationSearchResults = observer(
       terria: PropTypes.object.isRequired,
       search: PropTypes.object.isRequired,
       onLocationClick: PropTypes.func.isRequired,
-      theme: PropTypes.string
+      theme: PropTypes.string,
+      t: PropTypes.func.isRequired
     },
 
     getInitialState() {
@@ -47,10 +49,15 @@ const LocationSearchResults = observer(
     },
 
     renderResultsFooter() {
+      const { t } = this.props;
       if (this.state.isExpanded) {
-        return `View less ${this.props.search.searchProvider.name} results`;
+        return t("search.viewLess", {
+          name: this.props.search.searchProvider.name
+        });
       }
-      return `View more ${this.props.search.searchProvider.name} results`;
+      return t("search.viewMore", {
+        name: this.props.search.searchProvider.name
+      });
     },
 
     render() {
@@ -112,4 +119,4 @@ const LocationSearchResults = observer(
   })
 );
 
-module.exports = LocationSearchResults;
+module.exports = withTranslation()(LocationSearchResults);

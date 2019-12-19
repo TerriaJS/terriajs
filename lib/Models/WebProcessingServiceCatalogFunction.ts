@@ -32,6 +32,7 @@ import RegionTypeParameter from "./RegionTypeParameter";
 import ResultPendingCatalogItem from "./ResultPendingCatalogItem";
 import StringParameter from "./StringParameter";
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
+import i18next from "i18next";
 
 const sprintf = require("terriajs-cesium/Source/ThirdParty/sprintf").default;
 const executeWpsTemplate = require("./ExecuteWpsTemplate.xml");
@@ -157,9 +158,12 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
     if (!isDefined(json.ProcessDescription)) {
       throw new TerriaError({
         sender: this,
-        title: "Process does not have a process description",
-        message:
-          "The WPS DescribeProcess for this process does not include a ProcessDescription."
+        title: i18next.t(
+          "models.webProcessingService.processDescriptionErrorTitle"
+        ),
+        message: i18next.t(
+          "models.webProcessingService.processDescriptionErrorMessage"
+        )
       });
     }
 
@@ -201,8 +205,10 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
     if (!isDefined(dataInputs) || !isDefined(dataInputs.Input)) {
       throw new TerriaError({
         sender: this,
-        title: "Process does not have any inputs",
-        message: "This WPS process does not specify any inputs."
+        title: i18next.t("models.webProcessingService.processInputErrorTitle"),
+        message: i18next.t(
+          "models.webProcessingService.processInputErrorMessage"
+        )
       });
     }
 
@@ -300,9 +306,21 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
     if (!isDefined(status)) {
       throw new TerriaError({
         sender: this,
-        title: "Invalid response from WPS server",
-        message:
-          "The response from the WPS server does not include a Status element."
+        title: i18next.t(
+          "models.webProcessingService.invalidResponseErrorTitle"
+        ),
+        message: i18next.t(
+          "models.webProcessingService.invalidResponseErrorMessage",
+          {
+            name: this.name,
+            email:
+              '<a href="mailto:' +
+              this.terria.supportEmail +
+              '">' +
+              this.terria.supportEmail +
+              "</a>."
+          }
+        )
       });
     }
 
@@ -728,12 +746,17 @@ function throwInvalidWpsServerError(
   endpoint: string
 ) {
   throw new TerriaError({
-    title: "Invalid WPS Server",
-    message: `An error occurred while invoking ${endpoint} on the WPS server for process name ${
-      wps.name
-    }. The server's response does not appear to be a valid ${endpoint} document. <p>This error may also indicate that the processing server you specified is temporarily unavailable or there is a problem with your internet connection.  Try opening the processing server again, and if the problem persists, please report it by sending an email to <a href=\"mailto:${
-      wps.terria.supportEmail
-    }">${wps.terria.supportEmail}</a>.</p>`
+    title: i18next.t("models.webProcessingService.invalidWPSServerTitle"),
+    message: i18next.t("models.webProcessingService.invalidWPSServerMessage", {
+      name: wps.name,
+      email:
+        '<a href="mailto:' +
+        wps.terria.supportEmail +
+        '">' +
+        wps.terria.supportEmail +
+        "</a>.",
+      endpoint
+    })
   });
 }
 

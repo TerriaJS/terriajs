@@ -14,6 +14,7 @@ import { observer } from "mobx-react";
 import { action } from "mobx";
 import measureElement from "../measureElement";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
+import { withTranslation } from "react-i18next";
 import addToWorkbench from "../../Models/addToWorkbench";
 import { runInAction } from "mobx";
 import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
@@ -37,7 +38,8 @@ class MappablePreview extends React.Component {
     previewed: PropTypes.object.isRequired,
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
-    widthFromMeasureElementHOC: PropTypes.number
+    widthFromMeasureElementHOC: PropTypes.number,
+    t: PropTypes.func.isRequired
   };
 
   @action.bound
@@ -72,6 +74,7 @@ class MappablePreview extends React.Component {
   }
 
   render() {
+    const { t } = this.props;
     const catalogItem = this.props.previewed;
     return (
       <div className={Styles.root}>
@@ -91,8 +94,8 @@ class MappablePreview extends React.Component {
           className={Styles.btnAdd}
         >
           {this.props.terria.workbench.contains(catalogItem)
-            ? "Remove from the map"
-            : "Add to the map"}
+            ? t("preview.removeFromMap")
+            : t("preview.addToMap")}
         </button>
         <div className={Styles.previewedInfo}>
           <div
@@ -124,4 +127,4 @@ class MappablePreview extends React.Component {
   }
 }
 
-export default measureElement(MappablePreview);
+export default withTranslation()(measureElement(MappablePreview));

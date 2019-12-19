@@ -1,9 +1,9 @@
 "use strict";
 
-const WindingOrder = require("terriajs-cesium/Source/Core/WindingOrder")
-  .default;
-const DeveloperError = require("terriajs-cesium/Source/Core/DeveloperError")
-  .default;
+import i18next from "i18next";
+import WindingOrder from "terriajs-cesium/Source/Core/WindingOrder";
+import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import Point from "@mapbox/point-geometry";
 
 /**
  * Determine the winding order of a polygon ring.
@@ -11,7 +11,7 @@ const DeveloperError = require("terriajs-cesium/Source/Core/DeveloperError")
  * @param  {Point[]} ring The polygon ring as an array of '@mapbox/point-geometry' Points (or any points conforming to {x: number, y: number}).
  * @return {WindingOrder} The winding order of the polygon ring.
  */
-function computeRingWindingOrder(ring) {
+export default function computeRingWindingOrder(ring: Point[]): WindingOrder {
   const n = ring.length;
   let twiceArea =
     ring[n - 1].x * (ring[0].y - ring[n - 2].y) +
@@ -20,11 +20,9 @@ function computeRingWindingOrder(ring) {
     twiceArea += ring[i].x * (ring[i + 1].y - ring[i - 1].y);
   }
   if (isNaN(twiceArea)) {
-    throw new DeveloperError("Expected points of type {x:number, y:number}");
+    throw new DeveloperError(i18next.t("map.computeRingWindingOrder.devError"));
   }
   return twiceArea > 0.0
     ? WindingOrder.COUNTER_CLOCKWISE
     : WindingOrder.CLOCKWISE;
 }
-
-module.exports = computeRingWindingOrder;

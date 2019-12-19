@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { computed, isObservableArray, observable, runInAction } from "mobx";
 import isDefined from "../Core/isDefined";
 import loadXML from "../Core/loadXML";
@@ -171,7 +172,9 @@ export default class WebProcessingServiceCatalogItem
   extends CatalogMemberMixin(CreateModel(WebProcessingServiceCatalogItemTraits))
   implements Mappable {
   static readonly type = "wps-result";
-  readonly typeName = "Web Processing Service Result";
+  get typeName() {
+    return i18next.t("models.webProcessingService.wpsResult");
+  }
 
   readonly showsInfo = true;
   readonly isMappable = true;

@@ -1,5 +1,4 @@
 import React from "react";
-
 import createReactClass from "create-react-class";
 import { observer } from "mobx-react";
 
@@ -8,6 +7,7 @@ import PropTypes from "prop-types";
 import { addMarker } from "../../Models/LocationMarkerUtils";
 import LocationSearchResults from "../Search/LocationSearchResults";
 import SearchResult from "../Search/SearchResult";
+import { withTranslation } from "react-i18next";
 import Styles from "./mobile-search.scss";
 
 // A Location item when doing Bing map searvh or Gazetter search
@@ -17,7 +17,8 @@ const MobileSearch = observer(
 
     propTypes: {
       viewState: PropTypes.object,
-      terria: PropTypes.object
+      terria: PropTypes.object,
+      t: PropTypes.func.isRequired
     },
 
     onLocationClick(result) {
@@ -52,6 +53,7 @@ const MobileSearch = observer(
     },
 
     renderSearchInCatalogLink(theme) {
+      const { t } = this.props;
       return (
         <If
           condition={
@@ -63,9 +65,10 @@ const MobileSearch = observer(
               <SearchResult
                 clickAction={this.searchInDataCatalog}
                 icon={null}
-                name={`Search for "${
-                  this.props.viewState.searchState.locationSearchText
-                }" in the Data Catalogue`}
+                name={t("search.search", {
+                  searchText: this.props.viewState.searchState
+                    .locationSearchText
+                })}
                 theme={theme}
               />
             </ul>
@@ -97,4 +100,4 @@ const MobileSearch = observer(
   })
 );
 
-module.exports = MobileSearch;
+module.exports = withTranslation()(MobileSearch);

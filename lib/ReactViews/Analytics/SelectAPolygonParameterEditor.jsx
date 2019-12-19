@@ -2,6 +2,7 @@ import createReactClass from "create-react-class";
 import { reaction, runInAction } from "mobx";
 import PropTypes from "prop-types";
 import React from "react";
+import { withTranslation } from "react-i18next";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -17,7 +18,8 @@ const SelectAPolygonParameterEditor = createReactClass({
   propTypes: {
     previewed: PropTypes.object,
     parameter: PropTypes.object,
-    viewState: PropTypes.object
+    viewState: PropTypes.object,
+    t: PropTypes.func.isRequired
   },
 
   setDisplayValue(e) {
@@ -33,6 +35,7 @@ const SelectAPolygonParameterEditor = createReactClass({
   },
 
   render() {
+    const { t } = this.props;
     return (
       <div>
         <input className={Styles.field} type="text" value={this.state.value} />
@@ -41,7 +44,7 @@ const SelectAPolygonParameterEditor = createReactClass({
           onClick={this.selectExistingPolygonOnMap}
           className={Styles.btnSelector}
         >
-          Select existing polygon
+          {t("analytics.selectExistingPolygon")}
         </button>
       </div>
     );
@@ -161,4 +164,4 @@ SelectAPolygonParameterEditor.getDisplayValue = function(value) {
     .join(", ");
 };
 
-module.exports = SelectAPolygonParameterEditor;
+module.exports = withTranslation()(SelectAPolygonParameterEditor);

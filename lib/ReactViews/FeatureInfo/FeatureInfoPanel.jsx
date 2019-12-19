@@ -10,6 +10,8 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import i18next from "i18next";
+import { withTranslation } from "react-i18next";
 import Icon from "../Icon";
 import {
   LOCATION_MARKER_DATA_SOURCE_NAME,
@@ -25,14 +27,15 @@ import classNames from "classnames";
 import { observer, disposeOnUnmount } from "mobx-react";
 import { action, reaction, runInAction } from "mobx";
 
-const FeatureInfoPanel = observer(
+export const FeatureInfoPanel = observer(
   createReactClass({
     displayName: "FeatureInfoPanel",
 
     propTypes: {
       terria: PropTypes.object.isRequired,
       viewState: PropTypes.object.isRequired,
-      printView: PropTypes.bool
+      printView: PropTypes.bool,
+      t: PropTypes.func.isRequired
     },
 
     ref: null,
@@ -47,6 +50,7 @@ const FeatureInfoPanel = observer(
     },
 
     componentDidMount() {
+      const { t } = this.props;
       const createFakeSelectedFeatureDuringPicking = true;
       const terria = this.props.terria;
       disposeOnUnmount(
@@ -59,7 +63,7 @@ const FeatureInfoPanel = observer(
             } else {
               if (createFakeSelectedFeatureDuringPicking) {
                 const fakeFeature = new Entity({
-                  id: "Pick Location"
+                  id: t("featureInfo.pickLocation")
                 });
                 fakeFeature.position = pickedFeatures.pickPosition;
                 terria.selectedFeature = fakeFeature;
@@ -157,24 +161,26 @@ const FeatureInfoPanel = observer(
     },
 
     getMessageForNoResults() {
+      const { t } = this.props;
       if (this.props.terria.workbench.items.length > 0) {
         // feature info shows up becuase data has been added for the first time
         if (this.props.viewState.firstTimeAddingData) {
           runInAction(() => {
             this.props.viewState.firstTimeAddingData = false;
           });
-          return "Click on the map to learn more about a location";
+          return t("featureInfo.clickMap");
         }
         // if clicking on somewhere that has no data
-        return "No data is available here - try another location.";
+        return t("featureInfo.noDataAvailable");
       } else {
-        return "Click 'Add Data' to add data to the map.";
+        return t("featureInfo.clickToAddData");
       }
     },
 
     addManualMarker(longitude, latitude) {
+      const { t } = this.props;
       addMarker(this.props.terria, {
-        name: "User Selection",
+        name: t("featureInfo.userSelection"),
         location: {
           latitude: latitude,
           longitude: longitude
@@ -253,6 +259,7 @@ const FeatureInfoPanel = observer(
     },
 
     render() {
+      const { t } = this.props;
       const terria = this.props.terria;
       const viewState = this.props.viewState;
 
@@ -333,7 +340,7 @@ const FeatureInfoPanel = observer(
                 <div
                   className={classNames("drag-handle", Styles.btnPanelHeading)}
                 >
-                  <span>Feature Information</span>
+                  <span>{t("featureInfo.panelHeading")}</span>
                   <button
                     type="button"
                     onClick={this.toggleCollapsed}
@@ -350,7 +357,7 @@ const FeatureInfoPanel = observer(
                   type="button"
                   onClick={this.close}
                   className={Styles.btnCloseFeature}
-                  title="Close data panel"
+                  title={t("featureInfo.btnCloseFeature")}
                 >
                   <Icon glyph={Icon.GLYPHS.close} />
                 </button>
@@ -399,7 +406,9 @@ const FeatureInfoPanel = observer(
                   )}
                   className={Styles.satelliteSuggestionBtn}
                 >
-                  Show {pair.catalogItem.name} at this location
+                  {t("featureInfo.satelliteSuggestionBtn", {
+                    catalogItemName: pair.catalogItem.name
+                  })}
                 </button>
               ))}
             </ul>
@@ -474,7 +483,7 @@ function determineCatalogItem(workbench, feature) {
 
     if (dataSource.name === LOCATION_MARKER_DATA_SOURCE_NAME) {
       return {
-        name: "Location Marker"
+        name: i18next.t("featureInfo.locationMarker")
       };
     }
 
@@ -514,4 +523,4 @@ function featureHasInfo(feature) {
   return defined(feature.properties) || defined(feature.description);
 }
 
-module.exports = FeatureInfoPanel;
+export default withTranslation()(FeatureInfoPanel);

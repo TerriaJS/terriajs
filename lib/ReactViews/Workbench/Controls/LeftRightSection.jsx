@@ -7,6 +7,7 @@ import React from "react";
 
 import defined from "terriajs-cesium/Source/Core/defined";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import { withTranslation } from "react-i18next";
 
 // import Icon from '../../Icon';
 import Styles from "./left-right-section.scss";
@@ -19,7 +20,8 @@ const LeftRightSection = observer(
     displayName: "LeftRightSection",
 
     propTypes: {
-      item: PropTypes.object.isRequired
+      item: PropTypes.object.isRequired,
+      t: PropTypes.func.isRequired
     },
 
     goLeft() {
@@ -55,6 +57,7 @@ const LeftRightSection = observer(
     render() {
       const item = this.props.item;
       const splitDirection = item.splitDirection;
+      const { t } = this.props;
       if (
         !item.supportsSplitting ||
         !defined(splitDirection) ||
@@ -70,9 +73,9 @@ const LeftRightSection = observer(
             className={classNames(Styles.goLeft, {
               [Styles.isActive]: splitDirection === ImagerySplitDirection.LEFT
             })}
-            title="Show on the left side"
+            title={t("splitterTool.workbench.goleftTitle")}
           >
-            Left
+            {t("splitterTool.workbench.goleft")}
           </button>
           <button
             type="button"
@@ -80,9 +83,9 @@ const LeftRightSection = observer(
             className={classNames(Styles.goBoth, {
               [Styles.isActive]: splitDirection === ImagerySplitDirection.NONE
             })}
-            title="Show on both sides"
+            title={t("splitterTool.workbench.bothTitle")}
           >
-            Both
+            {t("splitterTool.workbench.both")}
           </button>
           <button
             type="button"
@@ -90,9 +93,9 @@ const LeftRightSection = observer(
             className={classNames(Styles.goRight, {
               [Styles.isActive]: splitDirection === ImagerySplitDirection.RIGHT
             })}
-            title="Show on the right side"
+            title={t("splitterTool.workbench.gorightTitle")}
           >
-            Right
+            {t("splitterTool.workbench.goright")}
           </button>
         </div>
       );
@@ -100,4 +103,4 @@ const LeftRightSection = observer(
   })
 );
 
-module.exports = LeftRightSection;
+module.exports = withTranslation()(LeftRightSection);

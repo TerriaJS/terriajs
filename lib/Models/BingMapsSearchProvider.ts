@@ -11,6 +11,7 @@ import SearchProvider from "./SearchProvider";
 import SearchResult from "./SearchResult";
 import Terria from "./Terria";
 import SearchProviderResults from "./SearchProviderResults";
+import i18next from "i18next";
 
 interface BingMapsSearchProviderOptions {
   terria: Terria;
@@ -33,7 +34,7 @@ export default class BingMapsSearchProvider extends SearchProvider {
     super();
 
     this.terria = options.terria;
-    this.name = "Locations";
+    this.name = i18next.t("viewModels.searchLocations");
     this.url = defaultValue(options.url, "https://dev.virtualearth.net/");
     if (this.url.length > 0 && this.url[this.url.length - 1] !== "/") {
       this.url += "/";
@@ -114,15 +115,13 @@ export default class BingMapsSearchProvider extends SearchProvider {
         }
 
         if (result.resourceSets.length === 0) {
-          searchResults.message =
-            "Sorry, no locations match your search query.";
+          searchResults.message = i18next.t("viewModels.searchNoLocations");
           return;
         }
 
         var resourceSet = result.resourceSets[0];
         if (resourceSet.resources.length === 0) {
-          searchResults.message =
-            "Sorry, no locations match your search query.";
+          searchResults.message = i18next.t("viewModels.searchNoLocations");
           return;
         }
 
@@ -178,8 +177,7 @@ export default class BingMapsSearchProvider extends SearchProvider {
         });
 
         if (searchResults.results.length === 0) {
-          searchResults.message =
-            "Sorry, no locations match your search query.";
+          searchResults.message = i18next.t("viewModels.searchNoLocations");
         }
       })
       .catch(() => {
@@ -188,8 +186,7 @@ export default class BingMapsSearchProvider extends SearchProvider {
           return;
         }
 
-        searchResults.message =
-          "An error occurred while searching.  Please check your internet connection or try again later.";
+        searchResults.message = i18next.t("viewModels.searchErrorOccurred");
       });
   }
 }

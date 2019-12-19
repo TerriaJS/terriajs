@@ -29,10 +29,18 @@ import { Small, Medium } from "../Generic/Responsive";
 import classNames from "classnames";
 import "inobounce";
 
+import { withTranslation } from "react-i18next";
+
 import Styles from "./standard-user-interface.scss";
 import { observer } from "mobx-react";
 import { action, runInAction } from "mobx";
 
+export const showStoryPrompt = (viewState, terria) => {
+  terria.configParameters.showFeaturePrompts &&
+    terria.configParameters.storyEnabled &&
+    terria.stories.length === 0 &&
+    viewState.toggleFeaturePrompt("story", true);
+};
 const animationDuration = 250;
 /** blah */
 const StandardUserInterface = observer(
@@ -54,7 +62,8 @@ const StandardUserInterface = observer(
       children: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.element),
         PropTypes.element
-      ])
+      ]),
+      t: PropTypes.func.isRequired
     },
 
     getDefaultProps() {
@@ -63,6 +72,7 @@ const StandardUserInterface = observer(
 
     /* eslint-disable-next-line camelcase */
     UNSAFE_componentWillMount() {
+      const { t } = this.props;
       const that = this;
       // only need to know on initial load
       this.dragOverListener = e => {
@@ -95,10 +105,10 @@ const StandardUserInterface = observer(
         !this.props.viewState.storyShown
       ) {
         this.props.viewState.notifications.push({
-          title: "This map contains a story",
-          message: "Would you like to view it now?",
-          confirmText: "Yes",
-          denyText: "Maybe later",
+          title: t("sui.notifications.title"),
+          message: t("sui.notifications.message"),
+          confirmText: t("sui.notifications.confirmText"),
+          denyText: t("sui.notifications.denyText"),
           confirmAction: action(() => {
             this.props.viewState.storyShown = true;
           }),
@@ -113,9 +123,7 @@ const StandardUserInterface = observer(
 
     componentDidMount() {
       this._wrapper.addEventListener("dragover", this.dragOverListener, false);
-      this.props.terria.configParameters.storyEnabled &&
-        this.props.terria.stories.length === 0 &&
-        this.props.viewState.toggleFeaturePrompt("story", true);
+      showStoryPrompt(this.props.viewState, this.props.terria);
     },
 
     componentWillUnmount() {
@@ -138,6 +146,8 @@ const StandardUserInterface = observer(
     },
 
     render() {
+      const { t } = this.props;
+
       const customElements = processCustomElements(
         this.props.viewState.useSmallScreenInterface,
         this.props.children
@@ -214,7 +224,7 @@ const StandardUserInterface = observer(
                       terria={this.props.terria}
                       viewState={this.props.viewState}
                       minified={false}
-                      btnText="Show workbench"
+                      btnText={t("sui.showWorkbench")}
                       animationDuration={animationDuration}
                     />
                   </div>
@@ -338,4 +348,6 @@ const StandardUserInterface = observer(
   })
 );
 
-module.exports = StandardUserInterface;
+export const StandardUserInterfaceWithoutTranslation = StandardUserInterface;
+
+export default withTranslation()(StandardUserInterface);

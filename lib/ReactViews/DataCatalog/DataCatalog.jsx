@@ -4,6 +4,7 @@ import { observer } from "mobx-react";
 import createReactClass from "create-react-class";
 
 import PropTypes from "prop-types";
+import { withTranslation } from "react-i18next";
 
 import defined from "terriajs-cesium/Source/Core/defined";
 
@@ -13,7 +14,7 @@ import SearchHeader from "../Search/SearchHeader";
 import Styles from "./data-catalog.scss";
 
 // Displays the data catalog.
-const DataCatalog = observer(
+export const DataCatalog = observer(
   createReactClass({
     displayName: "DataCatalog",
 
@@ -23,7 +24,8 @@ const DataCatalog = observer(
       items: PropTypes.array,
       overrideState: PropTypes.string,
       onActionButtonClicked: PropTypes.func,
-      removable: PropTypes.bool
+      removable: PropTypes.bool,
+      t: PropTypes.func.isRequired
     },
 
     render() {
@@ -35,11 +37,11 @@ const DataCatalog = observer(
           )
         : this.props.items;
       const items = (unfilteredItems || []).filter(defined);
-
+      const { t } = this.props;
       return (
         <ul className={Styles.dataCatalog}>
           <If condition={isSearching}>
-            <label className={Styles.label}>Search results</label>
+            <label className={Styles.label}>{t("search.resultsLabel")}</label>
             <SearchHeader
               searchProvider={searchState.catalogSearchProvider}
               isWaitingForSearchToStart={
@@ -70,4 +72,4 @@ const DataCatalog = observer(
   })
 );
 
-module.exports = DataCatalog;
+export default withTranslation()(DataCatalog);

@@ -1,6 +1,7 @@
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
+import { withTranslation, Trans } from "react-i18next";
 import Icon from "../../../Icon.jsx";
 import createCatalogItemFromFileOrUrl from "../../../../Models/createCatalogItemFromFileOrUrl";
 import upsertModelFromJson from "../../../../Models/upsertModelFromJson";
@@ -31,7 +32,8 @@ const AddData = createReactClass({
     terria: PropTypes.object,
     viewState: PropTypes.object,
     resetTab: PropTypes.func,
-    activeTab: PropTypes.string
+    activeTab: PropTypes.string,
+    t: PropTypes.func.isRequired
   },
 
   getInitialState() {
@@ -124,6 +126,7 @@ const AddData = createReactClass({
   },
 
   renderPanels() {
+    const { t } = this.props;
     const dropdownTheme = {
       dropdown: Styles.dropdown,
       list: Styles.dropdownList,
@@ -144,10 +147,12 @@ const AddData = createReactClass({
     return (
       <div className={Styles.tabPanels}>
         <If condition={this.props.activeTab === "local"}>
-          <div className={Styles.tabHeading}>Add local file</div>
+          <div className={Styles.tabHeading}>{t("addData.localAdd")}</div>
           <section className={Styles.tabPanel}>
             <label className={Styles.label}>
-              <strong>Step 1:</strong> Select file type (optional)
+              <Trans i18nKey="addData.localFileType">
+                <strong>Step 1:</strong> Select file type (optional)
+              </Trans>
             </label>
             <Dropdown
               options={localDataType}
@@ -157,7 +162,9 @@ const AddData = createReactClass({
               theme={dropdownTheme}
             />
             <label className={Styles.label}>
-              <strong>Step 2:</strong> Select file
+              <Trans i18nKey="addData.localFile">
+                <strong>Step 2:</strong> Select file
+              </Trans>
             </label>
             <FileInput
               accept={dataTypes.join(",")}
@@ -167,10 +174,12 @@ const AddData = createReactClass({
           </section>
         </If>
         <If condition={this.props.activeTab === "web"}>
-          <div className={Styles.tabHeading}>Add web data</div>
+          <div className={Styles.tabHeading}>{t("addData.webAdd")}</div>
           <section className={Styles.tabPanel}>
             <label className={Styles.label}>
-              <strong>Step 1:</strong> Select file type (optional)
+              <Trans i18nKey="addData.webFileType">
+                <strong>Step 1:</strong> Select file type (optional)
+              </Trans>
             </label>
             <Dropdown
               options={remoteDataType}
@@ -180,8 +189,10 @@ const AddData = createReactClass({
               theme={dropdownTheme}
             />
             <label className={Styles.label}>
-              <strong>Step 2:</strong> Enter the URL of the data file or web
-              service
+              <Trans i18nKey="addData.webFile">
+                <strong>Step 2:</strong> Enter the URL of the data file or web
+                service
+              </Trans>
             </label>
             <form className={Styles.urlInput}>
               <input
@@ -196,7 +207,7 @@ const AddData = createReactClass({
                 onClick={this.handleUrl}
                 className={Styles.urlInputBtn}
               >
-                Add
+                {t("addData.urlInputBtn")}
               </button>
               {this.state.isLoading && <Loader />}
             </form>
@@ -224,4 +235,4 @@ function loadFile(viewModel) {
   );
 }
 
-module.exports = AddData;
+module.exports = withTranslation()(AddData);

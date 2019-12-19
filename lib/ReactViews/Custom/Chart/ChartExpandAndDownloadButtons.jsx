@@ -2,6 +2,7 @@ import classNames from "classnames";
 import { runInAction } from "mobx";
 import PropTypes from "prop-types";
 import React from "react";
+import { withTranslation } from "react-i18next";
 import clone from "terriajs-cesium/Source/Core/clone";
 import raiseErrorOnRejectedPromise from "../../../Models/raiseErrorOnRejectedPromise";
 import Dropdown from "../../Generic/Dropdown";
@@ -9,14 +10,15 @@ import Styles from "./chart-expand-and-download-buttons.scss";
 import Icon from "../../Icon";
 import defined from "terriajs-cesium/Source/Core/defined";
 
-export default class ChartExpandAndDownloadButtons extends React.Component {
+class ChartExpandAndDownloadButtons extends React.Component {
   static propTypes = {
     sourceItems: PropTypes.array.isRequired,
     sourceNames: PropTypes.array,
     canDownload: PropTypes.bool,
     downloads: PropTypes.array,
     downloadNames: PropTypes.array,
-    raiseToTitle: PropTypes.bool
+    raiseToTitle: PropTypes.bool,
+    t: PropTypes.func.isRequired
   };
 
   expandButton = () => {
@@ -40,7 +42,7 @@ export default class ChartExpandAndDownloadButtons extends React.Component {
     });
     const downloadNames = this.props.downloadNames || this.props.sourceNames;
     let downloadButton;
-
+    const { t } = this.props;
     if (this.props.sourceNames) {
       const dropdownTheme = {
         dropdown: Styles.dropdown,
@@ -69,7 +71,7 @@ export default class ChartExpandAndDownloadButtons extends React.Component {
             options={nameAndHrefObjects}
             theme={downloadDropdownTheme}
           >
-            Download&nbsp;▾
+            {t("chart.download") + "&nbsp;▾"}
           </Dropdown>
         );
       }
@@ -86,7 +88,7 @@ export default class ChartExpandAndDownloadButtons extends React.Component {
               options={sourceNameObjects}
               theme={dropdownTheme}
             >
-              Expand&nbsp;▾
+              {t("chart.expand") + "&nbsp;▾"}
             </Dropdown>
             {downloadButton}
           </div>
@@ -114,7 +116,7 @@ export default class ChartExpandAndDownloadButtons extends React.Component {
           className={Styles.btnChartExpand}
           onClick={this.expandButton}
         >
-          Expand
+          {t("chart.expand")}
         </button>
         {downloadButton}
       </div>
@@ -146,3 +148,4 @@ function expandItem(props, sourceIndex) {
     raiseErrorOnRejectedPromise(terria, sourceItem.loadChartItems())
   );
 }
+export default withTranslation()(ChartExpandAndDownloadButtons);

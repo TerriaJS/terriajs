@@ -23,6 +23,7 @@ import Feature from "./Feature";
 import Mappable from "./Mappable";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import raiseErrorToUser from "./raiseErrorToUser";
+import i18next from "i18next";
 
 class ObservableCesium3DTileset extends Cesium3DTileset {
   _catalogItem?: Cesium3DTilesCatalogItem;
@@ -50,7 +51,9 @@ export default class Cesium3DTilesCatalogItem
   implements Mappable {
   static readonly type = "3d-tiles";
   readonly type = Cesium3DTilesCatalogItem.type;
-  readonly typeName = "Cesium 3D Tiles";
+  get typeName() {
+    return i18next.t("models.cesiumTerrain.name");
+  }
 
   readonly canZoomTo = true;
   readonly showsInfo = true;

@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import markerIcon from "./markerIcon";
 import prettifyCoordinates from "../Map/prettifyCoordinates";
 import CommonStrata from "./CommonStrata";
@@ -55,9 +56,9 @@ export function addMarker(
         location.height || 0.0
       ]
     },
-    description: `<table><tr><td>Lat / Lon</td><td>${displayCoords.latitude}, ${
-      displayCoords.longitude
-    }</td></tr></table>`,
+    description: `<table><tr><td>${i18next.t("featureInfo.latLon")}</td><td>${
+      displayCoords.latitude
+    }, ${displayCoords.longitude}</td></tr></table>`,
     billboard: billboard
   };
 

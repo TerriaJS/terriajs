@@ -1,5 +1,6 @@
 import Point from "@mapbox/point-geometry";
 import { VectorTile, VectorTileFeature } from "@mapbox/vector-tile";
+import i18next from "i18next";
 import Protobuf from "pbf";
 import BoundingRectangle from "terriajs-cesium/Source/Core/BoundingRectangle";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
@@ -67,21 +68,9 @@ export default class MapboxVectorTileImageryProvider
 
   constructor(options: MapboxVectorTileImageryProviderOptions) {
     this._uriTemplate = new URITemplate(options.url);
-
-    if (typeof options.layerName !== "string") {
-      throw new DeveloperError(
-        "MapboxVectorTileImageryProvider requires a layer name passed as options.layerName"
-      );
-    }
     this._layerName = options.layerName;
 
     this._subdomains = defaultValue(options.subdomains, []);
-
-    if (!(options.styleFunc instanceof Function)) {
-      throw new DeveloperError(
-        "MapboxVectorTileImageryProvider requires a styling function passed as options.styleFunc"
-      );
-    }
     this._styleFunc = options.styleFunc;
 
     this._tilingScheme = new WebMercatorTilingScheme();
@@ -118,9 +107,9 @@ export default class MapboxVectorTileImageryProvider
       (Math.abs(neTile.x - swTile.x) + 1) * (Math.abs(neTile.y - swTile.y) + 1);
     if (tileCount > 4) {
       throw new DeveloperError(
-        "The imagery provider's rectangle and minimumLevel indicate that there are " +
-          tileCount +
-          " tiles at the minimum level. Imagery providers with more than four tiles at the minimum level are not supported."
+        i18next.t("map.mapboxVectorTileImageryProvider.moreThanFourTiles", {
+          tileCount: tileCount
+        })
       );
     }
 
@@ -334,7 +323,9 @@ export default class MapboxVectorTileImageryProvider
           const size = layer.extent >> levelDelta;
           if (size < 16) {
             // Tile has less less detail than 16x16
-            throw new DeveloperError("Maximum level too high for data set");
+            throw new DeveloperError(
+              i18next.t("map.mapboxVectorTileImageryProvider.maxLevelError")
+            );
           }
           const x1 = size * (requestedTile.x - (nativeTile.x << levelDelta)); //
           const y1 = size * (requestedTile.y - (nativeTile.y << levelDelta));
