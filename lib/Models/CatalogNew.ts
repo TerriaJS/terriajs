@@ -32,7 +32,7 @@ export default class Catalog {
     group.setTrait(
       CommonStrata.definition,
       "description",
-      i18next.t("models.catalog.userAddedDataGroup")
+      userAddedGroupDescription
     );
     this.terria.addModel(group);
     this.group.add(CommonStrata.definition, group);
