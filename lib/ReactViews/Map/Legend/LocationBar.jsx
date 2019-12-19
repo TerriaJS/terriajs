@@ -5,6 +5,7 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import Styles from "./legend.scss";
+import { runInAction } from "mobx";
 
 const LocationBar = observer(
   createReactClass({
@@ -23,7 +24,9 @@ const LocationBar = observer(
     },
 
     toggleUseProjection() {
-      this.props.mouseCoords.toggleUseProjection();
+      runInAction(() => {
+        this.props.mouseCoords.toggleUseProjection();
+      });
     },
 
     render() {
