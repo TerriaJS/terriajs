@@ -34,6 +34,7 @@ const ViewingControls = observer(
     removeFromMap() {
       const workbench = this.props.viewState.terria.workbench;
       workbench.remove(this.props.item);
+      this.props.viewState.terria.timelineStack.remove(this.props.item);
     },
 
     zoomTo() {

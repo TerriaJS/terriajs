@@ -7,6 +7,7 @@ import { addMarker } from "../../Models/LocationMarkerUtils";
 import BadgeBar from "../BadgeBar";
 import LocationSearchResults from "./LocationSearchResults";
 import Styles from "./sidebar-search.scss";
+import { runInAction } from "mobx";
 
 // Handle any of the three kinds of search based on the props
 const SidebarSearch = observer(
@@ -21,7 +22,9 @@ const SidebarSearch = observer(
     },
 
     backToNowViewing() {
-      this.props.viewState.searchState.showLocationSearchResults = false;
+      runInAction(() => {
+        this.props.viewState.searchState.showLocationSearchResults = false;
+      });
     },
 
     onLocationClick(result) {

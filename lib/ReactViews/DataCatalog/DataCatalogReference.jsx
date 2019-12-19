@@ -27,8 +27,9 @@ const DataCatalogReference = observer(
 
     setPreviewedItem() {
       // raiseErrorOnRejectedPromise(this.props.item.terria, this.props.item.load());
+      let loadPromise;
       if (this.props.reference.loadReference) {
-        raiseErrorOnRejectedPromise(
+        loadPromise = raiseErrorOnRejectedPromise(
           this.props.terria,
           this.props.reference.loadReference()
         );
@@ -37,10 +38,21 @@ const DataCatalogReference = observer(
         this.props.reference,
         this.props.ancestors
       );
-      // mobile switch to nowvewing
-      this.props.viewState.switchMobileView(
-        this.props.viewState.mobileViewOptions.preview
-      );
+      // mobile switch to nowvewing, but only if this is a
+      // catalog item not a group.
+      if (loadPromise) {
+        loadPromise.then(() => {
+          if (
+            this.props.viewState.previewedItem === this.props.reference &&
+            this.props.reference.target &&
+            !this.props.reference.target.isGroup
+          ) {
+            this.props.viewState.switchMobileView(
+              this.props.viewState.mobileViewOptions.preview
+            );
+          }
+        });
+      }
     },
 
     add(event) {
@@ -61,10 +73,20 @@ const DataCatalogReference = observer(
       ) {
         this.setPreviewedItem();
       } else {
+        const toAdd = !this.props.terria.workbench.contains(
+          this.props.reference
+        );
+
+        if (toAdd) {
+          this.props.terria.timelineStack.addToTop(this.props.reference);
+        } else {
+          this.props.terria.timelineStack.remove(this.props.reference);
+        }
+
         const addPromise = addToWorkbench(
           this.props.terria.workbench,
           this.props.reference,
-          !this.props.terria.workbench.contains(this.props.reference)
+          toAdd
         ).then(() => {
           if (
             this.props.terria.workbench.contains(this.props.reference) &&

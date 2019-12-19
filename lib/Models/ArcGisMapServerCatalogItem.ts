@@ -24,6 +24,7 @@ import createStratumInstance from "./createStratumInstance";
 import getToken from "./getToken";
 import LoadableStratum from "./LoadableStratum";
 import Mappable from "./Mappable";
+import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumOrder from "./StratumOrder";
 
@@ -82,6 +83,16 @@ class MapServerStratum extends LoadableStratum(
     readonly token: string | undefined
   ) {
     super();
+  }
+
+  duplicateLoadableStratum(newModel: BaseModel): this {
+    return new MapServerStratum(
+      newModel as ArcGisMapServerCatalogItem,
+      this._mapServer,
+      this._allLayers,
+      this._legends,
+      this.token
+    ) as this;
   }
 
   get mapServerData() {
