@@ -7,6 +7,7 @@ Change Log
 * Improve menu bar button hover/focus states when interacting with its panel contents
 * Add ability to set opacity on `GeoJsonCatalogItem`
 * Expanded test cases to ensure WorkbenchItem & Story have the correct order of components composed
+* Fix broken catalog functions when used with translation HOC
 
 ### v7.10.0
 
