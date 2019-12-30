@@ -82,12 +82,10 @@ const MyDataTab = createReactClass({
     if (this.hasUserAddedData()) {
       const { t } = this.props;
       return (
-        <div className={Styles.dataTypeTabWrapper}>
-          <div className={Styles.dataTypeTab}>
-            <div className={Styles.dndBox}>
-              <Icon glyph={Icon.GLYPHS.upload} />
-              {t("addData.dragDrop")}
-            </div>
+        <div className={Styles.dataTypeTab}>
+          <div className={Styles.dndBox}>
+            <Icon glyph={Icon.GLYPHS.upload} />
+            {t("addData.dragDrop")}
           </div>
         </div>
       );
@@ -95,7 +93,7 @@ const MyDataTab = createReactClass({
 
     return (
       <div className={Styles.dataTypeTab}>
-        <div>
+        <div className={Styles.dndBoxInfo}>
           <Trans i18nKey="addData.infoText">
             <div>Drag and drop a file here to view it locally on the map</div>
             <div>(it won’t be saved or uploaded to the internet)</div>
@@ -136,8 +134,8 @@ const MyDataTab = createReactClass({
               resetTab={this.resetTab}
             />
           </If>
-          <div className={Styles.addedData}>
-            <If condition={showTwoColumn}>
+          <If condition={showTwoColumn}>
+            <div className={Styles.addedData}>
               <p className={Styles.explanation}>
                 <Trans i18nKey="addData.note">
                   <strong>Note: </strong>Data added in this way is not saved or
@@ -154,9 +152,9 @@ const MyDataTab = createReactClass({
                   terria={this.props.terria}
                 />
               </ul>
-            </If>
-            <If condition={!this.state.activeTab}>{this.renderPromptBox()}</If>
-          </div>
+            </div>
+          </If>
+          <If condition={!this.state.activeTab}>{this.renderPromptBox()}</If>
         </div>
         <If condition={showTwoColumn}>
           <DataPreview
