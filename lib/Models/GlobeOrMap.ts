@@ -145,7 +145,7 @@ export default abstract class GlobeOrMap {
         (<any>cesiumPolyline).polyline.material = Color.fromCssColorString(
           this.terria.baseMapContrastColor
         );
-        cesiumPolyline.polyline.width = 2;
+        (<any>cesiumPolyline).polyline.width = 2;
 
         this._removeHighlightCallback = function() {
           cesiumPolyline.polyline.material = polylineMaterial;
