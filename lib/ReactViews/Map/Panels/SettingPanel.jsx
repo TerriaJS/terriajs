@@ -50,9 +50,12 @@ class SettingPanel extends React.Component {
   @observable _hoverBaseMap = null;
 
   @computed
-  get activeMapName () {
-    return this._hoverBaseMap ? this._hoverBaseMap :
-      this.props.terria.mainViewer.baseMap ? this.props.terria.mainViewer.baseMap.name : "(None)";
+  get activeMapName() {
+    return this._hoverBaseMap
+      ? this._hoverBaseMap
+      : this.props.terria.mainViewer.baseMap
+      ? this.props.terria.mainViewer.baseMap.name
+      : "(None)";
   }
 
   selectBaseMap(baseMap, event) {
