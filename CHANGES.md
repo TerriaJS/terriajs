@@ -23,6 +23,7 @@ Change Log
 * Updated Welcome Message to pass its props to `WelcomeMessagePrimaryBtnClick` & `WelcomeMessageSecondaryBtnClick` overrides
 * Fixed a bug in anti-meridian handling causing excessive memory use.
 * Handled coordinate conversion for GeoJson geometries with an empty `coordinates` array.
+* Fixed height of My Data drag and drop box in Safari and IE.
 
 ### v7.9.0
 
