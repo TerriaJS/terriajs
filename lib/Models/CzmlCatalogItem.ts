@@ -10,6 +10,7 @@ import UrlMixin from "../ModelMixins/UrlMixin";
 import CzmlCatalogItemTraits from "../Traits/CzmlCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import Mappable from "./Mappable";
+import defined from "terriajs-cesium/Source/Core/defined";
 
 export default class CzmlCatalogItem
   extends AsyncMappableMixin(
@@ -28,6 +29,11 @@ export default class CzmlCatalogItem
 
   setFileInput(file: File) {
     this._czmlFile = file;
+  }
+
+  @computed
+  get hasLocalData(): boolean {
+    return defined(this._czmlFile);
   }
 
   protected forceLoadMapItems(): Promise<void> {

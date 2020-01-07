@@ -28,6 +28,7 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import GeoJsonCatalogItemTraits from "../Traits/GeoJsonCatalogItemTraits";
 import CreateModel from "./CreateModel";
+import defined from "terriajs-cesium/Source/Core/defined";
 
 const formatPropertyValue = require("../Core/formatPropertyValue");
 const hashFromString = require("../Core/hashFromString");
@@ -73,6 +74,11 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
 
   setFileInput(file: File) {
     this._geoJsonFile = file;
+  }
+
+  @computed
+  get hasLocalData(): boolean {
+    return defined(this._geoJsonFile);
   }
 
   /**

@@ -13,6 +13,7 @@ import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
 import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
+import defined from "terriajs-cesium/Source/Core/defined";
 
 // Types of CSVs:
 // - Points - Latitude and longitude columns or address
@@ -56,6 +57,11 @@ export default class CsvCatalogItem extends TableMixin(
 
   setFileInput(file: File) {
     this._csvFile = file;
+  }
+
+  @computed
+  get hasLocalData(): boolean {
+    return defined(this._csvFile);
   }
 
   /*

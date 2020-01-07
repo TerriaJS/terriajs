@@ -17,6 +17,7 @@ import UrlMixin from "../ModelMixins/UrlMixin";
 import KmlCatalogItemTraits from "../Traits/KmlCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import Terria from "./Terria";
+import defined from "terriajs-cesium/Source/Core/defined";
 
 const kmzRegex = /\.kmz$/i;
 
@@ -36,6 +37,11 @@ class KmlCatalogItem extends AsyncMappableMixin(
 
   setFileInput(file: File) {
     this._kmlFile = file;
+  }
+
+  @computed
+  get hasLocalData(): boolean {
+    return defined(this._kmlFile);
   }
 
   protected forceLoadMapItems(): Promise<void> {
