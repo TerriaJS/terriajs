@@ -287,11 +287,6 @@ const SharePanel = observer(
     },
 
     renderWarning() {
-      // Broken in mobx. See https://github.com/TerriaJS/terriajs/issues/3798
-      // Generate share data for user added catalog, then throw that away and use the returned
-      //  "rejected" items to display a disclaimer about what can't be shared
-      // const unshareableItems = addUserAddedCatalog(this.props.terria, []);
-
       const unshareableItems = this.props.terria.catalog.userAddedDataGroup.memberModels.filter(
         model => !isShareable(this.props.terria)(model.uniqueId)
       );
