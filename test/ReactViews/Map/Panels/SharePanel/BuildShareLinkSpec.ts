@@ -54,7 +54,11 @@ beforeEach(function() {
     }
   ];
 
-  viewState = new ViewState({ terria });
+  viewState = new ViewState({
+    terria: terria,
+    catalogSearchProvider: null,
+    locationSearchProviders: []
+  });
 
   // clone to prevent any weird mutations
   // catalogUpdateJson = JSON.parse(
@@ -88,11 +92,21 @@ beforeEach(function() {
   // );
 });
 
-const decodeAndParseStartHash = url =>
-  JSON.parse(URI.decode(URI.parse(url).fragment.replace(/start=/, "")));
+const decodeAndParseStartHash = (url: string) => {
+  const parsed = URI.parse(url);
+  if (parsed.fragment) {
+    return JSON.parse(URI.decode(parsed.fragment.replace(/start=/, "")));
+  }
+};
+interface FlattenedInitSources {
+  [key: string]: FlattenedInitSources[keyof FlattenedInitSources];
+  previewedItemId: string | undefined;
+  models: any;
+  workbench: any;
+}
 
-const flattenInitSources = initSources =>
-  initSources.reduce((acc, initSource) => {
+const flattenInitSources = (initSources: any[]): FlattenedInitSources =>
+  initSources.reduce((acc: FlattenedInitSources, initSource: any) => {
     Object.keys(initSource).forEach(key => {
       acc[key] = initSource[key];
     });
