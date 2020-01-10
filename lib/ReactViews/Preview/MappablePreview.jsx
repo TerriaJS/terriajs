@@ -109,7 +109,7 @@ class MappablePreview extends React.Component {
             <h3 className={Styles.h3}>{catalogItem.name}</h3>
             <If
               condition={
-                catalogItem.dataUrlType !== "local" &&
+                !catalogItem.hasLocalData &&
                 !this.props.viewState.useSmallScreenInterface
               }
             >

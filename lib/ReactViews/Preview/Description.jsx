@@ -56,7 +56,7 @@ const Description = observer(
             </div>
           </If>
 
-          <If condition={catalogItem.dataUrlType === "local"}>
+          <If condition={catalogItem.hasLocalData}>
             <p>
               This file only exists in your browser. To share it, you must load
               it onto a public web server.
@@ -64,9 +64,7 @@ const Description = observer(
           </If>
 
           <If
-            condition={
-              catalogItem.dataUrlType !== "local" && !catalogItem.hasDescription
-            }
+            condition={!catalogItem.hasLocalData && !catalogItem.hasDescription}
           >
             <p>
               Please contact the provider of this data for more information,
