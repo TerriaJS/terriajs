@@ -115,9 +115,14 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
       }
       const members = this.members;
       const moveFrom = members.indexOf(member.uniqueId);
+      if (members[newIndex] === undefined) {
+        throw new DeveloperError(`Invalid 'newIndex' target: ${newIndex}`);
+      }
       if (moveFrom === -1) {
         throw new DeveloperError(
-          `A model couldn't be found in the group ${this.uniqueId} for member uniqueId ${member.uniqueId}`
+          `A model couldn't be found in the group ${
+            this.uniqueId
+          } for member uniqueId ${member.uniqueId}`
         );
       }
       const cloneArr = clone(members);
