@@ -21,7 +21,6 @@ import {
 } from "./BuildShareLink";
 import PrintView from "./PrintView";
 import Styles from "./share-panel.scss";
-import CommonStrata from "../../../../Models/CommonStrata";
 
 const SharePanel = observer(
   createReactClass({
