@@ -63,22 +63,10 @@ describe("Terria", function() {
       expect(newTerria.workbench.itemIds).not.toContain("ABC");
 
       const shareLink = buildShareLink(terria, viewState);
-      newTerria
-        .updateApplicationUrl(shareLink)
-        // .then(() => Promise.resolve())
-        .then(res => {
-          debugger;
-          expect(newTerria.workbench.itemIds).toContain("ABC");
-          done();
-          //   const wms = <WebMapServiceCatalogItem>(
-          //     newTerria.catalog.userAddedDataGroup.memberModels[0]
-          //   );
-
-          //   wms.loadMapItems().then(() => {
-          //     expect(newTerria.workbench.itemIds).toContain("ABC");
-          //     done();
-          //   });
-        });
+      newTerria.updateApplicationUrl(shareLink).then(() => {
+        expect(newTerria.workbench.itemIds).toContain("ABC");
+        done();
+      });
     });
   });
 
