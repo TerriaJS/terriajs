@@ -8,6 +8,7 @@ Change Log
 * Add ability to set opacity on `GeoJsonCatalogItem`
 * Expanded test cases to ensure WorkbenchItem & Story have the correct order of components composed
 * Fix broken catalog functions when used with translation HOC
+* Fix bug with momentPoints chart type when plotting against series with null values
 
 ### v7.10.0
 
