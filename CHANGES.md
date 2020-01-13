@@ -8,6 +8,7 @@ Change Log
 * Add ability to set opacity on `GeoJsonCatalogItem`
 * Expanded test cases to ensure WorkbenchItem & Story have the correct order of components composed
 * Fix broken catalog functions when used with translation HOC
+* Make the default `Legend` width a little smaller to account for the workbench scrollbar
 
 ### v7.10.0
 
