@@ -3,20 +3,19 @@ import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
+import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
-
 import isDefined from "../Core/isDefined";
 import featureDataToGeoJson from "../Map/featureDataToGeoJson";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
+import CameraView from "./CameraView";
 import CommonStrata from "./CommonStrata";
 import Feature from "./Feature";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import Mappable from "./Mappable";
 import Terria from "./Terria";
-import CameraView from "./CameraView";
 
 export default abstract class GlobeOrMap {
   abstract readonly type: string;
@@ -113,9 +112,7 @@ export default abstract class GlobeOrMap {
             feature._cesium3DTileFeature.color = originalColor;
           }
         };
-      }
-
-      if (isDefined(feature.polygon)) {
+      } else if (isDefined(feature.polygon)) {
         hasGeometry = true;
 
         const cesiumPolygon = feature.cesiumEntity || feature;
@@ -137,9 +134,7 @@ export default abstract class GlobeOrMap {
           cesiumPolygon.polygon.outlineColor = polygonOutlineColor;
           cesiumPolygon.polygon.material = polygonMaterial;
         };
-      }
-
-      if (isDefined(feature.polyline)) {
+      } else if (isDefined(feature.polyline)) {
         hasGeometry = true;
 
         const cesiumPolyline = feature.cesiumEntity || feature;

@@ -213,11 +213,14 @@ const FeatureInfoPanel = observer(
     },
 
     renderLocationItem(cartesianPosition) {
-      const catographic = Ellipsoid.WGS84.cartesianToCartographic(
+      const cartographic = Ellipsoid.WGS84.cartesianToCartographic(
         cartesianPosition
       );
-      const latitude = CesiumMath.toDegrees(catographic.latitude);
-      const longitude = CesiumMath.toDegrees(catographic.longitude);
+      if (cartographic === undefined) {
+        return <></>;
+      }
+      const latitude = CesiumMath.toDegrees(cartographic.latitude);
+      const longitude = CesiumMath.toDegrees(cartographic.longitude);
       const pretty = prettifyCoordinates(longitude, latitude);
       // this.locationUpdated(longitude, latitude);
 

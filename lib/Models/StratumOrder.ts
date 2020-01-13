@@ -150,7 +150,7 @@ export default class StratumOrder {
         );
       }
 
-      return aPriority - aPriority;
+      return aPriority - bPriority;
     });
   }
 

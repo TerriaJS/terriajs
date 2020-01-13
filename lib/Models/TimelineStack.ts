@@ -3,6 +3,7 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import CommonStrata from "./CommonStrata";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 
 /**
  * Manages a stack of all the time-varying datasets currently attached to the timeline. Provides
@@ -18,6 +19,9 @@ export default class TimelineStack {
 
   @observable
   items: TimeVarying[] = [];
+
+  @observable
+  defaultTimeVarying: TimeVarying | undefined;
 
   private _disposeClockAutorun: IReactionDisposer;
   private _disposeTickSubscription: Cesium.Event.RemoveCallback;
@@ -74,10 +78,21 @@ export default class TimelineStack {
    */
   @computed
   get top(): TimeVarying | undefined {
-    if (this.items.length === 0) {
-      return undefined;
-    }
-    return this.items[this.items.length - 1];
+    // Find the first item with a current, start, and stop time.
+    // Use the default if there isn't one.
+    return (
+      this.items.find(item => {
+        const dereferenced: TimeVarying =
+          ReferenceMixin.is(item) && item.target
+            ? (item.target as TimeVarying)
+            : item;
+        return (
+          dereferenced.currentTimeAsJulianDate !== undefined &&
+          dereferenced.startTimeAsJulianDate !== undefined &&
+          dereferenced.stopTimeAsJulianDate !== undefined
+        );
+      }) || this.defaultTimeVarying
+    );
   }
 
   @computed
@@ -165,6 +180,11 @@ export default class TimelineStack {
       const layer = this.items[i];
       layer.setTrait(stratumId, "currentTime", currentTime);
       layer.setTrait(stratumId, "isPaused", isPaused);
+    }
+
+    if (this.defaultTimeVarying) {
+      this.defaultTimeVarying.setTrait(stratumId, "currentTime", currentTime);
+      this.defaultTimeVarying.setTrait(stratumId, "isPaused", isPaused);
     }
   }
 }

@@ -15,6 +15,7 @@ import createStratumInstance from "./createStratumInstance";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import LoadableStratum from "./LoadableStratum";
 import Mappable from "./Mappable";
+import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
@@ -29,6 +30,12 @@ class WpsLoadableStratum extends LoadableStratum(
 
   constructor(readonly item: WebProcessingServiceCatalogItem) {
     super();
+  }
+
+  duplicateLoadableStratum(newModel: BaseModel): this {
+    return new WpsLoadableStratum(
+      newModel as WebProcessingServiceCatalogItem
+    ) as this;
   }
 
   static async load(item: WebProcessingServiceCatalogItem) {
