@@ -1,49 +1,50 @@
 "use strict";
 import React from "react";
 import PropTypes from "prop-types";
-import createReactClass from "create-react-class";
-import ObserveModelMixin from "../../ObserveModelMixin";
 import Styles from "./tool_button.scss";
 import Icon from "../../Icon";
+import { observer } from "mobx-react";
+import { observable, action } from "mobx";
 
-const UserDrawing = require("../../../Models/UserDrawing");
-const EllipsoidGeodesic = require("terriajs-cesium/Source/Core/EllipsoidGeodesic.js")
-  .default;
-const Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid.js").default;
-const EllipsoidTangentPlane = require("terriajs-cesium/Source/Core/EllipsoidTangentPlane.js")
-  .default;
-const CesiumMath = require("terriajs-cesium/Source/Core/Math.js").default;
-const PolygonGeometryLibrary = require("terriajs-cesium/Source/Core/PolygonGeometryLibrary.js")
-  .default;
-const PolygonHierarchy = require("terriajs-cesium/Source/Core/PolygonHierarchy.js")
-  .default;
-const Cartesian3 = require("terriajs-cesium/Source/Core/Cartesian3.js").default;
-const VertexFormat = require("terriajs-cesium/Source/Core/VertexFormat.js")
-  .default;
+import UserDrawing from "../../../Models/UserDrawing";
+import EllipsoidGeodesic from "terriajs-cesium/Source/Core/EllipsoidGeodesic";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import EllipsoidTangentPlane from "terriajs-cesium/Source/Core/EllipsoidTangentPlane";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import PolygonGeometryLibrary from "terriajs-cesium/Source/Core/PolygonGeometryLibrary";
+import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import VertexFormat from "terriajs-cesium/Source/Core/VertexFormat";
 
-const MeasureTool = createReactClass({
-  displayName: "MeasureTool",
-  mixins: [ObserveModelMixin],
+@observer
+class MeasureTool extends React.Component {
+  @observable
+  totalDistanceMetres = 0;
 
-  propTypes: {
+  @observable
+  totalAreaMetresSquared = 0;
+
+  @observable
+  userDrawing;
+
+  static displayName = "MeasureTool";
+
+  static propTypes = {
     terria: PropTypes.object
-  },
+  };
 
-  getInitialState() {
-    return {
-      totalDistanceMetres: 0,
-      totalAreaMetresSquared: 0,
-      userDrawing: new UserDrawing({
-        terria: this.props.terria,
-        messageHeader: "Measure Tool",
-        allowPolygon: false,
-        onPointClicked: this.onPointClicked,
-        onPointMoved: this.onPointMoved,
-        onCleanUp: this.onCleanUp,
-        onMakeDialogMessage: this.onMakeDialogMessage
-      })
-    };
-  },
+  constructor(props) {
+    super(props);
+    this.userDrawing = new UserDrawing({
+      terria: this.props.terria,
+      messageHeader: "Measure Tool",
+      allowPolygon: false,
+      onPointClicked: this.onPointClicked,
+      onPointMoved: this.onPointMoved,
+      onCleanUp: this.onCleanUp,
+      onMakeDialogMessage: this.onMakeDialogMessage
+    });
+  }
 
   prettifyNumber(number, squared) {
     if (number <= 0) {
@@ -70,48 +71,46 @@ const MeasureTool = createReactClass({
       numberStr += "\u00B2";
     }
     return numberStr;
-  },
+  }
 
+  @action
   updateDistance(pointEntities) {
-    this.setState({ totalDistanceMetres: 0 });
+    this.totalDistanceMetres = 0;
     if (pointEntities.entities.values.length < 1) {
       return;
     }
 
     const prevPoint = pointEntities.entities.values[0];
     let prevPointPos = prevPoint.position.getValue(
-      this.props.terria.clock.currentTime
+      this.props.terria.timelineClock.currentTime
     );
     for (let i = 1; i < pointEntities.entities.values.length; i++) {
       const currentPoint = pointEntities.entities.values[i];
       const currentPointPos = currentPoint.position.getValue(
-        this.props.terria.clock.currentTime
+        this.props.terria.timelineClock.currentTime
       );
 
-      this.setState({
-        totalDistanceMetres:
-          this.state.totalDistanceMetres +
-          this.getGeodesicDistance(prevPointPos, currentPointPos)
-      });
+      this.totalDistanceMetres =
+        this.totalDistanceMetres +
+        this.getGeodesicDistance(prevPointPos, currentPointPos);
 
       prevPointPos = currentPointPos;
     }
-    if (this.state.userDrawing.closeLoop) {
+    if (this.userDrawing.closeLoop) {
       const firstPoint = pointEntities.entities.values[0];
       const firstPointPos = firstPoint.position.getValue(
-        this.props.terria.clock.currentTime
+        this.props.terria.timelineClock.currentTime
       );
-      this.setState({
-        totalDistanceMetres:
-          this.state.totalDistanceMetres +
-          this.getGeodesicDistance(prevPointPos, firstPointPos)
-      });
+      this.totalDistanceMetres =
+        this.totalDistanceMetres +
+        this.getGeodesicDistance(prevPointPos, firstPointPos);
     }
-  },
+  }
 
+  @action
   updateArea(pointEntities) {
-    this.setState({ totalAreaMetresSquared: 0 });
-    if (!this.state.userDrawing.closeLoop) {
+    this.totalAreaMetresSquared = 0;
+    if (!this.userDrawing.closeLoop) {
       // Not a closed polygon? Don't calculate area.
       return;
     }
@@ -124,7 +123,7 @@ const MeasureTool = createReactClass({
     for (let i = 0; i < pointEntities.entities.values.length; i++) {
       const currentPoint = pointEntities.entities.values[i];
       const currentPointPos = currentPoint.position.getValue(
-        this.props.terria.clock.currentTime
+        this.props.terria.timelineClock.currentTime
       );
       positions.push(currentPointPos);
     }
@@ -148,7 +147,6 @@ const MeasureTool = createReactClass({
       perPositionHeight,
       VertexFormat.POSITION_ONLY
     );
-
     if (
       geom.indices.length % 3 !== 0 ||
       geom.attributes.position.values.length % 3 !== 0
@@ -181,9 +179,8 @@ const MeasureTool = createReactClass({
       const s = (a + b + c) / 2.0;
       area += Math.sqrt(s * (s - a) * (s - b) * (s - c));
     }
-
-    this.setState({ totalAreaMetresSquared: area });
-  },
+    this.totalAreaMetresSquared = area;
+  }
 
   getGeodesicDistance(pointOne, pointTwo) {
     // Note that Cartesian.distance gives the straight line distance between the two points, ignoring
@@ -199,36 +196,40 @@ const MeasureTool = createReactClass({
       lastPointCartographic
     );
     return geodesic.surfaceDistance;
-  },
+  }
 
+  @action.bound
   onCleanUp() {
-    this.setState({ totalDistanceMetres: 0 });
-    this.setState({ totalAreaMetresSquared: 0 });
-  },
+    this.totalDistanceMetres = 0;
+    this.totalAreaMetresSquared = 0;
+  }
 
+  @action.bound
   onPointClicked(pointEntities) {
     this.updateDistance(pointEntities);
     this.updateArea(pointEntities);
-  },
+  }
 
+  @action.bound
   onPointMoved(pointEntities) {
     // This is no different to clicking a point.
     this.onPointClicked(pointEntities);
-  },
+  }
 
-  onMakeDialogMessage() {
-    const distance = this.prettifyNumber(this.state.totalDistanceMetres, false);
+  onMakeDialogMessage = () => {
+    const distance = this.prettifyNumber(this.totalDistanceMetres, false);
     let message = distance;
-    if (this.state.totalAreaMetresSquared !== 0) {
+    if (this.totalAreaMetresSquared !== 0) {
       message +=
-        "<br>" + this.prettifyNumber(this.state.totalAreaMetresSquared, true);
+        "<br>" + this.prettifyNumber(this.totalAreaMetresSquared, true);
     }
     return message;
-  },
+  };
 
+  @action.bound
   handleClick() {
-    this.state.userDrawing.enterDrawMode();
-  },
+    this.userDrawing.enterDrawMode();
+  }
 
   render() {
     return (
@@ -244,6 +245,6 @@ const MeasureTool = createReactClass({
       </div>
     );
   }
-});
+}
 
 export default MeasureTool;
