@@ -313,7 +313,7 @@ export default class Terria {
             return this.loadMagdaConfig(options.configUrl, config);
           }
 
-          const initializationUrls: string[] = config.initializationUrls;
+          const initializationUrls: string[] = config.initializationUrls || [];
           const initSources = initializationUrls.map(url =>
             generateInitializationUrl(
               baseUri,
@@ -330,9 +330,9 @@ export default class Terria {
         return this.serverConfig
           .init(this.configParameters.serverConfigUrl)
           .then((serverConfig: any) => {
-            this.initCorsProxy(this.configParameters, serverConfig);
-            return serverConfig;
-          });
+            return this.initCorsProxy(this.configParameters, serverConfig);
+          })
+          .then(() => this.serverConfig);
       })
       .then(serverConfig => {
         if (this.shareDataService && serverConfig) {
@@ -402,14 +402,19 @@ export default class Terria {
 
     return Promise.all(initSourcePromises).then(initSources => {
       runInAction(() => {
-        initSources.forEach(initSource => {
-          if (initSource === undefined) {
-            return;
-          }
-          this.applyInitData({
-            initData: initSource
-          });
-        });
+        const initDataLoads = filterOutUndefined(initSources).reduce(
+          (promises: any, initSource) => {
+            return [
+              ...promises,
+
+              this.applyInitData({
+                initData: initSource
+              })
+            ];
+          },
+          [Promise.resolve]
+        );
+        return Promise.all(initDataLoads);
       });
     });
   }
@@ -584,6 +589,7 @@ export default class Terria {
 
     // Load the models
     let promise: Promise<void>;
+    this.catalog.userAddedDataGroup;
 
     const models = initData.models;
     if (isJsonObject(models)) {

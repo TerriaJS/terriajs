@@ -10,6 +10,14 @@ import { BaseModel } from "./Model";
 import Terria from "./Terria";
 import upsertModelFromJson from "./upsertModelFromJson";
 
+/**
+ * The "url" trait will always be applied at the user stratum
+ * @param terria
+ * @param viewState
+ * @param fileOrUrl
+ * @param dataType
+ * @param confirmConversion
+ */
 export default function createCatalogItemFromFileOrUrl(
   terria: Terria,
   viewState: ViewState,
@@ -165,7 +173,8 @@ function getConfirmation(
 
 function loadItem(newCatalogItem: BaseModel, fileOrUrl: File | string) {
   if (typeof fileOrUrl === "string") {
-    newCatalogItem.setTrait(CommonStrata.definition, "url", fileOrUrl);
+    // newCatalogItem.setTrait(CommonStrata.definition, "url", fileOrUrl);
+    newCatalogItem.setTrait(CommonStrata.user, "url", fileOrUrl);
   } else {
     if (hasFileInput(newCatalogItem)) {
       newCatalogItem.setFileInput(fileOrUrl);
