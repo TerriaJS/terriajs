@@ -16,6 +16,9 @@ export default class Catalog {
   constructor(terria: Terria) {
     this.terria = terria;
     this.group = new CatalogGroup("/", this.terria);
+
+    // create user added data group
+    this.userAddedDataGroup;
   }
 
   get userAddedDataGroup(): CatalogGroup {
@@ -23,6 +26,17 @@ export default class Catalog {
     if (isDefined(group)) {
       return group;
     }
+
+    // check for the case where user added data group exists but was
+    // removed from this.group.memberModels after catalog members were reset
+    group = <CatalogGroup | undefined>(
+      this.terria.getModelById(BaseModel, USER_ADDED_CATEGORY_NAME)
+    );
+    if (isDefined(group)) {
+      this.group.add(CommonStrata.definition, group);
+      return group;
+    }
+
     group = new CatalogGroup(USER_ADDED_CATEGORY_NAME, this.terria);
     group.setTrait(CommonStrata.definition, "name", USER_ADDED_CATEGORY_NAME);
     group.setTrait(

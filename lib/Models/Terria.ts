@@ -49,6 +49,7 @@ import updateModelFromJson from "./updateModelFromJson";
 import upsertModelFromJson from "./upsertModelFromJson";
 import ViewerMode from "./ViewerMode";
 import Workbench from "./Workbench";
+import openGroup from "./openGroup";
 
 interface ConfigParameters {
   [key: string]: ConfigParameters[keyof ConfigParameters];
@@ -519,7 +520,13 @@ export default class Terria {
         }
       }
 
-      return loadedModel;
+      if (GroupMixin.isMixedInto(loadedModel)) {
+        return openGroup(loadedModel, loadedModel.isOpen).then(
+          () => loadedModel
+        );
+      } else {
+        return loadedModel;
+      }
     });
   }
 
@@ -589,7 +596,6 @@ export default class Terria {
 
     // Load the models
     let promise: Promise<void>;
-    this.catalog.userAddedDataGroup;
 
     const models = initData.models;
     if (isJsonObject(models)) {
