@@ -2,8 +2,15 @@
 @import "../../Sass/common/mixins";
 
 .chart-disclaimer-panel {
-  background: #9a4c4c;
+  background: #9a4b4b;
   color: white;
-  padding: 1px 6px;
+  padding: 1px 10px;
   font-size: 0.8rem;
+  p {
+    margin: 10px 0px;
+    a,
+    a:visited {
+      color: white;
+    }
+  }
 }

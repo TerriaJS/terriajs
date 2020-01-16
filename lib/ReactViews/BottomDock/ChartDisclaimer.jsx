@@ -3,6 +3,7 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import ObserveModelMixin from "../ObserveModelMixin";
 import Styles from "./chart-disclaimer.scss";
+import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 
 const ChartDisclaimer = createReactClass({
   displayName: "ChartDisclaimer",
@@ -30,7 +31,7 @@ const ChartDisclaimer = createReactClass({
     return (
       <div className={`${Styles.chartDisclaimerPanel}`}>
         {uniqueChartDisclaimers.map((chartDisclaimer, i) => (
-          <p key={i}>{chartDisclaimer}</p>
+          <p key={i}>{parseCustomHtmlToReact(chartDisclaimer)}</p>
         ))}
       </div>
     );
