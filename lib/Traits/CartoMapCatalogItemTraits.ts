@@ -1,11 +1,13 @@
 import primitiveTrait from "./primitiveTrait";
 import primitiveArrayTrait from "./primitiveArrayTrait";
+import objectArrayTrait from "./objectArrayTrait";
 import anyTrait from "./anyTrait";
 import mixTraits from "./mixTraits";
 import RasterLayerTraits from "./RasterLayerTraits";
 import MappableTraits from "./MappableTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import UrlTraits from "./UrlTraits";
+import LegendTraits from "./LegendTraits";
 import { JsonObject } from "../Core/Json";
 
 export default class CartoMapCatalogItemTraits extends mixTraits(
@@ -62,10 +64,11 @@ export default class CartoMapCatalogItemTraits extends mixTraits(
   })
   attribution?: string;
 
-  @primitiveTrait({
-    name: "Legend url",
-    description: "?",
-    type: "string"
+  @objectArrayTrait({
+    name: "Legend URLs",
+    description: "The legends to display on the workbench.",
+    type: LegendTraits,
+    idProperty: "index"
   })
-  legendUrl?: string;
+  legends?: LegendTraits[];
 }
