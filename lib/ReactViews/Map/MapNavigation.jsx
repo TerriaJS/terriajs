@@ -63,10 +63,10 @@ const MapNavigation = createReactClass({
               <ToggleSplitterTool terria={this.props.viewState.terria} />
             </div>
           </If>
-          <If condition={this.props.terria.viewerMode === ViewerMode.Leaflet}>
-            <div className={Styles.control}>
-              <HistoryControl terria={this.props.viewState.terria} />
-            </div>
+          <If
+            condition={!this.props.terria.configParameters.disableHistoryCotrol}
+          >
+            <HistoryControl terria={this.props.viewState.terria} />
           </If>
           <For each="item" of={this.props.navItems} index="i">
             <div className={Styles.control} key={i}>

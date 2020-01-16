@@ -15,6 +15,8 @@ const GLYPHS = {
   arOn: require("../../wwwroot/images/icons/ar-on.svg"),
   arRealign: require("../../wwwroot/images/icons/ar-realign.svg"),
   arResetAlignment: require("../../wwwroot/images/icons/ar-reset-alignment.svg"),
+  arrowBack: require("../../wwwroot/images/icons/arrow-back.svg"),
+  arrowForward: require("../../wwwroot/images/icons/arrow-forward.svg"),
   backToStart: require("../../wwwroot/images/icons/back-to-start.svg"),
   backward: require("../../wwwroot/images/icons/backward.svg"),
   barChart: require("../../wwwroot/images/icons/bar-chart.svg"),
