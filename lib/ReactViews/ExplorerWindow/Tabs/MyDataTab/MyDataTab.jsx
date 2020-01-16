@@ -93,7 +93,7 @@ const MyDataTab = createReactClass({
 
     return (
       <div className={Styles.dataTypeTab}>
-        <div>
+        <div className={Styles.dndBoxInfo}>
           <Trans i18nKey="addData.infoText">
             <div>Drag and drop a file here to view it locally on the map</div>
             <div>(it won’t be saved or uploaded to the internet)</div>
