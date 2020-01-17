@@ -345,6 +345,73 @@ describeIfSupported("Cesium Model", function() {
           .otherwise(done.fail);
       });
     });
+
+    describe("_buildPickedFeatures", function() {
+      it("should load imagery layer features when feature info requests are enabled", function(done) {
+        terria.allowFeatureInfoRequests = true;
+        var result = cesium._buildPickedFeatures(
+          {
+            "http://example.com/1": {
+              x: 1,
+              y: 2,
+              level: 3
+            }
+          },
+          { lat: LAT_DEGREES, lng: LONG_DEGREES, height: HEIGHT },
+          undefined,
+          imageryLayerPromises,
+          imageryLayers,
+          1000
+        );
+
+        expect(result.isLoading).toBe(true);
+
+        var featureInfo1 = new ImageryLayerFeatureInfo();
+        var featureInfo2 = new ImageryLayerFeatureInfo();
+
+        featureInfo1.name = "name1";
+        featureInfo2.name = "name2";
+
+        imageryLayerPromises[0].resolve([featureInfo1]);
+        imageryLayerPromises[1].resolve([featureInfo2]);
+
+        result.allFeaturesAvailablePromise
+          .then(function() {
+            expect(result.isLoading).toBe(false);
+            expect(result.features.length).toBe(2);
+            expect(result.features[0].name).toBe("name1");
+            expect(result.features[1].name).toBe("name2");
+          })
+          .then(done)
+          .otherwise(done.fail);
+      });
+
+      it("should not load imagery layer features when feature info requests are disabled", function(done) {
+        terria.allowFeatureInfoRequests = false;
+        var result = cesium._buildPickedFeatures(
+          {
+            "http://example.com/1": {
+              x: 1,
+              y: 2,
+              level: 3
+            }
+          },
+          { lat: LAT_DEGREES, lng: LONG_DEGREES, height: HEIGHT },
+          undefined,
+          imageryLayerPromises,
+          imageryLayers,
+          1000
+        );
+
+        result.allFeaturesAvailablePromise
+          .then(function() {
+            expect(result.isLoading).toBe(false);
+            expect(result.features.length).toBe(0);
+          })
+          .then(done)
+          .otherwise(done.fail);
+      });
+    });
   });
 
   // Internet Explorer does not support (and likely never will support) depth textues, so we
