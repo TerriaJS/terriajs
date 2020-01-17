@@ -6,13 +6,15 @@ import React from "react";
 import Icon from "../../Icon.jsx";
 import ObserveModelMixin from "../../ObserveModelMixin";
 import Styles from "./toggle_splitter_tool.scss";
+import { withTranslation } from "react-i18next";
 
 const ToggleSplitterTool = createReactClass({
   displayName: "ToggleSplitterTool",
   mixins: [ObserveModelMixin],
 
   propTypes: {
-    terria: PropTypes.object
+    terria: PropTypes.object,
+    t: PropTypes.func.isRequired
   },
 
   handleClick() {
@@ -21,6 +23,7 @@ const ToggleSplitterTool = createReactClass({
   },
 
   render() {
+    const { t } = this.props;
     if (!this.props.terria.currentViewer.canShowSplitter) {
       return null;
     }
@@ -29,7 +32,7 @@ const ToggleSplitterTool = createReactClass({
         <button
           type="button"
           className={Styles.btn}
-          title="Enable side-by-side comparison between two different sets of data"
+          title={t("splitterTool.toggleSplitterTool")}
           onClick={this.handleClick}
         >
           <Icon
@@ -45,4 +48,4 @@ const ToggleSplitterTool = createReactClass({
   }
 });
 
-export default ToggleSplitterTool;
+export default withTranslation()(ToggleSplitterTool);

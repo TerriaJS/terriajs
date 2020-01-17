@@ -5,32 +5,40 @@ import createReactClass from "create-react-class";
 import ObserveModelMixin from "../../ObserveModelMixin";
 import Styles from "./tool_button.scss";
 import Icon from "../../Icon.jsx";
+import { withTranslation } from "react-i18next";
 
 const UserDrawing = require("../../../Models/UserDrawing");
-const EllipsoidGeodesic = require("terriajs-cesium/Source/Core/EllipsoidGeodesic.js");
-const Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid.js");
-const EllipsoidTangentPlane = require("terriajs-cesium/Source/Core/EllipsoidTangentPlane.js");
-const CesiumMath = require("terriajs-cesium/Source/Core/Math.js");
-const PolygonGeometryLibrary = require("terriajs-cesium/Source/Core/PolygonGeometryLibrary.js");
-const PolygonHierarchy = require("terriajs-cesium/Source/Core/PolygonHierarchy.js");
-const Cartesian3 = require("terriajs-cesium/Source/Core/Cartesian3.js");
-const VertexFormat = require("terriajs-cesium/Source/Core/VertexFormat.js");
+const EllipsoidGeodesic = require("terriajs-cesium/Source/Core/EllipsoidGeodesic.js")
+  .default;
+const Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid.js").default;
+const EllipsoidTangentPlane = require("terriajs-cesium/Source/Core/EllipsoidTangentPlane.js")
+  .default;
+const CesiumMath = require("terriajs-cesium/Source/Core/Math.js").default;
+const PolygonGeometryLibrary = require("terriajs-cesium/Source/Core/PolygonGeometryLibrary.js")
+  .default;
+const PolygonHierarchy = require("terriajs-cesium/Source/Core/PolygonHierarchy.js")
+  .default;
+const Cartesian3 = require("terriajs-cesium/Source/Core/Cartesian3.js").default;
+const VertexFormat = require("terriajs-cesium/Source/Core/VertexFormat.js")
+  .default;
 
-const MeasureTool = createReactClass({
+export const MeasureTool = createReactClass({
   displayName: "MeasureTool",
   mixins: [ObserveModelMixin],
 
   propTypes: {
-    terria: PropTypes.object
+    terria: PropTypes.object,
+    t: PropTypes.func.isRequired
   },
 
   getInitialState() {
+    const { t } = this.props;
     return {
       totalDistanceMetres: 0,
       totalAreaMetresSquared: 0,
       userDrawing: new UserDrawing({
         terria: this.props.terria,
-        messageHeader: "Measure Tool",
+        messageHeader: t("measure.measureTool"),
         allowPolygon: false,
         onPointClicked: this.onPointClicked,
         onPointMoved: this.onPointMoved,
@@ -226,12 +234,13 @@ const MeasureTool = createReactClass({
   },
 
   render() {
+    const { t } = this.props;
     return (
       <div className={Styles.toolButton}>
         <button
           type="button"
           className={Styles.btn}
-          title="Measure distance between locations"
+          title={t("measure.measureDistance")}
           onClick={this.handleClick}
         >
           <Icon glyph={Icon.GLYPHS.measure} />
@@ -240,5 +249,4 @@ const MeasureTool = createReactClass({
     );
   }
 });
-
-export default MeasureTool;
+export default withTranslation()(MeasureTool);

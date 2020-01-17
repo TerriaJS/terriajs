@@ -1,9 +1,10 @@
 "use strict";
 
-const CesiumMath = require("terriajs-cesium/Source/Core/Math");
+const CesiumMath = require("terriajs-cesium/Source/Core/Math").default;
 const ConsoleAnalytics = require("../../Core/ConsoleAnalytics");
-const defaultValue = require("terriajs-cesium/Source/Core/defaultValue");
-const defined = require("terriajs-cesium/Source/Core/defined");
+const defaultValue = require("terriajs-cesium/Source/Core/defaultValue")
+  .default;
+const defined = require("terriajs-cesium/Source/Core/defined").default;
 const GeoJsonCatalogItem = require("../../Models/GeoJsonCatalogItem");
 const ObserveModelMixin = require("../ObserveModelMixin");
 const OpenStreetMapCatalogItem = require("../../Models/OpenStreetMapCatalogItem");
@@ -13,8 +14,9 @@ const PropTypes = require("prop-types");
 const Terria = require("../../Models/Terria");
 const TerriaViewer = require("../../ViewModels/TerriaViewer.js");
 const ViewerMode = require("../../Models/ViewerMode");
-const when = require("terriajs-cesium/Source/ThirdParty/when");
+const when = require("terriajs-cesium/Source/ThirdParty/when").default;
 import classNames from "classnames";
+import { withTranslation } from "react-i18next";
 
 import Styles from "./data-preview-map.scss";
 
@@ -28,21 +30,24 @@ const DataPreviewMap = createReactClass({
   propTypes: {
     terria: PropTypes.object.isRequired,
     previewedCatalogItem: PropTypes.object,
-    showMap: PropTypes.bool
+    showMap: PropTypes.bool,
+    t: PropTypes.func.isRequired
   },
 
   getInitialState() {
+    const { t } = this.props;
     return {
-      previewBadgeText: "PREVIEW LOADING..."
+      previewBadgeText: t("preview.loading")
     };
   },
 
   /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillMount() {
     const terria = this.props.terria;
+    const { t } = this.props;
 
     this.terriaPreview = new Terria({
-      appName: terria.appName + " preview",
+      appName: t("preview.preview", { appName: terria.appName }),
       supportEmail: terria.supportEmail,
       baseUrl: terria.baseUrl,
       cesiumBaseUrl: terria.cesiumBaseUrl,
@@ -65,7 +70,7 @@ const DataPreviewMap = createReactClass({
         ) {
           this._errorPreviewingCatalogItem = true;
           this.setState({
-            previewBadgeText: "NO PREVIEW AVAILABLE"
+            previewBadgeText: t("preview.noPreviewAvailable")
           });
         }
       }
@@ -110,6 +115,7 @@ const DataPreviewMap = createReactClass({
   },
 
   updatePreview(previewedCatalogItem) {
+    const { t } = this.props;
     if (this.lastPreviewedCatalogItem === previewedCatalogItem) {
       return;
     }
@@ -118,14 +124,14 @@ const DataPreviewMap = createReactClass({
       this.props.terria.analytics.logEvent(
         "dataSource",
         "preview",
-        previewedCatalogItem.name
+        previewedCatalogItem.path
       );
     }
 
     this.lastPreviewedCatalogItem = previewedCatalogItem;
 
     this.setState({
-      previewBadgeText: "DATA PREVIEW LOADING..."
+      previewBadgeText: t("preview.dataPreviewLoading")
     });
 
     this.isZoomedToExtent = false;
@@ -182,20 +188,20 @@ const DataPreviewMap = createReactClass({
 
               if (this._errorPreviewingCatalogItem) {
                 this.setState({
-                  previewBadgeText: "NO PREVIEW AVAILABLE"
+                  previewBadgeText: t("preview.noPreviewAvailable")
                 });
               } else if (that.removePreviewFromMap) {
                 this.setState({
-                  previewBadgeText: "DATA PREVIEW"
+                  previewBadgeText: t("preview.dataPreview")
                 });
               } else {
                 this.setState({
-                  previewBadgeText: "NO PREVIEW AVAILABLE"
+                  previewBadgeText: t("preview.noPreviewAvailable")
                 });
               }
             } else {
               this.setState({
-                previewBadgeText: "NO PREVIEW AVAILABLE"
+                previewBadgeText: t("preview.noPreviewAvailable")
               });
             }
 
@@ -206,7 +212,7 @@ const DataPreviewMap = createReactClass({
           console.error(err);
 
           this.setState({
-            previewBadgeText: "DATA PREVIEW ERROR"
+            previewBadgeText: t("preview.dataPreviewError")
           });
         });
     }
@@ -366,4 +372,4 @@ const DataPreviewMap = createReactClass({
     );
   }
 });
-module.exports = DataPreviewMap;
+module.exports = withTranslation()(DataPreviewMap);

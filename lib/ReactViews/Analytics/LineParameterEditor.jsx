@@ -11,6 +11,7 @@ import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import UserDrawing from "../../Models/UserDrawing";
 import ObserveModelMixin from "../ObserveModelMixin";
 import Styles from "./parameter-editors.scss";
+import { withTranslation } from "react-i18next";
 
 const LineParameterEditor = createReactClass({
   displayName: "LineParameterEditor",
@@ -19,7 +20,8 @@ const LineParameterEditor = createReactClass({
   propTypes: {
     previewed: PropTypes.object,
     parameter: PropTypes.object,
-    viewState: PropTypes.object
+    viewState: PropTypes.object,
+    t: PropTypes.func.isRequired
   },
 
   getInitialState() {
@@ -66,22 +68,21 @@ const LineParameterEditor = createReactClass({
   },
 
   render() {
+    const { t } = this.props;
     return (
       <div>
         <input
           className={Styles.field}
           type="text"
           onChange={this.setValueFromText}
-          value={LineParameterEditor.getDisplayValue(
-            this.props.parameter.value
-          )}
+          value={getDisplayValue(this.props.parameter.value)}
         />
         <button
           type="button"
           onClick={this.selectLineOnMap}
           className={Styles.btnSelector}
         >
-          Click to draw line
+          {t("analytics.clickToDrawLine")}
         </button>
       </div>
     );
@@ -115,7 +116,7 @@ LineParameterEditor.setValueFromText = function(e, parameter) {
  * @param {Object} value Native format of parameter value.
  * @return {String} String for display
  */
-LineParameterEditor.getDisplayValue = function(value) {
+export function getDisplayValue(value) {
   const pointsLongLats = value;
   if (!defined(pointsLongLats) || pointsLongLats.length < 1) {
     return "";
@@ -138,6 +139,6 @@ LineParameterEditor.getDisplayValue = function(value) {
   } else {
     return "";
   }
-};
+}
 
-module.exports = LineParameterEditor;
+export default withTranslation()(LineParameterEditor);

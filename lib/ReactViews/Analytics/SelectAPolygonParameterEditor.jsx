@@ -11,6 +11,7 @@ import PropTypes from "prop-types";
 import Styles from "./parameter-editors.scss";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import createReactClass from "create-react-class";
+import { withTranslation } from "react-i18next";
 
 const SelectAPolygonParameterEditor = createReactClass({
   mixins: [ObserveModelMixin],
@@ -18,7 +19,8 @@ const SelectAPolygonParameterEditor = createReactClass({
   propTypes: {
     previewed: PropTypes.object,
     parameter: PropTypes.object,
-    viewState: PropTypes.object
+    viewState: PropTypes.object,
+    t: PropTypes.func.isRequired
   },
 
   setDisplayValue(e) {
@@ -34,6 +36,7 @@ const SelectAPolygonParameterEditor = createReactClass({
   },
 
   render() {
+    const { t } = this.props;
     return (
       <div>
         <input className={Styles.field} type="text" value={this.state.value} />
@@ -42,7 +45,7 @@ const SelectAPolygonParameterEditor = createReactClass({
           onClick={this.selectExistingPolygonOnMap}
           className={Styles.btnSelector}
         >
-          Select existing polygon
+          {t("analytics.selectExistingPolygon")}
         </button>
       </div>
     );
@@ -52,11 +55,7 @@ const SelectAPolygonParameterEditor = createReactClass({
 /**
  * Prompts the user to select a point on the map.
  */
-SelectAPolygonParameterEditor.selectOnMap = function(
-  terria,
-  viewState,
-  parameter
-) {
+export function selectOnMap(terria, viewState, parameter) {
   // Cancel any feature picking already in progress.
   terria.pickedFeatures = undefined;
 
@@ -131,9 +130,9 @@ SelectAPolygonParameterEditor.selectOnMap = function(
     });
 
   viewState.explorerPanelIsVisible = false;
-};
+}
 
-SelectAPolygonParameterEditor.getDisplayValue = function(value) {
+export function getDisplayValue(value) {
   if (!defined(value) || value === "") {
     return "";
   }
@@ -142,6 +141,6 @@ SelectAPolygonParameterEditor.getDisplayValue = function(value) {
       return featureData.id;
     })
     .join(", ");
-};
+}
 
-module.exports = SelectAPolygonParameterEditor;
+export default withTranslation()(SelectAPolygonParameterEditor);

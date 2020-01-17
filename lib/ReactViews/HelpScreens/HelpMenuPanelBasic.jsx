@@ -11,14 +11,15 @@ import Styles from "./help-panel.scss";
 import DropdownStyles from "../Map/Panels/panel.scss";
 import helpIcon from "../../../wwwroot/images/icons/help.svg";
 
-import getReactElementFromContents from "../ReactHelpers/getReactElementFromContents";
+import { withTranslation } from "react-i18next";
 
 const HelpMenuPanelBasic = createReactClass({
   displayName: "HelpMenuPanelBasic",
   mixins: [ObserveModelMixin],
 
   propTypes: {
-    viewState: PropTypes.object.isRequired
+    viewState: PropTypes.object.isRequired,
+    t: PropTypes.func.isRequired
   },
 
   getInitialState() {
@@ -47,16 +48,18 @@ const HelpMenuPanelBasic = createReactClass({
     };
     const isOpen = this.props.viewState.showHelpMenu;
 
+    const { t } = this.props;
+
     return (
       <MenuPanel
         theme={dropdownTheme}
-        btnText="Help"
+        btnText={t("helpMenu.btnText")}
         viewState={this.props.viewState}
         isOpen={isOpen}
         onDismissed={() => {
           this.toggleShowHelpMenu(false);
         }}
-        btnTitle="get help"
+        btnTitle={t("helpMenu.btnTitle")}
         onOpenChanged={this.onOpenChanged}
         // forceClosed={this.props.viewState.showSatelliteGuidance}
         smallScreen={this.props.viewState.useSmallScreenInterface}
@@ -64,9 +67,7 @@ const HelpMenuPanelBasic = createReactClass({
         <If condition={isOpen}>
           <div className={classNames(Styles.viewer, DropdownStyles.section)}>
             <label className={DropdownStyles.heading}>
-              {getReactElementFromContents(
-                this.props.viewState.terria.language.HelpMenuHeader
-              )}
+              {t("helpMenu.helpMenuHeader")}
             </label>
             <ul className={Styles.viewerSelector}>
               <li className={Styles.listItem}>
@@ -78,9 +79,7 @@ const HelpMenuPanelBasic = createReactClass({
                   }}
                   className={Styles.btnViewer}
                 >
-                  {getReactElementFromContents(
-                    this.props.viewState.terria.language.HelpMenuOpenWelcome
-                  )}
+                  {t("helpMenu.helpMenuOpenWelcome")}
                 </button>
               </li>
               <li className={Styles.listItem}>
@@ -92,10 +91,7 @@ const HelpMenuPanelBasic = createReactClass({
                   }}
                   className={Styles.btnViewer}
                 >
-                  {getReactElementFromContents(
-                    this.props.viewState.terria.language
-                      .HelpMenuSatelliteGuideTitle
-                  )}
+                  {t("helpMenu.helpMenuSatelliteGuideTitle")}
                 </button>
               </li>
               <li className={Styles.listItem}>
@@ -104,9 +100,7 @@ const HelpMenuPanelBasic = createReactClass({
                   href="./help/help.html"
                   className={Styles.btnViewer}
                 >
-                  {getReactElementFromContents(
-                    this.props.viewState.terria.language.HelpMenuMoreHelpTitle
-                  )}
+                  {t("helpMenu.helpMenuMoreHelpTitle")}
                 </a>
               </li>
             </ul>
@@ -117,4 +111,4 @@ const HelpMenuPanelBasic = createReactClass({
   }
 });
 
-export default HelpMenuPanelBasic;
+export default withTranslation()(HelpMenuPanelBasic);

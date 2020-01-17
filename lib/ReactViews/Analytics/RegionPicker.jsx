@@ -14,6 +14,7 @@ import when from "terriajs-cesium/Source/ThirdParty/when";
 import GeoJsonCatalogItem from "../../Models/GeoJsonCatalogItem";
 import ObserveModelMixin from "../ObserveModelMixin";
 import WebMapServiceCatalogItem from "../../Models/WebMapServiceCatalogItem";
+import { withTranslation } from "react-i18next";
 
 import RegionTypeParameterEditor from "./RegionTypeParameterEditor";
 import Styles from "./parameter-editors.scss";
@@ -24,7 +25,8 @@ const RegionPicker = createReactClass({
 
   propTypes: {
     previewed: PropTypes.object,
-    parameter: PropTypes.object
+    parameter: PropTypes.object,
+    t: PropTypes.func.isRequired
   },
 
   getInitialState() {
@@ -187,6 +189,7 @@ const RegionPicker = createReactClass({
   },
 
   updateMapFromValue() {
+    const { t } = this.props;
     if (!defined(this.regionProvider)) {
       return;
     }
@@ -215,7 +218,7 @@ const RegionPicker = createReactClass({
           that._selectedRegionCatalogItem = new GeoJsonCatalogItem(
             that.props.previewed.terria
           );
-          that._selectedRegionCatalogItem.name = "Selected Polygon";
+          that._selectedRegionCatalogItem.name = t("analytics.selectedPolygon");
           that._selectedRegionCatalogItem.data = feature;
           that._selectedRegionCatalogItem.isEnabled = true;
           that._selectedRegionCatalogItem.zoomTo();
@@ -294,6 +297,7 @@ const RegionPicker = createReactClass({
   },
 
   render() {
+    const { t } = this.props;
     return (
       <div className={Styles.parameterEditor}>
         <RegionTypeParameterEditor
@@ -306,10 +310,10 @@ const RegionPicker = createReactClass({
           autoComplete="off"
           value={
             this.state.autocompleteText ||
-            RegionPicker.getDisplayValue(this.regionValue, this.props.parameter)
+            getDisplayValue(this.regionValue, this.props.parameter)
           }
           onChange={this.textChange}
-          placeholder="Region name"
+          placeholder={t("analytics.regionName")}
         />
         {this.renderOptions()}
       </div>
@@ -345,7 +349,7 @@ const RegionPicker = createReactClass({
  * @param {Object} value Native format of parameter value.
  * @return {String} String for display
  */
-RegionPicker.getDisplayValue = function(region, parameter) {
+export function getDisplayValue(region, parameter) {
   if (!defined(region)) {
     return "";
   }
@@ -361,6 +365,6 @@ RegionPicker.getDisplayValue = function(region, parameter) {
     return "";
   }
   return regionProvider.regionType + ": " + val;
-};
+}
 
-module.exports = RegionPicker;
+export default withTranslation()(RegionPicker);

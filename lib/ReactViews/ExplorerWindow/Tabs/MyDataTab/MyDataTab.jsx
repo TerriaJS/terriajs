@@ -8,6 +8,7 @@ import DataCatalog from "../../../DataCatalog/DataCatalog.jsx";
 import DataPreview from "../../../Preview/DataPreview.jsx";
 import AddData from "./AddData.jsx";
 import ObserveModelMixin from "../../../ObserveModelMixin";
+import { withTranslation, Trans } from "react-i18next";
 
 import Styles from "./my-data-tab.scss";
 
@@ -18,7 +19,8 @@ const MyDataTab = createReactClass({
 
   propTypes: {
     terria: PropTypes.object,
-    viewState: PropTypes.object
+    viewState: PropTypes.object,
+    t: PropTypes.func.isRequired
   },
 
   getInitialState() {
@@ -44,14 +46,15 @@ const MyDataTab = createReactClass({
   },
 
   renderTabs() {
+    const { t } = this.props;
     const tabs = [
       {
         id: "local",
-        caption: "Add Local Data"
+        caption: t("addData.localTitle")
       },
       {
         id: "web",
-        caption: "Add Web Data"
+        caption: t("addData.webTitle")
       }
     ];
     return (
@@ -77,11 +80,12 @@ const MyDataTab = createReactClass({
 
   renderPromptBox() {
     if (this.hasUserAddedData()) {
+      const { t } = this.props;
       return (
         <div className={Styles.dataTypeTab}>
           <div className={Styles.dndBox}>
             <Icon glyph={Icon.GLYPHS.upload} />
-            Drag and Drop
+            {t("addData.dragDrop")}
           </div>
         </div>
       );
@@ -89,9 +93,11 @@ const MyDataTab = createReactClass({
 
     return (
       <div className={Styles.dataTypeTab}>
-        <div>
-          <div>Drag and drop a file here to view it locally on the map</div>
-          <div>(it won’t be saved or uploaded to the internet)</div>
+        <div className={Styles.dndBoxInfo}>
+          <Trans i18nKey="addData.infoText">
+            <div>Drag and drop a file here to view it locally on the map</div>
+            <div>(it won’t be saved or uploaded to the internet)</div>
+          </Trans>
           <div className={Styles.tabCenter}>{this.renderTabs()}</div>
         </div>
         <div className={Styles.dndBox}>
@@ -103,6 +109,7 @@ const MyDataTab = createReactClass({
 
   render() {
     const showTwoColumn = this.hasUserAddedData() & !this.state.activeTab;
+    const { t } = this.props;
     return (
       <div className={Styles.root}>
         <div
@@ -118,7 +125,7 @@ const MyDataTab = createReactClass({
               className={Styles.btnBackToMyData}
             >
               <Icon glyph={Icon.GLYPHS.left} />
-              Back
+              {t("addData.back")}
             </button>
             <AddData
               terria={this.props.terria}
@@ -130,8 +137,10 @@ const MyDataTab = createReactClass({
           <If condition={showTwoColumn}>
             <div className={Styles.addedData}>
               <p className={Styles.explanation}>
-                <strong>Note: </strong>Data added in this way is not saved or
-                made visible to others.
+                <Trans i18nKey="addData.note">
+                  <strong>Note: </strong>Data added in this way is not saved or
+                  made visible to others.
+                </Trans>
               </p>
               <div className={Styles.tabLeft}>{this.renderTabs()}</div>
 
@@ -159,4 +168,4 @@ const MyDataTab = createReactClass({
   }
 });
 
-module.exports = MyDataTab;
+module.exports = withTranslation()(MyDataTab);
