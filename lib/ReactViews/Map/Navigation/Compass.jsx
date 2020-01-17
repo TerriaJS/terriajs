@@ -167,9 +167,9 @@ class Compass extends React.Component {
       <div
         className={Styles.compass}
         title={description}
-        onMouseDown={this.handleMouseDown}
-        onDoubleClick={this.handleDoubleClick}
-        onMouseUp={this.resetRotater}
+        onMouseDown={this.handleMouseDown.bind(this)}
+        onDoubleClick={this.handleDoubleClick.bind(this)}
+        onMouseUp={this.resetRotater.bind(this)}
       >
         <div className={Styles.outerRing} style={outerCircleStyle}>
           <Icon glyph={Icon.GLYPHS.compassOuter} />
@@ -461,7 +461,9 @@ function subscribeToAnimationFrame(viewModel) {
   viewModel._unsubscribeFromAnimationFrame = (id => () =>
     cancelAnimationFrame(id))(
     requestAnimationFrame(() => {
-      viewModel.orbitAnimationFrameFunction();
+      if (defined(viewModel.orbitAnimationFrameFunction)) {
+        viewModel.orbitAnimationFrameFunction();
+      }
       subscribeToAnimationFrame(viewModel);
     })
   );
