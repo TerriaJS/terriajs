@@ -9,6 +9,7 @@ Change Log
 * Expanded test cases to ensure WorkbenchItem & Story have the correct order of components composed
 * Fix broken catalog functions when used with translation HOC
 * Make the default `Legend` width a little smaller to account for the workbench scrollbar
+* Add `allowFeatureInfoRequests` property to `Terria` and prevent unnecessary feature info requests when creating `UserDrawing`s.
 
 ### v7.10.0
 
