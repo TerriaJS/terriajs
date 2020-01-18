@@ -28,7 +28,7 @@ import { withTranslation } from "react-i18next";
 import Styles from "./workbench-item.scss";
 import Icon from "../Icon.jsx";
 
-const WorkbenchItem = createReactClass({
+export const WorkbenchItemRaw = createReactClass({
   displayName: "WorkbenchItem",
   mixins: [ObserveModelMixin],
 
@@ -148,6 +148,15 @@ const WorkbenchItem = createReactClass({
               maxValue={workbenchItem.colorScaleMaximum}
             />
             <DisplayAsPercentSection item={workbenchItem} />
+            <If
+              condition={
+                workbenchItem.shortReport ||
+                (workbenchItem.shortReportSections &&
+                  workbenchItem.shortReportSections.length)
+              }
+            >
+              <ShortReport item={workbenchItem} />
+            </If>
             <Legend item={workbenchItem} />
             <If
               condition={
@@ -158,15 +167,6 @@ const WorkbenchItem = createReactClass({
             >
               <ConceptViewer item={workbenchItem} />
             </If>
-            <If
-              condition={
-                workbenchItem.shortReport ||
-                (workbenchItem.shortReportSections &&
-                  workbenchItem.shortReportSections.length)
-              }
-            >
-              <ShortReport item={workbenchItem} />
-            </If>
           </div>
         </If>
       </li>
@@ -174,4 +174,4 @@ const WorkbenchItem = createReactClass({
   }
 });
 
-module.exports = withTranslation()(sortable(WorkbenchItem));
+export default sortable(withTranslation()(WorkbenchItemRaw));
