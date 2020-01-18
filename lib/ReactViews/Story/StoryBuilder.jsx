@@ -49,6 +49,12 @@ const StoryBuilder = createReactClass({
     });
   },
 
+  closePopup() {
+    this.setState({
+      showPopup: false
+    });
+  },
+
   removeStory(index, story) {
     this.props.terria.stories = this.props.terria.stories.filter(
       st => st.id !== story.id
@@ -320,6 +326,7 @@ const StoryBuilder = createReactClass({
             terria={this.props.terria}
             viewState={this.props.viewState}
             modalWidth={this.props.widthFromMeasureElementHOC - 22}
+            userOnClick={this.closePopup}
           />
         </div>
       </div>

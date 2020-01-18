@@ -37,6 +37,7 @@ const SharePanel = createReactClass({
     catalogShareWithoutText: PropTypes.bool,
     modalWidth: PropTypes.number,
     viewState: PropTypes.object.isRequired,
+    userOnClick: PropTypes.func,
     t: PropTypes.func.isRequired
   },
 
@@ -532,6 +533,7 @@ const SharePanel = createReactClass({
             if (catalogShare || storyShare)
               this.props.viewState.shareModalIsVisible = false;
           }}
+          userOnClick={this.props.userOnClick}
         >
           <If condition={this.state.isOpen}>{this.renderContent()}</If>
         </MenuPanel>
