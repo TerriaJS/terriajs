@@ -9,9 +9,24 @@
   float: right;
 }
 
+.story-share {
+  position: relative;
+  text-align: center;
+  padding-top: $padding-small;
+  padding-bottom: $padding-small;
+}
+
 .catalog-share-inner {
   background: $grey-lightest;
   color: $text-darker;
+}
+
+.story-share-inner {
+  background: $grey-lightest;
+  color: $text-darker;
+  right: $padding;
+  top: -50px;
+  text-align: left;
 }
 
 .dropdown-inner {
@@ -32,6 +47,36 @@
     color: $text-light;
   }
 }
+
+.btn--storyShare {
+  composes: btn from "../../../../Sass/common/_buttons.scss";
+  composes: btn--map from "../../../../Sass/common/_buttons.scss";
+  padding: $padding;
+  line-height: 1.3;
+  font-size: $font-size-small;
+  font-weight: 600;
+  background: transparent;
+  box-shadow: none;
+  display: inline-block;
+
+  svg {
+    fill: #9ca1aa;
+    margin: 0 3px 1px 4px;
+    vertical-align: bottom;
+  }
+  span {
+    line-height: 1.3;
+    margin: 0 5px;
+  }
+  &:hover,
+  &:focus {
+    background: none;
+    svg {
+      fill: #ffffff;
+    }
+  }
+}
+
 .btn--withoutText {
   svg {
     fill: $text-darker;
@@ -77,6 +122,10 @@
 }
 
 .clipboard-for-catalog-share {
+  margin: 15px;
+}
+
+.clipboard-for-story-share {
   margin: 15px;
 }
 
