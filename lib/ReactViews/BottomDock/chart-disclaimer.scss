@@ -4,10 +4,10 @@
 .chart-disclaimer-panel {
   background: #9a4b4b;
   color: white;
-  padding: 1px 10px;
+  padding: 1px $padding;
   font-size: 0.8rem;
   p {
-    margin: 10px 0px;
+    margin: $padding 0px;
     a,
     a:visited {
       color: white;
