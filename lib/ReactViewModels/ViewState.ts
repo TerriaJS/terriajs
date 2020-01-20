@@ -1,6 +1,7 @@
 import clone from "terriajs-cesium/Source/Core/clone";
 import defined from "terriajs-cesium/Source/Core/defined";
 import DisclaimerHandler from "./DisclaimerHandler";
+import addedByUser from "../Core/addedByUser";
 import getAncestors from "../Models/getAncestors";
 import MouseCoords from "./MouseCoords";
 import SearchState from "./SearchState";
@@ -14,7 +15,6 @@ import {
 } from "mobx";
 import { BaseModel } from "../Models/Model";
 import PickedFeatures from "../Map/PickedFeatures";
-import isDefined from "../Core/isDefined";
 import { language } from "../Language/defaults";
 
 export const DATA_CATALOG_NAME = "data-catalog";
@@ -266,15 +266,7 @@ export default class ViewState {
 
   @action
   viewCatalogMember(catalogMember: BaseModel) {
-    // TODO call addedByUser() when it is fixed
-    let addedByUser = false;
-    if (isDefined(this.terria.catalog.userAddedDataGroupIfItExists)) {
-      const userAddedDataGroup = this.terria.catalog.userAddedDataGroup;
-      addedByUser = Boolean(
-        userAddedDataGroup.memberModels.find(m => m === catalogMember)
-      );
-    }
-    if (addedByUser) {
+    if (addedByUser(catalogMember)) {
       this.userDataPreviewedItem = catalogMember;
       this.openUserData();
     } else {
