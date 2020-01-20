@@ -684,7 +684,9 @@ export default class MagdaReference extends UrlMixin(
       );
     }
     const proxiedUrl = proxyCatalogItemUrl(this, recordUri.toString(), "0d");
-    return loadJson(proxiedUrl);
+    return loadJson(proxiedUrl, {
+      "Cache-Control": "no-cache, no-store, max-age=0"
+    });
   }
 
   protected buildMagdaRecordUri(options: RecordOptions): uri.URI | undefined {
