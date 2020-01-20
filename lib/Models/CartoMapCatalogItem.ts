@@ -1,6 +1,7 @@
 import CreateModel from "./CreateModel";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
+import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CartoMapCatalogItemTraits from "../Traits/CartoMapCatalogItemTraits";
 import Mappable from "./Mappable";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
@@ -10,10 +11,99 @@ import UrlTemplateImageryProvider from "terriajs-cesium/Source/Scene/UrlTemplate
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import isDefined from "../Core/isDefined";
-import CommonStrata from "./CommonStrata";
+import LoadableStratum from "./LoadableStratum";
+import StratumOrder from "./StratumOrder";
+import { BaseModel } from "./Model";
+
+export class CartoLoadableStratum extends LoadableStratum(
+  CartoMapCatalogItemTraits
+) {
+  static stratumName = "cartoLoadable";
+
+  constructor(
+    readonly catalogItem: CartoMapCatalogItem,
+    readonly tileUrl: string,
+    readonly tileSubdomains: string[]
+  ) {
+    super();
+  }
+
+  duplicateLoadableStratum(newModel: BaseModel): this {
+    return new CartoLoadableStratum(
+      newModel as CartoMapCatalogItem,
+      this.tileUrl,
+      this.tileSubdomains
+    ) as this;
+  }
+
+  static load(catalogItem: CartoMapCatalogItem): Promise<CartoLoadableStratum> {
+    let queryParameters: { auth_token?: string };
+    queryParameters = {};
+    if (catalogItem.auth_token) {
+      queryParameters.auth_token = catalogItem.auth_token;
+    }
+
+    if (catalogItem.url === undefined) {
+      throw new TerriaError({
+        title: "Unable to load Carto Map layer",
+        message:
+          "The Carto Map layer cannot be loaded the catalog item does not have a `url`."
+      });
+    }
+
+    const resource = new Resource({
+      url: catalogItem.url,
+      headers: {
+        "Content-Type": "application/json"
+      },
+      queryParameters: queryParameters
+    });
+
+    return Promise.resolve()
+      .then(() => {
+        return resource.post(JSON.stringify(catalogItem.config || {}));
+      })
+      .then(response => {
+        if (response === undefined) {
+          throw new TerriaError({
+            sender: this,
+            title: "Could not load Carto Map layer",
+            message:
+              "There was an error loading the data for this catalog item."
+          });
+        }
+
+        const map = JSON.parse(<string>response);
+
+        let url: string;
+        let subdomains: string[];
+
+        const metadataUrl =
+          map.metadata && map.metadata.url && map.metadata.url.raster;
+        if (metadataUrl) {
+          url = metadataUrl.urlTemplate;
+          subdomains = metadataUrl.subdomains;
+        } else {
+          throw new TerriaError({
+            sender: this,
+            title: "No URL",
+            message: "Unable to find a usable URL for the Carto Map layer."
+          });
+        }
+
+        const stratum = new CartoLoadableStratum(catalogItem, url, subdomains);
+
+        return stratum;
+      });
+  }
+}
+
+StratumOrder.addLoadStratum(CartoLoadableStratum.stratumName);
 
 export default class CartoMapCatalogItem
-  extends UrlMixin(CatalogMemberMixin(CreateModel(CartoMapCatalogItemTraits)))
+  extends AsyncMappableMixin(
+    UrlMixin(CatalogMemberMixin(CreateModel(CartoMapCatalogItemTraits)))
+  )
   implements Mappable {
   static readonly type = "carto";
 
@@ -23,72 +113,6 @@ export default class CartoMapCatalogItem
 
   get isMappable() {
     return true;
-  }
-
-  loadMapItems(): Promise<void> {
-    if (isDefined(this.tileUrl)) {
-      return Promise.resolve();
-    }
-
-    let queryParameters: { auth_token?: string };
-    queryParameters = {};
-    if (this.auth_token) {
-      queryParameters.auth_token = this.auth_token;
-    }
-
-    if (this.url === undefined) {
-      throw new TerriaError({
-        title: "Unable to load Carto Map layer",
-        message:
-          "The Carto Map layer cannot be loaded the catalog item does not have a `url`."
-      });
-    }
-
-    const resource = new Resource({
-      url: this.url,
-      headers: {
-        "Content-Type": "application/json"
-      },
-      queryParameters: queryParameters
-    });
-
-    let promise = resource.post(JSON.stringify(this.config || {}));
-    if (promise === undefined) {
-      throw new TerriaError({
-        sender: this,
-        title: "Could not load Carto Map layer",
-        message: "There was an error loading the data for this catalog item."
-      });
-    }
-
-    return promise.then(response => {
-      const map = JSON.parse(response);
-
-      let url: string;
-      let subdomains: string[];
-
-      const metadataUrl =
-        map.metadata && map.metadata.url && map.metadata.url.raster;
-      if (metadataUrl) {
-        url = metadataUrl.urlTemplate;
-        subdomains = metadataUrl.subdomains;
-      } else {
-        throw new TerriaError({
-          sender: this,
-          title: "No URL",
-          message: "Unable to find a usable URL for the Carto Map layer."
-        });
-      }
-
-      runInAction(() => {
-        this.setTrait(CommonStrata.user, "tileUrl", url);
-        if (!isDefined(this.tileSubdomains)) {
-          this.setTrait(CommonStrata.user, "tileSubdomains", subdomains);
-        }
-      });
-
-      return Promise.resolve();
-    });
   }
 
   @computed get mapItems() {
@@ -108,8 +132,20 @@ export default class CartoMapCatalogItem
     return Promise.resolve();
   }
 
+  protected forceLoadMapItems(): Promise<void> {
+    return CartoLoadableStratum.load(this).then(stratum => {
+      runInAction(() => {
+        this.strata.set(CartoLoadableStratum.stratumName, stratum);
+      });
+    });
+  }
+
   @computed get imageryProvider() {
-    if (!isDefined(this.tileUrl)) {
+    const stratum = <CartoLoadableStratum>(
+      this.strata.get(CartoLoadableStratum.stratumName)
+    );
+
+    if (!isDefined(stratum) || !isDefined(stratum.tileUrl)) {
       return;
     }
 
@@ -127,12 +163,12 @@ export default class CartoMapCatalogItem
     }
 
     let subdomains: string[] | undefined;
-    if (isDefined(this.tileSubdomains)) {
-      subdomains = this.tileSubdomains.slice();
+    if (isDefined(stratum.tileSubdomains)) {
+      subdomains = stratum.tileSubdomains.slice();
     }
 
     return new UrlTemplateImageryProvider({
-      url: proxyCatalogItemUrl(this, this.tileUrl),
+      url: proxyCatalogItemUrl(this, stratum.tileUrl),
       maximumLevel: this.maximumLevel,
       minimumLevel: this.minimumLevel,
       credit: this.attribution,

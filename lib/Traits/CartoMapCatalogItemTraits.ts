@@ -30,20 +30,6 @@ export default class CartoMapCatalogItemTraits extends mixTraits(
   auth_token?: string;
 
   @primitiveTrait({
-    type: "string",
-    name: "Tile url",
-    description: "The template URL from which to get tiles"
-  })
-  tileUrl?: string;
-
-  @primitiveArrayTrait({
-    type: "string",
-    name: "Tile subdomains",
-    description: "The subdomains from which to get tiles"
-  })
-  tileSubdomains?: string[];
-
-  @primitiveTrait({
     name: "Minimum Level",
     description: "The minimum tile level to retrieve from the map data",
     type: "number"

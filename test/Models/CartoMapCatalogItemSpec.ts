@@ -1,5 +1,7 @@
 import { configure, runInAction } from "mobx";
-import CartoMapCatalogItem from "../../lib/Models/CartoMapCatalogItem";
+import CartoMapCatalogItem, {
+  CartoLoadableStratum
+} from "../../lib/Models/CartoMapCatalogItem";
 import Terria from "../../lib/Models/Terria";
 import UrlTemplateImageryProvider from "terriajs-cesium/Source/Scene/UrlTemplateImageryProvider";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
@@ -22,12 +24,16 @@ describe("CartoMapCatalogItem", function() {
 
   describe("when tileUrl has been set", function() {
     beforeEach(function() {
-      runInAction(() => {
-        item.setTrait("user", "tileUrl", "ABC");
-      });
+      const tileUrl = "abc";
+      item.strata.set(
+        CartoLoadableStratum.stratumName,
+        new CartoLoadableStratum(item, tileUrl, [])
+      );
     });
 
     it("should create an imageryProvider with correct properties", function() {
+      const stratum = <CartoLoadableStratum>item.strata.get("cartoLoadable");
+
       expect(
         item.imageryProvider instanceof UrlTemplateImageryProvider
       ).toBeTruthy();
@@ -43,18 +49,19 @@ describe("CartoMapCatalogItem", function() {
             north: 20
           })
         );
-        item.setTrait("definition", "tileSubdomains", ["a", "b"]);
         item.setTrait("definition", "attribution", "foo bar baz");
       });
 
       const imageryProvider = item.imageryProvider;
       expect(imageryProvider).toBeDefined();
       if (imageryProvider !== undefined) {
-        expect(imageryProvider.url).toEqual(<string>item.tileUrl);
+        expect(imageryProvider.url).toEqual(<string>stratum.tileUrl);
         expect(imageryProvider.credit.html).toEqual(<string>item.attribution);
         expect(imageryProvider.minimumLevel).toEqual(item.minimumLevel);
         expect(imageryProvider.maximumLevel).toEqual(item.maximumLevel);
-        expect((<any>imageryProvider)._subdomains).toEqual(item.tileSubdomains);
+        expect((<any>imageryProvider)._subdomains).toEqual(
+          stratum.tileSubdomains
+        );
         const { west, south, east, north } = item.rectangle;
         let rectangle = Rectangle.fromDegrees(west, south, east, north);
         expect(imageryProvider.rectangle.west).toBeCloseTo(rectangle.west);
