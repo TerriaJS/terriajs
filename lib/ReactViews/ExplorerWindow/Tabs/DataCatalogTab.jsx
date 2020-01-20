@@ -8,6 +8,8 @@ import PropTypes from "prop-types";
 import DataCatalog from "../../DataCatalog/DataCatalog";
 import DataPreview from "../../Preview/DataPreview";
 
+import SearchBox, { DEBOUNCE_INTERVAL } from "../../Search/SearchBox.jsx";
+
 import Styles from "./data-catalog-tab.scss";
 import { runInAction } from "mobx";
 
@@ -43,16 +45,27 @@ const DataCatalogTab = observer(
 
     render() {
       const terria = this.props.terria;
+      const searchState = this.props.viewState.searchState;
       return (
         <div className={Styles.root}>
           <div className={Styles.dataExplorer}>
-            {/* TODO: Put this back once we add a MobX DataCatalogSearch Provider */}
-            {/* <SearchBox
-              searchText={this.props.viewState.searchState.catalogSearchText}
-              onSearchTextChanged={this.changeSearchText}
-              onDoSearch={this.search}
-              placeholder={this.props.searchPlaceholder}
-            /> */}
+            {/* ~TODO: Put this back once we add a MobX DataCatalogSearch Provider~ */}
+            {/* TODO2: Implement a more generic MobX DataCatalogSearch */}
+            {searchState.catalogSearchProvider && (
+              <SearchBox
+                searchText={searchState.catalogSearchText}
+                onSearchTextChanged={this.changeSearchText}
+                onDoSearch={this.search}
+                placeholder={this.props.searchPlaceholder}
+                debounceDuration={
+                  terria.catalogReferencesLoaded &&
+                  searchState.catalogSearchProvider
+                    ? searchState.catalogSearchProvider
+                        .debounceDurationOnceLoaded
+                    : DEBOUNCE_INTERVAL
+                }
+              />
+            )}
             <DataCatalog
               terria={this.props.terria}
               viewState={this.props.viewState}

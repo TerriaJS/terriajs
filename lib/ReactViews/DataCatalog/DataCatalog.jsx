@@ -29,11 +29,15 @@ const DataCatalog = observer(
     render() {
       const searchState = this.props.viewState.searchState;
       const isSearching = searchState.catalogSearchText.length > 0;
-      const unfilteredItems = isSearching
-        ? searchState.catalogSearchProvider.searchResults.map(
-            result => result.catalogItem
-          )
-        : this.props.items;
+      const unfilteredItems =
+        isSearching &&
+        searchState.catalogSearchProvider &&
+        searchState.catalogSearchResults &&
+        searchState.catalogSearchResults.results
+          ? searchState.catalogSearchResults.results.map(
+              result => result.catalogItem
+            )
+          : this.props.items;
       const items = (unfilteredItems || []).filter(defined);
 
       return (
@@ -41,7 +45,7 @@ const DataCatalog = observer(
           <If condition={isSearching}>
             <label className={Styles.label}>Search results</label>
             <SearchHeader
-              searchProvider={searchState.catalogSearchProvider}
+              searchResults={searchState.catalogSearchProvider}
               isWaitingForSearchToStart={
                 searchState.isWaitingToStartCatalogSearch
               }
