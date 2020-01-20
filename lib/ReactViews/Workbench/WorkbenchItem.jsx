@@ -193,4 +193,4 @@ const WorkbenchItem = observer(
   })
 );
 
-module.exports = withTranslation()(sortable(WorkbenchItem));
+module.exports = sortable(withTranslation()(WorkbenchItem));
