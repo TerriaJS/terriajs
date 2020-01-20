@@ -14,6 +14,12 @@ Change Log
 * Welcome message, in-app guides & new feature prompts are now disabled by default. These can be re-enabled by setting the `showWelcomeMessage`, `showInAppGuides` & `showFeaturePrompts` options in config.json. 
 * Updated Welcome Message to pass its props to `WelcomeMessagePrimaryBtnClick` & `WelcomeMessageSecondaryBtnClick` overrides
 
+### MobX Development
+* Fixed a bug where `updateModelFromJson` would ignore its `replaceStratum` parameter.
+* Fixed bug in StratumOrder where `sortBottomToTop` would sort strata in the wrong order.
+* Allow member re-ordering via GroupMixin's `moveMemberToIndex`
+* Re-added Measure Tool support
+
 ### v7.9.0
 
 * Upgraded to Cesium v1.63.1. This upgrade may cause more problems than usual because Cesium has switched from AMD to ES6 modules. If you run into problems, please contact us: https://terria.io/contact

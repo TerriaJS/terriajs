@@ -1,5 +1,6 @@
 import { action, computed, observable, runInAction } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import clone from "terriajs-cesium/Source/Core/clone";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
@@ -96,21 +97,40 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
       }
     }
 
+    /**
+     * Used to re-order catalog members
+     *
+     * @param stratumId name of the stratum to update
+     * @param member the member to be moved
+     * @param newIndex the new index to shift the member to
+     *
+     * @returns true if the member was moved to the new index successfully
+     */
     @action
     moveMemberToIndex(stratumId: string, member: BaseModel, newIndex: number) {
       if (member.uniqueId === undefined) {
-        return;
+        throw new DeveloperError(
+          "Cannot reorder a model without a `uniqueId`."
+        );
       }
-      const members = this.getTrait(stratumId, "members");
+      const members = this.members;
+      const moveFrom = members.indexOf(member.uniqueId);
+      if (members[newIndex] === undefined) {
+        throw new DeveloperError(`Invalid 'newIndex' target: ${newIndex}`);
+      }
+      if (moveFrom === -1) {
+        throw new DeveloperError(
+          `A model couldn't be found in the group ${
+            this.uniqueId
+          } for member uniqueId ${member.uniqueId}`
+        );
+      }
+      const cloneArr = clone(members);
 
-      if (isDefined(members)) {
-        const moveFrom = members.indexOf(member.uniqueId);
-        if (moveFrom === -1) {
-          return;
-        }
-        // shift a current member to the new index
-        members.splice(newIndex, 0, members.splice(moveFrom, 1)[0]);
-      }
+      // shift a current member to the new index
+      cloneArr.splice(newIndex, 0, cloneArr.splice(moveFrom, 1)[0]);
+      this.setTrait(stratumId, "members", cloneArr);
+      return true;
     }
 
     @action
