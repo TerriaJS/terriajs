@@ -5,10 +5,14 @@ interface CssExports {
   'btn-action--loading-on-map': string;
   'btn-catalog-item': string;
   'btn-catalog-item--is-previewed': string;
+  'btn-catalog-item--is-trashable': string;
+  'btn-trash': string;
   'btnAction': string;
   'btnActionLoadingOnMap': string;
   'btnCatalogItem': string;
   'btnCatalogItemIsPreviewed': string;
+  'btnCatalogItemIsTrashable': string;
+  'btnTrash': string;
   'root': string;
 }
 declare var cssExports: CssExports;
