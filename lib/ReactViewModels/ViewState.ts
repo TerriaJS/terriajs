@@ -15,7 +15,6 @@ import {
 import { BaseModel } from "../Models/Model";
 import PickedFeatures from "../Map/PickedFeatures";
 import isDefined from "../Core/isDefined";
-import "../Models/i18n.js";
 
 export const DATA_CATALOG_NAME = "data-catalog";
 export const USER_DATA_NAME = "my-data";

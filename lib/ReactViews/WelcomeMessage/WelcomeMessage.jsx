@@ -53,8 +53,6 @@ const WelcomeMessage = createReactClass({
 });
 
 export const WelcomeMessagePure = props => {
-  return null;
-
   const {
     showWelcomeMessage,
     setShowWelcomeMessage,

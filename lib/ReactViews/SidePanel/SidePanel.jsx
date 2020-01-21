@@ -10,7 +10,6 @@ import SearchBox from "../Search/SearchBox";
 import SidebarSearch from "../Search/SidebarSearch";
 import Workbench from "../Workbench/Workbench";
 import FullScreenButton from "./FullScreenButton";
-import getReactElementFromContents from "../ReactHelpers/getReactElementFromContents";
 import Styles from "./side-panel.scss";
 
 const SidePanel = observer(

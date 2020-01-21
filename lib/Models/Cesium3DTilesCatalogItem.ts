@@ -52,7 +52,7 @@ export default class Cesium3DTilesCatalogItem
   static readonly type = "3d-tiles";
   readonly type = Cesium3DTilesCatalogItem.type;
   get typeName() {
-    return i18next.t("models.cesiumTerrain.name");
+    return i18next.t("models.cesiumTerrain.name3D");
   }
 
   readonly canZoomTo = true;

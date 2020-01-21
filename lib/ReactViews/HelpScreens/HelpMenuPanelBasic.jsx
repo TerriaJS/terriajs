@@ -10,7 +10,6 @@ import DropdownStyles from "../Map/Panels/panel.scss";
 import helpIcon from "../../../wwwroot/images/icons/help.svg";
 
 import { withTranslation } from "react-i18next";
-import getReactElementFromContents from "../ReactHelpers/getReactElementFromContents";
 import { action } from "mobx";
 import { observer } from "mobx-react";
 
