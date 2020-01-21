@@ -61,7 +61,7 @@ export default class ViewState {
   // Flesh out later
   @observable showHelpMenu: boolean = false;
   @observable showSatelliteGuidance: boolean = false;
-  @observable showWelcomeMessage: boolean = true;
+  @observable showWelcomeMessage: boolean = false;
 
   // default value is null, because user has not made decision to show or
   // not show story
