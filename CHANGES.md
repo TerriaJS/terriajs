@@ -7,6 +7,7 @@ Change Log
 * Allow member re-ordering via GroupMixin's `moveMemberToIndex`
 * Re-added Measure Tool support
 * Re-implemented `addedByUser` to fix bug where previews of user added data would appear in the wrong tab.
+* Added header options for loadJson5, & allow header overrides on MagdaReference loading
 
 ### v7.9.0
 

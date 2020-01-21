@@ -16,3 +16,4 @@ terriajs.pid
 package-lock.json
 *.swp
 dist
+.history/
