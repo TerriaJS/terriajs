@@ -44,11 +44,13 @@ export class CartoLoadableStratum extends LoadableStratum(
     }
 
     if (catalogItem.url === undefined) {
-      throw new TerriaError({
-        title: "Unable to load Carto Map layer",
-        message:
-          "The Carto Map layer cannot be loaded the catalog item does not have a `url`."
-      });
+      return Promise.reject(
+        new TerriaError({
+          title: "Unable to load Carto Map layer",
+          message:
+            "The Carto Map layer cannot be loaded the catalog item does not have a `url`."
+        })
+      );
     }
 
     const resource = new Resource({
