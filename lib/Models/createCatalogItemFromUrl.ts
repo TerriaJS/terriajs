@@ -45,19 +45,35 @@ export function createCatalogItemFromUrlWithOptions(
       index + 1
     );
   } else {
-    var item = upsertModelFromJson(
-      CatalogMemberFactory,
-      terria,
-      "",
-      undefined,
-      CommonStrata.definition,
-      { type: mapping[index].type, name: url, url: url, id: options.id }
+    // Try creating an item of this type and loading it using provided url.
+    // If it works then add the item to terria and return it, otherwise discard
+    // it and try the next type.
+    var item = CatalogMemberFactory.create(
+      mapping[index].type,
+      options.id || url,
+      terria
     );
+
+    if (item === undefined) {
+      return createCatalogItemFromUrlWithOptions(
+        url,
+        terria,
+        allowLoad,
+        options,
+        index + 1
+      );
+    }
+
+    item.setTrait(CommonStrata.definition, "url", url);
+    item.setTrait(CommonStrata.definition, "name", url);
 
     if (allowLoad && CatalogMemberMixin.isMixedInto(item)) {
       return item
         .loadMetadata()
-        .then(() => item)
+        .then(() => {
+          terria.addModel(<BaseModel>item);
+          return item;
+        })
         .catch(e => {
           return createCatalogItemFromUrlWithOptions(
             url,
@@ -93,20 +109,3 @@ createCatalogItemFromUrl.register = function(
     requiresLoad: Boolean(requiresLoad)
   });
 };
-
-// TODO: move registrations to a seperate file
-createCatalogItemFromUrl.register(matchesExtension("geojson"), "geojson");
-createCatalogItemFromUrl.register(matchesUrl(/\/wms/i), "wms-group", true);
-createCatalogItemFromUrl.register(matchesExtension("kml"), "kml");
-createCatalogItemFromUrl.register(matchesExtension("kmz"), "kml");
-
-function matchesUrl(regex: RegExp) {
-  return /./.test.bind(regex);
-}
-
-function matchesExtension(extension: string) {
-  var regex = new RegExp("\\." + extension + "$", "i");
-  return function(url: string) {
-    return Boolean(url.match(regex));
-  };
-}
