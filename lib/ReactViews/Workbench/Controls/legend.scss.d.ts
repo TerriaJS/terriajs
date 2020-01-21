@@ -9,6 +9,7 @@ interface CssExports {
   'legendImagehasError': string;
   'legendInner': string;
   'legendLegendBoxImg': string;
+  'legendOpenExternally': string;
   'legendSpacer': string;
   'legendSvg': string;
   'legendTitle': string;
