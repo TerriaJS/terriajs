@@ -7,6 +7,7 @@ Change Log
 * Allow member re-ordering via GroupMixin's `moveMemberToIndex`
 * Re-added Measure Tool support
 * Added header options for loadJson5, & allow header overrides on MagdaReference loading
+* Re-added some matcher-type mappings in `registerCatalogMembers`.
 
 ### v7.9.0
 
