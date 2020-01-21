@@ -128,7 +128,7 @@ const Legend = observer(
           </When>
           <Otherwise>
             <li key={proxiedUrl}>
-              <a href={proxiedUrl} target="_blank" rel="noreferrer noopener">
+              <a href={proxiedUrl} target="_blank" rel="noreferrer noopener" className={Styles.legendOpenExternally}>
                 Open legend in a separate tab
               </a>
             </li>
