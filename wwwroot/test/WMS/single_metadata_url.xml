@@ -86,7 +86,7 @@
             <Layer opaque="0" queryable="1">
                 <Name>single_period</Name>
                 <Title>average_data</Title>
-                <Abstract></Abstract>
+                <Abstract>description foo bar baz</Abstract>
                 <SRS>EPSG:3857</SRS>
                 <LatLonBoundingBox maxx="46.3841552734" maxy="-123.29158783" minx="46.0292739868" miny="-124.177688599" />
                 <BoundingBox SRS="EPSG:4326" maxx="46.3841552734" maxy="-123.29158783" minx="46.0292739868" miny="-124.177688599" />

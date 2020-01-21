@@ -200,10 +200,10 @@ describe("WebProcessingServiceCatalogFunction", function() {
         await wps.invoke();
         expect(getXml).toHaveBeenCalledTimes(3);
         expect(getXml.calls.argsFor(1)[0]).toBe(
-          "http://gsky.nci.org.au/ows?check_status/123"
+          "http://example.com/ows?check_status/123"
         );
         expect(getXml.calls.argsFor(2)[0]).toBe(
-          "http://gsky.nci.org.au/ows?check_status/123"
+          "http://example.com/ows?check_status/123"
         );
       });
 

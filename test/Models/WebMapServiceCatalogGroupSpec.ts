@@ -20,11 +20,7 @@ describe("WebMapServiceCatalogGroup", function() {
     const terria = new Terria();
     const wms = new WebMapServiceCatalogGroup("test", terria);
     runInAction(() => {
-      wms.setTrait(
-        "definition",
-        "url",
-        "https://programs.communications.gov.au/geoserver/ows"
-      );
+      wms.setTrait("definition", "url", "test/WMS/single_metadata_url.xml");
     });
     autorun(() => {
       console.log(wms.members);
