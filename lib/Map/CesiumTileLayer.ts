@@ -40,7 +40,7 @@ class Credit extends CesiumCredit {
 const useClipUpdateWorkaround =
   FeatureDetection.isInternetExplorer() || FeatureDetection.isEdge();
 
-export default class CesiumTileLayer extends L.TileLayer {
+export default class CesiumTileLayer extends L.GridLayer {
   readonly tileSize = 256;
   readonly errorEvent = new CesiumEvent();
 
@@ -56,9 +56,9 @@ export default class CesiumTileLayer extends L.TileLayer {
 
   constructor(
     readonly imageryProvider: ImageryProvider,
-    options?: L.TileLayerOptions
+    options?: L.GridLayerOptions
   ) {
-    super(<any>undefined, options);
+    super(options);
     this.imageryProvider = imageryProvider;
 
     const disposeSplitterReaction = this._reactToSplitterChange();
