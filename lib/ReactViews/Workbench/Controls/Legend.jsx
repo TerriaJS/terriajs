@@ -175,7 +175,7 @@ const Legend = observer(
             backgroundImage: `url(${legendItem.imageUrl})`,
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
-            backgroundSize: "cover",
+            width: `${legendItem.imageWidth}px`,
             ...boxStyle
           };
         } else {
@@ -186,7 +186,9 @@ const Legend = observer(
           };
         }
       }
-
+      const rowStyle = {
+        height: `${legendItem.imageHeight + 2}px`
+      };
       return (
         <React.Fragment key={i}>
           {legendItem.addSpacingAbove && (
@@ -194,19 +196,15 @@ const Legend = observer(
               <td />
             </tr>
           )}
-          <tr>
-            <td className={Styles.legendBox} style={boxStyle}>
-              {boxContents}
-            </td>
+          <tr style={rowStyle}>
+            <td style={boxStyle}>{boxContents}</td>
             <td className={Styles.legendTitles}>
               {legendItem.titleAbove && (
                 <div className={Styles.legendTitleAbove}>
                   {legendItem.titleAbove}
                 </div>
               )}
-              {legendItem.title && (
-                <div className={Styles.legendTitle}>{legendItem.title}</div>
-              )}
+              <div>{legendItem.title}</div>
               {legendItem.titleBelow && (
                 <div className={Styles.legendTitleBelow}>
                   {legendItem.titleBelow}

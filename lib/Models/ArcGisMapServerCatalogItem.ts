@@ -65,6 +65,8 @@ interface Legend {
   label?: string;
   contentType: string;
   imageData: string;
+  width: number;
+  height: number;
 }
 
 class MapServerStratum extends LoadableStratum(
@@ -221,11 +223,18 @@ class MapServerStratum extends LoadableStratum(
   }
 
   @computed get legends() {
-    function newLegendItem(title: string, imageUrl: string) {
+    function newLegendItem(
+      title: string,
+      imageUrl: string,
+      width: number,
+      height: number
+    ) {
       const item = createStratumInstance(LegendItemTraits);
       runInAction(() => {
         item.title = title;
         item.imageUrl = imageUrl;
+        item.imageHeight = width;
+        item.imageWidth = height;
       });
       return item;
     }
@@ -259,7 +268,9 @@ class MapServerStratum extends LoadableStratum(
         );
         const dataUrl = "data:" + leg.contentType + ";base64," + leg.imageData;
         if (isDefined(legend.items)) {
-          legend.items.push(newLegendItem(title, dataUrl));
+          legend.items.push(
+            newLegendItem(title, dataUrl, leg.width, leg.height)
+          );
         }
       });
     });
