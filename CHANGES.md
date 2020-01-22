@@ -11,6 +11,7 @@ Change Log
 * Make the default `Legend` width a little smaller to account for the workbench scrollbar
 * Add a `ChartDisclaimer` component to display an additional disclaimer above the chart panel in the bottom dock.
 * Add `allowFeatureInfoRequests` property to `Terria` and prevent unnecessary feature info requests when creating `UserDrawing`s.
+* Adjusted z-index values so that the explorer panel is on top of the side panel and the notification window appears at the very top layer.
 
 ### v7.10.0
 
