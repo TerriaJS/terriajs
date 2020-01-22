@@ -15,6 +15,7 @@ import MagdaReference from "./MagdaReference";
 import OpenStreetMapCatalogItem from "./OpenStreetMapCatalogItem";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
+import FilteredCsvReference from "./FilteredCsvReference";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
@@ -55,4 +56,8 @@ export default function registerCatalogMembers() {
   );
   CatalogMemberFactory.register(MagdaReference.type, MagdaReference);
   CatalogMemberFactory.register(KmlCatalogItem.type, KmlCatalogItem);
+  CatalogMemberFactory.register(
+    FilteredCsvReference.type,
+    FilteredCsvReference
+  );
 }
