@@ -50,7 +50,7 @@ export function createCatalogItemFromUrlWithOptions(
     // it and try the next type.
     var item = CatalogMemberFactory.create(
       mapping[index].type,
-      options.id || url,
+      "/" + (options.id || url),
       terria
     );
 
@@ -84,6 +84,7 @@ export function createCatalogItemFromUrlWithOptions(
           );
         });
     } else {
+      terria.addModel(<BaseModel>item);
       return Promise.resolve(item);
     }
   }
