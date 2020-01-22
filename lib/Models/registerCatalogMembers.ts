@@ -124,7 +124,7 @@ function matchesUrl(regex: RegExp) {
   return /./.test.bind(regex);
 }
 
-function matchesExtension(extension: string) {
+export function matchesExtension(extension: string) {
   var regex = new RegExp("\\." + extension + "$", "i");
   return function(url: string) {
     return Boolean(url.match(regex));

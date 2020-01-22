@@ -3,6 +3,7 @@ import createCatalogItemFromUrl from "../../lib/Models/createCatalogItemFromUrl"
 import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGroup";
 import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
 import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
+import { matchesExtension } from "../../lib/Models/registerCatalogMembers";
 
 describe("createCatalogItemFromUrl", function() {
   let terria: Terria;
@@ -22,7 +23,7 @@ describe("createCatalogItemFromUrl", function() {
       true
     );
     createCatalogItemFromUrl.register(
-      s => Boolean(s.match(new RegExp("\\.geojson$", "i"))),
+      matchesExtension("geojson"),
       GeoJsonCatalogItem.type,
       true
     );
