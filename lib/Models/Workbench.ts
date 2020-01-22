@@ -127,6 +127,20 @@ export default class Workbench {
         model === item || dereferenceModel(model) === dereferenceModel(item)
     );
   }
+
+  /**
+   * Used to re-order the workbench list.
+   * @param item The model to be moved.
+   * @param newIndex The new index to shift the model to.
+   */
+  @action
+  moveItemToIndex(item: BaseModel, newIndex: number) {
+    if (!this.contains(item)) {
+      return;
+    }
+    this._items.splice(this.indexOf(item), 1);
+    this._items.splice(newIndex, 0, item);
+  }
 }
 
 function dereferenceModel(model: BaseModel): BaseModel {

@@ -588,7 +588,7 @@ export default class Terria {
 
     // Copy but don't yet load the workbench.
     const workbench = Array.isArray(initData.workbench)
-      ? initData.workbench.slice().reverse()
+      ? initData.workbench.slice()
       : [];
 
     const timeline = Array.isArray(initData.timeline)
