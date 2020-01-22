@@ -19,7 +19,7 @@
   }
 
   .top-element {
-    z-index: 99999 !important;
+    z-index: $notification-window-z-index - 10 !important;
     &:focus {
       outline: none;
     }
