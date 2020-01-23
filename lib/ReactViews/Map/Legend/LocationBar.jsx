@@ -23,7 +23,7 @@ const LocationBar = observer(
     },
 
     toggleUseProjection() {
-        this.props.mouseCoords.toggleUseProjection();
+      this.props.mouseCoords.toggleUseProjection();
     },
 
     render() {
