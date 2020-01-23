@@ -220,6 +220,58 @@ describeIfSupported("Cesium Model", function() {
           .otherwise(done.fail);
       });
 
+      it("should load imagery layer features when feature info requests are enabled", function(done) {
+        terria.allowFeatureInfoRequests = true;
+
+        cesium.pickFromLocation(
+          { lat: LAT_DEGREES, lng: LONG_DEGREES, height: HEIGHT },
+          {
+            "http://example.com/1": {
+              x: 1,
+              y: 2,
+              level: 3
+            }
+          }
+        );
+
+        expect(terria.pickedFeatures.isLoading).toBe(true);
+
+        var featureInfo = new ImageryLayerFeatureInfo();
+        featureInfo.name = "A";
+        imageryLayerPromises[0].resolve([featureInfo]);
+
+        terria.pickedFeatures.allFeaturesAvailablePromise
+          .then(function() {
+            expect(terria.pickedFeatures.isLoading).toBe(false);
+            expect(terria.pickedFeatures.features.length).toBe(1);
+            expect(terria.pickedFeatures.features[0].name).toBe("A");
+          })
+          .then(done)
+          .otherwise(done.fail);
+      });
+
+      it("should not load imagery layer features when feature info requests are disabled", function(done) {
+        terria.allowFeatureInfoRequests = false;
+        cesium.pickFromLocation(
+          { lat: LAT_DEGREES, lng: LONG_DEGREES, height: HEIGHT },
+          {
+            "http://example.com/1": {
+              x: 1,
+              y: 2,
+              level: 3
+            }
+          }
+        );
+
+        terria.pickedFeatures.allFeaturesAvailablePromise
+          .then(function() {
+            expect(terria.pickedFeatures.isLoading).toBe(false);
+            expect(terria.pickedFeatures.features.length).toBe(0);
+          })
+          .then(done)
+          .otherwise(done.fail);
+      });
+
       stateTests(function() {
         cesium.pickFromLocation(
           { lat: LAT_DEGREES, lng: LONG_DEGREES, height: HEIGHT },
@@ -313,6 +365,42 @@ describeIfSupported("Cesium Model", function() {
             expect(terria.pickedFeatures.features[0].name).toBe("entity1");
             expect(terria.pickedFeatures.features[1].name).toBe("entity2");
             expect(terria.pickedFeatures.features[2].name).toBe("entity3");
+          })
+          .then(done)
+          .otherwise(done.fail);
+      });
+
+      it("should load raster features when feature info requests are enabled", function(done) {
+        terria.allowFeatureInfoRequests = true;
+
+        doClick({ position: expectedPosScreenCoords });
+
+        expect(terria.pickedFeatures.isLoading).toBe(true);
+
+        var rasterFeature = new ImageryLayerFeatureInfo();
+        rasterFeature.name = "A";
+        imageryLayerPromises[0].resolve([rasterFeature]);
+        imageryLayerPromises[1].resolve([]);
+
+        terria.pickedFeatures.allFeaturesAvailablePromise
+          .then(function() {
+            expect(terria.pickedFeatures.isLoading).toBe(false);
+            expect(terria.pickedFeatures.features.length).toBe(1);
+            expect(terria.pickedFeatures.features[0].name).toBe("A");
+          })
+          .then(done)
+          .otherwise(done.fail);
+      });
+
+      it("should not load raster features when feature info requests are disabled", function(done) {
+        terria.allowFeatureInfoRequests = false;
+
+        doClick({ position: expectedPosScreenCoords });
+
+        terria.pickedFeatures.allFeaturesAvailablePromise
+          .then(function() {
+            expect(terria.pickedFeatures.isLoading).toBe(false);
+            expect(terria.pickedFeatures.features.length).toBe(0);
           })
           .then(done)
           .otherwise(done.fail);

@@ -212,7 +212,10 @@ function expand(props, sourceIndex) {
 
     const newCatalogItem = new CsvCatalogItem(terria, url, {
       tableStyle: makeTableStyle(),
-      isCsvForCharting: true
+      isCsvForCharting: true,
+      chartDisclaimer: props.catalogItem.chartDisclaimer
+        ? props.catalogItem.chartDisclaimer
+        : null
     });
     const items = [newCatalogItem];
     if (defined(feature.position._value)) {
