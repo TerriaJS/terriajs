@@ -47,11 +47,18 @@ class MappablePreview extends React.Component {
     }
 
     const keepCatalogOpen = event.shiftKey || event.ctrlKey;
+    const toAdd = !this.props.terria.workbench.contains(this.props.previewed);
+
+    if (toAdd) {
+      this.props.terria.timelineStack.addToTop(this.props.previewed);
+    } else {
+      this.props.terria.timelineStack.remove(this.props.previewed);
+    }
 
     const addPromise = addToWorkbench(
       this.props.terria.workbench,
       this.props.previewed,
-      !this.props.terria.workbench.contains(this.props.previewed)
+      toAdd
     ).then(() => {
       if (
         this.props.terria.workbench.contains(this.props.previewed) &&

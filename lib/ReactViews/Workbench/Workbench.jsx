@@ -7,6 +7,7 @@ import WorkbenchList from "./WorkbenchList";
 import { observer } from "mobx-react";
 
 import Styles from "./workbench.scss";
+import { runInAction } from "mobx";
 
 const Workbench = observer(
   createReactClass({
@@ -18,7 +19,10 @@ const Workbench = observer(
     },
 
     removeAll() {
-      this.props.terria.workbench.removeAll();
+      runInAction(() => {
+        this.props.terria.workbench.removeAll();
+        this.props.terria.timelineStack.items.clear();
+      });
     },
 
     render() {

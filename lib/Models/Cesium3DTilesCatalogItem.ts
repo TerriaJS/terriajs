@@ -70,7 +70,10 @@ export default class Cesium3DTilesCatalogItem
     if (this.tileset) {
       return makeRealPromise<Cesium3DTileset>(this.tileset.readyPromise).then(
         tileset => {
-          if (tileset.extras.style) {
+          if (
+            tileset.extras !== undefined &&
+            tileset.extras.style !== undefined
+          ) {
             runInAction(() => {
               this.strata.set(
                 CommonStrata.defaults,
@@ -244,7 +247,7 @@ export default class Cesium3DTilesCatalogItem
   }
 
   buildFeatureFromPickResult(_screenPosition: Cartesian2, pickResult: any) {
-    if (pickResult instanceof Cesium3DTileFeature) {
+    if (isCesium3DTileFeature(pickResult)) {
       const properties: { [name: string]: unknown } = {};
       pickResult.getPropertyNames().forEach(name => {
         properties[name] = pickResult.getProperty(name);
@@ -258,4 +261,8 @@ export default class Cesium3DTilesCatalogItem
       return result;
     }
   }
+}
+
+function isCesium3DTileFeature(o: any): o is Cesium3DTileFeature {
+  return "getPropertyNames" in o && "getProperty" in o;
 }

@@ -78,7 +78,9 @@ const StoryPanel = observer(
     },
 
     onClickContainer() {
-      this.props.viewState.topElement = "StoryPanel";
+      runInAction(() => {
+        this.props.viewState.topElement = "StoryPanel";
+      });
     },
 
     componentWillUnmount() {

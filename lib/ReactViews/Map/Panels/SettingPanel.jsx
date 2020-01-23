@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 import Slider from "rc-slider";
 import React from "react";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import DefaultTimelineModel from "../../../Models/DefaultTimelineModel";
 // eslint-disable-next-line no-unused-vars
 import Terria from "../../../Models/Terria";
 import ViewerMode from "../../../Models/ViewerMode";
@@ -183,6 +184,17 @@ class SettingPanel extends React.Component {
       }
     }
 
+    const timelineStack = this.props.terria.timelineStack;
+    const alwaysShowTimeline =
+      timelineStack.defaultTimeVarying !== undefined &&
+      timelineStack.defaultTimeVarying.startTimeAsJulianDate !== undefined &&
+      timelineStack.defaultTimeVarying.stopTimeAsJulianDate !== undefined &&
+      timelineStack.defaultTimeVarying.currentTimeAsJulianDate !== undefined;
+
+    const alwaysShowTimelineLabel = alwaysShowTimeline
+      ? "Press to start only showing the timeline when there are time-varying datasets on the workbench"
+      : "Press to start always showing the timeline, even when no time-varying datasets are on the workbench";
+
     return (
       <MenuPanel
         theme={dropdownTheme}
@@ -195,7 +207,7 @@ class SettingPanel extends React.Component {
           <label className={DropdownStyles.heading}> Map View </label>
           <ul className={Styles.viewerSelector}>
             <For each="viewerMode" of={viewerModes}>
-              <li key={viewerMode} className={Styles.listItem}>
+              <li key={viewerMode} className={Styles.listItemThreeCols}>
                 <button
                   onClick={this.selectViewer.bind(this, viewerMode)}
                   className={classNames(Styles.btnViewer, {
@@ -215,7 +227,7 @@ class SettingPanel extends React.Component {
             </label>
             <ul className={Styles.viewerSelector}>
               <For each="side" of={sides}>
-                <li key={side} className={Styles.listItem}>
+                <li key={side} className={Styles.listItemThreeCols}>
                   <button
                     onClick={this.showTerrainOnSide.bind(this, side)}
                     className={classNames(Styles.btnViewer, {
@@ -278,7 +290,7 @@ class SettingPanel extends React.Component {
           </label>
           <ul className={Styles.baseMapSelector}>
             <For each="baseMap" index="i" of={this.props.terria.baseMaps}>
-              <li key={i} className={Styles.listItem}>
+              <li key={i} className={Styles.listItemFourCols}>
                 <button
                   className={classNames(Styles.btnBaseMap, {
                     [Styles.isActive]:
@@ -297,6 +309,45 @@ class SettingPanel extends React.Component {
               </li>
             </For>
           </ul>
+        </div>
+        <div className={DropdownStyles.section}>
+          <label className={DropdownStyles.heading}>Timeline</label>
+          <section
+            className={Styles.nativeResolutionWrapper}
+            title={qualityLabels[this.props.terria.quality]}
+          >
+            <button
+              id="alwaysShowTimeline"
+              type="button"
+              onClick={() => {
+                runInAction(() => {
+                  if (alwaysShowTimeline) {
+                    this.props.terria.timelineStack.defaultTimeVarying = undefined;
+                  } else {
+                    this.props.terria.timelineStack.defaultTimeVarying = new DefaultTimelineModel();
+                  }
+                });
+              }}
+              title={alwaysShowTimelineLabel}
+              className={Styles.btnNativeResolution}
+            >
+              {alwaysShowTimeline ? (
+                <Icon glyph={Icon.GLYPHS.checkboxOn} />
+              ) : (
+                <Icon glyph={Icon.GLYPHS.checkboxOff} />
+              )}
+            </button>
+            <label
+              title={alwaysShowTimelineLabel}
+              htmlFor="alwaysShowTimeline"
+              className={classNames(
+                DropdownStyles.subHeading,
+                Styles.nativeResolutionHeader
+              )}
+            >
+              Always show
+            </label>
+          </section>
         </div>
         <If condition={this.props.terria.viewerMode !== ViewerMode.Leaflet}>
           <div className={DropdownStyles.section}>

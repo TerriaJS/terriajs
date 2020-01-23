@@ -15,6 +15,11 @@
 
   // Small font size prevents the font from dictating the table row height.
   font-size: 5px;
+
+  .legendOpenExternally {
+    font-size: $font-size-small;
+    color: $text-light;
+  }
 }
 
 .legend__inner {

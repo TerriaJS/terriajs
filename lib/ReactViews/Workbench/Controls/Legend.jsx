@@ -1,15 +1,16 @@
 "use strict";
 
 import classNames from "classnames";
-import defined from "terriajs-cesium/Source/Core/defined";
-import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
-import Loader from "../../Loader";
-import proxyCatalogItemUrl from "../../../Models/proxyCatalogItemUrl";
-import React from "react";
 import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
-import URI from "urijs";
 import { observer } from "mobx-react";
+import PropTypes from "prop-types";
+import React from "react";
+import defined from "terriajs-cesium/Source/Core/defined";
+import Resource from "terriajs-cesium/Source/Core/Resource";
+import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
+import URI from "urijs";
+import proxyCatalogItemUrl from "../../../Models/proxyCatalogItemUrl";
+import Loader from "../../Loader";
 import Styles from "./legend.scss";
 
 /* A lookup map for displayable mime types */
@@ -127,7 +128,12 @@ const Legend = observer(
           </When>
           <Otherwise>
             <li key={proxiedUrl}>
-              <a href={proxiedUrl} target="_blank" rel="noreferrer noopener">
+              <a
+                href={proxiedUrl}
+                target="_blank"
+                rel="noreferrer noopener"
+                className={Styles.legendOpenExternally}
+              >
                 Open legend in a separate tab
               </a>
             </li>
@@ -241,8 +247,16 @@ const Legend = observer(
 );
 
 function makeAbsolute(url) {
+  if (url instanceof Resource) {
+    url = url.url;
+  }
+
   const uri = new URI(url);
-  if (uri.protocol() !== "http" && uri.protocol() !== "https") {
+  if (
+    uri.protocol() &&
+    uri.protocol() !== "http" &&
+    uri.protocol() !== "https"
+  ) {
     return url;
   } else {
     return uri.absoluteTo(window.location.href).toString();

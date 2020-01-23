@@ -70,10 +70,14 @@ export default function DiscretelyTimeVaryingMixin<
           if (dt.time === undefined) {
             return undefined;
           }
-          return {
-            time: JulianDate.fromIso8601(dt.time),
-            tag: dt.tag !== undefined ? dt.tag : dt.time
-          };
+          try {
+            return {
+              time: JulianDate.fromIso8601(dt.time),
+              tag: dt.tag !== undefined ? dt.tag : dt.time
+            };
+          } catch {
+            return undefined;
+          }
         })
       );
 
