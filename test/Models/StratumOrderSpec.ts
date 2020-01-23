@@ -47,12 +47,12 @@ describe("StratumOrder", function() {
     so.addUserStratum("e");
     so.addLoadStratum("f");
 
-    const a = {};
-    const b = {};
-    const c = {};
-    const d = {};
-    const e = {};
-    const f = {};
+    const a = { a: "A" };
+    const b = { b: "B" };
+    const c = { c: "C" };
+    const d = { d: "D" };
+    const e = { e: "E" };
+    const f = { f: "F" };
     const strata = new Map<string, any>([
       ["a", a],
       ["b", b],

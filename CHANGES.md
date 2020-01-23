@@ -1,6 +1,15 @@
 Change Log
 ==========
 
+### MobX Development
+* Fixed a bug where `updateModelFromJson` would ignore its `replaceStratum` parameter.
+* Fixed bug in StratumOrder where `sortBottomToTop` would sort strata in the wrong order.
+* Allow member re-ordering via GroupMixin's `moveMemberToIndex`
+* Re-added Measure Tool support
+* Re-implemented `addedByUser` to fix bug where previews of user added data would appear in the wrong tab.
+* Added header options for loadJson5, & allow header overrides on MagdaReference loading
+* Re-enable search components if SearchProvider option provided
+
 ### v7.9.0
 
 * Upgraded to Cesium v1.63.1. This upgrade may cause more problems than usual because Cesium has switched from AMD to ES6 modules. If you run into problems, please contact us: https://terria.io/contact

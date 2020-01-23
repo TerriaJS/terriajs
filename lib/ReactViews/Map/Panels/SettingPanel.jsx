@@ -207,7 +207,7 @@ class SettingPanel extends React.Component {
           <label className={DropdownStyles.heading}> Map View </label>
           <ul className={Styles.viewerSelector}>
             <For each="viewerMode" of={viewerModes}>
-              <li key={viewerMode} className={Styles.listItem}>
+              <li key={viewerMode} className={Styles.listItemThreeCols}>
                 <button
                   onClick={this.selectViewer.bind(this, viewerMode)}
                   className={classNames(Styles.btnViewer, {
@@ -227,7 +227,7 @@ class SettingPanel extends React.Component {
             </label>
             <ul className={Styles.viewerSelector}>
               <For each="side" of={sides}>
-                <li key={side} className={Styles.listItem}>
+                <li key={side} className={Styles.listItemThreeCols}>
                   <button
                     onClick={this.showTerrainOnSide.bind(this, side)}
                     className={classNames(Styles.btnViewer, {
@@ -290,7 +290,7 @@ class SettingPanel extends React.Component {
           </label>
           <ul className={Styles.baseMapSelector}>
             <For each="baseMap" index="i" of={this.props.terria.baseMaps}>
-              <li key={i} className={Styles.listItem}>
+              <li key={i} className={Styles.listItemFourCols}>
                 <button
                   className={classNames(Styles.btnBaseMap, {
                     [Styles.isActive]:
