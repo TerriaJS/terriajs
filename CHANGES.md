@@ -8,6 +8,7 @@ Change Log
 * Add ability to set opacity on `GeoJsonCatalogItem`
 * Expanded test cases to ensure WorkbenchItem & Story have the correct order of components composed
 * Fix broken catalog functions when used with translation HOC
+* Fix bug with momentPoints chart type when plotting against series with null values
 * Make the default `Legend` width a little smaller to account for the workbench scrollbar
 * Add a `ChartDisclaimer` component to display an additional disclaimer above the chart panel in the bottom dock.
 * Add `allowFeatureInfoRequests` property to `Terria` and prevent unnecessary feature info requests when creating `UserDrawing`s.
