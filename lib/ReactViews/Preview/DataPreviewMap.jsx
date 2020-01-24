@@ -137,7 +137,7 @@ class DataPreviewMap extends React.Component {
 
     // Choose positron if it's available
     const positronBaseMap = this.props.terria.baseMaps.find(
-      baseMap => baseMap.mappable.uniqueId == POSITRON_BASE_MAP_ID
+      baseMap => baseMap.mappable.uniqueId === POSITRON_BASE_MAP_ID
     );
     if (positronBaseMap !== undefined) {
       this.previewViewer.baseMap = positronBaseMap.mappable;
