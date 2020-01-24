@@ -11,8 +11,6 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import Styles from "./data-preview.scss";
 
-import CustomRegionMappingMatching from "./CustomRegionMappingMatching";
-
 /**
  * Data preview section, for the preview map see DataPreviewMap
  */
@@ -59,7 +57,6 @@ const DataPreview = createReactClass({
                   height={250 - 34}
                 />
               </div>
-              <CustomRegionMappingMatching {...this.props} />
               <Description item={previewed} />
             </div>
           </When>
