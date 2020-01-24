@@ -10,6 +10,7 @@ Change Log
 * Added header options for loadJson5, & allow header overrides on MagdaReference loading
 * Re-enable search components if SearchProvider option provided
 * Fixed bug causing workbench items to be shared in the wrong order.
+* Fix bug where urls in the feature info panel weren't turned into hyperlinks
 
 ### v7.9.0
 
