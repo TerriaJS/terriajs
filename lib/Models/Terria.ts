@@ -39,7 +39,7 @@ import CommonStrata from "./CommonStrata";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import InitSource, { isInitOptions, isInitUrl } from "./InitSource";
-import MagdaReference from "./MagdaReference";
+import MagdaReference, { MagdaReferenceHeaders } from "./MagdaReference";
 import MapInteractionMode from "./MapInteractionMode";
 import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
@@ -74,10 +74,15 @@ interface ConfigParameters {
   bingMapsKey?: string;
   brandBarElements?: string[];
   disableMyLocation?: boolean;
+  experimentalFeatures?: boolean;
+  magdaReferenceHeaders?: MagdaReferenceHeaders;
 }
 
 interface StartOptions {
   configUrl: string;
+  configUrlHeaders?: {
+    [key: string]: string;
+  };
   applicationUrl?: string;
   shareDataService?: ShareDataService;
 }
@@ -169,7 +174,9 @@ export default class Terria {
     hideTerriaLogo: false,
     useCesiumIonBingImagery: undefined,
     bingMapsKey: undefined,
-    brandBarElements: undefined
+    brandBarElements: undefined,
+    experimentalFeatures: undefined,
+    magdaReferenceHeaders: undefined
   };
 
   @observable
@@ -230,6 +237,12 @@ export default class Terria {
    * @type {boolean}
    */
   @observable useNativeResolution = false;
+
+  /**
+   * Whether we think all references in the catalog have been loaded
+   * @type {boolean}
+   */
+  @observable catalogReferencesLoaded: boolean = false;
 
   constructor(options: TerriaOptions = {}) {
     if (options.baseUrl) {
@@ -302,7 +315,7 @@ export default class Terria {
 
     const baseUri = new URI(options.configUrl).filename("");
 
-    return loadJson5(options.configUrl)
+    return loadJson5(options.configUrl, options.configUrlHeaders)
       .then((config: any) => {
         runInAction(() => {
           if (config.parameters) {

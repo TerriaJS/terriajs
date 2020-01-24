@@ -31,6 +31,12 @@ import StratumOrder from "./StratumOrder";
 const magdaRecordStratum = "magda-record";
 StratumOrder.addDefaultStratum(magdaRecordStratum);
 
+// If you want to supply headers sent for magda requests, supply them in
+// config parameters
+export interface MagdaReferenceHeaders {
+  [key: string]: string;
+}
+
 export default class MagdaReference extends UrlMixin(
   ReferenceMixin(CreateModel(MagdaReferenceTraits))
 ) {
@@ -170,7 +176,8 @@ export default class MagdaReference extends UrlMixin(
         "dataset-distributions",
         "dataset-format"
       ],
-      dereference: true
+      dereference: true,
+      magdaReferenceHeaders: this.terria.configParameters.magdaReferenceHeaders
     }).then(record => {
       return MagdaReference.createMemberFromRecord(
         this.terria,
@@ -685,7 +692,8 @@ export default class MagdaReference extends UrlMixin(
       );
     }
     const proxiedUrl = proxyCatalogItemUrl(this, recordUri.toString(), "0d");
-    return loadJson(proxiedUrl);
+
+    return loadJson(proxiedUrl, options.magdaReferenceHeaders);
   }
 
   protected buildMagdaRecordUri(options: RecordOptions): uri.URI | undefined {
@@ -717,6 +725,7 @@ export interface RecordOptions {
   aspects?: string[];
   optionalAspects?: string[];
   dereference?: boolean;
+  magdaReferenceHeaders?: MagdaReferenceHeaders;
 }
 
 interface PreparedDistributionFormat {
