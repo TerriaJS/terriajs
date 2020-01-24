@@ -11,6 +11,7 @@ import SettingPanel from "../Map/Panels/SettingPanel";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel";
 import HelpMenuPanelBasic from "../HelpScreens/HelpMenuPanelBasic";
 import Terria from "../../Models/Terria";
+import { withTranslation } from "react-i18next";
 
 import ViewState from "../../ReactViewModels/ViewState";
 
@@ -26,7 +27,8 @@ const MobileMenu = observer(
       viewState: PropTypes.instanceOf(ViewState).isRequired,
       showFeedback: PropTypes.bool,
       terria: PropTypes.instanceOf(Terria).isRequired,
-      allBaseMaps: PropTypes.array.isRequired
+      allBaseMaps: PropTypes.array.isRequired,
+      t: PropTypes.func.isRequired
     },
 
     getDefaultProps() {
@@ -71,6 +73,7 @@ const MobileMenu = observer(
     },
 
     render() {
+      const { t } = this.props;
       const hasStories =
         this.props.terria.configParameters.storyEnabled &&
         defined(this.props.terria.stories) &&
@@ -115,13 +118,15 @@ const MobileMenu = observer(
             <If condition={this.props.showFeedback}>
               <MobileMenuItem
                 onClick={this.onFeedbackFormClick}
-                caption="Give Feedback"
+                caption={t("feedback.feedbackBtnText")}
               />
             </If>
             <If condition={hasStories}>
               <MobileMenuItem
                 onClick={this.runStories}
-                caption={`View Stories (${this.props.terria.stories.length})`}
+                caption={t("story.mobileViewStory", {
+                  storiesLength: this.props.terria.stories.length
+                })}
               />
             </If>{" "}
           </div>
@@ -131,4 +136,4 @@ const MobileMenu = observer(
   })
 );
 
-export default MobileMenu;
+export default withTranslation()(MobileMenu);

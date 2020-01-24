@@ -1,5 +1,7 @@
 import TerriaError from "./TerriaError";
 
+import i18next from "i18next";
+
 /**
  * Tells the web browser to print a given window, which my be an iframe window, and
  * returns a promise that resolves when printing is safely over so that, for example
@@ -15,9 +17,8 @@ export default function printWindow(windowToPrint: Window): Promise<void> {
     const timeout = setTimeout(function() {
       reject(
         new TerriaError({
-          title: "Error printing",
-          message:
-            "Printing did not start within 10 seconds. Maybe this web browser does not support printing?"
+          title: i18next.t("core.printWindow.errorTitle"),
+          message: i18next.t("core.printWindow.errorMessage")
         })
       );
     }, 10000);
@@ -36,10 +37,10 @@ export default function printWindow(windowToPrint: Window): Promise<void> {
       windowToPrint.matchMedia("print").addListener((evt: any) => {
         cancelTimeout();
         if (evt.matches) {
-          console.log("print media start");
+          console.log(i18next.t("core.printWindow.printMediaStart"));
           ++printInProgressCount;
         } else {
-          console.log("print media end");
+          console.log(i18next.t("core.printWindow.printMediaEnd"));
           --printInProgressCount;
           resolveIfZero();
         }
@@ -48,12 +49,12 @@ export default function printWindow(windowToPrint: Window): Promise<void> {
 
     windowToPrint.onbeforeprint = () => {
       cancelTimeout();
-      console.log("onbeforeprint");
+      console.log(i18next.t("core.printWindow.onbeforeprint"));
       ++printInProgressCount;
     };
     windowToPrint.onafterprint = () => {
       cancelTimeout();
-      console.log("onafterprint");
+      console.log(i18next.t("core.printWindow.onafterprint"));
       --printInProgressCount;
       resolveIfZero();
     };

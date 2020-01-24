@@ -11,6 +11,7 @@ import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import UserDrawing from "../../Models/UserDrawing";
 import ObserveModelMixin from "../ObserveModelMixin";
 import Styles from "./parameter-editors.scss";
+import { withTranslation } from "react-i18next";
 
 const LineParameterEditor = createReactClass({
   displayName: "LineParameterEditor",
@@ -19,7 +20,8 @@ const LineParameterEditor = createReactClass({
   propTypes: {
     previewed: PropTypes.object,
     parameter: PropTypes.object,
-    viewState: PropTypes.object
+    viewState: PropTypes.object,
+    t: PropTypes.func.isRequired
   },
 
   getInitialState() {
@@ -66,6 +68,7 @@ const LineParameterEditor = createReactClass({
   },
 
   render() {
+    const { t } = this.props;
     return (
       <div>
         <input
@@ -81,7 +84,7 @@ const LineParameterEditor = createReactClass({
           onClick={this.selectLineOnMap}
           className={Styles.btnSelector}
         >
-          Click to draw line
+          {t("analytics.clickToDrawLine")}
         </button>
       </div>
     );
@@ -140,4 +143,4 @@ LineParameterEditor.getDisplayValue = function(value) {
   }
 };
 
-module.exports = LineParameterEditor;
+module.exports = withTranslation()(LineParameterEditor);

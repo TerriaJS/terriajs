@@ -110,7 +110,7 @@ export default class Leaflet extends GlobeOrMap {
       maxZoom: 14, //this.maximumLeafletZoomLevel,
       zoomSnap: 1, // Change to  0.2 for incremental zoom when Chrome fixes canvas scaling gaps
       preferCanvas: true,
-      worldCopyJump: true
+      worldCopyJump: false
     }).setView([-28.5, 135], 5);
 
     this.scene = new LeafletScene(this.map);

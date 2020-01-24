@@ -5,6 +5,7 @@ import loadJson from "../Core/loadJson";
 import loadWithXhr from "../Core/loadWithXhr";
 import TerriaError from "../Core/TerriaError";
 import Terria from "./Terria";
+import i18next from "i18next";
 
 interface ShareDataServiceOptions {
   terria: Terria;
@@ -71,17 +72,16 @@ export default class ShareDataService {
         console.log(error);
         this.terria.error.raiseEvent(
           new TerriaError({
-            title: "Couldn't generate short URL.",
-            message:
-              "Something went wrong when trying to use the share data service to generate a short URL. " +
-              "If you believe it is a bug in " +
-              this.terria.appName +
-              ", please report it by emailing " +
-              '<a href="mailto:' +
-              this.terria.supportEmail +
-              '">' +
-              this.terria.supportEmail +
-              "</a>."
+            title: i18next.t("models.shareData.generateErrorTitle"),
+            message: i18next.t("models.shareData.generateErrorMessage", {
+              appName: this.terria.appName,
+              email:
+                '<a href="mailto:' +
+                this.terria.supportEmail +
+                '">' +
+                this.terria.supportEmail +
+                "</a>."
+            })
           })
         );
       });
@@ -95,17 +95,16 @@ export default class ShareDataService {
     return loadJson(this.url + "/" + token).catch(() => {
       this.terria.error.raiseEvent(
         new TerriaError({
-          title: "Could not expand URL",
-          message:
-            "The share data service used to launch " +
-            this.terria.appName +
-            " was not located. This may indicate an error in the link or that the service is unavailable at this time. If you believe it is a bug in " +
-            this.terria.appName +
-            ', please report it by emailing <a href="mailto:' +
-            this.terria.supportEmail +
-            '">' +
-            this.terria.supportEmail +
-            "</a>."
+          title: i18next.t("models.shareData.expandErrorTitle"),
+          message: i18next.t("models.shareData.expandErrorMessage", {
+            appName: this.terria.appName,
+            email:
+              '<a href="mailto:' +
+              this.terria.supportEmail +
+              '">' +
+              this.terria.supportEmail +
+              "</a>."
+          })
         })
       );
 
