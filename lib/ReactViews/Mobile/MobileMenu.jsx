@@ -9,7 +9,9 @@ import classNames from "classnames";
 import MobileMenuItem from "./MobileMenuItem";
 import SettingPanel from "../Map/Panels/SettingPanel.jsx";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
+import HelpMenuPanelBasic from "../HelpScreens/HelpMenuPanelBasic.jsx";
 import Terria from "../../Models/Terria";
+import { withTranslation } from "react-i18next";
 
 import ViewState from "../../ReactViewModels/ViewState";
 
@@ -24,7 +26,8 @@ const MobileMenu = createReactClass({
     viewState: PropTypes.instanceOf(ViewState).isRequired,
     showFeedback: PropTypes.bool,
     terria: PropTypes.instanceOf(Terria).isRequired,
-    allBaseMaps: PropTypes.array.isRequired
+    allBaseMaps: PropTypes.array.isRequired,
+    t: PropTypes.func.isRequired
   },
 
   getDefaultProps() {
@@ -57,8 +60,12 @@ const MobileMenu = createReactClass({
     this.props.viewState.storyShown = true;
     this.props.viewState.mobileMenuVisible = false;
   },
+  dismissSatelliteGuidanceAction() {
+    this.props.viewState.toggleFeaturePrompt("mapGuidesLocation", true, true);
+  },
 
   render() {
+    const { t } = this.props;
     const hasStories =
       this.props.terria.configParameters.storyEnabled &&
       defined(this.props.terria.stories) &&
@@ -87,6 +94,12 @@ const MobileMenu = createReactClass({
               viewState={this.props.viewState}
             />
           </div>
+          <div onClick={this.hideMenu}>
+            <HelpMenuPanelBasic
+              terria={this.props.terria}
+              viewState={this.props.viewState}
+            />
+          </div>
           <For each="menuItem" of={this.props.menuItems}>
             <div onClick={this.hideMenu} key={menuItem.key}>
               {menuItem}
@@ -95,13 +108,15 @@ const MobileMenu = createReactClass({
           <If condition={this.props.showFeedback}>
             <MobileMenuItem
               onClick={this.onFeedbackFormClick}
-              caption="Give Feedback"
+              caption={t("feedback.feedbackBtnText")}
             />
           </If>
           <If condition={hasStories}>
             <MobileMenuItem
               onClick={this.runStories}
-              caption={`View Stories (${this.props.terria.stories.length})`}
+              caption={t("story.mobileViewStory", {
+                storiesLength: this.props.terria.stories.length
+              })}
             />
           </If>
         </div>
@@ -110,4 +125,4 @@ const MobileMenu = createReactClass({
   }
 });
 
-export default MobileMenu;
+export default withTranslation()(MobileMenu);

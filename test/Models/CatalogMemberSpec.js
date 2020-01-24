@@ -3,7 +3,7 @@
 /*global require*/
 var CatalogMember = require("../../lib/Models/CatalogMember");
 var Terria = require("../../lib/Models/Terria");
-var when = require("terriajs-cesium/Source/ThirdParty/when");
+var when = require("terriajs-cesium/Source/ThirdParty/when").default;
 
 describe("CatalogMember", function() {
   var terria;
@@ -77,6 +77,48 @@ describe("CatalogMember", function() {
 
     it("returns the same as member.info if no source info items exist", function() {
       expect(member.infoWithoutSources).toEqual(info);
+    });
+  });
+
+  describe("using path()", function() {
+    describe("without a parent", function() {
+      it("shows default unnamed name", function() {
+        expect(member.path).toBe("Unnamed Item");
+      });
+      it("shows its own name", function() {
+        member
+          .updateFromJson({
+            name: "cybertruck"
+          })
+          .then(function() {
+            expect(member.path).toBe("cybertruck");
+          });
+      });
+    });
+    describe("with a parent", function() {
+      it("shows its own name appended to unnamed parent", function() {
+        const parent = new CatalogMember(terria);
+        member.parent = parent;
+        member
+          .updateFromJson({
+            name: "cybertruck"
+          })
+          .then(function() {
+            expect(member.path).toBe("Unnamed Item/cybertruck");
+          });
+      });
+      it("shows its own name appended to parent", function() {
+        const parent = new CatalogMember(terria);
+        parent.name = "Parent";
+        member.parent = parent;
+        member
+          .updateFromJson({
+            name: "cybertruck"
+          })
+          .then(function() {
+            expect(member.path).toBe("Parent/cybertruck");
+          });
+      });
     });
   });
 

@@ -13,7 +13,8 @@ const FeedbackButton = createReactClass({
   mixins: [ObserveModelMixin],
 
   propTypes: {
-    viewState: PropTypes.object.isRequired
+    viewState: PropTypes.object.isRequired,
+    btnText: PropTypes.string.isRequired
   },
 
   onClick() {
@@ -30,7 +31,7 @@ const FeedbackButton = createReactClass({
         >
           <Icon glyph={Icon.GLYPHS.feedback} />
           <Medium>
-            <span>Give feedback</span>
+            <span>{this.props.btnText}</span>
           </Medium>
         </button>
       </div>

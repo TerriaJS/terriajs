@@ -1,10 +1,10 @@
 "use strict";
 
 /*global require, fail*/
-var JulianDate = require("terriajs-cesium/Source/Core/JulianDate");
+var JulianDate = require("terriajs-cesium/Source/Core/JulianDate").default;
 var loadText = require("../../lib/Core/loadText");
-var Rectangle = require("terriajs-cesium/Source/Core/Rectangle");
-var when = require("terriajs-cesium/Source/ThirdParty/when");
+var Rectangle = require("terriajs-cesium/Source/Core/Rectangle").default;
+var when = require("terriajs-cesium/Source/ThirdParty/when").default;
 
 var SensorObservationServiceCatalogItem = require("../../lib/Models/SensorObservationServiceCatalogItem");
 var Terria = require("../../lib/Models/Terria");

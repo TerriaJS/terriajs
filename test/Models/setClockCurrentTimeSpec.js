@@ -1,8 +1,9 @@
 "use strict";
 
 /*global require,beforeEach*/
-var JulianDate = require("terriajs-cesium/Source/Core/JulianDate");
-var DataSourceClock = require("terriajs-cesium/Source/DataSources/DataSourceClock");
+var JulianDate = require("terriajs-cesium/Source/Core/JulianDate").default;
+var DataSourceClock = require("terriajs-cesium/Source/DataSources/DataSourceClock")
+  .default;
 var setClockCurrentTime = require("../../lib/Models/setClockCurrentTime");
 
 describe("setClockCurrentTime", function() {

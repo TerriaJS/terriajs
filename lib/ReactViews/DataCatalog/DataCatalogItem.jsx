@@ -8,16 +8,10 @@ import CatalogItem from "./CatalogItem";
 import getAncestors from "../../Models/getAncestors";
 import ObserveModelMixin from "../ObserveModelMixin";
 import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
-
-const STATE_TO_TITLE = {
-  loading: "Loading...",
-  remove: "Remove from map",
-  add: 'Add this item. Hold down "shift" to keep the data catalogue open.',
-  trash: "Remove from catalogue"
-};
+import { withTranslation } from "react-i18next";
 
 // Individual dataset
-const DataCatalogItem = createReactClass({
+export const DataCatalogItem = createReactClass({
   displayName: "DataCatalogItem",
   mixins: [ObserveModelMixin],
 
@@ -25,7 +19,8 @@ const DataCatalogItem = createReactClass({
     item: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
     removable: PropTypes.bool,
-    terria: PropTypes.object
+    terria: PropTypes.object,
+    t: PropTypes.func.isRequired
   },
 
   onBtnClicked(event) {
@@ -37,15 +32,18 @@ const DataCatalogItem = createReactClass({
       this.props.viewState.useSmallScreenInterface
     ) {
       this.setPreviewedItem();
-    } else if (this.props.removable) {
-      removeUserAddedData(this.props.terria, this.props.item);
     } else {
       this.toggleEnable(event);
     }
   },
 
+  onTrashClicked() {
+    removeUserAddedData(this.props.terria, this.props.item);
+  },
+
   toggleEnable(event) {
     this.props.item.toggleEnabled();
+    this.props.viewState.terria.checkNowViewingForTimeWms();
     // set preview as well
     this.setPreviewedItem();
 
@@ -80,6 +78,13 @@ const DataCatalogItem = createReactClass({
 
   render() {
     const item = this.props.item;
+    const { t } = this.props;
+    const STATE_TO_TITLE = {
+      loading: t("catalogItem.loading"),
+      remove: t("catalogItem.removeFromMap"),
+      add: t("catalogItem.add"),
+      trash: t("catalogItem.trash")
+    };
     return (
       <CatalogItem
         onTextClick={this.setPreviewedItem}
@@ -90,6 +95,16 @@ const DataCatalogItem = createReactClass({
           .join(" → ")}
         btnState={this.getState()}
         onBtnClick={this.onBtnClicked}
+        // All things are "removable" - meaning add and remove from workbench,
+        //    but only user data is "trashable"
+        trashable={this.props.removable}
+        onTrashClick={
+          this.props.removable
+            ? () => {
+                this.onTrashClicked();
+              }
+            : undefined
+        }
         titleOverrides={STATE_TO_TITLE}
       />
     );
@@ -100,10 +115,6 @@ const DataCatalogItem = createReactClass({
       return "loading";
     } else if (this.props.viewState.useSmallScreenInterface) {
       return "preview";
-    } else if (this.props.removable) {
-      return "trash";
-    } else if (addedByUser(this.props.item)) {
-      return null;
     } else if (this.props.item.isEnabled) {
       return "remove";
     } else if (!defined(this.props.item.invoke)) {
@@ -114,4 +125,4 @@ const DataCatalogItem = createReactClass({
   }
 });
 
-module.exports = DataCatalogItem;
+export default withTranslation()(DataCatalogItem);

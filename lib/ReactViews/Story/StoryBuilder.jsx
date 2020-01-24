@@ -15,6 +15,7 @@ import BadgeBar from "../BadgeBar.jsx";
 import triggerResize from "../../Core/triggerResize";
 import Loader from "../Loader";
 import Styles from "./story-builder.scss";
+import { withTranslation, Trans } from "react-i18next";
 
 const StoryBuilder = createReactClass({
   displayName: "StoryBuilder",
@@ -23,7 +24,8 @@ const StoryBuilder = createReactClass({
     terria: PropTypes.object.isRequired,
     isVisible: PropTypes.bool,
     viewState: PropTypes.object.isRequired,
-    animationDuration: PropTypes.number
+    animationDuration: PropTypes.number,
+    t: PropTypes.func.isRequired
   },
 
   getInitialState() {
@@ -115,6 +117,7 @@ const StoryBuilder = createReactClass({
   },
 
   recaptureScene(story) {
+    const { t } = this.props;
     clearTimeout(this.resetReCaptureStatus);
     const storyIndex = (this.props.terria.stories || [])
       .map(story => story.id)
@@ -138,7 +141,7 @@ const StoryBuilder = createReactClass({
 
       setTimeout(this.resetReCaptureStatus, 2000);
     } else {
-      throw new Error("Story does not exsit");
+      throw new Error(t("story.doesNotExist"));
     }
   },
 
@@ -183,16 +186,18 @@ const StoryBuilder = createReactClass({
     return (
       <div className={Styles.intro}>
         <Icon glyph={Icon.GLYPHS.story} />{" "}
-        <strong>This is your story editor</strong>
-        <div className={Styles.instructions}>
-          Create and share interactive stories directly from your map
-          <div>
-            <button onClick={this.toggleVideoGuide} className={Styles.tutBtn}>
-              <Icon glyph={Icon.GLYPHS.play} />
-              Getting Started{" "}
-            </button>
+        <Trans i18nKey="story.message">
+          <strong>This is your story editor</strong>
+          <div className={Styles.instructions}>
+            Create and share interactive stories directly from your map
+            <div>
+              <button onClick={this.toggleVideoGuide} className={Styles.tutBtn}>
+                <Icon glyph={Icon.GLYPHS.play} />
+                Getting Started{" "}
+              </button>
+            </div>
           </div>
-        </div>
+        </Trans>
       </div>
     );
   },
@@ -235,6 +240,7 @@ const StoryBuilder = createReactClass({
   },
 
   renderStories(editingMode) {
+    const { t } = this.props;
     const stories = this.props.terria.stories || [];
     const className = classNames({
       [Styles.stories]: true,
@@ -248,7 +254,7 @@ const StoryBuilder = createReactClass({
             onClick={this.removeAllStories}
             className={Styles.removeButton}
           >
-            Remove All <Icon glyph={Icon.GLYPHS.remove} />
+            {t("story.removeAllStories")} <Icon glyph={Icon.GLYPHS.remove} />
           </button>
         </BadgeBar>
 
@@ -282,6 +288,7 @@ const StoryBuilder = createReactClass({
   },
 
   render() {
+    const { t } = this.props;
     const hasStories =
       defined(this.props.terria.stories) &&
       this.props.terria.stories.length > 0;
@@ -301,20 +308,20 @@ const StoryBuilder = createReactClass({
                 disabled={this.state.editingMode || !hasStories}
                 className={Styles.previewBtn}
                 onClick={this.runStories}
-                title="preview stories"
+                title={t("story.preview")}
               >
                 <Icon glyph={Icon.GLYPHS.play} />
-                Play Story
+                {t("story.play")}
               </button>
             )}
             <button
               disabled={this.state.editingMode}
               className={Styles.captureBtn}
-              title="capture current scene"
+              title={t("story.captureSceneTitle")}
               onClick={this.onClickCapture}
             >
               {" "}
-              <Icon glyph={Icon.GLYPHS.story} /> Capture Scene{" "}
+              <Icon glyph={Icon.GLYPHS.story} /> {t("story.captureScene")}{" "}
             </button>
           </div>
         </div>
@@ -332,4 +339,4 @@ const StoryBuilder = createReactClass({
   }
 });
 
-export default StoryBuilder;
+export default withTranslation()(StoryBuilder);

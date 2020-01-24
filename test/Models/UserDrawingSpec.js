@@ -5,12 +5,14 @@ var UserDrawing = require("../../lib/Models/UserDrawing");
 var Terria = require("../../lib/Models/Terria");
 var Cesium = require("../../lib/Models/Cesium");
 var PickedFeatures = require("../../lib/Map/PickedFeatures");
-var Cartesian3 = require("terriajs-cesium/Source/Core/Cartesian3");
-var Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid.js");
-var CesiumWidget = require("terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget");
-var TileCoordinatesImageryProvider = require("terriajs-cesium/Source/Scene/TileCoordinatesImageryProvider");
-var Cartographic = require("terriajs-cesium/Source/Core/Cartographic");
-var CesiumMath = require("terriajs-cesium/Source/Core/Math");
+var Cartesian3 = require("terriajs-cesium/Source/Core/Cartesian3").default;
+var Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid.js").default;
+var CesiumWidget = require("terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget")
+  .default;
+var TileCoordinatesImageryProvider = require("terriajs-cesium/Source/Scene/TileCoordinatesImageryProvider")
+  .default;
+var Cartographic = require("terriajs-cesium/Source/Core/Cartographic").default;
+var CesiumMath = require("terriajs-cesium/Source/Core/Math").default;
 var supportsWebGL = require("../../lib/Core/supportsWebGL");
 
 var describeIfSupported = supportsWebGL() ? describe : xdescribe;
@@ -90,12 +92,30 @@ describe("UserDrawing", function() {
       "<div><strong>Draw on Map</strong></br>HELLO</br><i>Click to add a point</i></div>"
     );
   });
+
   it("listens for user picks on map after entering drawing mode", function() {
     var options = { terria: terria };
     var userDrawing = new UserDrawing(options);
     expect(userDrawing.terria.mapInteractionModeStack.length).toEqual(0);
     userDrawing.enterDrawMode();
     expect(userDrawing.terria.mapInteractionModeStack.length).toEqual(1);
+  });
+
+  it("disables feature info requests when in drawing mode", function() {
+    var options = { terria: terria };
+    var userDrawing = new UserDrawing(options);
+    expect(userDrawing.terria.allowFeatureInfoRequests).toEqual(true);
+    userDrawing.enterDrawMode();
+    expect(userDrawing.terria.allowFeatureInfoRequests).toEqual(false);
+  });
+
+  it("re-enables feature info requests on cleanup", function() {
+    var options = { terria: terria };
+    var userDrawing = new UserDrawing(options);
+    userDrawing.enterDrawMode();
+    expect(userDrawing.terria.allowFeatureInfoRequests).toEqual(false);
+    userDrawing._cleanUp();
+    expect(userDrawing.terria.allowFeatureInfoRequests).toEqual(true);
   });
 
   it("ensures onPointClicked callback is called when point is picked by user", function() {

@@ -7,6 +7,7 @@ import DataCatalogTab from "./Tabs/DataCatalogTab.jsx";
 import MyDataTab from "./Tabs/MyDataTab/MyDataTab.jsx";
 import ObserveModelMixin from "../ObserveModelMixin";
 import defined from "terriajs-cesium/Source/Core/defined";
+import { withTranslation } from "react-i18next";
 
 import Styles from "./tabs.scss";
 
@@ -17,18 +18,20 @@ const Tabs = createReactClass({
   propTypes: {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
-    tabs: PropTypes.array
+    tabs: PropTypes.array,
+    t: PropTypes.func.isRequired
   },
 
   getTabs() {
+    const { t } = this.props;
     // This can be passed in as prop
     if (this.props.tabs) {
       return this.props.tabs;
     }
 
     const myDataTab = {
-      name: "My Data",
       title: "my-data",
+      name: t("addData.myData"),
       category: "my-data",
       panel: (
         <MyDataTab
@@ -54,7 +57,7 @@ const Tabs = createReactClass({
                 terria={this.props.terria}
                 viewState={this.props.viewState}
                 items={member.items || [member]}
-                searchPlaceholder="Search whole catalogue"
+                searchPlaceholder={t("addData.searchPlaceholderWhole")}
               />
             )
           })),
@@ -63,7 +66,7 @@ const Tabs = createReactClass({
     } else {
       return [
         {
-          name: "Data Catalogue",
+          name: t("addData.dataCatalogue"),
           title: "data-catalog",
           category: "data-catalog",
           panel: (
@@ -71,7 +74,7 @@ const Tabs = createReactClass({
               terria={this.props.terria}
               viewState={this.props.viewState}
               items={this.props.terria.catalog.group.items}
-              searchPlaceholder="Search the catalogue"
+              searchPlaceholder={t("addData.searchPlaceholder")}
             />
           )
         },
@@ -155,4 +158,4 @@ const Tabs = createReactClass({
   }
 });
 
-module.exports = Tabs;
+module.exports = withTranslation()(Tabs);

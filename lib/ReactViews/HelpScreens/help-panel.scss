@@ -34,6 +34,7 @@
 .btn--viewer {
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn-grey from "../../Sass/common/_buttons.scss";
+  display: block;
 
   font-size: 0.8rem !important;
   text-align: left !important;

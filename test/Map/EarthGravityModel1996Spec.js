@@ -1,7 +1,7 @@
 "use strict";
 
 /*global require,describe,xdescribe,it,expect,beforeAll*/
-var Cartographic = require("terriajs-cesium/Source/Core/Cartographic");
+var Cartographic = require("terriajs-cesium/Source/Core/Cartographic").default;
 var EarthGravityModel1996 = require("../../lib/Map/EarthGravityModel1996");
 
 var describeIfSupported = EarthGravityModel1996.isSupported()

@@ -22,13 +22,25 @@ import processCustomElements from "./processCustomElements";
 import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import StoryPanel from "./../Story/StoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
+import ToolPanel from "./../ToolPanel.jsx";
+
+import SatelliteGuide from "../Guide/SatelliteGuide.jsx";
+import WelcomeMessage from "../WelcomeMessage/WelcomeMessage.jsx";
 
 import { Small, Medium } from "../Generic/Responsive";
 import classNames from "classnames";
 import "inobounce";
 
+import { withTranslation } from "react-i18next";
+
 import Styles from "./standard-user-interface.scss";
 
+export const showStoryPrompt = (viewState, terria) => {
+  terria.configParameters.showFeaturePrompts &&
+    terria.configParameters.storyEnabled &&
+    terria.stories.length === 0 &&
+    viewState.toggleFeaturePrompt("story", true);
+};
 const animationDuration = 250;
 /** blah */
 const StandardUserInterface = createReactClass({
@@ -50,7 +62,8 @@ const StandardUserInterface = createReactClass({
     children: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.element),
       PropTypes.element
-    ])
+    ]),
+    t: PropTypes.func.isRequired
   },
 
   getDefaultProps() {
@@ -59,6 +72,7 @@ const StandardUserInterface = createReactClass({
 
   /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillMount() {
+    const { t } = this.props;
     const that = this;
     // only need to know on initial load
     this.dragOverListener = e => {
@@ -89,10 +103,10 @@ const StandardUserInterface = createReactClass({
       !this.props.viewState.storyShown
     ) {
       this.props.viewState.notifications.push({
-        title: "This map contains a story",
-        message: "Would you like to view it now?",
-        confirmText: "Yes",
-        denyText: "Maybe later",
+        title: t("sui.notifications.title"),
+        message: t("sui.notifications.message"),
+        confirmText: t("sui.notifications.confirmText"),
+        denyText: t("sui.notifications.denyText"),
         confirmAction: () => {
           this.props.viewState.storyShown = true;
         },
@@ -107,9 +121,7 @@ const StandardUserInterface = createReactClass({
 
   componentDidMount() {
     this._wrapper.addEventListener("dragover", this.dragOverListener, false);
-    this.props.terria.configParameters.storyEnabled &&
-      this.props.terria.stories.length === 0 &&
-      this.props.viewState.toggleFeaturePrompt("story", true);
+    showStoryPrompt(this.props.viewState, this.props.terria);
   },
 
   componentWillUnmount() {
@@ -130,6 +142,8 @@ const StandardUserInterface = createReactClass({
   },
 
   render() {
+    const { t } = this.props;
+
     const customElements = processCustomElements(
       this.props.viewState.useSmallScreenInterface,
       this.props.children
@@ -149,6 +163,7 @@ const StandardUserInterface = createReactClass({
       !this.props.viewState.storyBuilderShown;
     return (
       <div className={Styles.storyWrapper}>
+        <WelcomeMessage viewState={this.props.viewState} />
         <div
           className={classNames(Styles.uiRoot, {
             [Styles.withStoryBuilder]: showStoryBuilder
@@ -157,7 +172,12 @@ const StandardUserInterface = createReactClass({
         >
           <div className={Styles.ui}>
             <div className={Styles.uiInner}>
-              <If condition={!this.props.viewState.hideMapUi()}>
+              <If
+                condition={
+                  !this.props.viewState.hideMapUi() &&
+                  !this.props.viewState.showToolPanel()
+                }
+              >
                 <Small>
                   <MobileHeader
                     terria={terria}
@@ -192,6 +212,11 @@ const StandardUserInterface = createReactClass({
                   </div>
                 </Medium>
               </If>
+
+              <If condition={this.props.viewState.showToolPanel()}>
+                <ToolPanel viewState={this.props.viewState} />
+              </If>
+
               <Medium>
                 <div
                   className={classNames(Styles.showWorkbenchButton, {
@@ -205,7 +230,7 @@ const StandardUserInterface = createReactClass({
                     terria={this.props.terria}
                     viewState={this.props.viewState}
                     minified={false}
-                    btnText="Show workbench"
+                    btnText={t("sui.showWorkbench")}
                     animationDuration={animationDuration}
                   />
                 </div>
@@ -263,6 +288,7 @@ const StandardUserInterface = createReactClass({
           </If>
 
           <Notification viewState={this.props.viewState} />
+          <SatelliteGuide terria={terria} viewState={this.props.viewState} />
           <MapInteractionWindow
             terria={terria}
             viewState={this.props.viewState}
@@ -308,6 +334,7 @@ const StandardUserInterface = createReactClass({
           <DragDropNotification
             lastUploadedFiles={this.props.viewState.lastUploadedFiles}
             viewState={this.props.viewState}
+            t={this.props.t}
           />
           {showStoryPanel && (
             <StoryPanel terria={terria} viewState={this.props.viewState} />
@@ -326,4 +353,6 @@ const StandardUserInterface = createReactClass({
   }
 });
 
-module.exports = StandardUserInterface;
+export const StandardUserInterfaceWithoutTranslation = StandardUserInterface;
+
+export default withTranslation()(StandardUserInterface);
