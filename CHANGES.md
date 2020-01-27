@@ -6,6 +6,7 @@ Change Log
 * Added first revision of "delta feature" for change detection of WMS catalog items which indicate `supportsDeltaComparison`
 * Improve menu bar button hover/focus states when interacting with its panel contents
 * Add ability to set opacity on `GeoJsonCatalogItem` 
+* Allow `CkanCatalogItem` names to be constructed from dataset and resource names where multiple resources are available for a single dataset
 
 ### v7.10.0
 
