@@ -13,8 +13,10 @@ interface CssExports {
   'dropdownInner': string;
   'is-active': string;
   'isActive': string;
-  'list-item': string;
-  'listItem': string;
+  'list-item-four-cols': string;
+  'list-item-three-cols': string;
+  'listItemFourCols': string;
+  'listItemThreeCols': string;
   'native-resolution-header': string;
   'native-resolution-wrapper': string;
   'nativeResolutionHeader': string;

@@ -8,7 +8,7 @@ import { getShallowRenderedOutput } from "./MoreShallowTools";
 
 // import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 
-import FeatureInfoPanel from "../../lib/ReactViews/FeatureInfo/FeatureInfoPanel";
+import { FeatureInfoPanel } from "../../lib/ReactViews/FeatureInfo/FeatureInfoPanel";
 import Loader from "../../lib/ReactViews/Loader";
 import PickedFeatures from "../../lib/Map/PickedFeatures";
 import runLater from "../../lib/Core/runLater";
@@ -36,7 +36,9 @@ describe("FeatureInfoPanel", function() {
 
   it("has isVisible class when viewState.featureInfoPanelIsVisible is true", function() {
     viewState.featureInfoPanelIsVisible = true;
-    const panel = <FeatureInfoPanel terria={terria} viewState={viewState} />;
+    const panel = (
+      <FeatureInfoPanel terria={terria} viewState={viewState} t={() => {}} />
+    );
     const result = getShallowRenderedOutput(panel);
     expect(result.props.children.props.className).toContain("is-visible");
   });
@@ -45,14 +47,18 @@ describe("FeatureInfoPanel", function() {
     var pickedFeatures = new PickedFeatures();
     pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
     terria.pickedFeatures = pickedFeatures;
-    const panel = <FeatureInfoPanel terria={terria} viewState={viewState} />;
+    const panel = (
+      <FeatureInfoPanel terria={terria} viewState={viewState} t={() => {}} />
+    );
     const result = getShallowRenderedOutput(panel);
     expect(findWithType(result, Loader)).toBeDefined();
   });
 
   it("does not have isVisible class when viewState.featureInfoPanelIsVisible is false", function() {
     viewState.featureInfoPanelIsVisible = false;
-    const panel = <FeatureInfoPanel terria={terria} viewState={viewState} />;
+    const panel = (
+      <FeatureInfoPanel terria={terria} viewState={viewState} t={() => {}} />
+    );
     const result = getShallowRenderedOutput(panel);
     expect(result.props.children.props.className).not.toContain("is-visible");
   });

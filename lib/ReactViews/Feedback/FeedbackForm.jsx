@@ -9,6 +9,7 @@ import sendFeedback from "../../Models/sendFeedback";
 import Styles from "./feedback-form.scss";
 import Icon from "../Icon";
 import classNames from "classnames";
+import { withTranslation, Trans } from "react-i18next";
 import { runInAction } from "mobx";
 
 const FeedbackForm = observer(
@@ -16,7 +17,8 @@ const FeedbackForm = observer(
     displayName: "FeedbackForm",
 
     propTypes: {
-      viewState: PropTypes.object.isRequired
+      viewState: PropTypes.object.isRequired,
+      t: PropTypes.func.isRequired
     },
 
     getInitialState() {
@@ -98,9 +100,10 @@ const FeedbackForm = observer(
     },
 
     render() {
+      const { t } = this.props;
       const preamble = parseCustomMarkdownToReact(
         this.props.viewState.terria.configParameters.feedbackPreamble ||
-          "We would love to hear from you!"
+          t("feedback.feedbackPreamble")
       );
       const feedbackFormClassNames = classNames(Styles.form, {
         [Styles.isOpen]: this.props.viewState.feedbackFormIsVisible
@@ -109,18 +112,18 @@ const FeedbackForm = observer(
         <div className="feedback__inner">
           <div className={feedbackFormClassNames}>
             <div className={Styles.header}>
-              <h4 className={Styles.title}>Feedback</h4>
+              <h4 className={Styles.title}>{t("feedback.title")}</h4>
               <button
                 className={Styles.btnClose}
                 onClick={this.onDismiss}
-                title="close feedback"
+                title={t("feedback.close")}
               >
                 <Icon glyph={Icon.GLYPHS.close} />
               </button>
             </div>
             <form onSubmit={this.onSubmit}>
               <div className={Styles.description}>{preamble}</div>
-              <label className={Styles.label}>Your name (optional)</label>
+              <label className={Styles.label}>{t("feedback.yourName")}</label>
               <input
                 type="text"
                 name="name"
@@ -129,9 +132,11 @@ const FeedbackForm = observer(
                 onChange={this.handleChange}
               />
               <label className={Styles.label}>
-                Email address (optional)
-                <br />
-                <em>We can&#39;t follow up without it!</em>
+                <Trans i18nKey="feedback.email">
+                  Email address (optional)
+                  <br />
+                  <em>We can&#39;t follow up without it!</em>
+                </Trans>
               </label>
               <input
                 type="text"
@@ -140,7 +145,9 @@ const FeedbackForm = observer(
                 value={this.state.email}
                 onChange={this.handleChange}
               />
-              <label className={Styles.label}>Comment or question</label>
+              <label className={Styles.label}>
+                {t("feedback.commentQuestion")}
+              </label>
               <textarea
                 className={Styles.field}
                 name="comment"
@@ -154,13 +161,11 @@ const FeedbackForm = observer(
                   ) : (
                     <Icon glyph={Icon.GLYPHS.checkboxOff} />
                   )}
-                  Share my map view with {this.props.viewState.terria.appName}{" "}
-                  developers
+                  {t("feedback.shareWithDevelopers", {
+                    appName: this.props.viewState.terria.appName
+                  })}
                   <br />
-                  <small>
-                    This helps us to troubleshoot issues by letting us see what
-                    you&#39;re seeing
-                  </small>
+                  <small>{t("feedback.captionText")}</small>
                 </button>
               </div>
               <div className={Styles.action}>
@@ -169,14 +174,16 @@ const FeedbackForm = observer(
                   className={Styles.btnCancel}
                   onClick={this.onDismiss}
                 >
-                  Cancel
+                  {t("feedback.cancel")}
                 </button>
                 <button
                   type="submit"
                   className={Styles.btnSubmit}
                   disabled={this.state.isSending}
                 >
-                  {this.state.isSending ? "Sending..." : "Send"}
+                  {this.state.isSending
+                    ? t("feedback.sending")
+                    : t("feedback.send")}
                 </button>
               </div>
             </form>
@@ -187,4 +194,4 @@ const FeedbackForm = observer(
   })
 );
 
-module.exports = FeedbackForm;
+module.exports = withTranslation()(FeedbackForm);

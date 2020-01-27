@@ -9,14 +9,15 @@ import Styles from "./help-panel.scss";
 import DropdownStyles from "../Map/Panels/panel.scss";
 import helpIcon from "../../../wwwroot/images/icons/help.svg";
 
-import getReactElementFromContents from "../ReactHelpers/getReactElementFromContents";
+import { withTranslation } from "react-i18next";
 import { action } from "mobx";
 import { observer } from "mobx-react";
 
 @observer
 class HelpMenuPanelBasic extends React.Component {
   static propTypes = {
-    viewState: PropTypes.object.isRequired
+    viewState: PropTypes.object.isRequired,
+    t: PropTypes.func.isRequired
   };
 
   constructor() {
@@ -40,16 +41,18 @@ class HelpMenuPanelBasic extends React.Component {
     };
     const isOpen = this.props.viewState.showHelpMenu;
 
+    const { t } = this.props;
+
     return (
       <MenuPanel
         theme={dropdownTheme}
-        btnText="Help"
+        btnText={t("helpMenu.btnText")}
         viewState={this.props.viewState}
         isOpen={isOpen}
         onDismissed={() => {
           this.setShowHelpMenu(false);
         }}
-        btnTitle="get help"
+        btnTitle={t("helpMenu.btnTitle")}
         onOpenChanged={this.setShowHelpMenu}
         // forceClosed={this.props.viewState.showSatelliteGuidance}
         smallScreen={this.props.viewState.useSmallScreenInterface}
@@ -57,9 +60,7 @@ class HelpMenuPanelBasic extends React.Component {
         <If condition={isOpen}>
           <div className={classNames(Styles.viewer, DropdownStyles.section)}>
             <label className={DropdownStyles.heading}>
-              {getReactElementFromContents(
-                this.props.viewState.language.HelpMenuHeader
-              )}
+              {t("helpMenu.helpMenuHeader")}
             </label>
             <ul className={Styles.viewerSelector}>
               <li className={Styles.listItem}>
@@ -71,9 +72,7 @@ class HelpMenuPanelBasic extends React.Component {
                   })}
                   className={Styles.btnViewer}
                 >
-                  {getReactElementFromContents(
-                    this.props.viewState.language.HelpMenuOpenWelcome
-                  )}
+                  {t("helpMenu.helpMenuOpenWelcome")}
                 </button>
               </li>
               <li className={Styles.listItem}>
@@ -85,9 +84,7 @@ class HelpMenuPanelBasic extends React.Component {
                   })}
                   className={Styles.btnViewer}
                 >
-                  {getReactElementFromContents(
-                    this.props.viewState.language.HelpMenuSatelliteGuideTitle
-                  )}
+                  {t("helpMenu.helpMenuSatelliteGuideTitle")}
                 </button>
               </li>
               <li className={Styles.listItem}>
@@ -96,9 +93,7 @@ class HelpMenuPanelBasic extends React.Component {
                   href="./help/help.html"
                   className={Styles.btnViewer}
                 >
-                  {getReactElementFromContents(
-                    this.props.viewState.language.HelpMenuMoreHelpTitle
-                  )}
+                  {t("helpMenu.helpMenuMoreHelpTitle")}
                 </a>
               </li>
             </ul>
@@ -109,4 +104,4 @@ class HelpMenuPanelBasic extends React.Component {
   }
 }
 
-export default HelpMenuPanelBasic;
+export default withTranslation()(HelpMenuPanelBasic);

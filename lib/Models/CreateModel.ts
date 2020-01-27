@@ -39,6 +39,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
      * if the container isn't loaded yet. It's also important for locating
      * this model in a hierarchical catalog.
      */
+    @observable
     readonly knownContainerUniqueIds: string[] = [];
 
     constructor(
