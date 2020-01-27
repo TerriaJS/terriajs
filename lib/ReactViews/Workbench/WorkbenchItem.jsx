@@ -28,7 +28,7 @@ import { withTranslation } from "react-i18next";
 import Styles from "./workbench-item.scss";
 import Icon from "../Icon.jsx";
 
-const WorkbenchItem = createReactClass({
+export const WorkbenchItemRaw = createReactClass({
   displayName: "WorkbenchItem",
   mixins: [ObserveModelMixin],
 
@@ -174,4 +174,4 @@ const WorkbenchItem = createReactClass({
   }
 });
 
-module.exports = sortable(withTranslation()(WorkbenchItem));
+export default sortable(withTranslation()(WorkbenchItemRaw));

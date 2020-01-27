@@ -5,7 +5,13 @@ Change Log
 * Fix draggable workbench/story items with translation HOC
 * Added first revision of "delta feature" for change detection of WMS catalog items which indicate `supportsDeltaComparison`
 * Improve menu bar button hover/focus states when interacting with its panel contents
-* Add ability to set opacity on `GeoJsonCatalogItem` 
+* Add ability to set opacity on `GeoJsonCatalogItem`
+* Expanded test cases to ensure WorkbenchItem & Story have the correct order of components composed
+* Fix broken catalog functions when used with translation HOC
+* Fix bug with momentPoints chart type when plotting against series with null values
+* Make the default `Legend` width a little smaller to account for the workbench scrollbar
+* Add a `ChartDisclaimer` component to display an additional disclaimer above the chart panel in the bottom dock.
+* Add `allowFeatureInfoRequests` property to `Terria` and prevent unnecessary feature info requests when creating `UserDrawing`s.
 * Allow `CkanCatalogItem` names to be constructed from dataset and resource names where multiple resources are available for a single dataset
 
 ### v7.10.0
@@ -22,6 +28,7 @@ Change Log
 * Updated Welcome Message to pass its props to `WelcomeMessagePrimaryBtnClick` & `WelcomeMessageSecondaryBtnClick` overrides
 * Fixed a bug in anti-meridian handling causing excessive memory use.
 * Handled coordinate conversion for GeoJson geometries with an empty `coordinates` array.
+* Fixed height of My Data drag and drop box in Safari and IE.
 
 ### v7.9.0
 

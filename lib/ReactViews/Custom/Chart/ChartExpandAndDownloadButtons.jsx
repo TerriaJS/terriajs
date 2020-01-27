@@ -211,7 +211,10 @@ function expand(props, sourceIndex) {
     const url = defined(sourceIndex) ? props.sources[sourceIndex] : undefined;
     const newCatalogItem = new CsvCatalogItem(terria, url, {
       tableStyle: makeTableStyle(),
-      isCsvForCharting: true
+      isCsvForCharting: true,
+      chartDisclaimer: props.catalogItem.chartDisclaimer
+        ? props.catalogItem.chartDisclaimer
+        : null
     });
     const newGeoJsonItem = new GeoJsonCatalogItem(terria, null);
     newGeoJsonItem.isUserSupplied = true;

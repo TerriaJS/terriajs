@@ -32,7 +32,7 @@ const PolygonParameterEditor = createReactClass({
   },
 
   selectPolygonOnMap() {
-    PolygonParameterEditor.selectOnMap(
+    selectOnMap(
       this.props.previewed.terria,
       this.props.viewState,
       this.props.parameter
@@ -47,9 +47,7 @@ const PolygonParameterEditor = createReactClass({
           className={Styles.field}
           type="text"
           onChange={this.setValueFromText}
-          value={PolygonParameterEditor.getDisplayValue(
-            this.props.parameter.value
-          )}
+          value={getDisplayValue(this.props.parameter.value)}
         />
         <button
           type="button"
@@ -77,7 +75,7 @@ PolygonParameterEditor.setValueFromText = function(e, parameter) {
  * @param {Object} value Native format of parameter value.
  * @return {String} String for display
  */
-PolygonParameterEditor.getDisplayValue = function(value) {
+export function getDisplayValue(value) {
   if (!defined(value) || value.length < 1) {
     return "";
   }
@@ -100,7 +98,7 @@ PolygonParameterEditor.getDisplayValue = function(value) {
   } else {
     return "";
   }
-};
+}
 
 /**
  * Helper function for processing clicked/moved points.
@@ -136,7 +134,7 @@ function getPointsLongLats(pointEntities, terria) {
  * @param {Object} viewState ViewState.
  * @param {FunctionParameter} parameter Parameter.
  */
-PolygonParameterEditor.selectOnMap = function(terria, viewState, parameter) {
+export function selectOnMap(terria, viewState, parameter) {
   const userDrawing = new UserDrawing({
     terria: terria,
     onPointClicked: function(pointEntities) {
@@ -151,6 +149,6 @@ PolygonParameterEditor.selectOnMap = function(terria, viewState, parameter) {
   });
   viewState.explorerPanelIsVisible = false;
   userDrawing.enterDrawMode();
-};
+}
 
-module.exports = withTranslation()(PolygonParameterEditor);
+export default withTranslation()(PolygonParameterEditor);
