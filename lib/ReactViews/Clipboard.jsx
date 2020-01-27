@@ -3,9 +3,10 @@ import React from "react";
 import Styles from "./clipboard.scss";
 import classNames from "classnames";
 import PropTypes from "prop-types";
+import { withTranslation } from "react-i18next";
 import Icon from "./Icon.jsx";
 
-export default class Clipboard extends React.Component {
+class Clipboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -16,17 +17,18 @@ export default class Clipboard extends React.Component {
   }
 
   componentDidMount() {
+    const { t } = this.props;
     this.clipboardBtn = new clipboard(`.btn-copy-${this.props.id}`);
     this.clipboardBtn.on("success", _ => {
       this.setState({
-        tooltip: "Copied to clipboard",
+        tooltip: t("clipboard.success"),
         success: true
       });
       this.resetTooltipLater();
     });
     this.clipboardBtn.on("error", _ => {
       this.setState({
-        tooltip: "Copy unsuccessful...",
+        tooltip: t("clipboard.unsuccessful"),
         success: false
       });
       this.resetTooltipLater();
@@ -57,12 +59,12 @@ export default class Clipboard extends React.Component {
 
   render() {
     const isLightTheme = this.props.theme === "light";
-
+    const { t } = this.props;
     return (
       <div className={Styles.clipboard}>
-        <div className={Styles.title}>Share URL</div>
+        <div className={Styles.title}>{t("clipboard.shareURL")}</div>
         <div className={Styles.explanation}>
-          Anyone with this URL will be able to access this map.
+          {t("clipboard.shareExplanation")}
         </div>
         <div className={Styles.clipboardBody}>
           {this.props.source}
@@ -70,7 +72,7 @@ export default class Clipboard extends React.Component {
             className={classNames(`btn-copy-${this.props.id}`, Styles.copyBtn)}
             data-clipboard-target={`#${this.props.id}`}
           >
-            Copy
+            {t("clipboard.copy")}
           </button>
         </div>
         {this.state.tooltip && (
@@ -95,5 +97,8 @@ export default class Clipboard extends React.Component {
 Clipboard.propTypes = {
   id: PropTypes.string.isRequired,
   source: PropTypes.object.isRequired,
-  theme: PropTypes.oneOf(["dark", "light"])
+  theme: PropTypes.oneOf(["dark", "light"]),
+  t: PropTypes.func.isRequired
 };
+
+export default withTranslation()(Clipboard);

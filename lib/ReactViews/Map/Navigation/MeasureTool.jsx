@@ -28,7 +28,7 @@ export const MeasureTool = createReactClass({
 
   propTypes: {
     terria: PropTypes.object,
-    t: PropTypes.func
+    t: PropTypes.func.isRequired
   },
 
   getInitialState() {
@@ -38,7 +38,7 @@ export const MeasureTool = createReactClass({
       totalAreaMetresSquared: 0,
       userDrawing: new UserDrawing({
         terria: this.props.terria,
-        messageHeader: t("measure.measure-tool"),
+        messageHeader: t("measure.measureTool"),
         allowPolygon: false,
         onPointClicked: this.onPointClicked,
         onPointMoved: this.onPointMoved,
@@ -240,7 +240,7 @@ export const MeasureTool = createReactClass({
         <button
           type="button"
           className={Styles.btn}
-          title={t("measure.measure-distance")}
+          title={t("measure.measureDistance")}
           onClick={this.handleClick}
         >
           <Icon glyph={Icon.GLYPHS.measure} />
