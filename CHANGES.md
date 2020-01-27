@@ -12,6 +12,7 @@ Change Log
 * Make the default `Legend` width a little smaller to account for the workbench scrollbar
 * Add a `ChartDisclaimer` component to display an additional disclaimer above the chart panel in the bottom dock.
 * Add `allowFeatureInfoRequests` property to `Terria` and prevent unnecessary feature info requests when creating `UserDrawing`s.
+* Allow `CkanCatalogItem` names to be constructed from dataset and resource names where multiple resources are available for a single dataset
 
 ### v7.10.0
 
