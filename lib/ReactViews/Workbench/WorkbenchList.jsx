@@ -18,7 +18,7 @@ class WorkbenchList extends React.Component {
 
   @action.bound
   onSort(sortedArray, currentDraggingSortData, currentDraggingIndex) {
-    this.props.terria.workbench.moveMemberToIndex(
+    this.props.terria.workbench.moveItemToIndex(
       currentDraggingSortData,
       currentDraggingIndex
     );
