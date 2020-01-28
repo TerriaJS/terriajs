@@ -58,3 +58,4 @@ The following people have contributed to TerriaJS:
    * [Jason D'Netto](https://github.com/Jason-DNetto)
 * [NCI](http://www.nci.org.au)
    * [Edison Guo](https://github.com/edisonguo)
+* [Zoran Kokeza](https://github.com/zoran995)

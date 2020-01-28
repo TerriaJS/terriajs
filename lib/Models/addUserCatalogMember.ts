@@ -10,6 +10,7 @@ import CommonStrata from "./CommonStrata";
 import Mappable from "./Mappable";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import GroupMixin from "../ModelMixins/GroupMixin";
+import i18next from "i18next";
 
 interface AddUserCatalogMemberOptions {
   enable?: boolean;
@@ -76,9 +77,8 @@ export default function addUserCatalogMember(
     .catch((e: any) => {
       if (!(e instanceof TerriaError)) {
         e = new TerriaError({
-          title: "Data could not be added",
-          message:
-            "The specified data could not be added because it is invalid or does not have the expected format."
+          title: i18next.t("models.userData.addingDataErrorTitle"),
+          message: i18next.t("models.userData.addingDataErrorTitle")
         });
       }
 

@@ -9,6 +9,7 @@ import CommonStrata from "../../../Models/CommonStrata";
 import hasTraits from "../../../Models/hasTraits";
 import RasterLayerTraits from "../../../Traits/RasterLayerTraits";
 import Styles from "./opacity-section.scss";
+import { withTranslation } from "react-i18next";
 import { runInAction } from "mobx";
 
 const OpacitySection = observer(
@@ -16,7 +17,8 @@ const OpacitySection = observer(
     displayName: "OpacitySection",
 
     propTypes: {
-      item: PropTypes.object.isRequired
+      item: PropTypes.object.isRequired,
+      t: PropTypes.func.isRequired
     },
 
     changeOpacity(value) {
@@ -30,6 +32,7 @@ const OpacitySection = observer(
 
     render() {
       const item = this.props.item;
+      const { t } = this.props;
       if (
         !hasTraits(item, RasterLayerTraits, "opacity") ||
         item.opacity === undefined
@@ -39,7 +42,9 @@ const OpacitySection = observer(
       return (
         <div className={Styles.opacity}>
           <label htmlFor="opacity">
-            Opacity: {parseInt(item.opacity * 100, 10)} %
+            {t("workbench.opacity", {
+              opacity: parseInt(item.opacity * 100, 10)
+            })}
           </label>
           <Slider
             className={Styles.opacitySlider}
@@ -54,4 +59,4 @@ const OpacitySection = observer(
   })
 );
 
-module.exports = OpacitySection;
+module.exports = withTranslation()(OpacitySection);

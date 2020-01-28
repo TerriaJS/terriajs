@@ -15,7 +15,6 @@ import {
 } from "mobx";
 import { BaseModel } from "../Models/Model";
 import PickedFeatures from "../Map/PickedFeatures";
-import { language } from "../Language/defaults";
 
 export const DATA_CATALOG_NAME = "data-catalog";
 export const USER_DATA_NAME = "my-data";
@@ -24,7 +23,6 @@ interface ViewStateOptions {
   terria: Terria;
   catalogSearchProvider: any;
   locationSearchProviders: any[];
-  languageOverrides?: any;
 }
 
 /**
@@ -109,8 +107,6 @@ export default class ViewState {
    */
   @observable shareModelIsVisible: boolean = false;
 
-  readonly language: any;
-
   private _unsubscribeErrorListener: any;
   private _pickedFeaturesSubscription: IReactionDisposer;
   private _isMapFullScreenSubscription: IReactionDisposer;
@@ -122,12 +118,6 @@ export default class ViewState {
 
   constructor(options: ViewStateOptions) {
     const terria = options.terria;
-
-    this.language = {
-      ...language,
-      ...options.languageOverrides
-    };
-
     this.searchState = new SearchState({
       terria: terria,
       catalogSearchProvider: options.catalogSearchProvider,
@@ -244,6 +234,7 @@ export default class ViewState {
   openAddData() {
     this.explorerPanelIsVisible = true;
     this.activeTabCategory = DATA_CATALOG_NAME;
+    this.switchMobileView(this.mobileViewOptions.data);
   }
 
   @action
@@ -255,6 +246,7 @@ export default class ViewState {
   @action
   closeCatalog() {
     this.explorerPanelIsVisible = false;
+    this.switchMobileView(null);
   }
 
   @action
@@ -317,5 +309,11 @@ export default class ViewState {
 
   viewingUserData() {
     return this.activeTabCategory === USER_DATA_NAME;
+  }
+
+  afterTerriaStarted() {
+    if (this.terria.configParameters.openAddData) {
+      this.openAddData();
+    }
   }
 }

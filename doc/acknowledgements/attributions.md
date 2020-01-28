@@ -1402,7 +1402,7 @@ Apache License
 
 -----
 
-The following software may be included in this product: @types/cesium, @types/classnames, @types/create-react-class, @types/d3-array, @types/d3-axis, @types/d3-selection, @types/d3-transition, @types/domhandler, @types/events, @types/geojson, @types/glob, @types/jasmine, @types/json5, @types/leaflet, @types/lodash, @types/lodash-es, @types/minimatch, @types/mustache, @types/node, @types/normalize-package-data, @types/papaparse, @types/pbf, @types/prop-types, @types/react, @types/react-dom, @types/urijs, @types/victory. A copy of the source code may be downloaded from https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/cesium), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/classnames), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/create-react-class), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-array), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-axis), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-selection), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-transition), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/domhandler), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/events), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/geojson), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/glob), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/jasmine), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/json5), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/leaflet), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/lodash), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/lodash-es), https://www.github.com/DefinitelyTyped/DefinitelyTyped.git (@types/minimatch), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/mustache), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/node), https://www.github.com/DefinitelyTyped/DefinitelyTyped.git (@types/normalize-package-data), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/papaparse), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/pbf), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/prop-types), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/react), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/react-dom), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/urijs), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/victory). This software contains the following license and notice below:
+The following software may be included in this product: @types/cesium, @types/classnames, @types/create-react-class, @types/d3-array, @types/d3-axis, @types/d3-selection, @types/d3-transition, @types/domhandler, @types/events, @types/geojson, @types/glob, @types/i18next, @types/jasmine, @types/json5, @types/leaflet, @types/lodash, @types/lodash-es, @types/minimatch, @types/mustache, @types/node, @types/normalize-package-data, @types/papaparse, @types/pbf, @types/prop-types, @types/react, @types/react-dom, @types/urijs, @types/victory. A copy of the source code may be downloaded from https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/cesium), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/classnames), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/create-react-class), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-array), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-axis), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-selection), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/d3-transition), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/domhandler), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/events), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/geojson), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/glob), https://github.com/i18next/i18next (@types/i18next), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/jasmine), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/json5), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/leaflet), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/lodash), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/lodash-es), https://www.github.com/DefinitelyTyped/DefinitelyTyped.git (@types/minimatch), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/mustache), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/node), https://www.github.com/DefinitelyTyped/DefinitelyTyped.git (@types/normalize-package-data), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/papaparse), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/pbf), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/prop-types), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/react), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/react-dom), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/urijs), https://github.com/DefinitelyTyped/DefinitelyTyped.git (@types/victory). This software contains the following license and notice below:
 
 MIT License
 
@@ -2024,7 +2024,7 @@ The following software may be included in this product: ansi-colors. A copy of t
 
 The MIT License (MIT)
 
-Copyright (c) 2015-2017, Brian Woodward.
+Copyright (c) 2015-present, Brian Woodward.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -2050,7 +2050,7 @@ The following software may be included in this product: ansi-colors. A copy of t
 
 The MIT License (MIT)
 
-Copyright (c) 2015-present, Brian Woodward.
+Copyright (c) 2015-2017, Brian Woodward.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -2775,6 +2775,32 @@ THE SOFTWARE.
 
 -----
 
+The following software may be included in this product: array-back, collect-all, config-master, sort-array, stream-via, wordwrapjs. A copy of the source code may be downloaded from https://github.com/75lb/array-back.git (array-back), https://github.com/75lb/collect-all.git (collect-all), https://github.com/75lb/config-master (config-master), https://github.com/75lb/sort-array.git (sort-array), https://github.com/75lb/stream-via.git (stream-via), https://github.com/75lb/wordwrapjs.git (wordwrapjs). This software contains the following license and notice below:
+
+The MIT License (MIT)
+
+Copyright (c) 2015-17 Lloyd Brookes <75pound@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+-----
+
 The following software may be included in this product: array-back, object-get, test-value, walk-back. A copy of the source code may be downloaded from https://github.com/75lb/array-back.git (array-back), https://github.com/75lb/object-get (object-get), https://github.com/75lb/test-value.git (test-value), https://github.com/75lb/walk-back.git (walk-back). This software contains the following license and notice below:
 
 The MIT License (MIT)
@@ -2806,32 +2832,6 @@ The following software may be included in this product: array-back, find-replace
 The MIT License (MIT)
 
 Copyright (c) 2015-19 Lloyd Brookes <75pound@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
------
-
-The following software may be included in this product: array-back, collect-all, config-master, sort-array, stream-via, wordwrapjs. A copy of the source code may be downloaded from https://github.com/75lb/array-back.git (array-back), https://github.com/75lb/collect-all.git (collect-all), https://github.com/75lb/config-master (config-master), https://github.com/75lb/sort-array.git (sort-array), https://github.com/75lb/stream-via.git (stream-via), https://github.com/75lb/wordwrapjs.git (wordwrapjs). This software contains the following license and notice below:
-
-The MIT License (MIT)
-
-Copyright (c) 2015-17 Lloyd Brookes <75pound@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -3005,7 +3005,7 @@ THE SOFTWARE
 
 -----
 
-The following software may be included in this product: assert, readable-stream, util. A copy of the source code may be downloaded from git://github.com/defunctzombie/commonjs-assert.git (assert), git://github.com/nodejs/readable-stream (readable-stream), git://github.com/defunctzombie/node-util (util). This software contains the following license and notice below:
+The following software may be included in this product: assert, readable-stream, util. A copy of the source code may be downloaded from git://github.com/browserify/commonjs-assert.git (assert), git://github.com/isaacs/readable-stream (readable-stream), git://github.com/defunctzombie/node-util (util). This software contains the following license and notice below:
 
 Copyright Joyent, Inc. and other Node contributors. All rights reserved.
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -3069,7 +3069,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 The following software may be included in this product: async. A copy of the source code may be downloaded from https://github.com/caolan/async.git. This software contains the following license and notice below:
 
-Copyright (c) 2010-2018 Caolan McMahon
+Copyright (c) 2010 Caolan McMahon
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -3093,7 +3093,7 @@ THE SOFTWARE.
 
 The following software may be included in this product: async. A copy of the source code may be downloaded from https://github.com/caolan/async.git. This software contains the following license and notice below:
 
-Copyright (c) 2010 Caolan McMahon
+Copyright (c) 2010-2018 Caolan McMahon
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -4205,7 +4205,7 @@ The following software may be included in this product: bl. A copy of the source
 The MIT License (MIT)
 =====================
 
-Copyright (c) 2013-2016 bl contributors
+Copyright (c) 2013-2018 bl contributors
 ----------------------------------
 
 *bl contributors listed at <https://github.com/rvagg/bl#contributors>*
@@ -4223,7 +4223,7 @@ The following software may be included in this product: bl. A copy of the source
 The MIT License (MIT)
 =====================
 
-Copyright (c) 2013-2018 bl contributors
+Copyright (c) 2013-2016 bl contributors
 ----------------------------------
 
 *bl contributors listed at <https://github.com/rvagg/bl#contributors>*
@@ -6424,9 +6424,9 @@ SOFTWARE.
 
 -----
 
-The following software may be included in this product: core-js, core-js-compat. A copy of the source code may be downloaded from https://github.com/zloirock/core-js.git (core-js), https://github.com/zloirock/core-js.git (core-js-compat). This software contains the following license and notice below:
+The following software may be included in this product: core-js. A copy of the source code may be downloaded from https://github.com/zloirock/core-js.git. This software contains the following license and notice below:
 
-Copyright (c) 2014-2020 Denis Pushkarev
+Copyright (c) 2015 Denis Pushkarev
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -6472,9 +6472,9 @@ THE SOFTWARE.
 
 -----
 
-The following software may be included in this product: core-js. A copy of the source code may be downloaded from https://github.com/zloirock/core-js.git. This software contains the following license and notice below:
+The following software may be included in this product: core-js, core-js-compat. A copy of the source code may be downloaded from https://github.com/zloirock/core-js.git (core-js), https://github.com/zloirock/core-js.git (core-js-compat). This software contains the following license and notice below:
 
-Copyright (c) 2015 Denis Pushkarev
+Copyright (c) 2014-2020 Denis Pushkarev
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -6665,30 +6665,6 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 
 -----
 
-The following software may be included in this product: cross-spawn. A copy of the source code may be downloaded from git://github.com/IndigoUnited/node-cross-spawn.git. This software contains the following license and notice below:
-
-Copyright (c) 2014 IndigoUnited
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is furnished
-to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
------
-
 The following software may be included in this product: cross-spawn. A copy of the source code may be downloaded from git@github.com:moxystudio/node-cross-spawn.git. This software contains the following license and notice below:
 
 The MIT License (MIT)
@@ -6704,6 +6680,30 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in
 all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+-----
+
+The following software may be included in this product: cross-spawn. A copy of the source code may be downloaded from git://github.com/IndigoUnited/node-cross-spawn.git. This software contains the following license and notice below:
+
+Copyright (c) 2014 IndigoUnited
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is furnished
+to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -6785,7 +6785,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 -----
 
-The following software may be included in this product: css-loader, enhanced-resolve, file-loader, html-webpack-plugin, imports-loader, istanbul-instrumenter-loader, loader-utils, memory-fs, mini-css-extract-plugin, raw-loader, schema-utils, style-loader, terser-webpack-plugin, url-loader, watchpack, webpack, webpack-dev-middleware, webpack-dev-server, worker-loader. A copy of the source code may be downloaded from https://github.com/webpack-contrib/css-loader.git (css-loader), git://github.com/webpack/enhanced-resolve.git (enhanced-resolve), https://github.com/webpack-contrib/file-loader.git (file-loader), https://github.com/jantimon/html-webpack-plugin.git (html-webpack-plugin), https://github.com/webpack-contrib/imports-loader (imports-loader), https://github.com/webpack-contrib/istanbul-instrumenter-loader.git (istanbul-instrumenter-loader), https://github.com/webpack/loader-utils.git (loader-utils), https://github.com/webpack/memory-fs.git (memory-fs), https://github.com/webpack-contrib/mini-css-extract-plugin.git (mini-css-extract-plugin), https://github.com/webpack-contrib/raw-loader.git (raw-loader), https://github.com/webpack-contrib/schema-utils (schema-utils), https://github.com/webpack-contrib/style-loader.git (style-loader), https://github.com/webpack-contrib/terser-webpack-plugin.git (terser-webpack-plugin), https://github.com/webpack-contrib/url-loader.git (url-loader), https://github.com/webpack/watchpack.git (watchpack), https://github.com/webpack/webpack.git (webpack), https://github.com/webpack/webpack-dev-middleware.git (webpack-dev-middleware), https://github.com/webpack/webpack-dev-server.git (webpack-dev-server), https://github.com/webpack-contrib/worker-loader.git (worker-loader). This software contains the following license and notice below:
+The following software may be included in this product: css-loader, enhanced-resolve, file-loader, html-webpack-plugin, imports-loader, istanbul-instrumenter-loader, loader-utils, memory-fs, mini-css-extract-plugin, raw-loader, schema-utils, style-loader, terser-webpack-plugin, url-loader, watchpack, webpack, webpack-dev-middleware, webpack-dev-server, worker-loader. A copy of the source code may be downloaded from https://github.com/webpack-contrib/css-loader.git (css-loader), git://github.com/webpack/enhanced-resolve.git (enhanced-resolve), https://github.com/webpack-contrib/file-loader.git (file-loader), https://github.com/jantimon/html-webpack-plugin.git (html-webpack-plugin), https://github.com/webpack-contrib/imports-loader (imports-loader), https://github.com/webpack-contrib/istanbul-instrumenter-loader.git (istanbul-instrumenter-loader), https://github.com/webpack/loader-utils.git (loader-utils), https://github.com/webpack/memory-fs.git (memory-fs), https://github.com/webpack-contrib/mini-css-extract-plugin.git (mini-css-extract-plugin), https://github.com/webpack-contrib/raw-loader.git (raw-loader), git+https://github.com/webpack-contrib/schema-utils.git (schema-utils), https://github.com/webpack-contrib/style-loader.git (style-loader), https://github.com/webpack-contrib/terser-webpack-plugin.git (terser-webpack-plugin), https://github.com/webpack-contrib/url-loader.git (url-loader), https://github.com/webpack/watchpack.git (watchpack), https://github.com/webpack/webpack.git (webpack), https://github.com/webpack/webpack-dev-middleware.git (webpack-dev-middleware), https://github.com/webpack/webpack-dev-server.git (webpack-dev-server), https://github.com/webpack-contrib/worker-loader.git (worker-loader). This software contains the following license and notice below:
 
 Copyright JS Foundation and other contributors
 
@@ -9828,11 +9828,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----
 
-The following software may be included in this product: extend-shallow, mixin-deep. A copy of the source code may be downloaded from https://github.com/jonschlinkert/extend-shallow.git (extend-shallow), https://github.com/jonschlinkert/mixin-deep.git (mixin-deep). This software contains the following license and notice below:
+The following software may be included in this product: extend-shallow, parse-filepath. A copy of the source code may be downloaded from https://github.com/jonschlinkert/extend-shallow.git (extend-shallow), https://github.com/jonschlinkert/parse-filepath.git (parse-filepath). This software contains the following license and notice below:
 
 The MIT License (MIT)
 
-Copyright (c) 2014-2015, 2017, Jon Schlinkert.
+Copyright (c) 2014-2015, Jon Schlinkert.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -9854,11 +9854,11 @@ THE SOFTWARE.
 
 -----
 
-The following software may be included in this product: extend-shallow, parse-filepath. A copy of the source code may be downloaded from https://github.com/jonschlinkert/extend-shallow.git (extend-shallow), https://github.com/jonschlinkert/parse-filepath.git (parse-filepath). This software contains the following license and notice below:
+The following software may be included in this product: extend-shallow, mixin-deep. A copy of the source code may be downloaded from https://github.com/jonschlinkert/extend-shallow.git (extend-shallow), https://github.com/jonschlinkert/mixin-deep.git (mixin-deep). This software contains the following license and notice below:
 
 The MIT License (MIT)
 
-Copyright (c) 2014-2015, Jon Schlinkert.
+Copyright (c) 2014-2015, 2017, Jon Schlinkert.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -10553,7 +10553,7 @@ The following software may be included in this product: fs-extra. A copy of the 
 
 (The MIT License)
 
-Copyright (c) 2011-2017 JP Richardson
+Copyright (c) 2011-2016 JP Richardson
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files
 (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify,
@@ -10573,7 +10573,7 @@ The following software may be included in this product: fs-extra. A copy of the 
 
 (The MIT License)
 
-Copyright (c) 2011-2016 JP Richardson
+Copyright (c) 2011-2017 JP Richardson
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files
 (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify,
@@ -10663,12 +10663,12 @@ the licensed code:
 
 -----
 
-The following software may be included in this product: fsevents. A copy of the source code may be downloaded from https://github.com/strongloop/fsevents.git. This software contains the following license and notice below:
+The following software may be included in this product: fsevents. A copy of the source code may be downloaded from https://github.com/fsevents/fsevents.git. This software contains the following license and notice below:
 
 MIT License
 -----------
 
-Copyright (C) 2010-2014 Philipp Dunkel
+Copyright (C) 2010-2019 by Philipp Dunkel, Ben Noordhuis, Elan Shankar, Paul Miller
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -10690,12 +10690,12 @@ THE SOFTWARE.
 
 -----
 
-The following software may be included in this product: fsevents. A copy of the source code may be downloaded from https://github.com/fsevents/fsevents.git. This software contains the following license and notice below:
+The following software may be included in this product: fsevents. A copy of the source code may be downloaded from https://github.com/strongloop/fsevents.git. This software contains the following license and notice below:
 
 MIT License
 -----------
 
-Copyright (C) 2010-2019 by Philipp Dunkel, Ben Noordhuis, Elan Shankar, Paul Miller
+Copyright (C) 2010-2014 Philipp Dunkel
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -10888,11 +10888,11 @@ https://creativecommons.org/licenses/by-sa/4.0/
 
 -----
 
-The following software may be included in this product: glob-parent. A copy of the source code may be downloaded from https://github.com/gulpjs/glob-parent.git. This software contains the following license and notice below:
+The following software may be included in this product: glob-parent. A copy of the source code may be downloaded from https://github.com/es128/glob-parent. This software contains the following license and notice below:
 
 The ISC License
 
-Copyright (c) 2015, 2019 Elan Shanker
+Copyright (c) 2015 Elan Shanker
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
@@ -10908,11 +10908,11 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 -----
 
-The following software may be included in this product: glob-parent. A copy of the source code may be downloaded from https://github.com/es128/glob-parent. This software contains the following license and notice below:
+The following software may be included in this product: glob-parent. A copy of the source code may be downloaded from https://github.com/gulpjs/glob-parent.git. This software contains the following license and notice below:
 
 The ISC License
 
-Copyright (c) 2015 Elan Shanker
+Copyright (c) 2015, 2019 Elan Shanker
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
@@ -11787,6 +11787,58 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -----
 
+The following software may be included in this product: i18next. A copy of the source code may be downloaded from https://github.com/i18next/i18next.git. This software contains the following license and notice below:
+
+The MIT License (MIT)
+
+Copyright (c) 2017 i18next
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+-----
+
+The following software may be included in this product: i18next-browser-languagedetector, react-i18next. A copy of the source code may be downloaded from https://github.com/i18next/i18next-browser-languageDetector.git (i18next-browser-languagedetector), https://github.com/i18next/react-i18next.git (react-i18next). This software contains the following license and notice below:
+
+The MIT License (MIT)
+
+Copyright (c) 2015 i18next
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+-----
+
 The following software may be included in this product: iconv-lite. A copy of the source code may be downloaded from git://github.com/ashtuchkin/iconv-lite.git. This software contains the following license and notice below:
 
 Copyright (c) 2011 Alexander Shtuchkin
@@ -12537,7 +12589,7 @@ The following software may be included in this product: js-tokens. A copy of the
 
 The MIT License (MIT)
 
-Copyright (c) 2014, 2015, 2016, 2017 Simon Lydell
+Copyright (c) 2014, 2015, 2016, 2017, 2018 Simon Lydell
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -12563,7 +12615,7 @@ The following software may be included in this product: js-tokens. A copy of the
 
 The MIT License (MIT)
 
-Copyright (c) 2014, 2015, 2016, 2017, 2018 Simon Lydell
+Copyright (c) 2014, 2015, 2016, 2017 Simon Lydell
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -12812,14 +12864,14 @@ third-party archives.
 NOTICE
 
 js2xmlparser  
-Copyright (C) 2016-2017 Michael Kourlas
+Copyright (C) 2016-2019 Michael Kourlas
 
 ## Apache License, version 2.0 ##
 
 The following components are provided under the [Apache License, version 2.0](https://www.apache.org/licenses/LICENSE-2.0):
 
 xmlcreate  
-Copyright (C) 2016-2017 Michael Kourlas
+Copyright (C) 2016-2019 Michael Kourlas
 
 -----
 
@@ -13024,14 +13076,14 @@ third-party archives.
 NOTICE
 
 js2xmlparser  
-Copyright (C) 2016-2019 Michael Kourlas
+Copyright (C) 2016-2017 Michael Kourlas
 
 ## Apache License, version 2.0 ##
 
 The following components are provided under the [Apache License, version 2.0](https://www.apache.org/licenses/LICENSE-2.0):
 
 xmlcreate  
-Copyright (C) 2016-2019 Michael Kourlas
+Copyright (C) 2016-2017 Michael Kourlas
 
 -----
 
@@ -13336,6 +13388,32 @@ SOFTWARE.
 
 -----
 
+The following software may be included in this product: json5. A copy of the source code may be downloaded from https://github.com/aseemk/json5.git. This software contains the following license and notice below:
+
+MIT License
+
+Copyright (c) 2012-2016 Aseem Kishore, and [others](https://github.com/aseemk/json5/contributors).
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+-----
+
 The following software may be included in this product: json5. A copy of the source code may be downloaded from git+https://github.com/json5/json5.git. This software contains the following license and notice below:
 
 MIT License
@@ -13361,32 +13439,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 [others]: https://github.com/json5/json5/contributors
-
------
-
-The following software may be included in this product: json5. A copy of the source code may be downloaded from https://github.com/aseemk/json5.git. This software contains the following license and notice below:
-
-MIT License
-
-Copyright (c) 2012-2016 Aseem Kishore, and [others](https://github.com/aseemk/json5/contributors).
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
 
 -----
 
@@ -14596,7 +14648,7 @@ SOFTWARE.
 
 -----
 
-The following software may be included in this product: mkdirp, mkdirp2, optimist, yargs. A copy of the source code may be downloaded from https://github.com/substack/node-mkdirp.git (mkdirp), https://github.com/75lb/mkdirp2 (mkdirp2), http://github.com/substack/node-optimist.git (optimist), http://github.com/chevex/yargs.git (yargs). This software contains the following license and notice below:
+The following software may be included in this product: mkdirp, mkdirp2, optimist, yargs. A copy of the source code may be downloaded from https://github.com/substack/node-mkdirp.git (mkdirp), https://github.com/75lb/mkdirp2 (mkdirp2), http://github.com/substack/node-optimist.git (optimist), http://github.com/bcoe/yargs.git (yargs). This software contains the following license and notice below:
 
 Copyright 2010 James Halliday (mail@substack.net)
 
@@ -18052,6 +18104,31 @@ IN THE SOFTWARE.
 
 The following software may be included in this product: readdirp. A copy of the source code may be downloaded from git://github.com/paulmillr/readdirp.git. This software contains the following license and notice below:
 
+This software is released under the MIT license:
+
+Copyright (c) 2012-2015 Thorsten Lorenz
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+-----
+
+The following software may be included in this product: readdirp. A copy of the source code may be downloaded from git://github.com/paulmillr/readdirp.git. This software contains the following license and notice below:
+
 MIT License
 
 Copyright (c) 2012-2019 Thorsten Lorenz, Paul Miller (https://paulmillr.com)
@@ -18073,31 +18150,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
------
-
-The following software may be included in this product: readdirp. A copy of the source code may be downloaded from git://github.com/paulmillr/readdirp.git. This software contains the following license and notice below:
-
-This software is released under the MIT license:
-
-Copyright (c) 2012-2015 Thorsten Lorenz
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----
 
@@ -22293,7 +22345,7 @@ SUCH DAMAGE.
 
 The following software may be included in this product: underscore. A copy of the source code may be downloaded from git://github.com/jashkenas/underscore.git. This software contains the following license and notice below:
 
-Copyright (c) 2009-2018 Jeremy Ashkenas, DocumentCloud and Investigative
+Copyright (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative
 Reporters & Editors
 
 Permission is hereby granted, free of charge, to any person
@@ -22321,7 +22373,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 The following software may be included in this product: underscore. A copy of the source code may be downloaded from git://github.com/jashkenas/underscore.git. This software contains the following license and notice below:
 
-Copyright (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative
+Copyright (c) 2009-2018 Jeremy Ashkenas, DocumentCloud and Investigative
 Reporters & Editors
 
 Permission is hereby granted, free of charge, to any person
@@ -23142,7 +23194,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 -----
 
-The following software may be included in this product: workspace-aggregator-27e89646-1708-4fdf-8597-7c5730738914. A copy of the source code may be downloaded from http://github.com/TerriaJS/TerriaMap. This software contains the following license and notice below:
+The following software may be included in this product: workspace-aggregator-078d619f-f034-4c94-be20-3ed8298b3a15. A copy of the source code may be downloaded from http://github.com/TerriaJS/TerriaMap. This software contains the following license and notice below:
 
 Apache License
                            Version 2.0, January 2004
@@ -23941,7 +23993,7 @@ THE SOFTWARE.
 
 -----
 
-The following software may be included in this product: yargs. A copy of the source code may be downloaded from https://github.com/yargs/yargs.git. This software contains the following license and notice below:
+The following software may be included in this product: yargs. A copy of the source code may be downloaded from http://github.com/yargs/yargs.git. This software contains the following license and notice below:
 
 Copyright 2010 James Halliday (mail@substack.net)
 Modified work Copyright 2014 Contributors (ben@npmjs.com)

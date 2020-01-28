@@ -3,6 +3,7 @@ import Icon from "../Icon";
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
+import { withTranslation } from "react-i18next";
 import WorkbenchList from "./WorkbenchList";
 import { observer } from "mobx-react";
 
@@ -15,7 +16,8 @@ const Workbench = observer(
 
     propTypes: {
       terria: PropTypes.object.isRequired,
-      viewState: PropTypes.object.isRequired
+      viewState: PropTypes.object.isRequired,
+      t: PropTypes.func.isRequired
     },
 
     removeAll() {
@@ -26,10 +28,11 @@ const Workbench = observer(
     },
 
     render() {
+      const { t } = this.props;
       return (
         <div className={Styles.workbench}>
           <BadgeBar
-            label="Data Sets"
+            label={t("workbench.label")}
             badge={this.props.terria.workbench.items.length}
           >
             <button
@@ -37,7 +40,7 @@ const Workbench = observer(
               onClick={this.removeAll}
               className={Styles.removeButton}
             >
-              Remove All <Icon glyph={Icon.GLYPHS.remove} />
+              {t("workbench.removeAll")} <Icon glyph={Icon.GLYPHS.remove} />
             </button>
           </BadgeBar>
           <WorkbenchList
@@ -50,4 +53,4 @@ const Workbench = observer(
   })
 );
 
-export default Workbench;
+export default withTranslation()(Workbench);

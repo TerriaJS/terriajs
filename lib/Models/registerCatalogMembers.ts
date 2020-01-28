@@ -1,5 +1,6 @@
 import ArcGisMapServerCatalogItem from "./ArcGisMapServerCatalogItem";
 import BingMapsCatalogItem from "./BingMapsCatalogItem";
+import CartoMapCatalogItem from "./CartoMapCatalogItem";
 import CatalogGroup from "./CatalogGroupNew";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import Cesium3DTilesCatalogItem from "./Cesium3DTilesCatalogItem";
@@ -55,4 +56,5 @@ export default function registerCatalogMembers() {
   );
   CatalogMemberFactory.register(MagdaReference.type, MagdaReference);
   CatalogMemberFactory.register(KmlCatalogItem.type, KmlCatalogItem);
+  CatalogMemberFactory.register(CartoMapCatalogItem.type, CartoMapCatalogItem);
 }
