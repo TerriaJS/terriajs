@@ -480,6 +480,7 @@
       "czml" : "CZML",
       "gpx" : "GPX",
       "json" : "JSON",
+      "carto": "Carto",
       "other" : "Other (use conversion service)"
     },
     "printWindow" : {
