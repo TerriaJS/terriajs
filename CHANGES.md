@@ -1,6 +1,20 @@
 Change Log
 ==========
 
+### MobX Development
+* Fixed a bug where `updateModelFromJson` would ignore its `replaceStratum` parameter.
+* Fixed bug in StratumOrder where `sortBottomToTop` would sort strata in the wrong order.
+* Allow member re-ordering via GroupMixin's `moveMemberToIndex`
+* Re-added Measure Tool support
+* Re-added `CartoMapCatalogItem`
+* Re-implemented `addedByUser` to fix bug where previews of user added data would appear in the wrong tab.
+* Added header options for loadJson5, & allow header overrides on MagdaReference loading
+* Re-enable search components if SearchProvider option provided
+* Modified tests to not use any real servers.
+* Fixed bug causing workbench items to be shared in the wrong order.
+* Fix bug where urls in the feature info panel weren't turned into hyperlinks
+* Fix preview map's base map and bounding rectangle size
+
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
 
@@ -18,20 +32,6 @@ Change Log
 * Updated Welcome Message to pass its props to `WelcomeMessagePrimaryBtnClick` & `WelcomeMessageSecondaryBtnClick` overrides
 * Fixed a bug in anti-meridian handling causing excessive memory use.
 * Handled coordinate conversion for GeoJson geometries with an empty `coordinates` array.
-
-### MobX Development
-* Fixed a bug where `updateModelFromJson` would ignore its `replaceStratum` parameter.
-* Fixed bug in StratumOrder where `sortBottomToTop` would sort strata in the wrong order.
-* Allow member re-ordering via GroupMixin's `moveMemberToIndex`
-* Re-added Measure Tool support
-* Re-added `CartoMapCatalogItem`
-* Re-implemented `addedByUser` to fix bug where previews of user added data would appear in the wrong tab.
-* Added header options for loadJson5, & allow header overrides on MagdaReference loading
-* Re-enable search components if SearchProvider option provided
-* Modified tests to not use any real servers.
-* Fixed bug causing workbench items to be shared in the wrong order.
-* Fix bug where urls in the feature info panel weren't turned into hyperlinks
-* Fix preview map's base map and bounding rectangle size
 
 ### v7.9.0
 
