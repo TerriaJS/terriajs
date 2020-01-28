@@ -2,21 +2,21 @@ import classNames from "classnames";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import React from "react";
-import ObserveModelMixin from "../ObserveModelMixin";
+import { withTranslation } from "react-i18next";
+
 import Styles from "./explorer-window.scss";
 
 const SLIDE_DURATION = 300;
 
 const ModalPopup = createReactClass({
-  mixins: [ObserveModelMixin],
-
   propTypes: {
     isVisible: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     onStartAnimatingIn: PropTypes.func,
     onDoneAnimatingIn: PropTypes.func,
     children: PropTypes.node.isRequired,
-    isTopElement: PropTypes.bool
+    isTopElement: PropTypes.bool,
+    t: PropTypes.func.isRequired
   },
 
   getInitialState() {
@@ -91,6 +91,7 @@ const ModalPopup = createReactClass({
   },
 
   render() {
+    const { t } = this.props;
     const visible = this.state.visible;
 
     return visible ? (
@@ -121,10 +122,10 @@ const ModalPopup = createReactClass({
             type="button"
             onClick={this.props.onClose}
             className={Styles.btnCloseModal}
-            title="Close data panel"
+            title={t("addData.closeDataPanel")}
             data-target="close-modal"
           >
-            Done
+            {t("addData.done")}
           </button>
           {this.props.children}
         </div>
@@ -133,4 +134,4 @@ const ModalPopup = createReactClass({
   }
 });
 
-module.exports = ModalPopup;
+module.exports = withTranslation()(ModalPopup);

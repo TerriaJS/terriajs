@@ -13,6 +13,7 @@ import Styles from "./parameter-editors.scss";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import UserDrawing from "../../Models/UserDrawing";
+import { withTranslation } from "react-i18next";
 import { observer } from "mobx-react";
 import { runInAction } from "mobx";
 
@@ -23,7 +24,8 @@ const PolygonParameterEditor = observer(
     propTypes: {
       previewed: PropTypes.object,
       parameter: PropTypes.object,
-      viewState: PropTypes.object
+      viewState: PropTypes.object,
+      t: PropTypes.func.isRequired
     },
 
     setValueFromText(e) {
@@ -39,6 +41,7 @@ const PolygonParameterEditor = observer(
     },
 
     render() {
+      const { t } = this.props;
       return (
         <div>
           <input
@@ -54,7 +57,7 @@ const PolygonParameterEditor = observer(
             onClick={this.selectPolygonOnMap}
             className={Styles.btnSelector}
           >
-            Click to draw polygon
+            {t("analytics.clickToDrawPolygon")}
           </button>
         </div>
       );
@@ -156,4 +159,4 @@ PolygonParameterEditor.selectOnMap = function(terria, viewState, parameter) {
   userDrawing.enterDrawMode();
 };
 
-module.exports = PolygonParameterEditor;
+module.exports = withTranslation()(PolygonParameterEditor);

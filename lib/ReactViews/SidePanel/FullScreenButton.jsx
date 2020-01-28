@@ -6,6 +6,7 @@ import triggerResize from "../../Core/triggerResize";
 import Styles from "./full_screen_button.scss";
 import classNames from "classnames";
 import Icon from "../Icon.jsx";
+import { withTranslation } from "react-i18next";
 import { observer } from "mobx-react";
 import { runInAction } from "mobx";
 
@@ -19,7 +20,8 @@ const FullScreenButton = observer(
       viewState: PropTypes.object.isRequired,
       btnText: PropTypes.string,
       minified: PropTypes.bool,
-      animationDuration: PropTypes.number // Defaults to 1 millisecond.
+      animationDuration: PropTypes.number, // Defaults to 1 millisecond.
+      t: PropTypes.func.isRequired
     },
 
     getInitialState() {
@@ -71,7 +73,7 @@ const FullScreenButton = observer(
         [Styles.isActive]: this.props.viewState.isMapFullScreen,
         [Styles.minified]: this.props.minified
       });
-
+      const { t } = this.props;
       return (
         <div
           className={classNames(Styles.fullScreen, {
@@ -91,15 +93,15 @@ const FullScreenButton = observer(
             id="toggle-workbench"
             aria-label={
               this.props.viewState.isMapFullScreen
-                ? "Show Workbench"
-                : "Hide Workbench"
+                ? t("sui.showWorkbench")
+                : t("sui.hideWorkbench")
             }
             onClick={this.toggleFullScreen}
             className={btnClassName}
             title={
               this.props.viewState.isMapFullScreen
-                ? "Show Workbench"
-                : "Hide Workbench"
+                ? t("sui.showWorkbench")
+                : t("sui.hideWorkbench")
             }
           >
             {this.renderButtonText()}
@@ -109,4 +111,4 @@ const FullScreenButton = observer(
     }
   })
 );
-module.exports = FullScreenButton;
+module.exports = withTranslation()(FullScreenButton);

@@ -3,6 +3,7 @@ import React from "react";
 import createReactClass from "create-react-class";
 
 import PropTypes from "prop-types";
+import { withTranslation, Trans } from "react-i18next";
 
 import defined from "terriajs-cesium/Source/Core/defined";
 
@@ -23,10 +24,12 @@ const Description = observer(
 
     propTypes: {
       item: PropTypes.object.isRequired,
-      printView: PropTypes.bool
+      printView: PropTypes.bool,
+      t: PropTypes.func.isRequired
     },
 
     render() {
+      const { t } = this.props;
       const catalogItem = this.props.item;
       const dataUrlType = catalogItem.dataUrlType;
       let hasDataUriCapability;
@@ -49,7 +52,7 @@ const Description = observer(
             }
           >
             <div>
-              <h4 className={Styles.h4}>Description</h4>
+              <h4 className={Styles.h4}>{t("description.name")}</h4>
               {parseCustomMarkdownToReact(catalogItem.description, {
                 catalogItem: catalogItem
               })}
@@ -57,10 +60,7 @@ const Description = observer(
           </If>
 
           <If condition={catalogItem.dataUrlType === "local"}>
-            <p>
-              This file only exists in your browser. To share it, you must load
-              it onto a public web server.
-            </p>
+            <p>{t("description.dataLocal")}</p>
           </If>
 
           <If
@@ -68,10 +68,7 @@ const Description = observer(
               catalogItem.dataUrlType !== "local" && !catalogItem.hasDescription
             }
           >
-            <p>
-              Please contact the provider of this data for more information,
-              including information about usage rights and constraints.
-            </p>
+            <p>{t("description.dataNotLocal")}</p>
           </If>
 
           <DataPreviewSections metadataItem={catalogItem} />
@@ -82,7 +79,7 @@ const Description = observer(
             }
           >
             <div>
-              <h4 className={Styles.h4}>Data Custodian</h4>
+              <h4 className={Styles.h4}>{t("description.dataCustodian")}</h4>
               {parseCustomMarkdownToReact(catalogItem.dataCustodian, {
                 catalogItem: catalogItem
               })}
@@ -95,30 +92,34 @@ const Description = observer(
               <Choose>
                 <When condition={catalogItem.type === "wms"}>
                   <p key="wms-description">
-                    This is a{" "}
-                    <a
-                      href="https://en.wikipedia.org/wiki/Web_Map_Service"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      WMS service
-                    </a>
-                    , which generates map images on request. It can be used in
-                    GIS software with this URL:
+                    <Trans i18nKey="description.wms">
+                      This is a
+                      <a
+                        href="https://en.wikipedia.org/wiki/Web_Map_Service"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        WMS service
+                      </a>
+                      , which generates map images on request. It can be used in
+                      GIS software with this URL:
+                    </Trans>
                   </p>
                 </When>
                 <When condition={catalogItem.type === "wfs"}>
                   <p key="wfs-description">
-                    This is a{" "}
-                    <a
-                      href="https://en.wikipedia.org/wiki/Web_Feature_Service"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      WFS service
-                    </a>
-                    , which transfers raw spatial data on request. It can be
-                    used in GIS software with this URL:
+                    <Trans i18nKey="description.wfs">
+                      This is a{" "}
+                      <a
+                        href="https://en.wikipedia.org/wiki/Web_Feature_Service"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        WFS service
+                      </a>
+                      , which transfers raw spatial data on request. It can be
+                      used in GIS software with this URL:
+                    </Trans>
                   </p>
                 </When>
               </Choose>
@@ -147,7 +148,7 @@ const Description = observer(
                   }
                 >
                   <p key="wms-layers">
-                    Layer name
+                    {t("description.layerName")}
                     {(catalogItem.layers || "").split(",").length > 1
                       ? "s"
                       : ""}
@@ -156,7 +157,7 @@ const Description = observer(
                 </When>
                 <When condition={catalogItem.type === "wfs"}>
                   <p key="wfs-typeNames">
-                    Type name
+                    {t("description.typeName")}
                     {(catalogItem.typeNames || "").split(",").length > 1
                       ? "s"
                       : ""}
@@ -167,7 +168,7 @@ const Description = observer(
             </If>
 
             <If condition={catalogItem.metadataUrl}>
-              <h4 className={Styles.h4}>Metadata URL</h4>
+              <h4 className={Styles.h4}>{t("description.metadataUrl")}</h4>
               <p>
                 <a
                   href={catalogItem.metadataUrl}
@@ -187,7 +188,7 @@ const Description = observer(
                 catalogItem.dataUrl
               }
             >
-              <h4 className={Styles.h4}>Data URL</h4>
+              <h4 className={Styles.h4}>{t("description.dataUrl")}</h4>
               <p>
                 <Choose>
                   <When
@@ -196,28 +197,32 @@ const Description = observer(
                       catalogItem.dataUrlType.indexOf("wcs") === 0
                     }
                   >
-                    Use the link below to download the data. See the{" "}
-                    {catalogItem.dataUrlType.indexOf("wfs") === 0 && (
-                      <a
-                        href="http://docs.geoserver.org/latest/en/user/services/wfs/reference.html"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        key="wfs"
-                      >
-                        Web Feature Service (WFS) documentation
-                      </a>
-                    )}
-                    {catalogItem.dataUrlType.indexOf("wcs") === 0 && (
-                      <a
-                        href="http://docs.geoserver.org/latest/en/user/services/wcs/reference.html"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        key="wms"
-                      >
-                        Web Coverage Service (WCS) documentation
-                      </a>
-                    )}{" "}
-                    for more information on customising URL query parameters.
+                    {catalogItem.dataUrlType.indexOf("wfs") === 0 &&
+                      t("description.useLinkBelow", {
+                        link: (
+                          <a
+                            href="http://docs.geoserver.org/latest/en/user/services/wfs/reference.html"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            key="wfs"
+                          >
+                            Web Feature Service (WFS) documentation
+                          </a>
+                        )
+                      })}
+                    {catalogItem.dataUrlType.indexOf("wcs") === 0 &&
+                      t("description.useLinkBelow", {
+                        link: (
+                          <a
+                            href="http://docs.geoserver.org/latest/en/user/services/wcs/reference.html"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            key="wms"
+                          >
+                            Web Coverage Service (WCS) documentation
+                          </a>
+                        )
+                      })}
                     <br />
                     <Link
                       url={catalogItem.dataUrl}
@@ -232,11 +237,9 @@ const Description = observer(
                     <If condition={hasDataUriCapability}>
                       <Link
                         url={dataUri}
-                        text={
-                          "Download the currently selected data in " +
-                          dataUriFormat.toUpperCase() +
-                          " format"
-                        }
+                        text={t("description.downloadInFormat", {
+                          format: dataUriFormat.toUpperCase()
+                        })}
                         download={getBetterFileName(
                           dataUrlType,
                           catalogItem.name,
@@ -245,17 +248,17 @@ const Description = observer(
                       />
                     </If>
                     <If condition={!hasDataUriCapability}>
-                      Unfortunately your browser does not support the
-                      functionality needed to download this data as a file.
-                      Please use Chrome, Firefox or Safari to download this
-                      data.
+                      {t("description.downloadNotSupported")}
                     </If>
                   </When>
                   <Otherwise>
-                    Use the link below to download the data directly.
+                    {t("description.useTheLinkToDownload")}
                     <br />
                     {catalogItem.dataUrl.startsWith("data:") && (
-                      <Link url={catalogItem.dataUrl} text="Download Data" />
+                      <Link
+                        url={catalogItem.dataUrl}
+                        text={t("description.downloadData")}
+                      />
                     )}
                     {!catalogItem.dataUrl.startsWith("data:") && (
                       <Link
@@ -286,7 +289,10 @@ const Description = observer(
                 }
               >
                 <div className={Styles.metadata}>
-                  <Collapsible title="Data Source Details" isInverse={true}>
+                  <Collapsible
+                    title={t("description.dataSourceDetails")}
+                    isInverse={true}
+                  >
                     <MetadataTable
                       metadataItem={catalogItem.metadata.dataSourceMetadata}
                     />
@@ -308,7 +314,10 @@ const Description = observer(
                 }
               >
                 <div className={Styles.metadata}>
-                  <Collapsible title="Data Service Details" isInverse={true}>
+                  <Collapsible
+                    title={t("description.dataServiceDetails")}
+                    isInverse={true}
+                  >
                     <MetadataTable
                       metadataItem={catalogItem.metadata.serviceMetadata}
                     />
@@ -383,4 +392,4 @@ const Link = observer(
   })
 );
 
-export default Description;
+export default withTranslation()(Description);

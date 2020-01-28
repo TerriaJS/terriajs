@@ -17,13 +17,15 @@ import Styles from "./datetime-selector-section.scss";
 import Icon from "../../Icon";
 import CommonStrata from "../../../Models/CommonStrata";
 import { runInAction } from "mobx";
+import { withTranslation } from "react-i18next";
 
 const DateTimeSelectorSection = observer(
   createReactClass({
     displayName: "DateTimeSelectorSection",
 
     propTypes: {
-      item: PropTypes.object.isRequired
+      item: PropTypes.object.isRequired,
+      t: PropTypes.func.isRequired
     },
 
     getInitialState() {
@@ -109,6 +111,7 @@ const DateTimeSelectorSection = observer(
     },
 
     render() {
+      const { t } = this.props;
       let discreteTime;
       let format;
       const item = this.props.item;
@@ -142,29 +145,29 @@ const DateTimeSelectorSection = observer(
                 className={Styles.datetimePrevious}
                 disabled={!item.isPreviousDiscreteTimeAvailable}
                 onClick={this.onPreviousButtonClicked}
-                title="Previous time"
+                title={t("dateTime.previous")}
               >
                 <Icon glyph={Icon.GLYPHS.previous} />
               </button>
               <button
                 className={Styles.currentDate}
                 onClick={this.toggleOpen}
-                title="Select a time"
+                title={t("dateTime.selectTime")}
               >
                 {defined(discreteTime)
                   ? discreteTime
-                  : "Currently out of range."}
+                  : t("dateTime.outOfRange")}
               </button>
               <button
                 className={Styles.datetimeNext}
                 disabled={!item.isNextDiscreteTimeAvailable}
                 onClick={this.onNextButtonClicked}
-                title="Next time"
+                title={t("dateTime.next")}
               >
                 <Icon glyph={Icon.GLYPHS.next} />
               </button>
             </div>
-            <div className={Styles.picker} title="Select a time">
+            <div className={Styles.picker} title={t("dateTime.selectTime")}>
               <DateTimePicker
                 currentDate={
                   item.currentDiscreteJulianDate === undefined
@@ -187,7 +190,7 @@ const DateTimeSelectorSection = observer(
               })}
               type="button"
               onClick={this.onTimelineButtonClicked}
-              title="Use timeline"
+              title={t("dateTime.useTimeline")}
             >
               <Icon glyph={Icon.GLYPHS.timeline} />
             </button>
@@ -197,7 +200,7 @@ const DateTimeSelectorSection = observer(
               })}
               type="button"
               onClick={this.onShowOnChartButtonClicked}
-              title="Show available times on chart"
+              title={t("dateTime.availableTimeChart")}
             >
               <Icon glyph={Icon.GLYPHS.lineChart} />
             </button>
@@ -208,4 +211,4 @@ const DateTimeSelectorSection = observer(
   })
 );
 
-module.exports = DateTimeSelectorSection;
+export default withTranslation()(DateTimeSelectorSection);
