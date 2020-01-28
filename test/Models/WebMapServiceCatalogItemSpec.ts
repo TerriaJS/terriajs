@@ -8,7 +8,7 @@ describe("WebMapServiceCatalogItem", function() {
   it("derives getCapabilitiesUrl from url if getCapabilitiesUrl is not specified", function() {
     const terria = new Terria();
     const wms = new WebMapServiceCatalogItem("test", terria);
-    wms.setTrait("definition", "url", "http://www.example.com");
+    wms.setTrait("definition", "url", "foo.bar.baz");
     expect(wms.getCapabilitiesUrl).toBeDefined();
     expect(wms.url).toBeDefined();
     expect(
@@ -22,11 +22,7 @@ describe("WebMapServiceCatalogItem", function() {
     const terria = new Terria();
     const wms = new WebMapServiceCatalogItem("test", terria);
     runInAction(() => {
-      wms.setTrait(
-        "definition",
-        "url",
-        "https://programs.communications.gov.au/geoserver/ows"
-      );
+      wms.setTrait("definition", "url", "test/WMS/single_metadata_url.xml");
       wms.setTrait(
         "definition",
         "layers",
@@ -41,16 +37,8 @@ describe("WebMapServiceCatalogItem", function() {
     const terria = new Terria();
     wms = new WebMapServiceCatalogItem("test", terria);
     runInAction(() => {
-      wms.setTrait(
-        "definition",
-        "url",
-        "https://programs.communications.gov.au/geoserver/ows"
-      );
-      wms.setTrait(
-        "definition",
-        "layers",
-        "mobile-black-spot-programme:funded-base-stations-group"
-      );
+      wms.setTrait("definition", "url", "test/WMS/single_metadata_url.xml");
+      wms.setTrait("definition", "layers", "single_period");
     });
     let description: String | undefined;
     const cleanup = autorun(() => {
@@ -69,9 +57,7 @@ describe("WebMapServiceCatalogItem", function() {
     });
     try {
       await wms.loadMetadata();
-      expect(description).toBe(
-        "Layer-Group type layer: mobile-black-spot-programme:funded-base-stations-group"
-      );
+      expect(description).toBe("description foo bar baz");
     } finally {
       cleanup();
     }
@@ -82,11 +68,7 @@ describe("WebMapServiceCatalogItem", function() {
     const terria = new Terria();
     wms = new WebMapServiceCatalogItem("test", terria);
     runInAction(() => {
-      wms.setTrait(
-        "definition",
-        "url",
-        "https://programs.communications.gov.au/geoserver/ows"
-      );
+      wms.setTrait("definition", "url", "test/WMS/single_metadata_url.xml");
       wms.setTrait(
         "definition",
         "layers",
@@ -106,7 +88,7 @@ describe("WebMapServiceCatalogItem", function() {
       ).toBeTruthy();
       if (mapItems[0].imageryProvider instanceof WebMapServiceImageryProvider) {
         expect(mapItems[0].imageryProvider.url).toBe(
-          "https://programs.communications.gov.au/geoserver/ows"
+          "test/WMS/single_metadata_url.xml"
         );
       }
     } finally {
