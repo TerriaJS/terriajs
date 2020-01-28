@@ -28,6 +28,7 @@ Change Log
 * Added header options for loadJson5, & allow header overrides on MagdaReference loading
 * Re-enable search components if SearchProvider option provided
 * Fix bug where urls in the feature info panel weren't turned into hyperlinks
+* Fix preview map's base map and bounding rectangle size
 
 ### v7.9.0
 

@@ -15,6 +15,7 @@ import Mappable, { ImageryParts } from "../../Models/Mappable";
 // eslint-disable-next-line no-unused-vars
 import Terria from "../../Models/Terria";
 import TerriaViewer from "../../ViewModels/TerriaViewer";
+import { POSITRON_BASE_MAP_ID } from "../../ViewModels/createGlobalBaseMapOptions";
 import ViewerMode from "../../Models/ViewerMode";
 import Styles from "./data-preview-map.scss";
 
@@ -136,13 +137,20 @@ class DataPreviewMap extends React.Component {
       "Initialising preview map. This might be expensive, so this should only show up when the preview map disappears and reappears"
     );
     this.isZoomedToExtent = false;
-    // Change this to choose positron if it's available
-    if (this.previewViewer.baseMap === undefined) {
+
+    // Choose positron if it's available
+    const positronBaseMap = this.props.terria.baseMaps.find(
+      baseMap => baseMap.mappable.uniqueId === POSITRON_BASE_MAP_ID
+    );
+    if (positronBaseMap !== undefined) {
+      this.previewViewer.baseMap = positronBaseMap.mappable;
+    } else {
       this.previewViewer.baseMap =
         this.props.terria.baseMaps.length > 0
           ? this.props.terria.baseMaps[0].mappable
           : undefined;
     }
+
     this.previewViewer.attach(container);
     this._disposePreviewBadgeStateUpdater = autorun(() => {
       if (this.props.showMap && this.props.previewed !== undefined) {
@@ -217,7 +225,7 @@ class DataPreviewMap extends React.Component {
       const minimumFraction = 0.05;
       const homeView = this.previewViewer.homeCamera;
       const minimumWidth =
-        CesiumMath.toDegrees(homeView.width) * minimumFraction;
+        CesiumMath.toDegrees(homeView.rectangle.width) * minimumFraction;
       if (east - west < minimumWidth) {
         const center = (east + west) * 0.5;
         west = center - minimumWidth * 0.5;
@@ -225,7 +233,7 @@ class DataPreviewMap extends React.Component {
       }
 
       const minimumHeight =
-        CesiumMath.toDegrees(homeView.height) * minimumFraction;
+        CesiumMath.toDegrees(homeView.rectangle.height) * minimumFraction;
       if (north - south < minimumHeight) {
         const center = (north + south) * 0.5;
         south = center - minimumHeight * 0.5;
