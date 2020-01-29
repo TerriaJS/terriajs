@@ -92,12 +92,30 @@ describe("UserDrawing", function() {
       "<div><strong>Draw on Map</strong></br>HELLO</br><i>Click to add a point</i></div>"
     );
   });
+
   it("listens for user picks on map after entering drawing mode", function() {
     var options = { terria: terria };
     var userDrawing = new UserDrawing(options);
     expect(userDrawing.terria.mapInteractionModeStack.length).toEqual(0);
     userDrawing.enterDrawMode();
     expect(userDrawing.terria.mapInteractionModeStack.length).toEqual(1);
+  });
+
+  it("disables feature info requests when in drawing mode", function() {
+    var options = { terria: terria };
+    var userDrawing = new UserDrawing(options);
+    expect(userDrawing.terria.allowFeatureInfoRequests).toEqual(true);
+    userDrawing.enterDrawMode();
+    expect(userDrawing.terria.allowFeatureInfoRequests).toEqual(false);
+  });
+
+  it("re-enables feature info requests on cleanup", function() {
+    var options = { terria: terria };
+    var userDrawing = new UserDrawing(options);
+    userDrawing.enterDrawMode();
+    expect(userDrawing.terria.allowFeatureInfoRequests).toEqual(false);
+    userDrawing._cleanUp();
+    expect(userDrawing.terria.allowFeatureInfoRequests).toEqual(true);
   });
 
   it("ensures onPointClicked callback is called when point is picked by user", function() {
