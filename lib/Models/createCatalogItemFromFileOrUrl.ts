@@ -165,7 +165,6 @@ function getConfirmation(
 
 function loadItem(newCatalogItem: BaseModel, fileOrUrl: File | string) {
   if (typeof fileOrUrl === "string") {
-    newCatalogItem.setTrait(CommonStrata.definition, "url", fileOrUrl);
     newCatalogItem.setTrait(CommonStrata.user, "url", fileOrUrl);
   } else {
     if (hasFileInput(newCatalogItem)) {

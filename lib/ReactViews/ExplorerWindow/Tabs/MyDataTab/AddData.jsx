@@ -94,7 +94,7 @@ const AddData = createReactClass({
           "",
           undefined,
           CommonStrata.definition,
-          { type: this.state.remoteDataType.value, name: url, url: url }
+          { type: this.state.remoteDataType.value, name: url }
         );
         newItem.setTrait(CommonStrata.user, "url", url);
         promise = newItem.loadMetadata().then(() => newItem);

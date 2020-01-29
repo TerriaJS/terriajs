@@ -5,7 +5,7 @@ Change Log
 * Added `hasLocalData` property to indicate when a catalog item contains local data. This property is used to determine whether the item can be shared or not.
 * Fixed bug in StratumOrder where `sortBottomToTop` would sort strata in the wrong order.
 * Allow member re-ordering via GroupMixin's `moveMemberToIndex`
-* Fixed bug causing user added data to not be shared.
+* Fixed bug causing user added data to not be shared. Note that catalog item urls are now set at the user stratum rather than the definition stratum.
 
 ### v7.9.0
 
