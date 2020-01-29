@@ -58,6 +58,16 @@ describe("Terria", function() {
           ]
         }
       );
+      updateModelFromJson(terria.catalog.group, CommonStrata.user, {
+        members: [
+          {
+            id: "itemDEF",
+            name: "def",
+            type: "wms",
+            url: "test/WMS/single_metadata_url.xml"
+          }
+        ]
+      });
     });
 
     it("initializes user added data group with shared items", function(done) {
@@ -82,16 +92,20 @@ describe("Terria", function() {
     });
 
     it("initializes workbench with shared workbench items", function(done) {
-      const model = <WebMapServiceCatalogItem>(
+      const model1 = <WebMapServiceCatalogItem>(
         terria.getModelById(BaseModel, "itemABC")
       );
-      terria.workbench.add(model);
-      expect(terria.workbench.itemIds).toContain("itemABC");
-      expect(newTerria.workbench.itemIds).not.toContain("itemABC");
+      const model2 = <WebMapServiceCatalogItem>(
+        terria.getModelById(BaseModel, "itemDEF")
+      );
+      terria.workbench.add(model1);
+      terria.workbench.add(model2);
+      expect(terria.workbench.itemIds).toEqual(["itemABC", "itemDEF"]);
+      expect(newTerria.workbench.itemIds).toEqual([]);
 
       const shareLink = buildShareLink(terria, viewState);
       newTerria.updateApplicationUrl(shareLink).then(() => {
-        expect(newTerria.workbench.itemIds).toContain("itemABC");
+        expect(newTerria.workbench.itemIds).toEqual(["itemABC", "itemDEF"]);
         done();
       });
     });

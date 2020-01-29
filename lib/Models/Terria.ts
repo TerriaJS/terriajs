@@ -403,20 +403,13 @@ export default class Terria {
 
     return Promise.all(initSourcePromises).then(initSources => {
       return runInAction(() => {
-        return Promise.all(
-          filterOutUndefined(initSources).reduce(
-            (promises: any, initSource) => {
-              return [
-                ...promises,
-                this.applyInitData({
-                  initData: initSource
-                })
-              ];
-            },
-            [Promise.resolve]
-          )
-        ).then(() => undefined);
-      });
+        const promises = filterOutUndefined(initSources).map(initSource =>
+          this.applyInitData({
+            initData: initSource
+          })
+        );
+        return Promise.all(promises);
+      }).then(() => undefined);
     });
   }
 
