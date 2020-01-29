@@ -487,6 +487,17 @@ export default class Terria {
         replaceStratum
       );
 
+      if (Array.isArray(containerIds)) {
+        containerIds.forEach(containerId => {
+          if (
+            typeof containerId === "string" &&
+            loadedModel.knownContainerUniqueIds.indexOf(containerId) < 0
+          ) {
+            loadedModel.knownContainerUniqueIds.push(containerId);
+          }
+        });
+      }
+
       // If we're replacing the stratum and the existing model is already
       // dereferenced, we need to replace the dereferenced stratum, too,
       // even if there's no trace of it it in the load data.
@@ -587,10 +598,6 @@ export default class Terria {
       this.currentViewer.zoomTo(initialCamera, 2.0);
     }
 
-    if (isJsonString(initData.previewedItemId)) {
-      this.previewedItemId = initData.previewedItemId;
-    }
-
     // Copy but don't yet load the workbench.
     const workbench = Array.isArray(initData.workbench)
       ? initData.workbench.slice()
@@ -621,6 +628,10 @@ export default class Terria {
 
     return promise.then(() => {
       return runInAction(() => {
+        if (isJsonString(initData.previewedItemId)) {
+          this.previewedItemId = initData.previewedItemId;
+        }
+
         const promises: Promise<void>[] = [];
 
         // Set the new contents of the workbench.

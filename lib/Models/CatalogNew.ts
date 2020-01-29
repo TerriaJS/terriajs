@@ -17,6 +17,7 @@ export default class Catalog {
   constructor(terria: Terria) {
     this.terria = terria;
     this.group = new CatalogGroup("/", this.terria);
+    this.terria.addModel(this.group);
 
     // create user added data group
     this.userAddedDataGroup;
