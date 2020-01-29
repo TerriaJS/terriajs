@@ -12,7 +12,9 @@ export default function updateModelFromJson(
   const traits = model.traits;
 
   runInAction(() => {
-    model.strata.set(stratumName, createStratumInstance(model));
+    if (replaceStratum) {
+      model.strata.set(stratumName, createStratumInstance(model));
+    }
 
     Object.keys(json).forEach(propertyName => {
       if (

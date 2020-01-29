@@ -1,12 +1,12 @@
 import CatalogGroup from "../../lib/Models/CatalogGroup";
 import DataCatalogMember from "../../lib/ReactViews/DataCatalog/DataCatalogMember";
-import DataCatalog from "../../lib/ReactViews/DataCatalog/DataCatalog";
+import { DataCatalog } from "../../lib/ReactViews/DataCatalog/DataCatalog";
 import { findAllWithType } from "react-shallow-testutils";
 import { getShallowRenderedOutput } from "./MoreShallowTools";
 import React from "react";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
-import { USER_ADDED_CATEGORY_NAME } from "../../lib/Core/addedByUser";
+import { USER_ADDED_CATEGORY_ID } from "../../lib/Core/addedByUser";
 
 describe("DataCatalog", function() {
   let terria;
@@ -35,6 +35,7 @@ describe("DataCatalog", function() {
         terria={terria}
         viewState={viewState}
         items={terria.catalog.group.items}
+        t={() => {}}
       />
     );
     const result = getShallowRenderedOutput(tab);
@@ -43,7 +44,7 @@ describe("DataCatalog", function() {
     let foundAnotherGroup = false;
     memberComponents.forEach(member => {
       expect(member.props.member).not.toBe(terria.catalog.userAddedDataGroup);
-      expect(member.props.member.name).not.toEqual(USER_ADDED_CATEGORY_NAME);
+      expect(member.props.member.name).not.toEqual(USER_ADDED_CATEGORY_ID);
       foundAnotherGroup =
         foundAnotherGroup || member.props.member === anotherGroup;
     });

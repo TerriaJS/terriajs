@@ -95,6 +95,13 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
       } else {
         this.setTrait(stratumId, "members", [member.uniqueId]);
       }
+
+      if (
+        this.uniqueId !== undefined &&
+        member.knownContainerUniqueIds.indexOf(this.uniqueId) < 0
+      ) {
+        member.knownContainerUniqueIds.push(this.uniqueId);
+      }
     }
 
     /**

@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
+import { useTranslation } from "react-i18next";
 
 import Loader from "../Loader";
 import Icon from "../Icon";
@@ -13,6 +14,7 @@ import Styles from "./data-catalog-group.scss";
  * @constructor
  */
 function CatalogGroup(props) {
+  const { t } = useTranslation();
   return (
     <li className={Styles.root}>
       <button
@@ -52,7 +54,7 @@ function CatalogGroup(props) {
         <button
           type="button"
           className={Styles.trashGroup}
-          title="remove this group"
+          title={t("dataCatalog.groupRemove")}
           onClick={props.removeUserAddedData}
         >
           <Icon glyph={Icon.GLYPHS.trashcan} />

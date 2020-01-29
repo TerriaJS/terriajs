@@ -11,23 +11,7 @@ import { observer } from "mobx-react";
 import Styles from "./data-preview.scss";
 
 naturalSort.insensitive = true;
-
-// Should get it from option
-const DEFAULT_SECTION_ORDER = [
-  "Disclaimer",
-  "Description",
-  "Data Description",
-  "Dataset Description",
-  "Service Description",
-  "Resource Description",
-  "Licence",
-  "Access Constraints",
-  "Author",
-  "Contact",
-  "Created",
-  "Modified",
-  "Update Frequency"
-];
+import { withTranslation } from "react-i18next";
 
 /**
  * CatalogItem-defined sections that sit within the preview description. These are ordered according to the catalog item's
@@ -38,10 +22,28 @@ const DataPreviewSections = observer(
     displayName: "DataPreviewSections",
 
     propTypes: {
-      metadataItem: PropTypes.object.isRequired
+      metadataItem: PropTypes.object.isRequired,
+      t: PropTypes.func.isRequired
     },
 
     sortInfoSections(items) {
+      const { t } = this.props;
+      // Should get it from option
+      const DEFAULT_SECTION_ORDER = [
+        t("preview.disclaimer"),
+        t("description.name"),
+        t("preview.dataDescription"),
+        t("preview.datasetDescription"),
+        t("preview.serviceDescription"),
+        t("preview.resourceDescription"),
+        t("preview.licence"),
+        t("preview.accessConstraints"),
+        t("preview.author"),
+        t("preview.contact"),
+        t("preview.created"),
+        t("preview.modified"),
+        t("preview.updateFrequency")
+      ];
       const infoSectionOrder =
         this.props.metadataItem.infoSectionOrder || DEFAULT_SECTION_ORDER;
 
@@ -85,4 +87,4 @@ const DataPreviewSections = observer(
   })
 );
 
-export default DataPreviewSections;
+export default withTranslation()(DataPreviewSections);

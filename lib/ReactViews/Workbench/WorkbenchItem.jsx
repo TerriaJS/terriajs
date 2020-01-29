@@ -26,6 +26,8 @@ import ShortReport from "./Controls/ShortReport";
 import StyleSelectorSection from "./Controls/StyleSelectorSection";
 import TimerSection from "./Controls/TimerSection";
 import ViewingControls from "./Controls/ViewingControls";
+import { withTranslation } from "react-i18next";
+
 import Styles from "./workbench-item.scss";
 import { runInAction } from "mobx";
 
@@ -40,7 +42,8 @@ const WorkbenchItem = observer(
       onTouchStart: PropTypes.func.isRequired,
       item: PropTypes.object.isRequired,
       viewState: PropTypes.object.isRequired,
-      setWrapperState: PropTypes.func
+      setWrapperState: PropTypes.func,
+      t: PropTypes.func.isRequired
     },
 
     toggleDisplay() {
@@ -73,6 +76,7 @@ const WorkbenchItem = observer(
 
     render() {
       const workbenchItem = this.props.item;
+      const { t } = this.props;
       return (
         <li
           style={this.props.style}
@@ -86,7 +90,7 @@ const WorkbenchItem = observer(
                 <button
                   type="button"
                   onClick={this.toggleVisibility}
-                  title="Data show/hide"
+                  title={t("workbench.toggleVisibility")}
                   className={Styles.btnVisibility}
                 >
                   {workbenchItem.show ? (
@@ -189,4 +193,4 @@ const WorkbenchItem = observer(
   })
 );
 
-module.exports = sortable(WorkbenchItem);
+module.exports = sortable(withTranslation()(WorkbenchItem));

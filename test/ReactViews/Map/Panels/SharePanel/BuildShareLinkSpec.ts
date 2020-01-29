@@ -5,7 +5,7 @@ import ViewState, {
   DATA_CATALOG_NAME,
   USER_DATA_NAME
 } from "../../../../../lib/ReactViewModels/ViewState";
-import { USER_ADDED_CATEGORY_NAME } from "../../../../../lib/Core/addedByUser";
+import { USER_ADDED_CATEGORY_ID } from "../../../../../lib/Core/addedByUser";
 
 import {
   buildShareLink,
@@ -93,7 +93,7 @@ describe("BuildShareLink", function() {
           const initSources = flattenInitSources(params.initSources);
 
           expect(
-            initSources.models[USER_ADDED_CATEGORY_NAME].members
+            initSources.models[USER_ADDED_CATEGORY_ID].members
           ).not.toContain(model.uniqueId);
 
           done();
@@ -148,7 +148,7 @@ describe("BuildShareLink", function() {
 
         expect(model.uniqueId).toBeDefined();
         expect(isShareable(terria)(model.uniqueId)).toBe(true);
-        expect(initSources.models[USER_ADDED_CATEGORY_NAME].members).toContain(
+        expect(initSources.models[USER_ADDED_CATEGORY_ID].members).toContain(
           model.uniqueId
         );
 

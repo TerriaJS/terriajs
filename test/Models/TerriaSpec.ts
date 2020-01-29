@@ -100,12 +100,13 @@ describe("Terria", function() {
       );
       terria.workbench.add(model1);
       terria.workbench.add(model2);
-      expect(terria.workbench.itemIds).toEqual(["itemABC", "itemDEF"]);
+      expect(terria.workbench.itemIds).toContain("itemABC");
+      expect(terria.workbench.itemIds).toContain("itemDEF");
       expect(newTerria.workbench.itemIds).toEqual([]);
 
       const shareLink = buildShareLink(terria, viewState);
       newTerria.updateApplicationUrl(shareLink).then(() => {
-        expect(newTerria.workbench.itemIds).toEqual(["itemABC", "itemDEF"]);
+        expect(newTerria.workbench.itemIds).toEqual(terria.workbench.itemIds);
         done();
       });
     });

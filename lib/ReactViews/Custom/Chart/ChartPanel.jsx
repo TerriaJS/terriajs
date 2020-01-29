@@ -4,6 +4,7 @@ import { observer } from "mobx-react";
 import { computed } from "mobx";
 import PropTypes from "prop-types";
 import React from "react";
+import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import raiseErrorOnRejectedPromise from "../../../Models/raiseErrorOnRejectedPromise";
 import Icon from "../../Icon";
@@ -23,7 +24,8 @@ class ChartPanel extends React.Component {
     terria: PropTypes.object.isRequired,
     onHeightChange: PropTypes.func,
     viewState: PropTypes.object.isRequired,
-    animationDuration: PropTypes.number
+    animationDuration: PropTypes.number,
+    t: PropTypes.func.isRequired
   };
 
   @computed
@@ -77,6 +79,7 @@ class ChartPanel extends React.Component {
         />
       );
     }
+    const { t } = this.props;
     return (
       <div className={Styles.holder}>
         <div className={Styles.inner}>
@@ -84,12 +87,12 @@ class ChartPanel extends React.Component {
             <div className={Styles.body}>
               <div className={Styles.header}>
                 <label className={Styles.sectionLabel}>
-                  {loader || "Charts"}
+                  {loader || t("chart.sectionLabel")}
                 </label>
                 <ChartPanelDownloadButton chartableItems={chartItems} />
                 <button
                   type="button"
-                  title="Close Panel"
+                  title={t("chart.closePanel")}
                   className={Styles.btnCloseChartPanel}
                   onClick={() => this.closePanel()}
                 >
@@ -105,4 +108,4 @@ class ChartPanel extends React.Component {
   }
 }
 
-export default ChartPanel;
+export default withTranslation()(ChartPanel);
