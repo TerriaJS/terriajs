@@ -16,6 +16,7 @@ import MapInteractionMode from "../../Models/MapInteractionMode";
 import ObserveModelMixin from "../ObserveModelMixin";
 
 import Styles from "./parameter-editors.scss";
+import { withTranslation } from "react-i18next";
 
 const PointParameterEditor = createReactClass({
   displayName: "PointParameterEditor",
@@ -25,7 +26,8 @@ const PointParameterEditor = createReactClass({
     previewed: PropTypes.object,
     parameter: PropTypes.object,
     viewState: PropTypes.object,
-    parameterViewModel: PropTypes.object
+    parameterViewModel: PropTypes.object,
+    t: PropTypes.func.isRequired
   },
 
   inputOnChange(e) {
@@ -45,10 +47,11 @@ const PointParameterEditor = createReactClass({
   },
 
   selectPointOnMap() {
-    PointParameterEditor.selectOnMap(
+    selectOnMap(
       this.props.previewed.terria,
       this.props.viewState,
-      this.props.parameter
+      this.props.parameter,
+      this.props.t("analytics.selectLocation")
     );
   },
 
@@ -59,7 +62,7 @@ const PointParameterEditor = createReactClass({
     }
 
     // Show the parameter's value if there is one.
-    return PointParameterEditor.getDisplayValue(this.props.parameter.value);
+    return getDisplayValue(this.props.parameter.value);
   },
 
   render() {
@@ -68,12 +71,12 @@ const PointParameterEditor = createReactClass({
       !parameterViewModel.isValueValid &&
       parameterViewModel.wasEverBlurredWhileInvalid;
     const style = showErrorMessage ? Styles.fieldInvalid : Styles.field;
-
+    const { t } = this.props;
     return (
       <div>
         <If condition={showErrorMessage}>
           <div className={Styles.warningText}>
-            Please enter valid coordinates (e.g. 131.0361, -25.3450).
+            {t("analytics.enterValidCoords")}
           </div>
         </If>
         <input
@@ -89,7 +92,7 @@ const PointParameterEditor = createReactClass({
           onClick={this.selectPointOnMap}
           className={Styles.btnSelector}
         >
-          Select location
+          {t("analytics.selectLocation")}
         </button>
       </div>
     );
@@ -145,7 +148,7 @@ PointParameterEditor.setValueFromText = function(e, parameter) {
  * @param {Object} value Native format of parameter value.
  * @return {String} String for display
  */
-PointParameterEditor.getDisplayValue = function(value) {
+export function getDisplayValue(value) {
   const digits = 5;
 
   if (defined(value)) {
@@ -157,7 +160,7 @@ PointParameterEditor.getDisplayValue = function(value) {
   } else {
     return "";
   }
-};
+}
 
 /**
  * Prompt user to select/draw on map in order to define parameter.
@@ -165,12 +168,11 @@ PointParameterEditor.getDisplayValue = function(value) {
  * @param {Object} viewState ViewState.
  * @param {FunctionParameter} parameter Parameter.
  */
-PointParameterEditor.selectOnMap = function(terria, viewState, parameter) {
+export function selectOnMap(terria, viewState, parameter, interactionMessage) {
   // Cancel any feature picking already in progress.
   terria.pickedFeatures = undefined;
-
   const pickPointMode = new MapInteractionMode({
-    message: "Select a point by clicking on the map.",
+    message: interactionMessage,
     onCancel: function() {
       terria.mapInteractionModeStack.pop();
       viewState.openAddData();
@@ -192,6 +194,6 @@ PointParameterEditor.selectOnMap = function(terria, viewState, parameter) {
     });
 
   viewState.explorerPanelIsVisible = false;
-};
+}
 
-module.exports = PointParameterEditor;
+export default withTranslation()(PointParameterEditor);

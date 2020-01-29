@@ -7,6 +7,7 @@ import triggerResize from "../../Core/triggerResize";
 import Styles from "./full_screen_button.scss";
 import classNames from "classnames";
 import Icon from "../Icon.jsx";
+import { withTranslation } from "react-i18next";
 
 // The button to make the map full screen and hide the workbench.
 const FullScreenButton = createReactClass({
@@ -18,7 +19,8 @@ const FullScreenButton = createReactClass({
     viewState: PropTypes.object.isRequired,
     btnText: PropTypes.string,
     minified: PropTypes.bool,
-    animationDuration: PropTypes.number // Defaults to 1 millisecond.
+    animationDuration: PropTypes.number, // Defaults to 1 millisecond.
+    t: PropTypes.func.isRequired
   },
 
   getInitialState() {
@@ -68,7 +70,7 @@ const FullScreenButton = createReactClass({
       [Styles.isActive]: this.props.viewState.isMapFullScreen,
       [Styles.minified]: this.props.minified
     });
-
+    const { t } = this.props;
     return (
       <div
         className={classNames(Styles.fullScreen, {
@@ -85,15 +87,15 @@ const FullScreenButton = createReactClass({
           id="toggle-workbench"
           aria-label={
             this.props.viewState.isMapFullScreen
-              ? "Show Workbench"
-              : "Hide Workbench"
+              ? t("sui.showWorkbench")
+              : t("sui.hideWorkbench")
           }
           onClick={this.toggleFullScreen}
           className={btnClassName}
           title={
             this.props.viewState.isMapFullScreen
-              ? "Show Workbench"
-              : "Hide Workbench"
+              ? t("sui.showWorkbench")
+              : t("sui.hideWorkbench")
           }
         >
           {this.renderButtonText()}
@@ -102,4 +104,4 @@ const FullScreenButton = createReactClass({
     );
   }
 });
-module.exports = FullScreenButton;
+module.exports = withTranslation()(FullScreenButton);
