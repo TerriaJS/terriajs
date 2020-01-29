@@ -13,6 +13,7 @@ Change Log
 * Bug fix for expanding chart - avoid creating marker where no lat lon exists.
 * Add a `ChartDisclaimer` component to display an additional disclaimer above the chart panel in the bottom dock.
 * Add `allowFeatureInfoRequests` property to `Terria` and prevent unnecessary feature info requests when creating `UserDrawing`s.
+* Removes unsupported data that is drag and dropped from the workbench and user catalog.
 * Adjusted z-index values so that the explorer panel is on top of the side panel and the notification window appears at the very top layer.
 * Allow `CkanCatalogItem` names to be constructed from dataset and resource names where multiple resources are available for a single dataset
 
@@ -27,7 +28,7 @@ Change Log
 * Changed catalog item event labels to include the full catalog item path, rather than just the catalog item name.
 * Added support for `openAddData` option in config.json.  If true, the "Add Data" dialog is automatically opened at startup.
 * Welcome message, in-app guides & new feature prompts are now disabled by default. These can be re-enabled by setting the `showWelcomeMessage`, `showInAppGuides` & `showFeaturePrompts` options in config.json. 
-* Updated Welcome Message to pass its props to `WelcomeMessagePrimaryBtnClick` & `WelcomeMessageSecondaryBtnClick` overrides
+* Updated Welcome Message to pass its props to `WelcomeMessagePrimaryBtnClick` & `WelcomeMessageSecondaryBtnClick` overrides.
 * Fixed a bug in anti-meridian handling causing excessive memory use.
 * Handled coordinate conversion for GeoJson geometries with an empty `coordinates` array.
 * Fixed height of My Data drag and drop box in Safari and IE.
