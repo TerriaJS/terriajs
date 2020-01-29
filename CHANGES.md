@@ -13,6 +13,7 @@ Change Log
 * Bug fix for expanding chart - avoid creating marker where no lat lon exists.
 * Add a `ChartDisclaimer` component to display an additional disclaimer above the chart panel in the bottom dock.
 * Add `allowFeatureInfoRequests` property to `Terria` and prevent unnecessary feature info requests when creating `UserDrawing`s.
+* Adjusted z-index values so that the explorer panel is on top of the side panel and the notification window appears at the very top layer.
 * Allow `CkanCatalogItem` names to be constructed from dataset and resource names where multiple resources are available for a single dataset
 
 ### v7.10.0
