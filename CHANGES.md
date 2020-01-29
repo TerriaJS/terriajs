@@ -1,6 +1,22 @@
 Change Log
 ==========
 
+### Next Release
+* Fix draggable workbench/story items with translation HOC
+* Added first revision of "delta feature" for change detection of WMS catalog items which indicate `supportsDeltaComparison`
+* Improve menu bar button hover/focus states when interacting with its panel contents
+* Add ability to set opacity on `GeoJsonCatalogItem`
+* Expanded test cases to ensure WorkbenchItem & Story have the correct order of components composed
+* Fix broken catalog functions when used with translation HOC
+* Fix bug with momentPoints chart type when plotting against series with null values
+* Make the default `Legend` width a little smaller to account for the workbench scrollbar
+* Bug fix for expanding chart - avoid creating marker where no lat lon exists.
+* Add a `ChartDisclaimer` component to display an additional disclaimer above the chart panel in the bottom dock.
+* Add `allowFeatureInfoRequests` property to `Terria` and prevent unnecessary feature info requests when creating `UserDrawing`s.
+* Removes unsupported data that is drag and dropped from the workbench and user catalog.
+* Adjusted z-index values so that the explorer panel is on top of the side panel and the notification window appears at the very top layer.
+* Allow `CkanCatalogItem` names to be constructed from dataset and resource names where multiple resources are available for a single dataset
+
 ### v7.10.0
 
 * Added proper basic internationalisation beginnings via i18next & react-i18next
@@ -13,10 +29,9 @@ Change Log
 * Added support for `openAddData` option in config.json.  If true, the "Add Data" dialog is automatically opened at startup.
 * Welcome message, in-app guides & new feature prompts are now disabled by default. These can be re-enabled by setting the `showWelcomeMessage`, `showInAppGuides` & `showFeaturePrompts` options in config.json. 
 * Updated Welcome Message to pass its props to `WelcomeMessagePrimaryBtnClick` & `WelcomeMessageSecondaryBtnClick` overrides
-* Bug fix for anti-meridian handling causing excessive memory use.
-* Handle coordinate conversion with GeoJson geometries which have an empty `coordinates` array.
 * Fixed a bug in anti-meridian handling causing excessive memory use.
 * Handled coordinate conversion for GeoJson geometries with an empty `coordinates` array.
+* Fixed height of My Data drag and drop box in Safari and IE.
 
 ### v7.9.0
 

@@ -22,6 +22,7 @@ import processCustomElements from "./processCustomElements";
 import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import StoryPanel from "./../Story/StoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
+import ToolPanel from "./../ToolPanel.jsx";
 
 import SatelliteGuide from "../Guide/SatelliteGuide.jsx";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage.jsx";
@@ -171,7 +172,12 @@ const StandardUserInterface = createReactClass({
         >
           <div className={Styles.ui}>
             <div className={Styles.uiInner}>
-              <If condition={!this.props.viewState.hideMapUi()}>
+              <If
+                condition={
+                  !this.props.viewState.hideMapUi() &&
+                  !this.props.viewState.showToolPanel()
+                }
+              >
                 <Small>
                   <MobileHeader
                     terria={terria}
@@ -206,6 +212,11 @@ const StandardUserInterface = createReactClass({
                   </div>
                 </Medium>
               </If>
+
+              <If condition={this.props.viewState.showToolPanel()}>
+                <ToolPanel viewState={this.props.viewState} />
+              </If>
+
               <Medium>
                 <div
                   className={classNames(Styles.showWorkbenchButton, {

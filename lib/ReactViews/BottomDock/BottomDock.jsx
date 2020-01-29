@@ -4,6 +4,7 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import ChartPanel from "../Custom/Chart/ChartPanel.jsx";
+import ChartDisclaimer from "./ChartDisclaimer.jsx";
 import Timeline from "./Timeline/Timeline.jsx";
 import ObserveModelMixin from "../ObserveModelMixin";
 import Styles from "./bottom-dock.scss";
@@ -35,6 +36,7 @@ const BottomDock = createReactClass({
         tabIndex={0}
         onClick={this.handleClick}
       >
+        <ChartDisclaimer terria={terria} viewState={this.props.viewState} />
         <ChartPanel
           terria={terria}
           onHeightChange={this.onHeightChange}

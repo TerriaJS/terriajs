@@ -16,7 +16,7 @@ import MapInteractionMode from "../../Models/MapInteractionMode";
 import ObserveModelMixin from "../ObserveModelMixin";
 
 import Styles from "./parameter-editors.scss";
-import { withTranslation, useTranslation } from "react-i18next";
+import { withTranslation } from "react-i18next";
 
 const PointParameterEditor = createReactClass({
   displayName: "PointParameterEditor",
@@ -47,10 +47,11 @@ const PointParameterEditor = createReactClass({
   },
 
   selectPointOnMap() {
-    PointParameterEditor.selectOnMap(
+    selectOnMap(
       this.props.previewed.terria,
       this.props.viewState,
-      this.props.parameter
+      this.props.parameter,
+      this.props.t("analytics.selectLocation")
     );
   },
 
@@ -61,7 +62,7 @@ const PointParameterEditor = createReactClass({
     }
 
     // Show the parameter's value if there is one.
-    return PointParameterEditor.getDisplayValue(this.props.parameter.value);
+    return getDisplayValue(this.props.parameter.value);
   },
 
   render() {
@@ -147,7 +148,7 @@ PointParameterEditor.setValueFromText = function(e, parameter) {
  * @param {Object} value Native format of parameter value.
  * @return {String} String for display
  */
-PointParameterEditor.getDisplayValue = function(value) {
+export function getDisplayValue(value) {
   const digits = 5;
 
   if (defined(value)) {
@@ -159,7 +160,7 @@ PointParameterEditor.getDisplayValue = function(value) {
   } else {
     return "";
   }
-};
+}
 
 /**
  * Prompt user to select/draw on map in order to define parameter.
@@ -167,12 +168,11 @@ PointParameterEditor.getDisplayValue = function(value) {
  * @param {Object} viewState ViewState.
  * @param {FunctionParameter} parameter Parameter.
  */
-PointParameterEditor.selectOnMap = function(terria, viewState, parameter) {
+export function selectOnMap(terria, viewState, parameter, interactionMessage) {
   // Cancel any feature picking already in progress.
   terria.pickedFeatures = undefined;
-  const { t } = useTranslation();
   const pickPointMode = new MapInteractionMode({
-    message: t("analytics.selectLocation"),
+    message: interactionMessage,
     onCancel: function() {
       terria.mapInteractionModeStack.pop();
       viewState.openAddData();
@@ -194,6 +194,6 @@ PointParameterEditor.selectOnMap = function(terria, viewState, parameter) {
     });
 
   viewState.explorerPanelIsVisible = false;
-};
+}
 
-module.exports = withTranslation()(PointParameterEditor);
+export default withTranslation()(PointParameterEditor);
