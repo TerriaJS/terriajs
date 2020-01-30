@@ -12,6 +12,7 @@ import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import i18next from "i18next";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
+import getDereferencedIfExists from "../Core/getDereferencedIfExists";
 
 interface AddUserCatalogMemberOptions {
   enable?: boolean;
@@ -46,10 +47,7 @@ export default function addUserCatalogMember(
       );
       terria.catalog.userAddedDataGroup.add(CommonStrata.user, newCatalogItem);
 
-      const dereferenced =
-        ReferenceMixin.is(newCatalogItem) && newCatalogItem.target !== undefined
-          ? newCatalogItem.target
-          : newCatalogItem;
+      const dereferenced = getDereferencedIfExists(newCatalogItem);
 
       if (
         isDefined(options.open) &&
