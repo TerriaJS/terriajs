@@ -106,7 +106,7 @@ const ChartExpandAndDownloadButtons = createReactClass({
             options={nameAndHrefObjects}
             theme={downloadDropdownTheme}
           >
-            {t("chart.download") + "&nbsp;▾"}
+            {t("chart.download") + " ▾"}
           </Dropdown>
         );
       }
@@ -123,7 +123,7 @@ const ChartExpandAndDownloadButtons = createReactClass({
               options={sourceNameObjects}
               theme={dropdownTheme}
             >
-              {t("chart.expand") + "&nbsp;▾"}
+              {t("chart.expand") + " ▾"}
             </Dropdown>
             {downloadButton}
           </div>

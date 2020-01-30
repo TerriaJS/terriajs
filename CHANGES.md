@@ -22,6 +22,7 @@ Change Log
 * Allow `CkanCatalogItem` names to be constructed from dataset and resource names where multiple resources are available for a single dataset
 * Set the name of ArcGis MapServer CatalogGroup and CatalogItem on load
 * Improve autodetecting WFS format, naming of the WFS catalog group and retaining the zoomToExtent
+* Remove unnecessary nbsp; from chart download and expand buttons introduced through internationalization.
 
 ### v7.10.0
 
