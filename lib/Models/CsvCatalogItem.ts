@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { runInAction, computed } from "mobx";
 import TerriaError from "../Core/TerriaError";
 import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
@@ -114,10 +115,8 @@ export default class CsvCatalogItem extends TableMixin(
       return Promise.reject(
         new TerriaError({
           sender: this,
-          title: "No CSV available",
-          message:
-            "The CSV catalog item cannot be loaded because it was not configured " +
-            "with a `url` or `csvString` property."
+          title: i18next.t("models.csv.unableToLoadItemTitle"),
+          message: i18next.t("models.csv.unableToLoadItemMessage")
         })
       );
     }

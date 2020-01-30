@@ -16,6 +16,7 @@ import ObserveModelMixin from "../ObserveModelMixin";
 
 import Styles from "./parameter-editors.scss";
 import { runInAction, autorun } from "mobx";
+import { withTranslation, useTranslation } from "react-i18next";
 
 const PointParameterEditor = createReactClass({
   displayName: "PointParameterEditor",
@@ -25,7 +26,8 @@ const PointParameterEditor = createReactClass({
     previewed: PropTypes.object,
     parameter: PropTypes.object,
     viewState: PropTypes.object,
-    parameterViewModel: PropTypes.object
+    parameterViewModel: PropTypes.object,
+    t: PropTypes.func.isRequired
   },
 
   inputOnChange(e) {
@@ -68,12 +70,12 @@ const PointParameterEditor = createReactClass({
       !parameterViewModel.isValueValid &&
       parameterViewModel.wasEverBlurredWhileInvalid;
     const style = showErrorMessage ? Styles.fieldInvalid : Styles.field;
-
+    const { t } = this.props;
     return (
       <div>
         <If condition={showErrorMessage}>
           <div className={Styles.warningText}>
-            Please enter valid coordinates (e.g. 131.0361, -25.3450).
+            {t("analytics.enterValidCoords")}
           </div>
         </If>
         <input
@@ -89,7 +91,7 @@ const PointParameterEditor = createReactClass({
           onClick={this.selectPointOnMap}
           className={Styles.btnSelector}
         >
-          Select location
+          {t("analytics.selectLocation")}
         </button>
       </div>
     );
@@ -172,8 +174,9 @@ PointParameterEditor.selectOnMap = function(terria, viewState, parameter) {
   });
 
   let pickedFeaturesSubscription;
+  const { t } = useTranslation();
   const pickPointMode = new MapInteractionMode({
-    message: "Select a point by clicking on the map.",
+    message: t("analytics.selectLocation"),
     onCancel: function() {
       terria.mapInteractionModeStack.pop();
       viewState.openAddData();
@@ -210,4 +213,4 @@ PointParameterEditor.selectOnMap = function(terria, viewState, parameter) {
   });
 };
 
-module.exports = PointParameterEditor;
+module.exports = withTranslation()(PointParameterEditor);

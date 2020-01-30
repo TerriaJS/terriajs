@@ -5,6 +5,7 @@ import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDire
 import React from "react";
 import classNames from "classnames";
 import createReactClass from "create-react-class";
+import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import { observer } from "mobx-react";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
@@ -26,7 +27,8 @@ const ViewingControls = observer(
 
     propTypes: {
       item: PropTypes.object.isRequired,
-      viewState: PropTypes.object.isRequired
+      viewState: PropTypes.object.isRequired,
+      t: PropTypes.func.isRequired
     },
 
     removeFromMap() {
@@ -68,6 +70,7 @@ const ViewingControls = observer(
     },
 
     splitItem() {
+      const { t } = this.props;
       const item = this.props.item;
       const terria = item.terria;
 
@@ -80,7 +83,13 @@ const ViewingControls = observer(
           "splitDirection",
           ImagerySplitDirection.RIGHT
         );
-        newItem.setTrait(CommonStrata.user, "name", item.name + " (copy)");
+        newItem.setTrait(
+          CommonStrata.user,
+          "name",
+          t("splitterTool.workbench.copyName", {
+            name: item.name
+          })
+        );
         newItem.setTrait(
           CommonStrata.user,
           "splitDirection",
@@ -132,6 +141,7 @@ const ViewingControls = observer(
         [Styles.noSplit]: !canSplit,
         [Styles.noInfo]: !item.showsInfo
       };
+      const { t } = this.props;
       return (
         <ul className={Styles.control}>
           <If condition={item.canZoomTo}>
@@ -139,10 +149,10 @@ const ViewingControls = observer(
               <button
                 type="button"
                 onClick={this.zoomTo}
-                title="Zoom to extent"
+                title={t("workbench.zoomToTitle")}
                 className={Styles.btn}
               >
-                Zoom To Extent
+                {t("workbench.zoomTo")}
               </button>
             </li>
             <span className={Styles.separator} />
@@ -154,10 +164,10 @@ const ViewingControls = observer(
               <button
                 type="button"
                 onClick={this.openFeature}
-                title="Zoom to data"
+                title={t("workbench.openFeatureTitle")}
                 className={Styles.btn}
               >
-                Zoom To
+                {t("workbench.openFeature")}
               </button>
             </li>
             <span className={Styles.separator} />
@@ -168,9 +178,9 @@ const ViewingControls = observer(
                 type="button"
                 onClick={this.previewItem}
                 className={Styles.btn}
-                title="info"
+                title={t("workbench.previewItemTitle")}
               >
-                About This Data
+                {t("workbench.previewItem")}
               </button>
             </li>
             <span className={Styles.separator} />
@@ -180,10 +190,10 @@ const ViewingControls = observer(
               <button
                 type="button"
                 onClick={this.splitItem}
-                title="Duplicate and show splitter"
+                title={t("workbench.splitItemTitle")}
                 className={Styles.btn}
               >
-                Split
+                {t("workbench.splitItem")}
               </button>
             </li>
             <span className={Styles.separator} />
@@ -194,9 +204,9 @@ const ViewingControls = observer(
                 type="button"
                 onClick={this.exportData}
                 className={Styles.btn}
-                title="Export map data"
+                title={t("workbench.exportDataTitle")}
               >
-                Export
+                {t("workbench.exportData")}
               </button>
             </li>
             <span className={Styles.separator} />
@@ -205,10 +215,10 @@ const ViewingControls = observer(
             <button
               type="button"
               onClick={this.removeFromMap}
-              title="Remove this data"
+              title={t("workbench.removeFromMapTitle")}
               className={Styles.btn}
             >
-              Remove <Icon glyph={Icon.GLYPHS.remove} />
+              {t("workbench.removeFromMap")} <Icon glyph={Icon.GLYPHS.remove} />
             </button>
           </li>
         </ul>
@@ -216,4 +226,4 @@ const ViewingControls = observer(
     }
   })
 );
-module.exports = ViewingControls;
+module.exports = withTranslation()(ViewingControls);

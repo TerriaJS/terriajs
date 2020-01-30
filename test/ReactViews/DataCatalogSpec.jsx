@@ -1,6 +1,6 @@
 import CatalogGroup from "../../lib/Models/CatalogGroup";
 import DataCatalogMember from "../../lib/ReactViews/DataCatalog/DataCatalogMember";
-import DataCatalog from "../../lib/ReactViews/DataCatalog/DataCatalog";
+import { DataCatalog } from "../../lib/ReactViews/DataCatalog/DataCatalog";
 import { findAllWithType } from "react-shallow-testutils";
 import { getShallowRenderedOutput } from "./MoreShallowTools";
 import React from "react";
@@ -35,6 +35,7 @@ describe("DataCatalog", function() {
         terria={terria}
         viewState={viewState}
         items={terria.catalog.group.items}
+        t={() => {}}
       />
     );
     const result = getShallowRenderedOutput(tab);

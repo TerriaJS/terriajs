@@ -2,6 +2,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Styles from "./tool_button.scss";
+import { withTranslation } from "react-i18next";
 import Icon from "../../Icon";
 import { observer } from "mobx-react";
 import { observable, action } from "mobx";
@@ -30,14 +31,15 @@ class MeasureTool extends React.Component {
   static displayName = "MeasureTool";
 
   static propTypes = {
-    terria: PropTypes.object
+    terria: PropTypes.object,
+    t: PropTypes.func.isRequired
   };
 
   constructor(props) {
     super(props);
     this.userDrawing = new UserDrawing({
-      terria: this.props.terria,
-      messageHeader: "Measure Tool",
+      terria: props.terria,
+      messageHeader: props.t("measure.measureTool"),
       allowPolygon: false,
       onPointClicked: this.onPointClicked,
       onPointMoved: this.onPointMoved,
@@ -232,12 +234,13 @@ class MeasureTool extends React.Component {
   }
 
   render() {
+    const { t } = this.props;
     return (
       <div className={Styles.toolButton}>
         <button
           type="button"
           className={Styles.btn}
-          title="Measure distance between locations"
+          title={t("measure.measureDistance")}
           onClick={this.handleClick}
         >
           <Icon glyph={Icon.GLYPHS.measure} />
@@ -246,5 +249,4 @@ class MeasureTool extends React.Component {
     );
   }
 }
-
-export default MeasureTool;
+export default withTranslation()(MeasureTool);

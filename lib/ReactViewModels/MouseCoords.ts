@@ -65,6 +65,7 @@ export default class MouseCoords {
     );
   }
 
+  @action
   toggleUseProjection() {
     this.useProjection = !this.useProjection;
   }

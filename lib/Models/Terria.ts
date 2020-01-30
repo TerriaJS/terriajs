@@ -238,6 +238,12 @@ export default class Terria {
    */
   @observable useNativeResolution = false;
 
+  /**
+   * Whether we think all references in the catalog have been loaded
+   * @type {boolean}
+   */
+  @observable catalogReferencesLoaded: boolean = false;
+
   constructor(options: TerriaOptions = {}) {
     if (options.baseUrl) {
       if (options.baseUrl.lastIndexOf("/") !== options.baseUrl.length - 1) {
@@ -582,7 +588,7 @@ export default class Terria {
 
     // Copy but don't yet load the workbench.
     const workbench = Array.isArray(initData.workbench)
-      ? initData.workbench.slice().reverse()
+      ? initData.workbench.slice()
       : [];
 
     const timeline = Array.isArray(initData.timeline)

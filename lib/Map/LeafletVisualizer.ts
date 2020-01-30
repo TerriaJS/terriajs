@@ -166,13 +166,20 @@ class LeafletGeomVisualizer {
   public update(time: JulianDate): boolean {
     const entities = this._entitiesToVisualize.values;
     const entityHash = this._entityHash;
+    let lastLeafletMarker: L.CircleMarker | undefined;
 
     for (let i = 0, len = entities.length; i < len; i++) {
       const entity = entities[i];
       const entityDetails = entityHash[entity.id];
 
-      if (isDefined(entity.point)) {
-        this._updatePoint(entity, time, entityHash, entityDetails);
+      if (isDefined(entity._point)) {
+        lastLeafletMarker = this._updatePoint(
+          entity,
+          time,
+          entityHash,
+          entityDetails,
+          lastLeafletMarker
+        );
       }
       if (isDefined(entity.billboard)) {
         this._updateBillboard(entity, time, entityHash, entityDetails);
@@ -195,7 +202,8 @@ class LeafletGeomVisualizer {
     entity: Entity,
     time: JulianDate,
     _entityHash: EntityHash,
-    entityDetails: EntityDetails
+    entityDetails: EntityDetails,
+    lastLeafletMarker?: L.CircleMarker
   ) {
     const featureGroup = this._featureGroup;
     const pointGraphics = entity.point;
@@ -245,11 +253,6 @@ class LeafletGeomVisualizer {
 
     let layer = details.layer;
 
-    let lastPoint: any;
-    featureGroup.eachLayer(function(layer) {
-      lastPoint = layer;
-    });
-
     if (!isDefined(layer)) {
       const pointOptions = {
         radius: pixelSize / 2.0,
@@ -261,7 +264,7 @@ class LeafletGeomVisualizer {
       };
 
       layer = details.layer = L.circleMarker(
-        positionToLatLng(position, lastPoint),
+        positionToLatLng(position, lastLeafletMarker),
         pointOptions
       );
       layer.on("click", featureClicked.bind(undefined, this, entity));
@@ -274,11 +277,11 @@ class LeafletGeomVisualizer {
       Color.clone(outlineColor, details.lastOutlineColor);
       details.lastOutlineWidth = outlineWidth;
 
-      return;
+      return layer;
     }
 
     if (!Cartesian3.equals(position, details.lastPosition)) {
-      layer.setLatLng(positionToLatLng(position, lastPoint));
+      layer.setLatLng(positionToLatLng(position, lastLeafletMarker));
       Cartesian3.clone(position, details.lastPosition);
     }
 
@@ -938,16 +941,14 @@ function cleanPolyline(
   }
 }
 
-function positionToLatLng(
-  position: Cartesian3,
-  prevLayer?: { _latlng: { lng: number; lat: number } }
-) {
+function positionToLatLng(position: Cartesian3, prevMarker?: L.CircleMarker) {
   const cartographic = Ellipsoid.WGS84.cartesianToCartographic(position);
   let lon = CesiumMath.toDegrees(cartographic.longitude);
-  if (prevLayer) {
-    if (prevLayer._latlng.lng - lon > 180) {
+  if (prevMarker) {
+    const prevLon = prevMarker.getLatLng().lng;
+    if (prevLon - lon > 180) {
       lon = lon + 360;
-    } else if (prevLayer._latlng.lng - lon < -180) {
+    } else if (prevLon - lon < -180) {
       lon = lon - 360;
     }
   }
