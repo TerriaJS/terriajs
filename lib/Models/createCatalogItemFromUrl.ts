@@ -2,7 +2,6 @@ import Terria from "./Terria";
 import CommonStrata from "./CommonStrata";
 import upsertModelFromJson from "./upsertModelFromJson";
 import CatalogMemberFactory from "./CatalogMemberFactory";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import { BaseModel } from "./Model";
 import UrlReference from "./UrlReference";
 
@@ -30,24 +29,17 @@ export function createCatalogItemFromUrlWithOptions(
   },
   _index?: number
 ): Promise<BaseModel | undefined> {
-  let id = options.id || url;
-
-  // make sure id is unique
-  while (terria.getModelById(BaseModel, id) !== undefined) {
-    id += "-";
-  }
-
   const item = upsertModelFromJson(
     CatalogMemberFactory,
     terria,
-    "/",
+    "",
     undefined,
     CommonStrata.definition,
     {
       type: UrlReference.type,
       name: url,
       url: url,
-      id: id,
+      localId: options.id || url,
       allowLoad: allowLoad
     }
   );

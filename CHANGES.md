@@ -11,6 +11,7 @@ Change Log
 * Added header options for loadJson5, & allow header overrides on MagdaReference loading
 * Re-added some matcher-type mappings in `registerCatalogMembers`.
 * Added `UrlReference` to represent catalog items created from a url with an auto-detected type.
+* Modified `upsertModelFromJson` so that when no `id` is provided, the `uniqueId` generated from `localId` or `name` is incremented if necessary to make it unique.
 * Re-enable search components if SearchProvider option provided
 * Modified tests to not use any real servers.
 * Fixed bug causing workbench items to be shared in the wrong order.

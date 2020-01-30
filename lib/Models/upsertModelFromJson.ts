@@ -15,8 +15,8 @@ export default function upsertModelFromJson(
   replaceStratum: boolean = false
 ): BaseModel {
   if (model === undefined) {
-    let id = json.id;
-    if (id === undefined) {
+    let uniqueId = json.id;
+    if (uniqueId === undefined) {
       const localId = json.localId || json.name;
       if (localId === undefined) {
         throw new TerriaError({
@@ -25,12 +25,19 @@ export default function upsertModelFromJson(
         });
       }
 
-      id = (parentId || "") + "/" + localId;
+      let id = (parentId || "") + "/" + localId;
+      let idIncrement = 1;
+      uniqueId = id;
+
+      while (terria.getModelById(BaseModel, uniqueId) !== undefined) {
+        uniqueId = id + "(" + idIncrement + ")";
+        idIncrement++;
+      }
     }
 
-    model = terria.getModelById(BaseModel, id);
+    model = terria.getModelById(BaseModel, uniqueId);
     if (model === undefined) {
-      model = factory.create(json.type, id, terria);
+      model = factory.create(json.type, uniqueId, terria);
       if (model === undefined) {
         throw new TerriaError({
           title: i18next.t("models.catalog.unsupportedTypeTitle"),
