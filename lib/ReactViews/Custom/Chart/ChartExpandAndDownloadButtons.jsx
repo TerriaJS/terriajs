@@ -218,7 +218,9 @@ function expand(props, sourceIndex) {
         : null
     });
     const items = [newCatalogItem];
+    let newGeoJsonAvailable = false;
     if (defined(feature.position._value)) {
+      newGeoJsonAvailable = true;
       const newGeoJsonItem = new GeoJsonCatalogItem(terria, null);
       newGeoJsonItem.isUserSupplied = true;
       newGeoJsonItem.style = {
@@ -243,7 +245,6 @@ function expand(props, sourceIndex) {
         }
       };
       newGeoJsonItem.isMappable = true;
-      newGeoJsonItem.style["marker-color"] = newCatalogItem.getNextColor();
       items.push(newGeoJsonItem);
     }
 
@@ -340,6 +341,8 @@ function expand(props, sourceIndex) {
     newCatalogItem.isMappable = false;
     newCatalogItem.isEnabled = true;
     newCatalogItem.creatorCatalogItem = compositeItem;
+    if (newGeoJsonAvailable)
+      items[1].style["marker-color"] = newCatalogItem.getNextColor();
 
     terria.catalog.addChartableItem(newCatalogItem); // Notify the chart panel so it shows "loading".
 
