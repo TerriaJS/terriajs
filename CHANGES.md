@@ -15,7 +15,7 @@ Change Log
 * Fix bug where urls in the feature info panel weren't turned into hyperlinks
 * Fix preview map's base map and bounding rectangle size
 * Added `hasLocalData` property to indicate when a catalog item contains local data. This property is used to determine whether the item can be shared or not.
-* Fixed bug causing user added data to not be shared. Note that catalog item urls are now set at the user stratum rather than the definition stratum.
+* Fixed bug causing user added data to not be shared. Note that user added catalog item urls are now set at the user stratum rather than the definition stratum.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
