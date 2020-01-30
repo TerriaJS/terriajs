@@ -23,6 +23,7 @@ Change Log
 * Set the name of ArcGis MapServer CatalogGroup and CatalogItem on load
 * Improve autodetecting WFS format, naming of the WFS catalog group and retaining the zoomToExtent
 * Remove unnecessary nbsp; from chart download and expand buttons introduced through internationalization.
+* Fix story prompt flag not being set after dismissing story, if `showFeaturePrompts` has been enabled
 
 ### v7.10.0
 
