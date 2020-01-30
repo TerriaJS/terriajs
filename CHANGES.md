@@ -8,6 +8,7 @@ Change Log
 * Re-added Measure Tool support
 * Added header options for loadJson5, & allow header overrides on MagdaReference loading
 * Re-added some matcher-type mappings in `registerCatalogMembers`.
+* Added `UrlReference` to represent catalog items created from a url with an auto-detected type.
 
 ### v7.9.0
 

@@ -4,6 +4,7 @@ import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGrou
 import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
 import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
 import { matchesExtension } from "../../lib/Models/registerCatalogMembers";
+import UrlReference from "../../lib/Models/UrlReference";
 
 describe("createCatalogItemFromUrl", function() {
   let terria: Terria;
@@ -16,6 +17,7 @@ describe("createCatalogItemFromUrl", function() {
       WebMapServiceCatalogGroup
     );
     CatalogMemberFactory.register(GeoJsonCatalogItem.type, GeoJsonCatalogItem);
+    CatalogMemberFactory.register(UrlReference.type, UrlReference);
 
     createCatalogItemFromUrl.register(
       s => true,
@@ -35,7 +37,10 @@ describe("createCatalogItemFromUrl", function() {
       expect(item).toBeDefined();
 
       if (item !== undefined) {
-        expect(item instanceof WebMapServiceCatalogGroup).toBe(true);
+        expect(item instanceof UrlReference).toBe(true);
+        expect(
+          (<UrlReference>item).target instanceof WebMapServiceCatalogGroup
+        ).toBe(true);
       }
       done();
     });
@@ -47,7 +52,10 @@ describe("createCatalogItemFromUrl", function() {
     createCatalogItemFromUrl(url, terria, true).then(item => {
       expect(item).toBeDefined();
       if (item !== undefined) {
-        expect(item instanceof GeoJsonCatalogItem).toBe(true);
+        expect(item instanceof UrlReference).toBe(true);
+        expect((<UrlReference>item).target instanceof GeoJsonCatalogItem).toBe(
+          true
+        );
       }
       done();
     });

@@ -4,6 +4,7 @@ import upsertModelFromJson from "./upsertModelFromJson";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import { BaseModel } from "./Model";
+import UrlReference from "./UrlReference";
 
 export default function createCatalogItemFromUrl(
   url: string,
@@ -29,65 +30,39 @@ export function createCatalogItemFromUrlWithOptions(
   },
   _index?: number
 ): Promise<BaseModel | undefined> {
-  const index = _index || 0;
-  if (index >= mapping.length) {
+  let id = options.id || url;
+
+  // make sure id is unique
+  while (terria.getModelById(BaseModel, id) !== undefined) {
+    id += "-";
+  }
+
+  const item = upsertModelFromJson(
+    CatalogMemberFactory,
+    terria,
+    "/",
+    undefined,
+    CommonStrata.definition,
+    {
+      type: UrlReference.type,
+      name: url,
+      url: url,
+      id: id,
+      allowLoad: allowLoad
+    }
+  );
+
+  if (item === undefined || !(item instanceof UrlReference)) {
     return Promise.resolve(undefined);
   }
-  if (
-    (mapping[index].matcher && !mapping[index].matcher(url)) ||
-    (mapping[index].requiresLoad && !allowLoad)
-  ) {
-    return createCatalogItemFromUrlWithOptions(
-      url,
-      terria,
-      allowLoad,
-      options,
-      index + 1
-    );
-  } else {
-    // Try creating an item of this type and loading it using provided url.
-    // If it works then add the item to terria and return it, otherwise discard
-    // it and try the next type.
-    var item = CatalogMemberFactory.create(
-      mapping[index].type,
-      "/" + (options.id || url),
-      terria
-    );
 
-    if (item === undefined) {
-      return createCatalogItemFromUrlWithOptions(
-        url,
-        terria,
-        allowLoad,
-        options,
-        index + 1
-      );
-    }
-
-    item.setTrait(CommonStrata.definition, "url", url);
-    item.setTrait(CommonStrata.definition, "name", url);
-
-    if (allowLoad && CatalogMemberMixin.isMixedInto(item)) {
-      return item
-        .loadMetadata()
-        .then(() => {
-          terria.addModel(<BaseModel>item);
-          return item;
-        })
-        .catch(e => {
-          return createCatalogItemFromUrlWithOptions(
-            url,
-            terria,
-            allowLoad,
-            options,
-            index + 1
-          );
-        });
-    } else {
-      terria.addModel(<BaseModel>item);
+  return item.loadReference().then(() => {
+    if (item.target !== undefined) {
       return Promise.resolve(item);
+    } else {
+      return Promise.resolve(undefined);
     }
-  }
+  });
 }
 
 type Matcher = (input: string) => boolean;
@@ -97,7 +72,7 @@ interface MappingEntry {
   requiresLoad: boolean;
 }
 
-const mapping: MappingEntry[] = [];
+export const mapping: MappingEntry[] = [];
 
 createCatalogItemFromUrl.register = function(
   matcher: Matcher,
