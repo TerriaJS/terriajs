@@ -2,6 +2,10 @@ Change Log
 ==========
 
 ### Next Release
+
+
+### v7.11.0
+
 * Fix draggable workbench/story items with translation HOC
 * Added first revision of "delta feature" for change detection of WMS catalog items which indicate `supportsDeltaComparison`
 * Improve menu bar button hover/focus states when interacting with its panel contents
@@ -16,6 +20,8 @@ Change Log
 * Removes unsupported data that is drag and dropped from the workbench and user catalog.
 * Adjusted z-index values so that the explorer panel is on top of the side panel and the notification window appears at the very top layer.
 * Allow `CkanCatalogItem` names to be constructed from dataset and resource names where multiple resources are available for a single dataset
+* Set the name of ArcGis MapServer CatalogGroup and CatalogItem on load
+* Improve autodetecting WFS format, naming of the WFS catalog group and retaining the zoomToExtent
 
 ### v7.10.0
 
