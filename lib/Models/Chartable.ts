@@ -38,6 +38,7 @@ export interface ChartPoint {
 
 export interface ChartItem {
   name: string;
+  categoryName?: string;
   item: Model<ModelTraits>;
   type: ChartItemType;
   showInChartPanel: boolean;

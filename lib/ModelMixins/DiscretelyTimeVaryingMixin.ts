@@ -272,6 +272,7 @@ export default function DiscretelyTimeVaryingMixin<
         {
           item: this,
           name: this.name || "",
+          categoryName: this.name,
           type: this.chartType || "momentLines",
           xAxis: { scale: "time" },
           points,
