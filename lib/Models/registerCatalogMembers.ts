@@ -1,3 +1,5 @@
+import ArcGisFeatureServerCatalogGroup from "./ArcGisFeatureServerCatalogGroup";
+import ArcGisFeatureServerCatalogItem from "./ArcGisFeatureServerCatalogItem";
 import ArcGisMapServerCatalogItem from "./ArcGisMapServerCatalogItem";
 import BingMapsCatalogItem from "./BingMapsCatalogItem";
 import CartoMapCatalogItem from "./CartoMapCatalogItem";
@@ -34,6 +36,14 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(
     ArcGisMapServerCatalogItem.type,
     ArcGisMapServerCatalogItem
+  );
+  CatalogMemberFactory.register(
+    ArcGisFeatureServerCatalogItem.type,
+    ArcGisFeatureServerCatalogItem
+  );
+  CatalogMemberFactory.register(
+    ArcGisFeatureServerCatalogGroup.type,
+    ArcGisFeatureServerCatalogGroup
   );
   CatalogMemberFactory.register(
     Cesium3DTilesCatalogItem.type,
