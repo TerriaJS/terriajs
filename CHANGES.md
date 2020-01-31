@@ -3,6 +3,8 @@ Change Log
 
 ### Next Release
 
+* Pass minimumLevel, in Cesium, to minNativeZoom, in Leaflet.
+
 ### v7.11.1
 
 * Fix for color of markers on the map associated with chart items
