@@ -23,7 +23,7 @@ const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
 
 describe("ArcGisMapServerCatalogItem", function() {
   const mapServerUrl =
-    "http://www.ga.gov.au/gis/rest/services/topography/Dynamic_National_Map_Hydrography_and_Marine/MapServer";
+    "http://www.example.com/Dynamic_National_Map_Hydrography_and_Marine/MapServer";
   const singleLayerUrl = mapServerUrl + "/31";
 
   let item: ArcGisMapServerCatalogItem;

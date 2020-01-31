@@ -14,11 +14,13 @@ import Transforms from "terriajs-cesium/Source/Core/Transforms";
 import Icon from "../../Icon.jsx";
 import Styles from "./compass.scss";
 import { runInAction, computed, when } from "mobx";
+import { withTranslation } from "react-i18next";
 
 // the compass on map
 class Compass extends React.Component {
   static propTypes = {
-    terria: PropTypes.object
+    terria: PropTypes.object,
+    t: PropTypes.func.isRequired
   };
 
   /**
@@ -159,9 +161,8 @@ class Compass extends React.Component {
       WebkitTransform: "rotate(-" + this.state.heading + "rad)",
       opacity: ""
     };
-
-    const description =
-      "Drag outer ring: rotate view.\nDrag inner gyroscope: free orbit.\nDouble-click: reset view.\nTIP: You can also free orbit by holding the CTRL key and dragging the map.";
+    const { t } = this.props;
+    const description = t("compass.description");
 
     return (
       <div
@@ -174,10 +175,7 @@ class Compass extends React.Component {
         <div className={Styles.outerRing} style={outerCircleStyle}>
           <Icon glyph={Icon.GLYPHS.compassOuter} />
         </div>
-        <div
-          className={Styles.innerRing}
-          title="Click and drag to rotate the camera"
-        >
+        <div className={Styles.innerRing} title={t("compass.title")}>
           <Icon glyph={Icon.GLYPHS.compassInner} />
         </div>
         <div className={Styles.rotationMarker} style={rotationMarkerStyle}>
@@ -496,4 +494,4 @@ function viewerChange(viewModel) {
   });
 }
 
-export default Compass;
+export default withTranslation()(Compass);

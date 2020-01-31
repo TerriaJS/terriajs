@@ -17,6 +17,8 @@ import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import Mappable from "./Mappable";
 import Terria from "./Terria";
 
+require("./ImageryLayerFeatureInfo"); // overrides Cesium's prototype.configureDescriptionFromProperties
+
 export default abstract class GlobeOrMap {
   abstract readonly type: string;
   abstract readonly terria: Terria;
@@ -145,7 +147,7 @@ export default abstract class GlobeOrMap {
         (<any>cesiumPolyline).polyline.material = Color.fromCssColorString(
           this.terria.baseMapContrastColor
         );
-        (<any>cesiumPolyline).polyline.width = 2;
+        cesiumPolyline.polyline.width = 2;
 
         this._removeHighlightCallback = function() {
           cesiumPolyline.polyline.material = polylineMaterial;

@@ -11,7 +11,7 @@ configure({
 });
 
 describe("OpenStreetMapCatalogItem", function() {
-  const testUrl = "https://global.ssl.fastly.net/light_all/";
+  const testUrl = "https://example.com/ooo/";
   let item: OpenStreetMapCatalogItem;
 
   beforeEach(function() {
@@ -25,9 +25,7 @@ describe("OpenStreetMapCatalogItem", function() {
   describe("templateUrl", function() {
     it("has placeholders for tile coordinates", function() {
       runInAction(() => item.setTrait("definition", "url", testUrl));
-      expect(item.templateUrl).toBe(
-        "https://global.ssl.fastly.net/light_all/{z}/{x}/{y}.png"
-      );
+      expect(item.templateUrl).toBe("https://example.com/ooo/{z}/{x}/{y}.png");
     });
 
     it("has placeholder for subdomains", function() {
@@ -37,7 +35,7 @@ describe("OpenStreetMapCatalogItem", function() {
       });
 
       expect(item.templateUrl).toBe(
-        "https://{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png"
+        "https://{s}.example.com/ooo/{z}/{x}/{y}.png"
       );
     });
   });
@@ -99,7 +97,7 @@ describe("OpenStreetMapCatalogItem", function() {
             rectangle: imageryProvider.rectangle,
             subdomains: (<any>imageryProvider)._subdomains
           }).toEqual({
-            url: "https://{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
+            url: "https://{s}.example.com/ooo/{z}/{x}/{y}.png",
             attribution: "foo bar baz",
             tilingScheme: new WebMercatorTilingScheme(),
             tileWidth: 256,

@@ -3,8 +3,9 @@ import createReactClass from "create-react-class";
 
 import React from "react";
 import PropTypes from "prop-types";
+import { withTranslation } from "react-i18next";
 import Guide from "./Guide.jsx";
-import SatelliteGuideData from "./satellite-guidance.js";
+import satelliteGuideData from "./satelliteGuideData.js";
 
 export const SATELLITE_GUIDE_KEY = "satelliteGuidance";
 
@@ -14,10 +15,12 @@ const SatelliteGuide = createReactClass({
   mixins: [ObserveModelMixin],
   propTypes: {
     terria: PropTypes.object.isRequired,
-    viewState: PropTypes.object.isRequired
+    viewState: PropTypes.object.isRequired,
+    t: PropTypes.func.isRequired
   },
   render() {
-    const { terria, viewState } = this.props;
+    const { terria, viewState, t } = this.props;
+    const guideData = satelliteGuideData(t);
 
     return (
       <Guide
@@ -27,7 +30,7 @@ const SatelliteGuide = createReactClass({
         handleMakeTopElement={() => (this.props.viewState.topElement = "Guide")}
         terria={terria}
         guideKey={SATELLITE_GUIDE_KEY}
-        guideData={SatelliteGuideData}
+        guideData={guideData}
         showGuide={viewState.showSatelliteGuidance}
         setShowGuide={bool => {
           viewState.showSatelliteGuidance = bool;
@@ -41,4 +44,4 @@ const SatelliteGuide = createReactClass({
   }
 });
 
-export default SatelliteGuide;
+export default withTranslation()(SatelliteGuide);

@@ -74,6 +74,13 @@ export default class CatalogMemberTraits extends ModelTraits {
   info: InfoSectionTraits[] = [];
 
   @primitiveTrait({
+    type: "boolean",
+    name: "Is catalog item open in workbench",
+    description: "Whether the item in the workbench open or collapsed."
+  })
+  isOpenInWorkbench: boolean = true;
+
+  @primitiveTrait({
     type: "string",
     name: "Short report",
     description: "A short report to show on the now viewing tab."

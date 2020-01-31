@@ -26,6 +26,8 @@ import ShortReport from "./Controls/ShortReport";
 import StyleSelectorSection from "./Controls/StyleSelectorSection";
 import TimerSection from "./Controls/TimerSection";
 import ViewingControls from "./Controls/ViewingControls";
+import { withTranslation } from "react-i18next";
+
 import Styles from "./workbench-item.scss";
 import { runInAction } from "mobx";
 
@@ -40,11 +42,18 @@ const WorkbenchItem = observer(
       onTouchStart: PropTypes.func.isRequired,
       item: PropTypes.object.isRequired,
       viewState: PropTypes.object.isRequired,
-      setWrapperState: PropTypes.func
+      setWrapperState: PropTypes.func,
+      t: PropTypes.func.isRequired
     },
 
     toggleDisplay() {
-      this.props.item.isLegendVisible = !this.props.item.isLegendVisible;
+      runInAction(() => {
+        this.props.item.setTrait(
+          CommonStrata.user,
+          "isOpenInWorkbench",
+          !this.props.item.isOpenInWorkbench
+        );
+      });
     },
 
     openModal() {
@@ -67,11 +76,12 @@ const WorkbenchItem = observer(
 
     render() {
       const workbenchItem = this.props.item;
+      const { t } = this.props;
       return (
         <li
           style={this.props.style}
           className={classNames(this.props.className, Styles.workbenchItem, {
-            [Styles.isOpen]: workbenchItem.isLegendVisible
+            [Styles.isOpen]: workbenchItem.isOpenInWorkbench
           })}
         >
           <ul className={Styles.header}>
@@ -80,7 +90,7 @@ const WorkbenchItem = observer(
                 <button
                   type="button"
                   onClick={this.toggleVisibility}
-                  title="Data show/hide"
+                  title={t("workbench.toggleVisibility")}
                   className={Styles.btnVisibility}
                 >
                   {workbenchItem.show ? (
@@ -115,7 +125,7 @@ const WorkbenchItem = observer(
                 className={Styles.btnToggle}
                 onClick={this.toggleDisplay}
               >
-                {workbenchItem.isLegendVisible ? (
+                {workbenchItem.isOpenInWorkbench ? (
                   <Icon glyph={Icon.GLYPHS.opened} />
                 ) : (
                   <Icon glyph={Icon.GLYPHS.closed} />
@@ -125,7 +135,7 @@ const WorkbenchItem = observer(
             <li className={Styles.headerClearfix} />
           </ul>
 
-          <If condition={true || workbenchItem.isLegendVisible}>
+          <If condition={workbenchItem.isOpenInWorkbench}>
             <div className={Styles.inner}>
               <ViewingControls
                 item={workbenchItem}
@@ -183,4 +193,4 @@ const WorkbenchItem = observer(
   })
 );
 
-module.exports = sortable(WorkbenchItem);
+module.exports = sortable(withTranslation()(WorkbenchItem));

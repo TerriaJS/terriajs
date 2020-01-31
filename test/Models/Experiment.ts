@@ -60,5 +60,7 @@ describe("NewStuff", function() {
         }
       });
     });
+
+    expect().nothing();
   });
 });

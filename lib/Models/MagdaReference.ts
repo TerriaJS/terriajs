@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { computed, toJS } from "mobx";
 import { createTransformer } from "mobx-utils";
 import filterOutUndefined from "../Core/filterOutUndefined";
@@ -29,6 +30,12 @@ import StratumOrder from "./StratumOrder";
 
 const magdaRecordStratum = "magda-record";
 StratumOrder.addDefaultStratum(magdaRecordStratum);
+
+// If you want to supply headers sent for magda requests, supply them in
+// config parameters
+export interface MagdaReferenceHeaders {
+  [key: string]: string;
+}
 
 export default class MagdaReference extends UrlMixin(
   ReferenceMixin(CreateModel(MagdaReferenceTraits))
@@ -169,7 +176,8 @@ export default class MagdaReference extends UrlMixin(
         "dataset-distributions",
         "dataset-format"
       ],
-      dereference: true
+      dereference: true,
+      magdaReferenceHeaders: this.terria.configParameters.magdaReferenceHeaders
     }).then(record => {
       return MagdaReference.createMemberFromRecord(
         this.terria,
@@ -322,8 +330,8 @@ export default class MagdaReference extends UrlMixin(
     if (ModelClass === undefined) {
       throw new TerriaError({
         sender: this,
-        title: "Unknown type",
-        message: `Could not create unknown model type ${type}.`
+        title: i18next.t("models.catalog.unsupportedTypeTitle"),
+        message: i18next.t("models.catalog.unsupportedTypeMessage", { type })
       });
     }
 
@@ -522,10 +530,10 @@ export default class MagdaReference extends UrlMixin(
       if (newMember === undefined) {
         throw new TerriaError({
           sender: this,
-          title: "Unknown type",
-          message: `Could not create unknown model type ${
-            format.definition.type
-          }.`
+          title: i18next.t("models.catalog.unsupportedTypeTitle"),
+          message: i18next.t("models.catalog.unsupportedTypeMessage", {
+            type: format.definition.type
+          })
         });
       }
       result = newMember;
@@ -678,13 +686,14 @@ export default class MagdaReference extends UrlMixin(
       return Promise.reject(
         new TerriaError({
           sender: this,
-          title: "Cannot load Magda record",
-          message: "The Magda URL or the record ID is unknown."
+          title: i18next.t("models.magda.idsNotSpecifiedTitle"),
+          message: i18next.t("models.magda.idsNotSpecifiedMessage")
         })
       );
     }
     const proxiedUrl = proxyCatalogItemUrl(this, recordUri.toString(), "0d");
-    return loadJson(proxiedUrl);
+
+    return loadJson(proxiedUrl, options.magdaReferenceHeaders);
   }
 
   protected buildMagdaRecordUri(options: RecordOptions): uri.URI | undefined {
@@ -716,6 +725,7 @@ export interface RecordOptions {
   aspects?: string[];
   optionalAspects?: string[];
   dereference?: boolean;
+  magdaReferenceHeaders?: MagdaReferenceHeaders;
 }
 
 interface PreparedDistributionFormat {
