@@ -1,26 +1,2 @@
 @import "~terriajs-variables";
 @import "../../../Sass/common/mixins";
-
-.tooltip {
-  max-width: 300px;
-  font-family: monospace;
-  color: $text-light !important;
-  background-color: $chart-darker !important;
-  border-radius: 0px !important;
-  padding: 5px 10px !important;
-
-  .category {
-    .name { font-weight: bold; }
-  }
-}
-
-.enter { opacity: 0; }
-.enterActive { opacity: 1; transition: opacity 1000ms; }
-.enterDone { opacity: 1; }
-.exit { opacity: 1; }
-.exitActive { opacity: 0; transition: opacity 1000ms; }
-.exitDone { opacity: 0; }
-
-.tooltipRow {
-  .column { margin-right: 2em; }
-}
