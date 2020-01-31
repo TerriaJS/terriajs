@@ -5,7 +5,9 @@ interface CssExports {
   'chart-title-from-table': string;
   'chartTd': string;
   'chartTitleFromTable': string;
+  'preview-chart': string;
   'preview-chart-wrapper': string;
+  'previewChart': string;
   'previewChartWrapper': string;
 }
 declare var cssExports: CssExports;

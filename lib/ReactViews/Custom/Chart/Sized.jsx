@@ -9,7 +9,7 @@ import React from "react";
 @observer
 class Sized extends React.Component {
   @observable containerElement = undefined;
-  @observable width = 0;
+  @observable size = { width: 0, height: 0 };
 
   static propTypes = {
     children: PropTypes.func.isRequired
@@ -32,14 +32,15 @@ class Sized extends React.Component {
   @action
   updateWidth() {
     if (this.containerElement) {
-      this.width = this.containerElement.getBoundingClientRect().width;
+      const rect = this.containerElement.getBoundingClientRect();
+      this.size = { width: rect.width, height: rect.height };
     }
   }
 
   render() {
     return (
       <div ref={this.attachElement.bind(this)}>
-        {this.props.children({ width: this.width })}
+        {this.props.children(this.size)}
       </div>
     );
   }

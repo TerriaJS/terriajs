@@ -173,7 +173,8 @@ export default class ChartCustomComponent extends CustomComponent {
         key: "chart",
         terria: context.terria,
         item: chartItem,
-        xAxisLabel: attrs.previewXLabel
+        xAxisLabel: attrs.previewXLabel,
+        height: 110
         // styling: attrs.styling,
         // highlightX: attrs.highlightX,
         // transitionDuration: 300

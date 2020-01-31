@@ -7,7 +7,8 @@ export default class LineChart extends React.PureComponent {
   static propTypes = {
     id: PropTypes.string.isRequired,
     chartItem: PropTypes.object.isRequired,
-    scales: PropTypes.object.isRequired
+    scales: PropTypes.object.isRequired,
+    color: PropTypes.string
   };
 
   doZoom(scales) {
@@ -21,15 +22,16 @@ export default class LineChart extends React.PureComponent {
   }
 
   render() {
-    const { chartItem, scales } = this.props;
-    const color = chartItem.getColor();
+    const { chartItem, scales, color } = this.props;
+    const stroke = color || chartItem.getColor();
     return (
       <g id={this.props.id}>
         <LinePath
           data={chartItem.points}
           x={p => scales.x(p.x)}
           y={p => scales.y(p.y)}
-          stroke={color}
+          stroke={stroke}
+          strokeWidth={2}
         />
       </g>
     );

@@ -1,92 +1,98 @@
-import merge from "lodash/merge";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
+import { scaleLinear, scaleTime } from "@vx/scale";
 import PropTypes from "prop-types";
 import React from "react";
-import { VictoryAxis, VictoryTheme, VictoryLine } from "victory";
-import Chart from "./Chart";
 import Chartable from "../../../Models/Chartable";
+import LineChart from "./LineChart";
+import Sized from "./Sized";
+import Styles from "./chart-preview.scss";
 
 @observer
 class FeatureInfoPanelChart extends React.Component {
   static propTypes = {
     width: PropTypes.number,
     height: PropTypes.number,
-    terria: PropTypes.object.isRequired,
     item: PropTypes.object.isRequired,
-    xAxisLabel: PropTypes.string
+    xAxisLabel: PropTypes.string,
+    baseColor: PropTypes.string
+  };
+
+  static defaultProps = {
+    baseColor: "#efefef"
   };
 
   @computed
-  get theme() {
-    const fontSize = 10;
-    const textColor = "white";
-    return merge({}, VictoryTheme.grayscale, {
-      chart: { padding: { top: 15, bottom: 30, left: 50, right: 0 } },
-      independentAxis: {
-        style: {
-          axis: { stroke: "none" },
-          axisLabel: { fontSize, padding: 15, fill: textColor },
-          tickLabels: { fontSize: 0, padding: 0 },
-          grid: {
-            stroke: "none",
-            fill: "none"
-          }
-        }
-      },
-      dependentAxis: {
-        style: {
-          axis: { stroke: "none" },
-          tickLabels: { fontSize, fill: textColor },
-          grid: {
-            stroke: "none",
-            fill: "none"
-          }
-        }
-      },
-      line: {
-        style: {
-          data: { stroke: "white" }
-        }
-      }
-    });
-  }
-
-  renderXAxis() {
-    return <VictoryAxis label={this.props.xAxisLabel} />;
-  }
-
-  renderYAxis(label, index) {
-    return <VictoryAxis dependentAxis key={index} tickCount={2} />;
-  }
-
-  renderLine(data, index) {
-    return <VictoryLine key={index} data={data.points} />;
+  get chartItem() {
+    return this.props.item.chartItems.find(
+      chartItem => chartItem.type === "line"
+    );
   }
 
   render() {
-    if (!Chartable.is(this.props.item)) {
-      return null;
-    }
-
+    if (!Chartable.is(this.props.item)) return null;
+    console.log(this.props.item.chartItems);
     this.props.item.loadChartItems();
-    const chartItem = this.props.item.chartItems[0];
-    if (!chartItem) {
-      return null;
-    }
+    if (!this.chartItem) return null;
 
+    const { width, height } = this.props;
     return (
-      <Chart
-        width={this.props.width}
-        height={this.props.height}
-        theme={this.theme}
-        chartItems={[chartItem]}
-        xAxis={chartItem.xAxis}
-        renderLegends={() => null}
-        renderYAxis={this.renderYAxis.bind(this)}
-        renderXAxis={this.renderXAxis.bind(this)}
-        renderLine={this.renderLine.bind(this)}
-      />
+      <div className={Styles.previewChart}>
+        <Sized>
+          {parentSize => (
+            <Chart
+              width={width || parentSize.width}
+              height={height || parentSize.height}
+              chartItem={this.chartItem}
+              baseColor={this.props.baseColor}
+            />
+          )}
+        </Sized>
+      </div>
+    );
+  }
+}
+
+class Chart extends React.Component {
+  static propTypes = {
+    width: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired,
+    chartItem: PropTypes.object.isRequired,
+    baseColor: PropTypes.string.isRequired
+  };
+
+  @computed
+  get scales() {
+    const chartItem = this.props.chartItem;
+    const xScaleParams = {
+      domain: chartItem.domain.x,
+      range: [0, this.props.width]
+    };
+    const yScaleParams = {
+      domain: chartItem.domain.y,
+      range: [this.props.height, 0]
+    };
+    return {
+      x:
+        chartItem.xAxis.scale === "linear"
+          ? scaleLinear(xScaleParams)
+          : scaleTime(xScaleParams),
+      y: scaleLinear(yScaleParams)
+    };
+  }
+
+  render() {
+    const { width, height, chartItem, baseColor } = this.props;
+    const id = `featureInfoPanelChart-${chartItem.name}`;
+    return (
+      <svg width={width} height={height}>
+        <LineChart
+          id={id}
+          chartItem={chartItem}
+          scales={this.scales}
+          color={baseColor}
+        />
+      </svg>
     );
   }
 }

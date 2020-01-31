@@ -37,7 +37,7 @@ class MomentLines extends React.Component {
               from={{ x, y: 0 }}
               to={{ x, y }}
               stroke={chartItem.getColor()}
-              strokeWidth={2}
+              strokeWidth={3}
               opacity={p.isSelected ? 1.0 : 0.3}
               pointerEvents="all"
               cursor="pointer"
