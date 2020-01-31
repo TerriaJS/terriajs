@@ -3,6 +3,10 @@ Change Log
 
 ### Next Release
 
+### v7.11.1
+
+* Fix for color of markers on the map associated with chart items
+
 
 ### v7.11.0
 
