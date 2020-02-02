@@ -438,7 +438,7 @@ function findNearestPoint(points, coords, xScale, maxDistancePx) {
   let left = 0;
   let right = points.length;
   let mid = 0;
-  while (true) {
+  for (;;) {
     if (left === right) break;
     mid = left + Math.floor((right - left) / 2);
     if (distance(coords, points[mid]) === 0) break;
