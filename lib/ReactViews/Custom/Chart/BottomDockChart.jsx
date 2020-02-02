@@ -1,5 +1,5 @@
 import { observer } from "mobx-react";
-import { action, computed, observable, runInAction, trace } from "mobx";
+import { action, computed, observable } from "mobx";
 import { AxisLeft, AxisBottom } from "@vx/axis";
 import { RectClipPath } from "@vx/clip-path";
 import { localPoint } from "@vx/event";
