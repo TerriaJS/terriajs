@@ -8,7 +8,7 @@ import _loadWithXhr from "../../lib/Core/loadWithXhr";
 import ArcGisMapServerCatalogItem from "../../lib/Models/ArcGisMapServerCatalogItem";
 import Terria from "../../lib/Models/Terria";
 import { RectangleTraits } from "../../lib/Traits/MappableTraits";
-import createStratumInstance from "../../lib/createStratumInstance";
+import createStratumInstance from "../../lib/Models/createStratumInstance";
 
 configure({
   enforceActions: "observed",
