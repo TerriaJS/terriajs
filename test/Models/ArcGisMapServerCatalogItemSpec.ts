@@ -221,11 +221,11 @@ describe("ArcGisMapServerCatalogItem", function() {
       expect(item.rectangle).toBeDefined();
       if (item.rectangle) {
         expect(rectangleFromTraits(item.rectangle)).toEqual(
-          new Rectangle(
-            1.7088098606747266,
-            -0.946999399137436,
-            2.919623350055036,
-            0.017166897952326066
+          new Rectangle.fromDegrees(
+            97.90759300700006,
+            -54.25906877199998,
+            167.2820957260001,
+            0.9835908000000587
           )
         );
       }
