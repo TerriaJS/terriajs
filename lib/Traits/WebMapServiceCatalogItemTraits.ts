@@ -1,5 +1,6 @@
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
+import FeatureInfoTraits from "./FeatureInfoTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
 import LegendTraits from "./LegendTraits";
@@ -12,6 +13,8 @@ import primitiveTrait from "./primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
 import SplitterTraits from "./SplitterTraits";
 import UrlTraits from "./UrlTraits";
+import anyTrait from "./anyTrait";
+import { JsonObject } from "../Core/Json";
 
 export class WebMapServiceAvailableStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -61,6 +64,7 @@ export class WebMapServiceAvailableLayerStylesTraits extends ModelTraits {
 }
 
 export default class WebMapServiceCatalogItemTraits extends mixTraits(
+  FeatureInfoTraits,
   LayerOrderingTraits,
   SplitterTraits,
   DiscretelyTimeVaryingTraits,
@@ -106,6 +110,13 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
     idProperty: "index"
   })
   legends?: LegendTraits[];
+
+  @anyTrait({
+    name: "Parameters",
+    description:
+      "Additional parameters to pass to the MapServer when requesting images."
+  })
+  parameters?: JsonObject;
 
   @primitiveTrait({
     type: "number",
