@@ -221,7 +221,7 @@ describe("ArcGisMapServerCatalogItem", function() {
       expect(item.rectangle).toBeDefined();
       if (item.rectangle) {
         expect(rectangleFromTraits(item.rectangle)).toEqual(
-          new Rectangle.fromDegrees(
+          Rectangle.fromDegrees(
             97.90759300700006,
             -54.25906877199998,
             167.2820957260001,
