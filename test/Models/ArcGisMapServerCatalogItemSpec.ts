@@ -8,6 +8,7 @@ import _loadWithXhr from "../../lib/Core/loadWithXhr";
 import ArcGisMapServerCatalogItem from "../../lib/Models/ArcGisMapServerCatalogItem";
 import Terria from "../../lib/Models/Terria";
 import { RectangleTraits } from "../../lib/Traits/MappableTraits";
+import createStratumInstance from "../../lib/createStratumInstance";
 
 configure({
   enforceActions: "observed",
@@ -219,16 +220,14 @@ describe("ArcGisMapServerCatalogItem", function() {
 
     it("defines a rectangle", function() {
       expect(item.rectangle).toBeDefined();
-      if (item.rectangle) {
-        expect(rectangleFromTraits(item.rectangle)).toEqual(
-          Rectangle.fromDegrees(
-            97.90759300700006,
-            -54.25906877199998,
-            167.2820957260001,
-            0.9835908000000587
-          )
-        );
-      }
+      expect(item.rectangle).toEqual(
+        createStratumInstance(RectangleTraits, {
+          east: 97.90759300700006,
+          south: -54.25906877199998,
+          west: 167.2820957260001,
+          north: 0.9835908000000587
+        })
+      );
     });
 
     it("defines info", function() {
