@@ -27,9 +27,17 @@ import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumOrder from "./StratumOrder";
+import StratumFromTraits from "./StratumFromTraits";
 
 const proj4 = require("proj4").default;
 const unionRectangleArray = require("../Map/unionRectangleArray");
+
+interface RectangleExtent {
+  east: number;
+  south: number;
+  west: number;
+  north: number;
+}
 
 interface DocumentInfo {
   Author?: string;
@@ -42,7 +50,7 @@ interface MapServer {
 }
 
 interface SpatialReference {
-  wkid?: string;
+  wkid?: number;
 }
 
 interface Extent {
@@ -498,7 +506,14 @@ function maximumScaleToLevel(maximumScale: number | undefined) {
   return levelAtMinScaleDenominator | 0;
 }
 
-function getRectangleFromLayer(thisLayerJson: Layer) {
+function updateBbox (extent: any, rectangle: RectangleExtent) {
+  if (rectangle.west < extent.xmax) rectangle.west = extent.xmax
+  if (rectangle.south < extent.ymin) rectangle.south = extent.ymin
+  if (rectangle.east < extent.xmin) rectangle.east = extent.xmin
+  if (rectangle.north < extent.ymax) rectangle.north = extent.ymax
+}
+
+function getRectangleFromLayer(thisLayerJson: Layer, rectangle: RectangleExtent) {
   const extent = thisLayerJson.extent;
   if (
     isDefined(extent) &&
@@ -506,6 +521,10 @@ function getRectangleFromLayer(thisLayerJson: Layer) {
     extent.spatialReference.wkid
   ) {
     const wkid = "EPSG:" + extent.spatialReference.wkid;
+    if (extent.spatialReference.wkid === 4326) {
+      return updateBbox(extent, rectangle)
+
+    }
     if (!isDefined((proj4definitions as any)[wkid])) {
       return undefined;
     }
@@ -523,22 +542,24 @@ function getRectangleFromLayer(thisLayerJson: Layer) {
     const east = p[0];
     const north = p[1];
 
-    return Rectangle.fromDegrees(west, south, east, north);
+    return updateBbox({west, south, east, north}, rectangle);
   }
 
   return undefined;
 }
 
-function getRectangleFromLayers(layers: Layer[]) {
+function getRectangleFromLayers(layers: Layer[])
+  : StratumFromTraits<RectangleTraits> | undefined {
+  const rectangle:RectangleExtent = {east: Infinity, south: Infinity, west: -Infinity, north: -Infinity}
   if (!Array.isArray(layers)) {
-    return getRectangleFromLayer(layers);
+    getRectangleFromLayer(layers, rectangle);
+  } else {
+    layers.forEach(function(item) {
+      getRectangleFromLayer(item, rectangle);
+    })
   }
 
-  return unionRectangleArray(
-    layers.map(function(item) {
-      return getRectangleFromLayer(item);
-    })
-  );
+  return rectangle
 }
 
 function cleanAndProxyUrl(
