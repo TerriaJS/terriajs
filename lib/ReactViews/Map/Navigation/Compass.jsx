@@ -1,45 +1,53 @@
 "use strict";
-const React = require("react");
-const PropTypes = require("prop-types");
-import createReactClass from "create-react-class";
-const CameraFlightPath = require("terriajs-cesium/Source/Scene/CameraFlightPath")
-  .default;
-const Cartesian2 = require("terriajs-cesium/Source/Core/Cartesian2").default;
-const Cartesian3 = require("terriajs-cesium/Source/Core/Cartesian3").default;
-const CesiumMath = require("terriajs-cesium/Source/Core/Math").default;
-const defined = require("terriajs-cesium/Source/Core/defined").default;
-const Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid").default;
-const getTimestamp = require("terriajs-cesium/Source/Core/getTimestamp")
-  .default;
-const Matrix4 = require("terriajs-cesium/Source/Core/Matrix4").default;
-const Ray = require("terriajs-cesium/Source/Core/Ray").default;
-const Transforms = require("terriajs-cesium/Source/Core/Transforms").default;
-import { withTranslation } from "react-i18next";
+import React from "react";
+import PropTypes from "prop-types";
+import CameraFlightPath from "terriajs-cesium/Source/Scene/CameraFlightPath";
+import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import defined from "terriajs-cesium/Source/Core/defined";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
+import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
+import Ray from "terriajs-cesium/Source/Core/Ray";
+import Transforms from "terriajs-cesium/Source/Core/Transforms";
 import Icon from "../../Icon.jsx";
 import Styles from "./compass.scss";
-import { runInAction } from "mobx";
+import { runInAction, computed, when } from "mobx";
+import { withTranslation } from "react-i18next";
 
 // the compass on map
-const Compass = createReactClass({
-  propTypes: {
+class Compass extends React.Component {
+  static propTypes = {
     terria: PropTypes.object,
     t: PropTypes.func.isRequired
-  },
+  };
 
-  getInitialState() {
-    return {
+  /**
+   * @param {Props} props
+   */
+  constructor(props) {
+    super(props);
+    this.state = {
       orbitCursorAngle: 0,
       heading: 0.0,
       orbitCursorOpacity: 0
     };
-  },
 
-  componentDidMount() {
+    when(() => this.cesiumViewer, () => this.cesiumLoaded());
+  }
+
+  @computed
+  get cesiumViewer() {
+    return this.props.terria.cesium;
+  }
+
+  cesiumLoaded() {
     this._unsubscribeFromViewerChange = this.props.terria.mainViewer.afterViewerChanged.addEventListener(
       () => viewerChange(this)
     );
     viewerChange(this);
-  },
+  }
 
   componentWillUnmount() {
     document.removeEventListener(
@@ -52,7 +60,7 @@ const Compass = createReactClass({
       this._unsubscribeFromAnimationFrame();
     this._unsubscribeFromPostRender && this._unsubscribeFromPostRender();
     this._unsubscribeFromViewerChange && this._unsubscribeFromViewerChange();
-  },
+  }
 
   handleMouseDown(e) {
     if (e.stopPropagation) e.stopPropagation();
@@ -84,7 +92,7 @@ const Compass = createReactClass({
     } else {
       return true;
     }
-  },
+  }
 
   handleDoubleClick(e) {
     const scene = this.props.terria.cesium.scene;
@@ -132,14 +140,14 @@ const Compass = createReactClass({
       duration: 1.5
     });
     scene.tweens.add(flight);
-  },
+  }
 
   resetRotater() {
     this.setState({
       orbitCursorOpacity: 0,
       orbitCursorAngle: 0
     });
-  },
+  }
 
   render() {
     const rotationMarkerStyle = {
@@ -160,9 +168,9 @@ const Compass = createReactClass({
       <div
         className={Styles.compass}
         title={description}
-        onMouseDown={this.handleMouseDown}
-        onDoubleClick={this.handleDoubleClick}
-        onMouseUp={this.resetRotater}
+        onMouseDown={this.handleMouseDown.bind(this)}
+        onDoubleClick={this.handleDoubleClick.bind(this)}
+        onMouseUp={this.resetRotater.bind(this)}
       >
         <div className={Styles.outerRing} style={outerCircleStyle}>
           <Icon glyph={Icon.GLYPHS.compassOuter} />
@@ -176,7 +184,7 @@ const Compass = createReactClass({
       </div>
     );
   }
-});
+}
 
 const vectorScratch = new Cartesian2();
 const oldTransformScratch = new Matrix4();
@@ -451,7 +459,9 @@ function subscribeToAnimationFrame(viewModel) {
   viewModel._unsubscribeFromAnimationFrame = (id => () =>
     cancelAnimationFrame(id))(
     requestAnimationFrame(() => {
-      viewModel.orbitAnimationFrameFunction();
+      if (defined(viewModel.orbitAnimationFrameFunction)) {
+        viewModel.orbitAnimationFrameFunction();
+      }
       subscribeToAnimationFrame(viewModel);
     })
   );
@@ -484,4 +494,4 @@ function viewerChange(viewModel) {
   });
 }
 
-module.exports = withTranslation()(Compass);
+export default withTranslation()(Compass);

@@ -71,12 +71,6 @@
   padding-bottom: $legend-padding;
 }
 
-.legendBox {
-  display: inline-block;
-  width: $legend-item-width;
-  height: $legend-item-height;
-}
-
 .legendTitles {
   font-size: 12px;
   line-height: $legend-item-height;
@@ -100,11 +94,6 @@
 
 .legendTitleBelow::before {
   content: "-";
-}
-
-.legendTitle {
-  position: absolute;
-  margin-top: -($legend-item-height / 2);
 }
 
 .legendSpacer {
