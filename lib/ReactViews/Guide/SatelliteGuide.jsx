@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import { withTranslation } from "react-i18next";
 import Guide from "./Guide.jsx";
 import satelliteGuideData from "./satelliteGuideData.js";
-import { runInAction, action } from "mobx";
+import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 
 export const SATELLITE_GUIDE_KEY = "satelliteGuidance";
