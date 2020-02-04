@@ -117,7 +117,9 @@ const StoryPanel = observer(
 
     onCenterScene(story) {
       if (story.shareData) {
-        this.props.terria.updateFromStartData(story.shareData);
+        runInAction(() => {
+          this.props.terria.updateFromStartData(story.shareData);
+        });
       }
     },
 
