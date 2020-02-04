@@ -220,14 +220,10 @@ describe("ArcGisMapServerCatalogItem", function() {
 
     it("defines a rectangle", function() {
       expect(item.rectangle).toBeDefined();
-      expect(item.rectangle).toEqual(
-        createStratumInstance(RectangleTraits, {
-          east: 97.90759300700006,
-          south: -54.25906877199998,
-          west: 167.2820957260001,
-          north: 0.9835908000000587
-        })
-      );
+      expect(item.rectangle.west).toEqual(97.90759300700006);
+      expect(item.rectangle.south).toEqual(-54.25906877199998);
+      expect(item.rectangle.east).toEqual(167.2820957260001);
+      expect(item.rectangle.north).toEqual(0.9835908000000587);
     });
 
     it("defines info", function() {
