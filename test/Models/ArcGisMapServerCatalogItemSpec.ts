@@ -245,7 +245,3 @@ describe("ArcGisMapServerCatalogItem", function() {
     });
   });
 });
-
-function rectangleFromTraits({ west, south, east, north }: RectangleTraits) {
-  return new Rectangle(west, south, east, north);
-}

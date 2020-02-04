@@ -506,7 +506,7 @@ function maximumScaleToLevel(maximumScale: number | undefined) {
   return levelAtMinScaleDenominator | 0;
 }
 
-function updateBbox(extent: any, rectangle: RectangleExtent) {
+function updateBbox(extent: Extent, rectangle: RectangleExtent) {
   if (extent.xmin < rectangle.west) rectangle.west = extent.xmax;
   if (extent.ymin < rectangle.south) rectangle.south = extent.ymin;
   if (extent.xmax > rectangle.east) rectangle.east = extent.xmin;
