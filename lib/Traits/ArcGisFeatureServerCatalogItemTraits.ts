@@ -5,9 +5,11 @@ import MappableTraits from "./MappableTraits";
 import primitiveTrait from "./primitiveTrait";
 import objectArrayTrait from "./objectArrayTrait";
 import LegendTraits from "./LegendTraits";
+import DataCustodianTraits from "./DataCustodianTraits";
 
 export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(
   UrlTraits,
+  DataCustodianTraits,
   MappableTraits,
   CatalogMemberTraits
 ) {

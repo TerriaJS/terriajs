@@ -20,10 +20,23 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import ModelReference from "../Traits/ModelReference";
 import CommonStrata from "./CommonStrata";
 
-interface FeatureServerLayer {
-  readonly id: string;
-  readonly name?: string;
-  readonly description?: string;
+interface DocumentInfo {
+  author?: string;
+}
+interface Layer {
+  id: number;
+  name?: string;
+  description?: string;
+  copyrightText?: string;
+}
+
+interface FeatureServer {
+  documentInfo?: DocumentInfo;
+  name?: string;
+  serviceDescription?: string;
+  description?: string;
+  copyrightText?: string;
+  layers: Layer[];
 }
 
 class FeatureServerStratum extends LoadableStratum(
@@ -32,8 +45,8 @@ class FeatureServerStratum extends LoadableStratum(
   static stratumName = "featureServer";
 
   constructor(
-    readonly catalogGroup: ArcGisFeatureServerCatalogGroup,
-    readonly metadata: any
+    private readonly _catalogGroup: ArcGisFeatureServerCatalogGroup,
+    private readonly _featureServer: FeatureServer
   ) {
     super();
   }
@@ -41,35 +54,54 @@ class FeatureServerStratum extends LoadableStratum(
   duplicateLoadableStratum(model: BaseModel): this {
     return new FeatureServerStratum(
       model as ArcGisFeatureServerCatalogGroup,
-      this.metadata
+      this._featureServer
     ) as this;
   }
 
+  get featureServerData() {
+    return this._featureServer;
+  }
+
   @computed get name() {
-    return isDefined(this.metadata) ? this.metadata.name : undefined;
+    if (this._featureServer.name && this._featureServer.name.length > 0) {
+      return this._featureServer.name;
+    }
   }
 
   @computed get info() {
-    const info = [];
-    if (isDefined(this.metadata)) {
-      if (this.metadata.serviceDescription) {
-        info.push(
-          createStratumInstance(InfoSectionTraits, {
-            name: "Service Description",
-            content: this.metadata.serviceDescription
-          })
-        );
-      }
-      if (this.metadata.description) {
-        info.push(
-          createStratumInstance(InfoSectionTraits, {
-            name: "Description",
-            content: this.metadata.description
-          })
-        );
-      }
+    function newInfo(name: string, content?: string) {
+      const traits = createStratumInstance(InfoSectionTraits);
+      runInAction(() => {
+        traits.name = name;
+        traits.content = content;
+      });
+      return traits;
     }
-    return info.length > 0 ? info : undefined;
+
+    return [
+      newInfo(
+        i18next.t("models.arcGisFeatureServerCatalogGroup.serviceDescription"),
+        this._featureServer.serviceDescription
+      ),
+      newInfo(
+        i18next.t("models.arcGisFeatureServerCatalogGroup.dataDescription"),
+        this._featureServer.description
+      ),
+      newInfo(
+        i18next.t("models.arcGisFeatureServerCatalogGroup.copyrightText"),
+        this._featureServer.copyrightText
+      )
+    ];
+  }
+
+  @computed get dataCustodian() {
+    if (
+      this._featureServer.documentInfo &&
+      this._featureServer.documentInfo.author &&
+      this._featureServer.documentInfo.author.length > 0
+    ) {
+      return this._featureServer.documentInfo.author;
+    }
   }
 
   static async load(
@@ -79,13 +111,15 @@ class FeatureServerStratum extends LoadableStratum(
     var uri = new URI(catalogGroup.url).addQuery("f", "json");
 
     return loadJson(proxyCatalogItemUrl(catalogGroup, uri.toString(), "1d"))
-      .then((metadata: any) => {
+      .then((featureServer: FeatureServer) => {
         // Is this really a FeatureServer REST response?
-        if (!metadata || !metadata.layers) {
+        if (!featureServer || !featureServer.layers) {
           throw new TerriaError({
-            title: i18next.t("models.arcGisFeatureServer.invalidServiceTitle"),
+            title: i18next.t(
+              "models.arcGisFeatureServerCatalogGroup.invalidServiceTitle"
+            ),
             message: i18next.t(
-              "models.arcGisFeatureServer.invalidServiceTitle",
+              "models.arcGisFeatureServerCatalogGroup.invalidServiceTitle",
               {
                 email:
                   '<a href="mailto:' +
@@ -98,15 +132,17 @@ class FeatureServerStratum extends LoadableStratum(
           });
         }
 
-        const stratum = new FeatureServerStratum(catalogGroup, metadata);
+        const stratum = new FeatureServerStratum(catalogGroup, featureServer);
         return stratum;
       })
       .catch(() => {
         throw new TerriaError({
           sender: catalogGroup,
-          title: i18next.t("models.arcGisFeatureServer.groupNotAvailableTitle"),
+          title: i18next.t(
+            "models.arcGisFeatureServerCatalogGroup.groupNotAvailableTitle"
+          ),
           message: i18next.t(
-            "models.arcGisFeatureServer.groupNotAvailableMessage",
+            "models.arcGisFeatureServerCatalogGroup.groupNotAvailableMessage",
             {
               cors:
                 '<a href="http://enable-cors.org/" target="_blank">CORS</a>',
@@ -130,14 +166,14 @@ class FeatureServerStratum extends LoadableStratum(
         if (!isDefined(layer.id)) {
           return undefined;
         }
-        return this.catalogGroup.uniqueId + "/" + layer.id;
+        return this._catalogGroup.uniqueId + "/" + layer.id;
       })
     );
   }
 
   @computed
-  get layers(): readonly FeatureServerLayer[] {
-    return this.metadata.layers;
+  get layers(): readonly Layer[] {
+    return this._featureServer.layers;
   }
 
   @action
@@ -146,14 +182,14 @@ class FeatureServerStratum extends LoadableStratum(
   }
 
   @action
-  createMemberFromLayer(layer: FeatureServerLayer) {
+  createMemberFromLayer(layer: Layer) {
     if (!isDefined(layer.id)) {
       return;
     }
 
-    const id = this.catalogGroup.uniqueId;
+    const id = this._catalogGroup.uniqueId;
     const layerId = id + "/" + layer.id;
-    const existingModel = this.catalogGroup.terria.getModelById(
+    const existingModel = this._catalogGroup.terria.getModelById(
       ArcGisFeatureServerCatalogItem,
       layerId
     );
@@ -162,9 +198,9 @@ class FeatureServerStratum extends LoadableStratum(
     if (existingModel === undefined) {
       model = new ArcGisFeatureServerCatalogItem(
         layerId,
-        this.catalogGroup.terria
+        this._catalogGroup.terria
       );
-      this.catalogGroup.terria.addModel(model);
+      this._catalogGroup.terria.addModel(model);
     } else {
       model = existingModel;
     }
@@ -176,7 +212,7 @@ class FeatureServerStratum extends LoadableStratum(
 
     model.setTrait(stratum, "name", layer.name);
 
-    var uri = new URI(this.catalogGroup.url).segment(layer.id + ""); // Convert layer id to string as segment(0) means sthg different.
+    var uri = new URI(this._catalogGroup.url).segment(layer.id + ""); // Convert layer id to string as segment(0) means sthg different.
     model.setTrait(stratum, "url", uri.toString());
   }
 }
@@ -195,7 +231,7 @@ export default class ArcGisFeatureServerCatalogGroup extends UrlMixin(
   }
 
   get typeName() {
-    return i18next.t("models.arcGisFeatureServer.nameGroup");
+    return i18next.t("models.arcGisFeatureServerCatalogGroup.name");
   }
 
   protected forceLoadMetadata(): Promise<void> {

@@ -22,6 +22,96 @@ import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import createStratumInstance from "./createStratumInstance";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
+import StratumFromTraits from "./StratumFromTraits";
+import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
+import proj4definitions from "../Map/Proj4Definitions";
+import { RectangleTraits } from "../Traits/MappableTraits";
+import TerriaError from "../Core/TerriaError";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
+
+const proj4 = require("proj4").default;
+
+interface DocumentInfo {
+  author?: string;
+}
+
+// TODO. see actual Symbol at https://developers.arcgis.com/javascript/latest/api-reference/esri-symbols-Symbol.html
+interface Symbol {
+  contentType: string;
+  color?: number[];
+  outline?: any;
+  outlineColor?: number[];
+  imageData?: any;
+  xoffset?: number;
+  yoffset?: number;
+  width?: number;
+  height?: number;
+  angle?: number;
+  size?: number;
+}
+
+interface Renderer {
+  type: string;
+}
+
+interface ClassBreakInfo {
+  classMaxValue: number;
+  classMinValue?: number;
+  label?: string;
+  symbol: Symbol;
+}
+
+interface ClassBreaksRenderer extends Renderer {
+  field: string;
+  classBreakInfos: ClassBreakInfo[];
+  defaultSymbol: Symbol;
+}
+
+interface UniqueValueInfo {
+  value: string;
+  label?: string;
+  symbol: Symbol;
+}
+
+interface UniqueValueRenderer extends Renderer {
+  field1: string;
+  field2?: string;
+  field3?: string;
+  fieldDelimiter?: string;
+  uniqueValueInfos: UniqueValueInfo[];
+  defaultSymbol: Symbol;
+}
+
+interface SimpleRenderer extends Renderer {
+  label?: string;
+  symbol: Symbol;
+}
+
+interface DrawingInfo {
+  renderer: Renderer;
+}
+
+interface FeatureServer {
+  documentInfo?: DocumentInfo;
+  name?: string;
+  description?: string;
+  copyrightText?: string;
+  drawingInfo?: DrawingInfo;
+  extent?: Extent;
+  maxScale?: number;
+}
+
+interface SpatialReference {
+  wkid?: string;
+}
+
+interface Extent {
+  xmin: number;
+  ymin: number;
+  xmax: number;
+  ymax: number;
+  spatialReference?: SpatialReference;
+}
 
 class FeatureServerStratum extends LoadableStratum(
   ArcGisFeatureServerCatalogItemTraits
@@ -29,9 +119,9 @@ class FeatureServerStratum extends LoadableStratum(
   static stratumName = "featureServer";
 
   constructor(
-    readonly item: ArcGisFeatureServerCatalogItem,
-    readonly geoJsonItem: GeoJsonCatalogItem,
-    readonly metadata: any
+    private readonly _item: ArcGisFeatureServerCatalogItem,
+    private readonly _geoJsonItem: GeoJsonCatalogItem,
+    private readonly _featureServer: FeatureServer
   ) {
     super();
   }
@@ -39,33 +129,31 @@ class FeatureServerStratum extends LoadableStratum(
   duplicateLoadableStratum(newModel: BaseModel): this {
     return new FeatureServerStratum(
       newModel as ArcGisFeatureServerCatalogItem,
-      this.geoJsonItem,
-      this.metadata
+      this._geoJsonItem,
+      this._featureServer
     ) as this;
   }
 
-  @computed get rectangle() {
-    return isDefined(this.geoJsonItem) ? this.geoJsonItem.rectangle : undefined;
+  get featureServerData() {
+    return this._featureServer;
   }
 
-  @computed get name() {
-    return isDefined(this.metadata) ? this.metadata.name : undefined;
-  }
-
-  @computed get info() {
-    if (isDefined(this.metadata) && this.metadata.description) {
-      return [
-        createStratumInstance(InfoSectionTraits, {
-          name: "Description",
-          content: this.metadata.description
-        })
-      ];
-    } else {
-      return undefined;
-    }
+  get geoJsonItem() {
+    return this._geoJsonItem;
   }
 
   static async load(item: ArcGisFeatureServerCatalogItem) {
+    if (!isDefined(item.uri)) {
+      throw new TerriaError({
+        title: i18next.t(
+          "models.arcGisFeatureServerCatalogItem.invalidUrlTitle"
+        ),
+        message: i18next.t(
+          "models.arcGisFeatureServerCatalogItem.invalidUrlMessage"
+        )
+      });
+    }
+
     const geoJsonItem = new GeoJsonCatalogItem(createGuid(), item.terria);
     geoJsonItem.setTrait(
       CommonStrata.definition,
@@ -85,10 +173,125 @@ class FeatureServerStratum extends LoadableStratum(
       .then(() => {
         return loadMetadata(item);
       })
-      .then(metadata => {
-        const stratum = new FeatureServerStratum(item, geoJsonItem, metadata);
+      .then(featureServer => {
+        const stratum = new FeatureServerStratum(
+          item,
+          geoJsonItem,
+          featureServer
+        );
         return stratum;
       });
+  }
+
+  @computed get maximumScale() {
+    return this._featureServer.maxScale;
+  }
+
+  @computed get name() {
+    if (this._featureServer.name && this._featureServer.name.length > 0) {
+      return this._featureServer.name;
+    }
+  }
+
+  @computed get dataCustodian() {
+    if (
+      this._featureServer.documentInfo &&
+      this._featureServer.documentInfo.author &&
+      this._featureServer.documentInfo.author.length > 0
+    ) {
+      return this._featureServer.documentInfo.author;
+    }
+  }
+
+  @computed get rectangle() {
+    const extent = this._featureServer.extent;
+
+    if (
+      isDefined(extent) &&
+      extent.spatialReference &&
+      extent.spatialReference.wkid
+    ) {
+      const wkid = "EPSG:" + extent.spatialReference.wkid;
+      if (!isDefined((proj4definitions as any)[wkid])) {
+        return undefined;
+      }
+
+      const source = new proj4.Proj((proj4definitions as any)[wkid]);
+      const dest = new proj4.Proj("EPSG:4326");
+
+      let p = proj4(source, dest, [extent.xmin, extent.ymin]);
+
+      const west = p[0];
+      const south = p[1];
+
+      p = proj4(source, dest, [extent.xmax, extent.ymax]);
+
+      const east = p[0];
+      const north = p[1];
+
+      const rectangle = { west: west, south: south, east: east, north: north };
+      return createStratumInstance(RectangleTraits, rectangle);
+    }
+
+    return undefined;
+  }
+
+  @computed get info() {
+    function newInfo(name: string, content?: string) {
+      const traits = createStratumInstance(InfoSectionTraits);
+      runInAction(() => {
+        traits.name = name;
+        traits.content = content;
+      });
+      return traits;
+    }
+
+    return [
+      newInfo(
+        i18next.t("models.arcGisMapServerCatalogItem.dataDescription"),
+        this._featureServer.description
+      ),
+      newInfo(
+        i18next.t("models.arcGisMapServerCatalogItem.copyrightText"),
+        this._featureServer.copyrightText
+      )
+    ];
+  }
+
+  @computed get legends(): StratumFromTraits<LegendTraits>[] | undefined {
+    if (
+      !this._item.useStyleInformationFromService ||
+      !this._featureServer.drawingInfo
+    ) {
+      return undefined;
+    }
+    const renderer = this._featureServer.drawingInfo.renderer;
+    const rendererType = renderer.type;
+
+    if (rendererType === "classBreaks") {
+      const classBreaksRenderer = <ClassBreaksRenderer>(
+        this._featureServer.drawingInfo.renderer
+      );
+
+      const items = [];
+      for (var i = 0; i < classBreaksRenderer.classBreakInfos.length; i++) {
+        const label = classBreaksRenderer.classBreakInfos[i].label;
+        const color = classBreaksRenderer.classBreakInfos[i].symbol.color;
+        if (color) {
+          const item = {
+            title: label,
+            color: convertEsriColorToCesiumColor(color).toCssColorString()
+          };
+          items.push(item);
+        }
+      }
+      const legend = <StratumFromTraits<LegendTraits>>(
+        (<unknown>{ items: items })
+      );
+      return [legend];
+    }
+
+    return undefined;
   }
 }
 
@@ -108,10 +311,18 @@ export default class ArcGisFeatureServerCatalogItem
   }
 
   get typeName() {
-    return i18next.t("models.arcGisFeatureServer.name");
+    return i18next.t("models.arcGisFeatureServerCatalogItem.name");
   }
 
   get isMappable() {
+    return true;
+  }
+
+  get canZoomTo() {
+    return true;
+  }
+
+  get showsInfo() {
     return true;
   }
 
@@ -128,24 +339,35 @@ export default class ArcGisFeatureServerCatalogItem
     return that.loadMetadata().then(() => {
       if (isDefined(that.geoJsonItem)) {
         return that.geoJsonItem.loadMapItems().then(() => {
-          const metadata = that.metadata;
-          if (that.useStyleInformationFromService) {
-            const renderer = metadata.drawingInfo.renderer;
+          const featureServerData = that.featureServerData;
+          if (
+            that.useStyleInformationFromService &&
+            featureServerData &&
+            featureServerData.drawingInfo
+          ) {
+            const renderer = featureServerData.drawingInfo.renderer;
+            const rendererType = renderer.type;
             that.mapItems.forEach(mapItem => {
               const entities = mapItem.entities;
               entities.suspendEvents();
 
               // A 'simple' renderer only applies a single style to all features
-              if (renderer.type === "simple") {
+              if (rendererType === "simple") {
+                const simpleRenderer = <SimpleRenderer>renderer;
                 entities.values.forEach(function(entity) {
-                  updateEntityWithEsriStyle(entity, renderer.symbol, that);
+                  updateEntityWithEsriStyle(
+                    entity,
+                    simpleRenderer.symbol,
+                    that
+                  );
                 });
 
                 // For a 'uniqueValue' renderer symbology gets applied via feature properties.
               } else if (renderer.type === "uniqueValue") {
-                const rendererObj = setupUniqueValRenderer(renderer);
+                const uniqueValueRenderer = <UniqueValueRenderer>renderer;
+                const rendererObj = setupUniqueValRenderer(uniqueValueRenderer);
 
-                const primaryFieldForSymbology = renderer.field1;
+                const primaryFieldForSymbology = uniqueValueRenderer.field1;
 
                 entities.values.forEach(function(entity) {
                   let symbolName = entity.properties[
@@ -153,23 +375,65 @@ export default class ArcGisFeatureServerCatalogItem
                   ].getValue();
 
                   // accumulate values if there is more than one field defined
-                  if (renderer.fieldDelimiter && renderer.field2) {
-                    var val2 = entity.properties[renderer.field2].getValue();
+                  if (
+                    uniqueValueRenderer.fieldDelimiter &&
+                    uniqueValueRenderer.field2
+                  ) {
+                    let val2 = entity.properties[
+                      uniqueValueRenderer.field2
+                    ].getValue();
+
                     if (val2) {
-                      symbolName += renderer.fieldDelimiter + val2;
-                      var val3 = entity.properties[renderer.field3].getValue();
-                      if (val3) {
-                        symbolName += renderer.fieldDelimiter + val3;
+                      symbolName += uniqueValueRenderer.fieldDelimiter + val2;
+
+                      if (uniqueValueRenderer.field3) {
+                        let val3 = entity.properties[
+                          uniqueValueRenderer.field3
+                        ].getValue();
+
+                        if (val3) {
+                          symbolName +=
+                            uniqueValueRenderer.fieldDelimiter + val3;
+                        }
                       }
                     }
                   }
 
-                  let rendererStyle = rendererObj[symbolName];
-                  if (rendererStyle === null) {
-                    rendererStyle = metadata.drawingInfo.renderer.defaultSymbol;
+                  let symbol: Symbol | undefined =
+                    rendererObj[symbolName].symbol;
+                  if (symbol === undefined || symbol === null) {
+                    symbol = uniqueValueRenderer.defaultSymbol;
                   }
 
-                  updateEntityWithEsriStyle(entity, rendererStyle.symbol, that);
+                  updateEntityWithEsriStyle(entity, symbol, that);
+                });
+              } else if (renderer.type === "classBreaks") {
+                const classBreaksRenderer = <ClassBreaksRenderer>renderer;
+                const field = classBreaksRenderer.field;
+
+                entities.values.forEach(function(entity) {
+                  let symbol: Symbol | undefined;
+                  let entityValue = entity.properties[field].getValue();
+
+                  for (
+                    var i = 0;
+                    i < classBreaksRenderer.classBreakInfos.length;
+                    i++
+                  ) {
+                    if (
+                      entityValue <=
+                      classBreaksRenderer.classBreakInfos[i].classMaxValue
+                    ) {
+                      symbol = classBreaksRenderer.classBreakInfos[i].symbol;
+                      break;
+                    }
+                  }
+
+                  if (symbol === undefined || symbol === null) {
+                    symbol = classBreaksRenderer.defaultSymbol;
+                  }
+
+                  updateEntityWithEsriStyle(entity, symbol, that);
                 });
               }
 
@@ -190,11 +454,11 @@ export default class ArcGisFeatureServerCatalogItem
     return isDefined(stratum) ? stratum.geoJsonItem : undefined;
   }
 
-  @computed get metadata() {
+  @computed get featureServerData() {
     const stratum = <FeatureServerStratum>(
       this.strata.get(FeatureServerStratum.stratumName)
     );
-    return isDefined(stratum) ? stratum.metadata : undefined;
+    return isDefined(stratum) ? stratum.featureServerData : undefined;
   }
 
   @computed get mapItems() {
@@ -208,8 +472,8 @@ export default class ArcGisFeatureServerCatalogItem
   }
 }
 
-function setupUniqueValRenderer(renderer) {
-  const out = {};
+function setupUniqueValRenderer(renderer: UniqueValueRenderer) {
+  const out: any = {};
   for (var i = 0; i < renderer.uniqueValueInfos.length; i++) {
     const val = renderer.uniqueValueInfos[i].value;
     out[val] = renderer.uniqueValueInfos[i];
@@ -217,7 +481,7 @@ function setupUniqueValRenderer(renderer) {
   return out;
 }
 
-function convertEsriColorToCesiumColor(esriColor) {
+function convertEsriColorToCesiumColor(esriColor: number[]) {
   return Color.fromBytes(
     esriColor[0],
     esriColor[1],
@@ -227,11 +491,11 @@ function convertEsriColorToCesiumColor(esriColor) {
 }
 
 function updateEntityWithEsriStyle(
-  entity,
-  symbol,
+  entity: Entity,
+  symbol: Symbol,
   catalogItem: ArcGisFeatureServerCatalogItem
 ) {
-  // We're going to replace a general Cesium Point with a billboard
+  // Replace a general Cesium Point with a billboard
   if (isDefined(entity.point) && isDefined(symbol.imageData)) {
     entity.billboard = {
       image: proxyCatalogItemUrl(
@@ -254,14 +518,14 @@ function updateEntityWithEsriStyle(
     entity.point = undefined;
   }
 
-  // We're going to update the styling of the Cesium Polyline
-  if (isDefined(entity.polyline)) {
+  // Update the styling of the Cesium Polyline
+  if (isDefined(entity.polyline) && isDefined(symbol.color)) {
     entity.polyline.material = convertEsriColorToCesiumColor(symbol.color);
     entity.polyline.width = symbol.width;
   }
 
-  // We're going to update the styling of the Cesium Point
-  if (isDefined(entity.point)) {
+  // Update the styling of the Cesium Point
+  if (isDefined(entity.point) && isDefined(symbol.color)) {
     entity.point.color = convertEsriColorToCesiumColor(symbol.color);
     entity.point.pixelSize = symbol.size;
 
@@ -273,8 +537,8 @@ function updateEntityWithEsriStyle(
     }
   }
 
-  // We're going to update the styling of the Cesium Polygon
-  if (isDefined(entity.polygon)) {
+  // Update the styling of the Cesium Polygon
+  if (isDefined(entity.polygon) && isDefined(symbol.color)) {
     entity.polygon.material = convertEsriColorToCesiumColor(symbol.color);
     if (isDefined(symbol.outline)) {
       entity.polygon.outlineColor = convertEsriColorToCesiumColor(
