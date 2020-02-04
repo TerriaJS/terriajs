@@ -555,7 +555,7 @@ class WebMapServiceCatalogItem
 
       const parameters: any = {
         ...WebMapServiceCatalogItem.defaultParameters,
-        ...(this.parameters || {}),
+        ...(this.parameters || {})
       };
 
       if (time !== undefined) {
