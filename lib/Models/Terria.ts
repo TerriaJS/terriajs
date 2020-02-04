@@ -374,7 +374,7 @@ export default class Terria {
     this._initSourceLoader.dispose();
   }
 
-  updateFromStartData (startData: any) {
+  updateFromStartData(startData: any) {
     interpretStartData(this, startData);
     return this.loadInitSources();
   }
