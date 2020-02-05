@@ -43,4 +43,12 @@ export default class FeatureInfoTraits extends ModelTraits {
       "A template URL string for fetching feature info. Template values of the form {x} will be replaced with corresponding property values from the picked feature."
   })
   featureInfoUrlTemplate?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Show string if property value is null",
+    description: "If the value of a property is null or undefined, show the specified string as the value of the property. Otherwise, the property name will not be listed at all.",
+  })
+  showStringIfPropertyValueIsNull?: string
+
 }
