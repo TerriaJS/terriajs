@@ -15,7 +15,7 @@ import featureDataToGeoJson from "../Map/featureDataToGeoJson";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import isDefined from "../Core/isDefined";
 import CommonStrata from "./CommonStrata";
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import Color from "terriajs-cesium/Source/Core/Color";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
@@ -28,6 +28,9 @@ import proj4definitions from "../Map/Proj4Definitions";
 import { RectangleTraits } from "../Traits/MappableTraits";
 import TerriaError from "../Core/TerriaError";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
+import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
+import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
 
 const proj4 = require("proj4").default;
 
@@ -35,7 +38,7 @@ interface DocumentInfo {
   author?: string;
 }
 
-// TODO. see actual Symbol at https://developers.arcgis.com/javascript/latest/api-reference/esri-symbols-Symbol.html
+// TODO. see actual Symbol at https://developers.arcgis.com/web-map-specification/objects/symbol/
 interface Symbol {
   contentType: string;
   color?: number[];
@@ -497,41 +500,48 @@ function updateEntityWithEsriStyle(
 ) {
   // Replace a general Cesium Point with a billboard
   if (isDefined(entity.point) && isDefined(symbol.imageData)) {
-    entity.billboard = {
+    entity.billboard = new BillboardGraphics({
       image: proxyCatalogItemUrl(
         catalogItem,
         `data:${symbol.contentType};base64,${symbol.imageData}`
       ),
       heightReference: catalogItem.clampToGround
         ? HeightReference.RELATIVE_TO_GROUND
-        : null,
+        : undefined,
       width: symbol.width,
       height: symbol.height,
       rotation: symbol.angle
-    };
+    });
 
     if (isDefined(symbol.xoffset) || isDefined(symbol.yoffset)) {
       const x = isDefined(symbol.xoffset) ? symbol.xoffset : 0;
       const y = isDefined(symbol.yoffset) ? symbol.yoffset : 0;
-      entity.billboard.pixelOffset = new Cartesian2(x, y);
+      entity.billboard.pixelOffset = new Cartesian3(x, y);
     }
-    entity.point = undefined;
+
+    entity.point.show = new ConstantProperty(false);
   }
 
   // Update the styling of the Cesium Polyline
   if (isDefined(entity.polyline) && isDefined(symbol.color)) {
-    entity.polyline.material = convertEsriColorToCesiumColor(symbol.color);
-    entity.polyline.width = symbol.width;
+    entity.polyline.material = new ColorMaterialProperty(
+      convertEsriColorToCesiumColor(symbol.color)
+    );
+    if (isDefined(symbol.width)) {
+      entity.polyline.width = symbol.width;
+    }
   }
 
   // Update the styling of the Cesium Point
   if (isDefined(entity.point) && isDefined(symbol.color)) {
-    entity.point.color = convertEsriColorToCesiumColor(symbol.color);
-    entity.point.pixelSize = symbol.size;
+    entity.point.color = new ConstantProperty(
+      convertEsriColorToCesiumColor(symbol.color)
+    );
+    entity.point.pixelSize = new ConstantProperty(symbol.size);
 
     if (isDefined(symbol.outline)) {
-      entity.point.outlineColor = convertEsriColorToCesiumColor(
-        symbol.outline.color
+      entity.point.outlineColor = new ConstantProperty(
+        convertEsriColorToCesiumColor(symbol.outline.color)
       );
       entity.point.outlineWidth = symbol.outline.width;
     }
