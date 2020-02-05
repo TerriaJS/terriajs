@@ -270,31 +270,45 @@ class FeatureServerStratum extends LoadableStratum(
     }
     const renderer = this._featureServer.drawingInfo.renderer;
     const rendererType = renderer.type;
+    let infos: UniqueValueInfo[] | ClassBreakInfo[];
 
-    if (rendererType === "classBreaks") {
-      const classBreaksRenderer = <ClassBreaksRenderer>(
-        this._featureServer.drawingInfo.renderer
-      );
-
-      const items = [];
-      for (var i = 0; i < classBreaksRenderer.classBreakInfos.length; i++) {
-        const label = classBreaksRenderer.classBreakInfos[i].label;
-        const color = classBreaksRenderer.classBreakInfos[i].symbol.color;
-        if (color) {
-          const item = {
-            title: label,
-            color: convertEsriColorToCesiumColor(color).toCssColorString()
-          };
-          items.push(item);
-        }
-      }
-      const legend = <StratumFromTraits<LegendTraits>>(
-        (<unknown>{ items: items })
-      );
-      return [legend];
+    if (rendererType === "uniqueValue") {
+      infos = (<UniqueValueRenderer>renderer).uniqueValueInfos;
+    } else if (rendererType === "classBreaks") {
+      infos = (<ClassBreaksRenderer>renderer).classBreakInfos;
+    } else {
+      return undefined;
     }
 
-    return undefined;
+    const items = [];
+    for (var i = 0; i < infos.length; i++) {
+      const label = infos[i].label;
+      const symbol = infos[i].symbol;
+      const color = symbol.color;
+      const imageUrl = symbol.imageData
+        ? proxyCatalogItemUrl(
+            this,
+            `data:${symbol.contentType};base64,${symbol.imageData}`
+          )
+        : undefined;
+
+      if (color) {
+        const item = {
+          title: label,
+          color: convertEsriColorToCesiumColor(color).toCssColorString()
+        };
+        items.push(item);
+      } else if (imageUrl) {
+        const item = {
+          title: label,
+          imageUrl: imageUrl
+        };
+        items.push(item);
+      }
+    }
+
+    const legend = <StratumFromTraits<LegendTraits>>(<unknown>{ items: items });
+    return [legend];
   }
 }
 
@@ -580,7 +594,7 @@ function buildMetadataUrl(catalogItem: ArcGisFeatureServerCatalogItem) {
 }
 
 function buildGeoJsonUrl(catalogItem: ArcGisFeatureServerCatalogItem) {
-  var url = cleanAndProxyUrl(catalogItem, catalogItem.url || "TODO");
+  var url = cleanAndProxyUrl(catalogItem, catalogItem.url || "0d");
   var urlComponents = splitLayerIdFromPath(url);
   return new URI(urlComponents.urlWithoutLayerId)
     .segment("query")
