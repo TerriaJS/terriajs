@@ -81,12 +81,10 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
    */
   @computed
   get readyData() {
-    console.log('ready data');
     return this._readyData;
   }
 
   protected forceLoadMapItems(): Promise<void> {
-    console.log('force load map items');
     const createLoadError = () =>
       new TerriaError({
         sender: this,
@@ -181,12 +179,10 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
   }
 
   protected forceLoadMetadata(): Promise<void> {
-    console.log('force load metadata');
     return Promise.resolve();
   }
 
   private loadDataSource(geoJson: JsonObject): Promise<GeoJsonDataSource> {
-    console.log('load data source');
     /* Style information is applied as follows, in decreasing priority:
            - simple-style properties set directly on individual features in the GeoJSON file
            - simple-style properties set as the 'Style' property on the catalog item

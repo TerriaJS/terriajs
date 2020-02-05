@@ -65,8 +65,6 @@ const WorkbenchItem = observer(
     },
 
     toggleVisibility() {
-      console.log(CommonStrata.user);
-      console.log(this.props.item.show);
       runInAction(() => {
         this.props.item.setTrait(
           CommonStrata.user,

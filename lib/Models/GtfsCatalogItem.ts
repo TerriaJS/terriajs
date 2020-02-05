@@ -285,11 +285,9 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
   }
 
   protected forceLoadMapItems(): Promise<void> {
-    console.log("forceLoadMapItems")
     const promise: Promise<void> = this.retrieveData()
       .then((data: FeedMessage) => {
         runInAction(() => {
-          console.log(data);
           if (this.show && data.entity !== undefined && data.entity !== null) {
             this.gtfsFeedEntities = data.entity;
             this.terria.currentViewer.notifyRepaintRequired();
