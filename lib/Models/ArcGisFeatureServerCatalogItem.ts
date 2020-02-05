@@ -38,7 +38,7 @@ interface DocumentInfo {
   author?: string;
 }
 
-// TODO. see actual Symbol at https://developers.arcgis.com/web-map-specification/objects/symbol/
+// See actual Symbol at https://developers.arcgis.com/web-map-specification/objects/symbol/
 interface Symbol {
   contentType: string;
   color?: number[];
@@ -146,15 +146,17 @@ class FeatureServerStratum extends LoadableStratum(
   }
 
   static async load(item: ArcGisFeatureServerCatalogItem) {
-    if (!isDefined(item.uri)) {
-      throw new TerriaError({
-        title: i18next.t(
-          "models.arcGisFeatureServerCatalogItem.invalidUrlTitle"
-        ),
-        message: i18next.t(
-          "models.arcGisFeatureServerCatalogItem.invalidUrlMessage"
-        )
-      });
+    if (!isDefined(item.url) || !isDefined(item.uri)) {
+      return Promise.reject(
+        new TerriaError({
+          title: i18next.t(
+            "models.arcGisFeatureServerCatalogItem.missingUrlTitle"
+          ),
+          message: i18next.t(
+            "models.arcGisFeatureServerCatalogItem.missingUrlMessage"
+          )
+        })
+      );
     }
 
     const geoJsonItem = new GeoJsonCatalogItem(createGuid(), item.terria);
@@ -163,6 +165,22 @@ class FeatureServerStratum extends LoadableStratum(
       "clampToGround",
       item.clampToGround
     );
+
+    const url = cleanAndProxyUrl(item, item.url);
+    const urlComponents = splitLayerIdFromPath(url);
+
+    if (!isDefined(urlComponents.layerId)) {
+      return Promise.reject(
+        new TerriaError({
+          title: i18next.t(
+            "models.arcGisFeatureServerCatalogItem.invalidServiceTitle"
+          ),
+          message: i18next.t(
+            "models.arcGisFeatureServerCatalogItem.invalidServiceMessage"
+          )
+        })
+      );
+    }
 
     return loadGeoJson(item)
       .then(geoJsonData => {

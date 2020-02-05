@@ -615,10 +615,12 @@
       "dataDescription" : "Data Description",
       "serviceDescription" : "Service Description",
       "copyrightText" : "Copyright Text",
-      "invalidUrlTitle": "Unable to load FeatureServer",
-      "invalidUrlMessage": "Could not load the ArcGis FeatureServer endpoint because the catalog item does not have a `url`.",
-      "unusableMetadataTitle": "ArcGIS FeatureServer Error",
-      "unusableMetadataDefaultMessage": "This dataset returned unusable metadata."
+      "missingUrlTitle": "Unable to load FeatureServer",
+      "missingUrlMessage" : "Could not load the ArcGis FeatureServer endpoint because the catalog item does not have a `url`.",
+      "invalidServiceTitle" : "Invalid ArcGIS Feature Service layer",
+      "invalidServiceMessage" : "An error occurred while invoking the ArcGIS Feature Service.  The server's response does not appear to be a valid Feature Service layer.",
+      "unusableMetadataTitle" : "ArcGIS FeatureServer Error",
+      "unusableMetadataDefaultMessage" : "This dataset returned unusable metadata."
     },
     "arcGisMapServerCatalogGroup" : {
       "name" : "ArcGIS Map Server Group",
