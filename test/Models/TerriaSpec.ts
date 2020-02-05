@@ -8,6 +8,8 @@ import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGrou
 import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
 import openGroup from "../../lib/Models/openGroup";
 import { BaseModel } from "../../lib/Models/Model";
+import { runInAction } from "mobx";
+import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 
 describe("Terria", function() {
   let terria: Terria;
@@ -107,6 +109,40 @@ describe("Terria", function() {
       const shareLink = buildShareLink(terria, viewState);
       newTerria.updateApplicationUrl(shareLink).then(() => {
         expect(newTerria.workbench.itemIds).toEqual(terria.workbench.itemIds);
+        done();
+      });
+    });
+
+    it("initializes splitter correctly", function(done) {
+      const model1 = <WebMapServiceCatalogItem>(
+        terria.getModelById(BaseModel, "itemABC")
+      );
+      terria.workbench.add(model1);
+
+      runInAction(() => {
+        terria.showSplitter = true;
+        terria.splitPosition = 0.7;
+        model1.setTrait(
+          CommonStrata.user,
+          "splitDirection",
+          ImagerySplitDirection.RIGHT
+        );
+      });
+
+      const shareLink = buildShareLink(terria, viewState);
+      newTerria.updateApplicationUrl(shareLink).then(() => {
+        expect(newTerria.showSplitter).toEqual(true);
+        expect(newTerria.splitPosition).toEqual(0.7);
+        expect(newTerria.workbench.itemIds).toEqual(["itemABC"]);
+
+        const newModel1 = <WebMapServiceCatalogItem>(
+          newTerria.getModelById(BaseModel, "itemABC")
+        );
+        expect(newModel1).toBeDefined();
+        expect(newModel1.splitDirection).toEqual(<any>(
+          ImagerySplitDirection.RIGHT
+        ));
+
         done();
       });
     });

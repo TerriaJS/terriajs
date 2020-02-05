@@ -20,7 +20,9 @@ import isDefined from "../Core/isDefined";
 import JsonValue, {
   isJsonObject,
   isJsonString,
-  JsonObject
+  JsonObject,
+  isJsonBoolean,
+  isJsonNumber
 } from "../Core/Json";
 import loadJson5 from "../Core/loadJson5";
 import ServerConfig from "../Core/ServerConfig";
@@ -596,6 +598,14 @@ export default class Terria {
     if (isJsonObject(initData.initialCamera)) {
       const initialCamera = CameraView.fromJson(initData.initialCamera);
       this.currentViewer.zoomTo(initialCamera, 2.0);
+    }
+
+    if (isJsonBoolean(initData.showSplitter)) {
+      this.showSplitter = initData.showSplitter;
+    }
+
+    if (isJsonNumber(initData.splitPosition)) {
+      this.splitPosition = initData.splitPosition;
     }
 
     // Copy but don't yet load the workbench.
