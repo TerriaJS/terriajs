@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, observable, runInAction, toJS, isObservable } from "mobx";
+import { computed, observable, runInAction, toJS } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
@@ -173,8 +173,6 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
 
   @computed
   get mapItems() {
-    console.log('map items');
-    console.log(isObservable(this._dataSource));
     if (this.isLoadingMapItems || this._dataSource === undefined) {
       return [];
     }

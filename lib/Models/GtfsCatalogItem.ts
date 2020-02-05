@@ -5,9 +5,7 @@ import {
   onBecomeObserved,
   onBecomeUnobserved,
   reaction,
-  runInAction,
-  action,
-  isObservable
+  runInAction
 } from "mobx";
 import { createTransformer, ITransformer, now } from "mobx-utils";
 import Pbf from "pbf";
@@ -83,8 +81,6 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   @computed
   protected get _pollingTimer(): number | undefined {
-    
-    console.log('pollingtimer');
     if (this.refreshInterval !== null && this.refreshInterval !== undefined) {
       return now(this.refreshInterval * 1000);
     }
@@ -120,7 +116,6 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   @computed
   protected get dataSource(): DataSource {
-    console.log('data source');
     this._dataSource.entities.suspendEvents();
 
     // Convert the GTFS protobuf into a more useful shape
@@ -202,7 +197,6 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   @computed
   get nextScheduledUpdateTime(): Date | undefined {
-    console.log('nextscheduledupdatetime');
     if (
       this._pollingTimer !== null &&
       this._pollingTimer !== undefined &&
@@ -217,14 +211,13 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   @computed
   get isPolling() {
-    console.log('is polling');
     return this._pollingTimer !== null && this._pollingTimer !== undefined;
   }
 
   @computed
   get mapItems(): DataSource[] {
-    console.log('mapitems')
     if (isDefined(this.dataSource)) {
+      this._dataSource.show = this.show;
       return [this.dataSource];
     }
     return [];
@@ -232,7 +225,6 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   @computed
   private get _cesiumUpAxis() {
-    console.log('cesium up axis');
     if (this.model.upAxis === undefined) {
       return Axis.Y;
     }
@@ -241,7 +233,6 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   @computed
   private get _cesiumForwardAxis() {
-    console.log('cesium forward axis');
     if (this.model.forwardAxis === undefined) {
       return Axis.Z;
     }
@@ -250,7 +241,6 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   @computed
   private get _model() {
-    console.log('model');
     if (this.model.url === undefined) {
       return undefined;
     }
@@ -302,10 +292,8 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
           console.log(data);
           if (this.show && data.entity !== undefined && data.entity !== null) {
             this.gtfsFeedEntities = data.entity;
-          } else {
-            this.gtfsFeedEntities = [];
+            this.terria.currentViewer.notifyRepaintRequired();
           }
-          this.terria.currentViewer.notifyRepaintRequired();
         });
       })
       .catch((e: Error) => {
