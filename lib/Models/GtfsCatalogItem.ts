@@ -288,7 +288,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     const promise: Promise<void> = this.retrieveData()
       .then((data: FeedMessage) => {
         runInAction(() => {
-          if (this.show && data.entity !== undefined && data.entity !== null) {
+          if (data.entity !== undefined && data.entity !== null) {
             this.gtfsFeedEntities = data.entity;
             this.terria.currentViewer.notifyRepaintRequired();
           }
