@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, observable, runInAction, toJS } from "mobx";
+import { computed, observable, runInAction, toJS, isObservable } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
@@ -81,10 +81,12 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
    */
   @computed
   get readyData() {
+    console.log('ready data');
     return this._readyData;
   }
 
   protected forceLoadMapItems(): Promise<void> {
+    console.log('force load map items');
     const createLoadError = () =>
       new TerriaError({
         sender: this,
@@ -171,6 +173,8 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
 
   @computed
   get mapItems() {
+    console.log('map items');
+    console.log(isObservable(this._dataSource));
     if (this.isLoadingMapItems || this._dataSource === undefined) {
       return [];
     }
@@ -179,10 +183,12 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
   }
 
   protected forceLoadMetadata(): Promise<void> {
+    console.log('force load metadata');
     return Promise.resolve();
   }
 
   private loadDataSource(geoJson: JsonObject): Promise<GeoJsonDataSource> {
+    console.log('load data source');
     /* Style information is applied as follows, in decreasing priority:
            - simple-style properties set directly on individual features in the GeoJSON file
            - simple-style properties set as the 'Style' property on the catalog item

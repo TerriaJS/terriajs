@@ -5,7 +5,9 @@ import {
   onBecomeObserved,
   onBecomeUnobserved,
   reaction,
-  runInAction
+  runInAction,
+  action,
+  isObservable
 } from "mobx";
 import { createTransformer, ITransformer, now } from "mobx-utils";
 import Pbf from "pbf";
@@ -42,6 +44,7 @@ import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import raiseErrorOnRejectedPromise from "./raiseErrorOnRejectedPromise";
 import Terria from "./Terria";
 import VehicleData from "./VehicleData";
+import isDefined from "../Core/isDefined";
 
 /**
  * For displaying realtime transport data. See [here](https://developers.google.com/transit/gtfs-realtime/reference/)
@@ -80,6 +83,8 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   @computed
   protected get _pollingTimer(): number | undefined {
+    
+    console.log('pollingtimer');
     if (this.refreshInterval !== null && this.refreshInterval !== undefined) {
       return now(this.refreshInterval * 1000);
     }
@@ -115,6 +120,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   @computed
   protected get dataSource(): DataSource {
+    console.log('data source');
     this._dataSource.entities.suspendEvents();
 
     // Convert the GTFS protobuf into a more useful shape
@@ -196,6 +202,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   @computed
   get nextScheduledUpdateTime(): Date | undefined {
+    console.log('nextscheduledupdatetime');
     if (
       this._pollingTimer !== null &&
       this._pollingTimer !== undefined &&
@@ -210,16 +217,22 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   @computed
   get isPolling() {
+    console.log('is polling');
     return this._pollingTimer !== null && this._pollingTimer !== undefined;
   }
 
   @computed
   get mapItems(): DataSource[] {
-    return [this.dataSource];
+    console.log('mapitems')
+    if (isDefined(this.dataSource)) {
+      return [this.dataSource];
+    }
+    return [];
   }
 
   @computed
   private get _cesiumUpAxis() {
+    console.log('cesium up axis');
     if (this.model.upAxis === undefined) {
       return Axis.Y;
     }
@@ -228,6 +241,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   @computed
   private get _cesiumForwardAxis() {
+    console.log('cesium forward axis');
     if (this.model.forwardAxis === undefined) {
       return Axis.Z;
     }
@@ -236,6 +250,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   @computed
   private get _model() {
+    console.log('model');
     if (this.model.url === undefined) {
       return undefined;
     }
@@ -280,13 +295,17 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
   }
 
   protected forceLoadMapItems(): Promise<void> {
+    console.log("forceLoadMapItems")
     const promise: Promise<void> = this.retrieveData()
       .then((data: FeedMessage) => {
         runInAction(() => {
-          if (data.entity !== undefined && data.entity !== null) {
+          console.log(data);
+          if (this.show && data.entity !== undefined && data.entity !== null) {
             this.gtfsFeedEntities = data.entity;
-            this.terria.currentViewer.notifyRepaintRequired();
+          } else {
+            this.gtfsFeedEntities = [];
           }
+          this.terria.currentViewer.notifyRepaintRequired();
         });
       })
       .catch((e: Error) => {

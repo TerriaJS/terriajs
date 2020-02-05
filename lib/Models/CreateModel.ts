@@ -95,6 +95,10 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
       trait: Key,
       value: StratumTraits[Key]
     ): void {
+      if (trait === "show") {
+        console.log(this.getOrCreateStratum(stratumId));
+        console.log(value);
+      }
       this.getOrCreateStratum(stratumId)[trait] = value;
     }
 
