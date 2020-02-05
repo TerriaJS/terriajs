@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { computed, toJS } from "mobx";
 import CzmlDataSource from "terriajs-cesium/Source/DataSources/CzmlDataSource";
 import isDefined from "../Core/isDefined";
@@ -43,10 +44,8 @@ export default class CzmlCatalogItem
       } else {
         throw new TerriaError({
           sender: this,
-          title: "No CZML available",
-          message:
-            `The CZML catalog item cannot be loaded because it was not configured ` +
-            `with a \`url\`, \`czmlData\`, or \`czmlString\` property.`
+          title: i18next.t("models.czml.unableToLoadItemTitle"),
+          message: i18next.t("models.czml.unableToLoadItemMessage")
         });
       }
     })
@@ -62,29 +61,17 @@ export default class CzmlCatalogItem
         } else {
           throw new TerriaError({
             sender: this,
-            title: "Could not load CZML",
-            message:
-              `An error occurred while retrieving or parsing JSON data from the provided link.` +
-              `<p>If you entered the link manually, please verify that the link is correct.</p>` +
-              `<p>This error may also indicate that the server does not support ` +
-              `<a href="http://enable-cors.org/" target="_blank">CORS</a>. If this is your server, ` +
-              `verify that CORS is enabled and enable it if it is not.  If you do not control the ` +
-              `server, please contact the administrator of the server and ask them to enable CORS. Or, ` +
-              `contact the ${this.terria.appName} team by emailing ` +
-              `<a href="mailto:${this.terria.supportEmail}">${
-                this.terria.supportEmail
-              }</a> ` +
-              `and ask us to add this server to the list of non-CORS-supporting servers that may be ` +
-              `proxied by ${
-                this.terria.appName
-              } itself.</p><p>If you did not enter this link manually, ` +
-              `this error may indicate that the data source you're trying to add is temporarily unavailable ` +
-              `or there is a problem with your internet connection.  Try adding the data source again, and if ` +
-              `the problem persists, please report it by sending an email to ` +
-              `<a href="mailto:${this.terria.supportEmail}">${
-                this.terria.supportEmail
-              }</a>. See the technical details below.</p>` +
-              `<pre>${e.stack || e.toString()}</pre>`
+            title: i18next.t("models.czml.errorLoadingTitle"),
+            message: i18next.t("models.czml.errorLoadingMessage", {
+              appName: this.terria.appName,
+              email:
+                '<a href="mailto:' +
+                this.terria.supportEmail +
+                '">' +
+                this.terria.supportEmail +
+                "</a>.",
+              stackTrace: e.stack || e.toString()
+            })
           });
         }
       });

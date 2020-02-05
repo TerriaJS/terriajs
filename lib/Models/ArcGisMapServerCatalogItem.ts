@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import uniqWith from "lodash-es/uniqWith";
 import { computed, runInAction } from "mobx";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -26,9 +27,17 @@ import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumOrder from "./StratumOrder";
+import StratumFromTraits from "./StratumFromTraits";
 
 const proj4 = require("proj4").default;
 const unionRectangleArray = require("../Map/unionRectangleArray");
+
+interface RectangleExtent {
+  east: number;
+  south: number;
+  west: number;
+  north: number;
+}
 
 interface DocumentInfo {
   Author?: string;
@@ -41,7 +50,7 @@ interface MapServer {
 }
 
 interface SpatialReference {
-  wkid?: string;
+  wkid?: number;
 }
 
 interface Extent {
@@ -65,6 +74,8 @@ interface Legend {
   label?: string;
   contentType: string;
   imageData: string;
+  width: number;
+  height: number;
 }
 
 class MapServerStratum extends LoadableStratum(
@@ -101,9 +112,10 @@ class MapServerStratum extends LoadableStratum(
   static async load(item: ArcGisMapServerCatalogItem) {
     if (!isDefined(item.uri)) {
       throw new TerriaError({
-        title: "Unable to load MapServer",
-        message:
-          "Could not load the ArcGis MapServer endpoint because the catalog item does not have a `url`."
+        title: i18next.t("models.arcGisMapServerCatalogItem.invalidUrlTitle"),
+        message: i18next.t(
+          "models.arcGisMapServerCatalogItem.invalidUrlMessage"
+        )
       });
     }
 
@@ -151,10 +163,14 @@ class MapServerStratum extends LoadableStratum(
       allLayers = [results[1]];
     } else {
       throw new TerriaError({
-        title: "ArcGIS Mapserver Error",
+        title: i18next.t(
+          "models.arcGisMapServerCatalogItem.unusableMetadataTitle"
+        ),
         message: isDefined(results[0].error)
           ? results[0].error.message
-          : "This dataset returned unusable metadata."
+          : i18next.t(
+              "models.arcGisMapServerCatalogItem.unusableMetadataDefaultMessage"
+            )
       });
     }
 
@@ -209,10 +225,16 @@ class MapServerStratum extends LoadableStratum(
     }
 
     return [
-      newInfo("Data Description", layer.description),
-      newInfo("Service Description", this._mapServer.description),
       newInfo(
-        "Copyright Text",
+        i18next.t("models.arcGisMapServerCatalogItem.dataDescription"),
+        layer.description
+      ),
+      newInfo(
+        i18next.t("models.arcGisMapServerCatalogItem.serviceDescription"),
+        this._mapServer.description
+      ),
+      newInfo(
+        i18next.t("models.arcGisMapServerCatalogItem.copyrightText"),
         isDefined(layer.copyrightText) && layer.copyrightText.length > 0
           ? layer.copyrightText
           : this._mapServer.copyrightText
@@ -221,11 +243,18 @@ class MapServerStratum extends LoadableStratum(
   }
 
   @computed get legends() {
-    function newLegendItem(title: string, imageUrl: string) {
+    function newLegendItem(
+      title: string,
+      imageUrl: string,
+      width: number,
+      height: number
+    ) {
       const item = createStratumInstance(LegendItemTraits);
       runInAction(() => {
         item.title = title;
         item.imageUrl = imageUrl;
+        item.imageHeight = width;
+        item.imageWidth = height;
       });
       return item;
     }
@@ -259,7 +288,9 @@ class MapServerStratum extends LoadableStratum(
         );
         const dataUrl = "data:" + leg.contentType + ";base64," + leg.imageData;
         if (isDefined(legend.items)) {
-          legend.items.push(newLegendItem(title, dataUrl));
+          legend.items.push(
+            newLegendItem(title, dataUrl, leg.width, leg.height)
+          );
         }
       });
     });
@@ -278,7 +309,9 @@ export default class ArcGisMapServerCatalogItem
   )
   implements Mappable {
   static readonly type = "esri-mapServer";
-  readonly typeName = "Esri ArcGIS MapServer";
+  get typeName() {
+    return i18next.t("models.arcGisMapServerCatalogItem.name");
+  }
 
   readonly supportsSplitting = true;
   readonly canZoomTo = true;
@@ -473,7 +506,17 @@ function maximumScaleToLevel(maximumScale: number | undefined) {
   return levelAtMinScaleDenominator | 0;
 }
 
-function getRectangleFromLayer(thisLayerJson: Layer) {
+function updateBbox(extent: Extent, rectangle: RectangleExtent) {
+  if (extent.xmin < rectangle.west) rectangle.west = extent.xmax;
+  if (extent.ymin < rectangle.south) rectangle.south = extent.ymin;
+  if (extent.xmax > rectangle.east) rectangle.east = extent.xmin;
+  if (extent.ymax > rectangle.north) rectangle.north = extent.ymax;
+}
+
+function getRectangleFromLayer(
+  thisLayerJson: Layer,
+  rectangle: RectangleExtent
+) {
   const extent = thisLayerJson.extent;
   if (
     isDefined(extent) &&
@@ -481,6 +524,10 @@ function getRectangleFromLayer(thisLayerJson: Layer) {
     extent.spatialReference.wkid
   ) {
     const wkid = "EPSG:" + extent.spatialReference.wkid;
+    if (extent.spatialReference.wkid === 4326) {
+      return updateBbox(extent, rectangle);
+    }
+
     if (!isDefined((proj4definitions as any)[wkid])) {
       return undefined;
     }
@@ -498,22 +545,39 @@ function getRectangleFromLayer(thisLayerJson: Layer) {
     const east = p[0];
     const north = p[1];
 
-    return Rectangle.fromDegrees(west, south, east, north);
+    return updateBbox(
+      { xmin: east, ymin: south, xmax: west, ymax: north },
+      rectangle
+    );
   }
 
   return undefined;
 }
 
-function getRectangleFromLayers(layers: Layer[]) {
+function getRectangleFromLayers(
+  layers: Layer[]
+): StratumFromTraits<RectangleTraits> | undefined {
+  const rectangle: RectangleExtent = {
+    west: Infinity,
+    south: Infinity,
+    east: -Infinity,
+    north: -Infinity
+  };
   if (!Array.isArray(layers)) {
-    return getRectangleFromLayer(layers);
+    getRectangleFromLayer(layers, rectangle);
+  } else {
+    layers.forEach(function(item) {
+      getRectangleFromLayer(item, rectangle);
+    });
   }
-
-  return unionRectangleArray(
-    layers.map(function(item) {
-      return getRectangleFromLayer(item);
-    })
-  );
+  if (
+    rectangle.east === Infinity ||
+    rectangle.south === Infinity ||
+    rectangle.west === -Infinity ||
+    rectangle.north === -Infinity
+  )
+    return undefined;
+  return rectangle;
 }
 
 function cleanAndProxyUrl(

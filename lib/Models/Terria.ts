@@ -116,6 +116,8 @@ export default class Terria {
   readonly overlays = new Workbench();
   readonly catalog = new Catalog(this);
   readonly timelineClock = new Clock({ shouldAnimate: false });
+
+  @observable
   readonly mainViewer = new TerriaViewer(
     this,
     computed(() =>
@@ -372,6 +374,11 @@ export default class Terria {
     this._initSourceLoader.dispose();
   }
 
+  updateFromStartData(startData: any) {
+    interpretStartData(this, startData);
+    return this.loadInitSources();
+  }
+
   updateApplicationUrl(newUrl: string) {
     const uri = new URI(newUrl);
     const hash = uri.fragment();
@@ -588,7 +595,7 @@ export default class Terria {
 
     // Copy but don't yet load the workbench.
     const workbench = Array.isArray(initData.workbench)
-      ? initData.workbench.slice().reverse()
+      ? initData.workbench.slice()
       : [];
 
     const timeline = Array.isArray(initData.timeline)

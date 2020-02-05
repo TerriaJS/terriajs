@@ -80,6 +80,48 @@ describe("CatalogMember", function() {
     });
   });
 
+  describe("using path()", function() {
+    describe("without a parent", function() {
+      it("shows default unnamed name", function() {
+        expect(member.path).toBe("Unnamed Item");
+      });
+      it("shows its own name", function() {
+        member
+          .updateFromJson({
+            name: "cybertruck"
+          })
+          .then(function() {
+            expect(member.path).toBe("cybertruck");
+          });
+      });
+    });
+    describe("with a parent", function() {
+      it("shows its own name appended to unnamed parent", function() {
+        const parent = new CatalogMember(terria);
+        member.parent = parent;
+        member
+          .updateFromJson({
+            name: "cybertruck"
+          })
+          .then(function() {
+            expect(member.path).toBe("Unnamed Item/cybertruck");
+          });
+      });
+      it("shows its own name appended to parent", function() {
+        const parent = new CatalogMember(terria);
+        parent.name = "Parent";
+        member.parent = parent;
+        member
+          .updateFromJson({
+            name: "cybertruck"
+          })
+          .then(function() {
+            expect(member.path).toBe("Parent/cybertruck");
+          });
+      });
+    });
+  });
+
   describe("updateFromJson", function() {
     it("merges the info property", function(done) {
       member

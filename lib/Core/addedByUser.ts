@@ -1,11 +1,11 @@
 import { BaseModel } from "../Models/Model";
 
-export const USER_ADDED_CATEGORY_NAME = "User-Added Data";
+export const USER_ADDED_CATEGORY_ID = "__User-Added_Data__";
 
-export default function addedByUser(catalogMember: BaseModel): Boolean {
+export default function addedByUser(catalogMember: BaseModel): boolean {
   return catalogMember.knownContainerUniqueIds.some(containerId => {
     return (
-      containerId === USER_ADDED_CATEGORY_NAME ||
+      containerId === USER_ADDED_CATEGORY_ID ||
       addedByUser(<BaseModel>(
         catalogMember.terria.getModelById(BaseModel, containerId)
       ))
