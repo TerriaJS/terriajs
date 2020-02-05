@@ -14,6 +14,7 @@ Change Log
 * Fixed bug causing workbench items to be shared in the wrong order.
 * Fix bug where urls in the feature info panel weren't turned into hyperlinks
 * Fix preview map's base map and bounding rectangle size
+* Re-added `ArcGisFeatureServerCatalogItem` and `ArcGisFeatureServerCatalogGroup`
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
