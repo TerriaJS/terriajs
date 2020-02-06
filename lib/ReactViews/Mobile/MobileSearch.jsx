@@ -1,5 +1,6 @@
 import React from "react";
 import createReactClass from "create-react-class";
+import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 
 import PropTypes from "prop-types";
@@ -32,12 +33,13 @@ const MobileSearch = observer(
     },
 
     searchInDataCatalog() {
-      const viewname = this.props.viewState.mobileViewOptions.data;
-      this.props.viewState.explorerPanelIsVisible = true;
-      this.props.viewState.switchMobileView(viewname);
-      this.props.viewState.searchInCatalog(
-        this.props.viewState.searchState.locationSearchText
-      );
+      const { searchState } = this.props.viewState;
+      runInAction(() => {
+        // Set text here so that it doesn't get batched up and the catalog
+        // search text has a chance to set isWaitingToStartCatalogSearch
+        searchState.catalogSearchText = searchState.locationSearchText;
+      });
+      this.props.viewState.searchInCatalog(searchState.locationSearchText);
     },
 
     render() {
