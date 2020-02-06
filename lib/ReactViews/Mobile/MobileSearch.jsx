@@ -64,15 +64,17 @@ const MobileSearch = observer(
         >
           <div className={Styles.providerResult}>
             <ul className={Styles.btnList}>
-              <SearchResult
-                clickAction={this.searchInDataCatalog}
-                icon={null}
-                name={t("search.search", {
-                  searchText: this.props.viewState.searchState
-                    .locationSearchText
-                })}
-                theme={theme}
-              />
+              {this.props.viewState.searchState.catalogSearchProvider && (
+                <SearchResult
+                  clickAction={this.searchInDataCatalog}
+                  icon={null}
+                  name={t("search.search", {
+                    searchText: this.props.viewState.searchState
+                      .locationSearchText
+                  })}
+                  theme={theme}
+                />
+              )}
             </ul>
           </div>
         </If>
