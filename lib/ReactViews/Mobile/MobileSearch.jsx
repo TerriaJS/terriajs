@@ -88,7 +88,7 @@ const MobileSearch = observer(
           viewState={this.props.viewState}
           search={search}
           onLocationClick={this.onLocationClick}
-          isWaitingForSearchToStart={searchState.isWaitingForSearchToStart}
+          isWaitingForSearchToStart={searchState.isWaitingToStartLocationSearch}
           theme={theme}
         />
       ));
