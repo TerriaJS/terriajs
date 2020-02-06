@@ -8,6 +8,12 @@
   padding-bottom: 5px;
   padding-right: 5px;
   font-family: $font-base;
+  
+  @media (max-width: $sm) {
+    position: fixed;
+    bottom: 0px;
+    background: $dark;
+  }
 }
 
 .text-row {
@@ -19,6 +25,10 @@
   left: 0px;
   background: $dark;
   padding: 3px 5px;
+  
+  @media (max-width: $sm) {
+    position: fixed;
+  }
 }
 
 .text-cell {

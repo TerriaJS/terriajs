@@ -67,6 +67,10 @@
     right: $padding * 2;
     margin: 0;
   }
+  
+  @media (max-width: $sm) {
+    position: fixed;
+  }
   position: absolute;
   z-index: 0;
   bottom: 25px;

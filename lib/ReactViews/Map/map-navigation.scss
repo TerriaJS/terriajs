@@ -11,6 +11,10 @@
     bottom: auto;
     right: 16px;
   }
+  
+  @media (max-width: $sm) {
+    position: fixed;
+  }
 }
 
 .with-time-series-controls {

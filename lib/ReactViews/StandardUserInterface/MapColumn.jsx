@@ -89,7 +89,10 @@ const MapColumn = observer(
       const isAboveChrome75 =
         chromeVersion && chromeVersion[0] && Number(chromeVersion[0]) > 75;
       const mapCellClass = classNames(Styles.mapCell, {
-        [Styles.mapCellChrome]: isAboveChrome75
+        [Styles.mapCellChrome]: isAboveChrome75}, {
+        [Styles.withTimeSeriesControls]: defined(
+          this.props.terria.timelineStack.topLayer
+        )
       });
       return (
         <div
