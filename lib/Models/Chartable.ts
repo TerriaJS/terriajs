@@ -1,11 +1,12 @@
 import maxBy from "lodash/maxBy";
 import minBy from "lodash/minBy";
-import { ScalePropType } from "victory";
 import ModelTraits from "../Traits/ModelTraits";
 import Model, { BaseModel } from "./Model";
 
+type Scale = "linear" | "time";
+
 export interface ChartAxis {
-  scale: ScalePropType;
+  scale: Scale;
   units?: string;
 }
 
