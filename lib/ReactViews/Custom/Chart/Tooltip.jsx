@@ -5,7 +5,7 @@ import { CSSTransition } from "react-transition-group";
 import PropTypes from "prop-types";
 import React from "react";
 import dateformat from "dateformat";
-import groupBy from "lodash/groupBy";
+import groupBy from "lodash-es/groupBy";
 import Styles from "./tooltip.scss";
 
 @observer

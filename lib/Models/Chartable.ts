@@ -1,5 +1,5 @@
-import maxBy from "lodash/maxBy";
-import minBy from "lodash/minBy";
+import maxBy from "lodash-es/maxBy";
+import minBy from "lodash-es/minBy";
 import ModelTraits from "../Traits/ModelTraits";
 import Model, { BaseModel } from "./Model";
 
