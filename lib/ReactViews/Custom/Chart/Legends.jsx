@@ -14,7 +14,7 @@ export default class Legends extends React.PureComponent {
   render() {
     const chartItems = this.props.chartItems;
     const colorScale = scaleOrdinal({
-      domain: chartItems.map(c => c.name),
+      domain: chartItems.map(c => `${c.categoryName} ${c.name}`),
       range: chartItems.map(c => c.getColor())
     });
 
