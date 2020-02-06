@@ -21,6 +21,7 @@ import ZoomX from "./ZoomX";
 
 const chartMinWidth = 110;
 const defaultGridColor = "#efefef";
+const labelColor = "#efefef";
 
 @observer
 class BottomDockChart extends React.Component {
@@ -202,7 +203,7 @@ class Chart extends React.Component {
   }
 
   render() {
-    const { width, height, margin } = this.props;
+    const { width, height, margin, xAxis } = this.props;
     return (
       <ZoomX
         surface="#zoomSurface"
@@ -225,7 +226,17 @@ class Chart extends React.Component {
                 width={this.plot.width}
                 height={this.plot.height}
               />
-              <XAxis top={this.plot.height + 1} scale={this.xScale} />
+              <XAxis
+                top={this.plot.height + 1}
+                scale={this.xScale}
+                label={xAxis.units}
+                labelProps={{
+                  fill: labelColor,
+                  fontSize: 12,
+                  textAnchor: "middle",
+                  fontFamily: "Arial"
+                }}
+              />
               <For each="y" index="i" of={this.yAxes}>
                 <YAxis
                   {...y}
@@ -303,6 +314,8 @@ class Plot extends React.Component {
             />
           );
         case "momentPoints": {
+          // Find a basis item to stick the points on, if we can't find one, we
+          // vertically center the points
           const basisItem = chartItems.find(
             item => item.type === "line" && item.xAxis.scale === "time"
           );
