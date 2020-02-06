@@ -79,23 +79,17 @@ const MobileSearch = observer(
 
     renderLocationResult(theme) {
       const searchState = this.props.viewState.searchState;
-      return searchState.locationSearchProviders
-        .filter(
-          search =>
-            search.isSearching ||
-            (search.searchResults && search.searchResults.length)
-        )
-        .map(search => (
-          <LocationSearchResults
-            key={search.name}
-            terria={this.props.terria}
-            viewState={this.props.viewState}
-            search={search}
-            onLocationClick={this.onLocationClick}
-            isWaitingForSearchToStart={searchState.isWaitingForSearchToStart}
-            theme={theme}
-          />
-        ));
+      return searchState.locationSearchResults.map(search => (
+        <LocationSearchResults
+          key={search.searchProvider.name}
+          terria={this.props.terria}
+          viewState={this.props.viewState}
+          search={search}
+          onLocationClick={this.onLocationClick}
+          isWaitingForSearchToStart={searchState.isWaitingForSearchToStart}
+          theme={theme}
+        />
+      ));
     }
   })
 );
