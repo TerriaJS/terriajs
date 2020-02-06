@@ -1,5 +1,7 @@
 import { computed } from "mobx";
 import { observer } from "mobx-react";
+import { AxisLeft, AxisBottom } from "@vx/axis";
+import { Group } from "@vx/group";
 import { scaleLinear, scaleTime } from "@vx/scale";
 import PropTypes from "prop-types";
 import React from "react";
@@ -13,13 +15,15 @@ class FeatureInfoPanelChart extends React.Component {
   static propTypes = {
     width: PropTypes.number,
     height: PropTypes.number,
+    margin: PropTypes.object,
     item: PropTypes.object.isRequired,
     xAxisLabel: PropTypes.string,
     baseColor: PropTypes.string
   };
 
   static defaultProps = {
-    baseColor: "#efefef"
+    baseColor: "#efefef",
+    margin: { top: 5, left: 5, right: 5, bottom: 5 }
   };
 
   @computed
@@ -31,7 +35,6 @@ class FeatureInfoPanelChart extends React.Component {
 
   render() {
     if (!Chartable.is(this.props.item)) return null;
-    console.log(this.props.item.chartItems);
     this.props.item.loadChartItems();
     if (!this.chartItem) return null;
 
@@ -43,8 +46,10 @@ class FeatureInfoPanelChart extends React.Component {
             <Chart
               width={width || parentSize.width}
               height={height || parentSize.height}
+              margin={this.props.margin}
               chartItem={this.chartItem}
               baseColor={this.props.baseColor}
+              xAxisLabel={this.props.xAxisLabel}
             />
           )}
         </Sized>
@@ -57,20 +62,34 @@ class Chart extends React.Component {
   static propTypes = {
     width: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
+    margin: PropTypes.object.isRequired,
     chartItem: PropTypes.object.isRequired,
-    baseColor: PropTypes.string.isRequired
+    baseColor: PropTypes.string.isRequired,
+    xAxisLabel: PropTypes.string
   };
+
+  xAxisHeight = 30;
+  yAxisWidth = 10;
+
+  @computed
+  get plot() {
+    const { width, height, margin } = this.props;
+    return {
+      width: width - margin.left - margin.right,
+      height: height - margin.top - margin.bottom - this.xAxisHeight
+    };
+  }
 
   @computed
   get scales() {
     const chartItem = this.props.chartItem;
     const xScaleParams = {
       domain: chartItem.domain.x,
-      range: [0, this.props.width]
+      range: [this.props.margin.left + this.yAxisWidth, this.plot.width]
     };
     const yScaleParams = {
       domain: chartItem.domain.y,
-      range: [this.props.height, 0]
+      range: [this.plot.height, 0]
     };
     return {
       x:
@@ -82,16 +101,50 @@ class Chart extends React.Component {
   }
 
   render() {
-    const { width, height, chartItem, baseColor } = this.props;
+    const { width, height, margin, chartItem, baseColor } = this.props;
     const id = `featureInfoPanelChart-${chartItem.name}`;
+    const textStyle = {
+      fill: baseColor,
+      fontSize: 10,
+      textAnchor: "middle",
+      fontFamily: "Arial"
+    };
     return (
       <svg width={width} height={height}>
-        <LineChart
-          id={id}
-          chartItem={chartItem}
-          scales={this.scales}
-          color={baseColor}
-        />
+        <Group top={margin.top} left={margin.left}>
+          <AxisBottom
+            top={this.plot.height}
+            scale={this.scales.x}
+            numTicks={2}
+            stroke="none"
+            tickStroke="none"
+            tickLabelProps={() => textStyle}
+            label={this.props.xAxisLabel}
+            labelOffset={3}
+            labelProps={textStyle}
+          />
+          <AxisLeft
+            scale={this.scales.y}
+            numTicks={4}
+            stroke="none"
+            tickStroke="none"
+            label={chartItem.units}
+            labelOffset={24}
+            labelProps={textStyle}
+            tickLabelProps={() => ({
+              ...textStyle,
+              textAnchor: "start",
+              dx: "0.5em",
+              dy: "0.25em"
+            })}
+          />
+          <LineChart
+            id={id}
+            chartItem={chartItem}
+            scales={this.scales}
+            color={baseColor}
+          />
+        </Group>
       </svg>
     );
   }
