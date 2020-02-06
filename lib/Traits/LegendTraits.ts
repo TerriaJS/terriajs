@@ -91,7 +91,6 @@ export default class LegendTraits extends ModelTraits {
   })
   title?: string;
 
-
   @primitiveTrait({
     type: "string",
     name: "URL",
