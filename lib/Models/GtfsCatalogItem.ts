@@ -31,8 +31,8 @@ import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import GtfsCatalogItemTraits from "../Traits/GtfsCatalogItemTraits";
-import {RectangleTraits} from "../Traits/MappableTraits";
-import createStratumInstance from "./createStratumInstance"
+import { RectangleTraits } from "../Traits/MappableTraits";
+import createStratumInstance from "./createStratumInstance";
 import LoadableStratum from "./LoadableStratum";
 import StratumOrder from "./StratumOrder";
 
@@ -56,30 +56,24 @@ interface RectangleExtent {
   north: number;
 }
 
-class GtfsStratum extends LoadableStratum(
-  GtfsCatalogItemTraits
-) {
+class GtfsStratum extends LoadableStratum(GtfsCatalogItemTraits) {
   static stratumName = "gtfs";
 
-  constructor(
-    private readonly _item: GtfsCatalogItem,
-    ) {
+  constructor(private readonly _item: GtfsCatalogItem) {
     super();
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
-    return new GtfsStratum(
-      newModel as GtfsCatalogItem,
-    ) as this;
+    return new GtfsStratum(newModel as GtfsCatalogItem) as this;
   }
 
   static async load(item: GtfsCatalogItem) {
-   return new GtfsStratum(item);
+    return new GtfsStratum(item);
   }
 
   @computed
   get rectangle() {
-    return createStratumInstance(RectangleTraits, this._item._bbox)
+    return createStratumInstance(RectangleTraits, this._item._bbox);
   }
 }
 
@@ -100,7 +94,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     south: Infinity,
     east: -Infinity,
     north: -Infinity
-  }
+  };
   /**
    * Always use the getter to read this. This is a cache for a computed property.
    *
@@ -316,7 +310,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
             south: Infinity,
             east: -Infinity,
             north: -Infinity
-          }
+          };
           console.log("ping");
           raiseErrorOnRejectedPromise(this.forceLoadMapItems());
           // console.log(getObserverTree(this, "mapItems"));
@@ -331,7 +325,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
   }
 
   protected forceLoadMetadata(): Promise<void> {
-    return Promise.resolve()
+    return Promise.resolve();
   }
 
   protected forceLoadMapItems(): Promise<void> {
@@ -404,7 +398,11 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
       entity.vehicle.position.bearing !== null &&
       entity.vehicle.position.bearing !== undefined
     ) {
-      updateBbox(entity.vehicle.position.latitude, entity.vehicle.position.longitude, this._bbox)
+      updateBbox(
+        entity.vehicle.position.latitude,
+        entity.vehicle.position.longitude,
+        this._bbox
+      );
       position = Cartesian3.fromDegrees(
         entity.vehicle.position.longitude,
         entity.vehicle.position.latitude
