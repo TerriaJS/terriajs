@@ -69,7 +69,7 @@ class Chart extends React.Component {
   @computed
   get chartItems() {
     return sortChartItemsByType(this.props.chartItems).map(chartItem => {
-      const key = `chartItem-${chartItem.cateogryName}-${
+      const key = `chartItem-${chartItem.categoryName}-${
         chartItem.name
       }`.replace(/[^a-z0-9-]/gi, "-");
       return {
