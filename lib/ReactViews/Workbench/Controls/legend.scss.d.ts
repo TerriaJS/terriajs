@@ -11,6 +11,7 @@ interface CssExports {
   'legendOpenExternally': string;
   'legendSpacer': string;
   'legendSvg': string;
+  'legendTitle': string;
   'legendTitleAbove': string;
   'legendTitleBelow': string;
   'legendTitles': string;
