@@ -15,6 +15,7 @@ Change Log
 * Fix bug where urls in the feature info panel weren't turned into hyperlinks
 * Fix preview map's base map and bounding rectangle size
 * Re-introduce UI elements for search when a catalogSearchProvider is provided
+* Prevent TerriaMap from crashing when timeline is on and changing to 2D
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
