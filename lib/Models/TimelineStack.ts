@@ -2,6 +2,7 @@ import { action, computed, observable, IReactionDisposer, autorun } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import CommonStrata from "./CommonStrata";
+import isDefined from "../Core/isDefined";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 
@@ -161,7 +162,7 @@ export default class TimelineStack {
     const clock = this.clock;
     const currentTime = JulianDate.toIso8601(clock.currentTime);
     const isPaused = !clock.shouldAnimate;
-    if (this.top && this.top.startTime !== JulianDate.toIso8601(clock.startTime)) {
+    if (this.top && !isDefined(this.top.startTime)) {
       this.top.setTrait(
         stratumId,
         "startTime",
@@ -181,7 +182,10 @@ export default class TimelineStack {
       layer.setTrait(stratumId, "isPaused", isPaused);
     }
 
-    if (this.defaultTimeVarying && this.defaultTimeVarying.currentTime !== currentTime) {
+    if (
+      this.defaultTimeVarying &&
+      !isDefined(this.defaultTimeVarying.currentTime)
+    ) {
       this.defaultTimeVarying.setTrait(stratumId, "currentTime", currentTime);
       this.defaultTimeVarying.setTrait(stratumId, "isPaused", isPaused);
     }
