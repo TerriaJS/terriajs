@@ -18,6 +18,7 @@ Change Log
 * Fix bug where urls in the feature info panel weren't turned into hyperlinks
 * Fix preview map's base map and bounding rectangle size
 * Re-introduce UI elements for search when a catalogSearchProvider is provided
+* Fix bug that prevented live transport data from being hidden
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
