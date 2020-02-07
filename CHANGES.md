@@ -14,6 +14,7 @@ Change Log
 * Fixed bug causing workbench items to be shared in the wrong order.
 * Fix bug where urls in the feature info panel weren't turned into hyperlinks
 * Fix preview map's base map and bounding rectangle size
+* Fixed positioning of the buttons at the bottom and the timeline component on mobile
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC

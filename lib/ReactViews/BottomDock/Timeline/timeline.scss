@@ -8,7 +8,7 @@
   padding-bottom: 5px;
   padding-right: 5px;
   font-family: $font-base;
-  
+
   @media (max-width: $sm) {
     position: fixed;
     bottom: 0px;
@@ -25,7 +25,7 @@
   left: 0px;
   background: $dark;
   padding: 3px 5px;
-  
+
   @media (max-width: $sm) {
     position: fixed;
   }
