@@ -233,7 +233,7 @@ class Chart extends React.Component {
   }
 
   render() {
-    const { width, height, xAxis } = this.props;
+    const { height, xAxis } = this.props;
     return (
       <ZoomX
         surface="#zoomSurface"
@@ -245,7 +245,7 @@ class Chart extends React.Component {
         <Legends chartItems={this.chartItems} />
         <div style={{ position: "relative" }}>
           <svg
-            width={width}
+            width="100%"
             height={height}
             onMouseMove={this.setMouseCoordsFromEvent.bind(this)}
             onMouseLeave={() => this.setMouseCoords(undefined)}

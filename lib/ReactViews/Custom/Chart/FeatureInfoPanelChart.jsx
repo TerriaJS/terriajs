@@ -102,7 +102,7 @@ class Chart extends React.Component {
   }
 
   render() {
-    const { width, height, margin, chartItem, baseColor } = this.props;
+    const { height, margin, chartItem, baseColor } = this.props;
     const id = `featureInfoPanelChart-${chartItem.name}`;
     const textStyle = {
       fill: baseColor,
@@ -111,7 +111,7 @@ class Chart extends React.Component {
       fontFamily: "Arial"
     };
     return (
-      <svg width={width} height={height}>
+      <svg width="100%" height={height}>
         <Group top={margin.top} left={margin.left}>
           <AxisBottom
             top={this.plot.height}
