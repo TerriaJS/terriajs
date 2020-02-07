@@ -9,12 +9,16 @@ Change Log
 * Re-added `CartoMapCatalogItem`
 * Re-implemented `addedByUser` to fix bug where previews of user added data would appear in the wrong tab.
 * Added header options for loadJson5, & allow header overrides on MagdaReference loading
+* Re-added some matcher-type mappings in `registerCatalogMembers`.
+* Added `UrlReference` to represent catalog items created from a url with an auto-detected type.
+* Modified `upsertModelFromJson` so that when no `id` is provided, the `uniqueId` generated from `localId` or `name` is incremented if necessary to make it unique.
 * Re-enable search components if SearchProvider option provided
 * Modified tests to not use any real servers.
 * Fixed bug causing workbench items to be shared in the wrong order.
 * Fix bug where urls in the feature info panel weren't turned into hyperlinks
 * Fix preview map's base map and bounding rectangle size
 * Fixed positioning of the buttons at the bottom and the timeline component on mobile
+* Re-introduce UI elements for search when a catalogSearchProvider is provided
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC

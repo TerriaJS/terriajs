@@ -6,6 +6,7 @@ import { withTranslation } from "react-i18next";
 import { addMarker } from "../../Models/LocationMarkerUtils";
 import BadgeBar from "../BadgeBar";
 import LocationSearchResults from "./LocationSearchResults";
+import SideBarDatasetSearchResults from "./SideBarDatasetSearchResults";
 import Styles from "./sidebar-search.scss";
 import { runInAction } from "mobx";
 
@@ -53,10 +54,12 @@ const SidebarSearch = observer(
                 }
               >
                 {/* TODO: Put this back once we add a MobX DataCatalogSearch Provider */}
-                {/* <SideBarDatasetSearchResults
-                terria={this.props.terria}
-                viewState={this.props.viewState}
-                /> */}
+                {this.props.viewState.searchState.catalogSearchProvider && (
+                  <SideBarDatasetSearchResults
+                    terria={this.props.terria}
+                    viewState={this.props.viewState}
+                  />
+                )}
               </If>
               <For
                 each="search"
