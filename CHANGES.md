@@ -20,6 +20,7 @@ Change Log
 * Added the ability to filter location search results by an app-wide bounding box configuration parameter
 * Re-introduce UI elements for search when a catalogSearchProvider is provided
 * Hide opacity control for point-table catalog items.
+* Prevent TerriaMap from crashing when timeline is on and changing to 2D
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
