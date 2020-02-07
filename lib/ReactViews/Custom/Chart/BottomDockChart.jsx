@@ -229,7 +229,7 @@ class Chart extends React.Component {
               <XAxis
                 top={this.plot.height + 1}
                 scale={this.xScale}
-                label={xAxis.units}
+                label={xAxis.units || (xAxis.scale === "time" && "Date")}
                 labelProps={{
                   fill: labelColor,
                   fontSize: 12,
