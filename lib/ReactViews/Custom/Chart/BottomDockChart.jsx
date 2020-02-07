@@ -5,6 +5,7 @@ import { RectClipPath } from "@vx/clip-path";
 import { localPoint } from "@vx/event";
 import { GridRows } from "@vx/grid";
 import { Group } from "@vx/group";
+import { withParentSize } from "@vx/responsive";
 import { scaleLinear, scaleTime } from "@vx/scale";
 import { Line } from "@vx/shape";
 import PropTypes from "prop-types";
@@ -15,7 +16,6 @@ import Legends from "./Legends";
 import LineChart from "./LineChart";
 import MomentLinesChart from "./MomentLinesChart";
 import MomentPointsChart from "./MomentPointsChart";
-import Sized from "./Sized";
 import Tooltip from "./Tooltip";
 import ZoomX from "./ZoomX";
 
@@ -23,9 +23,11 @@ const chartMinWidth = 110;
 const defaultGridColor = "#efefef";
 const labelColor = "#efefef";
 
+@withParentSize
 @observer
 class BottomDockChart extends React.Component {
   static propTypes = {
+    parentWidth: PropTypes.number,
     width: PropTypes.number,
     height: PropTypes.number,
     chartItems: PropTypes.array.isRequired,
@@ -33,17 +35,19 @@ class BottomDockChart extends React.Component {
     margin: PropTypes.object
   };
 
+  static defaultProps = {
+    parentWidth: 0
+  };
+
   render() {
     return (
-      <Sized>
-        {/* We use Sized for sizing the chart svg to parent width */}
-        {({ width: parentWidth }) => (
-          <Chart
-            {...this.props}
-            width={Math.max(chartMinWidth, this.props.width || parentWidth)}
-          />
+      <Chart
+        {...this.props}
+        width={Math.max(
+          chartMinWidth,
+          this.props.width || this.props.parentWidth
         )}
-      </Sized>
+      />
     );
   }
 }
@@ -61,7 +65,7 @@ class Chart extends React.Component {
   };
 
   static defaultProps = {
-    margin: { left: 100, right: 100, top: 10, bottom: 50 }
+    margin: { left: 20, right: 30, top: 10, bottom: 50 }
   };
 
   @observable zoomedXScale;
@@ -82,11 +86,23 @@ class Chart extends React.Component {
   }
 
   @computed
-  get plot() {
-    const { width, height, margin } = this.props;
+  get plotHeight() {
+    const { height, margin } = this.props;
+    return height - margin.top - margin.bottom - Legends.maxHeightPx;
+  }
+
+  @computed
+  get plotWidth() {
+    const { width, margin } = this.props;
+    return width - margin.left - margin.right - this.estimatedYAxesWidth;
+  }
+
+  @computed
+  get adjustedMargin() {
+    const margin = this.props.margin;
     return {
-      width: width - margin.left - margin.right,
-      height: height - margin.top - margin.bottom - Legends.maxHeightPx
+      ...margin,
+      left: margin.left + this.estimatedYAxesWidth
     };
   }
 
@@ -96,7 +112,7 @@ class Chart extends React.Component {
     const domain = calculateDomain(this.chartItems);
     const params = {
       domain: domain.x,
-      range: [0, this.plot.width]
+      range: [0, this.plotWidth]
     };
     if (xAxis.scale === "linear") return scaleLinear(params);
     else return scaleTime(params);
@@ -109,7 +125,7 @@ class Chart extends React.Component {
 
   @computed
   get yAxes() {
-    const range = [this.plot.height, 0];
+    const range = [this.plotHeight, 0];
     const chartItemsByUnit = groupBy(this.chartItems, "units");
     return Object.entries(chartItemsByUnit).map(([units, chartItems]) => {
       return {
@@ -161,23 +177,37 @@ class Chart extends React.Component {
 
   @computed
   get tooltip() {
-    const margin = this.props.margin;
+    const margin = this.adjustedMargin;
     const tooltip = {
       items: this.pointsNearMouse
     };
 
-    if (!this.mouseCoords || this.mouseCoords.x < this.plot.width * 0.75) {
-      tooltip.right = this.props.width - (this.plot.width + margin.right);
+    if (!this.mouseCoords || this.mouseCoords.x < this.plotWidth * 0.75) {
+      tooltip.right = this.props.width - (this.plotWidth + margin.right);
     } else {
       tooltip.left = margin.left;
     }
 
-    if (!this.mouseCoords || this.mouseCoords.y < this.plot.height * 0.5) {
-      tooltip.bottom = this.props.height - (margin.top + this.plot.height);
+    if (!this.mouseCoords || this.mouseCoords.y < this.plotHeight * 0.5) {
+      tooltip.bottom = this.props.height - (margin.top + this.plotHeight);
     } else {
       tooltip.top = margin.top;
     }
     return tooltip;
+  }
+
+  @computed
+  get estimatedYAxesWidth() {
+    const numTicks = 4;
+    const tickLabelFontSize = 10;
+    // We need to consider only the left most Y-axis as its label values appear
+    // outside the chart plot area. The labels of inner y-axes appear inside
+    // the plot area.
+    const leftmostYAxis = this.yAxes[0];
+    const maxLabelDigits = Math.max(
+      ...leftmostYAxis.scale.ticks(numTicks).map(n => n.toString().length)
+    );
+    return maxLabelDigits * tickLabelFontSize;
   }
 
   @action
@@ -197,13 +227,13 @@ class Chart extends React.Component {
     );
     if (!coords) return;
     this.setMouseCoords({
-      x: coords.x - this.props.margin.left,
-      y: coords.y - this.props.margin.top
+      x: coords.x - this.adjustedMargin.left,
+      y: coords.y - this.adjustedMargin.top
     });
   }
 
   render() {
-    const { width, height, margin, xAxis } = this.props;
+    const { width, height, xAxis } = this.props;
     return (
       <ZoomX
         surface="#zoomSurface"
@@ -220,14 +250,17 @@ class Chart extends React.Component {
             onMouseMove={this.setMouseCoordsFromEvent.bind(this)}
             onMouseLeave={() => this.setMouseCoords(undefined)}
           >
-            <Group left={margin.left} top={margin.top}>
+            <Group
+              left={this.adjustedMargin.left}
+              top={this.adjustedMargin.top}
+            >
               <RectClipPath
                 id="plotClip"
-                width={this.plot.width}
-                height={this.plot.height}
+                width={this.plotWidth}
+                height={this.plotHeight}
               />
               <XAxis
-                top={this.plot.height + 1}
+                top={this.plotHeight + 1}
                 scale={this.xScale}
                 label={xAxis.units || (xAxis.scale === "time" && "Date")}
                 labelProps={{
@@ -248,8 +281,8 @@ class Chart extends React.Component {
               <For each="y" index="i" of={this.yAxes}>
                 <GridRows
                   key={`grid-${y.units}`}
-                  width={this.plot.width}
-                  height={this.plot.height}
+                  width={this.plotWidth}
+                  height={this.plotHeight}
                   scale={y.scale}
                   numTicks={4}
                   stroke={this.yAxes.length > 1 ? y.color : defaultGridColor}
@@ -262,8 +295,8 @@ class Chart extends React.Component {
                 pointerEvents="all"
               >
                 <rect
-                  width={this.plot.width}
-                  height={this.plot.height}
+                  width={this.plotWidth}
+                  height={this.plotHeight}
                   fill="transparent"
                 />
                 {this.cursorX && (
@@ -383,7 +416,6 @@ class YAxis extends React.PureComponent {
         stroke={color}
         tickStroke={color}
         label={units || ""}
-        labelOffset={24}
         labelProps={{
           fill: color,
           textAnchor: "middle",
@@ -394,9 +426,7 @@ class YAxis extends React.PureComponent {
           fill: color,
           textAnchor: "end",
           fontSize: 10,
-          fontFamily: "Arial",
-          dx: "-0.25em",
-          dy: "0.25em"
+          fontFamily: "Arial"
         })}
       />
     );

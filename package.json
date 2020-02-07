@@ -48,6 +48,7 @@
     "@vx/grid": "^0.0.193-alpha.2",
     "@vx/group": "^0.0.193-alpha.2",
     "@vx/legend": "^0.0.193-alpha.2",
+    "@vx/responsive": "^0.0.193",
     "@vx/scale": "^0.0.193-alpha.2",
     "@vx/shape": "^0.0.193-alpha.2",
     "@vx/tooltip": "^0.0.193-alpha.2",

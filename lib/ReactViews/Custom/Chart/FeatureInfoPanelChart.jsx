@@ -2,17 +2,20 @@ import { computed } from "mobx";
 import { observer } from "mobx-react";
 import { AxisLeft, AxisBottom } from "@vx/axis";
 import { Group } from "@vx/group";
+import { withParentSize } from "@vx/responsive";
 import { scaleLinear, scaleTime } from "@vx/scale";
 import PropTypes from "prop-types";
 import React from "react";
 import Chartable from "../../../Models/Chartable";
 import LineChart from "./LineChart";
-import Sized from "./Sized";
 import Styles from "./chart-preview.scss";
 
+@withParentSize
 @observer
 class FeatureInfoPanelChart extends React.Component {
   static propTypes = {
+    parentWidth: PropTypes.number,
+    parentHeight: PropTypes.number,
     width: PropTypes.number,
     height: PropTypes.number,
     margin: PropTypes.object,
@@ -22,6 +25,8 @@ class FeatureInfoPanelChart extends React.Component {
   };
 
   static defaultProps = {
+    parentWidth: 0,
+    parentHeight: 0,
     baseColor: "#efefef",
     margin: { top: 5, left: 5, right: 5, bottom: 5 }
   };
@@ -38,21 +43,17 @@ class FeatureInfoPanelChart extends React.Component {
     this.props.item.loadChartItems();
     if (!this.chartItem) return null;
 
-    const { width, height } = this.props;
+    const { width, height, parentWidth, parentHeight } = this.props;
     return (
       <div className={Styles.previewChart}>
-        <Sized>
-          {parentSize => (
-            <Chart
-              width={width || parentSize.width}
-              height={height || parentSize.height}
-              margin={this.props.margin}
-              chartItem={this.chartItem}
-              baseColor={this.props.baseColor}
-              xAxisLabel={this.props.xAxisLabel}
-            />
-          )}
-        </Sized>
+        <Chart
+          width={width || parentWidth}
+          height={height || parentHeight}
+          margin={this.props.margin}
+          chartItem={this.chartItem}
+          baseColor={this.props.baseColor}
+          xAxisLabel={this.props.xAxisLabel}
+        />
       </div>
     );
   }
