@@ -80,6 +80,10 @@
 
 .with-time-series-controls {
   bottom: 58px;
+
+  @media (max-width: $sm) {
+    bottom: 65px;
+  }
 }
 
 .print-disclaimer {

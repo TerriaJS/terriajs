@@ -89,10 +89,7 @@ const MapColumn = observer(
       const isAboveChrome75 =
         chromeVersion && chromeVersion[0] && Number(chromeVersion[0]) > 75;
       const mapCellClass = classNames(Styles.mapCell, {
-        [Styles.mapCellChrome]: isAboveChrome75}, {
-        [Styles.withTimeSeriesControls]: defined(
-          this.props.terria.timelineStack.topLayer
-        )
+        [Styles.mapCellChrome]: isAboveChrome75
       });
       return (
         <div
@@ -135,7 +132,7 @@ const MapColumn = observer(
                 <div
                   className={classNames(Styles.feedbackButtonWrapper, {
                     [Styles.withTimeSeriesControls]: defined(
-                      this.props.terria.timelineStack.topLayer
+                      this.props.terria.timelineStack.top
                     )
                   })}
                 >
