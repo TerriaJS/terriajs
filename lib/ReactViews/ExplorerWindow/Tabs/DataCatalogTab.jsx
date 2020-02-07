@@ -52,8 +52,8 @@ class DataCatalogTab extends React.Component {
           {searchState.catalogSearchProvider && (
             <SearchBox
               searchText={searchState.catalogSearchText}
-              onSearchTextChanged={this.changeSearchText}
-              onDoSearch={this.search}
+              onSearchTextChanged={val => this.changeSearchText(val)}
+              onDoSearch={() => this.search()}
               placeholder={this.searchPlaceholder}
               debounceDuration={
                 terria.catalogReferencesLoaded &&
