@@ -161,8 +161,7 @@ export default class TimelineStack {
     const clock = this.clock;
     const currentTime = JulianDate.toIso8601(clock.currentTime);
     const isPaused = !clock.shouldAnimate;
-
-    if (this.top) {
+    if (this.top && this.top.startTime !== JulianDate.toIso8601(clock.startTime)) {
       this.top.setTrait(
         stratumId,
         "startTime",
@@ -182,7 +181,7 @@ export default class TimelineStack {
       layer.setTrait(stratumId, "isPaused", isPaused);
     }
 
-    if (this.defaultTimeVarying) {
+    if (this.defaultTimeVarying && this.defaultTimeVarying.currentTime !== currentTime) {
       this.defaultTimeVarying.setTrait(stratumId, "currentTime", currentTime);
       this.defaultTimeVarying.setTrait(stratumId, "isPaused", isPaused);
     }
