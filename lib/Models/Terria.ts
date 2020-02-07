@@ -76,6 +76,7 @@ interface ConfigParameters {
   disableMyLocation?: boolean;
   experimentalFeatures?: boolean;
   magdaReferenceHeaders?: MagdaReferenceHeaders;
+  locationSearchBoundingBox?: number[];
 }
 
 interface StartOptions {
@@ -178,7 +179,8 @@ export default class Terria {
     bingMapsKey: undefined,
     brandBarElements: undefined,
     experimentalFeatures: undefined,
-    magdaReferenceHeaders: undefined
+    magdaReferenceHeaders: undefined,
+    locationSearchBoundingBox: undefined
   };
 
   @observable
