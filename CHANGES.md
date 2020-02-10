@@ -1,14 +1,14 @@
 Change Log
 ==========
 
-### Next Release
+### v7.11.2
 
 * Pass minimumLevel, in Cesium, to minNativeZoom, in Leaflet.
+* Upgraded to Cesium v1.66.
 
 ### v7.11.1
 
 * Fix for color of markers on the map associated with chart items
-
 
 ### v7.11.0
 
@@ -41,7 +41,7 @@ Change Log
 * Added ability to re-add "User data" CSV items once removed from workbench.
 * Changed catalog item event labels to include the full catalog item path, rather than just the catalog item name.
 * Added support for `openAddData` option in config.json.  If true, the "Add Data" dialog is automatically opened at startup.
-* Welcome message, in-app guides & new feature prompts are now disabled by default. These can be re-enabled by setting the `showWelcomeMessage`, `showInAppGuides` & `showFeaturePrompts` options in config.json. 
+* Welcome message, in-app guides & new feature prompts are now disabled by default. These can be re-enabled by setting the `showWelcomeMessage`, `showInAppGuides` & `showFeaturePrompts` options in config.json.
 * Updated Welcome Message to pass its props to `WelcomeMessagePrimaryBtnClick` & `WelcomeMessageSecondaryBtnClick` overrides.
 * Fixed a bug in anti-meridian handling causing excessive memory use.
 * Handled coordinate conversion for GeoJson geometries with an empty `coordinates` array.
@@ -115,7 +115,7 @@ Change Log
 * Add scrollbar to dropdown boxes.
 * Add support for SDMX version 2.1 to existing `SdmxJsonCatalogItem`.
 * Add a warning when sharing a map describing datasets which will be missing.
-* Enable the story panel to be ordered to the front. 
+* Enable the story panel to be ordered to the front.
 * Disable the autocomplete on the title field when adding a new scene to a story.
 * Fix SED codes for regionmapping
 
