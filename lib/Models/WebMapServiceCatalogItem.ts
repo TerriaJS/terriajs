@@ -421,7 +421,6 @@ class WebMapServiceCatalogItem
 
   static readonly type = "wms";
   readonly canZoomTo = true;
-  readonly showsInfo = true;
   readonly supportsSplitting = true;
 
   get type() {
