@@ -2,8 +2,8 @@ import Terria from "./Terria";
 import CommonStrata from "./CommonStrata";
 import upsertModelFromJson from "./upsertModelFromJson";
 import CatalogMemberFactory from "./CatalogMemberFactory";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import { BaseModel } from "./Model";
+import UrlReference from "./UrlReference";
 
 export default function createCatalogItemFromUrl(
   url: string,
@@ -29,48 +29,32 @@ export function createCatalogItemFromUrlWithOptions(
   },
   _index?: number
 ): Promise<BaseModel | undefined> {
-  const index = _index || 0;
-  if (index >= mapping.length) {
+  const item = upsertModelFromJson(
+    CatalogMemberFactory,
+    terria,
+    "",
+    undefined,
+    CommonStrata.definition,
+    {
+      type: UrlReference.type,
+      name: url,
+      url: url,
+      localId: options.id || url,
+      allowLoad: allowLoad
+    }
+  );
+
+  if (item === undefined || !(item instanceof UrlReference)) {
     return Promise.resolve(undefined);
   }
-  if (
-    (mapping[index].matcher && !mapping[index].matcher(url)) ||
-    (mapping[index].requiresLoad && !allowLoad)
-  ) {
-    return createCatalogItemFromUrlWithOptions(
-      url,
-      terria,
-      allowLoad,
-      options,
-      index + 1
-    );
-  } else {
-    var item = upsertModelFromJson(
-      CatalogMemberFactory,
-      terria,
-      "",
-      undefined,
-      CommonStrata.definition,
-      { type: mapping[index].type, name: url, url: url, id: options.id }
-    );
 
-    if (allowLoad && CatalogMemberMixin.isMixedInto(item)) {
-      return item
-        .loadMetadata()
-        .then(() => item)
-        .catch(e => {
-          return createCatalogItemFromUrlWithOptions(
-            url,
-            terria,
-            allowLoad,
-            options,
-            index + 1
-          );
-        });
-    } else {
+  return item.loadReference().then(() => {
+    if (item.target !== undefined) {
       return Promise.resolve(item);
+    } else {
+      return Promise.resolve(undefined);
     }
-  }
+  });
 }
 
 type Matcher = (input: string) => boolean;
@@ -80,7 +64,7 @@ interface MappingEntry {
   requiresLoad: boolean;
 }
 
-const mapping: MappingEntry[] = [];
+export const mapping: MappingEntry[] = [];
 
 createCatalogItemFromUrl.register = function(
   matcher: Matcher,
@@ -93,20 +77,3 @@ createCatalogItemFromUrl.register = function(
     requiresLoad: Boolean(requiresLoad)
   });
 };
-
-// TODO: move registrations to a seperate file
-createCatalogItemFromUrl.register(matchesExtension("geojson"), "geojson");
-createCatalogItemFromUrl.register(matchesUrl(/\/wms/i), "wms-group", true);
-createCatalogItemFromUrl.register(matchesExtension("kml"), "kml");
-createCatalogItemFromUrl.register(matchesExtension("kmz"), "kml");
-
-function matchesUrl(regex: RegExp) {
-  return /./.test.bind(regex);
-}
-
-function matchesExtension(extension: string) {
-  var regex = new RegExp("\\." + extension + "$", "i");
-  return function(url: string) {
-    return Boolean(url.match(regex));
-  };
-}

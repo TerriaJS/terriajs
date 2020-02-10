@@ -9,6 +9,9 @@ Change Log
 * Re-added `CartoMapCatalogItem`
 * Re-implemented `addedByUser` to fix bug where previews of user added data would appear in the wrong tab.
 * Added header options for loadJson5, & allow header overrides on MagdaReference loading
+* Re-added some matcher-type mappings in `registerCatalogMembers`.
+* Added `UrlReference` to represent catalog items created from a url with an auto-detected type.
+* Modified `upsertModelFromJson` so that when no `id` is provided, the `uniqueId` generated from `localId` or `name` is incremented if necessary to make it unique.
 * Re-enable search components if SearchProvider option provided
 * Modified tests to not use any real servers.
 * Fixed bug causing workbench items to be shared in the wrong order.
@@ -16,6 +19,9 @@ Change Log
 * Fix preview map's base map and bounding rectangle size
 * Added `hasLocalData` property to indicate when a catalog item contains local data. This property is used to determine whether the item can be shared or not.
 * Fixed bug causing user added data to not be shared. Note that user added catalog item urls are now set at the user stratum rather than the definition stratum.
+* Added the ability to filter location search results by an app-wide bounding box configuration parameter
+* Re-introduce UI elements for search when a catalogSearchProvider is provided
+* Hide opacity control for point-table catalog items.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC

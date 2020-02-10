@@ -5,14 +5,12 @@ interface CssExports {
   'imageAnchor': string;
   'legend': string;
   'legend--svg': string;
-  'legendBox': string;
   'legendImagehasError': string;
   'legendInner': string;
   'legendLegendBoxImg': string;
   'legendOpenExternally': string;
   'legendSpacer': string;
   'legendSvg': string;
-  'legendTitle': string;
   'legendTitleAbove': string;
   'legendTitleBelow': string;
   'legendTitles': string;

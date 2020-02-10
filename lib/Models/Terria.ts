@@ -79,6 +79,7 @@ interface ConfigParameters {
   disableMyLocation?: boolean;
   experimentalFeatures?: boolean;
   magdaReferenceHeaders?: MagdaReferenceHeaders;
+  locationSearchBoundingBox?: number[];
 }
 
 interface StartOptions {
@@ -119,6 +120,8 @@ export default class Terria {
   readonly overlays = new Workbench();
   readonly catalog = new Catalog(this);
   readonly timelineClock = new Clock({ shouldAnimate: false });
+
+  @observable
   readonly mainViewer = new TerriaViewer(
     this,
     computed(() =>
@@ -179,7 +182,8 @@ export default class Terria {
     bingMapsKey: undefined,
     brandBarElements: undefined,
     experimentalFeatures: undefined,
-    magdaReferenceHeaders: undefined
+    magdaReferenceHeaders: undefined,
+    locationSearchBoundingBox: undefined
   };
 
   @observable
@@ -373,6 +377,11 @@ export default class Terria {
 
   dispose() {
     this._initSourceLoader.dispose();
+  }
+
+  updateFromStartData(startData: any) {
+    interpretStartData(this, startData);
+    return this.loadInitSources();
   }
 
   updateApplicationUrl(newUrl: string) {

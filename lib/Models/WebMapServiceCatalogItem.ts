@@ -554,7 +554,8 @@ class WebMapServiceCatalogItem
       console.log(`Creating new ImageryProvider for time ${time}`);
 
       const parameters: any = {
-        ...WebMapServiceCatalogItem.defaultParameters
+        ...WebMapServiceCatalogItem.defaultParameters,
+        ...(this.parameters || {})
       };
 
       if (time !== undefined) {
