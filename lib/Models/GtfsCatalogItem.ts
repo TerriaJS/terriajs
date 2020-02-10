@@ -102,6 +102,8 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
    */
   protected _dataSource: DataSource = new DataSource("billboard");
 
+  readonly showsInfo = true;
+
   protected static readonly FEATURE_INFO_TEMPLATE_FIELDS: string[] = [
     "route_short_name",
     "occupancy_status#str",
