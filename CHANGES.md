@@ -22,6 +22,7 @@ Change Log
 * Added the ability to filter location search results by an app-wide bounding box configuration parameter
 * Re-introduce UI elements for search when a catalogSearchProvider is provided
 * Hide opacity control for point-table catalog items.
+* Support Zoom to Data on `CsvCatalogItem` when data has lat-lon columns.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
