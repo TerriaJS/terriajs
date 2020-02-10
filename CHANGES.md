@@ -19,6 +19,7 @@ Change Log
 * Fix preview map's base map and bounding rectangle size
 * Added the ability to filter location search results by an app-wide bounding box configuration parameter
 * Re-introduce UI elements for search when a catalogSearchProvider is provided
+* Hide opacity control for point-table catalog items.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
