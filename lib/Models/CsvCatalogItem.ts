@@ -42,6 +42,7 @@ export default class CsvCatalogItem extends TableMixin(
   }
 
   private _csvFile?: File;
+  readonly showsInfo = true;
 
   constructor(id: string | undefined, terria: Terria) {
     super(id, terria);
