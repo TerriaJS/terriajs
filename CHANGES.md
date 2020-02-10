@@ -19,7 +19,7 @@ Change Log
 * Fix preview map's base map and bounding rectangle size
 * Added the ability to filter location search results by an app-wide bounding box configuration parameter
 * Re-introduce UI elements for search when a catalogSearchProvider is provided
-* Set `showInfo` to true for `CsvCatalogItem` to enable the 'About This Data' button in the workbench
+* Set `showInfo` to true for `CsvCatalogItem` and `GtfsCatalogItem` to enable the 'About This Data' button in the workbench
 
 
 ### Next Release
