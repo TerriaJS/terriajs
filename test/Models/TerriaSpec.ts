@@ -40,36 +40,30 @@ describe("Terria", function() {
         WebMapServiceCatalogGroup.type,
         WebMapServiceCatalogGroup
       );
-      updateModelFromJson(
-        terria.catalog.userAddedDataGroup,
-        CommonStrata.user,
+
+      terria.catalog.userAddedDataGroup.addMembersFromJson(CommonStrata.user, [
         {
-          members: [
-            {
-              id: "itemABC",
-              name: "abc",
-              type: "wms",
-              url: "test/WMS/single_metadata_url.xml"
-            },
-            {
-              id: "groupABC",
-              name: "xyz",
-              type: "wms-group",
-              url: "test/WMS/single_metadata_url.xml"
-            }
-          ]
+          id: "itemABC",
+          name: "abc",
+          type: "wms",
+          url: "test/WMS/single_metadata_url.xml"
+        },
+        {
+          id: "groupABC",
+          name: "xyz",
+          type: "wms-group",
+          url: "test/WMS/single_metadata_url.xml"
         }
-      );
-      updateModelFromJson(terria.catalog.group, CommonStrata.user, {
-        members: [
-          {
-            id: "itemDEF",
-            name: "def",
-            type: "wms",
-            url: "test/WMS/single_metadata_url.xml"
-          }
-        ]
-      });
+      ]);
+
+      terria.catalog.group.addMembersFromJson(CommonStrata.user, [
+        {
+          id: "itemDEF",
+          name: "def",
+          type: "wms",
+          url: "test/WMS/single_metadata_url.xml"
+        }
+      ]);
     });
 
     it("initializes user added data group with shared items", function(done) {

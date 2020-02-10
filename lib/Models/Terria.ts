@@ -566,9 +566,7 @@ export default class Terria {
     }
 
     if (initData.catalog !== undefined) {
-      updateModelFromJson(this.catalog.group, stratumId, {
-        members: initData.catalog
-      });
+      this.catalog.group.addMembersFromJson(stratumId, initData.catalog);
     }
 
     if (Array.isArray(initData.stories)) {

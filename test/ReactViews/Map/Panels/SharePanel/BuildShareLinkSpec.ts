@@ -18,9 +18,9 @@ import addUserCatalogMember from "../../../../../lib/Models/addUserCatalogMember
 import { BaseModel } from "../../../../../lib/Models/Model";
 import CommonStrata from "../../../../../lib/Models/CommonStrata";
 import { runInAction } from "mobx";
-import updateModelFromJson from "../../../../../lib/Models/updateModelFromJson";
 import addToWorkbench from "../../../../../lib/Models/addToWorkbench";
 import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
+import CatalogMemberFactory from "../../../../../lib/Models/CatalogMemberFactory";
 
 let terria: Terria;
 let viewState: ViewState;
@@ -38,6 +38,11 @@ beforeEach(function() {
     catalogSearchProvider: null,
     locationSearchProviders: []
   });
+
+  CatalogMemberFactory.register(
+    WebMapServiceCatalogItem.type,
+    WebMapServiceCatalogItem
+  );
 });
 
 const decodeAndParseStartHash = (url: string) => {
@@ -134,7 +139,7 @@ describe("BuildShareLink", function() {
         model.setTrait(
           CommonStrata.definition,
           "url",
-          "https://programs.communications.gov.au/geoserver/ows"
+          "test/WMS/single_metadata_url.xml"
         );
       });
       terria.addModel(model);
@@ -175,20 +180,14 @@ describe("BuildShareLink", function() {
 
   describe("should generate a url that opens to the catalog", function() {
     beforeEach(function() {
-      updateModelFromJson(
-        terria.catalog.userAddedDataGroup,
-        CommonStrata.user,
+      terria.catalog.userAddedDataGroup.addMembersFromJson(CommonStrata.user, [
         {
-          members: [
-            {
-              id: "ABC",
-              name: "abc",
-              type: "wms",
-              url: "foo"
-            }
-          ]
+          id: "ABC",
+          name: "abc",
+          type: "wms",
+          url: "test/WMS/single_metadata_url.xml"
         }
-      );
+      ]);
     });
 
     // sharing active tab category not implemented in mobx yet
