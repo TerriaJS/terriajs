@@ -20,7 +20,9 @@ import isDefined from "../Core/isDefined";
 import JsonValue, {
   isJsonObject,
   isJsonString,
-  JsonObject
+  JsonObject,
+  isJsonBoolean,
+  isJsonNumber
 } from "../Core/Json";
 import loadJson5 from "../Core/loadJson5";
 import ServerConfig from "../Core/ServerConfig";
@@ -49,6 +51,7 @@ import updateModelFromJson from "./updateModelFromJson";
 import upsertModelFromJson from "./upsertModelFromJson";
 import ViewerMode from "./ViewerMode";
 import Workbench from "./Workbench";
+import openGroup from "./openGroup";
 
 interface ConfigParameters {
   [key: string]: ConfigParameters[keyof ConfigParameters];
@@ -330,7 +333,7 @@ export default class Terria {
             return this.loadMagdaConfig(options.configUrl, config);
           }
 
-          const initializationUrls: string[] = config.initializationUrls;
+          const initializationUrls: string[] = config.initializationUrls || [];
           const initSources = initializationUrls.map(url =>
             generateInitializationUrl(
               baseUri,
@@ -347,9 +350,9 @@ export default class Terria {
         return this.serverConfig
           .init(this.configParameters.serverConfigUrl)
           .then((serverConfig: any) => {
-            this.initCorsProxy(this.configParameters, serverConfig);
-            return serverConfig;
-          });
+            return this.initCorsProxy(this.configParameters, serverConfig);
+          })
+          .then(() => this.serverConfig);
       })
       .then(serverConfig => {
         if (this.shareDataService && serverConfig) {
@@ -423,16 +426,14 @@ export default class Terria {
     });
 
     return Promise.all(initSourcePromises).then(initSources => {
-      runInAction(() => {
-        initSources.forEach(initSource => {
-          if (initSource === undefined) {
-            return;
-          }
+      return runInAction(() => {
+        const promises = filterOutUndefined(initSources).map(initSource =>
           this.applyInitData({
             initData: initSource
-          });
-        });
-      });
+          })
+        );
+        return Promise.all(promises);
+      }).then(() => undefined);
     });
   }
 
@@ -497,6 +498,17 @@ export default class Terria {
         replaceStratum
       );
 
+      if (Array.isArray(containerIds)) {
+        containerIds.forEach(containerId => {
+          if (
+            typeof containerId === "string" &&
+            loadedModel.knownContainerUniqueIds.indexOf(containerId) < 0
+          ) {
+            loadedModel.knownContainerUniqueIds.push(containerId);
+          }
+        });
+      }
+
       // If we're replacing the stratum and the existing model is already
       // dereferenced, we need to replace the dereferenced stratum, too,
       // even if there's no trace of it it in the load data.
@@ -536,7 +548,13 @@ export default class Terria {
         }
       }
 
-      return loadedModel;
+      if (GroupMixin.isMixedInto(loadedModel)) {
+        return openGroup(loadedModel, loadedModel.isOpen).then(
+          () => loadedModel
+        );
+      } else {
+        return loadedModel;
+      }
     });
   }
 
@@ -557,9 +575,7 @@ export default class Terria {
     }
 
     if (initData.catalog !== undefined) {
-      updateModelFromJson(this.catalog.group, stratumId, {
-        members: initData.catalog
-      });
+      this.catalog.group.addMembersFromJson(stratumId, initData.catalog);
     }
 
     if (Array.isArray(initData.stories)) {
@@ -591,8 +607,12 @@ export default class Terria {
       this.currentViewer.zoomTo(initialCamera, 2.0);
     }
 
-    if (isJsonString(initData.previewedItemId)) {
-      this.previewedItemId = initData.previewedItemId;
+    if (isJsonBoolean(initData.showSplitter)) {
+      this.showSplitter = initData.showSplitter;
+    }
+
+    if (isJsonNumber(initData.splitPosition)) {
+      this.splitPosition = initData.splitPosition;
     }
 
     // Copy but don't yet load the workbench.
@@ -625,6 +645,10 @@ export default class Terria {
 
     return promise.then(() => {
       return runInAction(() => {
+        if (isJsonString(initData.previewedItemId)) {
+          this.previewedItemId = initData.previewedItemId;
+        }
+
         const promises: Promise<void>[] = [];
 
         // Set the new contents of the workbench.

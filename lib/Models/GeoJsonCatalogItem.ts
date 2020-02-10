@@ -76,6 +76,11 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
     this._geoJsonFile = file;
   }
 
+  @computed
+  get hasLocalData(): boolean {
+    return isDefined(this._geoJsonFile);
+  }
+
   /**
    * Returns the final raw data after all transformations are applied.
    */
