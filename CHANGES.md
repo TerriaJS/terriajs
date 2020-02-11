@@ -26,6 +26,7 @@ Change Log
 * Fixed bug where `Catalog` would sometimes end up with an undefined `userAddedDataGroup`.
 * Show About Data for all items by default.
 * Fix bug that throws an error when clicking on ArcGIS Map Service features
+* Fix initialisation of `terria`'s `shareDataService`.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
