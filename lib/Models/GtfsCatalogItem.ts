@@ -47,7 +47,6 @@ import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import raiseErrorOnRejectedPromise from "./raiseErrorOnRejectedPromise";
 import Terria from "./Terria";
 import VehicleData from "./VehicleData";
-import isDefined from "../Core/isDefined";
 import { BaseModel } from "./Model";
 
 interface RectangleExtent {
@@ -259,11 +258,8 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   @computed
   get mapItems(): DataSource[] {
-    if (isDefined(this.dataSource)) {
-      this._dataSource.show = this.show;
-      return [this.dataSource];
-    }
-    return [];
+    this._dataSource.show = this.show;
+    return [this.dataSource];
   }
 
   @computed
