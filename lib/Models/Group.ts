@@ -12,6 +12,7 @@ export default interface Group {
   loadMembers(): Promise<void>;
   refreshKnownContainerUniqueIds(uniqueId: string | undefined): void;
   add(stratumId: string, member: BaseModel): void;
+  addMembersFromJson(stratumId: string, members: any): void;
   remove(stratumId: string, member: BaseModel): void;
   moveMemberToIndex(
     stratumId: string,

@@ -59,14 +59,12 @@ const Description = observer(
             </div>
           </If>
 
-          <If condition={catalogItem.dataUrlType === "local"}>
+          <If condition={catalogItem.hasLocalData}>
             <p>{t("description.dataLocal")}</p>
           </If>
 
           <If
-            condition={
-              catalogItem.dataUrlType !== "local" && !catalogItem.hasDescription
-            }
+            condition={!catalogItem.hasLocalData && !catalogItem.hasDescription}
           >
             <p>{t("description.dataNotLocal")}</p>
           </If>
