@@ -24,6 +24,7 @@ Change Log
 * Fix bug that prevented live transport data from being hidden
 * Hide opacity control for point-table catalog items.
 * Show About Data for all items by default.
+* Fix bug that throws an error when clicking on ArcGIS Map Service features
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
