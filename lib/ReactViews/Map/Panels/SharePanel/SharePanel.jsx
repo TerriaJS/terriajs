@@ -14,7 +14,7 @@ import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
 import Input from "../../../Styled/Input/Input.jsx";
 import DropdownStyles from "../panel.scss";
 import {
-  addUserAddedCatalog,
+  isShareable,
   buildShareLink,
   buildShortShareLink,
   canShorten
@@ -288,10 +288,10 @@ const SharePanel = observer(
     },
 
     renderWarning() {
-      // Broken in mobx. See https://github.com/TerriaJS/terriajs/issues/3798
-      // Generate share data for user added catalog, then throw that away and use the returned
-      //  "rejected" items to display a disclaimer about what can't be shared
-      const unshareableItems = addUserAddedCatalog(this.props.terria, []);
+      const unshareableItems = this.props.terria.catalog.userAddedDataGroup.memberModels.filter(
+        model => !isShareable(this.props.terria)(model.uniqueId)
+      );
+
       return (
         <If condition={unshareableItems.length > 0}>
           <div className={Styles.warning}>
@@ -349,7 +349,7 @@ const SharePanel = observer(
                 source={this.getShareUrlInput("light")}
                 id="share-url"
               />
-              {/* {this.renderWarning()} */}
+              {this.renderWarning()}
             </div>
           </Otherwise>
         </Choose>
@@ -368,7 +368,7 @@ const SharePanel = observer(
         <div>
           <div className={DropdownStyles.section}>
             <Clipboard source={this.getShareUrlInput("dark")} id="share-url" />
-            {/* {this.renderWarning()} */}
+            {this.renderWarning()}
           </div>
           <div className={DropdownStyles.section}>
             <div>{t("share.printTitle")}</div>

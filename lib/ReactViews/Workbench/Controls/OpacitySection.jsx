@@ -35,7 +35,7 @@ const OpacitySection = observer(
       const { t } = this.props;
       if (
         !hasTraits(item, RasterLayerTraits, "opacity") ||
-        item.opacity === undefined
+        item.disableOpacityControl
       ) {
         return null;
       }

@@ -54,8 +54,7 @@ export const DataCatalog = observer(
             />
           </If>
           <For each="item" of={items}>
-            {item !==
-              this.props.terria.catalog.userAddedDataGroupIfItExists && (
+            {item !== this.props.terria.catalog.userAddedDataGroup && (
               <DataCatalogMember
                 viewState={this.props.viewState}
                 member={item}
