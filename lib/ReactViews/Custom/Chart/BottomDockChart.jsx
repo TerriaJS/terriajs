@@ -18,6 +18,7 @@ import MomentLinesChart from "./MomentLinesChart";
 import MomentPointsChart from "./MomentPointsChart";
 import Tooltip from "./Tooltip";
 import ZoomX from "./ZoomX";
+import Styles from "./bottom-dock-chart.scss";
 
 const chartMinWidth = 110;
 const defaultGridColor = "#efefef";
@@ -73,16 +74,18 @@ class Chart extends React.Component {
 
   @computed
   get chartItems() {
-    return sortChartItemsByType(this.props.chartItems).map(chartItem => {
-      const key = `chartItem-${chartItem.categoryName}-${
-        chartItem.name
-      }`.replace(/[^a-z0-9-]/gi, "-");
-      return {
-        ...chartItem,
-        key,
-        points: chartItem.points.sort((p1, p2) => p1.x - p2.x)
-      };
-    });
+    return sortChartItemsByType(this.props.chartItems)
+      .map(chartItem => {
+        const key = `chartItem-${chartItem.categoryName}-${
+          chartItem.name
+        }`.replace(/[^a-z0-9-]/gi, "-");
+        return {
+          ...chartItem,
+          key,
+          points: chartItem.points.sort((p1, p2) => p1.x - p2.x)
+        };
+      })
+      .filter(chartItem => chartItem.points.length > 0);
   }
 
   @computed
@@ -205,6 +208,7 @@ class Chart extends React.Component {
     // the plot area.
     const leftmostYAxis = this.yAxes[0];
     const maxLabelDigits = Math.max(
+      0,
       ...leftmostYAxis.scale.ticks(numTicks).map(n => n.toString().length)
     );
     return maxLabelDigits * tickLabelFontSize;
@@ -234,6 +238,9 @@ class Chart extends React.Component {
 
   render() {
     const { height, xAxis } = this.props;
+    if (this.chartItems.length === 0)
+      return <div className={Styles.empty}>No data available</div>;
+
     return (
       <ZoomX
         surface="#zoomSurface"

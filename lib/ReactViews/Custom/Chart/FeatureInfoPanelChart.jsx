@@ -103,6 +103,11 @@ class Chart extends React.Component {
 
   render() {
     const { height, margin, chartItem, baseColor } = this.props;
+
+    if (chartItem.points.length === 0) {
+      return <div className={Styles.empty}>No data available</div>;
+    }
+
     const id = `featureInfoPanelChart-${chartItem.name}`;
     const textStyle = {
       fill: baseColor,
