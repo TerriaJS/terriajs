@@ -315,7 +315,6 @@ export default class ArcGisMapServerCatalogItem
 
   readonly supportsSplitting = true;
   readonly canZoomTo = true;
-  readonly showsInfo = true;
   readonly isMappable = true;
 
   get type() {

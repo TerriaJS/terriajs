@@ -36,6 +36,13 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       return true;
     }
 
+    /**
+     * Default value for showsInfo (About Data button)
+     */
+    get showsInfo() {
+      return true;
+    }
+
     @computed
     get nameInCatalog(): string | undefined {
       return super.nameInCatalog || this.name;

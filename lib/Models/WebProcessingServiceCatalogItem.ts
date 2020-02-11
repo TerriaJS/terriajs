@@ -183,7 +183,6 @@ export default class WebProcessingServiceCatalogItem
     return i18next.t("models.webProcessingService.wpsResult");
   }
 
-  readonly showsInfo = true;
   readonly isMappable = true;
 
   @observable
