@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { observable, autorun, runInAction } from "mobx";
+import { observable, autorun } from "mobx";
 import { USER_ADDED_CATEGORY_ID } from "../Core/addedByUser";
 import CatalogGroup from "./CatalogGroupNew";
 import CommonStrata from "./CommonStrata";
@@ -14,14 +14,14 @@ export default class Catalog {
 
   readonly terria: Terria;
 
-  reactToGroupChanges: () => void;
+  private _disposeCreateUserAddedGroup: () => void;
 
   constructor(terria: Terria) {
     this.terria = terria;
     this.group = new CatalogGroup("/", this.terria);
     this.terria.addModel(this.group);
 
-    this.reactToGroupChanges = autorun(() => {
+    this._disposeCreateUserAddedGroup = autorun(() => {
       // Make sure the catalog has a user added data group even if its
       // group or group members are reset.
       if (
@@ -60,6 +60,10 @@ export default class Catalog {
         this.group.add(CommonStrata.definition, userAddedDataGroup);
       }
     });
+  }
+
+  destroy() {
+    this._disposeCreateUserAddedGroup();
   }
 
   get userAddedDataGroup(): CatalogGroup {
