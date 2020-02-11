@@ -91,32 +91,22 @@ const Description = observer(
                 <When condition={catalogItem.type === "wms"}>
                   <p key="wms-description">
                     <Trans i18nKey="description.wms">
-                      This is a
                       <a
                         href="https://en.wikipedia.org/wiki/Web_Map_Service"
                         target="_blank"
                         rel="noopener noreferrer"
-                      >
-                        WMS service
-                      </a>
-                      , which generates map images on request. It can be used in
-                      GIS software with this URL:
+                      />
                     </Trans>
                   </p>
                 </When>
                 <When condition={catalogItem.type === "wfs"}>
                   <p key="wfs-description">
                     <Trans i18nKey="description.wfs">
-                      This is a{" "}
                       <a
                         href="https://en.wikipedia.org/wiki/Web_Feature_Service"
                         target="_blank"
                         rel="noopener noreferrer"
-                      >
-                        WFS service
-                      </a>
-                      , which transfers raw spatial data on request. It can be
-                      used in GIS software with this URL:
+                      />
                     </Trans>
                   </p>
                 </When>
