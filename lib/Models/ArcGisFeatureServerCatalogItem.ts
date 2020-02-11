@@ -61,19 +61,19 @@ interface ClassBreakInfo {
   classMaxValue: number;
   classMinValue?: number;
   label?: string;
-  symbol: Symbol;
+  symbol: Symbol | null;
 }
 
 interface ClassBreaksRenderer extends Renderer {
   field: string;
   classBreakInfos: ClassBreakInfo[];
-  defaultSymbol: Symbol;
+  defaultSymbol: Symbol | null;
 }
 
 interface UniqueValueInfo {
   value: string;
   label?: string;
-  symbol: Symbol;
+  symbol: Symbol | null;
 }
 
 interface UniqueValueRenderer extends Renderer {
@@ -82,12 +82,12 @@ interface UniqueValueRenderer extends Renderer {
   field3?: string;
   fieldDelimiter?: string;
   uniqueValueInfos: UniqueValueInfo[];
-  defaultSymbol: Symbol;
+  defaultSymbol: Symbol | null;
 }
 
 interface SimpleRenderer extends Renderer {
   label?: string;
-  symbol: Symbol;
+  symbol: Symbol | null;
 }
 
 interface DrawingInfo {
@@ -302,26 +302,28 @@ class FeatureServerStratum extends LoadableStratum(
     for (var i = 0; i < infos.length; i++) {
       const label = infos[i].label;
       const symbol = infos[i].symbol;
-      const color = symbol.color;
-      const imageUrl = symbol.imageData
-        ? proxyCatalogItemUrl(
-            this,
-            `data:${symbol.contentType};base64,${symbol.imageData}`
-          )
-        : undefined;
+      if (symbol) {
+        const color = symbol.color;
+        const imageUrl = symbol.imageData
+          ? proxyCatalogItemUrl(
+              this,
+              `data:${symbol.contentType};base64,${symbol.imageData}`
+            )
+          : undefined;
 
-      if (color) {
-        const item = {
-          title: label,
-          color: convertEsriColorToCesiumColor(color).toCssColorString()
-        };
-        items.push(item);
-      } else if (imageUrl) {
-        const item = {
-          title: label,
-          imageUrl: imageUrl
-        };
-        items.push(item);
+        if (color) {
+          const item = {
+            title: label,
+            color: convertEsriColorToCesiumColor(color).toCssColorString()
+          };
+          items.push(item);
+        } else if (imageUrl) {
+          const item = {
+            title: label,
+            imageUrl: imageUrl
+          };
+          items.push(item);
+        }
       }
     }
 
@@ -389,86 +391,41 @@ export default class ArcGisFeatureServerCatalogItem
               // A 'simple' renderer only applies a single style to all features
               if (rendererType === "simple") {
                 const simpleRenderer = <SimpleRenderer>renderer;
-                entities.values.forEach(function(entity) {
-                  updateEntityWithEsriStyle(
-                    entity,
-                    simpleRenderer.symbol,
-                    that
-                  );
-                });
+                const symbol = simpleRenderer.symbol;
+                if (symbol) {
+                  entities.values.forEach(function(entity) {
+                    updateEntityWithEsriStyle(entity, symbol, that);
+                  });
+                }
 
                 // For a 'uniqueValue' renderer symbology gets applied via feature properties.
               } else if (renderer.type === "uniqueValue") {
                 const uniqueValueRenderer = <UniqueValueRenderer>renderer;
-                const rendererObj = setupUniqueValRenderer(uniqueValueRenderer);
-
-                const primaryFieldForSymbology = uniqueValueRenderer.field1;
-
+                const rendererObj = setupUniqueValueRenderer(
+                  uniqueValueRenderer
+                );
                 entities.values.forEach(function(entity) {
-                  let symbolName = entity.properties[
-                    primaryFieldForSymbology
-                  ].getValue();
-
-                  // accumulate values if there is more than one field defined
-                  if (
-                    uniqueValueRenderer.fieldDelimiter &&
-                    uniqueValueRenderer.field2
-                  ) {
-                    let val2 = entity.properties[
-                      uniqueValueRenderer.field2
-                    ].getValue();
-
-                    if (val2) {
-                      symbolName += uniqueValueRenderer.fieldDelimiter + val2;
-
-                      if (uniqueValueRenderer.field3) {
-                        let val3 = entity.properties[
-                          uniqueValueRenderer.field3
-                        ].getValue();
-
-                        if (val3) {
-                          symbolName +=
-                            uniqueValueRenderer.fieldDelimiter + val3;
-                        }
-                      }
-                    }
+                  const symbol = getUniqueValueSymbol(
+                    entity,
+                    uniqueValueRenderer,
+                    rendererObj
+                  );
+                  if (symbol) {
+                    updateEntityWithEsriStyle(entity, symbol, that);
                   }
-
-                  let symbol: Symbol | undefined =
-                    rendererObj[symbolName].symbol;
-                  if (symbol === undefined || symbol === null) {
-                    symbol = uniqueValueRenderer.defaultSymbol;
-                  }
-
-                  updateEntityWithEsriStyle(entity, symbol, that);
                 });
+
+                // For a 'classBreaks' renderer symbology gets applied via classes or ranges of data.
               } else if (renderer.type === "classBreaks") {
                 const classBreaksRenderer = <ClassBreaksRenderer>renderer;
-                const field = classBreaksRenderer.field;
-
                 entities.values.forEach(function(entity) {
-                  let symbol: Symbol | undefined;
-                  let entityValue = entity.properties[field].getValue();
-
-                  for (
-                    var i = 0;
-                    i < classBreaksRenderer.classBreakInfos.length;
-                    i++
-                  ) {
-                    if (
-                      entityValue <=
-                      classBreaksRenderer.classBreakInfos[i].classMaxValue
-                    ) {
-                      symbol = classBreaksRenderer.classBreakInfos[i].symbol;
-                      break;
-                    }
+                  const symbol = getClassBreaksSymbol(
+                    entity,
+                    classBreaksRenderer
+                  );
+                  if (symbol) {
+                    updateEntityWithEsriStyle(entity, symbol, that);
                   }
-
-                  if (symbol === undefined || symbol === null) {
-                    symbol = classBreaksRenderer.defaultSymbol;
-                  }
-
-                  updateEntityWithEsriStyle(entity, symbol, that);
                 });
               }
 
@@ -507,13 +464,62 @@ export default class ArcGisFeatureServerCatalogItem
   }
 }
 
-function setupUniqueValRenderer(renderer: UniqueValueRenderer) {
+function setupUniqueValueRenderer(renderer: UniqueValueRenderer) {
   const out: any = {};
   for (var i = 0; i < renderer.uniqueValueInfos.length; i++) {
     const val = renderer.uniqueValueInfos[i].value;
     out[val] = renderer.uniqueValueInfos[i];
   }
   return out;
+}
+
+function getUniqueValueSymbol(
+  entity: Entity,
+  uniqueValueRenderer: UniqueValueRenderer,
+  rendererObj: any
+): Symbol | null {
+  let entityUniqueValue = entity.properties[
+    uniqueValueRenderer.field1
+  ].getValue();
+
+  // accumulate values if there is more than one field defined
+  if (uniqueValueRenderer.fieldDelimiter && uniqueValueRenderer.field2) {
+    let val2 = entity.properties[uniqueValueRenderer.field2].getValue();
+
+    if (val2) {
+      entityUniqueValue += uniqueValueRenderer.fieldDelimiter + val2;
+
+      if (uniqueValueRenderer.field3) {
+        let val3 = entity.properties[uniqueValueRenderer.field3].getValue();
+
+        if (val3) {
+          entityUniqueValue += uniqueValueRenderer.fieldDelimiter + val3;
+        }
+      }
+    }
+  }
+
+  const uniqueValueInfo = rendererObj[entityUniqueValue];
+
+  if (uniqueValueInfo && uniqueValueInfo.symbol) {
+    return uniqueValueInfo.symbol;
+  } else {
+    return uniqueValueRenderer.defaultSymbol;
+  }
+}
+
+function getClassBreaksSymbol(
+  entity: Entity,
+  classBreaksRenderer: ClassBreaksRenderer
+): Symbol | null {
+  let entityValue = entity.properties[classBreaksRenderer.field].getValue();
+  for (var i = 0; i < classBreaksRenderer.classBreakInfos.length; i++) {
+    if (entityValue <= classBreaksRenderer.classBreakInfos[i].classMaxValue) {
+      return classBreaksRenderer.classBreakInfos[i].symbol;
+    }
+  }
+
+  return classBreaksRenderer.defaultSymbol;
 }
 
 function convertEsriColorToCesiumColor(esriColor: number[]) {
