@@ -736,7 +736,9 @@ export default class Terria {
       reference.setTrait(CommonStrata.definition, "magdaRecord", config);
       await reference.loadReference().then(() => {
         if (reference.target instanceof CatalogGroup) {
-          this.catalog.group = reference.target;
+          runInAction(() => {
+            this.catalog.group = <CatalogGroup>reference.target;
+          });
         }
       });
     }

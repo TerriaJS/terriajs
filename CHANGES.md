@@ -23,6 +23,7 @@ Change Log
 * Re-introduce UI elements for search when a catalogSearchProvider is provided
 * Fix bug that prevented live transport data from being hidden
 * Hide opacity control for point-table catalog items.
+* Fixed bug where `Catalog` would sometimes end up with an undefined `userAddedDataGroup`.
 * Show About Data for all items by default.
 * Fix bug that throws an error when clicking on ArcGIS Map Service features
 
