@@ -39,6 +39,11 @@ class KmlCatalogItem extends AsyncMappableMixin(
     this._kmlFile = file;
   }
 
+  @computed
+  get hasLocalData(): boolean {
+    return isDefined(this._kmlFile);
+  }
+
   protected forceLoadMapItems(): Promise<void> {
     const createLoadError = () =>
       new TerriaError({

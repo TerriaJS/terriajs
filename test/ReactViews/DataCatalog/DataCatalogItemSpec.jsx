@@ -1,6 +1,6 @@
 import React from "react";
 import { findAllWithType } from "react-shallow-testutils";
-import { USER_ADDED_CATEGORY_NAME } from "../../../lib/Core/addedByUser";
+import { USER_ADDED_CATEGORY_ID } from "../../../lib/Core/addedByUser";
 import CatalogGroup from "../../../lib/Models/CatalogGroup";
 import CatalogItem from "../../../lib/Models/CatalogItem";
 import Terria from "../../../lib/Models/Terria";
@@ -11,7 +11,7 @@ import { getShallowRenderedOutput } from "../MoreShallowTools";
 
 function makeItemUserAdded(item, terria) {
   item.parent = new CatalogGroup(terria);
-  item.parent.name = USER_ADDED_CATEGORY_NAME;
+  item.parent.name = USER_ADDED_CATEGORY_ID;
 }
 
 describe("DataCatalogItem", () => {

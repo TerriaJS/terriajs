@@ -104,6 +104,22 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
       }
     }
 
+    @action
+    addMembersFromJson(stratumId: string, members: any[]) {
+      const newMemberIds = this.traits["members"].fromJson(
+        this,
+        stratumId,
+        members
+      );
+      newMemberIds
+        .map((memberId: string) =>
+          this.terria.getModelById(BaseModel, memberId)
+        )
+        .forEach((member: BaseModel) => {
+          this.add(stratumId, member);
+        });
+    }
+
     /**
      * Used to re-order catalog members
      *
