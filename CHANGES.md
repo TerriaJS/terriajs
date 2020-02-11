@@ -21,6 +21,7 @@ Change Log
 * Fixed bug causing user added data to not be shared. Note that user added catalog item urls are now set at the user stratum rather than the definition stratum.
 * Added the ability to filter location search results by an app-wide bounding box configuration parameter
 * Re-introduce UI elements for search when a catalogSearchProvider is provided
+* Fix bug that prevented live transport data from being hidden
 * Hide opacity control for point-table catalog items.
 * Show About Data for all items by default.
 
