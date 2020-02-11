@@ -31,6 +31,11 @@ export default class CzmlCatalogItem
     this._czmlFile = file;
   }
 
+  @computed
+  get hasLocalData(): boolean {
+    return isDefined(this._czmlFile);
+  }
+
   protected forceLoadMapItems(): Promise<void> {
     return new Promise<string | readonly JsonObject[]>(resolve => {
       if (isDefined(this.czmlData)) {

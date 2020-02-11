@@ -139,6 +139,12 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       );
     }
 
+    @computed
+    get disableOpacityControl() {
+      // disable opacity control for point tables
+      return this.activeTableStyle.isPoints();
+    }
+
     /**
      * Gets the items to show on the map.
      */

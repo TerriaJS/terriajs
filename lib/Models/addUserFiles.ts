@@ -8,7 +8,6 @@ import raiseErrorOnRejectedPromise from "./raiseErrorOnRejectedPromise";
 import createCatalogItemFromFileOrUrl from "./createCatalogItemFromFileOrUrl";
 import addUserCatalogMember from "./addUserCatalogMember";
 import TerriaError from "../Core/TerriaError";
-import updateModelFromJson from "./updateModelFromJson";
 import isDefined from "../Core/isDefined";
 
 interface FileType {
@@ -41,9 +40,10 @@ export default function addUserFiles(
   }
 
   function loadInitData(initData: { catalog: any }) {
-    updateModelFromJson(terria.catalog.group, CommonStrata.user, {
-      members: initData.catalog
-    });
+    terria.catalog.group.addMembersFromJson(
+      CommonStrata.user,
+      initData.catalog
+    );
   }
 
   for (let i = 0; i < files.length; i++) {
