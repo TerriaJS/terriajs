@@ -35,7 +35,11 @@ const ShadowSection = observer(
       const item = this.props.item;
 
       // This section only makes sense if we have a layer that supports shadows.
-      if (item.disableUserChanges || !defined(item.shadows)) {
+      if (
+        item.disableUserChanges ||
+        !defined(item.shadows) ||
+        !item.areShadowsRelevant
+      ) {
         return null;
       }
 

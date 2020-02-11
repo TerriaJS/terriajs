@@ -56,6 +56,9 @@ export default class Cesium3DTilesCatalogItem
   }
 
   readonly canZoomTo = true;
+
+  @observable areShadowsRelevant = true;
+
   private tileset?: ObservableCesium3DTileset;
 
   get isMappable() {
@@ -76,6 +79,10 @@ export default class Cesium3DTilesCatalogItem
             tileset.extras.style !== undefined
           ) {
             runInAction(() => {
+              if (isDefined(tileset.extras.style.pointSize)) {
+                this.areShadowsRelevant = false;
+              }
+
               this.strata.set(
                 CommonStrata.defaults,
                 createStratumInstance(Cesium3DTilesCatalogItemTraits, {
