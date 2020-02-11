@@ -26,7 +26,9 @@ export function calculateDomain(points: ChartPoint[]): ChartDomain {
 }
 
 export function axesMatch(a1: ChartAxis, a2: ChartAxis) {
-  return a1.scale === a2.scale && a1.units === a2.units;
+  // ignore unit label if both scales are time
+  if (a1.scale === "time" && a2.scale === "time") return true;
+  else return a1.scale === a2.scale && a1.units === a2.units;
 }
 
 export type ChartItemType = "line" | "momentLines" | "momentPoints";
