@@ -332,10 +332,16 @@ class Plot extends React.Component {
     zoomedScales: PropTypes.array.isRequired
   };
 
+  @computed
+  get chartRefs() {
+    return this.props.chartItems.map(_ => React.createRef());
+  }
+
   componentDidUpdate() {
-    Object.values(this.refs).forEach((ref, i) => {
-      if (typeof ref.doZoom === "function")
+    Object.values(this.chartRefs).forEach(({ current: ref }, i) => {
+      if (typeof ref.doZoom === "function") {
         ref.doZoom(this.props.zoomedScales[i]);
+      }
     });
   }
 
@@ -347,7 +353,7 @@ class Plot extends React.Component {
           return (
             <LineChart
               key={chartItem.key}
-              ref={chartItem.key}
+              ref={this.chartRefs[i]}
               id={chartItem.key}
               chartItem={chartItem}
               scales={initialScales[i]}
@@ -362,7 +368,7 @@ class Plot extends React.Component {
           return (
             <MomentPointsChart
               key={chartItem.key}
-              ref={chartItem.key}
+              ref={this.chartRefs[i]}
               id={chartItem.key}
               chartItem={chartItem}
               basisItem={basisItem}
@@ -374,7 +380,7 @@ class Plot extends React.Component {
           return (
             <MomentLinesChart
               key={chartItem.key}
-              ref={chartItem.key}
+              ref={this.chartRefs[i]}
               id={chartItem.key}
               chartItem={chartItem}
               scales={initialScales[i]}
