@@ -258,6 +258,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   @computed
   get mapItems(): DataSource[] {
+    this._dataSource.show = this.show;
     return [this.dataSource];
   }
 

@@ -21,7 +21,13 @@ Change Log
 * Fixed bug causing user added data to not be shared. Note that user added catalog item urls are now set at the user stratum rather than the definition stratum.
 * Added the ability to filter location search results by an app-wide bounding box configuration parameter
 * Re-introduce UI elements for search when a catalogSearchProvider is provided
+* Fix bug that prevented live transport data from being hidden
 * Hide opacity control for point-table catalog items.
+* Fixed bug where `Catalog` would sometimes end up with an undefined `userAddedDataGroup`.
+* Show About Data for all items by default.
+* Fixed translation strings for the descriptive text about WMS and WFS URLs in the data catalogue.
+* Fix bug that throws an error when clicking on ArcGIS Map Service features
+* Fix initialisation of `terria`'s `shareDataService`.
 * Support Zoom to Data on `CsvCatalogItem` when data has lat-lon columns.
 
 ### Next Release
@@ -37,7 +43,7 @@ Change Log
 * Added ability to re-add "User data" CSV items once removed from workbench.
 * Changed catalog item event labels to include the full catalog item path, rather than just the catalog item name.
 * Added support for `openAddData` option in config.json.  If true, the "Add Data" dialog is automatically opened at startup.
-* Welcome message, in-app guides & new feature prompts are now disabled by default. These can be re-enabled by setting the `showWelcomeMessage`, `showInAppGuides` & `showFeaturePrompts` options in config.json. 
+* Welcome message, in-app guides & new feature prompts are now disabled by default. These can be re-enabled by setting the `showWelcomeMessage`, `showInAppGuides` & `showFeaturePrompts` options in config.json.
 * Updated Welcome Message to pass its props to `WelcomeMessagePrimaryBtnClick` & `WelcomeMessageSecondaryBtnClick` overrides
 * Fixed a bug in anti-meridian handling causing excessive memory use.
 * Handled coordinate conversion for GeoJson geometries with an empty `coordinates` array.
@@ -110,7 +116,7 @@ Change Log
 * Add scrollbar to dropdown boxes.
 * Add support for SDMX version 2.1 to existing `SdmxJsonCatalogItem`.
 * Add a warning when sharing a map describing datasets which will be missing.
-* Enable the story panel to be ordered to the front. 
+* Enable the story panel to be ordered to the front.
 * Disable the autocomplete on the title field when adding a new scene to a story.
 * Fix SED codes for regionmapping
 
