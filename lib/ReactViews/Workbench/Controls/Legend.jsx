@@ -226,7 +226,7 @@ const Legend = observer(
         <ul className={Styles.legend}>
           <div className={Styles.legendInner}>
             <Choose>
-              <When condition={this.props.item.isLoading}>
+              <When condition={this.props.item.isLoadingMapItems}>
                 <li className={Styles.loader}>
                   <Loader message={this.props.item.loadingMessage} />
                 </li>

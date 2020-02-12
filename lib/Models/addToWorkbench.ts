@@ -30,15 +30,19 @@ export default function addToWorkbench(
     return Promise.resolve();
   }
 
+  workbench.add(item);
+
   if (ReferenceMixin.is(item)) {
     return item.loadReference().then(() => {
       const target = item.target;
       if (
         target &&
-        (!GroupMixin.isMixedInto(target) ||
-          Mappable.is(target) ||
-          Chartable.is(target))
+        GroupMixin.isMixedInto(target) &&
+        !Mappable.is(target) &&
+        !Chartable.is(target)
       ) {
+        workbench.remove(item);
+      } else if (target) {
         return addToWorkbench(workbench, target, add);
       }
     });
@@ -49,10 +53,9 @@ export default function addToWorkbench(
     ? item.loadChartItems()
     : undefined;
   return Promise.all(filterOutUndefined([mappablePromise, chartablePromise]))
-    .then(() => {
-      workbench.add(item);
-    })
+    .then(() => Promise.resolve())
     .catch(e => {
+      workbench.remove(item);
       if (isDefined(e)) {
         return Promise.reject(e);
       } else {
