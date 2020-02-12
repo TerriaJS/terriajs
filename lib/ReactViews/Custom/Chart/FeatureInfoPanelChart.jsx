@@ -17,7 +17,7 @@ class FeatureInfoPanelChart extends React.Component {
     parentWidth: PropTypes.number,
     parentHeight: PropTypes.number,
     width: PropTypes.number,
-    height: PropTypes.number,
+    height: PropTypes.number.isRequired,
     margin: PropTypes.object,
     item: PropTypes.object.isRequired,
     xAxisLabel: PropTypes.string,
@@ -59,6 +59,7 @@ class FeatureInfoPanelChart extends React.Component {
   }
 }
 
+@observer
 class Chart extends React.Component {
   static propTypes = {
     width: PropTypes.number.isRequired,
