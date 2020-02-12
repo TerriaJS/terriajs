@@ -429,6 +429,7 @@ class YAxis extends React.PureComponent {
         stroke={color}
         tickStroke={color}
         label={units || ""}
+        labelOffset={10}
         labelProps={{
           fill: color,
           textAnchor: "middle",
