@@ -38,7 +38,7 @@ const ShadowSection = observer(
       if (
         item.disableUserChanges ||
         !defined(item.shadows) ||
-        !item.areShadowsRelevant
+        !item.showShadowUi
       ) {
         return null;
       }
