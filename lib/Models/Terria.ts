@@ -347,16 +347,14 @@ export default class Terria {
       })
       .then(() => {
         this.serverConfig = new ServerConfig();
-        return this.serverConfig
-          .init(this.configParameters.serverConfigUrl)
-          .then((serverConfig: any) => {
-            return this.initCorsProxy(this.configParameters, serverConfig);
-          })
-          .then(() => this.serverConfig);
+        return this.serverConfig.init(this.configParameters.serverConfigUrl);
       })
-      .then(serverConfig => {
-        if (this.shareDataService && serverConfig) {
-          this.shareDataService.init(serverConfig);
+      .then((serverConfig: any) => {
+        return this.initCorsProxy(this.configParameters, serverConfig);
+      })
+      .then(() => {
+        if (this.shareDataService && this.serverConfig.config) {
+          this.shareDataService.init(this.serverConfig.config);
         }
         if (options.applicationUrl) {
           return this.updateApplicationUrl(options.applicationUrl);
