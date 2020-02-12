@@ -461,7 +461,7 @@ function calculateDomain(chartItems) {
   const ymax = Math.max(...chartItems.map(c => c.domain.y[1]));
   return {
     x: [xmin, xmax],
-    y: [ymin, ymax]
+    y: [Math.min(0, ymin), ymax]
   };
 }
 
