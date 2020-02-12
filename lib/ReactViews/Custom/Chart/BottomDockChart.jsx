@@ -236,6 +236,13 @@ class Chart extends React.Component {
     });
   }
 
+  componentDidUpdate(prevProps) {
+    // Unset zoom scale if any chartItems are added or removed
+    if (prevProps.chartItems.length !== this.props.chartItems.length) {
+      this.setZoomedXScale(undefined);
+    }
+  }
+
   render() {
     const { height, xAxis } = this.props;
     if (this.chartItems.length === 0)
