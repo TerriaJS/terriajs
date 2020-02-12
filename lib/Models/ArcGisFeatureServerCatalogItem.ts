@@ -588,7 +588,15 @@ function updateEntityWithEsriStyle(
 
   // Update the styling of the Cesium Polygon
   if (entity.polygon && symbol.color) {
-    entity.polygon.material = convertEsriColorToCesiumColor(symbol.color);
+    const color = symbol.color;
+
+    // feature picking doesn't work when the polygon interior is transparent, so
+    // use an almost-transparent color instead
+    if (color[3] === 0) {
+      color[3] = 1;
+    }
+    entity.polygon.material = convertEsriColorToCesiumColor(color);
+
     if (symbol.outline) {
       entity.polygon.outlineColor = convertEsriColorToCesiumColor(
         symbol.outline.color
