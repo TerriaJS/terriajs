@@ -5,6 +5,9 @@ import Chartable from "./Chartable";
 import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
 import Workbench from "./Workbench";
+import TerriaError from "../Core/TerriaError";
+import isDefined from "../Core/isDefined";
+import i18next from "i18next";
 
 /**
  * Adds or removes a model to/from the workbench. If the model is a reference,
@@ -27,19 +30,15 @@ export default function addToWorkbench(
     return Promise.resolve();
   }
 
-  workbench.add(item);
-
   if (ReferenceMixin.is(item)) {
     return item.loadReference().then(() => {
       const target = item.target;
       if (
         target &&
-        GroupMixin.isMixedInto(target) &&
-        !Mappable.is(target) &&
-        !Chartable.is(target)
+        (!GroupMixin.isMixedInto(target) ||
+          Mappable.is(target) ||
+          Chartable.is(target))
       ) {
-        workbench.remove(item);
-      } else if (target) {
         return addToWorkbench(workbench, target, add);
       }
     });
@@ -49,7 +48,20 @@ export default function addToWorkbench(
   const chartablePromise = Chartable.is(item)
     ? item.loadChartItems()
     : undefined;
-  return Promise.all(
-    filterOutUndefined([mappablePromise, chartablePromise])
-  ).then(() => {});
+  return Promise.all(filterOutUndefined([mappablePromise, chartablePromise]))
+    .then(() => {
+      workbench.add(item);
+    })
+    .catch(e => {
+      if (isDefined(e)) {
+        return Promise.reject(e);
+      } else {
+        return Promise.reject(
+          new TerriaError({
+            title: i18next.t("workbench.addItemErrorTitle"),
+            message: i18next.t("workbench.addItemErrorMessage")
+          })
+        );
+      }
+    });
 }

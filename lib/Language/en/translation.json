@@ -341,7 +341,9 @@
     "removeFromMap" : "Remove",
     "label" : "Data Sets",
     "removeAll" : "Remove All",
-    "toggleVisibility" : "Data show/hide"
+    "toggleVisibility" : "Data show/hide",
+    "addItemErrorTitle" : "Catalog item could not be added to workbench.",
+    "addItemErrorMessage" : "An error occurred while loading the catalog item."
   },
   "dateTime" : {
     "previous" : "Previous time",

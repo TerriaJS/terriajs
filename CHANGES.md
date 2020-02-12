@@ -29,6 +29,7 @@ Change Log
 * Fix bug that throws an error when clicking on ArcGIS Map Service features
 * Fix initialisation of `terria`'s `shareDataService`.
 * Support Zoom to Data on `CsvCatalogItem` when data has lat-lon columns.
+* Modified `addToWorkbench` to prevent catalog items from being added to workbench until after they have loaded and display an error message if item doesn't load.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
