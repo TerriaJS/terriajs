@@ -56,7 +56,6 @@ export default class Cesium3DTilesCatalogItem
   }
 
   readonly canZoomTo = true;
-
   private tileset?: ObservableCesium3DTileset;
 
   get isMappable() {
