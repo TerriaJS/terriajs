@@ -65,9 +65,10 @@ export default class CsvCatalogItem extends TableMixin(
     return isDefined(this._csvFile);
   }
 
-  // Zooming to tables with lat/lon columns works
+  @computed
   get canZoomTo() {
     const s = this.strata.get(automaticTableStylesStratumName);
+    // Zooming to tables with lat/lon columns works
     if (
       isDefined(s) &&
       isDefined(s.defaultStyle) &&
