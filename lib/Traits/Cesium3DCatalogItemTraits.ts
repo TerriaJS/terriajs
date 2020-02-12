@@ -129,6 +129,14 @@ export default class Cesium3DTilesCatalogItemTraits extends mixTraits(
   })
   shadows = "NONE";
 
+  @primitiveTrait({
+    type: "boolean",
+    name: "Show Shadow UI",
+    description:
+      "Determines whether the shadow UI component will be shown on the workbench item"
+  })
+  showShadowUi: boolean = true;
+
   @objectTrait({
     type: OptionsTraits,
     name: "options",

@@ -29,6 +29,7 @@ Change Log
 * Fix bug that throws an error when clicking on ArcGIS Map Service features
 * Fix initialisation of `terria`'s `shareDataService`.
 * Support Zoom to Data on `CsvCatalogItem` when data has lat-lon columns.
+* Add a trait called `showShadowUi` to `Cesium3DTilesCatalogItem` which hide shadows on workbench item UI.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
