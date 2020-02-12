@@ -21,7 +21,8 @@ import ModelReference from "../Traits/ModelReference";
 import CommonStrata from "./CommonStrata";
 
 interface DocumentInfo {
-  author?: string;
+  Title?: string;
+  Author?: string;
 }
 interface Layer {
   id: number;
@@ -63,8 +64,12 @@ class FeatureServerStratum extends LoadableStratum(
   }
 
   @computed get name() {
-    if (this._featureServer.name && this._featureServer.name.length > 0) {
-      return this._featureServer.name;
+    if (
+      this._featureServer.documentInfo &&
+      this._featureServer.documentInfo.Title &&
+      this._featureServer.documentInfo.Title.length > 0
+    ) {
+      return this._featureServer.documentInfo.Title;
     }
   }
 
@@ -97,10 +102,10 @@ class FeatureServerStratum extends LoadableStratum(
   @computed get dataCustodian() {
     if (
       this._featureServer.documentInfo &&
-      this._featureServer.documentInfo.author &&
-      this._featureServer.documentInfo.author.length > 0
+      this._featureServer.documentInfo.Author &&
+      this._featureServer.documentInfo.Author.length > 0
     ) {
-      return this._featureServer.documentInfo.author;
+      return this._featureServer.documentInfo.Author;
     }
   }
 

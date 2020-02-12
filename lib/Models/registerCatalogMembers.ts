@@ -116,6 +116,16 @@ export default function registerCatalogMembers() {
     true
   );
   createCatalogItemFromUrl.register(
+    matchesUrl(/\/arcgis\/rest\/.*\/FeatureServer\/\d+\b/i),
+    ArcGisFeatureServerCatalogItem.type,
+    true
+  );
+  createCatalogItemFromUrl.register(
+    matchesUrl(/\/arcgis\/rest\/.*\/FeatureServer(\/.*)?$/i),
+    ArcGisFeatureServerCatalogGroup.type,
+    true
+  );
+  createCatalogItemFromUrl.register(
     matchesUrl(/\/arcgis\/rest\/.*\/\d+\b/i),
     ArcGisMapServerCatalogItem.type,
     true
@@ -130,6 +140,16 @@ export default function registerCatalogMembers() {
   createCatalogItemFromUrl.register(
     s => true,
     ArcGisMapServerCatalogItem.type,
+    true
+  );
+  createCatalogItemFromUrl.register(
+    s => true,
+    ArcGisFeatureServerCatalogItem.type,
+    true
+  );
+  createCatalogItemFromUrl.register(
+    s => true,
+    ArcGisFeatureServerCatalogGroup.type,
     true
   );
 }

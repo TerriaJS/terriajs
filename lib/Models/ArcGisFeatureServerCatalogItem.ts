@@ -35,7 +35,7 @@ import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraph
 const proj4 = require("proj4").default;
 
 interface DocumentInfo {
-  author?: string;
+  Author?: string;
 }
 
 // See actual Symbol at https://developers.arcgis.com/web-map-specification/objects/symbol/
@@ -217,10 +217,10 @@ class FeatureServerStratum extends LoadableStratum(
   @computed get dataCustodian() {
     if (
       this._featureServer.documentInfo &&
-      this._featureServer.documentInfo.author &&
-      this._featureServer.documentInfo.author.length > 0
+      this._featureServer.documentInfo.Author &&
+      this._featureServer.documentInfo.Author.length > 0
     ) {
-      return this._featureServer.documentInfo.author;
+      return this._featureServer.documentInfo.Author;
     }
   }
 
@@ -537,7 +537,7 @@ function updateEntityWithEsriStyle(
   catalogItem: ArcGisFeatureServerCatalogItem
 ) {
   // Replace a general Cesium Point with a billboard
-  if (isDefined(entity.point) && isDefined(symbol.imageData)) {
+  if (entity.point && symbol.imageData) {
     entity.billboard = new BillboardGraphics({
       image: proxyCatalogItemUrl(
         catalogItem,
@@ -551,7 +551,7 @@ function updateEntityWithEsriStyle(
       rotation: symbol.angle
     });
 
-    if (isDefined(symbol.xoffset) || isDefined(symbol.yoffset)) {
+    if (symbol.xoffset || symbol.yoffset) {
       const x = isDefined(symbol.xoffset) ? symbol.xoffset : 0;
       const y = isDefined(symbol.yoffset) ? symbol.yoffset : 0;
       entity.billboard.pixelOffset = new Cartesian3(x, y);
@@ -561,7 +561,7 @@ function updateEntityWithEsriStyle(
   }
 
   // Update the styling of the Cesium Polyline
-  if (isDefined(entity.polyline) && isDefined(symbol.color)) {
+  if (entity.polyline && symbol.color) {
     entity.polyline.material = new ColorMaterialProperty(
       convertEsriColorToCesiumColor(symbol.color)
     );
@@ -571,13 +571,13 @@ function updateEntityWithEsriStyle(
   }
 
   // Update the styling of the Cesium Point
-  if (isDefined(entity.point) && isDefined(symbol.color)) {
+  if (entity.point && symbol.color) {
     entity.point.color = new ConstantProperty(
       convertEsriColorToCesiumColor(symbol.color)
     );
     entity.point.pixelSize = new ConstantProperty(symbol.size);
 
-    if (isDefined(symbol.outline)) {
+    if (symbol.outline) {
       entity.point.outlineColor = new ConstantProperty(
         convertEsriColorToCesiumColor(symbol.outline.color)
       );
@@ -586,9 +586,9 @@ function updateEntityWithEsriStyle(
   }
 
   // Update the styling of the Cesium Polygon
-  if (isDefined(entity.polygon) && isDefined(symbol.color)) {
+  if (entity.polygon && symbol.color) {
     entity.polygon.material = convertEsriColorToCesiumColor(symbol.color);
-    if (isDefined(symbol.outline)) {
+    if (symbol.outline) {
       entity.polygon.outlineColor = convertEsriColorToCesiumColor(
         symbol.outline.color
       );
