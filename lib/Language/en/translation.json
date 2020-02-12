@@ -110,7 +110,7 @@
     "native" : "native",
     "screen" : "screen",
     "btnTitle" : "Change view",
-    "btnText" : "Map",
+    "btnText" : "Map Settings",
     "mapView" : "Map View",
     "baseMap" : "Base Map",
     "imageOptimisation" : "Image Optimisation",

@@ -2,18 +2,30 @@ Change Log
 ==========
 
 ### MobX Development
-* Fixed a bug where `updateModelFromJson` would ignore its `replaceStratum` parameter.
 * Fixed bug in StratumOrder where `sortBottomToTop` would sort strata in the wrong order.
 * Allow member re-ordering via GroupMixin's `moveMemberToIndex`
+* Fixed a bug where `updateModelFromJson` would ignore its `replaceStratum` parameter.
 * Re-added Measure Tool support
 * Re-added `CartoMapCatalogItem`
 * Re-implemented `addedByUser` to fix bug where previews of user added data would appear in the wrong tab.
 * Added header options for loadJson5, & allow header overrides on MagdaReference loading
+* Re-added some matcher-type mappings in `registerCatalogMembers`.
+* Added `UrlReference` to represent catalog items created from a url with an auto-detected type.
+* Modified `upsertModelFromJson` so that when no `id` is provided, the `uniqueId` generated from `localId` or `name` is incremented if necessary to make it unique.
 * Re-enable search components if SearchProvider option provided
 * Modified tests to not use any real servers.
 * Fixed bug causing workbench items to be shared in the wrong order.
 * Fix bug where urls in the feature info panel weren't turned into hyperlinks
 * Fix preview map's base map and bounding rectangle size
+* Added `hasLocalData` property to indicate when a catalog item contains local data. This property is used to determine whether the item can be shared or not.
+* Fixed bug causing user added data to not be shared. Note that user added catalog item urls are now set at the user stratum rather than the definition stratum.
+* Added the ability to filter location search results by an app-wide bounding box configuration parameter
+* Re-introduce UI elements for search when a catalogSearchProvider is provided
+* Fix bug that prevented live transport data from being hidden
+* Hide opacity control for point-table catalog items.
+* Fixed bug where `Catalog` would sometimes end up with an undefined `userAddedDataGroup`.
+* Show About Data for all items by default.
+* Fix bug that throws an error when clicking on ArcGIS Map Service features
 * Re-added `ArcGisFeatureServerCatalogItem` and `ArcGisFeatureServerCatalogGroup`
 
 ### Next Release
