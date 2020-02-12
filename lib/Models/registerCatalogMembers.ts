@@ -130,6 +130,26 @@ export default function registerCatalogMembers() {
     ArcGisMapServerCatalogItem.type,
     true
   );
+  createCatalogItemFromUrl.register(
+    matchesUrl(/\/rest\/.*\/MapServer\/\d+\b/i),
+    ArcGisMapServerCatalogItem.type,
+    true
+  );
+  createCatalogItemFromUrl.register(
+    matchesUrl(/\/rest\/.*\/FeatureServer\/\d+\b/i),
+    ArcGisFeatureServerCatalogItem.type,
+    true
+  );
+  createCatalogItemFromUrl.register(
+    matchesUrl(/\/rest\/.*\/FeatureServer(\/.*)?$/i),
+    ArcGisFeatureServerCatalogGroup.type,
+    true
+  );
+  createCatalogItemFromUrl.register(
+    matchesUrl(/\/rest\/.*\/\d+\b/i),
+    ArcGisMapServerCatalogItem.type,
+    true
+  );
 
   // These don't even try to match a URL, they're just total fallbacks. We really, really want something to work.
   createCatalogItemFromUrl.register(

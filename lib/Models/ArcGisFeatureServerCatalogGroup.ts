@@ -19,6 +19,7 @@ import ArcGisFeatureServerCatalogItem from "./ArcGisFeatureServerCatalogItem";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import ModelReference from "../Traits/ModelReference";
 import CommonStrata from "./CommonStrata";
+import replaceUnderscores from "../Core/replaceUnderscores";
 
 interface DocumentInfo {
   Title?: string;
@@ -69,7 +70,7 @@ class FeatureServerStratum extends LoadableStratum(
       this._featureServer.documentInfo.Title &&
       this._featureServer.documentInfo.Title.length > 0
     ) {
-      return this._featureServer.documentInfo.Title;
+      return replaceUnderscores(this._featureServer.documentInfo.Title);
     }
   }
 
@@ -215,7 +216,7 @@ class FeatureServerStratum extends LoadableStratum(
 
     model.strata.delete(stratum);
 
-    model.setTrait(stratum, "name", layer.name);
+    model.setTrait(stratum, "name", replaceUnderscores(layer.name));
 
     var uri = new URI(this._catalogGroup.url).segment(layer.id + ""); // Convert layer id to string as segment(0) means sthg different.
     model.setTrait(stratum, "url", uri.toString());

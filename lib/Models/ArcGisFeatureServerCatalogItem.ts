@@ -23,7 +23,7 @@ import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import createStratumInstance from "./createStratumInstance";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import StratumFromTraits from "./StratumFromTraits";
-import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
+import LegendTraits from "../Traits/LegendTraits";
 import proj4definitions from "../Map/Proj4Definitions";
 import { RectangleTraits } from "../Traits/MappableTraits";
 import TerriaError from "../Core/TerriaError";
@@ -31,6 +31,7 @@ import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
+import replaceUnderscores from "../Core/replaceUnderscores";
 
 const proj4 = require("proj4").default;
 
@@ -210,7 +211,7 @@ class FeatureServerStratum extends LoadableStratum(
 
   @computed get name() {
     if (this._featureServer.name && this._featureServer.name.length > 0) {
-      return this._featureServer.name;
+      return replaceUnderscores(this._featureServer.name);
     }
   }
 
@@ -300,7 +301,7 @@ class FeatureServerStratum extends LoadableStratum(
 
     const items = [];
     for (var i = 0; i < infos.length; i++) {
-      const label = infos[i].label;
+      const label = replaceUnderscores(infos[i].label);
       const symbol = infos[i].symbol;
       if (symbol) {
         const color = symbol.color;
