@@ -28,6 +28,7 @@ Change Log
 * Fixed translation strings for the descriptive text about WMS and WFS URLs in the data catalogue.
 * Fix bug that throws an error when clicking on ArcGIS Map Service features
 * Fix initialisation of `terria`'s `shareDataService`.
+* Support Zoom to Data on `CsvCatalogItem` when data has lat-lon columns.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
