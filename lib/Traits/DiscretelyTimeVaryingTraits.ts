@@ -2,9 +2,14 @@ import DiscreteTimeTraits from "./DiscreteTimeTraits";
 import objectArrayTrait from "./objectArrayTrait";
 import primitiveTrait from "./primitiveTrait";
 import TimeVaryingTraits from "./TimeVaryingTraits";
+import ShowableTraits from "./ShowableTraits";
+import mixTraits from "./mixTraits";
 import { ChartItemType } from "../Models/Chartable";
 
-export default class DiscretelyTimeVaryingTraits extends TimeVaryingTraits {
+export default class DiscretelyTimeVaryingTraits extends mixTraits(
+  TimeVaryingTraits,
+  ShowableTraits
+) {
   @objectArrayTrait({
     name: "Discrete Times",
     description: "The discrete times at which this dataset is available.",
