@@ -32,6 +32,7 @@ Change Log
 * Add a trait called `showShadowUi` to `Cesium3DTilesCatalogItem` which hide shadows on workbench item UI.
 * Re-added `ArcGisFeatureServerCatalogItem` and `ArcGisFeatureServerCatalogGroup`
 * Prevent TerriaMap from crashing when timeline is on and changing to 2D
+* Fixed `proxyCatalogItemUrl` so it always returns a url as a string and fixed bug causing `ArcGisFeatureServerCatalogItem` to throw an error when a token is included in the proxy url.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
