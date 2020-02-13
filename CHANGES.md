@@ -30,6 +30,7 @@ Change Log
 * Fix initialisation of `terria`'s `shareDataService`.
 * Support Zoom to Data on `CsvCatalogItem` when data has lat-lon columns.
 * Add a trait called `showShadowUi` to `Cesium3DTilesCatalogItem` which hide shadows on workbench item UI.
+* Re-added `ArcGisFeatureServerCatalogItem` and `ArcGisFeatureServerCatalogGroup`
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC

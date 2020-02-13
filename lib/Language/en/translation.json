@@ -599,6 +599,29 @@
       "groupNotAvailableTitle" : "Group is not available",
       "groupNotAvailableMessage" : "An error occurred while invoking the ArcGIS Feature Service. <p>If you entered the link manually, please verify that the link is correct.</p> <p>This error may also indicate that the server does not support {{cors}}.  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the {{appName}} team by emailing {email} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by {{appName}} itself. <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>"
     },
+    "arcGisFeatureServerCatalogGroup" : {
+      "name" : "ArcGIS Feature Server Group",
+      "dataDescription" : "Data Description",
+      "serviceDescription" : "Service Description",
+      "copyrightText" : "Copyright Text",
+      "invalidServiceTitle" : "Invalid ArcGIS Feature Service",
+      "invalidServiceMessage" : "An error occurred while invoking the ArcGIS Feature Service.  The server's response does not appear to be a valid Feature Service document. <p>If you entered the link manually, please verify that the link is correct.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "groupNotAvailableTitle" : "Group is not available",
+      "groupNotAvailableMessage" : "An error occurred while invoking the ArcGIS Feature Service. <p>If you entered the link manually, please verify that the link is correct.</p> <p>This error may also indicate that the server does not support {{cors}}. If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the {{appName}} team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by {{appName}} itself. <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "cors" : "CORS"
+    },
+    "arcGisFeatureServerCatalogItem" : {
+      "name" : "Esri ArcGIS FeatureServer",
+      "dataDescription" : "Data Description",
+      "serviceDescription" : "Service Description",
+      "copyrightText" : "Copyright Text",
+      "missingUrlTitle": "Unable to load FeatureServer",
+      "missingUrlMessage" : "Could not load the ArcGis FeatureServer endpoint because the catalog item does not have a `url`.",
+      "invalidServiceTitle" : "Invalid ArcGIS Feature Service layer",
+      "invalidServiceMessage" : "An error occurred while invoking the ArcGIS Feature Service.  The server's response does not appear to be a valid Feature Service layer.",
+      "unusableMetadataTitle" : "ArcGIS FeatureServer Error",
+      "unusableMetadataDefaultMessage" : "This dataset returned unusable metadata."
+    },
     "arcGisMapServerCatalogGroup" : {
       "name" : "ArcGIS Map Server Group",
       "invalidServiceTitle" : "Invalid ArcGIS Map Service",
