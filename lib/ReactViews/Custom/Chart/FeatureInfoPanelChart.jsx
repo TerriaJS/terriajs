@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { AxisLeft, AxisBottom } from "@vx/axis";
 import { Group } from "@vx/group";
@@ -38,9 +38,14 @@ class FeatureInfoPanelChart extends React.Component {
     );
   }
 
+  componentDidMount() {
+    runInAction(() => {
+      this.props.item.loadChartItems();
+    });
+  }
+
   render() {
     if (!Chartable.is(this.props.item)) return null;
-    this.props.item.loadChartItems();
     if (!this.chartItem) return null;
 
     const { width, height, parentWidth, parentHeight } = this.props;
