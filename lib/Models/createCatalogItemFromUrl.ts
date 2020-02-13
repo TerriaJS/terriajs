@@ -34,7 +34,7 @@ export function createCatalogItemFromUrlWithOptions(
     terria,
     "",
     undefined,
-    CommonStrata.defaults,
+    CommonStrata.definition,
     {
       type: UrlReference.type,
       name: url,
