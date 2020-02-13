@@ -29,7 +29,7 @@ interface Chartable extends Model<ModelTraits> {
 
 namespace Chartable {
   export function is(model: BaseModel | Chartable): model is Chartable {
-    return "chartItems" in model;
+    return "loadChartItems" in model;
   }
 }
 
