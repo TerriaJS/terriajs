@@ -38,6 +38,12 @@ class FeatureInfoPanelChart extends React.Component {
     );
   }
 
+  componentDidUpdate() {
+    runInAction(() => {
+      this.props.item.loadChartItems();
+    });
+  }
+
   componentDidMount() {
     runInAction(() => {
       this.props.item.loadChartItems();
