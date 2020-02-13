@@ -10,6 +10,8 @@ import openGroup from "../../lib/Models/openGroup";
 import { BaseModel } from "../../lib/Models/Model";
 import { runInAction } from "mobx";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import UrlReference from "../../lib/Models/UrlReference";
+import createCatalogItemFromUrl from "../../lib/Models/createCatalogItemFromUrl";
 
 describe("Terria", function() {
   let terria: Terria;
@@ -39,6 +41,13 @@ describe("Terria", function() {
       CatalogMemberFactory.register(
         WebMapServiceCatalogGroup.type,
         WebMapServiceCatalogGroup
+      );
+      CatalogMemberFactory.register(UrlReference.type, UrlReference);
+
+      createCatalogItemFromUrl.register(
+        s => true,
+        WebMapServiceCatalogItem.type,
+        true
       );
 
       terria.catalog.userAddedDataGroup.addMembersFromJson(CommonStrata.user, [
@@ -84,6 +93,36 @@ describe("Terria", function() {
         );
 
         done();
+      });
+    });
+
+    it("initializes user added data group with shared UrlReference items", function(done) {
+      terria.catalog.userAddedDataGroup.addMembersFromJson(CommonStrata.user, [
+        {
+          id: "url_test",
+          name: "foo",
+          type: "url-reference",
+          url: "test/WMS/single_metadata_url.xml"
+        }
+      ]);
+
+      const shareLink = buildShareLink(terria, viewState);
+      newTerria.updateApplicationUrl(shareLink).then(() => {
+        expect(newTerria.catalog.userAddedDataGroup.members).toContain(
+          "url_test"
+        );
+        const urlRef = newTerria.getModelById(BaseModel, "url_test");
+        expect(urlRef).toBeDefined();
+        expect(urlRef instanceof UrlReference).toBe(true);
+
+        if (urlRef instanceof UrlReference) {
+          return urlRef.loadReference().then(() => {
+            expect(urlRef.target).toBeDefined();
+            done();
+          });
+        } else {
+          done.fail();
+        }
       });
     });
 
