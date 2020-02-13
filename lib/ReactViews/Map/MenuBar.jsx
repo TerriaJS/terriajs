@@ -91,46 +91,18 @@ const MenuBar = createReactClass({
     return (
       <div
         className={classNames(
-          Styles.menuArea,
           this.props.viewState.topElement === "MenuBar" ? "top-element" : ""
         )}
         onClick={this.handleClick}
       >
-        <ul className={Styles.menu}>
-          <If condition={storyEnabled}>
-            <li className={Styles.menuItem}>
-              <button
-                className={Styles.storyBtn}
-                type="button"
-                onClick={this.onStoryButtonClick}
-              >
-                <Icon glyph={Icon.GLYPHS.story} />
-                <span>{t("story.story")}</span>
-              </button>
-              {storyEnabled &&
-                this.props.viewState.featurePrompts.indexOf("story") >= 0 && (
-                  <Prompt
-                    content={promptHtml}
-                    displayDelay={delayTime}
-                    dismissText={t("story.dismissText")}
-                    dismissAction={this.dismissAction}
-                  />
-                )}
-            </li>
-          </If>
-          <li className={Styles.menuItem}>
-            <SettingPanel
-              terria={this.props.terria}
-              viewState={this.props.viewState}
-            />
-          </li>
-          <li className={Styles.menuItem}>
-            <SharePanel
-              terria={this.props.terria}
-              viewState={this.props.viewState}
-            />
-          </li>
-          <li className={Styles.menuItem}>
+        <ul
+          className={classNames(
+            Styles.menu,
+            Styles.menuArea,
+            Styles.menuAreaLeft
+          )}
+        >
+          {/* <li className={Styles.menuItem}>
             <HelpMenuPanelBasic
               terria={this.props.terria}
               viewState={this.props.viewState}
@@ -153,7 +125,7 @@ const MenuBar = createReactClass({
                   dismissAction={this.dismissSatelliteGuidanceAction}
                 />
               )}
-          </li>
+          </li> */}
           {enableTools && (
             <li className={Styles.menuItem}>
               <ToolsPanel
@@ -168,6 +140,49 @@ const MenuBar = createReactClass({
                 {element}
               </li>
             </For>
+          </If>
+        </ul>
+        <ul
+          className={classNames(
+            Styles.menu,
+            Styles.menuArea,
+            Styles.menuAreaRight
+          )}
+        >
+          <li className={Styles.menuItem}>
+            <SettingPanel
+              terria={this.props.terria}
+              viewState={this.props.viewState}
+            />
+          </li>
+          <li className={Styles.menuItem}>
+            <SharePanel
+              terria={this.props.terria}
+              viewState={this.props.viewState}
+            />
+          </li>
+          <If condition={storyEnabled}>
+            <li className={Styles.menuItem}>
+              <div>
+                <button
+                  className={Styles.storyBtn}
+                  type="button"
+                  onClick={this.onStoryButtonClick}
+                >
+                  <Icon glyph={Icon.GLYPHS.story} />
+                  <span>{t("story.story")}</span>
+                </button>
+                {storyEnabled &&
+                  this.props.viewState.featurePrompts.indexOf("story") >= 0 && (
+                    <Prompt
+                      content={promptHtml}
+                      displayDelay={delayTime}
+                      dismissText={t("story.dismissText")}
+                      dismissAction={this.dismissAction}
+                    />
+                  )}
+              </div>
+            </li>
           </If>
         </ul>
       </div>

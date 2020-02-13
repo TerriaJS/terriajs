@@ -2,9 +2,15 @@
 
 .menu-area {
   position: absolute;
-  top: 20px;
-  right: $padding;
+  top: 18px;
   z-index: 108;
+}
+
+.menu-area-left {
+  left: $padding;
+}
+.menu-area-right {
+  right: $padding;
 }
 
 .menu {
@@ -20,10 +26,26 @@
   position: relative;
   display: block;
   float: left;
-  margin-right: $padding;
+
+  // Prettier in flex-supported-browsers
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+
+  margin-right: $padding-tiny;
 
   &:last-child {
     margin-right: 0;
+  }
+
+  &:first-child * button,
+  &:first-child * a {
+    border-radius: 16px 0 0 16px;
+  }
+  &:last-child * button,
+  &:last-child * a {
+    border-radius: 0 16px 16px 0;
   }
 }
 

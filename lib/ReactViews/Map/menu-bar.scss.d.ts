@@ -3,8 +3,12 @@
 interface CssExports {
   'menu': string;
   'menu-area': string;
+  'menu-area-left': string;
+  'menu-area-right': string;
   'menu-item': string;
   'menuArea': string;
+  'menuAreaLeft': string;
+  'menuAreaRight': string;
   'menuItem': string;
   'storyBtn': string;
 }

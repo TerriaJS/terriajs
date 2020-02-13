@@ -232,10 +232,11 @@ $btn-setting-size: 35px;
   padding: 5px;
   color: $text-light;
   display: block;
-  min-height: 28px;
+  min-height: 32px;
   font-family: $font-pop;
-  opacity: 0.95;
-  background-color: $charcoal-grey;
+  font-weight: $font-weight-bold;
+  // opacity: 0.95; // new design has opaque map buttons?
+  background-color: $dark;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
   line-height: 1.3;
   &:hover,
