@@ -95,7 +95,7 @@ const AddData = createReactClass({
           this.props.terria,
           "",
           undefined,
-          CommonStrata.definition,
+          CommonStrata.defaults,
           { type: this.state.remoteDataType.value, name: url }
         );
         newItem.setTrait(CommonStrata.user, "url", url);
