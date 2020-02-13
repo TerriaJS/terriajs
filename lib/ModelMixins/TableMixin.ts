@@ -483,11 +483,12 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
                 const regionId: any = regionColumn.valuesAsRegions.regionIdToRowNumbersMap.get(
                   feature.properties[regionType.regionProp]
                 );
-
                 if (!isDefined(regionId)) return undefined;
-                return this.featureInfoFromFeature(
+                const d = this.getRowValues(regionId)
+                 console.log(this, regionType, regionColumn, d, regionId)
+               return this.featureInfoFromFeature(
                   regionType,
-                  this.getRowValues(regionId),
+                  d,
                   feature.properties[regionType.uniqueIdProp]
                 );
               }
@@ -522,6 +523,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       const result: JsonObject = {};
 
       this.tableColumns.forEach(column => {
+        console.log(column, index)
         result[column.name] = column.values[index];
       });
 
