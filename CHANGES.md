@@ -32,6 +32,7 @@ Change Log
 * Add a trait called `showShadowUi` to `Cesium3DTilesCatalogItem` which hide shadows on workbench item UI.
 * Re-added `ArcGisFeatureServerCatalogItem` and `ArcGisFeatureServerCatalogGroup`
 * Prevent TerriaMap from crashing when timeline is on and changing to 2D
+* Rewrite charts using `vx` svg charting library.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
