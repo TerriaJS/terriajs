@@ -163,7 +163,8 @@ export default class Leaflet extends GlobeOrMap {
       }
     };
 
-    ticker();
+    // Start ticker asynchronously to avoid calling an action in the consctructor
+    runLater(ticker);
 
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
     this._disposeSplitterReaction = this._reactToSplitterChanges();
