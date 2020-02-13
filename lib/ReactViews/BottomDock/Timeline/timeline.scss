@@ -9,7 +9,7 @@
   padding-right: 5px;
   font-family: $font-base;
 
-  @media (max-width: $sm) {
+  @media (max-width: $mobile) {
     position: fixed;
     bottom: 0px;
     background: $dark;
@@ -26,13 +26,26 @@
   background: $dark;
   padding: 3px 5px;
 
-  @media (max-width: $sm) {
+  @media (max-width: $mobile) {
     position: fixed;
   }
 }
 
 .text-cell {
-  display: table-cell;
+  display: flex;
+
+  @media (max-width: $mobile) {
+    max-width: 100vw;
+  }
+}
+
+.layer-name-truncated {
+  padding-right: $padding-small;
+  @media (max-width: $mobile) {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
 }
 
 .time {

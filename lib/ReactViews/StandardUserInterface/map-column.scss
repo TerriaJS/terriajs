@@ -68,7 +68,7 @@
     margin: 0;
   }
 
-  @media (max-width: $sm) {
+  @media (max-width: $mobile) {
     position: fixed;
   }
   position: absolute;
@@ -81,7 +81,7 @@
 .with-time-series-controls {
   bottom: 58px;
 
-  @media (max-width: $sm) {
+  @media (max-width: $mobile) {
     bottom: $mobile-bottom-timeline;
   }
 }
