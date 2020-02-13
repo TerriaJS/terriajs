@@ -475,13 +475,20 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
                 isDefined(style.regionColumn.regionType) &&
                 isDefined(style.regionColumn.regionType.regionProp)
               ) {
-                const regionId: any = style.regionColumn.valuesAsRegions.regionIdToRowNumbersMap.get(
-                  feature.properties[style.regionColumn.regionType.regionProp]
+                const regionColumn = style.regionColumn;
+                const regionType = regionColumn.regionType;
+
+                if (!isDefined(regionType)) return undefined;
+
+                const regionId: any = regionColumn.valuesAsRegions.regionIdToRowNumbersMap.get(
+                  feature.properties[regionType.regionProp]
                 );
+
                 if (!isDefined(regionId)) return undefined;
                 return this.featureInfoFromFeature(
-                  style.regionColumn.regionType,
-                  this.getRowValues(regionId)
+                  regionType,
+                  this.getRowValues(regionId),
+                  feature.properties[regionType.uniqueIdProp]
                 );
               }
 
@@ -493,15 +500,17 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       }
     );
 
-    private featureInfoFromFeature(region: RegionProvider, data: JsonObject) {
+    private featureInfoFromFeature(
+      region: RegionProvider,
+      data: JsonObject,
+      regionId: any
+    ) {
       const featureInfo = new ImageryLayerFeatureInfo();
       if (isDefined(region.nameProp)) {
         featureInfo.name = data[region.nameProp] as string;
       }
 
-      // This isn't working yet...
-      // For highlight
-      data.id = data[region.uniqueIdProp];
+      data.id = regionId;
       featureInfo.data = data;
 
       featureInfo.configureDescriptionFromProperties(data);
