@@ -34,6 +34,7 @@ Change Log
 * Prevent TerriaMap from crashing when timeline is on and changing to 2D
 * Rewrite charts using `vx` svg charting library.
 * Fixed bug causing `ArcGisFeatureServerCatalogItem` to throw an error when a token is included in the proxy url.
+* Fix a bug for zooming to `ArcGisMapServerCatalogItem` layers
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
