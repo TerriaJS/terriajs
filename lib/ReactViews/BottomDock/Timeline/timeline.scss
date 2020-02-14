@@ -33,10 +33,6 @@
 
 .text-cell {
   display: flex;
-
-  @media (max-width: $mobile) {
-    max-width: 100vw;
-  }
 }
 
 .layer-name-truncated {
@@ -45,6 +41,7 @@
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+    max-width: 50vw;
   }
 }
 

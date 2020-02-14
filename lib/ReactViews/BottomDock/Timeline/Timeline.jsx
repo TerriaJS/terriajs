@@ -100,12 +100,9 @@ export const Timeline = observer(
               title={t("dateTime.timeline.textCell")}
             >
               <div className={Styles.layerNameTruncated}>
-                {catalogItem.name} 
+                {catalogItem.name}
               </div>
-              <div className={Styles.layerNameTruncated}>
-                {currentTime}
-              </div>
-              
+              {currentTime}
             </div>
           </div>
           <div className={Styles.controlsRow}>

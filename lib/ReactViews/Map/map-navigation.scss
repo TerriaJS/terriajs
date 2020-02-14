@@ -12,7 +12,7 @@
     right: 16px;
   }
 
-  @media (max-width: $sm) {
+  @media (max-width: $mobile) {
     position: fixed;
   }
 }
@@ -20,7 +20,7 @@
 .with-time-series-controls {
   bottom: 100px;
 
-  @media (max-width: $sm) {
+  @media (max-width: $mobile) {
     bottom: $mobile-bottom-timeline;
   }
 }
