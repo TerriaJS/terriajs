@@ -19,11 +19,15 @@
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn--map from "../../Sass/common/_buttons.scss";
   display: flex;
-  background: $color-primary;
-  border-radius: 3px;
-  span {
-    display: flex;
-    line-height: 1;
+  // background: $color-primary;
+  border-radius: 16px;
+}
+
+.isActive {
+  svg:not(:root) {
+    // New arrow design (w/o styled-component fixes)
+    margin: auto;
+    width: 12px;
   }
 }
 
@@ -34,7 +38,7 @@
     margin-left: -1px;
     padding: 8px 0px;
     border: 0;
-    background: $dark;
+    // background: $dark;
     border-right: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 0 $radius-small $radius-small 0;
     transform: perspective(10px) rotateY(10deg);

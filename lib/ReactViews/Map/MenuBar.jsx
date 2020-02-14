@@ -99,7 +99,11 @@ const MenuBar = createReactClass({
           className={classNames(
             Styles.menu,
             Styles.menuArea,
-            Styles.menuAreaLeft
+            Styles.menuAreaLeft,
+            {
+              [Styles.menuAreaLeftWorkbenchClosed]: this.props.viewState
+                .isMapFullScreen
+            }
           )}
         >
           {/* <li className={Styles.menuItem}>

@@ -61,10 +61,10 @@ const FullScreenButton = observer(
         }
       }
       return (
-        <span>
-          {btnText}
+        <>
+          <span>{btnText}</span>
           <Icon glyph={Icon.GLYPHS.right} />
-        </span>
+        </>
       );
     },
 

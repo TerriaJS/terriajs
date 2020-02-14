@@ -4,10 +4,12 @@ interface CssExports {
   'menu': string;
   'menu-area': string;
   'menu-area-left': string;
+  'menu-area-left--workbenchClosed': string;
   'menu-area-right': string;
   'menu-item': string;
   'menuArea': string;
   'menuAreaLeft': string;
+  'menuAreaLeftWorkbenchClosed': string;
   'menuAreaRight': string;
   'menuItem': string;
   'storyBtn': string;

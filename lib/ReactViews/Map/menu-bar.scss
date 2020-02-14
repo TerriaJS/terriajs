@@ -8,6 +8,13 @@
 
 .menu-area-left {
   left: $padding;
+  transition: transform 0.25s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-delay: 0s;
+}
+.menu-area-left--workbenchClosed {
+  transition-delay: 0.5s;
+  transform: translateX(170px);
 }
 .menu-area-right {
   right: $padding;

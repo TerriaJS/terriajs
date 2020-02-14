@@ -232,6 +232,7 @@ $btn-setting-size: 35px;
   padding: 5px;
   color: $text-light;
   display: block;
+  // display: flex;
   min-height: 32px;
   font-family: $font-pop;
   font-weight: $font-weight-bold;
@@ -239,8 +240,11 @@ $btn-setting-size: 35px;
   background-color: $dark;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
 
-  display: grid;
-  grid-auto-flow: column;
+  // Can't apply these atm
+  // due to (presumably https://bugs.chromium.org/p/chromium/issues/detail?id=375693)
+  // display: grid;
+  // grid-auto-flow: column;
+
   &:hover,
   &:focus,
   .is-open &,
