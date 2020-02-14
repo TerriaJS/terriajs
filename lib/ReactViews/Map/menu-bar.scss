@@ -39,12 +39,19 @@
     margin-right: 0;
   }
 
-  &:first-child * button,
-  &:first-child * a {
+  // TODO(?)
+  // These selectors are here so that we can support the various implementations of
+  // menu item, a prop calculated with javascript would be a better option for later
+  &:first-child > div > button,
+  &:first-child > div > a,
+  &:first-child > button,
+  &:first-child > a {
     border-radius: 16px 0 0 16px;
   }
-  &:last-child * button,
-  &:last-child * a {
+  &:last-child > div > button,
+  &:last-child > div > a,
+  &:last-child > button,
+  &:last-child > a {
     border-radius: 0 16px 16px 0;
   }
 }
@@ -52,16 +59,6 @@
 .storyBtn {
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn--map from "../../Sass/common/_buttons.scss";
-  svg {
-    fill: #9ca1aa;
-    margin: 0 3px 0 4px;
-    vertical-align: bottom;
-  }
-  span {
-    vertical-align: top;
-    margin: 0 5px;
-    line-height: 1.3;
-  }
   &:hover,
   &:focus {
     svg {

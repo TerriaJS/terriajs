@@ -6,9 +6,9 @@
   border-radius: $radius-small;
   border: 0;
   svg {
-    fill: #9ca1aa;
-    margin: 0 3px 0 4px;
-    vertical-align: bottom;
+    // fill: #9ca1aa;
+    // margin: 0 3px 0 4px;
+    vertical-align: middle;
   }
 
   span {
@@ -18,8 +18,11 @@
   &:hover,
   &:focus {
     border: 0;
-    svg {
-      fill: #ffffff;
-    }
+  }
+}
+
+.about-tweak {
+  svg {
+    margin-top: 3px;
   }
 }

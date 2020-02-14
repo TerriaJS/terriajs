@@ -238,7 +238,9 @@ $btn-setting-size: 35px;
   // opacity: 0.95; // new design has opaque map buttons?
   background-color: $dark;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
-  line-height: 1.3;
+
+  display: grid;
+  grid-auto-flow: column;
   &:hover,
   &:focus,
   .is-open &,
@@ -246,16 +248,30 @@ $btn-setting-size: 35px;
     background: $color-primary;
     text-decoration: none;
   }
+  &:hover,
+  &:focus {
+    svg {
+      opacity: 1;
+    }
+  }
+  // overrides on panel.scss's .button
+  svg:not(:root) {
+    margin: auto 5px;
+    fill: $text-light;
+  }
   svg {
     height: 15px;
     width: 15px;
-    fill: $text-light;
+    opacity: 0.35;
+    margin: auto 5px auto 7px;
+    vertical-align: middle;
     display: inline-block;
   }
 
   span {
-    vertical-align: top;
-    margin: 0 5px;
+    // vertical-align: top;
+    vertical-align: middle;
+    margin: auto 5px;
   }
 }
 
