@@ -1,9 +1,13 @@
-import { action, computed } from "mobx";
+import { action, computed, runInAction } from "mobx";
 import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import { ChartPoint } from "../Charts/ChartData";
+import getChartColorForId from "../Charts/getChartColorForId";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import TerriaError from "../Core/TerriaError";
+import { calculateDomain, ChartItem } from "../Models/Chartable";
+import CommonStrata from "../Models/CommonStrata";
 import Model from "../Models/Model";
 import DiscretelyTimeVaryingTraits from "../Traits/DiscretelyTimeVaryingTraits";
 import TimeVarying from "./TimeVarying";
@@ -250,6 +254,54 @@ export default function DiscretelyTimeVaryingMixin<
         "currentTime",
         JulianDate.toIso8601(this.discreteTimesAsSortedJulianDates![index].time)
       );
+    }
+
+    @computed get chartItems(): ChartItem[] {
+      if (!this.showInChartPanel || !this.discreteTimesAsSortedJulianDates)
+        return [];
+      const points: ChartPoint[] = this.discreteTimesAsSortedJulianDates.map(
+        dt => ({
+          x: JulianDate.toDate(dt.time),
+          y: 0.5,
+          isSelected: dt.time === this.currentDiscreteJulianDate
+        })
+      );
+
+      const colorId = `color-${this.name}`;
+      return [
+        {
+          item: this,
+          name: this.name || "",
+          categoryName: this.name,
+          type: this.chartType || "momentLines",
+          xAxis: { scale: "time" },
+          points,
+          domain: { ...calculateDomain(points), y: [0, 1] },
+          showInChartPanel: this.show && this.showInChartPanel,
+          isSelectedInWorkbench: this.showInChartPanel,
+          updateIsSelectedInWorkbench: (isSelected: boolean) => {
+            runInAction(() => {
+              this.setTrait(CommonStrata.user, "showInChartPanel", isSelected);
+            });
+          },
+          getColor: () => {
+            return getChartColorForId(colorId);
+          },
+          onClick: (point: any) => {
+            runInAction(() => {
+              this.setTrait(
+                CommonStrata.user,
+                "currentTime",
+                point.x.toISOString()
+              );
+            });
+          }
+        }
+      ];
+    }
+
+    loadChartItems() {
+      return Promise.resolve();
     }
   }
 

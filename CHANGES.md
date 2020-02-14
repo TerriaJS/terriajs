@@ -30,7 +30,12 @@ Change Log
 * Fix initialisation of `terria`'s `shareDataService`.
 * Support Zoom to Data on `CsvCatalogItem` when data has lat-lon columns.
 * Add a trait called `showShadowUi` to `Cesium3DTilesCatalogItem` which hide shadows on workbench item UI.
+* Re-added `ArcGisFeatureServerCatalogItem` and `ArcGisFeatureServerCatalogGroup`
+* Prevent TerriaMap from crashing when timeline is on and changing to 2D
+* Rewrite charts using `vx` svg charting library.
+* Fixed bug causing `ArcGisFeatureServerCatalogItem` to throw an error when a token is included in the proxy url.
 * Add support for feature picking on region mapped datasets
+
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
