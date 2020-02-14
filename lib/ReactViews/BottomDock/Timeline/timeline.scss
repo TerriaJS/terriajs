@@ -37,11 +37,15 @@
 
 .layer-name-truncated {
   padding-right: $padding-small;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
   @media (max-width: $mobile) {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
     max-width: 50vw;
+  }
+
+  @media (min-width: $sm) {
+    max-width: 30vw;
   }
 }
 
