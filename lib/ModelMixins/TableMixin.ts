@@ -2,6 +2,7 @@ import { action, computed, observable, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
+import combine from "terriajs-cesium/Source/Core/combine";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
@@ -483,10 +484,15 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
                 const regionId: any = regionColumn.valuesAsRegions.regionIdToRowNumbersMap.get(
                   feature.properties[regionType.regionProp]
                 );
-                if (!isDefined(regionId)) return undefined;
-                const d = this.getRowValues(regionId)
-                 console.log(this, regionType, regionColumn, d, regionId)
-               return this.featureInfoFromFeature(
+                let d = null;
+
+                // TODO - find a better way to handle time-varying feature info's
+                if (Array.isArray(regionId)) {
+                  d = this.getRowValues(regionId[0]);
+                } else {
+                  d = this.getRowValues(regionId);
+                }
+                return this.featureInfoFromFeature(
                   regionType,
                   d,
                   feature.properties[regionType.uniqueIdProp]
@@ -523,7 +529,6 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       const result: JsonObject = {};
 
       this.tableColumns.forEach(column => {
-        console.log(column, index)
         result[column.name] = column.values[index];
       });
 
