@@ -5,6 +5,7 @@ import Chartable from "./Chartable";
 import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
 import Workbench from "./Workbench";
+import { runInAction } from "mobx";
 
 /**
  * Adds or removes a model to/from the workbench. If the model is a reference,
@@ -45,7 +46,9 @@ export default function addToWorkbench(
     });
   }
 
-  const mappablePromise = Mappable.is(item) ? item.loadMapItems() : undefined;
+  const mappablePromise = runInAction(() =>
+    Mappable.is(item) ? item.loadMapItems() : undefined
+  );
   const chartablePromise = Chartable.is(item)
     ? item.loadChartItems()
     : undefined;
