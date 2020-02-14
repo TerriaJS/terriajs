@@ -38,7 +38,7 @@
 .layer-name-truncated {
   padding-right: $padding-small;
 
-  @media (max-width: $mobile), (min-width: $sm) {
+  @media (max-width: $mobile), (min-width: $sm) and (max-width: $lg) {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
@@ -47,7 +47,7 @@
     max-width: 52vw;
   }
 
-  @media (min-width: $sm) {
+  @media (min-width: $sm) and (max-width: $lg) {
     max-width: 30vw;
   }
 }
