@@ -37,8 +37,12 @@
   &:hover,
   &:focus {
     border-radius: 0 $map-button-border-radius $map-button-border-radius 0;
-    padding: 0 $padding-small 0 $padding-mini;
+    padding: 0;
+    padding-right: $padding-small;
     box-shadow: none;
+  }
+  svg:not(:root) {
+    margin: auto $padding-small;
   }
 }
 

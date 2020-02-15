@@ -92,6 +92,13 @@ const SidePanel = observer(
       return (
         <div className={Styles.workBench}>
           <div className={Styles.header}>
+            <FullScreenButton
+              terria={this.props.terria}
+              viewState={this.props.viewState}
+              minified={true}
+              animationDuration={250}
+              btnText={t("addData.btnHide")}
+            />
             <SearchBox
               onSearchTextChanged={this.changeSearchText}
               onDoSearch={this.search}

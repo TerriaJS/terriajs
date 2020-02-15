@@ -262,7 +262,9 @@ $btn-setting-size: 35px;
   }
   // overrides on panel.scss's .button
   svg:not(:root) {
-    margin: auto 5px;
+    margin: auto $padding-small;
+    margin-left: $padding-small + 2px;
+    margin-right: $padding-small - 2px;
     fill: $text-light;
   }
   svg {
@@ -277,7 +279,7 @@ $btn-setting-size: 35px;
   span {
     // vertical-align: top;
     vertical-align: middle;
-    margin: auto 5px;
+    margin: auto $padding-small + 1px;
   }
 }
 

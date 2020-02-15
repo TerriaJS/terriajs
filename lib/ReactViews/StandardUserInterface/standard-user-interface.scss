@@ -48,6 +48,7 @@
 }
 
 .sidePanel {
+  position: relative;
   font-family: $font-pop;
   background: $dark;
   width: $work-bench-width;
@@ -146,7 +147,7 @@
   width: 200px;
   transition: transform 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-delay: 0.5s;
+  transition-delay: 0.25s;
 }
 
 .showWorkbenchButtonisVisible {
