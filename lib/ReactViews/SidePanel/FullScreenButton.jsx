@@ -57,7 +57,7 @@ const FullScreenButton = observer(
         if (this.props.viewState.isMapFullScreen) {
           return <Icon glyph={Icon.GLYPHS.right} />;
         } else {
-          return <Icon glyph={Icon.GLYPHS.left} />;
+          return <Icon glyph={Icon.GLYPHS.closeLight} />;
         }
       }
       return (

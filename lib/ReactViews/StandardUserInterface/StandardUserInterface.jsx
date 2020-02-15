@@ -203,6 +203,13 @@ const StandardUserInterface = observer(
                         this.props.viewState.topElement = "SidePanel";
                       })}
                     >
+                      <FullScreenButton
+                        terria={this.props.terria}
+                        viewState={this.props.viewState}
+                        minified={true}
+                        animationDuration={250}
+                        btnText={t("addData.btnHide")}
+                      />
                       <Branding terria={terria} version={this.props.version} />
                       <SidePanel
                         terria={terria}

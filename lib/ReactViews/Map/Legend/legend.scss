@@ -34,7 +34,8 @@ $distance-bg: rgba($dark, 0.9);
 .distanceLegend {
   composes: baseLegend;
   // Adjust colors to match btn--map.
-  background-color: $charcoal-grey;
+  // background-color: $charcoal-grey;
+  background-color: $dark;
   color: $text-light;
   &:hover {
     background: $color-primary;

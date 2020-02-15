@@ -22,6 +22,7 @@ const GLYPHS = {
   checkboxOff: require("../../wwwroot/images/icons/checkbox-off.svg"),
   checkboxOn: require("../../wwwroot/images/icons/checkbox-on.svg"),
   close: require("../../wwwroot/images/icons/close.svg"),
+  closeLight: require("../../wwwroot/images/icons/close-light.svg"),
   closed: require("../../wwwroot/images/icons/closed.svg"),
   decrease: require("../../wwwroot/images/icons/decrease.svg"),
   download: require("../../wwwroot/images/icons/download.svg"),

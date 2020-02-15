@@ -2,12 +2,12 @@
 
 .menu-area {
   position: absolute;
-  top: 18px;
+  top: $map-button-top;
   z-index: 108;
 }
 
 .menu-area-left {
-  left: $padding;
+  left: $padding + 25px;
   transition: transform 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-delay: 0s;
@@ -53,13 +53,13 @@
   &:first-child > div > a,
   &:first-child > button,
   &:first-child > a {
-    border-radius: 16px 0 0 16px;
+    border-radius: $map-button-border-radius 0 0 $map-button-border-radius;
   }
   &:last-child > div > button,
   &:last-child > div > a,
   &:last-child > button,
   &:last-child > a {
-    border-radius: 0 16px 16px 0;
+    border-radius: 0 $map-button-border-radius $map-button-border-radius 0;
   }
 }
 
