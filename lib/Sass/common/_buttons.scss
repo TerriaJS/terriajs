@@ -244,6 +244,9 @@ $btn-setting-size: 35px;
   // due to (presumably https://bugs.chromium.org/p/chromium/issues/detail?id=375693)
   // display: grid;
   // grid-auto-flow: column;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 
   &:hover,
   &:focus,
