@@ -4,7 +4,6 @@ import createReactClass from "create-react-class";
 
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import HelpMenuPanelBasic from "../HelpScreens/HelpMenuPanelBasic";
 import SettingPanel from "./Panels/SettingPanel";
 import SharePanel from "./Panels/SharePanel/SharePanel";
 import ToolsPanel from "./Panels/ToolsPanel/ToolsPanel";
@@ -59,12 +58,12 @@ const MenuBar = createReactClass({
   },
   render() {
     const { t } = this.props;
-    const satelliteGuidancePrompted = this.props.terria.getLocalProperty(
-      "satelliteGuidancePrompted"
-    );
-    const mapGuidesLocationPrompted = this.props.terria.getLocalProperty(
-      "mapGuidesLocationPrompted"
-    );
+    // const satelliteGuidancePrompted = this.props.terria.getLocalProperty(
+    //   "satelliteGuidancePrompted"
+    // );
+    // const mapGuidesLocationPrompted = this.props.terria.getLocalProperty(
+    //   "mapGuidesLocationPrompted"
+    // );
     const storyEnabled = this.props.terria.configParameters.storyEnabled;
     const enableTools = this.props.terria.getUserProperty("tools") === "1";
 
