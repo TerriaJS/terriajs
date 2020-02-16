@@ -2,15 +2,11 @@
 // Please do not change this file!
 interface CssExports {
   'menu': string;
-  'menu-area': string;
-  'menu-area-left': string;
-  'menu-area-left--workbenchClosed': string;
-  'menu-area-right': string;
+  'menu-bar': string;
+  'menu-bar--workbenchClosed': string;
   'menu-item': string;
-  'menuArea': string;
-  'menuAreaLeft': string;
-  'menuAreaLeftWorkbenchClosed': string;
-  'menuAreaRight': string;
+  'menuBar': string;
+  'menuBarWorkbenchClosed': string;
   'menuItem': string;
   'storyBtn': string;
 }

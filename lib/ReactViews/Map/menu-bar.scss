@@ -1,32 +1,31 @@
 @import "~terriajs-variables";
 
-.menu-area {
+.menu-bar {
   position: absolute;
-  top: $map-button-top;
   z-index: 108;
-}
-
-.menu-area-left {
-  left: $padding + 30px;
-  transition: transform 0.25s;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-delay: 0s;
-}
-.menu-area-left--workbenchClosed {
-  transition-delay: 0.25s;
-  transform: translateX(125px);
-}
-.menu-area-right {
+  top: $map-button-top;
+  left: 0;
   right: $padding;
-}
 
+  // todo: find some non-layout-change animation technique for
+  // this flex-menu-bar-workbench problem
+  transition: margin-left 0.25s;
+  margin-left: $work-bench-width + 40px;
+
+  display: flex;
+  justify-content: space-between;
+}
+.menu-bar--workbenchClosed {
+  transition-delay: 0.25s;
+  margin-left: 165px;
+}
 .menu {
   composes: list-reset from "../../Sass/common/_base.scss";
   composes: clearfix from "../../Sass/common/_base.scss";
   composes: sm-show from "../../Sass/common/_base.scss";
 
   /* Align About button with compass */
-  margin-right: 7px;
+  // margin-right: 7px;
 }
 
 .menu-item {

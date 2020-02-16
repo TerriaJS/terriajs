@@ -90,21 +90,16 @@ const MenuBar = createReactClass({
     return (
       <div
         className={classNames(
-          this.props.viewState.topElement === "MenuBar" ? "top-element" : ""
+          this.props.viewState.topElement === "MenuBar" ? "top-element" : "",
+          Styles.menuBar,
+          {
+            [Styles.menuBarWorkbenchClosed]: this.props.viewState
+              .isMapFullScreen
+          }
         )}
         onClick={this.handleClick}
       >
-        <ul
-          className={classNames(
-            Styles.menu,
-            Styles.menuArea,
-            Styles.menuAreaLeft,
-            {
-              [Styles.menuAreaLeftWorkbenchClosed]: this.props.viewState
-                .isMapFullScreen
-            }
-          )}
-        >
+        <ul className={classNames(Styles.menu)}>
           {/* <li className={Styles.menuItem}>
             <HelpMenuPanelBasic
               terria={this.props.terria}
@@ -145,13 +140,7 @@ const MenuBar = createReactClass({
             </For>
           </If>
         </ul>
-        <ul
-          className={classNames(
-            Styles.menu,
-            Styles.menuArea,
-            Styles.menuAreaRight
-          )}
-        >
+        <ul className={classNames(Styles.menu)}>
           <li className={Styles.menuItem}>
             <SettingPanel
               terria={this.props.terria}

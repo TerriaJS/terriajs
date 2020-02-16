@@ -232,15 +232,6 @@ const StandardUserInterface = observer(
 
                 <section className={Styles.map}>
                   {/* <ProgressBar terria={terria}/> */}
-                  <If condition={!this.props.viewState.hideMapUi()}>
-                    <MenuBar
-                      terria={terria}
-                      viewState={this.props.viewState}
-                      allBaseMaps={allBaseMaps}
-                      menuItems={customElements.menu}
-                      animationDuration={animationDuration}
-                    />
-                  </If>
                   <MapColumn
                     terria={terria}
                     viewState={this.props.viewState}
@@ -276,6 +267,13 @@ const StandardUserInterface = observer(
                     .explorerPanelIsVisible
                 })}
               >
+                <MenuBar
+                  terria={terria}
+                  viewState={this.props.viewState}
+                  allBaseMaps={allBaseMaps}
+                  menuItems={customElements.menu}
+                  animationDuration={animationDuration}
+                />
                 <MapNavigation
                   terria={terria}
                   viewState={this.props.viewState}
