@@ -257,7 +257,7 @@ $btn-setting-size: 35px;
   &:hover,
   &:focus {
     svg {
-      opacity: 1;
+      fill: $text-light;
     }
   }
   // overrides on panel.scss's .button
@@ -265,12 +265,14 @@ $btn-setting-size: 35px;
     margin: auto $padding-small;
     margin-left: $padding-small + 2px;
     margin-right: $padding-small - 2px;
-    fill: $text-light;
+
+    // fill: $text-light;
+    fill: #6487ae;
   }
   svg {
     height: 15px;
     width: 15px;
-    opacity: 0.35;
+    // opacity: 0.35;
     margin: auto 5px auto 7px;
     vertical-align: middle;
     display: inline-block;
