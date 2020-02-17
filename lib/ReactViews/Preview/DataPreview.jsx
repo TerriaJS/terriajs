@@ -1,6 +1,6 @@
 "use strict";
 
-import Chart from "../Custom/Chart/Chart";
+// import Chart from "../Custom/Chart/Chart";
 import Description from "./Description";
 import GroupPreview from "./GroupPreview";
 import InvokeFunction from "../Analytics/InvokeFunction";
@@ -68,11 +68,13 @@ const DataPreview = observer(
                 <h3 className={Styles.h3}>{previewed.name}</h3>
                 <p>{t("preview.doesNotContainGeospatialData")}</p>
                 <div className={Styles.previewChart}>
-                  <Chart
-                    data={chartData}
-                    axisLabel={{ x: previewed.xAxis.units, y: undefined }}
-                    height={250 - 34}
-                  />
+                  {/* TODO: Show a preview chart
+                      <Chart
+                         data={chartData}
+                         axisLabel={{ x: previewed.xAxis.units, y: undefined }}
+                         height={250 - 34}
+                         />
+                  */}
                 </div>
                 <Description item={previewed} />
               </div>

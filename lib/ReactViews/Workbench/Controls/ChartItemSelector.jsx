@@ -49,7 +49,11 @@ const ChartItem = observer(({ item, chartItem }) => {
 
 const ChartItemSelector = observer(function({ item }) {
   const chartView = new ChartView(item.terria);
-  const chartItems = chartView.chartItems.filter(c => c.item === item);
+  // We don't need to show selectors for moment datasets. They are part of
+  // discretelytimevarying items and have a separate chart button to enable/disable.
+  const chartItems = chartView.chartItems
+    .filter(c => c.item === item)
+    .filter(c => c.type !== "momentPoints" && c.type !== "momentLines");
   return (
     <ul className={Styles.root}>
       <For each="chartItem" index="i" of={chartItems}>
