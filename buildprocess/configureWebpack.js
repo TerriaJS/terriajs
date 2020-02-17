@@ -107,6 +107,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
                       '@babel/preset-react'
                     ],
                     plugins: [
+                        'babel-plugin-styled-components',
                         'babel-plugin-jsx-control-statements',
                         '@babel/plugin-transform-modules-commonjs',
                         require.resolve('@babel/plugin-syntax-dynamic-import')
