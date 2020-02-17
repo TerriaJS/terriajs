@@ -3,6 +3,7 @@ import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
+import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
@@ -150,7 +151,7 @@ export default abstract class GlobeOrMap {
         (<any>cesiumPolyline).polyline.material = Color.fromCssColorString(
           this.terria.baseMapContrastColor
         );
-        cesiumPolyline.polyline.width = 2;
+        cesiumPolyline.polyline.width = new ConstantProperty(2);
 
         this._removeHighlightCallback = function() {
           cesiumPolyline.polyline.material = polylineMaterial;

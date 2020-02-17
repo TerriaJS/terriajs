@@ -1154,14 +1154,8 @@ declare module "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider" {
 declare module "terriajs-cesium/Source/Scene/WebMapTileServiceImageryProvider" {
   export default Cesium.WebMapTileServiceImageryProvider;
 }
-declare module "terriajs-cesium/Source/Scene/createOpenStreetMapImageryProvider" {
-  export default Cesium.createOpenStreetMapImageryProvider;
-}
 declare module "terriajs-cesium/Source/Scene/createTangentSpaceDebugPrimitive" {
   export default Cesium.createTangentSpaceDebugPrimitive;
-}
-declare module "terriajs-cesium/Source/Scene/createTileMapServiceImageryProvider" {
-  export default Cesium.createTileMapServiceImageryProvider;
 }
 declare module "terriajs-cesium/Source/Scene/createWorldImagery" {
   export default Cesium.createWorldImagery;
@@ -1346,6 +1340,7 @@ declare module "terriajs-cesium/Source/Core/IonResource" {
 declare module "terriajs-cesium/Source/Scene/Cesium3DTileset" {
   import IonResource from "terriajs-cesium/Source/Core/IonResource";
   import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
+  import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
 
   export default class Cesium3DTileset {
     url: string;
@@ -1355,6 +1350,7 @@ declare module "terriajs-cesium/Source/Scene/Cesium3DTileset" {
     shadows?: Cesium.ShadowMode;
     readyPromise: Promise<Cesium3DTileset>;
     extras: any;
+    colorBlendMode: Cesium3DTileColorBlendMode;
 
     constructor(options: {
       url: string | IonResource | Cesium.Resource;
@@ -1365,6 +1361,10 @@ declare module "terriajs-cesium/Source/Scene/Cesium3DTileset" {
     destroy(): void;
     isDestroyed(): boolean;
   }
+}
+
+declare module "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode" {
+  export default Cesium.Cesium3DTileColorBlendMode;
 }
 
 declare module "terriajs-cesium/Source/Scene/Cesium3DTileStyle" {
