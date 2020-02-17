@@ -4,7 +4,13 @@ interface CssExports {
   'addData': string;
   'body': string;
   'button': string;
+  'charcoalGrey': string;
+  'colorPrimary': string;
+  'dark': string;
+  'darkWithOverlay': string;
   'header': string;
+  'mapButtonColor': string;
+  'modalHighlight': string;
   'uploadData': string;
   'workbenchEmpty': string;
 }

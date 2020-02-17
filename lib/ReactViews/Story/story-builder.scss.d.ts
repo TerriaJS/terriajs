@@ -5,12 +5,18 @@ interface CssExports {
   'VideoGuideWrapper--closing': string;
   'actions': string;
   'captureBtn': string;
+  'charcoalGrey': string;
+  'colorPrimary': string;
+  'dark': string;
+  'darkWithOverlay': string;
   'footer': string;
   'header': string;
   'intro': string;
   'isActive': string;
   'isHidden': string;
   'isVisible': string;
+  'mapButtonColor': string;
+  'modalHighlight': string;
   'previewBtn': string;
   'remove-button': string;
   'removeBtn': string;

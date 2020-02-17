@@ -4,8 +4,12 @@ interface CssExports {
   'btnGroup': string;
   'btnToggleActive': string;
   'btnToggleOpen': string;
+  'charcoalGrey': string;
   'children-list': string;
   'childrenList': string;
+  'colorPrimary': string;
+  'dark': string;
+  'darkWithOverlay': string;
   'hasChildren': string;
   'header': string;
   'inner': string;
@@ -13,6 +17,8 @@ interface CssExports {
   'isLoading': string;
   'isSelectable': string;
   'items': string;
+  'mapButtonColor': string;
+  'modalHighlight': string;
   'root': string;
   'section': string;
   'unSelectable': string;
