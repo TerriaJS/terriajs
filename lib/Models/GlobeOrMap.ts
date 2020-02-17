@@ -1,6 +1,7 @@
 import { Feature as GeoJSONFeature, Position } from "geojson";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
 import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
@@ -109,13 +110,28 @@ export default abstract class GlobeOrMap {
 
       if (isDefined(feature._cesium3DTileFeature)) {
         const originalColor = feature._cesium3DTileFeature.color;
-        feature._cesium3DTileFeature.color = Color.DARKSLATEGRAY;
+        const originalColorBlendMode =
+          feature._cesium3DTileFeature.tileset.colorBlendMode;
+
+        feature._cesium3DTileFeature.tileset.colorBlendMode =
+          Cesium3DTileColorBlendMode.MIX;
+        const newColor = Color.fromCssColorString(
+          this.terria.baseMapContrastColor
+        );
+
+        // highlighting doesn't work if the highlight colour is full white
+        // so in this case use something close to white instead
+        feature._cesium3DTileFeature.color = Color.equals(newColor, Color.WHITE)
+          ? Color.fromCssColorString("#fffffe")
+          : newColor;
+
         this._removeHighlightCallback = function() {
           if (
             isDefined(feature._cesium3DTileFeature) &&
             !feature._cesium3DTileFeature.tileset.isDestroyed()
           ) {
             feature._cesium3DTileFeature.color = originalColor;
+            feature._cesium3DTileFeature.tileset.colorBlendMode = originalColorBlendMode;
           }
         };
       } else if (isDefined(feature.polygon)) {
