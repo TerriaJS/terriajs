@@ -108,9 +108,12 @@ export default abstract class GlobeOrMap {
 
       if (isDefined(feature._cesium3DTileFeature)) {
         const originalColor = feature._cesium3DTileFeature.color;
-        feature._cesium3DTileFeature.color = Color.YELLOW;
+        feature._cesium3DTileFeature.color = Color.DARKSLATEGRAY;
         this._removeHighlightCallback = function() {
-          if (isDefined(feature._cesium3DTileFeature)) {
+          if (
+            isDefined(feature._cesium3DTileFeature) &&
+            !feature._cesium3DTileFeature.tileset.isDestroyed()
+          ) {
             feature._cesium3DTileFeature.color = originalColor;
           }
         };

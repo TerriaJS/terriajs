@@ -462,7 +462,7 @@ function determineCatalogItem(workbench, feature) {
     return undefined;
   }
 
-  if (feature._catalogItem) {
+  if (feature._catalogItem && workbench.items.includes(feature._catalogItem)) {
     return feature._catalogItem;
   }
 

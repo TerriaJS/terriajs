@@ -36,6 +36,7 @@ Change Log
 * Fixed bug causing `ArcGisFeatureServerCatalogItem` to throw an error when a token is included in the proxy url.
 * Fix a bug for zooming to `ArcGisMapServerCatalogItem` layers
 * Modified creation of catalog item from urls to set the item name to be the url at the defaults stratum rather than the definition stratum. This prevents actual item names at load strata from being overridden by a definition stratum name which is just a url.
+* Fixed a bug causing highlighting of features with `_cesium3DTileFeature` to sometimes stop working. Also changed highlight colour to make it more visible.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC

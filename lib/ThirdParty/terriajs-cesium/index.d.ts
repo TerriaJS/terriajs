@@ -1363,6 +1363,7 @@ declare module "terriajs-cesium/Source/Scene/Cesium3DTileset" {
     });
 
     destroy(): void;
+    isDestroyed(): boolean;
   }
 }
 
@@ -1378,8 +1379,11 @@ declare module "terriajs-cesium/Source/Scene/Cesium3DTileStyle" {
 }
 
 declare module "terriajs-cesium/Source/Scene/Cesium3DTileFeature" {
+  import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
+
   export default class Cesium3DTileFeature {
     color: Cesium.Color;
+    tileset: Cesium3DTileset;
     getPropertyNames(): string[];
     getProperty(name: string): unknown;
   }
