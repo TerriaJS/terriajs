@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import Icon from "../Icon.jsx";
 import IconWrapper from "../../Styled/IconWrapper";
 
-export default function PrivateIndicator(props) {
+export default function PrivateIndicator() {
   const { t } = useTranslation();
   // if in catalog, show primary colour
 
@@ -15,7 +15,7 @@ export default function PrivateIndicator(props) {
       width={15}
       css={`
         svg {
-          fill: ${props => props.theme.colorPrimary};
+          fill: ${p => p.theme.colorPrimary};
         }
       `}
     >

@@ -4,6 +4,7 @@ import { ThemeProvider } from "styled-components";
 import PropTypes from "prop-types";
 import combine from "terriajs-cesium/Source/Core/combine";
 
+import { terriaTheme } from "./StandardTheme";
 import arrayContains from "../../Core/arrayContains";
 import Branding from "../SidePanel/Branding";
 // import DragDropFile from '../DragDropFile';
@@ -36,13 +37,8 @@ import { withTranslation } from "react-i18next";
 
 import Styles from "./standard-user-interface.scss";
 // import Variables from "../../Sass/common/variables";
-import Variables from "terriajs-variables";
 import { observer } from "mobx-react";
 import { action, runInAction } from "mobx";
-
-const terriaTheme = {
-  colorPrimary: Variables.colorPrimary
-};
 
 export const showStoryPrompt = (viewState, terria) => {
   terria.configParameters.showFeaturePrompts &&
