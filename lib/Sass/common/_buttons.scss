@@ -261,21 +261,23 @@ $btn-setting-size: 35px;
     }
   }
   // overrides on panel.scss's .button
-  svg:not(:root) {
+  // svg:not(:root) {
+  // }
+  svg {
+    height: 15px;
+    width: 15px;
+    // opacity: 0.35;
+    // margin: auto 5px auto 7px;
+    vertical-align: middle;
+    display: inline-block;
+
     margin: auto $padding-small;
     margin-left: $padding-small + 2px;
     margin-right: $padding-small - 2px;
 
     // fill: $text-light;
-    fill: #6487ae;
-  }
-  svg {
-    height: 15px;
-    width: 15px;
-    // opacity: 0.35;
-    margin: auto 5px auto 7px;
-    vertical-align: middle;
-    display: inline-block;
+    // fill: #6487ae;
+    fill: $map-button-color;
   }
 
   span {

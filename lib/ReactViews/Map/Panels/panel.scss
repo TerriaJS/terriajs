@@ -120,9 +120,9 @@
   border: 0;
 
   svg {
-    fill: #6487ae;
-    margin: 0 3px 1px 4px;
-    vertical-align: middle;
+    // fill: #6487ae;
+    // margin: 0 3px 1px 4px;
+    // vertical-align: middle;
   }
 
   span {
@@ -135,6 +135,11 @@
     svg {
       fill: #ffffff;
     }
+  }
+}
+.button-for-modal-dropdown {
+  svg {
+    fill: $color-primary;
   }
 }
 

@@ -74,7 +74,9 @@ const DropdownPanel = createReactClass({
         <button
           onClick={this.openPanel}
           type="button"
-          className={classNames(Styles.button, this.props.theme.btn)}
+          className={classNames(Styles.button, this.props.theme.btn, {
+            [Styles.buttonForModalDropdown]: this.props.showDropdownAsModal
+          })}
           title={this.props.btnTitle}
           ref={element => (this.buttonElement = element)}
         >
