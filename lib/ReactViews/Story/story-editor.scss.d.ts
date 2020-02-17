@@ -3,6 +3,10 @@
 interface CssExports {
   'body': string;
   'cancelBtn': string;
+  'charcoalGrey': string;
+  'colorPrimary': string;
+  'dark': string;
+  'darkWithOverlay': string;
   'doneBtn': string;
   'editor': string;
   'editorHeader': string;
@@ -12,6 +16,8 @@ interface CssExports {
   'inner': string;
   'is-mounted': string;
   'isMounted': string;
+  'mapButtonColor': string;
+  'modalHighlight': string;
   'popupEditor': string;
   'saveBtn': string;
 }
