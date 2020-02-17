@@ -17,8 +17,10 @@
 
   &:hover,
   &:focus {
-    fill: $text-light;
     border: 0;
+    svg {
+      fill: $text-light;
+    }
   }
 }
 
