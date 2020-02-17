@@ -95,8 +95,16 @@ export default class MagdaReference extends UrlMixin(
     }),
     createStratumInstance(MagdaDistributionFormatTraits, {
       id: "EsriFeatureServer",
-      formatRegex: "^esri rest$",
-      urlRegex: "FeatureServer",
+      formatRegex: "ESRI MAPSERVER", // TO DO - tidy up this magda format reference
+      urlRegex: "FeatureServer$|FeatureServer/$",
+      definition: {
+        type: "esri-featureServer-group"
+      }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+      id: "EsriFeatureServer",
+      formatRegex: "ESRI MAPSERVER", // TO DO - tidy up this magda format reference
+      urlRegex: "FeatureServer/d",
       definition: {
         type: "esri-featureServer"
       }

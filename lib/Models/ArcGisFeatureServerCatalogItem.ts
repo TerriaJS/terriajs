@@ -167,23 +167,8 @@ class FeatureServerStratum extends LoadableStratum(
       item.clampToGround
     );
 
-    const url = cleanAndProxyUrl(item, item.url);
-    const urlComponents = splitLayerIdFromPath(url);
-
-    if (!isDefined(urlComponents.layerId)) {
-      return Promise.reject(
-        new TerriaError({
-          title: i18next.t(
-            "models.arcGisFeatureServerCatalogItem.invalidServiceTitle"
-          ),
-          message: i18next.t(
-            "models.arcGisFeatureServerCatalogItem.invalidServiceMessage"
-          )
-        })
-      );
-    }
-
-    return loadGeoJson(item)
+    return Promise.resolve()
+      .then(() => loadGeoJson(item))
       .then(geoJsonData => {
         geoJsonItem.setTrait(
           CommonStrata.definition,
@@ -627,21 +612,34 @@ function buildMetadataUrl(catalogItem: ArcGisFeatureServerCatalogItem) {
 }
 
 function buildGeoJsonUrl(catalogItem: ArcGisFeatureServerCatalogItem) {
-  var url = cleanAndProxyUrl(catalogItem, catalogItem.url || "0d");
-  var urlComponents = splitLayerIdFromPath(url);
-  return new URI(urlComponents.urlWithoutLayerId)
-    .segment("query")
-    .addQuery("f", "json")
-    .addQuery(
-      "layerDefs",
-      "{" + (urlComponents.layerId || 0) + ':"' + catalogItem.layerDef + '"}'
-    )
-    .toString();
+  const url = cleanUrl(catalogItem.url || "0d");
+  const urlComponents = splitLayerIdFromPath(url);
+  const layerId = urlComponents.layerId;
+
+  if (!isDefined(layerId)) {
+    throw new TerriaError({
+      title: i18next.t(
+        "models.arcGisFeatureServerCatalogItem.invalidServiceTitle"
+      ),
+      message: i18next.t(
+        "models.arcGisFeatureServerCatalogItem.invalidServiceMessage"
+      )
+    });
+  }
+
+  return proxyCatalogItemUrl(
+    catalogItem,
+    new URI(urlComponents.urlWithoutLayerId)
+      .segment("query")
+      .addQuery("f", "json")
+      .addQuery("layerDefs", "{" + layerId + ':"' + catalogItem.layerDef + '"}')
+      .toString()
+  );
 }
 
 function splitLayerIdFromPath(url: string) {
-  var regex = /^(.*)\/(\d+)$/;
-  var matches = url.match(regex);
+  const regex = /^(.*FeatureServer)\/(\d+)/;
+  const matches = url.match(regex);
   if (isDefined(matches) && matches !== null && matches.length > 2) {
     return {
       layerId: matches[2],
@@ -653,16 +651,9 @@ function splitLayerIdFromPath(url: string) {
   };
 }
 
-function cleanAndProxyUrl(
-  catalogItem: ArcGisFeatureServerCatalogItem,
-  url: string
-) {
-  return proxyCatalogItemUrl(catalogItem, cleanUrl(url));
-}
-
 function cleanUrl(url: string) {
   // Strip off the search portion of the URL
-  var uri = new URI(url);
+  const uri = new URI(url);
   uri.search("");
   return uri.toString();
 }
