@@ -97,6 +97,7 @@ const DataCatalogGroup = observer(
       return (
         <CatalogGroup
           text={this.getNameOrPrettyUrl()}
+          isPrivate={group.isPrivate}
           title={this.props.ancestors
             .map(member => member.nameInCatalog)
             .join(" → ")}
