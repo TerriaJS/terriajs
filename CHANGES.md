@@ -34,6 +34,10 @@ Change Log
 * Prevent TerriaMap from crashing when timeline is on and changing to 2D
 * Rewrite charts using `vx` svg charting library.
 * Fixed bug causing `ArcGisFeatureServerCatalogItem` to throw an error when a token is included in the proxy url.
+* Revamp map buttons at top to support two menu configuration
+* Viewer (2d/3d/3d-non-terrain) & basemap preferences are persisted to local storage again, and loaded back at startup
+* Dramatically simplified map button styling (pre-styled-components)
+* Allow DropdownPanel(InnerPanel) to show centered instead of offset toward the left
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
