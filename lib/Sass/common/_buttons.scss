@@ -232,12 +232,21 @@ $btn-setting-size: 35px;
   padding: 5px;
   color: $text-light;
   display: block;
-  min-height: 28px;
+  // display: flex;
+  min-height: 32px;
   font-family: $font-pop;
-  opacity: 0.95;
-  background-color: $charcoal-grey;
+  // opacity: 0.95; // new design has opaque map buttons?
+  background-color: $dark;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
-  line-height: 1.3;
+
+  // Can't apply these atm
+  // due to (presumably https://bugs.chromium.org/p/chromium/issues/detail?id=375693)
+  // display: grid;
+  // grid-auto-flow: column;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
   &:hover,
   &:focus,
   .is-open &,
@@ -245,16 +254,36 @@ $btn-setting-size: 35px;
     background: $color-primary;
     text-decoration: none;
   }
+  &:hover,
+  &:focus {
+    svg {
+      fill: $text-light;
+    }
+  }
+  // overrides on panel.scss's .button
+  // svg:not(:root) {
+  // }
   svg {
     height: 15px;
     width: 15px;
-    fill: $text-light;
+    // opacity: 0.35;
+    // margin: auto 5px auto 7px;
+    vertical-align: middle;
     display: inline-block;
+
+    margin: auto $padding-small;
+    margin-left: $padding-small + 2px;
+    margin-right: $padding-small - 2px;
+
+    // fill: $text-light;
+    // fill: #6487ae;
+    fill: $map-button-color;
   }
 
   span {
-    vertical-align: top;
-    margin: 0 5px;
+    // vertical-align: top;
+    vertical-align: middle;
+    margin: auto $padding-small + 1px;
   }
 }
 

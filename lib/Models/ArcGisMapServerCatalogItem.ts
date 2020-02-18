@@ -315,7 +315,6 @@ export default class ArcGisMapServerCatalogItem
 
   readonly supportsSplitting = true;
   readonly canZoomTo = true;
-  readonly showsInfo = true;
   readonly isMappable = true;
 
   get type() {
@@ -507,9 +506,9 @@ function maximumScaleToLevel(maximumScale: number | undefined) {
 }
 
 function updateBbox(extent: Extent, rectangle: RectangleExtent) {
-  if (extent.xmin < rectangle.west) rectangle.west = extent.xmax;
+  if (extent.xmin < rectangle.west) rectangle.west = extent.xmin;
   if (extent.ymin < rectangle.south) rectangle.south = extent.ymin;
-  if (extent.xmax > rectangle.east) rectangle.east = extent.xmin;
+  if (extent.xmax > rectangle.east) rectangle.east = extent.xmax;
   if (extent.ymax > rectangle.north) rectangle.north = extent.ymax;
 }
 
@@ -546,7 +545,7 @@ function getRectangleFromLayer(
     const north = p[1];
 
     return updateBbox(
-      { xmin: east, ymin: south, xmax: west, ymax: north },
+      { xmin: west, ymin: south, xmax: east, ymax: north },
       rectangle
     );
   }

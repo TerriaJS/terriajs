@@ -20,7 +20,9 @@ import isDefined from "../Core/isDefined";
 import JsonValue, {
   isJsonObject,
   isJsonString,
-  JsonObject
+  JsonObject,
+  isJsonBoolean,
+  isJsonNumber
 } from "../Core/Json";
 import loadJson5 from "../Core/loadJson5";
 import ServerConfig from "../Core/ServerConfig";
@@ -49,6 +51,7 @@ import updateModelFromJson from "./updateModelFromJson";
 import upsertModelFromJson from "./upsertModelFromJson";
 import ViewerMode from "./ViewerMode";
 import Workbench from "./Workbench";
+import openGroup from "./openGroup";
 
 interface ConfigParameters {
   [key: string]: ConfigParameters[keyof ConfigParameters];
@@ -76,6 +79,7 @@ interface ConfigParameters {
   disableMyLocation?: boolean;
   experimentalFeatures?: boolean;
   magdaReferenceHeaders?: MagdaReferenceHeaders;
+  locationSearchBoundingBox?: number[];
 }
 
 interface StartOptions {
@@ -178,7 +182,8 @@ export default class Terria {
     bingMapsKey: undefined,
     brandBarElements: undefined,
     experimentalFeatures: undefined,
-    magdaReferenceHeaders: undefined
+    magdaReferenceHeaders: undefined,
+    locationSearchBoundingBox: undefined
   };
 
   @observable
@@ -328,7 +333,7 @@ export default class Terria {
             return this.loadMagdaConfig(options.configUrl, config);
           }
 
-          const initializationUrls: string[] = config.initializationUrls;
+          const initializationUrls: string[] = config.initializationUrls || [];
           const initSources = initializationUrls.map(url =>
             generateInitializationUrl(
               baseUri,
@@ -342,21 +347,64 @@ export default class Terria {
       })
       .then(() => {
         this.serverConfig = new ServerConfig();
-        return this.serverConfig
-          .init(this.configParameters.serverConfigUrl)
-          .then((serverConfig: any) => {
-            this.initCorsProxy(this.configParameters, serverConfig);
-            return serverConfig;
-          });
+        return this.serverConfig.init(this.configParameters.serverConfigUrl);
       })
-      .then(serverConfig => {
-        if (this.shareDataService && serverConfig) {
-          this.shareDataService.init(serverConfig);
+      .then((serverConfig: any) => {
+        return this.initCorsProxy(this.configParameters, serverConfig);
+      })
+      .then(() => {
+        if (this.shareDataService && this.serverConfig.config) {
+          this.shareDataService.init(this.serverConfig.config);
         }
+        this.loadPersistedMapSettings();
         if (options.applicationUrl) {
           return this.updateApplicationUrl(options.applicationUrl);
         }
       });
+  }
+
+  loadPersistedMapSettings(): void {
+    const persistViewerMode = defaultValue(
+      this.configParameters.persistViewerMode,
+      true
+    );
+    const mainViewer = this.mainViewer;
+    const viewerMode = this.getLocalProperty("viewermode");
+    if (persistViewerMode && defined(viewerMode)) {
+      if (viewerMode === "3d" || viewerMode === "3dsmooth") {
+        mainViewer.viewerMode = ViewerMode.Cesium;
+        mainViewer.viewerOptions.useTerrain = viewerMode === "3d";
+      } else if (viewerMode === "2d") {
+        mainViewer.viewerMode = ViewerMode.Leaflet;
+      } else {
+        console.error(
+          `Trying to select ViewerMode ${viewerMode} that doesn't exist`
+        );
+      }
+    }
+  }
+
+  @action
+  updateBaseMaps(baseMaps: BaseMapViewModel[]): void {
+    this.baseMaps.push(...baseMaps);
+    if (!this.mainViewer.baseMap) {
+      this.loadPersistedBaseMap();
+    }
+  }
+
+  @action
+  loadPersistedBaseMap(): void {
+    const persistedBaseMapId = this.getLocalProperty("basemap");
+    const baseMapSearch = this.baseMaps.find(
+      baseMap => baseMap.mappable.uniqueId === persistedBaseMapId
+    );
+    if (baseMapSearch) {
+      this.mainViewer.baseMap = baseMapSearch.mappable;
+    } else {
+      console.error(
+        `Couldn't find a basemap for unique id ${persistedBaseMapId}`
+      );
+    }
   }
 
   get isLoadingInitSources(): boolean {
@@ -421,16 +469,14 @@ export default class Terria {
     });
 
     return Promise.all(initSourcePromises).then(initSources => {
-      runInAction(() => {
-        initSources.forEach(initSource => {
-          if (initSource === undefined) {
-            return;
-          }
+      return runInAction(() => {
+        const promises = filterOutUndefined(initSources).map(initSource =>
           this.applyInitData({
             initData: initSource
-          });
-        });
-      });
+          })
+        );
+        return Promise.all(promises);
+      }).then(() => undefined);
     });
   }
 
@@ -495,6 +541,17 @@ export default class Terria {
         replaceStratum
       );
 
+      if (Array.isArray(containerIds)) {
+        containerIds.forEach(containerId => {
+          if (
+            typeof containerId === "string" &&
+            loadedModel.knownContainerUniqueIds.indexOf(containerId) < 0
+          ) {
+            loadedModel.knownContainerUniqueIds.push(containerId);
+          }
+        });
+      }
+
       // If we're replacing the stratum and the existing model is already
       // dereferenced, we need to replace the dereferenced stratum, too,
       // even if there's no trace of it it in the load data.
@@ -534,7 +591,13 @@ export default class Terria {
         }
       }
 
-      return loadedModel;
+      if (GroupMixin.isMixedInto(loadedModel)) {
+        return openGroup(loadedModel, loadedModel.isOpen).then(
+          () => loadedModel
+        );
+      } else {
+        return loadedModel;
+      }
     });
   }
 
@@ -555,9 +618,7 @@ export default class Terria {
     }
 
     if (initData.catalog !== undefined) {
-      updateModelFromJson(this.catalog.group, stratumId, {
-        members: initData.catalog
-      });
+      this.catalog.group.addMembersFromJson(stratumId, initData.catalog);
     }
 
     if (Array.isArray(initData.stories)) {
@@ -589,8 +650,12 @@ export default class Terria {
       this.currentViewer.zoomTo(initialCamera, 2.0);
     }
 
-    if (isJsonString(initData.previewedItemId)) {
-      this.previewedItemId = initData.previewedItemId;
+    if (isJsonBoolean(initData.showSplitter)) {
+      this.showSplitter = initData.showSplitter;
+    }
+
+    if (isJsonNumber(initData.splitPosition)) {
+      this.splitPosition = initData.splitPosition;
     }
 
     // Copy but don't yet load the workbench.
@@ -623,6 +688,10 @@ export default class Terria {
 
     return promise.then(() => {
       return runInAction(() => {
+        if (isJsonString(initData.previewedItemId)) {
+          this.previewedItemId = initData.previewedItemId;
+        }
+
         const promises: Promise<void>[] = [];
 
         // Set the new contents of the workbench.
@@ -710,7 +779,9 @@ export default class Terria {
       reference.setTrait(CommonStrata.definition, "magdaRecord", config);
       await reference.loadReference().then(() => {
         if (reference.target instanceof CatalogGroup) {
-          this.catalog.group = reference.target;
+          runInAction(() => {
+            this.catalog.group = <CatalogGroup>reference.target;
+          });
         }
       });
     }

@@ -20,6 +20,10 @@ const InnerPanel = createReactClass({
     onDismissed: PropTypes.func,
     /** Animate as modal instead of dropdown */
     showDropdownAsModal: PropTypes.bool,
+
+    /** show panel centered instead of offset toward the left */
+    showDropdownInCenter: PropTypes.bool,
+
     /** Relative width to draw from */
     modalWidth: PropTypes.number,
     /** Theme to style components */
@@ -97,15 +101,17 @@ const InnerPanel = createReactClass({
           Styles.inner,
           this.props.theme.inner,
           { [Styles.isOpen]: this.state.isOpenCss },
-          { [Styles.showDropdownAsModal]: this.props.showDropdownAsModal }
+          { [Styles.showDropdownAsModal]: this.props.showDropdownAsModal },
+          { [Styles.showDropdownInCenter]: this.props.showDropdownInCenter }
         )}
         ref={this.props.innerRef}
         onClick={e => e.stopPropagation()}
         style={{
           width: this.props.modalWidth,
           left: this.props.dropdownOffset,
-          transformOrigin:
-            this.props.caretOffset && `${this.props.caretOffset} top`
+          transformOrigin: this.props.showDropdownInCenter
+            ? "0 top"
+            : this.props.caretOffset && `${this.props.caretOffset} top`
         }}
       >
         <button

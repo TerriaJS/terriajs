@@ -1,8 +1,15 @@
 import React from "react";
-import { Nav, Menu, ExperimentalMenu, Feedback } from "./customizable/Groups";
+import {
+  Nav,
+  Menu,
+  MenuLeft,
+  ExperimentalMenu,
+  Feedback
+} from "./customizable/Groups";
 
 const GROUP_ELEMENT_TO_KEY_MAPPING = {
   menu: Menu,
+  menuLeft: MenuLeft,
   nav: Nav,
   experimentalMenu: ExperimentalMenu,
   feedback: Feedback

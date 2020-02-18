@@ -2,18 +2,48 @@ Change Log
 ==========
 
 ### MobX Development
-* Fixed a bug where `updateModelFromJson` would ignore its `replaceStratum` parameter.
 * Fixed bug in StratumOrder where `sortBottomToTop` would sort strata in the wrong order.
 * Allow member re-ordering via GroupMixin's `moveMemberToIndex`
+* Fixed a bug where `updateModelFromJson` would ignore its `replaceStratum` parameter.
 * Re-added Measure Tool support
 * Re-added `CartoMapCatalogItem`
 * Re-implemented `addedByUser` to fix bug where previews of user added data would appear in the wrong tab.
 * Added header options for loadJson5, & allow header overrides on MagdaReference loading
+* Re-added some matcher-type mappings in `registerCatalogMembers`.
+* Added `UrlReference` to represent catalog items created from a url with an auto-detected type.
+* Modified `upsertModelFromJson` so that when no `id` is provided, the `uniqueId` generated from `localId` or `name` is incremented if necessary to make it unique.
 * Re-enable search components if SearchProvider option provided
 * Modified tests to not use any real servers.
 * Fixed bug causing workbench items to be shared in the wrong order.
 * Fix bug where urls in the feature info panel weren't turned into hyperlinks
 * Fix preview map's base map and bounding rectangle size
+* Fixed positioning of the buttons at the bottom and the timeline component on mobile
+* Added `hasLocalData` property to indicate when a catalog item contains local data. This property is used to determine whether the item can be shared or not.
+* Fixed bug causing user added data to not be shared. Note that user added catalog item urls are now set at the user stratum rather than the definition stratum.
+* Added the ability to filter location search results by an app-wide bounding box configuration parameter
+* Re-introduce UI elements for search when a catalogSearchProvider is provided
+* Fix bug that prevented live transport data from being hidden
+* Hide opacity control for point-table catalog items.
+* Fixed bug where `Catalog` would sometimes end up with an undefined `userAddedDataGroup`.
+* Show About Data for all items by default.
+* Fixed translation strings for the descriptive text about WMS and WFS URLs in the data catalogue.
+* Fix bug that throws an error when clicking on ArcGIS Map Service features
+* Fix initialisation of `terria`'s `shareDataService`.
+* Support Zoom to Data on `CsvCatalogItem` when data has lat-lon columns.
+* Add a trait called `showShadowUi` to `Cesium3DTilesCatalogItem` which hide shadows on workbench item UI.
+* Re-added `ArcGisFeatureServerCatalogItem` and `ArcGisFeatureServerCatalogGroup`
+* Prevent TerriaMap from crashing when timeline is on and changing to 2D
+* Rewrite charts using `vx` svg charting library.
+* Fixed bug causing `ArcGisFeatureServerCatalogItem` to throw an error when a token is included in the proxy url.
+* Fix a bug for zooming to `ArcGisMapServerCatalogItem` layers
+* Modified creation of catalog item from urls to set the item name to be the url at the defaults stratum rather than the definition stratum. This prevents actual item names at load strata from being overridden by a definition stratum name which is just a url.
+* Modified `addToWorkbench` so that when a catalog item fails to load it is removed from the workbench and an error message is displayed.
+* Add support for feature picking on region mapped datasets
+* Revamp map buttons at top to support two menu configuration
+* Viewer (2d/3d/3d-non-terrain) & basemap preferences are persisted to local storage again, and loaded back at startup
+* Dramatically simplified map button styling (pre-styled-components)
+* Allow DropdownPanel(InnerPanel) to show centered instead of offset toward the left
+* Added AccessControlMixin for tracking access control of a given MagdaReference
 * Add a legend title trait
 
 ### Next Release
@@ -29,7 +59,7 @@ Change Log
 * Added ability to re-add "User data" CSV items once removed from workbench.
 * Changed catalog item event labels to include the full catalog item path, rather than just the catalog item name.
 * Added support for `openAddData` option in config.json.  If true, the "Add Data" dialog is automatically opened at startup.
-* Welcome message, in-app guides & new feature prompts are now disabled by default. These can be re-enabled by setting the `showWelcomeMessage`, `showInAppGuides` & `showFeaturePrompts` options in config.json. 
+* Welcome message, in-app guides & new feature prompts are now disabled by default. These can be re-enabled by setting the `showWelcomeMessage`, `showInAppGuides` & `showFeaturePrompts` options in config.json.
 * Updated Welcome Message to pass its props to `WelcomeMessagePrimaryBtnClick` & `WelcomeMessageSecondaryBtnClick` overrides
 * Fixed a bug in anti-meridian handling causing excessive memory use.
 * Handled coordinate conversion for GeoJson geometries with an empty `coordinates` array.
@@ -102,7 +132,7 @@ Change Log
 * Add scrollbar to dropdown boxes.
 * Add support for SDMX version 2.1 to existing `SdmxJsonCatalogItem`.
 * Add a warning when sharing a map describing datasets which will be missing.
-* Enable the story panel to be ordered to the front. 
+* Enable the story panel to be ordered to the front.
 * Disable the autocomplete on the title field when adding a new scene to a story.
 * Fix SED codes for regionmapping
 

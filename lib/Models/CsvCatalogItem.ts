@@ -14,6 +14,7 @@ import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
 import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
+import isDefined from "../Core/isDefined";
 
 // Types of CSVs:
 // - Points - Latitude and longitude columns or address
@@ -57,6 +58,24 @@ export default class CsvCatalogItem extends TableMixin(
 
   setFileInput(file: File) {
     this._csvFile = file;
+  }
+
+  @computed
+  get hasLocalData(): boolean {
+    return isDefined(this._csvFile);
+  }
+
+  @computed
+  get canZoomTo() {
+    const s = this.strata.get(automaticTableStylesStratumName);
+    // Zooming to tables with lat/lon columns works
+    if (
+      isDefined(s) &&
+      isDefined(s.defaultStyle) &&
+      s.defaultStyle.latitudeColumn !== undefined
+    )
+      return true;
+    return false;
   }
 
   /*

@@ -8,6 +8,7 @@ import SearchResult from "./SearchResult";
 import classNames from "classnames";
 import Icon from "../Icon";
 import Styles from "./location-search-result.scss";
+import isDefined from "../../Core/isDefined";
 
 const LocationSearchResults = observer(
   createReactClass({
@@ -63,12 +64,27 @@ const LocationSearchResults = observer(
     render() {
       const search = this.props.search;
       const searchProvider = search.searchProvider;
+      const locationSearchBoundingBox = this.props.terria.configParameters
+        .locationSearchBoundingBox;
+
+      const validResults = isDefined(locationSearchBoundingBox)
+        ? search.results.filter(function(r) {
+            return (
+              r.location.longitude > locationSearchBoundingBox[0] &&
+              r.location.longitude < locationSearchBoundingBox[2] &&
+              r.location.latitude > locationSearchBoundingBox[1] &&
+              r.location.latitude < locationSearchBoundingBox[3]
+            );
+          })
+        : search.results;
+
       const results =
-        search.results.length > 5
+        validResults.length > 5
           ? this.state.isExpanded
-            ? search.results
-            : search.results.slice(0, 5)
-          : search.results;
+            ? validResults
+            : validResults.slice(0, 5)
+          : validResults;
+
       return (
         <div
           key={searchProvider.name}

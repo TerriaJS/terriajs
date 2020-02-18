@@ -2,8 +2,14 @@ import DiscreteTimeTraits from "./DiscreteTimeTraits";
 import objectArrayTrait from "./objectArrayTrait";
 import primitiveTrait from "./primitiveTrait";
 import TimeVaryingTraits from "./TimeVaryingTraits";
+import ShowableTraits from "./ShowableTraits";
+import mixTraits from "./mixTraits";
+import { ChartItemType } from "../Models/Chartable";
 
-export default class DiscretelyTimeVaryingTraits extends TimeVaryingTraits {
+export default class DiscretelyTimeVaryingTraits extends mixTraits(
+  TimeVaryingTraits,
+  ShowableTraits
+) {
   @objectArrayTrait({
     name: "Discrete Times",
     description: "The discrete times at which this dataset is available.",
@@ -22,4 +28,19 @@ export default class DiscretelyTimeVaryingTraits extends TimeVaryingTraits {
     type: "string"
   })
   fromContinuous: string = "nearest";
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Show in chart",
+    description: "Whether to show data availability on chart."
+  })
+  showInChartPanel = false;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Chart type",
+    description:
+      "Type determines how the data availibility will be plotted on chart. eg: momentLines, momentPoints"
+  })
+  chartType: ChartItemType = "momentLines";
 }

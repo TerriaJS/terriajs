@@ -50,7 +50,10 @@ class TerriaViewerWrapper extends React.Component {
     //         link: 'http://www.csiro.au/en/Research/D61'
     //     }
     // });
-    if (this.props.terria.baseMaps.length > 0) {
+    if (
+      this.props.terria.baseMaps.length > 0 &&
+      !this.props.terria.mainViewer.baseMap
+    ) {
       runInAction(() => {
         this.props.terria.mainViewer.baseMap = this.props.terria.baseMaps[0].mappable;
       });

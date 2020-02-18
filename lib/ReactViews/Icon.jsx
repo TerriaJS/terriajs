@@ -22,6 +22,7 @@ const GLYPHS = {
   checkboxOff: require("../../wwwroot/images/icons/checkbox-off.svg"),
   checkboxOn: require("../../wwwroot/images/icons/checkbox-on.svg"),
   close: require("../../wwwroot/images/icons/close.svg"),
+  closeLight: require("../../wwwroot/images/icons/close-light.svg"),
   closed: require("../../wwwroot/images/icons/closed.svg"),
   decrease: require("../../wwwroot/images/icons/decrease.svg"),
   download: require("../../wwwroot/images/icons/download.svg"),
@@ -77,7 +78,8 @@ const GLYPHS = {
   circleEmpty: require("../../wwwroot/images/icons/circle-empty.svg"),
   story: require("../../wwwroot/images/icons/story.svg"),
   recapture: require("../../wwwroot/images/icons/recapture.svg"),
-  menuDotted: require("../../wwwroot/images/icons/menu-dotted.svg")
+  menuDotted: require("../../wwwroot/images/icons/menu-dotted.svg"),
+  user: require("../../wwwroot/images/icons/user.svg")
 };
 
 const Icon = createReactClass({

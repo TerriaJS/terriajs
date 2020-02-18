@@ -82,7 +82,7 @@ export const DataCatalogItem = observer(
           }
         });
 
-        raiseErrorOnRejectedPromise(addPromise);
+        raiseErrorOnRejectedPromise(this.props.terria, addPromise);
       });
     },
 

@@ -163,6 +163,11 @@ export const FeatureInfoSection = observer(
 
     descriptionFromFeature() {
       const feature = this.props.feature;
+      const showStringIfPropertyValueIsNull =
+        this.props.catalogItem === undefined
+          ? false
+          : this.props.catalogItem.showStringIfPropertyValueIsNull;
+
       // This description could contain injected <script> tags etc.
       // Before rendering, we will pass it through parseCustomMarkdownToReact, which applies
       //     markdownToHtml (which applies MarkdownIt.render and DOMPurify.sanitize), and then
@@ -175,7 +180,11 @@ export const FeatureInfoSection = observer(
         feature.currentDescription ||
         getCurrentDescription(feature, currentTime);
       if (!defined(description) && defined(feature.properties)) {
-        description = describeFromProperties(feature.properties, currentTime);
+        description = describeFromProperties(
+          feature.properties,
+          currentTime,
+          showStringIfPropertyValueIsNull
+        );
       }
       return description;
     },
@@ -685,7 +694,11 @@ const simpleStyleIdentifiers = [
  * Derived from Cesium's geoJsonDataSource, but made to work with possibly time-varying properties.
  * @private
  */
-function describeFromProperties(properties, time) {
+function describeFromProperties(
+  properties,
+  time,
+  showStringIfPropertyValueIsNull
+) {
   let html = "";
   if (typeof properties.getValue === "function") {
     properties = properties.getValue(time);
@@ -697,19 +710,32 @@ function describeFromProperties(properties, time) {
           continue;
         }
         let value = properties[key];
+        if (defined(showStringIfPropertyValueIsNull) && !defined(value)) {
+          value = showStringIfPropertyValueIsNull;
+        }
         if (defined(value)) {
           if (typeof value.getValue === "function") {
             value = value.getValue(time);
           }
           if (Array.isArray(properties)) {
             html +=
-              "<tr><td>" + describeFromProperties(value, time) + "</td></tr>";
+              "<tr><td>" +
+              describeFromProperties(
+                value,
+                time,
+                showStringIfPropertyValueIsNull
+              ) +
+              "</td></tr>";
           } else if (typeof value === "object") {
             html +=
               "<tr><th>" +
               key +
               "</th><td>" +
-              describeFromProperties(value, time) +
+              describeFromProperties(
+                value,
+                time,
+                showStringIfPropertyValueIsNull
+              ) +
               "</td></tr>";
           } else {
             html += "<tr><th>" + key + "</th><td>" + value + "</td></tr>";

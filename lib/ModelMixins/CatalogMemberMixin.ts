@@ -4,11 +4,12 @@ import Model from "../Models/Model";
 import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
 import { createTransformer } from "mobx-utils";
 import AsyncLoader from "../Core/AsyncLoader";
+import AccessControlMixin from "./AccessControlMixin";
 
 type CatalogMember = Model<CatalogMemberTraits>;
 
 function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
-  abstract class CatalogMemberMixin extends Base {
+  abstract class CatalogMemberMixin extends AccessControlMixin(Base) {
     abstract get type(): string;
 
     private _metadataLoader = new AsyncLoader(
@@ -33,6 +34,13 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
     protected abstract forceLoadMetadata(): Promise<void>;
 
     get hasCatalogMemberMixin() {
+      return true;
+    }
+
+    /**
+     * Default value for showsInfo (About Data button)
+     */
+    get showsInfo() {
       return true;
     }
 
