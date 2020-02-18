@@ -1,10 +1,11 @@
 @import "~terriajs-variables";
 
-.root {
+ul.root {
   background: $overlay;
   list-style-type: none;
   font-size: $font-size-mid-small;
   padding-left: 1em;
+  margin: 10px 0;
 }
 
 .item {

@@ -8,6 +8,7 @@ import Workbench from "./Workbench";
 import TerriaError from "../Core/TerriaError";
 import isDefined from "../Core/isDefined";
 import i18next from "i18next";
+import { runInAction } from "mobx";
 
 /**
  * Adds or removes a model to/from the workbench. If the model is a reference,
@@ -48,7 +49,9 @@ export default function addToWorkbench(
     });
   }
 
-  const mappablePromise = Mappable.is(item) ? item.loadMapItems() : undefined;
+  const mappablePromise = runInAction(() =>
+    Mappable.is(item) ? item.loadMapItems() : undefined
+  );
   const chartablePromise = Chartable.is(item)
     ? item.loadChartItems()
     : undefined;

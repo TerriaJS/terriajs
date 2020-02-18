@@ -1,3 +1,5 @@
+import ArcGisFeatureServerCatalogGroup from "./ArcGisFeatureServerCatalogGroup";
+import ArcGisFeatureServerCatalogItem from "./ArcGisFeatureServerCatalogItem";
 import ArcGisMapServerCatalogItem from "./ArcGisMapServerCatalogItem";
 import BingMapsCatalogItem from "./BingMapsCatalogItem";
 import CartoMapCatalogItem from "./CartoMapCatalogItem";
@@ -36,6 +38,14 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(
     ArcGisMapServerCatalogItem.type,
     ArcGisMapServerCatalogItem
+  );
+  CatalogMemberFactory.register(
+    ArcGisFeatureServerCatalogItem.type,
+    ArcGisFeatureServerCatalogItem
+  );
+  CatalogMemberFactory.register(
+    ArcGisFeatureServerCatalogGroup.type,
+    ArcGisFeatureServerCatalogGroup
   );
   CatalogMemberFactory.register(
     Cesium3DTilesCatalogItem.type,
@@ -106,7 +116,37 @@ export default function registerCatalogMembers() {
     true
   );
   createCatalogItemFromUrl.register(
+    matchesUrl(/\/arcgis\/rest\/.*\/FeatureServer\/\d+\b/i),
+    ArcGisFeatureServerCatalogItem.type,
+    true
+  );
+  createCatalogItemFromUrl.register(
+    matchesUrl(/\/arcgis\/rest\/.*\/FeatureServer(\/.*)?$/i),
+    ArcGisFeatureServerCatalogGroup.type,
+    true
+  );
+  createCatalogItemFromUrl.register(
     matchesUrl(/\/arcgis\/rest\/.*\/\d+\b/i),
+    ArcGisMapServerCatalogItem.type,
+    true
+  );
+  createCatalogItemFromUrl.register(
+    matchesUrl(/\/rest\/.*\/MapServer\/\d+\b/i),
+    ArcGisMapServerCatalogItem.type,
+    true
+  );
+  createCatalogItemFromUrl.register(
+    matchesUrl(/\/rest\/.*\/FeatureServer\/\d+\b/i),
+    ArcGisFeatureServerCatalogItem.type,
+    true
+  );
+  createCatalogItemFromUrl.register(
+    matchesUrl(/\/rest\/.*\/FeatureServer(\/.*)?$/i),
+    ArcGisFeatureServerCatalogGroup.type,
+    true
+  );
+  createCatalogItemFromUrl.register(
+    matchesUrl(/\/rest\/.*\/\d+\b/i),
     ArcGisMapServerCatalogItem.type,
     true
   );
@@ -120,6 +160,16 @@ export default function registerCatalogMembers() {
   createCatalogItemFromUrl.register(
     s => true,
     ArcGisMapServerCatalogItem.type,
+    true
+  );
+  createCatalogItemFromUrl.register(
+    s => true,
+    ArcGisFeatureServerCatalogItem.type,
+    true
+  );
+  createCatalogItemFromUrl.register(
+    s => true,
+    ArcGisFeatureServerCatalogGroup.type,
     true
   );
 }

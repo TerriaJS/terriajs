@@ -132,7 +132,7 @@ const MapColumn = observer(
                 <div
                   className={classNames(Styles.feedbackButtonWrapper, {
                     [Styles.withTimeSeriesControls]: defined(
-                      this.props.terria.timelineStack.topLayer
+                      this.props.terria.timelineStack.top
                     )
                   })}
                 >
