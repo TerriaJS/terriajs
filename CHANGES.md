@@ -39,6 +39,10 @@ Change Log
 * Modified creation of catalog item from urls to set the item name to be the url at the defaults stratum rather than the definition stratum. This prevents actual item names at load strata from being overridden by a definition stratum name which is just a url.
 * Modified `addToWorkbench` so that when a catalog item fails to load it is removed from the workbench and an error message is displayed.
 * Add support for feature picking on region mapped datasets
+* Revamp map buttons at top to support two menu configuration
+* Viewer (2d/3d/3d-non-terrain) & basemap preferences are persisted to local storage again, and loaded back at startup
+* Dramatically simplified map button styling (pre-styled-components)
+* Allow DropdownPanel(InnerPanel) to show centered instead of offset toward the left
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC

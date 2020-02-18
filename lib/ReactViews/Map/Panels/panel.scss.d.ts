@@ -2,6 +2,8 @@
 // Please do not change this file!
 interface CssExports {
   'button': string;
+  'button-for-modal-dropdown': string;
+  'buttonForModalDropdown': string;
   'caret': string;
   'content': string;
   'heading': string;

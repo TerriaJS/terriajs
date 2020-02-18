@@ -4,7 +4,6 @@ import createReactClass from "create-react-class";
 
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import HelpMenuPanelBasic from "../HelpScreens/HelpMenuPanelBasic";
 import SettingPanel from "./Panels/SettingPanel";
 import SharePanel from "./Panels/SharePanel/SharePanel";
 import ToolsPanel from "./Panels/ToolsPanel/ToolsPanel";
@@ -24,6 +23,7 @@ const MenuBar = createReactClass({
     allBaseMaps: PropTypes.array, // Not implemented yet
     animationDuration: PropTypes.number,
     menuItems: PropTypes.arrayOf(PropTypes.element),
+    leftMenuItems: PropTypes.arrayOf(PropTypes.element),
     t: PropTypes.func.isRequired
   },
 
@@ -59,12 +59,12 @@ const MenuBar = createReactClass({
   },
   render() {
     const { t } = this.props;
-    const satelliteGuidancePrompted = this.props.terria.getLocalProperty(
-      "satelliteGuidancePrompted"
-    );
-    const mapGuidesLocationPrompted = this.props.terria.getLocalProperty(
-      "mapGuidesLocationPrompted"
-    );
+    // const satelliteGuidancePrompted = this.props.terria.getLocalProperty(
+    //   "satelliteGuidancePrompted"
+    // );
+    // const mapGuidesLocationPrompted = this.props.terria.getLocalProperty(
+    //   "mapGuidesLocationPrompted"
+    // );
     const storyEnabled = this.props.terria.configParameters.storyEnabled;
     const enableTools = this.props.terria.getUserProperty("tools") === "1";
 
@@ -91,46 +91,17 @@ const MenuBar = createReactClass({
     return (
       <div
         className={classNames(
-          Styles.menuArea,
-          this.props.viewState.topElement === "MenuBar" ? "top-element" : ""
+          this.props.viewState.topElement === "MenuBar" ? "top-element" : "",
+          Styles.menuBar,
+          {
+            [Styles.menuBarWorkbenchClosed]: this.props.viewState
+              .isMapFullScreen
+          }
         )}
         onClick={this.handleClick}
       >
-        <ul className={Styles.menu}>
-          <If condition={storyEnabled}>
-            <li className={Styles.menuItem}>
-              <button
-                className={Styles.storyBtn}
-                type="button"
-                onClick={this.onStoryButtonClick}
-              >
-                <Icon glyph={Icon.GLYPHS.story} />
-                <span>{t("story.story")}</span>
-              </button>
-              {storyEnabled &&
-                this.props.viewState.featurePrompts.indexOf("story") >= 0 && (
-                  <Prompt
-                    content={promptHtml}
-                    displayDelay={delayTime}
-                    dismissText={t("story.dismissText")}
-                    dismissAction={this.dismissAction}
-                  />
-                )}
-            </li>
-          </If>
-          <li className={Styles.menuItem}>
-            <SettingPanel
-              terria={this.props.terria}
-              viewState={this.props.viewState}
-            />
-          </li>
-          <li className={Styles.menuItem}>
-            <SharePanel
-              terria={this.props.terria}
-              viewState={this.props.viewState}
-            />
-          </li>
-          <li className={Styles.menuItem}>
+        <ul className={classNames(Styles.menu)}>
+          {/* <li className={Styles.menuItem}>
             <HelpMenuPanelBasic
               terria={this.props.terria}
               viewState={this.props.viewState}
@@ -153,7 +124,7 @@ const MenuBar = createReactClass({
                   dismissAction={this.dismissSatelliteGuidanceAction}
                 />
               )}
-          </li>
+          </li> */}
           {enableTools && (
             <li className={Styles.menuItem}>
               <ToolsPanel
@@ -162,6 +133,50 @@ const MenuBar = createReactClass({
               />
             </li>
           )}
+          <If condition={!this.props.viewState.useSmallScreenInterface}>
+            <For each="element" of={this.props.leftMenuItems} index="i">
+              <li className={Styles.menuItem} key={i}>
+                {element}
+              </li>
+            </For>
+          </If>
+        </ul>
+        <ul className={classNames(Styles.menu)}>
+          <li className={Styles.menuItem}>
+            <SettingPanel
+              terria={this.props.terria}
+              viewState={this.props.viewState}
+            />
+          </li>
+          <li className={Styles.menuItem}>
+            <SharePanel
+              terria={this.props.terria}
+              viewState={this.props.viewState}
+            />
+          </li>
+          <If condition={storyEnabled}>
+            <li className={Styles.menuItem}>
+              <div>
+                <button
+                  className={Styles.storyBtn}
+                  type="button"
+                  onClick={this.onStoryButtonClick}
+                >
+                  <Icon glyph={Icon.GLYPHS.story} />
+                  <span>{t("story.story")}</span>
+                </button>
+                {storyEnabled &&
+                  this.props.viewState.featurePrompts.indexOf("story") >= 0 && (
+                    <Prompt
+                      content={promptHtml}
+                      displayDelay={delayTime}
+                      dismissText={t("story.dismissText")}
+                      dismissAction={this.dismissAction}
+                    />
+                  )}
+              </div>
+            </li>
+          </If>
           <If condition={!this.props.viewState.useSmallScreenInterface}>
             <For each="element" of={this.props.menuItems} index="i">
               <li className={Styles.menuItem} key={i}>

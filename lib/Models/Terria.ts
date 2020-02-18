@@ -356,10 +356,55 @@ export default class Terria {
         if (this.shareDataService && this.serverConfig.config) {
           this.shareDataService.init(this.serverConfig.config);
         }
+        this.loadPersistedMapSettings();
         if (options.applicationUrl) {
           return this.updateApplicationUrl(options.applicationUrl);
         }
       });
+  }
+
+  loadPersistedMapSettings(): void {
+    const persistViewerMode = defaultValue(
+      this.configParameters.persistViewerMode,
+      true
+    );
+    const mainViewer = this.mainViewer;
+    const viewerMode = this.getLocalProperty("viewermode");
+    if (persistViewerMode && defined(viewerMode)) {
+      if (viewerMode === "3d" || viewerMode === "3dsmooth") {
+        mainViewer.viewerMode = ViewerMode.Cesium;
+        mainViewer.viewerOptions.useTerrain = viewerMode === "3d";
+      } else if (viewerMode === "2d") {
+        mainViewer.viewerMode = ViewerMode.Leaflet;
+      } else {
+        console.error(
+          `Trying to select ViewerMode ${viewerMode} that doesn't exist`
+        );
+      }
+    }
+  }
+
+  @action
+  updateBaseMaps(baseMaps: BaseMapViewModel[]): void {
+    this.baseMaps.push(...baseMaps);
+    if (!this.mainViewer.baseMap) {
+      this.loadPersistedBaseMap();
+    }
+  }
+
+  @action
+  loadPersistedBaseMap(): void {
+    const persistedBaseMapId = this.getLocalProperty("basemap");
+    const baseMapSearch = this.baseMaps.find(
+      baseMap => baseMap.mappable.uniqueId === persistedBaseMapId
+    );
+    if (baseMapSearch) {
+      this.mainViewer.baseMap = baseMapSearch.mappable;
+    } else {
+      console.error(
+        `Couldn't find a basemap for unique id ${persistedBaseMapId}`
+      );
+    }
   }
 
   get isLoadingInitSources(): boolean {
