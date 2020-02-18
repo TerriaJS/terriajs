@@ -8,10 +8,14 @@ interface CssExports {
   'btnEdit': string;
   'btnOpen': string;
   'btnRemove': string;
+  'charcoalGrey': string;
   'children-list': string;
   'childrenList': string;
+  'colorPrimary': string;
   'condition': string;
   'controls': string;
+  'dark': string;
+  'darkWithOverlay': string;
   'heading': string;
   'indented': string;
   'is-loading': string;
@@ -19,11 +23,14 @@ interface CssExports {
   'items': string;
   'list-reset': string;
   'listReset': string;
+  'mapButtonColor': string;
+  'modalHighlight': string;
   'no-conditions': string;
   'noConditions': string;
   'root': string;
   'section': string;
   'text': string;
+  'textLight': string;
   'title': string;
 }
 declare var cssExports: CssExports;

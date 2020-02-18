@@ -407,6 +407,7 @@
     "groupEmpty": "This group is empty"
   },
   "catalogItem" : {
+    "privateIndicatorTitle": "Private Dataset",
     "loading" : "Loading...",
     "remove" : "Remove",
     "add" : "Add",

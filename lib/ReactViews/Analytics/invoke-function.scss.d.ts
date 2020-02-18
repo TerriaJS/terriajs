@@ -2,11 +2,18 @@
 // Please do not change this file!
 interface CssExports {
   'btn': string;
+  'charcoalGrey': string;
+  'colorPrimary': string;
   'content': string;
+  'dark': string;
+  'darkWithOverlay': string;
   'description': string;
   'footer': string;
   'invoke-function': string;
   'invokeFunction': string;
+  'mapButtonColor': string;
+  'modalHighlight': string;
+  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

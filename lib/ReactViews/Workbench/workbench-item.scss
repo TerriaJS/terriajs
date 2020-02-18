@@ -37,6 +37,7 @@ $workbench-margin: $padding-small;
 .header {
   composes: list-reset from "../../Sass/common/_base.scss";
   width: 100%;
+  display: flex;
 }
 
 .header-clearfix {
@@ -44,9 +45,6 @@ $workbench-margin: $padding-small;
 }
 
 .visibilityColumn {
-  composes: col from "../../Sass/common/_base.scss";
-  composes: col-1 from "../../Sass/common/_base.scss";
-  padding: 8px 10px;
   //remove additional space below inline element
   button {
     display: block;
@@ -63,20 +61,14 @@ $workbench-margin: $padding-small;
 }
 
 .nameColumn {
-  composes: col from "../../Sass/common/_base.scss";
-  composes: col-10 from "../../Sass/common/_base.scss";
-  padding: 5px;
   text-align: left;
 }
 
 .toggleColumn {
-  composes: col from "../../Sass/common/_base.scss";
-  composes: col-1 from "../../Sass/common/_base.scss";
-  padding: 5px;
   //remove additional space below inline element
   svg {
-    height: 18px;
-    width: 18px;
+    height: 8px;
+    width: 8px;
     fill: #fff;
   }
 }

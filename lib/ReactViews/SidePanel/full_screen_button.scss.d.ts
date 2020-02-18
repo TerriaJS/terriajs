@@ -2,13 +2,20 @@
 // Please do not change this file!
 interface CssExports {
   'btn': string;
+  'charcoalGrey': string;
+  'colorPrimary': string;
+  'dark': string;
+  'darkWithOverlay': string;
   'enter': string;
   'exit': string;
   'full-screen': string;
   'fullScreen': string;
   'isActive': string;
+  'mapButtonColor': string;
   'minified': string;
   'minifiedFullscreenBtnWrapper': string;
+  'modalHighlight': string;
+  'textLight': string;
   'toggleWorkbench': string;
 }
 declare var cssExports: CssExports;

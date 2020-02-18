@@ -4,8 +4,15 @@ interface CssExports {
   'active': string;
   'btn': string;
   'btnGroup': string;
+  'charcoalGrey': string;
+  'colorPrimary': string;
+  'dark': string;
+  'darkWithOverlay': string;
   'inactive': string;
   'infoGroup': string;
+  'mapButtonColor': string;
+  'modalHighlight': string;
+  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

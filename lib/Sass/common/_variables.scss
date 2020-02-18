@@ -179,3 +179,8 @@ $legend-item-width: 30px;
 $legend-item-height: 16px;
 $legend-padding: $legend-item-height / 2;
 $legend-spacer-height: $legend-padding / 2;
+
+:export {
+  colorPrimary: $color-primary;
+  textLight: $text-light;
+}

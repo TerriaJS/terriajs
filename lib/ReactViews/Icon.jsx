@@ -41,6 +41,7 @@ const GLYPHS = {
   link: require("../../wwwroot/images/icons/link.svg"),
   loader: require("../../wwwroot/images/icons/loader.svg"),
   location: require("../../wwwroot/images/icons/location.svg"),
+  lock: require("../../wwwroot/images/icons/lock.svg"),
   loop: require("../../wwwroot/images/icons/loop.svg"),
   menu: require("../../wwwroot/images/icons/menu.svg"),
   measure: require("../../wwwroot/images/icons/measure.svg"),

@@ -3,14 +3,21 @@
 interface CssExports {
   'btn--close-modal': string;
   'btnCloseModal': string;
+  'charcoalGrey': string;
+  'colorPrimary': string;
+  'dark': string;
+  'darkWithOverlay': string;
   'explorer-panel': string;
   'explorerPanel': string;
   'is-mounted': string;
   'isMounted': string;
+  'mapButtonColor': string;
   'modal-overlay': string;
   'modal-wrapper': string;
+  'modalHighlight': string;
   'modalOverlay': string;
   'modalWrapper': string;
+  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

@@ -23,7 +23,7 @@ const MenuBar = createReactClass({
     allBaseMaps: PropTypes.array, // Not implemented yet
     animationDuration: PropTypes.number,
     menuItems: PropTypes.arrayOf(PropTypes.element),
-    leftMenuItems: PropTypes.arrayOf(PropTypes.element),
+    menuLeftItems: PropTypes.arrayOf(PropTypes.element),
     t: PropTypes.func.isRequired
   },
 
@@ -134,7 +134,7 @@ const MenuBar = createReactClass({
             </li>
           )}
           <If condition={!this.props.viewState.useSmallScreenInterface}>
-            <For each="element" of={this.props.leftMenuItems} index="i">
+            <For each="element" of={this.props.menuLeftItems} index="i">
               <li className={Styles.menuItem} key={i}>
                 {element}
               </li>

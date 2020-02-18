@@ -5,6 +5,10 @@ interface CssExports {
   'baseMapSelector': string;
   'btn--viewer': string;
   'btnViewer': string;
+  'charcoalGrey': string;
+  'colorPrimary': string;
+  'dark': string;
+  'darkWithOverlay': string;
   'dropdown-inner': string;
   'dropdownInner': string;
   'field': string;
@@ -15,11 +19,14 @@ interface CssExports {
   'linkWrapper': string;
   'list-item': string;
   'listItem': string;
+  'mapButtonColor': string;
+  'modalHighlight': string;
   'paragraph': string;
   'share-panel': string;
   'sharePanel': string;
   'shorten-url': string;
   'shortenUrl': string;
+  'textLight': string;
   'viewer-selector': string;
   'viewerSelector': string;
 }
