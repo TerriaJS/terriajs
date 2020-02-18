@@ -23,6 +23,7 @@ interface CssExports {
   'modalBg': string;
   'modalHighlight': string;
   'modalTop': string;
+  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

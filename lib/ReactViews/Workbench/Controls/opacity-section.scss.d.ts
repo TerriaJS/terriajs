@@ -9,6 +9,7 @@ interface CssExports {
   'modalHighlight': string;
   'opacity': string;
   'opacitySlider': string;
+  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

@@ -10,6 +10,7 @@ interface CssExports {
   'isActive': string;
   'mapButtonColor': string;
   'modalHighlight': string;
+  'textLight': string;
   'timelineControl': string;
   'timeline__control': string;
 }

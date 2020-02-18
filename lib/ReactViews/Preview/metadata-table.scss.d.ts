@@ -8,6 +8,7 @@ interface CssExports {
   'mapButtonColor': string;
   'modalHighlight': string;
   'root': string;
+  'textLight': string;
   'value': string;
 }
 declare var cssExports: CssExports;

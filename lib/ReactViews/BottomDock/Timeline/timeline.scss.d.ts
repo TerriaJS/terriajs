@@ -31,6 +31,7 @@ interface CssExports {
   'text-cell': string;
   'text-row': string;
   'textCell': string;
+  'textLight': string;
   'textRow': string;
   'time': string;
   'timeline': string;

@@ -15,6 +15,7 @@ interface CssExports {
   'darkWithOverlay': string;
   'mapButtonColor': string;
   'modalHighlight': string;
+  'textLight': string;
   'toolButton': string;
 }
 declare var cssExports: CssExports;

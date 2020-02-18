@@ -30,6 +30,7 @@ interface CssExports {
   'story-container': string;
   'storyContainer': string;
   'storyHeader': string;
+  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

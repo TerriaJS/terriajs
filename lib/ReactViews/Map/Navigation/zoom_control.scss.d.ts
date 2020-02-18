@@ -11,6 +11,7 @@ interface CssExports {
   'mapButtonColor': string;
   'modalHighlight': string;
   'refresh': string;
+  'textLight': string;
   'zoomControl': string;
 }
 declare var cssExports: CssExports;

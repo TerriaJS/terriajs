@@ -18,6 +18,7 @@ interface CssExports {
   'mapButtonColor': string;
   'modalHighlight': string;
   'myDataDropdown': string;
+  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

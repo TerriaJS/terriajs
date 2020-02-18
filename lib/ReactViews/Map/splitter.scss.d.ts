@@ -10,6 +10,7 @@ interface CssExports {
   'dividerWrapper': string;
   'mapButtonColor': string;
   'modalHighlight': string;
+  'textLight': string;
   'thumb': string;
 }
 declare var cssExports: CssExports;

@@ -16,6 +16,7 @@ interface CssExports {
   'section-short': string;
   'sectionLong': string;
   'sectionShort': string;
+  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

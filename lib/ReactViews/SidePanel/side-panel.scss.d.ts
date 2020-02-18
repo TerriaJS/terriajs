@@ -11,6 +11,7 @@ interface CssExports {
   'header': string;
   'mapButtonColor': string;
   'modalHighlight': string;
+  'textLight': string;
   'uploadData': string;
   'workbenchEmpty': string;
 }

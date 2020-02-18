@@ -10,6 +10,7 @@ interface CssExports {
   'field': string;
   'mapButtonColor': string;
   'modalHighlight': string;
+  'textLight': string;
   'title': string;
 }
 declare var cssExports: CssExports;

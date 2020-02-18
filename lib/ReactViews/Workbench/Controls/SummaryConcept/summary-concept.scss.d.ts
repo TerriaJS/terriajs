@@ -30,6 +30,7 @@ interface CssExports {
   'root': string;
   'section': string;
   'text': string;
+  'textLight': string;
   'title': string;
 }
 declare var cssExports: CssExports;

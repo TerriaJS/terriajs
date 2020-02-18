@@ -21,6 +21,7 @@ interface CssExports {
   'mapButtonColor': string;
   'modalHighlight': string;
   'nameColumn': string;
+  'textLight': string;
   'toggleColumn': string;
   'visibilityColumn': string;
   'workbench-item': string;

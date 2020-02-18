@@ -11,6 +11,7 @@ interface CssExports {
   'modalHighlight': string;
   'remove': string;
   'separator': string;
+  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

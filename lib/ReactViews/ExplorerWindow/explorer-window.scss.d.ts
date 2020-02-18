@@ -17,6 +17,7 @@ interface CssExports {
   'modalHighlight': string;
   'modalOverlay': string;
   'modalWrapper': string;
+  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

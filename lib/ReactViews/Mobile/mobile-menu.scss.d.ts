@@ -12,6 +12,7 @@ interface CssExports {
   'mobileNavHidden': string;
   'modalHighlight': string;
   'overlay': string;
+  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

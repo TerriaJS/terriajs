@@ -25,6 +25,7 @@ interface CssExports {
   'mobileHeader': string;
   'modalHighlight': string;
   'nowViewingCount': string;
+  'textLight': string;
   'ui': string;
 }
 declare var cssExports: CssExports;

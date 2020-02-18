@@ -9,6 +9,7 @@ interface CssExports {
   'modalHighlight': string;
   'remove-button': string;
   'removeButton': string;
+  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

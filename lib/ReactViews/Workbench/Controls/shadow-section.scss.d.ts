@@ -10,6 +10,7 @@ interface CssExports {
   'modalHighlight': string;
   'shadow-selector': string;
   'shadowSelector': string;
+  'textLight': string;
   'title': string;
 }
 declare var cssExports: CssExports;
