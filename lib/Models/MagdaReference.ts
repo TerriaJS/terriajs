@@ -12,7 +12,6 @@ import loadJson from "../Core/loadJson";
 import TerriaError from "../Core/TerriaError";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import MagdaDistributionFormatTraits from "../Traits/MagdaDistributionFormatTraits";
 import MagdaReferenceTraits from "../Traits/MagdaReferenceTraits";
 import CatalogMemberFactory from "./CatalogMemberFactory";
@@ -27,6 +26,10 @@ import Terria from "./Terria";
 import updateModelFromJson from "./updateModelFromJson";
 import ModelTraits from "../Traits/ModelTraits";
 import StratumOrder from "./StratumOrder";
+import AccessControlMixin, {
+  AccessType,
+  isValidAccessType
+} from "../ModelMixins/AccessControlMixin";
 
 const magdaRecordStratum = "magda-record";
 StratumOrder.addDefaultStratum(magdaRecordStratum);
@@ -37,8 +40,8 @@ export interface MagdaReferenceHeaders {
   [key: string]: string;
 }
 
-export default class MagdaReference extends UrlMixin(
-  ReferenceMixin(CreateModel(MagdaReferenceTraits))
+export default class MagdaReference extends AccessControlMixin(
+  UrlMixin(ReferenceMixin(CreateModel(MagdaReferenceTraits)))
 ) {
   static readonly defaultDistributionFormats: StratumFromTraits<
     MagdaDistributionFormatTraits
@@ -149,6 +152,12 @@ export default class MagdaReference extends UrlMixin(
     );
   }
 
+  @computed
+  get accessType(): AccessType {
+    const access = getAccessTypeFromMagdaRecord(this.magdaRecord);
+    return access || super.accessType;
+  }
+
   protected forceLoadReference(
     previousTarget: BaseModel | undefined
   ): Promise<BaseModel | undefined> {
@@ -187,7 +196,7 @@ export default class MagdaReference extends UrlMixin(
       dereference: true,
       magdaReferenceHeaders: this.terria.configParameters.magdaReferenceHeaders
     }).then(record => {
-      return MagdaReference.createMemberFromRecord(
+      const model = MagdaReference.createMemberFromRecord(
         this.terria,
         this,
         distributionFormats,
@@ -197,6 +206,7 @@ export default class MagdaReference extends UrlMixin(
         override,
         previousTarget
       );
+      return model;
     });
   }
 
@@ -380,6 +390,7 @@ export default class MagdaReference extends UrlMixin(
         if (!model) {
           // Can't create an item or group yet, so create a reference.
           const ref = new MagdaReference(member.id, terria, undefined);
+
           if (magdaUri) {
             ref.setTrait(CommonStrata.definition, "url", magdaUri.toString());
           }
@@ -417,6 +428,11 @@ export default class MagdaReference extends UrlMixin(
             ref.setTrait(CommonStrata.definition, "override", overriddenMember);
           }
 
+          const accessType = getAccessTypeFromMagdaRecord(member);
+          if (accessType) {
+            ref.setAccessType(accessType);
+          }
+
           if (terria.getModelById(BaseModel, member.id) === undefined) {
             terria.addModel(ref);
           }
@@ -424,6 +440,12 @@ export default class MagdaReference extends UrlMixin(
         } else {
           if (terria.getModelById(BaseModel, member.id) === undefined) {
             terria.addModel(model);
+          }
+          if (AccessControlMixin.isMixedInto(model)) {
+            const accessType = getAccessTypeFromMagdaRecord(member);
+            if (accessType) {
+              model.setAccessType(accessType);
+            }
           }
           return model.uniqueId;
         }
@@ -465,7 +487,6 @@ export default class MagdaReference extends UrlMixin(
     if (!isJsonString(terriaAspect.type)) {
       return undefined;
     }
-
     let result: BaseModel;
 
     if (previousTarget && previousTarget.type === terriaAspect.type) {
@@ -753,3 +774,13 @@ const prepareDistributionFormat = createTransformer(
     };
   }
 );
+
+function getAccessTypeFromMagdaRecord(
+  magdaRecord: any
+): AccessType | undefined {
+  const record = toJS(magdaRecord);
+  const accessControl: any =
+    record && record.aspects && record.aspects["esri-access-control"];
+  const access = accessControl && accessControl.access;
+  return isValidAccessType(access) ? access : undefined;
+}
