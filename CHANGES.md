@@ -38,6 +38,7 @@ Change Log
 * Fix a bug for zooming to `ArcGisMapServerCatalogItem` layers
 * Modified creation of catalog item from urls to set the item name to be the url at the defaults stratum rather than the definition stratum. This prevents actual item names at load strata from being overridden by a definition stratum name which is just a url.
 * Modified `addToWorkbench` so that when a catalog item fails to load it is removed from the workbench and an error message is displayed.
+* Add support for feature picking on region mapped datasets
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
