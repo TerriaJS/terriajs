@@ -18,6 +18,8 @@ interface CssExports {
   'gridRowInner12': string;
   'gridRowInner31': string;
   'inactiveGridRow': string;
+  'layer-name-truncated': string;
+  'layerNameTruncated': string;
   'openBelow': string;
   'style-selector': string;
   'styleSelector': string;

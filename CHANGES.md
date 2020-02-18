@@ -17,6 +17,7 @@ Change Log
 * Fixed bug causing workbench items to be shared in the wrong order.
 * Fix bug where urls in the feature info panel weren't turned into hyperlinks
 * Fix preview map's base map and bounding rectangle size
+* Fixed positioning of the buttons at the bottom and the timeline component on mobile
 * Added `hasLocalData` property to indicate when a catalog item contains local data. This property is used to determine whether the item can be shared or not.
 * Fixed bug causing user added data to not be shared. Note that user added catalog item urls are now set at the user stratum rather than the definition stratum.
 * Added the ability to filter location search results by an app-wide bounding box configuration parameter
