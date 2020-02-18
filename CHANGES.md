@@ -44,6 +44,7 @@ Change Log
 * Dramatically simplified map button styling (pre-styled-components)
 * Allow DropdownPanel(InnerPanel) to show centered instead of offset toward the left
 * Added AccessControlMixin for tracking access control of a given MagdaReference
+* Add a legend title trait
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
