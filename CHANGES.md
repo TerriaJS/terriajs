@@ -17,6 +17,7 @@ Change Log
 * Fixed bug causing workbench items to be shared in the wrong order.
 * Fix bug where urls in the feature info panel weren't turned into hyperlinks
 * Fix preview map's base map and bounding rectangle size
+* Fixed positioning of the buttons at the bottom and the timeline component on mobile
 * Added `hasLocalData` property to indicate when a catalog item contains local data. This property is used to determine whether the item can be shared or not.
 * Fixed bug causing user added data to not be shared. Note that user added catalog item urls are now set at the user stratum rather than the definition stratum.
 * Added the ability to filter location search results by an app-wide bounding box configuration parameter
@@ -34,6 +35,10 @@ Change Log
 * Prevent TerriaMap from crashing when timeline is on and changing to 2D
 * Rewrite charts using `vx` svg charting library.
 * Fixed bug causing `ArcGisFeatureServerCatalogItem` to throw an error when a token is included in the proxy url.
+* Fix a bug for zooming to `ArcGisMapServerCatalogItem` layers
+* Modified creation of catalog item from urls to set the item name to be the url at the defaults stratum rather than the definition stratum. This prevents actual item names at load strata from being overridden by a definition stratum name which is just a url.
+* Modified `addToWorkbench` so that when a catalog item fails to load it is removed from the workbench and an error message is displayed.
+* Add support for feature picking on region mapped datasets
 * Revamp map buttons at top to support two menu configuration
 * Viewer (2d/3d/3d-non-terrain) & basemap preferences are persisted to local storage again, and loaded back at startup
 * Dramatically simplified map button styling (pre-styled-components)

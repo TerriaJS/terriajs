@@ -67,6 +67,10 @@
     right: $padding * 2;
     margin: 0;
   }
+
+  @media (max-width: $mobile) {
+    position: fixed;
+  }
   position: absolute;
   z-index: 0;
   bottom: 25px;
@@ -76,6 +80,10 @@
 
 .with-time-series-controls {
   bottom: 58px;
+
+  @media (max-width: $mobile) {
+    bottom: $mobile-bottom-timeline;
+  }
 }
 
 .print-disclaimer {
