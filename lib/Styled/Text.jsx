@@ -7,6 +7,11 @@ export const Text = styled.div`
     `
     color: ${props.theme.colorPrimary};
   `}
+  ${props =>
+    props.textLight &&
+    `
+    color: ${props.theme.textLight};
+  `}
 
   ${props => props.fullWidth && `width: 100%;`}
 `;

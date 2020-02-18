@@ -3,10 +3,15 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
 
+import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
+
 import Loader from "../Loader";
 import Icon from "../Icon";
 
 import Styles from "./data-catalog-group.scss";
+
+import Box from "../../Styled/Box";
+import Text from "../../Styled/Text";
 
 /**
  * Dumb component that encapsulated the display logic for a catalog group.
@@ -37,29 +42,38 @@ function CatalogGroup(props) {
             )}
           </span>
         </If>
-        {props.text}
-        <span
-          className={classNames(Styles.caret, {
-            [Styles.offsetRight]: props.removable
-          })}
-        >
-          {props.open ? (
-            <Icon glyph={Icon.GLYPHS.opened} />
-          ) : (
-            <Icon glyph={Icon.GLYPHS.closed} />
-          )}
-        </span>
+        <Box justifySpaceBetween>
+          <Box>
+            <Text fullWidth primary={!props.selected && props.isPrivate}>
+              {props.text}
+            </Text>
+          </Box>
+          <Box centered>
+            {props.isPrivate && <PrivateIndicator />}
+            <span
+              className={classNames(Styles.caret, {
+                [Styles.offsetRight]: props.removable
+              })}
+            >
+              {props.open ? (
+                <Icon glyph={Icon.GLYPHS.opened} />
+              ) : (
+                <Icon glyph={Icon.GLYPHS.closed} />
+              )}
+            </span>
+            <If condition={props.removable}>
+              <button
+                type="button"
+                className={Styles.trashGroup}
+                title={t("dataCatalog.groupRemove")}
+                onClick={props.removeUserAddedData}
+              >
+                <Icon glyph={Icon.GLYPHS.trashcan} />
+              </button>
+            </If>
+          </Box>
+        </Box>
       </button>
-      <If condition={props.removable}>
-        <button
-          type="button"
-          className={Styles.trashGroup}
-          title={t("dataCatalog.groupRemove")}
-          onClick={props.removeUserAddedData}
-        >
-          <Icon glyph={Icon.GLYPHS.trashcan} />
-        </button>
-      </If>
       <If condition={props.open}>
         <ul
           className={classNames(Styles.catalogGroup, {
@@ -90,6 +104,7 @@ function CatalogGroup(props) {
 
 CatalogGroup.propTypes = {
   text: PropTypes.string,
+  isPrivate: PropTypes.bool,
   title: PropTypes.string,
   topLevel: PropTypes.bool,
   open: PropTypes.bool,
