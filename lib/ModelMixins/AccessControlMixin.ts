@@ -1,22 +1,15 @@
 import { action, computed, observable } from "mobx";
 import Constructor from "../Core/Constructor";
-import Model from "../Models/Model";
+import Model, { BaseModel } from "../Models/Model";
 import ModelTraits from "../Traits/ModelTraits";
-import getAncestors from "../Models/getAncestors";
 
 type AccessControlModel = Model<ModelTraits>;
-
-export type AccessType = "public" | "private" | "shared";
-
-export function isValidAccessType(type: string) {
-  return type === "public" || type === "private" || type === "shared";
-}
 
 function AccessControlMixin<T extends Constructor<AccessControlModel>>(
   Base: T
 ) {
   class Klass extends Base {
-    @observable private _accessType: AccessType | undefined;
+    @observable private _accessType: string | undefined;
 
     get hasAccessControlMixin() {
       return true;
@@ -24,28 +17,29 @@ function AccessControlMixin<T extends Constructor<AccessControlModel>>(
 
     /**
      * Returns the accessType for this model, default is public
-     *
      * Models can override this method to return access type differently
      */
     @computed
-    get accessType(): AccessType {
-      // TODO: simplify
+    get accessType(): string {
       if (AccessControlMixin.isMixedInto(this.sourceReference)) {
+        // This item is the target of a reference item, return the accessType
+        // of the reference item.
         return this.sourceReference.accessType;
       }
-      if (this._accessType) {
-        return this._accessType;
-      }
-      const parent = getAncestors(this.terria, this)[0];
+      // Try return the parents accessType
+      const parentId = this.knownContainerUniqueIds[0];
+      const parent = parentId && this.terria.getModelById(BaseModel, parentId);
       if (AccessControlMixin.isMixedInto(parent)) {
         return parent.accessType;
       }
+
+      // default
       return "public";
     }
 
     /* TODO: check if we actually need provision to explcitly set accessType */
     @action
-    setAccessType(accessType: AccessType) {
+    setAccessType(accessType: string) {
       this._accessType = accessType;
     }
 
@@ -56,7 +50,7 @@ function AccessControlMixin<T extends Constructor<AccessControlModel>>(
 
     @computed
     get isPrivate() {
-      return this.accessType === "private" || this.accessType === "shared";
+      return this.accessType !== "public";
     }
   }
 

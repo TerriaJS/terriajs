@@ -26,10 +26,7 @@ import Terria from "./Terria";
 import updateModelFromJson from "./updateModelFromJson";
 import ModelTraits from "../Traits/ModelTraits";
 import StratumOrder from "./StratumOrder";
-import AccessControlMixin, {
-  AccessType,
-  isValidAccessType
-} from "../ModelMixins/AccessControlMixin";
+import AccessControlMixin from "../ModelMixins/AccessControlMixin";
 
 const magdaRecordStratum = "magda-record";
 StratumOrder.addDefaultStratum(magdaRecordStratum);
@@ -153,7 +150,7 @@ export default class MagdaReference extends AccessControlMixin(
   }
 
   @computed
-  get accessType(): AccessType {
+  get accessType(): string {
     const access = getAccessTypeFromMagdaRecord(this.magdaRecord);
     return access || super.accessType;
   }
@@ -196,7 +193,7 @@ export default class MagdaReference extends AccessControlMixin(
       dereference: true,
       magdaReferenceHeaders: this.terria.configParameters.magdaReferenceHeaders
     }).then(record => {
-      const model = MagdaReference.createMemberFromRecord(
+      return MagdaReference.createMemberFromRecord(
         this.terria,
         this,
         distributionFormats,
@@ -206,7 +203,6 @@ export default class MagdaReference extends AccessControlMixin(
         override,
         previousTarget
       );
-      return model;
     });
   }
 
@@ -424,13 +420,10 @@ export default class MagdaReference extends AccessControlMixin(
             ref.setTrait(CommonStrata.definition, "name", member.name);
           }
 
+          ref.setTrait(CommonStrata.definition, "magdaRecord", member);
+
           if (overriddenMember) {
             ref.setTrait(CommonStrata.definition, "override", overriddenMember);
-          }
-
-          const accessType = getAccessTypeFromMagdaRecord(member);
-          if (accessType) {
-            ref.setAccessType(accessType);
           }
 
           if (terria.getModelById(BaseModel, member.id) === undefined) {
@@ -440,12 +433,6 @@ export default class MagdaReference extends AccessControlMixin(
         } else {
           if (terria.getModelById(BaseModel, member.id) === undefined) {
             terria.addModel(model);
-          }
-          if (AccessControlMixin.isMixedInto(model)) {
-            const accessType = getAccessTypeFromMagdaRecord(member);
-            if (accessType) {
-              model.setAccessType(accessType);
-            }
           }
           return model.uniqueId;
         }
@@ -782,5 +769,5 @@ function getAccessTypeFromMagdaRecord(
   const accessControl: any =
     record && record.aspects && record.aspects["esri-access-control"];
   const access = accessControl && accessControl.access;
-  return isValidAccessType(access) ? access : undefined;
+  return access;
 }
