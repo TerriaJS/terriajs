@@ -33,13 +33,7 @@ import Styles from "./workbench-item.scss";
 import { runInAction } from "mobx";
 
 import Box from "../../Styled/Box";
-import Spacing from "../../Styled/Spacing";
 import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
-
-const BoxColLi = styled(Box).attrs({
-  as: "li",
-  col: true
-})``;
 
 const WorkbenchItem = observer(
   createReactClass({
