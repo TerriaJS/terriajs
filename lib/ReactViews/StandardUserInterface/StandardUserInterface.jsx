@@ -189,6 +189,7 @@ const StandardUserInterface = observer(
                       <MobileHeader
                         terria={terria}
                         menuItems={customElements.menu}
+                        menuLeftItems={customElements.menuLeft}
                         viewState={this.props.viewState}
                         version={this.props.version}
                         allBaseMaps={allBaseMaps}
@@ -283,6 +284,7 @@ const StandardUserInterface = observer(
                     viewState={this.props.viewState}
                     allBaseMaps={allBaseMaps}
                     menuItems={customElements.menu}
+                    menuLeftItems={customElements.menuLeft}
                     animationDuration={animationDuration}
                   />
                   <MapNavigation

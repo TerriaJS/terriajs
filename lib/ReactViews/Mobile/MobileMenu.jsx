@@ -24,7 +24,7 @@ const MobileMenu = observer(
 
     propTypes: {
       menuItems: PropTypes.arrayOf(PropTypes.element),
-      leftMenuItems: PropTypes.arrayOf(PropTypes.element),
+      menuLeftItems: PropTypes.arrayOf(PropTypes.element),
       viewState: PropTypes.instanceOf(ViewState).isRequired,
       showFeedback: PropTypes.bool,
       terria: PropTypes.instanceOf(Terria).isRequired,
@@ -90,7 +90,7 @@ const MobileMenu = observer(
               [Styles.mobileNavHidden]: !this.props.viewState.mobileMenuVisible
             })}
           >
-            <For each="menuItem" of={this.props.leftMenuItems}>
+            <For each="menuItem" of={this.props.menuLeftItems}>
               <div
                 onClick={this.hideMenu}
                 key={menuItem ? menuItem.key : undefined}

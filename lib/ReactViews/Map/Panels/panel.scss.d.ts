@@ -26,7 +26,9 @@ interface CssExports {
   'panel': string;
   'section': string;
   'show-dropdown-as-modal': string;
+  'show-dropdown-in-center': string;
   'showDropdownAsModal': string;
+  'showDropdownInCenter': string;
   'sub-heading': string;
   'subHeading': string;
   'textLight': string;

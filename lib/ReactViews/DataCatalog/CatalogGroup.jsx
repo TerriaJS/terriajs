@@ -22,58 +22,56 @@ function CatalogGroup(props) {
   const { t } = useTranslation();
   return (
     <li className={Styles.root}>
-      <button
-        type="button"
-        className={classNames(
-          Styles.btnCatalog,
-          { [Styles.btnCatalogTopLevel]: props.topLevel },
-          { [Styles.btnIsOpen]: props.open },
-          { [Styles.isPreviewed]: props.selected }
-        )}
-        title={props.title}
-        onClick={props.onClick}
-      >
-        <If condition={!props.topLevel}>
-          <span className={Styles.folder}>
-            {props.open ? (
-              <Icon glyph={Icon.GLYPHS.folderOpen} />
-            ) : (
-              <Icon glyph={Icon.GLYPHS.folder} />
-            )}
-          </span>
-        </If>
-        <Box justifySpaceBetween>
-          <Box>
-            <Text fullWidth primary={!props.selected && props.isPrivate}>
-              {props.text}
-            </Text>
-          </Box>
-          <Box centered>
-            {props.isPrivate && <PrivateIndicator />}
-            <span
-              className={classNames(Styles.caret, {
-                [Styles.offsetRight]: props.removable
-              })}
-            >
+      <Text fullWidth primary={!props.selected && props.isPrivate}>
+        <button
+          type="button"
+          className={classNames(
+            Styles.btnCatalog,
+            { [Styles.btnCatalogTopLevel]: props.topLevel },
+            { [Styles.btnIsOpen]: props.open },
+            { [Styles.isPreviewed]: props.selected }
+          )}
+          title={props.title}
+          onClick={props.onClick}
+        >
+          <If condition={!props.topLevel}>
+            <span className={Styles.folder}>
               {props.open ? (
-                <Icon glyph={Icon.GLYPHS.opened} />
+                <Icon glyph={Icon.GLYPHS.folderOpen} />
               ) : (
-                <Icon glyph={Icon.GLYPHS.closed} />
+                <Icon glyph={Icon.GLYPHS.folder} />
               )}
             </span>
-            <If condition={props.removable}>
-              <button
-                type="button"
-                className={Styles.trashGroup}
-                title={t("dataCatalog.groupRemove")}
-                onClick={props.removeUserAddedData}
+          </If>
+          <Box justifySpaceBetween>
+            <Box>{props.text}</Box>
+            <Box centered>
+              {props.isPrivate && <PrivateIndicator />}
+              <span
+                className={classNames(Styles.caret, {
+                  [Styles.offsetRight]: props.removable
+                })}
               >
-                <Icon glyph={Icon.GLYPHS.trashcan} />
-              </button>
-            </If>
+                {props.open ? (
+                  <Icon glyph={Icon.GLYPHS.opened} />
+                ) : (
+                  <Icon glyph={Icon.GLYPHS.closed} />
+                )}
+              </span>
+              <If condition={props.removable}>
+                <button
+                  type="button"
+                  className={Styles.trashGroup}
+                  title={t("dataCatalog.groupRemove")}
+                  onClick={props.removeUserAddedData}
+                >
+                  <Icon glyph={Icon.GLYPHS.trashcan} />
+                </button>
+              </If>
+            </Box>
           </Box>
-        </Box>
-      </button>
+        </button>
+      </Text>
       <If condition={props.open}>
         <ul
           className={classNames(Styles.catalogGroup, {
