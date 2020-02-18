@@ -11,6 +11,7 @@ interface CssExports {
   'isActive': string;
   'mapButtonColor': string;
   'modalHighlight': string;
+  'textLight': string;
   'workbench-content': string;
   'workbenchContent': string;
 }

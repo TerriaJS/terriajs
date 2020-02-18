@@ -17,6 +17,7 @@ interface CssExports {
   'recapture': string;
   'story': string;
   'storyHeader': string;
+  'textLight': string;
   'toggleBtn': string;
   'viewBtn': string;
 }

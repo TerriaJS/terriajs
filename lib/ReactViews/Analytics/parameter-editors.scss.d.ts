@@ -38,6 +38,7 @@ interface CssExports {
   'radio': string;
   'region-input': string;
   'regionInput': string;
+  'textLight': string;
   'tree': string;
   'warning-text': string;
   'warningText': string;

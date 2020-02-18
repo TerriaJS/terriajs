@@ -29,6 +29,7 @@ interface CssExports {
   'showDropdownAsModal': string;
   'sub-heading': string;
   'subHeading': string;
+  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

@@ -22,6 +22,7 @@ interface CssExports {
   'modalHighlight': string;
   'offsetRight': string;
   'root': string;
+  'textLight': string;
   'trashGroup': string;
 }
 declare var cssExports: CssExports;

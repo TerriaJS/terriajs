@@ -11,6 +11,7 @@ interface CssExports {
   'raw-data-button': string;
   'rawDataButton': string;
   'section': string;
+  'textLight': string;
   'time-series-chart': string;
   'timeSeriesChart': string;
   'title': string;

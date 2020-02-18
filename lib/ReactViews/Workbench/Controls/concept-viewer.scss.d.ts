@@ -21,6 +21,7 @@ interface CssExports {
   'modalHighlight': string;
   'root': string;
   'section': string;
+  'textLight': string;
   'unSelectable': string;
 }
 declare var cssExports: CssExports;

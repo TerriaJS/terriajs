@@ -42,6 +42,7 @@ interface CssExports {
   'shareUrlfield': string;
   'shorten-url': string;
   'shortenUrl': string;
+  'textLight': string;
   'warning': string;
   'warning-link': string;
   'warningLink': string;

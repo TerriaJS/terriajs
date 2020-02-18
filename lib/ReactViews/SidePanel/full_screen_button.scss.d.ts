@@ -15,6 +15,7 @@ interface CssExports {
   'minified': string;
   'minifiedFullscreenBtnWrapper': string;
   'modalHighlight': string;
+  'textLight': string;
   'toggleWorkbench': string;
 }
 declare var cssExports: CssExports;

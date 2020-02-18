@@ -16,6 +16,7 @@ interface CssExports {
   'tabHeading': string;
   'tabPanel': string;
   'tabPanels': string;
+  'textLight': string;
   'url-input': string;
   'url-input__btn': string;
   'url-input__text-box': string;

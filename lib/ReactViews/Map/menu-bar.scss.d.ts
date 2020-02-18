@@ -15,6 +15,7 @@ interface CssExports {
   'menuItem': string;
   'modalHighlight': string;
   'storyBtn': string;
+  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

@@ -31,6 +31,7 @@ interface CssExports {
   'tabList': string;
   'tabListBtn': string;
   'tabListItem': string;
+  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

@@ -11,6 +11,7 @@ interface CssExports {
   'explanation': string;
   'mapButtonColor': string;
   'modalHighlight': string;
+  'textLight': string;
   'title': string;
   'tooltip': string;
   'tooltip-text': string;

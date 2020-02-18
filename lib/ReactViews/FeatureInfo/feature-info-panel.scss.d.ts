@@ -30,6 +30,7 @@ interface CssExports {
   'noResults': string;
   'panel': string;
   'satelliteSuggestionBtn': string;
+  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

@@ -16,6 +16,7 @@ interface CssExports {
   'preview-chart-wrapper': string;
   'previewChart': string;
   'previewChartWrapper': string;
+  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

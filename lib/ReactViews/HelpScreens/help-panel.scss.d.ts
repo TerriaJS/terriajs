@@ -26,6 +26,7 @@ interface CssExports {
   'sharePanel': string;
   'shorten-url': string;
   'shortenUrl': string;
+  'textLight': string;
   'viewer-selector': string;
   'viewerSelector': string;
 }

@@ -19,6 +19,7 @@ interface CssExports {
   'sidePanelHide': string;
   'story-wrapper': string;
   'storyWrapper': string;
+  'textLight': string;
   'ui': string;
   'ui-root': string;
   'uiInner': string;

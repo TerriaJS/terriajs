@@ -9,6 +9,7 @@ interface CssExports {
   'darkWithOverlay': string;
   'mapButtonColor': string;
   'modalHighlight': string;
+  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

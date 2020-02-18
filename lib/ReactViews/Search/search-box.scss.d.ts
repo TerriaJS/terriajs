@@ -11,6 +11,7 @@ interface CssExports {
   'searchClear': string;
   'searchData': string;
   'searchField': string;
+  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

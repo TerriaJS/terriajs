@@ -22,6 +22,7 @@ interface CssExports {
   'tabListItem': string;
   'tabPanel': string;
   'tabs': string;
+  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;
