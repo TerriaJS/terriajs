@@ -12,7 +12,6 @@ import loadJson from "../Core/loadJson";
 import TerriaError from "../Core/TerriaError";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import MagdaDistributionFormatTraits from "../Traits/MagdaDistributionFormatTraits";
 import MagdaReferenceTraits from "../Traits/MagdaReferenceTraits";
 import CatalogMemberFactory from "./CatalogMemberFactory";
@@ -27,6 +26,7 @@ import Terria from "./Terria";
 import updateModelFromJson from "./updateModelFromJson";
 import ModelTraits from "../Traits/ModelTraits";
 import StratumOrder from "./StratumOrder";
+import AccessControlMixin from "../ModelMixins/AccessControlMixin";
 
 const magdaRecordStratum = "magda-record";
 StratumOrder.addDefaultStratum(magdaRecordStratum);
@@ -37,8 +37,8 @@ export interface MagdaReferenceHeaders {
   [key: string]: string;
 }
 
-export default class MagdaReference extends UrlMixin(
-  ReferenceMixin(CreateModel(MagdaReferenceTraits))
+export default class MagdaReference extends AccessControlMixin(
+  UrlMixin(ReferenceMixin(CreateModel(MagdaReferenceTraits)))
 ) {
   static readonly defaultDistributionFormats: StratumFromTraits<
     MagdaDistributionFormatTraits
@@ -147,6 +147,12 @@ export default class MagdaReference extends UrlMixin(
       this.distributionFormats &&
       this.distributionFormats.map(prepareDistributionFormat)
     );
+  }
+
+  @computed
+  get accessType(): string {
+    const access = getAccessTypeFromMagdaRecord(this.magdaRecord);
+    return access || super.accessType;
   }
 
   protected forceLoadReference(
@@ -380,6 +386,7 @@ export default class MagdaReference extends UrlMixin(
         if (!model) {
           // Can't create an item or group yet, so create a reference.
           const ref = new MagdaReference(member.id, terria, undefined);
+
           if (magdaUri) {
             ref.setTrait(CommonStrata.definition, "url", magdaUri.toString());
           }
@@ -412,6 +419,8 @@ export default class MagdaReference extends UrlMixin(
           } else if (isJsonString(member.name)) {
             ref.setTrait(CommonStrata.definition, "name", member.name);
           }
+
+          ref.setTrait(CommonStrata.definition, "magdaRecord", member);
 
           if (overriddenMember) {
             ref.setTrait(CommonStrata.definition, "override", overriddenMember);
@@ -465,7 +474,6 @@ export default class MagdaReference extends UrlMixin(
     if (!isJsonString(terriaAspect.type)) {
       return undefined;
     }
-
     let result: BaseModel;
 
     if (previousTarget && previousTarget.type === terriaAspect.type) {
@@ -753,3 +761,11 @@ const prepareDistributionFormat = createTransformer(
     };
   }
 );
+
+function getAccessTypeFromMagdaRecord(magdaRecord: any): string {
+  const record = toJS(magdaRecord);
+  const accessControl: any =
+    record && record.aspects && record.aspects["esri-access-control"];
+  const access = accessControl && accessControl.access;
+  return access;
+}

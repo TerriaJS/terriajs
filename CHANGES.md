@@ -43,6 +43,7 @@ Change Log
 * Viewer (2d/3d/3d-non-terrain) & basemap preferences are persisted to local storage again, and loaded back at startup
 * Dramatically simplified map button styling (pre-styled-components)
 * Allow DropdownPanel(InnerPanel) to show centered instead of offset toward the left
+* Added AccessControlMixin for tracking access control of a given MagdaReference
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
