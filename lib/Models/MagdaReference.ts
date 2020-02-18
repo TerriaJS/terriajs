@@ -762,9 +762,7 @@ const prepareDistributionFormat = createTransformer(
   }
 );
 
-function getAccessTypeFromMagdaRecord(
-  magdaRecord: any
-): AccessType | undefined {
+function getAccessTypeFromMagdaRecord(magdaRecord: any): string {
   const record = toJS(magdaRecord);
   const accessControl: any =
     record && record.aspects && record.aspects["esri-access-control"];
