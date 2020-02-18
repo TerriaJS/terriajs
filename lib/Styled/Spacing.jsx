@@ -18,7 +18,7 @@ import PropTypes from "prop-types";
 
 // should it be a span or inline-block-div?
 export const Spacing = props => (
-  <div style={{ marginBottom: `${props.bottom * 4}px` }} />
+  <div style={{ marginBottom: `${props.bottom * 5}px` }} />
 );
 Spacing.propTypes = {
   bottom: PropTypes.number.isRequired

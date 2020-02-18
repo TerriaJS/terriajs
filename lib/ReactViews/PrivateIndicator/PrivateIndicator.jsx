@@ -1,21 +1,31 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
 import Icon from "../Icon.jsx";
 import IconWrapper from "../../Styled/IconWrapper";
 
-export default function PrivateIndicator() {
-  const { t } = useTranslation();
-  // if in catalog, show primary colour
+PrivateIndicator.propTypes = {
+  inWorkbench: PropTypes.bool
+};
 
-  // if in workbench, show ..?
+export default function PrivateIndicator(props) {
+  const { t } = useTranslation();
+
   return (
     <IconWrapper
+      marginRight={!props.inWorkbench}
       title={t("catalogItem.privateIndicatorTitle")}
-      width={15}
+      inWorkbench={props.inWorkbench}
       css={`
+        margin-top: -1px;
+        ${p => p.inWorkbench && `margin-right: 2px;`}
+
         svg {
-          fill: ${p => p.theme.colorPrimary};
+          width: 15px;
+          height: 15px;
+          fill: ${p =>
+            p.inWorkbench ? p.theme.textLight : p.theme.colorPrimary};
         }
       `}
     >
