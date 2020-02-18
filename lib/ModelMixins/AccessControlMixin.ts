@@ -29,6 +29,7 @@ function AccessControlMixin<T extends Constructor<AccessControlModel>>(
      */
     @computed
     get accessType(): AccessType {
+      // TODO: simplify
       if (AccessControlMixin.isMixedInto(this.sourceReference)) {
         return this.sourceReference.accessType;
       }
@@ -42,6 +43,7 @@ function AccessControlMixin<T extends Constructor<AccessControlModel>>(
       return "public";
     }
 
+    /* TODO: check if we actually need provision to explcitly set accessType */
     @action
     setAccessType(accessType: AccessType) {
       this._accessType = accessType;
