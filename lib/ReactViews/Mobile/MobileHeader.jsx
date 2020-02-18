@@ -24,6 +24,7 @@ const MobileHeader = observer(
       viewState: PropTypes.object.isRequired,
       allBaseMaps: PropTypes.array,
       version: PropTypes.string,
+      leftMenuItems: PropTypes.array,
       menuItems: PropTypes.array,
       t: PropTypes.func.isRequired
     },
@@ -234,6 +235,7 @@ const MobileHeader = observer(
           </div>
           <MobileMenu
             menuItems={this.props.menuItems}
+            leftMenuItems={this.props.leftMenuItems}
             viewState={this.props.viewState}
             allBaseMaps={this.props.allBaseMaps}
             terria={this.props.terria}

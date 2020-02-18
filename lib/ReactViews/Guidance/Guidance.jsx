@@ -40,7 +40,7 @@ const GuidanceContextModal = ({ children }) => {
   const { t } = useTranslation();
   return (
     <div className={Styles.context}>
-      <Text>{children}</Text>
+      <Text tallerHeight>{children}</Text>
       <button className={Styles.btn}>{t("general.next")}</button>
       {t("general.skip")}
       {/* ? */}

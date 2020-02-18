@@ -5,6 +5,9 @@ import Chartable from "./Chartable";
 import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
 import Workbench from "./Workbench";
+import TerriaError from "../Core/TerriaError";
+import isDefined from "../Core/isDefined";
+import i18next from "i18next";
 import { runInAction } from "mobx";
 
 /**
@@ -52,7 +55,19 @@ export default function addToWorkbench(
   const chartablePromise = Chartable.is(item)
     ? item.loadChartItems()
     : undefined;
-  return Promise.all(
-    filterOutUndefined([mappablePromise, chartablePromise])
-  ).then(() => {});
+  return Promise.all(filterOutUndefined([mappablePromise, chartablePromise]))
+    .then(() => Promise.resolve())
+    .catch(e => {
+      workbench.remove(item);
+      if (isDefined(e)) {
+        return Promise.reject(e);
+      } else {
+        return Promise.reject(
+          new TerriaError({
+            title: i18next.t("workbench.addItemErrorTitle"),
+            message: i18next.t("workbench.addItemErrorMessage")
+          })
+        );
+      }
+    });
 }
