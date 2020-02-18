@@ -44,6 +44,14 @@
   &.is-open {
     @include transform(scale(1) translateZ(0));
   }
+
+  &.show-dropdown-in-center {
+    @include transform(scale(0) translate3d(-50%, 0, 0));
+  }
+  &.is-open.show-dropdown-in-center {
+    @include transform(scale(1) translate3d(-50%, 0, 0));
+  }
+
   &.show-dropdown-as-modal {
     @include transform(translate3d(0, -300px, 0));
     opacity: 0;

@@ -27,7 +27,13 @@ const DropdownPanel = createReactClass({
   },
 
   onInnerMounted(innerElement) {
-    if (innerElement) {
+    const centerInnerDropdown = this.props.showDropdownInCenter;
+    if (centerInnerDropdown) {
+      this.setState({
+        caretOffset: "50%",
+        dropdownOffset: "50%"
+      });
+    } else if (innerElement) {
       // how much further right the panel is from the button
       const offset = this.buttonElement.offsetLeft - innerElement.offsetLeft;
       // if the panel is left of the button leave its offset as is, otherwise move it right so it's level with the button.
@@ -89,6 +95,7 @@ const DropdownPanel = createReactClass({
         </button>
         <If condition={this.isOpen()}>
           <InnerPanel
+            showDropdownInCenter={this.props.showDropdownInCenter}
             showDropdownAsModal={this.props.showDropdownAsModal}
             modalWidth={this.props.modalWidth}
             onDismissed={this.onDismissed}
