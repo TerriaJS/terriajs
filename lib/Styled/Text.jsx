@@ -1,24 +1,19 @@
-import React from "react";
-import PropTypes from "prop-types";
-import classNames from "classnames";
-import Styles from "./text.scss";
+import styled from "styled-components";
 
-// should it be a span or inline-block-div?
-export const Text = props => (
-  <div
-    className={classNames(Styles.text, {
-      [Styles.medium]: props.medium,
-      [Styles.bold]: props.bold
-    })}
-  >
-    {props.children}
-  </div>
-);
+// should it be a span or inline-block-div? - leaning to div
+export const Text = styled.div`
+  ${props =>
+    props.primary &&
+    `
+    color: ${props.theme.colorPrimary};
+  `}
+  ${props =>
+    props.textLight &&
+    `
+    color: ${props.theme.textLight};
+  `}
 
-Text.propTypes = {
-  medium: PropTypes.bool,
-  bold: PropTypes.bool,
-  children: PropTypes.node.isRequired
-};
+  ${props => props.fullWidth && `width: 100%;`}
+`;
 
 export default Text;

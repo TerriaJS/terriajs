@@ -62,7 +62,12 @@ class SettingPanel extends React.Component {
 
     // We store the user's chosen basemap for future use, but it's up to the instance to decide
     // whether to use that at start up.
-    // this.props.terria.setLocalProperty('basemap', baseMap.catalogItem.name);
+    if (baseMap.mappable) {
+      const baseMapId = baseMap.mappable.uniqueId;
+      if (baseMapId) {
+        this.props.terria.setLocalProperty("basemap", baseMapId);
+      }
+    }
   }
 
   mouseEnterBaseMap(baseMap) {
@@ -90,7 +95,7 @@ class SettingPanel extends React.Component {
       console.error(`Trying to select ViewerMode ${viewer} that doesn't exist`);
     }
     // We store the user's chosen viewer mode for future use.
-    // this.props.terria.setLocalProperty('viewermode', newViewerMode);
+    this.props.terria.setLocalProperty("viewermode", viewer);
     this.props.terria.currentViewer.notifyRepaintRequired();
   }
 

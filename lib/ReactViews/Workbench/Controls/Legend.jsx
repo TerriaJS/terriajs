@@ -8,6 +8,7 @@ import React from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
+import isDefined from "../../../Core/isDefined";
 import URI from "urijs";
 import proxyCatalogItemUrl from "../../../Models/proxyCatalogItemUrl";
 import Loader from "../../Loader";
@@ -226,13 +227,16 @@ const Legend = observer(
         <ul className={Styles.legend}>
           <div className={Styles.legendInner}>
             <Choose>
-              <When condition={this.props.item.isLoading}>
+              <When condition={this.props.item.isLoadingMapItems}>
                 <li className={Styles.loader}>
                   <Loader message={this.props.item.loadingMessage} />
                 </li>
               </When>
               <Otherwise>
                 <For each="legend" index="i" of={this.props.item.legends || []}>
+                  <If condition={isDefined(legend.title)}>
+                    <h3 className={Styles.legendTitle}>{legend.title}</h3>
+                  </If>
                   {this.renderLegend(legend, i)}
                 </For>
               </Otherwise>

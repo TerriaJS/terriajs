@@ -5,7 +5,11 @@ interface CssExports {
   'backbtn': string;
   'backbutton': string;
   'centuryBtn': string;
+  'charcoalGrey': string;
+  'colorPrimary': string;
   'controlsRow': string;
+  'dark': string;
+  'darkWithOverlay': string;
   'dateBtn': string;
   'datePicker': string;
   'dayPicker': string;
@@ -18,6 +22,10 @@ interface CssExports {
   'gridRowInner12': string;
   'gridRowInner31': string;
   'inactiveGridRow': string;
+  'layer-name-truncated': string;
+  'layerNameTruncated': string;
+  'mapButtonColor': string;
+  'modalHighlight': string;
   'openBelow': string;
   'style-selector': string;
   'styleSelector': string;
@@ -25,6 +33,7 @@ interface CssExports {
   'text-cell': string;
   'text-row': string;
   'textCell': string;
+  'textLight': string;
   'textRow': string;
   'time': string;
   'timeline': string;

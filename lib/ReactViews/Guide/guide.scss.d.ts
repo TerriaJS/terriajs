@@ -9,6 +9,10 @@ interface CssExports {
   'btn-next': string;
   'btnNext': string;
   'btnTertiary': string;
+  'charcoalGrey': string;
+  'colorPrimary': string;
+  'dark': string;
+  'darkWithOverlay': string;
   'guide': string;
   'image': string;
   'image-wrapper': string;
@@ -18,6 +22,9 @@ interface CssExports {
   'indicatorWrapper': string;
   'inner-close-btn': string;
   'innerCloseBtn': string;
+  'mapButtonColor': string;
+  'modalHighlight': string;
+  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

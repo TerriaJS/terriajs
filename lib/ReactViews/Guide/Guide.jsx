@@ -180,11 +180,11 @@ export const GuidePure = ({
         </button>
         <div className={Styles.body}>
           <div>
-            <Text bold medium>
+            <Text bold medium tallerHeight>
               {currentGuide.title}
             </Text>
             <Spacing bottom={4} />
-            <Text>{currentGuide.body}</Text>
+            <Text tallerHeight>{currentGuide.body}</Text>
           </div>
           <div className={Styles.bodyFooter}>
             <div className={Styles.bodyProgress}>

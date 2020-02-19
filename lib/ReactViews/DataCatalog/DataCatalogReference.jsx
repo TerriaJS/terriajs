@@ -125,6 +125,7 @@ const DataCatalogReference = observer(
           <When condition={reference.isGroup}>
             <CatalogGroup
               text={reference.name || "..."}
+              isPrivate={reference.isPrivate}
               title={this.props.ancestors
                 .map(member => member.nameInCatalog)
                 .join(" → ")}
