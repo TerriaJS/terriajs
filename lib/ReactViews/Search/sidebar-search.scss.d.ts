@@ -17,6 +17,7 @@ interface CssExports {
   'results': string;
   'results-content': string;
   'resultsContent': string;
+  'textDarker': string;
   'textLight': string;
 }
 declare var cssExports: CssExports;

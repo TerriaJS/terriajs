@@ -11,6 +11,7 @@ interface CssExports {
   'mapButtonColor': string;
   'modalHighlight': string;
   'refresh': string;
+  'textDarker': string;
   'textLight': string;
   'zoomControl': string;
 }

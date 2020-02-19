@@ -16,6 +16,7 @@ interface CssExports {
   'resultName': string;
   'search-result': string;
   'searchResult': string;
+  'textDarker': string;
   'textLight': string;
 }
 declare var cssExports: CssExports;

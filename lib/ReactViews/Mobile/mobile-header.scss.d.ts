@@ -25,6 +25,7 @@ interface CssExports {
   'mobileHeader': string;
   'modalHighlight': string;
   'nowViewingCount': string;
+  'textDarker': string;
   'textLight': string;
   'ui': string;
 }

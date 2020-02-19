@@ -28,6 +28,7 @@ interface CssExports {
   'modalHighlight': string;
   'print-disclaimer': string;
   'printDisclaimer': string;
+  'textDarker': string;
   'textLight': string;
   'with-time-series-controls': string;
   'withTimeSeriesControls': string;

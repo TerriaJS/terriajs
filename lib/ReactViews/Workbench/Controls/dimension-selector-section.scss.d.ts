@@ -10,6 +10,7 @@ interface CssExports {
   'field': string;
   'mapButtonColor': string;
   'modalHighlight': string;
+  'textDarker': string;
   'textLight': string;
   'title': string;
 }

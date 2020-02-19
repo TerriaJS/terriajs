@@ -33,6 +33,7 @@ interface CssExports {
   'storyPanel': string;
   'storySlideDown': string;
   'storySlideUp': string;
+  'textDarker': string;
   'textLight': string;
   'trashBtn': string;
   'tutBtn': string;
