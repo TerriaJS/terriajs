@@ -7,6 +7,7 @@ import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
 import Text from "../../Styled/Text";
 
+// only spans are valid html for buttons (even though divs work)
 const ButtonWrapper = styled(Box).attrs({
   as: "span"
 })`
@@ -34,7 +35,7 @@ const StyledMapIconButton = styled(RawButton)`
 `;
 MapIconButton.propTypes = {
   buttonText: PropTypes.string,
-  iconElement: PropTypes.element,
+  iconElement: PropTypes.element.isRequired,
   handleClick: PropTypes.func
 };
 
@@ -44,55 +45,48 @@ function MapIconButton(props) {
   const expanded = isExpanded && buttonText;
   // const { t } = this.props;
 
-  // const IconElement = props.iconElement;
   // const handleAway = () => setTimeout(() => setExpanded(false), 1000);
   const handleAway = () => setExpanded(false);
   return (
-    <div
-      // onMouseOut={() => setExpanded(false)}
+    <StyledMapIconButton
+      type="button"
+      title={buttonText}
+      onMouseOver={() => setExpanded(true)}
+      onFocus={() => setExpanded(true)}
       onMouseOut={handleAway}
       onBlur={handleAway}
+      onClick={props.handleClick}
+      css={`
+        svg {
+          ${expanded && `margin-left: 6px;`};
+        }
+      `}
     >
-      <StyledMapIconButton
-        type="button"
-        onMouseOver={() => setExpanded(true)}
-        onFocus={() => setExpanded(true)}
-        onClick={props.handleClick}
-        css={`
-          svg {
-            ${expanded && `margin-left: 6px;`};
-          }
-        `}
-      >
-        <ButtonWrapper>
-          {buttonText && (
-            <Text
-              css={`
-                display: block;
-                transition: transform 100ms;
-                margin: ${expanded ? `0 10px 0 8px` : `0`};
-                flex-grow: ${expanded ? `1` : `0.0001`};
-                transform: scale(${expanded ? `1, 1` : `0, 1`});
-              `}
-            >
-              {expanded && props.buttonText}
-              {/* {props.buttonText} */}
-            </Text>
-          )}
-          {props.iconElement && (
-            <span
-              css={`
-                display: block;
-                flex-grow: 1;
-                transition: flex-grow 200ms;
-              `}
-            >
-              {props.iconElement()}
-            </span>
-          )}
-        </ButtonWrapper>
-      </StyledMapIconButton>
-    </div>
+      <ButtonWrapper>
+        {/* only spans are valid html for buttons (even though divs work) */}
+        {buttonText && (
+          <Text
+            css={`
+              display: block;
+              transition: transform 100ms;
+              margin: ${expanded ? `0 10px 0 8px` : `0`};
+              transform: scale(${expanded ? `1, 1` : `0, 1`});
+            `}
+          >
+            {expanded && buttonText}
+          </Text>
+        )}
+        {props.iconElement && (
+          <span
+            css={`
+              display: block;
+            `}
+          >
+            {props.iconElement()}
+          </span>
+        )}
+      </ButtonWrapper>
+    </StyledMapIconButton>
   );
 }
 export default MapIconButton;
