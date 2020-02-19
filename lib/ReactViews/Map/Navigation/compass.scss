@@ -19,19 +19,18 @@
   composes: sm-show from "../../../Sass/common/_base.scss";
 
   svg {
-    fill: $dark;
+    fill: $text-darker;
   }
 }
 .innerRing {
   @include vertical-align();
-  height: $compass-width - $ring-width -20px;
-  width: $compass-width - $ring-width -20px;
+  height: $compass-width - $ring-width -10px;
+  width: $compass-width - $ring-width -10px;
   border-radius: 50%;
   display: block;
   margin: 0 auto;
   padding: 4px;
   box-sizing: border-box;
-  background: #ffffff;
 }
 .rotationMarker {
   background-image: url("../../../../wwwroot/images/compass-rotation-marker.svg");
