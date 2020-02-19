@@ -1,6 +1,7 @@
 import i18next from "i18next";
 import { computed, toJS } from "mobx";
 import { createTransformer } from "mobx-utils";
+import URI from "urijs";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import {
   isJsonObject,
@@ -8,6 +9,7 @@ import {
   JsonArray,
   JsonObject
 } from "../Core/Json";
+import isDefined from "../Core/isDefined";
 import loadJson from "../Core/loadJson";
 import TerriaError from "../Core/TerriaError";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
@@ -621,15 +623,15 @@ export default class MagdaReference extends AccessControlMixin(
     return result;
   }
 
-  private static findPreparedDistributionFormat(
+  private static async findPreparedDistributionFormat(
     distributionFormats: readonly PreparedDistributionFormat[],
     distributions: JsonArray
   ):
-    | {
+    Promise<| {
         distribution: JsonObject;
         format: PreparedDistributionFormat;
       }
-    | undefined {
+    | undefined> {
     for (let i = 0; i < distributionFormats.length; ++i) {
       const distributionFormat = distributionFormats[i];
       const formatRegex = distributionFormat.formatRegex;
@@ -650,6 +652,13 @@ export default class MagdaReference extends AccessControlMixin(
 
         const dcatJson = aspects["dcat-distribution-strings"];
         const datasetFormat = aspects["dataset-format"];
+
+        // @ts-ignore
+        if (isDefined(distribution.aspects['esri-resource']) && distribution.aspects['esri-resource'].typeKeywords.indexOf('Singlelayer') > -1) {
+            const val = await _reworkFeatureServerUrl(distribution)
+            // @ts-ignore
+            dcatJson.accessURL = val
+        }
 
         let format: string | undefined;
         let url: string | undefined;
@@ -769,3 +778,20 @@ function getAccessTypeFromMagdaRecord(magdaRecord: any): string {
   const access = accessControl && accessControl.access;
   return access;
 }
+
+
+// Attempting to override a service reference like
+// https://portal.spatial.nsw.gov.au/server/rest/services/NSW_Features_of_Interest_Category/FeatureServer
+// with
+// https://portal.spatial.nsw.gov.au/server/rest/services/NSW_Features_of_Interest_Category/FeatureServer/6
+// need to override match.distribution.aspects["dcat-distribution-strings"].accessUrl
+async function _reworkFeatureServerUrl(distribution: any) {
+  const sourceUri = new URI(distribution.aspects.source.url)
+  sourceUri.segment('data')
+  const additionalInfo = await loadJson(sourceUri.toString())
+  const id = additionalInfo.layers[0].id
+  const serviceUri = new URI(distribution.aspects["dcat-distribution-strings"].accessURL)
+  serviceUri.segment(id.toString())
+  return serviceUri.toString()
+}
+
