@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### Next release
+
+* Add support for `classBreaks` renderer to `ArcGisFeatureServerCatalogItem`.
+
 ### v7.11.2
 
 * Pass minimumLevel, in Cesium, to minNativeZoom, in Leaflet.
