@@ -7,14 +7,21 @@ interface CssExports {
   'btnSubmit': string;
   'btnSubmit--hover': string;
   'btnSubmitHover': string;
+  'charcoalGrey': string;
+  'colorPrimary': string;
+  'dark': string;
+  'darkWithOverlay': string;
   'description': string;
   'field': string;
   'form': string;
   'header': string;
   'isOpen': string;
   'label': string;
+  'mapButtonColor': string;
+  'modalHighlight': string;
   'share-url': string;
   'shareUrl': string;
+  'textLight': string;
   'title': string;
 }
 declare var cssExports: CssExports;

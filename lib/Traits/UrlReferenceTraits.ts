@@ -13,5 +13,5 @@ export default class UrlReferenceTraits extends mixTraits(
       "Whether it's ok to attempt to load the URL and detect failures.",
     type: "boolean"
   })
-  allowLoad?: boolean;
+  allowLoad?: boolean = true;
 }

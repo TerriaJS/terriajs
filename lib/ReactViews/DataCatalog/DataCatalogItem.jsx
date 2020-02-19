@@ -82,7 +82,7 @@ export const DataCatalogItem = observer(
           }
         });
 
-        raiseErrorOnRejectedPromise(addPromise);
+        raiseErrorOnRejectedPromise(this.props.terria, addPromise);
       });
     },
 
@@ -126,6 +126,7 @@ export const DataCatalogItem = observer(
           onTextClick={this.setPreviewedItem}
           selected={this.isSelected()}
           text={item.nameInCatalog}
+          isPrivate={item.isPrivate}
           title={this.props.ancestors.map(m => m.nameInCatalog).join(" -> ")}
           btnState={this.getState()}
           onBtnClick={this.onBtnClicked}

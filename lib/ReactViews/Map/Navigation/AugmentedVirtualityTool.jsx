@@ -1,47 +1,46 @@
-"use strict";
-
 import React from "react";
-import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import ObserveModelMixin from "../../ObserveModelMixin";
 import Styles from "./augmented_virtuality_tool.scss";
 import Icon from "../../Icon";
 import ViewerMode from "../../../Models/ViewerMode";
-import defined from "terriajs-cesium/Source/Core/defined";
 import { withTranslation } from "react-i18next";
-
 import AugmentedVirtuality from "../../../Models/AugmentedVirtuality";
+import { observer } from "mobx-react";
+import { action, observable } from "mobx";
 
-const AugmentedVirtualityTool = createReactClass({
-  displayName: "AugmentedVirtualityTool",
-  mixins: [ObserveModelMixin],
+@withTranslation()
+@observer
+class AugmentedVirtualityTool extends React.Component {
+  @observable experimentalWarningShown = false;
+  @observable realignHelpShown = false;
+  @observable resetRealignHelpShown = false;
 
-  propTypes: {
+  static propTypes = {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
     experimentalWarning: PropTypes.bool,
     t: PropTypes.func.isRequired
-  },
+  };
 
-  getInitialState() {
-    return {
-      augmentedVirtuality: new AugmentedVirtuality(this.props.terria),
-      experimentalWarningShown: false,
-      realignHelpShown: false,
-      resetRealignHelpShown: false
-    };
-  },
+  static defaultProps = {
+    experimentalWarning: true
+  };
 
+  constructor(props) {
+    super(props);
+    this.augmentedVirtuality = new AugmentedVirtuality(this.props.terria);
+  }
+
+  @action.bound
   handleClickAVTool() {
     // Make the AugmentedVirtuality module avaliable elsewhere.
-    this.props.terria.augmentedVirtuality = this.state.augmentedVirtuality;
+    this.props.terria.augmentedVirtuality = this.augmentedVirtuality;
 
     if (
-      defined(this.props.experimentalWarning) &&
       this.props.experimentalWarning !== false &&
-      !this.state.experimentalWarningShown
+      !this.experimentalWarningShown
     ) {
-      this.setState({ experimentalWarningShown: true });
+      this.experimentalWarningShown = true;
       const { t } = this.props;
       this.props.viewState.notifications.push({
         title: t("AR.title"),
@@ -49,13 +48,13 @@ const AugmentedVirtualityTool = createReactClass({
         confirmText: t("AR.confirmText")
       });
     }
+    this.augmentedVirtuality.toggleEnabled();
+  }
 
-    this.state.augmentedVirtuality.toggleEnabled();
-  },
-
+  @action.bound
   handleClickRealign() {
-    if (!this.state.realignHelpShown) {
-      this.setState({ realignHelpShown: true });
+    if (!this.realignHelpShown) {
+      this.realignHelpShown = true;
       const { t } = this.props;
       this.props.viewState.notifications.push({
         title: t("AR.manualAlignmentTitle"),
@@ -67,12 +66,13 @@ const AugmentedVirtualityTool = createReactClass({
       });
     }
 
-    this.state.augmentedVirtuality.toggleManualAlignment();
-  },
+    this.augmentedVirtuality.toggleManualAlignment();
+  }
 
+  @action.bound
   handleClickResetRealign() {
-    if (!this.state.resetRealignHelpShown) {
-      this.setState({ resetRealignHelpShown: true });
+    if (!this.resetRealignHelpShown) {
+      this.resetRealignHelpShown = true;
       const { t } = this.props;
       this.props.viewState.notifications.push({
         title: t("AR.resetAlignmentTitle"),
@@ -81,15 +81,15 @@ const AugmentedVirtualityTool = createReactClass({
       });
     }
 
-    this.state.augmentedVirtuality.resetAlignment();
-  },
+    this.augmentedVirtuality.resetAlignment();
+  }
 
   handleClickHover() {
-    this.state.augmentedVirtuality.toggleHoverHeight();
-  },
+    this.augmentedVirtuality.toggleHoverHeight();
+  }
 
   render() {
-    const enabled = this.state.augmentedVirtuality.enabled;
+    const enabled = this.augmentedVirtuality.isEnabled;
     let toggleImage = Icon.GLYPHS.arOff;
     let toggleStyle = Styles.btn;
     if (enabled) {
@@ -97,13 +97,13 @@ const AugmentedVirtualityTool = createReactClass({
       toggleStyle = Styles.btnPrimary;
     }
     const { t } = this.props;
-    const realignment = this.state.augmentedVirtuality.manualAlignment;
+    const realignment = this.augmentedVirtuality.manualAlignment;
     let realignmentStyle = Styles.btn;
     if (realignment) {
       realignmentStyle = Styles.btnBlink;
     }
 
-    const hoverLevel = this.state.augmentedVirtuality.hoverLevel;
+    const hoverLevel = this.augmentedVirtuality.hoverLevel;
     let hoverImage = Icon.GLYPHS.arHover0;
     // Note: We use the image of the next level that we will be changing to, not the level the we are currently at.
     switch (hoverLevel) {
@@ -135,17 +135,17 @@ const AugmentedVirtualityTool = createReactClass({
               type="button"
               className={Styles.btn}
               title={t("AR.btnHover")}
-              onClick={this.handleClickHover}
+              onClick={() => this.handleClickHover()}
             >
               <Icon glyph={hoverImage} />
             </button>
 
-            <If condition={!this.state.augmentedVirtuality.manualAlignmentSet}>
+            <If condition={!this.augmentedVirtuality.manualAlignmentSet}>
               <button
                 type="button"
                 className={realignmentStyle}
-                title={t("AR.handleClickRealign")}
-                onClick={this.btnRealign}
+                title={t("AR.btnRealign")}
+                onClick={this.handleClickRealign}
               >
                 <Icon glyph={Icon.GLYPHS.arRealign} />
               </button>
@@ -153,8 +153,7 @@ const AugmentedVirtualityTool = createReactClass({
 
             <If
               condition={
-                this.state.augmentedVirtuality.manualAlignmentSet &&
-                !realignment
+                this.augmentedVirtuality.manualAlignmentSet && !realignment
               }
             >
               <button
@@ -171,6 +170,6 @@ const AugmentedVirtualityTool = createReactClass({
       </If>
     );
   }
-});
+}
 
-module.exports = withTranslation()(AugmentedVirtualityTool);
+export default AugmentedVirtualityTool;

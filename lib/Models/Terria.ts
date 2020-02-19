@@ -52,6 +52,7 @@ import upsertModelFromJson from "./upsertModelFromJson";
 import ViewerMode from "./ViewerMode";
 import Workbench from "./Workbench";
 import openGroup from "./openGroup";
+import getDereferencedIfExists from "../Core/getDereferencedIfExists";
 
 interface ConfigParameters {
   [key: string]: ConfigParameters[keyof ConfigParameters];
@@ -356,10 +357,55 @@ export default class Terria {
         if (this.shareDataService && this.serverConfig.config) {
           this.shareDataService.init(this.serverConfig.config);
         }
+        this.loadPersistedMapSettings();
         if (options.applicationUrl) {
           return this.updateApplicationUrl(options.applicationUrl);
         }
       });
+  }
+
+  loadPersistedMapSettings(): void {
+    const persistViewerMode = defaultValue(
+      this.configParameters.persistViewerMode,
+      true
+    );
+    const mainViewer = this.mainViewer;
+    const viewerMode = this.getLocalProperty("viewermode");
+    if (persistViewerMode && defined(viewerMode)) {
+      if (viewerMode === "3d" || viewerMode === "3dsmooth") {
+        mainViewer.viewerMode = ViewerMode.Cesium;
+        mainViewer.viewerOptions.useTerrain = viewerMode === "3d";
+      } else if (viewerMode === "2d") {
+        mainViewer.viewerMode = ViewerMode.Leaflet;
+      } else {
+        console.error(
+          `Trying to select ViewerMode ${viewerMode} that doesn't exist`
+        );
+      }
+    }
+  }
+
+  @action
+  updateBaseMaps(baseMaps: BaseMapViewModel[]): void {
+    this.baseMaps.push(...baseMaps);
+    if (!this.mainViewer.baseMap) {
+      this.loadPersistedBaseMap();
+    }
+  }
+
+  @action
+  loadPersistedBaseMap(): void {
+    const persistedBaseMapId = this.getLocalProperty("basemap");
+    const baseMapSearch = this.baseMaps.find(
+      baseMap => baseMap.mappable.uniqueId === persistedBaseMapId
+    );
+    if (baseMapSearch) {
+      this.mainViewer.baseMap = baseMapSearch.mappable;
+    } else {
+      console.error(
+        `Couldn't find a basemap for unique id ${persistedBaseMapId}`
+      );
+    }
   }
 
   get isLoadingInitSources(): boolean {
@@ -482,61 +528,58 @@ export default class Terria {
       promise = Promise.resolve();
     }
 
-    return promise.then(() => {
-      const loadedModel = upsertModelFromJson(
-        CatalogMemberFactory,
-        this,
-        "/",
-        undefined,
-        stratumId,
-        {
-          ...cleanStratumData,
-          id: modelId
-        },
-        replaceStratum
-      );
+    return promise
+      .then(() => {
+        const loadedModel = upsertModelFromJson(
+          CatalogMemberFactory,
+          this,
+          "/",
+          undefined,
+          stratumId,
+          {
+            ...cleanStratumData,
+            id: modelId
+          },
+          replaceStratum
+        );
 
-      if (Array.isArray(containerIds)) {
-        containerIds.forEach(containerId => {
-          if (
-            typeof containerId === "string" &&
-            loadedModel.knownContainerUniqueIds.indexOf(containerId) < 0
-          ) {
-            loadedModel.knownContainerUniqueIds.push(containerId);
-          }
-        });
-      }
+        if (Array.isArray(containerIds)) {
+          containerIds.forEach(containerId => {
+            if (
+              typeof containerId === "string" &&
+              loadedModel.knownContainerUniqueIds.indexOf(containerId) < 0
+            ) {
+              loadedModel.knownContainerUniqueIds.push(containerId);
+            }
+          });
+        }
 
-      // If we're replacing the stratum and the existing model is already
-      // dereferenced, we need to replace the dereferenced stratum, too,
-      // even if there's no trace of it it in the load data.
-      let dereferenced = thisModelStratumData.dereferenced;
-      if (
-        replaceStratum &&
-        dereferenced === undefined &&
-        ReferenceMixin.is(loadedModel) &&
-        loadedModel.target !== undefined
-      ) {
-        dereferenced = {};
-      }
+        // If we're replacing the stratum and the existing model is already
+        // dereferenced, we need to replace the dereferenced stratum, too,
+        // even if there's no trace of it in the load data.
+        let dereferenced = thisModelStratumData.dereferenced;
+        if (
+          replaceStratum &&
+          dereferenced === undefined &&
+          ReferenceMixin.is(loadedModel) &&
+          loadedModel.target !== undefined
+        ) {
+          dereferenced = {};
+        }
 
-      if (dereferenced) {
         if (ReferenceMixin.is(loadedModel)) {
-          return loadedModel
-            .loadReference()
-            .then(() => {
-              return upsertModelFromJson(
-                CatalogMemberFactory,
-                this,
-                "/",
+          return loadedModel.loadReference().then(() => {
+            if (isDefined(loadedModel.target)) {
+              updateModelFromJson(
                 loadedModel.target,
                 stratumId,
-                dereferenced,
+                dereferenced || {},
                 replaceStratum
               );
-            })
-            .then(() => loadedModel);
-        } else {
+            }
+            return loadedModel;
+          });
+        } else if (dereferenced) {
           throw new TerriaError({
             sender: this,
             title: "Model cannot be dereferenced",
@@ -544,16 +587,19 @@ export default class Terria {
               "The stratum has a `dereferenced` property, but the model cannot be dereferenced."
           });
         }
-      }
 
-      if (GroupMixin.isMixedInto(loadedModel)) {
-        return openGroup(loadedModel, loadedModel.isOpen).then(
-          () => loadedModel
-        );
-      } else {
         return loadedModel;
-      }
-    });
+      })
+      .then(loadedModel => {
+        const dereferenced = getDereferencedIfExists(loadedModel);
+        if (GroupMixin.isMixedInto(dereferenced)) {
+          return openGroup(dereferenced, dereferenced.isOpen).then(
+            () => loadedModel
+          );
+        } else {
+          return loadedModel;
+        }
+      });
   }
 
   @action

@@ -2,6 +2,7 @@ import { action, computed, observable, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
+import combine from "terriajs-cesium/Source/Core/combine";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
@@ -9,14 +10,17 @@ import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
+import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
+import isDefined from "../Core/isDefined";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import { JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
+import RegionProvider from "../Map/RegionProvider";
 import JSRegionProviderList from "../Map/RegionProviderList";
 import { calculateDomain, ChartAxis, ChartItem } from "../Models/Chartable";
 import CommonStrata from "../Models/CommonStrata";
@@ -467,17 +471,61 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
             minimumZoom: regionType.serverMinZoom,
             maximumNativeZoom: regionType.serverMaxNativeZoom,
             maximumZoom: regionType.serverMaxZoom,
-            uniqueIdProp: regionType.uniqueIdProp
-            // featureInfoFunc: addDescriptionAndProperties(
-            //   regionMapping,
-            //   regionIndices,
-            //   regionImageryProvider
-            // )
+            uniqueIdProp: regionType.uniqueIdProp,
+            featureInfoFunc: (feature: any) => {
+              if (
+                isDefined(style.regionColumn) &&
+                isDefined(style.regionColumn.regionType) &&
+                isDefined(style.regionColumn.regionType.regionProp)
+              ) {
+                const regionColumn = style.regionColumn;
+                const regionType = regionColumn.regionType;
+
+                if (!isDefined(regionType)) return undefined;
+
+                const regionId: any = regionColumn.valuesAsRegions.regionIdToRowNumbersMap.get(
+                  feature.properties[regionType.regionProp]
+                );
+                let d = null;
+
+                // TODO - find a better way to handle time-varying feature info's
+                if (Array.isArray(regionId)) {
+                  d = this.getRowValues(regionId[0]);
+                } else {
+                  d = this.getRowValues(regionId);
+                }
+                return this.featureInfoFromFeature(
+                  regionType,
+                  d,
+                  feature.properties[regionType.uniqueIdProp]
+                );
+              }
+
+              return undefined;
+            }
           }),
           show: this.show
         };
       }
     );
+
+    private featureInfoFromFeature(
+      region: RegionProvider,
+      data: JsonObject,
+      regionId: any
+    ) {
+      const featureInfo = new ImageryLayerFeatureInfo();
+      if (isDefined(region.nameProp)) {
+        featureInfo.name = data[region.nameProp] as string;
+      }
+
+      data.id = regionId;
+      featureInfo.data = data;
+
+      featureInfo.configureDescriptionFromProperties(data);
+      featureInfo.configureNameFromProperties(data);
+      return featureInfo;
+    }
 
     private getRowValues(index: number): JsonObject {
       const result: JsonObject = {};
