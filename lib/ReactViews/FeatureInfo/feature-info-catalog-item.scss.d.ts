@@ -10,6 +10,7 @@ interface CssExports {
   'messageItem': string;
   'modalHighlight': string;
   'sections': string;
+  'textDarker': string;
   'textLight': string;
 }
 declare var cssExports: CssExports;

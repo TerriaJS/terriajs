@@ -18,6 +18,8 @@ interface CssExports {
   'modalHighlight': string;
   'textLight': string;
   'toolButton': string;
+  'with-time-series-controls': string;
+  'withTimeSeriesControls': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

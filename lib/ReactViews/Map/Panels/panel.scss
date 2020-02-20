@@ -76,7 +76,8 @@
   }
 
   svg {
-    fill: $grey;
+    // fill: $grey;
+    fill: $text-light;
     height: 10px;
     width: 10px;
   }
@@ -84,6 +85,10 @@
 .inner-close-btn--for-modal {
   top: 15px;
   right: 15px;
+
+  svg {
+    fill: $grey;
+  }
 }
 
 .caret {

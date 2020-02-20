@@ -17,3 +17,4 @@ package-lock.json
 *.swp
 dist
 .history/
+pancake/

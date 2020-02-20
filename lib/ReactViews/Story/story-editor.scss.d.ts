@@ -20,6 +20,7 @@ interface CssExports {
   'modalHighlight': string;
   'popupEditor': string;
   'saveBtn': string;
+  'textDarker': string;
   'textLight': string;
 }
 declare var cssExports: CssExports;

@@ -33,6 +33,7 @@ interface CssExports {
   'quality-wrapper': string;
   'qualityLabel': string;
   'qualityWrapper': string;
+  'textDarker': string;
   'textLight': string;
   'viewer-selector': string;
   'viewerSelector': string;

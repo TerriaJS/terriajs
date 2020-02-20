@@ -33,6 +33,7 @@ interface CssExports {
   'text-cell': string;
   'text-row': string;
   'textCell': string;
+  'textDarker': string;
   'textLight': string;
   'textRow': string;
   'time': string;
