@@ -50,7 +50,7 @@ Change Log
 * Added `pointSizeMap` to `TableStyle` to allow point size to be scaled by value
 * Added `isExperiencingIssues` to `CatalogMemberTraits`. When set to true, an alert is displayed above the catalog item description.
 * Add gyroscope guidance
-* Enable StyleSelector workbench control for `WebMapServiceCatalogItem`
+* Enable StyleSelectorSection workbench control for `WebMapServiceCatalogItem`
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
