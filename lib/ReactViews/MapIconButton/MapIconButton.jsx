@@ -21,6 +21,7 @@ const StyledMapIconButton = styled(RawButton)`
   border-radius: 16px;
   background: #fff;
   color: ${props => props.theme.textDarker};
+
   height: 32px;
   min-width: 32px;
   direction: rtl;
@@ -32,30 +33,47 @@ const StyledMapIconButton = styled(RawButton)`
     vertical-align: middle;
     fill: ${props => props.theme.textDarker};
   }
+
+  ${props =>
+    props.primary &&
+    `
+    background: ${props.theme.colorPrimary};
+    color: ${props.theme.textLight};
+    svg {
+      fill: ${props.theme.textLight};
+    }
+  `}
 `;
 MapIconButton.propTypes = {
-  buttonText: PropTypes.string,
+  primary: PropTypes.bool,
+  expandInPlace: PropTypes.bool,
+  title: PropTypes.string,
   iconElement: PropTypes.element.isRequired,
+  onClick: PropTypes.func,
   handleClick: PropTypes.func
 };
 
 function MapIconButton(props) {
   const [isExpanded, setExpanded] = useState(false);
-  const buttonText = props.buttonText;
-  const expanded = isExpanded && buttonText;
+  const { children, title, expandInPlace, primary } = props;
+  const expanded = isExpanded && children;
   // const { t } = this.props;
 
   // const handleAway = () => setTimeout(() => setExpanded(false), 1000);
   const handleAway = () => setExpanded(false);
-  return (
+
+  const MapIconButtonRaw = (
     <StyledMapIconButton
+      className={props.className}
+      primary={primary}
       type="button"
-      title={buttonText}
+      title={title}
       onMouseOver={() => setExpanded(true)}
       onFocus={() => setExpanded(true)}
       onMouseOut={handleAway}
       onBlur={handleAway}
-      onClick={props.handleClick}
+      // onClick={props.handleClick}
+      onClick={props.onClick}
       css={`
         svg {
           ${expanded && `margin-left: 6px;`};
@@ -64,16 +82,19 @@ function MapIconButton(props) {
     >
       <ButtonWrapper>
         {/* only spans are valid html for buttons (even though divs work) */}
-        {buttonText && (
+        {children && (
           <Text
+            as="span"
+            noWrap
             css={`
               display: block;
               transition: transform 100ms;
               margin: ${expanded ? `0 10px 0 8px` : `0`};
               transform: scale(${expanded ? `1, 1` : `0, 1`});
+              transform-origin: right;
             `}
           >
-            {expanded && buttonText}
+            {expanded && children}
           </Text>
         )}
         {props.iconElement && (
@@ -88,5 +109,35 @@ function MapIconButton(props) {
       </ButtonWrapper>
     </StyledMapIconButton>
   );
+  // we need to add some positional wrapping elements if we need to expand the
+  // button in place (`absolute`ly) instead of in the layout flow (`relative`).
+  if (expandInPlace) {
+    return (
+      <div
+        css={
+          expandInPlace &&
+          `
+            position:relative;
+            width: 32px;
+            height: 32px;
+            margin:auto;
+          `
+        }
+      >
+        <div
+          css={
+            expandInPlace &&
+            `
+              position:absolute;
+              top:0;
+              right:0;
+            `
+          }
+        >
+          {MapIconButtonRaw}
+        </div>
+      </div>
+    );
+  } else return MapIconButtonRaw;
 }
 export default MapIconButton;

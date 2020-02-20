@@ -23,13 +23,17 @@ export default function GyroscopeGuidance(props) {
     >
       <MapIconButton
         iconElement={() => <Icon glyph={Icon.GLYPHS.help} />}
-        buttonText="Help"
-      />
+        // buttonText="Help"
+      >
+        Help
+      </MapIconButton>
       <Spacing right={2} />
       <MapIconButton
         iconElement={() => <Icon glyph={Icon.GLYPHS.controls} />}
-        buttonText="Controls"
-      />
+        // buttonText="Controls"
+      >
+        Controls
+      </MapIconButton>
       <Spacing right={2} />
       <div
         css={`
@@ -42,7 +46,7 @@ export default function GyroscopeGuidance(props) {
         `}
       >
         <MapIconButton
-          handleClick={props.onClose}
+          onClick={props.onClose}
           iconElement={() => <Icon glyph={Icon.GLYPHS.closeLight} />}
         />
       </div>

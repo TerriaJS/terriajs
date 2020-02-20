@@ -14,6 +14,7 @@ export const Text = styled.div`
   `}
 
   ${props => props.fullWidth && `width: 100%;`}
+  ${props => props.noWrap && `white-space: nowrap;`}
 `;
 
 export default Text;
