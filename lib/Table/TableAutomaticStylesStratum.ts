@@ -13,6 +13,7 @@ import TableChartStyleTraits, {
   TableChartLineStyleTraits
 } from "../Traits/TableChartStyleTraits";
 import TableColorStyleTraits from "../Traits/TableColorStyleTraits";
+import TablePointSizeStyleTraits from "../Traits/TablePointSizeStyleTraits";
 import TableStyleTraits from "../Traits/TableStyleTraits";
 import TableColumnType from "./TableColumnType";
 import TableStyle from "./TableStyle";
@@ -95,6 +96,9 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
         color: createStratumInstance(TableColorStyleTraits, {
           colorColumn: column.name,
           legend: this._createLegendForColorStyle(i)
+        }),
+        pointSize: createStratumInstance(TablePointSizeStyleTraits, {
+          pointSizeColumn: column.name
         })
       })
     );

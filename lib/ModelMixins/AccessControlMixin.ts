@@ -26,11 +26,15 @@ function AccessControlMixin<T extends Constructor<AccessControlModel>>(
         // of the reference item.
         return this.sourceReference.accessType;
       }
-      // Try return the parents accessType
-      const parentId = this.knownContainerUniqueIds[0];
-      const parent = parentId && this.terria.getModelById(BaseModel, parentId);
-      if (AccessControlMixin.isMixedInto(parent)) {
-        return parent.accessType;
+
+      // Try and return the parents accessType
+      if (this.knownContainerUniqueIds.length > 0) {
+        const parentId = this.knownContainerUniqueIds[0];
+        const parent =
+          parentId && this.terria.getModelById(BaseModel, parentId);
+        if (AccessControlMixin.isMixedInto(parent)) {
+          return parent.accessType;
+        }
       }
 
       // default
