@@ -142,19 +142,17 @@
   }
 }
 
-.tutBtn {
+.tourBtn {
   composes: btn from "../../../../Sass/common/_buttons.scss";
   color: $text-light;
   font-size: $font-size-button;
   padding: $padding $padding * 2;
-  background: $overlay;
+  background-color: $color-primary;
   border-radius: $padding * 2;
-  margin-top: $padding;
 
   svg {
     height: 20px;
     width: 20px;
-    margin: 0 4px;
     fill: $faint-bg;
     vertical-align: bottom;
     display: inline-block;

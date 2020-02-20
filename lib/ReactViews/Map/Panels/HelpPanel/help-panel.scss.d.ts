@@ -35,9 +35,10 @@ interface CssExports {
   'storyFadeOut': string;
   'storySlideDown': string;
   'storySlideUp': string;
+  'textDarker': string;
   'textLight': string;
+  'tourBtn': string;
   'trashBtn': string;
-  'tutBtn': string;
   'videoGuide': string;
   'videoGuide--iframe': string;
   'videoGuideIframe': string;

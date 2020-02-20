@@ -40,6 +40,13 @@ export const Text = styled.div`
     `
     font-size: 15px;
   `}
+  ${props =>
+    props.title &&
+    `
+    font-weight: 800;
+    font-size: 26px;
+    line-height: 32px;
+  `}
   
 `;
 

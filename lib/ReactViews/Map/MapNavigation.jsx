@@ -33,6 +33,13 @@ class MapNavigation extends React.Component {
   static defaultProps = {
     navItems: []
   };
+  
+  @action.bound
+  showHelpPanel() {
+    this.props.viewState.showHelpMenu = !this.props.viewState
+    .showHelpMenu;
+    console.log("HI");
+  }
 
   render() {
     return (
@@ -104,17 +111,12 @@ class MapNavigation extends React.Component {
                 <MapIconButton
                   expandInPlace
                   iconElement={() => <Icon glyph={Icon.GLYPHS.help} />}
+                  onClick={this.showHelpPanel}
                 >
                   Help
                 </MapIconButton>
               </div>
             </div>
-          <div className={Styles.control}>
-            <HelpTool 
-              terria={this.props.terria} 
-              viewState={this.props.viewState}
-            />
-          </div>
           </Box>
         </Box>
       </div>

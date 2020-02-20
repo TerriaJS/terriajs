@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import Sortable from "react-anything-sortable";
-import { withTranslation, Trans } from "react-i18next";
+import { withTranslation, Trans, useTranslation } from "react-i18next";
 import combine from "terriajs-cesium/Source/Core/combine";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import defined from "terriajs-cesium/Source/Core/defined";
@@ -20,6 +20,33 @@ import { runInAction, action } from "mobx";
 import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
+import MapIconButton from "../../../MapIconButton/MapIconButton"
+import HelpPanelItem from "./HelpPanelItem";
+
+// export default function HelpPanel(props) {
+//   const [helpPanelOpen, setHelpPanelOpen] = useState(false);
+//   const { t } = useTranslation();
+//   return (
+//     <div className={Styles.helpPanel}>
+//       <button 
+//         type="button"
+//         className={Styles.closeBtn}
+//         title={"Close panel"}
+//         onClick={this.hidePanel}
+//       >
+//         <Icon glyph={Icon.GLYPHS.close} />
+//       </button>
+//       <Box center>
+//         <Box>
+//           <Text>
+//             <p>{`You aren't logged in as an administrator!
+//             None of your edits will save unless you log in.`}</p>
+//           </Text>
+//         </Box>
+//       </Box>
+//     </div>
+//   );
+// }
 
 @observer
 class HelpPanel extends React.Component {
@@ -28,9 +55,7 @@ class HelpPanel extends React.Component {
 
   static propTypes = {
     terria: PropTypes.object.isRequired,
-    isVisible: PropTypes.bool,
     viewState: PropTypes.object.isRequired,
-    animationDuration: PropTypes.number,
     t: PropTypes.func.isRequired
   };
 
@@ -49,20 +74,78 @@ class HelpPanel extends React.Component {
     const { t } = this.props;
     return (
       <div className={Styles.helpPanel}>
-        <button 
-          type="button"
-          className={Styles.closeBtn}
-          title={"Close panel"}
-          onClick={this.hidePanel}
+        <div
+          css={`
+            svg {
+              width: 15px;
+              height: 15px;
+            }
+            button {
+              box-shadow: none;
+              float: right
+            }
+          `}
         >
-          <Icon glyph={Icon.GLYPHS.close} />
-        </button>
-        <Box center>
-          <Box>
-            <Text>
-              <p>{`You aren't logged in as an administrator!
-              None of your edits will save unless you log in.`}</p>
-            </Text>
+          <MapIconButton
+            onClick={this.hidePanel}
+            iconElement={() => <Icon glyph={Icon.GLYPHS.closeLight} />}
+          />
+        </div>
+        <Box
+          centered
+          css={`
+            direction: ltr;
+            min-width: 295px;
+            padding: 100px 25px;
+            display: inline-block;
+          `}
+        >
+          <Text title>We're here to help</Text>
+          <Spacing bottom={5} />
+          <Text>
+            In hac habitasse platea dictumst.
+            Vivamus adipiscing fermentum quam
+            volutpat aliquam.
+          </Text>
+          <Spacing bottom={5} />
+          <Box centered>
+            <button
+              className={Styles.tourBtn}
+              title={"Take the tour"}
+              // onClick={}
+            >
+              {" "}
+              <Icon glyph={Icon.GLYPHS.bulb} /> {"Take the tour"}{" "}
+            </button>
+          </Box>
+          <Spacing bottom={10} />
+          <Box css={`
+            display: inline-block;
+          `}>
+            <HelpPanelItem 
+              terria={this.props.terria}
+              viewState={this.props.viewState}
+              iconElement={Icon.GLYPHS.controls}
+              label={"3D Navigation Controls"}
+            />
+            <HelpPanelItem 
+              terria={this.props.terria}
+              viewState={this.props.viewState}
+              iconElement={Icon.GLYPHS.splitter}
+              label={"Split Screen"}
+            />
+            <HelpPanelItem 
+              terria={this.props.terria}
+              viewState={this.props.viewState}
+              iconElement={Icon.GLYPHS.bulb}
+              label={"Placeholder"}
+            />
+            <HelpPanelItem 
+              terria={this.props.terria}
+              viewState={this.props.viewState}
+              iconElement={Icon.GLYPHS.bulb}
+              label={"Placeholder"}
+            />
           </Box>
         </Box>
       </div>
