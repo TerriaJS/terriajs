@@ -21,6 +21,7 @@ import { withTranslation } from "react-i18next";
 class Compass extends React.Component {
   static propTypes = {
     terria: PropTypes.object,
+    viewState: PropTypes.object,
     t: PropTypes.func.isRequired
   };
 
@@ -180,7 +181,10 @@ class Compass extends React.Component {
         // onBlur={() => this.setState({ active: false })}
       >
         {active && (
-          <GyroscopeGuidance onClose={() => this.setState({ active: false })} />
+          <GyroscopeGuidance
+            viewState={this.props.viewState}
+            onClose={() => this.setState({ active: false })}
+          />
         )}
         <div className={Styles.outerRing} style={outerCircleStyle}>
           <Icon glyph={Icon.GLYPHS.compassOuter} />

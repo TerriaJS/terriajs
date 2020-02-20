@@ -43,9 +43,20 @@ const StyledMapIconButton = styled(RawButton)`
       fill: ${props.theme.textLight};
     }
   `}
+
+  ${props =>
+    props.inverted &&
+    `
+    background: ${props.theme.textDarker};
+    color: ${props.theme.textLight};
+    svg {
+      fill: ${props.theme.textLight};
+    }
+  `}
 `;
 MapIconButton.propTypes = {
   primary: PropTypes.bool,
+  inverted: PropTypes.bool,
   expandInPlace: PropTypes.bool,
   title: PropTypes.string,
   iconElement: PropTypes.element.isRequired,
@@ -55,7 +66,7 @@ MapIconButton.propTypes = {
 
 function MapIconButton(props) {
   const [isExpanded, setExpanded] = useState(false);
-  const { children, title, expandInPlace, primary } = props;
+  const { children, title, expandInPlace, primary, inverted } = props;
   const expanded = isExpanded && children;
   // const { t } = this.props;
 
@@ -66,6 +77,7 @@ function MapIconButton(props) {
     <StyledMapIconButton
       className={props.className}
       primary={primary}
+      inverted={inverted}
       type="button"
       title={title}
       onMouseOver={() => setExpanded(true)}

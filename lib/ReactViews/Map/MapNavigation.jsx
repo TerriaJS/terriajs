@@ -42,7 +42,10 @@ class MapNavigation extends React.Component {
               }
             >
               <div className={Styles.control}>
-                <Compass terria={this.props.terria} />
+                <Compass
+                  terria={this.props.terria}
+                  viewState={this.props.viewState}
+                />
               </div>
             </If>
             <div className={Styles.control}>

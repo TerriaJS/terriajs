@@ -9,7 +9,7 @@ import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 
 import GeoJsonCatalogItem from "../../../Models/GeoJsonCatalogItem";
 import ObserveModelMixin from "../../ObserveModelMixin";
-import Styles from "./tool_button.scss";
+// import Styles from "./tool_button.scss";
 import TerriaError from "../../../Core/TerriaError";
 import CesiumCartographic from "terriajs-cesium/Source/Core/Cartographic.js";
 import Icon from "../../Icon";
