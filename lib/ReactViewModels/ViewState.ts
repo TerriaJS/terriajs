@@ -61,6 +61,8 @@ export default class ViewState {
   @observable showSatelliteGuidance: boolean = false;
   @observable showWelcomeMessage: boolean = false;
 
+  @observable workbenchWithOpenControls: string | undefined = undefined;
+
   // default value is null, because user has not made decision to show or
   // not show story
   // will be explicitly set to false when user 1. dismiss story

@@ -23,8 +23,20 @@ const StyledButton = styled.button`
 
   &:hover,
   &:focus {
-    opacity: 0.9;
+    // opacity: 0.9;
   }
+
+
+
+  ${props =>
+    props.primaryHover &&
+    `
+    &:hover,
+    &:focus {
+      color: ${props.theme.textLight};
+      background-color: ${props.theme.colorPrimary};
+    }
+  `}
 
   ${props =>
     props.primary &&
@@ -33,6 +45,7 @@ const StyledButton = styled.button`
     background-color: #519AC2;
     border: none;
   `}
+
   ${props => props.rounded && ` border-radius: 32px; `}
  
   ${props =>

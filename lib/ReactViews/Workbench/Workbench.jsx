@@ -32,6 +32,7 @@ const Workbench = observer(
       return (
         <div className={Styles.workbench}>
           <BadgeBar
+            smallBadge
             label={t("workbench.label")}
             badge={this.props.terria.workbench.items.length}
           >

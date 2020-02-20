@@ -31,6 +31,12 @@ export const Text = styled.div`
   line-height: 20px;
 
   ${props =>
+    props.small &&
+    `
+    font-size: 12px;
+  `}
+
+  ${props =>
     props.medium &&
     `
     // terrace designed ~h4 equivalent?

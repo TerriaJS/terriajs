@@ -3,6 +3,7 @@ import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import React from "react";
+import styled from "styled-components";
 import classNames from "classnames";
 import createReactClass from "create-react-class";
 import { withTranslation } from "react-i18next";
@@ -21,6 +22,34 @@ import addUserCatalogMember from "../../../Models/addUserCatalogMember";
 import getAncestors from "../../../Models/getAncestors";
 import { runInAction } from "mobx";
 
+import Box from "../../../Styled/Box";
+import { RawButton } from "../../../Styled/Button";
+import WorkbenchButton from "../WorkbenchButton";
+
+const ViewingControlMenuButton = styled(RawButton).attrs({
+  // primaryHover: true
+})`
+  color: ${props => props.theme.textDarker};
+  background-color: ${props => props.theme.textLight};
+  svg {
+    fill: ${props => props.theme.textDarker};
+  }
+  border-radius: none;
+
+  width: 114px;
+  height: 35px;
+  display: block;
+
+  &:hover,
+  &:focus {
+    color: ${props => props.theme.textLight};
+    background-color: ${props => props.theme.colorPrimary};
+    svg {
+      fill: ${props => props.theme.textLight};
+    }
+  }
+`;
+
 const ViewingControls = observer(
   createReactClass({
     displayName: "ViewingControls",
@@ -29,6 +58,21 @@ const ViewingControls = observer(
       item: PropTypes.object.isRequired,
       viewState: PropTypes.object.isRequired,
       t: PropTypes.func.isRequired
+    },
+
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillMount() {
+      window.addEventListener("click", this.hideMenu);
+    },
+
+    componentWillUnmount() {
+      window.removeEventListener("click", this.hideMenu);
+    },
+
+    hideMenu() {
+      runInAction(() => {
+        this.props.viewState.workbenchWithOpenControls = undefined;
+      });
     },
 
     removeFromMap() {
@@ -126,7 +170,62 @@ const ViewingControls = observer(
       item.exportData();
     },
 
+    renderViewingControlsMenu() {
+      const { t, item } = this.props;
+      const canSplit =
+        !item.terria.configParameters.disableSplitter &&
+        item.supportsSplitting &&
+        defined(item.splitDirection) &&
+        item.terria.currentViewer.canShowSplitter;
+      return (
+        <ul ref={e => (this.menuRef = e)}>
+          <If
+            condition={item.tableStructure && item.tableStructure.sourceFeature}
+          >
+            <li className={classNames(Styles.zoom)}>
+              <ViewingControlMenuButton
+                onClick={this.openFeature}
+                title={t("workbench.openFeatureTitle")}
+              >
+                {t("workbench.openFeature")}
+              </ViewingControlMenuButton>
+            </li>
+          </If>
+          <If condition={canSplit}>
+            <li className={classNames(Styles.split)}>
+              <ViewingControlMenuButton
+                onClick={this.splitItem}
+                title={t("workbench.splitItemTitle")}
+              >
+                {t("workbench.splitItem")}
+              </ViewingControlMenuButton>
+            </li>
+          </If>
+          <If condition={defined(item.linkedWcsUrl)}>
+            <li className={classNames(Styles.info)}>
+              <ViewingControlMenuButton
+                onClick={this.exportData}
+                title={t("workbench.exportDataTitle")}
+              >
+                {t("workbench.exportData")}
+              </ViewingControlMenuButton>
+            </li>
+          </If>
+          <li className={classNames(Styles.remove)}>
+            <ViewingControlMenuButton
+              onClick={this.removeFromMap}
+              title={t("workbench.removeFromMapTitle")}
+            >
+              {t("workbench.removeFromMap")}
+              {/* <Icon glyph={Icon.GLYPHS.remove} /> */}
+            </ViewingControlMenuButton>
+          </li>
+        </ul>
+      );
+    },
+
     render() {
+      const viewState = this.props.viewState;
       const item = this.props.item;
       const canZoom =
         item.canZoomTo ||
@@ -142,86 +241,74 @@ const ViewingControls = observer(
         [Styles.noInfo]: !item.showsInfo
       };
       const { t } = this.props;
+      const showMenu = item.uniqueId === viewState.workbenchWithOpenControls;
       return (
-        <ul className={Styles.control}>
-          <If condition={item.canZoomTo}>
-            <li className={classNames(Styles.zoom, classList)}>
-              <button
-                type="button"
-                onClick={this.zoomTo}
-                title={t("workbench.zoomToTitle")}
-                className={Styles.btn}
-              >
-                {t("workbench.zoomTo")}
-              </button>
-            </li>
-            <span className={Styles.separator} />
-          </If>
-          <If
-            condition={item.tableStructure && item.tableStructure.sourceFeature}
+        <Box>
+          <ul
+            className={Styles.control}
+            css={`
+              & > button:last-child {
+                margin-right: 0;
+              }
+            `}
           >
-            <li className={classNames(Styles.zoom, classList)}>
-              <button
-                type="button"
-                onClick={this.openFeature}
-                title={t("workbench.openFeatureTitle")}
-                className={Styles.btn}
-              >
-                {t("workbench.openFeature")}
-              </button>
-            </li>
-            <span className={Styles.separator} />
-          </If>
-          <If condition={item.showsInfo}>
-            <li className={classNames(Styles.info, classList)}>
-              <button
-                type="button"
-                onClick={this.previewItem}
-                className={Styles.btn}
-                title={t("workbench.previewItemTitle")}
-              >
-                {t("workbench.previewItem")}
-              </button>
-            </li>
-            <span className={Styles.separator} />
-          </If>
-          <If condition={canSplit}>
-            <li className={classNames(Styles.split, classList)}>
-              <button
-                type="button"
-                onClick={this.splitItem}
-                title={t("workbench.splitItemTitle")}
-                className={Styles.btn}
-              >
-                {t("workbench.splitItem")}
-              </button>
-            </li>
-            <span className={Styles.separator} />
-          </If>
-          <If condition={defined(item.linkedWcsUrl)}>
-            <li className={classNames(Styles.info, classList)}>
-              <button
-                type="button"
-                onClick={this.exportData}
-                className={Styles.btn}
-                title={t("workbench.exportDataTitle")}
-              >
-                {t("workbench.exportData")}
-              </button>
-            </li>
-            <span className={Styles.separator} />
-          </If>
-          <li className={classNames(Styles.remove, classList)}>
-            <button
-              type="button"
-              onClick={this.removeFromMap}
-              title={t("workbench.removeFromMapTitle")}
-              className={Styles.btn}
+            {/* <If condition={item.canZoomTo}> */}
+            <WorkbenchButton
+              className={classNames(Styles.zoom, classList)}
+              onClick={this.zoomTo}
+              title={t("workbench.zoomToTitle")}
+              // className={Styles.btn}
+              disabled={!item.canZoomTo}
+              iconElement={() => <Icon glyph={Icon.GLYPHS.search} />}
             >
-              {t("workbench.removeFromMap")} <Icon glyph={Icon.GLYPHS.remove} />
-            </button>
-          </li>
-        </ul>
+              {t("workbench.zoomTo")}
+            </WorkbenchButton>
+            {/* </If> */}
+            {/* <If condition={item.showsInfo}> */}
+            <WorkbenchButton
+              onClick={this.previewItem}
+              title={t("workbench.previewItemTitle")}
+              iconElement={() => <Icon glyph={Icon.GLYPHS.about} />}
+              disabled={!item.showsInfo}
+              className={classNames(Styles.info, classList)}
+            >
+              {t("workbench.previewItem")}
+            </WorkbenchButton>
+            <WorkbenchButton
+              css="flex-grow:0;"
+              onClick={e => {
+                event.stopPropagation();
+                runInAction(() => {
+                  viewState.workbenchWithOpenControls = item.uniqueId;
+                });
+              }}
+              title={t("workbench.showMoreActionsTitle")}
+              iconOnly
+              className={classNames(Styles.info, classList)}
+              iconElement={() => <Icon glyph={Icon.GLYPHS.menuDotted} />}
+            />
+            {/* </If> */}
+          </ul>
+          {showMenu && (
+            <Box
+              css={`
+                position: absolute;
+                z-index: 100;
+                right: 0;
+                top: 0;
+
+                padding: 0;
+                margin: 0;
+
+                ul {
+                  list-style: none;
+                }
+              `}
+            >
+              {this.renderViewingControlsMenu()}
+            </Box>
+          )}
+        </Box>
       );
     }
   })

@@ -111,28 +111,30 @@ const SidePanel = observer(
               searchText={searchState.locationSearchText}
               placeholder={t("search.placeholder")}
             />
-            <Text nunito>
-              <div className={Styles.addData}>
-                <button
-                  type="button"
-                  onClick={this.onAddDataClicked}
-                  className={Styles.button}
-                  title={addData}
-                >
-                  <Icon glyph={Icon.GLYPHS.add} />
+            <div className={Styles.addData}>
+              <button
+                type="button"
+                onClick={this.onAddDataClicked}
+                className={Styles.button}
+                title={addData}
+              >
+                <Icon glyph={Icon.GLYPHS.add} />
+                <TextSpan large nunito>
                   {addData}
-                </button>
-                <button
-                  type="button"
-                  onClick={this.onAddLocalDataClicked}
-                  className={Styles.uploadData}
-                  title={t("addData.load")}
-                >
-                  <Icon glyph={Icon.GLYPHS.upload} />
+                </TextSpan>
+              </button>
+              <button
+                type="button"
+                onClick={this.onAddLocalDataClicked}
+                className={Styles.uploadData}
+                title={t("addData.load")}
+              >
+                <Icon glyph={Icon.GLYPHS.upload} />
+                <TextSpan large nunito>
                   {uploadText}
-                </button>
-              </div>
-            </Text>
+                </TextSpan>
+              </button>
+            </div>
           </div>
           <div className={Styles.body}>
             <Choose>
