@@ -294,7 +294,8 @@
     "created" : "Created",
     "modified" : "Modified",
     "updateFrequency" : "Update Frequency",
-    "dataCustodian" : "Data Custodian"
+    "dataCustodian" : "Data Custodian",
+    "mayBeExperiencingIssues" : "<0>This dataset may currently be experiencing issues</0>"
   },
   "description" : {
     "name" : "Description",
