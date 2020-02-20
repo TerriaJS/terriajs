@@ -10,6 +10,13 @@ interface CssExports {
   'btnBlink': string;
   'btnPrimary': string;
   'btnPrimaryHover': string;
+  'charcoalGrey': string;
+  'colorPrimary': string;
+  'dark': string;
+  'darkWithOverlay': string;
+  'mapButtonColor': string;
+  'modalHighlight': string;
+  'textLight': string;
   'toolButton': string;
 }
 declare var cssExports: CssExports;

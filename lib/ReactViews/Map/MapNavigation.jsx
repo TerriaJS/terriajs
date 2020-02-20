@@ -11,6 +11,10 @@ import ZoomControl from "./Navigation/ZoomControl";
 import classNames from "classnames";
 import { observer } from "mobx-react";
 import defined from "terriajs-cesium/Source/Core/defined";
+import HelpTool from "./Navigation/HelpTool";
+import StylesToolButton from "./Navigation/tool_button.scss";
+import { observable, action } from "mobx";
+import Icon from "../Icon";
 
 // The map navigation region
 @observer
@@ -66,6 +70,12 @@ class MapNavigation extends React.Component {
               {item}
             </div>
           </For>
+          <div className={Styles.control}>
+            <HelpTool 
+              terria={this.props.terria} 
+              viewState={this.props.viewState}
+            />
+          </div>
         </div>
       </div>
     );
