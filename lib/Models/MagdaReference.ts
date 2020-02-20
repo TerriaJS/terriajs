@@ -1,6 +1,7 @@
 import i18next from "i18next";
 import { computed, toJS } from "mobx";
 import { createTransformer } from "mobx-utils";
+import URI from "urijs";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import {
   isJsonObject,
@@ -8,6 +9,7 @@ import {
   JsonArray,
   JsonObject
 } from "../Core/Json";
+import isDefined from "../Core/isDefined";
 import loadJson from "../Core/loadJson";
 import TerriaError from "../Core/TerriaError";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
@@ -94,7 +96,7 @@ export default class MagdaReference extends AccessControlMixin(
       }
     }),
     createStratumInstance(MagdaDistributionFormatTraits, {
-      id: "EsriFeatureServer",
+      id: "EsriFeatureServerGroup",
       formatRegex: "ESRI MAPSERVER", // TO DO - tidy up this magda format reference
       urlRegex: "FeatureServer$|FeatureServer/$",
       definition: {
@@ -104,7 +106,7 @@ export default class MagdaReference extends AccessControlMixin(
     createStratumInstance(MagdaDistributionFormatTraits, {
       id: "EsriFeatureServer",
       formatRegex: "ESRI MAPSERVER", // TO DO - tidy up this magda format reference
-      urlRegex: "FeatureServer/d",
+      urlRegex: "FeatureServer/\\S",
       definition: {
         type: "esri-featureServer"
       }
@@ -155,7 +157,7 @@ export default class MagdaReference extends AccessControlMixin(
     return access || super.accessType;
   }
 
-  protected forceLoadReference(
+  protected async forceLoadReference(
     previousTarget: BaseModel | undefined
   ): Promise<BaseModel | undefined> {
     const existingRecord = this.magdaRecord
@@ -166,7 +168,7 @@ export default class MagdaReference extends AccessControlMixin(
     const override = toJS(this.override);
     const distributionFormats = this.preparedDistributionFormats;
 
-    const target = MagdaReference.createMemberFromRecord(
+    const target = await MagdaReference.createMemberFromRecord(
       this.terria,
       this,
       distributionFormats,
@@ -206,7 +208,7 @@ export default class MagdaReference extends AccessControlMixin(
     });
   }
 
-  private static createMemberFromRecord(
+  private static async createMemberFromRecord(
     terria: Terria,
     sourceReference: BaseModel | undefined,
     distributionFormats: readonly PreparedDistributionFormat[],
@@ -215,7 +217,7 @@ export default class MagdaReference extends AccessControlMixin(
     record: JsonObject | undefined,
     override: JsonObject | undefined,
     previousTarget: BaseModel | undefined
-  ): BaseModel | undefined {
+  ): Promise<BaseModel | undefined> {
     if (record === undefined) {
       return undefined;
     }
@@ -229,7 +231,7 @@ export default class MagdaReference extends AccessControlMixin(
       const members = aspects.group.members;
       if (members.every(member => isJsonObject(member))) {
         // Every member has been dereferenced, so we're good to go.
-        return MagdaReference.createGroupFromRecord(
+        return await MagdaReference.createGroupFromRecord(
           terria,
           sourceReference,
           distributionFormats,
@@ -293,7 +295,7 @@ export default class MagdaReference extends AccessControlMixin(
     }
 
     if (distributions) {
-      const match = MagdaReference.findPreparedDistributionFormat(
+      const match = await MagdaReference.findPreparedDistributionFormat(
         distributionFormats,
         distributions
       );
@@ -319,7 +321,7 @@ export default class MagdaReference extends AccessControlMixin(
     return undefined;
   }
 
-  private static createGroupFromRecord(
+  private static async createGroupFromRecord(
     terria: Terria,
     sourceReference: BaseModel | undefined,
     distributionFormats: readonly PreparedDistributionFormat[],
@@ -328,7 +330,7 @@ export default class MagdaReference extends AccessControlMixin(
     record: JsonObject,
     override: JsonObject | undefined,
     previousTarget: BaseModel | undefined
-  ): BaseModel | undefined {
+  ): Promise<BaseModel | undefined> {
     const aspects = record.aspects;
     if (!isJsonObject(aspects)) {
       return undefined;
@@ -358,85 +360,91 @@ export default class MagdaReference extends AccessControlMixin(
 
     if (isJsonObject(aspects.group) && Array.isArray(aspects.group.members)) {
       const members = aspects.group.members;
-      const ids = members.map(member => {
-        if (!isJsonObject(member) || !isJsonString(member.id)) {
-          return undefined;
-        }
-
-        const memberId = member.id;
-
-        let overriddenMember: JsonObject | undefined;
-        if (override && Array.isArray(override.members)) {
-          overriddenMember = override.members.find(
-            member => isJsonObject(member) && member.id === memberId
-          ) as JsonObject | undefined;
-        }
-
-        const model = MagdaReference.createMemberFromRecord(
-          terria,
-          undefined,
-          distributionFormats,
-          magdaUri,
-          member.id,
-          member,
-          overriddenMember,
-          terria.getModelById(BaseModel, member.id)
-        );
-
-        if (!model) {
-          // Can't create an item or group yet, so create a reference.
-          const ref = new MagdaReference(member.id, terria, undefined);
-
-          if (magdaUri) {
-            ref.setTrait(CommonStrata.definition, "url", magdaUri.toString());
+      const ids = await Promise.all(
+        members.map(async member => {
+          if (!isJsonObject(member) || !isJsonString(member.id)) {
+            return undefined;
           }
-          ref.setTrait(CommonStrata.definition, "recordId", memberId);
 
-          if (
-            isJsonObject(member.aspects) &&
-            isJsonObject(member.aspects.group)
-          ) {
-            // This is most likely a group.
-            ref.setTrait(CommonStrata.definition, "isGroup", true);
+          const memberId = member.id;
+
+          let overriddenMember: JsonObject | undefined;
+          if (override && Array.isArray(override.members)) {
+            overriddenMember = override.members.find(
+              member => isJsonObject(member) && member.id === memberId
+            ) as JsonObject | undefined;
+          }
+
+          const model = await MagdaReference.createMemberFromRecord(
+            terria,
+            undefined,
+            distributionFormats,
+            magdaUri,
+            member.id,
+            member,
+            overriddenMember,
+            terria.getModelById(BaseModel, member.id)
+          );
+
+          if (!model) {
+            // Can't create an item or group yet, so create a reference.
+            const ref = new MagdaReference(member.id, terria, undefined);
+
+            if (magdaUri) {
+              ref.setTrait(CommonStrata.definition, "url", magdaUri.toString());
+            }
+            ref.setTrait(CommonStrata.definition, "recordId", memberId);
+
+            if (
+              isJsonObject(member.aspects) &&
+              isJsonObject(member.aspects.group)
+            ) {
+              // This is most likely a group.
+              ref.setTrait(CommonStrata.definition, "isGroup", true);
+            } else {
+              // This is most likely a mappable or chartable item.
+              ref.setTrait(CommonStrata.definition, "isMappable", true);
+              ref.setTrait(CommonStrata.definition, "isChartable", true);
+            }
+
+            // Use the name from the terria aspect if there is one.
+            if (
+              isJsonObject(member.aspects) &&
+              isJsonObject(member.aspects.terria) &&
+              isJsonObject(member.aspects.terria.definition) &&
+              isJsonString(member.aspects.terria.definition.name)
+            ) {
+              ref.setTrait(
+                CommonStrata.definition,
+                "name",
+                member.aspects.terria.definition.name
+              );
+            } else if (isJsonString(member.name)) {
+              ref.setTrait(CommonStrata.definition, "name", member.name);
+            }
+
+            ref.setTrait(CommonStrata.definition, "magdaRecord", member);
+
+            if (overriddenMember) {
+              ref.setTrait(
+                CommonStrata.definition,
+                "override",
+                overriddenMember
+              );
+            }
+
+            if (terria.getModelById(BaseModel, member.id) === undefined) {
+              terria.addModel(ref);
+            }
+            return ref.uniqueId;
           } else {
-            // This is most likely a mappable or chartable item.
-            ref.setTrait(CommonStrata.definition, "isMappable", true);
-            ref.setTrait(CommonStrata.definition, "isChartable", true);
+            if (terria.getModelById(BaseModel, member.id) === undefined) {
+              terria.addModel(model);
+            }
+            return model.uniqueId;
           }
-
-          // Use the name from the terria aspect if there is one.
-          if (
-            isJsonObject(member.aspects) &&
-            isJsonObject(member.aspects.terria) &&
-            isJsonObject(member.aspects.terria.definition) &&
-            isJsonString(member.aspects.terria.definition.name)
-          ) {
-            ref.setTrait(
-              CommonStrata.definition,
-              "name",
-              member.aspects.terria.definition.name
-            );
-          } else if (isJsonString(member.name)) {
-            ref.setTrait(CommonStrata.definition, "name", member.name);
-          }
-
-          ref.setTrait(CommonStrata.definition, "magdaRecord", member);
-
-          if (overriddenMember) {
-            ref.setTrait(CommonStrata.definition, "override", overriddenMember);
-          }
-
-          if (terria.getModelById(BaseModel, member.id) === undefined) {
-            terria.addModel(ref);
-          }
-          return ref.uniqueId;
-        } else {
-          if (terria.getModelById(BaseModel, member.id) === undefined) {
-            terria.addModel(model);
-          }
-          return model.uniqueId;
-        }
-      });
+        })
+      );
 
       if (isJsonString(record.name)) {
         group.setTrait(magdaRecordStratum, "name", record.name);
@@ -621,15 +629,18 @@ export default class MagdaReference extends AccessControlMixin(
     return result;
   }
 
-  private static findPreparedDistributionFormat(
+  private static async findPreparedDistributionFormat(
     distributionFormats: readonly PreparedDistributionFormat[],
     distributions: JsonArray
-  ):
+  ): Promise<
     | {
         distribution: JsonObject;
         format: PreparedDistributionFormat;
       }
-    | undefined {
+    | undefined
+  > {
+    await _checkForDodgyEsriDistribution(distributions)
+
     for (let i = 0; i < distributionFormats.length; ++i) {
       const distributionFormat = distributionFormats[i];
       const formatRegex = distributionFormat.formatRegex;
@@ -768,4 +779,30 @@ function getAccessTypeFromMagdaRecord(magdaRecord: any): string {
     record && record.aspects && record.aspects["esri-access-control"];
   const access = accessControl && accessControl.access;
   return access;
+}
+
+// Attempting to override a service reference like
+// https://portal.spatial.nsw.gov.au/server/rest/services/NSW_Features_of_Interest_Category/FeatureServer
+// with
+// https://portal.spatial.nsw.gov.au/server/rest/services/NSW_Features_of_Interest_Category/FeatureServer/6
+// need to override match.distribution.aspects["dcat-distribution-strings"].accessUrl
+async function _checkForDodgyEsriDistribution (distributions: JsonArray) {
+  // @ts-ignore
+  if (isDefined(distributions[0].aspects["esri-resource"])) {
+    const distribution = distributions[0]
+    // @ts-ignore
+    const esriResource = distribution.aspects["esri-resource"];
+    if (esriResource.typeKeywords.indexOf("Singlelayer") > -1) {
+      // @ts-ignore
+      const sourceUri = new URI(distribution.aspects.source.url);
+      sourceUri.segment("data")
+      const additionalInfo = await loadJson(sourceUri.toString())
+      const id = additionalInfo.layers[0].id;
+      // @ts-ignore
+      const serviceUri = new URI(distribution.aspects["dcat-distribution-strings"].accessURL);
+      serviceUri.segment(id.toString());
+      // @ts-ignore
+      distribution.aspects['dcat-distribution-strings'].accessURL = serviceUri.toString();
+    }
+  }
 }
