@@ -117,7 +117,7 @@ const InnerPanel = createReactClass({
         <button
           type="button"
           className={classNames(
-            "InnerPannelCloseButton",
+            "tjs-InnerPannelCloseButton",
             Styles.innerCloseBtn,
             {
               [Styles.innerCloseBtnForModal]: this.props.showDropdownAsModal
