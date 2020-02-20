@@ -60,6 +60,7 @@ export default class ViewState {
   @observable showHelpMenu: boolean = false;
   @observable showSatelliteGuidance: boolean = false;
   @observable showWelcomeMessage: boolean = false;
+  @observable selectedHelpMenuItem: string = "timeseries";
 
   @observable workbenchWithOpenControls: string | undefined = undefined;
 

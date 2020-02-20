@@ -39,6 +39,7 @@ import Styles from "./standard-user-interface.scss";
 // import Variables from "../../Sass/common/variables";
 import { observer } from "mobx-react";
 import { action, runInAction } from "mobx";
+import HelpPanel from "../Map/Panels/HelpPanel/HelpPanel";
 
 export const showStoryPrompt = (viewState, terria) => {
   terria.configParameters.showFeaturePrompts &&
@@ -356,6 +357,12 @@ const StandardUserInterface = observer(
                 terria={terria}
                 viewState={this.props.viewState}
                 animationDuration={animationDuration}
+              />
+            )}
+            {this.props.viewState.showHelpMenu && (
+              <HelpPanel
+                terria={terria}
+                viewState={this.props.viewState}
               />
             )}
           </div>
