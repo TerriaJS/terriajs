@@ -212,9 +212,11 @@ export default abstract class GlobeOrMap {
               "name",
               GlobeOrMap._featureHighlightName
             );
-            catalogItem.setTrait(CommonStrata.user, "geoJsonData", <any>(
-              geoJson
-            ));
+            catalogItem.setTrait(
+              CommonStrata.user,
+              "geoJsonData",
+              <any>geoJson
+            );
             catalogItem.setTrait(CommonStrata.user, "clampToGround", true);
             catalogItem.setTrait(CommonStrata.user, "style", {
               "stroke-width": 2,

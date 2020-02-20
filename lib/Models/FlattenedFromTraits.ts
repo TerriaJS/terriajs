@@ -29,7 +29,7 @@ type FlattenedFromTraits<TDefinition extends ModelTraits> = Complete<
         : never
       : SingleTrait<TDefinition[P]> extends infer R
       ? CopyNull<TDefinition[P], R> | undefined
-      : never
+      : never;
   }
 >;
 

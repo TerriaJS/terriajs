@@ -76,9 +76,10 @@ class Chart extends React.Component {
   get chartItems() {
     return sortChartItemsByType(this.props.chartItems)
       .map(chartItem => {
-        const key = `chartItem-${chartItem.categoryName}-${
-          chartItem.name
-        }`.replace(/[^a-z0-9-]/gi, "-");
+        const key = `chartItem-${chartItem.categoryName}-${chartItem.name}`.replace(
+          /[^a-z0-9-]/gi,
+          "-"
+        );
         return {
           ...chartItem,
           key,
@@ -253,7 +254,10 @@ class Chart extends React.Component {
         surface="#zoomSurface"
         initialScale={this.initialXScale}
         scaleExtent={[1, Infinity]}
-        translateExtent={[[0, 0], [Infinity, Infinity]]}
+        translateExtent={[
+          [0, 0],
+          [Infinity, Infinity]
+        ]}
         onZoom={zoomedScale => this.setZoomedXScale(zoomedScale)}
       >
         <Legends chartItems={this.chartItems} />

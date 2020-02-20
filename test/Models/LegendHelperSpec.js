@@ -124,7 +124,10 @@ describe("LegendHelper", function() {
   it("handles array of colorBins for enum values", function() {
     var enumTableColumn = new TableColumn("foo", ["A", "B", "A"]);
     var tableStyle = new TableStyle({
-      colorBins: [{ value: "A", color: "red" }, { value: "B", color: "blue" }]
+      colorBins: [
+        { value: "A", color: "red" },
+        { value: "B", color: "blue" }
+      ]
     });
     var legendHelper = new LegendHelper(enumTableColumn, tableStyle);
     expect(legendHelper).toBeDefined();
@@ -135,7 +138,10 @@ describe("LegendHelper", function() {
   it("filters array of colorBins if enum values are not present", function() {
     var enumTableColumn = new TableColumn("foo", ["A", "A"]);
     var tableStyle = new TableStyle({
-      colorBins: [{ value: "A", color: "red" }, { value: "B", color: "blue" }]
+      colorBins: [
+        { value: "A", color: "red" },
+        { value: "B", color: "blue" }
+      ]
     });
     var legendHelper = new LegendHelper(enumTableColumn, tableStyle);
     expect(legendHelper).toBeDefined();

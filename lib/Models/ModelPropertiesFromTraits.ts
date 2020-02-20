@@ -28,7 +28,7 @@ type ModelPropertiesFromCompleteTraits<TDefinition> = {
     infer TElement
   >
     ? ArrayTrait<NotUndefined<TDefinition[P]>, TElement>
-    : SingleTrait<TDefinition[P]>
+    : SingleTrait<TDefinition[P]>;
 };
 
 export default ModelPropertiesFromTraits;

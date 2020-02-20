@@ -80,7 +80,10 @@ const DistanceLegend = observer(
           }
         )
       );
-      disposeOnUnmount(this, autorun(() => this.addUpdateSubscription()));
+      disposeOnUnmount(
+        this,
+        autorun(() => this.addUpdateSubscription())
+      );
     },
 
     componentWillUnmount() {
