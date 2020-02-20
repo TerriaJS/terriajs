@@ -26,15 +26,28 @@ import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
 import WorkbenchButton from "../WorkbenchButton";
 
+const BoxViewingControl = styled(Box).attrs({
+  centered: true,
+  justifyContentSpaceAround: true
+})``;
+
 const ViewingControlMenuButton = styled(RawButton).attrs({
   // primaryHover: true
 })`
   color: ${props => props.theme.textDarker};
   background-color: ${props => props.theme.textLight};
+
   svg {
     fill: ${props => props.theme.textDarker};
+    width: 18px;
+    height: 18px;
   }
-  border-radius: none;
+  & > span {
+    // position: absolute;
+    // left: 37px;
+  }
+
+  border-radius: 0;
 
   width: 114px;
   height: 32px;
@@ -187,7 +200,10 @@ const ViewingControls = observer(
                 onClick={this.openFeature}
                 title={t("workbench.openFeatureTitle")}
               >
-                {t("workbench.openFeature")}
+                <BoxViewingControl>
+                  <Icon glyph={Icon.GLYPHS.upload} />
+                  <span>{t("workbench.openFeature")}</span>
+                </BoxViewingControl>
               </ViewingControlMenuButton>
             </li>
           </If>
@@ -197,7 +213,16 @@ const ViewingControls = observer(
                 onClick={this.splitItem}
                 title={t("workbench.splitItemTitle")}
               >
-                {t("workbench.splitItem")}
+                <BoxViewingControl
+                  css={`
+                    svg:not(:root) {
+                      width: 26px;
+                    }
+                  `}
+                >
+                  <Icon glyph={Icon.GLYPHS.splitterOn} />
+                  <span>{t("workbench.splitItem")}</span>
+                </BoxViewingControl>
               </ViewingControlMenuButton>
             </li>
           </If>
@@ -207,17 +232,22 @@ const ViewingControls = observer(
                 onClick={this.exportData}
                 title={t("workbench.exportDataTitle")}
               >
-                {t("workbench.exportData")}
+                <BoxViewingControl>
+                  <Icon glyph={Icon.GLYPHS.upload} />
+                  <span>{t("workbench.exportData")}</span>
+                </BoxViewingControl>
               </ViewingControlMenuButton>
             </li>
           </If>
-          <li className={classNames(Styles.remove)}>
+          <li className={classNames(Styles.removez)}>
             <ViewingControlMenuButton
               onClick={this.removeFromMap}
               title={t("workbench.removeFromMapTitle")}
             >
-              {t("workbench.removeFromMap")}
-              {/* <Icon glyph={Icon.GLYPHS.remove} /> */}
+              <BoxViewingControl>
+                <Icon glyph={Icon.GLYPHS.cancel} />
+                <span>{t("workbench.removeFromMap")}</span>
+              </BoxViewingControl>
             </ViewingControlMenuButton>
           </li>
         </ul>
@@ -301,6 +331,7 @@ const ViewingControls = observer(
                 right: 0;
                 top: 0;
                 top: 32px;
+                top: 42px;
 
                 padding: 0;
                 margin: 0;
