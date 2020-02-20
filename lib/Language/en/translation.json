@@ -405,6 +405,12 @@
     "loadingMessage" : "Loading"
   },
   "emptyWorkbenchMessage" : "<0><0>Your workbench is empty</0><1><strong>Click '$t(addData.addDataBtnText)' above to </strong></1><2><0>Browse the Data Catalogue</0><1>Load your own data onto the map</1></2><3><0></0><strong>TIP.</strong><2>All your active data sets will be listed here</2></3></0>",
+  "emptyWorkbench": {
+    "emptyArea": "Your workbench is empty",
+    "helpfulHints": "Helpful hints",
+    "helpfulHintsOne": "All your active data sets will be listed here.",
+    "helpfulHintsTwo": "<0>Click <1>'$t(addData.addDataBtnText)'</1> above to browse the Data Catalogue or click <1>'$t(models.catalog.upload)'</1> to load your own data onto the map.</0>"
+  },
   "dataCatalog" : {
     "groupRemove": "remove this group",
     "groupEmpty": "This group is empty"
