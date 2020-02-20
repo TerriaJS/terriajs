@@ -9,6 +9,7 @@ interface CssExports {
   'btnSubmitHover': string;
   'charcoalGrey': string;
   'colorPrimary': string;
+  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'description': string;

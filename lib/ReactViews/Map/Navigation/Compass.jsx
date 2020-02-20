@@ -37,7 +37,10 @@ class Compass extends React.Component {
       active: false
     };
 
-    when(() => this.cesiumViewer, () => this.cesiumLoaded());
+    when(
+      () => this.cesiumViewer,
+      () => this.cesiumLoaded()
+    );
   }
 
   @computed

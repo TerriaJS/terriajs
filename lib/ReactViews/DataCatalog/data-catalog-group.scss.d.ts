@@ -11,6 +11,7 @@ interface CssExports {
   'catalogGroupLowerLevel': string;
   'charcoalGrey': string;
   'colorPrimary': string;
+  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'folder': string;

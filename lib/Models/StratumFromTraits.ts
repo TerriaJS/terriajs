@@ -24,8 +24,8 @@ type StratumFromTraits<TDefinition extends ModelTraits> = Complete<
     [P in keyof TDefinition]: NotUndefined<TDefinition[P]> extends Array<
       infer TElement
     >
-      ? (ArrayTrait<TDefinition[P], TElement> | undefined)
-      : (SingleTrait<TDefinition[P]> | undefined)
+      ? ArrayTrait<TDefinition[P], TElement> | undefined
+      : SingleTrait<TDefinition[P]> | undefined;
   }
 >;
 

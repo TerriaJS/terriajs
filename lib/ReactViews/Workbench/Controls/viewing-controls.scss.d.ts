@@ -4,13 +4,13 @@ interface CssExports {
   'btn': string;
   'charcoalGrey': string;
   'colorPrimary': string;
+  'colorSplitter': string;
   'control': string;
   'dark': string;
   'darkWithOverlay': string;
   'mapButtonColor': string;
   'modalHighlight': string;
   'remove': string;
-  'separator': string;
   'textDarker': string;
   'textLight': string;
 }

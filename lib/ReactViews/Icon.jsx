@@ -7,6 +7,7 @@ import Styles from "./icon.scss";
 // icon.jsx
 const GLYPHS = {
   calendar: require("../../wwwroot/images/icons/calendar.svg"),
+  about: require("../../wwwroot/images/icons/about.svg"),
   add: require("../../wwwroot/images/icons/add.svg"),
   arHover0: require("../../wwwroot/images/icons/ar-hover0.svg"),
   arHover1: require("../../wwwroot/images/icons/ar-hover1.svg"),
@@ -83,6 +84,7 @@ const GLYPHS = {
   story: require("../../wwwroot/images/icons/story.svg"),
   recapture: require("../../wwwroot/images/icons/recapture.svg"),
   menuDotted: require("../../wwwroot/images/icons/menu-dotted.svg"),
+  cancel: require("../../wwwroot/images/icons/cancel.svg"),
   user: require("../../wwwroot/images/icons/user.svg")
 };
 

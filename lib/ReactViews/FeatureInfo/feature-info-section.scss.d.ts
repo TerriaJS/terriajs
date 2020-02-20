@@ -3,6 +3,7 @@
 interface CssExports {
   'charcoalGrey': string;
   'colorPrimary': string;
+  'colorSplitter': string;
   'content': string;
   'dark': string;
   'darkWithOverlay': string;

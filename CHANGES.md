@@ -49,6 +49,14 @@ Change Log
 * Show private or public dataset status on data catalog UI via AccessControlMixin
 * Added `pointSizeMap` to `TableStyle` to allow point size to be scaled by value
 * Added `isExperiencingIssues` to `CatalogMemberTraits`. When set to true, an alert is displayed above the catalog item description.
+* Add gyroscope guidance
+* Enable StyleSelectorSection workbench control for `WebMapServiceCatalogItem`
+* New-new ui
+* Add WIP help panes
+* Added "Split Screen Mode" into workbench
+* Moved excess workbench viewing controls into menu
+* Updated bottom attribution styling
+* Begin styled components themeing
 * Improve handling of `ArcGisFeatureServer` items being retrieved from portal via `MagdaReference`
 
 ### Next Release

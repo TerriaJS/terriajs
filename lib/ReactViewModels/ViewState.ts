@@ -60,6 +60,9 @@ export default class ViewState {
   @observable showHelpMenu: boolean = false;
   @observable showSatelliteGuidance: boolean = false;
   @observable showWelcomeMessage: boolean = false;
+  @observable selectedHelpMenuItem: string = "timeseries";
+
+  @observable workbenchWithOpenControls: string | undefined = undefined;
 
   // default value is null, because user has not made decision to show or
   // not show story

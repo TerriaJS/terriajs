@@ -16,6 +16,8 @@ $color-secondary: #06ccff;
 
 $animation-fast: 0.1s;
 
+$color-splitter: #ff6f00;
+
 $dark: #3f4854;
 $dark-with-overlay: #667080;
 $dark-lighter: #595b60;
@@ -182,7 +184,9 @@ $legend-spacer-height: $legend-padding / 2;
 
 :export {
   colorPrimary: $color-primary;
+  colorSplitter: $color-splitter;
   textLight: $text-light;
   textDarker: $text-darker;
   dark: $dark;
+  darkWithOverlay: $dark-with-overlay;
 }

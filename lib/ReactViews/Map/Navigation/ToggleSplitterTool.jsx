@@ -32,7 +32,7 @@ const ToggleSplitterTool = observer(
       return (
         <div className={Styles.toggle_splitter_tool}>
           <MapIconButton
-            primary={this.props.terria.showSplitter}
+            splitter={this.props.terria.showSplitter}
             expandInPlace
             title={t("splitterTool.toggleSplitterTool")}
             onClick={this.handleClick}

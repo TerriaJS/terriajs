@@ -195,9 +195,9 @@ describe("AugmentedVirtuality", function() {
     // Check when they are malformed.
     expect({}).not.closeOrientation(bod(0, 0, 0));
     expect(bod(0, 0, 0)).not.closeOrientation({});
-    expect({ orientation: { roll: 0, pitch: 0, heading: 0 } }).closeOrientation(
-      { orientation: { roll: 0, pitch: 0, heading: 0 } }
-    );
+    expect({
+      orientation: { roll: 0, pitch: 0, heading: 0 }
+    }).closeOrientation({ orientation: { roll: 0, pitch: 0, heading: 0 } });
     expect({ orientation: { pitch: 0, heading: 0 } }).not.closeOrientation({
       orientation: { roll: 0, pitch: 0, heading: 0 }
     });

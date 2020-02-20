@@ -348,9 +348,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
         throw new TerriaError({
           title: `Could not load ${this.nameInCatalog}.`,
           sender: this,
-          message: `There was an error loading the data for ${
-            this.nameInCatalog
-          }.`
+          message: `There was an error loading the data for ${this.nameInCatalog}.`
         });
       });
 

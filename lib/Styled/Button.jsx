@@ -27,6 +27,16 @@ const StyledButton = styled.button`
   }
 
   ${props =>
+    props.primaryHover &&
+    `
+    &:hover,
+    &:focus {
+      color: ${props.theme.textLight};
+      background-color: ${props.theme.colorPrimary};
+    }
+  `}
+
+  ${props =>
     props.primary &&
     `
     color: #fff;

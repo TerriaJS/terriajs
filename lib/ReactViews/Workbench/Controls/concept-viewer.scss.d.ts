@@ -8,6 +8,7 @@ interface CssExports {
   'children-list': string;
   'childrenList': string;
   'colorPrimary': string;
+  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'hasChildren': string;
