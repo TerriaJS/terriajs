@@ -639,7 +639,7 @@ export default class MagdaReference extends AccessControlMixin(
       }
     | undefined
   > {
-    await _checkForDodgyEsriDistribution(distributions)
+    // await _checkForDodgyEsriDistribution(distributions)
 
     for (let i = 0; i < distributionFormats.length; ++i) {
       const distributionFormat = distributionFormats[i];
@@ -675,6 +675,36 @@ export default class MagdaReference extends AccessControlMixin(
 
           if (url === undefined && typeof dcatJson.accessURL === "string") {
             url = dcatJson.accessURL;
+          }
+        }
+
+        // Attempting to override a service reference like
+        // https://portal.spatial.nsw.gov.au/server/rest/services/NSW_Features_of_Interest_Category/FeatureServer
+        // with
+        // https://portal.spatial.nsw.gov.au/server/rest/services/NSW_Features_of_Interest_Category/FeatureServer/6
+        const source: any = aspects.source;
+        if (
+          isJsonObject(dcatJson) &&
+          isDefined(aspects["esri-resource"]) &&
+          isDefined(source) &&
+          isDefined(source.url) &&
+          url &&
+          url.indexOf("FeatureServer") > 0
+        ) {
+          const esriResource: any = aspects["esri-resource"];
+          const sourceUri = new URI(source.url);
+          sourceUri.segment("data");
+          const additionalInfo = await loadJson(sourceUri.toString());
+
+          if (additionalInfo.layers.length === 1) {
+            const id = additionalInfo.layers[0].id;
+            if (isDefined(id)) {
+              const serviceUri = new URI(url);
+              serviceUri.segment(id.toString());
+              const newUrl = serviceUri.toString();
+              dcatJson.accessURL = newUrl;
+              url = newUrl;
+            }
           }
         }
 
@@ -779,30 +809,4 @@ function getAccessTypeFromMagdaRecord(magdaRecord: any): string {
     record && record.aspects && record.aspects["esri-access-control"];
   const access = accessControl && accessControl.access;
   return access;
-}
-
-// Attempting to override a service reference like
-// https://portal.spatial.nsw.gov.au/server/rest/services/NSW_Features_of_Interest_Category/FeatureServer
-// with
-// https://portal.spatial.nsw.gov.au/server/rest/services/NSW_Features_of_Interest_Category/FeatureServer/6
-// need to override match.distribution.aspects["dcat-distribution-strings"].accessUrl
-async function _checkForDodgyEsriDistribution (distributions: JsonArray) {
-  // @ts-ignore
-  if (isDefined(distributions[0].aspects["esri-resource"])) {
-    const distribution = distributions[0]
-    // @ts-ignore
-    const esriResource = distribution.aspects["esri-resource"];
-    if (esriResource.typeKeywords.indexOf("Singlelayer") > -1) {
-      // @ts-ignore
-      const sourceUri = new URI(distribution.aspects.source.url);
-      sourceUri.segment("data")
-      const additionalInfo = await loadJson(sourceUri.toString())
-      const id = additionalInfo.layers[0].id;
-      // @ts-ignore
-      const serviceUri = new URI(distribution.aspects["dcat-distribution-strings"].accessURL);
-      serviceUri.segment(id.toString());
-      // @ts-ignore
-      distribution.aspects['dcat-distribution-strings'].accessURL = serviceUri.toString();
-    }
-  }
 }
