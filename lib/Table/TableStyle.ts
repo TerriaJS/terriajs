@@ -5,8 +5,10 @@ import ColorMap from "../Map/ColorMap";
 import ConstantColorMap from "../Map/ConstantColorMap";
 import DiscreteColorMap from "../Map/DiscreteColorMap";
 import EnumColorMap from "../Map/EnumColorMap";
+import PointSizeMap from "../Map/PointSizeMap";
+import ConstantPointSizeMap from "../Map/ConstantPointSizeMap";
+import ScalePointSizeMap from "../Map/ScalePointSizeMap";
 import createCombinedModel from "../Models/createCombinedModel";
-import FlattenedFromTraits from "../Models/FlattenedFromTraits";
 import Model from "../Models/Model";
 import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import TableChartStyleTraits from "../Traits/TableChartStyleTraits";
@@ -19,6 +21,7 @@ import TableTraits from "../Traits/TableTraits";
 import ColorPalette from "./ColorPalette";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
+import isDefined from "../Core/isDefined";
 
 const defaultColor = "yellow";
 
@@ -348,6 +351,30 @@ export default class TableStyle {
           : Color.fromCssColorString(defaultColor);
       return new ConstantColorMap(color);
     }
+  }
+
+  @computed
+  get pointSizeMap(): PointSizeMap {
+    const pointSizeColumn = this.pointSizeColumn;
+    const pointSizeTraits = this.pointSizeTraits;
+
+    if (pointSizeColumn && pointSizeColumn.type === TableColumnType.scalar) {
+      const maximum = pointSizeColumn.valuesAsNumbers.maximum;
+      const minimum = pointSizeColumn.valuesAsNumbers.minimum;
+
+      if (isDefined(maximum) && isDefined(minimum) && maximum !== minimum) {
+        return new ScalePointSizeMap(
+          minimum,
+          maximum,
+          pointSizeTraits.nullSize,
+          pointSizeTraits.sizeFactor,
+          pointSizeTraits.sizeOffset
+        );
+      }
+    }
+
+    // can't scale point size by values in this column, so use same point size for every value
+    return new ConstantPointSizeMap(pointSizeTraits.sizeOffset);
   }
 
   private resolveColumn(name: string | undefined): TableColumn | undefined {

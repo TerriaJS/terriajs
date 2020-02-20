@@ -47,6 +47,7 @@ Change Log
 * Added AccessControlMixin for tracking access control of a given MagdaReference
 * Add a legend title trait
 * Show private or public dataset status on data catalog UI via AccessControlMixin
+* Added `pointSizeMap` to `TableStyle` to allow point size to be scaled by value
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
