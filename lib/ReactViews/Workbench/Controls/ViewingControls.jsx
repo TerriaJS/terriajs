@@ -37,7 +37,7 @@ const ViewingControlMenuButton = styled(RawButton).attrs({
   border-radius: none;
 
   width: 114px;
-  height: 35px;
+  height: 32px;
   display: block;
 
   &:hover,
@@ -279,7 +279,11 @@ const ViewingControls = observer(
               onClick={e => {
                 event.stopPropagation();
                 runInAction(() => {
-                  viewState.workbenchWithOpenControls = item.uniqueId;
+                  if (viewState.workbenchWithOpenControls === item.uniqueId) {
+                    viewState.workbenchWithOpenControls = undefined;
+                  } else {
+                    viewState.workbenchWithOpenControls = item.uniqueId;
+                  }
                 });
               }}
               title={t("workbench.showMoreActionsTitle")}
@@ -296,6 +300,7 @@ const ViewingControls = observer(
                 z-index: 100;
                 right: 0;
                 top: 0;
+                top: 32px;
 
                 padding: 0;
                 margin: 0;

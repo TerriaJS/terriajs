@@ -345,6 +345,8 @@
     "removeFromMap" : "Remove",
     "label" : "Data sets",
     "removeAll" : "Remove All",
+    "collapseAll" : "Collapse All",
+    "expandAll" : "Expand All",
     "toggleVisibility" : "Data show/hide",
     "addItemErrorTitle" : "Catalog item could not be added to workbench.",
     "addItemErrorMessage" : "An error occurred while loading the catalog item."
