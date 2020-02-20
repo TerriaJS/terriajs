@@ -144,6 +144,7 @@ function MapIconButton(props) {
               position:absolute;
               top:0;
               right:0;
+              ${isExpanded && `z-index:10;`}
             `
           }
         >

@@ -132,7 +132,10 @@ export default function GyroscopeGuidance(props) {
         top: 11px;
       `}
     >
-      <MapIconButton iconElement={() => <Icon glyph={Icon.GLYPHS.help} />}>
+      <MapIconButton
+        expandInPlace
+        iconElement={() => <Icon glyph={Icon.GLYPHS.help} />}
+      >
         Help
       </MapIconButton>
       <Spacing right={2} />
@@ -142,6 +145,7 @@ export default function GyroscopeGuidance(props) {
         `}
       >
         <MapIconButton
+          expandInPlace
           iconElement={() => <Icon glyph={Icon.GLYPHS.controls} />}
           onClick={() => setControlPanelOpen(!controlPanelOpen)}
         >

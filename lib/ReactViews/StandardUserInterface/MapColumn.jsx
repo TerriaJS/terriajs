@@ -122,7 +122,8 @@ const MapColumn = observer(
                   <DistanceLegend terria={this.props.terria} />
                 </div>
               </If>
-              <If
+              {/* TODO: re-implement/support custom feedbacks */}
+              {/* <If
                 condition={
                   !this.props.customFeedbacks.length &&
                   this.props.terria.configParameters.feedbackUrl &&
@@ -141,7 +142,7 @@ const MapColumn = observer(
                     btnText={t("feedback.feedbackBtnText")}
                   />
                 </div>
-              </If>
+              </If> */}
 
               <If
                 condition={
