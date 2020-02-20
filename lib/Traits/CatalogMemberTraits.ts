@@ -94,4 +94,12 @@ export default class CatalogMemberTraits extends ModelTraits {
     description: "A list of collapsible sections of the short report"
   })
   shortReportSections?: ShortReportTraits[];
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Is experiencing issues",
+    description:
+      "Whether the catalog item is experiencing issues which may cause its data to be unavailable"
+  })
+  isExperiencingIssues: boolean = false;
 }
