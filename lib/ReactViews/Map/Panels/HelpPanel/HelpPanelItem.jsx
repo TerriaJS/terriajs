@@ -76,11 +76,13 @@ class HelpPanelItem extends React.Component {
           <CompassIcon glyph={this.props.iconElement} />
         </CompassWrapper>
         <Text 
-          bold 
+          semiBold 
           uppercase 
           css={`
             display: table-cell;
             vertical-align: middle;
+            font-size: 16px;
+            line-height: 17px;
         `}>
           {this.props.label}
         </Text>

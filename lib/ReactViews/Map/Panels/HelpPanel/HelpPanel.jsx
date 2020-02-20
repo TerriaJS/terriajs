@@ -96,7 +96,7 @@ class HelpPanel extends React.Component {
           css={`
             direction: ltr;
             min-width: 295px;
-            padding: 100px 25px;
+            padding: 100px 20px;
             display: inline-block;
           `}
         >
@@ -126,25 +126,28 @@ class HelpPanel extends React.Component {
               terria={this.props.terria}
               viewState={this.props.viewState}
               iconElement={Icon.GLYPHS.controls}
-              label={"3D Navigation Controls"}
+              label={"Navigating 3D Data"}
             />
             <HelpPanelItem 
               terria={this.props.terria}
               viewState={this.props.viewState}
-              iconElement={Icon.GLYPHS.splitter}
+              iconElement={Icon.GLYPHS.splitterOff}
               label={"Split Screen"}
             />
             <HelpPanelItem 
               terria={this.props.terria}
               viewState={this.props.viewState}
               iconElement={Icon.GLYPHS.bulb}
-              label={"Placeholder"}
+              label={"Timeseries Date Picker"}
+              // css={`
+
+              // `}
             />
             <HelpPanelItem 
               terria={this.props.terria}
               viewState={this.props.viewState}
               iconElement={Icon.GLYPHS.bulb}
-              label={"Placeholder"}
+              label={"Pulling Away Underground Layers"}
             />
           </Box>
         </Box>
