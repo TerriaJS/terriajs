@@ -7,6 +7,7 @@ import { withTranslation } from "react-i18next";
 import AugmentedVirtuality from "../../../Models/AugmentedVirtuality";
 import { observer } from "mobx-react";
 import { action, observable } from "mobx";
+import classNames from "classnames";
 
 @withTranslation()
 @observer
@@ -120,7 +121,12 @@ class AugmentedVirtualityTool extends React.Component {
 
     return (
       <If condition={this.props.terria.viewerMode !== ViewerMode.Leaflet}>
-        <div className={Styles.augmentedVirtualityTool}>
+        <div
+          className={classNames(Styles.augmentedVirtualityTool, {
+            [Styles.withTimeSeriesControls]:
+              this.props.terria.timelineStack.top !== undefined
+          })}
+        >
           <button
             type="button"
             className={toggleStyle}

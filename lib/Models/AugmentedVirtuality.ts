@@ -1,4 +1,4 @@
-import { observable, action, computed } from "mobx";
+import { observable, action, computed, runInAction } from "mobx";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import CesiumMatrix3 from "terriajs-cesium/Source/Core/Matrix3";
 import CesiumCartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -111,7 +111,12 @@ export default class AugmentedVirtuality {
    */
   @action
   toggleManualAlignment() {
-    this.manualAlignment = !this.manualAlignment;
+    this.setManualAlignment(!this.manualAlignment);
+  }
+
+  @computed
+  get manualAlignmentSet() {
+    return this.realignAlpha !== 0.0 || this.realignHeading !== 0.0;
   }
 
   @computed
@@ -194,7 +199,7 @@ export default class AugmentedVirtuality {
       flyToHeight(0);
     } else {
       const terrainProvider = this.scene.terrainProvider;
-      sampleTerrainMostDetailed(terrainProvider, [position]).then(function(
+      sampleTerrainMostDetailed(terrainProvider, [hoverPosition]).then(function(
         updatedPosition: Cartographic[]
       ) {
         flyToHeight(updatedPosition[0].height);
@@ -322,7 +327,10 @@ export default class AugmentedVirtuality {
     if (enable === true) {
       this.orientationUpdated = true;
       const intervalMs = 1000 / this.maximumUpdatesPerSecond;
-      const id: any = setInterval(() => this.updateOrientation(), intervalMs);
+      const id: any = setInterval(
+        () => runInAction(() => this.updateOrientation()),
+        intervalMs
+      );
       this.eventLoopState = { intervalId: id };
     } else {
       clearInterval(this.eventLoopState.intervalId);
