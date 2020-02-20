@@ -12,6 +12,7 @@ import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import Ray from "terriajs-cesium/Source/Core/Ray";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
 import Icon from "../../Icon.jsx";
+import GyroscopeGuidance from "../../GyroscopeGuidance/GyroscopeGuidance";
 import Styles from "./compass.scss";
 import { runInAction, computed, when } from "mobx";
 import { withTranslation } from "react-i18next";
@@ -20,6 +21,7 @@ import { withTranslation } from "react-i18next";
 class Compass extends React.Component {
   static propTypes = {
     terria: PropTypes.object,
+    viewState: PropTypes.object,
     t: PropTypes.func.isRequired
   };
 
@@ -31,7 +33,8 @@ class Compass extends React.Component {
     this.state = {
       orbitCursorAngle: 0,
       heading: 0.0,
-      orbitCursorOpacity: 0
+      orbitCursorOpacity: 0,
+      active: false
     };
 
     when(() => this.cesiumViewer, () => this.cesiumLoaded());
@@ -162,6 +165,7 @@ class Compass extends React.Component {
       opacity: ""
     };
     const { t } = this.props;
+    const active = this.state.active;
     const description = t("compass.description");
 
     return (
@@ -171,12 +175,26 @@ class Compass extends React.Component {
         onMouseDown={this.handleMouseDown.bind(this)}
         onDoubleClick={this.handleDoubleClick.bind(this)}
         onMouseUp={this.resetRotater.bind(this)}
+        onMouseOver={() => this.setState({ active: true })}
+        onMouseOut={() => this.setState({ active: true })}
+        onFocus={() => this.setState({ active: true })}
+        // onBlur={() => this.setState({ active: false })}
       >
+        {active && (
+          <GyroscopeGuidance
+            viewState={this.props.viewState}
+            onClose={() => this.setState({ active: false })}
+          />
+        )}
         <div className={Styles.outerRing} style={outerCircleStyle}>
           <Icon glyph={Icon.GLYPHS.compassOuter} />
         </div>
         <div className={Styles.innerRing} title={t("compass.title")}>
-          <Icon glyph={Icon.GLYPHS.compassInner} />
+          <Icon
+            glyph={
+              active ? Icon.GLYPHS.compassInnerArrows : Icon.GLYPHS.compassInner
+            }
+          />
         </div>
         <div className={Styles.rotationMarker} style={rotationMarkerStyle}>
           <Icon glyph={Icon.GLYPHS.compassRotationMarker} />

@@ -8,6 +8,7 @@ interface CssExports {
   'mapButtonColor': string;
   'modalHighlight': string;
   'section': string;
+  'textDarker': string;
   'textLight': string;
   'timer-container': string;
   'timerContainer': string;

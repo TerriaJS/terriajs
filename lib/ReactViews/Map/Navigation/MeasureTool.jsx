@@ -17,6 +17,8 @@ import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import VertexFormat from "terriajs-cesium/Source/Core/VertexFormat";
 
+import MapIconButton from "../../MapIconButton/MapIconButton";
+
 @observer
 class MeasureTool extends React.Component {
   @observable
@@ -237,14 +239,14 @@ class MeasureTool extends React.Component {
     const { t } = this.props;
     return (
       <div className={Styles.toolButton}>
-        <button
-          type="button"
-          className={Styles.btn}
+        <MapIconButton
+          expandInPlace
           title={t("measure.measureDistance")}
           onClick={this.handleClick}
+          iconElement={() => <Icon glyph={Icon.GLYPHS.measure} />}
         >
-          <Icon glyph={Icon.GLYPHS.measure} />
-        </button>
+          {t("measure.measureToolTitle")}
+        </MapIconButton>
       </div>
     );
   }

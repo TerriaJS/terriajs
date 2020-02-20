@@ -21,6 +21,7 @@ interface CssExports {
   'modalHighlight': string;
   'share-url': string;
   'shareUrl': string;
+  'textDarker': string;
   'textLight': string;
   'title': string;
 }

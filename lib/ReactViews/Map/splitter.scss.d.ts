@@ -10,6 +10,7 @@ interface CssExports {
   'dividerWrapper': string;
   'mapButtonColor': string;
   'modalHighlight': string;
+  'textDarker': string;
   'textLight': string;
   'thumb': string;
 }

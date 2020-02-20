@@ -48,6 +48,7 @@ Change Log
 * Add a legend title trait
 * Show private or public dataset status on data catalog UI via AccessControlMixin
 * Added `pointSizeMap` to `TableStyle` to allow point size to be scaled by value
+* Added `isExperiencingIssues` to `CatalogMemberTraits`. When set to true, an alert is displayed above the catalog item description.
 * Improve handling of `ArcGisFeatureServer` items being retrieved from portal via `MagdaReference`
 
 ### Next Release

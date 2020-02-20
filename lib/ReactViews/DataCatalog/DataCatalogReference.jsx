@@ -140,6 +140,7 @@ const DataCatalogReference = observer(
               onTextClick={this.setPreviewedItem}
               selected={this.isSelected()}
               text={reference.name || "..."}
+              isPrivate={reference.isPrivate}
               title={this.props.ancestors
                 .map(m => m.nameInCatalog)
                 .join(" -> ")}
@@ -154,6 +155,7 @@ const DataCatalogReference = observer(
               onTextClick={this.setPreviewedItem}
               selected={this.isSelected()}
               text={reference.name || "..."}
+              isPrivate={reference.isPrivate}
               title={this.props.ancestors
                 .map(m => m.nameInCatalog)
                 .join(" -> ")}

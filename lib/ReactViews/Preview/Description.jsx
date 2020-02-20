@@ -14,6 +14,7 @@ import MetadataTable from "./MetadataTable";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import Styles from "./mappable-preview.scss";
 import { observer } from "mobx-react";
+import AUpageAlert from "@gov.au/page-alerts";
 
 /**
  * CatalogItem description.
@@ -46,6 +47,16 @@ const Description = observer(
       }
       return (
         <div className={Styles.description}>
+          <If condition={catalogItem.isExperiencingIssues}>
+            <AUpageAlert as="warning">
+              <div className={Styles.alertMessage}>
+                <Trans i18nKey="preview.mayBeExperiencingIssues">
+                  <p>This dataset may currently be experiencing issues</p>
+                </Trans>
+              </div>
+            </AUpageAlert>
+          </If>
+
           <If
             condition={
               catalogItem.description && catalogItem.description.length > 0

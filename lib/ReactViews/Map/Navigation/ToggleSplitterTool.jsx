@@ -8,6 +8,7 @@ import Icon from "../../Icon";
 import Styles from "./toggle_splitter_tool.scss";
 import { withTranslation } from "react-i18next";
 import { runInAction } from "mobx";
+import MapIconButton from "../../MapIconButton/MapIconButton";
 
 const ToggleSplitterTool = observer(
   createReactClass({
@@ -30,20 +31,23 @@ const ToggleSplitterTool = observer(
       }
       return (
         <div className={Styles.toggle_splitter_tool}>
-          <button
-            type="button"
-            className={Styles.btn}
+          <MapIconButton
+            primary={this.props.terria.showSplitter}
+            expandInPlace
             title={t("splitterTool.toggleSplitterTool")}
             onClick={this.handleClick}
+            iconElement={() => (
+              <Icon
+                glyph={
+                  this.props.terria.showSplitter
+                    ? Icon.GLYPHS.splitterOn
+                    : Icon.GLYPHS.splitterOff
+                }
+              />
+            )}
           >
-            <Icon
-              glyph={
-                this.props.terria.showSplitter
-                  ? Icon.GLYPHS.splitterOn
-                  : Icon.GLYPHS.splitterOff
-              }
-            />
-          </button>
+            {t("splitterTool.toggleSplitterToolTitle")}
+          </MapIconButton>
         </div>
       );
     }

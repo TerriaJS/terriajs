@@ -13,6 +13,7 @@ interface CssExports {
   'modalHighlight': string;
   'provider-result': string;
   'providerResult': string;
+  'textDarker': string;
   'textLight': string;
 }
 declare var cssExports: CssExports;

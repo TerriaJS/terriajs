@@ -9,6 +9,7 @@ interface CssExports {
   'modalHighlight': string;
   'results': string;
   'submit': string;
+  'textDarker': string;
   'textLight': string;
   'toolsPanel': string;
 }
