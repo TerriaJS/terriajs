@@ -22,7 +22,7 @@
   bottom: 100px;
 
   @media (max-width: $mobile) {
-    bottom: $mobile-bottom-timeline;
+    bottom: $mobile-bottom-timeline - 15px;
   }
 }
 
