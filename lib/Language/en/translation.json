@@ -236,7 +236,7 @@
     "bodyV" : "You can apply a range of styles, such as false-colour, to satellite imagery by clicking on the styles dropdown in your data workbench."
   },
   "addData" : {
-    "addDataBtnText" : "Add Data",
+    "addDataBtnText" : "Explore map data",
     "btnHide" : "Hide",
     "load" : "Load local/web data",
     "closeDataPanel" : "Close data panel",
@@ -331,19 +331,22 @@
     "displayPercent" : "Display as a percentage of regional total",
     "opacity" : "Opacity: {{opacity}} %",
     "zoomToTitle" : "Zoom to extent",
-    "zoomTo" : "Zoom To Extent",
+    "zoomTo" : "Ideal Zoom",
     "openFeatureTitle" : "Zoom to data",
     "openFeature" : "Zoom to",
-    "previewItemTitle" : "info",
-    "previewItem" : "About This Data",
+    "previewItemTitle" : "About this data",
+    "showMoreActionsTitle" : "Show more actions",
+    "previewItem" : "About Data",
     "splitItemTitle" : "Duplicate and show splitter",
     "splitItem" : "Compare",
     "exportDataTitle" : "Export map data",
     "exportData" : "Export",
     "removeFromMapTitle" : "Remove this data",
     "removeFromMap" : "Remove",
-    "label" : "Data Sets",
+    "label" : "Data sets",
     "removeAll" : "Remove All",
+    "collapseAll" : "Collapse All",
+    "expandAll" : "Expand All",
     "toggleVisibility" : "Data show/hide",
     "addItemErrorTitle" : "Catalog item could not be added to workbench.",
     "addItemErrorMessage" : "An error occurred while loading the catalog item."
@@ -405,6 +408,12 @@
     "loadingMessage" : "Loading"
   },
   "emptyWorkbenchMessage" : "<0><0>Your workbench is empty</0><1><strong>Click '$t(addData.addDataBtnText)' above to </strong></1><2><0>Browse the Data Catalogue</0><1>Load your own data onto the map</1></2><3><0></0><strong>TIP.</strong><2>All your active data sets will be listed here</2></3></0>",
+  "emptyWorkbench": {
+    "emptyArea": "Your workbench is empty",
+    "helpfulHints": "Helpful hints",
+    "helpfulHintsOne": "All your active data sets will be listed here.",
+    "helpfulHintsTwo": "<0>Click <1>'$t(addData.addDataBtnText)'</1> above to browse the Data Catalogue or click <1>'$t(models.catalog.upload)'</1> to load your own data onto the map.</0>"
+  },
   "dataCatalog" : {
     "groupRemove": "remove this group",
     "groupEmpty": "This group is empty"

@@ -34,6 +34,8 @@ export const Box = styled.div`
   ${props => props.centered && `align-items: center;`}
   ${props => props.centered && `justify-content: center;`}
 
+  ${props =>
+    props.justifyContentSpaceAround && `justify-content: space-around;`}
   ${props => props.justifySpaceBetween && `justify-content: space-between;`}
   
   ${props => props.left && `align-items: center;`}

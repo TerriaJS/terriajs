@@ -12,10 +12,12 @@ interface CssExports {
   'btnPrimaryHover': string;
   'charcoalGrey': string;
   'colorPrimary': string;
+  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'mapButtonColor': string;
   'modalHighlight': string;
+  'textDarker': string;
   'textLight': string;
   'toolButton': string;
   'with-time-series-controls': string;

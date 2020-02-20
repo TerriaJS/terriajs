@@ -17,6 +17,7 @@ interface CssExports {
   'clipboard-for-catalog-share': string;
   'clipboardForCatalogShare': string;
   'colorPrimary': string;
+  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'dropdown-inner': string;

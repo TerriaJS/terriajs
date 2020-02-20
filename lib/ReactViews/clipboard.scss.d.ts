@@ -5,6 +5,7 @@ interface CssExports {
   'clipboard': string;
   'clipboardBody': string;
   'colorPrimary': string;
+  'colorSplitter': string;
   'copyBtn': string;
   'dark': string;
   'darkWithOverlay': string;

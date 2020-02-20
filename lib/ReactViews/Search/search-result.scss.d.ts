@@ -7,6 +7,7 @@ interface CssExports {
   'btnLocationName': string;
   'charcoalGrey': string;
   'colorPrimary': string;
+  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'icon': string;

@@ -7,6 +7,7 @@ interface CssExports {
   'btnBackToMyData': string;
   'charcoalGrey': string;
   'colorPrimary': string;
+  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'data-catalog': string;

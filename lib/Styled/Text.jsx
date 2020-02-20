@@ -5,6 +5,7 @@ export const Text = styled.div`
   // TODO: themeify family
   font-family: "Nunito", "Open Sans", sans-serif;
   ${props => props.nunito && `font-family: "Nunito", "Open Sans", sans-serif;`}
+  ${props => props.openSans && `font-family: "Open Sans", sans-serif;`}
 
   font-weight: 400;
   ${props => props.bold && `font-weight: bold;`}
@@ -30,6 +31,12 @@ export const Text = styled.div`
   line-height: 20px;
 
   ${props =>
+    props.small &&
+    `
+    font-size: 12px;
+  `}
+
+  ${props =>
     props.medium &&
     `
     // terrace designed ~h4 equivalent?
@@ -39,6 +46,13 @@ export const Text = styled.div`
     props.large &&
     `
     font-size: 15px;
+  `}
+  ${props =>
+    props.title &&
+    `
+    font-weight: 800;
+    font-size: 26px;
+    line-height: 32px;
   `}
   
 `;

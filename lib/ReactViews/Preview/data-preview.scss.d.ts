@@ -5,6 +5,7 @@ interface CssExports {
   'btnBackToMap': string;
   'charcoalGrey': string;
   'colorPrimary': string;
+  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'field': string;
