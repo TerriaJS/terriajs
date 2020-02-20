@@ -364,6 +364,8 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
 
         const colorMap = (this.activeTableStyle || this.defaultTableStyle)
           .colorMap;
+        const pointSizeMap = (this.activeTableStyle || this.defaultTableStyle)
+          .pointSizeMap;
 
         const outlineColor = Color.fromCssColorString(
           "white" //this.terria.baseMapContrastColor;
@@ -385,7 +387,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
               position: Cartesian3.fromDegrees(longitude, latitude, 0.0),
               point: new PointGraphics({
                 color: colorMap.mapValueToColor(value),
-                pixelSize: 15,
+                pixelSize: pointSizeMap.mapValueToPointSize(value),
                 outlineWidth: 1,
                 outlineColor: outlineColor,
                 heightReference: HeightReference.CLAMP_TO_GROUND
