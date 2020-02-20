@@ -26,6 +26,7 @@ const CompassWrapper = styled(Box).attrs({
   flex-shrink: 0;
   width: 64px;
   height: 64px;
+  margin-right: 10px;
 `;
 const CompassPositioning = `
 
@@ -38,13 +39,20 @@ const CompassIcon = styled(Icon)`
   ${props =>
     props.inner
       ? `
-        width: 26px;
-        height: 26px;
-      `
+      fill: ${props.theme.textDarker};
+      width: 26px;
+      height: 26px;
+    `
       : `
-        width: 64px;
-        height: 64px;
-      `}
+      fill: ${props.theme.textLight};
+      width: 64px;
+      height: 64px;
+    `}
+  ${props =>
+    props.darken &&
+    `
+      opacity: 0.2;
+    `}
 `;
 
 function GyroscopeGuidancePanel(props) {
@@ -63,7 +71,7 @@ function GyroscopeGuidancePanel(props) {
       <Box>
         <CompassWrapper>
           <CompassIcon glyph={Icon.GLYPHS.compassOuter} />
-          <CompassIcon glyph={Icon.GLYPHS.compassInnerArrows} inner />
+          <CompassIcon glyph={Icon.GLYPHS.compassInnerArrows} inner darken />
         </CompassWrapper>
         <Box column>
           <Text bold uppercase>
@@ -78,12 +86,14 @@ function GyroscopeGuidancePanel(props) {
       </Box>
       <Spacing bottom={4} />
       <Box>
-        <CompassWrapper css={``}>
+        <CompassWrapper>
           <CompassIcon
             glyph={Icon.GLYPHS.compassOuter}
             css={CompassPositioning}
+            darken
           />
           <CompassIcon glyph={Icon.GLYPHS.compassInnerArrows} inner />
+          <Spacing right={2} />
         </CompassWrapper>
         <Box column>
           <Text bold uppercase>

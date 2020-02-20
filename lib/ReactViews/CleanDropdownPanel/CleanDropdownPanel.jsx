@@ -73,10 +73,16 @@ const CleanDropdownPanel = createReactClass({
       <div
         className={classNames(Styles.panel, this.props.theme.outer)}
         css={`
-          max-width: calc(100vw - 10px);
-          svg {
-            fill: ${p => p.theme.textLight};
+          .InnerPannelCloseButton {
+            svg:not(:hover):not(:focus) {
+              fill: ${p => p.theme.textLight};
+            }
+            svg {
+              height: 12px;
+              width: 12px;
+            }
           }
+          max-width: calc(100vw - 10px);
         `}
         ref={element => (this.buttonElement = element)}
       >
