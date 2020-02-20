@@ -29,9 +29,7 @@ export default function updateModelFromJson(
       if (trait === undefined) {
         throw new TerriaError({
           title: "Unknown property",
-          message: `The property ${propertyName} is not valid for type ${
-            model.type
-          }.`
+          message: `The property ${propertyName} is not valid for type ${model.type}.`
         });
       }
 

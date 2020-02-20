@@ -172,9 +172,9 @@ describe("Terria", function() {
           newTerria.getModelById(BaseModel, "itemABC")
         );
         expect(newModel1).toBeDefined();
-        expect(newModel1.splitDirection).toEqual(<any>(
-          ImagerySplitDirection.RIGHT
-        ));
+        expect(newModel1.splitDirection).toEqual(
+          <any>ImagerySplitDirection.RIGHT
+        );
 
         done();
       });

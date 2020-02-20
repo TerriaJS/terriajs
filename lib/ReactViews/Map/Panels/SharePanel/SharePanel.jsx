@@ -359,9 +359,7 @@ const SharePanel = observer(
     renderContentWithPrintAndEmbed() {
       const { t } = this.props;
       const iframeCode = this.state.shareUrl.length
-        ? `<iframe style="width: 720px; height: 600px; border: none;" src="${
-            this.state.shareUrl
-          }" allowFullScreen mozAllowFullScreen webkitAllowFullScreen></iframe>`
+        ? `<iframe style="width: 720px; height: 600px; border: none;" src="${this.state.shareUrl}" allowFullScreen mozAllowFullScreen webkitAllowFullScreen></iframe>`
         : "";
 
       return (

@@ -10,9 +10,9 @@ export default function addedByUser(catalogMember: BaseModel): boolean {
   return sourceReference.knownContainerUniqueIds.some(containerId => {
     return (
       containerId === USER_ADDED_CATEGORY_ID ||
-      addedByUser(<BaseModel>(
-        catalogMember.terria.getModelById(BaseModel, containerId)
-      ))
+      addedByUser(
+        <BaseModel>catalogMember.terria.getModelById(BaseModel, containerId)
+      )
     );
   });
 }

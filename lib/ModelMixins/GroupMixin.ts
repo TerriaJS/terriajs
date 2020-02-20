@@ -143,9 +143,7 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
       }
       if (moveFrom === -1) {
         throw new DeveloperError(
-          `A model couldn't be found in the group ${
-            this.uniqueId
-          } for member uniqueId ${member.uniqueId}`
+          `A model couldn't be found in the group ${this.uniqueId} for member uniqueId ${member.uniqueId}`
         );
       }
       const cloneArr = clone(members);

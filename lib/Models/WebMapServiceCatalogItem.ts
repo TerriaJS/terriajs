@@ -161,9 +161,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
                 candidate => candidate.name === style
               );
         if (layerStyle !== undefined && layerStyle.legend !== undefined) {
-          result.push(<StratumFromTraits<LegendTraits>>(
-            (<unknown>layerStyle.legend)
-          ));
+          result.push(
+            <StratumFromTraits<LegendTraits>>(<unknown>layerStyle.legend)
+          );
         }
       }
     }

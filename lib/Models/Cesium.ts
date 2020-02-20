@@ -188,8 +188,12 @@ export default class Cesium extends GlobeOrMap {
 
     if (isDefined(this._extraCredits.terria)) {
       const containerElement = getElement(container);
-      const creditsElement = containerElement && containerElement.getElementsByClassName("cesium-widget-credits")[0];
-      const logoContainer = creditsElement && creditsElement.getElementsByClassName("cesium-credit-logoContainer")[0];
+      const creditsElement =
+        containerElement &&
+        containerElement.getElementsByClassName("cesium-widget-credits")[0];
+      const logoContainer =
+        creditsElement &&
+        creditsElement.getElementsByClassName("cesium-credit-logoContainer")[0];
       if (logoContainer) {
         creditsElement.insertBefore(
           this._extraCredits.terria?.element,

@@ -34,7 +34,10 @@ class Compass extends React.Component {
       orbitCursorOpacity: 0
     };
 
-    when(() => this.cesiumViewer, () => this.cesiumLoaded());
+    when(
+      () => this.cesiumViewer,
+      () => this.cesiumLoaded()
+    );
   }
 
   @computed
