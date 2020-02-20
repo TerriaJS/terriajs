@@ -51,6 +51,12 @@ Change Log
 * Added `isExperiencingIssues` to `CatalogMemberTraits`. When set to true, an alert is displayed above the catalog item description.
 * Add gyroscope guidance
 * Enable StyleSelectorSection workbench control for `WebMapServiceCatalogItem`
+* New-new ui
+* Add WIP help panes
+* Added "Split Screen Mode" into workbench
+* Moved excess workbench viewing controls into menu
+* Updated bottom attribution styling
+* Begin styled components themeing
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
