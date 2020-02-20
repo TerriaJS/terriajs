@@ -9,7 +9,7 @@ import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 
 import GeoJsonCatalogItem from "../../../Models/GeoJsonCatalogItem";
 import ObserveModelMixin from "../../ObserveModelMixin";
-import Styles from "./tool_button.scss";
+// import Styles from "./tool_button.scss";
 import TerriaError from "../../../Core/TerriaError";
 import CesiumCartographic from "terriajs-cesium/Source/Core/Cartographic.js";
 import Icon from "../../Icon";
@@ -18,6 +18,7 @@ import { withTranslation } from "react-i18next";
 import { runInAction } from "mobx";
 import CommonStrata from "../../../Models/CommonStrata";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import MapIconButton from "../../MapIconButton/MapIconButton";
 
 const MyLocation = createReactClass({
   displayName: "MyLocation",
@@ -175,7 +176,7 @@ const MyLocation = createReactClass({
     }
   },
 
-  handleCick() {
+  handleClick() {
     if (this.followMeEnabled()) {
       this.disableFollowMe();
     } else {
@@ -184,22 +185,17 @@ const MyLocation = createReactClass({
   },
 
   render() {
-    let toggleStyle = Styles.btn;
-    if (this.followMeEnabled()) {
-      toggleStyle = Styles.btnPrimary;
-    }
     const { t } = this.props;
     return (
-      <div className={Styles.toolButton}>
-        <button
-          type="button"
-          className={toggleStyle}
-          title={t("location.centreMap")}
-          onClick={this.handleCick}
-        >
-          <Icon glyph={Icon.GLYPHS.geolocation} />
-        </button>
-      </div>
+      <MapIconButton
+        primary={this.followMeEnabled()}
+        expandInPlace
+        onClick={this.handleClick}
+        buttonTitle={t("location.centreMap")}
+        iconElement={() => <Icon glyph={Icon.GLYPHS.geolocation} />}
+      >
+        {t("location.location")}
+      </MapIconButton>
     );
   }
 });

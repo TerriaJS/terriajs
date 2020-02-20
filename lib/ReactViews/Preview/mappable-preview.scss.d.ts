@@ -20,6 +20,7 @@ interface CssExports {
   'previewedInfo': string;
   'share-link--wrapper': string;
   'shareLinkWrapper': string;
+  'textDarker': string;
   'textLight': string;
   'title-and-share-wrapper': string;
   'titleAndShareWrapper': string;

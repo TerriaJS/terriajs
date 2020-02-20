@@ -8,6 +8,7 @@
   },
   "measure" : {
     "measureTool" : "Measure Tool",
+    "measureToolTitle" : "Line Measure",
     "measureDistance": "Measure distance between locations"
   },
   "location" : {
@@ -19,6 +20,7 @@
     "centreMap" : "Centre map at your current location"
   },
   "splitterTool" : {
+    "toggleSplitterToolTitle": "Compare",
     "toggleSplitterTool" : "Enable side-by-side comparison between two different sets of data",
     "title" : "Drag left or right to adjust views",
     "workbench" : {
@@ -335,7 +337,7 @@
     "previewItemTitle" : "info",
     "previewItem" : "About This Data",
     "splitItemTitle" : "Duplicate and show splitter",
-    "splitItem" : "Split",
+    "splitItem" : "Compare",
     "exportDataTitle" : "Export map data",
     "exportData" : "Export",
     "removeFromMapTitle" : "Remove this data",

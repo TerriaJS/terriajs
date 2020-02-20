@@ -2,18 +2,23 @@
 
 .map-navigation {
   position: absolute;
-  right: 65px;
+  right: 5px;
+  // right: 65px;
   z-index: 1;
   bottom: 25px;
 
   @media (min-width: $sm) {
     top: 80px;
-    bottom: auto;
+    // bottom: auto;
+    bottom: 50px;
     right: 16px;
   }
 
   @media (max-width: $mobile) {
     position: fixed;
+    & > div {
+      flex-direction: row;
+    }
   }
 }
 
@@ -27,7 +32,7 @@
 
 .control {
   @media (min-width: $sm) {
-    margin: 7px 0;
+    margin: 5px 0;
     height: auto;
   }
   margin: 4px 8px;

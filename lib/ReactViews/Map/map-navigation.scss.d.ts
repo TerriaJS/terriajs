@@ -12,6 +12,7 @@ interface CssExports {
   'mapNavigation': string;
   'modalHighlight': string;
   'navs': string;
+  'textDarker': string;
   'textLight': string;
   'with-time-series-controls': string;
   'withTimeSeriesControls': string;

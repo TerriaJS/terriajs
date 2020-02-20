@@ -15,6 +15,7 @@ interface CssExports {
   'nowViewingItemShortReport': string;
   'short-report': string;
   'shortReport': string;
+  'textDarker': string;
   'textLight': string;
 }
 declare var cssExports: CssExports;

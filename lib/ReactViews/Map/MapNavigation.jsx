@@ -12,6 +12,11 @@ import classNames from "classnames";
 import { observer } from "mobx-react";
 import defined from "terriajs-cesium/Source/Core/defined";
 
+import Icon from "../Icon";
+import Box from "../../Styled/Box";
+import MapIconButton from "../MapIconButton/MapIconButton";
+import FeedbackButton from "../Feedback/FeedbackButton";
+
 // The map navigation region
 @observer
 class MapNavigation extends React.Component {
@@ -34,39 +39,74 @@ class MapNavigation extends React.Component {
           )
         })}
       >
-        <Medium>
-          <div className={Styles.navs}>
-            <If
-              condition={
-                this.props.terria.mainViewer.viewerMode === ViewerMode.Cesium
-              }
-            >
-              <div className={Styles.control}>
-                <Compass terria={this.props.terria} />
+        <Box centered column justifySpaceBetween fullHeight alignItemsFlexEnd>
+          <Box column>
+            <Medium>
+              <div className={Styles.navs}>
+                <If
+                  condition={
+                    this.props.terria.mainViewer.viewerMode ===
+                    ViewerMode.Cesium
+                  }
+                >
+                  <div className={Styles.control}>
+                    <Compass
+                      terria={this.props.terria}
+                      viewState={this.props.viewState}
+                    />
+                  </div>
+                </If>
+                <div className={Styles.control}>
+                  <ZoomControl terria={this.props.terria} />
+                </div>
               </div>
-            </If>
-            <div className={Styles.control}>
-              <ZoomControl terria={this.props.terria} />
+            </Medium>
+            <div className={Styles.controls}>
+              <If
+                condition={
+                  !this.props.terria.configParameters.disableMyLocation
+                }
+              >
+                <div className={Styles.control}>
+                  <MyLocation terria={this.props.terria} />
+                </div>
+              </If>
+              <If
+                condition={!this.props.terria.configParameters.disableSplitter}
+              >
+                <div className={Styles.control}>
+                  <ToggleSplitterTool terria={this.props.terria} />
+                </div>
+              </If>
+              <For each="item" of={this.props.navItems} index="i">
+                <div className={Styles.control} key={i}>
+                  {item}
+                </div>
+              </For>
             </div>
-          </div>
-        </Medium>
-        <div className={Styles.controls}>
-          <If condition={!this.props.terria.configParameters.disableMyLocation}>
-            <div className={Styles.control}>
-              <MyLocation terria={this.props.terria} />
+          </Box>
+          <Box
+            column
+            // bottom map buttons
+          >
+            <div className={Styles.controls}>
+              <div className={Styles.control}>
+                <FeedbackButton
+                  terria={this.props.terria}
+                  viewState={this.props.viewState}
+                />
+              </div>
+              <div className={Styles.control}>
+                <MapIconButton
+                  expandInPlace
+                  iconElement={() => <Icon glyph={Icon.GLYPHS.help} />}
+                >
+                  Help
+                </MapIconButton>
+              </div>
             </div>
-          </If>
-          <If condition={!this.props.terria.configParameters.disableSplitter}>
-            <div className={Styles.control}>
-              <ToggleSplitterTool terria={this.props.terria} />
-            </div>
-          </If>
-          <For each="item" of={this.props.navItems} index="i">
-            <div className={Styles.control} key={i}>
-              {item}
-            </div>
-          </For>
-        </div>
+          </Box>
+        </Box>
       </div>
     );
   }

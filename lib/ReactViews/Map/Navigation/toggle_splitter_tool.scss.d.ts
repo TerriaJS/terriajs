@@ -15,6 +15,7 @@ interface CssExports {
   'darkWithOverlay': string;
   'mapButtonColor': string;
   'modalHighlight': string;
+  'textDarker': string;
   'textLight': string;
   'toggle-splitter-tool': string;
   'toggleSplitterTool': string;

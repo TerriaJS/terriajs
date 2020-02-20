@@ -30,6 +30,7 @@ interface CssExports {
   'root': string;
   'section': string;
   'text': string;
+  'textDarker': string;
   'textLight': string;
   'title': string;
 }

@@ -10,6 +10,7 @@ interface CssExports {
   'modalHighlight': string;
   'shadow-selector': string;
   'shadowSelector': string;
+  'textDarker': string;
   'textLight': string;
   'title': string;
 }

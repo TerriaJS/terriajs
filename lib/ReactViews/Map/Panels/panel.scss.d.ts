@@ -31,6 +31,7 @@ interface CssExports {
   'showDropdownInCenter': string;
   'sub-heading': string;
   'subHeading': string;
+  'textDarker': string;
   'textLight': string;
 }
 declare var cssExports: CssExports;

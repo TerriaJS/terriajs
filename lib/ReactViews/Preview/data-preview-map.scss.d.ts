@@ -12,6 +12,7 @@ interface CssExports {
   'placeholder': string;
   'terria-preview': string;
   'terriaPreview': string;
+  'textDarker': string;
   'textLight': string;
 }
 declare var cssExports: CssExports;

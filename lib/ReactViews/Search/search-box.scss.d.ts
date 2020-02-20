@@ -11,6 +11,7 @@ interface CssExports {
   'searchClear': string;
   'searchData': string;
   'searchField': string;
+  'textDarker': string;
   'textLight': string;
 }
 declare var cssExports: CssExports;
