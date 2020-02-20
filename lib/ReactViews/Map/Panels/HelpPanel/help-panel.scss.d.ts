@@ -3,30 +3,24 @@
 interface CssExports {
   'VideoGuideWrapper': string;
   'VideoGuideWrapper--closing': string;
-  'actions': string;
-  'captureBtn': string;
   'charcoalGrey': string;
   'close-btn': string;
   'closeBtn': string;
   'colorPrimary': string;
   'dark': string;
   'darkWithOverlay': string;
-  'footer': string;
-  'header': string;
   'help-panel': string;
+  'help-panel-shifted': string;
   'helpPanel': string;
-  'intro': string;
-  'isActive': string;
+  'helpPanelShifted': string;
+  'is-selected': string;
   'isHidden': string;
+  'isSelected': string;
   'isVisible': string;
   'mapButtonColor': string;
   'modalHighlight': string;
-  'previewBtn': string;
-  'remove-button': string;
-  'removeBtn': string;
-  'removeButton': string;
-  'stories': string;
-  'story': string;
+  'panel-item': string;
+  'panelItem': string;
   'story-fade-in': string;
   'story-fade-out': string;
   'story-slide-down': string;
@@ -38,7 +32,7 @@ interface CssExports {
   'textDarker': string;
   'textLight': string;
   'tourBtn': string;
-  'trashBtn': string;
+  'video-panel': string;
   'videoGuide': string;
   'videoGuide--iframe': string;
   'videoGuideIframe': string;
@@ -46,6 +40,7 @@ interface CssExports {
   'videoGuideRatio': string;
   'videoGuideWrapper': string;
   'videoGuideWrapperClosing': string;
+  'videoPanel': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

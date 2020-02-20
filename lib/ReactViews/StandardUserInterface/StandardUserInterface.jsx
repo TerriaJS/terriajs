@@ -40,6 +40,7 @@ import Styles from "./standard-user-interface.scss";
 import { observer } from "mobx-react";
 import { action, runInAction } from "mobx";
 import HelpPanel from "../Map/Panels/HelpPanel/HelpPanel";
+import HelpVideoPanel from "../Map/Panels/HelpPanel/HelpVideoPanel";
 
 export const showStoryPrompt = (viewState, terria) => {
   terria.configParameters.showFeaturePrompts &&
@@ -365,6 +366,14 @@ const StandardUserInterface = observer(
                 viewState={this.props.viewState}
               />
             )}
+            {
+              this.props.viewState.showHelpMenu &&
+              this.props.viewState.helpPanelExpanded && 
+              (<HelpVideoPanel
+                terria={terria}
+                viewState={this.props.viewState}
+              />)
+            }
           </div>
         </ThemeProvider>
       );

@@ -65,15 +65,20 @@ class HelpPanel extends React.Component {
 
   @action.bound
   hidePanel() {
-    this.props.viewState.showHelpMenu = !this.props.viewState
-    .showHelpMenu;
+    this.props.viewState.showHelpMenu = false;
+    this.props.viewState.helpPanelExpanded = false;
+    this.props.viewState.selectedHelpMenuItem = "";
     console.log("Bye!");
   }
 
   render() {
     const { t } = this.props;
+    const className = classNames({
+      [Styles.helpPanel]: true,
+      [Styles.helpPanelShifted]: this.props.viewState.helpPanelExpanded
+    });
     return (
-      <div className={Styles.helpPanel}>
+      <div className={className}>
         <div
           css={`
             svg {
@@ -122,33 +127,38 @@ class HelpPanel extends React.Component {
           <Box css={`
             display: inline-block;
           `}>
-            <HelpPanelItem 
-              terria={this.props.terria}
-              viewState={this.props.viewState}
-              iconElement={Icon.GLYPHS.controls}
-              label={"Navigating 3D Data"}
-            />
-            <HelpPanelItem 
-              terria={this.props.terria}
-              viewState={this.props.viewState}
-              iconElement={Icon.GLYPHS.splitterOff}
-              label={"Split Screen"}
-            />
-            <HelpPanelItem 
-              terria={this.props.terria}
-              viewState={this.props.viewState}
-              iconElement={Icon.GLYPHS.bulb}
-              label={"Timeseries Date Picker"}
-              // css={`
-
-              // `}
-            />
-            <HelpPanelItem 
-              terria={this.props.terria}
-              viewState={this.props.viewState}
-              iconElement={Icon.GLYPHS.bulb}
-              label={"Pulling Away Underground Layers"}
-            />
+              <HelpPanelItem 
+                terria={this.props.terria}
+                viewState={this.props.viewState}
+                iconElement={Icon.GLYPHS.controls}
+                label={"Navigating 3D Data"}
+                itemString={"navigation"}
+                // onClick={this.changeActiveItem("navigation")}
+              />
+              <HelpPanelItem 
+                terria={this.props.terria}
+                viewState={this.props.viewState}
+                iconElement={Icon.GLYPHS.splitterOff}
+                label={"Split Screen"}
+                itemString={"splitscreen"}
+                // onClick={this.changeActiveItem("splitscreen")}
+              />
+              <HelpPanelItem 
+                terria={this.props.terria}
+                viewState={this.props.viewState}
+                iconElement={Icon.GLYPHS.bulb}
+                label={"Timeseries Date Picker"}
+                itemString={"timeseries"}
+                // onClick={this.changeActiveItem("timeseries")}
+              />
+              <HelpPanelItem 
+                terria={this.props.terria}
+                viewState={this.props.viewState}
+                iconElement={Icon.GLYPHS.bulb}
+                label={"Pulling Away Underground Layers"}
+                itemString={"underground"}
+                // onClick={this.changeActiveItem("underground")}
+              />
           </Box>
         </Box>
       </div>

@@ -24,16 +24,13 @@ import MapIconButton from "../../../MapIconButton/MapIconButton"
 import styled from "styled-components";
 
 @observer
-class HelpPanelItem extends React.Component {
+class HelpVideoPanel extends React.Component {
 
-  static displayName = "HelpPanelItem";
+  static displayName = "HelpVideoPanel";
 
   static propTypes = {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
-    iconElement: PropTypes.element.isRequired,
-    label: PropTypes.string.isRequired,
-    itemString: PropTypes.string,
     t: PropTypes.func.isRequired
   };
 
@@ -49,69 +46,38 @@ class HelpPanelItem extends React.Component {
 
   render() {
     const { t } = this.props;
-    const CompassWrapper = styled(Box).attrs({
-      centered: true
-    })`
-      flex-shrink: 0;
-      width: 64px;
-      height: 64px;
-      margin-right: 10px;
-      display: table-cell;
-    `;
-    const CompassIcon = styled(Icon)`
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      ${props =>
-        `
-          fill: #575757;
-          width: 30px;
-          height: 30px;
-        `}
-      ${props =>
-        props.darken &&
-        `
-          opacity: 0.2;
-        `}
-    `;
-    const itemSelected = 
-      this.props.viewState.selectedHelpMenuItem === 
-      this.props.itemString;
-    const className = classNames({
-      [Styles.panelItem]: true,
-      [Styles.isSelected]: itemSelected
-    });
     return (
-      <button 
-        className={className}
-        onClick={this.changeActiveItem}
-      >
-        <Box 
-          left
+      <div className={Styles.videoPanel}>
+        {/* <div
           css={`
-            display: table-row;
-            text-align: left;
+            svg {
+              width: 15px;
+              height: 15px;
+            }
+            button {
+              box-shadow: none;
+              float: right
+            }
           `}
         >
-          <CompassWrapper>
-            <CompassIcon glyph={this.props.iconElement} />
-          </CompassWrapper>
-          <Text 
-            semiBold 
-            uppercase 
-            css={`
-              display: table-cell;
-              vertical-align: middle;
-              font-size: 16px;
-              line-height: 17px;
-          `}>
-            {this.props.label}
-          </Text>
+          <MapIconButton
+            onClick={this.hidePanel}
+            iconElement={() => <Icon glyph={Icon.GLYPHS.closeLight} />}
+          />
+        </div> */}
+        <Box
+          centered
+          css={`
+            direction: ltr;
+            min-width: 295px;
+            padding: 100px 20px;
+            display: inline-block;
+          `}
+        >
         </Box>
-      </button>
+      </div>
     );
   }
 }
 
-export default withTranslation()(HelpPanelItem);
+export default withTranslation()(HelpVideoPanel);
