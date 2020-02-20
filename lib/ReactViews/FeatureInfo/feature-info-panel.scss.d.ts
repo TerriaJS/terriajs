@@ -14,6 +14,7 @@ interface CssExports {
   'btnToggleFeature': string;
   'charcoalGrey': string;
   'colorPrimary': string;
+  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'header': string;

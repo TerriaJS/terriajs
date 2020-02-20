@@ -5,6 +5,7 @@ interface CssExports {
   'cesiumContainer': string;
   'charcoalGrey': string;
   'colorPrimary': string;
+  'colorSplitter': string;
   'container': string;
   'dark': string;
   'darkWithOverlay': string;

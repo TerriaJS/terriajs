@@ -6,6 +6,7 @@ interface CssExports {
   'btnHover': string;
   'charcoalGrey': string;
   'colorPrimary': string;
+  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'file-input': string;

@@ -10,6 +10,7 @@ interface CssExports {
   'chart-panel': string;
   'chartPanel': string;
   'colorPrimary': string;
+  'colorSplitter': string;
   'colors': string;
   'dark': string;
   'darkWithOverlay': string;

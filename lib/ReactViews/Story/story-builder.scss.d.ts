@@ -7,6 +7,7 @@ interface CssExports {
   'captureBtn': string;
   'charcoalGrey': string;
   'colorPrimary': string;
+  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'footer': string;
