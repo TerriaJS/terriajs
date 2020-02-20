@@ -86,6 +86,7 @@ function MapIconButton(props) {
           <Text
             as="span"
             noWrap
+            medium
             css={`
               display: block;
               transition: transform 100ms;
