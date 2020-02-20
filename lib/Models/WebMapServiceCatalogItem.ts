@@ -7,14 +7,16 @@
 // 3. Observable spaghetti
 //  Solution: think in terms of pipelines with computed observables, document patterns.
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
-import { computed, runInAction, trace } from "mobx";
+import { computed, runInAction, trace, observable } from "mobx";
 import moment from "moment";
+import combine from "terriajs-cesium/Source/Core/combine";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
 import URI from "urijs";
+import isDefined from "../Core/isDefined";
 import containsAny from "../Core/containsAny";
 import createTransformerAllowUndefined from "../Core/createTransformerAllowUndefined";
 import filterOutUndefined from "../Core/filterOutUndefined";
@@ -33,6 +35,7 @@ import WebMapServiceCatalogItemTraits, {
 } from "../Traits/WebMapServiceCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
+import CommonStrata from "./CommonStrata";
 import LoadableStratum from "./LoadableStratum";
 import Mappable, { ImageryParts } from "./Mappable";
 import { BaseModel } from "./Model";
@@ -456,6 +459,38 @@ class WebMapServiceCatalogItem
     } else {
       return [];
     }
+  }
+
+  @computed
+  get styleSelector() {
+    if (this.availableStyles.length === 0) return undefined;
+    if (this.availableStyles[0].styles.length === 0) return undefined;
+
+    const userStrata: any = this.strata.get(CommonStrata.user);
+    let activeStyle = this.availableStyles[0].styles[0].name;
+    if (
+      isDefined(userStrata.parameters) &&
+      isDefined(userStrata.parameters.styles)
+    ) {
+      activeStyle = userStrata.parameters.styles;
+    }
+    return {
+      name: "Styles",
+      id: `styles-${this.uniqueId}`,
+      activeStyleId: activeStyle,
+      availableStyles: this.availableStyles[0].styles,
+      chooseActiveStyle: (strata: string, newStyle: string) => {
+        let newParameters = {
+          styles: newStyle
+        };
+        if (isDefined(userStrata) && "parameters" in userStrata) {
+          newParameters = combine(newParameters, userStrata.parameters);
+        }
+        runInAction(() => {
+          this.setTrait(CommonStrata.user, "parameters", newParameters);
+        });
+      }
+    };
   }
 
   @computed
