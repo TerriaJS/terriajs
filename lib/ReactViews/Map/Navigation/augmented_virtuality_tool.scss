@@ -6,7 +6,21 @@
 .augmentedVirtualityTool {
   composes: toolButton from "./tool_button.scss";
   float: left;
+  bottom: 29px;
+
+  @media (max-width: $mobile) {
+    position: fixed;
+  }
 }
+
+.with-time-series-controls {
+  bottom: 100px;
+
+  @media (max-width: $mobile) {
+    bottom: $mobile-bottom-timeline;
+  }
+}
+
 
 .btn {
   composes: btn from "./nav.scss";
