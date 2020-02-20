@@ -89,6 +89,7 @@ const SidePanel = observer(
       const { t } = this.props;
       const searchState = this.props.viewState.searchState;
       const addData = t("addData.addDataBtnText");
+      const uploadText = t("models.catalog.upload");
       return (
         <div className={Styles.workBench}>
           <div className={Styles.header}>
@@ -123,6 +124,7 @@ const SidePanel = observer(
                 title={t("addData.load")}
               >
                 <Icon glyph={Icon.GLYPHS.upload} />
+                {uploadText}
               </button>
             </div>
           </div>

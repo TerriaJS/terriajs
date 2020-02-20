@@ -236,7 +236,7 @@
     "bodyV" : "You can apply a range of styles, such as false-colour, to satellite imagery by clicking on the styles dropdown in your data workbench."
   },
   "addData" : {
-    "addDataBtnText" : "Add Data",
+    "addDataBtnText" : "Explore map data",
     "btnHide" : "Hide",
     "load" : "Load local/web data",
     "closeDataPanel" : "Close data panel",

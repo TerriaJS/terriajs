@@ -30,22 +30,13 @@ const FeedbackButton = observer(
     render() {
       const { t } = this.props;
       return (
-        <div
-          css={`
-            svg {
-              width: 30px;
-              height: 30px;
-            }
-          `}
+        <MapIconButton
+          expandInPlace
+          iconElement={() => <Icon glyph={Icon.GLYPHS.feedback} />}
+          onClick={this.onClick}
         >
-          <MapIconButton
-            expandInPlace
-            iconElement={() => <Icon glyph={Icon.GLYPHS.feedback} />}
-            onClick={this.onClick}
-          >
-            {t("feedback.feedbackBtnText")}
-          </MapIconButton>
-        </div>
+          {t("feedback.feedbackBtnText")}
+        </MapIconButton>
       );
     }
   })
