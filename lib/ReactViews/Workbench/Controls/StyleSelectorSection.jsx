@@ -56,8 +56,8 @@ const StyleSelectorSection = createReactClass({
           onChange={this.changeStyle.bind(this, styleSelector)}
         >
           {availableStyles.map(item => (
-            <option key={item.id} value={item.id}>
-              {item.name}
+            <option key={item.name} value={item.name}>
+              {item.title}
             </option>
           ))}
         </select>
