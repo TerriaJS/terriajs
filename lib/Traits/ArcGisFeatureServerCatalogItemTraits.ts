@@ -19,7 +19,7 @@ export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(
     description:
       "Whether the features in this service should be clamped to the terrain surface."
   })
-  clampToGround: boolean = false;
+  clampToGround: boolean = true;
 
   @primitiveTrait({
     type: "boolean",

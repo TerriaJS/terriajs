@@ -57,6 +57,7 @@ Change Log
 * Moved excess workbench viewing controls into menu
 * Updated bottom attribution styling
 * Begin styled components themeing
+* Make `clampToGround` default to true for `ArcGisFeatureServerCatalogItemTraits` to stop things from floating
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
