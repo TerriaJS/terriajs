@@ -6,10 +6,15 @@
 .augmentedVirtualityTool {
   composes: toolButton from "./tool_button.scss";
   float: left;
-  bottom: 29px;
+  bottom: 12px;
 
   @media (max-width: $mobile) {
-    position: fixed;
+    position: relative;
+  }
+
+  .btn {
+    height: 32px;
+    width: 32px;
   }
 }
 
