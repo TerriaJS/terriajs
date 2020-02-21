@@ -60,6 +60,7 @@ Change Log
 * Make `clampToGround` default to true for `ArcGisFeatureServerCatalogItemTraits` to stop things from floating
 * Add fix for `WebMapServiceCatalogItem` in `styleSelector` to prevent crash.
 * Revert changes to `StyleSelectorSelection` component and refactor `WebMapServiceCatalogItem` styleSelector getter.
+* Added a temporary fix for bug where a single model failing to load in `applyInitData` in `Terria` would cause other models in the same `initData` object to not load as well.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
