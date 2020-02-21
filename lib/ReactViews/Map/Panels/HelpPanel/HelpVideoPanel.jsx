@@ -34,6 +34,8 @@ class HelpVideoPanel extends React.Component {
     title: PropTypes.string.isRequired,
     itemString: PropTypes.string,
     description: PropTypes.array,
+    videoLink: PropTypes.string,
+    background: PropTypes.string,
     t: PropTypes.func.isRequired
   };
 
@@ -74,7 +76,7 @@ class HelpVideoPanel extends React.Component {
           className={Styles.videoGuide}
           onClick={e => e.stopPropagation()}
           style={{
-            backgroundImage: `url(${require("../../../../../wwwroot/images/data-stories-getting-started.jpg")})`
+            backgroundImage: `url(${this.props.background})`
           }}
         >
           <div className={Styles.videoGuideRatio}>
@@ -83,7 +85,7 @@ class HelpVideoPanel extends React.Component {
             </div>
             <iframe
               className={Styles.videoGuideIframe}
-              src="https://www.youtube.com/embed/fbiQawV8IYY"
+              src={this.props.videoLink}
               allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
             />
           </div>
@@ -104,7 +106,6 @@ class HelpVideoPanel extends React.Component {
     return (
       <div 
         className={className}
-        onClick={this.toggleVideoGuide}
       >
         {this.state.showVideoGuide && this.renderVideoGuide()}
         <Box
@@ -119,11 +120,12 @@ class HelpVideoPanel extends React.Component {
           <div
             className={Styles.videoGuideWrapper}
             style={{
-              backgroundImage: `linear-gradient(rgba(0,0,0,0.35),rgba(0,0,0,0.35)), url(${require("../../../../../wwwroot/images/data-stories-getting-started.jpg")})`
+              backgroundImage: `linear-gradient(rgba(0,0,0,0.35),rgba(0,0,0,0.35)), url(${this.props.background})`
             }}
           >
             <button
               className={Styles.videoBtn}
+              onClick={this.toggleVideoGuide}
             >
               <Icon glyph={Icon.GLYPHS.play} />
             </button>

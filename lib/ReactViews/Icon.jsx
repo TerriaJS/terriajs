@@ -89,6 +89,8 @@ const GLYPHS = {
   datePicker: require("../../wwwroot/images/icons/date-picker-icon.svg"),
   tour: require("../../wwwroot/images/icons/take-the-tour-icon.svg"),
   layers: require("../../wwwroot/images/icons/pulling-away-layers-icon.svg"),
+  start: require("../../wwwroot/images/icons/getting-started-icon.svg"),
+  cube: require("../../wwwroot/images/icons/interact.svg"),
 };
 
 const Icon = createReactClass({

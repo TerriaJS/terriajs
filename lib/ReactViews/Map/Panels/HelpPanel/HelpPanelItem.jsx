@@ -32,11 +32,17 @@ class HelpPanelItem extends React.Component {
   static propTypes = {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
-    iconElement: PropTypes.element.isRequired,
+    iconElement: PropTypes.object.isRequired,
     title: PropTypes.string.isRequired,
     itemString: PropTypes.string,
     description: PropTypes.array,
+    videoLink: PropTypes.string,
+    background: PropTypes.string,
     t: PropTypes.func.isRequired
+  };
+
+  static defaultProps = {
+    videoLink: "https://www.youtube.com/watch?v=fbiQawV8IYY"
   };
 
   constructor(props) {
@@ -123,6 +129,8 @@ class HelpPanelItem extends React.Component {
             title={this.props.title}
             itemString={this.props.itemString}
             description={this.props.description}
+            videoLink={this.props.videoLink}
+            background={this.props.background}
           />)
         }
       </div>

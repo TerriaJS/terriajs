@@ -17,6 +17,7 @@ interface CssExports {
   'isHidden': string;
   'isSelected': string;
   'isVisible': string;
+  'link': string;
   'mapButtonColor': string;
   'modalHighlight': string;
   'panel-item': string;

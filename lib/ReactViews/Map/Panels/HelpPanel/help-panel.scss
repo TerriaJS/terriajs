@@ -115,6 +115,11 @@
     @include transform(translate(-50%, 0%));
   }
 }
+
+.link {
+  color: $color-primary
+}
+
 .VideoGuideWrapper {
   top: 0;
   left: 0;
@@ -150,7 +155,7 @@
   box-shadow: $box-shadow;
   margin: 0;
   width: 90%;
-  min-height: 90%;
+  height: 90%;
   background-color: black;
   background-size: cover;
   background-repeat: no-repeat;
