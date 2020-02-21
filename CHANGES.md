@@ -50,6 +50,15 @@ Change Log
 * Added `pointSizeMap` to `TableStyle` to allow point size to be scaled by value
 * Added `isExperiencingIssues` to `CatalogMemberTraits`. When set to true, an alert is displayed above the catalog item description.
 * Add gyroscope guidance
+* Enable StyleSelectorSection workbench control for `WebMapServiceCatalogItem`
+* New-new ui
+* Add WIP help panes
+* Added "Split Screen Mode" into workbench
+* Moved excess workbench viewing controls into menu
+* Updated bottom attribution styling
+* Begin styled components themeing
+* Make `clampToGround` default to true for `ArcGisFeatureServerCatalogItemTraits` to stop things from floating
+* Add fix for `WebMapServiceCatalogItem` in `styleSelector` to prevent crash.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC

@@ -4,9 +4,12 @@
 .formLabel {
   position: absolute;
   svg {
-    height: $input-height;
-    width: $input-height;
+    // height: $input-height;
+    // width: $input-height;
+    height: 20px;
+    width: 20px;
     fill: $charcoal-grey;
+    padding: $padding;
     fill-opacity: 0.5;
   }
 }

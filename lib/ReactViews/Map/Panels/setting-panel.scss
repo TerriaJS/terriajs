@@ -39,6 +39,10 @@
   }
 }
 
+.isActiveSplitter {
+  background-color: $color-splitter;
+}
+
 .btn--base-map {
   padding: 0;
   position: relative;

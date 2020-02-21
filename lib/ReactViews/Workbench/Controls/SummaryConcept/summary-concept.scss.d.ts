@@ -12,6 +12,7 @@ interface CssExports {
   'children-list': string;
   'childrenList': string;
   'colorPrimary': string;
+  'colorSplitter': string;
   'condition': string;
   'controls': string;
   'dark': string;

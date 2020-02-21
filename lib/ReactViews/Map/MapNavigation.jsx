@@ -11,12 +11,12 @@ import ZoomControl from "./Navigation/ZoomControl";
 import classNames from "classnames";
 import { observer } from "mobx-react";
 import defined from "terriajs-cesium/Source/Core/defined";
-import HelpTool from "./Navigation/HelpTool";
-import StylesToolButton from "./Navigation/tool_button.scss";
-import { observable, action } from "mobx";
+// import HelpTool from "./Navigation/HelpTool";
+// import StylesToolButton from "./Navigation/tool_button.scss";
+import { action } from "mobx";
 import Icon from "../Icon";
 
-import Icon from "../Icon";
+// import Icon from "../Icon";
 import Box from "../../Styled/Box";
 import MapIconButton from "../MapIconButton/MapIconButton";
 import FeedbackButton from "../Feedback/FeedbackButton";
@@ -33,11 +33,10 @@ class MapNavigation extends React.Component {
   static defaultProps = {
     navItems: []
   };
-  
+
   @action.bound
   showHelpPanel() {
-    this.props.viewState.showHelpMenu = !this.props.viewState
-    .showHelpMenu;
+    this.props.viewState.showHelpMenu = !this.props.viewState.showHelpMenu;
     console.log("HI");
   }
 

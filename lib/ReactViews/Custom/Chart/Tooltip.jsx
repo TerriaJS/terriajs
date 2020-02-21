@@ -114,9 +114,7 @@ class TooltipGroup extends React.PureComponent {
         {name && <div className={Styles.groupName}>{name}</div>}
         <For each="item" of={items}>
           <TooltipItem
-            key={`tooltip-item-${item.chartItem.categoryName}-${
-              item.chartItem.name
-            }`}
+            key={`tooltip-item-${item.chartItem.categoryName}-${item.chartItem.name}`}
             item={item}
           />
         </For>

@@ -27,7 +27,7 @@ $workbench-margin: $padding-small;
 .inner {
   composes: clearfix from "../../Sass/common/_base.scss";
   padding: $padding;
-  border-top: 1px solid $border-color;
+  // border-top: 1px solid $border-color;
   img {
     max-width: 100%;
     height: auto;

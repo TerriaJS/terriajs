@@ -139,9 +139,7 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
         if (trait === undefined) {
           throw new TerriaError({
             title: "Unknown property",
-            message: `${propertyName} is not a valid sub-property of elements of ${
-              this.id
-            }.`
+            message: `${propertyName} is not a valid sub-property of elements of ${this.id}.`
           });
         }
 

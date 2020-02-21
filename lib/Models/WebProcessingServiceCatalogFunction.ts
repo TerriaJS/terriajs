@@ -235,9 +235,7 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
       throw new TerriaError({
         sender: this,
         title: "Unsupported parameter type",
-        message: `The parameter ${
-          input.Identifier
-        } is not a supported type of parameter.`
+        message: `The parameter ${input.Identifier} is not a supported type of parameter.`
       });
     });
     return parameters;
@@ -450,9 +448,7 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
       item.setTrait(
         CommonStrata.user,
         "description",
-        `This is the result of invoking the ${
-          this.name
-        } process or service at ${timestamp} with the input parameters below.`
+        `This is the result of invoking the ${this.name} process or service at ${timestamp} with the input parameters below.`
       );
 
       const info = createStratumInstance(InfoSectionTraits, {

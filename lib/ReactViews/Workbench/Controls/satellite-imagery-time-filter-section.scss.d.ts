@@ -6,6 +6,7 @@ interface CssExports {
   'btnGroup': string;
   'charcoalGrey': string;
   'colorPrimary': string;
+  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'inactive': string;

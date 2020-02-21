@@ -4,6 +4,7 @@ interface CssExports {
   'body': string;
   'charcoalGrey': string;
   'colorPrimary': string;
+  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'exitBtn': string;

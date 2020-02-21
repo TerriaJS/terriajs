@@ -2,7 +2,8 @@
 
 .control {
   composes: list-reset from "../../../Sass/common/_base.scss";
-  height: 18px;
+  // height: 18px;
+  width: 100%;
   position: relative;
   display: flex;
   justify-content: space-between;
@@ -12,10 +13,6 @@
     float: left;
     box-sizing: border-box;
   }
-}
-
-.separator {
-  border-left: solid 1px $border-color;
 }
 
 .remove {
@@ -32,10 +29,11 @@
 
 .btn {
   composes: btn from "../../../Sass/common/_buttons.scss";
-  color: $text-light;
+  background-color: $text-light;
+  color: $grey;
 
   &.btn {
     padding: 0;
-    font-size: $font-size-mini;
+    font-size: 12px;
   }
 }

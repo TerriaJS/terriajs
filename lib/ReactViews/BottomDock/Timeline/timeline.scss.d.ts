@@ -7,6 +7,7 @@ interface CssExports {
   'centuryBtn': string;
   'charcoalGrey': string;
   'colorPrimary': string;
+  'colorSplitter': string;
   'controlsRow': string;
   'dark': string;
   'darkWithOverlay': string;

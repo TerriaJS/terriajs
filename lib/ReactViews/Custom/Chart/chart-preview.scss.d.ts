@@ -7,6 +7,7 @@ interface CssExports {
   'chartTd': string;
   'chartTitleFromTable': string;
   'colorPrimary': string;
+  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'empty': string;

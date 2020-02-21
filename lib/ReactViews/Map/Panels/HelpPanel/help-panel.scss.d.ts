@@ -6,6 +6,7 @@ interface CssExports {
   'close-btn': string;
   'closeBtn': string;
   'colorPrimary': string;
+  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'help-panel': string;

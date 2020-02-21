@@ -5,6 +5,7 @@ interface CssExports {
   'baseLegend': string;
   'charcoalGrey': string;
   'colorPrimary': string;
+  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'distanceLegend': string;

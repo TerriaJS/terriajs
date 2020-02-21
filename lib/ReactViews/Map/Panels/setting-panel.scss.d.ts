@@ -11,12 +11,14 @@ interface CssExports {
   'btnViewer': string;
   'charcoalGrey': string;
   'colorPrimary': string;
+  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'dropdown-inner': string;
   'dropdownInner': string;
   'is-active': string;
   'isActive': string;
+  'isActiveSplitter': string;
   'list-item-four-cols': string;
   'list-item-three-cols': string;
   'listItemFourCols': string;
