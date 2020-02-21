@@ -469,6 +469,7 @@ class WebMapServiceCatalogItem
     const userStrata: any = this.strata.get(CommonStrata.user);
     let activeStyle = this.availableStyles[0].styles[0].name;
     if (
+      isDefined(userStrata) &&
       isDefined(userStrata.parameters) &&
       isDefined(userStrata.parameters.styles)
     ) {
