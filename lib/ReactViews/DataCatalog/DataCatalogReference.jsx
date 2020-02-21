@@ -92,10 +92,7 @@ const DataCatalogReference = observer(
             this.props.terria.workbench.contains(this.props.reference) &&
             !keepCatalogOpen
           ) {
-            runInAction(() => {
-              this.props.viewState.explorerPanelIsVisible = false;
-              this.props.viewState.mobileView = null;
-            });
+            this.props.viewState.closeCatalog();
           }
         });
 

@@ -66,10 +66,7 @@ class MappablePreview extends React.Component {
         this.props.terria.workbench.contains(this.props.previewed) &&
         !keepCatalogOpen
       ) {
-        runInAction(() => {
-          this.props.viewState.explorerPanelIsVisible = false;
-          this.props.viewState.mobileView = null;
-        });
+        this.props.viewState.closeCatalog();
       }
     });
 

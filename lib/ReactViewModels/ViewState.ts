@@ -250,6 +250,7 @@ export default class ViewState {
   closeCatalog() {
     this.explorerPanelIsVisible = false;
     this.switchMobileView(null);
+    this.clearPreviewedItem();
   }
 
   @action
@@ -257,6 +258,12 @@ export default class ViewState {
     this.openAddData();
     this.searchState.catalogSearchText = query;
     this.searchState.searchCatalog();
+  }
+
+  @action
+  clearPreviewedItem() {
+    this.userDataPreviewedItem = undefined;
+    this.previewedItem = undefined;
   }
 
   @action
