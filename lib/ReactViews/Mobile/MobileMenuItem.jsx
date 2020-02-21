@@ -12,7 +12,7 @@ export default function MobileMenuItem(props) {
         <When condition={props.href}>
           <a
             href={props.href}
-            target="_blank"
+            target={props.href !== "#" ? props.target || "_blank" : undefined}
             rel="noopener noreferrer"
             onClick={props.onClick}
             className={Styles.link}

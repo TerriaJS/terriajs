@@ -11,26 +11,46 @@ import Styles from "./menu-button.scss";
 function MenuButton(props) {
   return (
     <div>
-      <a
+      <Choose>
+        <When condition={props.href}>
+          <a
+            className={Styles.btnAboutLink}
+            href={props.href}
+            target={props.href !== "#" ? props.target || "_blank" : undefined}
+            title={props.caption}
+          >
+            {props.href !== "#" && <Icon glyph={Icon.GLYPHS.externalLink} />}
+            <span>{props.caption}</span>
+          </a>
+        </When>
+        <Otherwise>
+          <button onClick={props.onClick} className={Styles.btnAboutLink}>
+            {props.caption}
+          </button>
+        </Otherwise>
+      </Choose>
+
+      {/* <a
         className={Styles.btnAboutLink}
         href={props.href}
-        target={props.href !== "#" ? "_blank" : undefined}
+        target={props.href !== "#" ? props.target || "_blank" : undefined}
         title={props.caption}
       >
         {props.href !== "#" && <Icon glyph={Icon.GLYPHS.externalLink} />}
         <span>{props.caption}</span>
-      </a>
+      </a> */}
     </div>
   );
 }
 
 MenuButton.defaultProps = {
-  href: "#"
+  onClick: () => {}
 };
 
 MenuButton.propTypes = {
   href: PropTypes.string,
-  caption: PropTypes.string.isRequired
+  onClick: PropTypes.func,
+  caption: PropTypes.string
 };
 
 export default MenuButton;

@@ -77,7 +77,7 @@
     "shortenUsingService": "Shorten the share URL using a web service",
     "btnCatalogShareText": "Share",
     "btnMapShareText": "Share / Print",
-    "btnCatalogShareTitle": "Share your catalog with others",
+    "btnCatalogShareTitle": "Share your catalogue with others",
     "btnMapShareTitle": "Share your map with others"
   },
   "countDatasets": {
@@ -240,9 +240,9 @@
     "closeDataPanel": "Close data panel",
     "done": "Done",
     "myData": "My Data",
-    "dataCatalogue": "Data Catalog",
-    "searchPlaceholderWhole": "Search whole catalog",
-    "searchPlaceholder": "Search the catalog",
+    "dataCatalogue": "Data Catalogue",
+    "searchPlaceholderWhole": "Search whole catalogue",
+    "searchPlaceholder": "Search the catalogue",
     "localAdd": "Add local file",
     "localFileType": "<0>Step 1:</0> Select file type (optional)",
     "localFile": "<0>Step 2:</0> Select file",
@@ -262,11 +262,11 @@
     "resultsLabel": "Search Results",
     "done": "Done",
     "data": "Data",
-    "search": "Search for '{{searchText}}' in the Data Catalog",
+    "search": "Search for '{{searchText}}' in the Data Catalogue",
     "viewLess": "View less {{name}} results",
     "viewMore": "View more {{name}} results",
     "placeholder": "Search for locations",
-    "searchCatalogue": "Search the catalog"
+    "searchCatalogue": "Search the catalogue"
   },
   "mobile": {
     "toggleNavigation": "toggle navigation"
@@ -338,7 +338,7 @@
     "exportData": "Export",
     "removeFromMapTitle": "Remove this data",
     "removeFromMap": "Remove",
-    "label": "Layers",
+    "label": "Data Sets",
     "removeAll": "Remove All",
     "toggleVisibility": "Data show/hide"
   },
@@ -398,7 +398,7 @@
   "loader": {
     "loadingMessage": "Loading"
   },
-  "emptyWorkbenchMessage": "<0><0>Your workbench is empty</0><1><strong>Click '$t(addData.addDataBtnText)' above to </strong></1><2><0>Browse the Data Catalog</0><1>Load your own data onto the map</1></2><3><0></0><strong>TIP.</strong><2>All your active data sets will be listed here</2></3></0>",
+  "emptyWorkbenchMessage": "<0><0>Your workbench is empty</0><1><strong>Click '$t(addData.addDataBtnText)' above to </strong></1><2><0>Browse the Data Catalogue</0><1>Load your own data onto the map</1></2><3><0></0><strong>TIP.</strong><2>All your active data sets will be listed here</2></3></0>",
   "dataCatalog": {
     "groupRemove": "remove this group",
     "groupEmpty": "This group is empty"
@@ -407,7 +407,7 @@
     "loading": "Loading...",
     "remove": "Remove",
     "add": "Add",
-    "trash": "Remove from catalog",
+    "trash": "Remove from catalogue",
     "removeFromMap": "Remove from map"
   },
   "chart": {
@@ -423,10 +423,10 @@
     "searchPlaceNames": "Official Place Names",
     "searchNoPlaceNames": "Sorry, no official place names match your search query",
     "searchLocations": "Locations",
-    "searchCatalogueItem": "Catalog Items",
-    "searchNoCatalogueItem": "Sorry, no catalog items match your search query.",
+    "searchCatalogueItem": "Catalogue Items",
+    "searchNoCatalogueItem": "Sorry, no catalogue items match your search query.",
     "inMultipleLocations": "In multiple locations including: ",
-    "inDataCatalogue": "In Data Catalog"
+    "inDataCatalogue": "In Data Catalogue"
   },
   "terriaViewer": {
     "slowWebGLAvailableTitle": "Poor WebGL performance",
@@ -645,8 +645,8 @@
     },
     "ckan": {
       "nameServer": "ckanServer",
-      "errorLoadingTitle": "Error loading CKAN catalog",
-      "errorLoadingMessage": "The definition for this CKAN catalog does not have a valid filter query.",
+      "errorLoadingTitle": "Error loading CKAN catalogue",
+      "errorLoadingMessage": "The definition for this CKAN catalogue does not have a valid filter query.",
       "corsErrorMessage": "Couldn't retrieve packages from this CKAN server.<br/><br/>If you entered the URL manually, please double-check it.<br/><br/>If it's your server, make sure {{corsLink}} is enabled.<br/><br/> Otherwise, if reloading doesn't fix it, please report the problem by sending an email to {{email}} with the technical details below.  Thank you!<br/><br/>",
       "name": "CKAN Resource",
       "dataSourceErrorMessage": "This data source does not have any details available.",
@@ -680,8 +680,8 @@
       "chartDataGroup": "A group for chart data.",
       "dataSourceErrorMessage": "This data source does not have any details available.",
       "serviceErrorMessage": "This service does not have any details available.",
-      "unsupportedTypeTitle": "Unsupported catalog item type",
-      "unsupportedTypeMessage": "Unknown catalog item type: {{type}}. If you are loading your own catalog, please verify that it is correct. This error may also indicate an attempt to load a newer catalog file in an older version of {{appName}}.",
+      "unsupportedTypeTitle": "Unsupported catalogue item type",
+      "unsupportedTypeMessage": "Unknown catalogue item type: {{type}}. If you are loading your own catalogue, please verify that it is correct. This error may also indicate an attempt to load a newer catalogue file in an older version of {{appName}}.",
       "unsupportedFileTypeTitle": "Unsupported file type",
       "unsupportedFileTypeMessage": "This file format is not supported by {{appName}}. Supported file formats include: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>",
       "unsupportedFileTypeMessageII": "This file format is not supported by {{appName}}. Directly supported file formats include: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>  File formats supported through the online conversion service include: <ul><li>Shapefile (.zip)</li><li>MapInfo TAB (.zip)</li><li>Possibly other {{linkII}}</li></ul>",
@@ -709,11 +709,11 @@
       "unableToLoadItemMessage": "CSV did not have data or url to load from."
     },
     "csw": {
-      "name": "Catalog Service (CSW)",
+      "name": "Catalogue Service (CSW)",
       "unknownError": "The CSW server reported an unknown error.",
       "exceptionMessage": "The CSW server reported an error:\n\n {{exceptionText}}",
-      "notUseableTitle": "Catalog service is not useable",
-      "notUseableMessage": "Invalid response obtained when invoking GetDomain on the CSW server. <p>This error may indicate that the catalog server you specified is temporarily unavailable or there is a problem with your internet connection.  Try opening the processing server again, and if the problem persists, please report it by sending an email to ",
+      "notUseableTitle": "Catalogue service is not useable",
+      "notUseableMessage": "Invalid response obtained when invoking GetDomain on the CSW server. <p>This error may indicate that the catalogue server you specified is temporarily unavailable or there is a problem with your internet connection.  Try opening the processing server again, and if the problem persists, please report it by sending an email to ",
       "checkCORSDomain": "Couldn't execute GetDomain on this CSW server.<br/><br/> If you entered the URL manually, please double-check it.<br/><br/> If it's your server, make sure <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a> is enabled.<br/><br/> Otherwise, if reloading doesn't fix it, please report the problem by sending an email to {{email}} with the technical details below.  Thank you!",
       "checkCORSRecords": "Couldn't execute GetRecords on this CSW server.<br/><br/> If it's your server, make sure <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a> is enabled.<br/><br/> Otherwise, if reloading doesn't fix it, please report the problem by sending an email to {{email}} with the technical details below.  Thank you!",
       "dataResponsibility": "Data Responsibility",
@@ -780,8 +780,8 @@
       "resolvingAvailability": "Resolving availability at a location...",
       "accessingBaseMapErrorTitle": "Error accessing base map",
       "accessingBaseMapErrorMessage": "An error occurred while attempting to download tiles for base map:<p><center>{{name}} </center></p> This may indicate that there is a problem with your internet connection, that the base map is temporarily unavailable, or that the base map is invalid.  Please select a different base map using the Map button in the top-right corner.  Further technical details may be found below.<br/><br/>",
-      "accessingCatalogItemErrorTitle": "Error accessing catalog item",
-      "accessingCatalogItemErrorMessage": "An error occurred while attempting to download tiles for catalog item:<p><center>{{name}}</center></p> This may indicate that there is a problem with your internet connection, that the catalog item is temporarily unavailable, or that the catalog item is invalid.  The catalog item has been hidden from the map.  You may re-show it in the Now Viewing panel to try again.  Further technical details may be found below.<br/><br/>",
+      "accessingCatalogItemErrorTitle": "Error accessing catalogue item",
+      "accessingCatalogItemErrorMessage": "An error occurred while attempting to download tiles for catalogue item:<p><center>{{name}}</center></p> This may indicate that there is a problem with your internet connection, that the catalogue item is temporarily unavailable, or that the catalogue item is invalid.  The catalogue item has been hidden from the map.  You may re-show it in the Now Viewing panel to try again.  Further technical details may be found below.<br/><br/>",
       "tileErrorTitle": "Tile Error",
       "tileErrorMessage": "The tile with the URL:\n{{url}}\n succeeded when loaded with XMLHttpRequest but failed multiple times when loaded directly by Cesium or Leaflet.\n This may indicate that the server is very sensitive to the request headers provided or is simply unreliable.",
       "tileErrorMessageII": "Got a 200 (OK) response from URL:\n{{url}}\nbut it could not be loaded as an image.",
