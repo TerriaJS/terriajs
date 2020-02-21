@@ -1,52 +1,16 @@
 import classNames from "classnames";
-// import createReactClass from "create-react-class";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
-// import Sortable from "react-anything-sortable";
 import { withTranslation } from "react-i18next";
-// import combine from "terriajs-cesium/Source/Core/combine";
-// import createGuid from "terriajs-cesium/Source/Core/createGuid";
-// import defined from "terriajs-cesium/Source/Core/defined";
-// import triggerResize from "../../Core/triggerResize";
-// import BadgeBar from "../BadgeBar.jsx";
 import Icon from "../../../Icon.jsx";
-// import Loader from "../Loader";
-// import { getShareData } from "../Map/Panels/SharePanel/BuildShareLink";
 import Styles from "./help-panel.scss";
-// import Story from "./Story.jsx";
-// import StoryEditor from "./StoryEditor.jsx";
 import { action } from "mobx";
 import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
 import MapIconButton from "../../../MapIconButton/MapIconButton";
 import HelpPanelItem from "./HelpPanelItem";
-
-// export default function HelpPanel(props) {
-//   const [helpPanelOpen, setHelpPanelOpen] = useState(false);
-//   const { t } = useTranslation();
-//   return (
-//     <div className={Styles.helpPanel}>
-//       <button
-//         type="button"
-//         className={Styles.closeBtn}
-//         title={"Close panel"}
-//         onClick={this.hidePanel}
-//       >
-//         <Icon glyph={Icon.GLYPHS.close} />
-//       </button>
-//       <Box center>
-//         <Box>
-//           <Text>
-//             <p>{`You aren't logged in as an administrator!
-//             None of your edits will save unless you log in.`}</p>
-//           </Text>
-//         </Box>
-//       </Box>
-//     </div>
-//   );
-// }
 
 @observer
 class HelpPanel extends React.Component {
@@ -145,18 +109,23 @@ class HelpPanel extends React.Component {
               description={[
                 "If you’re new to the NSW Spatial Digital Twin, this video provides a short explanation of how to use some of the basic functions, so you can feel like a pro in no time!",
                 "We cover:",
-                "    • Signing in to the NSW Spatial Collaboration Portal (https://portal.spatial.nsw.gov.au/portal/apps/sites/#/home)",
-                "    • Finding a location",
-                "    • Exploring public data in the catalogue and adding it to the Digital Twin",
-                "    • Workbench controls",
-                "    • Removing data"
+                <span>
+                  • Signing in to the{" "}
+                  <a href="https://portal.spatial.nsw.gov.au/portal/apps/sites/#/home">
+                    NSW Spatial Collaboration Portal
+                  </a>
+                </span>,
+                "• Finding a location",
+                "• Exploring public data in the catalogue and adding it to the Digital Twin",
+                "• Workbench controls",
+                "• Removing data"
               ]}
               videoLink={"https://www.youtube.com/embed/Co5Fy1uhkb8"}
               background={
                 "https://img.youtube.com/vi/Co5Fy1uhkb8/maxresdefault.jpg"
               }
             />
-            <HelpPanelItem
+            {/* <HelpPanelItem
               terria={this.props.terria}
               viewState={this.props.viewState}
               iconElement={Icon.GLYPHS.cube}
@@ -170,7 +139,7 @@ class HelpPanel extends React.Component {
               background={
                 "https://img.youtube.com/vi/Co5Fy1uhkb8/maxresdefault.jpg"
               }
-            />
+            /> */}
             <HelpPanelItem
               terria={this.props.terria}
               viewState={this.props.viewState}
