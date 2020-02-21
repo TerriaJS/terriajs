@@ -1,4 +1,4 @@
-// import classNames from "classnames";
+import classNames from "classnames";
 // import createReactClass from "create-react-class";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
@@ -14,10 +14,10 @@ import { withTranslation } from "react-i18next";
 import Icon from "../../../Icon.jsx";
 // import Loader from "../Loader";
 // import { getShareData } from "../Map/Panels/SharePanel/BuildShareLink";
-// import Styles from "./help-panel.scss";
+import Styles from "./help-panel.scss";
 // import Story from "./Story.jsx";
 // import StoryEditor from "./StoryEditor.jsx";
-// import { runInAction, action } from "mobx";
+import { action } from "mobx";
 // import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";

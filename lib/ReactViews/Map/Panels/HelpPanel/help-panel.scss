@@ -9,7 +9,7 @@
   background-color: #fff;
   position: fixed;
   right: 0px;
-  z-index: 109;
+  z-index: 99999; // Hacky fix to get panels to appear on top. TODO: Need to use topElement
   font-size: $font-size-mid-small;
   transition: all 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -46,7 +46,7 @@
   position: fixed;
   right: 0px;
   top: 0px;
-  z-index: 109;
+  z-index: 99999; // Hacky fix to get panels to appear on top. TODO: Need to use topElement
   font-size: $font-size-mid-small;
   transition: all 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);

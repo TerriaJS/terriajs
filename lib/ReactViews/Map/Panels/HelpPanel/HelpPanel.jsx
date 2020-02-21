@@ -1,4 +1,4 @@
-// import classNames from "classnames";
+import classNames from "classnames";
 // import createReactClass from "create-react-class";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
@@ -77,7 +77,10 @@ class HelpPanel extends React.Component {
       [Styles.helpPanelShifted]: this.props.viewState.helpPanelExpanded
     });
     return (
-      <div className={className}>
+      <div 
+        className={className}
+        onClick={this.handleClick}
+      >
         <div
           css={`
             svg {
