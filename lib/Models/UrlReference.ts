@@ -11,6 +11,7 @@ import StratumOrder from "./StratumOrder";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import { mapping } from "./createCatalogItemFromUrl";
 import updateModelFromJson from "./updateModelFromJson";
+import isDefined from "terriajs/lib/Core/isDefined";
 
 const urlRecordStratum = "url-record";
 StratumOrder.addDefaultStratum(urlRecordStratum);
@@ -39,6 +40,9 @@ export default class UrlReference extends UrlMixin(
     if (this.url === undefined || this.uniqueId === undefined) {
       return Promise.resolve(undefined);
     }
+
+    // hack to make datastore api urls work across environments
+    this.rewritePlaceholderUrl();
 
     const target = UrlReference.createCatalogItemFromUrlReference(
       this,
@@ -117,6 +121,15 @@ export default class UrlReference extends UrlMixin(
       } else {
         return Promise.resolve(item);
       }
+    }
+  }
+
+  rewritePlaceholderUrl() {
+    // This is a terrible hack and I'm so sorry
+    // We represent the base url with a placeholder so that it can be configured per environment
+    const baseUrl: string = this.terria.configParameters.baseUrl as string;
+    if(isDefined( this.url) &&  isDefined(baseUrl) && this.url.includes("{{BASE_URL}}")) {
+      this.url.replace("{{BASE_URL}}", baseUrl);
     }
   }
 }
