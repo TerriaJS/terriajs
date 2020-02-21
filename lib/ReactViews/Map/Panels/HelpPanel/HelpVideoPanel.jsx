@@ -61,14 +61,6 @@ class HelpVideoPanel extends React.Component {
         showVideoGuide: !showVideoGuide,
         videoGuideVisible: false
       })
-      // this.slideOutTimer = this.setState({
-      //   videoGuideVisible: false
-      // });
-      // setTimeout(() => {
-      //   this.setState({
-      //     showVideoGuide: !showVideoGuide
-      //   });
-      // }, 300);
     }
   }
 
@@ -120,7 +112,7 @@ class HelpVideoPanel extends React.Component {
           css={`
             width: 100%;
             height: 100%;
-            padding: 50px 20px;
+            padding: 90px 20px;
             display: inline-block;
           `}
         >

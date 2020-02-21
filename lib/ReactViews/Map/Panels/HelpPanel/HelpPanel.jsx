@@ -76,19 +76,6 @@ class HelpPanel extends React.Component {
       [Styles.helpPanel]: true,
       [Styles.helpPanelShifted]: this.props.viewState.helpPanelExpanded
     });
-    const descriptionArray = [
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pretium pretium tempor. Ut eget imperdiet neque. In volutpat ante semper diam molestie, et aliquam erat laoreet.",
-      "Sed sit amet arcu aliquet, molestie justo at, auctor nunc. Phasellus ligula ipsum, volutpat eget semper id, viverra eget nibh. Suspendisse luctus mattis cursus. Nam consectetur ante at nisl hendrerit gravida. Donec vehicula rhoncus mattis. Mauris dignissim semper mattis.",
-      "Fusce porttitor a mi at suscipit. Praesent \
-      facilisis dolor sapien, vel sodales augue \
-      mollis ut. Mauris venenatis magna eu tortor \
-      posuere luctus. Aenean tincidunt turpis sed \
-      dui aliquam vehicula. Praesent nec elit non \
-      dolor consectetur tincidunt sed in felis. \
-      Donec elementum, lacus at mattis tincidunt, \
-      eros magna faucibus sem, in condimentum est \
-      augue tristique risus."
-    ];
     return (
       <div 
         className={className}
@@ -116,7 +103,7 @@ class HelpPanel extends React.Component {
           css={`
             direction: ltr;
             min-width: 295px;
-            padding: 100px 20px;
+            padding: 90px 20px;
             padding-bottom: 0px;
             display: inline-block;
           `}
@@ -153,33 +140,45 @@ class HelpPanel extends React.Component {
                 terria={this.props.terria}
                 viewState={this.props.viewState}
                 iconElement={Icon.GLYPHS.controls}
-                title={"Navigating 3D Data"}
+                title={"Navigating 3D data"}
                 itemString={"navigation"}
-                description={descriptionArray}
+                description={[
+                  "One of the key features of the NSW Spatial Digital Twin is the ability to add and view 3D data, including 3D imagery, or photo reality mesh. This is an interactive way to explore high resolution, 3D aerial imagery of some areas of NSW.",
+                  "In this video, we’ll show you how to add 3D data to the Digital Twin, and then use the navigation controls to view it in 3D."
+                ]}
               />
               <HelpPanelItem 
                 terria={this.props.terria}
                 viewState={this.props.viewState}
                 iconElement={Icon.GLYPHS.splitterOff}
-                title={"Split Screen"}
+                title={"Compare changes across a location"}
                 itemString={"splitscreen"}
-                description={descriptionArray}
+                description={[
+                  "Using the NSW Spatial Digital Twin, you can also compare a dataset at different points in time. This can help you to easily visualise and analyse the difference between an a place at two different points in time.",
+                  "In this video, we’ll show you how to use the ‘Compare’ functionality to view changes across a dataset, using our split screen functionality. We use the visual example of satellite imagery around Penrith before and during the NSW 2019 bushfires, showing the smoke haze."
+                ]}
               />
               <HelpPanelItem 
                 terria={this.props.terria}
                 viewState={this.props.viewState}
                 iconElement={Icon.GLYPHS.datePicker}
-                title={"Timeseries Date Picker"}
+                title={"Interacting with time-series data"}
                 itemString={"timeseries"}
-                description={descriptionArray}
+                description={[
+                  "Another key feature of the NSW Spatial Digital Twin is the ability to explore the fourth dimension of a dataset, time. For datasets that have a 4D attribute available, you can use the Digital Twin to navigate backwards and forwards in time and see how the data and landscape changes.",
+                  "In this video, we’ll show you how to use the 4D time-series controls using the Digital Twin."
+                ]}
               />
               <HelpPanelItem 
                 terria={this.props.terria}
                 viewState={this.props.viewState}
                 iconElement={Icon.GLYPHS.layers}
-                title={"Pulling Away Underground Layers"}
+                title={"Swiping away underground datasets"}
                 itemString={"underground"}
-                description={descriptionArray}
+                description={[
+                  "The NSW Spatial Digital Twin will allow you to ‘swipe away’ the terrain to view underground assets, such as water mains or sewer pipes’, in relation to the landscape around it.",
+                  "In this video, we’ll show you how to use the split screen feature and map settings to see below ground, in relation to the environment around it."
+                ]}
               />
           </Box>
         </Box>
