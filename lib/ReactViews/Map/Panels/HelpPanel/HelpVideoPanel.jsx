@@ -9,6 +9,7 @@ import Styles from "./help-panel.scss";
 import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
+import { action } from "mobx";
 
 @observer
 class HelpVideoPanel extends React.Component {
