@@ -14,6 +14,8 @@
 .compass {
   position: relative;
   cursor: default;
+
+  // todo: fix properly - why it moves in chrome but not firefox
   width: $compass-width;
   height: $compass-width;
   composes: sm-show from "../../../Sass/common/_base.scss";
@@ -54,7 +56,9 @@
   top: 0;
   left: 0;
   svg {
-    width: 100%;
-    height: 100%;
+    // width: 100%;
+    // height: 100%;
+    height: $compass-width;
+    width: $compass-width;
   }
 }

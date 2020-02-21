@@ -75,10 +75,7 @@ export const DataCatalogItem = observer(
             this.props.terria.workbench.contains(this.props.item) &&
             !keepCatalogOpen
           ) {
-            runInAction(() => {
-              this.props.viewState.explorerPanelIsVisible = false;
-              this.props.viewState.mobileView = null;
-            });
+            this.props.viewState.closeCatalog();
           }
         });
 

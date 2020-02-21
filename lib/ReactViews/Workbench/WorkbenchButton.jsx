@@ -27,7 +27,7 @@ const StyledWorkbenchButton = styled(RawButton)`
   height: 32px;
   min-width: 32px;
 
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+  box-shadow: none;
   svg {
     height: 16px;
     width: 16px;
@@ -47,11 +47,12 @@ const StyledWorkbenchButton = styled(RawButton)`
   ${props =>
     props.disabled &&
     `
-    background: ${props.theme.textDarker};
+    opacity:0.5;
+    // background: ${props.theme.textDarker};
     &:hover,
     &:focus {
       cursor: not-allowed;
-      background: ${props.theme.textDarker};
+      background: ${props.theme.dark};
     }
     `}
 

@@ -1,5 +1,4 @@
 import createReactClass from "create-react-class";
-import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
@@ -92,10 +91,7 @@ const DataCatalogReference = observer(
             this.props.terria.workbench.contains(this.props.reference) &&
             !keepCatalogOpen
           ) {
-            runInAction(() => {
-              this.props.viewState.explorerPanelIsVisible = false;
-              this.props.viewState.mobileView = null;
-            });
+            this.props.viewState.closeCatalog();
           }
         });
 
