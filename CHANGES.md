@@ -59,6 +59,7 @@ Change Log
 * Begin styled components themeing
 * Make `clampToGround` default to true for `ArcGisFeatureServerCatalogItemTraits` to stop things from floating
 * Add fix for `WebMapServiceCatalogItem` in `styleSelector` to prevent crash.
+* Revert changes to `StyleSelectorSelection` component and refactor `WebMapServiceCatalogItem` styleSelector getter.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
