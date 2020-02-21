@@ -527,7 +527,6 @@ class WebMapServiceCatalogItem
 
   @computed
   get mapItems() {
-    trace();
     const result = [];
 
     const current = this._currentImageryParts;
@@ -545,7 +544,6 @@ class WebMapServiceCatalogItem
 
   @computed
   private get _currentImageryParts(): ImageryParts | undefined {
-    trace();
     const imageryProvider = this._createImageryProvider(
       this.currentDiscreteTimeTag
     );
@@ -561,7 +559,6 @@ class WebMapServiceCatalogItem
 
   @computed
   private get _nextImageryParts(): ImageryParts | undefined {
-    trace();
     if (this.nextDiscreteTimeTag) {
       const imageryProvider = this._createImageryProvider(
         this.nextDiscreteTimeTag
