@@ -21,6 +21,8 @@ function AccessControlMixin<T extends Constructor<AccessControlModel>>(
      */
     @computed
     get accessType(): string {
+      if (this._accessType) return this._accessType;
+
       if (AccessControlMixin.isMixedInto(this.sourceReference)) {
         // This item is the target of a reference item, return the accessType
         // of the reference item.

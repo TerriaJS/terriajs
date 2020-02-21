@@ -434,6 +434,8 @@ export default class MagdaReference extends AccessControlMixin(
           if (terria.getModelById(BaseModel, member.id) === undefined) {
             terria.addModel(model);
           }
+          if (AccessControlMixin.isMixedInto(model))
+            model.setAccessType(getAccessTypeFromMagdaRecord(member));
           return model.uniqueId;
         }
       });
