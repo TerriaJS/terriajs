@@ -151,6 +151,10 @@ const SidePanel = observer(
                     searchState.isWaitingToStartLocationSearch
                   }
                 />
+                <Workbench
+                  viewState={this.props.viewState}
+                  terria={this.props.terria}
+                />
               </When>
               <When
                 condition={
