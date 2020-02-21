@@ -194,11 +194,32 @@ export default class Cesium extends GlobeOrMap {
       const logoContainer =
         creditsElement &&
         creditsElement.getElementsByClassName("cesium-credit-logoContainer")[0];
+      const expandLink =
+        creditsElement &&
+        creditsElement.getElementsByClassName("cesium-credit-expand-link") &&
+        creditsElement.getElementsByClassName("cesium-credit-expand-link")[0];
       if (logoContainer) {
         creditsElement.insertBefore(
           this._extraCredits.terria?.element,
           logoContainer
         );
+      }
+      if (expandLink) {
+        let attributionToAboutPage = document.createElement('div');
+        attributionToAboutPage.innerHTML = `<a href="about.html#data-attribution" target="_blank" rel="noopener noreferrer">Data attribution</a>`;
+        let disclaimerToAboutPage = document.createElement('div');
+        disclaimerToAboutPage.innerHTML = `<a href="about.html#disclaimer" target="_blank" rel="noopener noreferrer">Disclaimer</a>`;
+
+        logoContainer.parentNode.insertBefore(
+          disclaimerToAboutPage.firstChild,
+          logoContainer.nextSibling
+        );
+        logoContainer.parentNode.insertBefore(
+          attributionToAboutPage.firstChild,
+          logoContainer.nextSibling
+        );
+
+        expandLink.innerText = "Basemap";
       }
     }
 
