@@ -187,7 +187,7 @@ class Compass extends React.Component {
           <GyroscopeGuidance
             viewState={this.props.viewState}
             handleHelp={() => {
-              console.log("handle help")
+              console.log("handle help");
               this.props.viewState.showHelpMenu = true;
             }}
             onClose={() => this.setState({ active: false })}

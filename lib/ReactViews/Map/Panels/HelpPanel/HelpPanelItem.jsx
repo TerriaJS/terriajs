@@ -83,20 +83,16 @@ class HelpPanelItem extends React.Component {
           opacity: 0.2;
         `}
     `;
-    const itemSelected = 
-      this.props.viewState.selectedHelpMenuItem === 
-      this.props.itemString;
+    const itemSelected =
+      this.props.viewState.selectedHelpMenuItem === this.props.itemString;
     const className = classNames({
       [Styles.panelItem]: true,
       [Styles.isSelected]: itemSelected
     });
     return (
       <div>
-        <button 
-          className={className}
-          onClick={this.changeActiveItem}
-        >
-          <Box 
+        <button className={className} onClick={this.changeActiveItem}>
+          <Box
             left
             css={`
               display: table-row;
@@ -106,33 +102,33 @@ class HelpPanelItem extends React.Component {
             <CompassWrapper>
               <CompassIcon glyph={this.props.iconElement} />
             </CompassWrapper>
-            <Text 
-              semiBold 
-              uppercase 
+            <Text
+              semiBold
+              uppercase
               css={`
                 display: table-cell;
                 vertical-align: middle;
                 font-size: 16px;
                 line-height: 17px;
-            `}>
+              `}
+            >
               {this.props.title}
             </Text>
           </Box>
         </button>
-        {
-          this.props.viewState.showHelpMenu &&
-          this.props.viewState.helpPanelExpanded && 
-          itemSelected &&
-          (<HelpVideoPanel
-            terria={this.props.terria}
-            viewState={this.props.viewState}
-            title={this.props.title}
-            itemString={this.props.itemString}
-            description={this.props.description}
-            videoLink={this.props.videoLink}
-            background={this.props.background}
-          />)
-        }
+        {this.props.viewState.showHelpMenu &&
+          this.props.viewState.helpPanelExpanded &&
+          itemSelected && (
+            <HelpVideoPanel
+              terria={this.props.terria}
+              viewState={this.props.viewState}
+              title={this.props.title}
+              itemString={this.props.itemString}
+              description={this.props.description}
+              videoLink={this.props.videoLink}
+              background={this.props.background}
+            />
+          )}
       </div>
     );
   }

@@ -20,12 +20,11 @@ import { runInAction, action } from "mobx";
 import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
-import MapIconButton from "../../../MapIconButton/MapIconButton"
+import MapIconButton from "../../../MapIconButton/MapIconButton";
 import styled from "styled-components";
 
 @observer
 class HelpVideoPanel extends React.Component {
-
   static displayName = "HelpVideoPanel";
 
   static propTypes = {
@@ -62,7 +61,7 @@ class HelpVideoPanel extends React.Component {
       this.setState({
         showVideoGuide: !showVideoGuide,
         videoGuideVisible: false
-      })
+      });
     }
   }
 
@@ -96,17 +95,14 @@ class HelpVideoPanel extends React.Component {
 
   render() {
     const { t } = this.props;
-    const itemSelected = 
-      this.props.viewState.selectedHelpMenuItem === 
-      this.props.itemString;
+    const itemSelected =
+      this.props.viewState.selectedHelpMenuItem === this.props.itemString;
     const className = classNames({
       [Styles.videoPanel]: true,
       [Styles.isSelected]: itemSelected
-    })
+    });
     return (
-      <div 
-        className={className}
-      >
+      <div className={className}>
         {this.state.showVideoGuide && this.renderVideoGuide()}
         <Box
           centered
@@ -123,25 +119,17 @@ class HelpVideoPanel extends React.Component {
               backgroundImage: `linear-gradient(rgba(0,0,0,0.35),rgba(0,0,0,0.35)), url(${this.props.background})`
             }}
           >
-            <button
-              className={Styles.videoBtn}
-              onClick={this.toggleVideoGuide}
-            >
+            <button className={Styles.videoBtn} onClick={this.toggleVideoGuide}>
               <Icon glyph={Icon.GLYPHS.play} />
             </button>
           </div>
           <Spacing bottom={3} />
-          <Text
-            bold
-            title
-          >
+          <Text bold title>
             {this.props.title}
           </Text>
           <For each="desc" of={this.props.description}>
             <Spacing bottom={3} />
-            <Text medium>
-              {desc}
-            </Text>
+            <Text medium>{desc}</Text>
           </For>
         </Box>
       </div>

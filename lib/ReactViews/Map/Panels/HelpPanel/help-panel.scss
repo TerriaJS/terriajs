@@ -42,7 +42,7 @@
   height: 100%;
   color: #000;
   flex-basis: 400px;
-  background-color: #F4F4F4;
+  background-color: #f4f4f4;
   position: fixed;
   right: 0px;
   top: 0px;
@@ -52,15 +52,17 @@
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.panel-item, .videoBtn {
+.panel-item,
+.videoBtn {
   background-color: transparent;
   border: 0;
   width: 100%;
   height: 100%;
   padding: 0;
 }
-.panel-item:hover, .is-selected {
-  background-color: #F4F4F4;
+.panel-item:hover,
+.is-selected {
+  background-color: #f4f4f4;
   z-index: 110;
 }
 
@@ -69,7 +71,7 @@
   color: $text-light;
   font-size: $font-size-button;
   padding: $padding $padding * 2;
-  background-color: #519AC2;
+  background-color: #519ac2;
   border-radius: $padding * 2;
 
   svg {
@@ -117,7 +119,7 @@
 }
 
 .link {
-  color: $color-primary
+  color: $color-primary;
 }
 
 .VideoGuideWrapper {
@@ -141,7 +143,7 @@
 
 .videoGuideWrapperFullScreen {
   position: fixed;
-  z-index: 99999;  
+  z-index: 99999;
   top: 0;
   left: 0;
   right: 0;
