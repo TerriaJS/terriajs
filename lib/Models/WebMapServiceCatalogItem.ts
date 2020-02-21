@@ -164,9 +164,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
                 candidate => candidate.name === style
               );
         if (layerStyle !== undefined && layerStyle.legend !== undefined) {
-          result.push(
-            <StratumFromTraits<LegendTraits>>(<unknown>layerStyle.legend)
-          );
+          result.push(<StratumFromTraits<LegendTraits>>(
+            (<unknown>layerStyle.legend)
+          ));
         }
       }
     }
@@ -479,7 +479,12 @@ class WebMapServiceCatalogItem
       name: "Styles",
       id: `styles-${this.uniqueId}`,
       activeStyleId: activeStyle,
-      availableStyles: this.availableStyles[0].styles,
+      availableStyles: this.availableStyles[0].styles.map(function(s) {
+        return {
+          name: s.title,
+          id: s.name
+        };
+      }),
       chooseActiveStyle: (strata: string, newStyle: string) => {
         let newParameters = {
           styles: newStyle
