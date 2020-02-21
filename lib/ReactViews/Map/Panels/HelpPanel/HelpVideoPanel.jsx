@@ -39,6 +39,65 @@ class HelpVideoPanel extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      showVideoGuide: false,
+      videoGuideVisible: false
+    };
+  }
+
+  @action.bound
+  toggleVideoGuide() {
+    const showVideoGuide = this.state.showVideoGuide;
+    // If not enabled
+    if (!showVideoGuide) {
+      this.setState({
+        showVideoGuide: !showVideoGuide,
+        videoGuideVisible: true
+      });
+    }
+    // Otherwise we immediately trigger exit animations, then close it 300ms later
+    if (showVideoGuide) {
+      this.setState({
+        showVideoGuide: !showVideoGuide,
+        videoGuideVisible: false
+      })
+      // this.slideOutTimer = this.setState({
+      //   videoGuideVisible: false
+      // });
+      // setTimeout(() => {
+      //   this.setState({
+      //     showVideoGuide: !showVideoGuide
+      //   });
+      // }, 300);
+    }
+  }
+
+  renderVideoGuide() {
+    return (
+      <div
+        className={Styles.videoGuideWrapperFullScreen}
+        onClick={this.toggleVideoGuide}
+      >
+        <div
+          className={Styles.videoGuide}
+          onClick={e => e.stopPropagation()}
+          style={{
+            backgroundImage: `url(${require("../../../../../wwwroot/images/data-stories-getting-started.jpg")})`
+          }}
+        >
+          <div className={Styles.videoGuideRatio}>
+            <div className={Styles.videoGuideLoading}>
+              <Loader message={` `} />
+            </div>
+            <iframe
+              className={Styles.videoGuideIframe}
+              src="https://www.youtube.com/embed/fbiQawV8IYY"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            />
+          </div>
+        </div>
+      </div>
+    );
   }
 
   render() {
@@ -51,7 +110,11 @@ class HelpVideoPanel extends React.Component {
       [Styles.isSelected]: itemSelected
     })
     return (
-      <div className={className}>
+      <div 
+        className={className}
+        onClick={this.toggleVideoGuide}
+      >
+        {this.state.showVideoGuide && this.renderVideoGuide()}
         <Box
           centered
           css={`
@@ -63,25 +126,15 @@ class HelpVideoPanel extends React.Component {
         >
           <div
             className={Styles.videoGuideWrapper}
+            style={{
+              backgroundImage: `linear-gradient(rgba(0,0,0,0.35),rgba(0,0,0,0.35)), url(${require("../../../../../wwwroot/images/data-stories-getting-started.jpg")})`
+            }}
           >
-            <div
-              className={Styles.videoGuide}
-              onClick={e => e.stopPropagation()}
-              style={{
-                backgroundImage: `url(${require("../../../../../wwwroot/images/data-stories-getting-started.jpg")})`
-              }}
+            <button
+              className={Styles.videoBtn}
             >
-              <div className={Styles.videoGuideRatio}>
-                <div className={Styles.videoGuideLoading}>
-                  <Loader message={` `} />
-                </div>
-                <iframe
-                  className={Styles.videoGuideIframe}
-                  src="https://www.youtube.com/embed/fbiQawV8IYY"
-                  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                />
-              </div>
-            </div>
+              <Icon glyph={Icon.GLYPHS.play} />
+            </button>
           </div>
           <Spacing bottom={3} />
           <Text

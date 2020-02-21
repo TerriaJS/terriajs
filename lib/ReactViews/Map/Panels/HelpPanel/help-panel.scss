@@ -52,7 +52,7 @@
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.panel-item {
+.panel-item, .videoBtn {
   background-color: transparent;
   border: 0;
   width: 100%;
@@ -122,21 +122,43 @@
   bottom: 0;
   opacity: 1;
   width: 100%;
-  min-height: 260px;
+  height: 260px;
+  background-size: cover;
+
+  svg {
+    width: 50px;
+    height: 50px;
+    fill: #fff;
+    margin: auto;
+    position: relative;
+  }
+}
+
+.videoGuideWrapperFullScreen {
+  position: fixed;
+  z-index: 99999;  
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  opacity: 1;
+  @include animation("story-fade-in 0.3s");
 }
 
 .videoGuide {
   box-shadow: $box-shadow;
   margin: 0;
-  width: 100%;
-  min-height: 31.5%;
+  width: 90%;
+  min-height: 90%;
   background-color: black;
   background-size: cover;
   background-repeat: no-repeat;
   position: relative;
-  @include transform(translate(0%, 0%));
+  @include transform(translate(0%, 5%));
   transition: all 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  margin: auto;
 }
 .videoGuideRatio {
   padding-bottom: 58.5%;

@@ -33,12 +33,14 @@ interface CssExports {
   'textLight': string;
   'tourBtn': string;
   'video-panel': string;
+  'videoBtn': string;
   'videoGuide': string;
   'videoGuide--iframe': string;
   'videoGuideIframe': string;
   'videoGuideLoading': string;
   'videoGuideRatio': string;
   'videoGuideWrapper': string;
+  'videoGuideWrapperFullScreen': string;
   'videoPanel': string;
 }
 declare var cssExports: CssExports;
