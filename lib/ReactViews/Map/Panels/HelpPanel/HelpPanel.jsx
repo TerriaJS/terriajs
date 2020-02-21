@@ -76,6 +76,19 @@ class HelpPanel extends React.Component {
       [Styles.helpPanel]: true,
       [Styles.helpPanelShifted]: this.props.viewState.helpPanelExpanded
     });
+    const descriptionArray = [
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pretium pretium tempor. Ut eget imperdiet neque. In volutpat ante semper diam molestie, et aliquam erat laoreet.",
+      "Sed sit amet arcu aliquet, molestie justo at, auctor nunc. Phasellus ligula ipsum, volutpat eget semper id, viverra eget nibh. Suspendisse luctus mattis cursus. Nam consectetur ante at nisl hendrerit gravida. Donec vehicula rhoncus mattis. Mauris dignissim semper mattis.",
+      "Fusce porttitor a mi at suscipit. Praesent \
+      facilisis dolor sapien, vel sodales augue \
+      mollis ut. Mauris venenatis magna eu tortor \
+      posuere luctus. Aenean tincidunt turpis sed \
+      dui aliquam vehicula. Praesent nec elit non \
+      dolor consectetur tincidunt sed in felis. \
+      Donec elementum, lacus at mattis tincidunt, \
+      eros magna faucibus sem, in condimentum est \
+      augue tristique risus."
+    ];
     return (
       <div 
         className={className}
@@ -110,7 +123,7 @@ class HelpPanel extends React.Component {
         >
           <Text title>We&apos;re here to help</Text>
           <Spacing bottom={5} />
-          <Text>
+          <Text medium>
             In hac habitasse platea dictumst. Vivamus adipiscing fermentum quam
             volutpat aliquam.
           </Text>
@@ -122,7 +135,7 @@ class HelpPanel extends React.Component {
               // onClick={}
             >
               {" "}
-              <Icon glyph={Icon.GLYPHS.bulb} /> {"Take the tour"}{" "}
+              <Icon glyph={Icon.GLYPHS.tour} /> {"Take the tour"}{" "}
             </button>
           </Box>
         </Box>
@@ -142,6 +155,7 @@ class HelpPanel extends React.Component {
                 iconElement={Icon.GLYPHS.controls}
                 title={"Navigating 3D Data"}
                 itemString={"navigation"}
+                description={descriptionArray}
               />
               <HelpPanelItem 
                 terria={this.props.terria}
@@ -149,20 +163,23 @@ class HelpPanel extends React.Component {
                 iconElement={Icon.GLYPHS.splitterOff}
                 title={"Split Screen"}
                 itemString={"splitscreen"}
+                description={descriptionArray}
               />
               <HelpPanelItem 
                 terria={this.props.terria}
                 viewState={this.props.viewState}
-                iconElement={Icon.GLYPHS.bulb}
+                iconElement={Icon.GLYPHS.datePicker}
                 title={"Timeseries Date Picker"}
                 itemString={"timeseries"}
+                description={descriptionArray}
               />
               <HelpPanelItem 
                 terria={this.props.terria}
                 viewState={this.props.viewState}
-                iconElement={Icon.GLYPHS.bulb}
+                iconElement={Icon.GLYPHS.layers}
                 title={"Pulling Away Underground Layers"}
                 itemString={"underground"}
+                description={descriptionArray}
               />
           </Box>
         </Box>

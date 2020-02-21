@@ -33,6 +33,7 @@ class HelpVideoPanel extends React.Component {
     viewState: PropTypes.object.isRequired,
     title: PropTypes.string.isRequired,
     itemString: PropTypes.string,
+    description: PropTypes.array,
     t: PropTypes.func.isRequired
   };
 
@@ -89,34 +90,12 @@ class HelpVideoPanel extends React.Component {
           >
             {this.props.title}
           </Text>
-          <Spacing bottom={3} />
-          <Text medium>
-          Lorem ipsum dolor sit amet, consectetur 
-          adipiscing elit. Ut pretium pretium tempor. 
-          Ut eget imperdiet neque. In volutpat ante 
-          semper diam molestie, et aliquam erat laoreet.
-          </Text>
-          <Spacing bottom={3} />
-          <Text medium>
-          Sed sit amet arcu aliquet, molestie justo at, 
-          auctor nunc. Phasellus ligula ipsum, volutpat 
-          eget semper id, viverra eget nibh. Suspendisse 
-          luctus mattis cursus. Nam consectetur ante at 
-          nisl hendrerit gravida. Donec vehicula rhoncus 
-          mattis. Mauris dignissim semper mattis.
-          </Text>
-          <Spacing bottom={3} />
-          <Text medium>
-          Fusce porttitor a mi at suscipit. Praesent 
-          facilisis dolor sapien, vel sodales augue 
-          mollis ut. Mauris venenatis magna eu tortor 
-          posuere luctus. Aenean tincidunt turpis sed 
-          dui aliquam vehicula. Praesent nec elit non 
-          dolor consectetur tincidunt sed in felis. 
-          Donec elementum, lacus at mattis tincidunt, 
-          eros magna faucibus sem, in condimentum est 
-          augue tristique risus.
-          </Text>
+          <For each="desc" of={this.props.description}>
+            <Spacing bottom={3} />
+            <Text medium>
+              {desc}
+            </Text>
+          </For>
         </Box>
       </div>
     );

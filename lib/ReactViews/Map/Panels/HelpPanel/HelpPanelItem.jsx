@@ -35,6 +35,7 @@ class HelpPanelItem extends React.Component {
     iconElement: PropTypes.element.isRequired,
     title: PropTypes.string.isRequired,
     itemString: PropTypes.string,
+    description: PropTypes.array,
     t: PropTypes.func.isRequired
   };
 
@@ -115,11 +116,13 @@ class HelpPanelItem extends React.Component {
         {
           this.props.viewState.showHelpMenu &&
           this.props.viewState.helpPanelExpanded && 
+          itemSelected &&
           (<HelpVideoPanel
             terria={this.props.terria}
             viewState={this.props.viewState}
             title={this.props.title}
             itemString={this.props.itemString}
+            description={this.props.description}
           />)
         }
       </div>

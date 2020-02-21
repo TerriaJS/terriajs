@@ -85,7 +85,10 @@ const GLYPHS = {
   recapture: require("../../wwwroot/images/icons/recapture.svg"),
   menuDotted: require("../../wwwroot/images/icons/menu-dotted.svg"),
   cancel: require("../../wwwroot/images/icons/cancel.svg"),
-  user: require("../../wwwroot/images/icons/user.svg")
+  user: require("../../wwwroot/images/icons/user.svg"),
+  datePicker: require("../../wwwroot/images/icons/date-picker-icon.svg"),
+  tour: require("../../wwwroot/images/icons/take-the-tour-icon.svg"),
+  layers: require("../../wwwroot/images/icons/pulling-away-layers-icon.svg"),
 };
 
 const Icon = createReactClass({
