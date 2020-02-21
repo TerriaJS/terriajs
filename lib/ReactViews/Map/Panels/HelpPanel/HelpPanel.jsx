@@ -35,7 +35,7 @@ class HelpPanel extends React.Component {
   }
 
   render() {
-    const { t } = this.props;
+    // const { t } = this.props;
     const className = classNames({
       [Styles.helpPanel]: true,
       [Styles.helpPanelShifted]: this.props.viewState.helpPanelExpanded
@@ -109,7 +109,7 @@ class HelpPanel extends React.Component {
               description={[
                 "If you’re new to the NSW Spatial Digital Twin, this video provides a short explanation of how to use some of the basic functions, so you can feel like a pro in no time!",
                 "We cover:",
-                <span>
+                <span key={2}>
                   • Signing in to the{" "}
                   <a href="https://portal.spatial.nsw.gov.au/portal/apps/sites/#/home">
                     NSW Spatial Collaboration Portal
@@ -120,9 +120,9 @@ class HelpPanel extends React.Component {
                 "• Workbench controls",
                 "• Removing data"
               ]}
-              videoLink={"https://www.youtube.com/embed/Co5Fy1uhkb8"}
+              videoLink={"https://www.youtube.com/embed/lQE5E1O7VTs"}
               background={
-                "https://img.youtube.com/vi/Co5Fy1uhkb8/maxresdefault.jpg"
+                "https://img.youtube.com/vi/lQE5E1O7VTs/maxresdefault.jpg"
               }
             />
             {/* <HelpPanelItem

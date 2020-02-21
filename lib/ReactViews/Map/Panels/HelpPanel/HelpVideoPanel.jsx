@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
-import { withTranslation, Trans, useTranslation } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import Icon from "../../../Icon.jsx";
 import Loader from "../../../Loader";
 import Styles from "./help-panel.scss";
@@ -82,7 +82,7 @@ class HelpVideoPanel extends React.Component {
   }
 
   render() {
-    const { t } = this.props;
+    // const { t } = this.props;
     const itemSelected =
       this.props.viewState.selectedHelpMenuItem === this.props.itemString;
     const className = classNames({
