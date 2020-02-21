@@ -420,8 +420,6 @@ export default class MagdaReference extends AccessControlMixin(
             ref.setTrait(CommonStrata.definition, "name", member.name);
           }
 
-          ref.setTrait(CommonStrata.definition, "magdaRecord", member);
-
           if (overriddenMember) {
             ref.setTrait(CommonStrata.definition, "override", overriddenMember);
           }
@@ -429,13 +427,19 @@ export default class MagdaReference extends AccessControlMixin(
           if (terria.getModelById(BaseModel, member.id) === undefined) {
             terria.addModel(ref);
           }
+
+          if (AccessControlMixin.isMixedInto(ref)) {
+            ref.setAccessType(getAccessTypeFromMagdaRecord(member));
+          }
+
           return ref.uniqueId;
         } else {
           if (terria.getModelById(BaseModel, member.id) === undefined) {
             terria.addModel(model);
           }
-          if (AccessControlMixin.isMixedInto(model))
+          if (AccessControlMixin.isMixedInto(model)) {
             model.setAccessType(getAccessTypeFromMagdaRecord(member));
+          }
           return model.uniqueId;
         }
       });
