@@ -176,7 +176,10 @@ const StandardUserInterface = observer(
       return (
         <ThemeProvider theme={mergedTheme}>
           <div className={Styles.storyWrapper}>
-            {/* <WelcomeMessage viewState={this.props.viewState} /> */}
+            {/* <WelcomeMessage
+              showWelcomeMessage={this.props.viewState.showWelcomeMessage}
+              viewState={this.props.viewState} */}
+            />
             <div
               className={classNames(Styles.uiRoot, {
                 [Styles.withStoryBuilder]: showStoryBuilder

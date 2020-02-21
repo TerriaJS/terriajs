@@ -8,9 +8,18 @@ interface CssExports {
   'WelcomeModal-buttonTertiary': string;
   'WelcomeModal-closeLink': string;
   'WelcomeModalWrapper': string;
+  'charcoalGrey': string;
   'close-btn': string;
   'closeBtn': string;
+  'colorPrimary': string;
+  'colorSplitter': string;
+  'dark': string;
+  'darkWithOverlay': string;
   'highlight': string;
+  'mapButtonColor': string;
+  'modalHighlight': string;
+  'textDarker': string;
+  'textLight': string;
   'welcomeModal': string;
   'welcomeModalBody': string;
   'welcomeModalButton': string;

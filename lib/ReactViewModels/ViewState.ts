@@ -281,6 +281,10 @@ export default class ViewState {
   switchMobileView(viewName: string | null) {
     this.mobileView = viewName;
   }
+  @action
+  setShowWelcomeMessage(bool: boolean) {
+    this.showWelcomeMessage = bool;
+  }
 
   getNextNotification() {
     return this.notifications.length && this.notifications[0];

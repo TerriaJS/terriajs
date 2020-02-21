@@ -79,6 +79,7 @@ interface ConfigParameters {
   brandBarElements?: string[];
   disableMyLocation?: boolean;
   experimentalFeatures?: boolean;
+  showWelcomeMessage?: boolean;
   magdaReferenceHeaders?: MagdaReferenceHeaders;
   locationSearchBoundingBox?: number[];
 }
@@ -175,6 +176,7 @@ export default class Terria {
     initFragmentPaths: ["init/"],
     storyEnabled: true,
     interceptBrowserPrint: true,
+    showWelcomeMessage: true,
     tabbedCatalog: false,
     useCesiumIonTerrain: true,
     cesiumIonAccessToken: undefined,

@@ -3,7 +3,6 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
-import ObserveModelMixin from "../ObserveModelMixin";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 
 import Styles from "./welcome-message.scss";
@@ -16,41 +15,43 @@ import Spacing from "../../Styled/Spacing";
 import { useKeyPress } from "../Hooks/useKeyPress.js";
 import { useTranslation, Trans } from "react-i18next";
 import { runInAction } from "mobx";
+import { observer } from "mobx-react";
 
 export const WELCOME_MESSAGE_NAME = "welcomeMessage";
 export const LOCAL_PROPERTY_KEY = `${WELCOME_MESSAGE_NAME}Prompted`;
 
-const WelcomeMessage = createReactClass({
-  displayName: "WelcomeMessage",
-  mixins: [ObserveModelMixin],
-  propTypes: {
-    viewState: PropTypes.object.isRequired
-  },
-  /* eslint-disable-next-line camelcase */
-  UNSAFE_componentWillMount() {
-    const { viewState } = this.props;
-    const shouldShow =
-      (viewState.terria.configParameters.showWelcomeMessage &&
-        !viewState.terria.getLocalProperty(LOCAL_PROPERTY_KEY)) ||
-      false;
-    this.props.viewState.showWelcomeMessage = shouldShow;
-    knockout.track(this.props.viewState, ["showWelcomeMessage"]);
-  },
-  render() {
-    const viewState = this.props.viewState || {};
+const WelcomeMessage = observer(
+  createReactClass({
+    displayName: "WelcomeMessage",
+    propTypes: {
+      viewState: PropTypes.object.isRequired
+    },
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillMount() {
+      const { viewState } = this.props;
+      const shouldShow =
+        (viewState.terria.configParameters.showWelcomeMessage &&
+          !viewState.terria.getLocalProperty(LOCAL_PROPERTY_KEY)) ||
+        false;
+      this.props.viewState.setShowWelcomeMessage(shouldShow);
+      // knockout.track(this.props.viewState, ["showWelcomeMessage"]);
+    },
+    render() {
+      const viewState = this.props.viewState || {};
 
-    return (
-      <WelcomeMessagePure
-        showWelcomeMessage={viewState.showWelcomeMessage}
-        setShowWelcomeMessage={bool => {
-          viewState.showWelcomeMessage = bool;
-        }}
-        isTopElement={this.props.viewState.topElement === "WelcomeMessage"}
-        viewState={this.props.viewState}
-      />
-    );
-  }
-});
+      return (
+        <WelcomeMessagePure
+          showWelcomeMessage={viewState.showWelcomeMessage}
+          setShowWelcomeMessage={bool => {
+            viewState.setShowWelcomeMessage(bool);
+          }}
+          isTopElement={this.props.viewState.topElement === "WelcomeMessage"}
+          viewState={this.props.viewState}
+        />
+      );
+    }
+  })
+);
 
 export const WelcomeMessagePure = props => {
   const {
@@ -63,10 +64,12 @@ export const WelcomeMessagePure = props => {
   // This is required so we can do nested animations
   const [welcomeVisible, setWelcomeVisible] = useState(showWelcomeMessage);
   const [shouldExploreData, setShouldExploreData] = useState(false);
-  const {
-    WelcomeMessagePrimaryBtnClick,
-    WelcomeMessageSecondaryBtnClick
-  } = viewState.terria.overrides;
+  // const {
+  //   WelcomeMessagePrimaryBtnClick,
+  //   WelcomeMessageSecondaryBtnClick
+  // } = viewState.terria.overrides;
+  const WelcomeMessagePrimaryBtnClick = () => {};
+  const WelcomeMessageSecondaryBtnClick = () => {};
   const handleClose = (persist = false) => {
     setShowWelcomeMessage(false);
     if (persist) {
