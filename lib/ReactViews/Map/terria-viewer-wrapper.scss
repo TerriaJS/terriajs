@@ -50,8 +50,12 @@
       }
 
       a {
-        text-decoration: none;
-        color: $color-primary;
+        // text-decoration: none;
+        // color: $color-primary;
+
+        // I refuse to make this text-light without underlining it
+        text-decoration: underline;
+        color: $text-light;
         display: table-cell !important;
         vertical-align: middle;
         padding: $padding-mini $padding-small;
