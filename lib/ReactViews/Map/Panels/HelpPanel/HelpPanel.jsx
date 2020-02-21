@@ -74,6 +74,7 @@ class HelpPanel extends React.Component {
   render() {
     const { t } = this.props;
     const className = classNames({
+      [Styles.topElement]: true,
       [Styles.helpPanel]: true,
       [Styles.helpPanelShifted]: this.props.viewState.helpPanelExpanded
     });
@@ -102,6 +103,7 @@ class HelpPanel extends React.Component {
             direction: ltr;
             min-width: 295px;
             padding: 100px 20px;
+            padding-bottom: 0px;
             display: inline-block;
           `}
         >
@@ -123,6 +125,13 @@ class HelpPanel extends React.Component {
               <Icon glyph={Icon.GLYPHS.bulb} /> {"Take the tour"}{" "}
             </button>
           </Box>
+        </Box>
+        <Box
+          centered
+          css={`
+            display: inline-block;
+          `}
+        >
           <Spacing bottom={10} />
           <Box css={`
             display: inline-block;
@@ -131,33 +140,29 @@ class HelpPanel extends React.Component {
                 terria={this.props.terria}
                 viewState={this.props.viewState}
                 iconElement={Icon.GLYPHS.controls}
-                label={"Navigating 3D Data"}
+                title={"Navigating 3D Data"}
                 itemString={"navigation"}
-                // onClick={this.changeActiveItem("navigation")}
               />
               <HelpPanelItem 
                 terria={this.props.terria}
                 viewState={this.props.viewState}
                 iconElement={Icon.GLYPHS.splitterOff}
-                label={"Split Screen"}
+                title={"Split Screen"}
                 itemString={"splitscreen"}
-                // onClick={this.changeActiveItem("splitscreen")}
               />
               <HelpPanelItem 
                 terria={this.props.terria}
                 viewState={this.props.viewState}
                 iconElement={Icon.GLYPHS.bulb}
-                label={"Timeseries Date Picker"}
+                title={"Timeseries Date Picker"}
                 itemString={"timeseries"}
-                // onClick={this.changeActiveItem("timeseries")}
               />
               <HelpPanelItem 
                 terria={this.props.terria}
                 viewState={this.props.viewState}
                 iconElement={Icon.GLYPHS.bulb}
-                label={"Pulling Away Underground Layers"}
+                title={"Pulling Away Underground Layers"}
                 itemString={"underground"}
-                // onClick={this.changeActiveItem("underground")}
               />
           </Box>
         </Box>

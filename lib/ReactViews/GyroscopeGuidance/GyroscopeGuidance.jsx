@@ -10,6 +10,7 @@ import Spacing from "../../Styled/Spacing";
 import MapIconButton from "../MapIconButton/MapIconButton";
 // import MenuPanel from "../StandardUserInterface/customizable/MenuPanel";
 import CleanDropdownPanel from "../CleanDropdownPanel/CleanDropdownPanel";
+import { runInAction } from "mobx";
 
 GyroscopeGuidance.propTypes = {
   viewState: PropTypes.object,
@@ -135,6 +136,7 @@ export default function GyroscopeGuidance(props) {
       <MapIconButton
         expandInPlace
         iconElement={() => <Icon glyph={Icon.GLYPHS.help} />}
+        onClick={props.handleHelp}
       >
         Help
       </MapIconButton>

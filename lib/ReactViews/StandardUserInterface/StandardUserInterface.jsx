@@ -366,14 +366,11 @@ const StandardUserInterface = observer(
                 viewState={this.props.viewState}
               />
             )}
-            {
+            {/* {
               this.props.viewState.showHelpMenu &&
               this.props.viewState.helpPanelExpanded && 
-              (<HelpVideoPanel
-                terria={terria}
-                viewState={this.props.viewState}
-              />)
-            }
+              ()
+            } */}
           </div>
         </ThemeProvider>
       );

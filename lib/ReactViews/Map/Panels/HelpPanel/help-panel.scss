@@ -45,6 +45,7 @@
   background-color: #F4F4F4;
   position: fixed;
   right: 0px;
+  top: 0px;
   z-index: 109;
   font-size: $font-size-mid-small;
   transition: all 0.25s;
@@ -59,6 +60,7 @@
 }
 .panel-item:hover, .is-selected {
   background-color: #F4F4F4;
+  z-index: 110;
 }
 
 .tourBtn {
@@ -112,37 +114,27 @@
   }
 }
 .VideoGuideWrapper {
-  position: fixed;
-  z-index: 99999;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba($dark-with-overlay, 0.8);
   opacity: 1;
-  @include animation("story-fade-in 0.3s");
-}
-.VideoGuideWrapper--closing {
-  @include animation("story-fade-out 0.3s");
-  & > div {
-    @include animation("story-slide-down 0.3s");
-  }
+  width: 100%;
+  min-height: 260px;
 }
 
 .videoGuide {
   box-shadow: $box-shadow;
   margin: 0;
-  width: 40%;
+  width: 100%;
   min-height: 31.5%;
   background-color: black;
   background-size: cover;
   background-repeat: no-repeat;
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  max-width: 100%;
-  @include transform(translate(-50%, -50%));
-  @include animation("story-slide-up 0.3s");
+  position: relative;
+  @include transform(translate(0%, 0%));
+  transition: all 0.25s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 .videoGuideRatio {
   padding-bottom: 58.5%;

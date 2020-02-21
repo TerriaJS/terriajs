@@ -22,6 +22,7 @@ import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
 import MapIconButton from "../../../MapIconButton/MapIconButton"
 import styled from "styled-components";
+import HelpVideoPanel from "./HelpVideoPanel";
 
 @observer
 class HelpPanelItem extends React.Component {
@@ -32,7 +33,7 @@ class HelpPanelItem extends React.Component {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
     iconElement: PropTypes.element.isRequired,
-    label: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
     itemString: PropTypes.string,
     t: PropTypes.func.isRequired
   };
@@ -83,33 +84,45 @@ class HelpPanelItem extends React.Component {
       [Styles.isSelected]: itemSelected
     });
     return (
-      <button 
-        className={className}
-        onClick={this.changeActiveItem}
-      >
-        <Box 
-          left
-          css={`
-            display: table-row;
-            text-align: left;
-          `}
+      <div>
+        <button 
+          className={className}
+          onClick={this.changeActiveItem}
         >
-          <CompassWrapper>
-            <CompassIcon glyph={this.props.iconElement} />
-          </CompassWrapper>
-          <Text 
-            semiBold 
-            uppercase 
+          <Box 
+            left
             css={`
-              display: table-cell;
-              vertical-align: middle;
-              font-size: 16px;
-              line-height: 17px;
-          `}>
-            {this.props.label}
-          </Text>
-        </Box>
-      </button>
+              display: table-row;
+              text-align: left;
+            `}
+          >
+            <CompassWrapper>
+              <CompassIcon glyph={this.props.iconElement} />
+            </CompassWrapper>
+            <Text 
+              semiBold 
+              uppercase 
+              css={`
+                display: table-cell;
+                vertical-align: middle;
+                font-size: 16px;
+                line-height: 17px;
+            `}>
+              {this.props.title}
+            </Text>
+          </Box>
+        </button>
+        {
+          this.props.viewState.showHelpMenu &&
+          this.props.viewState.helpPanelExpanded && 
+          (<HelpVideoPanel
+            terria={this.props.terria}
+            viewState={this.props.viewState}
+            title={this.props.title}
+            itemString={this.props.itemString}
+          />)
+        }
+      </div>
     );
   }
 }

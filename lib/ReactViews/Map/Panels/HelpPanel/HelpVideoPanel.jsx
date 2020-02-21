@@ -11,7 +11,7 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import triggerResize from "../../Core/triggerResize";
 import BadgeBar from "../BadgeBar.jsx";
 import Icon from "../../../Icon.jsx";
-import Loader from "../Loader";
+import Loader from "../../../Loader";
 import { getShareData } from "../Map/Panels/SharePanel/BuildShareLink";
 import Styles from "./help-panel.scss";
 import Story from "./Story.jsx";
@@ -31,6 +31,8 @@ class HelpVideoPanel extends React.Component {
   static propTypes = {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
+    title: PropTypes.string.isRequired,
+    itemString: PropTypes.string,
     t: PropTypes.func.isRequired
   };
 
@@ -38,42 +40,84 @@ class HelpVideoPanel extends React.Component {
     super(props);
   }
 
-  @action.bound
-  changeActiveItem() {
-    this.props.viewState.selectedHelpMenuItem = this.props.itemString;
-    this.props.viewState.helpPanelExpanded = true;
-  }
-
   render() {
     const { t } = this.props;
+    const itemSelected = 
+      this.props.viewState.selectedHelpMenuItem === 
+      this.props.itemString;
+    const className = classNames({
+      [Styles.topElement]: true,
+      [Styles.videoPanel]: true,
+      [Styles.isSelected]: itemSelected
+    })
     return (
-      <div className={Styles.videoPanel}>
-        {/* <div
-          css={`
-            svg {
-              width: 15px;
-              height: 15px;
-            }
-            button {
-              box-shadow: none;
-              float: right
-            }
-          `}
-        >
-          <MapIconButton
-            onClick={this.hidePanel}
-            iconElement={() => <Icon glyph={Icon.GLYPHS.closeLight} />}
-          />
-        </div> */}
+      <div className={className}>
         <Box
           centered
           css={`
-            direction: ltr;
-            min-width: 295px;
-            padding: 100px 20px;
+            width: 100%;
+            height: 100%;
+            padding: 50px 20px;
             display: inline-block;
           `}
         >
+          <div
+            className={Styles.videoGuideWrapper}
+          >
+            <div
+              className={Styles.videoGuide}
+              onClick={e => e.stopPropagation()}
+              style={{
+                backgroundImage: `url(${require("../../../../../wwwroot/images/data-stories-getting-started.jpg")})`
+              }}
+            >
+              <div className={Styles.videoGuideRatio}>
+                <div className={Styles.videoGuideLoading}>
+                  <Loader message={` `} />
+                </div>
+                <iframe
+                  className={Styles.videoGuideIframe}
+                  src="https://www.youtube.com/embed/fbiQawV8IYY"
+                  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                />
+              </div>
+            </div>
+          </div>
+          <Spacing bottom={3} />
+          <Text
+            bold
+            title
+          >
+            {this.props.title}
+          </Text>
+          <Spacing bottom={3} />
+          <Text medium>
+          Lorem ipsum dolor sit amet, consectetur 
+          adipiscing elit. Ut pretium pretium tempor. 
+          Ut eget imperdiet neque. In volutpat ante 
+          semper diam molestie, et aliquam erat laoreet.
+          </Text>
+          <Spacing bottom={3} />
+          <Text medium>
+          Sed sit amet arcu aliquet, molestie justo at, 
+          auctor nunc. Phasellus ligula ipsum, volutpat 
+          eget semper id, viverra eget nibh. Suspendisse 
+          luctus mattis cursus. Nam consectetur ante at 
+          nisl hendrerit gravida. Donec vehicula rhoncus 
+          mattis. Mauris dignissim semper mattis.
+          </Text>
+          <Spacing bottom={3} />
+          <Text medium>
+          Fusce porttitor a mi at suscipit. Praesent 
+          facilisis dolor sapien, vel sodales augue 
+          mollis ut. Mauris venenatis magna eu tortor 
+          posuere luctus. Aenean tincidunt turpis sed 
+          dui aliquam vehicula. Praesent nec elit non 
+          dolor consectetur tincidunt sed in felis. 
+          Donec elementum, lacus at mattis tincidunt, 
+          eros magna faucibus sem, in condimentum est 
+          augue tristique risus.
+          </Text>
         </Box>
       </div>
     );

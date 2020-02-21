@@ -2,7 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'VideoGuideWrapper': string;
-  'VideoGuideWrapper--closing': string;
   'charcoalGrey': string;
   'close-btn': string;
   'closeBtn': string;
@@ -39,7 +38,6 @@ interface CssExports {
   'videoGuideLoading': string;
   'videoGuideRatio': string;
   'videoGuideWrapper': string;
-  'videoGuideWrapperClosing': string;
   'videoPanel': string;
 }
 declare var cssExports: CssExports;
