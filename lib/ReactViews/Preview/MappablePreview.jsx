@@ -16,7 +16,7 @@ import measureElement from "../measureElement";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
 import { withTranslation } from "react-i18next";
 import addToWorkbench from "../../Models/addToWorkbench";
-import { runInAction } from "mobx";
+// import { runInAction } from "mobx";
 import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
 
 /**
