@@ -680,7 +680,11 @@ export default class Terria {
             stratumId,
             models,
             replaceStratum
-          );
+          ).catch(e => {
+            // TODO: deal with shared models that can't be loaded because, e.g. because they are private
+            console.log(e);
+            return Promise.resolve();
+          });
         })
       ).then(() => undefined);
     } else {
