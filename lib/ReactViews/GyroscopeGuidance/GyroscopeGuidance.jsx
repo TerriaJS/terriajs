@@ -135,8 +135,8 @@ export default function GyroscopeGuidance(props) {
     >
       <MapIconButton
         expandInPlace
-        iconElement={() => <Icon glyph={Icon.GLYPHS.help} />}
-        onClick={props.handleHelp}
+        iconElement={() => <Icon glyph={Icon.GLYPHS.help} 
+        onClick={() => this.props.viewState.showHelpMenu = true}/>}
       >
         Help
       </MapIconButton>

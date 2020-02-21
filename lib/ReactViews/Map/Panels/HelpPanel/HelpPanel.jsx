@@ -74,7 +74,6 @@ class HelpPanel extends React.Component {
   render() {
     const { t } = this.props;
     const className = classNames({
-      [Styles.topElement]: true,
       [Styles.helpPanel]: true,
       [Styles.helpPanelShifted]: this.props.viewState.helpPanelExpanded
     });
