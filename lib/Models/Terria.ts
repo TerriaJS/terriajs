@@ -306,6 +306,7 @@ export default class Terria {
     return undefined;
   }
 
+  @action
   addModel(model: BaseModel) {
     if (model.uniqueId === undefined) {
       throw new DeveloperError("A model without a `uniqueId` cannot be added.");
