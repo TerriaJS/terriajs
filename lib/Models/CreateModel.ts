@@ -80,7 +80,6 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
 
     @computed
     get strataTopToBottom(): ReadonlyMap<string, StratumTraits> {
-      trace();
       return StratumOrder.sortTopToBottom(this.strata);
     }
 
