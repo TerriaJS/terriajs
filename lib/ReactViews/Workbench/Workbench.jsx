@@ -9,7 +9,21 @@ import { observer } from "mobx-react";
 
 import Styles from "./workbench.scss";
 import { runInAction } from "mobx";
+import logDatasetAnalyticsEvent from "../../Core/logDatasetAnalyticsEvent";
 
+// eslint-disable-next-line no-unused-vars
+import Terria from "../../Models/Terria";
+// eslint-disable-next-line no-unused-vars
+import ViewState from "../../ReactViewModels/ViewState";
+
+/**
+ * @typedef {object} Props
+ * @prop {Terria} terria
+ * @prop {ViewState} viewState
+ * @prop {function} t
+ *
+ * @extends {React.Component<Props>}
+ */
 const Workbench = observer(
   createReactClass({
     displayName: "Workbench",
@@ -31,6 +45,14 @@ const Workbench = observer(
       });
     },
     removeAll() {
+      this.props.terria.workbench.items.forEach(item => {
+        logDatasetAnalyticsEvent(
+          this.props.terria,
+          item,
+          "removeAllFromWorkbench"
+        );
+      });
+
       runInAction(() => {
         this.props.terria.workbench.removeAll();
         this.props.terria.timelineStack.items.clear();

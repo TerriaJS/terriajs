@@ -25,6 +25,8 @@ import { runInAction } from "mobx";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
 import WorkbenchButton from "../WorkbenchButton";
+import getDereferencedIfExists from "../../../Core/getDereferencedIfExists";
+import logDatasetAnalyticsEvent from "../../../Core/logDatasetAnalyticsEvent";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -92,6 +94,11 @@ const ViewingControls = observer(
       const workbench = this.props.viewState.terria.workbench;
       workbench.remove(this.props.item);
       this.props.viewState.terria.timelineStack.remove(this.props.item);
+      logDatasetAnalyticsEvent(
+        this.props.item.terria,
+        this.props.item,
+        "removeFromWorkbench"
+      );
     },
 
     zoomTo() {
@@ -167,11 +174,13 @@ const ViewingControls = observer(
         item = item.sourceCatalogItem;
       }
       // Open up all the parents (doesn't matter that this sets it to enabled as well because it already is).
-      getAncestors(this.props.item.terria, this.props.item).forEach(group => {
-        runInAction(() => {
-          group.setTrait(CommonStrata.user, "isOpen", true);
+      getAncestors(this.props.item.terria, this.props.item)
+        .map(item => getDereferencedIfExists(item))
+        .forEach(group => {
+          runInAction(() => {
+            group.setTrait(CommonStrata.user, "isOpen", true);
+          });
         });
-      });
       this.props.viewState.viewCatalogMember(item);
       this.props.viewState.switchMobileView(
         this.props.viewState.mobileViewOptions.preview

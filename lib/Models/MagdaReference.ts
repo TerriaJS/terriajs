@@ -27,6 +27,7 @@ import updateModelFromJson from "./updateModelFromJson";
 import ModelTraits from "../Traits/ModelTraits";
 import StratumOrder from "./StratumOrder";
 import AccessControlMixin from "../ModelMixins/AccessControlMixin";
+import GroupMixin from "../ModelMixins/GroupMixin";
 
 const magdaRecordStratum = "magda-record";
 StratumOrder.addDefaultStratum(magdaRecordStratum);
@@ -448,6 +449,10 @@ export default class MagdaReference extends AccessControlMixin(
         group.setTrait(magdaRecordStratum, "name", record.name);
       }
       group.setTrait(magdaRecordStratum, "members", filterOutUndefined(ids));
+      if (GroupMixin.isMixedInto(group)) {
+        console.log(`Refreshing ids for ${group.uniqueId}`);
+        group.refreshKnownContainerUniqueIds(group.uniqueId);
+      }
     }
 
     if (isJsonObject(aspects.terria)) {

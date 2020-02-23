@@ -10,8 +10,20 @@ import { Medium, Small } from "../Generic/Responsive";
 import Icon from "../Icon.jsx";
 import Styles from "./story-panel.scss";
 import { withTranslation } from "react-i18next";
+// eslint-disable-next-line no-unused-vars
+import Terria from "../../Models/Terria";
+import getDereferencedIfExists from "../../Core/getDereferencedIfExists";
+import getAncestors from "../../Models/getAncestors";
+
+/**
+ *
+ * @param {any} story
+ * @param {Terria} terria
+ */
 
 export function activateStory(story, terria) {
+  // Send a GA event on scene change with URL hash
+  terria.analytics?.logEvent("story", "scene", window.location.hash);
   return runInAction(() => {
     if (story.shareData) {
       return story.shareData.initSources.map(initSource =>
@@ -21,6 +33,15 @@ export function activateStory(story, terria) {
         })
       );
     }
+  }).then(() => {
+    terria.workbench.items.forEach(item => {
+      const dereferenced = getDereferencedIfExists(item);
+      const path = [
+        ...getAncestors(terria, dereferenced).map(getDereferencedIfExists),
+        dereferenced
+      ].join("/");
+      terria.analytics?.logEvent("story", "datasetView", path);
+    });
   });
 }
 

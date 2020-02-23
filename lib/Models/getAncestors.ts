@@ -26,7 +26,7 @@ export default function getAncestors(
   ) {
     currentModel = terria.getModelById(BaseModel, parentId);
     if (currentModel && currentModel.knownContainerUniqueIds.length > 0) {
-      result.push(currentModel);
+      result.splice(0, 0, currentModel);
     }
   }
 
