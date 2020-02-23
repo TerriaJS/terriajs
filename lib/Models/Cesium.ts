@@ -205,9 +205,9 @@ export default class Cesium extends GlobeOrMap {
         );
       }
       if (expandLink) {
-        let attributionToAboutPage = document.createElement('div');
+        let attributionToAboutPage = document.createElement("div");
         attributionToAboutPage.innerHTML = `<a href="about.html#data-attribution" target="_blank" rel="noopener noreferrer">Data attribution</a>`;
-        let disclaimerToAboutPage = document.createElement('div');
+        let disclaimerToAboutPage = document.createElement("div");
         disclaimerToAboutPage.innerHTML = `<a href="about.html#disclaimer" target="_blank" rel="noopener noreferrer">Disclaimer</a>`;
 
         logoContainer.parentNode.insertBefore(
