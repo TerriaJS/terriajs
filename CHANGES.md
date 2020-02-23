@@ -63,6 +63,8 @@ Change Log
 * Added a temporary fix for bug where a single model failing to load in `applyInitData` in `Terria` would cause other models in the same `initData` object to not load as well.
 * Change gyroscope focus/hover behaviour to move buttons on hover
 * Stop showing previewed item when catalog is closed
+* Prevent `StoryPanel.jsx` from reloading magda references on move through story.
+* Add google analytics to mobx
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
