@@ -1,4 +1,4 @@
-import L from "leaflet";
+import L, { gridLayer } from "leaflet";
 import { autorun, computed, observable } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
@@ -15,6 +15,7 @@ import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDire
 import isDefined from "../Core/isDefined";
 import pollToPromise from "../Core/pollToPromise";
 import getUrlForImageryTile from "./getUrlForImageryTile";
+import makeRealPromise from "../Core/makeRealPromise";
 
 const swScratch = new Cartographic();
 const neScratch = new Cartographic();
@@ -39,7 +40,12 @@ class Credit extends CesiumCredit {
 const useClipUpdateWorkaround =
   FeatureDetection.isInternetExplorer() || FeatureDetection.isEdge();
 
-export default class CesiumTileLayer extends L.TileLayer {
+// interface QueuedRequest {
+//   requestTile: () => ReturnType<typeof ImageryProvider.prototype.requestImage>;
+//   done: L.DoneCallback
+// }
+
+export default class CesiumTileLayer extends L.GridLayer {
   readonly tileSize = 256;
   readonly errorEvent = new CesiumEvent();
 
@@ -49,6 +55,7 @@ export default class CesiumTileLayer extends L.TileLayer {
   private _zSubtract = 0;
   private _requestImageError?: TileProviderError;
   private _previousCredits: Credit[] = [];
+  private _requestQueue: (() => boolean)[] = [];
 
   @observable splitDirection = ImagerySplitDirection.NONE;
   @observable splitPosition: number = 0.5;
@@ -57,7 +64,7 @@ export default class CesiumTileLayer extends L.TileLayer {
     readonly imageryProvider: ImageryProvider,
     options?: L.TileLayerOptions
   ) {
-    super(<any>undefined, options);
+    super(options);
     this.imageryProvider = imageryProvider;
 
     const disposeSplitterReaction = this._reactToSplitterChange();
@@ -122,78 +129,122 @@ export default class CesiumTileLayer extends L.TileLayer {
   }
 
   createTile(coords: L.Coords, done: L.DoneCallback) {
+    const tile = <HTMLImageElement>L.DomUtil.create("img", "leaflet-tile");
+    var size = this.getTileSize();
+    tile.width = size.x;
+    tile.height = size.y;
+    if (this.imageryProvider.ready) {
+      const tryRequest = () => {
+        const promiseOrUndefined = this.imageryProvider.requestImage(
+          coords.x,
+          coords.y,
+          coords.z
+        );
+        if (promiseOrUndefined !== undefined) {
+          // Probably need to add Terria error handling here
+          makeRealPromise<HTMLImageElement | HTMLCanvasElement>(
+            promiseOrUndefined
+          )
+            .finally(() => this._startQueuedRequest())
+            .then(image => {
+              console.log(`Finished tile ${coords.z}/${coords.x}/${coords.y}`);
+              // if (tile.parentNode !== null) {
+              //   tile.parentNode.replaceChild(image, tile);
+              // }
+              if (image instanceof HTMLImageElement) {
+                tile.src = image.src;
+              } else {
+                tile.src = image.toDataURL();
+              }
+              done(undefined, image);
+            })
+            .catch(e => done(e));
+        }
+        return promiseOrUndefined !== undefined;
+      };
+
+      if (!tryRequest()) {
+        // Queue request
+        this._requestQueue.push(tryRequest);
+      }
+    }
+
+    return tile;
+
     // Create a tile (Image) as normal.
-    const tile = <HTMLImageElement>super.createTile(coords, done);
 
     // By default, Leaflet handles tile load errors by setting the Image to the error URL and raising
     // an error event.  We want to first raise an error event that optionally returns a promise and
     // retries after the promise resolves.
 
-    const doRequest = (waitPromise?: any) => {
-      if (waitPromise) {
-        waitPromise
-          .then(function() {
-            doRequest();
-          })
-          .otherwise((e: unknown) => {
-            // The tile has failed irrecoverably, so invoke Leaflet's standard
-            // tile error handler.
-            (<any>L.TileLayer).prototype._tileOnError.call(this, done, tile, e);
-          });
-        return;
-      }
+    // const doRequest = (waitPromise?: any) => {
+    //   if (waitPromise) {
+    //     waitPromise
+    //       .then(function() {
+    //         doRequest();
+    //       })
+    //       .otherwise((e: unknown) => {
+    //         // The tile has failed irrecoverably, so invoke Leaflet's standard
+    //         // tile error handler.
+    //         (<any>L.TileLayer).prototype._tileOnError.call(this, done, tile, e);
+    //       });
+    //     return;
+    //   }
 
-      // Setting src will trigger a new load or error event, even if the
-      // new src is the same as the old one.
-      const tileUrl = this.getTileUrl(coords);
-      if (isDefined(tileUrl)) {
-        tile.src = tileUrl;
-      }
-    };
+    // // Setting src will trigger a new load or error event, even if the
+    // // new src is the same as the old one.
+    // const tileUrl = this.getTileUrl(coords);
+    // if (isDefined(tileUrl)) {
+    //   tile.src = tileUrl;
+    // }
+    // };
 
-    L.DomEvent.on(tile, "error", e => {
-      const level = (<any>this)._getLevelFromZ(coords);
-      const message =
-        "Failed to obtain image tile X: " +
-        coords.x +
-        " Y: " +
-        coords.y +
-        " Level: " +
-        level +
-        ".";
-      this._requestImageError = TileProviderError.handleError(
-        <any>this._requestImageError,
-        this.imageryProvider,
-        <any>this.imageryProvider.errorEvent,
-        message,
-        coords.x,
-        coords.y,
-        level,
-        doRequest,
-        <any>e
-      );
-    });
-
-    return tile;
+    // L.DomEvent.on(tile, "error", e => {
+    //   const level = (<any>this)._getLevelFromZ(coords);
+    //   const message =
+    //     "Failed to obtain image tile X: " +
+    //     coords.x +
+    //     " Y: " +
+    //     coords.y +
+    //     " Level: " +
+    //     level +
+    //     ".";
+    //   this._requestImageError = TileProviderError.handleError(
+    //     <any>this._requestImageError,
+    //     this.imageryProvider,
+    //     <any>this.imageryProvider.errorEvent,
+    //     message,
+    //     coords.x,
+    //     coords.y,
+    //     level,
+    //     doRequest,
+    //     <any>e
+    //   );
+    // });
+  }
+  _startQueuedRequest() {
+    // A queued request is a function that synchronously returns if it successfully started
+    //  and asynchronously calls done for the tile that the request is for
+    this._requestQueue = this._requestQueue.filter(r => !r());
   }
 
-  getTileUrl(tilePoint: L.Coords) {
-    const level = this._getLevelFromZ(tilePoint);
-    if (level < 0) {
-      return this.options.errorTileUrl;
-    }
+  // getTileUrl(tilePoint: L.Coords) {
+  //   const level = this._getLevelFromZ(tilePoint);
+  //   if (level < 0) {
+  //     return this.options.errorTileUrl;
+  //   }
 
-    return getUrlForImageryTile(
-      this.imageryProvider,
-      tilePoint.x,
-      tilePoint.y,
-      level
-    );
-  }
+  //   return getUrlForImageryTile(
+  //     this.imageryProvider,
+  //     tilePoint.x,
+  //     tilePoint.y,
+  //     level
+  //   );
+  // }
 
-  _getLevelFromZ(tilePoint: L.Coords) {
-    return tilePoint.z - this._zSubtract;
-  }
+  // _getLevelFromZ(tilePoint: L.Coords) {
+  //   return tilePoint.z - this._zSubtract;
+  // }
 
   _update() {
     if (!this.imageryProvider.ready) {
@@ -249,7 +300,7 @@ export default class CesiumTileLayer extends L.TileLayer {
         }
 
         if (isDefined(this.imageryProvider.maximumLevel)) {
-          this.options.maxNativeZoom = this.imageryProvider.maximumLevel;
+          (<any>this).options.maxNativeZoom = this.imageryProvider.maximumLevel;
         }
 
         if (isDefined(this.imageryProvider.credit)) {
@@ -439,7 +490,9 @@ export default class CesiumTileLayer extends L.TileLayer {
     // and destroying layers.  If the image requests for previous times/layers are allowed to hang
     // around, they clog up the pipeline and it takes approximately forever for the browser
     // to get around to downloading the tiles that are actually needed.
-    this._abortLoading();
+    if ((<any>this)._abortLoading) {
+      (<any>this)._abortLoading();
+    }
     return this;
   }
 }
