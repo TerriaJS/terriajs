@@ -184,7 +184,8 @@ export default class Terria {
     brandBarElements: undefined,
     experimentalFeatures: undefined,
     magdaReferenceHeaders: undefined,
-    locationSearchBoundingBox: undefined
+    locationSearchBoundingBox: undefined,
+    googleAnalyticsKey: undefined
   };
 
   @observable
@@ -348,6 +349,12 @@ export default class Terria {
         });
       })
       .then(() => {
+        this.analytics?.start(this.configParameters);
+        this.analytics?.logEvent(
+          "launch",
+          "url",
+          defined(baseUri.href) ? baseUri.href : "empty"
+        );
         this.serverConfig = new ServerConfig();
         return this.serverConfig.init(this.configParameters.serverConfigUrl);
       })
