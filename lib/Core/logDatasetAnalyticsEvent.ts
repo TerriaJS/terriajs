@@ -2,6 +2,7 @@ import Terria from "../Models/Terria";
 import { BaseModel } from "../Models/Model";
 import getDereferencedIfExists from "./getDereferencedIfExists";
 import getAncestors from "../Models/getAncestors";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 
 function logDatasetAnalyticsEvent(
   terria: Terria,
@@ -13,7 +14,13 @@ function logDatasetAnalyticsEvent(
   const path = [
     ...getAncestors(terria, dereferenced).map(getDereferencedIfExists),
     dereferenced
-  ].join("/");
+  ]
+    .map(
+      item =>
+        (CatalogMemberMixin.isMixedInto(item) && item.nameInCatalog) ||
+        item.uniqueId
+    )
+    .join("/");
 
   terria.analytics?.logEvent("dataSource", action, path, ...params);
 }
