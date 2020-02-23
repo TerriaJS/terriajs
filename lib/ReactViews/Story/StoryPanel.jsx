@@ -26,13 +26,16 @@ export function activateStory(story, terria) {
   terria.analytics?.logEvent("story", "scene", window.location.hash);
   return runInAction(() => {
     if (story.shareData) {
-      return story.shareData.initSources.map(initSource =>
-        terria.applyInitData({
-          initData: initSource,
-          replaceStratum: false
-        })
+      return Promise.all(
+        story.shareData.initSources.map(initSource =>
+          terria.applyInitData({
+            initData: initSource,
+            replaceStratum: false
+          })
+        )
       );
     }
+    return Promise.resolve([]);
   }).then(() => {
     terria.workbench.items.forEach(item => {
       const dereferenced = getDereferencedIfExists(item);
