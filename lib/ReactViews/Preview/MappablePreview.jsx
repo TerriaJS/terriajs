@@ -18,6 +18,7 @@ import { withTranslation } from "react-i18next";
 import addToWorkbench from "../../Models/addToWorkbench";
 // import { runInAction } from "mobx";
 import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
+import logDatasetAnalyticsEvent from "../../Core/logDatasetAnalyticsEvent";
 
 /**
  * @typedef {object} Props
@@ -67,6 +68,11 @@ class MappablePreview extends React.Component {
         !keepCatalogOpen
       ) {
         this.props.viewState.closeCatalog();
+        logDatasetAnalyticsEvent(
+          this.props.terria,
+          this.props.previewed,
+          toAdd ? "addFromPreviewButton" : "removeFromPreviewButton"
+        );
       }
     });
 

@@ -10,6 +10,7 @@ import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromis
 import removeUserAddedData from "../../Models/removeUserAddedData";
 import CatalogItem from "./CatalogItem";
 import { withTranslation } from "react-i18next";
+import logDatasetAnalyticsEvent from "../../Core/logDatasetAnalyticsEvent";
 
 // Individual dataset
 export const DataCatalogItem = observer(
@@ -75,6 +76,11 @@ export const DataCatalogItem = observer(
             this.props.terria.workbench.contains(this.props.item) &&
             !keepCatalogOpen
           ) {
+            logDatasetAnalyticsEvent(
+              this.props.terria,
+              this.props.item,
+              toAdd ? "addFromCatalogue" : "removeFromCatalogue"
+            );
             this.props.viewState.closeCatalog();
           }
         });

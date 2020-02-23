@@ -81,6 +81,7 @@ interface ConfigParameters {
   experimentalFeatures?: boolean;
   magdaReferenceHeaders?: MagdaReferenceHeaders;
   locationSearchBoundingBox?: number[];
+  googleAnalyticsKey?: string;
 }
 
 interface StartOptions {
@@ -182,6 +183,7 @@ export default class Terria {
     useCesiumIonBingImagery: undefined,
     bingMapsKey: undefined,
     brandBarElements: undefined,
+    disableMyLocation: undefined,
     experimentalFeatures: undefined,
     magdaReferenceHeaders: undefined,
     locationSearchBoundingBox: undefined,

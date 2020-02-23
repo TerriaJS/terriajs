@@ -33,6 +33,7 @@ import { runInAction } from "mobx";
 
 import Box from "../../Styled/Box";
 import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
+import getDereferencedIfExists from "../../Core/getDereferencedIfExists";
 
 const WorkbenchItem = observer(
   createReactClass({
@@ -116,8 +117,10 @@ const WorkbenchItem = observer(
                   onMouseDown={this.props.onMouseDown}
                   onTouchStart={this.props.onTouchStart}
                   className={Styles.draggable}
-                  title={getAncestors(workbenchItem)
-                    .map(member => member.nameInCatalog)
+                  title={getAncestors(workbenchItem.terria, workbenchItem)
+                    .map(
+                      member => getDereferencedIfExists(member).nameInCatalog
+                    )
                     .concat(workbenchItem.nameInCatalog)
                     .join(" → ")}
                 >
