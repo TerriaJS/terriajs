@@ -64,6 +64,7 @@ Change Log
 * Change gyroscope focus/hover behaviour to move buttons on hover
 * Stop showing previewed item when catalog is closed
 * Prevent `StoryPanel.jsx` from reloading magda references on move through story.
+* Add google analytics to mobx
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
