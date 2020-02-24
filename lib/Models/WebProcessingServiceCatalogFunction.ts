@@ -265,7 +265,8 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
     let dataInputs = await Promise.all(
       this.parameters.map(p => this.convertParameterToInput(p))
     );
-    runInAction(async () => {
+
+    return runInAction(async () => {
       const parameters = {
         Identifier: htmlEscapeText(identifier),
         DataInputs: dataInputs.filter(isDefined),
