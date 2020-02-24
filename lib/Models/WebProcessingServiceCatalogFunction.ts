@@ -336,7 +336,6 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
     if (isDefined(status.ProcessFailed)) {
       this.setErrorOnPendingItem(pendingItem, status.ProcessFailed);
     } else if (isDefined(status.ProcessSucceeded)) {
-      console.log("**success**", json);
       const item = await this.createCatalogItem(pendingItem, json);
       await item.loadMapItems();
       this.terria.workbench.add(item);
@@ -346,7 +345,6 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
       this.terria.workbench.contains(pendingItem)
     ) {
       return runLater(async () => {
-        console.log("**polling**");
         const promise = this.getXml(json.statusLocation);
         pendingItem.loadPromise = promise;
         const xml = await promise;
@@ -419,7 +417,6 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
       item.setTrait(CommonStrata.user, "wpsResponse", wpsResponse);
       item.setTrait(CommonStrata.user, "parameters", parameterTraits);
     });
-    console.log("**name**", pendingItem.name);
     return item;
   }
 
