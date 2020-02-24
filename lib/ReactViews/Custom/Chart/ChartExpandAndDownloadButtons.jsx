@@ -106,7 +106,7 @@ const ChartExpandAndDownloadButtons = createReactClass({
             options={nameAndHrefObjects}
             theme={downloadDropdownTheme}
           >
-            {t("chart.download") + "&nbsp;▾"}
+            {t("chart.download") + " ▾"}
           </Dropdown>
         );
       }
@@ -123,7 +123,7 @@ const ChartExpandAndDownloadButtons = createReactClass({
               options={sourceNameObjects}
               theme={dropdownTheme}
             >
-              {t("chart.expand") + "&nbsp;▾"}
+              {t("chart.expand") + " ▾"}
             </Dropdown>
             {downloadButton}
           </div>
@@ -209,39 +209,47 @@ function expand(props, sourceIndex) {
   // Side-effect: sets activeConcepts and existingColors
   function makeNewCatalogItem() {
     const url = defined(sourceIndex) ? props.sources[sourceIndex] : undefined;
+
     const newCatalogItem = new CsvCatalogItem(terria, url, {
       tableStyle: makeTableStyle(),
-      isCsvForCharting: true
+      isCsvForCharting: true,
+      chartDisclaimer: props.catalogItem.chartDisclaimer
+        ? props.catalogItem.chartDisclaimer
+        : null
     });
-    const newGeoJsonItem = new GeoJsonCatalogItem(terria, null);
-    newGeoJsonItem.isUserSupplied = true;
-    newGeoJsonItem.style = {
-      "stroke-width": 3,
-      "marker-size": 30,
-      stroke: "#ffffff",
-      "marker-color": newCatalogItem.colors[0],
-      "marker-opacity": 1
-    };
+    const items = [newCatalogItem];
+    let newGeoJsonAvailable = false;
+    if (defined(feature.position._value)) {
+      newGeoJsonAvailable = true;
+      const newGeoJsonItem = new GeoJsonCatalogItem(terria, null);
+      newGeoJsonItem.isUserSupplied = true;
+      newGeoJsonItem.style = {
+        "stroke-width": 3,
+        "marker-size": 30,
+        stroke: "#ffffff",
+        "marker-color": newCatalogItem.colors[0],
+        "marker-opacity": 1
+      };
+      const carts = Ellipsoid.WGS84.cartesianToCartographic(
+        feature.position._value
+      );
+      newGeoJsonItem.data = {
+        type: "Feature",
+        properties: {},
+        geometry: {
+          type: "Point",
+          coordinates: [
+            CesiumMath.toDegrees(carts.longitude),
+            CesiumMath.toDegrees(carts.latitude)
+          ]
+        }
+      };
+      newGeoJsonItem.isMappable = true;
+      items.push(newGeoJsonItem);
+    }
 
-    const carts = Ellipsoid.WGS84.cartesianToCartographic(
-      feature.position._value
-    );
-    newGeoJsonItem.data = {
-      type: "Feature",
-      properties: {},
-      geometry: {
-        type: "Point",
-        coordinates: [
-          CesiumMath.toDegrees(carts.longitude),
-          CesiumMath.toDegrees(carts.latitude)
-        ]
-      }
-    };
+    const compositeItem = new CompositeCatalogItem(terria, items);
 
-    const compositeItem = new CompositeCatalogItem(terria, [
-      newCatalogItem,
-      newGeoJsonItem
-    ]);
     let tableStructure = props.tableStructure;
     if (
       defined(props.colors) &&
@@ -333,15 +341,13 @@ function expand(props, sourceIndex) {
     newCatalogItem.isMappable = false;
     newCatalogItem.isEnabled = true;
     newCatalogItem.creatorCatalogItem = compositeItem;
+    if (newGeoJsonAvailable)
+      items[1].style["marker-color"] = newCatalogItem.getNextColor();
 
     terria.catalog.addChartableItem(newCatalogItem); // Notify the chart panel so it shows "loading".
 
-    newGeoJsonItem.isMappable = true;
-
     compositeItem.isEnabled = true;
     compositeItem.nowViewingCatalogItem = newCatalogItem;
-
-    newGeoJsonItem.style["marker-color"] = newCatalogItem.getNextColor();
 
     return compositeItem;
   }

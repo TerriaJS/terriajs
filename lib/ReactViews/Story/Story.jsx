@@ -23,7 +23,7 @@ const findTextContent = content => {
   return findTextContent(content.props.children);
 };
 
-class Story extends React.Component {
+export class StoryRaw extends React.Component {
   constructor(props) {
     super(props);
     this.toggleMenu = this.toggleMenu.bind(this);
@@ -170,7 +170,7 @@ class Story extends React.Component {
   }
 }
 
-Story.propTypes = {
+StoryRaw.propTypes = {
   story: PropTypes.object,
   editStory: PropTypes.func,
   viewStory: PropTypes.func,
@@ -186,4 +186,4 @@ Story.propTypes = {
   t: PropTypes.func.isRequired
 };
 
-module.exports = sortable(withTranslation()(Story));
+export default sortable(withTranslation()(StoryRaw));
