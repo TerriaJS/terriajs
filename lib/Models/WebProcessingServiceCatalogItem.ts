@@ -1,5 +1,11 @@
 import i18next from "i18next";
-import { computed, isObservableArray, observable, runInAction } from "mobx";
+import {
+  action,
+  computed,
+  isObservableArray,
+  observable,
+  runInAction
+} from "mobx";
 import isDefined from "../Core/isDefined";
 import loadXML from "../Core/loadXML";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
@@ -39,6 +45,7 @@ class WpsLoadableStratum extends LoadableStratum(
     ) as this;
   }
 
+  @action
   static async load(item: WebProcessingServiceCatalogItem) {
     if (!isDefined(item.wpsResponse) && isDefined(item.wpsResponseUrl)) {
       const url = proxyCatalogItemUrl(item, item.wpsResponseUrl, "1d");
@@ -195,7 +202,8 @@ export default class WebProcessingServiceCatalogItem
     });
 
     const reports: StratumFromTraits<ShortReportTraits>[] = [];
-    const promises = this.outputs.map(async (output, i) => {
+    const outputs = runInAction(() => this.outputs);
+    const promises = outputs.map(async (output, i) => {
       if (!output.Data.ComplexData) {
         return;
       }
@@ -248,7 +256,8 @@ export default class WebProcessingServiceCatalogItem
   async loadMapItems() {
     await this.loadMetadata();
     if (isDefined(this.geoJsonItem)) {
-      await this.geoJsonItem.loadMapItems();
+      const geoJsonItem = this.geoJsonItem;
+      await runInAction(() => geoJsonItem.loadMapItems());
     }
   }
 
@@ -352,10 +361,10 @@ function formatOutputValue(title: string, value: string | undefined) {
  */
 async function loadCatalogItem(item: any) {
   if (CatalogMemberMixin.isMixedInto(item)) {
-    await item.loadMetadata();
+    await runInAction(() => item.loadMetadata());
   }
   if (Mappable.is(item)) {
-    await item.loadMapItems();
+    await runInAction(() => item.loadMapItems());
   }
   return item;
 }
