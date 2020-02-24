@@ -70,13 +70,11 @@ const InvokeFunction = observer(
 
     submit() {
       try {
-        const promise = when(this.props.previewed.invoke()).otherwise(
-          terriaError => {
-            if (terriaError instanceof TerriaError) {
-              this.props.previewed.terria.error.raiseEvent(terriaError);
-            }
+        const promise = this.props.previewed.invoke().catch(terriaError => {
+          if (terriaError instanceof TerriaError) {
+            this.props.previewed.terria.error.raiseEvent(terriaError);
           }
-        );
+        });
 
         runInAction(() => {
           // Close modal window
