@@ -522,7 +522,7 @@ function findNearestPoint(points, coords, xScale, maxDistancePx) {
     : undefined;
 }
 
-function sanitizeIdString(id: string) {
+function sanitizeIdString(id) {
   // delete all non-alphanum chars
   return id.replace(/[^a-zA-Z0-9_-]/g, "");
 }
