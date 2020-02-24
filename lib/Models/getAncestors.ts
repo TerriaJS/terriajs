@@ -16,19 +16,17 @@ export default function getAncestors(
   member: BaseModel
 ): BaseModel[] {
   const result: BaseModel[] = [];
-
-  let parentId;
   let currentModel: BaseModel | undefined = member;
-
-  while (
-    (parentId = currentModel && currentModel.knownContainerUniqueIds[0]) !==
-    undefined
-  ) {
+  for (;;) {
+    const parentId: string | undefined =
+      currentModel && currentModel.knownContainerUniqueIds.length > 0
+        ? currentModel.knownContainerUniqueIds[0]
+        : undefined;
+    if (parentId === undefined) break;
     currentModel = terria.getModelById(BaseModel, parentId);
     if (currentModel && currentModel.knownContainerUniqueIds.length > 0) {
       result.splice(0, 0, currentModel);
     }
   }
-
   return result;
 }

@@ -54,11 +54,7 @@ const SelectAPolygonParameterEditor = createReactClass({
 /**
  * Prompts the user to select a point on the map.
  */
-SelectAPolygonParameterEditor.selectOnMap = function(
-  terria,
-  viewState,
-  parameter
-) {
+export function selectOnMap(terria, viewState, parameter) {
   // Cancel any feature picking already in progress.
   terria.pickedFeatures = undefined;
 
@@ -151,9 +147,9 @@ SelectAPolygonParameterEditor.selectOnMap = function(
   );
 
   viewState.explorerPanelIsVisible = false;
-};
+}
 
-SelectAPolygonParameterEditor.getDisplayValue = function(value) {
+export function getDisplayValue(value) {
   if (!defined(value) || value === "") {
     return "";
   }
@@ -162,6 +158,6 @@ SelectAPolygonParameterEditor.getDisplayValue = function(value) {
       return featureData.id;
     })
     .join(", ");
-};
+}
 
-module.exports = withTranslation()(SelectAPolygonParameterEditor);
+export default withTranslation()(SelectAPolygonParameterEditor);
