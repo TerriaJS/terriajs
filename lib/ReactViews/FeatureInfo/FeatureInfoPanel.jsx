@@ -280,7 +280,7 @@ export const FeatureInfoPanel = observer(
       const filterableCatalogItems = catalogItems
         .filter(
           catalogItem =>
-            defined(catalogItem) && catalogItem.canFilterIntervalsByFeature
+            defined(catalogItem) && catalogItem.canFilterTimeByFeature
         )
         .map(catalogItem => {
           const features = featureCatalogItemPairs.filter(
