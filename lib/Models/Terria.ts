@@ -227,6 +227,8 @@ export default class Terria {
   @observable terrainSplitDirection: ImagerySplitDirection =
     ImagerySplitDirection.NONE;
 
+  @observable depthTestAgainstTerrainEnabled = false;
+
   @observable stories: any[] = [];
 
   // TODO: this is duplicated with properties on ViewState, which is

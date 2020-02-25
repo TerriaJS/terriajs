@@ -47,6 +47,15 @@ class WorkbenchSplitScreen extends React.Component {
       });
     };
 
+    const toggleDepthTestAgainstTerrainEnabled = event => {
+      event && event.stopPropagation();
+      runInAction(() => {
+        this.props.terria.depthTestAgainstTerrainEnabled = !this.props.terria
+          .depthTestAgainstTerrainEnabled;
+      });
+      terria.currentViewer.notifyRepaintRequired();
+    };
+
     const isCesiumWithTerrain =
       terria.mainViewer.viewerMode === ViewerMode.Cesium &&
       terria.mainViewer.viewerOptions.useTerrain &&
@@ -70,8 +79,7 @@ class WorkbenchSplitScreen extends React.Component {
     }
 
     const depthTestAgainstTerrainEnabled =
-      supportsDepthTestAgainstTerrain &&
-      terria.currentViewer.scene.globe.depthTestAgainstTerrain;
+      supportsDepthTestAgainstTerrain && terria.depthTestAgainstTerrainEnabled;
 
     // const depthTestAgainstTerrainFlag =
     //   terria.currentViewer &&
@@ -187,21 +195,7 @@ class WorkbenchSplitScreen extends React.Component {
                 <button
                   id="depthTestAgainstTerrain"
                   type="button"
-                  onClick={() => {
-                    runInAction(() => {
-                      const currentViewer = props.terria.currentViewer;
-                      if (currentViewer.scene && currentViewer.scene.globe) {
-                        currentViewer.scene.globe.depthTestAgainstTerrain = !currentViewer
-                          .scene.globe.depthTestAgainstTerrain;
-                        currentViewer.notifyRepaintRequired();
-
-                        this.forceUpdate();
-                        // setSideForRerender(
-                        //   !currentViewer.scene.globe.depthTestAgainstTerrain
-                        // );
-                      }
-                    });
-                  }}
+                  onClick={() => toggleDepthTestAgainstTerrainEnabled()}
                   title={depthTestAgainstTerrainLabel}
                   className={Styles.btnNativeResolution}
                 >
