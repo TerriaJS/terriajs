@@ -68,6 +68,7 @@ Change Log
 * Fixed google analytics on story panel
 * Fixed path event name undefined labelling
 * Enable zoomTo and splitter on `CartoMapCatalogItem`.
+* Added name to `MapServerStratum` in `ArcGisMapServerCatalogItem`.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC

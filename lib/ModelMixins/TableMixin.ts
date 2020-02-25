@@ -215,6 +215,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
             item: this,
             name: yColumn.name,
             categoryName: this.name,
+            key: `key${this.uniqueId}-${this.name}-${yColumn.name}`,
             type: "line",
             xAxis,
             points,
