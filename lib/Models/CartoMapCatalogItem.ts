@@ -117,6 +117,10 @@ export default class CartoMapCatalogItem
     return true;
   }
 
+  get canZoomTo() {
+    return true;
+  }
+
   @computed get mapItems() {
     if (isDefined(this.imageryProvider)) {
       return [
