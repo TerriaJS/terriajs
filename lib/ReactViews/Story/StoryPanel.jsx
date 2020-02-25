@@ -4,16 +4,15 @@ import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
+import { withTranslation } from "react-i18next";
 import { Swipeable } from "react-swipeable";
+import getPath from "../../Core/getPath";
+// eslint-disable-next-line no-unused-vars
+import Terria from "../../Models/Terria";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import { Medium, Small } from "../Generic/Responsive";
 import Icon from "../Icon.jsx";
 import Styles from "./story-panel.scss";
-import { withTranslation } from "react-i18next";
-// eslint-disable-next-line no-unused-vars
-import Terria from "../../Models/Terria";
-import getDereferencedIfExists from "../../Core/getDereferencedIfExists";
-import getAncestors from "../../Models/getAncestors";
 
 /**
  *
@@ -38,12 +37,7 @@ export function activateStory(story, terria) {
     return Promise.resolve([]);
   }).then(() => {
     terria.workbench.items.forEach(item => {
-      const dereferenced = getDereferencedIfExists(item);
-      const path = [
-        ...getAncestors(terria, dereferenced).map(getDereferencedIfExists),
-        dereferenced
-      ].join("/");
-      terria.analytics?.logEvent("story", "datasetView", path);
+      terria.analytics?.logEvent("story", "datasetView", getPath(item));
     });
   });
 }
