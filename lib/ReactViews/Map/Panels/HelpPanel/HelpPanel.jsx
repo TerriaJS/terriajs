@@ -40,13 +40,13 @@ class HelpPanel extends React.Component {
 
   render() {
     // const { t } = this.props;
-    const className = classNames({
-      [Styles.helpPanel]: true,
-      [Styles.helpPanelShifted]: this.props.viewState.helpPanelExpanded,
-    },
-    this.props.viewState.topElement === "HelpPanel"
-      ? "top-element"
-      : "");
+    const className = classNames(
+      {
+        [Styles.helpPanel]: true,
+        [Styles.helpPanelShifted]: this.props.viewState.helpPanelExpanded
+      },
+      this.props.viewState.topElement === "HelpPanel" ? "top-element" : ""
+    );
     return (
       <div className={className} onClick={this.handleClick}>
         <div
