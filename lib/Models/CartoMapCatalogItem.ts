@@ -121,6 +121,10 @@ export default class CartoMapCatalogItem
     return isDefined(this.rectangle);
   }
 
+  get supportsSplitting() {
+    return true;
+  }
+
   @computed get mapItems() {
     if (isDefined(this.imageryProvider)) {
       return [

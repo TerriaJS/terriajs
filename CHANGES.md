@@ -67,7 +67,7 @@ Change Log
 * Add google analytics to mobx
 * Fixed google analytics on story panel
 * Fixed path event name undefined labelling
-* Enable `zoomTo` on `CartoMapCatalogItem`.
+* Enable zoomTo and splitter on `CartoMapCatalogItem`.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
