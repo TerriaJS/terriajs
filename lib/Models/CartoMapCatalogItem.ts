@@ -118,7 +118,7 @@ export default class CartoMapCatalogItem
   }
 
   get canZoomTo() {
-    return true;
+    return isDefined(this.rectangle);
   }
 
   @computed get mapItems() {
