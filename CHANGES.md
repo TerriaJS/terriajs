@@ -68,6 +68,7 @@ Change Log
 * Fixed google analytics on story panel
 * Fixed path event name undefined labelling
 * Added name to `MapServerStratum` in `ArcGisMapServerCatalogItem`.
+* Added `allowFeatureInfoRequests` property to `Terria` and prevent unnecessary feature info requests when creating `UserDrawing`s.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
