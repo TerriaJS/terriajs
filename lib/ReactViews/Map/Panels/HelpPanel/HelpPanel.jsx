@@ -31,7 +31,6 @@ class HelpPanel extends React.Component {
     this.props.viewState.showHelpMenu = false;
     this.props.viewState.helpPanelExpanded = false;
     this.props.viewState.selectedHelpMenuItem = "";
-    console.log("Bye!");
   }
 
   render() {
@@ -69,7 +68,7 @@ class HelpPanel extends React.Component {
             display: inline-block;
           `}
         >
-          <Text title>We&apos;re here to help</Text>
+          <Text heading>We&apos;re here to help</Text>
           <Spacing bottom={5} />
           <Text medium>
             Find useful tips on how to use the Digital Twin either by checking
