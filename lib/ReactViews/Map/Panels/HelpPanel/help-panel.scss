@@ -9,7 +9,7 @@
   background-color: #fff;
   position: fixed;
   right: 0px;
-  z-index: 99999; // Hacky fix to get panels to appear on top. TODO: Need to use topElement
+  z-index: 110; // Hacky fix to get panels to appear on top. TODO: Need to use topElement
   font-size: $font-size-mid-small;
   transition: all 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -40,7 +40,7 @@
   position: fixed;
   right: 0px;
   top: 0px;
-  z-index: 99999; // Hacky fix to get panels to appear on top. TODO: Need to use topElement
+  z-index: 110; // Hacky fix to get panels to appear on top. TODO: Need to use topElement
   font-size: $font-size-mid-small;
   transition: all 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -138,7 +138,6 @@
 
 .videoGuideWrapperFullScreen {
   position: fixed;
-  z-index: 99999;
   top: 0;
   left: 0;
   right: 0;

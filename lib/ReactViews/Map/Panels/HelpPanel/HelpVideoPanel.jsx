@@ -88,7 +88,10 @@ class HelpVideoPanel extends React.Component {
     const className = classNames({
       [Styles.videoPanel]: true,
       [Styles.isSelected]: itemSelected
-    });
+    },
+    this.props.viewState.topElement === "HelpPanel"
+      ? "top-element"
+      : "");
     return (
       <div className={className}>
         {this.state.showVideoGuide && this.renderVideoGuide()}
