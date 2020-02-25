@@ -64,7 +64,6 @@ export const DataCatalog = observer(
                 onActionButtonClicked={this.props.onActionButtonClicked}
                 removable={this.props.removable}
                 terria={this.props.terria}
-                ancestors={[]}
                 isTopLevel={true}
               />
             )}
