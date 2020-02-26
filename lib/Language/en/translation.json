@@ -479,6 +479,7 @@
       "esri-featureServer": "Esri ArcGIS FeatureServer (single layer)",
       "open-street-map": "Open Street Map Server",
       "geojson": "GeoJSON",
+      "geoRss": "GeoRSS",
       "kml": "KML or KMZ",
       "csv": "CSV",
       "czml": "CZML",
@@ -535,6 +536,12 @@
       "missingExteriorRing": "GML polygon is missing its exterior ring.",
       "missingPosList": "GML polygon's exterior ring is missing a posList.",
       "containsUnsupportedFeatureType": "GML contains unsupported feature type: {{type}}"
+    },
+    "geoRssToGeoJson": {
+      "containsUnsupportedFeatureType": "GeoRSS contains unsupported feature type: {{type}}"
+    },
+    "w3cToGeoJson": {
+      "containsUnsupportedFeatureType": "GeoRSS with W3C geometry contains unsupported feature type: {{type}}"
     },
     "gnafAddressGeocoder": {
       "noAddresses": "This tableStructure has no addresses!",
