@@ -8,9 +8,11 @@ import MappableTraits from "./MappableTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import UrlTraits from "./UrlTraits";
 import LegendTraits from "./LegendTraits";
+import SplitterTraits from "./SplitterTraits";
 import { JsonObject } from "../Core/Json";
 
 export default class CartoMapCatalogItemTraits extends mixTraits(
+  SplitterTraits,
   RasterLayerTraits,
   UrlTraits,
   MappableTraits,
