@@ -1,9 +1,5 @@
 var GeoRssCatalogItem = require("../../lib/Models/GeoRssCatalogItem");
-var TerriaError = require("../../lib/Core/TerriaError");
 var Terria = require("../../lib/Models/Terria");
-
-var loadBlob = require("../../lib/Core/loadBlob");
-var loadText = require("../../lib/Core/loadText");
 
 describe("GeoRssCatalogItem", function() {
   var terria;
