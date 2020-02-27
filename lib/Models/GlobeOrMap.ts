@@ -240,7 +240,7 @@ export default abstract class GlobeOrMap {
             });
 
             this.terria.overlays.add(catalogItem);
-            catalogItem.loadMapItems();
+            this._highlightPromise = catalogItem.loadMapItems();
 
             this._removeHighlightCallback = () => {
               if (isDefined(catalogItem)) {
