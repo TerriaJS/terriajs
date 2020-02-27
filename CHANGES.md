@@ -67,6 +67,9 @@ Change Log
 * Add google analytics to mobx
 * Fixed google analytics on story panel
 * Fixed path event name undefined labelling
+* Enable zoomTo and splitter on `CartoMapCatalogItem`.
+* Added name to `MapServerStratum` in `ArcGisMapServerCatalogItem`.
+* Fixed bug causing "Terrain hides underground features" checkbox to sometimes become out of sync between `SettingPanel` and `WorkbenchSplitScreen`.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC

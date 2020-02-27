@@ -298,6 +298,7 @@ export default class Cesium extends GlobeOrMap {
       this.scene.globe.splitDirection = this.terria.showSplitter
         ? this.terria.terrainSplitDirection
         : ImagerySplitDirection.NONE;
+      this.scene.globe.depthTestAgainstTerrain = this.terria.depthTestAgainstTerrainEnabled;
       if (this.scene.skyAtmosphere) {
         this.scene.skyAtmosphere.splitDirection = this.scene.globe.splitDirection;
       }

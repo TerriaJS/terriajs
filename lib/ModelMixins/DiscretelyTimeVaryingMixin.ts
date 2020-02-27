@@ -280,6 +280,7 @@ export default function DiscretelyTimeVaryingMixin<
           item: this,
           name: this.name || "",
           categoryName: this.name,
+          key: `key${this.uniqueId}-${this.name}`,
           type: this.chartType || "momentLines",
           xAxis: { scale: "time" },
           points,
