@@ -819,8 +819,8 @@ export default class Cesium extends GlobeOrMap {
 
     const providerCoords = this._attachProviderCoordHooks();
     var pickRasterPromise = this.terria.allowFeatureInfoRequests
-    ? this.scene.imageryLayers.pickImageryLayerFeatures(pickRay, this.scene)
-    : undefined;
+      ? this.scene.imageryLayers.pickImageryLayerFeatures(pickRay, this.scene)
+      : undefined;
 
     const result = this._buildPickedFeatures(
       providerCoords,
