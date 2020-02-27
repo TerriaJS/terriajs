@@ -2,6 +2,30 @@ import ModelTraits from "./ModelTraits";
 import LatLonHeightTraits from "./LatLonHeightTraits";
 import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
+import mixTraits from "./mixTraits";
+
+export class TimeFilterCoordinates extends mixTraits(LatLonHeightTraits) {
+  @primitiveTrait({
+    type: "number",
+    name: "x",
+    description: "X coordinate of the tile"
+  })
+  x?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "y",
+    description: "Y coordinate of the tile"
+  })
+  y?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "level",
+    description: "Zoom level of the tile"
+  })
+  level?: number;
+}
 
 export default class TimeFilterTraits extends ModelTraits {
   @primitiveTrait({
@@ -13,9 +37,9 @@ export default class TimeFilterTraits extends ModelTraits {
   timeFilterProperty?: string;
 
   @objectTrait({
-    type: LatLonHeightTraits,
-    name: "Time filter position",
-    description: "The currently selected position for interval filtering"
+    type: TimeFilterCoordinates,
+    name: "Time filter coordinates",
+    description: "The current position picked by the user for filtering"
   })
-  timeFilterPosition?: LatLonHeightTraits;
+  timeFilterCoordinates?: TimeFilterCoordinates;
 }

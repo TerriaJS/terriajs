@@ -24,11 +24,11 @@ const SatelliteImageryTimeFilterSection = observer(
     },
 
     removeFilter() {
-      this.props.item.filterIntervalsByFeature(undefined);
+      this.props.item.removeTimeFilterFeature();
     },
 
     zoomTo() {
-      const feature = this.props.item.intervalFilterFeature;
+      const feature = this.props.item.timeFilterFeature;
       const position =
         feature !== undefined && feature.position !== undefined
           ? feature.position.getValue(this.props.item.currentTime)
@@ -94,7 +94,10 @@ const SatelliteImageryTimeFilterSection = observer(
 
           if (thisLayerFeature !== undefined) {
             try {
-              item.filterIntervalsByFeature(thisLayerFeature, pickedFeatures);
+              item.setTimeFilterFeature(
+                thisLayerFeature,
+                pickedFeatures.providerCoords
+              );
             } catch (e) {
               console.log(e);
               raiseErrorToUser(terria, e);
@@ -112,7 +115,7 @@ const SatelliteImageryTimeFilterSection = observer(
         return null;
       }
 
-      const feature = this.props.item.intervalFilterFeature;
+      const feature = this.props.item.timeFilterFeature;
       if (feature === undefined) {
         return this.renderNoFeatureSelected();
       } else {

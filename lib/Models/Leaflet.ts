@@ -8,6 +8,7 @@ import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
@@ -15,7 +16,6 @@ import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import cesiumRequestAnimationFrame from "terriajs-cesium/Source/Core/requestAnimationFrame";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import when from "terriajs-cesium/Source/ThirdParty/when";
@@ -43,6 +43,7 @@ import Mappable, { ImageryParts, MapItem } from "./Mappable";
 import Terria from "./Terria";
 import MapboxVectorCanvasTileLayer from "../Map/MapboxVectorCanvasTileLayer";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
+import LatLonHeight from "../Core/LatLonHeight";
 
 interface SplitterClips {
   left: string;
@@ -406,6 +407,17 @@ export default class Leaflet extends GlobeOrMap {
   notifyRepaintRequired() {
     // No action necessary.
   }
+
+  /**
+   * Return features at a latitude, longitude and (optionally) height for the given imageryLayer.
+   * @param latLngHeight The position on the earth to pick
+   * @param providerCoords A map of imagery provider urls to the tile coords used to get features for those imagery
+   * @returns A flat array of all the features for the given tiles that are currently on the map
+   */
+  getFeaturesForLocation(
+    latLngHeight: LatLonHeight,
+    providerCoords: ProviderCoordsMap
+  ) {}
 
   /*
    * There are two "listeners" for clicks which are set up in our constructor.
