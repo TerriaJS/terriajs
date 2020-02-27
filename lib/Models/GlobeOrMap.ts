@@ -22,7 +22,8 @@ require("./ImageryLayerFeatureInfo"); // overrides Cesium's prototype.configureD
 export default abstract class GlobeOrMap {
   abstract readonly type: string;
   abstract readonly terria: Terria;
-  protected static _featureHighlightName = "___$FeatureHighlight&__";
+  protected static _featureHighlightID = "___$FeatureHighlight&__";
+  protected static _featureHighlightName = "TerriaJS Feature Highlight Marker";
 
   private _removeHighlightCallback?: () => void;
   private _highlightPromise: Promise<void> | undefined;
@@ -202,16 +203,23 @@ export default abstract class GlobeOrMap {
               geoJson.geometry.type = "MultiLineString";
             }
 
-            const catalogItem = new GeoJsonCatalogItem(
-              GlobeOrMap._featureHighlightName,
-              this.terria
+            let catalogItem = this.terria.getModelById(
+              GeoJsonCatalogItem,
+              GlobeOrMap._featureHighlightID
             );
+            if (catalogItem === undefined) {
+              catalogItem = new GeoJsonCatalogItem(
+                GlobeOrMap._featureHighlightID,
+                this.terria
+              );
+              catalogItem.setTrait(
+                CommonStrata.definition,
+                "name",
+                GlobeOrMap._featureHighlightName
+              );
+              this.terria.addModel(catalogItem);
+            }
 
-            catalogItem.setTrait(
-              CommonStrata.user,
-              "name",
-              GlobeOrMap._featureHighlightName
-            );
             catalogItem.setTrait(
               CommonStrata.user,
               "geoJsonData",
@@ -231,26 +239,14 @@ export default abstract class GlobeOrMap {
               "marker-url": undefined
             });
 
-            const removeCallback = (this._removeHighlightCallback = () => {
-              if (!isDefined(this._highlightPromise)) {
-                return;
-              }
-              this._highlightPromise
-                .then(() => {
-                  if (removeCallback !== this._removeHighlightCallback) {
-                    return;
-                  }
-                  catalogItem.setTrait(CommonStrata.user, "show", false);
-                })
-                .catch(function() {});
-            });
+            this.terria.overlays.add(catalogItem);
+            catalogItem.loadMapItems();
 
-            this._highlightPromise = catalogItem.loadMapItems().then(() => {
-              if (removeCallback !== this._removeHighlightCallback) {
-                return;
+            this._removeHighlightCallback = () => {
+              if (isDefined(catalogItem)) {
+                this.terria.overlays.remove(catalogItem);
               }
-              catalogItem.setTrait(CommonStrata.user, "show", true);
-            });
+            };
           }
         }
       }

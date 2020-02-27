@@ -70,6 +70,7 @@ Change Log
 * Enable zoomTo and splitter on `CartoMapCatalogItem`.
 * Added name to `MapServerStratum` in `ArcGisMapServerCatalogItem`.
 * Fixed bug causing "Terrain hides underground features" checkbox to sometimes become out of sync between `SettingPanel` and `WorkbenchSplitScreen`.
+* Fixed feature highlighting for imagery layers.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
