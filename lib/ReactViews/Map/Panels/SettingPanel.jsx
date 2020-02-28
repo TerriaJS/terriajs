@@ -120,6 +120,14 @@ class SettingPanel extends React.Component {
     this.props.terria.currentViewer.notifyRepaintRequired();
   }
 
+  @action
+  toggleDepthTestAgainstTerrainEnabled(event) {
+    event.stopPropagation();
+    this.props.terria.depthTestAgainstTerrainEnabled = !this.props.terria
+      .depthTestAgainstTerrainEnabled;
+    this.props.terria.currentViewer.notifyRepaintRequired();
+  }
+
   render() {
     if (!this.props.terria.mainViewer) {
       return null;
@@ -168,7 +176,7 @@ class SettingPanel extends React.Component {
     const supportsDepthTestAgainstTerrain = isCesiumWithTerrain;
     const depthTestAgainstTerrainEnabled =
       supportsDepthTestAgainstTerrain &&
-      this.props.terria.currentViewer.scene.globe.depthTestAgainstTerrain;
+      this.props.terria.depthTestAgainstTerrainEnabled;
 
     const depthTestAgainstTerrainLabel = `Press to start ${
       depthTestAgainstTerrainEnabled ? "showing" : "hiding"
@@ -269,17 +277,7 @@ class SettingPanel extends React.Component {
               <button
                 id="depthTestAgainstTerrain"
                 type="button"
-                onClick={() => {
-                  runInAction(() => {
-                    const currentViewer = this.props.terria.currentViewer;
-                    if (currentViewer.scene && currentViewer.scene.globe) {
-                      currentViewer.scene.globe.depthTestAgainstTerrain = !currentViewer
-                        .scene.globe.depthTestAgainstTerrain;
-                      currentViewer.notifyRepaintRequired();
-                      this.forceUpdate();
-                    }
-                  });
-                }}
+                onClick={this.toggleDepthTestAgainstTerrainEnabled.bind(this)}
                 title={depthTestAgainstTerrainLabel}
                 className={Styles.btnNativeResolution}
               >
