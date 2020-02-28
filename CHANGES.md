@@ -70,6 +70,7 @@ Change Log
 * Enable zoomTo and splitter on `CartoMapCatalogItem`.
 * Added name to `MapServerStratum` in `ArcGisMapServerCatalogItem`.
 * Fixed bug causing "Terrain hides underground features" checkbox to sometimes become out of sync between `SettingPanel` and `WorkbenchSplitScreen`.
+* Ports the Filter by Location" feature for Satellite imagery. The property name setting is renamed to `timeFilterPropertyName` from `featureTimesProperty`.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
