@@ -183,7 +183,7 @@ const resolveFeature = action(async function(
     }
   });
   const viewer = model.terria.mainViewer.currentViewer;
-  const features = await viewer.getFeaturesForLocation(
+  const features = await viewer.getFeaturesAtLocation(
     { latitude, longitude, height },
     providers
   );

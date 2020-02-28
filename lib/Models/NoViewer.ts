@@ -38,7 +38,7 @@ class NoViewer extends GlobeOrMap {
    * @param providerCoords A map of imagery provider urls to the tile coords used to get features for those imagery
    * @returns A flat array of all the features for the given tiles that are currently on the map
    */
-  getFeaturesForLocation(
+  getFeaturesAtLocation(
     latLngHeight: LatLonHeight,
     providerCoords: ProviderCoordsMap
   ) {}

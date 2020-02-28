@@ -855,7 +855,7 @@ export default class Cesium extends GlobeOrMap {
    * @param tileCoords A map of imagery provider urls to the tile coords used to get features for those imagery
    * @returns A flat array of all the features for the given tiles that are currently on the map
    */
-  async getFeaturesForLocation(
+  async getFeaturesAtLocation(
     latLngHeight: LatLonHeight,
     providerCoords: ProviderCoordsMap
   ): Promise<Entity[]> {

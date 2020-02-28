@@ -44,6 +44,8 @@ import Terria from "./Terria";
 import MapboxVectorCanvasTileLayer from "../Map/MapboxVectorCanvasTileLayer";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import LatLonHeight from "../Core/LatLonHeight";
+import MapInteractionMode from "./MapInteractionMode";
+import i18next from "i18next";
 
 interface SplitterClips {
   left: string;
@@ -414,10 +416,39 @@ export default class Leaflet extends GlobeOrMap {
    * @param providerCoords A map of imagery provider urls to the tile coords used to get features for those imagery
    * @returns A flat array of all the features for the given tiles that are currently on the map
    */
-  getFeaturesForLocation(
+  @action
+  async getFeaturesAtLocation(
     latLngHeight: LatLonHeight,
     providerCoords: ProviderCoordsMap
-  ) {}
+  ) {
+    const pickMode = new MapInteractionMode({
+      message: i18next.t("models.imageryLayer.resolvingAvailability"),
+      onCancel: () => {
+        this.terria.mapInteractionModeStack.pop();
+      }
+    });
+    this.terria.mapInteractionModeStack.push(pickMode);
+    this._pickFeatures(
+      L.latLng({
+        lat: latLngHeight.latitude,
+        lng: latLngHeight.longitude,
+        alt: latLngHeight.height
+      }),
+      providerCoords,
+      [],
+      true
+    );
+
+    if (pickMode.pickedFeatures) {
+      const pickedFeatures = pickMode.pickedFeatures;
+      await pickedFeatures.allFeaturesAvailablePromise;
+    }
+
+    return runInAction(() => {
+      this.terria.mapInteractionModeStack.pop();
+      return pickMode.pickedFeatures?.features;
+    });
+  }
 
   /*
    * There are two "listeners" for clicks which are set up in our constructor.
@@ -465,7 +496,8 @@ export default class Leaflet extends GlobeOrMap {
   private _pickFeatures(
     latlng: L.LatLng,
     tileCoordinates?: any,
-    existingFeatures?: Entity[]
+    existingFeatures?: Entity[],
+    ignoreSplitter: boolean = false
   ) {
     if (isDefined(this._pickedFeatures)) {
       // Picking is already in progress.
@@ -519,36 +551,38 @@ export default class Leaflet extends GlobeOrMap {
       pickedLocation
     );
 
-    // We want the all available promise to return after the cleanup one to make sure all vector click events have resolved.
+    // We want the all available promise to return after the cleanup one to
+    // make sure all vector click events have resolved.
     const promises = [cleanup].concat(
       imageryLayers.map(imageryLayer => {
         const imageryLayerUrl = (<any>imageryLayer.imageryProvider).url;
         const longRadians = CesiumMath.toRadians(latlng.lng);
         const latRadians = CesiumMath.toRadians(latlng.lat);
 
-        if (tileCoordinates[imageryLayerUrl]) {
-          return Promise.resolve(tileCoordinates[imageryLayerUrl]);
-        } else {
+        return Promise.resolve(
+          tileCoordinates[imageryLayerUrl] ||
+            imageryLayer.getFeaturePickingCoords(
+              this.map,
+              longRadians,
+              latRadians
+            )
+        ).then(coords => {
           return imageryLayer
-            .getFeaturePickingCoords(this.map, longRadians, latRadians)
-            .then(coords => {
-              return imageryLayer
-                .pickFeatures(
-                  coords.x,
-                  coords.y,
-                  coords.level,
-                  longRadians,
-                  latRadians
-                )
-                .then(features => {
-                  return {
-                    features: features,
-                    imageryLayer: imageryLayer,
-                    coords: coords
-                  };
-                });
+            .pickFeatures(
+              coords.x,
+              coords.y,
+              coords.level,
+              longRadians,
+              latRadians
+            )
+            .then(features => {
+              return {
+                features: features,
+                imageryLayer: imageryLayer,
+                coords: coords
+              };
             });
-        }
+        });
       })
     );
 
@@ -568,7 +602,6 @@ export default class Leaflet extends GlobeOrMap {
         });
 
         pickedFeatures.providerCoords = {};
-
         const filteredResults = promiseResult.filter(function(result) {
           return isDefined(result.features) && result.features.length > 0;
         });
@@ -586,6 +619,7 @@ export default class Leaflet extends GlobeOrMap {
         const features = filteredResults.reduce((allFeatures, result) => {
           if (
             this.terria.showSplitter &&
+            ignoreSplitter === false &&
             isDefined(pickedFeatures.pickPosition)
           ) {
             // Skip this feature, unless the imagery layer is on the picked side or
