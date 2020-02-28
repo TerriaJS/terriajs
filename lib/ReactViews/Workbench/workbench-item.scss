@@ -63,6 +63,7 @@ $workbench-margin: $padding-small;
 .nameColumn {
   text-align: left;
   width: 85%;
+  overflow-wrap: break-word;
 }
 
 .toggleColumn {
@@ -96,5 +97,4 @@ $workbench-margin: $padding-small;
   font-size: $font-size-mid-small;
   cursor: move;
   max-width: 100%;
-  overflow-wrap: break-word;
 }
