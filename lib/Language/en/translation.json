@@ -426,7 +426,8 @@
     "searchCatalogueItem": "Catalogue Items",
     "searchNoCatalogueItem": "Sorry, no catalogue items match your search query.",
     "inMultipleLocations": "In multiple locations including: ",
-    "inDataCatalogue": "In Data Catalogue"
+    "inDataCatalogue": "In Data Catalogue",
+    "searchPoint": "Search location"
   },
   "terriaViewer": {
     "slowWebGLAvailableTitle": "Poor WebGL performance",

@@ -5,6 +5,7 @@ Change Log
 
 * Pass minimumLevel, in Cesium, to minNativeZoom, in Leaflet.
 * Upgraded to Cesium v1.66.
+* Added option for point search by coordinates if `bingMapsKey` is not provided.
 
 ### v7.11.1
 
