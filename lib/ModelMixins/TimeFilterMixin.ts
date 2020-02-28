@@ -107,6 +107,9 @@ function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
       ];
 
       if (featureTimesProperty === undefined) return;
+
+      // Return the dates in the `featureTimesProperty`, but also ensure that
+      // these dates are present in the full list of available dates for the item
       const featureTimes: any = featureTimesProperty.getValue(this.currentTime);
       if (!Array.isArray(featureTimes)) return;
       const sortedDiscreteTimes = this.discreteTimes.map(dt => dt.time).sort();
