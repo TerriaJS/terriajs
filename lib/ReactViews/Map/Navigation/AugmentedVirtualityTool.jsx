@@ -40,7 +40,8 @@ class AugmentedVirtualityTool extends React.Component {
     // it seems you don't need to ask for both, but who knows, ios 14 / something
     // could change again
     if (
-      DeviceMotionEvent &&
+      window.DeviceMotionEvent &&
+      // exists on window by now?
       typeof DeviceMotionEvent.requestPermission === "function"
     ) {
       DeviceMotionEvent.requestPermission()
@@ -52,7 +53,8 @@ class AugmentedVirtualityTool extends React.Component {
         .catch(console.error);
     }
     if (
-      DeviceOrientationEvent &&
+      window.DeviceOrientationEvent &&
+      // exists on window by now?
       typeof DeviceOrientationEvent.requestPermission === "function"
     ) {
       DeviceOrientationEvent.requestPermission()
