@@ -423,6 +423,11 @@ export default class AugmentedVirtuality {
 function getCurrentScreenOrientation(): number {
   if (screen.orientation && screen.orientation.angle !== undefined)
     return screen.orientation.angle;
+
+  if (window.orientation) {
+    return Number(window.orientation);
+  }
+
   return 0;
 }
 
