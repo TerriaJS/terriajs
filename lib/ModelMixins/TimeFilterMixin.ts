@@ -26,9 +26,14 @@ type MixinModel = Model<
   TimeVarying;
 
 /**
- * A Mixin for filtering discrete times at picked position by a specified
- * property of the picked feature. This is used by the Location filter feature
- * for Satellite Imagery.
+ * A Mixin for filtering the dates for which imagery is available at a location
+ * picked by the user.
+ *
+ * When `timeFilterPropertyName` is set, we look for a property of that name in
+ * the feature query response at the picked location. The property value should be set
+ * to an array of dates for which imagery is available at the location. This
+ * Mixin is used to implement the Location filter feature for Satellite
+ * Imagery.
  */
 function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
   abstract class TimeFilterMixin extends Base {
@@ -49,10 +54,10 @@ function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
             }
 
             const coords = coordinatesFromTraits(this.timeFilterCoordinates);
-            if (this.timeFilterProperty && coords) {
+            if (this.timeFilterPropertyName && coords) {
               const resolved = await resolveFeature(
                 this,
-                this.timeFilterProperty,
+                this.timeFilterPropertyName,
                 coords.position,
                 coords.tileCoords
               );
@@ -74,7 +79,7 @@ function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
 
     @computed
     get canFilterTimeByFeature(): boolean {
-      return this.timeFilterProperty !== undefined;
+      return this.timeFilterPropertyName !== undefined;
     }
 
     @computed
@@ -93,12 +98,12 @@ function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
       if (
         this._currentTimeFilterFeature === undefined ||
         this._currentTimeFilterFeature.properties === undefined ||
-        this.timeFilterProperty === undefined
+        this.timeFilterPropertyName === undefined
       ) {
         return;
       }
       const featureTimesProperty = this._currentTimeFilterFeature.properties[
-        this.timeFilterProperty
+        this.timeFilterPropertyName
       ];
 
       if (featureTimesProperty === undefined) return;
