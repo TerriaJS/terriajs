@@ -18,13 +18,12 @@ import TimeVarying from "./TimeVarying";
 import Mappable, { ImageryParts } from "../Models/Mappable";
 import MappableTraits from "../Traits/MappableTraits";
 import runLater from "../Core/runLater";
+import LatLonHeight from "../Core/LatLonHeight";
 
 type MixinModel = Model<
   TimeFilterTraits & DiscretelyTimeVaryingTraits & MappableTraits
 > &
   TimeVarying;
-
-type Position = { latitude: number; longitude: number; height?: number };
 
 /**
  * A Mixin for filtering discrete times at picked position by a specified
@@ -170,7 +169,7 @@ namespace TimeFilterMixin {
 const resolveFeature = action(async function(
   model: Mappable & TimeVarying,
   propertyName: string,
-  position: Position,
+  position: LatLonHeight,
   tileCoords: ProviderCoords
 ) {
   const { latitude, longitude, height } = position;
