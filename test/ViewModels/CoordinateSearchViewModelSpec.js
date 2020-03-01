@@ -3,7 +3,6 @@
 /*global require*/
 var CoordinateSearchViewModel = require("../../lib/ViewModels/CoordinateSearchViewModel");
 var Terria = require("../../lib/Models/Terria");
-var knockout = require("terriajs-cesium/Source/ThirdParty/knockout").default;
 
 var QUERY = "-37.84,144.97";
 var QUERYNORESULT = "-37.84,a144.97";
