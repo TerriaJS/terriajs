@@ -297,6 +297,7 @@ export default class Cesium extends GlobeOrMap {
       this.scene.globe.splitDirection = this.terria.showSplitter
         ? this.terria.terrainSplitDirection
         : ImagerySplitDirection.NONE;
+      this.scene.globe.depthTestAgainstTerrain = this.terria.depthTestAgainstTerrainEnabled;
       if (this.scene.skyAtmosphere) {
         this.scene.skyAtmosphere.splitDirection = this.scene.globe.splitDirection;
       }
@@ -817,10 +818,9 @@ export default class Cesium extends GlobeOrMap {
     const vectorFeatures = this.pickVectorFeatures(screenPosition);
 
     const providerCoords = this._attachProviderCoordHooks();
-    const pickRasterPromise = this.scene.imageryLayers.pickImageryLayerFeatures(
-      pickRay,
-      this.scene
-    );
+    var pickRasterPromise = this.terria.allowFeatureInfoRequests
+      ? this.scene.imageryLayers.pickImageryLayerFeatures(pickRay, this.scene)
+      : undefined;
 
     const result = this._buildPickedFeatures(
       providerCoords,
