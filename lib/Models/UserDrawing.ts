@@ -158,9 +158,10 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
       }
     }
 
-    // Cancel any feature picking already in progress.
+    // Cancel any feature picking already in progress and disable feature info requests.
     runInAction(() => {
       this.terria.pickedFeatures = undefined;
+      this.terria.allowFeatureInfoRequests = false;
     });
     const that = this;
 
@@ -353,10 +354,12 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
   /**
    * User has finished or cancelled; restore initial state.
    */
-  private cleanUp() {
+  cleanUp() {
     this.terria.overlays.remove(this);
     this.pointEntities = new CustomDataSource("Points");
     this.otherEntities = new CustomDataSource("Lines and polygons");
+
+    this.terria.allowFeatureInfoRequests = true;
 
     this.inDrawMode = false;
     this.closeLoop = false;
