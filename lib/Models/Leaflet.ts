@@ -495,11 +495,13 @@ export default class Leaflet extends GlobeOrMap {
     });
 
     const imageryLayers: CesiumTileLayer[] = [];
-    this.map.eachLayer(layer => {
-      if (isImageryLayer(layer)) {
-        imageryLayers.push(layer);
-      }
-    });
+    if (this.terria.allowFeatureInfoRequests) {
+      this.map.eachLayer(layer => {
+        if (isImageryLayer(layer)) {
+          imageryLayers.push(layer);
+        }
+      });
+    }
     tileCoordinates = defaultValue(tileCoordinates, {});
 
     const pickedLocation = Cartographic.fromDegrees(latlng.lng, latlng.lat);
