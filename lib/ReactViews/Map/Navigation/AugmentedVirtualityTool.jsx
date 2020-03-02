@@ -36,6 +36,35 @@ class AugmentedVirtualityTool extends React.Component {
   handleClickAVTool() {
     // Make the AugmentedVirtuality module avaliable elsewhere.
     this.props.terria.augmentedVirtuality = this.augmentedVirtuality;
+    // feature detect for new ios 13
+    // it seems you don't need to ask for both, but who knows, ios 14 / something
+    // could change again
+    if (
+      window.DeviceMotionEvent &&
+      // exists on window by now?
+      typeof DeviceMotionEvent.requestPermission === "function"
+    ) {
+      DeviceMotionEvent.requestPermission()
+        .then(permissionState => {
+          if (permissionState !== "granted") {
+            console.error("couldn't get access for motion events");
+          }
+        })
+        .catch(console.error);
+    }
+    if (
+      window.DeviceOrientationEvent &&
+      // exists on window by now?
+      typeof DeviceOrientationEvent.requestPermission === "function"
+    ) {
+      DeviceOrientationEvent.requestPermission()
+        .then(permissionState => {
+          if (permissionState !== "granted") {
+            console.error("couldn't get access for orientation events");
+          }
+        })
+        .catch(console.error);
+    }
 
     if (
       this.props.experimentalWarning !== false &&
