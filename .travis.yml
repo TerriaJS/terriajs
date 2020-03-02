@@ -29,6 +29,7 @@ matrix:
     after_failure:
       - http POST "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/statuses/${TRAVIS_COMMIT}" "Authorization:token ${GITHUB_TOKEN}" state=failure context=deployment "target_url=${TRAVIS_JOB_WEB_URL}"
     env:
+    - NODE_OPTIONS=--max_old_space_size=5192
     - secure: bV2Mb/mIGY5eGXj9CAnimUorNJ7xHqyXK+wn4zWLIRJq1/dkV50r+49LmJH9zVDPe9vByYJJvRf2oqPEqbgcFl4zux+H+lGgVSRcHhngRpi+wLAvYBeYSn4hq/c/uCQme7jViBZQgTXF0l5Aw461AO5NyftyN7Ns+I4JJ9neync=
     - secure: XuhhOSoc2lRvrcen2Fpv/cy7GxhXH0WmnkCb6e/bmUjTrqSaJNdCoOzq4uEX3Ry0A82cf3VmBN0Ukq4w+CQD6rFaONk97XKvjP1ELsU86md1KuwnZkzdeZA1E6R/1tUkUvQ87WPnAsg8GYh/RxUUJtmjJv2b5roXEuIscyUCVKM=
     - secure: dazXp7EF+6t6RjOPz9osKxLll55YjzX6E0ZuABoQV0gM4YyBLQ+miJUnBzobvcZKl9BioGVzoVmGL66vT+63IwO7B9xg4pEFY0Q77YdF7ps0wknRwcKL4VRyJdghYy1u/SdBkV6uIzrRmAwvAwDSna/NZ7qmPcbMcWaj4O6OFCs=
