@@ -6,6 +6,7 @@ export default function saveStratumToJson(
   traits: TraitDefinitions,
   stratum: Readonly<StratumFromTraits<ModelTraits>>
 ): JsonObject {
+  console.log(stratum);
   const stratumAny: any = stratum;
 
   const result: JsonObject = {};
@@ -18,6 +19,8 @@ export default function saveStratumToJson(
       result[traitId] = jsonValue;
     }
   });
+  console.log("result");
+  console.log(result);
 
   return result;
 }

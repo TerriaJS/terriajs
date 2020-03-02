@@ -81,6 +81,7 @@ const WorkbenchItem = observer(
     render() {
       const workbenchItem = this.props.item;
       const { t } = this.props;
+      console.log(workbenchItem.name);
       return (
         <li
           style={this.props.style}

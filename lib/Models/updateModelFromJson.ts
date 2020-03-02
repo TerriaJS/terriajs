@@ -10,9 +10,9 @@ export default function updateModelFromJson(
   json: any,
   replaceStratum: boolean = false
 ) {
-  if (!isDefined(json.name) && isDefined(json.url)) {
-    json.name = json.url;
-  }
+  // if (!isDefined(json.name) && isDefined(json.url)) {
+  //   json.name = json.url;
+  // }
   const traits = model.traits;
 
   runInAction(() => {
