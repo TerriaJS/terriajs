@@ -199,6 +199,9 @@ export default class Terria {
   @observable
   selectedFeature: Feature | undefined;
 
+  @observable
+  allowFeatureInfoRequests: boolean = true;
+
   /**
    * Gets or sets the stack of map interactions modes.  The mode at the top of the stack
    * (highest index) handles click interactions with the map
