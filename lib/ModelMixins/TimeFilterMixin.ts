@@ -174,6 +174,9 @@ namespace TimeFilterMixin {
   }
 }
 
+/**
+ * Return the feature at position containing the time filter property.
+ */
 const resolveFeature = action(async function(
   model: Mappable & TimeVarying,
   propertyName: string,
