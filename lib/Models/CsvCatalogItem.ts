@@ -56,6 +56,11 @@ export default class CsvCatalogItem extends TableMixin(
     return CsvCatalogItem.type;
   }
 
+  get supportsSplitting() {
+    if (isDefined(this.activeTableStyle.regionColumn)) return true;
+    return false
+  }
+
   setFileInput(file: File) {
     this._csvFile = file;
   }
