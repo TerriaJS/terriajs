@@ -98,7 +98,7 @@ const AddData = createReactClass({
           CommonStrata.defaults,
           { type: this.state.remoteDataType.value, name: url }
         );
-        newItem.setTrait(CommonStrata.user, "name", url);
+        // newItem.setTrait(CommonStrata.user, "name", url);
         newItem.setTrait(CommonStrata.user, "url", url);
         // if user doesn't have a name, then replace with url
         promise = newItem.loadMetadata().then(() => newItem);

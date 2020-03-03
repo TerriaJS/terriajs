@@ -175,8 +175,8 @@ class MapServerStratum extends LoadableStratum(
             )
       });
     }
-    
-    // item.setTrait(CommonStrata.user, "name", item.name);
+
+    // item.setTrait(CommonStrata.user, "name", this.name);
 
     const stratum = new MapServerStratum(
       item,
@@ -185,6 +185,7 @@ class MapServerStratum extends LoadableStratum(
       legend,
       token
     );
+    console.log(stratum);
     return stratum;
   }
 

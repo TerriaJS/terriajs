@@ -79,6 +79,7 @@ export default function addUserCatalogMember(
       return newCatalogItem;
     })
     .catch((e: any) => {
+      console.log(e);
       if (!(e instanceof TerriaError)) {
         e = new TerriaError({
           title: i18next.t("models.userData.addingDataErrorTitle"),
