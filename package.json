@@ -131,7 +131,7 @@
     "ts-loader": "^5.3.3",
     "ts-node": "^5.0.1",
     "typescript": "^3.7.0",
-    "urijs": "^1.18.12",
+    "urijs": "^1.19.1",
     "url-loader": "^1.1.2",
     "webpack": "~4.39.0",
     "worker-loader": "^2.0.0"
