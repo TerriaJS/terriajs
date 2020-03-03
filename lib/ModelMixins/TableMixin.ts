@@ -369,7 +369,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
           .pointSizeMap;
 
         const outlineColor = Color.fromCssColorString(
-          "white" //this.terria.baseMapContrastColor;
+          "black" //this.terria.baseMapContrastColor;
         );
 
         const dataSource = new CustomDataSource(this.name || "Table");
