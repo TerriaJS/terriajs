@@ -138,6 +138,7 @@ export default function GyroscopeGuidance(props) {
         onClick={() => {
           runInAction(() => {
             props.viewState.showHelpMenu = !props.viewState.showHelpMenu;
+            props.viewState.topElement = "HelpPanel";
           });
         }}
         iconElement={() => <Icon glyph={Icon.GLYPHS.help} />}

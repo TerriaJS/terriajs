@@ -102,7 +102,7 @@ class HelpVideoPanel extends React.Component {
           `}
         >
           <div
-            className={Styles.videoGuideWrapper}
+            className={Styles.videoLink}
             style={{
               backgroundImage: `linear-gradient(rgba(0,0,0,0.35),rgba(0,0,0,0.35)), url(${this.props.background})`
             }}
@@ -112,7 +112,7 @@ class HelpVideoPanel extends React.Component {
             </button>
           </div>
           <Spacing bottom={3} />
-          <Text bold title>
+          <Text bold heading>
             {this.props.title}
           </Text>
           <For each="desc" of={this.props.description}>
