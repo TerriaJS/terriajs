@@ -72,6 +72,7 @@ Change Log
 * Ported Augmented Reality features
 * Fixed bug causing "Terrain hides underground features" checkbox to sometimes become out of sync between `SettingPanel` and `WorkbenchSplitScreen`.
 * Added `allowFeatureInfoRequests` property to `Terria` and prevent unnecessary feature info requests when creating `UserDrawing`s.
+* Tidied up analytics port, fixed `getAncestors` & added `getPath` helper
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
