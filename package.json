@@ -43,7 +43,7 @@
     "@types/react": "^16.8.18",
     "@types/react-dom": "^16.9.1",
     "@types/styled-components": "^4.4.3",
-    "@types/urijs": "^1.19.1",
+    "@types/urijs": "1.19.1",
     "@vx/axis": "^0.0.193-alpha.2",
     "@vx/clip-path": "^0.0.193-alpha.2",
     "@vx/event": "^0.0.193-alpha.2",
