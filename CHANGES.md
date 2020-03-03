@@ -69,8 +69,11 @@ Change Log
 * Fixed path event name undefined labelling
 * Enable zoomTo and splitter on `CartoMapCatalogItem`.
 * Added name to `MapServerStratum` in `ArcGisMapServerCatalogItem`.
+* Ported Augmented Reality features
 * Fixed bug causing "Terrain hides underground features" checkbox to sometimes become out of sync between `SettingPanel` and `WorkbenchSplitScreen`.
 * Made split screen window in workbench hidden when viewer is changed to 3D Smooth and 2D
+* Tidy Help UI code
+* Added `allowFeatureInfoRequests` property to `Terria` and prevent unnecessary feature info requests when creating `UserDrawing`s.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
