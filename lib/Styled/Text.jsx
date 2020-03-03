@@ -48,7 +48,7 @@ export const Text = styled.div`
     font-size: 15px;
   `}
   ${props =>
-    props.title &&
+    props.heading &&
     `
     font-weight: 800;
     font-size: 26px;
