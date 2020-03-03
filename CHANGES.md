@@ -72,6 +72,7 @@ Change Log
 * Ported Augmented Reality features
 * Fixed bug causing "Terrain hides underground features" checkbox to sometimes become out of sync between `SettingPanel` and `WorkbenchSplitScreen`.
 * Fixed bug causing name in catalog to be blank when sharing user-added URL data
+* Tidy Help UI code
 * Added `allowFeatureInfoRequests` property to `Terria` and prevent unnecessary feature info requests when creating `UserDrawing`s.
 
 ### Next Release
