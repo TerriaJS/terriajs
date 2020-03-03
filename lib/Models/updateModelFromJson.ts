@@ -2,7 +2,6 @@ import { runInAction } from "mobx";
 import TerriaError from "../Core/TerriaError";
 import createStratumInstance from "./createStratumInstance";
 import { BaseModel } from "./Model";
-import isDefined from "../Core/isDefined";
 
 export default function updateModelFromJson(
   model: BaseModel,
@@ -10,9 +9,6 @@ export default function updateModelFromJson(
   json: any,
   replaceStratum: boolean = false
 ) {
-  // if (!isDefined(json.name) && isDefined(json.url)) {
-  //   json.name = json.url;
-  // }
   const traits = model.traits;
 
   runInAction(() => {
@@ -36,6 +32,7 @@ export default function updateModelFromJson(
           message: `The property ${propertyName} is not valid for type ${model.type}.`
         });
       }
+
       const jsonValue = json[propertyName];
       if (jsonValue === undefined) {
         model.setTrait(stratumName, propertyName, undefined);

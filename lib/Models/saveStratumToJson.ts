@@ -18,7 +18,6 @@ export default function saveStratumToJson(
       result[traitId] = jsonValue;
     }
   });
-  console.log(result);
 
   return result;
 }

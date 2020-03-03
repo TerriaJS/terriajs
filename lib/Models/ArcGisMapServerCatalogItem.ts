@@ -28,7 +28,6 @@ import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumOrder from "./StratumOrder";
 import StratumFromTraits from "./StratumFromTraits";
-import CommonStrata from "./CommonStrata";
 
 const proj4 = require("proj4").default;
 const unionRectangleArray = require("../Map/unionRectangleArray");
@@ -176,8 +175,6 @@ class MapServerStratum extends LoadableStratum(
       });
     }
 
-    // item.setTrait(CommonStrata.user, "name", this.name);
-
     const stratum = new MapServerStratum(
       item,
       mapServer,
@@ -185,7 +182,6 @@ class MapServerStratum extends LoadableStratum(
       legend,
       token
     );
-    console.log(stratum);
     return stratum;
   }
 
