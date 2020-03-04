@@ -73,6 +73,8 @@ Change Log
 * Fixed bug causing "Terrain hides underground features" checkbox to sometimes become out of sync between `SettingPanel` and `WorkbenchSplitScreen`.
 * Tidy Help UI code
 * Added `allowFeatureInfoRequests` property to `Terria` and prevent unnecessary feature info requests when creating `UserDrawing`s.
+* Updated upload icon to point upwards
+* Prevent catalog item names from overflowing and pushing the collapse button off the workbench
 * Add support for splitting CSVs that are using region mapping.
 
 ### Next Release
