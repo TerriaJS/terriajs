@@ -87,7 +87,9 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
     const columns = this.catalogItem.tableColumns.filter(
       column =>
         column.type === TableColumnType.scalar ||
-        column.type === TableColumnType.enum
+        column.type === TableColumnType.enum ||
+        column.type === TableColumnType.region ||
+        column.type === TableColumnType.text
     );
 
     return columns.map((column, i) =>
