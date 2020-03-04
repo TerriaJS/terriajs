@@ -108,7 +108,7 @@ function getParseOptionsColumnMajor(
       const data = results.data;
       for (let i = 0; i < data.length; ++i) {
         const row = data[i];
-        if (i === 0) cleanColumnNames(row)
+        if (i === 0) cleanColumnNames(row);
         for (let j = 0; j < row.length; ++j) {
           let destColumn = result[j];
           if (destColumn === undefined) {
@@ -128,10 +128,10 @@ function getParseOptionsColumnMajor(
   };
 }
 
-function cleanColumnNames (columnNames: string[]) {
+function cleanColumnNames(columnNames: string[]) {
   for (var i = 0; i < columnNames.length; ++i) {
-    if (typeof columnNames[i] === 'string') {
-      columnNames[i] = columnNames[i].trim()
+    if (typeof columnNames[i] === "string") {
+      columnNames[i] = columnNames[i].trim();
     }
   }
 }
