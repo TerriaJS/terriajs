@@ -71,7 +71,9 @@ Change Log
 * Added name to `MapServerStratum` in `ArcGisMapServerCatalogItem`.
 * Ported Augmented Reality features
 * Fixed bug causing "Terrain hides underground features" checkbox to sometimes become out of sync between `SettingPanel` and `WorkbenchSplitScreen`.
+* Tidy Help UI code
 * Added `allowFeatureInfoRequests` property to `Terria` and prevent unnecessary feature info requests when creating `UserDrawing`s.
+* Updated upload icon to point upwards
 * Prevent catalog item names from overflowing and pushing the collapse button off the workbench
 
 ### Next Release

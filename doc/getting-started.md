@@ -25,7 +25,7 @@ If you run into trouble or want more explanation, read on.
 TerriaJS can be built and run on almost any macOS, Linux, or Windows system.  The following are required to build TerriaJS:
 
 * The Bash command shell. On macOS or Linux you almost certainly already have this. On Windows, you can easily get it by installing [Git for Windows](https://gitforwindows.org/). In the instructions below, we assume you're using a Bash command prompt.
-* [Node.js](https://nodejs.org) v8.0 or later.  v10.x is also known to work.  You can check your node version by running `node --version` on the command-line.
+* [Node.js](https://nodejs.org) v10.0 or later.  You can check your node version by running `node --version` on the command-line.
 * [npm](https://www.npmjs.com/) v6.0 or later.  npm is usually installed automatically alongside the above.  You can check your npm version by running `npm --version`.
 
 The following components are optional:
