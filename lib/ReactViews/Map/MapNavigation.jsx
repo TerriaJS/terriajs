@@ -37,7 +37,7 @@ class MapNavigation extends React.Component {
   @action.bound
   showHelpPanel() {
     this.props.viewState.showHelpMenu = !this.props.viewState.showHelpMenu;
-    console.log("HI");
+    this.props.viewState.topElement = "HelpPanel";
   }
 
   render() {
