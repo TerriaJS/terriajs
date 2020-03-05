@@ -1,24 +1,23 @@
+import { action } from "mobx";
+import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
+import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
+import getPath from "../../Core/getPath";
+import addToWorkbench from "../../Models/addToWorkbench";
 import Mappable from "../../Models/Mappable";
+import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
 // eslint-disable-next-line no-unused-vars
 import Terria from "../../Models/Terria";
 // eslint-disable-next-line no-unused-vars
 import ViewState from "../../ReactViewModels/ViewState";
+import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
+import measureElement from "../measureElement";
 import DataPreviewMap from "./DataPreviewMap";
 // import DataPreviewMap from "./DataPreviewMap";
 import Description from "./Description";
 import Styles from "./mappable-preview.scss";
-import { observer } from "mobx-react";
-import { action } from "mobx";
-import measureElement from "../measureElement";
-import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
-import { withTranslation } from "react-i18next";
-import addToWorkbench from "../../Models/addToWorkbench";
-// import { runInAction } from "mobx";
-import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
-import logDatasetAnalyticsEvent from "../../Core/logDatasetAnalyticsEvent";
 
 /**
  * @typedef {object} Props
@@ -68,10 +67,10 @@ class MappablePreview extends React.Component {
         !keepCatalogOpen
       ) {
         this.props.viewState.closeCatalog();
-        logDatasetAnalyticsEvent(
-          this.props.terria,
-          this.props.previewed,
-          toAdd ? "addFromPreviewButton" : "removeFromPreviewButton"
+        this.props.terria.analytics?.logEvent(
+          "dataSource",
+          toAdd ? "addFromPreviewButton" : "removeFromPreviewButton",
+          getPath(this.props.previewed)
         );
       }
     });

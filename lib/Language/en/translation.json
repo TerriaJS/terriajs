@@ -506,8 +506,14 @@
       "onbeforeprint" : "onbeforeprint",
       "onafterprint" : "onafterprint"
     },
+    "consoleAnalytics" : {
+      "started" : "ConsoleAnalytics was started.",
+      "startedNoLogToConsole" : "ConsoleAnalytics was started, however `userParameters.logToConsole` was not defined or set to false.",
+      "logStartedWithGAParameters" : "ConsoleAnalytics was started but a `googleAnalyticsKey` or `googleAnalyticsOptions` key was observed on `userParameters`"
+    },
     "googleAnalytics" : {
-      "log" : "Google Analytics tracking is disabled because terria.configParameters.googleAnalyticsKey is not specified"
+      "log" : "Google Analytics tracking is disabled because terria.configParameters.googleAnalyticsKey is not specified",
+      "logEnabledOnDevelopment" : "Google Analytics was initialised in a `development` environment"
     },
     "readText" : {
       "fileRequired" : "file is require"
