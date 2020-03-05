@@ -22,7 +22,11 @@ import Styles from "./story-panel.scss";
 
 export function activateStory(story, terria) {
   // Send a GA event on scene change with URL hash
-  terria.analytics?.logEvent("story", "scene", window.location.hash);
+  const analyticsLabel =
+    window.location.hash.length > 0
+      ? window.location.hash
+      : "No hash detected (story not shared yet?)";
+  terria.analytics?.logEvent("story", "scene", analyticsLabel);
   return runInAction(() => {
     if (story.shareData) {
       return Promise.all(

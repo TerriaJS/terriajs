@@ -27,6 +27,7 @@ import JsonValue, {
 import loadJson5 from "../Core/loadJson5";
 import ServerConfig from "../Core/ServerConfig";
 import TerriaError from "../Core/TerriaError";
+import { getUriWithoutPath } from "../Core/uriHelpers";
 import PickedFeatures from "../Map/PickedFeatures";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
@@ -332,6 +333,8 @@ export default class Terria {
 
     const baseUri = new URI(options.configUrl).filename("");
 
+    const launchUrlForAnalytics =
+      options.applicationUrl || getUriWithoutPath(baseUri);
     return loadJson5(options.configUrl, options.configUrlHeaders)
       .then((config: any) => {
         runInAction(() => {
@@ -357,11 +360,7 @@ export default class Terria {
       })
       .then(() => {
         this.analytics?.start(this.configParameters);
-        this.analytics?.logEvent(
-          "launch",
-          "url",
-          defined(baseUri.href) ? baseUri.href : "empty"
-        );
+        this.analytics?.logEvent("launch", "url", launchUrlForAnalytics);
         this.serverConfig = new ServerConfig();
         return this.serverConfig.init(this.configParameters.serverConfigUrl);
       })
