@@ -77,6 +77,7 @@ Change Log
 * Tidied up analytics port, fixed `getAncestors` & added `getPath` helper
 * Updated upload icon to point upwards
 * Prevent catalog item names from overflowing and pushing the collapse button off the workbench
+* Stopped analytics launch event sending bad label
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
