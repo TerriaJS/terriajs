@@ -28,6 +28,7 @@ const GLYPHS = {
   closed: require("../../wwwroot/images/icons/closed.svg"),
   decrease: require("../../wwwroot/images/icons/decrease.svg"),
   download: require("../../wwwroot/images/icons/download.svg"),
+  downloadNew: require("../../wwwroot/images/icons/download-new.svg"),
   expand: require("../../wwwroot/images/icons/expand.svg"),
   eye: require("../../wwwroot/images/icons/eye.svg"),
   externalLink: require("../../wwwroot/images/icons/external-link.svg"),

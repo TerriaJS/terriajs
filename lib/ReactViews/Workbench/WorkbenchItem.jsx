@@ -109,7 +109,9 @@ const WorkbenchItem = observer(
                   </button>
                 </Box>
               </If>
-              <Box paddedHorizontally className={Styles.nameColumn}>
+            </Box>
+            <Box className={Styles.nameColumn}>
+              <Box fullWidth paddedHorizontally>
                 <div
                   onMouseDown={this.props.onMouseDown}
                   onTouchStart={this.props.onTouchStart}

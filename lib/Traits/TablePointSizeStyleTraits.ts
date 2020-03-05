@@ -15,7 +15,7 @@ export default class TablePointSizeStyleTraits extends ModelTraits {
       "The point size, in pixels, to use when the column has no value.",
     type: "number"
   })
-  nullSize: number = 7;
+  nullSize: number = 9;
 
   @primitiveTrait({
     name: "Size Factor",
@@ -39,5 +39,5 @@ export default class TablePointSizeStyleTraits extends ModelTraits {
       "the highest.",
     type: "number"
   })
-  sizeOffset: number = 7;
+  sizeOffset: number = 10;
 }
