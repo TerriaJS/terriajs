@@ -254,7 +254,6 @@ export default abstract class GlobeOrMap {
                   if (isDefined(catalogItem)) {
                     catalogItem.setTrait(CommonStrata.user, "show", false);
                   }
-
                 })
                 .catch(function() {});
             });
@@ -266,7 +265,6 @@ export default abstract class GlobeOrMap {
               if (isDefined(catalogItem)) {
                 catalogItem.setTrait(CommonStrata.user, "show", true);
               }
-
             });
           }
         }
