@@ -242,11 +242,32 @@ export default abstract class GlobeOrMap {
             this.terria.overlays.add(catalogItem);
             this._highlightPromise = catalogItem.loadMapItems();
 
-            this._removeHighlightCallback = () => {
-              if (isDefined(catalogItem)) {
-                this.terria.overlays.remove(catalogItem);
+            const removeCallback = (this._removeHighlightCallback = () => {
+              if (!isDefined(this._highlightPromise)) {
+                return;
               }
-            };
+              this._highlightPromise
+                .then(() => {
+                  if (removeCallback !== this._removeHighlightCallback) {
+                    return;
+                  }
+                  if (isDefined(catalogItem)) {
+                    catalogItem.setTrait(CommonStrata.user, "show", false);
+                  }
+
+                })
+                .catch(function() {});
+            });
+
+            this._highlightPromise = catalogItem.loadMapItems().then(() => {
+              if (removeCallback !== this._removeHighlightCallback) {
+                return;
+              }
+              if (isDefined(catalogItem)) {
+                catalogItem.setTrait(CommonStrata.user, "show", true);
+              }
+
+            });
           }
         }
       }
