@@ -69,11 +69,15 @@ Change Log
 * Fixed path event name undefined labelling
 * Enable zoomTo and splitter on `CartoMapCatalogItem`.
 * Added name to `MapServerStratum` in `ArcGisMapServerCatalogItem`.
+* Readded basic `CompositeCatalogItem`.
 * Ported Augmented Reality features
 * Fixed bug causing "Terrain hides underground features" checkbox to sometimes become out of sync between `SettingPanel` and `WorkbenchSplitScreen`.
 * Tidy Help UI code
 * Added `allowFeatureInfoRequests` property to `Terria` and prevent unnecessary feature info requests when creating `UserDrawing`s.
+* Tidied up analytics port, fixed `getAncestors` & added `getPath` helper
 * Updated upload icon to point upwards
+* Prevent catalog item names from overflowing and pushing the collapse button off the workbench
+* Stopped analytics launch event sending bad label
 * Fixed feature highlighting for imagery layers.
 
 ### Next Release
