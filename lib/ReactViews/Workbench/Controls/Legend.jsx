@@ -223,6 +223,8 @@ const Legend = observer(
     },
 
     render() {
+      if (this.props.item.hideLegendInWorkbench) return null;
+
       return (
         <ul className={Styles.legend}>
           <div className={Styles.legendInner}>
