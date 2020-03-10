@@ -8,4 +8,3 @@ This is a description of what I've done in this PR, especially explaining choice
 
 -   [ ] There are unit tests to verify my changes are correct or unit tests aren't applicable (if so, write quick reason why unit tests don't exist)
 -   [ ] I've updated CHANGES.md with what I changed.
--   [ ] I've linked this PR to an issue in ZenHub (core dev team only)
