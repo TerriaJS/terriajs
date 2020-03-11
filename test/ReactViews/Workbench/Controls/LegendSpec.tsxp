@@ -1,0 +1,44 @@
+const findAllWithType = require("react-shallow-testutils").findAllWithType;
+import { getShallowRenderedOutput } from "../../MoreShallowTools";
+import React from "react";
+
+import Terria from "../../../../lib/Models/Terria";
+import WebMapServiceCatalogItem from "../../../../lib/Models/WebMapServiceCatalogItem";
+import Legend from "../../../../lib/ReactViews/Workbench/Controls/Legend";
+
+
+describe("Legend", function() {
+  let terria: Terria;
+  let wmsItem: WebMapServiceCatalogItem;
+
+  beforeEach(function() {
+    terria = new Terria({
+      baseUrl: "./"
+    });
+
+    wmsItem = new WebMapServiceCatalogItem('mywms' ,terria);
+    wmsItem.setTrait("definition", "url", "test/WMS/single_styles_legend_urls.xml");
+  });
+
+  it("A legend image can be rendered", async function() {
+    wmsItem.loadMapItems().then(() => {
+        const legendSection = <Legend item={wmsItem} />;
+        const result = getShallowRenderedOutput(legendSection);
+        const memberComponents = findAllWithType(result, "img");
+        expect(memberComponents.length).toEqual(1);
+      });
+  });
+
+
+  it("A legend image can be hidden", async function() {
+    wmsItem.setTrait("definition", "hideLegendInWorkbench", true);
+    wmsItem.loadMapItems().then(() => {
+        const legendSection = <Legend item={wmsItem} />;
+        const result = getShallowRenderedOutput(legendSection);
+        const memberComponents = findAllWithType(result, "img");
+        expect(memberComponents.length).toEqual(0);
+        expect(result).toEqual(null)
+      });
+  });
+
+});

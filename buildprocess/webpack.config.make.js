@@ -4,7 +4,12 @@ var path = require('path');
 var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 //var testGlob = ['./test/**/*.js', './test/**/*.jsx', '!./test/Utility/*.js'];
-var testGlob = ['./test/SpecMain.ts', './test/**/*Spec.ts', './test/Models/Experiment.ts'];
+var testGlob = [
+    "./test/SpecMain.ts",
+    "./test/**/*Spec.ts",
+    "./test/**/*Spec.tsx",
+    "./test/Models/Experiment.ts"
+];
 console.log(glob.sync(testGlob));
 module.exports = function(hot, dev) {
     const terriaJSBasePath = path.resolve(__dirname, '../');
