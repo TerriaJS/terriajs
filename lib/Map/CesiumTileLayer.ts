@@ -187,10 +187,11 @@ export default class CesiumTileLayer extends L.TileLayer {
     return tile;
   }
 
-  getTileUrl(tilePoint: L.Coords) {
+  getTileUrl(tilePoint: L.Coords): string {
     const level = this._getLevelFromZ(tilePoint);
+    const errorTileUrl = this.options.errorTileUrl || "";
     if (level < 0) {
-      return this.options.errorTileUrl;
+      return errorTileUrl;
     }
 
     return (
@@ -199,7 +200,7 @@ export default class CesiumTileLayer extends L.TileLayer {
         tilePoint.x,
         tilePoint.y,
         level
-      ) || ""
+      ) || errorTileUrl
     );
   }
 
