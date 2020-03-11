@@ -193,11 +193,13 @@ export default class CesiumTileLayer extends L.TileLayer {
       return this.options.errorTileUrl;
     }
 
-    return getUrlForImageryTile(
-      this.imageryProvider,
-      tilePoint.x,
-      tilePoint.y,
-      level
+    return (
+      getUrlForImageryTile(
+        this.imageryProvider,
+        tilePoint.x,
+        tilePoint.y,
+        level
+      ) || ""
     );
   }
 
