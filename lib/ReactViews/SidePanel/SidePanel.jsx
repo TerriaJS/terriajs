@@ -1,12 +1,11 @@
 import createReactClass from "create-react-class";
-import { reaction, runInAction } from "mobx";
+import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation, Trans } from "react-i18next";
-import { removeMarker } from "../../Models/LocationMarkerUtils";
 import Icon from "../Icon";
-import SearchBox from "../Search/SearchBox";
+import SearchBoxAndResults from "../Search/SearchBoxAndResults";
 import SidebarSearch from "../Search/SidebarSearch";
 import Workbench from "../Workbench/Workbench";
 import FullScreenButton from "./FullScreenButton";
@@ -97,37 +96,6 @@ const SidePanel = observer(
       t: PropTypes.func.isRequired
     },
 
-    componentDidMount() {
-      this.subscribeToProps();
-    },
-
-    componentDidUpdate() {
-      this.subscribeToProps();
-    },
-
-    componentWillUnmount() {
-      this.unsubscribeFromProps();
-    },
-
-    subscribeToProps() {
-      this.unsubscribeFromProps();
-
-      // Close the search results when the Now Viewing changes (so that it's visible).
-      this._nowViewingChangeSubscription = reaction(
-        () => this.props.terria.workbench.items,
-        () => {
-          this.props.viewState.searchState.showLocationSearchResults = false;
-        }
-      );
-    },
-
-    unsubscribeFromProps() {
-      if (this._nowViewingChangeSubscription) {
-        this._nowViewingChangeSubscription();
-        this._nowViewingChangeSubscription = undefined;
-      }
-    },
-
     onAddDataClicked(event) {
       event.stopPropagation();
       runInAction(() => {
@@ -139,27 +107,6 @@ const SidePanel = observer(
     onAddLocalDataClicked() {
       this.props.viewState.openUserData();
     },
-
-    changeSearchText(newText) {
-      runInAction(() => {
-        this.props.viewState.searchState.locationSearchText = newText;
-      });
-
-      if (newText.length === 0) {
-        removeMarker(this.props.terria);
-      }
-    },
-
-    search() {
-      this.props.viewState.searchState.searchLocations();
-    },
-
-    startLocationSearch() {
-      runInAction(() => {
-        this.props.viewState.searchState.showLocationSearchResults = true;
-      });
-    },
-
     render() {
       const { t } = this.props;
       const searchState = this.props.viewState.searchState;
@@ -175,7 +122,9 @@ const SidePanel = observer(
               animationDuration={250}
               btnText={t("addData.btnHide")}
             />
-            <SearchBox
+            <SearchBoxAndResults
+              viewState={this.props.viewState}
+              terria={this.props.terria}
               onSearchTextChanged={this.changeSearchText}
               onDoSearch={this.search}
               onFocus={this.startLocationSearch}
