@@ -78,6 +78,7 @@ Change Log
 * Updated upload icon to point upwards
 * Prevent catalog item names from overflowing and pushing the collapse button off the workbench
 * Stopped analytics launch event sending bad label
+* Reimplemented splitting using `SplitItemReference`.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
