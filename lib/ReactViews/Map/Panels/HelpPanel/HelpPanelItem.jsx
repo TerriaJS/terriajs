@@ -102,8 +102,7 @@ class HelpPanelItem extends React.Component {
             </Text>
           </Box>
         </button>
-        {this.props.viewState.showHelpMenu &&
-          this.props.viewState.helpPanelExpanded &&
+        {this.props.viewState.helpPanelExpanded &&
           itemSelected && (
             <HelpVideoPanel
               terria={this.props.terria}

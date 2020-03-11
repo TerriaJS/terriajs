@@ -29,8 +29,6 @@ class HelpPanel extends React.Component {
   @action.bound
   hidePanel() {
     this.props.viewState.showHelpMenu = false;
-    this.props.viewState.helpPanelExpanded = false;
-    this.props.viewState.selectedHelpMenuItem = "";
   }
 
   @action.bound

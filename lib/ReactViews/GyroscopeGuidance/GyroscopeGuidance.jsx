@@ -137,7 +137,7 @@ export default function GyroscopeGuidance(props) {
         // expandInPlace
         onClick={() => {
           runInAction(() => {
-            props.viewState.showHelpMenu = !props.viewState.showHelpMenu;
+            props.viewState.showHelpMenu = true;
             props.viewState.topElement = "HelpPanel";
           });
         }}
