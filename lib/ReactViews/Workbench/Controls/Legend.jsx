@@ -29,15 +29,14 @@ const DISPLAYABLE_MIME_TYPES = [
 const IMAGE_URL_REGEX = /[.\/](png|jpg|jpeg|gif|svg)/i;
 
 function checkMimeType(legendUrl) {
-  if (legendUrl.mimeType) {
-    return !!DISPLAYABLE_MIME_TYPES[legendUrl.mimeType];
+  if (legendUrl.urlMimeType) {
+    return !!DISPLAYABLE_MIME_TYPES[legendUrl.urlMimeType];
   }
 
   return !!legendUrl.url.match(IMAGE_URL_REGEX);
 }
 
-const Legend = observer(
-  createReactClass({
+const Legend = createReactClass({
     displayName: "Legend",
 
     propTypes: {
@@ -247,8 +246,7 @@ const Legend = observer(
         </ul>
       );
     }
-  })
-);
+  });
 
 function makeAbsolute(url) {
   if (url instanceof Resource) {
@@ -267,4 +265,4 @@ function makeAbsolute(url) {
   }
 }
 
-module.exports = Legend;
+export default observer(Legend);
