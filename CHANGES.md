@@ -78,6 +78,8 @@ Change Log
 * Updated upload icon to point upwards
 * Prevent catalog item names from overflowing and pushing the collapse button off the workbench
 * Stopped analytics launch event sending bad label
+* Provide a fallback name for an `ArcGisServerCatalogItem`
+* Ensure `CesiumTileLayer.getTileUrl` returns a string.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
