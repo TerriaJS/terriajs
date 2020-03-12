@@ -8,26 +8,9 @@ import UrlReference from "./UrlReference";
 export default function createCatalogItemFromUrl(
   url: string,
   terria: Terria,
-  allowLoad: boolean,
-  _index?: number
-): Promise<BaseModel | undefined> {
-  return createCatalogItemFromUrlWithOptions(
-    url,
-    terria,
-    allowLoad,
-    {},
-    _index
-  );
-}
-
-export function createCatalogItemFromUrlWithOptions(
-  url: string,
-  terria: Terria,
-  allowLoad: boolean,
-  options: {
+  _index?: number, options: {
     id?: string;
-  },
-  _index?: number
+  } = {}
 ): Promise<BaseModel | undefined> {
   const item = upsertModelFromJson(
     CatalogMemberFactory,
@@ -40,7 +23,7 @@ export function createCatalogItemFromUrlWithOptions(
       name: url,
       url: url,
       localId: options.id || url,
-      allowLoad: allowLoad
+      allowLoad: true
     }
   );
 

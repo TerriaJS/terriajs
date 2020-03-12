@@ -30,16 +30,22 @@ export default function createCatalogItemFromFileOrUrl(
   }
 
   if (dataType === "auto") {
-    return createCatalogItemFromUrl(name, terria, isUrl).then(newItem => {
-      //##Doesn't work for file uploads
-      if (!isDefined(newItem)) {
-        return tryConversionService(name, terria, viewState, confirmConversion);
-      } else {
-        // It's a file or service we support directly
-        // In some cases (web services), the item will already have been loaded by this point.
-        return loadItem(newItem, fileOrUrl);
-      }
-    });
+    if (isUrl) {
+      return createCatalogItemFromUrl(name, terria).then(newItem => {
+        //##Doesn't work for file uploads
+        if (!isDefined(newItem)) {
+          return tryConversionService(name, terria, viewState, confirmConversion);
+        } else {
+          // It's a file or service we support directly
+          // In some cases (web services), the item will already have been loaded by this point.
+          return loadItem(newItem, fileOrUrl);
+        }
+      });
+    } else {
+      throw 'Auto datatype is not implemented for Files'
+    }
+  
+    
   } else if (dataType === "other") {
     // user explicitly chose "Other (use conversion service)"
     return getConfirmation(
