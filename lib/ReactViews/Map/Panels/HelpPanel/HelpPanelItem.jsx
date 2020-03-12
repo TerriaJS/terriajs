@@ -60,8 +60,8 @@ class HelpPanelItem extends React.Component {
       ${props =>
         `
           fill: #4B4A4A;
-          width: 30px;
-          height: 30px;
+          width: 27px;
+          height: 27px;
         `}
       ${props =>
         props.darken &&

@@ -115,9 +115,10 @@ class HelpVideoPanel extends React.Component {
           <Text
             css={`
               color: #404855;
+              font-size: 23px;
+              line-height: 31px;
             `}
             bold
-            heading
           >
             {this.props.title}
           </Text>

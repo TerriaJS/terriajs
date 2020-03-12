@@ -80,6 +80,7 @@ class HelpPanel extends React.Component {
           <Text
             css={`
               color: #404855;
+              font-weight: 800;
             `}
             heading
           >
@@ -89,10 +90,8 @@ class HelpPanel extends React.Component {
           <Text
             css={`
               color: #404855;
-              font-size: 13px;
               line-height: 18px;
             `}
-            medium
           >
             Find useful tips on how to use the Digital Twin either by checking
             the video guides below or by contacting the team at{" "}
