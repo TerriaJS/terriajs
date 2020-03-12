@@ -12,17 +12,17 @@
   font-size: $font-size-mid-small;
   transition: all 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  .close-btn {
-    position: relative;
-    float: right;
-    top: $padding;
-    right: $padding;
-    svg {
-      height: 15px;
-      width: 15px;
-      opacity: 0.5;
-    }
-  }
+  // .close-btn {
+  //   position: relative;
+  //   float: right;
+  //   top: $padding;
+  //   right: $padding;
+  //   svg {
+  //     height: 15px;
+  //     width: 15px;
+  //     opacity: 0.5;
+  //   }
+  // }
 }
 
 .help-panel-shifted {
@@ -58,6 +58,10 @@
 .is-selected {
   background-color: #f4f4f4;
   z-index: 110;
+}
+
+.isnt-selected {
+  opacity: 50%;
 }
 
 .tourBtn {

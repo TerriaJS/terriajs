@@ -112,12 +112,25 @@ class HelpVideoPanel extends React.Component {
             </button>
           </div>
           <Spacing bottom={3} />
-          <Text bold heading>
+          <Text
+            css={`
+              color: #404855;
+            `}
+            bold
+            heading
+          >
             {this.props.title}
           </Text>
           <For each="desc" of={this.props.description}>
             <Spacing bottom={3} />
-            <Text medium>{desc}</Text>
+            <Text
+              css={`
+                color: #4d5766;
+              `}
+              medium
+            >
+              {desc}
+            </Text>
           </For>
         </Box>
       </div>

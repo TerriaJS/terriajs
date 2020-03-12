@@ -50,12 +50,15 @@ class HelpPanel extends React.Component {
         <div
           css={`
             svg {
-              width: 15px;
-              height: 15px;
+              width: 16px;
+              height: 16px;
+              fill: #404855;
+              opacity: 0.5;
             }
             button {
               box-shadow: none;
               float: right;
+              padding: 15px;
             }
           `}
         >
@@ -74,9 +77,23 @@ class HelpPanel extends React.Component {
             display: inline-block;
           `}
         >
-          <Text heading>We&apos;re here to help</Text>
+          <Text
+            css={`
+              color: #404855;
+            `}
+            heading
+          >
+            We&apos;re here to help
+          </Text>
           <Spacing bottom={5} />
-          <Text medium>
+          <Text
+            css={`
+              color: #404855;
+              font-size: 13px;
+              line-height: 18px;
+            `}
+            medium
+          >
             Find useful tips on how to use the Digital Twin either by checking
             the video guides below or by contacting the team at{" "}
             <span className={Styles.link}>info@terria.io</span>.

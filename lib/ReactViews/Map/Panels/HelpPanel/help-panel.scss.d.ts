@@ -2,8 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'charcoalGrey': string;
-  'close-btn': string;
-  'closeBtn': string;
   'colorPrimary': string;
   'colorSplitter': string;
   'dark': string;
@@ -14,6 +12,8 @@ interface CssExports {
   'helpPanelShifted': string;
   'is-selected': string;
   'isSelected': string;
+  'isnt-selected': string;
+  'isntSelected': string;
   'link': string;
   'mapButtonColor': string;
   'modalHighlight': string;

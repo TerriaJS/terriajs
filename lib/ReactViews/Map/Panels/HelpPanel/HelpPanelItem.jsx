@@ -59,7 +59,7 @@ class HelpPanelItem extends React.Component {
       transform: translate(-50%, -50%);
       ${props =>
         `
-          fill: #575757;
+          fill: #4B4A4A;
           width: 30px;
           height: 30px;
         `}
@@ -71,9 +71,12 @@ class HelpPanelItem extends React.Component {
     `;
     const itemSelected =
       this.props.viewState.selectedHelpMenuItem === this.props.itemString;
+    const itemNotSelected =
+      this.props.viewState.selectedHelpMenuItem !== "" && !itemSelected;
     const className = classNames({
       [Styles.panelItem]: true,
-      [Styles.isSelected]: itemSelected
+      [Styles.isSelected]: itemSelected,
+      [Styles.isntSelected]: itemNotSelected
     });
     return (
       <div>
@@ -96,24 +99,24 @@ class HelpPanelItem extends React.Component {
                 vertical-align: middle;
                 font-size: 16px;
                 line-height: 17px;
+                color: #575757;
               `}
             >
               {this.props.title}
             </Text>
           </Box>
         </button>
-        {this.props.viewState.helpPanelExpanded &&
-          itemSelected && (
-            <HelpVideoPanel
-              terria={this.props.terria}
-              viewState={this.props.viewState}
-              title={this.props.title}
-              itemString={this.props.itemString}
-              description={this.props.description}
-              videoLink={this.props.videoLink}
-              background={this.props.background}
-            />
-          )}
+        {this.props.viewState.helpPanelExpanded && itemSelected && (
+          <HelpVideoPanel
+            terria={this.props.terria}
+            viewState={this.props.viewState}
+            title={this.props.title}
+            itemString={this.props.itemString}
+            description={this.props.description}
+            videoLink={this.props.videoLink}
+            background={this.props.background}
+          />
+        )}
       </div>
     );
   }
