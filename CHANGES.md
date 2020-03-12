@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### Next
+
+* Added babel dynamic import plugin for webpack builds.
+
 ### v7.11.2
 
 * Pass minimumLevel, in Cesium, to minNativeZoom, in Leaflet.
