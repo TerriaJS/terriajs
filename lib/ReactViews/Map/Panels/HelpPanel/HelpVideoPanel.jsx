@@ -111,7 +111,7 @@ class HelpVideoPanel extends React.Component {
               <Icon glyph={Icon.GLYPHS.play} />
             </button>
           </div>
-          <Spacing bottom={3} />
+          <Spacing bottom={5} />
           <Text
             css={`
               color: #404855;
