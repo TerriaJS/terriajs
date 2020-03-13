@@ -34,7 +34,7 @@ describe("featureBelongsToCatalogItem", function() {
     });
     feature.imageryLayer = new ImageryLayer(imageryProvider);
     expect(featureBelongsToCatalogItem(feature, item)).toBe(false);
-    item.mapItems = [{ imageryProvider }];
+    item.mapItems = [{ imageryProvider, alpha: 0, show: false }];
     expect(featureBelongsToCatalogItem(feature, item)).toBe(true);
   });
 });
