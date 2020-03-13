@@ -80,6 +80,7 @@ Change Log
 * Stopped analytics launch event sending bad label
 * Provide a fallback name for an `ArcGisServerCatalogItem`
 * Ensure `CesiumTileLayer.getTileUrl` returns a string.
+* Polished help UI to match designs
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
