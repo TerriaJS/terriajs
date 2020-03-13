@@ -57,8 +57,9 @@ class HelpPanel extends React.Component {
             }
             button {
               box-shadow: none;
-              float: right;
               padding: 15px;
+              position: absolute;
+              right: 0;
             }
           `}
         >
@@ -72,7 +73,7 @@ class HelpPanel extends React.Component {
           css={`
             direction: ltr;
             min-width: 295px;
-            padding: 90px 20px;
+            padding: 84px 25px;
             padding-bottom: 0px;
             display: inline-block;
           `}
@@ -86,7 +87,7 @@ class HelpPanel extends React.Component {
           >
             We&apos;re here to help
           </Text>
-          <Spacing bottom={5} />
+          <Spacing bottom={4} />
           <Text
             css={`
               color: #404855;
@@ -109,13 +110,13 @@ class HelpPanel extends React.Component {
             </button>
           </Box> */}
         </Box>
+        <Spacing bottom={10} />
         <Box
           centered
           css={`
             display: inline-block;
           `}
         >
-          <Spacing bottom={10} />
           <Box
             css={`
               display: inline-block;

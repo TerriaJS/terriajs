@@ -79,10 +79,15 @@ class HelpPanelItem extends React.Component {
       [Styles.isntSelected]: itemNotSelected
     });
     return (
-      <div>
+      <div
+        css={`
+          height: 70px;
+        `}
+      >
         <button className={className} onClick={this.changeActiveItem}>
           <Box
             left
+            fullHeight
             css={`
               display: table-row;
               text-align: left;
