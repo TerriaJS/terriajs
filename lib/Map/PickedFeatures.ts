@@ -1,6 +1,9 @@
+import { observable } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import { observable } from "mobx";
+import Feature from "../Models/Feature";
+import Mappable, { ImageryParts } from "../Models/Mappable";
+import { BaseModel } from "../Models/Model";
 
 export type ProviderCoords = { x: number; y: number; level: number };
 export type ProviderCoordsMap = { [url: string]: ProviderCoords };
@@ -39,4 +42,33 @@ export default class PickedFeatures {
   @observable error: string | undefined;
 
   providerCoords: ProviderCoordsMap | undefined;
+}
+
+export function featureBelongsToCatalogItem(
+  feature: Feature,
+  catalogItem: BaseModel
+) {
+  if (feature._catalogItem === catalogItem) return true;
+
+  if (!Mappable.is(catalogItem)) return;
+
+  const dataSource = feature.entityCollection?.owner;
+  const imageryProvider = feature.imageryLayer?.imageryProvider;
+
+  // Test whether the catalog item has a matching dataSource or an imageryProvider
+  const match = catalogItem.mapItems.some(mapItem => {
+    if (dataSource && mapItem === dataSource) {
+      return true;
+    }
+    if (
+      imageryProvider &&
+      ImageryParts.is(mapItem) &&
+      mapItem.imageryProvider === imageryProvider
+    ) {
+      return true;
+    }
+    return false;
+  });
+
+  return match;
 }
