@@ -60,6 +60,7 @@ class HelpPanel extends React.Component {
               padding: 15px;
               position: absolute;
               right: 0;
+              z-index: 110;
             }
           `}
         >

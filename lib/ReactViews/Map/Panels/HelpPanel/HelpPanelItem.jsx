@@ -49,14 +49,13 @@ class HelpPanelItem extends React.Component {
       flex-shrink: 0;
       width: 64px;
       height: 64px;
-      margin-right: 10px;
       display: table-cell;
+      vertical-align: middle;
+      padding-left: 25px;
     `;
     const CompassIcon = styled(Icon)`
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      position: relative;
+      transform: translate(0%, 0%);
       ${props =>
         `
           fill: #4B4A4A;
@@ -100,6 +99,8 @@ class HelpPanelItem extends React.Component {
               semiBold
               uppercase
               css={`
+                padding-right: 25px;
+                padding-left: 5px;
                 display: table-cell;
                 vertical-align: middle;
                 font-size: 16px;
