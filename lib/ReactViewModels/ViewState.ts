@@ -291,7 +291,7 @@ export default class ViewState {
    * Removes references of a model from viewState
    */
   @action
-  removeModelFromViews(model: BaseModel) {
+  removeModelReferences(model: BaseModel) {
     if (this.previewedItem === model) this.previewedItem = undefined;
     if (this.userDataPreviewedItem === model)
       this.userDataPreviewedItem = undefined;

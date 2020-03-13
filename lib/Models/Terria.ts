@@ -339,12 +339,13 @@ export default class Terria {
    * Remove references to a model from Terria.
    */
   @action
-  removeModelFromTerria(model: BaseModel) {
-    if (this.pickedFeatures) {
+  removeModelReferences(model: BaseModel) {
+    const pickedFeatures = this.pickedFeatures;
+    if (pickedFeatures) {
       // Remove picked features that belong to the catalog item
-      this.pickedFeatures.features.forEach((feature, i) => {
+      pickedFeatures.features.forEach((feature, i) => {
         if (featureBelongsToCatalogItem(<Feature>feature, model)) {
-          this.pickedFeatures?.features.splice(i, 1);
+          pickedFeatures?.features.splice(i, 1);
         }
       });
     }

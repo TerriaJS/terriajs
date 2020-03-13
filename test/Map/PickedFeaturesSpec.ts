@@ -2,19 +2,13 @@ import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSourc
 import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
 import { featureBelongsToCatalogItem } from "../../lib/Map/PickedFeatures";
-import CreateModel from "../../lib/Models/CreateModel";
 import Feature from "../../lib/Models/Feature";
-import { MapItem } from "../../lib/Models/Mappable";
 import Terria from "../../lib/Models/Terria";
-import UrlTraits from "../../lib/Traits/UrlTraits";
-
-class TestCatalogItem extends CreateModel(UrlTraits) {
-  mapItems: MapItem[] = [];
-}
+import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
 
 describe("featureBelongsToCatalogItem", function() {
   it("returns true if the `_catalogItem` property matches", function() {
-    const item = new TestCatalogItem(undefined, new Terria());
+    const item = new SimpleCatalogItem(undefined, new Terria());
     const feature = new Feature({});
     expect(featureBelongsToCatalogItem(feature, item)).toBe(false);
     feature._catalogItem = item;
@@ -22,7 +16,7 @@ describe("featureBelongsToCatalogItem", function() {
   });
 
   it("returns true if mapItems has the dataSource that owns the feature", function() {
-    const item = new TestCatalogItem(undefined, new Terria());
+    const item = new SimpleCatalogItem(undefined, new Terria());
     const feature = new Feature({});
     const dataSource = new CustomDataSource("testData");
     dataSource.entities.add(feature);
@@ -32,7 +26,7 @@ describe("featureBelongsToCatalogItem", function() {
   });
 
   it("returns true if mapItems has a matching imagery provider", function() {
-    const item = new TestCatalogItem(undefined, new Terria());
+    const item = new SimpleCatalogItem(undefined, new Terria());
     const feature = new Feature({});
     const imageryProvider = new WebMapServiceImageryProvider({
       url: "test",
