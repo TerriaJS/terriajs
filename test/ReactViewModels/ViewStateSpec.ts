@@ -11,7 +11,7 @@ describe("ViewState", function() {
     viewState = new ViewState({
       terria,
       catalogSearchProvider: undefined,
-      locationSearchProviders: undefined
+      locationSearchProviders: []
     });
   });
 
