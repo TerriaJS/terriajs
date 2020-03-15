@@ -15,31 +15,37 @@ describe("Legend", function() {
       baseUrl: "./"
     });
 
-    wmsItem = new WebMapServiceCatalogItem('mywms' ,terria);
-    wmsItem.setTrait("definition", "url", "/test/WMS/single_style_legend_url.xml");
+    wmsItem = new WebMapServiceCatalogItem("mywms", terria);
+    wmsItem.setTrait(
+      "definition",
+      "url",
+      "/test/WMS/single_style_legend_url.xml"
+    );
   });
 
   it("A legend image can be rendered", async function(done) {
-    wmsItem.loadMapItems().then(() => {
-      // @ts-ignore
+    wmsItem
+      .loadMapItems()
+      .then(() => {
+        // @ts-ignore
         const legendSection = <Legend item={wmsItem} />;
         const result = getShallowRenderedOutput(legendSection);
         const memberComponents = findAllWithType(result, "img");
         expect(memberComponents.length).toEqual(1);
       })
-      .then(done)
+      .then(done);
   });
-
 
   it("A legend image can be hidden", async function(done) {
     wmsItem.setTrait("definition", "hideLegendInWorkbench", true);
-    wmsItem.loadMapItems().then(() => {
+    wmsItem
+      .loadMapItems()
+      .then(() => {
         // @ts-ignore
         const legendSection = <Legend item={wmsItem} />;
         const result = getShallowRenderedOutput(legendSection);
-        expect(result).toEqual(null)
+        expect(result).toEqual(null);
       })
-      .then(done)
+      .then(done);
   });
-
 });
