@@ -16,6 +16,8 @@ $color-secondary: #06ccff;
 
 $animation-fast: 0.1s;
 
+$color-splitter: #ff6f00;
+
 $dark: #3f4854;
 $dark-with-overlay: #667080;
 $dark-lighter: #595b60;
@@ -65,6 +67,7 @@ $link-text-decoration: none;
 $padding: 10px;
 $padding-small: 5px;
 $padding-mini: 3px;
+$padding-tiny: 1px;
 
 $btn-default-line-height: 20px;
 $input-height: 40px;
@@ -106,6 +109,7 @@ $mobile-main-bg: #ffffff;
 $mobile-text: #000;
 
 $mobile-modal-top-height: 40px;
+$mobile-bottom-timeline: 70px;
 
 $font-size-large: 1.3rem;
 $font-size-mid-large: 1.1rem;
@@ -125,6 +129,9 @@ $font-weight-medium: 500;
 $font-weight-normal: 400;
 $font-weight-light: 100;
 
+$map-button-color: #9ca1aa;
+$map-button-top: 18px;
+$map-button-border-radius: 16px;
 $work-bench-width: 350px;
 $setting-panel: 300px;
 $share-panel-width: 450px;
@@ -146,6 +153,7 @@ $ring-width: 10px;
 $compass-width: 55px;
 
 //screen sizes
+$mobile: 767px;
 $sm: 768px;
 $md: 992px;
 $lg: 1300px;
@@ -173,3 +181,12 @@ $legend-item-width: 30px;
 $legend-item-height: 16px;
 $legend-padding: $legend-item-height / 2;
 $legend-spacer-height: $legend-padding / 2;
+
+:export {
+  colorPrimary: $color-primary;
+  colorSplitter: $color-splitter;
+  textLight: $text-light;
+  textDarker: $text-darker;
+  dark: $dark;
+  darkWithOverlay: $dark-with-overlay;
+}

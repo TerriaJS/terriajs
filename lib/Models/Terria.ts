@@ -27,7 +27,10 @@ import JsonValue, {
 import loadJson5 from "../Core/loadJson5";
 import ServerConfig from "../Core/ServerConfig";
 import TerriaError from "../Core/TerriaError";
-import PickedFeatures from "../Map/PickedFeatures";
+import { getUriWithoutPath } from "../Core/uriHelpers";
+import PickedFeatures, {
+  featureBelongsToCatalogItem
+} from "../Map/PickedFeatures";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
@@ -52,6 +55,7 @@ import upsertModelFromJson from "./upsertModelFromJson";
 import ViewerMode from "./ViewerMode";
 import Workbench from "./Workbench";
 import openGroup from "./openGroup";
+import getDereferencedIfExists from "../Core/getDereferencedIfExists";
 
 interface ConfigParameters {
   [key: string]: ConfigParameters[keyof ConfigParameters];
@@ -80,6 +84,7 @@ interface ConfigParameters {
   experimentalFeatures?: boolean;
   magdaReferenceHeaders?: MagdaReferenceHeaders;
   locationSearchBoundingBox?: number[];
+  googleAnalyticsKey?: string;
 }
 
 interface StartOptions {
@@ -181,9 +186,11 @@ export default class Terria {
     useCesiumIonBingImagery: undefined,
     bingMapsKey: undefined,
     brandBarElements: undefined,
+    disableMyLocation: undefined,
     experimentalFeatures: undefined,
     magdaReferenceHeaders: undefined,
-    locationSearchBoundingBox: undefined
+    locationSearchBoundingBox: undefined,
+    googleAnalyticsKey: undefined
   };
 
   @observable
@@ -194,6 +201,9 @@ export default class Terria {
 
   @observable
   selectedFeature: Feature | undefined;
+
+  @observable
+  allowFeatureInfoRequests: boolean = true;
 
   /**
    * Gets or sets the stack of map interactions modes.  The mode at the top of the stack
@@ -222,6 +232,8 @@ export default class Terria {
   @observable splitPositionVertical = 0.5;
   @observable terrainSplitDirection: ImagerySplitDirection =
     ImagerySplitDirection.NONE;
+
+  @observable depthTestAgainstTerrainEnabled = false;
 
   @observable stories: any[] = [];
 
@@ -295,6 +307,11 @@ export default class Terria {
     }
   }
 
+  @computed
+  get modelIds() {
+    return Array.from(this.models.keys());
+  }
+
   getModelById<T extends BaseModel>(type: Class<T>, id: string): T | undefined {
     const model = this.models.get(id);
     if (instanceOf(type, model)) {
@@ -305,6 +322,7 @@ export default class Terria {
     return undefined;
   }
 
+  @action
   addModel(model: BaseModel) {
     if (model.uniqueId === undefined) {
       throw new DeveloperError("A model without a `uniqueId` cannot be added.");
@@ -317,11 +335,33 @@ export default class Terria {
     this.models.set(model.uniqueId, model);
   }
 
+  /**
+   * Remove references to a model from Terria.
+   */
+  @action
+  removeModelReferences(model: BaseModel) {
+    const pickedFeatures = this.pickedFeatures;
+    if (pickedFeatures) {
+      // Remove picked features that belong to the catalog item
+      pickedFeatures.features.forEach((feature, i) => {
+        if (featureBelongsToCatalogItem(<Feature>feature, model)) {
+          pickedFeatures?.features.splice(i, 1);
+        }
+      });
+    }
+    this.workbench.remove(model);
+    if (model.uniqueId) {
+      this.models.delete(model.uniqueId);
+    }
+  }
+
   start(options: StartOptions) {
     this.shareDataService = options.shareDataService;
 
     const baseUri = new URI(options.configUrl).filename("");
 
+    const launchUrlForAnalytics =
+      options.applicationUrl || getUriWithoutPath(baseUri);
     return loadJson5(options.configUrl, options.configUrlHeaders)
       .then((config: any) => {
         runInAction(() => {
@@ -346,6 +386,8 @@ export default class Terria {
         });
       })
       .then(() => {
+        this.analytics?.start(this.configParameters);
+        this.analytics?.logEvent("launch", "url", launchUrlForAnalytics);
         this.serverConfig = new ServerConfig();
         return this.serverConfig.init(this.configParameters.serverConfigUrl);
       })
@@ -356,10 +398,55 @@ export default class Terria {
         if (this.shareDataService && this.serverConfig.config) {
           this.shareDataService.init(this.serverConfig.config);
         }
+        this.loadPersistedMapSettings();
         if (options.applicationUrl) {
           return this.updateApplicationUrl(options.applicationUrl);
         }
       });
+  }
+
+  loadPersistedMapSettings(): void {
+    const persistViewerMode = defaultValue(
+      this.configParameters.persistViewerMode,
+      true
+    );
+    const mainViewer = this.mainViewer;
+    const viewerMode = this.getLocalProperty("viewermode");
+    if (persistViewerMode && defined(viewerMode)) {
+      if (viewerMode === "3d" || viewerMode === "3dsmooth") {
+        mainViewer.viewerMode = ViewerMode.Cesium;
+        mainViewer.viewerOptions.useTerrain = viewerMode === "3d";
+      } else if (viewerMode === "2d") {
+        mainViewer.viewerMode = ViewerMode.Leaflet;
+      } else {
+        console.error(
+          `Trying to select ViewerMode ${viewerMode} that doesn't exist`
+        );
+      }
+    }
+  }
+
+  @action
+  updateBaseMaps(baseMaps: BaseMapViewModel[]): void {
+    this.baseMaps.push(...baseMaps);
+    if (!this.mainViewer.baseMap) {
+      this.loadPersistedBaseMap();
+    }
+  }
+
+  @action
+  loadPersistedBaseMap(): void {
+    const persistedBaseMapId = this.getLocalProperty("basemap");
+    const baseMapSearch = this.baseMaps.find(
+      baseMap => baseMap.mappable.uniqueId === persistedBaseMapId
+    );
+    if (baseMapSearch) {
+      this.mainViewer.baseMap = baseMapSearch.mappable;
+    } else {
+      console.error(
+        `Couldn't find a basemap for unique id ${persistedBaseMapId}`
+      );
+    }
   }
 
   get isLoadingInitSources(): boolean {
@@ -482,61 +569,58 @@ export default class Terria {
       promise = Promise.resolve();
     }
 
-    return promise.then(() => {
-      const loadedModel = upsertModelFromJson(
-        CatalogMemberFactory,
-        this,
-        "/",
-        undefined,
-        stratumId,
-        {
-          ...cleanStratumData,
-          id: modelId
-        },
-        replaceStratum
-      );
+    return promise
+      .then(() => {
+        const loadedModel = upsertModelFromJson(
+          CatalogMemberFactory,
+          this,
+          "/",
+          undefined,
+          stratumId,
+          {
+            ...cleanStratumData,
+            id: modelId
+          },
+          replaceStratum
+        );
 
-      if (Array.isArray(containerIds)) {
-        containerIds.forEach(containerId => {
-          if (
-            typeof containerId === "string" &&
-            loadedModel.knownContainerUniqueIds.indexOf(containerId) < 0
-          ) {
-            loadedModel.knownContainerUniqueIds.push(containerId);
-          }
-        });
-      }
+        if (Array.isArray(containerIds)) {
+          containerIds.forEach(containerId => {
+            if (
+              typeof containerId === "string" &&
+              loadedModel.knownContainerUniqueIds.indexOf(containerId) < 0
+            ) {
+              loadedModel.knownContainerUniqueIds.push(containerId);
+            }
+          });
+        }
 
-      // If we're replacing the stratum and the existing model is already
-      // dereferenced, we need to replace the dereferenced stratum, too,
-      // even if there's no trace of it it in the load data.
-      let dereferenced = thisModelStratumData.dereferenced;
-      if (
-        replaceStratum &&
-        dereferenced === undefined &&
-        ReferenceMixin.is(loadedModel) &&
-        loadedModel.target !== undefined
-      ) {
-        dereferenced = {};
-      }
+        // If we're replacing the stratum and the existing model is already
+        // dereferenced, we need to replace the dereferenced stratum, too,
+        // even if there's no trace of it in the load data.
+        let dereferenced = thisModelStratumData.dereferenced;
+        if (
+          replaceStratum &&
+          dereferenced === undefined &&
+          ReferenceMixin.is(loadedModel) &&
+          loadedModel.target !== undefined
+        ) {
+          dereferenced = {};
+        }
 
-      if (dereferenced) {
         if (ReferenceMixin.is(loadedModel)) {
-          return loadedModel
-            .loadReference()
-            .then(() => {
-              return upsertModelFromJson(
-                CatalogMemberFactory,
-                this,
-                "/",
+          return loadedModel.loadReference().then(() => {
+            if (isDefined(loadedModel.target)) {
+              updateModelFromJson(
                 loadedModel.target,
                 stratumId,
-                dereferenced,
+                dereferenced || {},
                 replaceStratum
               );
-            })
-            .then(() => loadedModel);
-        } else {
+            }
+            return loadedModel;
+          });
+        } else if (dereferenced) {
           throw new TerriaError({
             sender: this,
             title: "Model cannot be dereferenced",
@@ -544,16 +628,19 @@ export default class Terria {
               "The stratum has a `dereferenced` property, but the model cannot be dereferenced."
           });
         }
-      }
 
-      if (GroupMixin.isMixedInto(loadedModel)) {
-        return openGroup(loadedModel, loadedModel.isOpen).then(
-          () => loadedModel
-        );
-      } else {
         return loadedModel;
-      }
-    });
+      })
+      .then(loadedModel => {
+        const dereferenced = getDereferencedIfExists(loadedModel);
+        if (GroupMixin.isMixedInto(dereferenced)) {
+          return openGroup(dereferenced, dereferenced.isOpen).then(
+            () => loadedModel
+          );
+        } else {
+          return loadedModel;
+        }
+      });
   }
 
   @action
@@ -634,7 +721,11 @@ export default class Terria {
             stratumId,
             models,
             replaceStratum
-          );
+          ).catch(e => {
+            // TODO: deal with shared models that can't be loaded because, e.g. because they are private
+            console.log(e);
+            return Promise.resolve();
+          });
         })
       ).then(() => undefined);
     } else {

@@ -3,13 +3,14 @@ import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
+import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import addedByUser from "../../Core/addedByUser";
+import getPath from "../../Core/getPath";
 import addToWorkbench from "../../Models/addToWorkbench";
 import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
 import removeUserAddedData from "../../Models/removeUserAddedData";
 import CatalogItem from "./CatalogItem";
-import { withTranslation } from "react-i18next";
 
 // Individual dataset
 export const DataCatalogItem = observer(
@@ -23,8 +24,7 @@ export const DataCatalogItem = observer(
       onActionButtonClicked: PropTypes.func,
       removable: PropTypes.bool,
       terria: PropTypes.object,
-      t: PropTypes.func.isRequired,
-      ancestors: PropTypes.array
+      t: PropTypes.func.isRequired
     },
 
     onBtnClicked(event) {
@@ -75,14 +75,16 @@ export const DataCatalogItem = observer(
             this.props.terria.workbench.contains(this.props.item) &&
             !keepCatalogOpen
           ) {
-            runInAction(() => {
-              this.props.viewState.explorerPanelIsVisible = false;
-              this.props.viewState.mobileView = null;
-            });
+            this.props.viewState.closeCatalog();
+            this.props.terria.analytics?.logEvent(
+              "dataSource",
+              toAdd ? "addFromCatalogue" : "removeFromCatalogue",
+              getPath(this.props.item)
+            );
           }
         });
 
-        raiseErrorOnRejectedPromise(addPromise);
+        raiseErrorOnRejectedPromise(this.props.terria, addPromise);
       });
     },
 
@@ -96,10 +98,7 @@ export const DataCatalogItem = observer(
       if (this.props.item.loadReference) {
         this.props.item.loadReference();
       }
-      this.props.viewState.viewCatalogMember(
-        this.props.item,
-        this.props.ancestors
-      );
+      this.props.viewState.viewCatalogMember(this.props.item);
       // mobile switch to nowvewing
       this.props.viewState.switchMobileView(
         this.props.viewState.mobileViewOptions.preview
@@ -126,7 +125,8 @@ export const DataCatalogItem = observer(
           onTextClick={this.setPreviewedItem}
           selected={this.isSelected()}
           text={item.nameInCatalog}
-          title={this.props.ancestors.map(m => m.nameInCatalog).join(" -> ")}
+          isPrivate={item.isPrivate}
+          title={getPath(item, " -> ")}
           btnState={this.getState()}
           onBtnClick={this.onBtnClicked}
           // All things are "removable" - meaning add and remove from workbench,

@@ -5,12 +5,20 @@ interface CssExports {
   'arrowIcon': string;
   'btn': string;
   'btnLocationName': string;
+  'charcoalGrey': string;
+  'colorPrimary': string;
+  'colorSplitter': string;
   'dark': string;
+  'darkWithOverlay': string;
   'icon': string;
   'light': string;
+  'mapButtonColor': string;
+  'modalHighlight': string;
   'resultName': string;
   'search-result': string;
   'searchResult': string;
+  'textDarker': string;
+  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

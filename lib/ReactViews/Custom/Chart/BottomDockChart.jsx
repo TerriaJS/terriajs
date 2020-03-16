@@ -76,12 +76,8 @@ class Chart extends React.Component {
   get chartItems() {
     return sortChartItemsByType(this.props.chartItems)
       .map(chartItem => {
-        const key = `chartItem-${chartItem.categoryName}-${
-          chartItem.name
-        }`.replace(/[^a-z0-9-]/gi, "-");
         return {
           ...chartItem,
-          key,
           points: chartItem.points.sort((p1, p2) => p1.x - p2.x)
         };
       })
@@ -253,7 +249,10 @@ class Chart extends React.Component {
         surface="#zoomSurface"
         initialScale={this.initialXScale}
         scaleExtent={[1, Infinity]}
-        translateExtent={[[0, 0], [Infinity, Infinity]]}
+        translateExtent={[
+          [0, 0],
+          [Infinity, Infinity]
+        ]}
         onZoom={zoomedScale => this.setZoomedXScale(zoomedScale)}
       >
         <Legends chartItems={this.chartItems} />
@@ -361,7 +360,7 @@ class Plot extends React.Component {
             <LineChart
               key={chartItem.key}
               ref={this.chartRefs[i]}
-              id={chartItem.key}
+              id={sanitizeIdString(chartItem.key)}
               chartItem={chartItem}
               scales={initialScales[i]}
             />
@@ -376,7 +375,7 @@ class Plot extends React.Component {
             <MomentPointsChart
               key={chartItem.key}
               ref={this.chartRefs[i]}
-              id={chartItem.key}
+              id={sanitizeIdString(chartItem.key)}
               chartItem={chartItem}
               basisItem={basisItem}
               scales={initialScales[i]}
@@ -388,7 +387,7 @@ class Plot extends React.Component {
             <MomentLinesChart
               key={chartItem.key}
               ref={this.chartRefs[i]}
-              id={chartItem.key}
+              id={sanitizeIdString(chartItem.key)}
               chartItem={chartItem}
               scales={initialScales[i]}
             />
@@ -521,4 +520,9 @@ function findNearestPoint(points, coords, xScale, maxDistancePx) {
   return Math.abs(distance(coords, nearestPoint)) <= maxDistancePx
     ? nearestPoint
     : undefined;
+}
+
+function sanitizeIdString(id) {
+  // delete all non-alphanum chars
+  return id.replace(/[^a-zA-Z0-9_-]/g, "");
 }

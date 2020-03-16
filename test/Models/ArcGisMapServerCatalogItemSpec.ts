@@ -214,6 +214,12 @@ describe("ArcGisMapServerCatalogItem", function() {
       });
     });
 
+    it("defines the name", function() {
+      expect(item.name).toBe(
+        "Australia 250K Topographic Hydrography and Marine Layers"
+      );
+    });
+
     it("defines the dataCustodian", function() {
       expect(item.dataCustodian).toBe("Geoscience Australia");
     });

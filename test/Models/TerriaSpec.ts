@@ -10,6 +10,11 @@ import openGroup from "../../lib/Models/openGroup";
 import { BaseModel } from "../../lib/Models/Model";
 import { runInAction } from "mobx";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import UrlReference from "../../lib/Models/UrlReference";
+import createCatalogItemFromUrl from "../../lib/Models/createCatalogItemFromUrl";
+import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
+import PickedFeatures from "../../lib/Map/PickedFeatures";
+import Feature from "../../lib/Models/Feature";
 
 describe("Terria", function() {
   let terria: Terria;
@@ -39,6 +44,13 @@ describe("Terria", function() {
       CatalogMemberFactory.register(
         WebMapServiceCatalogGroup.type,
         WebMapServiceCatalogGroup
+      );
+      CatalogMemberFactory.register(UrlReference.type, UrlReference);
+
+      createCatalogItemFromUrl.register(
+        s => true,
+        WebMapServiceCatalogItem.type,
+        true
       );
 
       terria.catalog.userAddedDataGroup.addMembersFromJson(CommonStrata.user, [
@@ -84,6 +96,36 @@ describe("Terria", function() {
         );
 
         done();
+      });
+    });
+
+    it("initializes user added data group with shared UrlReference items", function(done) {
+      terria.catalog.userAddedDataGroup.addMembersFromJson(CommonStrata.user, [
+        {
+          id: "url_test",
+          name: "foo",
+          type: "url-reference",
+          url: "test/WMS/single_metadata_url.xml"
+        }
+      ]);
+
+      const shareLink = buildShareLink(terria, viewState);
+      newTerria.updateApplicationUrl(shareLink).then(() => {
+        expect(newTerria.catalog.userAddedDataGroup.members).toContain(
+          "url_test"
+        );
+        const urlRef = newTerria.getModelById(BaseModel, "url_test");
+        expect(urlRef).toBeDefined();
+        expect(urlRef instanceof UrlReference).toBe(true);
+
+        if (urlRef instanceof UrlReference) {
+          return urlRef.loadReference().then(() => {
+            expect(urlRef.target).toBeDefined();
+            done();
+          });
+        } else {
+          done.fail();
+        }
       });
     });
 
@@ -133,9 +175,9 @@ describe("Terria", function() {
           newTerria.getModelById(BaseModel, "itemABC")
         );
         expect(newModel1).toBeDefined();
-        expect(newModel1.splitDirection).toEqual(<any>(
-          ImagerySplitDirection.RIGHT
-        ));
+        expect(newModel1.splitDirection).toEqual(
+          <any>ImagerySplitDirection.RIGHT
+        );
 
         done();
       });
@@ -179,6 +221,34 @@ describe("Terria", function() {
       .catch(error => {
         done.fail();
       });
+  });
+
+  describe("removeModelReferences", function() {
+    let model: SimpleCatalogItem;
+    beforeEach(function() {
+      model = new SimpleCatalogItem("testId", terria);
+      terria.addModel(model);
+    });
+
+    it("removes the model from workbench", function() {
+      terria.workbench.add(model);
+      terria.removeModelReferences(model);
+      expect(terria.workbench).not.toContain(model);
+    });
+
+    it("it removes picked features that contain the model", function() {
+      terria.pickedFeatures = new PickedFeatures();
+      const feature = new Feature({});
+      feature._catalogItem = model;
+      terria.pickedFeatures.features.push(feature);
+      terria.removeModelReferences(model);
+      expect(terria.pickedFeatures.features.length).toBe(0);
+    });
+
+    it("unregisters the model from Terria", function() {
+      terria.removeModelReferences(model);
+      expect(terria.getModelById(BaseModel, "testId")).toBeUndefined();
+    });
   });
 
   //   it("tells us there's a time enabled WMS with `checkNowViewingForTimeWms()`", function(done) {

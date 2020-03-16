@@ -2,12 +2,13 @@ import createReactClass from "create-react-class";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
+import { withTranslation } from "react-i18next";
 import addedByUser from "../../Core/addedByUser";
+import getPath from "../../Core/getPath";
 import openGroup from "../../Models/openGroup";
 import removeUserAddedData from "../../Models/removeUserAddedData";
 import CatalogGroup from "./CatalogGroup";
 import DataCatalogMember from "./DataCatalogMember";
-import { withTranslation } from "react-i18next";
 
 const DataCatalogGroup = observer(
   createReactClass({
@@ -24,7 +25,6 @@ const DataCatalogGroup = observer(
       removable: PropTypes.bool,
       terria: PropTypes.object,
       t: PropTypes.func.isRequired,
-      ancestors: PropTypes.array,
       isTopLevel: PropTypes.bool
     },
 
@@ -66,10 +66,7 @@ const DataCatalogGroup = observer(
     clickGroup() {
       this.toggleOpen();
       this.props.group.loadMembers();
-      this.props.viewState.viewCatalogMember(
-        this.props.group,
-        this.props.ancestors
-      );
+      this.props.viewState.viewCatalogMember(this.props.group);
     },
 
     isSelected() {
@@ -97,9 +94,8 @@ const DataCatalogGroup = observer(
       return (
         <CatalogGroup
           text={this.getNameOrPrettyUrl()}
-          title={this.props.ancestors
-            .map(member => member.nameInCatalog)
-            .join(" → ")}
+          isPrivate={group.isPrivate}
+          title={getPath(this.props.group, " → ")}
           topLevel={this.props.isTopLevel}
           open={this.isOpen()}
           loading={group.isLoading || group.isLoadingMembers}
@@ -124,7 +120,6 @@ const DataCatalogGroup = observer(
                 overrideOpen={this.props.manageIsOpenLocally}
                 overrideState={this.props.overrideState}
                 onActionButtonClicked={this.props.onActionButtonClicked}
-                ancestors={[...this.props.ancestors, group]}
               />
             </For>
           </If>

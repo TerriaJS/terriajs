@@ -17,7 +17,12 @@ describe("TableStructure", function() {
   it("can read from json object", function() {
     // Use a copy of data to make the column, because knockout adds stuff to data.
     // Also, test a "slice" of the column's values, to remove knockout stuff.
-    var data = [["x", "y"], [1, 5], [3, 8], [4, -3]];
+    var data = [
+      ["x", "y"],
+      [1, 5],
+      [3, 8],
+      [4, -3]
+    ];
     var tableStructure = TableStructure.fromJson(data.slice());
     expect(tableStructure.columns.length).toEqual(2);
     expect(tableStructure.columns[0].name).toEqual("x");
@@ -37,7 +42,12 @@ describe("TableStructure", function() {
   });
 
   it("can read from json object into existing structure", function() {
-    var data = [["x", "y"], [1, 5], [3, 8], [4, -3]];
+    var data = [
+      ["x", "y"],
+      [1, 5],
+      [3, 8],
+      [4, -3]
+    ];
     var tableStructure = new TableStructure();
     tableStructure.loadFromJson(data);
     expect(tableStructure.columns.length).toEqual(2);
@@ -59,7 +69,12 @@ describe("TableStructure", function() {
   });
 
   it("can convert to ArrayOfColumns", function() {
-    var data = [["x", "y"], [1, 5], [3, 8], [4, -3]];
+    var data = [
+      ["x", "y"],
+      [1, 5],
+      [3, 8],
+      [4, -3]
+    ];
     var tableStructure = TableStructure.fromJson(data);
     var columns = tableStructure.toArrayOfColumns();
     expect(columns.length).toEqual(2);
@@ -68,7 +83,12 @@ describe("TableStructure", function() {
   });
 
   it("can convert to ArrayOfRows", function() {
-    var data = [["x", "y"], ["1", "5"], ["3", "8"], ["4", "-3"]];
+    var data = [
+      ["x", "y"],
+      ["1", "5"],
+      ["3", "8"],
+      ["4", "-3"]
+    ];
     var tableStructure = TableStructure.fromJson(data);
     var rows = tableStructure.toArrayOfRows();
     expect(rows.length).toEqual(4);
@@ -76,7 +96,12 @@ describe("TableStructure", function() {
   });
 
   it("can convert to ArrayOfRows with formatting", function() {
-    var data = [["x", "y"], [1.678, 9.883], [54321, 12345], [4, -3]];
+    var data = [
+      ["x", "y"],
+      [1.678, 9.883],
+      [54321, 12345],
+      [4, -3]
+    ];
     var options = {
       columnOptions: {
         x: { format: { maximumFractionDigits: 0 } },
@@ -100,7 +125,12 @@ describe("TableStructure", function() {
   });
 
   it("can convert to ArrayOfRows with formatting and quotes if containing commas", function() {
-    var data = [["x", "y"], [1.678, 9.883], [54321, 12345], [4, -3]];
+    var data = [
+      ["x", "y"],
+      [1.678, 9.883],
+      [54321, 12345],
+      [4, -3]
+    ];
     var options = {
       columnOptions: {
         x: { format: { maximumFractionDigits: 0 } },
@@ -124,7 +154,12 @@ describe("TableStructure", function() {
   });
 
   it("can convert to ArrayOfRows with formatting and quotes if containing quotes", function() {
-    var data = [["x", "y"], [1.678, 9.883], [54321, 12345], [4, -3]];
+    var data = [
+      ["x", "y"],
+      [1.678, 9.883],
+      [54321, 12345],
+      [4, -3]
+    ];
     var options = {
       columnOptions: {
         x: { format: { maximumFractionDigits: 0 } },
@@ -148,7 +183,12 @@ describe("TableStructure", function() {
   });
 
   it("can convert to csv", function() {
-    var data = [["lat", "y"], [1.678, 9.883], [54321, 12345], [4, -3]];
+    var data = [
+      ["lat", "y"],
+      [1.678, 9.883],
+      [54321, 12345],
+      [4, -3]
+    ];
     var tableStructure = new TableStructure();
     tableStructure = tableStructure.loadFromJson(data);
     var csvString = tableStructure.toCsvString();
@@ -156,7 +196,10 @@ describe("TableStructure", function() {
   });
 
   it("can create a data URI", function() {
-    var data = [["lat", "y"], [1.6, -9.8]];
+    var data = [
+      ["lat", "y"],
+      [1.6, -9.8]
+    ];
     var tableStructure = new TableStructure();
     // From json
     tableStructure = tableStructure.loadFromJson(data);
@@ -170,7 +213,12 @@ describe("TableStructure", function() {
   });
 
   it("can convert to row objects", function() {
-    var data = [["lat", "y"], [1, 5.12345], [3, 8], [4, -3]];
+    var data = [
+      ["lat", "y"],
+      [1, 5.12345],
+      [3, 8],
+      [4, -3]
+    ];
     var tableStructure = TableStructure.fromJson(data);
     var rowObjects = tableStructure.toRowObjects();
     expect(rowObjects.length).toEqual(3);
@@ -182,7 +230,12 @@ describe("TableStructure", function() {
   });
 
   it("can convert to string and number row objects", function() {
-    var data = [["x", "y"], [1.678, -9.883], [54321, 12345], [4, -3]];
+    var data = [
+      ["x", "y"],
+      [1.678, -9.883],
+      [54321, 12345],
+      [4, -3]
+    ];
     var options = {
       columnOptions: {
         x: { format: { maximumFractionDigits: 0 } },
@@ -207,22 +260,45 @@ describe("TableStructure", function() {
   });
 
   it("can convert to point arrays", function() {
-    var data = [["a", "b", "c"], [1, 2, 3], [4, 5, 6], [7, 8, 9]];
+    var data = [
+      ["a", "b", "c"],
+      [1, 2, 3],
+      [4, 5, 6],
+      [7, 8, 9]
+    ];
     var tableStructure = TableStructure.fromJson(data);
     var xy = tableStructure.toPointArrays();
     expect(xy.length).toEqual(2);
-    expect(xy[0]).toEqual([{ x: 1, y: 2 }, { x: 4, y: 5 }, { x: 7, y: 8 }]);
-    expect(xy[1]).toEqual([{ x: 1, y: 3 }, { x: 4, y: 6 }, { x: 7, y: 9 }]);
+    expect(xy[0]).toEqual([
+      { x: 1, y: 2 },
+      { x: 4, y: 5 },
+      { x: 7, y: 8 }
+    ]);
+    expect(xy[1]).toEqual([
+      { x: 1, y: 3 },
+      { x: 4, y: 6 },
+      { x: 7, y: 9 }
+    ]);
   });
 
   it("can get column names", function() {
-    var data = [["lat", "y"], [1, 5], [3, 8], [4, -3]];
+    var data = [
+      ["lat", "y"],
+      [1, 5],
+      [3, 8],
+      [4, -3]
+    ];
     var tableStructure = TableStructure.fromJson(data);
     expect(tableStructure.getColumnNames()).toEqual(["lat", "y"]);
   });
 
   it("can get column with name", function() {
-    var data = [["x", "y"], [1, 5], [3, 8], [4, -3]];
+    var data = [
+      ["x", "y"],
+      [1, 5],
+      [3, 8],
+      [4, -3]
+    ];
     var tableStructure = TableStructure.fromJson(data);
     expect(tableStructure.getColumnWithName("y")).toEqual(
       tableStructure.columns[1]
@@ -231,7 +307,12 @@ describe("TableStructure", function() {
   });
 
   it("sets column types", function() {
-    var data = [["x", "lat"], [1, 5], [3, 8], [4, -3]];
+    var data = [
+      ["x", "lat"],
+      [1, 5],
+      [3, 8],
+      [4, -3]
+    ];
     var tableStructure = TableStructure.fromJson(data);
     expect(tableStructure.columnsByType[VarType.SCALAR].length).toEqual(1);
     expect(tableStructure.columnsByType[VarType.SCALAR][0].name).toEqual("x");
@@ -304,7 +385,12 @@ describe("TableStructure", function() {
   });
 
   it("can describe rows with formatting", function() {
-    var data = [["x", "y"], [1.678, 5.123], [54321, 12345], [4, -3]];
+    var data = [
+      ["x", "y"],
+      [1.678, 5.123],
+      [54321, 12345],
+      [4, -3]
+    ];
     var options = {
       columnOptions: {
         y: {
@@ -343,7 +429,12 @@ describe("TableStructure", function() {
     tableStructure = tableStructure.loadFromJson(data);
     expect(tableStructure.hasAddress).toBe(true);
 
-    var dataNoAddr = [["x", "y"], [1.678, 5.123], [54321, 12345], [4, -3]];
+    var dataNoAddr = [
+      ["x", "y"],
+      [1.678, 5.123],
+      [54321, 12345],
+      [4, -3]
+    ];
     var optionsNoAddr = {
       columnOptions: {
         y: {
@@ -480,8 +571,16 @@ describe("TableStructure", function() {
   });
 
   it("can merge tables without dates", function() {
-    var data = [["id", "lat", "lon"], ["A", 16.8, 5.2], ["B", 16.2, 5.2]];
-    var dat2 = [["id", "lat", "lon"], ["A", 12, 8], ["C", 15, 5.5]];
+    var data = [
+      ["id", "lat", "lon"],
+      ["A", 16.8, 5.2],
+      ["B", 16.2, 5.2]
+    ];
+    var dat2 = [
+      ["id", "lat", "lon"],
+      ["A", 12, 8],
+      ["C", 15, 5.5]
+    ];
     var options = { idColumnNames: ["id"] };
     var table1 = new TableStructure("foo", options);
     var table2 = new TableStructure("bar"); // Only uses idColumnNames on table1.
@@ -493,7 +592,12 @@ describe("TableStructure", function() {
   });
 
   it("can add columns", function() {
-    var dataNoAddr = [["x", "y"], [1.678, 5.123], [54321, 12345], [4, -3]];
+    var dataNoAddr = [
+      ["x", "y"],
+      [1.678, 5.123],
+      [54321, 12345],
+      [4, -3]
+    ];
     var options = {
       columnOptions: {
         y: {
@@ -515,7 +619,12 @@ describe("TableStructure", function() {
   });
 
   it("can sort columns", function() {
-    var data = [["x", "y", "z"], [3, 5, "a"], [1, 8, "c"], [4, -3, "b"]];
+    var data = [
+      ["x", "y", "z"],
+      [3, 5, "a"],
+      [1, 8, "c"],
+      [4, -3, "b"]
+    ];
     var tableStructure = TableStructure.fromJson(data);
     tableStructure.sortBy(tableStructure.getColumnWithName("x"));
     expect(tableStructure.getColumnWithName("x").values.slice()).toEqual([

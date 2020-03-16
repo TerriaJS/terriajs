@@ -5,16 +5,25 @@ interface CssExports {
   'btn': string;
   'btn--close-chart-panel': string;
   'btnCloseChartPanel': string;
+  'charcoalGrey': string;
   'chart': string;
   'chart-panel': string;
   'chartPanel': string;
+  'colorPrimary': string;
+  'colorSplitter': string;
   'colors': string;
+  'dark': string;
+  'darkWithOverlay': string;
   'header': string;
   'holder': string;
   'inner': string;
   'loader': string;
+  'mapButtonColor': string;
+  'modalHighlight': string;
   'section-label': string;
   'sectionLabel': string;
+  'textDarker': string;
+  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

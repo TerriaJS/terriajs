@@ -14,24 +14,25 @@
 .compass {
   position: relative;
   cursor: default;
+
+  // todo: fix properly - why it moves in chrome but not firefox
   width: $compass-width;
   height: $compass-width;
   composes: sm-show from "../../../Sass/common/_base.scss";
 
   svg {
-    fill: $dark;
+    fill: $text-darker;
   }
 }
 .innerRing {
   @include vertical-align();
-  height: $compass-width - $ring-width -20px;
-  width: $compass-width - $ring-width -20px;
+  height: $compass-width - $ring-width -10px;
+  width: $compass-width - $ring-width -10px;
   border-radius: 50%;
   display: block;
   margin: 0 auto;
   padding: 4px;
   box-sizing: border-box;
-  background: #ffffff;
 }
 .rotationMarker {
   background-image: url("../../../../wwwroot/images/compass-rotation-marker.svg");
@@ -55,7 +56,9 @@
   top: 0;
   left: 0;
   svg {
-    width: 100%;
-    height: 100%;
+    // width: 100%;
+    // height: 100%;
+    height: $compass-width;
+    width: $compass-width;
   }
 }

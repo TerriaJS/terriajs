@@ -79,6 +79,23 @@ describe("UserDrawing", function() {
     expect(userDrawing.terria.mapInteractionModeStack.length).toEqual(1);
   });
 
+  it("disables feature info requests when in drawing mode", function() {
+    var options = { terria: terria };
+    var userDrawing = new UserDrawing(options);
+    expect(userDrawing.terria.allowFeatureInfoRequests).toEqual(true);
+    userDrawing.enterDrawMode();
+    expect(userDrawing.terria.allowFeatureInfoRequests).toEqual(false);
+  });
+
+  it("re-enables feature info requests on cleanup", function() {
+    var options = { terria: terria };
+    var userDrawing = new UserDrawing(options);
+    userDrawing.enterDrawMode();
+    expect(userDrawing.terria.allowFeatureInfoRequests).toEqual(false);
+    userDrawing.cleanUp();
+    expect(userDrawing.terria.allowFeatureInfoRequests).toEqual(true);
+  });
+
   it("ensures onPointClicked callback is called when point is picked by user", function() {
     const onPointClicked = jasmine.createSpy();
     const userDrawing = new UserDrawing({ terria, onPointClicked });

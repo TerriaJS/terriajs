@@ -5,6 +5,13 @@ interface CssExports {
   'btn--tab': string;
   'btnSelected': string;
   'btnTab': string;
+  'charcoalGrey': string;
+  'colorPrimary': string;
+  'colorSplitter': string;
+  'dark': string;
+  'darkWithOverlay': string;
+  'mapButtonColor': string;
+  'modalHighlight': string;
   'panel-content': string;
   'panelContent': string;
   'tab-left-col': string;
@@ -16,6 +23,8 @@ interface CssExports {
   'tabListItem': string;
   'tabPanel': string;
   'tabs': string;
+  'textDarker': string;
+  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

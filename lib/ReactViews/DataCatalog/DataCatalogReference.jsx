@@ -1,16 +1,16 @@
 import createReactClass from "create-react-class";
-import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
+import defined from "terriajs-cesium/Source/Core/defined";
 import addedByUser from "../../Core/addedByUser";
+import getPath from "../../Core/getPath";
+import addToWorkbench from "../../Models/addToWorkbench";
+import CommonStrata from "../../Models/CommonStrata";
+import openGroup from "../../Models/openGroup";
+import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
 import CatalogGroup from "./CatalogGroup";
 import CatalogItem from "./CatalogItem";
-import openGroup from "../../Models/openGroup";
-import CommonStrata from "../../Models/CommonStrata";
-import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
-import addToWorkbench from "../../Models/addToWorkbench";
-import defined from "terriajs-cesium/Source/Core/defined";
 
 const DataCatalogReference = observer(
   createReactClass({
@@ -21,7 +21,6 @@ const DataCatalogReference = observer(
       viewState: PropTypes.object.isRequired,
       onActionButtonClicked: PropTypes.func,
       terria: PropTypes.object,
-      ancestors: PropTypes.array,
       isTopLevel: PropTypes.bool
     },
 
@@ -34,10 +33,7 @@ const DataCatalogReference = observer(
           this.props.reference.loadReference()
         );
       }
-      this.props.viewState.viewCatalogMember(
-        this.props.reference,
-        this.props.ancestors
-      );
+      this.props.viewState.viewCatalogMember(this.props.reference);
       // mobile switch to nowvewing, but only if this is a
       // catalog item not a group.
       if (loadPromise) {
@@ -92,10 +88,7 @@ const DataCatalogReference = observer(
             this.props.terria.workbench.contains(this.props.reference) &&
             !keepCatalogOpen
           ) {
-            runInAction(() => {
-              this.props.viewState.explorerPanelIsVisible = false;
-              this.props.viewState.mobileView = null;
-            });
+            this.props.viewState.closeCatalog();
           }
         });
 
@@ -119,15 +112,15 @@ const DataCatalogReference = observer(
 
     render() {
       const reference = this.props.reference;
+      const path = getPath(reference, " -> ");
 
       return (
         <Choose>
           <When condition={reference.isGroup}>
             <CatalogGroup
               text={reference.name || "..."}
-              title={this.props.ancestors
-                .map(member => member.nameInCatalog)
-                .join(" → ")}
+              isPrivate={reference.isPrivate}
+              title={path}
               onClick={this.open}
               topLevel={this.props.isTopLevel}
               loading={this.props.reference.isLoadingReference}
@@ -139,9 +132,8 @@ const DataCatalogReference = observer(
               onTextClick={this.setPreviewedItem}
               selected={this.isSelected()}
               text={reference.name || "..."}
-              title={this.props.ancestors
-                .map(m => m.nameInCatalog)
-                .join(" -> ")}
+              isPrivate={reference.isPrivate}
+              title={path}
               btnState={
                 this.props.reference.isLoadingReference ? "loading" : "stats"
               }
@@ -153,9 +145,8 @@ const DataCatalogReference = observer(
               onTextClick={this.setPreviewedItem}
               selected={this.isSelected()}
               text={reference.name || "..."}
-              title={this.props.ancestors
-                .map(m => m.nameInCatalog)
-                .join(" -> ")}
+              isPrivate={reference.isPrivate}
+              title={path}
               btnState={
                 this.props.reference.isLoadingReference ? "loading" : "add"
               }

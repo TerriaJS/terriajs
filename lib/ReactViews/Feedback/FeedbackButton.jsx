@@ -4,10 +4,12 @@ import createReactClass from "create-react-class";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
-import { Medium } from "../Generic/Responsive";
+import { withTranslation } from "react-i18next";
+// import { Medium } from "../Generic/Responsive";
 import Icon from "../Icon";
-import Styles from "./feedback-button.scss";
+// import Styles from "./feedback-button.scss";
 import { runInAction } from "mobx";
+import MapIconButton from "../MapIconButton/MapIconButton";
 
 const FeedbackButton = observer(
   createReactClass({
@@ -15,7 +17,8 @@ const FeedbackButton = observer(
 
     propTypes: {
       viewState: PropTypes.object.isRequired,
-      btnText: PropTypes.string.isRequired
+      btnText: PropTypes.string.isRequired,
+      t: PropTypes.func.isRequired
     },
 
     onClick() {
@@ -25,22 +28,18 @@ const FeedbackButton = observer(
     },
 
     render() {
+      const { t } = this.props;
       return (
-        <div className={Styles.feedback}>
-          <button
-            type="button"
-            className={Styles.btnFeedback}
-            onClick={this.onClick}
-          >
-            <Icon glyph={Icon.GLYPHS.feedback} />
-            <Medium>
-              <span>{this.props.btnText}</span>
-            </Medium>
-          </button>
-        </div>
+        <MapIconButton
+          expandInPlace
+          iconElement={() => <Icon glyph={Icon.GLYPHS.feedback} />}
+          onClick={this.onClick}
+        >
+          {t("feedback.feedbackBtnText")}
+        </MapIconButton>
       );
     }
   })
 );
 
-module.exports = FeedbackButton;
+export default withTranslation()(FeedbackButton);

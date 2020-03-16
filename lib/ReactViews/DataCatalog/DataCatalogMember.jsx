@@ -5,10 +5,10 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import GroupMixin from "../../ModelMixins/GroupMixin";
+import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
 import DataCatalogGroup from "./DataCatalogGroup";
 import DataCatalogItem from "./DataCatalogItem";
 import DataCatalogReference from "./DataCatalogReference";
-import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
 
 /**
  * Component that is either a {@link CatalogItem} or a {@link DataCatalogMember} and encapsulated this choosing logic.
@@ -25,7 +25,6 @@ export default observer(
       onActionButtonClicked: PropTypes.func,
       removable: PropTypes.bool,
       terria: PropTypes.object,
-      ancestors: PropTypes.array,
       isTopLevel: PropTypes.bool
     },
 
@@ -42,7 +41,6 @@ export default observer(
             reference={member}
             viewState={this.props.viewState}
             terria={this.props.terria}
-            ancestors={this.props.ancestors}
             onActionButtonClicked={this.props.onActionButtonClicked}
             isTopLevel={this.props.isTopLevel}
           />
@@ -57,7 +55,6 @@ export default observer(
             onActionButtonClicked={this.props.onActionButtonClicked}
             removable={this.props.removable}
             terria={this.props.terria}
-            ancestors={this.props.ancestors}
             isTopLevel={this.props.isTopLevel}
           />
         );
@@ -70,7 +67,6 @@ export default observer(
             onActionButtonClicked={this.props.onActionButtonClicked}
             removable={this.props.removable}
             terria={this.props.terria}
-            ancestors={this.props.ancestors}
           />
         );
       }

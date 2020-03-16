@@ -7,6 +7,8 @@
 
 /** No-op grouping element for elements that should be added to the menu */
 export function Menu() {}
+/** No-op grouping element for elements that should be added to the left menu */
+export function MenuLeft() {}
 /** No-op grouping element for elements that should be added to the nav*/
 export function Nav() {}
 /** No-op grouping element for elements that should be added to the experimental features*/

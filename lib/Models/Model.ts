@@ -56,7 +56,7 @@ export type ArrayElementTypes<T extends ModelTraits> = {
     ? E extends ModelTraits
       ? E
       : never
-    : never
+    : never;
 };
 
 export interface ModelInterface<T extends ModelTraits> {

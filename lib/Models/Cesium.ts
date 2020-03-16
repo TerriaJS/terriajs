@@ -56,6 +56,7 @@ import Mappable, {
 } from "./Mappable";
 import Terria from "./Terria";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
+import getElement from "terriajs-cesium/Source/Widgets/getElement";
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
 // Intermediary
@@ -185,14 +186,42 @@ export default class Cesium extends GlobeOrMap {
     //         }
     //     });
 
-    // if (defined(this._defaultTerriaCredit)) {
-    //     var containerElement = getElement(container);
-    //     var creditsElement = containerElement && containerElement.getElementsByClassName('cesium-widget-credits')[0];
-    //     var logoContainer = creditsElement && creditsElement.getElementsByClassName('cesium-credit-logoContainer')[0];
-    //     if (logoContainer) {
-    //         creditsElement.insertBefore(this._defaultTerriaCredit.element, logoContainer);
-    //     }
-    // }
+    if (isDefined(this._extraCredits.terria)) {
+      const containerElement = getElement(container);
+      const creditsElement =
+        containerElement &&
+        containerElement.getElementsByClassName("cesium-widget-credits")[0];
+      const logoContainer =
+        creditsElement &&
+        creditsElement.getElementsByClassName("cesium-credit-logoContainer")[0];
+      const expandLink =
+        creditsElement &&
+        creditsElement.getElementsByClassName("cesium-credit-expand-link") &&
+        creditsElement.getElementsByClassName("cesium-credit-expand-link")[0];
+      if (logoContainer) {
+        creditsElement.insertBefore(
+          this._extraCredits.terria?.element,
+          logoContainer
+        );
+      }
+      if (expandLink) {
+        let attributionToAboutPage = document.createElement("div");
+        attributionToAboutPage.innerHTML = `<a href="about.html#data-attribution" target="_blank" rel="noopener noreferrer">Data attribution</a>`;
+        let disclaimerToAboutPage = document.createElement("div");
+        disclaimerToAboutPage.innerHTML = `<a href="about.html#disclaimer" target="_blank" rel="noopener noreferrer">Disclaimer</a>`;
+
+        logoContainer.parentNode.insertBefore(
+          disclaimerToAboutPage.firstChild,
+          logoContainer.nextSibling
+        );
+        logoContainer.parentNode.insertBefore(
+          attributionToAboutPage.firstChild,
+          logoContainer.nextSibling
+        );
+
+        expandLink.innerText = "Basemap";
+      }
+    }
 
     this.scene.globe.depthTestAgainstTerrain = false;
 
@@ -268,6 +297,7 @@ export default class Cesium extends GlobeOrMap {
       this.scene.globe.splitDirection = this.terria.showSplitter
         ? this.terria.terrainSplitDirection
         : ImagerySplitDirection.NONE;
+      this.scene.globe.depthTestAgainstTerrain = this.terria.depthTestAgainstTerrainEnabled;
       if (this.scene.skyAtmosphere) {
         this.scene.skyAtmosphere.splitDirection = this.scene.globe.splitDirection;
       }
@@ -752,12 +782,18 @@ export default class Cesium extends GlobeOrMap {
   // This function isn't used anywhere yet
   @computed
   get _extraCredits() {
-    const credits: { cesium?: Cesium.Credit; terria?: Cesium.Credit } = {};
+    const credits: { cesium?: Credit; terria?: Credit } = {};
     if (this._terrainWithCredits.credit) {
       credits.cesium = this._terrainWithCredits.credit;
     }
     if (!this.terria.configParameters.hideTerriaLogo) {
-      //credits.terria = ...
+      const logo = require("../../wwwroot/images/terria-watermark.svg");
+      credits.terria = new Credit(
+        '<a href="https://terria.io/" target="_blank" rel="noopener noreferrer"><img src="' +
+          logo +
+          '" title="Built with Terria"/></a>',
+        true
+      );
     }
     return credits;
   }
@@ -782,10 +818,9 @@ export default class Cesium extends GlobeOrMap {
     const vectorFeatures = this.pickVectorFeatures(screenPosition);
 
     const providerCoords = this._attachProviderCoordHooks();
-    const pickRasterPromise = this.scene.imageryLayers.pickImageryLayerFeatures(
-      pickRay,
-      this.scene
-    );
+    var pickRasterPromise = this.terria.allowFeatureInfoRequests
+      ? this.scene.imageryLayers.pickImageryLayerFeatures(pickRay, this.scene)
+      : undefined;
 
     const result = this._buildPickedFeatures(
       providerCoords,

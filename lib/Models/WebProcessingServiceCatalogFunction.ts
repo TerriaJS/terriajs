@@ -1,4 +1,10 @@
-import { computed, isObservableArray, observable, runInAction } from "mobx";
+import {
+  action,
+  computed,
+  isObservableArray,
+  observable,
+  runInAction
+} from "mobx";
 import Mustache from "mustache";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import URI from "urijs";
@@ -235,9 +241,7 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
       throw new TerriaError({
         sender: this,
         title: "Unsupported parameter type",
-        message: `The parameter ${
-          input.Identifier
-        } is not a supported type of parameter.`
+        message: `The parameter ${input.Identifier} is not a supported type of parameter.`
       });
     });
     return parameters;
@@ -249,38 +253,44 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
    * If `executeWithHttpGet` is true, a GET request is made
    * instead of the default POST request.
    */
+  @action
   async invoke() {
     if (!isDefined(this.identifier) || !isDefined(this.executeUrl)) {
       return;
     }
 
+    const identifier = this.identifier;
+    const executeUrl = this.executeUrl;
     const pendingItem = this.createPendingCatalogItem();
     let dataInputs = await Promise.all(
       this.parameters.map(p => this.convertParameterToInput(p))
     );
-    const parameters = {
-      Identifier: htmlEscapeText(this.identifier),
-      DataInputs: dataInputs.filter(isDefined),
-      storeExecuteResponse: this.storeSupported,
-      status: this.statusSupported
-    };
-    let promise: Promise<any>;
-    if (this.executeWithHttpGet) {
-      promise = this.getXml(this.executeUrl, {
-        ...parameters,
-        DataInputs: parameters.DataInputs.map(
-          ({ inputIdentifier: id, inputValue: val }) => `${id}=${val}`
-        ).join(";")
-      });
-    } else {
-      const executeXml = Mustache.render(executeWpsTemplate, parameters);
-      promise = this.postXml(this.executeUrl, executeXml);
-    }
 
-    pendingItem.loadPromise = promise;
-    this.terria.workbench.add(pendingItem);
-    const executeResponseXml = await promise;
-    await this.handleExecuteResponse(executeResponseXml, pendingItem);
+    return runInAction(async () => {
+      const parameters = {
+        Identifier: htmlEscapeText(identifier),
+        DataInputs: dataInputs.filter(isDefined),
+        storeExecuteResponse: this.storeSupported,
+        status: this.statusSupported
+      };
+      let promise: Promise<any>;
+      if (this.executeWithHttpGet) {
+        promise = this.getXml(executeUrl, {
+          ...parameters,
+          DataInputs: parameters.DataInputs.map(
+            ({ inputIdentifier: id, inputValue: val }) => `${id}=${val}`
+          ).join(";")
+        });
+      } else {
+        const executeXml = Mustache.render(executeWpsTemplate, parameters);
+        promise = this.postXml(executeUrl, executeXml);
+      }
+
+      pendingItem.loadPromise = promise;
+      this.terria.workbench.add(pendingItem);
+      const executeResponseXml = await promise;
+      return this.handleExecuteResponse(executeResponseXml, pendingItem);
+    });
   }
 
   /**
@@ -393,7 +403,7 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
     const item = new WebProcessingServiceCatalogItem(id, this.terria);
     const parameterTraits = await Promise.all(
       this.parameters.map(async p => {
-        const geoJsonFeature = await p.geoJsonFeature;
+        const geoJsonFeature = await runInAction(() => p.geoJsonFeature);
         const tmp = createStratumInstance(ParameterTraits, {
           name: p.name,
           value: p.formatValueAsString(),
@@ -450,9 +460,7 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
       item.setTrait(
         CommonStrata.user,
         "description",
-        `This is the result of invoking the ${
-          this.name
-        } process or service at ${timestamp} with the input parameters below.`
+        `This is the result of invoking the ${this.name} process or service at ${timestamp} with the input parameters below.`
       );
 
       const info = createStratumInstance(InfoSectionTraits, {

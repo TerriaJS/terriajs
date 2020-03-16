@@ -4,23 +4,45 @@ import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
+import { withTranslation } from "react-i18next";
 import { Swipeable } from "react-swipeable";
+import getPath from "../../Core/getPath";
+// eslint-disable-next-line no-unused-vars
+import Terria from "../../Models/Terria";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import { Medium, Small } from "../Generic/Responsive";
 import Icon from "../Icon.jsx";
 import Styles from "./story-panel.scss";
-import { withTranslation } from "react-i18next";
+
+/**
+ *
+ * @param {any} story
+ * @param {Terria} terria
+ */
 
 export function activateStory(story, terria) {
+  // Send a GA event on scene change with URL hash
+  const analyticsLabel =
+    window.location.hash.length > 0
+      ? window.location.hash
+      : "No hash detected (story not shared yet?)";
+  terria.analytics?.logEvent("story", "scene", analyticsLabel);
   return runInAction(() => {
     if (story.shareData) {
-      return story.shareData.initSources.map(initSource =>
-        terria.applyInitData({
-          initData: initSource,
-          replaceStratum: true
-        })
+      return Promise.all(
+        story.shareData.initSources.map(initSource =>
+          terria.applyInitData({
+            initData: initSource,
+            replaceStratum: false
+          })
+        )
       );
     }
+    return Promise.resolve([]);
+  }).then(() => {
+    terria.workbench.items.forEach(item => {
+      terria.analytics?.logEvent("story", "datasetView", getPath(item));
+    });
   });
 }
 

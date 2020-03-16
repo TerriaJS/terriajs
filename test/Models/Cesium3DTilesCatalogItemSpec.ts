@@ -145,7 +145,10 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
         await item.loadMapItems();
       } catch {}
       // observe mapItems
-      dispose = reaction(() => item.mapItems, () => {});
+      dispose = reaction(
+        () => item.mapItems,
+        () => {}
+      );
     });
 
     afterEach(function() {

@@ -69,8 +69,8 @@ export default class Cesium3DTilesCatalogItem
   protected forceLoadMapItems() {
     this.loadTileset();
     if (this.tileset) {
-      return makeRealPromise<Cesium3DTileset>(this.tileset.readyPromise).then(
-        tileset => {
+      return makeRealPromise<Cesium3DTileset>(this.tileset.readyPromise)
+        .then(tileset => {
           if (
             tileset.extras !== undefined &&
             tileset.extras.style !== undefined
@@ -84,8 +84,8 @@ export default class Cesium3DTilesCatalogItem
               );
             });
           }
-        }
-      );
+        }) // TODO: What should handle this error?
+        .catch(e => console.error(e));
     } else {
       return Promise.resolve();
     }

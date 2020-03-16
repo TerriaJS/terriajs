@@ -8,6 +8,12 @@
   padding-bottom: 5px;
   padding-right: 5px;
   font-family: $font-base;
+
+  @media (max-width: $mobile) {
+    position: fixed;
+    bottom: 0px;
+    background: $dark;
+  }
 }
 
 .text-row {
@@ -19,10 +25,31 @@
   left: 0px;
   background: $dark;
   padding: 3px 5px;
+
+  @media (max-width: $mobile) {
+    position: fixed;
+  }
 }
 
 .text-cell {
-  display: table-cell;
+  display: flex;
+}
+
+.layer-name-truncated {
+  padding-right: $padding-small;
+
+  @media (max-width: $mobile), (min-width: $sm) and (max-width: $lg) {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  @media (max-width: $mobile) {
+    max-width: 52vw;
+  }
+
+  @media (min-width: $sm) and (max-width: $lg) {
+    max-width: 30vw;
+  }
 }
 
 .time {

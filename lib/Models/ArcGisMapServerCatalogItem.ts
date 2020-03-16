@@ -41,12 +41,14 @@ interface RectangleExtent {
 
 interface DocumentInfo {
   Author?: string;
+  Title?: string;
 }
 
 interface MapServer {
   documentInfo?: DocumentInfo;
   description?: string;
   copyrightText?: string;
+  mapName?: string;
 }
 
 interface SpatialReference {
@@ -192,6 +194,28 @@ class MapServerStratum extends LoadableStratum(
     return Math.min(
       ...filterOutUndefined(this.allLayers.map(({ maxScale }) => maxScale))
     );
+  }
+
+  @computed get name() {
+    // single layer
+    if (
+      this.allLayers.length === 1 &&
+      this.allLayers[0].name &&
+      this.allLayers[0].name.length > 0
+    ) {
+      return replaceUnderscores(this.allLayers[0].name);
+    }
+
+    // group of layers
+    else if (
+      this._mapServer.documentInfo &&
+      this._mapServer.documentInfo.Title &&
+      this._mapServer.documentInfo.Title.length > 0
+    ) {
+      return replaceUnderscores(this._mapServer.documentInfo.Title);
+    } else if (this._mapServer.mapName && this._mapServer.mapName.length > 0) {
+      return replaceUnderscores(this._mapServer.mapName);
+    }
   }
 
   @computed get dataCustodian() {

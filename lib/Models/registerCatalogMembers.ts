@@ -20,6 +20,9 @@ import OpenStreetMapCatalogItem from "./OpenStreetMapCatalogItem";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
 import UrlReference from "./UrlReference";
+import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFunction";
+import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
+import CompositeCatalogItem from "./CompositeCatalogItem";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
@@ -70,6 +73,18 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(KmlCatalogItem.type, KmlCatalogItem);
   CatalogMemberFactory.register(CartoMapCatalogItem.type, CartoMapCatalogItem);
   CatalogMemberFactory.register(UrlReference.type, UrlReference);
+  CatalogMemberFactory.register(
+    WebProcessingServiceCatalogFunction.type,
+    WebProcessingServiceCatalogFunction
+  );
+  CatalogMemberFactory.register(
+    WebProcessingServiceCatalogItem.type,
+    WebProcessingServiceCatalogItem
+  );
+  CatalogMemberFactory.register(
+    CompositeCatalogItem.type,
+    CompositeCatalogItem
+  );
 
   createCatalogItemFromUrl.register(
     matchesExtension("csv"),

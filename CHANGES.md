@@ -17,6 +17,7 @@ Change Log
 * Fixed bug causing workbench items to be shared in the wrong order.
 * Fix bug where urls in the feature info panel weren't turned into hyperlinks
 * Fix preview map's base map and bounding rectangle size
+* Fixed positioning of the buttons at the bottom and the timeline component on mobile
 * Added `hasLocalData` property to indicate when a catalog item contains local data. This property is used to determine whether the item can be shared or not.
 * Fixed bug causing user added data to not be shared. Note that user added catalog item urls are now set at the user stratum rather than the definition stratum.
 * Added the ability to filter location search results by an app-wide bounding box configuration parameter
@@ -37,6 +38,51 @@ Change Log
 * Fix a bug for zooming to `ArcGisMapServerCatalogItem` layers
 * Modified creation of catalog item from urls to set the item name to be the url at the defaults stratum rather than the definition stratum. This prevents actual item names at load strata from being overridden by a definition stratum name which is just a url.
 * Fixed a bug causing highlighting of features with `_cesium3DTileFeature` to sometimes stop working. Also changed highlight colour to make it more visible.
+* Fixed bug causing user added data with an auto-detected data type to not be shared properly.
+* Modified `addToWorkbench` so that when a catalog item fails to load it is removed from the workbench and an error message is displayed.
+* Add support for feature picking on region mapped datasets
+* Revamp map buttons at top to support two menu configuration
+* Viewer (2d/3d/3d-non-terrain) & basemap preferences are persisted to local storage again, and loaded back at startup
+* Dramatically simplified map button styling (pre-styled-components)
+* Allow DropdownPanel(InnerPanel) to show centered instead of offset toward the left
+* Added AccessControlMixin for tracking access control of a given MagdaReference
+* Add a legend title trait
+* Show private or public dataset status on data catalog UI via AccessControlMixin
+* Added `pointSizeMap` to `TableStyle` to allow point size to be scaled by value
+* Added `isExperiencingIssues` to `CatalogMemberTraits`. When set to true, an alert is displayed above the catalog item description.
+* Add gyroscope guidance
+* Enable StyleSelectorSection workbench control for `WebMapServiceCatalogItem`
+* New-new ui
+* Add WIP help panes
+* Added "Split Screen Mode" into workbench
+* Moved excess workbench viewing controls into menu
+* Updated bottom attribution styling
+* Begin styled components themeing
+* Make `clampToGround` default to true for `ArcGisFeatureServerCatalogItemTraits` to stop things from floating
+* Add fix for `WebMapServiceCatalogItem` in `styleSelector` to prevent crash.
+* Revert changes to `StyleSelectorSelection` component and refactor `WebMapServiceCatalogItem` styleSelector getter.
+* Added a temporary fix for bug where a single model failing to load in `applyInitData` in `Terria` would cause other models in the same `initData` object to not load as well.
+* Change gyroscope focus/hover behaviour to move buttons on hover
+* Stop showing previewed item when catalog is closed
+* Prevent `StoryPanel.jsx` from reloading magda references on move through story.
+* Add google analytics to mobx
+* Fixed google analytics on story panel
+* Fixed path event name undefined labelling
+* Enable zoomTo and splitter on `CartoMapCatalogItem`.
+* Added name to `MapServerStratum` in `ArcGisMapServerCatalogItem`.
+* Readded basic `CompositeCatalogItem`.
+* Ported Augmented Reality features
+* Fixed bug causing "Terrain hides underground features" checkbox to sometimes become out of sync between `SettingPanel` and `WorkbenchSplitScreen`.
+* Made split screen window in workbench hidden when viewer is changed to 3D Smooth and 2D
+* Tidy Help UI code
+* Added `allowFeatureInfoRequests` property to `Terria` and prevent unnecessary feature info requests when creating `UserDrawing`s.
+* Tidied up analytics port, fixed `getAncestors` & added `getPath` helper
+* Updated upload icon to point upwards
+* Prevent catalog item names from overflowing and pushing the collapse button off the workbench
+* Stopped analytics launch event sending bad label
+* Provide a fallback name for an `ArcGisServerCatalogItem`
+* Ensure `CesiumTileLayer.getTileUrl` returns a string.
+* Adds methods `removeModelReferences` to Terria & ViewState for unregistering and removing models from different parts of the UI.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC

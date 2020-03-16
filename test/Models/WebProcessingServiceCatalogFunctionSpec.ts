@@ -93,7 +93,10 @@ describe("WebProcessingServiceCatalogFunction", function() {
 
     beforeEach(async function() {
       getXml = spyOn(wps, "getXml").and.returnValue(processDescriptionsXml);
-      dispose = reaction(() => wps.parameters, () => {});
+      dispose = reaction(
+        () => wps.parameters,
+        () => {}
+      );
       await wps.loadMetadata();
       runInAction(() => {
         const param = <GeoJsonParameter>(
@@ -361,9 +364,10 @@ describe("WebProcessingServiceCatalogFunction", function() {
 
 function initTerria() {
   CatalogMemberFactory.register(CsvCatalogItem.type, <any>CsvCatalogItem);
-  CatalogMemberFactory.register(GeoJsonCatalogItem.type, <any>(
-    GeoJsonCatalogItem
-  ));
+  CatalogMemberFactory.register(
+    GeoJsonCatalogItem.type,
+    <any>GeoJsonCatalogItem
+  );
   const terria = new Terria();
   terria.configParameters.regionMappingDefinitionsUrl =
     "/data/regionMapping.json";

@@ -60,6 +60,10 @@ export default class ViewState {
   @observable showHelpMenu: boolean = false;
   @observable showSatelliteGuidance: boolean = false;
   @observable showWelcomeMessage: boolean = false;
+  @observable selectedHelpMenuItem: string = "";
+  @observable helpPanelExpanded: boolean = false;
+
+  @observable workbenchWithOpenControls: string | undefined = undefined;
 
   // default value is null, because user has not made decision to show or
   // not show story
@@ -247,6 +251,7 @@ export default class ViewState {
   closeCatalog() {
     this.explorerPanelIsVisible = false;
     this.switchMobileView(null);
+    this.clearPreviewedItem();
   }
 
   @action
@@ -254,6 +259,12 @@ export default class ViewState {
     this.openAddData();
     this.searchState.catalogSearchText = query;
     this.searchState.searchCatalog();
+  }
+
+  @action
+  clearPreviewedItem() {
+    this.userDataPreviewedItem = undefined;
+    this.previewedItem = undefined;
   }
 
   @action
@@ -266,10 +277,7 @@ export default class ViewState {
       this.openAddData();
       if (this.terria.configParameters.tabbedCatalog) {
         // Go to specific tab
-        this.activeTabIdInCategory = getAncestors(
-          catalogMember.terria,
-          catalogMember
-        )[0].uniqueId;
+        this.activeTabIdInCategory = getAncestors(catalogMember)[0].uniqueId;
       }
     }
   }
@@ -277,6 +285,16 @@ export default class ViewState {
   @action
   switchMobileView(viewName: string | null) {
     this.mobileView = viewName;
+  }
+
+  /**
+   * Removes references of a model from viewState
+   */
+  @action
+  removeModelReferences(model: BaseModel) {
+    if (this.previewedItem === model) this.previewedItem = undefined;
+    if (this.userDataPreviewedItem === model)
+      this.userDataPreviewedItem = undefined;
   }
 
   getNextNotification() {

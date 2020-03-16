@@ -4,13 +4,13 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import FeatureInfoCatalogItem from "./FeatureInfoCatalogItem";
+import { featureBelongsToCatalogItem } from "../../Map/PickedFeatures.ts";
 import DragWrapper from "../DragWrapper";
 import Loader from "../Loader";
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import i18next from "i18next";
 import { withTranslation } from "react-i18next";
 import Icon from "../Icon";
 import {
@@ -21,7 +21,7 @@ import {
 } from "../../Models/LocationMarkerUtils";
 import prettifyCoordinates from "../../Map/prettifyCoordinates";
 import raiseErrorToUser from "../../Models/raiseErrorToUser";
-
+import i18next from "i18next";
 import Styles from "./feature-info-panel.scss";
 import classNames from "classnames";
 import { observer, disposeOnUnmount } from "mobx-react";
@@ -449,71 +449,24 @@ function getFeaturesGroupedByCatalogItems(terria) {
   return { catalogItems, featureCatalogItemPairs };
 }
 
-/**
- * Figures out what the catalog item for a feature is.
- *
- * @param workbench {@link Workbench} to look in the items for.
- * @param feature Feature to match
- * @returns {CatalogItem}
- */
 function determineCatalogItem(workbench, feature) {
-  if (!defined(workbench)) {
-    // So that specs do not need to define a workbench.
-    return undefined;
+  // If the feature is a marker return a fake item
+  if (feature.entityCollection && feature.entityCollection.owner) {
+    const dataSource = feature.entityCollection.owner;
+    if (dataSource.name === LOCATION_MARKER_DATA_SOURCE_NAME) {
+      return {
+        name: i18next.t("featureInfo.locationMarker")
+      };
+    }
   }
 
   if (feature._catalogItem && workbench.items.includes(feature._catalogItem)) {
     return feature._catalogItem;
   }
 
-  // "Data sources" (eg. czml, geojson, kml, csv) have an entity collection defined on the entity
-  // (and therefore the feature).
-  // Then match up the data source on the feature with a now-viewing item's data source.
-  //
-  // Gpx, Ogr, WebFeatureServiceCatalogItem, ArcGisFeatureServerCatalogItem, WebProcessingServiceCatalogItem
-  // all have a this._geoJsonItem, which we also need to check.
-  let result;
-  let i;
-  let item;
-  if (
-    defined(feature.entityCollection) &&
-    defined(feature.entityCollection.owner)
-  ) {
-    const dataSource = feature.entityCollection.owner;
-
-    if (dataSource.name === LOCATION_MARKER_DATA_SOURCE_NAME) {
-      return {
-        name: i18next.t("featureInfo.locationMarker")
-      };
-    }
-
-    for (i = workbench.items.length - 1; i >= 0; i--) {
-      item = workbench.items[i];
-      if (item.mapItems.some(mapItem => mapItem === dataSource)) {
-        result = item;
-        break;
-      }
-    }
-    return result;
-  }
-
-  // If there is no data source, but there is an imagery layer (eg. ArcGIS),
-  // we can match up the imagery layer on the feature with a now-viewing item.
-  if (defined(feature.imageryLayer)) {
-    const imageryLayer = feature.imageryLayer;
-    for (i = workbench.items.length - 1; i >= 0; i--) {
-      const item = workbench.items[i];
-      if (
-        item.mapItems.some(
-          mapItem => mapItem.imageryProvider === imageryLayer.imageryProvider
-        )
-      ) {
-        result = workbench.items[i];
-        break;
-      }
-    }
-    return result;
-  }
+  return workbench.items.find(item =>
+    featureBelongsToCatalogItem(feature, item)
+  );
 }
 
 /**

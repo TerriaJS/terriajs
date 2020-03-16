@@ -86,6 +86,13 @@ export class LegendItemTraits extends ModelTraits {
 export default class LegendTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
+    name: "Title",
+    description: "A title to be displayed above the legend."
+  })
+  title?: string;
+
+  @primitiveTrait({
+    type: "string",
     name: "URL",
     description: "The URL of the legend image."
   })
