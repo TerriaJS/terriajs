@@ -460,7 +460,7 @@ function determineCatalogItem(workbench, feature) {
     }
   }
 
-  if (feature._catalogItem) {
+  if (feature._catalogItem && workbench.items.includes(feature._catalogItem)) {
     return feature._catalogItem;
   }
 
