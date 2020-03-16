@@ -72,6 +72,7 @@ Change Log
 * Readded basic `CompositeCatalogItem`.
 * Ported Augmented Reality features
 * Fixed bug causing "Terrain hides underground features" checkbox to sometimes become out of sync between `SettingPanel` and `WorkbenchSplitScreen`.
+* Made split screen window in workbench hidden when viewer is changed to 3D Smooth and 2D
 * Tidy Help UI code
 * Added `allowFeatureInfoRequests` property to `Terria` and prevent unnecessary feature info requests when creating `UserDrawing`s.
 * Tidied up analytics port, fixed `getAncestors` & added `getPath` helper
