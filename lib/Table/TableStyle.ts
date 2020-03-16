@@ -334,6 +334,9 @@ export default class TableStyle {
         colorColumn.type === TableColumnType.region ||
         colorColumn.type === TableColumnType.text)
     ) {
+      const regionColor = Color.fromCssColorString(
+        this.colorTraits.regionColor
+      );
       return new EnumColorMap({
         enumColors: filterOutUndefined(
           this.enumColors.map(e => {
@@ -342,7 +345,10 @@ export default class TableStyle {
             }
             return {
               value: e.value,
-              color: Color.fromCssColorString(e.color)
+              color:
+                colorColumn.type !== TableColumnType.region
+                  ? Color.fromCssColorString(e.color)
+                  : regionColor
             };
           })
         ),
