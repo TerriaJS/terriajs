@@ -22,6 +22,7 @@ import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
 import UrlReference from "./UrlReference";
 import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFunction";
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
+import CompositeCatalogItem from "./CompositeCatalogItem";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
@@ -79,6 +80,10 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(
     WebProcessingServiceCatalogItem.type,
     WebProcessingServiceCatalogItem
+  );
+  CatalogMemberFactory.register(
+    CompositeCatalogItem.type,
+    CompositeCatalogItem
   );
 
   createCatalogItemFromUrl.register(
