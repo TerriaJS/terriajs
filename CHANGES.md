@@ -81,6 +81,7 @@ Change Log
 * Stopped analytics launch event sending bad label
 * Provide a fallback name for an `ArcGisServerCatalogItem`
 * Ensure `CesiumTileLayer.getTileUrl` returns a string.
+* Adds methods `removeModelReferences` to Terria & ViewState for unregistering and removing models from different parts of the UI.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
