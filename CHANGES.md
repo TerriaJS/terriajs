@@ -80,10 +80,12 @@ Change Log
 * Updated upload icon to point upwards
 * Prevent catalog item names from overflowing and pushing the collapse button off the workbench
 * Stopped analytics launch event sending bad label
+* Add .tsx tests for UI components
 * Provide a fallback name for an `ArcGisServerCatalogItem`
 * Ensure `CesiumTileLayer.getTileUrl` returns a string.
 * Polished help UI to match designs
 * Adds methods `removeModelReferences` to Terria & ViewState for unregistering and removing models from different parts of the UI.
+* Add trait to enabling hiding legends for a `CatalogMember` in the workbench.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
