@@ -30,4 +30,10 @@ describe("ViewState", function() {
       expect(viewState.userDataPreviewedItem).toBeUndefined();
     });
   });
+
+  describe("error provider", function() {
+    it("creates an empty error provider by default", function() {
+      viewState.errorProvider = null;
+    });
+  });
 });
