@@ -38,7 +38,7 @@
 
 .field:focus,
 .field.is-focused {
-  outline: none;
+  // outline: none;
   border-color: rgba($color-primary, 0.5);
   box-shadow: none;
 }

@@ -23,6 +23,16 @@ export const Text = styled.div`
     `
     color: ${props.theme.textLight};
   `}
+  ${props =>
+    props.textLight &&
+    `
+    color: ${props.theme.textLight};
+  `}
+  ${props =>
+    props.textDarker &&
+    `
+    color: ${props.theme.textDarker};
+  `}
 
   ${props => props.fullWidth && `width: 100%;`}
   ${props => props.noWrap && `white-space: nowrap;`}

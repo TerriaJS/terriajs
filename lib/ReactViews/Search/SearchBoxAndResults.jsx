@@ -1,14 +1,62 @@
 import React from "react";
 import { removeMarker } from "../../Models/LocationMarkerUtils";
 import { reaction, runInAction } from "mobx";
-import { withTranslation } from "react-i18next";
+import { Trans, withTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
+// import { ThemeContext } from "styled-components";
 
 import SearchBox from "../Search/SearchBox";
 import SidebarSearch from "../Search/SidebarSearch";
 
 import Box from "../../Styled/Box";
+import Text from "../../Styled/Text";
+import Spacing from "../../Styled/Spacing";
+import { RawButton } from "../../Styled/Button";
+import Icon from "../Icon";
+
+function SearchInDataCatalog({ viewState }) {
+  const locationSearchText = viewState.searchState.locationSearchText;
+  return (
+    <RawButton
+      onClick={() => {
+        const { searchState } = viewState;
+        runInAction(() => {
+          // Set text here so that it doesn't get batched up and the catalog
+          // search text has a chance to set isWaitingToStartCatalogSearch
+          searchState.catalogSearchText = searchState.locationSearchText;
+        });
+        viewState.searchInCatalog(searchState.locationSearchText);
+      }}
+    >
+      <Box paddedRatio={2} rounded charcoalGreyBg>
+        <Box
+          css={`
+            width: 15px;
+          `}
+          flexShrinkZero
+        >
+          <Icon glyph={Icon.GLYPHS["dataCatalog"]} />
+        </Box>
+        <Spacing right={2} />
+        <Text textAlignLeft textLight large>
+          <Trans
+            i18nKey="search.searchInDataCatalog"
+            locationSearchText={locationSearchText}
+          >
+            Search <strong>{{ locationSearchText }}</strong> in the Data
+            Catalogue
+          </Trans>
+        </Text>
+      </Box>
+    </RawButton>
+  );
+}
+SearchInDataCatalog.propTypes = {
+  // theme: PropTypes.object.isRequired,
+  viewState: PropTypes.object.isRequired,
+  t: PropTypes.func.isRequired
+};
 
 class SearchBoxAndResults extends React.Component {
   componentDidMount() {
@@ -61,10 +109,11 @@ class SearchBoxAndResults extends React.Component {
   }
   render() {
     const { t } = this.props;
-    const searchState = this.props.viewState.searchState;
+    const viewState = this.props.viewState;
+    const searchState = viewState.searchState;
 
     return (
-      <>
+      <Text textDarker>
         <SearchBox
           onSearchTextChanged={this.changeSearchText.bind(this)}
           onDoSearch={this.search.bind(this)}
@@ -72,7 +121,17 @@ class SearchBoxAndResults extends React.Component {
           searchText={searchState.locationSearchText}
           placeholder={t("search.placeholder")}
         />
-        <Box>
+        {/* Results */}
+        <Box
+          column
+          paddedRatio={2}
+          css={`
+            background-color: ${props => props.theme.greyLightest};
+          `}
+        >
+          {/* box */}
+          {/* search sydney in data catalog */}
+          {/* location search results ( 3 results etc) */}
           <Choose>
             <When
               condition={
@@ -80,6 +139,8 @@ class SearchBoxAndResults extends React.Component {
                 searchState.showLocationSearchResults
               }
             >
+              <Spacing bottom={2} />
+              <SearchInDataCatalog viewState={viewState} t={t} />
               <SidebarSearch
                 terria={this.props.terria}
                 viewState={this.props.viewState}
@@ -90,10 +151,7 @@ class SearchBoxAndResults extends React.Component {
             </When>
           </Choose>
         </Box>
-        {/* box */}
-        {/* saerch sydney in data catalog */}
-        {/* location search results */}
-      </>
+      </Text>
     );
   }
 }

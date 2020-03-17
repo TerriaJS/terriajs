@@ -1,6 +1,6 @@
 import React from "react";
 import createReactClass from "create-react-class";
-import { ThemeProvider } from "styled-components";
+import { ThemeProvider, createGlobalStyle } from "styled-components";
 import PropTypes from "prop-types";
 import combine from "terriajs-cesium/Source/Core/combine";
 
@@ -47,6 +47,15 @@ export const showStoryPrompt = (viewState, terria) => {
     terria.stories.length === 0 &&
     viewState.toggleFeaturePrompt("story", true);
 };
+const GlobalTerriaStyles = createGlobalStyle`
+  ${props =>
+    props.experimentalFeatures &&
+    `
+    body {
+      outline: 3px solid #C390F9;
+    }
+  `}
+`;
 const animationDuration = 250;
 /** blah */
 const StandardUserInterface = observer(
@@ -175,6 +184,11 @@ const StandardUserInterface = observer(
         !this.props.viewState.storyBuilderShown;
       return (
         <ThemeProvider theme={mergedTheme}>
+          <GlobalTerriaStyles
+            experimentalFeatures={
+              this.props.terria.configParameters.experimentalFeatures
+            }
+          />
           <div className={Styles.storyWrapper}>
             {/* <WelcomeMessage viewState={this.props.viewState} /> */}
             <div

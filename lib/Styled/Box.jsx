@@ -8,6 +8,8 @@ export const Box = styled.div`
   box-sizing: border-box;
 
 
+  ${props => props.rounded && `border-radius: ${props.theme.borderRadius};`}
+
   ${props => props.fullHeight && `height: 100%;`}
   ${props => props.fullWidth && `width: 100%;`}
   
@@ -51,7 +53,13 @@ export const Box = styled.div`
   ${props => props.column && `flex-direction: column;`}
   ${props => props.wrap && `flex-wrap: wrap;`}
 
+  ${props => props.flexShrinkZero && `flex-shrink: 0;`}
+
   ${props => props.boxShadow && `box-shadow: 0 2px 8px 0 rgba(0,0,0,0.16);`}
+
+  /* Background colours? unsure how to handle this on theme level yet */
+  ${props =>
+    props.charcoalGreyBg && `background-color: ${props.theme.charcoalGrey};`}
 
 
   /* Unsure of padding API as yet */
