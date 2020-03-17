@@ -47,7 +47,10 @@
 
 .provider-result {
   margin-top: $padding-small;
-  background-color: $dark-with-overlay;
+  @media (min-width: $md) {
+    color: $text-darker;
+  }
+  // background-color: $dark-with-overlay;
   .items {
     display: none;
   }

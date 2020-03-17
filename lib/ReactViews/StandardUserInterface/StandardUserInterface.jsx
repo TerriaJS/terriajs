@@ -52,7 +52,9 @@ const GlobalTerriaStyles = createGlobalStyle`
     props.experimentalFeatures &&
     `
     body {
-      outline: 3px solid #C390F9;
+      *:focus {
+        outline: 3px solid #C390F9;
+      }
     }
   `}
 `;

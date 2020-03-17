@@ -158,7 +158,7 @@ const SidePanel = observer(
           </div>
           <div className={Styles.body}>
             <Choose>
-              <When
+              {/* <When
                 condition={
                   searchState.locationSearchText.length > 0 &&
                   searchState.showLocationSearchResults
@@ -187,7 +187,7 @@ const SidePanel = observer(
                     <EmptyWorkbench t={t} />
                   </Otherwise>
                 </Choose>
-              </When>
+              </When> */}
               <When
                 condition={
                   this.props.terria.workbench.items &&

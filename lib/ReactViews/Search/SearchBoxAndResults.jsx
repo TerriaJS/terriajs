@@ -7,13 +7,16 @@ import { observer } from "mobx-react";
 // import { ThemeContext } from "styled-components";
 
 import SearchBox from "../Search/SearchBox";
-import SidebarSearch from "../Search/SidebarSearch";
+// import SidebarSearch from "../Search/SidebarSearch";
+import LocationSearchResults from "../Search/LocationSearchResults";
+import Icon from "../Icon";
 
 import Box from "../../Styled/Box";
 import Text from "../../Styled/Text";
 import Spacing from "../../Styled/Spacing";
 import { RawButton } from "../../Styled/Button";
-import Icon from "../Icon";
+
+import { addMarker } from "../../Models/LocationMarkerUtils";
 
 function SearchInDataCatalog({ viewState }) {
   const locationSearchText = viewState.searchState.locationSearchText;
@@ -53,7 +56,6 @@ function SearchInDataCatalog({ viewState }) {
   );
 }
 SearchInDataCatalog.propTypes = {
-  // theme: PropTypes.object.isRequired,
   viewState: PropTypes.object.isRequired,
   t: PropTypes.func.isRequired
 };
@@ -97,6 +99,9 @@ class SearchBoxAndResults extends React.Component {
 
     if (newText.length === 0) {
       removeMarker(this.props.terria);
+      runInAction(() => {
+        this.props.viewState.searchState.showLocationSearchResults = false;
+      });
     }
   }
   search() {
@@ -122,35 +127,46 @@ class SearchBoxAndResults extends React.Component {
           placeholder={t("search.placeholder")}
         />
         {/* Results */}
-        <Box
-          column
-          paddedRatio={2}
-          css={`
-            background-color: ${props => props.theme.greyLightest};
-          `}
+        <If
+          condition={
+            searchState.locationSearchText.length > 0 &&
+            searchState.showLocationSearchResults
+          }
         >
-          {/* box */}
-          {/* search sydney in data catalog */}
-          {/* location search results ( 3 results etc) */}
-          <Choose>
-            <When
-              condition={
-                searchState.locationSearchText.length > 0 &&
-                searchState.showLocationSearchResults
-              }
+          <Box
+            column
+            paddedRatio={2}
+            css={`
+              background-color: ${props => props.theme.greyLightest};
+            `}
+          >
+            <Spacing bottom={2} />
+            {/* search {searchterm} in data catalog */}
+            <SearchInDataCatalog viewState={viewState} t={t} />
+            {/* location search results ( 3 results etc) */}
+            <For
+              each="search"
+              of={this.props.viewState.searchState.locationSearchResults}
             >
-              <Spacing bottom={2} />
-              <SearchInDataCatalog viewState={viewState} t={t} />
-              <SidebarSearch
+              <LocationSearchResults
+                key={search.searchProvider.name}
                 terria={this.props.terria}
                 viewState={this.props.viewState}
+                search={search}
+                onLocationClick={result => {
+                  addMarker(this.props.terria, result);
+                  result.clickAction();
+                  runInAction(() => {
+                    searchState.showLocationSearchResults = false;
+                  });
+                }}
                 isWaitingForSearchToStart={
-                  searchState.isWaitingToStartLocationSearch
+                  searchState.isWaitingForSearchToStart
                 }
               />
-            </When>
-          </Choose>
-        </Box>
+            </For>
+          </Box>
+        </If>
       </Text>
     );
   }

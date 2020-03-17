@@ -5,6 +5,8 @@ import Icon from "../Icon";
 import Styles from "./search-result.scss";
 import classNames from "classnames";
 
+import Text from "../../Styled/Text";
+
 // A Location item when doing Bing map searvh or Gazetter search
 const SearchResult = createReactClass({
   propTypes: {
@@ -17,16 +19,18 @@ const SearchResult = createReactClass({
   getDefaultProps() {
     return {
       icon: false,
-      theme: "dark"
+      theme: "light"
     };
   },
 
   render() {
+    const isDarkTheme = this.props.theme === "dark"
+    const isLightTheme = this.props.theme === "light"
     return (
       <li
         className={classNames(Styles.searchResult, {
-          [Styles.dark]: this.props.theme === "dark",
-          [Styles.light]: this.props.theme === "light"
+          [Styles.dark]: isDarkTheme
+          [Styles.light]: isLightTheme
         })}
       >
         <button
@@ -34,6 +38,8 @@ const SearchResult = createReactClass({
           onClick={this.props.clickAction}
           className={Styles.btn}
         >
+          {/* (You need light text on a dark theme, and vice versa) */}
+          <Text large textLight={isDarkTheme} textDark={isLightTheme}>
           {this.props.icon && (
             <span className={Styles.icon}>
               <Icon glyph={Icon.GLYPHS[this.props.icon]} />
@@ -43,6 +49,7 @@ const SearchResult = createReactClass({
           <span className={Styles.arrowIcon}>
             <Icon glyph={Icon.GLYPHS.right} />
           </span>
+          </Text>
         </button>
       </li>
     );
