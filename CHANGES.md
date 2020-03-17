@@ -80,6 +80,7 @@ Change Log
 * Updated upload icon to point upwards
 * Prevent catalog item names from overflowing and pushing the collapse button off the workbench
 * Stopped analytics launch event sending bad label
+* Add .tsx tests for UI components
 * Provide a fallback name for an `ArcGisServerCatalogItem`
 * Ensure `CesiumTileLayer.getTileUrl` returns a string.
 * Adds methods `removeModelReferences` to Terria & ViewState for unregistering and removing models from different parts of the UI.
