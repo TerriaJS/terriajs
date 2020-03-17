@@ -287,6 +287,16 @@ export default class ViewState {
     this.mobileView = viewName;
   }
 
+  /**
+   * Removes references of a model from viewState
+   */
+  @action
+  removeModelReferences(model: BaseModel) {
+    if (this.previewedItem === model) this.previewedItem = undefined;
+    if (this.userDataPreviewedItem === model)
+      this.userDataPreviewedItem = undefined;
+  }
+
   getNextNotification() {
     return this.notifications.length && this.notifications[0];
   }

@@ -10,6 +10,7 @@ var testGlob = [
     "./test/**/*Spec.tsx",
     "./test/Models/Experiment.ts"
 ];
+
 console.log(glob.sync(testGlob));
 module.exports = function(hot, dev) {
     const terriaJSBasePath = path.resolve(__dirname, '../');
