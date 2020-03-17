@@ -1,5 +1,6 @@
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
+import RollbarErrorProvider from "../../lib/Models/RollbarErrorProvider";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
 
 describe("ViewState", function() {
@@ -33,7 +34,16 @@ describe("ViewState", function() {
 
   describe("error provider", function() {
     it("creates an empty error provider by default", function() {
-      viewState.errorProvider = null;
+      expect(viewState.errorProvider).toBeNull();
+    });
+
+    it("can create an error provider with rollbar", function() {
+      terria.configParameters.rollbarAccessToken = "123";
+      viewState.errorProvider = new RollbarErrorProvider({
+        terria: viewState.terria
+      });
+      expect(viewState.errorProvider).toBeDefined();
+      expect(viewState.errorProvider.errorProvider).toBeDefined();
     });
   });
 });

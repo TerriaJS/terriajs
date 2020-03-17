@@ -1,5 +1,4 @@
 import isDefined from "../Core/isDefined";
-import ErrorProvider from "./ErrorProvider";
 import Terria from "./Terria";
 import Rollbar from "rollbar";
 
