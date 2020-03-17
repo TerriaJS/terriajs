@@ -3,7 +3,8 @@
 .story-panel {
   font-family: $font-base;
   flex-basis: 400px;
-  max-width: 400px;
+  // max-width: 400px;
+  width: 300px;
   color: $text-light;
   font-size: $font-size-mid-small;
   background: $dark;
@@ -45,6 +46,19 @@
     font-weight: normal;
     margin: 0;
   }
+}
+
+.closeBtn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn--map from "../../Sass/common/_buttons.scss";
+  display: flex;
+  background: $dark;
+  border-radius: 16px 0 0 16px;
+  z-index: 99999;
+  position: absolute;
+  top: 18px;
+  margin-left: -35px;
+  box-shadow: none;
 }
 
 .trashBtn,

@@ -6,6 +6,7 @@ interface CssExports {
   'actions': string;
   'captureBtn': string;
   'charcoalGrey': string;
+  'closeBtn': string;
   'colorPrimary': string;
   'colorSplitter': string;
   'dark': string;
