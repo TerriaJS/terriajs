@@ -22,8 +22,8 @@ export default class RollbarErrorProvider {
     this.errorProvider = new Rollbar({
       accessToken: this.terria.configParameters.rollbarAccessToken,
       captureUncaught: true,
-      captureUnhandledRejections: true
-      // enabled: process.env.NODE_ENV === 'production'
+      captureUnhandledRejections: true,
+      enabled: process.env.NODE_ENV === 'production'
     });
   }
 }
