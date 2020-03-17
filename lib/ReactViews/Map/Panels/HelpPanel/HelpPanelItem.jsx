@@ -109,15 +109,15 @@ class HelpPanelItem extends React.Component {
             </Text>
           </Box>
         </button>
-          <HelpVideoPanel
-            terria={this.props.terria}
-            viewState={this.props.viewState}
-            title={this.props.title}
-            itemString={this.props.itemString}
-            description={this.props.description}
-            videoLink={this.props.videoLink}
-            background={this.props.background}
-          />
+        <HelpVideoPanel
+          terria={this.props.terria}
+          viewState={this.props.viewState}
+          title={this.props.title}
+          itemString={this.props.itemString}
+          description={this.props.description}
+          videoLink={this.props.videoLink}
+          background={this.props.background}
+        />
       </div>
     );
   }
