@@ -8,6 +8,7 @@ import URI from "urijs";
 import ObserveModelMixin from "./ObserveModelMixin";
 import addUserFiles from "../Models/addUserFiles";
 import { CATALOG_ROUTE } from "../ReactViewModels/TerriaRouting.js";
+import { Trans, withTranslation } from "react-i18next";
 
 import Styles from "./drag-drop-file.scss";
 
@@ -97,10 +98,12 @@ const DragDropFile = createReactClass({
       >
         <If condition={this.props.viewState.isDraggingDroppingFile}>
           <div className={Styles.inner}>
-            <h3 className={Styles.heading}>Drag & Drop</h3>
-            <div className={Styles.caption}>
-              Your data anywhere to view on the map
-            </div>
+            <Trans i18nKey="dragDrop.text">
+              <h3 className={Styles.heading}>Drag & Drop</h3>
+              <div className={Styles.caption}>
+                Your data anywhere to view on the map
+              </div>
+            </Trans>
           </div>
         </If>
       </div>
@@ -108,4 +111,4 @@ const DragDropFile = createReactClass({
   }
 });
 
-module.exports = withRouter(DragDropFile);
+module.exports = withRouter(withTranslation()(DragDropFile));

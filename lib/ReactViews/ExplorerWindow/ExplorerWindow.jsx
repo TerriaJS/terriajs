@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 import classNames from "classnames";
 import ko from "terriajs-cesium/Source/ThirdParty/knockout";
+import { withTranslation } from "react-i18next";
 
 import {
   CATALOG_ROUTE,
@@ -28,7 +29,8 @@ const ExplorerWindow = createReactClass({
   propTypes: {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
-    match: PropTypes.object.isRequired
+    match: PropTypes.object.isRequired,
+    t: PropTypes.func.isRequired
   },
   close() {
     this.props.viewState.explorerPanelIsVisible = false;
@@ -126,6 +128,7 @@ const ExplorerWindow = createReactClass({
   },
 
   render() {
+    const { t } = this.props;
     const visible = this.isVisible();
 
     return visible ? (
@@ -156,10 +159,10 @@ const ExplorerWindow = createReactClass({
             type="button"
             onClick={this.close}
             className={Styles.btnCloseModal}
-            title="Close data panel"
+            title={t("addData.closeDataPanel")}
             data-target="close-modal"
           >
-            Done
+            {t("addData.done")}
           </button>
           <Tabs terria={this.props.terria} viewState={this.props.viewState} />
         </div>
@@ -168,4 +171,4 @@ const ExplorerWindow = createReactClass({
   }
 });
 
-module.exports = withRouter(ExplorerWindow);
+module.exports = withRouter(withTranslation()(ExplorerWindow));

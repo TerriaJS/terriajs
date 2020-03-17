@@ -8,6 +8,7 @@ import DataCatalog from "../../DataCatalog/DataCatalog.jsx";
 import DataPreview from "../../Preview/DataPreview.jsx";
 import ObserveModelMixin from "../../ObserveModelMixin";
 import SearchBox from "../../Search/SearchBox.jsx";
+import { withTranslation } from "react-i18next";
 
 import Styles from "./data-catalog-tab.scss";
 
@@ -21,13 +22,7 @@ const DataCatalogTab = createReactClass({
     viewState: PropTypes.object,
     match: PropTypes.object,
     items: PropTypes.array,
-    searchPlaceholder: PropTypes.string
-  },
-
-  getDefaultProps() {
-    return {
-      searchPlaceholder: "Search the catalogue" // Let SearchBox set the default placeholder
-    };
+    t: PropTypes.func.isRequired
   },
 
   changeSearchText(newText) {
@@ -39,6 +34,7 @@ const DataCatalogTab = createReactClass({
   },
 
   render() {
+    const { t } = this.props;
     const terria = this.props.terria;
     const idToDecode =
       this.props.match.params && this.props.match.params.catalogMemberId;
@@ -52,7 +48,7 @@ const DataCatalogTab = createReactClass({
             searchText={this.props.viewState.searchState.catalogSearchText}
             onSearchTextChanged={this.changeSearchText}
             onDoSearch={this.search}
-            placeholder={this.props.searchPlaceholder}
+            placeholder={t("addData.searchPlaceholder")}
           />
           <DataCatalog
             terria={this.props.terria}
@@ -71,4 +67,4 @@ const DataCatalogTab = createReactClass({
   }
 });
 
-module.exports = withRouter(DataCatalogTab);
+module.exports = withRouter(withTranslation()(DataCatalogTab));

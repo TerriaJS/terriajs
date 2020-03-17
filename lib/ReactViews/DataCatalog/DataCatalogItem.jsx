@@ -2,6 +2,7 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
+import URI from "urijs";
 import defined from "terriajs-cesium/Source/Core/defined";
 // import addedByUser from "../../Core/addedByUser";
 import removeUserAddedData from "../../Models/removeUserAddedData";
@@ -9,17 +10,10 @@ import CatalogItem from "./CatalogItem";
 import getAncestors from "../../Models/getAncestors";
 import ObserveModelMixin from "../ObserveModelMixin";
 import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
-import URI from "urijs";
-
-const STATE_TO_TITLE = {
-  loading: "Loading...",
-  remove: "Remove from map",
-  add: 'Add this item. Hold down "shift" to keep the data catalogue open.',
-  trash: "Remove from catalogue"
-};
+import { withTranslation } from "react-i18next";
 
 // Individual dataset
-const DataCatalogItem = createReactClass({
+export const DataCatalogItem = createReactClass({
   displayName: "DataCatalogItem",
   mixins: [ObserveModelMixin],
 
@@ -28,7 +22,8 @@ const DataCatalogItem = createReactClass({
     match: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
     removable: PropTypes.bool,
-    terria: PropTypes.object
+    terria: PropTypes.object,
+    t: PropTypes.func.isRequired
   },
 
   onBtnClicked(event) {
@@ -87,6 +82,13 @@ const DataCatalogItem = createReactClass({
 
   render() {
     const item = this.props.item;
+    const { t } = this.props;
+    const STATE_TO_TITLE = {
+      loading: t("catalogItem.loading"),
+      remove: t("catalogItem.removeFromMap"),
+      add: t("catalogItem.add"),
+      trash: t("catalogItem.trash")
+    };
     return (
       <CatalogItem
         onTextClick={this.setPreviewedItem}
@@ -128,8 +130,4 @@ const DataCatalogItem = createReactClass({
   }
 });
 
-module.exports = {
-  default: withRouter(DataCatalogItem),
-  DataCatalogItem: withRouter(DataCatalogItem),
-  DataCatalogItemRaw: DataCatalogItem
-};
+export default withRouter(withTranslation()(DataCatalogItem));

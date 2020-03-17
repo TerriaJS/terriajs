@@ -11,6 +11,7 @@ import ObserveModelMixin from "../ObserveModelMixin";
 import Styles from "./mappable-preview.scss";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
 import ErrorBoundary from "../ErrorBoundary/ErrorBoundary.jsx";
+import { withTranslation } from "react-i18next";
 
 /**
  * CatalogItem preview that is mappable (as opposed to say, an analytics item that can't be displayed on a map without
@@ -24,7 +25,8 @@ const MappablePreview = createReactClass({
     previewed: PropTypes.object.isRequired,
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
-    widthFromMeasureElementHOC: PropTypes.number
+    widthFromMeasureElementHOC: PropTypes.number,
+    t: PropTypes.func.isRequired
   },
 
   toggleOnMap(event) {
@@ -48,6 +50,7 @@ const MappablePreview = createReactClass({
   },
 
   render() {
+    const { t } = this.props;
     const catalogItem =
       this.props.previewed.nowViewingCatalogItem || this.props.previewed;
     return (
@@ -80,8 +83,8 @@ const MappablePreview = createReactClass({
           className={Styles.btnAdd}
         >
           {this.props.previewed.isEnabled
-            ? "Remove from the map"
-            : "Add to the map"}
+            ? t("preview.removeFromMap")
+            : t("preview.addToMap")}
         </button>
         <div className={Styles.previewedInfo}>
           <div
@@ -113,4 +116,4 @@ const MappablePreview = createReactClass({
   }
 });
 
-export default measureElement(MappablePreview);
+export default withTranslation()(measureElement(MappablePreview));

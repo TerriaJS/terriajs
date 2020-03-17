@@ -27,7 +27,11 @@ describe("StandardUserInterface", function() {
 
   it("has class story-wrapper", function() {
     const ui = (
-      <StandardUserInterfaceRaw terria={terria} viewState={viewState} />
+      <StandardUserInterfaceRaw
+        terria={terria}
+        viewState={viewState}
+        t={() => {}}
+      />
     );
     const result = getShallowRenderedOutput(ui);
     expect(result.props.className).toContain("story-wrapper");
@@ -36,7 +40,11 @@ describe("StandardUserInterface", function() {
   it("feature info panel has top-element class when it is the top element", function() {
     viewState.topElement = "FeatureInfo";
     const ui = (
-      <StandardUserInterfaceRaw terria={terria} viewState={viewState} />
+      <StandardUserInterfaceRaw
+        terria={terria}
+        viewState={viewState}
+        t={() => {}}
+      />
     );
     const result = getShallowRenderedOutput(ui);
     const featureInfo = findWithClass(
@@ -49,7 +57,11 @@ describe("StandardUserInterface", function() {
   it("side panel has top-element class when it is the top element", function() {
     viewState.topElement = "SidePanel";
     const ui = (
-      <StandardUserInterfaceRaw terria={terria} viewState={viewState} />
+      <StandardUserInterfaceRaw
+        terria={terria}
+        viewState={viewState}
+        t={() => {}}
+      />
     );
     const result = getShallowRenderedOutput(ui);
     const sidePanel = findWithClass(
@@ -62,7 +74,11 @@ describe("StandardUserInterface", function() {
   it("feature info panel does not have top-element class when it is not the top element", function() {
     viewState.topElement = "SidePanel";
     const ui = (
-      <StandardUserInterfaceRaw terria={terria} viewState={viewState} />
+      <StandardUserInterfaceRaw
+        terria={terria}
+        viewState={viewState}
+        t={() => {}}
+      />
     );
     const result = getShallowRenderedOutput(ui);
     const featureInfo = findWithClass(

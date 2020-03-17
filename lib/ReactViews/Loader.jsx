@@ -3,8 +3,9 @@ import ObserveModelMixin from "./ObserveModelMixin";
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
+import { withTranslation } from "react-i18next";
+import classNames from "classnames";
 import Icon from "./Icon.jsx";
-
 import Styles from "./loader.scss";
 
 const Loader = createReactClass({
@@ -20,16 +21,18 @@ const Loader = createReactClass({
 
   propTypes: {
     message: PropTypes.string,
-    className: PropTypes.string
+    className: PropTypes.string,
+    t: PropTypes.func.isRequired
   },
 
   render() {
+    const { t } = this.props;
     return (
-      <span className={Styles.loader}>
+      <span className={classNames(Styles.loader, this.props.className)}>
         <Icon glyph={Icon.GLYPHS.loader} />
-        <span>{this.props.message || "Loading"}</span>
+        <span>{this.props.message || t("loader.loadingMessage")}</span>
       </span>
     );
   }
 });
-module.exports = Loader;
+module.exports = withTranslation()(Loader);
