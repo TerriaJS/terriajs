@@ -2,9 +2,16 @@ import styled from "styled-components";
 
 export const Box = styled.div`
   ${props => props.relative && `position:relative;`}
-
+  
   display: flex;
   position: relative;
+  ${props =>
+    props.positionAbsolute &&
+    `
+    position:absolute;
+    z-index:1;
+   `}
+
   box-sizing: border-box;
 
 

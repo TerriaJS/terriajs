@@ -8,10 +8,10 @@
 }
 
 .search-result.light .btn {
-  border-bottom: 1px solid rgba($grey, 0.4);
+  // border-bottom: 1px solid rgba($grey, 0.4);
   background: transparent;
   &:hover {
-    border-bottom: 1px solid $color-primary;
+    // border-bottom: 1px solid $color-primary;
     color: $color-primary;
   }
   svg {
@@ -71,9 +71,6 @@
     padding-right: $padding;
     width: 100%;
     border: 1px solid transparent;
-    @media (min-width: $sm) {
-      border: 1px solid $grey;
-    }
   }
   &:hover {
     .arrow-icon svg {
@@ -82,5 +79,12 @@
   }
   &.btnLocationName {
     padding: $padding $padding * 3;
+  }
+}
+.btnWithBorderBottom {
+  &.btnWithBorderBottom {
+    @media (min-width: $sm) {
+      border-bottom: 1px solid $grey;
+    }
   }
 }

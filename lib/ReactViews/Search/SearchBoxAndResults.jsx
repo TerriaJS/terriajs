@@ -100,17 +100,28 @@ class SearchBoxAndResults extends React.Component {
     if (newText.length === 0) {
       removeMarker(this.props.terria);
       runInAction(() => {
-        this.props.viewState.searchState.showLocationSearchResults = false;
+        this.toggleShowLocationSearchResults(false);
+      });
+    }
+    if (
+      newText.length > 0 &&
+      !this.props.viewState.searchState.showLocationSearchResults
+    ) {
+      runInAction(() => {
+        this.toggleShowLocationSearchResults(true);
       });
     }
   }
   search() {
     this.props.viewState.searchState.searchLocations();
   }
-  startLocationSearch() {
+  toggleShowLocationSearchResults(bool) {
     runInAction(() => {
-      this.props.viewState.searchState.showLocationSearchResults = true;
+      this.props.viewState.searchState.showLocationSearchResults = bool;
     });
+  }
+  startLocationSearch() {
+    this.toggleShowLocationSearchResults(true);
   }
   render() {
     const { t } = this.props;
@@ -119,54 +130,60 @@ class SearchBoxAndResults extends React.Component {
 
     return (
       <Text textDarker>
-        <SearchBox
-          onSearchTextChanged={this.changeSearchText.bind(this)}
-          onDoSearch={this.search.bind(this)}
-          onFocus={this.startLocationSearch.bind(this)}
-          searchText={searchState.locationSearchText}
-          placeholder={t("search.placeholder")}
-        />
-        {/* Results */}
-        <If
-          condition={
-            searchState.locationSearchText.length > 0 &&
-            searchState.showLocationSearchResults
-          }
-        >
-          <Box
-            column
-            paddedRatio={2}
-            css={`
-              background-color: ${props => props.theme.greyLightest};
-            `}
+        <Box fullWidth>
+          <SearchBox
+            onSearchTextChanged={this.changeSearchText.bind(this)}
+            onDoSearch={this.search.bind(this)}
+            onFocus={this.startLocationSearch.bind(this)}
+            searchText={searchState.locationSearchText}
+            placeholder={t("search.placeholder")}
+          />
+          {/* Results */}
+          <If
+            condition={
+              searchState.locationSearchText.length > 0 &&
+              searchState.showLocationSearchResults
+            }
           >
-            <Spacing bottom={2} />
-            {/* search {searchterm} in data catalog */}
-            <SearchInDataCatalog viewState={viewState} t={t} />
-            {/* location search results ( 3 results etc) */}
-            <For
-              each="search"
-              of={this.props.viewState.searchState.locationSearchResults}
+            <Box
+              positionAbsolute
+              fullWidth
+              column
+              paddedRatio={2}
+              css={`
+                top: 100%;
+                background-color: ${props => props.theme.greyLightest};
+              `}
             >
-              <LocationSearchResults
-                key={search.searchProvider.name}
-                terria={this.props.terria}
-                viewState={this.props.viewState}
-                search={search}
-                onLocationClick={result => {
-                  addMarker(this.props.terria, result);
-                  result.clickAction();
-                  runInAction(() => {
-                    searchState.showLocationSearchResults = false;
-                  });
-                }}
-                isWaitingForSearchToStart={
-                  searchState.isWaitingForSearchToStart
-                }
-              />
-            </For>
-          </Box>
-        </If>
+              <Spacing bottom={2} />
+              {/* search {searchterm} in data catalog */}
+              <SearchInDataCatalog viewState={viewState} t={t} />
+              <Spacing bottom={2} />
+              {/* location search results ( 3 results etc) */}
+              <For
+                each="search"
+                of={this.props.viewState.searchState.locationSearchResults}
+              >
+                <LocationSearchResults
+                  key={search.searchProvider.name}
+                  terria={this.props.terria}
+                  viewState={this.props.viewState}
+                  search={search}
+                  onLocationClick={result => {
+                    addMarker(this.props.terria, result);
+                    result.clickAction();
+                    runInAction(() => {
+                      searchState.showLocationSearchResults = false;
+                    });
+                  }}
+                  isWaitingForSearchToStart={
+                    searchState.isWaitingForSearchToStart
+                  }
+                />
+              </For>
+            </Box>
+          </If>
+        </Box>
       </Text>
     );
   }

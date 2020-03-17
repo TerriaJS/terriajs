@@ -37,7 +37,7 @@ const LocationSearchResults = observer(
       return {
         isOpen: true,
         // isExpanded: false
-        isExpanded: true
+        isExpanded: false
       };
     },
 
@@ -125,6 +125,7 @@ const LocationSearchResults = observer(
                   name={result.name}
                   icon="location"
                   theme={this.props.theme}
+                  isLastResult={results.length === i + 1}
                 />
               ))}
               {/* {search.results.length > 5 && (

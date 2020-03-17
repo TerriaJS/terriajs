@@ -12,6 +12,7 @@ const SearchResult = createReactClass({
   propTypes: {
     name: PropTypes.string.isRequired,
     clickAction: PropTypes.func.isRequired,
+    isLastResult: PropTypes.bool,
     icon: PropTypes.string,
     theme: PropTypes.string
   },
@@ -24,31 +25,33 @@ const SearchResult = createReactClass({
   },
 
   render() {
-    const isDarkTheme = this.props.theme === "dark"
-    const isLightTheme = this.props.theme === "light"
+    const isDarkTheme = this.props.theme === "dark";
+    const isLightTheme = this.props.theme === "light";
     return (
       <li
         className={classNames(Styles.searchResult, {
-          [Styles.dark]: isDarkTheme
+          [Styles.dark]: isDarkTheme,
           [Styles.light]: isLightTheme
         })}
       >
         <button
           type="button"
           onClick={this.props.clickAction}
-          className={Styles.btn}
+          className={classNames(Styles.btn, {
+            [Styles.btnWithBorderBottom]: !this.props.isLastResult
+          })}
         >
           {/* (You need light text on a dark theme, and vice versa) */}
           <Text large textLight={isDarkTheme} textDark={isLightTheme}>
-          {this.props.icon && (
-            <span className={Styles.icon}>
-              <Icon glyph={Icon.GLYPHS[this.props.icon]} />
+            {this.props.icon && (
+              <span className={Styles.icon}>
+                <Icon glyph={Icon.GLYPHS[this.props.icon]} />
+              </span>
+            )}
+            <span className={Styles.resultName}>{this.props.name}</span>
+            <span className={Styles.arrowIcon}>
+              <Icon glyph={Icon.GLYPHS.right} />
             </span>
-          )}
-          <span className={Styles.resultName}>{this.props.name}</span>
-          <span className={Styles.arrowIcon}>
-            <Icon glyph={Icon.GLYPHS.right} />
-          </span>
           </Text>
         </button>
       </li>
