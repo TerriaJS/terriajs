@@ -38,12 +38,21 @@
   flex-basis: 400px;
   background-color: #f4f4f4;
   position: fixed;
-  right: 0px;
+  // right: 0px;
   top: 0px;
   z-index: 110;
   font-size: $font-size-mid-small;
   transition: all 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  &.isVisible {
+    right: 0;
+  }
+  &.shiftedToRight {
+    right: -490px;
+  }
+  &.isHidden {
+    visibility: hidden;
+  }
 }
 
 .panel-item,
@@ -58,11 +67,6 @@
 .panel-item:hover,
 .is-selected {
   background-color: #f4f4f4;
-  z-index: 110;
-}
-
-.isnt-selected {
-  opacity: 50%;
 }
 
 .tourBtn {

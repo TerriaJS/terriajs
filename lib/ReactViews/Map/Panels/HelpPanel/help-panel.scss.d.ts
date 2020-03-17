@@ -11,14 +11,15 @@ interface CssExports {
   'helpPanel': string;
   'helpPanelShifted': string;
   'is-selected': string;
+  'isHidden': string;
   'isSelected': string;
-  'isnt-selected': string;
-  'isntSelected': string;
+  'isVisible': string;
   'link': string;
   'mapButtonColor': string;
   'modalHighlight': string;
   'panel-item': string;
   'panelItem': string;
+  'shiftedToRight': string;
   'story-fade-in': string;
   'story-fade-out': string;
   'story-slide-down': string;

@@ -85,9 +85,12 @@ class HelpVideoPanel extends React.Component {
     // const { t } = this.props;
     const itemSelected =
       this.props.viewState.selectedHelpMenuItem === this.props.itemString;
+    const isExpanded = this.props.viewState.selectedHelpMenuItem !== "";
     const className = classNames({
       [Styles.videoPanel]: true,
-      [Styles.isSelected]: itemSelected
+      [Styles.isVisible]: isExpanded,
+      [Styles.shiftedToRight]: !isExpanded,
+      [Styles.isHidden]: !itemSelected
     });
     return (
       <div className={className}>

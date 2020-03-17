@@ -90,6 +90,7 @@ class HelpPanel extends React.Component {
           </Text>
           <Spacing bottom={4} />
           <Text
+            medium
             css={`
               color: #404855;
               line-height: 18px;

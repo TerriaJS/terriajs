@@ -70,12 +70,9 @@ class HelpPanelItem extends React.Component {
     `;
     const itemSelected =
       this.props.viewState.selectedHelpMenuItem === this.props.itemString;
-    const itemNotSelected =
-      this.props.viewState.selectedHelpMenuItem !== "" && !itemSelected;
     const className = classNames({
       [Styles.panelItem]: true,
-      [Styles.isSelected]: itemSelected,
-      [Styles.isntSelected]: itemNotSelected
+      [Styles.isSelected]: itemSelected
     });
     return (
       <div
@@ -112,7 +109,6 @@ class HelpPanelItem extends React.Component {
             </Text>
           </Box>
         </button>
-        {this.props.viewState.helpPanelExpanded && itemSelected && (
           <HelpVideoPanel
             terria={this.props.terria}
             viewState={this.props.viewState}
@@ -122,7 +118,6 @@ class HelpPanelItem extends React.Component {
             videoLink={this.props.videoLink}
             background={this.props.background}
           />
-        )}
       </div>
     );
   }
