@@ -85,6 +85,7 @@ Change Log
 * Ensure `CesiumTileLayer.getTileUrl` returns a string.
 * Adds methods `removeModelReferences` to Terria & ViewState for unregistering and removing models from different parts of the UI.
 * Add trait to enabling hiding legends for a `CatalogMember` in the workbench.
+* Added new help menu item on how to navigate 3d data
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
