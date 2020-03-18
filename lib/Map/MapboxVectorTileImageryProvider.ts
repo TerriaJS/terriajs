@@ -43,7 +43,9 @@ interface MapboxVectorTileImageryProviderOptions {
   maximumNativeZoom?: number;
   rectangle?: Rectangle;
   uniqueIdProp: string;
-  featureInfoFunc?: (feature: VectorTileFeature) => ImageryLayerFeatureInfo | undefined;
+  featureInfoFunc?: (
+    feature: VectorTileFeature
+  ) => ImageryLayerFeatureInfo | undefined;
 }
 
 export default class MapboxVectorTileImageryProvider
@@ -51,7 +53,9 @@ export default class MapboxVectorTileImageryProvider
   private readonly _uriTemplate: uri.URITemplate;
   private readonly _layerName: string;
   private readonly _subdomains: string[];
-  private readonly _styleFunc: (feature: VectorTileFeature) => SimpleStyle | undefined;
+  private readonly _styleFunc: (
+    feature: VectorTileFeature
+  ) => SimpleStyle | undefined;
   private readonly _tilingScheme: WebMercatorTilingScheme;
   private readonly _tileWidth: number;
   private readonly _tileHeight: number;

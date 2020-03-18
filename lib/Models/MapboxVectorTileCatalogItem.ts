@@ -16,10 +16,10 @@ import i18next from "i18next";
 import isDefined from "../Core/isDefined";
 import { VectorTileFeature } from "@mapbox/vector-tile";
 import { clone } from "lodash-es";
-import createStratumInstance from "./createStratumInstance";
-import { RectangleTraits } from "../Traits/MappableTraits";
 
-class MapboxVectorTileLoadableStratum extends LoadableStratum(MapboxVectorTileCatalogItemTraits) {
+class MapboxVectorTileLoadableStratum extends LoadableStratum(
+  MapboxVectorTileCatalogItemTraits
+) {
   static stratumName = "MapboxVectorTileLoadable";
 
   constructor(readonly item: MapboxVectorTileCatalogItem) {
@@ -27,7 +27,9 @@ class MapboxVectorTileLoadableStratum extends LoadableStratum(MapboxVectorTileCa
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
-    return new MapboxVectorTileLoadableStratum(newModel as MapboxVectorTileCatalogItem) as this;
+    return new MapboxVectorTileLoadableStratum(
+      newModel as MapboxVectorTileCatalogItem
+    ) as this;
   }
 
   static async load(item: MapboxVectorTileCatalogItem) {
@@ -41,7 +43,7 @@ class MapboxVectorTileLoadableStratum extends LoadableStratum(MapboxVectorTileCa
   //       item.lineColor= this.lineColor
   //         item.title=this.name
   //     });
-  //     return item; 
+  //     return item;
   // }
 }
 
@@ -75,17 +77,20 @@ class MapboxVectorTileCatalogItem extends AsyncMappableMixin(
 
   protected async forceLoadMapItems(): Promise<void> {
     await this.loadMetadata();
-    this.updateImageryProvider()
-    
+    this.updateImageryProvider();
   }
 
   private updateImageryProvider() {
     autorun(async () => {
       runInAction(() => {
-        if (!isDefined(this.url) || !isDefined(this.layer) || !isDefined(this.rectangle)) {
-          return
+        if (
+          !isDefined(this.url) ||
+          !isDefined(this.layer) ||
+          !isDefined(this.rectangle)
+        ) {
+          return;
         }
-  
+
         this.imageryProvider = new MapboxVectorTileImageryProvider({
           url: this.url,
           layerName: this.layer,
@@ -93,10 +98,15 @@ class MapboxVectorTileCatalogItem extends AsyncMappableMixin(
           styleFunc: () => ({
             fillStyle: this.fillColor,
             strokeStyle: this.lineColor,
-            lineJoin: 'miter',
+            lineJoin: "miter",
             lineWidth: 1
           }),
-          rectangle: Rectangle.fromDegrees(this.rectangle.west, this.rectangle.south, this.rectangle.east, this.rectangle.north) ,
+          rectangle: Rectangle.fromDegrees(
+            this.rectangle.west,
+            this.rectangle.south,
+            this.rectangle.east,
+            this.rectangle.north
+          ),
           minimumZoom: this.minimumZoom,
           maximumNativeZoom: this.maximumNativeZoom,
           maximumZoom: this.maximumZoom,
@@ -104,7 +114,8 @@ class MapboxVectorTileCatalogItem extends AsyncMappableMixin(
           featureInfoFunc: this.featureInfoFromFeature.bind(this)
         });
       });
-    })}
+    });
+  }
 
   @computed
   get mapItems() {
@@ -125,8 +136,7 @@ class MapboxVectorTileCatalogItem extends AsyncMappableMixin(
   featureInfoFromFeature(feature: VectorTileFeature) {
     const featureInfo = new ImageryLayerFeatureInfo();
     if (isDefined(this.nameProperty)) {
-      featureInfo.name =
-        feature.properties[this.nameProperty];
+      featureInfo.name = feature.properties[this.nameProperty];
     }
     (featureInfo as any).properties = clone(feature.properties);
     featureInfo.data = {

@@ -72,7 +72,10 @@ export default function registerCatalogMembers() {
   );
   CatalogMemberFactory.register(MagdaReference.type, MagdaReference);
   CatalogMemberFactory.register(KmlCatalogItem.type, KmlCatalogItem);
-  CatalogMemberFactory.register(MapboxVectorTileCatalogItem.type, MapboxVectorTileCatalogItem)
+  CatalogMemberFactory.register(
+    MapboxVectorTileCatalogItem.type,
+    MapboxVectorTileCatalogItem
+  );
   CatalogMemberFactory.register(CartoMapCatalogItem.type, CartoMapCatalogItem);
   CatalogMemberFactory.register(UrlReference.type, UrlReference);
   CatalogMemberFactory.register(
