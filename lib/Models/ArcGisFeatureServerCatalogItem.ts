@@ -552,7 +552,7 @@ function updateEntityWithEsriStyle(
       convertEsriColorToCesiumColor(symbol.color)
     );
     if (isDefined(symbol.width)) {
-      entity.polyline.width = symbol.width;
+      entity.polyline.width = new ConstantProperty(symbol.width);
     }
   }
 

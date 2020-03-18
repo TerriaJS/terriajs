@@ -48,6 +48,7 @@ interface MapServer {
   documentInfo?: DocumentInfo;
   description?: string;
   copyrightText?: string;
+  mapName?: string;
 }
 
 interface SpatialReference {
@@ -212,6 +213,8 @@ class MapServerStratum extends LoadableStratum(
       this._mapServer.documentInfo.Title.length > 0
     ) {
       return replaceUnderscores(this._mapServer.documentInfo.Title);
+    } else if (this._mapServer.mapName && this._mapServer.mapName.length > 0) {
+      return replaceUnderscores(this._mapServer.mapName);
     }
   }
 

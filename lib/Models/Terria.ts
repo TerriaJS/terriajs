@@ -28,7 +28,9 @@ import loadJson5 from "../Core/loadJson5";
 import ServerConfig from "../Core/ServerConfig";
 import TerriaError from "../Core/TerriaError";
 import { getUriWithoutPath } from "../Core/uriHelpers";
-import PickedFeatures from "../Map/PickedFeatures";
+import PickedFeatures, {
+  featureBelongsToCatalogItem
+} from "../Map/PickedFeatures";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
@@ -306,6 +308,11 @@ export default class Terria {
     }
   }
 
+  @computed
+  get modelIds() {
+    return Array.from(this.models.keys());
+  }
+
   getModelById<T extends BaseModel>(type: Class<T>, id: string): T | undefined {
     const model = this.models.get(id);
     if (instanceOf(type, model)) {
@@ -327,6 +334,26 @@ export default class Terria {
     }
 
     this.models.set(model.uniqueId, model);
+  }
+
+  /**
+   * Remove references to a model from Terria.
+   */
+  @action
+  removeModelReferences(model: BaseModel) {
+    const pickedFeatures = this.pickedFeatures;
+    if (pickedFeatures) {
+      // Remove picked features that belong to the catalog item
+      pickedFeatures.features.forEach((feature, i) => {
+        if (featureBelongsToCatalogItem(<Feature>feature, model)) {
+          pickedFeatures?.features.splice(i, 1);
+        }
+      });
+    }
+    this.workbench.remove(model);
+    if (model.uniqueId) {
+      this.models.delete(model.uniqueId);
+    }
   }
 
   start(options: StartOptions) {
