@@ -7,12 +7,36 @@ import classNames from "classnames";
 
 import Text from "../../Styled/Text";
 
+// Really really lightweight highlight without pulling in react-highlight-words
+// pros: lightweight
+// cons: ???
+function highlightKeyword(searchResult, keywordToHighlight) {
+  const parts = searchResult.split(new RegExp(`(${keywordToHighlight})`, "gi"));
+  return (
+    <>
+      {parts.map((part, i) => (
+        <span
+          key={i}
+          style={
+            part.toLowerCase() === keywordToHighlight.toLowerCase()
+              ? { fontWeight: "bold" }
+              : {}
+          }
+        >
+          {part}
+        </span>
+      ))}
+    </>
+  );
+}
+
 // A Location item when doing Bing map searvh or Gazetter search
 const SearchResult = createReactClass({
   propTypes: {
     name: PropTypes.string.isRequired,
     clickAction: PropTypes.func.isRequired,
     isLastResult: PropTypes.bool,
+    locationSearchText: PropTypes.string,
     icon: PropTypes.string,
     theme: PropTypes.string
   },
@@ -25,8 +49,10 @@ const SearchResult = createReactClass({
   },
 
   render() {
-    const isDarkTheme = this.props.theme === "dark";
-    const isLightTheme = this.props.theme === "light";
+    const { theme, name, locationSearchText, icon, isLastResult } = this.props;
+    const isDarkTheme = theme === "dark";
+    const isLightTheme = theme === "light";
+    const highlightedResultName = highlightKeyword(name, locationSearchText);
     return (
       <li
         className={classNames(Styles.searchResult, {
@@ -38,19 +64,19 @@ const SearchResult = createReactClass({
           type="button"
           onClick={this.props.clickAction}
           className={classNames(Styles.btn, {
-            [Styles.btnWithBorderBottom]: !this.props.isLastResult
+            [Styles.btnWithBorderBottom]: !isLastResult
           })}
         >
           {/* (You need light text on a dark theme, and vice versa) */}
           <Text large textLight={isDarkTheme} textDark={isLightTheme}>
-            {this.props.icon && (
+            {icon && (
               <span className={Styles.icon}>
-                <Icon glyph={Icon.GLYPHS[this.props.icon]} />
+                <Icon glyph={Icon.GLYPHS[icon]} />
               </span>
             )}
-            <span className={Styles.resultName}>{this.props.name}</span>
+            <span className={Styles.resultName}>{highlightedResultName}</span>
             <span className={Styles.arrowIcon}>
-              <Icon glyph={Icon.GLYPHS.right} />
+              <Icon glyph={Icon.GLYPHS.right2} />
             </span>
           </Text>
         </button>

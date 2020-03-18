@@ -18,7 +18,7 @@ import { RawButton } from "../../Styled/Button";
 
 import { addMarker } from "../../Models/LocationMarkerUtils";
 
-function SearchInDataCatalog({ viewState }) {
+function SearchInDataCatalog({ viewState, handleClick }) {
   const locationSearchText = viewState.searchState.locationSearchText;
   return (
     <RawButton
@@ -30,6 +30,7 @@ function SearchInDataCatalog({ viewState }) {
           searchState.catalogSearchText = searchState.locationSearchText;
         });
         viewState.searchInCatalog(searchState.locationSearchText);
+        handleClick && handleClick();
       }}
     >
       <Box paddedRatio={2} rounded charcoalGreyBg>
@@ -56,8 +57,8 @@ function SearchInDataCatalog({ viewState }) {
   );
 }
 SearchInDataCatalog.propTypes = {
-  viewState: PropTypes.object.isRequired,
-  t: PropTypes.func.isRequired
+  handleClick: PropTypes.func.isRequired,
+  viewState: PropTypes.object.isRequired
 };
 
 class SearchBoxAndResults extends React.Component {
@@ -127,6 +128,7 @@ class SearchBoxAndResults extends React.Component {
     const { t } = this.props;
     const viewState = this.props.viewState;
     const searchState = viewState.searchState;
+    const locationSearchText = searchState.locationSearchText;
 
     return (
       <Text textDarker>
@@ -157,7 +159,12 @@ class SearchBoxAndResults extends React.Component {
             >
               <Spacing bottom={2} />
               {/* search {searchterm} in data catalog */}
-              <SearchInDataCatalog viewState={viewState} t={t} />
+              <SearchInDataCatalog
+                viewState={viewState}
+                handleClick={() => {
+                  this.toggleShowLocationSearchResults(false);
+                }}
+              />
               <Spacing bottom={2} />
               {/* location search results ( 3 results etc) */}
               <For
@@ -169,6 +176,7 @@ class SearchBoxAndResults extends React.Component {
                   terria={this.props.terria}
                   viewState={this.props.viewState}
                   search={search}
+                  locationSearchText={locationSearchText}
                   onLocationClick={result => {
                     addMarker(this.props.terria, result);
                     result.clickAction();

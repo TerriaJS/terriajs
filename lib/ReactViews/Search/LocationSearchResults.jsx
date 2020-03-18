@@ -13,7 +13,6 @@ import { withTranslation } from "react-i18next";
 import SearchHeader from "./SearchHeader";
 import SearchResult from "./SearchResult";
 import classNames from "classnames";
-import Icon from "../Icon";
 import Styles from "./location-search-result.scss";
 import isDefined from "../../Core/isDefined";
 
@@ -30,6 +29,7 @@ const LocationSearchResults = observer(
       search: PropTypes.object.isRequired,
       onLocationClick: PropTypes.func.isRequired,
       theme: PropTypes.string,
+      locationSearchText: PropTypes.string,
       t: PropTypes.func.isRequired
     },
 
@@ -123,8 +123,9 @@ const LocationSearchResults = observer(
                   key={i}
                   clickAction={this.props.onLocationClick.bind(null, result)}
                   name={result.name}
-                  icon="location"
+                  icon="location2"
                   theme={this.props.theme}
+                  locationSearchText={this.props.locationSearchText}
                   isLastResult={results.length === i + 1}
                 />
               ))}
