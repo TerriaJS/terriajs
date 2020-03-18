@@ -7,6 +7,13 @@ export const Text = styled.div`
   ${props => props.nunito && `font-family: "Nunito", "Open Sans", sans-serif;`}
   ${props => props.openSans && `font-family: "Open Sans", sans-serif;`}
 
+  ${props =>
+    props.breakWord &&
+    `
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  `}
+
   font-weight: 400;
   ${props => props.bold && `font-weight: bold;`}
   ${props => props.semiBold && `font-weight: 600;`}

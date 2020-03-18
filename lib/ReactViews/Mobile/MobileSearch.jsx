@@ -56,21 +56,18 @@ const MobileSearch = observer(
 
     renderSearchInCatalogLink(theme) {
       const { t } = this.props;
+      const searchState = this.props.viewState.searchState;
       return (
-        <If
-          condition={
-            this.props.viewState.searchState.locationSearchText.length > 0
-          }
-        >
+        <If condition={searchState.locationSearchText.length > 0}>
           <div className={Styles.providerResult}>
             <ul className={Styles.btnList}>
-              {this.props.viewState.searchState.catalogSearchProvider && (
+              {searchState.catalogSearchProvider && (
                 <SearchResult
                   clickAction={this.searchInDataCatalog}
                   icon={null}
+                  locationSearchText={searchState.locationSearchText}
                   name={t("search.search", {
-                    searchText: this.props.viewState.searchState
-                      .locationSearchText
+                    searchText: searchState.locationSearchText
                   })}
                   theme={theme}
                 />
@@ -89,6 +86,7 @@ const MobileSearch = observer(
           terria={this.props.terria}
           viewState={this.props.viewState}
           search={search}
+          locationSearchText={searchState.locationSearchText}
           onLocationClick={this.onLocationClick}
           isWaitingForSearchToStart={searchState.isWaitingToStartLocationSearch}
           theme={theme}

@@ -151,22 +151,23 @@ class SearchBoxAndResults extends React.Component {
               positionAbsolute
               fullWidth
               column
-              paddedRatio={2}
               css={`
                 top: 100%;
                 background-color: ${props => props.theme.greyLightest};
               `}
             >
-              <Spacing bottom={2} />
-              {/* search {searchterm} in data catalog */}
-              <SearchInDataCatalog
-                viewState={viewState}
-                handleClick={() => {
-                  this.toggleShowLocationSearchResults(false);
-                }}
-              />
-              <Spacing bottom={2} />
-              {/* location search results ( 3 results etc) */}
+              <Box paddedRatio={2}>
+                <Spacing bottom={2} />
+                {/* search {searchterm} in data catalog */}
+                <SearchInDataCatalog
+                  viewState={viewState}
+                  handleClick={() => {
+                    this.toggleShowLocationSearchResults(false);
+                  }}
+                />
+                <Spacing bottom={2} />
+                {/* location search results ( 3 results etc) */}
+              </Box>
               <For
                 each="search"
                 of={this.props.viewState.searchState.locationSearchResults}

@@ -2,15 +2,16 @@ import React from "react";
 import PropTypes from "prop-types";
 import createReactClass from "create-react-class";
 import Icon from "../Icon";
-import Styles from "./search-result.scss";
-import classNames from "classnames";
 
-import Text from "../../Styled/Text";
+import Box, { BoxSpan } from "../../Styled/Box";
+import { RawButton } from "../../Styled/Button";
+import { TextSpan } from "../../Styled/Text";
 
 // Really really lightweight highlight without pulling in react-highlight-words
 // pros: lightweight
 // cons: ???
 function highlightKeyword(searchResult, keywordToHighlight) {
+  if (!keywordToHighlight) return searchResult;
   const parts = searchResult.split(new RegExp(`(${keywordToHighlight})`, "gi"));
   return (
     <>
@@ -54,32 +55,52 @@ const SearchResult = createReactClass({
     const isLightTheme = theme === "light";
     const highlightedResultName = highlightKeyword(name, locationSearchText);
     return (
-      <li
-        className={classNames(Styles.searchResult, {
-          [Styles.dark]: isDarkTheme,
-          [Styles.light]: isLightTheme
-        })}
-      >
-        <button
-          type="button"
-          onClick={this.props.clickAction}
-          className={classNames(Styles.btn, {
-            [Styles.btnWithBorderBottom]: !isLastResult
-          })}
-        >
-          {/* (You need light text on a dark theme, and vice versa) */}
-          <Text large textLight={isDarkTheme} textDark={isLightTheme}>
-            {icon && (
-              <span className={Styles.icon}>
-                <Icon glyph={Icon.GLYPHS[icon]} />
-              </span>
-            )}
-            <span className={Styles.resultName}>{highlightedResultName}</span>
-            <span className={Styles.arrowIcon}>
-              <Icon glyph={Icon.GLYPHS.right2} />
-            </span>
-          </Text>
-        </button>
+      <li>
+        <Box fullWidth>
+          <RawButton
+            type="button"
+            onClick={this.props.clickAction}
+            fullWidth
+            isLastResult={isLastResult}
+            css={`
+              ${p =>
+                !p.isLastResult && `border-bottom: 1px solid ${p.theme.grey};`}
+              ${p => `
+              &:hover, &:focus {
+                background-color: ${p.theme.greyLighter};
+                .tjs-search-result-right2 svg {
+                  fill-opacity:1;
+                }
+              }`}
+            `}
+          >
+            {/* (You need light text on a dark theme, and vice versa) */}
+            <TextSpan
+              breakWord
+              large
+              textLight={isDarkTheme}
+              textDark={isLightTheme}
+            >
+              <BoxSpan paddedRatio={2} centered justifySpaceBetween>
+                {icon && (
+                  <BoxSpan flexShrinkZero styledWidth={"15px"}>
+                    <Icon glyph={Icon.GLYPHS[icon]} />
+                  </BoxSpan>
+                )}
+                <BoxSpan fullWidth>
+                  <TextSpan textAlignLeft>{highlightedResultName}</TextSpan>
+                </BoxSpan>
+                <BoxSpan
+                  className="tjs-search-result-right2"
+                  styledWidth={"14px"}
+                  flexShrinkZero
+                >
+                  <Icon css={"fill-opacity:0;"} glyph={Icon.GLYPHS.right2} />
+                </BoxSpan>
+              </BoxSpan>
+            </TextSpan>
+          </RawButton>
+        </Box>
       </li>
     );
   }

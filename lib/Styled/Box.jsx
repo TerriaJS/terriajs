@@ -19,6 +19,7 @@ export const Box = styled.div`
 
   ${props => props.fullHeight && `height: 100%;`}
   ${props => props.fullWidth && `width: 100%;`}
+  ${props => props.styledWidth && `width: ${props.styledWidth};`}
   
   ${props =>
     props.col &&
@@ -83,5 +84,9 @@ export const Box = styled.div`
     `padding: ${5 *
       (props.paddedVertically === true ? 1 : props.paddedVertically)}px 0;`}
 `;
+
+export const BoxSpan = styled(Box).attrs({
+  as: "span"
+})``;
 
 export default Box;
