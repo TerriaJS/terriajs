@@ -6,6 +6,7 @@ import Resource from "terriajs-cesium/Source/Core/Resource";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
+import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
 import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
 import isDefined from "../Core/isDefined";
 import makeRealPromise from "../Core/makeRealPromise";
@@ -104,7 +105,7 @@ export default class Cesium3DTilesCatalogItem
       this.optionsObj
     );
 
-    if (isDefined(tileset) && !tileset.destroyed) {
+    if (tileset && !tileset.destroyed) {
       this.tileset = tileset;
     }
   }
@@ -121,6 +122,12 @@ export default class Cesium3DTilesCatalogItem
     this.tileset.style = toJS(this.cesiumTileStyle);
     this.tileset.shadows = this.cesiumShadows;
     this.tileset.show = this.show;
+
+    const key = this.colorBlendMode as keyof typeof Cesium3DTileColorBlendMode;
+    const colorBlendMode = Cesium3DTileColorBlendMode[key];
+    if (colorBlendMode !== undefined)
+      this.tileset.colorBlendMode = colorBlendMode;
+    this.tileset.colorBlendAmount = this.colorBlendAmount;
 
     // default is 16 (baseMaximumScreenSpaceError @ 2)
     // we want to reduce to 8 for higher levels of quality
