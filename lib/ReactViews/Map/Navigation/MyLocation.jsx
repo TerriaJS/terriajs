@@ -192,7 +192,7 @@ const MyLocation = createReactClass({
         expandInPlace
         onClick={this.handleClick}
         buttonTitle={t("location.centreMap")}
-        iconElement={() => <Icon glyph={Icon.GLYPHS.geolocation} />}
+        iconElement={() => <Icon glyph={Icon.GLYPHS.geolocationThick} />}
       >
         {t("location.location")}
       </MapIconButton>

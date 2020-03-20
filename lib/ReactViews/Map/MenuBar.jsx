@@ -158,6 +158,7 @@ const MenuBar = createReactClass({
           <If condition={storyEnabled}>
             <li className={Styles.menuItem}>
               <div>
+                {/* <If condition={!this.props.viewState.storyBuilderShown}> */}
                 <button
                   className={Styles.storyBtn}
                   type="button"
@@ -166,6 +167,7 @@ const MenuBar = createReactClass({
                   <Icon glyph={Icon.GLYPHS.story} />
                   <span>{t("story.story")}</span>
                 </button>
+                {/* </If> */}
                 {storyEnabled &&
                   this.props.viewState.featurePrompts.indexOf("story") >= 0 && (
                     <Prompt

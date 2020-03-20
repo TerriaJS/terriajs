@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="22px" height="22px" viewBox="0 0 22 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>location</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Assets/UI/Location" transform="translate(-5.000000, -5.000000)">
+            <g id="button1" transform="translate(6.000000, 6.000000)">
+                <g id="location">
+                    <g>
+                        <circle id="Oval" stroke="#4D5766" stroke-width="2" cx="10" cy="10" r="7"></circle>
+                        <circle id="Oval-12" fill="#4D5766" cx="10" cy="10" r="2"></circle>
+                        <line x1="10" y1="-2.83106871e-14" x2="10" y2="2.5" id="Line-2-Copy" stroke="#4D5766" stroke-width="2" stroke-linecap="round"></line>
+                        <line x1="10" y1="17.5" x2="10" y2="20" id="Line-2" stroke="#4D5766" stroke-width="2" stroke-linecap="round"></line>
+                        <line x1="17.5" y1="10" x2="20" y2="10" id="Line" stroke="#4D5766" stroke-width="2" stroke-linecap="round"></line>
+                        <line x1="0" y1="10" x2="2.5" y2="10" id="Line-Copy" stroke="#4D5766" stroke-width="2" stroke-linecap="round"></line>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
