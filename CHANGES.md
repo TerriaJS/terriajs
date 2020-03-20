@@ -86,6 +86,8 @@ Change Log
 * Adds methods `removeModelReferences` to Terria & ViewState for unregistering and removing models from different parts of the UI.
 * Add trait to enabling hiding legends for a `CatalogMember` in the workbench.
 * Add traits to customize color blending and highlight color for `Cesium3DTilesCatalogItem`
+* Reimplemented splitting using `SplitItemReference`.
+
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
