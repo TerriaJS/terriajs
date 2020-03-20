@@ -9,7 +9,8 @@
 
   // todo: find some non-layout-change animation technique for
   // this flex-menu-bar-workbench problem
-  transition: margin-left 0.25s;
+  transition: margin-left 0.25s,
+    margin-right 0.25s cubic-bezier(0.17, 0.84, 0.44, 1) 0.15s;
   margin-left: $work-bench-width + 40px;
 
   display: flex;
@@ -19,6 +20,9 @@
 .menu-bar--workbenchClosed {
   transition-delay: 0.25s;
   margin-left: 165px;
+}
+.menu-bar--storyOpen {
+  margin-right: 35px;
 }
 .menu {
   composes: list-reset from "../../Sass/common/_base.scss";

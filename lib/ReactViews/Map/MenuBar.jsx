@@ -95,7 +95,8 @@ const MenuBar = createReactClass({
           Styles.menuBar,
           {
             [Styles.menuBarWorkbenchClosed]: this.props.viewState
-              .isMapFullScreen
+              .isMapFullScreen,
+            [Styles.menuBarStoryOpen]: this.props.viewState.storyBuilderShown
           }
         )}
         onClick={this.handleClick}
