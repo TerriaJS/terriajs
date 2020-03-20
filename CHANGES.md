@@ -87,6 +87,7 @@ Change Log
 * Add trait to enabling hiding legends for a `CatalogMember` in the workbench.
 * Add traits to customize color blending and highlight color for `Cesium3DTilesCatalogItem`
 * Reimplemented splitting using `SplitItemReference`.
+* Fixed bug causing full app crash or viewer zoom refresh when using 3D view and changing settings or changing the terrain provider.
 
 
 ### Next Release
