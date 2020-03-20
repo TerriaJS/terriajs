@@ -45,46 +45,41 @@ class CkanDatasetStratum extends LoadableStratum(
   static stratumName = "ckanDataset";
 
   constructor(
-    private readonly _item: GeoJsonCatalogItem,
-    private readonly _ckanDataset: CkanDataset,
+    private readonly ckanDataset: CkanDataset,
+    private readonly ckanResource: CkanResource,
+    private readonly ckanCatalogGroup: CkanCatalogGroup
   ) {
     super();
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
     return new CkanDatasetStratum(
-      newModel as GeoJsonCatalogItem,
-      this._ckanDataset
+      this.ckanDataset,
+      this.ckanResource,
+      this.ckanCatalogGroup
     ) as this;
   }
 
-  static async load(item: GeoJsonCatalogItem, ckanDataset: CkanDataset) {
-    return new CkanDatasetStratum(item, ckanDataset);
-  }
-
-  @computed get ckanDataset() {
-    return this._ckanDataset
+  static async load(ckanDataset: CkanDataset, ckanResource: CkanResource, ckanCatalogGroup: CkanCatalogGroup) {
+    return new CkanDatasetStratum(ckanDataset, ckanResource, ckanCatalogGroup);
   }
 
   @computed get url() {
-    if (this.ckanDataset === undefined) return undefined
     return this.ckanDataset.url
   }
 
   @computed get name() {
-    if (this.ckanDataset === undefined) return undefined
+    if (this.ckanCatalogGroup.useResourceName) return this.ckanResource.name
+    if (this.ckanCatalogGroup.useDatasetNameAndFormatWhereMultipleResources && this.ckanDataset.resources.length > 1) return this.ckanDataset.title + " - " + this.ckanResource.format
+    if (this.ckanCatalogGroup.useCombinationNameWhereMultipleResources && this.ckanDataset.resources.length > 1) return this.ckanDataset.title + " - " + this.ckanResource.name
     return this.ckanDataset.title
   }
 
   @computed get dataCustodian() {
-    if (this.ckanDataset === undefined) return undefined
-    if (this.ckanDataset.organization === undefined) return undefined
     return this.ckanDataset.organization.description || this.ckanDataset.organization.title;
-
   }
 
   @computed get rectangle() {
-    if (this.ckanDataset === undefined) return undefined
     if (this.ckanDataset.geo_coverage === undefined) return undefined
     var bboxString = this.ckanDataset.geo_coverage
     if (isDefined(bboxString)) {
@@ -102,8 +97,6 @@ class CkanDatasetStratum extends LoadableStratum(
   }
 
   @computed get info() {
-    if (this.ckanDataset === undefined) return []
-
     function newInfo(name: string, content?: string) {
       const traits = createStratumInstance(InfoSectionTraits);
       runInAction(() => {
@@ -116,10 +109,9 @@ class CkanDatasetStratum extends LoadableStratum(
     function prettifyDate (date: string) {
       if (date.match(/^\d\d\d\d-\d\d-\d\d.*/)) {
         return date.substr(0, 10);
-      } else {
-        return date;
-      }
+      } else return date;
     }
+
     const outArray = [];
 
     if (isDefined(this.ckanDataset.license_url)) {
@@ -162,10 +154,6 @@ class CkanDatasetStratum extends LoadableStratum(
     ))
     return outArray
   }
-
-  @computed get legends(): StratumFromTraits<LegendTraits>[] | undefined {
-    return undefined
-  }
 }
 
 StratumOrder.addLoadStratum(CkanDatasetStratum.stratumName);
@@ -185,9 +173,9 @@ function createItem (ckanCatalogGroup: CkanCatalogGroup, itemId: string, itemTyp
     return model
 }
 
-function setCkanRelatedStrata (model: any, resource: CkanResource, dataset: CkanDataset) {
+function setCkanRelatedStrata (model: any, resource: CkanResource, dataset: CkanDataset, ckanCatalogGroup: CkanCatalogGroup) {
     model.setTrait('underride', 'url', resource.url)
-    CkanDatasetStratum.load(model, dataset).then(statum => {
+    CkanDatasetStratum.load(dataset, resource, ckanCatalogGroup).then(statum => {
       runInAction(() => {
         model.strata.set(CkanDatasetStratum.stratumName, statum);
       });
@@ -238,7 +226,6 @@ function findMatchingFormat (supportedFormats: any[], resource: CkanResource) {
 }
 
 export function createCatalogItemFromCkanResource (resource: CkanResource, dataset: CkanDataset, ckanCatalogGroup: CkanCatalogGroup, supportedFormats: any[]) {
-
     const itemId = ckanCatalogGroup.uniqueId + "/" + dataset.id + "/" + resource.id;
 
     const format = findMatchingFormat(supportedFormats, resource)
@@ -246,6 +233,6 @@ export function createCatalogItemFromCkanResource (resource: CkanResource, datas
 
     let model = createItem(ckanCatalogGroup, itemId, format.constructor)
     model.setTrait('underride', 'url', resource.url)
-    setCkanRelatedStrata(model, resource, dataset)
+    setCkanRelatedStrata(model, resource, dataset, ckanCatalogGroup)
     return model
 }

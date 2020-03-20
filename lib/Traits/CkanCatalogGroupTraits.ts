@@ -41,7 +41,6 @@ export default class CkanCatalogGroupTraits extends mixTraits(
   })
   filterQuery?: string;
 
-
   @primitiveTrait({
     type: "string",
     name: "Group By",
@@ -53,6 +52,39 @@ export default class CkanCatalogGroupTraits extends mixTraits(
      `
   })
   groupBy?: string = "organization";
+
+  @primitiveTrait({
+    type: "string",
+    name: "Ungrouped title",
+    description:
+      `A title for the group holding all items that don't have a group in CKAN.
+      If the value is a blank string or undefined, these items will be left at the top level, not grouped.`
+  })
+  ungroupedTitle: string = "No group";
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Use resource name",
+    description:
+     `True to use the name of the resource for the name of the catalog item; false to use the name of the dataset.`
+  })
+  useResourceName: boolean = false;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Use combination name where multiple resources",
+    description:
+     `Use a combination of the name and the resource format and dataset where there are multiple resources for a single dataset.`
+  })
+  useDatasetNameAndFormatWhereMultipleResources: boolean = true;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Use combination of dataset and resource name where multiple resources",
+    description:
+     `Use a combination of the name and the resource and dataset name where there are multiple resources for a single dataset.`
+  })
+  useCombinationNameWhereMultipleResources: boolean = false;
 
   @primitiveTrait({
     type: "boolean",

@@ -103,7 +103,7 @@ class CkanServerStratum extends LoadableStratum(
 
   @computed
   get members(): ModelReference[] {
-    // When data is grouped (most circumstances) just return the groups ids
+    // When data is grouped (most circumstances) just return the group ids
     if (this.groups !== undefined) {
       return this.groups.map(g => g.uniqueId as ModelReference)
     }
@@ -140,6 +140,14 @@ class CkanServerStratum extends LoadableStratum(
     const groups:CatalogGroup[] = []
     if (this._catalogGroup.groupBy === 'organization') createGroupsByOrganisations(this, groups)
     if (this._catalogGroup.groupBy === 'group') createGroupsByCkanGroups(this, groups)
+
+    groups.sort(function(a, b){
+        if (a.name === undefined || b.name === undefined) return 0
+        if (a.name < b.name) { return -1; }
+        if (a.name > b.name) { return 1; }
+        return 0;
+    })
+
     return groups
   }
 
@@ -161,6 +169,11 @@ class CkanServerStratum extends LoadableStratum(
 
   @action
   addCatalogItemByCkanGroupsToCatalogGroup(catalogItem: any, dataset: CkanDataset) {
+    if (dataset.groups.length === 0) {
+       const groupId = this._catalogGroup.uniqueId + '/ungrouped'
+       this.addCatalogItemToCatalogGroup(catalogItem, dataset, groupId)
+       return
+    }
     dataset.groups.forEach(g => {
       const groupId = this._catalogGroup.uniqueId + '/' + g.id
       this.addCatalogItemToCatalogGroup(catalogItem, dataset, groupId)
@@ -226,11 +239,19 @@ export default class CkanCatalogGroup extends UrlMixin(
   }
 }
 
+
+
 function createGroup (groupId: string, terria: Terria, groupName: string) {
   const g = new CatalogGroup(groupId, terria)
   g.setTrait('definition', 'name', groupName)
   terria.addModel(g);
   return g
+}
+
+function createUngroupedGroup(ckanServer: CkanServerStratum, groups: CatalogGroup[]) {
+  const groupId = ckanServer._catalogGroup.uniqueId + '/ungrouped'
+  const group = createGroup(groupId, ckanServer._catalogGroup.terria, ckanServer._catalogGroup.ungroupedTitle)
+  groups.push(group)
 }
 
 function createGroupsByOrganisations (ckanServer: CkanServerStratum, groups: CatalogGroup[]) {
@@ -245,6 +266,7 @@ function createGroupsByOrganisations (ckanServer: CkanServerStratum, groups: Cat
 }
 
 function createGroupsByCkanGroups (ckanServer: CkanServerStratum, groups: CatalogGroup[]) {
+  createUngroupedGroup(ckanServer, groups)
   ckanServer.filteredDatasets.forEach(ds => {
     ds.groups.forEach(g => {
       const groupId = ckanServer._catalogGroup.uniqueId + '/' + g.id
