@@ -18,6 +18,7 @@ import Feature from "./Feature";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import Mappable from "./Mappable";
 import Terria from "./Terria";
+import Cesium3DTilesCatalogItem from "./Cesium3DTilesCatalogItem";
 
 require("./ImageryLayerFeatureInfo"); // overrides Cesium's prototype.configureDescriptionFromProperties
 
@@ -110,20 +111,29 @@ export default abstract class GlobeOrMap {
 
       if (isDefined(feature._cesium3DTileFeature)) {
         const originalColor = feature._cesium3DTileFeature.color;
-        const originalColorBlendMode =
-          feature._cesium3DTileFeature.tileset.colorBlendMode;
 
-        feature._cesium3DTileFeature.tileset.colorBlendMode =
-          Cesium3DTileColorBlendMode.MIX;
-        const newColor = Color.fromCssColorString(
-          this.terria.baseMapContrastColor
-        );
+        // Get the highlight color from the catalogItem trait or default to baseMapContrastColor
+        const catalogItem = feature._catalogItem;
+        let highlightColor;
+        if (
+          catalogItem instanceof Cesium3DTilesCatalogItem &&
+          catalogItem.highlightColor
+        ) {
+          highlightColor = Color.fromCssColorString(catalogItem.highlightColor);
+        } else {
+          highlightColor = Color.fromCssColorString(
+            this.terria.baseMapContrastColor
+          );
+        }
 
         // highlighting doesn't work if the highlight colour is full white
         // so in this case use something close to white instead
-        feature._cesium3DTileFeature.color = Color.equals(newColor, Color.WHITE)
+        feature._cesium3DTileFeature.color = Color.equals(
+          highlightColor,
+          Color.WHITE
+        )
           ? Color.fromCssColorString("#fffffe")
-          : newColor;
+          : highlightColor;
 
         this._removeHighlightCallback = function() {
           if (
@@ -131,7 +141,6 @@ export default abstract class GlobeOrMap {
             !feature._cesium3DTileFeature.tileset.isDestroyed()
           ) {
             feature._cesium3DTileFeature.color = originalColor;
-            feature._cesium3DTileFeature.tileset.colorBlendMode = originalColorBlendMode;
           }
         };
       } else if (isDefined(feature.polygon)) {
