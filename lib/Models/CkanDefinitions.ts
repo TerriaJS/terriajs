@@ -1,3 +1,19 @@
+import ArcGisFeatureServerCatalogItem from "./ArcGisFeatureServerCatalogItem";
+import ArcGisMapServerCatalogItem from "./ArcGisMapServerCatalogItem";
+import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
+import CsvCatalogItem from "./CsvCatalogItem";
+import KmlCatalogItem from "./KmlCatalogItem";
+import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
+
+export enum SupportedTypes {
+  ArcGisFeatureServerCatalogItem,
+  ArcGisMapServerCatalogItem,
+  GeoJsonCatalogItem,
+  CsvCatalogItem,
+  KmlCatalogItem,
+  WebMapServiceCatalogItem
+}
+
 export interface CkanResource {
   description: string;
   name: string;

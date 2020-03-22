@@ -11,5 +11,4 @@ export default class CkanCatalogItemTraits extends mixTraits(
   DataCustodianTraits,
   MappableTraits,
   CatalogMemberTraits
-) {
-}
+) {}

@@ -2,7 +2,7 @@ import i18next from "i18next";
 import CkanCatalogItemTraits from "../Traits/CkanCatalogItemTraits";
 import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
-import Terria from './Terria'
+import Terria from "./Terria";
 import StratumOrder from "./StratumOrder";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
@@ -36,12 +36,10 @@ import TerriaError from "../Core/TerriaError";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import replaceUnderscores from "../Core/replaceUnderscores";
 import CkanCatalogGroup from "./CkanCatalogGroup";
-import {CkanDataset, CkanOrganisation, CkanResource} from "./CkanDefinitions";
+import { CkanDataset, CkanOrganisation, CkanResource } from "./CkanDefinitions";
 import { JsonObject } from "../Core/Json";
 
-class CkanDatasetStratum extends LoadableStratum(
-  CkanCatalogItemTraits
-) {
+class CkanDatasetStratum extends LoadableStratum(CkanCatalogItemTraits) {
   static stratumName = "ckanDataset";
 
   constructor(
@@ -60,28 +58,43 @@ class CkanDatasetStratum extends LoadableStratum(
     ) as this;
   }
 
-  static async load(ckanDataset: CkanDataset, ckanResource: CkanResource, ckanCatalogGroup: CkanCatalogGroup) {
+  static async load(
+    ckanDataset: CkanDataset,
+    ckanResource: CkanResource,
+    ckanCatalogGroup: CkanCatalogGroup
+  ) {
     return new CkanDatasetStratum(ckanDataset, ckanResource, ckanCatalogGroup);
   }
 
   @computed get url() {
-    return this.ckanDataset.url
+    return this.ckanDataset.url;
   }
 
   @computed get name() {
-    if (this.ckanCatalogGroup.useResourceName) return this.ckanResource.name
-    if (this.ckanCatalogGroup.useDatasetNameAndFormatWhereMultipleResources && this.ckanDataset.resources.length > 1) return this.ckanDataset.title + " - " + this.ckanResource.format
-    if (this.ckanCatalogGroup.useCombinationNameWhereMultipleResources && this.ckanDataset.resources.length > 1) return this.ckanDataset.title + " - " + this.ckanResource.name
-    return this.ckanDataset.title
+    if (this.ckanCatalogGroup.useResourceName) return this.ckanResource.name;
+    if (
+      this.ckanCatalogGroup.useDatasetNameAndFormatWhereMultipleResources &&
+      this.ckanDataset.resources.length > 1
+    )
+      return this.ckanDataset.title + " - " + this.ckanResource.format;
+    if (
+      this.ckanCatalogGroup.useCombinationNameWhereMultipleResources &&
+      this.ckanDataset.resources.length > 1
+    )
+      return this.ckanDataset.title + " - " + this.ckanResource.name;
+    return this.ckanDataset.title;
   }
 
   @computed get dataCustodian() {
-    return this.ckanDataset.organization.description || this.ckanDataset.organization.title;
+    return (
+      this.ckanDataset.organization.description ||
+      this.ckanDataset.organization.title
+    );
   }
 
   @computed get rectangle() {
-    if (this.ckanDataset.geo_coverage === undefined) return undefined
-    var bboxString = this.ckanDataset.geo_coverage
+    if (this.ckanDataset.geo_coverage === undefined) return undefined;
+    var bboxString = this.ckanDataset.geo_coverage;
     if (isDefined(bboxString)) {
       var parts = bboxString.split(",");
       if (parts.length === 4) {
@@ -106,7 +119,7 @@ class CkanDatasetStratum extends LoadableStratum(
       return traits;
     }
 
-    function prettifyDate (date: string) {
+    function prettifyDate(date: string) {
       if (date.match(/^\d\d\d\d-\d\d-\d\d.*/)) {
         return date.substr(0, 10);
       } else return date;
@@ -115,11 +128,14 @@ class CkanDatasetStratum extends LoadableStratum(
     const outArray = [];
 
     if (isDefined(this.ckanDataset.license_url)) {
-      outArray.push(newInfo(
-        i18next.t("models.ckan.licence"),
-        // TODO - Double check prettier doesn't clobber this line
-        `[${(this.ckanDataset.license_title || this.ckanDataset.license_url)}](${this.ckanDataset.license_url})`
-      ))
+      outArray.push(
+        newInfo(
+          i18next.t("models.ckan.licence"),
+          // TODO - Double check prettier doesn't clobber this line
+          `[${this.ckanDataset.license_title ||
+            this.ckanDataset.license_url}](${this.ckanDataset.license_url})`
+        )
+      );
     } else if (isDefined(this.ckanDataset.license_title)) {
       outArray.push({
         name: i18next.t("models.ckan.licence"),
@@ -127,59 +143,74 @@ class CkanDatasetStratum extends LoadableStratum(
       });
     }
 
-    outArray.push(newInfo(
-      i18next.t("models.ckan.contact_point"),
-      this.ckanDataset.contact_point
-    ))
+    outArray.push(
+      newInfo(
+        i18next.t("models.ckan.contact_point"),
+        this.ckanDataset.contact_point
+      )
+    );
 
-    outArray.push(newInfo(
-      i18next.t("models.ckan.datasetDescription"),
-      this.ckanDataset.notes
-    ))
-    outArray.push(newInfo(
-      i18next.t("models.ckan.author"),
-      this.ckanDataset.author
-    ))
-    outArray.push(newInfo(
-      i18next.t("models.ckan.metadata_created"),
-      prettifyDate(this.ckanDataset.metadata_created)
-    ))
-    outArray.push(newInfo(
-      i18next.t("models.ckan.metadata_modified"),
-      prettifyDate(this.ckanDataset.metadata_modified)
-    ))
-    outArray.push(newInfo(
-      i18next.t("models.ckan.update_freq"),
-      this.ckanDataset.update_freq
-    ))
-    return outArray
+    outArray.push(
+      newInfo(
+        i18next.t("models.ckan.datasetDescription"),
+        this.ckanDataset.notes
+      )
+    );
+    outArray.push(
+      newInfo(i18next.t("models.ckan.author"), this.ckanDataset.author)
+    );
+    outArray.push(
+      newInfo(
+        i18next.t("models.ckan.metadata_created"),
+        prettifyDate(this.ckanDataset.metadata_created)
+      )
+    );
+    outArray.push(
+      newInfo(
+        i18next.t("models.ckan.metadata_modified"),
+        prettifyDate(this.ckanDataset.metadata_modified)
+      )
+    );
+    outArray.push(
+      newInfo(
+        i18next.t("models.ckan.update_freq"),
+        this.ckanDataset.update_freq
+      )
+    );
+    return outArray;
   }
 }
 
 StratumOrder.addLoadStratum(CkanDatasetStratum.stratumName);
 
-function createItem (ckanCatalogGroup: CkanCatalogGroup, itemId: string, itemType: any) {
-    const existingModel = ckanCatalogGroup.terria.getModelById(
-      itemType,
-      itemId
-    );
-    let model: any;
-    if (existingModel === undefined) {
-      model = new itemType(itemId, ckanCatalogGroup.terria);
-      ckanCatalogGroup.terria.addModel(model);
-    } else {
-      model = existingModel;
-    }
-    return model
+function createItem(
+  ckanCatalogGroup: CkanCatalogGroup,
+  itemId: string,
+  itemType: any
+) {
+  const existingModel = ckanCatalogGroup.terria.getModelById(itemType, itemId);
+  let model: any;
+  if (existingModel === undefined) {
+    model = new itemType(itemId, ckanCatalogGroup.terria);
+    ckanCatalogGroup.terria.addModel(model);
+  } else {
+    model = existingModel;
+  }
+  return model;
 }
 
-function setCkanRelatedStrata (model: any, resource: CkanResource, dataset: CkanDataset, ckanCatalogGroup: CkanCatalogGroup) {
-    model.setTrait('underride', 'url', resource.url)
-    CkanDatasetStratum.load(dataset, resource, ckanCatalogGroup).then(statum => {
-      runInAction(() => {
-        model.strata.set(CkanDatasetStratum.stratumName, statum);
-      });
-    })
+function setCkanRelatedStrata(
+  model: any,
+  resource: CkanResource,
+  dataset: CkanDataset,
+  ckanCatalogGroup: CkanCatalogGroup
+) {
+  model.setTrait("underride", "url", resource.url);
+  CkanDatasetStratum.load(dataset, resource, ckanCatalogGroup).then(statum => {
+    runInAction(() => {
+      model.strata.set(CkanDatasetStratum.stratumName, statum);
+    });
+  });
 }
 
 export function setupSupportedFormats(ckanCatalogGroup: CkanCatalogGroup) {
@@ -187,52 +218,82 @@ export function setupSupportedFormats(ckanCatalogGroup: CkanCatalogGroup) {
     return {
       constructor: constructor,
       resourceFormat: resourceFormat
-    }
+    };
   }
-  const supportedFormats:any = []
+  const supportedFormats: any = [];
   if (ckanCatalogGroup.allowGeoJson) {
-    supportedFormats.push(addSupportedFormat(GeoJsonCatalogItem, ckanCatalogGroup.geoJsonResourceFormat))
+    supportedFormats.push(
+      addSupportedFormat(
+        GeoJsonCatalogItem,
+        ckanCatalogGroup.geoJsonResourceFormat
+      )
+    );
   }
   if (ckanCatalogGroup.allowWms) {
-    supportedFormats.push(addSupportedFormat(WebMapServiceCatalogItem, ckanCatalogGroup.wmsResourceFormat))
+    supportedFormats.push(
+      addSupportedFormat(
+        WebMapServiceCatalogItem,
+        ckanCatalogGroup.wmsResourceFormat
+      )
+    );
   }
   if (ckanCatalogGroup.allowKml) {
-    supportedFormats.push(addSupportedFormat(KmlCatalogItem, ckanCatalogGroup.kmlResourceFormat))
+    supportedFormats.push(
+      addSupportedFormat(KmlCatalogItem, ckanCatalogGroup.kmlResourceFormat)
+    );
   }
   if (ckanCatalogGroup.allowCsv) {
-    supportedFormats.push(addSupportedFormat(CsvCatalogItem, ckanCatalogGroup.csvResourceFormat))
+    supportedFormats.push(
+      addSupportedFormat(CsvCatalogItem, ckanCatalogGroup.csvResourceFormat)
+    );
   }
   if (ckanCatalogGroup.allowArcGisFeatureServer) {
-    supportedFormats.push(addSupportedFormat(ArcGisFeatureServerCatalogItem, ckanCatalogGroup.arcgisFeatureServerResourceFormat))
+    supportedFormats.push(
+      addSupportedFormat(
+        ArcGisFeatureServerCatalogItem,
+        ckanCatalogGroup.arcgisFeatureServerResourceFormat
+      )
+    );
   }
   if (ckanCatalogGroup.allowArcGisMapServer) {
-    supportedFormats.push(addSupportedFormat(ArcGisMapServerCatalogItem, ckanCatalogGroup.arcgisMapServerResourceFormat))
+    supportedFormats.push(
+      addSupportedFormat(
+        ArcGisMapServerCatalogItem,
+        ckanCatalogGroup.arcgisMapServerResourceFormat
+      )
+    );
   }
 
   // if (ckanCatalogGroup.allowWfs) {
   //   supportedFormats.push(addSupportedFormat(WebFeatureServiceCatalogItem, ckanCatalogGroup.wfsResourceFormat))
   // }
-  return supportedFormats
+  return supportedFormats;
 }
 
-function findMatchingFormat (supportedFormats: any[], resource: CkanResource) {
+function findMatchingFormat(supportedFormats: any[], resource: CkanResource) {
   for (var i = 0; i < supportedFormats.length; ++i) {
-    const format = supportedFormats[i]
-    if (new RegExp(format.resourceFormat, 'i').test(resource.format)) {
-      return format
+    const format = supportedFormats[i];
+    if (new RegExp(format.resourceFormat, "i").test(resource.format)) {
+      return format;
     }
   }
-  return undefined
+  return undefined;
 }
 
-export function createCatalogItemFromCkanResource (resource: CkanResource, dataset: CkanDataset, ckanCatalogGroup: CkanCatalogGroup, supportedFormats: any[]) {
-    const itemId = ckanCatalogGroup.uniqueId + "/" + dataset.id + "/" + resource.id;
+export function createCatalogItemFromCkanResource(
+  resource: CkanResource,
+  dataset: CkanDataset,
+  ckanCatalogGroup: CkanCatalogGroup,
+  supportedFormats: any[]
+) {
+  const itemId =
+    ckanCatalogGroup.uniqueId + "/" + dataset.id + "/" + resource.id;
 
-    const format = findMatchingFormat(supportedFormats, resource)
-    if (format === undefined) return undefined
+  const format = findMatchingFormat(supportedFormats, resource);
+  if (format === undefined) return undefined;
 
-    let model = createItem(ckanCatalogGroup, itemId, format.constructor)
-    model.setTrait('underride', 'url', resource.url)
-    setCkanRelatedStrata(model, resource, dataset, ckanCatalogGroup)
-    return model
+  let model = createItem(ckanCatalogGroup, itemId, format.constructor);
+  model.setTrait("underride", "url", resource.url);
+  setCkanRelatedStrata(model, resource, dataset, ckanCatalogGroup);
+  return model;
 }

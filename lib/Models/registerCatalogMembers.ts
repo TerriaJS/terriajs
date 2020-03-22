@@ -25,7 +25,6 @@ import UrlReference from "./UrlReference";
 import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFunction";
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
 
-
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
   CatalogMemberFactory.register(
@@ -87,10 +86,7 @@ export default function registerCatalogMembers() {
     CompositeCatalogItem.type,
     CompositeCatalogItem
   );
-  CatalogMemberFactory.register(
-    CkanCatalogGroup.type,
-    CkanCatalogGroup
-  );
+  CatalogMemberFactory.register(CkanCatalogGroup.type, CkanCatalogGroup);
   createCatalogItemFromUrl.register(
     matchesExtension("csv"),
     CsvCatalogItem.type
