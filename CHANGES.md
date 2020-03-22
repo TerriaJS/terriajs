@@ -83,6 +83,7 @@ Change Log
 * Provide a fallback name for an `ArcGisServerCatalogItem`
 * Ensure `CesiumTileLayer.getTileUrl` returns a string.
 * Adds methods `removeModelReferences` to Terria & ViewState for unregistering and removing models from different parts of the UI.
+* Add support for `CkanCatalogGroup` and `CkanCatalogItem`.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
