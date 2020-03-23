@@ -58,7 +58,7 @@ class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     var uri = new URI(catalogGroup.url)
       .segment("api/3/action/package_search")
       .addQuery({ start: 0, rows: 1000, sort: "metadata_created asc" })
-      .addQuery({ q: "+(res_format:(csv OR CSV OR geojson OR GeoJSON OR WMS OR wms OR kml OR WFS OR wfs))" });
+      .addQuery({ q: catalogGroup.filterQuery });
 
     return await paginateThroughResults(uri, catalogGroup)
   }
@@ -130,6 +130,7 @@ class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     return groups;
   }
 
+  @computed
   get filteredGroups(): CatalogGroup[] | undefined {
     if (this.groups === undefined) return undefined;
     if (isDefined(this._catalogGroup.blacklist)) {
@@ -199,7 +200,7 @@ class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
         this._catalogGroup,
         this._supportedFormats
       );
-      if (this._catalogGroup.groupBy === "organization" && item !== undefined) {
+      if (this._catalogGroup.groupBy === "organization" && item !== undefined && ckanDataset.organization !== null) {
         const groupId =
           this._catalogGroup.uniqueId + "/" + ckanDataset.organization.id;
         this.addCatalogItemToCatalogGroup(item, ckanDataset, groupId);
@@ -260,12 +261,18 @@ function createUngroupedGroup(
   groups: CatalogGroup[]
 ) {
   const groupId = ckanServer._catalogGroup.uniqueId + "/ungrouped";
-  const group = createGroup(
-    groupId,
-    ckanServer._catalogGroup.terria,
-    ckanServer._catalogGroup.ungroupedTitle
+  let existingGroup = ckanServer._catalogGroup.terria.getModelById(
+    CatalogGroup,
+    groupId
   );
-  groups.push(group);
+  if (existingGroup === undefined) {
+    const group = createGroup(
+      groupId,
+      ckanServer._catalogGroup.terria,
+      ckanServer._catalogGroup.ungroupedTitle
+    );
+    groups.push(group);
+  }
 }
 
 function createGroupsByOrganisations(

@@ -35,7 +35,7 @@ export default class CkanCatalogGroupTraits extends mixTraits(
          * This property is observable.
        `
   })
-  filterQuery?: string;
+  filterQuery?: string = '+(res_format:(geojson OR GeoJSON OR WMS OR wms OR kml OR WFS OR wfs OR CSV-GEO-AU OR csv-geo-au OR "Esri REST"))';
 
   @primitiveTrait({
     type: "string",
