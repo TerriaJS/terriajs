@@ -74,6 +74,11 @@ export default class TerriaViewer {
     keepAlive: true
   })
   get currentViewer(): GlobeOrMap {
+    // Use untracked on everything to ensure the viewer isn't recreated
+    //  except when the viewer is required to change, the currently required
+    //  viewer class finishes loading from an async chunk or the map container
+    //  is changed
+
     const currentView = untracked(() => this.destroyCurrentViewer());
 
     let newViewer: GlobeOrMap;
