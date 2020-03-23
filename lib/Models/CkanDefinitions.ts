@@ -42,7 +42,7 @@ export interface CkanDataset {
   name: string;
   title: string;
   url: string;
-  organization: CkanOrganisation;
+  organization: CkanOrganisation | null;
   geo_coverage?: string;
   metadata_created: string;
   metadata_modified: string;

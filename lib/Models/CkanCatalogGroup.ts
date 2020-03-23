@@ -57,49 +57,24 @@ class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     var terria = catalogGroup.terria;
     var uri = new URI(catalogGroup.url)
       .segment("api/3/action/package_search")
-      .addQuery({ rows: 1000, sort: "metadata_created asc" })
-      .addQuery({ q: "+(res_format:geojson OR res_format:GeoJSON)" });
-    return loadJson(proxyCatalogItemUrl(catalogGroup, uri.toString(), "1d"))
-      .then((ckanServerResponse: CkanServerResponse) => {
-        if (!ckanServerResponse || !ckanServerResponse.help) {
-          throw new TerriaError({
-            title: i18next.t("models.ckan.errorLoadingTitle"),
-            message: i18next.t("models.ckan.errorLoadingMessage", {
-              email:
-                '<a href="mailto:' +
-                terria.supportEmail +
-                '">' +
-                terria.supportEmail +
-                "</a>"
-            })
-          });
-        }
+      .addQuery({ start: 0, rows: 1000, sort: "metadata_created asc" })
+      .addQuery({ q: "+(res_format:(csv OR CSV OR geojson OR GeoJSON OR WMS OR wms OR kml OR WFS OR wfs))" });
 
-        return new CkanServerStratum(catalogGroup, ckanServerResponse);
-      })
-      .catch(() => {
-        throw new TerriaError({
-          sender: catalogGroup,
-          title: i18next.t("models.ckan.errorLoadingTitle"),
-          message: i18next.t("models.ckan.corsErrorMessage", {
-            cors: '<a href="http://enable-cors.org/" target="_blank">CORS</a>',
-            appName: terria.appName,
-            email:
-              '<a href="mailto:' +
-              terria.supportEmail +
-              '">' +
-              terria.supportEmail +
-              "</a>"
-          })
-        });
-      });
+    return await paginateThroughResults(uri, catalogGroup)
   }
 
   @computed
   get members(): ModelReference[] {
-    // When data is grouped (most circumstances) just return the group ids
-    if (this.groups !== undefined) {
-      return this.groups.map(g => g.uniqueId as ModelReference);
+    // When data is grouped (most circumstances) return group id's
+    // for those which have content
+    if (this.filteredGroups !== undefined) {
+      const groupIds: ModelReference[] = []
+       this.filteredGroups.forEach(g => {
+        if (g.members.length > 0) {
+          groupIds.push(g.uniqueId as ModelReference)
+        }
+      })
+      return groupIds
     }
 
     // Otherwise return the id's of all the resources of all the filtered datasets
@@ -134,6 +109,8 @@ class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     if (this._catalogGroup.groupBy === "none") return undefined;
 
     const groups: CatalogGroup[] = [];
+    createUngroupedGroup(this, groups);
+
     if (this._catalogGroup.groupBy === "organization")
       createGroupsByOrganisations(this, groups);
     if (this._catalogGroup.groupBy === "group")
@@ -151,6 +128,18 @@ class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     });
 
     return groups;
+  }
+
+  get filteredGroups(): CatalogGroup[] | undefined {
+    if (this.groups === undefined) return undefined;
+    if (isDefined(this._catalogGroup.blacklist)) {
+      const bl = this._catalogGroup.blacklist;
+      return this.groups.filter(group => {
+        if (group.name === undefined) return false
+        else return bl.indexOf(group.name) === -1
+      });
+    }
+    return this.groups;
   }
 
   @action
@@ -284,19 +273,21 @@ function createGroupsByOrganisations(
   groups: CatalogGroup[]
 ) {
   ckanServer.filteredDatasets.forEach(ds => {
-    const groupId =
-      ckanServer._catalogGroup.uniqueId + "/" + ds.organization.id;
-    let existingGroup = ckanServer._catalogGroup.terria.getModelById(
-      CatalogGroup,
-      groupId
-    );
-    if (existingGroup === undefined) {
-      const group = createGroup(
-        groupId,
-        ckanServer._catalogGroup.terria,
-        ds.organization.title
+    if (ds.organization !== null) {
+      const groupId =
+        ckanServer._catalogGroup.uniqueId + "/" + ds.organization.id;
+      let existingGroup = ckanServer._catalogGroup.terria.getModelById(
+        CatalogGroup,
+        groupId
       );
-      groups.push(group);
+      if (existingGroup === undefined) {
+        const group = createGroup(
+          groupId,
+          ckanServer._catalogGroup.terria,
+          ds.organization.title
+        );
+        groups.push(group);
+      }
     }
   });
 }
@@ -305,7 +296,6 @@ function createGroupsByCkanGroups(
   ckanServer: CkanServerStratum,
   groups: CatalogGroup[]
 ) {
-  createUngroupedGroup(ckanServer, groups);
   ckanServer.filteredDatasets.forEach(ds => {
     ds.groups.forEach(g => {
       const groupId = ckanServer._catalogGroup.uniqueId + "/" + g.id;
@@ -325,4 +315,51 @@ function createGroupsByCkanGroups(
       }
     });
   });
+}
+
+async function paginateThroughResults (uri:any, catalogGroup: CkanCatalogGroup) {
+  const ckanServerResponse = await getCkanDatasets(uri, catalogGroup)
+  if (ckanServerResponse === undefined || !ckanServerResponse || !ckanServerResponse.help) {
+    throw new TerriaError({
+      title: i18next.t("models.ckan.errorLoadingTitle"),
+      message: i18next.t("models.ckan.errorLoadingMessage", {
+        email:
+          '<a href="mailto:' +
+          catalogGroup.terria.supportEmail +
+          '">' +
+          catalogGroup.terria.supportEmail +
+          "</a>"
+      })
+    });
+  }
+  let nextResultStart = 1001
+  while (nextResultStart < ckanServerResponse.result.count) {
+    await getMoreResults(uri, catalogGroup, ckanServerResponse, nextResultStart)
+    nextResultStart = nextResultStart + 1000
+  }
+  return new CkanServerStratum(catalogGroup, ckanServerResponse);
+}
+
+async function getCkanDatasets(uri: any, catalogGroup: CkanCatalogGroup): Promise<CkanServerResponse | undefined> {
+  try {
+    const response: CkanServerResponse = await loadJson(proxyCatalogItemUrl(catalogGroup, uri.toString(), "1d"))
+    return response
+  } catch (err) {
+    console.log(err)
+    return undefined
+  }
+}
+
+async function getMoreResults (uri:any, catalogGroup: CkanCatalogGroup, baseResults: CkanServerResponse, nextResultStart: number) {
+  uri.setQuery('start', nextResultStart)
+  try {
+    const ckanServerResponse = await getCkanDatasets(uri, catalogGroup)
+    if (ckanServerResponse === undefined) {
+      return
+    }
+    baseResults.result.results = baseResults.result.results.concat(ckanServerResponse.result.results)
+  } catch (err) {
+    console.log(err)
+    return undefined
+  }
 }

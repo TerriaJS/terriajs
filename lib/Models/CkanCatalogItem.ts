@@ -251,7 +251,7 @@ export function setupSupportedFormats(ckanCatalogGroup: CkanCatalogGroup) {
     supportedFormats.push(
       addSupportedFormat(
         ArcGisFeatureServerCatalogItem,
-        ckanCatalogGroup.arcgisFeatureServerResourceFormat
+        ckanCatalogGroup.arcGisFeatureServerResourceFormat
       )
     );
   }
@@ -259,14 +259,11 @@ export function setupSupportedFormats(ckanCatalogGroup: CkanCatalogGroup) {
     supportedFormats.push(
       addSupportedFormat(
         ArcGisMapServerCatalogItem,
-        ckanCatalogGroup.arcgisMapServerResourceFormat
+        ckanCatalogGroup.arcGisMapServerResourceFormat
       )
     );
   }
 
-  // if (ckanCatalogGroup.allowWfs) {
-  //   supportedFormats.push(addSupportedFormat(WebFeatureServiceCatalogItem, ckanCatalogGroup.wfsResourceFormat))
-  // }
   return supportedFormats;
 }
 

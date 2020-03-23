@@ -13,8 +13,8 @@ export default class CkanCatalogGroupTraits extends mixTraits(
 ) {
   @anyTrait({
     name: "Blacklist",
-    description: `An array of strings of blacklisted groups names and data titles.
-      A group or data source that appears in this list will not be shown to the user.`
+    description: `An array of strings of blacklisted group names and dataset titles.
+      A group or dataset that appears in this list will not be shown to the user.`
   })
   blacklist?: string[];
 
@@ -156,7 +156,7 @@ export default class CkanCatalogGroupTraits extends mixTraits(
     description:
       "Gets or sets a regular expression that, when it matches a resource's format, indicates that the resource is a CSV resource"
   })
-  csvResourceFormat: string = "^csv";
+  csvResourceFormat: string = "^csv-geo-";
 
   @primitiveTrait({
     type: "boolean",
@@ -173,7 +173,7 @@ export default class CkanCatalogGroupTraits extends mixTraits(
         Gets or sets a regular expression that, when it matches a resource's format, indicates that the resource is a ArcGIS Map Service resource
         A valid MapServer resource must also have \`MapServer\` in its URL.`
   })
-  arcgisMapServerResourceFormat: string = "^esri rest$";
+  arcGisMapServerResourceFormat: string = "^esri rest$";
 
   @primitiveTrait({
     type: "boolean",
@@ -190,5 +190,5 @@ export default class CkanCatalogGroupTraits extends mixTraits(
         Gets or sets a regular expression that, when it matches a resource's format, indicates that the resource is a ArcGIS Map Service resource
         A valid FeatureServer resource must also have \`FeatureServerServer\` in its URL.`
   })
-  arcgisFeatureServerResourceFormat: string = "^esri rest$";
+  arcGisFeatureServerResourceFormat: string = "^esri rest$";
 }
