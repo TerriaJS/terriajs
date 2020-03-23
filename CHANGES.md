@@ -87,7 +87,7 @@ Change Log
 * Add trait to enabling hiding legends for a `CatalogMember` in the workbench.
 * Add traits to customize color blending and highlight color for `Cesium3DTilesCatalogItem`
 * Reimplemented splitting using `SplitItemReference`.
-
+* Fix bug that caused contents on the video panel of the help UI to overlay the actual video
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
