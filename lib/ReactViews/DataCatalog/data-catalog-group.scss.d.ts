@@ -11,7 +11,6 @@ interface CssExports {
   'catalogGroupLowerLevel': string;
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'folder': string;
@@ -23,8 +22,6 @@ interface CssExports {
   'modalHighlight': string;
   'offsetRight': string;
   'root': string;
-  'textDarker': string;
-  'textLight': string;
   'trashGroup': string;
 }
 declare var cssExports: CssExports;

@@ -8,7 +8,6 @@ interface CssExports {
   'button': string;
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'data-catalog': string;
@@ -24,8 +23,6 @@ interface CssExports {
   'modalBg': string;
   'modalHighlight': string;
   'modalTop': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

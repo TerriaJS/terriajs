@@ -3,7 +3,6 @@
 interface CssExports {
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'control': string;
   'controls': string;
   'dark': string;
@@ -13,8 +12,6 @@ interface CssExports {
   'mapNavigation': string;
   'modalHighlight': string;
   'navs': string;
-  'textDarker': string;
-  'textLight': string;
   'with-time-series-controls': string;
   'withTimeSeriesControls': string;
 }

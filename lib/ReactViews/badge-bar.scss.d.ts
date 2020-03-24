@@ -3,7 +3,6 @@
 interface CssExports {
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'header': string;
@@ -13,8 +12,6 @@ interface CssExports {
   'modalHighlight': string;
   'small-badge': string;
   'smallBadge': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

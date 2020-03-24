@@ -4,7 +4,6 @@ interface CssExports {
   'body': string;
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'draggable': string;
@@ -18,8 +17,6 @@ interface CssExports {
   'recapture': string;
   'story': string;
   'storyHeader': string;
-  'textDarker': string;
-  'textLight': string;
   'toggleBtn': string;
   'viewBtn': string;
 }

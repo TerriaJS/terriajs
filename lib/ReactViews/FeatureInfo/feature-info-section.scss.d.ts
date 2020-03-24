@@ -3,7 +3,6 @@
 interface CssExports {
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'content': string;
   'dark': string;
   'darkWithOverlay': string;
@@ -12,8 +11,6 @@ interface CssExports {
   'raw-data-button': string;
   'rawDataButton': string;
   'section': string;
-  'textDarker': string;
-  'textLight': string;
   'time-series-chart': string;
   'timeSeriesChart': string;
   'title': string;

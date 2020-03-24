@@ -11,7 +11,6 @@ interface CssExports {
   'btnTertiary': string;
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'guide': string;
@@ -25,8 +24,6 @@ interface CssExports {
   'innerCloseBtn': string;
   'mapButtonColor': string;
   'modalHighlight': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

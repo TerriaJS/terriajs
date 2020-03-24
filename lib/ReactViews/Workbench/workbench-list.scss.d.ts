@@ -3,7 +3,6 @@
 interface CssExports {
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'drop-zone': string;
@@ -12,8 +11,6 @@ interface CssExports {
   'isActive': string;
   'mapButtonColor': string;
   'modalHighlight': string;
-  'textDarker': string;
-  'textLight': string;
   'workbench-content': string;
   'workbenchContent': string;
 }

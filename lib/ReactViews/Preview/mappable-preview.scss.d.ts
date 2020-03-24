@@ -7,7 +7,6 @@ interface CssExports {
   'btnAdd': string;
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'description': string;
@@ -23,8 +22,6 @@ interface CssExports {
   'previewedInfo': string;
   'share-link--wrapper': string;
   'shareLinkWrapper': string;
-  'textDarker': string;
-  'textLight': string;
   'title-and-share-wrapper': string;
   'titleAndShareWrapper': string;
 }

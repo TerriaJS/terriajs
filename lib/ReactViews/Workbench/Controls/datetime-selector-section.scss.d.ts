@@ -3,7 +3,6 @@
 interface CssExports {
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'currentDate': string;
   'dark': string;
   'darkWithOverlay': string;
@@ -15,8 +14,6 @@ interface CssExports {
   'mapButtonColor': string;
   'modalHighlight': string;
   'picker': string;
-  'textDarker': string;
-  'textLight': string;
   'time': string;
   'timeline-active': string;
   'timeline-button': string;

@@ -4,7 +4,6 @@ interface CssExports {
   'btnList': string;
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'data': string;
@@ -16,8 +15,6 @@ interface CssExports {
   'provider-result': string;
   'providerResult': string;
   'results': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

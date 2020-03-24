@@ -4,7 +4,6 @@ interface CssExports {
   'btn': string;
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'enter': string;
@@ -16,8 +15,6 @@ interface CssExports {
   'minified': string;
   'minifiedFullscreenBtnWrapper': string;
   'modalHighlight': string;
-  'textDarker': string;
-  'textLight': string;
   'toggleWorkbench': string;
 }
 declare var cssExports: CssExports;

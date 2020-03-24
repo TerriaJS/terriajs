@@ -7,7 +7,6 @@ interface CssExports {
   'chartTd': string;
   'chartTitleFromTable': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'empty': string;
@@ -17,8 +16,6 @@ interface CssExports {
   'preview-chart-wrapper': string;
   'previewChart': string;
   'previewChartWrapper': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

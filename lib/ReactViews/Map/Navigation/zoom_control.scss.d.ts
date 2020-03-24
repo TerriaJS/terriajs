@@ -3,7 +3,6 @@
 interface CssExports {
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'decrease': string;
@@ -12,8 +11,6 @@ interface CssExports {
   'mapButtonColor': string;
   'modalHighlight': string;
   'refresh': string;
-  'textDarker': string;
-  'textLight': string;
   'zoomControl': string;
 }
 declare var cssExports: CssExports;

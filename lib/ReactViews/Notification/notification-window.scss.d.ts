@@ -5,7 +5,6 @@ interface CssExports {
   'btn': string;
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'footer': string;
@@ -13,8 +12,6 @@ interface CssExports {
   'mapButtonColor': string;
   'modalHighlight': string;
   'notification': string;
-  'textDarker': string;
-  'textLight': string;
   'title': string;
   'wrapper': string;
 }

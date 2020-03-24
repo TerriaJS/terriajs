@@ -11,7 +11,6 @@ interface CssExports {
   'btnSearch': string;
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'doubleDigit': string;
@@ -26,8 +25,6 @@ interface CssExports {
   'mobileHeader': string;
   'modalHighlight': string;
   'nowViewingCount': string;
-  'textDarker': string;
-  'textLight': string;
   'ui': string;
 }
 declare var cssExports: CssExports;

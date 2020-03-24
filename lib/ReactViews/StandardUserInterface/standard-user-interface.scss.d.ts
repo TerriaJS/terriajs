@@ -3,7 +3,6 @@
 interface CssExports {
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'explorerPanelIsVisible': string;
@@ -20,8 +19,6 @@ interface CssExports {
   'sidePanelHide': string;
   'story-wrapper': string;
   'storyWrapper': string;
-  'textDarker': string;
-  'textLight': string;
   'ui': string;
   'ui-root': string;
   'uiInner': string;

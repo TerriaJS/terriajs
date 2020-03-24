@@ -14,7 +14,6 @@ interface CssExports {
   'btnSelector': string;
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'data': string;
@@ -39,8 +38,6 @@ interface CssExports {
   'radio': string;
   'region-input': string;
   'regionInput': string;
-  'textDarker': string;
-  'textLight': string;
   'tree': string;
   'warning-text': string;
   'warningText': string;

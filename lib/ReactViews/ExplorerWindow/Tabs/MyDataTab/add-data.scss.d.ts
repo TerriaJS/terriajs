@@ -3,7 +3,6 @@
 interface CssExports {
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'dropdownList': string;
@@ -17,8 +16,6 @@ interface CssExports {
   'tabHeading': string;
   'tabPanel': string;
   'tabPanels': string;
-  'textDarker': string;
-  'textLight': string;
   'url-input': string;
   'url-input__btn': string;
   'url-input__text-box': string;

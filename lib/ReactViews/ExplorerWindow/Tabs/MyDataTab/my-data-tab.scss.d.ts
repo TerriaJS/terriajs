@@ -7,7 +7,6 @@ interface CssExports {
   'btnBackToMyData': string;
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'data-catalog': string;
@@ -32,8 +31,6 @@ interface CssExports {
   'tabList': string;
   'tabListBtn': string;
   'tabListItem': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

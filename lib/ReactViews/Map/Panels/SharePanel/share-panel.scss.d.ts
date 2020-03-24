@@ -17,7 +17,6 @@ interface CssExports {
   'clipboard-for-catalog-share': string;
   'clipboardForCatalogShare': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'dropdown-inner': string;
@@ -43,8 +42,6 @@ interface CssExports {
   'shareUrlfield': string;
   'shorten-url': string;
   'shortenUrl': string;
-  'textDarker': string;
-  'textLight': string;
   'warning': string;
   'warning-link': string;
   'warningLink': string;

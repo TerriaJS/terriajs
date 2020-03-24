@@ -7,7 +7,6 @@ interface CssExports {
   'caret': string;
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'content': string;
   'dark': string;
   'darkWithOverlay': string;
@@ -32,8 +31,6 @@ interface CssExports {
   'showDropdownInCenter': string;
   'sub-heading': string;
   'subHeading': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

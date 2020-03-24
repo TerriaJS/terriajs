@@ -12,7 +12,6 @@ interface CssExports {
   'children-list': string;
   'childrenList': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'condition': string;
   'controls': string;
   'dark': string;
@@ -31,8 +30,6 @@ interface CssExports {
   'root': string;
   'section': string;
   'text': string;
-  'textDarker': string;
-  'textLight': string;
   'title': string;
 }
 declare var cssExports: CssExports;

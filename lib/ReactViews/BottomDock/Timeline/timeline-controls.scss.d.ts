@@ -3,7 +3,6 @@
 interface CssExports {
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'controls': string;
   'dark': string;
   'darkWithOverlay': string;
@@ -11,8 +10,6 @@ interface CssExports {
   'isActive': string;
   'mapButtonColor': string;
   'modalHighlight': string;
-  'textDarker': string;
-  'textLight': string;
   'timelineControl': string;
   'timeline__control': string;
 }

@@ -5,7 +5,6 @@ interface CssExports {
   'baseLegend': string;
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'distanceLegend': string;
@@ -17,8 +16,6 @@ interface CssExports {
   'section-short': string;
   'sectionLong': string;
   'sectionShort': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

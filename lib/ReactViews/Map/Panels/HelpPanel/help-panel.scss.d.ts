@@ -5,7 +5,6 @@ interface CssExports {
   'close-btn': string;
   'closeBtn': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'help-panel': string;
@@ -27,8 +26,6 @@ interface CssExports {
   'storyFadeOut': string;
   'storySlideDown': string;
   'storySlideUp': string;
-  'textDarker': string;
-  'textLight': string;
   'tourBtn': string;
   'video-panel': string;
   'videoBtn': string;

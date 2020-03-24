@@ -3,14 +3,11 @@
 interface CssExports {
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'mapButtonColor': string;
   'modalHighlight': string;
   'section': string;
-  'textDarker': string;
-  'textLight': string;
   'timer-container': string;
   'timerContainer': string;
 }

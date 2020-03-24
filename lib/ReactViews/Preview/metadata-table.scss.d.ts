@@ -3,14 +3,11 @@
 interface CssExports {
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'mapButtonColor': string;
   'modalHighlight': string;
   'root': string;
-  'textDarker': string;
-  'textLight': string;
   'value': string;
 }
 declare var cssExports: CssExports;

@@ -7,7 +7,6 @@ interface CssExports {
   'centuryBtn': string;
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'controlsRow': string;
   'dark': string;
   'darkWithOverlay': string;
@@ -34,8 +33,6 @@ interface CssExports {
   'text-cell': string;
   'text-row': string;
   'textCell': string;
-  'textDarker': string;
-  'textLight': string;
   'textRow': string;
   'time': string;
   'timeline': string;

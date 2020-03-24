@@ -14,7 +14,6 @@ interface CssExports {
   'btnToggleFeature': string;
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'header': string;
@@ -31,8 +30,6 @@ interface CssExports {
   'noResults': string;
   'panel': string;
   'satelliteSuggestionBtn': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

@@ -10,7 +10,6 @@ interface CssExports {
   'chart-panel': string;
   'chartPanel': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'colors': string;
   'dark': string;
   'darkWithOverlay': string;
@@ -22,8 +21,6 @@ interface CssExports {
   'modalHighlight': string;
   'section-label': string;
   'sectionLabel': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

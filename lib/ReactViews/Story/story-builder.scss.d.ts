@@ -7,7 +7,6 @@ interface CssExports {
   'captureBtn': string;
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'footer': string;
@@ -34,8 +33,6 @@ interface CssExports {
   'storyPanel': string;
   'storySlideDown': string;
   'storySlideUp': string;
-  'textDarker': string;
-  'textLight': string;
   'trashBtn': string;
   'tutBtn': string;
   'videoGuide': string;

@@ -8,7 +8,6 @@ interface CssExports {
   'children-list': string;
   'childrenList': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'hasChildren': string;
@@ -22,8 +21,6 @@ interface CssExports {
   'modalHighlight': string;
   'root': string;
   'section': string;
-  'textDarker': string;
-  'textLight': string;
   'unSelectable': string;
 }
 declare var cssExports: CssExports;
