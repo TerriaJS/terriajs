@@ -88,6 +88,7 @@ Change Log
 * Add traits to customize color blending and highlight color for `Cesium3DTilesCatalogItem`
 * Reimplemented splitting using `SplitItemReference`.
 * Fix bug that caused contents on the video panel of the help UI to overlay the actual video
+* Overhauled location search to be a dropdown instead of list of results
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
