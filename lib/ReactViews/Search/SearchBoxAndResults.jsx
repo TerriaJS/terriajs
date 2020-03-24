@@ -11,14 +11,14 @@ import SearchBox from "../Search/SearchBox";
 import LocationSearchResults from "../Search/LocationSearchResults";
 import Icon, { StyledIcon } from "../Icon";
 
-import Box, { BoxSpan } from "../../Styled/Box";
+import Box from "../../Styled/Box";
 import Text from "../../Styled/Text";
 import Spacing from "../../Styled/Spacing";
 import { RawButton } from "../../Styled/Button";
 
 import { addMarker } from "../../Models/LocationMarkerUtils";
 
-function SearchInDataCatalog({ viewState, handleClick }) {
+export function SearchInDataCatalog({ viewState, handleClick }) {
   const locationSearchText = viewState.searchState.locationSearchText;
   return (
     <RawButton
@@ -56,7 +56,7 @@ SearchInDataCatalog.propTypes = {
   viewState: PropTypes.object.isRequired
 };
 
-class SearchBoxAndResults extends React.Component {
+export class SearchBoxAndResultsRaw extends React.Component {
   componentDidMount() {
     this.subscribeToProps();
   }
@@ -190,10 +190,10 @@ class SearchBoxAndResults extends React.Component {
   }
 }
 
-SearchBoxAndResults.propTypes = {
+SearchBoxAndResultsRaw.propTypes = {
   terria: PropTypes.object.isRequired,
   viewState: PropTypes.object.isRequired,
   t: PropTypes.func.isRequired
 };
 
-export default withTranslation()(observer(SearchBoxAndResults));
+export default withTranslation()(observer(SearchBoxAndResultsRaw));

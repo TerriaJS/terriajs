@@ -90,7 +90,6 @@ const SidePanel = observer(
     },
     render() {
       const { t } = this.props;
-      const searchState = this.props.viewState.searchState;
       const addData = t("addData.addDataBtnText");
       const uploadText = t("models.catalog.upload");
       return (
@@ -106,10 +105,6 @@ const SidePanel = observer(
             <SearchBoxAndResults
               viewState={this.props.viewState}
               terria={this.props.terria}
-              onSearchTextChanged={this.changeSearchText}
-              onDoSearch={this.search}
-              onFocus={this.startLocationSearch}
-              searchText={searchState.locationSearchText}
               placeholder={t("search.placeholder")}
             />
             <div className={Styles.addData}>
