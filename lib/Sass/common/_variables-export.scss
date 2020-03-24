@@ -1,6 +1,9 @@
 // We reimport variables and then export it here so that it doesn't get consumed
 // in variables and update type files every time we make something accessible via JS
-@import "variables";
+
+// This is the webpack-aliased-and-overriden-from-TerriaMap one, otherwise
+// resolves back to our base one provided in terriajs
+@import "terriajs-variables";
 
 :export {
   colorPrimary: $color-primary;
