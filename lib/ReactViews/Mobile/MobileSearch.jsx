@@ -69,7 +69,7 @@ const MobileSearch = observer(
                   name={t("search.search", {
                     searchText: searchState.locationSearchText
                   })}
-                  theme={theme}
+                  searchResultTheme={theme}
                 />
               )}
             </ul>

@@ -124,7 +124,7 @@ const LocationSearchResults = observer(
                   clickAction={this.props.onLocationClick.bind(null, result)}
                   name={result.name}
                   icon="location2"
-                  theme={this.props.theme}
+                  searchResultTheme={this.props.theme}
                   locationSearchText={this.props.locationSearchText}
                   isLastResult={results.length === i + 1}
                 />

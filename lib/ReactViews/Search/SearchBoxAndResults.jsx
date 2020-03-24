@@ -35,14 +35,7 @@ function SearchInDataCatalog({ viewState, handleClick }) {
       }}
     >
       <Box paddedRatio={2} rounded charcoalGreyBg>
-        <Box
-          css={`
-            width: 15px;
-          `}
-          flexShrinkZero
-        >
-          <Icon glyph={Icon.GLYPHS["dataCatalog"]} />
-        </Box>
+        <StyledIcon styledWidth={"14px"} glyph={Icon.GLYPHS["dataCatalog"]} />
         <Spacing right={2} />
         <Text textAlignLeft textLight large fullWidth>
           <Trans
@@ -53,9 +46,7 @@ function SearchInDataCatalog({ viewState, handleClick }) {
             Catalogue
           </Trans>
         </Text>
-        <BoxSpan styledWidth={"14px"} flexShrinkZero>
-          <StyledIcon glyph={Icon.GLYPHS.right2} light />
-        </BoxSpan>
+        <StyledIcon glyph={Icon.GLYPHS.right2} styledWidth={"14px"} light />
       </Box>
     </RawButton>
   );
@@ -160,8 +151,7 @@ class SearchBoxAndResults extends React.Component {
                 background-color: ${props => props.theme.greyLightest};
               `}
             >
-              <Box paddedRatio={2}>
-                <Spacing bottom={2} />
+              <Box column paddedRatio={2}>
                 {/* search {searchterm} in data catalog */}
                 <SearchInDataCatalog
                   viewState={viewState}
@@ -169,7 +159,6 @@ class SearchBoxAndResults extends React.Component {
                     this.toggleShowLocationSearchResults(false);
                   }}
                 />
-                <Spacing bottom={2} />
               </Box>
               <For
                 each="search"
@@ -189,7 +178,7 @@ class SearchBoxAndResults extends React.Component {
                     });
                   }}
                   isWaitingForSearchToStart={
-                    searchState.isWaitingForSearchToStart
+                    searchState.isWaitingToStartLocationSearch
                   }
                 />
               </For>

@@ -119,8 +119,13 @@ const Icon = createReactClass({
 });
 
 const StyledIcon = styled(Icon)`
+  flex-shrink: 0;
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
+
   ${props => props.light && `fill: ${props.theme.textLight};`}
+  ${props => props.dark && `fill: ${props.theme.textDark};`}
+
+  ${props => props.fillColor && `fill: ${props.fillColor};`}
 `;
 
 module.exports = Icon;

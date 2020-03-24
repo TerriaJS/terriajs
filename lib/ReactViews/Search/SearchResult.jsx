@@ -1,67 +1,74 @@
 import React from "react";
 import PropTypes from "prop-types";
-import styled from "styled-components";
+import styled, { withTheme } from "styled-components";
 import createReactClass from "create-react-class";
-import Icon from "../Icon";
+import Icon, { StyledIcon } from "../Icon";
 
 import Box, { BoxSpan } from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
 import { TextSpan } from "../../Styled/Text";
-import Spacing from "../../Styled/Spacing";
+import Hr from "../../Styled/Hr";
+import Spacing, { SpacingSpan } from "../../Styled/Spacing";
 
 import highlightKeyword from "../ReactViewHelpers/highlightKeyword";
 
 // Not sure how to generalise this or if it should be kept in stlyed/Button.jsx
+
+// Initially had this as border bottom on the button, but need a HR given it's not a full width border
+// // ${p => !p.isLastResult && `border-bottom: 1px solid ${p.theme.greyLighter};`}
 const RawButtonAndHighlight = styled(RawButton)`
-  ${p => !p.isLastResult && `border-bottom: 1px solid ${p.theme.grey};`}
   ${p => `
   &:hover, &:focus {
     background-color: ${p.theme.greyLighter};
-    ${BoxSpan} svg {
-      fill-opacity:1;
-    }
-    ${Icon} {
-      fill-opacity:1;
+    ${StyledIcon} {
+      fill-opacity: 1;
     }
   }`}
 `;
 
 // A Location item when doing Bing map searvh or Gazetter search
-const SearchResult = createReactClass({
+export const SearchResult = createReactClass({
   propTypes: {
     name: PropTypes.string.isRequired,
     clickAction: PropTypes.func.isRequired,
     isLastResult: PropTypes.bool,
     locationSearchText: PropTypes.string,
     icon: PropTypes.string,
-    theme: PropTypes.string
+    theme: PropTypes.object,
+    searchResultTheme: PropTypes.string
   },
 
   getDefaultProps() {
     return {
       icon: false,
-      theme: "light"
+      searchResultTheme: "light"
     };
   },
 
   render() {
-    const { theme, name, locationSearchText, icon, isLastResult } = this.props;
-    const isDarkTheme = theme === "dark";
-    const isLightTheme = theme === "light";
+    const {
+      searchResultTheme,
+      theme,
+      name,
+      locationSearchText,
+      icon,
+      isLastResult
+    } = this.props;
+    const isDarkTheme = searchResultTheme === "dark";
+    const isLightTheme = searchResultTheme === "light";
     const highlightedResultName = highlightKeyword(name, locationSearchText);
     return (
       <li>
-        <Box fullWidth>
+        <Box fullWidth column>
           <RawButtonAndHighlight
             type="button"
             onClick={this.props.clickAction}
             fullWidth
-            isLastResult={isLastResult}
           >
-            {/* (You need light text on a dark theme, and vice versa) */}
             <TextSpan
               breakWord
               large
+              // (You need light text on a dark theme, and vice versa)
               textLight={isDarkTheme}
               textDark={isLightTheme}
             >
@@ -72,9 +79,13 @@ const SearchResult = createReactClass({
                 justifySpaceBetween
               >
                 {icon && (
-                  <BoxSpan flexShrinkZero styledWidth={"15px"}>
-                    <Icon glyph={Icon.GLYPHS[icon]} />
-                  </BoxSpan>
+                  <StyledIcon
+                    // (You need light text on a dark theme, and vice versa)
+                    fillColor={isLightTheme ? theme.textDarker : false}
+                    light={isDarkTheme}
+                    styledWidth={"16px"}
+                    glyph={Icon.GLYPHS[icon]}
+                  />
                 )}
                 <Spacing right={2} />
                 <BoxSpan fullWidth>
@@ -82,11 +93,23 @@ const SearchResult = createReactClass({
                     {highlightedResultName}
                   </TextSpan>
                 </BoxSpan>
-                <BoxSpan styledWidth={"14px"} flexShrinkZero>
-                  <Icon css={"fill-opacity:0;"} glyph={Icon.GLYPHS.right2} />
-                </BoxSpan>
+                <StyledIcon
+                  // (You need light text on a dark theme, and vice versa)
+                  fillColor={isLightTheme ? theme.textDarker : false}
+                  light={isDarkTheme}
+                  styledWidth={"14px"}
+                  css={"fill-opacity:0;"}
+                  glyph={Icon.GLYPHS.right2}
+                />
               </BoxSpan>
             </TextSpan>
+            {!isLastResult && (
+              <BoxSpan>
+                <SpacingSpan right={2} />
+                <Hr size={1} fullWidth borderBottomColor={theme.greyLighter} />
+                <SpacingSpan right={2} />
+              </BoxSpan>
+            )}
           </RawButtonAndHighlight>
         </Box>
       </li>
@@ -94,4 +117,4 @@ const SearchResult = createReactClass({
   }
 });
 
-module.exports = SearchResult;
+export default withTheme(SearchResult);
