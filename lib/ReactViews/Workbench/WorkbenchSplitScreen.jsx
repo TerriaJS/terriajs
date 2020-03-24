@@ -92,135 +92,137 @@ class WorkbenchSplitScreen extends React.Component {
     } features that are underneath the terrain surface`;
     // const { t } = useTranslation();
     return (
-      <Box
-        fullWidth
-        column
-        css={`
-          background: ${p => p.theme.darkWithOverlay};
-          color: ${p => p.theme.textLight};
-          svg {
-            fill: ${p => p.theme.textLight};
-            width: 14px;
-            height: 14px;
-          }
-          margin: 5px 0;
-          border: 1px solid rgba(255, 255, 255, 0.15);
-        `}
-      >
+      <If condition={supportsSide}>
         <Box
           fullWidth
-          centered
-          justifySpaceBetween
-          css={`
-            background: ${p => p.theme.colorSplitter};
-            padding: 0 10px;
-            font-weight: bold;
-            font-size: 14px;
-            color: ${p => p.theme.textLight};
-            letter-spacing: 0;
-            line-height: 34px;
-          `}
-        >
-          <Box>SPLIT SCREEN MODE</Box>
-          <RawButton
-            onClick={() => {
-              runInAction(() => (terria.showSplitter = !terria.showSplitter));
-            }}
-          >
-            <Icon glyph={Icon.GLYPHS.close} />
-          </RawButton>
-        </Box>
-        <Box
           column
           css={`
             background: ${p => p.theme.darkWithOverlay};
-            padding: 5px 10px;
+            color: ${p => p.theme.textLight};
+            svg {
+              fill: ${p => p.theme.textLight};
+              width: 14px;
+              height: 14px;
+            }
+            margin: 5px 0;
+            border: 1px solid rgba(255, 255, 255, 0.15);
           `}
         >
-          <Spacing bottom={1} />
-          <Box>
-            <label className={DropdownStyles.heading}>Terrain position</label>
-            <Spacing bottom={1} />
-          </Box>
-          <Box>
-            <ul
-              className={Styles.viewerSelector}
-              css={`
-                display: flex;
-                width: 100%;
-                margin: 0;
-                li {
-                  padding: 0;
-                }
-              `}
+          <Box
+            fullWidth
+            centered
+            justifySpaceBetween
+            css={`
+              background: ${p => p.theme.colorSplitter};
+              padding: 0 10px;
+              font-weight: bold;
+              font-size: 14px;
+              color: ${p => p.theme.textLight};
+              letter-spacing: 0;
+              line-height: 34px;
+            `}
+          >
+            <Box>SPLIT SCREEN MODE</Box>
+            <RawButton
+              onClick={() => {
+                runInAction(() => (terria.showSplitter = !terria.showSplitter));
+              }}
             >
-              <For each="side" of={sides}>
-                <li
-                  key={side}
-                  css={`
-                    flex: 1;
-                  `}
-                >
-                  <button
-                    onClick={() => showTerrainOnSide(side)}
-                    className={classNames(Styles.btnViewer, {
-                      [Styles.isActive]: side === currentSide,
-                      [Styles.isActiveSplitter]: side === currentSide
-                    })}
+              <Icon glyph={Icon.GLYPHS.close} />
+            </RawButton>
+          </Box>
+          <Box
+            column
+            css={`
+              background: ${p => p.theme.darkWithOverlay};
+              padding: 5px 10px;
+            `}
+          >
+            <Spacing bottom={1} />
+            <Box>
+              <label className={DropdownStyles.heading}>Terrain position</label>
+              <Spacing bottom={1} />
+            </Box>
+            <Box>
+              <ul
+                className={Styles.viewerSelector}
+                css={`
+                  display: flex;
+                  width: 100%;
+                  margin: 0;
+                  li {
+                    padding: 0;
+                  }
+                `}
+              >
+                <For each="side" of={sides}>
+                  <li
+                    key={side}
                     css={`
-                      &:not(select) {
-                        border: none !important;
-                        height: 30px;
-                        font-size: 0.85rem;
-                        font-weight: 400;
-                        line-height: 20px;
-
-                        &:hover,
-                        &:focus {
-                          background-color: ${p => p.theme.colorSplitter};
-                        }
-                      }
+                      flex: 1;
                     `}
                   >
-                    {side}
+                    <button
+                      onClick={() => showTerrainOnSide(side)}
+                      className={classNames(Styles.btnViewer, {
+                        [Styles.isActive]: side === currentSide,
+                        [Styles.isActiveSplitter]: side === currentSide
+                      })}
+                      css={`
+                        &:not(select) {
+                          border: none !important;
+                          height: 30px;
+                          font-size: 0.85rem;
+                          font-weight: 400;
+                          line-height: 20px;
+
+                          &:hover,
+                          &:focus {
+                            background-color: ${p => p.theme.colorSplitter};
+                          }
+                        }
+                      `}
+                    >
+                      {side}
+                    </button>
+                  </li>
+                </For>
+              </ul>
+            </Box>
+            <If condition={supportsDepthTestAgainstTerrain}>
+              <>
+                <Spacing bottom={2} />
+                <Box className={Styles.nativeResolutionWrapper}>
+                  <button
+                    id="depthTestAgainstTerrain"
+                    type="button"
+                    onClick={() => toggleDepthTestAgainstTerrainEnabled()}
+                    title={depthTestAgainstTerrainLabel}
+                    className={Styles.btnNativeResolution}
+                  >
+                    {depthTestAgainstTerrainEnabled ? (
+                      <Icon glyph={Icon.GLYPHS.checkboxOn} />
+                    ) : (
+                      <Icon glyph={Icon.GLYPHS.checkboxOff} />
+                    )}
                   </button>
-                </li>
-              </For>
-            </ul>
+                  <label
+                    title={depthTestAgainstTerrainLabel}
+                    htmlFor="depthTestAgainstTerrain"
+                    className={classNames(
+                      DropdownStyles.subHeading,
+                      Styles.nativeResolutionHeader
+                    )}
+                  >
+                    Terrain hides underground features
+                  </label>
+                </Box>
+              </>
+            </If>
+            <Spacing bottom={1} />
           </Box>
-          <If condition={supportsDepthTestAgainstTerrain}>
-            <>
-              <Spacing bottom={2} />
-              <Box className={Styles.nativeResolutionWrapper}>
-                <button
-                  id="depthTestAgainstTerrain"
-                  type="button"
-                  onClick={() => toggleDepthTestAgainstTerrainEnabled()}
-                  title={depthTestAgainstTerrainLabel}
-                  className={Styles.btnNativeResolution}
-                >
-                  {depthTestAgainstTerrainEnabled ? (
-                    <Icon glyph={Icon.GLYPHS.checkboxOn} />
-                  ) : (
-                    <Icon glyph={Icon.GLYPHS.checkboxOff} />
-                  )}
-                </button>
-                <label
-                  title={depthTestAgainstTerrainLabel}
-                  htmlFor="depthTestAgainstTerrain"
-                  className={classNames(
-                    DropdownStyles.subHeading,
-                    Styles.nativeResolutionHeader
-                  )}
-                >
-                  Terrain hides underground features
-                </label>
-              </Box>
-            </>
-          </If>
-          <Spacing bottom={1} />
         </Box>
-      </Box>
+      </If>
     );
   }
 }
