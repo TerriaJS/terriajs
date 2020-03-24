@@ -1,0 +1,16 @@
+// We reimport variables and then export it here so that it doesn't get consumed
+// in variables and update type files every time we make something accessible via JS
+@import "variables";
+
+:export {
+  colorPrimary: $color-primary;
+  colorSplitter: $color-splitter;
+  textLight: $text-light;
+  textDarker: $text-darker;
+  dark: $dark;
+  darkWithOverlay: $dark-with-overlay;
+  grey: $grey;
+  greyLighter: $grey-lighter;
+  greyLightest: $grey-lightest;
+  charcoalGrey: $charcoal-grey;
+}
