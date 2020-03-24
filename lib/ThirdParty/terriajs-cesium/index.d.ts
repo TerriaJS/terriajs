@@ -1352,6 +1352,7 @@ declare module "terriajs-cesium/Source/Scene/Cesium3DTileset" {
     readyPromise: Promise<Cesium3DTileset>;
     extras: any;
     colorBlendMode: Cesium3DTileColorBlendMode;
+    colorBlendAmount: number;
 
     constructor(options: {
       url: string | IonResource | Cesium.Resource;

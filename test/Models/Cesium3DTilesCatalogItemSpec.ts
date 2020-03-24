@@ -4,6 +4,7 @@ import IonResource from "terriajs-cesium/Source/Core/IonResource";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
+import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
 import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
 import Cesium3DTilesCatalogItem from "../../lib/Models/Cesium3DTilesCatalogItem";
 import createStratumInstance from "../../lib/Models/createStratumInstance";
@@ -173,6 +174,27 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
           it("sets `show`", function() {
             runInAction(() => item.setTrait("definition", "show", false));
             expect(item.mapItems[0].show).toBe(false);
+          });
+
+          it("sets the shadow mode", function() {
+            runInAction(() => item.setTrait("definition", "shadows", "cast"));
+            expect(item.mapItems[0].shadows).toBe(ShadowMode.CAST_ONLY);
+          });
+
+          it("sets the color blend mode", function() {
+            runInAction(() => {
+              item.setTrait("definition", "colorBlendMode", "REPLACE");
+              expect(item.mapItems[0].colorBlendMode).toBe(
+                Cesium3DTileColorBlendMode.REPLACE
+              );
+            });
+          });
+
+          it("sets the color blend amount", function() {
+            runInAction(() => {
+              item.setTrait("user", "colorBlendAmount", 0.42);
+              expect(item.mapItems[0].colorBlendAmount).toBe(0.42);
+            });
           });
 
           it("sets the shadow mode", function() {
