@@ -2,6 +2,8 @@
 // Please do not change this file!
 interface CssExports {
   'loader': string;
+  'mapButtonColor': string;
+  'modalHighlight': string;
   'spin': string;
 }
 declare var cssExports: CssExports;
