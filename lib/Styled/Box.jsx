@@ -15,7 +15,7 @@ export const Box = styled.div`
   box-sizing: border-box;
 
 
-  ${props => props.rounded && `border-radius: ${props.theme.borderRadius};`}
+  ${props => props.rounded && `border-radius: ${props.theme.radiusLarge};`}
 
   ${props => props.fullHeight && `height: 100%;`}
   ${props => props.fullWidth && `width: 100%;`}
@@ -77,12 +77,20 @@ export const Box = styled.div`
   ${props => props.paddedRatio && `padding: ${5 * props.paddedRatio}px;`}
   ${props =>
     props.paddedHorizontally &&
-    `padding: 0 ${5 *
-      (props.paddedHorizontally === true ? 1 : props.paddedHorizontally)}px;`}
+    `
+      padding-left:${5 *
+        (props.paddedHorizontally === true ? 1 : props.paddedHorizontally)}px;
+      padding-right:${5 *
+        (props.paddedHorizontally === true ? 1 : props.paddedHorizontally)}px;
+    `}
   ${props =>
     props.paddedVertically &&
-    `padding: ${5 *
-      (props.paddedVertically === true ? 1 : props.paddedVertically)}px 0;`}
+    `
+      padding-top: ${5 *
+        (props.paddedVertically === true ? 1 : props.paddedVertically)}px;
+      padding-bottom: ${5 *
+        (props.paddedVertically === true ? 1 : props.paddedVertically)}px;
+    `}
 `;
 
 export const BoxSpan = styled(Box).attrs({

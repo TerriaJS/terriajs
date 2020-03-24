@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import createReactClass from "create-react-class";
+import styled from "styled-components";
 import classNames from "classnames";
 import Styles from "./icon.scss";
 
@@ -117,5 +118,11 @@ const Icon = createReactClass({
   }
 });
 
+const StyledIcon = styled(Icon)`
+  ${props => props.styledWidth && `width: ${props.styledWidth};`}
+  ${props => props.light && `fill: ${props.theme.textLight};`}
+`;
+
 module.exports = Icon;
 module.exports.GLYPHS = GLYPHS;
+module.exports.StyledIcon = StyledIcon;

@@ -1,35 +1,30 @@
 import React from "react";
 import PropTypes from "prop-types";
+import styled from "styled-components";
 import createReactClass from "create-react-class";
 import Icon from "../Icon";
 
 import Box, { BoxSpan } from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
 import { TextSpan } from "../../Styled/Text";
+import Spacing from "../../Styled/Spacing";
 
-// Really really lightweight highlight without pulling in react-highlight-words
-// pros: lightweight
-// cons: ???
-function highlightKeyword(searchResult, keywordToHighlight) {
-  if (!keywordToHighlight) return searchResult;
-  const parts = searchResult.split(new RegExp(`(${keywordToHighlight})`, "gi"));
-  return (
-    <>
-      {parts.map((part, i) => (
-        <span
-          key={i}
-          style={
-            part.toLowerCase() === keywordToHighlight.toLowerCase()
-              ? { fontWeight: "bold" }
-              : {}
-          }
-        >
-          {part}
-        </span>
-      ))}
-    </>
-  );
-}
+import highlightKeyword from "../ReactViewHelpers/highlightKeyword";
+
+// Not sure how to generalise this or if it should be kept in stlyed/Button.jsx
+const RawButtonAndHighlight = styled(RawButton)`
+  ${p => !p.isLastResult && `border-bottom: 1px solid ${p.theme.grey};`}
+  ${p => `
+  &:hover, &:focus {
+    background-color: ${p.theme.greyLighter};
+    ${BoxSpan} svg {
+      fill-opacity:1;
+    }
+    ${Icon} {
+      fill-opacity:1;
+    }
+  }`}
+`;
 
 // A Location item when doing Bing map searvh or Gazetter search
 const SearchResult = createReactClass({
@@ -57,22 +52,11 @@ const SearchResult = createReactClass({
     return (
       <li>
         <Box fullWidth>
-          <RawButton
+          <RawButtonAndHighlight
             type="button"
             onClick={this.props.clickAction}
             fullWidth
             isLastResult={isLastResult}
-            css={`
-              ${p =>
-                !p.isLastResult && `border-bottom: 1px solid ${p.theme.grey};`}
-              ${p => `
-              &:hover, &:focus {
-                background-color: ${p.theme.greyLighter};
-                .tjs-search-result-right2 svg {
-                  fill-opacity:1;
-                }
-              }`}
-            `}
           >
             {/* (You need light text on a dark theme, and vice versa) */}
             <TextSpan
@@ -81,25 +65,29 @@ const SearchResult = createReactClass({
               textLight={isDarkTheme}
               textDark={isLightTheme}
             >
-              <BoxSpan paddedRatio={2} centered justifySpaceBetween>
+              <BoxSpan
+                paddedRatio={2}
+                paddedVertically={3}
+                centered
+                justifySpaceBetween
+              >
                 {icon && (
                   <BoxSpan flexShrinkZero styledWidth={"15px"}>
                     <Icon glyph={Icon.GLYPHS[icon]} />
                   </BoxSpan>
                 )}
+                <Spacing right={2} />
                 <BoxSpan fullWidth>
-                  <TextSpan textAlignLeft>{highlightedResultName}</TextSpan>
+                  <TextSpan noFontSize textAlignLeft>
+                    {highlightedResultName}
+                  </TextSpan>
                 </BoxSpan>
-                <BoxSpan
-                  className="tjs-search-result-right2"
-                  styledWidth={"14px"}
-                  flexShrinkZero
-                >
+                <BoxSpan styledWidth={"14px"} flexShrinkZero>
                   <Icon css={"fill-opacity:0;"} glyph={Icon.GLYPHS.right2} />
                 </BoxSpan>
               </BoxSpan>
             </TextSpan>
-          </RawButton>
+          </RawButtonAndHighlight>
         </Box>
       </li>
     );

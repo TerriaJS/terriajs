@@ -9,9 +9,9 @@ import { observer } from "mobx-react";
 import SearchBox from "../Search/SearchBox";
 // import SidebarSearch from "../Search/SidebarSearch";
 import LocationSearchResults from "../Search/LocationSearchResults";
-import Icon from "../Icon";
+import Icon, { StyledIcon } from "../Icon";
 
-import Box from "../../Styled/Box";
+import Box, { BoxSpan } from "../../Styled/Box";
 import Text from "../../Styled/Text";
 import Spacing from "../../Styled/Spacing";
 import { RawButton } from "../../Styled/Button";
@@ -22,6 +22,7 @@ function SearchInDataCatalog({ viewState, handleClick }) {
   const locationSearchText = viewState.searchState.locationSearchText;
   return (
     <RawButton
+      fullWidth
       onClick={() => {
         const { searchState } = viewState;
         runInAction(() => {
@@ -43,7 +44,7 @@ function SearchInDataCatalog({ viewState, handleClick }) {
           <Icon glyph={Icon.GLYPHS["dataCatalog"]} />
         </Box>
         <Spacing right={2} />
-        <Text textAlignLeft textLight large>
+        <Text textAlignLeft textLight large fullWidth>
           <Trans
             i18nKey="search.searchInDataCatalog"
             locationSearchText={locationSearchText}
@@ -52,6 +53,9 @@ function SearchInDataCatalog({ viewState, handleClick }) {
             Catalogue
           </Trans>
         </Text>
+        <BoxSpan styledWidth={"14px"} flexShrinkZero>
+          <StyledIcon glyph={Icon.GLYPHS.right2} light />
+        </BoxSpan>
       </Box>
     </RawButton>
   );
@@ -166,7 +170,6 @@ class SearchBoxAndResults extends React.Component {
                   }}
                 />
                 <Spacing bottom={2} />
-                {/* location search results ( 3 results etc) */}
               </Box>
               <For
                 each="search"
