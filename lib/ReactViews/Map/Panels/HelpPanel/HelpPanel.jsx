@@ -38,14 +38,16 @@ class HelpPanel extends React.Component {
 
   render() {
     // const { t } = this.props;
-    const isVisible = this.props.viewState.showHelpMenu && this.props.viewState.topElement === "HelpPanel";
+    const isVisible =
+      this.props.viewState.showHelpMenu &&
+      this.props.viewState.topElement === "HelpPanel";
     const isExpanded = this.props.viewState.helpPanelExpanded;
     const className = classNames(
       {
         [Styles.helpPanel]: true,
         [Styles.isVisible]: isVisible && !isExpanded,
         [Styles.isHidden]: !isVisible,
-        [Styles.helpPanelShifted]: isVisible && isExpanded,
+        [Styles.helpPanelShifted]: isVisible && isExpanded
       },
       this.props.viewState.topElement === "HelpPanel" ? "top-element" : ""
     );
