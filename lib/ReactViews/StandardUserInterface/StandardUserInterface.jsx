@@ -360,7 +360,11 @@ const StandardUserInterface = observer(
               />
             )}
             {this.props.viewState.showHelpMenu && (
-              <HelpPanel terria={terria} viewState={this.props.viewState} items={customElements.helpMenu}/>
+              <HelpPanel
+                terria={terria}
+                viewState={this.props.viewState}
+                items={customElements.helpMenu}
+              />
             )}
           </div>
         </ThemeProvider>
