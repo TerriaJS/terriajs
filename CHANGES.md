@@ -86,6 +86,11 @@ Change Log
 * Polished help UI to match designs
 * Adds methods `removeModelReferences` to Terria & ViewState for unregistering and removing models from different parts of the UI.
 * Add trait to enabling hiding legends for a `CatalogMember` in the workbench.
+* Added new help menu item on how to navigate 3d data
+* Add traits to customize color blending and highlight color for `Cesium3DTilesCatalogItem`
+* Reimplemented splitting using `SplitItemReference`.
+* Fix bug that caused contents on the video panel of the help UI to overlay the actual video
+* Fixed bug causing full app crash or viewer zoom refresh when using 3D view and changing settings or changing the terrain provider.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
