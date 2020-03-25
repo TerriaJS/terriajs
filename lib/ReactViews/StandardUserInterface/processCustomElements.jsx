@@ -4,7 +4,8 @@ import {
   Menu,
   MenuLeft,
   ExperimentalMenu,
-  Feedback
+  Feedback,
+  HelpMenu
 } from "./customizable/Groups";
 
 const GROUP_ELEMENT_TO_KEY_MAPPING = {
@@ -12,7 +13,8 @@ const GROUP_ELEMENT_TO_KEY_MAPPING = {
   menuLeft: MenuLeft,
   nav: Nav,
   experimentalMenu: ExperimentalMenu,
-  feedback: Feedback
+  feedback: Feedback,
+  helpMenu: HelpMenu
 };
 
 const groupElementKeys = Object.keys(GROUP_ELEMENT_TO_KEY_MAPPING);
