@@ -1,6 +1,5 @@
 const create: any = require("react-test-renderer").create;
 import React from "react";
-import { unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
@@ -11,7 +10,6 @@ describe("SearchBox", function() {
   let viewState: ViewState;
 
   let testRenderer: any;
-  let container: any = null;
 
   beforeEach(function() {
     terria = new Terria({
@@ -22,15 +20,6 @@ describe("SearchBox", function() {
       catalogSearchProvider: null,
       locationSearchProviders: []
     });
-
-    container = document.createElement("div");
-    document.body.appendChild(container);
-  });
-
-  afterEach(() => {
-    unmountComponentAtNode(container);
-    container.remove();
-    container = null;
   });
 
   describe("with basic props", function() {

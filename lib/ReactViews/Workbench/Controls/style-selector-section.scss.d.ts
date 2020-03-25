@@ -2,8 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'field': string;
-  'mapButtonColor': string;
-  'modalHighlight': string;
   'style-selector': string;
   'styleSelector': string;
   'title': string;
