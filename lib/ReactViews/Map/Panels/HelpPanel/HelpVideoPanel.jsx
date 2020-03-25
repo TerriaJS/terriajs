@@ -89,8 +89,11 @@ class HelpVideoPanel extends React.Component {
     const className = classNames({
       [Styles.videoPanel]: true,
       [Styles.isVisible]: isExpanded,
+      // when the help entire video panel is invisible (hidden away to the right)
       [Styles.shiftedToRight]:
-        !isExpanded || !this.props.viewState.showHelpMenu, // when the help entire video panel is still hidden away to the right
+        !isExpanded ||
+        !this.props.viewState.showHelpMenu ||
+        this.props.viewState.topElement !== "HelpPanel",
       [Styles.isHidden]: !itemSelected // when the item isn't selected
     });
     return (
