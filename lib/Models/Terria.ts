@@ -56,6 +56,7 @@ import ViewerMode from "./ViewerMode";
 import Workbench from "./Workbench";
 import openGroup from "./openGroup";
 import getDereferencedIfExists from "../Core/getDereferencedIfExists";
+import SplitItemReference from "./SplitItemReference";
 
 interface ConfigParameters {
   [key: string]: ConfigParameters[keyof ConfigParameters];
@@ -567,6 +568,22 @@ export default class Terria {
       promise = Promise.all(containerPromises).then(() => undefined);
     } else {
       promise = Promise.resolve();
+    }
+
+    // If this model is a `SplitItemReference` we must load the source item first
+    const splitSourceId = cleanStratumData.splitSourceItemId;
+    if (
+      cleanStratumData.type === SplitItemReference.type &&
+      typeof splitSourceId === "string"
+    ) {
+      promise = promise.then(() =>
+        this.loadModelStratum(
+          splitSourceId,
+          stratumId,
+          allModelStratumData,
+          replaceStratum
+        ).then(() => undefined)
+      );
     }
 
     return promise

@@ -66,15 +66,18 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
       return result;
     }
 
-    duplicateModel(newId: ModelId): this {
-      const newModel = new (<any>this.constructor)(newId, this.terria);
+    duplicateModel(newId: ModelId, sourceReference?: BaseModel): BaseModel {
+      const newModel = new (<any>this.constructor)(
+        newId,
+        this.terria,
+        sourceReference
+      );
       this.strata.forEach((stratum, stratumId) => {
         const newStratum = isLoadableStratum(stratum)
           ? stratum.duplicateLoadableStratum(newModel)
           : createStratumInstance(Traits, stratum);
         newModel.strata.set(stratumId, newStratum);
       });
-      this.terria.addModel(newModel);
       return newModel;
     }
 
