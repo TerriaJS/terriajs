@@ -91,6 +91,9 @@ Change Log
 * Reimplemented splitting using `SplitItemReference`.
 * Fix bug that caused contents on the video panel of the help UI to overlay the actual video
 * Fixed bug causing full app crash or viewer zoom refresh when using 3D view and changing settings or changing the terrain provider.
+* Changed most of the icons for the `MapNavigation` section (on the right hand side) of the screen
+* Added a close button to story panel
+* Made `MapIconButton` to animate when expanding 
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
