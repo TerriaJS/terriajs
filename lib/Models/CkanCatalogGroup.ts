@@ -15,10 +15,7 @@ import loadJson from "../Core/loadJson";
 import isDefined from "../Core/isDefined";
 import createStratumInstance from "./createStratumInstance";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
-import {
-  createCatalogItemFromCkanResource,
-  setupSupportedFormats
-} from "./CkanCatalogItem";
+import CkanItemReference from "./CkanItemReference";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import ModelReference from "../Traits/ModelReference";
 import CkanCatalogGroupTraits from "../Traits/CkanCatalogGroupTraits";
@@ -33,15 +30,23 @@ import {
   SupportedTypes
 } from "./CkanDefinitions";
 
-class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
+export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
+
   static stratumName = "ckanServer";
-  _supportedFormats: any[];
+  groups: CatalogGroup[] = [];
+  filteredGroups: CatalogGroup[] = [];
+  datasets: CkanDataset[]  = [];
+  filteredDatasets: CkanDataset[]  = [];
+
   constructor(
     readonly _catalogGroup: CkanCatalogGroup,
     private readonly _ckanResponse: CkanServerResponse
   ) {
     super();
-    this._supportedFormats = setupSupportedFormats(this._catalogGroup);
+    this.datasets = this.setDatasets()
+    this.filteredDatasets = this.setFilteredDatasets()
+    this.groups = this.setGroups()
+    this.filteredGroups = this.setFilteredGroups()
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -90,31 +95,30 @@ class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     return references;
   }
 
-  @computed
-  get datasets(): CkanDataset[] {
+  protected setDatasets(): CkanDataset[] {
     return this._ckanResponse.result.results;
   }
 
-  @computed
-  get filteredDatasets(): CkanDataset[] {
-    if (isDefined(this._catalogGroup.blacklist)) {
+  protected setFilteredDatasets(): CkanDataset[] {
+    if (this.datasets.length === 0) return []
+    if (this._catalogGroup.blacklist !== undefined) {
       const bl = this._catalogGroup.blacklist;
       return this.datasets.filter(ds => bl.indexOf(ds.title) === -1);
     }
     return this.datasets;
   }
 
-  @computed
-  get groups(): CatalogGroup[] | undefined {
-    if (this._catalogGroup.groupBy === "none") return undefined;
-
-    const groups: CatalogGroup[] = [];
+  protected setGroups(): CatalogGroup[] {
+    if (this._catalogGroup.groupBy === "none") return [];
+    let groups: CatalogGroup[] = [];
     createUngroupedGroup(this, groups);
 
     if (this._catalogGroup.groupBy === "organization")
       createGroupsByOrganisations(this, groups);
     if (this._catalogGroup.groupBy === "group")
       createGroupsByCkanGroups(this, groups);
+
+    groups = [...new Set(groups)];
 
     groups.sort(function(a, b) {
       if (a.name === undefined || b.name === undefined) return 0;
@@ -126,14 +130,12 @@ class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
       }
       return 0;
     });
-
     return groups;
   }
 
-  @computed
-  get filteredGroups(): CatalogGroup[] | undefined {
-    if (this.groups === undefined) return undefined;
-    if (isDefined(this._catalogGroup.blacklist)) {
+  protected setFilteredGroups(): CatalogGroup[] {
+    if (this.groups.length === 0) return [];
+    if (this._catalogGroup.blacklist !== undefined) {
       const bl = this._catalogGroup.blacklist;
       return this.groups.filter(group => {
         if (group.name === undefined) return false;
@@ -194,27 +196,37 @@ class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
 
     for (var i = 0; i < ckanDataset.resources.length; ++i) {
       const resource = ckanDataset.resources[i];
-      const item: SupportedTypes = createCatalogItemFromCkanResource(
-        resource,
-        ckanDataset,
-        this._catalogGroup,
-        this._supportedFormats
+      const resourceId = datasetId + "/" + resource.id;
+
+      let item = this._catalogGroup.terria.getModelById(
+        CkanItemReference,
+        resourceId
       );
-      if (
-        this._catalogGroup.groupBy === "organization" &&
-        item !== undefined &&
-        ckanDataset.organization !== null
-      ) {
-        const groupId =
-          this._catalogGroup.uniqueId + "/" + ckanDataset.organization.id;
-        this.addCatalogItemToCatalogGroup(item, ckanDataset, groupId);
-      } else if (
-        this._catalogGroup.groupBy !== "groups" &&
-        item !== undefined
-      ) {
-        this.addCatalogItemByCkanGroupsToCatalogGroup(item, ckanDataset);
+      if (item === undefined) {
+        item = new CkanItemReference(resourceId, this._catalogGroup.terria);
+        item.setDataset(ckanDataset)
+        item.setResource(resource)
+        item.setCkanCatalog(this._catalogGroup)
+        item.setSupportedFormatFromResource(resource)
+        if (item._supportedFormat === undefined) {
+          continue
+        }
+        item.setCkanStrata(item)
+        item.terria.addModel(item)
+        if (this._catalogGroup.itemProperties !== undefined) {
+          item.setItemProperties(item, this._catalogGroup.itemProperties)
+        }
+        if (this._catalogGroup.groupBy === "organization") {
+          const groupId = ckanDataset.organization ? this._catalogGroup.uniqueId + "/" + ckanDataset.organization.id : this._catalogGroup.uniqueId + "/ungrouped";
+          this.addCatalogItemToCatalogGroup(item, ckanDataset, groupId);
+        } else if (this._catalogGroup.groupBy === "group") {
+          this.addCatalogItemByCkanGroupsToCatalogGroup(item, ckanDataset);
+        }
+      } else {
+        return item
       }
-    }
+
+      }
   }
 }
 
@@ -270,13 +282,13 @@ function createUngroupedGroup(
     groupId
   );
   if (existingGroup === undefined) {
-    const group = createGroup(
+    existingGroup= createGroup(
       groupId,
       ckanServer._catalogGroup.terria,
       ckanServer._catalogGroup.ungroupedTitle
     );
-    groups.push(group);
   }
+  groups.push(existingGroup);
 }
 
 function createGroupsByOrganisations(
@@ -292,13 +304,13 @@ function createGroupsByOrganisations(
         groupId
       );
       if (existingGroup === undefined) {
-        const group = createGroup(
+        existingGroup = createGroup(
           groupId,
           ckanServer._catalogGroup.terria,
           ds.organization.title
         );
-        groups.push(group);
       }
+      groups.push(existingGroup)
     }
   });
 }
@@ -315,15 +327,15 @@ function createGroupsByCkanGroups(
         groupId
       );
       if (existingGroup === undefined) {
-        const group = createGroup(
+        existingGroup = createGroup(
           groupId,
           ckanServer._catalogGroup.terria,
           g.display_name
         );
-        group.setTrait("definition", "description", g.description);
+        existingGroup.setTrait("definition", "description", g.description);
 
-        groups.push(group);
       }
+      groups.push(existingGroup)
     });
   });
 }

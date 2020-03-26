@@ -15,6 +15,7 @@ import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
 import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import isDefined from "../Core/isDefined";
+import { BaseModel } from "./Model";
 
 // Types of CSVs:
 // - Points - Latitude and longitude columns or address
@@ -44,8 +45,8 @@ export default class CsvCatalogItem extends TableMixin(
 
   private _csvFile?: File;
 
-  constructor(id: string | undefined, terria: Terria) {
-    super(id, terria);
+  constructor(id: string | undefined, terria: Terria, sourceReference: BaseModel | undefined) {
+    super(id, terria, sourceReference);
     this.strata.set(
       automaticTableStylesStratumName,
       new TableAutomaticStylesStratum(this)

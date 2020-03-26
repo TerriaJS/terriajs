@@ -8,6 +8,7 @@ import CatalogMemberFactory from "./CatalogMemberFactory";
 import Cesium3DTilesCatalogItem from "./Cesium3DTilesCatalogItem";
 import CesiumTerrainCatalogItem from "./CesiumTerrainCatalogItem";
 import CkanCatalogGroup from "./CkanCatalogGroup";
+import CkanItemReference from "./CkanItemReference";
 import CompositeCatalogItem from "./CompositeCatalogItem";
 import createCatalogItemFromUrl from "./createCatalogItemFromUrl";
 import CsvCatalogItem from "./CsvCatalogItem";
@@ -87,6 +88,7 @@ export default function registerCatalogMembers() {
     CompositeCatalogItem
   );
   CatalogMemberFactory.register(CkanCatalogGroup.type, CkanCatalogGroup);
+  CatalogMemberFactory.register(CkanItemReference.type, CkanItemReference);
   createCatalogItemFromUrl.register(
     matchesExtension("csv"),
     CsvCatalogItem.type

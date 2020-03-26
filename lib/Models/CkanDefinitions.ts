@@ -37,6 +37,11 @@ export interface CkanDatasetGroup {
   description: string;
 }
 
+export interface CkanExtra {
+  key: string;
+  value: string;
+}
+
 export interface CkanDataset {
   id: string;
   name: string;
@@ -44,6 +49,7 @@ export interface CkanDataset {
   url: string;
   organization: CkanOrganisation | null;
   geo_coverage?: string;
+  extras?: CkanExtra[];
   metadata_created: string;
   metadata_modified: string;
   update_freq: string;
@@ -54,6 +60,17 @@ export interface CkanDataset {
   contact_point: string;
   groups: CkanDatasetGroup[];
   resources: CkanResource[];
+  spatial?: string;
+}
+
+export interface CkanResourceServerResponse {
+  help: string;
+  result: CkanResource;
+}
+
+export interface CkanDatasetServerResponse {
+  help: string;
+  result: CkanDataset;
 }
 
 export interface CkanSearchResult {
