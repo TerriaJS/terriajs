@@ -35,8 +35,8 @@ import GroupMixin from "../ModelMixins/GroupMixin";
 import { CkanDataset, CkanOrganisation, CkanResource, CkanDatasetServerResponse, CkanResourceServerResponse } from "./CkanDefinitions";
 import CkanCatalogGroup from "./CkanCatalogGroup";
 
-class CkanDatasetStratum extends LoadableStratum(CkanItemReferenceTraits) {
-  static stratumName = "ckan-item";
+export class CkanDatasetStratum extends LoadableStratum(CkanItemReferenceTraits) {
+  static stratumName = "ckanDataset";
 
   constructor(
     private readonly ckanItemReference: CkanItemReference,
@@ -275,6 +275,10 @@ export default class CkanItemReference extends UrlMixin(
 
   get type() {
     return CkanItemReference.type;
+  }
+
+  get typeName() {
+    return i18next.t("models.ckan.name");
   }
 
   _ckanDataset: CkanDataset | undefined = undefined
