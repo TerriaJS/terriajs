@@ -84,6 +84,7 @@ Change Log
 * Provide a fallback name for an `ArcGisServerCatalogItem`
 * Ensure `CesiumTileLayer.getTileUrl` returns a string.
 * Adds methods `removeModelReferences` to Terria & ViewState for unregistering and removing models from different parts of the UI.
+* Add basic support for various error provider services, implementing support for Rollbar. 
 * Add trait to enabling hiding legends for a `CatalogMember` in the workbench.
 * Added new help menu item on how to navigate 3d data
 * Add traits to customize color blending and highlight color for `Cesium3DTilesCatalogItem`
