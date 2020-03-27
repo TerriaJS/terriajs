@@ -2,13 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'button': string;
-  'charcoalGrey': string;
-  'colorPrimary': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'item': string;
-  'mapButtonColor': string;
-  'modalHighlight': string;
   'root': string;
 }
 declare var cssExports: CssExports;

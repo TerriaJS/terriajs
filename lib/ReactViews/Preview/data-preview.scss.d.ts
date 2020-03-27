@@ -3,15 +3,9 @@
 interface CssExports {
   'btn--back-to-map': string;
   'btnBackToMap': string;
-  'charcoalGrey': string;
-  'colorPrimary': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'field': string;
   'h3': string;
   'h4': string;
-  'mapButtonColor': string;
-  'modalHighlight': string;
   'placeholder': string;
   'preview': string;
   'preview-chart': string;
