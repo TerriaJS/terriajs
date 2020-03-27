@@ -62,7 +62,6 @@ describe("CkanItemReference", function() {
         ckanItemReference.strata.get(CkanDatasetStratum.stratumName)
       );
       ckanItemTarget = ckanItemReference.target;
-      await ckanItemTarget.loadMetadata();
     });
 
     it("properly creates item", function() {
