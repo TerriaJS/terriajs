@@ -105,7 +105,6 @@ export class CkanDatasetStratum extends LoadableStratum(
         );
       }
     }
-    console.log("LKSDF");
     return new CkanDatasetStratum(ckanItemReference, ckanCatalogGroup);
   }
 
