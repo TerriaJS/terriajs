@@ -91,6 +91,7 @@ Change Log
 * Reimplemented splitting using `SplitItemReference`.
 * Fix bug that caused contents on the video panel of the help UI to overlay the actual video
 * Fixed bug causing full app crash or viewer zoom refresh when using 3D view and changing settings or changing the terrain provider.
+* Implements `SensorObservationServiceCatalogItem`.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
