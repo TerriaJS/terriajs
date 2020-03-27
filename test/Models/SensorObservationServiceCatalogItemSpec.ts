@@ -314,6 +314,8 @@ describe("SensorObservationServiceCatalogItem", function() {
 
 function removeElements(selector: string, content: string): string {
   const dom = xml(content);
-  dom.querySelectorAll(selector).forEach(el => el.remove());
+  dom
+    .querySelectorAll(selector)
+    .forEach(el => typeof el.remove === "function" && el.remove());
   return new XMLSerializer().serializeToString(dom);
 }
