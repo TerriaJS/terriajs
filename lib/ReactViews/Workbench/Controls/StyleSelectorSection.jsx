@@ -75,4 +75,4 @@ const StyleSelectorSection = createReactClass({
   }
 });
 
-module.exports = observer(StyleSelectorSection);
+export default observer(StyleSelectorSection);
