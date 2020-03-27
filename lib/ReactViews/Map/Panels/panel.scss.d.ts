@@ -5,7 +5,6 @@ interface CssExports {
   'button-for-modal-dropdown': string;
   'buttonForModalDropdown': string;
   'caret': string;
-  'charcoalGrey': string;
   'colorPrimary': string;
   'colorSplitter': string;
   'content': string;
@@ -21,8 +20,6 @@ interface CssExports {
   'isOpen': string;
   'label': string;
   'link': string;
-  'mapButtonColor': string;
-  'modalHighlight': string;
   'overlay': string;
   'panel': string;
   'section': string;

@@ -5,7 +5,6 @@ interface CssExports {
   'btn--option': string;
   'btnDropdown': string;
   'btnOption': string;
-  'charcoalGrey': string;
   'colorPrimary': string;
   'colorSplitter': string;
   'dark': string;
@@ -16,8 +15,6 @@ interface CssExports {
   'isOpen': string;
   'isSelected': string;
   'list': string;
-  'mapButtonColor': string;
-  'modalHighlight': string;
   'myDataDropdown': string;
   'textDarker': string;
   'textLight': string;

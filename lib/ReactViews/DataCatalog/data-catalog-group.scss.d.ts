@@ -9,7 +9,6 @@ interface CssExports {
   'catalog-group--lower-level': string;
   'catalogGroup': string;
   'catalogGroupLowerLevel': string;
-  'charcoalGrey': string;
   'colorPrimary': string;
   'colorSplitter': string;
   'dark': string;
@@ -19,8 +18,6 @@ interface CssExports {
   'label': string;
   'label--no-results': string;
   'labelNoResults': string;
-  'mapButtonColor': string;
-  'modalHighlight': string;
   'offsetRight': string;
   'root': string;
   'textDarker': string;

@@ -6,7 +6,6 @@ interface CssExports {
   'backButton': string;
   'backButtonInactive': string;
   'button': string;
-  'charcoalGrey': string;
   'colorPrimary': string;
   'colorSplitter': string;
   'dark': string;
@@ -18,11 +17,9 @@ interface CssExports {
   'icon-back': string;
   'iconBack': string;
   'isOpen': string;
-  'mapButtonColor': string;
   'mobileModal': string;
   'modal-top': string;
   'modalBg': string;
-  'modalHighlight': string;
   'modalTop': string;
   'textDarker': string;
   'textLight': string;

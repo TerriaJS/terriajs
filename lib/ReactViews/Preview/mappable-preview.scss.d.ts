@@ -5,7 +5,6 @@ interface CssExports {
   'alertMessage': string;
   'btn--add': string;
   'btnAdd': string;
-  'charcoalGrey': string;
   'colorPrimary': string;
   'colorSplitter': string;
   'dark': string;
@@ -16,9 +15,7 @@ interface CssExports {
   'h3': string;
   'h4': string;
   'link': string;
-  'mapButtonColor': string;
   'metadata': string;
-  'modalHighlight': string;
   'previewed--info': string;
   'previewedInfo': string;
   'share-link--wrapper': string;

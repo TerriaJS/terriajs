@@ -9,7 +9,6 @@ interface CssExports {
   'btn-next': string;
   'btnNext': string;
   'btnTertiary': string;
-  'charcoalGrey': string;
   'colorPrimary': string;
   'colorSplitter': string;
   'dark': string;
@@ -23,8 +22,6 @@ interface CssExports {
   'indicatorWrapper': string;
   'inner-close-btn': string;
   'innerCloseBtn': string;
-  'mapButtonColor': string;
-  'modalHighlight': string;
   'textDarker': string;
   'textLight': string;
 }

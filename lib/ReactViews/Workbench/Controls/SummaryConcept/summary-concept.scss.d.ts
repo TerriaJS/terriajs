@@ -8,7 +8,6 @@ interface CssExports {
   'btnEdit': string;
   'btnOpen': string;
   'btnRemove': string;
-  'charcoalGrey': string;
   'children-list': string;
   'childrenList': string;
   'colorPrimary': string;
@@ -24,8 +23,6 @@ interface CssExports {
   'items': string;
   'list-reset': string;
   'listReset': string;
-  'mapButtonColor': string;
-  'modalHighlight': string;
   'no-conditions': string;
   'noConditions': string;
   'root': string;

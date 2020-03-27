@@ -3,15 +3,12 @@
 interface CssExports {
   'bar': string;
   'baseLegend': string;
-  'charcoalGrey': string;
   'colorPrimary': string;
   'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'distanceLegend': string;
   'locationBar': string;
-  'mapButtonColor': string;
-  'modalHighlight': string;
   'section': string;
   'section-long': string;
   'section-short': string;

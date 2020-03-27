@@ -2,7 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'btn': string;
-  'charcoalGrey': string;
   'colorPrimary': string;
   'colorSplitter': string;
   'dark': string;
@@ -12,10 +11,8 @@ interface CssExports {
   'full-screen': string;
   'fullScreen': string;
   'isActive': string;
-  'mapButtonColor': string;
   'minified': string;
   'minifiedFullscreenBtnWrapper': string;
-  'modalHighlight': string;
   'textDarker': string;
   'textLight': string;
   'toggleWorkbench': string;

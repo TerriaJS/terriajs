@@ -3,7 +3,6 @@
 interface CssExports {
   'body': string;
   'cancelBtn': string;
-  'charcoalGrey': string;
   'colorPrimary': string;
   'colorSplitter': string;
   'dark': string;
@@ -17,8 +16,6 @@ interface CssExports {
   'inner': string;
   'is-mounted': string;
   'isMounted': string;
-  'mapButtonColor': string;
-  'modalHighlight': string;
   'popupEditor': string;
   'saveBtn': string;
   'textDarker': string;

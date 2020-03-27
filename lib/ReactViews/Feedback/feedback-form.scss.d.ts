@@ -7,7 +7,6 @@ interface CssExports {
   'btnSubmit': string;
   'btnSubmit--hover': string;
   'btnSubmitHover': string;
-  'charcoalGrey': string;
   'colorPrimary': string;
   'colorSplitter': string;
   'dark': string;
@@ -18,8 +17,6 @@ interface CssExports {
   'header': string;
   'isOpen': string;
   'label': string;
-  'mapButtonColor': string;
-  'modalHighlight': string;
   'share-url': string;
   'shareUrl': string;
   'textDarker': string;

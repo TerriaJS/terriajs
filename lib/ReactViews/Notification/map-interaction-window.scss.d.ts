@@ -2,15 +2,12 @@
 // Please do not change this file!
 interface CssExports {
   'btn': string;
-  'charcoalGrey': string;
   'colorPrimary': string;
   'colorSplitter': string;
   'content': string;
   'dark': string;
   'darkWithOverlay': string;
   'isActive': string;
-  'mapButtonColor': string;
-  'modalHighlight': string;
   'textDarker': string;
   'textLight': string;
   'window': string;

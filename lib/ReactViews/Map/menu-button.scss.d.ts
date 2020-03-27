@@ -3,13 +3,10 @@
 interface CssExports {
   'btn--about-link': string;
   'btnAboutLink': string;
-  'charcoalGrey': string;
   'colorPrimary': string;
   'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
-  'mapButtonColor': string;
-  'modalHighlight': string;
   'textDarker': string;
   'textLight': string;
 }

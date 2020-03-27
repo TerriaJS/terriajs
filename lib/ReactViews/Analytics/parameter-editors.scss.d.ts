@@ -12,7 +12,6 @@ interface CssExports {
   'btnLocationSelector': string;
   'btnRadio': string;
   'btnSelector': string;
-  'charcoalGrey': string;
   'colorPrimary': string;
   'colorSplitter': string;
   'dark': string;
@@ -30,8 +29,6 @@ interface CssExports {
   'isHidden': string;
   'label': string;
   'map': string;
-  'mapButtonColor': string;
-  'modalHighlight': string;
   'parameter-editor': string;
   'parameter-editor-important-note': string;
   'parameterEditor': string;
