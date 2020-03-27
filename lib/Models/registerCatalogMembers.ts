@@ -24,6 +24,7 @@ import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFu
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
 import CompositeCatalogItem from "./CompositeCatalogItem";
 import SensorObservationServiceCatalogItem from "./SensorObservationServiceCatalogItem";
+import SplitItemReference from "./SplitItemReference";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
@@ -74,6 +75,7 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(KmlCatalogItem.type, KmlCatalogItem);
   CatalogMemberFactory.register(CartoMapCatalogItem.type, CartoMapCatalogItem);
   CatalogMemberFactory.register(UrlReference.type, UrlReference);
+  CatalogMemberFactory.register(SplitItemReference.type, SplitItemReference);
   CatalogMemberFactory.register(
     WebProcessingServiceCatalogFunction.type,
     WebProcessingServiceCatalogFunction

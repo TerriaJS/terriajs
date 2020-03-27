@@ -39,6 +39,11 @@ export abstract class BaseModel {
 
   dispose() {}
 
+  abstract duplicateModel(
+    newId: ModelId,
+    sourceReference?: BaseModel
+  ): BaseModel;
+
   abstract get strataTopToBottom(): ReadonlyMap<
     string,
     StratumFromTraits<ModelTraits>
@@ -83,7 +88,7 @@ export interface ModelInterface<T extends ModelTraits> {
 
   dispose(): void;
 
-  duplicateModel(newId: ModelId): this;
+  duplicateModel(newId: ModelId, sourceReference?: BaseModel): BaseModel;
 
   setTrait<Key extends keyof StratumFromTraits<T>>(
     stratumId: string,

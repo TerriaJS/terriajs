@@ -102,4 +102,12 @@ export default class CatalogMemberTraits extends ModelTraits {
       "Whether the catalog item is experiencing issues which may cause its data to be unavailable"
   })
   isExperiencingIssues: boolean = false;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Hide legend in workbench",
+    description:
+      "Whether the legend is hidden in the workbench for this catalog member."
+  })
+  hideLegendInWorkbench: boolean = false;
 }
