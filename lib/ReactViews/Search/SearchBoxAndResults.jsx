@@ -25,11 +25,10 @@ export function SearchInDataCatalog({ viewState, handleClick }) {
       fullWidth
       onClick={() => {
         const { searchState } = viewState;
-        runInAction(() => {
-          // Set text here so that it doesn't get batched up and the catalog
-          // search text has a chance to set isWaitingToStartCatalogSearch
-          searchState.catalogSearchText = searchState.locationSearchText;
-        });
+        // Set text here as a separate action so that it doesn't get batched up and the catalog
+        // search text has a chance to set isWaitingToStartCatalogSearch
+        searchState.setCatalogSearchText(searchState.locationSearchText);
+
         viewState.searchInCatalog(searchState.locationSearchText);
         handleClick && handleClick();
       }}
@@ -153,12 +152,16 @@ export class SearchBoxAndResultsRaw extends React.Component {
             >
               <Box column paddedRatio={2}>
                 {/* search {searchterm} in data catalog */}
-                <SearchInDataCatalog
-                  viewState={viewState}
-                  handleClick={() => {
-                    this.toggleShowLocationSearchResults(false);
-                  }}
-                />
+                {/* ~TODO: Put this back once we add a MobX DataCatalogSearch Provider~ */}
+                {/* TODO2: Implement a more generic MobX DataCatalogSearch */}
+                {searchState.catalogSearchProvider && (
+                  <SearchInDataCatalog
+                    viewState={viewState}
+                    handleClick={() => {
+                      this.toggleShowLocationSearchResults(false);
+                    }}
+                  />
+                )}
               </Box>
               <For
                 each="search"

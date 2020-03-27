@@ -114,6 +114,11 @@ export default class SearchState {
   }
 
   @action
+  setCatalogSearchText(newText: string) {
+    this.catalogSearchText = newText;
+  }
+
+  @action
   searchLocations() {
     if (this.isWaitingToStartLocationSearch) {
       this.isWaitingToStartLocationSearch = false;
