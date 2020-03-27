@@ -40,7 +40,7 @@ export default class CkanCatalogGroupTraits extends mixTraits(
   filterQuery?: JsonObject[] = [
     {
       fq:
-        '(res_format:(geojson OR GeoJSON OR WMS OR wms OR kml OR WFS OR wfs OR CSV-GEO-AU OR csv-geo-au OR "Esri REST"))'
+        '(res_format:(czml OR CZML OR geojson OR GeoJSON OR WMS OR wms OR kml OR KML OR kmz OR KMZ OR WFS OR wfs OR CSV-GEO-AU OR csv-geo-au OR "Esri REST"))'
     }
   ];
 

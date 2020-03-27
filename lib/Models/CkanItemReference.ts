@@ -360,7 +360,8 @@ export default class CkanItemReference extends UrlMixin(
   @computed
   get preparedSupportedFormats(): PreparedSupportedFormat[] {
     return (
-      this.supportedFormats && this.supportedFormats.map(prepareSupportedFormat)
+      this.supportedResourceFormats &&
+      this.supportedResourceFormats.map(prepareSupportedFormat)
     );
   }
 

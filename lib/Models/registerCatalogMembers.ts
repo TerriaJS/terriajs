@@ -25,7 +25,6 @@ import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
 import UrlReference from "./UrlReference";
 import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFunction";
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
-import CompositeCatalogItem from "./CompositeCatalogItem";
 import SplitItemReference from "./SplitItemReference";
 
 export default function registerCatalogMembers() {
