@@ -42,7 +42,7 @@ const StyleSelectorSection = createReactClass({
 
     const label = styleSelector.name && styleSelector.name.length > 0 && (
       <label className={Styles.title} htmlFor={styleSelector.name}>
-        {label}
+        {styleSelector.name}
       </label>
     );
 

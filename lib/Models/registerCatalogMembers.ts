@@ -23,6 +23,7 @@ import UrlReference from "./UrlReference";
 import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFunction";
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
 import CompositeCatalogItem from "./CompositeCatalogItem";
+import SensorObservationServiceCatalogItem from "./SensorObservationServiceCatalogItem";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
@@ -76,6 +77,10 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(
     WebProcessingServiceCatalogFunction.type,
     WebProcessingServiceCatalogFunction
+  );
+  CatalogMemberFactory.register(
+    SensorObservationServiceCatalogItem.type,
+    SensorObservationServiceCatalogItem
   );
   CatalogMemberFactory.register(
     WebProcessingServiceCatalogItem.type,

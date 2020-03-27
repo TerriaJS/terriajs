@@ -22,7 +22,9 @@ import ColorPalette from "./ColorPalette";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
 import isDefined from "../Core/isDefined";
+import createColorForIdTransformer from "../Core/createColorForIdTransformer";
 
+const getColorForId = createColorForIdTransformer();
 const defaultColor = "yellow";
 
 interface TableModel extends Model<TableTraits> {
@@ -343,13 +345,16 @@ export default class TableStyle {
       });
     } else {
       // No column to color by, so use the same color for everything.
-      const color =
-        colorTraits.nullColor !== undefined
-          ? Color.fromCssColorString(colorTraits.nullColor)
-          : this.binColors.length > 0
-          ? this.binColors[0]
-          : Color.fromCssColorString(defaultColor);
-      return new ConstantColorMap(color);
+      let color = Color.fromCssColorString(defaultColor);
+      const colorId = this.tableModel.uniqueId || this.tableModel.name;
+      if (colorTraits.nullColor) {
+        color = Color.fromCssColorString(colorTraits.nullColor);
+      } else if (this.binColors.length > 0) {
+        color = this.binColors[0];
+      } else if (colorId) {
+        color = Color.fromCssColorString(getColorForId(colorId));
+      }
+      return new ConstantColorMap(color, this.tableModel.name);
     }
   }
 
@@ -384,3 +389,5 @@ export default class TableStyle {
     return this.tableModel.tableColumns.find(column => column.name === name);
   }
 }
+
+getColorForId;

@@ -34,6 +34,7 @@
     "@types/geojson": "^7946.0.7",
     "@types/i18next": "^13.0.0",
     "@types/jasmine": "^2.8.8",
+    "@types/jasmine-ajax": "^3.3.0",
     "@types/json5": "^0.0.30",
     "@types/leaflet": "^1.4.3",
     "@types/lodash-es": "^4.17.3",
@@ -148,6 +149,7 @@
     "glob-all": "^3.0.1",
     "husky": "^2.7.0",
     "istanbul-instrumenter-loader": "^3.0.1",
+    "jasmine-ajax": "^4.0.0",
     "jasmine-core": "^2.9.1",
     "jsdoc": "^3.5.0",
     "karma": "^4.0.0",
@@ -172,7 +174,6 @@
     "react-shallow-testutils": "^3.0.0",
     "react-test-renderer": "^16.3.2",
     "regenerator-runtime": "^0.13.2",
-    "terriajs-jasmine-ajax": "^3.2.1",
     "terriajs-server": "^3.0.1",
     "webpack-dev-server": "^3.1.14"
   },
