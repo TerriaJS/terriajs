@@ -57,14 +57,34 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
 
   static async load(
     catalogGroup: CkanCatalogGroup
-  ): Promise<CkanServerStratum> {
+  ): Promise<CkanServerStratum | undefined> {
     var terria = catalogGroup.terria;
-    var uri = new URI(catalogGroup.url)
-      .segment("api/3/action/package_search")
-      .addQuery({ start: 0, rows: 1000, sort: "metadata_created asc" })
-      .addQuery({ q: catalogGroup.filterQuery });
 
-    return await paginateThroughResults(uri, catalogGroup);
+    let ckanServerResponse: CkanServerResponse | undefined = undefined;
+
+    // Each item in the array causes an independent request to the CKAN, and the results are concatenated
+    for (var i = 0; i < catalogGroup.filterQuery.length; ++i) {
+      const filterQuery = catalogGroup.filterQuery[i];
+      var uri = new URI(catalogGroup.url)
+        .segment("api/3/action/package_search")
+        .addQuery({ start: 0, rows: 1000, sort: "metadata_created asc" });
+
+      // @ts-ignore
+      Object.keys(filterQuery).forEach(key =>
+        uri.addQuery(key, filterQuery[key])
+      );
+
+      const result = await paginateThroughResults(uri, catalogGroup);
+      if (ckanServerResponse === undefined) {
+        ckanServerResponse = result;
+      } else {
+        ckanServerResponse.result.results = ckanServerResponse.result.results.concat(
+          result.result.results
+        );
+      }
+    }
+    if (ckanServerResponse === undefined) return undefined;
+    return new CkanServerStratum(catalogGroup, ckanServerResponse);
   }
 
   @computed
@@ -212,6 +232,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
         }
         item.setCkanStrata(item);
         item.terria.addModel(item);
+
         if (this._catalogGroup.itemProperties !== undefined) {
           item.setItemProperties(item, this._catalogGroup.itemProperties);
         }
@@ -247,6 +268,7 @@ export default class CkanCatalogGroup extends UrlMixin(
 
   protected forceLoadMetadata(): Promise<void> {
     return CkanServerStratum.load(this).then(stratum => {
+      if (stratum === undefined) return;
       runInAction(() => {
         this.strata.set(CkanServerStratum.stratumName, stratum);
       });
@@ -371,7 +393,7 @@ async function paginateThroughResults(
     );
     nextResultStart = nextResultStart + 1000;
   }
-  return new CkanServerStratum(catalogGroup, ckanServerResponse);
+  return ckanServerResponse;
 }
 
 async function getCkanDatasets(

@@ -105,7 +105,7 @@ export class CkanDatasetStratum extends LoadableStratum(
         );
       }
     }
-
+    console.log("LKSDF");
     return new CkanDatasetStratum(ckanItemReference, ckanCatalogGroup);
   }
 
@@ -410,10 +410,7 @@ export default class CkanItemReference extends UrlMixin(
   // I wonder if it needs to be on both?
   async setCkanStrata(model: BaseModel) {
     // not sure why this needs to be any
-    let stratum: any = this.strata.get(CkanDatasetStratum.stratumName);
-    if (stratum === undefined) {
-      stratum = await CkanDatasetStratum.load(this, this._ckanCatalogGroup);
-    }
+    const stratum = await CkanDatasetStratum.load(this, this._ckanCatalogGroup);
     if (stratum === undefined) return;
     runInAction(() => {
       model.strata.set(CkanDatasetStratum.stratumName, stratum);
@@ -429,8 +426,6 @@ export default class CkanItemReference extends UrlMixin(
   async forceLoadReference(
     previousTarget: BaseModel | undefined
   ): Promise<BaseModel | undefined> {
-    if (this.datasetId === undefined && this.resourceId === undefined)
-      return undefined;
     await this.setCkanStrata(this);
 
     if (this._supportedFormat === undefined) return undefined;

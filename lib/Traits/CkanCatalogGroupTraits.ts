@@ -30,18 +30,19 @@ export default class CkanCatalogGroupTraits extends mixTraits(
          * array causes an independent request to the CKAN, and the results are concatenated.  The
          * search string is equivalent to what would be in the parameters segment of the url calling the CKAN search api.
          * See the [Solr documentation](http://wiki.apache.org/solr/CommonQueryParameters#fq) for information about filter queries.
-         * Each item can be either a URL-encoded string ("fq=res_format%3awms") or an object ({ fq: 'res_format:wms' }). The latter
-         * format is easier to work with.
+         * Each item is an object ({ fq: 'res_format:wms' }).
          *   To get all the datasets with wms resources: [{ fq: 'res_format%3awms' }]
          *   To get all wms/WMS datasets in the Surface Water group: [{q: 'groups=Surface Water', fq: 'res_format:WMS' }]
          *   To get both wms and esri-mapService datasets: [{q: 'res_format:WMS'}, {q: 'res_format:"Esri REST"' }]
          *   To get all datasets with no filter, you can use ['']
-         * This property is required.
-         * This property is observable.
        `
   })
-  filterQuery?: string =
-    '+(res_format:(geojson OR GeoJSON OR WMS OR wms OR kml OR WFS OR wfs OR CSV-GEO-AU OR csv-geo-au OR "Esri REST"))';
+  filterQuery?: JsonObject[] = [
+    {
+      fq:
+        '(res_format:(geojson OR GeoJSON OR WMS OR wms OR kml OR WFS OR wfs OR CSV-GEO-AU OR csv-geo-au OR "Esri REST"))'
+    }
+  ];
 
   @primitiveTrait({
     type: "string",
