@@ -101,12 +101,12 @@ class DataPreviewMap extends React.Component {
     /**
      * @param {HTMLElement | null} container
      */
-    this.containerRef = container => {
+    this.containerRef = action(container => {
       this.previewViewer.attached && this.previewViewer.detach();
       if (container !== null) {
         this.initPreview(container);
       }
-    };
+    });
     this.previewViewer = new TerriaViewer(
       this.props.terria,
       computed(() => {

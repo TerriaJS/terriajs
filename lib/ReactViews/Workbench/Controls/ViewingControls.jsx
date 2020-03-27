@@ -24,6 +24,7 @@ import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
 import Icon from "../../Icon";
 import WorkbenchButton from "../WorkbenchButton";
+import SplitItemReference from "../../../Models/SplitItemReference";
 import Styles from "./viewing-controls.scss";
 
 const BoxViewingControl = styled(Box).attrs({
@@ -136,33 +137,53 @@ const ViewingControls = observer(
       const item = this.props.item;
       const terria = item.terria;
 
-      const newItemId = createGuid();
-      const newItem = item.duplicateModel(newItemId);
+      const splitRef = new SplitItemReference(createGuid(), terria);
+      runInAction(async () => {
+        if (item.splitDirection === ImagerySplitDirection.NONE) {
+          item.setTrait(
+            CommonStrata.user,
+            "splitDirection",
+            ImagerySplitDirection.RIGHT
+          );
+        }
 
-      runInAction(() => {
-        item.setTrait(
+        splitRef.setTrait(
           CommonStrata.user,
-          "splitDirection",
-          ImagerySplitDirection.RIGHT
+          "splitSourceItemId",
+          item.uniqueId
         );
-        newItem.setTrait(
-          CommonStrata.user,
-          "name",
-          t("splitterTool.workbench.copyName", {
-            name: item.name
-          })
-        );
-        newItem.setTrait(
-          CommonStrata.user,
-          "splitDirection",
-          ImagerySplitDirection.LEFT
-        );
-
+        terria.addModel(splitRef);
         terria.showSplitter = true;
-      });
 
-      // Add it to terria.catalog, which is required so the new item can be shared.
-      addUserCatalogMember(terria, newItem, { open: false, zoomTo: false });
+        await splitRef.loadReference();
+        runInAction(() => {
+          const target = splitRef.target;
+          if (target) {
+            target.setTrait(
+              CommonStrata.user,
+              "name",
+              t("splitterTool.workbench.copyName", {
+                name: item.name
+              })
+            );
+
+            // Set a direction opposite to the original item
+            target.setTrait(
+              CommonStrata.user,
+              "splitDirection",
+              item.splitDirection === ImagerySplitDirection.LEFT
+                ? ImagerySplitDirection.RIGHT
+                : ImagerySplitDirection.LEFT
+            );
+          }
+        });
+
+        // Add it to terria.catalog, which is required so the new item can be shared.
+        addUserCatalogMember(terria, splitRef, {
+          open: false,
+          zoomTo: false
+        });
+      });
     },
 
     previewItem() {

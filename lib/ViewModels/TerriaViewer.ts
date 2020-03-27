@@ -1,11 +1,12 @@
 import {
+  action,
   computed,
   IComputedValue,
   IObservableValue,
   observable,
-  action,
-  runInAction
+  untracked
 } from "mobx";
+import { fromPromise, FULFILLED } from "mobx-utils";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import CameraView from "../Models/CameraView";
@@ -63,7 +64,6 @@ export default class TerriaViewer {
     this.items = items;
   }
 
-  @computed
   get attached(): boolean {
     return this.mapContainer !== undefined;
   }
@@ -74,63 +74,70 @@ export default class TerriaViewer {
     keepAlive: true
   })
   get currentViewer(): GlobeOrMap {
-    const currentView = this.destroyCurrentViewer();
+    // Use untracked on everything to ensure the viewer isn't recreated
+    //  except when the viewer is required to change, the currently required
+    //  viewer class finishes loading from an async chunk or the map container
+    //  is changed
 
-    const viewerMode = this.attached ? this.viewerMode : undefined;
-    console.log(`Creating a viewer: ${viewerMode}`);
+    const currentView = untracked(() => this.destroyCurrentViewer());
 
     let newViewer: GlobeOrMap;
-    if (this.mapContainer && viewerMode === ViewerMode.Leaflet) {
-      const Leaflet = this._getLeafletIfLoaded();
-      newViewer = new Leaflet(this, this.mapContainer);
-    } else if (this.mapContainer && viewerMode === ViewerMode.Cesium) {
-      const Cesium = this._getCesiumIfLoaded();
-      newViewer = new Cesium(this, this.mapContainer);
+    if (this.attached && this.viewerMode === ViewerMode.Leaflet) {
+      const LeafletOrNoViewer = this._getLeafletIfLoaded();
+      newViewer = untracked(
+        () => new LeafletOrNoViewer(this, this.mapContainer!)
+      );
+    } else if (this.attached && this.viewerMode === ViewerMode.Cesium) {
+      const CesiumOrNoViewer = this._getCesiumIfLoaded();
+      newViewer = untracked(
+        () => new CesiumOrNoViewer(this, this.mapContainer!)
+      );
     } else {
-      newViewer = new NoViewer(this);
+      newViewer = untracked(() => new NoViewer(this));
     }
 
+    console.log(`Creating a viewer: ${newViewer.type}`);
     this._lastViewer = newViewer;
-
-    newViewer.zoomTo(currentView || this.homeCamera, 0.0);
-
+    newViewer.zoomTo(currentView || untracked(() => this.homeCamera), 0.0);
     return newViewer;
   }
 
-  @observable
-  private _Cesium: typeof import("../Models/Cesium").default | undefined;
-  private _cesiumPromise: Promise<void> | undefined;
+  @computed({
+    keepAlive: true
+  })
+  private get _cesiumPromise() {
+    return fromPromise(
+      import("../Models/Cesium").then(Cesium => Cesium.default)
+    );
+  }
 
-  private _getCesiumIfLoaded() {
-    if (this._Cesium) {
-      return this._Cesium;
+  private _getCesiumIfLoaded():
+    | typeof import("../Models/Cesium").default
+    | typeof NoViewer {
+    if (this._cesiumPromise.state === FULFILLED) {
+      return this._cesiumPromise.value;
     } else {
-      if (!this._cesiumPromise) {
-        this._cesiumPromise = import("../Models/Cesium").then(Cesium => {
-          runInAction(() => {
-            this._Cesium = Cesium.default;
-          });
-        });
-      }
+      // TODO: Handle error loading Cesium. What do you do if a bundle doesn't load?
       return NoViewer;
     }
   }
 
-  @observable
-  private _Leaflet: typeof import("../Models/Leaflet").default | undefined;
-  private _leafletPromise: Promise<void> | undefined;
+  @computed({
+    keepAlive: true
+  })
+  private get _leafletPromise() {
+    return fromPromise(
+      import("../Models/Leaflet").then(Leaflet => Leaflet.default)
+    );
+  }
 
-  private _getLeafletIfLoaded() {
-    if (this._Leaflet) {
-      return this._Leaflet;
+  private _getLeafletIfLoaded():
+    | typeof import("../Models/Leaflet").default
+    | typeof NoViewer {
+    if (this._leafletPromise.state === FULFILLED) {
+      return this._leafletPromise.value;
     } else {
-      if (!this._leafletPromise) {
-        this._leafletPromise = import("../Models/Leaflet").then(Leaflet => {
-          runInAction(() => {
-            this._Leaflet = Leaflet.default;
-          });
-        });
-      }
+      // TODO: Handle error loading Leaflet. What do you do if a bundle doesn't load?
       return NoViewer;
     }
   }
@@ -149,10 +156,14 @@ export default class TerriaViewer {
     this.destroyCurrentViewer();
   }
 
+  destroy() {
+    this.detach();
+  }
+
   private destroyCurrentViewer() {
     let currentView: CameraView | undefined;
     if (this._lastViewer !== undefined) {
-      console.log(`Destroying a viewer`);
+      console.log(`Destroying viewer: ${this._lastViewer.type}`);
       currentView = this._lastViewer.getCurrentCameraView();
       this._lastViewer.destroy();
       this._lastViewer = undefined;
