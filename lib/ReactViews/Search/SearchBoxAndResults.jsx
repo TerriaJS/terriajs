@@ -150,19 +150,19 @@ export class SearchBoxAndResultsRaw extends React.Component {
                 background-color: ${props => props.theme.greyLightest};
               `}
             >
-              <Box column paddedRatio={2}>
-                {/* search {searchterm} in data catalog */}
-                {/* ~TODO: Put this back once we add a MobX DataCatalogSearch Provider~ */}
-                {/* TODO2: Implement a more generic MobX DataCatalogSearch */}
-                {searchState.catalogSearchProvider && (
+              {/* search {searchterm} in data catalog */}
+              {/* ~TODO: Put this back once we add a MobX DataCatalogSearch Provider~ */}
+              {/* TODO2: Implement a more generic MobX DataCatalogSearch */}
+              {searchState.catalogSearchProvider && (
+                <Box column paddedRatio={2}>
                   <SearchInDataCatalog
                     viewState={viewState}
                     handleClick={() => {
                       this.toggleShowLocationSearchResults(false);
                     }}
                   />
-                )}
-              </Box>
+                </Box>
+              )}
               <For
                 each="search"
                 of={this.props.viewState.searchState.locationSearchResults}
