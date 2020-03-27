@@ -69,8 +69,8 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
         .segment("api/3/action/package_search")
         .addQuery({ start: 0, rows: 1000, sort: "metadata_created asc" });
 
-      // @ts-ignore
-      Object.keys(filterQuery).forEach(key =>
+      Object.keys(filterQuery).forEach((key: string) =>
+        // @ts-ignore
         uri.addQuery(key, filterQuery[key])
       );
 
