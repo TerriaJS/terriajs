@@ -43,7 +43,7 @@ class HelpPanelItem extends React.Component {
 
   render() {
     // const { t } = this.props;
-    const CompassWrapper = styled(Box).attrs({
+    const MenuIconWrapper = styled(Box).attrs({
       centered: true
     })`
       flex-shrink: 0;
@@ -53,7 +53,7 @@ class HelpPanelItem extends React.Component {
       vertical-align: middle;
       padding-left: 25px;
     `;
-    const CompassIcon = styled(Icon)`
+    const MenuIcon = styled(Icon)`
       position: relative;
       transform: translate(0%, 0%);
       ${props =>
@@ -89,9 +89,9 @@ class HelpPanelItem extends React.Component {
               text-align: left;
             `}
           >
-            <CompassWrapper>
-              <CompassIcon glyph={this.props.iconElement} />
-            </CompassWrapper>
+            <MenuIconWrapper>
+              <MenuIcon glyph={this.props.iconElement} />
+            </MenuIconWrapper>
             <Text
               semiBold
               uppercase

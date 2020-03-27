@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import createReactClass from "create-react-class";
+import styled from "styled-components";
 import classNames from "classnames";
 import Styles from "./icon.scss";
 
@@ -114,5 +115,18 @@ const Icon = createReactClass({
   }
 });
 
+const StyledIcon = styled(Icon)`
+  flex-shrink: 0;
+  ${props => props.styledWidth && `width: ${props.styledWidth};`}
+
+  ${props => props.light && `fill: ${props.theme.textLight};`}
+  ${props => props.dark && `fill: ${props.theme.textDark};`}
+
+  ${props => props.fillColor && `fill: ${props.fillColor};`}
+
+  ${props => props.opacity && `opacity: ${props.opacity};`}
+`;
+
 module.exports = Icon;
 module.exports.GLYPHS = GLYPHS;
+module.exports.StyledIcon = StyledIcon;

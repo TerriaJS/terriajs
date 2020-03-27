@@ -10,6 +10,7 @@ export const Text = styled.div`
   font-weight: 400;
   ${props => props.bold && `font-weight: bold;`}
   ${props => props.semiBold && `font-weight: 600;`}
+  ${props => props.extraBold && `font-weight: 800;`}
   ${props => props.uppercase && `text-transform: uppercase;`}
 
   ${props => props.textAlignLeft && `text-align: left;`}

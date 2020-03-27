@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
-import Icon from "../../../Icon.jsx";
+import Icon, { StyledIcon } from "../../../Icon.jsx";
 import Styles from "./help-panel.scss";
 import { action } from "mobx";
 import Spacing from "../../../../Styled/Spacing";
@@ -11,6 +11,7 @@ import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
 import MapIconButton from "../../../MapIconButton/MapIconButton";
 import HelpPanelItem from "./HelpPanelItem";
+import { RawButton } from "../../../../Styled/Button.jsx";
 
 @observer
 class HelpPanel extends React.Component {
@@ -55,12 +56,6 @@ class HelpPanel extends React.Component {
       <div className={className} onClick={this.handleClick}>
         <div
           css={`
-            svg {
-              width: 16px;
-              height: 16px;
-              fill: #404855;
-              opacity: 0.5;
-            }
             button {
               box-shadow: none;
               padding: 15px;
@@ -70,10 +65,14 @@ class HelpPanel extends React.Component {
             }
           `}
         >
-          <MapIconButton
-            onClick={this.hidePanel}
-            iconElement={() => <Icon glyph={Icon.GLYPHS.closeLight} />}
-          />
+          <RawButton onClick={this.hidePanel}>
+            <StyledIcon 
+              styledWidth={"16px"}
+              fillColor={"#404855"}
+              opacity={"0.5"}
+              glyph={Icon.GLYPHS.closeLight}
+            />
+          </RawButton>
         </div>
         <Box
           centered
@@ -88,8 +87,8 @@ class HelpPanel extends React.Component {
           <Text
             css={`
               color: #404855;
-              font-weight: 800;
             `}
+            extraBold
             heading
           >
             We&apos;re here to help
