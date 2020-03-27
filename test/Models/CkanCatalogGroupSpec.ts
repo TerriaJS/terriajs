@@ -88,7 +88,7 @@ describe("CkanCatalogGroup", function() {
           let group1 = <CatalogGroup>ckanServerStratum.groups[1];
           expect(group1.name).toBe("Murray-Darling Basin Authority");
           // There are 2 resources on the 2 datasets
-          expect(group1.members.length).toBe(4);
+          expect(group1.members.length).toBe(6);
 
           let group2 = <CatalogGroup>ckanServerStratum.groups[2];
           expect(group2.name).toBe(ckanCatalogGroup.ungroupedTitle);
