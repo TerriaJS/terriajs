@@ -56,6 +56,24 @@ export class CkanDatasetStratum extends LoadableStratum(CkanItemReferenceTraits)
     ckanItemReference: CkanItemReference,
     ckanCatalogGroup: CkanCatalogGroup | undefined
   ) {
+    if (ckanItemReference._ckanDataset === undefined) {
+      // If we've got a dataset and no defined resource
+      if (ckanItemReference.datasetId !== undefined && ckanItemReference.resourceId !== undefined) {
+        ckanItemReference._ckanDataset = await loadCkanDataset(ckanItemReference)
+        ckanItemReference._ckanResource = findResourceInDataset(ckanItemReference._ckanDataset, ckanItemReference.resourceId)
+        ckanItemReference.setSupportedFormatFromResource(ckanItemReference._ckanResource)
+      } else if (ckanItemReference.datasetId !== undefined && ckanItemReference.resourceId === undefined) {
+        ckanItemReference._ckanDataset = await loadCkanDataset(ckanItemReference)
+        const matched = ckanItemReference.findFirstValidResource(ckanItemReference._ckanDataset)
+        if (matched === undefined) return undefined
+        ckanItemReference._ckanResource = matched.ckanResource
+        ckanItemReference._supportedFormat = matched.supportedFormat
+      } else if (ckanItemReference.datasetId === undefined && ckanItemReference.resourceId !== undefined) {
+        ckanItemReference._ckanResource = await loadCkanResource(ckanItemReference)
+        ckanItemReference._supportedFormat = ckanItemReference.isResourceInSupportedFormats(ckanItemReference._ckanResource)
+      }
+    }
+
     return new CkanDatasetStratum(ckanItemReference, ckanCatalogGroup);
   }
 
@@ -91,15 +109,6 @@ export class CkanDatasetStratum extends LoadableStratum(CkanItemReferenceTraits)
       return this.ckanDataset.title;
     }
     return this.ckanResource.name
-  }
-
-  @computed get dataCustodian() {
-    if (this.ckanDataset === undefined) return undefined
-    if (this.ckanDataset.organization === null) return undefined
-    return (
-      this.ckanDataset.organization.description ||
-      this.ckanDataset.organization.title
-    );
   }
 
   @computed get rectangle() {
@@ -144,7 +153,6 @@ export class CkanDatasetStratum extends LoadableStratum(CkanItemReferenceTraits)
         });
       }
     }
-
     return undefined;
   }
 
@@ -197,6 +205,14 @@ export class CkanDatasetStratum extends LoadableStratum(CkanItemReferenceTraits)
     outArray.push(
       newInfo(i18next.t("models.ckan.author"), this.ckanDataset.author)
     );
+
+    if (this.ckanDataset.organization) {
+     outArray.push(
+        newInfo(i18next.t("models.ckan.datasetCustodian"), this.ckanDataset.organization.description ||
+        this.ckanDataset.organization.title)
+      );
+    }
+
     outArray.push(
       newInfo(
         i18next.t("models.ckan.metadata_created"),
@@ -308,7 +324,7 @@ export default class CkanItemReference extends UrlMixin(
     );
   }
 
-  protected isResourceInSupportedFormats (resource: CkanResource | undefined): PreparedSupportedFormat | undefined {
+  isResourceInSupportedFormats (resource: CkanResource | undefined): PreparedSupportedFormat | undefined {
     if (resource === undefined) return undefined
     for (let i = 0; i < this.preparedSupportedFormats.length; ++i) {
       const format = this.preparedSupportedFormats[i]
@@ -320,7 +336,7 @@ export default class CkanItemReference extends UrlMixin(
     return undefined
   }
 
-  protected findFirstValidResource (dataset: CkanDataset | undefined): CkanResourceWithFormat | undefined {
+  findFirstValidResource (dataset: CkanDataset | undefined): CkanResourceWithFormat | undefined {
     if (dataset === undefined) return undefined
     for (let i = 0; i < dataset.resources.length; ++i) {
       const r = dataset.resources[i]
@@ -351,12 +367,18 @@ export default class CkanItemReference extends UrlMixin(
     this._supportedFormat = this.isResourceInSupportedFormats(resource)
   }
 
-  setCkanStrata (model: BaseModel) {
-    if (this._ckanDataset === undefined || this._ckanResource === undefined) return
-    CkanDatasetStratum.load(this, this._ckanCatalogGroup).then(statum => {
-      runInAction(() => {
-        model.strata.set(CkanDatasetStratum.stratumName, statum);
-      });
+  // We will first attach this to the CkanItemReference
+  // and then we'll attach it to the target model
+  // I wonder if it needs to be on both?
+  async setCkanStrata (model: BaseModel) {
+    // not sure why this needs to be any
+    let stratum: any = this.strata.get(CkanDatasetStratum.stratumName)
+    if (stratum === undefined) {
+      stratum = await CkanDatasetStratum.load(this, this._ckanCatalogGroup)
+    }
+    if (stratum === undefined) return
+    runInAction(() => {
+      model.strata.set(CkanDatasetStratum.stratumName, stratum);
     });
   }
 
@@ -366,53 +388,37 @@ export default class CkanItemReference extends UrlMixin(
     })
   }
 
-  protected async forceLoadReference(
+  async forceLoadReference(
     previousTarget: BaseModel | undefined
   ): Promise<BaseModel | undefined> {
+    if (this.datasetId === undefined && this.resourceId === undefined) return undefined
+    await this.setCkanStrata(this)
 
-    if (this._ckanDataset === undefined) {
-      if (this.datasetId !== undefined && this.resourceId !== undefined) {
-        this._ckanDataset = await loadCkanDataset(this)
-        this._ckanResource = findResourceInDataset(this._ckanDataset, this.resourceId)
-        this.setSupportedFormatFromResource(this._ckanResource)
-      } else if (this.datasetId !== undefined && this.resourceId === undefined) {
-        this._ckanDataset = await loadCkanDataset(this)
-        const matched = this.findFirstValidResource(this._ckanDataset)
-        if (matched === undefined) return undefined
-        this._ckanResource = matched.ckanResource
-        this._supportedFormat = matched.supportedFormat
-      } else if (this.datasetId === undefined && this.resourceId !== undefined) {
-        this._ckanResource = await loadCkanResource(this)
-      }
-    }
+    if (this._supportedFormat === undefined) return undefined
 
-    if (this._ckanResource === undefined || this._supportedFormat === undefined || this._ckanDataset === undefined) {
-      return undefined
-    }
-
-    const src = this
     const model = CatalogMemberFactory.create(
        this._supportedFormat.definition.type as string,
-       src.uniqueId,
-       src.terria,
-       src
+       this.uniqueId,
+       this.terria,
+       this
     );
-    if (model === undefined) return
-    const defintionStratum = this.strata.get('definition')
 
+    if (model === undefined) return
+    previousTarget = model
+    await this.setCkanStrata(model)
+
+    const defintionStratum = this.strata.get('definition')
     if (defintionStratum) {
       model.strata.set('definition', defintionStratum)
       model.setTrait('definition', 'url', undefined)
     }
 
-    this.setCkanStrata(model)
+    // Tried to make this sequence an updateModelFromJson but wouldn't work?
+    // updateModelFromJson(model, CommonStrata.override, {itemProperties: this.itemProperties})
+
+    // Also tried this other approach which works from the CkanCatalogGroup
+    // this.setItemProperties(model, this.itemProperties)
     if (this.itemProperties !== undefined) {
-      // Tried to make this sequence an updateModelFromJson but wouldn't work?
-      // updateModelFromJson(model, CommonStrata.override, {itemProperties: this.itemProperties})
-
-      // Also tried this other approach which works from the CkanCatalogGroup
-      // this.setItemProperties(model, this.itemProperties)
-
       const ipKeys = Object.keys(this.itemProperties)
       ipKeys.forEach(p => {
         // @ts-ignore
@@ -420,7 +426,6 @@ export default class CkanItemReference extends UrlMixin(
       })
     }
 
-    previousTarget = model
     return model
   }
 

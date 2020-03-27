@@ -4,9 +4,8 @@ import Terria from "../../lib/Models/Terria";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import i18next from "i18next";
 import CkanItemReference, {CkanDatasetStratum} from "../../lib/Models/CkanItemReference";
-import CatalogGroup from "../../lib/Models/CatalogGroupNew";
 import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
-import {BaseModel} from "../../lib/Models/Model";
+import InfoSectionTraits from "../../lib/Traits/CatalogMemberTraits"
 
 configure({
   enforceActions: "observed",
@@ -25,6 +24,7 @@ describe("CkanItemReference", function() {
   let terria: Terria;
   let ckanItemReference: CkanItemReference;
   let ckanDatasetStratum: CkanDatasetStratum;
+  let ckanItemTarget: any;
 
   beforeEach(async function() {
     terria = new Terria({
@@ -35,7 +35,8 @@ describe("CkanItemReference", function() {
     const realLoadWithXhr = loadWithXhr.load;
     // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
     spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
-      args[0] = "test/CKAN/taxation-statistics-package.json";
+      if (args[0].indexOf('somedataset') > -1) args[0] = "test/CKAN/taxation-statistics-package.json";
+      if (args[0].indexOf('someresource') > -1) args[0] = "test/CKAN/taxation-statistics-wms-resource.json";
       return realLoadWithXhr(...args);
     });
   });
@@ -45,94 +46,104 @@ describe("CkanItemReference", function() {
     expect(ckanItemReference.typeName).toBe("CKAN Resource");
   });
 
-  describe("after loading metadata - default settings - ", function() {
+  describe("Can load an item by datasetId - ", function() {
     beforeEach(async function() {
       runInAction(() => {
-        ckanItemReference.setTrait("definition", "url", ckanServerUrl);
+        ckanItemReference.setTrait("definition", "url", "somedataset");
         ckanItemReference.setTrait("definition", "name", "Taxation Statistics");
+        ckanItemReference.setTrait("definition", "datasetId", "1234");
       });
       await ckanItemReference.loadReference();
       ckanDatasetStratum = <CkanDatasetStratum>ckanItemReference.strata.get(CkanDatasetStratum.stratumName)
+      ckanItemTarget = ckanItemReference.target
     });
 
     it("properly creates item", function() {
-      expect(ckanItemReference.name).toBe("Taxation Statistics");
+      // when creating a single item directly name is retained from the definition stratum
+      expect(ckanItemTarget.name).toBe("Taxation Statistics");
+
+      expect(ckanItemReference._ckanResource).toBeDefined();
+      expect(ckanItemReference._ckanDataset).toBeDefined();
+      expect(ckanItemReference._ckanCatalogGroup).toBe(undefined);
+
+      expect(ckanItemTarget).toBeDefined();
+      expect(ckanItemTarget instanceof WebMapServiceCatalogItem).toBe(true);
+      expect(ckanItemTarget.url).toBe("http://data.gov.au/geoserver/taxation-statistics-2011-12/wms?request=GetCapabilities");
+
+      expect(ckanItemTarget.rectangle.west).toBe(96.816941408);
+      expect(ckanItemTarget.rectangle.south).toBe(-43.598215003);
+      expect(ckanItemTarget.rectangle.east).toBe(159.109219008);
+      expect(ckanItemTarget.rectangle.north).toBe(-9.142175977);
+
+      const licenceInfo = ckanItemTarget.info.filter((i:any) => i.name === 'Licence')[0]
+      expect(licenceInfo.content).toBe('[Creative Commons Attribution 3.0 Australia](http://creativecommons.org/licenses/by/3.0/au/)');
+
+      const contactInfo = ckanItemTarget.info.filter((i:any) => i.name === 'Contact')[0]
+      expect(contactInfo.content).toBe("taxstats@ato.gov.au");
+
+      const datasetInfo = ckanItemTarget.info.filter((i:any) => i.name === "Dataset Description")[0]
+      expect(datasetInfo.content).toBe("Taxation statistics: an overview of the income and tax status of Australian individuals, companies, partnerships, trusts and funds for 2011-12. ");
+
+      const authorInfo = ckanItemTarget.info.filter((i:any) => i.name === 'Author')[0]
+      expect(authorInfo.content).toBe("Australian Taxation Office");
+
+      const createdInfo = ckanItemTarget.info.filter((i:any) => i.name === 'Created')[0]
+      expect(createdInfo.content).toBe("2014-04-24");
+
+      const modifiedInfo = ckanItemTarget.info.filter((i:any) => i.name === 'Modified')[0]
+      expect(modifiedInfo.content).toBe("2015-08-25");
+
+      const updateInfo = ckanItemTarget.info.filter((i:any) => i.name === "Update Frequency")[0]
+      expect(updateInfo.content).toBe("daily");
+
+      const custodianInfo = ckanItemTarget.info.filter((i:any) => i.name === "Dataset Custodian")[0]
+      expect(custodianInfo.content).toBe("Australian Taxation Office");
     });
-
-    // it("properly creates groups", function() {
-    //   if (ckanServerStratum !== undefined) {
-    //     if (ckanServerStratum.groups) {
-    //       // 3 groups because we add an Ungrouped Group
-    //       expect(ckanServerStratum.groups.length).toBe(3);
-
-    //       // 3 groups are sorted by name
-    //       let group0 = <CatalogGroup>ckanServerStratum.groups[0];
-    //       expect(group0.name).toBe("Department of the Environment and Energy");
-    //       // There is only 1 resource on the 1 dataset
-    //       expect(group0.members.length).toBe(1);
-
-    //       let group1 = <CatalogGroup>ckanServerStratum.groups[1];
-    //       expect(group1.name).toBe("Murray-Darling Basin Authority");
-    //       // There are 2 resources on the 2 datasets
-    //       expect(group1.members.length).toBe(4);
-
-    //       let group2 = <CatalogGroup>ckanServerStratum.groups[2];
-    //       expect(group2.name).toBe(ckanCatalogGroup.ungroupedTitle);
-    //       expect(group2.name).toBe("No group");
-    //       expect(group2.members.length).toBe(0);
-    //     }
-    //   }
-    // });
   });
 
-  // describe("after loading metadata - change some settings - ", function() {
-  //   beforeEach(async function() {
-  //     runInAction(() => {
-  //       ckanCatalogGroup.setTrait("definition", "url", 'test/CKAN/search-result.json');
-  //       ckanCatalogGroup.setTrait("definition", "groupBy", 'group');
-  //       ckanCatalogGroup.setTrait("definition", "ungroupedTitle", 'Blah');
-  //       ckanCatalogGroup.setTrait("definition", "blacklist", ['Geography']);
-  //       ckanCatalogGroup.setTrait("definition", "itemProperties", {
-  //         isGeoServer: true
-  //       });
-  //     });
-  //     await ckanCatalogGroup.loadMembers();
-  //     ckanServerStratum = <CkanServerStratum>ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
-  //   });
+  describe("Can load an item by resourceId - ", function() {
+    beforeEach(async function() {
+      runInAction(() => {
+        ckanItemReference.setTrait("definition", "url", "someresource");
+        ckanItemReference.setTrait("definition", "name", "Taxation Statistics");
+        ckanItemReference.setTrait("definition", "resourceId", "1234");
+      });
+      await ckanItemReference.loadReference();
+      ckanDatasetStratum = <CkanDatasetStratum>ckanItemReference.strata.get(CkanDatasetStratum.stratumName)
+      ckanItemTarget = ckanItemReference.target
+    });
 
-  //   it("properly creates members", function() {
-  //     expect(ckanCatalogGroup.members).toBeDefined();
-  //     expect(ckanCatalogGroup.members.length).toBe(3);
-  //     let member0 = <CatalogGroup>ckanCatalogGroup.memberModels[0];
-  //     expect(member0.name).toBe("Blah");
-  //     let member1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
-  //     expect(member1.name).toBe("Environment");
-  //     let member2 = <CatalogGroup>ckanCatalogGroup.memberModels[2];
-  //     expect(member2.name).toBe("Science");
-  //   });
 
-  //   it("Geography group has been filtered from the groups", function() {
-  //     if (ckanServerStratum !== undefined) {
-  //       if (ckanServerStratum.groups && ckanServerStratum.filteredGroups) {
-  //         expect(ckanServerStratum.groups.length).toBe(4);
-  //         expect(ckanServerStratum.filteredGroups.length).toBe(3);
-  //       }
-  //     }
-  //   });
+    it("properly creates item", function() {
 
-  //   it("itemProperties get added", async function() {
-  //     if (ckanServerStratum !== undefined) {
-  //       const m = terria.getModelById(CkanItemReference, ckanCatalogGroup.uniqueId + '/66e3efa7-fb5c-4bd7-9478-74adb6277955/1dae2cfe-345b-4320-bf0c-4da0de061dc5')
-  //       if (m) {
-  //         await m.loadReference()
-  //         const target = m.target as WebMapServiceCatalogItem
-  //         if (target) {
-  //           expect(target.isGeoServer).toBe(true)
-  //         }
-  //       }
-  //     }
-  //   });
+      expect(ckanItemReference._ckanResource).toBeDefined();
+      expect(ckanItemReference._ckanDataset).toBe(undefined);
+      expect(ckanItemReference._ckanCatalogGroup).toBe(undefined);
+      // when creating a single item directly name is retained from the definition stratum
+      expect(ckanItemTarget.name).toBe("Taxation Statistics");
 
-  // });
+      expect(ckanItemTarget).toBeDefined();
+      expect(ckanItemTarget instanceof WebMapServiceCatalogItem).toBe(true);
+      expect(ckanItemTarget.url).toBe("http://data.gov.au/geoserver/taxation-statistics-2011-12/wms?request=GetCapabilities");
+      expect(ckanItemTarget.rectangle.west).toBe(undefined)
+      expect(ckanItemTarget.info.length).toBe(0)
+
+    });
+  });
+
+
+  describe("Rejected if there is no datasetId or resourceId - ", function() {
+    beforeEach(async function() {
+      runInAction(() => {
+        ckanItemReference.setTrait("definition", "url", "someresource");
+        ckanItemReference.setTrait("definition", "name", "Taxation Statistics");
+      });
+      await ckanItemReference.loadReference();
+    });
+
+    it("No target can be created", function() {
+      expect(ckanItemReference.target).toBe(undefined);
+    });
+  });
 
 });

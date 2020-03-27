@@ -694,6 +694,7 @@
       "datasetDescription" : "Dataset Description",
       "dataDescription" : "Data Description",
       "resourceDescription" : "Resource Description",
+      "datasetCustodian" : "Dataset Custodian",
       "licence" : "Licence",
       "author" : "Author",
       "contact_point" : "Contact",
