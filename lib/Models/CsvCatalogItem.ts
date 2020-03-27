@@ -45,7 +45,11 @@ export default class CsvCatalogItem extends TableMixin(
 
   private _csvFile?: File;
 
-  constructor(id: string | undefined, terria: Terria, sourceReference: BaseModel | undefined) {
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference: BaseModel | undefined
+  ) {
     super(id, terria, sourceReference);
     this.strata.set(
       automaticTableStylesStratumName,

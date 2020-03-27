@@ -10,7 +10,6 @@ import anyTrait from "./anyTrait";
 import modelReferenceArrayTrait from "./modelReferenceArrayTrait";
 import JsonObject from "../Core/Json";
 
-
 export default class CkanCatalogGroupTraits extends mixTraits(
   GroupTraits,
   UrlTraits,

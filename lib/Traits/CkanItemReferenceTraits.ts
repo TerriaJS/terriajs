@@ -17,9 +17,8 @@ export default class CkanCatalogItemTraits extends mixTraits(
   DataCustodianTraits,
   MappableTraits,
   CkanSharedTraits,
-  CatalogMemberReferenceTraits,
+  CatalogMemberReferenceTraits
 ) {
-
   @primitiveTrait({
     name: "Dataset ID",
     description: "The CKAN ID of the dataset.",
@@ -33,5 +32,4 @@ export default class CkanCatalogItemTraits extends mixTraits(
     type: "string"
   })
   resourceId?: string;
-
 }

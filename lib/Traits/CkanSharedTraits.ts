@@ -6,10 +6,10 @@ import CkanResourceFormatTraits from "./CkanResourceFormatTraits";
 import mixTraits from "./mixTraits";
 
 export default class CkanSharedTraits extends mixTraits() {
-
   @anyTrait({
     name: "Item Properties",
-    description: "An object of properties that will be set on the item created from the CKAN resource."
+    description:
+      "An object of properties that will be set on the item created from the CKAN resource."
   })
   itemProperties?: JsonObject;
 

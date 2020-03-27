@@ -3,9 +3,11 @@ import _loadWithXhr from "../../lib/Core/loadWithXhr";
 import Terria from "../../lib/Models/Terria";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import i18next from "i18next";
-import CkanItemReference, {CkanDatasetStratum} from "../../lib/Models/CkanItemReference";
+import CkanItemReference, {
+  CkanDatasetStratum
+} from "../../lib/Models/CkanItemReference";
 import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
-import InfoSectionTraits from "../../lib/Traits/CatalogMemberTraits"
+import InfoSectionTraits from "../../lib/Traits/CatalogMemberTraits";
 
 configure({
   enforceActions: "observed",
@@ -35,8 +37,10 @@ describe("CkanItemReference", function() {
     const realLoadWithXhr = loadWithXhr.load;
     // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
     spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
-      if (args[0].indexOf('somedataset') > -1) args[0] = "test/CKAN/taxation-statistics-package.json";
-      if (args[0].indexOf('someresource') > -1) args[0] = "test/CKAN/taxation-statistics-wms-resource.json";
+      if (args[0].indexOf("somedataset") > -1)
+        args[0] = "test/CKAN/taxation-statistics-package.json";
+      if (args[0].indexOf("someresource") > -1)
+        args[0] = "test/CKAN/taxation-statistics-wms-resource.json";
       return realLoadWithXhr(...args);
     });
   });
@@ -54,8 +58,10 @@ describe("CkanItemReference", function() {
         ckanItemReference.setTrait("definition", "datasetId", "1234");
       });
       await ckanItemReference.loadReference();
-      ckanDatasetStratum = <CkanDatasetStratum>ckanItemReference.strata.get(CkanDatasetStratum.stratumName)
-      ckanItemTarget = ckanItemReference.target
+      ckanDatasetStratum = <CkanDatasetStratum>(
+        ckanItemReference.strata.get(CkanDatasetStratum.stratumName)
+      );
+      ckanItemTarget = ckanItemReference.target;
     });
 
     it("properly creates item", function() {
@@ -68,35 +74,57 @@ describe("CkanItemReference", function() {
 
       expect(ckanItemTarget).toBeDefined();
       expect(ckanItemTarget instanceof WebMapServiceCatalogItem).toBe(true);
-      expect(ckanItemTarget.url).toBe("http://data.gov.au/geoserver/taxation-statistics-2011-12/wms?request=GetCapabilities");
+      expect(ckanItemTarget.url).toBe(
+        "http://data.gov.au/geoserver/taxation-statistics-2011-12/wms?request=GetCapabilities"
+      );
 
       expect(ckanItemTarget.rectangle.west).toBe(96.816941408);
       expect(ckanItemTarget.rectangle.south).toBe(-43.598215003);
       expect(ckanItemTarget.rectangle.east).toBe(159.109219008);
       expect(ckanItemTarget.rectangle.north).toBe(-9.142175977);
 
-      const licenceInfo = ckanItemTarget.info.filter((i:any) => i.name === 'Licence')[0]
-      expect(licenceInfo.content).toBe('[Creative Commons Attribution 3.0 Australia](http://creativecommons.org/licenses/by/3.0/au/)');
+      const licenceInfo = ckanItemTarget.info.filter(
+        (i: any) => i.name === "Licence"
+      )[0];
+      expect(licenceInfo.content).toBe(
+        "[Creative Commons Attribution 3.0 Australia](http://creativecommons.org/licenses/by/3.0/au/)"
+      );
 
-      const contactInfo = ckanItemTarget.info.filter((i:any) => i.name === 'Contact')[0]
+      const contactInfo = ckanItemTarget.info.filter(
+        (i: any) => i.name === "Contact"
+      )[0];
       expect(contactInfo.content).toBe("taxstats@ato.gov.au");
 
-      const datasetInfo = ckanItemTarget.info.filter((i:any) => i.name === "Dataset Description")[0]
-      expect(datasetInfo.content).toBe("Taxation statistics: an overview of the income and tax status of Australian individuals, companies, partnerships, trusts and funds for 2011-12. ");
+      const datasetInfo = ckanItemTarget.info.filter(
+        (i: any) => i.name === "Dataset Description"
+      )[0];
+      expect(datasetInfo.content).toBe(
+        "Taxation statistics: an overview of the income and tax status of Australian individuals, companies, partnerships, trusts and funds for 2011-12. "
+      );
 
-      const authorInfo = ckanItemTarget.info.filter((i:any) => i.name === 'Author')[0]
+      const authorInfo = ckanItemTarget.info.filter(
+        (i: any) => i.name === "Author"
+      )[0];
       expect(authorInfo.content).toBe("Australian Taxation Office");
 
-      const createdInfo = ckanItemTarget.info.filter((i:any) => i.name === 'Created')[0]
+      const createdInfo = ckanItemTarget.info.filter(
+        (i: any) => i.name === "Created"
+      )[0];
       expect(createdInfo.content).toBe("2014-04-24");
 
-      const modifiedInfo = ckanItemTarget.info.filter((i:any) => i.name === 'Modified')[0]
+      const modifiedInfo = ckanItemTarget.info.filter(
+        (i: any) => i.name === "Modified"
+      )[0];
       expect(modifiedInfo.content).toBe("2015-08-25");
 
-      const updateInfo = ckanItemTarget.info.filter((i:any) => i.name === "Update Frequency")[0]
+      const updateInfo = ckanItemTarget.info.filter(
+        (i: any) => i.name === "Update Frequency"
+      )[0];
       expect(updateInfo.content).toBe("daily");
 
-      const custodianInfo = ckanItemTarget.info.filter((i:any) => i.name === "Dataset Custodian")[0]
+      const custodianInfo = ckanItemTarget.info.filter(
+        (i: any) => i.name === "Dataset Custodian"
+      )[0];
       expect(custodianInfo.content).toBe("Australian Taxation Office");
     });
   });
@@ -109,13 +137,13 @@ describe("CkanItemReference", function() {
         ckanItemReference.setTrait("definition", "resourceId", "1234");
       });
       await ckanItemReference.loadReference();
-      ckanDatasetStratum = <CkanDatasetStratum>ckanItemReference.strata.get(CkanDatasetStratum.stratumName)
-      ckanItemTarget = ckanItemReference.target
+      ckanDatasetStratum = <CkanDatasetStratum>(
+        ckanItemReference.strata.get(CkanDatasetStratum.stratumName)
+      );
+      ckanItemTarget = ckanItemReference.target;
     });
 
-
     it("properly creates item", function() {
-
       expect(ckanItemReference._ckanResource).toBeDefined();
       expect(ckanItemReference._ckanDataset).toBe(undefined);
       expect(ckanItemReference._ckanCatalogGroup).toBe(undefined);
@@ -124,13 +152,13 @@ describe("CkanItemReference", function() {
 
       expect(ckanItemTarget).toBeDefined();
       expect(ckanItemTarget instanceof WebMapServiceCatalogItem).toBe(true);
-      expect(ckanItemTarget.url).toBe("http://data.gov.au/geoserver/taxation-statistics-2011-12/wms?request=GetCapabilities");
-      expect(ckanItemTarget.rectangle.west).toBe(undefined)
-      expect(ckanItemTarget.info.length).toBe(0)
-
+      expect(ckanItemTarget.url).toBe(
+        "http://data.gov.au/geoserver/taxation-statistics-2011-12/wms?request=GetCapabilities"
+      );
+      expect(ckanItemTarget.rectangle.west).toBe(undefined);
+      expect(ckanItemTarget.info.length).toBe(0);
     });
   });
-
 
   describe("Rejected if there is no datasetId or resourceId - ", function() {
     beforeEach(async function() {
@@ -145,5 +173,4 @@ describe("CkanItemReference", function() {
       expect(ckanItemReference.target).toBe(undefined);
     });
   });
-
 });
