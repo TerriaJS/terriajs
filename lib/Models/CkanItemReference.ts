@@ -314,9 +314,16 @@ export default class CkanItemReference extends UrlMixin(
     }),
     createStratumInstance(CkanResourceFormatTraits, {
       id: "Kml",
-      formatRegex: "^kml$",
+      formatRegex: "^km[lz]$",
       definition: {
         type: "kml"
+      }
+    }),
+    createStratumInstance(CkanResourceFormatTraits, {
+      id: "Czml",
+      formatRegex: "^czml$",
+      definition: {
+        type: "czml"
       }
     })
   ];
@@ -345,7 +352,7 @@ export default class CkanItemReference extends UrlMixin(
     super(id, terria, sourceReference, strata);
     this.setTrait(
       CommonStrata.defaults,
-      "supportedFormats",
+      "supportedResourceFormats",
       CkanItemReference.defaultSupportedFormats
     );
   }
