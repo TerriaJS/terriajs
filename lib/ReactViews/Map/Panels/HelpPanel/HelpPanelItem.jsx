@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
-import Icon from "../../../Icon.jsx";
+import Icon, { StyledIcon } from "../../../Icon.jsx";
 import Styles from "./help-panel.scss";
 import { action } from "mobx";
 import Text from "../../../../Styled/Text";
@@ -53,20 +53,9 @@ class HelpPanelItem extends React.Component {
       vertical-align: middle;
       padding-left: 25px;
     `;
-    const MenuIcon = styled(Icon)`
+    const MenuIcon = styled(StyledIcon)`
       position: relative;
-      transform: translate(0%, 0%);
-      ${props =>
-        `
-          fill: #4B4A4A;
-          width: 27px;
-          height: 27px;
-        `}
-      ${props =>
-        props.darken &&
-        `
-          opacity: 0.2;
-        `}
+      trasform: translate(0%, 0%);
     `;
     const itemSelected =
       this.props.viewState.selectedHelpMenuItem === this.props.itemString;
@@ -90,7 +79,11 @@ class HelpPanelItem extends React.Component {
             `}
           >
             <MenuIconWrapper>
-              <MenuIcon glyph={this.props.iconElement} />
+              <MenuIcon 
+                styledWidth={"27px"}
+                fillColor={"#4B4A4A"}
+                glyph={this.props.iconElement} 
+              />
             </MenuIconWrapper>
             <Text
               semiBold
