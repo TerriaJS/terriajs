@@ -3,9 +3,9 @@ import styled from "styled-components";
 // should it be a span or inline-block-div? - leaning to div
 export const Text = styled.div`
   // TODO: themeify family
-  font-family: "Nunito", "Open Sans", sans-serif;
-  ${props => props.nunito && `font-family: "Nunito", "Open Sans", sans-serif;`}
-  ${props => props.openSans && `font-family: "Open Sans", sans-serif;`}
+  font-family: "Nunito", sans-serif;
+  ${props => props.nunito && `font-family: "Nunito", sans-serif;`}
+  // ${props => props.openSans && `font-family: "Nunito", sans-serif;`}
 
   font-weight: 400;
   ${props => props.bold && `font-weight: bold;`}
