@@ -3,15 +3,16 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
+import { withTheme } from "styled-components";
 import Icon, { StyledIcon } from "../../../Icon.jsx";
 import Styles from "./help-panel.scss";
 import { action } from "mobx";
 import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
-import MapIconButton from "../../../MapIconButton/MapIconButton";
 import HelpPanelItem from "./HelpPanelItem";
 import { RawButton } from "../../../../Styled/Button.jsx";
+import { withTheme } from "styled-components";
 
 @observer
 class HelpPanel extends React.Component {
@@ -39,6 +40,7 @@ class HelpPanel extends React.Component {
 
   render() {
     // const { t } = this.props;
+    console.log(this.props.theme);
     const isVisible =
       this.props.viewState.showHelpMenu &&
       this.props.viewState.topElement === "HelpPanel";
@@ -74,31 +76,27 @@ class HelpPanel extends React.Component {
             />
           </RawButton>
         </div>
+        <Spacing bottom={17} />
         <Box
           centered
+          paddedHorizontally={5} // TODO: add vertical padding too
           css={`
             direction: ltr;
             min-width: 295px;
-            padding: 84px 25px;
-            padding-bottom: 0px;
             display: inline-block;
           `}
         >
           <Text
-            css={`
-              color: #404855;
-            `}
             extraBold
             heading
+            fillColor={"#404855"}
           >
             We&apos;re here to help
           </Text>
           <Spacing bottom={4} />
           <Text
             medium
-            css={`
-              color: #404855;
-            `}
+            fillColor={"#404855"}
           >
             Find useful tips on how to use the Digital Twin either by checking
             the video guides below or by contacting the team at{" "}
@@ -220,4 +218,4 @@ class HelpPanel extends React.Component {
   }
 }
 
-export default withTranslation()(HelpPanel);
+export default withTranslation()(withTheme(HelpPanel));

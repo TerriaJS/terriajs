@@ -48,6 +48,12 @@ export const Text = styled.div`
     `
     font-size: 15px;
   `}
+  ${props => 
+    props.subHeading &&
+    `
+    font-size: 23px;
+    line-height: 31px;
+  `}
   ${props =>
     props.heading &&
     `
@@ -56,6 +62,11 @@ export const Text = styled.div`
     line-height: 32px;
   `}
   
+  ${props =>
+    props.fillColor &&
+    `
+    color: ${props.fillColor};
+  `}
 `;
 
 export const TextSpan = styled(Text).attrs({

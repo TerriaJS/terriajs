@@ -3,6 +3,7 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
+import { withTheme } from "styled-components";
 import Icon from "../../../Icon.jsx";
 import Loader from "../../../Loader";
 import Styles from "./help-panel.scss";
@@ -120,22 +121,17 @@ class HelpVideoPanel extends React.Component {
           </div>
           <Spacing bottom={5} />
           <Text
-            css={`
-              color: #404855;
-              font-size: 23px;
-              line-height: 31px;
-            `}
+            subHeading
             bold
+            fillColor={"#404855"}
           >
             {this.props.title}
           </Text>
           <For each="desc" of={this.props.description}>
             <Spacing bottom={3} />
             <Text
-              css={`
-                color: #4d5766;
-              `}
               medium
+              fillColor={this.props.theme.textDarker}
             >
               {desc}
             </Text>
@@ -146,4 +142,4 @@ class HelpVideoPanel extends React.Component {
   }
 }
 
-export default withTranslation()(HelpVideoPanel);
+export default withTranslation()(withTheme(HelpVideoPanel));
