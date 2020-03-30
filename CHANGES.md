@@ -84,12 +84,15 @@ Change Log
 * Provide a fallback name for an `ArcGisServerCatalogItem`
 * Ensure `CesiumTileLayer.getTileUrl` returns a string.
 * Adds methods `removeModelReferences` to Terria & ViewState for unregistering and removing models from different parts of the UI.
+* Add basic support for various error provider services, implementing support for Rollbar. 
 * Add trait to enabling hiding legends for a `CatalogMember` in the workbench.
 * Added new help menu item on how to navigate 3d data
 * Add traits to customize color blending and highlight color for `Cesium3DTilesCatalogItem`
 * Reimplemented splitting using `SplitItemReference`.
 * Fix bug that caused contents on the video panel of the help UI to overlay the actual video
 * Overhauled location search to be a dropdown instead of list of results
+* Fixed bug causing full app crash or viewer zoom refresh when using 3D view and changing settings or changing the terrain provider.
+* Add support for styling CSVs using a region mapped or text columns.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
