@@ -1,32 +1,31 @@
 "use strict";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
-import React from "react";
-import styled from "styled-components";
 import classNames from "classnames";
 import createReactClass from "create-react-class";
-import { withTranslation } from "react-i18next";
-import defined from "terriajs-cesium/Source/Core/defined";
-import { observer } from "mobx-react";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
-import when from "terriajs-cesium/Source/ThirdParty/when";
-
-import CommonStrata from "../../../Models/CommonStrata";
-import Icon from "../../Icon";
-import PickedFeatures from "../../../Map/PickedFeatures";
-import PropTypes from "prop-types";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import Styles from "./viewing-controls.scss";
-import addUserCatalogMember from "../../../Models/addUserCatalogMember";
-import getAncestors from "../../../Models/getAncestors";
 import { runInAction } from "mobx";
-
+import { observer } from "mobx-react";
+import PropTypes from "prop-types";
+import React from "react";
+import { withTranslation } from "react-i18next";
+import styled from "styled-components";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import defined from "terriajs-cesium/Source/Core/defined";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import when from "terriajs-cesium/Source/ThirdParty/when";
+import getDereferencedIfExists from "../../../Core/getDereferencedIfExists";
+import getPath from "../../../Core/getPath";
+import PickedFeatures from "../../../Map/PickedFeatures";
+import addUserCatalogMember from "../../../Models/addUserCatalogMember";
+import CommonStrata from "../../../Models/CommonStrata";
+import getAncestors from "../../../Models/getAncestors";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
+import Icon from "../../Icon";
 import WorkbenchButton from "../WorkbenchButton";
-import getDereferencedIfExists from "../../../Core/getDereferencedIfExists";
-import logDatasetAnalyticsEvent from "../../../Core/logDatasetAnalyticsEvent";
+import SplitItemReference from "../../../Models/SplitItemReference";
+import Styles from "./viewing-controls.scss";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -94,10 +93,10 @@ const ViewingControls = observer(
       const workbench = this.props.viewState.terria.workbench;
       workbench.remove(this.props.item);
       this.props.viewState.terria.timelineStack.remove(this.props.item);
-      logDatasetAnalyticsEvent(
-        this.props.item.terria,
-        this.props.item,
-        "removeFromWorkbench"
+      this.props.viewState.terria.analytics?.logEvent(
+        "dataSource",
+        "removeFromWorkbench",
+        getPath(this.props.item)
       );
     },
 
@@ -138,33 +137,53 @@ const ViewingControls = observer(
       const item = this.props.item;
       const terria = item.terria;
 
-      const newItemId = createGuid();
-      const newItem = item.duplicateModel(newItemId);
+      const splitRef = new SplitItemReference(createGuid(), terria);
+      runInAction(async () => {
+        if (item.splitDirection === ImagerySplitDirection.NONE) {
+          item.setTrait(
+            CommonStrata.user,
+            "splitDirection",
+            ImagerySplitDirection.RIGHT
+          );
+        }
 
-      runInAction(() => {
-        item.setTrait(
+        splitRef.setTrait(
           CommonStrata.user,
-          "splitDirection",
-          ImagerySplitDirection.RIGHT
+          "splitSourceItemId",
+          item.uniqueId
         );
-        newItem.setTrait(
-          CommonStrata.user,
-          "name",
-          t("splitterTool.workbench.copyName", {
-            name: item.name
-          })
-        );
-        newItem.setTrait(
-          CommonStrata.user,
-          "splitDirection",
-          ImagerySplitDirection.LEFT
-        );
-
+        terria.addModel(splitRef);
         terria.showSplitter = true;
-      });
 
-      // Add it to terria.catalog, which is required so the new item can be shared.
-      addUserCatalogMember(terria, newItem, { open: false, zoomTo: false });
+        await splitRef.loadReference();
+        runInAction(() => {
+          const target = splitRef.target;
+          if (target) {
+            target.setTrait(
+              CommonStrata.user,
+              "name",
+              t("splitterTool.workbench.copyName", {
+                name: item.name
+              })
+            );
+
+            // Set a direction opposite to the original item
+            target.setTrait(
+              CommonStrata.user,
+              "splitDirection",
+              item.splitDirection === ImagerySplitDirection.LEFT
+                ? ImagerySplitDirection.RIGHT
+                : ImagerySplitDirection.LEFT
+            );
+          }
+        });
+
+        // Add it to terria.catalog, which is required so the new item can be shared.
+        addUserCatalogMember(terria, splitRef, {
+          open: false,
+          zoomTo: false
+        });
+      });
     },
 
     previewItem() {
@@ -174,7 +193,7 @@ const ViewingControls = observer(
         item = item.sourceCatalogItem;
       }
       // Open up all the parents (doesn't matter that this sets it to enabled as well because it already is).
-      getAncestors(this.props.item.terria, this.props.item)
+      getAncestors(this.props.item)
         .map(item => getDereferencedIfExists(item))
         .forEach(group => {
           runInAction(() => {

@@ -1,16 +1,12 @@
-import React from "react";
+import { computed, runInAction } from "mobx";
 import { observer } from "mobx-react";
-
 import PropTypes from "prop-types";
+import React from "react";
 import { withTranslation } from "react-i18next";
-
 import DataCatalog from "../../DataCatalog/DataCatalog";
 import DataPreview from "../../Preview/DataPreview";
-
 import SearchBox, { DEBOUNCE_INTERVAL } from "../../Search/SearchBox.jsx";
-
 import Styles from "./data-catalog-tab.scss";
-import { runInAction, computed } from "mobx";
 
 // The DataCatalog Tab
 @observer

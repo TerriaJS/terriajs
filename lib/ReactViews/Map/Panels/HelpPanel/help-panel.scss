@@ -5,22 +5,13 @@
   width: 290px;
   height: 100%;
   color: #000;
-  flex-basis: 400px;
   background-color: #fff;
   position: fixed;
   right: 0px;
-  z-index: 99999; // Hacky fix to get panels to appear on top. TODO: Need to use topElement
+  z-index: 110;
   font-size: $font-size-mid-small;
   transition: all 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  &.isVisible {
-    visibility: visible;
-    margin-right: 0;
-  }
-  &.isHidden {
-    visibility: hidden;
-    margin-right: -400px;
-  }
   .close-btn {
     position: relative;
     float: right;
@@ -33,9 +24,11 @@
     }
   }
 }
+
 .help-panel-shifted {
   right: 490px;
 }
+
 .video-panel {
   font-family: $font-base;
   width: 490px;
@@ -46,7 +39,7 @@
   position: fixed;
   right: 0px;
   top: 0px;
-  z-index: 99999; // Hacky fix to get panels to appear on top. TODO: Need to use topElement
+  z-index: 110;
   font-size: $font-size-mid-small;
   transition: all 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -60,6 +53,7 @@
   height: 100%;
   padding: 0;
 }
+
 .panel-item:hover,
 .is-selected {
   background-color: #f4f4f4;
@@ -122,7 +116,7 @@
   color: $color-primary;
 }
 
-.VideoGuideWrapper {
+.videoLink {
   top: 0;
   left: 0;
   right: 0;

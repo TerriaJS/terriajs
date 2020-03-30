@@ -37,6 +37,7 @@ Change Log
 * Fixed bug causing `ArcGisFeatureServerCatalogItem` to throw an error when a token is included in the proxy url.
 * Fix a bug for zooming to `ArcGisMapServerCatalogItem` layers
 * Modified creation of catalog item from urls to set the item name to be the url at the defaults stratum rather than the definition stratum. This prevents actual item names at load strata from being overridden by a definition stratum name which is just a url.
+* Fixed a bug causing highlighting of features with `_cesium3DTileFeature` to sometimes stop working. Also changed highlight colour to make it more visible.
 * Fixed bug causing user added data with an auto-detected data type to not be shared properly.
 * Modified `addToWorkbench` so that when a catalog item fails to load it is removed from the workbench and an error message is displayed.
 * Add support for feature picking on region mapped datasets
@@ -69,10 +70,29 @@ Change Log
 * Fixed path event name undefined labelling
 * Enable zoomTo and splitter on `CartoMapCatalogItem`.
 * Added name to `MapServerStratum` in `ArcGisMapServerCatalogItem`.
+* Readded basic `CompositeCatalogItem`.
 * Ported Augmented Reality features
 * Fixed bug causing "Terrain hides underground features" checkbox to sometimes become out of sync between `SettingPanel` and `WorkbenchSplitScreen`.
 * Ports the Filter by Location" feature for Satellite imagery. The property name setting is renamed to `timeFilterPropertyName` from `featureTimesProperty`.
+* Made split screen window in workbench hidden when viewer is changed to 3D Smooth and 2D
+* Tidy Help UI code
 * Added `allowFeatureInfoRequests` property to `Terria` and prevent unnecessary feature info requests when creating `UserDrawing`s.
+* Tidied up analytics port, fixed `getAncestors` & added `getPath` helper
+* Updated upload icon to point upwards
+* Prevent catalog item names from overflowing and pushing the collapse button off the workbench
+* Stopped analytics launch event sending bad label
+* Add .tsx tests for UI components
+* Provide a fallback name for an `ArcGisServerCatalogItem`
+* Ensure `CesiumTileLayer.getTileUrl` returns a string.
+* Adds methods `removeModelReferences` to Terria & ViewState for unregistering and removing models from different parts of the UI.
+* Add basic support for various error provider services, implementing support for Rollbar. 
+* Add trait to enabling hiding legends for a `CatalogMember` in the workbench.
+* Added new help menu item on how to navigate 3d data
+* Add traits to customize color blending and highlight color for `Cesium3DTilesCatalogItem`
+* Reimplemented splitting using `SplitItemReference`.
+* Fix bug that caused contents on the video panel of the help UI to overlay the actual video
+* Fixed bug causing full app crash or viewer zoom refresh when using 3D view and changing settings or changing the terrain provider.
+* Add support for styling CSVs using a region mapped or text columns.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC

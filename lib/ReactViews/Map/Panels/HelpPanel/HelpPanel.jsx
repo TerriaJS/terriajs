@@ -31,15 +31,22 @@ class HelpPanel extends React.Component {
     this.props.viewState.showHelpMenu = false;
     this.props.viewState.helpPanelExpanded = false;
     this.props.viewState.selectedHelpMenuItem = "";
-    console.log("Bye!");
+  }
+
+  @action.bound
+  handleClick() {
+    this.props.viewState.topElement = "HelpPanel";
   }
 
   render() {
     // const { t } = this.props;
-    const className = classNames({
-      [Styles.helpPanel]: true,
-      [Styles.helpPanelShifted]: this.props.viewState.helpPanelExpanded
-    });
+    const className = classNames(
+      {
+        [Styles.helpPanel]: true,
+        [Styles.helpPanelShifted]: this.props.viewState.helpPanelExpanded
+      },
+      this.props.viewState.topElement === "HelpPanel" ? "top-element" : ""
+    );
     return (
       <div className={className} onClick={this.handleClick}>
         <div
@@ -69,7 +76,7 @@ class HelpPanel extends React.Component {
             display: inline-block;
           `}
         >
-          <Text title>We&apos;re here to help</Text>
+          <Text heading>We&apos;re here to help</Text>
           <Spacing bottom={5} />
           <Text medium>
             Find useful tips on how to use the Digital Twin either by checking
@@ -125,7 +132,7 @@ class HelpPanel extends React.Component {
                 "https://img.youtube.com/vi/lQE5E1O7VTs/maxresdefault.jpg"
               }
             />
-            {/* <HelpPanelItem
+            <HelpPanelItem
               terria={this.props.terria}
               viewState={this.props.viewState}
               iconElement={Icon.GLYPHS.cube}
@@ -135,11 +142,11 @@ class HelpPanel extends React.Component {
                 "One of the key features of the NSW Spatial Digital Twin is the ability to add and view 3D data, including 3D imagery, or photo reality mesh. This is an interactive way to explore high resolution, 3D aerial imagery of some areas of NSW.",
                 "In this video, we’ll show you how to add 3D data to the Digital Twin, and then use the navigation controls to view it in 3D."
               ]}
-              videoLink={"https://www.youtube.com/embed/Co5Fy1uhkb8"}
+              videoLink={"https://www.youtube.com/embed/elmKyBFecjk"}
               background={
-                "https://img.youtube.com/vi/Co5Fy1uhkb8/maxresdefault.jpg"
+                "https://img.youtube.com/vi/elmKyBFecjk/maxresdefault.jpg"
               }
-            /> */}
+            />
             <HelpPanelItem
               terria={this.props.terria}
               viewState={this.props.viewState}

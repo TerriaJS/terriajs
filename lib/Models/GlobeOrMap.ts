@@ -1,8 +1,10 @@
 import { Feature as GeoJSONFeature, Position } from "geojson";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
 import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
+import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
@@ -19,6 +21,7 @@ import Mappable from "./Mappable";
 import Terria from "./Terria";
 import { ProviderCoordsMap } from "../Map/PickedFeatures";
 import LatLonHeight from "../Core/LatLonHeight";
+import Cesium3DTilesCatalogItem from "./Cesium3DTilesCatalogItem";
 
 require("./ImageryLayerFeatureInfo"); // overrides Cesium's prototype.configureDescriptionFromProperties
 
@@ -122,9 +125,35 @@ export default abstract class GlobeOrMap {
 
       if (isDefined(feature._cesium3DTileFeature)) {
         const originalColor = feature._cesium3DTileFeature.color;
-        feature._cesium3DTileFeature.color = Color.YELLOW;
+
+        // Get the highlight color from the catalogItem trait or default to baseMapContrastColor
+        const catalogItem = feature._catalogItem;
+        let highlightColor;
+        if (
+          catalogItem instanceof Cesium3DTilesCatalogItem &&
+          catalogItem.highlightColor
+        ) {
+          highlightColor = Color.fromCssColorString(catalogItem.highlightColor);
+        } else {
+          highlightColor = Color.fromCssColorString(
+            this.terria.baseMapContrastColor
+          );
+        }
+
+        // highlighting doesn't work if the highlight colour is full white
+        // so in this case use something close to white instead
+        feature._cesium3DTileFeature.color = Color.equals(
+          highlightColor,
+          Color.WHITE
+        )
+          ? Color.fromCssColorString("#fffffe")
+          : highlightColor;
+
         this._removeHighlightCallback = function() {
-          if (isDefined(feature._cesium3DTileFeature)) {
+          if (
+            isDefined(feature._cesium3DTileFeature) &&
+            !feature._cesium3DTileFeature.tileset.isDestroyed()
+          ) {
             feature._cesium3DTileFeature.color = originalColor;
           }
         };
@@ -161,7 +190,7 @@ export default abstract class GlobeOrMap {
         (<any>cesiumPolyline).polyline.material = Color.fromCssColorString(
           this.terria.baseMapContrastColor
         );
-        cesiumPolyline.polyline.width = 2;
+        cesiumPolyline.polyline.width = new ConstantProperty(2);
 
         this._removeHighlightCallback = function() {
           cesiumPolyline.polyline.material = polylineMaterial;
