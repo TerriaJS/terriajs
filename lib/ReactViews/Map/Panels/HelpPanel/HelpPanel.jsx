@@ -66,7 +66,7 @@ class HelpPanel extends React.Component {
           `}
         >
           <RawButton onClick={this.hidePanel}>
-            <StyledIcon 
+            <StyledIcon
               styledWidth={"16px"}
               fillColor={"#404855"}
               opacity={"0.5"}
@@ -98,7 +98,6 @@ class HelpPanel extends React.Component {
             medium
             css={`
               color: #404855;
-              line-height: 18px;
             `}
           >
             Find useful tips on how to use the Digital Twin either by checking

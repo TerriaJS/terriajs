@@ -79,10 +79,10 @@ class HelpPanelItem extends React.Component {
             `}
           >
             <MenuIconWrapper>
-              <MenuIcon 
+              <MenuIcon
                 styledWidth={"27px"}
                 fillColor={"#4B4A4A"}
-                glyph={this.props.iconElement} 
+                glyph={this.props.iconElement}
               />
             </MenuIconWrapper>
             <Text
