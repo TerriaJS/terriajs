@@ -3,8 +3,14 @@
 interface CssExports {
   'body': string;
   'btn': string;
+  'charcoalGrey': string;
+  'colorPrimary': string;
+  'dark': string;
+  'darkWithOverlay': string;
   'footer': string;
   'inner': string;
+  'mapButtonColor': string;
+  'modalHighlight': string;
   'notification': string;
   'title': string;
   'wrapper': string;

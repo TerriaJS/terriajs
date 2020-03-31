@@ -3,11 +3,17 @@
 interface CssExports {
   'body': string;
   'btn': string;
+  'charcoalGrey': string;
+  'colorPrimary': string;
+  'dark': string;
+  'darkWithOverlay': string;
   'header': string;
   'is-inverse': string;
   'is-open': string;
   'isInverse': string;
   'isOpen': string;
+  'mapButtonColor': string;
+  'modalHighlight': string;
   'root': string;
 }
 declare var cssExports: CssExports;

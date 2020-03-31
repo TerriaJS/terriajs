@@ -8,7 +8,7 @@ import Styles from "./help-panel.scss";
 import { action } from "mobx";
 import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
-import styled from "styled-components";
+import styled, { withTheme } from "styled-components";
 import HelpVideoPanel from "./HelpVideoPanel";
 
 @observer
@@ -24,6 +24,7 @@ class HelpPanelItem extends React.Component {
     description: PropTypes.array,
     videoLink: PropTypes.string,
     background: PropTypes.string,
+    theme: PropTypes.object,
     t: PropTypes.func.isRequired
   };
 
@@ -88,6 +89,7 @@ class HelpPanelItem extends React.Component {
             <Text
               semiBold
               uppercase
+              fillColor={this.props.theme.textDark}
               css={`
                 padding-right: 25px;
                 padding-left: 5px;
@@ -116,4 +118,4 @@ class HelpPanelItem extends React.Component {
   }
 }
 
-export default withTranslation()(HelpPanelItem);
+export default withTranslation()(withTheme(HelpPanelItem));

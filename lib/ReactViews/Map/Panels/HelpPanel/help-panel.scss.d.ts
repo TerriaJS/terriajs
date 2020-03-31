@@ -3,7 +3,6 @@
 interface CssExports {
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
   'help-panel': string;
@@ -15,6 +14,8 @@ interface CssExports {
   'isSelected': string;
   'isVisible': string;
   'link': string;
+  'mapButtonColor': string;
+  'modalHighlight': string;
   'panel-item': string;
   'panelItem': string;
   'shiftedToRight': string;

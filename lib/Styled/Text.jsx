@@ -65,7 +65,7 @@ export const Text = styled.div`
     `
     font-size: 15px;
   `}
-  ${props => 
+  ${props =>
     props.subHeading &&
     `
     font-size: 23px;

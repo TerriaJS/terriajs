@@ -12,7 +12,6 @@ import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
 import HelpPanelItem from "./HelpPanelItem";
 import { RawButton } from "../../../../Styled/Button.jsx";
-import { withTheme } from "styled-components";
 
 @observer
 class HelpPanel extends React.Component {
@@ -21,6 +20,7 @@ class HelpPanel extends React.Component {
   static propTypes = {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
+    theme: PropTypes.object,
     t: PropTypes.func.isRequired
   };
 
@@ -59,7 +59,6 @@ class HelpPanel extends React.Component {
         <div
           css={`
             button {
-              box-shadow: none;
               padding: 15px;
               position: absolute;
               right: 0;
@@ -70,34 +69,28 @@ class HelpPanel extends React.Component {
           <RawButton onClick={this.hidePanel}>
             <StyledIcon
               styledWidth={"16px"}
-              fillColor={"#404855"}
+              fillColor={this.props.theme.textDark}
               opacity={"0.5"}
               glyph={Icon.GLYPHS.closeLight}
             />
           </RawButton>
         </div>
-        <Spacing bottom={17} />
         <Box
           centered
-          paddedHorizontally={5} // TODO: add vertical padding too
+          paddedHorizontally={5}
+          paddedVertically={17}
+          displayInlineBlock
           css={`
             direction: ltr;
             min-width: 295px;
-            display: inline-block;
+            padding-bottom: 0px;
           `}
         >
-          <Text
-            extraBold
-            heading
-            fillColor={"#404855"}
-          >
+          <Text extraBold heading fillColor={this.props.theme.textDark}>
             We&apos;re here to help
           </Text>
           <Spacing bottom={4} />
-          <Text
-            medium
-            fillColor={"#404855"}
-          >
+          <Text medium fillColor={this.props.theme.textDark}>
             Find useful tips on how to use the Digital Twin either by checking
             the video guides below or by contacting the team at{" "}
             <span className={Styles.link}>info@terria.io</span>.
@@ -115,17 +108,8 @@ class HelpPanel extends React.Component {
           </Box> */}
         </Box>
         <Spacing bottom={10} />
-        <Box
-          centered
-          css={`
-            display: inline-block;
-          `}
-        >
-          <Box
-            css={`
-              display: inline-block;
-            `}
-          >
+        <Box centered displayInlineBlock>
+          <Box displayInlineBlock>
             <HelpPanelItem
               terria={this.props.terria}
               viewState={this.props.viewState}

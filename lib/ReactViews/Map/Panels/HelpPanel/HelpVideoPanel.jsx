@@ -24,6 +24,7 @@ class HelpVideoPanel extends React.Component {
     description: PropTypes.array,
     videoLink: PropTypes.string,
     background: PropTypes.string,
+    theme: PropTypes.object,
     t: PropTypes.func.isRequired
   };
 
@@ -102,12 +103,11 @@ class HelpVideoPanel extends React.Component {
         {this.state.showVideoGuide && this.renderVideoGuide()}
         <Box
           centered
-          css={`
-            width: 100%;
-            height: 100%;
-            padding: 90px 20px;
-            display: inline-block;
-          `}
+          fullWidth
+          fullHeight
+          displayInlineBlock
+          paddedHorizontally={4}
+          paddedVertically={18}
         >
           <div
             className={Styles.videoLink}
@@ -120,19 +120,12 @@ class HelpVideoPanel extends React.Component {
             </button>
           </div>
           <Spacing bottom={5} />
-          <Text
-            subHeading
-            bold
-            fillColor={"#404855"}
-          >
+          <Text subHeading bold fillColor={this.props.theme.textDark}>
             {this.props.title}
           </Text>
           <For each="desc" of={this.props.description}>
             <Spacing bottom={3} />
-            <Text
-              medium
-              fillColor={this.props.theme.textDarker}
-            >
+            <Text medium fillColor={this.props.theme.textDarker}>
               {desc}
             </Text>
           </For>

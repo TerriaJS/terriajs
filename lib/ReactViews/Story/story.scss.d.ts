@@ -2,12 +2,18 @@
 // Please do not change this file!
 interface CssExports {
   'body': string;
+  'charcoalGrey': string;
+  'colorPrimary': string;
+  'dark': string;
+  'darkWithOverlay': string;
   'draggable': string;
   'footer': string;
   'isSuccessful': string;
+  'mapButtonColor': string;
   'menu': string;
   'menuBtn': string;
   'menuInner': string;
+  'modalHighlight': string;
   'recapture': string;
   'story': string;
   'storyHeader': string;

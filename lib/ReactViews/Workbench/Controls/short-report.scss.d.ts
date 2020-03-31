@@ -3,8 +3,14 @@
 interface CssExports {
   'btn--toggle': string;
   'btnToggle': string;
+  'charcoalGrey': string;
   'collapsible-header': string;
   'collapsibleHeader': string;
+  'colorPrimary': string;
+  'dark': string;
+  'darkWithOverlay': string;
+  'mapButtonColor': string;
+  'modalHighlight': string;
   'now-viewing-item__short-report': string;
   'nowViewingItemShortReport': string;
   'short-report': string;
