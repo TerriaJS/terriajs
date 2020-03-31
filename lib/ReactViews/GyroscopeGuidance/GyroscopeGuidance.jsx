@@ -134,7 +134,7 @@ export default function GyroscopeGuidance(props) {
       `}
     >
       <MapIconButton
-        // expandInPlace
+        neverCollapse
         onClick={() => {
           runInAction(() => {
             props.viewState.showHelpMenu = !props.viewState.showHelpMenu;
@@ -152,7 +152,7 @@ export default function GyroscopeGuidance(props) {
         `}
       >
         <MapIconButton
-          // expandInPlace
+          neverCollapse
           iconElement={() => <Icon glyph={Icon.GLYPHS.controls} />}
           onClick={() => setControlPanelOpen(!controlPanelOpen)}
         >

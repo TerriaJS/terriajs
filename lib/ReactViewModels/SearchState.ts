@@ -32,7 +32,7 @@ export default class SearchState {
   @observable unifiedSearchText: string = "";
   @observable isWaitingToStartUnifiedSearch: boolean = false;
 
-  @observable showLocationSearchResults: boolean = true;
+  @observable showLocationSearchResults: boolean = false;
   @observable showMobileLocationSearch: boolean = false;
   @observable showMobileCatalogSearch: boolean = false;
 
@@ -111,6 +111,11 @@ export default class SearchState {
         );
       }
     }
+  }
+
+  @action
+  setCatalogSearchText(newText: string) {
+    this.catalogSearchText = newText;
   }
 
   @action

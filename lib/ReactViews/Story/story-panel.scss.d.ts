@@ -2,11 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'body': string;
-  'charcoalGrey': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'exitBtn': string;
   'full-panel': string;
   'fullPanel': string;
@@ -19,9 +14,7 @@ interface CssExports {
   'isPushedUp': string;
   'left': string;
   'locationBtn': string;
-  'mapButtonColor': string;
   'mobileNavBtn': string;
-  'modalHighlight': string;
   'navBtn': string;
   'navBtnMobile': string;
   'nextBtn': string;
@@ -31,8 +24,6 @@ interface CssExports {
   'story-container': string;
   'storyContainer': string;
   'storyHeader': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

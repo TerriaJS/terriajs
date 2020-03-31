@@ -24,7 +24,7 @@ const SideBarDatasetSearchResults = observer(
 
     getDefaultProps() {
       return {
-        theme: "dark"
+        theme: "light"
       };
     },
 

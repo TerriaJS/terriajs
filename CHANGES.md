@@ -90,6 +90,7 @@ Change Log
 * Add traits to customize color blending and highlight color for `Cesium3DTilesCatalogItem`
 * Reimplemented splitting using `SplitItemReference`.
 * Fix bug that caused contents on the video panel of the help UI to overlay the actual video
+* Overhauled location search to be a dropdown instead of list of results
 * Fixed bug causing full app crash or viewer zoom refresh when using 3D view and changing settings or changing the terrain provider.
 * Add support for styling CSVs using a region mapped or text columns.
 
