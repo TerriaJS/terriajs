@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { runInAction } from "mobx";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
