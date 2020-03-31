@@ -2,9 +2,9 @@ import { runInAction } from "mobx";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import SensorObservationServiceCatalogItem from "../../lib/Models/SensorObservationServiceCatalogItem";
 import Terria from "../../lib/Models/Terria";
-import { xml } from "../SpecHelpers";
 
 const GetFeatureOfInterestResponse = require("raw-loader!../../wwwroot/test/sos/GetFeatureOfInterestResponse.xml");
+const EmptyGetFeatureOfInterestResponse = require("raw-loader!../../wwwroot/test/sos/GetFeatureOfInterestResponse_NoMembers.xml");
 const GetObservationResponseDaily = require("raw-loader!../../wwwroot/test/sos/GetObservationResponse_Daily.xml");
 const GetObservationResponseYearly = require("raw-loader!../../wwwroot/test/sos/GetObservationResponse_Yearly.xml");
 
@@ -101,14 +101,10 @@ describe("SensorObservationServiceCatalogItem", function() {
       });
 
       it("throws an error if features is empty", async function() {
-        const emptyGetFeatureOfInterestResponse = removeElements(
-          "featureMember",
-          GetFeatureOfInterestResponse
-        );
         jasmine.Ajax.stubRequest(
           "https://sos.example.com",
           /\<sos:GetFeatureOfInterest/
-        ).andReturn({ responseText: emptyGetFeatureOfInterestResponse });
+        ).andReturn({ responseText: EmptyGetFeatureOfInterestResponse });
         let ex;
         try {
           await runInAction(() => item.loadMapItems());
@@ -312,11 +308,3 @@ describe("SensorObservationServiceCatalogItem", function() {
     });
   });
 });
-
-function removeElements(selector: string, content: string): string {
-  const dom = xml(content);
-  dom
-    .querySelectorAll(selector)
-    .forEach(el => typeof el.remove === "function" && el.remove());
-  return new XMLSerializer().serializeToString(dom);
-}
