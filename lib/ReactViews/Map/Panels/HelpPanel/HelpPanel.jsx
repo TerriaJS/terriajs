@@ -86,11 +86,11 @@ class HelpPanel extends React.Component {
             padding-bottom: 0px;
           `}
         >
-          <Text extraBold heading fillColor={this.props.theme.textDark}>
+          <Text extraBold heading textDark>
             We&apos;re here to help
           </Text>
           <Spacing bottom={4} />
-          <Text medium fillColor={this.props.theme.textDark}>
+          <Text medium textDark>
             Find useful tips on how to use the Digital Twin either by checking
             the video guides below or by contacting the team at{" "}
             <span className={Styles.link}>info@terria.io</span>.

@@ -37,6 +37,11 @@ export const Text = styled.div`
     color: ${props.theme.textLight};
   `}
   ${props =>
+    props.textDark &&
+    `
+    color: ${props.theme.textDark};
+  `}
+  ${props =>
     props.textDarker &&
     `
     color: ${props.theme.textDarker};
@@ -64,6 +69,11 @@ export const Text = styled.div`
     props.large &&
     `
     font-size: 15px;
+  `}
+  ${props =>
+    props.extraLarge &&
+    `
+    font-size: 16px;
   `}
   ${props =>
     props.subHeading &&

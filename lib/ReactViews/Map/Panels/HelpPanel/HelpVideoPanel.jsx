@@ -120,12 +120,12 @@ class HelpVideoPanel extends React.Component {
             </button>
           </div>
           <Spacing bottom={5} />
-          <Text subHeading bold fillColor={this.props.theme.textDark}>
+          <Text subHeading bold textDark>
             {this.props.title}
           </Text>
           <For each="desc" of={this.props.description}>
             <Spacing bottom={3} />
-            <Text medium fillColor={this.props.theme.textDarker}>
+            <Text medium textDark>
               {desc}
             </Text>
           </For>

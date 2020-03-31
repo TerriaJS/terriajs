@@ -82,22 +82,21 @@ class HelpPanelItem extends React.Component {
             <MenuIconWrapper>
               <MenuIcon
                 styledWidth={"27px"}
-                fillColor={"#4B4A4A"}
+                fillColor={this.props.theme.textDark}
                 glyph={this.props.iconElement}
               />
             </MenuIconWrapper>
             <Text
               semiBold
+              extraLarge
               uppercase
-              fillColor={this.props.theme.textDark}
+              textDark
               css={`
                 padding-right: 25px;
                 padding-left: 5px;
                 display: table-cell;
                 vertical-align: middle;
-                font-size: 16px;
                 line-height: 17px;
-                color: #575757;
               `}
             >
               {this.props.title}
