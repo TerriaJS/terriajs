@@ -89,11 +89,6 @@ export const Text = styled.div`
     line-height: 32px;
   `}
   
-  ${props =>
-    props.fillColor &&
-    `
-    color: ${props.fillColor};
-  `}
 `;
 
 export const TextSpan = styled(Text).attrs({
