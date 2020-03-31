@@ -144,8 +144,8 @@ const AugmentedVirtualityTool = createReactClass({
               <button
                 type="button"
                 className={realignmentStyle}
-                title={t("AR.handleClickRealign")}
-                onClick={this.btnRealign}
+                title={t("AR.btnRealign")}
+                onClick={this.handleClickRealign}
               >
                 <Icon glyph={Icon.GLYPHS.arRealign} />
               </button>
