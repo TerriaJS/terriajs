@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import createReactClass from "create-react-class";
+import styled from "styled-components";
 import classNames from "classnames";
 import Styles from "./icon.scss";
 
@@ -45,6 +46,7 @@ const GLYPHS = {
   link: require("../../wwwroot/images/icons/link.svg"),
   loader: require("../../wwwroot/images/icons/loader.svg"),
   location: require("../../wwwroot/images/icons/location.svg"),
+  location2: require("../../wwwroot/images/icons/location2.svg"),
   lock: require("../../wwwroot/images/icons/lock.svg"),
   loop: require("../../wwwroot/images/icons/loop.svg"),
   menu: require("../../wwwroot/images/icons/menu.svg"),
@@ -57,6 +59,7 @@ const GLYPHS = {
   refresh: require("../../wwwroot/images/icons/refresh.svg"),
   remove: require("../../wwwroot/images/icons/remove.svg"),
   right: require("../../wwwroot/images/icons/right.svg"),
+  right2: require("../../wwwroot/images/icons/right2.svg"),
   search: require("../../wwwroot/images/icons/search.svg"),
   selected: require("../../wwwroot/images/icons/selected.svg"),
   settings: require("../../wwwroot/images/icons/settings.svg"),
@@ -72,6 +75,7 @@ const GLYPHS = {
   next: require("../../wwwroot/images/icons/next.svg"),
   timeline: require("../../wwwroot/images/icons/timeline.svg"),
   data: require("../../wwwroot/images/icons/data.svg"),
+  dataCatalog: require("../../wwwroot/images/icons/dataCatalog.svg"),
   upload: require("../../wwwroot/images/icons/upload.svg"),
   trashcan: require("../../wwwroot/images/icons/trashcan.svg"),
   local: require("../../wwwroot/images/icons/localfile.svg"),
@@ -120,5 +124,16 @@ const Icon = createReactClass({
   }
 });
 
+const StyledIcon = styled(Icon)`
+  flex-shrink: 0;
+  ${props => props.styledWidth && `width: ${props.styledWidth};`}
+
+  ${props => props.light && `fill: ${props.theme.textLight};`}
+  ${props => props.dark && `fill: ${props.theme.textDark};`}
+
+  ${props => props.fillColor && `fill: ${props.fillColor};`}
+`;
+
 module.exports = Icon;
 module.exports.GLYPHS = GLYPHS;
+module.exports.StyledIcon = StyledIcon;
