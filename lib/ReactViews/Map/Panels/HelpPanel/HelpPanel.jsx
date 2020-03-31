@@ -43,7 +43,10 @@ class HelpPanel extends React.Component {
       this.props.viewState.topElement === "HelpPanel" ? "top-element" : ""
     );
     return (
-      <div className={className} onClick={() => this.props.viewState.setTopElement("HelpPanel")}>
+      <div
+        className={className}
+        onClick={() => this.props.viewState.setTopElement("HelpPanel")}
+      >
         <div
           css={`
             button {

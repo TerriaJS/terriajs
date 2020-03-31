@@ -63,7 +63,12 @@ class HelpPanelItem extends React.Component {
           height: 70px;
         `}
       >
-        <button className={className} onClick={() => this.props.viewState.selectHelpMenuItem(this.props.itemString)}>
+        <button
+          className={className}
+          onClick={() =>
+            this.props.viewState.selectHelpMenuItem(this.props.itemString)
+          }
+        >
           <Box
             left
             fullHeight
