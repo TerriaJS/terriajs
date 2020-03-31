@@ -6,7 +6,6 @@ import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
 import Icon, { StyledIcon } from "../../../Icon.jsx";
 import Styles from "./help-panel.scss";
-import { action } from "mobx";
 import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
@@ -28,19 +27,8 @@ class HelpPanel extends React.Component {
     super(props);
   }
 
-  @action.bound
-  hidePanel() {
-    this.props.viewState.showHelpMenu = false;
-  }
-
-  @action.bound
-  handleClick() {
-    this.props.viewState.topElement = "HelpPanel";
-  }
-
   render() {
     // const { t } = this.props;
-    console.log(this.props.theme);
     const isVisible =
       this.props.viewState.showHelpMenu &&
       this.props.viewState.topElement === "HelpPanel";
@@ -55,7 +43,7 @@ class HelpPanel extends React.Component {
       this.props.viewState.topElement === "HelpPanel" ? "top-element" : ""
     );
     return (
-      <div className={className} onClick={this.handleClick}>
+      <div className={className} onClick={() => this.props.viewState.setTopElement("HelpPanel")}>
         <div
           css={`
             button {
@@ -66,7 +54,7 @@ class HelpPanel extends React.Component {
             }
           `}
         >
-          <RawButton onClick={this.hidePanel}>
+          <RawButton onClick={() => this.props.viewState.hideHelpPanel()}>
             <StyledIcon
               styledWidth={"16px"}
               fillColor={this.props.theme.textDark}

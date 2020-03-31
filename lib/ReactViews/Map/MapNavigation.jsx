@@ -13,7 +13,6 @@ import { observer } from "mobx-react";
 import defined from "terriajs-cesium/Source/Core/defined";
 // import HelpTool from "./Navigation/HelpTool";
 // import StylesToolButton from "./Navigation/tool_button.scss";
-import { action } from "mobx";
 import Icon from "../Icon";
 
 // import Icon from "../Icon";
@@ -33,14 +32,6 @@ class MapNavigation extends React.Component {
   static defaultProps = {
     navItems: []
   };
-
-  @action.bound
-  showHelpPanel() {
-    this.props.viewState.showHelpMenu = true;
-    this.props.viewState.topElement = "HelpPanel";
-    this.props.viewState.helpPanelExpanded = false;
-    this.props.viewState.selectedHelpMenuItem = "";
-  }
 
   render() {
     return (
@@ -112,7 +103,7 @@ class MapNavigation extends React.Component {
                 <MapIconButton
                   expandInPlace
                   iconElement={() => <Icon glyph={Icon.GLYPHS.help} />}
-                  onClick={this.showHelpPanel}
+                  onClick={() => this.props.viewState.showHelpPanel()}
                 >
                   Help
                 </MapIconButton>

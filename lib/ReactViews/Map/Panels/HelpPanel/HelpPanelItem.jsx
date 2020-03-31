@@ -5,7 +5,6 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 import { StyledIcon } from "../../../Icon.jsx";
 import Styles from "./help-panel.scss";
-import { action } from "mobx";
 import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
 import styled, { withTheme } from "styled-components";
@@ -36,12 +35,6 @@ class HelpPanelItem extends React.Component {
     super(props);
   }
 
-  @action.bound
-  changeActiveItem() {
-    this.props.viewState.selectedHelpMenuItem = this.props.itemString;
-    this.props.viewState.helpPanelExpanded = true;
-  }
-
   render() {
     // const { t } = this.props;
     const MenuIconWrapper = styled(Box).attrs({
@@ -70,7 +63,7 @@ class HelpPanelItem extends React.Component {
           height: 70px;
         `}
       >
-        <button className={className} onClick={this.changeActiveItem}>
+        <button className={className} onClick={() => this.props.viewState.selectHelpMenuItem(this.props.itemString)}>
           <Box
             left
             fullHeight

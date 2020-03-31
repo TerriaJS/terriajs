@@ -135,14 +135,7 @@ export default function GyroscopeGuidance(props) {
     >
       <MapIconButton
         neverCollapse
-        onClick={() => {
-          runInAction(() => {
-            props.viewState.showHelpMenu = true;
-            props.viewState.topElement = "HelpPanel";
-            props.viewState.helpPanelExpanded = false;
-            props.viewState.selectedHelpMenuItem = "";
-          });
-        }}
+        onClick={() => props.viewState.showHelpPanel()}
         iconElement={() => <Icon glyph={Icon.GLYPHS.help} />}
       >
         Help
