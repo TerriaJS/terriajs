@@ -5,26 +5,17 @@ interface CssExports {
   'alertMessage': string;
   'btn--add': string;
   'btnAdd': string;
-  'charcoalGrey': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'description': string;
   'error': string;
   'field': string;
   'h3': string;
   'h4': string;
   'link': string;
-  'mapButtonColor': string;
   'metadata': string;
-  'modalHighlight': string;
   'previewed--info': string;
   'previewedInfo': string;
   'share-link--wrapper': string;
   'shareLinkWrapper': string;
-  'textDarker': string;
-  'textLight': string;
   'title-and-share-wrapper': string;
   'titleAndShareWrapper': string;
 }

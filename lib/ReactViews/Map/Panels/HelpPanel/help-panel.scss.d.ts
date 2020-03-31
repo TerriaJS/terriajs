@@ -15,8 +15,6 @@ interface CssExports {
   'isSelected': string;
   'isVisible': string;
   'link': string;
-  'mapButtonColor': string;
-  'modalHighlight': string;
   'panel-item': string;
   'panelItem': string;
   'shiftedToRight': string;
@@ -28,8 +26,6 @@ interface CssExports {
   'storyFadeOut': string;
   'storySlideDown': string;
   'storySlideUp': string;
-  'textDarker': string;
-  'textLight': string;
   'tourBtn': string;
   'video-panel': string;
   'videoBtn': string;

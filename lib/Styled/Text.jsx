@@ -7,6 +7,13 @@ export const Text = styled.div`
   ${props => props.nunito && `font-family: "Nunito", sans-serif;`}
   // ${props => props.openSans && `font-family: "Nunito", sans-serif;`}
 
+  ${props =>
+    props.breakWord &&
+    `
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  `}
+
   font-weight: 400;
   ${props => props.bold && `font-weight: bold;`}
   ${props => props.semiBold && `font-weight: 600;`}
@@ -24,11 +31,21 @@ export const Text = styled.div`
     `
     color: ${props.theme.textLight};
   `}
+  ${props =>
+    props.textLight &&
+    `
+    color: ${props.theme.textLight};
+  `}
+  ${props =>
+    props.textDarker &&
+    `
+    color: ${props.theme.textDarker};
+  `}
 
   ${props => props.fullWidth && `width: 100%;`}
   ${props => props.noWrap && `white-space: nowrap;`}
 
-  font-size: 13px;
+  ${props => !props.noFontSize && `font-size: 13px;`}
   line-height: 20px;
 
   ${props =>
