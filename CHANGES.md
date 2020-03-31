@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+### Next release
+
+* Rework the handling of point datasets on the anti-meridian when using LeafletJS.
+
+
 ### v7.11.3
 
 * Added babel dynamic import plugin for webpack builds.
