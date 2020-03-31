@@ -1,13 +1,13 @@
 import { DomElement } from "domhandler";
 import React, { ReactElement } from "react";
+import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import CommonStrata from "../../Models/CommonStrata";
 import SensorObservationServiceCatalogItem from "../../Models/SensorObservationServiceCatalogItem";
 import ChartPreviewStyles from "./Chart/chart-preview.scss";
 import ChartExpandAndDownloadButtons from "./Chart/ChartExpandAndDownloadButtons";
 import Chart from "./Chart/FeatureInfoPanelChart";
 import CustomComponent, { ProcessNodeContext } from "./CustomComponent";
-import CommonStrata from "../../Models/CommonStrata";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
 
 export default class SOSChartCustomComponent extends CustomComponent {
   readonly attributes = ["identifier", "name", "units", "hide-buttons"];
@@ -67,6 +67,7 @@ export default class SOSChartCustomComponent extends CustomComponent {
     const featureName = node.attribs["name"];
     const hideButtons = node.attribs["hide-buttons"];
     const chartElements = [];
+    const units = catalogItem.selectedObservable?.units;
     if (!hideButtons) {
       // Build expand/download buttons
       const downloadItem = catalogItem.duplicateModel(createGuid());
@@ -82,6 +83,9 @@ export default class SOSChartCustomComponent extends CustomComponent {
         "chartFeatureOfInterestIdentifier",
         featureOfInterestId
       );
+      downloadItem
+        .addObject(CommonStrata.user, "columns", "values")
+        ?.setTrait(CommonStrata.user, "units", units);
       chartElements.push(
         React.createElement(ChartExpandAndDownloadButtons, {
           key: "button",
@@ -106,6 +110,9 @@ export default class SOSChartCustomComponent extends CustomComponent {
       "chartFeatureOfInterestIdentifier",
       featureOfInterestId
     );
+    chartItem
+      .addObject(CommonStrata.user, "columns", "values")
+      ?.setTrait(CommonStrata.user, "units", units);
 
     chartElements.push(
       React.createElement(Chart, {

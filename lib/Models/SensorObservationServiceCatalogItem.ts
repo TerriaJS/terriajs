@@ -25,10 +25,12 @@ import TableStyleTraits from "../Traits/TableStyleTraits";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
+import { AvailableStyle } from "./SelectableStyle";
 import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
-import LegendTraits from "../Traits/LegendTraits";
+import TableColumnTraits from "../Traits/TableColumnTraits";
+import CommonStrata from "./CommonStrata";
 
 interface GetFeatureOfInterestResponse {
   featureMember?: FeatureMember[] | FeatureMember;
@@ -200,22 +202,10 @@ class GetObservationRequest {
   }
 
   @computed
-  get activeProcedure() {
-    return this.catalogItem.procedures.find(
-      p => p.identifier === this.catalogItem.activeTableStyle.id
-    );
-  }
-
-  @computed
-  get observableProperty() {
-    return this.catalogItem.observableProperties[0];
-  }
-
-  @computed
   get parameters() {
     const foiIdentifier = this.catalogItem.chartFeatureOfInterestIdentifier;
-    const observableProperty = this.observableProperty;
-    const procedure = this.activeProcedure;
+    const observableProperty = this.catalogItem.selectedObservable;
+    const procedure = this.catalogItem.selectedProcedure;
     if (
       foiIdentifier === undefined ||
       procedure === undefined ||
@@ -242,8 +232,8 @@ class GetObservationRequest {
    */
   @computed
   get temporalFilters() {
-    const observableProperty = this.observableProperty;
-    const procedure = this.activeProcedure;
+    const observableProperty = this.catalogItem.selectedObservable;
+    const procedure = this.catalogItem.selectedProcedure;
     if (procedure === undefined || observableProperty === undefined) {
       return;
     }
@@ -448,17 +438,10 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
       return [];
     }
 
-    const procedure = request.activeProcedure!;
-    const observableProperty = request.observableProperty!;
-    const units = observableProperty.units || procedure.units;
-    const valueTitle =
-      observableProperty.title +
-      " " +
-      procedure.title +
-      (units !== undefined ? " (" + units + ")" : "");
-
+    const procedure = this.selectedProcedure!;
+    const observableProperty = this.selectedObservable!;
     const datesCol = ["date"];
-    const valuesCol = [valueTitle];
+    const valuesCol = ["values"];
     const observationsCol = ["observations"];
     const identifiersCol = ["identifiers"];
     const proceduresCol = [this.proceduresName];
@@ -504,6 +487,17 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
       }
     });
 
+    runInAction(() => {
+      // Set title for values column
+      const valueColumn = this.addObject(
+        CommonStrata.defaults,
+        "columns",
+        "values"
+      );
+      valueColumn?.setTrait(CommonStrata.defaults, "name", "values");
+      valueColumn?.setTrait(CommonStrata.defaults, "title", this.valueTitle);
+    });
+
     return [
       datesCol,
       valuesCol,
@@ -515,19 +509,101 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
   }
 
   @computed
-  get styleSelector() {
-    const selector = super.styleSelector;
-    if (selector === undefined) {
+  get valueTitle() {
+    if (
+      this.selectedObservable === undefined ||
+      this.selectedProcedure === undefined
+    ) {
       return;
     }
 
-    const sosModel = this;
+    const units = this.selectedObservable.units || this.selectedProcedure.units;
+    const valueTitle =
+      this.selectedObservable.title +
+      " " +
+      this.selectedProcedure.title +
+      (units !== undefined ? " (" + units + ")" : "");
+    return valueTitle;
+  }
+
+  @computed
+  get styleSelector() {
+    return undefined;
+  }
+
+  @computed
+  get styleSelectors() {
+    return filterOutUndefined([
+      this.proceduresSelector,
+      this.observablesSelector
+    ]);
+  }
+
+  @computed
+  get proceduresSelector() {
+    const proceduresSelector = super.styleSelector;
+    if (proceduresSelector === undefined) return;
+
+    const item = this;
     return {
-      ...selector,
+      ...proceduresSelector,
       get name(): string {
-        return sosModel.proceduresName;
+        return item.proceduresName;
       }
     };
+  }
+
+  @computed
+  get observablesSelector() {
+    if (this.mapItems.length === 0) {
+      return;
+    }
+    const item = this;
+    return {
+      get id(): string {
+        return "observables";
+      },
+      get name(): string {
+        return item.observablePropertiesName;
+      },
+      get availableStyles(): readonly AvailableStyle[] {
+        return filterOutUndefined(
+          item.observableProperties.map(p => {
+            if (p.identifier && p.title) {
+              return {
+                id: p.identifier,
+                name: p.title || p.identifier
+              };
+            }
+          })
+        );
+      },
+      get activeStyleId(): string | undefined {
+        return item.selectedObservableId;
+      },
+      chooseActiveStyle(stratumId: string, observableId: string) {
+        item.setTrait(stratumId, "selectedObservableId", observableId);
+      }
+    };
+  }
+
+  @computed
+  get selectedObservableId() {
+    return (
+      super.selectedObservableId || this.observableProperties[0]?.identifier
+    );
+  }
+
+  @computed
+  get selectedObservable() {
+    return this.observableProperties.find(
+      p => p.identifier === this.selectedObservableId
+    );
+  }
+
+  @computed
+  get selectedProcedure() {
+    return this.procedures.find(p => p.identifier === this.activeTableStyle.id);
   }
 }
 

@@ -162,4 +162,11 @@ export default class SensorObservationCatalogItemTraits extends mixTraits(
       "The `identifier` of the feature-of-interest for which we are showing the chart."
   })
   chartFeatureOfInterestIdentifier?: string;
+
+  @primitiveTrait({
+    name: "Selected observable id",
+    type: "string",
+    description: "The identifier of the selected observable property"
+  })
+  selectedObservableId?: string;
 }

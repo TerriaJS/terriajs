@@ -189,6 +189,14 @@ describe("SensorObservationServiceCatalogItem", function() {
           );
         });
       });
+
+      it("sets the style selectors correctly", function() {
+        expect(item.styleSelector).toBeUndefined();
+        expect(item.styleSelectors.map(s => s.name)).toEqual([
+          "Frequency",
+          "Observation Type"
+        ]);
+      });
     });
   });
 
@@ -260,16 +268,9 @@ describe("SensorObservationServiceCatalogItem", function() {
       });
 
       it("defines all feature columns", function() {
-        console.log(
-          "**title**",
-          item.procedures.find(p => p.identifier === item.activeTableStyle.id)
-            ?.identifier,
-          item.procedures.find(p => p.identifier === item.activeTableStyle.id)
-            ?.title
-        );
         expect(item.tableColumns.map(c => c.name)).toEqual([
           "date",
-          "undefined undefined",
+          "values",
           "observations",
           "identifiers",
           "Frequency",
