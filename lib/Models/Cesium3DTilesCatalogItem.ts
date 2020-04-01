@@ -93,12 +93,8 @@ export default class Cesium3DTilesCatalogItem
   }
 
   private loadTileset() {
-    if (!isDefined(this.url)) {
-      return;
-    }
-
     const tileset = this.createNewTileset(
-      proxyCatalogItemUrl(this, this.url),
+      this.url,
       this.ionAssetId,
       this.ionAccessToken,
       this.ionServer,
@@ -154,7 +150,7 @@ export default class Cesium3DTilesCatalogItem
   }
 
   private createNewTileset(
-    url: Resource | string,
+    url: Resource | string | undefined,
     ionAssetId: number | undefined,
     ionAccessToken: string | undefined,
     ionServer: string | undefined,
@@ -179,7 +175,7 @@ export default class Cesium3DTilesCatalogItem
       if (url instanceof Resource) {
         resource = url;
       } else {
-        resource = new Resource({ url });
+        resource = new Resource({ url: proxyCatalogItemUrl(this, url) });
       }
     }
 
