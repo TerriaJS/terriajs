@@ -10,6 +10,7 @@ import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
 import MapIconButton from "../../../MapIconButton/MapIconButton";
+import HelpPanelItem from "./HelpPanelItem"
 
 @observer
 class HelpPanel extends React.Component {
@@ -18,7 +19,7 @@ class HelpPanel extends React.Component {
   static propTypes = {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
-    items: PropTypes.object,
+    items: PropTypes.array,
     t: PropTypes.func.isRequired
   };
 
