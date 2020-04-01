@@ -18,7 +18,7 @@ class HelpPanel extends React.Component {
   static propTypes = {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
-    items: PropTypes.object.isRequired,
+    items: PropTypes.object,
     t: PropTypes.func.isRequired
   };
 
@@ -106,7 +106,32 @@ class HelpPanel extends React.Component {
             css={`
               display: inline-block;
             `}
-          >
+          >            
+            <HelpPanelItem
+              terria={this.props.terria}
+              viewState={this.props.viewState}
+              iconElement={Icon.GLYPHS.start}
+              title={"Getting started with the Digital Twin"}
+              itemString={"getstarted"}
+              description={[
+                "If you’re new to the NSW Spatial Digital Twin, this video provides a short explanation of how to use some of the basic functions, so you can feel like a pro in no time!",
+                "We cover:",
+                <span key={2}>
+                  • Signing in to the{" "}
+                  <a href="https://portal.spatial.nsw.gov.au/portal/apps/sites/#/home">
+                    NSW Spatial Collaboration Portal
+                  </a>
+                </span>,
+                "• Finding a location",
+                "• Exploring public data in the catalogue and adding it to the Digital Twin",
+                "• Workbench controls",
+                "• Removing data"
+              ]}
+              videoLink={"https://www.youtube.com/embed/lQE5E1O7VTs"}
+              background={
+                "https://img.youtube.com/vi/lQE5E1O7VTs/maxresdefault.jpg"
+              }
+            />
             {this.props.items}
           </Box>
         </Box>
