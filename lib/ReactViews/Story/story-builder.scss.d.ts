@@ -5,6 +5,7 @@ interface CssExports {
   'VideoGuideWrapper--closing': string;
   'actions': string;
   'captureBtn': string;
+  'closeBtn': string;
   'footer': string;
   'header': string;
   'intro': string;

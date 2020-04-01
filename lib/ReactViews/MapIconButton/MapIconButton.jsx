@@ -108,7 +108,7 @@ function MapIconButton(props) {
       onClick={props.onClick}
       css={`
         svg {
-          ${expanded && `margin-left: 6px;`};
+          margin: 0px 6px;
         }
       `}
     >
@@ -121,14 +121,13 @@ function MapIconButton(props) {
             medium
             css={`
               display: block;
-              transition: max-width 1s, transform 300ms;
-              max-width: ${expanded ? `200px` : `0px`};
-              margin: ${expanded ? `0 10px 0 8px` : `0`};
-              transform: scale(${expanded ? `1, 1` : `0, 1`});
-              transform-origin: right;
+              transition: all 0.5s ease;
+              max-width: ${expanded ? `150px` : `0px`};
+              margin-right: ${expanded ? `10px` : `0px`};
+              opacity: ${expanded ? `1.0` : `0`};
             `}
           >
-            {expanded && children}
+            {children}
           </Text>
         )}
         {props.iconElement && (
