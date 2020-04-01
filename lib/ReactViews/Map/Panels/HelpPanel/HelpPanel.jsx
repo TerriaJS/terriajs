@@ -10,7 +10,7 @@ import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
 import MapIconButton from "../../../MapIconButton/MapIconButton";
-import HelpPanelItem from "./HelpPanelItem"
+import HelpPanelItem from "./HelpPanelItem";
 
 @observer
 class HelpPanel extends React.Component {
@@ -107,7 +107,7 @@ class HelpPanel extends React.Component {
             css={`
               display: inline-block;
             `}
-          >            
+          >
             <HelpPanelItem
               terria={this.props.terria}
               viewState={this.props.viewState}
