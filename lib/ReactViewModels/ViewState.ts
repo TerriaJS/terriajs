@@ -23,6 +23,7 @@ interface ViewStateOptions {
   terria: Terria;
   catalogSearchProvider: any;
   locationSearchProviders: any[];
+  errorHandlingProvider?: any;
 }
 
 /**
@@ -64,6 +65,8 @@ export default class ViewState {
   @observable helpPanelExpanded: boolean = false;
 
   @observable workbenchWithOpenControls: string | undefined = undefined;
+
+  errorProvider: any | null = null;
 
   // default value is null, because user has not made decision to show or
   // not show story
@@ -128,6 +131,9 @@ export default class ViewState {
       locationSearchProviders: options.locationSearchProviders
     });
 
+    this.errorProvider = options.errorHandlingProvider
+      ? options.errorHandlingProvider
+      : null;
     this.terria = terria;
 
     // Show errors to the user as notifications.
