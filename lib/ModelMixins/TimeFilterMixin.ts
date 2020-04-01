@@ -210,7 +210,12 @@ const resolveFeature = action(async function(
 });
 
 function coordinatesFromTraits(traits: Model<TimeFilterCoordinates>) {
-  const { latitude, longitude, height, x, y, level } = traits;
+  const {
+    latitude,
+    longitude,
+    height,
+    tile: { x, y, level }
+  } = traits;
   if (latitude === undefined || longitude === undefined) return;
   if (x === undefined || y === undefined || level === undefined) return;
   return {

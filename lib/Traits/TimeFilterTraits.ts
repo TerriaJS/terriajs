@@ -4,7 +4,7 @@ import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
 import mixTraits from "./mixTraits";
 
-export class TimeFilterCoordinates extends mixTraits(LatLonHeightTraits) {
+export class TileCoordinates extends ModelTraits {
   @primitiveTrait({
     type: "number",
     name: "x",
@@ -25,6 +25,16 @@ export class TimeFilterCoordinates extends mixTraits(LatLonHeightTraits) {
     description: "Zoom level of the tile"
   })
   level?: number;
+}
+
+export class TimeFilterCoordinates extends mixTraits(LatLonHeightTraits) {
+  @objectTrait({
+    name: "Tile coordinates",
+    type: TileCoordinates,
+    description:
+      "x, y, level coordinates of the picked tile. Refer: https://cesium.com/docs/cesiumjs-ref-doc/ImageryProvider.html?classFilter=imageryprovider#pickFeatures"
+  })
+  tile?: TileCoordinates;
 }
 
 export default class TimeFilterTraits extends ModelTraits {
