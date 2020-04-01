@@ -5,12 +5,6 @@ interface CssExports {
   'btn--tab': string;
   'btnSelected': string;
   'btnTab': string;
-  'charcoalGrey': string;
-  'colorPrimary': string;
-  'dark': string;
-  'darkWithOverlay': string;
-  'mapButtonColor': string;
-  'modalHighlight': string;
   'panel-content': string;
   'panelContent': string;
   'tab-left-col': string;

@@ -5,18 +5,12 @@ interface CssExports {
   'btn--option': string;
   'btnDropdown': string;
   'btnOption': string;
-  'charcoalGrey': string;
-  'colorPrimary': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'dropdown': string;
   'is-open': string;
   'is-selected': string;
   'isOpen': string;
   'isSelected': string;
   'list': string;
-  'mapButtonColor': string;
-  'modalHighlight': string;
   'myDataDropdown': string;
 }
 declare var cssExports: CssExports;

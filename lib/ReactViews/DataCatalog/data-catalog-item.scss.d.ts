@@ -13,12 +13,6 @@ interface CssExports {
   'btnCatalogItemIsPreviewed': string;
   'btnCatalogItemIsTrashable': string;
   'btnTrash': string;
-  'charcoalGrey': string;
-  'colorPrimary': string;
-  'dark': string;
-  'darkWithOverlay': string;
-  'mapButtonColor': string;
-  'modalHighlight': string;
   'root': string;
 }
 declare var cssExports: CssExports;
