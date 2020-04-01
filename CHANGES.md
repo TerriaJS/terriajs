@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+
+### Next release
+
+* Add support for `classBreaks` renderer to `ArcGisFeatureServerCatalogItem`.
+
 ### v7.11.3
 
 * Added babel dynamic import plugin for webpack builds.
