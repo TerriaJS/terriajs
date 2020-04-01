@@ -83,6 +83,7 @@ const GLYPHS = {
   compassInner: require("../../wwwroot/images/icons/compass-inner.svg"),
   compassInnerArrows: require("../../wwwroot/images/icons/compass-inner-arrows.svg"),
   compassOuter: require("../../wwwroot/images/icons/compass-outer.svg"),
+  compassOuterEnlarged: require("../../wwwroot/images/icons/compass-outer-enlarged.svg"),
   compassRotationMarker: require("../../wwwroot/images/icons/compass-rotation-marker.svg"),
   circleFull: require("../../wwwroot/images/icons/circlef-full.svg"),
   circleEmpty: require("../../wwwroot/images/icons/circle-empty.svg"),
