@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { runInAction } from "mobx";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
@@ -135,12 +134,7 @@ export default function GyroscopeGuidance(props) {
     >
       <MapIconButton
         neverCollapse
-        onClick={() => {
-          runInAction(() => {
-            props.viewState.showHelpMenu = !props.viewState.showHelpMenu;
-            props.viewState.topElement = "HelpPanel";
-          });
-        }}
+        onClick={() => props.viewState.showHelpPanel()}
         iconElement={() => <Icon glyph={Icon.GLYPHS.help} />}
       >
         Help

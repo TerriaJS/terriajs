@@ -241,6 +241,11 @@ export default class ViewState {
   }
 
   @action
+  setTopElement(key: string) {
+    this.topElement = key;
+  }
+
+  @action
   openAddData() {
     this.explorerPanelIsVisible = true;
     this.activeTabCategory = DATA_CATALOG_NAME;
@@ -291,6 +296,25 @@ export default class ViewState {
   @action
   switchMobileView(viewName: string | null) {
     this.mobileView = viewName;
+  }
+
+  @action
+  showHelpPanel() {
+    this.showHelpMenu = true;
+    this.helpPanelExpanded = false;
+    this.selectedHelpMenuItem = "";
+    this.setTopElement("HelpPanel");
+  }
+
+  @action
+  selectHelpMenuItem(key: string) {
+    this.selectedHelpMenuItem = key;
+    this.helpPanelExpanded = true;
+  }
+
+  @action
+  hideHelpPanel() {
+    this.showHelpMenu = false;
   }
 
   /**

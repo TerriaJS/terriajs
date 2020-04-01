@@ -126,6 +126,8 @@ const StyledIcon = styled(Icon)`
   ${props => props.dark && `fill: ${props.theme.textDark};`}
 
   ${props => props.fillColor && `fill: ${props.fillColor};`}
+  
+  ${props => props.opacity && `opacity: ${props.opacity};`}
 `;
 
 module.exports = Icon;

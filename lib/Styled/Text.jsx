@@ -3,9 +3,9 @@ import styled from "styled-components";
 // should it be a span or inline-block-div? - leaning to div
 export const Text = styled.div`
   // TODO: themeify family
-  font-family: "Nunito", "Open Sans", sans-serif;
-  ${props => props.nunito && `font-family: "Nunito", "Open Sans", sans-serif;`}
-  ${props => props.openSans && `font-family: "Open Sans", sans-serif;`}
+  font-family: "Nunito", sans-serif;
+  ${props => props.nunito && `font-family: "Nunito", sans-serif;`}
+  // ${props => props.openSans && `font-family: "Nunito", sans-serif;`}
 
   ${props =>
     props.breakWord &&
@@ -17,6 +17,7 @@ export const Text = styled.div`
   font-weight: 400;
   ${props => props.bold && `font-weight: bold;`}
   ${props => props.semiBold && `font-weight: 600;`}
+  ${props => props.extraBold && `font-weight: 800;`}
   ${props => props.uppercase && `text-transform: uppercase;`}
 
   ${props => props.textAlignLeft && `text-align: left;`}
@@ -34,6 +35,11 @@ export const Text = styled.div`
     props.textLight &&
     `
     color: ${props.theme.textLight};
+  `}
+  ${props =>
+    props.textDark &&
+    `
+    color: ${props.theme.textDark};
   `}
   ${props =>
     props.textDarker &&
@@ -63,6 +69,17 @@ export const Text = styled.div`
     props.large &&
     `
     font-size: 15px;
+  `}
+  ${props =>
+    props.extraLarge &&
+    `
+    font-size: 16px;
+  `}
+  ${props =>
+    props.subHeading &&
+    `
+    font-size: 23px;
+    line-height: 31px;
   `}
   ${props =>
     props.heading &&

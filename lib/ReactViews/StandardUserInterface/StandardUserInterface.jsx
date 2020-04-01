@@ -375,9 +375,7 @@ const StandardUserInterface = observer(
                 animationDuration={animationDuration}
               />
             )}
-            {this.props.viewState.showHelpMenu && (
-              <HelpPanel terria={terria} viewState={this.props.viewState} />
-            )}
+            <HelpPanel terria={terria} viewState={this.props.viewState} />
           </div>
         </ThemeProvider>
       );
