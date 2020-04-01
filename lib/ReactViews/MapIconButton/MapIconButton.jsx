@@ -68,6 +68,7 @@ MapIconButton.propTypes = {
   splitter: PropTypes.bool,
   inverted: PropTypes.bool,
   expandInPlace: PropTypes.bool,
+  neverCollapse: PropTypes.bool,
   title: PropTypes.string,
   iconElement: PropTypes.element.isRequired,
   onClick: PropTypes.func,
@@ -76,8 +77,16 @@ MapIconButton.propTypes = {
 
 function MapIconButton(props) {
   const [isExpanded, setExpanded] = useState(false);
-  const { children, title, expandInPlace, primary, splitter, inverted } = props;
-  const expanded = isExpanded && children;
+  const {
+    children,
+    title,
+    expandInPlace,
+    neverCollapse,
+    primary,
+    splitter,
+    inverted
+  } = props;
+  const expanded = (isExpanded || neverCollapse) && children;
   // const { t } = this.props;
 
   // const handleAway = () => setTimeout(() => setExpanded(false), 1000);

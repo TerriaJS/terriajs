@@ -27,7 +27,10 @@ import JsonValue, {
 import loadJson5 from "../Core/loadJson5";
 import ServerConfig from "../Core/ServerConfig";
 import TerriaError from "../Core/TerriaError";
-import PickedFeatures from "../Map/PickedFeatures";
+import { getUriWithoutPath } from "../Core/uriHelpers";
+import PickedFeatures, {
+  featureBelongsToCatalogItem
+} from "../Map/PickedFeatures";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
@@ -53,6 +56,7 @@ import ViewerMode from "./ViewerMode";
 import Workbench from "./Workbench";
 import openGroup from "./openGroup";
 import getDereferencedIfExists from "../Core/getDereferencedIfExists";
+import SplitItemReference from "./SplitItemReference";
 
 interface ConfigParameters {
   [key: string]: ConfigParameters[keyof ConfigParameters];
@@ -82,6 +86,7 @@ interface ConfigParameters {
   magdaReferenceHeaders?: MagdaReferenceHeaders;
   locationSearchBoundingBox?: number[];
   googleAnalyticsKey?: string;
+  rollbarAccessToken?: string;
 }
 
 interface StartOptions {
@@ -187,7 +192,8 @@ export default class Terria {
     experimentalFeatures: undefined,
     magdaReferenceHeaders: undefined,
     locationSearchBoundingBox: undefined,
-    googleAnalyticsKey: undefined
+    googleAnalyticsKey: undefined,
+    rollbarAccessToken: undefined
   };
 
   @observable
@@ -304,6 +310,11 @@ export default class Terria {
     }
   }
 
+  @computed
+  get modelIds() {
+    return Array.from(this.models.keys());
+  }
+
   getModelById<T extends BaseModel>(type: Class<T>, id: string): T | undefined {
     const model = this.models.get(id);
     if (instanceOf(type, model)) {
@@ -327,11 +338,33 @@ export default class Terria {
     this.models.set(model.uniqueId, model);
   }
 
+  /**
+   * Remove references to a model from Terria.
+   */
+  @action
+  removeModelReferences(model: BaseModel) {
+    const pickedFeatures = this.pickedFeatures;
+    if (pickedFeatures) {
+      // Remove picked features that belong to the catalog item
+      pickedFeatures.features.forEach((feature, i) => {
+        if (featureBelongsToCatalogItem(<Feature>feature, model)) {
+          pickedFeatures?.features.splice(i, 1);
+        }
+      });
+    }
+    this.workbench.remove(model);
+    if (model.uniqueId) {
+      this.models.delete(model.uniqueId);
+    }
+  }
+
   start(options: StartOptions) {
     this.shareDataService = options.shareDataService;
 
     const baseUri = new URI(options.configUrl).filename("");
 
+    const launchUrlForAnalytics =
+      options.applicationUrl || getUriWithoutPath(baseUri);
     return loadJson5(options.configUrl, options.configUrlHeaders)
       .then((config: any) => {
         runInAction(() => {
@@ -357,11 +390,7 @@ export default class Terria {
       })
       .then(() => {
         this.analytics?.start(this.configParameters);
-        this.analytics?.logEvent(
-          "launch",
-          "url",
-          defined(baseUri.href) ? baseUri.href : "empty"
-        );
+        this.analytics?.logEvent("launch", "url", launchUrlForAnalytics);
         this.serverConfig = new ServerConfig();
         return this.serverConfig.init(this.configParameters.serverConfigUrl);
       })
@@ -541,6 +570,22 @@ export default class Terria {
       promise = Promise.all(containerPromises).then(() => undefined);
     } else {
       promise = Promise.resolve();
+    }
+
+    // If this model is a `SplitItemReference` we must load the source item first
+    const splitSourceId = cleanStratumData.splitSourceItemId;
+    if (
+      cleanStratumData.type === SplitItemReference.type &&
+      typeof splitSourceId === "string"
+    ) {
+      promise = promise.then(() =>
+        this.loadModelStratum(
+          splitSourceId,
+          stratumId,
+          allModelStratumData,
+          replaceStratum
+        ).then(() => undefined)
+      );
     }
 
     return promise

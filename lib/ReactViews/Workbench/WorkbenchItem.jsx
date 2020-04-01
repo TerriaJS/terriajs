@@ -2,14 +2,18 @@
 
 import classNames from "classnames";
 import createReactClass from "create-react-class";
+import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { sortable } from "react-anything-sortable";
+import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
+import getPath from "../../Core/getPath";
 import CommonStrata from "../../Models/CommonStrata";
-import getAncestors from "../../Models/getAncestors";
+import Box from "../../Styled/Box";
 import Icon from "../Icon";
+import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
 import ChartItemSelector from "./Controls/ChartItemSelector";
 import ColorScaleRangeSection from "./Controls/ColorScaleRangeSection";
 import ConceptViewer from "./Controls/ConceptViewer";
@@ -26,14 +30,7 @@ import ShortReport from "./Controls/ShortReport";
 import StyleSelectorSection from "./Controls/StyleSelectorSection";
 import TimerSection from "./Controls/TimerSection";
 import ViewingControls from "./Controls/ViewingControls";
-import { withTranslation } from "react-i18next";
-
 import Styles from "./workbench-item.scss";
-import { runInAction } from "mobx";
-
-import Box from "../../Styled/Box";
-import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
-import getDereferencedIfExists from "../../Core/getDereferencedIfExists";
 
 const WorkbenchItem = observer(
   createReactClass({
@@ -119,12 +116,7 @@ const WorkbenchItem = observer(
                   onMouseDown={this.props.onMouseDown}
                   onTouchStart={this.props.onTouchStart}
                   className={Styles.draggable}
-                  title={getAncestors(workbenchItem.terria, workbenchItem)
-                    .map(
-                      member => getDereferencedIfExists(member).nameInCatalog
-                    )
-                    .concat(workbenchItem.nameInCatalog)
-                    .join(" → ")}
+                  title={getPath(workbenchItem, " → ")}
                 >
                   <If condition={!workbenchItem.isMappable}>
                     <span className={Styles.iconLineChart}>

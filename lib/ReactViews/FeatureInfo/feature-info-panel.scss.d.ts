@@ -12,11 +12,6 @@ interface CssExports {
   'btnLocationSelected': string;
   'btnPanelHeading': string;
   'btnToggleFeature': string;
-  'charcoalGrey': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'header': string;
   'is-collapsed': string;
   'is-translucent': string;
@@ -25,14 +20,10 @@ interface CssExports {
   'isTranslucent': string;
   'isVisible': string;
   'location': string;
-  'mapButtonColor': string;
-  'modalHighlight': string;
   'no-results': string;
   'noResults': string;
   'panel': string;
   'satelliteSuggestionBtn': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

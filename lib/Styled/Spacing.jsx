@@ -13,6 +13,10 @@ export const Spacing = styled.div`
   ${props => props.right && `margin-right: ${props.right * 5}px;`}
 `;
 
+export const SpacingSpan = styled(Spacing).attrs({
+  as: "span"
+})``;
+
 export default Spacing;
 
 // import React from "react";

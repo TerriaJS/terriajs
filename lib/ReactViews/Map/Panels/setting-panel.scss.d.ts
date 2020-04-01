@@ -9,11 +9,6 @@ interface CssExports {
   'btnBaseMap': string;
   'btnNativeResolution': string;
   'btnViewer': string;
-  'charcoalGrey': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'dropdown-inner': string;
   'dropdownInner': string;
   'is-active': string;
@@ -23,8 +18,6 @@ interface CssExports {
   'list-item-three-cols': string;
   'listItemFourCols': string;
   'listItemThreeCols': string;
-  'mapButtonColor': string;
-  'modalHighlight': string;
   'native-resolution-header': string;
   'native-resolution-wrapper': string;
   'nativeResolutionHeader': string;
@@ -35,8 +28,6 @@ interface CssExports {
   'quality-wrapper': string;
   'qualityLabel': string;
   'qualityWrapper': string;
-  'textDarker': string;
-  'textLight': string;
   'viewer-selector': string;
   'viewerSelector': string;
 }
