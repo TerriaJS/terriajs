@@ -47,10 +47,6 @@ class HelpPanelItem extends React.Component {
       vertical-align: middle;
       padding-left: 25px;
     `;
-    const MenuIcon = styled(StyledIcon)`
-      position: relative;
-      trasform: translate(0%, 0%);
-    `;
     const itemSelected =
       this.props.viewState.selectedHelpMenuItem === this.props.itemString;
     const className = classNames({
@@ -78,7 +74,7 @@ class HelpPanelItem extends React.Component {
             `}
           >
             <MenuIconWrapper>
-              <MenuIcon
+              <StyledIcon
                 styledWidth={"27px"}
                 fillColor={this.props.theme.textDark}
                 glyph={this.props.iconElement}
