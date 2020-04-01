@@ -21,6 +21,7 @@ export const Box = styled.div`
   ${props => props.fullHeight && `height: 100%;`}
   ${props => props.fullWidth && `width: 100%;`}
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
+  ${props => props.styledHeight && `height: ${props.styledHeight};`}
   
   ${props =>
     props.col &&
@@ -69,6 +70,9 @@ export const Box = styled.div`
   /* Background colours? unsure how to handle this on theme level yet */
   ${props =>
     props.charcoalGreyBg && `background-color: ${props.theme.charcoalGrey};`}
+
+  ${props =>
+    props.bgColor && `background-color: ${props.bgColor};`}
 
 
   /* Unsure of padding API as yet */
