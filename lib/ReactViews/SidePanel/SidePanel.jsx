@@ -4,6 +4,7 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation, Trans } from "react-i18next";
+import { withTheme } from "styled-components";
 import Icon from "../Icon";
 import SearchBoxAndResults from "../Search/SearchBoxAndResults";
 import Workbench from "../Workbench/Workbench";
@@ -24,7 +25,7 @@ function EmptyWorkbench(props) {
           min-height: 240px;
         `}
       >
-        <Text large css={"color: #88A3C1"}>
+        <Text large color={props.theme.textLightDimmed}>
           {t("emptyWorkbench.emptyArea")}
         </Text>
       </Box>
@@ -64,7 +65,8 @@ function EmptyWorkbench(props) {
   );
 }
 EmptyWorkbench.propTypes = {
-  t: PropTypes.func.isRequired
+  t: PropTypes.func.isRequired,
+  theme: PropTypes.object.isRequired
 };
 
 const SidePanel = observer(
@@ -74,7 +76,8 @@ const SidePanel = observer(
     propTypes: {
       terria: PropTypes.object.isRequired,
       viewState: PropTypes.object.isRequired,
-      t: PropTypes.func.isRequired
+      t: PropTypes.func.isRequired,
+      theme: PropTypes.object.isRequired
     },
 
     onAddDataClicked(event) {
@@ -89,7 +92,7 @@ const SidePanel = observer(
       this.props.viewState.openUserData();
     },
     render() {
-      const { t } = this.props;
+      const { t, theme } = this.props;
       const addData = t("addData.addDataBtnText");
       const uploadText = t("models.catalog.upload");
       return (
@@ -146,7 +149,7 @@ const SidePanel = observer(
                 />
               </When>
               <Otherwise>
-                <EmptyWorkbench t={t} />
+                <EmptyWorkbench t={t} theme={theme} />
               </Otherwise>
             </Choose>
           </div>
@@ -156,4 +159,4 @@ const SidePanel = observer(
   })
 );
 
-module.exports = withTranslation()(SidePanel);
+module.exports = withTranslation()(withTheme(SidePanel));

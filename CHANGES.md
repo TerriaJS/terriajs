@@ -95,6 +95,7 @@ Change Log
 * Overhauled location search to be a dropdown instead of list of results
 * Fixed bug causing full app crash or viewer zoom refresh when using 3D view and changing settings or changing the terrain provider.
 * Add support for styling CSVs using a region mapped or text columns.
+* Removed hardcoded workbench & Panel button colours
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
