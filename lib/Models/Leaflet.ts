@@ -8,6 +8,7 @@ import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
@@ -15,7 +16,6 @@ import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import cesiumRequestAnimationFrame from "terriajs-cesium/Source/Core/requestAnimationFrame";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import when from "terriajs-cesium/Source/ThirdParty/when";
@@ -43,6 +43,9 @@ import Mappable, { ImageryParts, MapItem } from "./Mappable";
 import Terria from "./Terria";
 import MapboxVectorCanvasTileLayer from "../Map/MapboxVectorCanvasTileLayer";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
+import LatLonHeight from "../Core/LatLonHeight";
+import MapInteractionMode from "./MapInteractionMode";
+import i18next from "i18next";
 
 interface SplitterClips {
   left: string;
@@ -407,6 +410,46 @@ export default class Leaflet extends GlobeOrMap {
     // No action necessary.
   }
 
+  /**
+   * Return features at a latitude, longitude and (optionally) height for the given imageryLayer.
+   * @param latLngHeight The position on the earth to pick
+   * @param providerCoords A map of imagery provider urls to the tile coords used to get features for those imagery
+   * @returns A flat array of all the features for the given tiles that are currently on the map
+   */
+  @action
+  async getFeaturesAtLocation(
+    latLngHeight: LatLonHeight,
+    providerCoords: ProviderCoordsMap
+  ) {
+    const pickMode = new MapInteractionMode({
+      message: i18next.t("models.imageryLayer.resolvingAvailability"),
+      onCancel: () => {
+        this.terria.mapInteractionModeStack.pop();
+      }
+    });
+    this.terria.mapInteractionModeStack.push(pickMode);
+    this._pickFeatures(
+      L.latLng({
+        lat: latLngHeight.latitude,
+        lng: latLngHeight.longitude,
+        alt: latLngHeight.height
+      }),
+      providerCoords,
+      [],
+      true
+    );
+
+    if (pickMode.pickedFeatures) {
+      const pickedFeatures = pickMode.pickedFeatures;
+      await pickedFeatures.allFeaturesAvailablePromise;
+    }
+
+    return runInAction(() => {
+      this.terria.mapInteractionModeStack.pop();
+      return pickMode.pickedFeatures?.features;
+    });
+  }
+
   /*
    * There are two "listeners" for clicks which are set up in our constructor.
    * - One fires for any click: `map.on('click', ...`.  It calls `pickFeatures`.
@@ -453,7 +496,8 @@ export default class Leaflet extends GlobeOrMap {
   private _pickFeatures(
     latlng: L.LatLng,
     tileCoordinates?: any,
-    existingFeatures?: Entity[]
+    existingFeatures?: Entity[],
+    ignoreSplitter: boolean = false
   ) {
     if (isDefined(this._pickedFeatures)) {
       // Picking is already in progress.
@@ -509,36 +553,38 @@ export default class Leaflet extends GlobeOrMap {
       pickedLocation
     );
 
-    // We want the all available promise to return after the cleanup one to make sure all vector click events have resolved.
+    // We want the all available promise to return after the cleanup one to
+    // make sure all vector click events have resolved.
     const promises = [cleanup].concat(
       imageryLayers.map(imageryLayer => {
         const imageryLayerUrl = (<any>imageryLayer.imageryProvider).url;
         const longRadians = CesiumMath.toRadians(latlng.lng);
         const latRadians = CesiumMath.toRadians(latlng.lat);
 
-        if (tileCoordinates[imageryLayerUrl]) {
-          return Promise.resolve(tileCoordinates[imageryLayerUrl]);
-        } else {
+        return Promise.resolve(
+          tileCoordinates[imageryLayerUrl] ||
+            imageryLayer.getFeaturePickingCoords(
+              this.map,
+              longRadians,
+              latRadians
+            )
+        ).then(coords => {
           return imageryLayer
-            .getFeaturePickingCoords(this.map, longRadians, latRadians)
-            .then(coords => {
-              return imageryLayer
-                .pickFeatures(
-                  coords.x,
-                  coords.y,
-                  coords.level,
-                  longRadians,
-                  latRadians
-                )
-                .then(features => {
-                  return {
-                    features: features,
-                    imageryLayer: imageryLayer,
-                    coords: coords
-                  };
-                });
+            .pickFeatures(
+              coords.x,
+              coords.y,
+              coords.level,
+              longRadians,
+              latRadians
+            )
+            .then(features => {
+              return {
+                features: features,
+                imageryLayer: imageryLayer,
+                coords: coords
+              };
             });
-        }
+        });
       })
     );
 
@@ -558,7 +604,6 @@ export default class Leaflet extends GlobeOrMap {
         });
 
         pickedFeatures.providerCoords = {};
-
         const filteredResults = promiseResult.filter(function(result) {
           return isDefined(result.features) && result.features.length > 0;
         });
@@ -576,6 +621,7 @@ export default class Leaflet extends GlobeOrMap {
         const features = filteredResults.reduce((allFeatures, result) => {
           if (
             this.terria.showSplitter &&
+            ignoreSplitter === false &&
             isDefined(pickedFeatures.pickPosition)
           ) {
             // Skip this feature, unless the imagery layer is on the picked side or

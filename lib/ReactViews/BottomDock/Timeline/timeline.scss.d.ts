@@ -5,11 +5,7 @@ interface CssExports {
   'backbtn': string;
   'backbutton': string;
   'centuryBtn': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
   'controlsRow': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'dateBtn': string;
   'datePicker': string;
   'dayPicker': string;
@@ -31,8 +27,6 @@ interface CssExports {
   'text-cell': string;
   'text-row': string;
   'textCell': string;
-  'textDarker': string;
-  'textLight': string;
   'textRow': string;
   'time': string;
   'timeline': string;

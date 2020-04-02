@@ -7,10 +7,6 @@ interface CssExports {
   'btnSubmit': string;
   'btnSubmit--hover': string;
   'btnSubmitHover': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'description': string;
   'field': string;
   'form': string;
@@ -19,8 +15,6 @@ interface CssExports {
   'label': string;
   'share-url': string;
   'shareUrl': string;
-  'textDarker': string;
-  'textLight': string;
   'title': string;
 }
 declare var cssExports: CssExports;

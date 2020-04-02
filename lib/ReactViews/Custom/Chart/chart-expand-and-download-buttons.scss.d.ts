@@ -15,10 +15,6 @@ interface CssExports {
   'chart-expand': string;
   'chartDropdownButton': string;
   'chartExpand': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'dropdown': string;
   'dropdownBtn': string;
   'dropdownBtnOption': string;
@@ -28,8 +24,6 @@ interface CssExports {
   'dropdown__list': string;
   'raise-to-title': string;
   'raiseToTitle': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

@@ -9,12 +9,6 @@ interface CssExports {
   'btnBlink': string;
   'btnPrimary': string;
   'btnPrimaryHover': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
-  'textDarker': string;
-  'textLight': string;
   'toggle-splitter-tool': string;
   'toggleSplitterTool': string;
 }

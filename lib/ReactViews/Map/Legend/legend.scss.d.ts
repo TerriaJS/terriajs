@@ -3,10 +3,6 @@
 interface CssExports {
   'bar': string;
   'baseLegend': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'distanceLegend': string;
   'locationBar': string;
   'section': string;
@@ -14,8 +10,6 @@ interface CssExports {
   'section-short': string;
   'sectionLong': string;
   'sectionShort': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

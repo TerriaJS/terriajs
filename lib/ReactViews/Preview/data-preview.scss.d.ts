@@ -3,10 +3,6 @@
 interface CssExports {
   'btn--back-to-map': string;
   'btnBackToMap': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'field': string;
   'h3': string;
   'h4': string;
@@ -16,8 +12,6 @@ interface CssExports {
   'previewChart': string;
   'previewInner': string;
   'preview__inner': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

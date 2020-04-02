@@ -9,10 +9,6 @@ interface CssExports {
   'btnMenu': string;
   'btnNowViewing': string;
   'btnSearch': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'doubleDigit': string;
   'form-search-data': string;
   'formSearchData': string;
@@ -23,8 +19,6 @@ interface CssExports {
   'mobile-header': string;
   'mobileHeader': string;
   'nowViewingCount': string;
-  'textDarker': string;
-  'textLight': string;
   'ui': string;
 }
 declare var cssExports: CssExports;

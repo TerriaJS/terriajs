@@ -5,17 +5,11 @@ interface CssExports {
   'chart-title-from-table': string;
   'chartTd': string;
   'chartTitleFromTable': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'empty': string;
   'preview-chart': string;
   'preview-chart-wrapper': string;
   'previewChart': string;
   'previewChartWrapper': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

@@ -5,11 +5,7 @@ interface CssExports {
   'button-for-modal-dropdown': string;
   'buttonForModalDropdown': string;
   'caret': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
   'content': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'heading': string;
   'inner': string;
   'inner-close-btn': string;
@@ -29,8 +25,6 @@ interface CssExports {
   'showDropdownInCenter': string;
   'sub-heading': string;
   'subHeading': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

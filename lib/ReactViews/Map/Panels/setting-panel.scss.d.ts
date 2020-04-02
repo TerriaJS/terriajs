@@ -9,10 +9,6 @@ interface CssExports {
   'btnBaseMap': string;
   'btnNativeResolution': string;
   'btnViewer': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'dropdown-inner': string;
   'dropdownInner': string;
   'is-active': string;
@@ -32,8 +28,6 @@ interface CssExports {
   'quality-wrapper': string;
   'qualityLabel': string;
   'qualityWrapper': string;
-  'textDarker': string;
-  'textLight': string;
   'viewer-selector': string;
   'viewerSelector': string;
 }

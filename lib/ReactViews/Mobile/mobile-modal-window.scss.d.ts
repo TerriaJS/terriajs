@@ -6,10 +6,6 @@ interface CssExports {
   'backButton': string;
   'backButtonInactive': string;
   'button': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'data-catalog': string;
   'dataCatalog': string;
   'done-button': string;
@@ -21,8 +17,6 @@ interface CssExports {
   'modal-top': string;
   'modalBg': string;
   'modalTop': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

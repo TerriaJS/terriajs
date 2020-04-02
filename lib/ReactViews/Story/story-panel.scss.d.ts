@@ -2,10 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'body': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'exitBtn': string;
   'full-panel': string;
   'fullPanel': string;
@@ -28,8 +24,6 @@ interface CssExports {
   'story-container': string;
   'storyContainer': string;
   'storyHeader': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

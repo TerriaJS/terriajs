@@ -3,10 +3,6 @@
 interface CssExports {
   'body': string;
   'cancelBtn': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'doneBtn': string;
   'editor': string;
   'editorHeader': string;
@@ -18,8 +14,6 @@ interface CssExports {
   'isMounted': string;
   'popupEditor': string;
   'saveBtn': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

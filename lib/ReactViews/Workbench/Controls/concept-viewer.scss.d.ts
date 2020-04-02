@@ -6,10 +6,6 @@ interface CssExports {
   'btnToggleOpen': string;
   'children-list': string;
   'childrenList': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'hasChildren': string;
   'header': string;
   'inner': string;
@@ -19,8 +15,6 @@ interface CssExports {
   'items': string;
   'root': string;
   'section': string;
-  'textDarker': string;
-  'textLight': string;
   'unSelectable': string;
 }
 declare var cssExports: CssExports;
