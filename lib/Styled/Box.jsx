@@ -71,8 +71,7 @@ export const Box = styled.div`
   ${props =>
     props.charcoalGreyBg && `background-color: ${props.theme.charcoalGrey};`}
 
-  ${props =>
-    props.bgColor && `background-color: ${props.bgColor};`}
+  ${props => props.bgColor && `background-color: ${props.bgColor};`}
 
 
   /* Unsure of padding API as yet */

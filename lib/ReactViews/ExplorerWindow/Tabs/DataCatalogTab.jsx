@@ -8,7 +8,11 @@ import DataCatalog from "../../DataCatalog/DataCatalog";
 import DataPreview from "../../Preview/DataPreview";
 import SearchBox, { DEBOUNCE_INTERVAL } from "../../Search/SearchBox.jsx";
 import Styles from "./data-catalog-tab.scss";
-import Box from "../../../Styled/Box"
+import Box from "../../../Styled/Box";
+import { getParentGroups } from "../../../Core/getPath";
+import Text from "../../../Styled/Text";
+import Icon, { StyledIcon } from "../../Icon";
+import Spacing from "../../../Styled/Spacing";
 
 // The DataCatalog Tab
 @observer
@@ -44,12 +48,16 @@ class DataCatalogTab extends React.Component {
     console.log(this.props.theme);
     const terria = this.props.terria;
     const searchState = this.props.viewState.searchState;
+    const previewed = this.props.viewState.previewedItem;
+    const showBreadcrumb =
+      searchState.catalogSearchText.length > 0 && previewed;
+    const parentGroups = previewed ? getParentGroups(previewed) : undefined;
     return (
       <div className={Styles.root}>
         <div
           className={Styles.dataExplorer}
           css={`
-            height: calc(100% - 32px);
+            height: ${showBreadcrumb ? `calc(100% - 32px)` : `100%`};
           `}
         >
           {/* ~TODO: Put this back once we add a MobX DataCatalogSearch Provider~ */}
@@ -81,12 +89,35 @@ class DataCatalogTab extends React.Component {
           viewState={this.props.viewState}
           previewed={this.props.viewState.previewedItem}
         />
-        {searchState.catalogSearchText.length > 0 && (
+        {showBreadcrumb && (
+          // Note: should it reset the text if a person deletes current search and starts a new search?
           <Box
+            left
             styledHeight={"32px"}
             bgColor={this.props.theme.greyLighter}
+            paddedHorizontally={2.4}
+            paddedVertically={1}
           >
-
+            <StyledIcon
+              styledWidth={"16px"}
+              fillColor={this.props.theme.textDark}
+              glyph={Icon.GLYPHS.globe}
+            />
+            <Spacing right={1.2} />
+            {parentGroups && (
+              <For each="parent" index="i" of={parentGroups}>
+                <Text small textDark>
+                  {parent}
+                </Text>
+                <If condition={i !== parentGroups.length - 1}>
+                  <Box paddedHorizontally={1}>
+                    <Text small textDark>
+                      {">"}
+                    </Text>
+                  </Box>
+                </If>
+              </For>
+            )}
           </Box>
         )}
       </div>

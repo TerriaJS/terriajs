@@ -14,6 +14,8 @@ import { observer } from "mobx-react";
 import { runInAction } from "mobx";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
 import Loader from "../Loader";
+import { getParentGroups } from "../../Core/getPath";
+import getAncestors from "../../Models/getAncestors";
 
 /**
  * Data preview section, for the preview map see DataPreviewMap
@@ -38,6 +40,14 @@ const DataPreview = observer(
     render() {
       const { t } = this.props;
       let previewed = this.props.previewed;
+      const showBreadcrumb =
+        this.props.viewState.searchState.catalogSearchText.length > 0 &&
+        previewed;
+      if (previewed) {
+        console.log(previewed);
+        console.log(getAncestors(previewed));
+        console.log(getParentGroups(previewed));
+      }
       if (previewed !== undefined && ReferenceMixin.is(previewed)) {
         if (previewed.target === undefined) {
           // Reference is not available yet.
@@ -55,7 +65,7 @@ const DataPreview = observer(
         <div
           className={Styles.preview}
           css={`
-            height: calc(100% - 32px);
+            height: ${showBreadcrumb ? `calc(100% - 32px)` : `100%`};
           `}
         >
           <Choose>

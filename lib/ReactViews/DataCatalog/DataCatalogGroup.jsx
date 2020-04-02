@@ -90,6 +90,7 @@ const DataCatalogGroup = observer(
 
     render() {
       const group = this.props.group;
+      console.log(group);
       const { t } = this.props;
       return (
         <CatalogGroup

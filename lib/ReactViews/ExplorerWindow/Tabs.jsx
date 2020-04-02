@@ -43,7 +43,6 @@ const Tabs = observer(
       };
 
       if (this.props.terria.configParameters.tabbedCatalog) {
-        console.log("1");
         return [].concat(
           this.props.terria.catalog.group.memberModels
             .filter(
@@ -66,7 +65,6 @@ const Tabs = observer(
           [myDataTab]
         );
       } else {
-        console.log("2");
         return [
           {
             name: t("addData.dataCatalogue"),
