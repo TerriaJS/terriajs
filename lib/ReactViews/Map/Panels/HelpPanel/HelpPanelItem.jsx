@@ -3,12 +3,11 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
-import Icon from "../../../Icon.jsx";
+import { StyledIcon } from "../../../Icon.jsx";
 import Styles from "./help-panel.scss";
-import { action } from "mobx";
 import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
-import styled from "styled-components";
+import styled, { withTheme } from "styled-components";
 import HelpVideoPanel from "./HelpVideoPanel";
 
 @observer
@@ -24,6 +23,7 @@ class HelpPanelItem extends React.Component {
     description: PropTypes.array,
     videoLink: PropTypes.string,
     background: PropTypes.string,
+    theme: PropTypes.object,
     t: PropTypes.func.isRequired
   };
 
@@ -35,39 +35,17 @@ class HelpPanelItem extends React.Component {
     super(props);
   }
 
-  @action.bound
-  changeActiveItem() {
-    this.props.viewState.selectedHelpMenuItem = this.props.itemString;
-    this.props.viewState.helpPanelExpanded = true;
-  }
-
   render() {
     // const { t } = this.props;
-    const CompassWrapper = styled(Box).attrs({
+    const MenuIconWrapper = styled(Box).attrs({
       centered: true
     })`
       flex-shrink: 0;
       width: 64px;
       height: 64px;
-      margin-right: 10px;
       display: table-cell;
-    `;
-    const CompassIcon = styled(Icon)`
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      ${props =>
-        `
-          fill: #575757;
-          width: 30px;
-          height: 30px;
-        `}
-      ${props =>
-        props.darken &&
-        `
-          opacity: 0.2;
-        `}
+      vertical-align: middle;
+      padding-left: 25px;
     `;
     const itemSelected =
       this.props.viewState.selectedHelpMenuItem === this.props.itemString;
@@ -76,25 +54,42 @@ class HelpPanelItem extends React.Component {
       [Styles.isSelected]: itemSelected
     });
     return (
-      <div>
-        <button className={className} onClick={this.changeActiveItem}>
+      <div
+        css={`
+          height: 70px;
+        `}
+      >
+        <button
+          className={className}
+          onClick={() =>
+            this.props.viewState.selectHelpMenuItem(this.props.itemString)
+          }
+        >
           <Box
             left
+            fullHeight
             css={`
               display: table-row;
               text-align: left;
             `}
           >
-            <CompassWrapper>
-              <CompassIcon glyph={this.props.iconElement} />
-            </CompassWrapper>
+            <MenuIconWrapper>
+              <StyledIcon
+                styledWidth={"27px"}
+                fillColor={this.props.theme.textDark}
+                glyph={this.props.iconElement}
+              />
+            </MenuIconWrapper>
             <Text
               semiBold
+              extraLarge
               uppercase
+              textDark
               css={`
+                padding-right: 25px;
+                padding-left: 5px;
                 display: table-cell;
                 vertical-align: middle;
-                font-size: 16px;
                 line-height: 17px;
               `}
             >
@@ -102,22 +97,18 @@ class HelpPanelItem extends React.Component {
             </Text>
           </Box>
         </button>
-        {this.props.viewState.showHelpMenu &&
-          this.props.viewState.helpPanelExpanded &&
-          itemSelected && (
-            <HelpVideoPanel
-              terria={this.props.terria}
-              viewState={this.props.viewState}
-              title={this.props.title}
-              itemString={this.props.itemString}
-              description={this.props.description}
-              videoLink={this.props.videoLink}
-              background={this.props.background}
-            />
-          )}
+        <HelpVideoPanel
+          terria={this.props.terria}
+          viewState={this.props.viewState}
+          title={this.props.title}
+          itemString={this.props.itemString}
+          description={this.props.description}
+          videoLink={this.props.videoLink}
+          background={this.props.background}
+        />
       </div>
     );
   }
 }
 
-export default withTranslation()(HelpPanelItem);
+export default withTranslation()(withTheme(HelpPanelItem));

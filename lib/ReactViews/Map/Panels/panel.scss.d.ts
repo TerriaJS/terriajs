@@ -5,12 +5,7 @@ interface CssExports {
   'button-for-modal-dropdown': string;
   'buttonForModalDropdown': string;
   'caret': string;
-  'charcoalGrey': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
   'content': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'heading': string;
   'inner': string;
   'inner-close-btn': string;
@@ -21,8 +16,6 @@ interface CssExports {
   'isOpen': string;
   'label': string;
   'link': string;
-  'mapButtonColor': string;
-  'modalHighlight': string;
   'overlay': string;
   'panel': string;
   'section': string;
@@ -32,8 +25,6 @@ interface CssExports {
   'showDropdownInCenter': string;
   'sub-heading': string;
   'subHeading': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

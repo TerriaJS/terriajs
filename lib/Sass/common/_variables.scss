@@ -1,8 +1,7 @@
-@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,400italic,600");
-@import url("https://fonts.googleapis.com/css?family=Lato:400,700");
+@import url("https://fonts.googleapis.com/css?family=Nunito:300,400,500,400italic,600,700&display=swap");
 
-$font-pop: "Open Sans", sans-serif;
-$font-base: "Open Sans", sans-serif;
+$font-pop: "Nunito", sans-serif;
+$font-base: "Nunito", sans-serif;
 $font-mono: monospace, sans-serif;
 $font-feature-info: $font-mono;
 $font: $font-base;
@@ -146,6 +145,7 @@ $border-color: rgba(#fff, 0.15);
 $border-style: 1px solid $border-color;
 $box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.12), 0 2px 2px 0 rgba(0, 0, 0, 0.24);
 
+$radius-large: 4px;
 $radius-medium: 3px;
 $radius-small: 2px;
 
@@ -181,12 +181,3 @@ $legend-item-width: 30px;
 $legend-item-height: 16px;
 $legend-padding: $legend-item-height / 2;
 $legend-spacer-height: $legend-padding / 2;
-
-:export {
-  colorPrimary: $color-primary;
-  colorSplitter: $color-splitter;
-  textLight: $text-light;
-  textDarker: $text-darker;
-  dark: $dark;
-  darkWithOverlay: $dark-with-overlay;
-}
