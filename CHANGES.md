@@ -96,6 +96,7 @@ Change Log
 * Fixed bug causing full app crash or viewer zoom refresh when using 3D view and changing settings or changing the terrain provider.
 * Add support for styling CSVs using a region mapped or text columns.
 * Removed hardcoded workbench & Panel button colours
+* Ensure CSV column names are trimmed of whitespace.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
