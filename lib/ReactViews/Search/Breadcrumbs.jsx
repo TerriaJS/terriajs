@@ -10,6 +10,10 @@ import Icon, { StyledIcon } from "../Icon";
 import Spacing from "../../Styled/Spacing";
 import { RawButton } from "../../Styled/Button";
 import styled from "styled-components";
+import getAncestors from "../../Models/getAncestors";
+import getDereferencedIfExists from "../../Core/getDereferencedIfExists";
+import { runInAction } from "mobx";
+import CommonStrata from "../../Models/CommonStrata";
 
 const RawButtonAndUnderline = styled(RawButton)`
   ${props => `
@@ -28,11 +32,22 @@ class Breadcrumbs extends React.Component {
     t: PropTypes.func.isRequired
   }
 
+  openInCatalog(items) {
+    items.forEach(item => {
+      runInAction(() => {
+        item.setTrait(CommonStrata.user, "isOpen", true);
+      });
+    });
+    this.props.viewState.changeSearchState("");
+    this.props.viewState.showBreadcrumbs(false);
+  }
+
   render() {
     console.log(this.props.theme);
     const parentGroups = this.props.previewed ? getParentGroups(this.props.previewed) : undefined;
+    const ancestors = getAncestors(this.props.previewed).map(ancestor => getDereferencedIfExists(ancestor));
     return (
-        // Note: should it reset the text if a person deletes current search and starts a new search?
+      // Note: should it reset the text if a person deletes current search and starts a new search?
       <Box
         left
         styledHeight={"32px"}
@@ -50,7 +65,10 @@ class Breadcrumbs extends React.Component {
           <For each="parent" index="i" of={parentGroups}>
             {/* The first and last two groups use the full name */}
             <If condition={i <= 1 || i >= parentGroups.length - 2}>
-              <RawButtonAndUnderline>
+              <RawButtonAndUnderline
+                type="button"
+                onClick={() => this.openInCatalog(ancestors.slice(0, i+1))}
+              >
                 <Text small textDark>
                   {parent}
                 </Text>

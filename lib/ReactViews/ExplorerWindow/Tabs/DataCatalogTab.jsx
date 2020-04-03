@@ -44,14 +44,13 @@ class DataCatalogTab extends React.Component {
     const terria = this.props.terria;
     const searchState = this.props.viewState.searchState;
     const previewed = this.props.viewState.previewedItem;
-    const showBreadcrumb =
-      searchState.catalogSearchText.length > 0 && previewed;
+    const showBreadcrumbs = this.props.viewState.breadcrumbsShown;
     return (
       <div className={Styles.root}>
         <div
           className={Styles.dataExplorer}
           css={`
-            height: ${showBreadcrumb ? `calc(100% - 32px)` : `100%`};
+            height: ${showBreadcrumbs ? `calc(100% - 32px)` : `100%`};
           `}
         >
           {/* ~TODO: Put this back once we add a MobX DataCatalogSearch Provider~ */}
@@ -61,6 +60,7 @@ class DataCatalogTab extends React.Component {
               searchText={searchState.catalogSearchText}
               onSearchTextChanged={val => this.changeSearchText(val)}
               onDoSearch={() => this.search()}
+              onClear={() => this.props.viewState.showBreadcrumbs(false)}
               placeholder={this.searchPlaceholder}
               debounceDuration={
                 terria.catalogReferencesLoaded &&
@@ -83,7 +83,7 @@ class DataCatalogTab extends React.Component {
           viewState={this.props.viewState}
           previewed={previewed}
         />
-        {showBreadcrumb &&
+        {showBreadcrumbs &&
         <Breadcrumbs 
           terria={this.props.terria}
           viewState={this.props.viewState}

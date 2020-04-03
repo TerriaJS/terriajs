@@ -40,9 +40,6 @@ const DataPreview = observer(
     render() {
       const { t } = this.props;
       let previewed = this.props.previewed;
-      const showBreadcrumb =
-        this.props.viewState.searchState.catalogSearchText.length > 0 &&
-        previewed;
       if (previewed) {
         console.log(previewed);
         console.log(getAncestors(previewed));
@@ -65,7 +62,7 @@ const DataPreview = observer(
         <div
           className={Styles.preview}
           css={`
-            height: ${showBreadcrumb ? `calc(100% - 32px)` : `100%`};
+            height: ${this.props.viewState.breadcrumbsShown ? `calc(100% - 32px)` : `100%`};
           `}
         >
           <Choose>

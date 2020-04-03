@@ -56,6 +56,7 @@ export default class ViewState {
   @observable explorerPanelAnimating: boolean = false;
   @observable topElement: string = "FeatureInfo";
   @observable storyBuilderShown: boolean = false;
+  @observable breadcrumbsShown: boolean = false;
 
   // Flesh out later
   @observable showHelpMenu: boolean = false;
@@ -263,6 +264,7 @@ export default class ViewState {
     this.explorerPanelIsVisible = false;
     this.switchMobileView(null);
     this.clearPreviewedItem();
+    this.showBreadcrumbs(false);
   }
 
   @action
@@ -315,6 +317,16 @@ export default class ViewState {
   @action
   hideHelpPanel() {
     this.showHelpMenu = false;
+  }
+
+  @action
+  changeSearchState(newText: string) {
+    this.searchState.catalogSearchText = newText;
+  }
+
+  @action
+  showBreadcrumbs(isActive: boolean) {
+    this.breadcrumbsShown = isActive;
   }
 
   /**
