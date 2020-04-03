@@ -121,7 +121,7 @@ function MapIconButton(props) {
             medium
             css={`
               display: block;
-              transition: all 0.5s ease;
+              transition: all 0.3s ease;
               max-width: ${expanded ? `150px` : `0px`};
               margin-right: ${expanded ? `10px` : `0px`};
               opacity: ${expanded ? `1.0` : `0`};

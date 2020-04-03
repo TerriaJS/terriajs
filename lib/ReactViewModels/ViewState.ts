@@ -241,6 +241,11 @@ export default class ViewState {
   }
 
   @action
+  toggleStoryBuilder() {
+    this.storyBuilderShown = !this.storyBuilderShown;
+  }
+
+  @action
   openAddData() {
     this.explorerPanelIsVisible = true;
     this.activeTabCategory = DATA_CATALOG_NAME;
