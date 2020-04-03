@@ -9,22 +9,13 @@ interface CssExports {
   'catalog-group--lower-level': string;
   'catalogGroup': string;
   'catalogGroupLowerLevel': string;
-  'charcoalGrey': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'folder': string;
   'isPreviewed': string;
   'label': string;
   'label--no-results': string;
   'labelNoResults': string;
-  'mapButtonColor': string;
-  'modalHighlight': string;
   'offsetRight': string;
   'root': string;
-  'textDarker': string;
-  'textLight': string;
   'trashGroup': string;
 }
 declare var cssExports: CssExports;

@@ -23,6 +23,7 @@ interface ViewStateOptions {
   terria: Terria;
   catalogSearchProvider: any;
   locationSearchProviders: any[];
+  errorHandlingProvider?: any;
 }
 
 /**
@@ -65,6 +66,8 @@ export default class ViewState {
   @observable helpPanelExpanded: boolean = false;
 
   @observable workbenchWithOpenControls: string | undefined = undefined;
+
+  errorProvider: any | null = null;
 
   // default value is null, because user has not made decision to show or
   // not show story
@@ -129,6 +132,9 @@ export default class ViewState {
       locationSearchProviders: options.locationSearchProviders
     });
 
+    this.errorProvider = options.errorHandlingProvider
+      ? options.errorHandlingProvider
+      : null;
     this.terria = terria;
 
     // Show errors to the user as notifications.
@@ -236,6 +242,11 @@ export default class ViewState {
   }
 
   @action
+  setTopElement(key: string) {
+    this.topElement = key;
+  }
+
+  @action
   openAddData() {
     this.explorerPanelIsVisible = true;
     this.activeTabCategory = DATA_CATALOG_NAME;
@@ -286,6 +297,35 @@ export default class ViewState {
   @action
   switchMobileView(viewName: string | null) {
     this.mobileView = viewName;
+  }
+
+  @action
+  showHelpPanel() {
+    this.showHelpMenu = true;
+    this.helpPanelExpanded = false;
+    this.selectedHelpMenuItem = "";
+    this.setTopElement("HelpPanel");
+  }
+
+  @action
+  selectHelpMenuItem(key: string) {
+    this.selectedHelpMenuItem = key;
+    this.helpPanelExpanded = true;
+  }
+
+  @action
+  hideHelpPanel() {
+    this.showHelpMenu = false;
+  }
+
+  /**
+   * Removes references of a model from viewState
+   */
+  @action
+  removeModelReferences(model: BaseModel) {
+    if (this.previewedItem === model) this.previewedItem = undefined;
+    if (this.userDataPreviewedItem === model)
+      this.userDataPreviewedItem = undefined;
   }
 
   getNextNotification() {

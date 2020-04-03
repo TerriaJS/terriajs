@@ -31,6 +31,7 @@ export const DataCatalog = observer(
     render() {
       const searchState = this.props.viewState.searchState;
       const isSearching = searchState.catalogSearchText.length > 0;
+      const hasCatalogSearchProvider = searchState.catalogSearchProvider;
       const unfilteredItems =
         isSearching &&
         searchState.catalogSearchProvider &&
@@ -44,7 +45,7 @@ export const DataCatalog = observer(
       const { t } = this.props;
       return (
         <ul className={Styles.dataCatalog}>
-          <If condition={isSearching}>
+          <If condition={isSearching && hasCatalogSearchProvider}>
             <label className={Styles.label}>{t("search.resultsLabel")}</label>
             <SearchHeader
               searchResults={searchState.catalogSearchProvider}

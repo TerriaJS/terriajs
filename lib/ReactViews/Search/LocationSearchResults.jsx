@@ -1,3 +1,10 @@
+/**
+  Initially this was written to support various location search providers in master,
+  however we only have a single location provider at the moment, and how we merge
+  them in the new design is yet to be resolved, see:
+  https://github.com/TerriaJS/nsw-digital-twin/issues/248#issuecomment-599919318
+ */
+
 import { observer } from "mobx-react";
 import React from "react";
 import createReactClass from "create-react-class";
@@ -6,9 +13,10 @@ import { withTranslation } from "react-i18next";
 import SearchHeader from "./SearchHeader";
 import SearchResult from "./SearchResult";
 import classNames from "classnames";
-import Icon from "../Icon";
 import Styles from "./location-search-result.scss";
 import isDefined from "../../Core/isDefined";
+
+import Text from "../../Styled/Text";
 
 const LocationSearchResults = observer(
   createReactClass({
@@ -21,33 +29,35 @@ const LocationSearchResults = observer(
       search: PropTypes.object.isRequired,
       onLocationClick: PropTypes.func.isRequired,
       theme: PropTypes.string,
+      locationSearchText: PropTypes.string,
       t: PropTypes.func.isRequired
     },
 
     getInitialState() {
       return {
         isOpen: true,
+        // isExpanded: false
         isExpanded: false
       };
     },
 
     getDefaultProps() {
       return {
-        theme: "dark"
+        theme: "light"
       };
     },
 
-    toggleGroup() {
-      this.setState({
-        isOpen: !this.state.isOpen
-      });
-    },
+    // toggleGroup() {
+    //   this.setState({
+    //     isOpen: !this.state.isOpen
+    //   });
+    // },
 
-    toggleExpand() {
-      this.setState({
-        isExpanded: !this.state.isExpanded
-      });
-    },
+    // toggleExpand() {
+    //   this.setState({
+    //     isExpanded: !this.state.isExpanded
+    //   });
+    // },
 
     renderResultsFooter() {
       const { t } = this.props;
@@ -94,29 +104,32 @@ const LocationSearchResults = observer(
             [Styles.light]: this.props.theme === "light"
           })}
         >
-          <button onClick={this.toggleGroup} className={Styles.heading}>
+          {/* <button onClick={this.toggleGroup} className={Styles.heading}>
             <span>{searchProvider.name}</span>
             <Icon
               glyph={
                 this.state.isOpen ? Icon.GLYPHS.opened : Icon.GLYPHS.closed
               }
             />
-          </button>
+          </button> */}
           <SearchHeader
             searchResults={search}
             isWaitingForSearchToStart={this.props.isWaitingForSearchToStart}
           />
-          <ul className={Styles.items}>
-            {results.map((result, i) => (
-              <SearchResult
-                key={i}
-                clickAction={this.props.onLocationClick.bind(null, result)}
-                name={result.name}
-                icon="location"
-                theme={this.props.theme}
-              />
-            ))}
-            {search.results.length > 5 && (
+          <Text textDarker>
+            <ul className={Styles.items}>
+              {results.map((result, i) => (
+                <SearchResult
+                  key={i}
+                  clickAction={this.props.onLocationClick.bind(null, result)}
+                  name={result.name}
+                  icon="location2"
+                  searchResultTheme={this.props.theme}
+                  locationSearchText={this.props.locationSearchText}
+                  isLastResult={results.length === i + 1}
+                />
+              ))}
+              {/* {search.results.length > 5 && (
               <button className={Styles.footer} onClick={this.toggleExpand}>
                 {this.renderResultsFooter()}
                 <Icon
@@ -127,8 +140,9 @@ const LocationSearchResults = observer(
                   }
                 />
               </button>
-            )}
-          </ul>
+            )} */}
+            </ul>
+          </Text>
         </div>
       );
     }
