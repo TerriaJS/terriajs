@@ -1,13 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="10px" height="2px" viewBox="0 0 10 2" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
-    <title>zoom-minus</title>
-    <desc>Created with Sketch.</desc>
-    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Assets/UI/Zoom/Port" transform="translate(-7.000000, -46.000000)" fill="#4D5766">
-            <g id="Group-27">
-                <rect id="zoom-minus" x="7" y="46" width="10" height="2"></rect>
-            </g>
-        </g>
-    </g>
+<svg width="10" height="2" xmlns="http://www.w3.org/2000/svg">
+  <path d="M0 0h10v2H0z" fill-rule="evenodd"/>
 </svg>
