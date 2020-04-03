@@ -13,6 +13,8 @@ import { getParentGroups } from "../../../Core/getPath";
 import Text from "../../../Styled/Text";
 import Icon, { StyledIcon } from "../../Icon";
 import Spacing from "../../../Styled/Spacing";
+import { RawButton } from "../../../Styled/Button";
+import styled from "styled-components";
 
 // The DataCatalog Tab
 @observer
@@ -106,9 +108,21 @@ class DataCatalogTab extends React.Component {
             <Spacing right={1.2} />
             {parentGroups && (
               <For each="parent" index="i" of={parentGroups}>
-                <Text small textDark>
-                  {parent}
-                </Text>
+                {/* The first and last two groups use the full name */}
+                <If condition={i <= 1 || i >= parentGroups.length - 2}>
+                  <RawButtonAndUnderline>
+                    <Text small textDark>
+                      {parent}
+                    </Text>
+                  </RawButtonAndUnderline>
+                </If>
+                {/* The remainder are just '..' to prevent/minimise overflowing */}
+                <If condition={i > 1 && i < parentGroups.length - 2}>
+                  <Text small textDark>
+                    {"..."}
+                  </Text>
+                </If>
+
                 <If condition={i !== parentGroups.length - 1}>
                   <Box paddedHorizontally={1}>
                     <Text small textDark>
@@ -124,5 +138,12 @@ class DataCatalogTab extends React.Component {
     );
   }
 }
+
+const RawButtonAndUnderline = styled(RawButton)`
+  ${props => `
+  &:hover, &:focus {
+    text-decoration: underline ${props.theme.textDark};
+  }`}
+`;
 
 module.exports = withTranslation()(withTheme(DataCatalogTab));
