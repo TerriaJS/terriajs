@@ -62,7 +62,9 @@ const DataPreview = observer(
         <div
           className={Styles.preview}
           css={`
-            height: ${this.props.viewState.breadcrumbsShown ? `calc(100% - 32px)` : `100%`};
+            height: ${this.props.viewState.breadcrumbsShown
+              ? `calc(100% - 32px)`
+              : `100%`};
           `}
         >
           <Choose>

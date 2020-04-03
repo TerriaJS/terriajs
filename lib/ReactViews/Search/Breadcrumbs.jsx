@@ -30,7 +30,7 @@ class Breadcrumbs extends React.Component {
     previewed: PropTypes.object,
     theme: PropTypes.object,
     t: PropTypes.func.isRequired
-  }
+  };
 
   openInCatalog(items) {
     items.forEach(item => {
@@ -44,8 +44,12 @@ class Breadcrumbs extends React.Component {
 
   render() {
     console.log(this.props.theme);
-    const parentGroups = this.props.previewed ? getParentGroups(this.props.previewed) : undefined;
-    const ancestors = getAncestors(this.props.previewed).map(ancestor => getDereferencedIfExists(ancestor));
+    const parentGroups = this.props.previewed
+      ? getParentGroups(this.props.previewed)
+      : undefined;
+    const ancestors = getAncestors(this.props.previewed).map(ancestor =>
+      getDereferencedIfExists(ancestor)
+    );
     return (
       // Note: should it reset the text if a person deletes current search and starts a new search?
       <Box
@@ -67,7 +71,7 @@ class Breadcrumbs extends React.Component {
             <If condition={i <= 1 || i >= parentGroups.length - 2}>
               <RawButtonAndUnderline
                 type="button"
-                onClick={() => this.openInCatalog(ancestors.slice(0, i+1))}
+                onClick={() => this.openInCatalog(ancestors.slice(0, i + 1))}
               >
                 <Text small textDark>
                   {parent}
@@ -91,7 +95,7 @@ class Breadcrumbs extends React.Component {
           </For>
         )}
       </Box>
-    )
+    );
   }
 }
 

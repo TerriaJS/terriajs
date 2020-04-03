@@ -83,13 +83,13 @@ class DataCatalogTab extends React.Component {
           viewState={this.props.viewState}
           previewed={previewed}
         />
-        {showBreadcrumbs &&
-        <Breadcrumbs 
-          terria={this.props.terria}
-          viewState={this.props.viewState}
-          previewed={previewed}
-        />
-        }
+        {showBreadcrumbs && (
+          <Breadcrumbs
+            terria={this.props.terria}
+            viewState={this.props.viewState}
+            previewed={previewed}
+          />
+        )}
       </div>
     );
   }
