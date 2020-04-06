@@ -18,6 +18,9 @@
     visibility: hidden;
     margin-right: -400px;
   }
+  & .actions {
+    padding: $padding;
+  }
 }
 
 .title {
@@ -70,9 +73,12 @@
 }
 
 .header {
-  .actions {
+  & .actions {
     border-bottom: 1px solid $overlay;
-    padding: $padding;
+  }
+
+  & .stories-actions {
+    display: flex;
   }
 }
 
@@ -118,10 +124,15 @@
   padding: $padding;
 }
 
+.previewBtn {
+  width: 50%;
+}
+
 .captureBtn,
 .previewBtn {
   position: relative;
   padding-left: 35px;
+  height: inherit;
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn-primary from "../../Sass/common/_buttons.scss";
   svg {
@@ -132,10 +143,6 @@
     left: $padding;
     top: 8px;
   }
-}
-
-.previewBtn {
-  margin-bottom: $padding;
 }
 
 .story:hover {

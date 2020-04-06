@@ -321,13 +321,17 @@ const StoryBuilder = createReactClass({
               />
             </For>
           </Sortable>
-          <SharePanel
-            storyShare
-            terria={this.props.terria}
-            viewState={this.props.viewState}
-            modalWidth={this.props.widthFromMeasureElementHOC - 22}
-            userOnClick={this.closePopup}
-          />
+          <div className={Styles.actions}>
+            <button
+              disabled={this.state.editingMode || this.state.showPopup}
+              className={Styles.captureBtn}
+              title={t("story.captureSceneTitle")}
+              onClick={this.onClickCapture}
+            >
+              {" "}
+              <Icon glyph={Icon.GLYPHS.story} /> {t("story.captureScene")}{" "}
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -371,25 +375,37 @@ const StoryBuilder = createReactClass({
           {!hasStories && this.renderIntro()}
           <div className={Styles.actions}>
             {hasStories && (
+              <div className={Styles.storiesActions}>
+                <button
+                  disabled={this.state.editingMode || !hasStories}
+                  className={Styles.previewBtn}
+                  onClick={this.runStories}
+                  title={t("story.preview")}
+                >
+                  <Icon glyph={Icon.GLYPHS.play} />
+                  {t("story.play")}
+                </button>
+                <SharePanel
+                  storyShare
+                  btnDisabled={this.state.editingMode || !hasStories}
+                  terria={this.props.terria}
+                  viewState={this.props.viewState}
+                  modalWidth={this.props.widthFromMeasureElementHOC - 22}
+                  userOnClick={this.closePopup}
+                />
+              </div>
+            )}
+            {!hasStories && (
               <button
-                disabled={this.state.editingMode || !hasStories}
-                className={Styles.previewBtn}
-                onClick={this.runStories}
-                title={t("story.preview")}
+                disabled={this.state.editingMode}
+                className={Styles.captureBtn}
+                title={t("story.captureSceneTitle")}
+                onClick={this.onClickCapture}
               >
-                <Icon glyph={Icon.GLYPHS.play} />
-                {t("story.play")}
+                {" "}
+                <Icon glyph={Icon.GLYPHS.story} /> {t("story.captureScene")}{" "}
               </button>
             )}
-            <button
-              disabled={this.state.editingMode}
-              className={Styles.captureBtn}
-              title={t("story.captureSceneTitle")}
-              onClick={this.onClickCapture}
-            >
-              {" "}
-              <Icon glyph={Icon.GLYPHS.story} /> {t("story.captureScene")}{" "}
-            </button>
           </div>
         </div>
         {hasStories && this.renderStories(this.state.editingMode)}

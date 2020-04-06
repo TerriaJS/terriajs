@@ -11,6 +11,7 @@ import Icon from "../../../Icon.jsx";
 import Loader from "../../../Loader";
 import ObserverModelMixin from "../../../ObserveModelMixin";
 import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel.jsx";
+import StorySharePanel from "./StorySharePanel.jsx";
 import Input from "../../../Styled/Input/Input.jsx";
 import DropdownStyles from "../panel.scss";
 import {
@@ -38,6 +39,7 @@ const SharePanel = createReactClass({
     modalWidth: PropTypes.number,
     viewState: PropTypes.object.isRequired,
     userOnClick: PropTypes.func,
+    btnDisabled: PropTypes.bool,
     t: PropTypes.func.isRequired
   },
 
@@ -481,6 +483,14 @@ const SharePanel = createReactClass({
     );
   },
 
+  openWithUserClick() {
+    if (this.props.userOnClick) {
+      this.props.userOnClick();
+    }
+    this.changeOpenState();
+    this.renderContentForStoryShare();
+  },
+
   render() {
     const { t } = this.props;
     const {
@@ -517,7 +527,7 @@ const SharePanel = createReactClass({
       ? t("share.btnStoryShareTitle")
       : t("share.btnMapShareTitle");
 
-    return (
+    return !storyShare ? (
       <div>
         <MenuPanel
           theme={dropdownTheme}
@@ -526,18 +536,36 @@ const SharePanel = createReactClass({
           btnTitle={btnTitle}
           isOpen={this.state.isOpen}
           onOpenChanged={this.changeOpenState}
-          showDropdownAsModal={catalogShare || storyShare}
+          showDropdownAsModal={catalogShare}
           modalWidth={modalWidth}
           smallScreen={this.props.viewState.useSmallScreenInterface}
           onDismissed={() => {
-            if (catalogShare || storyShare)
-              this.props.viewState.shareModalIsVisible = false;
+            if (catalogShare) this.props.viewState.shareModalIsVisible = false;
           }}
           userOnClick={this.props.userOnClick}
         >
           <If condition={this.state.isOpen}>{this.renderContent()}</If>
         </MenuPanel>
       </div>
+    ) : (
+      <StorySharePanel
+        theme={dropdownTheme}
+        btnText={catalogShareWithoutText ? null : btnText}
+        viewState={this.props.viewState}
+        btnTitle={btnTitle}
+        isOpen={this.state.isOpen}
+        onOpenChanged={this.changeOpenState}
+        showDropdownAsModal={storyShare}
+        modalWidth={modalWidth}
+        smallScreen={this.props.viewState.useSmallScreenInterface}
+        btnDisabled={this.props.btnDisabled}
+        onDismissed={() => {
+          if (storyShare) this.props.viewState.shareModalIsVisible = false;
+        }}
+        userOnClick={this.props.userOnClick}
+      >
+        <If condition={this.state.isOpen}>{this.renderContent()}</If>
+      </StorySharePanel>
     );
   }
 });

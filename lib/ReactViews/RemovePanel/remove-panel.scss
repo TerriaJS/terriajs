@@ -37,14 +37,8 @@
 
 .btn {
   composes: btn from "../../Sass/common/_buttons.scss";
-  border-radius: $radius-medium;
-  padding: $padding;
-  text-align: center;
-  font-size: $font-size-button;
-  font-weight: $font-weight-bold;
-  width: 100%;
+  composes: btn-primary from "../../Sass/common/_buttons.scss";
   &.delete {
-    background: $warning;
     margin-right: $padding-small;
   }
   &.cancel {
