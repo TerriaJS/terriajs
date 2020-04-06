@@ -1,19 +1,50 @@
 Change Log
 ==========
 
-### Next Release
+
+### Next release
+
+* Add support for `classBreaks` renderer to `ArcGisFeatureServerCatalogItem`.
+* Story related enhancements:
+  * Added a title to story panel with ability to close story panel. 
+  * Added a popup on remove all stories.
+  * Added button for sharing stories.
+  * Added a question popup on window close (if there are stories on the map so users don't lose their work).
+  
+### v7.11.3
+
+* Added babel dynamic import plugin for webpack builds.
+* `ignoreUnknownTileErrors` will now also ignore HTTP 200 responses that are not proper images.
+
+### v7.11.2
+
+* Pass minimumLevel, in Cesium, to minNativeZoom, in Leaflet.
+* Upgraded to Cesium v1.66.
+
+### v7.11.1
+
+* Fix for color of markers on the map associated with chart items
+
+### v7.11.0
+
 * Fix draggable workbench/story items with translation HOC
 * Added first revision of "delta feature" for change detection of WMS catalog items which indicate `supportsDeltaComparison`
 * Improve menu bar button hover/focus states when interacting with its panel contents
 * Add ability to set opacity on `GeoJsonCatalogItem`
 * Expanded test cases to ensure WorkbenchItem & Story have the correct order of components composed
 * Fix broken catalog functions when used with translation HOC
+* Fix bug with momentPoints chart type when plotting against series with null values
 * Make the default `Legend` width a little smaller to account for the workbench scrollbar
-* Story related enhancements:
-  * Added a title to story panel with ability to close story panel. 
-  * Added a popup on remove all stories.
-  * Added button for sharing stories.
-  * Added a question popup on window close (if there are stories on the map so users don't lose their work).
+* Bug fix for expanding chart - avoid creating marker where no lat lon exists.
+* Add a `ChartDisclaimer` component to display an additional disclaimer above the chart panel in the bottom dock.
+* Add `allowFeatureInfoRequests` property to `Terria` and prevent unnecessary feature info requests when creating `UserDrawing`s.
+* Removes unsupported data that is drag and dropped from the workbench and user catalog.
+* Adjusted z-index values so that the explorer panel is on top of the side panel and the notification window appears at the very top layer.
+* Allow `CkanCatalogItem` names to be constructed from dataset and resource names where multiple resources are available for a single dataset
+* Set the name of ArcGis MapServer CatalogGroup and CatalogItem on load
+* Improve autodetecting WFS format, naming of the WFS catalog group and retaining the zoomToExtent
+* Remove unnecessary nbsp; from chart download and expand buttons introduced through internationalization.
+* Fix story prompt flag not being set after dismissing story, if `showFeaturePrompts` has been enabled
 
 ### v7.10.0
 
@@ -25,8 +56,8 @@ Change Log
 * Added ability to re-add "User data" CSV items once removed from workbench.
 * Changed catalog item event labels to include the full catalog item path, rather than just the catalog item name.
 * Added support for `openAddData` option in config.json.  If true, the "Add Data" dialog is automatically opened at startup.
-* Welcome message, in-app guides & new feature prompts are now disabled by default. These can be re-enabled by setting the `showWelcomeMessage`, `showInAppGuides` & `showFeaturePrompts` options in config.json. 
-* Updated Welcome Message to pass its props to `WelcomeMessagePrimaryBtnClick` & `WelcomeMessageSecondaryBtnClick` overrides
+* Welcome message, in-app guides & new feature prompts are now disabled by default. These can be re-enabled by setting the `showWelcomeMessage`, `showInAppGuides` & `showFeaturePrompts` options in config.json.
+* Updated Welcome Message to pass its props to `WelcomeMessagePrimaryBtnClick` & `WelcomeMessageSecondaryBtnClick` overrides.
 * Fixed a bug in anti-meridian handling causing excessive memory use.
 * Handled coordinate conversion for GeoJson geometries with an empty `coordinates` array.
 * Fixed height of My Data drag and drop box in Safari and IE.
@@ -99,7 +130,7 @@ Change Log
 * Add scrollbar to dropdown boxes.
 * Add support for SDMX version 2.1 to existing `SdmxJsonCatalogItem`.
 * Add a warning when sharing a map describing datasets which will be missing.
-* Enable the story panel to be ordered to the front. 
+* Enable the story panel to be ordered to the front.
 * Disable the autocomplete on the title field when adding a new scene to a story.
 * Fix SED codes for regionmapping
 

@@ -85,7 +85,8 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
             presets: ['@babel/preset-env', '@babel/preset-react'],
             plugins: [
                 'babel-plugin-jsx-control-statements',
-                '@babel/plugin-transform-modules-commonjs'
+                '@babel/plugin-transform-modules-commonjs',
+                '@babel/plugin-syntax-dynamic-import',
             ]
         }
     });
