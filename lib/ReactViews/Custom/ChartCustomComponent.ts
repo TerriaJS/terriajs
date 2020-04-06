@@ -136,6 +136,8 @@ export default class ChartCustomComponent extends CustomComponent {
     checkAllPropertyKeys(node.attribs, this.attributes);
 
     const attrs = parseNodeAttrs(node.attribs);
+    const csvString: any =
+      typeof children[0] == "string" ? children[0] : undefined;
     const chartElements = [];
     if (!attrs.hideButtons) {
       // Build expand/download buttons
@@ -148,9 +150,13 @@ export default class ChartCustomComponent extends CustomComponent {
           ].join(":");
           const item = new CsvCatalogItem(id, context.terria);
           this.setTraitsFromAttrs(item, attrs, i);
+          if (csvString) {
+            item.setTrait(CommonStrata.user, "csvString", csvString);
+          }
           return item;
         }
       );
+
       chartElements.push(
         React.createElement(ChartExpandAndDownloadButtons, {
           key: "button",
@@ -168,6 +174,10 @@ export default class ChartCustomComponent extends CustomComponent {
     // Build chart item to show in the info panel
     const chartItem = new CsvCatalogItem(undefined, context.terria);
     this.setTraitsFromAttrs(chartItem, attrs, 0);
+    if (csvString) {
+      chartItem.setTrait(CommonStrata.user, "csvString", csvString);
+    }
+
     chartElements.push(
       React.createElement(Chart, {
         key: "chart",
@@ -245,7 +255,7 @@ export default class ChartCustomComponent extends CustomComponent {
       );
 
       (attrs.yColumns || []).forEach(y => {
-        chartStyle.chart.addObject(CommonStrata.user, "lines", y)!;
+        const line = chartStyle.chart.addObject(CommonStrata.user, "lines", y)!;
       });
 
       item.setTrait(CommonStrata.user, "activeStyle", "chart");

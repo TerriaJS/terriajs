@@ -1,22 +1,23 @@
 import { action, computed, observable, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Color from "terriajs-cesium/Source/Core/Color";
-import combine from "terriajs-cesium/Source/Core/combine";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
+import SampledPositionProperty from "terriajs-cesium/Source/DataSources/SampledPositionProperty";
+import SampledProperty from "terriajs-cesium/Source/DataSources/SampledProperty";
+import TimeIntervalCollectionPositionProperty from "terriajs-cesium/Source/DataSources/TimeIntervalCollectionPositionProperty";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
-import isDefined from "../Core/isDefined";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
@@ -33,6 +34,13 @@ import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
 import LegendTraits from "../Traits/LegendTraits";
 import TableTraits from "../Traits/TableTraits";
+import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
+import TimeIntervalCollection from "terriajs-cesium/Source/Core/TimeIntervalCollection";
+import TimeIntervalCollectionProperty from "terriajs-cesium/Source/DataSources/TimeIntervalCollectionProperty";
+import Color from "terriajs-cesium/Source/Core/Color";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import createLongitudeLatitudeFeaturePerId from "../Table/createLongitudeLatitudeFeaturePerId";
+import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
 
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
 //   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
@@ -66,7 +74,6 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       if (this.dataColumnMajor === undefined) {
         return [];
       }
-
       return this.dataColumnMajor.map((_, i) => this.getTableColumn(i));
     }
 
@@ -103,7 +110,14 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       if (value !== undefined) {
         return value;
       } else if (this.styles && this.styles.length > 0) {
-        return this.styles[0].id;
+        const styleWithScalarColorColumn = this.styles.find(s => {
+          const colName = s.color.colorColumn;
+          return (
+            colName &&
+            this.findColumnByName(colName)?.type === TableColumnType.scalar
+          );
+        });
+        return styleWithScalarColorColumn?.id || this.styles[0].id;
       }
       return undefined;
     }
@@ -271,6 +285,18 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       };
     }
 
+    @computed
+    get rowIds(): number[] {
+      const nRows = (this.dataColumnMajor?.[0]?.length || 1) - 1;
+      const ids = [...new Array(nRows).keys()];
+      return ids;
+    }
+
+    @computed
+    get isSampled(): boolean {
+      return this.activeTableStyle.timeTraits.isSampled;
+    }
+
     get legends(): readonly ModelPropertiesFromTraits<LegendTraits>[] {
       if (this.mapItems.length > 0) {
         const colorLegend = this.activeTableStyle.colorTraits.legend;
@@ -354,50 +380,17 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
           return undefined;
         }
 
-        const longitudes = style.longitudeColumn.valuesAsNumbers.values;
-        const latitudes = style.latitudeColumn.valuesAsNumbers.values;
-
-        const colorColumn = style.colorColumn;
-        const valueFunction =
-          colorColumn !== undefined
-            ? colorColumn.valueFunctionForType
-            : () => null;
-
-        const colorMap = (this.activeTableStyle || this.defaultTableStyle)
-          .colorMap;
-        const pointSizeMap = (this.activeTableStyle || this.defaultTableStyle)
-          .pointSizeMap;
-
-        const outlineColor = Color.fromCssColorString(
-          "black" //this.terria.baseMapContrastColor;
-        );
-
         const dataSource = new CustomDataSource(this.name || "Table");
         dataSource.entities.suspendEvents();
 
-        for (let i = 0; i < longitudes.length && i < latitudes.length; ++i) {
-          const longitude = longitudes[i];
-          const latitude = latitudes[i];
-          const value = valueFunction(i);
-          if (longitude === null || latitude === null) {
-            continue;
-          }
-
-          const entity = dataSource.entities.add(
-            new Entity({
-              position: Cartesian3.fromDegrees(longitude, latitude, 0.0),
-              point: new PointGraphics({
-                color: colorMap.mapValueToColor(value),
-                pixelSize: pointSizeMap.mapValueToPointSize(value),
-                outlineWidth: 1,
-                outlineColor: outlineColor,
-                heightReference: HeightReference.CLAMP_TO_GROUND
-              })
-            })
-          );
-          entity.properties = this.getRowValues(i);
+        let features: Entity[];
+        if (style.idColumns !== undefined && style.timeColumn !== undefined) {
+          features = createLongitudeLatitudeFeaturePerId(<any>style);
+        } else {
+          features = createLongitudeLatitudeFeaturePerRow(style);
         }
 
+        features.forEach(f => dataSource.entities.add(f));
         dataSource.show = this.show;
         dataSource.entities.resumeEvents();
         return dataSource;
@@ -551,3 +544,189 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
 
   return TableMixin;
 }
+
+// function generateFeatureFromSingleRow() {}
+
+// function generateFeatureFromMultipleRows(
+//   rowIds: number[],
+//   style: TableStyleWithLatLngColumns,
+//   idColumns: TableColumn[],
+//   timeColumn: TableColumn
+// ) {
+//   const isSampled = style.timeTraits.isSampled;
+//   const shouldInterpolateColorAndSize =
+//     isSampled &&
+//     style.tableModel.tableColumns.find(
+//       col => col.type === TableColumnType.scalar
+//     );
+
+//   const availability = new TimeIntervalCollection();
+//   const properties = new TimeIntervalCollectionProperty();
+//   const description = new TimeIntervalCollectionProperty();
+
+//   const position = isSampled
+//     ? new SampledPositionProperty()
+//     : new TimeIntervalCollectionPositionProperty();
+
+//   // Color and size are never interpolated when they are drawn from a text column.
+//   const [color, scale, pixelSize] = shouldInterpolateColorAndSize
+//     ? [
+//         new SampledProperty(Color),
+//         new SampledProperty(Number),
+//         new SampledProperty(Number)
+//       ]
+//     : [
+//         new TimeIntervalCollectionProperty(),
+//         new TimeIntervalCollectionProperty(),
+//         new TimeIntervalCollectionProperty()
+//       ];
+
+//   const dates = timeColumn.valuesAsJulianDates.values;
+//   const intervals = style.timeIntervals;
+//   const longitudes = style.longitudeColumn.valuesAsNumbers.values;
+//   const latitudes = style.latitudeColumn.valuesAsNumbers.values;
+//   rowIds.forEach(rowId => {
+//     const date = dates[rowId];
+//     const interval = timeIntervals[rowId];
+//     const longitude = longitudes[rowId];
+//     const latitude = latitudes[rowId];
+
+//     if (longitude === null || latitude === null) {
+//       return;
+//     }
+
+//     const point = Cartesian3.fromDegrees(longitude, latitude, 0.0);
+//     if (isSampledProperty(position)) {
+//       position.addSample(date, point);
+//     } else {
+//       position.intervals.addInterval(cloneInterval(interval, point));
+//     }
+//   });
+// }
+
+// function isSampledProperty(prop: any): prop is SampledProperty {
+//   return prop instanceof SampledProperty;
+// }
+
+// function cloneInterval(interval: TimeInterval, data: any) {
+//   const cloned = interval.clone();
+//   cloned.data = data;
+//   return cloned;
+// }
+
+// function generateFeatureFromMultipleRows(
+//   rowIds: number[],
+//   style: TableStyleWithLatLngColumns,
+//   idColumns: TableColumn[],
+//   timeColumn: TableColumn
+// ) {
+//   let position:
+//     | SampledPositionProperty
+//     | TimeIntervalCollectionPositionProperty;
+//   if (style.timeTraits.isSampled) {
+//     position = new SampledPositionProperty();
+//   } else {
+//     position = new TimeIntervalCollectionPositionProperty();
+//   }
+
+//   const shouldInterpolateColorAndSize =
+//     isSampled && defined(specialColumns.value) && !specialColumns.value.isEnum;
+//   let color, scale, pixelSize;
+//   if (shouldInterpolateColorAndSize) {
+//     color = new SampledProperty(Color);
+//     scale = new SampledProperty(Number);
+//     pixelSize = new SampledProperty(Number);
+//   } else {
+//     color = new TimeIntervalCollectionProperty();
+//     scale = new TimeIntervalCollectionProperty();
+//     pixelSize = new TimeIntervalCollectionProperty();
+//   }
+//   const properties = new TimeIntervalCollectionProperty();
+//   const description = new TimeIntervalCollectionProperty();
+
+//   rowIds.forEach(rowId => {
+//     const date = timeColumn.valuesAsJulianDates.values[rowId];
+//     const interval = style.timeIntervals[rowId];
+//     const longitude = style.longitudeColumn.valuesAsNumbers.values[rowId];
+//     const latitude = style.latitudeColumn.valuesAsNumbers.values[rowId];
+
+//     if (longitude === null || latitude === null) {
+//       return;
+//     }
+
+//     const point = Cartesian3.fromDegrees(longitude, latitude, 0.0);
+//     if (isSampled(position)) {
+//       position.addSample(date, point);
+//     } else {
+//       position.intervals.addInterval(cloneInterval(interval, point));
+//     }
+//   });
+
+//   const pointGraphics = new PointGraphics({
+//     color,
+//     outlineColor,
+//     pixelSize,
+//     show,
+//     outlineWidth: 1,
+//     heightReference: HeightReference.CLAMP_TO_GROUND
+//   });
+//   return new Entity({
+//     position,
+//     point: pointGraphics,
+//     availability
+//   });
+// }
+
+// class GenerateOneFeatuerPerId {
+//   constructor(
+//     readonly style: TableStyleWithLatLngColumns,
+//     readonly idColumns: TableColumn[],
+//     readonly timeColumn: TableColumn
+//   ) {}
+
+//   @computed
+//   get rowsGroupedById() {
+//     const nRows = this.timeColumn.values.length;
+//     const rowIds = [...new Array(nRows).keys()];
+//     return groupBy(rowIds, rowId =>
+//       this.idColumns.map(col => col.values[rowId]).join("-")
+//     );
+//   }
+
+//   @computed
+//   get features(): Entity[] {
+//     return this.rowsGroupedById.map(rowIds =>
+//       this.createFeatureFromRows(rowIds)
+//     );
+//   }
+
+//   createFeatureFromRows(rowIds: number[]) {
+//     return new Entity({
+//       position,
+
+//     })
+//   }
+// }
+
+// class GenerateOneFeaturePerRow {
+//   constructor(readonly style: TableStyleWithLatLngColumns) {}
+
+//   @computed
+//   get features(): Entity[] {
+//     return [];
+//   }
+// }
+
+// function addOneFeaturePerId(
+//   dataSource: DataSource,
+//   style: TableStyleWithLatLngColumns,
+//   idColumns: TableColumn[],
+//   timeColumn: TableColumn
+// ) {
+//   const nRows = timeColumn.values.length;
+//   const rowIds = [...new Array(nRows).keys()];
+//   const rowsForFeatures = groupBy(rowIds, rowId =>
+//     idColumns.map(col => col.values[rowId]).join("-")
+//   );
+//   rowsForFeatures.forEach(rows => dataSource.entities.add(createFeature(rows)));
+// }

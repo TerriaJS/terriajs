@@ -13,7 +13,6 @@ interface CssExports {
   'catalog-share-inner': string;
   'catalogShare': string;
   'catalogShareInner': string;
-  'charcoalGrey': string;
   'clipboard-for-catalog-share': string;
   'clipboardForCatalogShare': string;
   'colorPrimary': string;
@@ -30,9 +29,7 @@ interface CssExports {
   'link': string;
   'link-wrapper': string;
   'linkWrapper': string;
-  'mapButtonColor': string;
   'mobileHeader': string;
-  'modalHighlight': string;
   'paragraph': string;
   'print-button': string;
   'print-view-loader': string;

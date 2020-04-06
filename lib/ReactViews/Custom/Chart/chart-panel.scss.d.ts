@@ -5,7 +5,6 @@ interface CssExports {
   'btn': string;
   'btn--close-chart-panel': string;
   'btnCloseChartPanel': string;
-  'charcoalGrey': string;
   'chart': string;
   'chart-panel': string;
   'chartPanel': string;
@@ -18,8 +17,6 @@ interface CssExports {
   'holder': string;
   'inner': string;
   'loader': string;
-  'mapButtonColor': string;
-  'modalHighlight': string;
   'section-label': string;
   'sectionLabel': string;
   'textDarker': string;

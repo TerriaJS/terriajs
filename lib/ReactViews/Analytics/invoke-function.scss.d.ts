@@ -2,7 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'btn': string;
-  'charcoalGrey': string;
   'colorPrimary': string;
   'colorSplitter': string;
   'content': string;
@@ -12,8 +11,6 @@ interface CssExports {
   'footer': string;
   'invoke-function': string;
   'invokeFunction': string;
-  'mapButtonColor': string;
-  'modalHighlight': string;
   'textDarker': string;
   'textLight': string;
 }

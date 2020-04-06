@@ -479,7 +479,6 @@ export default class Cesium extends GlobeOrMap {
       return;
       //throw new DeveloperError("viewOrExtent is required.");
     }
-
     flightDurationSeconds = defaultValue(flightDurationSeconds, 3.0);
 
     var that = this;
@@ -1204,11 +1203,16 @@ function zoomToDataSource(
         }
       }
 
-      var boundingSphere = BoundingSphere.fromBoundingSpheres(boundingSpheres);
-      cesium.scene.camera.flyToBoundingSphere(boundingSphere, {
-        duration: flightDurationSeconds
-      });
-      return true;
+      if (boundingSpheres.length > 0) {
+        var boundingSphere = BoundingSphere.fromBoundingSpheres(
+          boundingSpheres
+        );
+        cesium.scene.camera.flyToBoundingSphere(boundingSphere, {
+          duration: flightDurationSeconds
+        });
+        return true;
+      }
+      return false;
     },
     {
       pollInterval: 100,

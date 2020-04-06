@@ -2,13 +2,10 @@
 // Please do not change this file!
 interface CssExports {
   'branding': string;
-  'charcoalGrey': string;
   'colorPrimary': string;
   'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
-  'mapButtonColor': string;
-  'modalHighlight': string;
   'textDarker': string;
   'textLight': string;
 }

@@ -5,7 +5,6 @@ interface CssExports {
   'btn--back-to-my-data': string;
   'btnAddMoreData': string;
   'btnBackToMyData': string;
-  'charcoalGrey': string;
   'colorPrimary': string;
   'colorSplitter': string;
   'dark': string;
@@ -20,8 +19,6 @@ interface CssExports {
   'isActive': string;
   'left-col': string;
   'leftCol': string;
-  'mapButtonColor': string;
-  'modalHighlight': string;
   'oneCol': string;
   'root': string;
   'tab-list': string;

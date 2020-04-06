@@ -9,7 +9,6 @@ interface CssExports {
   'btnBaseMap': string;
   'btnNativeResolution': string;
   'btnViewer': string;
-  'charcoalGrey': string;
   'colorPrimary': string;
   'colorSplitter': string;
   'dark': string;
@@ -23,8 +22,6 @@ interface CssExports {
   'list-item-three-cols': string;
   'listItemFourCols': string;
   'listItemThreeCols': string;
-  'mapButtonColor': string;
-  'modalHighlight': string;
   'native-resolution-header': string;
   'native-resolution-wrapper': string;
   'nativeResolutionHeader': string;

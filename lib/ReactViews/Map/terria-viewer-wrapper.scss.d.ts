@@ -3,15 +3,12 @@
 interface CssExports {
   'cesium-container': string;
   'cesiumContainer': string;
-  'charcoalGrey': string;
   'colorPrimary': string;
   'colorSplitter': string;
   'container': string;
   'dark': string;
   'darkWithOverlay': string;
-  'mapButtonColor': string;
   'mapPlaceholder': string;
-  'modalHighlight': string;
   'textDarker': string;
   'textLight': string;
 }
