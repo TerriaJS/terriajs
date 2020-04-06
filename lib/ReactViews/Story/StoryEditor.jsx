@@ -3,8 +3,9 @@ import PropTypes from "prop-types";
 import Editor from "../Generic/Editor.jsx";
 import classNames from "classnames";
 import Styles from "./story-editor.scss";
+import { withTranslation } from "react-i18next";
 
-export default class StoryEditor extends React.Component {
+class StoryEditor extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -133,6 +134,7 @@ export default class StoryEditor extends React.Component {
   }
 
   renderPopupEditor() {
+    const { t } = this.props;
     return (
       <div
         onKeyDown={this.onKeyDown}
@@ -145,7 +147,7 @@ export default class StoryEditor extends React.Component {
           <div className={Styles.header}>
             <input
               ref={titleInput => (this.titleInput = titleInput)}
-              placeholder="Enter a title here"
+              placeholder={t("story.editor.placeholder")}
               autoComplete="off"
               className={Styles.field}
               type="text"
@@ -157,18 +159,18 @@ export default class StoryEditor extends React.Component {
               className={Styles.cancelBtn}
               onClick={this.cancelEditing}
               type="button"
-              title="cancel"
+              title={t("story.editor.cancelBtn")}
             >
-              Cancel
+              {t("story.editor.cancelEditing")}
             </button>
             <button
               disabled={!this.state.title.length}
               className={Styles.saveBtn}
               onClick={this.saveStory}
               type="button"
-              title="save"
+              title={t("story.editor.saveBtn")}
             >
-              Save
+              {t("story.editor.saveStory")}
             </button>
           </div>
           <div className={Styles.body}>
@@ -198,7 +200,9 @@ StoryEditor.propTypes = {
   story: PropTypes.object,
   removeStory: PropTypes.func,
   saveStory: PropTypes.func,
-  exitEditingMode: PropTypes.func
+  exitEditingMode: PropTypes.func,
+  t: PropTypes.func.isRequired
 };
 
 StoryEditor.defaultProps = { story: { title: "", text: "", id: undefined } };
+export default withTranslation()(StoryEditor);

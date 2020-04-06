@@ -4,12 +4,14 @@
 var NowViewing = require("../../lib/Models/NowViewing");
 var Terria = require("../../lib/Models/Terria");
 var Cesium = require("../../lib/Models/Cesium");
-var CesiumWidget = require("terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget");
+var CesiumWidget = require("terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget")
+  .default;
 var Leaflet = require("../../lib/Models/Leaflet");
 var L = require("leaflet");
 var CatalogItem = require("../../lib/Models/CatalogItem");
 var supportsWebGL = require("../../lib/Core/supportsWebGL");
-var TileCoordinatesImageryProvider = require("terriajs-cesium/Source/Scene/TileCoordinatesImageryProvider");
+var TileCoordinatesImageryProvider = require("terriajs-cesium/Source/Scene/TileCoordinatesImageryProvider")
+  .default;
 
 describe("NowViewing without a viewer", function() {
   var terria;

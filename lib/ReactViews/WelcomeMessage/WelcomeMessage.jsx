@@ -13,8 +13,8 @@ import SlideUpFadeIn from "../Transitions/SlideUpFadeIn/SlideUpFadeIn";
 
 import Spacing from "../../Styled/Spacing";
 
-import getReactElementFromContents from "../ReactHelpers/getReactElementFromContents";
 import { useKeyPress } from "../Hooks/useKeyPress.js";
+import { useTranslation, Trans } from "react-i18next";
 
 export const WELCOME_MESSAGE_NAME = "welcomeMessage";
 export const LOCAL_PROPERTY_KEY = `${WELCOME_MESSAGE_NAME}Prompted`;
@@ -28,7 +28,10 @@ const WelcomeMessage = createReactClass({
   /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillMount() {
     const { viewState } = this.props;
-    const shouldShow = !viewState.terria.getLocalProperty(LOCAL_PROPERTY_KEY);
+    const shouldShow =
+      (viewState.terria.configParameters.showWelcomeMessage &&
+        !viewState.terria.getLocalProperty(LOCAL_PROPERTY_KEY)) ||
+      false;
     this.props.viewState.showWelcomeMessage = shouldShow;
     knockout.track(this.props.viewState, ["showWelcomeMessage"]);
   },
@@ -48,25 +51,21 @@ const WelcomeMessage = createReactClass({
   }
 });
 
-export const WelcomeMessagePure = ({
-  showWelcomeMessage,
-  setShowWelcomeMessage,
-  isTopElement,
-  viewState
-}) => {
+export const WelcomeMessagePure = props => {
+  const {
+    showWelcomeMessage,
+    setShowWelcomeMessage,
+    isTopElement,
+    viewState
+  } = props;
+  const { t } = useTranslation();
   // This is required so we can do nested animations
   const [welcomeVisible, setWelcomeVisible] = useState(showWelcomeMessage);
   const [shouldExploreData, setShouldExploreData] = useState(false);
   const {
-    WelcomeMessage,
-    WelcomeMessagePrimaryBtn,
-    WelcomeMessageSecondaryBtn,
-    WelcomeMessageDissmissText,
-
     WelcomeMessagePrimaryBtnClick,
     WelcomeMessageSecondaryBtnClick
-  } = viewState.terria.language;
-
+  } = viewState.terria.overrides;
   const handleClose = (persist = false) => {
     setShowWelcomeMessage(false);
     if (persist) {
@@ -114,17 +113,20 @@ export const WelcomeMessagePure = ({
             <button
               type="button"
               className={Styles.closeBtn}
-              onClick={() => handleClose(false)}
+              onClick={() => handleClose(true)} // persist close if they put the effort to clicking "X" instead of click-away-from-modal
               title="Close"
               aria-label="Close"
             >
               <Icon glyph={Icon.GLYPHS.close} />
             </button>
             <h1>
-              Spatial data made <span className={Styles.highlight}>easy.</span>
+              <Trans i18nKey="welcomeMessage.title">
+                Spatial data made{" "}
+                <span className={Styles.highlight}>easy.</span>
+              </Trans>
             </h1>
             <span className={Styles.welcomeModalBody}>
-              <div>{getReactElementFromContents(WelcomeMessage)}</div>
+              <div>{t("welcomeMessage.WelcomeMessage")}</div>
               <If condition={!viewState.useSmallScreenInterface}>
                 <Spacing bottom={10} />
               </If>
@@ -140,13 +142,13 @@ export const WelcomeMessagePure = ({
                   onClick={() => {
                     handleClose(true);
                     if (WelcomeMessagePrimaryBtnClick) {
-                      WelcomeMessagePrimaryBtnClick();
+                      WelcomeMessagePrimaryBtnClick(props);
                     } else {
                       setShouldExploreData(true);
                     }
                   }}
                 >
-                  {getReactElementFromContents(WelcomeMessagePrimaryBtn)}
+                  {t("welcomeMessage.WelcomeMessagePrimaryBtn")}
                 </button>
                 {WelcomeMessageSecondaryBtnClick && (
                   <button
@@ -157,7 +159,7 @@ export const WelcomeMessagePure = ({
                     onClick={() => {
                       handleClose(true);
                       // if (WelcomeMessageSecondaryBtnClick) {
-                      WelcomeMessageSecondaryBtnClick();
+                      WelcomeMessageSecondaryBtnClick(props);
                       // } else {
                       //   setTimeout(() => {
                       //     viewState.showHelpMenu = true;
@@ -165,7 +167,7 @@ export const WelcomeMessagePure = ({
                       // }
                     }}
                   >
-                    {getReactElementFromContents(WelcomeMessageSecondaryBtn)}
+                    {t("welcomeMessage.WelcomeMessageSecondaryBtn")}
                   </button>
                 )}
               </div>
@@ -173,7 +175,7 @@ export const WelcomeMessagePure = ({
                 className={Styles.welcomeModalCloseLink}
                 onClick={() => handleClose(true)}
               >
-                {getReactElementFromContents(WelcomeMessageDissmissText)}
+                {t("welcomeMessage.WelcomeMessageDissmissText")}
               </button>
             </span>
           </article>

@@ -1,19 +1,21 @@
 "use strict";
 
 /*global require,describe,it,expect,beforeEach*/
-var Cartographic = require("terriajs-cesium/Source/Core/Cartographic");
-var CesiumMath = require("terriajs-cesium/Source/Core/Math");
+var Cartographic = require("terriajs-cesium/Source/Core/Cartographic").default;
+var CesiumMath = require("terriajs-cesium/Source/Core/Math").default;
 var CesiumTileLayer = require("../../lib/Map/CesiumTileLayer");
-var Color = require("terriajs-cesium/Source/Core/Color");
-var Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid");
-var Entity = require("terriajs-cesium/Source/DataSources/Entity");
-var GeoJsonDataSource = require("terriajs-cesium/Source/DataSources/GeoJsonDataSource");
-var ImageryLayerFeatureInfo = require("terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo");
+var Color = require("terriajs-cesium/Source/Core/Color").default;
+var Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid").default;
+var Entity = require("terriajs-cesium/Source/DataSources/Entity").default;
+var GeoJsonDataSource = require("terriajs-cesium/Source/DataSources/GeoJsonDataSource")
+  .default;
+var ImageryLayerFeatureInfo = require("terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo")
+  .default;
 var L = require("leaflet");
 var Leaflet = require("../../lib/Models/Leaflet");
 var loadJson = require("../../lib/Core/loadJson");
 var Terria = require("../../lib/Models/Terria");
-var when = require("terriajs-cesium/Source/ThirdParty/when");
+var when = require("terriajs-cesium/Source/ThirdParty/when").default;
 
 var DEFAULT_ZOOM_LEVEL = 5;
 
@@ -371,6 +373,45 @@ describe("Leaflet Model", function() {
         terria.pickedFeatures.allFeaturesAvailablePromise
           .then(function() {
             expect(terria.pickedFeatures.isLoading).toBe(false);
+          })
+          .then(done)
+          .otherwise(done.fail);
+      });
+
+      it("should load imagery layer features when feature info requests are enabled", function(done) {
+        terria.allowFeatureInfoRequests = true;
+        trigger();
+
+        expect(terria.pickedFeatures.isLoading).toBe(true);
+
+        var featureInfo1 = new ImageryLayerFeatureInfo();
+        var featureInfo2 = new ImageryLayerFeatureInfo();
+
+        featureInfo1.name = "name1";
+        featureInfo2.name = "name2";
+
+        deferred1.resolve([featureInfo1]);
+        deferred2.resolve([featureInfo2]);
+
+        terria.pickedFeatures.allFeaturesAvailablePromise
+          .then(function() {
+            expect(terria.pickedFeatures.isLoading).toBe(false);
+            expect(terria.pickedFeatures.features.length).toBe(2);
+            expect(terria.pickedFeatures.features[0].name).toBe("name1");
+            expect(terria.pickedFeatures.features[1].name).toBe("name2");
+          })
+          .then(done)
+          .otherwise(done.fail);
+      });
+
+      it("should not load imagery layer features when feature info requests are disabled", function(done) {
+        terria.allowFeatureInfoRequests = false;
+        trigger();
+
+        terria.pickedFeatures.allFeaturesAvailablePromise
+          .then(function() {
+            expect(terria.pickedFeatures.isLoading).toBe(false);
+            expect(terria.pickedFeatures.features.length).toBe(0);
           })
           .then(done)
           .otherwise(done.fail);

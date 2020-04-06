@@ -3,6 +3,7 @@ import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import prettifyCoordinates from "../Map/prettifyCoordinates";
 import React from "react";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 import Styles from "./location-item.scss";
 
 export default function LocationItem(props) {
@@ -19,9 +20,10 @@ export default function LocationItem(props) {
     latitude = pretty.latitude;
     longitude = pretty.longitude;
   }
+  const { t } = useTranslation();
   return (
     <div className={Styles.location}>
-      <span>Lat / Lon&nbsp;</span>
+      <span>{t("featureInfo.latLon")}</span>
       <span>{latitude + ", " + longitude}</span>
     </div>
   );

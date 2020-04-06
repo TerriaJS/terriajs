@@ -5,6 +5,7 @@ import classNames from "classnames";
 import Icon from "../Icon.jsx";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import { sortable } from "react-anything-sortable";
+import { withTranslation } from "react-i18next";
 
 const findTextContent = content => {
   if (typeof content === "string") {
@@ -22,7 +23,7 @@ const findTextContent = content => {
   return findTextContent(content.props.children);
 };
 
-class Story extends React.Component {
+export class StoryRaw extends React.Component {
   constructor(props) {
     super(props);
     this.toggleMenu = this.toggleMenu.bind(this);
@@ -82,6 +83,7 @@ class Story extends React.Component {
   }
 
   renderMenu() {
+    const { t } = this.props;
     return (
       <div className={Styles.menu}>
         <ul className={Styles.menuInner}>
@@ -89,20 +91,20 @@ class Story extends React.Component {
             <button
               className={Styles.menuBtn}
               type="button"
-              title="view"
+              title={t("story.viewStory")}
               onClick={this.viewStory}
             >
-              View
+              {t("story.view")}
             </button>
           </li>
           <li>
             <button
               className={Styles.menuBtn}
               type="button"
-              title="edit"
+              title={t("story.editStory")}
               onClick={this.editStory}
             >
-              Edit
+              {t("story.edit")}
             </button>
           </li>
           <li>
@@ -112,20 +114,20 @@ class Story extends React.Component {
                 [Styles.isSuccessful]: this.props.recaptureStorySuccessful
               })}
               type="button"
-              title="re-capture"
+              title={t("story.recaptureStory")}
               onClick={this.recaptureStory}
             >
-              Recapture
+              {t("story.recapture")}
             </button>
           </li>
           <li>
             <button
               className={Styles.menuBtn}
               type="button"
-              title="delete"
+              title={t("story.deleteStory")}
               onClick={this.deleteStory}
             >
-              Delete
+              {t("story.delete")}
             </button>
           </li>
         </ul>
@@ -136,7 +138,7 @@ class Story extends React.Component {
   render() {
     const story = this.props.story;
     const bodyText = this.getTruncatedContent(story.text);
-
+    const { t } = this.props;
     return (
       <div
         className={classNames(this.props.className, Styles.story)}
@@ -155,7 +157,7 @@ class Story extends React.Component {
             />
             {story.title && story.title.length > 0
               ? story.title
-              : "untitled scene"}
+              : t("story.untitledScene")}
           </h3>
           <button className={Styles.toggleBtn} onClick={this.toggleMenu}>
             <Icon glyph={Icon.GLYPHS.menuDotted} />
@@ -168,7 +170,7 @@ class Story extends React.Component {
   }
 }
 
-Story.propTypes = {
+StoryRaw.propTypes = {
   story: PropTypes.object,
   editStory: PropTypes.func,
   viewStory: PropTypes.func,
@@ -180,7 +182,8 @@ Story.propTypes = {
   style: PropTypes.object,
   className: PropTypes.string,
   menuOpen: PropTypes.bool,
-  openMenu: PropTypes.func
+  openMenu: PropTypes.func,
+  t: PropTypes.func.isRequired
 };
 
-module.exports = sortable(Story);
+export default sortable(withTranslation()(StoryRaw));
