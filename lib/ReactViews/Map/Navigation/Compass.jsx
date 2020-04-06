@@ -1,6 +1,8 @@
 "use strict";
 import React from "react";
 import PropTypes from "prop-types";
+import styled from "styled-components";
+import classNames from "classnames";
 import CameraFlightPath from "terriajs-cesium/Source/Scene/CameraFlightPath";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -16,6 +18,47 @@ import GyroscopeGuidance from "../../GyroscopeGuidance/GyroscopeGuidance";
 import Styles from "./compass.scss";
 import { runInAction, computed, when } from "mobx";
 import { withTranslation } from "react-i18next";
+
+const StyledCompass = styled.div`
+  display: none;
+  position: relative;
+  cursor: default;
+
+  // saas export will stringify your numbers
+  width: ${props => Number(props.theme.compassWidth) + 10}px;
+  height: ${props => Number(props.theme.compassWidth) + 10}px;
+
+  svg {
+    fill: ${props => props.theme.textDarker};
+  }
+
+  @media (min-width: ${props => props.theme.sm}px) {
+    display: block;
+  }
+`;
+
+const StyledCompassOuterRing = styled.div`
+  width: calc(100% - 10px);
+  // width: ${props => props.theme.compassWidth}px;
+  // height: ${props => props.theme.compassWidth}px;
+  border-radius: 50%;
+
+  position: absolute;
+  background-repeat: no-repeat;
+  background-size: contain;
+  top: 0;
+  left: 0;
+
+  svg {
+
+  }
+
+  ${props =>
+    props.active &&
+    `
+    width: 100%;
+  `}
+`;
 
 // the compass on map
 class Compass extends React.Component {
@@ -172,8 +215,8 @@ class Compass extends React.Component {
     const description = t("compass.description");
 
     return (
-      <div
-        className={Styles.compass}
+      <StyledCompass
+        // className={Styles.compass}
         title={description}
         onMouseDown={this.handleMouseDown.bind(this)}
         onDoubleClick={this.handleDoubleClick.bind(this)}
@@ -181,6 +224,7 @@ class Compass extends React.Component {
         onMouseOver={() => this.setState({ active: true })}
         onMouseOut={() => this.setState({ active: true })}
         onFocus={() => this.setState({ active: true })}
+        active={active}
         // onBlur={() => this.setState({ active: false })}
       >
         {active && (
@@ -193,9 +237,17 @@ class Compass extends React.Component {
             onClose={() => this.setState({ active: false })}
           />
         )}
-        <div className={Styles.outerRing} style={outerCircleStyle}>
-          <Icon glyph={Icon.GLYPHS.compassOuter} />
-        </div>
+        {/* <div className={Styles.outerRing} style={outerCircleStyle}> */}
+        <StyledCompassOuterRing active={active} style={outerCircleStyle}>
+          <Icon
+            glyph={
+              active
+                ? Icon.GLYPHS.compassOuterEnlarged
+                : Icon.GLYPHS.compassOuter
+            }
+          />
+        </StyledCompassOuterRing>
+        {/* </div> */}
         <div className={Styles.innerRing} title={t("compass.title")}>
           <Icon
             glyph={
@@ -206,7 +258,7 @@ class Compass extends React.Component {
         <div className={Styles.rotationMarker} style={rotationMarkerStyle}>
           <Icon glyph={Icon.GLYPHS.compassRotationMarker} />
         </div>
-      </div>
+      </StyledCompass>
     );
   }
 }
