@@ -1,10 +1,11 @@
 Change Log
 ==========
 
+
 ### Next release
 
+* Add support for `classBreaks` renderer to `ArcGisFeatureServerCatalogItem`.
 * Rework the handling of point datasets on the anti-meridian when using LeafletJS.
-
 
 ### v7.11.3
 
