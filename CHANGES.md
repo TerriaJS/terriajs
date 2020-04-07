@@ -97,6 +97,7 @@ Change Log
 * Add support for styling CSVs using a region mapped or text columns.
 * Removed hardcoded workbench & Panel button colours
 * Ensure CSV column names are trimmed of whitespace.
+* Really stop analytics launch event sending bad & now empty & now finally the real label
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
