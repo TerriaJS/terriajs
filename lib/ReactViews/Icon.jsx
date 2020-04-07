@@ -40,6 +40,7 @@ const GLYPHS = {
   geolocation: require("../../wwwroot/images/icons/geolocation.svg"),
   gallery: require("../../wwwroot/images/icons/gallery.svg"),
   help: require("../../wwwroot/images/icons/help.svg"),
+  helpThick: require("../../wwwroot/images/icons/help-thick.svg"),
   increase: require("../../wwwroot/images/icons/increase.svg"),
   left: require("../../wwwroot/images/icons/left.svg"),
   lineChart: require("../../wwwroot/images/icons/line-chart.svg"),

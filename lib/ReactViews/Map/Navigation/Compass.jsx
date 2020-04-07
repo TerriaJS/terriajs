@@ -2,7 +2,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import classNames from "classnames";
 import CameraFlightPath from "terriajs-cesium/Source/Scene/CameraFlightPath";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -13,24 +12,30 @@ import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import Ray from "terriajs-cesium/Source/Core/Ray";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
-import Icon from "../../Icon.jsx";
+import Icon, { StyledIcon } from "../../Icon.jsx";
 import GyroscopeGuidance from "../../GyroscopeGuidance/GyroscopeGuidance";
-import Styles from "./compass.scss";
 import { runInAction, computed, when } from "mobx";
 import { withTranslation } from "react-i18next";
+import { withTheme } from "styled-components";
+
+// Map Compass
+//
+// Markup:
+// <StyledCompass>
+//   (<GyroscopeGuidance /> if hovered/active/focused)
+//   <StyledCompassOuterRing />
+//   <StyledCompassInnerRing title="Click and drag to rotate the camera" />
+//   <StyledCompassRotationMarker />
+// </StyledCompass>
 
 const StyledCompass = styled.div`
   display: none;
   position: relative;
-  cursor: default;
+  cursor: pointer;
 
   // saas export will stringify your numbers
   width: ${props => Number(props.theme.compassWidth) + 10}px;
   height: ${props => Number(props.theme.compassWidth) + 10}px;
-
-  svg {
-    fill: ${props => props.theme.textDarker};
-  }
 
   @media (min-width: ${props => props.theme.sm}px) {
     display: block;
@@ -38,26 +43,35 @@ const StyledCompass = styled.div`
 `;
 
 const StyledCompassOuterRing = styled.div`
-  width: calc(100% - 10px);
-  // width: ${props => props.theme.compassWidth}px;
-  // height: ${props => props.theme.compassWidth}px;
-  border-radius: 50%;
+  ${props => props.theme.centerWithoutFlex()}
 
-  position: absolute;
+  width: ${props => (props.active ? "100%" : "calc(100% - 10px)")};
+`;
+
+const StyledCompassInnerRing = styled.div`
+  ${props => props.theme.verticalAlign()}
+  
+  width: ${props =>
+    Number(props.theme.compassWidth) - Number(props.theme.ringWidth) - 10}px;
+  height: ${props =>
+    Number(props.theme.compassWidth) - Number(props.theme.ringWidth) - 10}px;
+
+  margin: 0 auto;
+  padding: 4px;
+  box-sizing: border-box;
+`;
+
+const StyledCompassRotationMarker = styled.div`
+  ${props => props.theme.centerWithoutFlex()}
+  
+  width: ${props =>
+    Number(props.theme.compassWidth) + Number(props.theme.ringWidth) - 4}px;
+  height: ${props =>
+    Number(props.theme.compassWidth) + Number(props.theme.ringWidth) - 4}px;
+
+  border-radius: 50%;
   background-repeat: no-repeat;
   background-size: contain;
-  top: 0;
-  left: 0;
-
-  svg {
-
-  }
-
-  ${props =>
-    props.active &&
-    `
-    width: 100%;
-  `}
 `;
 
 // the compass on map
@@ -65,6 +79,7 @@ class Compass extends React.Component {
   static propTypes = {
     terria: PropTypes.object,
     viewState: PropTypes.object,
+    theme: PropTypes.object.isRequired,
     t: PropTypes.func.isRequired
   };
 
@@ -216,16 +231,20 @@ class Compass extends React.Component {
 
     return (
       <StyledCompass
-        // className={Styles.compass}
         title={description}
         onMouseDown={this.handleMouseDown.bind(this)}
         onDoubleClick={this.handleDoubleClick.bind(this)}
         onMouseUp={this.resetRotater.bind(this)}
         onMouseOver={() => this.setState({ active: true })}
         onMouseOut={() => this.setState({ active: true })}
+        // do we give focus to this? given it's purely a mouse tool
+        // focus it anyway..
+        tabIndex="0"
         onFocus={() => this.setState({ active: true })}
-        active={active}
+        // Gotta keep menu open if blurred, and close it with the close button
+        // instead. otherwise it'll never focus on the help buttons
         // onBlur={() => this.setState({ active: false })}
+        active={active}
       >
         {active && (
           <GyroscopeGuidance
@@ -237,27 +256,39 @@ class Compass extends React.Component {
             onClose={() => this.setState({ active: false })}
           />
         )}
-        {/* <div className={Styles.outerRing} style={outerCircleStyle}> */}
-        <StyledCompassOuterRing active={active} style={outerCircleStyle}>
-          <Icon
-            glyph={
-              active
-                ? Icon.GLYPHS.compassOuterEnlarged
-                : Icon.GLYPHS.compassOuter
-            }
-          />
+        <StyledCompassOuterRing active={active}>
+          <div style={outerCircleStyle}>
+            <StyledIcon
+              fillColor={this.props.theme.textDarker}
+              glyph={
+                active
+                  ? Icon.GLYPHS.compassOuterEnlarged
+                  : Icon.GLYPHS.compassOuter
+              }
+            />
+          </div>
         </StyledCompassOuterRing>
-        {/* </div> */}
-        <div className={Styles.innerRing} title={t("compass.title")}>
-          <Icon
+        <StyledCompassInnerRing title={t("compass.title")}>
+          <StyledIcon
+            fillColor={this.props.theme.textDarker}
             glyph={
               active ? Icon.GLYPHS.compassInnerArrows : Icon.GLYPHS.compassInner
             }
           />
-        </div>
-        <div className={Styles.rotationMarker} style={rotationMarkerStyle}>
-          <Icon glyph={Icon.GLYPHS.compassRotationMarker} />
-        </div>
+        </StyledCompassInnerRing>
+
+        <StyledCompassRotationMarker
+          style={{
+            backgroundImage: require("../../../../wwwroot/images/compass-rotation-marker.svg")
+          }}
+        >
+          <div style={rotationMarkerStyle}>
+            <StyledIcon
+              fillColor={this.props.theme.textDarker}
+              glyph={Icon.GLYPHS.compassRotationMarker}
+            />
+          </div>
+        </StyledCompassRotationMarker>
       </StyledCompass>
     );
   }
@@ -571,4 +602,4 @@ function viewerChange(viewModel) {
   });
 }
 
-export default withTranslation()(Compass);
+export default withTranslation()(withTheme(Compass));

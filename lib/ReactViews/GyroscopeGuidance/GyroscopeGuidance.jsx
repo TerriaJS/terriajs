@@ -128,14 +128,14 @@ export default function GyroscopeGuidance(props) {
       css={`
         position: absolute;
         direction: rtl;
-        right: 65px;
-        top: 11px;
+        right: 75px;
+        top: 17px;
       `}
     >
       <MapIconButton
         neverCollapse
         onClick={() => props.viewState.showHelpPanel()}
-        iconElement={() => <Icon glyph={Icon.GLYPHS.help} />}
+        iconElement={() => <Icon glyph={Icon.GLYPHS.helpThick} />}
       >
         Help
       </MapIconButton>
@@ -178,6 +178,7 @@ export default function GyroscopeGuidance(props) {
           transform: scale(0.75);
           transform-origin: right;
           svg {
+            fill: ${p => p.theme.textLight};
             width: 15px;
             height: 15px;
           }
