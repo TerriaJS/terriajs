@@ -24,6 +24,7 @@ import isReadOnlyArray from "../Core/isReadOnlyArray";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin from "../ModelMixins/DiscretelyTimeVaryingMixin";
+import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
@@ -401,9 +402,13 @@ class GetCapabilitiesStratum extends LoadableStratum(
 }
 
 class WebMapServiceCatalogItem
-  extends DiscretelyTimeVaryingMixin(
-    GetCapabilitiesMixin(
-      UrlMixin(CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits)))
+  extends TimeFilterMixin(
+    DiscretelyTimeVaryingMixin(
+      GetCapabilitiesMixin(
+        UrlMixin(
+          CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
+        )
+      )
     )
   )
   implements Mappable {
