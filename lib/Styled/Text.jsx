@@ -32,9 +32,9 @@ export const Text = styled.div`
     color: ${props.theme.textLight};
   `}
   ${props =>
-    props.textLight &&
+    props.textLightDimmed &&
     `
-    color: ${props.theme.textLight};
+    color: ${props.theme.textLightDimmed};
   `}
   ${props =>
     props.textDark &&
@@ -45,6 +45,11 @@ export const Text = styled.div`
     props.textDarker &&
     `
     color: ${props.theme.textDarker};
+  `}
+  ${props =>
+    props.color &&
+    `
+    color: ${props.color};
   `}
 
   ${props => props.fullWidth && `width: 100%;`}

@@ -98,6 +98,9 @@ Change Log
 * Update Compass UI to include larger rotation target, remove sass from compass
 * Link Compass "help" button to `navigation` HelpPanelItem (requires generalisation later down the track)
 * Improve keyboard traversal through right-hand-side map icon buttons
+* Removed hardcoded workbench & Panel button colours
+* Ensure CSV column names are trimmed of whitespace.
+* Really stop analytics launch event sending bad & now empty & now finally the real label
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC

@@ -25,6 +25,7 @@
   colorPrimary: $color-primary;
   colorSplitter: $color-splitter;
   textLight: $text-light;
+  textLightDimmed: $text-light-dimmed;
   textDark: $text-dark;
   textDarker: $text-darker;
   textBlack: $text-black;
@@ -35,4 +36,7 @@
   greyLighter2: $grey-lighter2;
   greyLightest: $grey-lightest;
   charcoalGrey: $charcoal-grey;
+
+  // TODO: fix, these are stopgaps & should get merged in with something else(?)
+  mapButtonColor: $map-button-color;
 }
