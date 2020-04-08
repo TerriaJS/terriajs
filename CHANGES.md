@@ -95,6 +95,9 @@ Change Log
 * Overhauled location search to be a dropdown instead of list of results
 * Fixed bug causing full app crash or viewer zoom refresh when using 3D view and changing settings or changing the terrain provider.
 * Add support for styling CSVs using a region mapped or text columns.
+* Update Compass UI to include larger rotation target, remove sass from compass
+* Link Compass "help" button to `navigation` HelpPanelItem (requires generalisation later down the track)
+* Improve keyboard traversal through right-hand-side map icon buttons
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
