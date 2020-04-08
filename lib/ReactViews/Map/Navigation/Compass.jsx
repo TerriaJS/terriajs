@@ -31,7 +31,6 @@ import { withTheme } from "styled-components";
 const StyledCompass = styled.div`
   display: none;
   position: relative;
-  cursor: pointer;
 
   // saas export will stringify your numbers
   width: ${props => Number(props.theme.compassWidth) + 10}px;
@@ -63,7 +62,9 @@ const StyledCompassInnerRing = styled.div`
 
 const StyledCompassRotationMarker = styled.div`
   ${props => props.theme.centerWithoutFlex()}
-  
+
+  cursor: pointer;
+
   width: ${props =>
     Number(props.theme.compassWidth) + Number(props.theme.ringWidth) - 4}px;
   height: ${props =>

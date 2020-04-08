@@ -1,5 +1,5 @@
 "use strict";
-import React, { useState } from "react";
+import React, { useState, useRef, createRef } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
@@ -87,13 +87,14 @@ function MapIconButton(props) {
     inverted
   } = props;
   const expanded = (isExpanded || neverCollapse) && children;
-  // const { t } = this.props;
+  const buttonRef = props.buttonRef || useRef();
 
   // const handleAway = () => setTimeout(() => setExpanded(false), 1000);
   const handleAway = () => setExpanded(false);
 
   const MapIconButtonRaw = (
     <StyledMapIconButton
+      ref={buttonRef}
       className={props.className}
       primary={primary}
       splitter={splitter}

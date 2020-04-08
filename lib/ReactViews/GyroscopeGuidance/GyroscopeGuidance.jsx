@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import styled from "styled-components";
+import React, { useState, useRef } from "react";
+import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
@@ -27,6 +27,10 @@ const CompassWrapper = styled(Box).attrs({
   width: 64px;
   height: 64px;
   margin-right: 10px;
+
+  svg {
+    fill: ${props => props.theme.textDarker};
+  }
 `;
 const CompassPositioning = `
 
@@ -122,6 +126,7 @@ function GyroscopeGuidancePanel(props) {
 
 export default function GyroscopeGuidance(props) {
   const [controlPanelOpen, setControlPanelOpen] = useState(false);
+  const controlsMapIcon = useRef();
   const { t } = useTranslation();
   return (
     <Box
@@ -134,7 +139,10 @@ export default function GyroscopeGuidance(props) {
     >
       <MapIconButton
         neverCollapse
-        onClick={() => props.viewState.showHelpPanel()}
+        onClick={() => {
+          props.viewState.showHelpPanel();
+          props.viewState.selectHelpMenuItem("navigation");
+        }}
         iconElement={() => <Icon glyph={Icon.GLYPHS.helpThick} />}
       >
         Help
@@ -146,6 +154,7 @@ export default function GyroscopeGuidance(props) {
         `}
       >
         <MapIconButton
+          buttonRef={controlsMapIcon}
           neverCollapse
           iconElement={() => <Icon glyph={Icon.GLYPHS.controls} />}
           onClick={() => setControlPanelOpen(!controlPanelOpen)}
@@ -160,6 +169,22 @@ export default function GyroscopeGuidance(props) {
         >
           <CleanDropdownPanel
             // theme={dropdownTheme}
+
+            // While opacity at this level is not ideal, it's the only way
+            // to get the background to be transparent - another step up
+            // is setting the opacity layer underneath, and a
+            // pseudo-panel on top of it to keep the opacity on top.
+            // but that's a lot to do right now
+            //   - for a component that is still using sass
+            //   - for 0.85 where the contrast is still great.
+            cleanDropdownPanelStyles={css`
+              opacity: 0.85;
+              .tjs-sc-InnerPanel,
+              .tjs-sc-InnerPanel__caret {
+                background: ${p => p.theme.textBlack};
+              }
+            `}
+            refForCaret={controlsMapIcon}
             isOpen={controlPanelOpen}
             onOpenChanged={() => controlPanelOpen}
             // onDismissed={() => setControlPanelOpen(false)}
