@@ -1,3 +1,12 @@
+/**
+ * This could use a lot of work, for example, due to the way both of:
+ *  - how the component is currently composed
+ *  - how it's currently hooked into the cesium viewer
+ * we needlessly force re-render it all even though there is no change to orbit
+ * or heading
+ */
+//
+
 "use strict";
 import React from "react";
 import PropTypes from "prop-types";
@@ -251,8 +260,8 @@ class Compass extends React.Component {
           <GyroscopeGuidance
             viewState={this.props.viewState}
             handleHelp={() => {
-              console.log("handle help");
-              this.props.viewState.showHelpMenu = true;
+              this.props.viewState.showHelpPanel();
+              this.props.viewState.selectHelpMenuItem("navigation");
             }}
             onClose={() => this.setState({ active: false })}
           />

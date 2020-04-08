@@ -100,7 +100,7 @@ const GLYPHS = {
   cube: require("../../wwwroot/images/icons/interact.svg")
 };
 
-const Icon = createReactClass({
+export const Icon = createReactClass({
   propTypes: {
     glyph: PropTypes.object,
     style: PropTypes.object,
@@ -120,7 +120,7 @@ const Icon = createReactClass({
   }
 });
 
-const StyledIcon = styled(Icon)`
+export const StyledIcon = styled(Icon)`
   flex-shrink: 0;
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
 
@@ -132,6 +132,8 @@ const StyledIcon = styled(Icon)`
   ${props => props.opacity && `opacity: ${props.opacity};`}
 `;
 
+export default Icon;
+// (?) are these cjs exports for the doc generator?
 module.exports = Icon;
 module.exports.GLYPHS = GLYPHS;
 module.exports.StyledIcon = StyledIcon;

@@ -12,8 +12,9 @@ import MapIconButton from "../MapIconButton/MapIconButton";
 import CleanDropdownPanel from "../CleanDropdownPanel/CleanDropdownPanel";
 
 GyroscopeGuidance.propTypes = {
-  viewState: PropTypes.object,
-  onClose: PropTypes.func
+  viewState: PropTypes.object.isRequired,
+  handleHelp: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired
 };
 
 const Text = styled(TextSpan).attrs({
@@ -59,7 +60,7 @@ const CompassIcon = styled(Icon)`
     `}
 `;
 
-function GyroscopeGuidancePanel(props) {
+function GyroscopeGuidancePanel() {
   // TODO: i18inify
   return (
     <Box
@@ -139,10 +140,7 @@ export default function GyroscopeGuidance(props) {
     >
       <MapIconButton
         neverCollapse
-        onClick={() => {
-          props.viewState.showHelpPanel();
-          props.viewState.selectHelpMenuItem("navigation");
-        }}
+        onClick={props.handleHelp}
         iconElement={() => <Icon glyph={Icon.GLYPHS.helpThick} />}
       >
         Help

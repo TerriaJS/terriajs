@@ -4,6 +4,7 @@ import { act } from "react-dom/test-utils";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import GyroscopeGuidance from "../../../lib/ReactViews/GyroscopeGuidance/GyroscopeGuidance";
+import MapIconButton from "../../../lib/ReactViews/MapIconButton/MapIconButton";
 
 describe("GyroscopeGuidance", function() {
   let terria: Terria;
@@ -23,17 +24,20 @@ describe("GyroscopeGuidance", function() {
   });
 
   describe("with basic props", function() {
-    const searchBoxWithProps = (
-      <GyroscopeGuidance onClose={() => {}} viewState={viewState} />
-    );
-
-    it("renders", function() {
+    it("renders with 3 buttons", function() {
       act(() => {
-        testRenderer = create(searchBoxWithProps);
+        testRenderer = create(
+          <GyroscopeGuidance
+            handleHelp={() => {}}
+            onClose={() => {}}
+            viewState={viewState}
+          />
+        );
       });
 
-      const button = testRenderer.root.findByType("button");
-      expect(button).toBeDefined();
+      const buttons = testRenderer.root.findAllByType(MapIconButton);
+      expect(buttons.length).toBeTruthy();
+      expect(buttons.length).toEqual(3);
     });
   });
 });

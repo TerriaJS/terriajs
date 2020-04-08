@@ -3,9 +3,12 @@ import React from "react";
 import { act } from "react-dom/test-utils";
 import Terria from "../../../../../lib/Models/Terria";
 import ViewState from "../../../../../lib/ReactViewModels/ViewState";
+import { ThemeProvider } from "styled-components";
+import { terriaTheme } from "../../../../../lib/ReactViews/StandardUserInterface/StandardTheme";
 import Compass from "../../../../../lib/ReactViews/Map/Navigation/Compass";
+import { StyledIcon } from "../../../../../lib/ReactViews/Icon";
 
-describe("GyroscopeGuidance", function() {
+describe("Compass", function() {
   let terria: Terria;
   let viewState: ViewState;
 
@@ -23,17 +26,22 @@ describe("GyroscopeGuidance", function() {
   });
 
   describe("with basic props", function() {
-    const searchBoxWithProps = (
-      <Compass onClose={() => {}} viewState={viewState} terria={terria} />
-    );
-
     it("renders", function() {
       act(() => {
-        testRenderer = create(searchBoxWithProps);
+        testRenderer = create(
+          <ThemeProvider theme={terriaTheme}>
+            <Compass
+              onClose={() => {}}
+              theme={terriaTheme}
+              viewState={viewState}
+              terria={terria}
+            />
+          </ThemeProvider>
+        );
       });
 
-      const button = testRenderer.root.findByType("button");
-      expect(button).toBeDefined();
+      const icons = testRenderer.root.findAllByType(StyledIcon);
+      expect(icons.length).toBeTruthy();
     });
   });
 });
