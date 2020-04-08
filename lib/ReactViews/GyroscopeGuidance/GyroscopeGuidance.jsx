@@ -75,7 +75,7 @@ function GyroscopeGuidancePanel() {
       <Spacing bottom={4} />
       <Box>
         <CompassWrapper>
-          <CompassIcon glyph={Icon.GLYPHS.compassOuter} />
+          <CompassIcon glyph={Icon.GLYPHS.compassOuterEnlarged} />
           <CompassIcon glyph={Icon.GLYPHS.compassInnerArrows} inner darken />
         </CompassWrapper>
         <Box column>
@@ -93,7 +93,7 @@ function GyroscopeGuidancePanel() {
       <Box>
         <CompassWrapper>
           <CompassIcon
-            glyph={Icon.GLYPHS.compassOuter}
+            glyph={Icon.GLYPHS.compassOuterEnlarged}
             css={CompassPositioning}
             darken
           />
