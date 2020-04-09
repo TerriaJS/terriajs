@@ -2,15 +2,14 @@ import Terria from "./Terria";
 import CommonStrata from "./CommonStrata";
 import upsertModelFromJson from "./upsertModelFromJson";
 import CatalogMemberFactory from "./CatalogMemberFactory";
-import { BaseModel } from "./Model";
 import UrlReference from "./UrlReference";
 
-export default function createCatalogItemFromUrl(
+export default function createUrlReferenceFromUrl(
   url: string,
   terria: Terria,
-  isUrl: boolean,
+  allowLoad: boolean,
   _index?: number
-): Promise<BaseModel | undefined> {
+): Promise<UrlReference | undefined> {
   const item = upsertModelFromJson(
     CatalogMemberFactory,
     terria,
@@ -22,7 +21,7 @@ export default function createCatalogItemFromUrl(
       name: url,
       url: url,
       localId: url,
-      allowLoad: isUrl
+      allowLoad: allowLoad
     }
   );
 
@@ -48,7 +47,7 @@ interface MappingEntry {
 
 export const mapping: MappingEntry[] = [];
 
-createCatalogItemFromUrl.register = function(
+createUrlReferenceFromUrl.register = function(
   matcher: Matcher,
   type: string,
   requiresLoad?: boolean

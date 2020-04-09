@@ -45,7 +45,11 @@ export default class CsvCatalogItem extends TableMixin(
 
   private _csvFile?: File;
 
-  constructor(id: string | undefined, terria: Terria, sourceReference?: BaseModel) {
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel
+  ) {
     super(id, terria, sourceReference);
     this.strata.set(
       automaticTableStylesStratumName,
@@ -131,7 +135,7 @@ export default class CsvCatalogItem extends TableMixin(
       return Csv.parseFile(this._csvFile, true);
     } else if (this.url !== undefined) {
       return Csv.parseUrl(proxyCatalogItemUrl(this, this.url, "1d"), true);
-    }  else {
+    } else {
       return Promise.reject(
         new TerriaError({
           sender: this,

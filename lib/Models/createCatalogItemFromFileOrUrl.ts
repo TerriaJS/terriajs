@@ -6,7 +6,7 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import ViewState from "../ReactViewModels/ViewState";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import CommonStrata from "./CommonStrata";
-import createCatalogItemFromUrl from "./createCatalogItemFromUrl";
+import createUrlReferenceFromUrl from "./createUrlReferenceFromUrl";
 import { BaseModel } from "./Model";
 import Terria from "./Terria";
 import upsertModelFromJson from "./upsertModelFromJson";
@@ -32,7 +32,7 @@ export default function createCatalogItemFromFileOrUrl(
   }
 
   if (dataType === "auto") {
-    return createCatalogItemFromUrl(name, terria, isUrl).then(newItem => {
+    return createUrlReferenceFromUrl(name, terria, isUrl).then(newItem => {
       if (!isDefined(newItem)) {
         return tryConversionService(name, terria, viewState, confirmConversion);
       } else {

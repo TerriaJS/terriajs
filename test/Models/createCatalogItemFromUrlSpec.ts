@@ -1,12 +1,12 @@
 import Terria from "../../lib/Models/Terria";
-import createCatalogItemFromUrl from "../../lib/Models/createCatalogItemFromUrl";
+import createUrlReferenceFromUrl from "../../lib/Models/createUrlReferenceFromUrl";
 import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGroup";
 import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
 import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
 import { matchesExtension } from "../../lib/Models/registerCatalogMembers";
 import UrlReference from "../../lib/Models/UrlReference";
 
-describe("createCatalogItemFromUrl", function() {
+describe("createUrlReferenceFromUrl", function() {
   let terria: Terria;
 
   beforeEach(function() {
@@ -19,12 +19,12 @@ describe("createCatalogItemFromUrl", function() {
     CatalogMemberFactory.register(GeoJsonCatalogItem.type, GeoJsonCatalogItem);
     CatalogMemberFactory.register(UrlReference.type, UrlReference);
 
-    createCatalogItemFromUrl.register(
+    createUrlReferenceFromUrl.register(
       s => true,
       WebMapServiceCatalogGroup.type,
       true
     );
-    createCatalogItemFromUrl.register(
+    createUrlReferenceFromUrl.register(
       matchesExtension("geojson"),
       GeoJsonCatalogItem.type,
       true
@@ -33,7 +33,7 @@ describe("createCatalogItemFromUrl", function() {
 
   it("should create an item of the first registered type", function(done) {
     const url = "test/WMS/single_metadata_url.xml";
-    createCatalogItemFromUrl(url, terria, true).then(item => {
+    createUrlReferenceFromUrl(url, terria, true).then(item => {
       expect(item).toBeDefined();
 
       if (item !== undefined) {
@@ -49,7 +49,7 @@ describe("createCatalogItemFromUrl", function() {
   it("should create an item of the second registered type", function(done) {
     const url = "test/geoJSON/bike_racks.geojson";
 
-    createCatalogItemFromUrl(url, terria, true).then(item => {
+    createUrlReferenceFromUrl(url, terria, true).then(item => {
       expect(item).toBeDefined();
       if (item !== undefined) {
         expect(item instanceof UrlReference).toBe(true);

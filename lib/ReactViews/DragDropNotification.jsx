@@ -45,13 +45,12 @@ class DragDropNotification extends React.Component {
 
   componentWillUnmount() {
     clearTimeout(this.notificationTimeout);
-    this.lastUploadedFilesReaction()
+    this.lastUploadedFilesReaction();
   }
 
   handleHover() {
     // reset timer on hover
     clearTimeout(this.notificationTimeout);
-    
   }
 
   handleMouseLeave() {
@@ -86,8 +85,8 @@ class DragDropNotification extends React.Component {
             {fileNames}
             {'"'}
           </span>{" "}
-          {this.props.viewState.lastUploadedFiles.length > 1 ? "have" : "has"} been added
-          to <span className={Styles.action}>My data</span>
+          {this.props.viewState.lastUploadedFiles.length > 1 ? "have" : "has"}{" "}
+          been added to <span className={Styles.action}>My data</span>
         </div>
       </button>
     );

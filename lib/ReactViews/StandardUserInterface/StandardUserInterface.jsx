@@ -7,8 +7,8 @@ import combine from "terriajs-cesium/Source/Core/combine";
 import { terriaTheme } from "./StandardTheme";
 import arrayContains from "../../Core/arrayContains";
 import Branding from "../SidePanel/Branding";
-import DragDropFile from '../DragDropFile';
-import DragDropNotification from './../DragDropNotification';
+import DragDropFile from "../DragDropFile";
+import DragDropNotification from "./../DragDropNotification";
 import ExplorerWindow from "../ExplorerWindow/ExplorerWindow";
 import FeatureInfoPanel from "../FeatureInfo/FeatureInfoPanel";
 import FeedbackForm from "../Feedback/FeedbackForm";
@@ -356,12 +356,10 @@ const StandardUserInterface = observer(
                 />
               </div>
               <DragDropFile
-            terria={this.props.terria}
-            viewState={this.props.viewState}
-          />
-          <DragDropNotification
-            viewState={this.props.viewState}
-          />
+                terria={this.props.terria}
+                viewState={this.props.viewState}
+              />
+              <DragDropNotification viewState={this.props.viewState} />
               {showStoryPanel && (
                 <StoryPanel terria={terria} viewState={this.props.viewState} />
               )}
