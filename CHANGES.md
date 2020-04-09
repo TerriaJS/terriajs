@@ -2,9 +2,10 @@ Change Log
 ==========
 
 
-### Next release
+### v7.11.4
 
 * Add support for `classBreaks` renderer to `ArcGisFeatureServerCatalogItem`.
+* Upgraded to Cesium v1.68.
 
 ### v7.11.3
 
