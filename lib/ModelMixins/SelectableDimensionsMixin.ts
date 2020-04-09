@@ -3,7 +3,6 @@ import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
 import ModelTraits from "../Traits/ModelTraits";
 
-
 export interface DimensionOption {
   readonly id: string;
   readonly name: string;
@@ -18,12 +17,13 @@ export interface SelectableDimension {
 }
 
 interface SelectableDimensions {
-  selectableDimensions: SelectableDimension[]
+  selectableDimensions: SelectableDimension[];
 }
 
-
 namespace SelectableDimensions {
-  export function is(model: SelectableDimensions): model is SelectableDimensions {
+  export function is(
+    model: SelectableDimensions
+  ): model is SelectableDimensions {
     return "selectableDimensions" in model;
   }
 }

@@ -80,7 +80,7 @@ export class WebMapServiceAvailableDimensionTraits extends ModelTraits {
     description: "Possible dimension values."
   })
   values?: string[];
-  
+
   @primitiveTrait({
     type: "string",
     name: "Units",

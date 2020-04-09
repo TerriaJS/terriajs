@@ -9,8 +9,7 @@ import Icon from "../../Icon";
 import Styles from "./style-selector-section.scss";
 import CommonStrata from "../../../Models/CommonStrata";
 import { runInAction } from "mobx";
-import SelectableDimensionsMixin from "../../../ModelMixins/SelectableDimensionsMixin"
-
+import SelectableDimensionsMixin from "../../../ModelMixins/SelectableDimensionsMixin";
 
 const DimensionSelectorSection = createReactClass({
   displayName: "DimensionSelectorSection",
@@ -21,10 +20,7 @@ const DimensionSelectorSection = createReactClass({
 
   setDimensionValue(dimension, event) {
     runInAction(() => {
-      dimension.setDimensionValue(
-        CommonStrata.user,
-        event.target.value
-      );
+      dimension.setDimensionValue(CommonStrata.user, event.target.value);
     });
   },
 
@@ -47,10 +43,7 @@ const DimensionSelectorSection = createReactClass({
               className={Styles.field}
               name={dim.id}
               value={dim.selectedId}
-              onChange={this.setDimensionValue.bind(
-                this,
-                dim
-              )}
+              onChange={this.setDimensionValue.bind(this, dim)}
             >
               {dim.options.map(option => (
                 <option key={option.id} value={option.id}>

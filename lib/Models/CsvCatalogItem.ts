@@ -149,7 +149,9 @@ export default class CsvCatalogItem extends TableMixin(
 
   @computed
   get selectableDimensions() {
-    if (typeof this.activeTableStyle.regionColumn?.regionType?.regionType !== 'undefined' &&
+    if (
+      typeof this.activeTableStyle.regionColumn?.regionType?.regionType !==
+        "undefined" &&
       typeof this.regionProviderList !== "undefined" &&
       Array.isArray(this.regionProviderList.regionProviders)
     ) {
@@ -161,24 +163,28 @@ export default class CsvCatalogItem extends TableMixin(
           };
         }
       );
-      return [...super.selectableDimensions, {
-        get id(): string {
-          return "regionMapping";
-        },
-        get name(): string {
-          return "Region Mapping";
-        },
-        options: regionOptions,
-        selectedId: this.activeTableStyle.regionColumn.regionType.regionType,
-        setDimensionValue: (
-          stratumId: string,
-          regionType: string
-        ) => {
-          this.tableStyles.forEach(tableStyle => {
-            tableStyle.regionColumn?.traits.setTrait(stratumId, "regionType", regionType)
-          })
+      return [
+        ...super.selectableDimensions,
+        {
+          get id(): string {
+            return "regionMapping";
+          },
+          get name(): string {
+            return "Region Mapping";
+          },
+          options: regionOptions,
+          selectedId: this.activeTableStyle.regionColumn.regionType.regionType,
+          setDimensionValue: (stratumId: string, regionType: string) => {
+            this.tableStyles.forEach(tableStyle => {
+              tableStyle.regionColumn?.traits.setTrait(
+                stratumId,
+                "regionType",
+                regionType
+              );
+            });
+          }
         }
-      }]
+      ];
     } else {
       return super.selectableDimensions;
     }
