@@ -6,6 +6,7 @@ Change Log
 
 * Add support for `classBreaks` renderer to `ArcGisFeatureServerCatalogItem`.
 * Upgraded to Cesium v1.68.
+* Replace `defineProperties` and `freezeObject` to `Object.defineProperties` and `Object.freeze` respectively.
 
 ### v7.11.3
 
