@@ -4,110 +4,66 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import ObserveModelMixin from "../../ObserveModelMixin";
+import { observer } from "mobx-react";
+import Icon from "../../Icon";
+import Styles from "./style-selector-section.scss";
+import CommonStrata from "../../../Models/CommonStrata";
+import { runInAction } from "mobx";
+import SelectableDimensionsMixin from "../../../ModelMixins/SelectableDimensionsMixin"
 
-import Styles from "./dimension-selector-section.scss";
 
 const DimensionSelectorSection = createReactClass({
   displayName: "DimensionSelectorSection",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     item: PropTypes.object.isRequired
   },
 
-  changeDimension(dimension, event) {
-    const item = this.props.item;
-    const dimensions = item.dimensions || {};
-
-    dimensions[dimension.name] = event.target.value;
-
-    item.dimensions = dimensions;
-    item.refresh();
+  setDimensionValue(dimension, event) {
+    runInAction(() => {
+      dimension.setDimensionValue(
+        CommonStrata.user,
+        event.target.value
+      );
+    });
   },
 
   render() {
     const item = this.props.item;
-
-    // This section only makes sense if we have a layer that has dimensions.
-    if (
-      item.disableUserChanges ||
-      !defined(item.availableDimensions) ||
-      !defined(item.layers)
-    ) {
+    console.log(item);
+    if (!SelectableDimensionsMixin.is(item)) {
       return null;
     }
-
-    const dimensions = [];
-    item.layers.split(",").forEach(layerName => {
-      const layerDimensions = item.availableDimensions[layerName];
-      if (!layerDimensions) {
-        return;
-      }
-
-      layerDimensions.forEach(layerDimension => {
-        // Don't include the time dimension; it is handled specially
-        if (layerDimension.name.toLowerCase() === "time") {
-          return;
-        }
-
-        // Only use the first dimension we find with each name.
-        const existingDimension = dimensions.filter(
-          dimension => dimension.name === layerDimension.name
-        )[0];
-        if (!defined(existingDimension)) {
-          dimensions.push(layerDimension);
-        }
-      });
-    });
+    const selectableDimensions = item.selectableDimensions;
 
     return (
-      <div className={Styles.dimensionSelector}>
-        {dimensions.map(this.renderDimensionSelector)}
-      </div>
-    );
-  },
-
-  renderDimensionSelector(dimension) {
-    const dimensionValues = dimension.options;
-    const selectedDimensions = this.props.item.dimensions || {};
-    const value = selectedDimensions[dimension.name] || dimension.default || "";
-    const addDefault =
-      value.length === 0 && dimension.options.indexOf(value) < 0;
-
-    let title =
-      dimension.name.length > 0
-        ? dimension.name.charAt(0).toUpperCase() + dimension.name.slice(1)
-        : "";
-    if (dimension.unitSymbol) {
-      title += "(" + dimension.unitSymbol + ")";
-    }
-
-    return (
-      <div key={dimension.name}>
-        <label className={Styles.title} htmlFor={dimension.name}>
-          {title}
-        </label>
-        <select
-          className={Styles.field}
-          name={dimension.name}
-          value={value}
-          onChange={this.changeDimension.bind(this, dimension)}
-        >
-          {addDefault && (
-            <option key="__default__" value="">
-              Default
-            </option>
-          )}
-          {dimensionValues.map(item => (
-            <option key={item} value={item}>
-              {item}
-            </option>
-          ))}
-        </select>
+      <div className={Styles.styleSelector}>
+        {selectableDimensions.map(dim => (
+          <div key={dim.id} className={Styles.styleSelector}>
+            <label className={Styles.title} htmlFor={dim.name}>
+              {dim.name}
+            </label>
+            <select
+              className={Styles.field}
+              name={dim.id}
+              value={dim.selectedId}
+              onChange={this.setDimensionValue.bind(
+                this,
+                dim
+              )}
+            >
+              {dim.options.map(option => (
+                <option key={option.id} value={option.id}>
+                  {option.name}
+                </option>
+              ))}
+            </select>
+            <Icon glyph={Icon.GLYPHS.opened} />
+          </div>
+        ))}
       </div>
     );
   }
 });
 
-module.exports = DimensionSelectorSection;
+export default observer(DimensionSelectorSection);

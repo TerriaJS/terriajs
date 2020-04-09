@@ -27,12 +27,17 @@ import CommonStrata from "../Models/CommonStrata";
 import { ImageryParts } from "../Models/Mappable";
 import Model from "../Models/Model";
 import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
-import SelectableStyle, { AvailableStyle } from "../Models/SelectableStyle";
+
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
 import LegendTraits from "../Traits/LegendTraits";
 import TableTraits from "../Traits/TableTraits";
+import {
+  SelectableDimension,
+  DimensionOption
+} from "../Models/SelectableDimensions";
+import SelectableDimensions from "./SelectableDimensionsMixin";
 
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
 //   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
@@ -42,7 +47,7 @@ class RegionProviderList extends JSRegionProviderList {}
 export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
   Base: T
 ) {
-  abstract class TableMixin extends Base {
+  abstract class TableMixin extends Base implements SelectableDimensions {
     /**
      * The raw data table in column-major format, i.e. the outer array is an
      * array of columns.
@@ -241,34 +246,36 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
     }
 
     @computed
-    get styleSelector(): SelectableStyle | undefined {
+    get selectableDimensions(): SelectableDimension[] {
       if (this.mapItems.length === 0) {
-        return;
+        [];
       }
 
       const tableModel = this;
-      return {
-        get id(): string {
-          return "style";
-        },
-        get name(): string {
-          return "";
-        },
-        get availableStyles(): readonly AvailableStyle[] {
-          return tableModel.tableStyles.map(style => {
-            return {
-              id: style.id,
-              name: style.styleTraits.title || style.id
-            };
-          });
-        },
-        get activeStyleId(): string | undefined {
-          return tableModel.activeStyle;
-        },
-        chooseActiveStyle(stratumId: string, styleId: string) {
-          tableModel.setTrait(stratumId, "activeStyle", styleId);
+      return [
+        {
+          get id(): string {
+            return "activeStyle";
+          },
+          get name(): string {
+            return "Display Variable";
+          },
+          get options(): readonly DimensionOption[] {
+            return tableModel.tableStyles.map(style => {
+              return {
+                id: style.id,
+                name: style.styleTraits.title || style.id
+              };
+            });
+          },
+          get selectedId(): string | undefined {
+            return tableModel.activeStyle;
+          },
+          setDimensionValue(stratumId: string, styleId: string) {
+            tableModel.setTrait(stratumId, "activeStyle", styleId);
+          }
         }
-      };
+      ];
     }
 
     get legends(): readonly ModelPropertiesFromTraits<LegendTraits>[] {

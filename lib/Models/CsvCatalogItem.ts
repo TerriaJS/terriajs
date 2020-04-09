@@ -15,6 +15,12 @@ import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
 import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import isDefined from "../Core/isDefined";
+import filterOutUndefined from "../Core/filterOutUndefined";
+import {
+  DimensionOption,
+  SelectableDimension
+} from "../ModelMixins/SelectableDimensionsMixin";
+import CommonStrata from "./CommonStrata";
 
 // Types of CSVs:
 // - Points - Latitude and longitude columns or address
@@ -138,6 +144,43 @@ export default class CsvCatalogItem extends TableMixin(
           message: i18next.t("models.csv.unableToLoadItemMessage")
         })
       );
+    }
+  }
+
+  @computed
+  get selectableDimensions() {
+    if (typeof this.activeTableStyle.regionColumn?.regionType?.regionType !== 'undefined' &&
+      typeof this.regionProviderList !== "undefined" &&
+      Array.isArray(this.regionProviderList.regionProviders)
+    ) {
+      const regionOptions: DimensionOption[] = this.regionProviderList.regionProviders.map(
+        regionProvider => {
+          return {
+            name: regionProvider.regionType,
+            id: regionProvider.regionType
+          };
+        }
+      );
+      return [...super.selectableDimensions, {
+        get id(): string {
+          return "regionMapping";
+        },
+        get name(): string {
+          return "Region Mapping";
+        },
+        options: regionOptions,
+        selectedId: this.activeTableStyle.regionColumn.regionType.regionType,
+        setDimensionValue: (
+          stratumId: string,
+          regionType: string
+        ) => {
+          this.tableStyles.forEach(tableStyle => {
+            tableStyle.regionColumn?.traits.setTrait(stratumId, "regionType", regionType)
+          })
+        }
+      }]
+    } else {
+      return super.selectableDimensions;
     }
   }
 }

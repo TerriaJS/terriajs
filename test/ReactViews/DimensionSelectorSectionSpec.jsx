@@ -1,4 +1,4 @@
-import DimensionSelectorSection from "../../lib/ReactViews/Workbench/Controls/DimensionSelectorSection";
+import DimensionSelectorSection from "../../lib/ReactViews/Workbench/Controls/DimensionSelectorSectionO";
 import { findAllWithType } from "react-shallow-testutils";
 import { getShallowRenderedOutput } from "./MoreShallowTools";
 import React from "react";

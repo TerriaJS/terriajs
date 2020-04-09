@@ -26,7 +26,7 @@ describe("StyleSelectorSection", function() {
     // for mocking something purely to check the React element does what you expect it to.
     // const someWMS = new WebMapServiceCatalogItem("blah", terria);
     const mockItem = {
-      styleSelector: {
+      selectableDimensions: {
         availableStyles: [
           {
             name: "Neko Style",
@@ -48,7 +48,7 @@ describe("StyleSelectorSection", function() {
     memberComponents.forEach((member: any, index: number) => {
       // `StyleSelectorSection`s render out html option elements, with the names as the values
       expect(member.type).toEqual("option");
-      expect(mockItem.styleSelector.availableStyles[index].name).toEqual(
+      expect(mockItem.selectableDimensions.availableStyles[index].name).toEqual(
         member.props.children
       );
     });

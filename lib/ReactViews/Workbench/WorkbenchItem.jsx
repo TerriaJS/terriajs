@@ -180,7 +180,7 @@ const WorkbenchItem = observer(
               <DimensionSelectorSection item={workbenchItem} />
               <DateTimeSelectorSection item={workbenchItem} />
               <SatelliteImageryTimeFilterSection item={workbenchItem} />
-              <StyleSelectorSection item={workbenchItem} />
+              {/* <StyleSelectorSection item={workbenchItem} /> */}
               <ColorScaleRangeSection
                 item={workbenchItem}
                 minValue={workbenchItem.colorScaleMinimum}

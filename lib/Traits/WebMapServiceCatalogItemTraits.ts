@@ -16,6 +16,8 @@ import UrlTraits from "./UrlTraits";
 import anyTrait from "./anyTrait";
 import { JsonObject } from "../Core/Json";
 import TimeFilterTraits from "./TimeFilterTraits";
+import { CapabilitiesDimension } from "../Models/WebMapServiceCapabilities";
+import primitiveArrayTrait from "./primitiveArrayTrait";
 
 export class WebMapServiceAvailableStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -64,6 +66,81 @@ export class WebMapServiceAvailableLayerStylesTraits extends ModelTraits {
   styles?: WebMapServiceAvailableStyleTraits[];
 }
 
+export class WebMapServiceAvailableDimensionTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "string",
+    name: "Dimension Name",
+    description: "The name of the dimension."
+  })
+  name?: string;
+
+  @primitiveArrayTrait({
+    type: "string",
+    name: "Dimension values",
+    description: "Possible dimension values."
+  })
+  values?: string[];
+  
+  @primitiveTrait({
+    type: "string",
+    name: "Units",
+    description: "The units of the dimension."
+  })
+  units?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Unit Symbol",
+    description: "The unitSymbol of the dimension."
+  })
+  unitSymbol?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Default",
+    description: "The default value for the dimension."
+  })
+  default?: string;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Multiple Values",
+    description: "Can the dimension support multiple values."
+  })
+  multipleValues?: boolean;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Nearest Value",
+    description: "The nearest value of the dimension."
+  })
+  nearestValue?: boolean;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Current",
+    description: "The current value of the dimension."
+  })
+  current?: boolean;
+}
+
+export class WebMapServiceAvailableLayerDimensionsTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "string",
+    name: "Layer Name",
+    description: "The name of the layer for which styles are available."
+  })
+  layerName?: string;
+
+  @objectArrayTrait({
+    type: WebMapServiceAvailableDimensionTraits,
+    name: "Dimensions",
+    description: "The dimensions available for this layer.",
+    idProperty: "name"
+  })
+  dimensions?: WebMapServiceAvailableDimensionTraits[];
+}
+
 export default class WebMapServiceCatalogItemTraits extends mixTraits(
   FeatureInfoTraits,
   LayerOrderingTraits,
@@ -104,6 +181,14 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
     idProperty: "layerName"
   })
   availableStyles?: WebMapServiceAvailableLayerStylesTraits[];
+
+  @objectArrayTrait({
+    type: WebMapServiceAvailableLayerDimensionsTraits,
+    name: "Available Dimensions",
+    description: "The available dimensions.",
+    idProperty: "layerName"
+  })
+  availableDimensions?: WebMapServiceAvailableLayerDimensionsTraits[];
 
   @objectArrayTrait({
     name: "Legend URLs",

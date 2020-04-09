@@ -32,7 +32,8 @@ import DiscreteTimeTraits from "../Traits/DiscreteTimeTraits";
 import LegendTraits from "../Traits/LegendTraits";
 import { RectangleTraits } from "../Traits/MappableTraits";
 import WebMapServiceCatalogItemTraits, {
-  WebMapServiceAvailableLayerStylesTraits
+  WebMapServiceAvailableLayerStylesTraits,
+  WebMapServiceAvailableLayerDimensionsTraits
 } from "../Traits/WebMapServiceCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
@@ -45,9 +46,13 @@ import StratumFromTraits from "./StratumFromTraits";
 import WebMapServiceCapabilities, {
   CapabilitiesLayer,
   CapabilitiesStyle,
-  getRectangleFromLayer
+  getRectangleFromLayer,
+  CapabilitiesDimension
 } from "./WebMapServiceCapabilities";
 import i18next from "i18next";
+import SelectableDimensions, {
+  SelectableDimension
+} from "../ModelMixins/SelectableDimensionsMixin";
 
 interface LegendUrl {
   url: string;
@@ -184,6 +189,50 @@ class GetCapabilitiesStratum extends LoadableStratum(
       this.capabilities && this.capabilities.findLayer(name)
     ];
     return new Map(this.catalogItem.layersArray.map(lookup));
+  }
+
+  @computed
+  get availableDimensions(): StratumFromTraits<
+    WebMapServiceAvailableLayerDimensionsTraits
+  >[] {
+    const result: StratumFromTraits<
+      WebMapServiceAvailableLayerDimensionsTraits
+    >[] = [];
+
+    if (!this.capabilities) {
+      return result;
+    }
+
+    const capabilitiesLayers = this.capabilitiesLayers;
+
+    for (const layerTuple of capabilitiesLayers) {
+      const layerName = layerTuple[0];
+      const layer = layerTuple[1];
+
+      const dimensions: ReadonlyArray<CapabilitiesDimension> = layer
+        ? this.capabilities.getInheritedValues(layer, "Dimension")
+        : [];
+
+      result.push({
+        layerName: layerName,
+        dimensions: dimensions
+          .filter(dim => dim.name !== "time")
+          .map(dim => {
+            return {
+              name: dim.name,
+              units: dim.units,
+              unitSymbol: dim.unitSymbol,
+              default: dim.default,
+              multipleValues: dim.multipleValues,
+              current: dim.current,
+              nearestValue: dim.nearestValue,
+              values: dim.text?.split(",")
+            };
+          })
+      });
+    }
+
+    return result;
   }
 
   @computed
@@ -353,6 +402,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
         layer,
         "Dimension"
       );
+
+      console.log(dimensions);
+
       const timeDimension = dimensions.find(
         dimension => dimension.name.toLowerCase() === "time"
       );
@@ -411,7 +463,7 @@ class WebMapServiceCatalogItem
       )
     )
   )
-  implements Mappable {
+  implements Mappable, SelectableDimensions {
   /**
    * The collection of strings that indicate an Abstract property should be ignored.  If these strings occur anywhere
    * in the Abstract, the Abstract will not be used.  This makes it easy to filter out placeholder data like
@@ -467,41 +519,106 @@ class WebMapServiceCatalogItem
   }
 
   @computed
-  get styleSelector() {
-    if (this.availableStyles.length === 0) return undefined;
-    if (this.availableStyles[0].styles.length === 0) return undefined;
-
+  get selectableDimensions() {
     const userStrata: any = this.strata.get(CommonStrata.user);
-    let activeStyle = this.availableStyles[0].styles[0].name;
+    let userParameters = userStrata?.parameters;
+
+    let styleDimensions: SelectableDimension[] = [];
+    let wmsDimensions: SelectableDimension[] = [];
+
     if (
-      isDefined(userStrata) &&
-      isDefined(userStrata.parameters) &&
-      isDefined(userStrata.parameters.styles)
+      this.availableStyles.length !== 0 &&
+      this.availableStyles[0].styles.length !== 0
     ) {
-      activeStyle = userStrata.parameters.styles;
-    }
-    return {
-      name: "Styles",
-      id: `styles-${this.uniqueId}`,
-      activeStyleId: activeStyle,
-      availableStyles: this.availableStyles[0].styles.map(function(s) {
-        return {
-          name: s.title,
-          id: s.name
-        };
-      }),
-      chooseActiveStyle: (strata: string, newStyle: string) => {
-        let newParameters = {
-          styles: newStyle
-        };
-        if (isDefined(userStrata) && "parameters" in userStrata) {
-          newParameters = combine(newParameters, userStrata.parameters);
+      const userStrata: any = this.strata.get(CommonStrata.user);
+
+      styleDimensions = [
+        {
+          id: `styles-${this.uniqueId}`,
+          name: "Styles",
+          options: filterOutUndefined(
+            this.availableStyles[0].styles.map(function(s) {
+              if (isDefined(s.name)) {
+                return {
+                  name: s.title || s.name || "",
+                  id: s.name as string
+                };
+              }
+            })
+          ),
+          selectedId:
+            userParameters?.styles || this.availableStyles[0].styles[0].name,
+          setDimensionValue: (stratumId: string, newStyle: string) => {
+            let newParameters = {
+              styles: newStyle
+            };
+            if (isDefined(userStrata?.parameters)) {
+              newParameters = combine(newParameters, userStrata.parameters);
+            }
+            runInAction(() => {
+              this.setTrait(CommonStrata.user, "parameters", newParameters);
+            });
+          }
         }
-        runInAction(() => {
-          this.setTrait(CommonStrata.user, "parameters", newParameters);
-        });
-      }
-    };
+      ];
+    }
+
+    if (
+      this.availableDimensions.length !== 0 &&
+      this.availableDimensions[0].dimensions.length !== 0
+    ) {
+      wmsDimensions = filterOutUndefined(
+        this.availableDimensions[0].dimensions.map(dim => {
+          if (!isDefined(dim.name)) {
+            return;
+          }
+          return {
+            id: `dimensions-${dim.name}`,
+            name: dim.name,
+            options: filterOutUndefined(
+              dim.values.map(value => {
+                let name = !isDefined(dim.units)
+                  ? value
+                  : `${value} (${dim.units}${
+                      isDefined(dim.unitSymbol) ? ` ${dim.unitSymbol})` : ")"
+                    }`;
+                return {
+                  name: value,
+                  id: value
+                };
+              })
+            ),
+            selectedId:
+              isDefined(userParameters) &&
+              isDefined(userParameters["dim_" + dim.name])
+                ? userParameters["dim_" + dim.name]
+                : dim.default,
+            setDimensionValue: (stratumId: string, newDimension: string) => {
+              let newParameters: any = {};
+
+              // elevation is specified as simply elevation.
+              // Other (custom) dimensions are prefixed with 'dim_'.
+              // See WMS 1.3.0 spec section C.3.2 and C.3.3.
+              if (dim.name?.toLowerCase() === "elevation") {
+                newParameters["elevation"] = newDimension;
+              } else {
+                newParameters["dim_" + dim.name] = newDimension;
+              }
+              if (isDefined(userStrata) && "parameters" in userStrata) {
+                newParameters = combine(newParameters, userStrata.parameters);
+              }
+              runInAction(() => {
+                this.setTrait(CommonStrata.user, "parameters", newParameters);
+              });
+            }
+          };
+        })
+      );
+    }
+
+    console.log(wmsDimensions);
+
+    return [...styleDimensions, ...wmsDimensions];
   }
 
   @computed
@@ -593,12 +710,12 @@ class WebMapServiceCatalogItem
         return undefined;
       }
 
-      console.log(`Creating new ImageryProvider for time ${time}`);
-
       const parameters: any = {
         ...WebMapServiceCatalogItem.defaultParameters,
         ...(this.parameters || {})
       };
+
+      console.log(parameters);
 
       if (time !== undefined) {
         parameters.time = time;
