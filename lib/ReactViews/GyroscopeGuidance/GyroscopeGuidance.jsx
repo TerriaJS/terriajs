@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import Icon from "../Icon.jsx";
 import Box from "../../Styled/Box";
 import { TextSpan } from "../../Styled/Text";
+import { RawButton } from "../../Styled/Button";
 import Spacing from "../../Styled/Spacing";
 import MapIconButton from "../MapIconButton/MapIconButton";
 // import MenuPanel from "../StandardUserInterface/customizable/MenuPanel";
@@ -18,7 +19,8 @@ GyroscopeGuidance.propTypes = {
 };
 
 const Text = styled(TextSpan).attrs({
-  textAlignLeft: true
+  textAlignLeft: true,
+  noFontSize: true
 })``;
 
 const CompassWrapper = styled(Box).attrs({
@@ -60,7 +62,7 @@ const CompassIcon = styled(Icon)`
     `}
 `;
 
-function GyroscopeGuidancePanel() {
+function GyroscopeGuidancePanel(props) {
   // TODO: i18inify
   return (
     <Box
@@ -73,57 +75,68 @@ function GyroscopeGuidancePanel() {
     >
       <Text large>Gyroscope Contols</Text>
       <Spacing bottom={4} />
-      <Box>
-        <CompassWrapper>
-          <CompassIcon glyph={Icon.GLYPHS.compassOuterEnlarged} />
-          <CompassIcon glyph={Icon.GLYPHS.compassInnerArrows} inner darken />
-        </CompassWrapper>
-        <Box column>
-          <Text bold uppercase>
-            Outer Ring
-          </Text>
-          <Spacing bottom={1} />
-          <Text>
-            Drag the outer ring in a circular motion to rotate the map view
-            360˚.
-          </Text>
+      <Text medium>
+        <Box>
+          <CompassWrapper>
+            <CompassIcon glyph={Icon.GLYPHS.compassOuterEnlarged} />
+            <CompassIcon glyph={Icon.GLYPHS.compassInnerArrows} inner darken />
+          </CompassWrapper>
+          <Box column>
+            <Text bold uppercase>
+              Outer Ring
+            </Text>
+            <Spacing bottom={1} />
+            <Text>
+              Drag the outer ring in a circular motion to rotate the map view
+              360˚.
+            </Text>
+          </Box>
         </Box>
-      </Box>
-      <Spacing bottom={4} />
-      <Box>
-        <CompassWrapper>
-          <CompassIcon
-            glyph={Icon.GLYPHS.compassOuterEnlarged}
-            css={CompassPositioning}
-            darken
-          />
-          <CompassIcon glyph={Icon.GLYPHS.compassInnerArrows} inner />
-          <Spacing right={2} />
-        </CompassWrapper>
-        <Box column>
-          <Text bold uppercase>
-            Inner Circle
-          </Text>
-          <Spacing bottom={1} />
-          <Text>
-            Click in the centre and slowly drag up, down, left or right to tilt
-            and rotate the map at the same time.
-          </Text>
-          <Spacing bottom={2} />
-          <Text>Double click in here to reset view to its default state.</Text>
+        <Spacing bottom={4} />
+        <Box>
+          <CompassWrapper>
+            <CompassIcon
+              glyph={Icon.GLYPHS.compassOuterEnlarged}
+              css={CompassPositioning}
+              darken
+            />
+            <CompassIcon glyph={Icon.GLYPHS.compassInnerArrows} inner />
+            <Spacing right={2} />
+          </CompassWrapper>
+          <Box column>
+            <Text bold uppercase>
+              Inner Circle
+            </Text>
+            <Spacing bottom={1} />
+            <Text>
+              Click in the centre and slowly drag up, down, left or right to
+              tilt and rotate the map at the same time.
+            </Text>
+            <Spacing bottom={2} />
+            <Text>
+              Double click in here to reset view to its default state.
+            </Text>
+          </Box>
         </Box>
-      </Box>
-      <Spacing bottom={4} />
-      <Text>
-        You can also tilt and rotate the map by holding the CTRL key and
-        dragging the map.
+        <Spacing bottom={4} />
+        <Text>
+          You can also tilt and rotate the map by holding the CTRL key and
+          dragging the map.
+        </Text>
+        <Spacing bottom={4} />
+        <RawButton onClick={props.handleHelp}>
+          <Text displayBlock primary isLink>
+            Find out more about the controls and how to use them.
+          </Text>
+        </RawButton>
       </Text>
-      {/* <Text>
-        Click here to find out more about the controls and how to use them.
-      </Text> */}
     </Box>
   );
 }
+
+GyroscopeGuidancePanel.propTypes = {
+  handleHelp: PropTypes.func.isRequired
+};
 
 export default function GyroscopeGuidance(props) {
   const [controlPanelOpen, setControlPanelOpen] = useState(false);
@@ -191,7 +204,7 @@ export default function GyroscopeGuidance(props) {
             viewState={props.viewState}
             smallScreen={props.viewState.useSmallScreenInterface}
           >
-            <GyroscopeGuidancePanel />
+            <GyroscopeGuidancePanel handleHelp={props.handleHelp} />
           </CleanDropdownPanel>
         </div>
       </div>

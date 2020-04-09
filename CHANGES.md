@@ -98,6 +98,7 @@ Change Log
 * Update Compass UI to include larger rotation target, remove sass from compass
 * Link Compass "help" button to `navigation` HelpPanelItem (requires generalisation later down the track)
 * Improve keyboard traversal through right-hand-side map icon buttons
+* Link Compass Gyroscope guidance footer text to `navigation` HelpPanelItem (requires generalisation later down the track)
 * Removed hardcoded workbench & Panel button colours
 * Ensure CSV column names are trimmed of whitespace.
 * Really stop analytics launch event sending bad & now empty & now finally the real label

@@ -2,6 +2,12 @@ import styled from "styled-components";
 
 // should it be a span or inline-block-div? - leaning to div
 export const Text = styled.div`
+  ${props => props.displayBlock && `display: block;`}
+
+  // Unsure about this one, as we don't have react-router / "actual links" at
+  // the moment, no present way to distinguish external links, etc
+  ${props => props.isLink && `text-decoration: underline;`}
+
   // TODO: themeify family
   font-family: "Nunito", sans-serif;
   ${props => props.nunito && `font-family: "Nunito", sans-serif;`}
