@@ -27,6 +27,8 @@ import { runInAction, computed, when } from "mobx";
 import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
 
+import FadeIn from "../../Transitions/FadeIn/FadeIn";
+
 // Map Compass
 //
 // Markup:
@@ -52,6 +54,7 @@ const StyledCompass = styled.div`
 
 const StyledCompassOuterRing = styled.div`
   ${props => props.theme.centerWithoutFlex()}
+  z-index: 1;
 
   width: ${props => (props.active ? "100%" : "calc(100% - 10px)")};
 `;
@@ -102,7 +105,8 @@ class Compass extends React.Component {
       orbitCursorAngle: 0,
       heading: 0.0,
       orbitCursorOpacity: 0,
-      active: false
+      active: false,
+      activeForTransition: false
     };
 
     when(
@@ -245,28 +249,20 @@ class Compass extends React.Component {
         onMouseDown={this.handleMouseDown.bind(this)}
         onDoubleClick={this.handleDoubleClick.bind(this)}
         onMouseUp={this.resetRotater.bind(this)}
-        onMouseOver={() => this.setState({ active: true })}
-        onMouseOut={() => this.setState({ active: true })}
-        // do we give focus to this? given it's purely a mouse tool
-        // focus it anyway..
-        tabIndex="0"
-        onFocus={() => this.setState({ active: true })}
-        // Gotta keep menu open if blurred, and close it with the close button
-        // instead. otherwise it'll never focus on the help buttons
-        // onBlur={() => this.setState({ active: false })}
         active={active}
       >
-        {active && (
-          <GyroscopeGuidance
-            viewState={this.props.viewState}
-            handleHelp={() => {
-              this.props.viewState.showHelpPanel();
-              this.props.viewState.selectHelpMenuItem("navigation");
-            }}
-            onClose={() => this.setState({ active: false })}
-          />
-        )}
-        <StyledCompassOuterRing active={active}>
+        <StyledCompassOuterRing
+          active={active}
+          onMouseOver={() => this.setState({ active: true })}
+          onMouseOut={() => this.setState({ active: true })}
+          // do we give focus to this? given it's purely a mouse tool
+          // focus it anyway..
+          tabIndex="0"
+          onFocus={() => this.setState({ active: true })}
+          // Gotta keep menu open if blurred, and close it with the close button
+          // instead. otherwise it'll never focus on the help buttons
+          // onBlur={() => this.setState({ active: false })}
+        >
           <div style={outerCircleStyle}>
             <StyledIcon
               fillColor={this.props.theme.textDarker}
@@ -278,6 +274,16 @@ class Compass extends React.Component {
             />
           </div>
         </StyledCompassOuterRing>
+        <FadeIn isVisible={active}>
+          <GyroscopeGuidance
+            viewState={this.props.viewState}
+            handleHelp={() => {
+              this.props.viewState.showHelpPanel();
+              this.props.viewState.selectHelpMenuItem("navigation");
+            }}
+            onClose={() => this.setState({ active: false })}
+          />
+        </FadeIn>
         <StyledCompassInnerRing title={t("compass.title")}>
           <StyledIcon
             fillColor={this.props.theme.textDarker}
@@ -286,7 +292,6 @@ class Compass extends React.Component {
             }
           />
         </StyledCompassInnerRing>
-
         <StyledCompassRotationMarker
           style={{
             backgroundImage: require("../../../../wwwroot/images/compass-rotation-marker.svg")

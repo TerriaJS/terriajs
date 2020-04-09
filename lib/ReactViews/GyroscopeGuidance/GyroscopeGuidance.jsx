@@ -152,19 +152,21 @@ export default function GyroscopeGuidance(props) {
       `}
     >
       <MapIconButton
+        roundRight
         neverCollapse
         onClick={props.handleHelp}
         iconElement={() => <Icon glyph={Icon.GLYPHS.helpThick} />}
       >
         Help
       </MapIconButton>
-      <Spacing right={2} />
+      <Spacing marginRight={1} />
       <div
         css={`
           position: relative;
         `}
       >
         <MapIconButton
+          roundLeft
           buttonRef={controlsMapIcon}
           neverCollapse
           iconElement={() => <Icon glyph={Icon.GLYPHS.controls} />}
@@ -221,6 +223,7 @@ export default function GyroscopeGuidance(props) {
         `}
       >
         <MapIconButton
+          css={"opacity: 0.8;"}
           inverted
           onClick={props.onClose}
           iconElement={() => <Icon glyph={Icon.GLYPHS.closeLight} />}
