@@ -10,6 +10,8 @@ import createCatalogItemFromUrl from "./createCatalogItemFromUrl";
 import { BaseModel } from "./Model";
 import Terria from "./Terria";
 import upsertModelFromJson from "./upsertModelFromJson";
+import UrlReference from "./UrlReference";
+import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 
 export default function createCatalogItemFromFileOrUrl(
   terria: Terria,
@@ -30,22 +32,15 @@ export default function createCatalogItemFromFileOrUrl(
   }
 
   if (dataType === "auto") {
-    if (isUrl) {
-      return createCatalogItemFromUrl(name, terria).then(newItem => {
-        //##Doesn't work for file uploads
-        if (!isDefined(newItem)) {
-          return tryConversionService(name, terria, viewState, confirmConversion);
-        } else {
-          // It's a file or service we support directly
-          // In some cases (web services), the item will already have been loaded by this point.
-          return loadItem(newItem, fileOrUrl);
-        }
-      });
-    } else {
-      throw 'Auto datatype is not implemented for Files'
-    }
-  
-    
+    return createCatalogItemFromUrl(name, terria, isUrl).then(newItem => {
+      if (!isDefined(newItem)) {
+        return tryConversionService(name, terria, viewState, confirmConversion);
+      } else {
+        // It's a file or service we support directly
+        // In some cases (web services), the item will already have been loaded by this point.
+        return loadItem(newItem, fileOrUrl);
+      }
+    });
   } else if (dataType === "other") {
     // user explicitly chose "Other (use conversion service)"
     return getConfirmation(
@@ -166,29 +161,30 @@ function getConfirmation(
   });
 }
 
-function loadItem(newCatalogItem: BaseModel, fileOrUrl: File | string) {
+async function loadItem(
+  newCatalogItem: BaseModel,
+  fileOrUrl: File | string
+): Promise<BaseModel> {
+  if (
+    ReferenceMixin.is(newCatalogItem) &&
+    newCatalogItem.target !== undefined
+  ) {
+    return loadItem(newCatalogItem.target, fileOrUrl);
+  }
+
   if (typeof fileOrUrl === "string") {
     newCatalogItem.setTrait(CommonStrata.user, "url", fileOrUrl);
-  } else {
-    if (hasFileInput(newCatalogItem)) {
-      newCatalogItem.setFileInput(fileOrUrl);
-    }
-    // TODO
-    // newCatalogItem.dataSourceUrl = fileOrUrl.name;
-    // newCatalogItem.dataUrlType = "local";
+  } else if (hasFileInput(newCatalogItem)) {
+    newCatalogItem.setFileInput(fileOrUrl);
   }
 
-  if (CatalogMemberMixin.isMixedInto(newCatalogItem)) {
-    return newCatalogItem.loadMetadata().then(() => newCatalogItem);
-  } else {
-    return Promise.resolve(newCatalogItem);
-  }
+  return newCatalogItem;
 }
 
-interface HasFileInput extends BaseModel {
+export interface HasFileInput extends BaseModel {
   setFileInput(file: File): void;
 }
 
-function hasFileInput(model: BaseModel): model is HasFileInput {
+export function hasFileInput(model: BaseModel): model is HasFileInput {
   return "setFileInput" in model;
 }

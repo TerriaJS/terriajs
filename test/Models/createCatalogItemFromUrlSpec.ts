@@ -33,7 +33,7 @@ describe("createCatalogItemFromUrl", function() {
 
   it("should create an item of the first registered type", function(done) {
     const url = "test/WMS/single_metadata_url.xml";
-    createCatalogItemFromUrl(url, terria).then(item => {
+    createCatalogItemFromUrl(url, terria, true).then(item => {
       expect(item).toBeDefined();
 
       if (item !== undefined) {
@@ -49,7 +49,7 @@ describe("createCatalogItemFromUrl", function() {
   it("should create an item of the second registered type", function(done) {
     const url = "test/geoJSON/bike_racks.geojson";
 
-    createCatalogItemFromUrl(url, terria).then(item => {
+    createCatalogItemFromUrl(url, terria, true).then(item => {
       expect(item).toBeDefined();
       if (item !== undefined) {
         expect(item instanceof UrlReference).toBe(true);
