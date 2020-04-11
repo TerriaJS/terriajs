@@ -6,7 +6,7 @@ import Icon from "../Icon";
 
 import Styles from "./search-box.scss";
 
-const DEBOUNCE_INTERVAL = 2000;
+export const DEBOUNCE_INTERVAL = 1000;
 
 /**
  * Simple dumb search box component that leaves the actual execution of searches to the component that renders it. Note
@@ -28,6 +28,7 @@ export default createReactClass({
     placeholder: PropTypes.string,
     onClear: PropTypes.func,
     alwaysShowClear: PropTypes.bool,
+    debounceDuration: PropTypes.number,
     autoFocus: PropTypes.bool
   },
 
@@ -42,6 +43,19 @@ export default createReactClass({
   /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillMount() {
     this.searchWithDebounce = debounce(this.search, DEBOUNCE_INTERVAL);
+  },
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.debounceDuration !== this.props.debounceDuration &&
+      this.props.debounceDuration > 0
+    ) {
+      this.removeDebounce();
+      this.searchWithDebounce = debounce(
+        this.search,
+        this.props.debounceDuration
+      );
+    }
   },
 
   componentWillUnmount() {
@@ -63,8 +77,14 @@ export default createReactClass({
 
   handleChange(event) {
     const value = event.target.value;
-    this.props.onSearchTextChanged(value);
-    this.searchWithDebounce();
+    // immediately bypass debounce if we started with no value
+    if (this.props.searchText.length === 0) {
+      this.props.onSearchTextChanged(value);
+      this.search();
+    } else {
+      this.props.onSearchTextChanged(value);
+      this.searchWithDebounce();
+    }
   },
 
   clearSearch() {

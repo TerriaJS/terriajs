@@ -6,14 +6,17 @@ import { observer } from "mobx-react";
 
 import Icon from "../../Icon";
 import Styles from "./toggle_splitter_tool.scss";
+import { withTranslation } from "react-i18next";
 import { runInAction } from "mobx";
+import MapIconButton from "../../MapIconButton/MapIconButton";
 
 const ToggleSplitterTool = observer(
   createReactClass({
     displayName: "ToggleSplitterTool",
 
     propTypes: {
-      terria: PropTypes.object
+      terria: PropTypes.object,
+      t: PropTypes.func.isRequired
     },
 
     handleClick() {
@@ -22,29 +25,33 @@ const ToggleSplitterTool = observer(
     },
 
     render() {
+      const { t } = this.props;
       if (!this.props.terria.currentViewer.canShowSplitter) {
         return null;
       }
       return (
         <div className={Styles.toggle_splitter_tool}>
-          <button
-            type="button"
-            className={Styles.btn}
-            title="Enable side-by-side comparison between two different sets of data"
+          <MapIconButton
+            splitter={this.props.terria.showSplitter}
+            expandInPlace
+            title={t("splitterTool.toggleSplitterTool")}
             onClick={this.handleClick}
+            iconElement={() => (
+              <Icon
+                glyph={
+                  this.props.terria.showSplitter
+                    ? Icon.GLYPHS.splitterOn
+                    : Icon.GLYPHS.splitterOff
+                }
+              />
+            )}
           >
-            <Icon
-              glyph={
-                this.props.terria.showSplitter
-                  ? Icon.GLYPHS.splitterOn
-                  : Icon.GLYPHS.splitterOff
-              }
-            />
-          </button>
+            {t("splitterTool.toggleSplitterToolTitle")}
+          </MapIconButton>
         </div>
       );
     }
   })
 );
 
-export default ToggleSplitterTool;
+export default withTranslation()(ToggleSplitterTool);

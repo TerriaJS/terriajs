@@ -1,16 +1,73 @@
 import createReactClass from "create-react-class";
-import { reaction, runInAction } from "mobx";
+import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
-import { removeMarker } from "../../Models/LocationMarkerUtils";
+import { withTranslation, Trans } from "react-i18next";
+import { withTheme } from "styled-components";
 import Icon from "../Icon";
-import SearchBox from "../Search/SearchBox";
-import SidebarSearch from "../Search/SidebarSearch";
+import SearchBoxAndResults from "../Search/SearchBoxAndResults";
 import Workbench from "../Workbench/Workbench";
 import FullScreenButton from "./FullScreenButton";
-import getReactElementFromContents from "../ReactHelpers/getReactElementFromContents";
 import Styles from "./side-panel.scss";
+
+import Box from "../../Styled/Box";
+import Spacing from "../../Styled/Spacing";
+import Text, { TextSpan } from "../../Styled/Text";
+
+function EmptyWorkbench(props) {
+  const t = props.t;
+  return (
+    <Text large textLight nunito>
+      <Box
+        centered
+        css={`
+          min-height: 240px;
+        `}
+      >
+        <Text large color={props.theme.textLightDimmed}>
+          {t("emptyWorkbench.emptyArea")}
+        </Text>
+      </Box>
+      <Box column paddedRatio={3}>
+        <Box
+          left
+          css={`
+            svg {
+              fill: ${p => p.theme.textLight};
+              width: 13px;
+              height: 13px;
+              padding-right: 5px;
+            }
+          `}
+        >
+          <Icon glyph={Icon.GLYPHS.bulb} />
+          <Text large>{t("emptyWorkbench.helpfulHints")}</Text>
+        </Box>
+        <Spacing bottom={2} />
+        <Text large>{t("emptyWorkbench.helpfulHintsOne")}</Text>
+        <Spacing bottom={1} />
+        <Trans i18nKey="emptyWorkbench.helpfulHintsTwo">
+          <Text large>
+            Click
+            <TextSpan large bold>
+              Explore map data
+            </TextSpan>
+            above to browse the Data Catalogue or click
+            <TextSpan large bold>
+              Upload
+            </TextSpan>
+            to load your own data onto the map.
+          </Text>
+        </Trans>
+      </Box>
+    </Text>
+  );
+}
+EmptyWorkbench.propTypes = {
+  t: PropTypes.func.isRequired,
+  theme: PropTypes.object.isRequired
+};
 
 const SidePanel = observer(
   createReactClass({
@@ -18,38 +75,9 @@ const SidePanel = observer(
 
     propTypes: {
       terria: PropTypes.object.isRequired,
-      viewState: PropTypes.object.isRequired
-    },
-
-    componentDidMount() {
-      this.subscribeToProps();
-    },
-
-    componentDidUpdate() {
-      this.subscribeToProps();
-    },
-
-    componentWillUnmount() {
-      this.unsubscribeFromProps();
-    },
-
-    subscribeToProps() {
-      this.unsubscribeFromProps();
-
-      // Close the search results when the Now Viewing changes (so that it's visible).
-      this._nowViewingChangeSubscription = reaction(
-        () => this.props.terria.workbench.items,
-        () => {
-          this.props.viewState.searchState.showLocationSearchResults = false;
-        }
-      );
-    },
-
-    unsubscribeFromProps() {
-      if (this._nowViewingChangeSubscription) {
-        this._nowViewingChangeSubscription();
-        this._nowViewingChangeSubscription = undefined;
-      }
+      viewState: PropTypes.object.isRequired,
+      t: PropTypes.func.isRequired,
+      theme: PropTypes.object.isRequired
     },
 
     onAddDataClicked(event) {
@@ -63,34 +91,10 @@ const SidePanel = observer(
     onAddLocalDataClicked() {
       this.props.viewState.openUserData();
     },
-
-    changeSearchText(newText) {
-      runInAction(() => {
-        this.props.viewState.searchState.locationSearchText = newText;
-      });
-
-      if (newText.length === 0) {
-        removeMarker(this.props.terria);
-      }
-    },
-
-    search() {
-      this.props.viewState.searchState.searchLocations();
-    },
-
-    startLocationSearch() {
-      runInAction(() => {
-        this.props.viewState.searchState.showLocationSearchResults = true;
-      });
-    },
-
     render() {
-      const searchState = this.props.viewState.searchState;
-      const emptyWorkbenchValue = this.props.viewState.language[
-        "EmptyWorkbenchMessage"
-      ];
-      const emptyWorkbench = getReactElementFromContents(emptyWorkbenchValue);
-
+      const { t, theme } = this.props;
+      const addData = t("addData.addDataBtnText");
+      const uploadText = t("models.catalog.upload");
       return (
         <div className={Styles.workBench}>
           <div className={Styles.header}>
@@ -99,53 +103,40 @@ const SidePanel = observer(
               viewState={this.props.viewState}
               minified={true}
               animationDuration={250}
-              btnText="Hide"
+              btnText={t("addData.btnHide")}
             />
-            <SearchBox
-              onSearchTextChanged={this.changeSearchText}
-              onDoSearch={this.search}
-              onFocus={this.startLocationSearch}
-              searchText={searchState.locationSearchText}
-              placeholder="Search for locations"
+            <SearchBoxAndResults
+              viewState={this.props.viewState}
+              terria={this.props.terria}
+              placeholder={t("search.placeholder")}
             />
             <div className={Styles.addData}>
               <button
                 type="button"
                 onClick={this.onAddDataClicked}
                 className={Styles.button}
-                title={this.props.viewState.language.AddDataBtnText}
+                title={addData}
               >
                 <Icon glyph={Icon.GLYPHS.add} />
-                {getReactElementFromContents(
-                  this.props.viewState.language.AddDataBtnText
-                )}
+                <TextSpan large nunito>
+                  {addData}
+                </TextSpan>
               </button>
               <button
                 type="button"
                 onClick={this.onAddLocalDataClicked}
                 className={Styles.uploadData}
-                title="Load local/web data"
+                title={t("addData.load")}
               >
                 <Icon glyph={Icon.GLYPHS.upload} />
+                <TextSpan large nunito>
+                  {uploadText}
+                </TextSpan>
               </button>
             </div>
           </div>
           <div className={Styles.body}>
             <Choose>
-              <When
-                condition={
-                  searchState.locationSearchText.length > 0 &&
-                  searchState.showLocationSearchResults
-                }
-              >
-                <SidebarSearch
-                  terria={this.props.terria}
-                  viewState={this.props.viewState}
-                  isWaitingForSearchToStart={
-                    searchState.isWaitingToStartLocationSearch
-                  }
-                />
-              </When>
               <When
                 condition={
                   this.props.terria.workbench.items &&
@@ -158,7 +149,7 @@ const SidePanel = observer(
                 />
               </When>
               <Otherwise>
-                <div className={Styles.workbenchEmpty}>{emptyWorkbench}</div>
+                <EmptyWorkbench t={t} theme={theme} />
               </Otherwise>
             </Choose>
           </div>
@@ -168,4 +159,4 @@ const SidePanel = observer(
   })
 );
 
-module.exports = SidePanel;
+module.exports = withTranslation()(withTheme(SidePanel));

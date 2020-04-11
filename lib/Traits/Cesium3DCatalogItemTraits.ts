@@ -129,6 +129,14 @@ export default class Cesium3DTilesCatalogItemTraits extends mixTraits(
   })
   shadows = "NONE";
 
+  @primitiveTrait({
+    type: "boolean",
+    name: "Show Shadow UI",
+    description:
+      "Determines whether the shadow UI component will be shown on the workbench item"
+  })
+  showShadowUi: boolean = true;
+
   @objectTrait({
     type: OptionsTraits,
     name: "options",
@@ -151,4 +159,28 @@ export default class Cesium3DTilesCatalogItemTraits extends mixTraits(
     description: "The filters to apply to this catalog item."
   })
   filters?: FilterTraits[];
+
+  @primitiveTrait({
+    name: "Color blend mode",
+    type: "string",
+    description:
+      "The color blend mode decides how per-feature color is blended with color defined in the tileset. Acceptable values are HIGHLIGHT, MIX & REPLACE as defined in the cesium documentation - https://cesium.com/docs/cesiumjs-ref-doc/Cesium3DTileColorBlendMode.html"
+  })
+  colorBlendMode = "MIX";
+
+  @primitiveTrait({
+    name: "Color blend amount",
+    type: "number",
+    description:
+      "When the colorBlendMode is MIX this value is used to interpolate between source color and feature color. A value of 0.0 results in the source color while a value of 1.0 results in the feature color, with any value in-between resulting in a mix of the source color and feature color."
+  })
+  colorBlendAmount = 0.5;
+
+  @primitiveTrait({
+    name: "Highlight color",
+    type: "string",
+    description:
+      "The color used to highlight a feature when it is picked. If not set, this defaults to `Terria.baseMapContrastColor`"
+  })
+  highlightColor?: string;
 }

@@ -6,6 +6,7 @@ interface CssExports {
   'exit': string;
   'full-screen': string;
   'fullScreen': string;
+  'isActive': string;
   'minified': string;
   'minifiedFullscreenBtnWrapper': string;
   'toggleWorkbench': string;

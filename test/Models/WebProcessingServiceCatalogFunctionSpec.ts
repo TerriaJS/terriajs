@@ -93,7 +93,10 @@ describe("WebProcessingServiceCatalogFunction", function() {
 
     beforeEach(async function() {
       getXml = spyOn(wps, "getXml").and.returnValue(processDescriptionsXml);
-      dispose = reaction(() => wps.parameters, () => {});
+      dispose = reaction(
+        () => wps.parameters,
+        () => {}
+      );
       await wps.loadMetadata();
       runInAction(() => {
         const param = <GeoJsonParameter>(
@@ -200,10 +203,10 @@ describe("WebProcessingServiceCatalogFunction", function() {
         await wps.invoke();
         expect(getXml).toHaveBeenCalledTimes(3);
         expect(getXml.calls.argsFor(1)[0]).toBe(
-          "http://gsky.nci.org.au/ows?check_status/123"
+          "http://example.com/ows?check_status/123"
         );
         expect(getXml.calls.argsFor(2)[0]).toBe(
-          "http://gsky.nci.org.au/ows?check_status/123"
+          "http://example.com/ows?check_status/123"
         );
       });
 
@@ -361,9 +364,10 @@ describe("WebProcessingServiceCatalogFunction", function() {
 
 function initTerria() {
   CatalogMemberFactory.register(CsvCatalogItem.type, <any>CsvCatalogItem);
-  CatalogMemberFactory.register(GeoJsonCatalogItem.type, <any>(
-    GeoJsonCatalogItem
-  ));
+  CatalogMemberFactory.register(
+    GeoJsonCatalogItem.type,
+    <any>GeoJsonCatalogItem
+  );
   const terria = new Terria();
   terria.configParameters.regionMappingDefinitionsUrl =
     "/data/regionMapping.json";

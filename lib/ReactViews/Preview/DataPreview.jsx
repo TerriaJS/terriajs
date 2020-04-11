@@ -1,6 +1,6 @@
 "use strict";
 
-import Chart from "../Custom/Chart/Chart";
+// import Chart from "../Custom/Chart/Chart";
 import Description from "./Description";
 import GroupPreview from "./GroupPreview";
 import InvokeFunction from "../Analytics/InvokeFunction";
@@ -9,6 +9,7 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import Styles from "./data-preview.scss";
+import { withTranslation, Trans } from "react-i18next";
 import { observer } from "mobx-react";
 import { runInAction } from "mobx";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
@@ -24,7 +25,8 @@ const DataPreview = observer(
     propTypes: {
       terria: PropTypes.object.isRequired,
       viewState: PropTypes.object,
-      previewed: PropTypes.object
+      previewed: PropTypes.object,
+      t: PropTypes.func.isRequired
     },
 
     backToMap() {
@@ -34,6 +36,7 @@ const DataPreview = observer(
     },
 
     render() {
+      const { t } = this.props;
       let previewed = this.props.previewed;
       if (previewed !== undefined && ReferenceMixin.is(previewed)) {
         if (previewed.target === undefined) {
@@ -63,13 +66,15 @@ const DataPreview = observer(
             <When condition={chartData}>
               <div className={Styles.previewInner}>
                 <h3 className={Styles.h3}>{previewed.name}</h3>
-                <p>This file does not contain geospatial data.</p>
+                <p>{t("preview.doesNotContainGeospatialData")}</p>
                 <div className={Styles.previewChart}>
-                  <Chart
-                    data={chartData}
-                    axisLabel={{ x: previewed.xAxis.units, y: undefined }}
-                    height={250 - 34}
-                  />
+                  {/* TODO: Show a preview chart
+                      <Chart
+                         data={chartData}
+                         axisLabel={{ x: previewed.xAxis.units, y: undefined }}
+                         height={250 - 34}
+                         />
+                  */}
                 </div>
                 <Description item={previewed} />
               </div>
@@ -94,14 +99,16 @@ const DataPreview = observer(
             </When>
             <Otherwise>
               <div className={Styles.placeholder}>
-                <p>Select a dataset to see a preview</p>
-                <p>- OR -</p>
-                <button
-                  className={Styles.btnBackToMap}
-                  onClick={this.backToMap}
-                >
-                  Go to the map
-                </button>
+                <Trans i18nKey="preview.selectToPreview">
+                  <p>Select a dataset to see a preview</p>
+                  <p>- OR -</p>
+                  <button
+                    className={Styles.btnBackToMap}
+                    onClick={this.backToMap}
+                  >
+                    Go to the map
+                  </button>
+                </Trans>
               </div>
             </Otherwise>
           </Choose>
@@ -132,4 +139,4 @@ const DataPreview = observer(
   })
 );
 
-module.exports = DataPreview;
+module.exports = withTranslation()(DataPreview);

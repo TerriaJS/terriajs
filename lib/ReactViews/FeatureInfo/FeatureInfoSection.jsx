@@ -22,6 +22,7 @@ import formatNumberForLocale from "../../Core/formatNumberForLocale";
 import Icon from "../Icon";
 import propertyGetTimeValues from "../../Core/propertyGetTimeValues";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
+import { withTranslation } from "react-i18next";
 
 import Styles from "./feature-info-section.scss";
 import { runInAction } from "mobx";
@@ -32,7 +33,7 @@ Mustache.escape = function(string) {
 };
 
 // Individual feature info section
-const FeatureInfoSection = observer(
+export const FeatureInfoSection = observer(
   createReactClass({
     displayName: "FeatureInfoSection",
 
@@ -44,7 +45,8 @@ const FeatureInfoSection = observer(
       catalogItem: PropTypes.object, // Note this may not be known (eg. WFS).
       isOpen: PropTypes.bool,
       onClickHeader: PropTypes.func,
-      printView: PropTypes.bool
+      printView: PropTypes.bool,
+      t: PropTypes.func.isRequired
     },
 
     getInitialState() {
@@ -135,6 +137,7 @@ const FeatureInfoSection = observer(
     },
 
     descriptionFromTemplate() {
+      const { t } = this.props;
       const template = this.props.template;
       const templateData = this.getTemplateData();
       // If property names were changed, let the template access the original property names too.
@@ -154,12 +157,17 @@ const FeatureInfoSection = observer(
           ? Mustache.render(template, templateData)
           : Mustache.render(template.template, templateData, template.partials);
       } else {
-        return "No information available";
+        return t("featureInfo.noInfoAvailable");
       }
     },
 
     descriptionFromFeature() {
       const feature = this.props.feature;
+      const showStringIfPropertyValueIsNull =
+        this.props.catalogItem === undefined
+          ? false
+          : this.props.catalogItem.showStringIfPropertyValueIsNull;
+
       // This description could contain injected <script> tags etc.
       // Before rendering, we will pass it through parseCustomMarkdownToReact, which applies
       //     markdownToHtml (which applies MarkdownIt.render and DOMPurify.sanitize), and then
@@ -172,18 +180,23 @@ const FeatureInfoSection = observer(
         feature.currentDescription ||
         getCurrentDescription(feature, currentTime);
       if (!defined(description) && defined(feature.properties)) {
-        description = describeFromProperties(feature.properties, currentTime);
+        description = describeFromProperties(
+          feature.properties,
+          currentTime,
+          showStringIfPropertyValueIsNull
+        );
       }
       return description;
     },
 
     renderDataTitle() {
+      const { t } = this.props;
       const template = this.props.template;
       if (typeof template === "object" && defined(template.name)) {
         return Mustache.render(template.name, this.getPropertyValues());
       }
       const feature = this.props.feature;
-      return (feature && feature.name) || "Site Data";
+      return (feature && feature.name) || t("featureInfo.siteData");
     },
 
     isFeatureTimeVarying(feature) {
@@ -212,6 +225,7 @@ const FeatureInfoSection = observer(
     },
 
     render() {
+      const { t } = this.props;
       const catalogItemName =
         (this.props.catalogItem && this.props.catalogItem.name) || "";
       let baseFilename = catalogItemName;
@@ -283,7 +297,7 @@ const FeatureInfoSection = observer(
                     </If>
                     <If condition={!reactInfo.hasRawData}>
                       <div ref="no-info" key="no-info">
-                        No information available.
+                        {t("featureInfo.noInfoAvailable")}
                       </div>
                     </If>
                     <If
@@ -680,7 +694,11 @@ const simpleStyleIdentifiers = [
  * Derived from Cesium's geoJsonDataSource, but made to work with possibly time-varying properties.
  * @private
  */
-function describeFromProperties(properties, time) {
+function describeFromProperties(
+  properties,
+  time,
+  showStringIfPropertyValueIsNull
+) {
   let html = "";
   if (typeof properties.getValue === "function") {
     properties = properties.getValue(time);
@@ -692,19 +710,32 @@ function describeFromProperties(properties, time) {
           continue;
         }
         let value = properties[key];
+        if (defined(showStringIfPropertyValueIsNull) && !defined(value)) {
+          value = showStringIfPropertyValueIsNull;
+        }
         if (defined(value)) {
           if (typeof value.getValue === "function") {
             value = value.getValue(time);
           }
           if (Array.isArray(properties)) {
             html +=
-              "<tr><td>" + describeFromProperties(value, time) + "</td></tr>";
+              "<tr><td>" +
+              describeFromProperties(
+                value,
+                time,
+                showStringIfPropertyValueIsNull
+              ) +
+              "</td></tr>";
           } else if (typeof value === "object") {
             html +=
               "<tr><th>" +
               key +
               "</th><td>" +
-              describeFromProperties(value, time) +
+              describeFromProperties(
+                value,
+                time,
+                showStringIfPropertyValueIsNull
+              ) +
               "</td></tr>";
           } else {
             html += "<tr><th>" + key + "</th><td>" + value + "</td></tr>";
@@ -909,4 +940,4 @@ function contains(text, number, precision) {
  */
 FeatureInfoSection.extraComponents = [];
 
-module.exports = FeatureInfoSection;
+export default withTranslation()(FeatureInfoSection);

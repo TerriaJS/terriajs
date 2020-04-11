@@ -975,7 +975,11 @@ declare module "terriajs-cesium/Source/Scene/GetFeatureInfoFormat" {
   export default Cesium.GetFeatureInfoFormat;
 }
 declare module "terriajs-cesium/Source/Scene/Globe" {
-  export default Cesium.Globe;
+  import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+  class Globe extends Cesium.Globe {
+    splitDirection: ImagerySplitDirection;
+  }
+  export default Globe;
 }
 declare module "terriajs-cesium/Source/Scene/GoogleEarthEnterpriseImageryProvider" {
   export default Cesium.GoogleEarthEnterpriseImageryProvider;
@@ -1078,8 +1082,13 @@ declare module "terriajs-cesium/Source/Scene/PrimitiveCollection" {
 }
 declare module "terriajs-cesium/Source/Scene/Scene" {
   import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+  import Globe from "terriajs-cesium/Source/Scene/Globe";
+  import SkyAtmosphere from "terriajs-cesium/Source/Scene/SkyAtmosphere";
   class Scene extends Cesium.Scene {
     canvas: HTMLCanvasElement;
+    tweens: any;
+    readonly globe: Globe;
+    readonly skyAtmosphere: SkyAtmosphere;
     /**
      * NOTE: Private in Cesium, should only be called if there is no other alternative.
      * */
@@ -1106,7 +1115,11 @@ declare module "terriajs-cesium/Source/Scene/SingleTileImageryProvider" {
   export default Cesium.SingleTileImageryProvider;
 }
 declare module "terriajs-cesium/Source/Scene/SkyAtmosphere" {
-  export default Cesium.SkyAtmosphere;
+  import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+  class SkyAtmosphere extends Cesium.SkyAtmosphere {
+    splitDirection: ImagerySplitDirection;
+  }
+  export default SkyAtmosphere;
 }
 declare module "terriajs-cesium/Source/Scene/SkyBox" {
   export default Cesium.SkyBox;
@@ -1141,14 +1154,8 @@ declare module "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider" {
 declare module "terriajs-cesium/Source/Scene/WebMapTileServiceImageryProvider" {
   export default Cesium.WebMapTileServiceImageryProvider;
 }
-declare module "terriajs-cesium/Source/Scene/createOpenStreetMapImageryProvider" {
-  export default Cesium.createOpenStreetMapImageryProvider;
-}
 declare module "terriajs-cesium/Source/Scene/createTangentSpaceDebugPrimitive" {
   export default Cesium.createTangentSpaceDebugPrimitive;
-}
-declare module "terriajs-cesium/Source/Scene/createTileMapServiceImageryProvider" {
-  export default Cesium.createTileMapServiceImageryProvider;
 }
 declare module "terriajs-cesium/Source/Scene/createWorldImagery" {
   export default Cesium.createWorldImagery;
@@ -1273,6 +1280,7 @@ declare module "terriajs-cesium/Source/Workers/createTaskProcessorWorker" {
 }
 
 // Additional declarations to fix type errors
+declare module "terriajs-cesium/Source/Widgets/getElement";
 declare module "terriajs-cesium/Source/ThirdParty/when";
 declare module "terriajs-cesium/Source/Core/getTimestamp" {
   export default function getTimestamp(): number;
@@ -1333,6 +1341,7 @@ declare module "terriajs-cesium/Source/Core/IonResource" {
 declare module "terriajs-cesium/Source/Scene/Cesium3DTileset" {
   import IonResource from "terriajs-cesium/Source/Core/IonResource";
   import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
+  import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
 
   export default class Cesium3DTileset {
     url: string;
@@ -1340,6 +1349,10 @@ declare module "terriajs-cesium/Source/Scene/Cesium3DTileset" {
     maximumScreenSpaceError: number;
     style?: Cesium3DTileStyle;
     shadows?: Cesium.ShadowMode;
+    readyPromise: Promise<Cesium3DTileset>;
+    extras: any;
+    colorBlendMode: Cesium3DTileColorBlendMode;
+    colorBlendAmount: number;
 
     constructor(options: {
       url: string | IonResource | Cesium.Resource;
@@ -1348,7 +1361,12 @@ declare module "terriajs-cesium/Source/Scene/Cesium3DTileset" {
     });
 
     destroy(): void;
+    isDestroyed(): boolean;
   }
+}
+
+declare module "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode" {
+  export default Cesium.Cesium3DTileColorBlendMode;
 }
 
 declare module "terriajs-cesium/Source/Scene/Cesium3DTileStyle" {
@@ -1363,8 +1381,11 @@ declare module "terriajs-cesium/Source/Scene/Cesium3DTileStyle" {
 }
 
 declare module "terriajs-cesium/Source/Scene/Cesium3DTileFeature" {
+  import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
+
   export default class Cesium3DTileFeature {
     color: Cesium.Color;
+    tileset: Cesium3DTileset;
     getPropertyNames(): string[];
     getProperty(name: string): unknown;
   }
@@ -1399,3 +1420,5 @@ declare module "terriajs-cesium/Source/Core/Ion" {
 
   export default Ion;
 }
+
+declare module "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";

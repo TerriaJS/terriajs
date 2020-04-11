@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import L from "leaflet";
 import { autorun, computed, observable } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
@@ -165,14 +166,11 @@ export default class CesiumTileLayer extends L.TileLayer {
 
     L.DomEvent.on(tile, "error", e => {
       const level = (<any>this)._getLevelFromZ(coords);
-      const message =
-        "Failed to obtain image tile X: " +
-        coords.x +
-        " Y: " +
-        coords.y +
-        " Level: " +
-        level +
-        ".";
+      const message = i18next.t("map.cesium.failedToObtain", {
+        x: coords.x,
+        y: coords.y,
+        level: level
+      });
       this._requestImageError = TileProviderError.handleError(
         <any>this._requestImageError,
         this.imageryProvider,
@@ -189,17 +187,20 @@ export default class CesiumTileLayer extends L.TileLayer {
     return tile;
   }
 
-  getTileUrl(tilePoint: L.Coords) {
+  getTileUrl(tilePoint: L.Coords): string {
     const level = this._getLevelFromZ(tilePoint);
+    const errorTileUrl = this.options.errorTileUrl || "";
     if (level < 0) {
-      return this.options.errorTileUrl;
+      return errorTileUrl;
     }
 
-    return getUrlForImageryTile(
-      this.imageryProvider,
-      tilePoint.x,
-      tilePoint.y,
-      level
+    return (
+      getUrlForImageryTile(
+        this.imageryProvider,
+        tilePoint.x,
+        tilePoint.y,
+        level
+      ) || errorTileUrl
     );
   }
 
@@ -239,7 +240,7 @@ export default class CesiumTileLayer extends L.TileLayer {
         if (!(tilingScheme instanceof WebMercatorTilingScheme)) {
           this.errorEvent.raiseEvent(
             this,
-            "This dataset cannot be displayed on the 2D map because it does not support the Web Mercator (EPSG:3857) projection."
+            i18next.t("map.cesium.notWebMercatorTilingScheme")
           );
           return;
         }
@@ -255,7 +256,7 @@ export default class CesiumTileLayer extends L.TileLayer {
         ) {
           this.errorEvent.raiseEvent(
             this,
-            "This dataset cannot be displayed on the 2D map because it uses an unusual tiling scheme that is not supported."
+            i18next.t("map.cesium.unusalTilingScheme")
           );
           return;
         }

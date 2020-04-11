@@ -74,6 +74,13 @@ export default class CatalogMemberTraits extends ModelTraits {
   info: InfoSectionTraits[] = [];
 
   @primitiveTrait({
+    type: "boolean",
+    name: "Is catalog item open in workbench",
+    description: "Whether the item in the workbench open or collapsed."
+  })
+  isOpenInWorkbench: boolean = true;
+
+  @primitiveTrait({
     type: "string",
     name: "Short report",
     description: "A short report to show on the now viewing tab."
@@ -87,4 +94,20 @@ export default class CatalogMemberTraits extends ModelTraits {
     description: "A list of collapsible sections of the short report"
   })
   shortReportSections?: ShortReportTraits[];
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Is experiencing issues",
+    description:
+      "Whether the catalog item is experiencing issues which may cause its data to be unavailable"
+  })
+  isExperiencingIssues: boolean = false;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Hide legend in workbench",
+    description:
+      "Whether the legend is hidden in the workbench for this catalog member."
+  })
+  hideLegendInWorkbench: boolean = false;
 }

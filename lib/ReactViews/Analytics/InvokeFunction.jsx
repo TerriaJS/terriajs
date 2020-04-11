@@ -3,12 +3,12 @@ import PropTypes from "prop-types";
 import React from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
-import when from "terriajs-cesium/Source/ThirdParty/when";
 import TerriaError from "../../Core/TerriaError";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import Loader from "../Loader";
 import ParameterEditor from "./ParameterEditor";
 import Styles from "./invoke-function.scss";
+import { withTranslation } from "react-i18next";
 import { observer } from "mobx-react";
 import { runInAction } from "mobx";
 
@@ -50,7 +50,8 @@ const InvokeFunction = observer(
     propTypes: {
       terria: PropTypes.object,
       previewed: PropTypes.object,
-      viewState: PropTypes.object
+      viewState: PropTypes.object,
+      t: PropTypes.func.isRequired
     },
 
     /* eslint-disable-next-line camelcase */
@@ -68,13 +69,11 @@ const InvokeFunction = observer(
 
     submit() {
       try {
-        const promise = when(this.props.previewed.invoke()).otherwise(
-          terriaError => {
-            if (terriaError instanceof TerriaError) {
-              this.props.previewed.terria.error.raiseEvent(terriaError);
-            }
+        const promise = this.props.previewed.invoke().catch(terriaError => {
+          if (terriaError instanceof TerriaError) {
+            this.props.previewed.terria.error.raiseEvent(terriaError);
           }
-        );
+        });
 
         runInAction(() => {
           // Close modal window
@@ -134,7 +133,7 @@ const InvokeFunction = observer(
           this.validateParameter
         );
       }
-
+      const { t } = this.props;
       return (
         <div className={Styles.invokeFunction}>
           <div className={Styles.content}>
@@ -153,7 +152,7 @@ const InvokeFunction = observer(
               onClick={this.submit}
               disabled={invalidParameters}
             >
-              Run Analysis
+              {t("analytics.runAnalysis")}
             </button>
           </div>
         </div>
@@ -162,4 +161,4 @@ const InvokeFunction = observer(
   })
 );
 
-module.exports = InvokeFunction;
+module.exports = withTranslation()(InvokeFunction);

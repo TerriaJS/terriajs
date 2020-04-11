@@ -4,22 +4,45 @@ import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
+import { withTranslation } from "react-i18next";
 import { Swipeable } from "react-swipeable";
+import getPath from "../../Core/getPath";
+// eslint-disable-next-line no-unused-vars
+import Terria from "../../Models/Terria";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import { Medium, Small } from "../Generic/Responsive";
 import Icon from "../Icon.jsx";
 import Styles from "./story-panel.scss";
 
+/**
+ *
+ * @param {any} story
+ * @param {Terria} terria
+ */
+
 export function activateStory(story, terria) {
+  // Send a GA event on scene change with URL hash
+  const analyticsLabel =
+    window.location.hash.length > 0
+      ? window.location.hash
+      : "No hash detected (story not shared yet?)";
+  terria.analytics?.logEvent("story", "scene", analyticsLabel);
   return runInAction(() => {
     if (story.shareData) {
-      return story.shareData.initSources.map(initSource =>
-        terria.applyInitData({
-          initData: initSource,
-          replaceStratum: true
-        })
+      return Promise.all(
+        story.shareData.initSources.map(initSource =>
+          terria.applyInitData({
+            initData: initSource,
+            replaceStratum: false
+          })
+        )
       );
     }
+    return Promise.resolve([]);
+  }).then(() => {
+    terria.workbench.items.forEach(item => {
+      terria.analytics?.logEvent("story", "datasetView", getPath(item));
+    });
   });
 }
 
@@ -28,7 +51,8 @@ const StoryPanel = observer(
     displayName: "StoryPanel",
     propTypes: {
       terria: PropTypes.object.isRequired,
-      viewState: PropTypes.object.isRequired
+      viewState: PropTypes.object.isRequired,
+      t: PropTypes.func.isRequired
     },
     slideInTimer: null,
     slideOutTimer: null,
@@ -78,7 +102,9 @@ const StoryPanel = observer(
     },
 
     onClickContainer() {
-      this.props.viewState.topElement = "StoryPanel";
+      runInAction(() => {
+        this.props.viewState.topElement = "StoryPanel";
+      });
     },
 
     componentWillUnmount() {
@@ -113,7 +139,9 @@ const StoryPanel = observer(
 
     onCenterScene(story) {
       if (story.shareData) {
-        this.props.terria.updateFromStartData(story.shareData);
+        runInAction(() => {
+          this.props.terria.updateFromStartData(story.shareData);
+        });
       }
     },
 
@@ -133,12 +161,13 @@ const StoryPanel = observer(
     },
 
     render() {
+      const { t } = this.props;
       const stories = this.props.terria.stories || [];
       const story = stories[this.props.viewState.currentStoryId];
       const locationBtn = (
         <button
           className={Styles.locationBtn}
-          title="center scene"
+          title={t("story.locationBtn")}
           onClick={this.onCenterScene.bind(this, story)}
         >
           <Icon glyph={Icon.GLYPHS.location} />
@@ -147,7 +176,7 @@ const StoryPanel = observer(
       const exitBtn = (
         <button
           className={Styles.exitBtn}
-          title="exit story"
+          title={t("story.exitBtn")}
           onClick={this.slideOut}
         >
           <Icon glyph={Icon.GLYPHS.close} />
@@ -184,7 +213,7 @@ const StoryPanel = observer(
                   <button
                     className={Styles.previousBtn}
                     disabled={this.props.terria.stories.length <= 1}
-                    title="go to previous scene"
+                    title={t("story.previousBtn")}
                     onClick={this.goToPrevStory}
                   >
                     <Icon glyph={Icon.GLYPHS.left} />
@@ -197,7 +226,7 @@ const StoryPanel = observer(
                   {story.title && story.title.length > 0 ? (
                     <h3>{story.title}</h3>
                   ) : (
-                    <h3> untitled scene </h3>
+                    <h3> {t("story.untitled")} </h3>
                   )}
                   <Small>{exitBtn}</Small>
                   <If condition={this.props.terria.stories.length >= 2}>
@@ -206,7 +235,7 @@ const StoryPanel = observer(
                         {" "}
                         {stories.map((story, i) => (
                           <button
-                            title={`go to story ${story.title}`}
+                            title={t("story.navBtn", { title: story.title })}
                             type="button"
                             key={story.id}
                             onClick={() => this.navigateStory(i)}
@@ -237,7 +266,7 @@ const StoryPanel = observer(
                   <button
                     disabled={this.props.terria.stories.length <= 1}
                     className={Styles.nextBtn}
-                    title="go to next scene"
+                    title={t("story.nextBtn")}
                     onClick={this.goToNextStory}
                   >
                     <Icon glyph={Icon.GLYPHS.right} />
@@ -249,7 +278,7 @@ const StoryPanel = observer(
                   {" "}
                   {stories.map((story, i) => (
                     <button
-                      title={`go to story ${story.title}`}
+                      title={t("story.navBtnMobile", { title: story.title })}
                       type="button"
                       key={story.id}
                       className={classNames(Styles.mobileNavBtn, {
@@ -271,4 +300,4 @@ const StoryPanel = observer(
   })
 );
 
-export default StoryPanel;
+export default withTranslation()(StoryPanel);

@@ -1,6 +1,8 @@
+import ShowableTraits from "./ShowableTraits";
 import ModelTraits from "./ModelTraits";
 import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
+import mixTraits from "./mixTraits";
 
 export class RectangleTraits extends ModelTraits {
   @primitiveTrait({
@@ -32,14 +34,7 @@ export class RectangleTraits extends ModelTraits {
   north?: number;
 }
 
-export default class MappableTraits extends ModelTraits {
-  @primitiveTrait({
-    type: "boolean",
-    name: "Show",
-    description: "Show or hide the mappable item"
-  })
-  show: boolean = true;
-
+export default class MappableTraits extends mixTraits(ShowableTraits) {
   @objectTrait({
     type: RectangleTraits,
     name: "Rectangle",

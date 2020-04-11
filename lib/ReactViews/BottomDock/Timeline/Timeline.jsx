@@ -1,5 +1,3 @@
-"use strict";
-
 import createReactClass from "create-react-class";
 import dateFormat from "dateformat";
 import React from "react";
@@ -13,17 +11,19 @@ import TimelineControls from "./TimelineControls";
 import CesiumTimeline from "./CesiumTimeline";
 import DateTimePicker from "./DateTimePicker";
 import { formatDateTime } from "./DateFormats";
+import { withTranslation } from "react-i18next";
 
 import Styles from "./timeline.scss";
 import CommonStrata from "../../../Models/CommonStrata";
 
-const Timeline = observer(
+export const Timeline = observer(
   createReactClass({
     displayName: "Timeline",
 
     propTypes: {
       terria: PropTypes.object.isRequired,
-      locale: PropTypes.object
+      locale: PropTypes.object,
+      t: PropTypes.func.isRequired
     },
 
     getInitialState() {
@@ -65,9 +65,13 @@ const Timeline = observer(
     render() {
       const terria = this.props.terria;
       const catalogItem = terria.timelineStack.top;
-      if (!defined(catalogItem)) {
+      if (
+        !defined(catalogItem) ||
+        !defined(catalogItem.currentTimeAsJulianDate)
+      ) {
         return null;
       }
+      const { t } = this.props;
 
       const jsDate = JulianDate.toDate(catalogItem.currentTimeAsJulianDate);
       const timelineStack = this.props.terria.timelineStack;
@@ -93,9 +97,12 @@ const Timeline = observer(
           <div className={Styles.textRow}>
             <div
               className={Styles.textCell}
-              title="Name of the dataset whose time range is shown"
+              title={t("dateTime.timeline.textCell")}
             >
-              {catalogItem.name} {currentTime}
+              <div className={Styles.layerNameTruncated}>
+                {catalogItem.name}
+              </div>
+              {currentTime}
             </div>
           </div>
           <div className={Styles.controlsRow}>
@@ -130,4 +137,4 @@ const Timeline = observer(
   })
 );
 
-module.exports = Timeline;
+export default withTranslation()(Timeline);

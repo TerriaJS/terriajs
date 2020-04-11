@@ -17,7 +17,7 @@ describe("upsertModelFromJson", function() {
     const json = {
       type: "wms",
       name: "Test",
-      url: "https://programs.communications.gov.au/geoserver/ows",
+      url: "foo.bar.baz",
       layers: "mybroadband:MyBroadband_ADSL_Availability"
     };
 
@@ -34,9 +34,7 @@ describe("upsertModelFromJson", function() {
 
     const wms = <WebMapServiceCatalogItem>model;
     expect(wms.name).toBe("Test");
-    expect(wms.url).toBe(
-      "https://programs.communications.gov.au/geoserver/ows"
-    );
+    expect(wms.url).toBe("foo.bar.baz");
     expect(wms.layers).toBe("mybroadband:MyBroadband_ADSL_Availability");
   });
 

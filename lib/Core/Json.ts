@@ -16,6 +16,10 @@ export function isJsonObject(
   );
 }
 
+export function isJsonBoolean(value: JsonValue | undefined): value is boolean {
+  return typeof value === "boolean";
+}
+
 export function isJsonNumber(value: JsonValue | undefined): value is number {
   return typeof value === "number";
 }

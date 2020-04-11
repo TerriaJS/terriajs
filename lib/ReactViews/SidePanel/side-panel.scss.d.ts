@@ -6,7 +6,6 @@ interface CssExports {
   'button': string;
   'header': string;
   'uploadData': string;
-  'workBench': string;
   'workbenchEmpty': string;
 }
 declare var cssExports: CssExports;

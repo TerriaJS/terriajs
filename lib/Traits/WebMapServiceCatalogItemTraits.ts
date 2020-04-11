@@ -1,5 +1,6 @@
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
+import FeatureInfoTraits from "./FeatureInfoTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
 import LegendTraits from "./LegendTraits";
@@ -12,6 +13,9 @@ import primitiveTrait from "./primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
 import SplitterTraits from "./SplitterTraits";
 import UrlTraits from "./UrlTraits";
+import anyTrait from "./anyTrait";
+import { JsonObject } from "../Core/Json";
+import TimeFilterTraits from "./TimeFilterTraits";
 
 export class WebMapServiceAvailableStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -61,9 +65,11 @@ export class WebMapServiceAvailableLayerStylesTraits extends ModelTraits {
 }
 
 export default class WebMapServiceCatalogItemTraits extends mixTraits(
+  FeatureInfoTraits,
   LayerOrderingTraits,
   SplitterTraits,
   DiscretelyTimeVaryingTraits,
+  TimeFilterTraits,
   GetCapabilitiesTraits,
   RasterLayerTraits,
   UrlTraits,
@@ -107,6 +113,13 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   })
   legends?: LegendTraits[];
 
+  @anyTrait({
+    name: "Parameters",
+    description:
+      "Additional parameters to pass to the MapServer when requesting images."
+  })
+  parameters?: JsonObject;
+
   @primitiveTrait({
     type: "number",
     name: "Minimum Scale Denominator",
@@ -126,4 +139,14 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
       "True to hide tiles when the `Minimum Scale Denominator` is exceeded. If false, we can zoom in arbitrarily close to the (increasingly blurry) layer."
   })
   hideLayerAfterMinScaleDenominator: boolean = false;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Maximum Refresh Intervals",
+    description:
+      "The maximum number of discrete times that can be created by a single " +
+      "date range, when specified in the format time/time/periodicity. E.g. " +
+      "`2015-04-27T16:15:00/2015-04-27T18:45:00/PT15M` has 11 times."
+  })
+  maxRefreshIntervals: number = 1000;
 }

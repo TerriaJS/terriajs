@@ -22,7 +22,12 @@
 }
 
 .isActive {
-  background-color: $color-primary;
+  // background-color: $color-primary;
+  background-color: $color-splitter;
+  &:hover,
+  &:focus {
+    background-color: $color-splitter;
+  }
   color: #444;
 }
 
@@ -35,4 +40,8 @@
   color: #fff;
   composes: btn from "../../../Sass/common/_buttons.scss";
   composes: btn-primary from "../../../Sass/common/_buttons.scss";
+  &:hover,
+  &:focus {
+    background-color: $color-splitter;
+  }
 }

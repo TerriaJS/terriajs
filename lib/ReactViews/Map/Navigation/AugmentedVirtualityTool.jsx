@@ -1,116 +1,139 @@
-"use strict";
-
 import React from "react";
-import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import ObserveModelMixin from "../../ObserveModelMixin";
 import Styles from "./augmented_virtuality_tool.scss";
 import Icon from "../../Icon";
 import ViewerMode from "../../../Models/ViewerMode";
-import defined from "terriajs-cesium/Source/Core/defined";
-
+import { withTranslation } from "react-i18next";
 import AugmentedVirtuality from "../../../Models/AugmentedVirtuality";
+import { observer } from "mobx-react";
+import { action, observable } from "mobx";
+import classNames from "classnames";
 
-const AugmentedVirtualityTool = createReactClass({
-  displayName: "AugmentedVirtualityTool",
-  mixins: [ObserveModelMixin],
+@withTranslation()
+@observer
+class AugmentedVirtualityTool extends React.Component {
+  @observable experimentalWarningShown = false;
+  @observable realignHelpShown = false;
+  @observable resetRealignHelpShown = false;
 
-  propTypes: {
+  static propTypes = {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
-    experimentalWarning: PropTypes.bool
-  },
+    experimentalWarning: PropTypes.bool,
+    t: PropTypes.func.isRequired
+  };
 
-  getInitialState() {
-    return {
-      augmentedVirtuality: new AugmentedVirtuality(this.props.terria),
-      experimentalWarningShown: false,
-      realignHelpShown: false,
-      resetRealignHelpShown: false
-    };
-  },
+  static defaultProps = {
+    experimentalWarning: true
+  };
 
+  constructor(props) {
+    super(props);
+    this.augmentedVirtuality = new AugmentedVirtuality(this.props.terria);
+  }
+
+  @action.bound
   handleClickAVTool() {
     // Make the AugmentedVirtuality module avaliable elsewhere.
-    this.props.terria.augmentedVirtuality = this.state.augmentedVirtuality;
+    this.props.terria.augmentedVirtuality = this.augmentedVirtuality;
+    // feature detect for new ios 13
+    // it seems you don't need to ask for both, but who knows, ios 14 / something
+    // could change again
+    if (
+      window.DeviceMotionEvent &&
+      // exists on window by now?
+      typeof DeviceMotionEvent.requestPermission === "function"
+    ) {
+      DeviceMotionEvent.requestPermission()
+        .then(permissionState => {
+          if (permissionState !== "granted") {
+            console.error("couldn't get access for motion events");
+          }
+        })
+        .catch(console.error);
+    }
+    if (
+      window.DeviceOrientationEvent &&
+      // exists on window by now?
+      typeof DeviceOrientationEvent.requestPermission === "function"
+    ) {
+      DeviceOrientationEvent.requestPermission()
+        .then(permissionState => {
+          if (permissionState !== "granted") {
+            console.error("couldn't get access for orientation events");
+          }
+        })
+        .catch(console.error);
+    }
 
     if (
-      defined(this.props.experimentalWarning) &&
       this.props.experimentalWarning !== false &&
-      !this.state.experimentalWarningShown
+      !this.experimentalWarningShown
     ) {
-      this.setState({ experimentalWarningShown: true });
-
+      this.experimentalWarningShown = true;
+      const { t } = this.props;
       this.props.viewState.notifications.push({
-        title: "Experimental Feature: Augmented Reality",
-        message:
-          "Augmented Reality mode is currently in beta. " +
-          "This mode is only designed for use on the latest high end mobile devices. " +
-          "<br /><br />WARNING: This mode can consume a lot of data, please be mindful of data usage charges from your network provider. " +
-          "<br /><br />The accuracy of this mode depends on the accuracy of your mobile devices internal compass.",
-        confirmText: "Got it"
+        title: t("AR.title"),
+        message: t("AR.experimentalFeatureMessage"),
+        confirmText: t("AR.confirmText")
       });
     }
+    this.augmentedVirtuality.toggleEnabled();
+  }
 
-    this.state.augmentedVirtuality.toggleEnabled();
-  },
-
+  @action.bound
   handleClickRealign() {
-    if (!this.state.realignHelpShown) {
-      this.setState({ realignHelpShown: true });
-
+    if (!this.realignHelpShown) {
+      this.realignHelpShown = true;
+      const { t } = this.props;
       this.props.viewState.notifications.push({
-        title: "Manual Alignment",
-        message:
-          "Align your mobile device so that it corresponds with the maps current alignment, then click the blinking compass." +
-          " If no landmarks to align with are currently visible on the map, you can move the map using" +
-          " drag and pinch actions until a recognisable landmark is visible before aligning the device with the map." +
-          '<br /><div><img width="100%" src="./build/TerriaJS/images/ar-realign-guide.gif" /></div>' +
-          "<br />Tip: The sun or moon are often good landmarks to align with if you are in a location you aren\x27t familiar with (be careful not to look at the sun - it can hurt your eyes).",
-        confirmText: "Got it"
+        title: t("AR.manualAlignmentTitle"),
+        message: t("AR.manualAlignmentMessage", {
+          img:
+            '<img width="100%" src="./build/TerriaJS/images/ar-realign-guide.gif" />'
+        }),
+        confirmText: t("AR.confirmText")
       });
     }
 
-    this.state.augmentedVirtuality.toggleManualAlignment();
-  },
+    this.augmentedVirtuality.toggleManualAlignment();
+  }
 
+  @action.bound
   handleClickResetRealign() {
-    if (!this.state.resetRealignHelpShown) {
-      this.setState({ resetRealignHelpShown: true });
-
+    if (!this.resetRealignHelpShown) {
+      this.resetRealignHelpShown = true;
+      const { t } = this.props;
       this.props.viewState.notifications.push({
-        title: "Reset Alignment",
-        message:
-          "Resetting to compass alignment. If the alignment doesn\x27t match the real world try waving" +
-          " your device in a figure 8 motion to recalibrate device. This can be done at any time." +
-          "<br /> <br />Avoid locations with magnetic fields or metal objects as these may disorient the devices compass.",
-        confirmText: "Got it"
+        title: t("AR.resetAlignmentTitle"),
+        message: t("AR.resetAlignmentMessage"),
+        confirmText: t("AR.confirmText")
       });
     }
 
-    this.state.augmentedVirtuality.resetAlignment();
-  },
+    this.augmentedVirtuality.resetAlignment();
+  }
 
   handleClickHover() {
-    this.state.augmentedVirtuality.toggleHoverHeight();
-  },
+    this.augmentedVirtuality.toggleHoverHeight();
+  }
 
   render() {
-    const enabled = this.state.augmentedVirtuality.enabled;
+    const enabled = this.augmentedVirtuality.isEnabled;
     let toggleImage = Icon.GLYPHS.arOff;
     let toggleStyle = Styles.btn;
     if (enabled) {
       toggleImage = Icon.GLYPHS.arOn;
       toggleStyle = Styles.btnPrimary;
     }
-
-    const realignment = this.state.augmentedVirtuality.manualAlignment;
+    const { t } = this.props;
+    const realignment = this.augmentedVirtuality.manualAlignment;
     let realignmentStyle = Styles.btn;
     if (realignment) {
       realignmentStyle = Styles.btnBlink;
     }
 
-    const hoverLevel = this.state.augmentedVirtuality.hoverLevel;
+    const hoverLevel = this.augmentedVirtuality.hoverLevel;
     let hoverImage = Icon.GLYPHS.arHover0;
     // Note: We use the image of the next level that we will be changing to, not the level the we are currently at.
     switch (hoverLevel) {
@@ -127,11 +150,16 @@ const AugmentedVirtualityTool = createReactClass({
 
     return (
       <If condition={this.props.terria.viewerMode !== ViewerMode.Leaflet}>
-        <div className={Styles.augmentedVirtualityTool}>
+        <div
+          className={classNames(Styles.augmentedVirtualityTool, {
+            [Styles.withTimeSeriesControls]:
+              this.props.terria.timelineStack.top !== undefined
+          })}
+        >
           <button
             type="button"
             className={toggleStyle}
-            title="augmented reality tool"
+            title={t("AR.arTool")}
             onClick={this.handleClickAVTool}
           >
             <Icon glyph={toggleImage} />
@@ -141,17 +169,17 @@ const AugmentedVirtualityTool = createReactClass({
             <button
               type="button"
               className={Styles.btn}
-              title="toggle hover height"
-              onClick={this.handleClickHover}
+              title={t("AR.btnHover")}
+              onClick={() => this.handleClickHover()}
             >
               <Icon glyph={hoverImage} />
             </button>
 
-            <If condition={!this.state.augmentedVirtuality.manualAlignmentSet}>
+            <If condition={!this.augmentedVirtuality.manualAlignmentSet}>
               <button
                 type="button"
                 className={realignmentStyle}
-                title="toggle manual alignment"
+                title={t("AR.btnRealign")}
                 onClick={this.handleClickRealign}
               >
                 <Icon glyph={Icon.GLYPHS.arRealign} />
@@ -160,14 +188,13 @@ const AugmentedVirtualityTool = createReactClass({
 
             <If
               condition={
-                this.state.augmentedVirtuality.manualAlignmentSet &&
-                !realignment
+                this.augmentedVirtuality.manualAlignmentSet && !realignment
               }
             >
               <button
                 type="button"
                 className={Styles.btn}
-                title="reset compass alignment"
+                title={t("AR.btnResetRealign")}
                 onClick={this.handleClickResetRealign}
               >
                 <Icon glyph={Icon.GLYPHS.arResetAlignment} />
@@ -178,6 +205,6 @@ const AugmentedVirtualityTool = createReactClass({
       </If>
     );
   }
-});
+}
 
-module.exports = AugmentedVirtualityTool;
+export default AugmentedVirtualityTool;

@@ -4,9 +4,12 @@
 .formLabel {
   position: absolute;
   svg {
-    height: $input-height;
-    width: $input-height;
+    // height: $input-height;
+    // width: $input-height;
+    height: 20px;
+    width: 20px;
     fill: $charcoal-grey;
+    padding: $padding;
     fill-opacity: 0.5;
   }
 }
@@ -27,6 +30,7 @@ input[type="text"].searchField {
   color: $text-dark;
   width: 100%;
   overflow: hidden;
+  border-color: transparent; // if you need to remove borders, always use transparent "X"px borders instead of 0 borders for a11y
   @include placeholder {
     text-align: center;
     @include transition(all, 0.25s, linear);

@@ -8,6 +8,7 @@ import _loadWithXhr from "../../lib/Core/loadWithXhr";
 import ArcGisMapServerCatalogItem from "../../lib/Models/ArcGisMapServerCatalogItem";
 import Terria from "../../lib/Models/Terria";
 import { RectangleTraits } from "../../lib/Traits/MappableTraits";
+import createStratumInstance from "../../lib/Models/createStratumInstance";
 
 configure({
   enforceActions: "observed",
@@ -23,7 +24,7 @@ const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
 
 describe("ArcGisMapServerCatalogItem", function() {
   const mapServerUrl =
-    "http://www.ga.gov.au/gis/rest/services/topography/Dynamic_National_Map_Hydrography_and_Marine/MapServer";
+    "http://www.example.com/Dynamic_National_Map_Hydrography_and_Marine/MapServer";
   const singleLayerUrl = mapServerUrl + "/31";
 
   let item: ArcGisMapServerCatalogItem;
@@ -213,22 +214,22 @@ describe("ArcGisMapServerCatalogItem", function() {
       });
     });
 
+    it("defines the name", function() {
+      expect(item.name).toBe(
+        "Australia 250K Topographic Hydrography and Marine Layers"
+      );
+    });
+
     it("defines the dataCustodian", function() {
       expect(item.dataCustodian).toBe("Geoscience Australia");
     });
 
     it("defines a rectangle", function() {
       expect(item.rectangle).toBeDefined();
-      if (item.rectangle) {
-        expect(rectangleFromTraits(item.rectangle)).toEqual(
-          new Rectangle(
-            1.7088098606747266,
-            -0.946999399137436,
-            2.919623350055036,
-            0.017166897952326066
-          )
-        );
-      }
+      expect(item.rectangle.west).toEqual(97.90759300700006);
+      expect(item.rectangle.south).toEqual(-54.25906877199998);
+      expect(item.rectangle.east).toEqual(167.2820957260001);
+      expect(item.rectangle.north).toEqual(0.9835908000000587);
     });
 
     it("defines info", function() {
@@ -250,7 +251,3 @@ describe("ArcGisMapServerCatalogItem", function() {
     });
   });
 });
-
-function rectangleFromTraits({ west, south, east, north }: RectangleTraits) {
-  return new Rectangle(west, south, east, north);
-}

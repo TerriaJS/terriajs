@@ -4,7 +4,7 @@ import primitiveTrait from "./primitiveTrait";
 export default class DiscreteTimeTraits extends ModelTraits {
   @primitiveTrait({
     name: "Time",
-    description: "The discrete time, expressed as an ISO8601 sttring.",
+    description: "The discrete time, expressed as an ISO8601 string.",
     type: "string"
   })
   time?: string;

@@ -13,12 +13,12 @@ describe("StratumOrder", function() {
     so.addUserStratum("userTest");
     so.addLoadStratum("loadTest");
 
-    expect(so.priorities.get("loadTest")).toBeLessThan(<number>(
-      so.priorities.get("definitionTest")
-    ));
-    expect(so.priorities.get("definitionTest")).toBeLessThan(<number>(
-      so.priorities.get("userTest")
-    ));
+    expect(so.priorities.get("loadTest")).toBeLessThan(
+      <number>so.priorities.get("definitionTest")
+    );
+    expect(so.priorities.get("definitionTest")).toBeLessThan(
+      <number>so.priorities.get("userTest")
+    );
   });
 
   it("strata of the same type get unique priorities", function() {
@@ -47,12 +47,12 @@ describe("StratumOrder", function() {
     so.addUserStratum("e");
     so.addLoadStratum("f");
 
-    const a = {};
-    const b = {};
-    const c = {};
-    const d = {};
-    const e = {};
-    const f = {};
+    const a = { a: "A" };
+    const b = { b: "B" };
+    const c = { c: "C" };
+    const d = { d: "D" };
+    const e = { e: "E" };
+    const f = { f: "F" };
     const strata = new Map<string, any>([
       ["a", a],
       ["b", b],
@@ -106,7 +106,10 @@ describe("StratumOrder", function() {
 
     const a = {};
     const b = {};
-    const strata = new Map<string, any>([["a", a], ["b", b]]);
+    const strata = new Map<string, any>([
+      ["a", a],
+      ["b", b]
+    ]);
 
     expect(function() {
       so.sortBottomToTop(strata);

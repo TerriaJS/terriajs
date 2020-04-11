@@ -6,6 +6,7 @@ import Resource from "terriajs-cesium/Source/Core/Resource";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
+import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
 import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
 import isDefined from "../Core/isDefined";
 import makeRealPromise from "../Core/makeRealPromise";
@@ -16,11 +17,14 @@ import FeatureInfoMixin from "../ModelMixins/FeatureInfoMixin";
 import Cesium3DTilesCatalogItemTraits, {
   OptionsTraits
 } from "../Traits/Cesium3DCatalogItemTraits";
+import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
+import createStratumInstance from "./createStratumInstance";
 import Feature from "./Feature";
 import Mappable from "./Mappable";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import raiseErrorToUser from "./raiseErrorToUser";
+import i18next from "i18next";
 
 class ObservableCesium3DTileset extends Cesium3DTileset {
   _catalogItem?: Cesium3DTilesCatalogItem;
@@ -48,11 +52,11 @@ export default class Cesium3DTilesCatalogItem
   implements Mappable {
   static readonly type = "3d-tiles";
   readonly type = Cesium3DTilesCatalogItem.type;
-  readonly typeName = "Cesium 3D Tiles";
+  get typeName() {
+    return i18next.t("models.cesiumTerrain.name3D");
+  }
 
   readonly canZoomTo = true;
-  readonly showsInfo = true;
-
   private tileset?: ObservableCesium3DTileset;
 
   get isMappable() {
@@ -65,23 +69,39 @@ export default class Cesium3DTilesCatalogItem
 
   protected forceLoadMapItems() {
     this.loadTileset();
-    return Promise.resolve();
+    if (this.tileset) {
+      return makeRealPromise<Cesium3DTileset>(this.tileset.readyPromise)
+        .then(tileset => {
+          if (
+            tileset.extras !== undefined &&
+            tileset.extras.style !== undefined
+          ) {
+            runInAction(() => {
+              this.strata.set(
+                CommonStrata.defaults,
+                createStratumInstance(Cesium3DTilesCatalogItemTraits, {
+                  style: tileset.extras.style
+                })
+              );
+            });
+          }
+        }) // TODO: What should handle this error?
+        .catch(e => console.error(e));
+    } else {
+      return Promise.resolve();
+    }
   }
 
   private loadTileset() {
-    if (!isDefined(this.url)) {
-      return;
-    }
-
     const tileset = this.createNewTileset(
-      proxyCatalogItemUrl(this, this.url),
+      this.url,
       this.ionAssetId,
       this.ionAccessToken,
       this.ionServer,
       this.optionsObj
     );
 
-    if (isDefined(tileset) && !tileset.destroyed) {
+    if (tileset && !tileset.destroyed) {
       this.tileset = tileset;
     }
   }
@@ -98,6 +118,12 @@ export default class Cesium3DTilesCatalogItem
     this.tileset.style = toJS(this.cesiumTileStyle);
     this.tileset.shadows = this.cesiumShadows;
     this.tileset.show = this.show;
+
+    const key = this.colorBlendMode as keyof typeof Cesium3DTileColorBlendMode;
+    const colorBlendMode = Cesium3DTileColorBlendMode[key];
+    if (colorBlendMode !== undefined)
+      this.tileset.colorBlendMode = colorBlendMode;
+    this.tileset.colorBlendAmount = this.colorBlendAmount;
 
     // default is 16 (baseMaximumScreenSpaceError @ 2)
     // we want to reduce to 8 for higher levels of quality
@@ -124,7 +150,7 @@ export default class Cesium3DTilesCatalogItem
   }
 
   private createNewTileset(
-    url: Resource | string,
+    url: Resource | string | undefined,
     ionAssetId: number | undefined,
     ionAccessToken: string | undefined,
     ionServer: string | undefined,
@@ -149,7 +175,7 @@ export default class Cesium3DTilesCatalogItem
       if (url instanceof Resource) {
         resource = url;
       } else {
-        resource = new Resource({ url });
+        resource = new Resource({ url: proxyCatalogItemUrl(this, url) });
       }
     }
 
@@ -225,7 +251,7 @@ export default class Cesium3DTilesCatalogItem
   }
 
   buildFeatureFromPickResult(_screenPosition: Cartesian2, pickResult: any) {
-    if (pickResult instanceof Cesium3DTileFeature) {
+    if (isCesium3DTileFeature(pickResult)) {
       const properties: { [name: string]: unknown } = {};
       pickResult.getPropertyNames().forEach(name => {
         properties[name] = pickResult.getProperty(name);
@@ -239,4 +265,8 @@ export default class Cesium3DTilesCatalogItem
       return result;
     }
   }
+}
+
+function isCesium3DTileFeature(o: any): o is Cesium3DTileFeature {
+  return "getPropertyNames" in o && "getProperty" in o;
 }

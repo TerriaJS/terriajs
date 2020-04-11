@@ -4,12 +4,22 @@ import React from "react";
 import PropTypes from "prop-types";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Styles from "./parameter-editors.scss";
-import PointParameterEditor from "./PointParameterEditor";
-import PolygonParameterEditor from "./PolygonParameterEditor";
-import SelectAPolygonParameterEditor from "./SelectAPolygonParameterEditor";
-import RegionPicker from "./RegionPicker";
+import {
+  selectOnMap as selectPointOnMap,
+  getDisplayValue as getPointParameterDisplayValue
+} from "./PointParameterEditor";
+import {
+  selectOnMap as selectPolygonOnMap,
+  getDisplayValue as getPolygonParameterDisplayValue
+} from "./PolygonParameterEditor";
+import {
+  selectOnMap as selectExistingPolygonOnMap,
+  getDisplayValue as getExistingPolygonParameterDisplayValue
+} from "./SelectAPolygonParameterEditor";
+import { getDisplayValue as getRegionPickerDisplayValue } from "./RegionPicker";
 import createReactClass from "create-react-class";
 import GeoJsonParameter from "../../Models/GeoJsonParameter";
+import { withTranslation } from "react-i18next";
 import { observer } from "mobx-react";
 import { runInAction } from "mobx";
 
@@ -19,7 +29,8 @@ const GeoJsonParameterEditor = observer(
     propTypes: {
       previewed: PropTypes.object,
       parameter: PropTypes.object,
-      viewState: PropTypes.object
+      viewState: PropTypes.object,
+      t: PropTypes.func.isRequired
     },
 
     onCleanUp() {
@@ -29,10 +40,11 @@ const GeoJsonParameterEditor = observer(
     selectPointOnMap() {
       runInAction(() => {
         this.props.parameter.value = undefined;
-        PointParameterEditor.selectOnMap(
+        selectPointOnMap(
           this.props.previewed.terria,
           this.props.viewState,
-          this.props.parameter
+          this.props.parameter,
+          this.props.t("analytics.selectLocation")
         );
         this.props.parameter.subtype = GeoJsonParameter.PointType;
       });
@@ -41,7 +53,7 @@ const GeoJsonParameterEditor = observer(
     selectPolygonOnMap() {
       runInAction(() => {
         this.props.parameter.value = undefined;
-        PolygonParameterEditor.selectOnMap(
+        selectPolygonOnMap(
           this.props.previewed.terria,
           this.props.viewState,
           this.props.parameter
@@ -53,7 +65,7 @@ const GeoJsonParameterEditor = observer(
     selectExistingPolygonOnMap() {
       runInAction(() => {
         this.props.parameter.value = undefined;
-        SelectAPolygonParameterEditor.selectOnMap(
+        selectExistingPolygonOnMap(
           this.props.previewed.terria,
           this.props.viewState,
           this.props.parameter
@@ -63,10 +75,11 @@ const GeoJsonParameterEditor = observer(
     },
 
     render() {
+      const { t } = this.props;
       return (
         <div>
           <div>
-            <strong>Select Location</strong>
+            <strong>{t("analytics.selectLocation")}</strong>
           </div>
           <div
             className="container"
@@ -82,7 +95,7 @@ const GeoJsonParameterEditor = observer(
               onClick={this.selectPointOnMap}
               className={Styles.btnLocationSelector}
             >
-              <strong>Point (lat/lon)</strong>
+              <strong>{t("analytics.point")}</strong>
             </button>
             <button
               type="button"
@@ -90,14 +103,14 @@ const GeoJsonParameterEditor = observer(
               onClick={this.selectPolygonOnMap}
               className={Styles.btnLocationSelector}
             >
-              <strong>Polygon</strong>
+              <strong>{t("analytics.polygon")}</strong>
             </button>
             <button
               type="button"
               onClick={this.selectExistingPolygonOnMap}
               className={Styles.btnLocationSelector}
             >
-              <strong>Existing Polygon</strong>
+              <strong>{t("analytics.existingPolygon")}</strong>
             </button>
           </div>
           <input
@@ -117,10 +130,7 @@ const GeoJsonParameterEditor = observer(
               ) === ""
             }
           >
-            <div>
-              Nothing has been selected, please use the buttons above to make a
-              selection.
-            </div>
+            <div>{t("analytics.nothingSelected")}</div>
           </If>
         </div>
       );
@@ -133,15 +143,15 @@ GeoJsonParameterEditor.getDisplayValue = function(value, parameter) {
     return "";
   }
   if (parameter.subtype === GeoJsonParameter.PointType) {
-    return PointParameterEditor.getDisplayValue(value);
+    return getPointParameterDisplayValue(value);
   }
   if (parameter.subtype === GeoJsonParameter.SelectAPolygonType) {
-    return SelectAPolygonParameterEditor.getDisplayValue(value);
+    return getExistingPolygonParameterDisplayValue(value);
   }
   if (parameter.subtype === GeoJsonParameter.PolygonType) {
-    return PolygonParameterEditor.getDisplayValue(value);
+    return getPolygonParameterDisplayValue(value);
   }
-  return RegionPicker.getDisplayValue(value, parameter);
+  return getRegionPickerDisplayValue(value, parameter);
 };
 
-module.exports = GeoJsonParameterEditor;
+module.exports = withTranslation()(GeoJsonParameterEditor);

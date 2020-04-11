@@ -9,7 +9,12 @@ import createBingBaseMapOptions from "./createBingBaseMapOptions";
 import OpenStreetMapCatalogItem from "../Models/OpenStreetMapCatalogItem";
 import { runInAction } from "mobx";
 
-function createGlobalBaseMapOptions(terria: Terria, bingMapsKey: string) {
+export const POSITRON_BASE_MAP_ID = "basemap-positron";
+
+export default function createGlobalBaseMapOptions(
+  terria: Terria,
+  bingMapsKey: string
+) {
   const result = createBingBaseMapOptions(terria, bingMapsKey);
 
   var naturalEarthII = new WebMapServiceCatalogItem(
@@ -69,7 +74,7 @@ function createGlobalBaseMapOptions(terria: Terria, bingMapsKey: string) {
     )
   );
 
-  const positron = new OpenStreetMapCatalogItem("basemap-positron", terria);
+  const positron = new OpenStreetMapCatalogItem(POSITRON_BASE_MAP_ID, terria);
   runInAction(() => {
     positron.setTrait(CommonStrata.user, "name", "Positron (Light)");
     positron.setTrait(
@@ -132,5 +137,3 @@ function createGlobalBaseMapOptions(terria: Terria, bingMapsKey: string) {
 
   return result;
 }
-
-module.exports = createGlobalBaseMapOptions;

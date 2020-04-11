@@ -4,6 +4,7 @@ import createReactClass from "create-react-class";
 import classNames from "classnames";
 
 import defined from "terriajs-cesium/Source/Core/defined";
+import { withTranslation } from "react-i18next";
 
 import Styles from "./panel.scss";
 import Icon from "../../Icon.jsx";
@@ -19,6 +20,10 @@ const InnerPanel = createReactClass({
     onDismissed: PropTypes.func,
     /** Animate as modal instead of dropdown */
     showDropdownAsModal: PropTypes.bool,
+
+    /** show panel centered instead of offset toward the left */
+    showDropdownInCenter: PropTypes.bool,
+
     /** Relative width to draw from */
     modalWidth: PropTypes.number,
     /** Theme to style components */
@@ -33,7 +38,8 @@ const InnerPanel = createReactClass({
     children: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.element),
       PropTypes.element
-    ])
+    ]),
+    t: PropTypes.func.isRequired
   },
 
   getDefaultProps() {
@@ -88,31 +94,38 @@ const InnerPanel = createReactClass({
   },
 
   render() {
+    const { t } = this.props;
     return (
       <div
         className={classNames(
           Styles.inner,
           this.props.theme.inner,
           { [Styles.isOpen]: this.state.isOpenCss },
-          { [Styles.showDropdownAsModal]: this.props.showDropdownAsModal }
+          { [Styles.showDropdownAsModal]: this.props.showDropdownAsModal },
+          { [Styles.showDropdownInCenter]: this.props.showDropdownInCenter }
         )}
         ref={this.props.innerRef}
         onClick={e => e.stopPropagation()}
         style={{
           width: this.props.modalWidth,
           left: this.props.dropdownOffset,
-          transformOrigin:
-            this.props.caretOffset && `${this.props.caretOffset} top`
+          transformOrigin: this.props.showDropdownInCenter
+            ? "0 top"
+            : this.props.caretOffset && `${this.props.caretOffset} top`
         }}
       >
         <button
           type="button"
-          className={classNames(Styles.innerCloseBtn, {
-            [Styles.innerCloseBtnForModal]: this.props.showDropdownAsModal
-          })}
+          className={classNames(
+            "tjs-InnerPannelCloseButton",
+            Styles.innerCloseBtn,
+            {
+              [Styles.innerCloseBtnForModal]: this.props.showDropdownAsModal
+            }
+          )}
           onClick={this.forceClose}
-          title="Close"
-          aria-label="Close"
+          title={t("general.close")}
+          aria-label={t("general.close")}
         >
           <Icon glyph={Icon.GLYPHS.close} />
         </button>
@@ -132,4 +145,4 @@ const InnerPanel = createReactClass({
   }
 });
 
-export default InnerPanel;
+export default withTranslation()(InnerPanel);

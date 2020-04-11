@@ -1,8 +1,7 @@
-@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,400italic,600");
-@import url("https://fonts.googleapis.com/css?family=Lato:400,700");
+@import url("https://fonts.googleapis.com/css?family=Nunito:300,400,500,400italic,600,700&display=swap");
 
-$font-pop: "Open Sans", sans-serif;
-$font-base: "Open Sans", sans-serif;
+$font-pop: "Nunito", sans-serif;
+$font-base: "Nunito", sans-serif;
 $font-mono: monospace, sans-serif;
 $font-feature-info: $font-mono;
 $font: $font-base;
@@ -15,6 +14,8 @@ $color-primary-disabled: #595b60;
 $color-secondary: #06ccff;
 
 $animation-fast: 0.1s;
+
+$color-splitter: #ff6f00;
 
 $dark: #3f4854;
 $dark-with-overlay: #667080;
@@ -65,6 +66,7 @@ $link-text-decoration: none;
 $padding: 10px;
 $padding-small: 5px;
 $padding-mini: 3px;
+$padding-tiny: 1px;
 
 $btn-default-line-height: 20px;
 $input-height: 40px;
@@ -106,6 +108,7 @@ $mobile-main-bg: #ffffff;
 $mobile-text: #000;
 
 $mobile-modal-top-height: 40px;
+$mobile-bottom-timeline: 70px;
 
 $font-size-large: 1.3rem;
 $font-size-mid-large: 1.1rem;
@@ -125,6 +128,9 @@ $font-weight-medium: 500;
 $font-weight-normal: 400;
 $font-weight-light: 100;
 
+$map-button-color: #9ca1aa;
+$map-button-top: 18px;
+$map-button-border-radius: 16px;
 $work-bench-width: 350px;
 $setting-panel: 300px;
 $share-panel-width: 450px;
@@ -139,6 +145,7 @@ $border-color: rgba(#fff, 0.15);
 $border-style: 1px solid $border-color;
 $box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.12), 0 2px 2px 0 rgba(0, 0, 0, 0.24);
 
+$radius-large: 4px;
 $radius-medium: 3px;
 $radius-small: 2px;
 
@@ -146,6 +153,7 @@ $ring-width: 10px;
 $compass-width: 55px;
 
 //screen sizes
+$mobile: 767px;
 $sm: 768px;
 $md: 992px;
 $lg: 1300px;

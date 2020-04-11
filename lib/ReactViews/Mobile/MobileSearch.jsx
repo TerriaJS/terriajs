@@ -1,6 +1,6 @@
 import React from "react";
-
 import createReactClass from "create-react-class";
+import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 
 import PropTypes from "prop-types";
@@ -8,6 +8,7 @@ import PropTypes from "prop-types";
 import { addMarker } from "../../Models/LocationMarkerUtils";
 import LocationSearchResults from "../Search/LocationSearchResults";
 import SearchResult from "../Search/SearchResult";
+import { withTranslation } from "react-i18next";
 import Styles from "./mobile-search.scss";
 
 // A Location item when doing Bing map searvh or Gazetter search
@@ -17,7 +18,8 @@ const MobileSearch = observer(
 
     propTypes: {
       viewState: PropTypes.object,
-      terria: PropTypes.object
+      terria: PropTypes.object,
+      t: PropTypes.func.isRequired
     },
 
     onLocationClick(result) {
@@ -31,12 +33,13 @@ const MobileSearch = observer(
     },
 
     searchInDataCatalog() {
-      const viewname = this.props.viewState.mobileViewOptions.data;
-      this.props.viewState.explorerPanelIsVisible = true;
-      this.props.viewState.switchMobileView(viewname);
-      this.props.viewState.searchInCatalog(
-        this.props.viewState.searchState.locationSearchText
-      );
+      const { searchState } = this.props.viewState;
+      runInAction(() => {
+        // Set text here so that it doesn't get batched up and the catalog
+        // search text has a chance to set isWaitingToStartCatalogSearch
+        searchState.catalogSearchText = searchState.locationSearchText;
+      });
+      this.props.viewState.searchInCatalog(searchState.locationSearchText);
     },
 
     render() {
@@ -52,22 +55,23 @@ const MobileSearch = observer(
     },
 
     renderSearchInCatalogLink(theme) {
+      const { t } = this.props;
+      const searchState = this.props.viewState.searchState;
       return (
-        <If
-          condition={
-            this.props.viewState.searchState.locationSearchText.length > 0
-          }
-        >
+        <If condition={searchState.locationSearchText.length > 0}>
           <div className={Styles.providerResult}>
             <ul className={Styles.btnList}>
-              <SearchResult
-                clickAction={this.searchInDataCatalog}
-                icon={null}
-                name={`Search for "${
-                  this.props.viewState.searchState.locationSearchText
-                }" in the Data Catalogue`}
-                theme={theme}
-              />
+              {searchState.catalogSearchProvider && (
+                <SearchResult
+                  clickAction={this.searchInDataCatalog}
+                  icon={null}
+                  locationSearchText={searchState.locationSearchText}
+                  name={t("search.search", {
+                    searchText: searchState.locationSearchText
+                  })}
+                  searchResultTheme={theme}
+                />
+              )}
             </ul>
           </div>
         </If>
@@ -76,25 +80,20 @@ const MobileSearch = observer(
 
     renderLocationResult(theme) {
       const searchState = this.props.viewState.searchState;
-      return searchState.locationSearchProviders
-        .filter(
-          search =>
-            search.isSearching ||
-            (search.searchResults && search.searchResults.length)
-        )
-        .map(search => (
-          <LocationSearchResults
-            key={search.name}
-            terria={this.props.terria}
-            viewState={this.props.viewState}
-            search={search}
-            onLocationClick={this.onLocationClick}
-            isWaitingForSearchToStart={searchState.isWaitingForSearchToStart}
-            theme={theme}
-          />
-        ));
+      return searchState.locationSearchResults.map(search => (
+        <LocationSearchResults
+          key={search.searchProvider.name}
+          terria={this.props.terria}
+          viewState={this.props.viewState}
+          search={search}
+          locationSearchText={searchState.locationSearchText}
+          onLocationClick={this.onLocationClick}
+          isWaitingForSearchToStart={searchState.isWaitingToStartLocationSearch}
+          theme={theme}
+        />
+      ));
     }
   })
 );
 
-module.exports = MobileSearch;
+module.exports = withTranslation()(MobileSearch);

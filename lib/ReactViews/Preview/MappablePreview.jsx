@@ -1,22 +1,23 @@
+import { action } from "mobx";
+import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
+import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
+import getPath from "../../Core/getPath";
+import addToWorkbench from "../../Models/addToWorkbench";
 import Mappable from "../../Models/Mappable";
+import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
 // eslint-disable-next-line no-unused-vars
 import Terria from "../../Models/Terria";
 // eslint-disable-next-line no-unused-vars
 import ViewState from "../../ReactViewModels/ViewState";
+import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
+import measureElement from "../measureElement";
 import DataPreviewMap from "./DataPreviewMap";
 // import DataPreviewMap from "./DataPreviewMap";
 import Description from "./Description";
 import Styles from "./mappable-preview.scss";
-import { observer } from "mobx-react";
-import { action } from "mobx";
-import measureElement from "../measureElement";
-import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
-import addToWorkbench from "../../Models/addToWorkbench";
-import { runInAction } from "mobx";
-import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
 
 /**
  * @typedef {object} Props
@@ -37,7 +38,8 @@ class MappablePreview extends React.Component {
     previewed: PropTypes.object.isRequired,
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
-    widthFromMeasureElementHOC: PropTypes.number
+    widthFromMeasureElementHOC: PropTypes.number,
+    t: PropTypes.func.isRequired
   };
 
   @action.bound
@@ -47,20 +49,29 @@ class MappablePreview extends React.Component {
     }
 
     const keepCatalogOpen = event.shiftKey || event.ctrlKey;
+    const toAdd = !this.props.terria.workbench.contains(this.props.previewed);
+
+    if (toAdd) {
+      this.props.terria.timelineStack.addToTop(this.props.previewed);
+    } else {
+      this.props.terria.timelineStack.remove(this.props.previewed);
+    }
 
     const addPromise = addToWorkbench(
       this.props.terria.workbench,
       this.props.previewed,
-      !this.props.terria.workbench.contains(this.props.previewed)
+      toAdd
     ).then(() => {
       if (
         this.props.terria.workbench.contains(this.props.previewed) &&
         !keepCatalogOpen
       ) {
-        runInAction(() => {
-          this.props.viewState.explorerPanelIsVisible = false;
-          this.props.viewState.mobileView = null;
-        });
+        this.props.viewState.closeCatalog();
+        this.props.terria.analytics?.logEvent(
+          "dataSource",
+          toAdd ? "addFromPreviewButton" : "removeFromPreviewButton",
+          getPath(this.props.previewed)
+        );
       }
     });
 
@@ -72,6 +83,7 @@ class MappablePreview extends React.Component {
   }
 
   render() {
+    const { t } = this.props;
     const catalogItem = this.props.previewed;
     return (
       <div className={Styles.root}>
@@ -91,8 +103,8 @@ class MappablePreview extends React.Component {
           className={Styles.btnAdd}
         >
           {this.props.terria.workbench.contains(catalogItem)
-            ? "Remove from the map"
-            : "Add to the map"}
+            ? t("preview.removeFromMap")
+            : t("preview.addToMap")}
         </button>
         <div className={Styles.previewedInfo}>
           <div
@@ -102,7 +114,7 @@ class MappablePreview extends React.Component {
             <h3 className={Styles.h3}>{catalogItem.name}</h3>
             <If
               condition={
-                catalogItem.dataUrlType !== "local" &&
+                !catalogItem.hasLocalData &&
                 !this.props.viewState.useSmallScreenInterface
               }
             >
@@ -124,4 +136,4 @@ class MappablePreview extends React.Component {
   }
 }
 
-export default measureElement(MappablePreview);
+export default withTranslation()(measureElement(MappablePreview));

@@ -1,4 +1,11 @@
-import { computed, isObservableArray, observable, runInAction } from "mobx";
+import i18next from "i18next";
+import {
+  action,
+  computed,
+  isObservableArray,
+  observable,
+  runInAction
+} from "mobx";
 import isDefined from "../Core/isDefined";
 import loadXML from "../Core/loadXML";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
@@ -15,6 +22,7 @@ import createStratumInstance from "./createStratumInstance";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import LoadableStratum from "./LoadableStratum";
 import Mappable from "./Mappable";
+import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
@@ -31,6 +39,13 @@ class WpsLoadableStratum extends LoadableStratum(
     super();
   }
 
+  duplicateLoadableStratum(newModel: BaseModel): this {
+    return new WpsLoadableStratum(
+      newModel as WebProcessingServiceCatalogItem
+    ) as this;
+  }
+
+  @action
   static async load(item: WebProcessingServiceCatalogItem) {
     if (!isDefined(item.wpsResponse) && isDefined(item.wpsResponseUrl)) {
       const url = proxyCatalogItemUrl(item, item.wpsResponseUrl, "1d");
@@ -171,9 +186,10 @@ export default class WebProcessingServiceCatalogItem
   extends CatalogMemberMixin(CreateModel(WebProcessingServiceCatalogItemTraits))
   implements Mappable {
   static readonly type = "wps-result";
-  readonly typeName = "Web Processing Service Result";
+  get typeName() {
+    return i18next.t("models.webProcessingService.wpsResult");
+  }
 
-  readonly showsInfo = true;
   readonly isMappable = true;
 
   @observable
@@ -186,7 +202,8 @@ export default class WebProcessingServiceCatalogItem
     });
 
     const reports: StratumFromTraits<ShortReportTraits>[] = [];
-    const promises = this.outputs.map(async (output, i) => {
+    const outputs = runInAction(() => this.outputs);
+    const promises = outputs.map(async (output, i) => {
       if (!output.Data.ComplexData) {
         return;
       }
@@ -239,7 +256,8 @@ export default class WebProcessingServiceCatalogItem
   async loadMapItems() {
     await this.loadMetadata();
     if (isDefined(this.geoJsonItem)) {
-      await this.geoJsonItem.loadMapItems();
+      const geoJsonItem = this.geoJsonItem;
+      await runInAction(() => geoJsonItem.loadMapItems());
     }
   }
 
@@ -343,10 +361,10 @@ function formatOutputValue(title: string, value: string | undefined) {
  */
 async function loadCatalogItem(item: any) {
   if (CatalogMemberMixin.isMixedInto(item)) {
-    await item.loadMetadata();
+    await runInAction(() => item.loadMetadata());
   }
   if (Mappable.is(item)) {
-    await item.loadMapItems();
+    await runInAction(() => item.loadMapItems());
   }
   return item;
 }

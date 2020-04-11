@@ -1,6 +1,7 @@
 import { action, computed, observable } from "mobx";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
+import CommonStrata from "../Models/CommonStrata";
 import { BaseModel } from "./Model";
 
 interface WorkbenchItem extends BaseModel {
@@ -31,6 +32,14 @@ export default class Workbench {
   }
 
   /**
+   * Gets the unique IDs of the items in the workbench.
+   */
+  @computed
+  get shouldExpandAll(): boolean {
+    return this._items.every(item => !(<any>item).isOpenInWorkbench);
+  }
+
+  /**
    * Removes a model or its dereferenced equivalent from the workbench.
    * @param item The model.
    */
@@ -48,6 +57,26 @@ export default class Workbench {
   @action
   removeAll() {
     this._items.clear();
+  }
+
+  /**
+   * Collapses all models from the workbench.
+   */
+  @action
+  collapseAll() {
+    this._items.map(item => {
+      item.setTrait(CommonStrata.user, "isOpenInWorkbench", false);
+    });
+  }
+
+  /**
+   * Expands all models from the workbench.
+   */
+  @action
+  expandAll() {
+    this._items.map(item => {
+      item.setTrait(CommonStrata.user, "isOpenInWorkbench", true);
+    });
   }
 
   /**
@@ -126,6 +155,20 @@ export default class Workbench {
       model =>
         model === item || dereferenceModel(model) === dereferenceModel(item)
     );
+  }
+
+  /**
+   * Used to re-order the workbench list.
+   * @param item The model to be moved.
+   * @param newIndex The new index to shift the model to.
+   */
+  @action
+  moveItemToIndex(item: BaseModel, newIndex: number) {
+    if (!this.contains(item)) {
+      return;
+    }
+    this._items.splice(this.indexOf(item), 1);
+    this._items.splice(newIndex, 0, item);
   }
 }
 

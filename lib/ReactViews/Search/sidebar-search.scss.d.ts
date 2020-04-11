@@ -4,13 +4,23 @@ interface CssExports {
   'btn--done': string;
   'btnDone': string;
   'btnList': string;
+  'charcoalGrey': string;
+  'colorPrimary': string;
+  'colorSplitter': string;
+  'dark': string;
+  'darkWithOverlay': string;
+  'greyLightest': string;
   'heading': string;
   'items': string;
+  'mapButtonColor': string;
+  'modalHighlight': string;
   'provider-result': string;
   'providerResult': string;
   'results': string;
   'results-content': string;
   'resultsContent': string;
+  'textDarker': string;
+  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

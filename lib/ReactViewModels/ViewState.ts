@@ -1,6 +1,7 @@
 import clone from "terriajs-cesium/Source/Core/clone";
 import defined from "terriajs-cesium/Source/Core/defined";
 import DisclaimerHandler from "./DisclaimerHandler";
+import addedByUser from "../Core/addedByUser";
 import getAncestors from "../Models/getAncestors";
 import MouseCoords from "./MouseCoords";
 import SearchState from "./SearchState";
@@ -14,8 +15,6 @@ import {
 } from "mobx";
 import { BaseModel } from "../Models/Model";
 import PickedFeatures from "../Map/PickedFeatures";
-import isDefined from "../Core/isDefined";
-import { language } from "../Language/defaults";
 
 export const DATA_CATALOG_NAME = "data-catalog";
 export const USER_DATA_NAME = "my-data";
@@ -24,7 +23,7 @@ interface ViewStateOptions {
   terria: Terria;
   catalogSearchProvider: any;
   locationSearchProviders: any[];
-  languageOverrides?: any;
+  errorHandlingProvider?: any;
 }
 
 /**
@@ -61,7 +60,13 @@ export default class ViewState {
   // Flesh out later
   @observable showHelpMenu: boolean = false;
   @observable showSatelliteGuidance: boolean = false;
-  @observable showWelcomeMessage: boolean = true;
+  @observable showWelcomeMessage: boolean = false;
+  @observable selectedHelpMenuItem: string = "";
+  @observable helpPanelExpanded: boolean = false;
+
+  @observable workbenchWithOpenControls: string | undefined = undefined;
+
+  errorProvider: any | null = null;
 
   // default value is null, because user has not made decision to show or
   // not show story
@@ -109,8 +114,6 @@ export default class ViewState {
    */
   @observable shareModelIsVisible: boolean = false;
 
-  readonly language: any;
-
   private _unsubscribeErrorListener: any;
   private _pickedFeaturesSubscription: IReactionDisposer;
   private _isMapFullScreenSubscription: IReactionDisposer;
@@ -122,18 +125,15 @@ export default class ViewState {
 
   constructor(options: ViewStateOptions) {
     const terria = options.terria;
-
-    this.language = {
-      ...language,
-      ...options.languageOverrides
-    };
-
     this.searchState = new SearchState({
       terria: terria,
       catalogSearchProvider: options.catalogSearchProvider,
       locationSearchProviders: options.locationSearchProviders
     });
 
+    this.errorProvider = options.errorHandlingProvider
+      ? options.errorHandlingProvider
+      : null;
     this.terria = terria;
 
     // Show errors to the user as notifications.
@@ -241,9 +241,15 @@ export default class ViewState {
   }
 
   @action
+  setTopElement(key: string) {
+    this.topElement = key;
+  }
+
+  @action
   openAddData() {
     this.explorerPanelIsVisible = true;
     this.activeTabCategory = DATA_CATALOG_NAME;
+    this.switchMobileView(this.mobileViewOptions.data);
   }
 
   @action
@@ -255,6 +261,8 @@ export default class ViewState {
   @action
   closeCatalog() {
     this.explorerPanelIsVisible = false;
+    this.switchMobileView(null);
+    this.clearPreviewedItem();
   }
 
   @action
@@ -265,16 +273,14 @@ export default class ViewState {
   }
 
   @action
+  clearPreviewedItem() {
+    this.userDataPreviewedItem = undefined;
+    this.previewedItem = undefined;
+  }
+
+  @action
   viewCatalogMember(catalogMember: BaseModel) {
-    // TODO call addedByUser() when it is fixed
-    let addedByUser = false;
-    if (isDefined(this.terria.catalog.userAddedDataGroupIfItExists)) {
-      const userAddedDataGroup = this.terria.catalog.userAddedDataGroup;
-      addedByUser = Boolean(
-        userAddedDataGroup.memberModels.find(m => m === catalogMember)
-      );
-    }
-    if (addedByUser) {
+    if (addedByUser(catalogMember)) {
       this.userDataPreviewedItem = catalogMember;
       this.openUserData();
     } else {
@@ -282,10 +288,7 @@ export default class ViewState {
       this.openAddData();
       if (this.terria.configParameters.tabbedCatalog) {
         // Go to specific tab
-        this.activeTabIdInCategory = getAncestors(
-          catalogMember.terria,
-          catalogMember
-        )[0].uniqueId;
+        this.activeTabIdInCategory = getAncestors(catalogMember)[0].uniqueId;
       }
     }
   }
@@ -293,6 +296,35 @@ export default class ViewState {
   @action
   switchMobileView(viewName: string | null) {
     this.mobileView = viewName;
+  }
+
+  @action
+  showHelpPanel() {
+    this.showHelpMenu = true;
+    this.helpPanelExpanded = false;
+    this.selectedHelpMenuItem = "";
+    this.setTopElement("HelpPanel");
+  }
+
+  @action
+  selectHelpMenuItem(key: string) {
+    this.selectedHelpMenuItem = key;
+    this.helpPanelExpanded = true;
+  }
+
+  @action
+  hideHelpPanel() {
+    this.showHelpMenu = false;
+  }
+
+  /**
+   * Removes references of a model from viewState
+   */
+  @action
+  removeModelReferences(model: BaseModel) {
+    if (this.previewedItem === model) this.previewedItem = undefined;
+    if (this.userDataPreviewedItem === model)
+      this.userDataPreviewedItem = undefined;
   }
 
   getNextNotification() {
@@ -325,5 +357,11 @@ export default class ViewState {
 
   viewingUserData() {
     return this.activeTabCategory === USER_DATA_NAME;
+  }
+
+  afterTerriaStarted() {
+    if (this.terria.configParameters.openAddData) {
+      this.openAddData();
+    }
   }
 }

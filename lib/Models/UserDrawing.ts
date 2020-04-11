@@ -15,6 +15,7 @@ import ModelTraits from "../Traits/ModelTraits";
 import CreateModel from "./CreateModel";
 import MapInteractionMode from "./MapInteractionMode";
 import Terria from "./Terria";
+import i18next from "i18next";
 
 interface Options {
   terria: Terria;
@@ -53,7 +54,10 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
     /**
      * Text that appears at the top of the dialog when drawmode is active.
      */
-    this.messageHeader = defaultValue(options.messageHeader, "Draw on Map");
+    this.messageHeader = defaultValue(
+      options.messageHeader,
+      i18next.t("models.userDrawing.messageHeader")
+    );
 
     /**
      * If true, user can click on first point to close the line, turning it into a polygon.
@@ -154,9 +158,10 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
       }
     }
 
-    // Cancel any feature picking already in progress.
+    // Cancel any feature picking already in progress and disable feature info requests.
     runInAction(() => {
       this.terria.pickedFeatures = undefined;
+      this.terria.allowFeatureInfoRequests = false;
     });
     const that = this;
 
@@ -349,10 +354,12 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
   /**
    * User has finished or cancelled; restore initial state.
    */
-  private cleanUp() {
+  cleanUp() {
     this.terria.overlays.remove(this);
     this.pointEntities = new CustomDataSource("Points");
     this.otherEntities = new CustomDataSource("Lines and polygons");
+
+    this.terria.allowFeatureInfoRequests = true;
 
     this.inDrawMode = false;
     this.closeLoop = false;
@@ -394,11 +401,13 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
       message += innerMessage + "</br>";
     }
 
-    var word = "a";
     if (this.pointEntities.entities.values.length > 0) {
-      word = "another";
+      message +=
+        "<i>" + i18next.t("models.userDrawing.clickToAddAnotherPoint") + "</i>";
+    } else {
+      message +=
+        "<i>" + i18next.t("models.userDrawing.clickToAddFirstPoint") + "</i>";
     }
-    message += "<i>Click to add " + word + " point</i>";
     // htmlToReactParser will fail if html doesn't have only one root element.
     return "<div>" + message + "</div>";
   }
@@ -407,7 +416,9 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
    * Figure out the text for the dialog button.
    */
   getButtonText() {
-    return this.pointEntities.entities.values.length >= 2 ? "Done" : "Cancel";
+    return this.pointEntities.entities.values.length >= 2
+      ? i18next.t("models.userDrawing.btnDone")
+      : i18next.t("models.userDrawing.btnCancel");
   }
 
   /**

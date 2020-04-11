@@ -2,21 +2,28 @@ import { action, computed, observable, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
+import combine from "terriajs-cesium/Source/Core/combine";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
-import ChartData, { ChartPoint } from "../Charts/ChartData";
+import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
+import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import { ChartPoint } from "../Charts/ChartData";
+import getChartColorForId from "../Charts/getChartColorForId";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
+import isDefined from "../Core/isDefined";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import { JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
+import RegionProvider from "../Map/RegionProvider";
 import JSRegionProviderList from "../Map/RegionProviderList";
-import { ChartAxis, ChartItem } from "../Models/Chartable";
+import { calculateDomain, ChartAxis, ChartItem } from "../Models/Chartable";
+import CommonStrata from "../Models/CommonStrata";
 import { ImageryParts } from "../Models/Mappable";
 import Model from "../Models/Model";
 import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
@@ -26,8 +33,6 @@ import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
 import LegendTraits from "../Traits/LegendTraits";
 import TableTraits from "../Traits/TableTraits";
-import getChartColorForId from "../Charts/getChartColorForId";
-import CommonStrata from "../Models/CommonStrata";
 
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
 //   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
@@ -138,6 +143,12 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       );
     }
 
+    @computed
+    get disableOpacityControl() {
+      // disable opacity control for point tables
+      return this.activeTableStyle.isPoints();
+    }
+
     /**
      * Gets the items to show on the map.
      */
@@ -204,8 +215,11 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
             item: this,
             name: yColumn.name,
             categoryName: this.name,
+            key: `key${this.uniqueId}-${this.name}-${yColumn.name}`,
+            type: "line",
             xAxis,
             points,
+            domain: calculateDomain(points),
             units: yColumn.traits.units,
             isSelectedInWorkbench: line.isSelectedInWorkbench,
             showInChartPanel: this.show && line.isSelectedInWorkbench,
@@ -351,9 +365,11 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
 
         const colorMap = (this.activeTableStyle || this.defaultTableStyle)
           .colorMap;
+        const pointSizeMap = (this.activeTableStyle || this.defaultTableStyle)
+          .pointSizeMap;
 
         const outlineColor = Color.fromCssColorString(
-          "white" //this.terria.baseMapContrastColor;
+          "black" //this.terria.baseMapContrastColor;
         );
 
         const dataSource = new CustomDataSource(this.name || "Table");
@@ -372,9 +388,10 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
               position: Cartesian3.fromDegrees(longitude, latitude, 0.0),
               point: new PointGraphics({
                 color: colorMap.mapValueToColor(value),
-                pixelSize: 15,
+                pixelSize: pointSizeMap.mapValueToPointSize(value),
                 outlineWidth: 1,
-                outlineColor: outlineColor
+                outlineColor: outlineColor,
+                heightReference: HeightReference.CLAMP_TO_GROUND
               })
             })
           );
@@ -412,7 +429,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
 
         return {
           alpha: this.opacity,
-          imageryProvider: <any>new MapboxVectorTileImageryProvider({
+          imageryProvider: new MapboxVectorTileImageryProvider({
             url: regionType.server,
             layerName: regionType.layerName,
             styleFunc: function(feature: any) {
@@ -457,17 +474,61 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
             minimumZoom: regionType.serverMinZoom,
             maximumNativeZoom: regionType.serverMaxNativeZoom,
             maximumZoom: regionType.serverMaxZoom,
-            uniqueIdProp: regionType.uniqueIdProp
-            // featureInfoFunc: addDescriptionAndProperties(
-            //   regionMapping,
-            //   regionIndices,
-            //   regionImageryProvider
-            // )
+            uniqueIdProp: regionType.uniqueIdProp,
+            featureInfoFunc: (feature: any) => {
+              if (
+                isDefined(style.regionColumn) &&
+                isDefined(style.regionColumn.regionType) &&
+                isDefined(style.regionColumn.regionType.regionProp)
+              ) {
+                const regionColumn = style.regionColumn;
+                const regionType = regionColumn.regionType;
+
+                if (!isDefined(regionType)) return undefined;
+
+                const regionId: any = regionColumn.valuesAsRegions.regionIdToRowNumbersMap.get(
+                  feature.properties[regionType.regionProp]
+                );
+                let d = null;
+
+                // TODO - find a better way to handle time-varying feature info's
+                if (Array.isArray(regionId)) {
+                  d = this.getRowValues(regionId[0]);
+                } else {
+                  d = this.getRowValues(regionId);
+                }
+                return this.featureInfoFromFeature(
+                  regionType,
+                  d,
+                  feature.properties[regionType.uniqueIdProp]
+                );
+              }
+
+              return undefined;
+            }
           }),
           show: this.show
         };
       }
     );
+
+    private featureInfoFromFeature(
+      region: RegionProvider,
+      data: JsonObject,
+      regionId: any
+    ) {
+      const featureInfo = new ImageryLayerFeatureInfo();
+      if (isDefined(region.nameProp)) {
+        featureInfo.name = data[region.nameProp] as string;
+      }
+
+      data.id = regionId;
+      featureInfo.data = data;
+
+      featureInfo.configureDescriptionFromProperties(data);
+      featureInfo.configureNameFromProperties(data);
+      return featureInfo;
+    }
 
     private getRowValues(index: number): JsonObject {
       const result: JsonObject = {};

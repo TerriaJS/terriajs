@@ -54,6 +54,14 @@ export default class TableColorStyleTraits extends ModelTraits {
   nullColor?: string;
 
   @primitiveTrait({
+    name: "Region Color",
+    description:
+      "The color to use when the styling the region, specified as a CSS color string.",
+    type: "string"
+  })
+  regionColor: string = "#02528d";
+
+  @primitiveTrait({
     name: "Null Label",
     description: "The label to use in the legend for null values.",
     type: "string"

@@ -4,12 +4,14 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import FeatureInfoCatalogItem from "./FeatureInfoCatalogItem";
+import { featureBelongsToCatalogItem } from "../../Map/PickedFeatures.ts";
 import DragWrapper from "../DragWrapper";
 import Loader from "../Loader";
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import { withTranslation } from "react-i18next";
 import Icon from "../Icon";
 import {
   LOCATION_MARKER_DATA_SOURCE_NAME,
@@ -19,20 +21,21 @@ import {
 } from "../../Models/LocationMarkerUtils";
 import prettifyCoordinates from "../../Map/prettifyCoordinates";
 import raiseErrorToUser from "../../Models/raiseErrorToUser";
-
+import i18next from "i18next";
 import Styles from "./feature-info-panel.scss";
 import classNames from "classnames";
 import { observer, disposeOnUnmount } from "mobx-react";
 import { action, reaction, runInAction } from "mobx";
 
-const FeatureInfoPanel = observer(
+export const FeatureInfoPanel = observer(
   createReactClass({
     displayName: "FeatureInfoPanel",
 
     propTypes: {
       terria: PropTypes.object.isRequired,
       viewState: PropTypes.object.isRequired,
-      printView: PropTypes.bool
+      printView: PropTypes.bool,
+      t: PropTypes.func.isRequired
     },
 
     ref: null,
@@ -47,6 +50,7 @@ const FeatureInfoPanel = observer(
     },
 
     componentDidMount() {
+      const { t } = this.props;
       const createFakeSelectedFeatureDuringPicking = true;
       const terria = this.props.terria;
       disposeOnUnmount(
@@ -59,7 +63,7 @@ const FeatureInfoPanel = observer(
             } else {
               if (createFakeSelectedFeatureDuringPicking) {
                 const fakeFeature = new Entity({
-                  id: "Pick Location"
+                  id: t("featureInfo.pickLocation")
                 });
                 fakeFeature.position = pickedFeatures.pickPosition;
                 terria.selectedFeature = fakeFeature;
@@ -157,24 +161,26 @@ const FeatureInfoPanel = observer(
     },
 
     getMessageForNoResults() {
+      const { t } = this.props;
       if (this.props.terria.workbench.items.length > 0) {
         // feature info shows up becuase data has been added for the first time
         if (this.props.viewState.firstTimeAddingData) {
           runInAction(() => {
             this.props.viewState.firstTimeAddingData = false;
           });
-          return "Click on the map to learn more about a location";
+          return t("featureInfo.clickMap");
         }
         // if clicking on somewhere that has no data
-        return "No data is available here - try another location.";
+        return t("featureInfo.noDataAvailable");
       } else {
-        return "Click 'Add Data' to add data to the map.";
+        return t("featureInfo.clickToAddData");
       }
     },
 
     addManualMarker(longitude, latitude) {
+      const { t } = this.props;
       addMarker(this.props.terria, {
-        name: "User Selection",
+        name: t("featureInfo.userSelection"),
         location: {
           latitude: latitude,
           longitude: longitude
@@ -213,11 +219,14 @@ const FeatureInfoPanel = observer(
     },
 
     renderLocationItem(cartesianPosition) {
-      const catographic = Ellipsoid.WGS84.cartesianToCartographic(
+      const cartographic = Ellipsoid.WGS84.cartesianToCartographic(
         cartesianPosition
       );
-      const latitude = CesiumMath.toDegrees(catographic.latitude);
-      const longitude = CesiumMath.toDegrees(catographic.longitude);
+      if (cartographic === undefined) {
+        return <></>;
+      }
+      const latitude = CesiumMath.toDegrees(cartographic.latitude);
+      const longitude = CesiumMath.toDegrees(cartographic.longitude);
       const pretty = prettifyCoordinates(longitude, latitude);
       // this.locationUpdated(longitude, latitude);
 
@@ -250,6 +259,7 @@ const FeatureInfoPanel = observer(
     },
 
     render() {
+      const { t } = this.props;
       const terria = this.props.terria;
       const viewState = this.props.viewState;
 
@@ -270,7 +280,7 @@ const FeatureInfoPanel = observer(
       const filterableCatalogItems = catalogItems
         .filter(
           catalogItem =>
-            defined(catalogItem) && catalogItem.canFilterIntervalsByFeature
+            defined(catalogItem) && catalogItem.canFilterTimeByFeature
         )
         .map(catalogItem => {
           const features = featureCatalogItemPairs.filter(
@@ -330,7 +340,7 @@ const FeatureInfoPanel = observer(
                 <div
                   className={classNames("drag-handle", Styles.btnPanelHeading)}
                 >
-                  <span>Feature Information</span>
+                  <span>{t("featureInfo.panelHeading")}</span>
                   <button
                     type="button"
                     onClick={this.toggleCollapsed}
@@ -347,7 +357,7 @@ const FeatureInfoPanel = observer(
                   type="button"
                   onClick={this.close}
                   className={Styles.btnCloseFeature}
-                  title="Close data panel"
+                  title={t("featureInfo.btnCloseFeature")}
                 >
                   <Icon glyph={Icon.GLYPHS.close} />
                 </button>
@@ -396,7 +406,9 @@ const FeatureInfoPanel = observer(
                   )}
                   className={Styles.satelliteSuggestionBtn}
                 >
-                  Show {pair.catalogItem.name} at this location
+                  {t("featureInfo.satelliteSuggestionBtn", {
+                    catalogItemName: pair.catalogItem.name
+                  })}
                 </button>
               ))}
             </ul>
@@ -437,71 +449,24 @@ function getFeaturesGroupedByCatalogItems(terria) {
   return { catalogItems, featureCatalogItemPairs };
 }
 
-/**
- * Figures out what the catalog item for a feature is.
- *
- * @param workbench {@link Workbench} to look in the items for.
- * @param feature Feature to match
- * @returns {CatalogItem}
- */
 function determineCatalogItem(workbench, feature) {
-  if (!defined(workbench)) {
-    // So that specs do not need to define a workbench.
-    return undefined;
+  // If the feature is a marker return a fake item
+  if (feature.entityCollection && feature.entityCollection.owner) {
+    const dataSource = feature.entityCollection.owner;
+    if (dataSource.name === LOCATION_MARKER_DATA_SOURCE_NAME) {
+      return {
+        name: i18next.t("featureInfo.locationMarker")
+      };
+    }
   }
 
-  if (feature._catalogItem) {
+  if (feature._catalogItem && workbench.items.includes(feature._catalogItem)) {
     return feature._catalogItem;
   }
 
-  // "Data sources" (eg. czml, geojson, kml, csv) have an entity collection defined on the entity
-  // (and therefore the feature).
-  // Then match up the data source on the feature with a now-viewing item's data source.
-  //
-  // Gpx, Ogr, WebFeatureServiceCatalogItem, ArcGisFeatureServerCatalogItem, WebProcessingServiceCatalogItem
-  // all have a this._geoJsonItem, which we also need to check.
-  let result;
-  let i;
-  let item;
-  if (
-    defined(feature.entityCollection) &&
-    defined(feature.entityCollection.owner)
-  ) {
-    const dataSource = feature.entityCollection.owner;
-
-    if (dataSource.name === LOCATION_MARKER_DATA_SOURCE_NAME) {
-      return {
-        name: "Location Marker"
-      };
-    }
-
-    for (i = workbench.items.length - 1; i >= 0; i--) {
-      item = workbench.items[i];
-      if (item.mapItems.some(mapItem => mapItem === dataSource)) {
-        result = item;
-        break;
-      }
-    }
-    return result;
-  }
-
-  // If there is no data source, but there is an imagery layer (eg. ArcGIS),
-  // we can match up the imagery layer on the feature with a now-viewing item.
-  if (defined(feature.imageryLayer)) {
-    const imageryLayer = feature.imageryLayer;
-    for (i = workbench.items.length - 1; i >= 0; i--) {
-      const item = workbench.items[i];
-      if (
-        item.mapItems.some(
-          mapItem => mapItem.imageryProvider === imageryLayer.imageryProvider
-        )
-      ) {
-        result = workbench.items[i];
-        break;
-      }
-    }
-    return result;
-  }
+  return workbench.items.find(item =>
+    featureBelongsToCatalogItem(feature, item)
+  );
 }
 
 /**
@@ -511,4 +476,4 @@ function featureHasInfo(feature) {
   return defined(feature.properties) || defined(feature.description);
 }
 
-module.exports = FeatureInfoPanel;
+export default withTranslation()(FeatureInfoPanel);

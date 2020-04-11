@@ -67,9 +67,30 @@ export class LegendItemTraits extends ModelTraits {
     type: "boolean"
   })
   addSpacingAbove?: boolean;
+
+  @primitiveTrait({
+    name: "Legend Image Height",
+    description: "The height of the legend image.",
+    type: "number"
+  })
+  imageHeight: number = 20;
+
+  @primitiveTrait({
+    name: "Legend Image Width",
+    description: "The width of the legend image.",
+    type: "number"
+  })
+  imageWidth: number = 20;
 }
 
 export default class LegendTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "string",
+    name: "Title",
+    description: "A title to be displayed above the legend."
+  })
+  title?: string;
+
   @primitiveTrait({
     type: "string",
     name: "URL",

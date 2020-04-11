@@ -2,6 +2,8 @@
 // Please do not change this file!
 interface CssExports {
   'button': string;
+  'button-for-modal-dropdown': string;
+  'buttonForModalDropdown': string;
   'caret': string;
   'content': string;
   'heading': string;
@@ -18,7 +20,9 @@ interface CssExports {
   'panel': string;
   'section': string;
   'show-dropdown-as-modal': string;
+  'show-dropdown-in-center': string;
   'showDropdownAsModal': string;
+  'showDropdownInCenter': string;
   'sub-heading': string;
   'subHeading': string;
 }

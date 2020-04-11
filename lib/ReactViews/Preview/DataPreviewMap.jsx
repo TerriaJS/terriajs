@@ -5,6 +5,7 @@ import { autorun, computed, observable, runInAction, action } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
+import { withTranslation } from "react-i18next";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import CommonStrata from "../../Models/CommonStrata";
@@ -14,6 +15,8 @@ import Mappable, { ImageryParts } from "../../Models/Mappable";
 // eslint-disable-next-line no-unused-vars
 import Terria from "../../Models/Terria";
 import TerriaViewer from "../../ViewModels/TerriaViewer";
+import { POSITRON_BASE_MAP_ID } from "../../ViewModels/createGlobalBaseMapOptions";
+import ViewerMode from "../../Models/ViewerMode";
 import Styles from "./data-preview-map.scss";
 
 /**
@@ -78,17 +81,18 @@ class DataPreviewMap extends React.Component {
    * @type {string}
    */
   @observable
-  previewBadgeText = "";
+  previewBadgeState = "";
 
   static propTypes = {
     terria: PropTypes.object.isRequired,
     previewed: PropTypes.object,
-    showMap: PropTypes.bool
+    showMap: PropTypes.bool,
+    t: PropTypes.func.isRequired
   };
 
   @action
-  setPreviewBadgeText(text) {
-    this.previewBadgeText = text;
+  setPreviewBadgeState(text) {
+    this.previewBadgeState = text;
   }
 
   constructor(props) {
@@ -97,12 +101,12 @@ class DataPreviewMap extends React.Component {
     /**
      * @param {HTMLElement | null} container
      */
-    this.containerRef = container => {
+    this.containerRef = action(container => {
       this.previewViewer.attached && this.previewViewer.detach();
       if (container !== null) {
         this.initPreview(container);
       }
-    };
+    });
     this.previewViewer = new TerriaViewer(
       this.props.terria,
       computed(() => {
@@ -114,7 +118,7 @@ class DataPreviewMap extends React.Component {
       })
     );
     runInAction(() => {
-      this.previewViewer.viewerMode = "leaflet";
+      this.previewViewer.viewerMode = ViewerMode.Leaflet;
       this.previewViewer.disableInteraction = true;
       this.previewViewer.homeCamera = this.props.terria.mainViewer.homeCamera;
     });
@@ -133,19 +137,26 @@ class DataPreviewMap extends React.Component {
       "Initialising preview map. This might be expensive, so this should only show up when the preview map disappears and reappears"
     );
     this.isZoomedToExtent = false;
-    // Change this to choose positron if it's available
-    if (this.previewViewer.baseMap === undefined) {
+
+    // Choose positron if it's available
+    const positronBaseMap = this.props.terria.baseMaps.find(
+      baseMap => baseMap.mappable.uniqueId === POSITRON_BASE_MAP_ID
+    );
+    if (positronBaseMap !== undefined) {
+      this.previewViewer.baseMap = positronBaseMap.mappable;
+    } else {
       this.previewViewer.baseMap =
         this.props.terria.baseMaps.length > 0
           ? this.props.terria.baseMaps[0].mappable
           : undefined;
     }
+
     this.previewViewer.attach(container);
-    this._disposePreviewBadgeTextUpdater = autorun(() => {
+    this._disposePreviewBadgeStateUpdater = autorun(() => {
       if (this.props.showMap && this.props.previewed !== undefined) {
-        this.setPreviewBadgeText("PREVIEW LOADING...");
+        this.setPreviewBadgeState("loading");
         this.props.previewed.loadMapItems().then(() => {
-          this.setPreviewBadgeText("DATA PREVIEW");
+          this.setPreviewBadgeState("dataPreview");
         });
       }
     });
@@ -175,8 +186,8 @@ class DataPreviewMap extends React.Component {
   }
 
   componentWillUnmount() {
-    this._disposePreviewBadgeTextUpdater &&
-      this._disposePreviewBadgeTextUpdater();
+    this._disposePreviewBadgeStateUpdater &&
+      this._disposePreviewBadgeStateUpdater();
     this._disposeZoomToExtentSubscription &&
       this._disposeZoomToExtentSubscription();
     this.previewViewer.detach();
@@ -214,7 +225,7 @@ class DataPreviewMap extends React.Component {
       const minimumFraction = 0.05;
       const homeView = this.previewViewer.homeCamera;
       const minimumWidth =
-        CesiumMath.toDegrees(homeView.width) * minimumFraction;
+        CesiumMath.toDegrees(homeView.rectangle.width) * minimumFraction;
       if (east - west < minimumWidth) {
         const center = (east + west) * 0.5;
         west = center - minimumWidth * 0.5;
@@ -222,7 +233,7 @@ class DataPreviewMap extends React.Component {
       }
 
       const minimumHeight =
-        CesiumMath.toDegrees(homeView.height) * minimumFraction;
+        CesiumMath.toDegrees(homeView.rectangle.height) * minimumFraction;
       if (north - south < minimumHeight) {
         const center = (north + south) * 0.5;
         south = center - minimumHeight * 0.5;
@@ -267,6 +278,13 @@ class DataPreviewMap extends React.Component {
   }
 
   render() {
+    const { t } = this.props;
+    const previewBadgeLabels = {
+      loading: t("preview.loading"),
+      noPreviewAvailable: t("preview.noPreviewAvailable"),
+      dataPreview: t("preview.dataPreview"),
+      dataPreviewError: t("preview.dataPreviewError")
+    };
     return (
       <div className={Styles.map} onClick={this.clickMap}>
         <Choose>
@@ -283,13 +301,15 @@ class DataPreviewMap extends React.Component {
           </Otherwise>
         </Choose>
 
-        <label className={Styles.badge}>{this.previewBadgeText}</label>
+        <label className={Styles.badge}>
+          {previewBadgeLabels[this.previewBadgeState]}
+        </label>
       </div>
     );
   }
 }
 
-export default DataPreviewMap;
+export default withTranslation()(DataPreviewMap);
 
 // Unported code
 

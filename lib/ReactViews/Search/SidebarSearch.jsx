@@ -2,10 +2,13 @@ import createReactClass from "create-react-class";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
+import { withTranslation } from "react-i18next";
 import { addMarker } from "../../Models/LocationMarkerUtils";
 import BadgeBar from "../BadgeBar";
 import LocationSearchResults from "./LocationSearchResults";
+import SideBarDatasetSearchResults from "./SideBarDatasetSearchResults";
 import Styles from "./sidebar-search.scss";
+import { runInAction } from "mobx";
 
 // Handle any of the three kinds of search based on the props
 const SidebarSearch = observer(
@@ -15,11 +18,14 @@ const SidebarSearch = observer(
     propTypes: {
       viewState: PropTypes.object.isRequired,
       isWaitingForSearchToStart: PropTypes.bool,
-      terria: PropTypes.object.isRequired
+      terria: PropTypes.object.isRequired,
+      t: PropTypes.func.isRequired
     },
 
     backToNowViewing() {
-      this.props.viewState.searchState.showLocationSearchResults = false;
+      runInAction(() => {
+        this.props.viewState.searchState.showLocationSearchResults = false;
+      });
     },
 
     onLocationClick(result) {
@@ -28,16 +34,17 @@ const SidebarSearch = observer(
     },
 
     render() {
+      const { t } = this.props;
       return (
         <div className={Styles.search}>
           <div className={Styles.results}>
-            <BadgeBar label="Search Results">
+            <BadgeBar label={t("search.resultsLabel")}>
               <button
                 type="button"
                 onClick={this.backToNowViewing}
                 className={Styles.btnDone}
               >
-                Done
+                {t("search.done")}
               </button>
             </BadgeBar>
             <div className={Styles.resultsContent}>
@@ -47,10 +54,12 @@ const SidebarSearch = observer(
                 }
               >
                 {/* TODO: Put this back once we add a MobX DataCatalogSearch Provider */}
-                {/* <SideBarDatasetSearchResults
-                  terria={this.props.terria}
-                  viewState={this.props.viewState}
-                /> */}
+                {this.props.viewState.searchState.catalogSearchProvider && (
+                  <SideBarDatasetSearchResults
+                    terria={this.props.terria}
+                    viewState={this.props.viewState}
+                  />
+                )}
               </If>
               <For
                 each="search"
@@ -75,4 +84,4 @@ const SidebarSearch = observer(
   })
 );
 
-module.exports = SidebarSearch;
+module.exports = withTranslation()(SidebarSearch);

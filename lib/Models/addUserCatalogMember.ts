@@ -10,6 +10,9 @@ import CommonStrata from "./CommonStrata";
 import Mappable from "./Mappable";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import GroupMixin from "../ModelMixins/GroupMixin";
+import i18next from "i18next";
+import ReferenceMixin from "../ModelMixins/ReferenceMixin";
+import getDereferencedIfExists from "../Core/getDereferencedIfExists";
 
 interface AddUserCatalogMemberOptions {
   enable?: boolean;
@@ -44,31 +47,33 @@ export default function addUserCatalogMember(
       );
       terria.catalog.userAddedDataGroup.add(CommonStrata.user, newCatalogItem);
 
+      const dereferenced = getDereferencedIfExists(newCatalogItem);
+
       if (
         isDefined(options.open) &&
-        hasTraits(newCatalogItem, GroupTraits, "isOpen")
+        hasTraits(dereferenced, GroupTraits, "isOpen")
       ) {
-        newCatalogItem.setTrait(CommonStrata.user, "isOpen", true);
+        dereferenced.setTrait(CommonStrata.user, "isOpen", true);
       }
 
       if (
         defaultValue(options.enable, true) &&
-        !GroupMixin.isMixedInto(newCatalogItem)
+        !GroupMixin.isMixedInto(dereferenced)
       ) {
         // add to workbench if it doesn't hold an item by the same id
         if (
           !terria.workbench.items.find(
-            item => item.uniqueId === newCatalogItem.uniqueId
+            item => item.uniqueId === dereferenced.uniqueId
           )
         ) {
-          terria.workbench.add(newCatalogItem);
+          terria.workbench.add(dereferenced);
         }
       }
 
-      if (defaultValue(options.zoomTo, true) && Mappable.is(newCatalogItem)) {
-        newCatalogItem
+      if (defaultValue(options.zoomTo, true) && Mappable.is(dereferenced)) {
+        dereferenced
           .loadMapItems()
-          .then(() => terria.currentViewer.zoomTo(newCatalogItem, 1));
+          .then(() => terria.currentViewer.zoomTo(dereferenced, 1));
       }
 
       return newCatalogItem;
@@ -76,9 +81,8 @@ export default function addUserCatalogMember(
     .catch((e: any) => {
       if (!(e instanceof TerriaError)) {
         e = new TerriaError({
-          title: "Data could not be added",
-          message:
-            "The specified data could not be added because it is invalid or does not have the expected format."
+          title: i18next.t("models.userData.addingDataErrorTitle"),
+          message: i18next.t("models.userData.addingDataErrorTitle")
         });
       }
 

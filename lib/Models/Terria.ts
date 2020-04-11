@@ -1,15 +1,18 @@
 import { action, computed, observable, runInAction, toJS } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Clock from "terriajs-cesium/Source/Core/Clock";
+import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
+import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import URI from "urijs";
 import AsyncLoader from "../Core/AsyncLoader";
 import Class from "../Core/Class";
 import ConsoleAnalytics from "../Core/ConsoleAnalytics";
+import CorsProxy from "../Core/CorsProxy";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import GoogleAnalytics from "../Core/GoogleAnalytics";
 import instanceOf from "../Core/instanceOf";
@@ -17,40 +20,48 @@ import isDefined from "../Core/isDefined";
 import JsonValue, {
   isJsonObject,
   isJsonString,
-  JsonObject
+  JsonObject,
+  isJsonBoolean,
+  isJsonNumber
 } from "../Core/Json";
 import loadJson5 from "../Core/loadJson5";
 import ServerConfig from "../Core/ServerConfig";
 import TerriaError from "../Core/TerriaError";
-import PickedFeatures from "../Map/PickedFeatures";
+import { getUriWithoutPath } from "../Core/uriHelpers";
+import PickedFeatures, {
+  featureBelongsToCatalogItem
+} from "../Map/PickedFeatures";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
+import TimeVarying from "../ModelMixins/TimeVarying";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
+import CatalogGroup from "./CatalogGroupNew";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import Catalog from "./CatalogNew";
 import CommonStrata from "./CommonStrata";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import InitSource, { isInitOptions, isInitUrl } from "./InitSource";
+import MagdaReference, { MagdaReferenceHeaders } from "./MagdaReference";
+import MapInteractionMode from "./MapInteractionMode";
 import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
-import NoViewer from "./NoViewer";
 import ShareDataService from "./ShareDataService";
 import TimelineStack from "./TimelineStack";
 import updateModelFromJson from "./updateModelFromJson";
 import upsertModelFromJson from "./upsertModelFromJson";
-import Workbench from "./Workbench";
-import CorsProxy from "../Core/CorsProxy";
-import MapInteractionMode from "./MapInteractionMode";
-import TimeVarying from "../ModelMixins/TimeVarying";
-import MagdaReference from "./MagdaReference";
-import CatalogGroup from "./CatalogGroupNew";
 import ViewerMode from "./ViewerMode";
+import Workbench from "./Workbench";
+import openGroup from "./openGroup";
+import getDereferencedIfExists from "../Core/getDereferencedIfExists";
+import SplitItemReference from "./SplitItemReference";
 
 interface ConfigParameters {
   [key: string]: ConfigParameters[keyof ConfigParameters];
+  appName?: string;
+  supportEmail?: string;
   defaultMaximumShownFeatureInfos?: number;
   regionMappingDefinitionsUrl: string;
   conversionServiceBaseUrl?: string;
@@ -71,11 +82,19 @@ interface ConfigParameters {
   bingMapsKey?: string;
   brandBarElements?: string[];
   disableMyLocation?: boolean;
+  experimentalFeatures?: boolean;
+  magdaReferenceHeaders?: MagdaReferenceHeaders;
+  locationSearchBoundingBox?: number[];
+  googleAnalyticsKey?: string;
+  rollbarAccessToken?: string;
 }
 
 interface StartOptions {
   configUrl: string;
-  applicationUrl?: string;
+  configUrlHeaders?: {
+    [key: string]: string;
+  };
+  applicationUrl?: Location;
   shareDataService?: ShareDataService;
 }
 
@@ -108,6 +127,8 @@ export default class Terria {
   readonly overlays = new Workbench();
   readonly catalog = new Catalog(this);
   readonly timelineClock = new Clock({ shouldAnimate: false });
+
+  @observable
   readonly mainViewer = new TerriaViewer(
     this,
     computed(() =>
@@ -123,8 +144,8 @@ export default class Terria {
     )
   );
 
-  appName?: string;
-  supportEmail?: string;
+  appName: string = "TerriaJS App";
+  supportEmail: string = "support@terria.io";
 
   /**
    * Gets or sets the {@link this.corsProxy} used to determine if a URL needs to be proxied and to proxy it if necessary.
@@ -146,6 +167,8 @@ export default class Terria {
 
   @observable
   readonly configParameters: ConfigParameters = {
+    appName: "TerriaJS App",
+    supportEmail: "info@terria.io",
     defaultMaximumShownFeatureInfos: 100,
     regionMappingDefinitionsUrl: "build/TerriaJS/data/regionMapping.json",
     conversionServiceBaseUrl: "convert/",
@@ -164,7 +187,13 @@ export default class Terria {
     hideTerriaLogo: false,
     useCesiumIonBingImagery: undefined,
     bingMapsKey: undefined,
-    brandBarElements: undefined
+    brandBarElements: undefined,
+    disableMyLocation: undefined,
+    experimentalFeatures: undefined,
+    magdaReferenceHeaders: undefined,
+    locationSearchBoundingBox: undefined,
+    googleAnalyticsKey: undefined,
+    rollbarAccessToken: undefined
   };
 
   @observable
@@ -175,6 +204,9 @@ export default class Terria {
 
   @observable
   selectedFeature: Feature | undefined;
+
+  @observable
+  allowFeatureInfoRequests: boolean = true;
 
   /**
    * Gets or sets the stack of map interactions modes.  The mode at the top of the stack
@@ -201,6 +233,10 @@ export default class Terria {
   @observable showSplitter = false;
   @observable splitPosition = 0.5;
   @observable splitPositionVertical = 0.5;
+  @observable terrainSplitDirection: ImagerySplitDirection =
+    ImagerySplitDirection.NONE;
+
+  @observable depthTestAgainstTerrainEnabled = false;
 
   @observable stories: any[] = [];
 
@@ -223,6 +259,12 @@ export default class Terria {
    * @type {boolean}
    */
   @observable useNativeResolution = false;
+
+  /**
+   * Whether we think all references in the catalog have been loaded
+   * @type {boolean}
+   */
+  @observable catalogReferencesLoaded: boolean = false;
 
   constructor(options: TerriaOptions = {}) {
     if (options.baseUrl) {
@@ -268,6 +310,11 @@ export default class Terria {
     }
   }
 
+  @computed
+  get modelIds() {
+    return Array.from(this.models.keys());
+  }
+
   getModelById<T extends BaseModel>(type: Class<T>, id: string): T | undefined {
     const model = this.models.get(id);
     if (instanceOf(type, model)) {
@@ -278,6 +325,7 @@ export default class Terria {
     return undefined;
   }
 
+  @action
   addModel(model: BaseModel) {
     if (model.uniqueId === undefined) {
       throw new DeveloperError("A model without a `uniqueId` cannot be added.");
@@ -290,12 +338,34 @@ export default class Terria {
     this.models.set(model.uniqueId, model);
   }
 
+  /**
+   * Remove references to a model from Terria.
+   */
+  @action
+  removeModelReferences(model: BaseModel) {
+    const pickedFeatures = this.pickedFeatures;
+    if (pickedFeatures) {
+      // Remove picked features that belong to the catalog item
+      pickedFeatures.features.forEach((feature, i) => {
+        if (featureBelongsToCatalogItem(<Feature>feature, model)) {
+          pickedFeatures?.features.splice(i, 1);
+        }
+      });
+    }
+    this.workbench.remove(model);
+    if (model.uniqueId) {
+      this.models.delete(model.uniqueId);
+    }
+  }
+
   start(options: StartOptions) {
     this.shareDataService = options.shareDataService;
 
     const baseUri = new URI(options.configUrl).filename("");
 
-    return loadJson5(options.configUrl)
+    const launchUrlForAnalytics =
+      options.applicationUrl?.href || getUriWithoutPath(baseUri);
+    return loadJson5(options.configUrl, options.configUrlHeaders)
       .then((config: any) => {
         runInAction(() => {
           if (config.parameters) {
@@ -306,7 +376,7 @@ export default class Terria {
             return this.loadMagdaConfig(options.configUrl, config);
           }
 
-          const initializationUrls: string[] = config.initializationUrls;
+          const initializationUrls: string[] = config.initializationUrls || [];
           const initSources = initializationUrls.map(url =>
             generateInitializationUrl(
               baseUri,
@@ -319,22 +389,67 @@ export default class Terria {
         });
       })
       .then(() => {
+        this.analytics?.start(this.configParameters);
+        this.analytics?.logEvent("launch", "url", launchUrlForAnalytics);
         this.serverConfig = new ServerConfig();
-        return this.serverConfig
-          .init(this.configParameters.serverConfigUrl)
-          .then((serverConfig: any) => {
-            this.initCorsProxy(this.configParameters, serverConfig);
-            return serverConfig;
-          });
+        return this.serverConfig.init(this.configParameters.serverConfigUrl);
       })
-      .then(serverConfig => {
-        if (this.shareDataService && serverConfig) {
-          this.shareDataService.init(serverConfig);
+      .then((serverConfig: any) => {
+        return this.initCorsProxy(this.configParameters, serverConfig);
+      })
+      .then(() => {
+        if (this.shareDataService && this.serverConfig.config) {
+          this.shareDataService.init(this.serverConfig.config);
         }
+        this.loadPersistedMapSettings();
         if (options.applicationUrl) {
-          return this.updateApplicationUrl(options.applicationUrl);
+          return this.updateApplicationUrl(options.applicationUrl.href);
         }
       });
+  }
+
+  loadPersistedMapSettings(): void {
+    const persistViewerMode = defaultValue(
+      this.configParameters.persistViewerMode,
+      true
+    );
+    const mainViewer = this.mainViewer;
+    const viewerMode = this.getLocalProperty("viewermode");
+    if (persistViewerMode && defined(viewerMode)) {
+      if (viewerMode === "3d" || viewerMode === "3dsmooth") {
+        mainViewer.viewerMode = ViewerMode.Cesium;
+        mainViewer.viewerOptions.useTerrain = viewerMode === "3d";
+      } else if (viewerMode === "2d") {
+        mainViewer.viewerMode = ViewerMode.Leaflet;
+      } else {
+        console.error(
+          `Trying to select ViewerMode ${viewerMode} that doesn't exist`
+        );
+      }
+    }
+  }
+
+  @action
+  updateBaseMaps(baseMaps: BaseMapViewModel[]): void {
+    this.baseMaps.push(...baseMaps);
+    if (!this.mainViewer.baseMap) {
+      this.loadPersistedBaseMap();
+    }
+  }
+
+  @action
+  loadPersistedBaseMap(): void {
+    const persistedBaseMapId = this.getLocalProperty("basemap");
+    const baseMapSearch = this.baseMaps.find(
+      baseMap => baseMap.mappable.uniqueId === persistedBaseMapId
+    );
+    if (baseMapSearch) {
+      this.mainViewer.baseMap = baseMapSearch.mappable;
+    } else {
+      console.error(
+        `Couldn't find a basemap for unique id ${persistedBaseMapId}`
+      );
+    }
   }
 
   get isLoadingInitSources(): boolean {
@@ -350,6 +465,11 @@ export default class Terria {
 
   dispose() {
     this._initSourceLoader.dispose();
+  }
+
+  updateFromStartData(startData: any) {
+    interpretStartData(this, startData);
+    return this.loadInitSources();
   }
 
   updateApplicationUrl(newUrl: string) {
@@ -377,6 +497,12 @@ export default class Terria {
         this.configParameters[key] = parameters[key];
       }
     });
+
+    this.appName = defaultValue(this.configParameters.appName, this.appName);
+    this.supportEmail = defaultValue(
+      this.configParameters.supportEmail,
+      this.supportEmail
+    );
   }
 
   protected forceLoadInitSources(): Promise<void> {
@@ -388,16 +514,14 @@ export default class Terria {
     });
 
     return Promise.all(initSourcePromises).then(initSources => {
-      runInAction(() => {
-        initSources.forEach(initSource => {
-          if (initSource === undefined) {
-            return;
-          }
+      return runInAction(() => {
+        const promises = filterOutUndefined(initSources).map(initSource =>
           this.applyInitData({
             initData: initSource
-          });
-        });
-      });
+          })
+        );
+        return Promise.all(promises);
+      }).then(() => undefined);
     });
   }
 
@@ -435,7 +559,9 @@ export default class Terria {
           allModelStratumData,
           replaceStratum
         ).then(container => {
-          const dereferenced = ReferenceMixin.is(container) ? container.target : container;
+          const dereferenced = ReferenceMixin.is(container)
+            ? container.target
+            : container;
           if (GroupMixin.isMixedInto(dereferenced)) {
             return dereferenced.loadMembers();
           }
@@ -446,50 +572,74 @@ export default class Terria {
       promise = Promise.resolve();
     }
 
-    return promise.then(() => {
-      const loadedModel = upsertModelFromJson(
-        CatalogMemberFactory,
-        this,
-        "/",
-        undefined,
-        stratumId,
-        {
-          ...cleanStratumData,
-          id: modelId
-        },
-        replaceStratum
+    // If this model is a `SplitItemReference` we must load the source item first
+    const splitSourceId = cleanStratumData.splitSourceItemId;
+    if (
+      cleanStratumData.type === SplitItemReference.type &&
+      typeof splitSourceId === "string"
+    ) {
+      promise = promise.then(() =>
+        this.loadModelStratum(
+          splitSourceId,
+          stratumId,
+          allModelStratumData,
+          replaceStratum
+        ).then(() => undefined)
       );
+    }
 
-      // If we're replacing the stratum and the existing model is already
-      // dereferenced, we need to replace the dereferenced stratum, too,
-      // even if there's no trace of it it in the load data.
-      let dereferenced = thisModelStratumData.dereferenced;
-      if (
-        replaceStratum &&
-        dereferenced === undefined &&
-        ReferenceMixin.is(loadedModel) &&
-        loadedModel.target !== undefined
-      ) {
-        dereferenced = {};
-      }
+    return promise
+      .then(() => {
+        const loadedModel = upsertModelFromJson(
+          CatalogMemberFactory,
+          this,
+          "/",
+          undefined,
+          stratumId,
+          {
+            ...cleanStratumData,
+            id: modelId
+          },
+          replaceStratum
+        );
 
-      if (dereferenced) {
+        if (Array.isArray(containerIds)) {
+          containerIds.forEach(containerId => {
+            if (
+              typeof containerId === "string" &&
+              loadedModel.knownContainerUniqueIds.indexOf(containerId) < 0
+            ) {
+              loadedModel.knownContainerUniqueIds.push(containerId);
+            }
+          });
+        }
+
+        // If we're replacing the stratum and the existing model is already
+        // dereferenced, we need to replace the dereferenced stratum, too,
+        // even if there's no trace of it in the load data.
+        let dereferenced = thisModelStratumData.dereferenced;
+        if (
+          replaceStratum &&
+          dereferenced === undefined &&
+          ReferenceMixin.is(loadedModel) &&
+          loadedModel.target !== undefined
+        ) {
+          dereferenced = {};
+        }
+
         if (ReferenceMixin.is(loadedModel)) {
-          return loadedModel
-            .loadReference()
-            .then(() => {
-              return upsertModelFromJson(
-                CatalogMemberFactory,
-                this,
-                "/",
+          return loadedModel.loadReference().then(() => {
+            if (isDefined(loadedModel.target)) {
+              updateModelFromJson(
                 loadedModel.target,
                 stratumId,
-                dereferenced,
+                dereferenced || {},
                 replaceStratum
               );
-            })
-            .then(() => loadedModel);
-        } else {
+            }
+            return loadedModel;
+          });
+        } else if (dereferenced) {
           throw new TerriaError({
             sender: this,
             title: "Model cannot be dereferenced",
@@ -497,10 +647,19 @@ export default class Terria {
               "The stratum has a `dereferenced` property, but the model cannot be dereferenced."
           });
         }
-      }
 
-      return loadedModel;
-    });
+        return loadedModel;
+      })
+      .then(loadedModel => {
+        const dereferenced = getDereferencedIfExists(loadedModel);
+        if (GroupMixin.isMixedInto(dereferenced)) {
+          return openGroup(dereferenced, dereferenced.isOpen).then(
+            () => loadedModel
+          );
+        } else {
+          return loadedModel;
+        }
+      });
   }
 
   @action
@@ -520,9 +679,7 @@ export default class Terria {
     }
 
     if (initData.catalog !== undefined) {
-      updateModelFromJson(this.catalog.group, stratumId, {
-        members: initData.catalog
-      });
+      this.catalog.group.addMembersFromJson(stratumId, initData.catalog);
     }
 
     if (Array.isArray(initData.stories)) {
@@ -554,13 +711,17 @@ export default class Terria {
       this.currentViewer.zoomTo(initialCamera, 2.0);
     }
 
-    if (isJsonString(initData.previewedItemId)) {
-      this.previewedItemId = initData.previewedItemId;
+    if (isJsonBoolean(initData.showSplitter)) {
+      this.showSplitter = initData.showSplitter;
+    }
+
+    if (isJsonNumber(initData.splitPosition)) {
+      this.splitPosition = initData.splitPosition;
     }
 
     // Copy but don't yet load the workbench.
     const workbench = Array.isArray(initData.workbench)
-      ? initData.workbench.slice().reverse()
+      ? initData.workbench.slice()
       : [];
 
     const timeline = Array.isArray(initData.timeline)
@@ -579,7 +740,11 @@ export default class Terria {
             stratumId,
             models,
             replaceStratum
-          );
+          ).catch(e => {
+            // TODO: deal with shared models that can't be loaded because, e.g. because they are private
+            console.log(e);
+            return Promise.resolve();
+          });
         })
       ).then(() => undefined);
     } else {
@@ -588,6 +753,10 @@ export default class Terria {
 
     return promise.then(() => {
       return runInAction(() => {
+        if (isJsonString(initData.previewedItemId)) {
+          this.previewedItemId = initData.previewedItemId;
+        }
+
         const promises: Promise<void>[] = [];
 
         // Set the new contents of the workbench.
@@ -607,6 +776,8 @@ export default class Terria {
 
         this.workbench.items = newItems;
 
+        // TODO: the timelineStack should be populated from the `timeline` property,
+        // not from the workbench.
         this.timelineStack.items = this.workbench.items
           .filter(item => {
             return item.uniqueId && timeline.indexOf(item.uniqueId) >= 0;
@@ -673,7 +844,9 @@ export default class Terria {
       reference.setTrait(CommonStrata.definition, "magdaRecord", config);
       await reference.loadReference().then(() => {
         if (reference.target instanceof CatalogGroup) {
-          this.catalog.group = reference.target;
+          runInAction(() => {
+            this.catalog.group = <CatalogGroup>reference.target;
+          });
         }
       });
     }

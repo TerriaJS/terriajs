@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { computed, toJS } from "mobx";
 import { createTransformer } from "mobx-utils";
 import filterOutUndefined from "../Core/filterOutUndefined";
@@ -11,7 +12,6 @@ import loadJson from "../Core/loadJson";
 import TerriaError from "../Core/TerriaError";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import MagdaDistributionFormatTraits from "../Traits/MagdaDistributionFormatTraits";
 import MagdaReferenceTraits from "../Traits/MagdaReferenceTraits";
 import CatalogMemberFactory from "./CatalogMemberFactory";
@@ -26,12 +26,20 @@ import Terria from "./Terria";
 import updateModelFromJson from "./updateModelFromJson";
 import ModelTraits from "../Traits/ModelTraits";
 import StratumOrder from "./StratumOrder";
+import AccessControlMixin from "../ModelMixins/AccessControlMixin";
+import GroupMixin from "../ModelMixins/GroupMixin";
 
 const magdaRecordStratum = "magda-record";
 StratumOrder.addDefaultStratum(magdaRecordStratum);
 
-export default class MagdaReference extends UrlMixin(
-  ReferenceMixin(CreateModel(MagdaReferenceTraits))
+// If you want to supply headers sent for magda requests, supply them in
+// config parameters
+export interface MagdaReferenceHeaders {
+  [key: string]: string;
+}
+
+export default class MagdaReference extends AccessControlMixin(
+  UrlMixin(ReferenceMixin(CreateModel(MagdaReferenceTraits)))
 ) {
   static readonly defaultDistributionFormats: StratumFromTraits<
     MagdaDistributionFormatTraits
@@ -88,8 +96,16 @@ export default class MagdaReference extends UrlMixin(
     }),
     createStratumInstance(MagdaDistributionFormatTraits, {
       id: "EsriFeatureServer",
-      formatRegex: "^esri rest$",
-      urlRegex: "FeatureServer",
+      formatRegex: "ESRI MAPSERVER", // TO DO - tidy up this magda format reference
+      urlRegex: "FeatureServer$|FeatureServer/$",
+      definition: {
+        type: "esri-featureServer-group"
+      }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+      id: "EsriFeatureServer",
+      formatRegex: "ESRI MAPSERVER", // TO DO - tidy up this magda format reference
+      urlRegex: "FeatureServer/d",
       definition: {
         type: "esri-featureServer"
       }
@@ -134,6 +150,12 @@ export default class MagdaReference extends UrlMixin(
     );
   }
 
+  @computed
+  get accessType(): string {
+    const access = getAccessTypeFromMagdaRecord(this.magdaRecord);
+    return access || super.accessType;
+  }
+
   protected forceLoadReference(
     previousTarget: BaseModel | undefined
   ): Promise<BaseModel | undefined> {
@@ -169,7 +191,8 @@ export default class MagdaReference extends UrlMixin(
         "dataset-distributions",
         "dataset-format"
       ],
-      dereference: true
+      dereference: true,
+      magdaReferenceHeaders: this.terria.configParameters.magdaReferenceHeaders
     }).then(record => {
       return MagdaReference.createMemberFromRecord(
         this.terria,
@@ -322,8 +345,8 @@ export default class MagdaReference extends UrlMixin(
     if (ModelClass === undefined) {
       throw new TerriaError({
         sender: this,
-        title: "Unknown type",
-        message: `Could not create unknown model type ${type}.`
+        title: i18next.t("models.catalog.unsupportedTypeTitle"),
+        message: i18next.t("models.catalog.unsupportedTypeMessage", { type })
       });
     }
 
@@ -364,6 +387,7 @@ export default class MagdaReference extends UrlMixin(
         if (!model) {
           // Can't create an item or group yet, so create a reference.
           const ref = new MagdaReference(member.id, terria, undefined);
+
           if (magdaUri) {
             ref.setTrait(CommonStrata.definition, "url", magdaUri.toString());
           }
@@ -404,10 +428,18 @@ export default class MagdaReference extends UrlMixin(
           if (terria.getModelById(BaseModel, member.id) === undefined) {
             terria.addModel(ref);
           }
+
+          if (AccessControlMixin.isMixedInto(ref)) {
+            ref.setAccessType(getAccessTypeFromMagdaRecord(member));
+          }
+
           return ref.uniqueId;
         } else {
           if (terria.getModelById(BaseModel, member.id) === undefined) {
             terria.addModel(model);
+          }
+          if (AccessControlMixin.isMixedInto(model)) {
+            model.setAccessType(getAccessTypeFromMagdaRecord(member));
           }
           return model.uniqueId;
         }
@@ -417,6 +449,10 @@ export default class MagdaReference extends UrlMixin(
         group.setTrait(magdaRecordStratum, "name", record.name);
       }
       group.setTrait(magdaRecordStratum, "members", filterOutUndefined(ids));
+      if (GroupMixin.isMixedInto(group)) {
+        console.log(`Refreshing ids for ${group.uniqueId}`);
+        group.refreshKnownContainerUniqueIds(group.uniqueId);
+      }
     }
 
     if (isJsonObject(aspects.terria)) {
@@ -449,7 +485,6 @@ export default class MagdaReference extends UrlMixin(
     if (!isJsonString(terriaAspect.type)) {
       return undefined;
     }
-
     let result: BaseModel;
 
     if (previousTarget && previousTarget.type === terriaAspect.type) {
@@ -522,10 +557,10 @@ export default class MagdaReference extends UrlMixin(
       if (newMember === undefined) {
         throw new TerriaError({
           sender: this,
-          title: "Unknown type",
-          message: `Could not create unknown model type ${
-            format.definition.type
-          }.`
+          title: i18next.t("models.catalog.unsupportedTypeTitle"),
+          message: i18next.t("models.catalog.unsupportedTypeMessage", {
+            type: format.definition.type
+          })
         });
       }
       result = newMember;
@@ -678,13 +713,14 @@ export default class MagdaReference extends UrlMixin(
       return Promise.reject(
         new TerriaError({
           sender: this,
-          title: "Cannot load Magda record",
-          message: "The Magda URL or the record ID is unknown."
+          title: i18next.t("models.magda.idsNotSpecifiedTitle"),
+          message: i18next.t("models.magda.idsNotSpecifiedMessage")
         })
       );
     }
     const proxiedUrl = proxyCatalogItemUrl(this, recordUri.toString(), "0d");
-    return loadJson(proxiedUrl);
+
+    return loadJson(proxiedUrl, options.magdaReferenceHeaders);
   }
 
   protected buildMagdaRecordUri(options: RecordOptions): uri.URI | undefined {
@@ -716,6 +752,7 @@ export interface RecordOptions {
   aspects?: string[];
   optionalAspects?: string[];
   dereference?: boolean;
+  magdaReferenceHeaders?: MagdaReferenceHeaders;
 }
 
 interface PreparedDistributionFormat {
@@ -735,3 +772,11 @@ const prepareDistributionFormat = createTransformer(
     };
   }
 );
+
+function getAccessTypeFromMagdaRecord(magdaRecord: any): string {
+  const record = toJS(magdaRecord);
+  const accessControl: any =
+    record && record.aspects && record.aspects["esri-access-control"];
+  const access = accessControl && accessControl.access;
+  return access;
+}

@@ -24,12 +24,18 @@ import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
 import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
 import Axis from "terriajs-cesium/Source/Scene/Axis";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
+import URI from "urijs";
 import loadArrayBuffer from "../Core/loadArrayBuffer";
 import TerriaError from "../Core/TerriaError";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import GtfsCatalogItemTraits from "../Traits/GtfsCatalogItemTraits";
+import { RectangleTraits } from "../Traits/MappableTraits";
+import createStratumInstance from "./createStratumInstance";
+import LoadableStratum from "./LoadableStratum";
+import StratumOrder from "./StratumOrder";
+
 import CreateModel from "./CreateModel";
 import {
   FeedEntity,
@@ -41,6 +47,37 @@ import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import raiseErrorOnRejectedPromise from "./raiseErrorOnRejectedPromise";
 import Terria from "./Terria";
 import VehicleData from "./VehicleData";
+import { BaseModel } from "./Model";
+
+interface RectangleExtent {
+  east: number;
+  south: number;
+  west: number;
+  north: number;
+}
+
+class GtfsStratum extends LoadableStratum(GtfsCatalogItemTraits) {
+  static stratumName = "gtfs";
+
+  constructor(private readonly _item: GtfsCatalogItem) {
+    super();
+  }
+
+  duplicateLoadableStratum(newModel: BaseModel): this {
+    return new GtfsStratum(newModel as GtfsCatalogItem) as this;
+  }
+
+  static async load(item: GtfsCatalogItem) {
+    return new GtfsStratum(item);
+  }
+
+  @computed
+  get rectangle() {
+    return createStratumInstance(RectangleTraits, this._item._bbox);
+  }
+}
+
+StratumOrder.addLoadStratum(GtfsStratum.stratumName);
 
 /**
  * For displaying realtime transport data. See [here](https://developers.google.com/transit/gtfs-realtime/reference/)
@@ -51,6 +88,13 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 ) {
   disposer: IReactionDisposer | undefined;
 
+  readonly canZoomTo = true;
+  _bbox: RectangleExtent = {
+    west: Infinity,
+    south: Infinity,
+    east: -Infinity,
+    north: -Infinity
+  };
   /**
    * Always use the getter to read this. This is a cache for a computed property.
    *
@@ -87,15 +131,29 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
   protected convertManyFeedEntitiesToBillboardData: ITransformer<
     FeedEntity[],
     VehicleData[]
-  > = createTransformer((feedEntity: FeedEntity[]) => {
-    return this.gtfsFeedEntities
-      .map((entity: FeedEntity) =>
-        this.convertFeedEntityToBillboardData(entity)
-      )
-      .filter(
-        (item: VehicleData) =>
-          item.position !== null && item.position !== undefined
-      );
+  > = createTransformer((feedEntities: FeedEntity[]) => {
+    // Sometimes the feed can contain many records for the same vehicle
+    // so we'll only display the newest record.
+    // Although technically the timestamp property is optional, if none is
+    // present we'll show the record.
+    const vehicleMap = new Map();
+    for (var i = 0; i < feedEntities.length; ++i) {
+      const entity: FeedEntity = feedEntities[i];
+      const item: VehicleData = this.convertFeedEntityToBillboardData(entity);
+
+      if (item && item.position && item.featureInfo) {
+        const vehicleInfo = item.featureInfo.get("entity").vehicle.vehicle;
+        if (vehicleMap.has(vehicleInfo.id) && vehicleInfo.timestamp) {
+          let existingRecord = vehicleMap.get(vehicleInfo.id);
+          if (existingRecord.timestamp < vehicleInfo.timestamp) {
+            vehicleMap.set(vehicleInfo.id, item);
+          }
+        } else {
+          vehicleMap.set(vehicleInfo.id, item);
+        }
+      }
+    }
+    return [...vehicleMap.values()];
   });
 
   @computed
@@ -106,7 +164,6 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     const vehicleData: VehicleData[] = this.convertManyFeedEntitiesToBillboardData(
       this.gtfsFeedEntities
     );
-
     for (let data of vehicleData) {
       if (data.sourceId === undefined) {
         continue;
@@ -201,6 +258,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   @computed
   get mapItems(): DataSource[] {
+    this._dataSource.show = this.show;
     return [this.dataSource];
   }
 
@@ -248,6 +306,12 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
       this.disposer = reaction(
         () => this._pollingTimer,
         () => {
+          this._bbox = {
+            west: Infinity,
+            south: Infinity,
+            east: -Infinity,
+            north: -Infinity
+          };
           console.log("ping");
           raiseErrorOnRejectedPromise(this.forceLoadMapItems());
           // console.log(getObserverTree(this, "mapItems"));
@@ -266,6 +330,11 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
   }
 
   protected forceLoadMapItems(): Promise<void> {
+    GtfsStratum.load(this).then(stratum => {
+      runInAction(() => {
+        this.strata.set(GtfsStratum.stratumName, stratum);
+      });
+    });
     const promise: Promise<void> = this.retrieveData()
       .then((data: FeedMessage) => {
         runInAction(() => {
@@ -279,9 +348,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
         throw new TerriaError({
           title: `Could not load ${this.nameInCatalog}.`,
           sender: this,
-          message: `There was an error loading the data for ${
-            this.nameInCatalog
-          }.`
+          message: `There was an error loading the data for ${this.nameInCatalog}.`
         });
       });
 
@@ -315,7 +382,6 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     if (entity.id == undefined) {
       return {};
     }
-
     let position = undefined;
     let orientation = undefined;
     let featureInfo: Map<string, any> = new Map();
@@ -331,6 +397,11 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
       entity.vehicle.position.bearing !== null &&
       entity.vehicle.position.bearing !== undefined
     ) {
+      updateBbox(
+        entity.vehicle.position.latitude,
+        entity.vehicle.position.longitude,
+        this._bbox
+      );
       position = Cartesian3.fromDegrees(
         entity.vehicle.position.longitude,
         entity.vehicle.position.latitude
@@ -349,26 +420,56 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     for (let field of GtfsCatalogItem.FEATURE_INFO_TEMPLATE_FIELDS) {
       featureInfo.set(field, prettyPrintGtfsEntityField(field, entity));
     }
+    featureInfo.set("entity", entity);
     let billboard;
     let point;
 
     if (this.image !== undefined && this.image !== null) {
       billboard = new BillboardGraphics({
-        image: this.terria.baseUrl + this.image,
+        image: new URI(this.image).absoluteTo(this.terria.baseUrl).toString(),
         heightReference: HeightReference.RELATIVE_TO_GROUND,
-        // near and far distances are arbitrary, these ones look nice
-        scaleByDistance: new NearFarScalar(0.1, 1.0, 100000, 0.1),
+        scaleByDistance:
+          this.scaleImageByDistance.nearValue ===
+          this.scaleImageByDistance.farValue
+            ? undefined
+            : new NearFarScalar(
+                this.scaleImageByDistance.near,
+                this.scaleImageByDistance.nearValue,
+                this.scaleImageByDistance.far,
+                this.scaleImageByDistance.farValue
+              ),
+        scale:
+          this.scaleImageByDistance.nearValue ===
+            this.scaleImageByDistance.farValue &&
+          this.scaleImageByDistance.nearValue !== 1.0
+            ? this.scaleImageByDistance.nearValue
+            : undefined,
         color: new Color(1.0, 1.0, 1.0, this.opacity)
       });
     } else {
       point = new PointGraphics({
         color: Color.CYAN,
-        pixelSize: 32,
         outlineWidth: 1,
         outlineColor: Color.WHITE,
-        scaleByDistance: new ConstantProperty(
-          new NearFarScalar(0.1, 1.0, 100000, 0.1)
-        )
+        scaleByDistance:
+          this.scaleImageByDistance.nearValue ===
+          this.scaleImageByDistance.farValue
+            ? undefined
+            : new ConstantProperty(
+                new NearFarScalar(
+                  this.scaleImageByDistance.near,
+                  this.scaleImageByDistance.nearValue,
+                  this.scaleImageByDistance.far,
+                  this.scaleImageByDistance.farValue
+                )
+              ),
+        pixelSize:
+          this.scaleImageByDistance.nearValue ===
+            this.scaleImageByDistance.farValue &&
+          this.scaleImageByDistance.nearValue !== 1.0
+            ? 32 * this.scaleImageByDistance.nearValue
+            : 32,
+        heightReference: HeightReference.RELATIVE_TO_GROUND
       });
     }
 
@@ -381,4 +482,11 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
       point: point
     };
   }
+}
+
+function updateBbox(lat: number, lon: number, rectangle: RectangleExtent) {
+  if (lon < rectangle.west) rectangle.west = lon;
+  if (lat < rectangle.south) rectangle.south = lat;
+  if (lon > rectangle.east) rectangle.east = lon;
+  if (lat > rectangle.north) rectangle.north = lat;
 }

@@ -1,92 +1,169 @@
-import merge from "lodash/merge";
-import { computed } from "mobx";
+import { computed, runInAction } from "mobx";
 import { observer } from "mobx-react";
+import { AxisLeft, AxisBottom } from "@vx/axis";
+import { Group } from "@vx/group";
+import { withParentSize } from "@vx/responsive";
+import { scaleLinear, scaleTime } from "@vx/scale";
 import PropTypes from "prop-types";
 import React from "react";
-import { VictoryAxis, VictoryTheme, VictoryLine } from "victory";
-import Chart from "./Chart";
 import Chartable from "../../../Models/Chartable";
+import LineChart from "./LineChart";
+import Styles from "./chart-preview.scss";
 
+@withParentSize
 @observer
 class FeatureInfoPanelChart extends React.Component {
   static propTypes = {
+    parentWidth: PropTypes.number,
+    parentHeight: PropTypes.number,
     width: PropTypes.number,
-    height: PropTypes.number,
-    terria: PropTypes.object.isRequired,
+    height: PropTypes.number.isRequired,
+    margin: PropTypes.object,
     item: PropTypes.object.isRequired,
-    xAxisLabel: PropTypes.string
+    xAxisLabel: PropTypes.string,
+    baseColor: PropTypes.string
+  };
+
+  static defaultProps = {
+    parentWidth: 0,
+    parentHeight: 0,
+    baseColor: "#efefef",
+    margin: { top: 5, left: 5, right: 5, bottom: 5 }
   };
 
   @computed
-  get theme() {
-    const fontSize = 10;
-    const textColor = "white";
-    return merge({}, VictoryTheme.grayscale, {
-      chart: { padding: { top: 15, bottom: 30, left: 50, right: 0 } },
-      independentAxis: {
-        style: {
-          axis: { stroke: "none" },
-          axisLabel: { fontSize, padding: 15, fill: textColor },
-          tickLabels: { fontSize: 0, padding: 0 },
-          grid: {
-            stroke: "none",
-            fill: "none"
-          }
-        }
-      },
-      dependentAxis: {
-        style: {
-          axis: { stroke: "none" },
-          tickLabels: { fontSize, fill: textColor },
-          grid: {
-            stroke: "none",
-            fill: "none"
-          }
-        }
-      },
-      line: {
-        style: {
-          data: { stroke: "white" }
-        }
-      }
+  get chartItem() {
+    return this.props.item.chartItems.find(
+      chartItem => chartItem.type === "line"
+    );
+  }
+
+  componentDidUpdate() {
+    runInAction(() => {
+      this.props.item.loadChartItems();
     });
   }
 
-  renderXAxis() {
-    return <VictoryAxis label={this.props.xAxisLabel} />;
-  }
-
-  renderYAxis(label, index) {
-    return <VictoryAxis dependentAxis key={index} tickCount={2} />;
-  }
-
-  renderLine(data, index) {
-    return <VictoryLine key={index} data={data.points} />;
+  componentDidMount() {
+    runInAction(() => {
+      this.props.item.loadChartItems();
+    });
   }
 
   render() {
-    if (!Chartable.is(this.props.item)) {
-      return null;
-    }
+    if (!Chartable.is(this.props.item)) return null;
+    if (!this.chartItem) return null;
 
-    this.props.item.loadChartItems();
-    const chartItem = this.props.item.chartItems[0];
-    if (!chartItem) {
-      return null;
-    }
-
+    const { width, height, parentWidth, parentHeight } = this.props;
     return (
-      <Chart
-        width={this.props.width}
-        height={this.props.height}
-        theme={this.theme}
-        chartItems={[chartItem]}
-        xAxis={chartItem.xAxis}
-        renderLegends={() => null}
-        renderYAxis={this.renderYAxis.bind(this)}
-        renderXAxis={this.renderXAxis.bind(this)}
-        renderLine={this.renderLine.bind(this)}
-      />
+      <div className={Styles.previewChart}>
+        <Chart
+          width={width || parentWidth}
+          height={height || parentHeight}
+          margin={this.props.margin}
+          chartItem={this.chartItem}
+          baseColor={this.props.baseColor}
+          xAxisLabel={this.props.xAxisLabel}
+        />
+      </div>
+    );
+  }
+}
+
+@observer
+class Chart extends React.Component {
+  static propTypes = {
+    width: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired,
+    margin: PropTypes.object.isRequired,
+    chartItem: PropTypes.object.isRequired,
+    baseColor: PropTypes.string.isRequired,
+    xAxisLabel: PropTypes.string
+  };
+
+  xAxisHeight = 30;
+  yAxisWidth = 10;
+
+  @computed
+  get plot() {
+    const { width, height, margin } = this.props;
+    return {
+      width: width - margin.left - margin.right,
+      height: height - margin.top - margin.bottom - this.xAxisHeight
+    };
+  }
+
+  @computed
+  get scales() {
+    const chartItem = this.props.chartItem;
+    const xScaleParams = {
+      domain: chartItem.domain.x,
+      range: [this.props.margin.left + this.yAxisWidth, this.plot.width]
+    };
+    const yScaleParams = {
+      domain: chartItem.domain.y,
+      range: [this.plot.height, 0]
+    };
+    return {
+      x:
+        chartItem.xAxis.scale === "linear"
+          ? scaleLinear(xScaleParams)
+          : scaleTime(xScaleParams),
+      y: scaleLinear(yScaleParams)
+    };
+  }
+
+  render() {
+    const { height, margin, chartItem, baseColor } = this.props;
+
+    if (chartItem.points.length === 0) {
+      return <div className={Styles.empty}>No data available</div>;
+    }
+
+    const id = `featureInfoPanelChart-${chartItem.name}`;
+    const textStyle = {
+      fill: baseColor,
+      fontSize: 10,
+      textAnchor: "middle",
+      fontFamily: "Arial"
+    };
+    return (
+      <svg width="100%" height={height}>
+        <Group top={margin.top} left={margin.left}>
+          <AxisBottom
+            top={this.plot.height}
+            scale={this.scales.x}
+            numTicks={2}
+            stroke="none"
+            tickStroke="none"
+            tickLabelProps={() => textStyle}
+            label={this.props.xAxisLabel}
+            labelOffset={3}
+            labelProps={textStyle}
+          />
+          <AxisLeft
+            scale={this.scales.y}
+            numTicks={4}
+            stroke="none"
+            tickStroke="none"
+            label={chartItem.units}
+            labelOffset={24}
+            labelProps={textStyle}
+            tickLabelProps={() => ({
+              ...textStyle,
+              textAnchor: "start",
+              dx: "0.5em",
+              dy: "0.25em"
+            })}
+          />
+          <LineChart
+            id={id}
+            chartItem={chartItem}
+            scales={this.scales}
+            color={baseColor}
+          />
+        </Group>
+      </svg>
     );
   }
 }

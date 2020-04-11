@@ -5,8 +5,10 @@ import ColorMap from "../Map/ColorMap";
 import ConstantColorMap from "../Map/ConstantColorMap";
 import DiscreteColorMap from "../Map/DiscreteColorMap";
 import EnumColorMap from "../Map/EnumColorMap";
+import PointSizeMap from "../Map/PointSizeMap";
+import ConstantPointSizeMap from "../Map/ConstantPointSizeMap";
+import ScalePointSizeMap from "../Map/ScalePointSizeMap";
 import createCombinedModel from "../Models/createCombinedModel";
-import FlattenedFromTraits from "../Models/FlattenedFromTraits";
 import Model from "../Models/Model";
 import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import TableChartStyleTraits from "../Traits/TableChartStyleTraits";
@@ -19,6 +21,7 @@ import TableTraits from "../Traits/TableTraits";
 import ColorPalette from "./ColorPalette";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
+import isDefined from "../Core/isDefined";
 
 const defaultColor = "yellow";
 
@@ -181,7 +184,11 @@ export default class TableStyle {
     let paletteName = this.colorTraits.colorPalette;
     let numberOfBins: number | undefined;
 
-    if (colorColumn.type === TableColumnType.enum) {
+    if (
+      colorColumn.type === TableColumnType.enum ||
+      colorColumn.type === TableColumnType.region ||
+      colorColumn.type === TableColumnType.text
+    ) {
       // Enumerated values, so use a large, high contrast palette.
       paletteName = paletteName || "HighContrast";
       numberOfBins = colorColumn.uniqueValues.values.length;
@@ -321,7 +328,15 @@ export default class TableStyle {
           ? Color.fromCssColorString(colorTraits.nullColor)
           : new Color(0.0, 0.0, 0.0, 0.0)
       });
-    } else if (colorColumn && colorColumn.type === TableColumnType.enum) {
+    } else if (
+      colorColumn &&
+      (colorColumn.type === TableColumnType.enum ||
+        colorColumn.type === TableColumnType.region ||
+        colorColumn.type === TableColumnType.text)
+    ) {
+      const regionColor = Color.fromCssColorString(
+        this.colorTraits.regionColor
+      );
       return new EnumColorMap({
         enumColors: filterOutUndefined(
           this.enumColors.map(e => {
@@ -330,7 +345,10 @@ export default class TableStyle {
             }
             return {
               value: e.value,
-              color: Color.fromCssColorString(e.color)
+              color:
+                colorColumn.type !== TableColumnType.region
+                  ? Color.fromCssColorString(e.color)
+                  : regionColor
             };
           })
         ),
@@ -348,6 +366,30 @@ export default class TableStyle {
           : Color.fromCssColorString(defaultColor);
       return new ConstantColorMap(color);
     }
+  }
+
+  @computed
+  get pointSizeMap(): PointSizeMap {
+    const pointSizeColumn = this.pointSizeColumn;
+    const pointSizeTraits = this.pointSizeTraits;
+
+    if (pointSizeColumn && pointSizeColumn.type === TableColumnType.scalar) {
+      const maximum = pointSizeColumn.valuesAsNumbers.maximum;
+      const minimum = pointSizeColumn.valuesAsNumbers.minimum;
+
+      if (isDefined(maximum) && isDefined(minimum) && maximum !== minimum) {
+        return new ScalePointSizeMap(
+          minimum,
+          maximum,
+          pointSizeTraits.nullSize,
+          pointSizeTraits.sizeFactor,
+          pointSizeTraits.sizeOffset
+        );
+      }
+    }
+
+    // can't scale point size by values in this column, so use same point size for every value
+    return new ConstantPointSizeMap(pointSizeTraits.sizeOffset);
   }
 
   private resolveColumn(name: string | undefined): TableColumn | undefined {

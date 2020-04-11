@@ -4,6 +4,7 @@ import TraitsConstructor from "../Traits/TraitsConstructor";
 import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
 import StratumFromTraits from "./StratumFromTraits";
 import Terria from "./Terria";
+import { ModelId } from "../Traits/ModelReference";
 
 export interface ModelConstructor<T> {
   new (
@@ -38,6 +39,11 @@ export abstract class BaseModel {
 
   dispose() {}
 
+  abstract duplicateModel(
+    newId: ModelId,
+    sourceReference?: BaseModel
+  ): BaseModel;
+
   abstract get strataTopToBottom(): ReadonlyMap<
     string,
     StratumFromTraits<ModelTraits>
@@ -56,7 +62,7 @@ export type ArrayElementTypes<T extends ModelTraits> = {
     ? E extends ModelTraits
       ? E
       : never
-    : never
+    : never;
 };
 
 export interface ModelInterface<T extends ModelTraits> {
@@ -81,6 +87,8 @@ export interface ModelInterface<T extends ModelTraits> {
   readonly strataBottomToTop: ReadonlyMap<string, StratumFromTraits<T>>;
 
   dispose(): void;
+
+  duplicateModel(newId: ModelId, sourceReference?: BaseModel): BaseModel;
 
   setTrait<Key extends keyof StratumFromTraits<T>>(
     stratumId: string,

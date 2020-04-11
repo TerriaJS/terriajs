@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import TerriaError from "../Core/TerriaError";
 import { BaseModel } from "./Model";
 import ModelFactory from "./ModelFactory";
@@ -14,27 +15,35 @@ export default function upsertModelFromJson(
   replaceStratum: boolean = false
 ): BaseModel {
   if (model === undefined) {
-    let id = json.id;
-    if (id === undefined) {
+    let uniqueId = json.id;
+    if (uniqueId === undefined) {
       const localId = json.localId || json.name;
       if (localId === undefined) {
         throw new TerriaError({
-          title: "Missing property",
-          message:
-            "Model objects must have an `id`, `localId`, or `name` property."
+          title: i18next.t("models.catalog.idForMatchingErrorTitle"),
+          message: i18next.t("models.catalog.idForMatchingErrorMessage")
         });
       }
 
-      id = (parentId || "") + "/" + localId;
+      let id = (parentId || "") + "/" + localId;
+      let idIncrement = 1;
+      uniqueId = id;
+
+      while (terria.getModelById(BaseModel, uniqueId) !== undefined) {
+        uniqueId = id + "(" + idIncrement + ")";
+        idIncrement++;
+      }
     }
 
-    model = terria.getModelById(BaseModel, id);
+    model = terria.getModelById(BaseModel, uniqueId);
     if (model === undefined) {
-      model = factory.create(json.type, id, terria);
+      model = factory.create(json.type, uniqueId, terria);
       if (model === undefined) {
         throw new TerriaError({
-          title: "Unknown type",
-          message: `Could not create unknown model type ${json.type}.`
+          title: i18next.t("models.catalog.unsupportedTypeTitle"),
+          message: i18next.t("models.catalog.unsupportedTypeMessage", {
+            type: json.type
+          })
         });
       }
 

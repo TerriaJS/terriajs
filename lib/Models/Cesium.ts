@@ -56,6 +56,9 @@ import Mappable, {
 } from "./Mappable";
 import Terria from "./Terria";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
+import getElement from "terriajs-cesium/Source/Widgets/getElement";
+import LatLonHeight from "../Core/LatLonHeight";
+//import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
 // Intermediary
 var cartesian3Scratch = new Cartesian3();
@@ -140,6 +143,8 @@ export default class Cesium extends GlobeOrMap {
     );
     this.scene = this.cesiumWidget.scene;
 
+    //new Cesium3DTilesInspector(document.getElementsByClassName("cesium-widget").item(0), this.scene);
+
     this.dataSourceDisplay = new DataSourceDisplay({
       scene: this.scene,
       dataSourceCollection: this.dataSources
@@ -182,14 +187,42 @@ export default class Cesium extends GlobeOrMap {
     //         }
     //     });
 
-    // if (defined(this._defaultTerriaCredit)) {
-    //     var containerElement = getElement(container);
-    //     var creditsElement = containerElement && containerElement.getElementsByClassName('cesium-widget-credits')[0];
-    //     var logoContainer = creditsElement && creditsElement.getElementsByClassName('cesium-credit-logoContainer')[0];
-    //     if (logoContainer) {
-    //         creditsElement.insertBefore(this._defaultTerriaCredit.element, logoContainer);
-    //     }
-    // }
+    if (isDefined(this._extraCredits.terria)) {
+      const containerElement = getElement(container);
+      const creditsElement =
+        containerElement &&
+        containerElement.getElementsByClassName("cesium-widget-credits")[0];
+      const logoContainer =
+        creditsElement &&
+        creditsElement.getElementsByClassName("cesium-credit-logoContainer")[0];
+      const expandLink =
+        creditsElement &&
+        creditsElement.getElementsByClassName("cesium-credit-expand-link") &&
+        creditsElement.getElementsByClassName("cesium-credit-expand-link")[0];
+      if (logoContainer) {
+        creditsElement.insertBefore(
+          this._extraCredits.terria?.element,
+          logoContainer
+        );
+      }
+      if (expandLink) {
+        let attributionToAboutPage = document.createElement("div");
+        attributionToAboutPage.innerHTML = `<a href="about.html#data-attribution" target="_blank" rel="noopener noreferrer">Data attribution</a>`;
+        let disclaimerToAboutPage = document.createElement("div");
+        disclaimerToAboutPage.innerHTML = `<a href="about.html#disclaimer" target="_blank" rel="noopener noreferrer">Disclaimer</a>`;
+
+        logoContainer.parentNode.insertBefore(
+          disclaimerToAboutPage.firstChild,
+          logoContainer.nextSibling
+        );
+        logoContainer.parentNode.insertBefore(
+          attributionToAboutPage.firstChild,
+          logoContainer.nextSibling
+        );
+
+        expandLink.innerText = "Basemap";
+      }
+    }
 
     this.scene.globe.depthTestAgainstTerrain = false;
 
@@ -220,7 +253,7 @@ export default class Cesium extends GlobeOrMap {
 
     // Handle left click by picking objects from the map.
     inputHandler.setInputAction(e => {
-      this.pickFromScreenPosition(e.position);
+      this.pickFromScreenPosition(e.position, false);
     }, ScreenSpaceEventType.LEFT_CLICK);
 
     this.pauser = new CesiumRenderLoopPauser(this.cesiumWidget, () => {
@@ -237,6 +270,14 @@ export default class Cesium extends GlobeOrMap {
         ) {
           this._selectionIndicator.position =
             feature.cesiumPrimitive._clampedPosition;
+        } else if (
+          isDefined(feature.cesiumPrimitive) &&
+          isDefined(feature.cesiumPrimitive._clampedModelMatrix)
+        ) {
+          this._selectionIndicator.position = Matrix4.getTranslation(
+            feature.cesiumPrimitive._clampedModelMatrix,
+            this._selectionIndicator.position || new Cartesian3()
+          );
         } else if (isDefined(feature.position)) {
           this._selectionIndicator.position = feature.position.getValue(
             this.terria.timelineClock.currentTime
@@ -254,6 +295,13 @@ export default class Cesium extends GlobeOrMap {
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
     this._disposeTerrainReaction = autorun(() => {
       this.scene.globe.terrainProvider = this._terrainProvider;
+      this.scene.globe.splitDirection = this.terria.showSplitter
+        ? this.terria.terrainSplitDirection
+        : ImagerySplitDirection.NONE;
+      this.scene.globe.depthTestAgainstTerrain = this.terria.depthTestAgainstTerrainEnabled;
+      if (this.scene.skyAtmosphere) {
+        this.scene.skyAtmosphere.splitDirection = this.scene.globe.splitDirection;
+      }
     });
     this._disposeSplitterReaction = this._reactToSplitterChanges();
 
@@ -735,12 +783,18 @@ export default class Cesium extends GlobeOrMap {
   // This function isn't used anywhere yet
   @computed
   get _extraCredits() {
-    const credits: { cesium?: Cesium.Credit; terria?: Cesium.Credit } = {};
+    const credits: { cesium?: Credit; terria?: Credit } = {};
     if (this._terrainWithCredits.credit) {
       credits.cesium = this._terrainWithCredits.credit;
     }
     if (!this.terria.configParameters.hideTerriaLogo) {
-      //credits.terria = ...
+      const logo = require("../../wwwroot/images/terria-watermark.svg");
+      credits.terria = new Credit(
+        '<a href="https://terria.io/" target="_blank" rel="noopener noreferrer"><img src="' +
+          logo +
+          '" title="Built with Terria"/></a>',
+        true
+      );
     }
     return credits;
   }
@@ -755,7 +809,7 @@ export default class Cesium extends GlobeOrMap {
    * specified and set terria.pickedFeatures based on this.
    *
    */
-  pickFromScreenPosition(screenPosition: Cartesian2) {
+  pickFromScreenPosition(screenPosition: Cartesian2, ignoreSplitter: boolean) {
     const pickRay = this.scene.camera.getPickRay(screenPosition);
     const pickPosition = this.scene.globe.pick(pickRay, this.scene);
     const pickPositionCartographic = Ellipsoid.WGS84.cartesianToCartographic(
@@ -765,10 +819,9 @@ export default class Cesium extends GlobeOrMap {
     const vectorFeatures = this.pickVectorFeatures(screenPosition);
 
     const providerCoords = this._attachProviderCoordHooks();
-    const pickRasterPromise = this.scene.imageryLayers.pickImageryLayerFeatures(
-      pickRay,
-      this.scene
-    );
+    var pickRasterPromise = this.terria.allowFeatureInfoRequests
+      ? this.scene.imageryLayers.pickImageryLayerFeatures(pickRay, this.scene)
+      : undefined;
 
     const result = this._buildPickedFeatures(
       providerCoords,
@@ -776,7 +829,8 @@ export default class Cesium extends GlobeOrMap {
       vectorFeatures,
       pickRasterPromise ? [pickRasterPromise] : [],
       undefined,
-      pickPositionCartographic.height
+      pickPositionCartographic.height,
+      ignoreSplitter
     );
 
     const mapInteractionModeStack = this.terria.mapInteractionModeStack;
@@ -792,6 +846,64 @@ export default class Cesium extends GlobeOrMap {
         this.terria.pickedFeatures = result;
       }
     });
+  }
+
+  /**
+   * Return features at a latitude, longitude and (optionally) height for the given imagery layers.
+   * @param latLngHeight The position on the earth to pick
+   * @param tileCoords A map of imagery provider urls to the tile coords used to get features for those imagery
+   * @returns A flat array of all the features for the given tiles that are currently on the map
+   */
+  async getFeaturesAtLocation(
+    latLngHeight: LatLonHeight,
+    providerCoords: ProviderCoordsMap
+  ): Promise<Entity[]> {
+    const pickPosition = this.scene.globe.ellipsoid.cartographicToCartesian(
+      Cartographic.fromDegrees(
+        latLngHeight.longitude,
+        latLngHeight.latitude,
+        latLngHeight.height
+      )
+    );
+    const pickPositionCartographic = Ellipsoid.WGS84.cartesianToCartographic(
+      pickPosition
+    );
+
+    const promises = [];
+    const imageryLayers: ImageryLayer[] = [];
+
+    for (let i = this.scene.imageryLayers.length - 1; i >= 0; i--) {
+      const imageryLayer = <ImageryLayer>this.scene.imageryLayers.get(i);
+      const imageryProvider = imageryLayer.imageryProvider;
+      // @ts-ignore
+      const imageryProviderUrl = imageryProvider.url;
+      if (imageryProviderUrl && providerCoords[imageryProviderUrl]) {
+        var tileCoords = providerCoords[imageryProviderUrl];
+        promises.push(
+          imageryProvider.pickFeatures(
+            tileCoords.x,
+            tileCoords.y,
+            tileCoords.level,
+            pickPositionCartographic.longitude,
+            pickPositionCartographic.latitude
+          )
+        );
+        imageryLayers.push(imageryLayer);
+      }
+    }
+
+    const pickedFeatures = this._buildPickedFeatures(
+      providerCoords,
+      pickPosition,
+      [],
+      promises,
+      imageryLayers,
+      pickPositionCartographic.height,
+      true
+    );
+
+    await pickedFeatures.allFeaturesAvailablePromise;
+    return pickedFeatures.features;
   }
 
   /**
@@ -931,7 +1043,8 @@ export default class Cesium extends GlobeOrMap {
     existingFeatures: Entity[],
     featurePromises: Promise<ImageryLayerFeatureInfo[]>[],
     imageryLayers: ImageryLayer[] | undefined,
-    defaultHeight: number
+    defaultHeight: number,
+    ignoreSplitter: boolean
   ): PickedFeatures {
     const result = new PickedFeatures();
 
@@ -970,8 +1083,13 @@ export default class Cesium extends GlobeOrMap {
                 return this._createFeatureFromImageryLayerFeature(feature);
               });
 
-              if (this.terria.showSplitter && isDefined(result.pickPosition)) {
-                // Select only features from the same side or both sides of the splitter
+              if (
+                this.terria.showSplitter &&
+                isDefined(result.pickPosition) &&
+                ignoreSplitter === false
+              ) {
+                // Select only features that are active on the same side or
+                // both sides of the splitter
                 const screenPosition = this._computePositionOnScreen(
                   result.pickPosition
                 );
