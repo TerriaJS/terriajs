@@ -2,6 +2,7 @@ Change Log
 ==========
 
 ### MobX Development
+* Re-added `ArcGisMapServerCatalogGroup` and `ArcGisServerGroup`.
 * Fixed bug in StratumOrder where `sortBottomToTop` would sort strata in the wrong order.
 * Allow member re-ordering via GroupMixin's `moveMemberToIndex`
 * Fixed a bug where `updateModelFromJson` would ignore its `replaceStratum` parameter.

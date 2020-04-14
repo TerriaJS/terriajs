@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import LoadableStratum from "./LoadableStratum";
-import ArcGisFeatureServerCatalogGroupTraits from "../Traits/ArcGisFeatureServerCatalogGroupTraits";
+import ArcGisMapServerCatalogGroupTraits from "../Traits/ArcGisMapServerCatalogGroupTraits";
 import { computed, runInAction, action } from "mobx";
 import { BaseModel } from "./Model";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -15,7 +15,7 @@ import loadJson from "../Core/loadJson";
 import isDefined from "../Core/isDefined";
 import createStratumInstance from "./createStratumInstance";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
-import ArcGisFeatureServerCatalogItem from "./ArcGisFeatureServerCatalogItem";
+import ArcGisMapServerCatalogItem from "./ArcGisMapServerCatalogItem";
 import ArcGisCatalogGroup from "./ArcGisCatalogGroup";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import ModelReference from "../Traits/ModelReference";
@@ -26,54 +26,58 @@ interface DocumentInfo {
   Title?: string;
   Author?: string;
 }
+
 interface Layer {
   id: number;
   name?: string;
+  parentLayerId: number;
   description?: string;
   copyrightText?: string;
+  type?: string;
 }
 
-interface FeatureServer {
+export interface MapServer {
   documentInfo?: DocumentInfo;
   name?: string;
   serviceDescription?: string;
   description?: string;
   copyrightText?: string;
-  layers: Layer[];
+  layers?: Layer[];
+  subLayers?: Layer[];
 }
 
-export class FeatureServerStratum extends LoadableStratum(
-  ArcGisFeatureServerCatalogGroupTraits
+export class MapServerStratum extends LoadableStratum(
+  ArcGisMapServerCatalogGroupTraits
 ) {
-  static stratumName = "featureServer";
+  static stratumName = "mapServer";
 
   constructor(
     private readonly _catalogGroup:
-      | ArcGisFeatureServerCatalogGroup
+      | ArcGisMapServerCatalogGroup
       | ArcGisCatalogGroup,
-    private readonly _featureServer: FeatureServer
+    private readonly _mapServer: MapServer
   ) {
     super();
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
-    return new FeatureServerStratum(
-      model as ArcGisFeatureServerCatalogGroup,
-      this._featureServer
+    return new MapServerStratum(
+      model as ArcGisMapServerCatalogGroup,
+      this._mapServer
     ) as this;
   }
 
-  get featureServerData() {
-    return this._featureServer;
+  get mapServerData() {
+    return this._mapServer;
   }
 
   @computed get name() {
     if (
-      this._featureServer.documentInfo &&
-      this._featureServer.documentInfo.Title &&
-      this._featureServer.documentInfo.Title.length > 0
+      this._mapServer.documentInfo &&
+      this._mapServer.documentInfo.Title &&
+      this._mapServer.documentInfo.Title.length > 0
     ) {
-      return replaceUnderscores(this._featureServer.documentInfo.Title);
+      return replaceUnderscores(this._mapServer.documentInfo.Title);
     }
   }
 
@@ -90,45 +94,45 @@ export class FeatureServerStratum extends LoadableStratum(
     return [
       newInfo(
         i18next.t("models.arcGisFeatureServerCatalogGroup.serviceDescription"),
-        this._featureServer.serviceDescription
+        this._mapServer.serviceDescription
       ),
       newInfo(
         i18next.t("models.arcGisFeatureServerCatalogGroup.dataDescription"),
-        this._featureServer.description
+        this._mapServer.description
       ),
       newInfo(
         i18next.t("models.arcGisFeatureServerCatalogGroup.copyrightText"),
-        this._featureServer.copyrightText
+        this._mapServer.copyrightText
       )
     ];
   }
 
   @computed get dataCustodian() {
     if (
-      this._featureServer.documentInfo &&
-      this._featureServer.documentInfo.Author &&
-      this._featureServer.documentInfo.Author.length > 0
+      this._mapServer.documentInfo &&
+      this._mapServer.documentInfo.Author &&
+      this._mapServer.documentInfo.Author.length > 0
     ) {
-      return this._featureServer.documentInfo.Author;
+      return this._mapServer.documentInfo.Author;
     }
   }
 
   static async load(
-    catalogGroup: ArcGisFeatureServerCatalogGroup | ArcGisCatalogGroup
-  ): Promise<FeatureServerStratum> {
+    catalogGroup: ArcGisMapServerCatalogGroup | ArcGisCatalogGroup
+  ): Promise<MapServerStratum> {
     var terria = catalogGroup.terria;
     var uri = new URI(catalogGroup.url).addQuery("f", "json");
 
     return loadJson(proxyCatalogItemUrl(catalogGroup, uri.toString(), "1d"))
-      .then((featureServer: FeatureServer) => {
-        // Is this really a FeatureServer REST response?
-        if (!featureServer || !featureServer.layers) {
+      .then((mapServer: MapServer) => {
+        // Is this really a MapServer REST response?
+        if (!mapServer || (!mapServer.layers && !mapServer.subLayers)) {
           throw new TerriaError({
             title: i18next.t(
-              "models.arcGisFeatureServerCatalogGroup.invalidServiceTitle"
+              "models.arcGisMapServerCatalogGroup.invalidServiceTitle"
             ),
             message: i18next.t(
-              "models.arcGisFeatureServerCatalogGroup.invalidServiceTitle",
+              "models.arcGisMapServerCatalogGroup.invalidServiceTitle",
               {
                 email:
                   '<a href="mailto:' +
@@ -140,18 +144,17 @@ export class FeatureServerStratum extends LoadableStratum(
             )
           });
         }
-
-        const stratum = new FeatureServerStratum(catalogGroup, featureServer);
+        const stratum = new MapServerStratum(catalogGroup, mapServer);
         return stratum;
       })
       .catch(() => {
         throw new TerriaError({
           sender: catalogGroup,
           title: i18next.t(
-            "models.arcGisFeatureServerCatalogGroup.groupNotAvailableTitle"
+            "models.arcGisMapServerCatalogGroup.groupNotAvailableTitle"
           ),
           message: i18next.t(
-            "models.arcGisFeatureServerCatalogGroup.groupNotAvailableMessage",
+            "models.arcGisMapServerCatalogGroup.groupNotAvailableMessage",
             {
               cors:
                 '<a href="http://enable-cors.org/" target="_blank">CORS</a>',
@@ -171,18 +174,32 @@ export class FeatureServerStratum extends LoadableStratum(
   @computed
   get members(): ModelReference[] {
     return filterOutUndefined(
-      this.layers.map(layer => {
-        if (!isDefined(layer.id)) {
-          return undefined;
-        }
-        return this._catalogGroup.uniqueId + "/" + layer.id;
-      })
+      this.layers
+        .map(layer => {
+          if (!isDefined(layer.id) || layer.parentLayerId !== -1) {
+            return undefined;
+          }
+          return this._catalogGroup.uniqueId + "/" + layer.id;
+        })
+        .concat(
+          this.subLayers.map(subLayer => {
+            if (!isDefined(subLayer.id)) {
+              return undefined;
+            }
+            return this._catalogGroup.uniqueId + "/" + subLayer.id;
+          })
+        )
     );
   }
 
   @computed
   get layers(): readonly Layer[] {
-    return this._featureServer.layers;
+    return this._mapServer.layers || [];
+  }
+
+  @computed
+  get subLayers(): readonly Layer[] {
+    return this._mapServer.subLayers || [];
   }
 
   @action
@@ -195,23 +212,42 @@ export class FeatureServerStratum extends LoadableStratum(
     if (!isDefined(layer.id)) {
       return;
     }
-
     const id = this._catalogGroup.uniqueId;
-    const layerId = id + "/" + layer.id;
-    const existingModel = this._catalogGroup.terria.getModelById(
-      ArcGisFeatureServerCatalogItem,
-      layerId
-    );
-
-    let model: ArcGisFeatureServerCatalogItem;
-    if (existingModel === undefined) {
-      model = new ArcGisFeatureServerCatalogItem(
-        layerId,
-        this._catalogGroup.terria
+    //if parent layer is not -1 then this is sublayer so we define its ID like that
+    const layerId =
+      id +
+      "/" +
+      (layer.parentLayerId !== -1 ? layer.parentLayerId + "/" : "") +
+      layer.id;
+    let model: ArcGisMapServerCatalogItem | ArcGisMapServerCatalogGroup;
+    if (layer.type === "Group Layer") {
+      const existingModel = this._catalogGroup.terria.getModelById(
+        ArcGisMapServerCatalogGroup,
+        layerId
       );
-      this._catalogGroup.terria.addModel(model);
+      if (existingModel === undefined) {
+        model = new ArcGisMapServerCatalogGroup(
+          layerId,
+          this._catalogGroup.terria
+        );
+        this._catalogGroup.terria.addModel(model);
+      } else {
+        model = existingModel;
+      }
     } else {
-      model = existingModel;
+      const existingModel = this._catalogGroup.terria.getModelById(
+        ArcGisMapServerCatalogItem,
+        layerId
+      );
+      if (existingModel === undefined) {
+        model = new ArcGisMapServerCatalogItem(
+          layerId,
+          this._catalogGroup.terria
+        );
+        this._catalogGroup.terria.addModel(model);
+      } else {
+        model = existingModel;
+      }
     }
 
     // Replace the stratum inherited from the parent group.
@@ -226,38 +262,36 @@ export class FeatureServerStratum extends LoadableStratum(
   }
 }
 
-StratumOrder.addLoadStratum(FeatureServerStratum.stratumName);
+StratumOrder.addLoadStratum(MapServerStratum.stratumName);
 
-export default class ArcGisFeatureServerCatalogGroup extends UrlMixin(
-  GroupMixin(
-    CatalogMemberMixin(CreateModel(ArcGisFeatureServerCatalogGroupTraits))
-  )
+export default class ArcGisMapServerCatalogGroup extends UrlMixin(
+  GroupMixin(CatalogMemberMixin(CreateModel(ArcGisMapServerCatalogGroupTraits)))
 ) {
-  static readonly type = "esri-featureServer-group";
+  static readonly type = "esri-mapServer-group";
 
   get type() {
-    return ArcGisFeatureServerCatalogGroup.type;
+    return ArcGisMapServerCatalogGroup.type;
   }
 
   get typeName() {
-    return i18next.t("models.arcGisFeatureServerCatalogGroup.name");
+    return i18next.t("models.arcGisMapServerCatalogGroup.name");
   }
 
   protected forceLoadMetadata(): Promise<void> {
-    return FeatureServerStratum.load(this).then(stratum => {
+    return MapServerStratum.load(this).then(stratum => {
       runInAction(() => {
-        this.strata.set(FeatureServerStratum.stratumName, stratum);
+        this.strata.set(MapServerStratum.stratumName, stratum);
       });
     });
   }
 
   protected forceLoadMembers(): Promise<void> {
     return this.loadMetadata().then(() => {
-      const featureServerStratum = <FeatureServerStratum | undefined>(
-        this.strata.get(FeatureServerStratum.stratumName)
+      const mapServerStratum = <MapServerStratum | undefined>(
+        this.strata.get(MapServerStratum.stratumName)
       );
-      if (featureServerStratum) {
-        featureServerStratum.createMembersFromLayers();
+      if (mapServerStratum) {
+        mapServerStratum.createMembersFromLayers();
       }
     });
   }

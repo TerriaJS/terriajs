@@ -646,6 +646,9 @@
     },
     "arcGisMapServerCatalogGroup" : {
       "name" : "ArcGIS Map Server Group",
+      "dataDescription" : "Data Description",
+      "serviceDescription" : "Service Description",
+      "copyrightText" : "Copyright Text",
       "invalidServiceTitle" : "Invalid ArcGIS Map Service",
       "invalidServiceMessage" : "An error occurred while invoking the ArcGIS Map Service.  The server's response does not appear to be a valid Map Service document. <p>If you entered the link manually, please verify that the link is correct.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
       "groupNotAvailableTitle" : "Group is not available",
