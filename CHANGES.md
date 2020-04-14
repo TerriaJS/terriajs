@@ -2,7 +2,6 @@ Change Log
 ==========
 
 ### MobX Development
-* Re-added `ArcGisMapServerCatalogGroup` and `ArcGisServerGroup`.
 * Fixed bug in StratumOrder where `sortBottomToTop` would sort strata in the wrong order.
 * Allow member re-ordering via GroupMixin's `moveMemberToIndex`
 * Fixed a bug where `updateModelFromJson` would ignore its `replaceStratum` parameter.
@@ -99,6 +98,7 @@ Change Log
 * Removed hardcoded workbench & Panel button colours
 * Ensure CSV column names are trimmed of whitespace.
 * Really stop analytics launch event sending bad & now empty & now finally the real label
+* Re-added `ArcGisMapServerCatalogGroup` and `ArcGisServerGroup`.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
