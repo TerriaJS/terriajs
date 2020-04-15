@@ -9,7 +9,7 @@ matrix:
     - npm run prettier-check
     - pyenv shell 2.7
     - pip install -r doc/requirements.txt
-    - gulp lint docs release
+    - gulp lint release --continue
     - gulp test-travis
     env:
     - NODE_OPTIONS=--max_old_space_size=3072

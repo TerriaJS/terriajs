@@ -7,7 +7,7 @@ Change Log
 * Add support for `classBreaks` renderer to `ArcGisFeatureServerCatalogItem`.
 * Upgraded to Cesium v1.68.
 * Replace `defineProperties` and `freezeObject` to `Object.defineProperties` and `Object.freeze` respectively.
-* Bumped travis build environment to node 10.
+* Bumped travis build environment to node 10, and skip running gulp docs on travis.
 
 ### v7.11.3
 
