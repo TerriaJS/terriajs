@@ -1,15 +1,14 @@
 "use strict";
 
-import defined from "terriajs-cesium/Source/Core/defined";
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import Icon from "../../Icon";
-import Styles from "./style-selector-section.scss";
+import Styles from "./dimension-selector-section.scss";
 import CommonStrata from "../../../Models/CommonStrata";
 import { runInAction } from "mobx";
-import SelectableDimensionsMixin from "../../../ModelMixins/SelectableDimensionsMixin";
+import SelectableDimensions from "../../../Models/SelectableDimensions";
 
 const DimensionSelectorSection = createReactClass({
   displayName: "DimensionSelectorSection",
@@ -26,32 +25,33 @@ const DimensionSelectorSection = createReactClass({
 
   render() {
     const item = this.props.item;
-    console.log(item);
-    if (!SelectableDimensionsMixin.is(item)) {
+    if (!SelectableDimensions.is(item)) {
       return null;
     }
     const selectableDimensions = item.selectableDimensions;
 
     return (
-      <div className={Styles.styleSelector}>
+      <div className={Styles.dimensionSelector}>
         {selectableDimensions.map(dim => (
-          <div key={dim.id} className={Styles.styleSelector}>
+          <div key={dim.id} className={Styles.dimensionSelector}>
             <label className={Styles.title} htmlFor={dim.name}>
               {dim.name}
             </label>
-            <select
-              className={Styles.field}
-              name={dim.id}
-              value={dim.selectedId}
-              onChange={this.setDimensionValue.bind(this, dim)}
-            >
-              {dim.options.map(option => (
-                <option key={option.id} value={option.id}>
-                  {option.name}
-                </option>
-              ))}
-            </select>
-            <Icon glyph={Icon.GLYPHS.opened} />
+            <div className={Styles.dimensionSelectorSelect}>
+              <select
+                className={Styles.field}
+                name={dim.id}
+                value={dim.selectedId}
+                onChange={this.setDimensionValue.bind(this, dim)}
+              >
+                {dim.options.map(option => (
+                  <option key={option.id} value={option.id}>
+                    {option.name}
+                  </option>
+                ))}
+              </select>
+              <Icon glyph={Icon.GLYPHS.opened} />
+            </div>
           </div>
         ))}
       </div>

@@ -52,7 +52,7 @@ import WebMapServiceCapabilities, {
 import i18next from "i18next";
 import SelectableDimensions, {
   SelectableDimension
-} from "../ModelMixins/SelectableDimensionsMixin";
+} from "../Models/SelectableDimensions";
 
 interface LegendUrl {
   url: string;

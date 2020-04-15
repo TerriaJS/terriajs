@@ -2,7 +2,9 @@
 // Please do not change this file!
 interface CssExports {
   'dimension-selector': string;
+  'dimension-selector-select': string;
   'dimensionSelector': string;
+  'dimensionSelectorSelect': string;
   'field': string;
   'title': string;
 }

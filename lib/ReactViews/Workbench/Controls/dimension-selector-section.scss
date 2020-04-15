@@ -1,9 +1,40 @@
 @import "~terriajs-variables";
 
 .dimension-selector {
-  font-size: $font-size-mid-small;
+  font-size: 0.9rem;
+  margin-top: 10px;
   label {
     margin-right: $padding-small;
+  }
+}
+
+.dimension-selector-select {
+  position: relative;
+  svg {
+    position: absolute;
+    fill: $text-light;
+    width: 10px;
+    // height: 10px;
+    // top: -28px;
+    top: 0;
+    height: 40px;
+    right: 10px;
+    pointer-events: none;
+  }
+  select {
+    background: rgba(250, 250, 250, 0.2);
+    // color: white;
+    color: $text-light;
+    letter-spacing: -0.2px;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    option {
+      color: black;
+    }
+  }
+  select::-ms-expand {
+    display: none;
   }
 }
 

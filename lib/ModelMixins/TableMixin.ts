@@ -33,11 +33,10 @@ import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
 import LegendTraits from "../Traits/LegendTraits";
 import TableTraits from "../Traits/TableTraits";
-import {
+import SelectableDimensions, {
   SelectableDimension,
   DimensionOption
 } from "../Models/SelectableDimensions";
-import SelectableDimensions from "./SelectableDimensionsMixin";
 
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
 //   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
