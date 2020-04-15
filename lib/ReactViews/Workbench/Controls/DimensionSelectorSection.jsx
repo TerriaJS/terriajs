@@ -41,12 +41,21 @@ const DimensionSelectorSection = createReactClass({
               <select
                 className={Styles.field}
                 name={dim.id}
-                value={typeof dim.selectedId === 'undefined' ? '__undefined__' : dim.selectedId}
+                value={
+                  typeof dim.selectedId === "undefined"
+                    ? "__undefined__"
+                    : dim.selectedId
+                }
                 onChange={this.setDimensionValue.bind(this, dim)}
               >
                 {/* If no value as been selected -> add option */}
-                {(typeof dim.selectedId === 'undefined' || dim.allowUndefined) && (
-                  <option key="__undefined__" value="" className={Styles.dimensionsSelectorNoSelection}>
+                {(typeof dim.selectedId === "undefined" ||
+                  dim.allowUndefined) && (
+                  <option
+                    key="__undefined__"
+                    value=""
+                    className={Styles.dimensionsSelectorNoSelection}
+                  >
                     Not specified
                   </option>
                 )}
