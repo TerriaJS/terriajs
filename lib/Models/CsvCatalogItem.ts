@@ -16,6 +16,7 @@ import Terria from "./Terria";
 import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import isDefined from "../Core/isDefined";
 import { DimensionOption } from "../Models/SelectableDimensions";
+import filterOutUndefined from "../Core/filterOutUndefined";
 
 // Types of CSVs:
 // - Points - Latitude and longitude columns or address
@@ -145,7 +146,6 @@ export default class CsvCatalogItem extends TableMixin(
   @computed
   get selectableDimensions() {
     if (
-      typeof this.activeTableStyle.regionColumn !== "undefined" &&
       typeof this.regionProviderList !== "undefined" &&
       Array.isArray(this.regionProviderList.regionProviders)
     ) {
@@ -167,7 +167,7 @@ export default class CsvCatalogItem extends TableMixin(
         }
       );
 
-      return [
+      return filterOutUndefined([
         ...super.selectableDimensions,
         {
           get id(): string {
@@ -177,42 +177,46 @@ export default class CsvCatalogItem extends TableMixin(
             return "Region Column";
           },
           options: regionColumnOptions,
-          selectedId: this.activeTableStyle.regionColumn.name,
+          selectedId: this.activeTableStyle.regionColumn?.name,
           setDimensionValue: (stratumId: string, regionCol: string) => {
             this.defaultStyle.setTrait(stratumId, "regionColumn", regionCol);
           }
         },
-        {
-          get id(): string {
-            return "regionMapping";
-          },
-          get name(): string {
-            return "Region Mapping";
-          },
-          options: regionTypeOptions,
-          selectedId: this.activeTableStyle.regionColumn?.regionType
-            ?.regionType,
-          setDimensionValue: (stratumId: string, regionType: string) => {
-            let columnTraits = this.columns?.find(
-              column => column.name === this.activeTableStyle.regionColumn?.name
-            );
-            if (!isDefined(columnTraits)) {
-              columnTraits = this.addObject(
-                stratumId,
-                "columns",
-                this.activeTableStyle.regionColumn!.name
-              )!;
-              columnTraits.setTrait(
-                stratumId,
-                "name",
-                this.activeTableStyle.regionColumn!.name
-              );
-            }
+        isDefined(this.activeTableStyle.regionColumn)
+          ? {
+              get id(): string {
+                return "regionMapping";
+              },
+              get name(): string {
+                return "Region Mapping";
+              },
+              options: regionTypeOptions,
+              allowUndefined: true,
+              selectedId: this.activeTableStyle.regionColumn?.regionType
+                ?.regionType,
+              setDimensionValue: (stratumId: string, regionType: string) => {
+                let columnTraits = this.columns?.find(
+                  column =>
+                    column.name === this.activeTableStyle.regionColumn?.name
+                );
+                if (!isDefined(columnTraits)) {
+                  columnTraits = this.addObject(
+                    stratumId,
+                    "columns",
+                    this.activeTableStyle.regionColumn!.name
+                  )!;
+                  columnTraits.setTrait(
+                    stratumId,
+                    "name",
+                    this.activeTableStyle.regionColumn!.name
+                  );
+                }
 
-            columnTraits.setTrait(stratumId, "regionType", regionType);
-          }
-        }
-      ];
+                columnTraits.setTrait(stratumId, "regionType", regionType);
+              }
+            }
+          : undefined
+      ]);
     } else {
       return super.selectableDimensions;
     }

@@ -8,6 +8,7 @@ export interface SelectableDimension {
   readonly name: string;
   readonly options: readonly DimensionOption[];
   readonly selectedId: string | undefined;
+  readonly allowUndefined?: boolean
   setDimensionValue(stratumId: string, selectedId: string): void;
 }
 
