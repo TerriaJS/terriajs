@@ -25,10 +25,17 @@ const DimensionSelectorSection = createReactClass({
 
   render() {
     const item = this.props.item;
-    if (!SelectableDimensions.is(item)) {
+    if (
+      !SelectableDimensions.is(item) ||
+      item.selectableDimensions.length === 0
+    ) {
       return null;
     }
-    const selectableDimensions = item.selectableDimensions;
+
+    // Filter out dimensions with only 1 option (unless they have 1 option and allow undefined - which is 2 total options)
+    const selectableDimensions = item.selectableDimensions.filter(dim =>
+      dim.options.length + (dim.allowUndefined ? 1 : 0) > 1
+    );
 
     return (
       <div className={Styles.dimensionSelector}>

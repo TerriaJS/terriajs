@@ -403,8 +403,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
         "Dimension"
       );
 
-      console.log(dimensions);
-
       const timeDimension = dimensions.find(
         dimension => dimension.name.toLowerCase() === "time"
       );
@@ -616,8 +614,6 @@ class WebMapServiceCatalogItem
       );
     }
 
-    console.log(wmsDimensions);
-
     return [...styleDimensions, ...wmsDimensions];
   }
 
@@ -714,8 +710,6 @@ class WebMapServiceCatalogItem
         ...WebMapServiceCatalogItem.defaultParameters,
         ...(this.parameters || {})
       };
-
-      console.log(parameters);
 
       if (time !== undefined) {
         parameters.time = time;
