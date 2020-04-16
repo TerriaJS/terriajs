@@ -840,9 +840,9 @@
       "unsupportedFileTzpe": "Unsupported file type",
       "loadError": "The file size is greater than the {{maxConversionSizeMB}} MB limit of the {{appName}} conversion service",
       "invalidFile": "This may indicate that the file is invalid or that it is not supported by the {{appName}} conversion service.",
-      "errorConvertingToGeoJsonTitle": "Error converting file to GeoJson",
-      "errorConvertingToGeoJsonMessage": "An error occurred while attempting to convert this file to GeoJson. ",
-      "emailUs": "If you would like assistance or further information, please email us at {{email}}"
+      "errorConvertingToGeoJsonTitle": "Error converting file to GeoJSON",
+      "errorConvertingToGeoJsonMessage": "An error occurred while attempting to convert this file to GeoJSON. ",
+      "emailUs": "&nbsp; If you would like assistance or further information, please email us at {{email}}"
     },
     "openStreetMap": {
       "name": "Open Street Map"
