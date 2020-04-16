@@ -570,18 +570,18 @@ class WebMapServiceCatalogItem
           if (!isDefined(dim.name)) {
             return;
           }
+          console.log(dim);
           return {
             id: `dimensions-${dim.name}`,
             name: dim.name,
             options: filterOutUndefined(
               dim.values.map(value => {
-                let name = !isDefined(dim.units)
-                  ? value
-                  : `${value} (${dim.units}${
-                      isDefined(dim.unitSymbol) ? ` ${dim.unitSymbol})` : ")"
-                    }`;
+                let name = value;
+                if (isDefined(dim.units)) {
+                  name = `${value} (${dim.units}${isDefined(dim.unitSymbol) ? ` ${dim.unitSymbol})` : ")"}`;
+                }
                 return {
-                  name: value,
+                  name,
                   id: value
                 };
               })
