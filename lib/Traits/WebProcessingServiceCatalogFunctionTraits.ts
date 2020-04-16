@@ -1,11 +1,11 @@
-import CatalogMemberTraits from "./CatalogMemberTraits";
 import mixTraits from "./mixTraits";
 import UrlTraits from "./UrlTraits";
 import primitiveTrait from "./primitiveTrait";
+import CatalogFunctionTraits from "./CatalogFunctionTraits";
 
 export default class WebProcessingServiceCatalogFunctionTraits extends mixTraits(
   UrlTraits,
-  CatalogMemberTraits
+  CatalogFunctionTraits
 ) {
   @primitiveTrait({
     type: "string",

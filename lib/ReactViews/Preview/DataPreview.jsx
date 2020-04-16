@@ -14,6 +14,7 @@ import { observer } from "mobx-react";
 import { runInAction } from "mobx";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
 import Loader from "../Loader";
+import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 
 /**
  * Data preview section, for the preview map see DataPreviewMap
@@ -80,7 +81,9 @@ const DataPreview = observer(
               </div>
             </When>
             <When
-              condition={previewed && typeof previewed.invoke !== "undefined"}
+              condition={
+                previewed && CatalogFunctionMixin.isMixedInto(previewed)
+              }
             >
               <InvokeFunction
                 previewed={previewed}

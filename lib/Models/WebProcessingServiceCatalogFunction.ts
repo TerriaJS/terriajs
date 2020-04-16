@@ -14,7 +14,6 @@ import loadXML from "../Core/loadXML";
 import runLater from "../Core/runLater";
 import TerriaError from "../Core/TerriaError";
 import Reproject from "../Map/Reproject";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import xml2json from "../ThirdParty/xml2json";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import WebProcessingServiceCatalogFunctionTraits from "../Traits/WebProcessingServiceCatalogFunctionTraits";
@@ -39,8 +38,8 @@ import ResultPendingCatalogItem from "./ResultPendingCatalogItem";
 import StringParameter from "./StringParameter";
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
 import i18next from "i18next";
+import CatalogFunctionMixin from "../ModelMixins/CatalogFunctionMixin";
 
-const sprintf = require("terriajs-cesium/Source/ThirdParty/sprintf").default;
 const executeWpsTemplate = require("./ExecuteWpsTemplate.xml");
 
 type AllowedValues = {
@@ -92,7 +91,7 @@ type ParameterConverter = {
   parameterToInput: (parameter: FunctionParameter) => InputData | undefined;
 };
 
-export default class WebProcessingServiceCatalogFunction extends CatalogMemberMixin(
+export default class WebProcessingServiceCatalogFunction extends CatalogFunctionMixin(
   CreateModel(WebProcessingServiceCatalogFunctionTraits)
 ) {
   static readonly type = "wps";
@@ -303,7 +302,7 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
   async handleExecuteResponse(
     xml: any,
     pendingItem: ResultPendingCatalogItem
-  ): Promise<unknown> {
+  ): Promise<void> {
     if (
       !xml ||
       !xml.documentElement ||
@@ -335,7 +334,10 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
     }
 
     if (isDefined(status.ProcessFailed)) {
-      this.setErrorOnPendingItem(pendingItem, status.ProcessFailed);
+      const e = status.ProcessFailed.ExceptionReport?.Exception;
+      this.setErrorOnPendingItem(
+        (e?.ExceptionText as string) || (e?.Exception as string) || undefined
+      );
     } else if (isDefined(status.ProcessSucceeded)) {
       const item = await this.createCatalogItem(pendingItem, json);
       await item.loadMapItems();
@@ -350,7 +352,7 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
         pendingItem.loadPromise = promise;
         const xml = await promise;
         return this.handleExecuteResponse(xml, pendingItem);
-      }, 500);
+      }, 500) as Promise<void>;
     }
   }
 
@@ -419,86 +421,6 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
       item.setTrait(CommonStrata.user, "parameters", parameterTraits);
     });
     return item;
-  }
-
-  createPendingCatalogItem() {
-    const now = new Date();
-    const timestamp = sprintf(
-      "%04d-%02d-%02dT%02d:%02d:%02d",
-      now.getFullYear(),
-      now.getMonth() + 1,
-      now.getDate(),
-      now.getHours(),
-      now.getMinutes(),
-      now.getSeconds()
-    );
-
-    const id = `${this.name} ${timestamp}`;
-    const item = new ResultPendingCatalogItem(id, this.terria);
-    item.showsInfo = true;
-    item.isMappable = true;
-
-    const inputsSection =
-      '<table class="cesium-infoBox-defaultTable">' +
-      this.parameters.reduce((previousValue, parameter) => {
-        return (
-          previousValue +
-          "<tr>" +
-          '<td style="vertical-align: middle">' +
-          parameter.name +
-          "</td>" +
-          "<td>" +
-          parameter.formatValueAsString(parameter.value) +
-          "</td>" +
-          "</tr>"
-        );
-      }, "") +
-      "</table>";
-
-    runInAction(() => {
-      item.setTrait(CommonStrata.user, "name", id);
-      item.setTrait(
-        CommonStrata.user,
-        "description",
-        `This is the result of invoking the ${this.name} process or service at ${timestamp} with the input parameters below.`
-      );
-
-      const info = createStratumInstance(InfoSectionTraits, {
-        name: "Inputs",
-        content: inputsSection
-      });
-      item.setTrait(CommonStrata.user, "info", [info]);
-    });
-
-    return item;
-  }
-
-  setErrorOnPendingItem(pendingItem: ResultPendingCatalogItem, failure: any) {
-    let errorMessage = "The reason for failure is unknown.";
-    if (
-      isDefined(failure.ExceptionReport) &&
-      isDefined(failure.ExceptionReport.Exception)
-    ) {
-      const e = failure.ExceptionReport.Exception;
-      errorMessage = e.ExceptionText || e.Exception || errorMessage;
-    }
-
-    runInAction(() => {
-      pendingItem.setTrait(
-        CommonStrata.user,
-        "shortReport",
-        "Web Processing Service invocation failed.  More details are available on the Info panel."
-      );
-
-      const errorInfo = createStratumInstance(InfoSectionTraits, {
-        name: "Error Details",
-        content: errorMessage
-      });
-      const info = pendingItem.getTrait(CommonStrata.user, "info");
-      if (isDefined(info)) {
-        info.push(errorInfo);
-      }
-    });
   }
 
   getXml(url: string, parameters?: any) {
