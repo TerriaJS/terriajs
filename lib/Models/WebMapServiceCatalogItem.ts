@@ -578,7 +578,9 @@ class WebMapServiceCatalogItem
               dim.values.map(value => {
                 let name = value;
                 if (isDefined(dim.units)) {
-                  name = `${value} (${dim.units}${isDefined(dim.unitSymbol) ? ` ${dim.unitSymbol})` : ")"}`;
+                  name = `${value} (${dim.units}${
+                    isDefined(dim.unitSymbol) ? ` ${dim.unitSymbol})` : ")"
+                  }`;
                 }
                 return {
                   name,
