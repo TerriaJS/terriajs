@@ -27,7 +27,6 @@ import OpacitySection from "./Controls/OpacitySection";
 import SatelliteImageryTimeFilterSection from "./Controls/SatelliteImageryTimeFilterSection";
 import ShadowSection from "./Controls/ShadowSection";
 import ShortReport from "./Controls/ShortReport";
-import StyleSelectorSection from "./Controls/StyleSelectorSection";
 import TimerSection from "./Controls/TimerSection";
 import ViewingControls from "./Controls/ViewingControls";
 import Styles from "./workbench-item.scss";
@@ -177,10 +176,9 @@ const WorkbenchItem = observer(
               <ChartItemSelector item={workbenchItem} />
               <FilterSection item={workbenchItem} />
               <ShadowSection item={workbenchItem} />
-              <DimensionSelectorSection item={workbenchItem} />
               <DateTimeSelectorSection item={workbenchItem} />
               <SatelliteImageryTimeFilterSection item={workbenchItem} />
-              {/* <StyleSelectorSection item={workbenchItem} /> */}
+              <DimensionSelectorSection item={workbenchItem} />
               <ColorScaleRangeSection
                 item={workbenchItem}
                 minValue={workbenchItem.colorScaleMinimum}
