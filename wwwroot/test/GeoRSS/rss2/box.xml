@@ -1,0 +1,19 @@
+<rss xmlns="http://www.w3.org/2005/Atom" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml">
+<channel>	<title>GeoRSS feed samples</title>
+	<subtitle>To aid in unit testing</subtitle>
+	<link href="http://example.org/" />
+	<updated>2020-02-26T18:30:02Z</updated>
+	<author>
+		<name>TerriaJS</name>
+		<email>groldan@example.com</email>
+	</author>
+	<link href="http://www.georss.org/example" />
+	<item>
+		<title>Point sample</title>
+		<link href="http://www.georss.org/example" />
+		<id>point-1</id>
+		<updated>2005-08-17T07:02:32Z</updated>
+		<content>a sample geometry</content>
+		<georss:box>42.943 -71.032 43.039 -69.856</georss:box>
+	</item></channel>
+</rss>
