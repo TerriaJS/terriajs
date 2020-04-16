@@ -57,6 +57,9 @@ import Workbench from "./Workbench";
 import openGroup from "./openGroup";
 import getDereferencedIfExists from "../Core/getDereferencedIfExists";
 import SplitItemReference from "./SplitItemReference";
+import Internationalization, {
+  LanguageConfiguration
+} from "./Internationalization";
 
 interface ConfigParameters {
   [key: string]: ConfigParameters[keyof ConfigParameters];
@@ -87,6 +90,7 @@ interface ConfigParameters {
   locationSearchBoundingBox?: number[];
   googleAnalyticsKey?: string;
   rollbarAccessToken?: string;
+  languageConfiguration?: LanguageConfiguration;
 }
 
 interface StartOptions {
@@ -193,7 +197,8 @@ export default class Terria {
     magdaReferenceHeaders: undefined,
     locationSearchBoundingBox: undefined,
     googleAnalyticsKey: undefined,
-    rollbarAccessToken: undefined
+    rollbarAccessToken: undefined,
+    languageConfiguration: undefined
   };
 
   @observable
@@ -371,6 +376,8 @@ export default class Terria {
           if (config.parameters) {
             this.updateParameters(config.parameters);
           }
+
+          Internationalization.initLanguage(config.languageConfiguration);
 
           if (config.aspects) {
             return this.loadMagdaConfig(options.configUrl, config);
