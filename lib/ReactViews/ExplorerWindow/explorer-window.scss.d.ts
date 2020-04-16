@@ -3,10 +3,6 @@
 interface CssExports {
   'btn--close-modal': string;
   'btnCloseModal': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'explorer-panel': string;
   'explorerPanel': string;
   'is-mounted': string;
@@ -15,8 +11,6 @@ interface CssExports {
   'modal-wrapper': string;
   'modalOverlay': string;
   'modalWrapper': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

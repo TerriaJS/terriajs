@@ -57,6 +57,7 @@ import Mappable, {
 import Terria from "./Terria";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import getElement from "terriajs-cesium/Source/Widgets/getElement";
+import LatLonHeight from "../Core/LatLonHeight";
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
 // Intermediary
@@ -252,7 +253,7 @@ export default class Cesium extends GlobeOrMap {
 
     // Handle left click by picking objects from the map.
     inputHandler.setInputAction(e => {
-      this.pickFromScreenPosition(e.position);
+      this.pickFromScreenPosition(e.position, false);
     }, ScreenSpaceEventType.LEFT_CLICK);
 
     this.pauser = new CesiumRenderLoopPauser(this.cesiumWidget, () => {
@@ -807,7 +808,7 @@ export default class Cesium extends GlobeOrMap {
    * specified and set terria.pickedFeatures based on this.
    *
    */
-  pickFromScreenPosition(screenPosition: Cartesian2) {
+  pickFromScreenPosition(screenPosition: Cartesian2, ignoreSplitter: boolean) {
     const pickRay = this.scene.camera.getPickRay(screenPosition);
     const pickPosition = this.scene.globe.pick(pickRay, this.scene);
     const pickPositionCartographic = Ellipsoid.WGS84.cartesianToCartographic(
@@ -827,7 +828,8 @@ export default class Cesium extends GlobeOrMap {
       vectorFeatures,
       pickRasterPromise ? [pickRasterPromise] : [],
       undefined,
-      pickPositionCartographic.height
+      pickPositionCartographic.height,
+      ignoreSplitter
     );
 
     const mapInteractionModeStack = this.terria.mapInteractionModeStack;
@@ -843,6 +845,64 @@ export default class Cesium extends GlobeOrMap {
         this.terria.pickedFeatures = result;
       }
     });
+  }
+
+  /**
+   * Return features at a latitude, longitude and (optionally) height for the given imagery layers.
+   * @param latLngHeight The position on the earth to pick
+   * @param tileCoords A map of imagery provider urls to the tile coords used to get features for those imagery
+   * @returns A flat array of all the features for the given tiles that are currently on the map
+   */
+  async getFeaturesAtLocation(
+    latLngHeight: LatLonHeight,
+    providerCoords: ProviderCoordsMap
+  ): Promise<Entity[]> {
+    const pickPosition = this.scene.globe.ellipsoid.cartographicToCartesian(
+      Cartographic.fromDegrees(
+        latLngHeight.longitude,
+        latLngHeight.latitude,
+        latLngHeight.height
+      )
+    );
+    const pickPositionCartographic = Ellipsoid.WGS84.cartesianToCartographic(
+      pickPosition
+    );
+
+    const promises = [];
+    const imageryLayers: ImageryLayer[] = [];
+
+    for (let i = this.scene.imageryLayers.length - 1; i >= 0; i--) {
+      const imageryLayer = <ImageryLayer>this.scene.imageryLayers.get(i);
+      const imageryProvider = imageryLayer.imageryProvider;
+      // @ts-ignore
+      const imageryProviderUrl = imageryProvider.url;
+      if (imageryProviderUrl && providerCoords[imageryProviderUrl]) {
+        var tileCoords = providerCoords[imageryProviderUrl];
+        promises.push(
+          imageryProvider.pickFeatures(
+            tileCoords.x,
+            tileCoords.y,
+            tileCoords.level,
+            pickPositionCartographic.longitude,
+            pickPositionCartographic.latitude
+          )
+        );
+        imageryLayers.push(imageryLayer);
+      }
+    }
+
+    const pickedFeatures = this._buildPickedFeatures(
+      providerCoords,
+      pickPosition,
+      [],
+      promises,
+      imageryLayers,
+      pickPositionCartographic.height,
+      true
+    );
+
+    await pickedFeatures.allFeaturesAvailablePromise;
+    return pickedFeatures.features;
   }
 
   /**
@@ -982,7 +1042,8 @@ export default class Cesium extends GlobeOrMap {
     existingFeatures: Entity[],
     featurePromises: Promise<ImageryLayerFeatureInfo[]>[],
     imageryLayers: ImageryLayer[] | undefined,
-    defaultHeight: number
+    defaultHeight: number,
+    ignoreSplitter: boolean
   ): PickedFeatures {
     const result = new PickedFeatures();
 
@@ -1021,8 +1082,13 @@ export default class Cesium extends GlobeOrMap {
                 return this._createFeatureFromImageryLayerFeature(feature);
               });
 
-              if (this.terria.showSplitter && isDefined(result.pickPosition)) {
-                // Select only features from the same side or both sides of the splitter
+              if (
+                this.terria.showSplitter &&
+                isDefined(result.pickPosition) &&
+                ignoreSplitter === false
+              ) {
+                // Select only features that are active on the same side or
+                // both sides of the splitter
                 const screenPosition = this._computePositionOnScreen(
                   result.pickPosition
                 );

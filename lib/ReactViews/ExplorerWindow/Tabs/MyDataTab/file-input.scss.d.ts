@@ -4,15 +4,9 @@ interface CssExports {
   'btn': string;
   'btn--hover': string;
   'btnHover': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'file-input': string;
   'fileInput': string;
   'input': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

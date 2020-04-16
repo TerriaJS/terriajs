@@ -3,14 +3,8 @@
 interface CssExports {
   'clipboard': string;
   'clipboardBody': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
   'copyBtn': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'explanation': string;
-  'textDarker': string;
-  'textLight': string;
   'title': string;
   'tooltip': string;
   'tooltip-text': string;

@@ -3,18 +3,12 @@
 interface CssExports {
   'body': string;
   'btn': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'header': string;
   'is-inverse': string;
   'is-open': string;
   'isInverse': string;
   'isOpen': string;
   'root': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

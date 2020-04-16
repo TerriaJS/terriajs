@@ -12,10 +12,6 @@ interface CssExports {
   'btnLocationSelector': string;
   'btnRadio': string;
   'btnSelector': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'data': string;
   'embeddedMap': string;
   'field': string;
@@ -36,8 +32,6 @@ interface CssExports {
   'radio': string;
   'region-input': string;
   'regionInput': string;
-  'textDarker': string;
-  'textLight': string;
   'tree': string;
   'warning-text': string;
   'warningText': string;

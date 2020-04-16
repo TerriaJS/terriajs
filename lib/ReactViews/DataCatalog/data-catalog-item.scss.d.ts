@@ -13,13 +13,7 @@ interface CssExports {
   'btnCatalogItemIsPreviewed': string;
   'btnCatalogItemIsTrashable': string;
   'btnTrash': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'root': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

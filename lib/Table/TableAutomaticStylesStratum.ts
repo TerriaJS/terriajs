@@ -1,5 +1,6 @@
 import { computed } from "mobx";
 import { createTransformer } from "mobx-utils";
+import isDefined from "../Core/isDefined";
 import DiscreteColorMap from "../Map/DiscreteColorMap";
 import EnumColorMap from "../Map/EnumColorMap";
 import createStratumInstance from "../Models/createStratumInstance";
@@ -104,7 +105,9 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
     const columns = this.catalogItem.tableColumns.filter(
       column =>
         column.type === TableColumnType.scalar ||
-        column.type === TableColumnType.enum
+        column.type === TableColumnType.enum ||
+        column.type === TableColumnType.region ||
+        column.type === TableColumnType.text
     );
 
     return columns.map((column, i) =>
@@ -161,6 +164,14 @@ class ColorStyleLegend extends LoadableStratum(LegendTraits) {
   get items(): StratumFromTraits<LegendItemTraits>[] {
     const activeStyle = this.catalogItem.activeTableStyle;
     if (activeStyle === undefined) {
+      return [];
+    }
+
+    // Don't created a legend if we're using a region column
+    if (
+      isDefined(activeStyle.colorColumn) &&
+      activeStyle.colorColumn.type === TableColumnType.region
+    ) {
       return [];
     }
 

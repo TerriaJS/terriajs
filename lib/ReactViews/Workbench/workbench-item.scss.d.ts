@@ -6,10 +6,6 @@ interface CssExports {
   'btn-visibility': string;
   'btnToggle': string;
   'btnVisibility': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'draggable': string;
   'header': string;
   'header-clearfix': string;
@@ -19,8 +15,6 @@ interface CssExports {
   'is-open': string;
   'isOpen': string;
   'nameColumn': string;
-  'textDarker': string;
-  'textLight': string;
   'toggleColumn': string;
   'visibilityColumn': string;
   'workbench-item': string;

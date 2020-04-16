@@ -2,14 +2,8 @@
 // Please do not change this file!
 interface CssExports {
   'btn': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
   'control': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'remove': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

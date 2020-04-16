@@ -8,6 +8,7 @@ interface CssExports {
   'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
+  'greyLightest': string;
   'heading': string;
   'items': string;
   'provider-result': string;

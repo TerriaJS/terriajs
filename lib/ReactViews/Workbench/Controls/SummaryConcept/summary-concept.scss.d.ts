@@ -10,12 +10,8 @@ interface CssExports {
   'btnRemove': string;
   'children-list': string;
   'childrenList': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
   'condition': string;
   'controls': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'heading': string;
   'indented': string;
   'is-loading': string;
@@ -28,8 +24,6 @@ interface CssExports {
   'root': string;
   'section': string;
   'text': string;
-  'textDarker': string;
-  'textLight': string;
   'title': string;
 }
 declare var cssExports: CssExports;

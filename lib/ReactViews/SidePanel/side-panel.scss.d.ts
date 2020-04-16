@@ -4,13 +4,7 @@ interface CssExports {
   'addData': string;
   'body': string;
   'button': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'header': string;
-  'textDarker': string;
-  'textLight': string;
   'uploadData': string;
   'workbenchEmpty': string;
 }

@@ -5,10 +5,6 @@ interface CssExports {
   'btn--back-to-my-data': string;
   'btnAddMoreData': string;
   'btnBackToMyData': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'data-catalog': string;
   'dataCatalog': string;
   'dataTypeTab': string;
@@ -29,8 +25,6 @@ interface CssExports {
   'tabList': string;
   'tabListBtn': string;
   'tabListItem': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

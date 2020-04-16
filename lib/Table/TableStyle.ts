@@ -230,7 +230,11 @@ export default class TableStyle {
     let paletteName = this.colorTraits.colorPalette;
     let numberOfBins: number | undefined;
 
-    if (colorColumn.type === TableColumnType.enum) {
+    if (
+      colorColumn.type === TableColumnType.enum ||
+      colorColumn.type === TableColumnType.region ||
+      colorColumn.type === TableColumnType.text
+    ) {
       // Enumerated values, so use a large, high contrast palette.
       paletteName = paletteName || "HighContrast";
       numberOfBins = colorColumn.uniqueValues.values.length;
@@ -370,7 +374,15 @@ export default class TableStyle {
           ? Color.fromCssColorString(colorTraits.nullColor)
           : new Color(0.0, 0.0, 0.0, 0.0)
       });
-    } else if (colorColumn && colorColumn.type === TableColumnType.enum) {
+    } else if (
+      colorColumn &&
+      (colorColumn.type === TableColumnType.enum ||
+        colorColumn.type === TableColumnType.region ||
+        colorColumn.type === TableColumnType.text)
+    ) {
+      const regionColor = Color.fromCssColorString(
+        this.colorTraits.regionColor
+      );
       return new EnumColorMap({
         enumColors: filterOutUndefined(
           this.enumColors.map(e => {
@@ -379,7 +391,10 @@ export default class TableStyle {
             }
             return {
               value: e.value,
-              color: Color.fromCssColorString(e.color)
+              color:
+                colorColumn.type !== TableColumnType.region
+                  ? Color.fromCssColorString(e.color)
+                  : regionColor
             };
           })
         ),

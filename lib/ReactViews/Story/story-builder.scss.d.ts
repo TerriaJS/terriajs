@@ -5,10 +5,6 @@ interface CssExports {
   'VideoGuideWrapper--closing': string;
   'actions': string;
   'captureBtn': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'footer': string;
   'header': string;
   'intro': string;
@@ -31,8 +27,6 @@ interface CssExports {
   'storyPanel': string;
   'storySlideDown': string;
   'storySlideUp': string;
-  'textDarker': string;
-  'textLight': string;
   'trashBtn': string;
   'tutBtn': string;
   'videoGuide': string;

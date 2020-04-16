@@ -2,10 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'body': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'draggable': string;
   'footer': string;
   'isSuccessful': string;
@@ -15,8 +11,6 @@ interface CssExports {
   'recapture': string;
   'story': string;
   'storyHeader': string;
-  'textDarker': string;
-  'textLight': string;
   'toggleBtn': string;
   'viewBtn': string;
 }

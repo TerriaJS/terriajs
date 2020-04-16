@@ -8,19 +8,13 @@ interface CssExports {
   'chart': string;
   'chart-panel': string;
   'chartPanel': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
   'colors': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'header': string;
   'holder': string;
   'inner': string;
   'loader': string;
   'section-label': string;
   'sectionLabel': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

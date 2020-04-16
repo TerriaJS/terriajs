@@ -3,15 +3,9 @@
 interface CssExports {
   'body': string;
   'btn': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'footer': string;
   'inner': string;
   'notification': string;
-  'textDarker': string;
-  'textLight': string;
   'title': string;
   'wrapper': string;
 }

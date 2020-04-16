@@ -2,10 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'btn': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
   'enter': string;
   'exit': string;
   'full-screen': string;
@@ -13,8 +9,6 @@ interface CssExports {
   'isActive': string;
   'minified': string;
   'minifiedFullscreenBtnWrapper': string;
-  'textDarker': string;
-  'textLight': string;
   'toggleWorkbench': string;
 }
 declare var cssExports: CssExports;

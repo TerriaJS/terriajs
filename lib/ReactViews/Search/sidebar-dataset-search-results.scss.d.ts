@@ -5,6 +5,7 @@ interface CssExports {
   'colorSplitter': string;
   'dark': string;
   'darkWithOverlay': string;
+  'greyLightest': string;
   'heading': string;
   'isOpen': string;
   'items': string;

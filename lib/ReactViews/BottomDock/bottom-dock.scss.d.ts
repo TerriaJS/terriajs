@@ -3,12 +3,6 @@
 interface CssExports {
   'bottom-dock': string;
   'bottomDock': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

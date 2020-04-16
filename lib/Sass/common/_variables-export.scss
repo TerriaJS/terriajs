@@ -1,0 +1,26 @@
+// We reimport variables and then export it here so that it doesn't get consumed
+// in variables and update type files every time we make something accessible via JS
+
+// This is the webpack-aliased-and-overriden-from-TerriaMap one, otherwise
+// resolves back to our base one provided in terriajs
+@import "terriajs-variables";
+
+:export {
+  radiusLarge: $radius-large;
+  colorPrimary: $color-primary;
+  colorSplitter: $color-splitter;
+  textLight: $text-light;
+  textLightDimmed: $text-light-dimmed;
+  textDark: $text-dark;
+  textDarker: $text-darker;
+  dark: $dark;
+  darkWithOverlay: $dark-with-overlay;
+  grey: $grey;
+  greyLighter: $grey-lighter;
+  greyLighter2: $grey-lighter2;
+  greyLightest: $grey-lightest;
+  charcoalGrey: $charcoal-grey;
+
+  // TODO: fix, these are stopgaps & should get merged in with something else(?)
+  mapButtonColor: $map-button-color;
+}
