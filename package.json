@@ -100,7 +100,7 @@
     "eslint-plugin-jsx-control-statements": "^2.2.1",
     "eslint-plugin-react": "^7.12.4",
     "fs-extra": "^7.0.1",
-    "generate-terriajs-schema": "^1.4.0",
+    "generate-terriajs-schema": "^1.5.0",
     "glob-all": "^3.0.1",
     "husky": "^2.2.0",
     "jasmine-core": "^2.9.1",
