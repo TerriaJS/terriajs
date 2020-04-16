@@ -152,7 +152,7 @@ export default class CsvCatalogItem extends TableMixin(
     ) {
       return super.selectableDimensions;
     }
-    
+
     const regionColumnOptions: DimensionOption[] = this.tableStyles.map(
       tableStyle => {
         return {
