@@ -247,7 +247,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
     @computed
     get selectableDimensions(): SelectableDimension[] {
       if (this.mapItems.length === 0) {
-        [];
+        return [];
       }
 
       const tableModel = this;
