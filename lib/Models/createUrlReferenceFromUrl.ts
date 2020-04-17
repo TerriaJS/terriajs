@@ -7,8 +7,7 @@ import UrlReference from "./UrlReference";
 export default function createUrlReferenceFromUrl(
   url: string,
   terria: Terria,
-  allowLoad: boolean,
-  _index?: number
+  allowLoad: boolean
 ): Promise<UrlReference | undefined> {
   const item = upsertModelFromJson(
     CatalogMemberFactory,
