@@ -2,7 +2,6 @@ import i18next from "i18next";
 import { runInAction } from "mobx";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import ViewState from "../ReactViewModels/ViewState";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import CommonStrata from "./CommonStrata";
@@ -10,15 +9,14 @@ import createUrlReferenceFromUrl from "./createUrlReferenceFromUrl";
 import { BaseModel } from "./Model";
 import Terria from "./Terria";
 import upsertModelFromJson from "./upsertModelFromJson";
-import UrlReference from "./UrlReference";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 
 export default function createCatalogItemFromFileOrUrl(
   terria: Terria,
   viewState: ViewState,
   fileOrUrl: File | string,
-  dataType: any,
-  confirmConversion: boolean
+  dataType?: string,
+  confirmConversion: boolean = false
 ): Promise<BaseModel | undefined> {
   dataType = isDefined(dataType) ? dataType : "auto";
 
