@@ -3,6 +3,7 @@ Change Log
 ### next release
 
 * Added `GeoRssCatalogItem` for displaying GeoRSS files comming from rss2 and atom feeds.
+* Now is't possible to use Mustache template to define an item element name
 
 ### v7.11.4
 
