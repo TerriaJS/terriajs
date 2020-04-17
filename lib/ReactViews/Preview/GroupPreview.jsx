@@ -75,7 +75,9 @@ const GroupPreview = createReactClass({
 
             <If condition={metadataItem.dataCustodian}>
               <div>
-                <h2 className={Styles.subHeading}>{t("preview.dataCustodian")}</h2>
+                <h2 className={Styles.subHeading}>
+                  {t("preview.dataCustodian")}
+                </h2>
                 {parseCustomMarkdownToReact(metadataItem.dataCustodian, {
                   catalogItem: metadataItem
                 })}
