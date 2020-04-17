@@ -577,10 +577,16 @@ class WebMapServiceCatalogItem
             options: filterOutUndefined(
               dim.values.map(value => {
                 let name = value;
-                if (isDefined(dim.units)) {
-                  name = `${value} (${dim.units}${
-                    isDefined(dim.unitSymbol) ? ` ${dim.unitSymbol})` : ")"
-                  }`;
+                if (typeof dim.units === "string" && dim.units !== "") {
+                  if (
+                    typeof dim.unitSymbol === "string" &&
+                    dim.unitSymbol !== ""
+                  ) {
+                    name = `${value} (${dim.units} ${dim.unitSymbol})`;
+                  } else {
+                    name = `${value} (${dim.units})`;
+                    
+                  }
                 }
                 return {
                   name,
