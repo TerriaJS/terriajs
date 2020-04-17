@@ -585,7 +585,6 @@ class WebMapServiceCatalogItem
                     name = `${value} (${dim.units} ${dim.unitSymbol})`;
                   } else {
                     name = `${value} (${dim.units})`;
-                    
                   }
                 }
                 return {
