@@ -66,12 +66,4 @@ export default class CsvCatalogItemTraits extends mixTraits(
     type: PollingTraits
   })
   polling?: PollingTraits;
-
-  @primitiveTrait({
-    name: "Enable manual region mapping",
-    description:
-      "If enabled, there will be controls to set region column and region type.",
-    type: "boolean"
-  })
-  enableManualRegionMapping?: boolean;
 }

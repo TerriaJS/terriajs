@@ -15,8 +15,7 @@ import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
 import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import isDefined from "../Core/isDefined";
-import { DimensionOption } from "../Models/SelectableDimensions";
-import filterOutUndefined from "../Core/filterOutUndefined";
+import { BaseModel } from "./Model";
 
 // Types of CSVs:
 // - Points - Latitude and longitude columns or address
@@ -141,86 +140,6 @@ export default class CsvCatalogItem extends TableMixin(
         })
       );
     }
-  }
-
-  @computed
-  get selectableDimensions() {
-    if (
-      !this.enableManualRegionMapping ||
-      !isDefined(this.regionProviderList) ||
-      !Array.isArray(this.regionProviderList.regionProviders)
-    ) {
-      return super.selectableDimensions;
-    }
-
-    const regionColumnOptions: DimensionOption[] = this.tableStyles.map(
-      tableStyle => {
-        return {
-          name: tableStyle.id,
-          id: tableStyle.id
-        };
-      }
-    );
-
-    const regionTypeOptions: DimensionOption[] = this.regionProviderList.regionProviders.map(
-      regionProvider => {
-        return {
-          name: regionProvider.regionType,
-          id: regionProvider.regionType
-        };
-      }
-    );
-
-    return filterOutUndefined([
-      ...super.selectableDimensions,
-      {
-        get id(): string {
-          return "regionColumn";
-        },
-        get name(): string {
-          return "Region Column";
-        },
-        options: regionColumnOptions,
-        selectedId: this.activeTableStyle.regionColumn?.name,
-        setDimensionValue: (stratumId: string, regionCol: string) => {
-          this.defaultStyle.setTrait(stratumId, "regionColumn", regionCol);
-        }
-      },
-      isDefined(this.activeTableStyle.regionColumn)
-        ? {
-            get id(): string {
-              return "regionMapping";
-            },
-            get name(): string {
-              return "Region Mapping";
-            },
-            options: regionTypeOptions,
-            allowUndefined: true,
-            selectedId: this.activeTableStyle.regionColumn?.regionType
-              ?.regionType,
-            setDimensionValue: (stratumId: string, regionType: string) => {
-              let columnTraits = this.columns?.find(
-                column =>
-                  column.name === this.activeTableStyle.regionColumn?.name
-              );
-              if (!isDefined(columnTraits)) {
-                columnTraits = this.addObject(
-                  stratumId,
-                  "columns",
-                  this.activeTableStyle.regionColumn!.name
-                )!;
-                columnTraits.setTrait(
-                  stratumId,
-                  "name",
-                  this.activeTableStyle.regionColumn!.name
-                );
-              }
-
-              columnTraits.setTrait(stratumId, "regionType", regionType);
-            }
-          }
-        : undefined
-    ]);
   }
 }
 
