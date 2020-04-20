@@ -9,7 +9,7 @@ import ModelTraits from "../Traits/ModelTraits";
 import UrlReferenceTraits from "../Traits/UrlReferenceTraits";
 import StratumOrder from "./StratumOrder";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import { mapping } from "./createCatalogItemFromUrl";
+import { mapping } from "./createUrlReferenceFromUrl";
 import updateModelFromJson from "./updateModelFromJson";
 
 const urlRecordStratum = "url-record";
@@ -40,7 +40,7 @@ export default class UrlReference extends UrlMixin(
       return Promise.resolve(undefined);
     }
 
-    const target = UrlReference.createCatalogItemFromUrlReference(
+    const target = UrlReference.createUrlReferenceFromUrlReference(
       this,
       this.uniqueId,
       this.url,
@@ -51,7 +51,7 @@ export default class UrlReference extends UrlMixin(
     return Promise.resolve(target);
   }
 
-  private static createCatalogItemFromUrlReference(
+  private static createUrlReferenceFromUrlReference(
     sourceReference: BaseModel,
     id: string,
     url: string,
@@ -68,7 +68,7 @@ export default class UrlReference extends UrlMixin(
       (mapping[index].matcher && !mapping[index].matcher(url)) ||
       (mapping[index].requiresLoad && !allowLoad)
     ) {
-      return UrlReference.createCatalogItemFromUrlReference(
+      return UrlReference.createUrlReferenceFromUrlReference(
         sourceReference,
         id,
         url,
@@ -85,7 +85,7 @@ export default class UrlReference extends UrlMixin(
       );
 
       if (item === undefined) {
-        return UrlReference.createCatalogItemFromUrlReference(
+        return UrlReference.createUrlReferenceFromUrlReference(
           sourceReference,
           id,
           url,
@@ -105,7 +105,7 @@ export default class UrlReference extends UrlMixin(
           .loadMetadata()
           .then(() => item)
           .catch(e => {
-            return UrlReference.createCatalogItemFromUrlReference(
+            return UrlReference.createUrlReferenceFromUrlReference(
               sourceReference,
               id,
               url,
