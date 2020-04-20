@@ -8,6 +8,7 @@ import UrlReference from "../../lib/Models/UrlReference";
 import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import createCatalogItemFromFileOrUrl from "../../lib/Models/createCatalogItemFromFileOrUrl";
+import loadBlob from "../../lib/Core/loadBlob";
 
 describe("createUrlReferenceFromUrl", function() {
   let terria: Terria;
@@ -86,20 +87,18 @@ describe("createUrlReferenceFromUrl", function() {
   it("should create an catalog item (CSVCatalogItem) from File (csv) without specifying a dataType", function(done) {
     const fileUrl = "test/csv/lat_lon_val.csv";
 
-    fetch(fileUrl)
-      .then(res => res.blob())
-      .then(blob => {
-        let file: File = Object.assign(blob, {
-          lastModified: 0,
-          name: "lat_lon_val.csv"
-        });
-        createCatalogItemFromFileOrUrl(terria, viewState, file).then(item => {
-          expect(item).toBeDefined();
-          if (item !== undefined) {
-            expect(item instanceof CsvCatalogItem).toBe(true);
-          }
-          done();
-        });
+    loadBlob(fileUrl).then(blob => {
+      let file: File = Object.assign(blob, {
+        lastModified: 0,
+        name: "lat_lon_val.csv"
       });
+      createCatalogItemFromFileOrUrl(terria, viewState, file).then(item => {
+        expect(item).toBeDefined();
+        if (item !== undefined) {
+          expect(item instanceof CsvCatalogItem).toBe(true);
+        }
+        done();
+      });
+    });
   });
 });
