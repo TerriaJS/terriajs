@@ -24,12 +24,11 @@ const Text = styled(TextSpan).attrs({
 })``;
 
 const CompassWrapper = styled(Box).attrs({
-  centered: true
+  centered: true,
+  styledWidth: "64px",
+  styledHeight: "64px"
 })`
   flex-shrink: 0;
-  width: 64px;
-  height: 64px;
-  margin-right: 10px;
 
   svg {
     fill: ${props => props.theme.textDarker};
@@ -67,10 +66,10 @@ function GyroscopeGuidancePanel(props) {
   return (
     <Box
       column
+      paddedRatio={4}
       css={`
         direction: ltr;
         min-width: 295px;
-        padding: 20px;
       `}
     >
       <Text large>Gyroscope Contols</Text>
@@ -81,6 +80,7 @@ function GyroscopeGuidancePanel(props) {
             <CompassIcon glyph={Icon.GLYPHS.compassOuterEnlarged} />
             <CompassIcon glyph={Icon.GLYPHS.compassInnerArrows} inner darken />
           </CompassWrapper>
+          <Spacing right={2} />
           <Box column>
             <Text bold uppercase>
               Outer Ring
@@ -103,6 +103,7 @@ function GyroscopeGuidancePanel(props) {
             <CompassIcon glyph={Icon.GLYPHS.compassInnerArrows} inner />
             <Spacing right={2} />
           </CompassWrapper>
+          <Spacing right={2} />
           <Box column>
             <Text bold uppercase>
               Inner Circle
@@ -216,7 +217,6 @@ export default function GyroscopeGuidance(props) {
           transform: scale(0.75);
           transform-origin: right;
           svg {
-            fill: ${p => p.theme.textLight};
             width: 15px;
             height: 15px;
           }

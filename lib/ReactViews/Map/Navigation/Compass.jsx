@@ -257,7 +257,6 @@ class Compass extends React.Component {
 
     return (
       <StyledCompass
-        title={description}
         onMouseDown={this.handleMouseDown.bind(this)}
         onDoubleClick={this.handleDoubleClick.bind(this)}
         onMouseUp={this.resetRotater.bind(this)}
@@ -279,7 +278,7 @@ class Compass extends React.Component {
         </StyledCompassOuterRing>
 
         {/* "Top" animated layer */}
-        <StyledCompassOuterRing active={active}>
+        <StyledCompassOuterRing active={active} title={description}>
           <div style={outerCircleStyle}>
             <StyledIcon
               fillColor={this.props.theme.textDarker}
@@ -300,6 +299,7 @@ class Compass extends React.Component {
 
         {/* Rotation marker when dragging */}
         <StyledCompassRotationMarker
+          title={description}
           style={{
             backgroundImage: require("../../../../wwwroot/images/compass-rotation-marker.svg")
           }}
