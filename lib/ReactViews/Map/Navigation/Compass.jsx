@@ -44,8 +44,11 @@ const StyledCompass = styled.div`
   position: relative;
 
   // saas export will stringify your numbers
-  width: ${props => Number(props.theme.compassWidth) + 10}px;
-  height: ${props => Number(props.theme.compassWidth) + 10}px;
+  // width: ${props => Number(props.theme.compassWidth) + 10}px;
+  // height: ${props => Number(props.theme.compassWidth) + 10}px;
+  width: ${props => props.theme.compassWidth}px;
+  height: ${props => props.theme.compassWidth}px;
+  // height: ${props => Number(props.theme.compassWidth) + 10}px;
 
   @media (min-width: ${props => props.theme.sm}px) {
     display: block;
@@ -54,9 +57,14 @@ const StyledCompass = styled.div`
 
 const StyledCompassOuterRing = styled.div`
   ${props => props.theme.centerWithoutFlex()}
-  z-index: 1;
+  // z-index: 1;
+  z-index: ${props => (props.active ? "2" : "1")};
 
-  width: ${props => (props.active ? "100%" : "calc(100% - 10px)")};
+  // width: ${props => (props.active ? "100%" : "calc(100% - 10px)")};
+  // width: ${props => (props.active ? "100%" : "calc(100% - 10px)")};
+  ${props => props.active && "transform: translate(-50%,-50%) scale(1.1818);"};
+  width: 100%;
+  transition: transform 0.3s;
 `;
 
 const StyledCompassInnerRing = styled.div`
@@ -251,8 +259,32 @@ class Compass extends React.Component {
         onMouseUp={this.resetRotater.bind(this)}
         active={active}
       >
+        {/* "Top" animated layer */}
         <StyledCompassOuterRing
+          css={`
+            z-index: 2;
+          `}
           active={active}
+          onMouseOver={() => this.setState({ active: true })}
+          onMouseOut={() => this.setState({ active: true })}
+          // do we give focus to this? given it's purely a mouse tool
+          // focus it anyway..
+          tabIndex="0"
+          onFocus={() => this.setState({ active: true })}
+          // Gotta keep menu open if blurred, and close it with the close button
+          // instead. otherwise it'll never focus on the help buttons
+          // onBlur={() => this.setState({ active: false })}
+        >
+          <div style={outerCircleStyle}>
+            <StyledIcon
+              fillColor={this.props.theme.textDarker}
+              glyph={Icon.GLYPHS.compassOuter}
+            />
+          </div>
+        </StyledCompassOuterRing>
+        {/* Bottom "turns into white circle when active" layer */}
+        <StyledCompassOuterRing
+          active={false}
           onMouseOver={() => this.setState({ active: true })}
           onMouseOut={() => this.setState({ active: true })}
           // do we give focus to this? given it's purely a mouse tool
@@ -268,7 +300,7 @@ class Compass extends React.Component {
               fillColor={this.props.theme.textDarker}
               glyph={
                 active
-                  ? Icon.GLYPHS.compassOuterEnlarged
+                  ? Icon.GLYPHS.compassOuterSkeleton
                   : Icon.GLYPHS.compassOuter
               }
             />
