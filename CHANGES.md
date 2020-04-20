@@ -104,6 +104,7 @@ Change Log
 * Removed hardcoded workbench & Panel button colours
 * Ensure CSV column names are trimmed of whitespace.
 * Really stop analytics launch event sending bad & now empty & now finally the real label
+* Tidy Compass UI animations, styles, titles
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
