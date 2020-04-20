@@ -4,6 +4,9 @@
  *  - how it's currently hooked into the cesium viewer
  * we needlessly force re-render it all even though there is no change to orbit
  * or heading
+ *
+ * You'll also see a few weird numbers - this is due to the port from the scss
+ * styles, and will be leaving it as is for now
  */
 //
 
@@ -34,7 +37,8 @@ import FadeIn from "../../Transitions/FadeIn/FadeIn";
 // Markup:
 // <StyledCompass>
 //   (<GyroscopeGuidance /> if hovered/active/focused)
-//   <StyledCompassOuterRing />
+//   <StyledCompassOuterRing /> (base, turns into white circle when active)
+//   <StyledCompassOuterRing /> (clone to be used for animation)
 //   <StyledCompassInnerRing title="Click and drag to rotate the camera" />
 //   <StyledCompassRotationMarker />
 // </StyledCompass>
@@ -43,27 +47,26 @@ const StyledCompass = styled.div`
   display: none;
   position: relative;
 
-  // saas export will stringify your numbers
-  // width: ${props => Number(props.theme.compassWidth) + 10}px;
-  // height: ${props => Number(props.theme.compassWidth) + 10}px;
   width: ${props => props.theme.compassWidth}px;
   height: ${props => props.theme.compassWidth}px;
-  // height: ${props => Number(props.theme.compassWidth) + 10}px;
 
   @media (min-width: ${props => props.theme.sm}px) {
     display: block;
   }
 `;
 
+// 1.1818 comes from 65/55 = 1.1818 (64 and 56 sketch-designed numbers adapted for our "5" multiplier atm)
+const compassScaleRatio = 65 / 55;
+
 const StyledCompassOuterRing = styled.div`
   ${props => props.theme.centerWithoutFlex()}
-  // z-index: 1;
   z-index: ${props => (props.active ? "2" : "1")};
-
-  // width: ${props => (props.active ? "100%" : "calc(100% - 10px)")};
-  // width: ${props => (props.active ? "100%" : "calc(100% - 10px)")};
-  ${props => props.active && "transform: translate(-50%,-50%) scale(1.1818);"};
   width: 100%;
+  
+  ${props =>
+    props.active &&
+    `transform: translate(-50%,-50%) scale(${compassScaleRatio});`};
+
   transition: transform 0.3s;
 `;
 
@@ -82,6 +85,7 @@ const StyledCompassInnerRing = styled.div`
 
 const StyledCompassRotationMarker = styled.div`
   ${props => props.theme.centerWithoutFlex()}
+  z-index: 3;
 
   cursor: pointer;
 
@@ -259,45 +263,12 @@ class Compass extends React.Component {
         onMouseUp={this.resetRotater.bind(this)}
         active={active}
       >
-        {/* "Top" animated layer */}
-        <StyledCompassOuterRing
-          css={`
-            z-index: 2;
-          `}
-          active={active}
-          onMouseOver={() => this.setState({ active: true })}
-          onMouseOut={() => this.setState({ active: true })}
-          // do we give focus to this? given it's purely a mouse tool
-          // focus it anyway..
-          tabIndex="0"
-          onFocus={() => this.setState({ active: true })}
-          // Gotta keep menu open if blurred, and close it with the close button
-          // instead. otherwise it'll never focus on the help buttons
-          // onBlur={() => this.setState({ active: false })}
-        >
-          <div style={outerCircleStyle}>
-            <StyledIcon
-              fillColor={this.props.theme.textDarker}
-              glyph={Icon.GLYPHS.compassOuter}
-            />
-          </div>
-        </StyledCompassOuterRing>
         {/* Bottom "turns into white circle when active" layer */}
-        <StyledCompassOuterRing
-          active={false}
-          onMouseOver={() => this.setState({ active: true })}
-          onMouseOut={() => this.setState({ active: true })}
-          // do we give focus to this? given it's purely a mouse tool
-          // focus it anyway..
-          tabIndex="0"
-          onFocus={() => this.setState({ active: true })}
-          // Gotta keep menu open if blurred, and close it with the close button
-          // instead. otherwise it'll never focus on the help buttons
-          // onBlur={() => this.setState({ active: false })}
-        >
+        <StyledCompassOuterRing active={false}>
           <div style={outerCircleStyle}>
             <StyledIcon
               fillColor={this.props.theme.textDarker}
+              // if it's active, show a white circle only, as we need the base layer
               glyph={
                 active
                   ? Icon.GLYPHS.compassOuterSkeleton
@@ -306,6 +277,51 @@ class Compass extends React.Component {
             />
           </div>
         </StyledCompassOuterRing>
+
+        {/* "Top" animated layer */}
+        <StyledCompassOuterRing active={active}>
+          <div style={outerCircleStyle}>
+            <StyledIcon
+              fillColor={this.props.theme.textDarker}
+              glyph={Icon.GLYPHS.compassOuter}
+            />
+          </div>
+        </StyledCompassOuterRing>
+
+        {/* "Center circle icon" */}
+        <StyledCompassInnerRing title={t("compass.title")}>
+          <StyledIcon
+            fillColor={this.props.theme.textDarker}
+            glyph={
+              active ? Icon.GLYPHS.compassInnerArrows : Icon.GLYPHS.compassInner
+            }
+          />
+        </StyledCompassInnerRing>
+
+        {/* Rotation marker when dragging */}
+        <StyledCompassRotationMarker
+          style={{
+            backgroundImage: require("../../../../wwwroot/images/compass-rotation-marker.svg")
+          }}
+          onMouseOver={() => this.setState({ active: true })}
+          onMouseOut={() => this.setState({ active: true })}
+          // do we give focus to this? given it's purely a mouse tool
+          // focus it anyway..
+          tabIndex="0"
+          onFocus={() => this.setState({ active: true })}
+          // Gotta keep menu open if blurred, and close it with the close button
+          // instead. otherwise it'll never focus on the help buttons
+          // onBlur={() => this.setState({ active: false })}
+        >
+          <div style={rotationMarkerStyle}>
+            <StyledIcon
+              fillColor={this.props.theme.textDarker}
+              glyph={Icon.GLYPHS.compassRotationMarker}
+            />
+          </div>
+        </StyledCompassRotationMarker>
+
+        {/* Gyroscope guidance menu */}
         <FadeIn isVisible={active}>
           <GyroscopeGuidance
             viewState={this.props.viewState}
@@ -316,26 +332,6 @@ class Compass extends React.Component {
             onClose={() => this.setState({ active: false })}
           />
         </FadeIn>
-        <StyledCompassInnerRing title={t("compass.title")}>
-          <StyledIcon
-            fillColor={this.props.theme.textDarker}
-            glyph={
-              active ? Icon.GLYPHS.compassInnerArrows : Icon.GLYPHS.compassInner
-            }
-          />
-        </StyledCompassInnerRing>
-        <StyledCompassRotationMarker
-          style={{
-            backgroundImage: require("../../../../wwwroot/images/compass-rotation-marker.svg")
-          }}
-        >
-          <div style={rotationMarkerStyle}>
-            <StyledIcon
-              fillColor={this.props.theme.textDarker}
-              glyph={Icon.GLYPHS.compassRotationMarker}
-            />
-          </div>
-        </StyledCompassRotationMarker>
       </StyledCompass>
     );
   }
