@@ -112,25 +112,21 @@ class HelpPanel extends React.Component {
               terria={this.props.terria}
               viewState={this.props.viewState}
               iconElement={Icon.GLYPHS.start}
-              title={"Getting started with the Digital Twin"}
+              title={"Getting started with a map"}
               itemString={"getstarted"}
               description={[
-                "If you’re new to the NSW Spatial Digital Twin, this video provides a short explanation of how to use some of the basic functions, so you can feel like a pro in no time!",
-                "We cover:",
-                <span key={2}>
-                  • Signing in to the{" "}
-                  <a href="https://portal.spatial.nsw.gov.au/portal/apps/sites/#/home">
-                    NSW Spatial Collaboration Portal
-                  </a>
-                </span>,
-                "• Finding a location",
-                "• Exploring public data in the catalogue and adding it to the Digital Twin",
-                "• Workbench controls",
-                "• Removing data"
+                "If you're new to the map or using spatial data, our Getting Started video quickly covers the basic functionality you'll need to use to add and interrogate data sets.",
+                "If you don't have time to watch the video, we suggest exploring the following areas:",
+                "• Search for a location to quickly find an area of interest",
+                "• Use 'Explore map data' to view the catalogue of available data sets and add them to the map",
+                "• Interact with the data layer, including opacity and toggling on and off on the left in your workbench",
+                "• Click on the data on the map to view more detailed data, including the raw data",
+                "• Change your basemap using options in 'Map Settings' to help make some data sets more visible",
+                "• Zoom and change your view, including tilting the view angle using the controls on the right-hand side of the screen"
               ]}
-              videoLink={"https://www.youtube.com/embed/lQE5E1O7VTs"}
+              videoLink={"https://www.youtube.com/embed/NTtSM70rIvI"}
               background={
-                "https://img.youtube.com/vi/lQE5E1O7VTs/maxresdefault.jpg"
+                "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
               }
             />
             {this.props.items}
