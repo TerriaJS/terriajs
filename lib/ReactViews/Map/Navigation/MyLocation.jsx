@@ -191,7 +191,7 @@ const MyLocation = createReactClass({
         primary={this.followMeEnabled()}
         expandInPlace
         onClick={this.handleClick}
-        buttonTitle={t("location.centreMap")}
+        title={t("location.centreMap")}
         iconElement={() => <Icon glyph={Icon.GLYPHS.geolocation} />}
       >
         {t("location.location")}
