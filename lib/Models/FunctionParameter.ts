@@ -6,7 +6,8 @@ export interface Options {
   name?: string;
   description?: string;
   isRequired?: boolean;
-  converter: unknown;
+  converter?: unknown;
+  value?: any;
 }
 
 interface Feature {
@@ -20,9 +21,9 @@ export default abstract class FunctionParameter {
   readonly name: string;
   readonly description: string;
   readonly isRequired: boolean;
-  readonly converter: unknown;
+  readonly converter?: unknown;
 
-  @observable value?: unknown;
+  @observable value?: any;
 
   readonly geoJsonFeature?: Promise<Feature> | Feature | undefined;
 
@@ -32,6 +33,7 @@ export default abstract class FunctionParameter {
     this.description = options.description || "";
     this.isRequired = options.isRequired || false;
     this.converter = options.converter;
+    this.value = options.value
   }
 
   formatValueAsString(value?: unknown) {

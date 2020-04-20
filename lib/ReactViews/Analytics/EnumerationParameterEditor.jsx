@@ -1,34 +1,28 @@
 import React from "react";
-import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import ObserveModelMixin from "../ObserveModelMixin";
+import { observer } from "mobx-react";
 
 import Styles from "./parameter-editors.scss";
+import { runInAction } from "mobx";
 
-const EnumerationParameterEditor = createReactClass({
-  displayName: "EnumerationParameterEditor",
-  mixins: [ObserveModelMixin],
-
-  propTypes: {
-    previewed: PropTypes.object,
-    parameter: PropTypes.object
-  },
-
-  getInitialState() {
-    return {
-      value: this.props.parameter.value
-    };
-  },
+@observer
+class EnumerationParameterEditor extends React.Component {
+  static propTypes = {
+    terria: PropTypes.object,
+    viewState: PropTypes.object
+  };
 
   onChange(e) {
-    this.props.parameter.value = e.target.value;
-  },
+    runInAction(() => {
+      this.props.parameter.value = e.target.value;
+    })
+  };
 
   render() {
     return (
       <select
         className={Styles.field}
-        onChange={this.onChange}
+        onChange={this.onChange.bind(this)}
         value={this.props.parameter.value}
       >
         {this.props.parameter.possibleValues.map((v, i) => (
@@ -39,6 +33,6 @@ const EnumerationParameterEditor = createReactClass({
       </select>
     );
   }
-});
+}
 
 module.exports = EnumerationParameterEditor;
