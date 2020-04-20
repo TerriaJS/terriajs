@@ -15,6 +15,7 @@ import SplitterTraits from "./SplitterTraits";
 import UrlTraits from "./UrlTraits";
 import anyTrait from "./anyTrait";
 import { JsonObject } from "../Core/Json";
+import TimeFilterTraits from "./TimeFilterTraits";
 
 export class WebMapServiceAvailableStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -68,6 +69,7 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   LayerOrderingTraits,
   SplitterTraits,
   DiscretelyTimeVaryingTraits,
+  TimeFilterTraits,
   GetCapabilitiesTraits,
   RasterLayerTraits,
   UrlTraits,

@@ -2,6 +2,8 @@ Change Log
 ==========
 
 ### MobX Development
+
+* Fixed DragDropFile and `createCatalogItemFromFileOrUrl` which wasn't enabled/working in mobx, added tests for `createCatalogItemFromFileOrUrl` and renamed `createCatalogItemFromUrl` to `createUrlRefernceFromUrl`.
 * Fixed bug in StratumOrder where `sortBottomToTop` would sort strata in the wrong order.
 * Allow member re-ordering via GroupMixin's `moveMemberToIndex`
 * Fixed a bug where `updateModelFromJson` would ignore its `replaceStratum` parameter.
@@ -73,6 +75,7 @@ Change Log
 * Readded basic `CompositeCatalogItem`.
 * Ported Augmented Reality features
 * Fixed bug causing "Terrain hides underground features" checkbox to sometimes become out of sync between `SettingPanel` and `WorkbenchSplitScreen`.
+* Ports the Filter by Location" feature for Satellite imagery. The property name setting is renamed to `timeFilterPropertyName` from `featureTimesProperty`.
 * Made split screen window in workbench hidden when viewer is changed to 3D Smooth and 2D
 * Tidy Help UI code
 * Added `allowFeatureInfoRequests` property to `Terria` and prevent unnecessary feature info requests when creating `UserDrawing`s.
@@ -83,6 +86,7 @@ Change Log
 * Add .tsx tests for UI components
 * Provide a fallback name for an `ArcGisServerCatalogItem`
 * Ensure `CesiumTileLayer.getTileUrl` returns a string.
+* Polished help UI to match designs
 * Adds methods `removeModelReferences` to Terria & ViewState for unregistering and removing models from different parts of the UI.
 * Add basic support for various error provider services, implementing support for Rollbar. 
 * Add trait to enabling hiding legends for a `CatalogMember` in the workbench.
@@ -94,6 +98,9 @@ Change Log
 * Fixed bug causing full app crash or viewer zoom refresh when using 3D view and changing settings or changing the terrain provider.
 * Add support for styling CSVs using a region mapped or text columns.
 * Make the help panel customisable to different maps
+* Removed hardcoded workbench & Panel button colours
+* Ensure CSV column names are trimmed of whitespace.
+* Really stop analytics launch event sending bad & now empty & now finally the real label
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC

@@ -3,14 +3,14 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
-import Icon from "../../../Icon.jsx";
+import { withTheme } from "styled-components";
+import Icon, { StyledIcon } from "../../../Icon.jsx";
 import Styles from "./help-panel.scss";
-import { action } from "mobx";
 import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
-import MapIconButton from "../../../MapIconButton/MapIconButton";
 import HelpPanelItem from "./HelpPanelItem";
+import { RawButton } from "../../../../Styled/Button.jsx";
 
 @observer
 class HelpPanel extends React.Component {
@@ -20,6 +20,7 @@ class HelpPanel extends React.Component {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
     items: PropTypes.array,
+    theme: PropTypes.object,
     t: PropTypes.func.isRequired
   };
 
@@ -27,59 +28,61 @@ class HelpPanel extends React.Component {
     super(props);
   }
 
-  @action.bound
-  hidePanel() {
-    this.props.viewState.showHelpMenu = false;
-    this.props.viewState.helpPanelExpanded = false;
-    this.props.viewState.selectedHelpMenuItem = "";
-  }
-
-  @action.bound
-  handleClick() {
-    this.props.viewState.topElement = "HelpPanel";
-  }
-
   render() {
     // const { t } = this.props;
+    const isVisible =
+      this.props.viewState.showHelpMenu &&
+      this.props.viewState.topElement === "HelpPanel";
+    const isExpanded = this.props.viewState.helpPanelExpanded;
     const className = classNames(
       {
         [Styles.helpPanel]: true,
-        [Styles.helpPanelShifted]: this.props.viewState.helpPanelExpanded
+        [Styles.isVisible]: isVisible && !isExpanded,
+        [Styles.isHidden]: !isVisible,
+        [Styles.helpPanelShifted]: isVisible && isExpanded
       },
       this.props.viewState.topElement === "HelpPanel" ? "top-element" : ""
     );
     return (
-      <div className={className} onClick={this.handleClick}>
+      <div
+        className={className}
+        onClick={() => this.props.viewState.setTopElement("HelpPanel")}
+      >
         <div
           css={`
-            svg {
-              width: 15px;
-              height: 15px;
-            }
             button {
-              box-shadow: none;
-              float: right;
+              padding: 15px;
+              position: absolute;
+              right: 0;
+              z-index: 110;
             }
           `}
         >
-          <MapIconButton
-            onClick={this.hidePanel}
-            iconElement={() => <Icon glyph={Icon.GLYPHS.closeLight} />}
-          />
+          <RawButton onClick={() => this.props.viewState.hideHelpPanel()}>
+            <StyledIcon
+              styledWidth={"16px"}
+              fillColor={this.props.theme.textDark}
+              opacity={"0.5"}
+              glyph={Icon.GLYPHS.closeLight}
+            />
+          </RawButton>
         </div>
         <Box
           centered
+          paddedHorizontally={5}
+          paddedVertically={17}
+          displayInlineBlock
           css={`
             direction: ltr;
             min-width: 295px;
-            padding: 90px 20px;
             padding-bottom: 0px;
-            display: inline-block;
           `}
         >
-          <Text heading>We&apos;re here to help</Text>
-          <Spacing bottom={5} />
-          <Text medium>
+          <Text extraBold heading textDark>
+            We&apos;re here to help
+          </Text>
+          <Spacing bottom={4} />
+          <Text medium textDark>
             Find useful tips on how to use the Digital Twin either by checking
             the video guides below or by contacting the team at{" "}
             <span className={Styles.link}>info@terria.io</span>.
@@ -96,18 +99,9 @@ class HelpPanel extends React.Component {
             </button>
           </Box> */}
         </Box>
-        <Box
-          centered
-          css={`
-            display: inline-block;
-          `}
-        >
-          <Spacing bottom={10} />
-          <Box
-            css={`
-              display: inline-block;
-            `}
-          >
+        <Spacing bottom={10} />
+        <Box centered displayInlineBlock>
+          <Box displayInlineBlock>
             <HelpPanelItem
               terria={this.props.terria}
               viewState={this.props.viewState}
@@ -137,4 +131,4 @@ class HelpPanel extends React.Component {
   }
 }
 
-export default withTranslation()(HelpPanel);
+export default withTranslation()(withTheme(HelpPanel));

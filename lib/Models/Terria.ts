@@ -94,7 +94,7 @@ interface StartOptions {
   configUrlHeaders?: {
     [key: string]: string;
   };
-  applicationUrl?: string;
+  applicationUrl?: Location;
   shareDataService?: ShareDataService;
 }
 
@@ -364,7 +364,7 @@ export default class Terria {
     const baseUri = new URI(options.configUrl).filename("");
 
     const launchUrlForAnalytics =
-      options.applicationUrl || getUriWithoutPath(baseUri);
+      options.applicationUrl?.href || getUriWithoutPath(baseUri);
     return loadJson5(options.configUrl, options.configUrlHeaders)
       .then((config: any) => {
         runInAction(() => {
@@ -403,7 +403,7 @@ export default class Terria {
         }
         this.loadPersistedMapSettings();
         if (options.applicationUrl) {
-          return this.updateApplicationUrl(options.applicationUrl);
+          return this.updateApplicationUrl(options.applicationUrl.href);
         }
       });
   }
