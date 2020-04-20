@@ -2,6 +2,8 @@ Change Log
 ==========
 
 ### MobX Development
+
+* Fixed DragDropFile and `createCatalogItemFromFileOrUrl` which wasn't enabled/working in mobx, added tests for `createCatalogItemFromFileOrUrl` and renamed `createCatalogItemFromUrl` to `createUrlRefernceFromUrl`.
 * Fixed bug in StratumOrder where `sortBottomToTop` would sort strata in the wrong order.
 * Allow member re-ordering via GroupMixin's `moveMemberToIndex`
 * Fixed a bug where `updateModelFromJson` would ignore its `replaceStratum` parameter.
