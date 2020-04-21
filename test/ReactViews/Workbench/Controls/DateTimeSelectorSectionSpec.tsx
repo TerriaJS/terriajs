@@ -7,6 +7,7 @@ import React from "react";
 import Terria from "../../../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../../../lib/Models/WebMapServiceCatalogItem";
 import DateTimeSelectorSection from "../../../../lib/ReactViews/Workbench/Controls/DateTimeSelectorSection";
+import { formatDateTime } from "../../../../lib/ReactViews/BottomDock/Timeline/DateFormats";
 
 describe("DateTimeSelectorSection", function() {
   let terria: Terria;
@@ -39,7 +40,11 @@ describe("DateTimeSelectorSection", function() {
   it("A datetime selector is rendered", function() {
     expect(buttons).toBeDefined();
     expect(buttons.length).toEqual(5);
-    expect(currentDateBtn.children[0]).toEqual("01/01/2014, 11:00:00");
+    // Need to do it the longer way because Travis runs in a diff locale
+    const expectedDateStr = formatDateTime(
+      new Date("2014-01-01T00:00:00.000Z")
+    );
+    expect(currentDateBtn.children[0]).toEqual(expectedDateStr);
   });
 
   it("A datetime selector can be formatted", async function() {
