@@ -97,9 +97,14 @@ Change Log
 * Overhauled location search to be a dropdown instead of list of results
 * Fixed bug causing full app crash or viewer zoom refresh when using 3D view and changing settings or changing the terrain provider.
 * Add support for styling CSVs using a region mapped or text columns.
+* Update Compass UI to include larger rotation target, remove sass from compass
+* Link Compass "help" button to `navigation` HelpPanelItem (requires generalisation later down the track)
+* Improve keyboard traversal through right-hand-side map icon buttons
+* Link Compass Gyroscope guidance footer text to `navigation` HelpPanelItem (requires generalisation later down the track)
 * Removed hardcoded workbench & Panel button colours
 * Ensure CSV column names are trimmed of whitespace.
 * Really stop analytics launch event sending bad & now empty & now finally the real label
+* Tidy Compass UI animations, styles, titles
 * Add `dateFormat` trait to `TimeVaryingTraits` to allowing formatting of datestrings in workbench and bottomdock.
 
 ### Next Release
