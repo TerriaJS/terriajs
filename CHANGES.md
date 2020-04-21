@@ -3,6 +3,7 @@ Change Log
 ### next release
 
 * Added `GeoRssCatalogItem` for displaying GeoRSS files comming from rss2 and atom feeds.
+* Added Mustache template Name to the CSWCatalogGroup (itemNameTemplate) to define a child item name
 
 ### v7.11.4
 
