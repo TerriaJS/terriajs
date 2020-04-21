@@ -42,9 +42,7 @@ import SelectableDimensions, {
 //   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
 // This is a dodgy workaround.
 class RegionProviderList extends JSRegionProviderList {}
-function TableMixin<T extends Constructor<Model<TableTraits>>>(
-  Base: T
-) {
+function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
   abstract class TableMixin extends Base implements SelectableDimensions {
     get hasTableMixin() {
       return true;
@@ -261,7 +259,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(
     @computed
     get styleDimensions(): SelectableDimension | undefined {
       if (this.mapItems.length === 0 && !this.enableManualRegionMapping) {
-        return
+        return;
       }
       const tableModel = this;
       return {
