@@ -79,6 +79,39 @@ export default class ViewState {
   @observable featurePrompts: any[] = [];
 
   /**
+   * we need a layering system for touring the app, but also a way for it to be
+   * chopped and changed from a terriamap
+   * 
+   * this will be slightly different to the help sequences that were done in
+   * the past, but may evolve to become a "sequence" (where the UI gets 
+   * programatically toggled to delve deeper into the app, e.g. show the user
+   * how to add data via the data catalog window)
+   * 
+   * rough points
+   * - "all guide points visible"
+   * - 
+   * 
+
+   * draft structure(?):
+   * 
+   * maybe each "guide" item will have
+   * {
+   *  ref: (react ref object)
+   *  dotOffset: (which way the dot and guide should be positioned relative to the ref component)
+   *  content: (component, more flexibility than a string)
+   * ...?
+   * }
+   * and guide props?
+   * {
+   *  enabled: parent component to decide this based on active index
+   * ...?
+   * }
+   *  */
+
+  @observable tourPoints: any[] = [];
+  @observable currentTourIndex: any[] = [];
+
+  /**
    * Gets or sets a value indicating whether the small screen (mobile) user interface should be used.
    * @type {Boolean}
    */
