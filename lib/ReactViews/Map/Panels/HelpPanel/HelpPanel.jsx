@@ -42,16 +42,8 @@ class HelpPanel extends React.Component {
     return (
       <For each="content" index="i" of={contents}>
         <Box paddedVertically>
-          <Box
-            centered
-            paddedHorizontally={4}
-          >
-            <Numbers 
-              small 
-              textLight
-              textAlignCenter
-              darkBg
-            >
+          <Box centered paddedHorizontally={4}>
+            <Numbers small textLight textAlignCenter darkBg>
               {i + 1}
             </Numbers>
           </Box>

@@ -108,7 +108,9 @@ class HelpVideoPanel extends React.Component {
           displayInlineBlock
           paddedHorizontally={4}
           paddedVertically={18}
-          css={`overflow: auto;`}
+          css={`
+            overflow: auto;
+          `}
         >
           <div
             className={Styles.videoLink}
