@@ -278,7 +278,12 @@ class Compass extends React.Component {
         </StyledCompassOuterRing>
 
         {/* "Top" animated layer */}
-        <StyledCompassOuterRing active={active} title={description}>
+        <StyledCompassOuterRing
+          active={active}
+          title={description}
+          aria-hidden="true"
+          role="presentation"
+        >
           <div style={outerCircleStyle}>
             <StyledIcon
               fillColor={this.props.theme.textDarker}
