@@ -8,6 +8,7 @@
 :export {
   // TODO: find a better solution for this - some of these we need to provide as
   // numbers only so we can do math on them and add the unit afterwards 😵
+  // screen sizes for media queries
   // mobile: $mobile;
   // sm: $sm;
   // md: $md;
@@ -17,11 +18,15 @@
   md: 992;
   lg: 1300;
 
+  // Compass styles
   // compassWidth: $compass-width;
   compassWidth: 55;
   ringWidth: 10;
 
+  // ..radius? (no standardised radius at the moment, pull in as needed from variables
   radiusLarge: $radius-large;
+
+  // Colours
   colorPrimary: $color-primary;
   colorSplitter: $color-splitter;
   textLight: $text-light;
