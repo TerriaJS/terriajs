@@ -11,6 +11,15 @@ import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
 import HelpPanelItem from "./HelpPanelItem";
 import { RawButton } from "../../../../Styled/Button.jsx";
+import styled from "styled-components";
+
+const Numbers = styled(Text)`
+  width: 22px;
+  height: 22px;
+  line-height: 22px;
+  border-radius: 50%;
+  ${props => props.darkBg && `background-color: ${props.theme.textDark};`}
+`;
 
 @observer
 class HelpPanel extends React.Component {
@@ -26,6 +35,32 @@ class HelpPanel extends React.Component {
 
   constructor(props) {
     super(props);
+  }
+
+  renderOrderedList(contents) {
+    console.log(this.props.theme);
+    return (
+      <For each="content" index="i" of={contents}>
+        <Box paddedVertically>
+          <Box
+            centered
+            paddedHorizontally={4}
+          >
+            <Numbers 
+              small 
+              textLight
+              textAlignCenter
+              darkBg
+            >
+              {i + 1}
+            </Numbers>
+          </Box>
+          <Text medium textDark>
+            {content}
+          </Text>
+        </Box>
+      </For>
+    );
   }
 
   render() {
@@ -111,12 +146,14 @@ class HelpPanel extends React.Component {
               description={[
                 "If you're new to the map or using spatial data, our Getting Started video quickly covers the basic functionality you'll need to use to add and interrogate data sets.",
                 "If you don't have time to watch the video, we suggest exploring the following areas:",
-                "• Search for a location to quickly find an area of interest",
-                "• Use 'Explore map data' to view the catalogue of available data sets and add them to the map",
-                "• Interact with the data layer, including opacity and toggling on and off on the left in your workbench",
-                "• Click on the data on the map to view more detailed data, including the raw data",
-                "• Change your basemap using options in 'Map Settings' to help make some data sets more visible",
-                "• Zoom and change your view, including tilting the view angle using the controls on the right-hand side of the screen"
+                this.renderOrderedList([
+                  "Search for a location to quickly find an area of interest",
+                  "Use 'Explore map data' to view the catalogue of available data sets and add them to the map",
+                  "Interact with the data layer, including opacity and toggling on and off on the left in your workbench",
+                  "Click on the data on the map to view more detailed data, including the raw data",
+                  "Change your basemap using options in 'Map Settings' to help make some data sets more visible",
+                  "Zoom and change your view, including tilting the view angle using the controls on the right-hand side of the screen"
+                ])
               ]}
               videoLink={"https://www.youtube.com/embed/NTtSM70rIvI"}
               background={

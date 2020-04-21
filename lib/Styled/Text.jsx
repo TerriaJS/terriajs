@@ -21,6 +21,7 @@ export const Text = styled.div`
   ${props => props.uppercase && `text-transform: uppercase;`}
 
   ${props => props.textAlignLeft && `text-align: left;`}
+  ${props => props.textAlignCenter && `text-align: center;`}
   ${props =>
     props.primary &&
     `
