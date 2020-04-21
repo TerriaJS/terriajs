@@ -6,6 +6,21 @@
 @import "terriajs-variables";
 
 :export {
+  // TODO: find a better solution for this - some of these we need to provide as
+  // numbers only so we can do math on them and add the unit afterwards 😵
+  // mobile: $mobile;
+  // sm: $sm;
+  // md: $md;
+  // lg: $lg;
+  mobile: 767;
+  sm: 768;
+  md: 992;
+  lg: 1300;
+
+  // compassWidth: $compass-width;
+  compassWidth: 55;
+  ringWidth: 10;
+
   radiusLarge: $radius-large;
   colorPrimary: $color-primary;
   colorSplitter: $color-splitter;
@@ -13,6 +28,7 @@
   textLightDimmed: $text-light-dimmed;
   textDark: $text-dark;
   textDarker: $text-darker;
+  textBlack: $text-black;
   dark: $dark;
   darkWithOverlay: $dark-with-overlay;
   grey: $grey;
