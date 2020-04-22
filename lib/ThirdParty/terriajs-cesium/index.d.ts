@@ -1,3 +1,5 @@
+/// <reference types="cesium" />
+
 // Generated from the intersection of:
 // - properties available on Cesium object
 // - files in Source/**/*
