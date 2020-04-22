@@ -109,7 +109,11 @@ export default class ViewState {
    *  */
 
   @observable tourPoints: any[] = [];
-  @observable currentTourIndex: any[] = [];
+  @observable currentTourIndex: number = -1;
+  @action
+  setTourIndex(index: number) {
+    this.currentTourIndex = index;
+  }
 
   /**
    * Gets or sets a value indicating whether the small screen (mobile) user interface should be used.

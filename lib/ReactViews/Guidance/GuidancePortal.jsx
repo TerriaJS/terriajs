@@ -8,6 +8,7 @@ import styled, { withTheme } from "styled-components";
 // import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
+import { observer } from "mobx-react";
 
 import Box from "../../Styled/Box";
 import Button from "../../Styled/Button";
@@ -91,24 +92,28 @@ const GuidancePortalOverlay = styled(Box)`
   position: fixed;
   width: 100%;
   height: 100%;
-  background: lightblue;
+  background: black;
   z-index: 1000;
-  opacity: 0.5;
+  opacity: 0.45;
 `;
 
-export const GuidancePortal = ({ children }) => {
+export const GuidancePortal = observer(({ children, viewState }) => {
   const [showGuidance, setShowGuidance] = useState(false);
-
+  const showPortal = viewState.currentTourIndex !== -1;
+  if (!showPortal) return null;
   return (
     <GuidancePortalOverlay>
       <GuidanceDot onClick={() => setShowGuidance(!showGuidance)} />
       {showGuidance && <GuidanceContextModal>{children}</GuidanceContextModal>}
+
+      <Button onClick={() => viewState.setTourIndex(-1)}>Exit tour</Button>
     </GuidancePortalOverlay>
   );
-};
+});
 
 GuidancePortal.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
+  viewState: PropTypes.object.isRequired
 };
 
 export default withTheme(GuidancePortal);

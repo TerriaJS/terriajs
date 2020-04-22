@@ -86,17 +86,17 @@ class HelpPanel extends React.Component {
             the video guides below or by contacting the team at{" "}
             <span className={Styles.link}>info@terria.io</span>.
           </Text>
-          {/* <Spacing bottom={5} />
+          <Spacing bottom={5} />
           <Box centered>
             <button
               className={Styles.tourBtn}
               title={"Take the tour"}
-              // onClick={}
+              onClick={() => this.props.viewState.setTourIndex(0)}
             >
               {" "}
               <Icon glyph={Icon.GLYPHS.tour} /> {"Take the tour"}{" "}
             </button>
-          </Box> */}
+          </Box>
         </Box>
         <Spacing bottom={10} />
         <Box centered displayInlineBlock>
