@@ -16,8 +16,6 @@ type CatalogFunction = Model<CatalogFunctionTraits>;
 
 function CatalogFunctionMixin<T extends Constructor<CatalogFunction>>(Base: T) {
   abstract class CatalogFunctionMixin extends CatalogMemberMixin(Base) {
-    protected resultPendingCatalogItem?: ResultPendingCatalogItem;
-
     abstract async invoke(): Promise<void>;
 
     // TODO: Move parameters into Traits
@@ -36,12 +34,12 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunction>>(Base: T) {
       );
 
       const id = `${this.name} ${timestamp}`;
-      this.resultPendingCatalogItem = new ResultPendingCatalogItem(
+      const resultPendingCatalogItem = new ResultPendingCatalogItem(
         id,
         this.terria
       );
-      this.resultPendingCatalogItem.showsInfo = true;
-      this.resultPendingCatalogItem.isMappable = true;
+      resultPendingCatalogItem.showsInfo = true;
+      resultPendingCatalogItem.isMappable = true;
 
       const inputsSection =
         '<table class="cesium-infoBox-defaultTable">' +
@@ -61,8 +59,8 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunction>>(Base: T) {
         "</table>";
 
       runInAction(() => {
-        this.resultPendingCatalogItem!.setTrait(CommonStrata.user, "name", id);
-        this.resultPendingCatalogItem!.setTrait(
+        resultPendingCatalogItem!.setTrait(CommonStrata.user, "name", id);
+        resultPendingCatalogItem!.setTrait(
           CommonStrata.user,
           "description",
           `This is the result of invoking the ${this.name} process or service at ${timestamp} with the input parameters below.`
@@ -72,17 +70,17 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunction>>(Base: T) {
           name: "Inputs",
           content: inputsSection
         });
-        this.resultPendingCatalogItem!.setTrait(CommonStrata.user, "info", [
+        resultPendingCatalogItem!.setTrait(CommonStrata.user, "info", [
           info
         ]);
       });
-      return this.resultPendingCatalogItem;
+      return resultPendingCatalogItem;
     }
 
-    setErrorOnPendingItem(errorMessage?: string) {
+    setErrorOnPendingItem(resultPendingCatalogItem: ResultPendingCatalogItem, errorMessage?: string) {
       runInAction(() => {
-        if (isDefined(this.resultPendingCatalogItem)) {
-          this.resultPendingCatalogItem.setTrait(
+        if (isDefined(resultPendingCatalogItem)) {
+          resultPendingCatalogItem.setTrait(
             CommonStrata.user,
             "shortReport",
             `${this.typeName ||
@@ -94,7 +92,7 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunction>>(Base: T) {
             name: "Error Details",
             content: errorMessage || "The reason for failure is unknown."
           });
-          const info = this.resultPendingCatalogItem.getTrait(
+          const info = resultPendingCatalogItem.getTrait(
             CommonStrata.user,
             "info"
           );
