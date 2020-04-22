@@ -27,10 +27,6 @@ class HelpPanelItem extends React.Component {
     t: PropTypes.func.isRequired
   };
 
-  static defaultProps = {
-    videoLink: "https://www.youtube.com/watch?v=fbiQawV8IYY"
-  };
-
   constructor(props) {
     super(props);
   }

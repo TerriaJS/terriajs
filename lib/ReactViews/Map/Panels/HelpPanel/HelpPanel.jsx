@@ -16,10 +16,28 @@ import styled from "styled-components";
 const Numbers = styled(Text)`
   width: 22px;
   height: 22px;
-  line-height: 22px;
+  line-height: 24px;
   border-radius: 50%;
   ${props => props.darkBg && `background-color: ${props.theme.textDark};`}
 `;
+
+const renderOrderedList = function(contents) {
+  return (
+    <For each="content" index="i" of={contents}>
+      <Box paddedVertically>
+        <Box centered>
+          <Numbers textLight textAlignCenter darkBg>
+            {i + 1}
+          </Numbers>
+          <Spacing right={3} />
+        </Box>
+        <Text medium textDark>
+          {content}
+        </Text>
+      </Box>
+    </For>
+  );
+}
 
 @observer
 class HelpPanel extends React.Component {
@@ -28,32 +46,34 @@ class HelpPanel extends React.Component {
   static propTypes = {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
+    gettingStarted: PropTypes.object,
     items: PropTypes.array,
     theme: PropTypes.object,
     t: PropTypes.func.isRequired
   };
 
+  static defaultProps = {
+    gettingStarted: {
+      title: "Getting started with a map",
+      description: [
+        "If you're new to the map or using spatial data, our Getting Started video quickly covers the basic functionality you'll need to use to add and interrogate data sets.",
+        "If you don't have time to watch the video, we suggest exploring the following areas:",
+        renderOrderedList([
+          "Search for a location to quickly find an area of interest",
+          "Use 'Explore map data' to view the catalogue of available data sets and add them to the map",
+          "Interact with the data layer, including opacity and toggling on and off on the left in your workbench",
+          "Click on the data on the map to view more detailed data, including the raw data",
+          "Change your basemap using options in 'Map Settings' to help make some data sets more visible",
+          "Zoom and change your view, including tilting the view angle using the controls on the right-hand side of the screen"
+        ])
+      ],
+      videoLink: "https://www.youtube.com/embed/NTtSM70rIvI",
+      background: "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
+    }
+  };
+
   constructor(props) {
     super(props);
-  }
-
-  renderOrderedList(contents) {
-    console.log(this.props.theme);
-    return (
-      <For each="content" index="i" of={contents}>
-        <Box paddedVertically>
-          <Box centered>
-            <Numbers small textLight textAlignCenter darkBg>
-              {i + 1}
-            </Numbers>
-            <Spacing right={3} />
-          </Box>
-          <Text medium textDark>
-            {content}
-          </Text>
-        </Box>
-      </For>
-    );
   }
 
   render() {
@@ -134,24 +154,11 @@ class HelpPanel extends React.Component {
               terria={this.props.terria}
               viewState={this.props.viewState}
               iconElement={Icon.GLYPHS.start}
-              title={"Getting started with a map"}
+              title={this.props.gettingStarted.title}
               itemString={"getstarted"}
-              description={[
-                "If you're new to the map or using spatial data, our Getting Started video quickly covers the basic functionality you'll need to use to add and interrogate data sets.",
-                "If you don't have time to watch the video, we suggest exploring the following areas:",
-                this.renderOrderedList([
-                  "Search for a location to quickly find an area of interest",
-                  "Use 'Explore map data' to view the catalogue of available data sets and add them to the map",
-                  "Interact with the data layer, including opacity and toggling on and off on the left in your workbench",
-                  "Click on the data on the map to view more detailed data, including the raw data",
-                  "Change your basemap using options in 'Map Settings' to help make some data sets more visible",
-                  "Zoom and change your view, including tilting the view angle using the controls on the right-hand side of the screen"
-                ])
-              ]}
-              videoLink={"https://www.youtube.com/embed/NTtSM70rIvI"}
-              background={
-                "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
-              }
+              description={this.props.gettingStarted.description}
+              videoLink={this.props.gettingStarted.videoLink}
+              background={this.props.gettingStarted.background}
             />
             {this.props.items}
           </Box>
