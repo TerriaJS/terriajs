@@ -11,14 +11,12 @@ import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 
 import MapInteractionMode from "../../Models/MapInteractionMode";
-import ObserveModelMixin from "../ObserveModelMixin";
 import { withTranslation } from "react-i18next";
 
 import Styles from "./parameter-editors.scss";
 
 const RectangleParameterEditor = createReactClass({
   displayName: "RectangleParameterEditor",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     previewed: PropTypes.object,

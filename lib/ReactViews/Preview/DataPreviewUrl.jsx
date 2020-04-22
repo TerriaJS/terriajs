@@ -4,14 +4,12 @@ import createReactClass from "create-react-class";
 
 import PropTypes from "prop-types";
 
-import ObserveModelMixin from "../ObserveModelMixin";
 import Styles from "./data-preview.scss";
 /**
  * URL section of the preview.
  */
 const DataPreviewUrl = createReactClass({
   displayName: "DataPreviewUrl",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     metadataItem: PropTypes.object.isRequired
