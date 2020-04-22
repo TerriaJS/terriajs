@@ -205,13 +205,11 @@ export const MeasureTool = createReactClass({
   },
 
   onCleanUp() {
-    this.props.terria.cesium.viewer.scene.globe.depthTestAgainstTerrain = true;
     this.setState({ totalDistanceMetres: 0 });
     this.setState({ totalAreaMetresSquared: 0 });
   },
 
   onPointClicked(pointEntities) {
-    this.props.terria.cesium.viewer.scene.globe.depthTestAgainstTerrain = false;
     this.updateDistance(pointEntities);
     this.updateArea(pointEntities);
   },
