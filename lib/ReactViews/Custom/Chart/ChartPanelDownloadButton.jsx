@@ -7,12 +7,10 @@ import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import VarType from "../../../Map/VarType";
 import Icon from "../../Icon";
-import ObserveModelMixin from "../../ObserveModelMixin";
 import Styles from "./chart-panel-download-button.scss";
 
 const ChartPanelDownloadButton = createReactClass({
   displayName: "ChartPanelDownloadButton",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     chartableItems: PropTypes.array.isRequired

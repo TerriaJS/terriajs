@@ -1,6 +1,5 @@
 import defined from "terriajs-cesium/Source/Core/defined";
 import FeatureInfoSection from "./FeatureInfoSection";
-import ObserveModelMixin from "../ObserveModelMixin";
 import React from "react";
 
 import createReactClass from "create-react-class";
@@ -15,7 +14,6 @@ import { observer } from "mobx-react";
 const FeatureInfoCatalogItem = observer(
   createReactClass({
     displayName: "FeatureInfoCatalogItem",
-    mixins: [ObserveModelMixin],
 
     propTypes: {
       features: PropTypes.array,
