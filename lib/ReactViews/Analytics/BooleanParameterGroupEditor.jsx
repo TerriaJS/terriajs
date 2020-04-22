@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import MoreOrLess from "../Generic/MoreOrLess.jsx";
 
 import ObserveModelMixin from "../ObserveModelMixin";
-import BooleanParameterEditor from "./BooleanParameterEditor.jsx";
+import BooleanParameterEditor from "./BooleanParameterEditor.tsx";
 
 import Styles from "./parameter-editors.scss";
 

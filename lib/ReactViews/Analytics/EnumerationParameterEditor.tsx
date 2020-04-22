@@ -3,20 +3,16 @@ import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 
 import Styles from "./parameter-editors.scss";
-import { runInAction } from "mobx";
+import { action } from "mobx";
+import EnumerationParameter from "../../Models/EnumerationParameter";
 
 @observer
-class EnumerationParameterEditor extends React.Component {
-  static propTypes = {
-    terria: PropTypes.object,
-    viewState: PropTypes.object
-  };
-
-  onChange(e) {
-    runInAction(() => {
-      this.props.parameter.value = e.target.value;
-    })
-  };
+export default class EnumerationParameterEditor extends React.Component<{parameter: EnumerationParameter}> {
+  @action
+  onChange(e:React.FormEvent<HTMLSelectElement>) {
+    this.props.parameter.value = (e.target as any).value;
+    // this.props.p
+  }
 
   render() {
     return (
@@ -34,5 +30,3 @@ class EnumerationParameterEditor extends React.Component {
     );
   }
 }
-
-module.exports = EnumerationParameterEditor;
