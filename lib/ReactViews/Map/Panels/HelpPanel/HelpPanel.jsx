@@ -42,10 +42,11 @@ class HelpPanel extends React.Component {
     return (
       <For each="content" index="i" of={contents}>
         <Box paddedVertically>
-          <Box centered paddedHorizontally={4}>
+          <Box centered>
             <Numbers small textLight textAlignCenter darkBg>
               {i + 1}
             </Numbers>
+            <Spacing right={3} />
           </Box>
           <Text medium textDark>
             {content}
