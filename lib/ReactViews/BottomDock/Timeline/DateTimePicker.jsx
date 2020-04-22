@@ -44,7 +44,7 @@ const DateTimePicker = createReactClass({
     onOpen: PropTypes.func.isRequired,
     onClose: PropTypes.func.isRequired,
     showCalendarButton: PropTypes.bool,
-    dateFormat: PropTypes.object
+    dateFormat: PropTypes.string
   },
 
   getDefaultProps() {
@@ -330,7 +330,7 @@ const DateTimePicker = createReactClass({
                 }}
               >
                 {defined(this.props.dateFormat)
-                  ? dateFormat(item, this.props.dateFormat.currentTime)
+                  ? dateFormat(item, this.props.dateFormat)
                   : formatDateTime(item)}
               </button>
             ))}
