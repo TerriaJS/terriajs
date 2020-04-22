@@ -102,8 +102,12 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
                         '@babel/preset-env',
                         {
                           corejs: 3,
-                          useBuiltIns: "usage"
-                        }
+                          useBuiltIns: "usage",
+                          targets: [
+                            ">0.25%",
+                            "not ie 11",
+                            "not op_mini all"
+                          ]                        }
                       ],
                       '@babel/preset-react'
                     ],
@@ -115,7 +119,13 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
                     ]
                 }
             },
-            require.resolve('ts-loader')
+            {
+                loader: require.resolve('ts-loader'),
+                options: {
+                    transpileOnly: true,
+                    experimentalWatchApi: true
+                }
+            }
         ]
     });
 
@@ -246,7 +256,8 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
 
     config.plugins = (config.plugins || []).concat([
         new StringReplacePlugin(),
-        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+        new webpack.debug.ProfilingPlugin()
     ]);
 
     if (hot && !disableStyleLoader) {
