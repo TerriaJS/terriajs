@@ -9,9 +9,8 @@ import EnumerationParameter from "../../Models/EnumerationParameter";
 @observer
 export default class EnumerationParameterEditor extends React.Component<{parameter: EnumerationParameter}> {
   @action
-  onChange(e:React.FormEvent<HTMLSelectElement>) {
-    this.props.parameter.value = (e.target as any).value;
-    // this.props.p
+  onChange(e:React.ChangeEvent<HTMLSelectElement>) {
+    this.props.parameter.value = e.target.value;
   }
 
   render() {
