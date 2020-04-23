@@ -50,10 +50,17 @@ class HelpPanelItem extends React.Component {
       [Styles.panelItem]: true,
       [Styles.isSelected]: itemSelected
     });
-    const reactComponents = parseCustomMarkdownToReact(this.props.description)?.props.children;
+    const reactComponents = parseCustomMarkdownToReact(this.props.description)
+      ?.props.children;
     console.log(reactComponents);
-    const title = (reactComponents.length > 0) ? reactComponents.find(item => /(h[0-6])/i.test(item.type))?.props.children : "";
-    const paragraphs = reactComponents.filter(item => item.type === "p").map(item => item.props.children);
+    const title =
+      reactComponents.length > 0
+        ? reactComponents.find(item => /(h[0-6])/i.test(item.type))?.props
+            .children
+        : "";
+    const paragraphs = reactComponents
+      .filter(item => item.type === "p")
+      .map(item => item.props.children);
     return (
       <div
         css={`
@@ -94,7 +101,7 @@ class HelpPanelItem extends React.Component {
                 line-height: 17px;
               `}
             >
-              {(title) ? title : ""}
+              {title ? title : ""}
             </Text>
           </Box>
         </button>

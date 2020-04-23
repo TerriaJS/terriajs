@@ -36,7 +36,7 @@ const renderOrderedList = function(contents) {
       </Box>
     </For>
   );
-}
+};
 
 @observer
 class StyledHtml extends React.Component {
@@ -61,20 +61,25 @@ class StyledHtml extends React.Component {
         <For each="item" of={this.props.content}>
           <Choose>
             <When condition={/(h[0-6]|p)/i.test(item.type)}>
-              <Text 
+              <Text
                 textDark
                 bold={/(h[0-6])/i.test(item.type)} // Only headers are bold
-                subHeading={item.type === 'h1'}
-                medium={item.type === 'p'}
+                subHeading={item.type === "h1"}
+                medium={item.type === "p"}
               >
                 {item.props.children}
                 <Spacing bottom={3} />
               </Text>
             </When>
-            <When condition={item.type === 'ol'}>
-              {renderOrderedList(item.props.children.map(point => point.props.children))}
+            <When condition={item.type === "ol"}>
+              {renderOrderedList(
+                item.props.children.map(point => point.props.children)
+              )}
             </When>
             <Otherwise>
+              {/* If it's none of the above tags, just render as 
+                  normal html but with the same text formatting.
+                  We can style more tags as necessary */}
               <Text textDark medium>
                 {item}
               </Text>
