@@ -8,7 +8,6 @@ import Icon from "../../../Icon.jsx";
 import Loader from "../../../Loader";
 import Styles from "./help-panel.scss";
 import Spacing from "../../../../Styled/Spacing";
-import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
 import { action } from "mobx";
 import StyledHtml from "./StyledHtml";

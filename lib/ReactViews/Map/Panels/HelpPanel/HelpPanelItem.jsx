@@ -52,15 +52,11 @@ class HelpPanelItem extends React.Component {
     });
     const reactComponents = parseCustomMarkdownToReact(this.props.description)
       ?.props.children;
-    console.log(reactComponents);
     const title =
       reactComponents.length > 0
         ? reactComponents.find(item => /(h[0-6])/i.test(item.type))?.props
             .children
         : "";
-    const paragraphs = reactComponents
-      .filter(item => item.type === "p")
-      .map(item => item.props.children);
     return (
       <div
         css={`

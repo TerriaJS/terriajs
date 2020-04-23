@@ -1,11 +1,8 @@
-import classNames from "classnames";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
-import Icon from "../../../Icon.jsx";
-import Loader from "../../../Loader";
 import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
