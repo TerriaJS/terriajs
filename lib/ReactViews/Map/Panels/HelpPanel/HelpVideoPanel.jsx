@@ -123,6 +123,7 @@ class HelpVideoPanel extends React.Component {
             </button>
           </div>
           <Spacing bottom={5} />
+          {/* {this.props.description} */}
           <Text subHeading bold textDark>
             {this.props.title}
           </Text>

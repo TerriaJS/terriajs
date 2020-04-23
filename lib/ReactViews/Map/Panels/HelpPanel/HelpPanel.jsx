@@ -46,30 +46,9 @@ class HelpPanel extends React.Component {
   static propTypes = {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
-    gettingStarted: PropTypes.object,
     items: PropTypes.array,
     theme: PropTypes.object,
     t: PropTypes.func.isRequired
-  };
-
-  static defaultProps = {
-    gettingStarted: {
-      title: "Getting started with a map",
-      description: [
-        "If you're new to the map or using spatial data, our Getting Started video quickly covers the basic functionality you'll need to use to add and interrogate data sets.",
-        "If you don't have time to watch the video, we suggest exploring the following areas:",
-        renderOrderedList([
-          "Search for a location to quickly find an area of interest",
-          "Use 'Explore map data' to view the catalogue of available data sets and add them to the map",
-          "Interact with the data layer, including opacity and toggling on and off on the left in your workbench",
-          "Click on the data on the map to view more detailed data, including the raw data",
-          "Change your basemap using options in 'Map Settings' to help make some data sets more visible",
-          "Zoom and change your view, including tilting the view angle using the controls on the right-hand side of the screen"
-        ])
-      ],
-      videoLink: "https://www.youtube.com/embed/NTtSM70rIvI",
-      background: "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
-    }
   };
 
   constructor(props) {
@@ -78,6 +57,7 @@ class HelpPanel extends React.Component {
 
   render() {
     // const { t } = this.props;
+    const helpItems = this.props.terria.configParameters.helpContent;
     const isVisible =
       this.props.viewState.showHelpMenu &&
       this.props.viewState.topElement === "HelpPanel";
@@ -150,17 +130,18 @@ class HelpPanel extends React.Component {
         <Spacing bottom={10} />
         <Box centered displayInlineBlock>
           <Box displayInlineBlock>
-            <HelpPanelItem
-              terria={this.props.terria}
-              viewState={this.props.viewState}
-              iconElement={Icon.GLYPHS.start}
-              title={this.props.gettingStarted.title}
-              itemString={"getstarted"}
-              description={this.props.gettingStarted.description}
-              videoLink={this.props.gettingStarted.videoLink}
-              background={this.props.gettingStarted.background}
-            />
-            {this.props.items}
+            <For each="item" of={helpItems}>
+              <HelpPanelItem
+                terria={this.props.terria}
+                viewState={this.props.viewState}
+                iconElement={Icon.GLYPHS.start}
+                itemString={item.key}
+                description={item.content}
+                videoLink={item.videoUrl}
+                background={item.background}
+              />
+            </For>
+            {/* {this.props.items} */}
           </Box>
         </Box>
       </div>

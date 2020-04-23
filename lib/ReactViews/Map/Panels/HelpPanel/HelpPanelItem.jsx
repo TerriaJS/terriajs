@@ -9,6 +9,7 @@ import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
 import styled, { withTheme } from "styled-components";
 import HelpVideoPanel from "./HelpVideoPanel";
+import parseCustomMarkdownToReact from "../../../Custom/parseCustomMarkdownToReact";
 
 @observer
 class HelpPanelItem extends React.Component {
@@ -18,9 +19,9 @@ class HelpPanelItem extends React.Component {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
     iconElement: PropTypes.object.isRequired,
-    title: PropTypes.string.isRequired,
-    itemString: PropTypes.string,
-    description: PropTypes.array,
+    // title: PropTypes.string.isRequired,
+    itemString: PropTypes.string.isRequired,
+    description: PropTypes.string,
     videoLink: PropTypes.string,
     background: PropTypes.string,
     theme: PropTypes.object,
@@ -49,6 +50,9 @@ class HelpPanelItem extends React.Component {
       [Styles.panelItem]: true,
       [Styles.isSelected]: itemSelected
     });
+    const reactComponents = parseCustomMarkdownToReact(this.props.description)?.props.children;
+    const title = (reactComponents.length > 0) ? reactComponents.find(item => /(h[0-6])/i.test(item.type))?.props.children : "";
+    const paragraphs = reactComponents.filter(item => item.type === "p").map(item => item.props.children);
     return (
       <div
         css={`
@@ -89,16 +93,16 @@ class HelpPanelItem extends React.Component {
                 line-height: 17px;
               `}
             >
-              {this.props.title}
+              {(title) ? title : ""}
             </Text>
           </Box>
         </button>
         <HelpVideoPanel
           terria={this.props.terria}
           viewState={this.props.viewState}
-          title={this.props.title}
+          title={title}
           itemString={this.props.itemString}
-          description={this.props.description}
+          description={paragraphs}
           videoLink={this.props.videoLink}
           background={this.props.background}
         />
