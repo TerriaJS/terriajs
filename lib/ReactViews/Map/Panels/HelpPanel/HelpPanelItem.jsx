@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
-import { StyledIcon } from "../../../Icon.jsx";
+import Icon, { StyledIcon } from "../../../Icon.jsx";
 import Styles from "./help-panel.scss";
 import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
@@ -18,7 +18,7 @@ class HelpPanelItem extends React.Component {
   static propTypes = {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
-    iconElement: PropTypes.object.isRequired,
+    iconElement: PropTypes.string,
     // title: PropTypes.string.isRequired,
     itemString: PropTypes.string.isRequired,
     description: PropTypes.string,
@@ -78,10 +78,11 @@ class HelpPanelItem extends React.Component {
             `}
           >
             <MenuIconWrapper>
+              {/* TODO: Enable overriding non-terriajs icons */}
               <StyledIcon
                 styledWidth={"27px"}
                 fillColor={this.props.theme.textDark}
-                glyph={this.props.iconElement}
+                glyph={Icon.GLYPHS[this.props.iconElement]}
               />
             </MenuIconWrapper>
             <Text

@@ -107,7 +107,7 @@ class HelpPanel extends React.Component {
               <HelpPanelItem
                 terria={this.props.terria}
                 viewState={this.props.viewState}
-                iconElement={Icon.GLYPHS.start}
+                iconElement={item.icon}
                 itemString={item.key}
                 description={item.content}
                 videoLink={item.videoUrl}

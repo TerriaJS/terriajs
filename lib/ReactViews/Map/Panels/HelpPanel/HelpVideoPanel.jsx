@@ -100,7 +100,10 @@ class HelpVideoPanel extends React.Component {
     });
     return (
       <div className={className}>
-        {this.state.showVideoGuide && this.renderVideoGuide()}
+        {this.props.videoLink &&
+          this.props.background &&
+          this.state.showVideoGuide &&
+          this.renderVideoGuide()}
         <Box
           centered
           fullWidth

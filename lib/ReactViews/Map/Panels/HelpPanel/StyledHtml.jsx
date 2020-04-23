@@ -17,7 +17,6 @@ const Numbers = styled(Text)`
 `;
 
 const renderOrderedList = function(contents) {
-  console.log(contents);
   return (
     <For each="content" index="i" of={contents}>
       <Box paddedVertically>
@@ -57,6 +56,7 @@ class StyledHtml extends React.Component {
       <div>
         <For each="item" of={this.props.content}>
           <Choose>
+            {/* Either a header or paragraph tag */}
             <When condition={/(h[0-6]|p)/i.test(item.type)}>
               <Text
                 textDark
