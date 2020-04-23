@@ -1,3 +1,4 @@
+import { Ref, HtmlHTMLAttributes } from "React";
 import clone from "terriajs-cesium/Source/Core/clone";
 import defined from "terriajs-cesium/Source/Core/defined";
 import DisclaimerHandler from "./DisclaimerHandler";
@@ -109,10 +110,19 @@ export default class ViewState {
    *  */
 
   @observable tourPoints: any[] = [];
+  @observable appRefs: Map<string, Ref<HTMLElement>> = new Map();
+  @observable currentTourId: string | undefined = undefined;
   @observable currentTourIndex: number = -1;
   @action
   setTourIndex(index: number) {
     this.currentTourIndex = index;
+  }
+
+  @action
+  updateAppRef(refName: string, ref: Ref<HTMLElement>) {
+    if (!this.appRefs.get(refName)) {
+      this.appRefs.set(refName, ref);
+    }
   }
 
   /**

@@ -2,12 +2,13 @@
  * Framework for tour
  *
  */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // import styled from "styled-components";
 import styled, { withTheme } from "styled-components";
 // import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
+import { autorun } from "mobx";
 import { observer } from "mobx-react";
 
 import Box from "../../Styled/Box";
@@ -15,6 +16,7 @@ import Button from "../../Styled/Button";
 import Text from "../../Styled/Text";
 
 import GuidanceDot from "./GuidanceDot.jsx";
+import GuidanceOverlay from "./GuidanceOverlay.jsx";
 
 const GuidanceProgress = props => {
   const countArray = Array.from(Array(props.max).keys()).map(e => e++);
@@ -95,19 +97,63 @@ const GuidancePortalOverlay = styled(Box)`
   background: black;
   z-index: 1000;
   opacity: 0.45;
+
+  display: none;
 `;
 
+const GuidancePortalDisplayName = "GuidancePortal";
 export const GuidancePortal = observer(({ children, viewState }) => {
   const [showGuidance, setShowGuidance] = useState(false);
   const showPortal = viewState.currentTourIndex !== -1;
+
+  useEffect(() =>
+    autorun(() => {
+      if (showPortal && viewState.topElement !== GuidancePortalDisplayName) {
+        viewState.setTopElement(GuidancePortalDisplayName);
+      }
+    })
+  );
+
+  // const currentTourPoint = viewState.tourPoints.find(tourPoint => tourPoint.id === viewState.currentTourId)
+  // const currentScreen = {
+  //   rectangle: {
+  //     x: 5,
+  //     y: 451.5,
+  //     width: 205,
+  //     height: 42,
+  //     top: 451.5,
+  //     right: 210,
+  //     bottom: 493.5,
+  //     left: 5
+  //   }
+  // };
+  // const currentScreenComponent = viewState.appRefs.get(currentTourPoint.componentName);
+
+  const currentScreenComponent = viewState.appRefs.get("ExploreMapData");
+  const currentScreen = {
+    rectangle: currentScreenComponent?.current?.getBoundingClientRect?.()
+  };
+
   if (!showPortal) return null;
   return (
-    <GuidancePortalOverlay>
-      <GuidanceDot onClick={() => setShowGuidance(!showGuidance)} />
-      {showGuidance && <GuidanceContextModal>{children}</GuidanceContextModal>}
+    <>
+      <GuidanceOverlay
+        screen={currentScreen}
+        onCancel={() => viewState.setTourIndex(-1)}
+      />
+      <GuidancePortalOverlay
+      // className={
+      //   viewState.topElement === GuidancePortalDisplayName && "top-element"
+      // }
+      >
+        <GuidanceDot onClick={() => setShowGuidance(!showGuidance)} />
+        {showGuidance && (
+          <GuidanceContextModal>{children}</GuidanceContextModal>
+        )}
 
-      <Button onClick={() => viewState.setTourIndex(-1)}>Exit tour</Button>
-    </GuidancePortalOverlay>
+        <Button onClick={() => viewState.setTourIndex(-1)}>Exit tour</Button>
+      </GuidancePortalOverlay>
+    </>
   );
 });
 

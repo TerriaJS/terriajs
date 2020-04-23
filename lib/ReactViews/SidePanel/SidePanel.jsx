@@ -11,6 +11,8 @@ import Workbench from "../Workbench/Workbench";
 import FullScreenButton from "./FullScreenButton";
 import Styles from "./side-panel.scss";
 
+import { useRefForTerria } from "../Hooks/useRefForTerria";
+
 import Box from "../../Styled/Box";
 import Spacing from "../../Styled/Spacing";
 import Text, { TextSpan } from "../../Styled/Text";
@@ -69,6 +71,35 @@ EmptyWorkbench.propTypes = {
   theme: PropTypes.object.isRequired
 };
 
+export const EXPLORE_MAP_DATA_NAME = "ExploreMapData";
+const ExploreMapDataWithTour = ({
+  addDataBtnText,
+  onAddDataClicked,
+  viewState
+}) => {
+  const buttonRef = useRefForTerria(EXPLORE_MAP_DATA_NAME, viewState);
+
+  return (
+    <button
+      ref={buttonRef}
+      type="button"
+      onClick={onAddDataClicked}
+      className={Styles.button}
+      title={addDataBtnText}
+    >
+      <Icon glyph={Icon.GLYPHS.add} />
+      <TextSpan large nunito>
+        {addDataBtnText}
+      </TextSpan>
+    </button>
+  );
+};
+ExploreMapDataWithTour.propTypes = {
+  addDataBtnText: PropTypes.string.isRequired,
+  onAddDataClicked: PropTypes.func.isRequired,
+  viewState: PropTypes.object.isRequired
+};
+
 const SidePanel = observer(
   createReactClass({
     displayName: "SidePanel",
@@ -105,23 +136,20 @@ const SidePanel = observer(
               animationDuration={250}
               btnText={t("addData.btnHide")}
             />
+            <button onClick={() => this.props.viewState.setTourIndex(0)}>
+              <Icon glyph={Icon.GLYPHS.tour} /> {"Take the tour"}{" "}
+            </button>
             <SearchBoxAndResults
               viewState={this.props.viewState}
               terria={this.props.terria}
               placeholder={t("search.placeholder")}
             />
             <div className={Styles.addData}>
-              <button
-                type="button"
-                onClick={this.onAddDataClicked}
-                className={Styles.button}
-                title={addData}
-              >
-                <Icon glyph={Icon.GLYPHS.add} />
-                <TextSpan large nunito>
-                  {addData}
-                </TextSpan>
-              </button>
+              <ExploreMapDataWithTour
+                viewState={this.props.viewState}
+                addDataBtnText={addData}
+                onAddDataClicked={this.onAddDataClicked}
+              />
               <button
                 type="button"
                 onClick={this.onAddLocalDataClicked}

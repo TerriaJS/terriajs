@@ -119,8 +119,7 @@ export class SearchBoxAndResultsRaw extends React.Component {
     this.toggleShowLocationSearchResults(true);
   }
   render() {
-    const { t } = this.props;
-    const viewState = this.props.viewState;
+    const { viewState, placeholder } = this.props;
     const searchState = viewState.searchState;
     const locationSearchText = searchState.locationSearchText;
 
@@ -132,7 +131,7 @@ export class SearchBoxAndResultsRaw extends React.Component {
             onDoSearch={this.search.bind(this)}
             onFocus={this.startLocationSearch.bind(this)}
             searchText={searchState.locationSearchText}
-            placeholder={t("search.placeholder")}
+            placeholder={placeholder}
           />
           {/* Results */}
           <If
@@ -196,7 +195,7 @@ export class SearchBoxAndResultsRaw extends React.Component {
 SearchBoxAndResultsRaw.propTypes = {
   terria: PropTypes.object.isRequired,
   viewState: PropTypes.object.isRequired,
-  t: PropTypes.func.isRequired
+  placeholder: PropTypes.string.isRequired
 };
 
-export default withTranslation()(observer(SearchBoxAndResultsRaw));
+export default observer(SearchBoxAndResultsRaw);
