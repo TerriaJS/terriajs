@@ -39,8 +39,9 @@ class FeatureInfoPanel extends React.Component {
 
   ref = null;
 
-  getInitialState() {
-    return {
+  constructor(props) {
+    super(props);
+    this.state = {
       left: null,
       right: null,
       top: null,
