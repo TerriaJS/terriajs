@@ -105,6 +105,7 @@ Change Log
 * Ensure CSV column names are trimmed of whitespace.
 * Really stop analytics launch event sending bad & now empty & now finally the real label
 * Tidy Compass UI animations, styles, titles
+* Test CI
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
