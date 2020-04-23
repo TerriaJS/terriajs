@@ -105,6 +105,8 @@ Change Log
 * Ensure CSV column names are trimmed of whitespace.
 * Really stop analytics launch event sending bad & now empty & now finally the real label
 * Tidy Compass UI animations, styles, titles
+* Implement SenapsLocationsCatalogItem
+* Update papaparse and improve handling for retrieveing CSVs via chunking that have no ContentLenth header
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC

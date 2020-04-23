@@ -76,11 +76,13 @@ function getParseOptionsRowMajor(
   reject: (reason?: any) => void
 ): papaparse.ParseConfig {
   const result: string[][] = [];
+  let parser: any = null;
 
   return {
     skipEmptyLines: true,
     worker: useWorker,
-    chunk: function(results) {
+    chunk: function(results, p) {
+      parser = p;
       const data = results.data;
       for (let i = 0; i < data.length; ++i) {
         result.push(data[i]);
@@ -90,7 +92,10 @@ function getParseOptionsRowMajor(
       resolve(result);
     },
     error: function(e) {
-      reject(e);
+      // If we did manage to get some data lets use what we've got
+      // Perhaps there was an error because there was no Content-Length header
+      if (result.length > 0) parser.abort();
+      else reject(e);
     }
   };
 }
@@ -100,11 +105,13 @@ function getParseOptionsColumnMajor(
   reject: (reason?: any) => void
 ): papaparse.ParseConfig {
   const result: string[][] = [];
+  let parser: any = null;
 
   return {
     skipEmptyLines: true,
     worker: useWorker,
-    chunk: function(results) {
+    chunk: function(results, p) {
+      parser = p;
       const data = results.data;
       for (let i = 0; i < data.length; ++i) {
         const row = data[i];
@@ -123,7 +130,10 @@ function getParseOptionsColumnMajor(
       resolve(result);
     },
     error: function(e) {
-      reject(e);
+      // If we did manage to get some data lets use what we've got
+      // Perhaps there was an error because there was no Content-Length header
+      if (result.length > 0) parser.abort();
+      else reject(e);
     }
   };
 }
