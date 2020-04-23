@@ -11,6 +11,7 @@ import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
 import { action } from "mobx";
+import StyledHtml from "./StyledHtml";
 
 @observer
 class HelpVideoPanel extends React.Component {
@@ -123,8 +124,9 @@ class HelpVideoPanel extends React.Component {
             </button>
           </div>
           <Spacing bottom={5} />
+          <StyledHtml content={this.props.description} />
           {/* {this.props.description} */}
-          <Text subHeading bold textDark>
+          {/* <Text subHeading bold textDark>
             {this.props.title}
           </Text>
           <For each="desc" of={this.props.description}>
@@ -132,7 +134,7 @@ class HelpVideoPanel extends React.Component {
             <Text medium textDark>
               {desc}
             </Text>
-          </For>
+          </For> */}
         </Box>
       </div>
     );

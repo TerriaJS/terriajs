@@ -11,33 +11,6 @@ import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
 import HelpPanelItem from "./HelpPanelItem";
 import { RawButton } from "../../../../Styled/Button.jsx";
-import styled from "styled-components";
-
-const Numbers = styled(Text)`
-  width: 22px;
-  height: 22px;
-  line-height: 24px;
-  border-radius: 50%;
-  ${props => props.darkBg && `background-color: ${props.theme.textDark};`}
-`;
-
-const renderOrderedList = function(contents) {
-  return (
-    <For each="content" index="i" of={contents}>
-      <Box paddedVertically>
-        <Box centered>
-          <Numbers textLight textAlignCenter darkBg>
-            {i + 1}
-          </Numbers>
-          <Spacing right={3} />
-        </Box>
-        <Text medium textDark>
-          {content}
-        </Text>
-      </Box>
-    </For>
-  );
-}
 
 @observer
 class HelpPanel extends React.Component {

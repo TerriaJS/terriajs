@@ -51,6 +51,7 @@ class HelpPanelItem extends React.Component {
       [Styles.isSelected]: itemSelected
     });
     const reactComponents = parseCustomMarkdownToReact(this.props.description)?.props.children;
+    console.log(reactComponents);
     const title = (reactComponents.length > 0) ? reactComponents.find(item => /(h[0-6])/i.test(item.type))?.props.children : "";
     const paragraphs = reactComponents.filter(item => item.type === "p").map(item => item.props.children);
     return (
@@ -102,7 +103,7 @@ class HelpPanelItem extends React.Component {
           viewState={this.props.viewState}
           title={title}
           itemString={this.props.itemString}
-          description={paragraphs}
+          description={reactComponents}
           videoLink={this.props.videoLink}
           background={this.props.background}
         />
