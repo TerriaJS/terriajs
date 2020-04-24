@@ -98,9 +98,6 @@ describe("SenapsLocationsCatalogItem", function() {
         "tdfnode.0.323831395a368714-99.SHT31DIS_ALL.temperature",
         "tdfnode.0.323831395a368714-99.SHT31DIS_ALL.humidity"
       ]);
-      expect(feature.properties.streamId).toBe(
-        "tdfnode.0.323831395a368714-99.SHT31DIS_ALL.temperature"
-      );
     });
   });
 

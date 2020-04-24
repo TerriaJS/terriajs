@@ -2,12 +2,6 @@ import i18next from "i18next";
 import { computed, runInAction } from "mobx";
 import URI from "urijs";
 
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import Property from "terriajs-cesium/Source/Core/Property";
-import sampleTerrain from "terriajs-cesium/Source/Core/sampleTerrain";
 import isDefined from "../Core/isDefined";
 import loadJson from "../Core/loadJson";
 import TerriaError from "../Core/TerriaError";
@@ -33,7 +27,6 @@ export interface SenapsFeature {
     endpoint: string;
     hasStreams: boolean | null;
     streamIds: string[];
-    streamId: string | null;
   };
   geometry: JsonObject;
 }
@@ -87,7 +80,7 @@ export class SenapsLocationsStratum extends LoadableStratum(
 
   duplicateLoadableStratum(newModel: BaseModel): this {
     return new SenapsLocationsStratum(
-      this.senapsLocationsCatalogItem,
+      newModel as SenapsLocationsCatalogItem,
       this.geojsonItem
     ) as this;
   }
@@ -122,9 +115,6 @@ export class SenapsLocationsStratum extends LoadableStratum(
             (s: SenapsStream) => s.id
           );
           f.properties.hasStreams = true;
-          if (f.properties.streamIds.length > 0) {
-            f.properties.streamId = f.properties.streamIds[0];
-          }
         }
       }
 
@@ -138,8 +128,7 @@ export class SenapsLocationsStratum extends LoadableStratum(
               description: site.description,
               endpoint: site._links.self.href,
               hasStreams: null,
-              streamIds: [],
-              streamId: null
+              streamIds: []
             },
             geometry: site.geojson
           };
@@ -148,19 +137,33 @@ export class SenapsLocationsStratum extends LoadableStratum(
         })
       };
 
-      const gjci = new GeoJsonCatalogItem(
+      const geojsonCatalogItem = new GeoJsonCatalogItem(
         undefined,
         senapsLocationsCatalogItem.terria
       );
-      gjci.setTrait("definition", "geoJsonData", (fc as any) as JsonObject);
+      geojsonCatalogItem.setTrait(
+        "definition",
+        "geoJsonData",
+        (fc as any) as JsonObject
+      );
+
+      geojsonCatalogItem.setTrait("definition", "clampToGround", true);
 
       if (isDefined(senapsLocationsCatalogItem.style)) {
-        gjci.setTrait("definition", "style", senapsLocationsCatalogItem.style);
+        geojsonCatalogItem.setTrait(
+          "definition",
+          "style",
+          senapsLocationsCatalogItem.style
+        );
       }
 
       const featureInfo = createStratumInstance(FeatureInfoTemplateTraits, {
-        template: `<h4>Site: {{id}}</h4>
-  <h5 style="margin-bottom:5px;">Available Streams</h5>
+        template: `<h4>${i18next.t(
+          "models.senaps.locationHeadingFeatureInfo"
+        )}: {{id}}</h4>
+  <h5 style="margin-bottom:5px;">${i18next.t(
+    "models.senaps.availableStreamsHeadingFeatureInfo"
+  )}</h5>
   {{#hasStreams}}
     <ul>{{#streamIds}}
       <li>{{.}}</li>
@@ -177,7 +180,6 @@ export class SenapsLocationsStratum extends LoadableStratum(
     </chart>
   {{/hasStreams}}
   {{^hasStreams}}
-    No streams ar this locations
     <br/><br/>
   {{/hasStreams}}
   `
@@ -188,8 +190,11 @@ export class SenapsLocationsStratum extends LoadableStratum(
         featureInfo
       );
 
-      gjci.loadMapItems();
-      return new SenapsLocationsStratum(senapsLocationsCatalogItem, gjci);
+      geojsonCatalogItem.loadMapItems();
+      return new SenapsLocationsStratum(
+        senapsLocationsCatalogItem,
+        geojsonCatalogItem
+      );
     } catch (e) {
       const msg =
         e.statusCode === 401
