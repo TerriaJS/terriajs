@@ -129,7 +129,9 @@ export const GuidancePortal = observer(({ children, viewState }) => {
   // };
   // const currentScreenComponent = viewState.appRefs.get(currentTourPoint.componentName);
 
-  const currentScreenComponent = viewState.appRefs.get("ExploreMapData");
+  // const currentScreenComponent = viewState.appRefs.get("ExploreMapData");
+  // const currentScreenComponent = viewState.appRefs.get("LocationSearchInput");
+  const currentScreenComponent = viewState.appRefs.get("MapSettings");
   const currentScreen = {
     rectangle: currentScreenComponent?.current?.getBoundingClientRect?.()
   };
