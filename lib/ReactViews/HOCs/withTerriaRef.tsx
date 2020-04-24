@@ -1,4 +1,6 @@
 import React from "react";
+import PropTypes from "prop-types";
+
 import ViewState from "../../ReactViewModels/ViewState";
 
 const getDisplayName = (WrappedComponent: React.ComponentClass<any>) => {
@@ -37,10 +39,19 @@ export const withTerriaRef = <P extends object>(
       this.updateRef();
     }
     render() {
-      return <WrappedComponent refFromHOC={this.hocRef} {...this.props} />;
+      return (
+        <WrappedComponent
+          updateRefFromHOC={this.updateRef}
+          refFromHOC={this.hocRef}
+          {...this.props}
+        />
+      );
     }
   }
   return WithTerriaRef;
+};
+withTerriaRef.propTypes = {
+  viewState: PropTypes.object.isRequired
 };
 
 export default withTerriaRef;

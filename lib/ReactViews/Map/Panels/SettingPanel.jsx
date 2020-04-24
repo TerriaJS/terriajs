@@ -460,10 +460,7 @@ class SettingPanel extends React.Component {
   }
 }
 
-export const SETTING_PANEL_NAME = "MapSettings";
-const SettingPanelWithRef = props =>
-  withTerriaRef(SettingPanel, props.viewState, SETTING_PANEL_NAME);
-
+export const SETTING_PANEL_NAME = "MenuBarMapSettingsButton";
 export default withTranslation()(
   withTerriaRef(SettingPanel, SETTING_PANEL_NAME)
 );

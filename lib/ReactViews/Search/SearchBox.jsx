@@ -13,7 +13,7 @@ export const DEBOUNCE_INTERVAL = 1000;
  * that just like an input, this calls onSearchTextChanged when the value is changed, and expects that its parent
  * component will listen for this and update searchText with the new value.
  */
-const SearchBox = createReactClass({
+export const SearchBox = createReactClass({
   displayName: "SearchBox",
   propTypes: {
     /** Called when the search changes, after a debounce of {@link DEBOUNCE_INTERVAL} ms */

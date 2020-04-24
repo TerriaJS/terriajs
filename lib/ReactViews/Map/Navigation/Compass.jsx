@@ -29,6 +29,7 @@ import GyroscopeGuidance from "../../GyroscopeGuidance/GyroscopeGuidance";
 import { runInAction, computed, when } from "mobx";
 import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
+import { withTerriaRef } from "../../HOCs/withTerriaRef";
 
 import FadeIn from "../../Transitions/FadeIn/FadeIn";
 
@@ -104,6 +105,7 @@ class Compass extends React.Component {
   static propTypes = {
     terria: PropTypes.object,
     viewState: PropTypes.object,
+    refFromHOC: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
     t: PropTypes.func.isRequired
   };
@@ -284,7 +286,7 @@ class Compass extends React.Component {
           aria-hidden="true"
           role="presentation"
         >
-          <div style={outerCircleStyle}>
+          <div ref={this.props.refFromHOC} style={outerCircleStyle}>
             <StyledIcon
               fillColor={this.props.theme.textDarker}
               glyph={Icon.GLYPHS.compassOuter}
@@ -650,4 +652,7 @@ function viewerChange(viewModel) {
   });
 }
 
-export default withTranslation()(withTheme(Compass));
+export const COMPASS_NAME = "MapNavigationCompassOuterRing";
+export default withTranslation()(
+  withTheme(withTerriaRef(Compass, COMPASS_NAME))
+);

@@ -71,7 +71,7 @@ EmptyWorkbench.propTypes = {
   theme: PropTypes.object.isRequired
 };
 
-export const EXPLORE_MAP_DATA_NAME = "ExploreMapData";
+export const EXPLORE_MAP_DATA_NAME = "ExploreMapDataButton";
 const ExploreMapDataWithTour = ({
   addDataBtnText,
   onAddDataClicked,

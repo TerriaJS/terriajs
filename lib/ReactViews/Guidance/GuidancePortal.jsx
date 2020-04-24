@@ -1,5 +1,10 @@
 /**
+ * GuidancePortal.jsx
  * Framework for tour
+ *
+ * Not a real "portal" in the sense of a react portal, even though it
+ * started out as wanting to be that. Our not-yet-invented "new modal system"
+ * will probably utilise a react portal, though.
  *
  */
 import React, { useState, useEffect } from "react";
@@ -12,11 +17,13 @@ import { autorun } from "mobx";
 import { observer } from "mobx-react";
 
 import Box from "../../Styled/Box";
-import Button from "../../Styled/Button";
+import Button, { RawButton } from "../../Styled/Button";
 import Text from "../../Styled/Text";
+import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 
 import GuidanceDot from "./GuidanceDot.jsx";
 import GuidanceOverlay from "./GuidanceOverlay.jsx";
+// import { buildShareLink } from "../Map/Panels/SharePanel/BuildShareLink";
 
 const GuidanceProgress = props => {
   const countArray = Array.from(Array(props.max).keys()).map(e => e++);
@@ -62,9 +69,13 @@ GuidanceProgress.propTypes = {
 };
 
 const GuidanceContextBox = styled(Box)`
+  position: absolute;
   box-sizing: border-box;
   width: 256px;
-  background-color: $modal-bg;
+  // background-color: $modal-bg;
+  z-index: 10000;
+  background: white;
+
   padding: 16px;
   color: $text-darker;
 
@@ -74,13 +85,26 @@ const GuidanceContextBox = styled(Box)`
   box-shadow: 0 6px 6px 0 rgba(0, 0, 0, 0.12), 0 10px 20px 0 rgba(0, 0, 0, 0.05);
 `;
 
-const GuidanceContextModal = ({ children }) => {
+const GuidanceContextModal = ({
+  topStyle,
+  leftStyle,
+  onNext,
+  onSkip,
+  children
+}) => {
   const { t } = useTranslation();
   return (
-    <GuidanceContextBox>
+    <GuidanceContextBox
+      style={{
+        top: topStyle,
+        left: leftStyle
+      }}
+    >
       <Text tallerHeight>{children}</Text>
-      <Button primary>{t("general.next")}</Button>
-      {t("general.skip")}
+      <Button onClick={() => onNext?.()} primary>
+        {t("general.next")}
+      </Button>
+      <RawButton onClick={() => onSkip?.()}>{t("general.skip")}</RawButton>
       {/* ? */}
       <GuidanceProgress step={2} max={4} />
     </GuidanceContextBox>
@@ -88,7 +112,11 @@ const GuidanceContextModal = ({ children }) => {
 };
 
 GuidanceContextModal.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
+  onNext: PropTypes.func,
+  onSkip: PropTypes.func,
+  topStyle: PropTypes.string,
+  leftStyle: PropTypes.string
 };
 const GuidancePortalOverlay = styled(Box)`
   position: fixed;
@@ -114,26 +142,16 @@ export const GuidancePortal = observer(({ children, viewState }) => {
     })
   );
 
-  // const currentTourPoint = viewState.tourPoints.find(tourPoint => tourPoint.id === viewState.currentTourId)
-  // const currentScreen = {
-  //   rectangle: {
-  //     x: 5,
-  //     y: 451.5,
-  //     width: 205,
-  //     height: 42,
-  //     top: 451.5,
-  //     right: 210,
-  //     bottom: 493.5,
-  //     left: 5
-  //   }
-  // };
-  // const currentScreenComponent = viewState.appRefs.get(currentTourPoint.componentName);
+  const currentTourPoint = viewState.currentTourPoint;
+  const currentTourPointRef = viewState.appRefs.get(
+    currentTourPoint?.appRefName
+  );
 
-  // const currentScreenComponent = viewState.appRefs.get("ExploreMapData");
-  // const currentScreenComponent = viewState.appRefs.get("LocationSearchInput");
-  const currentScreenComponent = viewState.appRefs.get("MapSettings");
+  const currentRectangle = currentTourPointRef?.current?.getBoundingClientRect?.();
+
   const currentScreen = {
-    rectangle: currentScreenComponent?.current?.getBoundingClientRect?.()
+    // rectangle: currentScreenComponent?.current?.getBoundingClientRect?.()
+    rectangle: currentRectangle
   };
 
   if (!showPortal) return null;
@@ -141,8 +159,18 @@ export const GuidancePortal = observer(({ children, viewState }) => {
     <>
       <GuidanceOverlay
         screen={currentScreen}
-        onCancel={() => viewState.setTourIndex(-1)}
+        // onCancel={() => viewState.setTourIndex(-1)}
+        onCancel={() => viewState.nextTourPoint()}
       />
+      <GuidanceContextModal
+        onNext={() => viewState.nextTourPoint()}
+        // onClose={() => viewState.nextTourPoint()}
+        onSkip={() => viewState.setTourIndex(-1)}
+        topStyle={`${currentRectangle?.bottom}px`}
+        leftStyle={`${currentRectangle?.left}px`}
+      >
+        {parseCustomMarkdownToReact(currentTourPoint?.content)}
+      </GuidanceContextModal>
       <GuidancePortalOverlay
       // className={
       //   viewState.topElement === GuidancePortalDisplayName && "top-element"
