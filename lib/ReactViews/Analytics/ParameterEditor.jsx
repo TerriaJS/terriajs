@@ -6,7 +6,6 @@ import createReactClass from "create-react-class";
 
 import PropTypes from "prop-types";
 
-import ObserveModelMixin from "../ObserveModelMixin";
 import PointParameterEditor from "./PointParameterEditor";
 import LineParameterEditor from "./LineParameterEditor";
 import RectangleParameterEditor from "./RectangleParameterEditor";
@@ -26,7 +25,6 @@ import Styles from "./parameter-editors.scss";
 
 const ParameterEditor = createReactClass({
   displayName: "ParameterEditor",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     parameter: PropTypes.object,

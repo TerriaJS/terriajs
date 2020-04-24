@@ -2,7 +2,6 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import SearchBox from "../Search/SearchBox";
-import ObserveModelMixin from "../ObserveModelMixin";
 import MobileModalWindow from "./MobileModalWindow";
 import Branding from "../SidePanel/Branding";
 import Styles from "./mobile-header.scss";
@@ -17,7 +16,6 @@ import { runInAction, action } from "mobx";
 const MobileHeader = observer(
   createReactClass({
     displayName: "MobileHeader",
-    mixins: [ObserveModelMixin],
 
     propTypes: {
       terria: PropTypes.object,
