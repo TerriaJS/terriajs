@@ -102,13 +102,15 @@ class HelpPanel extends React.Component {
         <Spacing bottom={10} />
         <Box centered displayInlineBlock>
           <Box displayInlineBlock>
-            <For each="item" of={helpItems}>
-              <HelpPanelItem
-                terria={this.props.terria}
-                viewState={this.props.viewState}
-                content={item}
-              />
-            </For>
+            {helpItems && (
+              <For each="item" of={helpItems}>
+                <HelpPanelItem
+                  terria={this.props.terria}
+                  viewState={this.props.viewState}
+                  content={item}
+                />
+              </For>
+            )}
           </Box>
         </Box>
       </div>
