@@ -14,3 +14,4 @@ terriajs.pid
 /wwwroot/user-guide/
 package-lock.json
 *.swp
+.history
