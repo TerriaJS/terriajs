@@ -398,7 +398,7 @@
   "loader": {
     "loadingMessage": "Loading"
   },
-  "emptyWorkbenchMessage": "<0><0>Your workbench is empty</0><1><strong>Click '$t(addData.addDataBtnText)' above to </strong></1><2><0>Browse the Data Catalog</0><1>Load your own data onto the map</1></2><3><0></0><strong>TIP.</strong><2>All your active data sets will be listed here</2></3></0>",
+  "emptyWorkbenchMessage": "<0><0>Your workbench is empty.</0><1><strong>Click '$t(addData.addDataBtnText)' above to: </strong></1><2><0>Browse the Data Catalog</0><1>Load your own data onto the map</1></2><3><0></0><strong>TIP &nbsp;</strong><2>All your active datasets will be listed here</2></3></0>",
   "dataCatalog": {
     "groupRemove": "remove this group",
     "groupEmpty": "This group is empty"
