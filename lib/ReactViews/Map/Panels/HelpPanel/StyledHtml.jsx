@@ -51,7 +51,6 @@ class StyledHtml extends React.Component {
   }
 
   render() {
-    console.log(this.props.content);
     return (
       <div>
         <For each="item" of={this.props.content}>

@@ -18,12 +18,7 @@ class HelpPanelItem extends React.Component {
   static propTypes = {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
-    iconElement: PropTypes.string,
-    // title: PropTypes.string.isRequired,
-    itemString: PropTypes.string.isRequired,
-    description: PropTypes.string,
-    videoLink: PropTypes.string,
-    background: PropTypes.string,
+    content: PropTypes.object.isRequired,
     theme: PropTypes.object,
     t: PropTypes.func.isRequired
   };
@@ -45,13 +40,14 @@ class HelpPanelItem extends React.Component {
       padding-left: 25px;
     `;
     const itemSelected =
-      this.props.viewState.selectedHelpMenuItem === this.props.itemString;
+      this.props.viewState.selectedHelpMenuItem === this.props.content.key;
     const className = classNames({
       [Styles.panelItem]: true,
       [Styles.isSelected]: itemSelected
     });
-    const reactComponents = parseCustomMarkdownToReact(this.props.description)
-      ?.props.children;
+    const reactComponents = parseCustomMarkdownToReact(
+      this.props.content.markdownText
+    )?.props.children;
     const title =
       reactComponents.length > 0
         ? reactComponents.find(item => /(h[0-6])/i.test(item.type))?.props
@@ -66,7 +62,7 @@ class HelpPanelItem extends React.Component {
         <button
           className={className}
           onClick={() =>
-            this.props.viewState.selectHelpMenuItem(this.props.itemString)
+            this.props.viewState.selectHelpMenuItem(this.props.content.key)
           }
         >
           <Box
@@ -82,7 +78,7 @@ class HelpPanelItem extends React.Component {
               <StyledIcon
                 styledWidth={"27px"}
                 fillColor={this.props.theme.textDark}
-                glyph={Icon.GLYPHS[this.props.iconElement]}
+                glyph={Icon.GLYPHS[this.props.content.icon]}
               />
             </MenuIconWrapper>
             <Text
@@ -105,11 +101,10 @@ class HelpPanelItem extends React.Component {
         <HelpVideoPanel
           terria={this.props.terria}
           viewState={this.props.viewState}
-          title={title}
-          itemString={this.props.itemString}
-          description={reactComponents}
-          videoLink={this.props.videoLink}
-          background={this.props.background}
+          itemString={this.props.content.key}
+          htmlContent={reactComponents}
+          videoUrl={this.props.content.videoUrl}
+          placeholderImage={this.props.content.placeholderImage}
         />
       </div>
     );

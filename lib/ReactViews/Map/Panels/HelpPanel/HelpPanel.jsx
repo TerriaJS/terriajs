@@ -19,7 +19,6 @@ class HelpPanel extends React.Component {
   static propTypes = {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
-    items: PropTypes.array,
     theme: PropTypes.object,
     t: PropTypes.func.isRequired
   };
@@ -107,14 +106,9 @@ class HelpPanel extends React.Component {
               <HelpPanelItem
                 terria={this.props.terria}
                 viewState={this.props.viewState}
-                iconElement={item.icon}
-                itemString={item.key}
-                description={item.content}
-                videoLink={item.videoUrl}
-                background={item.background}
+                content={item}
               />
             </For>
-            {/* {this.props.items} */}
           </Box>
         </Box>
       </div>
