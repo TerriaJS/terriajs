@@ -94,7 +94,7 @@ class HelpPanelItem extends React.Component {
                 line-height: 17px;
               `}
             >
-              {title ? title : ""}
+              {title}
             </Text>
           </Box>
         </button>

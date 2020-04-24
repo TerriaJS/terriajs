@@ -15,5 +15,3 @@ export function Nav() {}
 export function ExperimentalMenu() {}
 /** No-op grouping element for elements that should be added to the Feedback*/
 export function Feedback() {}
-/** No-op grouping element for elements that should be added to the help panel*/
-export function HelpMenu() {}

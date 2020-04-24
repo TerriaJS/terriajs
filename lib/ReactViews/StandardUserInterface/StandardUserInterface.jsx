@@ -171,7 +171,6 @@ const StandardUserInterface = observer(
         this.props.viewState.useSmallScreenInterface,
         this.props.children
       );
-      console.log(customElements);
 
       const terria = this.props.terria;
       const allBaseMaps = this.props.allBaseMaps;
