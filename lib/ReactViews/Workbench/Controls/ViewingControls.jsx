@@ -212,7 +212,7 @@ const ViewingControls = observer(
     },
 
     renderViewingControlsMenu() {
-      const { t, item } = this.props;
+      const { t, item, viewState } = this.props;
       const canSplit =
         !item.terria.configParameters.disableSplitter &&
         item.supportsSplitting &&
@@ -250,6 +250,29 @@ const ViewingControls = observer(
                 >
                   <Icon glyph={Icon.GLYPHS.splitterOn} />
                   <span>{t("workbench.splitItem")}</span>
+                </BoxViewingControl>
+              </ViewingControlMenuButton>
+            </li>
+          </If>
+          <If
+            condition={
+              item.isDiffable && viewState.useSmallScreenInterface === false
+            }
+          >
+            <li className={classNames(Styles.split)}>
+              <ViewingControlMenuButton
+                onClick={this.splitItem}
+                title={t("workbench.diffImageTitle")}
+              >
+                <BoxViewingControl
+                  css={`
+                    svg:not(:root) {
+                      width: 26px;
+                    }
+                  `}
+                >
+                  <Icon glyph={Icon.GLYPHS.diffImage} />
+                  <span>{t("workbench.diffImage")}</span>
                 </BoxViewingControl>
               </ViewingControlMenuButton>
             </li>

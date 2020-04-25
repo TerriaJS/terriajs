@@ -72,6 +72,7 @@ const GLYPHS = {
   splitter: require("../../wwwroot/images/icons/splitter.svg"),
   splitterOn: require("../../wwwroot/images/icons/splitterOn.svg"),
   splitterOff: require("../../wwwroot/images/icons/splitterOff.svg"),
+  diffImage: require("../../wwwroot/images/icons/splitter.svg"),
   previous: require("../../wwwroot/images/icons/previous.svg"),
   next: require("../../wwwroot/images/icons/next.svg"),
   timeline: require("../../wwwroot/images/icons/timeline.svg"),
@@ -129,7 +130,7 @@ export const StyledIcon = styled(Icon)`
   ${props => props.dark && `fill: ${props.theme.textDark};`}
 
   ${props => props.fillColor && `fill: ${props.fillColor};`}
-  
+
   ${props => props.opacity && `opacity: ${props.opacity};`}
 `;
 
