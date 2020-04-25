@@ -7,7 +7,8 @@
 // 3. Observable spaghetti
 //  Solution: think in terms of pipelines with computed observables, document patterns.
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
-import { computed, runInAction, trace, observable } from "mobx";
+import i18next from "i18next";
+import { computed, runInAction } from "mobx";
 import moment from "moment";
 import combine from "terriajs-cesium/Source/Core/combine";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -16,16 +17,17 @@ import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTili
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
 import URI from "urijs";
-import isDefined from "../Core/isDefined";
 import containsAny from "../Core/containsAny";
 import createTransformerAllowUndefined from "../Core/createTransformerAllowUndefined";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import isDefined from "../Core/isDefined";
 import isReadOnlyArray from "../Core/isReadOnlyArray";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import DiffableMixin from "../ModelMixins/DiffableMixin";
 import DiscretelyTimeVaryingMixin from "../ModelMixins/DiscretelyTimeVaryingMixin";
-import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
+import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import DiscreteTimeTraits from "../Traits/DiscreteTimeTraits";
@@ -34,9 +36,9 @@ import { RectangleTraits } from "../Traits/MappableTraits";
 import WebMapServiceCatalogItemTraits, {
   WebMapServiceAvailableLayerStylesTraits
 } from "../Traits/WebMapServiceCatalogItemTraits";
+import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
-import CommonStrata from "./CommonStrata";
 import LoadableStratum from "./LoadableStratum";
 import Mappable, { ImageryParts } from "./Mappable";
 import { BaseModel } from "./Model";
@@ -47,7 +49,7 @@ import WebMapServiceCapabilities, {
   CapabilitiesStyle,
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
-import i18next from "i18next";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 
 interface LegendUrl {
   url: string;
@@ -402,11 +404,13 @@ class GetCapabilitiesStratum extends LoadableStratum(
 }
 
 class WebMapServiceCatalogItem
-  extends TimeFilterMixin(
-    DiscretelyTimeVaryingMixin(
-      GetCapabilitiesMixin(
-        UrlMixin(
-          CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
+  extends DiffableMixin(
+    TimeFilterMixin(
+      DiscretelyTimeVaryingMixin(
+        GetCapabilitiesMixin(
+          UrlMixin(
+            CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
+          )
         )
       )
     )
@@ -530,8 +534,27 @@ class WebMapServiceCatalogItem
     }
   }
 
+  showDiffImage(
+    firstDate: JulianDate,
+    secondDate: JulianDate,
+    diffStyleId: string
+  ) {
+    if (this.canDiffImages === false) {
+      return;
+    }
+
+    this.setTrait(CommonStrata.user, "firstDiffDate", firstDate.toString());
+    this.setTrait(CommonStrata.user, "secondDiffDate", secondDate.toString());
+    this.styleSelector?.chooseActiveStyle(CommonStrata.user, diffStyleId);
+    this.setTrait(CommonStrata.user, "isShowingDiff", true);
+  }
+
   @computed
   get mapItems() {
+    if (this.isShowingDiff === true) {
+      return this._diffImageryParts ? [this._diffImageryParts] : [];
+    }
+
     const result = [];
 
     const current = this._currentImageryParts;
@@ -579,6 +602,36 @@ class WebMapServiceCatalogItem
     } else {
       return undefined;
     }
+  }
+
+  @computed
+  private get _diffImageryParts(): ImageryParts | undefined {
+    // A helper to get the diff tag given a date string
+    const getDiffTag = (date: string | undefined): string | undefined => {
+      if (date === undefined) {
+        return;
+      }
+      const julianDate = JulianDate.fromIso8601(date);
+      const index = this.getDiscreteTimeIndex(julianDate);
+      return index !== undefined
+        ? this.discreteTimesAsSortedJulianDates?.[index].tag
+        : undefined;
+    };
+
+    const firstDiffTag = getDiffTag(this.firstDiffDate);
+    const secondDiffTag = getDiffTag(this.secondDiffDate);
+    if (firstDiffTag === undefined || secondDiffTag === undefined) {
+      return;
+    }
+    const time = `${firstDiffTag},${secondDiffTag}`;
+    const imageryProvider = this._createImageryProvider(time);
+    return (
+      imageryProvider && {
+        imageryProvider,
+        alpha: this.opacity,
+        show: this.show !== undefined ? this.show : true
+      }
+    );
   }
 
   private _createImageryProvider = createTransformerAllowUndefined(

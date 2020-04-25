@@ -85,13 +85,7 @@ function DiscretelyTimeVaryingMixin<
       return asJulian;
     }
 
-    @computed
-    get currentDiscreteTimeIndex(): number | undefined {
-      const currentTime = this.currentTimeAsJulianDate;
-      if (currentTime === undefined) {
-        return undefined;
-      }
-
+    getDiscreteTimeIndex(time: JulianDate): number | undefined {
       const discreteTimes = this.discreteTimesAsSortedJulianDates;
       if (discreteTimes === undefined || discreteTimes.length === 0) {
         return undefined;
@@ -99,7 +93,7 @@ function DiscretelyTimeVaryingMixin<
 
       const exactIndex = binarySearch(
         discreteTimes,
-        currentTime,
+        time,
         (candidate, currentTime) =>
           JulianDate.compare(candidate.time, currentTime)
       );
@@ -122,16 +116,24 @@ function DiscretelyTimeVaryingMixin<
         const nextTime = discreteTimes[nextIndex].time;
 
         const timeFromPrevious = JulianDate.secondsDifference(
-          currentTime,
+          time,
           previousTime
         );
-        const timeToNext = JulianDate.secondsDifference(nextTime, currentTime);
+        const timeToNext = JulianDate.secondsDifference(nextTime, time);
         if (timeToNext > timeFromPrevious) {
           return nextIndex - 1;
         } else {
           return nextIndex;
         }
       }
+    }
+
+    @computed
+    get currentDiscreteTimeIndex(): number | undefined {
+      return (
+        this.currentTimeAsJulianDate &&
+        this.getDiscreteTimeIndex(this.currentTimeAsJulianDate)
+      );
     }
 
     @computed

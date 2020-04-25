@@ -8,6 +8,7 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 import styled from "styled-components";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -186,6 +187,14 @@ const ViewingControls = observer(
       });
     },
 
+    openDiffTool() {
+      this.props.item.showDiffImage(
+        JulianDate.fromIso8601("2020-01-08"),
+        JulianDate.fromIso8601("2020-01-24"),
+        "NDVI"
+      );
+    },
+
     previewItem() {
       let item = this.props.item;
       // If this is a chartable item opened from another catalog item, get the info of the original item.
@@ -256,12 +265,12 @@ const ViewingControls = observer(
           </If>
           <If
             condition={
-              item.isDiffable && viewState.useSmallScreenInterface === false
+              item.canDiffImages && viewState.useSmallScreenInterface === false
             }
           >
             <li className={classNames(Styles.split)}>
               <ViewingControlMenuButton
-                onClick={this.splitItem}
+                onClick={this.openDiffTool}
                 title={t("workbench.diffImageTitle")}
               >
                 <BoxViewingControl
