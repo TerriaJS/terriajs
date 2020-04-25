@@ -11,11 +11,10 @@ import CommonStrata from "../Models/CommonStrata";
 import Model from "../Models/Model";
 import DiscretelyTimeVaryingTraits from "../Traits/DiscretelyTimeVaryingTraits";
 import TimeVarying from "./TimeVarying";
-import TimeFilterMixin from "./TimeFilterMixin";
 
 type DiscretelyTimeVarying = Model<DiscretelyTimeVaryingTraits>;
 
-export default function DiscretelyTimeVaryingMixin<
+function DiscretelyTimeVaryingMixin<
   T extends Constructor<DiscretelyTimeVarying>
 >(Base: T) {
   abstract class DiscretelyTimeVaryingMixin extends Base
@@ -61,14 +60,7 @@ export default function DiscretelyTimeVaryingMixin<
 
     @computed
     get discreteTimesAsSortedJulianDates() {
-      let discreteTimes;
-      if (
-        TimeFilterMixin.isMixedInto(this) &&
-        this.filteredDiscreteTimes !== undefined
-      ) {
-        discreteTimes = this.filteredDiscreteTimes;
-      } else discreteTimes = this.discreteTimes;
-
+      const discreteTimes = this.discreteTimes;
       if (discreteTimes === undefined) {
         return undefined;
       }
@@ -315,6 +307,14 @@ export default function DiscretelyTimeVaryingMixin<
 
   return DiscretelyTimeVaryingMixin;
 }
+
+namespace DiscretelyTimeVaryingMixin {
+  export type Instance = InstanceType<
+    ReturnType<typeof DiscretelyTimeVaryingMixin>
+  >;
+}
+
+export default DiscretelyTimeVaryingMixin;
 
 function toJulianDate(time: string | undefined): JulianDate | undefined {
   if (time === undefined) {
