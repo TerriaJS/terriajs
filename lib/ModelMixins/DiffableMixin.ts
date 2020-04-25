@@ -2,8 +2,9 @@ import DiffableTraits from "../Traits/DiffableTraits";
 import Model from "../Models/Model";
 import Constructor from "../Core/Constructor";
 import { JulianDate } from "cesium";
+import ShowableTraits from "../Traits/ShowableTraits";
 
-type MixinModel = Model<DiffableTraits>;
+type MixinModel = Model<DiffableTraits & ShowableTraits>;
 
 function DiffableMixin<T extends Constructor<MixinModel>>(Base: T) {
   abstract class DiffableMixin extends Base {

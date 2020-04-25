@@ -188,11 +188,9 @@ const ViewingControls = observer(
     },
 
     openDiffTool() {
-      this.props.item.showDiffImage(
-        JulianDate.fromIso8601("2020-01-08"),
-        JulianDate.fromIso8601("2020-01-24"),
-        "NDVI"
-      );
+      this.props.viewState.openTool("diffTool", {
+        sourceItem: this.props.item
+      });
     },
 
     previewItem() {

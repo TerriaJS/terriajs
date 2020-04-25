@@ -11,7 +11,8 @@ import {
   reaction,
   IReactionDisposer,
   action,
-  runInAction
+  runInAction,
+  computed
 } from "mobx";
 import { BaseModel } from "../Models/Model";
 import PickedFeatures from "../Map/PickedFeatures";
@@ -114,6 +115,11 @@ export default class ViewState {
    * is currently visible.
    */
   @observable shareModelIsVisible: boolean = false;
+
+  /**
+   * The currently open tool
+   */
+  @observable currentTool: { type: string; params: unknown } | undefined;
 
   private _unsubscribeErrorListener: any;
   private _pickedFeaturesSubscription: IReactionDisposer;
@@ -364,5 +370,20 @@ export default class ViewState {
     if (this.terria.configParameters.openAddData) {
       this.openAddData();
     }
+  }
+
+  @action
+  openTool(toolType: string, params?: any) {
+    this.currentTool = { type: toolType, params };
+  }
+
+  @action
+  closeTool() {
+    this.currentTool = undefined;
+  }
+
+  @computed
+  get isToolOpen() {
+    return this.currentTool !== undefined;
   }
 }

@@ -55,6 +55,9 @@
     "btnRealign": "toggle manual alignment",
     "btnResetRealign": "reset compass alignment"
   },
+  "tool": {
+    "closeButtonTitle": "Close {{toolName}} Tool"
+  },
   "legend": {
     "lat": "Lat",
     "lon": "Lon",
