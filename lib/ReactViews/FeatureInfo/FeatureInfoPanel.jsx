@@ -28,16 +28,12 @@ import { action, reaction, runInAction } from "mobx";
 
 @observer
 class FeatureInfoPanel extends React.Component {
-  static displayName = "FeatureInfoPanel";
-
   static propTypes = {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
     printView: PropTypes.bool,
     t: PropTypes.func.isRequired
   };
-
-  ref = null;
 
   constructor(props) {
     super(props);
@@ -125,10 +121,9 @@ class FeatureInfoPanel extends React.Component {
       });
   }
 
+  @action.bound
   close() {
-    runInAction(() => {
-      this.props.viewState.featureInfoPanelIsVisible = false;
-    });
+    this.props.viewState.featureInfoPanelIsVisible = false;
 
     // give the close animation time to finish before unselecting, to avoid jumpiness
     setTimeout(
@@ -140,22 +135,20 @@ class FeatureInfoPanel extends React.Component {
     );
   }
 
+  @action.bound
   toggleCollapsed(event) {
-    runInAction(() => {
-      this.props.viewState.featureInfoPanelIsCollapsed = !this.props.viewState
-        .featureInfoPanelIsCollapsed;
-    });
+    this.props.viewState.featureInfoPanelIsCollapsed = !this.props.viewState
+      .featureInfoPanelIsCollapsed;
   }
 
+  @action.bound
   toggleOpenFeature(feature) {
     const terria = this.props.terria;
-    runInAction(() => {
-      if (feature === terria.selectedFeature) {
-        terria.selectedFeature = undefined;
-      } else {
-        terria.selectedFeature = feature;
-      }
-    });
+    if (feature === terria.selectedFeature) {
+      terria.selectedFeature = undefined;
+    } else {
+      terria.selectedFeature = feature;
+    }
   }
 
   getMessageForNoResults() {
@@ -194,16 +187,16 @@ class FeatureInfoPanel extends React.Component {
     }
   }
 
-  locationUpdated(longitude, latitude) {
-    if (
-      defined(latitude) &&
-      defined(longitude) &&
-      isMarkerVisible(this.props.terria)
-    ) {
-      removeMarker(this.props.terria);
-      this.addManualMarker(longitude, latitude);
-    }
-  }
+  // locationUpdated(longitude, latitude) {
+  //   if (
+  //     defined(latitude) &&
+  //     defined(longitude) &&
+  //     isMarkerVisible(this.props.terria)
+  //   ) {
+  //     removeMarker(this.props.terria);
+  //     this.addManualMarker(longitude, latitude);
+  //   }
+  // }
 
   filterIntervalsByFeature(catalogItem, feature) {
     try {
@@ -326,9 +319,8 @@ class FeatureInfoPanel extends React.Component {
         <li>{this.renderLocationItem(position)}</li>
       </If>
     );
-    this.ref = React.createRef();
     return (
-      <DragWrapper ref={this.ref}>
+      <DragWrapper>
         <div
           className={panelClassName}
           aria-hidden={!viewState.featureInfoPanelIsVisible}
