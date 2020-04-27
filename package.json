@@ -80,6 +80,7 @@
     "file-saver": "^1.3.8",
     "gulp": "^4.0.0",
     "hammerjs": "^2.0.6",
+    "hoist-non-react-statics": "^3.3.2",
     "html-to-react": "1.3.4",
     "i18next": "^19.0.0",
     "i18next-browser-languagedetector": "^4.0.1",

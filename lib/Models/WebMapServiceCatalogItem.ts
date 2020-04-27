@@ -50,6 +50,8 @@ import WebMapServiceCapabilities, {
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import { AvailableStyle } from "./SelectableStyle";
+import { JsonObject } from "../Core/Json";
 
 interface LegendUrl {
   url: string;
@@ -166,6 +168,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
             : layerAvailableStyles.styles.find(
                 candidate => candidate.name === style
               );
+
         if (layerStyle !== undefined && layerStyle.legend !== undefined) {
           result.push(
             <StratumFromTraits<LegendTraits>>(<unknown>layerStyle.legend)
@@ -201,7 +204,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
     }
 
     const capabilitiesLayers = this.capabilitiesLayers;
-
     for (const layerTuple of capabilitiesLayers) {
       const layerName = layerTuple[0];
       const layer = layerTuple[1];
@@ -227,7 +229,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
             );
             legendMimeType = wmsLegendUrl.Format;
           }
-
           const legend = !legendUri
             ? undefined
             : createStratumInstance(LegendTraits, {
@@ -490,8 +491,8 @@ class WebMapServiceCatalogItem
       activeStyleId: activeStyle,
       availableStyles: this.availableStyles[0].styles.map(function(s) {
         return {
-          name: s.title,
-          id: s.name
+          name: s.title!,
+          id: s.name!
         };
       }),
       chooseActiveStyle: (strata: string, newStyle: string) => {
@@ -519,6 +520,14 @@ class WebMapServiceCatalogItem
     }
   }
 
+  @computed
+  get availableDiffStyles(): readonly AvailableStyle[] | undefined {
+    // Currently only NDVI
+    return this.styleSelector?.availableStyles.filter(
+      style => style.id === "NDVI"
+    );
+  }
+
   protected get defaultGetCapabilitiesUrl(): string | undefined {
     if (this.uri) {
       return this.uri
@@ -539,14 +548,38 @@ class WebMapServiceCatalogItem
     secondDate: JulianDate,
     diffStyleId: string
   ) {
-    if (this.canDiffImages === false) {
-      return;
-    }
-
+    if (this.canDiffImages === false) return;
     this.setTrait(CommonStrata.user, "firstDiffDate", firstDate.toString());
     this.setTrait(CommonStrata.user, "secondDiffDate", secondDate.toString());
-    this.styleSelector?.chooseActiveStyle(CommonStrata.user, diffStyleId);
+    this.setTrait(CommonStrata.user, "diffStyleId", diffStyleId);
     this.setTrait(CommonStrata.user, "isShowingDiff", true);
+  }
+
+  clearDiffImage() {
+    this.setTrait(CommonStrata.user, "firstDiffDate", undefined);
+    this.setTrait(CommonStrata.user, "secondDiffDate", undefined);
+    this.setTrait(CommonStrata.user, "diffStyleId", undefined);
+    this.setTrait(CommonStrata.user, "isShowingDiff", false);
+  }
+
+  getLegendUrlForDiffStyle(
+    diffStyleId: string,
+    firstDate: JulianDate,
+    secondDate: JulianDate
+  ) {
+    const firstTag = this.getTagForTime(firstDate);
+    const secondTag = this.getTagForTime(secondDate);
+    const time = `${firstTag},${secondTag}`;
+    const layerName = this.availableStyles.find(style =>
+      style.styles.some(s => s.name === diffStyleId)
+    )?.layerName;
+    return URI(
+      `${this.url}?service=WMS&version=1.1.0&request=GetLegendGraphic&format=image/png&transparent=True`
+    )
+      .addQuery("layer", encodeURIComponent(layerName || ""))
+      .addQuery("styles", encodeURIComponent(diffStyleId))
+      .addQuery("time", time)
+      .toString();
   }
 
   @computed
@@ -572,9 +605,9 @@ class WebMapServiceCatalogItem
 
   @computed
   private get _currentImageryParts(): ImageryParts | undefined {
-    const imageryProvider = this._createImageryProvider(
-      this.currentDiscreteTimeTag
-    );
+    const imageryProvider = this._createImageryProvider({
+      time: this.currentDiscreteTimeTag
+    });
     if (imageryProvider === undefined) {
       return undefined;
     }
@@ -588,9 +621,9 @@ class WebMapServiceCatalogItem
   @computed
   private get _nextImageryParts(): ImageryParts | undefined {
     if (this.nextDiscreteTimeTag) {
-      const imageryProvider = this._createImageryProvider(
-        this.nextDiscreteTimeTag
-      );
+      const imageryProvider = this._createImageryProvider({
+        time: this.nextDiscreteTimeTag
+      });
       if (imageryProvider === undefined) {
         return undefined;
       }
@@ -607,24 +640,25 @@ class WebMapServiceCatalogItem
   @computed
   private get _diffImageryParts(): ImageryParts | undefined {
     // A helper to get the diff tag given a date string
-    const getDiffTag = (date: string | undefined): string | undefined => {
-      if (date === undefined) {
-        return;
-      }
-      const julianDate = JulianDate.fromIso8601(date);
-      const index = this.getDiscreteTimeIndex(julianDate);
-      return index !== undefined
-        ? this.discreteTimesAsSortedJulianDates?.[index].tag
-        : undefined;
-    };
-
-    const firstDiffTag = getDiffTag(this.firstDiffDate);
-    const secondDiffTag = getDiffTag(this.secondDiffDate);
-    if (firstDiffTag === undefined || secondDiffTag === undefined) {
+    const firstDate =
+      this.firstDiffDate && JulianDate.fromIso8601(this.firstDiffDate);
+    const secondDate =
+      this.secondDiffDate && JulianDate.fromIso8601(this.secondDiffDate);
+    const firstDiffTag = firstDate && this.getTagForTime(firstDate);
+    const secondDiffTag = secondDate && this.getTagForTime(secondDate);
+    const diffStyleId = this.diffStyleId;
+    if (
+      firstDiffTag === undefined ||
+      secondDiffTag === undefined ||
+      diffStyleId === undefined
+    ) {
       return;
     }
     const time = `${firstDiffTag},${secondDiffTag}`;
-    const imageryProvider = this._createImageryProvider(time);
+    const imageryProvider = this._createImageryProvider({
+      time,
+      extraParameters: { styles: diffStyleId }
+    });
     return (
       imageryProvider && {
         imageryProvider,
@@ -634,10 +668,20 @@ class WebMapServiceCatalogItem
     );
   }
 
+  getTagForTime(date: JulianDate): string | undefined {
+    const index = this.getDiscreteTimeIndex(date);
+    return index !== undefined
+      ? this.discreteTimesAsSortedJulianDates?.[index].tag
+      : undefined;
+  }
+
   private _createImageryProvider = createTransformerAllowUndefined(
     (
-      time: string | undefined
+      opts:
+        | { time: string | undefined; extraParameters?: JsonObject }
+        | undefined
     ): Cesium.WebMapServiceImageryProvider | undefined => {
+      const { time, extraParameters } = opts || {};
       // Don't show anything on the map until GetCapabilities finishes loading.
       if (this.isLoadingMetadata) {
         return undefined;
@@ -650,7 +694,8 @@ class WebMapServiceCatalogItem
 
       const parameters: any = {
         ...WebMapServiceCatalogItem.defaultParameters,
-        ...(this.parameters || {})
+        ...(this.parameters || {}),
+        ...extraParameters
       };
 
       if (time !== undefined) {

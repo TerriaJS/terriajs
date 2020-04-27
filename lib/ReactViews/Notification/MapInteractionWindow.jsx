@@ -75,13 +75,15 @@ const MapInteractionWindow = observer(
           {interactionMode &&
             interactionMode.customUi &&
             interactionMode.customUi()}
-          <button
-            type="button"
-            onClick={interactionMode && interactionMode.onCancel}
-            className={Styles.btn}
-          >
-            {interactionMode && interactionMode.buttonText}
-          </button>
+          {interactionMode && interactionMode.onCancel && (
+            <button
+              type="button"
+              onClick={interactionMode && interactionMode.onCancel}
+              className={Styles.btn}
+            >
+              {interactionMode && interactionMode.buttonText}
+            </button>
+          )}
         </div>
       );
     }

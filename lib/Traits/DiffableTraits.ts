@@ -30,4 +30,11 @@ export default class DiffableTraits extends ModelTraits {
     description: "The second date to use to compute the difference image"
   })
   secondDiffDate?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Diff style ID",
+    description: "The ID of the style used to compute the difference image"
+  })
+  diffStyleId?: string;
 }

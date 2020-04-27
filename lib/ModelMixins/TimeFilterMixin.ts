@@ -178,10 +178,10 @@ function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
 }
 
 namespace TimeFilterMixin {
-  export interface TimeFilterMixin
+  export interface Instance
     extends InstanceType<ReturnType<typeof TimeFilterMixin>> {}
 
-  export function isMixedInto(model: any): model is TimeFilterMixin {
+  export function isMixedInto(model: any): model is Instance {
     return model && model.hasTimeFilterMixin;
   }
 }
