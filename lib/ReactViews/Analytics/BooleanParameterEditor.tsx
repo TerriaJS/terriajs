@@ -4,17 +4,19 @@ import Styles from "./parameter-editors.scss";
 import { action } from "mobx";
 import BooleanParameter from "../../Models/BooleanParameter";
 
-const Icon = require('../Icon')
+const Icon = require("../Icon");
 
 @observer
-export default class BooleanParameterEditor extends React.Component<{parameter:BooleanParameter}> {
+export default class BooleanParameterEditor extends React.Component<{
+  parameter: BooleanParameter;
+}> {
   @action
   onClick() {
     this.props.parameter.value = !this.props.parameter.value;
   }
 
   renderCheckbox() {
-    const value = this.props.parameter.value ;
+    const value = this.props.parameter.value;
     const name = this.props.parameter.name;
     const description = this.props.parameter.description;
 

@@ -6,9 +6,11 @@ import { action } from "mobx";
 import { observer } from "mobx-react";
 
 @observer
-export default class GenericParameterEditor extends React.Component<{parameter:FunctionParameter}> {
+export default class GenericParameterEditor extends React.Component<{
+  parameter: FunctionParameter;
+}> {
   @action
-  onChange(e:React.ChangeEvent<HTMLInputElement>) {
+  onChange(e: React.ChangeEvent<HTMLInputElement>) {
     this.props.parameter.value = e.target.value;
   }
 

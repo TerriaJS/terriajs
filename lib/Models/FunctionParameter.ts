@@ -33,7 +33,7 @@ export default abstract class FunctionParameter {
     this.description = options.description || "";
     this.isRequired = options.isRequired || false;
     this.converter = options.converter;
-    this.value = options.value
+    this.value = options.value;
   }
 
   formatValueAsString(value?: unknown) {

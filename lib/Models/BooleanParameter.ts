@@ -5,30 +5,33 @@ import { observable, computed } from "mobx";
 
 interface Options extends FunctionParameterOptions {
   /** The name for the "true" value of the boolean parameter. */
-  trueName?:string
+  trueName?: string;
   /** The description for the "true" value of the boolean parameter. */
-  trueDescription?:string
+  trueDescription?: string;
   /** The name for the "false" value of the boolean parameter. */
-  falseName?:string
+  falseName?: string;
   /** The description for the "false" value of the boolean parameter. */
-  falseDescription?:string
+  falseDescription?: string;
 }
 
-export default class BooleanParameter extends FunctionParameter implements Options {
+export default class BooleanParameter extends FunctionParameter
+  implements Options {
   readonly type = "boolean";
-  readonly trueName?:string
-  readonly trueDescription?:string
-  readonly falseName?:string
-  readonly falseDescription?:string
+  readonly trueName?: string;
+  readonly trueDescription?: string;
+  readonly falseName?: string;
+  readonly falseDescription?: string;
 
-  @observable value = false
+  @observable value = false;
 
   /**
    * Gets a value indicating whether this parameter has names for its "true" and "false" states.
    */
-  @computed 
-  get hasNamedStates () {
-    return typeof this.trueName === 'string' && typeof this.falseName === 'string'
+  @computed
+  get hasNamedStates() {
+    return (
+      typeof this.trueName === "string" && typeof this.falseName === "string"
+    );
   }
 
   constructor(options: Options) {
@@ -37,6 +40,6 @@ export default class BooleanParameter extends FunctionParameter implements Optio
     this.trueDescription = options.trueDescription;
     this.falseName = options.falseName;
     this.falseDescription = options.falseDescription;
-    this.value = options.value
+    this.value = options.value;
   }
 }

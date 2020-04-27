@@ -70,14 +70,15 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunction>>(Base: T) {
           name: "Inputs",
           content: inputsSection
         });
-        resultPendingCatalogItem!.setTrait(CommonStrata.user, "info", [
-          info
-        ]);
+        resultPendingCatalogItem!.setTrait(CommonStrata.user, "info", [info]);
       });
       return resultPendingCatalogItem;
     }
 
-    setErrorOnPendingItem(resultPendingCatalogItem: ResultPendingCatalogItem, errorMessage?: string) {
+    setErrorOnPendingItem(
+      resultPendingCatalogItem: ResultPendingCatalogItem,
+      errorMessage?: string
+    ) {
       runInAction(() => {
         if (isDefined(resultPendingCatalogItem)) {
           resultPendingCatalogItem.setTrait(

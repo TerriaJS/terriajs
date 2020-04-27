@@ -7,9 +7,11 @@ import { action } from "mobx";
 import EnumerationParameter from "../../Models/EnumerationParameter";
 
 @observer
-export default class EnumerationParameterEditor extends React.Component<{parameter: EnumerationParameter}> {
+export default class EnumerationParameterEditor extends React.Component<{
+  parameter: EnumerationParameter;
+}> {
   @action
-  onChange(e:React.ChangeEvent<HTMLSelectElement>) {
+  onChange(e: React.ChangeEvent<HTMLSelectElement>) {
     this.props.parameter.value = e.target.value;
   }
 
