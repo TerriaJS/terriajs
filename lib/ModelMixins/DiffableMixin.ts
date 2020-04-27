@@ -6,15 +6,10 @@ import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
 import DiffableTraits from "../Traits/DiffableTraits";
 import ShowableTraits from "../Traits/ShowableTraits";
 import SplitterTraits from "../Traits/SplitterTraits";
-import WebMapServiceCatalogItemTraits from "../Traits/WebMapServiceCatalogItemTraits";
 import TimeFilterMixin from "./TimeFilterMixin";
 
 type MixinModel = Model<
-  DiffableTraits &
-    ShowableTraits &
-    CatalogMemberTraits &
-    SplitterTraits &
-    WebMapServiceCatalogItemTraits
+  DiffableTraits & ShowableTraits & CatalogMemberTraits & SplitterTraits
 > &
   TimeFilterMixin.Instance;
 
