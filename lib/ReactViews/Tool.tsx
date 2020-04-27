@@ -8,7 +8,7 @@ interface PropsType {
   params: unknown;
 }
 
-export default function Tool({type, params, viewState}: PropsType) {
+export default function Tool({ type, params, viewState }: PropsType) {
   const ToolComponent: any = getToolComponent(type);
   return ToolComponent && <ToolComponent viewState={viewState} {...params} />;
 }
