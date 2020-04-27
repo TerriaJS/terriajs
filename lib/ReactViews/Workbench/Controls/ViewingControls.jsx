@@ -8,7 +8,6 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 import styled from "styled-components";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -21,11 +20,11 @@ import PickedFeatures from "../../../Map/PickedFeatures";
 import addUserCatalogMember from "../../../Models/addUserCatalogMember";
 import CommonStrata from "../../../Models/CommonStrata";
 import getAncestors from "../../../Models/getAncestors";
+import SplitItemReference from "../../../Models/SplitItemReference";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
 import Icon from "../../Icon";
 import WorkbenchButton from "../WorkbenchButton";
-import SplitItemReference from "../../../Models/SplitItemReference";
 import Styles from "./viewing-controls.scss";
 
 const BoxViewingControl = styled(Box).attrs({
