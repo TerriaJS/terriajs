@@ -335,9 +335,7 @@ export default class WebProcessingServiceCatalogFunction extends CatalogFunction
 
     if (isDefined(status.ProcessFailed)) {
       const e = status.ProcessFailed.ExceptionReport?.Exception;
-      this.setErrorOnPendingItem(
-        (e?.ExceptionText as string) || (e?.Exception as string) || undefined
-      );
+      this.setErrorOnPendingItem(e?.ExceptionText || e?.Exception);
     } else if (isDefined(status.ProcessSucceeded)) {
       const item = await this.createCatalogItem(pendingItem, json);
       await item.loadMapItems();
