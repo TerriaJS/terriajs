@@ -61,8 +61,8 @@
   "diffTool": {
     "locationPicker": {
       "initialMessages": {
-        "beforePick": "Select a point by clicking on the map",
-        "afterPick": "Click another point to change the selection"
+        "beforePick": "Select a point in the region where you want to see the difference",
+        "afterPick": "Click another point to change the selected region"
       },
       "nextMessages": {
         "beforePick": "Click another point to change the selection",
