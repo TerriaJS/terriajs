@@ -16,7 +16,6 @@ import ViewState from "../../../ReactViewModels/ViewState";
 import DatePicker from "./DatePicker";
 import Styles from "./diff-tool.scss";
 import LocationPicker from "./LocationPicker";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 
 const Box: any = require("../../../Styled/Box").default;
 const Button: any = require("../../../Styled/Button").default;

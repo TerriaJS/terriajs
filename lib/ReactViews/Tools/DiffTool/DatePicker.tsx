@@ -96,32 +96,61 @@ class DatePicker extends React.Component<PropsType> {
             onClick={() => item.moveToNextDiscreteTime(CommonStrata.user)}
           />
         </Box>
-        <div style={{ position: "absolute" }}>
-          <DateTimePicker
-            currentDate={this.currentDate}
-            dates={this.availableDates}
-            onChange={this.changeCurrentDate}
-            popupStyle={this.props.popupStyle}
-            openDirection="none"
-            isOpen={this.isOpen}
-            showCalendarButton={false}
-            onOpen={() => this.setIsOpen(true)}
-            onClose={() => this.setIsOpen(false)}
-          />
-        </div>
+        {this.isOpen && (
+          <div style={{ position: "absolute" }}>
+            <DateTimePicker
+              currentDate={this.currentDate}
+              dates={this.availableDates}
+              onChange={this.changeCurrentDate}
+              popupStyle={this.props.popupStyle}
+              openDirection="none"
+              isOpen={this.isOpen}
+              showCalendarButton={false}
+              onOpen={() => this.setIsOpen(true)}
+              onClose={() => this.setIsOpen(false)}
+            />
+          </div>
+        )}
       </div>
     );
   }
 }
 
-const PrevButton = styled(Button).attrs({
-  iconProps: { renderIcon: () => <Icon glyph={Icon.GLYPHS.previous} /> }
-})``;
+const PagerButton = styled(Button)`
+  cursor: pointer;
+  background-color: ${props => props.theme.darkWithOverlay};
+  width: 34px;
+  height: 34px;
+  border-radius: 2px 0 0 2px;
+  border: 1px solid ${props => props.theme.darkWithOverlay};
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  svg {
+    width: 8px;
+    height: 8px;
+    padding: 6px 0;
+  }
+`;
 
-const NextButton = styled(Button).attrs({
-  iconProps: { renderIcon: () => <Icon glyph={Icon.GLYPHS.next} /> }
-})``;
+const PrevButton = styled(PagerButton).attrs({
+  renderIcon: () => <Icon glyph={Icon.GLYPHS.previous} />
+})`
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
+`;
 
-const DateButton = styled(Button)``;
+const NextButton = styled(PagerButton).attrs({
+  renderIcon: () => <Icon glyph={Icon.GLYPHS.next} />
+})`
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+`;
+
+const DateButton = styled(Button).attrs({ secondary: true })`
+  cursor: pointer;
+  background-color: ${props => props.theme.darkWithOverlay};
+  height: 34px;
+  border-radius: 0px;
+  border: 1px solid ${props => props.theme.darkWithOverlay};
+`;
 
 export default withTranslation()(DatePicker);
