@@ -17,6 +17,7 @@ import { autorun } from "mobx";
 import { observer } from "mobx-react";
 
 import Box from "../../Styled/Box";
+import Spacing from "../../Styled/Spacing";
 import Button, { RawButton } from "../../Styled/Button";
 import Text from "../../Styled/Text";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
@@ -25,99 +26,138 @@ import GuidanceDot from "./GuidanceDot.jsx";
 import GuidanceOverlay from "./GuidanceOverlay.jsx";
 // import { buildShareLink } from "../Map/Panels/SharePanel/BuildShareLink";
 
+const ProgressDot = styled.div`
+  display: inline-block;
+  box-sizing: border-box;
+  height: 6px;
+  width: 6px;
+  border: 1px solid ${p => p.theme.colorPrimary};
+
+  background-color: ${p =>
+    p.count < p.countStep ? p.theme.colorPrimary : "transparent"};
+
+  margin-left: 8px;
+  border-radius: 50%;
+`;
+
+/**
+ * Indicator bar/"dots" on progress of tour.
+ * Fill in indicator dot depending on progress determined from count & max count
+ */
 const GuidanceProgress = props => {
   const countArray = Array.from(Array(props.max).keys()).map(e => e++);
   const countStep = props.step;
   return (
-    <div
-      css={`
-        float: right;
-        margin-right: -8px;
-      `}
-    >
+    <Box centered>
       {countArray.map(count => {
-        return (
-          <div
-            key={count}
-            css={`
-              display: inline-block;
-              box-sizing: border-box;
-              // height: 1px;
-              height: 2px;
-              width: 8px;
-              // border: 2px solid #519ac2;
-              background-color: ${p => p.theme.colorPrimary};
-              opacity: ${count < countStep ? 0.35 : 1};
-              // margin-left: 8px;
-
-              margin-left: 6px;
-              border-radius: 4px;
-            `}
-            // className={classNames(Styles.indicator, {
-            //   [Styles.indicatorEnabled]: count < countStep
-            // })}
-          />
-        );
+        return <ProgressDot key={count} count={count} countStep={countStep} />;
       })}
-    </div>
+    </Box>
   );
 };
 GuidanceProgress.propTypes = {
   max: PropTypes.number.isRequired,
-  step: PropTypes.number.isRequired,
-  children: PropTypes.node.isRequired
+  step: PropTypes.number.isRequired
 };
 
-const GuidanceContextBox = styled(Box)`
+const TourExplanationBox = styled(Box)`
   position: absolute;
-  box-sizing: border-box;
-  width: 256px;
+  width: 335px;
   // background-color: $modal-bg;
   z-index: 10000;
   background: white;
-
-  padding: 16px;
   color: $text-darker;
 
   min-height: 136px;
   border-radius: 4px;
 
   box-shadow: 0 6px 6px 0 rgba(0, 0, 0, 0.12), 0 10px 20px 0 rgba(0, 0, 0, 0.05);
+
+  // extend parseCustomMarkdownToReact() to inject our <Text /> with relevant props to cut down on # of styles?
+  // Force styling from markdown?
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0;
+    padding: 0;
+  }
+  h1,
+  h2,
+  h3 {
+    margin-bottom: ${p => p.theme.spacing * 2}px;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  h4,
+  h5,
+  h6 {
+    font-size: 15px;
+  }
+
+  p {
+    margin: 0;
+    margin-bottom: ${p => p.theme.spacing}px;
+  }
+  p:last-child {
+    margin-bottom: 0;
+  }
 `;
 
-const GuidanceContextModal = ({
+const TourExplanation = ({
   topStyle,
   leftStyle,
   onNext,
   onSkip,
+  currentStep,
+  maxSteps,
   children
 }) => {
   const { t } = useTranslation();
   return (
-    <GuidanceContextBox
-      style={{
-        top: topStyle,
-        left: leftStyle
-      }}
-    >
-      <Text tallerHeight>{children}</Text>
-      <Button onClick={() => onNext?.()} primary>
-        {t("general.next")}
-      </Button>
-      <RawButton onClick={() => onSkip?.()}>{t("general.skip")}</RawButton>
-      {/* ? */}
-      <GuidanceProgress step={2} max={4} />
-    </GuidanceContextBox>
+    <Text medium textDarker>
+      <Spacing bottom={2} />
+      <TourExplanationBox
+        paddedRatio={3}
+        column
+        style={{
+          top: topStyle,
+          left: leftStyle
+        }}
+      >
+        <Text medium noFontSize textDarker>
+          {children}
+        </Text>
+        <Spacing bottom={5} />
+        <Box centered justifySpaceBetween>
+          {/* <GuidanceProgress step={2} max={4} /> */}
+          <GuidanceProgress step={currentStep} max={maxSteps} />
+          <Box centered>
+            <RawButton onClick={() => onSkip?.()}>
+              {t("general.skip")}
+            </RawButton>
+            <Spacing right={2} />
+            <Button onClick={() => onNext?.()} primary>
+              {t("general.next")}
+            </Button>
+          </Box>
+        </Box>
+      </TourExplanationBox>
+    </Text>
   );
 };
-
-GuidanceContextModal.propTypes = {
+TourExplanation.propTypes = {
   children: PropTypes.node.isRequired,
+  currentStep: PropTypes.number.isRequired,
+  maxSteps: PropTypes.number.isRequired,
   onNext: PropTypes.func,
   onSkip: PropTypes.func,
   topStyle: PropTypes.string,
   leftStyle: PropTypes.string
 };
+
 const GuidancePortalOverlay = styled(Box)`
   position: fixed;
   width: 100%;
@@ -154,6 +194,9 @@ export const GuidancePortal = observer(({ children, viewState }) => {
     rectangle: currentRectangle
   };
 
+  const currentTourIndex = viewState.currentTourIndex;
+  const maxSteps = viewState.tourPoints.length;
+
   if (!showPortal) return null;
   return (
     <>
@@ -162,7 +205,9 @@ export const GuidancePortal = observer(({ children, viewState }) => {
         // onCancel={() => viewState.setTourIndex(-1)}
         onCancel={() => viewState.nextTourPoint()}
       />
-      <GuidanceContextModal
+      <TourExplanation
+        currentStep={currentTourIndex + 1}
+        maxSteps={maxSteps}
         onNext={() => viewState.nextTourPoint()}
         // onClose={() => viewState.nextTourPoint()}
         onSkip={() => viewState.setTourIndex(-1)}
@@ -170,16 +215,14 @@ export const GuidancePortal = observer(({ children, viewState }) => {
         leftStyle={`${currentRectangle?.left}px`}
       >
         {parseCustomMarkdownToReact(currentTourPoint?.content)}
-      </GuidanceContextModal>
+      </TourExplanation>
       <GuidancePortalOverlay
       // className={
       //   viewState.topElement === GuidancePortalDisplayName && "top-element"
       // }
       >
         <GuidanceDot onClick={() => setShowGuidance(!showGuidance)} />
-        {showGuidance && (
-          <GuidanceContextModal>{children}</GuidanceContextModal>
-        )}
+        {showGuidance && <TourBox>{children}</TourBox>}
 
         <Button onClick={() => viewState.setTourIndex(-1)}>Exit tour</Button>
       </GuidancePortalOverlay>
