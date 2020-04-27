@@ -107,6 +107,7 @@ Change Log
 * Tidy Compass UI animations, styles, titles
 * Bumped mobx minor to 4.15.x, mobx-react major to 6.x.x
 * Add `dateFormat` trait to `TimeVaryingTraits` to allowing formatting of datestrings in workbench and bottomdock.
+* Added diff tool for visualizing difference (delta) of images between 2 dates for services that support it.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
