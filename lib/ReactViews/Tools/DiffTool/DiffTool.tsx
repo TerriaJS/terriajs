@@ -163,7 +163,7 @@ class Main extends React.Component<MainPropsType> {
 
   @computed
   get diffItemName() {
-    const name = this.diffItem.name || "";
+    const name = this.props.sourceItem.name || "";
     const firstDate = this.leftDate;
     const secondDate = this.rightDate;
     const format = "yyyy/mm/dd";
