@@ -1,10 +1,12 @@
 import hoistStatics from "hoist-non-react-statics";
 import { action, computed, observable, reaction, runInAction } from "mobx";
 import { observer } from "mobx-react";
+import { IDisposer } from "mobx-utils";
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import LatLonHeight from "../../../Core/LatLonHeight";
 import PickedFeatures from "../../../Map/PickedFeatures";
@@ -12,94 +14,178 @@ import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import CommonStrata from "../../../Models/CommonStrata";
 import Feature from "../../../Models/Feature";
 import Mappable, { ImageryParts } from "../../../Models/Mappable";
+import SplitItemReference from "../../../Models/SplitItemReference";
+import Terria from "../../../Models/Terria";
 import ViewState from "../../../ReactViewModels/ViewState";
 import DatePicker from "./DatePicker";
 import Styles from "./diff-tool.scss";
 import LocationPicker from "./LocationPicker";
 
+type DiffableItem = DiffableMixin.Instance;
+
 const Box: any = require("../../../Styled/Box").default;
 const Button: any = require("../../../Styled/Button").default;
 const Text: any = require("../../../Styled/Text").default;
+const dateFormat = require("dateformat");
 
-type DiffableItem = DiffableMixin.Instance;
-
-interface PropTypes extends WithTranslation {
+interface PropsType extends WithTranslation {
   viewState: ViewState;
   sourceItem: DiffableItem;
 }
 
 @observer
-class DiffTool extends React.Component<PropTypes> {
+class DiffTool extends React.Component<PropsType> {
   static readonly toolName = "Image Difference";
 
+  @observable private leftItem?: DiffableItem;
+  @observable private rightItem?: DiffableItem;
   @observable private userSelectedSourceItem?: DiffableItem;
-  // @ts-ignore
-  @observable private leftItem: DiffableItem;
-  // @ts-ignore
-  @observable private rightItem: DiffableItem;
+
+  private splitterItemsDisposer?: IDisposer;
+  private originalSettings: any;
+
+  @computed
+  get sourceItem(): DiffableItem {
+    return this.userSelectedSourceItem || this.props.sourceItem;
+  }
+
+  @action.bound
+  changeSourceItem(sourceItem: DiffableItem) {
+    this.userSelectedSourceItem = sourceItem;
+  }
+
+  @action
+  async createSplitterItems() {
+    try {
+      const [leftItem, rightItem] = await Promise.all([
+        createSplitItem(this.sourceItem, ImagerySplitDirection.LEFT),
+        createSplitItem(this.sourceItem, ImagerySplitDirection.RIGHT)
+      ]);
+      runInAction(() => {
+        this.leftItem = leftItem;
+        this.rightItem = rightItem;
+      });
+    } catch {}
+  }
+
+  @action
+  removeSplitterItems() {
+    this.leftItem && removeSplitItem(this.leftItem);
+    this.rightItem && removeSplitItem(this.rightItem);
+  }
+
+  @action
+  enterDiffTool() {
+    // Start the reaction that splits the sourceItem into left & right items
+    this.splitterItemsDisposer = reaction(
+      () => this.sourceItem,
+      () => {
+        this.removeSplitterItems();
+        this.createSplitterItems();
+      },
+      { fireImmediately: true }
+    );
+
+    const viewState = this.props.viewState;
+    const terria = viewState.terria;
+    this.originalSettings = {
+      showSplitter: terria.showSplitter,
+      isMapFullScreen: viewState.isMapFullScreen
+    };
+    terria.showSplitter = true;
+    viewState.isMapFullScreen = true;
+    this.sourceItem.setTrait(CommonStrata.user, "show", false);
+  }
+
+  @action
+  leaveDiffTool() {
+    const viewState = this.props.viewState;
+    const terria = viewState.terria;
+    const originalSettings = this.originalSettings;
+    this.removeSplitterItems();
+    this.splitterItemsDisposer?.();
+    terria.showSplitter = originalSettings.showSplitter;
+    viewState.isMapFullScreen = originalSettings.isMapFullScreen;
+    this.sourceItem.setTrait(CommonStrata.user, "show", true);
+  }
+
+  componentDidMount() {
+    this.enterDiffTool();
+  }
+
+  componentWillUnmount() {
+    this.leaveDiffTool();
+  }
+
+  render() {
+    if (this.leftItem && this.rightItem) {
+      return (
+        <Main
+          {...this.props}
+          terria={this.props.viewState.terria}
+          sourceItem={this.sourceItem}
+          changeSourceItem={this.changeSourceItem}
+          leftItem={this.leftItem}
+          rightItem={this.rightItem}
+        />
+      );
+    } else return null;
+  }
+}
+
+interface MainPropsType extends PropsType {
+  terria: Terria;
+  leftItem: DiffableItem;
+  rightItem: DiffableItem;
+  changeSourceItem: (newSourceItem: DiffableItem) => void;
+}
+
+@observer
+class Main extends React.Component<MainPropsType> {
   @observable private location?: LatLonHeight;
   @observable private locationPickerMessages: {
     beforePick: string;
     afterPick: string;
   };
 
-  private splitterItemsDisposer: () => void;
-  private originalSettings: any;
-
-  constructor(props: PropTypes) {
+  constructor(props: MainPropsType) {
     super(props);
-
     this.locationPickerMessages = {
       beforePick: props.t("diffTool.locationPicker.initialMessages.beforePick"),
       afterPick: props.t("diffTool.locationPicker.initialMessages.afterPick")
     };
-
-    const createSplitterItems = action((sourceItem: DiffableItem) => {
-      const terria = sourceItem.terria;
-      if (this.leftItem) terria.overlays.remove(this.leftItem);
-      if (this.rightItem) terria.overlays.remove(this.rightItem);
-      this.leftItem = duplicateSourceItem(
-        sourceItem,
-        ImagerySplitDirection.LEFT
-      );
-      this.rightItem = duplicateSourceItem(
-        sourceItem,
-        ImagerySplitDirection.RIGHT
-      );
-      terria.overlays.add(this.leftItem);
-      terria.overlays.add(this.rightItem);
-    });
-
-    createSplitterItems(runInAction(() => this.sourceItem));
-    this.splitterItemsDisposer = reaction(
-      () => this.sourceItem,
-      action((sourceItem: DiffableItem) => {
-        createSplitterItems(sourceItem);
-      })
-    );
-  }
-
-  @computed
-  get sourceItem() {
-    return this.userSelectedSourceItem || this.props.sourceItem;
   }
 
   @computed
   get diffItem() {
-    return this.leftItem;
+    return this.props.leftItem;
+  }
+
+  @computed
+  get diffItemName() {
+    const name = this.diffItem.name || "";
+    const firstDate = this.leftDate;
+    const secondDate = this.rightDate;
+    const format = "yyyy/mm/dd";
+    if (!firstDate || !secondDate) {
+      return name;
+    } else {
+      const d1 = dateFormat(firstDate, format);
+      const d2 = dateFormat(secondDate, format);
+      return `${name} - difference for dates ${d1}, ${d2}`;
+    }
   }
 
   @computed
   get diffableItemsInWorkbench(): DiffableItem[] {
-    const terria = this.props.viewState.terria;
-    return terria.workbench.items.filter(item =>
+    return this.props.terria.workbench.items.filter(item =>
       DiffableMixin.isMixedInto(item)
     ) as DiffableItem[];
   }
 
   @computed
   get previewStyle(): string | undefined {
-    return this.leftItem.styleSelector?.activeStyleId;
+    return this.diffItem.styleSelector?.activeStyleId;
   }
 
   @computed
@@ -108,13 +194,13 @@ class DiffTool extends React.Component<PropTypes> {
   }
 
   @computed
-  get leftDate() {
-    return this.leftItem.currentDiscreteJulianDate;
+  get leftDate(): JulianDate | undefined {
+    return this.props.leftItem.currentDiscreteJulianDate;
   }
 
   @computed
-  get rightDate() {
-    return this.rightItem.currentDiscreteJulianDate;
+  get rightDate(): JulianDate | undefined {
+    return this.props.rightItem.currentDiscreteJulianDate;
   }
 
   @computed
@@ -132,10 +218,24 @@ class DiffTool extends React.Component<PropTypes> {
   }
 
   @action.bound
+  changeSourceItem(e: React.ChangeEvent<HTMLSelectElement>) {
+    const newSourceItem = this.diffableItemsInWorkbench.find(
+      item => item.uniqueId === e.target.value
+    );
+    if (newSourceItem) this.props.changeSourceItem(newSourceItem);
+  }
+
+  @action.bound
   changePreviewStyle(e: React.ChangeEvent<HTMLSelectElement>) {
     const styleId = e.target.value;
-    this.leftItem.styleSelector?.chooseActiveStyle(CommonStrata.user, styleId);
-    this.rightItem.styleSelector?.chooseActiveStyle(CommonStrata.user, styleId);
+    this.props.leftItem.styleSelector?.chooseActiveStyle(
+      CommonStrata.user,
+      styleId
+    );
+    this.props.rightItem.styleSelector?.chooseActiveStyle(
+      CommonStrata.user,
+      styleId
+    );
   }
 
   @action.bound
@@ -144,59 +244,20 @@ class DiffTool extends React.Component<PropTypes> {
   }
 
   @action.bound
-  changeSourceItem(e: React.ChangeEvent<HTMLSelectElement>) {
-    this.userSelectedSourceItem = this.diffableItemsInWorkbench.find(
-      item => item.uniqueId === e.target.value
-    );
-  }
-
-  @action
-  enterDiffTool() {
-    const { viewState, sourceItem } = this.props;
-    const terria = viewState.terria;
-    this.originalSettings = {
-      showSplitter: terria.showSplitter,
-      isMapFullScreen: viewState.isMapFullScreen
-    };
-    terria.showSplitter = true;
-    viewState.isMapFullScreen = true;
-    sourceItem.setTrait(CommonStrata.user, "show", false);
-  }
-
-  @action
-  leaveDiffTool() {
-    const { viewState, sourceItem } = this.props;
-    const terria = viewState.terria;
-    const originalSettings = this.originalSettings;
-    terria.showSplitter = originalSettings.showSplitter;
-    viewState.isMapFullScreen = originalSettings.isMapFullScreen;
-    terria.overlays.remove(this.leftItem);
-    terria.overlays.remove(this.rightItem);
-    sourceItem.setTrait(CommonStrata.user, "show", true);
-    this.splitterItemsDisposer();
-  }
-
-  @action.bound
   onUserPickLocation(
     pickedFeatures: PickedFeatures,
     pickedLocation: LatLonHeight
   ) {
-    const t = this.props.t;
+    const { leftItem, rightItem, t } = this.props;
     const feature = pickedFeatures.features.find(
       f =>
-        doesFeatureBelongToItem(f as Feature, this.leftItem) ||
-        doesFeatureBelongToItem(f as Feature, this.rightItem)
+        doesFeatureBelongToItem(f as Feature, leftItem) ||
+        doesFeatureBelongToItem(f as Feature, rightItem)
     );
 
     if (feature) {
-      this.leftItem.setTimeFilterFeature(
-        feature,
-        pickedFeatures.providerCoords
-      );
-      this.rightItem.setTimeFilterFeature(
-        feature,
-        pickedFeatures.providerCoords
-      );
+      leftItem.setTimeFilterFeature(feature, pickedFeatures.providerCoords);
+      rightItem.setTimeFilterFeature(feature, pickedFeatures.providerCoords);
       this.location = pickedLocation;
       this.locationPickerMessages = {
         beforePick: t("diffTool.locationPicker.nextMessages.beforePick"),
@@ -213,63 +274,54 @@ class DiffTool extends React.Component<PropTypes> {
   @action.bound
   generateDiff() {
     if (
-      this.leftItem.currentDiscreteJulianDate === undefined ||
-      this.rightItem.currentDiscreteJulianDate === undefined ||
+      this.leftDate === undefined ||
+      this.rightDate === undefined ||
       this.diffStyle === undefined
     ) {
       return;
     }
 
-    const terria = this.props.viewState.terria;
-    terria.overlays.remove(this.rightItem);
+    const terria = this.props.terria;
+    terria.overlays.remove(this.props.leftItem);
+    terria.overlays.remove(this.props.rightItem);
+    terria.workbench.add(this.diffItem);
+
+    this.diffItem.setTrait(CommonStrata.user, "name", this.diffItemName);
+    this.diffItem.showDiffImage(this.leftDate, this.rightDate, this.diffStyle);
     terria.showSplitter = false;
-    this.diffItem.showDiffImage(
-      this.leftItem.currentDiscreteJulianDate,
-      this.rightItem.currentDiscreteJulianDate,
-      this.diffStyle
-    );
   }
 
   @action.bound
-  removeGeneratedDiff() {
-    const terria = this.props.viewState.terria;
+  resetTool() {
+    const terria = this.props.terria;
     this.diffItem.clearDiffImage();
-    terria.overlays.add(this.rightItem);
-    terria.showSplitter = true;
-  }
-
-  componentDidMount() {
-    this.enterDiffTool();
-  }
-
-  componentWillUnmount() {
-    this.leaveDiffTool();
+    terria.overlays.add(this.props.leftItem);
+    terria.overlays.add(this.props.rightItem);
+    terria.workbench.remove(this.diffItem);
+    this.props.terria.showSplitter = true;
   }
 
   render() {
-    const { viewState, t } = this.props;
-    const terria = viewState.terria;
+    const { terria, viewState, sourceItem, t } = this.props;
     const isShowingDiff = this.diffItem.isShowingDiff;
     const isReadyToGenerateDiff =
       this.location &&
-      this.leftItem.currentDiscreteJulianDate &&
-      this.rightItem.currentDiscreteJulianDate &&
+      this.leftDate &&
+      this.rightDate &&
       this.diffStyle !== undefined;
 
     return (
       <>
         <MainPanel isMapFullScreen={viewState.isMapFullScreen}>
           {isShowingDiff && (
-            <BackButton onClick={this.removeGeneratedDiff}>
-              &lt; Back
-            </BackButton>
+            <BackButton onClick={this.resetTool}>&lt; Back</BackButton>
           )}
           <Text textLight medium>
             Compute the difference image for two dates
           </Text>
           {!isShowingDiff && (
             <Selector
-              value={this.sourceItem.uniqueId}
+              value={sourceItem.uniqueId}
               onChange={this.changeSourceItem}
             >
               <option disabled>Select source item</option>
@@ -329,11 +381,11 @@ class DiffTool extends React.Component<PropTypes> {
         {!isShowingDiff && (
           <DatePanel>
             <DatePicker
-              item={this.leftItem}
+              item={this.props.leftItem}
               popupStyle={Styles.leftDatePickerPopup}
             />
             <DatePicker
-              item={this.rightItem}
+              item={this.props.rightItem}
               popupStyle={Styles.rightDatePickerPopup}
             />
           </DatePanel>
@@ -397,14 +449,33 @@ const DatePanel = styled(Box).attrs({
   }
 `;
 
-function duplicateSourceItem(
+async function createSplitItem(
   sourceItem: DiffableItem,
   splitDirection: ImagerySplitDirection
-): DiffableItem {
-  const item = sourceItem.duplicateModel(createGuid()) as DiffableItem;
-  item.setTrait(CommonStrata.user, "splitDirection", splitDirection);
-  item.setTrait(CommonStrata.user, "show", true);
-  return item;
+): Promise<DiffableItem> {
+  const terria = sourceItem.terria;
+  const ref = new SplitItemReference(createGuid(), terria);
+  ref.setTrait(CommonStrata.user, "splitSourceItemId", sourceItem.uniqueId);
+  terria.addModel(ref);
+  await ref.loadReference();
+  return runInAction(() => {
+    if (ref.target === undefined) {
+      throw Error("failed to split item");
+    }
+    const newItem = ref.target as DiffableItem;
+    newItem.setTrait(CommonStrata.user, "show", true);
+    newItem.setTrait(CommonStrata.user, "splitDirection", splitDirection);
+    terria.overlays.add(newItem);
+    return newItem;
+  });
+}
+
+function removeSplitItem(item: DiffableItem) {
+  const terria = item.terria;
+  terria.overlays.remove(item);
+  if (item.sourceReference && terria.workbench.contains(item) === false) {
+    terria.removeModelReferences(item.sourceReference);
+  }
 }
 
 function doesFeatureBelongToItem(
