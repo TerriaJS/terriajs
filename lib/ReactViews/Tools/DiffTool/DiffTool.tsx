@@ -178,8 +178,8 @@ class Main extends React.Component<MainPropsType> {
 
   @computed
   get diffableItemsInWorkbench(): DiffableItem[] {
-    return this.props.terria.workbench.items.filter(item =>
-      DiffableMixin.isMixedInto(item)
+    return this.props.terria.workbench.items.filter(
+      item => DiffableMixin.isMixedInto(item) && item.canDiffImages
     ) as DiffableItem[];
   }
 
