@@ -76,14 +76,10 @@ export const Timeline = observer(
       const jsDate = JulianDate.toDate(catalogItem.currentTimeAsJulianDate);
       const timelineStack = this.props.terria.timelineStack;
       let currentTime;
-      if (
-        defined(timelineStack.top) &&
-        defined(timelineStack.top.dateFormat) &&
-        defined(timelineStack.top.dateFormat.currentTime)
-      ) {
+      if (defined(timelineStack.top) && defined(timelineStack.top.dateFormat)) {
         currentTime = dateFormat(
           jsDate,
-          this.props.terria.timelineStack.top.dateFormat.currentTime
+          this.props.terria.timelineStack.top.dateFormat
         );
       } else {
         currentTime = formatDateTime(jsDate, this.props.locale);

@@ -4,13 +4,11 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import ObserveModelMixin from "../../ObserveModelMixin";
 
 import Styles from "./dimension-selector-section.scss";
 
 const DimensionSelectorSection = createReactClass({
   displayName: "DimensionSelectorSection",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     item: PropTypes.object.isRequired
