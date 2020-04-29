@@ -20,7 +20,7 @@ const renderOrderedList = function(contents) {
   return (
     <For each="content" index="i" of={contents}>
       <Box paddedVertically>
-        <Box centered>
+        <Box alignItemsFlexStart>
           <Numbers textLight textAlignCenter darkBg>
             {i + 1}
           </Numbers>
