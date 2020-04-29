@@ -99,10 +99,7 @@ class HelpVideoPanel extends React.Component {
     });
     return (
       <div className={className}>
-        {this.props.videoUrl &&
-          this.props.placeholderImage &&
-          this.state.showVideoGuide &&
-          this.renderVideoGuide()}
+        {this.state.showVideoGuide && this.renderVideoGuide()}
         <Box
           centered
           fullWidth
@@ -114,16 +111,21 @@ class HelpVideoPanel extends React.Component {
             overflow: auto;
           `}
         >
-          <div
-            className={Styles.videoLink}
-            style={{
-              backgroundImage: `linear-gradient(rgba(0,0,0,0.35),rgba(0,0,0,0.35)), url(${this.props.placeholderImage})`
-            }}
-          >
-            <button className={Styles.videoBtn} onClick={this.toggleVideoGuide}>
-              <Icon glyph={Icon.GLYPHS.play} />
-            </button>
-          </div>
+          {this.props.videoUrl && this.props.placeholderImage && (
+            <div
+              className={Styles.videoLink}
+              style={{
+                backgroundImage: `linear-gradient(rgba(0,0,0,0.35),rgba(0,0,0,0.35)), url(${this.props.placeholderImage})`
+              }}
+            >
+              <button
+                className={Styles.videoBtn}
+                onClick={this.toggleVideoGuide}
+              >
+                <Icon glyph={Icon.GLYPHS.play} />
+              </button>
+            </div>
+          )}
           <Spacing bottom={5} />
           <StyledHtml content={this.props.htmlContent} />
         </Box>
