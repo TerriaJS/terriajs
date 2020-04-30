@@ -30,6 +30,8 @@ import { runInAction, computed, when } from "mobx";
 import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
 
+import Box from "../../../Styled/Box";
+
 import FadeIn from "../../Transitions/FadeIn/FadeIn";
 
 // Map Compass
@@ -362,14 +364,23 @@ class Compass extends React.Component {
 
         {/* Gyroscope guidance menu */}
         <FadeIn isVisible={active}>
-          <GyroscopeGuidance
-            viewState={this.props.viewState}
-            handleHelp={() => {
-              this.props.viewState.showHelpPanel();
-              this.props.viewState.selectHelpMenuItem("navigation");
-            }}
-            onClose={() => this.setState({ active: false })}
-          />
+          <Box
+            css={`
+              ${p => p.theme.verticalAlign("absolute")}
+              direction: rtl;
+              right: 72px;
+            `}
+          >
+            <GyroscopeGuidance
+              rightOffset="72px"
+              viewState={this.props.viewState}
+              handleHelp={() => {
+                this.props.viewState.showHelpPanel();
+                this.props.viewState.selectHelpMenuItem("navigation");
+              }}
+              onClose={() => this.setState({ active: false })}
+            />
+          </Box>
         </FadeIn>
       </StyledCompass>
     );
