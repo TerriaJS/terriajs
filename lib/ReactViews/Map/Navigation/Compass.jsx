@@ -84,7 +84,7 @@ const getCompassScaleRatio = compassWidth =>
  * have a beautiful animating compass.
  *
  * So please leave scale(0.9999) alone unless you can fix the rendering issue in
- * chrome, unless you want to develop a burning hatred for the compass 🙏🔥
+ * chrome, or if you want to develop a burning hatred for the compass 🙏🔥
  *
  **/
 const StyledCompassOuterRing = styled.div`
