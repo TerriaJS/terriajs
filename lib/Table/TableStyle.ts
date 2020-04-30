@@ -404,5 +404,3 @@ export default class TableStyle {
     return this.tableModel.tableColumns.find(column => column.name === name);
   }
 }
-
-getColorForId;
