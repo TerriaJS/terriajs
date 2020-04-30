@@ -107,8 +107,11 @@ Change Log
 * Tidy Compass UI animations, styles, titles
 * Bumped mobx minor to 4.15.x, mobx-react major to 6.x.x
 * Add `dateFormat` trait to `TimeVaryingTraits` to allowing formatting of datestrings in workbench and bottomdock.
+* Fixed FeatureInfoPanel using old class state
+* Fixed MapIconButton & FeedbackButton proptypes being defined incorrectly
 * Implement SenapsLocationsCatalogItem
 * Update papaparse and improve handling for retrieveing CSVs via chunking that have no ContentLenth header
+
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
