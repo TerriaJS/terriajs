@@ -40,16 +40,21 @@ class HelpPanelItem extends React.Component {
       padding-left: 25px;
     `;
     const itemSelected =
-      this.props.viewState.selectedHelpMenuItem === this.props.content.key;
+      this.props.viewState.selectedHelpMenuItem === this.props.content.itemName;
     const className = classNames({
       [Styles.panelItem]: true,
       [Styles.isSelected]: itemSelected
     });
-    const reactComponents = parseCustomMarkdownToReact(
-      this.props.content.markdownText
-    )?.props.children;
+
+    const iconName = this.props.content.icon
+      ? this.props.content.icon
+      : "start"; // TODO: check what default icon should be
+    const reactComponents = this.props.content.markdownText
+      ? parseCustomMarkdownToReact(this.props.content.markdownText).props
+          .children
+      : undefined;
     const title =
-      reactComponents.length > 0
+      reactComponents !== undefined && reactComponents.length > 0
         ? reactComponents.find(item => /(h[0-6])/i.test(item.type))?.props
             .children
         : "";
@@ -62,7 +67,7 @@ class HelpPanelItem extends React.Component {
         <button
           className={className}
           onClick={() =>
-            this.props.viewState.selectHelpMenuItem(this.props.content.key)
+            this.props.viewState.selectHelpMenuItem(this.props.content.itemName)
           }
         >
           <Box
@@ -78,7 +83,7 @@ class HelpPanelItem extends React.Component {
               <StyledIcon
                 styledWidth={"27px"}
                 fillColor={this.props.theme.textDark}
-                glyph={Icon.GLYPHS[this.props.content.icon]}
+                glyph={Icon.GLYPHS[iconName]}
               />
             </MenuIconWrapper>
             <Text
@@ -101,7 +106,7 @@ class HelpPanelItem extends React.Component {
         <HelpVideoPanel
           terria={this.props.terria}
           viewState={this.props.viewState}
-          itemString={this.props.content.key}
+          itemString={this.props.content.itemName}
           htmlContent={reactComponents}
           videoUrl={this.props.content.videoUrl}
           placeholderImage={this.props.content.placeholderImage}

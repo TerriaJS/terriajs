@@ -11,7 +11,7 @@ import HelpVideoPanel from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/H
 import Text from "../../../../../lib/Styled/Text";
 import StyledHtml from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/StyledHtml";
 import { runInAction } from "mobx";
-import Icon from "../../../../../lib/ReactViews/Icon"
+import Icon from "../../../../../lib/ReactViews/Icon";
 
 describe("HelpPanel", function() {
   let terria: Terria;
@@ -73,12 +73,12 @@ describe("HelpPanel", function() {
       const menuIcon = helpItem.findByType(Icon);
       // Not sure how to compare icons so I just used the gylph.id
       expect(menuIcon.props.glyph.id).toBe("getting-started-icon");
-    })
+    });
 
     it("does not render any text on the help menu buttons", function() {
       const helpItem = testRenderer.root.findByType(HelpPanelItem);
       expect(() => {
-        helpItem.findByType(Text)
+        helpItem.findByType(Text);
       }).toThrow();
     });
 
@@ -86,14 +86,14 @@ describe("HelpPanel", function() {
       const videoPanel = testRenderer.root.findByType(HelpVideoPanel);
       expect(videoPanel.props.htmlContent).toBeFalsy();
       expect(() => {
-        videoPanel.findByType(StyledHtml)
+        videoPanel.findByType(StyledHtml);
       }).toThrow();
     });
 
     it("does not render any images in video panel", function() {
       const videoPanel = testRenderer.root.findByType(HelpVideoPanel);
       expect(() => {
-        videoPanel.findByProps({className: "tjs-help-panel__video-panel"})
+        videoPanel.findByProps({ className: "tjs-help-panel__video-panel" });
       }).toThrow();
     });
   });

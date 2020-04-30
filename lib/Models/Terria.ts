@@ -195,7 +195,7 @@ export default class Terria {
     locationSearchBoundingBox: undefined,
     googleAnalyticsKey: undefined,
     rollbarAccessToken: undefined,
-    helpContent: undefined
+    helpContent: []
   };
 
   @observable

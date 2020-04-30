@@ -127,7 +127,9 @@ class HelpVideoPanel extends React.Component {
             </div>
           )}
           <Spacing bottom={5} />
-          <StyledHtml content={this.props.htmlContent} />
+          {this.props.htmlContent && (
+            <StyledHtml content={this.props.htmlContent} />
+          )}
         </Box>
       </div>
     );
