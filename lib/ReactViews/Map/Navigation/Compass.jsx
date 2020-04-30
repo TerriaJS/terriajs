@@ -89,10 +89,12 @@ const getCompassScaleRatio = compassWidth =>
  **/
 const StyledCompassOuterRing = styled.div`
   ${props => props.theme.centerWithoutFlex()}
+  // override the transform provided in centerWithoutFlex()
+  transform: translate(-50%,-50%) scale(0.9999);
+
   z-index: ${props => (props.active ? "2" : "1")};
   width: 100%;
-  transform: translate(-50%,-50%) scale(0.9999);
-  
+
   ${props =>
     props.active &&
     `transform: translate(-50%,-50%) scale(${getCompassScaleRatio(
