@@ -60,9 +60,13 @@ export default class SOSChartCustomComponent extends CustomComponent {
 
     checkAllPropertyKeys(node.attribs, this.attributes);
 
-    const catalogItem: SensorObservationServiceCatalogItem = <any>(
-      context.catalogItem
-    );
+    if (!(context.catalogItem instanceof SensorObservationServiceCatalogItem)) {
+      throw new DeveloperError(
+        "<sos-chart> can only be used for showing charts for SensorObservationServiceCatalogItem"
+      );
+    }
+    const catalogItem: SensorObservationServiceCatalogItem =
+      context.catalogItem;
     const featureOfInterestId = node.attribs["identifier"];
     const featureName = node.attribs["name"];
     const hideButtons = node.attribs["hide-buttons"];
