@@ -5,6 +5,7 @@ import ModelTraits from "./ModelTraits";
 import mixTraits from "./mixTraits";
 import UrlTraits from "./UrlTraits";
 import primitiveTrait from "./primitiveTrait";
+import primitiveArrayTrait from "./primitiveArrayTrait";
 import objectTrait from "./objectTrait";
 import anyTrait from "./anyTrait";
 import modelReferenceArrayTrait from "./modelReferenceArrayTrait";
@@ -16,15 +17,15 @@ export default class CkanCatalogGroupTraits extends mixTraits(
   CatalogMemberTraits,
   CkanSharedTraits
 ) {
-  @anyTrait({
+  @primitiveArrayTrait({
     name: "Blacklist",
+    type: "string",
     description: `An array of strings of blacklisted group names and dataset titles.
       A group or dataset that appears in this list will not be shown to the user.`
   })
   blacklist?: string[];
 
-  @primitiveTrait({
-    type: "string",
+  @anyTrait({
     name: "Filter Query",
     description: `Gets or sets the filter query to pass to CKAN when querying the available data sources and their groups. Each item in the
          * array causes an independent request to the CKAN, and the results are concatenated.  The

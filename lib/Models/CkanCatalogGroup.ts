@@ -26,8 +26,7 @@ import {
   CkanDataset,
   CkanResource,
   CkanSearchResult,
-  CkanServerResponse,
-  SupportedTypes
+  CkanServerResponse
 } from "./CkanDefinitions";
 
 export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
@@ -256,7 +255,7 @@ StratumOrder.addLoadStratum(CkanServerStratum.stratumName);
 export default class CkanCatalogGroup extends UrlMixin(
   GroupMixin(CatalogMemberMixin(CreateModel(CkanCatalogGroupTraits)))
 ) {
-  static readonly type = "ckan";
+  static readonly type = "ckan-group";
 
   get type() {
     return CkanCatalogGroup.type;
