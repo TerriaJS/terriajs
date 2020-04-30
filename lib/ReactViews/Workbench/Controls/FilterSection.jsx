@@ -7,13 +7,11 @@ import PropTypes from "prop-types";
 import { Range } from "rc-slider";
 import React from "react";
 import CommonStrata from "../../../Models/CommonStrata";
-import ObserveModelMixin from "../../ObserveModelMixin";
 import Styles from "./filter-section.scss";
 
 const FilterSection = observer(
   createReactClass({
     displayName: "FilterSection",
-    mixins: [ObserveModelMixin],
 
     propTypes: {
       item: PropTypes.object.isRequired

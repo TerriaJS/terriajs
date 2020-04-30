@@ -1,14 +1,14 @@
 import React from "react";
 import createReactClass from "create-react-class";
-import { ThemeProvider } from "styled-components";
+import { ThemeProvider, createGlobalStyle } from "styled-components";
 import PropTypes from "prop-types";
 import combine from "terriajs-cesium/Source/Core/combine";
 
 import { terriaTheme } from "./StandardTheme";
 import arrayContains from "../../Core/arrayContains";
 import Branding from "../SidePanel/Branding";
-// import DragDropFile from '../DragDropFile';
-// import DragDropNotification from './../DragDropNotification';
+import DragDropFile from "../DragDropFile";
+import DragDropNotification from "./../DragDropNotification";
 import ExplorerWindow from "../ExplorerWindow/ExplorerWindow";
 import FeatureInfoPanel from "../FeatureInfo/FeatureInfoPanel";
 import FeedbackForm from "../Feedback/FeedbackForm";
@@ -47,6 +47,17 @@ export const showStoryPrompt = (viewState, terria) => {
     terria.stories.length === 0 &&
     viewState.toggleFeaturePrompt("story", true);
 };
+const GlobalTerriaStyles = createGlobalStyle`
+  ${props =>
+    props.experimentalFeatures &&
+    `
+    body {
+      *:focus {
+        outline: 3px solid #C390F9;
+      }
+    }
+  `}
+`;
 const animationDuration = 250;
 /** blah */
 const StandardUserInterface = observer(
@@ -175,6 +186,11 @@ const StandardUserInterface = observer(
         !this.props.viewState.storyBuilderShown;
       return (
         <ThemeProvider theme={mergedTheme}>
+          <GlobalTerriaStyles
+            experimentalFeatures={
+              this.props.terria.configParameters.experimentalFeatures
+            }
+          />
           <div className={Styles.storyWrapper}>
             {/* <WelcomeMessage viewState={this.props.viewState} /> */}
             <div
@@ -339,14 +355,11 @@ const StandardUserInterface = observer(
                   viewState={this.props.viewState}
                 />
               </div>
-              {/* <DragDropFile
-            terria={this.props.terria}
-            viewState={this.props.viewState}
-          />
-          <DragDropNotification
-            lastUploadedFiles={this.props.viewState.lastUploadedFiles}
-            viewState={this.props.viewState}
-          /> */}
+              <DragDropFile
+                terria={this.props.terria}
+                viewState={this.props.viewState}
+              />
+              <DragDropNotification viewState={this.props.viewState} />
               {showStoryPanel && (
                 <StoryPanel terria={terria} viewState={this.props.viewState} />
               )}
@@ -359,9 +372,7 @@ const StandardUserInterface = observer(
                 animationDuration={animationDuration}
               />
             )}
-            {this.props.viewState.showHelpMenu && (
-              <HelpPanel terria={terria} viewState={this.props.viewState} />
-            )}
+            <HelpPanel terria={terria} viewState={this.props.viewState} />
           </div>
         </ThemeProvider>
       );

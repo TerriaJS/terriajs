@@ -11,7 +11,8 @@
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
         "outDir": "ts-out",
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "types": []
     },
     "include": [
         "./lib/**/*",

@@ -264,7 +264,8 @@
     "resultsLabel" : "Search Results",
     "done" : "Done",
     "data" : "Data",
-    "search" : "Search for '{{searchText}}' in the Data Catalogue",
+    "searchInDataCatalog": "Search <1>'{{locationSearchText}}'</1> in the Data Catalogue",
+    "search" : "Search '{{searchText}}' in the Data Catalogue",
     "viewLess" : "View less {{name}} results",
     "viewMore" : "View more {{name}} results",
     "placeholder" : "Search for locations",
@@ -875,6 +876,15 @@
     },
     "mapboxVectorTile" : {
       "name" : "Mapbox Vector Tile"
+    },
+    "senaps": {
+      "name": "Senaps Locations",
+      "retrieveErrorTitle": "Error processing Senaps Catalog Item",
+      "generalErrorMessage" : "Encountered an error processing Senaps data",
+      "missingKeyErrorMessage" : "A Senaps API Key should be added to the terriajs-server config using the appendParamToQueryString option",
+      "locationHeadingFeatureInfo": "Location",
+      "availableStreamsHeadingFeatureInfo": "Available Streams",
+      "noStreamsMessageFeatureInfo": "No streams at this location."
     },
     "ogr" : {
       "name" : "Unknown / Converted to GeoJSON",

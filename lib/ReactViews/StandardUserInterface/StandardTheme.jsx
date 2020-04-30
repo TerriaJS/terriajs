@@ -1,6 +1,8 @@
-import Variables from "terriajs-variables";
-// import PropTypes from "prop-types";
+import Variables from "style-loader!css-loader!sass-loader!../../Sass/common/_variables-export.scss";
+
+import Mixins from "../../Styled/mixins";
 
 export const terriaTheme = {
-  colorPrimary: Variables.colorPrimary
+  ...Variables,
+  ...Mixins
 };

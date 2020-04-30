@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import createReactClass from "create-react-class";
+import styled from "styled-components";
 import classNames from "classnames";
 import Styles from "./icon.scss";
 
@@ -39,12 +40,14 @@ const GLYPHS = {
   geolocation: require("../../wwwroot/images/icons/geolocation.svg"),
   gallery: require("../../wwwroot/images/icons/gallery.svg"),
   help: require("../../wwwroot/images/icons/help.svg"),
+  helpThick: require("../../wwwroot/images/icons/help-thick.svg"),
   increase: require("../../wwwroot/images/icons/increase.svg"),
   left: require("../../wwwroot/images/icons/left.svg"),
   lineChart: require("../../wwwroot/images/icons/line-chart.svg"),
   link: require("../../wwwroot/images/icons/link.svg"),
   loader: require("../../wwwroot/images/icons/loader.svg"),
   location: require("../../wwwroot/images/icons/location.svg"),
+  location2: require("../../wwwroot/images/icons/location2.svg"),
   lock: require("../../wwwroot/images/icons/lock.svg"),
   loop: require("../../wwwroot/images/icons/loop.svg"),
   menu: require("../../wwwroot/images/icons/menu.svg"),
@@ -57,6 +60,7 @@ const GLYPHS = {
   refresh: require("../../wwwroot/images/icons/refresh.svg"),
   remove: require("../../wwwroot/images/icons/remove.svg"),
   right: require("../../wwwroot/images/icons/right.svg"),
+  right2: require("../../wwwroot/images/icons/right2.svg"),
   search: require("../../wwwroot/images/icons/search.svg"),
   selected: require("../../wwwroot/images/icons/selected.svg"),
   settings: require("../../wwwroot/images/icons/settings.svg"),
@@ -72,6 +76,7 @@ const GLYPHS = {
   next: require("../../wwwroot/images/icons/next.svg"),
   timeline: require("../../wwwroot/images/icons/timeline.svg"),
   data: require("../../wwwroot/images/icons/data.svg"),
+  dataCatalog: require("../../wwwroot/images/icons/dataCatalog.svg"),
   upload: require("../../wwwroot/images/icons/upload.svg"),
   trashcan: require("../../wwwroot/images/icons/trashcan.svg"),
   local: require("../../wwwroot/images/icons/localfile.svg"),
@@ -79,6 +84,8 @@ const GLYPHS = {
   compassInner: require("../../wwwroot/images/icons/compass-inner.svg"),
   compassInnerArrows: require("../../wwwroot/images/icons/compass-inner-arrows.svg"),
   compassOuter: require("../../wwwroot/images/icons/compass-outer.svg"),
+  compassOuterSkeleton: require("../../wwwroot/images/icons/compass-outer-skeleton.svg"),
+  compassOuterEnlarged: require("../../wwwroot/images/icons/compass-outer-enlarged.svg"),
   compassRotationMarker: require("../../wwwroot/images/icons/compass-rotation-marker.svg"),
   circleFull: require("../../wwwroot/images/icons/circlef-full.svg"),
   circleEmpty: require("../../wwwroot/images/icons/circle-empty.svg"),
@@ -94,7 +101,7 @@ const GLYPHS = {
   cube: require("../../wwwroot/images/icons/interact.svg")
 };
 
-const Icon = createReactClass({
+export const Icon = createReactClass({
   propTypes: {
     glyph: PropTypes.object,
     style: PropTypes.object,
@@ -114,5 +121,20 @@ const Icon = createReactClass({
   }
 });
 
+export const StyledIcon = styled(Icon)`
+  flex-shrink: 0;
+  ${props => props.styledWidth && `width: ${props.styledWidth};`}
+
+  ${props => props.light && `fill: ${props.theme.textLight};`}
+  ${props => props.dark && `fill: ${props.theme.textDark};`}
+
+  ${props => props.fillColor && `fill: ${props.fillColor};`}
+  
+  ${props => props.opacity && `opacity: ${props.opacity};`}
+`;
+
+export default Icon;
+// (?) are these cjs exports for the doc generator?
 module.exports = Icon;
 module.exports.GLYPHS = GLYPHS;
+module.exports.StyledIcon = StyledIcon;

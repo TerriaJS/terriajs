@@ -9,13 +9,11 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 
 import UserDrawing from "../../Models/UserDrawing";
-import ObserveModelMixin from "../ObserveModelMixin";
 import Styles from "./parameter-editors.scss";
 import { withTranslation } from "react-i18next";
 
 const LineParameterEditor = createReactClass({
   displayName: "LineParameterEditor",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     previewed: PropTypes.object,
