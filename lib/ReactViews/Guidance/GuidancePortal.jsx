@@ -15,6 +15,7 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { autorun } from "mobx";
 import { observer } from "mobx-react";
+// import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 
 import Box from "../../Styled/Box";
 import Spacing from "../../Styled/Spacing";
@@ -22,6 +23,11 @@ import Button, { RawButton } from "../../Styled/Button";
 import Text from "../../Styled/Text";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 
+import {
+  TOUR_WIDTH,
+  calculateLeftPosition,
+  calculateTopPosition
+} from "./guidance-helpers.ts";
 import GuidanceDot from "./GuidanceDot.jsx";
 import GuidanceOverlay from "./GuidanceOverlay.jsx";
 // import { buildShareLink } from "../Map/Panels/SharePanel/BuildShareLink";
@@ -62,7 +68,7 @@ GuidanceProgress.propTypes = {
 
 const TourExplanationBox = styled(Box)`
   position: absolute;
-  width: 335px;
+  width: ${TOUR_WIDTH}px;
   // background-color: $modal-bg;
   z-index: 10000;
   background: white;
@@ -117,16 +123,15 @@ const TourExplanation = ({
 }) => {
   const { t } = useTranslation();
   return (
-    <Text medium textDarker>
-      <Spacing bottom={2} />
-      <TourExplanationBox
-        paddedRatio={3}
-        column
-        style={{
-          top: topStyle,
-          left: leftStyle
-        }}
-      >
+    <TourExplanationBox
+      paddedRatio={3}
+      column
+      style={{
+        top: topStyle,
+        left: leftStyle
+      }}
+    >
+      <Text medium textDarker>
         <Text medium noFontSize textDarker>
           {children}
         </Text>
@@ -144,8 +149,8 @@ const TourExplanation = ({
             </Button>
           </Box>
         </Box>
-      </TourExplanationBox>
-    </Text>
+      </Text>
+    </TourExplanationBox>
   );
 };
 TourExplanation.propTypes = {
@@ -170,6 +175,7 @@ const GuidancePortalOverlay = styled(Box)`
 `;
 
 const GuidancePortalDisplayName = "GuidancePortal";
+// TODO: process tourpoints and take out nonexistent refs?
 export const GuidancePortal = observer(({ children, viewState }) => {
   const [showGuidance, setShowGuidance] = useState(false);
   const showPortal = viewState.currentTourIndex !== -1;
@@ -188,16 +194,35 @@ export const GuidancePortal = observer(({ children, viewState }) => {
   );
 
   const currentRectangle = currentTourPointRef?.current?.getBoundingClientRect?.();
+  if (!currentRectangle) {
+    if (showPortal) {
+      console.log(
+        "Tried to show guidance portal with no rectangle available from ref"
+      );
+    }
+    return null;
+  }
 
+  // To match old HelpScreenWindow / HelpOverlay API
   const currentScreen = {
     // rectangle: currentScreenComponent?.current?.getBoundingClientRect?.()
-    rectangle: currentRectangle
+    rectangle: currentRectangle,
+    // positionTop: currentTourPoint?.positionTop || RELATIVE_POSITION.RECT_TOP,
+    positionTop:
+      currentTourPoint?.positionTop || viewState.relativePosition.RECT_BOTTOM,
+    positionLeft:
+      currentTourPoint?.positionLeft || viewState.relativePosition.RECT_LEFT,
+    offsetTop: currentTourPoint?.offsetTop || 10,
+    offsetLeft: currentTourPoint?.offsetLeft || 0
   };
+
+  const positionLeft = calculateLeftPosition(currentScreen);
+  const positionTop = calculateTopPosition(currentScreen);
 
   const currentTourIndex = viewState.currentTourIndex;
   const maxSteps = viewState.tourPoints.length;
 
-  if (!showPortal) return null;
+  if (!showPortal || !currentTourPoint) return null;
   return (
     <>
       <GuidanceOverlay
@@ -211,8 +236,10 @@ export const GuidancePortal = observer(({ children, viewState }) => {
         onNext={() => viewState.nextTourPoint()}
         // onClose={() => viewState.nextTourPoint()}
         onSkip={() => viewState.setTourIndex(-1)}
-        topStyle={`${currentRectangle?.bottom}px`}
-        leftStyle={`${currentRectangle?.left}px`}
+        // topStyle={`${currentRectangle?.bottom}px`}
+        // leftStyle={`${currentRectangle?.left}px`}
+        topStyle={`${positionTop}px`}
+        leftStyle={`${positionLeft}px`}
       >
         {parseCustomMarkdownToReact(currentTourPoint?.content)}
       </TourExplanation>

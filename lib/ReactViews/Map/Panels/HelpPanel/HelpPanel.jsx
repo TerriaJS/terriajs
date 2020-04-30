@@ -2,6 +2,7 @@ import classNames from "classnames";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
+import { runInAction } from "mobx";
 import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
 import Icon, { StyledIcon } from "../../../Icon.jsx";
@@ -29,9 +30,8 @@ class HelpPanel extends React.Component {
 
   render() {
     // const { t } = this.props;
-    const isVisible =
-      this.props.viewState.showHelpMenu &&
-      this.props.viewState.topElement === "HelpPanel";
+    const isVisible = this.props.viewState.showHelpMenu;
+    // this.props.viewState.topElement === "HelpPanel";
     const isExpanded = this.props.viewState.helpPanelExpanded;
     const className = classNames(
       {
@@ -91,7 +91,12 @@ class HelpPanel extends React.Component {
             <button
               className={Styles.tourBtn}
               title={"Take the tour"}
-              onClick={() => this.props.viewState.setTourIndex(0)}
+              onClick={() => {
+                runInAction(() => {
+                  this.props.viewState.hideHelpPanel();
+                  this.props.viewState.setTourIndex(0);
+                });
+              }}
             >
               {" "}
               <Icon glyph={Icon.GLYPHS.tour} /> {"Take the tour"}{" "}
