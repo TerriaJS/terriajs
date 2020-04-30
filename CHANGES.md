@@ -107,7 +107,7 @@ Change Log
 * Tidy Compass UI animations, styles, titles
 * Bumped mobx minor to 4.15.x, mobx-react major to 6.x.x
 * Add `dateFormat` trait to `TimeVaryingTraits` to allowing formatting of datestrings in workbench and bottomdock.
-* Remove requirement for browser to render based on make half pixel calculations for the Compass
+* Remove requirement for browser to render based on make half pixel calculations for the Compass & stop it jumping around when animating
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
