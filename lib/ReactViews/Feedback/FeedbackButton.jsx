@@ -17,7 +17,6 @@ const FeedbackButton = observer(
 
     propTypes: {
       viewState: PropTypes.object.isRequired,
-      btnText: PropTypes.string.isRequired,
       t: PropTypes.func.isRequired
     },
 
