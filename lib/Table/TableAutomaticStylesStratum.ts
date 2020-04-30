@@ -1,13 +1,14 @@
 import { computed } from "mobx";
 import { createTransformer } from "mobx-utils";
 import isDefined from "../Core/isDefined";
+import ConstantColorMap from "../Map/ConstantColorMap";
 import DiscreteColorMap from "../Map/DiscreteColorMap";
 import EnumColorMap from "../Map/EnumColorMap";
+import TableMixin from "../ModelMixins/TableMixin";
 import createStratumInstance from "../Models/createStratumInstance";
 import LoadableStratum from "../Models/LoadableStratum";
 import { BaseModel } from "../Models/Model";
 import StratumFromTraits from "../Models/StratumFromTraits";
-import CsvCatalogItemTraits from "../Traits/CsvCatalogItemTraits";
 import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
 import TableChartStyleTraits, {
   TableChartLineStyleTraits
@@ -15,16 +16,15 @@ import TableChartStyleTraits, {
 import TableColorStyleTraits from "../Traits/TableColorStyleTraits";
 import TablePointSizeStyleTraits from "../Traits/TablePointSizeStyleTraits";
 import TableStyleTraits from "../Traits/TableStyleTraits";
+import TableTraits from "../Traits/TableTraits";
 import TableColumnType from "./TableColumnType";
 import TableStyle from "./TableStyle";
-import TableMixin from "../ModelMixins/TableMixin";
-import ConstantColorMap from "../Map/ConstantColorMap";
 
 interface TableCatalogItem
   extends InstanceType<ReturnType<typeof TableMixin>> {}
 
 export default class TableAutomaticStylesStratum extends LoadableStratum(
-  CsvCatalogItemTraits
+  TableTraits
 ) {
   constructor(readonly catalogItem: TableCatalogItem) {
     super();
