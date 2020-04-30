@@ -4,7 +4,6 @@ import createReactClass from "create-react-class";
 
 import PropTypes from "prop-types";
 
-import ObserveModelMixin from "../ObserveModelMixin";
 import Styles from "./metadata-table.scss";
 
 /**
@@ -12,7 +11,6 @@ import Styles from "./metadata-table.scss";
  */
 const MetadataTable = createReactClass({
   displayName: "MetadataTable",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     metadataItem: PropTypes.object.isRequired // A MetadataItem instance.

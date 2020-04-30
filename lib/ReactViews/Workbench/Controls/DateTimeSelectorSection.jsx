@@ -129,9 +129,9 @@ const DateTimeSelectorSection = observer(
 
       if (defined(item.currentDiscreteJulianDate)) {
         const time = JulianDate.toDate(item.currentDiscreteJulianDate);
-        if (defined(item.dateFormat) && defined(item.dateFormat.currentTime)) {
+        if (defined(item.dateFormat)) {
           format = item.dateFormat;
-          discreteTime = dateFormat(time, item.dateFormat.currentTime);
+          discreteTime = dateFormat(time, item.dateFormat);
         } else {
           discreteTime = formatDateTime(time);
         }

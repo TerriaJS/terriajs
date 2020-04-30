@@ -55,6 +55,7 @@ export default class ViewState {
   @observable mobileMenuVisible: boolean = false;
   @observable explorerPanelAnimating: boolean = false;
   @observable topElement: string = "FeatureInfo";
+  @observable lastUploadedFiles: any[] = [];
   @observable storyBuilderShown: boolean = false;
 
   // Flesh out later

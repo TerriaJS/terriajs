@@ -2,7 +2,6 @@
 
 import SummaryConcept from "./SummaryConcept/SummaryConcept";
 import Concept from "./Concept";
-import ObserveModelMixin from "../../ObserveModelMixin";
 import SummaryConceptModel from "../../../Map/SummaryConcept";
 
 import React from "react";
@@ -12,7 +11,6 @@ import Styles from "./concept-viewer.scss";
 
 const ConceptViewer = createReactClass({
   displayName: "ConceptViewer",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     item: PropTypes.object.isRequired
