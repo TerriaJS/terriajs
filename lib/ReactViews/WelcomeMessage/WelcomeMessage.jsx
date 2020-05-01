@@ -3,7 +3,6 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
-import ObserveModelMixin from "../ObserveModelMixin";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 
 import Styles from "./welcome-message.scss";
@@ -22,7 +21,6 @@ export const LOCAL_PROPERTY_KEY = `${WELCOME_MESSAGE_NAME}Prompted`;
 
 const WelcomeMessage = createReactClass({
   displayName: "WelcomeMessage",
-  mixins: [ObserveModelMixin],
   propTypes: {
     viewState: PropTypes.object.isRequired
   },

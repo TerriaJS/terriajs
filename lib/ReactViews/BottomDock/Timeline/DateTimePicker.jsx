@@ -9,7 +9,6 @@ import uniq from "lodash-es/uniq";
 import defined from "terriajs-cesium/Source/Core/defined";
 import { formatDateTime } from "./DateFormats";
 import Icon from "../../Icon";
-import ObserveModelMixin from "../../ObserveModelMixin";
 import Styles from "./timeline.scss";
 import combine from "terriajs-cesium/Source/Core/combine";
 
@@ -35,7 +34,6 @@ const monthNames = [
 
 const DateTimePicker = createReactClass({
   displayName: "DateTimePicker",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     dates: PropTypes.array.isRequired, // Array of JS Date objects.
@@ -46,7 +44,7 @@ const DateTimePicker = createReactClass({
     onOpen: PropTypes.func.isRequired,
     onClose: PropTypes.func.isRequired,
     showCalendarButton: PropTypes.bool,
-    dateFormat: PropTypes.object
+    dateFormat: PropTypes.string
   },
 
   getDefaultProps() {
@@ -332,7 +330,7 @@ const DateTimePicker = createReactClass({
                 }}
               >
                 {defined(this.props.dateFormat)
-                  ? dateFormat(item, this.props.dateFormat.currentTime)
+                  ? dateFormat(item, this.props.dateFormat)
                   : formatDateTime(item)}
               </button>
             ))}

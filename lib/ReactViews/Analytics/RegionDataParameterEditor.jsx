@@ -7,7 +7,6 @@ import PropTypes from "prop-types";
 import defined from "terriajs-cesium/Source/Core/defined";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 import VarType from "../../Map/VarType";
-import ObserveModelMixin from "../ObserveModelMixin";
 import CatalogItem from "../DataCatalog/CatalogItem";
 import CatalogGroup from "../DataCatalog/CatalogGroup";
 
@@ -15,7 +14,6 @@ import Styles from "./parameter-editors.scss";
 
 const RegionDataParameterEditor = createReactClass({
   displayName: "RegionDataParameterEditor",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     previewed: PropTypes.object,

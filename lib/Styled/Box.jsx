@@ -14,12 +14,14 @@ export const Box = styled.div`
 
   box-sizing: border-box;
 
+  ${props => props.displayInlineBlock && `display: inline-block;`}
 
   ${props => props.rounded && `border-radius: ${props.theme.radiusLarge};`}
 
   ${props => props.fullHeight && `height: 100%;`}
   ${props => props.fullWidth && `width: 100%;`}
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
+  ${props => props.styledHeight && `height: ${props.styledHeight};`}
   
   ${props =>
     props.col &&

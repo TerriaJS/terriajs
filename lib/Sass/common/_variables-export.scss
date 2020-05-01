@@ -6,12 +6,34 @@
 @import "terriajs-variables";
 
 :export {
+  // TODO: find a better solution for this - some of these we need to provide as
+  // numbers only so we can do math on them and add the unit afterwards 😵
+  // screen sizes for media queries
+  // mobile: $mobile;
+  // sm: $sm;
+  // md: $md;
+  // lg: $lg;
+  mobile: 767;
+  sm: 768;
+  md: 992;
+  lg: 1300;
+
+  // Compass styles
+  // compassWidth: $compass-width;
+  compassWidth: 55;
+  ringWidth: 10;
+
+  // ..radius? (no standardised radius at the moment, pull in as needed from variables
   radiusLarge: $radius-large;
+
+  // Colours
   colorPrimary: $color-primary;
   colorSplitter: $color-splitter;
   textLight: $text-light;
+  textLightDimmed: $text-light-dimmed;
   textDark: $text-dark;
   textDarker: $text-darker;
+  textBlack: $text-black;
   dark: $dark;
   darkWithOverlay: $dark-with-overlay;
   grey: $grey;
@@ -19,4 +41,7 @@
   greyLighter2: $grey-lighter2;
   greyLightest: $grey-lightest;
   charcoalGrey: $charcoal-grey;
+
+  // TODO: fix, these are stopgaps & should get merged in with something else(?)
+  mapButtonColor: $map-button-color;
 }

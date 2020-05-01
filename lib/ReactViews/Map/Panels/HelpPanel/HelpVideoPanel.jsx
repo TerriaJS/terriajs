@@ -3,6 +3,7 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
+import { withTheme } from "styled-components";
 import Icon from "../../../Icon.jsx";
 import Loader from "../../../Loader";
 import Styles from "./help-panel.scss";
@@ -23,6 +24,7 @@ class HelpVideoPanel extends React.Component {
     description: PropTypes.array,
     videoLink: PropTypes.string,
     background: PropTypes.string,
+    theme: PropTypes.object,
     t: PropTypes.func.isRequired
   };
 
@@ -85,21 +87,27 @@ class HelpVideoPanel extends React.Component {
     // const { t } = this.props;
     const itemSelected =
       this.props.viewState.selectedHelpMenuItem === this.props.itemString;
+    const isExpanded = this.props.viewState.selectedHelpMenuItem !== "";
     const className = classNames({
       [Styles.videoPanel]: true,
-      [Styles.isSelected]: itemSelected
+      [Styles.isVisible]: isExpanded,
+      // when the help entire video panel is invisible (hidden away to the right)
+      [Styles.shiftedToRight]:
+        !isExpanded ||
+        !this.props.viewState.showHelpMenu ||
+        this.props.viewState.topElement !== "HelpPanel",
+      [Styles.isHidden]: !itemSelected // when the item isn't selected
     });
     return (
       <div className={className}>
         {this.state.showVideoGuide && this.renderVideoGuide()}
         <Box
           centered
-          css={`
-            width: 100%;
-            height: 100%;
-            padding: 90px 20px;
-            display: inline-block;
-          `}
+          fullWidth
+          fullHeight
+          displayInlineBlock
+          paddedHorizontally={4}
+          paddedVertically={18}
         >
           <div
             className={Styles.videoLink}
@@ -111,13 +119,15 @@ class HelpVideoPanel extends React.Component {
               <Icon glyph={Icon.GLYPHS.play} />
             </button>
           </div>
-          <Spacing bottom={3} />
-          <Text bold heading>
+          <Spacing bottom={5} />
+          <Text subHeading bold textDark>
             {this.props.title}
           </Text>
           <For each="desc" of={this.props.description}>
             <Spacing bottom={3} />
-            <Text medium>{desc}</Text>
+            <Text medium textDark>
+              {desc}
+            </Text>
           </For>
         </Box>
       </div>
@@ -125,4 +135,4 @@ class HelpVideoPanel extends React.Component {
   }
 }
 
-export default withTranslation()(HelpVideoPanel);
+export default withTranslation()(withTheme(HelpVideoPanel));
