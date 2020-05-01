@@ -6,6 +6,9 @@
     "next" : "Next",
     "skip" : "Skip"
   },
+  "tour": {
+    "end": "Skip tour"
+  },
   "measure" : {
     "measureTool" : "Measure Tool",
     "measureToolTitle" : "Line Measure",

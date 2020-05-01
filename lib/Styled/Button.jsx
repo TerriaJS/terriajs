@@ -42,6 +42,8 @@ const StyledButton = styled.button`
     color: #fff;
     background-color: #519AC2;
     border: none;
+    height:34px;
+    border-radius:20px;
   `}
   ${props => props.rounded && ` border-radius: 32px; `}
  

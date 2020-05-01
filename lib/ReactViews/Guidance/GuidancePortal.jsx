@@ -17,6 +17,8 @@ import { autorun } from "mobx";
 import { observer } from "mobx-react";
 // import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 
+import Caret from "../Generic/Caret";
+import isDefined from "../../Core/isDefined";
 import Box from "../../Styled/Box";
 import Spacing from "../../Styled/Spacing";
 import Button, { RawButton } from "../../Styled/Button";
@@ -35,8 +37,8 @@ import GuidanceOverlay from "./GuidanceOverlay.jsx";
 const ProgressDot = styled.div`
   display: inline-block;
   box-sizing: border-box;
-  height: 6px;
-  width: 6px;
+  height: 7px;
+  width: 7px;
   border: 1px solid ${p => p.theme.colorPrimary};
 
   background-color: ${p =>
@@ -93,7 +95,7 @@ const TourExplanationBox = styled(Box)`
   h1,
   h2,
   h3 {
-    margin-bottom: ${p => p.theme.spacing * 2}px;
+    margin-bottom: ${p => p.theme.spacing * 3}px;
     font-size: 16px;
     font-weight: bold;
   }
@@ -115,6 +117,8 @@ const TourExplanationBox = styled(Box)`
 const TourExplanation = ({
   topStyle,
   leftStyle,
+  caretOffsetTop,
+  caretOffsetLeft,
   onNext,
   onSkip,
   currentStep,
@@ -131,18 +135,22 @@ const TourExplanation = ({
         left: leftStyle
       }}
     >
-      <Text medium textDarker>
-        <Text medium noFontSize textDarker>
+      <Caret
+        style={{
+          top: `${caretOffsetTop}px`,
+          left: `${caretOffsetLeft}px`
+        }}
+      />
+      <Text light medium textDarker>
+        <Text light medium noFontSize textDarker>
           {children}
         </Text>
-        <Spacing bottom={5} />
+        <Spacing bottom={3} />
         <Box centered justifySpaceBetween>
           {/* <GuidanceProgress step={2} max={4} /> */}
           <GuidanceProgress step={currentStep} max={maxSteps} />
           <Box centered>
-            <RawButton onClick={() => onSkip?.()}>
-              {t("general.skip")}
-            </RawButton>
+            <RawButton onClick={() => onSkip?.()}>{t("tour.end")}</RawButton>
             <Spacing right={2} />
             <Button onClick={() => onNext?.()} primary>
               {t("general.next")}
@@ -157,6 +165,8 @@ TourExplanation.propTypes = {
   children: PropTypes.node.isRequired,
   currentStep: PropTypes.number.isRequired,
   maxSteps: PropTypes.number.isRequired,
+  caretOffsetTop: PropTypes.number,
+  caretOffsetLeft: PropTypes.number,
   onNext: PropTypes.func,
   onSkip: PropTypes.func,
   topStyle: PropTypes.string,
@@ -207,17 +217,30 @@ export const GuidancePortal = observer(({ children, viewState }) => {
   const currentScreen = {
     // rectangle: currentScreenComponent?.current?.getBoundingClientRect?.()
     rectangle: currentRectangle,
-    // positionTop: currentTourPoint?.positionTop || RELATIVE_POSITION.RECT_TOP,
     positionTop:
       currentTourPoint?.positionTop || viewState.relativePosition.RECT_BOTTOM,
     positionLeft:
       currentTourPoint?.positionLeft || viewState.relativePosition.RECT_LEFT,
-    offsetTop: currentTourPoint?.offsetTop || 10,
-    offsetLeft: currentTourPoint?.offsetLeft || 0
+    offsetTop: isDefined(currentTourPoint?.offsetTop)
+      ? currentTourPoint.offsetTop
+      : 15,
+    offsetLeft: isDefined(currentTourPoint?.offsetLeft)
+      ? currentTourPoint.offsetLeft
+      : 0
   };
 
   const positionLeft = calculateLeftPosition(currentScreen);
   const positionTop = calculateTopPosition(currentScreen);
+
+  // TODO(wing): caret could easily be smarter than manually positioning it,
+  // take the rectangle from the highlighted component and set the base offset
+  // around that. manually position it for now
+  const caretOffsetTop = isDefined(currentTourPoint?.caretOffsetTop)
+    ? currentTourPoint.caretOffsetTop
+    : -3;
+  const caretOffsetLeft = isDefined(currentTourPoint?.caretOffsetLeft)
+    ? currentTourPoint.caretOffsetLeft
+    : 20;
 
   const currentTourIndex = viewState.currentTourIndex;
   const maxSteps = viewState.tourPoints.length;
@@ -240,6 +263,8 @@ export const GuidancePortal = observer(({ children, viewState }) => {
         // leftStyle={`${currentRectangle?.left}px`}
         topStyle={`${positionTop}px`}
         leftStyle={`${positionLeft}px`}
+        caretOffsetTop={caretOffsetTop}
+        caretOffsetLeft={caretOffsetLeft}
       >
         {parseCustomMarkdownToReact(currentTourPoint?.content)}
       </TourExplanation>

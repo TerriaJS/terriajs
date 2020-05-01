@@ -21,6 +21,7 @@ export const Text = styled.div`
   `}
 
   font-weight: 400;
+  ${props => props.light && `font-weight: 300;`}
   ${props => props.bold && `font-weight: bold;`}
   ${props => props.semiBold && `font-weight: 600;`}
   ${props => props.extraBold && `font-weight: 800;`}
