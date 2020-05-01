@@ -104,10 +104,12 @@ describe("HelpPanel", function() {
         terria.configParameters.helpContent = [
           {
             itemName: "test",
-            markdownText: "# Test\n\nHello, this is just a test\n\nThis is another paragraph",
+            markdownText:
+              "# Test\n\nHello, this is just a test\n\nThis is another paragraph",
             icon: "datePicker",
             videoUrl: "https://www.youtube.com/embed/NTtSM70rIvI",
-            placeholderImage: "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
+            placeholderImage:
+              "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
           }
         ];
       });
@@ -134,8 +136,10 @@ describe("HelpPanel", function() {
     });
 
     it("renders the video component", function() {
-      const videoComponent = testRenderer.root.findByProps({ className: "tjs-help-panel__videoLink" });
+      const videoComponent = testRenderer.root.findByProps({
+        className: "tjs-help-panel__videoLink"
+      });
       expect(videoComponent).toBeDefined();
     });
-  })
+  });
 });
