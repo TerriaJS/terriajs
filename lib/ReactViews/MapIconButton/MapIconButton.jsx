@@ -75,7 +75,7 @@ MapIconButton.propTypes = {
   roundLeft: PropTypes.bool,
   roundRight: PropTypes.bool,
   title: PropTypes.string,
-  iconElement: PropTypes.element.isRequired,
+  iconElement: PropTypes.func.isRequired,
   onClick: PropTypes.func,
   handleClick: PropTypes.func
 };
