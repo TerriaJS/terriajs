@@ -37,7 +37,7 @@ gcloud container clusters get-credentials terriajs-ci --zone australia-southeast
 
 # Install some tools we need from npm
 npm install -g https://github.com/terriajs/sync-dependencies
-npm install request@^2.83.0
+npm install got@^11.0.2
 
 # Clone and build TerriaMap, using this version of TerriaJS
 TERRIAJS_COMMIT_HASH=$(git rev-parse HEAD)
