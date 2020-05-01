@@ -64,6 +64,7 @@ export default class ViewState {
   @observable showWelcomeMessage: boolean = false;
   @observable selectedHelpMenuItem: string = "";
   @observable helpPanelExpanded: boolean = false;
+  @observable disclaimerSettings: any | undefined = undefined;
 
   @observable workbenchWithOpenControls: string | undefined = undefined;
 

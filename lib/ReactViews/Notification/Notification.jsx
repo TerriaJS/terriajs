@@ -48,6 +48,7 @@ const Notification = observer(
     },
 
     render() {
+      console.log(this.props.viewState.notifications);
       const notification =
         (this.props.viewState.notifications.length > 0 &&
           this.props.viewState.notifications[0]) ||

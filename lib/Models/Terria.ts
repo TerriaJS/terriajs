@@ -87,6 +87,7 @@ interface ConfigParameters {
   locationSearchBoundingBox?: number[];
   googleAnalyticsKey?: string;
   rollbarAccessToken?: string;
+  globalDisclaimer?: any;
 }
 
 interface StartOptions {
@@ -193,7 +194,8 @@ export default class Terria {
     magdaReferenceHeaders: undefined,
     locationSearchBoundingBox: undefined,
     googleAnalyticsKey: undefined,
-    rollbarAccessToken: undefined
+    rollbarAccessToken: undefined,
+    globalDisclaimer: undefined
   };
 
   @observable
