@@ -30,7 +30,7 @@ import {
   calculateLeftPosition,
   calculateTopPosition
 } from "./guidance-helpers.ts";
-import GuidanceDot from "./GuidanceDot.jsx";
+// import GuidanceDot from "./GuidanceDot.jsx";
 import GuidanceOverlay from "./GuidanceOverlay.jsx";
 // import { buildShareLink } from "../Map/Panels/SharePanel/BuildShareLink";
 
@@ -172,22 +172,8 @@ TourExplanation.propTypes = {
   topStyle: PropTypes.string,
   leftStyle: PropTypes.string
 };
-
-const GuidancePortalOverlay = styled(Box)`
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background: black;
-  z-index: 1000;
-  opacity: 0.45;
-
-  display: none;
-`;
-
-const GuidancePortalDisplayName = "GuidancePortal";
-// TODO: process tourpoints and take out nonexistent refs?
-export const GuidancePortal = observer(({ children, viewState }) => {
-  const [showGuidance, setShowGuidance] = useState(false);
+export const TourGrouping = observer(({ viewState }) => {
+  // const [showGuidance, setShowGuidance] = useState(false);
   const showPortal = viewState.currentTourIndex !== -1;
 
   useEffect(() =>
@@ -248,11 +234,6 @@ export const GuidancePortal = observer(({ children, viewState }) => {
   if (!showPortal || !currentTourPoint) return null;
   return (
     <>
-      <GuidanceOverlay
-        screen={currentScreen}
-        // onCancel={() => viewState.setTourIndex(-1)}
-        onCancel={() => viewState.nextTourPoint()}
-      />
       <TourExplanation
         currentStep={currentTourIndex + 1}
         maxSteps={maxSteps}
@@ -268,16 +249,29 @@ export const GuidancePortal = observer(({ children, viewState }) => {
       >
         {parseCustomMarkdownToReact(currentTourPoint?.content)}
       </TourExplanation>
-      <GuidancePortalOverlay
-      // className={
-      //   viewState.topElement === GuidancePortalDisplayName && "top-element"
-      // }
-      >
-        <GuidanceDot onClick={() => setShowGuidance(!showGuidance)} />
-        {showGuidance && <TourBox>{children}</TourBox>}
+    </>
+  );
+});
 
-        <Button onClick={() => viewState.setTourIndex(-1)}>Exit tour</Button>
-      </GuidancePortalOverlay>
+export const GuidancePortalDisplayName = "GuidancePortal";
+// TODO: process tourpoints and take out nonexistent refs?
+export const GuidancePortal = observer(({ viewState }) => {
+  const currentTourPoint = viewState.currentTourPoint;
+  const currentTourPointRef = viewState.appRefs.get(
+    currentTourPoint?.appRefName
+  );
+  const currentRectangle = currentTourPointRef?.current?.getBoundingClientRect?.();
+
+  return (
+    <>
+      {currentRectangle && (
+        <GuidanceOverlay
+          rectangle={currentRectangle}
+          // onCancel={() => viewState.setTourIndex(-1)}
+          onCancel={() => viewState.nextTourPoint()}
+        />
+      )}
+      <TourGrouping viewState={viewState} />
     </>
   );
 });
@@ -288,3 +282,24 @@ GuidancePortal.propTypes = {
 };
 
 export default withTheme(GuidancePortal);
+
+// const GuidancePortalOverlay = styled(Box)`
+//   position: fixed;
+//   width: 100%;
+//   height: 100%;
+//   background: black;
+//   z-index: 1000;
+//   opacity: 0.45;
+
+//   display: none;
+// `;
+// <GuidancePortalOverlay
+// // className={
+// //   viewState.topElement === GuidancePortalDisplayName && "top-element"
+// // }
+// >
+//   <GuidanceDot onClick={() => setShowGuidance(!showGuidance)} />
+//   {showGuidance && <TourBox>{children}</TourBox>}
+
+//   <Button onClick={() => viewState.setTourIndex(-1)}>Exit tour</Button>
+// </GuidancePortalOverlay>

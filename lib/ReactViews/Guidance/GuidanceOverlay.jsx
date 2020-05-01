@@ -20,13 +20,12 @@ import defined from "terriajs-cesium/Source/Core/defined";
 // propTypes: {
 //   helpViewState: PropTypes.object;
 // }
-const GuidanceOverlay = ({ screen, onCancel }) => {
+const GuidanceOverlay = ({ rectangle, onCancel }) => {
   const advance = () => {
     // this.props.helpViewState.advance = true;
   };
   // const helpScreen = this.props.helpViewState.currentScreen;
-  const helpScreen = screen;
-  if (!defined(helpScreen) || !defined(helpScreen.rectangle)) {
+  if (!defined(rectangle)) {
     console.log("no rectangle passed in, won't render overlay");
     return null;
   }
@@ -34,32 +33,32 @@ const GuidanceOverlay = ({ screen, onCancel }) => {
   // Top
   const topOverlayPositionLeft = 0 + "px";
   const topOverlayPositionTop = 0 + "px";
-  const topOverlayHeight = helpScreen.rectangle.top + "px";
+  const topOverlayHeight = rectangle.top + "px";
   const topOverlayWidth = "100%";
 
   // Left
   const leftOverlayPositionLeft = 0 + "px";
-  const leftOverlayPositionTop = helpScreen.rectangle.top + "px";
-  const leftOverlayHeight = helpScreen.rectangle.height + "px";
-  const leftOverlayWidth = helpScreen.rectangle.left + "px";
+  const leftOverlayPositionTop = rectangle.top + "px";
+  const leftOverlayHeight = rectangle.height + "px";
+  const leftOverlayWidth = rectangle.left + "px";
 
   // Right
-  const rightOverlayPositionLeft = helpScreen.rectangle.right + "px";
-  const rightOverlayPositionTop = helpScreen.rectangle.top + "px";
-  const rightOverlayHeight = helpScreen.rectangle.height + "px";
+  const rightOverlayPositionLeft = rectangle.right + "px";
+  const rightOverlayPositionTop = rectangle.top + "px";
+  const rightOverlayHeight = rectangle.height + "px";
   const rightOverlayWidth = "100%";
 
   // Bottom
   const bottomOverlayPositionLeft = 0 + "px";
-  const bottomOverlayPositionTop = helpScreen.rectangle.bottom + "px";
+  const bottomOverlayPositionTop = rectangle.bottom + "px";
   const bottomOverlayHeight = "100%";
   const bottomOverlayWidth = "100%";
 
   const windowClass = classNames(Styles.window, {
-    [Styles.isActive]: helpScreen
+    [Styles.isActive]: rectangle
   });
   return (
-    <div className={windowClass} aria-hidden={!helpScreen}>
+    <div className={windowClass}>
       <div
         className={Styles.topOverlay}
         style={{
@@ -105,7 +104,7 @@ const GuidanceOverlay = ({ screen, onCancel }) => {
   );
 };
 GuidanceOverlay.propTypes = {
-  screen: PropTypes.object.isRequired,
+  rectangle: PropTypes.object.isRequired,
   onCancel: PropTypes.func.isRequired
 };
 
