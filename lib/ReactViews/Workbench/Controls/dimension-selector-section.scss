@@ -38,6 +38,11 @@
   }
 }
 
+.dimension-selector-no-selection {
+  color: $text-light;
+  opacity: .8;
+}
+
 .title {
   display: block;
   margin-top: 10px;
