@@ -1,0 +1,14 @@
+<rss xmlns="http://www.w3.org/2005/Atom" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml">
+	<channel>
+		<title>GeoRSS feed sample</title>
+		<subtitle>To aid in unit testing</subtitle>
+		<link href="http://example.org/" />
+		<updated>2020-02-26T18:30:02Z</updated>
+		<author>
+			<name>TerriaJS</name>
+			<email>groldan@example.com</email>
+		</author>
+		<link href="http://www.georss.org/example" />
+		
+	</channel>
+</rss>
