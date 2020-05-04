@@ -7,7 +7,7 @@ import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem"
 import CommonStrata from "../../lib/Models/CommonStrata";
 import { runInAction } from "mobx";
 import SelectableDimensions from "../../lib/Models/SelectableDimensions";
-import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
+// import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
 
 describe("DimensionSelectorSection", function() {
   let terria: Terria;

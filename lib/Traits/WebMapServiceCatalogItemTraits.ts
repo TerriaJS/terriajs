@@ -16,7 +16,6 @@ import UrlTraits from "./UrlTraits";
 import anyTrait from "./anyTrait";
 import { JsonObject } from "../Core/Json";
 import TimeFilterTraits from "./TimeFilterTraits";
-import { CapabilitiesDimension } from "../Models/WebMapServiceCapabilities";
 import primitiveArrayTrait from "./primitiveArrayTrait";
 
 export class WebMapServiceAvailableStyleTraits extends ModelTraits {
