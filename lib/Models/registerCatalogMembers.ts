@@ -24,6 +24,7 @@ import UrlReference from "./UrlReference";
 import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFunction";
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
 import CompositeCatalogItem from "./CompositeCatalogItem";
+import SensorObservationServiceCatalogItem from "./SensorObservationServiceCatalogItem";
 import SplitItemReference from "./SplitItemReference";
 
 export default function registerCatalogMembers() {
@@ -83,6 +84,10 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(
     WebProcessingServiceCatalogFunction.type,
     WebProcessingServiceCatalogFunction
+  );
+  CatalogMemberFactory.register(
+    SensorObservationServiceCatalogItem.type,
+    SensorObservationServiceCatalogItem
   );
   CatalogMemberFactory.register(
     WebProcessingServiceCatalogItem.type,
