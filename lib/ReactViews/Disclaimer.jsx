@@ -10,6 +10,7 @@ import bingAerialBackground from "../../wwwroot/images/bing-aerial-labels-wide.p
 import styled from "styled-components";
 import parseCustomMarkdownToReact from "./Custom/parseCustomMarkdownToReact";
 import Button from "../Styled/Button";
+import FadeIn from "./Transitions/FadeIn/FadeIn";
 
 const TopElementBox = styled(Box)`
   z-index: 99999;
@@ -21,6 +22,7 @@ const BackgroundImage = styled(Box)`
   background-size: cover;
   background-repeat: no-repeat;
   filter: blur(10px);
+  z-index: 0;
 `;
 
 const DisclaimerButton = styled(Button).attrs({
@@ -52,62 +54,50 @@ class Disclaimer extends React.Component {
     super(props);
   }
 
-  // confirm() {
-  //   const notification = this.props.viewState.notifications[0];
-  //   if (notification && notification.confirmAction) {
-  //     notification.confirmAction();
-  //   }
+  confirm(confirmCallbackFn) {
+    if (confirmCallbackFn) {
+      confirmCallbackFn();
+    }
 
-  //   this.close(notification);
-  // }
+    this.props.viewState.hideDisclaimer();
+  }
 
-  // deny() {
-  //   const notification = this.props.viewState.notifications[0];
-  //   if (notification && notification.denyAction) {
-  //     notification.denyAction();
-  //   }
-
-  //   this.close(notification);
-  // }
-
-  // close(notification) {
-  //   runInAction(() => {
-  //     this.props.viewState.disclaimerSettings = undefined;
-  //   });
-
-  //   // Force refresh once the notification is dispached if .hideUi is set since once all the .hideUi's
-  //   // have been dispatched the UI will no longer be suppressed causing a change in the view state.
-  //   if (notification && notification.hideUi) {
-  //     triggerResize();
-  //   }
-  // }
+  deny(denyCallbackFn) {
+    if (denyCallbackFn) {
+      denyCallbackFn();
+    }
+    // Otherwise, do nothing for now?
+  }
 
   render() {
     const disclaimer = this.props.viewState.disclaimerSettings;
     console.log(this.props.theme);
     return (
       disclaimer && (
-        <TopElementBox positionAbsolute fullWidth fullHeight centered>
-          <BackgroundImage
-            styledWidth={"110%"}
-            styledHeight={"110%"}
-            positionAbsolute
-          />
-          <TopElementBox displayInlineBlock left styledWidth={"573px"}>
-            <Text
-              styledFontSize={"18px"}
-              styledLineHeight={"24px"}
-              bold
-              textLight
-            >
-              {disclaimer.title}
-            </Text>
-            <Spacing bottom={4} />
-            <Text
-              styledLineHeight={"18px"}
-              textLight
-              css={props =>
-                `
+        <FadeIn isVisible={this.props.viewState.disclaimerVisible}>
+          <TopElementBox positionAbsolute fullWidth fullHeight centered>
+            <BackgroundImage
+              // Make the image slightly larger to deal with
+              // image shrinking a tad bit when blurred
+              styledWidth={"105%"}
+              styledHeight={"105%"}
+              positionAbsolute
+            />
+            <Box displayInlineBlock left styledWidth={"573px"}>
+              <Text
+                styledFontSize={"18px"}
+                styledLineHeight={"24px"}
+                bold
+                textLight
+              >
+                {disclaimer.title}
+              </Text>
+              <Spacing bottom={4} />
+              <Text
+                styledLineHeight={"18px"}
+                textLight
+                css={props =>
+                  `
                 // not sure of the ideal way to deal with this
                 a {
                   font-weight: bold;
@@ -115,33 +105,28 @@ class Disclaimer extends React.Component {
                   text-decoration: none;
                 }
               `
-              }
-            >
-              {parseCustomMarkdownToReact(disclaimer.message)}
-            </Text>
-            <Spacing bottom={5} />
-            <Box fullWidth centered>
-              <DisclaimerButton denyButton>
-                {disclaimer.denyText}
-              </DisclaimerButton>
-              <Spacing right={3} />
-              <DisclaimerButton>{disclaimer.confirmText}</DisclaimerButton>
+                }
+              >
+                {parseCustomMarkdownToReact(disclaimer.message)}
+              </Text>
+              <Spacing bottom={5} />
+              <Box fullWidth centered>
+                <DisclaimerButton
+                  denyButton
+                  onClick={() => this.deny(disclaimer.denyAction)}
+                >
+                  {disclaimer.denyText}
+                </DisclaimerButton>
+                <Spacing right={3} />
+                <DisclaimerButton
+                  onClick={() => this.confirm(disclaimer.confirmAction)}
+                >
+                  {disclaimer.confirmText}
+                </DisclaimerButton>
+              </Box>
             </Box>
           </TopElementBox>
-          {/* <NotificationWindow
-          title={disclaimer.title}
-          message={disclaimer.message}
-          confirmText={disclaimer.confirmText}
-          denyText={disclaimer.denyText}
-          onConfirm={this.confirm}
-          onDeny={this.deny}
-          type={
-            defined(disclaimer.type) ? disclaimer.type : "disclaimer"
-          }
-          width={disclaimer.width}
-          height={disclaimer.height}
-        /> */}
-        </TopElementBox>
+        </FadeIn>
       )
     );
   }

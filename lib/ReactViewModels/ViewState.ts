@@ -65,6 +65,7 @@ export default class ViewState {
   @observable selectedHelpMenuItem: string = "";
   @observable helpPanelExpanded: boolean = false;
   @observable disclaimerSettings: any | undefined = undefined;
+  @observable disclaimerVisible: boolean = false;
 
   @observable workbenchWithOpenControls: string | undefined = undefined;
 
@@ -317,6 +318,11 @@ export default class ViewState {
   @action
   hideHelpPanel() {
     this.showHelpMenu = false;
+  }
+
+  @action
+  hideDisclaimer() {
+    this.disclaimerVisible = false;
   }
 
   /**
