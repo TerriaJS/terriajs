@@ -3,6 +3,9 @@ Change Log
 
 ### MobX Development
 
+* Added option for manual Table region mapping - with `enableManualRegionMapping` TableTrait. This provides `SelectableDimensions` for the region column and region type.
+* Added WMS Dimensions (using `SelectableDimensions`)
+* Merged the `StyleSelector` and `DimensionsSelector`, and created a `SelectableDimensions` interface.
 * Fixed DragDropFile and `createCatalogItemFromFileOrUrl` which wasn't enabled/working in mobx, added tests for `createCatalogItemFromFileOrUrl` and renamed `createCatalogItemFromUrl` to `createUrlRefernceFromUrl`.
 * Fixed bug in StratumOrder where `sortBottomToTop` would sort strata in the wrong order.
 * Allow member re-ordering via GroupMixin's `moveMemberToIndex`
