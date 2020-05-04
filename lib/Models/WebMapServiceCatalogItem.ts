@@ -517,114 +517,6 @@ class WebMapServiceCatalogItem
   }
 
   @computed
-  get selectableDimensions() {
-    const userStrata: any = this.strata.get(CommonStrata.user);
-    let userParameters = userStrata?.parameters;
-
-    let styleDimensions: SelectableDimension[] = [];
-    let wmsDimensions: SelectableDimension[] = [];
-
-    if (
-      this.availableStyles.length !== 0 &&
-      this.availableStyles[0].styles.length !== 0
-    ) {
-      const userStrata: any = this.strata.get(CommonStrata.user);
-
-      styleDimensions = [
-        {
-          id: `styles-${this.uniqueId}`,
-          name: "Styles",
-          options: filterOutUndefined(
-            this.availableStyles[0].styles.map(function(s) {
-              if (isDefined(s.name)) {
-                return {
-                  name: s.title || s.name || "",
-                  id: s.name as string
-                };
-              }
-            })
-          ),
-          selectedId:
-            userParameters?.styles || this.availableStyles[0].styles[0].name,
-          setDimensionValue: (stratumId: string, newStyle: string) => {
-            let newParameters = {
-              styles: newStyle
-            };
-            if (isDefined(userStrata?.parameters)) {
-              newParameters = combine(newParameters, userStrata.parameters);
-            }
-            runInAction(() => {
-              this.setTrait(CommonStrata.user, "parameters", newParameters);
-            });
-          }
-        }
-      ];
-    }
-
-    if (
-      this.availableDimensions.length !== 0 &&
-      this.availableDimensions[0].dimensions.length !== 0
-    ) {
-      wmsDimensions = filterOutUndefined(
-        this.availableDimensions[0].dimensions.map(dim => {
-          if (!isDefined(dim.name)) {
-            return;
-          }
-          console.log(dim);
-          return {
-            id: `dimensions-${dim.name}`,
-            name: dim.name,
-            options: filterOutUndefined(
-              dim.values.map(value => {
-                let name = value;
-                if (typeof dim.units === "string" && dim.units !== "") {
-                  if (
-                    typeof dim.unitSymbol === "string" &&
-                    dim.unitSymbol !== ""
-                  ) {
-                    name = `${value} (${dim.units} ${dim.unitSymbol})`;
-                  } else {
-                    name = `${value} (${dim.units})`;
-                  }
-                }
-                return {
-                  name,
-                  id: value
-                };
-              })
-            ),
-            selectedId:
-              isDefined(userParameters) &&
-              isDefined(userParameters["dim_" + dim.name])
-                ? userParameters["dim_" + dim.name]
-                : dim.default,
-            setDimensionValue: (stratumId: string, newDimension: string) => {
-              let newParameters: any = {};
-
-              // elevation is specified as simply elevation.
-              // Other (custom) dimensions are prefixed with 'dim_'.
-              // See WMS 1.3.0 spec section C.3.2 and C.3.3.
-              if (dim.name?.toLowerCase() === "elevation") {
-                newParameters["elevation"] = newDimension;
-              } else {
-                newParameters["dim_" + dim.name] = newDimension;
-              }
-              if (isDefined(userStrata) && "parameters" in userStrata) {
-                newParameters = combine(newParameters, userStrata.parameters);
-              }
-              runInAction(() => {
-                this.setTrait(CommonStrata.user, "parameters", newParameters);
-              });
-            }
-          };
-        })
-      );
-    }
-
-    return [...styleDimensions, ...wmsDimensions];
-  }
-
-  @computed
   get stylesArray(): ReadonlyArray<string> {
     if (Array.isArray(this.styles)) {
       return this.styles;
@@ -713,10 +605,25 @@ class WebMapServiceCatalogItem
         return undefined;
       }
 
-      const parameters: any = {
-        ...WebMapServiceCatalogItem.defaultParameters,
-        ...(this.parameters || {})
+      let parameters: { [key: string]: any } = {
+        ...WebMapServiceCatalogItem.defaultParameters
       };
+
+      // Override parameters set by user (in `parameters` trait)
+      if (isDefined(this.parameters)) {
+        Object.keys(this.parameters).forEach(
+          key =>
+            // elevation is specified as simply "elevation", styles is specified as "styles"
+            // Other (custom) dimensions are prefixed with 'dim_'.
+            // See WMS 1.3.0 spec section C.3.2 and C.3.3.
+            (parameters[
+              key?.toLowerCase() !== "elevation" &&
+              key?.toLowerCase() !== "styles"
+                ? `dim_${key}`
+                : key
+            ] = this.parameters![key])
+        );
+      }
 
       if (time !== undefined) {
         parameters.time = time;
@@ -818,6 +725,113 @@ class WebMapServiceCatalogItem
       return imageryProvider;
     }
   );
+
+  @computed
+  get availableStyleSelectableDimensions(): SelectableDimension | undefined {
+    // Currently this only handles styles for the first layer (hence this.availableStyles[0])
+    if (
+      this.availableStyles.length !== 0 &&
+      this.availableStyles[0].styles.length !== 0
+    ) {
+      return {
+        id: `styles-${this.uniqueId}`,
+        name: "Styles",
+        options: filterOutUndefined(
+          this.availableStyles[0].styles.map(function(s) {
+            if (isDefined(s.name)) {
+              return {
+                name: s.title || s.name || "",
+                id: s.name as string
+              };
+            }
+          })
+        ),
+
+        // Set selectedId to value stored in `parameters` trait or the first available value
+        selectedId:
+          this.parameters?.styles?.toString() ||
+          this.availableStyles[0].styles[0].name,
+
+        setDimensionValue: (stratumId: string, newStyle: string) => {
+          let newParameters = {
+            styles: newStyle
+          };
+          if (isDefined(this.parameters)) {
+            newParameters = combine(newParameters, this.parameters);
+          }
+          runInAction(() => {
+            this.setTrait(CommonStrata.user, "parameters", newParameters);
+          });
+        }
+      };
+    }
+  }
+
+  @computed
+  get availableDimensionSelectableDimensions(): SelectableDimension[] {
+    // Currently this only handles dimensions for the first layer (hence this.availableDimensions[0])
+    if (
+      this.availableDimensions.length !== 0 &&
+      this.availableDimensions[0].dimensions.length !== 0
+    ) {
+      return filterOutUndefined(
+        this.availableDimensions[0].dimensions.map(dim => {
+          if (!isDefined(dim.name)) {
+            return;
+          }
+          return {
+            id: `dimensions-${dim.name}`,
+            name: dim.name,
+            options: dim.values.map(value => {
+              let name = value;
+              // Add units and unitSybol if defined
+              if (typeof dim.units === "string" && dim.units !== "") {
+                if (
+                  typeof dim.unitSymbol === "string" &&
+                  dim.unitSymbol !== ""
+                ) {
+                  name = `${value} (${dim.units} ${dim.unitSymbol})`;
+                } else {
+                  name = `${value} (${dim.units})`;
+                }
+              }
+              return {
+                name,
+                id: value
+              };
+            }),
+
+            // Set selectedId to value stored in `parameters` trait, the default value, or the first available value
+            selectedId:
+              this.parameters?.[dim.name]?.toString() ||
+              dim.default ||
+              dim.values[0],
+
+            setDimensionValue: (stratumId: string, newDimension: string) => {
+              let newParameters: any = {};
+
+              newParameters[dim.name!] = newDimension;
+              if (isDefined(this.parameters)) {
+                newParameters = combine(newParameters, this.parameters);
+              }
+              runInAction(() => {
+                this.setTrait(stratumId, "parameters", newParameters);
+              });
+            }
+          };
+        })
+      );
+    }
+    return [];
+  }
+
+  @computed
+  get selectableDimensions() {
+    return filterOutUndefined([
+      this.availableStyleSelectableDimensions,
+      ...this.availableDimensionSelectableDimensions
+    ]);
+  }
 }
 
 function scaleDenominatorToLevel(
