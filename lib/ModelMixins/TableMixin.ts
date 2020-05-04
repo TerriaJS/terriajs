@@ -213,11 +213,11 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
             points.push({ x, y });
           }
 
-          const colorId = `color-${this.name}-${yColumn.name}`;
+          const colorId = `color-${this.uniqueId}-${this.name}-${yColumn.name}`;
 
           return {
             item: this,
-            name: yColumn.name,
+            name: yColumn.traits.title || yColumn.name,
             categoryName: this.name,
             key: `key${this.uniqueId}-${this.name}-${yColumn.name}`,
             type: "line",

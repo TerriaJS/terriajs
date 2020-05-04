@@ -1,6 +1,19 @@
+/**
+ * This could use a lot of work, for example, due to the way both of:
+ *  - how the component is currently composed
+ *  - how it's currently hooked into the cesium viewer
+ * we needlessly force re-render it all even though there is no change to orbit
+ * or heading
+ *
+ * You'll also see a few weird numbers - this is due to the port from the scss
+ * styles, and will be leaving it as is for now
+ */
+//
+
 "use strict";
 import React from "react";
 import PropTypes from "prop-types";
+import styled from "styled-components";
 import CameraFlightPath from "terriajs-cesium/Source/Scene/CameraFlightPath";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -11,17 +24,87 @@ import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import Ray from "terriajs-cesium/Source/Core/Ray";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
-import Icon from "../../Icon.jsx";
+import Icon, { StyledIcon } from "../../Icon.jsx";
 import GyroscopeGuidance from "../../GyroscopeGuidance/GyroscopeGuidance";
-import Styles from "./compass.scss";
 import { runInAction, computed, when } from "mobx";
 import { withTranslation } from "react-i18next";
+import { withTheme } from "styled-components";
+
+import FadeIn from "../../Transitions/FadeIn/FadeIn";
+
+// Map Compass
+//
+// Markup:
+// <StyledCompass>
+//   (<GyroscopeGuidance /> if hovered/active/focused)
+//   <StyledCompassOuterRing /> (base, turns into white circle when active)
+//   <StyledCompassOuterRing /> (clone to be used for animation)
+//   <StyledCompassInnerRing title="Click and drag to rotate the camera" />
+//   <StyledCompassRotationMarker />
+// </StyledCompass>
+
+const StyledCompass = styled.div`
+  display: none;
+  position: relative;
+
+  width: ${props => props.theme.compassWidth}px;
+  height: ${props => props.theme.compassWidth}px;
+
+  @media (min-width: ${props => props.theme.sm}px) {
+    display: block;
+  }
+`;
+
+// 1.1818 comes from 65/55 = 1.1818 (64 and 56 sketch-designed numbers adapted for our "5" multiplier atm)
+const compassScaleRatio = 65 / 55;
+
+const StyledCompassOuterRing = styled.div`
+  ${props => props.theme.centerWithoutFlex()}
+  z-index: ${props => (props.active ? "2" : "1")};
+  width: 100%;
+  
+  ${props =>
+    props.active &&
+    `transform: translate(-50%,-50%) scale(${compassScaleRatio});`};
+
+  transition: transform 0.3s;
+`;
+
+const StyledCompassInnerRing = styled.div`
+  ${props => props.theme.verticalAlign()}
+  
+  width: ${props =>
+    Number(props.theme.compassWidth) - Number(props.theme.ringWidth) - 10}px;
+  height: ${props =>
+    Number(props.theme.compassWidth) - Number(props.theme.ringWidth) - 10}px;
+
+  margin: 0 auto;
+  padding: 4px;
+  box-sizing: border-box;
+`;
+
+const StyledCompassRotationMarker = styled.div`
+  ${props => props.theme.centerWithoutFlex()}
+  z-index: 3;
+
+  cursor: pointer;
+
+  width: ${props =>
+    Number(props.theme.compassWidth) + Number(props.theme.ringWidth) - 4}px;
+  height: ${props =>
+    Number(props.theme.compassWidth) + Number(props.theme.ringWidth) - 4}px;
+
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  background-size: contain;
+`;
 
 // the compass on map
 class Compass extends React.Component {
   static propTypes = {
     terria: PropTypes.object,
     viewState: PropTypes.object,
+    theme: PropTypes.object.isRequired,
     t: PropTypes.func.isRequired
   };
 
@@ -34,7 +117,8 @@ class Compass extends React.Component {
       orbitCursorAngle: 0,
       heading: 0.0,
       orbitCursorOpacity: 0,
-      active: false
+      active: false,
+      activeForTransition: false
     };
 
     when(
@@ -172,41 +256,88 @@ class Compass extends React.Component {
     const description = t("compass.description");
 
     return (
-      <div
-        className={Styles.compass}
-        title={description}
+      <StyledCompass
         onMouseDown={this.handleMouseDown.bind(this)}
         onDoubleClick={this.handleDoubleClick.bind(this)}
         onMouseUp={this.resetRotater.bind(this)}
-        onMouseOver={() => this.setState({ active: true })}
-        onMouseOut={() => this.setState({ active: true })}
-        onFocus={() => this.setState({ active: true })}
-        // onBlur={() => this.setState({ active: false })}
+        active={active}
       >
-        {active && (
-          <GyroscopeGuidance
-            viewState={this.props.viewState}
-            handleHelp={() => {
-              console.log("handle help");
-              this.props.viewState.showHelpMenu = true;
-            }}
-            onClose={() => this.setState({ active: false })}
-          />
-        )}
-        <div className={Styles.outerRing} style={outerCircleStyle}>
-          <Icon glyph={Icon.GLYPHS.compassOuter} />
-        </div>
-        <div className={Styles.innerRing} title={t("compass.title")}>
-          <Icon
+        {/* Bottom "turns into white circle when active" layer */}
+        <StyledCompassOuterRing active={false}>
+          <div style={outerCircleStyle}>
+            <StyledIcon
+              fillColor={this.props.theme.textDarker}
+              // if it's active, show a white circle only, as we need the base layer
+              glyph={
+                active
+                  ? Icon.GLYPHS.compassOuterSkeleton
+                  : Icon.GLYPHS.compassOuter
+              }
+            />
+          </div>
+        </StyledCompassOuterRing>
+
+        {/* "Top" animated layer */}
+        <StyledCompassOuterRing
+          active={active}
+          title={description}
+          aria-hidden="true"
+          role="presentation"
+        >
+          <div style={outerCircleStyle}>
+            <StyledIcon
+              fillColor={this.props.theme.textDarker}
+              glyph={Icon.GLYPHS.compassOuter}
+            />
+          </div>
+        </StyledCompassOuterRing>
+
+        {/* "Center circle icon" */}
+        <StyledCompassInnerRing title={t("compass.title")}>
+          <StyledIcon
+            fillColor={this.props.theme.textDarker}
             glyph={
               active ? Icon.GLYPHS.compassInnerArrows : Icon.GLYPHS.compassInner
             }
           />
-        </div>
-        <div className={Styles.rotationMarker} style={rotationMarkerStyle}>
-          <Icon glyph={Icon.GLYPHS.compassRotationMarker} />
-        </div>
-      </div>
+        </StyledCompassInnerRing>
+
+        {/* Rotation marker when dragging */}
+        <StyledCompassRotationMarker
+          title={description}
+          style={{
+            backgroundImage: require("../../../../wwwroot/images/compass-rotation-marker.svg")
+          }}
+          onMouseOver={() => this.setState({ active: true })}
+          onMouseOut={() => this.setState({ active: true })}
+          // do we give focus to this? given it's purely a mouse tool
+          // focus it anyway..
+          tabIndex="0"
+          onFocus={() => this.setState({ active: true })}
+          // Gotta keep menu open if blurred, and close it with the close button
+          // instead. otherwise it'll never focus on the help buttons
+          // onBlur={() => this.setState({ active: false })}
+        >
+          <div style={rotationMarkerStyle}>
+            <StyledIcon
+              fillColor={this.props.theme.textDarker}
+              glyph={Icon.GLYPHS.compassRotationMarker}
+            />
+          </div>
+        </StyledCompassRotationMarker>
+
+        {/* Gyroscope guidance menu */}
+        <FadeIn isVisible={active}>
+          <GyroscopeGuidance
+            viewState={this.props.viewState}
+            handleHelp={() => {
+              this.props.viewState.showHelpPanel();
+              this.props.viewState.selectHelpMenuItem("navigation");
+            }}
+            onClose={() => this.setState({ active: false })}
+          />
+        </FadeIn>
+      </StyledCompass>
     );
   }
 }
@@ -519,4 +650,4 @@ function viewerChange(viewModel) {
   });
 }
 
-export default withTranslation()(Compass);
+export default withTranslation()(withTheme(Compass));
