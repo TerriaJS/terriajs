@@ -6,15 +6,18 @@ const Icon = require("../../Icon");
 import Styles from "./dimension-selector-section.scss";
 import CommonStrata from "../../../Models/CommonStrata";
 import { runInAction } from "mobx";
-import SelectableDimensions, { SelectableDimension } from "../../../Models/SelectableDimensions";
+import SelectableDimensions, {
+  SelectableDimension
+} from "../../../Models/SelectableDimensions";
 
-
-  @observer
-  export default class DimensionSelectorSection extends React.Component<{
-    item: SelectableDimensions;
-  }> {
-
-  setDimensionValue(dimension: SelectableDimension, event: React.ChangeEvent<HTMLSelectElement>) {
+@observer
+export default class DimensionSelectorSection extends React.Component<{
+  item: SelectableDimensions;
+}> {
+  setDimensionValue(
+    dimension: SelectableDimension,
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) {
     runInAction(() => {
       dimension.setDimensionValue(CommonStrata.user, event.target.value);
     });
@@ -76,4 +79,4 @@ import SelectableDimensions, { SelectableDimension } from "../../../Models/Selec
       </div>
     );
   }
-  }
+}

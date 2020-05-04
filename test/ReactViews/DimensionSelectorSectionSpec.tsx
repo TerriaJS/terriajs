@@ -64,7 +64,7 @@ describe("DimensionSelectorSection", function() {
     const customOptions = findAllWithType(dim2, "option");
     expect(customOptions.length).toBe(3);
 
-    done()
+    done();
   });
 
   it("shows the union of the styles and dimensions available for a WMS layer", function(done) {
@@ -164,13 +164,21 @@ describe("DimensionSelectorSection", function() {
   it("detects LGAs by code", function(done) {
     terria.configParameters.regionMappingDefinitionsUrl =
       "test/csv/regionMapping.json";
-      
-    const csvItem = new CsvCatalogItem('some-csv', terria);
+
+    const csvItem = new CsvCatalogItem("some-csv", terria);
 
     runInAction(() => {
-      csvItem.setTrait(CommonStrata.definition, "csvString", "lga_code,value\n31000,1")
-      csvItem.setTrait(CommonStrata.definition, "enableManualRegionMapping", true)
-    })
+      csvItem.setTrait(
+        CommonStrata.definition,
+        "csvString",
+        "lga_code,value\n31000,1"
+      );
+      csvItem.setTrait(
+        CommonStrata.definition,
+        "enableManualRegionMapping",
+        true
+      );
+    });
 
     csvItem
       .loadMetadata()
