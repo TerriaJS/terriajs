@@ -67,55 +67,7 @@ describe("DimensionSelectorSection", function() {
     done();
   });
 
-  it("shows the union of the styles and dimensions available for a WMS layer", function(done) {
-    const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
-    runInAction(() => {
-      wmsItem.setTrait(CommonStrata.definition, "url", "http://example.com");
-      wmsItem.setTrait(
-        CommonStrata.definition,
-        "getCapabilitiesUrl",
-        "test/WMS/styles_and_dimensions.xml"
-      );
-      wmsItem.setTrait(CommonStrata.definition, "layers", "A,B");
-      wmsItem.setTrait(CommonStrata.definition, "parameters", {
-        styles: "contour/ferret",
-        custom: "Another thing",
-        elevation: "-0.59375"
-      });
-    });
-
-    wmsItem
-      .loadMetadata()
-      .then(function() {
-        const section = <DimensionSelectorSection item={wmsItem} />;
-        const result = getShallowRenderedOutput(section);
-        const selects = findAllWithType(result, "select");
-        const labels = findAllWithType(result, "label");
-        expect(selects.length).toBe(3);
-        expect(labels.length).toBe(3);
-
-        console.log(labels);
-
-        expect(selects[0].props.name).toContain(`styles-${wmsItem.uniqueId}`);
-        expect(selects[0].props.value).toBe("contour/ferret");
-        const styleOptions = findAllWithType(selects[0], "option");
-        expect(styleOptions.length).toBe(40);
-
-        expect(selects[1].props.name).toContain("dimensions-elevation");
-        expect(selects[1].props.value).toBe("-0.59375");
-        const elevationOptions = findAllWithType(selects[1], "option");
-        expect(elevationOptions.length).toBe(16);
-
-        expect(selects[2].props.name).toContain("dimensions-custom");
-        expect(selects[2].props.value).toBe("Another thing");
-        const customOptions = findAllWithType(selects[2], "option");
-        expect(customOptions.length).toBe(4);
-      })
-      .then(done)
-      .catch(done.fail);
-  });
-
-  it("shows region mapping options for a CSV catalog item", function(done) {
+  it("show dimensions and styles for a 'real' WMS layer", function(done) {
     const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
     runInAction(() => {
       wmsItem.setTrait(CommonStrata.definition, "url", "http://example.com");
@@ -161,45 +113,48 @@ describe("DimensionSelectorSection", function() {
       .catch(done.fail);
   });
 
-  it("detects LGAs by code", function(done) {
-    terria.configParameters.regionMappingDefinitionsUrl =
-      "test/csv/regionMapping.json";
+  // it("shows csv styles and region mapping options", async function(done) {
+  //   terria.configParameters.regionMappingDefinitionsUrl =
+  //     "test/csv/regionMapping.json";
 
-    const csvItem = new CsvCatalogItem("some-csv", terria);
+  //   const csvItem = new CsvCatalogItem("some-csv", terria);
 
-    runInAction(() => {
-      csvItem.setTrait(
-        CommonStrata.definition,
-        "csvString",
-        "lga_code,value\n31000,1"
-      );
-      csvItem.setTrait(
-        CommonStrata.definition,
-        "enableManualRegionMapping",
-        true
-      );
-    });
+  //   runInAction(() => {
+  //     csvItem.setTrait(
+  //       CommonStrata.definition,
+  //       "url",
+  //       "test/csv/lga_code_2015.csv"
+  //     );
+  //     csvItem.setTrait(
+  //       CommonStrata.definition,
+  //       "enableManualRegionMapping",
+  //       true
+  //     );
+  //   });
 
-    csvItem
-      .loadMetadata()
-      .then(function() {
-        const section = <DimensionSelectorSection item={csvItem} />;
-        const result = getShallowRenderedOutput(section);
-        const selects = findAllWithType(result, "select");
-        expect(selects.length).toBe(3);
+  //   await csvItem.loadMetadata();
+  //   await csvItem.loadMapItems();
 
-        expect(selects[0].props.name).toContain("activeStyle");
-        // expect(selects[0].props.value).toBe("value");
-        expect(findAllWithType(selects[0], "option".length).toBe(2));
+  //   const section = <DimensionSelectorSection item={csvItem} />;
+  //   const result = getShallowRenderedOutput(section);
+  //   const selects = findAllWithType(result, "select");
+  //   expect(selects.length).toBe(3);
 
-        expect(selects[1].props.name).toContain("regionColumn");
-        expect(selects[1].props.value).toBe("lga_code");
-        expect(findAllWithType(selects[1], "option".length).toBe(2));
+  //   if (selects.length < 3) {
+  //     done.fail("Not enough select objects");
+  //   }
 
-        expect(selects[2].props.name).toContain("regionMapping");
-        expect(selects[2].props.value).toBe("LGA_2018");
-      })
-      .catch(fail)
-      .then(done);
-  });
+  //   expect(selects[0].props.name).toContain("activeStyle");
+  //   // expect(selects[0].props.value).toBe("value");
+  //   expect(findAllWithType(selects[0], "option".length).toBe(2));
+
+  //   expect(selects[1].props.name).toContain("regionColumn");
+  //   expect(selects[1].props.value).toBe("lga_code");
+  //   expect(findAllWithType(selects[1], "option".length).toBe(2));
+
+  //   expect(selects[2].props.name).toContain("regionMapping");
+  //   expect(selects[2].props.value).toBe("LGA_2018");
+
+  //   done();
+  // });
 });
