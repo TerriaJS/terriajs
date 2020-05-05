@@ -112,6 +112,9 @@ Change Log
 * Fixed MapIconButton & FeedbackButton proptypes being defined incorrectly
 * Implement SenapsLocationsCatalogItem
 * Update papaparse and improve handling for retrieveing CSVs via chunking that have no ContentLenth header
+#### mobx-28
+* Fix SASS exports causing some build errors in certain webpack conditions
+#### mobx-29
 * Remove maxZoom from leaflet map.
 
 
