@@ -7,7 +7,7 @@
  * will probably utilise a react portal, though.
  *
  */
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 // import styled from "styled-components";
 import styled, { withTheme } from "styled-components";
 // import styled, { css } from "styled-components";
@@ -113,6 +113,11 @@ const TourExplanationBox = styled(Box)`
     margin-bottom: 0;
   }
 `;
+
+// const TourSpot = styled.div`
+//   width: 14px;
+//   height: 14px;
+// `;
 
 const TourExplanation = ({
   topStyle,
@@ -238,10 +243,7 @@ export const TourGrouping = observer(({ viewState }) => {
         currentStep={currentTourIndex + 1}
         maxSteps={maxSteps}
         onNext={() => viewState.nextTourPoint()}
-        // onClose={() => viewState.nextTourPoint()}
         onSkip={() => viewState.setTourIndex(-1)}
-        // topStyle={`${currentRectangle?.bottom}px`}
-        // leftStyle={`${currentRectangle?.left}px`}
         topStyle={`${positionTop}px`}
         leftStyle={`${positionLeft}px`}
         caretOffsetTop={caretOffsetTop}
