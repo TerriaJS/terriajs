@@ -9,7 +9,6 @@ import ModelTraits from "../Traits/ModelTraits";
 import UrlReferenceTraits from "../Traits/UrlReferenceTraits";
 import StratumOrder from "./StratumOrder";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import { mapping } from "./createUrlReferenceFromUrl";
 import updateModelFromJson from "./updateModelFromJson";
 
 const urlRecordStratum = "url-record";
@@ -60,13 +59,14 @@ export default class UrlReference extends UrlMixin(
     _index?: number
   ): Promise<BaseModel | undefined> {
     const index = _index || 0;
-    if (index >= mapping.length) {
+    if (index >= UrlToCatalogMemberMapping.mapping.length) {
       return Promise.resolve(undefined);
     }
 
     if (
-      (mapping[index].matcher && !mapping[index].matcher(url)) ||
-      (mapping[index].requiresLoad && !allowLoad)
+      (UrlToCatalogMemberMapping.mapping[index].matcher &&
+        !UrlToCatalogMemberMapping.mapping[index].matcher(url)) ||
+      (UrlToCatalogMemberMapping.mapping[index].requiresLoad && !allowLoad)
     ) {
       return UrlReference.createCatalogMemberFromUrlReference(
         sourceReference,
@@ -78,7 +78,7 @@ export default class UrlReference extends UrlMixin(
       );
     } else {
       const item = CatalogMemberFactory.create(
-        mapping[index].type,
+        UrlToCatalogMemberMapping.mapping[index].type,
         sourceReference.uniqueId,
         terria,
         sourceReference
@@ -120,3 +120,25 @@ export default class UrlReference extends UrlMixin(
     }
   }
 }
+
+export type Matcher = (input: string) => boolean;
+
+export interface MappingEntry {
+  matcher: Matcher;
+  type: string;
+  requiresLoad: boolean;
+}
+
+export class UrlMapping {
+  mapping: MappingEntry[] = [];
+
+  register(matcher: Matcher, type: string, requiresLoad?: boolean) {
+    this.mapping.push({
+      matcher,
+      type,
+      requiresLoad: Boolean(requiresLoad)
+    });
+  }
+}
+
+export const UrlToCatalogMemberMapping = new UrlMapping();
