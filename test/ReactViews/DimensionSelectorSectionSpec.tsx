@@ -100,7 +100,7 @@ describe("DimensionSelectorSection", function() {
       );
       wmsItem.setTrait(CommonStrata.definition, "layers", "A,B");
       wmsItem.setTrait(CommonStrata.definition, "parameters", {
-        styles: "contour/ferret",
+        styles: "contour/ferret,shadefill/alg2",
         custom: "Another thing",
         elevation: "-0.59375"
       });
@@ -121,7 +121,12 @@ describe("DimensionSelectorSection", function() {
         expect(selects.length).toBe(3);
         expect(labels.length).toBe(3);
 
-        expect(selects[0].props.name).toContain(`styles-${wmsItem.uniqueId}`);
+        // Expect 2 styles (layer A, layer B) + 3 dimensions (elevation, custom, another)
+        expect(selects.length).toBe(5);
+        expect(labels.length).toBe(5);
+
+        // Check Style A
+        expect(selects[0].props.name).toContain(`${wmsItem.uniqueId}-A-styles`);
         expect(selects[0].props.value).toBe("contour/ferret");
         const styleOptions = selects[0].findAllByType("option");
         expect(styleOptions.length).toBe(40);

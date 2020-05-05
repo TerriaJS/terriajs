@@ -200,7 +200,7 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   @anyTrait({
     name: "Parameters",
     description:
-      "Additional parameters to pass to the MapServer when requesting images."
+      "Additional parameters to pass to the MapServer when requesting images. Style parameters are stored as CSV in `styles`."
   })
   parameters?: JsonObject;
 
