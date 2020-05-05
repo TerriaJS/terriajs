@@ -25,6 +25,7 @@ import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
 import CompositeCatalogItem from "./CompositeCatalogItem";
 import SensorObservationServiceCatalogItem from "./SensorObservationServiceCatalogItem";
 import SplitItemReference from "./SplitItemReference";
+import YDYRCatalogFunction from "./YDYRCatalogFunction";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
@@ -76,6 +77,7 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CartoMapCatalogItem.type, CartoMapCatalogItem);
   CatalogMemberFactory.register(UrlReference.type, UrlReference);
   CatalogMemberFactory.register(SplitItemReference.type, SplitItemReference);
+  CatalogMemberFactory.register(YDYRCatalogFunction.type, YDYRCatalogFunction);
   CatalogMemberFactory.register(
     SenapsLocationsCatalogItem.type,
     SenapsLocationsCatalogItem

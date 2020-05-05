@@ -21,7 +21,8 @@ terriamap:
             "gov",
             "gov.uk",
             "gov.nz",
-            "sample.aero3dpro.com.au"
+            "sample.aero3dpro.com.au",
+            "ydyr.info"
         ]
         initPaths:
         - "/etc/config/client"
