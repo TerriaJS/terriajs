@@ -40,7 +40,7 @@ export default class UrlReference extends UrlMixin(
       return Promise.resolve(undefined);
     }
 
-    const target = UrlReference.createUrlReferenceFromUrlReference(
+    const target = UrlReference.createCatalogMemberFromUrlReference(
       this,
       this.uniqueId,
       this.url,
@@ -51,7 +51,7 @@ export default class UrlReference extends UrlMixin(
     return Promise.resolve(target);
   }
 
-  private static createUrlReferenceFromUrlReference(
+  private static createCatalogMemberFromUrlReference(
     sourceReference: BaseModel,
     id: string,
     url: string,
@@ -68,7 +68,7 @@ export default class UrlReference extends UrlMixin(
       (mapping[index].matcher && !mapping[index].matcher(url)) ||
       (mapping[index].requiresLoad && !allowLoad)
     ) {
-      return UrlReference.createUrlReferenceFromUrlReference(
+      return UrlReference.createCatalogMemberFromUrlReference(
         sourceReference,
         id,
         url,
@@ -85,7 +85,7 @@ export default class UrlReference extends UrlMixin(
       );
 
       if (item === undefined) {
-        return UrlReference.createUrlReferenceFromUrlReference(
+        return UrlReference.createCatalogMemberFromUrlReference(
           sourceReference,
           id,
           url,
@@ -105,7 +105,7 @@ export default class UrlReference extends UrlMixin(
           .loadMetadata()
           .then(() => item)
           .catch(e => {
-            return UrlReference.createUrlReferenceFromUrlReference(
+            return UrlReference.createCatalogMemberFromUrlReference(
               sourceReference,
               id,
               url,
