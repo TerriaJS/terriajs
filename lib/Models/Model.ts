@@ -88,7 +88,7 @@ export interface ModelInterface<T extends ModelTraits> {
 
   dispose(): void;
 
-  duplicateModel(newId: ModelId, sourceReference?: BaseModel): BaseModel;
+  duplicateModel(newId: ModelId, sourceReference?: BaseModel): this;
 
   setTrait<Key extends keyof StratumFromTraits<T>>(
     stratumId: string,
