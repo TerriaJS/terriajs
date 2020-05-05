@@ -112,6 +112,7 @@ Change Log
 * Fixed MapIconButton & FeedbackButton proptypes being defined incorrectly
 * Implement SenapsLocationsCatalogItem
 * Update papaparse and improve handling for retrieveing CSVs via chunking that have no ContentLenth header
+* Remove maxZoom from leaflet map.
 
 
 ### Next Release
