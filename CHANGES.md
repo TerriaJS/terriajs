@@ -99,6 +99,7 @@ Change Log
 * Changed most of the icons for the `MapNavigation` section (on the right hand side) of the screen
 * Added a close button to story panel
 * Made `MapIconButton` to animate when expanding 
+* Implements `SensorObservationServiceCatalogItem`.
 * Add support for styling CSVs using a region mapped or text columns.
 * Update Compass UI to include larger rotation target, remove sass from compass
 * Link Compass "help" button to `navigation` HelpPanelItem (requires generalisation later down the track)
@@ -114,7 +115,10 @@ Change Log
 * Fixed MapIconButton & FeedbackButton proptypes being defined incorrectly
 * Implement SenapsLocationsCatalogItem
 * Update papaparse and improve handling for retrieveing CSVs via chunking that have no ContentLenth header
-
+#### mobx-28
+* Fix SASS exports causing some build errors in certain webpack conditions
+#### mobx-29
+* (placeholder)
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
