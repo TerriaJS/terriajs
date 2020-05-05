@@ -1,7 +1,6 @@
 "use strict";
 
 import defined from "terriajs-cesium/Source/Core/defined";
-import ObserveModelMixin from "../ObserveModelMixin";
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
@@ -13,7 +12,6 @@ import { runInAction } from "mobx";
 const Notification = observer(
   createReactClass({
     displayName: "Notification",
-    mixins: [ObserveModelMixin],
 
     propTypes: {
       viewState: PropTypes.object

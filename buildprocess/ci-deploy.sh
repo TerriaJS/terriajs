@@ -50,6 +50,7 @@ git commit -a -m 'temporary commit' # so the version doesn't indicate local modi
 git tag -a "TerriaMap-$TERRIAMAP_COMMIT_HASH--TerriaJS-$TERRIAJS_COMMIT_HASH" -m 'temporary tag'
 rm package-lock.json # because TerriaMap's package-lock.json won't reflect terriajs dependencies
 npm install
+npm install moment@2.24.0
 npm run gulp build
 
 npm run "--terriajs-map:docker_name=terriajs-ci" docker-build-ci -- --tag "asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME"
