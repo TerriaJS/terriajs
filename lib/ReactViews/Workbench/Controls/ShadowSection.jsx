@@ -7,14 +7,12 @@ import PropTypes from "prop-types";
 import React from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import CommonStrata from "../../../Models/CommonStrata";
-import ObserveModelMixin from "../../ObserveModelMixin";
 import Icon from "./../../Icon";
 import Styles from "./shadow-section.scss";
 
 const ShadowSection = observer(
   createReactClass({
     displayName: "ShadowSection",
-    mixins: [ObserveModelMixin],
 
     propTypes: {
       item: PropTypes.object.isRequired

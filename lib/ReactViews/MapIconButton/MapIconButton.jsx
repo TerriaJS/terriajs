@@ -1,5 +1,5 @@
 "use strict";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
@@ -19,6 +19,9 @@ const ButtonWrapper = styled(Box).attrs({
 // styles half ripped from nav.scss
 const StyledMapIconButton = styled(RawButton)`
   border-radius: 16px;
+  ${props => props.roundLeft && `border-radius: 16px 0 0 16px;`}
+  ${props => props.roundRight && `border-radius: 0 16px 16px 0;`}
+
   background: #fff;
   color: ${props => props.theme.textDarker};
 
@@ -56,7 +59,7 @@ const StyledMapIconButton = styled(RawButton)`
   ${props =>
     props.inverted &&
     `
-    background: ${props.theme.textDarker};
+    background: ${props.theme.textBlack};
     color: ${props.theme.textLight};
     svg {
       fill: ${props.theme.textLight};
@@ -69,8 +72,10 @@ MapIconButton.propTypes = {
   inverted: PropTypes.bool,
   expandInPlace: PropTypes.bool,
   neverCollapse: PropTypes.bool,
+  roundLeft: PropTypes.bool,
+  roundRight: PropTypes.bool,
   title: PropTypes.string,
-  iconElement: PropTypes.element.isRequired,
+  iconElement: PropTypes.func.isRequired,
   onClick: PropTypes.func,
   handleClick: PropTypes.func
 };
@@ -79,6 +84,8 @@ function MapIconButton(props) {
   const [isExpanded, setExpanded] = useState(false);
   const {
     children,
+    roundLeft,
+    roundRight,
     title,
     expandInPlace,
     neverCollapse,
@@ -87,17 +94,20 @@ function MapIconButton(props) {
     inverted
   } = props;
   const expanded = (isExpanded || neverCollapse) && children;
-  // const { t } = this.props;
+  const buttonRef = props.buttonRef || useRef();
 
   // const handleAway = () => setTimeout(() => setExpanded(false), 1000);
   const handleAway = () => setExpanded(false);
 
   const MapIconButtonRaw = (
     <StyledMapIconButton
+      ref={buttonRef}
       className={props.className}
       primary={primary}
       splitter={splitter}
       inverted={inverted}
+      roundLeft={roundLeft}
+      roundRight={roundRight}
       type="button"
       title={title}
       onMouseOver={() => setExpanded(true)}

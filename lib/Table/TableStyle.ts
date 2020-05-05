@@ -4,6 +4,7 @@ import { computed } from "mobx";
 import Color from "terriajs-cesium/Source/Core/Color";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
+import createColorForIdTransformer from "../Core/createColorForIdTransformer";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import ColorMap from "../Map/ColorMap";
@@ -28,7 +29,8 @@ import ColorPalette from "./ColorPalette";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
 
-const DEFAULT_COLOR = "yellow";
+const getColorForId = createColorForIdTransformer();
+const defaultColor = "yellow";
 const DEFAULT_FINAL_DURATION_SECONDS = 3600 * 24 - 1; // one day less a second, if there is only one date.
 
 interface TableModel extends Model<TableTraits> {
@@ -404,13 +406,16 @@ export default class TableStyle {
       });
     } else {
       // No column to color by, so use the same color for everything.
-      const color =
-        colorTraits.nullColor !== undefined
-          ? Color.fromCssColorString(colorTraits.nullColor)
-          : this.binColors.length > 0
-          ? this.binColors[0]
-          : Color.fromCssColorString(DEFAULT_COLOR);
-      return new ConstantColorMap(color);
+      let color = Color.fromCssColorString(defaultColor);
+      const colorId = this.tableModel.uniqueId || this.tableModel.name;
+      if (colorTraits.nullColor) {
+        color = Color.fromCssColorString(colorTraits.nullColor);
+      } else if (this.binColors.length > 0) {
+        color = this.binColors[0];
+      } else if (colorId) {
+        color = Color.fromCssColorString(getColorForId(colorId));
+      }
+      return new ConstantColorMap(color, this.tableModel.name);
     }
   }
 

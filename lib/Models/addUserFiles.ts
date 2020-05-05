@@ -11,7 +11,7 @@ import TerriaError from "../Core/TerriaError";
 import isDefined from "../Core/isDefined";
 
 interface FileType {
-  value: String;
+  value: string;
 }
 
 export default function addUserFiles(

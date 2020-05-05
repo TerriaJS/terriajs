@@ -1,14 +1,14 @@
 import { computed } from "mobx";
 import { createTransformer } from "mobx-utils";
 import isDefined from "../Core/isDefined";
+import ConstantColorMap from "../Map/ConstantColorMap";
 import DiscreteColorMap from "../Map/DiscreteColorMap";
 import EnumColorMap from "../Map/EnumColorMap";
+import TableMixin from "../ModelMixins/TableMixin";
 import createStratumInstance from "../Models/createStratumInstance";
-import CsvCatalogItem from "../Models/CsvCatalogItem";
 import LoadableStratum from "../Models/LoadableStratum";
 import { BaseModel } from "../Models/Model";
 import StratumFromTraits from "../Models/StratumFromTraits";
-import CsvCatalogItemTraits from "../Traits/CsvCatalogItemTraits";
 import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
 import TableChartStyleTraits, {
   TableChartLineStyleTraits
@@ -16,6 +16,7 @@ import TableChartStyleTraits, {
 import TableColorStyleTraits from "../Traits/TableColorStyleTraits";
 import TablePointSizeStyleTraits from "../Traits/TablePointSizeStyleTraits";
 import TableStyleTraits from "../Traits/TableStyleTraits";
+import TableTraits from "../Traits/TableTraits";
 import TableColumnType from "./TableColumnType";
 import TableStyle from "./TableStyle";
 import DiscreteTimeTraits from "../Traits/DiscreteTimeTraits";
@@ -24,15 +25,20 @@ import TableTimeStyleTraits from "../Traits/TableTimeStyleTraits";
 
 const DEFAULT_ID_COLUMN = "id";
 
+interface TableCatalogItem
+  extends InstanceType<ReturnType<typeof TableMixin>> {}
+
 export default class TableAutomaticStylesStratum extends LoadableStratum(
-  CsvCatalogItemTraits
+  TableTraits
 ) {
-  constructor(readonly catalogItem: CsvCatalogItem) {
+  constructor(readonly catalogItem: TableCatalogItem) {
     super();
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
-    return new TableAutomaticStylesStratum(newModel as CsvCatalogItem) as this;
+    return new TableAutomaticStylesStratum(
+      newModel as TableCatalogItem
+    ) as this;
   }
 
   @computed
@@ -74,8 +80,17 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
       });
     }
 
-    // This dataset isn't spatial, so try to find some columns to
-    // plot on a chart.
+    // This dataset isn't spatial, so see if we have a valid chart style
+    if (this.defaultChartStyle) {
+      return this.defaultChartStyle;
+    }
+
+    // Can't do much with this dataset.
+    return createStratumInstance(TableStyleTraits);
+  }
+
+  @computed
+  get defaultChartStyle(): StratumFromTraits<TableStyleTraits> | undefined {
     const scalarColumns = this.catalogItem.tableColumns.filter(
       column =>
         column.type === TableColumnType.scalar ||
@@ -94,9 +109,6 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
         })
       });
     }
-
-    // Can't do much with this dataset.
-    return createStratumInstance(TableStyleTraits);
   }
 
   @computed
@@ -151,13 +163,16 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
   );
 }
 
-class ColorStyleLegend extends LoadableStratum(LegendTraits) {
-  constructor(readonly catalogItem: CsvCatalogItem, readonly index: number) {
+export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
+  constructor(readonly catalogItem: TableCatalogItem, readonly index: number) {
     super();
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
-    return new ColorStyleLegend(newModel as CsvCatalogItem, this.index) as this;
+    return new ColorStyleLegend(
+      newModel as TableCatalogItem,
+      this.index
+    ) as this;
   }
 
   @computed
@@ -180,8 +195,9 @@ class ColorStyleLegend extends LoadableStratum(LegendTraits) {
       return this._createLegendItemsFromDiscreteColorMap(activeStyle, colorMap);
     } else if (colorMap instanceof EnumColorMap) {
       return this._createLegendItemsFromEnumColorMap(activeStyle, colorMap);
+    } else if (colorMap instanceof ConstantColorMap) {
+      return this._createLegendItemsFromConstantColorMap(activeStyle, colorMap);
     }
-
     return [];
   }
 
@@ -250,6 +266,18 @@ class ColorStyleLegend extends LoadableStratum(LegendTraits) {
         });
       })
       .concat(nullBin);
+  }
+
+  private _createLegendItemsFromConstantColorMap(
+    activeStyle: TableStyle,
+    colorMap: ConstantColorMap
+  ): StratumFromTraits<LegendItemTraits>[] {
+    return [
+      createStratumInstance(LegendItemTraits, {
+        color: colorMap.color.toCssColorString(),
+        title: colorMap.title
+      })
+    ];
   }
 
   private _formatValue(value: number): string {
