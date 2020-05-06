@@ -1,3 +1,5 @@
+import { TourPoint } from "../../ReactViewModels/defaultTourPoints";
+import isDefined from "../../Core/isDefined";
 import {
   RelativePosition,
   TOUR_WIDTH
@@ -6,6 +8,40 @@ export {
   RelativePosition,
   TOUR_WIDTH
 } from "../../ReactViewModels/defaultTourPoints";
+
+export function getOffsetsFromTourPoint(tourPoint: TourPoint) {
+  // Offsets
+  const offsetTop = isDefined(tourPoint?.offsetTop) ? tourPoint.offsetTop : 15;
+  const offsetLeft = isDefined(tourPoint?.offsetLeft)
+    ? tourPoint.offsetLeft
+    : 0;
+
+  // TODO(wing): caret could easily be smarter than manually positioning it,
+  // take the rectangle from the highlighted component and set the base offset
+  // around that. manually position it for now
+  const caretOffsetTop = isDefined(tourPoint?.caretOffsetTop)
+    ? tourPoint.caretOffsetTop
+    : -3;
+  const caretOffsetLeft = isDefined(tourPoint?.caretOffsetLeft)
+    ? tourPoint.caretOffsetLeft
+    : 20;
+
+  // todo: more stuff that could be structured better
+  const indicatorOffsetTop = isDefined(tourPoint?.indicatorOffsetTop)
+    ? tourPoint.indicatorOffsetTop
+    : -20;
+  const indicatorOffsetLeft = isDefined(tourPoint?.indicatorOffsetLeft)
+    ? tourPoint.indicatorOffsetLeft
+    : 3;
+  return {
+    offsetTop,
+    offsetLeft,
+    caretOffsetTop,
+    caretOffsetLeft,
+    indicatorOffsetTop,
+    indicatorOffsetLeft
+  };
+}
 
 interface HelpScreen {
   rectangle: DOMRect;

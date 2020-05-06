@@ -8,7 +8,21 @@ export enum RelativePosition {
 
 export const TOUR_WIDTH = 345;
 
-export type TourPoint = any;
+export interface TourPoint {
+  appRefName: string;
+  priority: number;
+  caretOffsetTop?: number;
+  caretOffsetLeft?: number;
+  indicatorOffsetTop?: number;
+  indicatorOffsetLeft?: number;
+  offsetTop?: number;
+  offsetLeft?: number;
+  positionTop?: RelativePosition;
+  positionLeft?: RelativePosition;
+  content: string;
+}
+
+// use appRefName as the ID
 export const defaultTourPoints = [
   {
     appRefName: "ExploreMapDataButton",

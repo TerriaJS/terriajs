@@ -18,7 +18,6 @@ import { observer } from "mobx-react";
 // import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 
 import Caret from "../Generic/Caret";
-import isDefined from "../../Core/isDefined";
 import Box from "../../Styled/Box";
 import Spacing from "../../Styled/Spacing";
 import Button, { RawButton } from "../../Styled/Button";
@@ -26,27 +25,17 @@ import Text from "../../Styled/Text";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 
 import {
-  TOUR_WIDTH,
+  getOffsetsFromTourPoint,
   calculateLeftPosition,
   calculateTopPosition
 } from "./guidance-helpers.ts";
 // import GuidanceDot from "./GuidanceDot.jsx";
 import GuidanceOverlay from "./GuidanceOverlay.jsx";
+import ProgressDot from "./ProgressDot.jsx";
+import TourExplanationBox, {
+  TourExplanationBoxZIndex
+} from "./TourExplanationBox.jsx";
 // import { buildShareLink } from "../Map/Panels/SharePanel/BuildShareLink";
-
-const ProgressDot = styled.div`
-  display: inline-block;
-  box-sizing: border-box;
-  height: 7px;
-  width: 7px;
-  border: 1px solid ${p => p.theme.colorPrimary};
-
-  background-color: ${p =>
-    p.count < p.countStep ? p.theme.colorPrimary : "transparent"};
-
-  margin-left: 8px;
-  border-radius: 50%;
-`;
 
 /**
  * Indicator bar/"dots" on progress of tour.
@@ -68,52 +57,6 @@ GuidanceProgress.propTypes = {
   step: PropTypes.number.isRequired
 };
 
-const TourExplanationBox = styled(Box)`
-  position: absolute;
-  width: ${TOUR_WIDTH}px;
-  // background-color: $modal-bg;
-  z-index: 10000;
-  background: white;
-  color: $text-darker;
-
-  min-height: 136px;
-  border-radius: 4px;
-
-  box-shadow: 0 6px 6px 0 rgba(0, 0, 0, 0.12), 0 10px 20px 0 rgba(0, 0, 0, 0.05);
-
-  // extend parseCustomMarkdownToReact() to inject our <Text /> with relevant props to cut down on # of styles?
-  // Force styling from markdown?
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    margin: 0;
-    padding: 0;
-  }
-  h1,
-  h2,
-  h3 {
-    margin-bottom: ${p => p.theme.spacing * 3}px;
-    font-size: 16px;
-    font-weight: bold;
-  }
-  h4,
-  h5,
-  h6 {
-    font-size: 15px;
-  }
-
-  p {
-    margin: 0;
-    margin-bottom: ${p => p.theme.spacing}px;
-  }
-  p:last-child {
-    margin-bottom: 0;
-  }
-`;
-
 const TourIndicator = styled(RawButton)`
   position: absolute;
   top: -10px;
@@ -134,9 +77,40 @@ const TourExplanation = ({
   onSkip,
   currentStep,
   maxSteps,
+  active,
   children
 }) => {
   const { t } = useTranslation();
+  if (!active) {
+    // Tour explanation requires the various positioning even if only just
+    // showing the "tour indicator" button, as it is offset against the caret
+    // which is offset against the original box
+    return (
+      <Box
+        positionAbsolute
+        style={{
+          zIndex: TourExplanationBoxZIndex - 1,
+          top: topStyle,
+          left: leftStyle
+        }}
+      >
+        <Box
+          positionAbsolute
+          style={{
+            top: `${caretOffsetTop}px`,
+            left: `${caretOffsetLeft}px`
+          }}
+        >
+          <TourIndicator
+            style={{
+              top: `${indicatorOffsetTop}px`,
+              left: `${indicatorOffsetLeft}px`
+            }}
+          />
+        </Box>
+      </Box>
+    );
+  }
   return (
     <TourExplanationBox
       paddedRatio={3}
@@ -146,21 +120,12 @@ const TourExplanation = ({
         left: leftStyle
       }}
     >
-      <Box
-        positionAbsolute
+      <Caret
         style={{
           top: `${caretOffsetTop}px`,
           left: `${caretOffsetLeft}px`
         }}
-      >
-        <Caret />
-        <TourIndicator
-          style={{
-            top: `${indicatorOffsetTop}px`,
-            left: `${indicatorOffsetLeft}px`
-          }}
-        />
-      </Box>
+      />
       <Text light medium textDarker>
         <Text light medium noFontSize textDarker>
           {children}
@@ -192,79 +157,46 @@ TourExplanation.propTypes = {
   onNext: PropTypes.func,
   onSkip: PropTypes.func,
   topStyle: PropTypes.string,
-  leftStyle: PropTypes.string
+  leftStyle: PropTypes.string,
+  active: PropTypes.bool
 };
-export const TourGrouping = observer(({ viewState }) => {
-  // const [showGuidance, setShowGuidance] = useState(false);
-  const showPortal = viewState.currentTourIndex !== -1;
 
-  useEffect(() =>
-    autorun(() => {
-      if (showPortal && viewState.topElement !== GuidancePortalDisplayName) {
-        viewState.setTopElement(GuidancePortalDisplayName);
-      }
-    })
-  );
+export const TourGrouping = observer(({ viewState }) =>
+  viewState.tourPoints.map((tourPoint, index) => {
+    const tourPointRef = viewState.appRefs.get(tourPoint?.appRefName);
 
-  const currentTourPoint = viewState.currentTourPoint;
-  const currentTourPointRef = viewState.appRefs.get(
-    currentTourPoint?.appRefName
-  );
+    const currentRectangle = tourPointRef?.current?.getBoundingClientRect?.();
+    const {
+      offsetTop,
+      offsetLeft,
+      caretOffsetTop,
+      caretOffsetLeft,
+      indicatorOffsetTop,
+      indicatorOffsetLeft
+    } = getOffsetsFromTourPoint(tourPoint);
 
-  const currentRectangle = currentTourPointRef?.current?.getBoundingClientRect?.();
-  if (!currentRectangle) {
-    if (showPortal) {
-      console.log(
-        "Tried to show guidance portal with no rectangle available from ref"
-      );
-    }
-    return null;
-  }
+    // To match old HelpScreenWindow / HelpOverlay API
+    const currentScreen = {
+      rectangle: currentRectangle,
+      positionTop:
+        tourPoint?.positionTop || viewState.relativePosition.RECT_BOTTOM,
+      positionLeft:
+        tourPoint?.positionLeft || viewState.relativePosition.RECT_LEFT,
+      offsetTop: offsetTop,
+      offsetLeft: offsetLeft
+    };
 
-  // To match old HelpScreenWindow / HelpOverlay API
-  const currentScreen = {
-    // rectangle: currentScreenComponent?.current?.getBoundingClientRect?.()
-    rectangle: currentRectangle,
-    positionTop:
-      currentTourPoint?.positionTop || viewState.relativePosition.RECT_BOTTOM,
-    positionLeft:
-      currentTourPoint?.positionLeft || viewState.relativePosition.RECT_LEFT,
-    offsetTop: isDefined(currentTourPoint?.offsetTop)
-      ? currentTourPoint.offsetTop
-      : 15,
-    offsetLeft: isDefined(currentTourPoint?.offsetLeft)
-      ? currentTourPoint.offsetLeft
-      : 0
-  };
+    const positionLeft = calculateLeftPosition(currentScreen);
+    const positionTop = calculateTopPosition(currentScreen);
 
-  const positionLeft = calculateLeftPosition(currentScreen);
-  const positionTop = calculateTopPosition(currentScreen);
+    const currentTourIndex = viewState.currentTourIndex;
+    const maxSteps = viewState.tourPoints.length;
 
-  // TODO(wing): caret could easily be smarter than manually positioning it,
-  // take the rectangle from the highlighted component and set the base offset
-  // around that. manually position it for now
-  const caretOffsetTop = isDefined(currentTourPoint?.caretOffsetTop)
-    ? currentTourPoint.caretOffsetTop
-    : -3;
-  const caretOffsetLeft = isDefined(currentTourPoint?.caretOffsetLeft)
-    ? currentTourPoint.caretOffsetLeft
-    : 20;
-
-  // todo: more stuff that could be structured better
-  const indicatorOffsetTop = isDefined(currentTourPoint?.indicatorOffsetTop)
-    ? currentTourPoint.indicatorOffsetTop
-    : -20;
-  const indicatorOffsetLeft = isDefined(currentTourPoint?.indicatorOffsetLeft)
-    ? currentTourPoint.indicatorOffsetLeft
-    : 3;
-
-  const currentTourIndex = viewState.currentTourIndex;
-  const maxSteps = viewState.tourPoints.length;
-
-  if (!showPortal || !currentTourPoint) return null;
-  return (
-    <>
+    if (!tourPoint) return null;
+    return (
       <TourExplanation
+        key={tourPoint.appRefName}
+        active={currentTourIndex === index}
         currentStep={currentTourIndex + 1}
         maxSteps={maxSteps}
         onNext={() => viewState.nextTourPoint()}
@@ -276,20 +208,33 @@ export const TourGrouping = observer(({ viewState }) => {
         indicatorOffsetTop={indicatorOffsetTop}
         indicatorOffsetLeft={indicatorOffsetLeft}
       >
-        {parseCustomMarkdownToReact(currentTourPoint?.content)}
+        {parseCustomMarkdownToReact(tourPoint?.content)}
       </TourExplanation>
-    </>
-  );
-});
+    );
+  })
+);
 
 export const GuidancePortalDisplayName = "GuidancePortal";
 // TODO: process tourpoints and take out nonexistent refs?
 export const GuidancePortal = observer(({ viewState }) => {
+  const showPortal = viewState.currentTourIndex !== -1;
+  useEffect(() =>
+    autorun(() => {
+      if (showPortal && viewState.topElement !== GuidancePortalDisplayName) {
+        viewState.setTopElement(GuidancePortalDisplayName);
+      }
+    })
+  );
   const currentTourPoint = viewState.currentTourPoint;
   const currentTourPointRef = viewState.appRefs.get(
     currentTourPoint?.appRefName
   );
   const currentRectangle = currentTourPointRef?.current?.getBoundingClientRect?.();
+  if (!currentRectangle && showPortal) {
+    console.log(
+      "Tried to show guidance portal with no rectangle available from ref"
+    );
+  }
 
   return (
     <>
@@ -300,7 +245,7 @@ export const GuidancePortal = observer(({ viewState }) => {
           onCancel={() => viewState.nextTourPoint()}
         />
       )}
-      <TourGrouping viewState={viewState} />
+      {showPortal && <TourGrouping viewState={viewState} />}
     </>
   );
 });

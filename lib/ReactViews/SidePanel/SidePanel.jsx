@@ -136,9 +136,9 @@ const SidePanel = observer(
               animationDuration={250}
               btnText={t("addData.btnHide")}
             />
-            {/* <button onClick={() => this.props.viewState.setTourIndex(0)}>
+            <button onClick={() => this.props.viewState.setTourIndex(0)}>
               <Icon glyph={Icon.GLYPHS.tour} /> {"Take the tour"}{" "}
-            </button> */}
+            </button>
             <SearchBoxAndResults
               viewState={this.props.viewState}
               terria={this.props.terria}

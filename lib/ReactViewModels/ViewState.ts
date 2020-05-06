@@ -134,7 +134,7 @@ export default class ViewState {
   nextTourPoint() {
     const totalTourPoints = this.tourPoints?.length;
     const currentIndex = this.currentTourIndex;
-    if (currentIndex === totalTourPoints) {
+    if (currentIndex === totalTourPoints - 1) {
       this.currentTourIndex = -1;
     } else {
       this.currentTourIndex = currentIndex + 1;
