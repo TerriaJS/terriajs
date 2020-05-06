@@ -25,18 +25,18 @@ export interface TourPoint {
 // use appRefName as the ID
 export const defaultTourPoints = [
   {
-    appRefName: "ExploreMapDataButton",
-    priority: 10,
-    offsetLeft: 70,
-    content:
-      "## Explore map data\n\nBrowse the catalogue of available data and add it to the map here. You can add multiple datasets at any one time, and you’ll see them listed down below in the Workbench."
-  },
-  {
     appRefName: "LocationSearchInput",
     priority: 20,
     offsetLeft: 225,
     content:
       "## Location search\n\nEnter a locality or address to easily locate a point of interest on the map."
+  },
+  {
+    appRefName: "ExploreMapDataButton",
+    priority: 10,
+    offsetLeft: 70,
+    content:
+      "## Explore map data\n\nBrowse the catalogue of available data and add it to the map here. You can add multiple datasets at any one time, and you’ll see them listed down below in the Workbench."
   },
   {
     appRefName: "MenuBarMapSettingsButton",

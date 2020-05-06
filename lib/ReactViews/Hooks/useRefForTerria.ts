@@ -5,7 +5,7 @@ import ViewState from "../../ReactViewModels/ViewState";
 // but it makes most sense to run it this way for now
 export function useRefForTerria(
   refName: string,
-  viewState: ViewState // todo: reach into store without passing hook(?)
+  viewState: ViewState // todo: reach into store without passing viewstate(?)
 ): Ref<HTMLElement> {
   const ref = useRef<HTMLElement>(null);
 

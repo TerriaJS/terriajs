@@ -175,64 +175,83 @@ TourExplanation.propTypes = {
   active: PropTypes.bool
 };
 
-export const TourGrouping = observer(({ viewState }) =>
-  viewState.tourPoints.map((tourPoint, index) => {
-    const tourPointRef = viewState.appRefs.get(tourPoint?.appRefName);
-
-    const currentRectangle = tourPointRef?.current?.getBoundingClientRect?.();
-    const {
-      offsetTop,
-      offsetLeft,
-      caretOffsetTop,
-      caretOffsetLeft,
-      indicatorOffsetTop,
-      indicatorOffsetLeft
-    } = getOffsetsFromTourPoint(tourPoint);
-
-    // To match old HelpScreenWindow / HelpOverlay API
-    const currentScreen = {
-      rectangle: currentRectangle,
-      positionTop:
-        tourPoint?.positionTop || viewState.relativePosition.RECT_BOTTOM,
-      positionLeft:
-        tourPoint?.positionLeft || viewState.relativePosition.RECT_LEFT,
-      offsetTop: offsetTop,
-      offsetLeft: offsetLeft
-    };
-
-    const positionLeft = calculateLeftPosition(currentScreen);
-    const positionTop = calculateTopPosition(currentScreen);
-
-    const currentTourIndex = viewState.currentTourIndex;
-    const maxSteps = viewState.tourPoints.length;
-
-    if (!tourPoint) return null;
-    return (
-      <TourExplanation
-        key={tourPoint.appRefName}
-        active={currentTourIndex === index}
-        currentStep={currentTourIndex + 1}
-        maxSteps={maxSteps}
-        setTourIndex={idx => viewState.setTourIndex(idx)}
-        onTourIndicatorClick={() => viewState.setTourIndex(index)}
-        onNext={() => viewState.nextTourPoint()}
-        onSkip={() => viewState.setTourIndex(-1)}
-        isLastTourPoint={index === viewState.tourPoints.length - 1}
-        topStyle={`${positionTop}px`}
-        leftStyle={`${positionLeft}px`}
-        caretOffsetTop={caretOffsetTop}
-        caretOffsetLeft={caretOffsetLeft}
-        indicatorOffsetTop={indicatorOffsetTop}
-        indicatorOffsetLeft={indicatorOffsetLeft}
-      >
-        {parseCustomMarkdownToReact(tourPoint?.content)}
-      </TourExplanation>
+export const TourGrouping = observer(({ viewState, tourPoints }) => {
+  const currentTourPoint = tourPoints[viewState.currentTourIndex];
+  const currentTourPointRef = viewState.appRefs.get(
+    currentTourPoint?.appRefName
+  );
+  const currentRectangle = currentTourPointRef?.current?.getBoundingClientRect?.();
+  if (!currentRectangle) {
+    console.log(
+      "Tried to show guidance portal with no rectangle available from ref"
     );
-  })
-);
+  }
+  return (
+    <>
+      {currentRectangle && (
+        <TourOverlay
+          rectangle={currentRectangle}
+          onCancel={() => viewState.nextTourPoint()}
+        />
+      )}
+      {tourPoints.map((tourPoint, index) => {
+        const tourPointRef = viewState.appRefs.get(tourPoint?.appRefName);
+
+        const currentRectangle = tourPointRef?.current?.getBoundingClientRect?.();
+        const {
+          offsetTop,
+          offsetLeft,
+          caretOffsetTop,
+          caretOffsetLeft,
+          indicatorOffsetTop,
+          indicatorOffsetLeft
+        } = getOffsetsFromTourPoint(tourPoint);
+
+        // To match old HelpScreenWindow / HelpOverlay API
+        const currentScreen = {
+          rectangle: currentRectangle,
+          positionTop:
+            tourPoint?.positionTop || viewState.relativePosition.RECT_BOTTOM,
+          positionLeft:
+            tourPoint?.positionLeft || viewState.relativePosition.RECT_LEFT,
+          offsetTop: offsetTop,
+          offsetLeft: offsetLeft
+        };
+
+        const positionLeft = calculateLeftPosition(currentScreen);
+        const positionTop = calculateTopPosition(currentScreen);
+
+        const currentTourIndex = viewState.currentTourIndex;
+        const maxSteps = tourPoints.length;
+
+        if (!tourPoint) return null;
+        return (
+          <TourExplanation
+            key={tourPoint.appRefName}
+            active={currentTourIndex === index}
+            currentStep={currentTourIndex + 1}
+            maxSteps={maxSteps}
+            setTourIndex={idx => viewState.setTourIndex(idx)}
+            onTourIndicatorClick={() => viewState.setTourIndex(index)}
+            onNext={() => viewState.nextTourPoint()}
+            onSkip={() => viewState.setTourIndex(-1)}
+            isLastTourPoint={index === tourPoints.length - 1}
+            topStyle={`${positionTop}px`}
+            leftStyle={`${positionLeft}px`}
+            caretOffsetTop={caretOffsetTop}
+            caretOffsetLeft={caretOffsetLeft}
+            indicatorOffsetTop={indicatorOffsetTop}
+            indicatorOffsetLeft={indicatorOffsetLeft}
+          >
+            {parseCustomMarkdownToReact(tourPoint?.content)}
+          </TourExplanation>
+        );
+      })}
+    </>
+  );
+});
 
 export const GuidancePortalDisplayName = "GuidancePortal";
-// TODO: process tourpoints and take out nonexistent refs?
 export const GuidancePortal = observer(({ viewState }) => {
   const showPortal = viewState.currentTourIndex !== -1;
   useEffect(() =>
@@ -242,27 +261,15 @@ export const GuidancePortal = observer(({ viewState }) => {
       }
     })
   );
-  const currentTourPoint = viewState.currentTourPoint;
-  const currentTourPointRef = viewState.appRefs.get(
-    currentTourPoint?.appRefName
-  );
-  const currentRectangle = currentTourPointRef?.current?.getBoundingClientRect?.();
-  if (!currentRectangle && showPortal) {
-    console.log(
-      "Tried to show guidance portal with no rectangle available from ref"
-    );
+  if (!showPortal) {
+    return null;
   }
 
   return (
-    <>
-      {currentRectangle && (
-        <TourOverlay
-          rectangle={currentRectangle}
-          onCancel={() => viewState.nextTourPoint()}
-        />
-      )}
-      {showPortal && <TourGrouping viewState={viewState} />}
-    </>
+    <TourGrouping
+      viewState={viewState}
+      tourPoints={viewState.tourPointsWithValidRefs}
+    />
   );
 });
 

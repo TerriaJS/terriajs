@@ -1,5 +1,7 @@
+// helpers for the app Tour in general
 import { TourPoint } from "../../ReactViewModels/defaultTourPoints";
 import isDefined from "../../Core/isDefined";
+
 import {
   RelativePosition,
   TOUR_WIDTH
@@ -9,6 +11,7 @@ export {
   TOUR_WIDTH
 } from "../../ReactViewModels/defaultTourPoints";
 
+// We need isDefined across these as we are dealing with numbers, 0 is falsy
 export function getOffsetsFromTourPoint(tourPoint: TourPoint) {
   // Offsets
   const offsetTop = isDefined(tourPoint?.offsetTop) ? tourPoint.offsetTop : 15;

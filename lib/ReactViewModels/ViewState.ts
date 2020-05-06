@@ -117,14 +117,20 @@ export default class ViewState {
 
   @observable tourPoints: TourPoint[] = defaultTourPoints;
   @observable appRefs: Map<string, Ref<HTMLElement>> = new Map();
-  @observable currentTourId: string | undefined = undefined;
   @observable currentTourIndex: number = -1;
 
-  get currentTourPoint() {
-    const sortedTourPoints = this.tourPoints.sort((a, b) => {
-      return a.priority - b.priority;
-    });
-    return sortedTourPoints[this.currentTourIndex];
+  get tourPointsWithValidRefs() {
+    // should viewstate.ts reach into document? seems unavoidable if we want
+    // this to be the true source of tourPoints.
+    return this.tourPoints
+      .sort((a, b) => {
+        return a.priority - b.priority;
+      })
+      .filter(tourPoint =>
+        document?.contains(
+          (<any>this.appRefs).get(tourPoint.appRefName)?.current
+        )
+      );
   }
   @action
   setTourIndex(index: number) {
@@ -132,7 +138,7 @@ export default class ViewState {
   }
   @action
   nextTourPoint() {
-    const totalTourPoints = this.tourPoints?.length;
+    const totalTourPoints = this.tourPointsWithValidRefs.length;
     const currentIndex = this.currentTourIndex;
     if (currentIndex === totalTourPoints - 1) {
       this.currentTourIndex = -1;
@@ -143,7 +149,7 @@ export default class ViewState {
 
   @action
   updateAppRef(refName: string, ref: Ref<HTMLElement>) {
-    if (!this.appRefs.get(refName)) {
+    if (!this.appRefs.get(refName) || this.appRefs.get(refName) !== ref) {
       this.appRefs.set(refName, ref);
     }
   }
