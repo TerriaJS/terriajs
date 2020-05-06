@@ -96,6 +96,7 @@ Change Log
 * Fix bug that caused contents on the video panel of the help UI to overlay the actual video
 * Overhauled location search to be a dropdown instead of list of results
 * Fixed bug causing full app crash or viewer zoom refresh when using 3D view and changing settings or changing the terrain provider.
+* Implements `SensorObservationServiceCatalogItem`.
 * Add support for styling CSVs using a region mapped or text columns.
 * Update Compass UI to include larger rotation target, remove sass from compass
 * Link Compass "help" button to `navigation` HelpPanelItem (requires generalisation later down the track)
@@ -111,7 +112,10 @@ Change Log
 * Fixed MapIconButton & FeedbackButton proptypes being defined incorrectly
 * Implement SenapsLocationsCatalogItem
 * Update papaparse and improve handling for retrieveing CSVs via chunking that have no ContentLenth header
-
+#### mobx-28
+* Fix SASS exports causing some build errors in certain webpack conditions
+#### mobx-29
+* (placeholder)
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
