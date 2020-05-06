@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { RawButton } from "../../Styled/Button";
 
-export const ProgressDot = styled(RawButton)`
+export const TourProgressDot = styled(RawButton)`
   display: inline-block;
   box-sizing: border-box;
   height: 7px;
@@ -14,4 +14,4 @@ export const ProgressDot = styled(RawButton)`
   border-radius: 50%;
 `;
 
-export default ProgressDot;
+export default TourProgressDot;

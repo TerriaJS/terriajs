@@ -27,7 +27,7 @@ import StoryPanel from "./../Story/StoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 
 import SatelliteGuide from "../Guide/SatelliteGuide";
-import GuidancePortal from "../Guidance/GuidancePortal";
+import TourPortal from "../Tour/TourPortal";
 // import WelcomeMessage from "../WelcomeMessage/WelcomeMessage";
 
 import { Small, Medium } from "../Generic/Responsive";
@@ -192,7 +192,7 @@ const StandardUserInterface = observer(
               this.props.terria.configParameters.experimentalFeatures
             }
           />
-          <GuidancePortal terria={terria} viewState={this.props.viewState} />
+          <TourPortal terria={terria} viewState={this.props.viewState} />
           <div className={Styles.storyWrapper}>
             {/* <WelcomeMessage viewState={this.props.viewState} /> */}
             <div

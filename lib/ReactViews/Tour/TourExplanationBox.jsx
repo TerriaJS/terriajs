@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Box from "../../Styled/Box";
-import { TOUR_WIDTH } from "./guidance-helpers.ts";
+import { TOUR_WIDTH } from "./tour-helpers.ts";
 // TODO: make relative to app z-index
 export const TourExplanationBoxZIndex = 10000;
 

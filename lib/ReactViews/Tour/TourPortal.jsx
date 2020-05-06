@@ -1,5 +1,5 @@
 /**
- * GuidancePortal.jsx
+ * TourPortal.jsx
  * Framework for tour
  *
  * Not a real "portal" in the sense of a react portal, even though it
@@ -25,9 +25,9 @@ import {
   getOffsetsFromTourPoint,
   calculateLeftPosition,
   calculateTopPosition
-} from "./guidance-helpers.ts";
-import GuidanceOverlay from "./GuidanceOverlay.jsx";
-import ProgressDot from "./ProgressDot.jsx";
+} from "./tour-helpers.ts";
+import TourOverlay from "./TourOverlay.jsx";
+import TourProgressDot from "./TourProgressDot.jsx";
 import TourIndicator from "./TourIndicator.jsx";
 import TourExplanationBox, {
   TourExplanationBoxZIndex
@@ -37,14 +37,14 @@ import TourExplanationBox, {
  * Indicator bar/"dots" on progress of tour.
  * Fill in indicator dot depending on progress determined from count & max count
  */
-const GuidanceProgress = ({ max, step, setTourIndex }) => {
+const TourProgress = ({ max, step, setTourIndex }) => {
   const countArray = Array.from(Array(max).keys()).map(e => e++);
   const countStep = step;
   return (
     <Box centered>
       {countArray.map(count => {
         return (
-          <ProgressDot
+          <TourProgressDot
             onClick={() => setTourIndex(count)}
             key={count}
             active={count < countStep}
@@ -54,7 +54,7 @@ const GuidanceProgress = ({ max, step, setTourIndex }) => {
     </Box>
   );
 };
-GuidanceProgress.propTypes = {
+TourProgress.propTypes = {
   setTourIndex: PropTypes.func.isRequired,
   max: PropTypes.number.isRequired,
   step: PropTypes.number.isRequired
@@ -130,7 +130,7 @@ const TourExplanation = ({
         </Text>
         <Spacing bottom={3} />
         <Box centered justifySpaceBetween>
-          <GuidanceProgress
+          <TourProgress
             setTourIndex={setTourIndex}
             step={currentStep}
             max={maxSteps}
@@ -256,7 +256,7 @@ export const GuidancePortal = observer(({ viewState }) => {
   return (
     <>
       {currentRectangle && (
-        <GuidanceOverlay
+        <TourOverlay
           rectangle={currentRectangle}
           onCancel={() => viewState.nextTourPoint()}
         />

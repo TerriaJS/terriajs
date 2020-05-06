@@ -9,7 +9,7 @@ import defined from "terriajs-cesium/Source/Core/defined";
 /**
  * Re-adapted from ObscureOverlay.jsx to be more general and not tied to viewState
  *
- * GuidancePortal.jsx should be the 'wrapper'/smart component
+ * TourPortal.jsx should be the 'wrapper'/smart component
  *
  * This provides five panels. Four are rectangle elements that go above, left, right, and below the highlighted element
  * to grey out the rest of the screen. A fifth panel, which is clear, covers the whole screen to prevent the highlighted
@@ -20,7 +20,7 @@ import defined from "terriajs-cesium/Source/Core/defined";
 // propTypes: {
 //   helpViewState: PropTypes.object;
 // }
-const GuidanceOverlay = ({ rectangle, onCancel }) => {
+const TourOverlay = ({ rectangle, onCancel }) => {
   const advance = () => {
     // this.props.helpViewState.advance = true;
   };
@@ -103,9 +103,9 @@ const GuidanceOverlay = ({ rectangle, onCancel }) => {
     </div>
   );
 };
-GuidanceOverlay.propTypes = {
+TourOverlay.propTypes = {
   rectangle: PropTypes.object.isRequired,
   onCancel: PropTypes.func.isRequired
 };
 
-module.exports = GuidanceOverlay;
+module.exports = TourOverlay;
