@@ -13,7 +13,6 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { autorun } from "mobx";
 import { observer } from "mobx-react";
-// import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 
 import Caret from "../Generic/Caret";
 import Box from "../../Styled/Box";
@@ -259,7 +258,6 @@ export const GuidancePortal = observer(({ viewState }) => {
       {currentRectangle && (
         <GuidanceOverlay
           rectangle={currentRectangle}
-          // onCancel={() => viewState.setTourIndex(-1)}
           onCancel={() => viewState.nextTourPoint()}
         />
       )}
@@ -274,24 +272,3 @@ GuidancePortal.propTypes = {
 };
 
 export default withTheme(GuidancePortal);
-
-// const GuidancePortalOverlay = styled(Box)`
-//   position: fixed;
-//   width: 100%;
-//   height: 100%;
-//   background: black;
-//   z-index: 1000;
-//   opacity: 0.45;
-
-//   display: none;
-// `;
-// <GuidancePortalOverlay
-// // className={
-// //   viewState.topElement === GuidancePortalDisplayName && "top-element"
-// // }
-// >
-//   <GuidanceDot onClick={() => setShowGuidance(!showGuidance)} />
-//   {showGuidance && <TourBox>{children}</TourBox>}
-
-//   <Button onClick={() => viewState.setTourIndex(-1)}>Exit tour</Button>
-// </GuidancePortalOverlay>
