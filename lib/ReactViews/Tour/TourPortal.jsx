@@ -8,13 +8,14 @@
  *
  */
 import React, { useEffect } from "react";
-import { withTheme } from "styled-components";
+import { withTheme, useTheme } from "styled-components";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { autorun } from "mobx";
 import { observer } from "mobx-react";
 
 import Caret from "../Generic/Caret";
+import CloseButton from "../Generic/CloseButton";
 import Box from "../../Styled/Box";
 import Spacing from "../../Styled/Spacing";
 import Button, { RawButton } from "../../Styled/Button";
@@ -29,6 +30,7 @@ import {
 import TourOverlay from "./TourOverlay.jsx";
 import TourProgressDot from "./TourProgressDot.jsx";
 import TourIndicator from "./TourIndicator.jsx";
+import TourPrefaceBox from "./TourPrefaceBox.jsx";
 import TourExplanationBox, {
   TourExplanationBoxZIndex
 } from "./TourExplanationBox.jsx";
@@ -117,6 +119,7 @@ const TourExplanation = ({
         top: topStyle,
         left: leftStyle
       }}
+      A
     >
       <Caret
         style={{
@@ -175,7 +178,7 @@ TourExplanation.propTypes = {
   active: PropTypes.bool
 };
 
-export const TourGrouping = observer(({ viewState, tourPoints }) => {
+const TourGrouping = observer(({ viewState, tourPoints }) => {
   const currentTourPoint = tourPoints[viewState.currentTourIndex];
   const currentTourPointRef = viewState.appRefs.get(
     currentTourPoint?.appRefName
@@ -234,7 +237,7 @@ export const TourGrouping = observer(({ viewState, tourPoints }) => {
             setTourIndex={idx => viewState.setTourIndex(idx)}
             onTourIndicatorClick={() => viewState.setTourIndex(index)}
             onNext={() => viewState.nextTourPoint()}
-            onSkip={() => viewState.setTourIndex(-1)}
+            onSkip={() => viewState.closeTour()}
             isLastTourPoint={index === tourPoints.length - 1}
             topStyle={`${positionTop}px`}
             leftStyle={`${positionLeft}px`}
@@ -251,18 +254,92 @@ export const TourGrouping = observer(({ viewState, tourPoints }) => {
   );
 });
 
-export const GuidancePortalDisplayName = "GuidancePortal";
-export const GuidancePortal = observer(({ viewState }) => {
+const TourPreface = ({ viewState }) => {
+  const { t } = useTranslation();
+  const theme = useTheme();
+  return (
+    <>
+      <TourPrefaceBox
+        onClick={() => viewState.closeTour()}
+        role="presentation"
+        aria-hidden="true"
+        pseudoBg
+      />
+      <TourExplanationBox
+        longer
+        paddedRatio={4}
+        column
+        style={{
+          right: 25,
+          bottom: 45
+        }}
+      >
+        <CloseButton
+          color={theme.darkWithOverlay}
+          // color={"green"}
+          topRight
+          onClick={() => viewState.closeTour()}
+        />
+        <Spacing bottom={2} />
+        <Text extraExtraLarge bold textDarker>
+          {t("tour.preface.title")}
+        </Text>
+        <Spacing bottom={3} />
+        <Text light medium textDarker>
+          {t("tour.preface.content")}
+        </Text>
+        <Spacing bottom={4} />
+        <Text medium>
+          <Box>
+            <Button
+              fullWidth
+              secondary
+              onClick={e => {
+                e.stopPropagation();
+                viewState.closeTour();
+              }}
+            >
+              {t("tour.preface.close")}
+            </Button>
+            <Spacing right={3} />
+            <Button
+              primary
+              fullWidth
+              textProps={{ noFontSize: true }}
+              onClick={e => {
+                e.stopPropagation();
+                viewState.setShowTour(true);
+              }}
+            >
+              {t("tour.preface.start")}
+            </Button>
+          </Box>
+        </Text>
+        <Spacing bottom={1} />
+      </TourExplanationBox>
+    </>
+  );
+};
+TourPreface.propTypes = {
+  viewState: PropTypes.object.isRequired
+};
+
+export const TourPortalDisplayName = "TourPortal";
+export const TourPortal = observer(({ viewState }) => {
   const showPortal = viewState.currentTourIndex !== -1;
+  const showPreface = showPortal && !viewState.showTour;
   useEffect(() =>
     autorun(() => {
-      if (showPortal && viewState.topElement !== GuidancePortalDisplayName) {
-        viewState.setTopElement(GuidancePortalDisplayName);
+      if (showPortal && viewState.topElement !== TourPortalDisplayName) {
+        viewState.setTopElement(TourPortalDisplayName);
       }
     })
   );
-  if (!showPortal) {
+  if (viewState.useSmallScreenInterface || !showPortal) {
     return null;
+  }
+  if (showPreface) {
+    return <TourPreface viewState={viewState} />;
   }
 
   return (
@@ -273,9 +350,9 @@ export const GuidancePortal = observer(({ viewState }) => {
   );
 });
 
-GuidancePortal.propTypes = {
+TourPortal.propTypes = {
   children: PropTypes.node.isRequired,
   viewState: PropTypes.object.isRequired
 };
 
-export default withTheme(GuidancePortal);
+export default withTheme(TourPortal);

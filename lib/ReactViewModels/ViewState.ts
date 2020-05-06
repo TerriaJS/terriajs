@@ -116,6 +116,7 @@ export default class ViewState {
    *  */
 
   @observable tourPoints: TourPoint[] = defaultTourPoints;
+  @observable showTour: boolean = false;
   @observable appRefs: Map<string, Ref<HTMLElement>> = new Map();
   @observable currentTourIndex: number = -1;
 
@@ -137,11 +138,20 @@ export default class ViewState {
     this.currentTourIndex = index;
   }
   @action
+  setShowTour(bool: boolean) {
+    this.showTour = bool;
+  }
+  @action
+  closeTour() {
+    this.currentTourIndex = -1;
+    this.showTour = false;
+  }
+  @action
   nextTourPoint() {
     const totalTourPoints = this.tourPointsWithValidRefs.length;
     const currentIndex = this.currentTourIndex;
-    if (currentIndex === totalTourPoints - 1) {
-      this.currentTourIndex = -1;
+    if (currentIndex >= totalTourPoints - 1) {
+      this.closeTour();
     } else {
       this.currentTourIndex = currentIndex + 1;
     }

@@ -6,11 +6,11 @@ export const TourExplanationBoxZIndex = 10000;
 
 export const TourExplanationBox = styled(Box)`
   position: absolute;
-  width: ${TOUR_WIDTH}px;
+  width: ${p => (p.longer ? `${TOUR_WIDTH + 55}` : `${TOUR_WIDTH}`)}px;
   // background-color: $modal-bg;
   z-index: ${TourExplanationBoxZIndex};
   background: white;
-  color: $text-darker;
+  // color: ${p => p.theme.textDarker};
 
   min-height: 136px;
   border-radius: 4px;
