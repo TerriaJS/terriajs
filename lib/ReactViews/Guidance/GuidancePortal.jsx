@@ -8,9 +8,7 @@
  *
  */
 import React, { useEffect } from "react";
-// import styled from "styled-components";
-import styled, { withTheme } from "styled-components";
-// import styled, { css } from "styled-components";
+import { withTheme } from "styled-components";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { autorun } from "mobx";
@@ -29,42 +27,39 @@ import {
   calculateLeftPosition,
   calculateTopPosition
 } from "./guidance-helpers.ts";
-// import GuidanceDot from "./GuidanceDot.jsx";
 import GuidanceOverlay from "./GuidanceOverlay.jsx";
 import ProgressDot from "./ProgressDot.jsx";
+import TourIndicator from "./TourIndicator.jsx";
 import TourExplanationBox, {
   TourExplanationBoxZIndex
 } from "./TourExplanationBox.jsx";
-// import { buildShareLink } from "../Map/Panels/SharePanel/BuildShareLink";
 
 /**
  * Indicator bar/"dots" on progress of tour.
  * Fill in indicator dot depending on progress determined from count & max count
  */
-const GuidanceProgress = props => {
-  const countArray = Array.from(Array(props.max).keys()).map(e => e++);
-  const countStep = props.step;
+const GuidanceProgress = ({ max, step, setTourIndex }) => {
+  const countArray = Array.from(Array(max).keys()).map(e => e++);
+  const countStep = step;
   return (
     <Box centered>
       {countArray.map(count => {
-        return <ProgressDot key={count} count={count} countStep={countStep} />;
+        return (
+          <ProgressDot
+            onClick={() => setTourIndex(count)}
+            key={count}
+            active={count < countStep}
+          />
+        );
       })}
     </Box>
   );
 };
 GuidanceProgress.propTypes = {
+  setTourIndex: PropTypes.func.isRequired,
   max: PropTypes.number.isRequired,
   step: PropTypes.number.isRequired
 };
-
-const TourIndicator = styled(RawButton)`
-  position: absolute;
-  top: -10px;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background-color: ${p => p.theme.colorPrimary};
-`;
 
 const TourExplanation = ({
   topStyle,
@@ -73,11 +68,14 @@ const TourExplanation = ({
   caretOffsetLeft,
   indicatorOffsetTop,
   indicatorOffsetLeft,
+  setTourIndex,
+  onTourIndicatorClick,
   onNext,
   onSkip,
   currentStep,
   maxSteps,
   active,
+  isLastTourPoint,
   children
 }) => {
   const { t } = useTranslation();
@@ -102,6 +100,7 @@ const TourExplanation = ({
           }}
         >
           <TourIndicator
+            onClick={onTourIndicatorClick}
             style={{
               top: `${indicatorOffsetTop}px`,
               left: `${indicatorOffsetLeft}px`
@@ -132,14 +131,27 @@ const TourExplanation = ({
         </Text>
         <Spacing bottom={3} />
         <Box centered justifySpaceBetween>
-          {/* <GuidanceProgress step={2} max={4} /> */}
-          <GuidanceProgress step={currentStep} max={maxSteps} />
+          <GuidanceProgress
+            setTourIndex={setTourIndex}
+            step={currentStep}
+            max={maxSteps}
+          />
           <Box centered>
-            <RawButton onClick={() => onSkip?.()}>{t("tour.end")}</RawButton>
-            <Spacing right={2} />
-            <Button onClick={() => onNext?.()} primary>
-              {t("general.next")}
-            </Button>
+            {isLastTourPoint ? (
+              <Button onClick={() => onSkip?.()} primary>
+                {t("tour.finish")}
+              </Button>
+            ) : (
+              <>
+                <RawButton onClick={() => onSkip?.()}>
+                  {t("tour.end")}
+                </RawButton>
+                <Spacing right={2} />
+                <Button onClick={() => onNext?.()} primary>
+                  {t("general.next")}
+                </Button>
+              </>
+            )}
           </Box>
         </Box>
       </Text>
@@ -154,10 +166,13 @@ TourExplanation.propTypes = {
   caretOffsetLeft: PropTypes.number,
   indicatorOffsetTop: PropTypes.number,
   indicatorOffsetLeft: PropTypes.number,
+  setTourIndex: PropTypes.func,
+  onTourIndicatorClick: PropTypes.func,
   onNext: PropTypes.func,
   onSkip: PropTypes.func,
   topStyle: PropTypes.string,
   leftStyle: PropTypes.string,
+  isLastTourPoint: PropTypes.bool,
   active: PropTypes.bool
 };
 
@@ -199,8 +214,11 @@ export const TourGrouping = observer(({ viewState }) =>
         active={currentTourIndex === index}
         currentStep={currentTourIndex + 1}
         maxSteps={maxSteps}
+        setTourIndex={idx => viewState.setTourIndex(idx)}
+        onTourIndicatorClick={() => viewState.setTourIndex(index)}
         onNext={() => viewState.nextTourPoint()}
         onSkip={() => viewState.setTourIndex(-1)}
+        isLastTourPoint={index === viewState.tourPoints.length - 1}
         topStyle={`${positionTop}px`}
         leftStyle={`${positionLeft}px`}
         caretOffsetTop={caretOffsetTop}

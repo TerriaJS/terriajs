@@ -7,7 +7,8 @@
     "skip" : "Skip"
   },
   "tour": {
-    "end": "Skip tour"
+    "end": "Skip tour",
+    "finish": "Finish"
   },
   "measure" : {
     "measureTool" : "Measure Tool",
