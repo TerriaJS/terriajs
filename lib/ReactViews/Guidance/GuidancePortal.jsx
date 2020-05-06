@@ -114,16 +114,22 @@ const TourExplanationBox = styled(Box)`
   }
 `;
 
-// const TourSpot = styled.div`
-//   width: 14px;
-//   height: 14px;
-// `;
+const TourIndicator = styled(RawButton)`
+  position: absolute;
+  top: -10px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: ${p => p.theme.colorPrimary};
+`;
 
 const TourExplanation = ({
   topStyle,
   leftStyle,
   caretOffsetTop,
   caretOffsetLeft,
+  indicatorOffsetTop,
+  indicatorOffsetLeft,
   onNext,
   onSkip,
   currentStep,
@@ -140,12 +146,21 @@ const TourExplanation = ({
         left: leftStyle
       }}
     >
-      <Caret
+      <Box
+        positionAbsolute
         style={{
           top: `${caretOffsetTop}px`,
           left: `${caretOffsetLeft}px`
         }}
-      />
+      >
+        <Caret />
+        <TourIndicator
+          style={{
+            top: `${indicatorOffsetTop}px`,
+            left: `${indicatorOffsetLeft}px`
+          }}
+        />
+      </Box>
       <Text light medium textDarker>
         <Text light medium noFontSize textDarker>
           {children}
@@ -172,6 +187,8 @@ TourExplanation.propTypes = {
   maxSteps: PropTypes.number.isRequired,
   caretOffsetTop: PropTypes.number,
   caretOffsetLeft: PropTypes.number,
+  indicatorOffsetTop: PropTypes.number,
+  indicatorOffsetLeft: PropTypes.number,
   onNext: PropTypes.func,
   onSkip: PropTypes.func,
   topStyle: PropTypes.string,
@@ -233,6 +250,14 @@ export const TourGrouping = observer(({ viewState }) => {
     ? currentTourPoint.caretOffsetLeft
     : 20;
 
+  // todo: more stuff that could be structured better
+  const indicatorOffsetTop = isDefined(currentTourPoint?.indicatorOffsetTop)
+    ? currentTourPoint.indicatorOffsetTop
+    : -20;
+  const indicatorOffsetLeft = isDefined(currentTourPoint?.indicatorOffsetLeft)
+    ? currentTourPoint.indicatorOffsetLeft
+    : 3;
+
   const currentTourIndex = viewState.currentTourIndex;
   const maxSteps = viewState.tourPoints.length;
 
@@ -248,6 +273,8 @@ export const TourGrouping = observer(({ viewState }) => {
         leftStyle={`${positionLeft}px`}
         caretOffsetTop={caretOffsetTop}
         caretOffsetLeft={caretOffsetLeft}
+        indicatorOffsetTop={indicatorOffsetTop}
+        indicatorOffsetLeft={indicatorOffsetLeft}
       >
         {parseCustomMarkdownToReact(currentTourPoint?.content)}
       </TourExplanation>
