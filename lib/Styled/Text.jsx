@@ -99,6 +99,9 @@ export const Text = styled.div`
     font-size: 26px;
     line-height: 32px;
   `}
+
+  ${props => props.styledSize && `font-size: ${props.styledSize}`};
+  ${props => props.styledLineHeight && `line-height: ${props.styledLineHeight}`};
   
 `;
 

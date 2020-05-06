@@ -27,7 +27,7 @@ import StoryPanel from "./../Story/StoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 
 import SatelliteGuide from "../Guide/SatelliteGuide";
-// import WelcomeMessage from "../WelcomeMessage/WelcomeMessage";
+import WelcomeMessage from "../WelcomeMessage/WelcomeMessage";
 
 import { Small, Medium } from "../Generic/Responsive";
 import classNames from "classnames";
@@ -192,7 +192,7 @@ const StandardUserInterface = observer(
             }
           />
           <div className={Styles.storyWrapper}>
-            {/* <WelcomeMessage viewState={this.props.viewState} /> */}
+            <WelcomeMessage viewState={this.props.viewState} />
             <div
               className={classNames(Styles.uiRoot, {
                 [Styles.withStoryBuilder]: showStoryBuilder

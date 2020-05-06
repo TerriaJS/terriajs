@@ -16,6 +16,8 @@ import {
 import { BaseModel } from "../Models/Model";
 import PickedFeatures from "../Map/PickedFeatures";
 
+import { LOCAL_PROPERTY_KEY as WELCOME_PROPERTY_KEY } from "../ReactViews/WelcomeMessage/WelcomeMessage";
+
 export const DATA_CATALOG_NAME = "data-catalog";
 export const USER_DATA_NAME = "my-data";
 
@@ -316,6 +318,11 @@ export default class ViewState {
   @action
   hideHelpPanel() {
     this.showHelpMenu = false;
+  }
+
+  @action
+  setShowWelcomeMessage(welcomeMessageShown: boolean) {
+    this.showWelcomeMessage = welcomeMessageShown;
   }
 
   /**
