@@ -6,6 +6,8 @@
  * started out as wanting to be that. Our not-yet-invented "new modal system"
  * will probably utilise a react portal, though.
  *
+ * TODO: loop through configparameters for ability to customise at runtime
+ * , then add docs for customisation
  */
 import React, { useEffect } from "react";
 import { withTheme, useTheme } from "styled-components";
