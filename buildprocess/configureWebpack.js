@@ -271,7 +271,10 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
         });
     } else if (MiniCssExtractPlugin) {
         config.module.rules.push({
-            exclude: path.resolve(terriaJSBasePath, 'lib', 'Sass'),
+            exclude: [
+                path.resolve(terriaJSBasePath, 'lib', 'Sass', 'common'),
+                path.resolve(terriaJSBasePath, 'lib', 'Sass', 'global'),
+            ],
             include: path.resolve(terriaJSBasePath, 'lib'),
             test: /\.scss$/,
             use: [
