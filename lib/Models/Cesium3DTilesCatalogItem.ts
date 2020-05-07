@@ -98,7 +98,7 @@ export default class Cesium3DTilesCatalogItem
     }
 
     let resource = undefined;
-    if (!isDefined(this.url) && isDefined(this.ionAssetId)) {
+    if (isDefined(this.ionAssetId)) {
       resource = this.createResourceFromIonId(
         this.ionAssetId,
         this.ionAccessToken,
