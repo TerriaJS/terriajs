@@ -116,6 +116,7 @@ Change Log
 * Fix SASS exports causing some build errors in certain webpack conditions
 #### mobx-29
 * (placeholder)
+* Added generic styled select
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
