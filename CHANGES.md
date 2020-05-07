@@ -96,6 +96,7 @@ Change Log
 * Fix bug that caused contents on the video panel of the help UI to overlay the actual video
 * Overhauled location search to be a dropdown instead of list of results
 * Fixed bug causing full app crash or viewer zoom refresh when using 3D view and changing settings or changing the terrain provider.
+* Implements `SensorObservationServiceCatalogItem`.
 * Add support for styling CSVs using a region mapped or text columns.
 * Update Compass UI to include larger rotation target, remove sass from compass
 * Link Compass "help" button to `navigation` HelpPanelItem (requires generalisation later down the track)
@@ -108,6 +109,15 @@ Change Log
 * Bumped mobx minor to 4.15.x, mobx-react major to 6.x.x
 * Add `dateFormat` trait to `TimeVaryingTraits` to allowing formatting of datestrings in workbench and bottomdock.
 * Added diff tool for visualizing difference (delta) of images between 2 dates for services that support it.
+* Fixed FeatureInfoPanel using old class state
+* Fixed MapIconButton & FeedbackButton proptypes being defined incorrectly
+* Implement SenapsLocationsCatalogItem
+* Update papaparse and improve handling for retrieveing CSVs via chunking that have no ContentLenth header
+#### mobx-28
+* Fix SASS exports causing some build errors in certain webpack conditions
+#### mobx-29
+* (placeholder)
+* Run & configure prettier on terriajs lib/ json files
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC

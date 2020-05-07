@@ -1,0 +1,90 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://senaps.io/api/sensor/v2/locations?count=1000&expand=true&id=*boorowa*"
+    }
+  },
+  "count": 1,
+  "_embedded": {
+    "locations": [
+      {
+        "_links": {
+          "self": {
+            "href": "https://senaps.io/api/sensor/v2/locations/boorowa.temprh.site5a"
+          }
+        },
+        "description": "Boorowa TempRH Site5a",
+        "geojson": {
+          "type": "Point",
+          "coordinates": [
+            148.699683,
+            -34.470083
+          ]
+        },
+        "id": "boorowa.temprh.site5a",
+        "usermetadata": null,
+        "_embedded": {
+          "organisation": [
+            {
+              "_links": {
+                "self": {
+                  "href": "https://senaps.io/api/sensor/v2/organisations/csiro"
+                }
+              },
+              "id": "csiro"
+            }
+          ],
+          "groups": [
+            {
+              "_links": {
+                "self": {
+                  "href": "https://senaps.io/api/sensor/v2/groups/boorowa-temp-humidity"
+                }
+              },
+              "id": "boorowa-temp-humidity"
+            }
+          ]
+        }
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "https://senaps.io/api/sensor/v2/locations/boorowa.temprh.site5a"
+          }
+        },
+        "description": "Boorowa TempRH Site5a",
+        "geojson": {
+          "type": "Point",
+          "coordinates": [
+            148.699683,
+            -34.470083
+          ]
+        },
+        "id": "somesillyone",
+        "usermetadata": null,
+        "_embedded": {
+          "organisation": [
+            {
+              "_links": {
+                "self": {
+                  "href": "https://senaps.io/api/sensor/v2/organisations/csiro"
+                }
+              },
+              "id": "csiro"
+            }
+          ],
+          "groups": [
+            {
+              "_links": {
+                "self": {
+                  "href": "https://senaps.io/api/sensor/v2/groups/boorowa-temp-humidity"
+                }
+              },
+              "id": "boorowa-temp-humidity"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
