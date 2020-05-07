@@ -34,7 +34,7 @@ import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import RectangleParameter from "./RectangleParameter";
 import RegionParameter from "./RegionParameter";
 import RegionTypeParameter from "./RegionTypeParameter";
-import ResultPendingCatalogItem from "./ResultPendingCatalogItem";
+import CatalogFunctionJob from "./CatalogFunctionJob";
 import StringParameter from "./StringParameter";
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
 import i18next from "i18next";
@@ -301,7 +301,7 @@ export default class WebProcessingServiceCatalogFunction extends CatalogFunction
    */
   async handleExecuteResponse(
     xml: any,
-    pendingItem: ResultPendingCatalogItem
+    pendingItem: CatalogFunctionJob
   ): Promise<void> {
     if (
       !xml ||
@@ -396,7 +396,7 @@ export default class WebProcessingServiceCatalogFunction extends CatalogFunction
   }
 
   async createCatalogItem(
-    pendingItem: ResultPendingCatalogItem,
+    pendingItem: CatalogFunctionJob,
     wpsResponse: any
   ) {
     const id = `result-${pendingItem.uniqueId}`;

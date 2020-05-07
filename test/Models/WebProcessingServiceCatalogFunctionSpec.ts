@@ -11,7 +11,7 @@ import LineParameter from "../../lib/Models/LineParameter";
 import PointParameter from "../../lib/Models/PointParameter";
 import PolygonParameter from "../../lib/Models/PolygonParameter";
 import RectangleParameter from "../../lib/Models/RectangleParameter";
-import ResultPendingCatalogItem from "../../lib/Models/ResultPendingCatalogItem";
+import ResultPendingCatalogItem from "../../lib/Models/CatalogFunctionJob";
 import StringParameter from "../../lib/Models/StringParameter";
 import Terria from "../../lib/Models/Terria";
 import WebProcessingServiceCatalogFunction, {

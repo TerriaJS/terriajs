@@ -3,7 +3,7 @@ import Model from "../Models/Model";
 import CatalogFunctionTraits from "../Traits/CatalogFunctionTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import FunctionParameter from "../Models/FunctionParameter";
-import ResultPendingCatalogItem from "../Models/ResultPendingCatalogItem";
+import CatalogFunctionJob from "../Models/CatalogFunctionJob";
 import { runInAction } from "mobx";
 import CommonStrata from "../Models/CommonStrata";
 import createStratumInstance from "../Models/createStratumInstance";
@@ -21,7 +21,7 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunction>>(Base: T) {
     // TODO: Move parameters into Traits
     abstract get parameters(): FunctionParameter[];
 
-    createPendingCatalogItem(): ResultPendingCatalogItem {
+    createPendingCatalogItem(): CatalogFunctionJob {
       const now = new Date();
       const timestamp = sprintf(
         "%04d-%02d-%02dT%02d:%02d:%02d",
@@ -34,12 +34,12 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunction>>(Base: T) {
       );
 
       const id = `${this.name} ${timestamp}`;
-      const resultPendingCatalogItem = new ResultPendingCatalogItem(
+      const catalogFunctionJob = new CatalogFunctionJob(
         id,
         this.terria
       );
-      resultPendingCatalogItem.showsInfo = true;
-      resultPendingCatalogItem.isMappable = true;
+      catalogFunctionJob.showsInfo = true;
+      catalogFunctionJob.isMappable = true;
 
       const inputsSection =
         '<table class="cesium-infoBox-defaultTable">' +
@@ -59,8 +59,8 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunction>>(Base: T) {
         "</table>";
 
       runInAction(() => {
-        resultPendingCatalogItem!.setTrait(CommonStrata.user, "name", id);
-        resultPendingCatalogItem!.setTrait(
+        catalogFunctionJob!.setTrait(CommonStrata.user, "name", id);
+        catalogFunctionJob!.setTrait(
           CommonStrata.user,
           "description",
           `This is the result of invoking the ${this.name} process or service at ${timestamp} with the input parameters below.`
@@ -70,18 +70,18 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunction>>(Base: T) {
           name: "Inputs",
           content: inputsSection
         });
-        resultPendingCatalogItem!.setTrait(CommonStrata.user, "info", [info]);
+        catalogFunctionJob!.setTrait(CommonStrata.user, "info", [info]);
       });
-      return resultPendingCatalogItem;
+      return catalogFunctionJob;
     }
 
     setErrorOnPendingItem(
-      resultPendingCatalogItem: ResultPendingCatalogItem,
+      CatalogFunctionJob: CatalogFunctionJob,
       errorMessage?: string
     ) {
       runInAction(() => {
-        if (isDefined(resultPendingCatalogItem)) {
-          resultPendingCatalogItem.setTrait(
+        if (isDefined(CatalogFunctionJob)) {
+          CatalogFunctionJob.setTrait(
             CommonStrata.user,
             "shortReport",
             `${this.typeName ||
@@ -93,7 +93,7 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunction>>(Base: T) {
             name: "Error Details",
             content: errorMessage || "The reason for failure is unknown."
           });
-          const info = resultPendingCatalogItem.getTrait(
+          const info = CatalogFunctionJob.getTrait(
             CommonStrata.user,
             "info"
           );

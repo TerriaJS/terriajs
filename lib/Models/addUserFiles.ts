@@ -1,6 +1,6 @@
 import Terria from "./Terria";
 import ViewState from "../ReactViewModels/ViewState";
-import ResultPendingCatalogItem from "./ResultPendingCatalogItem";
+import CatalogFunctionJob from "./CatalogFunctionJob";
 import CommonStrata from "./CommonStrata";
 import readJson from "../Core/readJson";
 import getDataType from "../Core/getDataType";
@@ -21,7 +21,7 @@ export default function addUserFiles(
   fileType: FileType
 ) {
   const dataType = fileType || getDataType().localDataType[0];
-  const tempCatalogItemList: ResultPendingCatalogItem[] = [];
+  const tempCatalogItemList: CatalogFunctionJob[] = [];
   const promises = [];
 
   function loadCatalogItemFromFile(file: File) {
@@ -48,7 +48,7 @@ export default function addUserFiles(
 
   for (let i = 0; i < files.length; i++) {
     const file = files[i];
-    const tempCatalogItem = new ResultPendingCatalogItem(file.name, terria);
+    const tempCatalogItem = new CatalogFunctionJob(file.name, terria);
     tempCatalogItem.setTrait(CommonStrata.user, "name", file.name);
     tempCatalogItem.setTrait(
       CommonStrata.user,

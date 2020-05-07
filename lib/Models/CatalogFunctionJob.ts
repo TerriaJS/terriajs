@@ -1,10 +1,10 @@
 import { observable } from "mobx";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import ResultPendingCatalogItemTraits from "../Traits/ResultPendingCatalogItemTraits";
 import CreateModel from "./CreateModel";
+import CatalogFunctionJobTraits from "../Traits/CatalogFunctionJobTraits";
 
-export default class ResultPendingCatalogItem extends CatalogMemberMixin(
-  CreateModel(ResultPendingCatalogItemTraits)
+export default class CatalogFunctionJob extends CatalogMemberMixin(
+  CreateModel(CatalogFunctionJobTraits)
 ) {
   @observable showsInfo = false;
   @observable isMappable = false;
