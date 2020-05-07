@@ -38,6 +38,9 @@ export const withTerriaRef = <P extends object>(
     componentDidUpdate() {
       this.updateRef();
     }
+    componentWillUnmount() {
+      this.props.viewState.deleteAppRef(refName);
+    }
     render() {
       return (
         <WrappedComponent

@@ -123,14 +123,15 @@ export default class ViewState {
   get tourPointsWithValidRefs() {
     // should viewstate.ts reach into document? seems unavoidable if we want
     // this to be the true source of tourPoints.
+    // update: well it turns out you can be smarter about it and actually
+    // properly clean up your refs - so we'll leave that up to the UI to
+    // provide valid refs
     return this.tourPoints
       .sort((a, b) => {
         return a.priority - b.priority;
       })
-      .filter(tourPoint =>
-        document?.contains(
-          (<any>this.appRefs).get(tourPoint.appRefName)?.current
-        )
+      .filter(
+        tourPoint => (<any>this.appRefs).get(tourPoint.appRefName)?.current
       );
   }
   @action
@@ -169,6 +170,10 @@ export default class ViewState {
     if (!this.appRefs.get(refName) || this.appRefs.get(refName) !== ref) {
       this.appRefs.set(refName, ref);
     }
+  }
+  @action
+  deleteAppRef(refName: string) {
+    this.appRefs.delete(refName);
   }
 
   /**

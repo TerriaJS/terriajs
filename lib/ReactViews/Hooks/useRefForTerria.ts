@@ -10,7 +10,13 @@ export function useRefForTerria(
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    viewState.updateAppRef(refName, ref);
+    if (ref && ref.current) {
+      viewState.updateAppRef(refName, ref);
+    }
+    // cleanup callback
+    return function removeRefFromTerria() {
+      viewState.deleteAppRef(refName);
+    };
   }, [ref]);
   return ref;
 }
