@@ -7,8 +7,8 @@ import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import CloseButton from "../../../lib/ReactViews/Generic/CloseButton";
 import TourPortal, {
-  TourGrouping,
-  TourPreface
+  TourPreface,
+  TourExplanation
 } from "../../../lib/ReactViews/Tour/TourPortal";
 
 describe("TourPortal", function() {
@@ -34,12 +34,12 @@ describe("TourPortal", function() {
         act(() => {
           testRenderer = create(<TourPortal viewState={viewState} />);
         });
-
+        // tourportal should just not render anything in this case
         expect(() => testRenderer.root.findByType("div")).toThrow();
       });
       it("renders something using the TourPreface path under preface conditions", function() {
         runInAction(() => {
-          viewState.currentTourIndex = 0;
+          viewState.setTourIndex(0);
           viewState.setShowTour(false);
         });
         act(() => {
@@ -48,6 +48,7 @@ describe("TourPortal", function() {
           );
         });
 
+        // tourportal should render the TourPreface 2*close & accept buttons
         const buttons = testRenderer.root.findAllByType("button");
         expect(testRenderer.root.children).toBeDefined();
         expect(buttons).toBeDefined();
@@ -56,41 +57,84 @@ describe("TourPortal", function() {
         expect(closeButton).toBeDefined();
         expect(closeButton.length).toEqual(1);
         expect(testRenderer.root.findByType(TourPreface)).toBeDefined();
-        expect(() => testRenderer.root.findByType(TourGrouping)).toThrow();
+        expect(() => testRenderer.root.findByType(TourExplanation)).toThrow();
       });
       it("renders something using the TourGrouping path under showPortal conditions", function() {
-        runInAction(() => {
-          viewState.currentTourIndex = 0;
-          viewState.setShowTour(true);
-        });
+        const testRef: any = React.createRef();
+        const testRef2: any = React.createRef();
+        const testRef3: any = React.createRef();
         act(() => {
           testRenderer = create(
+            <div>
+              <div ref={testRef} />
+              <div ref={testRef2} />
+              <div ref={testRef3} />
+              {withThemeContext(<TourPortal viewState={viewState} />)}
+            </div>,
+            {
+              createNodeMock: (/* element: any */) => {
+                return {
+                  // This is not compulsory as we still render if we
+                  // can't get a rectangle, but we'll mock it anyway
+                  getBoundingClientRect: () => ({
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0
+                  })
+                };
+                // return document.createElement("div");
+              }
+            }
+          );
+        });
+        runInAction(() => {
+          viewState.setTourIndex(0);
+          viewState.setShowTour(true);
+          viewState.updateAppRef("TestRef", testRef);
+          viewState.updateAppRef("TestRef2", testRef2);
+          viewState.updateAppRef("TestRef3", testRef3);
+          viewState.tourPoints = [
+            {
+              appRefName: "TestRef",
+              priority: 10,
+              content: "## Best friends\n\nMochi and neko are best friends"
+            },
+            {
+              appRefName: "TestRef2",
+              priority: 20,
+              content: "## Motivated by food\n\nNeko loves food"
+            },
+            {
+              appRefName: "TestRef3",
+              priority: 30,
+              content: "## Lazy\n\nThey like to lounge around all day"
+            }
+          ];
+        });
+        act(() => {
+          testRenderer.update(
             withThemeContext(<TourPortal viewState={viewState} />)
           );
         });
 
-        const buttons = testRenderer.root.findAllByType("button");
-        expect(buttons).toBeDefined();
-        expect(buttons.length).toEqual(3);
-        const closeButton = testRenderer.root.findAllByType(CloseButton);
-        expect(closeButton).toBeDefined();
-        expect(closeButton.length).toEqual(1);
+        // 3 test tour points
+        expect(testRenderer.root.findAllByType(TourExplanation).length).toBe(3);
 
-        expect(testRenderer.root.findByType(TourGrouping)).toBeDefined();
-        expect(() => testRenderer.root.findByType(TourPreface)).toThrow();
+        // Remove one tour point and we should only have 2 left
+        // (e.g. if you add a tour point on the compass,
+        // this is triggered when compass disappears between 2D<->3D modes)
+        runInAction(() => {
+          viewState.deleteAppRef("TestRef");
+        });
+        act(() => {
+          testRenderer.update(
+            withThemeContext(<TourPortal viewState={viewState} />)
+          );
+        });
+        // 2 test tour points
+        expect(testRenderer.root.findAllByType(TourExplanation).length).toBe(2);
       });
     });
-    // it("renders and clearSearch triggers onSearchTextChanged callback", function() {
-    //   act(() => {
-    //     testRenderer = create(tourPortalWithProps);
-    //   });
-
-    //   const searchBoxInstance = testRenderer.root.instance;
-    //   expect(searchBoxValue).toEqual("something");
-    //   // attempt clear search method
-    //   searchBoxInstance.clearSearch();
-    //   // Now it should be reset
-    //   expect(searchBoxValue).toEqual("");
-    // });
   });
 });

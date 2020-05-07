@@ -64,7 +64,7 @@ TourProgress.propTypes = {
   step: PropTypes.number.isRequired
 };
 
-const TourExplanation = ({
+export const TourExplanation = ({
   topStyle,
   leftStyle,
   caretOffsetTop,
@@ -194,7 +194,7 @@ TourExplanation.propTypes = {
   active: PropTypes.bool
 };
 
-export const TourGrouping = observer(({ viewState, tourPoints }) => {
+const TourGrouping = observer(({ viewState, tourPoints }) => {
   const currentTourPoint = tourPoints[viewState.currentTourIndex];
   const currentTourPointRef = viewState.appRefs.get(
     currentTourPoint?.appRefName

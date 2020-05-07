@@ -60,6 +60,10 @@ interface HelpScreen {
  */
 export function calculateLeftPosition(helpScreen: HelpScreen) {
   const screenRect = helpScreen.rectangle;
+  if (!screenRect) {
+    console.log("no rectangle in helpScreen");
+    return 0;
+  }
   let leftPosition = 0;
   if (helpScreen.positionLeft === RelativePosition.RECT_LEFT) {
     leftPosition = screenRect.left;
@@ -81,6 +85,10 @@ export function calculateLeftPosition(helpScreen: HelpScreen) {
  */
 export function calculateTopPosition(helpScreen: HelpScreen) {
   const screenRect = helpScreen.rectangle;
+  if (!screenRect) {
+    console.log("no rectangle in helpScreen");
+    return 0;
+  }
   let topPosition = 0;
   if (helpScreen.positionTop === RelativePosition.RECT_LEFT) {
     topPosition = screenRect.left;
