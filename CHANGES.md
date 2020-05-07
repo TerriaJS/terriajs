@@ -116,6 +116,7 @@ Change Log
 * Fix SASS exports causing some build errors in certain webpack conditions
 #### mobx-29
 * (placeholder)
+* Run & configure prettier on terriajs lib/ json files
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC

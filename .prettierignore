@@ -4,6 +4,7 @@
 # Unignore directories (to all depths) and unignore code and style files
 !lib/**/
 !lib/**/*.js
+!lib/**/*.json
 !lib/**/*.jsx
 !lib/**/*.ts
 !lib/**/*.tsx
