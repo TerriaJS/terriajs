@@ -93,15 +93,37 @@ export default class Cesium3DTilesCatalogItem
   }
 
   private loadTileset() {
-    const tileset = this.createNewTileset(
-      this.url,
-      this.ionAssetId,
-      this.ionAccessToken,
-      this.ionServer,
-      this.optionsObj
-    );
+    if (!isDefined(this.url) && !isDefined(this.ionAssetId)) {
+      return;
+    }
 
-    if (tileset && !tileset.destroyed) {
+    let resource = undefined;
+    if (!isDefined(this.url) && isDefined(this.ionAssetId)) {
+      resource = this.createResourceFromIonId(
+        this.ionAssetId,
+        this.ionAccessToken,
+        this.ionServer
+      );
+    } else if (isDefined(this.url)) {
+      resource = this.createResourceFromUrl(
+        proxyCatalogItemUrl(this, this.url),
+        this.ionAssetId,
+        this.ionAccessToken,
+        this.ionServer
+      );
+    }
+
+    if (!isDefined(resource)) {
+      return;
+    }
+
+    const tileset = new ObservableCesium3DTileset({
+      ...this.optionsObj,
+      url: resource
+    });
+
+    tileset._catalogItem = this;
+    if (isDefined(tileset) && !tileset.destroyed) {
       this.tileset = tileset;
     }
   }
@@ -149,47 +171,44 @@ export default class Cesium3DTilesCatalogItem
     return options;
   }
 
-  private createNewTileset(
-    url: Resource | string | undefined,
+  private createResourceFromUrl(
+    url: Resource | string,
     ionAssetId: number | undefined,
     ionAccessToken: string | undefined,
-    ionServer: string | undefined,
-    options: any
+    ionServer: string | undefined
   ) {
-    if (!isDefined(url) && !isDefined(ionAssetId)) {
+    if (!isDefined(url)) {
       return;
     }
 
-    let resource: Promise<IonResource> | Resource | undefined;
-    if (isDefined(ionAssetId)) {
-      resource = <Promise<IonResource>>makeRealPromise(
-        IonResource.fromAssetId(ionAssetId, {
-          accessToken:
-            ionAccessToken || this.terria.configParameters.cesiumIonAccessToken,
-          server: ionServer
-        })
-      ).catch(e => {
-        raiseErrorToUser(this.terria, e);
-      });
-    } else if (isDefined(url)) {
-      if (url instanceof Resource) {
-        resource = url;
-      } else {
-        resource = new Resource({ url: proxyCatalogItemUrl(this, url) });
+    let resource: Resource | undefined;
+    if (url instanceof Resource) {
+      resource = url;
+    } else {
+      resource = new Resource({ url });
+    }
+
+    return resource;
+  }
+
+  private async createResourceFromIonId(
+    ionAssetId: number | undefined,
+    ionAccessToken: string | undefined,
+    ionServer: string | undefined
+  ) {
+    if (!isDefined(ionAssetId)) {
+      return;
+    }
+
+    let resource: IonResource | undefined = await IonResource.fromAssetId(
+      ionAssetId,
+      {
+        accessToken:
+          ionAccessToken || this.terria.configParameters.cesiumIonAccessToken,
+        server: ionServer
       }
-    }
-
-    if (!isDefined(resource)) {
-      return;
-    }
-
-    const tileset = new ObservableCesium3DTileset({
-      ...options,
-      url: resource
-    });
-
-    tileset._catalogItem = this;
-    return tileset;
+    );
+    return resource;
   }
 
   @computed get showExpressionFromFilters() {

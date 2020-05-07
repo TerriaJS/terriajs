@@ -115,7 +115,7 @@ Change Log
 #### mobx-28
 * Fix SASS exports causing some build errors in certain webpack conditions
 #### mobx-29
-* (placeholder)
+* Fix handling of urls on `Cesium3DTilesCatalogItem` related to proxying and getting confused between Resource vs URL.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
