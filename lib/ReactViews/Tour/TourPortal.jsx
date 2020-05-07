@@ -79,10 +79,12 @@ const TourExplanation = ({
   currentStep,
   maxSteps,
   active,
+  isFirstTourPoint,
   isLastTourPoint,
   children
 }) => {
   const { t } = useTranslation();
+  const theme = useTheme();
   if (!active) {
     // Tour explanation requires the various positioning even if only just
     // showing the "tour indicator" button, as it is offset against the caret
@@ -122,8 +124,13 @@ const TourExplanation = ({
         top: topStyle,
         left: leftStyle
       }}
-      A
     >
+      <CloseButton
+        color={theme.darkWithOverlay}
+        topRight
+        onClick={() => onSkip?.()}
+      />
+      <Spacing bottom={2} />
       <Caret
         style={{
           top: `${caretOffsetTop}px`,
@@ -148,10 +155,14 @@ const TourExplanation = ({
               </Button>
             ) : (
               <>
-                <RawButton onClick={() => onPrevious?.()}>
-                  {t("tour.previous")}
-                </RawButton>
-                <Spacing right={2} />
+                {!isFirstTourPoint && (
+                  <>
+                    <RawButton onClick={() => onPrevious?.()}>
+                      {t("tour.previous")}
+                    </RawButton>
+                    <Spacing right={2} />
+                  </>
+                )}
                 <Button onClick={() => onNext?.()} primary>
                   {t("tour.next")}
                 </Button>
@@ -171,14 +182,15 @@ TourExplanation.propTypes = {
   caretOffsetLeft: PropTypes.number,
   indicatorOffsetTop: PropTypes.number,
   indicatorOffsetLeft: PropTypes.number,
-  setTourIndex: PropTypes.func,
-  onTourIndicatorClick: PropTypes.func,
-  onPrevious: PropTypes.func,
-  onNext: PropTypes.func,
-  onSkip: PropTypes.func,
+  setTourIndex: PropTypes.func.isRequired,
+  onTourIndicatorClick: PropTypes.func.isRequired,
+  onPrevious: PropTypes.func.isRequired,
+  onNext: PropTypes.func.isRequired,
+  onSkip: PropTypes.func.isRequired,
   topStyle: PropTypes.string,
   leftStyle: PropTypes.string,
-  isLastTourPoint: PropTypes.bool,
+  isFirstTourPoint: PropTypes.bool.isRequired,
+  isLastTourPoint: PropTypes.bool.isRequired,
   active: PropTypes.bool
 };
 
