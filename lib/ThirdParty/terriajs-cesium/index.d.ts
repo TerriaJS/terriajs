@@ -547,8 +547,8 @@ declare module "terriajs-cesium/Source/DataSources/BillboardGraphics" {
   import Color from "terriajs-cesium/Source/Core/Color";
   import Event from "terriajs-cesium/Source/Core/Event";
   import NearFarScalar from "terriajs-cesium/Source/Core/NearFarScalar";
-
   class BillboardGraphics {
+
     definitionChanged: Event;
     image: Property<string>;
     imageSubRegion: Property<BoundingRectangle>;
@@ -704,8 +704,10 @@ declare module "terriajs-cesium/Source/DataSources/EllipsoidGraphics" {
 }
 declare module "terriajs-cesium/Source/DataSources/Entity" {
   import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
+  import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
   class Entity extends Cesium.Entity {
     billboard: BillboardGraphics;
+    properties: PropertyBag;
   }
   export default Entity;
 }
@@ -1397,7 +1399,7 @@ declare module "terriajs-cesium/Source/DataSources/PropertyBag" {
   import Property from "terriajs-cesium/Source/Core/Property";
   import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 
-  export default class PropertyBag {
+  class PropertyBag {
     constructor(value?: string, createPropertyCallback?: () => any);
     addProperty<T = any>(
       propertyName: string,
@@ -1408,7 +1410,10 @@ declare module "terriajs-cesium/Source/DataSources/PropertyBag" {
     getValue<T = any>(time: JulianDate, result?: T): T;
     hasProperty(propertyName: string): boolean;
     removeProperty(propertyName: string): void;
+    [key: string]: any
   }
+
+  export default PropertyBag
 }
 declare module "terriajs-cesium/Source/Core/Ion" {
   import Resource from "terriajs-cesium/Source/Core/Resource";
@@ -1424,3 +1429,6 @@ declare module "terriajs-cesium/Source/Core/Ion" {
 }
 
 declare module "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
+
+declare module "terriajs-cesium/Source/Renderer/TextureMagnificationFilter"
+declare module "terriajs-cesium/Source/Core/WebGLConstants"

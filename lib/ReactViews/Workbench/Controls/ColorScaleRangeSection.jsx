@@ -6,8 +6,10 @@ import PropTypes from "prop-types";
 import defined from "terriajs-cesium/Source/Core/defined";
 import { withTranslation } from "react-i18next";
 import Styles from "./colorscalerange-section.scss";
+import { observer } from "mobx-react";
+import { runInAction } from "mobx";
 
-const ColorScaleRangeSection = createReactClass({
+const ColorScaleRangeSection = observer(createReactClass({
   displayName: "ColorScaleRangeSection",
 
   propTypes: {
@@ -73,8 +75,11 @@ const ColorScaleRangeSection = createReactClass({
       return;
     }
 
-    this.props.item.colorScaleMinimum = min;
-    this.props.item.colorScaleMaximum = max;
+    runInAction(() => {
+      this.props.item.colorScaleMinimum = min;
+      this.props.item.colorScaleMaximum = max;
+    })
+    
   },
 
   changeRangeMin(event) {
@@ -124,5 +129,5 @@ const ColorScaleRangeSection = createReactClass({
       </form>
     );
   }
-});
+}));
 module.exports = withTranslation()(ColorScaleRangeSection);

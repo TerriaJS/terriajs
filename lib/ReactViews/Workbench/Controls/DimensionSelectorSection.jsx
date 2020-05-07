@@ -2,12 +2,16 @@
 
 import defined from "terriajs-cesium/Source/Core/defined";
 import React from "react";
+import CommonStrata from "../../../Models/CommonStrata";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 
 import Styles from "./dimension-selector-section.scss";
 
-const DimensionSelectorSection = createReactClass({
+import { observer } from "mobx-react";
+import { runInAction } from "mobx";
+
+const DimensionSelectorSection = observer(createReactClass({
   displayName: "DimensionSelectorSection",
 
   propTypes: {
@@ -16,12 +20,15 @@ const DimensionSelectorSection = createReactClass({
 
   changeDimension(dimension, event) {
     const item = this.props.item;
-    const dimensions = item.dimensions || {};
+    if (!item.isLoadingMapItems) {
+      const dimensions = item.dimensions || {};
 
-    dimensions[dimension.name] = event.target.value;
+      runInAction(() => {
+        dimensions[dimension.name] = event.target.value;
+        item.setTrait(CommonStrata.user, "dimensions", dimensions);
+      });
+    }
 
-    item.dimensions = dimensions;
-    item.refresh();
   },
 
   render() {
@@ -106,6 +113,6 @@ const DimensionSelectorSection = createReactClass({
       </div>
     );
   }
-});
+}));
 
 module.exports = DimensionSelectorSection;
