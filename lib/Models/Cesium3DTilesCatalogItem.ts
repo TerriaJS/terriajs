@@ -106,10 +106,7 @@ export default class Cesium3DTilesCatalogItem
       );
     } else if (isDefined(this.url)) {
       resource = this.createResourceFromUrl(
-        proxyCatalogItemUrl(this, this.url),
-        this.ionAssetId,
-        this.ionAccessToken,
-        this.ionServer
+        proxyCatalogItemUrl(this, this.url)
       );
     }
 
@@ -171,12 +168,7 @@ export default class Cesium3DTilesCatalogItem
     return options;
   }
 
-  private createResourceFromUrl(
-    url: Resource | string,
-    ionAssetId: number | undefined,
-    ionAccessToken: string | undefined,
-    ionServer: string | undefined
-  ) {
+  private createResourceFromUrl(url: Resource | string) {
     if (!isDefined(url)) {
       return;
     }
