@@ -7,6 +7,7 @@ Change Log
 * (placeholder)
 * Renamed `UrlReference.createUrlReferenceFromUrlReference` to `UrlReference.createCatalogMemberFromUrlReference`
 * Moved url to catalog member mapping from `createUrlRefernceFromUrl.register` to `UrlToCatalogMemberMapping` (now in `UrlReference.ts` file) 
+* Added in-app tour framework & base tour items
 
 #### mobx-28
 * Fix SASS exports causing some build errors in certain webpack conditions
@@ -121,11 +122,6 @@ Change Log
 * Fixed MapIconButton & FeedbackButton proptypes being defined incorrectly
 * Implement SenapsLocationsCatalogItem
 * Update papaparse and improve handling for retrieveing CSVs via chunking that have no ContentLenth header
-#### mobx-28
-* Fix SASS exports causing some build errors in certain webpack conditions
-#### mobx-29
-* (placeholder)
-* Added in-app tour framework & base tour items
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
