@@ -23,7 +23,6 @@ const ToggleSplitterTool = observer(function(props) {
         expandInPlace
         title={t("splitterTool.toggleSplitterTool")}
         onClick={() => {
-          const terria = terria;
           runInAction(() => (terria.showSplitter = !terria.showSplitter));
         }}
         iconElement={() => (
