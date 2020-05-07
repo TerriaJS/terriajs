@@ -73,6 +73,7 @@ const TourExplanation = ({
   indicatorOffsetLeft,
   setTourIndex,
   onTourIndicatorClick,
+  onPrevious,
   onNext,
   onSkip,
   currentStep,
@@ -147,12 +148,12 @@ const TourExplanation = ({
               </Button>
             ) : (
               <>
-                <RawButton onClick={() => onSkip?.()}>
-                  {t("tour.end")}
+                <RawButton onClick={() => onPrevious?.()}>
+                  {t("tour.previous")}
                 </RawButton>
                 <Spacing right={2} />
                 <Button onClick={() => onNext?.()} primary>
-                  {t("general.next")}
+                  {t("tour.next")}
                 </Button>
               </>
             )}
@@ -172,6 +173,7 @@ TourExplanation.propTypes = {
   indicatorOffsetLeft: PropTypes.number,
   setTourIndex: PropTypes.func,
   onTourIndicatorClick: PropTypes.func,
+  onPrevious: PropTypes.func,
   onNext: PropTypes.func,
   onSkip: PropTypes.func,
   topStyle: PropTypes.string,
@@ -238,8 +240,10 @@ const TourGrouping = observer(({ viewState, tourPoints }) => {
             maxSteps={maxSteps}
             setTourIndex={idx => viewState.setTourIndex(idx)}
             onTourIndicatorClick={() => viewState.setTourIndex(index)}
+            onPrevious={() => viewState.previousTourPoint()}
             onNext={() => viewState.nextTourPoint()}
             onSkip={() => viewState.closeTour()}
+            isFirstTourPoint={index === 0}
             isLastTourPoint={index === tourPoints.length - 1}
             topStyle={`${positionTop}px`}
             leftStyle={`${positionLeft}px`}

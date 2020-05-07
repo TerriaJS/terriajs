@@ -14,7 +14,9 @@
       "start": "Start tour"
     },
     "end": "End tour",
-    "finish": "Finish"
+    "finish": "Finish",
+    "previous": "Previous",
+    "next": "Next"
   },
   "measure" : {
     "measureTool" : "Measure Tool",

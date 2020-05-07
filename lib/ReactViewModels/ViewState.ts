@@ -147,6 +147,13 @@ export default class ViewState {
     this.showTour = false;
   }
   @action
+  previousTourPoint() {
+    const currentIndex = this.currentTourIndex;
+    if (currentIndex !== 0) {
+      this.currentTourIndex = currentIndex - 1;
+    }
+  }
+  @action
   nextTourPoint() {
     const totalTourPoints = this.tourPointsWithValidRefs.length;
     const currentIndex = this.currentTourIndex;
