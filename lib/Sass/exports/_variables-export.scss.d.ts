@@ -18,7 +18,6 @@ interface CssExports {
   'radiusLarge': string;
   'ringWidth': string;
   'sm': string;
-  'spacing': string;
   'textBlack': string;
   'textDark': string;
   'textDarker': string;
