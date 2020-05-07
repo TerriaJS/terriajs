@@ -194,7 +194,7 @@ TourExplanation.propTypes = {
   active: PropTypes.bool
 };
 
-const TourGrouping = observer(({ viewState, tourPoints }) => {
+export const TourGrouping = observer(({ viewState, tourPoints }) => {
   const currentTourPoint = tourPoints[viewState.currentTourIndex];
   const currentTourPointRef = viewState.appRefs.get(
     currentTourPoint?.appRefName
@@ -272,7 +272,7 @@ const TourGrouping = observer(({ viewState, tourPoints }) => {
   );
 });
 
-const TourPreface = ({ viewState }) => {
+export const TourPreface = ({ viewState }) => {
   const { t } = useTranslation();
   const theme = useTheme();
   return (
