@@ -3,6 +3,15 @@ Change Log
 
 ### MobX Development
 
+#### mobx-29
+* (placeholder)
+* Renamed `UrlReference.createUrlReferenceFromUrlReference` to `UrlReference.createCatalogMemberFromUrlReference`
+* Moved url to catalog member mapping from `createUrlRefernceFromUrl.register` to `UrlToCatalogMemberMapping` (now in `UrlReference.ts` file) 
+
+#### mobx-28
+* Fix SASS exports causing some build errors in certain webpack conditions
+
+#### mobx-1 through mobx-27
 * Fixed DragDropFile and `createCatalogItemFromFileOrUrl` which wasn't enabled/working in mobx, added tests for `createCatalogItemFromFileOrUrl` and renamed `createCatalogItemFromUrl` to `createUrlRefernceFromUrl`.
 * Fixed bug in StratumOrder where `sortBottomToTop` would sort strata in the wrong order.
 * Allow member re-ordering via GroupMixin's `moveMemberToIndex`
