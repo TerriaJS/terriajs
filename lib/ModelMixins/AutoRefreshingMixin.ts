@@ -3,7 +3,8 @@ import {
   IReactionDisposer,
   onBecomeObserved,
   onBecomeUnobserved,
-  reaction
+  reaction,
+  observable
 } from "mobx";
 import { now } from "mobx-utils";
 import Constructor from "../Core/Constructor";
@@ -16,6 +17,8 @@ export default function AutoRefreshingMixin<
   T extends Constructor<AutoRefreshing>
 >(Base: T) {
   abstract class AutoRefreshingMixin extends Base {
+    private _autoRefreshEnabled = true
+
     _autoRefreshDisposer: IReactionDisposer | undefined;
 
     /* Return the interval in seconds to poll for updates. */
@@ -27,20 +30,34 @@ export default function AutoRefreshingMixin<
     constructor(...args: any[]) {
       super(...args);
       // We should only poll when our map items have consumers
-      onBecomeObserved(this, "mapItems", () => {
-        this._autoRefreshDisposer = reaction(
-          () => this._pollingTimer,
-          () => {
-            this.refreshData();
-          }
-        );
-      });
-      onBecomeUnobserved(this, "mapItems", () => {
-        if (this._autoRefreshDisposer) {
-          this._autoRefreshDisposer();
-          this._autoRefreshDisposer = undefined;
+      onBecomeObserved(this, "mapItems", this.startAutoRefresh.bind(this));
+      onBecomeUnobserved(this, "mapItems", this.stopAutoRefresh.bind(this));
+    }
+
+    private startAutoRefresh() {
+      if (!this._autoRefreshDisposer && this._autoRefreshEnabled) {
+      this._autoRefreshDisposer = reaction(
+        () => this._pollingTimer,
+        () => {
+          this.refreshData();
         }
-      });
+      );}
+    }
+
+    private stopAutoRefresh() {
+      if (this._autoRefreshDisposer) {
+        this._autoRefreshDisposer();
+        this._autoRefreshDisposer = undefined;
+      }
+    }
+
+    toggleAutoRefresh(enabled:boolean) {
+      this._autoRefreshEnabled = enabled
+      if (enabled) {
+        this.startAutoRefresh()
+      } else {
+        this.stopAutoRefresh()
+      }
     }
 
     @computed
