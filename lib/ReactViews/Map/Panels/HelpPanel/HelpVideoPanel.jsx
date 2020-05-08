@@ -11,6 +11,9 @@ import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
 import { action } from "mobx";
+import VideoGuide from "./VideoGuide";
+
+const HELP_VIDEO_NAME = "helpVideo";
 
 @observer
 class HelpVideoPanel extends React.Component {
@@ -100,7 +103,13 @@ class HelpVideoPanel extends React.Component {
     });
     return (
       <div className={className}>
-        {this.state.showVideoGuide && this.renderVideoGuide()}
+        {/* {this.state.showVideoGuide && this.renderVideoGuide()} */}
+        <VideoGuide 
+          viewState={this.props.viewState}
+          videoLink={this.props.videoLink}
+          background={this.props.background}
+          videoName={HELP_VIDEO_NAME}
+        />
         <Box
           centered
           fullWidth
@@ -115,7 +124,7 @@ class HelpVideoPanel extends React.Component {
               backgroundImage: `linear-gradient(rgba(0,0,0,0.35),rgba(0,0,0,0.35)), url(${this.props.background})`
             }}
           >
-            <button className={Styles.videoBtn} onClick={this.toggleVideoGuide}>
+            <button className={Styles.videoBtn} onClick={() => this.props.viewState.setVideoGuideVisible(HELP_VIDEO_NAME)}>
               <Icon glyph={Icon.GLYPHS.play} />
             </button>
           </div>
