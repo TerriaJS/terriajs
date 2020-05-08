@@ -1,8 +1,9 @@
 import ModelTraits from "./ModelTraits";
 import primitiveTrait from "./primitiveTrait";
-import anyTrait from "./anyTrait";
+import mixTraits from "./mixTraits";
+import MappableTraits from "./MappableTraits";
 
-export default class AutoRefreshingTraits extends ModelTraits {
+export default class AutoRefreshingTraits extends mixTraits(MappableTraits, ModelTraits) {
   @primitiveTrait({
     name: "Refresh interval",
     description: "How often the data in this model is refreshed, in seconds",

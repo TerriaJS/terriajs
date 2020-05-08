@@ -10,8 +10,9 @@ import { now } from "mobx-utils";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
 import MappableTraits from "../Traits/MappableTraits";
+import AutoRefreshingTraits from "../Traits/AutoRefreshingTraits";
 
-type AutoRefreshing = Model<MappableTraits>;
+type AutoRefreshing = Model<AutoRefreshingTraits>;
 
 export default function AutoRefreshingMixin<
   T extends Constructor<AutoRefreshing>
