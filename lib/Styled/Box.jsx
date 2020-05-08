@@ -39,8 +39,8 @@ export const Box = styled.div`
   // ${props => props.col7 && "width: 58.33333%;"}
   // ${props => props.col8 && "width: 66.66667%;"}
   // ${props => props.col9 && "width: 75%;"}
-  // ${props => props.col10 && "width: 83.33333%;"}
-  // ${props => props.col11 && "width: 91.66667%;"}
+  ${props => props.col10 && "width: 83.33333%;"}
+  ${props => props.col11 && "width: 91.66667%;"}
   // ${props => props.col12 && "width: 100%;"}
 
   ${props => props.centered && `align-items: center;`}

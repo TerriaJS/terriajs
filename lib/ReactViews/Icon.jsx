@@ -98,7 +98,8 @@ const GLYPHS = {
   tour: require("../../wwwroot/images/icons/take-the-tour-icon.svg"),
   layers: require("../../wwwroot/images/icons/pulling-away-layers-icon.svg"),
   start: require("../../wwwroot/images/icons/getting-started-icon.svg"),
-  cube: require("../../wwwroot/images/icons/interact.svg")
+  cube: require("../../wwwroot/images/icons/interact.svg"),
+  playInverted: require("../../wwwroot/images/icons/play-inverted.svg")
 };
 
 export const Icon = createReactClass({

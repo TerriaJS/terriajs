@@ -66,6 +66,7 @@ export default class ViewState {
   @observable showWelcomeMessage: boolean = false;
   @observable selectedHelpMenuItem: string = "";
   @observable helpPanelExpanded: boolean = false;
+  @observable videoGuideVisible: string = "";
 
   @observable workbenchWithOpenControls: string | undefined = undefined;
 
@@ -323,6 +324,12 @@ export default class ViewState {
   @action
   setShowWelcomeMessage(welcomeMessageShown: boolean) {
     this.showWelcomeMessage = welcomeMessageShown;
+  }
+
+  @action
+  setVideoGuideVisible(videoName: string) {
+    console.log("Setting videoGuideVisible to " + videoName);
+    this.videoGuideVisible = videoName;
   }
 
   /**

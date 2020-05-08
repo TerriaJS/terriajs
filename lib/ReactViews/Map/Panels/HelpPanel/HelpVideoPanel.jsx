@@ -5,12 +5,10 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
 import Icon from "../../../Icon.jsx";
-import Loader from "../../../Loader";
 import Styles from "./help-panel.scss";
 import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
-import { action } from "mobx";
 import VideoGuide from "./VideoGuide";
 
 const HELP_VIDEO_NAME = "helpVideo";
@@ -52,7 +50,7 @@ class HelpVideoPanel extends React.Component {
     });
     return (
       <div className={className}>
-        <VideoGuide 
+        <VideoGuide
           viewState={this.props.viewState}
           videoLink={this.props.videoLink}
           background={this.props.background}
@@ -72,7 +70,12 @@ class HelpVideoPanel extends React.Component {
               backgroundImage: `linear-gradient(rgba(0,0,0,0.35),rgba(0,0,0,0.35)), url(${this.props.background})`
             }}
           >
-            <button className={Styles.videoBtn} onClick={() => this.props.viewState.setVideoGuideVisible(HELP_VIDEO_NAME)}>
+            <button
+              className={Styles.videoBtn}
+              onClick={() =>
+                this.props.viewState.setVideoGuideVisible(HELP_VIDEO_NAME)
+              }
+            >
               <Icon glyph={Icon.GLYPHS.play} />
             </button>
           </div>

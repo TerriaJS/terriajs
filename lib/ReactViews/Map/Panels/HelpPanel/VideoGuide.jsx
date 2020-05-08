@@ -1,4 +1,3 @@
-
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
@@ -30,7 +29,7 @@ class VideoGuide extends React.Component {
     videoName: PropTypes.string,
     theme: PropTypes.object,
     t: PropTypes.func
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -38,7 +37,11 @@ class VideoGuide extends React.Component {
 
   render() {
     return (
-      <FadeIn isVisible={this.props.viewState.videoGuideVisible === this.props.videoName}>
+      <FadeIn
+        isVisible={
+          this.props.viewState.videoGuideVisible === this.props.videoName
+        }
+      >
         <VideoWrapperBox
           centered
           onClick={() => this.props.viewState.setVideoGuideVisible("")}
@@ -51,9 +54,7 @@ class VideoGuide extends React.Component {
               background-size: cover;
               background-repeat: no-repeat;
               background-image: url(${this.props.background});
-            `}
-            onClick={e => e.stopPropagation()}
-            css={`
+
               svg {
                 fill: #fff;
                 width: 60px;
@@ -62,10 +63,9 @@ class VideoGuide extends React.Component {
                 left: -30px;
               }
             `}
+            onClick={e => e.stopPropagation()}
           >
-            <Loader 
-              message={` `} 
-            />
+            <Loader message={` `} />
             <iframe
               src={this.props.videoLink}
               allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"

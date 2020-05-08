@@ -101,7 +101,8 @@ export const Text = styled.div`
   `}
 
   ${props => props.styledSize && `font-size: ${props.styledSize}`};
-  ${props => props.styledLineHeight && `line-height: ${props.styledLineHeight}`};
+  ${props =>
+    props.styledLineHeight && `line-height: ${props.styledLineHeight}`};
   
 `;
 
