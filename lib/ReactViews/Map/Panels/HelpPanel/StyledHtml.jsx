@@ -13,7 +13,7 @@ const Numbers = styled(Text)`
   height: 22px;
   line-height: 22px;
   border-radius: 50%;
-  ${props => props.darkBg && `background-color: ${props.theme.textDarker};`}
+  background-color: ${props => props.theme.textDarker};
 `;
 
 const renderOrderedList = function(contents) {

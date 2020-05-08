@@ -7,6 +7,7 @@ Change Log
 * (placeholder)
 * Renamed `UrlReference.createUrlReferenceFromUrlReference` to `UrlReference.createCatalogMemberFromUrlReference`
 * Moved url to catalog member mapping from `createUrlRefernceFromUrl.register` to `UrlToCatalogMemberMapping` (now in `UrlReference.ts` file) 
+* Make the help panel customisable for different maps by modifying `config.json`
 
 #### mobx-28
 * Fix SASS exports causing some build errors in certain webpack conditions
@@ -107,7 +108,6 @@ Change Log
 * Fixed bug causing full app crash or viewer zoom refresh when using 3D view and changing settings or changing the terrain provider.
 * Implements `SensorObservationServiceCatalogItem`.
 * Add support for styling CSVs using a region mapped or text columns.
-* Make the help panel customisable to different maps
 * Update Compass UI to include larger rotation target, remove sass from compass
 * Link Compass "help" button to `navigation` HelpPanelItem (requires generalisation later down the track)
 * Improve keyboard traversal through right-hand-side map icon buttons
