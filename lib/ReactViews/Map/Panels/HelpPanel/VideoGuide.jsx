@@ -50,11 +50,8 @@ class VideoGuide extends React.Component {
             centered
             col11
             styledHeight={"90%"}
+            backgroundImage={this.props.background}
             css={`
-              background-size: cover;
-              background-repeat: no-repeat;
-              background-image: url(${this.props.background});
-
               svg {
                 fill: #fff;
                 width: 60px;

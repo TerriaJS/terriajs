@@ -93,6 +93,23 @@ export const Box = styled.div`
       padding-bottom: ${5 *
         (props.paddedVertically === true ? 1 : props.paddedVertically)}px;
     `}
+  
+  ${props =>
+    props.backgroundImage &&
+    `
+      ${
+        props.backgroundBlackOverlay
+          ? `
+      background-image: linear-gradient(
+          rgba(0, 0, 0, ${props.backgroundBlackOverlay}),
+          rgba(0, 0, 0, ${props.backgroundBlackOverlay})
+        ),
+        url(${props.backgroundImage});`
+          : `background-image: url(${props.backgroundImage});`
+      }
+      background-size: cover;
+      background-repeat: no-repeat;
+    `}
 `;
 
 export const BoxSpan = styled(Box).attrs({

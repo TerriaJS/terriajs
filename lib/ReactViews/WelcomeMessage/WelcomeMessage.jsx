@@ -97,11 +97,7 @@ class WelcomeMessage extends React.Component {
 }
 
 export const WelcomeMessagePure = props => {
-  const {
-    showWelcomeMessage,
-    setShowWelcomeMessage,
-    viewState
-  } = props;
+  const { showWelcomeMessage, setShowWelcomeMessage, viewState } = props;
   // const { t } = useTranslation();
   // This is required so we can do nested animations
   const [welcomeVisible, setWelcomeVisible] = useState(showWelcomeMessage);
@@ -190,15 +186,17 @@ export const WelcomeMessagePure = props => {
                   col6
                   centered
                   fullHeight
-                  css={`
-                    background-size: cover;
-                    background-repeat: no-repeat;
-                    background-image: linear-gradient(
-                        rgba(0, 0, 0, 0.5),
-                        rgba(0, 0, 0, 0.5)
-                      ),
-                      url(https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg);
-                  `}
+                  backgroundImage={"https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"}
+                  backgroundBlackOverlay={"50%"}
+                  // css={`
+                  //   background-size: cover;
+                  //   background-repeat: no-repeat;
+                  //   background-image: linear-gradient(
+                  //       rgba(0, 0, 0, 0.5),
+                  //       rgba(0, 0, 0, 0.5)
+                  //     ),
+                  //     url(https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg);
+                  // `}
                 >
                   <RawButton
                     fullWidth
