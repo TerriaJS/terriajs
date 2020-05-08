@@ -119,7 +119,7 @@ export const WelcomeMessagePure = props => {
 
   useKeyPress("Escape", () => {
     if (showWelcomeMessage) {
-      handleClose(false);
+      handleClose(true);
     }
   });
 
@@ -138,7 +138,7 @@ export const WelcomeMessagePure = props => {
         }
       }}
     >
-      <div /* onClick={handleClose.bind(null, false)}*/>
+      <div /* onClick={handleClose.bind(null, true)}*/>
         <WelcomeModalWrapper fullWidth fullHeight positionAbsolute centered>
           <VideoGuide
             viewState={viewState}
@@ -155,7 +155,7 @@ export const WelcomeMessagePure = props => {
               displayInlineBlock
             >
               <RawButton
-                onClick={handleClose.bind(null, false)}
+                onClick={handleClose.bind(null, true)}
                 css={`
                   float: right;
                 `}
@@ -228,7 +228,7 @@ export const WelcomeMessagePure = props => {
                     buttonText={"I'll need some help"}
                     buttonIcon={Icon.GLYPHS.help}
                     onClick={() => {
-                      handleClose(false);
+                      handleClose(true);
                       props.viewState.showHelpPanel();
                     }}
                   />
@@ -237,7 +237,7 @@ export const WelcomeMessagePure = props => {
                     buttonText={"Explore map data"}
                     buttonIcon={Icon.GLYPHS.add}
                     onClick={() => {
-                      handleClose(false);
+                      handleClose(true);
                       setShouldExploreData(true);
                     }}
                   />
@@ -245,7 +245,7 @@ export const WelcomeMessagePure = props => {
               </Box>
               <Spacing bottom={13} />
               <Box fullWidth centered>
-                <RawButton onClick={handleClose.bind(null, false)}>
+                <RawButton onClick={handleClose.bind(null, true)}>
                   <TextSpan small textLight>
                     Close message and don’t show me this again
                   </TextSpan>
