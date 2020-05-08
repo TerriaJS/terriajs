@@ -3,11 +3,9 @@
 interface CssExports {
   'menu': string;
   'menu-bar': string;
-  'menu-bar--storyOpen': string;
   'menu-bar--workbenchClosed': string;
   'menu-item': string;
   'menuBar': string;
-  'menuBarStoryOpen': string;
   'menuBarWorkbenchClosed': string;
   'menuItem': string;
   'storyBtn': string;

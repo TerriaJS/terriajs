@@ -11,13 +11,12 @@
   transition: all 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   &.isVisible {
-    transition-delay: 0.25s;
     visibility: visible;
     margin-right: 0;
   }
   &.isHidden {
     visibility: hidden;
-    margin-right: -435px;
+    margin-right: -400px;
   }
 }
 .header {
@@ -46,19 +45,6 @@
     font-weight: normal;
     margin: 0;
   }
-}
-
-.closeBtn {
-  composes: btn from "../../Sass/common/_buttons.scss";
-  composes: btn--map from "../../Sass/common/_buttons.scss";
-  display: flex;
-  background: $dark;
-  border-radius: 16px 0 0 16px;
-  z-index: 99999;
-  position: absolute;
-  top: 18px;
-  margin-left: -35px;
-  box-shadow: none;
 }
 
 .trashBtn,

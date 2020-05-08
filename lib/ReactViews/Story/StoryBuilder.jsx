@@ -309,16 +309,6 @@ const StoryBuilder = observer(
       });
     },
 
-    onCloseButtonClick() {
-      this.props.viewState.toggleStoryBuilder();
-      this.props.terria.currentViewer.notifyRepaintRequired();
-      // Allow any animations to finish, then trigger a resize.
-      setTimeout(function() {
-        triggerResize();
-      }, this.props.animationDuration || 1);
-      this.props.viewState.toggleFeaturePrompt("story", false, true);
-    },
-
     render() {
       const { t } = this.props;
       const hasStories =
@@ -331,13 +321,6 @@ const StoryBuilder = observer(
       });
       return (
         <div className={className}>
-          <button
-            onClick={this.onCloseButtonClick}
-            title={"Close Story"}
-            className={Styles.closeBtn}
-          >
-            <Icon glyph={Icon.GLYPHS.closeLight} />
-          </button>
           {this.state.showVideoGuide && this.renderVideoGuide()}
           <div className={Styles.header}>
             {!hasStories && this.renderIntro()}
