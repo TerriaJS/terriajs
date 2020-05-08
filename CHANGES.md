@@ -122,10 +122,6 @@ Change Log
 * Fixed MapIconButton & FeedbackButton proptypes being defined incorrectly
 * Implement SenapsLocationsCatalogItem
 * Update papaparse and improve handling for retrieveing CSVs via chunking that have no ContentLenth header
-#### mobx-28
-* Fix SASS exports causing some build errors in certain webpack conditions
-#### mobx-29
-* Fix handling of urls on `Cesium3DTilesCatalogItem` related to proxying and getting confused between Resource vs URL.
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
