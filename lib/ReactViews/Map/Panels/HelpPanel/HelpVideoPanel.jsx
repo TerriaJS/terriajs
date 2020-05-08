@@ -33,57 +33,6 @@ class HelpVideoPanel extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      showVideoGuide: false,
-      videoGuideVisible: false
-    };
-  }
-
-  @action.bound
-  toggleVideoGuide() {
-    const showVideoGuide = this.state.showVideoGuide;
-    // If not enabled
-    if (!showVideoGuide) {
-      this.setState({
-        showVideoGuide: !showVideoGuide,
-        videoGuideVisible: true
-      });
-    }
-    // Otherwise we immediately trigger exit animations, then close it 300ms later
-    if (showVideoGuide) {
-      this.setState({
-        showVideoGuide: !showVideoGuide,
-        videoGuideVisible: false
-      });
-    }
-  }
-
-  renderVideoGuide() {
-    return (
-      <div
-        className={Styles.videoGuideWrapperFullScreen}
-        onClick={this.toggleVideoGuide}
-      >
-        <div
-          className={Styles.videoGuide}
-          onClick={e => e.stopPropagation()}
-          style={{
-            backgroundImage: `url(${this.props.background})`
-          }}
-        >
-          <div className={Styles.videoGuideRatio}>
-            <div className={Styles.videoGuideLoading}>
-              <Loader message={` `} />
-            </div>
-            <iframe
-              className={Styles.videoGuideIframe}
-              src={this.props.videoLink}
-              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-            />
-          </div>
-        </div>
-      </div>
-    );
   }
 
   render() {
@@ -103,7 +52,6 @@ class HelpVideoPanel extends React.Component {
     });
     return (
       <div className={className}>
-        {/* {this.state.showVideoGuide && this.renderVideoGuide()} */}
         <VideoGuide 
           viewState={this.props.viewState}
           videoLink={this.props.videoLink}
