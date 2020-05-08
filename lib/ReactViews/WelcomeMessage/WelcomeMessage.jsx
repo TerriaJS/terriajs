@@ -186,17 +186,10 @@ export const WelcomeMessagePure = props => {
                   col6
                   centered
                   fullHeight
-                  backgroundImage={"https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"}
+                  backgroundImage={
+                    "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
+                  }
                   backgroundBlackOverlay={"50%"}
-                  // css={`
-                  //   background-size: cover;
-                  //   background-repeat: no-repeat;
-                  //   background-image: linear-gradient(
-                  //       rgba(0, 0, 0, 0.5),
-                  //       rgba(0, 0, 0, 0.5)
-                  //     ),
-                  //     url(https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg);
-                  // `}
                 >
                   <RawButton
                     fullWidth
