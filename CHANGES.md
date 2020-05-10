@@ -4,10 +4,10 @@ Change Log
 ### MobX Development
 
 #### mobx-29
-* (placeholder)
 * Fix handling of urls on `Cesium3DTilesCatalogItem` related to proxying and getting confused between Resource vs URL.
 * Renamed `UrlReference.createUrlReferenceFromUrlReference` to `UrlReference.createCatalogMemberFromUrlReference`
 * Moved url to catalog member mapping from `createUrlRefernceFromUrl.register` to `UrlToCatalogMemberMapping` (now in `UrlReference.ts` file) 
+* Added generic styled select
 
 #### mobx-28
 * Fix SASS exports causing some build errors in certain webpack conditions
@@ -122,6 +122,7 @@ Change Log
 * Fixed MapIconButton & FeedbackButton proptypes being defined incorrectly
 * Implement SenapsLocationsCatalogItem
 * Update papaparse and improve handling for retrieveing CSVs via chunking that have no ContentLenth header
+
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
