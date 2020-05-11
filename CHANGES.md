@@ -3,6 +3,9 @@ Change Log
 
 ### MobX Development
 
+#### mobx-next-release
+* (placeholder)
+
 #### mobx-29
 * Fix handling of urls on `Cesium3DTilesCatalogItem` related to proxying and getting confused between Resource vs URL.
 * Renamed `UrlReference.createUrlReferenceFromUrlReference` to `UrlReference.createCatalogMemberFromUrlReference`
