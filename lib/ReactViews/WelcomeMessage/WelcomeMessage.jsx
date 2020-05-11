@@ -115,7 +115,7 @@ export const WelcomeMessagePure = props => {
 
   useKeyPress("Escape", () => {
     if (showWelcomeMessage) {
-      handleClose(true);
+      handleClose(false);
     }
   });
 
@@ -151,7 +151,7 @@ export const WelcomeMessagePure = props => {
               displayInlineBlock
             >
               <RawButton
-                onClick={handleClose.bind(null, true)}
+                onClick={handleClose.bind(null, false)}
                 css={`
                   float: right;
                 `}
@@ -219,7 +219,7 @@ export const WelcomeMessagePure = props => {
                     buttonText={"I'll need some help"}
                     buttonIcon={Icon.GLYPHS.help}
                     onClick={() => {
-                      handleClose(true);
+                      handleClose(false);
                       props.viewState.showHelpPanel();
                     }}
                   />
@@ -228,7 +228,7 @@ export const WelcomeMessagePure = props => {
                     buttonText={"Explore map data"}
                     buttonIcon={Icon.GLYPHS.add}
                     onClick={() => {
-                      handleClose(true);
+                      handleClose(false);
                       setShouldExploreData(true);
                     }}
                   />
