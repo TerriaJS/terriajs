@@ -161,6 +161,10 @@
     "send": "Send",
     "feedbackBtnText": "Give Feedback"
   },
+  "helpPanel": {
+    "menuPaneTitle": "We're here to help",
+    "menuPaneBody": "Find useful tips on how to use TerriaJS by either checking the guides below or by contacting the team at [info@terria.io](mailto:info@terria.io)"
+  },
   "helpMenu": {
     "btnText": "Help",
     "btnTitle": "get help",
@@ -901,6 +905,15 @@
     },
     "mapboxVectorTile": {
       "name": "Mapbox Vector Tile"
+    },
+    "senaps": {
+      "name": "Senaps Locations",
+      "retrieveErrorTitle": "Error processing Senaps Catalog Item",
+      "generalErrorMessage": "Encountered an error processing Senaps data",
+      "missingKeyErrorMessage": "A Senaps API Key should be added to the terriajs-server config using the appendParamToQueryString option",
+      "locationHeadingFeatureInfo": "Location",
+      "availableStreamsHeadingFeatureInfo": "Available Streams",
+      "noStreamsMessageFeatureInfo": "No streams at this location."
     },
     "ogr": {
       "name": "Unknown / Converted to GeoJSON",

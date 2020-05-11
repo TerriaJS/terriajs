@@ -17,6 +17,7 @@ const GLYPHS = {
   arOn: require("../../wwwroot/images/icons/ar-on.svg"),
   arRealign: require("../../wwwroot/images/icons/ar-realign.svg"),
   arResetAlignment: require("../../wwwroot/images/icons/ar-reset-alignment.svg"),
+  arrowDown: require("../../wwwroot/images/icons/arrow-down.svg"),
   backToStart: require("../../wwwroot/images/icons/back-to-start.svg"),
   backward: require("../../wwwroot/images/icons/backward.svg"),
   barChart: require("../../wwwroot/images/icons/bar-chart.svg"),
@@ -99,7 +100,14 @@ const GLYPHS = {
   tour: require("../../wwwroot/images/icons/take-the-tour-icon.svg"),
   layers: require("../../wwwroot/images/icons/pulling-away-layers-icon.svg"),
   start: require("../../wwwroot/images/icons/getting-started-icon.svg"),
-  cube: require("../../wwwroot/images/icons/interact.svg")
+  cube: require("../../wwwroot/images/icons/interact.svg"),
+  video: require("../../wwwroot/images/icons/video.svg"),
+  compare: require("../../wwwroot/images/icons/compare.svg"),
+  newHelp: require("../../wwwroot/images/icons/help-2.svg"),
+  geolocationThick: require("../../wwwroot/images/icons/location-thick.svg"),
+  minusThick: require("../../wwwroot/images/icons/zoom-minus.svg"),
+  plusThick: require("../../wwwroot/images/icons/zoom-plus.svg"),
+  refreshThick: require("../../wwwroot/images/icons/zoom-refresh.svg")
 };
 
 export const Icon = createReactClass({
