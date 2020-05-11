@@ -27,7 +27,7 @@ const BackgroundImage = styled(Box)`
 
 const DisclaimerButton = styled(Button).attrs({
   textProps: {
-    semiBold: true,
+    semiBold: true
   },
   rounded: true
 })`
