@@ -7,7 +7,6 @@ import CatalogGroup from "./CatalogGroupNew";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import Cesium3DTilesCatalogItem from "./Cesium3DTilesCatalogItem";
 import CesiumTerrainCatalogItem from "./CesiumTerrainCatalogItem";
-import createUrlReferenceFromUrl from "./createUrlReferenceFromUrl";
 import CsvCatalogItem from "./CsvCatalogItem";
 import CzmlCatalogItem from "./CzmlCatalogItem";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
@@ -20,7 +19,7 @@ import OpenStreetMapCatalogItem from "./OpenStreetMapCatalogItem";
 import SenapsLocationsCatalogItem from "./SenapsLocationsCatalogItem";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
-import UrlReference from "./UrlReference";
+import UrlReference, { UrlToCatalogMemberMapping } from "./UrlReference";
 import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFunction";
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
 import CompositeCatalogItem from "./CompositeCatalogItem";
@@ -98,103 +97,103 @@ export default function registerCatalogMembers() {
     CompositeCatalogItem
   );
 
-  createUrlReferenceFromUrl.register(
+  UrlToCatalogMemberMapping.register(
     matchesExtension("csv"),
     CsvCatalogItem.type
   );
-  createUrlReferenceFromUrl.register(
+  UrlToCatalogMemberMapping.register(
     matchesExtension("czm"),
     CzmlCatalogItem.type
   );
-  createUrlReferenceFromUrl.register(
+  UrlToCatalogMemberMapping.register(
     matchesExtension("czml"),
     CzmlCatalogItem.type
   );
-  createUrlReferenceFromUrl.register(
+  UrlToCatalogMemberMapping.register(
     matchesExtension("geojson"),
     GeoJsonCatalogItem.type
   );
-  createUrlReferenceFromUrl.register(
+  UrlToCatalogMemberMapping.register(
     matchesExtension("json"),
     GeoJsonCatalogItem.type
   );
-  createUrlReferenceFromUrl.register(
+  UrlToCatalogMemberMapping.register(
     matchesExtension("kml"),
     KmlCatalogItem.type
   );
-  createUrlReferenceFromUrl.register(
+  UrlToCatalogMemberMapping.register(
     matchesExtension("kmz"),
     KmlCatalogItem.type
   );
-  createUrlReferenceFromUrl.register(
+  UrlToCatalogMemberMapping.register(
     matchesExtension("topojson"),
     GeoJsonCatalogItem.type
   );
 
   // These items work by trying to match a URL, then loading the data. If it fails, they move on.
-  createUrlReferenceFromUrl.register(
+  UrlToCatalogMemberMapping.register(
     matchesUrl(/\/wms/i),
     WebMapServiceCatalogGroup.type,
     true
   );
-  createUrlReferenceFromUrl.register(
+  UrlToCatalogMemberMapping.register(
     matchesUrl(/\/arcgis\/rest\/.*\/MapServer\/\d+\b/i),
     ArcGisMapServerCatalogItem.type,
     true
   );
-  createUrlReferenceFromUrl.register(
+  UrlToCatalogMemberMapping.register(
     matchesUrl(/\/arcgis\/rest\/.*\/FeatureServer\/\d+\b/i),
     ArcGisFeatureServerCatalogItem.type,
     true
   );
-  createUrlReferenceFromUrl.register(
+  UrlToCatalogMemberMapping.register(
     matchesUrl(/\/arcgis\/rest\/.*\/FeatureServer(\/.*)?$/i),
     ArcGisFeatureServerCatalogGroup.type,
     true
   );
-  createUrlReferenceFromUrl.register(
+  UrlToCatalogMemberMapping.register(
     matchesUrl(/\/arcgis\/rest\/.*\/\d+\b/i),
     ArcGisMapServerCatalogItem.type,
     true
   );
-  createUrlReferenceFromUrl.register(
+  UrlToCatalogMemberMapping.register(
     matchesUrl(/\/rest\/.*\/MapServer\/\d+\b/i),
     ArcGisMapServerCatalogItem.type,
     true
   );
-  createUrlReferenceFromUrl.register(
+  UrlToCatalogMemberMapping.register(
     matchesUrl(/\/rest\/.*\/FeatureServer\/\d+\b/i),
     ArcGisFeatureServerCatalogItem.type,
     true
   );
-  createUrlReferenceFromUrl.register(
+  UrlToCatalogMemberMapping.register(
     matchesUrl(/\/rest\/.*\/FeatureServer(\/.*)?$/i),
     ArcGisFeatureServerCatalogGroup.type,
     true
   );
-  createUrlReferenceFromUrl.register(
+  UrlToCatalogMemberMapping.register(
     matchesUrl(/\/rest\/.*\/\d+\b/i),
     ArcGisMapServerCatalogItem.type,
     true
   );
 
   // These don't even try to match a URL, they're just total fallbacks. We really, really want something to work.
-  createUrlReferenceFromUrl.register(
+  UrlToCatalogMemberMapping.register(
     s => true,
     WebMapServiceCatalogGroup.type,
     true
   );
-  createUrlReferenceFromUrl.register(
+  UrlToCatalogMemberMapping.register(
     s => true,
     ArcGisMapServerCatalogItem.type,
     true
   );
-  createUrlReferenceFromUrl.register(
+  UrlToCatalogMemberMapping.register(
     s => true,
     ArcGisFeatureServerCatalogItem.type,
     true
   );
-  createUrlReferenceFromUrl.register(
+  UrlToCatalogMemberMapping.register(
     s => true,
     ArcGisFeatureServerCatalogGroup.type,
     true
