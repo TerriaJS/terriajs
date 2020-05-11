@@ -7,6 +7,7 @@ Change Log
 * Fix handling of urls on `Cesium3DTilesCatalogItem` related to proxying and getting confused between Resource vs URL.
 * Renamed `UrlReference.createUrlReferenceFromUrlReference` to `UrlReference.createCatalogMemberFromUrlReference`
 * Moved url to catalog member mapping from `createUrlRefernceFromUrl.register` to `UrlToCatalogMemberMapping` (now in `UrlReference.ts` file) 
+* Make the help panel customisable for different maps by modifying `config.json`
 * Added generic styled select
 * Remove maxZoom from leaflet map.
 * Run & configure prettier on terriajs lib/ json files
