@@ -9,6 +9,7 @@ import Styles from "./help-panel.scss";
 import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
+import parseCustomMarkdownToReact from "../../../Custom/parseCustomMarkdownToReact";
 import HelpPanelItem from "./HelpPanelItem";
 import { RawButton } from "../../../../Styled/Button.jsx";
 
@@ -28,7 +29,7 @@ class HelpPanel extends React.Component {
   }
 
   render() {
-    // const { t } = this.props;
+    const { t } = this.props;
     const helpItems = this.props.terria.configParameters.helpContent;
     const isVisible =
       this.props.viewState.showHelpMenu &&
@@ -79,13 +80,11 @@ class HelpPanel extends React.Component {
           `}
         >
           <Text extraBold heading textDark>
-            We&apos;re here to help
+            {t("helpPanel.menuPaneTitle")}
           </Text>
           <Spacing bottom={4} />
-          <Text medium textDark>
-            Find useful tips on how to use the Digital Twin either by checking
-            the video guides below or by contacting the team at{" "}
-            <span className={Styles.link}>info@terria.io</span>.
+          <Text medium textDark highlightLinks>
+            {parseCustomMarkdownToReact(t("helpPanel.menuPaneBody"))}
           </Text>
           {/* <Spacing bottom={5} />
           <Box centered>

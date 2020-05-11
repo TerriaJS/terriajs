@@ -100,7 +100,13 @@ export const Text = styled.div`
     font-size: 26px;
     line-height: 32px;
   `}
-  
+  ${props =>
+    props.highlightLinks &&
+    `
+    a {
+      color: ${props.theme.colorPrimary};
+    }
+  `}
 `;
 
 export const TextSpan = styled(Text).attrs({
