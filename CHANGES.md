@@ -10,6 +10,9 @@ Change Log
 * Added generic styled select
 * Remove maxZoom from leaflet map.
 * Run & configure prettier on terriajs lib/ json files
+* Changed most of the icons for the `MapNavigation` section (on the right hand side) of the screen
+* Added a close button to story panel
+* Made `MapIconButton` to animate when expanding 
 
 #### mobx-28
 * Fix SASS exports causing some build errors in certain webpack conditions
@@ -108,9 +111,6 @@ Change Log
 * Fix bug that caused contents on the video panel of the help UI to overlay the actual video
 * Overhauled location search to be a dropdown instead of list of results
 * Fixed bug causing full app crash or viewer zoom refresh when using 3D view and changing settings or changing the terrain provider.
-* Changed most of the icons for the `MapNavigation` section (on the right hand side) of the screen
-* Added a close button to story panel
-* Made `MapIconButton` to animate when expanding 
 * Implements `SensorObservationServiceCatalogItem`.
 * Add support for styling CSVs using a region mapped or text columns.
 * Update Compass UI to include larger rotation target, remove sass from compass
