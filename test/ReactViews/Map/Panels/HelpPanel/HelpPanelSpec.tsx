@@ -68,11 +68,11 @@ describe("HelpPanel", function() {
       expect(helpItems.length).toBe(1);
     });
 
-    it("renders the default start icon", function() {
+    it("renders the default video icon", function() {
       const helpItem = testRenderer.root.findByType(HelpPanelItem);
       const menuIcon = helpItem.findByType(Icon);
       // Not sure how to compare icons so I just used the gylph.id
-      expect(menuIcon.props.glyph.id).toBe("getting-started-icon");
+      expect(menuIcon.props.glyph.id).toBe("video");
     });
 
     it("does not render any text on the help menu buttons", function() {
