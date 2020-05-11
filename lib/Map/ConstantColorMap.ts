@@ -2,7 +2,7 @@ import Color from "terriajs-cesium/Source/Core/Color";
 import ColorMap from "./ColorMap";
 
 export default class ConstantColorMap extends ColorMap {
-  constructor(readonly color: Readonly<Color>) {
+  constructor(readonly color: Readonly<Color>, readonly title?: string) {
     super();
   }
 

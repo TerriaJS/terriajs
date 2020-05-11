@@ -3,6 +3,21 @@ Change Log
 
 ### MobX Development
 
+#### mobx-29
+* Fix handling of urls on `Cesium3DTilesCatalogItem` related to proxying and getting confused between Resource vs URL.
+* Renamed `UrlReference.createUrlReferenceFromUrlReference` to `UrlReference.createCatalogMemberFromUrlReference`
+* Moved url to catalog member mapping from `createUrlRefernceFromUrl.register` to `UrlToCatalogMemberMapping` (now in `UrlReference.ts` file) 
+* Added generic styled select
+* Remove maxZoom from leaflet map.
+* Run & configure prettier on terriajs lib/ json files
+* Changed most of the icons for the `MapNavigation` section (on the right hand side) of the screen
+* Added a close button to story panel
+* Made `MapIconButton` to animate when expanding 
+
+#### mobx-28
+* Fix SASS exports causing some build errors in certain webpack conditions
+
+#### mobx-1 through mobx-27
 * Fixed DragDropFile and `createCatalogItemFromFileOrUrl` which wasn't enabled/working in mobx, added tests for `createCatalogItemFromFileOrUrl` and renamed `createCatalogItemFromUrl` to `createUrlRefernceFromUrl`.
 * Fixed bug in StratumOrder where `sortBottomToTop` would sort strata in the wrong order.
 * Allow member re-ordering via GroupMixin's `moveMemberToIndex`
@@ -96,6 +111,7 @@ Change Log
 * Fix bug that caused contents on the video panel of the help UI to overlay the actual video
 * Overhauled location search to be a dropdown instead of list of results
 * Fixed bug causing full app crash or viewer zoom refresh when using 3D view and changing settings or changing the terrain provider.
+* Implements `SensorObservationServiceCatalogItem`.
 * Add support for styling CSVs using a region mapped or text columns.
 * Update Compass UI to include larger rotation target, remove sass from compass
 * Link Compass "help" button to `navigation` HelpPanelItem (requires generalisation later down the track)

@@ -1,4 +1,4 @@
-import Variables from "style-loader!css-loader!sass-loader!../../Sass/common/_variables-export.scss";
+import Variables from "../../Sass/exports/_variables-export.scss";
 
 import Mixins from "../../Styled/mixins";
 

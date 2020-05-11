@@ -36,24 +36,3 @@ export default function createUrlReferenceFromUrl(
     }
   });
 }
-
-type Matcher = (input: string) => boolean;
-interface MappingEntry {
-  matcher: Matcher;
-  type: string;
-  requiresLoad: boolean;
-}
-
-export const mapping: MappingEntry[] = [];
-
-createUrlReferenceFromUrl.register = function(
-  matcher: Matcher,
-  type: string,
-  requiresLoad?: boolean
-) {
-  mapping.push({
-    matcher,
-    type,
-    requiresLoad: Boolean(requiresLoad)
-  });
-};
