@@ -9,6 +9,7 @@ Change Log
 * Moved url to catalog member mapping from `createUrlRefernceFromUrl.register` to `UrlToCatalogMemberMapping` (now in `UrlReference.ts` file) 
 * Added generic styled select
 * Remove maxZoom from leaflet map.
+* Run & configure prettier on terriajs lib/ json files
 
 #### mobx-28
 * Fix SASS exports causing some build errors in certain webpack conditions
@@ -123,6 +124,7 @@ Change Log
 * Fixed MapIconButton & FeedbackButton proptypes being defined incorrectly
 * Implement SenapsLocationsCatalogItem
 * Update papaparse and improve handling for retrieveing CSVs via chunking that have no ContentLenth header
+
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC
