@@ -595,7 +595,7 @@ export default class TableStyle {
 function sortedUniqueDates(
   dates: Readonly<(JulianDate | null | undefined)[]>
 ): JulianDate[] {
-  const nonNullDates: JulianDate[] = <any>dates.filter(d => d);
+  const nonNullDates: JulianDate[] = dates.filter((d): d is JulianDate => !!d);
   return nonNullDates
     .sort((a, b) => JulianDate.compare(a, b))
     .filter((d, i, ds) => i === 0 || !JulianDate.equals(d, ds[i - 1]));
