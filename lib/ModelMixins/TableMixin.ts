@@ -102,7 +102,9 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
      * Gets the {@link TableStyleTraits#id} of the currently-active style.
      * Note that this is a trait so there is no guarantee that a style
      * with this ID actually exists. If no active style is explicitly
-     * specified, the ID of the first of the {@link #styles} is used.
+     * specified, the ID of the first style with a scalar color column is used.
+     * If there is no such style the id of the first style of the {@link #styles}
+     * is used.
      */
     @computed
     get activeStyle(): string | undefined {
@@ -110,6 +112,8 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       if (value !== undefined) {
         return value;
       } else if (this.styles && this.styles.length > 0) {
+        // Find and return a style with scalar color column if it exists,
+        // otherwise just return the first available style id.
         const styleWithScalarColorColumn = this.styles.find(s => {
           const colName = s.color.colorColumn;
           return (
