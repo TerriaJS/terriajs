@@ -590,7 +590,7 @@ export default class TableStyle {
 }
 
 /**
- * Returns an array of
+ * Returns an array of sorted unique dates
  */
 function sortedUniqueDates(
   dates: Readonly<(JulianDate | null | undefined)[]>
