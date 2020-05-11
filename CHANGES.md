@@ -12,7 +12,8 @@ Change Log
 * Run & configure prettier on terriajs lib/ json files
 * Changed most of the icons for the `MapNavigation` section (on the right hand side) of the screen
 * Added a close button to story panel
-* Made `MapIconButton` to animate when expanding 
+* Made `MapIconButton` to animate when expanding
+* Remove requirement for browser to render based on make half pixel calculations for the Compass & stop it jumping around when animating
 
 #### mobx-28
 * Fix SASS exports causing some build errors in certain webpack conditions
@@ -123,7 +124,6 @@ Change Log
 * Tidy Compass UI animations, styles, titles
 * Bumped mobx minor to 4.15.x, mobx-react major to 6.x.x
 * Add `dateFormat` trait to `TimeVaryingTraits` to allowing formatting of datestrings in workbench and bottomdock.
-* Remove requirement for browser to render based on make half pixel calculations for the Compass & stop it jumping around when animating
 * Tidy Gyroscope Guidance positioning
 * Fixed FeatureInfoPanel using old class state
 * Fixed MapIconButton & FeedbackButton proptypes being defined incorrectly
