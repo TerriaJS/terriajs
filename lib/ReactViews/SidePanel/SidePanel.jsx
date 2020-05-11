@@ -10,6 +10,7 @@ import SearchBox from "../Search/SearchBox.jsx";
 import SidebarSearch from "../Search/SidebarSearch.jsx";
 import Workbench from "../Workbench/Workbench.jsx";
 import Icon from "../Icon.jsx";
+import SidePanelContent from "./SidePanelContent";
 import FullScreenButton from "./FullScreenButton.jsx";
 import { removeMarker } from "../../Models/LocationMarkerUtils";
 import { withTranslation, Trans } from "react-i18next";
@@ -90,6 +91,7 @@ const SidePanel = createReactClass({
     return (
       <div className={Styles.workBench}>
         <div className={Styles.header}>
+          <SidePanelContent />
           <FullScreenButton
             terria={this.props.terria}
             viewState={this.props.viewState}
@@ -98,14 +100,14 @@ const SidePanel = createReactClass({
             btnText={t("addData.btnHide")}
           />
 
-          <SearchBox
+          {/*<SearchBox
             onSearchTextChanged={this.changeSearchText}
             onDoSearch={this.search}
             onFocus={this.startLocationSearch}
             searchText={searchState.locationSearchText}
             placeholder={t("search.placeholder")}
-          />
-          <div className={Styles.addData}>
+          /> */}
+          {/* <div className={Styles.addData}>
             <button
               type="button"
               onClick={this.onAddDataClicked}
@@ -123,10 +125,10 @@ const SidePanel = createReactClass({
             >
               <Icon glyph={Icon.GLYPHS.upload} />
             </button>
-          </div>
+          </div> */}
         </div>
         <div className={Styles.body}>
-          <Choose>
+          {/* <Choose>
             <When
               condition={
                 searchState.locationSearchText.length > 0 &&
@@ -140,8 +142,8 @@ const SidePanel = createReactClass({
                   searchState.isWaitingToStartLocationSearch
                 }
               />
-            </When>
-            <When
+            </When> */}
+          {/* <When
               condition={
                 this.props.terria.nowViewing.items &&
                 this.props.terria.nowViewing.items.length > 0
@@ -151,8 +153,8 @@ const SidePanel = createReactClass({
                 viewState={this.props.viewState}
                 terria={this.props.terria}
               />
-            </When>
-            <Otherwise>
+            </When> */}
+          {/* <Otherwise>
               <Trans i18nKey="emptyWorkbenchMessage">
                 <div className={Styles.workbenchEmpty}>
                   <div>Your workbench is empty</div>
@@ -170,8 +172,8 @@ const SidePanel = createReactClass({
                   </p>
                 </div>
               </Trans>
-            </Otherwise>
-          </Choose>
+            </Otherwise> */}
+          {/* </Choose> */}
         </div>
       </div>
     );
