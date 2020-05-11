@@ -48,7 +48,7 @@ class HelpPanelItem extends React.Component {
 
     const iconName = this.props.content.icon
       ? this.props.content.icon
-      : "start"; // TODO: check what default icon should be
+      : "video";
     const reactComponents = this.props.content.markdownText
       ? parseCustomMarkdownToReact(this.props.content.markdownText).props
           .children
