@@ -3,7 +3,7 @@ Change Log
 
 ### MobX Development
 
-#### mobx-next-release
+#### mobx-next-release (mobx-30)
 * (placeholder)
 
 #### mobx-29
