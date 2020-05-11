@@ -255,7 +255,7 @@ export default class ChartCustomComponent extends CustomComponent {
       );
 
       (attrs.yColumns || []).forEach(y => {
-        const line = chartStyle.chart.addObject(CommonStrata.user, "lines", y)!;
+        chartStyle.chart.addObject(CommonStrata.user, "lines", y)!;
       });
 
       item.setTrait(CommonStrata.user, "activeStyle", "chart");
