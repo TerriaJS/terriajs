@@ -135,115 +135,134 @@ export const WelcomeMessagePure = props => {
       }}
     >
       <div /* onClick={handleClose.bind(null, true)}*/>
-        <WelcomeModalWrapper fullWidth fullHeight positionAbsolute centered>
-          <VideoGuide
-            viewState={viewState}
-            videoLink={"https://www.youtube.com/embed/NTtSM70rIvI"}
-            background={
-              "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
-            }
-            videoName={WELCOME_MESSAGE_VIDEO}
-          />
-          <SlideUpFadeIn isVisible={welcomeVisible}>
-            <Box
-              styledWidth={"617px"}
-              styledHeight={"454px"}
-              displayInlineBlock
-            >
-              <RawButton
-                onClick={handleClose.bind(null, false)}
-                css={`
-                  float: right;
-                `}
+        <WelcomeModalWrapper
+          fullWidth
+          fullHeight
+          positionAbsolute
+          right
+          onClick={() => handleClose(false)}
+        >
+          <Box
+            styledWidth={
+              viewState.isMapFullScreen ? "100%" : "calc(100% - 350px)"
+            } // TODO: use variable $work-bench-width
+            fullHeight
+            centered
+          >
+            <VideoGuide
+              viewState={viewState}
+              videoLink={"https://www.youtube.com/embed/NTtSM70rIvI"}
+              background={
+                "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
+              }
+              videoName={WELCOME_MESSAGE_VIDEO}
+            />
+            <SlideUpFadeIn isVisible={welcomeVisible}>
+              <Box
+                styledWidth={"667px"}
+                styledHeight={"504px"}
+                displayInlineBlock
+                paddedRatio={6}
+                onClick={e => {
+                  viewState.setTopElement("WelcomeMessage");
+                  e.stopPropagation();
+                }}
               >
-                <StyledIcon
-                  styledWidth={"24px"}
-                  light
-                  glyph={Icon.GLYPHS.closeLight}
-                />
-              </RawButton>
-              <Spacing bottom={7} />
-              <Box displayInlineBlock col10>
-                <Text
-                  bold
-                  textLight
-                  styledSize={"36px"}
-                  styledLineHeight={"49px"}
+                <RawButton
+                  onClick={handleClose.bind(null, false)}
+                  css={`
+                    float: right;
+                  `}
                 >
-                  Let&apos;s get you started
-                </Text>
-                <Spacing bottom={3} />
-                <Text textLight>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut
-                  pretium pretium tempor. Ut eget imperdiet neque. In volutpat
-                  ante semper diam molestie, et aliquam erat laoreet. Sed sit
-                  amet arcu aliquet, molestie justo at, auctor nunc.
-                </Text>
-              </Box>
-              <Spacing bottom={6} />
-              <Box fullWidth styledHeight={"180px"}>
-                <Box
-                  col6
-                  centered
-                  fullHeight
-                  backgroundImage={
-                    "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
-                  }
-                  backgroundBlackOverlay={"50%"}
-                >
-                  <RawButton
-                    fullWidth
-                    fullHeight
-                    onClick={() =>
-                      viewState.setVideoGuideVisible(WELCOME_MESSAGE_VIDEO)
-                    }
+                  <StyledIcon
+                    styledWidth={"24px"}
+                    light
+                    glyph={Icon.GLYPHS.closeLight}
+                  />
+                </RawButton>
+                <Spacing bottom={7} />
+                <Box displayInlineBlock col10>
+                  <Text
+                    bold
+                    textLight
+                    styledSize={"36px"}
+                    styledLineHeight={"49px"}
                   >
-                    <StyledIcon
-                      styledWidth={"48px"}
-                      light
-                      glyph={Icon.GLYPHS.playInverted}
-                      css={`
-                        margin: auto;
-                      `}
+                    Let&apos;s get you started
+                  </Text>
+                  <Spacing bottom={3} />
+                  <Text textLight>
+                    Interested in data discovery and exploration?
+                    <br />
+                    Dive right in and get started or check the following help
+                    guide options.
+                  </Text>
+                </Box>
+                <Spacing bottom={6} />
+                <Box fullWidth styledHeight={"180px"}>
+                  <Box
+                    col6
+                    centered
+                    fullHeight
+                    backgroundImage={
+                      "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
+                    }
+                    backgroundBlackOverlay={"50%"}
+                  >
+                    <RawButton
+                      fullWidth
+                      fullHeight
+                      onClick={() =>
+                        viewState.setVideoGuideVisible(WELCOME_MESSAGE_VIDEO)
+                      }
+                    >
+                      <StyledIcon
+                        styledWidth={"48px"}
+                        light
+                        glyph={Icon.GLYPHS.playInverted}
+                        css={`
+                          margin: auto;
+                        `}
+                      />
+                    </RawButton>
+                  </Box>
+                  <Spacing right={5} />
+                  <Box styledWidth={"37%"} displayInlineBlock>
+                    <WelcomeMessageButton
+                      buttonText={"Take the tour"}
+                      buttonIcon={Icon.GLYPHS.tour}
                     />
+                    <Spacing bottom={3} />
+                    <WelcomeMessageButton
+                      buttonText={"I'll need some help"}
+                      buttonIcon={Icon.GLYPHS.help}
+                      onClick={() => {
+                        handleClose(false);
+                        props.viewState.showHelpPanel();
+                      }}
+                    />
+                    <Spacing bottom={3} />
+                    <WelcomeMessageButton
+                      buttonText={"Explore map data"}
+                      buttonIcon={Icon.GLYPHS.add}
+                      onClick={() => {
+                        handleClose(false);
+                        setShouldExploreData(true);
+                      }}
+                    />
+                  </Box>
+                </Box>
+                <Spacing bottom={13} />
+                <Box fullWidth centered>
+                  <RawButton onClick={handleClose.bind(null, true)}>
+                    <TextSpan primary isLink>
+                      Close message and don’t show me this again
+                    </TextSpan>
                   </RawButton>
                 </Box>
-                <Spacing right={5} />
-                <Box styledWidth={"37%"} displayInlineBlock>
-                  <WelcomeMessageButton
-                    buttonText={"Take the tour"}
-                    buttonIcon={Icon.GLYPHS.tour}
-                  />
-                  <Spacing bottom={3} />
-                  <WelcomeMessageButton
-                    buttonText={"I'll need some help"}
-                    buttonIcon={Icon.GLYPHS.help}
-                    onClick={() => {
-                      handleClose(false);
-                      props.viewState.showHelpPanel();
-                    }}
-                  />
-                  <Spacing bottom={3} />
-                  <WelcomeMessageButton
-                    buttonText={"Explore map data"}
-                    buttonIcon={Icon.GLYPHS.add}
-                    onClick={() => {
-                      handleClose(false);
-                      setShouldExploreData(true);
-                    }}
-                  />
-                </Box>
               </Box>
-              <Spacing bottom={13} />
-              <Box fullWidth centered>
-                <RawButton onClick={handleClose.bind(null, true)}>
-                  <TextSpan small textLight>
-                    Close message and don’t show me this again
-                  </TextSpan>
-                </RawButton>
-              </Box>
-            </Box>
-            {/* <article
+
+              {/* <article
             className={Styles.welcomeModal}
             // Allows interaction w/ modal without closing
             onClick={e => {
@@ -320,7 +339,8 @@ export const WelcomeMessagePure = props => {
               </button>
             </span>
           </article> */}
-          </SlideUpFadeIn>
+            </SlideUpFadeIn>
+          </Box>
         </WelcomeModalWrapper>
       </div>
     </FadeIn>
