@@ -99,7 +99,7 @@ class Disclaimer extends React.Component {
                   `
                 // not sure of the ideal way to deal with this
                 a {
-                  font-weight: bold;
+                  font-weight: 600;
                   color: ${props.theme.colorPrimary};
                   text-decoration: none;
                 }
