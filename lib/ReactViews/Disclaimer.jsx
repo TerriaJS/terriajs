@@ -26,10 +26,9 @@ const BackgroundImage = styled(Box)`
 `;
 
 const DisclaimerButton = styled(Button).attrs({
-  // Seems to be more like designs with bold
-  // textProps: {
-  //   semiBold: true,
-  // },
+  textProps: {
+    semiBold: true,
+  },
   rounded: true
 })`
   width: 280px;
