@@ -4,10 +4,13 @@ Change Log
 ### MobX Development
 
 #### mobx-29
-* (placeholder)
+* Fix handling of urls on `Cesium3DTilesCatalogItem` related to proxying and getting confused between Resource vs URL.
 * Renamed `UrlReference.createUrlReferenceFromUrlReference` to `UrlReference.createCatalogMemberFromUrlReference`
 * Moved url to catalog member mapping from `createUrlRefernceFromUrl.register` to `UrlToCatalogMemberMapping` (now in `UrlReference.ts` file) 
 * Make the help panel customisable for different maps by modifying `config.json`
+* Added generic styled select
+* Remove maxZoom from leaflet map.
+* Run & configure prettier on terriajs lib/ json files
 
 #### mobx-28
 * Fix SASS exports causing some build errors in certain webpack conditions
@@ -106,6 +109,9 @@ Change Log
 * Fix bug that caused contents on the video panel of the help UI to overlay the actual video
 * Overhauled location search to be a dropdown instead of list of results
 * Fixed bug causing full app crash or viewer zoom refresh when using 3D view and changing settings or changing the terrain provider.
+* Changed most of the icons for the `MapNavigation` section (on the right hand side) of the screen
+* Added a close button to story panel
+* Made `MapIconButton` to animate when expanding 
 * Implements `SensorObservationServiceCatalogItem`.
 * Add support for styling CSVs using a region mapped or text columns.
 * Update Compass UI to include larger rotation target, remove sass from compass
@@ -122,6 +128,7 @@ Change Log
 * Fixed MapIconButton & FeedbackButton proptypes being defined incorrectly
 * Implement SenapsLocationsCatalogItem
 * Update papaparse and improve handling for retrieveing CSVs via chunking that have no ContentLenth header
+
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC

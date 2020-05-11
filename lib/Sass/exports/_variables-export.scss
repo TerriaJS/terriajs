@@ -25,6 +25,10 @@
 
   // ..radius? (no standardised radius at the moment, pull in as needed from variables
   radiusLarge: $radius-large;
+  radiusSmall: $radius-small;
+
+  overlay: $overlay;
+  overlayInvert: $overlay-invert;
 
   // Colours
   colorPrimary: $color-primary;
