@@ -67,7 +67,12 @@
   top: $mobile-header-height;
   bottom: 0;
 }
-
+.tabsContainer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
 .feedback {
   position: absolute;
   z-index: $front-component-z-index - 10;

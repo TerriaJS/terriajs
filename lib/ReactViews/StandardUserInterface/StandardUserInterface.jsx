@@ -23,7 +23,7 @@ import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import StoryPanel from "./../Story/StoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 import ToolPanel from "./../ToolPanel.jsx";
-
+import SectorTabs from "./../SidePanel/SectorTabs";
 import SatelliteGuide from "../Guide/SatelliteGuide.jsx";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage.jsx";
 
@@ -213,6 +213,9 @@ const StandardUserInterface = createReactClass({
                     version={this.props.version}
                     allBaseMaps={allBaseMaps}
                   />
+                  <div className={Styles.tabsContainer}>
+                    <SectorTabs />
+                  </div>
                 </Small>
                 <Medium>
                   <div
@@ -238,6 +241,9 @@ const StandardUserInterface = createReactClass({
                     />
                   </div>
                 </Medium>
+                {/* <Small>
+                 
+                </Small> */}
               </If>
 
               <If condition={this.props.viewState.showToolPanel()}>
@@ -294,7 +300,7 @@ const StandardUserInterface = createReactClass({
             viewState={this.props.viewState}
           />
 
-          <If
+          {/* <If
             condition={
               !customElements.feedback.length &&
               this.props.terria.configParameters.feedbackUrl &&
@@ -304,7 +310,7 @@ const StandardUserInterface = createReactClass({
             <aside className={Styles.feedback}>
               <FeedbackForm viewState={this.props.viewState} />
             </aside>
-          </If>
+          </If> */}
 
           <div
             className={classNames(
