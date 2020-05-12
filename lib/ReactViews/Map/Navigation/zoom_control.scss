@@ -12,6 +12,8 @@
 
   width: 24px;
   height: 60px;
+  padding-top: $padding-tiny;
+  padding-left: $padding-tiny;
 
   svg {
     height: 10px;
@@ -32,4 +34,11 @@
 .decrease,
 .refresh {
   composes: btn from "../../../Sass/common/_buttons.scss";
+}
+
+.refresh {
+  svg {
+    height: 12px;
+    width: 12px;
+  }
 }

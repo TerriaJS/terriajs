@@ -89,6 +89,7 @@ interface ConfigParameters {
   googleAnalyticsKey?: string;
   rollbarAccessToken?: string;
   showWelcomeMessage?: boolean;
+  helpContent?: any[];
 }
 
 interface StartOptions {
@@ -197,7 +198,8 @@ export default class Terria {
     locationSearchBoundingBox: undefined,
     googleAnalyticsKey: undefined,
     rollbarAccessToken: undefined,
-    showWelcomeMessage: false
+    showWelcomeMessage: false,
+    helpContent: []
   };
 
   @observable
