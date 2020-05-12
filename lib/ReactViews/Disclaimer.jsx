@@ -14,6 +14,8 @@ import FadeIn from "./Transitions/FadeIn/FadeIn";
 
 const TopElementBox = styled(Box)`
   z-index: 99999;
+  top: 0;
+  right: 0;
 `;
 
 const BackgroundImage = styled(Box)`
@@ -21,6 +23,7 @@ const BackgroundImage = styled(Box)`
     url(${bingAerialBackground});
   background-size: cover;
   background-repeat: no-repeat;
+  background-position: center;
   filter: blur(10px);
   z-index: 0;
 `;
@@ -31,12 +34,14 @@ const DisclaimerButton = styled(Button).attrs({
   },
   rounded: true
 })`
-  width: 280px;
-  border: 2px solid ${props => props.theme.grey};
-  background-color: ${props =>
-    props.denyButton ? "transparent" : props.theme.grey};
-  color: ${props =>
-    props.denyButton ? props.theme.grey : props.theme.textLight};
+  width: ${props => (props.fullWidth ? "100%" : "280px")};
+  ${props =>
+    props.denyButton &&
+    `
+    border: 2px solid ${props.theme.grey}; 
+    color: ${props.theme.grey}; 
+    background-color: transparent;
+  `}
 `;
 
 @observer
@@ -70,6 +75,8 @@ class Disclaimer extends React.Component {
 
   render() {
     const disclaimer = this.props.viewState.disclaimerSettings;
+    const useSmallScreenInterface = this.props.viewState
+      .useSmallScreenInterface;
     console.log(this.props.theme);
     return (
       disclaimer && (
@@ -78,11 +85,20 @@ class Disclaimer extends React.Component {
             <BackgroundImage
               // Make the image slightly larger to deal with
               // image shrinking a tad bit when blurred
-              styledWidth={"105%"}
-              styledHeight={"105%"}
+              styledWidth={"110%"}
+              styledHeight={"110%"}
               positionAbsolute
             />
-            <Box displayInlineBlock left styledWidth={"573px"}>
+            <Box
+              displayInlineBlock
+              left
+              styledWidth={useSmallScreenInterface ? "100%" : "613px"}
+              paddedRatio={4}
+              css={`
+                max-height: 100%;
+                overflow: auto;
+              `}
+            >
               <Text
                 styledFontSize={"18px"}
                 styledLineHeight={"24px"}
@@ -109,16 +125,30 @@ class Disclaimer extends React.Component {
                 {parseCustomMarkdownToReact(disclaimer.message)}
               </Text>
               <Spacing bottom={5} />
-              <Box fullWidth centered>
+              <Box
+                fullWidth
+                centered
+                displayInlineBlock={useSmallScreenInterface}
+              >
                 <DisclaimerButton
                   denyButton
                   onClick={() => this.deny(disclaimer.denyAction)}
+                  fullWidth={useSmallScreenInterface}
                 >
                   {disclaimer.denyText}
                 </DisclaimerButton>
-                <Spacing right={3} />
+                <Choose>
+                  <When condition={useSmallScreenInterface}>
+                    <Spacing bottom={3} />
+                  </When>
+                  <Otherwise>
+                    <Spacing right={3} />
+                  </Otherwise>
+                </Choose>
                 <DisclaimerButton
                   onClick={() => this.confirm(disclaimer.confirmAction)}
+                  fullWidth={useSmallScreenInterface}
+                  primary
                 >
                   {disclaimer.confirmText}
                 </DisclaimerButton>
