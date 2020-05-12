@@ -9,7 +9,6 @@ import Styles from "./help-panel.scss";
 import Spacing from "../../../../Styled/Spacing";
 import Box from "../../../../Styled/Box";
 import VideoGuide from "./VideoGuide";
-import { action } from "mobx";
 import StyledHtml from "./StyledHtml";
 
 const HELP_VIDEO_NAME = "helpVideo";
