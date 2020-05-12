@@ -21,21 +21,10 @@ const SidePanelContent = createReactClass({
         </div>
         <SectorTabs />
         <div className={Styles.panelHeading}>
-          <span className={Styles.siteTitle}>Agriculture</span>
+          <span className={Styles.siteTitle}>Sector name</span>
         </div>
         <div className={Styles.sectorInfo}>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-            convallis ex nulla, eu volutpat urna faucibus quis. Aliquam porta
-            urna eu urna posuere dignissim. Sed bibendum ipsum in eros rhoncus
-            elementum. Sed nec aliquam velit, bibendum volutpat justo. Proin
-            semper viverra risus at porta. Nunc tincidunt felis eget bibendum
-            elementum. In hac habitasse platea dictumst. Ut eu ullamcorper orci.
-            Suspendisse potenti. Sed eu dolor consectetur ex pulvinar porttitor
-            sit amet a augue. Quisque cursus blandit orci, mattis accumsan dolor
-            auctor a. Mauris et velit eget massa placerat aliquet. Donec eu
-            risus mi.
-          </p>
+          <p>Sector information panel</p>
         </div>
       </>
     );
