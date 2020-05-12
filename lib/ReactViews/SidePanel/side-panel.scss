@@ -21,55 +21,6 @@
   }
 }
 
-// Side Panel Content
-$sectionHeight: 45px;
-@mixin headingContainer {
-  display: flex;
-  align-items: center;
-  height: $sectionHeight;
-}
-
-.panelHeading {
-  @include headingContainer;
-}
-.tabsContainer {
-  @include headingContainer;
-  justify-content: space-evenly;
-  border-radius: $radius-small;
-  background-color: $grey-lightest;
-  svg {
-    // height: $input-height;
-    // width: $input-height;
-    height: 20px;
-    width: 20px;
-    fill: $charcoal-grey;
-    padding: $padding;
-    fill-opacity: 0.5;
-    cursor: pointer;
-    &:hover {
-      background-color: #ddd;
-    }
-  }
-}
-.sectorInfo {
-  display: flex;
-  background-color: $grey-lightest;
-  padding: $padding-small;
-  font-size: $font-size-small;
-  border-radius: $radius-small;
-}
-
-.siteTitle {
-  font-family: $font-base;
-  color: $text-light;
-  line-height: 1;
-  font-weight: $font-weight-bold;
-  font-size: 14px;
-  flex-basis: 130px;
-  text-align: left;
-  margin: 7px 2px;
-}
-
 .header {
   padding: 0 $padding-small;
   background: $dark;
