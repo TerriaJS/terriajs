@@ -67,7 +67,12 @@
   top: $mobile-header-height;
   bottom: 0;
 }
-
+.tabsContainer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
 .feedback {
   position: absolute;
   z-index: $front-component-z-index - 10;
@@ -140,17 +145,19 @@
 
 .showWorkbenchButton {
   position: fixed;
-  top: 16px;
-  left: -200px;
+  right: 0;
+  top: 18px;
+  right: -200px;
   z-index: 99;
   width: 200px;
-  transition: all 0.25s;
+  transition: transform 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-delay: 0.5s;
+  transition-delay: 0.25s;
 }
 
 .showWorkbenchButtonisVisible {
-  left: 16px;
+  right: 16px;
+  transform: translateX(0);
 }
 .showWorkbenchButtonisNotVisible {
   transition-delay: 0s;

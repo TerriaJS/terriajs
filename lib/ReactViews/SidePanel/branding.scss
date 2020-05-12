@@ -2,9 +2,12 @@
 @import "../../Sass/common/mixins";
 
 .branding {
+  display: flex;
+  justify-content: center;
   box-sizing: border-box;
   height: $sm-logo-height;
   overflow: hidden;
+
   @include transition(all, 0.5s, linear);
 
   @media (min-width: $sm) {
@@ -19,6 +22,6 @@
 
     // For some reason without this IE9 flips out and stretches the images.
     width: auto;
-    height: auto;
+    height: 45px;
   }
 }

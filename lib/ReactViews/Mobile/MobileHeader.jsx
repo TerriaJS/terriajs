@@ -132,7 +132,7 @@ const MobileHeader = createReactClass({
               }
             >
               <div className={Styles.groupLeft}>
-                <button
+                {/* <button
                   type="button"
                   onClick={() =>
                     (this.props.viewState.mobileMenuVisible = true)
@@ -141,14 +141,14 @@ const MobileHeader = createReactClass({
                   title={t("mobile.toggleNavigation")}
                 >
                   <Icon glyph={Icon.GLYPHS.menu} />
-                </button>
+                </button> */}
                 <Branding
                   terria={this.props.terria}
                   version={this.props.version}
                 />
               </div>
-              <div className={Styles.groupRight}>
-                <button
+              {/*  <div className={Styles.groupRight}>
+                  <button
                   type="button"
                   className={Styles.btnAdd}
                   onClick={this.onMobileDataCatalogClicked}
@@ -179,9 +179,9 @@ const MobileHeader = createReactClass({
                 >
                   <Icon glyph={Icon.GLYPHS.search} />
                 </button>
-              </div>
+              </div>*/}
             </When>
-            <Otherwise>
+            {/* <Otherwise>
               <div className={Styles.formSearchData}>
                 <Choose>
                   <When condition={searchState.showMobileLocationSearch}>
@@ -207,20 +207,20 @@ const MobileHeader = createReactClass({
                   </When>
                 </Choose>
               </div>
-            </Otherwise>
+            </Otherwise> */}
           </Choose>
         </div>
-        <MobileMenu
+        {/* <MobileMenu
           menuItems={this.props.menuItems}
           viewState={this.props.viewState}
           allBaseMaps={this.props.allBaseMaps}
           terria={this.props.terria}
           showFeedback={!!this.props.terria.configParameters.feedbackUrl}
-        />
-        <MobileModalWindow
+        /> */}
+        {/* <MobileModalWindow
           terria={this.props.terria}
           viewState={this.props.viewState}
-        />
+        /> */}
       </div>
     );
   }
