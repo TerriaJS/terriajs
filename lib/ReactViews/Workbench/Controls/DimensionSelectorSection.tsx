@@ -9,6 +9,7 @@ import { runInAction } from "mobx";
 import SelectableDimensions, {
   SelectableDimension
 } from "../../../Models/SelectableDimensions";
+import Select from "../../../Styled/Select";
 
 @observer
 export default class DimensionSelectorSection extends React.Component<{
@@ -44,36 +45,28 @@ export default class DimensionSelectorSection extends React.Component<{
             <label className={Styles.title} htmlFor={dim.name}>
               {dim.name}
             </label>
-            <div className={Styles.dimensionSelectorSelect}>
-              <select
-                className={Styles.field}
-                name={dim.id}
-                value={
-                  typeof dim.selectedId === "undefined"
-                    ? "__undefined__"
-                    : dim.selectedId
-                }
-                onChange={this.setDimensionValue.bind(this, dim)}
-              >
-                {/* If no value as been selected -> add option */}
-                {(typeof dim.selectedId === "undefined" ||
-                  dim.allowUndefined) && (
-                  <option
-                    key="__undefined__"
-                    value=""
-                    className={Styles.dimensionSelectorNoSelection}
-                  >
-                    Not specified
-                  </option>
-                )}
-                {dim.options.map(option => (
-                  <option key={option.id} value={option.id}>
-                    {option.name}
-                  </option>
-                ))}
-              </select>
-              <Icon glyph={Icon.GLYPHS.opened} />
-            </div>
+            <Select
+              name={dim.id}
+              value={
+                typeof dim.selectedId === "undefined"
+                  ? "__undefined__"
+                  : dim.selectedId
+              }
+              onChange={this.setDimensionValue.bind(this, dim)}
+            >
+              {/* If no value as been selected -> add option */}
+              {(typeof dim.selectedId === "undefined" ||
+                dim.allowUndefined) && (
+                <option key="__undefined__" value="">
+                  Not specified
+                </option>
+              )}
+              {dim.options.map(option => (
+                <option key={option.id} value={option.id}>
+                  {option.name}
+                </option>
+              ))}
+            </Select>
           </div>
         ))}
       </div>
