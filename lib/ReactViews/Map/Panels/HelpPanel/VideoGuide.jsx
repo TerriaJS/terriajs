@@ -44,7 +44,10 @@ class VideoGuide extends React.Component {
       >
         <VideoWrapperBox
           centered
-          onClick={() => this.props.viewState.setVideoGuideVisible("")}
+          onClick={e => {
+            this.props.viewState.setVideoGuideVisible("");
+            e.stopPropagation();
+          }}
         >
           <Box
             centered

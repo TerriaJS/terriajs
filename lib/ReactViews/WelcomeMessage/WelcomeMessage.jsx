@@ -24,7 +24,7 @@ const WELCOME_MESSAGE_VIDEO = "welcomeMessageVideo";
 
 const WelcomeModalWrapper = styled(Box)`
   z-index: 99999;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.75);
 `;
 
 function WelcomeMessageButton(props) {
@@ -102,15 +102,18 @@ export const WelcomeMessagePure = props => {
   // This is required so we can do nested animations
   const [welcomeVisible, setWelcomeVisible] = useState(showWelcomeMessage);
   const [shouldExploreData, setShouldExploreData] = useState(false);
+  const [shouldOpenHelp, setShouldOpenHelp] = useState(false);
   // const {
   //   WelcomeMessagePrimaryBtnClick,
   //   WelcomeMessageSecondaryBtnClick
   // } = viewState.terria.overrides;
   const handleClose = (persist = false) => {
     setShowWelcomeMessage(false);
+    setShouldOpenHelp(false);
     if (persist) {
       viewState.terria.setLocalProperty(LOCAL_PROPERTY_KEY, true);
     }
+    setShouldOpenHelp(false);
   };
 
   useKeyPress("Escape", () => {
@@ -131,6 +134,10 @@ export const WelcomeMessagePure = props => {
             viewState.openAddData();
             viewState.setTopElement("AddData");
           }
+          if (shouldOpenHelp) {
+            setShouldOpenHelp(false);
+            viewState.showHelpPanel();
+          }
         }
       }}
     >
@@ -143,7 +150,9 @@ export const WelcomeMessagePure = props => {
       >
         <Box
           styledWidth={
-            viewState.isMapFullScreen ? "100%" : "calc(100% - 350px)"
+            viewState.isMapFullScreen || viewState.useSmallScreenInterface
+              ? "100%"
+              : "calc(100% - 350px)"
           } // TODO: use variable $work-bench-width
           fullHeight
           centered
@@ -199,45 +208,54 @@ export const WelcomeMessagePure = props => {
               </Box>
               <Spacing bottom={6} />
               <Box fullWidth styledHeight={"180px"}>
-                <Box
-                  col6
-                  centered
-                  fullHeight
-                  backgroundImage={
-                    "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
-                  }
-                  backgroundBlackOverlay={"50%"}
-                >
-                  <RawButton
-                    fullWidth
+                <If condition={!viewState.useSmallScreenInterface}>
+                  <Box
+                    col6
+                    centered
                     fullHeight
-                    onClick={() =>
-                      viewState.setVideoGuideVisible(WELCOME_MESSAGE_VIDEO)
+                    backgroundImage={
+                      "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
                     }
+                    backgroundBlackOverlay={"50%"}
                   >
-                    <StyledIcon
-                      styledWidth={"48px"}
-                      light
-                      glyph={Icon.GLYPHS.playInverted}
-                      css={`
-                        margin: auto;
-                      `}
+                    <RawButton
+                      fullWidth
+                      fullHeight
+                      onClick={() =>
+                        viewState.setVideoGuideVisible(WELCOME_MESSAGE_VIDEO)
+                      }
+                    >
+                      <StyledIcon
+                        styledWidth={"48px"}
+                        light
+                        glyph={Icon.GLYPHS.playInverted}
+                        css={`
+                          margin: auto;
+                        `}
+                      />
+                    </RawButton>
+                  </Box>
+                  <Spacing right={5} />
+                </If>
+                <Box
+                  styledWidth={
+                    viewState.useSmallScreenInterface ? "100%" : "37%"
+                  }
+                  displayInlineBlock
+                >
+                  <If condition={!viewState.useSmallScreenInterface}>
+                    <WelcomeMessageButton
+                      buttonText={"Take the tour"}
+                      buttonIcon={Icon.GLYPHS.tour}
                     />
-                  </RawButton>
-                </Box>
-                <Spacing right={5} />
-                <Box styledWidth={"37%"} displayInlineBlock>
-                  <WelcomeMessageButton
-                    buttonText={"Take the tour"}
-                    buttonIcon={Icon.GLYPHS.tour}
-                  />
-                  <Spacing bottom={3} />
+                    <Spacing bottom={3} />
+                  </If>
                   <WelcomeMessageButton
                     buttonText={"I'll need some help"}
                     buttonIcon={Icon.GLYPHS.help}
                     onClick={() => {
                       handleClose(false);
-                      props.viewState.showHelpPanel();
+                      setShouldOpenHelp(true);
                     }}
                   />
                   <Spacing bottom={3} />
@@ -251,7 +269,9 @@ export const WelcomeMessagePure = props => {
                   />
                 </Box>
               </Box>
-              <Spacing bottom={13} />
+              <If condition={!viewState.useSmallScreenInterface}>
+                <Spacing bottom={13} />
+              </If>
               <Box fullWidth centered>
                 <RawButton onClick={handleClose.bind(null, true)}>
                   <TextSpan primary isLink>
