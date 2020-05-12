@@ -23,7 +23,7 @@ import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import StoryPanel from "./../Story/StoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 import ToolPanel from "./../ToolPanel.jsx";
-
+import SectorTabs from "./../SidePanel/SectorTabs";
 import SatelliteGuide from "../Guide/SatelliteGuide.jsx";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage.jsx";
 
@@ -172,6 +172,33 @@ const StandardUserInterface = createReactClass({
         >
           <div className={Styles.ui}>
             <div className={Styles.uiInner}>
+              {/* Moved side panel to left */}
+              <section className={Styles.map}>
+                {/* <ProgressBar terria={terria} /> */}
+                <MapColumn
+                  terria={terria}
+                  viewState={this.props.viewState}
+                  customFeedbacks={customElements.feedback}
+                />
+                <main>
+                  <ExplorerWindow
+                    terria={terria}
+                    viewState={this.props.viewState}
+                  />
+                  <If
+                    condition={
+                      this.props.terria.configParameters.experimentalFeatures &&
+                      !this.props.viewState.hideMapUi()
+                    }
+                  >
+                    <ExperimentalFeatures
+                      terria={terria}
+                      viewState={this.props.viewState}
+                      experimentalItems={customElements.experimentalMenu}
+                    />
+                  </If>
+                </main>
+              </section>
               <If
                 condition={
                   !this.props.viewState.hideMapUi() &&
@@ -186,6 +213,9 @@ const StandardUserInterface = createReactClass({
                     version={this.props.version}
                     allBaseMaps={allBaseMaps}
                   />
+                  <div className={Styles.tabsContainer}>
+                    <SectorTabs />
+                  </div>
                 </Small>
                 <Medium>
                   <div
@@ -211,6 +241,9 @@ const StandardUserInterface = createReactClass({
                     />
                   </div>
                 </Medium>
+                {/* <Small>
+                 
+                </Small> */}
               </If>
 
               <If condition={this.props.viewState.showToolPanel()}>
@@ -235,33 +268,6 @@ const StandardUserInterface = createReactClass({
                   />
                 </div>
               </Medium>
-
-              <section className={Styles.map}>
-                <ProgressBar terria={terria} />
-                <MapColumn
-                  terria={terria}
-                  viewState={this.props.viewState}
-                  customFeedbacks={customElements.feedback}
-                />
-                <main>
-                  <ExplorerWindow
-                    terria={terria}
-                    viewState={this.props.viewState}
-                  />
-                  <If
-                    condition={
-                      this.props.terria.configParameters.experimentalFeatures &&
-                      !this.props.viewState.hideMapUi()
-                    }
-                  >
-                    <ExperimentalFeatures
-                      terria={terria}
-                      viewState={this.props.viewState}
-                      experimentalItems={customElements.experimentalMenu}
-                    />
-                  </If>
-                </main>
-              </section>
             </div>
           </div>
 
@@ -272,18 +278,18 @@ const StandardUserInterface = createReactClass({
                   .explorerPanelIsVisible
               })}
             >
-              <MenuBar
+              {/* <MenuBar
                 terria={terria}
                 viewState={this.props.viewState}
                 allBaseMaps={allBaseMaps}
                 menuItems={customElements.menu}
                 animationDuration={animationDuration}
-              />
-              <MapNavigation
+              /> */}
+              {/* <MapNavigation
                 terria={terria}
                 viewState={this.props.viewState}
                 navItems={customElements.nav}
-              />
+              /> */}
             </div>
           </If>
 
@@ -294,7 +300,7 @@ const StandardUserInterface = createReactClass({
             viewState={this.props.viewState}
           />
 
-          <If
+          {/* <If
             condition={
               !customElements.feedback.length &&
               this.props.terria.configParameters.feedbackUrl &&
@@ -304,7 +310,7 @@ const StandardUserInterface = createReactClass({
             <aside className={Styles.feedback}>
               <FeedbackForm viewState={this.props.viewState} />
             </aside>
-          </If>
+          </If> */}
 
           <div
             className={classNames(

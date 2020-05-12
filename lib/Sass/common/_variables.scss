@@ -1,13 +1,17 @@
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,400italic,600");
 @import url("https://fonts.googleapis.com/css?family=Lato:400,700");
 
+// Receipt Variables
+$sectionHeight: 45px;
+// Receipt Variables Ends Here
+
 $font-pop: "Open Sans", sans-serif;
 $font-base: "Open Sans", sans-serif;
 $font-mono: monospace, sans-serif;
 $font-feature-info: $font-mono;
 $font: $font-base;
 
-$color-primary: #519ac2;
+$color-primary: #ff6600;
 $color-primary-disabled: #595b60;
 @function get-hover-color($base-color) {
   @return lighten($base-color, 10%);
@@ -16,7 +20,7 @@ $color-secondary: #06ccff;
 
 $animation-fast: 0.1s;
 
-$dark: #3f4854;
+$dark: #404040;
 $dark-with-overlay: #667080;
 $dark-lighter: #595b60;
 $grey: #888888;
@@ -125,7 +129,8 @@ $font-weight-medium: 500;
 $font-weight-normal: 400;
 $font-weight-light: 100;
 
-$work-bench-width: 350px;
+$map-button-top: 18px;
+$work-bench-width: 450px;
 $setting-panel: 300px;
 $share-panel-width: 450px;
 $share-panel-caret-left: 215px;

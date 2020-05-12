@@ -77,7 +77,13 @@ const GLYPHS = {
   circleEmpty: require("../../wwwroot/images/icons/circle-empty.svg"),
   story: require("../../wwwroot/images/icons/story.svg"),
   recapture: require("../../wwwroot/images/icons/recapture.svg"),
-  menuDotted: require("../../wwwroot/images/icons/menu-dotted.svg")
+  menuDotted: require("../../wwwroot/images/icons/menu-dotted.svg"),
+  // Receipt-Sectors
+  agriculture: require("../../wwwroot/images/icons/sector-icons/agriculture.svg"),
+  manufacturing: require("../../wwwroot/images/icons/sector-icons/manufacturing.svg"),
+  internationalCooperationAndDevelopment: require("../../wwwroot/images/icons/sector-icons/international_cooperation_and_development.svg"),
+  coastalInfrastructure: require("../../wwwroot/images/icons/sector-icons/coastal_infrastructure.svg"),
+  finance: require("../../wwwroot/images/icons/sector-icons/finance.svg")
 };
 
 const Icon = createReactClass({
