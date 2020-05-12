@@ -317,8 +317,7 @@ const StandardUserInterface = observer(
                 {this.props.viewState.isToolOpen && (
                   <Tool
                     viewState={this.props.viewState}
-                    type={this.props.viewState.currentTool.type}
-                    params={this.props.viewState.currentTool.params}
+                    {...this.props.viewState.currentTool}
                   />
                 )}
               </Medium>

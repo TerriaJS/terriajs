@@ -187,9 +187,13 @@ const ViewingControls = observer(
     },
 
     openDiffTool() {
-      this.props.viewState.openTool("diffTool", {
-        sourceItem: this.props.item
-      });
+      this.props.viewState.openTool(
+        "Difference",
+        import("../../Tools/DiffTool/DiffTool"),
+        {
+          sourceItem: this.props.item
+        }
+      );
     },
 
     previewItem() {
