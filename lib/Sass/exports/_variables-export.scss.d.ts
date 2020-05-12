@@ -26,6 +26,7 @@ interface CssExports {
   'textDarker': string;
   'textLight': string;
   'textLightDimmed': string;
+  'workbenchWidth': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

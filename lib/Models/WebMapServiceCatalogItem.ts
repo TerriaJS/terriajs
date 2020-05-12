@@ -12,6 +12,7 @@ import { computed, runInAction } from "mobx";
 import moment from "moment";
 import combine from "terriajs-cesium/Source/Core/combine";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
@@ -22,6 +23,7 @@ import createTransformerAllowUndefined from "../Core/createTransformerAllowUndef
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import isReadOnlyArray from "../Core/isReadOnlyArray";
+import { JsonObject } from "../Core/Json";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import DiffableMixin from "../ModelMixins/DiffableMixin";
@@ -43,15 +45,15 @@ import LoadableStratum from "./LoadableStratum";
 import Mappable, { ImageryParts } from "./Mappable";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
+import { AvailableStyle } from "./SelectableStyle";
 import StratumFromTraits from "./StratumFromTraits";
 import WebMapServiceCapabilities, {
   CapabilitiesLayer,
   CapabilitiesStyle,
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import { AvailableStyle } from "./SelectableStyle";
-import { JsonObject } from "../Core/Json";
+
+const dateFormat = require("dateformat");
 
 interface LegendUrl {
   url: string;
@@ -304,8 +306,18 @@ class GetCapabilitiesStratum extends LoadableStratum(
         result.push(traits);
       }
     }
-
     return result;
+  }
+
+  @computed
+  get shortReport() {
+    const catalogItem = this.catalogItem;
+    if (catalogItem.isShowingDiff) {
+      const format = "yyyy/mm/dd";
+      const d1 = dateFormat(catalogItem.firstDiffDate, format);
+      const d2 = dateFormat(catalogItem.secondDiffDate, format);
+      return `Showing difference image computed for ${catalogItem.diffStyleId} style on dates ${d1} and ${d2}`;
+    }
   }
 
   @computed
@@ -473,6 +485,7 @@ class WebMapServiceCatalogItem
 
   @computed
   get styleSelector() {
+    if (this.isShowingDiff) return undefined;
     if (this.availableStyles.length === 0) return undefined;
     if (this.availableStyles[0].styles.length === 0) return undefined;
 
@@ -548,9 +561,15 @@ class WebMapServiceCatalogItem
     secondDate: JulianDate,
     diffStyleId: string
   ) {
-    if (this.canDiffImages === false) return;
-    this.setTrait(CommonStrata.user, "firstDiffDate", firstDate.toString());
-    this.setTrait(CommonStrata.user, "secondDiffDate", secondDate.toString());
+    if (this.canDiffImages === false) {
+      return;
+    }
+
+    // A helper to get the diff tag given a date string
+    const firstDateStr = this.getTagForTime(firstDate);
+    const secondDateStr = this.getTagForTime(secondDate);
+    this.setTrait(CommonStrata.user, "firstDiffDate", firstDateStr);
+    this.setTrait(CommonStrata.user, "secondDiffDate", secondDateStr);
     this.setTrait(CommonStrata.user, "diffStyleId", diffStyleId);
     this.setTrait(CommonStrata.user, "isShowingDiff", true);
   }
@@ -639,22 +658,15 @@ class WebMapServiceCatalogItem
 
   @computed
   private get _diffImageryParts(): ImageryParts | undefined {
-    // A helper to get the diff tag given a date string
-    const firstDate =
-      this.firstDiffDate && JulianDate.fromIso8601(this.firstDiffDate);
-    const secondDate =
-      this.secondDiffDate && JulianDate.fromIso8601(this.secondDiffDate);
-    const firstDiffTag = firstDate && this.getTagForTime(firstDate);
-    const secondDiffTag = secondDate && this.getTagForTime(secondDate);
     const diffStyleId = this.diffStyleId;
     if (
-      firstDiffTag === undefined ||
-      secondDiffTag === undefined ||
+      this.firstDiffDate === undefined ||
+      this.secondDiffDate === undefined ||
       diffStyleId === undefined
     ) {
       return;
     }
-    const time = `${firstDiffTag},${secondDiffTag}`;
+    const time = `${this.firstDiffDate},${this.secondDiffDate}`;
     const imageryProvider = this._createImageryProvider({
       time,
       extraParameters: { styles: diffStyleId }
