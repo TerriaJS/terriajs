@@ -43,7 +43,7 @@ export default class BooleanParameter extends FunctionParameter<boolean>
     this.falseDescription = options.falseDescription;
 
     if (!isDefined(options.value)) {
-      this.setValue(CommonStrata.defaults, false)
+      this.setValue(CommonStrata.defaults, false);
     }
   }
 }

@@ -27,7 +27,11 @@ describe("WebProcessingServiceCatalogItem", function() {
       "/data/regionMapping.json";
     item = new WebProcessingServiceCatalogItem("test", terria);
     runInAction(() => {
-      const param1 = item.addObject(CommonStrata.user, "parameters", "param1");
+      const param1 = item.addObject(
+        CommonStrata.user,
+        "wpsParameters",
+        "param1"
+      )!;
       if (isDefined(param1)) {
         param1.setTrait(CommonStrata.user, "name", "point");
         param1.setTrait(CommonStrata.user, "value", "144.97228,-37.77138");

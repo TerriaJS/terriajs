@@ -38,6 +38,9 @@ import StringParameter from "./StringParameter";
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
 import i18next from "i18next";
 import CatalogFunctionMixin from "../ModelMixins/CatalogFunctionMixin";
+import ResultPendingCatalogItem from "./ResultPendingCatalogItem";
+
+const sprintf = require("terriajs-cesium/Source/ThirdParty/sprintf").default;
 
 const executeWpsTemplate = require("./ExecuteWpsTemplate.xml");
 
@@ -82,7 +85,8 @@ export type WpsInputData = {
 };
 
 type ParameterConverter = {
-  inputToParameter: (catalogFunction: CatalogFunctionMixin,
+  inputToParameter: (
+    catalogFunction: CatalogFunctionMixin,
     input: Input,
     options: FunctionParameterOptions
   ) => FunctionParameter | undefined;
@@ -256,8 +260,38 @@ export default class WebProcessingServiceCatalogFunction extends CatalogFunction
     if (!isDefined(this.identifier) || !isDefined(this.executeUrl)) {
       return;
     }
+    const identifier = this.identifier;
+    const executeUrl = this.executeUrl;
+    const pendingItem = this.createPendingCatalogItem();
+    let dataInputs = await Promise.all(
+      this.functionParameters.map(p => this.convertParameterToInput(p))
+    );
 
-    
+    return runInAction(async () => {
+      const parameters = {
+        Identifier: htmlEscapeText(identifier),
+        DataInputs: dataInputs.filter(isDefined),
+        storeExecuteResponse: this.storeSupported,
+        status: this.statusSupported
+      };
+      let promise: Promise<any>;
+      if (this.executeWithHttpGet) {
+        promise = this.getXml(executeUrl, {
+          ...parameters,
+          DataInputs: parameters.DataInputs.map(
+            ({ inputIdentifier: id, inputValue: val }) => `${id}=${val}`
+          ).join(";")
+        });
+      } else {
+        const executeXml = Mustache.render(executeWpsTemplate, parameters);
+        promise = this.postXml(executeUrl, executeXml);
+      }
+
+      pendingItem.loadPromise = promise;
+      this.terria.workbench.add(pendingItem);
+      const executeResponseXml = await promise;
+      return this.handleExecuteResponse(executeResponseXml, pendingItem);
+    });
   }
 
   /**
@@ -269,7 +303,7 @@ export default class WebProcessingServiceCatalogFunction extends CatalogFunction
    */
   async handleExecuteResponse(
     xml: any,
-    pendingItem: CatalogFunctionJob
+    pendingItem: ResultPendingCatalogItem
   ): Promise<void> {
     if (
       !xml ||
@@ -322,7 +356,87 @@ export default class WebProcessingServiceCatalogFunction extends CatalogFunction
     }
   }
 
-  convertInputToParameter(catalogFunction:CatalogFunctionMixin, input: Input) {
+  createPendingCatalogItem() {
+    const now = new Date();
+    const timestamp = sprintf(
+      "%04d-%02d-%02dT%02d:%02d:%02d",
+      now.getFullYear(),
+      now.getMonth() + 1,
+      now.getDate(),
+      now.getHours(),
+      now.getMinutes(),
+      now.getSeconds()
+    );
+
+    const id = `${this.name} ${timestamp}`;
+    const item = new ResultPendingCatalogItem(id, this.terria);
+    item.showsInfo = true;
+    item.isMappable = true;
+
+    const inputsSection =
+      '<table class="cesium-infoBox-defaultTable">' +
+      this.functionParameters.reduce((previousValue, parameter) => {
+        return (
+          previousValue +
+          "<tr>" +
+          '<td style="vertical-align: middle">' +
+          parameter.name +
+          "</td>" +
+          "<td>" +
+          parameter.formatValueAsString(parameter.value) +
+          "</td>" +
+          "</tr>"
+        );
+      }, "") +
+      "</table>";
+
+    runInAction(() => {
+      item.setTrait(CommonStrata.user, "name", id);
+      item.setTrait(
+        CommonStrata.user,
+        "description",
+        `This is the result of invoking the ${this.name} process or service at ${timestamp} with the input parameters below.`
+      );
+
+      const info = createStratumInstance(InfoSectionTraits, {
+        name: "Inputs",
+        content: inputsSection
+      });
+      item.setTrait(CommonStrata.user, "info", [info]);
+    });
+
+    return item;
+  }
+
+  setErrorOnPendingItem(pendingItem: ResultPendingCatalogItem, failure: any) {
+    let errorMessage = "The reason for failure is unknown.";
+    if (
+      isDefined(failure.ExceptionReport) &&
+      isDefined(failure.ExceptionReport.Exception)
+    ) {
+      const e = failure.ExceptionReport.Exception;
+      errorMessage = e.ExceptionText || e.Exception || errorMessage;
+    }
+
+    runInAction(() => {
+      pendingItem.setTrait(
+        CommonStrata.user,
+        "shortReport",
+        "Web Processing Service invocation failed.  More details are available on the Info panel."
+      );
+
+      const errorInfo = createStratumInstance(InfoSectionTraits, {
+        name: "Error Details",
+        content: errorMessage
+      });
+      const info = pendingItem.getTrait(CommonStrata.user, "info");
+      if (isDefined(info)) {
+        info.push(errorInfo);
+      }
+    });
+  }
+
+  convertInputToParameter(catalogFunction: CatalogFunctionMixin, input: Input) {
     if (!isDefined(input.Identifier)) {
       return;
     }
@@ -331,7 +445,7 @@ export default class WebProcessingServiceCatalogFunction extends CatalogFunction
 
     for (let i = 0; i < this.parameterConverters.length; i++) {
       const converter = this.parameterConverters[i];
-      const parameter = converter.inputToParameter(catalogFunction,input, {
+      const parameter = converter.inputToParameter(catalogFunction, input, {
         id: input.Identifier,
         name: input.Name,
         description: input.Abstract,
@@ -364,7 +478,7 @@ export default class WebProcessingServiceCatalogFunction extends CatalogFunction
   }
 
   async createCatalogItem(
-    pendingItem: CatalogFunctionJob,
+    pendingItem: ResultPendingCatalogItem,
     wpsResponse: any
   ) {
     const id = `result-${pendingItem.uniqueId}`;
@@ -384,7 +498,7 @@ export default class WebProcessingServiceCatalogFunction extends CatalogFunction
       item.setTrait(CommonStrata.user, "name", pendingItem.name);
       item.setTrait(CommonStrata.user, "description", pendingItem.description);
       item.setTrait(CommonStrata.user, "wpsResponse", wpsResponse);
-      item.setTrait(CommonStrata.user, "parameters", parameterTraits);
+      item.setTrait(CommonStrata.user, "wpsParameters", parameterTraits);
     });
     return item;
   }
@@ -408,7 +522,11 @@ export default class WebProcessingServiceCatalogFunction extends CatalogFunction
 }
 
 const LiteralDataConverter = {
-  inputToParameter: function(catalogFunction:CatalogFunctionMixin,  input: Input, options: FunctionParameterOptions) {
+  inputToParameter: function(
+    catalogFunction: CatalogFunctionMixin,
+    input: Input,
+    options: FunctionParameterOptions
+  ) {
     if (!isDefined(input.LiteralData)) {
       return;
     }
@@ -439,7 +557,11 @@ const LiteralDataConverter = {
 };
 
 const DateTimeConverter = {
-  inputToParameter: function(catalogFunction:CatalogFunctionMixin,input: Input, options: FunctionParameterOptions) {
+  inputToParameter: function(
+    catalogFunction: CatalogFunctionMixin,
+    input: Input,
+    options: FunctionParameterOptions
+  ) {
     if (
       !isDefined(input.ComplexData) ||
       !isDefined(input.ComplexData.Default) ||
@@ -458,7 +580,9 @@ const DateTimeConverter = {
   parameterToInput: function(parameter: FunctionParameter) {
     return {
       inputType: "ComplexData",
-      inputValue: DateTimeParameter.formatValueForUrl(parameter?.value?.toString() || '')
+      inputValue: DateTimeParameter.formatValueForUrl(
+        parameter?.value?.toString() || ""
+      )
     };
   }
 };
@@ -474,7 +598,11 @@ const PolygonConverter = simpleGeoJsonDataConverter(
 );
 
 const RectangleConverter = {
-  inputToParameter: function(catalogFunction: CatalogFunctionMixin, input: Input, options: FunctionParameterOptions) {
+  inputToParameter: function(
+    catalogFunction: CatalogFunctionMixin,
+    input: Input,
+    options: FunctionParameterOptions
+  ) {
     if (
       !isDefined(input.BoundingBoxData) ||
       !isDefined(input.BoundingBoxData.Default) ||
@@ -559,7 +687,11 @@ const RectangleConverter = {
 };
 
 const GeoJsonGeometryConverter = {
-  inputToParameter: function(catalogFunction: CatalogFunctionMixin, input: Input, options: FunctionParameterOptions) {
+  inputToParameter: function(
+    catalogFunction: CatalogFunctionMixin,
+    input: Input,
+    options: FunctionParameterOptions
+  ) {
     if (
       !isDefined(input.ComplexData) ||
       !isDefined(input.ComplexData.Default) ||
@@ -581,30 +713,35 @@ const GeoJsonGeometryConverter = {
       converter: undefined
     });
 
-    const regionParameter = new RegionParameter(catalogFunction,{
+    const regionParameter = new RegionParameter(catalogFunction, {
       id: "regionParameter",
       name: "Region Parameter",
       regionProvider: regionTypeParameter,
       converter: undefined
     });
 
-    return new GeoJsonParameter(catalogFunction,{
+    return new GeoJsonParameter(catalogFunction, {
       ...options,
       regionParameter
     });
   },
 
-  parameterToInput: function(parameter: FunctionParameter): WpsInputData | undefined {
+  parameterToInput: function(
+    parameter: FunctionParameter
+  ): WpsInputData | undefined {
     if (!isDefined(parameter.value) || parameter.value === null) {
       return;
     }
-    return (<GeoJsonParameter>parameter).getProcessedValue((<GeoJsonParameter>parameter).value);
+    return (<GeoJsonParameter>parameter).getProcessedValue(
+      (<GeoJsonParameter>parameter).value
+    );
   }
 };
 
 function simpleGeoJsonDataConverter(schemaType: string, klass: any) {
   return {
-    inputToParameter: function(catalogFunction:CatalogFunctionMixin,
+    inputToParameter: function(
+      catalogFunction: CatalogFunctionMixin,
       input: Input,
       options: FunctionParameterOptions
     ) {

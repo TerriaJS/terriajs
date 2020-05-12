@@ -11,7 +11,7 @@ import LineParameter from "../../lib/Models/LineParameter";
 import PointParameter from "../../lib/Models/PointParameter";
 import PolygonParameter from "../../lib/Models/PolygonParameter";
 import RectangleParameter from "../../lib/Models/RectangleParameter";
-import ResultPendingCatalogItem from "../../lib/Models/CatalogFunctionJob";
+import ResultPendingCatalogItem from "../../lib/Models/ResultPendingCatalogItem";
 import StringParameter from "../../lib/Models/StringParameter";
 import Terria from "../../lib/Models/Terria";
 import WebProcessingServiceCatalogFunction, {
@@ -22,6 +22,7 @@ import Workbench from "../../lib/Models/Workbench";
 import xml2json from "../../lib/ThirdParty/xml2json";
 import "../SpecHelpers";
 import { xml } from "../SpecHelpers";
+import CommonStrata from "../../lib/Models/CommonStrata";
 
 configure({
   enforceActions: "observed",
@@ -79,7 +80,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
 
     describe("parameters", function() {
       it("returns one parameter for each input", function() {
-        expect(wps.parameters.map(({ type }) => type)).toEqual([
+        expect(wps.functionParameters.map(({ type }) => type)).toEqual([
           "string",
           "geojson"
         ]);
@@ -100,14 +101,14 @@ describe("WebProcessingServiceCatalogFunction", function() {
       await wps.loadMetadata();
       runInAction(() => {
         const param = <GeoJsonParameter>(
-          wps.parameters.find(p => p.type === "geojson")
+          wps.functionParameters.find(p => p.type === "geojson")
         );
         param.subtype = GeoJsonParameter.PointType;
-        param.value = {
+        param.setValue(CommonStrata.user, {
           longitude: 2.5302435855103993,
           latitude: -0.6592349301568685,
           height: -1196.8235676901866
-        };
+        });
       });
     });
 
@@ -225,7 +226,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
 
   describe("convertInputToParameter", function() {
     it("works for a simple input", function() {
-      const parameter = wps.convertInputToParameter({
+      const parameter = wps.convertInputToParameter(wps, {
         Identifier: "geometry_id",
         Name: "Geometry ID",
         Abstract: "ID of the input",
@@ -242,7 +243,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
     });
 
     it("converts LiteralData input with `AllowedValues` to EnumerationParameter", function() {
-      const parameter = wps.convertInputToParameter({
+      const parameter = wps.convertInputToParameter(wps, {
         Identifier: "geometry_id",
         LiteralData: { AllowedValues: { Value: ["Point", "Polygon"] } }
       });
@@ -254,7 +255,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
     });
 
     it("converts LiteralData input with `AllowedValue` to EnumerationParameter", function() {
-      const parameter = wps.convertInputToParameter({
+      const parameter = wps.convertInputToParameter(wps, {
         Identifier: "geometry_id",
         LiteralData: { AllowedValue: { Value: "Point" } }
       });
@@ -266,7 +267,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
     });
 
     it("converts LiteralData input with `AnyValue` to StringParameter", function() {
-      const parameter = wps.convertInputToParameter({
+      const parameter = wps.convertInputToParameter(wps, {
         Identifier: "geometry_id",
         LiteralData: { AnyValue: {} }
       });
@@ -274,7 +275,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
     });
 
     it("converts ComplexData input with datetime schema to DateTimeParameter", function() {
-      const parameter = wps.convertInputToParameter({
+      const parameter = wps.convertInputToParameter(wps, {
         Identifier: "geometry",
         ComplexData: {
           Default: {
@@ -286,7 +287,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
     });
 
     it("converts ComplexData input with point schema to PointParameter", function() {
-      const parameter = wps.convertInputToParameter({
+      const parameter = wps.convertInputToParameter(wps, {
         Identifier: "geometry",
         ComplexData: {
           Default: {
@@ -298,7 +299,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
     });
 
     it("converts ComplexData input with line schema to LineParameter", function() {
-      const parameter = wps.convertInputToParameter({
+      const parameter = wps.convertInputToParameter(wps, {
         Identifier: "geometry",
         ComplexData: {
           Default: {
@@ -312,7 +313,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
     });
 
     it("converts ComplexData input with polygon schema to PolygonParameter", function() {
-      const parameter = wps.convertInputToParameter({
+      const parameter = wps.convertInputToParameter(wps, {
         Identifier: "geometry",
         ComplexData: {
           Default: {
@@ -324,7 +325,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
     });
 
     it("converts ComplexData input with GeoJson schema to GeoJsonParameter", function() {
-      const parameter = wps.convertInputToParameter({
+      const parameter = wps.convertInputToParameter(wps, {
         Identifier: "geometry",
         ComplexData: {
           Default: {
@@ -336,7 +337,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
     });
 
     it("converts input with BoundingBoxData to RectangleParameter", function() {
-      const parameter = wps.convertInputToParameter({
+      const parameter = wps.convertInputToParameter(wps, {
         Identifier: "geometry",
         BoundingBoxData: {
           Default: { CRS: "crs84" }
@@ -347,11 +348,11 @@ describe("WebProcessingServiceCatalogFunction", function() {
   });
 
   it("can convert a parameter to data input", async function() {
-    const parameter = new PointParameter({
+    const parameter = new PointParameter(wps, {
       id: "foo",
       converter: PointConverter
     });
-    parameter.value = Cartographic.ZERO;
+    parameter.setValue(CommonStrata.user, Cartographic.ZERO);
     const input = await wps.convertParameterToInput(parameter);
     expect(input).toEqual({
       inputIdentifier: "foo",

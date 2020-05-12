@@ -15,7 +15,9 @@ interface Options extends FunctionParameterOptions {
   regionParameter: RegionParameter;
 }
 
-export default class GeoJsonParameter extends FunctionParameter<CartographicPoint | PolygonCoordinates | JsonObject> {
+export default class GeoJsonParameter extends FunctionParameter<
+  CartographicPoint | PolygonCoordinates | JsonObject
+> {
   readonly type = "geojson";
 
   static readonly PointType = "point";
@@ -36,7 +38,9 @@ export default class GeoJsonParameter extends FunctionParameter<CartographicPoin
   /**
    * Return representation of value as URL argument.
    */
-  getProcessedValue(value: Cartographic | PolygonCoordinates | Feature[] | JsonObject) {
+  getProcessedValue(
+    value: Cartographic | PolygonCoordinates | Feature[] | JsonObject
+  ) {
     if (this.subtype === GeoJsonParameter.PointType) {
       return {
         inputType: "ComplexData",
@@ -46,7 +50,9 @@ export default class GeoJsonParameter extends FunctionParameter<CartographicPoin
     if (this.subtype === GeoJsonParameter.PolygonType) {
       return {
         inputType: "ComplexData",
-        inputValue: PolygonParameter.formatValueForUrl(<PolygonCoordinates>value)
+        inputValue: PolygonParameter.formatValueForUrl(
+          <PolygonCoordinates>value
+        )
       };
     }
     if (this.subtype === GeoJsonParameter.SelectAPolygonType) {
@@ -57,7 +63,7 @@ export default class GeoJsonParameter extends FunctionParameter<CartographicPoin
     }
   }
 
-  @computed get geoJsonFeature(): Feature | JsonObject | undefined{
+  @computed get geoJsonFeature(): Feature | JsonObject | undefined {
     if (this.subtype === GeoJsonParameter.PointType) {
       return PointParameter.getGeoJsonFeature(<Cartographic>this.value);
     }
@@ -68,7 +74,7 @@ export default class GeoJsonParameter extends FunctionParameter<CartographicPoin
       return SelectAPolygonParameter.getGeoJsonFeature(this.value);
     }
 
-    return
+    return;
     // TODO rest
   }
 }

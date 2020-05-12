@@ -9,12 +9,16 @@ interface Options extends FunctionParameterOptions {
   crs?: string;
 }
 
-export type RectangleCoordinates = {west: number;
+export type RectangleCoordinates = {
+  west: number;
   south: number;
   east: number;
-  north: number;}
+  north: number;
+};
 
-export default class RectangleParameter extends FunctionParameter<RectangleCoordinates> {
+export default class RectangleParameter extends FunctionParameter<
+  RectangleCoordinates
+> {
   readonly type = "rectangle";
 
   readonly crs: string;

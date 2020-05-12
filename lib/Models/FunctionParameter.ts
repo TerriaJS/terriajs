@@ -38,9 +38,9 @@ export default abstract class FunctionParameter<
     this.setValue(CommonStrata.defaults, options.value);
   }
 
-  @computed 
+  @computed
   isValid(): boolean {
-    return true
+    return true;
   }
 
   @computed
@@ -67,15 +67,11 @@ export default abstract class FunctionParameter<
         );
       }
 
-    // v not defined -> delete parameter
+      // v not defined -> delete parameter
     } else {
-      const newParameters = Object.assign({} , this.catalogFunction.parameters)
-      delete newParameters[this.id]
-      this.catalogFunction.setTrait(
-        strataId,
-        "parameters",
-        newParameters
-      );
+      const newParameters = Object.assign({}, this.catalogFunction.parameters);
+      delete newParameters[this.id];
+      this.catalogFunction.setTrait(strataId, "parameters", newParameters);
     }
   }
 

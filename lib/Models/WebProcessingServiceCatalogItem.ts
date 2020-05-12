@@ -27,7 +27,6 @@ import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
 import upsertModelFromJson from "./upsertModelFromJson";
-import CatalogFunctionMixin from "../ModelMixins/CatalogFunctionMixin";
 import CatalogFunctionJobMixin from "../ModelMixins/CatalogFunctionJobMixin";
 import { ChartItem } from "./Chartable";
 
@@ -186,9 +185,10 @@ class WpsLoadableStratum extends LoadableStratum(
 StratumOrder.addLoadStratum(WpsLoadableStratum.stratumName);
 
 export default class WebProcessingServiceCatalogItem
-  extends CatalogFunctionJobMixin(CreateModel(WebProcessingServiceCatalogItemTraits))
+  extends CatalogFunctionJobMixin(
+    CreateModel(WebProcessingServiceCatalogItemTraits)
+  )
   implements Mappable {
-  
   static readonly type = "wps-result";
   get typeName() {
     return i18next.t("models.webProcessingService.wpsResult");
@@ -199,56 +199,14 @@ export default class WebProcessingServiceCatalogItem
   @observable
   private geoJsonItem?: GeoJsonCatalogItem;
 
-  async forceLoadMetadata() {
-    if (!this.init) {
-      this.init = true
-      const identifier = this.identifier;
-      const executeUrl = this.executeUrl;
-      const pendingItem = this.createPendingCatalogItem();
-      let dataInputs = await Promise.all(
-        this.functionParameters.map(p => this.convertParameterToInput(p))
-      );
-
-      return runInAction(async () => {
-        const parameters = {
-          Identifier: htmlEscapeText(identifier),
-          DataInputs: dataInputs.filter(isDefined),
-          storeExecuteResponse: this.storeSupported,
-          status: this.statusSupported
-        };
-        let promise: Promise<any>;
-        if (this.executeWithHttpGet) {
-          promise = this.getXml(executeUrl, {
-            ...parameters,
-            DataInputs: parameters.DataInputs.map(
-              ({ inputIdentifier: id, inputValue: val }) => `${id}=${val}`
-            ).join(";")
-          });
-        } else {
-          const executeXml = Mustache.render(executeWpsTemplate, parameters);
-          promise = this.postXml(executeUrl, executeXml);
-        }
-
-        pendingItem.loadPromise = promise;
-        this.terria.workbench.add(pendingItem);
-        const executeResponseXml = await promise;
-        return this.handleExecuteResponse(executeResponseXml, pendingItem);
-      });
-    }
-  }
+  async forceLoadMetadata() {}
 
   get chartItems(): ChartItem[] {
-    return []
+    return [];
   }
-  protected async forceLoadChartItems(): Promise<void> {
-    
-  }
-  protected async forceLoadMapItems(): Promise<void> {
-    
-  }
-  refreshData(): void {
-    
-  }
+  protected async forceLoadChartItems(): Promise<void> {}
+  protected async forceLoadMapItems(): Promise<void> {}
+  refreshData(): void {}
 
   async loadResults() {
     const stratum = await WpsLoadableStratum.load(this);

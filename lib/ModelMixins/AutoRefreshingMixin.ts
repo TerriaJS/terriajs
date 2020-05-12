@@ -34,21 +34,22 @@ export default function AutoRefreshingMixin<
       // Toggle autorefresh when `refreshEnabled` trait changes
       autorun(() => {
         if (this.refreshEnabled) {
-          this.startAutoRefresh()
+          this.startAutoRefresh();
         } else {
-          this.stopAutoRefresh()
+          this.stopAutoRefresh();
         }
-      })
+      });
     }
 
     private startAutoRefresh() {
       if (!this._autoRefreshDisposer && this.refreshEnabled) {
-      this._autoRefreshDisposer = reaction(
-        () => this._pollingTimer,
-        () => {
-          this.refreshData();
-        }
-      );}
+        this._autoRefreshDisposer = reaction(
+          () => this._pollingTimer,
+          () => {
+            this.refreshData();
+          }
+        );
+      }
     }
 
     private stopAutoRefresh() {

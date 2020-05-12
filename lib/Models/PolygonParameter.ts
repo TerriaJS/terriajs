@@ -7,7 +7,9 @@ type Coordinates = number[];
 type LinearRing = Coordinates[];
 export type PolygonCoordinates = LinearRing[];
 
-export default class PolygonParameter extends FunctionParameter<PolygonCoordinates> {
+export default class PolygonParameter extends FunctionParameter<
+  PolygonCoordinates
+> {
   readonly type = "polygon";
 
   static formatValueForUrl(value: PolygonCoordinates) {
@@ -25,7 +27,7 @@ export default class PolygonParameter extends FunctionParameter<PolygonCoordinat
     });
   }
 
-  static getGeoJsonFeature(value: PolygonCoordinates): Feature<Polygon>{
+  static getGeoJsonFeature(value: PolygonCoordinates): Feature<Polygon> {
     return {
       type: "Feature",
       geometry: {

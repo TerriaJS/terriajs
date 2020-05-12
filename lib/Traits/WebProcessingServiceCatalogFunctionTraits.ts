@@ -4,8 +4,8 @@ import primitiveTrait from "./primitiveTrait";
 import CatalogFunctionTraits from "./CatalogFunctionTraits";
 
 export default class WebProcessingServiceCatalogFunctionTraits extends mixTraits(
-  UrlTraits,
-  CatalogFunctionTraits
+  CatalogFunctionTraits,
+  UrlTraits
 ) {
   @primitiveTrait({
     type: "string",

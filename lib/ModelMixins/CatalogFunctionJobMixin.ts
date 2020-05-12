@@ -22,8 +22,8 @@ function CatalogFunctionJobMixin<
   abstract class CatalogFunctionJobMixin extends AsyncChartableMixin(
     AsyncMappableMixin(AutoRefreshingMixin(CatalogMemberMixin(Base)))
   ) {
-    protected init = false
-    
+    protected init = false;
+
     readonly refreshInterval = 1;
 
     loadPromise = Promise.resolve();
@@ -42,37 +42,40 @@ function CatalogFunctionJobMixin<
 
       const id = `${this.name} ${timestamp}`;
 
-      const inputsSection =
-        '<table class="cesium-infoBox-defaultTable">' +
-        this.parameters.reduce((previousValue, parameter) => {
-          return (
-            previousValue +
-            "<tr>" +
-            '<td style="vertical-align: middle">' +
-            parameter.id +
-            "</td>" +
-            "<td>" +
-            parameter.value +
-            "</td>" +
-            "</tr>"
-          );
-        }, "") +
-        "</table>";
+      if (isDefined(this.parameters)) {
+        const inputsSection =
+          '<table class="cesium-infoBox-defaultTable">' +
+          Object.keys(this.parameters).reduce((previousValue, key) => {
+            return (
+              previousValue +
+              "<tr>" +
+              '<td style="vertical-align: middle">' +
+              key +
+              "</td>" +
+              "<td>" +
+              this.parameters![key] +
+              "</td>" +
+              "</tr>"
+            );
+          }, "") +
+          "</table>";
 
-      runInAction(() => {
-        // CatalogFunctionJobJob!.setTrait(
-        //   CommonStrata.user,
-        //   "description",
-        //   `This is the result of invoking the ${this.name} process or service at ${timestamp} with the input parameters below.`
-        // );
+        runInAction(() => {
+          // CatalogFunctionJobJob!.setTrait(
+          //   CommonStrata.user,
+          //   "description",
+          //   `This is the result of invoking the ${this.name} process or service at ${timestamp} with the input parameters below.`
+          // );
 
-        this.setTrait(CommonStrata.user, "info", [
-          createStratumInstance(InfoSectionTraits, {
-            name: "Inputs",
-            content: inputsSection
-          })
-        ]);
-      });
+          this.setTrait(CommonStrata.user, "info", [
+            createStratumInstance(InfoSectionTraits, {
+              name: "Inputs",
+              content: inputsSection
+            })
+          ]);
+        });
+      }
+
       return this.loadPromise;
     }
 
@@ -81,7 +84,7 @@ function CatalogFunctionJobMixin<
       this.setTrait(
         CommonStrata.user,
         "shortReport",
-        `${this.typeName ||
+        `${this.type ||
           this
             .type} invocation failed. More details are available on the Info panel.`
       );

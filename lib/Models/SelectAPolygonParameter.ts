@@ -5,7 +5,9 @@ import { JsonObject } from "../Core/Json";
 /**
  * A parameter that specifies an arbitrary polygon on the globe, which has been selected from a different layer.
  */
-export default class SelectAPolygonParameter extends FunctionParameter<JsonObject[]> {
+export default class SelectAPolygonParameter extends FunctionParameter<
+  JsonObject[]
+> {
   readonly type = "polygon";
 
   static formatValueForUrl(value: Feature[]) {
@@ -16,7 +18,7 @@ export default class SelectAPolygonParameter extends FunctionParameter<JsonObjec
     const featureList = value.map(function(featureData: Feature) {
       return {
         type: "Feature",
-        geometry: featureData.geometry,
+        geometry: featureData.geometry
       };
     });
 

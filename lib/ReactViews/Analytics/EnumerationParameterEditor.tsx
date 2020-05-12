@@ -5,6 +5,7 @@ import { observer } from "mobx-react";
 import Styles from "./parameter-editors.scss";
 import { action } from "mobx";
 import EnumerationParameter from "../../Models/EnumerationParameter";
+import CommonStrata from "../../Models/CommonStrata";
 
 @observer
 export default class EnumerationParameterEditor extends React.Component<{
@@ -12,7 +13,7 @@ export default class EnumerationParameterEditor extends React.Component<{
 }> {
   @action
   onChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    this.props.parameter.value = e.target.value;
+    this.props.parameter.setValue(CommonStrata.user, e.target.value);
   }
 
   render() {

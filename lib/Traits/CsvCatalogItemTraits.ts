@@ -35,7 +35,8 @@ class PollingTraits extends ModelTraits {
 export default class CsvCatalogItemTraits extends mixTraits(
   FeatureInfoTraits,
   UrlTraits,
-  TableTraits, AutoRefreshingTraits
+  TableTraits,
+  AutoRefreshingTraits
 ) {
   @primitiveTrait({
     name: "Character Set",

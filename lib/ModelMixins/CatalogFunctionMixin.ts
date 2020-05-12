@@ -3,17 +3,12 @@ import Model from "../Models/Model";
 import CatalogFunctionTraits from "../Traits/CatalogFunctionTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import FunctionParameter from "../Models/FunctionParameter";
-import { runInAction } from "mobx";
-import CommonStrata from "../Models/CommonStrata";
-import createStratumInstance from "../Models/createStratumInstance";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
-import isDefined from "../Core/isDefined";
-import CatalogFunctionJobMixin from "./CatalogFunctionJobMixin";
-
 
 type CatalogFunctionMixin = Model<CatalogFunctionTraits>;
 
-function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(Base: T) {
+function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
+  Base: T
+) {
   abstract class CatalogFunctionMixin extends CatalogMemberMixin(Base) {
     abstract async invoke(): Promise<void>;
 

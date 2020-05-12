@@ -9,6 +9,7 @@ import objectArrayTrait from "./objectArrayTrait";
 import primitiveTrait from "./primitiveTrait";
 import CatalogFunctionJobTraits from "./CatalogFunctionJobTraits";
 import WebProcessingServiceCatalogFunctionTraits from "./WebProcessingServiceCatalogFunctionTraits";
+import Feature from "../Models/Feature";
 
 export class ParameterTraits extends ModelTraits {
   @primitiveTrait({
@@ -32,7 +33,9 @@ export class ParameterTraits extends ModelTraits {
   geoJsonFeature?: JsonObject;
 }
 
-export default class WebProcessingServiceCatalogItemTraits extends mixTraits(CatalogFunctionJobTraits,
+export default class WebProcessingServiceCatalogItemTraits extends mixTraits(
+  FeatureInfoTraits,
+  CatalogFunctionJobTraits,
   WebProcessingServiceCatalogFunctionTraits
 ) {
   @anyTrait({

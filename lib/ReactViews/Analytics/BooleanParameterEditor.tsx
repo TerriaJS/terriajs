@@ -3,6 +3,7 @@ import { observer } from "mobx-react";
 import Styles from "./parameter-editors.scss";
 import { action } from "mobx";
 import BooleanParameter from "../../Models/BooleanParameter";
+import CommonStrata from "../../Models/CommonStrata";
 
 const Icon = require("../Icon");
 
@@ -12,7 +13,10 @@ export default class BooleanParameterEditor extends React.Component<{
 }> {
   @action
   onClick() {
-    this.props.parameter.value = !this.props.parameter.value;
+    this.props.parameter.setValue(
+      CommonStrata.user,
+      !this.props.parameter.value
+    );
   }
 
   renderCheckbox() {
