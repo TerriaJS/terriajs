@@ -88,6 +88,7 @@ interface ConfigParameters {
   googleAnalyticsKey?: string;
   rollbarAccessToken?: string;
   globalDisclaimer?: any;
+  helpContent?: any[];
 }
 
 interface StartOptions {
@@ -195,7 +196,8 @@ export default class Terria {
     locationSearchBoundingBox: undefined,
     googleAnalyticsKey: undefined,
     rollbarAccessToken: undefined,
-    globalDisclaimer: undefined
+    globalDisclaimer: undefined,
+    helpContent: []
   };
 
   @observable
