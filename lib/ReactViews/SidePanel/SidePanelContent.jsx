@@ -4,7 +4,8 @@ import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import Icon from "../Icon";
-import Styles from "./side-panel.scss";
+import SectorTabs from "./SectorTabs";
+import Styles from "./side-panel-content.scss";
 const SidePanelContent = createReactClass({
   displayName: "SidePanelContent",
 
@@ -18,13 +19,7 @@ const SidePanelContent = createReactClass({
         <div className={Styles.panelHeading}>
           <span className={Styles.siteTitle}>Sectors</span>
         </div>
-        <div className={Styles.tabsContainer}>
-          <Icon glyph={Icon.GLYPHS.agriculture} />
-          <Icon glyph={Icon.GLYPHS.manufacturing} />
-          <Icon glyph={Icon.GLYPHS.internationalCooperationAndDevelopment} />
-          <Icon glyph={Icon.GLYPHS.coastalInfrastructure} />
-          <Icon glyph={Icon.GLYPHS.finance} />
-        </div>
+        <SectorTabs />
         <div className={Styles.panelHeading}>
           <span className={Styles.siteTitle}>Agriculture</span>
         </div>
