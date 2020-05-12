@@ -242,6 +242,11 @@ export default class ViewState {
   }
 
   @action
+  toggleStoryBuilder() {
+    this.storyBuilderShown = !this.storyBuilderShown;
+  }
+
+  @action
   setTopElement(key: string) {
     this.topElement = key;
   }

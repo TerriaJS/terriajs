@@ -8,9 +8,9 @@ import Icon from "../../../Icon.jsx";
 import Loader from "../../../Loader";
 import Styles from "./help-panel.scss";
 import Spacing from "../../../../Styled/Spacing";
-import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
 import { action } from "mobx";
+import StyledHtml from "./StyledHtml";
 
 @observer
 class HelpVideoPanel extends React.Component {
@@ -19,11 +19,10 @@ class HelpVideoPanel extends React.Component {
   static propTypes = {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
-    title: PropTypes.string.isRequired,
     itemString: PropTypes.string,
-    description: PropTypes.array,
-    videoLink: PropTypes.string,
-    background: PropTypes.string,
+    htmlContent: PropTypes.array,
+    videoUrl: PropTypes.string,
+    placeholderImage: PropTypes.string,
     theme: PropTypes.object,
     t: PropTypes.func.isRequired
   };
@@ -65,7 +64,7 @@ class HelpVideoPanel extends React.Component {
           className={Styles.videoGuide}
           onClick={e => e.stopPropagation()}
           style={{
-            backgroundImage: `url(${this.props.background})`
+            backgroundImage: `url(${this.props.placeholderImage})`
           }}
         >
           <div className={Styles.videoGuideRatio}>
@@ -74,7 +73,7 @@ class HelpVideoPanel extends React.Component {
             </div>
             <iframe
               className={Styles.videoGuideIframe}
-              src={this.props.videoLink}
+              src={this.props.videoUrl}
               allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
             />
           </div>
@@ -108,27 +107,29 @@ class HelpVideoPanel extends React.Component {
           displayInlineBlock
           paddedHorizontally={4}
           paddedVertically={18}
+          css={`
+            overflow: auto;
+          `}
         >
-          <div
-            className={Styles.videoLink}
-            style={{
-              backgroundImage: `linear-gradient(rgba(0,0,0,0.35),rgba(0,0,0,0.35)), url(${this.props.background})`
-            }}
-          >
-            <button className={Styles.videoBtn} onClick={this.toggleVideoGuide}>
-              <Icon glyph={Icon.GLYPHS.play} />
-            </button>
-          </div>
+          {this.props.videoUrl && this.props.placeholderImage && (
+            <div
+              className={Styles.videoLink}
+              style={{
+                backgroundImage: `linear-gradient(rgba(0,0,0,0.35),rgba(0,0,0,0.35)), url(${this.props.placeholderImage})`
+              }}
+            >
+              <button
+                className={Styles.videoBtn}
+                onClick={this.toggleVideoGuide}
+              >
+                <Icon glyph={Icon.GLYPHS.play} />
+              </button>
+            </div>
+          )}
           <Spacing bottom={5} />
-          <Text subHeading bold textDark>
-            {this.props.title}
-          </Text>
-          <For each="desc" of={this.props.description}>
-            <Spacing bottom={3} />
-            <Text medium textDark>
-              {desc}
-            </Text>
-          </For>
+          {this.props.htmlContent && (
+            <StyledHtml content={this.props.htmlContent} />
+          )}
         </Box>
       </div>
     );
