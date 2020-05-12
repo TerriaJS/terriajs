@@ -15,10 +15,12 @@ interface CssExports {
   'mapButtonColor': string;
   'md': string;
   'mobile': string;
+  'overlay': string;
+  'overlayInvert': string;
   'radiusLarge': string;
+  'radiusSmall': string;
   'ringWidth': string;
   'sm': string;
-  'spacing': string;
   'textBlack': string;
   'textDark': string;
   'textDarker': string;
