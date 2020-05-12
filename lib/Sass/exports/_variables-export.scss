@@ -20,11 +20,18 @@
 
   // Compass styles
   // compassWidth: $compass-width;
-  compassWidth: 55;
+  // We have to deviate from our "divide by 5" here, due to 55 being an odd number
+  // and thus meaning some things will scale to contain half pixels
+  // bumped up to 56 to hit an even number
+  compassWidth: 56;
   ringWidth: 10;
 
   // ..radius? (no standardised radius at the moment, pull in as needed from variables
   radiusLarge: $radius-large;
+  radiusSmall: $radius-small;
+
+  overlay: $overlay;
+  overlayInvert: $overlay-invert;
 
   // Colours
   colorPrimary: $color-primary;
