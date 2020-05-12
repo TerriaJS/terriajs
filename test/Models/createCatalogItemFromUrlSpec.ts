@@ -4,7 +4,9 @@ import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGrou
 import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
 import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
 import { matchesExtension } from "../../lib/Models/registerCatalogMembers";
-import UrlReference from "../../lib/Models/UrlReference";
+import UrlReference, {
+  UrlToCatalogMemberMapping
+} from "../../lib/Models/UrlReference";
 import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import createCatalogItemFromFileOrUrl from "../../lib/Models/createCatalogItemFromFileOrUrl";
@@ -25,18 +27,18 @@ describe("createUrlReferenceFromUrl", function() {
     CatalogMemberFactory.register(CsvCatalogItem.type, CsvCatalogItem);
     CatalogMemberFactory.register(UrlReference.type, UrlReference);
 
-    createUrlReferenceFromUrl.register(
+    UrlToCatalogMemberMapping.register(
       s => true,
       WebMapServiceCatalogGroup.type,
       true
     );
 
-    createUrlReferenceFromUrl.register(
+    UrlToCatalogMemberMapping.register(
       matchesExtension("geojson"),
       GeoJsonCatalogItem.type
     );
 
-    createUrlReferenceFromUrl.register(
+    UrlToCatalogMemberMapping.register(
       matchesExtension("csv"),
       CsvCatalogItem.type
     );

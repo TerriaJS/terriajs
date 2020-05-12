@@ -12,7 +12,7 @@
         "allowSyntheticDefaultImports": true,
         "outDir": "ts-out",
         "resolveJsonModule": true,
-        "types": []
+        "typeRoots": ["./lib/ThirdParty"]
     },
     "include": [
         "./lib/**/*",
