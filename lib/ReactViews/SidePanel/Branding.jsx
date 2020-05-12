@@ -18,7 +18,7 @@ const Branding = createReactClass({
       .brandBarElements;
     if (!defined(brandingHtmlElements)) {
       brandingHtmlElements = [
-        '<a target="_blank" href="http://terria.io"><img src="images/terria_logo.png" height="52" title="Version: {{ version }}" /></a>'
+        '<a target="_blank" href="http://terria.io"><img src="images/receipt-logo.png" height="40" title="Version: {{ version }}" /></a>'
       ];
     }
 
