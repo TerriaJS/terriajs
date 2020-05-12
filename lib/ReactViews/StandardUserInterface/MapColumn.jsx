@@ -132,10 +132,10 @@ const MapColumn = createReactClass({
                   )
                 })}
               >
-                <FeedbackButton
+                {/* <FeedbackButton
                   viewState={this.props.viewState}
                   btnText={t("feedback.feedbackBtnText")}
-                />
+                /> */}
               </div>
             </If>
 
