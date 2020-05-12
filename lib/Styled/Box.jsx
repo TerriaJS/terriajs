@@ -71,6 +71,10 @@ export const Box = styled.div`
   ${props =>
     props.charcoalGreyBg && `background-color: ${props.theme.charcoalGrey};`}
 
+  /* background color can be set on box or passed in through props read via theme...? */
+  ${props =>
+    props.backgroundColor && `background-color: ${props.backgroundColor};`}
+
 
   /* Unsure of padding API as yet */
 

@@ -59,6 +59,13 @@
     "closeButtonTitle": "Close {{toolName}} Tool"
   },
   "diffTool": {
+    "title": "Difference",
+    "exit": "Exit",
+    "computeDifference": "This layer visualizes the difference between imagery captured at two discrete points in time.",
+    "styles": "Styles",
+    "choosePreview": "Choose a preview style",
+    "chooseDifference": "Choose a difference style",
+    "differenceResultsTitle": "Change detection results",
     "locationPicker": {
       "initialMessages": {
         "beforePick": "Select a point in the region where you want to see the difference",
@@ -79,7 +86,7 @@
       "dateButtonTitle": "Select a date",
       "dateOutOfRange": "Currently out of range"
     },
-    "generateDiffButtonText": "Generate Difference Map"
+    "generateDiffButtonText": "Generate change detection"
   },
   "legend": {
     "lat": "Lat",

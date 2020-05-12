@@ -2,9 +2,10 @@ import hoistStatics from "hoist-non-react-statics";
 import { action, computed, observable, reaction, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { IDisposer } from "mobx-utils";
-import React from "react";
+import React, { useState } from "react";
+import { TFunction } from "i18next";
 import { WithTranslation, withTranslation } from "react-i18next";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
@@ -16,6 +17,7 @@ import Feature from "../../../Models/Feature";
 import Mappable, { ImageryParts } from "../../../Models/Mappable";
 import SplitItemReference from "../../../Models/SplitItemReference";
 import Terria from "../../../Models/Terria";
+import { StyledIcon, GLYPHS } from "../../Icon";
 import ViewState from "../../../ReactViewModels/ViewState";
 import DatePicker from "./DatePicker";
 import Styles from "./diff-tool.scss";
@@ -25,7 +27,10 @@ type DiffableItem = DiffableMixin.Instance;
 
 const Box: any = require("../../../Styled/Box").default;
 const Button: any = require("../../../Styled/Button").default;
+const RawButton: any = require("../../../Styled/Button").RawButton;
 const Text: any = require("../../../Styled/Text").default;
+const Spacing: any = require("../../../Styled/Spacing").default;
+import Select from "../../../Styled/Select";
 const dateFormat = require("dateformat");
 
 interface PropsType extends WithTranslation {
@@ -311,65 +316,82 @@ class Main extends React.Component<MainPropsType> {
       this.diffStyle !== undefined;
 
     return (
-      <>
-        <MainPanel isMapFullScreen={viewState.isMapFullScreen}>
-          {isShowingDiff && (
-            <BackButton onClick={this.resetTool}>&lt; Back</BackButton>
-          )}
-          <Text textLight medium>
-            Compute the difference image for two dates
-          </Text>
-          {!isShowingDiff && (
+      <Text large>
+        <DiffAccordion viewState={viewState} t={t}>
+          <MainPanel isMapFullScreen={viewState.isMapFullScreen}>
+            {isShowingDiff && (
+              <>
+                <BackButton onClick={this.resetTool}>&lt; Back</BackButton>
+                <Text medium textLight>
+                  {t("diffTool.differenceResultsTitle")}
+                </Text>
+              </>
+            )}
+            <Text textLight>{t("diffTool.computeDifference")}</Text>
+            <Spacing bottom={4} />
+            {!isShowingDiff && (
+              <Selector
+                value={sourceItem.uniqueId}
+                onChange={this.changeSourceItem}
+              >
+                <option disabled>Select source item</option>
+                {this.diffableItemsInWorkbench.map(item => (
+                  <option key={item.uniqueId} value={item.uniqueId}>
+                    {item.name}
+                  </option>
+                ))}
+              </Selector>
+            )}
+            <Spacing bottom={4} />
+            {!isShowingDiff && (
+              <>
+                <Text textLight>{t("diffTool.styles")}</Text>
+                <Spacing bottom={2} />
+                <Selector
+                  spacingBottom
+                  value={this.previewStyle}
+                  onChange={this.changePreviewStyle}
+                >
+                  <option disabled value="">
+                    {t("diffTool.choosePreview")}
+                  </option>
+                  {this.diffItem.styleSelector?.availableStyles.map(style => (
+                    <option key={style.id} value={style.id}>
+                      {style.name}
+                    </option>
+                  ))}
+                </Selector>
+              </>
+            )}
             <Selector
-              value={sourceItem.uniqueId}
-              onChange={this.changeSourceItem}
-            >
-              <option disabled>Select source item</option>
-              {this.diffableItemsInWorkbench.map(item => (
-                <option key={item.uniqueId} value={item.uniqueId}>
-                  {item.name}
-                </option>
-              ))}
-            </Selector>
-          )}
-          <Text large textLight css="margin-top: 1em;">
-            Styles
-          </Text>
-          {!isShowingDiff && (
-            <Selector
-              value={this.previewStyle}
-              onChange={this.changePreviewStyle}
+              value={this.diffStyle || ""}
+              onChange={this.changeDiffStyle}
             >
               <option disabled value="">
-                Choose a preview style
+                {t("diffTool.chooseDifference")}
               </option>
-              {this.diffItem.styleSelector?.availableStyles.map(style => (
+              {this.diffItem.availableDiffStyles?.map(style => (
                 <option key={style.id} value={style.id}>
                   {style.name}
                 </option>
               ))}
             </Selector>
-          )}
-          <Selector
-            value={this.diffStyle || ""}
-            onChange={this.changeDiffStyle}
-          >
-            <option disabled value="">
-              Choose a difference style
-            </option>
-            {this.diffItem.availableDiffStyles?.map(style => (
-              <option key={style.id} value={style.id}>
-                {style.name}
-              </option>
-            ))}
-          </Selector>
-          {this.legendUrl && <img src={this.legendUrl} />}
-          {isReadyToGenerateDiff && !isShowingDiff && (
-            <GenerateButton onClick={this.generateDiff}>
-              {t("diffTool.generateDiffButtonText")}
-            </GenerateButton>
-          )}
-        </MainPanel>
+            {this.legendUrl && (
+              <>
+                <Spacing bottom={2} />
+                <img width="100%" src={this.legendUrl} />
+              </>
+            )}
+            {isReadyToGenerateDiff && !isShowingDiff && (
+              <>
+                <Spacing bottom={4} />
+                <GenerateButton onClick={this.generateDiff}>
+                  {t("diffTool.generateDiffButtonText")}
+                </GenerateButton>
+              </>
+            )}
+          </MainPanel>
+        </DiffAccordion>
         {!isShowingDiff && (
           <LocationPicker
             terria={terria}
@@ -390,18 +412,68 @@ class Main extends React.Component<MainPropsType> {
             />
           </DatePanel>
         )}
-      </>
+      </Text>
     );
   }
 }
 
-const MainPanel = styled(Box).attrs({
+interface DiffAccordionProps {
+  viewState: ViewState;
+  t: TFunction;
+}
+
+const DiffAccordion: React.FC<DiffAccordionProps> = props => {
+  const [showChildren, setShowChildren] = useState(true);
+  const { t, viewState } = props;
+  const theme = useTheme();
+  return (
+    <DiffAccordionWrapper isMapFullScreen={viewState.isMapFullScreen} column>
+      <Box
+        paddedVertically
+        paddedHorizontally={2}
+        centered
+        justifySpaceBetween
+        backgroundColor={theme.colorSplitter}
+      >
+        <Box centered>
+          <StyledIcon styledWidth="20px" light glyph={GLYPHS.difference} />
+          <Spacing right={1} />
+          {/* font-size is non standard with what we have so far in terria,
+          lineheight as well to hit nonstandard paddings */}
+          <Text css={"font-size: 17px;line-height: 26px;"} textLight>
+            {t("diffTool.title")}
+          </Text>
+        </Box>
+        {/* margin-right 5px for the padded button offset - larger click area
+        but visible should be inline with rest of box */}
+        <Box centered css={"margin-right:-5px;"}>
+          <RawButton onClick={() => viewState.closeTool()}>
+            <Text textLight small semiBold uppercase>
+              {t("diffTool.exit")}
+            </Text>
+          </RawButton>
+          <Spacing right={1} />
+          <RawButton onClick={() => setShowChildren(!showChildren)}>
+            <Box paddedRatio={1} centered>
+              <StyledIcon
+                styledWidth="12px"
+                light
+                glyph={showChildren ? GLYPHS.opened : GLYPHS.closed}
+              />
+            </Box>
+          </RawButton>
+        </Box>
+      </Box>
+      {showChildren && props.children}
+    </DiffAccordionWrapper>
+  );
+};
+
+const DiffAccordionWrapper = styled(Box).attrs({
   column: true,
   positionAbsolute: true,
-  padded: true,
-  paddedRatio: 3,
-  styledWidth: "324px",
-  charcoalGreyBg: true
+  styledWidth: "324px"
+  // charcoalGreyBg: true
 })`
   top: 70px;
   left: 0px;
@@ -409,10 +481,13 @@ const MainPanel = styled(Box).attrs({
   margin-left: ${props =>
     props.isMapFullScreen ? 16 : parseInt(props.theme.workbenchWidth) + 40}px;
   transition: margin-left 0.25s;
-  div:last-of-type {
-    margin-bottom: auto; /* aligns the last item to the bottom of the panel */
-  }
 `;
+
+const MainPanel = styled(Box).attrs({
+  column: true,
+  paddedRatio: 2,
+  charcoalGreyBg: true
+})``;
 
 const BackButton = styled(Button).attrs({
   secondary: true
@@ -421,14 +496,14 @@ const BackButton = styled(Button).attrs({
 const GenerateButton = styled(Button).attrs({
   primary: true,
   fullWidth: true
-})`
-  margin-top: 20px;
-`;
+})``;
 
-const Selector = styled.select`
-  max-width: 100%;
-  margin-bottom: 1em;
-`;
+const Selector = (props: any) => (
+  <Box fullWidth column>
+    <Select {...props}>{props.children}</Select>
+    {props.spacingBottom && <Spacing bottom={2} />}
+  </Box>
+);
 
 const DatePanel = styled(Box).attrs({
   centered: true,
