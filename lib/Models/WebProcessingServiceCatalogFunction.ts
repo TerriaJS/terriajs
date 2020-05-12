@@ -34,7 +34,6 @@ import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import RectangleParameter from "./RectangleParameter";
 import RegionParameter from "./RegionParameter";
 import RegionTypeParameter from "./RegionTypeParameter";
-import CatalogFunctionJob from "./CatalogFunctionJob";
 import StringParameter from "./StringParameter";
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
 import i18next from "i18next";
@@ -77,18 +76,18 @@ type ProcessDescription = {
   statusSupported?: string;
 };
 
-type InputData = {
+export type WpsInputData = {
   inputValue: Promise<string | undefined> | string | undefined;
   inputType: string;
 };
 
 type ParameterConverter = {
-  inputToParameter: (
+  inputToParameter: (catalogFunction: CatalogFunctionMixin,
     input: Input,
     options: FunctionParameterOptions
   ) => FunctionParameter | undefined;
 
-  parameterToInput: (parameter: FunctionParameter) => InputData | undefined;
+  parameterToInput: (parameter: FunctionParameter) => WpsInputData | undefined;
 };
 
 export default class WebProcessingServiceCatalogFunction extends CatalogFunctionMixin(
@@ -231,9 +230,9 @@ export default class WebProcessingServiceCatalogFunction extends CatalogFunction
    * UI that can come and go, but we want those modifications to persist.
    */
   @computed({ keepAlive: true })
-  get parameters() {
+  get functionParameters() {
     const parameters = this.inputs.map(input => {
-      const parameter = this.convertInputToParameter(input);
+      const parameter = this.convertInputToParameter(this, input);
       if (isDefined(parameter)) {
         return parameter;
       }
@@ -258,38 +257,7 @@ export default class WebProcessingServiceCatalogFunction extends CatalogFunction
       return;
     }
 
-    const identifier = this.identifier;
-    const executeUrl = this.executeUrl;
-    const pendingItem = this.createPendingCatalogItem();
-    let dataInputs = await Promise.all(
-      this.parameters.map(p => this.convertParameterToInput(p))
-    );
-
-    return runInAction(async () => {
-      const parameters = {
-        Identifier: htmlEscapeText(identifier),
-        DataInputs: dataInputs.filter(isDefined),
-        storeExecuteResponse: this.storeSupported,
-        status: this.statusSupported
-      };
-      let promise: Promise<any>;
-      if (this.executeWithHttpGet) {
-        promise = this.getXml(executeUrl, {
-          ...parameters,
-          DataInputs: parameters.DataInputs.map(
-            ({ inputIdentifier: id, inputValue: val }) => `${id}=${val}`
-          ).join(";")
-        });
-      } else {
-        const executeXml = Mustache.render(executeWpsTemplate, parameters);
-        promise = this.postXml(executeUrl, executeXml);
-      }
-
-      pendingItem.loadPromise = promise;
-      this.terria.workbench.add(pendingItem);
-      const executeResponseXml = await promise;
-      return this.handleExecuteResponse(executeResponseXml, pendingItem);
-    });
+    
   }
 
   /**
@@ -354,7 +322,7 @@ export default class WebProcessingServiceCatalogFunction extends CatalogFunction
     }
   }
 
-  convertInputToParameter(input: Input) {
+  convertInputToParameter(catalogFunction:CatalogFunctionMixin, input: Input) {
     if (!isDefined(input.Identifier)) {
       return;
     }
@@ -363,7 +331,7 @@ export default class WebProcessingServiceCatalogFunction extends CatalogFunction
 
     for (let i = 0; i < this.parameterConverters.length; i++) {
       const converter = this.parameterConverters[i];
-      const parameter = converter.inputToParameter(input, {
+      const parameter = converter.inputToParameter(catalogFunction,input, {
         id: input.Identifier,
         name: input.Name,
         description: input.Abstract,
@@ -402,7 +370,7 @@ export default class WebProcessingServiceCatalogFunction extends CatalogFunction
     const id = `result-${pendingItem.uniqueId}`;
     const item = new WebProcessingServiceCatalogItem(id, this.terria);
     const parameterTraits = await Promise.all(
-      this.parameters.map(async p => {
+      this.functionParameters.map(async p => {
         const geoJsonFeature = await runInAction(() => p.geoJsonFeature);
         const tmp = createStratumInstance(ParameterTraits, {
           name: p.name,
@@ -440,7 +408,7 @@ export default class WebProcessingServiceCatalogFunction extends CatalogFunction
 }
 
 const LiteralDataConverter = {
-  inputToParameter: function(input: Input, options: FunctionParameterOptions) {
+  inputToParameter: function(catalogFunction:CatalogFunctionMixin,  input: Input, options: FunctionParameterOptions) {
     if (!isDefined(input.LiteralData)) {
       return;
     }
@@ -448,7 +416,7 @@ const LiteralDataConverter = {
     const allowedValues =
       input.LiteralData.AllowedValues || input.LiteralData.AllowedValue;
     if (isDefined(allowedValues) && isDefined(allowedValues.Value)) {
-      return new EnumerationParameter({
+      return new EnumerationParameter(catalogFunction, {
         ...options,
         possibleValues:
           Array.isArray(allowedValues.Value) ||
@@ -457,7 +425,7 @@ const LiteralDataConverter = {
             : [allowedValues.Value]
       });
     } else if (isDefined(input.LiteralData.AnyValue)) {
-      return new StringParameter({
+      return new StringParameter(catalogFunction, {
         ...options
       });
     }
@@ -471,7 +439,7 @@ const LiteralDataConverter = {
 };
 
 const DateTimeConverter = {
-  inputToParameter: function(input: Input, options: FunctionParameterOptions) {
+  inputToParameter: function(catalogFunction:CatalogFunctionMixin,input: Input, options: FunctionParameterOptions) {
     if (
       !isDefined(input.ComplexData) ||
       !isDefined(input.ComplexData.Default) ||
@@ -485,12 +453,12 @@ const DateTimeConverter = {
     if (schema !== "http://www.w3.org/TR/xmlschema-2/#dateTime") {
       return undefined;
     }
-    return new DateTimeParameter(options);
+    return new DateTimeParameter(catalogFunction, options);
   },
   parameterToInput: function(parameter: FunctionParameter) {
     return {
       inputType: "ComplexData",
-      inputValue: DateTimeParameter.formatValueForUrl(<string>parameter.value)
+      inputValue: DateTimeParameter.formatValueForUrl(parameter?.value?.toString() || '')
     };
   }
 };
@@ -506,7 +474,7 @@ const PolygonConverter = simpleGeoJsonDataConverter(
 );
 
 const RectangleConverter = {
-  inputToParameter: function(input: Input, options: FunctionParameterOptions) {
+  inputToParameter: function(catalogFunction: CatalogFunctionMixin, input: Input, options: FunctionParameterOptions) {
     if (
       !isDefined(input.BoundingBoxData) ||
       !isDefined(input.BoundingBoxData.Default) ||
@@ -539,7 +507,7 @@ const RectangleConverter = {
       return undefined;
     }
 
-    return new RectangleParameter({
+    return new RectangleParameter(catalogFunction, {
       ...options,
       crs: usedCrs
     });
@@ -591,7 +559,7 @@ const RectangleConverter = {
 };
 
 const GeoJsonGeometryConverter = {
-  inputToParameter: function(input: Input, options: FunctionParameterOptions) {
+  inputToParameter: function(catalogFunction: CatalogFunctionMixin, input: Input, options: FunctionParameterOptions) {
     if (
       !isDefined(input.ComplexData) ||
       !isDefined(input.ComplexData.Default) ||
@@ -606,37 +574,37 @@ const GeoJsonGeometryConverter = {
       return undefined;
     }
 
-    const regionTypeParameter = new RegionTypeParameter({
+    const regionTypeParameter = new RegionTypeParameter(catalogFunction, {
       id: "regionType",
       name: "Region Type",
       description: "The type of region to analyze.",
       converter: undefined
     });
 
-    const regionParameter = new RegionParameter({
+    const regionParameter = new RegionParameter(catalogFunction,{
       id: "regionParameter",
       name: "Region Parameter",
       regionProvider: regionTypeParameter,
       converter: undefined
     });
 
-    return new GeoJsonParameter({
+    return new GeoJsonParameter(catalogFunction,{
       ...options,
       regionParameter
     });
   },
 
-  parameterToInput: function(parameter: FunctionParameter) {
-    if (!isDefined(parameter.value)) {
+  parameterToInput: function(parameter: FunctionParameter): WpsInputData | undefined {
+    if (!isDefined(parameter.value) || parameter.value === null) {
       return;
     }
-    return (<GeoJsonParameter>parameter).getProcessedValue(parameter.value);
+    return (<GeoJsonParameter>parameter).getProcessedValue((<GeoJsonParameter>parameter).value);
   }
 };
 
 function simpleGeoJsonDataConverter(schemaType: string, klass: any) {
   return {
-    inputToParameter: function(
+    inputToParameter: function(catalogFunction:CatalogFunctionMixin,
       input: Input,
       options: FunctionParameterOptions
     ) {
@@ -658,7 +626,7 @@ function simpleGeoJsonDataConverter(schemaType: string, klass: any) {
         return undefined;
       }
 
-      return new klass(options);
+      return new klass(catalogFunction, options);
     },
     parameterToInput: function(parameter: FunctionParameter) {
       return {

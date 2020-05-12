@@ -10,4 +10,11 @@ export default class AutoRefreshingTraits extends mixTraits(MappableTraits, Mode
     type: "number"
   })
   refreshInterval?: number;
+
+  @primitiveTrait({
+    name: "Refresh enabled",
+    description: "Toggle for enabling auto refresh.",
+    type: "boolean"
+  })
+  refreshEnabled: boolean = true;
 }

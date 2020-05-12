@@ -27,6 +27,9 @@ import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
 import upsertModelFromJson from "./upsertModelFromJson";
+import CatalogFunctionMixin from "../ModelMixins/CatalogFunctionMixin";
+import CatalogFunctionJobMixin from "../ModelMixins/CatalogFunctionJobMixin";
+import { ChartItem } from "./Chartable";
 
 const createGuid = require("terriajs-cesium/Source/Core/createGuid").default;
 
@@ -94,7 +97,7 @@ class WpsLoadableStratum extends LoadableStratum(
   }
 
   @computed get geoJsonItem() {
-    const features = this.item.parameters
+    const features = this.item.wpsParameters
       .map(param => param.geoJsonFeature)
       .filter(isDefined);
     const geoJsonItem = new GeoJsonCatalogItem(createGuid(), this.item.terria);
@@ -115,7 +118,7 @@ class WpsLoadableStratum extends LoadableStratum(
   @computed get inputsSectionHtml() {
     const inputsSection =
       '<table class="cesium-infoBox-defaultTable">' +
-      this.item.parameters.reduce((previousValue, parameter) => {
+      this.item.wpsParameters.reduce((previousValue, parameter) => {
         return (
           previousValue +
           "<tr>" +
@@ -183,8 +186,9 @@ class WpsLoadableStratum extends LoadableStratum(
 StratumOrder.addLoadStratum(WpsLoadableStratum.stratumName);
 
 export default class WebProcessingServiceCatalogItem
-  extends CatalogMemberMixin(CreateModel(WebProcessingServiceCatalogItemTraits))
+  extends CatalogFunctionJobMixin(CreateModel(WebProcessingServiceCatalogItemTraits))
   implements Mappable {
+  
   static readonly type = "wps-result";
   get typeName() {
     return i18next.t("models.webProcessingService.wpsResult");
@@ -196,6 +200,57 @@ export default class WebProcessingServiceCatalogItem
   private geoJsonItem?: GeoJsonCatalogItem;
 
   async forceLoadMetadata() {
+    if (!this.init) {
+      this.init = true
+      const identifier = this.identifier;
+      const executeUrl = this.executeUrl;
+      const pendingItem = this.createPendingCatalogItem();
+      let dataInputs = await Promise.all(
+        this.functionParameters.map(p => this.convertParameterToInput(p))
+      );
+
+      return runInAction(async () => {
+        const parameters = {
+          Identifier: htmlEscapeText(identifier),
+          DataInputs: dataInputs.filter(isDefined),
+          storeExecuteResponse: this.storeSupported,
+          status: this.statusSupported
+        };
+        let promise: Promise<any>;
+        if (this.executeWithHttpGet) {
+          promise = this.getXml(executeUrl, {
+            ...parameters,
+            DataInputs: parameters.DataInputs.map(
+              ({ inputIdentifier: id, inputValue: val }) => `${id}=${val}`
+            ).join(";")
+          });
+        } else {
+          const executeXml = Mustache.render(executeWpsTemplate, parameters);
+          promise = this.postXml(executeUrl, executeXml);
+        }
+
+        pendingItem.loadPromise = promise;
+        this.terria.workbench.add(pendingItem);
+        const executeResponseXml = await promise;
+        return this.handleExecuteResponse(executeResponseXml, pendingItem);
+      });
+    }
+  }
+
+  get chartItems(): ChartItem[] {
+    return []
+  }
+  protected async forceLoadChartItems(): Promise<void> {
+    
+  }
+  protected async forceLoadMapItems(): Promise<void> {
+    
+  }
+  refreshData(): void {
+    
+  }
+
+  async loadResults() {
     const stratum = await WpsLoadableStratum.load(this);
     runInAction(() => {
       this.strata.set(WpsLoadableStratum.stratumName, stratum);

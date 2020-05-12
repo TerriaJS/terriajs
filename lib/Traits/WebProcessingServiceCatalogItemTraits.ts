@@ -7,6 +7,8 @@ import mixTraits from "./mixTraits";
 import ModelTraits from "./ModelTraits";
 import objectArrayTrait from "./objectArrayTrait";
 import primitiveTrait from "./primitiveTrait";
+import CatalogFunctionJobTraits from "./CatalogFunctionJobTraits";
+import WebProcessingServiceCatalogFunctionTraits from "./WebProcessingServiceCatalogFunctionTraits";
 
 export class ParameterTraits extends ModelTraits {
   @primitiveTrait({
@@ -30,10 +32,8 @@ export class ParameterTraits extends ModelTraits {
   geoJsonFeature?: JsonObject;
 }
 
-export default class WebProcessingServiceCatalogItemTraits extends mixTraits(
-  FeatureInfoTraits,
-  MappableTraits,
-  CatalogMemberTraits
+export default class WebProcessingServiceCatalogItemTraits extends mixTraits(CatalogFunctionJobTraits,
+  WebProcessingServiceCatalogFunctionTraits
 ) {
   @anyTrait({
     name: "WPS Response",
@@ -54,5 +54,5 @@ export default class WebProcessingServiceCatalogItemTraits extends mixTraits(
     name: "Parameters",
     description: "Parameter names & values for this result item"
   })
-  parameters?: ParameterTraits[];
+  wpsParameters?: ParameterTraits[];
 }

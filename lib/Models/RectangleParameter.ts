@@ -1,24 +1,26 @@
-import { observable } from "mobx";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import FunctionParameter, {
   Options as FunctionParameterOptions
 } from "./FunctionParameter";
+import CatalogFunctionMixin from "../ModelMixins/CatalogFunctionMixin";
 const Reproject = require("../Map/Reproject");
 
 interface Options extends FunctionParameterOptions {
   crs?: string;
 }
 
-export default class RectangleParameter extends FunctionParameter {
-  readonly type = "rectangle";
+export type RectangleCoordinates = {west: number;
+  south: number;
+  east: number;
+  north: number;}
 
-  @observable value?: Rectangle;
+export default class RectangleParameter extends FunctionParameter<RectangleCoordinates> {
+  readonly type = "rectangle";
 
   readonly crs: string;
 
-  constructor(options: Options) {
-    super(options);
+  constructor(catalogFunction: CatalogFunctionMixin, options: Options) {
+    super(catalogFunction, options);
     this.crs = defaultValue(options.crs, Reproject.TERRIA_CRS);
   }
 }

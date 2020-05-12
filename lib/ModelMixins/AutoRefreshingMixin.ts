@@ -4,12 +4,11 @@ import {
   onBecomeObserved,
   onBecomeUnobserved,
   reaction,
-  observable
+  autorun
 } from "mobx";
 import { now } from "mobx-utils";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
-import MappableTraits from "../Traits/MappableTraits";
 import AutoRefreshingTraits from "../Traits/AutoRefreshingTraits";
 
 type AutoRefreshing = Model<AutoRefreshingTraits>;
@@ -18,14 +17,12 @@ export default function AutoRefreshingMixin<
   T extends Constructor<AutoRefreshing>
 >(Base: T) {
   abstract class AutoRefreshingMixin extends Base {
-    private _autoRefreshEnabled = true
-
     _autoRefreshDisposer: IReactionDisposer | undefined;
 
-    /* Return the interval in seconds to poll for updates. */
+    /** Return the interval in seconds to poll for updates. */
     abstract get refreshInterval(): number | undefined;
 
-    /* Call hook for refreshing the item */
+    /** Call hook for refreshing the item */
     abstract refreshData(): void;
 
     constructor(...args: any[]) {
@@ -33,10 +30,19 @@ export default function AutoRefreshingMixin<
       // We should only poll when our map items have consumers
       onBecomeObserved(this, "mapItems", this.startAutoRefresh.bind(this));
       onBecomeUnobserved(this, "mapItems", this.stopAutoRefresh.bind(this));
+
+      // Toggle autorefresh when `refreshEnabled` trait changes
+      autorun(() => {
+        if (this.refreshEnabled) {
+          this.startAutoRefresh()
+        } else {
+          this.stopAutoRefresh()
+        }
+      })
     }
 
     private startAutoRefresh() {
-      if (!this._autoRefreshDisposer && this._autoRefreshEnabled) {
+      if (!this._autoRefreshDisposer && this.refreshEnabled) {
       this._autoRefreshDisposer = reaction(
         () => this._pollingTimer,
         () => {
@@ -49,15 +55,6 @@ export default function AutoRefreshingMixin<
       if (this._autoRefreshDisposer) {
         this._autoRefreshDisposer();
         this._autoRefreshDisposer = undefined;
-      }
-    }
-
-    toggleAutoRefresh(enabled:boolean) {
-      this._autoRefreshEnabled = enabled
-      if (enabled) {
-        this.startAutoRefresh()
-      } else {
-        this.stopAutoRefresh()
       }
     }
 

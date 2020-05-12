@@ -3,16 +3,19 @@ import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import FunctionParameter, {
   Options as FunctionParameterOptions
 } from "./FunctionParameter";
-import PointParameter from "./PointParameter";
-import PolygonParameter, { Polygon } from "./PolygonParameter";
+import PointParameter, { CartographicPoint } from "./PointParameter";
+import PolygonParameter, { PolygonCoordinates } from "./PolygonParameter";
 import RegionParameter from "./RegionParameter";
 import SelectAPolygonParameter from "./SelectAPolygonParameter";
+import CatalogFunctionMixin from "../ModelMixins/CatalogFunctionMixin";
+import { FeatureCollection, Feature } from "geojson";
+import { JsonArray, JsonObject } from "../Core/Json";
 
 interface Options extends FunctionParameterOptions {
   regionParameter: RegionParameter;
 }
 
-export default class GeoJsonParameter extends FunctionParameter {
+export default class GeoJsonParameter extends FunctionParameter<CartographicPoint | PolygonCoordinates | JsonObject> {
   readonly type = "geojson";
 
   static readonly PointType = "point";
@@ -25,15 +28,15 @@ export default class GeoJsonParameter extends FunctionParameter {
 
   readonly regionParameter: RegionParameter;
 
-  constructor(options: Options) {
-    super(options);
+  constructor(catalogFunction: CatalogFunctionMixin, options: Options) {
+    super(catalogFunction, options);
     this.regionParameter = options.regionParameter;
   }
 
   /**
    * Return representation of value as URL argument.
    */
-  getProcessedValue(value: unknown) {
+  getProcessedValue(value: Cartographic | PolygonCoordinates | Feature[] | JsonObject) {
     if (this.subtype === GeoJsonParameter.PointType) {
       return {
         inputType: "ComplexData",
@@ -43,27 +46,29 @@ export default class GeoJsonParameter extends FunctionParameter {
     if (this.subtype === GeoJsonParameter.PolygonType) {
       return {
         inputType: "ComplexData",
-        inputValue: PolygonParameter.formatValueForUrl(<Polygon>value)
+        inputValue: PolygonParameter.formatValueForUrl(<PolygonCoordinates>value)
       };
     }
     if (this.subtype === GeoJsonParameter.SelectAPolygonType) {
       return {
         inputType: "ComplexData",
-        inputValue: SelectAPolygonParameter.formatValueForUrl(value)
+        inputValue: SelectAPolygonParameter.formatValueForUrl(<Feature[]>value)
       };
     }
   }
 
-  @computed get geoJsonFeature() {
+  @computed get geoJsonFeature(): Feature | JsonObject | undefined{
     if (this.subtype === GeoJsonParameter.PointType) {
       return PointParameter.getGeoJsonFeature(<Cartographic>this.value);
     }
     if (this.subtype === GeoJsonParameter.PolygonType) {
-      return PolygonParameter.getGeoJsonFeature(<Polygon>this.value);
+      return PolygonParameter.getGeoJsonFeature(<PolygonCoordinates>this.value);
     }
     if (this.subtype === GeoJsonParameter.SelectAPolygonType) {
       return SelectAPolygonParameter.getGeoJsonFeature(this.value);
     }
+
+    return
     // TODO rest
   }
 }

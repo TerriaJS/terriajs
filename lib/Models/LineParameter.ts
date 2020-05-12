@@ -3,7 +3,7 @@ import FunctionParameter from "./FunctionParameter";
 type Coordinates = number[];
 export type Line = Coordinates[];
 
-export default class LineParameter extends FunctionParameter {
+export default class LineParameter extends FunctionParameter<Line> {
   readonly type = "line";
 
   /**

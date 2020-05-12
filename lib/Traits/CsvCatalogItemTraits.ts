@@ -5,6 +5,7 @@ import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
 import TableTraits from "./TableTraits";
 import UrlTraits from "./UrlTraits";
+import AutoRefreshingTraits from "./AutoRefreshingTraits";
 
 class PollingTraits extends ModelTraits {
   @primitiveTrait({
@@ -34,7 +35,7 @@ class PollingTraits extends ModelTraits {
 export default class CsvCatalogItemTraits extends mixTraits(
   FeatureInfoTraits,
   UrlTraits,
-  TableTraits
+  TableTraits, AutoRefreshingTraits
 ) {
   @primitiveTrait({
     name: "Character Set",

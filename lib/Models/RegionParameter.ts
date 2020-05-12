@@ -2,6 +2,7 @@ import FunctionParameter, {
   Options as FunctionParameterOptions
 } from "./FunctionParameter";
 import RegionTypeParameter from "./RegionTypeParameter";
+import CatalogFunctionMixin from "../ModelMixins/CatalogFunctionMixin";
 
 interface Options extends FunctionParameterOptions {
   regionProvider: RegionTypeParameter;
@@ -11,8 +12,8 @@ export default class RegionParameter extends FunctionParameter {
   readonly type = "region";
   readonly regionProvider: RegionTypeParameter;
 
-  constructor(options: Options) {
-    super(options);
+  constructor(catalogFunction:CatalogFunctionMixin, options: Options) {
+    super(catalogFunction, options);
     this.regionProvider = options.regionProvider;
   }
 }

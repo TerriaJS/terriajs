@@ -1,17 +1,16 @@
 import FunctionParameter from "./FunctionParameter";
 import { observable, computed } from "mobx";
 import isDefined from "../Core/isDefined";
+import { Feature, Polygon } from "geojson";
 
 type Coordinates = number[];
 type LinearRing = Coordinates[];
-export type Polygon = LinearRing[];
+export type PolygonCoordinates = LinearRing[];
 
-export default class PolygonParameter extends FunctionParameter {
+export default class PolygonParameter extends FunctionParameter<PolygonCoordinates> {
   readonly type = "polygon";
 
-  @observable value?: Polygon;
-
-  static formatValueForUrl(value: Polygon) {
+  static formatValueForUrl(value: PolygonCoordinates) {
     return JSON.stringify({
       type: "FeatureCollection",
       features: [
@@ -26,13 +25,14 @@ export default class PolygonParameter extends FunctionParameter {
     });
   }
 
-  static getGeoJsonFeature(value: Polygon) {
+  static getGeoJsonFeature(value: PolygonCoordinates): Feature<Polygon>{
     return {
       type: "Feature",
       geometry: {
         type: "Polygon",
         coordinates: value
-      }
+      },
+      properties: {}
     };
   }
 

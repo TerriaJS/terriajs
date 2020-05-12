@@ -2,6 +2,9 @@ import FunctionParameter, {
   Options as FunctionParameterOptions
 } from "./FunctionParameter";
 import { observable, computed } from "mobx";
+import CatalogFunctionMixin from "../ModelMixins/CatalogFunctionMixin";
+import CommonStrata from "./CommonStrata";
+import isDefined from "../Core/isDefined";
 
 interface Options extends FunctionParameterOptions {
   /** The name for the "true" value of the boolean parameter. */
@@ -14,15 +17,13 @@ interface Options extends FunctionParameterOptions {
   falseDescription?: string;
 }
 
-export default class BooleanParameter extends FunctionParameter
+export default class BooleanParameter extends FunctionParameter<boolean>
   implements Options {
   readonly type = "boolean";
   readonly trueName?: string;
   readonly trueDescription?: string;
   readonly falseName?: string;
   readonly falseDescription?: string;
-
-  @observable value = false;
 
   /**
    * Gets a value indicating whether this parameter has names for its "true" and "false" states.
@@ -34,12 +35,15 @@ export default class BooleanParameter extends FunctionParameter
     );
   }
 
-  constructor(options: Options) {
-    super(options);
+  constructor(catalogFunction: CatalogFunctionMixin, options: Options) {
+    super(catalogFunction, options);
     this.trueName = options.trueName;
     this.trueDescription = options.trueDescription;
     this.falseName = options.falseName;
     this.falseDescription = options.falseDescription;
-    this.value = options.value;
+
+    if (!isDefined(options.value)) {
+      this.setValue(CommonStrata.defaults, false)
+    }
   }
 }

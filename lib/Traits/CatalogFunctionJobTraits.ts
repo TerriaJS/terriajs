@@ -4,6 +4,7 @@ import primitiveTrait from "./primitiveTrait";
 import objectArrayTrait from "./objectArrayTrait";
 import mixTraits from "./mixTraits";
 import AutoRefreshingTraits from "./AutoRefreshingTraits";
+import CatalogFunctionTraits from "./CatalogFunctionTraits";
 
 export class FunctionParameterTraits extends ModelTraits {
   @primitiveTrait({
@@ -22,12 +23,6 @@ export class FunctionParameterTraits extends ModelTraits {
   "value"?: string;
 }
 
-export default class CatalogFunctionJobTraits extends mixTraits(AutoRefreshingTraits, CatalogMemberTraits) {
-  @objectArrayTrait({
-    type: FunctionParameterTraits,
-    idProperty: 'id',
-    name: "parameters",
-    description: "Function Parameters"
-  })
-  parameters?: FunctionParameterTraits;
+export default class CatalogFunctionJobTraits extends mixTraits(CatalogFunctionTraits, AutoRefreshingTraits, CatalogMemberTraits) {
+
 }
