@@ -14,13 +14,18 @@ import TimeVarying from "./TimeVarying";
 
 type DiscretelyTimeVarying = Model<DiscretelyTimeVaryingTraits>;
 
+interface AsJulian {
+  time: JulianDate;
+  tag: string;
+}
+
 function DiscretelyTimeVaryingMixin<
   T extends Constructor<DiscretelyTimeVarying>
 >(Base: T) {
   abstract class DiscretelyTimeVaryingMixin extends Base
     implements TimeVarying {
     @computed
-    get currentTime() {
+    get currentTime(): string | undefined {
       const time = super.currentTime;
       if (time === undefined) {
         if (this.initialTimeSource === "now") {
@@ -49,23 +54,23 @@ function DiscretelyTimeVaryingMixin<
     }
 
     @computed({ equals: JulianDate.equals })
-    get startTimeAsJulianDate() {
+    get startTimeAsJulianDate(): JulianDate | undefined {
       return toJulianDate(this.startTime);
     }
 
     @computed({ equals: JulianDate.equals })
-    get stopTimeAsJulianDate() {
+    get stopTimeAsJulianDate(): JulianDate | undefined {
       return toJulianDate(this.stopTime);
     }
 
     @computed
-    get discreteTimesAsSortedJulianDates() {
+    get discreteTimesAsSortedJulianDates(): AsJulian[] | undefined {
       const discreteTimes = this.discreteTimes;
       if (discreteTimes === undefined) {
         return undefined;
       }
 
-      const asJulian: { time: JulianDate; tag: string }[] = [];
+      const asJulian: AsJulian[] = [];
       for (let i = 0; i < discreteTimes.length; i++) {
         const dt = discreteTimes[i];
         try {
@@ -197,7 +202,7 @@ function DiscretelyTimeVaryingMixin<
     }
 
     @computed
-    get startTime() {
+    get startTime(): string | undefined {
       const time = super.startTime;
       if (
         time === undefined &&
@@ -212,7 +217,7 @@ function DiscretelyTimeVaryingMixin<
     }
 
     @computed
-    get stopTime() {
+    get stopTime(): string | undefined {
       const time = super.stopTime;
       if (
         time === undefined &&

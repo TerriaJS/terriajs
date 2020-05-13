@@ -56,25 +56,13 @@ terriamap:
             mobileDefaultViewerMode: "2d"
             experimentalFeatures: true
             feedbackUrl: "feedback"
-            helpContent:
-                - itemName: gettingstarted
-                markdownText: |-
-                    # Getting started with the map
-                    
-                    If you're new to the map or using spatial data, our Getting Started video quickly covers the basic functionality you'll need to use to add and interrogate data sets.
-                    
-                    If you don't have time to watch the video, we suggest exploring the following areas:
-                        
-                        1. Search for a location to quickly find an area of interest
-                        2. Use 'Explore map data' to view the catalogue of available data sets and add them to the map
-                        3. Interact with the data layer, including opacity and toggling on and off on the left in your workbench
-                        4. Click on the data on the map to view more detailed data, including the raw data
-                        5. Change your basemap using options in 'Map Settings' to help make some data sets more visible
-                        6. Zoom and change your view, including tilting the view angle using the controls on the right-hand side of the screen
-                icon: video
-                videoUrl: https://www.youtube.com/embed/NTtSM70rIvI
-                placeholderImage: https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg                
-        ]
+            helpContent: 
+                - 
+                  itemName: gettingstarted
+                  markdownText: "# Getting started with the map\n\nTemporarily removed until CI issues resolved"
+                  icon: "video"
+                  videoUrl: "https://www.youtube.com/embed/NTtSM70rIvI"
+                  placeholderImage: "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
     resources:
         requests:
             cpu: 10m

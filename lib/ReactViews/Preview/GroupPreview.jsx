@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 
 import DataPreviewSections from "./DataPreviewSections";
 import DataPreviewUrl from "./DataPreviewUrl";
-import measureElement from "../measureElement";
+import measureElement from "../HOCs/measureElement";
 import Styles from "./mappable-preview.scss";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
