@@ -53,7 +53,7 @@ const StyledButton = styled.button`
     // background-color: #4d5766;
     background-color: ${props.theme.textLight};
     color: ${props.theme.darkWithOverlay};
-    height: 34px;
+    min-height: 34px;
     border-radius: 20px;
     border: 2px solid ${props.theme.darkWithOverlay};
   `}

@@ -5,6 +5,7 @@ import { IDisposer } from "mobx-utils";
 import React, { useState } from "react";
 import { TFunction } from "i18next";
 import { WithTranslation, withTranslation } from "react-i18next";
+import { DefaultTheme, withTheme } from "styled-components";
 import styled, { useTheme } from "styled-components";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -36,6 +37,7 @@ const dateFormat = require("dateformat");
 interface PropsType extends WithTranslation {
   viewState: ViewState;
   sourceItem: DiffableItem;
+  theme: DefaultTheme;
 }
 
 @observer
@@ -127,6 +129,7 @@ class DiffTool extends React.Component<PropsType> {
       return (
         <Main
           {...this.props}
+          theme={this.props.theme}
           terria={this.props.viewState.terria}
           sourceItem={this.sourceItem}
           changeSourceItem={this.changeSourceItem}
@@ -306,8 +309,11 @@ class Main extends React.Component<MainPropsType> {
     this.props.terria.showSplitter = true;
   }
 
+  // i want to restructure the render so that there's 2 distinct "showing diff"
+  // or not states, right now intertwining them means way too many conditionals
+  // that confuse the required spacing etc.
   render() {
-    const { terria, viewState, sourceItem, t } = this.props;
+    const { terria, viewState, sourceItem, t, theme } = this.props;
     const isShowingDiff = this.diffItem.isShowingDiff;
     const isReadyToGenerateDiff =
       this.location &&
@@ -321,30 +327,54 @@ class Main extends React.Component<MainPropsType> {
           <MainPanel isMapFullScreen={viewState.isMapFullScreen}>
             {isShowingDiff && (
               <>
-                <BackButton onClick={this.resetTool}>&lt; Back</BackButton>
+                <Box centered left>
+                  <BackButton
+                    css={`
+                      color: ${theme.textLight};
+                      border-color: ${theme.textLight};
+                    `}
+                    transparentBg
+                    onClick={this.resetTool}
+                  >
+                    <Box centered>
+                      <StyledIcon
+                        css="transform:rotate(90deg);"
+                        light
+                        styledWidth="16px"
+                        glyph={GLYPHS.arrowDown}
+                      />
+                      Back
+                    </Box>
+                  </BackButton>
+                </Box>
+                <Spacing bottom={3} />
                 <Text medium textLight>
                   {t("diffTool.differenceResultsTitle")}
                 </Text>
+                <Spacing bottom={2} />
               </>
             )}
             <Text textLight>{t("diffTool.computeDifference")}</Text>
-            <Spacing bottom={4} />
-            {!isShowingDiff && (
-              <Selector
-                value={sourceItem.uniqueId}
-                onChange={this.changeSourceItem}
-              >
-                <option disabled>Select source item</option>
-                {this.diffableItemsInWorkbench.map(item => (
-                  <option key={item.uniqueId} value={item.uniqueId}>
-                    {item.name}
-                  </option>
-                ))}
-              </Selector>
-            )}
-            <Spacing bottom={4} />
+            {isShowingDiff && <Spacing bottom={3} />}
             {!isShowingDiff && (
               <>
+                <Spacing bottom={4} />
+                <Selector
+                  value={sourceItem.uniqueId}
+                  onChange={this.changeSourceItem}
+                >
+                  <option disabled>Select source item</option>
+                  {this.diffableItemsInWorkbench.map(item => (
+                    <option key={item.uniqueId} value={item.uniqueId}>
+                      {item.name}
+                    </option>
+                  ))}
+                </Selector>
+              </>
+            )}
+            {!isShowingDiff && (
+              <>
+                <Spacing bottom={4} />
                 <Text textLight>{t("diffTool.styles")}</Text>
                 <Spacing bottom={2} />
                 <Selector
@@ -567,4 +597,4 @@ function doesFeatureBelongToItem(
   );
 }
 
-export default hoistStatics(withTranslation()(DiffTool), DiffTool);
+export default hoistStatics(withTranslation()(withTheme(DiffTool)), DiffTool);
