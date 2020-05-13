@@ -241,15 +241,15 @@ export const WelcomeMessagePure = props => {
                       buttonIcon={Icon.GLYPHS.tour}
                     />
                     <Spacing bottom={4} />
+                    <WelcomeMessageButton
+                      buttonText={t("welcomeMessage.helpBtnText")}
+                      buttonIcon={Icon.GLYPHS.newHelp}
+                      onClick={() => {
+                        handleClose(false);
+                        setShouldOpenHelp(true);
+                      }}
+                    />
                   </If>
-                  <WelcomeMessageButton
-                    buttonText={t("welcomeMessage.helpBtnText")}
-                    buttonIcon={Icon.GLYPHS.newHelp}
-                    onClick={() => {
-                      handleClose(false);
-                      setShouldOpenHelp(true);
-                    }}
-                  />
                   <Spacing bottom={4} />
                   <WelcomeMessageButton
                     buttonText={t("welcomeMessage.exploreDataBtnText")}
