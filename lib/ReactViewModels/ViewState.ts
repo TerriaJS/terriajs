@@ -1,3 +1,4 @@
+import { Ref } from "react";
 import clone from "terriajs-cesium/Source/Core/clone";
 import defined from "terriajs-cesium/Source/Core/defined";
 import DisclaimerHandler from "./DisclaimerHandler";
@@ -15,6 +16,13 @@ import {
 } from "mobx";
 import { BaseModel } from "../Models/Model";
 import PickedFeatures from "../Map/PickedFeatures";
+import {
+  TourPoint,
+  defaultTourPoints,
+  RelativePosition
+} from "./defaultTourPoints";
+
+import { LOCAL_PROPERTY_KEY as WELCOME_PROPERTY_KEY } from "../ReactViews/WelcomeMessage/WelcomeMessage";
 
 export const DATA_CATALOG_NAME = "data-catalog";
 export const USER_DATA_NAME = "my-data";
@@ -40,6 +48,7 @@ export default class ViewState {
   });
   readonly searchState: SearchState;
   readonly terria: Terria;
+  readonly relativePosition = RelativePosition;
 
   @observable previewedItem: BaseModel | undefined;
   @observable userDataPreviewedItem: BaseModel | undefined;
@@ -66,6 +75,7 @@ export default class ViewState {
   @observable helpPanelExpanded: boolean = false;
   @observable disclaimerSettings: any | undefined = undefined;
   @observable disclaimerVisible: boolean = false;
+  @observable videoGuideVisible: string = "";
 
   @observable workbenchWithOpenControls: string | undefined = undefined;
 
@@ -79,6 +89,97 @@ export default class ViewState {
 
   @observable currentStoryId: number = 0;
   @observable featurePrompts: any[] = [];
+
+  /**
+   * we need a layering system for touring the app, but also a way for it to be
+   * chopped and changed from a terriamap
+   * 
+   * this will be slightly different to the help sequences that were done in
+   * the past, but may evolve to become a "sequence" (where the UI gets 
+   * programatically toggled to delve deeper into the app, e.g. show the user
+   * how to add data via the data catalog window)
+   * 
+   * rough points
+   * - "all guide points visible"
+   * - 
+   * 
+
+   * draft structure(?):
+   * 
+   * maybe each "guide" item will have
+   * {
+   *  ref: (react ref object)
+   *  dotOffset: (which way the dot and guide should be positioned relative to the ref component)
+   *  content: (component, more flexibility than a string)
+   * ...?
+   * }
+   * and guide props?
+   * {
+   *  enabled: parent component to decide this based on active index
+   * ...?
+   * }
+   *  */
+
+  @observable tourPoints: TourPoint[] = defaultTourPoints;
+  @observable showTour: boolean = false;
+  @observable appRefs: Map<string, Ref<HTMLElement>> = new Map();
+  @observable currentTourIndex: number = -1;
+
+  get tourPointsWithValidRefs() {
+    // should viewstate.ts reach into document? seems unavoidable if we want
+    // this to be the true source of tourPoints.
+    // update: well it turns out you can be smarter about it and actually
+    // properly clean up your refs - so we'll leave that up to the UI to
+    // provide valid refs
+    return this.tourPoints
+      .sort((a, b) => {
+        return a.priority - b.priority;
+      })
+      .filter(
+        tourPoint => (<any>this.appRefs).get(tourPoint.appRefName)?.current
+      );
+  }
+  @action
+  setTourIndex(index: number) {
+    this.currentTourIndex = index;
+  }
+  @action
+  setShowTour(bool: boolean) {
+    this.showTour = bool;
+  }
+  @action
+  closeTour() {
+    this.currentTourIndex = -1;
+    this.showTour = false;
+  }
+  @action
+  previousTourPoint() {
+    const currentIndex = this.currentTourIndex;
+    if (currentIndex !== 0) {
+      this.currentTourIndex = currentIndex - 1;
+    }
+  }
+  @action
+  nextTourPoint() {
+    const totalTourPoints = this.tourPointsWithValidRefs.length;
+    const currentIndex = this.currentTourIndex;
+    if (currentIndex >= totalTourPoints - 1) {
+      this.closeTour();
+    } else {
+      this.currentTourIndex = currentIndex + 1;
+    }
+  }
+
+  @action
+  updateAppRef(refName: string, ref: Ref<HTMLElement>) {
+    if (!this.appRefs.get(refName) || this.appRefs.get(refName) !== ref) {
+      this.appRefs.set(refName, ref);
+    }
+  }
+  @action
+  deleteAppRef(refName: string) {
+    this.appRefs.delete(refName);
+  }
 
   /**
    * Gets or sets a value indicating whether the small screen (mobile) user interface should be used.
@@ -328,6 +429,17 @@ export default class ViewState {
   @action
   hideDisclaimer() {
     this.disclaimerVisible = false;
+  }
+
+  @action
+  setShowWelcomeMessage(welcomeMessageShown: boolean) {
+    this.showWelcomeMessage = welcomeMessageShown;
+  }
+
+  @action
+  setVideoGuideVisible(videoName: string) {
+    console.log("Setting videoGuideVisible to " + videoName);
+    this.videoGuideVisible = videoName;
   }
 
   /**

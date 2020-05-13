@@ -1,4 +1,7 @@
 // <Spacing /> example from terrace
+
+// we'd typically want to avoid this but as the heading and paragraph margins
+// are still settling, we will need to use this liberally
 import styled from "styled-components";
 
 // interface SpacingProps {

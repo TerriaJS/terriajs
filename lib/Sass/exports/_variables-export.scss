@@ -26,6 +26,8 @@
   compassWidth: 56;
   ringWidth: 10;
 
+  spacing: 5;
+
   // ..radius? (no standardised radius at the moment, pull in as needed from variables
   radiusLarge: $radius-large;
   radiusSmall: $radius-small;
@@ -36,7 +38,7 @@
   // Colours
   colorPrimary: $color-primary;
   colorSplitter: $color-splitter;
-  textLight: $text-light;
+  textLight: $text-light; // essentially #fff until we sort out the colour palette from vic
   textLightDimmed: $text-light-dimmed;
   textDark: $text-dark;
   textDarker: $text-darker;

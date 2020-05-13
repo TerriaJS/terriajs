@@ -34,17 +34,22 @@ const DropdownPanel = createReactClass({
         dropdownOffset: "50%"
       });
     } else if (innerElement) {
+      const btnRef = this.props.btnRef;
+      const buttonElementOffsetLeft =
+        btnRef?.current?.offsetLeft || this.buttonElement?.offsetLeft || 0;
+      const buttonElementClientWidth =
+        btnRef?.current?.clientWidth || this.buttonElement?.clientWidth || 0;
       // how much further right the panel is from the button
-      const offset = this.buttonElement.offsetLeft - innerElement.offsetLeft;
+      const offset = buttonElementOffsetLeft - innerElement.offsetLeft;
       // if the panel is left of the button leave its offset as is, otherwise move it right so it's level with the button.
       const dropdownOffset =
         offset < innerElement.offsetLeft ? offset : innerElement.offsetLeft;
       // offset the caret to line up with the middle of the button - note that the caret offset is relative to the panel, whereas
       // the offsets for the button/panel are relative to their container.
       const caretOffset = Math.max(
-        this.buttonElement.clientWidth / 2 -
+        buttonElementClientWidth / 2 -
           10 -
-          (dropdownOffset - this.buttonElement.offsetLeft),
+          (dropdownOffset - buttonElementOffsetLeft),
         0
       );
 
@@ -84,7 +89,7 @@ const DropdownPanel = createReactClass({
             [Styles.buttonForModalDropdown]: this.props.showDropdownAsModal
           })}
           title={this.props.btnTitle}
-          ref={element => (this.buttonElement = element)}
+          ref={this.props.btnRef || (element => (this.buttonElement = element))}
         >
           <If condition={this.props.theme.icon}>
             <Icon glyph={iconGlyph} />
