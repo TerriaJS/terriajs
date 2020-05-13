@@ -88,6 +88,7 @@ interface ConfigParameters {
   locationSearchBoundingBox?: number[];
   googleAnalyticsKey?: string;
   rollbarAccessToken?: string;
+  globalDisclaimer?: any;
   showWelcomeMessage?: boolean;
   helpContent?: any[];
 }
@@ -198,6 +199,7 @@ export default class Terria {
     locationSearchBoundingBox: undefined,
     googleAnalyticsKey: undefined,
     rollbarAccessToken: undefined,
+    globalDisclaimer: undefined,
     showWelcomeMessage: false,
     helpContent: []
   };
