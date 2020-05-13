@@ -12,7 +12,7 @@ import Box from "../../Styled/Box";
 import Text, { TextSpan } from "../../Styled/Text";
 
 import { useKeyPress } from "../Hooks/useKeyPress.js";
-// import { useTranslation, Trans } from "react-i18next";
+import { useTranslation, Trans } from "react-i18next";
 import { observer } from "mobx-react";
 import styled from "styled-components";
 import Button, { RawButton } from "../../Styled/Button";
@@ -94,7 +94,7 @@ class WelcomeMessage extends React.Component {
 
 export const WelcomeMessagePure = props => {
   const { showWelcomeMessage, setShowWelcomeMessage, viewState } = props;
-  // const { t } = useTranslation();
+  const { t } = useTranslation();
   // This is required so we can do nested animations
   const [welcomeVisible, setWelcomeVisible] = useState(showWelcomeMessage);
   const [shouldExploreData, setShouldExploreData] = useState(false);
@@ -192,14 +192,15 @@ export const WelcomeMessagePure = props => {
                   styledSize={"36px"}
                   styledLineHeight={"49px"}
                 >
-                  Let&apos;s get you started
+                  {t("welcomeMessage.title")}
                 </Text>
                 <Spacing bottom={3} />
                 <Text textLight>
-                  Interested in data discovery and exploration?
-                  <br />
-                  Dive right in and get started or check the following help
-                  guide options.
+                    <Trans i18nKey="welcomeMessage.welcomeMessage">
+                      Interested in data discovery and exploration?
+                      <br/>
+                      Dive right in and get started or check the following help guide options.
+                    </Trans>
                 </Text>
               </Box>
               <Spacing bottom={6} />
@@ -240,13 +241,13 @@ export const WelcomeMessagePure = props => {
                 >
                   <If condition={!viewState.useSmallScreenInterface}>
                     <WelcomeMessageButton
-                      buttonText={"Take the tour"}
+                      buttonText={t("welcomeMessage.tourBtnText")}
                       buttonIcon={Icon.GLYPHS.tour}
                     />
                     <Spacing bottom={4} />
                   </If>
                   <WelcomeMessageButton
-                    buttonText={"I'll need some help"}
+                    buttonText={t("welcomeMessage.helpBtnText")}
                     buttonIcon={Icon.GLYPHS.newHelp}
                     onClick={() => {
                       handleClose(false);
@@ -255,7 +256,7 @@ export const WelcomeMessagePure = props => {
                   />
                   <Spacing bottom={4} />
                   <WelcomeMessageButton
-                    buttonText={"Explore map data"}
+                    buttonText={t("welcomeMessage.exploreDataBtnText")}
                     buttonIcon={Icon.GLYPHS.add}
                     onClick={() => {
                       handleClose(false);
@@ -270,7 +271,7 @@ export const WelcomeMessagePure = props => {
               <Box fullWidth centered>
                 <RawButton onClick={handleClose.bind(null, true)}>
                   <TextSpan textLight isLink>
-                    Close message and don’t show me this again
+                    {t("welcomeMessage.dismissText")}
                   </TextSpan>
                 </RawButton>
               </Box>
