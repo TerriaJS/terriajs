@@ -29,12 +29,7 @@ const WelcomeModalWrapper = styled(Box)`
 
 function WelcomeMessageButton(props) {
   return (
-    <Button
-      primary
-      rounded
-      fullWidth
-      onClick={props.onClick}
-    >
+    <Button primary rounded fullWidth onClick={props.onClick}>
       <Box centered>
         {props.buttonIcon && (
           <StyledIcon light styledWidth={"22px"} glyph={props.buttonIcon} />
@@ -196,11 +191,12 @@ export const WelcomeMessagePure = props => {
                 </Text>
                 <Spacing bottom={3} />
                 <Text textLight>
-                    <Trans i18nKey="welcomeMessage.welcomeMessage">
-                      Interested in data discovery and exploration?
-                      <br/>
-                      Dive right in and get started or check the following help guide options.
-                    </Trans>
+                  <Trans i18nKey="welcomeMessage.welcomeMessage">
+                    Interested in data discovery and exploration?
+                    <br />
+                    Dive right in and get started or check the following help
+                    guide options.
+                  </Trans>
                 </Text>
               </Box>
               <Spacing bottom={6} />
