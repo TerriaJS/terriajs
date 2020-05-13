@@ -47,6 +47,10 @@ terriamap:
             disclaimer:
                 text: "Disclaimer: This map must not be used for navigation or precise spatial analysis"
                 url: "https://terria.io"
+            globalDisclaimer:
+                confirmationRequired: false,
+                buttonTitle: "Acknowledge",
+                title: "Disclaimer",
             developerAttribution:
                 text: "Terria"
                 link: "https://terria.io"
@@ -54,6 +58,7 @@ terriamap:
             brandBarElements: ["", "<a target=\"_blank\" href=\"http://terria.io\"><img src=\"images/terria_logo.png\" height=\"52\" title=\"Version: {{version}}\" /></a>", ""]
             supportEmail: "info@terria.io"
             mobileDefaultViewerMode: "2d"
+            showWelcomeMessage: true
             experimentalFeatures: true
             feedbackUrl: "feedback"
             helpContent: 
