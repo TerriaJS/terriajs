@@ -33,14 +33,11 @@ function WelcomeMessageButton(props) {
       primary
       rounded
       fullWidth
-      css={`
-        height: 50px;
-      `}
       onClick={props.onClick}
     >
       <Box centered>
         {props.buttonIcon && (
-          <StyledIcon light styledWidth={"25px"} glyph={props.buttonIcon} />
+          <StyledIcon light styledWidth={"22px"} glyph={props.buttonIcon} />
         )}
         <Spacing right={2} />
         {props.buttonText && (
@@ -82,7 +79,6 @@ class WelcomeMessage extends React.Component {
 
   render() {
     const viewState = this.props.viewState || {};
-    console.log(this.props.theme);
     return (
       <WelcomeMessagePure
         showWelcomeMessage={viewState.showWelcomeMessage}
@@ -168,7 +164,7 @@ export const WelcomeMessagePure = props => {
           <SlideUpFadeIn isVisible={welcomeVisible}>
             <Box
               styledWidth={"667px"}
-              styledHeight={"504px"}
+              styledMinHeight={"504px"}
               displayInlineBlock
               paddedRatio={6}
               onClick={e => {
@@ -207,12 +203,11 @@ export const WelcomeMessagePure = props => {
                 </Text>
               </Box>
               <Spacing bottom={6} />
-              <Box fullWidth styledHeight={"180px"}>
+              <Box fullWidth styledMinHeight={"160px"}>
                 <If condition={!viewState.useSmallScreenInterface}>
                   <Box
                     col6
                     centered
-                    fullHeight
                     backgroundImage={
                       "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
                     }
@@ -248,17 +243,17 @@ export const WelcomeMessagePure = props => {
                       buttonText={"Take the tour"}
                       buttonIcon={Icon.GLYPHS.tour}
                     />
-                    <Spacing bottom={3} />
+                    <Spacing bottom={4} />
                   </If>
                   <WelcomeMessageButton
                     buttonText={"I'll need some help"}
-                    buttonIcon={Icon.GLYPHS.help}
+                    buttonIcon={Icon.GLYPHS.newHelp}
                     onClick={() => {
                       handleClose(false);
                       setShouldOpenHelp(true);
                     }}
                   />
-                  <Spacing bottom={3} />
+                  <Spacing bottom={4} />
                   <WelcomeMessageButton
                     buttonText={"Explore map data"}
                     buttonIcon={Icon.GLYPHS.add}
@@ -274,90 +269,12 @@ export const WelcomeMessagePure = props => {
               </If>
               <Box fullWidth centered>
                 <RawButton onClick={handleClose.bind(null, true)}>
-                  <TextSpan primary isLink>
+                  <TextSpan textLight isLink>
                     Close message and don’t show me this again
                   </TextSpan>
                 </RawButton>
               </Box>
             </Box>
-
-            {/* <article
-            className={Styles.welcomeModal}
-            // Allows interaction w/ modal without closing
-            onClick={e => {
-              viewState.setTopElement("WelcomeMessage");
-              e.stopPropagation();
-            }}
-          >
-            <button
-              type="button"
-              className={Styles.closeBtn}
-              onClick={() => handleClose(true)} // persist close if they put the effort to clicking "X" instead of click-away-from-modal
-              title="Close"
-              aria-label="Close"
-            >
-              <Icon glyph={Icon.GLYPHS.close} />
-            </button>
-            <h1>
-              <Trans i18nKey="welcomeMessage.title">
-                Spatial data made{" "}
-                <span className={Styles.highlight}>easy.</span>
-              </Trans>
-            </h1>
-            <span className={Styles.welcomeModalBody}>
-              <div>{t("welcomeMessage.WelcomeMessage")}</div>
-              <If condition={!viewState.useSmallScreenInterface}>
-                <Spacing bottom={10} />
-              </If>
-              <If condition={viewState.useSmallScreenInterface}>
-                <Spacing bottom={4} />
-              </If>
-              <div>
-                <button
-                  className={classNames(
-                    Styles.welcomeModalButton,
-                    Styles.welcomeModalButtonPrimary
-                  )}
-                  onClick={() => {
-                    handleClose(true);
-                    if (WelcomeMessagePrimaryBtnClick) {
-                      WelcomeMessagePrimaryBtnClick(props);
-                    } else {
-                      setShouldExploreData(true);
-                    }
-                  }}
-                >
-                  {t("welcomeMessage.WelcomeMessagePrimaryBtn")}
-                </button>
-                {WelcomeMessageSecondaryBtnClick && (
-                  <button
-                    className={classNames(
-                      Styles.welcomeModalButton,
-                      Styles.welcomeModalButtonTertiary
-                    )}
-                    onClick={() => {
-                      handleClose(true);
-                      // if (WelcomeMessageSecondaryBtnClick) {
-                      WelcomeMessageSecondaryBtnClick(props);
-                      // } else {
-                      //   setTimeout(() => {
-                      //     viewState.showHelpMenu = true;
-                      //   }, 300);
-                      // }
-                    }}
-                  >
-                    {t("welcomeMessage.WelcomeMessageSecondaryBtn")}
-                  </button>
-                )}
-              </div>
-              <button
-                className={Styles.welcomeModalCloseLink}
-                onClick={() => handleClose(true)}
-              >
-                {t("welcomeMessage.WelcomeMessageDissmissText")}
-              </button>
-            </span>
-          </article> */}
           </SlideUpFadeIn>
         </Box>
       </WelcomeModalWrapper>

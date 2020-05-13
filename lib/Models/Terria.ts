@@ -57,7 +57,7 @@ import Workbench from "./Workbench";
 import openGroup from "./openGroup";
 import getDereferencedIfExists from "../Core/getDereferencedIfExists";
 import SplitItemReference from "./SplitItemReference";
-import overrides from "../Overrides/defaults.jsx";
+// import overrides from "../Overrides/defaults.jsx";
 
 interface ConfigParameters {
   [key: string]: ConfigParameters[keyof ConfigParameters];
@@ -130,7 +130,7 @@ export default class Terria {
   readonly overlays = new Workbench();
   readonly catalog = new Catalog(this);
   readonly timelineClock = new Clock({ shouldAnimate: false });
-  readonly overrides: any = overrides; // TODO: add options.functionOverrides like in master
+  // readonly overrides: any = overrides; // TODO: add options.functionOverrides like in master
 
   @observable
   readonly mainViewer = new TerriaViewer(

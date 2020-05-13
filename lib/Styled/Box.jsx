@@ -22,6 +22,7 @@ export const Box = styled.div`
   ${props => props.fullWidth && `width: 100%;`}
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
   ${props => props.styledHeight && `height: ${props.styledHeight};`}
+  ${props => props.styledMinHeight && `min-height: ${props.styledMinHeight};`}
   
   ${props =>
     props.col &&
@@ -109,6 +110,7 @@ export const Box = styled.div`
       }
       background-size: cover;
       background-repeat: no-repeat;
+      background-position: center;
     `}
 `;
 
