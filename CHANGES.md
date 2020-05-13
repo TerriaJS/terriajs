@@ -4,9 +4,11 @@ Change Log
 ### MobX Development
 
 #### mobx-next-release (mobx-30)
+* Ported welcome message to mobx with new designs
 * (placeholder)
 * Updated CI clientConfig values to include new help panel default
 * Bumped explicit base typescript to 3.9.2
+* Lock rollbar to 2.15.2
 
 #### mobx-29
 * Fix handling of urls on `Cesium3DTilesCatalogItem` related to proxying and getting confused between Resource vs URL.
