@@ -16,6 +16,7 @@ import { useTranslation, Trans } from "react-i18next";
 import { observer } from "mobx-react";
 import styled from "styled-components";
 import Button, { RawButton } from "../../Styled/Button";
+import { TourPortalDisplayName } from "../Tour/TourPortal";
 import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
 
 export const WELCOME_MESSAGE_NAME = "welcomeMessage";
@@ -92,6 +93,7 @@ export const WelcomeMessagePure = props => {
   const { t } = useTranslation();
   // This is required so we can do nested animations
   const [welcomeVisible, setWelcomeVisible] = useState(showWelcomeMessage);
+  const [shouldTakeTour, setShouldTakeTour] = useState(false);
   const [shouldExploreData, setShouldExploreData] = useState(false);
   const [shouldOpenHelp, setShouldOpenHelp] = useState(false);
   // const {
@@ -120,6 +122,12 @@ export const WelcomeMessagePure = props => {
       transitionProps={{
         onExiting: () => setWelcomeVisible(false),
         onExited: () => {
+          if (shouldTakeTour) {
+            setShouldTakeTour(false);
+            viewState.setTourIndex(0);
+            viewState.setShowTour(true);
+            viewState.setTopElement(TourPortalDisplayName);
+          }
           if (shouldExploreData) {
             setShouldExploreData(false);
             viewState.openAddData();
@@ -237,6 +245,17 @@ export const WelcomeMessagePure = props => {
                 >
                   <If condition={!viewState.useSmallScreenInterface}>
                     <WelcomeMessageButton
+                      onClick={() => {
+                        handleClose(false);
+                        // not sure if we should wait for the exit animation,
+                        // if we don't, we have a flicker due to the difference
+                        // in overlay darkness - but if we wait, it goes
+                        // dark -> light -> dark anyway..
+                        setShouldTakeTour(true);
+                        viewState.setTourIndex(0);
+                        viewState.setShowTour(true);
+                        viewState.setTopElement(TourPortalDisplayName);
+                      }}
                       buttonText={t("welcomeMessage.tourBtnText")}
                       buttonIcon={Icon.GLYPHS.tour}
                     />
