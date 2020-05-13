@@ -8,7 +8,7 @@ const Icon = styled.span`
   margin-right: 8px;
 `;
 const StyledButton = styled.button`
-  height: 40px;
+  min-height: 40px;
   // min-width: 75px;
   padding: 0 16px;
 

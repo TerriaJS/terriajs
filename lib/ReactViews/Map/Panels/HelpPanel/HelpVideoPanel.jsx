@@ -5,12 +5,13 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
 import Icon from "../../../Icon.jsx";
-import Loader from "../../../Loader";
 import Styles from "./help-panel.scss";
 import Spacing from "../../../../Styled/Spacing";
 import Box from "../../../../Styled/Box";
-import { action } from "mobx";
+import VideoGuide from "./VideoGuide";
 import StyledHtml from "./StyledHtml";
+
+const HELP_VIDEO_NAME = "helpVideo";
 
 @observer
 class HelpVideoPanel extends React.Component {
@@ -29,57 +30,6 @@ class HelpVideoPanel extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      showVideoGuide: false,
-      videoGuideVisible: false
-    };
-  }
-
-  @action.bound
-  toggleVideoGuide() {
-    const showVideoGuide = this.state.showVideoGuide;
-    // If not enabled
-    if (!showVideoGuide) {
-      this.setState({
-        showVideoGuide: !showVideoGuide,
-        videoGuideVisible: true
-      });
-    }
-    // Otherwise we immediately trigger exit animations, then close it 300ms later
-    if (showVideoGuide) {
-      this.setState({
-        showVideoGuide: !showVideoGuide,
-        videoGuideVisible: false
-      });
-    }
-  }
-
-  renderVideoGuide() {
-    return (
-      <div
-        className={Styles.videoGuideWrapperFullScreen}
-        onClick={this.toggleVideoGuide}
-      >
-        <div
-          className={Styles.videoGuide}
-          onClick={e => e.stopPropagation()}
-          style={{
-            backgroundImage: `url(${this.props.placeholderImage})`
-          }}
-        >
-          <div className={Styles.videoGuideRatio}>
-            <div className={Styles.videoGuideLoading}>
-              <Loader message={` `} />
-            </div>
-            <iframe
-              className={Styles.videoGuideIframe}
-              src={this.props.videoUrl}
-              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-            />
-          </div>
-        </div>
-      </div>
-    );
   }
 
   render() {
@@ -99,7 +49,12 @@ class HelpVideoPanel extends React.Component {
     });
     return (
       <div className={className}>
-        {this.state.showVideoGuide && this.renderVideoGuide()}
+        <VideoGuide
+          viewState={this.props.viewState}
+          videoLink={this.props.videoUrl}
+          background={this.props.placeholderImage}
+          videoName={HELP_VIDEO_NAME}
+        />
         <Box
           centered
           fullWidth
@@ -120,7 +75,9 @@ class HelpVideoPanel extends React.Component {
             >
               <button
                 className={Styles.videoBtn}
-                onClick={this.toggleVideoGuide}
+                onClick={() =>
+                  this.props.viewState.setVideoGuideVisible(HELP_VIDEO_NAME)
+                }
               >
                 <Icon glyph={Icon.GLYPHS.play} />
               </button>

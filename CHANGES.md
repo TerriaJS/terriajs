@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### mobx-next-release (mobx-30)
+* Ported welcome message to mobx with new designs
 * (placeholder)
 * Updated CI clientConfig values to include new help panel default
 * Bumped explicit base typescript to 3.9.2

@@ -16,6 +16,8 @@ import {
 import { BaseModel } from "../Models/Model";
 import PickedFeatures from "../Map/PickedFeatures";
 
+import { LOCAL_PROPERTY_KEY as WELCOME_PROPERTY_KEY } from "../ReactViews/WelcomeMessage/WelcomeMessage";
+
 export const DATA_CATALOG_NAME = "data-catalog";
 export const USER_DATA_NAME = "my-data";
 
@@ -64,6 +66,7 @@ export default class ViewState {
   @observable showWelcomeMessage: boolean = false;
   @observable selectedHelpMenuItem: string = "";
   @observable helpPanelExpanded: boolean = false;
+  @observable videoGuideVisible: string = "";
 
   @observable workbenchWithOpenControls: string | undefined = undefined;
 
@@ -321,6 +324,17 @@ export default class ViewState {
   @action
   hideHelpPanel() {
     this.showHelpMenu = false;
+  }
+
+  @action
+  setShowWelcomeMessage(welcomeMessageShown: boolean) {
+    this.showWelcomeMessage = welcomeMessageShown;
+  }
+
+  @action
+  setVideoGuideVisible(videoName: string) {
+    console.log("Setting videoGuideVisible to " + videoName);
+    this.videoGuideVisible = videoName;
   }
 
   /**
