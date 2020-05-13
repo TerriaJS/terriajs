@@ -149,24 +149,22 @@ export const TourExplanation = ({
             max={maxSteps}
           />
           <Box centered>
+            {!isFirstTourPoint && (
+              <>
+                <RawButton onClick={() => onPrevious?.()}>
+                  {t("tour.previous")}
+                </RawButton>
+                <Spacing right={2} />
+              </>
+            )}
             {isLastTourPoint ? (
               <Button onClick={() => onSkip?.()} primary>
                 {t("tour.finish")}
               </Button>
             ) : (
-              <>
-                {!isFirstTourPoint && (
-                  <>
-                    <RawButton onClick={() => onPrevious?.()}>
-                      {t("tour.previous")}
-                    </RawButton>
-                    <Spacing right={2} />
-                  </>
-                )}
-                <Button onClick={() => onNext?.()} primary>
-                  {t("tour.next")}
-                </Button>
-              </>
+              <Button onClick={() => onNext?.()} primary>
+                {t("tour.next")}
+              </Button>
             )}
           </Box>
         </Box>
