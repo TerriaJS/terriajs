@@ -15,13 +15,18 @@ import TimeFilterMixin from "./TimeFilterMixin";
 
 type DiscretelyTimeVarying = Model<DiscretelyTimeVaryingTraits>;
 
+interface AsJulian {
+  time: JulianDate;
+  tag: string;
+}
+
 export default function DiscretelyTimeVaryingMixin<
   T extends Constructor<DiscretelyTimeVarying>
 >(Base: T) {
   abstract class DiscretelyTimeVaryingMixin extends Base
     implements TimeVarying {
     @computed
-    get currentTime() {
+    get currentTime(): string | undefined {
       const time = super.currentTime;
       if (time === undefined) {
         if (this.initialTimeSource === "now") {
@@ -50,17 +55,17 @@ export default function DiscretelyTimeVaryingMixin<
     }
 
     @computed({ equals: JulianDate.equals })
-    get startTimeAsJulianDate() {
+    get startTimeAsJulianDate(): JulianDate | undefined {
       return toJulianDate(this.startTime);
     }
 
     @computed({ equals: JulianDate.equals })
-    get stopTimeAsJulianDate() {
+    get stopTimeAsJulianDate(): JulianDate | undefined {
       return toJulianDate(this.stopTime);
     }
 
     @computed
-    get discreteTimesAsSortedJulianDates() {
+    get discreteTimesAsSortedJulianDates(): AsJulian[] | undefined {
       let discreteTimes;
       if (
         TimeFilterMixin.isMixedInto(this) &&
@@ -73,7 +78,7 @@ export default function DiscretelyTimeVaryingMixin<
         return undefined;
       }
 
-      const asJulian = filterOutUndefined(
+      const asJulian: AsJulian[] = filterOutUndefined(
         discreteTimes.map(dt => {
           if (dt.time === undefined) {
             return undefined;
@@ -206,7 +211,7 @@ export default function DiscretelyTimeVaryingMixin<
     }
 
     @computed
-    get startTime() {
+    get startTime(): string | undefined {
       const time = super.startTime;
       if (
         time === undefined &&
@@ -221,7 +226,7 @@ export default function DiscretelyTimeVaryingMixin<
     }
 
     @computed
-    get stopTime() {
+    get stopTime(): string | undefined {
       const time = super.stopTime;
       if (
         time === undefined &&

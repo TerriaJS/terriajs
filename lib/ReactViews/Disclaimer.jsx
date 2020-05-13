@@ -77,41 +77,40 @@ class Disclaimer extends React.Component {
     const disclaimer = this.props.viewState.disclaimerSettings;
     const useSmallScreenInterface = this.props.viewState
       .useSmallScreenInterface;
-    return (
-      disclaimer && (
-        <FadeIn isVisible={this.props.viewState.disclaimerVisible}>
-          <TopElementBox positionAbsolute fullWidth fullHeight centered>
-            <BackgroundImage
-              // Make the image slightly larger to deal with
-              // image shrinking a tad bit when blurred
-              styledWidth={"110%"}
-              styledHeight={"110%"}
-              positionAbsolute
-            />
-            <Box
-              displayInlineBlock
-              left
-              styledWidth={useSmallScreenInterface ? "100%" : "613px"}
-              paddedRatio={4}
-              css={`
-                max-height: 100%;
-                overflow: auto;
-              `}
+    return disclaimer ? (
+      <FadeIn isVisible={this.props.viewState.disclaimerVisible}>
+        <TopElementBox positionAbsolute fullWidth fullHeight centered>
+          <BackgroundImage
+            // Make the image slightly larger to deal with
+            // image shrinking a tad bit when blurred
+            styledWidth={"110%"}
+            styledHeight={"110%"}
+            positionAbsolute
+          />
+          <Box
+            displayInlineBlock
+            left
+            styledWidth={useSmallScreenInterface ? "100%" : "613px"}
+            paddedRatio={4}
+            css={`
+              max-height: 100%;
+              overflow: auto;
+            `}
+          >
+            <Text
+              styledFontSize={"18px"}
+              styledLineHeight={"24px"}
+              bold
+              textLight
             >
-              <Text
-                styledFontSize={"18px"}
-                styledLineHeight={"24px"}
-                bold
-                textLight
-              >
-                {disclaimer.title}
-              </Text>
-              <Spacing bottom={4} />
-              <Text
-                styledLineHeight={"18px"}
-                textLight
-                css={props =>
-                  `
+              {disclaimer.title}
+            </Text>
+            <Spacing bottom={4} />
+            <Text
+              styledLineHeight={"18px"}
+              textLight
+              css={props =>
+                `
                 // not sure of the ideal way to deal with this
                 a {
                   font-weight: 600;
@@ -119,44 +118,43 @@ class Disclaimer extends React.Component {
                   text-decoration: none;
                 }
               `
-                }
+              }
+            >
+              {parseCustomMarkdownToReact(disclaimer.message)}
+            </Text>
+            <Spacing bottom={5} />
+            <Box
+              fullWidth
+              centered
+              displayInlineBlock={useSmallScreenInterface}
+            >
+              <DisclaimerButton
+                denyButton
+                onClick={() => this.deny(disclaimer.denyAction)}
+                fullWidth={useSmallScreenInterface}
               >
-                {parseCustomMarkdownToReact(disclaimer.message)}
-              </Text>
-              <Spacing bottom={5} />
-              <Box
-                fullWidth
-                centered
-                displayInlineBlock={useSmallScreenInterface}
+                {disclaimer.denyText}
+              </DisclaimerButton>
+              <Choose>
+                <When condition={useSmallScreenInterface}>
+                  <Spacing bottom={3} />
+                </When>
+                <Otherwise>
+                  <Spacing right={3} />
+                </Otherwise>
+              </Choose>
+              <DisclaimerButton
+                onClick={() => this.confirm(disclaimer.confirmAction)}
+                fullWidth={useSmallScreenInterface}
+                primary
               >
-                <DisclaimerButton
-                  denyButton
-                  onClick={() => this.deny(disclaimer.denyAction)}
-                  fullWidth={useSmallScreenInterface}
-                >
-                  {disclaimer.denyText}
-                </DisclaimerButton>
-                <Choose>
-                  <When condition={useSmallScreenInterface}>
-                    <Spacing bottom={3} />
-                  </When>
-                  <Otherwise>
-                    <Spacing right={3} />
-                  </Otherwise>
-                </Choose>
-                <DisclaimerButton
-                  onClick={() => this.confirm(disclaimer.confirmAction)}
-                  fullWidth={useSmallScreenInterface}
-                  primary
-                >
-                  {disclaimer.confirmText}
-                </DisclaimerButton>
-              </Box>
+                {disclaimer.confirmText}
+              </DisclaimerButton>
             </Box>
-          </TopElementBox>
-        </FadeIn>
-      )
-    );
+          </Box>
+        </TopElementBox>
+      </FadeIn>
+    ) : null;
   }
 }
 
