@@ -220,6 +220,7 @@ export default class ViewState {
 
   private _unsubscribeErrorListener: any;
   private _pickedFeaturesSubscription: IReactionDisposer;
+  private _disclaimerVisibleSubscription: IReactionDisposer;
   private _isMapFullScreenSubscription: IReactionDisposer;
   private _showStoriesSubscription: IReactionDisposer;
   private _mobileMenuSubscription: IReactionDisposer;
@@ -263,6 +264,19 @@ export default class ViewState {
         if (defined(pickedFeatures)) {
           this.featureInfoPanelIsVisible = true;
           this.featureInfoPanelIsCollapsed = false;
+        }
+      }
+    );
+    // When disclaimer is shown, ensure fullscreen
+    // unsure about this behaviour because it nudges the user off center
+    // of the original camera set from config once they acknowdge
+    this._disclaimerVisibleSubscription = reaction(
+      () => this.disclaimerVisible,
+      disclaimerVisible => {
+        if (disclaimerVisible) {
+          this.isMapFullScreen = true;
+        } else if (!disclaimerVisible && this.isMapFullScreen) {
+          this.isMapFullScreen = false;
         }
       }
     );
@@ -334,6 +348,7 @@ export default class ViewState {
 
   dispose() {
     this._pickedFeaturesSubscription();
+    this._disclaimerVisibleSubscription();
     this._unsubscribeErrorListener();
     this._mobileMenuSubscription();
     this._isMapFullScreenSubscription();
@@ -427,8 +442,12 @@ export default class ViewState {
   }
 
   @action
+  setDisclaimerVisible(bool: boolean) {
+    this.disclaimerVisible = bool;
+  }
+  @action
   hideDisclaimer() {
-    this.disclaimerVisible = false;
+    this.setDisclaimerVisible(false);
   }
 
   @action

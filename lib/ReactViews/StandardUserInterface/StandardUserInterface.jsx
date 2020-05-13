@@ -200,6 +200,10 @@ const StandardUserInterface = observer(
               className={classNames(Styles.uiRoot, {
                 [Styles.withStoryBuilder]: showStoryBuilder
               })}
+              css={`
+                ${this.props.viewState.disclaimerVisible &&
+                  `filter: blur(10px);`}
+              `}
               ref={w => (this._wrapper = w)}
             >
               <div className={Styles.ui}>

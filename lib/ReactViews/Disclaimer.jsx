@@ -6,7 +6,10 @@ import { withTheme } from "styled-components";
 import Box from "../Styled/Box";
 import Text from "../Styled/Text";
 import Spacing from "../Styled/Spacing";
-import bingAerialBackground from "../../wwwroot/images/bing-aerial-labels-wide.png";
+// if we must use a placeholder image,
+// do not bundle in the full res `wwwroot/images/bing-aerial-labels-wide.png`
+// image as it's a 1.4mb png
+// import bingAerialBackground from "../../wwwroot/images/bing-aerial-labels-wide-low-quality.jpg";
 import styled from "styled-components";
 import parseCustomMarkdownToReact from "./Custom/parseCustomMarkdownToReact";
 import Button from "../Styled/Button";
@@ -18,13 +21,14 @@ const TopElementBox = styled(Box)`
   right: 0;
 `;
 
+// background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+//   url(${bingAerialBackground});
 const BackgroundImage = styled(Box)`
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url(${bingAerialBackground});
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  filter: blur(10px);
+  background: rgba(0, 0, 0, 0.75);
+  // background-size: cover;
+  // background-repeat: no-repeat;
+  // background-position: center;
+  // filter: blur(10px);
   z-index: 0;
 `;
 
@@ -81,10 +85,13 @@ class Disclaimer extends React.Component {
       <FadeIn isVisible={this.props.viewState.disclaimerVisible}>
         <TopElementBox positionAbsolute fullWidth fullHeight centered>
           <BackgroundImage
-            // Make the image slightly larger to deal with
-            // image shrinking a tad bit when blurred
-            styledWidth={"110%"}
-            styledHeight={"110%"}
+            // // Make the image slightly larger to deal with
+            // // image shrinking a tad bit when blurred
+            // styledWidth={"110%"}
+            // styledHeight={"110%"}
+
+            fullWidth
+            fullHeight
             positionAbsolute
           />
           <Box
