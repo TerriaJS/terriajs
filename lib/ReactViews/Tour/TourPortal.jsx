@@ -16,6 +16,8 @@ import { useTranslation } from "react-i18next";
 import { autorun } from "mobx";
 import { observer } from "mobx-react";
 
+import { useWindowSize } from "../Hooks/useWindowSize";
+
 import Caret from "../Generic/Caret";
 import CloseButton from "../Generic/CloseButton";
 import Box from "../../Styled/Box";
@@ -344,6 +346,10 @@ export const TourPortalDisplayName = "TourPortal";
 export const TourPortal = observer(({ viewState }) => {
   const showPortal = viewState.currentTourIndex !== -1;
   const showPreface = showPortal && !viewState.showTour;
+  // should we bump up the debounce here? feels like 16ms is quite aggressive
+  // and almost to the point of not debouncing at all, but the render logic
+  // is quite cheap so it makes for a better resizing/zooming experience
+  const width = useWindowSize({ debounceOverride: 16 });
   useEffect(() =>
     autorun(() => {
       if (showPortal && viewState.topElement !== TourPortalDisplayName) {
@@ -360,6 +366,7 @@ export const TourPortal = observer(({ viewState }) => {
 
   return (
     <TourGrouping
+      key={width}
       viewState={viewState}
       tourPoints={viewState.tourPointsWithValidRefs}
     />
