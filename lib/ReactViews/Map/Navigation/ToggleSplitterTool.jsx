@@ -28,9 +28,7 @@ const ToggleSplitterTool = observer(function(props) {
         iconElement={() => (
           <Icon
             glyph={
-              terria.showSplitter
-                ? Icon.GLYPHS.splitterOn
-                : Icon.GLYPHS.splitterOff
+              terria.showSplitter ? Icon.GLYPHS.splitterOn : Icon.GLYPHS.compare
             }
           />
         )}

@@ -3,11 +3,24 @@ Change Log
 
 ### MobX Development
 
-#### mobx-29
+#### mobx-next-release (mobx-30)
 * (placeholder)
+* Updated CI clientConfig values to include new help panel default
+* Bumped explicit base typescript to 3.9.2
+
+#### mobx-29
+* Fix handling of urls on `Cesium3DTilesCatalogItem` related to proxying and getting confused between Resource vs URL.
 * Renamed `UrlReference.createUrlReferenceFromUrlReference` to `UrlReference.createCatalogMemberFromUrlReference`
 * Moved url to catalog member mapping from `createUrlRefernceFromUrl.register` to `UrlToCatalogMemberMapping` (now in `UrlReference.ts` file) 
 * Added in-app tour framework & base tour items
+* Make the help panel customisable for different maps by modifying `config.json`
+* Added generic styled select
+* Remove maxZoom from leaflet map.
+* Run & configure prettier on terriajs lib/ json files
+* Changed most of the icons for the `MapNavigation` section (on the right hand side) of the screen
+* Added a close button to story panel
+* Made `MapIconButton` to animate when expanding
+* Remove requirement for browser to render based on make half pixel calculations for the Compass & stop it jumping around when animating
 
 #### mobx-28
 * Fix SASS exports causing some build errors in certain webpack conditions
@@ -118,10 +131,12 @@ Change Log
 * Tidy Compass UI animations, styles, titles
 * Bumped mobx minor to 4.15.x, mobx-react major to 6.x.x
 * Add `dateFormat` trait to `TimeVaryingTraits` to allowing formatting of datestrings in workbench and bottomdock.
+* Tidy Gyroscope Guidance positioning
 * Fixed FeatureInfoPanel using old class state
 * Fixed MapIconButton & FeedbackButton proptypes being defined incorrectly
 * Implement SenapsLocationsCatalogItem
 * Update papaparse and improve handling for retrieveing CSVs via chunking that have no ContentLenth header
+
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC

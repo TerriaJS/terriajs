@@ -28,6 +28,7 @@ export const Text = styled.div`
   ${props => props.uppercase && `text-transform: uppercase;`}
 
   ${props => props.textAlignLeft && `text-align: left;`}
+  ${props => props.textAlignCenter && `text-align: center;`}
   ${props =>
     props.primary &&
     `
@@ -107,7 +108,13 @@ export const Text = styled.div`
     font-size: 26px;
     line-height: 32px;
   `}
-  
+  ${props =>
+    props.highlightLinks &&
+    `
+    a {
+      color: ${props.theme.colorPrimary};
+    }
+  `}
 `;
 
 export const TextSpan = styled(Text).attrs({

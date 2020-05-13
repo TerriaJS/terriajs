@@ -1,3 +1,4 @@
+// CompassSpec.tsx
 const create: any = require("react-test-renderer").create;
 import React from "react";
 import { act } from "react-dom/test-utils";
@@ -5,7 +6,9 @@ import Terria from "../../../../../lib/Models/Terria";
 import ViewState from "../../../../../lib/ReactViewModels/ViewState";
 import { ThemeProvider } from "styled-components";
 import { terriaTheme } from "../../../../../lib/ReactViews/StandardUserInterface/StandardTheme";
-import Compass from "../../../../../lib/ReactViews/Map/Navigation/Compass";
+// import Compass from "../../../../../lib/ReactViews/Map/Navigation/Compass";
+const Compass: any = require("../../../../../lib/ReactViews/Map/Navigation/Compass")
+  .default;
 import { StyledIcon } from "../../../../../lib/ReactViews/Icon";
 
 describe("Compass", function() {
@@ -31,7 +34,6 @@ describe("Compass", function() {
         testRenderer = create(
           <ThemeProvider theme={terriaTheme}>
             <Compass
-              onClose={() => {}}
               theme={terriaTheme}
               viewState={viewState}
               terria={terria}

@@ -28,9 +28,7 @@ const MenuBar = props => {
     });
   };
   const onStoryButtonClick = () => {
-    runInAction(() => {
-      props.viewState.storyBuilderShown = !props.viewState.storyBuilderShown;
-    });
+    props.viewState.toggleStoryBuilder();
     props.terria.currentViewer.notifyRepaintRequired();
     // Allow any animations to finish, then trigger a resize.
     setTimeout(function() {
