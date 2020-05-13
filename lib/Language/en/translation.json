@@ -6,6 +6,18 @@
     "next": "Next",
     "skip": "Skip"
   },
+  "tour": {
+    "preface": {
+      "title": "Take the tour",
+      "content": "Unsure of where to begin? Take a quick tour of the main features of our software, and learn about some of the key functions to help you get on your way.",
+      "close": "Maybe later",
+      "start": "Start tour"
+    },
+    "end": "End tour",
+    "finish": "Finish",
+    "previous": "Previous",
+    "next": "Next"
+  },
   "measure": {
     "measureTool": "Measure Tool",
     "measureToolTitle": "Line Measure",

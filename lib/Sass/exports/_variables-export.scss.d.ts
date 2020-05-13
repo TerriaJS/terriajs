@@ -21,6 +21,7 @@ interface CssExports {
   'radiusSmall': string;
   'ringWidth': string;
   'sm': string;
+  'spacing': string;
   'textBlack': string;
   'textDark': string;
   'textDarker': string;

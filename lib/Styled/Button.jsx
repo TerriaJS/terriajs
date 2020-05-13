@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import Box from "./Box";
+// import Box from "./Box";
 import Text from "./Text";
 
 const Icon = styled.span`
@@ -40,17 +40,22 @@ const StyledButton = styled.button`
     props.primary &&
     `
     color: #fff;
-    background-color: #519AC2;
+    background-color: ${props.theme.colorPrimary};
     border: none;
+    height:34px;
+    border-radius:20px;
   `}
   ${props => props.rounded && ` border-radius: 32px; `}
  
   ${props =>
     props.secondary &&
     `
-    background-color: #4d5766;
-    color: #fff;
-    border: none;
+    // background-color: #4d5766;
+    background-color: ${props.theme.textLight};
+    color: ${props.theme.darkWithOverlay};
+    height: 34px;
+    border-radius: 20px;
+    border: 2px solid ${props.theme.darkWithOverlay};
   `}
   ${props =>
     props.warning &&
@@ -88,31 +93,29 @@ export const RawButton = styled.button`
 export const Button = props => {
   const { primary, secondary, warning, iconProps, textProps, ...rest } = props;
   return (
-    <Box>
-      <StyledButton
-        primary={primary}
-        secondary={secondary}
-        warning={warning}
-        {...rest}
-      >
-        {props.renderIcon && typeof props.renderIcon === "function" && (
-          <Icon css={iconProps && iconProps.css} {...iconProps}>
-            {props.renderIcon()}
-          </Icon>
-        )}
-        {props.children && (
-          <Text
-            white={primary || secondary || warning}
-            medium={secondary}
-            bold
-            skinny
-            {...textProps}
-          >
-            {props.children}
-          </Text>
-        )}
-      </StyledButton>
-    </Box>
+    <StyledButton
+      primary={primary}
+      secondary={secondary}
+      warning={warning}
+      {...rest}
+    >
+      {props.renderIcon && typeof props.renderIcon === "function" && (
+        <Icon css={iconProps && iconProps.css} {...iconProps}>
+          {props.renderIcon()}
+        </Icon>
+      )}
+      {props.children && (
+        <Text
+          white={primary || secondary || warning}
+          medium={secondary}
+          // bold
+          skinny
+          {...textProps}
+        >
+          {props.children}
+        </Text>
+      )}
+    </StyledButton>
   );
 };
 

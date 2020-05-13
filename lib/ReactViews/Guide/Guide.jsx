@@ -30,8 +30,7 @@ import classNames from "classnames";
 import Styles from "./guide.scss";
 
 // import createReactClass from "create-react-class";
-// import ObserveModelMixin from "terriajs/lib/ReactViews/ObserveModelMixin";
-// import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
+// // import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 
 import Icon from "../Icon.jsx";
 import SlideUpFadeIn from "../Transitions/SlideUpFadeIn/SlideUpFadeIn";
