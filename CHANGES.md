@@ -3,6 +3,7 @@ Change Log
 ### next release
 
 * Added `GeoRssCatalogItem` for displaying GeoRSS files comming from rss2 and atom feeds.
+* Fixed a bug where catalog item returned by TerriaJsonCatalogFunction gets added to the workbench twice.
 
 ### v7.11.4
 
