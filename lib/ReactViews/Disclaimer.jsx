@@ -77,7 +77,6 @@ class Disclaimer extends React.Component {
     const disclaimer = this.props.viewState.disclaimerSettings;
     const useSmallScreenInterface = this.props.viewState
       .useSmallScreenInterface;
-    console.log(this.props.theme);
     return (
       disclaimer && (
         <FadeIn isVisible={this.props.viewState.disclaimerVisible}>
