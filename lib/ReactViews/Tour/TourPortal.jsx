@@ -20,7 +20,7 @@ import Caret from "../Generic/Caret";
 import CloseButton from "../Generic/CloseButton";
 import Box from "../../Styled/Box";
 import Spacing from "../../Styled/Spacing";
-import Button, { RawButton } from "../../Styled/Button";
+import Button from "../../Styled/Button";
 import Text from "../../Styled/Text";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 
@@ -151,9 +151,9 @@ export const TourExplanation = ({
           <Box centered>
             {!isFirstTourPoint && (
               <>
-                <RawButton onClick={() => onPrevious?.()}>
+                <Button secondary onClick={() => onPrevious?.()}>
                   {t("tour.previous")}
-                </RawButton>
+                </Button>
                 <Spacing right={2} />
               </>
             )}
