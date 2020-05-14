@@ -79,7 +79,10 @@ class MapNavigation extends React.Component {
                 condition={!this.props.terria.configParameters.disableSplitter}
               >
                 <div className={Styles.control}>
-                  <ToggleSplitterTool terria={this.props.terria} />
+                  <ToggleSplitterTool
+                    terria={this.props.terria}
+                    viewState={this.props.viewState}
+                  />
                 </div>
               </If>
               <If condition={this.props.viewState.isToolOpen}>

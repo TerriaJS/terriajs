@@ -3,7 +3,7 @@ import React from "react";
 import { act } from "react-dom/test-utils";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
-import SearchBox from "../../../lib/ReactViews/Search/SearchBox";
+import { SearchBox } from "../../../lib/ReactViews/Search/SearchBox";
 
 describe("SearchBox", function() {
   let terria: Terria;

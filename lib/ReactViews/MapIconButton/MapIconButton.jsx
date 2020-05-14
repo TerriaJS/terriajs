@@ -185,4 +185,11 @@ function MapIconButton(props) {
     );
   } else return MapIconButtonRaw;
 }
+
+// const MapIconButtonWithRef = (props, ref) => (
+//   <MapIconButton {...props} buttonRef={ref} />
+// );
+
+// export default React.forwardRef(MapIconButtonWithRef);
+
 export default MapIconButton;
