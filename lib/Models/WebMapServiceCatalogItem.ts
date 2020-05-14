@@ -52,6 +52,7 @@ import WebMapServiceCapabilities, {
   CapabilitiesStyle,
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 
 const dateFormat = require("dateformat");
 
@@ -629,9 +630,9 @@ class WebMapServiceCatalogItem
 
   @computed
   private get _currentImageryParts(): ImageryParts | undefined {
-    const imageryProvider = this._createImageryProvider({
-      time: this.currentDiscreteTimeTag
-    });
+    const imageryProvider = this._createImageryProvider(
+      this.currentDiscreteTimeTag
+    );
     if (imageryProvider === undefined) {
       return undefined;
     }
@@ -645,9 +646,9 @@ class WebMapServiceCatalogItem
   @computed
   private get _nextImageryParts(): ImageryParts | undefined {
     if (this.nextDiscreteTimeTag) {
-      const imageryProvider = this._createImageryProvider({
-        time: this.nextDiscreteTimeTag
-      });
+      const imageryProvider = this._createImageryProvider(
+        this.nextDiscreteTimeTag
+      );
       if (imageryProvider === undefined) {
         return undefined;
       }
@@ -672,17 +673,20 @@ class WebMapServiceCatalogItem
       return;
     }
     const time = `${this.firstDiffDate},${this.secondDiffDate}`;
-    const imageryProvider = this._createImageryProvider({
-      time,
-      extraParameters: { styles: diffStyleId }
-    });
-    return (
-      imageryProvider && {
+    const imageryProvider = this._createImageryProvider(time);
+    if (imageryProvider) {
+      return {
         imageryProvider,
         alpha: this.opacity,
         show: this.show !== undefined ? this.show : true
-      }
-    );
+      };
+    }
+    return undefined;
+  }
+
+  @computed
+  get diffModeParameters() {
+    return { styles: this.diffStyleId };
   }
 
   getTagForTime(date: JulianDate): string | undefined {
@@ -694,11 +698,8 @@ class WebMapServiceCatalogItem
 
   private _createImageryProvider = createTransformerAllowUndefined(
     (
-      opts:
-        | { time: string | undefined; extraParameters?: JsonObject }
-        | undefined
+      time: string | undefined
     ): Cesium.WebMapServiceImageryProvider | undefined => {
-      const { time, extraParameters } = opts || {};
       // Don't show anything on the map until GetCapabilities finishes loading.
       if (this.isLoadingMetadata) {
         return undefined;
@@ -709,10 +710,13 @@ class WebMapServiceCatalogItem
 
       console.log(`Creating new ImageryProvider for time ${time}`);
 
+      const diffModeParameters = this.isShowingDiff
+        ? this.diffModeParameters
+        : {};
       const parameters: any = {
         ...WebMapServiceCatalogItem.defaultParameters,
         ...(this.parameters || {}),
-        ...extraParameters
+        ...diffModeParameters
       };
 
       if (time !== undefined) {
@@ -774,7 +778,6 @@ class WebMapServiceCatalogItem
       }
 
       const imageryProvider = new WebMapServiceImageryProvider(imageryOptions);
-
       if (
         maximumLevel !== undefined &&
         this.hideLayerAfterMinScaleDenominator
