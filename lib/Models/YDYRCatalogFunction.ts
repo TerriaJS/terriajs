@@ -2,24 +2,22 @@ import { action, computed, runInAction } from "mobx";
 import TerriaError from "../Core/TerriaError";
 import YDYRCatalogFunctionTraits from "../Traits/YDYRCatalogFunctionTraits";
 import CreateModel from "./CreateModel";
-import FunctionParameter from "./FunctionParameter";
+import FunctionParameter from "./FunctionParameters/FunctionParameter";
 import i18next from "i18next";
 import CatalogFunctionMixin from "../ModelMixins/CatalogFunctionMixin";
-import EnumerationParameter from "./EnumerationParameter";
+import EnumerationParameter from "./FunctionParameters/EnumerationParameter";
 import TableMixin from "../ModelMixins/TableMixin";
 import isDefined from "../Core/isDefined";
 import TableColumnType from "../Table/TableColumnType";
-import BooleanParameter from "./BooleanParameter";
+import BooleanParameter from "./FunctionParameters/BooleanParameter";
 import loadWithXhr from "../Core/loadWithXhr";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import filterOutUndefined from "../Core/filterOutUndefined";
-import runLater from "../Core/runLater";
 import loadJson from "../Core/loadJson";
 import loadText from "../Core/loadText";
-import CsvCatalogItemTraits from "../Traits/CsvCatalogItemTraits";
 import CsvCatalogItem from "./CsvCatalogItem";
 import CommonStrata from "./CommonStrata";
-import StringParameter from "./StringParameter";
+import StringParameter from "./FunctionParameters/StringParameter";
 import ResultPendingCatalogItem from "./ResultPendingCatalogItem";
 
 export const DATASETS = [
@@ -210,7 +208,7 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
       )
       .map(item => item.uniqueId)
       .filter(isDefined);
-    this._inputLayers = new EnumerationParameter({
+    this._inputLayers = new EnumerationParameter(this, {
       id: "Input Layer",
       possibleValues,
       value:
@@ -236,7 +234,7 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
             )
         )
         .map(col => col.name) || [];
-    this._regionColumn = new EnumerationParameter({
+    this._regionColumn = new EnumerationParameter(this, {
       id: "Region Column",
       possibleValues,
       value:
@@ -255,7 +253,7 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
       this.selectedTableCatalogMember?.tableColumns
         .filter(col => col.type === TableColumnType.scalar)
         .map(col => col.name) || [];
-    this._dataColumn = new EnumerationParameter({
+    this._dataColumn = new EnumerationParameter(this, {
       id: "Data Column",
       possibleValues,
       value:
@@ -270,7 +268,7 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
 
   @computed get availableRegions(): EnumerationParameter {
     const possibleValues = DATASETS.map(d => d.title);
-    return new EnumerationParameter({
+    return new EnumerationParameter(this, {
       id: "Output Geography",
       possibleValues: DATASETS.map(d => d.title),
       value: possibleValues[0],
@@ -281,7 +279,7 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
   @computed get algorithmParameters(): BooleanParameter[] {
     return ALGORITHMS.map(
       alg =>
-        new BooleanParameter({
+        new BooleanParameter(this, {
           id: alg[0],
           value: alg[1]
           // trueName: "Enabled",
@@ -305,18 +303,15 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
 
   @computed get authenticationParameters(): StringParameter[] {
     return [
-      new StringParameter({ id: "Username", isRequired: true }),
-      new StringParameter({ id: "Password", isRequired: true })
+      new StringParameter(this, { id: "Username", isRequired: true }),
+      new StringParameter(this, { id: "Password", isRequired: true })
     ];
   }
   /**
    *  Maps the input to function parameters.
-   *
-   * We `keepAlive` because the parameter properties could be modified by
-   * UI that can come and go, but we want those modifications to persist.
    */
-  @computed({ keepAlive: true })
-  get parameters(): FunctionParameter[] {
+  @computed
+  get functionParameters(): FunctionParameter[] {
     return [
       this.inputLayers,
       this.regionColumn,
@@ -439,15 +434,15 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
     //       }));
     // }
 
-    const resultPendingCatalogItem = this.createPendingCatalogItem()
-    this.terria.workbench.add(resultPendingCatalogItem);
+    // const resultPendingCatalogItem = this.createPendingCatalogItem()
+    // this.terria.workbench.add(resultPendingCatalogItem);
 
-    this.pollForResults(jobId, resultPendingCatalogItem);
+    this.pollForResults(jobId);
 
     console.log(params);
   }
 
-  async pollForResults(jobId: string, resultPendingCatalogItem: ResultPendingCatalogItem, attempt = 0) {
+  async pollForResults(jobId: string, attempt = 0) {
     const status = await loadJson(
       proxyCatalogItemUrl(
         this,
@@ -459,26 +454,26 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
     if (typeof status !== "string") {
       console.log("COMPLETED");
       console.log(status);
-      this.downloadResults(status.key, resultPendingCatalogItem);
+      this.downloadResults(status.key);
       return;
     } else {
-      resultPendingCatalogItem?.setTrait(
-        CommonStrata.user,
-        "description",
-        status
-      );
+      // resultPendingCatalogItem?.setTrait(
+      //   CommonStrata.user,
+      //   "description",
+      //   status
+      // );
       console.log(status);
     }
 
-    setTimeout(this.pollForResults.bind(this, jobId, resultPendingCatalogItem, attempt + 1), 1000);
+    setTimeout(this.pollForResults.bind(this, jobId, attempt + 1), 1000);
   }
 
-  async downloadResults(key: string, resultPendingCatalogItem: ResultPendingCatalogItem) {
-    resultPendingCatalogItem.setTrait(
-      CommonStrata.user,
-      "description",
-      "Job has finished, downloading CSV data"
-    );
+  async downloadResults(key: string) {
+    // resultPendingCatalogItem.setTrait(
+    //   CommonStrata.user,
+    //   "description",
+    //   "Job has finished, downloading CSV data"
+    // );
     const csv = await loadText(
       proxyCatalogItemUrl(
         this,
@@ -491,8 +486,7 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
       item.setTrait(CommonStrata.user, "csvString", csv);
     });
     await item.loadMapItems();
-      this.terria.workbench.remove(resultPendingCatalogItem);
-    
+    // this.terria.workbench.remove(resultPendingCatalogItem);
 
     this.terria.workbench.add(item);
   }
