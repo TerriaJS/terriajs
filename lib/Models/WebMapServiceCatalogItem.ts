@@ -536,9 +536,9 @@ class WebMapServiceCatalogItem
   @computed
   get availableDiffStyles(): readonly AvailableStyle[] | undefined {
     // Currently only NDVI
-    return this.styleSelector?.availableStyles.filter(
-      style => style.id === "NDVI"
-    );
+    return this.availableStyles?.[0]?.styles
+      .filter(style => style.name === "NDVI")
+      .map(style => ({ id: style.name!, name: style.title! }));
   }
 
   protected get defaultGetCapabilitiesUrl(): string | undefined {
