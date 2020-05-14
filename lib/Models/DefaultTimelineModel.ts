@@ -23,4 +23,8 @@ export default class DefaultTimelineModel extends DiscretelyTimeVaryingMixin(
       JulianDate.toIso8601(JulianDate.addHours(now, 12, new JulianDate()))
     );
   }
+
+  get discreteTimes() {
+    return undefined;
+  }
 }

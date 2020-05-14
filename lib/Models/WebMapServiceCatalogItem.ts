@@ -355,8 +355,8 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get discreteTimes(): StratumFromTraits<DiscreteTimeTraits>[] | undefined {
-    const result: StratumFromTraits<DiscreteTimeTraits>[] = [];
+  get discreteTimes(): { time: string; tag: string | undefined }[] | undefined {
+    const result = [];
 
     for (let layer of this.capabilitiesLayers.values()) {
       if (!layer) {
@@ -540,6 +540,16 @@ class WebMapServiceCatalogItem
   @computed
   get disableDateTimeSelector() {
     return this.isShowingDiff === true;
+  }
+
+  @computed
+  get discreteTimes() {
+    const getCapabilitiesStratum:
+      | GetCapabilitiesStratum
+      | undefined = this.strata.get(
+      GetCapabilitiesMixin.getCapabilitiesStratumName
+    ) as GetCapabilitiesStratum;
+    return getCapabilitiesStratum?.discreteTimes;
   }
 
   protected get defaultGetCapabilitiesUrl(): string | undefined {
