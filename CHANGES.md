@@ -9,6 +9,9 @@ Change Log
 * Bumped explicit base typescript to 3.9.2
 * Lock rollbar to 2.15.2
 * Ported disclaimer to mobx with new designs
+* Added diff tool for visualizing difference (delta) of images between 2 dates for services that support it.
+* Updated workbench ViewingControls styles to line up with icons
+* Updated splitter to force trigger resizes so it catches up on any animation delays from the workbench
 
 #### mobx-29
 * Fix handling of urls on `Cesium3DTilesCatalogItem` related to proxying and getting confused between Resource vs URL.
@@ -133,7 +136,6 @@ Change Log
 * Tidy Compass UI animations, styles, titles
 * Bumped mobx minor to 4.15.x, mobx-react major to 6.x.x
 * Add `dateFormat` trait to `TimeVaryingTraits` to allowing formatting of datestrings in workbench and bottomdock.
-* Added diff tool for visualizing difference (delta) of images between 2 dates for services that support it.
 * Tidy Gyroscope Guidance positioning
 * Fixed FeatureInfoPanel using old class state
 * Fixed MapIconButton & FeedbackButton proptypes being defined incorrectly
