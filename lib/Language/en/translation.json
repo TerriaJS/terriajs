@@ -67,6 +67,38 @@
     "btnRealign": "toggle manual alignment",
     "btnResetRealign": "reset compass alignment"
   },
+  "tool": {
+    "closeButtonTitle": "Close {{toolName}} Tool"
+  },
+  "tool": {
+    "loadingError": {
+      "title": "Error Loading {{toolName}} Tool",
+      "message": "An error occurred while trying to load the this tool from the server. Please try again."
+    }
+  },
+  "diffTool": {
+    "locationPicker": {
+      "initialMessages": {
+        "beforePick": "Select a point in the region where you want to see the difference",
+        "afterPick": "Click another point to change the selected region"
+      },
+      "nextMessages": {
+        "beforePick": "Click another point to change the selection",
+        "afterPick": "Click another point to change the selection"
+      },
+      "errorMessages": {
+        "beforePick": "Failed to resolve imagery at location! Please choose a different location or zoom-level.",
+        "afterPick": "Click another point to change the selection"
+      }
+    },
+    "datePicker": {
+      "previousDateTitle": "Previous date",
+      "nextDateTitle": "Previous date",
+      "dateButtonTitle": "Select a date",
+      "dateOutOfRange": "Currently out of range"
+    },
+    "generateDiffButtonText": "Generate Difference Map"
+  },
   "legend": {
     "lat": "Lat",
     "lon": "Lon",
@@ -356,6 +388,8 @@
     "previewItem": "About Data",
     "splitItemTitle": "Duplicate and show splitter",
     "splitItem": "Compare",
+    "diffImageTitle": "View image differences between two dates",
+    "diffImage": "Difference",
     "exportDataTitle": "Export map data",
     "exportData": "Export",
     "removeFromMapTitle": "Remove this data",

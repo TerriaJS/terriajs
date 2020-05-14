@@ -41,6 +41,7 @@ import Styles from "./standard-user-interface.scss";
 import { observer } from "mobx-react";
 import { action, runInAction } from "mobx";
 import HelpPanel from "../Map/Panels/HelpPanel/HelpPanel";
+import Tool from "../Tool";
 import Disclaimer from "../Disclaimer";
 
 export const showStoryPrompt = (viewState, terria) => {
@@ -318,6 +319,15 @@ const StandardUserInterface = observer(
                   />
                 </div>
               </If>
+
+              <Medium>
+                {this.props.viewState.isToolOpen && (
+                  <Tool
+                    viewState={this.props.viewState}
+                    {...this.props.viewState.currentTool}
+                  />
+                )}
+              </Medium>
 
               <Notification viewState={this.props.viewState} />
               <SatelliteGuide

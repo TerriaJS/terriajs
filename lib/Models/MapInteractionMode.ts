@@ -3,7 +3,7 @@ import PickedFeatures from "../Map/PickedFeatures";
 import { observable } from "mobx";
 
 interface Options {
-  onCancel: () => void;
+  onCancel?: () => void;
   message: string;
   customUi?: () => unknown;
   buttonText?: string;
@@ -14,7 +14,7 @@ interface Options {
  * A mode for interacting with the map.
  */
 export default class MapInteractionMode {
-  readonly onCancel: () => void;
+  readonly onCancel?: () => void;
 
   readonly buttonText: string;
   readonly drawRectangle: boolean;

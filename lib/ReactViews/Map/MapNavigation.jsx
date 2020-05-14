@@ -19,6 +19,7 @@ import Icon from "../Icon";
 import Box from "../../Styled/Box";
 import MapIconButton from "../MapIconButton/MapIconButton";
 import FeedbackButton from "../Feedback/FeedbackButton";
+import CloseToolButton from "./Navigation/CloseToolButton";
 
 // The map navigation region
 @observer
@@ -83,6 +84,9 @@ class MapNavigation extends React.Component {
                     viewState={this.props.viewState}
                   />
                 </div>
+              </If>
+              <If condition={this.props.viewState.isToolOpen}>
+                <CloseToolButton viewState={this.props.viewState} />
               </If>
               <For each="item" of={this.props.navItems} index="i">
                 <div className={Styles.control} key={i}>
