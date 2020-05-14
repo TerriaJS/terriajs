@@ -11,8 +11,6 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import { observer } from "mobx-react";
 import { UIMode } from "../../Models/MapInteractionMode";
 
-// import Box from "../../Styled/Box";
-// const MapInteractionWindowWrapper = styled(Box)`
 const MapInteractionWindowWrapper = styled.div`
   ${props =>
     props.isDiffTool &&
