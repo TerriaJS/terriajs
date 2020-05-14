@@ -1,0 +1,32 @@
+@import "../../Sass/common/mixins";
+@import "~terriajs-variables";
+
+.panelHeading {
+  @include headingContainer;
+  padding: $padding-small;
+  @media (max-width: $sm) {
+    background-color: $grey-lightest;
+  }
+}
+.sectorTitle {
+  font-family: $font-base;
+  color: $text-light;
+  line-height: 1;
+  font-weight: $font-weight-bold;
+  font-size: 14px;
+  text-align: left;
+  margin: 7px 2px;
+  @media (max-width: $sm) {
+    color: $text-darker;
+  }
+}
+.sectorInfo {
+  display: flex;
+  background-color: $grey-lightest;
+  padding: $padding-small;
+  font-size: $font-size-small;
+  border-radius: $radius-small;
+  @media (max-width: $sm) {
+    border-radius: 0;
+  }
+}
