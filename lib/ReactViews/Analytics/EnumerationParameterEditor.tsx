@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 
 import Styles from "./parameter-editors.scss";
 import { action } from "mobx";
-import EnumerationParameter from "../../Models/EnumerationParameter";
+import EnumerationParameter from "../../Models/FunctionParameters/EnumerationParameter";
 import CommonStrata from "../../Models/CommonStrata";
 
 @observer

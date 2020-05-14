@@ -1,7 +1,7 @@
 import FunctionParameter, {
   Options as FunctionParameterOptions
 } from "./FunctionParameter";
-import CatalogFunctionMixin from "../ModelMixins/CatalogFunctionMixin";
+import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 
 interface Options extends FunctionParameterOptions {
   possibleValues: string[];

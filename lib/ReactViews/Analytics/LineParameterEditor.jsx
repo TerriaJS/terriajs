@@ -11,6 +11,7 @@ import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import UserDrawing from "../../Models/UserDrawing";
 import Styles from "./parameter-editors.scss";
 import { withTranslation } from "react-i18next";
+import CommonStrata from "../../Models/CommonStrata";
 
 const LineParameterEditor = createReactClass({
   displayName: "LineParameterEditor",
@@ -57,7 +58,7 @@ const LineParameterEditor = createReactClass({
       points.push(CesiumMath.toDegrees(cartographic.latitude));
       pointsLongLats.push(points);
     }
-    this.props.parameter.value = pointsLongLats;
+    this.props.parameter.setValue(CommonStrata.user, pointsLongLats);
   },
 
   selectLineOnMap() {
@@ -108,7 +109,7 @@ LineParameterEditor.setValueFromText = function(e, parameter) {
       pointsLongLats.push(points);
     }
   }
-  parameter.value = pointsLongLats;
+  parameter.setValue(CommonStrata.user, pointsLongLats);
 };
 
 /**

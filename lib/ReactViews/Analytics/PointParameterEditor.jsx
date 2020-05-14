@@ -16,6 +16,7 @@ import MapInteractionMode from "../../Models/MapInteractionMode";
 import Styles from "./parameter-editors.scss";
 import { runInAction, autorun } from "mobx";
 import { withTranslation } from "react-i18next";
+import CommonStrata from "../../Models/CommonStrata";
 
 const PointParameterEditor = createReactClass({
   displayName: "PointParameterEditor",
@@ -107,7 +108,7 @@ PointParameterEditor.setValueFromText = function(e, parameter) {
   const text = e.target.value;
 
   if (text.trim().length === 0 && !parameter.isRequired) {
-    parameter.value = undefined;
+    parameter.setValue(CommonStrata.user, undefined);
     return true;
   }
 
@@ -131,9 +132,12 @@ PointParameterEditor.setValueFromText = function(e, parameter) {
     if (isNaN(longitude) || isNaN(latitude)) {
       return false;
     }
-    parameter.value = Cartographic.fromDegrees(
-      parseFloat(coordinates[0]),
-      parseFloat(coordinates[1])
+    parameter.setValue(
+      CommonStrata.user,
+      Cartographic.fromDegrees(
+        parseFloat(coordinates[0]),
+        parseFloat(coordinates[1])
+      )
     );
     return true;
   } else {
@@ -198,7 +202,7 @@ export function selectOnMap(terria, viewState, parameter, interactionMessage) {
             pickedFeatures.pickPosition
           );
           terria.mapInteractionModeStack.pop();
-          parameter.value = value;
+          parameter.setValue(CommonStrata.user, value);
           viewState.openAddData();
         });
       }

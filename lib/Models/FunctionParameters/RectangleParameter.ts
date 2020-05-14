@@ -2,8 +2,8 @@ import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import FunctionParameter, {
   Options as FunctionParameterOptions
 } from "./FunctionParameter";
-import CatalogFunctionMixin from "../ModelMixins/CatalogFunctionMixin";
-const Reproject = require("../Map/Reproject");
+import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
+const Reproject = require("../../Map/Reproject");
 
 interface Options extends FunctionParameterOptions {
   crs?: string;

@@ -29,6 +29,7 @@ import StratumOrder from "./StratumOrder";
 import upsertModelFromJson from "./upsertModelFromJson";
 import CatalogFunctionJobMixin from "../ModelMixins/CatalogFunctionJobMixin";
 import { ChartItem } from "./Chartable";
+import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 
 const createGuid = require("terriajs-cesium/Source/Core/createGuid").default;
 
@@ -185,8 +186,8 @@ class WpsLoadableStratum extends LoadableStratum(
 StratumOrder.addLoadStratum(WpsLoadableStratum.stratumName);
 
 export default class WebProcessingServiceCatalogItem
-  extends CatalogFunctionJobMixin(
-    CreateModel(WebProcessingServiceCatalogItemTraits)
+  extends AsyncMappableMixin(
+    CatalogFunctionJobMixin(CreateModel(WebProcessingServiceCatalogItemTraits))
   )
   implements Mappable {
   static readonly type = "wps-result";
@@ -194,12 +195,12 @@ export default class WebProcessingServiceCatalogItem
     return i18next.t("models.webProcessingService.wpsResult");
   }
 
-  readonly isMappable = true;
-
   @observable
   private geoJsonItem?: GeoJsonCatalogItem;
 
-  async forceLoadMetadata() {}
+  async forceLoadMetadata() {
+    await this.loadResults();
+  }
 
   get chartItems(): ChartItem[] {
     return [];

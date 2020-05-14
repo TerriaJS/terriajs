@@ -2,7 +2,7 @@ import { observable, computed } from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import FunctionParameter from "./FunctionParameter";
-import isDefined from "../Core/isDefined";
+import isDefined from "../../Core/isDefined";
 import { Feature, Point } from "geojson";
 
 export type CartographicPoint = {

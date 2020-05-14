@@ -3,16 +3,16 @@ import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import isDefined from "../../lib/Core/isDefined";
 import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
 import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
-import DateTimeParameter from "../../lib/Models/DateTimeParameter";
-import EnumerationParameter from "../../lib/Models/EnumerationParameter";
+import DateTimeParameter from "../../lib/Models/FunctionParameters/DateTimeParameter";
+import EnumerationParameter from "../../lib/Models/FunctionParameters/EnumerationParameter";
 import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
-import GeoJsonParameter from "../../lib/Models/GeoJsonParameter";
-import LineParameter from "../../lib/Models/LineParameter";
-import PointParameter from "../../lib/Models/PointParameter";
-import PolygonParameter from "../../lib/Models/PolygonParameter";
-import RectangleParameter from "../../lib/Models/RectangleParameter";
+import GeoJsonParameter from "../../lib/Models/FunctionParameters/GeoJsonParameter";
+import LineParameter from "../../lib/Models/FunctionParameters/LineParameter";
+import PointParameter from "../../lib/Models/FunctionParameters/PointParameter";
+import PolygonParameter from "../../lib/Models/FunctionParameters/PolygonParameter";
+import RectangleParameter from "../../lib/Models/FunctionParameters/RectangleParameter";
 import ResultPendingCatalogItem from "../../lib/Models/ResultPendingCatalogItem";
-import StringParameter from "../../lib/Models/StringParameter";
+import StringParameter from "../../lib/Models/FunctionParameters/StringParameter";
 import Terria from "../../lib/Models/Terria";
 import WebProcessingServiceCatalogFunction, {
   PointConverter

@@ -2,7 +2,7 @@ import FunctionParameter, {
   Options as FunctionParameterOptions
 } from "./FunctionParameter";
 import RegionTypeParameter from "./RegionTypeParameter";
-import CatalogFunctionMixin from "../ModelMixins/CatalogFunctionMixin";
+import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 
 interface Options extends FunctionParameterOptions {
   regionProvider: RegionTypeParameter;

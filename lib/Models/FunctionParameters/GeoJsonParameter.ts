@@ -7,9 +7,9 @@ import PointParameter, { CartographicPoint } from "./PointParameter";
 import PolygonParameter, { PolygonCoordinates } from "./PolygonParameter";
 import RegionParameter from "./RegionParameter";
 import SelectAPolygonParameter from "./SelectAPolygonParameter";
-import CatalogFunctionMixin from "../ModelMixins/CatalogFunctionMixin";
+import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 import { FeatureCollection, Feature } from "geojson";
-import { JsonArray, JsonObject } from "../Core/Json";
+import { JsonArray, JsonObject } from "../../Core/Json";
 
 interface Options extends FunctionParameterOptions {
   regionParameter: RegionParameter;

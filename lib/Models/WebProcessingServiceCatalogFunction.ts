@@ -21,20 +21,20 @@ import { ParameterTraits } from "../Traits/WebProcessingServiceCatalogItemTraits
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
-import DateTimeParameter from "./DateTimeParameter";
-import EnumerationParameter from "./EnumerationParameter";
+import DateTimeParameter from "./FunctionParameters/DateTimeParameter";
+import EnumerationParameter from "./FunctionParameters/EnumerationParameter";
 import FunctionParameter, {
   Options as FunctionParameterOptions
-} from "./FunctionParameter";
-import GeoJsonParameter from "./GeoJsonParameter";
-import LineParameter from "./LineParameter";
-import PointParameter from "./PointParameter";
-import PolygonParameter from "./PolygonParameter";
+} from "./FunctionParameters/FunctionParameter";
+import GeoJsonParameter from "./FunctionParameters/GeoJsonParameter";
+import LineParameter from "./FunctionParameters/LineParameter";
+import PointParameter from "./FunctionParameters/PointParameter";
+import PolygonParameter from "./FunctionParameters/PolygonParameter";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import RectangleParameter from "./RectangleParameter";
-import RegionParameter from "./RegionParameter";
-import RegionTypeParameter from "./RegionTypeParameter";
-import StringParameter from "./StringParameter";
+import RectangleParameter from "./FunctionParameters/RectangleParameter";
+import RegionParameter from "./FunctionParameters/RegionParameter";
+import RegionTypeParameter from "./FunctionParameters/RegionTypeParameter";
+import StringParameter from "./FunctionParameters/StringParameter";
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
 import i18next from "i18next";
 import CatalogFunctionMixin from "../ModelMixins/CatalogFunctionMixin";
@@ -114,6 +114,9 @@ export default class WebProcessingServiceCatalogFunction extends CatalogFunction
   @observable
   private processDescription?: ProcessDescription;
 
+  @observable
+  private _functionParameters: FunctionParameter[] = [];
+
   /**
    * Returns the proxied URL for the DescribeProcess endpoint.
    */
@@ -177,6 +180,18 @@ export default class WebProcessingServiceCatalogFunction extends CatalogFunction
 
     runInAction(() => {
       this.processDescription = json.ProcessDescription;
+
+      this._functionParameters = this.inputs.map(input => {
+        const parameter = this.convertInputToParameter(this, input);
+        if (isDefined(parameter)) {
+          return parameter;
+        }
+        throw new TerriaError({
+          sender: this,
+          title: "Unsupported parameter type",
+          message: `The parameter ${input.Identifier} is not a supported type of parameter.`
+        });
+      });
     });
   }
 
@@ -229,24 +244,10 @@ export default class WebProcessingServiceCatalogFunction extends CatalogFunction
 
   /**
    *  Maps the input to function parameters.
-   *
-   * We `keepAlive` because the parameter properties could be modified by
-   * UI that can come and go, but we want those modifications to persist.
    */
-  @computed({ keepAlive: true })
+  @computed
   get functionParameters() {
-    const parameters = this.inputs.map(input => {
-      const parameter = this.convertInputToParameter(this, input);
-      if (isDefined(parameter)) {
-        return parameter;
-      }
-      throw new TerriaError({
-        sender: this,
-        title: "Unsupported parameter type",
-        message: `The parameter ${input.Identifier} is not a supported type of parameter.`
-      });
-    });
-    return parameters;
+    return this._functionParameters;
   }
 
   /**
@@ -733,7 +734,7 @@ const GeoJsonGeometryConverter = {
       return;
     }
     return (<GeoJsonParameter>parameter).getProcessedValue(
-      (<GeoJsonParameter>parameter).value
+      (<GeoJsonParameter>parameter).value!
     );
   }
 };

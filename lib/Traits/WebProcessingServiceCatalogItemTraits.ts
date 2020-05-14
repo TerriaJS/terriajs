@@ -34,6 +34,7 @@ export class ParameterTraits extends ModelTraits {
 }
 
 export default class WebProcessingServiceCatalogItemTraits extends mixTraits(
+  MappableTraits,
   FeatureInfoTraits,
   CatalogFunctionJobTraits,
   WebProcessingServiceCatalogFunctionTraits

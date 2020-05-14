@@ -2,7 +2,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import Styles from "./parameter-editors.scss";
 import { action } from "mobx";
-import BooleanParameter from "../../Models/BooleanParameter";
+import BooleanParameter from "../../Models/FunctionParameters/BooleanParameter";
 import CommonStrata from "../../Models/CommonStrata";
 
 const Icon = require("../Icon");

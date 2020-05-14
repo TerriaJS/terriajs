@@ -1,6 +1,6 @@
 import FunctionParameter from "./FunctionParameter";
 import { observable, computed } from "mobx";
-import isDefined from "../Core/isDefined";
+import isDefined from "../../Core/isDefined";
 import { Feature, Polygon } from "geojson";
 
 type Coordinates = number[];

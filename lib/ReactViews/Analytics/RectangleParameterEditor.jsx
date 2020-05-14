@@ -14,6 +14,7 @@ import MapInteractionMode from "../../Models/MapInteractionMode";
 import { withTranslation } from "react-i18next";
 
 import Styles from "./parameter-editors.scss";
+import CommonStrata from "../../Models/CommonStrata";
 
 const RectangleParameterEditor = createReactClass({
   displayName: "RectangleParameterEditor",
@@ -98,7 +99,7 @@ const RectangleParameterEditor = createReactClass({
       .getObservable(pickPointMode, "pickedFeatures")
       .subscribe(function(pickedFeatures) {
         if (pickedFeatures instanceof Rectangle) {
-          that.props.parameter.value = pickedFeatures;
+          that.props.parameter.setValue(CommonStrata.user, pickedFeatures);
           terria.mapInteractionModeStack.pop();
           terria.selectBox = false;
           that.props.viewState.openAddData();

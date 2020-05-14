@@ -1,7 +1,7 @@
-import isDefined from "../Core/isDefined";
+import isDefined from "../../Core/isDefined";
 import FunctionParameter from "./FunctionParameter";
 import { FeatureCollection, Feature } from "geojson";
-import { JsonObject } from "../Core/Json";
+import { JsonObject } from "../../Core/Json";
 /**
  * A parameter that specifies an arbitrary polygon on the globe, which has been selected from a different layer.
  */

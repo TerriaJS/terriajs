@@ -19,12 +19,14 @@ type CatalogFunctionJobMixin = Model<CatalogFunctionJobTraits>;
 function CatalogFunctionJobMixin<
   T extends Constructor<CatalogFunctionJobMixin>
 >(Base: T) {
-  abstract class CatalogFunctionJobMixin extends AsyncChartableMixin(
-    AsyncMappableMixin(AutoRefreshingMixin(CatalogMemberMixin(Base)))
+  abstract class CatalogFunctionJobMixin extends AutoRefreshingMixin(
+    CatalogMemberMixin(Base)
   ) {
     protected init = false;
 
-    readonly refreshInterval = 1;
+    get refreshInterval() {
+      return 1;
+    }
 
     loadPromise = Promise.resolve();
 

@@ -1,10 +1,9 @@
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import ModelTraits from "./ModelTraits";
 import primitiveTrait from "./primitiveTrait";
-import objectArrayTrait from "./objectArrayTrait";
 import mixTraits from "./mixTraits";
-import AutoRefreshingTraits from "./AutoRefreshingTraits";
 import CatalogFunctionTraits from "./CatalogFunctionTraits";
+import AutoRefreshingTraits from "./AutoRefreshingTraits";
 
 export class FunctionParameterTraits extends ModelTraits {
   @primitiveTrait({

@@ -2,7 +2,7 @@ import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
 import CatalogFunctionTraits from "../Traits/CatalogFunctionTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
-import FunctionParameter from "../Models/FunctionParameter";
+import FunctionParameter from "../Models/FunctionParameters/FunctionParameter";
 
 type CatalogFunctionMixin = Model<CatalogFunctionTraits>;
 
