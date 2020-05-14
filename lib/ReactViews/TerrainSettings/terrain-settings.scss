@@ -1,0 +1,29 @@
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
+.terrain-panel {
+  font-family: $font-base;
+  flex-basis: 400px;
+  max-width: 400px;
+  color: $text-light;
+  font-size: $font-size-mid-small;
+  background: $dark;
+  display: block;
+  transition: all 0.25s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  &.terrainIsVisible {
+    visibility: visible;
+    margin-right: 0;
+    margin-left: 85px;
+  }
+  &.terrainIsHidden {
+    visibility: hidden;
+    margin-right: -400px;
+  }
+}
+
+.header {
+  .actions {
+    border-bottom: 1px solid $overlay;
+    padding: $padding;
+  }
+}

@@ -5,6 +5,7 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import Slider from "rc-slider";
+import triggerResize from "../../../Core/triggerResize";
 
 import ViewerMode from "../../../Models/ViewerMode";
 import ObserveModelMixin from "../../ObserveModelMixin";
@@ -85,6 +86,22 @@ const SettingPanel = createReactClass({
     this.props.terria.currentViewer.notifyRepaintRequired();
   },
 
+  toggleShowTerrainSettings() {
+    this.props.viewState.terrainSettingShown = !this.props.viewState
+      .terrainSettingShown;
+
+    if (this.props.viewState.terrainSettingShown) {
+      this.props.viewState.storyBuilderShown = false;
+    }
+
+    this.props.terria.currentViewer.notifyRepaintRequired();
+    // Allow any animations to finish, then trigger a resize.
+    setTimeout(function() {
+      triggerResize();
+    }, this.props.animationDuration || 1);
+    //this.props.viewState.toggleFeaturePrompt("story", false, true);
+  },
+
   render() {
     const { t } = this.props;
     const viewerModeLabels = {
@@ -141,6 +158,9 @@ const SettingPanel = createReactClass({
         btnTitle={t("settingPanel.btnTitle")}
         btnText={t("settingPanel.btnText")}
         viewState={this.props.viewState}
+        onDismissed={() => {
+          this.toggleShowTerrainSettings(false);
+        }}
         smallScreen={this.props.viewState.useSmallScreenInterface}
       >
         <div className={classNames(Styles.viewer, DropdownStyles.section)}>
@@ -163,6 +183,20 @@ const SettingPanel = createReactClass({
             </For>
           </ul>
         </div>
+
+        <div className={classNames(Styles.viewer, DropdownStyles.section)}>
+          <label className={DropdownStyles.heading}>
+            {" "}
+            {t("settingPanel.terrainTitle")}{" "}
+          </label>
+          <button
+            onClick={this.toggleShowTerrainSettings}
+            className={Styles.btnViewer}
+          >
+            {t("settingPanel.terrainSettings")}
+          </button>
+        </div>
+
         <div className={classNames(Styles.baseMap, DropdownStyles.section)}>
           <label className={DropdownStyles.heading}>
             {" "}

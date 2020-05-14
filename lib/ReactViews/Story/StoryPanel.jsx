@@ -77,6 +77,7 @@ const StoryPanel = createReactClass({
   },
 
   slideIn() {
+    console.log("slideIn:??? ");
     this.slideInTimer = setTimeout(() => {
       this.setState({
         inView: true

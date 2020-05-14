@@ -112,6 +112,8 @@
     "btnTitle": "Change view",
     "btnText": "Map",
     "mapView": "Map View",
+    "terrainTitle": "Terrain",
+    "terrainSettings": "Terrain Settings",
     "baseMap": "Base Map",
     "imageOptimisation": "Image Optimisation",
     "nativeResolutionHeader": "Use native device resolution",

@@ -21,6 +21,7 @@ import SidePanel from "./../SidePanel/SidePanel.jsx";
 import processCustomElements from "./processCustomElements";
 import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import StoryPanel from "./../Story/StoryPanel.jsx";
+import TerrainSettingsPanel from "./../TerrainSettings/TerrainSettingPanel";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 import ToolPanel from "./../ToolPanel.jsx";
 
@@ -152,6 +153,11 @@ const StandardUserInterface = createReactClass({
     const terria = this.props.terria;
     const allBaseMaps = this.props.allBaseMaps;
 
+    console.log(
+      "this.props.viewState.storyBuilderShown",
+      this.props.viewState.storyBuilderShown
+    );
+
     const showStoryBuilder =
       this.props.viewState.storyBuilderShown &&
       !this.shouldUseMobileInterface();
@@ -161,6 +167,14 @@ const StandardUserInterface = createReactClass({
       this.props.viewState.storyShown &&
       !this.props.viewState.explorerPanelIsVisible &&
       !this.props.viewState.storyBuilderShown;
+
+    console.log("showStoryBuilder", showStoryBuilder);
+
+    const showTerrainPanel =
+      this.props.viewState.terrainSettingShown &&
+      !this.shouldUseMobileInterface();
+
+    console.log("showTerrainPanel", showTerrainPanel);
     return (
       <div className={Styles.storyWrapper}>
         <WelcomeMessage viewState={this.props.viewState} />
@@ -343,6 +357,15 @@ const StandardUserInterface = createReactClass({
         {this.props.terria.configParameters.storyEnabled && (
           <StoryBuilder
             isVisible={showStoryBuilder}
+            terria={terria}
+            viewState={this.props.viewState}
+            animationDuration={animationDuration}
+          />
+        )}
+
+        {showTerrainPanel && (
+          <TerrainSettingsPanel
+            isVisible={showTerrainPanel}
             terria={terria}
             viewState={this.props.viewState}
             animationDuration={animationDuration}
