@@ -85,6 +85,15 @@ export const RawButton = styled.button`
   border: 0;
   background-color: transparent;
 
+  ${props =>
+    props.activeStyles &&
+    `
+    &:hover,
+    &:focus {
+      opacity: 0.9;
+    }
+  `}
+
   ${props => props.fullWidth && `width: 100%;`}
   ${props => props.fullHeight && `height: 100%;`}
 `;

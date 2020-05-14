@@ -84,8 +84,9 @@
     "chooseDifference": "Choose a difference style",
     "differenceResultsTitle": "Change detection results",
     "locationPicker": {
+      "title": "Select a precise location",
       "initialMessages": {
-        "beforePick": "Select a point in the region where you want to see the difference",
+        "beforePick": "We need this to run our change detection process.",
         "afterPick": "Click another point to change the selected region"
       },
       "nextMessages": {

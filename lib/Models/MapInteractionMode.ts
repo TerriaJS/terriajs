@@ -2,12 +2,18 @@ import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import PickedFeatures from "../Map/PickedFeatures";
 import { observable } from "mobx";
 
+export enum UIMode {
+  Difference
+}
+
 interface Options {
   onCancel?: () => void;
   message: string;
+  messageAsNode?: React.ReactNode;
   customUi?: () => unknown;
   buttonText?: string;
   drawRectangle?: boolean;
+  uiMode?: UIMode; // diff tool hack for now
 }
 
 /**
@@ -18,12 +24,16 @@ export default class MapInteractionMode {
 
   readonly buttonText: string;
   readonly drawRectangle: boolean;
+  readonly uiMode: UIMode;
 
   @observable
   customUi: (() => unknown) | undefined;
 
   @observable
   message: () => string;
+
+  @observable
+  messageAsNode: () => React.ReactNode;
 
   @observable
   pickedFeatures?: PickedFeatures;
@@ -51,6 +61,13 @@ export default class MapInteractionMode {
     };
 
     /**
+     * Gets or sets the react node displayed on the map when in this mode.
+     */
+    this.messageAsNode = function() {
+      return options.messageAsNode;
+    };
+
+    /**
      * Set the text of the button for the dialog the message is displayed on.
      */
     this.buttonText = defaultValue(options.buttonText, "Cancel");
@@ -59,6 +76,11 @@ export default class MapInteractionMode {
      * Gets or sets the features that are currently picked.
      */
     this.pickedFeatures = undefined;
+
+    /**
+     * Gets or sets whether to use the diff tool UI+styles
+     */
+    this.uiMode = defaultValue(options.uiMode, undefined);
 
     /**
      * Determines whether a rectangle will be requested from the user rather than a set of pickedFeatures.

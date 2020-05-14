@@ -422,10 +422,21 @@ class Main extends React.Component<MainPropsType> {
             )}
           </MainPanel>
         </DiffAccordion>
+        {isShowingDiff && (
+          // rushing a bunch of this inline css!
+          <CloseDifferenceButton
+            theme={theme}
+            activeStyles
+            onClick={this.resetTool}
+          >
+            <StyledIcon light styledWidth="19px" glyph={GLYPHS.closeLight} />
+          </CloseDifferenceButton>
+        )}
         {!isShowingDiff && (
           <LocationPicker
             terria={terria}
             location={this.location}
+            title={t("diffTool.locationPicker.title")}
             messages={this.locationPickerMessages}
             onPick={this.onUserPickLocation}
           />
@@ -522,6 +533,19 @@ const MainPanel = styled(Box).attrs({
 const BackButton = styled(Button).attrs({
   secondary: true
 })``;
+
+const CloseDifferenceButton = styled(RawButton)`
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 60px;
+
+  border-radius: 50%;
+  padding: 13px;
+  color: ${p => p.theme.textLight};
+  border-color: ${p => p.theme.textLight};
+  background-color: ${p => p.theme.colorPrimary};
+`;
 
 const GenerateButton = styled(Button).attrs({
   primary: true,
