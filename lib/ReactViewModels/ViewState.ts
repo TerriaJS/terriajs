@@ -220,7 +220,13 @@ export default class ViewState {
   /**
    * The currently open tool
    */
-  @observable currentTool: { type: string; params: unknown } | undefined;
+  @observable currentTool:
+    | {
+        toolName: string;
+        toolComponent: React.Component | string;
+        params: unknown;
+      }
+    | undefined;
 
   private _unsubscribeErrorListener: any;
   private _pickedFeaturesSubscription: IReactionDisposer;
@@ -490,8 +496,12 @@ export default class ViewState {
   }
 
   @action
-  openTool(toolType: string, params?: any) {
-    this.currentTool = { type: toolType, params };
+  openTool(
+    toolName: string,
+    toolComponent: React.Component | string,
+    params?: any
+  ) {
+    this.currentTool = { toolName, toolComponent, params };
   }
 
   @action

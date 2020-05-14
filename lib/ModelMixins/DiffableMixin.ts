@@ -1,4 +1,5 @@
 import { JulianDate } from "cesium";
+import { computed } from "mobx";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
 import SelectableStyle, { AvailableStyle } from "../Models/SelectableStyle";
@@ -39,6 +40,21 @@ function DiffableMixin<T extends Constructor<MixinModel>>(Base: T) {
       firstDate: JulianDate,
       secondDate: JulianDate
     ): string;
+
+    @computed
+    get discreteTimesAsSortedJulianDates() {
+      // Hides date time selectors for the item if it is currently showing difference image
+      return this.isShowingDiff
+        ? undefined
+        : super.discreteTimesAsSortedJulianDates;
+    }
+
+    @computed
+    get canFilterTimeByFeature() {
+      // Hides the SatelliteImageryTimeFilterSection for the item if it is
+      // currently showing difference image
+      return this.isShowingDiff ? false : true;
+    }
   }
 
   return DiffableMixin;
