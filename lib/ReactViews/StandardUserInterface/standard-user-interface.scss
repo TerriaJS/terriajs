@@ -95,9 +95,9 @@
   left: 0;
 
   @media (min-width: $md) {
-    left: $work-bench-width + 22px;
+    right: $work-bench-width + 22px;
     top: 62px;
-    right: 96px;
+    left: 96px;
     bottom: 0;
     // debugger
     // background: rgba(#ffcc00, 0.5);
@@ -145,7 +145,6 @@
 
 .showWorkbenchButton {
   position: fixed;
-  right: 0;
   top: 18px;
   right: -200px;
   z-index: 99;
