@@ -17,6 +17,7 @@ const StyledButton = styled.button`
 
   ${props => props.fullWidth && `width: 100%;`}
   ${props => props.fullHeight && `height: 100%;`}
+  ${props => props.styledMinWidth && `min-width: ${props.styledMinWidth};`}
 
   ${props => props.marginLeft && `margin-left: ${4 * props.marginLeft}px;`}
   ${props => props.marginRight && `margin-right: ${4 * props.marginRight}px;`}

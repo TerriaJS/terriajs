@@ -26,7 +26,6 @@ import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import StoryPanel from "./../Story/StoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 
-import SatelliteGuide from "../Guide/SatelliteGuide";
 import TourPortal from "../Tour/TourPortal";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage";
 
@@ -320,10 +319,10 @@ const StandardUserInterface = observer(
               </If>
 
               <Notification viewState={this.props.viewState} />
-              <SatelliteGuide
+              {/* <SatelliteGuide
                 terria={terria}
                 viewState={this.props.viewState}
-              />
+              /> */}
               <MapInteractionWindow
                 terria={terria}
                 viewState={this.props.viewState}
