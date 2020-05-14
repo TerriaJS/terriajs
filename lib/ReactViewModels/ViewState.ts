@@ -7,6 +7,7 @@ import getAncestors from "../Models/getAncestors";
 import MouseCoords from "./MouseCoords";
 import SearchState from "./SearchState";
 import Terria from "../Models/Terria";
+import triggerResize from "../Core/triggerResize";
 import {
   observable,
   reaction,
@@ -27,6 +28,10 @@ import { LOCAL_PROPERTY_KEY as WELCOME_PROPERTY_KEY } from "../ReactViews/Welcom
 
 export const DATA_CATALOG_NAME = "data-catalog";
 export const USER_DATA_NAME = "my-data";
+
+// check showWorkbenchButton delay and transforms
+// export const WORKBENCH_RESIZE_ANIMATION_DURATION = 250;
+export const WORKBENCH_RESIZE_ANIMATION_DURATION = 500;
 
 interface ViewStateOptions {
   terria: Terria;
@@ -369,6 +374,30 @@ export default class ViewState {
     this._previewedItemIdSubscription();
     this._disclaimerHandler.dispose();
     this.searchState.dispose();
+  }
+
+  @action
+  triggerResizeEvent() {
+    triggerResize();
+  }
+
+  @action
+  setIsMapFullScreen(
+    bool: boolean,
+    animationDuration = WORKBENCH_RESIZE_ANIMATION_DURATION
+  ) {
+    this.isMapFullScreen = bool;
+    // Allow any animations to finish, then trigger a resize.
+
+    // (wing): much better to do by listening for transitionend, but will leave
+    // this as is until that's in place
+    setTimeout(function() {
+      // should we do this here in viewstate? it pulls in browser dependent things,
+      // and (defensively) calls it.
+      // but only way to ensure we trigger this resize, by standardising fullscreen
+      // toggle through an action.
+      triggerResize();
+    }, animationDuration);
   }
 
   @action

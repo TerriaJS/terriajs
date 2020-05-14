@@ -17,7 +17,7 @@
   flex-flow: wrap;
 }
 .menu-bar--workbenchClosed {
-  transition-delay: 0.25s;
+  // transition-delay: 0.25s; // temporary disable delays for splitter lag w/o resizing on transitionend
   margin-left: 165px;
 }
 .menu {
