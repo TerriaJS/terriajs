@@ -4,7 +4,8 @@
     "open": "Open",
     "prev": "Prev",
     "next": "Next",
-    "skip": "Skip"
+    "skip": "Skip",
+    "back": "Back"
   },
   "tour": {
     "preface": {
@@ -68,9 +69,7 @@
     "btnResetRealign": "reset compass alignment"
   },
   "tool": {
-    "closeButtonTitle": "Close {{toolName}} Tool"
-  },
-  "tool": {
+    "closeButtonTitle": "Close {{toolName}} Tool",
     "loadingError": {
       "title": "Error Loading {{toolName}} Tool",
       "message": "An error occurred while trying to load the this tool from the server. Please try again."
