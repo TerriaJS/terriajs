@@ -9,6 +9,7 @@ Change Log
 * Bumped explicit base typescript to 3.9.2
 * Lock rollbar to 2.15.2
 * Ported disclaimer to mobx with new designs
+* Stop disclaimer clashing with welcome message by only loading WelcomeMessage after disclaimer is no longer visible
 
 #### mobx-29
 * Fix handling of urls on `Cesium3DTilesCatalogItem` related to proxying and getting confused between Resource vs URL.
