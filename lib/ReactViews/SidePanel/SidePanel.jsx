@@ -10,7 +10,6 @@ import SearchBox from "../Search/SearchBox.jsx";
 import SidebarSearch from "../Search/SidebarSearch.jsx";
 import Workbench from "../Workbench/Workbench.jsx";
 import Icon from "../Icon.jsx";
-import SidePanelContent from "./SidePanelContent";
 import FullScreenButton from "./FullScreenButton.jsx";
 import { removeMarker } from "../../Models/LocationMarkerUtils";
 import { withTranslation, Trans } from "react-i18next";
@@ -91,7 +90,6 @@ const SidePanel = createReactClass({
     return (
       <div className={Styles.workBench}>
         <div className={Styles.header}>
-          <SidePanelContent />
           <FullScreenButton
             terria={this.props.terria}
             viewState={this.props.viewState}
