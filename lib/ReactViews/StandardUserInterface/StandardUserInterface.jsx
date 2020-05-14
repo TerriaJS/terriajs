@@ -42,6 +42,7 @@ import { observer } from "mobx-react";
 import { action, runInAction } from "mobx";
 import HelpPanel from "../Map/Panels/HelpPanel/HelpPanel";
 import Tool from "../Tool";
+import Disclaimer from "../Disclaimer";
 
 export const showStoryPrompt = (viewState, terria) => {
   terria.configParameters.showFeaturePrompts &&
@@ -200,6 +201,10 @@ const StandardUserInterface = observer(
               className={classNames(Styles.uiRoot, {
                 [Styles.withStoryBuilder]: showStoryBuilder
               })}
+              css={`
+                ${this.props.viewState.disclaimerVisible &&
+                  `filter: blur(10px);`}
+              `}
               ref={w => (this._wrapper = w)}
             >
               <div className={Styles.ui}>
@@ -385,6 +390,7 @@ const StandardUserInterface = observer(
               />
             )}
             <HelpPanel terria={terria} viewState={this.props.viewState} />
+            <Disclaimer viewState={this.props.viewState} />
           </div>
         </ThemeProvider>
       );

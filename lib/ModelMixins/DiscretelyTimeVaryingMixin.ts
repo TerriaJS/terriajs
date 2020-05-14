@@ -24,6 +24,10 @@ function DiscretelyTimeVaryingMixin<
 >(Base: T) {
   abstract class DiscretelyTimeVaryingMixin extends Base
     implements TimeVarying {
+    abstract discreteTimes:
+      | { time: string; tag: string | undefined }[]
+      | undefined;
+
     @computed
     get currentTime(): string | undefined {
       const time = super.currentTime;

@@ -22,12 +22,11 @@ import TimeVarying from "./TimeVarying";
 
 type MixinModel = Model<
   TimeFilterTraits & DiscretelyTimeVaryingTraits & MappableTraits
-> &
-  DiscretelyTimeVaryingMixin.Instance;
+>;
 
 /**
  * A Mixin for filtering the dates for which imagery is available at a location
- * picked by the user. This Mixin requires `DiscretelyTimeVaryingMixin` to be present.
+ * picked by the user
  *
  * When `timeFilterPropertyName` is set, we look for a property of that name in
  * the feature query response at the picked location. The property value should be
@@ -36,7 +35,7 @@ type MixinModel = Model<
  * Imagery.
  */
 function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
-  abstract class TimeFilterMixin extends Base {
+  abstract class TimeFilterMixin extends DiscretelyTimeVaryingMixin(Base) {
     @observable _currentTimeFilterFeature?: Entity;
 
     constructor(...args: any[]) {

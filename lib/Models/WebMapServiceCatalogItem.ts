@@ -23,11 +23,9 @@ import createTransformerAllowUndefined from "../Core/createTransformerAllowUndef
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import isReadOnlyArray from "../Core/isReadOnlyArray";
-import { JsonObject } from "../Core/Json";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import DiffableMixin from "../ModelMixins/DiffableMixin";
-import DiscretelyTimeVaryingMixin from "../ModelMixins/DiscretelyTimeVaryingMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
 import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -357,8 +355,8 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get discreteTimes(): StratumFromTraits<DiscreteTimeTraits>[] | undefined {
-    const result: StratumFromTraits<DiscreteTimeTraits>[] = [];
+  get discreteTimes(): { time: string; tag: string | undefined }[] | undefined {
+    const result = [];
 
     for (let layer of this.capabilitiesLayers.values()) {
       if (!layer) {
@@ -419,11 +417,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
 class WebMapServiceCatalogItem
   extends DiffableMixin(
     TimeFilterMixin(
-      DiscretelyTimeVaryingMixin(
-        GetCapabilitiesMixin(
-          UrlMixin(
-            CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
-          )
+      GetCapabilitiesMixin(
+        UrlMixin(
+          CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
         )
       )
     )
@@ -541,6 +537,21 @@ class WebMapServiceCatalogItem
       .map(style => ({ id: style.name!, name: style.title! }));
   }
 
+  @computed
+  get disableDateTimeSelector() {
+    return this.isShowingDiff === true;
+  }
+
+  @computed
+  get discreteTimes() {
+    const getCapabilitiesStratum:
+      | GetCapabilitiesStratum
+      | undefined = this.strata.get(
+      GetCapabilitiesMixin.getCapabilitiesStratumName
+    ) as GetCapabilitiesStratum;
+    return getCapabilitiesStratum?.discreteTimes;
+  }
+
   protected get defaultGetCapabilitiesUrl(): string | undefined {
     if (this.uri) {
       return this.uri
@@ -624,9 +635,9 @@ class WebMapServiceCatalogItem
 
   @computed
   private get _currentImageryParts(): ImageryParts | undefined {
-    const imageryProvider = this._createImageryProvider({
-      time: this.currentDiscreteTimeTag
-    });
+    const imageryProvider = this._createImageryProvider(
+      this.currentDiscreteTimeTag
+    );
     if (imageryProvider === undefined) {
       return undefined;
     }
@@ -640,9 +651,9 @@ class WebMapServiceCatalogItem
   @computed
   private get _nextImageryParts(): ImageryParts | undefined {
     if (this.nextDiscreteTimeTag) {
-      const imageryProvider = this._createImageryProvider({
-        time: this.nextDiscreteTimeTag
-      });
+      const imageryProvider = this._createImageryProvider(
+        this.nextDiscreteTimeTag
+      );
       if (imageryProvider === undefined) {
         return undefined;
       }
@@ -667,17 +678,20 @@ class WebMapServiceCatalogItem
       return;
     }
     const time = `${this.firstDiffDate},${this.secondDiffDate}`;
-    const imageryProvider = this._createImageryProvider({
-      time,
-      extraParameters: { styles: diffStyleId }
-    });
-    return (
-      imageryProvider && {
+    const imageryProvider = this._createImageryProvider(time);
+    if (imageryProvider) {
+      return {
         imageryProvider,
         alpha: this.opacity,
         show: this.show !== undefined ? this.show : true
-      }
-    );
+      };
+    }
+    return undefined;
+  }
+
+  @computed
+  get diffModeParameters() {
+    return { styles: this.diffStyleId };
   }
 
   getTagForTime(date: JulianDate): string | undefined {
@@ -689,11 +703,8 @@ class WebMapServiceCatalogItem
 
   private _createImageryProvider = createTransformerAllowUndefined(
     (
-      opts:
-        | { time: string | undefined; extraParameters?: JsonObject }
-        | undefined
+      time: string | undefined
     ): Cesium.WebMapServiceImageryProvider | undefined => {
-      const { time, extraParameters } = opts || {};
       // Don't show anything on the map until GetCapabilities finishes loading.
       if (this.isLoadingMetadata) {
         return undefined;
@@ -704,10 +715,13 @@ class WebMapServiceCatalogItem
 
       console.log(`Creating new ImageryProvider for time ${time}`);
 
+      const diffModeParameters = this.isShowingDiff
+        ? this.diffModeParameters
+        : {};
       const parameters: any = {
         ...WebMapServiceCatalogItem.defaultParameters,
         ...(this.parameters || {}),
-        ...extraParameters
+        ...diffModeParameters
       };
 
       if (time !== undefined) {
@@ -769,7 +783,6 @@ class WebMapServiceCatalogItem
       }
 
       const imageryProvider = new WebMapServiceImageryProvider(imageryOptions);
-
       if (
         maximumLevel !== undefined &&
         this.hideLayerAfterMinScaleDenominator

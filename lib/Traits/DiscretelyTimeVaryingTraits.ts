@@ -10,14 +10,6 @@ export default class DiscretelyTimeVaryingTraits extends mixTraits(
   TimeVaryingTraits,
   ShowableTraits
 ) {
-  @objectArrayTrait({
-    name: "Discrete Times",
-    description: "The discrete times at which this dataset is available.",
-    type: DiscreteTimeTraits,
-    idProperty: "time"
-  })
-  discreteTimes?: DiscreteTimeTraits[];
-
   @primitiveTrait({
     name: "Mapping from Continuous Time",
     description:

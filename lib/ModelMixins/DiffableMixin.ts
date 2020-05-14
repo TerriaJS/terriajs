@@ -42,14 +42,6 @@ function DiffableMixin<T extends Constructor<MixinModel>>(Base: T) {
     ): string;
 
     @computed
-    get discreteTimesAsSortedJulianDates() {
-      // Hides date time selectors for the item if it is currently showing difference image
-      return this.isShowingDiff
-        ? undefined
-        : super.discreteTimesAsSortedJulianDates;
-    }
-
-    @computed
     get canFilterTimeByFeature() {
       // Hides the SatelliteImageryTimeFilterSection for the item if it is
       // currently showing difference image

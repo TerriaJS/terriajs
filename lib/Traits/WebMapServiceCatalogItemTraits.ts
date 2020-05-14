@@ -1,5 +1,7 @@
+import { JsonObject } from "../Core/Json";
+import anyTrait from "./anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
+import DiffableTraits from "./DiffableTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
@@ -12,11 +14,8 @@ import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
 import SplitterTraits from "./SplitterTraits";
-import UrlTraits from "./UrlTraits";
-import anyTrait from "./anyTrait";
-import { JsonObject } from "../Core/Json";
 import TimeFilterTraits from "./TimeFilterTraits";
-import DiffableTraits from "./DiffableTraits";
+import UrlTraits from "./UrlTraits";
 
 export class WebMapServiceAvailableStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -70,7 +69,6 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   FeatureInfoTraits,
   LayerOrderingTraits,
   SplitterTraits,
-  DiscretelyTimeVaryingTraits,
   TimeFilterTraits,
   GetCapabilitiesTraits,
   RasterLayerTraits,
