@@ -21,4 +21,3 @@ const SplitPoint = createReactClass({
 });
 
 export default SplitPoint;
-module.exports = SplitPoint;
