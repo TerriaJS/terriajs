@@ -23,11 +23,9 @@ import createTransformerAllowUndefined from "../Core/createTransformerAllowUndef
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import isReadOnlyArray from "../Core/isReadOnlyArray";
-import { JsonObject } from "../Core/Json";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import DiffableMixin from "../ModelMixins/DiffableMixin";
-import DiscretelyTimeVaryingMixin from "../ModelMixins/DiscretelyTimeVaryingMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
 import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -52,7 +50,6 @@ import WebMapServiceCapabilities, {
   CapabilitiesStyle,
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
-import Resource from "terriajs-cesium/Source/Core/Resource";
 
 const dateFormat = require("dateformat");
 
@@ -420,11 +417,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
 class WebMapServiceCatalogItem
   extends DiffableMixin(
     TimeFilterMixin(
-      DiscretelyTimeVaryingMixin(
-        GetCapabilitiesMixin(
-          UrlMixin(
-            CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
-          )
+      GetCapabilitiesMixin(
+        UrlMixin(
+          CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
         )
       )
     )
