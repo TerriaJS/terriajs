@@ -11,6 +11,7 @@ Change Log
 * Ported disclaimer to mobx with new designs
 * Added diff tool for visualizing difference (delta) of images between 2 dates for services that support it.
 * Updated workbench ViewingControls styles to line up with icons
+* Prevent re-diff on workbench items that are already a diff
 * Updated splitter to force trigger resizes so it catches up on any animation delays from the workbench
 
 #### mobx-29

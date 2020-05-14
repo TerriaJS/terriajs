@@ -266,7 +266,9 @@ const ViewingControls = observer(
           </If>
           <If
             condition={
-              item.canDiffImages && viewState.useSmallScreenInterface === false
+              viewState.useSmallScreenInterface === false &&
+              !item.isShowingDiff &&
+              item.canDiffImages
             }
           >
             <li className={classNames(Styles.split)}>
