@@ -54,10 +54,6 @@ class HelpPanelItem extends React.Component {
           .children
       : undefined;
     const title = this.props.content.title || "";
-    // reactComponents !== undefined && reactComponents.length > 0
-    //   ? reactComponents.find(item => /(h[0-6])/i.test(item.type))?.props
-    //       .children
-    //   : "";
     return (
       <div
         css={`

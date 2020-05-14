@@ -319,10 +319,6 @@ const StandardUserInterface = observer(
               </If>
 
               <Notification viewState={this.props.viewState} />
-              {/* <SatelliteGuide
-                terria={terria}
-                viewState={this.props.viewState}
-              /> */}
               <MapInteractionWindow
                 terria={terria}
                 viewState={this.props.viewState}

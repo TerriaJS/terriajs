@@ -69,7 +69,7 @@ export default class ViewState {
 
   // Flesh out later
   @observable showHelpMenu: boolean = false;
-  @observable showSatelliteGuidance: boolean = true;
+  // @observable showSatelliteGuidance: boolean = true;
   @observable showWelcomeMessage: boolean = false;
   @observable selectedHelpMenuItem: string = "";
   @observable helpPanelExpanded: boolean = false;
