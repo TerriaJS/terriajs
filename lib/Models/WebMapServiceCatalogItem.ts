@@ -541,6 +541,11 @@ class WebMapServiceCatalogItem
       .map(style => ({ id: style.name!, name: style.title! }));
   }
 
+  @computed
+  get disableDateTimeSelector() {
+    return this.isShowingDiff === true;
+  }
+
   protected get defaultGetCapabilitiesUrl(): string | undefined {
     if (this.uri) {
       return this.uri
