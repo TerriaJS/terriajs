@@ -133,6 +133,7 @@ export const Icon = createReactClass({
 });
 
 export const StyledIcon = styled(Icon)`
+  display:block;
   flex-shrink: 0;
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
 
