@@ -7,14 +7,20 @@ import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import LatLonHeight from "../../../Core/LatLonHeight";
 import PickedFeatures from "../../../Map/PickedFeatures";
 import { addMarker, removeMarker } from "../../../Models/LocationMarkerUtils";
-import MapInteractionMode from "../../../Models/MapInteractionMode";
+import MapInteractionMode, { UIMode } from "../../../Models/MapInteractionMode";
 import Terria from "../../../Models/Terria";
+
+import { StyledIcon, GLYPHS } from "../../Icon";
+const Box: any = require("../../../Styled/Box").default;
+const Text: any = require("../../../Styled/Text").default;
+const Spacing: any = require("../../../Styled/Spacing").default;
 
 const Loader = require("../../Loader");
 
 interface PropsType {
   terria: Terria;
   location?: LatLonHeight;
+  title: string;
   messages: {
     beforePick: string;
     afterPick: string;
@@ -24,6 +30,25 @@ interface PropsType {
     pickedLocation: LatLonHeight
   ) => void;
 }
+interface LocationPickerContentProps {
+  title: string;
+  content: string;
+}
+
+const LocationPickerContent: React.FC<LocationPickerContentProps> = props => {
+  return (
+    <Box column>
+      <Box left centered>
+        <StyledIcon light styledWidth="14px" glyph={GLYPHS.location2} />
+        <Spacing right={1} />
+        <Text bold medium>
+          {props.title}
+        </Text>
+      </Box>
+      <Text>{props.content}</Text>
+    </Box>
+  );
+};
 
 @observer
 export default class LocationPicker extends React.Component<PropsType> {
@@ -33,9 +58,13 @@ export default class LocationPicker extends React.Component<PropsType> {
 
   @action
   setupPicker() {
-    const { terria, location, messages, onPick } = this.props;
+    const { terria, location, messages, onPick, title } = this.props;
     this.pickMode = new MapInteractionMode({
-      message: messages.beforePick
+      message: "",
+      messageAsNode: (
+        <LocationPickerContent title={title} content={messages.beforePick} />
+      ),
+      uiMode: UIMode.Difference
     });
     addInteractionModeToMap(terria, this.pickMode);
     if (location) showMarker(terria, location);
@@ -47,7 +76,12 @@ export default class LocationPicker extends React.Component<PropsType> {
           return;
         }
 
-        this.pickMode!.message = () => this.props.messages.afterPick;
+        this.pickMode!.messageAsNode = () => (
+          <LocationPickerContent
+            title={title}
+            content={this.props.messages.afterPick}
+          />
+        );
         this.pickMode!.customUi = () => (
           <Loader message={`Querying ${location ? "new" : ""} position...`} />
         );

@@ -4,7 +4,8 @@
     "open": "Open",
     "prev": "Prev",
     "next": "Next",
-    "skip": "Skip"
+    "skip": "Skip",
+    "back": "Back"
   },
   "tour": {
     "preface": {
@@ -68,18 +69,24 @@
     "btnResetRealign": "reset compass alignment"
   },
   "tool": {
-    "closeButtonTitle": "Close {{toolName}} Tool"
-  },
-  "tool": {
+    "closeButtonTitle": "Close {{toolName}} Tool",
     "loadingError": {
       "title": "Error Loading {{toolName}} Tool",
       "message": "An error occurred while trying to load the this tool from the server. Please try again."
     }
   },
   "diffTool": {
+    "title": "Difference",
+    "exit": "Exit",
+    "computeDifference": "This layer visualizes the difference between imagery captured at two discrete points in time.",
+    "styles": "Styles",
+    "choosePreview": "Choose a preview style",
+    "chooseDifference": "Choose a difference style",
+    "differenceResultsTitle": "Change detection results",
     "locationPicker": {
+      "title": "Select a precise location",
       "initialMessages": {
-        "beforePick": "Select a point in the region where you want to see the difference",
+        "beforePick": "We need this to run our change detection process.",
         "afterPick": "Click another point to change the selected region"
       },
       "nextMessages": {
@@ -97,7 +104,7 @@
       "dateButtonTitle": "Select a date",
       "dateOutOfRange": "Currently out of range"
     },
-    "generateDiffButtonText": "Generate Difference Map"
+    "generateDiffButtonText": "Generate change detection"
   },
   "legend": {
     "lat": "Lat",

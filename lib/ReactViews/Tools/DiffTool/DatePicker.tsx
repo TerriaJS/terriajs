@@ -116,7 +116,11 @@ class DatePicker extends React.Component<PropsType> {
   }
 }
 
-const PagerButton = styled(Button)`
+const PagerButton = styled(Button).attrs({
+  iconProps: {
+    css: "margin-right:0;"
+  }
+})`
   cursor: pointer;
   background-color: ${props => props.theme.darkWithOverlay};
   width: 34px;
@@ -126,6 +130,7 @@ const PagerButton = styled(Button)`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   svg {
     width: 8px;
     height: 8px;
@@ -147,8 +152,9 @@ const NextButton = styled(PagerButton).attrs({
 
 const DateButton = styled(Button).attrs({ secondary: true })`
   cursor: pointer;
+  color: ${props => props.theme.textLight};
   background-color: ${props => props.theme.darkWithOverlay};
-  height: 34px;
+  // height: 34px;
   border-radius: 0px;
   border: 1px solid ${props => props.theme.darkWithOverlay};
 `;
