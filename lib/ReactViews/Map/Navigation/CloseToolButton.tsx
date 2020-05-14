@@ -8,19 +8,29 @@ const Icon: any = require("../../Icon");
 interface PropsType extends WithTranslation {
   viewState: ViewState;
   t: any;
+  toolIsDifference?: boolean;
 }
 
-function CloseToolButton({ viewState, t }: PropsType) {
+function CloseToolButton({ viewState, t, toolIsDifference }: PropsType) {
+  const closeText = t("tool.closeButtonTitle", {
+    toolName: viewState.currentTool?.toolName
+  });
   return (
     <MapIconButton
-      roundLeft
-      roundRight
-      title={t("tool.closeButtonTitle", {
-        toolName: viewState.currentTool?.toolName
-      })}
-      iconElement={() => <Icon glyph={Icon.GLYPHS.close} />}
+      css={`
+        svg {
+          width: 13px;
+          height: 13px;
+        }
+      `}
+      title={closeText}
+      splitter={toolIsDifference}
+      expandInPlace
+      iconElement={() => <Icon glyph={Icon.GLYPHS.closeLight} />}
       onClick={() => viewState.closeTool()}
-    />
+    >
+      {closeText}
+    </MapIconButton>
   );
 }
 

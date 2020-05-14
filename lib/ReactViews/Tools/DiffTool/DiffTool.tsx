@@ -343,7 +343,7 @@ class Main extends React.Component<MainPropsType> {
                         styledWidth="16px"
                         glyph={GLYPHS.arrowDown}
                       />
-                      Back
+                      <Text noFontSize>{t("general.back")}</Text>
                     </Box>
                   </BackButton>
                 </Box>
