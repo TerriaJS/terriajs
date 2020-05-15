@@ -71,7 +71,7 @@ class HelpVideoPanel extends React.Component {
         >
           <If condition={helpItemType === "videoAndContent"}>
             {this.props.videoUrl && this.props.placeholderImage && (
-              <div>
+              <div key={"image"}>
                 <div
                   className={Styles.videoLink}
                   style={{
@@ -91,7 +91,7 @@ class HelpVideoPanel extends React.Component {
               </div>
             )}
             {this.props.htmlContent && (
-              <StyledHtml content={this.props.htmlContent} />
+              <StyledHtml key={"content"} content={this.props.htmlContent} />
             )}
           </If>
           <If condition={helpItemType === "slider"}>

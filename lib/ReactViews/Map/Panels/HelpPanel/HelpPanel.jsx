@@ -109,8 +109,9 @@ class HelpPanel extends React.Component {
         <Box centered displayInlineBlock>
           <Box displayInlineBlock>
             {helpItems && (
-              <For each="item" of={helpItems}>
+              <For each="item" index="i" of={helpItems}>
                 <HelpPanelItem
+                  key={i}
                   terria={this.props.terria}
                   viewState={this.props.viewState}
                   content={item}
