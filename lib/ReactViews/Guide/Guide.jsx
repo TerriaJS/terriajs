@@ -203,10 +203,7 @@ export const GuidePure = ({
 GuidePure.propTypes = {
   terria: PropTypes.object.isRequired,
   guideKey: PropTypes.string.isRequired,
-  isTopElement: PropTypes.bool.isRequired,
-  handleMakeTopElement: PropTypes.func.isRequired,
   guideData: PropTypes.array.isRequired,
-  showGuide: PropTypes.bool.isRequired,
   setShowGuide: PropTypes.func.isRequired,
 
   guideClassName: PropTypes.string,

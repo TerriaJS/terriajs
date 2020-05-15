@@ -107,7 +107,8 @@ const GLYPHS = {
   geolocationThick: require("../../wwwroot/images/icons/location-thick.svg"),
   minusThick: require("../../wwwroot/images/icons/zoom-minus.svg"),
   plusThick: require("../../wwwroot/images/icons/zoom-plus.svg"),
-  refreshThick: require("../../wwwroot/images/icons/zoom-refresh.svg")
+  refreshThick: require("../../wwwroot/images/icons/zoom-refresh.svg"),
+  satellite: require("../../wwwroot/images/icons/satellite.svg")
 };
 
 export const Icon = createReactClass({
