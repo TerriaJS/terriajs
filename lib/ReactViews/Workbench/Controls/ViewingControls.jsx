@@ -20,11 +20,11 @@ import PickedFeatures from "../../../Map/PickedFeatures";
 import addUserCatalogMember from "../../../Models/addUserCatalogMember";
 import CommonStrata from "../../../Models/CommonStrata";
 import getAncestors from "../../../Models/getAncestors";
+import SplitItemReference from "../../../Models/SplitItemReference";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
 import Icon from "../../Icon";
 import WorkbenchButton from "../WorkbenchButton";
-import SplitItemReference from "../../../Models/SplitItemReference";
 import Styles from "./viewing-controls.scss";
 
 const BoxViewingControl = styled(Box).attrs({
@@ -186,6 +186,16 @@ const ViewingControls = observer(
       });
     },
 
+    openDiffTool() {
+      this.props.viewState.openTool(
+        "Difference",
+        import("../../Tools/DiffTool/DiffTool"),
+        {
+          sourceItem: this.props.item
+        }
+      );
+    },
+
     previewItem() {
       let item = this.props.item;
       // If this is a chartable item opened from another catalog item, get the info of the original item.
@@ -212,7 +222,7 @@ const ViewingControls = observer(
     },
 
     renderViewingControlsMenu() {
-      const { t, item } = this.props;
+      const { t, item, viewState } = this.props;
       const canSplit =
         !item.terria.configParameters.disableSplitter &&
         item.supportsSplitting &&
@@ -250,6 +260,29 @@ const ViewingControls = observer(
                 >
                   <Icon glyph={Icon.GLYPHS.splitterOn} />
                   <span>{t("workbench.splitItem")}</span>
+                </BoxViewingControl>
+              </ViewingControlMenuButton>
+            </li>
+          </If>
+          <If
+            condition={
+              item.canDiffImages && viewState.useSmallScreenInterface === false
+            }
+          >
+            <li className={classNames(Styles.split)}>
+              <ViewingControlMenuButton
+                onClick={this.openDiffTool}
+                title={t("workbench.diffImageTitle")}
+              >
+                <BoxViewingControl
+                  css={`
+                    svg:not(:root) {
+                      width: 26px;
+                    }
+                  `}
+                >
+                  <Icon glyph={Icon.GLYPHS.diffImage} />
+                  <span>{t("workbench.diffImage")}</span>
                 </BoxViewingControl>
               </ViewingControlMenuButton>
             </li>
