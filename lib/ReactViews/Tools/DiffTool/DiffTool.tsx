@@ -307,6 +307,16 @@ class Main extends React.Component<MainPropsType> {
     terria.overlays.add(this.props.rightItem);
     terria.workbench.remove(this.diffItem);
     this.props.terria.showSplitter = true;
+    this.props.leftItem.setTrait(
+      CommonStrata.user,
+      "splitDirection",
+      ImagerySplitDirection.LEFT
+    );
+    this.props.rightItem.setTrait(
+      CommonStrata.user,
+      "splitDirection",
+      ImagerySplitDirection.RIGHT
+    );
   }
 
   // i want to restructure the render so that there's 2 distinct "showing diff"

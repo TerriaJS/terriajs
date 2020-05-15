@@ -13,6 +13,9 @@ Change Log
 * Updated workbench ViewingControls styles to line up with icons
 * Prevent re-diff on workbench items that are already a diff
 * Updated splitter to force trigger resizes so it catches up on any animation delays from the workbench
+* Added satellite imagery to help panel
+* Stop disclaimer clashing with welcome message by only loading WelcomeMessage after disclaimer is no longer visible
+* Fixes a difftool bug where left/right items loose their split direction settings when the tool is reset
 
 #### mobx-29
 * Fix handling of urls on `Cesium3DTilesCatalogItem` related to proxying and getting confused between Resource vs URL.

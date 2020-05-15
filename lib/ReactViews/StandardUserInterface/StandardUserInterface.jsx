@@ -26,7 +26,6 @@ import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import StoryPanel from "./../Story/StoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 
-import SatelliteGuide from "../Guide/SatelliteGuide";
 import TourPortal from "../Tour/TourPortal";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage";
 
@@ -196,7 +195,9 @@ const StandardUserInterface = observer(
           />
           <TourPortal terria={terria} viewState={this.props.viewState} />
           <div className={Styles.storyWrapper}>
-            <WelcomeMessage viewState={this.props.viewState} />
+            <If condition={!this.props.viewState.disclaimerVisible}>
+              <WelcomeMessage viewState={this.props.viewState} />
+            </If>
             <div
               className={classNames(Styles.uiRoot, {
                 [Styles.withStoryBuilder]: showStoryBuilder
@@ -334,10 +335,6 @@ const StandardUserInterface = observer(
               </Medium>
 
               <Notification viewState={this.props.viewState} />
-              <SatelliteGuide
-                terria={terria}
-                viewState={this.props.viewState}
-              />
               <MapInteractionWindow
                 terria={terria}
                 viewState={this.props.viewState}
