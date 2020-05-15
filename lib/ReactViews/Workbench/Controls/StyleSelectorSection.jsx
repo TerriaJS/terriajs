@@ -5,7 +5,7 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
-import Icon from "./../../Icon";
+// import Icon from "./../../Icon";
 import Styles from "./style-selector-section.scss";
 import CommonStrata from "../../../Models/CommonStrata";
 import Box from "../../../Styled/Box";
