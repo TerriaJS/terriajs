@@ -9,6 +9,7 @@ Change Log
 * Bumped explicit base typescript to 3.9.2
 * Lock rollbar to 2.15.2
 * Ported disclaimer to mobx with new designs
+* Fixes a difftool bug where left/right items loose their split direction settings when the tool is reset
 
 #### mobx-29
 * Fix handling of urls on `Cesium3DTilesCatalogItem` related to proxying and getting confused between Resource vs URL.
