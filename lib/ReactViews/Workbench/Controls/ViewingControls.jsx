@@ -23,13 +23,14 @@ import getAncestors from "../../../Models/getAncestors";
 import SplitItemReference from "../../../Models/SplitItemReference";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
-import Icon from "../../Icon";
+import Icon, { StyledIcon } from "../../Icon";
 import WorkbenchButton from "../WorkbenchButton";
 import Styles from "./viewing-controls.scss";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
-  justifyContentSpaceAround: true
+  left: true,
+  justifySpaceBetween: true
 })``;
 
 const ViewingControlMenuButton = styled(RawButton).attrs({
@@ -37,6 +38,10 @@ const ViewingControlMenuButton = styled(RawButton).attrs({
 })`
   color: ${props => props.theme.textDarker};
   background-color: ${props => props.theme.textLight};
+
+  ${StyledIcon} {
+    width: 35px;
+  }
 
   svg {
     fill: ${props => props.theme.textDarker};
@@ -51,7 +56,8 @@ const ViewingControlMenuButton = styled(RawButton).attrs({
   border-radius: 0;
 
   width: 114px;
-  height: 32px;
+  // ensure we support long strings
+  min-height: 32px;
   display: block;
 
   &:hover,
@@ -239,7 +245,7 @@ const ViewingControls = observer(
                 title={t("workbench.openFeatureTitle")}
               >
                 <BoxViewingControl>
-                  <Icon glyph={Icon.GLYPHS.upload} />
+                  <StyledIcon glyph={Icon.GLYPHS.upload} />
                   <span>{t("workbench.openFeature")}</span>
                 </BoxViewingControl>
               </ViewingControlMenuButton>
@@ -251,14 +257,8 @@ const ViewingControls = observer(
                 onClick={this.splitItem}
                 title={t("workbench.splitItemTitle")}
               >
-                <BoxViewingControl
-                  css={`
-                    svg:not(:root) {
-                      width: 26px;
-                    }
-                  `}
-                >
-                  <Icon glyph={Icon.GLYPHS.splitterOn} />
+                <BoxViewingControl>
+                  <StyledIcon glyph={Icon.GLYPHS.compare} />
                   <span>{t("workbench.splitItem")}</span>
                 </BoxViewingControl>
               </ViewingControlMenuButton>
@@ -266,7 +266,9 @@ const ViewingControls = observer(
           </If>
           <If
             condition={
-              item.canDiffImages && viewState.useSmallScreenInterface === false
+              viewState.useSmallScreenInterface === false &&
+              !item.isShowingDiff &&
+              item.canDiffImages
             }
           >
             <li className={classNames(Styles.split)}>
@@ -274,14 +276,8 @@ const ViewingControls = observer(
                 onClick={this.openDiffTool}
                 title={t("workbench.diffImageTitle")}
               >
-                <BoxViewingControl
-                  css={`
-                    svg:not(:root) {
-                      width: 26px;
-                    }
-                  `}
-                >
-                  <Icon glyph={Icon.GLYPHS.diffImage} />
+                <BoxViewingControl>
+                  <StyledIcon glyph={Icon.GLYPHS.difference} />
                   <span>{t("workbench.diffImage")}</span>
                 </BoxViewingControl>
               </ViewingControlMenuButton>
@@ -294,7 +290,7 @@ const ViewingControls = observer(
                 title={t("workbench.exportDataTitle")}
               >
                 <BoxViewingControl>
-                  <Icon glyph={Icon.GLYPHS.upload} />
+                  <StyledIcon glyph={Icon.GLYPHS.upload} />
                   <span>{t("workbench.exportData")}</span>
                 </BoxViewingControl>
               </ViewingControlMenuButton>
@@ -306,7 +302,7 @@ const ViewingControls = observer(
               title={t("workbench.removeFromMapTitle")}
             >
               <BoxViewingControl>
-                <Icon glyph={Icon.GLYPHS.cancel} />
+                <StyledIcon glyph={Icon.GLYPHS.cancel} />
                 <span>{t("workbench.removeFromMap")}</span>
               </BoxViewingControl>
             </ViewingControlMenuButton>

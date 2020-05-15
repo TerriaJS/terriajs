@@ -100,7 +100,7 @@ class DiffTool extends React.Component<PropsType> {
       isMapFullScreen: viewState.isMapFullScreen
     };
     terria.showSplitter = true;
-    viewState.isMapFullScreen = true;
+    viewState.setIsMapFullScreen(true);
     this.sourceItem.setTrait(CommonStrata.user, "show", false);
   }
 
@@ -112,7 +112,7 @@ class DiffTool extends React.Component<PropsType> {
     this.removeSplitterItems();
     this.splitterItemsDisposer?.();
     terria.showSplitter = originalSettings.showSplitter;
-    viewState.isMapFullScreen = originalSettings.isMapFullScreen;
+    viewState.setIsMapFullScreen(originalSettings.isMapFullScreen);
     this.sourceItem.setTrait(CommonStrata.user, "show", true);
   }
 

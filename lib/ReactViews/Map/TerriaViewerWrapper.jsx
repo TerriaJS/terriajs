@@ -104,7 +104,7 @@ class TerriaViewerWrapper extends React.Component {
         <div className={Styles.mapPlaceholder}>
           Loading the map, please wait...
         </div>
-        <Splitter terria={this.props.terria} />
+        <Splitter terria={this.props.terria} viewState={this.props.viewState} />
         <div
           id="cesiumContainer"
           className={Styles.cesiumContainer}

@@ -30,6 +30,7 @@ const Splitter = observer(
 
     propTypes: {
       terria: PropTypes.object.isRequired,
+      viewState: PropTypes.object.isRequired,
       thumbSize: PropTypes.number,
       padding: PropTypes.number,
       t: PropTypes.func.isRequired
@@ -146,6 +147,9 @@ const Splitter = observer(
       this.unsubscribe();
 
       const viewer = this.props.terria.currentViewer;
+      // Ensure splitter stays in sync with map
+      this.props.viewState.triggerResizeEvent();
+
       viewer.resumeMapInteraction();
 
       event.preventDefault();
