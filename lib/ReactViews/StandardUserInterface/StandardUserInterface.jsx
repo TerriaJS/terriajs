@@ -236,6 +236,10 @@ const StandardUserInterface = observer(
                         onClick={action(() => {
                           this.props.viewState.topElement = "SidePanel";
                         })}
+                        // TODO: debounce/batch
+                        onTransitionEnd={() =>
+                          this.props.viewState.triggerResizeEvent()
+                        }
                       >
                         <Branding
                           terria={terria}
