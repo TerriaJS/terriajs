@@ -326,12 +326,13 @@ const StandardUserInterface = observer(
               </If>
 
               <Medium>
-                {this.props.viewState.isToolOpen && (
+                {/* I think this does what the previous boolean condition does, but without the console error */}
+                <If condition={this.props.viewState.isToolOpen}>
                   <Tool
                     viewState={this.props.viewState}
                     {...this.props.viewState.currentTool}
                   />
-                )}
+                </If>
               </Medium>
 
               <Notification viewState={this.props.viewState} />
