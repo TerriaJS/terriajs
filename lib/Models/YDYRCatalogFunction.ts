@@ -1,4 +1,4 @@
-import { action, computed, runInAction } from "mobx";
+import { action, computed, runInAction, autorun, reaction } from "mobx";
 import TerriaError from "../Core/TerriaError";
 import YDYRCatalogFunctionTraits from "../Traits/YDYRCatalogFunctionTraits";
 import CreateModel from "./CreateModel";
@@ -185,7 +185,40 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
   private _dataColumn?: EnumerationParameter;
   private _regionColumn?: EnumerationParameter;
 
-  async forceLoadMetadata() {}
+  async forceLoadMetadata() {
+    // autorun(() => {
+    //   console.log('running autorun');
+    //   [this.inputLayers, this.dataColumn, this.regionColumn].forEach(
+    //     enumParam => {
+    //       // Clear value if no possibleValues
+    //       if (enumParam.possibleValues.length === 0) {
+    //         enumParam.clearValue(CommonStrata.user);
+
+    //         // If value isn't defined or is invalid -> if a value isRequired, then set to first option
+    //       } else if (
+    //         !isDefined(enumParam.value) ||
+    //         !enumParam.possibleValues.includes(enumParam.value)
+    //       ) {
+    //         if (enumParam.isRequired) {
+    //           enumParam.setValue(
+    //             CommonStrata.user,
+    //             enumParam.possibleValues[0]
+    //           );
+    //         } else {
+    //           enumParam.clearValue(CommonStrata.user);
+    //         }
+    //       }
+    //     }
+    //   );
+    // });
+
+    reaction(
+      () => this.parameters,
+      (value: any) => {
+        console.log(value);
+      }
+    );
+  }
 
   @computed
   get selectedTableCatalogMember(): TableMixin.TableMixin | undefined {
@@ -211,11 +244,7 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
     this._inputLayers = new EnumerationParameter(this, {
       id: "Input Layer",
       possibleValues,
-      value:
-        isDefined(this._inputLayers?.value) &&
-        this._inputLayers?.possibleValues.includes(this._inputLayers.value)
-          ? this._inputLayers.value
-          : possibleValues[0],
+
       isRequired: true
     });
     return this._inputLayers;
@@ -237,11 +266,7 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
     this._regionColumn = new EnumerationParameter(this, {
       id: "Region Column",
       possibleValues,
-      value:
-        isDefined(this._regionColumn?.value) &&
-        this._regionColumn?.possibleValues.includes(this._regionColumn.value)
-          ? this._regionColumn.value
-          : possibleValues[0],
+
       isRequired: true
     });
     return this._regionColumn;
@@ -256,22 +281,15 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
     this._dataColumn = new EnumerationParameter(this, {
       id: "Data Column",
       possibleValues,
-      value:
-        isDefined(this._dataColumn?.value) &&
-        this._dataColumn?.possibleValues.includes(this._dataColumn.value)
-          ? this._dataColumn.value
-          : possibleValues[0],
       isRequired: true
     });
     return this._dataColumn;
   }
 
   @computed get availableRegions(): EnumerationParameter {
-    const possibleValues = DATASETS.map(d => d.title);
     return new EnumerationParameter(this, {
       id: "Output Geography",
       possibleValues: DATASETS.map(d => d.title),
-      value: possibleValues[0],
       isRequired: true
     });
   }
@@ -280,8 +298,8 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
     return ALGORITHMS.map(
       alg =>
         new BooleanParameter(this, {
-          id: alg[0],
-          value: alg[1]
+          id: alg[0]
+          // value: alg[1]
           // trueName: "Enabled",
           // falseName: "Disabled"
         })
@@ -312,6 +330,7 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
    */
   @computed
   get functionParameters(): FunctionParameter[] {
+    console.log(this);
     return [
       this.inputLayers,
       this.regionColumn,
@@ -331,7 +350,6 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
    */
   @action
   async invoke() {
-    console.log("INVOKE");
     if (
       !isDefined(this.regionColumn.value) ||
       !isDefined(this.dataColumn.value)

@@ -11,7 +11,6 @@ export interface Options {
   description?: string;
   isRequired?: boolean;
   converter?: unknown;
-  value?: any;
 }
 
 export default abstract class FunctionParameter<
@@ -24,7 +23,6 @@ export default abstract class FunctionParameter<
   readonly description: string;
   readonly isRequired: boolean;
   readonly converter?: unknown;
-  readonly defaultValue?: T;
 
   readonly geoJsonFeature?: Promise<Feature> | Feature | JsonObject | undefined;
 
@@ -37,43 +35,36 @@ export default abstract class FunctionParameter<
     this.description = options.description || "";
     this.isRequired = options.isRequired || false;
     this.converter = options.converter;
-    this.defaultValue = options.value;
-    // runInAction(() => {
-    //   this.setValue(CommonStrata.defaults, options.value);
-    // })
   }
 
   isValid(): boolean {
     return true;
   }
 
+  @computed
   get value(): T | undefined {
-    return (
-      (this.catalogFunction.parameters?.[this.id] as T) || this.defaultValue
-    );
+    return this.catalogFunction.parameters?.[this.id] as T;
   }
 
   @action
   setValue(strataId: string, v: T) {
-    if (isDefined(v)) {
-      let parameterTraits = this.catalogFunction.getTrait(
-        strataId,
-        "parameters"
-      );
-      if (!isDefined(parameterTraits)) {
-        this.catalogFunction.setTrait(strataId, "parameters", {
-          [this.id]: v!
-        });
-      } else {
-        this.catalogFunction.setTrait(
-          strataId,
-          "parameters",
-          Object.assign(this.catalogFunction.parameters, { [this.id]: v })
-        );
-      }
-
-      // v not defined -> delete parameter
+    let parameterTraits = this.catalogFunction.getTrait(strataId, "parameters");
+    if (!isDefined(parameterTraits)) {
+      this.catalogFunction.setTrait(strataId, "parameters", {
+        [this.id]: v!
+      });
     } else {
+      this.catalogFunction.setTrait(
+        strataId,
+        "parameters",
+        Object.assign(this.catalogFunction.parameters, { [this.id]: v })
+      );
+    }
+  }
+
+  @action
+  clearValue(strataId: string) {
+    if (isDefined(this.catalogFunction.parameters?.[this.id])) {
       const newParameters = Object.assign({}, this.catalogFunction.parameters);
       delete newParameters[this.id];
       this.catalogFunction.setTrait(strataId, "parameters", newParameters);

@@ -23,6 +23,12 @@ export default class EnumerationParameterEditor extends React.Component<{
         onChange={this.onChange.bind(this)}
         value={this.props.parameter.value}
       >
+        {(typeof this.props.parameter.value === "undefined" ||
+          !this.props.parameter.isRequired) && (
+          <option key="__undefined__" value="">
+            Not specified
+          </option>
+        )}
         {this.props.parameter.possibleValues.map((v, i) => (
           <option value={v} key={i}>
             {v}
