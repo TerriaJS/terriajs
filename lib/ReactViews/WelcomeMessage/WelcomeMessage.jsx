@@ -37,9 +37,9 @@ function WelcomeMessageButton(props) {
         )}
         <Spacing right={2} />
         {props.buttonText && (
-          <Text textLight extraLarge>
+          <TextSpan textLight extraLarge>
             {props.buttonText}
-          </Text>
+          </TextSpan>
         )}
       </Box>
     </Button>

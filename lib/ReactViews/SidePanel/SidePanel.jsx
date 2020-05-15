@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation, Trans } from "react-i18next";
 import { withTheme } from "styled-components";
-import Icon from "../Icon";
+import Icon, { StyledIcon } from "../Icon";
 import SearchBoxAndResults from "../Search/SearchBoxAndResults";
 import Workbench from "../Workbench/Workbench";
 import FullScreenButton from "./FullScreenButton";
@@ -16,6 +16,7 @@ import { useRefForTerria } from "../Hooks/useRefForTerria";
 import Box from "../../Styled/Box";
 import Spacing from "../../Styled/Spacing";
 import Text, { TextSpan } from "../../Styled/Text";
+import Button from "../../Styled/Button";
 
 function EmptyWorkbench(props) {
   const t = props.t;
@@ -79,19 +80,31 @@ const ExploreMapDataWithTour = ({
 }) => {
   const buttonRef = useRefForTerria(EXPLORE_MAP_DATA_NAME, viewState);
 
+  const iconProps = {
+    glyph: Icon.GLYPHS.add,
+    light: true,
+    styledWidth: "20px"
+  };
+  const textProps = {
+    large: true
+  };
   return (
-    <button
+    <Button
       ref={buttonRef}
       type="button"
       onClick={onAddDataClicked}
-      className={Styles.button}
       title={addDataBtnText}
+      primary
+      renderIcon={() => {}} // Just want to have icon rendered, not sure what to do here?
+      iconProps={iconProps}
+      textProps={textProps}
+      styledWidth={"204px"}
     >
-      <Icon glyph={Icon.GLYPHS.add} />
-      <TextSpan large nunito>
-        {addDataBtnText}
-      </TextSpan>
-    </button>
+      {/* <StyledIcon glyph={Icon.GLYPHS.add} light styledWidth={"20px"} /> */}
+      {/* <TextSpan large nunito> */}
+      {addDataBtnText}
+      {/* </TextSpan> */}
+    </Button>
   );
 };
 ExploreMapDataWithTour.propTypes = {
@@ -153,7 +166,7 @@ const SidePanel = observer(
                 className={Styles.uploadData}
                 title={t("addData.load")}
               >
-                <Icon glyph={Icon.GLYPHS.upload} />
+                <Icon glyph={Icon.GLYPHS.uploadThin} />
                 <TextSpan large nunito>
                   {uploadText}
                 </TextSpan>

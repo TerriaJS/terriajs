@@ -1,8 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-// import Box from "./Box";
+import { BoxSpan } from "./Box";
 import Text from "./Text";
+import { StyledIcon } from "../ReactViews/Icon";
+import { SpacingSpan } from "./Spacing";
 
 const Icon = styled.span`
   margin-right: 8px;
@@ -17,6 +19,7 @@ const StyledButton = styled.button`
 
   ${props => props.fullWidth && `width: 100%;`}
   ${props => props.fullHeight && `height: 100%;`}
+  ${props => props.styledWidth && `width: ${props.styledWidth};`}
   ${props => props.styledMinWidth && `min-width: ${props.styledMinWidth};`}
 
   ${props => props.marginLeft && `margin-left: ${4 * props.marginLeft}px;`}
@@ -109,22 +112,27 @@ export const Button = props => {
       warning={warning}
       {...rest}
     >
-      {props.renderIcon && typeof props.renderIcon === "function" && (
-        <Icon css={iconProps && iconProps.css} {...iconProps}>
-          {props.renderIcon()}
-        </Icon>
-      )}
-      {props.children && (
-        <Text
-          white={primary || secondary || warning}
-          medium={secondary}
-          // bold
-          skinny
-          {...textProps}
-        >
-          {props.children}
-        </Text>
-      )}
+      <BoxSpan centered>
+        {props.renderIcon && typeof props.renderIcon === "function" && (
+          <BoxSpan>
+            <StyledIcon css={iconProps && iconProps.css} {...iconProps}>
+              {props.renderIcon()}
+            </StyledIcon>
+            <SpacingSpan right={2} />
+          </BoxSpan>
+        )}
+        {props.children && (
+          <Text
+            white={primary || secondary || warning}
+            medium={secondary}
+            // bold
+            skinny
+            {...textProps}
+          >
+            {props.children}
+          </Text>
+        )}
+      </BoxSpan>
     </StyledButton>
   );
 };

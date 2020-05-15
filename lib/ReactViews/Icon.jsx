@@ -110,7 +110,8 @@ export const GLYPHS = {
   minusThick: require("../../wwwroot/images/icons/zoom-minus.svg"),
   plusThick: require("../../wwwroot/images/icons/zoom-plus.svg"),
   refreshThick: require("../../wwwroot/images/icons/zoom-refresh.svg"),
-  satellite: require("../../wwwroot/images/icons/satellite.svg")
+  satellite: require("../../wwwroot/images/icons/satellite.svg"),
+  uploadThin: require("../../wwwroot/images/icons/upload-thin.svg")
 };
 
 export const Icon = createReactClass({
