@@ -2,7 +2,6 @@ import { action, computed, observable, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
-import combine from "terriajs-cesium/Source/Core/combine";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
@@ -27,22 +26,26 @@ import CommonStrata from "../Models/CommonStrata";
 import { ImageryParts } from "../Models/Mappable";
 import Model from "../Models/Model";
 import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
-import SelectableStyle, { AvailableStyle } from "../Models/SelectableStyle";
+
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
 import LegendTraits from "../Traits/LegendTraits";
 import TableTraits from "../Traits/TableTraits";
+import SelectableDimensions, {
+  SelectableDimension,
+  DimensionOption
+} from "../Models/SelectableDimensions";
 
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
 //   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
 // This is a dodgy workaround.
 class RegionProviderList extends JSRegionProviderList {}
-
-export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
-  Base: T
-) {
-  abstract class TableMixin extends Base {
+function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
+  abstract class TableMixin extends Base implements SelectableDimensions {
+    get hasTableMixin() {
+      return true;
+    }
     /**
      * The raw data table in column-major format, i.e. the outer array is an
      * array of columns.
@@ -241,20 +244,31 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
     }
 
     @computed
-    get styleSelector(): SelectableStyle | undefined {
-      if (this.mapItems.length === 0) {
+    get selectableDimensions(): SelectableDimension[] {
+      return filterOutUndefined([
+        this.styleDimensions,
+        this.regionColumnDimensions,
+        this.regionProviderDimensions
+      ]);
+    }
+
+    /**
+     * Takes {@link TableStyle}s and returns a SelectableDimension which can be rendered in a Select dropdown
+     */
+    @computed
+    get styleDimensions(): SelectableDimension | undefined {
+      if (this.mapItems.length === 0 && !this.enableManualRegionMapping) {
         return;
       }
-
       const tableModel = this;
       return {
         get id(): string {
-          return "style";
+          return "activeStyle";
         },
         get name(): string {
-          return "";
+          return "Display Variable";
         },
-        get availableStyles(): readonly AvailableStyle[] {
+        get options(): readonly DimensionOption[] {
           return tableModel.tableStyles.map(style => {
             return {
               id: style.id,
@@ -262,11 +276,97 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
             };
           });
         },
-        get activeStyleId(): string | undefined {
+        get selectedId(): string | undefined {
           return tableModel.activeStyle;
         },
-        chooseActiveStyle(stratumId: string, styleId: string) {
+        setDimensionValue(stratumId: string, styleId: string) {
           tableModel.setTrait(stratumId, "activeStyle", styleId);
+        }
+      };
+    }
+
+    /**
+     * Creates SelectableDimension for regionProviderList - the list of all available region providers.
+     * {@link TableTraits#enableManualRegionMapping} must be enabled.
+     */
+    @computed
+    get regionProviderDimensions(): SelectableDimension | undefined {
+      if (
+        !this.enableManualRegionMapping ||
+        !Array.isArray(this.regionProviderList?.regionProviders) ||
+        !isDefined(this.activeTableStyle.regionColumn)
+      ) {
+        return;
+      }
+
+      return {
+        get id(): string {
+          return "regionMapping";
+        },
+        get name(): string {
+          return "Region Mapping";
+        },
+        options: this.regionProviderList!.regionProviders.map(
+          regionProvider => {
+            return {
+              name: regionProvider.regionType,
+              id: regionProvider.regionType
+            };
+          }
+        ),
+        allowUndefined: true,
+        selectedId: this.activeTableStyle.regionColumn?.regionType?.regionType,
+        setDimensionValue: (stratumId: string, regionType: string) => {
+          let columnTraits = this.columns?.find(
+            column => column.name === this.activeTableStyle.regionColumn?.name
+          );
+          if (!isDefined(columnTraits)) {
+            columnTraits = this.addObject(
+              stratumId,
+              "columns",
+              this.activeTableStyle.regionColumn!.name
+            )!;
+            columnTraits.setTrait(
+              stratumId,
+              "name",
+              this.activeTableStyle.regionColumn!.name
+            );
+          }
+
+          columnTraits.setTrait(stratumId, "regionType", regionType);
+        }
+      };
+    }
+
+    /**
+     * Creates SelectableDimension for region column - the options contains a list of all columns.
+     * {@link TableTraits#enableManualRegionMapping} must be enabled.
+     */
+    @computed
+    get regionColumnDimensions(): SelectableDimension | undefined {
+      if (
+        !this.enableManualRegionMapping ||
+        !Array.isArray(this.regionProviderList?.regionProviders)
+      ) {
+        return;
+      }
+
+      return {
+        get id(): string {
+          return "regionColumn";
+        },
+        get name(): string {
+          return "Region Column";
+        },
+        options: this.tableStyles.map(tableStyle => {
+          return {
+            name: tableStyle.id,
+            id: tableStyle.id
+          };
+        }),
+        selectedId: this.activeTableStyle.regionColumn?.name,
+        setDimensionValue: (stratumId: string, regionCol: string) => {
+          this.defaultStyle.setTrait(stratumId, "regionColumn", regionCol);
         }
       };
     }
@@ -551,3 +651,14 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
 
   return TableMixin;
 }
+
+namespace TableMixin {
+  export interface TableMixin
+    extends InstanceType<ReturnType<typeof TableMixin>> {}
+
+  export function isMixedInto(model: any): model is TableMixin {
+    return model && model.hasTableMixin;
+  }
+}
+
+export default TableMixin;

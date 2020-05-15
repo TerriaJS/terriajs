@@ -25,12 +25,11 @@ import TableStyleTraits from "../Traits/TableStyleTraits";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import { AvailableStyle } from "./SelectableStyle";
 import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
-import TableColumnTraits from "../Traits/TableColumnTraits";
 import CommonStrata from "./CommonStrata";
+import { SelectableDimension } from "./SelectableDimensions";
 
 interface GetFeatureOfInterestResponse {
   featureMember?: FeatureMember[] | FeatureMember;
@@ -527,12 +526,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
   }
 
   @computed
-  get styleSelector() {
-    return undefined;
-  }
-
-  @computed
-  get styleSelectors() {
+  get selectableDimensions() {
     return filterOutUndefined([
       this.proceduresSelector,
       this.observablesSelector
@@ -540,8 +534,8 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
   }
 
   @computed
-  get proceduresSelector() {
-    const proceduresSelector = super.styleSelector;
+  get proceduresSelector(): SelectableDimension | undefined {
+    const proceduresSelector = super.styleDimensions;
     if (proceduresSelector === undefined) return;
 
     const item = this;
@@ -554,7 +548,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
   }
 
   @computed
-  get observablesSelector() {
+  get observablesSelector(): SelectableDimension | undefined {
     if (this.mapItems.length === 0) {
       return;
     }
@@ -566,7 +560,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
       get name(): string {
         return item.observablePropertiesName;
       },
-      get availableStyles(): readonly AvailableStyle[] {
+      get options() {
         return filterOutUndefined(
           item.observableProperties.map(p => {
             if (p.identifier && p.title) {
@@ -578,10 +572,10 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
           })
         );
       },
-      get activeStyleId(): string | undefined {
+      get selectedId(): string | undefined {
         return item.selectedObservableId;
       },
-      chooseActiveStyle(stratumId: string, observableId: string) {
+      setDimensionValue(stratumId: string, observableId: string) {
         item.setTrait(stratumId, "selectedObservableId", observableId);
       }
     };

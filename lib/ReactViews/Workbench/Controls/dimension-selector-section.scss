@@ -1,7 +1,8 @@
 @import "~terriajs-variables";
 
 .dimension-selector {
-  font-size: $font-size-mid-small;
+  font-size: 0.9rem;
+  margin-top: 10px;
   label {
     margin-right: $padding-small;
   }
