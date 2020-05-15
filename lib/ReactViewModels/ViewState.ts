@@ -12,7 +12,8 @@ import {
   reaction,
   IReactionDisposer,
   action,
-  runInAction
+  runInAction,
+  computed
 } from "mobx";
 import { BaseModel } from "../Models/Model";
 import PickedFeatures from "../Map/PickedFeatures";
@@ -69,7 +70,7 @@ export default class ViewState {
 
   // Flesh out later
   @observable showHelpMenu: boolean = false;
-  @observable showSatelliteGuidance: boolean = false;
+  // @observable showSatelliteGuidance: boolean = true;
   @observable showWelcomeMessage: boolean = false;
   @observable selectedHelpMenuItem: string = "";
   @observable helpPanelExpanded: boolean = false;
@@ -217,6 +218,17 @@ export default class ViewState {
    * is currently visible.
    */
   @observable shareModelIsVisible: boolean = false;
+
+  /**
+   * The currently open tool
+   */
+  @observable currentTool:
+    | {
+        toolName: string;
+        toolComponent: React.Component | string;
+        params: unknown;
+      }
+    | undefined;
 
   private _unsubscribeErrorListener: any;
   private _pickedFeaturesSubscription: IReactionDisposer;
@@ -507,5 +519,24 @@ export default class ViewState {
     if (this.terria.configParameters.openAddData) {
       this.openAddData();
     }
+  }
+
+  @action
+  openTool(
+    toolName: string,
+    toolComponent: React.Component | string,
+    params?: any
+  ) {
+    this.currentTool = { toolName, toolComponent, params };
+  }
+
+  @action
+  closeTool() {
+    this.currentTool = undefined;
+  }
+
+  @computed
+  get isToolOpen() {
+    return this.currentTool !== undefined;
   }
 }

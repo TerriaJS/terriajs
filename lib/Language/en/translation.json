@@ -4,7 +4,8 @@
     "open": "Open",
     "prev": "Prev",
     "next": "Next",
-    "skip": "Skip"
+    "skip": "Skip",
+    "back": "Back"
   },
   "tour": {
     "preface": {
@@ -66,6 +67,44 @@
     "btnHover": "toggle hover height",
     "btnRealign": "toggle manual alignment",
     "btnResetRealign": "reset compass alignment"
+  },
+  "tool": {
+    "closeButtonTitle": "Close {{toolName}} Tool",
+    "loadingError": {
+      "title": "Error Loading {{toolName}} Tool",
+      "message": "An error occurred while trying to load the this tool from the server. Please try again."
+    }
+  },
+  "diffTool": {
+    "title": "Difference",
+    "exit": "Exit",
+    "computeDifference": "This layer visualizes the difference between imagery captured at two discrete points in time.",
+    "styles": "Styles",
+    "choosePreview": "Choose a preview style",
+    "chooseDifference": "Choose a difference style",
+    "differenceResultsTitle": "Change detection results",
+    "locationPicker": {
+      "title": "Select a precise location",
+      "initialMessages": {
+        "beforePick": "We need this to run our change detection process.",
+        "afterPick": "Click another point to change the selected region"
+      },
+      "nextMessages": {
+        "beforePick": "Click another point to change the selection",
+        "afterPick": "Click another point to change the selection"
+      },
+      "errorMessages": {
+        "beforePick": "Failed to resolve imagery at location! Please choose a different location or zoom-level.",
+        "afterPick": "Click another point to change the selection"
+      }
+    },
+    "datePicker": {
+      "previousDateTitle": "Previous date",
+      "nextDateTitle": "Previous date",
+      "dateButtonTitle": "Select a date",
+      "dateOutOfRange": "Currently out of range"
+    },
+    "generateDiffButtonText": "Generate change detection"
   },
   "legend": {
     "lat": "Lat",
@@ -356,6 +395,8 @@
     "previewItem": "About Data",
     "splitItemTitle": "Duplicate and show splitter",
     "splitItem": "Compare",
+    "diffImageTitle": "View image differences between two dates",
+    "diffImage": "Difference",
     "exportDataTitle": "Export map data",
     "exportData": "Export",
     "removeFromMapTitle": "Remove this data",

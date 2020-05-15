@@ -10,6 +10,7 @@ import Spacing from "../../../../Styled/Spacing";
 import Box from "../../../../Styled/Box";
 import VideoGuide from "./VideoGuide";
 import StyledHtml from "./StyledHtml";
+import SatelliteGuide from "../../../Guide/SatelliteGuide";
 
 const HELP_VIDEO_NAME = "helpVideo";
 
@@ -21,6 +22,7 @@ class HelpVideoPanel extends React.Component {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
     itemString: PropTypes.string,
+    paneMode: PropTypes.string,
     htmlContent: PropTypes.array,
     videoUrl: PropTypes.string,
     placeholderImage: PropTypes.string,
@@ -34,6 +36,7 @@ class HelpVideoPanel extends React.Component {
 
   render() {
     // const { t } = this.props;
+    const helpItemType = this.props.paneMode || "videoAndContent"; // default is video panel
     const itemSelected =
       this.props.viewState.selectedHelpMenuItem === this.props.itemString;
     const isExpanded = this.props.viewState.selectedHelpMenuItem !== "";
@@ -66,27 +69,37 @@ class HelpVideoPanel extends React.Component {
             overflow: auto;
           `}
         >
-          {this.props.videoUrl && this.props.placeholderImage && (
-            <div
-              className={Styles.videoLink}
-              style={{
-                backgroundImage: `linear-gradient(rgba(0,0,0,0.35),rgba(0,0,0,0.35)), url(${this.props.placeholderImage})`
-              }}
-            >
-              <button
-                className={Styles.videoBtn}
-                onClick={() =>
-                  this.props.viewState.setVideoGuideVisible(HELP_VIDEO_NAME)
-                }
-              >
-                <Icon glyph={Icon.GLYPHS.play} />
-              </button>
-            </div>
-          )}
-          <Spacing bottom={5} />
-          {this.props.htmlContent && (
-            <StyledHtml content={this.props.htmlContent} />
-          )}
+          <If condition={helpItemType === "videoAndContent"}>
+            {this.props.videoUrl && this.props.placeholderImage && (
+              <div key={"image"}>
+                <div
+                  className={Styles.videoLink}
+                  style={{
+                    backgroundImage: `linear-gradient(rgba(0,0,0,0.35),rgba(0,0,0,0.35)), url(${this.props.placeholderImage})`
+                  }}
+                >
+                  <button
+                    className={Styles.videoBtn}
+                    onClick={() =>
+                      this.props.viewState.setVideoGuideVisible(HELP_VIDEO_NAME)
+                    }
+                  >
+                    <Icon glyph={Icon.GLYPHS.play} />
+                  </button>
+                </div>
+                <Spacing bottom={5} />
+              </div>
+            )}
+            {this.props.htmlContent && (
+              <StyledHtml key={"content"} content={this.props.htmlContent} />
+            )}
+          </If>
+          <If condition={helpItemType === "slider"}>
+            <SatelliteGuide
+              terria={this.props.terria}
+              viewState={this.props.viewState}
+            />
+          </If>
         </Box>
       </div>
     );

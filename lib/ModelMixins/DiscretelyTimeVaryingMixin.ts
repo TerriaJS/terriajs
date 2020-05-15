@@ -11,7 +11,6 @@ import CommonStrata from "../Models/CommonStrata";
 import Model from "../Models/Model";
 import DiscretelyTimeVaryingTraits from "../Traits/DiscretelyTimeVaryingTraits";
 import TimeVarying from "./TimeVarying";
-import TimeFilterMixin from "./TimeFilterMixin";
 
 type DiscretelyTimeVarying = Model<DiscretelyTimeVaryingTraits>;
 
@@ -20,11 +19,15 @@ interface AsJulian {
   tag: string;
 }
 
-export default function DiscretelyTimeVaryingMixin<
+function DiscretelyTimeVaryingMixin<
   T extends Constructor<DiscretelyTimeVarying>
 >(Base: T) {
   abstract class DiscretelyTimeVaryingMixin extends Base
     implements TimeVarying {
+    abstract discreteTimes:
+      | { time: string; tag: string | undefined }[]
+      | undefined;
+
     @computed
     get currentTime(): string | undefined {
       const time = super.currentTime;
@@ -66,45 +69,29 @@ export default function DiscretelyTimeVaryingMixin<
 
     @computed
     get discreteTimesAsSortedJulianDates(): AsJulian[] | undefined {
-      let discreteTimes;
-      if (
-        TimeFilterMixin.isMixedInto(this) &&
-        this.filteredDiscreteTimes !== undefined
-      ) {
-        discreteTimes = this.filteredDiscreteTimes;
-      } else discreteTimes = this.discreteTimes;
-
+      const discreteTimes = this.discreteTimes;
       if (discreteTimes === undefined) {
         return undefined;
       }
 
-      const asJulian: AsJulian[] = filterOutUndefined(
-        discreteTimes.map(dt => {
-          if (dt.time === undefined) {
-            return undefined;
-          }
-          try {
-            return {
-              time: JulianDate.fromIso8601(dt.time),
+      const asJulian: AsJulian[] = [];
+      for (let i = 0; i < discreteTimes.length; i++) {
+        const dt = discreteTimes[i];
+        try {
+          if (dt.time !== undefined) {
+            const time = JulianDate.fromIso8601(dt.time);
+            asJulian.push({
+              time,
               tag: dt.tag !== undefined ? dt.tag : dt.time
-            };
-          } catch {
-            return undefined;
+            });
           }
-        })
-      );
-
+        } catch {}
+      }
       asJulian.sort((a, b) => JulianDate.compare(a.time, b.time));
       return asJulian;
     }
 
-    @computed
-    get currentDiscreteTimeIndex(): number | undefined {
-      const currentTime = this.currentTimeAsJulianDate;
-      if (currentTime === undefined) {
-        return undefined;
-      }
-
+    getDiscreteTimeIndex(time: JulianDate): number | undefined {
       const discreteTimes = this.discreteTimesAsSortedJulianDates;
       if (discreteTimes === undefined || discreteTimes.length === 0) {
         return undefined;
@@ -112,7 +99,7 @@ export default function DiscretelyTimeVaryingMixin<
 
       const exactIndex = binarySearch(
         discreteTimes,
-        currentTime,
+        time,
         (candidate, currentTime) =>
           JulianDate.compare(candidate.time, currentTime)
       );
@@ -135,16 +122,24 @@ export default function DiscretelyTimeVaryingMixin<
         const nextTime = discreteTimes[nextIndex].time;
 
         const timeFromPrevious = JulianDate.secondsDifference(
-          currentTime,
+          time,
           previousTime
         );
-        const timeToNext = JulianDate.secondsDifference(nextTime, currentTime);
+        const timeToNext = JulianDate.secondsDifference(nextTime, time);
         if (timeToNext > timeFromPrevious) {
           return nextIndex - 1;
         } else {
           return nextIndex;
         }
       }
+    }
+
+    @computed
+    get currentDiscreteTimeIndex(): number | undefined {
+      return (
+        this.currentTimeAsJulianDate &&
+        this.getDiscreteTimeIndex(this.currentTimeAsJulianDate)
+      );
     }
 
     @computed
@@ -320,6 +315,14 @@ export default function DiscretelyTimeVaryingMixin<
 
   return DiscretelyTimeVaryingMixin;
 }
+
+namespace DiscretelyTimeVaryingMixin {
+  export type Instance = InstanceType<
+    ReturnType<typeof DiscretelyTimeVaryingMixin>
+  >;
+}
+
+export default DiscretelyTimeVaryingMixin;
 
 function toJulianDate(time: string | undefined): JulianDate | undefined {
   if (time === undefined) {
