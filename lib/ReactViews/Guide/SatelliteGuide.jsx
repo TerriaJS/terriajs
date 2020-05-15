@@ -33,17 +33,11 @@ class SatelliteGuide extends React.Component {
   render() {
     const { terria, viewState, t } = this.props;
     const guideData = satelliteGuideData(t);
-
     return (
       <Guide
-        hasIntroSlide
-        // Use this as guide won't track viewstate
-        isTopElement={viewState.topElement === "Guide"}
-        handleMakeTopElement={this.handleMakeTopElement}
         terria={terria}
         guideKey={SATELLITE_GUIDE_KEY}
         guideData={guideData}
-        showGuide={viewState.showSatelliteGuidance}
         setShowGuide={bool => {
           this.setShowSatelliteGuidance(bool);
           // If we're closing for any reason, set prompted to true

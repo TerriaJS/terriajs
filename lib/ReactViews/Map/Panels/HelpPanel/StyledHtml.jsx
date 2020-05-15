@@ -19,7 +19,7 @@ const Numbers = styled(Text)`
 const renderOrderedList = function(contents) {
   return (
     <For each="content" index="i" of={contents}>
-      <Box paddedVertically>
+      <Box key={i} paddedVertically>
         <Box alignItemsFlexStart>
           <Numbers textLight textAlignCenter darkBg>
             {i + 1}
@@ -39,8 +39,6 @@ class StyledHtml extends React.Component {
   static displayName = "StyledHtml";
 
   static propTypes = {
-    terria: PropTypes.object.isRequired,
-    viewState: PropTypes.object.isRequired,
     content: PropTypes.array,
     theme: PropTypes.object,
     t: PropTypes.func.isRequired
@@ -53,11 +51,12 @@ class StyledHtml extends React.Component {
   render() {
     return (
       <div>
-        <For each="item" of={this.props.content}>
+        <For each="item" index="i" of={this.props.content}>
           <Choose>
             {/* Either a header or paragraph tag */}
             <When condition={/(h[0-6]|p)/i.test(item.type)}>
               <Text
+                key={i}
                 textDark
                 bold={/(h[0-6])/i.test(item.type)} // Only headers are bold
                 subHeading={item.type === "h1"}
@@ -76,7 +75,7 @@ class StyledHtml extends React.Component {
               {/* If it's none of the above tags, just render as 
                   normal html but with the same text formatting.
                   We can style more tags as necessary */}
-              <Text textDark medium>
+              <Text key={i} textDark medium>
                 {item}
               </Text>
             </Otherwise>

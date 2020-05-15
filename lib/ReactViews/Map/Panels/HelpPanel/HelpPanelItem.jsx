@@ -53,11 +53,7 @@ class HelpPanelItem extends React.Component {
       ? parseCustomMarkdownToReact(this.props.content.markdownText).props
           .children
       : undefined;
-    const title =
-      reactComponents !== undefined && reactComponents.length > 0
-        ? reactComponents.find(item => /(h[0-6])/i.test(item.type))?.props
-            .children
-        : "";
+    const title = this.props.content.title || "";
     return (
       <div
         css={`
@@ -107,6 +103,7 @@ class HelpPanelItem extends React.Component {
           terria={this.props.terria}
           viewState={this.props.viewState}
           itemString={this.props.content.itemName}
+          paneMode={this.props.content.paneMode}
           htmlContent={reactComponents}
           videoUrl={this.props.content.videoUrl}
           placeholderImage={this.props.content.placeholderImage}

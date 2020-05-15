@@ -32,13 +32,12 @@ import Styles from "./guide.scss";
 // import createReactClass from "create-react-class";
 // // import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 
-import Icon from "../Icon.jsx";
-import SlideUpFadeIn from "../Transitions/SlideUpFadeIn/SlideUpFadeIn";
-
 import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
+import Button from "../../Styled/Button";
+import Box from "../../Styled/Box";
 
 const GuideProgress = props => {
   // doesn't work for IE11
@@ -93,13 +92,9 @@ export const analyticsSetShowGuide = (
 export const GuidePure = ({
   terria,
   guideKey,
-  isTopElement,
-  handleMakeTopElement,
   hasIntroSlide = false,
   guideData,
-  showGuide,
-  setShowGuide,
-  guideClassName
+  setShowGuide
 }) => {
   // Handle index locally for now (unless we do a "open guide at X point" in the future?)
   const [currentGuideIndex, setCurrentGuideIndex] = useState(0);
@@ -143,6 +138,7 @@ export const GuidePure = ({
   };
   const currentGuide = guideData[currentGuideIndex] || {};
   const hidePrev = currentGuide.hidePrev || false;
+  const hideNext = currentGuide.hideNext || false;
   const prevButtonText = currentGuide.prevText || t("general.prev");
   const nextButtonText = currentGuide.nextText || t("general.next");
   const maxStepCount = hasIntroSlide ? guideData.length - 1 : guideData.length;
@@ -151,75 +147,63 @@ export const GuidePure = ({
     : currentGuideIndex + 1;
 
   return (
-    <SlideUpFadeIn
-      isVisible={showGuide}
-      onExited={() => setCurrentGuideIndex(0)}
-    >
-      <div
-        className={classNames(
-          Styles.guide,
-          guideClassName,
-          isTopElement ? "top-element" : ""
-        )}
-        onClick={handleMakeTopElement}
-      >
-        <div className={Styles.image}>
-          <div className={Styles.imageWrapper}>
-            <img src={currentGuide.imageSrc} />
-          </div>
-        </div>
-        <button
-          type="button"
-          className={classNames(Styles.innerCloseBtn)}
-          onClick={() => handleSetShowGuide(false)}
-          title={t("general.close")}
-          aria-label={t("general.close")}
-        >
-          <Icon glyph={Icon.GLYPHS.close} />
-        </button>
-        <div className={Styles.body}>
-          <div>
-            <Text bold medium tallerHeight>
-              {currentGuide.title}
-            </Text>
-            <Spacing bottom={4} />
-            <Text tallerHeight>{currentGuide.body}</Text>
-          </div>
-          <div className={Styles.bodyFooter}>
-            <div className={Styles.bodyProgress}>
-              <GuideProgress
-                currentStep={currentStepCount}
-                maxStepCount={maxStepCount}
-              />
-            </div>
-            {!hidePrev && (
-              <button
-                onClick={handlePrev}
-                className={classNames(Styles.btnTertiary)}
-              >
-                {prevButtonText}
-              </button>
-            )}
-            <button
-              onClick={handleNext}
-              className={classNames(Styles.btn, Styles.btnNext)}
+    <Box displayInlineBlock>
+      <Box
+        fullWidth
+        styledHeight={"254px"}
+        backgroundImage={currentGuide.imageSrc}
+      />
+      <Spacing bottom={5} />
+      <Box paddedHorizontally={1} displayInlineBlock>
+        <Text textDark bold subHeading>
+          {currentGuide.title}
+        </Text>
+        <Spacing bottom={5} />
+        <Box styledMinHeight={"100px"} fullWidth>
+          <Text textDark medium>
+            {currentGuide.body}
+          </Text>
+        </Box>
+        <Spacing bottom={7} />
+        <Box>
+          <Box
+            css={`
+              margin-right: auto;
+            `}
+          >
+            <GuideProgress
+              currentStep={currentStepCount}
+              maxStepCount={maxStepCount}
+            />
+          </Box>
+          {!hidePrev && (
+            <Button
+              secondary
+              onClick={() => handlePrev()}
+              styledMinWidth={"94px"}
             >
-              {nextButtonText}
-            </button>
-          </div>
-        </div>
-      </div>
-    </SlideUpFadeIn>
+              {prevButtonText}
+            </Button>
+          )}
+          <Spacing right={2} />
+          <Button
+            primary
+            onClick={() => handleNext()}
+            styledMinWidth={"94px"}
+            css={hideNext && `visibility: hidden;`}
+          >
+            {nextButtonText}
+          </Button>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 
 GuidePure.propTypes = {
   terria: PropTypes.object.isRequired,
   guideKey: PropTypes.string.isRequired,
-  isTopElement: PropTypes.bool.isRequired,
-  handleMakeTopElement: PropTypes.func.isRequired,
   guideData: PropTypes.array.isRequired,
-  showGuide: PropTypes.bool.isRequired,
   setShowGuide: PropTypes.func.isRequired,
 
   guideClassName: PropTypes.string,
