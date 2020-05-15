@@ -196,7 +196,9 @@ const StandardUserInterface = observer(
           />
           <TourPortal terria={terria} viewState={this.props.viewState} />
           <div className={Styles.storyWrapper}>
-            <WelcomeMessage viewState={this.props.viewState} />
+            <If condition={!this.props.viewState.disclaimerVisible}>
+              <WelcomeMessage viewState={this.props.viewState} />
+            </If>
             <div
               className={classNames(Styles.uiRoot, {
                 [Styles.withStoryBuilder]: showStoryBuilder

@@ -9,6 +9,7 @@ Change Log
 * Bumped explicit base typescript to 3.9.2
 * Lock rollbar to 2.15.2
 * Ported disclaimer to mobx with new designs
+* Stop disclaimer clashing with welcome message by only loading WelcomeMessage after disclaimer is no longer visible
 * Fixes a difftool bug where left/right items loose their split direction settings when the tool is reset
 
 #### mobx-29
