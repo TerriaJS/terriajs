@@ -19,6 +19,7 @@ import Icon from "../Icon";
 import Box from "../../Styled/Box";
 import MapIconButton from "../MapIconButton/MapIconButton";
 import FeedbackButton from "../Feedback/FeedbackButton";
+import CloseToolButton from "./Navigation/CloseToolButton";
 
 // The map navigation region
 @observer
@@ -34,6 +35,9 @@ class MapNavigation extends React.Component {
   };
 
   render() {
+    const toolIsDifference =
+      this.props.viewState.currentTool?.toolName === "Difference";
+    const isDiffMode = this.props.viewState.isToolOpen && toolIsDifference;
     return (
       <div
         className={classNames(Styles.mapNavigation, {
@@ -75,7 +79,10 @@ class MapNavigation extends React.Component {
                 </div>
               </If>
               <If
-                condition={!this.props.terria.configParameters.disableSplitter}
+                condition={
+                  !this.props.terria.configParameters.disableSplitter &&
+                  !isDiffMode
+                }
               >
                 <div className={Styles.control}>
                   <ToggleSplitterTool
@@ -83,6 +90,12 @@ class MapNavigation extends React.Component {
                     viewState={this.props.viewState}
                   />
                 </div>
+              </If>
+              <If condition={this.props.viewState.isToolOpen}>
+                <CloseToolButton
+                  toolIsDifference={toolIsDifference}
+                  viewState={this.props.viewState}
+                />
               </If>
               <For each="item" of={this.props.navItems} index="i">
                 <div className={Styles.control} key={i}>

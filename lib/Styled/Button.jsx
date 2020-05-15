@@ -54,7 +54,7 @@ const StyledButton = styled.button`
     // background-color: #4d5766;
     background-color: ${props.theme.textLight};
     color: ${props.theme.darkWithOverlay};
-    height: 34px;
+    min-height: 34px;
     border-radius: 20px;
     border: 2px solid ${props.theme.darkWithOverlay};
   `}
@@ -85,6 +85,15 @@ export const RawButton = styled.button`
   padding: 0;
   border: 0;
   background-color: transparent;
+
+  ${props =>
+    props.activeStyles &&
+    `
+    &:hover,
+    &:focus {
+      opacity: 0.9;
+    }
+  `}
 
   ${props => props.fullWidth && `width: 100%;`}
   ${props => props.fullHeight && `height: 100%;`}
