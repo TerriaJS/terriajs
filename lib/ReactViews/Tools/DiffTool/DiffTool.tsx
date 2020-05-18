@@ -606,7 +606,7 @@ const CloseDifferenceButton = styled(RawButton)`
 const GenerateButton = styled(Button).attrs({
   primary: true,
   fullWidth: true
-});
+})``;
 
 const Selector = (props: any) => (
   <Box fullWidth column>
