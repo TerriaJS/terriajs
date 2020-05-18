@@ -27,6 +27,7 @@ import StoryPanel from "./../Story/StoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 
 import TourPortal from "../Tour/TourPortal";
+import SatelliteHelpPrompt from "../HelpScreens/SatelliteHelpPrompt";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage";
 
 import { Small, Medium } from "../Generic/Responsive";
@@ -194,6 +195,10 @@ const StandardUserInterface = observer(
             }
           />
           <TourPortal terria={terria} viewState={this.props.viewState} />
+          <SatelliteHelpPrompt
+            terria={terria}
+            viewState={this.props.viewState}
+          />
           <div className={Styles.storyWrapper}>
             <If condition={!this.props.viewState.disclaimerVisible}>
               <WelcomeMessage viewState={this.props.viewState} />

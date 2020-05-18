@@ -28,6 +28,8 @@
 
   spacing: 5;
 
+  frontComponentZIndex: $front-component-z-index;
+
   // ..radius? (no standardised radius at the moment, pull in as needed from variables
   radiusLarge: $radius-large;
   radiusSmall: $radius-small;
