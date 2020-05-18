@@ -10,7 +10,6 @@ export interface LanguageConfiguration {
   languages: Object;
   fallbackLanguage: string;
   changeLanguageOnStartWhen: string[];
-  additionalNamespaces: string[];
 }
 const defaultLanguageConfiguration = {
   enabled: false,
@@ -24,8 +23,7 @@ const defaultLanguageConfiguration = {
     "localStorage",
     "navigator",
     "htmlTag"
-  ],
-  additionalNamespaces: []
+  ]
 };
 
 class Internationalization {
@@ -68,7 +66,7 @@ class Internationalization {
         */
         ns: ["translation", "languageOverrides"],
         defaultNS: "languageOverrides",
-        fallbackNS: [...languageConfig.additionalNamespaces, "translation"],
+        fallbackNS: "translation",
 
         resources: {
           en: {
