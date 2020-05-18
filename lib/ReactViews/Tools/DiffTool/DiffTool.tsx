@@ -465,10 +465,13 @@ class Main extends React.Component<MainPropsType> {
                 <img width="100%" src={this.legendUrl} />
               </>
             )}
-            {isReadyToGenerateDiff && !isShowingDiff && (
+            {!isShowingDiff && (
               <>
                 <Spacing bottom={4} />
-                <GenerateButton onClick={this.generateDiff}>
+                <GenerateButton
+                  onClick={this.generateDiff}
+                  disabled={!isReadyToGenerateDiff}
+                >
                   {t("diffTool.generateDiffButtonText")}
                 </GenerateButton>
               </>
@@ -603,7 +606,7 @@ const CloseDifferenceButton = styled(RawButton)`
 const GenerateButton = styled(Button).attrs({
   primary: true,
   fullWidth: true
-})``;
+});
 
 const Selector = (props: any) => (
   <Box fullWidth column>
