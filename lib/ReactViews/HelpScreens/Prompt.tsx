@@ -88,10 +88,11 @@ export const Prompt: React.FC<PromptProps> = ({
             </Text>
             <Spacing bottom={4} />
             <Text medium>
-              <Box>
+              <Box centered>
                 <Button
-                  fullWidth
                   secondary
+                  fullWidth
+                  shortMinHeight
                   onClick={(e: any) => {
                     e.stopPropagation();
                     onDismiss();
@@ -103,6 +104,7 @@ export const Prompt: React.FC<PromptProps> = ({
                 <Button
                   primary
                   fullWidth
+                  shortMinHeight
                   textProps={{ noFontSize: true }}
                   onClick={(e: any) => {
                     e.stopPropagation();

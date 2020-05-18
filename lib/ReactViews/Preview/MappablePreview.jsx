@@ -60,6 +60,7 @@ class MappablePreview extends React.Component {
     const addPromise = addToWorkbench(
       this.props.terria.workbench,
       this.props.previewed,
+      this.props.viewState,
       toAdd
     ).then(() => {
       if (

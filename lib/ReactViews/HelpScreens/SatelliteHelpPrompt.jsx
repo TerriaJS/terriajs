@@ -2,12 +2,17 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { observer } from "mobx-react";
 
-import Prompt from "../HelpScreens/Prompt";
+import Prompt from "./Prompt";
 
-export const HelpPromptDisplayName = "HelpPrompt";
-export const HelpPrompt = observer(({ viewState }) => {
+export const SATELLITE_HELP_PROMPT_KEY = "satelliteGuidance";
+export const SatelliteHelpPrompt = observer(({ viewState }) => {
   const { t } = useTranslation();
   const showHelp = viewState.showSatelliteGuidance;
+
+  const dismissSatellitePrompt = () => {
+    viewState.toggleFeaturePrompt(SATELLITE_HELP_PROMPT_KEY, true, true);
+    viewState.setShowSatelliteGuidance(false);
+  };
 
   return (
     <Prompt
@@ -18,13 +23,13 @@ export const HelpPrompt = observer(({ viewState }) => {
       dismissLabel={t("satelliteGuidance.prevI")}
       acceptLabel={t("satelliteGuidance.nextI")}
       onAccept={() => {
-        viewState.setShowSatelliteGuidance(false);
+        dismissSatellitePrompt();
         viewState.showHelpPanel();
         viewState.selectHelpMenuItem("satelliteimagery");
       }}
-      onDismiss={() => viewState.setShowSatelliteGuidance(false)}
+      onDismiss={() => dismissSatellitePrompt()}
     />
   );
 });
 
-export default HelpPrompt;
+export default SatelliteHelpPrompt;
