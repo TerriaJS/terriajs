@@ -468,9 +468,18 @@ class Main extends React.Component<MainPropsType> {
             {!isShowingDiff && (
               <>
                 <Spacing bottom={4} />
+                {!isReadyToGenerateDiff && (
+                  <>
+                    <Text textLight id="TJSDifferenceDisabledButtonPrompt">
+                      {t("diffTool.disabledButtonPrompt")}
+                    </Text>
+                    <Spacing bottom={2} />
+                  </>
+                )}
                 <GenerateButton
                   onClick={this.generateDiff}
                   disabled={!isReadyToGenerateDiff}
+                  aria-describedby="TJSDifferenceDisabledButtonPrompt"
                 >
                   {t("diffTool.generateDiffButtonText")}
                 </GenerateButton>
@@ -605,6 +614,7 @@ const CloseDifferenceButton = styled(RawButton)`
 
 const GenerateButton = styled(Button).attrs({
   primary: true,
+  splitter: true,
   fullWidth: true
 })``;
 

@@ -64,6 +64,13 @@ const StyledButton = styled.button`
     background-color: red;
   `}
 
+  ${props =>
+    props.splitter &&
+    `
+    background-color: ${props.theme.colorSplitter};
+    color: ${props.theme.textLight};
+  `}
+
   ${props => props.transparentBg && `background: transparent;`}
   ${props =>
     props.disabled &&
@@ -72,6 +79,7 @@ const StyledButton = styled.button`
     &[disabled] {
       cursor: not-allowed;
       opacity: 0.3;
+      background: ${props.theme.grey};
     }
   `}
 `;
