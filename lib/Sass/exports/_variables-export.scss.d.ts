@@ -7,6 +7,7 @@ interface CssExports {
   'compassWidth': string;
   'dark': string;
   'darkWithOverlay': string;
+  'frontComponentZIndex': string;
   'grey': string;
   'greyLighter': string;
   'greyLighter2': string;
