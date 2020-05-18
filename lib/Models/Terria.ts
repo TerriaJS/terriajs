@@ -57,6 +57,9 @@ import Workbench from "./Workbench";
 import openGroup from "./openGroup";
 import getDereferencedIfExists from "../Core/getDereferencedIfExists";
 import SplitItemReference from "./SplitItemReference";
+import Internationalization, {
+  LanguageConfiguration
+} from "./Internationalization";
 // import overrides from "../Overrides/defaults.jsx";
 
 interface ConfigParameters {
@@ -91,6 +94,7 @@ interface ConfigParameters {
   globalDisclaimer?: any;
   showWelcomeMessage?: boolean;
   helpContent?: any[];
+  languageConfiguration?: LanguageConfiguration;
 }
 
 interface StartOptions {
@@ -201,7 +205,8 @@ export default class Terria {
     rollbarAccessToken: undefined,
     globalDisclaimer: undefined,
     showWelcomeMessage: false,
-    helpContent: []
+    helpContent: [],
+    languageConfiguration: undefined
   };
 
   @observable
@@ -379,6 +384,10 @@ export default class Terria {
           if (config.parameters) {
             this.updateParameters(config.parameters);
           }
+
+          Internationalization.initLanguage(
+            config.parameters.languageConfiguration
+          );
 
           if (config.aspects) {
             return this.loadMagdaConfig(options.configUrl, config);

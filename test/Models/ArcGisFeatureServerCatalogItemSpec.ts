@@ -51,7 +51,9 @@ describe("ArcGisFeatureServerCatalogItem", function() {
 
   it("has a type and typeName", function() {
     expect(item.type).toBe("esri-featureServer");
-    expect(item.typeName).toBe("Esri ArcGIS FeatureServer");
+    expect(item.typeName).toBe(
+      i18next.t("models.arcGisFeatureServerCatalogItem.name")
+    );
   });
 
   it("supports zooming to extent", function() {

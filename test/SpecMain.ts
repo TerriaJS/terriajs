@@ -3,12 +3,20 @@
 import "../lib/Core/prerequisites";
 import "jasmine-ajax";
 import { spy } from "mobx";
+import i18next from "i18next";
 
 // Fail the test if a MobX computed property throws an exception.
 spy(event => {
   if (event.type === "error") {
     fail(event.message);
   }
+});
+
+beforeEach(function() {
+  i18next.init({
+    lng: "cimode",
+    debug: false
+  });
 });
 
 jasmine.getEnv().addReporter({

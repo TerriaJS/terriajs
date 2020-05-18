@@ -13,6 +13,7 @@ import {
   FilterTraits,
   OptionsTraits
 } from "../../lib/Traits/Cesium3DCatalogItemTraits";
+import i18next from "i18next";
 
 describe("Cesium3DTilesCatalogItemSpec", function() {
   let item: Cesium3DTilesCatalogItem;
@@ -28,7 +29,7 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
   it("should have a type and a typeName", function() {
     expect(Cesium3DTilesCatalogItem.type).toBe("3d-tiles");
     expect(item.type).toBe("3d-tiles");
-    expect(item.typeName).toBe("Cesium 3D Tiles");
+    expect(item.typeName).toBe(i18next.t("models.cesiumTerrain.name3D"));
   });
 
   it("supports zooming", function() {
