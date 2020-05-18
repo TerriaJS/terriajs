@@ -9,12 +9,14 @@
   svg {
     // height: $input-height;
     // width: $input-height;
+    color: black;
+    stroke: currentColor;
+    cursor: pointer;
     height: 20px;
     width: 20px;
-    fill: $charcoal-grey;
     padding: $padding;
     fill-opacity: 0.5;
-    cursor: pointer;
+    fill: currentColor;
     &:hover {
       background-color: #ddd;
     }

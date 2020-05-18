@@ -1,6 +1,8 @@
 Change Log
 ==========
+### next release
 
+* Added `GeoRssCatalogItem` for displaying GeoRSS files comming from rss2 and atom feeds.
 
 ### v7.11.4
 
