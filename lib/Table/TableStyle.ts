@@ -217,7 +217,7 @@ export default class TableStyle {
     }
   }
 
-  get numberOfBins (): number {
+  get numberOfBins(): number {
     const colorColumn = this.colorColumn;
     if (colorColumn === undefined) return this.binMaximums.length;
     if (
@@ -227,7 +227,9 @@ export default class TableStyle {
     ) {
       return colorColumn.uniqueValues.values.length;
     } else if (colorColumn.type === TableColumnType.scalar) {
-      return colorColumn.uniqueValues.values.length < this.binMaximums.length ? colorColumn.uniqueValues.values.length : this.binMaximums.length
+      return colorColumn.uniqueValues.values.length < this.binMaximums.length
+        ? colorColumn.uniqueValues.values.length
+        : this.binMaximums.length;
     }
     return this.binMaximums.length;
   }
@@ -282,7 +284,10 @@ export default class TableStyle {
       if (min === undefined || max === undefined) {
         return [];
       }
-      const numberOfBins = colorColumn.uniqueValues.values.length < this.colorTraits.numberOfBins ? colorColumn.uniqueValues.values.length : this.colorTraits.numberOfBins
+      const numberOfBins =
+        colorColumn.uniqueValues.values.length < this.colorTraits.numberOfBins
+          ? colorColumn.uniqueValues.values.length
+          : this.colorTraits.numberOfBins;
       let next = min;
       const step = (max - min) / numberOfBins;
 

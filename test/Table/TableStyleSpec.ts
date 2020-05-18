@@ -9,9 +9,10 @@ describe("Table Style", function() {
 
   beforeEach(async function() {
     terria = new Terria({
-      baseUrl: "./",
+      baseUrl: "./"
     });
-    terria.configParameters.regionMappingDefinitionsUrl = "data/regionMapping.json"
+    terria.configParameters.regionMappingDefinitionsUrl =
+      "data/regionMapping.json";
   });
 
   describe(" - Scalar", function() {
@@ -27,10 +28,10 @@ describe("Table Style", function() {
         "url",
         "/test/csv/SED_2018_SED_CODE18.csv"
       );
-      await csvItem.loadMapItems()
+      await csvItem.loadMapItems();
 
-      const activeStyle = csvItem.activeTableStyle
-      const colorColumn = activeStyle.colorColumn
+      const activeStyle = csvItem.activeTableStyle;
+      const colorColumn = activeStyle.colorColumn;
       expect(colorColumn).toBeDefined();
       expect(colorColumn.type).toBe(4);
       expect(colorColumn.values.length).toBe(450);
@@ -42,15 +43,11 @@ describe("Table Style", function() {
     });
 
     it(" - Gets fewer bins when fewer values than default bin length", async function() {
-      csvItem.setTrait(
-        "definition",
-        "url",
-        "/test/csv/lat_lon_val.csv"
-      );
-      await csvItem.loadMapItems()
+      csvItem.setTrait("definition", "url", "/test/csv/lat_lon_val.csv");
+      await csvItem.loadMapItems();
 
-      const activeStyle = csvItem.activeTableStyle
-      const colorColumn = activeStyle.colorColumn
+      const activeStyle = csvItem.activeTableStyle;
+      const colorColumn = activeStyle.colorColumn;
       expect(colorColumn).toBeDefined();
       expect(colorColumn).toBeDefined();
       expect(colorColumn.type).toBe(4);
@@ -60,6 +57,5 @@ describe("Table Style", function() {
       expect(activeStyle.binColors.length).toEqual(numUniqueValues);
       expect(activeStyle.binMaximums.length).toEqual(numUniqueValues);
     });
-  })
-
+  });
 });
