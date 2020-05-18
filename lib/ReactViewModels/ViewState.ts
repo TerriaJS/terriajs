@@ -24,6 +24,7 @@ import {
   RelativePosition
 } from "./defaultTourPoints";
 
+import { SATELLITE_HELP_PROMPT_KEY } from "../ReactViews/HelpScreens/SatelliteHelpPrompt";
 import { LOCAL_PROPERTY_KEY as WELCOME_PROPERTY_KEY } from "../ReactViews/WelcomeMessage/WelcomeMessage";
 
 export const DATA_CATALOG_NAME = "data-catalog";
@@ -75,7 +76,7 @@ export default class ViewState {
 
   // Flesh out later
   @observable showHelpMenu: boolean = false;
-  @observable showSatelliteGuidance: boolean = true;
+  @observable showSatelliteGuidance: boolean = false;
   @observable showWelcomeMessage: boolean = false;
   @observable selectedHelpMenuItem: string = "";
   @observable helpPanelExpanded: boolean = false;
@@ -243,6 +244,7 @@ export default class ViewState {
   private _mobileMenuSubscription: IReactionDisposer;
   private _storyPromptSubscription: IReactionDisposer;
   private _previewedItemIdSubscription: IReactionDisposer;
+  private _workbenchHasTimeWMSSubscription: IReactionDisposer;
   private _disclaimerHandler: DisclaimerHandler;
 
   constructor(options: ViewStateOptions) {
@@ -336,6 +338,20 @@ export default class ViewState {
 
     this._disclaimerHandler = new DisclaimerHandler(terria, this);
 
+    this._workbenchHasTimeWMSSubscription = reaction(
+      () => this.terria.workbench.hasTimeWMS,
+      (hasTimeWMS: boolean) => {
+        if (
+          hasTimeWMS === true &&
+          // // only show it once
+          !this.terria.getLocalProperty(`${SATELLITE_HELP_PROMPT_KEY}Prompted`)
+        ) {
+          this.setShowSatelliteGuidance(true);
+          this.toggleFeaturePrompt(SATELLITE_HELP_PROMPT_KEY, true, true);
+        }
+      }
+    );
+
     this._storyPromptSubscription = reaction(
       () => this.storyShown,
       (storyShown: boolean | null) => {
@@ -372,6 +388,7 @@ export default class ViewState {
     this._showStoriesSubscription();
     this._storyPromptSubscription();
     this._previewedItemIdSubscription();
+    this._workbenchHasTimeWMSSubscription();
     this._disclaimerHandler.dispose();
     this.searchState.dispose();
   }
