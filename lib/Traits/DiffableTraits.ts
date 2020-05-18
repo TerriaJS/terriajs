@@ -1,5 +1,6 @@
 import ModelTraits from "./ModelTraits";
 import primitiveTrait from "./primitiveTrait";
+import primitiveArrayTrait from "./primitiveArrayTrait";
 
 export default class DiffableTraits extends ModelTraits {
   @primitiveTrait({
@@ -37,4 +38,12 @@ export default class DiffableTraits extends ModelTraits {
     description: "The ID of the style used to compute the difference image"
   })
   diffStyleId?: string;
+
+  @primitiveArrayTrait({
+    type: "string",
+    name: "Available diff styles",
+    description:
+      "List of styles that can be used for computing difference image"
+  })
+  availableDiffStyles?: string[];
 }

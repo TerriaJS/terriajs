@@ -32,6 +32,8 @@ const RawButton: any = require("../../../Styled/Button").RawButton;
 const Text: any = require("../../../Styled/Text").default;
 const Spacing: any = require("../../../Styled/Spacing").default;
 import Select from "../../../Styled/Select";
+import { AvailableStyle } from "../../../Models/SelectableStyle";
+import filterOutUndefined from "../../../Core/filterOutUndefined";
 const dateFormat = require("dateformat");
 
 interface PropsType extends WithTranslation {
@@ -199,6 +201,17 @@ class Main extends React.Component<MainPropsType> {
   @computed
   get diffStyle(): string | undefined {
     return this.diffItem.diffStyleId;
+  }
+
+  @computed
+  get availableDiffStyles(): AvailableStyle[] {
+    return filterOutUndefined(
+      this.diffItem.availableDiffStyles.map(diffStyleId =>
+        this.diffItem.styleSelector?.availableStyles.find(
+          style => style.id === diffStyleId
+        )
+      )
+    );
   }
 
   @computed
@@ -410,7 +423,7 @@ class Main extends React.Component<MainPropsType> {
               <option disabled value="">
                 {t("diffTool.chooseDifference")}
               </option>
-              {this.diffItem.availableDiffStyles?.map(style => (
+              {this.availableDiffStyles.map(style => (
                 <option key={style.id} value={style.id}>
                   {style.name}
                 </option>

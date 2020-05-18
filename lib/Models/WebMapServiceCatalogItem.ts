@@ -414,6 +414,62 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 }
 
+class DiffStratum extends LoadableStratum(WebMapServiceCatalogItemTraits) {
+  constructor(readonly catalogItem: WebMapServiceCatalogItem) {
+    super();
+  }
+
+  duplicateLoadableStratum(model: BaseModel): this {
+    return new DiffStratum(model as WebMapServiceCatalogItem) as this;
+  }
+
+  @computed
+  get legends() {
+    if (this.catalogItem.isShowingDiff && this.diffLegendUrl) {
+      const urlMimeType =
+        new URL(this.diffLegendUrl).searchParams.get("format") || undefined;
+      return [
+        createStratumInstance(LegendTraits, {
+          url: this.diffLegendUrl,
+          urlMimeType
+        })
+      ];
+    }
+    return undefined;
+  }
+
+  @computed
+  get diffLegendUrl() {
+    const diffStyleId = this.catalogItem.diffStyleId;
+    const firstDate = this.catalogItem.firstDiffDate;
+    const secondDate = this.catalogItem.secondDiffDate;
+    if (diffStyleId && firstDate && secondDate) {
+      return this.catalogItem.getLegendUrlForDiffStyle(
+        diffStyleId,
+        JulianDate.fromIso8601(firstDate),
+        JulianDate.fromIso8601(secondDate)
+      );
+    }
+    return undefined;
+  }
+
+  @computed
+  get availableDiffStyles() {
+    // Currently only NDVI
+    return ["NDVI"];
+  }
+
+  @computed
+  get disableStyleSelector() {
+    return this.catalogItem.isShowingDiff;
+  }
+
+  @computed
+  get disableDateTimeSelector() {
+    return this.catalogItem.isShowingDiff;
+  }
+}
+
 class WebMapServiceCatalogItem
   extends DiffableMixin(
     TimeFilterMixin(
@@ -460,6 +516,9 @@ class WebMapServiceCatalogItem
           GetCapabilitiesMixin.getCapabilitiesStratumName,
           stratum
         );
+
+        const diffStratum = new DiffStratum(this);
+        this.strata.set(DiffableMixin.diffStratumName, diffStratum);
       });
     });
   }
@@ -481,7 +540,6 @@ class WebMapServiceCatalogItem
 
   @computed
   get styleSelector() {
-    if (this.isShowingDiff) return undefined;
     if (this.availableStyles.length === 0) return undefined;
     if (this.availableStyles[0].styles.length === 0) return undefined;
 
@@ -527,19 +585,6 @@ class WebMapServiceCatalogItem
     } else {
       return [];
     }
-  }
-
-  @computed
-  get availableDiffStyles(): readonly AvailableStyle[] | undefined {
-    // Currently only NDVI
-    return this.availableStyles?.[0]?.styles
-      .filter(style => style.name === "NDVI")
-      .map(style => ({ id: style.name!, name: style.title! }));
-  }
-
-  @computed
-  get disableDateTimeSelector() {
-    return this.isShowingDiff === true;
   }
 
   @computed
