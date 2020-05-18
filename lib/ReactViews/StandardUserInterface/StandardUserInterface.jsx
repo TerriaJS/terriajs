@@ -174,7 +174,7 @@ const StandardUserInterface = createReactClass({
             <div className={Styles.uiInner}>
               {/* Moved side panel to left */}
               <section className={Styles.map}>
-                {/* <ProgressBar terria={terria} /> */}
+                <ProgressBar terria={terria} />
                 <MapColumn
                   terria={terria}
                   viewState={this.props.viewState}
@@ -242,7 +242,7 @@ const StandardUserInterface = createReactClass({
                   </div>
                 </Medium>
                 {/* <Small>
-                 
+
                 </Small> */}
               </If>
 
@@ -278,18 +278,18 @@ const StandardUserInterface = createReactClass({
                   .explorerPanelIsVisible
               })}
             >
-              {/* <MenuBar
+              <MenuBar
                 terria={terria}
                 viewState={this.props.viewState}
                 allBaseMaps={allBaseMaps}
                 menuItems={customElements.menu}
                 animationDuration={animationDuration}
-              /> */}
-              {/* <MapNavigation
+              />
+              <MapNavigation
                 terria={terria}
                 viewState={this.props.viewState}
                 navItems={customElements.nav}
-              /> */}
+              />
             </div>
           </If>
 
@@ -300,7 +300,7 @@ const StandardUserInterface = createReactClass({
             viewState={this.props.viewState}
           />
 
-          {/* <If
+          <If
             condition={
               !customElements.feedback.length &&
               this.props.terria.configParameters.feedbackUrl &&
@@ -310,7 +310,7 @@ const StandardUserInterface = createReactClass({
             <aside className={Styles.feedback}>
               <FeedbackForm viewState={this.props.viewState} />
             </aside>
-          </If> */}
+          </If>
 
           <div
             className={classNames(
