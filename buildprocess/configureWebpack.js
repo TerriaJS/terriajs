@@ -38,13 +38,13 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
                 },
                 {
                     pattern: /Please assign <i>Cesium.Ion.defaultAccessToken<\/i>/g,
-                    replacement: function() {
+                    replacement: function () {
                         return "Please set \"cesiumIonAccessToken\" in config.json";
                     }
                 },
                 {
                     pattern: / before making any Cesium API calls/g,
-                    replacement: function() {
+                    replacement: function () {
                         return "";
                     }
                 }
@@ -87,6 +87,11 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
                 'babel-plugin-jsx-control-statements',
                 '@babel/plugin-transform-modules-commonjs',
                 '@babel/plugin-syntax-dynamic-import',
+                ['@babel/plugin-proposal-class-properties',
+                    {
+                        loose: true
+                    }
+                ]
             ]
         }
     });

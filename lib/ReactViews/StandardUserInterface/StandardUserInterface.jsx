@@ -18,6 +18,7 @@ import Notification from "./../Notification/Notification.jsx";
 import ObserveModelMixin from "./../ObserveModelMixin";
 import ProgressBar from "../Map/ProgressBar.jsx";
 import SidePanel from "./../SidePanel/SidePanel.jsx";
+import SidePanelContent from "./../SidePanel/SidePanelContent";
 import processCustomElements from "./processCustomElements";
 import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import StoryPanel from "./../Story/StoryPanel.jsx";
@@ -26,7 +27,7 @@ import ToolPanel from "./../ToolPanel.jsx";
 import SectorTabs from "./../SidePanel/SectorTabs";
 import SatelliteGuide from "../Guide/SatelliteGuide.jsx";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage.jsx";
-
+import SectorInfo from "../SidePanel/SectorInfo";
 import { Small, Medium } from "../Generic/Responsive";
 import classNames from "classnames";
 import "inobounce";
@@ -143,7 +144,6 @@ const StandardUserInterface = createReactClass({
 
   render() {
     const { t } = this.props;
-
     const customElements = processCustomElements(
       this.props.viewState.useSmallScreenInterface,
       this.props.children
@@ -214,7 +214,7 @@ const StandardUserInterface = createReactClass({
                     allBaseMaps={allBaseMaps}
                   />
                   <div className={Styles.tabsContainer}>
-                    <SectorTabs />
+                    <SidePanelContent />
                   </div>
                 </Small>
                 <Medium>
@@ -235,6 +235,7 @@ const StandardUserInterface = createReactClass({
                     }}
                   >
                     <Branding terria={terria} version={this.props.version} />
+                    <SidePanelContent />
                     <SidePanel
                       terria={terria}
                       viewState={this.props.viewState}

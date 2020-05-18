@@ -21,4 +21,7 @@
       background-color: #ddd;
     }
   }
+  @media (max-width: $sm) {
+    border-radius: 0;
+  }
 }

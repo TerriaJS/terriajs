@@ -1,34 +1,34 @@
-import createReactClass from "create-react-class";
-
-import PropTypes from "prop-types";
 import React from "react";
-import { withTranslation } from "react-i18next";
-import Icon from "../Icon";
 import SectorTabs from "./SectorTabs";
-import Styles from "./side-panel-content.scss";
-const SidePanelContent = createReactClass({
-  displayName: "SidePanelContent",
+import SectorInfo from "./SectorInfo";
+import { Small, Medium } from "../Generic/Responsive";
+class SidePanelContent extends React.Component {
+  state = {
+    sector: null
+  };
+  showSectorInfo = sector => {
+    this.setState({
+      sector: {
+        title: sector.title,
+        info: sector.info
+      }
+    });
+  };
 
-  propTypes: {
-    t: PropTypes.func.isRequired
-  },
   render() {
-    const { t } = this.props;
+    const { sector } = this.state;
     return (
       <>
-        <div className={Styles.panelHeading}>
-          <span className={Styles.siteTitle}>Sectors</span>
-        </div>
-        <SectorTabs />
-        <div className={Styles.panelHeading}>
-          <span className={Styles.siteTitle}>Sector name</span>
-        </div>
-        <div className={Styles.sectorInfo}>
-          <p>Sector information panel</p>
-        </div>
+        <Medium>
+          <SectorTabs showSectorInfo={this.showSectorInfo} />
+          <SectorInfo sector={sector} />
+        </Medium>
+        <Small>
+          <SectorInfo sector={sector} />
+          <SectorTabs showSectorInfo={this.showSectorInfo} />
+        </Small>
       </>
     );
   }
-});
-
-module.exports = withTranslation()(SidePanelContent);
+}
+export default SidePanelContent;
