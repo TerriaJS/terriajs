@@ -20,7 +20,7 @@ Change Log
 * Fixes a splitter bug where split direction is not applied to new layers.
 * Re-added satellite guide prompt option via `showInAppGuides`
 * Changed tour "go back 1 tour point" messaging from "previous" to "back"
-
+* Ensure there aren't more bins than unique values for a `TableStyle`
 
 #### mobx-29
 * Fix handling of urls on `Cesium3DTilesCatalogItem` related to proxying and getting confused between Resource vs URL.
