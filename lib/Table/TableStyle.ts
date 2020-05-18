@@ -184,7 +184,7 @@ export default class TableStyle {
     }
 
     let paletteName = this.colorTraits.colorPalette;
-    let numberOfBins: number | undefined;
+    const numberOfBins = this.numberOfBins;
 
     if (
       colorColumn.type === TableColumnType.enum ||
@@ -193,7 +193,6 @@ export default class TableStyle {
     ) {
       // Enumerated values, so use a large, high contrast palette.
       paletteName = paletteName || "HighContrast";
-      numberOfBins = colorColumn.uniqueValues.values.length;
     } else if (colorColumn.type === TableColumnType.scalar) {
       if (paletteName === undefined) {
         const valuesAsNumbers = colorColumn.valuesAsNumbers;
@@ -209,7 +208,6 @@ export default class TableStyle {
           paletteName = "YlOrRd";
         }
       }
-      numberOfBins = this.binMaximums.length;
     }
 
     if (paletteName !== undefined && numberOfBins !== undefined) {
@@ -219,13 +217,29 @@ export default class TableStyle {
     }
   }
 
+  get numberOfBins (): number {
+    const colorColumn = this.colorColumn;
+    if (colorColumn === undefined) return this.binMaximums.length;
+    if (
+      colorColumn.type === TableColumnType.enum ||
+      colorColumn.type === TableColumnType.region ||
+      colorColumn.type === TableColumnType.text
+    ) {
+      return colorColumn.uniqueValues.values.length;
+    } else if (colorColumn.type === TableColumnType.scalar) {
+      return colorColumn.uniqueValues.values.length < this.binMaximums.length ? colorColumn.uniqueValues.values.length : this.binMaximums.length
+    }
+    return this.binMaximums.length;
+  }
+
   /**
    * Gets the color to use for each bin. The length of the returned array
    * will be equal to {@link #numberOfColorBins}.
    */
   @computed
   get binColors(): readonly Readonly<Color>[] {
-    const numberOfBins = this.binMaximums.length;
+    const colorColumn = this.colorColumn;
+    const numberOfBins = this.numberOfBins;
 
     // Pick a color for every bin.
     const binColors = this.colorTraits.binColors || [];
@@ -268,8 +282,7 @@ export default class TableStyle {
       if (min === undefined || max === undefined) {
         return [];
       }
-
-      const numberOfBins = this.colorTraits.numberOfBins;
+      const numberOfBins = colorColumn.uniqueValues.values.length < this.colorTraits.numberOfBins ? colorColumn.uniqueValues.values.length : this.colorTraits.numberOfBins
       let next = min;
       const step = (max - min) / numberOfBins;
 
