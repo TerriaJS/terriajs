@@ -84,16 +84,18 @@
     "chooseDifference": "Choose a difference style",
     "differenceResultsTitle": "Change detection results",
     "locationPicker": {
-      "title": "Select a precise location",
       "initialMessages": {
+        "title": "Select a precise location",
         "beforePick": "We need this to run our change detection process.",
         "afterPick": "Click another point to change the selected region"
       },
       "nextMessages": {
+        "title": "You have selected the location {{latitude}} {{longitude}}",
         "beforePick": "Click another point to change the selection",
         "afterPick": "Click another point to change the selection"
       },
       "errorMessages": {
+        "title": "Select a precise location",
         "beforePick": "Failed to resolve imagery at location! Please choose a different location or zoom-level.",
         "afterPick": "Click another point to change the selection"
       }
