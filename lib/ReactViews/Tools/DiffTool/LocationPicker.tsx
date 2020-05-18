@@ -11,6 +11,7 @@ import MapInteractionMode, { UIMode } from "../../../Models/MapInteractionMode";
 import Terria from "../../../Models/Terria";
 
 import { StyledIcon, GLYPHS } from "../../Icon";
+import ViewState from "../../../ReactViewModels/ViewState";
 const Box: any = require("../../../Styled/Box").default;
 const Text: any = require("../../../Styled/Text").default;
 const Spacing: any = require("../../../Styled/Spacing").default;
@@ -145,7 +146,11 @@ function removeInteractionModeFromMap(
 }
 
 function showMarker(terria: Terria, location: LatLonHeight) {
-  addMarker(terria, { name: "User selection", location });
+  addMarker(terria, {
+    name: "User selection",
+    location,
+    customMarkerIcon: require("../../../../wwwroot/images/difference-pin.png")
+  });
 }
 
 function cartesianToDegrees(cartesian: Cartesian3) {
