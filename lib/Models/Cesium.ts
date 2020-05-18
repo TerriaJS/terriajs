@@ -1128,7 +1128,7 @@ export default class Cesium extends GlobeOrMap {
     return filterOutUndefined(
       item.mapItems.map(m => {
         if (ImageryParts.is(m)) {
-          return this._createImageryLayer(m.imageryProvider) as ImageryLayer;
+          return this._makeImageryLayerFromParts(m) as ImageryLayer;
         }
       })
     );
