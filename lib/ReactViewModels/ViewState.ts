@@ -342,6 +342,7 @@ export default class ViewState {
       () => this.terria.workbench.hasTimeWMS,
       (hasTimeWMS: boolean) => {
         if (
+          this.terria.configParameters.showInAppGuides &&
           hasTimeWMS === true &&
           // // only show it once
           !this.terria.getLocalProperty(`${SATELLITE_HELP_PROMPT_KEY}Prompted`)
