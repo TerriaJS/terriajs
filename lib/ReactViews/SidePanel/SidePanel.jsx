@@ -72,46 +72,55 @@ EmptyWorkbench.propTypes = {
   theme: PropTypes.object.isRequired
 };
 
-export const EXPLORE_MAP_DATA_NAME = "ExploreMapDataButton";
-const ExploreMapDataWithTour = ({
-  addDataBtnText,
-  onAddDataClicked,
-  viewState
-}) => {
-  const buttonRef = useRefForTerria(EXPLORE_MAP_DATA_NAME, viewState);
-
-  const iconProps = {
-    glyph: Icon.GLYPHS.add,
-    light: true,
-    styledWidth: "20px"
-  };
-  const textProps = {
-    large: true
-  };
+const SidePanelButton = props => {
+  const { btnText, ...rest } = props;
   return (
     <Button
-      ref={buttonRef}
-      type="button"
-      onClick={onAddDataClicked}
-      title={addDataBtnText}
       primary
-      renderIcon={() => {}} // Just want to have icon rendered, not sure what to do here?
-      iconProps={iconProps}
-      textProps={textProps}
-      styledWidth={"204px"}
+      renderIcon={props.children && (() => props.children)}
+      textProps={{
+        large: true
+      }}
+      {...rest}
     >
-      {/* <StyledIcon glyph={Icon.GLYPHS.add} light styledWidth={"20px"} /> */}
-      {/* <TextSpan large nunito> */}
-      {addDataBtnText}
-      {/* </TextSpan> */}
+      {props.btnText}
     </Button>
   );
 };
-ExploreMapDataWithTour.propTypes = {
-  addDataBtnText: PropTypes.string.isRequired,
-  onAddDataClicked: PropTypes.func.isRequired,
-  viewState: PropTypes.object.isRequired
-};
+
+export const EXPLORE_MAP_DATA_NAME = "ExploreMapDataButton";
+// const ExploreMapDataWithTour = ({
+//   addDataBtnText,
+//   onAddDataClicked,
+//   viewState
+// }) => {
+//   const buttonRef = useRefForTerria(EXPLORE_MAP_DATA_NAME, viewState);
+//   return (
+//     <Button
+//       ref={buttonRef}
+//       type="button"
+//       onClick={onAddDataClicked}
+//       title={addDataBtnText}
+//       primary
+//       renderIcon={() => {
+//         return (
+//           <StyledIcon glyph={Icon.GLYPHS.add} light styledWidth={"20px"} />
+//         );
+//       }}
+//       textProps={{
+//         large: true
+//       }}
+//       styledWidth={"204px"}
+//     >
+//       {addDataBtnText}
+//     </Button>
+//   );
+// };
+// ExploreMapDataWithTour.propTypes = {
+//   addDataBtnText: PropTypes.string.isRequired,
+//   onAddDataClicked: PropTypes.func.isRequired,
+//   viewState: PropTypes.object.isRequired
+// };
 
 const SidePanel = observer(
   createReactClass({
@@ -125,10 +134,8 @@ const SidePanel = observer(
     },
 
     onAddDataClicked(event) {
-      event.stopPropagation();
-      runInAction(() => {
-        this.props.viewState.topElement = "AddData";
-      });
+      // event.stopPropagation();
+      this.props.viewState.setTopElement("AddData");
       this.props.viewState.openAddData();
     },
 
@@ -139,6 +146,7 @@ const SidePanel = observer(
       const { t, theme } = this.props;
       const addData = t("addData.addDataBtnText");
       const uploadText = t("models.catalog.upload");
+      // const addDataRef = useRefForTerria(EXPLORE_MAP_DATA_NAME, this.props.viewState);
       return (
         <div className={Styles.workBench}>
           <div className={Styles.header}>
@@ -154,24 +162,35 @@ const SidePanel = observer(
               terria={this.props.terria}
               placeholder={t("search.placeholder")}
             />
-            <div className={Styles.addData}>
-              <ExploreMapDataWithTour
-                viewState={this.props.viewState}
-                addDataBtnText={addData}
-                onAddDataClicked={this.onAddDataClicked}
-              />
-              <button
-                type="button"
-                onClick={this.onAddLocalDataClicked}
-                className={Styles.uploadData}
-                title={t("addData.load")}
+            <Spacing bottom={2} />
+            <Box justifySpaceBetween>
+              <SidePanelButton
+                // Unsure how to get refs working :(
+                // ref={addDataRef}
+                onClick={() => this.onAddDataClicked()}
+                title={addData}
+                btnText={addData}
+                styledWidth={"200px"}
               >
-                <Icon glyph={Icon.GLYPHS.uploadThin} />
-                <TextSpan large nunito>
-                  {uploadText}
-                </TextSpan>
-              </button>
-            </div>
+                <StyledIcon
+                  glyph={Icon.GLYPHS.add}
+                  light
+                  styledWidth={"20px"}
+                />
+              </SidePanelButton>
+              <SidePanelButton
+                onClick={() => this.onAddLocalDataClicked()}
+                title={t("addData.load")}
+                btnText={uploadText}
+                styledWidth={"130px"}
+              >
+                <StyledIcon
+                  glyph={Icon.GLYPHS.uploadThin}
+                  light
+                  styledWidth={"20px"}
+                />
+              </SidePanelButton>
+            </Box>
           </div>
           <div className={Styles.body}>
             <Choose>

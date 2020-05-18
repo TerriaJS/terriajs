@@ -3,8 +3,6 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import { BoxSpan } from "./Box";
 import Text from "./Text";
-import { StyledIcon } from "../ReactViews/Icon";
-import { SpacingSpan } from "./Spacing";
 
 const Icon = styled.span`
   margin-right: 8px;
@@ -114,12 +112,9 @@ export const Button = props => {
     >
       <BoxSpan centered>
         {props.renderIcon && typeof props.renderIcon === "function" && (
-          <BoxSpan>
-            <StyledIcon css={iconProps && iconProps.css} {...iconProps}>
-              {props.renderIcon()}
-            </StyledIcon>
-            <SpacingSpan right={2} />
-          </BoxSpan>
+          <Icon css={iconProps && iconProps.css} {...iconProps}>
+            {props.renderIcon()}
+          </Icon>
         )}
         {props.children && (
           <Text
