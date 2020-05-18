@@ -131,7 +131,6 @@ export class SearchBoxAndResultsRaw extends React.Component {
     const { viewState, placeholder } = this.props;
     const searchState = viewState.searchState;
     const locationSearchText = searchState.locationSearchText;
-
     return (
       <Text textDarker>
         <Box fullWidth>
