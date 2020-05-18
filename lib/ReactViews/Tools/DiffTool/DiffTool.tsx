@@ -1,40 +1,44 @@
 import hoistStatics from "hoist-non-react-statics";
+import { TFunction } from "i18next";
 import { action, computed, observable, reaction, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { IDisposer } from "mobx-utils";
 import React, { useState } from "react";
-import { TFunction } from "i18next";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { DefaultTheme, withTheme } from "styled-components";
-import styled, { useTheme } from "styled-components";
+import styled, { DefaultTheme, useTheme, withTheme } from "styled-components";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import filterOutUndefined from "../../../Core/filterOutUndefined";
 import LatLonHeight from "../../../Core/LatLonHeight";
 import PickedFeatures from "../../../Map/PickedFeatures";
 import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import CommonStrata from "../../../Models/CommonStrata";
 import Feature from "../../../Models/Feature";
 import Mappable, { ImageryParts } from "../../../Models/Mappable";
+import { AvailableStyle } from "../../../Models/SelectableStyle";
 import SplitItemReference from "../../../Models/SplitItemReference";
 import Terria from "../../../Models/Terria";
-import { StyledIcon, GLYPHS } from "../../Icon";
 import ViewState from "../../../ReactViewModels/ViewState";
+import Select from "../../../Styled/Select";
+import { GLYPHS, StyledIcon } from "../../Icon";
 import DatePicker from "./DatePicker";
 import Styles from "./diff-tool.scss";
 import LocationPicker from "./LocationPicker";
-
-type DiffableItem = DiffableMixin.Instance;
+import prettifyCoordinates from "../../../Map/prettifyCoordinates";
+import {
+  isMarkerVisible,
+  removeMarker
+} from "../../../Models/LocationMarkerUtils";
 
 const Box: any = require("../../../Styled/Box").default;
 const Button: any = require("../../../Styled/Button").default;
 const RawButton: any = require("../../../Styled/Button").RawButton;
 const Text: any = require("../../../Styled/Text").default;
 const Spacing: any = require("../../../Styled/Spacing").default;
-import Select from "../../../Styled/Select";
-import { AvailableStyle } from "../../../Models/SelectableStyle";
-import filterOutUndefined from "../../../Core/filterOutUndefined";
 const dateFormat = require("dateformat");
+
+type DiffableItem = DiffableMixin.Instance;
 
 interface PropsType extends WithTranslation {
   viewState: ViewState;
@@ -104,6 +108,11 @@ class DiffTool extends React.Component<PropsType> {
     terria.showSplitter = true;
     viewState.setIsMapFullScreen(true);
     this.sourceItem.setTrait(CommonStrata.user, "show", false);
+
+    if (isMarkerVisible(terria)) {
+      // If we have an active marker, remove it.
+      removeMarker(terria);
+    }
   }
 
   @action
@@ -152,18 +161,45 @@ interface MainPropsType extends PropsType {
 
 @observer
 class Main extends React.Component<MainPropsType> {
-  @observable private location?: LatLonHeight;
-  @observable private locationPickerMessages: {
-    beforePick: string;
-    afterPick: string;
-  };
+  @observable private _location?: LatLonHeight;
+  @observable private _locationPickError = false;
 
   constructor(props: MainPropsType) {
     super(props);
-    this.locationPickerMessages = {
-      beforePick: props.t("diffTool.locationPicker.initialMessages.beforePick"),
-      afterPick: props.t("diffTool.locationPicker.initialMessages.afterPick")
-    };
+  }
+
+  @computed
+  get location() {
+    return this._location; // || getMarkerLocation(this.props.terria);
+  }
+
+  @computed
+  get locationPickerMessages() {
+    const t = this.props.t;
+    if (this._locationPickError) {
+      return {
+        title: t("diffTool.locationPicker.errorMessages.title"),
+        beforePick: t("diffTool.locationPicker.errorMessages.beforePick"),
+        afterPick: t("diffTool.locationPicker.errorMessages.afterPick")
+      };
+    } else if (this.location) {
+      return {
+        title: t(
+          "diffTool.locationPicker.nextMessages.title",
+          prettifyCoordinates(this.location.longitude, this.location.latitude, {
+            digits: 2
+          })
+        ),
+        beforePick: t("diffTool.locationPicker.nextMessages.beforePick"),
+        afterPick: t("diffTool.locationPicker.nextMessages.afterPick")
+      };
+    } else {
+      return {
+        title: t("diffTool.locationPicker.initialMessages.title"),
+        beforePick: t("diffTool.locationPicker.initialMessages.beforePick"),
+        afterPick: t("diffTool.locationPicker.initialMessages.afterPick")
+      };
+    }
   }
 
   @computed
@@ -279,16 +315,10 @@ class Main extends React.Component<MainPropsType> {
     if (feature) {
       leftItem.setTimeFilterFeature(feature, pickedFeatures.providerCoords);
       rightItem.setTimeFilterFeature(feature, pickedFeatures.providerCoords);
-      this.location = pickedLocation;
-      this.locationPickerMessages = {
-        beforePick: t("diffTool.locationPicker.nextMessages.beforePick"),
-        afterPick: t("diffTool.locationPicker.nextMessages.afterPick")
-      };
+      this._location = pickedLocation;
+      this._locationPickError = false;
     } else {
-      this.locationPickerMessages = {
-        beforePick: t("diffTool.locationPicker.errorMessages.beforePick"),
-        afterPick: t("diffTool.locationPicker.errorMessages.afterPick")
-      };
+      this._locationPickError = true;
     }
   }
 
@@ -459,7 +489,7 @@ class Main extends React.Component<MainPropsType> {
           <LocationPicker
             terria={terria}
             location={this.location}
-            title={t("diffTool.locationPicker.title")}
+            title={this.locationPickerMessages.title}
             messages={this.locationPickerMessages}
             onPick={this.onUserPickLocation}
           />
