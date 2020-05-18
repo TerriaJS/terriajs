@@ -42,6 +42,11 @@ const MenuBar = createReactClass({
   onStoryButtonClick() {
     this.props.viewState.storyBuilderShown = !this.props.viewState
       .storyBuilderShown;
+
+    if (this.props.viewState.storyBuilderShown) {
+      this.props.viewState.terrainSettingShown = false;
+    }
+
     this.props.terria.currentViewer.notifyRepaintRequired();
     // Allow any animations to finish, then trigger a resize.
     setTimeout(function() {

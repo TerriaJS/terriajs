@@ -159,7 +159,7 @@ const SettingPanel = createReactClass({
         btnText={t("settingPanel.btnText")}
         viewState={this.props.viewState}
         onDismissed={() => {
-          this.toggleShowTerrainSettings(false);
+          //this.toggleShowTerrainSettings(false);
         }}
         smallScreen={this.props.viewState.useSmallScreenInterface}
       >
