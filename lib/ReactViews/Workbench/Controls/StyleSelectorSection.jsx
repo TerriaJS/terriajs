@@ -27,7 +27,9 @@ const StyleSelectorSection = createReactClass({
 
   render() {
     const item = this.props.item;
-    if (defined(item.styleSelector)) {
+    if (item.disableStyleSelector) {
+      return null;
+    } else if (defined(item.styleSelector)) {
       return this.renderSingleStyleSelector(item.styleSelector);
     } else if (defined(item.styleSelectors)) {
       return this.renderMultipleStyleSelectors(item.styleSelectors);

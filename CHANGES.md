@@ -17,7 +17,11 @@ Change Log
 * Added satellite imagery to help panel
 * Stop disclaimer clashing with welcome message by only loading WelcomeMessage after disclaimer is no longer visible
 * Fixes a difftool bug where left/right items loose their split direction settings when the tool is reset
+* Fixes a splitter bug where split direction is not applied to new layers.
+* Re-added satellite guide prompt option via `showInAppGuides`
+* Changed tour "go back 1 tour point" messaging from "previous" to "back"
 * Added an option for translation override from TerriaMap
+
 
 #### mobx-29
 * Fix handling of urls on `Cesium3DTilesCatalogItem` related to proxying and getting confused between Resource vs URL.

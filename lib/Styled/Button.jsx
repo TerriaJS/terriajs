@@ -9,6 +9,7 @@ const Icon = styled.span`
 `;
 const StyledButton = styled.button`
   min-height: 40px;
+  ${props => props.shortMinHeight && `min-height: 34px;`}
   // min-width: 75px;
   padding: 0 16px;
 
@@ -43,7 +44,6 @@ const StyledButton = styled.button`
     color: #fff;
     background-color: ${props.theme.colorPrimary};
     border: none;
-    height:34px;
     border-radius:20px;
   `}
   ${props => props.rounded && ` border-radius: 32px; `}
@@ -54,7 +54,6 @@ const StyledButton = styled.button`
     // background-color: #4d5766;
     background-color: ${props.theme.textLight};
     color: ${props.theme.darkWithOverlay};
-    min-height: 34px;
     border-radius: 20px;
     border: 2px solid ${props.theme.darkWithOverlay};
   `}
@@ -62,6 +61,13 @@ const StyledButton = styled.button`
     props.warning &&
     `
     background-color: red;
+  `}
+
+  ${props =>
+    props.splitter &&
+    `
+    background-color: ${props.theme.colorSplitter};
+    color: ${props.theme.textLight};
   `}
 
   ${props => props.transparentBg && `background: transparent;`}
@@ -72,6 +78,7 @@ const StyledButton = styled.button`
     &[disabled] {
       cursor: not-allowed;
       opacity: 0.3;
+      background: ${props.theme.grey};
     }
   `}
 `;
