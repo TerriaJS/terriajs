@@ -3,7 +3,10 @@ Change Log
 
 ### MobX Development
 
-#### mobx-next-release (mobx-30)
+#### mobx-next-release (mobx-31)
+* ((Placeholder some awesome new testing. or fixes. or features.))
+
+#### mobx-30
 * Ported welcome message to mobx with new designs
 * Updated CI clientConfig values to include new help panel default
 * Bumped explicit base typescript to 3.9.2
@@ -20,7 +23,6 @@ Change Log
 * Fixes a splitter bug where split direction is not applied to new layers.
 * Re-added satellite guide prompt option via `showInAppGuides`
 * Changed tour "go back 1 tour point" messaging from "previous" to "back"
-
 
 #### mobx-29
 * Fix handling of urls on `Cesium3DTilesCatalogItem` related to proxying and getting confused between Resource vs URL.
