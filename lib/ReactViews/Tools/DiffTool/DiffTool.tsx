@@ -6,15 +6,23 @@ import { IDisposer } from "mobx-utils";
 import React, { useState } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, useTheme, withTheme } from "styled-components";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import LatLonHeight from "../../../Core/LatLonHeight";
 import PickedFeatures from "../../../Map/PickedFeatures";
+import prettifyCoordinates from "../../../Map/prettifyCoordinates";
 import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import CommonStrata from "../../../Models/CommonStrata";
 import Feature from "../../../Models/Feature";
+import {
+  getMarkerLocation,
+  removeMarker
+} from "../../../Models/LocationMarkerUtils";
 import Mappable, { ImageryParts } from "../../../Models/Mappable";
 import { AvailableStyle } from "../../../Models/SelectableStyle";
 import SplitItemReference from "../../../Models/SplitItemReference";
@@ -25,11 +33,6 @@ import { GLYPHS, StyledIcon } from "../../Icon";
 import DatePicker from "./DatePicker";
 import Styles from "./diff-tool.scss";
 import LocationPicker from "./LocationPicker";
-import prettifyCoordinates from "../../../Map/prettifyCoordinates";
-import {
-  isMarkerVisible,
-  removeMarker
-} from "../../../Models/LocationMarkerUtils";
 
 const Box: any = require("../../../Styled/Box").default;
 const Button: any = require("../../../Styled/Button").default;
@@ -108,11 +111,6 @@ class DiffTool extends React.Component<PropsType> {
     terria.showSplitter = true;
     viewState.setIsMapFullScreen(true);
     this.sourceItem.setTrait(CommonStrata.user, "show", false);
-
-    if (isMarkerVisible(terria)) {
-      // If we have an active marker, remove it.
-      removeMarker(terria);
-    }
   }
 
   @action
@@ -161,16 +159,11 @@ interface MainPropsType extends PropsType {
 
 @observer
 class Main extends React.Component<MainPropsType> {
-  @observable private _location?: LatLonHeight;
+  @observable private location?: LatLonHeight;
   @observable private _locationPickError = false;
 
   constructor(props: MainPropsType) {
     super(props);
-  }
-
-  @computed
-  get location() {
-    return this._location; // || getMarkerLocation(this.props.terria);
   }
 
   @computed
@@ -315,7 +308,7 @@ class Main extends React.Component<MainPropsType> {
     if (feature) {
       leftItem.setTimeFilterFeature(feature, pickedFeatures.providerCoords);
       rightItem.setTimeFilterFeature(feature, pickedFeatures.providerCoords);
-      this._location = pickedLocation;
+      this.location = pickedLocation;
       this._locationPickError = false;
     } else {
       this._locationPickError = true;
@@ -360,6 +353,35 @@ class Main extends React.Component<MainPropsType> {
       "splitDirection",
       ImagerySplitDirection.RIGHT
     );
+  }
+
+  @action
+  async componentDidMount() {
+    // Look for any existing marker like from a search result and filter
+    // imagery at that location
+    const markerLocation = getMarkerLocation(this.props.terria);
+    const sourceItem = this.props.sourceItem;
+    if (
+      this.location === undefined &&
+      markerLocation &&
+      Mappable.is(sourceItem)
+    ) {
+      const part = sourceItem.mapItems.find(p => ImageryParts.is(p));
+      const im = part && ImageryParts.is(part) && part.imageryProvider;
+      if (im) {
+        const promises = [
+          setTimeFilterFromLocation(this.props.leftItem, markerLocation, im),
+          setTimeFilterFromLocation(this.props.rightItem, markerLocation, im)
+        ];
+        const someSuccessful = (await Promise.all(promises)).some(ok => ok);
+        if (someSuccessful) {
+          runInAction(() => (this.location = markerLocation));
+        } else {
+          // If we cannot resolve imagery at the marker location, remove it
+          removeMarker(this.props.terria);
+        }
+      }
+    }
   }
 
   // i want to restructure the render so that there's 2 distinct "showing diff"
@@ -545,13 +567,13 @@ const DiffAccordion: React.FC<DiffAccordionProps> = props => {
           <StyledIcon styledWidth="20px" light glyph={GLYPHS.difference} />
           <Spacing right={1} />
           {/* font-size is non standard with what we have so far in terria,
-          lineheight as well to hit nonstandard paddings */}
+              lineheight as well to hit nonstandard paddings */}
           <Text css={"font-size: 17px;line-height: 26px;"} textLight>
             {t("diffTool.title")}
           </Text>
         </Box>
         {/* margin-right 5px for the padded button offset - larger click area
-        but visible should be inline with rest of box */}
+            but visible should be inline with rest of box */}
         <Box centered css={"margin-right:-5px;"}>
           <RawButton onClick={() => viewState.closeTool()}>
             <Text textLight small semiBold uppercase>
@@ -685,6 +707,32 @@ function doesFeatureBelongToItem(
       m => ImageryParts.is(m) && m.imageryProvider === imageryProvider
     ) !== undefined
   );
+}
+
+function setTimeFilterFromLocation(
+  item: DiffableItem,
+  location: LatLonHeight,
+  im: ImageryProvider
+): Promise<boolean> {
+  const carto = new Cartographic(
+    CesiumMath.toRadians(location.longitude),
+    CesiumMath.toRadians(location.latitude)
+  );
+  // We just need to set this to a high enough level supported by the service
+  const level = 30;
+  const tile = im.tilingScheme.positionToTileXY(carto, level);
+  return item.setTimeFilterFromLocation({
+    position: {
+      latitude: location.latitude,
+      longitude: location.longitude,
+      height: location.height
+    },
+    tileCoords: {
+      x: tile.x,
+      y: tile.y,
+      level
+    }
+  });
 }
 
 export default hoistStatics(withTranslation()(withTheme(DiffTool)), DiffTool);

@@ -5,6 +5,7 @@ Change Log
 
 #### mobx-next-release (mobx-31)
 * ((Placeholder some awesome new testing. or fixes. or features.))
+* Difftool will now pick any existing marked location (like from a search result) and filter imagery for that location.
 
 #### mobx-30
 * Ported welcome message to mobx with new designs
