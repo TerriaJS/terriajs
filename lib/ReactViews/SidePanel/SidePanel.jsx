@@ -8,7 +8,6 @@ import Icon, { StyledIcon } from "../Icon";
 import SearchBoxAndResults from "../Search/SearchBoxAndResults";
 import Workbench from "../Workbench/Workbench";
 import FullScreenButton from "./FullScreenButton";
-import Styles from "./side-panel.scss";
 
 // import { useRefForTerria } from "../Hooks/useRefForTerria";
 
@@ -151,8 +150,13 @@ const SidePanel = observer(
       const uploadText = t("models.catalog.upload");
       // const addDataRef = useRefForTerria(EXPLORE_MAP_DATA_NAME, this.props.viewState);
       return (
-        <div className={Styles.workBench}>
-          <div className={Styles.header}>
+        <div>
+          <div
+            css={`
+              padding: 0 5px;
+              background: ${this.props.theme.dark};
+            `}
+          >
             <FullScreenButton
               terria={this.props.terria}
               viewState={this.props.viewState}
@@ -194,8 +198,13 @@ const SidePanel = observer(
                 />
               </SidePanelButton>
             </Box>
+            <Spacing bottom={1} />
           </div>
-          <div className={Styles.body}>
+          <div
+            css={`
+              overflow: hidden;
+            `}
+          >
             <Choose>
               <When
                 condition={
