@@ -3,6 +3,7 @@ Change Log
 ### next release
 
 * Added `GeoRssCatalogItem` for displaying GeoRSS files comming from rss2 and atom feeds.
+* Bug fix: Prevent geojson files from appearing twice in the workbench when dropped with the .json extension
 
 ### v7.11.4
 
