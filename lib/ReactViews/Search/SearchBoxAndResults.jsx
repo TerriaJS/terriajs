@@ -132,7 +132,7 @@ export class SearchBoxAndResultsRaw extends React.Component {
     const searchState = viewState.searchState;
     const locationSearchText = searchState.locationSearchText;
     return (
-      <Text textDarker>
+      <Text textLightDimmed large semiBold>
         <Box fullWidth>
           <SearchBox
             ref={this.locationSearchRef}

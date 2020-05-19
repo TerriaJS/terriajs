@@ -98,6 +98,7 @@ export const RawButton = styled.button`
 
   ${props => props.fullWidth && `width: 100%;`}
   ${props => props.fullHeight && `height: 100%;`}
+  ${props => props.styledWidth && `width: ${props.styledWidth};`}
 `;
 
 // Icon and props-children-mandatory-text-wrapping is a mess here so it's all very WIP

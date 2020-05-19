@@ -1,5 +1,4 @@
 import createReactClass from "create-react-class";
-import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
@@ -11,7 +10,7 @@ import Workbench from "../Workbench/Workbench";
 import FullScreenButton from "./FullScreenButton";
 import Styles from "./side-panel.scss";
 
-import { useRefForTerria } from "../Hooks/useRefForTerria";
+// import { useRefForTerria } from "../Hooks/useRefForTerria";
 
 import Box from "../../Styled/Box";
 import Spacing from "../../Styled/Spacing";
@@ -83,9 +82,13 @@ const SidePanelButton = props => {
       }}
       {...rest}
     >
-      {props.btnText}
+      {btnText ? btnText : ""}
     </Button>
   );
+};
+SidePanelButton.propTypes = {
+  btnText: PropTypes.string,
+  children: PropTypes.node
 };
 
 export const EXPLORE_MAP_DATA_NAME = "ExploreMapDataButton";

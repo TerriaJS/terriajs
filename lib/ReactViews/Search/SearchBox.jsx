@@ -2,26 +2,24 @@ import React from "react";
 import PropTypes from "prop-types";
 import createReactClass from "create-react-class";
 import debounce from "lodash-es/debounce";
-import Icon from "../Icon";
+import Icon, { StyledIcon } from "../Icon";
 import styled, { withTheme } from "styled-components";
-import Text from "../../Styled/Text";
-import Styles from "./search-box.scss";
+import Box, { BoxSpan } from "../../Styled/Box";
+import { RawButton } from "../../Styled/Button";
 
 const SearchInput = styled.input`
   box-sizing: border-box;
   margin-top: 0;
   margin-bottom: 0;
-  border-style: solid;
-  border-width: 1px;
-  border-color: ${props => props.theme.greyLighter};
+  border: none;
   border-radius: 20px;
   height: 40px;
   width: 100%;
-  color: $text-dark;
   display: block;
-  padding: 0.5rem 0.5rem;
+  padding: 0.5rem 40px;
   vertical-align: middle;
   -webkit-appearance: none;
+  background-color: ${props => props.theme.textDarker};
 `;
 
 export const DEBOUNCE_INTERVAL = 1000;
@@ -123,53 +121,68 @@ export const SearchBox = createReactClass({
   },
 
   render() {
-    console.log(this.props.theme);
     const clearButton = (
-      <button
-        type="button"
-        className={Styles.searchClear}
-        onClick={this.clearSearch}
+      <RawButton
+        onClick={() => this.clearSearch()}
+        styledWidth={"40px"}
+        fullHeight
+        css={`
+          position: absolute;
+          right: 0px;
+          top: 0px;
+        `}
       >
-        <Icon glyph={Icon.GLYPHS.close} />
-      </button>
+        <BoxSpan centered>
+          <StyledIcon
+            glyph={Icon.GLYPHS.close}
+            styledWidth={"15px"}
+            fillColor={this.props.theme.textLightDimmed}
+            opacity={"0.5"}
+          />
+        </BoxSpan>
+      </RawButton>
     );
 
     return (
-      <Text large fullWidth>
-        <form
-          autoComplete="off"
-          onSubmit={event => event.preventDefault()}
+      <form
+        autoComplete="off"
+        onSubmit={event => event.preventDefault()}
+        css={`
+          position: relative;
+          width: 100%;
+        `}
+      >
+        <label
+          htmlFor="search"
           css={`
-            position: relative;
-            width: 100%;
+            position: absolute;
           `}
         >
-          <label htmlFor="search" className={Styles.formLabel}>
-            <Icon glyph={Icon.GLYPHS.search} />
-          </label>
-          <SearchInput
-            ref={this.props.inputBoxRef}
-            id="search"
-            type="text"
-            name="search"
-            value={this.props.searchText}
-            onChange={this.handleChange}
-            onFocus={this.props.onFocus}
-            onKeyDown={this.onKeyDown}
-            // className={Styles.searchField}
-            placeholder={this.props.placeholder}
-            autoComplete="off"
-            autoFocus={this.props.autoFocus}
-            rounded
-            // css={`
-            //   border-radius: 20px;
-            //   background-color: ${this.props.theme.textDarker};
-            //   color: ${this.props.theme.greyLightest};
-            // `}
-          />
-          {(this.props.alwaysShowClear || this.hasValue()) && clearButton}
-        </form>
-      </Text>
+          <Box paddedRatio={2}>
+            <StyledIcon
+              glyph={Icon.GLYPHS.search}
+              styledWidth={"20px"}
+              fillColor={this.props.theme.textLightDimmed}
+              opacity={"0.5"}
+            />
+          </Box>
+        </label>
+        <SearchInput
+          ref={this.props.inputBoxRef}
+          id="search"
+          type="text"
+          name="search"
+          value={this.props.searchText}
+          onChange={this.handleChange}
+          onFocus={this.props.onFocus}
+          onKeyDown={this.onKeyDown}
+          placeholder={this.props.placeholder}
+          autoComplete="off"
+          autoFocus={this.props.autoFocus}
+          rounded
+        />
+        {(this.props.alwaysShowClear || this.hasValue()) && clearButton}
+      </form>
     );
   }
 });
