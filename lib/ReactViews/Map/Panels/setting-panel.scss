@@ -34,6 +34,21 @@
   }
 }
 
+.btn--terrain {
+  composes: btn from "../../../Sass/common/_buttons.scss";
+  composes: btn-grey from "../../../Sass/common/_buttons.scss";
+
+  color: $text-light;
+
+  &.is-active {
+    border: 1px solid rgba(255, 255, 255, 0.5);
+  }
+  &[disabled],
+  &:disabled {
+    opacity: 0.3;
+  }
+}
+
 .btn--base-map {
   padding: 0;
   position: relative;

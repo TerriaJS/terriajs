@@ -191,7 +191,8 @@ const SettingPanel = createReactClass({
           </label>
           <button
             onClick={this.toggleShowTerrainSettings}
-            className={Styles.btnViewer}
+            className={Styles.btnTerrain}
+            disabled={this.props.terria.viewerMode != 0}
           >
             {t("settingPanel.terrainSettings")}
           </button>

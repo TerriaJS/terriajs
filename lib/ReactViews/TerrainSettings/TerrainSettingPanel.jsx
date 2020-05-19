@@ -8,25 +8,9 @@ import { withTranslation } from "react-i18next";
 
 var Material = require("terriajs-cesium/Source/Scene/Material").default;
 var Color = require("terriajs-cesium/Source/Core/Color").default;
-var createWorldTerrain = require("terriajs-cesium/Source/Core/createWorldTerrain")
-  .default;
 var CesiumTerrainProvider = require("terriajs-cesium/Source/Core/CesiumTerrainProvider")
   .default;
 var IonResource = require("terriajs-cesium/Source/Core/IonResource").default;
-var knockout = require("terriajs-cesium/Source/ThirdParty/knockout").default;
-
-var viewModel = {
-  enableContour: false,
-  contourSpacing: 150.0,
-  contourWidth: 2.0,
-  selectedShading: "elevation",
-  changeColor: function() {
-    contourUniforms.color = Cesium.Color.fromRandom(
-      { alpha: 1.0 },
-      contourColor
-    );
-  }
-};
 
 const TerrainSettingsPanel = createReactClass({
   displayName: "TerrainSettings",
@@ -40,15 +24,15 @@ const TerrainSettingsPanel = createReactClass({
   },
 
   getColorRamp(selectedShading) {
-    var elevationRamp = [0.0, 0.045, 0.1, 0.15, 0.37, 0.54, 1.0];
-    var slopeRamp = [0.0, 0.29, 0.5, Math.sqrt(2) / 2, 0.87, 0.91, 1.0];
-    var aspectRamp = [0.0, 0.2, 0.4, 0.6, 0.8, 0.9, 1.0];
-    var ramp = document.createElement("canvas");
+    const elevationRamp = [0.0, 0.045, 0.1, 0.15, 0.37, 0.54, 1.0];
+    const slopeRamp = [0.0, 0.29, 0.5, Math.sqrt(2) / 2, 0.87, 0.91, 1.0];
+    const aspectRamp = [0.0, 0.2, 0.4, 0.6, 0.8, 0.9, 1.0];
+    let ramp = document.createElement("canvas");
     ramp.width = 100;
     ramp.height = 1;
-    var ctx = ramp.getContext("2d");
+    let ctx = ramp.getContext("2d");
 
-    var values;
+    let values;
     if (selectedShading === "elevation") {
       values = elevationRamp;
     } else if (selectedShading === "slope") {
@@ -57,7 +41,7 @@ const TerrainSettingsPanel = createReactClass({
       values = aspectRamp;
     }
 
-    var grd = ctx.createLinearGradient(0, 0, 100, 0);
+    let grd = ctx.createLinearGradient(0, 0, 100, 0);
     grd.addColorStop(values[0], "#000000"); //black
     grd.addColorStop(values[1], "#2747E0"); //blue
     grd.addColorStop(values[2], "#D33B7D"); //pink
@@ -143,21 +127,39 @@ const TerrainSettingsPanel = createReactClass({
 
   updateMaterial() {
     let globe = this.props.terria.cesium.viewer.scene.globe;
-    this.props.terria.cesium.viewer.terrainProvider = new CesiumTerrainProvider(
-      {
-        url: IonResource.fromAssetId(1),
-        requestVertexNormals: true
+    this.props.terria.cesium.viewer.terrainProvider.hasVertexNormals;
+
+    // TerrainProvider requestVertexNormals is needed to visualize slope.
+    // To activate requestVertexNormals we need to define a new terrainProvider
+    // using the existing terrain asset.
+    if (
+      !this.props.terria.cesium.viewer.scene.terrainProvider
+        .requestVertexNormals
+    ) {
+      let url = this.props.terria.cesium.viewer.scene.terrainProvider._layers[0]
+        .resource._url;
+      const substring = "assets.cesium";
+      if (url.includes(substring)) {
+        url = url.match(/\d+/)[0];
+        url = IonResource.fromAssetId(url);
       }
-    );
+      this.props.terria.cesium.viewer.terrainProvider = new CesiumTerrainProvider(
+        {
+          url: url,
+          requestVertexNormals: true
+        }
+      );
+    }
+
     globe.enableLighting = true;
 
-    var selectedShading = this.props.viewState.terrainMaterialSelection;
+    let selectedShading = this.props.viewState.terrainMaterialSelection;
     let hasContour = false;
-    var minHeight = -414.0; // approximate dead sea elevation
-    var maxHeight = 8777.0; // approximate everest elevation
-    var contourColor = Color.RED.clone();
-    var contourUniforms = {};
-    var shadingUniforms = {};
+    const minHeight = -414.0; // approximate dead sea elevation
+    const maxHeight = 8777.0; // approximate everest elevation
+    let contourColor = Color.RED.clone();
+    let contourUniforms = {};
+    let shadingUniforms = {};
 
     this.enableContour = false;
     this.contourSpacing = 150.0;
@@ -229,14 +231,16 @@ const TerrainSettingsPanel = createReactClass({
       <>
         <div className={className}>
           <div className={Styles.header}>
-            <div className={Styles.actions}>Terrain Settings</div>
+            <div className={Styles.actions}>
+              <h3>{t("settingPanel.terrainSettings")}</h3>
+            </div>
           </div>
 
           <div className="container">
             <div className="row">
-              <div className="col-sm-12" id="toolbar">
-                <form>
-                  <div className="radio">
+              <div>
+                <form className={Styles.form}>
+                  <div className={Styles.radio}>
                     <label>
                       <input
                         type="radio"
@@ -250,7 +254,7 @@ const TerrainSettingsPanel = createReactClass({
                       No Shading
                     </label>
                   </div>
-                  <div className="radio">
+                  <div className={Styles.radio}>
                     <label>
                       <input
                         type="radio"
@@ -264,7 +268,7 @@ const TerrainSettingsPanel = createReactClass({
                       Elevation
                     </label>
                   </div>
-                  <div className="radio">
+                  <div className={Styles.radio}>
                     <label>
                       <input
                         type="radio"
@@ -278,7 +282,7 @@ const TerrainSettingsPanel = createReactClass({
                       Slope
                     </label>
                   </div>
-                  <div className="radio">
+                  <div className={Styles.radio}>
                     <label>
                       <input
                         type="radio"
