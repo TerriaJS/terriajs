@@ -33,8 +33,10 @@ describe("Table Style", function() {
       const activeStyle = csvItem.activeTableStyle;
       const colorColumn = activeStyle.colorColumn;
       expect(colorColumn).toBeDefined();
-      expect(colorColumn.type).toBe(4);
-      expect(colorColumn.values.length).toBe(450);
+      if (colorColumn !== undefined) {
+        expect(colorColumn.type).toBe(4);
+        expect(colorColumn.values.length).toBe(450);
+      }
 
       // Expect 7 as per Traits/TableStyleColorTraits.ts
       expect(activeStyle.numberOfBins).toEqual(7);
@@ -49,13 +51,14 @@ describe("Table Style", function() {
       const activeStyle = csvItem.activeTableStyle;
       const colorColumn = activeStyle.colorColumn;
       expect(colorColumn).toBeDefined();
-      expect(colorColumn).toBeDefined();
-      expect(colorColumn.type).toBe(4);
-      const numUniqueValues = colorColumn.uniqueValues.values.length;
-      expect(numUniqueValues).toBe(4);
-      expect(activeStyle.numberOfBins).toEqual(numUniqueValues);
-      expect(activeStyle.binColors.length).toEqual(numUniqueValues);
-      expect(activeStyle.binMaximums.length).toEqual(numUniqueValues);
+      if (colorColumn !== undefined) {
+        expect(colorColumn.type).toBe(4);
+        const numUniqueValues = colorColumn.uniqueValues.values.length;
+        expect(numUniqueValues).toBe(4);
+        expect(activeStyle.numberOfBins).toEqual(numUniqueValues);
+        expect(activeStyle.binColors.length).toEqual(numUniqueValues);
+        expect(activeStyle.binMaximums.length).toEqual(numUniqueValues);
+      }
     });
   });
 });
