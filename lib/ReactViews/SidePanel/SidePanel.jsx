@@ -2,7 +2,7 @@ import createReactClass from "create-react-class";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
-import { withTranslation, Trans } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
 import Icon, { StyledIcon } from "../Icon";
 import SearchBoxAndResults from "../Search/SearchBoxAndResults";
@@ -13,11 +13,24 @@ import FullScreenButton from "./FullScreenButton";
 
 import Box from "../../Styled/Box";
 import Spacing from "../../Styled/Spacing";
-import Text, { TextSpan } from "../../Styled/Text";
+import Text from "../../Styled/Text";
 import Button from "../../Styled/Button";
 
 function EmptyWorkbench(props) {
   const t = props.t;
+  const HelpfulHintsIcon = () => {
+    return (
+      <StyledIcon
+        glyph={Icon.GLYPHS.bulb}
+        styledWidth={"14px"}
+        styledHeight={"14px"}
+        light
+        css={`
+          padding: 2px 1px;
+        `}
+      />
+    );
+  };
   return (
     <Text large textLight nunito>
       <Box
@@ -31,23 +44,29 @@ function EmptyWorkbench(props) {
         </Text>
       </Box>
       <Box column paddedRatio={3}>
-        <Box
-          left
-          css={`
-            svg {
-              fill: ${p => p.theme.textLight};
-              width: 13px;
-              height: 13px;
-              padding-right: 5px;
-            }
-          `}
-        >
-          <Icon glyph={Icon.GLYPHS.bulb} />
-          <Text large>{t("emptyWorkbench.helpfulHints")}</Text>
+        <Box left>
+          <Text extraLarge bold>
+            {t("emptyWorkbench.helpfulHints")}
+          </Text>
         </Box>
-        <Spacing bottom={2} />
-        <Text large>{t("emptyWorkbench.helpfulHintsOne")}</Text>
-        <Spacing bottom={1} />
+        <Spacing bottom={4} />
+        <Box>
+          <HelpfulHintsIcon />
+          <Spacing right={1} />
+          <Text medium light>
+            {t("emptyWorkbench.helpfulHintsOne")}
+          </Text>
+        </Box>
+        <Spacing bottom={3} />
+        <Box>
+          <HelpfulHintsIcon />
+          <Spacing right={1} />
+          <Text medium light>
+            {t("emptyWorkbench.helpfulHintsTwo")}
+          </Text>
+        </Box>
+        {/* <Text large>{t("emptyWorkbench.helpfulHintsOne")}</Text>
+        <Spacing bottom={3} />
         <Trans i18nKey="emptyWorkbench.helpfulHintsTwo">
           <Text large>
             Click
@@ -60,7 +79,7 @@ function EmptyWorkbench(props) {
             </TextSpan>
             to load your own data onto the map.
           </Text>
-        </Trans>
+        </Trans> */}
       </Box>
     </Text>
   );

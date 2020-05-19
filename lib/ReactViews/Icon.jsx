@@ -138,6 +138,7 @@ export const StyledIcon = styled(Icon)`
   display:block;
   flex-shrink: 0;
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
+  ${props => props.styledHeight && `height: ${props.styledHeight};`}
 
   ${props => props.light && `fill: ${props.theme.textLight};`}
   ${props => props.dark && `fill: ${props.theme.textDark};`}

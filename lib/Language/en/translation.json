@@ -469,8 +469,8 @@
   "emptyWorkbench": {
     "emptyArea": "Your workbench is empty",
     "helpfulHints": "Helpful hints",
-    "helpfulHintsOne": "All your active data sets will be listed here.",
-    "helpfulHintsTwo": "<0>Click <1>'$t(addData.addDataBtnText)'</1> above to browse the Data Catalogue or click <1>'$t(models.catalog.upload)'</1> to load your own data onto the map.</0>"
+    "helpfulHintsOne": "Browse the available data by selecting ‘Explore map data’ or click ‘Upload’ to add your own data to the map.",
+    "helpfulHintsTwo": "In the workbench you can toggle datasets on and off, change their opacity, activate the split screen comparison, change styles, and navigate through dates and times, if the data supports this functionality."
   },
   "dataCatalog": {
     "groupRemove": "remove this group",
