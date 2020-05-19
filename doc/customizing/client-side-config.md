@@ -65,4 +65,4 @@ Option                      | Meaning | Default
 `"corsProxyBaseUrl"`            | URL of CORS proxy service (part of TerriaJS-Server)| `proxy/`
 `"proj4ServiceBaseUrl"`         | URL of Proj4 projection lookup service (part of TerriaJS-Server) | `proj4/`
 `"proxyableDomainsUrl"`         | URL of list of domains which the CORS proxy service will allow to be proxied. | `proxyabledomains/`
-`"regionMappingDefinitionsUrl"` | URL of the JSON file that defines region mapping for CSV files. | `data/regionMapping.json`
+`"regionMappingDefinitionsUrl"` | URL of the JSON file that defines region mapping for CSV files. | `build/TerriaJS/data/regionMapping.json`
