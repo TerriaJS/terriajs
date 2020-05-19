@@ -71,7 +71,7 @@ function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
       if (propertyName === undefined || !Mappable.is(this)) {
         return false;
       }
-      debugger;
+
       const resolved = await resolveFeature(
         this,
         propertyName,
