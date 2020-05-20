@@ -18,7 +18,6 @@ import loadText from "../Core/loadText";
 import CsvCatalogItem from "./CsvCatalogItem";
 import CommonStrata from "./CommonStrata";
 import StringParameter from "./FunctionParameters/StringParameter";
-import ResultPendingCatalogItem from "./ResultPendingCatalogItem";
 
 export const DATASETS = [
   {
@@ -185,40 +184,7 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
   private _dataColumn?: EnumerationParameter;
   private _regionColumn?: EnumerationParameter;
 
-  async forceLoadMetadata() {
-    // autorun(() => {
-    //   console.log('running autorun');
-    //   [this.inputLayers, this.dataColumn, this.regionColumn].forEach(
-    //     enumParam => {
-    //       // Clear value if no possibleValues
-    //       if (enumParam.possibleValues.length === 0) {
-    //         enumParam.clearValue(CommonStrata.user);
-
-    //         // If value isn't defined or is invalid -> if a value isRequired, then set to first option
-    //       } else if (
-    //         !isDefined(enumParam.value) ||
-    //         !enumParam.possibleValues.includes(enumParam.value)
-    //       ) {
-    //         if (enumParam.isRequired) {
-    //           enumParam.setValue(
-    //             CommonStrata.user,
-    //             enumParam.possibleValues[0]
-    //           );
-    //         } else {
-    //           enumParam.clearValue(CommonStrata.user);
-    //         }
-    //       }
-    //     }
-    //   );
-    // });
-
-    reaction(
-      () => this.parameters,
-      (value: any) => {
-        console.log(value);
-      }
-    );
-  }
+  async forceLoadMetadata() {}
 
   @computed
   get selectedTableCatalogMember(): TableMixin.TableMixin | undefined {
@@ -299,9 +265,6 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
       alg =>
         new BooleanParameter(this, {
           id: alg[0]
-          // value: alg[1]
-          // trueName: "Enabled",
-          // falseName: "Disabled"
         })
     );
   }

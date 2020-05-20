@@ -1,9 +1,10 @@
-import { observable, computed, action, runInAction } from "mobx";
+import { computed, runInAction } from "mobx";
 import isDefined from "../../Core/isDefined";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
-import CommonStrata from "./../CommonStrata";
 import JsonValue, { JsonObject } from "../../Core/Json";
-import { Feature, FeatureCollection } from "geojson";
+import { Feature } from "geojson";
+
+import combine from "terriajs-cesium/Source/Core/combine";
 
 export interface Options {
   id: string;
@@ -46,28 +47,32 @@ export default abstract class FunctionParameter<
     return this.catalogFunction.parameters?.[this.id] as T;
   }
 
-  @action
   setValue(strataId: string, v: T) {
-    let parameterTraits = this.catalogFunction.getTrait(strataId, "parameters");
-    if (!isDefined(parameterTraits)) {
-      this.catalogFunction.setTrait(strataId, "parameters", {
+    if (isDefined(v)) {
+      let newParameters: JsonObject = {
         [this.id]: v!
+      };
+      if (isDefined(this.catalogFunction.parameters)) {
+        newParameters = combine(newParameters, this.catalogFunction.parameters);
+      }
+      runInAction(() => {
+        this.catalogFunction.setTrait(strataId, "parameters", newParameters);
       });
     } else {
-      this.catalogFunction.setTrait(
-        strataId,
-        "parameters",
-        Object.assign(this.catalogFunction.parameters, { [this.id]: v })
-      );
+      this.clearValue(strataId);
     }
   }
 
-  @action
   clearValue(strataId: string) {
     if (isDefined(this.catalogFunction.parameters?.[this.id])) {
-      const newParameters = Object.assign({}, this.catalogFunction.parameters);
-      delete newParameters[this.id];
-      this.catalogFunction.setTrait(strataId, "parameters", newParameters);
+      runInAction(() => {
+        delete this.catalogFunction.parameters![this.id];
+        this.catalogFunction.setTrait(
+          strataId,
+          "parameters",
+          this.catalogFunction.parameters
+        );
+      });
     }
   }
 

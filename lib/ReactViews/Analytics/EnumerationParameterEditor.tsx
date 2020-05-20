@@ -1,11 +1,11 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 
 import Styles from "./parameter-editors.scss";
 import { action } from "mobx";
 import EnumerationParameter from "../../Models/FunctionParameters/EnumerationParameter";
 import CommonStrata from "../../Models/CommonStrata";
+import isDefined from "../../Core/isDefined";
 
 @observer
 export default class EnumerationParameterEditor extends React.Component<{
@@ -17,18 +17,25 @@ export default class EnumerationParameterEditor extends React.Component<{
   }
 
   render() {
+    const value = this.props.parameter.value;
     return (
       <select
         className={Styles.field}
         onChange={this.onChange.bind(this)}
-        value={this.props.parameter.value}
+        value={value}
       >
-        {(typeof this.props.parameter.value === "undefined" ||
-          !this.props.parameter.isRequired) && (
+        {(!isDefined(value) || !this.props.parameter.isRequired) && (
           <option key="__undefined__" value="">
             Not specified
           </option>
         )}
+        {/* Create option if value is invalid (not in possibleValues) */}
+        {isDefined(value) &&
+          !this.props.parameter.possibleValues.includes(value) && (
+            <option key="__invalid__" value={value}>
+              Invalid value ({value})
+            </option>
+          )}
         {this.props.parameter.possibleValues.map((v, i) => (
           <option value={v} key={i}>
             {v}
