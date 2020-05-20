@@ -168,13 +168,10 @@ const StandardUserInterface = createReactClass({
       !this.props.viewState.explorerPanelIsVisible &&
       !this.props.viewState.storyBuilderShown;
 
-    console.log("showStoryBuilder", showStoryBuilder);
-
     const showTerrainPanel =
       this.props.viewState.terrainSettingShown &&
       !this.shouldUseMobileInterface();
 
-    console.log("showTerrainPanel", showTerrainPanel);
     return (
       <div className={Styles.storyWrapper}>
         <WelcomeMessage viewState={this.props.viewState} />

@@ -103,7 +103,8 @@
     "hillshade": "Hillshade",
     "spacing": "Contour Line Spacing",
     "width": "Contour Line Width",
-    "enableContourLines": "Enable Contour Lines"
+    "enableContourLines": "Enable Contour Lines",
+    "timeOfDay": "Time of Day"
   },
   "settingPanel": {
     "none": "(None)",

@@ -37,5 +37,31 @@
 }
 
 .topMargin {
-  margin-top: 10px;
+  margin-top: 20px;
+}
+
+.inner-close-btn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  position: absolute;
+  z-index: 10;
+  top: $padding-small * 5;
+  right: $padding-small * 3;
+
+  padding: 7px;
+
+  background-color: $modal-bg;
+  border-radius: 50%;
+
+  &:hover,
+  &:focus {
+    svg {
+      fill: $color-secondary;
+    }
+  }
+
+  svg {
+    fill: $color-primary;
+    height: $padding;
+    width: $padding;
+  }
 }

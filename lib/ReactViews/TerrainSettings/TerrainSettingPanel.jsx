@@ -6,9 +6,12 @@ import ObserveModelMixin from "../ObserveModelMixin";
 import Styles from "./terrain-settings.scss";
 import { withTranslation } from "react-i18next";
 import Slider from "rc-slider";
+import Icon from "../Icon.jsx";
 
 var Material = require("terriajs-cesium/Source/Scene/Material").default;
 var Color = require("terriajs-cesium/Source/Core/Color").default;
+var Clock = require("terriajs-cesium/Source/Core/Clock").default;
+var JulianDate = require("terriajs-cesium/Source/Core/JulianDate").default;
 var CesiumTerrainProvider = require("terriajs-cesium/Source/Core/CesiumTerrainProvider")
   .default;
 var IonResource = require("terriajs-cesium/Source/Core/IonResource").default;
@@ -251,10 +254,32 @@ const TerrainSettingsPanel = createReactClass({
   },
 
   onChangeElevationRampRange(values) {
-    console.log("onChangeElevationRampRange values: ", values);
     this.props.viewState.elevationColorRampRang = values;
     this.props.viewState.shadingUniforms.minimumHeight = values[0];
     this.props.viewState.shadingUniforms.maximumHeight = values[1];
+  },
+
+  onChangeClock(value) {
+    this.props.viewState.time = value;
+    const currentTime = JulianDate.fromDate(new Date());
+    let timeOffset = JulianDate.addSeconds(
+      currentTime,
+      value * 60 * 60,
+      new JulianDate()
+    );
+    this.props.terria.cesium.viewer.clock.currentTime = timeOffset;
+  },
+
+  formatDate() {
+    const currentDate = new Date();
+    let newDate = currentDate.setHours(
+      currentDate.getHours() + this.props.viewState.time
+    );
+    return new Date(newDate).getHours() + ":" + new Date(newDate).getMinutes();
+  },
+
+  handleCloseTerrainSettings() {
+    this.props.viewState.terrainSettingShown = false;
   },
 
   render() {
@@ -267,6 +292,15 @@ const TerrainSettingsPanel = createReactClass({
     return (
       <>
         <div className={className}>
+          <button
+            type="button"
+            className={classNames(Styles.innerCloseBtn)}
+            onClick={this.handleCloseTerrainSettings}
+            title={t("general.close")}
+            aria-label={t("general.close")}
+          >
+            <Icon glyph={Icon.GLYPHS.close} />
+          </button>
           <div className={Styles.header}>
             <div className={Styles.actions}>
               <h3>{t("settingPanel.terrainSettings")}</h3>
@@ -365,7 +399,23 @@ const TerrainSettingsPanel = createReactClass({
                 </div>
               )}
 
-              <hr />
+              {(this.props.viewState.terrainMaterialSelection === "elevation" ||
+                this.props.viewState.terrainMaterialSelection ===
+                  "hillshade") && (
+                <div>
+                  {t("terrainSettingsPanel.timeOfDay") +
+                    ": " +
+                    this.formatDate()}
+                  <Slider
+                    min={1}
+                    max={24}
+                    step={1}
+                    onChange={this.onChangeClock}
+                  />
+                </div>
+              )}
+
+              <hr className={Styles.topMargin} />
 
               <div>
                 <div className={Styles.topMargin}>
