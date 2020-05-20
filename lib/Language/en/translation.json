@@ -94,6 +94,17 @@
     "btnText": "Tool",
     "btnTitle": "Advanced toolbox"
   },
+  "terrainSettingsPanel": {
+    "noShading": "No Shading",
+    "elevation": "Elevation",
+    "elevationColorRampRange": "Elevation Color Ramp Range",
+    "slope": "Slope",
+    "aspect": "Aspect",
+    "hillshade": "Hillshade",
+    "spacing": "Contour Line Spacing",
+    "width": "Contour Line Width",
+    "enableContourLines": "Enable Contour Lines"
+  },
   "settingPanel": {
     "none": "(None)",
     "viewerModeLabels": {

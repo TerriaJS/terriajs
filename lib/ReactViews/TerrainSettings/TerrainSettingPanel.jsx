@@ -5,6 +5,7 @@ import classNames from "classnames";
 import ObserveModelMixin from "../ObserveModelMixin";
 import Styles from "./terrain-settings.scss";
 import { withTranslation } from "react-i18next";
+import Slider from "rc-slider";
 
 var Material = require("terriajs-cesium/Source/Scene/Material").default;
 var Color = require("terriajs-cesium/Source/Core/Color").default;
@@ -27,6 +28,7 @@ const TerrainSettingsPanel = createReactClass({
     const elevationRamp = [0.0, 0.045, 0.1, 0.15, 0.37, 0.54, 1.0];
     const slopeRamp = [0.0, 0.29, 0.5, Math.sqrt(2) / 2, 0.87, 0.91, 1.0];
     const aspectRamp = [0.0, 0.2, 0.4, 0.6, 0.8, 0.9, 1.0];
+    const hillshadeRamp = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
     let ramp = document.createElement("canvas");
     ramp.width = 100;
     ramp.height = 1;
@@ -39,6 +41,8 @@ const TerrainSettingsPanel = createReactClass({
       values = slopeRamp;
     } else if (selectedShading === "aspect") {
       values = aspectRamp;
+    } else if (selectedShading === "hillshade") {
+      values = hillshadeRamp;
     }
 
     let grd = ctx.createLinearGradient(0, 0, 100, 0);
@@ -154,19 +158,10 @@ const TerrainSettingsPanel = createReactClass({
     globe.enableLighting = true;
 
     let selectedShading = this.props.viewState.terrainMaterialSelection;
-    let hasContour = false;
-    const minHeight = -414.0; // approximate dead sea elevation
-    const maxHeight = 8777.0; // approximate everest elevation
     let contourColor = Color.RED.clone();
-    let contourUniforms = {};
-    let shadingUniforms = {};
-
-    this.enableContour = false;
-    this.contourSpacing = 150.0;
-    this.contourWidth = 2.0;
     this.selectedShading = "elevation";
     this.changeColor = function() {
-      contourUniforms.color = Cesium.Color.fromRandom(
+      this.props.viewState.contourUniforms.color = Cesium.Color.fromRandom(
         { alpha: 1.0 },
         contourColor
       );
@@ -174,50 +169,92 @@ const TerrainSettingsPanel = createReactClass({
 
     let material;
 
-    if (hasContour) {
+    if (this.props.viewState.enableContour) {
       if (selectedShading === "elevation") {
         material = this.getElevationContourMaterial();
-        shadingUniforms = material.materials.elevationRampMaterial.uniforms;
-        shadingUniforms.minimumHeight = minHeight;
-        shadingUniforms.maximumHeight = maxHeight;
-        contourUniforms = material.materials.contourMaterial.uniforms;
+        this.props.viewState.shadingUniforms =
+          material.materials.elevationRampMaterial.uniforms;
+        this.props.viewState.shadingUniforms.minimumHeight = this.props.viewState.elevationColorRampRang[0];
+        this.props.viewState.shadingUniforms.maximumHeight = this.props.viewState.elevationColorRampRang[1];
+        this.props.viewState.contourUniforms =
+          material.materials.contourMaterial.uniforms;
       } else if (selectedShading === "slope") {
         material = this.getSlopeContourMaterial();
-        shadingUniforms = material.materials.slopeRampMaterial.uniforms;
-        contourUniforms = material.materials.contourMaterial.uniforms;
+        this.props.viewState.shadingUniforms =
+          material.materials.slopeRampMaterial.uniforms;
+        this.props.viewState.contourUniforms =
+          material.materials.contourMaterial.uniforms;
       } else if (selectedShading === "aspect") {
         material = this.getAspectContourMaterial();
-        shadingUniforms = material.materials.aspectRampMaterial.uniforms;
-        contourUniforms = material.materials.contourMaterial.uniforms;
+        this.props.viewState.shadingUniforms =
+          material.materials.aspectRampMaterial.uniforms;
+        this.props.viewState.contourUniforms =
+          material.materials.contourMaterial.uniforms;
+      } else if (selectedShading === "hillshade") {
+        material = this.getAspectContourMaterial();
+        this.props.viewState.shadingUniforms =
+          material.materials.aspectRampMaterial.uniforms;
+        this.props.viewState.contourUniforms =
+          material.materials.contourMaterial.uniforms;
       } else {
         material = Material.fromType("ElevationContour");
-        contourUniforms = material.uniforms;
+        this.props.viewState.contourUniforms = material.uniforms;
       }
-      contourUniforms.width = this.viewModel.contourWidth;
-      contourUniforms.spacing = this.viewModel.contourSpacing;
-      contourUniforms.color = contourColor;
+      this.props.viewState.contourUniforms.width = this.props.viewState.contourWidth;
+      this.props.viewState.contourUniforms.spacing = this.props.viewState.contourSpacing;
+      this.props.viewState.contourUniforms.color = contourColor;
     } else if (selectedShading === "elevation") {
       material = Material.fromType("ElevationRamp");
-      shadingUniforms = material.uniforms;
-      shadingUniforms.minimumHeight = minHeight;
-      shadingUniforms.maximumHeight = maxHeight;
+      this.props.viewState.shadingUniforms = material.uniforms;
+      this.props.viewState.shadingUniforms.minimumHeight = this.props.viewState.elevationColorRampRang[0];
+      this.props.viewState.shadingUniforms.maximumHeight = this.props.viewState.elevationColorRampRang[1];
     } else if (selectedShading === "slope") {
       material = Material.fromType("SlopeRamp");
-      shadingUniforms = material.uniforms;
+      this.props.viewState.shadingUniforms = material.uniforms;
     } else if (selectedShading === "aspect") {
       material = Material.fromType("AspectRamp");
-      shadingUniforms = material.uniforms;
+      this.props.viewState.shadingUniforms = material.uniforms;
+    } else if (selectedShading === "hillshade") {
+      material = Material.fromType("ElevationRamp");
+      this.props.viewState.shadingUniforms = material.uniforms;
     }
     if (selectedShading !== "none") {
-      shadingUniforms.image = this.getColorRamp(selectedShading);
+      this.props.viewState.shadingUniforms.image = this.getColorRamp(
+        selectedShading
+      );
     }
     globe.material = material;
   },
 
-  onChange(e) {
+  onChangeTerrainMaterial(e) {
     viewState.terrainMaterialSelection = e.target.value;
-    //this.foobar(this)
     this.updateMaterial();
+  },
+
+  onChangeContourSpacing(value) {
+    this.props.viewState.contourSpacing = value;
+    this.props.viewState.contourUniforms.spacing = value;
+  },
+
+  onChangeContourWidth(value) {
+    this.props.viewState.contourWidth = value;
+    this.props.viewState.contourUniforms.width = value;
+  },
+
+  enableContourCheckBox() {
+    if (this.props.viewState.enableContour) {
+      this.props.viewState.enableContour = false;
+    } else {
+      this.props.viewState.enableContour = true;
+    }
+    this.updateMaterial();
+  },
+
+  onChangeElevationRampRange(values) {
+    console.log("onChangeElevationRampRange values: ", values);
+    this.props.viewState.elevationColorRampRang = values;
+    this.props.viewState.shadingUniforms.minimumHeight = values[0];
+    this.props.viewState.shadingUniforms.maximumHeight = values[1];
   },
 
   render() {
@@ -237,9 +274,9 @@ const TerrainSettingsPanel = createReactClass({
           </div>
 
           <div className="container">
-            <div className="row">
+            <div className={Styles.terrainSettings}>
               <div>
-                <form className={Styles.form}>
+                <form>
                   <div className={Styles.radio}>
                     <label>
                       <input
@@ -249,9 +286,9 @@ const TerrainSettingsPanel = createReactClass({
                           this.props.viewState.terrainMaterialSelection ===
                           "none"
                         }
-                        onChange={this.onChange}
+                        onChange={this.onChangeTerrainMaterial}
                       />
-                      No Shading
+                      {t("terrainSettingsPanel.noShading")}
                     </label>
                   </div>
                   <div className={Styles.radio}>
@@ -263,9 +300,9 @@ const TerrainSettingsPanel = createReactClass({
                           this.props.viewState.terrainMaterialSelection ===
                           "elevation"
                         }
-                        onChange={this.onChange}
+                        onChange={this.onChangeTerrainMaterial}
                       />
-                      Elevation
+                      {t("terrainSettingsPanel.elevation")}
                     </label>
                   </div>
                   <div className={Styles.radio}>
@@ -277,9 +314,9 @@ const TerrainSettingsPanel = createReactClass({
                           this.props.viewState.terrainMaterialSelection ===
                           "slope"
                         }
-                        onChange={this.onChange}
+                        onChange={this.onChangeTerrainMaterial}
                       />
-                      Slope
+                      {t("terrainSettingsPanel.slope")}
                     </label>
                   </div>
                   <div className={Styles.radio}>
@@ -291,12 +328,80 @@ const TerrainSettingsPanel = createReactClass({
                           this.props.viewState.terrainMaterialSelection ===
                           "aspect"
                         }
-                        onChange={this.onChange}
+                        onChange={this.onChangeTerrainMaterial}
                       />
-                      Aspect
+                      {t("terrainSettingsPanel.aspect")}
+                    </label>
+                  </div>
+                  <div className={Styles.radio}>
+                    <label>
+                      <input
+                        type="radio"
+                        value="hillshade"
+                        checked={
+                          this.props.viewState.terrainMaterialSelection ===
+                          "hillshade"
+                        }
+                        onChange={this.onChangeTerrainMaterial}
+                      />
+                      {t("terrainSettingsPanel.hillshade")}
                     </label>
                   </div>
                 </form>
+              </div>
+
+              {this.props.viewState.terrainMaterialSelection ===
+                "elevation" && (
+                <div>
+                  {t("terrainSettingsPanel.elevationColorRampRange")}
+                  <Slider.Range
+                    min={-414}
+                    max={8777}
+                    step={1}
+                    allowCross={false}
+                    defaultValue={[-414, 8777]}
+                    onChange={this.onChangeElevationRampRange}
+                  />
+                </div>
+              )}
+
+              <hr />
+
+              <div>
+                <div className={Styles.topMargin}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={this.props.viewState.enableContour}
+                      onChange={this.enableContourCheckBox}
+                    />
+                    {t("terrainSettingsPanel.enableContourLines")}
+                  </label>
+                </div>
+                <div>
+                  {t("terrainSettingsPanel.spacing")}{" "}
+                  {": " + this.props.viewState.contourSpacing}
+                  <Slider
+                    id="terrainSettingsSpacingSlider"
+                    min={1}
+                    max={500}
+                    step={1}
+                    value={this.props.viewState.contourSpacing}
+                    onChange={this.onChangeContourSpacing}
+                  />
+                </div>
+                <div>
+                  {t("terrainSettingsPanel.width")}{" "}
+                  {": " + this.props.viewState.contourWidth}
+                  <Slider
+                    id="terrainSettingsSpacingSlider"
+                    min={1}
+                    max={10}
+                    step={1}
+                    value={this.props.viewState.contourWidth}
+                    onChange={this.onChangeContourWidth}
+                  />
+                </div>
               </div>
             </div>
           </div>
