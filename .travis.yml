@@ -4,7 +4,7 @@ matrix:
   include:
   - language: node_js
     node_js:
-    - '8'
+    - '10'
     script:
     - npm run prettier-check
     - pyenv shell 2.7
@@ -19,7 +19,7 @@ matrix:
     - secure: gzSiFfm+cog4Kl7kxh997UwuIIbthm5cbbwDWSJE8EnqAGuHP6XJsVnu+c1Ql+nuVidY0hCeenjdGuRMt5jSWCES6jAT1RR2j46PrCE0tLRDZIcY5m2rt9uRtAGG/Wvsk0tRdg/TPMc50f/3c4zX8iMmD4Hd1qB/G/debE6PDBE=
   - language: node_js
     node_js:
-    - '8'
+    - '10'
     install: true
     sudo: required
     services:
