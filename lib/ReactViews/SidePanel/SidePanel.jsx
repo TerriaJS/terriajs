@@ -9,7 +9,8 @@ import SearchBoxAndResults from "../Search/SearchBoxAndResults";
 import Workbench from "../Workbench/Workbench";
 import FullScreenButton from "./FullScreenButton";
 
-// import { useRefForTerria } from "../Hooks/useRefForTerria";
+import { useRefForTerria } from "../Hooks/useRefForTerria";
+import { withTerriaRef } from "../HOCs/withTerriaRef";
 
 import Box from "../../Styled/Box";
 import Spacing from "../../Styled/Spacing";
@@ -89,11 +90,12 @@ EmptyWorkbench.propTypes = {
   theme: PropTypes.object.isRequired
 };
 
-const SidePanelButton = props => {
+const SidePanelButton = React.forwardRef((props, ref) => {
   const { btnText, ...rest } = props;
   return (
     <Button
       primary
+      ref={ref}
       renderIcon={props.children && (() => props.children)}
       textProps={{
         large: true
@@ -103,7 +105,7 @@ const SidePanelButton = props => {
       {btnText ? btnText : ""}
     </Button>
   );
-};
+});
 SidePanelButton.propTypes = {
   btnText: PropTypes.string,
   children: PropTypes.node
@@ -150,6 +152,7 @@ const SidePanel = observer(
     propTypes: {
       terria: PropTypes.object.isRequired,
       viewState: PropTypes.object.isRequired,
+      refFromHOC: PropTypes.object.isRequired,
       t: PropTypes.func.isRequired,
       theme: PropTypes.object.isRequired
     },
@@ -191,8 +194,7 @@ const SidePanel = observer(
             <Spacing bottom={2} />
             <Box justifySpaceBetween>
               <SidePanelButton
-                // Unsure how to get refs working :(
-                // ref={addDataRef}
+                ref={this.props.refFromHOC}
                 onClick={() => this.onAddDataClicked()}
                 title={addData}
                 btnText={addData}
@@ -247,4 +249,6 @@ const SidePanel = observer(
   })
 );
 
-module.exports = withTranslation()(withTheme(SidePanel));
+module.exports = withTranslation()(
+  withTheme(withTerriaRef(SidePanel, EXPLORE_MAP_DATA_NAME))
+);
