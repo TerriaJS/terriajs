@@ -3,7 +3,7 @@
     <Service>
         <Name>OGC:WMS</Name>
         <Title>wms Server</Title>
-        <Abstract></Abstract>
+        <Abstract>web map service foo bar test</Abstract>
         <KeywordList>
 
             <Keyword></Keyword>
@@ -27,6 +27,8 @@
             <ContactVoiceTelephone></ContactVoiceTelephone>
             <ContactElectronicMailAddress></ContactElectronicMailAddress>
         </ContactInformation>
+        <Fees>test</Fees>
+        <AccessConstraints>test</AccessConstraints> 
     </Service>
     <Capability>
         <Request>

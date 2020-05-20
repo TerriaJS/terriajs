@@ -350,6 +350,7 @@
     "resourceDescription": "Resource Description",
     "licence": "Licence",
     "accessConstraints": "Access Constraints",
+    "fees": "Fees",
     "author": "Author",
     "contact": "Contact",
     "created": "Created",
@@ -1129,7 +1130,10 @@
       "groupNotAvailableTitle": "Group is not available",
       "groupNotAvailableMessage": "An error occurred while invoking GetCapabilities on the WMS server. <p>If you entered the link manually, please verify that the link is correct.</p> <p>This error may also indicate that the server does not support <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' Map team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by '{{appName}}' itself.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection. Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
       "missingUrlTitle": "Unable to load GetCapabilities",
-      "missingUrlMessage": "Could not load the Web Map Service (WMS) GetCapabilities document because the catalog item does not have a `url`."
+      "missingUrlMessage": "Could not load the Web Map Service (WMS) GetCapabilities document because the catalog item does not have a `url`.",
+      "abstract": "Web Map Service Description",
+      "accessConstraints": "Web Map Service Access Constraints",
+      "fees": "Web Map Service Fees"
     },
     "webMapServiceCatalogItem": {
       "wms": "Web Map Service (WMS)",

@@ -4,7 +4,10 @@ Change Log
 ### MobX Development
 
 #### mobx-next-release (mobx-31)
-* ((Placeholder some awesome new testing. or fixes. or features.))
+* Added `hideSource` trait to `CatalogMemberTraits`. When set to true source URL won't be visible in the explorer window.
+* Added `Title`, `ContactInformation`, `Fees` to the `CapabilitiesService` interface so they are pulled on metadata load.
+* Resolved name issue of `WebMapServiceCapabilities`. Now it returns a name resolved from `capabilities` unless it is set by user.
+* Added setting of `isOpenInWorkbench`, `isExperiencingIssues`, `hideLegendInWorkbench`, `hideSource` strats for `WebMapServiceCatalogItem` from `WebMapServiceCatalogGroup`.
 
 #### mobx-30
 * Ported welcome message to mobx with new designs
