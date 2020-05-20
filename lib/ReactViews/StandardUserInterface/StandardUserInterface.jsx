@@ -22,6 +22,7 @@ import SidePanelContent from "./../SidePanel/SidePanelContent";
 import processCustomElements from "./processCustomElements";
 import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import StoryPanel from "./../Story/StoryPanel.jsx";
+import RCStoryPanel from "./../Story/RCStoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 import ToolPanel from "./../ToolPanel.jsx";
 import SectorTabs from "./../SidePanel/SectorTabs";
@@ -236,6 +237,12 @@ const StandardUserInterface = createReactClass({
                   >
                     <Branding terria={terria} version={this.props.version} />
                     <SidePanelContent />
+                    {showStoryPanel && (
+                      <RCStoryPanel
+                        terria={terria}
+                        viewState={this.props.viewState}
+                      />
+                    )}
                     <SidePanel
                       terria={terria}
                       viewState={this.props.viewState}
@@ -343,9 +350,6 @@ const StandardUserInterface = createReactClass({
             viewState={this.props.viewState}
             t={this.props.t}
           />
-          {showStoryPanel && (
-            <StoryPanel terria={terria} viewState={this.props.viewState} />
-          )}
         </div>
         {this.props.terria.configParameters.storyEnabled && (
           <StoryBuilder
