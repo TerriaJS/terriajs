@@ -103,10 +103,18 @@ export const RawButton = styled.button`
 
 // Icon and props-children-mandatory-text-wrapping is a mess here so it's all very WIP
 export const Button = (props, ref) => {
-  const { primary, secondary, warning, iconProps, textProps, ...rest } = props;
+  const {
+    primary,
+    secondary,
+    warning,
+    iconProps,
+    textProps,
+    buttonRef,
+    ...rest
+  } = props;
   return (
     <StyledButton
-      ref={ref}
+      ref={buttonRef}
       primary={primary}
       secondary={secondary}
       warning={warning}
@@ -141,7 +149,10 @@ Button.propTypes = {
   primary: PropTypes.bool,
   secondary: PropTypes.bool,
   warning: PropTypes.bool,
-  children: PropTypes.node
+  children: PropTypes.node,
+  buttonRef: PropTypes.object
 };
 
-export default React.forwardRef(Button);
+const ButtonWithRef = (props, ref) => <Button {...props} buttonRef={ref} />;
+
+export default React.forwardRef(ButtonWithRef);
