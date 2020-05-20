@@ -6,16 +6,16 @@
 import React from "react";
 import createReactClass from "create-react-class";
 import classNames from "classnames";
-import Icon from "../../Icon.jsx";
-import InnerPanel from "./InnerPanel";
-import BaseOuterPanel from "./BaseOuterPanel";
+import Icon from "../../../Icon.jsx";
+import InnerPanel from "../InnerPanel";
+import BaseOuterPanel from "../BaseOuterPanel";
 
-import Styles from "./panel.scss";
+import Styles from "../panel.scss";
 
 import defined from "terriajs-cesium/Source/Core/defined";
 
-const DropdownPanel = createReactClass({
-  displayName: "DropdownPanel",
+const StorySharePanel = createReactClass({
+  displayName: "StorySharePanel",
   mixins: [BaseOuterPanel],
 
   getInitialState() {
@@ -85,7 +85,8 @@ const DropdownPanel = createReactClass({
         <button
           onClick={this.openWithUserClick}
           type="button"
-          className={classNames(Styles.button, this.props.theme.btn)}
+          disabled={this.props.btnDisabled}
+          className={classNames(this.props.theme.btn)}
           title={this.props.btnTitle}
           ref={element => (this.buttonElement = element)}
         >
@@ -115,4 +116,4 @@ const DropdownPanel = createReactClass({
   }
 });
 
-export default DropdownPanel;
+export default StorySharePanel;
