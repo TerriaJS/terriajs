@@ -9,7 +9,6 @@ import SearchBoxAndResults from "../Search/SearchBoxAndResults";
 import Workbench from "../Workbench/Workbench";
 import FullScreenButton from "./FullScreenButton";
 
-import { useRefForTerria } from "../Hooks/useRefForTerria";
 import { withTerriaRef } from "../HOCs/withTerriaRef";
 
 import Box from "../../Styled/Box";
@@ -91,6 +90,7 @@ const SidePanelButton = React.forwardRef((props, ref) => {
     </Button>
   );
 });
+SidePanelButton.displayName = "SidePanelButton"; // for some reasons lint doesn't like not having this
 SidePanelButton.propTypes = {
   btnText: PropTypes.string,
   children: PropTypes.node
