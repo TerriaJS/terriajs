@@ -66,21 +66,6 @@ function EmptyWorkbench(props) {
             {t("emptyWorkbench.helpfulHintsTwo")}
           </Text>
         </Box>
-        {/* <Text large>{t("emptyWorkbench.helpfulHintsOne")}</Text>
-        <Spacing bottom={3} />
-        <Trans i18nKey="emptyWorkbench.helpfulHintsTwo">
-          <Text large>
-            Click
-            <TextSpan large bold>
-              Explore map data
-            </TextSpan>
-            above to browse the Data Catalogue or click
-            <TextSpan large bold>
-              Upload
-            </TextSpan>
-            to load your own data onto the map.
-          </Text>
-        </Trans> */}
       </Box>
     </Text>
   );
@@ -112,38 +97,6 @@ SidePanelButton.propTypes = {
 };
 
 export const EXPLORE_MAP_DATA_NAME = "ExploreMapDataButton";
-// const ExploreMapDataWithTour = ({
-//   addDataBtnText,
-//   onAddDataClicked,
-//   viewState
-// }) => {
-//   const buttonRef = useRefForTerria(EXPLORE_MAP_DATA_NAME, viewState);
-//   return (
-//     <Button
-//       ref={buttonRef}
-//       type="button"
-//       onClick={onAddDataClicked}
-//       title={addDataBtnText}
-//       primary
-//       renderIcon={() => {
-//         return (
-//           <StyledIcon glyph={Icon.GLYPHS.add} light styledWidth={"20px"} />
-//         );
-//       }}
-//       textProps={{
-//         large: true
-//       }}
-//       styledWidth={"204px"}
-//     >
-//       {addDataBtnText}
-//     </Button>
-//   );
-// };
-// ExploreMapDataWithTour.propTypes = {
-//   addDataBtnText: PropTypes.string.isRequired,
-//   onAddDataClicked: PropTypes.func.isRequired,
-//   viewState: PropTypes.object.isRequired
-// };
 
 const SidePanel = observer(
   createReactClass({
@@ -157,8 +110,7 @@ const SidePanel = observer(
       theme: PropTypes.object.isRequired
     },
 
-    onAddDataClicked(event) {
-      // event.stopPropagation();
+    onAddDataClicked() {
       this.props.viewState.setTopElement("AddData");
       this.props.viewState.openAddData();
     },
@@ -170,7 +122,6 @@ const SidePanel = observer(
       const { t, theme } = this.props;
       const addData = t("addData.addDataBtnText");
       const uploadText = t("models.catalog.upload");
-      // const addDataRef = useRefForTerria(EXPLORE_MAP_DATA_NAME, this.props.viewState);
       return (
         <div>
           <div
