@@ -149,4 +149,11 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
       "`2015-04-27T16:15:00/2015-04-27T18:45:00/PT15M` has 11 times."
   })
   maxRefreshIntervals: number = 1000;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Disable style selector",
+    description: "When true, disables the style selector in the workbench"
+  })
+  disableStyleSelector = false;
 }

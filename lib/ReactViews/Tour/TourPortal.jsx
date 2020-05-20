@@ -153,19 +153,19 @@ export const TourExplanation = ({
           <Box centered>
             {!isFirstTourPoint && (
               <>
-                <Button secondary onClick={() => onPrevious?.()}>
-                  {t("tour.previous")}
+                <Button secondary shortMinHeight onClick={() => onPrevious?.()}>
+                  {t("general.back")}
                 </Button>
                 <Spacing right={2} />
               </>
             )}
             {isLastTourPoint ? (
-              <Button onClick={() => onSkip?.()} primary>
+              <Button primary shortMinHeight onClick={() => onSkip?.()}>
                 {t("tour.finish")}
               </Button>
             ) : (
-              <Button onClick={() => onNext?.()} primary>
-                {t("tour.next")}
+              <Button primary shortMinHeight onClick={() => onNext?.()}>
+                {t("general.next")}
               </Button>
             )}
           </Box>

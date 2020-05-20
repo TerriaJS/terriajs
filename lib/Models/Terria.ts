@@ -90,6 +90,7 @@ interface ConfigParameters {
   rollbarAccessToken?: string;
   globalDisclaimer?: any;
   showWelcomeMessage?: boolean;
+  showInAppGuides?: boolean;
   helpContent?: any[];
 }
 
@@ -201,6 +202,7 @@ export default class Terria {
     rollbarAccessToken: undefined,
     globalDisclaimer: undefined,
     showWelcomeMessage: false,
+    showInAppGuides: false,
     helpContent: []
   };
 

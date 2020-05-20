@@ -17,7 +17,8 @@ const MapInteractionWindowWrapper = styled.div`
     `
     top: initial;
     bottom: 100px;
-    width: 330px;
+    min-width: 330px;
+    width: auto;
 
     box-sizing: border-box;
     padding: 10px 15px;

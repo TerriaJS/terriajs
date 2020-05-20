@@ -8,6 +8,7 @@ import DiffableTraits from "../Traits/DiffableTraits";
 import ShowableTraits from "../Traits/ShowableTraits";
 import SplitterTraits from "../Traits/SplitterTraits";
 import TimeFilterMixin from "./TimeFilterMixin";
+import StratumOrder from "../Models/StratumOrder";
 
 type MixinModel = Model<
   DiffableTraits & ShowableTraits & CatalogMemberTraits & SplitterTraits
@@ -17,11 +18,6 @@ type MixinModel = Model<
 function DiffableMixin<T extends Constructor<MixinModel>>(Base: T) {
   abstract class DiffableMixin extends Base {
     abstract styleSelector: SelectableStyle | undefined;
-
-    /**
-     * A list of styles on which we can run the difference computation
-     */
-    abstract availableDiffStyles: readonly AvailableStyle[] | undefined;
 
     get hasDiffableMixin() {
       return true;
@@ -59,6 +55,9 @@ namespace DiffableMixin {
   export function isMixedInto(model: any): model is Instance {
     return model?.hasDiffableMixin;
   }
+
+  export const diffStratumName = "diffStratum";
+  StratumOrder.addLoadStratum(diffStratumName);
 }
 
 export default DiffableMixin;

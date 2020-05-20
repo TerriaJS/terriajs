@@ -35,4 +35,11 @@ export default class DiscretelyTimeVaryingTraits extends mixTraits(
       "Type determines how the data availibility will be plotted on chart. eg: momentLines, momentPoints"
   })
   chartType: ChartItemType = "momentLines";
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Disable date time selector",
+    description: "When true, disables the date time selector in the workbench"
+  })
+  disableDateTimeSelector = false;
 }
