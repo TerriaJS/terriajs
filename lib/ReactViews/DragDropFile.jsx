@@ -1,67 +1,64 @@
 import React from "react";
-import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
-import ObserveModelMixin from "./ObserveModelMixin";
 import addUserFiles from "../Models/addUserFiles";
 import { Trans, withTranslation } from "react-i18next";
 
+import { observer } from "mobx-react";
+import { flow, action } from "mobx";
+
 import Styles from "./drag-drop-file.scss";
 
-const DragDropFile = createReactClass({
-  displayName: "DragDropFile",
-  mixins: [ObserveModelMixin],
-
-  propTypes: {
+@observer
+class DragDropFile extends React.Component {
+  static propTypes = {
     terria: PropTypes.object,
     viewState: PropTypes.object
-  },
+  };
 
-  target: null,
+  target = null;
 
-  handleDrop(e) {
+  handleDrop = flow(function*(e) {
     e.preventDefault();
     e.stopPropagation();
 
-    addUserFiles(
+    const addedCatalogItems = yield addUserFiles(
       e.dataTransfer.files,
       this.props.terria,
       this.props.viewState,
       null
-    ).then(addedCatalogItems => {
-      if (addedCatalogItems.length > 0) {
-        this.props.viewState.myDataIsUploadView = false;
-        if (this.props.viewState.explorerPanelIsVisible) {
-          this.props.viewState.viewCatalogMember(addedCatalogItems[0]);
-          this.props.viewState.openUserData();
-        } else {
-          this.notifyUpload(addedCatalogItems);
-        }
+    );
+
+    if (addedCatalogItems.length > 0) {
+      this.props.viewState.myDataIsUploadView = false;
+      if (this.props.viewState.explorerPanelIsVisible) {
+        this.props.viewState.viewCatalogMember(addedCatalogItems[0]);
+        this.props.viewState.openUserData();
+      } else {
+        // update last batch of uploaded files
+        this.props.viewState.lastUploadedFiles = addedCatalogItems.map(
+          item => item.name
+        );
       }
-    });
+    }
 
     this.props.viewState.isDraggingDroppingFile = false;
-  },
+  });
 
-  notifyUpload(addedCatalogItems) {
-    // update last batch of uploaded files
-    this.props.viewState.lastUploadedFiles = addedCatalogItems.map(
-      item => item.name
-    );
-  },
-
+  @action
   handleDragEnter(e) {
     e.preventDefault();
     e.stopPropagation();
     e.dataTransfer.dropEffect = "copy";
     this.lastTarget = e.target;
-  },
+  }
 
   handleDragOver(e) {
     e.preventDefault();
-  },
+  }
 
+  @action
   handleDragLeave(e) {
     e.preventDefault();
     if (e.screenX === 0 && e.screenY === 0) {
@@ -70,20 +67,21 @@ const DragDropFile = createReactClass({
     if (e.target === document || e.target === this.lastTarget) {
       this.props.viewState.isDraggingDroppingFile = false;
     }
-  },
+  }
 
+  @action
   handleMouseLeave() {
     this.props.viewState.isDraggingDroppingFile = false;
-  },
+  }
 
   render() {
     return (
       <div
-        onDrop={this.handleDrop}
-        onDragEnter={this.handleDragEnter}
-        onDragOver={this.handleDragOver}
-        onDragLeave={this.handleDragLeave}
-        onMouseLeave={this.handleMouseLeave}
+        onDrop={this.handleDrop.bind(this)}
+        onDragEnter={this.handleDragEnter.bind(this)}
+        onDragOver={this.handleDragOver.bind(this)}
+        onDragLeave={this.handleDragLeave.bind(this)}
+        onMouseLeave={this.handleMouseLeave.bind(this)}
         className={classNames(Styles.dropZone, {
           [Styles.isActive]: this.props.viewState.isDraggingDroppingFile
         })}
@@ -101,6 +99,5 @@ const DragDropFile = createReactClass({
       </div>
     );
   }
-});
-
+}
 module.exports = withTranslation()(DragDropFile);

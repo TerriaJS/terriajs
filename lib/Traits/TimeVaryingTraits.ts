@@ -54,4 +54,12 @@ export default class TimeVaryingTraits extends mixTraits(CatalogMemberTraits) {
     type: "boolean"
   })
   isPaused: boolean = true;
+
+  @primitiveTrait({
+    name: "Date Format",
+    description: `A dateformat string (using the dateformat package) used to adjust the presentation of the date in various spots in the UI for a catalog item.
+       For example, to just show the year set to 'yyyy'. Used in places like the the Workbench Item and Bottom Dock`,
+    type: "string"
+  })
+  dateFormat?: string;
 }

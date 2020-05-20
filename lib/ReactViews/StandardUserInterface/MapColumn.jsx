@@ -7,7 +7,6 @@ import TerriaViewerWrapper from "../Map/TerriaViewerWrapper";
 import DistanceLegend from "../Map/Legend/DistanceLegend";
 // import FeedbackButton from "../Feedback/FeedbackButton";
 import LocationBar from "../Map/Legend/LocationBar";
-import ObserveModelMixin from "../ObserveModelMixin";
 // import defined from "terriajs-cesium/Source/Core/defined";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import BottomDock from "../BottomDock/BottomDock";
@@ -30,7 +29,6 @@ const chromeVersion = FeatureDetection.chromeVersion();
 const MapColumn = observer(
   createReactClass({
     displayName: "MapColumn",
-    mixins: [ObserveModelMixin],
 
     propTypes: {
       terria: PropTypes.object.isRequired,

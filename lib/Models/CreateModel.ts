@@ -66,7 +66,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
       return result;
     }
 
-    duplicateModel(newId: ModelId, sourceReference?: BaseModel): BaseModel {
+    duplicateModel(newId: ModelId, sourceReference?: BaseModel): this {
       const newModel = new (<any>this.constructor)(
         newId,
         this.terria,

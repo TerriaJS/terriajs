@@ -6,6 +6,8 @@ Change Log
 * Added `Title`, `ContactInformation`, `Fees` to the `CapabilitiesService` interface so they are pulled on metadata load.
 * Resolved name issue of `WebMapServiceCapabilities`. Now it returns a name resolved from `capabilities` unless it is set by user.
 * Added setting of `isOpenInWorkbench`, `isExperiencingIssues`, `hideLegendInWorkbench`, `hideSource` strats for `WebMapServiceCatalogItem` from `WebMapServiceCatalogGroup`.
+
+* Fixed DragDropFile and `createCatalogItemFromFileOrUrl` which wasn't enabled/working in mobx, added tests for `createCatalogItemFromFileOrUrl` and renamed `createCatalogItemFromUrl` to `createUrlRefernceFromUrl`.
 * Fixed bug in StratumOrder where `sortBottomToTop` would sort strata in the wrong order.
 * Allow member re-ordering via GroupMixin's `moveMemberToIndex`
 * Fixed a bug where `updateModelFromJson` would ignore its `replaceStratum` parameter.
@@ -98,10 +100,26 @@ Change Log
 * Fix bug that caused contents on the video panel of the help UI to overlay the actual video
 * Overhauled location search to be a dropdown instead of list of results
 * Fixed bug causing full app crash or viewer zoom refresh when using 3D view and changing settings or changing the terrain provider.
+* Implements `SensorObservationServiceCatalogItem`.
 * Add support for styling CSVs using a region mapped or text columns.
+* Update Compass UI to include larger rotation target, remove sass from compass
+* Link Compass "help" button to `navigation` HelpPanelItem (requires generalisation later down the track)
+* Improve keyboard traversal through right-hand-side map icon buttons
+* Link Compass Gyroscope guidance footer text to `navigation` HelpPanelItem (requires generalisation later down the track)
 * Removed hardcoded workbench & Panel button colours
 * Ensure CSV column names are trimmed of whitespace.
 * Really stop analytics launch event sending bad & now empty & now finally the real label
+* Tidy Compass UI animations, styles, titles
+* Bumped mobx minor to 4.15.x, mobx-react major to 6.x.x
+* Add `dateFormat` trait to `TimeVaryingTraits` to allowing formatting of datestrings in workbench and bottomdock.
+* Fixed FeatureInfoPanel using old class state
+* Fixed MapIconButton & FeedbackButton proptypes being defined incorrectly
+* Implement SenapsLocationsCatalogItem
+* Update papaparse and improve handling for retrieveing CSVs via chunking that have no ContentLenth header
+#### mobx-28
+* Fix SASS exports causing some build errors in certain webpack conditions
+#### mobx-29
+* (placeholder)
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC

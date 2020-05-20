@@ -131,6 +131,8 @@ class HelpPanel extends React.Component {
               viewState={this.props.viewState}
               iconElement={Icon.GLYPHS.cube}
               title={"Navigating 3D data"}
+              // ! If removing this item, update GyroscopeGuidance to point to a new panel !
+              // until we plug-and-play HelpPanel content, this failsafe-comment will have to do.
               itemString={"navigation"}
               description={[
                 "One of the key features of the NSW Spatial Digital Twin is the ability to add and view 3D data, including 3D imagery, or photo reality mesh. This is an interactive way to explore high resolution, 3D aerial imagery of some areas of NSW.",

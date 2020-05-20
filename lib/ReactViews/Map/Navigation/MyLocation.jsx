@@ -8,7 +8,6 @@ import URI from "urijs";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 
 import GeoJsonCatalogItem from "../../../Models/GeoJsonCatalogItem";
-import ObserveModelMixin from "../../ObserveModelMixin";
 // import Styles from "./tool_button.scss";
 import TerriaError from "../../../Core/TerriaError";
 import CesiumCartographic from "terriajs-cesium/Source/Core/Cartographic.js";
@@ -22,7 +21,6 @@ import MapIconButton from "../../MapIconButton/MapIconButton";
 
 const MyLocation = createReactClass({
   displayName: "MyLocation",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     terria: PropTypes.object.isRequired,
@@ -191,7 +189,7 @@ const MyLocation = createReactClass({
         primary={this.followMeEnabled()}
         expandInPlace
         onClick={this.handleClick}
-        buttonTitle={t("location.centreMap")}
+        title={t("location.centreMap")}
         iconElement={() => <Icon glyph={Icon.GLYPHS.geolocation} />}
       >
         {t("location.location")}
