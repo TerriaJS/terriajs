@@ -122,8 +122,13 @@ const DateTimeSelectorSection = observer(
       let format;
       const item = this.props.item;
       const discreteTimes = item.discreteTimesAsSortedJulianDates;
+      const disableDateTimeSelector = item.disableDateTimeSelector;
 
-      if (!defined(discreteTimes) || discreteTimes.length === 0) {
+      if (
+        !defined(discreteTimes) ||
+        discreteTimes.length === 0 ||
+        disableDateTimeSelector
+      ) {
         return null;
       }
 

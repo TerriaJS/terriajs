@@ -144,14 +144,7 @@ export default function GyroscopeGuidance(props) {
   const controlsMapIcon = useRef();
   const { t } = useTranslation();
   return (
-    <Box
-      css={`
-        position: absolute;
-        direction: rtl;
-        right: 75px;
-        top: 17px;
-      `}
-    >
+    <>
       <MapIconButton
         roundRight
         neverCollapse
@@ -229,6 +222,6 @@ export default function GyroscopeGuidance(props) {
           iconElement={() => <Icon glyph={Icon.GLYPHS.closeLight} />}
         />
       </div>
-    </Box>
+    </>
   );
 }

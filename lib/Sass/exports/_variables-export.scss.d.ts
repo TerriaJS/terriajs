@@ -7,6 +7,7 @@ interface CssExports {
   'compassWidth': string;
   'dark': string;
   'darkWithOverlay': string;
+  'frontComponentZIndex': string;
   'grey': string;
   'greyLighter': string;
   'greyLighter2': string;
@@ -15,14 +16,19 @@ interface CssExports {
   'mapButtonColor': string;
   'md': string;
   'mobile': string;
+  'overlay': string;
+  'overlayInvert': string;
   'radiusLarge': string;
+  'radiusSmall': string;
   'ringWidth': string;
   'sm': string;
+  'spacing': string;
   'textBlack': string;
   'textDark': string;
   'textDarker': string;
   'textLight': string;
   'textLightDimmed': string;
+  'workbenchWidth': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;
