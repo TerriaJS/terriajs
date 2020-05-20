@@ -190,6 +190,12 @@ export default class WebProcessingServiceCatalogItem
     CatalogFunctionJobMixin(CreateModel(WebProcessingServiceCatalogItemTraits))
   )
   implements Mappable {
+  invoke(): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  pollForResults() {
+    return Promise.resolve(true);
+  }
   static readonly type = "wps-result";
   get typeName() {
     return i18next.t("models.webProcessingService.wpsResult");

@@ -1,18 +1,13 @@
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import AutoRefreshingMixin from "./AutoRefreshingMixin";
-import AsyncChartableMixin from "./AsyncChartableMixin";
-import AsyncMappableMixin from "./AsyncMappableMixin";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import { runInAction, action } from "mobx";
 import CatalogFunctionJobTraits from "../Traits/CatalogFunctionJobTraits";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
-import CreateModel from "../Models/CreateModel";
 import CommonStrata from "../Models/CommonStrata";
 import createStratumInstance from "../Models/createStratumInstance";
 import isDefined from "../Core/isDefined";
-
-const sprintf = require("terriajs-cesium/Source/ThirdParty/sprintf").default;
 
 type CatalogFunctionJobMixin = Model<CatalogFunctionJobTraits>;
 
@@ -24,25 +19,34 @@ function CatalogFunctionJobMixin<
   ) {
     protected init = false;
 
-    get refreshInterval() {
-      return 1;
+    abstract async invoke(): Promise<void>;
+
+    /**
+     * Called every refreshInterval - return indicates whether job has finished (true = finished)
+     */
+    abstract async pollForResults(): Promise<boolean>;
+
+    /**
+     * This function adapts AutoRefreshMixin's refreshData with this Mixin's pollForResults - adding the boolean return value which triggers refresh disable
+     */
+    refreshData() {
+      this.pollForResults().then(finished => {
+        if (finished) {
+          runInAction(() =>
+            this.setTrait(CommonStrata.user, "refreshEnabled", false)
+          );
+        }
+      });
     }
 
     loadPromise = Promise.resolve();
 
     protected forceLoadMetadata() {
-      const now = new Date();
-      const timestamp = sprintf(
-        "%04d-%02d-%02dT%02d:%02d:%02d",
-        now.getFullYear(),
-        now.getMonth() + 1,
-        now.getDate(),
-        now.getHours(),
-        now.getMinutes(),
-        now.getSeconds()
-      );
-
-      const id = `${this.name} ${timestamp}`;
+      if (this.jobStatus === "running" && !this.refreshEnabled) {
+        runInAction(() =>
+          this.setTrait(CommonStrata.user, "refreshEnabled", true)
+        );
+      }
 
       if (isDefined(this.parameters)) {
         const inputsSection =
@@ -62,12 +66,14 @@ function CatalogFunctionJobMixin<
           }, "") +
           "</table>";
 
+        console.log(inputsSection);
+
         runInAction(() => {
-          // CatalogFunctionJobJob!.setTrait(
-          //   CommonStrata.user,
-          //   "description",
-          //   `This is the result of invoking the ${this.name} process or service at ${timestamp} with the input parameters below.`
-          // );
+          this.setTrait(
+            CommonStrata.user,
+            "description",
+            `This is the result of invoking ${this.name} with the input parameters below.`
+          );
 
           this.setTrait(CommonStrata.user, "info", [
             createStratumInstance(InfoSectionTraits, {

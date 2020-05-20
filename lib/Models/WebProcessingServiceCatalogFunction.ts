@@ -97,6 +97,8 @@ type ParameterConverter = {
 export default class WebProcessingServiceCatalogFunction extends CatalogFunctionMixin(
   CreateModel(WebProcessingServiceCatalogFunctionTraits)
 ) {
+  readonly jobType = WebProcessingServiceCatalogItem.type;
+
   static readonly type = "wps";
   readonly typeName = "Web Processing Service (WPS)";
   readonly proxyCacheDuration = "1d";

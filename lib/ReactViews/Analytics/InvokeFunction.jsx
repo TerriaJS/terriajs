@@ -10,6 +10,8 @@ import Styles from "./invoke-function.scss";
 import { withTranslation } from "react-i18next";
 import { observer } from "mobx-react";
 import { runInAction, observable } from "mobx";
+import Terria from "../../Models/Terria";
+import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 
 class FunctionViewModel {
   constructor(catalogFunction) {
@@ -67,29 +69,24 @@ const InvokeFunction = observer(
       }
     },
 
-    submit() {
+    async submit() {
       try {
-        const promise = this.props.previewed.invoke().catch(terriaError => {
-          if (terriaError instanceof TerriaError) {
-            this.props.previewed.terria.error.raiseEvent(terriaError);
-          }
-        });
+        const submitted = await this.props.previewed.submitJob();
 
-        runInAction(() => {
-          // Close modal window
-          this.props.viewState.explorerPanelIsVisible = false;
-          // mobile switch to nowvewing
-          this.props.viewState.switchMobileView(
-            this.props.viewState.mobileViewOptions.preview
-          );
-        });
-
-        return promise;
+        if (submitted) {
+          runInAction(() => {
+            // Close modal window
+            this.props.viewState.explorerPanelIsVisible = false;
+            // mobile switch to nowvewing
+            this.props.viewState.switchMobileView(
+              this.props.viewState.mobileViewOptions.preview
+            );
+          });
+        }
       } catch (e) {
         if (e instanceof TerriaError) {
           this.props.previewed.terria.error.raiseEvent(e);
         }
-        return undefined;
       }
     },
 

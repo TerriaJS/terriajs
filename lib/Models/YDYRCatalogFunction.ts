@@ -18,6 +18,7 @@ import loadText from "../Core/loadText";
 import CsvCatalogItem from "./CsvCatalogItem";
 import CommonStrata from "./CommonStrata";
 import StringParameter from "./FunctionParameters/StringParameter";
+import YDYRCatalogFunctionJob from "./YDYRCatalogFunctionJob";
 
 export const DATASETS = [
   {
@@ -178,11 +179,17 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
   CreateModel(YDYRCatalogFunctionTraits)
 ) {
   static readonly type = "ydyr";
+  readonly jobType = YDYRCatalogFunctionJob.type;
+
   readonly typeName = "YourDataYourRegions";
 
   private _inputLayers?: EnumerationParameter;
   private _dataColumn?: EnumerationParameter;
   private _regionColumn?: EnumerationParameter;
+
+  protected async createJob(id: string) {
+    return new YDYRCatalogFunctionJob(id, this.terria);
+  }
 
   async forceLoadMetadata() {}
 
@@ -282,12 +289,12 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
   //   });
   // }
 
-  @computed get authenticationParameters(): StringParameter[] {
-    return [
-      new StringParameter(this, { id: "Username", isRequired: true }),
-      new StringParameter(this, { id: "Password", isRequired: true })
-    ];
-  }
+  // @computed get authenticationParameters(): StringParameter[] {
+  //   return [
+  //     new StringParameter(this, { id: "Username", isRequired: true }),
+  //     new StringParameter(this, { id: "Password", isRequired: true })
+  //   ];
+  // }
   /**
    *  Maps the input to function parameters.
    */
@@ -299,195 +306,9 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
       this.regionColumn,
       this.dataColumn,
       this.availableRegions,
-      ...this.algorithmParameters,
-      ...this.authenticationParameters
+      ...this.algorithmParameters
+      // ...this.authenticationParameters
       // this.sidedataParameters
     ];
   }
-
-  /**
-   * Performs the Execute request for the WPS process
-   *
-   * If `executeWithHttpGet` is true, a GET request is made
-   * instead of the default POST request.
-   */
-  @action
-  async invoke() {
-    if (
-      !isDefined(this.regionColumn.value) ||
-      !isDefined(this.dataColumn.value)
-    ) {
-      throw `The Region column and Data column must be defined`;
-    }
-
-    const data = {
-      ids: this.selectedTableCatalogMember?.findColumnByName(
-        this.regionColumn.value
-      )?.values,
-      values: this.selectedTableCatalogMember?.findColumnByName(
-        this.dataColumn.value
-      )?.valuesAsNumbers.values
-    };
-
-    if (!data.ids?.length || !data.values?.length) {
-      throw `The column selected has no valid data values`;
-    }
-
-    // Remove rows with null values
-    const invalidRows: number[] = filterOutUndefined(
-      data.values.map((val, idx) => (val === null ? idx : undefined))
-    );
-
-    console.log(invalidRows);
-
-    data.ids = data.ids.filter((id, idx) => !invalidRows.includes(idx));
-    data.values = data.values.filter(
-      (value, idx) => !invalidRows.includes(idx)
-    );
-
-    const params = {
-      data,
-      data_column: this.dataColumn.value,
-      geom_column: this.regionColumn.value,
-      side_data: DATASETS.find(d => d.title === this.availableRegions.value)
-        ?.sideData,
-      dst_geom: DATASETS.find(d => d.title === this.availableRegions.value)
-        ?.geographyName,
-      src_geom: this.selectedTableCatalogMember?.activeTableStyle.regionColumn
-        ?.regionType?.regionType,
-      averaged_counts: false,
-      algorithms: this.algorithmParameters
-        .filter(alg => alg.value)
-        .map(alg => alg.id)
-    };
-
-    const jobId = await loadWithXhr({
-      url: proxyCatalogItemUrl(
-        this,
-        `https://${this.authenticationParameters[0].value}:${this.authenticationParameters[1].value}@ydyr.info/api/v1/disaggregate.json`
-      ),
-      method: "POST",
-      data: JSON.stringify(params),
-      headers: { "Content-Type": "application/json" },
-      responseType: "json"
-    });
-
-    if (typeof jobId !== "string") {
-      throw `The YDYR server didn't provide a valid job id.`;
-    }
-
-    //   switch(createJobReponse.status) {
-    //     case 202:
-    //       createJobReponse.response
-    //       break
-    //     case 500:
-    //       break
-    //     default:
-    //       break
-    //   }
-
-    //   if(r.status === 202) {
-    //     // then the request was accepted
-    //     r.json().then(j => poller(j));
-    // } else if(r.status === 500) {
-    //     // server error
-    //     r.json().then(e => error({
-    //         title: (e && e.title) || 'Server Error',
-    //         detail: 'Job failed to submit' +
-    //             ((e && e.detail) ? (': ' + e.detail) : '')}));
-    // } else {
-    //     const subber = s => {
-    //         if(s.includes('is not valid under any of the given schemas')) {
-    //             return 'invalid JSON data';
-    //         }
-    //         return s.length < 100 ? s : (s.substring(0, 100) + '...');
-    //     }
-
-    //     r.json()
-    //       .then(e => error({
-    //         title: (e && e.title) || 'Server Error',
-    //         detail: 'Unexpected status (' + r.status.toString() + ') ' +
-    //             'when submitting job' +
-    //                 ((e && e.detail) ? (': ' + subber(e.detail)) : '')}))
-    //       .catch(e => error({
-    //         title: (e && e.title) || 'Error parsing JSON response',
-    //         detail: `Received ${r.status} response code and failed to parse response as JSON`
-    //       }));
-    // }
-
-    // const resultPendingCatalogItem = this.createPendingCatalogItem()
-    // this.terria.workbench.add(resultPendingCatalogItem);
-
-    this.pollForResults(jobId);
-
-    console.log(params);
-  }
-
-  async pollForResults(jobId: string, attempt = 0) {
-    const status = await loadJson(
-      proxyCatalogItemUrl(
-        this,
-        `https://${this.authenticationParameters[0].value}:${this.authenticationParameters[1].value}@ydyr.info/api/v1/status/${jobId}`
-      ),
-      { "Cache-Control": "no-cache" }
-    );
-
-    if (typeof status !== "string") {
-      console.log("COMPLETED");
-      console.log(status);
-      this.downloadResults(status.key);
-      return;
-    } else {
-      // resultPendingCatalogItem?.setTrait(
-      //   CommonStrata.user,
-      //   "description",
-      //   status
-      // );
-      console.log(status);
-    }
-
-    setTimeout(this.pollForResults.bind(this, jobId, attempt + 1), 1000);
-  }
-
-  async downloadResults(key: string) {
-    // resultPendingCatalogItem.setTrait(
-    //   CommonStrata.user,
-    //   "description",
-    //   "Job has finished, downloading CSV data"
-    // );
-    const csv = await loadText(
-      proxyCatalogItemUrl(
-        this,
-        `https://${this.authenticationParameters[0].value}:${this.authenticationParameters[1].value}@ydyr.info/api/v1/download/${key}?format=csv`
-      )
-    );
-    const item = new CsvCatalogItem(`${this.uniqueId}-result`, this.terria);
-    runInAction(() => {
-      item.setTrait(CommonStrata.user, "name", "YDYR results");
-      item.setTrait(CommonStrata.user, "csvString", csv);
-    });
-    await item.loadMapItems();
-    // this.terria.workbench.remove(resultPendingCatalogItem);
-
-    this.terria.workbench.add(item);
-  }
-}
-
-function throwInvalidWpsServerError(
-  wps: YDYRCatalogFunction,
-  endpoint: string
-) {
-  throw new TerriaError({
-    title: i18next.t("models.YDYR.invalidWPSServerTitle"),
-    message: i18next.t("models.YDYR.invalidWPSServerMessage", {
-      name: wps.name,
-      email:
-        '<a href="mailto:' +
-        wps.terria.supportEmail +
-        '">' +
-        wps.terria.supportEmail +
-        "</a>.",
-      endpoint
-    })
-  });
 }
