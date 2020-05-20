@@ -2,12 +2,10 @@ import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGrou
 import { autorun, runInAction } from "mobx";
 import Terria from "../../lib/Models/Terria";
 import i18next from "i18next";
-import WebMapServiceCatalogItem from "./../../dist/Models/WebMapServiceCatalogItem";
 
 describe("WebMapServiceCatalogGroup", function() {
   let terria: Terria;
   let wms: WebMapServiceCatalogGroup;
-  let wmsItem: WebMapServiceCatalogItem;
 
   beforeEach(function() {
     terria = new Terria();
