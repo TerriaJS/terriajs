@@ -9,20 +9,20 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
+import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import ModelReference from "../Traits/ModelReference";
 import WebMapServiceCatalogGroupTraits from "../Traits/WebMapServiceCatalogGroupTraits";
 import CommonStrata from "./CommonStrata";
+import createInfoSection from "./createInfoSection";
 import CreateModel from "./CreateModel";
 import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
+import StratumFromTraits from "./StratumFromTraits";
 import WebMapServiceCapabilities, {
   CapabilitiesLayer
 } from "./WebMapServiceCapabilities";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
-import createStratumInstance from "./createStratumInstance";
-import StratumFromTraits from "./StratumFromTraits";
 
 class GetCapabilitiesStratum extends LoadableStratum(
   WebMapServiceCatalogGroupTraits
@@ -77,14 +77,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
   @computed get info() {
     const result: StratumFromTraits<InfoSectionTraits>[] = [];
-    function newInfo(name: string, content?: string) {
-      const traits = createStratumInstance(InfoSectionTraits);
-      runInAction(() => {
-        traits.name = name;
-        traits.content = content;
-      });
-      return traits;
-    }
 
     const service = this.capabilities && this.capabilities.Service;
     if (service) {
@@ -98,7 +90,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
         )
       ) {
         result.push(
-          newInfo(
+          createInfoSection(
             i18next.t("models.webMapServiceCatalogGroup.abstract"),
             this.capabilities.Service.Abstract
           )
@@ -112,7 +104,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
         !/^none$/i.test(service.AccessConstraints)
       ) {
         result.push(
-          newInfo(
+          createInfoSection(
             i18next.t("models.webMapServiceCatalogGroup.accessConstraints"),
             this.capabilities.Service.AccessConstraints
           )
@@ -122,7 +114,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       // Show the Fees if it isn't "none".
       if (service && service.Fees && !/^none$/i.test(service.Fees)) {
         result.push(
-          newInfo(
+          createInfoSection(
             i18next.t("models.webMapServiceCatalogGroup.fees"),
             this.capabilities.Service.Fees
           )
