@@ -10,13 +10,14 @@ import { now } from "mobx-utils";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
 import AutoRefreshingTraits from "../Traits/AutoRefreshingTraits";
+import AsyncMappableMixin from "./AsyncMappableMixin";
 
 type AutoRefreshing = Model<AutoRefreshingTraits>;
 
 export default function AutoRefreshingMixin<
   T extends Constructor<AutoRefreshing>
 >(Base: T) {
-  abstract class AutoRefreshingMixin extends Base {
+  abstract class AutoRefreshingMixin extends AsyncMappableMixin(Base) {
     _autoRefreshDisposer: IReactionDisposer | undefined;
 
     /** Return the interval in seconds to poll for updates. */
@@ -76,6 +77,7 @@ export default function AutoRefreshingMixin<
     @computed
     get nextScheduledUpdateTime(): Date | undefined {
       if (
+        this.refreshEnabled &&
         this._pollingTimer !== undefined &&
         this.refreshInterval !== undefined
       ) {

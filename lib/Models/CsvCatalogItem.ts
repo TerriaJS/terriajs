@@ -17,6 +17,7 @@ import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import isDefined from "../Core/isDefined";
 import { BaseModel } from "./Model";
 import CommonStrata from "./CommonStrata";
+import runLater from "../Core/runLater";
 
 // Types of CSVs:
 // - Points - Latitude and longitude columns or address
@@ -33,10 +34,8 @@ const automaticTableStylesStratumName = "automaticTableStyles";
 
 export default class CsvCatalogItem extends TableMixin(
   AsyncChartableMixin(
-    AsyncMappableMixin(
-      AutoRefreshingMixin(
-        UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
-      )
+    AutoRefreshingMixin(
+      UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
     )
   )
 ) {
@@ -53,10 +52,12 @@ export default class CsvCatalogItem extends TableMixin(
   ) {
     super(id, terria, sourceReference);
 
-    runInAction(() =>
-      this.strata.set(
-        automaticTableStylesStratumName,
-        new TableAutomaticStylesStratum(this)
+    runLater(() =>
+      runInAction(() =>
+        this.strata.set(
+          automaticTableStylesStratumName,
+          new TableAutomaticStylesStratum(this)
+        )
       )
     );
   }
