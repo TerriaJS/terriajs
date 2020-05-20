@@ -24,10 +24,10 @@ import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import StoryPanel from "./../Story/StoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 import ToolPanel from "./../ToolPanel.jsx";
-import SectorTabs from "./../SidePanel/SectorTabs";
+// import SectorTabs from "./../SidePanel/SectorTabs";
 import SatelliteGuide from "../Guide/SatelliteGuide.jsx";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage.jsx";
-import SectorInfo from "../SidePanel/SectorInfo";
+// import SectorInfo from "../SidePanel/SectorInfo";
 import { Small, Medium } from "../Generic/Responsive";
 import classNames from "classnames";
 import "inobounce";
@@ -206,16 +206,18 @@ const StandardUserInterface = createReactClass({
                 }
               >
                 <Small>
-                  <MobileHeader
-                    terria={terria}
-                    menuItems={customElements.menu}
-                    viewState={this.props.viewState}
-                    version={this.props.version}
-                    allBaseMaps={allBaseMaps}
-                  />
-                  <div className={Styles.tabsContainer}>
-                    <SidePanelContent />
-                  </div>
+                  <>
+                    <MobileHeader
+                      terria={terria}
+                      menuItems={customElements.menu}
+                      viewState={this.props.viewState}
+                      version={this.props.version}
+                      allBaseMaps={allBaseMaps}
+                    />
+                    <div className={Styles.tabsContainer}>
+                      <SidePanelContent terria={terria} />
+                    </div>
+                  </>
                 </Small>
                 <Medium>
                   <div
@@ -235,7 +237,7 @@ const StandardUserInterface = createReactClass({
                     }}
                   >
                     <Branding terria={terria} version={this.props.version} />
-                    <SidePanelContent />
+                    <SidePanelContent terria={terria} />
                     <SidePanel
                       terria={terria}
                       viewState={this.props.viewState}
