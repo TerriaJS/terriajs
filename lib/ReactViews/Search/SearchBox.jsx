@@ -5,6 +5,7 @@ import debounce from "lodash-es/debounce";
 import Icon, { StyledIcon } from "../Icon";
 import styled, { withTheme } from "styled-components";
 import Box, { BoxSpan } from "../../Styled/Box";
+import Text from "../../Styled/Text";
 import { RawButton } from "../../Styled/Button";
 
 const SearchInput = styled.input`
@@ -167,20 +168,22 @@ export const SearchBox = createReactClass({
             />
           </Box>
         </label>
-        <SearchInput
-          ref={this.props.inputBoxRef}
-          id="search"
-          type="text"
-          name="search"
-          value={this.props.searchText}
-          onChange={this.handleChange}
-          onFocus={this.props.onFocus}
-          onKeyDown={this.onKeyDown}
-          placeholder={this.props.placeholder}
-          autoComplete="off"
-          autoFocus={this.props.autoFocus}
-          rounded
-        />
+        <Text textLightDimmed large semiBold>
+          <SearchInput
+            ref={this.props.inputBoxRef}
+            id="search"
+            type="text"
+            name="search"
+            value={this.props.searchText}
+            onChange={this.handleChange}
+            onFocus={this.props.onFocus}
+            onKeyDown={this.onKeyDown}
+            placeholder={this.props.placeholder}
+            autoComplete="off"
+            autoFocus={this.props.autoFocus}
+            rounded
+          />
+        </Text>
         {(this.props.alwaysShowClear || this.hasValue()) && clearButton}
       </form>
     );
