@@ -21,6 +21,7 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import ModelReference from "../Traits/ModelReference";
 import CommonStrata from "./CommonStrata";
 import replaceUnderscores from "../Core/replaceUnderscores";
+import createInfoSection from "./createInfoSection";
 
 interface DocumentInfo {
   Title?: string;
@@ -78,25 +79,16 @@ export class FeatureServerStratum extends LoadableStratum(
   }
 
   @computed get info() {
-    function newInfo(name: string, content?: string) {
-      const traits = createStratumInstance(InfoSectionTraits);
-      runInAction(() => {
-        traits.name = name;
-        traits.content = content;
-      });
-      return traits;
-    }
-
     return [
-      newInfo(
+      createInfoSection(
         i18next.t("models.arcGisFeatureServerCatalogGroup.serviceDescription"),
         this._featureServer.serviceDescription
       ),
-      newInfo(
+      createInfoSection(
         i18next.t("models.arcGisFeatureServerCatalogGroup.dataDescription"),
         this._featureServer.description
       ),
-      newInfo(
+      createInfoSection(
         i18next.t("models.arcGisFeatureServerCatalogGroup.copyrightText"),
         this._featureServer.copyrightText
       )

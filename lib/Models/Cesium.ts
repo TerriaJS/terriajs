@@ -58,6 +58,7 @@ import Terria from "./Terria";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import getElement from "terriajs-cesium/Source/Widgets/getElement";
 import LatLonHeight from "../Core/LatLonHeight";
+import filterOutUndefined from "../Core/filterOutUndefined";
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
 // Intermediary
@@ -1124,18 +1125,13 @@ export default class Cesium extends GlobeOrMap {
   }
 
   getImageryLayersForItem(item: Mappable): ImageryLayer[] {
-    const allImageryParts = item.mapItems.filter(ImageryParts.is);
-    const imageryLayers: ImageryLayer[] = [];
-
-    for (let i = 0; i < allImageryParts.length; i++) {
-      let index = this.scene.imageryLayers.indexOf(
-        this._makeImageryLayerFromParts(allImageryParts[i])
-      );
-      if (index !== -1) {
-        imageryLayers.push(<ImageryLayer>this.scene.imageryLayers.get(index));
-      }
-    }
-    return imageryLayers;
+    return filterOutUndefined(
+      item.mapItems.map(m => {
+        if (ImageryParts.is(m)) {
+          return this._makeImageryLayerFromParts(m) as ImageryLayer;
+        }
+      })
+    );
   }
 
   private _makeImageryLayerFromParts(parts: ImageryParts): Cesium.ImageryLayer {

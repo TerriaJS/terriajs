@@ -10,14 +10,6 @@ export default class DiscretelyTimeVaryingTraits extends mixTraits(
   TimeVaryingTraits,
   ShowableTraits
 ) {
-  @objectArrayTrait({
-    name: "Discrete Times",
-    description: "The discrete times at which this dataset is available.",
-    type: DiscreteTimeTraits,
-    idProperty: "time"
-  })
-  discreteTimes?: DiscreteTimeTraits[];
-
   @primitiveTrait({
     name: "Mapping from Continuous Time",
     description:
@@ -43,4 +35,11 @@ export default class DiscretelyTimeVaryingTraits extends mixTraits(
       "Type determines how the data availibility will be plotted on chart. eg: momentLines, momentPoints"
   })
   chartType: ChartItemType = "momentLines";
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Disable date time selector",
+    description: "When true, disables the date time selector in the workbench"
+  })
+  disableDateTimeSelector = false;
 }
