@@ -146,38 +146,44 @@ const TerrainSettingsPanel = createReactClass({
     });
   },
 
+  changeTerrainVertexNormals(option) {
+    let url = this.props.terria.cesium.viewer.scene.terrainProvider._layers[0]
+      .resource._url;
+    const substring = "assets.cesium";
+    if (url.includes(substring)) {
+      url = url.match(/\d+/)[0];
+      url = IonResource.fromAssetId(url);
+    }
+    this.props.terria.cesium.viewer.terrainProvider = new CesiumTerrainProvider(
+      {
+        url: url,
+        requestVertexNormals: option
+      }
+    );
+  },
+
   updateMaterial() {
+    let selectedShading = this.props.viewState.terrainMaterialSelection;
+    let material;
     let globe = this.props.terria.cesium.viewer.scene.globe;
-    this.props.terria.cesium.viewer.terrainProvider.hasVertexNormals;
 
     // TerrainProvider requestVertexNormals is needed to visualize slope.
     // To activate requestVertexNormals we need to define a new terrainProvider
     // using the existing terrain asset.
     if (
-      !this.props.terria.cesium.viewer.scene.terrainProvider
-        .requestVertexNormals
+      !this.props.terria.cesium.viewer.scene.terrainProvider.hasVertexNormals &&
+      selectedShading !== "none"
     ) {
-      let url = this.props.terria.cesium.viewer.scene.terrainProvider._layers[0]
-        .resource._url;
-      const substring = "assets.cesium";
-      if (url.includes(substring)) {
-        url = url.match(/\d+/)[0];
-        url = IonResource.fromAssetId(url);
-      }
-      this.props.terria.cesium.viewer.terrainProvider = new CesiumTerrainProvider(
-        {
-          url: url,
-          requestVertexNormals: true
-        }
-      );
+      this.changeTerrainVertexNormals(true);
+    } else if (
+      // Turn vertexNormals off
+      this.props.terria.cesium.viewer.scene.terrainProvider.hasVertexNormals &&
+      selectedShading === "none"
+    ) {
+      this.changeTerrainVertexNormals(false);
     }
 
     globe.enableLighting = true;
-
-    let selectedShading = this.props.viewState.terrainMaterialSelection;
-    this.selectedShading = "elevation";
-
-    let material;
 
     if (this.props.viewState.enableContour) {
       if (selectedShading === "elevation") {
