@@ -4,6 +4,9 @@ Change Log
 ### MobX Development
 
 #### mobx-next-release (mobx-31)
+* Fixed minor UI errors in console
+* Replaced helpful hints text with the new version
+* Made the shapes of some of the workbench components rounded
 * ((Placeholder some awesome new testing. or fixes. or features.))
 
 #### mobx-30
