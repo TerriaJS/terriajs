@@ -7,10 +7,10 @@ import Styles from "./terrain-settings.scss";
 import { withTranslation } from "react-i18next";
 import Slider from "rc-slider";
 import Icon from "../Icon.jsx";
+import { SliderPicker } from "react-color";
 
 var Material = require("terriajs-cesium/Source/Scene/Material").default;
 var Color = require("terriajs-cesium/Source/Core/Color").default;
-var Clock = require("terriajs-cesium/Source/Core/Clock").default;
 var JulianDate = require("terriajs-cesium/Source/Core/JulianDate").default;
 var CesiumTerrainProvider = require("terriajs-cesium/Source/Core/CesiumTerrainProvider")
   .default;
@@ -25,6 +25,20 @@ const TerrainSettingsPanel = createReactClass({
     viewState: PropTypes.object.isRequired,
     animationDuration: PropTypes.number,
     t: PropTypes.func.isRequired
+  },
+
+  getInitialState() {
+    return {
+      state: {
+        displayColorPicker: false,
+        color: {
+          r: "241",
+          g: "112",
+          b: "19",
+          a: "1"
+        }
+      }
+    };
   },
 
   getColorRamp(selectedShading) {
@@ -161,14 +175,7 @@ const TerrainSettingsPanel = createReactClass({
     globe.enableLighting = true;
 
     let selectedShading = this.props.viewState.terrainMaterialSelection;
-    let contourColor = Color.RED.clone();
     this.selectedShading = "elevation";
-    this.changeColor = function() {
-      this.props.viewState.contourUniforms.color = Cesium.Color.fromRandom(
-        { alpha: 1.0 },
-        contourColor
-      );
-    };
 
     let material;
 
@@ -205,7 +212,7 @@ const TerrainSettingsPanel = createReactClass({
       }
       this.props.viewState.contourUniforms.width = this.props.viewState.contourWidth;
       this.props.viewState.contourUniforms.spacing = this.props.viewState.contourSpacing;
-      this.props.viewState.contourUniforms.color = contourColor;
+      this.props.viewState.contourUniforms.color = this.props.viewState.cesiumContourColor;
     } else if (selectedShading === "elevation") {
       material = Material.fromType("ElevationRamp");
       this.props.viewState.shadingUniforms = material.uniforms;
@@ -232,16 +239,19 @@ const TerrainSettingsPanel = createReactClass({
   onChangeTerrainMaterial(e) {
     viewState.terrainMaterialSelection = e.target.value;
     this.updateMaterial();
+    this.props.terria.currentViewer.notifyRepaintRequired();
   },
 
   onChangeContourSpacing(value) {
     this.props.viewState.contourSpacing = value;
     this.props.viewState.contourUniforms.spacing = value;
+    this.props.terria.currentViewer.notifyRepaintRequired();
   },
 
   onChangeContourWidth(value) {
     this.props.viewState.contourWidth = value;
     this.props.viewState.contourUniforms.width = value;
+    this.props.terria.currentViewer.notifyRepaintRequired();
   },
 
   enableContourCheckBox() {
@@ -251,12 +261,14 @@ const TerrainSettingsPanel = createReactClass({
       this.props.viewState.enableContour = true;
     }
     this.updateMaterial();
+    this.props.terria.currentViewer.notifyRepaintRequired();
   },
 
   onChangeElevationRampRange(values) {
     this.props.viewState.elevationColorRampRang = values;
     this.props.viewState.shadingUniforms.minimumHeight = values[0];
     this.props.viewState.shadingUniforms.maximumHeight = values[1];
+    this.props.terria.currentViewer.notifyRepaintRequired();
   },
 
   onChangeClock(value) {
@@ -268,6 +280,20 @@ const TerrainSettingsPanel = createReactClass({
       new JulianDate()
     );
     this.props.terria.cesium.viewer.clock.currentTime = timeOffset;
+    this.props.terria.currentViewer.notifyRepaintRequired();
+  },
+
+  onChangeContourColor(color) {
+    this.setState({ color: color.rgb });
+
+    this.props.viewState.cesiumContourColor = Color.fromBytes(
+      color.rgb.r,
+      color.rgb.g,
+      color.rgb.b,
+      color.rgb.a
+    );
+    this.props.viewState.contourUniforms.color = this.props.viewState.cesiumContourColor;
+    this.props.terria.currentViewer.notifyRepaintRequired();
   },
 
   formatDate() {
@@ -452,6 +478,12 @@ const TerrainSettingsPanel = createReactClass({
                     onChange={this.onChangeContourWidth}
                   />
                 </div>
+                <div>
+                  <SliderPicker
+                    color={this.state.color}
+                    onChange={this.onChangeContourColor}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -461,5 +493,4 @@ const TerrainSettingsPanel = createReactClass({
   }
 });
 
-// export default TerrainSettingsPanel;
 export default withTranslation()(TerrainSettingsPanel);
