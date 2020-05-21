@@ -447,8 +447,6 @@ const TerrainSettingsPanel = createReactClass({
                 </div>
               )}
 
-              <hr className={Styles.topMargin} />
-
               <div>
                 <div className={Styles.topMargin}>
                   <label>
@@ -484,7 +482,7 @@ const TerrainSettingsPanel = createReactClass({
                     onChange={this.onChangeContourWidth}
                   />
                 </div>
-                <div>
+                <div className={Styles.topMargin}>
                   <SliderPicker
                     color={this.state.color}
                     onChange={this.onChangeContourColor}
