@@ -2,7 +2,6 @@
 
 import classNames from "classnames";
 import defined from "terriajs-cesium/Source/Core/defined";
-import ObserveModelMixin from "../ObserveModelMixin";
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
@@ -11,7 +10,6 @@ import Styles from "./notification-window.scss";
 
 const NotificationWindow = createReactClass({
   displayName: "NotificationWindow",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     title: PropTypes.string.isRequired,

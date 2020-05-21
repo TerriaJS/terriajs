@@ -12,7 +12,6 @@ import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 
 import GeoJsonCatalogItem from "../../Models/GeoJsonCatalogItem";
-import ObserveModelMixin from "../ObserveModelMixin";
 import WebMapServiceCatalogItem from "../../Models/WebMapServiceCatalogItem";
 import { withTranslation } from "react-i18next";
 
@@ -21,7 +20,6 @@ import Styles from "./parameter-editors.scss";
 
 const RegionPicker = createReactClass({
   displayName: "RegionPicker",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     previewed: PropTypes.object,

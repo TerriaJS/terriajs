@@ -1,4 +1,3 @@
-import ObserveModelMixin from "../ObserveModelMixin";
 import React from "react";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
@@ -13,7 +12,6 @@ import { withTranslation } from "react-i18next";
 const SideBarDatasetSearchResults = observer(
   createReactClass({
     displayName: "SideBarDatasetSearchResults",
-    mixins: [ObserveModelMixin],
 
     propTypes: {
       viewState: PropTypes.object.isRequired,
