@@ -39,6 +39,13 @@ export class ShortReportTraits extends ModelTraits {
     description: "The content of the section."
   })
   content?: string;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Show",
+    description: "Indicates if this short report section showing."
+  })
+  show = true;
 }
 
 export default class CatalogMemberTraits extends ModelTraits {
