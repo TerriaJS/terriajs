@@ -5,7 +5,6 @@ import isDefined from "../Core/isDefined";
 import loadWithXhr from "../Core/loadWithXhr";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import loadJson from "../Core/loadJson";
-import loadText from "../Core/loadText";
 import CsvCatalogItem from "./CsvCatalogItem";
 import CommonStrata from "./CommonStrata";
 import CatalogFunctionJobMixin from "../ModelMixins/CatalogFunctionJobMixin";
@@ -17,6 +16,8 @@ import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
   CreateModel(YDYRCatalogFunctionJobTraits)
 ) {
+  private csvResult?: CsvCatalogItem;
+
   @computed
   get mapItems(): MapItem[] {
     return [];
@@ -187,50 +188,54 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
     );
 
     if (typeof status !== "string") {
-      console.log(status);
+      runInAction(() => this.logs.push(JSON.stringify(status)));
       this.setTrait(CommonStrata.user, "resultId", status.key);
       return true;
     } else {
-      // resultPendingCatalogItem?.setTrait(
-      //   CommonStrata.user,
-      //   "description",
-      //   status
-      // );
-      console.log(status);
+      runInAction(() => this.logs.push(status));
+
       return false;
     }
   }
 
   async downloadResults() {
-    // if (!isDefined(this.auth)) {
-    //   return;
-    // }
-    // resultPendingCatalogItem.setTrait(
-    //   CommonStrata.user,
-    //   "description",
-    //   "Job has finished, downloading CSV data"
-    // );
-
     if (!isDefined(this.resultId)) {
-      return;
+      return [];
     }
 
-    const csv = await loadText(
-      proxyCatalogItemUrl(
-        this,
-        `${this.apiUrl}download/${this.resultId}?format=csv`
-      ),
-      {
-        "Cache-Control": "no-cache"
-      }
-    );
-    const item = new CsvCatalogItem(`${this.uniqueId}-result`, this.terria);
-    runInAction(() => {
-      item.setTrait(CommonStrata.user, "name", "YDYR results");
-      item.setTrait(CommonStrata.user, "csvString", csv);
-    });
-    await item.loadMapItems();
+    this.csvResult = new CsvCatalogItem(`${this.uniqueId}-result`, this.terria);
 
-    this.terria.workbench.add(item);
+    let regionColumnSplit = DATASETS.find(
+      d => d.title === this.parameters?.["Output Geography"]
+    )?.geographyName.split("_");
+    let regionColumn = "";
+
+    if (isDefined(regionColumnSplit) && regionColumnSplit!.length === 2) {
+      regionColumn = `${regionColumnSplit![0]}_code_${regionColumnSplit![1]}`;
+    }
+
+    runInAction(() => {
+      this.csvResult!.setTrait(
+        CommonStrata.user,
+        "name",
+        `${this.name} Results`
+      );
+      this.csvResult!.setTrait(
+        CommonStrata.user,
+        "url",
+        proxyCatalogItemUrl(
+          this,
+          `${this.apiUrl}download/${this.resultId}?format=csv`
+        )
+      );
+      if (regionColumn !== "") {
+        this.csvResult!.setTrait(CommonStrata.user, "excludeStyles", [
+          regionColumn
+        ]);
+      }
+    });
+    await this.csvResult.loadMapItems();
+
+    return [this.csvResult];
   }
 }

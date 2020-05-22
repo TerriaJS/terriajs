@@ -1,13 +1,21 @@
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import AutoRefreshingMixin from "./AutoRefreshingMixin";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
-import { runInAction, action, reaction, computed, observable } from "mobx";
+import {
+  runInAction,
+  action,
+  reaction,
+  computed,
+  observable,
+  IObservableArray
+} from "mobx";
 import CatalogFunctionJobTraits from "../Traits/CatalogFunctionJobTraits";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
 import CommonStrata from "../Models/CommonStrata";
 import createStratumInstance from "../Models/createStratumInstance";
 import isDefined from "../Core/isDefined";
+import AsyncMappableMixin from "./AsyncMappableMixin";
 
 type CatalogFunctionJobMixin = Model<CatalogFunctionJobTraits>;
 
@@ -22,10 +30,18 @@ function CatalogFunctionJobMixin<
 
       reaction(
         () => this.jobStatus,
-        () => {
+        async () => {
+          // Download results when finished
           if (this.jobStatus === "finished" && !this.downloadedResults) {
             this.downloadedResults = true;
-            this.downloadResults();
+            this.results = (await this.downloadResults()) || [];
+            this.results.forEach(result => {
+              this.terria.workbench.add(result);
+              this.terria.catalog.userAddedDataGroup.add(
+                CommonStrata.user,
+                result
+              );
+            });
           } else if (this.jobStatus === "running" && !this.refreshEnabled) {
             runInAction(() =>
               this.setTrait(CommonStrata.user, "refreshEnabled", true)
@@ -33,10 +49,33 @@ function CatalogFunctionJobMixin<
           }
         }
       );
+
+      reaction(
+        () => this.logs.map(log => log),
+        () => {
+          this.updateLogsShortReport();
+        }
+      );
+
+      reaction(
+        () => this.show,
+        () => {
+          this.results.forEach(result => {
+            if (AsyncMappableMixin.isMixedInto(result)) {
+              result.setTrait(CommonStrata.user, "show", this.show);
+            }
+            this.terria.workbench.add(result);
+          });
+        }
+      );
     }
 
-    @observable
-    private downloadedResults = false;
+    protected results: CatalogMemberMixin.CatalogMemberMixin[] = [];
+
+    @observable private downloadedResults = false;
+    private pollingForResults = false;
+
+    protected logs: IObservableArray<string> = observable([]);
 
     abstract async invoke(): Promise<void>;
 
@@ -45,7 +84,9 @@ function CatalogFunctionJobMixin<
      */
     abstract async pollForResults(): Promise<boolean>;
 
-    abstract async downloadResults(): Promise<void>;
+    abstract async downloadResults(): Promise<
+      CatalogMemberMixin.CatalogMemberMixin[] | void
+    >;
 
     /**
      * This function adapts AutoRefreshMixin's refreshData with this Mixin's pollForResults - adding the boolean return value which triggers refresh disable
@@ -56,6 +97,12 @@ function CatalogFunctionJobMixin<
           this.setTrait(CommonStrata.user, "jobStatus", "running")
         );
       }
+      if (this.pollingForResults) {
+        return;
+      }
+
+      this.pollingForResults = true;
+
       this.pollForResults().then(finished => {
         if (finished) {
           runInAction(() =>
@@ -65,6 +112,7 @@ function CatalogFunctionJobMixin<
             this.setTrait(CommonStrata.user, "refreshEnabled", false)
           );
         }
+        this.pollingForResults = false;
       });
     }
 
@@ -88,8 +136,6 @@ function CatalogFunctionJobMixin<
             );
           }, "") +
           "</table>";
-
-        console.log(inputsSection);
 
         runInAction(() => {
           this.setTrait(
@@ -123,6 +169,7 @@ function CatalogFunctionJobMixin<
         name: "Error Details",
         content: errorMessage || "The reason for failure is unknown."
       });
+
       const info = this.getTrait(CommonStrata.user, "info");
       if (isDefined(info)) {
         info.push(errorInfo);
@@ -131,17 +178,43 @@ function CatalogFunctionJobMixin<
 
     @computed
     get shortReport() {
+      let content = "";
       if (this.jobStatus === "inactive") {
-        return "Job is inactive";
+        content = "Job is inactive";
       } else if (this.jobStatus === "running") {
-        return "Job is running...";
+        content = "Job is running...";
       } else if (this.jobStatus === "finished") {
         if (this.downloadedResults) {
-          return "Job is finished";
+          content = "Job is finished";
         } else {
-          return "Job is finished, downloading results...";
+          content = "Job is finished, downloading results...";
         }
       }
+      return content;
+    }
+
+    @action
+    updateLogsShortReport() {
+      if (this.logs.length === 0) {
+        return;
+      }
+
+      let report = this.shortReportSections.find(
+        report => report.name === "Job Logs"
+      );
+
+      if (!isDefined(report)) {
+        report = this.addObject(
+          CommonStrata.user,
+          "shortReportSections",
+          "Job Logs"
+        );
+        if (!isDefined(report)) {
+          return;
+        }
+      }
+
+      report.setTrait(CommonStrata.user, "content", this.logs.join("\n"));
     }
 
     get hasCatalogFunctionJobMixin() {

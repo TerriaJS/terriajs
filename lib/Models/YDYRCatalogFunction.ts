@@ -1,23 +1,13 @@
-import { action, computed, runInAction, autorun, reaction } from "mobx";
-import TerriaError from "../Core/TerriaError";
+import { computed } from "mobx";
 import YDYRCatalogFunctionTraits from "../Traits/YDYRCatalogFunctionTraits";
 import CreateModel from "./CreateModel";
 import FunctionParameter from "./FunctionParameters/FunctionParameter";
-import i18next from "i18next";
 import CatalogFunctionMixin from "../ModelMixins/CatalogFunctionMixin";
 import EnumerationParameter from "./FunctionParameters/EnumerationParameter";
 import TableMixin from "../ModelMixins/TableMixin";
 import isDefined from "../Core/isDefined";
 import TableColumnType from "../Table/TableColumnType";
 import BooleanParameter from "./FunctionParameters/BooleanParameter";
-import loadWithXhr from "../Core/loadWithXhr";
-import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import filterOutUndefined from "../Core/filterOutUndefined";
-import loadJson from "../Core/loadJson";
-import loadText from "../Core/loadText";
-import CsvCatalogItem from "./CsvCatalogItem";
-import CommonStrata from "./CommonStrata";
-import StringParameter from "./FunctionParameters/StringParameter";
 import YDYRCatalogFunctionJob from "./YDYRCatalogFunctionJob";
 
 export const DATASETS = [
@@ -289,25 +279,17 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
   //   });
   // }
 
-  // @computed get authenticationParameters(): StringParameter[] {
-  //   return [
-  //     new StringParameter(this, { id: "Username", isRequired: true }),
-  //     new StringParameter(this, { id: "Password", isRequired: true })
-  //   ];
-  // }
   /**
    *  Maps the input to function parameters.
    */
   @computed
   get functionParameters(): FunctionParameter[] {
-    console.log(this);
     return [
       this.inputLayers,
       this.regionColumn,
       this.dataColumn,
       this.availableRegions,
       ...this.algorithmParameters
-      // ...this.authenticationParameters
       // this.sidedataParameters
     ];
   }
