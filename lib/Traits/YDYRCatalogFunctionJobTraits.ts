@@ -13,4 +13,11 @@ export default class YDYRCatalogFunctionJobTraits extends mixTraits(
     description: "Job ID for YDYR API."
   })
   jobId?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Result ID",
+    description: "Result ID for YDYR API."
+  })
+  resultId?: string;
 }

@@ -1,7 +1,7 @@
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import AutoRefreshingMixin from "./AutoRefreshingMixin";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
-import { runInAction, action } from "mobx";
+import { runInAction, action, reaction, computed, observable } from "mobx";
 import CatalogFunctionJobTraits from "../Traits/CatalogFunctionJobTraits";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
@@ -17,7 +17,26 @@ function CatalogFunctionJobMixin<
   abstract class CatalogFunctionJobMixin extends AutoRefreshingMixin(
     CatalogMemberMixin(Base)
   ) {
-    protected init = false;
+    constructor(...args: any[]) {
+      super(...args);
+
+      reaction(
+        () => this.jobStatus,
+        () => {
+          if (this.jobStatus === "finished" && !this.downloadedResults) {
+            this.downloadedResults = true;
+            this.downloadResults();
+          } else if (this.jobStatus === "running" && !this.refreshEnabled) {
+            runInAction(() =>
+              this.setTrait(CommonStrata.user, "refreshEnabled", true)
+            );
+          }
+        }
+      );
+    }
+
+    @observable
+    private downloadedResults = false;
 
     abstract async invoke(): Promise<void>;
 
@@ -26,12 +45,22 @@ function CatalogFunctionJobMixin<
      */
     abstract async pollForResults(): Promise<boolean>;
 
+    abstract async downloadResults(): Promise<void>;
+
     /**
      * This function adapts AutoRefreshMixin's refreshData with this Mixin's pollForResults - adding the boolean return value which triggers refresh disable
      */
     refreshData() {
+      if (this.jobStatus !== "running") {
+        runInAction(() =>
+          this.setTrait(CommonStrata.user, "jobStatus", "running")
+        );
+      }
       this.pollForResults().then(finished => {
         if (finished) {
+          runInAction(() =>
+            this.setTrait(CommonStrata.user, "jobStatus", "finished")
+          );
           runInAction(() =>
             this.setTrait(CommonStrata.user, "refreshEnabled", false)
           );
@@ -42,12 +71,6 @@ function CatalogFunctionJobMixin<
     loadPromise = Promise.resolve();
 
     protected forceLoadMetadata() {
-      if (this.jobStatus === "running" && !this.refreshEnabled) {
-        runInAction(() =>
-          this.setTrait(CommonStrata.user, "refreshEnabled", true)
-        );
-      }
-
       if (isDefined(this.parameters)) {
         const inputsSection =
           '<table class="cesium-infoBox-defaultTable">' +
@@ -83,7 +106,6 @@ function CatalogFunctionJobMixin<
           ]);
         });
       }
-
       return this.loadPromise;
     }
 
@@ -104,6 +126,21 @@ function CatalogFunctionJobMixin<
       const info = this.getTrait(CommonStrata.user, "info");
       if (isDefined(info)) {
         info.push(errorInfo);
+      }
+    }
+
+    @computed
+    get shortReport() {
+      if (this.jobStatus === "inactive") {
+        return "Job is inactive";
+      } else if (this.jobStatus === "running") {
+        return "Job is running...";
+      } else if (this.jobStatus === "finished") {
+        if (this.downloadedResults) {
+          return "Job is finished";
+        } else {
+          return "Job is finished, downloading results...";
+        }
       }
     }
 

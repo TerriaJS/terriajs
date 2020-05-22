@@ -13,8 +13,6 @@ import YDYRCatalogFunctionJobTraits from "../Traits/YDYRCatalogFunctionJobTraits
 import { ALGORITHMS, DATASETS } from "./YDYRCatalogFunction";
 import { MapItem } from "./Mappable";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import { isDOMComponent } from "react-dom/test-utils";
-import { isSupported } from "../Map/EarthGravityModel1996";
 
 export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
   CreateModel(YDYRCatalogFunctionJobTraits)
@@ -189,9 +187,8 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
     );
 
     if (typeof status !== "string") {
-      console.log("COMPLETED");
       console.log(status);
-      this.downloadResults(status.key);
+      this.setTrait(CommonStrata.user, "resultId", status.key);
       return true;
     } else {
       // resultPendingCatalogItem?.setTrait(
@@ -204,7 +201,7 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
     }
   }
 
-  async downloadResults(key: string) {
+  async downloadResults() {
     // if (!isDefined(this.auth)) {
     //   return;
     // }
@@ -214,8 +211,15 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
     //   "Job has finished, downloading CSV data"
     // );
 
+    if (!isDefined(this.resultId)) {
+      return;
+    }
+
     const csv = await loadText(
-      proxyCatalogItemUrl(this, `${this.apiUrl}download/${key}?format=csv`),
+      proxyCatalogItemUrl(
+        this,
+        `${this.apiUrl}download/${this.resultId}?format=csv`
+      ),
       {
         "Cache-Control": "no-cache"
       }

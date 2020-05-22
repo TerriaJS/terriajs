@@ -190,6 +190,9 @@ export default class WebProcessingServiceCatalogItem
     CatalogFunctionJobMixin(CreateModel(WebProcessingServiceCatalogItemTraits))
   )
   implements Mappable {
+  downloadResults(): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
   invoke(): Promise<void> {
     throw new Error("Method not implemented.");
   }
