@@ -9,6 +9,7 @@ import primitiveTrait from "./primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
 import TimeVaryingTraits from "./TimeVaryingTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
+import primitiveArrayTrait from "./primitiveArrayTrait";
 
 export default class TableTraits extends mixTraits(
   LayerOrderingTraits,
@@ -63,4 +64,20 @@ export default class TableTraits extends mixTraits(
     type: "string"
   })
   activeStyle?: string;
+
+  @primitiveArrayTrait({
+    name: "Exclude Styles",
+    description:
+      "The set of styles which are excluded. This can be used to exclude columns from layers which use automatic styles.",
+    type: "string"
+  })
+  excludeStyles?: string[];
+
+  @primitiveTrait({
+    name: "Enable manual region mapping",
+    description:
+      "If enabled, there will be controls to set region column and region type.",
+    type: "boolean"
+  })
+  enableManualRegionMapping?: boolean;
 }

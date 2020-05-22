@@ -76,8 +76,9 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
   get defaultChartStyle(): StratumFromTraits<TableStyleTraits> | undefined {
     const scalarColumns = this.catalogItem.tableColumns.filter(
       column =>
-        column.type === TableColumnType.scalar ||
-        column.type === TableColumnType.time
+        !this.catalogItem.excludeStyles?.includes(column.name) &&
+        (column.type === TableColumnType.scalar ||
+          column.type === TableColumnType.time)
     );
 
     if (scalarColumns.length >= 2) {
@@ -99,10 +100,11 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
     // Create a style to color by every scalar and enum.
     const columns = this.catalogItem.tableColumns.filter(
       column =>
-        column.type === TableColumnType.scalar ||
-        column.type === TableColumnType.enum ||
-        column.type === TableColumnType.region ||
-        column.type === TableColumnType.text
+        !this.catalogItem.excludeStyles?.includes(column.name) &&
+        (column.type === TableColumnType.scalar ||
+          column.type === TableColumnType.enum ||
+          column.type === TableColumnType.region ||
+          column.type === TableColumnType.text)
     );
 
     return columns.map((column, i) =>
