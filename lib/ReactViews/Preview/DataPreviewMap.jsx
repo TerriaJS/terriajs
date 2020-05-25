@@ -20,6 +20,8 @@ import { withTranslation } from "react-i18next";
 
 import Styles from "./data-preview-map.scss";
 
+const Receipt = require("../../Models/Receipt.js");
+
 /**
  * Leaflet-based preview map that sits within the preview.
  */
@@ -53,6 +55,8 @@ const DataPreviewMap = createReactClass({
       cesiumBaseUrl: terria.cesiumBaseUrl,
       analytics: new ConsoleAnalytics()
     });
+
+    Receipt.initialize(this.terriaPreview);
 
     this.terriaPreview.configParameters.hideTerriaLogo = true;
 
