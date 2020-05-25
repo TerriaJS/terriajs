@@ -6,7 +6,7 @@ import Branding from "./../SidePanel/Branding.jsx";
 import DragDropFile from "./../DragDropFile.jsx";
 import DragDropNotification from "./../DragDropNotification.jsx";
 import ExplorerWindow from "./../ExplorerWindow/ExplorerWindow.jsx";
-import FeatureInfoPanel from "./../FeatureInfo/FeatureInfoPanel.jsx";
+import FeatureInfoPanel from "./../RCFeatureInfo/FeatureInfoPanel.jsx";
 import FeedbackForm from "../Feedback/FeedbackForm.jsx";
 import MapColumn from "./MapColumn.jsx";
 import MapInteractionWindow from "./../Notification/MapInteractionWindow.jsx";

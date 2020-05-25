@@ -1,0 +1,56 @@
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
+
+.download {
+  float: right;
+  margin: 10px 1px;
+}
+
+.btn {
+  composes: btn from "./feature-info-panel.scss";
+  composes: btn-primary from "../../Sass/common/_buttons.scss";
+}
+
+.icon--download {
+  // the default icon styling for a dropdown is for a btn--primary, so we have to make some adjustments
+  padding-right: 10px;
+  svg {
+    position: absolute;
+    top: 6px;
+    right: 5px;
+    height: 20px;
+    width: 20px;
+    fill: currentColor;
+  }
+}
+
+.dropdown__list {
+  display: flex;
+  flex-direction: column;
+  li a {
+    // this makes sure the hover highlight fills the full width of the item
+    display: block;
+    padding-top: 0;
+    padding-bottom: 0;
+    width: 100%;
+    @if variable-exists(text-link) {
+      color: $text-link;
+    }
+    // Outside of a dropdown menu, links are normally shown with the same color on hover.
+    // So, to provide some highlighting on hover in a dropdown menu, use the visited link color,
+    // if it exists and is different from the unvisited link color.
+    &:hover {
+      @if variable-exists(text-visited-link) and
+        variable-exists(text-link) and
+        ($text-visited-link != $text-link)
+      {
+        color: $text-visited-link;
+        text-decoration: $link-text-decoration;
+      }
+    }
+  }
+}
+
+.dropdown__button {
+  composes: btn--small from "../../Sass/common/_buttons.scss";
+}
