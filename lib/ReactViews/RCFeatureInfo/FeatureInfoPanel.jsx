@@ -27,6 +27,8 @@ import raiseErrorToUser from "../../Models/raiseErrorToUser";
 import Styles from "./feature-info-panel.scss";
 import classNames from "classnames";
 
+import { launchStory } from "../../Models/Receipt";
+
 export const FeatureInfoPanel = createReactClass({
   displayName: "FeatureInfoPanel",
   mixins: [ObserveModelMixin],
@@ -245,9 +247,8 @@ export const FeatureInfoPanel = createReactClass({
   },
 
   openStory(storyId) {
-    // this.close();
-    // alert(storyId);
-    console.log("🎹", storyId);
+    launchStory(storyId, this.props.terria);
+    this.close();
   },
 
   render() {
