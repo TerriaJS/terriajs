@@ -43,6 +43,7 @@ function EmptyWorkbench(props) {
           {t("emptyWorkbench.emptyArea")}
         </Text>
       </Box>
+      <Spacing bottom={10} />
       <Box column paddedRatio={3}>
         <Box left>
           <Text extraLarge bold>
@@ -63,6 +64,14 @@ function EmptyWorkbench(props) {
           <Spacing right={1} />
           <Text medium light>
             {t("emptyWorkbench.helpfulHintsTwo")}
+          </Text>
+        </Box>
+        <Spacing bottom={3} />
+        <Box>
+          <HelpfulHintsIcon />
+          <Spacing right={1} />
+          <Text medium light>
+            {t("emptyWorkbench.helpfulHintsThree")}
           </Text>
         </Box>
       </Box>
@@ -119,6 +128,7 @@ const SidePanel = observer(
       this.props.viewState.openUserData();
     },
     render() {
+      console.log(this.props.theme);
       const { t, theme } = this.props;
       const addData = t("addData.addDataBtnText");
       const uploadText = t("models.catalog.upload");

@@ -471,8 +471,9 @@
   "emptyWorkbench": {
     "emptyArea": "Your workbench is empty",
     "helpfulHints": "Helpful hints",
-    "helpfulHintsOne": "Browse the available data by selecting ‘Explore map data’ or click ‘Upload’ to add your own data to the map.",
-    "helpfulHintsTwo": "In the workbench you can toggle datasets on and off, change their opacity, activate the split screen comparison, change styles, and navigate through dates and times, if the data supports this functionality."
+    "helpfulHintsOne": "Browse available data by selecting ‘Explore map data’ or click ‘Upload’ to add your own data to the map.",
+    "helpfulHintsTwo": "Once you’ve added data to the map, your active data sets are listed here in your workbench. The workbench will help you to interact with the data.",
+    "helpfulHintsThree": "In the workbench you can toggle data sets on and off, change their opacity, activate the split screen comparison, change styles, and navigate through dates and times, if the data supports this functionality."
   },
   "dataCatalog": {
     "groupRemove": "remove this group",

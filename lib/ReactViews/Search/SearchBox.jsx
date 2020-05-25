@@ -21,6 +21,11 @@ const SearchInput = styled.input`
   vertical-align: middle;
   -webkit-appearance: none;
   background-color: ${props => props.theme.textDarker};
+
+  ::placeholder {
+    color: ${props => props.theme.textLight};
+    opacity: 1;
+  }
 `;
 
 export const DEBOUNCE_INTERVAL = 1000;
@@ -138,8 +143,8 @@ export const SearchBox = withTheme(
             <StyledIcon
               glyph={Icon.GLYPHS.close}
               styledWidth={"15px"}
-              fillColor={this.props.theme.textLightDimmed}
-              opacity={"0.5"}
+              fillColor={this.props.theme.textLight}
+              // opacity={"0.5"}
             />
           </BoxSpan>
         </RawButton>
@@ -164,12 +169,12 @@ export const SearchBox = withTheme(
               <StyledIcon
                 glyph={Icon.GLYPHS.search}
                 styledWidth={"20px"}
-                fillColor={this.props.theme.textLightDimmed}
-                opacity={"0.5"}
+                fillColor={this.props.theme.textLight}
+                // opacity={"0.5"}
               />
             </Box>
           </label>
-          <Text textLightDimmed large semiBold>
+          <Text color={this.props.theme.textLight} large semiBold>
             <SearchInput
               ref={this.props.inputBoxRef}
               id="search"
