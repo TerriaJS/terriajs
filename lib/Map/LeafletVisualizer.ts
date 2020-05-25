@@ -203,7 +203,13 @@ class LeafletGeomVisualizer {
         );
       }
       if (isDefined(entity.billboard)) {
-        this._updateBillboard(entity, time, entityHash, entityDetails, applyLocalisedAntiMeridianFix === true ? bounds : undefined);
+        this._updateBillboard(
+          entity,
+          time,
+          entityHash,
+          entityDetails,
+          applyLocalisedAntiMeridianFix === true ? bounds : undefined
+        );
       }
       if (isDefined(entity.label)) {
         this._updateLabel(entity, time, entityHash, entityDetails);
@@ -302,7 +308,10 @@ class LeafletGeomVisualizer {
       return layer;
     }
 
-    if (!Cartesian3.equals(position, details.lastPosition) || boundsJustChanged) {
+    if (
+      !Cartesian3.equals(position, details.lastPosition) ||
+      boundsJustChanged
+    ) {
       layer.setLatLng(positionToLatLng(position, bounds));
       Cartesian3.clone(position, details.lastPosition);
     }
@@ -979,23 +988,25 @@ function _isCloseToWesternAntiMeridian(bounds: LatLngBounds) {
   return false;
 }
 
-function positionToLatLng(position: Cartesian3, bounds: LatLngBounds | undefined) {
-    var cartographic = Ellipsoid.WGS84.cartesianToCartographic(position);
-    let lon = CesiumMath.toDegrees(cartographic.longitude);
-    if (bounds !== undefined) {
-      if (_isCloseToEasternAntiMeridian(bounds)) {
-        if (lon < -140) {
-          lon = lon + 360;
-        }
-      } else if (_isCloseToWesternAntiMeridian(bounds)) {
-        if (lon > 140) {
-          lon = lon - 360;
-        }
+function positionToLatLng(
+  position: Cartesian3,
+  bounds: LatLngBounds | undefined
+) {
+  var cartographic = Ellipsoid.WGS84.cartesianToCartographic(position);
+  let lon = CesiumMath.toDegrees(cartographic.longitude);
+  if (bounds !== undefined) {
+    if (_isCloseToEasternAntiMeridian(bounds)) {
+      if (lon < -140) {
+        lon = lon + 360;
+      }
+    } else if (_isCloseToWesternAntiMeridian(bounds)) {
+      if (lon > 140) {
+        lon = lon - 360;
       }
     }
-    return L.latLng(CesiumMath.toDegrees(cartographic.latitude), lon);
   }
-
+  return L.latLng(CesiumMath.toDegrees(cartographic.latitude), lon);
+}
 
 function hierarchyToLatLngs(hierarchy: PolygonHierarchy) {
   // This function currently does not handle polygons with holes.

@@ -8,6 +8,7 @@ Change Log
 * Added `Title`, `ContactInformation`, `Fees` to the `CapabilitiesService` interface so they are pulled on metadata load.
 * Resolved name issue of `WebMapServiceCapabilities`. Now it returns a name resolved from `capabilities` unless it is set by user.
 * Added setting of `isOpenInWorkbench`, `isExperiencingIssues`, `hideLegendInWorkbench`, `hideSource` strats for `WebMapServiceCatalogItem` from `WebMapServiceCatalogGroup`.
+* Fix handling of points and markers around the anti-meridian in the `LeafletVisualizer`.
 
 #### mobx-30
 * Ported welcome message to mobx with new designs
