@@ -11,10 +11,7 @@ class SidePanelContent extends React.Component {
   };
   showSectorInfo = sector => {
     const { terria } = this.props;
-    knockout.getObservable(terria, "selectedSector").subscribe(() => {
-      const selectedSector = terria.selectedSector;
-      terria.selectedSector = "agriculture";
-    });
+    terria.selectedSector = "manufacturing";
 
     this.setState({
       sector: {
@@ -23,22 +20,6 @@ class SidePanelContent extends React.Component {
       }
     });
   };
-  // componentDidMount() {
-  //   const { terria } = this.props;
-  //   this.selectedSectorSubscription = knockout
-  //     .getObservable(terria, "selectedSector")
-  //     .subscribe(() => {
-  //       const selectedSector = terria.selectedSector;
-  //       console.log('CDM', selectedSector);
-  //     });
-  // }
-  // componentWillUnmount() {
-  //   if (defined(this.selectedSectorSubscription)) {
-  //     this.selectedSectorSubscription.dispose();
-  //     this.selectedSectorSubscription = undefined;
-  //   }
-  // }
-
   render() {
     const { sector } = this.state;
 
