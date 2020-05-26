@@ -236,7 +236,7 @@ const StandardUserInterface = createReactClass({
                     }}
                   >
                     <Branding terria={terria} version={this.props.version} />
-                    <SidePanelContent />
+                    {!showStoryPanel && <SidePanelContent />}
                     {showStoryPanel && (
                       <RCStoryPanel
                         terria={terria}
@@ -293,11 +293,11 @@ const StandardUserInterface = createReactClass({
                 menuItems={customElements.menu}
                 animationDuration={animationDuration}
               />
-              <MapNavigation
+              {/* <MapNavigation
                 terria={terria}
                 viewState={this.props.viewState}
                 navItems={customElements.nav}
-              />
+              /> */}
             </div>
           </If>
 
