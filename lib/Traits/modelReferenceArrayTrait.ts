@@ -101,7 +101,7 @@ export class ModelReferenceArrayTrait extends Trait {
           });
         }
         try {
-         const nestedModel = upsertModelFromJson(
+          const nestedModel = upsertModelFromJson(
             this.factory,
             model.terria,
             model.uniqueId === undefined ? "/" : model.uniqueId,
@@ -109,11 +109,10 @@ export class ModelReferenceArrayTrait extends Trait {
             stratumName,
             jsonElement
           );
-        return nestedModel.uniqueId!;
-      } catch (err) {
-         return undefined
-       }
-
+          return nestedModel.uniqueId!;
+        } catch (err) {
+          return undefined;
+        }
       } else {
         throw new TerriaError({
           title: "Invalid property",
