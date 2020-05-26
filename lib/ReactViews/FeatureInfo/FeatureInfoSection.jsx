@@ -503,7 +503,11 @@ function applyFormatsInPlace(properties, formats) {
  */
 function replaceBadKeyCharacters(properties) {
   // if properties is anything other than an Object type, return it. Otherwise recurse through its properties.
-  if (!properties || typeof properties !== "object" || Array.isArray(properties)) {
+  if (
+    !properties ||
+    typeof properties !== "object" ||
+    Array.isArray(properties)
+  ) {
     return properties;
   }
   const result = {};
