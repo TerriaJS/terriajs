@@ -3,7 +3,10 @@ Change Log
 
 ### MobX Development
 
-#### mobx-next-release (mobx-31)
+#### mobx-next-release (mobx-32)
+* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
+
+#### mobx-31
 * Fixes broken time filter location picker when other features are present on the map.
 * Fixes the feature info panel button to show imagery at the selected location.
 * Added `hideSource` trait to `CatalogMemberTraits`. When set to true source URL won't be visible in the explorer window.
