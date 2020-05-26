@@ -12,7 +12,6 @@ import classNames from "classnames";
 import dateFormat from "dateformat";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import isArray from "terriajs-cesium/Source/Core/isArray";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import { observer } from "mobx-react";
 
@@ -504,7 +503,7 @@ function applyFormatsInPlace(properties, formats) {
  */
 function replaceBadKeyCharacters(properties) {
   // if properties is anything other than an Object type, return it. Otherwise recurse through its properties.
-  if (!properties || typeof properties !== "object" || isArray(properties)) {
+  if (!properties || typeof properties !== "object" || Array.isArray(properties)) {
     return properties;
   }
   const result = {};
