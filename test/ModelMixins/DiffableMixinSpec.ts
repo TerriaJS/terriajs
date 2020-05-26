@@ -1,0 +1,88 @@
+import { computed, action } from "mobx";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import DiffableMixin from "../../lib/ModelMixins/DiffableMixin";
+import TimeFilterMixin from "../../lib/ModelMixins/TimeFilterMixin";
+import CommonStrata from "../../lib/Models/CommonStrata";
+import CreateModel from "../../lib/Models/CreateModel";
+import SelectableStyle from "../../lib/Models/SelectableStyle";
+import Terria from "../../lib/Models/Terria";
+import CatalogMemberTraits from "../../lib/Traits/CatalogMemberTraits";
+import DiffableTraits from "../../lib/Traits/DiffableTraits";
+import DiscretelyTimeVaryingTraits from "../../lib/Traits/DiscretelyTimeVaryingTraits";
+import MappableTraits from "../../lib/Traits/MappableTraits";
+import mixTraits from "../../lib/Traits/mixTraits";
+import ShowableTraits from "../../lib/Traits/ShowableTraits";
+import SplitterTraits from "../../lib/Traits/SplitterTraits";
+import TimeFilterTraits from "../../lib/Traits/TimeFilterTraits";
+
+describe("DiffableMixin", function() {
+  describe("canFilterTimeByFeature", function() {
+    it(
+      "returns false if the item is showing diff",
+      action(function() {
+        const testItem = new TestCatalogItem("test", new Terria());
+        testItem.setTrait(CommonStrata.user, "isShowingDiff", true);
+        expect(testItem.canFilterTimeByFeature).toBe(false);
+      })
+    );
+
+    it(
+      "returns the inherited value",
+      action(function() {
+        const testItem = new TestCatalogItem("test", new Terria());
+        testItem.setTrait(CommonStrata.user, "isShowingDiff", false);
+        testItem.setTrait(CommonStrata.user, "timeFilterPropertyName", "foo");
+        expect(testItem.canFilterTimeByFeature).toBe(true);
+        testItem.setTrait(
+          CommonStrata.user,
+          "timeFilterPropertyName",
+          undefined
+        );
+        expect(testItem.canFilterTimeByFeature).toBe(false);
+      })
+    );
+  });
+});
+
+class TestCatalogItem extends DiffableMixin(
+  TimeFilterMixin(
+    CreateModel(
+      mixTraits(
+        DiffableTraits,
+        ShowableTraits,
+        CatalogMemberTraits,
+        SplitterTraits,
+        TimeFilterTraits,
+        DiscretelyTimeVaryingTraits,
+        MappableTraits
+      )
+    )
+  )
+) {
+  styleSelector: SelectableStyle | undefined = undefined;
+
+  get discreteTimes() {
+    return undefined;
+  }
+
+  showDiffImage(
+    firstDate: JulianDate,
+    secondDate: JulianDate,
+    diffStyleId: string
+  ) {}
+
+  clearDiffImage() {}
+
+  getLegendUrlForDiffStyle(
+    diffStyleId: string,
+    firstDate: JulianDate,
+    secondDate: JulianDate
+  ) {
+    return "test-legend-url";
+  }
+
+  @computed
+  get mapItems() {
+    return [];
+  }
+}
