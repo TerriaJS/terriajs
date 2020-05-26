@@ -4,6 +4,7 @@ import { BaseModel } from "../Models/Model";
 import ModelFactory from "../Models/ModelFactory";
 import upsertModelFromJson from "../Models/upsertModelFromJson";
 import ModelReference from "./ModelReference";
+import filterOutUndefined from "../Core/filterOutUndefined";
 import Trait, { TraitOptions } from "./Trait";
 
 export interface ModelArrayTraitOptions extends TraitOptions {
@@ -99,18 +100,20 @@ export class ModelReferenceArrayTrait extends Trait {
               "A modelReferenceArrayTrait does not have a factory but it contains an embedded model that does not yet exist."
           });
         }
-
-        const nestedModel = upsertModelFromJson(
-          this.factory,
-          model.terria,
-          model.uniqueId === undefined ? "/" : model.uniqueId,
-          undefined,
-          stratumName,
-          jsonElement
-        );
-
-        // This model will definitely have an ID.
+        try {
+         const nestedModel = upsertModelFromJson(
+            this.factory,
+            model.terria,
+            model.uniqueId === undefined ? "/" : model.uniqueId,
+            undefined,
+            stratumName,
+            jsonElement
+          );
         return nestedModel.uniqueId!;
+      } catch (err) {
+         return undefined
+       }
+
       } else {
         throw new TerriaError({
           title: "Invalid property",
@@ -120,8 +123,7 @@ export class ModelReferenceArrayTrait extends Trait {
         });
       }
     });
-
-    return result;
+    return filterOutUndefined(result);
   }
 
   toJson(value: ReadonlyArray<ModelReference> | undefined): any {
