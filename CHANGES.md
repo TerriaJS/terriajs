@@ -4,6 +4,8 @@ Change Log
 ### MobX Development
 
 #### mobx-next-release (mobx-31)
+* Fixes broken time filter location picker when other features are present on the map.
+* Fixes the feature info panel button to show imagery at the selected location.
 * Added `hideSource` trait to `CatalogMemberTraits`. When set to true source URL won't be visible in the explorer window.
 * Added `Title`, `ContactInformation`, `Fees` to the `CapabilitiesService` interface so they are pulled on metadata load.
 * Resolved name issue of `WebMapServiceCapabilities`. Now it returns a name resolved from `capabilities` unless it is set by user.
