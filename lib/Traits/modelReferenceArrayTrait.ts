@@ -100,19 +100,15 @@ export class ModelReferenceArrayTrait extends Trait {
               "A modelReferenceArrayTrait does not have a factory but it contains an embedded model that does not yet exist."
           });
         }
-        try {
-          const nestedModel = upsertModelFromJson(
-            this.factory,
-            model.terria,
-            model.uniqueId === undefined ? "/" : model.uniqueId,
-            undefined,
-            stratumName,
-            jsonElement
-          );
-          return nestedModel.uniqueId!;
-        } catch (err) {
-          return undefined;
-        }
+        const nestedModel = upsertModelFromJson(
+          this.factory,
+          model.terria,
+          model.uniqueId === undefined ? "/" : model.uniqueId,
+          undefined,
+          stratumName,
+          jsonElement
+        );
+        return nestedModel.uniqueId!;
       } else {
         throw new TerriaError({
           title: "Invalid property",
@@ -122,7 +118,7 @@ export class ModelReferenceArrayTrait extends Trait {
         });
       }
     });
-    return filterOutUndefined(result);
+    return result;
   }
 
   toJson(value: ReadonlyArray<ModelReference> | undefined): any {

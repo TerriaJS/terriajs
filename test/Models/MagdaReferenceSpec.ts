@@ -3,6 +3,7 @@ import CatalogGroup from "../../lib/Models/CatalogGroupNew";
 import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
+import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
 import MagdaReference from "../../lib/Models/MagdaReference";
 import Terria from "../../lib/Models/Terria";
 
@@ -33,6 +34,7 @@ describe("MagdaReference", function() {
   beforeEach(function() {
     CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
     CatalogMemberFactory.register(CsvCatalogItem.type, CsvCatalogItem);
+    CatalogMemberFactory.register(GeoJsonCatalogItem.type, GeoJsonCatalogItem);
   });
 
   it("can dereference to a group", function(done) {
@@ -228,5 +230,79 @@ describe("MagdaReference", function() {
       })
       .then(done)
       .catch(done.fail);
+  });
+
+
+  it("loads valid items and ignores broken items", async function() {
+    const groupWithBrokenItem = {
+      "aspects":{
+        "group":{
+          "members":[{
+            "aspects":{
+              "terria":{
+                "definition":{
+                  "name":"GeoJSON Another Test",
+                  "url":"http://ci.terria.io/master/test/bike_racks.geojson"
+                },
+                "id":"fa0e6775-e285-4f49-8d5a-abd58cbfdfad",
+                "type":"geojson"
+              }
+            },
+            "id":"fa0e6775-e285-4f49-8d5a-abd58cbfdfad",
+            "name":"GeoJSON Another Test"
+          },
+          {
+            "aspects":{
+              "terria":{
+                "definition":{
+                  "name":"GeoJSON Another Test with broken url",
+                  "url":null
+                },
+                "id":"1057cfde-243b-4aa0-8bba-732f45327c96",
+                "type":"geojson"
+              }
+            },
+            "id":"1057cfde-243b-4aa0-8bba-732f45327c96",
+            "name":"GeoJSON Another Test with broken url"
+          }
+          ]
+        },
+        "terria":{
+          "definition":{
+            "description":
+            "New empty catalog group",
+            "name":"Contains broken stuff"
+          },
+          "id":"c0f03092-d7e8-4ff0-9edd-72393b256960",
+          "type":"group"
+        }
+      },
+      "id":"c0f03092-d7e8-4ff0-9edd-72393b256960",
+      "name":"Contains broken stuff",
+      "tenantId":0
+    };
+
+    const terria = new Terria();
+    const model = new MagdaReference(undefined, terria);
+
+    model.setTrait(CommonStrata.definition, "recordId", "test-group");
+    model.setTrait(
+      CommonStrata.definition,
+      "magdaRecord",
+      groupWithBrokenItem
+    );
+
+    await model.loadReference();
+
+    const group = model.target as CatalogGroup;
+    expect(group.members.length).toBe(2);
+
+    const member0 = group.memberModels[0] as GeoJsonCatalogItem;
+    expect(member0.uniqueId).toBe("fa0e6775-e285-4f49-8d5a-abd58cbfdfad");
+    expect(member0.isExperiencingIssues).toBe(false);
+
+    const member1 = group.memberModels[1] as GeoJsonCatalogItem;
+    expect(member1.uniqueId).toBe("1057cfde-243b-4aa0-8bba-732f45327c96");
+    expect(member1.isExperiencingIssues).toBe(true);
   });
 });

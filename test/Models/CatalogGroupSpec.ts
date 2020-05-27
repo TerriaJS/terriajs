@@ -1,5 +1,6 @@
 import CatalogGroup from "../../lib/Models/CatalogGroupNew";
 import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
+import BaseModel from "../../lib/Models/GeoJsonCatalogItem";
 import Terria from "../../lib/Models/Terria";
 import upsertModelFromJson from "../../lib/Models/upsertModelFromJson";
 import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
@@ -88,7 +89,7 @@ describe("CatalogGroup", function() {
     const groupWithBrokenItem = [
       {
         type: "geojson",
-        name: "Invalid item Test",
+        name: "Invalid GeoJSON item",
         url: null
       },
       {
@@ -99,7 +100,13 @@ describe("CatalogGroup", function() {
     ];
     const group = new CatalogGroup("brokenGroup", terria);
     group.addMembersFromJson("definition", groupWithBrokenItem);
-    expect(group.members.length).toBe(1);
-    expect(group.members[0]).toBe("brokenGroup/Valid GeoJSON item");
+    expect(group.members.length).toBe(2);
+    let member0 = terria.getModelById(BaseModel, group.members[0]);
+    expect(member0.uniqueId).toBe("brokenGroup/Invalid GeoJSON item");
+    expect(member0.isExperiencingIssues).toBe(true);
+
+    let member1 = terria.getModelById(BaseModel, group.members[1]);
+    expect(member1.uniqueId).toBe("brokenGroup/Valid GeoJSON item");
+    expect(member1.isExperiencingIssues).toBe(false);
   });
 });

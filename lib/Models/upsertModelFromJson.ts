@@ -51,7 +51,10 @@ export default function upsertModelFromJson(
     }
   }
 
-  updateModelFromJson(model, stratumName, json, replaceStratum);
-
+  try {
+    updateModelFromJson(model, stratumName, json, replaceStratum);
+  } catch {
+    model.setTrait('override', 'isExperiencingIssues', true)
+  }
   return model;
 }
