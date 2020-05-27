@@ -20,7 +20,7 @@ describe("DiffableMixin", function() {
     it(
       "returns false if the item is showing diff",
       action(function() {
-        const testItem = new TestCatalogItem("test", new Terria());
+        const testItem = new TestDiffableItem("test", new Terria());
         testItem.setTrait(CommonStrata.user, "isShowingDiff", true);
         expect(testItem.canFilterTimeByFeature).toBe(false);
       })
@@ -29,7 +29,7 @@ describe("DiffableMixin", function() {
     it(
       "otherwise returns the inherited value",
       action(function() {
-        const testItem = new TestCatalogItem("test", new Terria());
+        const testItem = new TestDiffableItem("test", new Terria());
         testItem.setTrait(CommonStrata.user, "isShowingDiff", false);
         testItem.setTrait(CommonStrata.user, "timeFilterPropertyName", "foo");
         expect(testItem.canFilterTimeByFeature).toBe(true);
@@ -44,7 +44,7 @@ describe("DiffableMixin", function() {
   });
 });
 
-class TestCatalogItem extends DiffableMixin(
+class TestDiffableItem extends DiffableMixin(
   TimeFilterMixin(
     CreateModel(
       mixTraits(
