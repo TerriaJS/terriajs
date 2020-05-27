@@ -3,13 +3,11 @@ Change Log
 
 ### MobX Development
 
-#### mobx-next-release (mobx-31)
+#### mobx-next-release (mobx-32)
+* Fixed a regression bug where the time filter is shown for all satellite imagery items
 * Fixed minor UI errors in console
 * Replaced helpful hints text with the new version
 * Made the shapes of some of the workbench components rounded
-* ((Placeholder some awesome new testing. or fixes. or features.))
-#### mobx-next-release (mobx-32)
-* Fixed a regression bug where the time filter is shown for all satellite imagery items
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-31
