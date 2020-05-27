@@ -11,16 +11,24 @@ const Spacing: React.ComponentType<{
 }> = require("../Styled/Spacing").default;
 const Button: React.ComponentType<any> = require("../Styled/Button").default;
 
+enum CopyStatus {
+  Success,
+  Error,
+  NotCopiedOrWaiting // Copy button hasn't been clicked or clipboard.js hasn't copied the data yet
+}
+
 interface ClipboardProps {
   id: string;
-  source: React.ElementType;
+  source: React.ReactElement;
   theme: "dark" | "light";
 }
 
 const Clipboard: React.FC<ClipboardProps> = props => {
   const { id, source, theme } = props;
   const { t } = useTranslation();
-  const [copySuccess, setCopySuccess] = useState<boolean | null>(null);
+  const [status, setStatus] = useState<CopyStatus>(
+    CopyStatus.NotCopiedOrWaiting
+  );
   useEffect(() => {
     // Setup clipboard.js and show a tooltip on copy success or error for 3s
     const clipboardBtn = new clipboard(`.btn-copy-${id}`);
@@ -34,15 +42,15 @@ const Clipboard: React.FC<ClipboardProps> = props => {
     function resetTooltipLater() {
       removeTimeout();
       timerId = setTimeout(() => {
-        setCopySuccess(null);
+        setStatus(CopyStatus.NotCopiedOrWaiting);
       }, 3000);
     }
     clipboardBtn.on("success", () => {
-      setCopySuccess(true);
+      setStatus(CopyStatus.Success);
       resetTooltipLater();
     });
     clipboardBtn.on("error", () => {
-      setCopySuccess(false);
+      setStatus(CopyStatus.Error);
       resetTooltipLater();
     });
     return function cleanup() {
@@ -73,7 +81,7 @@ const Clipboard: React.FC<ClipboardProps> = props => {
           {t("clipboard.copy")}
         </Button>
       </Box>
-      {copySuccess !== null && (
+      {status !== CopyStatus.NotCopiedOrWaiting && (
         <>
           <Spacing bottom={2} />
           <Box
@@ -84,7 +92,11 @@ const Clipboard: React.FC<ClipboardProps> = props => {
             <StyledIcon
               light={!isLightTheme}
               realDark={isLightTheme}
-              glyph={copySuccess ? Icon.GLYPHS.selected : Icon.GLYPHS.close}
+              glyph={
+                status === CopyStatus.Success
+                  ? Icon.GLYPHS.selected
+                  : Icon.GLYPHS.close
+              }
               styledWidth="20px"
               css={`
                 margin: 8px;
@@ -93,7 +105,7 @@ const Clipboard: React.FC<ClipboardProps> = props => {
               `}
             />
             <TooltipText>
-              {copySuccess
+              {status === CopyStatus.Success
                 ? t("clipboard.success")
                 : t("clipboard.unsuccessful")}
             </TooltipText>
