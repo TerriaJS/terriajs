@@ -270,7 +270,9 @@ function DiscretelyTimeVaryingMixin<
         dt => ({
           x: JulianDate.toDate(dt.time),
           y: 0.5,
-          isSelected: dt.time === this.currentDiscreteJulianDate
+          isSelected:
+            this.currentDiscreteJulianDate &&
+            this.currentDiscreteJulianDate.equals(dt.time)
         })
       );
 
