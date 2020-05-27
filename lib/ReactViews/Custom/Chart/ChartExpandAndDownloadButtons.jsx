@@ -41,7 +41,7 @@ class ChartExpandAndDownloadButtons extends React.Component {
     expandItem(this.sourceItems, sourceIndex, this.props.terria);
   };
 
-  componentDidMount() {
+  resolveSourceItems() {
     Promise.all(
       this.props.sourceItems.map(sourceItem => Promise.resolve(sourceItem))
     ).then(
@@ -49,6 +49,16 @@ class ChartExpandAndDownloadButtons extends React.Component {
         this.sourceItems = filterOutUndefined(results);
       })
     );
+  }
+
+  componentDidMount() {
+    this.resolveSourceItems();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.sourceItems !== prevProps.sourceItems) {
+      this.resolveSourceItems();
+    }
   }
 
   render() {
