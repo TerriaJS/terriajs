@@ -4,6 +4,7 @@ import { Circle } from "@vx/shape";
 import PropTypes from "prop-types";
 import React from "react";
 import { interpolateNumber as d3InterpolateNumber } from "d3-interpolate";
+import { scaleLinear } from "@vx/scale";
 
 const markerRadiusSmall = 2;
 const markerRadiusLarge = 5;
@@ -14,16 +15,27 @@ class MomentPointsChart extends React.Component {
     id: PropTypes.string.isRequired,
     chartItem: PropTypes.object.isRequired,
     basisItem: PropTypes.object,
+    basisItemScales: PropTypes.object,
     scales: PropTypes.object.isRequired
   };
 
   @computed
   get points() {
-    const { chartItem, basisItem } = this.props;
-    const f = basisItem
-      ? p => ({ ...p, ...interpolate(p, basisItem.points) })
-      : p => ({ ...p, y: 0.5 });
-    return chartItem.points.map(f);
+    const { chartItem, basisItem, basisItemScales, scales } = this.props;
+    if (basisItem) {
+      // We want to stick the chartItem points to the basis item, to do this we
+      // interpolate the chart item points to match the basis item points. This
+      // interpolation should not affect the scale of the chart item points.
+      const basisToSourceScale = scaleLinear({
+        domain: basisItemScales.y.domain(),
+        range: scales.y.domain()
+      });
+      const interpolatedPoints = chartItem.points.map(p =>
+        interpolate(p, basisItem.points, basisToSourceScale)
+      );
+      return interpolatedPoints;
+    }
+    return chartItem.points;
   }
 
   doZoom(scales) {
@@ -41,6 +53,7 @@ class MomentPointsChart extends React.Component {
             : markerRadiusLarge) + (point.isSelected ? 3 : 0);
         dot.setAttribute("cx", scales.x(point.x));
         dot.setAttribute("r", radius);
+        dot.setAttribute("opacity", point.isSelected ? 1.0 : 0.3);
       }
     });
   }
@@ -69,17 +82,28 @@ class MomentPointsChart extends React.Component {
   }
 }
 
-function interpolate({ x, y }, sortedPoints) {
-  const closest = closestPointIndex(x, sortedPoints);
+/** Interpolates the given source point {x, y} to the closet point in the `sortedPoints` array.
+ *
+ * The source point and `sortedBasisPoints` may be of different scale, so we use `basisToSourceScale`
+ * to generate a point in the original source items scale.
+ */
+function interpolate({ x, y }, sortedBasisPoints, basisToSourceScale) {
+  const closest = closestPointIndex(x, sortedBasisPoints);
   if (closest === null) return { x, y };
 
-  const a = sortedPoints[closest];
-  const b = sortedPoints[closest + 1];
+  const a = sortedBasisPoints[closest];
+  const b = sortedBasisPoints[closest + 1];
 
   const xAsPercentage =
     (x.getTime() - a.x.getTime()) / (b.x.getTime() - a.x.getTime());
 
-  const interpolated = { x, y: d3InterpolateNumber(a.y, b.y)(xAsPercentage) };
+  const interpolated = {
+    x,
+    y: d3InterpolateNumber(
+      basisToSourceScale(a.y),
+      basisToSourceScale(b.y)
+    )(xAsPercentage)
+  };
   return interpolated;
 }
 
