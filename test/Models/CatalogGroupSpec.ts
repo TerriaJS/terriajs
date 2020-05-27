@@ -101,8 +101,14 @@ describe("CatalogGroup", function() {
     const group = new CatalogGroup("brokenGroup", terria);
     group.addMembersFromJson("definition", groupWithBrokenItem);
     expect(group.members.length).toBe(2);
-    let member0 = terria.getModelById(GeoJsonCatalogItem, group.members[0] as string);
-    let member1 = terria.getModelById(GeoJsonCatalogItem, group.members[1] as string);
+    let member0 = terria.getModelById(
+      GeoJsonCatalogItem,
+      group.members[0] as string
+    );
+    let member1 = terria.getModelById(
+      GeoJsonCatalogItem,
+      group.members[1] as string
+    );
     expect(member0).toBeDefined();
     expect(member1).toBeDefined();
     if (member0 !== undefined && member1 !== undefined) {
