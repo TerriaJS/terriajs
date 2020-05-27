@@ -9,6 +9,7 @@
         "allowJs": true,
         "jsx": "preserve",
         "esModuleInterop": true,
+        "useDefineForClassFields": true,
         "allowSyntheticDefaultImports": true,
         "outDir": "ts-out",
         "resolveJsonModule": true,
