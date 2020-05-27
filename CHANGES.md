@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### mobx-next-release (mobx-32)
+* Made expanded SOS chart item shareable.
 * Fixed a regression bug where the time filter is shown for all satellite imagery items
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
