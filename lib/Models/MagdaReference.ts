@@ -517,7 +517,7 @@ export default class MagdaReference extends AccessControlMixin(
       try {
         updateModelFromJson(result, stratum, terriaAspect[stratum], true);
       } catch (err) {
-        result.setTrait('override', 'isExperiencingIssues', true)
+        result.setTrait("underride", "isExperiencingIssues", true);
       }
     });
 
