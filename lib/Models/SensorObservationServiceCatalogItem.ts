@@ -89,6 +89,12 @@ class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
     super(catalogItem);
   }
 
+  duplicateLoadableStratum(
+    newModel: SensorObservationServiceCatalogItem
+  ): this {
+    return new SosAutomaticStylesStratum(newModel) as this;
+  }
+
   @computed
   get styles(): StratumFromTraits<TableStyleTraits>[] {
     return this.catalogItem.procedures.map(p => {
@@ -312,6 +318,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     this.initializeAutomaticStyleStratum();
   }
 
+  @action
   initializeAutomaticStyleStratum() {
     this.strata.set(
       automaticTableStylesStratumName,

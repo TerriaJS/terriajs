@@ -75,7 +75,6 @@ export default class SOSChartCustomComponent extends CustomComponent {
     if (!hideButtons) {
       // Build expand/download buttons
       const downloadItem = catalogItem.duplicateModel(createGuid());
-      downloadItem.initializeAutomaticStyleStratum();
       downloadItem.setTrait(CommonStrata.user, "showAsChart", true);
       downloadItem.setTrait(
         CommonStrata.user,
@@ -102,7 +101,6 @@ export default class SOSChartCustomComponent extends CustomComponent {
 
     // Build chart item to show in the info panel
     const chartItem = catalogItem.duplicateModel(createGuid());
-    chartItem.initializeAutomaticStyleStratum();
     chartItem.setTrait(CommonStrata.user, "showAsChart", true);
     chartItem.setTrait(
       CommonStrata.user,
