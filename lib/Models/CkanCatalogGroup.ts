@@ -41,10 +41,10 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     private readonly _ckanResponse: CkanServerResponse
   ) {
     super();
-    this.datasets = this.setDatasets();
-    this.filteredDatasets = this.setFilteredDatasets();
-    this.groups = this.setGroups();
-    this.filteredGroups = this.setFilteredGroups();
+    this.datasets = this.getDatasets();
+    this.filteredDatasets = this.getFilteredDatasets();
+    this.groups = this.getGroups();
+    this.filteredGroups = this.getFilteredGroups();
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -113,11 +113,11 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     return references;
   }
 
-  protected setDatasets(): CkanDataset[] {
+  protected getDatasets(): CkanDataset[] {
     return this._ckanResponse.result.results;
   }
 
-  protected setFilteredDatasets(): CkanDataset[] {
+  protected getFilteredDatasets(): CkanDataset[] {
     if (this.datasets.length === 0) return [];
     if (this._catalogGroup.blacklist !== undefined) {
       const bl = this._catalogGroup.blacklist;
@@ -126,7 +126,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     return this.datasets;
   }
 
-  protected setGroups(): CatalogGroup[] {
+  protected getGroups(): CatalogGroup[] {
     if (this._catalogGroup.groupBy === "none") return [];
     let groups: CatalogGroup[] = [];
     createUngroupedGroup(this, groups);
@@ -151,7 +151,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     return groups;
   }
 
-  protected setFilteredGroups(): CatalogGroup[] {
+  protected getFilteredGroups(): CatalogGroup[] {
     if (this.groups.length === 0) return [];
     if (this._catalogGroup.blacklist !== undefined) {
       const bl = this._catalogGroup.blacklist;
