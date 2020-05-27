@@ -20,12 +20,6 @@ const SearchInput = styled.input`
   padding: 0.5rem 40px;
   vertical-align: middle;
   -webkit-appearance: none;
-  // background-color: ${props => props.theme.darkWithOverlay};
-
-  // ::placeholder {
-  //   color: ${props => props.theme.textLight};
-  //   opacity: 0.6;
-  // }
 `;
 
 export const DEBOUNCE_INTERVAL = 1000;
