@@ -27,7 +27,7 @@ describe("DiffableMixin", function() {
     );
 
     it(
-      "returns the inherited value",
+      "otherwise returns the inherited value",
       action(function() {
         const testItem = new TestCatalogItem("test", new Terria());
         testItem.setTrait(CommonStrata.user, "isShowingDiff", false);
