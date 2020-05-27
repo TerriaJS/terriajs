@@ -8,6 +8,17 @@ Change Log
 * Replaced helpful hints text with the new version
 * Made the shapes of some of the workbench components rounded
 * ((Placeholder some awesome new testing. or fixes. or features.))
+#### mobx-next-release (mobx-32)
+* Fixed a regression bug where the time filter is shown for all satellite imagery items
+* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
+
+#### mobx-31
+* Fixes broken time filter location picker when other features are present on the map.
+* Fixes the feature info panel button to show imagery at the selected location.
+* Added `hideSource` trait to `CatalogMemberTraits`. When set to true source URL won't be visible in the explorer window.
+* Added `Title`, `ContactInformation`, `Fees` to the `CapabilitiesService` interface so they are pulled on metadata load.
+* Resolved name issue of `WebMapServiceCapabilities`. Now it returns a name resolved from `capabilities` unless it is set by user.
+* Added setting of `isOpenInWorkbench`, `isExperiencingIssues`, `hideLegendInWorkbench`, `hideSource` strats for `WebMapServiceCatalogItem` from `WebMapServiceCatalogGroup`.
 
 #### mobx-30
 * Ported welcome message to mobx with new designs
@@ -147,6 +158,7 @@ Change Log
 * Removed hardcoded workbench & Panel button colours
 * Ensure CSV column names are trimmed of whitespace.
 * Really stop analytics launch event sending bad & now empty & now finally the real label
+* Re-added `ArcGisMapServerCatalogGroup` and `ArcGisServerGroup`.
 * Tidy Compass UI animations, styles, titles
 * Bumped mobx minor to 4.15.x, mobx-react major to 6.x.x
 * Add `dateFormat` trait to `TimeVaryingTraits` to allowing formatting of datestrings in workbench and bottomdock.
