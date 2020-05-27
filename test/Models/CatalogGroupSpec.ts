@@ -101,12 +101,15 @@ describe("CatalogGroup", function() {
     const group = new CatalogGroup("brokenGroup", terria);
     group.addMembersFromJson("definition", groupWithBrokenItem);
     expect(group.members.length).toBe(2);
-    let member0 = terria.getModelById(BaseModel, group.members[0]);
-    expect(member0.uniqueId).toBe("brokenGroup/Invalid GeoJSON item");
-    expect(member0.isExperiencingIssues).toBe(true);
-
-    let member1 = terria.getModelById(BaseModel, group.members[1]);
-    expect(member1.uniqueId).toBe("brokenGroup/Valid GeoJSON item");
-    expect(member1.isExperiencingIssues).toBe(false);
+    let member0 = terria.getModelById(GeoJsonCatalogItem, group.members[0] as string);
+    let member1 = terria.getModelById(GeoJsonCatalogItem, group.members[1] as string);
+    expect(member0).toBeDefined();
+    expect(member1).toBeDefined();
+    if (member0 !== undefined && member1 !== undefined) {
+      expect(member0.uniqueId).toBe("brokenGroup/Invalid GeoJSON item");
+      expect(member0.isExperiencingIssues).toBe(true);
+      expect(member1.uniqueId).toBe("brokenGroup/Valid GeoJSON item");
+      expect(member1.isExperiencingIssues).toBe(false);
+    }
   });
 });
