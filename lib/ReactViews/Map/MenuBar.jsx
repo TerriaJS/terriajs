@@ -55,6 +55,13 @@ const MenuBar = createReactClass({
   dismissSatelliteGuidanceAction() {
     this.props.viewState.toggleFeaturePrompt("mapGuidesLocation", true, true);
   },
+
+  onAddDataClicked(event) {
+    event.stopPropagation();
+    this.props.viewState.topElement = "AddData";
+    this.props.viewState.openAddData();
+  },
+
   render() {
     const { t } = this.props;
     const satelliteGuidancePrompted = this.props.terria.getLocalProperty(
@@ -130,6 +137,14 @@ const MenuBar = createReactClass({
               viewState={this.props.viewState}
             />
           </li>
+          <button
+            type="button"
+            onClick={this.onAddDataClicked}
+            title="View data"
+            className={Styles.storyBtn}
+          >
+            Data
+          </button>
           <li className={Styles.menuItem}>
             <HelpMenuPanelBasic
               terria={this.props.terria}
