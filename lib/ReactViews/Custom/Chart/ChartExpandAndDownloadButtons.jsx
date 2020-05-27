@@ -17,6 +17,7 @@ class ChartExpandAndDownloadButtons extends React.Component {
   @observable sourceItems = [];
 
   static propTypes = {
+    terria: PropTypes.object.isRequired,
     sourceItems: PropTypes.array.isRequired, // Array of items or Promise returning item
     sourceNames: PropTypes.array,
     canDownload: PropTypes.bool,
