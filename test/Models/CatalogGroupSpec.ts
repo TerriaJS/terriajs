@@ -1,4 +1,5 @@
 import CatalogGroup from "../../lib/Models/CatalogGroupNew";
+import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
 import Terria from "../../lib/Models/Terria";
 import upsertModelFromJson from "../../lib/Models/upsertModelFromJson";
 import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
@@ -80,5 +81,25 @@ describe("CatalogGroup", function() {
     expect(() => {
       item.moveMemberToIndex(CommonStrata.definition, child1, 3);
     }).toThrowError("Invalid 'newIndex' target: 3");
+  });
+
+  it("loads valid items and ignores broken items", function() {
+    CatalogMemberFactory.register(GeoJsonCatalogItem.type, GeoJsonCatalogItem);
+    const groupWithBrokenItem = [
+      {
+        type: "geojson",
+        name: "Invalid item Test",
+        url: null
+      },
+      {
+        type: "geojson",
+        name: "Valid GeoJSON item",
+        url: "test/bike_racks.geojson"
+      }
+    ];
+    const group = new CatalogGroup("brokenGroup", terria);
+    group.addMembersFromJson("definition", groupWithBrokenItem);
+    expect(group.members.length).toBe(1);
+    expect(group.members[0]).toBe("brokenGroup/Valid GeoJSON item");
   });
 });
