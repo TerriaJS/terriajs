@@ -31,6 +31,7 @@ import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
 import TableColumnTraits from "../Traits/TableColumnTraits";
 import CommonStrata from "./CommonStrata";
+import { BaseModel } from "./Model";
 
 interface GetFeatureOfInterestResponse {
   featureMember?: FeatureMember[] | FeatureMember;
@@ -313,13 +314,12 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
   static readonly type = "sos";
   static defaultRequestTemplate = require("./SensorObservationServiceRequestTemplate.xml");
 
-  constructor(id: string | undefined, terria: Terria) {
-    super(id, terria);
-    this.initializeAutomaticStyleStratum();
-  }
-
-  @action
-  initializeAutomaticStyleStratum() {
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel
+  ) {
+    super(id, terria, sourceReference);
     this.strata.set(
       automaticTableStylesStratumName,
       new SosAutomaticStylesStratum(this)

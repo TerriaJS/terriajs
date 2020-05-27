@@ -8,6 +8,7 @@ import ChartPreviewStyles from "./Chart/chart-preview.scss";
 import ChartExpandAndDownloadButtons from "./Chart/ChartExpandAndDownloadButtons";
 import Chart from "./Chart/FeatureInfoPanelChart";
 import CustomComponent, { ProcessNodeContext } from "./CustomComponent";
+import SplitItemReference from "../../Models/SplitItemReference";
 
 export default class SOSChartCustomComponent extends CustomComponent {
   readonly attributes = ["identifier", "name", "units", "hide-buttons"];
@@ -74,26 +75,35 @@ export default class SOSChartCustomComponent extends CustomComponent {
     const units = catalogItem.selectedObservable?.units;
     if (!hideButtons) {
       // Build expand/download buttons
-      const downloadItem = catalogItem.duplicateModel(createGuid());
-      downloadItem.setTrait(CommonStrata.user, "showAsChart", true);
-      downloadItem.setTrait(
-        CommonStrata.user,
-        "name",
-        featureName || catalogItem.name
+      const itemPromise = createDuplicateReferenceModel(catalogItem).then(
+        downloadItem => {
+          if (!downloadItem) {
+            return;
+          }
+
+          downloadItem.setTrait(CommonStrata.user, "showAsChart", true);
+          downloadItem.setTrait(
+            CommonStrata.user,
+            "name",
+            featureName || catalogItem.name
+          );
+          downloadItem.setTrait(
+            CommonStrata.user,
+            "chartFeatureOfInterestIdentifier",
+            featureOfInterestId
+          );
+          downloadItem
+            .addObject(CommonStrata.user, "columns", "values")
+            ?.setTrait(CommonStrata.user, "units", units);
+
+          return downloadItem;
+        }
       );
-      downloadItem.setTrait(
-        CommonStrata.user,
-        "chartFeatureOfInterestIdentifier",
-        featureOfInterestId
-      );
-      downloadItem
-        .addObject(CommonStrata.user, "columns", "values")
-        ?.setTrait(CommonStrata.user, "units", units);
       chartElements.push(
         React.createElement(ChartExpandAndDownloadButtons, {
           key: "button",
           terria: context.terria,
-          sourceItems: [downloadItem],
+          sourceItems: [itemPromise],
           raiseToTitle: !!getInsertedTitle(node)
         })
       );
@@ -211,6 +221,19 @@ export default class SOSChartCustomComponent extends CustomComponent {
       node.data,
       revisedChildren
     );
+  }
+}
+
+async function createDuplicateReferenceModel(
+  sourceItem: SensorObservationServiceCatalogItem
+): Promise<SensorObservationServiceCatalogItem | undefined> {
+  const terria = sourceItem.terria;
+  const ref = new SplitItemReference(createGuid(), terria);
+  ref.setTrait(CommonStrata.user, "splitSourceItemId", sourceItem.uniqueId);
+  await ref.loadReference();
+  if (ref.target) {
+    terria.addModel(ref);
+    return ref.target as SensorObservationServiceCatalogItem;
   }
 }
 
