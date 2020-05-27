@@ -4,7 +4,7 @@ Change Log
 ### MobX Development
 
 #### mobx-next-release (mobx-32)
-* Fixing a regression bug were the time filter is shown for all satellite imagery items
+* Fixing a regression bug where the time filter is shown for all satellite imagery items
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-31
