@@ -9,6 +9,10 @@ import CatalogGroup from "./CatalogGroupNew";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import Cesium3DTilesCatalogItem from "./Cesium3DTilesCatalogItem";
 import CesiumTerrainCatalogItem from "./CesiumTerrainCatalogItem";
+import CkanCatalogGroup from "./CkanCatalogGroup";
+import CkanItemReference from "./CkanItemReference";
+import CompositeCatalogItem from "./CompositeCatalogItem";
+import createUrlReferenceFromUrl from "./createUrlReferenceFromUrl";
 import CsvCatalogItem from "./CsvCatalogItem";
 import CzmlCatalogItem from "./CzmlCatalogItem";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
@@ -19,14 +23,13 @@ import KmlCatalogItem from "./KmlCatalogItem";
 import MagdaReference from "./MagdaReference";
 import OpenStreetMapCatalogItem from "./OpenStreetMapCatalogItem";
 import SenapsLocationsCatalogItem from "./SenapsLocationsCatalogItem";
-import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
-import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
-import UrlReference, { UrlToCatalogMemberMapping } from "./UrlReference";
-import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFunction";
-import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
-import CompositeCatalogItem from "./CompositeCatalogItem";
 import SensorObservationServiceCatalogItem from "./SensorObservationServiceCatalogItem";
 import SplitItemReference from "./SplitItemReference";
+import UrlReference, { UrlToCatalogMemberMapping } from "./UrlReference";
+import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
+import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
+import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFunction";
+import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
@@ -103,6 +106,8 @@ export default function registerCatalogMembers() {
     CompositeCatalogItem.type,
     CompositeCatalogItem
   );
+  CatalogMemberFactory.register(CkanCatalogGroup.type, CkanCatalogGroup);
+  CatalogMemberFactory.register(CkanItemReference.type, CkanItemReference);
 
   UrlToCatalogMemberMapping.register(
     matchesExtension("csv"),
