@@ -5,6 +5,7 @@ Change Log
 
 #### mobx-next-release (mobx-32)
 * Fixed a regression bug where the time filter is shown for all satellite imagery items
+* Set default `clampToGround` trait to `true` for `GeoJsonCatalogItem`
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-31
