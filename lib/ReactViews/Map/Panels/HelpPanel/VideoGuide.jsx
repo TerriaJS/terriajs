@@ -7,16 +7,47 @@ import styled from "styled-components";
 import Box from "../../../../Styled/Box";
 import FadeIn from "../../../Transitions/FadeIn/FadeIn";
 import Loader from "../../../Loader";
+import { useKeyPress } from "../../../Hooks/useKeyPress.js";
 
-const VideoWrapperBox = styled(Box)`
-  position: fixed;
-  z-index: 99999;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-`;
+// const VideoWrapperBox = styled(Box)`
+//   position: fixed;
+//   z-index: 99999;
+//   top: 0;
+//   left: 0;
+//   right: 0;
+//   bottom: 0;
+//   background: rgba(0, 0, 0, 0.6);
+// `;
+
+const VideoWrapperBox = props => {
+  const { viewState } = props;
+  const handleClose = () => viewState.setVideoGuideVisible("");
+
+  useKeyPress("Escape", () => {
+    handleClose();
+  });
+
+  return (
+    <Box
+      centered
+      onClick={e => {
+        handleClose();
+        e.stopPropagation();
+      }}
+      css={`
+        position: fixed;
+        z-index: 99999;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+      `}
+    >
+      {props.children}
+    </Box>
+  );
+};
 
 @observer
 class VideoGuide extends React.Component {
@@ -43,11 +74,12 @@ class VideoGuide extends React.Component {
         }
       >
         <VideoWrapperBox
-          centered
-          onClick={e => {
-            this.props.viewState.setVideoGuideVisible("");
-            e.stopPropagation();
-          }}
+          viewState={this.props.viewState}
+          // centered
+          // onClick={e => {
+          //   this.props.viewState.setVideoGuideVisible("");
+          //   e.stopPropagation();
+          // }}
         >
           <Box
             centered
