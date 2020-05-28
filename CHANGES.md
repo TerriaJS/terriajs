@@ -5,7 +5,8 @@ Change Log
 
 #### mobx-next-release (mobx-32)
 * Fixed a regression bug where the time filter is shown for all satellite imagery items
-* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
+* Add `clampToGround` property on to holes within polygons in `GeoJsonCatalogItem`
+* (💫The next rad feature💫 but please be mostly bug fixes from now until June!) 
 
 #### mobx-31
 * Fixes broken time filter location picker when other features are present on the map.
