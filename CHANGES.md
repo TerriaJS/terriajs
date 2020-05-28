@@ -8,6 +8,7 @@ Change Log
 * Fixed a regression bug where the time filter is shown for all satellite imagery items
 * Fixed a bug where WMS items caused type errors in newer babel and typescript builds, due to mixed mixin methods on DiffableMixin & DiscretelyTimeVaryingMixin
 * Fixed a bug where KmlCatalogItem did not use the proxy for any urls.
+* Add support for `CkanCatalogGroup` and `CkanItemReference`.
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-31
@@ -165,13 +166,6 @@ Change Log
 * Fixed MapIconButton & FeedbackButton proptypes being defined incorrectly
 * Implement SenapsLocationsCatalogItem
 * Update papaparse and improve handling for retrieveing CSVs via chunking that have no ContentLenth header
-* Add support for `CkanCatalogGroup` and `CkanItemReference`.
-
-#### mobx-28
-* Fix SASS exports causing some build errors in certain webpack conditions
-#### mobx-29
-* (placeholder)
-* Run & configure prettier on terriajs lib/ json files
 
 
 ### Next Release
