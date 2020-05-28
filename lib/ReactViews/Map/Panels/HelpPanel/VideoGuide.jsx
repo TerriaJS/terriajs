@@ -56,6 +56,11 @@ const VideoWrapperBox = props => {
   );
 };
 
+VideoWrapperBox.propTypes = {
+  viewState: PropTypes.object.isRequired,
+  children: PropTypes.node
+};
+
 @observer
 class VideoGuide extends React.Component {
   static displayName = "VideoGuide";
