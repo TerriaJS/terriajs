@@ -6,7 +6,7 @@ import ViewState from "../../lib/ReactViewModels/ViewState";
 import { runInAction } from "mobx";
 import WelcomeMessage, {
   WelcomeMessagePure
-} from "../../lib/ReactViews/WelcomeMessage/WelcomeMessage.jsx";
+} from "../../lib/ReactViews/WelcomeMessage/WelcomeMessage";
 
 describe("WelcomeMessage", function() {
   let terria: Terria;

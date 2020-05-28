@@ -4,8 +4,8 @@ import { act } from "react-dom/test-utils";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import { runInAction } from "mobx";
-import Disclaimer from "../../lib/ReactViews/Disclaimer.jsx";
-import Box from "../../lib/Styled/Box.jsx";
+import Disclaimer from "../../lib/ReactViews/Disclaimer";
+import Box from "../../lib/Styled/Box";
 
 describe("Disclaimer", function() {
   let terria: Terria;
