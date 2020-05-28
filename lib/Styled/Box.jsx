@@ -22,6 +22,7 @@ export const Box = styled.div`
   ${props => props.fullWidth && `width: 100%;`}
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
   ${props => props.styledHeight && `height: ${props.styledHeight};`}
+  ${props => props.styledMinHeight && `min-height: ${props.styledMinHeight};`}
   
   ${props =>
     props.col &&
@@ -35,12 +36,12 @@ export const Box = styled.div`
   // ${props => props.col3 && "width: 25%;"}
   // ${props => props.col4 && "width: 33.33333%;"}
   // ${props => props.col5 && "width: 41.66667%;"}
-  // ${props => props.col6 && "width: 50%;"}
+  ${props => props.col6 && "width: 50%;"}
   // ${props => props.col7 && "width: 58.33333%;"}
   // ${props => props.col8 && "width: 66.66667%;"}
   // ${props => props.col9 && "width: 75%;"}
-  // ${props => props.col10 && "width: 83.33333%;"}
-  // ${props => props.col11 && "width: 91.66667%;"}
+  ${props => props.col10 && "width: 83.33333%;"}
+  ${props => props.col11 && "width: 91.66667%;"}
   // ${props => props.col12 && "width: 100%;"}
 
   ${props => props.centered && `align-items: center;`}
@@ -71,6 +72,10 @@ export const Box = styled.div`
   ${props =>
     props.charcoalGreyBg && `background-color: ${props.theme.charcoalGrey};`}
 
+  /* background color can be set on box or passed in through props read via theme...? */
+  ${props =>
+    props.backgroundColor && `background-color: ${props.backgroundColor};`}
+
 
   /* Unsure of padding API as yet */
 
@@ -92,6 +97,24 @@ export const Box = styled.div`
         (props.paddedVertically === true ? 1 : props.paddedVertically)}px;
       padding-bottom: ${5 *
         (props.paddedVertically === true ? 1 : props.paddedVertically)}px;
+    `}
+  
+  ${props =>
+    props.backgroundImage &&
+    `
+      ${
+        props.backgroundBlackOverlay
+          ? `
+      background-image: linear-gradient(
+          rgba(0, 0, 0, ${props.backgroundBlackOverlay}),
+          rgba(0, 0, 0, ${props.backgroundBlackOverlay})
+        ),
+        url(${props.backgroundImage});`
+          : `background-image: url(${props.backgroundImage});`
+      }
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
     `}
 `;
 

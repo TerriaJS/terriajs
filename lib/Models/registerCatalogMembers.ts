@@ -1,5 +1,7 @@
+import ArcGisCatalogGroup from "./ArcGisCatalogGroup";
 import ArcGisFeatureServerCatalogGroup from "./ArcGisFeatureServerCatalogGroup";
 import ArcGisFeatureServerCatalogItem from "./ArcGisFeatureServerCatalogItem";
+import ArcGisMapServerCatalogGroup from "./ArcGisMapServerCatalogGroup";
 import ArcGisMapServerCatalogItem from "./ArcGisMapServerCatalogItem";
 import BingMapsCatalogItem from "./BingMapsCatalogItem";
 import CartoMapCatalogItem from "./CartoMapCatalogItem";
@@ -43,9 +45,14 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(GeoJsonCatalogItem.type, GeoJsonCatalogItem);
   CatalogMemberFactory.register(CsvCatalogItem.type, CsvCatalogItem);
   CatalogMemberFactory.register(CzmlCatalogItem.type, CzmlCatalogItem);
+  CatalogMemberFactory.register(ArcGisCatalogGroup.type, ArcGisCatalogGroup);
   CatalogMemberFactory.register(
     ArcGisMapServerCatalogItem.type,
     ArcGisMapServerCatalogItem
+  );
+  CatalogMemberFactory.register(
+    ArcGisMapServerCatalogGroup.type,
+    ArcGisMapServerCatalogGroup
   );
   CatalogMemberFactory.register(
     ArcGisFeatureServerCatalogItem.type,
@@ -147,6 +154,11 @@ export default function registerCatalogMembers() {
     true
   );
   UrlToCatalogMemberMapping.register(
+    matchesUrl(/\/arcgis\/rest\/.*\/MapServer(\/.*)?$/i),
+    ArcGisMapServerCatalogGroup.type,
+    true
+  );
+  UrlToCatalogMemberMapping.register(
     matchesUrl(/\/arcgis\/rest\/.*\/FeatureServer\/\d+\b/i),
     ArcGisFeatureServerCatalogItem.type,
     true
@@ -162,8 +174,18 @@ export default function registerCatalogMembers() {
     true
   );
   UrlToCatalogMemberMapping.register(
+    matchesUrl(/\/arcgis\/rest\//i),
+    ArcGisCatalogGroup.type,
+    true
+  );
+  UrlToCatalogMemberMapping.register(
     matchesUrl(/\/rest\/.*\/MapServer\/\d+\b/i),
     ArcGisMapServerCatalogItem.type,
+    true
+  );
+  UrlToCatalogMemberMapping.register(
+    matchesUrl(/\/rest\/.*\/MapServer(\/.*)?$/i),
+    ArcGisMapServerCatalogGroup.type,
     true
   );
   UrlToCatalogMemberMapping.register(
@@ -195,9 +217,15 @@ export default function registerCatalogMembers() {
   );
   UrlToCatalogMemberMapping.register(
     s => true,
+    ArcGisMapServerCatalogGroup.type,
+    true
+  );
+  UrlToCatalogMemberMapping.register(
+    s => true,
     ArcGisFeatureServerCatalogItem.type,
     true
   );
+  UrlToCatalogMemberMapping.register(s => true, ArcGisCatalogGroup.type, true);
   UrlToCatalogMemberMapping.register(
     s => true,
     ArcGisFeatureServerCatalogGroup.type,

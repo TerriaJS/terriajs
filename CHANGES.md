@@ -3,6 +3,57 @@ Change Log
 
 ### MobX Development
 
+#### mobx-next-release (mobx-32)
+* Made expanded SOS chart item shareable.
+* Fixed a regression bug where the time filter is shown for all satellite imagery items
+* Fixed a bug where WMS items caused type errors in newer babel and typescript builds, due to mixed mixin methods on DiffableMixin & DiscretelyTimeVaryingMixin
+* Fixed a bug where KmlCatalogItem did not use the proxy for any urls.
+* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
+
+#### mobx-31
+* Fixes broken time filter location picker when other features are present on the map.
+* Fixes the feature info panel button to show imagery at the selected location.
+* Added `hideSource` trait to `CatalogMemberTraits`. When set to true source URL won't be visible in the explorer window.
+* Added `Title`, `ContactInformation`, `Fees` to the `CapabilitiesService` interface so they are pulled on metadata load.
+* Resolved name issue of `WebMapServiceCapabilities`. Now it returns a name resolved from `capabilities` unless it is set by user.
+* Added setting of `isOpenInWorkbench`, `isExperiencingIssues`, `hideLegendInWorkbench`, `hideSource` strats for `WebMapServiceCatalogItem` from `WebMapServiceCatalogGroup`.
+
+#### mobx-30
+* Ported welcome message to mobx with new designs
+* Updated CI clientConfig values to include new help panel default
+* Bumped explicit base typescript to 3.9.2
+* Lock rollbar to 2.15.2
+* Ported disclaimer to mobx with new designs
+* Added diff tool for visualizing difference (delta) of images between 2 dates for services that support it.
+* Updated workbench ViewingControls styles to line up with icons
+* Prevent re-diff on workbench items that are already a diff
+* Updated splitter to force trigger resizes so it catches up on any animation delays from the workbench
+* Update workbench to trigger resize events onTransitionEnd on top of view-model-triggers
+* Added satellite imagery to help panel
+* Stop disclaimer clashing with welcome message by only loading WelcomeMessage after disclaimer is no longer visible
+* Fixes a difftool bug where left/right items loose their split direction settings when the tool is reset
+* Fixes a splitter bug where split direction is not applied to new layers.
+* Re-added satellite guide prompt option via `showInAppGuides`
+* Changed tour "go back 1 tour point" messaging from "previous" to "back"
+
+#### mobx-29
+* Fix handling of urls on `Cesium3DTilesCatalogItem` related to proxying and getting confused between Resource vs URL.
+* Renamed `UrlReference.createUrlReferenceFromUrlReference` to `UrlReference.createCatalogMemberFromUrlReference`
+* Moved url to catalog member mapping from `createUrlRefernceFromUrl.register` to `UrlToCatalogMemberMapping` (now in `UrlReference.ts` file) 
+* Added in-app tour framework & base tour items
+* Make the help panel customisable for different maps by modifying `config.json`
+* Added generic styled select
+* Remove maxZoom from leaflet map.
+* Run & configure prettier on terriajs lib/ json files
+* Changed most of the icons for the `MapNavigation` section (on the right hand side) of the screen
+* Added a close button to story panel
+* Made `MapIconButton` to animate when expanding
+* Remove requirement for browser to render based on make half pixel calculations for the Compass & stop it jumping around when animating
+
+#### mobx-28
+* Fix SASS exports causing some build errors in certain webpack conditions
+
+#### mobx-1 through mobx-27
 * Fixed DragDropFile and `createCatalogItemFromFileOrUrl` which wasn't enabled/working in mobx, added tests for `createCatalogItemFromFileOrUrl` and renamed `createCatalogItemFromUrl` to `createUrlRefernceFromUrl`.
 * Fixed bug in StratumOrder where `sortBottomToTop` would sort strata in the wrong order.
 * Allow member re-ordering via GroupMixin's `moveMemberToIndex`
@@ -105,9 +156,11 @@ Change Log
 * Removed hardcoded workbench & Panel button colours
 * Ensure CSV column names are trimmed of whitespace.
 * Really stop analytics launch event sending bad & now empty & now finally the real label
+* Re-added `ArcGisMapServerCatalogGroup` and `ArcGisServerGroup`.
 * Tidy Compass UI animations, styles, titles
 * Bumped mobx minor to 4.15.x, mobx-react major to 6.x.x
 * Add `dateFormat` trait to `TimeVaryingTraits` to allowing formatting of datestrings in workbench and bottomdock.
+* Tidy Gyroscope Guidance positioning
 * Fixed FeatureInfoPanel using old class state
 * Fixed MapIconButton & FeedbackButton proptypes being defined incorrectly
 * Implement SenapsLocationsCatalogItem
@@ -119,6 +172,7 @@ Change Log
 #### mobx-29
 * (placeholder)
 * Run & configure prettier on terriajs lib/ json files
+
 
 ### Next Release
 * Fix draggable workbench/story items with translation HOC

@@ -110,7 +110,6 @@ export default class Leaflet extends GlobeOrMap {
     this.map = L.map(container, {
       zoomControl: false,
       attributionControl: false,
-      maxZoom: 14, //this.maximumLeafletZoomLevel,
       zoomSnap: 1, // Change to  0.2 for incremental zoom when Chrome fixes canvas scaling gaps
       preferCanvas: true,
       worldCopyJump: false
@@ -713,19 +712,14 @@ export default class Leaflet extends GlobeOrMap {
   }
 
   getImageryLayersForItem(item: Mappable): CesiumTileLayer[] {
-    const allImageryParts = item.mapItems.filter(ImageryParts.is);
-    const imageryLayers: CesiumTileLayer[] = [];
-    this.map.eachLayer(layer => {
-      if (isImageryLayer(layer)) {
-        const found = allImageryParts.find(
-          p => p.imageryProvider === layer.imageryProvider
-        );
-        if (found) {
-          imageryLayers.push(layer);
+    return filterOutUndefined(
+      item.mapItems.map(m => {
+        if (ImageryParts.is(m)) {
+          const layer = this._createImageryLayer(m.imageryProvider);
+          return layer instanceof CesiumTileLayer ? layer : undefined;
         }
-      }
-    });
-    return imageryLayers;
+      })
+    );
   }
 
   /**

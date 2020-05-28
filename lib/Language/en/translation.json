@@ -4,7 +4,19 @@
     "open": "Open",
     "prev": "Prev",
     "next": "Next",
-    "skip": "Skip"
+    "skip": "Skip",
+    "back": "Back"
+  },
+  "tour": {
+    "preface": {
+      "title": "Take the tour",
+      "content": "Unsure of where to begin? Take a quick tour of the main features of our software, and learn about some of the key functions to help you get on your way.",
+      "close": "Maybe later",
+      "start": "Start tour"
+    },
+    "end": "End tour",
+    "finish": "Finish",
+    "previous": "Previous"
   },
   "measure": {
     "measureTool": "Measure Tool",
@@ -54,6 +66,47 @@
     "btnHover": "toggle hover height",
     "btnRealign": "toggle manual alignment",
     "btnResetRealign": "reset compass alignment"
+  },
+  "tool": {
+    "closeButtonTitle": "Close {{toolName}} Tool",
+    "loadingError": {
+      "title": "Error Loading {{toolName}} Tool",
+      "message": "An error occurred while trying to load the this tool from the server. Please try again."
+    }
+  },
+  "diffTool": {
+    "title": "Difference",
+    "exit": "Exit",
+    "computeDifference": "This layer visualizes the difference between imagery captured at two discrete points in time.",
+    "styles": "Styles",
+    "choosePreview": "Choose a preview style",
+    "chooseDifference": "Choose a difference style",
+    "disabledButtonPrompt": "Select a precise location and difference style to proceed with change detection.",
+    "differenceResultsTitle": "Change detection results",
+    "locationPicker": {
+      "initialMessages": {
+        "title": "Select a precise location",
+        "beforePick": "We need this to run our change detection process.",
+        "afterPick": "Click another point to change the selected region"
+      },
+      "nextMessages": {
+        "title": "You have selected the location {{latitude}} {{longitude}}",
+        "beforePick": "Click another point to change the selection",
+        "afterPick": "Click another point to change the selection"
+      },
+      "errorMessages": {
+        "title": "Select a precise location",
+        "beforePick": "Failed to resolve imagery at location! Please choose a different location or zoom-level.",
+        "afterPick": "Click another point to change the selection"
+      }
+    },
+    "datePicker": {
+      "previousDateTitle": "Previous date",
+      "nextDateTitle": "Previous date",
+      "dateButtonTitle": "Select a date",
+      "dateOutOfRange": "Currently out of range"
+    },
+    "generateDiffButtonText": "Generate change detection"
   },
   "legend": {
     "lat": "Lat",
@@ -135,6 +188,10 @@
     "send": "Send",
     "feedbackBtnText": "Give Feedback"
   },
+  "helpPanel": {
+    "menuPaneTitle": "We're here to help",
+    "menuPaneBody": "Find useful tips on how to use TerriaJS by either checking the guides below or by contacting the team at [info@terria.io](mailto:info@terria.io)"
+  },
   "helpMenu": {
     "btnText": "Help",
     "btnTitle": "get help",
@@ -176,11 +233,12 @@
     "latLon": "Lat / Lon "
   },
   "welcomeMessage": {
-    "title": "Spatial data made <2>easy.</2>",
-    "WelcomeMessage": "Access rich spatial data from multiple data sources, all from one convenient location.",
-    "WelcomeMessagePrimaryBtn": "Explore Data",
-    "WelcomeMessageSecondaryBtn": "Take a tour",
-    "WelcomeMessageDissmissText": "Don't show me this again"
+    "title": "Let's get you started",
+    "welcomeMessage": "Interested in data discovery and exploration?<br/>Dive right in and get started or check the following help guide options.",
+    "tourBtnText": "Take the tour",
+    "helpBtnText": "I'll need some help",
+    "exploreDataBtnText": "Explore map data",
+    "dismissText": "Close message and don't show me this again"
   },
   "story": {
     "viewStory": "view",
@@ -292,6 +350,7 @@
     "resourceDescription": "Resource Description",
     "licence": "Licence",
     "accessConstraints": "Access Constraints",
+    "fees": "Fees",
     "author": "Author",
     "contact": "Contact",
     "created": "Created",
@@ -339,6 +398,8 @@
     "previewItem": "About Data",
     "splitItemTitle": "Duplicate and show splitter",
     "splitItem": "Compare",
+    "diffImageTitle": "View image differences between two dates",
+    "diffImage": "Difference",
     "exportDataTitle": "Export map data",
     "exportData": "Export",
     "removeFromMapTitle": "Remove this data",
@@ -645,6 +706,9 @@
     },
     "arcGisMapServerCatalogGroup": {
       "name": "ArcGIS Map Server Group",
+      "dataDescription": "Data Description",
+      "serviceDescription": "Service Description",
+      "copyrightText": "Copyright Text",
       "invalidServiceTitle": "Invalid ArcGIS Map Service",
       "invalidServiceMessage": "An error occurred while invoking the ArcGIS Map Service.  The server's response does not appear to be a valid Map Service document. <p>If you entered the link manually, please verify that the link is correct.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
       "groupNotAvailableTitle": "Group is not available",
@@ -1070,7 +1134,10 @@
       "groupNotAvailableTitle": "Group is not available",
       "groupNotAvailableMessage": "An error occurred while invoking GetCapabilities on the WMS server. <p>If you entered the link manually, please verify that the link is correct.</p> <p>This error may also indicate that the server does not support <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' Map team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by '{{appName}}' itself.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection. Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
       "missingUrlTitle": "Unable to load GetCapabilities",
-      "missingUrlMessage": "Could not load the Web Map Service (WMS) GetCapabilities document because the catalog item does not have a `url`."
+      "missingUrlMessage": "Could not load the Web Map Service (WMS) GetCapabilities document because the catalog item does not have a `url`.",
+      "abstract": "Web Map Service Description",
+      "accessConstraints": "Web Map Service Access Constraints",
+      "fees": "Web Map Service Fees"
     },
     "webMapServiceCatalogItem": {
       "wms": "Web Map Service (WMS)",

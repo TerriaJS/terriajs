@@ -20,4 +20,4 @@ const SplitPoint = createReactClass({
   }
 });
 
-module.exports = SplitPoint;
+export default SplitPoint;
