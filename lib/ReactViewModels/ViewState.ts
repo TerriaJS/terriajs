@@ -521,6 +521,7 @@ export default class ViewState {
 
   @action
   setVideoGuideVisible(videoName: string) {
+    console.log("Setting videoGuideVisible to " + videoName);
     this.videoGuideVisible = videoName;
   }
 
