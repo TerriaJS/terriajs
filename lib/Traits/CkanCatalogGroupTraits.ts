@@ -1,15 +1,12 @@
-import CkanSharedTraits from "./CkanSharedTraits";
-import CatalogMemberTraits from "./CatalogMemberTraits";
-import GroupTraits from "./GroupTraits";
-import ModelTraits from "./ModelTraits";
-import mixTraits from "./mixTraits";
-import UrlTraits from "./UrlTraits";
-import primitiveTrait from "./primitiveTrait";
-import primitiveArrayTrait from "./primitiveArrayTrait";
-import objectTrait from "./objectTrait";
+import { JsonObject } from "../Core/Json";
 import anyTrait from "./anyTrait";
-import modelReferenceArrayTrait from "./modelReferenceArrayTrait";
-import JsonObject from "../Core/Json";
+import CatalogMemberTraits from "./CatalogMemberTraits";
+import CkanSharedTraits from "./CkanSharedTraits";
+import GroupTraits from "./GroupTraits";
+import mixTraits from "./mixTraits";
+import primitiveArrayTrait from "./primitiveArrayTrait";
+import primitiveTrait from "./primitiveTrait";
+import UrlTraits from "./UrlTraits";
 
 export default class CkanCatalogGroupTraits extends mixTraits(
   GroupTraits,

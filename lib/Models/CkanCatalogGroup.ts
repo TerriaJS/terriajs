@@ -1,33 +1,23 @@
 import i18next from "i18next";
-import LoadableStratum from "./LoadableStratum";
-import { computed, runInAction, action } from "mobx";
-import { BaseModel } from "./Model";
-import UrlMixin from "../ModelMixins/UrlMixin";
-import GroupMixin from "../ModelMixins/GroupMixin";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import CreateModel from "./CreateModel";
-import CatalogGroup from "./CatalogGroupNew";
-import StratumOrder from "./StratumOrder";
+import { action, computed, runInAction } from "mobx";
 import URI from "urijs";
-import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import TerriaError from "../Core/TerriaError";
-import loadJson from "../Core/loadJson";
 import isDefined from "../Core/isDefined";
-import createStratumInstance from "./createStratumInstance";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
-import CkanItemReference from "./CkanItemReference";
-import filterOutUndefined from "../Core/filterOutUndefined";
-import ModelReference from "../Traits/ModelReference";
+import loadJson from "../Core/loadJson";
+import TerriaError from "../Core/TerriaError";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import GroupMixin from "../ModelMixins/GroupMixin";
+import UrlMixin from "../ModelMixins/UrlMixin";
 import CkanCatalogGroupTraits from "../Traits/CkanCatalogGroupTraits";
-import CommonStrata from "./CommonStrata";
+import ModelReference from "../Traits/ModelReference";
+import CatalogGroup from "./CatalogGroupNew";
+import { CkanDataset, CkanServerResponse } from "./CkanDefinitions";
+import CkanItemReference from "./CkanItemReference";
+import CreateModel from "./CreateModel";
+import LoadableStratum from "./LoadableStratum";
+import { BaseModel } from "./Model";
+import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
+import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
-import replaceUnderscores from "../Core/replaceUnderscores";
-import {
-  CkanDataset,
-  CkanResource,
-  CkanSearchResult,
-  CkanServerResponse
-} from "./CkanDefinitions";
 
 export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
   static stratumName = "ckanServer";
@@ -69,7 +59,6 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
         .addQuery({ start: 0, rows: 1000, sort: "metadata_created asc" });
 
       Object.keys(filterQuery).forEach((key: string) =>
-        // @ts-ignore
         uri.addQuery(key, filterQuery[key])
       );
 
