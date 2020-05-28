@@ -4,6 +4,7 @@ Change Log
 
 * Added `GeoRssCatalogItem` for displaying GeoRSS files comming from rss2 and atom feeds.
 * Bug fix: Prevent geojson files from appearing twice in the workbench when dropped with the .json extension
+* Fix for safari regarding basemap imagery tile fail count
 * Story related enhancements:
   * Added a title to story panel with ability to close story panel. 
   * Added a popup on remove all stories.
