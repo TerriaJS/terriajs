@@ -23,6 +23,7 @@ import {
 } from "../../Models/LocationMarkerUtils";
 import prettifyCoordinates from "../../Map/prettifyCoordinates";
 import raiseErrorToUser from "../../Models/raiseErrorToUser";
+import triggerResize from "../../Core/triggerResize";
 
 import Styles from "./feature-info-panel.scss";
 import classNames from "classnames";
@@ -247,8 +248,16 @@ export const FeatureInfoPanel = createReactClass({
   },
 
   openStory(storyId) {
-    launchStory(storyId, this.props.terria);
-    this.close();
+    launchStory(storyId, this.props.terria)
+    .then(() => {
+      this.props.viewState.storyBuilderShown = false;
+      this.props.viewState.storyShown = true;
+      setTimeout(function() {
+        triggerResize();
+      }, 1);
+      this.props.terria.currentViewer.notifyRepaintRequired();
+      this.close();
+    });
   },
 
   render() {
