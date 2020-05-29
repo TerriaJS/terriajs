@@ -24,7 +24,7 @@ function DiscretelyTimeVaryingMixin<
 >(Base: T) {
   abstract class DiscretelyTimeVaryingMixin extends Base
     implements TimeVarying {
-    abstract discreteTimes:
+    abstract get discreteTimes():
       | { time: string; tag: string | undefined }[]
       | undefined;
 

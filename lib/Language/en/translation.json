@@ -706,6 +706,9 @@
     },
     "arcGisMapServerCatalogGroup": {
       "name": "ArcGIS Map Server Group",
+      "dataDescription": "Data Description",
+      "serviceDescription": "Service Description",
+      "copyrightText": "Copyright Text",
       "invalidServiceTitle": "Invalid ArcGIS Map Service",
       "invalidServiceMessage": "An error occurred while invoking the ArcGIS Map Service.  The server's response does not appear to be a valid Map Service document. <p>If you entered the link manually, please verify that the link is correct.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
       "groupNotAvailableTitle": "Group is not available",
@@ -745,7 +748,7 @@
       "errorRenderingMessage": "<p>An error occurred while rendering in 3D.  This probably indicates a bug in {{appName}} or an incompatibility with your system or web browser.  We'll now switch you to 2D so that you can continue your work. We would appreciate it if you report this error by sending an email to {{email}} with the technical details below.  Thank you!</p>"
     },
     "ckan": {
-      "nameServer": "ckanServer",
+      "nameServer": "CKAN Server",
       "errorLoadingTitle": "Error loading CKAN catalogue",
       "errorLoadingMessage": "The definition for this CKAN catalogue does not have a valid filter query.",
       "corsErrorMessage": "Couldn't retrieve packages from this CKAN server.<br/><br/>If you entered the URL manually, please double-check it.<br/><br/>If it's your server, make sure {{corsLink}} is enabled.<br/><br/> Otherwise, if reloading doesn't fix it, please report the problem by sending an email to {{email}} with the technical details below.  Thank you!<br/><br/>",
@@ -755,6 +758,7 @@
       "datasetDescription": "Dataset Description",
       "dataDescription": "Data Description",
       "resourceDescription": "Resource Description",
+      "datasetCustodian": "Dataset Custodian",
       "licence": "Licence",
       "author": "Author",
       "contact_point": "Contact",

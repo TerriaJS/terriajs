@@ -6,6 +6,11 @@ Change Log
 #### mobx-next-release (mobx-32)
 * Made expanded SOS chart item shareable.
 * Fixed a regression bug where the time filter is shown for all satellite imagery items
+* Add `clampToGround` property on to holes within polygons in `GeoJsonCatalogItem`
+* Set default `clampToGround` trait to `true` for `GeoJsonCatalogItem`
+* Fixed a bug where WMS items caused type errors in newer babel and typescript builds, due to mixed mixin methods on DiffableMixin & DiscretelyTimeVaryingMixin
+* Fixed a bug where KmlCatalogItem did not use the proxy for any urls.
+* Add support for `CkanCatalogGroup` and `CkanItemReference`.
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-31
@@ -154,6 +159,7 @@ Change Log
 * Removed hardcoded workbench & Panel button colours
 * Ensure CSV column names are trimmed of whitespace.
 * Really stop analytics launch event sending bad & now empty & now finally the real label
+* Re-added `ArcGisMapServerCatalogGroup` and `ArcGisServerGroup`.
 * Tidy Compass UI animations, styles, titles
 * Bumped mobx minor to 4.15.x, mobx-react major to 6.x.x
 * Add `dateFormat` trait to `TimeVaryingTraits` to allowing formatting of datestrings in workbench and bottomdock.
