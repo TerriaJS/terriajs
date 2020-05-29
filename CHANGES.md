@@ -11,6 +11,8 @@ Change Log
 * Fixed a bug where WMS items caused type errors in newer babel and typescript builds, due to mixed mixin methods on DiffableMixin & DiscretelyTimeVaryingMixin
 * Fixed a bug where KmlCatalogItem did not use the proxy for any urls.
 * Add support for `CkanCatalogGroup` and `CkanItemReference`.
+* Fixed a chart bug where moment points do not stick to the basis item when they are of different scale.
+* Fixed a bug where the moment point selection highlight is lost when changing the satellite imagery date.
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-31
