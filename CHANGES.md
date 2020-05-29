@@ -4,9 +4,13 @@ Change Log
 ### MobX Development
 
 #### mobx-next-release (mobx-32)
+* Made expanded SOS chart item shareable.
 * Fixed a regression bug where the time filter is shown for all satellite imagery items
 * Add `clampToGround` property on to holes within polygons in `GeoJsonCatalogItem`
-* (💫The next rad feature💫 but please be mostly bug fixes from now until June!) 
+* Fixed a bug where WMS items caused type errors in newer babel and typescript builds, due to mixed mixin methods on DiffableMixin & DiscretelyTimeVaryingMixin
+* Fixed a bug where KmlCatalogItem did not use the proxy for any urls.
+* Add support for `CkanCatalogGroup` and `CkanItemReference`.
+* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-31
 * Fixes broken time filter location picker when other features are present on the map.
