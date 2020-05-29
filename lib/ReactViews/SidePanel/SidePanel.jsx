@@ -128,7 +128,6 @@ const SidePanel = observer(
       this.props.viewState.openUserData();
     },
     render() {
-      console.log(this.props.theme);
       const { t, theme } = this.props;
       const addData = t("addData.addDataBtnText");
       const uploadText = t("models.catalog.upload");
