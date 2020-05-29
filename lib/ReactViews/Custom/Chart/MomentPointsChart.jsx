@@ -89,10 +89,15 @@ class MomentPointsChart extends React.Component {
  */
 function interpolate({ x, y }, sortedBasisPoints, basisToSourceScale) {
   const closest = closestPointIndex(x, sortedBasisPoints);
-  if (closest === null) return { x, y };
+  if (closest === undefined) {
+    return {x, y};
+  }
 
   const a = sortedBasisPoints[closest];
   const b = sortedBasisPoints[closest + 1];
+  if (a === undefined || b === undefined) {
+    return {x, y};
+  }
 
   const xAsPercentage =
     (x.getTime() - a.x.getTime()) / (b.x.getTime() - a.x.getTime());
@@ -108,13 +113,13 @@ function interpolate({ x, y }, sortedBasisPoints, basisToSourceScale) {
 }
 
 function closestPointIndex(x, sortedPoints) {
-  for (let i = 0; i <= sortedPoints.length - 2; i++) {
+  for (let i = 0; i < sortedPoints.length; i++) {
     if (sortedPoints[i].x.getTime() >= x.getTime()) {
-      if (i === 0) break;
+      if (i === 0) return 0;
       return i - 1;
     }
   }
-  return null;
+  return;
 }
 
 export default MomentPointsChart;
