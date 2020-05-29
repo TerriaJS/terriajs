@@ -67,9 +67,9 @@ class VideoGuide extends React.Component {
 
   static propTypes = {
     viewState: PropTypes.object.isRequired,
+    videoName: PropTypes.string.isRequired,
     videoLink: PropTypes.string,
     background: PropTypes.string,
-    videoName: PropTypes.string,
     theme: PropTypes.object,
     t: PropTypes.func
   };
