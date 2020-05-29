@@ -5,15 +5,9 @@ import { ThemeProvider } from "styled-components";
 import { terriaTheme } from "../../../../../lib/ReactViews/StandardUserInterface/StandardTheme";
 import Terria from "../../../../../lib/Models/Terria";
 import ViewState from "../../../../../lib/ReactViewModels/ViewState";
-// import HelpPanel from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/HelpPanel";
 const VideoGuide: any = require("../../../../../lib/ReactViews/Map/Panels/HelpPanel/VideoGuide")
   .default;
-import HelpPanelItem from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/HelpPanelItem";
-import HelpVideoPanel from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/HelpVideoPanel";
-import Box from "../../../../../lib/Styled/Box";
-import StyledHtml from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/StyledHtml";
 import { runInAction } from "mobx";
-import Icon, { StyledIcon } from "../../../../../lib/ReactViews/Icon";
 
 describe("VideoGuide", function() {
   let terria: Terria;
