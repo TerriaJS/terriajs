@@ -3,6 +3,12 @@ Change Log
 ### next release
 
 * Added `GeoRssCatalogItem` for displaying GeoRSS files comming from rss2 and atom feeds.
+* Bug fix: Prevent geojson files from appearing twice in the workbench when dropped with the .json extension
+* Story related enhancements:
+  * Added a title to story panel with ability to close story panel. 
+  * Added a popup on remove all stories.
+  * Added button for sharing stories.
+  * Added a question popup on window close (if there are stories on the map so users don't lose their work).
 
 ### v7.11.4
 
