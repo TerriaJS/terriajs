@@ -43,6 +43,7 @@
     "@types/pbf": "^3.0.1",
     "@types/react": "^16.8.18",
     "@types/react-dom": "^16.9.1",
+    "@types/react-test-renderer": "^16.9.2",
     "@types/styled-components": "^5.1.0",
     "@types/urijs": "1.19.1",
     "@vx/axis": "^0.0.193-alpha.2",
@@ -140,7 +141,6 @@
     "worker-loader": "^2.0.0"
   },
   "devDependencies": {
-    "@types/react-test-renderer": "^16.9.2",
     "babel-eslint": "^10.0.1",
     "babel-plugin-styled-components": "^1.10.7",
     "electron": "^2.0.0",
