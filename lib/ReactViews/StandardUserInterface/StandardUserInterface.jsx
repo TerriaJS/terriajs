@@ -151,6 +151,7 @@ const StandardUserInterface = createReactClass({
     );
 
     const terria = this.props.terria;
+    console.log("User Interface", terria.homeView, terria.initialView);
     const allBaseMaps = this.props.allBaseMaps;
 
     const showStoryBuilder =
@@ -174,14 +175,59 @@ const StandardUserInterface = createReactClass({
           <div className={Styles.ui}>
             <div className={Styles.uiInner}>
               {/* Moved side panel to left */}
-              <section className={Styles.map}>
-                <ProgressBar terria={terria} />
-                <MapColumn
-                  terria={terria}
-                  viewState={this.props.viewState}
-                  customFeedbacks={customElements.feedback}
-                />
-                <main>
+              <If
+                condition={
+                  !this.props.viewState.hideMapUi() &&
+                  !this.props.viewState.showToolPanel()
+                }
+              >
+                <Small>
+                  <MobileHeader
+                    terria={terria}
+                    menuItems={customElements.menu}
+                    viewState={this.props.viewState}
+                    version={this.props.version}
+                    allBaseMaps={allBaseMaps}
+                  />
+                  <div className={Styles.middleContainer}>
+                    <section
+                      className={classNames(
+                        Styles.map,
+                        showStoryPanel && Styles.smallMap
+                      )}
+                    >
+                      <ProgressBar terria={terria} />
+                      <MapColumn
+                        terria={terria}
+                        viewState={this.props.viewState}
+                        customFeedbacks={customElements.feedback}
+                      />
+                    </section>
+
+                    {showStoryPanel && (
+                      <div className={Styles.storyPanelWrapper}>
+                        <RCStoryPanel
+                          terria={terria}
+                          viewState={this.props.viewState}
+                        />
+                      </div>
+                    )}
+                  </div>
+                  {!showStoryPanel && (
+                    <div className={Styles.tabsContainer}>
+                      <SidePanelContent />
+                    </div>
+                  )}
+                </Small>
+                <Medium>
+                  <section className={Styles.map}>
+                    <ProgressBar terria={terria} />
+                    <MapColumn
+                      terria={terria}
+                      viewState={this.props.viewState}
+                      customFeedbacks={customElements.feedback}
+                    />
+                    {/* <main>
                   <ExplorerWindow
                     terria={terria}
                     viewState={this.props.viewState}
@@ -198,27 +244,8 @@ const StandardUserInterface = createReactClass({
                       experimentalItems={customElements.experimentalMenu}
                     />
                   </If>
-                </main>
-              </section>
-              <If
-                condition={
-                  !this.props.viewState.hideMapUi() &&
-                  !this.props.viewState.showToolPanel()
-                }
-              >
-                <Small>
-                  <MobileHeader
-                    terria={terria}
-                    menuItems={customElements.menu}
-                    viewState={this.props.viewState}
-                    version={this.props.version}
-                    allBaseMaps={allBaseMaps}
-                  />
-                  <div className={Styles.tabsContainer}>
-                    <SidePanelContent />
-                  </div>
-                </Small>
-                <Medium>
+                </main> */}
+                  </section>
                   <div
                     className={classNames(
                       Styles.sidePanel,
@@ -236,7 +263,7 @@ const StandardUserInterface = createReactClass({
                     }}
                   >
                     <Branding terria={terria} version={this.props.version} />
-                    <SidePanelContent />
+                    {!showStoryPanel && <SidePanelContent />}
                     {showStoryPanel && (
                       <RCStoryPanel
                         terria={terria}
@@ -293,11 +320,11 @@ const StandardUserInterface = createReactClass({
                 menuItems={customElements.menu}
                 animationDuration={animationDuration}
               />
-              <MapNavigation
+              {/* <MapNavigation
                 terria={terria}
                 viewState={this.props.viewState}
                 navItems={customElements.nav}
-              />
+              /> */}
             </div>
           </If>
 

@@ -67,15 +67,23 @@ const RCStoryPanel = createReactClass({
     this.activateStory(stories[this.props.viewState.currentStoryId]);
   },
   componentDidMount() {
+    const { terria } = this.props;
+    console.log("Component Did Mount", terria.initialView, terria.homeView);
     this.slideIn();
     this.escKeyListener = e => {
       if (e.keyCode === 27) {
         this.exitStory();
       }
     };
+
     window.addEventListener("keydown", this.escKeyListener, true);
   },
-
+  componentDidUpdate() {
+    // Make hotspots visible when zoomed in
+    const stories = this.props.terria.stories || [];
+    const story = stories[this.props.viewState.currentStoryId];
+    this.props.terria.updateFromStartData(story.shareData);
+  },
   slideIn() {
     this.slideInTimer = setTimeout(() => {
       this.setState({
@@ -179,7 +187,7 @@ const RCStoryPanel = createReactClass({
         >
           <Medium>
             <div className={Styles.left}>
-              {locationBtn}
+              {/* {locationBtn} */}
               <button
                 className={Styles.previousBtn}
                 disabled={this.props.terria.stories.length <= 1}
@@ -192,47 +200,49 @@ const RCStoryPanel = createReactClass({
           </Medium>
           <div className={Styles.story}>
             <div className={Styles.storyHeader}>
-              <Small>{locationBtn}</Small>
+              {/* <Small>{locationBtn}</Small> */}
               {story.title && story.title.length > 0 ? (
                 <h3>{story.title}</h3>
               ) : (
                 <h3> {t("story.untitled")} </h3>
               )}
               <Small>{exitBtn}</Small>
-              <If condition={this.props.terria.stories.length >= 2}>
-                <Medium>
-                  <div className={Styles.navBtn}>
-                    {" "}
-                    {stories.map((story, i) => (
-                      <button
-                        title={t("story.navBtn", { title: story.title })}
-                        type="button"
-                        key={story.id}
-                        onClick={() => this.navigateStory(i)}
-                      >
-                        {" "}
-                        <Icon
-                          glyph={
-                            i === this.props.viewState.currentStoryId
-                              ? Icon.GLYPHS.circleFull
-                              : Icon.GLYPHS.circleEmpty
-                          }
-                        />
-                      </button>
-                    ))}
-                  </div>
-                </Medium>
-              </If>
             </div>
             {story.text && (
               <div className={Styles.body}>
                 {parseCustomHtmlToReact(story.text)}
               </div>
             )}
+            <div className={Styles.navs}>
+              <If condition={this.props.terria.stories.length >= 2}>
+                {/* <Medium> */}
+                <div className={Styles.navBtn}>
+                  {" "}
+                  {stories.map((story, i) => (
+                    <button
+                      title={t("story.navBtn", { title: story.title })}
+                      type="button"
+                      key={story.id}
+                      onClick={() => this.navigateStory(i)}
+                    >
+                      {" "}
+                      <Icon
+                        glyph={
+                          i === this.props.viewState.currentStoryId
+                            ? Icon.GLYPHS.circleFull
+                            : Icon.GLYPHS.circleEmpty
+                        }
+                      />
+                    </button>
+                  ))}
+                </div>
+                {/* </Medium> */}
+              </If>
+            </div>
           </div>
           <Medium>
             <div className={Styles.right}>
-              {exitBtn}
+              {/* {exitBtn} */}
               <button
                 disabled={this.props.terria.stories.length <= 1}
                 className={Styles.nextBtn}
@@ -243,7 +253,7 @@ const RCStoryPanel = createReactClass({
               </button>
             </div>
           </Medium>
-          <Small>
+          {/* <Small>
             <div className={Styles.navBtnMobile}>
               {" "}
               {stories.map((story, i) => (
@@ -260,7 +270,7 @@ const RCStoryPanel = createReactClass({
                 </button>
               ))}
             </div>
-          </Small>
+          </Small> */}
         </div>
       </Swipeable>
     );

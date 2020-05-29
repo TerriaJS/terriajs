@@ -10,13 +10,11 @@
     // height: $input-height;
     // width: $input-height;
     color: black;
-    stroke: currentColor;
     cursor: pointer;
     height: 20px;
     width: 20px;
     padding: $padding;
-    fill-opacity: 0.5;
-    fill: currentColor;
+    fill-opacity: 1;
     &:hover {
       background-color: #ddd;
     }

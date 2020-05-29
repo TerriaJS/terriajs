@@ -58,14 +58,35 @@
     margin: 0;
   }
 }
-
+.middleContainer {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  @media (orientation: landscape) {
+    flex-direction: row;
+  }
+}
 .map {
   @include transition(left $animation-fast ease-in);
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: $mobile-header-height;
-  bottom: 0;
+  height: 100%;
+  @media (min-width: $sm) {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: $mobile-header-height;
+    bottom: 0;
+  }
+  @media (orientation: landscape) {
+    flex: 1;
+  }
+}
+.smallMap {
+  height: 300px;
+}
+.storyPanelWrapper {
+  @media (orientation: landscape) {
+    flex: 1;
+  }
 }
 .tabsContainer {
   position: fixed;
@@ -161,6 +182,14 @@
 .showWorkbenchButtonisNotVisible {
   transition-delay: 0s;
 }
+@media (max-width: $sm) {
+  .uiInner {
+    display: flex;
+    flex: 1;
+    height: 100%;
+    flex-direction: column;
+  }
+}
 
 @media (min-width: $sm) {
   .ui {
@@ -168,6 +197,7 @@
   .uiInner {
     display: flex;
     overflow: hidden;
+    flex-direction: row;
   }
   .sidePanel {
     vertical-align: top;
