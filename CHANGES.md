@@ -6,6 +6,9 @@ Change Log
 #### mobx-next-release (mobx-32)
 * Made expanded SOS chart item shareable.
 * Fixed a regression bug where the time filter is shown for all satellite imagery items
+* Fixed minor UI errors in console
+* Replaced helpful hints text with the new version
+* Made the shapes of some of the workbench components rounded
 * Add `clampToGround` property on to holes within polygons in `GeoJsonCatalogItem`
 * Set default `clampToGround` trait to `true` for `GeoJsonCatalogItem`
 * Fixed a bug where WMS items caused type errors in newer babel and typescript builds, due to mixed mixin methods on DiffableMixin & DiscretelyTimeVaryingMixin
