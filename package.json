@@ -140,6 +140,7 @@
     "worker-loader": "^2.0.0"
   },
   "devDependencies": {
+    "@types/react-test-renderer": "^16.9.2",
     "babel-eslint": "^10.0.1",
     "babel-plugin-styled-components": "^1.10.7",
     "electron": "^2.0.0",
