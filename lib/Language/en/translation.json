@@ -749,7 +749,7 @@
       "errorRenderingMessage": "<p>An error occurred while rendering in 3D.  This probably indicates a bug in {{appName}} or an incompatibility with your system or web browser.  We'll now switch you to 2D so that you can continue your work. We would appreciate it if you report this error by sending an email to {{email}} with the technical details below.  Thank you!</p>"
     },
     "ckan": {
-      "nameServer": "ckanServer",
+      "nameServer": "CKAN Server",
       "errorLoadingTitle": "Error loading CKAN catalogue",
       "errorLoadingMessage": "The definition for this CKAN catalogue does not have a valid filter query.",
       "corsErrorMessage": "Couldn't retrieve packages from this CKAN server.<br/><br/>If you entered the URL manually, please double-check it.<br/><br/>If it's your server, make sure {{corsLink}} is enabled.<br/><br/> Otherwise, if reloading doesn't fix it, please report the problem by sending an email to {{email}} with the technical details below.  Thank you!<br/><br/>",
@@ -759,6 +759,7 @@
       "datasetDescription": "Dataset Description",
       "dataDescription": "Data Description",
       "resourceDescription": "Resource Description",
+      "datasetCustodian": "Dataset Custodian",
       "licence": "Licence",
       "author": "Author",
       "contact_point": "Contact",

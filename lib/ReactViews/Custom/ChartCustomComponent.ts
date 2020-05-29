@@ -146,7 +146,7 @@ export default class ChartCustomComponent extends CustomComponent {
             context.feature.id,
             source
           ].join(":");
-          const item = new CsvCatalogItem(id, context.terria);
+          const item = new CsvCatalogItem(id, context.terria, undefined);
           this.setTraitsFromAttrs(item, attrs, i);
           return item;
         }
@@ -166,7 +166,7 @@ export default class ChartCustomComponent extends CustomComponent {
     }
 
     // Build chart item to show in the info panel
-    const chartItem = new CsvCatalogItem(undefined, context.terria);
+    const chartItem = new CsvCatalogItem(undefined, context.terria, undefined);
     this.setTraitsFromAttrs(chartItem, attrs, 0);
     chartElements.push(
       React.createElement(Chart, {
