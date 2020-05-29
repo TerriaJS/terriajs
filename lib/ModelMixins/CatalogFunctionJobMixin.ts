@@ -7,7 +7,8 @@ import {
   reaction,
   computed,
   observable,
-  IObservableArray
+  IObservableArray,
+  onBecomeObserved
 } from "mobx";
 import CatalogFunctionJobTraits from "../Traits/CatalogFunctionJobTraits";
 import Constructor from "../Core/Constructor";
@@ -16,6 +17,7 @@ import CommonStrata from "../Models/CommonStrata";
 import createStratumInstance from "../Models/createStratumInstance";
 import isDefined from "../Core/isDefined";
 import AsyncMappableMixin from "./AsyncMappableMixin";
+import runLater from "../Core/runLater";
 
 type CatalogFunctionJobMixin = Model<CatalogFunctionJobTraits>;
 
@@ -28,6 +30,18 @@ function CatalogFunctionJobMixin<
     constructor(...args: any[]) {
       super(...args);
 
+      // If this is showing in workbench, make sure result layers are also in workbench
+      onBecomeObserved(this, "mapItems", () => {
+        runLater(() =>
+          this.results.forEach(
+            result =>
+              this.terria.workbench.contains(result) ||
+              runInAction(() => this.terria.workbench.add(result))
+          )
+        );
+      });
+
+      // Handle changes in job status
       reaction(
         () => this.jobStatus,
         async () => {
@@ -42,6 +56,7 @@ function CatalogFunctionJobMixin<
                 result
               );
             });
+            // Poll for results when running
           } else if (this.jobStatus === "running" && !this.refreshEnabled) {
             runInAction(() =>
               this.setTrait(CommonStrata.user, "refreshEnabled", true)
@@ -50,6 +65,7 @@ function CatalogFunctionJobMixin<
         }
       );
 
+      // Update logs
       reaction(
         () => this.logs.map(log => log),
         () => {
@@ -57,6 +73,7 @@ function CatalogFunctionJobMixin<
         }
       );
 
+      // Propagate show to result layer's show
       reaction(
         () => this.show,
         () => {
