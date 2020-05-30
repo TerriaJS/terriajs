@@ -46,6 +46,7 @@ import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvi
 import LatLonHeight from "../Core/LatLonHeight";
 import MapInteractionMode from "./MapInteractionMode";
 import i18next from "i18next";
+import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 
 interface SplitterClips {
   left: string;
@@ -94,8 +95,8 @@ export default class Leaflet extends GlobeOrMap {
   private _disposeSplitterReaction: () => void;
 
   private _createImageryLayer: (
-    ip: Cesium.ImageryProvider
-  ) => GridLayer = createTransformer((ip: Cesium.ImageryProvider) => {
+    ip: ImageryProvider
+  ) => GridLayer = createTransformer((ip: ImageryProvider) => {
     if (ip instanceof MapboxVectorTileImageryProvider) {
       return new MapboxVectorCanvasTileLayer(ip, {});
     } else {
@@ -332,7 +333,7 @@ export default class Leaflet extends GlobeOrMap {
   }
 
   zoomTo(
-    target: CameraView | Cesium.Rectangle | Cesium.DataSource | Mappable | any,
+    target: CameraView | Rectangle | DataSource | Mappable | any,
     flightDurationSeconds: number
   ): void {
     if (!isDefined(target)) {
@@ -895,7 +896,7 @@ export default class Leaflet extends GlobeOrMap {
 
   _addVectorTileHighlight(
     imageryProvider: MapboxVectorTileImageryProvider,
-    rectangle: Cesium.Rectangle
+    rectangle: Rectangle
   ): () => void {
     const map = this.map;
     const options: any = {

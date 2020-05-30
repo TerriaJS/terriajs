@@ -7,7 +7,7 @@ import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import KmlDataSource from "terriajs-cesium/Source/DataSources/KmlDataSource";
 import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
-import Property from "terriajs-cesium/Source/Core/Property";
+import Property from "terriajs-cesium/Source/DataSources/Property";
 import sampleTerrain from "terriajs-cesium/Source/Core/sampleTerrain";
 import isDefined from "../Core/isDefined";
 import readXml from "../Core/readXml";
@@ -18,6 +18,7 @@ import UrlMixin from "../ModelMixins/UrlMixin";
 import KmlCatalogItemTraits from "../Traits/KmlCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import Terria from "./Terria";
+import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 
 const kmzRegex = /\.kmz$/i;
 
@@ -125,11 +126,13 @@ class KmlCatalogItem extends AsyncMappableMixin(
           const polygonHierarchy = getPropertyValue<PolygonHierarchy>(
             polygon.hierarchy
           );
-          samplePolygonHierarchyPositions(
-            polygonHierarchy,
-            positionsToSample,
-            correspondingCartesians
-          );
+          if (polygonHierarchy) {
+            samplePolygonHierarchyPositions(
+              polygonHierarchy,
+              positionsToSample,
+              correspondingCartesians
+            );
+          }
         }
       }
       const terrainProvider = this.terria.cesium.scene.globe.terrainProvider;
@@ -156,10 +159,14 @@ class KmlCatalogItem extends AsyncMappableMixin(
           const existingHierarchy = getPropertyValue<PolygonHierarchy>(
             polygon.hierarchy
           );
-          polygon.hierarchy = new PolygonHierarchy(
-            existingHierarchy.positions,
-            existingHierarchy.holes
-          );
+          if (existingHierarchy) {
+            polygon.hierarchy = new ConstantProperty(
+              new PolygonHierarchy(
+                existingHierarchy.positions,
+                existingHierarchy.holes
+              )
+            );
+          }
         }
       });
     }
@@ -168,7 +175,10 @@ class KmlCatalogItem extends AsyncMappableMixin(
 
 export default KmlCatalogItem;
 
-function getPropertyValue<T>(property: Property): T {
+function getPropertyValue<T>(property: Property | undefined): T | undefined {
+  if (property === undefined) {
+    return undefined;
+  }
   return property.getValue(JulianDate.now());
 }
 

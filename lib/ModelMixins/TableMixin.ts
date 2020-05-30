@@ -2,9 +2,9 @@ import { action, computed, observable, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
-import combine from "terriajs-cesium/Source/Core/combine";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
@@ -15,8 +15,8 @@ import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
-import isDefined from "../Core/isDefined";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
@@ -33,6 +33,8 @@ import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
 import LegendTraits from "../Traits/LegendTraits";
 import TableTraits from "../Traits/TableTraits";
+import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
+import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
 
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
 //   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
@@ -385,17 +387,23 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
 
           const entity = dataSource.entities.add(
             new Entity({
-              position: Cartesian3.fromDegrees(longitude, latitude, 0.0),
+              position: new ConstantPositionProperty(
+                Cartesian3.fromDegrees(longitude, latitude, 0.0)
+              ),
               point: new PointGraphics({
-                color: colorMap.mapValueToColor(value),
-                pixelSize: pointSizeMap.mapValueToPointSize(value),
-                outlineWidth: 1,
-                outlineColor: outlineColor,
-                heightReference: HeightReference.CLAMP_TO_GROUND
+                color: new ConstantProperty(colorMap.mapValueToColor(value)),
+                pixelSize: new ConstantProperty(
+                  pointSizeMap.mapValueToPointSize(value)
+                ),
+                outlineWidth: new ConstantProperty(1),
+                outlineColor: new ConstantProperty(outlineColor),
+                heightReference: new ConstantProperty(
+                  HeightReference.CLAMP_TO_GROUND
+                )
               })
             })
           );
-          entity.properties = this.getRowValues(i);
+          entity.properties = new PropertyBag(this.getRowValues(i));
         }
 
         dataSource.show = this.show;

@@ -14,6 +14,12 @@ import GltfCatalogItemTraits from "../Traits/GltfCatalogItemTraits";
 import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
 import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
 
+declare module "terriajs-cesium/Source/Scene/Axis" {
+  export default class Axis {
+    static fromName(name: string): number;
+  }
+}
+
 export default class GltfCatalogItem
   extends UrlMixin(CatalogMemberMixin(CreateModel(GltfCatalogItemTraits)))
   implements Mappable {
@@ -84,10 +90,10 @@ export default class GltfCatalogItem
       return undefined;
     }
     const options = {
-      uri: this.url,
-      upAxis: this._cesiumUpAxis,
-      forwardAxis: this._cesiumForwardAxis,
-      scale: this.scale !== undefined ? this.scale : 1,
+      uri: new ConstantProperty(this.url),
+      upAxis: new ConstantProperty(this._cesiumUpAxis),
+      forwardAxis: new ConstantProperty(this._cesiumForwardAxis),
+      scale: new ConstantProperty(this.scale !== undefined ? this.scale : 1),
       shadows: new ConstantProperty(this._cesiumShadows)
     };
 
@@ -99,7 +105,7 @@ export default class GltfCatalogItem
     if (this._model === undefined) {
       return [];
     }
-    this._model.show = this.show;
+    this._model.show = new ConstantProperty(this.show);
 
     let position: Cartesian3;
     if (

@@ -5,6 +5,14 @@ import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import loadJson from "./loadJson";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 
+declare module "terriajs-cesium/Source/Core/FeatureDetection" {
+  export default class FeatureDetection {
+    static isEdge(): boolean;
+    static isInternetExplorer(): boolean;
+    static internetExplorerVersion(): number[];
+  }
+}
+
 /**
  * Rewrites URLs so that they're resolved via the TerriaJS-Server proxy rather than going direct. This is most useful
  * for getting around CORS restrictions on services that don't have CORS set up or when using pre-CORS browsers like IE9.

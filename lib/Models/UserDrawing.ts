@@ -16,6 +16,7 @@ import CreateModel from "./CreateModel";
 import MapInteractionMode from "./MapInteractionMode";
 import Terria from "./Terria";
 import i18next from "i18next";
+import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
 
 interface Options {
   terria: Terria;
@@ -213,7 +214,7 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
   private addPointToPointEntities(name: string, position: Cartesian3) {
     var pointEntity = new Entity({
       name: name,
-      position: position,
+      position: new ConstantPositionProperty(position),
       billboard: <any>{
         image: this.svgPoint,
         eyeOffset: new Cartesian3(0.0, 0.0, -50.0)

@@ -456,6 +456,10 @@ function getUniqueValueSymbol(
   uniqueValueRenderer: UniqueValueRenderer,
   rendererObj: any
 ): Symbol | null {
+  if (!entity.properties) {
+    return uniqueValueRenderer.defaultSymbol;
+  }
+
   let entityUniqueValue = entity.properties[
     uniqueValueRenderer.field1
   ].getValue();
@@ -490,6 +494,10 @@ function getClassBreaksSymbol(
   entity: Entity,
   classBreaksRenderer: ClassBreaksRenderer
 ): Symbol | null {
+  if (!entity.properties) {
+    return classBreaksRenderer.defaultSymbol;
+  }
+
   let entityValue = entity.properties[classBreaksRenderer.field].getValue();
   for (var i = 0; i < classBreaksRenderer.classBreakInfos.length; i++) {
     if (entityValue <= classBreaksRenderer.classBreakInfos[i].classMaxValue) {
@@ -517,22 +525,26 @@ function updateEntityWithEsriStyle(
   // Replace a general Cesium Point with a billboard
   if (entity.point && symbol.imageData) {
     entity.billboard = new BillboardGraphics({
-      image: proxyCatalogItemUrl(
-        catalogItem,
-        `data:${symbol.contentType};base64,${symbol.imageData}`
+      image: new ConstantProperty(
+        proxyCatalogItemUrl(
+          catalogItem,
+          `data:${symbol.contentType};base64,${symbol.imageData}`
+        )
       ),
-      heightReference: catalogItem.clampToGround
-        ? HeightReference.RELATIVE_TO_GROUND
-        : undefined,
-      width: symbol.width,
-      height: symbol.height,
-      rotation: symbol.angle
+      heightReference: new ConstantProperty(
+        catalogItem.clampToGround
+          ? HeightReference.RELATIVE_TO_GROUND
+          : undefined
+      ),
+      width: new ConstantProperty(symbol.width),
+      height: new ConstantProperty(symbol.height),
+      rotation: new ConstantProperty(symbol.angle)
     });
 
     if (symbol.xoffset || symbol.yoffset) {
       const x = isDefined(symbol.xoffset) ? symbol.xoffset : 0;
       const y = isDefined(symbol.yoffset) ? symbol.yoffset : 0;
-      entity.billboard.pixelOffset = new Cartesian3(x, y);
+      entity.billboard.pixelOffset = new ConstantProperty(new Cartesian3(x, y));
     }
 
     entity.point.show = new ConstantProperty(false);
@@ -541,7 +553,7 @@ function updateEntityWithEsriStyle(
   // Update the styling of the Cesium Polyline
   if (entity.polyline && symbol.color) {
     entity.polyline.material = new ColorMaterialProperty(
-      convertEsriColorToCesiumColor(symbol.color)
+      new ConstantProperty(convertEsriColorToCesiumColor(symbol.color))
     );
     if (isDefined(symbol.width)) {
       entity.polyline.width = new ConstantProperty(symbol.width);
@@ -572,11 +584,15 @@ function updateEntityWithEsriStyle(
     if (color[3] === 0) {
       color[3] = 1;
     }
-    entity.polygon.material = convertEsriColorToCesiumColor(color);
+    entity.polygon.material = new ColorMaterialProperty(
+      new ConstantProperty(convertEsriColorToCesiumColor(color))
+    );
 
     if (symbol.outline) {
-      entity.polygon.outlineColor = convertEsriColorToCesiumColor(
-        symbol.outline.color
+      entity.polygon.outlineColor = new ColorMaterialProperty(
+        new ConstantProperty(
+          convertEsriColorToCesiumColor(symbol.outline.color)
+        )
       );
       entity.polygon.outlineWidth = symbol.outline.width;
     }

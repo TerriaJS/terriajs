@@ -4,6 +4,8 @@ import TimeVarying from "../ModelMixins/TimeVarying";
 import CommonStrata from "./CommonStrata";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
+import Clock from "terriajs-cesium/Source/Core/Clock";
+import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 
 /**
  * Manages a stack of all the time-varying datasets currently attached to the timeline. Provides
@@ -24,9 +26,9 @@ export default class TimelineStack {
   defaultTimeVarying: TimeVarying | undefined;
 
   private _disposeClockAutorun: IReactionDisposer;
-  private _disposeTickSubscription: Cesium.Event.RemoveCallback;
+  private _disposeTickSubscription: CesiumEvent.RemoveCallback;
 
-  constructor(readonly clock: Cesium.Clock) {
+  constructor(readonly clock: Clock) {
     // Keep the Cesium clock in sync with the top layer's clock.
     this._disposeClockAutorun = autorun(() => {
       const topLayer = this.top;

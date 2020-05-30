@@ -206,7 +206,7 @@ class LeafletGeomVisualizer {
     lastLeafletMarker?: L.CircleMarker
   ) {
     const featureGroup = this._featureGroup;
-    const pointGraphics = entity.point;
+    const pointGraphics = entity.point!;
 
     const show =
       entity.isAvailable(time) &&
@@ -324,7 +324,7 @@ class LeafletGeomVisualizer {
     _entityHash: EntityHash,
     entityDetails: EntityDetails
   ) {
-    const markerGraphics = entity.billboard;
+    const markerGraphics = entity.billboard!;
     const featureGroup = this._featureGroup;
     let position;
     let marker: L.Marker;
@@ -462,7 +462,7 @@ class LeafletGeomVisualizer {
     _entityHash: EntityHash,
     entityDetails: EntityDetails
   ) {
-    const labelGraphics = entity.label;
+    const labelGraphics = entity.label!;
     const featureGroup = this._featureGroup;
     let position;
     let marker: L.Marker;
@@ -586,7 +586,7 @@ class LeafletGeomVisualizer {
     entityDetails: EntityDetails
   ) {
     const featureGroup = this._featureGroup;
-    const polygonGraphics = entity.polygon;
+    const polygonGraphics = entity.polygon!;
 
     const show =
       entity.isAvailable(time) &&
@@ -710,7 +710,7 @@ class LeafletGeomVisualizer {
     _entityHash: EntityHash,
     entityDetails: EntityDetails
   ) {
-    const polylineGraphics = entity.polyline;
+    const polylineGraphics = entity.polyline!;
     const featureGroup = this._featureGroup;
     let positions, polyline;
 

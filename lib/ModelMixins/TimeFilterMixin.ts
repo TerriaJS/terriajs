@@ -146,6 +146,10 @@ function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
       if (!this.currentTimeAsJulianDate) {
         return;
       }
+      if (!feature.position) {
+        return;
+      }
+
       const position = feature.position.getValue(this.currentTimeAsJulianDate);
       const cartographic = Ellipsoid.WGS84.cartesianToCartographic(position);
       const featureImageryUrl = this.imageryUrls.find(
@@ -210,6 +214,10 @@ const resolveFeature = action(async function(
   );
 
   const feature = (features || []).find(feature => {
+    if (!feature.properties) {
+      return false;
+    }
+
     const prop = feature.properties[propertyName];
     const times = prop.getValue(model.currentTimeAsJulianDate);
     return Array.isArray(times) && times.length > 0;
