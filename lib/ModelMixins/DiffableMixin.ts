@@ -17,7 +17,7 @@ type MixinModel = Model<
 
 function DiffableMixin<T extends Constructor<MixinModel>>(Base: T) {
   abstract class DiffableMixin extends Base {
-    abstract styleSelector: SelectableStyle | undefined;
+    abstract get styleSelector(): SelectableStyle | undefined;
 
     get hasDiffableMixin() {
       return true;

@@ -663,6 +663,7 @@ function createEntityFromHole(
   entity.polyline.show = mainEntity.polyline!.show;
   entity.polyline.material = mainEntity.polyline!.material;
   entity.polyline.width = mainEntity.polyline!.width;
+  entity.polyline.clampToGround = mainEntity.polyline!.clampToGround;
 
   closePolyline(hole.positions);
   entity.polyline.positions = new ConstantProperty(hole.positions);

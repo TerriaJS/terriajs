@@ -1,14 +1,15 @@
 import i18next from "i18next";
 import { computed } from "mobx";
-
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import KmlDataSource from "terriajs-cesium/Source/DataSources/KmlDataSource";
 import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
-import Property from "terriajs-cesium/Source/DataSources/Property";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 import sampleTerrain from "terriajs-cesium/Source/Core/sampleTerrain";
+import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
+import KmlDataSource from "terriajs-cesium/Source/DataSources/KmlDataSource";
+import Property from "terriajs-cesium/Source/DataSources/Property";
 import isDefined from "../Core/isDefined";
 import readXml from "../Core/readXml";
 import TerriaError from "../Core/TerriaError";
@@ -17,8 +18,7 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import KmlCatalogItemTraits from "../Traits/KmlCatalogItemTraits";
 import CreateModel from "./CreateModel";
-import Terria from "./Terria";
-import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
+import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 
 const kmzRegex = /\.kmz$/i;
 
@@ -61,7 +61,7 @@ class KmlCatalogItem extends AsyncMappableMixin(
         })
       });
 
-    return new Promise<string | Document | Blob>((resolve, reject) => {
+    return new Promise<string | Resource | Document | Blob>(resolve => {
       if (isDefined(this.kmlString)) {
         const parser = new DOMParser();
         resolve(parser.parseFromString(this.kmlString, "text/xml"));
@@ -72,7 +72,7 @@ class KmlCatalogItem extends AsyncMappableMixin(
           resolve(readXml(this._kmlFile));
         }
       } else if (isDefined(this.url)) {
-        resolve(this.url);
+        resolve(proxyCatalogItemUrl(this, this.url));
       } else {
         throw new TerriaError({
           sender: this,

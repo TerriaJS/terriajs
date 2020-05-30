@@ -106,8 +106,8 @@ class HelpPanel extends React.Component {
           </Box>
         </Box>
         <Spacing bottom={10} />
-        <Box centered displayInlineBlock>
-          <Box displayInlineBlock>
+        <Box centered displayInlineBlock fullWidth>
+          <Box displayInlineBlock fullWidth>
             {helpItems && (
               <For each="item" index="i" of={helpItems}>
                 <HelpPanelItem
