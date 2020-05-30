@@ -41,12 +41,6 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
     return `https://ydyr.info/api/v1/`;
   }
 
-  /**
-   * Performs the Execute request for the WPS process
-   *
-   * If `executeWithHttpGet` is true, a GET request is made
-   * instead of the default POST request.
-   */
   @action
   async invoke() {
     if (!isDefined(this.parameters)) {
@@ -75,14 +69,37 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
       throw `The region column, data column and output geography must be defined`;
     }
 
-    const regionColumn = this.parameters["Region Column"] as string;
-    const dataColumn = this.parameters["Data Column"] as string;
-    const outputGeography = this.parameters["Output Geography"] as string;
+    const regionColumnName = this.parameters["Region Column"] as string;
+    const dataColumnName = this.parameters["Data Column"] as string;
+    const outputGeographyName = this.parameters["Output Geography"] as string;
+
+    const regionColumn = tableCatalogItem?.findColumnByName(regionColumnName);
+    const dataColumn = tableCatalogItem?.findColumnByName(dataColumnName);
+
+    this.setTrait(
+      CommonStrata.user,
+      "name",
+      `YDYR ${tableCatalogItem.name}: ${dataColumnName}`
+    );
+
+    const jobDetails = this.addObject(
+      CommonStrata.user,
+      "shortReportSections",
+      "Job Details"
+    );
+    jobDetails?.setTrait(
+      CommonStrata.user,
+      "content",
+      `${dataColumnName}: "${
+        DATASETS.find(
+          d => d.geographyName === regionColumn?.regionType?.regionType
+        )?.title
+      }" to "${outputGeographyName}"`
+    );
 
     const data = {
-      ids: tableCatalogItem?.findColumnByName(regionColumn)?.values,
-      values: tableCatalogItem?.findColumnByName(dataColumn)?.valuesAsNumbers
-        .values
+      ids: regionColumn?.values,
+      values: dataColumn?.valuesAsNumbers.values
     };
 
     if (!data.ids?.length || !data.values?.length) {
@@ -101,10 +118,11 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
 
     const params = {
       data,
-      data_column: dataColumn,
-      geom_column: regionColumn,
-      side_data: DATASETS.find(d => d.title === outputGeography)?.sideData,
-      dst_geom: DATASETS.find(d => d.title === outputGeography)?.geographyName,
+      data_column: dataColumnName,
+      geom_column: regionColumnName,
+      side_data: DATASETS.find(d => d.title === outputGeographyName)?.sideData,
+      dst_geom: DATASETS.find(d => d.title === outputGeographyName)
+        ?.geographyName,
       src_geom:
         tableCatalogItem?.activeTableStyle.regionColumn?.regionType?.regionType,
       averaged_counts: false,

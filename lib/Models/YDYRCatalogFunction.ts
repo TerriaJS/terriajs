@@ -160,9 +160,9 @@ export const SIDE_DATA = [
 
 export const ALGORITHMS: [string, boolean][] = [
   ["Negative Binomial", true],
-  ["Population Weighted", false],
-  ["Poisson Linear", false],
-  ["Ridge Regressor", false]
+  ["Population Weighted", false]
+  // ["Poisson Linear", false],
+  // ["Ridge Regressor", false]
 ];
 
 export default class YDYRCatalogFunction extends CatalogFunctionMixin(

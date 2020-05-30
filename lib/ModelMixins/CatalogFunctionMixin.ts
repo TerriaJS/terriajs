@@ -7,7 +7,6 @@ import CatalogFunctionJobMixin from "./CatalogFunctionJobMixin";
 import CommonStrata from "../Models/CommonStrata";
 import { toJS, runInAction } from "mobx";
 import TerriaError from "../Core/TerriaError";
-import createStratumInstance from "../Models/createStratumInstance";
 import upsertModelFromJson from "../Models/upsertModelFromJson";
 import CatalogMemberFactory from "../Models/CatalogMemberFactory";
 const sprintf = require("terriajs-cesium/Source/ThirdParty/sprintf").default;
