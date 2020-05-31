@@ -236,11 +236,11 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
     let value = "";
 
     if (isDefined(this.inputLayers.value) && !this.inputLayers.isValid) {
-      value = `The selected layer "${this.inputLayers.value} does not exist in the Workbench". `;
+      value = `The selected layer "${this.inputLayers.value} does not exist in the map". `;
     }
 
     if (this.inputLayers.possibleValues.length === 0) {
-      value = `No input layers available, please add a tabular data layer to the Workbench (for example - CSV). `;
+      value = `No supported input layers available, please add a region-mapped data layer to the map.`;
     }
 
     if (value !== "") {
