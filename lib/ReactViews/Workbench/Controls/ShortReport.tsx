@@ -49,7 +49,12 @@ export default class ShortReport extends React.Component<{
             <a
               href="#"
               onClick={this.clickShortReport.bind(this, r.name)}
-              style={{ color: "inherit", textDecoration: "none" }}
+              style={{
+                color: "inherit",
+                fontWeight: "bold",
+                paddingTop: "5px",
+                display: "block"
+              }}
             >
               {r.name}
             </a>
