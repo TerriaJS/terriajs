@@ -105,7 +105,20 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       const value = super.activeStyle;
       if (value !== undefined) {
         return value;
-      } else if (this.styles && this.styles.length > 0) {
+      } else if (
+        this.styles &&
+        this.styles.length > 0 &&
+        isDefined(this.styles[0].id)
+      ) {
+        // Find first style with scalar column for default style
+        for (let i = 0; i < this.styles.length; i++) {
+          if (
+            this.tableColumns.find(col => col.name === this.styles[i].id)
+              ?.type === TableColumnType.scalar
+          ) {
+            return this.styles[i].id;
+          }
+        }
         return this.styles[0].id;
       }
       return undefined;
