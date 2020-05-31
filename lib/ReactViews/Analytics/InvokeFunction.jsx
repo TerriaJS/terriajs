@@ -106,7 +106,10 @@ const InvokeFunction = observer(
     },
 
     validateParameter(parameter) {
-      if (!this.parametersViewModel.getParameter(parameter).isValueValid) {
+      if (
+        !parameter.isValid ||
+        !this.parametersViewModel.getParameter(parameter).isValueValid
+      ) {
         // Editor says it's not valid, so it's not valid.
         return false;
       }

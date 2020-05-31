@@ -2,7 +2,7 @@ import FunctionParameter, {
   Options as FunctionParameterOptions
 } from "./FunctionParameter";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
-import { autorun, observable, reaction } from "mobx";
+import { autorun, observable, reaction, computed } from "mobx";
 import CommonStrata from "../CommonStrata";
 import isDefined from "../../Core/isDefined";
 
@@ -34,5 +34,18 @@ export default class EnumerationParameter extends FunctionParameter<string> {
       },
       { fireImmediately: true }
     );
+  }
+
+  @computed
+  get isValid(): boolean {
+    if (!isDefined(this.value)) {
+      return !this.isRequired;
+    }
+
+    if (this.possibleValues.includes(this.value)) {
+      return true;
+    }
+
+    return false;
   }
 }

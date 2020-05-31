@@ -22,6 +22,7 @@ import GeoJsonParameterEditor from "./GeoJsonParameterEditor";
 import defined from "terriajs-cesium/Source/Core/defined";
 
 import Styles from "./parameter-editors.scss";
+import InfoParameterEditor from "./InfoParameterEditor";
 
 const ParameterEditor = createReactClass({
   displayName: "ParameterEditor",
@@ -56,7 +57,15 @@ const ParameterEditor = createReactClass({
         this
       );
       if (defined(editor)) {
-        return editor;
+        return (
+          <div
+            style={{
+              color: this.props.parameter.isValid ? "inherit" : "#ff0000"
+            }}
+          >
+            {editor}
+          </div>
+        );
       }
     }
     const genericEditor = ParameterEditor.parameterTypeConverters.filter(
@@ -313,6 +322,23 @@ ParameterEditor.parameterTypeConverters = [
               previewed={parameterEditor.props.previewed}
               viewState={parameterEditor.props.viewState}
               parameter={parameterEditor.props.parameter}
+            />
+          </div>
+        );
+      }
+    }
+  },
+  {
+    id: "info",
+    parameterTypeToDiv: function GenericParameterToDiv(type, parameterEditor) {
+      if (type === this.id) {
+        return (
+          <div>
+            {parameterEditor.renderLabel()}
+            <InfoParameterEditor
+              previewed={parameterEditor.props.previewed}
+              parameter={parameterEditor.props.parameter}
+              parameterViewModel={parameterEditor.props.parameterViewModel}
             />
           </div>
         );

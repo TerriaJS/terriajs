@@ -6,7 +6,7 @@ import { Feature } from "geojson";
 
 import combine from "terriajs-cesium/Source/Core/combine";
 
-export interface Options {
+export interface Options<T extends JsonValue | undefined = JsonValue> {
   id: string;
   name?: string;
   description?: string;
@@ -28,7 +28,7 @@ export default abstract class FunctionParameter<
   readonly geoJsonFeature?: Promise<Feature> | Feature | JsonObject | undefined;
 
   constructor(
-    private readonly catalogFunction: CatalogFunctionMixin,
+    protected readonly catalogFunction: CatalogFunctionMixin,
     options: Options
   ) {
     this.id = options.id;
@@ -38,7 +38,12 @@ export default abstract class FunctionParameter<
     this.converter = options.converter;
   }
 
-  isValid(): boolean {
+  @computed
+  get isValid(): boolean {
+    if (!isDefined(this.value)) {
+      return !this.isRequired;
+    }
+
     return true;
   }
 
