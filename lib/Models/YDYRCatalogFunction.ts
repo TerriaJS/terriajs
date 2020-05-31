@@ -9,6 +9,9 @@ import isDefined from "../Core/isDefined";
 import TableColumnType from "../Table/TableColumnType";
 import BooleanParameter from "./FunctionParameters/BooleanParameter";
 import YDYRCatalogFunctionJob from "./YDYRCatalogFunctionJob";
+import filterOutUndefined from "../Core/filterOutUndefined";
+import InfoParameter from "./FunctionParameters/InfoParameter";
+import StringParameter from "./FunctionParameters/StringParameter";
 
 export const DATASETS = [
   {
@@ -184,6 +187,11 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
   async forceLoadMetadata() {}
 
   @computed
+  get description() {
+    return `Your Data Your Regions (YDYR) is an API for the conversion of data between different Australian geographic boundaries. See <a href="https://ydyr.info">ydyr.info</a> for more information`;
+  }
+
+  @computed
   get selectedTableCatalogMember(): TableMixin.TableMixin | undefined {
     if (!isDefined(this.inputLayers?.value)) {
       return;
@@ -196,7 +204,16 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
   }
 
   @computed
-  get inputLayers(): EnumerationParameter {
+  get apiUrl(): StringParameter {
+    return new StringParameter(this, {
+      id: "apiUrl",
+      name: "YDYR API Endpoint",
+      isRequired: true
+    });
+  }
+
+  @computed
+  get inputLayers() {
     const possibleValues = this.terria.workbench.items
       .filter(
         item =>
@@ -204,6 +221,7 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
       )
       .map(item => item.uniqueId)
       .filter(isDefined);
+
     this._inputLayers = new EnumerationParameter(this, {
       id: "Input Layer",
       possibleValues,
@@ -214,7 +232,32 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
   }
 
   @computed
-  get regionColumn(): EnumerationParameter {
+  get inputLayersInfo() {
+    let value = "";
+
+    if (isDefined(this.inputLayers.value) && !this.inputLayers.isValid) {
+      value = `The selected layer "${this.inputLayers.value} does not exist in the Workbench". `;
+    }
+
+    if (this.inputLayers.possibleValues.length === 0) {
+      value = `No input layers available, please add a tabular data layer to the Workbench (for example - CSV). `;
+    }
+
+    if (value !== "") {
+      return new InfoParameter(this, {
+        id: "inputLayersError",
+        name: "Input Layer Error",
+        errorMessage: true,
+        value
+      });
+    }
+  }
+
+  @computed
+  get regionColumn(): EnumerationParameter | undefined {
+    if (!this.inputLayers.isValid) {
+      return;
+    }
     const possibleValues =
       this.selectedTableCatalogMember?.tableColumns
         // Filter region columns which use supported regions
@@ -226,6 +269,7 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
             )
         )
         .map(col => col.name) || [];
+
     this._regionColumn = new EnumerationParameter(this, {
       id: "Region Column",
       possibleValues,
@@ -236,11 +280,31 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
   }
 
   @computed
-  get dataColumn(): EnumerationParameter {
+  get regionColumnInfo() {
+    if (
+      this.inputLayers.isValid &&
+      this.regionColumn?.possibleValues.length === 0
+    ) {
+      return new InfoParameter(this, {
+        id: "regionColumnError",
+        name: "Region Column Error",
+        errorMessage: true,
+        value: `No region columns available, the selected layer "${this.inputLayers.value}" doesn't have any supported region columns. The region mapping can be set in the Workbench.`
+      });
+    }
+  }
+
+  @computed
+  get dataColumn(): EnumerationParameter | undefined {
+    if (!this.inputLayers.isValid) {
+      return;
+    }
     const possibleValues =
       this.selectedTableCatalogMember?.tableColumns
         .filter(col => col.type === TableColumnType.scalar)
         .map(col => col.name) || [];
+    if (possibleValues.length === 0) {
+    }
     this._dataColumn = new EnumerationParameter(this, {
       id: "Data Column",
       possibleValues,
@@ -249,7 +313,25 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
     return this._dataColumn;
   }
 
-  @computed get availableRegions(): EnumerationParameter {
+  @computed
+  get dataColumnInfo() {
+    if (
+      this.inputLayers.isValid &&
+      this.dataColumn?.possibleValues.length === 0
+    ) {
+      return new InfoParameter(this, {
+        id: "dataColumnError",
+        name: "Data Column Error",
+        errorMessage: true,
+        value: `No data columns available, the selected layer "${this.inputLayers.value}" doesn't have any numerical columns.`
+      });
+    }
+  }
+
+  @computed get availableRegions(): EnumerationParameter | undefined {
+    if (!this.regionColumn?.isValid) {
+      return;
+    }
     return new EnumerationParameter(this, {
       id: "Output Geography",
       possibleValues: DATASETS.map(d => d.title),
@@ -257,13 +339,46 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
     });
   }
 
+  @computed get algorithmParametersInfo(): InfoParameter | undefined {
+    if (this.algorithmParameters.length > 0) {
+      return new InfoParameter(this, {
+        id: "algorithmsInfo",
+        name: "Select Algorithms",
+        value: `Predictive models used to convert data between the input and output geographies:`
+      });
+    }
+  }
+
   @computed get algorithmParameters(): BooleanParameter[] {
+    if (
+      !this.regionColumn?.isValid ||
+      !this.dataColumn?.isValid ||
+      !this.availableRegions?.isValid
+    ) {
+      return [];
+    }
     return ALGORITHMS.map(
       alg =>
         new BooleanParameter(this, {
           id: alg[0]
         })
     );
+  }
+
+  @computed get submitWarning(): InfoParameter | undefined {
+    if (
+      this.inputLayers.isValid &&
+      this.regionColumn?.isValid &&
+      this.dataColumn?.isValid &&
+      this.availableRegions?.isValid
+    ) {
+      return new InfoParameter(this, {
+        id: "dataWarning",
+        name: "Warning",
+        errorMessage: false,
+        value: `By submitting this form your tabular data will be sent to ${this.apiUrl.value} for processing.`
+      });
+    }
   }
 
   // @computed get sidedataParameters(): EnumerationParameter {
@@ -284,13 +399,19 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
    */
   @computed
   get functionParameters(): FunctionParameter[] {
-    return [
-      this.inputLayers,
-      this.regionColumn,
-      this.dataColumn,
+    return filterOutUndefined([
+      this.apiUrl,
+
+      this.inputLayersInfo || this.inputLayers,
+      this.regionColumnInfo || this.regionColumn,
+
+      this.dataColumnInfo || this.dataColumn,
+
       this.availableRegions,
-      ...this.algorithmParameters
+      this.algorithmParametersInfo,
+      ...this.algorithmParameters,
+      this.submitWarning
       // this.sidedataParameters
-    ];
+    ]);
   }
 }

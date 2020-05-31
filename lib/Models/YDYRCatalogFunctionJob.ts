@@ -37,14 +37,14 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
     await super.forceLoadMetadata();
   }
 
-  get apiUrl() {
-    return `https://ydyr.info/api/v1/`;
-  }
-
   @action
   async invoke() {
     if (!isDefined(this.parameters)) {
       throw "Parameters have not been set";
+    }
+
+    if (!isDefined(this.parameters["apiUrl"])) {
+      throw "The apiUrl parameter must be defined.";
     }
 
     if (!isDefined(this.parameters!["Input Layer"])) {
@@ -132,7 +132,10 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
     };
 
     const jobId = await loadWithXhr({
-      url: proxyCatalogItemUrl(this, `${this.apiUrl}disaggregate.json`),
+      url: proxyCatalogItemUrl(
+        this,
+        `${this.parameters["apiUrl"]}disaggregate.json`
+      ),
       method: "POST",
       data: JSON.stringify(params),
       headers: {
@@ -188,18 +191,21 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
   }
 
   async pollForResults() {
-    console.log("POLLING");
-    // if (!isDefined(this.auth)) {
-    //   return;
-    // }
-
     if (!isDefined(this.jobId)) {
       console.log("NO JOB ID");
       return true;
     }
 
+    if (!isDefined(this.parameters!["apiUrl"])) {
+      console.log("apiUrl parameter is not defined");
+      return true;
+    }
+
     const status = await loadJson(
-      proxyCatalogItemUrl(this, `${this.apiUrl}status/${this.jobId}`),
+      proxyCatalogItemUrl(
+        this,
+        `${this.parameters!["apiUrl"]}status/${this.jobId}`
+      ),
       {
         "Cache-Control": "no-cache"
       }
@@ -218,6 +224,11 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
 
   async downloadResults() {
     if (!isDefined(this.resultId)) {
+      return [];
+    }
+
+    if (!isDefined(this.parameters!["apiUrl"])) {
+      console.log("apiUrl parameter is not defined");
       return [];
     }
 
@@ -243,7 +254,7 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
         "url",
         proxyCatalogItemUrl(
           this,
-          `${this.apiUrl}download/${this.resultId}?format=csv`
+          `${this.parameters!["apiUrl"]}download/${this.resultId}?format=csv`
         )
       );
       if (regionColumn !== "") {
