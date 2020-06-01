@@ -17,7 +17,7 @@ type MixinModel = Model<
 
 function DiffableMixin<T extends Constructor<MixinModel>>(Base: T) {
   abstract class DiffableMixin extends Base {
-    abstract styleSelector: SelectableStyle | undefined;
+    abstract get styleSelector(): SelectableStyle | undefined;
 
     get hasDiffableMixin() {
       return true;
@@ -41,7 +41,7 @@ function DiffableMixin<T extends Constructor<MixinModel>>(Base: T) {
     get canFilterTimeByFeature() {
       // Hides the SatelliteImageryTimeFilterSection for the item if it is
       // currently showing difference image
-      return this.isShowingDiff ? false : true;
+      return super.canFilterTimeByFeature && !this.isShowingDiff;
     }
   }
 

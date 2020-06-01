@@ -16,6 +16,7 @@ import isDefined from "../Core/isDefined";
 import createStratumInstance from "./createStratumInstance";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import ArcGisFeatureServerCatalogItem from "./ArcGisFeatureServerCatalogItem";
+import ArcGisCatalogGroup from "./ArcGisCatalogGroup";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import ModelReference from "../Traits/ModelReference";
 import CommonStrata from "./CommonStrata";
@@ -42,13 +43,15 @@ interface FeatureServer {
   layers: Layer[];
 }
 
-class FeatureServerStratum extends LoadableStratum(
+export class FeatureServerStratum extends LoadableStratum(
   ArcGisFeatureServerCatalogGroupTraits
 ) {
   static stratumName = "featureServer";
 
   constructor(
-    private readonly _catalogGroup: ArcGisFeatureServerCatalogGroup,
+    private readonly _catalogGroup:
+      | ArcGisFeatureServerCatalogGroup
+      | ArcGisCatalogGroup,
     private readonly _featureServer: FeatureServer
   ) {
     super();
@@ -103,7 +106,7 @@ class FeatureServerStratum extends LoadableStratum(
   }
 
   static async load(
-    catalogGroup: ArcGisFeatureServerCatalogGroup
+    catalogGroup: ArcGisFeatureServerCatalogGroup | ArcGisCatalogGroup
   ): Promise<FeatureServerStratum> {
     var terria = catalogGroup.terria;
     var uri = new URI(catalogGroup.url).addQuery("f", "json");
