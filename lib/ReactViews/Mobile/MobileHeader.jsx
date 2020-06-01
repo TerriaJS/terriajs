@@ -1,14 +1,14 @@
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import SearchBox from "../Search/SearchBox.jsx";
+// import SearchBox from "../Search/SearchBox.jsx";
 import ObserveModelMixin from "../ObserveModelMixin";
-import MobileModalWindow from "./MobileModalWindow";
+// import MobileModalWindow from "./MobileModalWindow";
 import Branding from "../SidePanel/Branding.jsx";
 import Styles from "./mobile-header.scss";
-import Icon from "../Icon.jsx";
-import MobileMenu from "./MobileMenu";
-import classNames from "classnames";
+// import Icon from "../Icon.jsx";
+// import MobileMenu from "./MobileMenu";
+// import classNames from "classnames";
 import { removeMarker } from "../../Models/LocationMarkerUtils";
 import { withTranslation } from "react-i18next";
 
@@ -118,8 +118,8 @@ const MobileHeader = createReactClass({
 
   render() {
     const searchState = this.props.viewState.searchState;
-    const nowViewingLength = this.props.terria.nowViewing.items.length;
-    const { t } = this.props;
+    // const nowViewingLength = this.props.terria.nowViewing.items.length;
+    // const { t } = this.props;
 
     return (
       <div className={Styles.ui}>

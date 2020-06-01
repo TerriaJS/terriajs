@@ -6,13 +6,13 @@ import PropTypes from "prop-types";
 
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 import ObserveModelMixin from "../ObserveModelMixin";
-import SearchBox from "../Search/SearchBox.jsx";
-import SidebarSearch from "../Search/SidebarSearch.jsx";
-import Workbench from "../Workbench/Workbench.jsx";
-import Icon from "../Icon.jsx";
+// import SearchBox from "../Search/SearchBox.jsx";
+// import SidebarSearch from "../Search/SidebarSearch.jsx";
+// import Workbench from "../Workbench/Workbench.jsx";
+// import Icon from "../Icon.jsx";
 import FullScreenButton from "./FullScreenButton.jsx";
 import { removeMarker } from "../../Models/LocationMarkerUtils";
-import { withTranslation, Trans } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import Styles from "./side-panel.scss";
 
 const SidePanel = createReactClass({
@@ -85,8 +85,8 @@ const SidePanel = createReactClass({
 
   render() {
     const { t } = this.props;
-    const searchState = this.props.viewState.searchState;
-    const addData = t("addData.addDataBtnText");
+    // const searchState = this.props.viewState.searchState;
+    // const addData = t("addData.addDataBtnText");
     return (
       <div className={Styles.workBench}>
         <div className={Styles.header}>
@@ -98,7 +98,7 @@ const SidePanel = createReactClass({
             btnText={t("addData.btnHide")}
           />
 
-          {/*<SearchBox
+          {/* <SearchBox
             onSearchTextChanged={this.changeSearchText}
             onDoSearch={this.search}
             onFocus={this.startLocationSearch}

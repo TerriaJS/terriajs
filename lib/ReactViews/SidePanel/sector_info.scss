@@ -26,6 +26,18 @@
   padding: $padding-small;
   font-size: $font-size-small;
   border-radius: $radius-small;
+  background-image: url("../../../wwwroot/images/TimelineIcons.png");
+  background-position: center;
+  background-size: contain;
+  @media (max-width: $sm) {
+    border-radius: 0;
+  }
+}
+.messageConatiner {
+  background-color: $grey-lightest;
+  padding: $padding;
+  font-size: $font-size-small;
+  border-radius: $radius-small;
   @media (max-width: $sm) {
     border-radius: 0;
   }
