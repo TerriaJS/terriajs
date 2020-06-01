@@ -91,7 +91,7 @@ class MapNavigation extends React.Component {
                   />
                 </div>
               </If>
-              <If condition={this.props.viewState.isToolOpen}>
+              <If condition={this.props.viewState.currentTool?.showCloseButton}>
                 <CloseToolButton
                   toolIsDifference={toolIsDifference}
                   viewState={this.props.viewState}
