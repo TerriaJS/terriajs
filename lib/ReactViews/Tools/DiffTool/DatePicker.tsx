@@ -96,21 +96,24 @@ class DatePicker extends React.Component<PropsType> {
             onClick={() => item.moveToNextDiscreteTime(CommonStrata.user)}
           />
         </Box>
-        {this.isOpen && (
-          <div style={{ position: "absolute" }}>
-            <DateTimePicker
-              currentDate={this.currentDate}
-              dates={this.availableDates}
-              onChange={this.changeCurrentDate}
-              popupStyle={this.props.popupStyle}
-              openDirection="none"
-              isOpen={this.isOpen}
-              showCalendarButton={false}
-              onOpen={() => this.setIsOpen(true)}
-              onClose={() => this.setIsOpen(false)}
-            />
-          </div>
-        )}
+        <div
+          style={{
+            display: this.isOpen ? "block" : "none",
+            position: "absolute"
+          }}
+        >
+          <DateTimePicker
+            currentDate={this.currentDate}
+            dates={this.availableDates}
+            onChange={this.changeCurrentDate}
+            popupStyle={this.props.popupStyle}
+            openDirection="none"
+            isOpen={this.isOpen}
+            showCalendarButton={false}
+            onOpen={() => this.setIsOpen(true)}
+            onClose={() => this.setIsOpen(false)}
+          />
+        </div>
       </div>
     );
   }
