@@ -5,6 +5,8 @@ import Terria from "../../lib/Models/Terria";
 import upsertModelFromJson from "../../lib/Models/upsertModelFromJson";
 import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
 import CommonStrata from "../../lib/Models/CommonStrata";
+import StubCatalogItem from "../../lib/Models/StubCatalogItem";
+import { getUniqueStubName } from "../../lib/Models/createStubCatalogItem";
 
 describe("CatalogGroup", function() {
   let terria: Terria, json: any, catalogGroup: CatalogGroup;
@@ -96,26 +98,73 @@ describe("CatalogGroup", function() {
         type: "geojson",
         name: "Valid GeoJSON item",
         url: "test/bike_racks.geojson"
-      }
+      },
+      {
+        type: "unknown",
+        name: "Invalid type"
+      },
+      {
+        name: "Just a name with no type"
+      },
+      // Empty nothingness
+      {}
     ];
     const group = new CatalogGroup("brokenGroup", terria);
     group.addMembersFromJson("definition", groupWithBrokenItem);
-    expect(group.members.length).toBe(2);
-    let member0 = terria.getModelById(
+    expect(group.members.length).toBe(5);
+    const member0 = terria.getModelById(
       GeoJsonCatalogItem,
       group.members[0] as string
     );
-    let member1 = terria.getModelById(
+    const member1 = terria.getModelById(
       GeoJsonCatalogItem,
       group.members[1] as string
     );
+    const invalidType = terria.getModelById(
+      StubCatalogItem,
+      group.members[2] as string
+    );
+    const noType = terria.getModelById(
+      StubCatalogItem,
+      group.members[3] as string
+    );
+    const nothingness = terria.getModelById(
+      StubCatalogItem,
+      group.members[4] as string
+    );
+
     expect(member0).toBeDefined();
     expect(member1).toBeDefined();
-    if (member0 !== undefined && member1 !== undefined) {
+    expect(invalidType).toBeDefined();
+    expect(noType).toBeDefined();
+    expect(nothingness).toBeDefined();
+    const stubName = getUniqueStubName(terria);
+    if (
+      member0 !== undefined &&
+      member1 !== undefined &&
+      invalidType !== undefined &&
+      noType !== undefined &&
+      nothingness !== undefined
+    ) {
       expect(member0.uniqueId).toBe("brokenGroup/Invalid GeoJSON item");
       expect(member0.isExperiencingIssues).toBe(true);
+
       expect(member1.uniqueId).toBe("brokenGroup/Valid GeoJSON item");
       expect(member1.isExperiencingIssues).toBe(false);
+
+      expect(invalidType.type).toBe(StubCatalogItem.type);
+      expect(invalidType.name).toBe("brokenGroup/Invalid type (Stub)");
+      expect(invalidType.isExperiencingIssues).toBe(true);
+
+      expect(noType.type).toBe(StubCatalogItem.type);
+      expect(noType.name).toBe("brokenGroup/Just a name with no type (Stub)");
+      expect(noType.isExperiencingIssues).toBe(true);
+
+      expect(nothingness.type).toBe(StubCatalogItem.type);
+      expect(nothingness.name).toBe("[StubCatalogItem]");
+      expect(nothingness.isExperiencingIssues).toBe(true);
+    } else {
+      throw "bad";
     }
   });
 });

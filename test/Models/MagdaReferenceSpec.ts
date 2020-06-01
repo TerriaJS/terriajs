@@ -6,6 +6,8 @@ import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
 import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
 import MagdaReference from "../../lib/Models/MagdaReference";
 import Terria from "../../lib/Models/Terria";
+import StubCatalogItem from "../../lib/Models/StubCatalogItem";
+import { BaseModel } from "../../lib/Models/Model";
 
 describe("MagdaReference", function() {
   const recordGroupWithOneCsv = {
@@ -233,7 +235,7 @@ describe("MagdaReference", function() {
   });
 
   it("loads valid items and ignores broken items", async function() {
-    const groupWithBrokenItem = {
+    const groupWithBrokenItem: any = {
       aspects: {
         group: {
           members: [
@@ -264,6 +266,17 @@ describe("MagdaReference", function() {
               },
               id: "1057cfde-243b-4aa0-8bba-732f45327c96",
               name: "GeoJSON Another Test with broken url"
+            },
+            {
+              aspects: {
+                terria: {
+                  definition: {}
+                },
+                id: "item-with-no-type-and-definition",
+                type: "unknown"
+              },
+              id: "item-with-no-type-and-definition",
+              name: "item with no type and definition"
             }
           ]
         },
@@ -290,14 +303,22 @@ describe("MagdaReference", function() {
     await model.loadReference();
 
     const group = model.target as CatalogGroup;
-    expect(group.members.length).toBe(2);
+    expect(group.members.length).toBe(3);
 
     const member0 = group.memberModels[0] as GeoJsonCatalogItem;
     expect(member0.uniqueId).toBe("fa0e6775-e285-4f49-8d5a-abd58cbfdfad");
+    expect(member0.type).toBe(GeoJsonCatalogItem.type);
     expect(member0.isExperiencingIssues).toBe(false);
 
     const member1 = group.memberModels[1] as GeoJsonCatalogItem;
     expect(member1.uniqueId).toBe("1057cfde-243b-4aa0-8bba-732f45327c96");
+    expect(member1.type).toBe(GeoJsonCatalogItem.type);
     expect(member1.isExperiencingIssues).toBe(true);
+
+    const unknown = group.memberModels[2] as MagdaReference;
+    expect(unknown.uniqueId).toBe("item-with-no-type-and-definition");
+    expect(unknown.name).toBe("item with no type and definition");
+    expect(unknown.type).toBe("magda");
+    expect(unknown.target).toBeUndefined();
   });
 });
