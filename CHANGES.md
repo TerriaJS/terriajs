@@ -15,6 +15,7 @@ Change Log
 * Fixed a bug where KmlCatalogItem did not use the proxy for any urls.
 * Add support for `CkanCatalogGroup` and `CkanItemReference`.
 * Fixed difference tool losing datepicker state by keeping it mounted
+* Disabled unhelpful Help button when in `useSmallScreenInterface`
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-31
