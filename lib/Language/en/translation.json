@@ -782,6 +782,7 @@
       "chartDataGroup": "A group for chart data.",
       "dataSourceErrorMessage": "This data source does not have any details available.",
       "serviceErrorMessage": "This service does not have any details available.",
+      "stubCreationFailure": "Could not stub out catalog item {{item}}",
       "unsupportedTypeTitle": "Unknown type",
       "unsupportedTypeMessage": "Could not create unknown model type {{type}}.",
       "unsupportedFileTypeTitle": "Unsupported file type",

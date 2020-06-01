@@ -501,6 +501,8 @@ export default class MagdaReference extends AccessControlMixin(
         console.error(
           `Could not create unknown model type ${terriaAspect.type}.`
         );
+        // don't create a stub here, as magda should rarely create unknown model types
+        // and we'll let the UI highlight that it's bad rather than bandaging an unknown type
         return undefined;
       }
       result = newMember;

@@ -17,6 +17,7 @@ import KmlCatalogItem from "./KmlCatalogItem";
 import MagdaReference from "./MagdaReference";
 import OpenStreetMapCatalogItem from "./OpenStreetMapCatalogItem";
 import SenapsLocationsCatalogItem from "./SenapsLocationsCatalogItem";
+import StubCatalogItem from "./StubCatalogItem";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
 import UrlReference, { UrlToCatalogMemberMapping } from "./UrlReference";
@@ -28,6 +29,7 @@ import SplitItemReference from "./SplitItemReference";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
+  CatalogMemberFactory.register(StubCatalogItem.type, StubCatalogItem);
   CatalogMemberFactory.register(
     WebMapServiceCatalogItem.type,
     WebMapServiceCatalogItem
