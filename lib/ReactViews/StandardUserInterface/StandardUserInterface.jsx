@@ -264,12 +264,12 @@ const StandardUserInterface = createReactClass({
                   >
                     <Branding terria={terria} version={this.props.version} />
                     {!showStoryPanel && <SidePanelContent />}
-                    {showStoryPanel && (
+                    {showStoryPanel ? (
                       <RCStoryPanel
                         terria={terria}
                         viewState={this.props.viewState}
                       />
-                    )}
+                    ) : null}
                     <SidePanel
                       terria={terria}
                       viewState={this.props.viewState}
@@ -335,7 +335,7 @@ const StandardUserInterface = createReactClass({
             viewState={this.props.viewState}
           />
 
-          <If
+          {/* <If
             condition={
               !customElements.feedback.length &&
               this.props.terria.configParameters.feedbackUrl &&
@@ -345,7 +345,7 @@ const StandardUserInterface = createReactClass({
             <aside className={Styles.feedback}>
               <FeedbackForm viewState={this.props.viewState} />
             </aside>
-          </If>
+          </If> */}
 
           <div
             className={classNames(
