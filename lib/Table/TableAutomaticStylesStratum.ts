@@ -147,14 +147,6 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
       return [];
     }
 
-    // Don't created a legend if we're using a region column
-    if (
-      isDefined(activeStyle.colorColumn) &&
-      activeStyle.colorColumn.type === TableColumnType.region
-    ) {
-      return [];
-    }
-
     const colorMap = activeStyle.colorMap;
     if (colorMap instanceof DiscreteColorMap) {
       return this._createLegendItemsFromDiscreteColorMap(activeStyle, colorMap);
@@ -223,11 +215,24 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
           ]
         : [];
 
-    return colorMap.values
-      .map((value, i) => {
+    // Aggregate colours (don't show multiple legend items for the same colour)
+    const colorMapValues = colorMap.values.reduce<{
+      [color: string]: string[];
+    }>((prev, current, i) => {
+      const cssCol = colorMap.colors[i].toCssColorString();
+      if (isDefined(prev[cssCol])) {
+        prev[cssCol].push(current);
+      } else {
+        prev[cssCol] = [current];
+      }
+      return prev;
+    }, {});
+
+    return Object.entries(colorMapValues)
+      .map(value => {
         return createStratumInstance(LegendItemTraits, {
-          title: value,
-          color: colorMap.colors[i].toCssColorString()
+          multipleTitles: value[1],
+          color: value[0]
         });
       })
       .concat(nullBin);
