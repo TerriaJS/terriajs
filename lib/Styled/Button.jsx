@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-// import Box from "./Box";
+import { BoxSpan } from "./Box";
 import Text from "./Text";
 
 const Icon = styled.span`
@@ -18,6 +18,7 @@ const StyledButton = styled.button`
 
   ${props => props.fullWidth && `width: 100%;`}
   ${props => props.fullHeight && `height: 100%;`}
+  ${props => props.styledWidth && `width: ${props.styledWidth};`}
   ${props => props.styledMinWidth && `min-width: ${props.styledMinWidth};`}
 
   ${props => props.marginLeft && `margin-left: ${4 * props.marginLeft}px;`}
@@ -104,34 +105,46 @@ export const RawButton = styled.button`
 
   ${props => props.fullWidth && `width: 100%;`}
   ${props => props.fullHeight && `height: 100%;`}
+  ${props => props.styledWidth && `width: ${props.styledWidth};`}
 `;
 
 // Icon and props-children-mandatory-text-wrapping is a mess here so it's all very WIP
-export const Button = props => {
-  const { primary, secondary, warning, iconProps, textProps, ...rest } = props;
+export const Button = (props, ref) => {
+  const {
+    primary,
+    secondary,
+    warning,
+    iconProps,
+    textProps,
+    buttonRef,
+    ...rest
+  } = props;
   return (
     <StyledButton
+      ref={buttonRef}
       primary={primary}
       secondary={secondary}
       warning={warning}
       {...rest}
     >
-      {props.renderIcon && typeof props.renderIcon === "function" && (
-        <Icon css={iconProps && iconProps.css} {...iconProps}>
-          {props.renderIcon()}
-        </Icon>
-      )}
-      {props.children && (
-        <Text
-          white={primary || secondary || warning}
-          medium={secondary}
-          // bold
-          skinny
-          {...textProps}
-        >
-          {props.children}
-        </Text>
-      )}
+      <BoxSpan centered>
+        {props.renderIcon && typeof props.renderIcon === "function" && (
+          <Icon css={iconProps && iconProps.css} {...iconProps}>
+            {props.renderIcon()}
+          </Icon>
+        )}
+        {props.children && (
+          <Text
+            white={primary || secondary || warning}
+            medium={secondary}
+            // bold
+            skinny
+            {...textProps}
+          >
+            {props.children}
+          </Text>
+        )}
+      </BoxSpan>
     </StyledButton>
   );
 };
@@ -143,7 +156,10 @@ Button.propTypes = {
   primary: PropTypes.bool,
   secondary: PropTypes.bool,
   warning: PropTypes.bool,
-  children: PropTypes.node
+  children: PropTypes.node,
+  buttonRef: PropTypes.object
 };
 
-export default Button;
+const ButtonWithRef = (props, ref) => <Button {...props} buttonRef={ref} />;
+
+export default React.forwardRef(ButtonWithRef);

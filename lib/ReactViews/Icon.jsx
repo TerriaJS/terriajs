@@ -110,7 +110,8 @@ export const GLYPHS = {
   minusThick: require("../../wwwroot/images/icons/zoom-minus.svg"),
   plusThick: require("../../wwwroot/images/icons/zoom-plus.svg"),
   refreshThick: require("../../wwwroot/images/icons/zoom-refresh.svg"),
-  satellite: require("../../wwwroot/images/icons/satellite.svg")
+  satellite: require("../../wwwroot/images/icons/satellite.svg"),
+  uploadThin: require("../../wwwroot/images/icons/upload-thin.svg")
 };
 
 export const Icon = createReactClass({
@@ -137,6 +138,7 @@ export const StyledIcon = styled(Icon)`
   display:block;
   flex-shrink: 0;
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
+  ${props => props.styledHeight && `height: ${props.styledHeight};`}
 
   ${props => props.light && `fill: ${props.theme.textLight};`}
   ${props => props.dark && `fill: ${props.theme.textDark};`}
