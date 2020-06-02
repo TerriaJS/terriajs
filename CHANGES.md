@@ -16,6 +16,8 @@ Change Log
 * Fixed a bug where KmlCatalogItem did not use the proxy for any urls.
 * Add support for `CkanCatalogGroup` and `CkanItemReference`.
 * Removed sass from Clipboard
+* Made changes to the video modals: close button has been added, pressing escape now closes the component and some basic unit tests created
+* Updated the video modal for _Data Stories: Getting Started_ to use the new `VideoGuide` component
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-31
