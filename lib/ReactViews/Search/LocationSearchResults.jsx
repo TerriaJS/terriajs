@@ -109,7 +109,7 @@ const LocationSearchResults = observer(
 
       const results =
         validResults.length > MAX_RESULTS_BEFORE_TRUNCATING
-          ? this.state.isExpanded
+          ? isExpanded
             ? validResults
             : validResults.slice(0, MAX_RESULTS_BEFORE_TRUNCATING)
           : validResults;
