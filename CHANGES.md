@@ -6,6 +6,7 @@ Change Log
 #### mobx-next-release (mobx-32)
 * Made expanded SOS chart item shareable.
 * Fixed a regression bug where the time filter is shown for all satellite imagery items
+* Add unit tests for `WelcomeMessage` and `Disclaimer`
 * Fixed minor UI errors in console
 * Replaced helpful hints text with the new version
 * Made the shapes of some of the workbench components rounded
