@@ -16,6 +16,7 @@ Change Log
 * Fixed a bug where KmlCatalogItem did not use the proxy for any urls.
 * Add support for `CkanCatalogGroup` and `CkanItemReference`.
 * Removed sass from Clipboard
+* Added `TransformationTraits` that can be used to change position/rotation/scale of a model.
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-31
