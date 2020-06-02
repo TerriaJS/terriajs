@@ -6,6 +6,7 @@ Change Log
 #### mobx-next-release (mobx-32)
 * Made expanded SOS chart item shareable.
 * Fixed a regression bug where the time filter is shown for all satellite imagery items
+* Add unit tests for `WelcomeMessage` and `Disclaimer`
 * Fixed minor UI errors in console
 * Replaced helpful hints text with the new version
 * Made the shapes of some of the workbench components rounded
@@ -14,6 +15,7 @@ Change Log
 * Fixed a bug where WMS items caused type errors in newer babel and typescript builds, due to mixed mixin methods on DiffableMixin & DiscretelyTimeVaryingMixin
 * Fixed a bug where KmlCatalogItem did not use the proxy for any urls.
 * Add support for `CkanCatalogGroup` and `CkanItemReference`.
+* Removed sass from Clipboard
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-31
@@ -25,6 +27,8 @@ Change Log
 * Added setting of `isOpenInWorkbench`, `isExperiencingIssues`, `hideLegendInWorkbench`, `hideSource` strats for `WebMapServiceCatalogItem` from `WebMapServiceCatalogGroup`.
 * Changed the `Tool` interface, now accepting prop `getToolComponent` instead of `toolComponent`
 * Added `ToolButton` for loading/unloading a tool
+* Fixed a bug where a single incorrect catalog item in a group would prevent subsequent items from loading.
+* Improved catalog parsing to include a stub (`StubCatalogItem`) when terriajs can't parse something
 
 #### mobx-30
 * Ported welcome message to mobx with new designs
