@@ -215,8 +215,8 @@ const Legend = createReactClass({
               }
             >
               {isDefined(legendItem.multipleTitles)
-                ? `${[...legendItem.multipleTitles]
-                    .splice(0, legendItem.maxMultipleTitlesShowed)
+                ? `${legendItem.multipleTitles
+                    .slice(0, legendItem.maxMultipleTitlesShowed)
                     .join(", ")}${
                     legendItem.multipleTitles.length >
                     legendItem.maxMultipleTitlesShowed

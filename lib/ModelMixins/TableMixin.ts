@@ -102,11 +102,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       const value = super.activeStyle;
       if (value !== undefined) {
         return value;
-      } else if (
-        this.styles &&
-        this.styles.length > 0 &&
-        isDefined(this.styles[0].id)
-      ) {
+      } else if (this.styles && this.styles.length > 0) {
         // Find first style with scalar column for default style
         for (let i = 0; i < this.styles.length; i++) {
           if (
