@@ -6,8 +6,7 @@ import { observer } from "mobx-react";
 import { computed } from "mobx";
 import Styles from "./Map/Navigation/tool_button.scss";
 import MapIconButton from "./MapIconButton/MapIconButton";
-
-const Icon: any = require("./Icon");
+import Icon from "./Icon";
 
 interface ToolProps extends WithTranslation {
   viewState: ViewState;
