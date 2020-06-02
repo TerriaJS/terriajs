@@ -78,7 +78,6 @@ export default class GltfCatalogItem
       pitch || 0,
       roll || 0
     );
-    console.log("**position**", this.position);
     const orientation = Transforms.headingPitchRollQuaternion(
       this.position,
       hpr
