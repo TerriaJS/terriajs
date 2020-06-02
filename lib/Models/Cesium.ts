@@ -1288,10 +1288,6 @@ function zoomToBoundingSphere(
   flightDurationSeconds?: number
 ) {
   var boundingSphere = target.boundingSphere;
-  var modelMatrix = target.modelMatrix;
-  if (modelMatrix) {
-    boundingSphere = BoundingSphere.transform(boundingSphere, modelMatrix);
-  }
   cesium.scene.camera.flyToBoundingSphere(boundingSphere, {
     offset: new HeadingPitchRange(0.0, -0.5, boundingSphere.radius),
     duration: flightDurationSeconds
