@@ -16,6 +16,8 @@ Change Log
 * Fixed a bug where KmlCatalogItem did not use the proxy for any urls.
 * Add support for `CkanCatalogGroup` and `CkanItemReference`.
 * Removed sass from Clipboard
+* Changed the `Tool` interface, now accepting prop `getToolComponent` instead of `toolComponent`
+* Added `ToolButton` for loading/unloading a tool
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-31
@@ -25,8 +27,6 @@ Change Log
 * Added `Title`, `ContactInformation`, `Fees` to the `CapabilitiesService` interface so they are pulled on metadata load.
 * Resolved name issue of `WebMapServiceCapabilities`. Now it returns a name resolved from `capabilities` unless it is set by user.
 * Added setting of `isOpenInWorkbench`, `isExperiencingIssues`, `hideLegendInWorkbench`, `hideSource` strats for `WebMapServiceCatalogItem` from `WebMapServiceCatalogGroup`.
-* Changed the `Tool` interface, now accepting prop `getToolComponent` instead of `toolComponent`
-* Added `ToolButton` for loading/unloading a tool
 * Fixed a bug where a single incorrect catalog item in a group would prevent subsequent items from loading.
 * Improved catalog parsing to include a stub (`StubCatalogItem`) when terriajs can't parse something
 
