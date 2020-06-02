@@ -11,8 +11,10 @@ import UrlMixin from "../ModelMixins/UrlMixin";
 import CreateModel from "./CreateModel";
 import Mappable from "./Mappable";
 import GltfCatalogItemTraits from "../Traits/GltfCatalogItemTraits";
-import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
 import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
+import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
+import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
+import Transforms from "terriajs-cesium/Source/Core/Transforms";
 
 export default class GltfCatalogItem
   extends UrlMixin(CatalogMemberMixin(CreateModel(GltfCatalogItemTraits)))
@@ -32,23 +34,60 @@ export default class GltfCatalogItem
   }
 
   @computed
-  private get _cesiumUpAxis() {
+  private get cesiumUpAxis() {
     if (this.upAxis === undefined) {
-      return Axis.Z;
+      return Axis.Y;
     }
     return Axis.fromName(this.upAxis);
   }
 
   @computed
-  private get _cesiumForwardAxis() {
+  private get cesiumForwardAxis() {
     if (this.forwardAxis === undefined) {
-      return Axis.X;
+      return Axis.Z;
     }
     return Axis.fromName(this.forwardAxis);
   }
 
   @computed
-  private get _cesiumShadows() {
+  private get position(): Cartesian3 {
+    if (
+      this.origin !== undefined &&
+      this.origin.longitude !== undefined &&
+      this.origin.latitude !== undefined &&
+      this.origin.height !== undefined
+    ) {
+      return Cartesian3.fromDegrees(
+        this.origin.longitude,
+        this.origin.latitude,
+        this.origin.height
+      );
+    } else {
+      return Cartesian3.ZERO;
+    }
+  }
+
+  /**
+   * Returns the orientation of the model in the ECEF frame
+   */
+  @computed
+  private get orientation(): Quaternion {
+    const { heading, pitch, roll } = this.rotation;
+    const hpr = HeadingPitchRoll.fromDegrees(
+      heading || 0,
+      pitch || 0,
+      roll || 0
+    );
+    console.log("**position**", this.position);
+    const orientation = Transforms.headingPitchRollQuaternion(
+      this.position,
+      hpr
+    );
+    return orientation;
+  }
+
+  @computed
+  private get cesiumShadows() {
     let result;
 
     switch (this.shadows !== undefined ? this.shadows.toLowerCase() : "none") {
@@ -74,57 +113,39 @@ export default class GltfCatalogItem
   protected forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
+
   loadMapItems(): Promise<void> {
     return Promise.resolve();
   }
 
   @computed
-  private get _model() {
+  private get model() {
     if (this.url === undefined) {
       return undefined;
     }
     const options = {
       uri: this.url,
-      upAxis: this._cesiumUpAxis,
-      forwardAxis: this._cesiumForwardAxis,
+      upAxis: this.cesiumUpAxis,
+      forwardAxis: this.cesiumForwardAxis,
       scale: this.scale !== undefined ? this.scale : 1,
-      shadows: new ConstantProperty(this._cesiumShadows)
+      shadows: new ConstantProperty(this.cesiumShadows)
     };
-
     return new ModelGraphics(options);
   }
 
   @computed
   get mapItems() {
-    if (this._model === undefined) {
-      return [];
-    }
-    this._model.show = this.show;
+    if (this.model === undefined) return [];
 
-    let position: Cartesian3;
-    if (
-      this.origin !== undefined &&
-      this.origin.longitude !== undefined &&
-      this.origin.latitude !== undefined &&
-      this.origin.height !== undefined
-    ) {
-      position = Cartesian3.fromDegrees(
-        this.origin.longitude,
-        this.origin.latitude,
-        this.origin.height
-      );
-    } else {
-      position = Cartesian3.ZERO;
-    }
-
+    this.model.show = this.show;
     const dataSource: CustomDataSource = new CustomDataSource(
       this.name || "glTF model"
     );
     dataSource.entities.add(
       new Entity({
-        position: new ConstantPositionProperty(position),
-        orientation: new ConstantProperty(Quaternion.IDENTITY),
-        model: this._model
+        position: new ConstantPositionProperty(this.position),
+        orientation: new ConstantProperty(this.orientation),
+        model: this.model
       })
     );
     return [dataSource];

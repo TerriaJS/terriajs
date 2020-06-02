@@ -9,6 +9,7 @@ import objectArrayTrait from "./objectArrayTrait";
 import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
 import UrlTraits from "./UrlTraits";
+import TransformationTraits from "./TransformationTraits";
 
 export class FilterTraits extends ModelTraits {
   @primitiveTrait({
@@ -95,6 +96,7 @@ export class OptionsTraits extends ModelTraits {
 }
 
 export default class Cesium3DTilesCatalogItemTraits extends mixTraits(
+  TransformationTraits,
   FeatureInfoTraits,
   MappableTraits,
   UrlTraits,

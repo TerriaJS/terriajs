@@ -1,17 +1,8 @@
-import objectTrait from "./objectTrait";
-import LatLonHeightTraits from "./LatLonHeightTraits";
+import mixTraits from "./mixTraits";
 import primitiveTrait from "./primitiveTrait";
-import ModelTraits from "./ModelTraits";
+import TransformationTraits from "./TransformationTraits";
 
-export default class GltfTraits extends ModelTraits {
-  @objectTrait({
-    type: LatLonHeightTraits,
-    name: "Origin",
-    description:
-      "The origin of the model, expressed as a longitude and latitude in degrees and a height in meters. If this property is specified, the model's axes will have X pointing East, Y pointing North, and Z pointing Up. If not specified, the model is located in the Earth-Centered Earth-Fixed frame."
-  })
-  origin?: LatLonHeightTraits;
-
+export default class GltfTraits extends mixTraits(TransformationTraits) {
   @primitiveTrait({
     type: "string",
     name: "Up axis",
@@ -27,13 +18,6 @@ export default class GltfTraits extends ModelTraits {
       "The model's forward axis. By default, glTF 2.0 models are Z-forward according to the glTF spec, however older glTF (1.0, 0.8) models used X-forward. Valid values are 'X' or 'Z'."
   })
   forwardAxis?: string;
-
-  @primitiveTrait({
-    type: "number",
-    name: "Scale",
-    description: "The scale factor to apply to the model"
-  })
-  scale?: number;
 
   @primitiveTrait({
     type: "string",

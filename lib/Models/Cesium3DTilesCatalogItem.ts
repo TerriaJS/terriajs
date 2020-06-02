@@ -1,12 +1,19 @@
-import { computed, observable, runInAction, toJS } from "mobx";
+import i18next from "i18next";
+import { action, computed, observable, runInAction, toJS } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import clone from "terriajs-cesium/Source/Core/clone";
+import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import IonResource from "terriajs-cesium/Source/Core/IonResource";
+import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
+import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
+import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
 import Resource from "terriajs-cesium/Source/Core/Resource";
+import Transforms from "terriajs-cesium/Source/Core/Transforms";
+import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
-import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
 import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
 import isDefined from "../Core/isDefined";
 import makeRealPromise from "../Core/makeRealPromise";
@@ -23,8 +30,6 @@ import createStratumInstance from "./createStratumInstance";
 import Feature from "./Feature";
 import Mappable from "./Mappable";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import raiseErrorToUser from "./raiseErrorToUser";
-import i18next from "i18next";
 
 class ObservableCesium3DTileset extends Cesium3DTileset {
   _catalogItem?: Cesium3DTilesCatalogItem;
@@ -41,6 +46,11 @@ class ObservableCesium3DTileset extends Cesium3DTileset {
       });
     });
   }
+}
+
+interface ObservableCesium3DTileset {
+  modelMatrix: Matrix4;
+  root: { transform: Matrix4 };
 }
 
 export default class Cesium3DTilesCatalogItem
@@ -120,9 +130,46 @@ export default class Cesium3DTilesCatalogItem
     });
 
     tileset._catalogItem = this;
-    if (isDefined(tileset) && !tileset.destroyed) {
+    if (!tileset.destroyed) {
       this.tileset = tileset;
     }
+  }
+
+  /**
+   * Computes a modelMatrix from the origin, rotation & scale traits
+   */
+  @action
+  private computeModelMatrixFromTransformationTraits(modelMatrix: Matrix4) {
+    let scale = Matrix4.getScale(modelMatrix, new Cartesian3());
+    let position = Matrix4.getTranslation(modelMatrix, new Cartesian3());
+    let orientation = Quaternion.fromRotationMatrix(
+      Matrix4.getMatrix3(modelMatrix, new Matrix3())
+    );
+
+    const { latitude, longitude, height } = this.origin;
+    if (
+      latitude !== undefined &&
+      longitude !== undefined &&
+      height !== undefined
+    ) {
+      position = Cartesian3.fromDegrees(longitude, latitude, height);
+    }
+
+    const { heading, pitch, roll } = this.rotation;
+    if (heading !== undefined && pitch !== undefined && roll !== undefined) {
+      const hpr = HeadingPitchRoll.fromDegrees(heading, pitch, roll);
+      orientation = Transforms.headingPitchRollQuaternion(position, hpr);
+    }
+
+    if (this.scale !== undefined) {
+      scale = new Cartesian3(this.scale, this.scale, this.scale);
+    }
+
+    return Matrix4.fromTranslationQuaternionRotationScale(
+      position,
+      orientation,
+      scale
+    );
   }
 
   @computed get mapItems() {
@@ -154,6 +201,20 @@ export default class Cesium3DTilesCatalogItem
         : 8;
     this.tileset.maximumScreenSpaceError =
       tilesetBaseSse * this.terria.baseMaximumScreenSpaceError;
+
+    // To make it easier to perform transformation operations on the tileset we
+    // set the root transform to IDENTIY and instead control all
+    // transformations using modelMatrix
+    const modelMatrix = Matrix4.equals(
+      this.tileset.root.transform,
+      Matrix4.IDENTITY
+    )
+      ? this.tileset.modelMatrix
+      : this.tileset.root.transform;
+    this.tileset.root.transform = Matrix4.IDENTITY.clone();
+    this.tileset.modelMatrix = this.computeModelMatrixFromTransformationTraits(
+      modelMatrix
+    );
 
     return [this.tileset];
   }
