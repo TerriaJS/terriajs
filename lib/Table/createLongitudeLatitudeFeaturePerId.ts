@@ -84,10 +84,13 @@ function createFeature(
       col.type !== TableColumnType.longitude &&
       col.type !== TableColumnType.latitude
   );
-  const chartCsv = [
-    chartColumns.map(col => col.name).join(","),
-    ...rowIds.map(i => chartColumns.map(col => col.values[i]).join(","))
-  ].join("\n");
+  const getChartDetails = () => ({
+    title: featureId,
+    csvData: [
+      chartColumns.map(col => col.name).join(","),
+      ...rowIds.map(i => chartColumns.map(col => col.values[i]).join(","))
+    ].join("\n")
+  });
 
   rowIds.forEach(rowId => {
     const longitude = longitudes[rowId];
@@ -115,10 +118,7 @@ function createFeature(
       properties,
       {
         ...getRowValues(rowId, tableColumns),
-        _terria_getChartDetails: () => ({
-          csvData: chartCsv,
-          title: featureId
-        })
+        _terria_getChartDetails: getChartDetails
       },
       interval
     );
