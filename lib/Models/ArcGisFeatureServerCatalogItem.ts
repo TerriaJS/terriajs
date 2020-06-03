@@ -581,9 +581,7 @@ function updateEntityWithEsriStyle(
     entity.polygon.material = convertEsriColorToCesiumColor(color);
 
     if (symbol.outline) {
-      entity.polygon.outlineColor = convertEsriColorToCesiumColor(
-        symbol.outline.color
-      );
+      entity.polygon.outlineColor = convertEsriColorToCesiumColor(outlineColor);
       entity.polygon.outlineWidth = symbol.outline.width;
     }
   }
