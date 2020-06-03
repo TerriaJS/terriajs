@@ -17,6 +17,8 @@ Change Log
 * Add support for `CkanCatalogGroup` and `CkanItemReference`.
 * Removed sass from Clipboard
 * Updated LocationSearchResults to support multiple search providers
+* Updated LocationSearchResults to support multiple search providers
+* Replaced lifesaver icon on the help button with a question mark button
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-31
