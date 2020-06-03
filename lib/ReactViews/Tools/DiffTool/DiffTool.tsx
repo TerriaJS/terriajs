@@ -367,11 +367,20 @@ class Main extends React.Component<MainPropsType> {
       Mappable.is(sourceItem)
     ) {
       const part = sourceItem.mapItems.find(p => ImageryParts.is(p));
-      const im = part && ImageryParts.is(part) && part.imageryProvider;
-      if (im) {
+      const imageryProvider =
+        part && ImageryParts.is(part) && part.imageryProvider;
+      if (imageryProvider) {
         const promises = [
-          setTimeFilterFromLocation(this.props.leftItem, markerLocation, im),
-          setTimeFilterFromLocation(this.props.rightItem, markerLocation, im)
+          setTimeFilterFromLocation(
+            this.props.leftItem,
+            markerLocation,
+            imageryProvider
+          ),
+          setTimeFilterFromLocation(
+            this.props.rightItem,
+            markerLocation,
+            imageryProvider
+          )
         ];
         const someSuccessful = (await Promise.all(promises)).some(ok => ok);
         if (someSuccessful) {
