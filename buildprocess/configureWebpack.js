@@ -155,7 +155,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
         ],
         loader: require.resolve('url-loader'),
         options: {
-            limit: 8192
+            limit: 120000
         }
     });
 
