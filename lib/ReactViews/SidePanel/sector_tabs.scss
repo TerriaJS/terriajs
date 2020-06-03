@@ -5,7 +5,8 @@
   @include headingContainer;
   justify-content: space-evenly;
   border-radius: $radius-small;
-  background-color: $grey-lightest;
+  background-color: #cfd6e6;
+  margin: 0 5px;
   svg {
     // height: $input-height;
     // width: $input-height;
@@ -17,7 +18,7 @@
     fill-opacity: 1;
     border-radius: 2px;
     &:hover {
-      background-color: #ddd;
+      background-color: #e8edf4;
     }
   }
   @media (max-width: $sm) {

@@ -10,10 +10,10 @@
 }
 .sectorTitle {
   font-family: $font-base;
-  color: $text-light;
+  color: $color-primary;
   line-height: 1;
   font-weight: $font-weight-bold;
-  font-size: 14px;
+  font-size: 18px;
   text-align: left;
   margin: 7px 2px;
   @media (max-width: $sm) {
@@ -26,19 +26,44 @@
   padding: $padding-small;
   font-size: $font-size-small;
   border-radius: $radius-small;
-  background-image: url("../../../wwwroot/images/TimelineIcons.png");
+  background-image: url("../../../wwwroot/images/sectors/agriculture.png");
   background-position: center;
-  background-size: contain;
+  background-size: cover;
+  background-repeat: no-repeat;
   @media (max-width: $sm) {
     border-radius: 0;
   }
 }
-.messageConatiner {
-  background-color: $grey-lightest;
+.infoContainer {
+  background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(0, 0, 0, 0.6)),
+    url("../../../wwwroot/images/sectors/agriculture.png");
+  background-size: cover;
+  height: 200px;
+  margin: 5px 0;
+  position: relative;
+}
+.lr p {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: white;
+  margin: 0;
+  font-family: $font-base;
+  font-size: $font-size-small;
+  font-weight: 500;
+  line-height: 1.5;
+}
+.details {
+  //background-color: #bdcadd;
   padding: $padding;
   font-size: $font-size-small;
+  font-weight: 500;
   border-radius: $radius-small;
+  line-height: 2;
   @media (max-width: $sm) {
     border-radius: 0;
+  }
+  h4 {
+    margin: 0;
   }
 }

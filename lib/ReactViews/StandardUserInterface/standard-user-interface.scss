@@ -49,7 +49,9 @@
 
 .sidePanel {
   font-family: $font-pop;
-  background: $dark-blue;
+  background-color: #b8c6db;
+  background-image: linear-gradient(315deg, #b8c6db 0%, #f5f7fa 74%);
+  // background: $dark-blue;
   width: $work-bench-width;
   flex-basis: $work-bench-width;
   max-width: $work-bench-width;

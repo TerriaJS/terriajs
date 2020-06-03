@@ -48,11 +48,12 @@
   height: 100vh;
   min-height: 100px;
   max-width: 1200px;
-  background-color: $grey-lightest;
+  background-color: #ffffff;
+  background-image: linear-gradient(315deg, #ffffff 0%, #d7e1ec 74%);
   color: $text-dark;
   text-align: left;
   box-sizing: border-box;
-  margin: 10px auto;
+  margin: 0 auto;
   border-radius: 2px;
   // box-shadow: 0 0 15px 6px rgba(100, 100, 100, 0.3);
 
@@ -95,7 +96,9 @@
 .body {
   padding: $padding * 1.5 $padding;
   color: $dark;
-  font-size: 1rem;
+  font-size: 14px;
+  line-height: 1.5;
+  font-family: $font-base;
   height: 500px;
   overflow-y: auto;
 

@@ -1,17 +1,18 @@
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,400italic,600");
 @import url("https://fonts.googleapis.com/css?family=Lato:400,700");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
 
 // Receipt Variables
 $sectionHeight: 45px;
 // Receipt Variables Ends Here
 
-$font-pop: "Open Sans", sans-serif;
-$font-base: "Open Sans", sans-serif;
+$font-pop: "Montserrat", sans-serif;
+$font-base: "Montserrat", sans-serif;
 $font-mono: monospace, sans-serif;
 $font-feature-info: $font-mono;
 $font: $font-base;
 
-$color-primary: #ff6600;
+$color-primary: #0a478c;
 $color-primary-disabled: #595b60;
 @function get-hover-color($base-color) {
   @return lighten($base-color, 10%);
@@ -19,7 +20,6 @@ $color-primary-disabled: #595b60;
 $color-secondary: #06ccff;
 
 $animation-fast: 0.1s;
-$dark-blue: #0a478c;
 $dark: #404040;
 $dark-with-overlay: #667080;
 $dark-lighter: #595b60;
