@@ -151,7 +151,6 @@ const StandardUserInterface = createReactClass({
     );
 
     const terria = this.props.terria;
-    console.log("User Interface", terria.homeView, terria.initialView);
     const allBaseMaps = this.props.allBaseMaps;
 
     const showStoryBuilder =
