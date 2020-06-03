@@ -16,10 +16,12 @@ import isDefined from "../Core/isDefined";
 import createStratumInstance from "./createStratumInstance";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import ArcGisFeatureServerCatalogItem from "./ArcGisFeatureServerCatalogItem";
+import ArcGisCatalogGroup from "./ArcGisCatalogGroup";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import ModelReference from "../Traits/ModelReference";
 import CommonStrata from "./CommonStrata";
 import replaceUnderscores from "../Core/replaceUnderscores";
+import createInfoSection from "./createInfoSection";
 
 interface DocumentInfo {
   Title?: string;
@@ -41,13 +43,15 @@ interface FeatureServer {
   layers: Layer[];
 }
 
-class FeatureServerStratum extends LoadableStratum(
+export class FeatureServerStratum extends LoadableStratum(
   ArcGisFeatureServerCatalogGroupTraits
 ) {
   static stratumName = "featureServer";
 
   constructor(
-    private readonly _catalogGroup: ArcGisFeatureServerCatalogGroup,
+    private readonly _catalogGroup:
+      | ArcGisFeatureServerCatalogGroup
+      | ArcGisCatalogGroup,
     private readonly _featureServer: FeatureServer
   ) {
     super();
@@ -75,25 +79,16 @@ class FeatureServerStratum extends LoadableStratum(
   }
 
   @computed get info() {
-    function newInfo(name: string, content?: string) {
-      const traits = createStratumInstance(InfoSectionTraits);
-      runInAction(() => {
-        traits.name = name;
-        traits.content = content;
-      });
-      return traits;
-    }
-
     return [
-      newInfo(
+      createInfoSection(
         i18next.t("models.arcGisFeatureServerCatalogGroup.serviceDescription"),
         this._featureServer.serviceDescription
       ),
-      newInfo(
+      createInfoSection(
         i18next.t("models.arcGisFeatureServerCatalogGroup.dataDescription"),
         this._featureServer.description
       ),
-      newInfo(
+      createInfoSection(
         i18next.t("models.arcGisFeatureServerCatalogGroup.copyrightText"),
         this._featureServer.copyrightText
       )
@@ -111,7 +106,7 @@ class FeatureServerStratum extends LoadableStratum(
   }
 
   static async load(
-    catalogGroup: ArcGisFeatureServerCatalogGroup
+    catalogGroup: ArcGisFeatureServerCatalogGroup | ArcGisCatalogGroup
   ): Promise<FeatureServerStratum> {
     var terria = catalogGroup.terria;
     var uri = new URI(catalogGroup.url).addQuery("f", "json");

@@ -38,7 +38,11 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
                 {
                     pattern: /buildModuleUrl\([\'|\"](.*)[\'|\"]\)/ig,
                     replacement: function (match, p1, offset, string) {
-                        return "require('" + cesiumDir.replace(/\\/g, '\\\\') + "/Source/" + p1.replace(/\\/g, '\\\\') + "')";
+                        // The original string might have double quotes in it, so we'll replace them with single quotes
+                        // That way, the quotes in "require" will hopefully always match
+                        let p1_modified = p1.replace(/\"/g, '\'');
+                        p1_modified = p1_modified.replace(/\\/g, '\\\\')
+                        return "require('" + cesiumDir.replace(/\\/g, '\\\\') + "/Source/" + p1_modified + "')";
                     }
                 },
                 {
@@ -271,7 +275,10 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
         });
     } else if (MiniCssExtractPlugin) {
         config.module.rules.push({
-            exclude: path.resolve(terriaJSBasePath, 'lib', 'Sass'),
+            exclude: [
+                path.resolve(terriaJSBasePath, 'lib', 'Sass', 'common'),
+                path.resolve(terriaJSBasePath, 'lib', 'Sass', 'global'),
+            ],
             include: path.resolve(terriaJSBasePath, 'lib'),
             test: /\.scss$/,
             use: [

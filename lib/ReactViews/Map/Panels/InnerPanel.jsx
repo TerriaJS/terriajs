@@ -98,6 +98,8 @@ const InnerPanel = createReactClass({
     return (
       <div
         className={classNames(
+          // Until we break these few components out of sass, we'll use regular ol classnames
+          "tjs-sc-InnerPanel",
           Styles.inner,
           this.props.theme.inner,
           { [Styles.isOpen]: this.state.isOpenCss },
@@ -117,7 +119,8 @@ const InnerPanel = createReactClass({
         <button
           type="button"
           className={classNames(
-            "tjs-InnerPannelCloseButton",
+            // Until we break these few components out of sass, we'll use regular ol classnames
+            "tjs-sc-InnerPanelCloseButton",
             Styles.innerCloseBtn,
             {
               [Styles.innerCloseBtnForModal]: this.props.showDropdownAsModal
@@ -135,7 +138,7 @@ const InnerPanel = createReactClass({
           }
         >
           <span
-            className={Styles.caret}
+            className={classNames(Styles.caret, "tjs-sc-InnerPanel__caret")}
             style={{ left: this.props.caretOffset }}
           />
         </If>

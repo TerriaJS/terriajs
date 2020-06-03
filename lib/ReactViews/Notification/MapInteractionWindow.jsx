@@ -3,11 +3,29 @@
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
+import styled from "styled-components";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import Styles from "./map-interaction-window.scss";
 import classNames from "classnames";
 import defined from "terriajs-cesium/Source/Core/defined";
 import { observer } from "mobx-react";
+import { UIMode } from "../../Models/MapInteractionMode";
+
+const MapInteractionWindowWrapper = styled.div`
+  ${props =>
+    props.isDiffTool &&
+    `
+    top: initial;
+    bottom: 100px;
+    min-width: 330px;
+    width: auto;
+
+    box-sizing: border-box;
+    padding: 10px 15px;
+    background: ${props.theme.colorSplitter};
+    color:${props.theme.textLight};
+  `}
+`;
 
 const MapInteractionWindow = observer(
   createReactClass({
@@ -65,24 +83,36 @@ const MapInteractionWindow = observer(
       const windowClass = classNames(Styles.window, {
         [Styles.isActive]: interactionMode
       });
+      const isDiffTool = interactionMode?.uiMode === UIMode.Difference;
 
       return (
-        <div className={windowClass} aria-hidden={!interactionMode}>
-          <div className={Styles.content}>
+        <MapInteractionWindowWrapper
+          className={windowClass}
+          aria-hidden={!interactionMode}
+          isDiffTool={isDiffTool}
+        >
+          <div
+            className={classNames({
+              [Styles.content]: !isDiffTool
+            })}
+          >
             {interactionMode &&
               parseCustomHtmlToReact(interactionMode.message())}
+            {interactionMode && interactionMode.messageAsNode()}
           </div>
           {interactionMode &&
             interactionMode.customUi &&
             interactionMode.customUi()}
-          <button
-            type="button"
-            onClick={interactionMode && interactionMode.onCancel}
-            className={Styles.btn}
-          >
-            {interactionMode && interactionMode.buttonText}
-          </button>
-        </div>
+          {interactionMode && interactionMode.onCancel && (
+            <button
+              type="button"
+              onClick={interactionMode && interactionMode.onCancel}
+              className={Styles.btn}
+            >
+              {interactionMode && interactionMode.buttonText}
+            </button>
+          )}
+        </MapInteractionWindowWrapper>
       );
     }
   })

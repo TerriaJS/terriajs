@@ -33,6 +33,7 @@ import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMater
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
 import replaceUnderscores from "../Core/replaceUnderscores";
 import PolylineDashMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineDashMaterialProperty";
+import createInfoSection from "./createInfoSection";
 
 const proj4 = require("proj4").default;
 
@@ -282,25 +283,14 @@ class FeatureServerStratum extends LoadableStratum(
     return undefined;
   }
 
-  @computed get info(): StratumFromTraits<InfoSectionTraits>[] {
-    function newInfo(
-      name: string,
-      content?: string
-    ): StratumFromTraits<InfoSectionTraits> {
-      const traits = createStratumInstance(InfoSectionTraits);
-      runInAction(() => {
-        traits.name = name;
-        traits.content = content;
-      });
-      return traits;
-    }
 
+  @computed get info() {
     return [
-      newInfo(
+      createInfoSection(
         i18next.t("models.arcGisMapServerCatalogItem.dataDescription"),
         this._featureServer.description
       ),
-      newInfo(
+      createInfoSection(
         i18next.t("models.arcGisMapServerCatalogItem.copyrightText"),
         this._featureServer.copyrightText
       )

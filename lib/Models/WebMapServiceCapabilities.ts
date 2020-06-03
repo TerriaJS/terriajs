@@ -77,13 +77,49 @@ export interface CapabilitiesLayer {
 }
 
 export interface CapabilitiesService {
+  /** Title of the service. */
+  readonly Title?: string;
+  /** Longer narative description of the service. */
   readonly Abstract?: string;
+
+  /** Information about a contact person for the service. */
+  readonly ContactInformation?: CapabilitiesContactInformation;
+  /** Fees for this service */
+  readonly Fees?: string;
+  /** Access contraints for this service. */
   readonly AccessConstraints?: string;
-  readonly KeywordList: CapabilitiesKeywordList;
+  /** List of keywords or keyword phrases to help catalog searching. */
+  readonly KeywordList?: CapabilitiesKeywordList;
 }
 
 export interface CapabilitiesKeywordList {
   readonly Keyword: string | string[];
+}
+
+/**
+ * Information about a contact person for the service.
+ */
+export interface CapabilitiesContactInformation {
+  ContactPersonPrimary?: ContactInformationContactPersonPrimary;
+  ContactPosition?: string;
+  ContactAddress?: ContactInformationContactAddress;
+  ContactVoiceTelephone?: string;
+  ContactFacsimileTelephone?: string;
+  ContactElectronicMailAddress?: string;
+}
+
+export interface ContactInformationContactPersonPrimary {
+  ContactPerson?: string;
+  ContactOrganization?: string;
+}
+
+export interface ContactInformationContactAddress {
+  AddressType?: string;
+  Address?: string;
+  City?: string;
+  StateOrProvince?: string;
+  PostCode?: string;
+  Country?: string;
 }
 
 type ElementTypeIfArray<T> = T extends ReadonlyArray<infer U> ? U : T;

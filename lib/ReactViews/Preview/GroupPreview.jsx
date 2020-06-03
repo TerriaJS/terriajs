@@ -6,8 +6,7 @@ import PropTypes from "prop-types";
 
 import DataPreviewSections from "./DataPreviewSections";
 import DataPreviewUrl from "./DataPreviewUrl";
-import measureElement from "../measureElement";
-import ObserveModelMixin from "../ObserveModelMixin";
+import measureElement from "../HOCs/measureElement";
 import Styles from "./mappable-preview.scss";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
@@ -18,7 +17,6 @@ import { withTranslation } from "react-i18next";
  */
 const GroupPreview = createReactClass({
   displayName: "GroupPreview",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     previewed: PropTypes.object.isRequired,

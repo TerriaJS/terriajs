@@ -7,6 +7,8 @@ import ViewState from "../../../lib/ReactViewModels/ViewState";
 import SearchBoxAndResults, {
   SearchInDataCatalog
 } from "../../../lib/ReactViews/Search/SearchBoxAndResults";
+import { ThemeProvider } from "styled-components";
+import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface/StandardTheme";
 
 describe("SearchBoxAndResults", function() {
   let terria: Terria;
@@ -38,11 +40,13 @@ describe("SearchBoxAndResults", function() {
     });
     act(() => {
       testRenderer = create(
-        <SearchBoxAndResults
-          t={() => {}}
-          terria={terria}
-          viewState={viewState}
-        />
+        <ThemeProvider theme={terriaTheme}>
+          <SearchBoxAndResults
+            t={() => {}}
+            terria={terria}
+            viewState={viewState}
+          />
+        </ThemeProvider>
       );
     });
 
@@ -63,11 +67,13 @@ describe("SearchBoxAndResults", function() {
     });
     act(() => {
       testRenderer = create(
-        <SearchBoxAndResults
-          t={() => {}}
-          terria={terria}
-          viewState={viewState}
-        />
+        <ThemeProvider theme={terriaTheme}>
+          <SearchBoxAndResults
+            t={() => {}}
+            terria={terria}
+            viewState={viewState}
+          />
+        </ThemeProvider>
       );
     });
 
@@ -87,11 +93,13 @@ describe("SearchBoxAndResults", function() {
     });
     act(() => {
       testRenderer = create(
-        <SearchBoxAndResults
-          t={() => {}}
-          terria={terria}
-          viewState={viewState}
-        />
+        <ThemeProvider theme={terriaTheme}>
+          <SearchBoxAndResults
+            t={() => {}}
+            terria={terria}
+            viewState={viewState}
+          />
+        </ThemeProvider>
       );
     });
 

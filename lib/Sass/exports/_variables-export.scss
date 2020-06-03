@@ -1,0 +1,61 @@
+// We reimport variables and then export it here so that it doesn't get consumed
+// in variables and update type files every time we make something accessible via JS
+
+// This is the webpack-aliased-and-overriden-from-TerriaMap one, otherwise
+// resolves back to our base one provided in terriajs
+@import "~terriajs-variables";
+
+:export {
+  // TODO: find a better solution for this - some of these we need to provide as
+  // numbers only so we can do math on them and add the unit afterwards 😵
+  // screen sizes for media queries
+  // mobile: $mobile;
+  // sm: $sm;
+  // md: $md;
+  // lg: $lg;
+  mobile: 767;
+  sm: 768;
+  md: 992;
+  lg: 1300;
+
+  // Compass styles
+  // compassWidth: $compass-width;
+  // We have to deviate from our "divide by 5" here, due to 55 being an odd number
+  // and thus meaning some things will scale to contain half pixels
+  // bumped up to 56 to hit an even number
+  compassWidth: 56;
+  ringWidth: 10;
+
+  spacing: 5;
+
+  frontComponentZIndex: $front-component-z-index;
+
+  // ..radius? (no standardised radius at the moment, pull in as needed from variables
+  radius40Button: 20;
+  radiusLarge: $radius-large;
+  radiusSmall: $radius-small;
+
+  overlay: $overlay;
+  overlayInvert: $overlay-invert;
+
+  // Colours
+  colorPrimary: $color-primary;
+  colorSplitter: $color-splitter;
+  textLight: $text-light; // essentially #fff until we sort out the colour palette from vic
+  textLightDimmed: $text-light-dimmed;
+  textDark: $text-dark;
+  textDarker: $text-darker;
+  textBlack: $text-black;
+  dark: $dark;
+  darkWithOverlay: $dark-with-overlay;
+  grey: $grey;
+  greyLighter: $grey-lighter;
+  greyLighter2: $grey-lighter2;
+  greyLightest: $grey-lightest;
+  charcoalGrey: $charcoal-grey;
+
+  // TODO: fix, these are stopgaps & should get merged in with something else(?)
+  mapButtonColor: $map-button-color;
+
+  workbenchWidth: 350;
+}

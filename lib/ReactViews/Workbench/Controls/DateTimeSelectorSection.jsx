@@ -122,16 +122,21 @@ const DateTimeSelectorSection = observer(
       let format;
       const item = this.props.item;
       const discreteTimes = item.discreteTimesAsSortedJulianDates;
+      const disableDateTimeSelector = item.disableDateTimeSelector;
 
-      if (!defined(discreteTimes) || discreteTimes.length === 0) {
+      if (
+        !defined(discreteTimes) ||
+        discreteTimes.length === 0 ||
+        disableDateTimeSelector
+      ) {
         return null;
       }
 
       if (defined(item.currentDiscreteJulianDate)) {
         const time = JulianDate.toDate(item.currentDiscreteJulianDate);
-        if (defined(item.dateFormat) && defined(item.dateFormat.currentTime)) {
+        if (defined(item.dateFormat)) {
           format = item.dateFormat;
-          discreteTime = dateFormat(time, item.dateFormat.currentTime);
+          discreteTime = dateFormat(time, item.dateFormat);
         } else {
           discreteTime = formatDateTime(time);
         }

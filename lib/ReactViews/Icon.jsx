@@ -6,7 +6,7 @@ import classNames from "classnames";
 import Styles from "./icon.scss";
 
 // icon.jsx
-const GLYPHS = {
+export const GLYPHS = {
   calendar: require("../../wwwroot/images/icons/calendar.svg"),
   about: require("../../wwwroot/images/icons/about.svg"),
   add: require("../../wwwroot/images/icons/add.svg"),
@@ -17,6 +17,7 @@ const GLYPHS = {
   arOn: require("../../wwwroot/images/icons/ar-on.svg"),
   arRealign: require("../../wwwroot/images/icons/ar-realign.svg"),
   arResetAlignment: require("../../wwwroot/images/icons/ar-reset-alignment.svg"),
+  arrowDown: require("../../wwwroot/images/icons/arrow-down.svg"),
   backToStart: require("../../wwwroot/images/icons/back-to-start.svg"),
   backward: require("../../wwwroot/images/icons/backward.svg"),
   barChart: require("../../wwwroot/images/icons/bar-chart.svg"),
@@ -40,6 +41,7 @@ const GLYPHS = {
   geolocation: require("../../wwwroot/images/icons/geolocation.svg"),
   gallery: require("../../wwwroot/images/icons/gallery.svg"),
   help: require("../../wwwroot/images/icons/help.svg"),
+  helpThick: require("../../wwwroot/images/icons/help-thick.svg"),
   increase: require("../../wwwroot/images/icons/increase.svg"),
   left: require("../../wwwroot/images/icons/left.svg"),
   lineChart: require("../../wwwroot/images/icons/line-chart.svg"),
@@ -71,6 +73,8 @@ const GLYPHS = {
   splitter: require("../../wwwroot/images/icons/splitter.svg"),
   splitterOn: require("../../wwwroot/images/icons/splitterOn.svg"),
   splitterOff: require("../../wwwroot/images/icons/splitterOff.svg"),
+  difference: require("../../wwwroot/images/icons/difference.svg"),
+  diffImage: require("../../wwwroot/images/icons/splitter.svg"),
   previous: require("../../wwwroot/images/icons/previous.svg"),
   next: require("../../wwwroot/images/icons/next.svg"),
   timeline: require("../../wwwroot/images/icons/timeline.svg"),
@@ -83,6 +87,8 @@ const GLYPHS = {
   compassInner: require("../../wwwroot/images/icons/compass-inner.svg"),
   compassInnerArrows: require("../../wwwroot/images/icons/compass-inner-arrows.svg"),
   compassOuter: require("../../wwwroot/images/icons/compass-outer.svg"),
+  compassOuterSkeleton: require("../../wwwroot/images/icons/compass-outer-skeleton.svg"),
+  compassOuterEnlarged: require("../../wwwroot/images/icons/compass-outer-enlarged.svg"),
   compassRotationMarker: require("../../wwwroot/images/icons/compass-rotation-marker.svg"),
   circleFull: require("../../wwwroot/images/icons/circlef-full.svg"),
   circleEmpty: require("../../wwwroot/images/icons/circle-empty.svg"),
@@ -95,10 +101,20 @@ const GLYPHS = {
   tour: require("../../wwwroot/images/icons/take-the-tour-icon.svg"),
   layers: require("../../wwwroot/images/icons/pulling-away-layers-icon.svg"),
   start: require("../../wwwroot/images/icons/getting-started-icon.svg"),
-  cube: require("../../wwwroot/images/icons/interact.svg")
+  cube: require("../../wwwroot/images/icons/interact.svg"),
+  playInverted: require("../../wwwroot/images/icons/play-inverted.svg"),
+  video: require("../../wwwroot/images/icons/video.svg"),
+  compare: require("../../wwwroot/images/icons/compare.svg"),
+  newHelp: require("../../wwwroot/images/icons/help-2.svg"),
+  geolocationThick: require("../../wwwroot/images/icons/location-thick.svg"),
+  minusThick: require("../../wwwroot/images/icons/zoom-minus.svg"),
+  plusThick: require("../../wwwroot/images/icons/zoom-plus.svg"),
+  refreshThick: require("../../wwwroot/images/icons/zoom-refresh.svg"),
+  satellite: require("../../wwwroot/images/icons/satellite.svg"),
+  uploadThin: require("../../wwwroot/images/icons/upload-thin.svg")
 };
 
-const Icon = createReactClass({
+export const Icon = createReactClass({
   propTypes: {
     glyph: PropTypes.object,
     style: PropTypes.object,
@@ -118,18 +134,22 @@ const Icon = createReactClass({
   }
 });
 
-const StyledIcon = styled(Icon)`
+export const StyledIcon = styled(Icon)`
+  display:block;
   flex-shrink: 0;
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
+  ${props => props.styledHeight && `height: ${props.styledHeight};`}
 
   ${props => props.light && `fill: ${props.theme.textLight};`}
   ${props => props.dark && `fill: ${props.theme.textDark};`}
 
+  // Until we sort out what "light / dark" means for components that have both
+  // modes, use "realDark" to get real
+  ${props => props.realDark && `fill: ${props.theme.dark};`}
+
   ${props => props.fillColor && `fill: ${props.fillColor};`}
-  
+
   ${props => props.opacity && `opacity: ${props.opacity};`}
 `;
 
-module.exports = Icon;
-module.exports.GLYPHS = GLYPHS;
-module.exports.StyledIcon = StyledIcon;
+export default Object.assign(Icon, { GLYPHS });
