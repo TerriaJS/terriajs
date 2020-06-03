@@ -96,6 +96,16 @@ export default class CsvCatalogItem extends AsyncChartableMixin(
     }
   }
 
+  @computed
+  get discreteTimes() {
+    const automaticTableStylesStratum:
+      | TableAutomaticStylesStratum
+      | undefined = this.strata.get(
+      automaticTableStylesStratumName
+    ) as TableAutomaticStylesStratum;
+    return automaticTableStylesStratum?.discreteTimes;
+  }
+
   /*
    * Hook called by AutoRefreshingMixin to refresh data.
    *

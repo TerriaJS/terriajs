@@ -13,7 +13,7 @@ describe("TableMixin", function() {
   let item: CsvCatalogItem;
 
   beforeEach(function() {
-    item = new CsvCatalogItem("test", new Terria());
+    item = new CsvCatalogItem("test", new Terria(), undefined);
     jasmine.Ajax.install();
     jasmine.Ajax.stubRequest(
       "build/TerriaJS/data/regionMapping.json"

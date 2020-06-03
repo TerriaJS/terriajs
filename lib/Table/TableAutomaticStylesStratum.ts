@@ -137,7 +137,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
   }
 
   @computed
-  get discreteTimes(): StratumFromTraits<DiscreteTimeTraits>[] | undefined {
+  get discreteTimes(): { time: string; tag: string | undefined }[] | undefined {
     const dates = this.catalogItem.activeTableStyle.timeColumn?.valuesAsDates
       .values;
     if (dates === undefined) {
