@@ -110,4 +110,12 @@ export default class CatalogMemberTraits extends ModelTraits {
       "Whether the legend is hidden in the workbench for this catalog member."
   })
   hideLegendInWorkbench: boolean = false;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Hide source in explorer window",
+    description:
+      "Indicates that the source of this data should be hidden from the UI (obviously this isn't super-secure as you can just look at the network requests)."
+  })
+  hideSource: boolean = false;
 }
