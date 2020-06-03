@@ -24,6 +24,16 @@ describe("getAncestors", function() {
     terria.addModel(groupLevelTwo);
     terria.addModel(groupLevelThree);
   });
+
+  /**
+   * these tests assert the comments on the `getAncestors()` description and
+   * the return description, namely
+   *
+   * "The "Root Group" is not included."
+   * "@return The members' ancestors in its parent tree, starting at the top, not including this member."
+   *
+   * See `getAncestors.ts` for full details
+   */
   describe("getCatalogMembersToSave", () => {
     it("returns ancestors from top down with groups and wms", function() {
       groupLevelThree.add("definition", wms);
