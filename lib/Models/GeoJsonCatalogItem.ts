@@ -346,7 +346,6 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
         ) {
           // Polygons don't directly support outlines when they're on terrain.
           // So create a manual outline.
-          console.log("creating polyline");
           createPolylineFromPolygon(entities, entity, now);
         }
       }
