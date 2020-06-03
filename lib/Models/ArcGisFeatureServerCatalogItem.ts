@@ -578,7 +578,7 @@ function updateEntityWithEsriStyle(
     // will not correctly render outlines in 3D mode. Make fills semi-transparent,
     // outline colours "black" and hard coded width may solve the problem.
     const color = symbol.color.slice(0, 3).concat([128]);
-    const outlineWidth: any = 0.4;
+    const outlineWidth = 0.4;
     const outlineColor = [0, 0, 0, 255];
 
     // feature picking doesn't work when the polygon interior is transparent, so
@@ -591,7 +591,7 @@ function updateEntityWithEsriStyle(
 
     if (symbol.outline) {
       entity.polygon.outlineColor = convertEsriColorToCesiumColor(outlineColor);
-      entity.polygon.outlineWidth = outlineWidth;
+      entity.polygon.outlineWidth = new ConstantProperty(outlineWidth);
     }
   }
 }
