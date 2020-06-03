@@ -15,6 +15,8 @@ Change Log
 * Fixed a bug where WMS items caused type errors in newer babel and typescript builds, due to mixed mixin methods on DiffableMixin & DiscretelyTimeVaryingMixin
 * Fixed a bug where KmlCatalogItem did not use the proxy for any urls.
 * Add support for `CkanCatalogGroup` and `CkanItemReference`.
+* Fixed a chart bug where moment points do not stick to the basis item when they are of different scale.
+* Fixed a bug where the moment point selection highlight is lost when changing the satellite imagery date.
 * Removed sass from Clipboard
 * Replaced lifesaver icon on the help button with a question mark button
 * Fix handling of points and markers around the anti-meridian in the `LeafletVisualizer`.
