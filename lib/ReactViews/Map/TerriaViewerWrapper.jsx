@@ -73,7 +73,7 @@ const TerriaViewerWrapper = createReactClass({
     return (
       <aside className={Styles.container}>
         <div className={Styles.mapPlaceholder}>
-          Loading the map, please wait...
+          {/*Loading the map, please wait...*/}
         </div>
         <Splitter terria={this.props.terria} />
         <div

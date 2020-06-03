@@ -320,11 +320,11 @@ const StandardUserInterface = createReactClass({
                 menuItems={customElements.menu}
                 animationDuration={animationDuration}
               />
-              {/* <MapNavigation
+              <MapNavigation
                 terria={terria}
                 viewState={this.props.viewState}
                 navItems={customElements.nav}
-              /> */}
+              />
             </div>
           </If>
 

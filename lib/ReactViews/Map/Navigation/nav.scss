@@ -7,11 +7,11 @@
   border-radius: 50%;
   display: block;
   float: inherit;
-  background: #fff;
-  color: $dark;
+  background: $floating-buttons-bg;
+  color: $floating-buttons-icon-fill;
   height: 40px;
   width: 40px;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+  //box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
 
   svg {
     height: 24px;

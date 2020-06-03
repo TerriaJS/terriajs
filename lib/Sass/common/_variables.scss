@@ -12,18 +12,32 @@ $font-mono: monospace, sans-serif;
 $font-feature-info: $font-mono;
 $font: $font-base;
 
+$light: #dededf;
+$lighter: #c8d7ea;
+$lightest: #f5f7fa;
+
+// FloatingButtons
+$floating-buttons-bg: rgba(255, 255, 255, 0.2);
+$floating-buttons-icon-fill: rgba(0, 0, 0, 0.8);
+
+// SidePanel
+$side-panel-background-color: $light;
+$side-panel-background-image: linear-gradient(315deg, $light 0%, $lightest 74%);
+$side-panel-button-hover: #e8edf4;
+
 $color-primary: #0a478c;
+$color-secondary: #06ccff;
 $color-primary-disabled: #595b60;
+
 @function get-hover-color($base-color) {
   @return lighten($base-color, 10%);
 }
-$color-secondary: #06ccff;
 
 $animation-fast: 0.1s;
 $dark: #404040;
 $dark-with-overlay: #667080;
 $dark-lighter: #595b60;
-$grey: #888888;
+$grey: #000000;
 $grey-lighter: #ddd;
 // todo: Fix during overhaul
 $grey-lighter2: #e6e6e6;
