@@ -10,14 +10,8 @@ class SidePanelContent extends React.Component {
     sector: null
   };
   showSectorInfo = sector => {
-    const { terria } = this.props;
-    terria.selectedSector = "manufacturing";
-
     this.setState({
-      sector: {
-        title: sector.title,
-        info: sector.info
-      }
+      sector
     });
   };
   render() {
