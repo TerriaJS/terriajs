@@ -93,14 +93,17 @@ export function removeMarker(terria: Terria) {
 }
 
 /** Determines whether the location marker is visible previously added in {@link #addMarker}. */
-export function isMarkerVisible(terria: Terria) {
+export function isMarkerVisible(terria: Terria): boolean {
   const catalogItem = terria.getModelById(CzmlCatalogItem, MARKER_UNIQUE_ID);
   return catalogItem !== undefined && terria.overlays.contains(catalogItem);
 }
 
 export function getMarkerLocation(terria: Terria): LatLonHeight | undefined {
   const catalogItem = terria.getModelById(CzmlCatalogItem, MARKER_UNIQUE_ID);
-  const marker = catalogItem?.czmlData[1];
+  if (catalogItem === undefined || !terria.overlays.contains(catalogItem)) {
+    return;
+  }
+  const marker = catalogItem.czmlData[1];
   // @ts-ignore
   const position = marker?.position?.cartographicDegrees;
   if (Array.isArray(toJS(position))) {
