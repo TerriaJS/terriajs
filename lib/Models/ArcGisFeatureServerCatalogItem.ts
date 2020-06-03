@@ -538,16 +538,6 @@ function updateEntityWithEsriStyle(
     entity.point.show = new ConstantProperty(false);
   }
 
-  // Update the styling of the Cesium Polyline
-  if (entity.polyline && symbol.color) {
-    entity.polyline.material = new ColorMaterialProperty(
-      convertEsriColorToCesiumColor(symbol.color)
-    );
-    if (isDefined(symbol.width)) {
-      entity.polyline.width = new ConstantProperty(symbol.width);
-    }
-  }
-
   // Update the styling of the Cesium Point
   if (entity.point && symbol.color) {
     entity.point.color = new ConstantProperty(
@@ -564,6 +554,7 @@ function updateEntityWithEsriStyle(
   }
 
   // Update the styling of the Cesium Polygon
+  const lineWidth = 0.4;
   if (entity.polygon && symbol.color) {
     const color = symbol.color;
 
@@ -578,7 +569,16 @@ function updateEntityWithEsriStyle(
       entity.polygon.outlineColor = convertEsriColorToCesiumColor(
         symbol.outline.color
       );
-      entity.polygon.outlineWidth = symbol.outline.width;
+      entity.polygon.outlineWidth = new ConstantProperty(lineWidth);
+    }
+  }
+  // Update the styling of the Cesium Polyline
+  else if (entity.polyline && symbol.color) {
+    entity.polyline.material = new ColorMaterialProperty(
+      convertEsriColorToCesiumColor(symbol.color)
+    );
+    if (isDefined(symbol.width)) {
+      entity.polyline.width = new ConstantProperty(lineWidth);
     }
   }
 }
