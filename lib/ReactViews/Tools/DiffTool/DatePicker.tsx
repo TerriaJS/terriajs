@@ -7,12 +7,12 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import CommonStrata from "../../../Models/CommonStrata";
 import { formatDateTime } from "../../BottomDock/Timeline/DateFormats";
+import Icon from "../../Icon";
 
 const DateTimePicker = require("../../../ReactViews/BottomDock/Timeline/DateTimePicker.jsx");
 const dateFormat = require("dateformat");
 const Box: any = require("../../../Styled/Box").default;
 const Button: any = require("../../../Styled/Button").default;
-const Icon: any = require("../../Icon");
 
 interface PropsType extends WithTranslation {
   item: DiffableMixin.Instance;
