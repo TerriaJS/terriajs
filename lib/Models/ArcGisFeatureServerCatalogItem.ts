@@ -565,10 +565,12 @@ function updateEntityWithEsriStyle(
 
   // Update the styling of the Cesium Polygon
   if (entity.polygon && symbol.color) {
-    // 100% opacity or transparency will prevent outline from being rendered
-    // correctly in 3D mode at top view angle. Make it semi-transparent will
-    // solve the problem.
+    // 1) 100% opacity or transparency; and
+    // 2) Similarity of colours between outlines and fills
+    // will not render outlines correctly in 3D mode. Make fills semi-transparent
+    // and outline colours "black" may solve the problem.
     const color = symbol.color.slice(0, 3).concat([128]);
+    const outlineColor = [0, 0, 0, 255];
 
     // feature picking doesn't work when the polygon interior is transparent, so
     // use an almost-transparent color instead
