@@ -44,6 +44,7 @@ describe("Legend", function() {
         // @ts-ignore
         const legendSection = <Legend item={wmsItem} />;
         const result = getShallowRenderedOutput(legendSection);
+        // @ts-ignore
         expect(result).toEqual(null);
       })
       .then(done);

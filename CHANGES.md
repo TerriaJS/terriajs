@@ -16,8 +16,13 @@ Change Log
 * Fixed a bug where KmlCatalogItem did not use the proxy for any urls.
 * Add support for `CkanCatalogGroup` and `CkanItemReference`.
 * Prevent addedByUser stack overflow
+* Fixed a chart bug where moment points do not stick to the basis item when they are of different scale.
+* Fixed a bug where the moment point selection highlight is lost when changing the satellite imagery date.
 * Removed sass from Clipboard
+* Updated LocationSearchResults to support multiple search providers
+* Updated LocationSearchResults to support multiple search providers
 * Replaced lifesaver icon on the help button with a question mark button
+* Fix handling of points and markers around the anti-meridian in the `LeafletVisualizer`.
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-31

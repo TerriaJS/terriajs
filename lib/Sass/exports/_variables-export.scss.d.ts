@@ -18,6 +18,7 @@ interface CssExports {
   'mobile': string;
   'overlay': string;
   'overlayInvert': string;
+  'radius40Button': string;
   'radiusLarge': string;
   'radiusSmall': string;
   'ringWidth': string;
