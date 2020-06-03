@@ -79,6 +79,11 @@ class Disclaimer extends React.Component {
 
   render() {
     const disclaimer = this.props.viewState.disclaimerSettings;
+    const disclaimerTitle = disclaimer?.title || "Disclaimer";
+    const disclaimerConfirm = disclaimer?.confirmText || "Ok";
+    const disclaimerDeny = disclaimer?.denyText || "Cancel";
+    const disclaimerMessage =
+      disclaimer?.message || "Disclaimer text goes here";
     const useSmallScreenInterface = this.props.viewState
       .useSmallScreenInterface;
     return disclaimer ? (
@@ -110,7 +115,7 @@ class Disclaimer extends React.Component {
               bold
               textLight
             >
-              {disclaimer.title}
+              {disclaimerTitle}
             </Text>
             <Spacing bottom={4} />
             <Text
@@ -127,7 +132,7 @@ class Disclaimer extends React.Component {
               `
               }
             >
-              {parseCustomMarkdownToReact(disclaimer.message)}
+              {parseCustomMarkdownToReact(disclaimerMessage)}
             </Text>
             <Spacing bottom={5} />
             <Box
@@ -140,7 +145,7 @@ class Disclaimer extends React.Component {
                 onClick={() => this.deny(disclaimer.denyAction)}
                 fullWidth={useSmallScreenInterface}
               >
-                {disclaimer.denyText}
+                {disclaimerDeny}
               </DisclaimerButton>
               <Choose>
                 <When condition={useSmallScreenInterface}>
@@ -155,7 +160,7 @@ class Disclaimer extends React.Component {
                 fullWidth={useSmallScreenInterface}
                 primary
               >
-                {disclaimer.confirmText}
+                {disclaimerConfirm}
               </DisclaimerButton>
             </Box>
           </Box>

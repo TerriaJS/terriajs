@@ -370,7 +370,7 @@ class Plot extends React.Component {
         case "momentPoints": {
           // Find a basis item to stick the points on, if we can't find one, we
           // vertically center the points
-          const basisItem = chartItems.find(
+          const basisItemIndex = chartItems.findIndex(
             item => item.type === "line" && item.xAxis.scale === "time"
           );
           return (
@@ -379,8 +379,9 @@ class Plot extends React.Component {
               ref={this.chartRefs[i]}
               id={sanitizeIdString(chartItem.key)}
               chartItem={chartItem}
-              basisItem={basisItem}
               scales={initialScales[i]}
+              basisItem={chartItems[basisItemIndex]}
+              basisItemScales={initialScales[basisItemIndex]}
             />
           );
         }

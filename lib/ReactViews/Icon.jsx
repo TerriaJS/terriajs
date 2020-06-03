@@ -143,13 +143,13 @@ export const StyledIcon = styled(Icon)`
   ${props => props.light && `fill: ${props.theme.textLight};`}
   ${props => props.dark && `fill: ${props.theme.textDark};`}
 
+  // Until we sort out what "light / dark" means for components that have both
+  // modes, use "realDark" to get real
+  ${props => props.realDark && `fill: ${props.theme.dark};`}
+
   ${props => props.fillColor && `fill: ${props.fillColor};`}
 
   ${props => props.opacity && `opacity: ${props.opacity};`}
 `;
 
-export default Icon;
-// (?) are these cjs exports for the doc generator?
-module.exports = Icon;
-module.exports.GLYPHS = GLYPHS;
-module.exports.StyledIcon = StyledIcon;
+export default Object.assign(Icon, { GLYPHS });
