@@ -17,6 +17,7 @@ Change Log
 * Add support for `CkanCatalogGroup` and `CkanItemReference`.
 * Removed sass from Clipboard
 * Replaced lifesaver icon on the help button with a question mark button
+* Fix handling of points and markers around the anti-meridian in the `LeafletVisualizer`.
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-31
