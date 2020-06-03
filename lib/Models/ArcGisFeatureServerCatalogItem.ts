@@ -540,11 +540,18 @@ function updateEntityWithEsriStyle(
 
   // Update the styling of the Cesium Polyline
   if (entity.polyline && symbol.color) {
+    // 1) 100% opacity or transparency; and
+    // 2) Similarity of colours between outlines and fills; and
+    // 3) Incorrect width
+    // will not correctly render outlines in 3D mode. Make fills semi-transparent,
+    // outline colours "black" and hard coded width may solve the problem.
+    const color = symbol.color.slice(0, 3).concat([128]);
+    const outlineWidth = 0.4;
     entity.polyline.material = new ColorMaterialProperty(
-      convertEsriColorToCesiumColor(symbol.color)
+      convertEsriColorToCesiumColor(color)
     );
     if (isDefined(symbol.width)) {
-      entity.polyline.width = new ConstantProperty(symbol.width);
+      entity.polyline.width = new ConstantProperty(outlineWidth);
     }
   }
 
@@ -566,10 +573,12 @@ function updateEntityWithEsriStyle(
   // Update the styling of the Cesium Polygon
   if (entity.polygon && symbol.color) {
     // 1) 100% opacity or transparency; and
-    // 2) Similarity of colours between outlines and fills
-    // will not render outlines correctly in 3D mode. Make fills semi-transparent
-    // and outline colours "black" may solve the problem.
+    // 2) Similarity of colours between outlines and fills; and
+    // 3) Incorrect width
+    // will not correctly render outlines in 3D mode. Make fills semi-transparent,
+    // outline colours "black" and hard coded width may solve the problem.
     const color = symbol.color.slice(0, 3).concat([128]);
+    const outlineWidth: any = 0.4;
     const outlineColor = [0, 0, 0, 255];
 
     // feature picking doesn't work when the polygon interior is transparent, so
@@ -582,7 +591,7 @@ function updateEntityWithEsriStyle(
 
     if (symbol.outline) {
       entity.polygon.outlineColor = convertEsriColorToCesiumColor(outlineColor);
-      entity.polygon.outlineWidth = symbol.outline.width;
+      entity.polygon.outlineWidth = outlineWidth;
     }
   }
 }
