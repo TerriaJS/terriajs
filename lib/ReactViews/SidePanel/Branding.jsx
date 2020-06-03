@@ -14,7 +14,7 @@ const Branding = createReactClass({
   render() {
     return (
       <div className={Styles.branding}>
-        <img src="images/receipt-logo.png" className="{Styles.logo}" />
+        <img src="images/receipt-blue-logo.png" className="{Styles.logo}" />
       </div>
     );
   }
