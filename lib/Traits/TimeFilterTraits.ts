@@ -3,6 +3,7 @@ import LatLonHeightTraits from "./LatLonHeightTraits";
 import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
 import mixTraits from "./mixTraits";
+import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 
 export class TileCoordinates extends ModelTraits {
   @primitiveTrait({
@@ -37,7 +38,9 @@ export class TimeFilterCoordinates extends mixTraits(LatLonHeightTraits) {
   tile?: TileCoordinates;
 }
 
-export default class TimeFilterTraits extends ModelTraits {
+export default class TimeFilterTraits extends mixTraits(
+  DiscretelyTimeVaryingTraits
+) {
   @primitiveTrait({
     type: "string",
     name: "Time filter property",

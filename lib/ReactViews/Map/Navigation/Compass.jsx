@@ -29,6 +29,9 @@ import GyroscopeGuidance from "../../GyroscopeGuidance/GyroscopeGuidance";
 import { runInAction, computed, when } from "mobx";
 import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
+import { withTerriaRef } from "../../HOCs/withTerriaRef";
+
+import Box from "../../../Styled/Box";
 
 import FadeIn from "../../Transitions/FadeIn/FadeIn";
 
@@ -55,17 +58,51 @@ const StyledCompass = styled.div`
   }
 `;
 
-// 1.1818 comes from 65/55 = 1.1818 (64 and 56 sketch-designed numbers adapted for our "5" multiplier atm)
-const compassScaleRatio = 65 / 55;
+/**
+ * Take a compass width and scale it up 10px, instead of hardcoding values like:
+ * // const compassScaleRatio = 66 / 56;
+ */
+const getCompassScaleRatio = compassWidth =>
+  (Number(compassWidth) + 10) / Number(compassWidth);
 
+/**
+ * You think 0.9999 is a joke but I kid you not, it's the root of all evil in
+ * bandaging these related issues:
+ * https://github.com/TerriaJS/terriajs/issues/4261
+ * https://github.com/TerriaJS/terriajs/pull/4262
+ * https://github.com/TerriaJS/terriajs/pull/4213
+ *
+ * It seems the rendering in Chrome means that in certain conditions
+ * - chrome (not even another webkit browser)
+ * - "default browser zoom" (doesn't happen when you are even at 110%, but will
+ *   when shrunk down enough)
+ * - the way our compass is composed
+ *
+ * The action of triggering the 'active' state (scaled up to
+ * `getCompassScaleRatio()`) & back down means that the "InnerRing" will look
+ * off-center by 0.5-1px until you switch windows/tabs away and back, then
+ * chrome will decide to render it in the correct position.
+ *
+ * I haven't dug further to the root cause as doing it like this means wew now
+ * have a beautiful animating compass.
+ *
+ * So please leave scale(0.9999) alone unless you can fix the rendering issue in
+ * chrome, or if you want to develop a burning hatred for the compass 🙏🔥
+ *
+ **/
 const StyledCompassOuterRing = styled.div`
   ${props => props.theme.centerWithoutFlex()}
+  // override the transform provided in centerWithoutFlex()
+  transform: translate(-50%,-50%) scale(0.9999);
+
   z-index: ${props => (props.active ? "2" : "1")};
   width: 100%;
-  
+
   ${props =>
     props.active &&
-    `transform: translate(-50%,-50%) scale(${compassScaleRatio});`};
+    `transform: translate(-50%,-50%) scale(${getCompassScaleRatio(
+      props.theme.compassWidth
+    )});`};
 
   transition: transform 0.3s;
 `;
@@ -104,6 +141,7 @@ class Compass extends React.Component {
   static propTypes = {
     terria: PropTypes.object,
     viewState: PropTypes.object,
+    refFromHOC: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
     t: PropTypes.func.isRequired
   };
@@ -284,7 +322,7 @@ class Compass extends React.Component {
           aria-hidden="true"
           role="presentation"
         >
-          <div style={outerCircleStyle}>
+          <div ref={this.props.refFromHOC} style={outerCircleStyle}>
             <StyledIcon
               fillColor={this.props.theme.textDarker}
               glyph={Icon.GLYPHS.compassOuter}
@@ -328,14 +366,23 @@ class Compass extends React.Component {
 
         {/* Gyroscope guidance menu */}
         <FadeIn isVisible={active}>
-          <GyroscopeGuidance
-            viewState={this.props.viewState}
-            handleHelp={() => {
-              this.props.viewState.showHelpPanel();
-              this.props.viewState.selectHelpMenuItem("navigation");
-            }}
-            onClose={() => this.setState({ active: false })}
-          />
+          <Box
+            css={`
+              ${p => p.theme.verticalAlign("absolute")}
+              direction: rtl;
+              right: 72px;
+            `}
+          >
+            <GyroscopeGuidance
+              rightOffset="72px"
+              viewState={this.props.viewState}
+              handleHelp={() => {
+                this.props.viewState.showHelpPanel();
+                this.props.viewState.selectHelpMenuItem("navigation");
+              }}
+              onClose={() => this.setState({ active: false })}
+            />
+          </Box>
         </FadeIn>
       </StyledCompass>
     );
@@ -650,4 +697,7 @@ function viewerChange(viewModel) {
   });
 }
 
-export default withTranslation()(withTheme(Compass));
+export const COMPASS_NAME = "MapNavigationCompassOuterRing";
+export default withTranslation()(
+  withTheme(withTerriaRef(Compass, COMPASS_NAME))
+);

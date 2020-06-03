@@ -200,7 +200,7 @@ class FeatureInfoPanel extends React.Component {
 
   filterIntervalsByFeature(catalogItem, feature) {
     try {
-      catalogItem.filterIntervalsByFeature(
+      catalogItem.setTimeFilterFeature(
         feature,
         this.props.terria.pickedFeatures
       );

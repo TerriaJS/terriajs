@@ -21,12 +21,14 @@ export const Text = styled.div`
   `}
 
   font-weight: 400;
+  ${props => props.light && `font-weight: 300;`}
   ${props => props.bold && `font-weight: bold;`}
   ${props => props.semiBold && `font-weight: 600;`}
   ${props => props.extraBold && `font-weight: 800;`}
   ${props => props.uppercase && `text-transform: uppercase;`}
 
   ${props => props.textAlignLeft && `text-align: left;`}
+  ${props => props.textAlignCenter && `text-align: center;`}
   ${props =>
     props.primary &&
     `
@@ -86,6 +88,13 @@ export const Text = styled.div`
     `
     font-size: 16px;
   `}
+
+  // yeah extra extra large - will re-port to h4 once we re-add Heading.tsx
+  ${props =>
+    props.extraExtraLarge &&
+    `
+    font-size: 18px;
+  `}
   ${props =>
     props.subHeading &&
     `
@@ -99,7 +108,29 @@ export const Text = styled.div`
     font-size: 26px;
     line-height: 32px;
   `}
+
+  ${props => props.styledSize && `font-size: ${props.styledSize}`};
+  ${props =>
+    props.styledLineHeight && `line-height: ${props.styledLineHeight}`};
   
+  ${props =>
+    props.styledFontSize &&
+    `
+    font-size: ${props.styledFontSize};
+  `}
+  ${props =>
+    props.styledLineHeight &&
+    `
+    line-height: ${props.styledLineHeight};
+  `}
+  
+  ${props =>
+    props.highlightLinks &&
+    `
+    a {
+      color: ${props.theme.colorPrimary};
+    }
+  `}
 `;
 
 export const TextSpan = styled(Text).attrs({

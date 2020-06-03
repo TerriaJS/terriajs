@@ -3,6 +3,7 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import CommonStrata from "../Models/CommonStrata";
 import { BaseModel } from "./Model";
+import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
 
 interface WorkbenchItem extends BaseModel {
   supportsReordering?: boolean;
@@ -37,6 +38,19 @@ export default class Workbench {
   @computed
   get shouldExpandAll(): boolean {
     return this._items.every(item => !(<any>item).isOpenInWorkbench);
+  }
+
+  /**
+   * Checks if the workbench contains time-based WMS
+   */
+  @computed
+  get hasTimeWMS(): boolean {
+    return this._items.some(
+      item =>
+        item.type === "wms" &&
+        TimeFilterMixin.isMixedInto(item) &&
+        item.discreteTimesAsSortedJulianDates?.length
+    );
   }
 
   /**

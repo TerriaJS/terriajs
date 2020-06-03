@@ -4,16 +4,12 @@ interface CssExports {
   'colorPrimary': string;
   'colorSplitter': string;
   'dark': string;
-  'darkWithOverlay': string;
-  'greyLightest': string;
   'heading': string;
   'isOpen': string;
   'items': string;
   'light': string;
   'provider-result': string;
   'providerResult': string;
-  'textDarker': string;
-  'textLight': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

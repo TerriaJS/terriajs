@@ -6,7 +6,7 @@ import classNames from "classnames";
 import Styles from "./icon.scss";
 
 // icon.jsx
-const GLYPHS = {
+export const GLYPHS = {
   calendar: require("../../wwwroot/images/icons/calendar.svg"),
   about: require("../../wwwroot/images/icons/about.svg"),
   add: require("../../wwwroot/images/icons/add.svg"),
@@ -17,6 +17,7 @@ const GLYPHS = {
   arOn: require("../../wwwroot/images/icons/ar-on.svg"),
   arRealign: require("../../wwwroot/images/icons/ar-realign.svg"),
   arResetAlignment: require("../../wwwroot/images/icons/ar-reset-alignment.svg"),
+  arrowDown: require("../../wwwroot/images/icons/arrow-down.svg"),
   backToStart: require("../../wwwroot/images/icons/back-to-start.svg"),
   backward: require("../../wwwroot/images/icons/backward.svg"),
   barChart: require("../../wwwroot/images/icons/bar-chart.svg"),
@@ -72,6 +73,8 @@ const GLYPHS = {
   splitter: require("../../wwwroot/images/icons/splitter.svg"),
   splitterOn: require("../../wwwroot/images/icons/splitterOn.svg"),
   splitterOff: require("../../wwwroot/images/icons/splitterOff.svg"),
+  difference: require("../../wwwroot/images/icons/difference.svg"),
+  diffImage: require("../../wwwroot/images/icons/splitter.svg"),
   previous: require("../../wwwroot/images/icons/previous.svg"),
   next: require("../../wwwroot/images/icons/next.svg"),
   timeline: require("../../wwwroot/images/icons/timeline.svg"),
@@ -98,7 +101,17 @@ const GLYPHS = {
   tour: require("../../wwwroot/images/icons/take-the-tour-icon.svg"),
   layers: require("../../wwwroot/images/icons/pulling-away-layers-icon.svg"),
   start: require("../../wwwroot/images/icons/getting-started-icon.svg"),
-  cube: require("../../wwwroot/images/icons/interact.svg")
+  cube: require("../../wwwroot/images/icons/interact.svg"),
+  playInverted: require("../../wwwroot/images/icons/play-inverted.svg"),
+  video: require("../../wwwroot/images/icons/video.svg"),
+  compare: require("../../wwwroot/images/icons/compare.svg"),
+  newHelp: require("../../wwwroot/images/icons/help-2.svg"),
+  geolocationThick: require("../../wwwroot/images/icons/location-thick.svg"),
+  minusThick: require("../../wwwroot/images/icons/zoom-minus.svg"),
+  plusThick: require("../../wwwroot/images/icons/zoom-plus.svg"),
+  refreshThick: require("../../wwwroot/images/icons/zoom-refresh.svg"),
+  satellite: require("../../wwwroot/images/icons/satellite.svg"),
+  uploadThin: require("../../wwwroot/images/icons/upload-thin.svg")
 };
 
 export const Icon = createReactClass({
@@ -122,19 +135,21 @@ export const Icon = createReactClass({
 });
 
 export const StyledIcon = styled(Icon)`
+  display:block;
   flex-shrink: 0;
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
+  ${props => props.styledHeight && `height: ${props.styledHeight};`}
 
   ${props => props.light && `fill: ${props.theme.textLight};`}
   ${props => props.dark && `fill: ${props.theme.textDark};`}
 
+  // Until we sort out what "light / dark" means for components that have both
+  // modes, use "realDark" to get real
+  ${props => props.realDark && `fill: ${props.theme.dark};`}
+
   ${props => props.fillColor && `fill: ${props.fillColor};`}
-  
+
   ${props => props.opacity && `opacity: ${props.opacity};`}
 `;
 
-export default Icon;
-// (?) are these cjs exports for the doc generator?
-module.exports = Icon;
-module.exports.GLYPHS = GLYPHS;
-module.exports.StyledIcon = StyledIcon;
+export default Object.assign(Icon, { GLYPHS });

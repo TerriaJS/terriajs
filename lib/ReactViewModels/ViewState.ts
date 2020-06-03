@@ -1,3 +1,4 @@
+import { Ref } from "react";
 import clone from "terriajs-cesium/Source/Core/clone";
 import defined from "terriajs-cesium/Source/Core/defined";
 import DisclaimerHandler from "./DisclaimerHandler";
@@ -6,18 +7,32 @@ import getAncestors from "../Models/getAncestors";
 import MouseCoords from "./MouseCoords";
 import SearchState from "./SearchState";
 import Terria from "../Models/Terria";
+import triggerResize from "../Core/triggerResize";
 import {
   observable,
   reaction,
   IReactionDisposer,
   action,
-  runInAction
+  runInAction,
+  computed
 } from "mobx";
 import { BaseModel } from "../Models/Model";
 import PickedFeatures from "../Map/PickedFeatures";
+import {
+  TourPoint,
+  defaultTourPoints,
+  RelativePosition
+} from "./defaultTourPoints";
+
+import { SATELLITE_HELP_PROMPT_KEY } from "../ReactViews/HelpScreens/SatelliteHelpPrompt";
+import { LOCAL_PROPERTY_KEY as WELCOME_PROPERTY_KEY } from "../ReactViews/WelcomeMessage/WelcomeMessage";
 
 export const DATA_CATALOG_NAME = "data-catalog";
 export const USER_DATA_NAME = "my-data";
+
+// check showWorkbenchButton delay and transforms
+// export const WORKBENCH_RESIZE_ANIMATION_DURATION = 250;
+export const WORKBENCH_RESIZE_ANIMATION_DURATION = 500;
 
 interface ViewStateOptions {
   terria: Terria;
@@ -40,6 +55,7 @@ export default class ViewState {
   });
   readonly searchState: SearchState;
   readonly terria: Terria;
+  readonly relativePosition = RelativePosition;
 
   @observable previewedItem: BaseModel | undefined;
   @observable userDataPreviewedItem: BaseModel | undefined;
@@ -64,6 +80,9 @@ export default class ViewState {
   @observable showWelcomeMessage: boolean = false;
   @observable selectedHelpMenuItem: string = "";
   @observable helpPanelExpanded: boolean = false;
+  @observable disclaimerSettings: any | undefined = undefined;
+  @observable disclaimerVisible: boolean = false;
+  @observable videoGuideVisible: string = "";
 
   @observable workbenchWithOpenControls: string | undefined = undefined;
 
@@ -77,6 +96,97 @@ export default class ViewState {
 
   @observable currentStoryId: number = 0;
   @observable featurePrompts: any[] = [];
+
+  /**
+   * we need a layering system for touring the app, but also a way for it to be
+   * chopped and changed from a terriamap
+   * 
+   * this will be slightly different to the help sequences that were done in
+   * the past, but may evolve to become a "sequence" (where the UI gets 
+   * programatically toggled to delve deeper into the app, e.g. show the user
+   * how to add data via the data catalog window)
+   * 
+   * rough points
+   * - "all guide points visible"
+   * - 
+   * 
+
+   * draft structure(?):
+   * 
+   * maybe each "guide" item will have
+   * {
+   *  ref: (react ref object)
+   *  dotOffset: (which way the dot and guide should be positioned relative to the ref component)
+   *  content: (component, more flexibility than a string)
+   * ...?
+   * }
+   * and guide props?
+   * {
+   *  enabled: parent component to decide this based on active index
+   * ...?
+   * }
+   *  */
+
+  @observable tourPoints: TourPoint[] = defaultTourPoints;
+  @observable showTour: boolean = false;
+  @observable appRefs: Map<string, Ref<HTMLElement>> = new Map();
+  @observable currentTourIndex: number = -1;
+
+  get tourPointsWithValidRefs() {
+    // should viewstate.ts reach into document? seems unavoidable if we want
+    // this to be the true source of tourPoints.
+    // update: well it turns out you can be smarter about it and actually
+    // properly clean up your refs - so we'll leave that up to the UI to
+    // provide valid refs
+    return this.tourPoints
+      .sort((a, b) => {
+        return a.priority - b.priority;
+      })
+      .filter(
+        tourPoint => (<any>this.appRefs).get(tourPoint.appRefName)?.current
+      );
+  }
+  @action
+  setTourIndex(index: number) {
+    this.currentTourIndex = index;
+  }
+  @action
+  setShowTour(bool: boolean) {
+    this.showTour = bool;
+  }
+  @action
+  closeTour() {
+    this.currentTourIndex = -1;
+    this.showTour = false;
+  }
+  @action
+  previousTourPoint() {
+    const currentIndex = this.currentTourIndex;
+    if (currentIndex !== 0) {
+      this.currentTourIndex = currentIndex - 1;
+    }
+  }
+  @action
+  nextTourPoint() {
+    const totalTourPoints = this.tourPointsWithValidRefs.length;
+    const currentIndex = this.currentTourIndex;
+    if (currentIndex >= totalTourPoints - 1) {
+      this.closeTour();
+    } else {
+      this.currentTourIndex = currentIndex + 1;
+    }
+  }
+
+  @action
+  updateAppRef(refName: string, ref: Ref<HTMLElement>) {
+    if (!this.appRefs.get(refName) || this.appRefs.get(refName) !== ref) {
+      this.appRefs.set(refName, ref);
+    }
+  }
+  @action
+  deleteAppRef(refName: string) {
+    this.appRefs.delete(refName);
+  }
 
   /**
    * Gets or sets a value indicating whether the small screen (mobile) user interface should be used.
@@ -115,13 +225,26 @@ export default class ViewState {
    */
   @observable shareModelIsVisible: boolean = false;
 
+  /**
+   * The currently open tool
+   */
+  @observable currentTool:
+    | {
+        toolName: string;
+        toolComponent: React.Component | string;
+        params: unknown;
+      }
+    | undefined;
+
   private _unsubscribeErrorListener: any;
   private _pickedFeaturesSubscription: IReactionDisposer;
+  private _disclaimerVisibleSubscription: IReactionDisposer;
   private _isMapFullScreenSubscription: IReactionDisposer;
   private _showStoriesSubscription: IReactionDisposer;
   private _mobileMenuSubscription: IReactionDisposer;
   private _storyPromptSubscription: IReactionDisposer;
   private _previewedItemIdSubscription: IReactionDisposer;
+  private _workbenchHasTimeWMSSubscription: IReactionDisposer;
   private _disclaimerHandler: DisclaimerHandler;
 
   constructor(options: ViewStateOptions) {
@@ -160,6 +283,19 @@ export default class ViewState {
         if (defined(pickedFeatures)) {
           this.featureInfoPanelIsVisible = true;
           this.featureInfoPanelIsCollapsed = false;
+        }
+      }
+    );
+    // When disclaimer is shown, ensure fullscreen
+    // unsure about this behaviour because it nudges the user off center
+    // of the original camera set from config once they acknowdge
+    this._disclaimerVisibleSubscription = reaction(
+      () => this.disclaimerVisible,
+      disclaimerVisible => {
+        if (disclaimerVisible) {
+          this.isMapFullScreen = true;
+        } else if (!disclaimerVisible && this.isMapFullScreen) {
+          this.isMapFullScreen = false;
         }
       }
     );
@@ -202,6 +338,21 @@ export default class ViewState {
 
     this._disclaimerHandler = new DisclaimerHandler(terria, this);
 
+    this._workbenchHasTimeWMSSubscription = reaction(
+      () => this.terria.workbench.hasTimeWMS,
+      (hasTimeWMS: boolean) => {
+        if (
+          this.terria.configParameters.showInAppGuides &&
+          hasTimeWMS === true &&
+          // // only show it once
+          !this.terria.getLocalProperty(`${SATELLITE_HELP_PROMPT_KEY}Prompted`)
+        ) {
+          this.setShowSatelliteGuidance(true);
+          this.toggleFeaturePrompt(SATELLITE_HELP_PROMPT_KEY, true, true);
+        }
+      }
+    );
+
     this._storyPromptSubscription = reaction(
       () => this.storyShown,
       (storyShown: boolean | null) => {
@@ -231,14 +382,45 @@ export default class ViewState {
 
   dispose() {
     this._pickedFeaturesSubscription();
+    this._disclaimerVisibleSubscription();
     this._unsubscribeErrorListener();
     this._mobileMenuSubscription();
     this._isMapFullScreenSubscription();
     this._showStoriesSubscription();
     this._storyPromptSubscription();
     this._previewedItemIdSubscription();
+    this._workbenchHasTimeWMSSubscription();
     this._disclaimerHandler.dispose();
     this.searchState.dispose();
+  }
+
+  @action
+  triggerResizeEvent() {
+    triggerResize();
+  }
+
+  @action
+  setIsMapFullScreen(
+    bool: boolean,
+    animationDuration = WORKBENCH_RESIZE_ANIMATION_DURATION
+  ) {
+    this.isMapFullScreen = bool;
+    // Allow any animations to finish, then trigger a resize.
+
+    // (wing): much better to do by listening for transitionend, but will leave
+    // this as is until that's in place
+    setTimeout(function() {
+      // should we do this here in viewstate? it pulls in browser dependent things,
+      // and (defensively) calls it.
+      // but only way to ensure we trigger this resize, by standardising fullscreen
+      // toggle through an action.
+      triggerResize();
+    }, animationDuration);
+  }
+
+  @action
+  toggleStoryBuilder() {
+    this.storyBuilderShown = !this.storyBuilderShown;
   }
 
   @action
@@ -318,6 +500,31 @@ export default class ViewState {
     this.showHelpMenu = false;
   }
 
+  @action
+  setDisclaimerVisible(bool: boolean) {
+    this.disclaimerVisible = bool;
+  }
+  @action
+  hideDisclaimer() {
+    this.setDisclaimerVisible(false);
+  }
+
+  @action
+  setShowSatelliteGuidance(showSatelliteGuidance: boolean) {
+    this.showSatelliteGuidance = showSatelliteGuidance;
+  }
+
+  @action
+  setShowWelcomeMessage(welcomeMessageShown: boolean) {
+    this.showWelcomeMessage = welcomeMessageShown;
+  }
+
+  @action
+  setVideoGuideVisible(videoName: string) {
+    console.log("Setting videoGuideVisible to " + videoName);
+    this.videoGuideVisible = videoName;
+  }
+
   /**
    * Removes references of a model from viewState
    */
@@ -364,5 +571,24 @@ export default class ViewState {
     if (this.terria.configParameters.openAddData) {
       this.openAddData();
     }
+  }
+
+  @action
+  openTool(
+    toolName: string,
+    toolComponent: React.Component | string,
+    params?: any
+  ) {
+    this.currentTool = { toolName, toolComponent, params };
+  }
+
+  @action
+  closeTool() {
+    this.currentTool = undefined;
+  }
+
+  @computed
+  get isToolOpen() {
+    return this.currentTool !== undefined;
   }
 }

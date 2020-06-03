@@ -32,6 +32,7 @@ import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantPropert
 import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
 import replaceUnderscores from "../Core/replaceUnderscores";
+import createInfoSection from "./createInfoSection";
 
 const proj4 = require("proj4").default;
 
@@ -244,21 +245,12 @@ class FeatureServerStratum extends LoadableStratum(
   }
 
   @computed get info() {
-    function newInfo(name: string, content?: string) {
-      const traits = createStratumInstance(InfoSectionTraits);
-      runInAction(() => {
-        traits.name = name;
-        traits.content = content;
-      });
-      return traits;
-    }
-
     return [
-      newInfo(
+      createInfoSection(
         i18next.t("models.arcGisMapServerCatalogItem.dataDescription"),
         this._featureServer.description
       ),
-      newInfo(
+      createInfoSection(
         i18next.t("models.arcGisMapServerCatalogItem.copyrightText"),
         this._featureServer.copyrightText
       )

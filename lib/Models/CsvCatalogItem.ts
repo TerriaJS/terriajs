@@ -53,7 +53,7 @@ export default class CsvCatalogItem extends AsyncChartableMixin(
   constructor(
     id: string | undefined,
     terria: Terria,
-    sourceReference?: BaseModel
+    sourceReference: BaseModel | undefined
   ) {
     super(id, terria, sourceReference);
     this.strata.set(
