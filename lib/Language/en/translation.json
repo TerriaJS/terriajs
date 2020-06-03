@@ -536,6 +536,9 @@
     "selectExistingPolygon": "Select existing polygon"
   },
   "core": {
+    "errors": {
+      "tooDeepAddedByUser": "Reached 100 catalog items when checking addedByUser and landing on ID: \"{{memberId}}\"? Check that you haven't got a recursive catalog group."
+    },
     "userAddedData": "User-Added Data",
     "chartData": "Chart Data",
     "dataUri": {
@@ -787,6 +790,7 @@
       "chartDataGroup": "A group for chart data.",
       "dataSourceErrorMessage": "This data source does not have any details available.",
       "serviceErrorMessage": "This service does not have any details available.",
+      "stubCreationFailure": "Could not stub out catalog item {{item}}",
       "unsupportedTypeTitle": "Unknown type",
       "unsupportedTypeMessage": "Could not create unknown model type {{type}}.",
       "unsupportedFileTypeTitle": "Unsupported file type",
