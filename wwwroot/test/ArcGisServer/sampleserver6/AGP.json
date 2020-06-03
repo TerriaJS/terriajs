@@ -1,0 +1,22 @@
+{
+  "currentVersion": 10.71,
+  "folders": [],
+  "services": [
+    {
+      "name": "AGP/Census",
+      "type": "MapServer"
+    },
+    {
+      "name": "AGP/Hurricanes",
+      "type": "MapServer"
+    },
+    {
+      "name": "AGP/USA",
+      "type": "MapServer"
+    },
+    {
+      "name": "AGP/WindTurbines",
+      "type": "MapServer"
+    }
+  ]
+}

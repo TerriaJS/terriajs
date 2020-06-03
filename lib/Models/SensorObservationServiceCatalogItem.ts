@@ -31,6 +31,7 @@ import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
 import TableColumnTraits from "../Traits/TableColumnTraits";
 import CommonStrata from "./CommonStrata";
+import { BaseModel } from "./Model";
 
 interface GetFeatureOfInterestResponse {
   featureMember?: FeatureMember[] | FeatureMember;
@@ -87,6 +88,12 @@ StratumOrder.addLoadStratum(automaticTableStylesStratumName);
 class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
   constructor(readonly catalogItem: SensorObservationServiceCatalogItem) {
     super(catalogItem);
+  }
+
+  duplicateLoadableStratum(
+    newModel: SensorObservationServiceCatalogItem
+  ): this {
+    return new SosAutomaticStylesStratum(newModel) as this;
   }
 
   @computed
@@ -307,12 +314,12 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
   static readonly type = "sos";
   static defaultRequestTemplate = require("./SensorObservationServiceRequestTemplate.xml");
 
-  constructor(id: string | undefined, terria: Terria) {
-    super(id, terria);
-    this.initializeAutomaticStyleStratum();
-  }
-
-  initializeAutomaticStyleStratum() {
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel
+  ) {
+    super(id, terria, sourceReference);
     this.strata.set(
       automaticTableStylesStratumName,
       new SosAutomaticStylesStratum(this)
