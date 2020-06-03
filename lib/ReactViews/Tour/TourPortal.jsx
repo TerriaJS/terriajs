@@ -374,7 +374,7 @@ export const TourPortal = observer(({ viewState }) => {
 });
 
 TourPortal.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   viewState: PropTypes.object.isRequired
 };
 
