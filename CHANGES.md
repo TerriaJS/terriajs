@@ -6,6 +6,7 @@ Change Log
 #### mobx-next-release (mobx-32)
 * Made expanded SOS chart item shareable.
 * Fixed a regression bug where the time filter is shown for all satellite imagery items
+* Add unit tests for `WelcomeMessage` and `Disclaimer`
 * Fixed minor UI errors in console
 * Replaced helpful hints text with the new version
 * Made the shapes of some of the workbench components rounded
@@ -15,6 +16,9 @@ Change Log
 * Fixed a bug where KmlCatalogItem did not use the proxy for any urls.
 * Add support for `CkanCatalogGroup` and `CkanItemReference`.
 * Added unit test to ensure getAncestors behaviour
+* Removed sass from Clipboard
+* Replaced lifesaver icon on the help button with a question mark button
+* Fix handling of points and markers around the anti-meridian in the `LeafletVisualizer`.
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-31
@@ -24,6 +28,8 @@ Change Log
 * Added `Title`, `ContactInformation`, `Fees` to the `CapabilitiesService` interface so they are pulled on metadata load.
 * Resolved name issue of `WebMapServiceCapabilities`. Now it returns a name resolved from `capabilities` unless it is set by user.
 * Added setting of `isOpenInWorkbench`, `isExperiencingIssues`, `hideLegendInWorkbench`, `hideSource` strats for `WebMapServiceCatalogItem` from `WebMapServiceCatalogGroup`.
+* Fixed a bug where a single incorrect catalog item in a group would prevent subsequent items from loading.
+* Improved catalog parsing to include a stub (`StubCatalogItem`) when terriajs can't parse something
 
 #### mobx-30
 * Ported welcome message to mobx with new designs

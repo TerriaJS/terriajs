@@ -118,7 +118,7 @@ class MapNavigation extends React.Component {
               <div className={Styles.control}>
                 <MapIconButton
                   expandInPlace
-                  iconElement={() => <Icon glyph={Icon.GLYPHS.newHelp} />}
+                  iconElement={() => <Icon glyph={Icon.GLYPHS.helpThick} />}
                   onClick={() => this.props.viewState.showHelpPanel()}
                 >
                   Help

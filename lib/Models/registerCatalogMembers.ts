@@ -25,6 +25,7 @@ import OpenStreetMapCatalogItem from "./OpenStreetMapCatalogItem";
 import SenapsLocationsCatalogItem from "./SenapsLocationsCatalogItem";
 import SensorObservationServiceCatalogItem from "./SensorObservationServiceCatalogItem";
 import SplitItemReference from "./SplitItemReference";
+import StubCatalogItem from "./StubCatalogItem";
 import UrlReference, { UrlToCatalogMemberMapping } from "./UrlReference";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
@@ -33,6 +34,7 @@ import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
+  CatalogMemberFactory.register(StubCatalogItem.type, StubCatalogItem);
   CatalogMemberFactory.register(
     WebMapServiceCatalogItem.type,
     WebMapServiceCatalogItem
