@@ -204,20 +204,21 @@ const StandardUserInterface = createReactClass({
                       />
                     </section>
 
-                    {showStoryPanel && (
+                    {showStoryPanel ? (
                       <div className={Styles.storyPanelWrapper}>
                         <RCStoryPanel
                           terria={terria}
                           viewState={this.props.viewState}
                         />
                       </div>
+                    ) : null}
+
+                    {!showStoryPanel && (
+                      <div className={Styles.tabsContainer}>
+                        <SidePanelContent />
+                      </div>
                     )}
                   </div>
-                  {!showStoryPanel && (
-                    <div className={Styles.tabsContainer}>
-                      <SidePanelContent />
-                    </div>
-                  )}
                 </Small>
                 <Medium>
                   <section className={Styles.map}>

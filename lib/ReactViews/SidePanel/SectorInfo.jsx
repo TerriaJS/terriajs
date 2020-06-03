@@ -14,13 +14,15 @@ class SectorInfo extends React.Component {
           <div className={Styles.panelHeading}>
             <span className={Styles.sectorTitle}>{sector.title}</span>
           </div>
-          <div
-            className={classNames(Styles.infoContainer, Styles.lr)}
-            style={{
-              background: `url(${sector.image}) no-repeat center`
-            }}
-          />
-          <p className={Styles.details}>{sector.info}</p>
+          <div className={Styles.infoContainer}>
+            <div
+              className={classNames(Styles.imageContainer, Styles.lr)}
+              style={{
+                background: `url(${sector.image}) no-repeat center`
+              }}
+            />
+            <p className={Styles.details}>{sector.info}</p>
+          </div>
         </>
       );
     }

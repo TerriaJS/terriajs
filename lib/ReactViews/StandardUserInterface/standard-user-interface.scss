@@ -91,10 +91,9 @@
   }
 }
 .tabsContainer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
+  @media (orientation: landscape) {
+    flex: 1;
+  }
 }
 .feedback {
   position: absolute;
