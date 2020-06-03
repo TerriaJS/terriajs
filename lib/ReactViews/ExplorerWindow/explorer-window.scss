@@ -18,7 +18,8 @@
   left: 0;
 
   @media (min-width: $md) {
-    padding-left: 30px + $work-bench-width;
+    //padding-left: 30px + $work-bench-width;
+    padding-left: 30px;
     padding-right: 30px;
   }
 }
