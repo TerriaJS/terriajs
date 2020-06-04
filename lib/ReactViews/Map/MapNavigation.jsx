@@ -38,6 +38,7 @@ class MapNavigation extends React.Component {
     const toolIsDifference =
       this.props.viewState.currentTool?.toolName === "Difference";
     const isDiffMode = this.props.viewState.isToolOpen && toolIsDifference;
+
     return (
       <div
         className={classNames(Styles.mapNavigation, {
@@ -115,15 +116,17 @@ class MapNavigation extends React.Component {
                   viewState={this.props.viewState}
                 />
               </div>
-              <div className={Styles.control}>
-                <MapIconButton
-                  expandInPlace
-                  iconElement={() => <Icon glyph={Icon.GLYPHS.helpThick} />}
-                  onClick={() => this.props.viewState.showHelpPanel()}
-                >
-                  Help
-                </MapIconButton>
-              </div>
+              <If condition={!this.props.viewState.useSmallScreenInterface}>
+                <div className={Styles.control}>
+                  <MapIconButton
+                    expandInPlace
+                    iconElement={() => <Icon glyph={Icon.GLYPHS.helpThick} />}
+                    onClick={() => this.props.viewState.showHelpPanel()}
+                  >
+                    Help
+                  </MapIconButton>
+                </div>
+              </If>
             </div>
           </Box>
         </Box>
