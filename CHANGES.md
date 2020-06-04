@@ -23,6 +23,7 @@ Change Log
 * Updated LocationSearchResults to support multiple search providers
 * Replaced lifesaver icon on the help button with a question mark button
 * Fix handling of points and markers around the anti-meridian in the `LeafletVisualizer`.
+* Ported timeseries tables.
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-31
@@ -173,7 +174,6 @@ Change Log
 * Removed hardcoded workbench & Panel button colours
 * Ensure CSV column names are trimmed of whitespace.
 * Really stop analytics launch event sending bad & now empty & now finally the real label
-* Re-implemented timeseries tables.
 * Re-added `ArcGisMapServerCatalogGroup` and `ArcGisServerGroup`.
 * Tidy Compass UI animations, styles, titles
 * Bumped mobx minor to 4.15.x, mobx-react major to 6.x.x
