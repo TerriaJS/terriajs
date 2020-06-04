@@ -314,18 +314,20 @@ const StandardUserInterface = createReactClass({
                   .explorerPanelIsVisible
               })}
             >
-              <MenuBar
-                terria={terria}
-                viewState={this.props.viewState}
-                allBaseMaps={allBaseMaps}
-                menuItems={customElements.menu}
-                animationDuration={animationDuration}
-              />
-              {/* <MapNavigation
-                terria={terria}
-                viewState={this.props.viewState}
-                navItems={customElements.nav}
-              /> */}
+              <Medium>
+                <MenuBar
+                  terria={terria}
+                  viewState={this.props.viewState}
+                  allBaseMaps={allBaseMaps}
+                  menuItems={customElements.menu}
+                  animationDuration={animationDuration}
+                />
+                <MapNavigation
+                  terria={terria}
+                  viewState={this.props.viewState}
+                  navItems={customElements.nav}
+                />
+              </Medium>
             </div>
           </If>
 
