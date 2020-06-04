@@ -272,6 +272,8 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
 
     this._regionColumn = new EnumerationParameter(this, {
       id: "Region Column",
+      description:
+        "The data source field which contains unique codes for the input geography.",
       possibleValues,
 
       isRequired: true
@@ -289,7 +291,13 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
         id: "regionColumnError",
         name: "Region Column Error",
         errorMessage: true,
-        value: `No region columns available, the selected layer "${this.inputLayers.value}" doesn't have any supported region columns. The region mapping can be set in the Workbench.`
+        value: `No region columns available, the selected layer "${
+          this.inputLayers.value
+        }" doesn't have any supported region columns.  
+The region mapping can be set in the Workbench.  
+  
+**Supported regions:**
+${DATASETS.map(d => `\n- ${d.title}`)}`
       });
     }
   }
@@ -307,6 +315,8 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
     }
     this._dataColumn = new EnumerationParameter(this, {
       id: "Data Column",
+      description:
+        "The data source field which contains the values for the data to be converted.",
       possibleValues,
       isRequired: true
     });
@@ -334,6 +344,7 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
     }
     return new EnumerationParameter(this, {
       id: "Output Geography",
+      description: "The output geography to be converted to.",
       possibleValues: DATASETS.map(d => d.title),
       isRequired: true
     });
@@ -401,8 +412,8 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
   get functionParameters(): FunctionParameter[] {
     return filterOutUndefined([
       this.apiUrl,
-
-      this.inputLayersInfo || this.inputLayers,
+      this.inputLayers,
+      this.inputLayersInfo,
       this.regionColumnInfo || this.regionColumn,
 
       this.dataColumnInfo || this.dataColumn,
