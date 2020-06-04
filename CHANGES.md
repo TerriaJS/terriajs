@@ -10,6 +10,7 @@ Change Log
   * Added button for sharing stories.
   * Added a question popup on window close (if there are stories on the map so users don't lose their work).
 * Pinned `html-to-react` to version 1.3.4 to avoid IE11 incompatibility with newer version of deep dependency `entities`. See https://github.com/fb55/entities/issues/209
+* Added a `MapboxStyleCatalogItem` for showing Mapbox styles.
 
 ### v7.11.4
 
