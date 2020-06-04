@@ -95,7 +95,7 @@ const MenuBar = createReactClass({
         onClick={this.handleClick}
       >
         <ul className={Styles.menu}>
-          <If condition={storyEnabled}>
+          {/* <If condition={storyEnabled}>
             <li className={Styles.menuItem}>
               <button
                 className={Styles.storyBtn}
@@ -116,7 +116,7 @@ const MenuBar = createReactClass({
                   />
                 )}
             </li>
-          </If>
+          </If> */}
           <li className={Styles.menuItem}>
             <SettingPanel
               terria={this.props.terria}
