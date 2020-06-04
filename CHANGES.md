@@ -15,8 +15,7 @@ Change Log
 * Fixed a bug where WMS items caused type errors in newer babel and typescript builds, due to mixed mixin methods on DiffableMixin & DiscretelyTimeVaryingMixin
 * Fixed a bug where KmlCatalogItem did not use the proxy for any urls.
 * Add support for `CkanCatalogGroup` and `CkanItemReference`.
-* Fixed difference tool losing datepicker state by keeping it mounted
-* Disabled unhelpful Help button when in `useSmallScreenInterface`
+* Hide the chart legend if there are more than four items to prevent things like FeatureInfo being pushed out of the view and the map resizing.
 * Prevent addedByUser stack overflow
 * Fixed a chart bug where moment points do not stick to the basis item when they are of different scale.
 * Fixed a bug where the moment point selection highlight is lost when changing the satellite imagery date.
@@ -25,6 +24,8 @@ Change Log
 * Updated LocationSearchResults to support multiple search providers
 * Replaced lifesaver icon on the help button with a question mark button
 * Fix handling of points and markers around the anti-meridian in the `LeafletVisualizer`.
+* Fixed difference tool losing datepicker state by keeping it mounted
+* Disabled unhelpful Help button when in `useSmallScreenInterface`
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-31
