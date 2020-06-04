@@ -32,6 +32,7 @@ import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantPropert
 import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
 import replaceUnderscores from "../Core/replaceUnderscores";
+import PolylineDashMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineDashMaterialProperty";
 import createInfoSection from "./createInfoSection";
 
 const proj4 = require("proj4").default;
@@ -281,7 +282,6 @@ class FeatureServerStratum extends LoadableStratum(
 
     return undefined;
   }
-
 
   @computed get info() {
     return [
