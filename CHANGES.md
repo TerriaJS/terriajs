@@ -9,6 +9,7 @@ Change Log
   * Added a popup on remove all stories.
   * Added button for sharing stories.
   * Added a question popup on window close (if there are stories on the map so users don't lose their work).
+* Added a `MapboxStyleCatalogItem` for showing Mapbox styles.
 
 ### v7.11.4
 
