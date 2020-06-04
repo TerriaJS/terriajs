@@ -11,7 +11,9 @@ class SectorTabs extends React.Component {
   constructor(props) {
     super(props);
   }
-
+  state = {
+    selectedId: -1
+  };
   render() {
     const sectors = [
       {
@@ -52,13 +54,22 @@ class SectorTabs extends React.Component {
         image: Finance
       }
     ];
-
+    const { selectedId } = this.state;
     return (
       <div className={Styles.tabsContainer}>
         {sectors.map((sector, id) => {
           return (
-            <div key={id} onClick={() => this.props.showSectorInfo(sector)}>
-              <Icon glyph={sector.icon} />
+            <div
+              key={id}
+              onClick={() => {
+                this.setState({ selectedId: id });
+                this.props.showSectorInfo(sector);
+              }}
+            >
+              <Icon
+                glyph={sector.icon}
+                className={selectedId === id ? Styles.selectedTab : ""}
+              />
             </div>
           );
         })}
