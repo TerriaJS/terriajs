@@ -24,6 +24,8 @@ Change Log
 * Updated LocationSearchResults to support multiple search providers
 * Replaced lifesaver icon on the help button with a question mark button
 * Fix handling of points and markers around the anti-meridian in the `LeafletVisualizer`.
+* Fixed difference tool losing datepicker state by keeping it mounted
+* Disabled unhelpful Help button when in `useSmallScreenInterface`
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-31
