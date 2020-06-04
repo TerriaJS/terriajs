@@ -388,8 +388,8 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
         dataSource.entities.suspendEvents();
 
         let features: Entity[];
-        if (style.idColumns !== undefined && style.timeColumn !== undefined) {
-          features = createLongitudeLatitudeFeaturePerId(<any>style);
+        if (style.isTimeVaryingPointsWithId()) {
+          features = createLongitudeLatitudeFeaturePerId(style);
         } else {
           features = createLongitudeLatitudeFeaturePerRow(style);
         }

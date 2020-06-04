@@ -206,6 +206,25 @@ export default class TableStyle {
   }
 
   /**
+   * Determines if this style is visualized as time varying points tracked by id
+   */
+  isTimeVaryingPointsWithId(): this is {
+    readonly longitudeColumn: TableColumn;
+    readonly latitudeColumn: TableColumn;
+    readonly idColumns: TableColumn[];
+    readonly timeColumn: TableColumn;
+    readonly timeIntervals: (JulianDate | null)[];
+  } {
+    return (
+      this.longitudeColumn !== undefined &&
+      this.latitudeColumn !== undefined &&
+      this.idColumns !== undefined &&
+      this.timeColumn !== undefined &&
+      this.timeIntervals !== undefined
+    );
+  }
+
+  /**
    * Determines if this style is visualized as regions on a map.
    */
   isRegions(): this is { readonly regionColumn: TableColumn } {

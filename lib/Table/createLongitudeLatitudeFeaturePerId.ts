@@ -23,7 +23,7 @@ type RequiredTableStyle = TableStyle & {
   latitudeColumn: TableColumn;
   timeColumn: TableColumn;
   idColumns: TableColumn[];
-  timeIntervals: JulianDate[];
+  timeIntervals: (JulianDate | null)[];
 };
 
 /**
