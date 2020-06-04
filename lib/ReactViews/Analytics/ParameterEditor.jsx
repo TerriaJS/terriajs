@@ -24,6 +24,8 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import Styles from "./parameter-editors.scss";
 import InfoParameterEditor from "./InfoParameterEditor";
 
+const parseCustomMarkdownToReact = require("../Custom/parseCustomMarkdownToReact");
+
 const ParameterEditor = createReactClass({
   displayName: "ParameterEditor",
 
@@ -38,14 +40,26 @@ const ParameterEditor = createReactClass({
 
   renderLabel() {
     return (
-      <label
-        key={this.props.parameter.id}
-        className={Styles.label}
-        htmlFor={this.fieldId + this.props.parameter.type}
-      >
-        {this.props.parameter.name}
-        {this.props.parameter.isRequired && <span> (required)</span>}
-      </label>
+      <div>
+        <label
+          key={this.props.parameter.id}
+          className={Styles.label}
+          htmlFor={this.fieldId + this.props.parameter.type}
+        >
+          {this.props.parameter.name}
+          {this.props.parameter.isRequired && <span> (required)</span>}
+        </label>
+        {typeof this.props.parameter.description === "string" &&
+        this.props.parameter.description !== "" ? (
+          <span>
+            {parseCustomMarkdownToReact(this.props.parameter.description, {
+              parameter: this.props.parameter
+            })}
+          </span>
+        ) : (
+          ""
+        )}
+      </div>
     );
   },
 
