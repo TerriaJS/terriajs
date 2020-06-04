@@ -224,6 +224,9 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
 
     this._inputLayers = new EnumerationParameter(this, {
       id: "Input Layer",
+      description: `Select a layer which contains the tabular data you want to convert to another geography, It should contain at least two columns:  
+- A geography column containing unique codes (eg postcodes)
+- A data column containing the values you want to convert (eg number of households by postcode)`,
       possibleValues,
 
       isRequired: true
