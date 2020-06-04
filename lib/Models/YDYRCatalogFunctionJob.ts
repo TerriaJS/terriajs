@@ -257,6 +257,12 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
           `${this.parameters!["apiUrl"]}download/${this.resultId}?format=csv`
         )
       );
+      this.csvResult!.setTrait(
+        CommonStrata.user,
+        "enableManualRegionMapping",
+        true
+      );
+
       if (regionColumn !== "") {
         this.csvResult!.setTrait(CommonStrata.user, "excludeStyles", [
           regionColumn
