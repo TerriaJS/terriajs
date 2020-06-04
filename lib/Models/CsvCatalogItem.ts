@@ -18,6 +18,7 @@ import isDefined from "../Core/isDefined";
 import { BaseModel } from "./Model";
 import CommonStrata from "./CommonStrata";
 import runLater from "../Core/runLater";
+import { DownloadableData } from "./DownloadableModelData";
 
 // Types of CSVs:
 // - Points - Latitude and longitude columns or address
@@ -32,13 +33,15 @@ import runLater from "../Core/runLater";
 
 const automaticTableStylesStratumName = "automaticTableStyles";
 
-export default class CsvCatalogItem extends TableMixin(
-  AsyncChartableMixin(
-    AutoRefreshingMixin(
-      UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
+export default class CsvCatalogItem
+  extends TableMixin(
+    AsyncChartableMixin(
+      AutoRefreshingMixin(
+        UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
+      )
     )
   )
-) {
+  implements DownloadableData {
   static get type() {
     return "csv";
   }
@@ -73,6 +76,30 @@ export default class CsvCatalogItem extends TableMixin(
   @computed
   get hasLocalData(): boolean {
     return isDefined(this._csvFile);
+  }
+
+  async downloadData() {
+    if (isDefined(this._csvFile)) {
+      return {
+        name: (this.name || this.uniqueId)!,
+        file: this._csvFile
+      };
+    }
+    if (isDefined(this.csvString)) {
+      return {
+        name: (this.name || this.uniqueId)!,
+        file: new Blob([this.csvString])
+      };
+    }
+
+    if (isDefined(this.url)) {
+      return this.url;
+    }
+
+    throw new TerriaError({
+      sender: this,
+      message: "No data available to download."
+    });
   }
 
   @computed
