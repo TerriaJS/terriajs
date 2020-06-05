@@ -5,26 +5,27 @@
   @include headingContainer;
   justify-content: space-evenly;
   border-radius: $radius-small;
-  background-color: #cfd6e6;
-  margin: 0 5px;
+  background-color: $lighter;
+  margin: 0 8px;
   svg {
     // height: $input-height;
     // width: $input-height;
-    color: black;
+    color: $color-primary;
     cursor: pointer;
-    height: 20px;
-    width: 20px;
+    height: 24px;
+    width: 24px;
     padding: $padding;
     fill-opacity: 1;
     border-radius: 2px;
+    transition: background-color 200ms ease;
     &:hover {
-      background-color: #e8edf4;
+      background-color: $side-panel-button-hover;
     }
   }
   @media (max-width: $sm) {
     border-radius: 0;
     margin: 0;
-    background-color: #f6f7fa;
+    background-color: $side-panel-background-color;
   }
 }
 .selectedTab {

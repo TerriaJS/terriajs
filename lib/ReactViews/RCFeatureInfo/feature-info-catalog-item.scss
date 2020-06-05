@@ -1,0 +1,14 @@
+@import "~terriajs-variables";
+
+.group {
+}
+
+.sections {
+  composes: list-reset from "../../Sass/common/_base.scss";
+}
+
+.message-item {
+  background: $info-color;
+  color: $dark;
+  padding: 5px 8px;
+}

@@ -30,6 +30,8 @@
 .storyBtn {
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn--map from "../../Sass/common/_buttons.scss";
+  display: inline-block;
+  margin-left: 8px;
   svg {
     fill: #9ca1aa;
     margin: 0 3px 0 4px;
