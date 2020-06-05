@@ -12,18 +12,37 @@ $font-mono: monospace, sans-serif;
 $font-feature-info: $font-mono;
 $font: $font-base;
 
+$light: #dededf;
+$lighter: #c8d7ea;
+$lightest: #f5f7fa;
+
+// FloatingButtons
+$floating-buttons-bg: rgba(255, 255, 255, 0.7);
+$floating-buttons-bg-hover: rgba(255, 255, 255, 0.9);
+$floating-buttons-icon-fill: rgba(0, 0, 0, 0.8);
+$floating-buttons-text-color: rgba(0, 0, 0, 0.8);
+
+$close-icon-info-panel-button: rgba(0, 0, 0, 0.4);
+
+// SidePanel
+$side-panel-background-color: $light;
+$side-panel-background-image: linear-gradient(315deg, $light 0%, $lightest 74%);
+$side-panel-button-hover: #e8edf4;
+
 $color-primary: #0a478c;
+$color-primary-gradient: linear-gradient(135deg, #1bb4ec, #e85e8e) 0a478c;
+$color-secondary: #06ccff;
 $color-primary-disabled: #595b60;
+
 @function get-hover-color($base-color) {
   @return lighten($base-color, 10%);
 }
-$color-secondary: #06ccff;
 
 $animation-fast: 0.1s;
 $dark: #404040;
 $dark-with-overlay: #667080;
 $dark-lighter: #595b60;
-$grey: #888888;
+$grey: #000000;
 $grey-lighter: #ddd;
 // todo: Fix during overhaul
 $grey-lighter2: #e6e6e6;
@@ -76,8 +95,8 @@ $input-height-large: 48px;
 $input-glyph-height: 24px; // This value should be $input-height * 0.6
 $input-glyph-margin: 8px; // This value should be $input-height * 0.2
 
-$sm-logo-height: $input-height;
-$logo-height: 70px;
+$sm-logo-height: 30px;
+$logo-height: 60px;
 $mobile-header-height: 50px;
 
 $modal-bg: #fff;
@@ -96,11 +115,11 @@ $dropdown-hover-color: orange;
 
 $data-catalog-color: $text-black;
 
-$feature-info-bg: rgba($dark, 0.95);
+$feature-info-bg: $floating-buttons-bg;
 $feature-info-section-bg: $overlay;
-$feature-info-color: $text-light;
-$feature-info-header-bg: $dark;
-$feature-info-btn-color: $text-light;
+$feature-info-color: $floating-buttons-text-color;
+$feature-info-header-bg: $floating-buttons-bg;
+$feature-info-btn-color: $floating-buttons-text-color;
 // $feature-info-table-odd-row-bg: lighten($feature-info-bg, 5%); // Optionally define for stripy tables.
 $feature-info-table-border-style: 1px solid $dark;
 // $feature-info-table-width: 100%; // Optionally define to force tables to the full width of the feature info panel.
@@ -144,6 +163,7 @@ $border-color: rgba(#fff, 0.15);
 $border-style: 1px solid $border-color;
 $box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.12), 0 2px 2px 0 rgba(0, 0, 0, 0.24);
 
+$radius-big: 6px;
 $radius-medium: 3px;
 $radius-small: 2px;
 
