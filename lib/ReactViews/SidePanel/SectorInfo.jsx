@@ -2,6 +2,8 @@ import React from "react";
 import Styles from "./sector_info.scss";
 import PropTypes from "prop-types";
 import classNames from "classnames";
+import Icon from "../Icon.jsx";
+import { Small, Medium } from "../Generic/Responsive";
 class SectorInfo extends React.Component {
   constructor(props) {
     super(props);
@@ -10,9 +12,14 @@ class SectorInfo extends React.Component {
     const { sector } = this.props;
     if (sector !== null) {
       return (
-        <>
+        <div>
           <div className={Styles.panelHeading}>
             <span className={Styles.sectorTitle}>{sector.title}</span>
+            <Small>
+              <button className={Styles.exitBtn} onClick={this.props.close}>
+                <Icon glyph={Icon.GLYPHS.close} />
+              </button>
+            </Small>
           </div>
           <div className={Styles.infoContainer}>
             <div
@@ -23,7 +30,7 @@ class SectorInfo extends React.Component {
             />
             <p className={Styles.details}>{sector.info}</p>
           </div>
-        </>
+        </div>
       );
     }
     return (

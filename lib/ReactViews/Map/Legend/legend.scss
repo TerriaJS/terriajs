@@ -34,10 +34,10 @@ $distance-bg: rgba($dark, 0.9);
 .distanceLegend {
   composes: baseLegend;
   // Adjust colors to match btn--map.
-  background-color: $floating-buttons-bg;
-  color: $floating-buttons-text-color;
+  background-color: $charcoal-grey;
+  color: $text-light;
   &:hover {
-    background: $floating-buttons-bg-hover;
+    background: $color-primary;
   }
   //
   margin-right: $padding-small;
@@ -67,7 +67,7 @@ $distance-bg: rgba($dark, 0.9);
 
 .distanceLegend {
   &:hover {
-    background-color: $floating-buttons-bg;
+    background: $charcoal-grey;
   }
   text-align: center;
   width: 110px;

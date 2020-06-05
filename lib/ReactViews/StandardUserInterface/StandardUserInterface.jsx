@@ -151,6 +151,7 @@ const StandardUserInterface = createReactClass({
     );
 
     const terria = this.props.terria;
+    console.log("User Interface", terria.homeView, terria.initialView);
     const allBaseMaps = this.props.allBaseMaps;
 
     const showStoryBuilder =
@@ -313,18 +314,22 @@ const StandardUserInterface = createReactClass({
                   .explorerPanelIsVisible
               })}
             >
-              {/*    <MenuBar
+              {/*
+            <Medium>
+              <MenuBar
                 terria={terria}
                 viewState={this.props.viewState}
                 allBaseMaps={allBaseMaps}
                 menuItems={customElements.menu}
                 animationDuration={animationDuration}
-              />*/}
+              />
               <MapNavigation
                 terria={terria}
                 viewState={this.props.viewState}
                 navItems={customElements.nav}
               />
+            </Medium>
+            */}
             </div>
           </If>
 

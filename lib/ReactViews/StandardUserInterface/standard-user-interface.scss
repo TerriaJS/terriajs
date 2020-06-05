@@ -38,7 +38,7 @@
 
 .ui {
   overflow: hidden;
-  background: $light;
+  background: $dark;
   width: 100%;
   height: 100vh;
 }
@@ -49,14 +49,13 @@
 
 .sidePanel {
   font-family: $font-pop;
-  background-color: $side-panel-background-color;
-  background-image: $side-panel-background-image;
+  background-color: #b8c6db;
+  background-image: linear-gradient(315deg, #b8c6db 0%, #f5f7fa 74%);
   // background: $dark-blue;
   width: $work-bench-width;
   flex-basis: $work-bench-width;
   max-width: $work-bench-width;
   box-sizing: border-box;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
   h1 {
     margin: 0;
   }
@@ -158,9 +157,6 @@
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   border-right: 1px solid rgba(255, 255, 255, 0.2);
   visibility: visible;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-  z-index: 10;
-  padding: 16px;
 }
 
 .sidePanelHide {

@@ -14,6 +14,9 @@ class SidePanelContent extends React.Component {
       sector
     });
   };
+  closeSectorInfo = () => {
+    this.setState({ sector: null });
+  };
   render() {
     const { sector } = this.state;
 
@@ -21,10 +24,10 @@ class SidePanelContent extends React.Component {
       <>
         <Medium>
           <SectorTabs showSectorInfo={this.showSectorInfo} />
-          <SectorInfo sector={sector} />
+          <SectorInfo sector={sector} close={this.closeSectorInfo} />
         </Medium>
         <Small>
-          <SectorInfo sector={sector} />
+          <SectorInfo sector={sector} close={this.closeSectorInfo} />
           <SectorTabs showSectorInfo={this.showSectorInfo} />
         </Small>
       </>

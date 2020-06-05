@@ -59,8 +59,8 @@ const FullScreenButton = createReactClass({
     }
     return (
       <span>
-        <Icon glyph={Icon.GLYPHS.left} />
         {btnText}
+        <Icon glyph={Icon.GLYPHS.right} />
       </span>
     );
   },

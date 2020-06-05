@@ -834,9 +834,6 @@
     "mapboxVectorTile": {
       "name": "Mapbox Vector Tile"
     },
-    "mapboxStyle": {
-      "name": "Mapbox Style"
-    },
     "ogr": {
       "name": "Unknown / Converted to GeoJSON",
       "dataSourceErrorMessage": "This data source does not have any details available.",
