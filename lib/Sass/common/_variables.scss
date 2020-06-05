@@ -17,8 +17,10 @@ $lighter: #c8d7ea;
 $lightest: #f5f7fa;
 
 // FloatingButtons
-$floating-buttons-bg: rgba(255, 255, 255, 0.2);
+$floating-buttons-bg: rgba(255, 255, 255, 0.7);
+$floating-buttons-bg-hover: rgba(255, 255, 255, 0.9);
 $floating-buttons-icon-fill: rgba(0, 0, 0, 0.8);
+$floating-buttons-text-color: rgba(0, 0, 0, 0.8);
 
 // SidePanel
 $side-panel-background-color: $light;
