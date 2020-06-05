@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### mobx-next-release (mobx-33)
+* Ported timeseries tables.
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-32
@@ -27,7 +28,6 @@ Change Log
 * Updated LocationSearchResults to support multiple search providers
 * Replaced lifesaver icon on the help button with a question mark button
 * Fix handling of points and markers around the anti-meridian in the `LeafletVisualizer`.
-* Ported timeseries tables.
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 * Fixed difference tool losing datepicker state by keeping it mounted
 * Disabled unhelpful Help button when in `useSmallScreenInterface`
