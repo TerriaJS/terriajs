@@ -7,6 +7,11 @@ import isDefined from "../../lib/Core/isDefined";
 import { JsonArray } from "../../lib/Core/Json";
 import i18next from "i18next";
 
+import Color from "terriajs-cesium/Source/Core/Color";
+import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
+import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+
 configure({
   enforceActions: "observed",
   computedRequiresReaction: true
@@ -22,6 +27,10 @@ const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
 describe("ArcGisFeatureServerCatalogItem", function() {
   const featureServerUrl =
     "http://example.com/arcgis/rest/services/Water_Network/FeatureServer/2";
+
+  const featureServerUrl2 =
+    "http://example.com/arcgis/rest/services/Parks/FeatureServer/3";
+
   let terria: Terria;
   let item: ArcGisFeatureServerCatalogItem;
 
@@ -43,6 +52,14 @@ describe("ArcGisFeatureServerCatalogItem", function() {
         );
         url = url.replace(/FeatureServer\/2\/?\?.*/i, "2.json");
         args[0] = "test/ArcGisFeatureServer/Water_Network/" + url;
+      } else if (url.match("Parks/FeatureServer")) {
+        url = url.replace(/^.*\/FeatureServer/, "FeatureServer");
+        url = url.replace(
+          /FeatureServer\/query\?f=json&layerDefs=%7B3%3A%22.*%22%7D$/i,
+          "layerDefs.json"
+        );
+        url = url.replace(/FeatureServer\/3\/?\?.*/i, "3.json");
+        args[0] = "test/ArcGisFeatureServer/Parks/" + url;
       }
 
       return realLoadWithXhr(...args);
@@ -116,6 +133,76 @@ describe("ArcGisFeatureServerCatalogItem", function() {
 
           const features = <JsonArray>geoJsonData.features;
           expect(features.length).toEqual(13);
+        }
+      }
+    });
+  });
+
+  describe("updateEntityWithEsriStyle", function() {
+    it("does not style polyline if polygon outline has style.", async function() {
+      runInAction(() => {
+        item.setTrait(CommonStrata.definition, "url", featureServerUrl2);
+      });
+
+      await item.loadMetadata();
+      await item.loadMapItems();
+
+      const expectedOutlineWidth = 0.4;
+      const expectedPolygonFilledColor: number = Color.fromBytes(
+        215,
+        203,
+        247,
+        255
+      ).toRgba();
+      const expectedPolygonOutlineColor: number = Color.fromBytes(
+        110,
+        110,
+        110,
+        255
+      ).toRgba();
+      const expectedPolylineColor: number = Color.fromBytes(
+        0,
+        0,
+        0,
+        255
+      ).toRgba();
+
+      item.mapItems.map(mapItem => {
+        mapItem.entities.values.map(entity => {
+          const aTime = new JulianDate();
+          const actualPolygonOutlineWidth = (<ConstantProperty>(
+            entity.polygon.outlineWidth
+          )).getValue(aTime);
+          expect(actualPolygonOutlineWidth).toEqual(expectedOutlineWidth);
+
+          const acutualPolygonColor = (<any>entity.polygon.material).color
+            .getValue(aTime)
+            .toRgba();
+          expect(acutualPolygonColor).toEqual(expectedPolygonFilledColor);
+
+          const actualPolygonOutlineColor = (<any>(
+            (<any>entity.polygon.outlineColor).getValue(aTime)
+          )).toRgba();
+          expect(actualPolygonOutlineColor).toEqual(
+            expectedPolygonOutlineColor
+          );
+
+          const acutalPolylineColor = (<any>entity.polyline.material).color
+            .getValue(aTime)
+            .toRgba();
+          expect(acutalPolylineColor).toEqual(expectedPolylineColor);
+        });
+      });
+
+      expect(item.geoJsonItem).toBeDefined();
+      if (isDefined(item.geoJsonItem)) {
+        const geoJsonData = item.geoJsonItem.geoJsonData;
+        expect(geoJsonData).toBeDefined();
+        if (isDefined(geoJsonData)) {
+          expect(geoJsonData.type).toEqual("FeatureCollection");
+
+          const features = <JsonArray>geoJsonData.features;
+          expect(features.length).toEqual(2);
         }
       }
     });
