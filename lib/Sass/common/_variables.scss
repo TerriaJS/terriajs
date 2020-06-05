@@ -22,12 +22,15 @@ $floating-buttons-bg-hover: rgba(255, 255, 255, 0.9);
 $floating-buttons-icon-fill: rgba(0, 0, 0, 0.8);
 $floating-buttons-text-color: rgba(0, 0, 0, 0.8);
 
+$close-icon-info-panel-button: rgba(0, 0, 0, 0.4);
+
 // SidePanel
 $side-panel-background-color: $light;
 $side-panel-background-image: linear-gradient(315deg, $light 0%, $lightest 74%);
 $side-panel-button-hover: #e8edf4;
 
 $color-primary: #0a478c;
+$color-primary-gradient: linear-gradient(135deg, #1bb4ec, #e85e8e) 0a478c;
 $color-secondary: #06ccff;
 $color-primary-disabled: #595b60;
 
@@ -93,8 +96,8 @@ $input-glyph-height: 24px; // This value should be $input-height * 0.6
 $input-glyph-margin: 8px; // This value should be $input-height * 0.2
 
 $sm-logo-height: $input-height;
-$logo-height: 70px;
-$mobile-header-height: 50px;
+$logo-height: 60px;
+$mobile-header-height: 30px;
 
 $modal-bg: #fff;
 $modal-tab-bg: $modal-bg;
