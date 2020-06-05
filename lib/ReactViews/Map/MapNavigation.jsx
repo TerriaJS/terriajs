@@ -52,16 +52,16 @@ const MapNavigation = createReactClass({
           </div>
         </Medium>
         <div className={Styles.controls}>
-          <If condition={!this.props.terria.configParameters.disableMyLocation}>
+          {/*       <If condition={!this.props.terria.configParameters.disableMyLocation}>
             <div className={Styles.control}>
               <MyLocation terria={this.props.terria} />
             </div>
-          </If>
-          <If condition={!this.props.terria.configParameters.disableSplitter}>
+          </If>*/}
+          {/* <If condition={!this.props.terria.configParameters.disableSplitter}>
             <div className={Styles.control}>
               <ToggleSplitterTool terria={this.props.viewState.terria} />
             </div>
-          </If>
+          </If>*/}
           <For each="item" of={this.props.navItems} index="i">
             <div className={Styles.control} key={i}>
               {item}

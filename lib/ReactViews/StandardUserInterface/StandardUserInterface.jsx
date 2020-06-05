@@ -313,13 +313,13 @@ const StandardUserInterface = createReactClass({
                   .explorerPanelIsVisible
               })}
             >
-              <MenuBar
+              {/*    <MenuBar
                 terria={terria}
                 viewState={this.props.viewState}
                 allBaseMaps={allBaseMaps}
                 menuItems={customElements.menu}
                 animationDuration={animationDuration}
-              />
+              />*/}
               <MapNavigation
                 terria={terria}
                 viewState={this.props.viewState}
