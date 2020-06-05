@@ -8,7 +8,6 @@
   display: none;
   backdrop-filter: blur(0.8);
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-
   svg {
     fill: $feature-info-color;
   }
@@ -66,14 +65,14 @@
   &:hover,
   &:focus {
     svg {
-      fill: $color-primary;
+      fill: $dark;
     }
   }
   svg {
     height: 23px;
     width: 23px;
     display: block;
-    fill: $feature-info-btn-color;
+    fill: $close-icon-info-panel-button;
   }
 }
 

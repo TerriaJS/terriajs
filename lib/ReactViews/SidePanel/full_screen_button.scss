@@ -21,9 +21,13 @@
 .btn {
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn--map from "../../Sass/common/_buttons.scss";
-  display: flex;
-  background: $color-primary;
+  //display: flex;
+  background: $floating-buttons-bg;
+  color: $floating-buttons-text-color;
   border-radius: 3px;
+  &:hover {
+    background: $floating-buttons-bg-hover;
+  }
   span {
     display: flex;
     line-height: 1;
