@@ -28,6 +28,7 @@ import TableTraits from "../Traits/TableTraits";
 import ColorPalette from "./ColorPalette";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
+import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
 
 const getColorForId = createColorForIdTransformer();
 const defaultColor = "yellow";
@@ -582,7 +583,11 @@ export default class TableStyle {
         return null;
       }
 
-      const nextDateIndex = sortedIndex(sortedStartDates, date);
+      const nextDateIndex = binarySearch(
+        sortedStartDates,
+        date,
+        (d1: JulianDate, d2: JulianDate) => JulianDate.compare(d1, d2)
+      );
       const nextDate = sortedStartDates[nextDateIndex + 1];
       if (nextDate) {
         return nextDate;
