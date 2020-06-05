@@ -19,7 +19,7 @@ import MenuBar from "../Map/MenuBar";
 import ExperimentalFeatures from "../Map/ExperimentalFeatures";
 import MobileHeader from "../Mobile/MobileHeader";
 import Notification from "../Notification/Notification";
-// import ProgressBar from '../Map/ProgressBar';
+import ProgressBar from "../Map/ProgressBar";
 import SidePanel from "../SidePanel/SidePanel";
 import processCustomElements from "./processCustomElements";
 import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
@@ -278,7 +278,7 @@ const StandardUserInterface = observer(
                   </Medium>
 
                   <section className={Styles.map}>
-                    {/* <ProgressBar terria={terria}/> */}
+                    <ProgressBar terria={terria} />
                     <MapColumn
                       terria={terria}
                       viewState={this.props.viewState}
