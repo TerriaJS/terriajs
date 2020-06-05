@@ -1,27 +1,24 @@
 @import "../../Sass/common/mixins";
 @import "~terriajs-variables";
 
-.panelHeading {
-  @include headingContainer;
-  padding: $padding-small;
+.panel {
+  background: $side-panel-background-image;
+  height: 100%;
+  overflow-y: auto;
+  position: relative;
   @media (max-width: $sm) {
-    background-color: #f6f7fa;
+    padding: $padding;
   }
 }
+
 .sectorTitle {
   font-family: $font-base;
   color: $color-primary;
   line-height: 1;
-  font-weight: $font-weight-bold;
-  font-size: 18px;
-  text-align: left;
-  margin: 7px 2px;
-  flex-grow: 2;
 }
 .sectorInfo {
   display: flex;
   background-color: $grey-lightest;
-  padding: $padding-small;
   font-size: $font-size-small;
   border-radius: $radius-small;
   background-image: url("../../../wwwroot/images/sectors/agriculture.png");
@@ -33,13 +30,6 @@
   }
 }
 .infoContainer {
-  overflow-y: auto;
-  @media (max-width: $xs) {
-    max-height: 250px;
-  }
-  @media (max-height: 640px) {
-    max-height: 150px;
-  }
 }
 .imageContainer {
   background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(0, 0, 0, 0.6)),
@@ -63,39 +53,13 @@
   font-weight: 500;
   line-height: 1.5;
 }
-.details {
-  //background-color: #bdcadd;
-  padding: $padding;
-  font-size: $font-size-small;
-  font-weight: 500;
-  border-radius: $radius-small;
-  line-height: 2;
-  @media (max-width: $sm) {
-    overflow-y: scroll;
-    margin: 0;
-    border-radius: 0;
-    //background-color: #b8c6db;
-    //background-image: linear-gradient(315deg, #b8c6db 0%, #f5f7fa 74%);
-  }
-  @media (max-width: $xs) {
-    max-height: 250px;
-  }
-  @media (max-height: 640px) {
-    max-height: 150px;
-  }
-  // @media (orientation: landscape) {
-  //   max-height: 190px;
-  // }
-  h4 {
-    margin: 0;
-  }
-}
 
 .exitBtn {
   z-index: 999;
   composes: btn from "../../Sass/common/_buttons.scss";
-  display: block;
-  padding: $padding * 0.8 $padding * 1.6;
+  position: absolute;
+  right: 20px;
+
   &:not([disabled]):hover {
     svg {
       fill: $color-primary;

@@ -2,9 +2,11 @@
 @import url("https://fonts.googleapis.com/css?family=Lato:400,700");
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
 
-// Receipt Variables
-$sectionHeight: 50px;
-// Receipt Variables Ends Here
+//screen sizes
+$xs: 480px;
+$sm: 768px;
+$md: 992px;
+$lg: 1300px;
 
 $font-pop: "Montserrat", sans-serif;
 $font-base: "Montserrat", sans-serif;
@@ -16,6 +18,9 @@ $light: #dededf;
 $lighter: #c8d7ea;
 $lightest: #f5f7fa;
 
+$tabs-container-bg: #d9e2ec;
+$selected-tab-background-color: #f5f7fa;
+
 // FloatingButtons
 $floating-buttons-bg: rgba(255, 255, 255, 0.7);
 $floating-buttons-bg-hover: rgba(255, 255, 255, 0.9);
@@ -26,7 +31,7 @@ $close-icon-info-panel-button: rgba(0, 0, 0, 0.4);
 
 // SidePanel
 $side-panel-background-color: $light;
-$side-panel-background-image: linear-gradient(315deg, $light 0%, $lightest 74%);
+$side-panel-background-image: linear-gradient(315deg, #b8c6db 0%, #f5f7fa 74%);
 $side-panel-button-hover: #e8edf4;
 
 $color-primary: #0a478c;
@@ -85,7 +90,7 @@ $warning: #ff5b6f;
 $info-color: #fed17f;
 $link-text-decoration: none;
 
-$padding: 10px;
+$padding: 16px;
 $padding-small: 5px;
 $padding-mini: 3px;
 
@@ -96,7 +101,7 @@ $input-glyph-height: 24px; // This value should be $input-height * 0.6
 $input-glyph-margin: 8px; // This value should be $input-height * 0.2
 
 $sm-logo-height: 30px;
-$logo-height: 60px;
+$logo-height: 50px;
 $mobile-header-height: 50px;
 
 $modal-bg: #fff;
@@ -162,6 +167,7 @@ $chart-height: 250px;
 $border-color: rgba(#fff, 0.15);
 $border-style: 1px solid $border-color;
 $box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.12), 0 2px 2px 0 rgba(0, 0, 0, 0.24);
+$box-shadow-bigger: 0 0 20px rgba(0, 0, 0, 0.3);
 
 $radius-big: 6px;
 $radius-medium: 3px;
@@ -169,12 +175,6 @@ $radius-small: 2px;
 
 $ring-width: 10px;
 $compass-width: 55px;
-
-//screen sizes
-$xs: 480px;
-$sm: 768px;
-$md: 992px;
-$lg: 1300px;
 
 $front-component-z-index: 99;
 $notification-window-z-index: 99999;

@@ -2,18 +2,17 @@
 @import "~terriajs-variables";
 
 .tabsContainer {
-  @include headingContainer;
+  display: flex;
   justify-content: space-evenly;
   border-radius: $radius-small;
-  background-color: $lighter;
+  background-color: $tabs-container-bg;
+
   svg {
-    // height: $input-height;
-    // width: $input-height;
     color: $color-primary;
     cursor: pointer;
     height: 24px;
     width: 24px;
-    padding: $padding;
+    padding: 10px;
     fill-opacity: 1;
     border-radius: 2px;
     transition: background-color 200ms ease;
@@ -24,9 +23,8 @@
   @media (max-width: $sm) {
     border-radius: 0;
     margin: 0;
-    background-color: $side-panel-background-color;
   }
 }
 .selectedTab {
-  background-color: #f5f7fa;
+  background-color: $selected-tab-background-color;
 }

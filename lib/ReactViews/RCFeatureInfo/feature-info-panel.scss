@@ -7,7 +7,7 @@
   border-radius: $radius-big;
   display: none;
   backdrop-filter: blur(0.8);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  box-shadow: $box-shadow-bigger;
   svg {
     fill: $feature-info-color;
   }

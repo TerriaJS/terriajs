@@ -199,15 +199,15 @@ const RCStoryPanel = createReactClass({
             </div>
           </Medium>
           <div className={Styles.story}>
-            <div className={Styles.storyHeader}>
-              {/* <Small>{locationBtn}</Small> */}
+            {/*<div className={Styles.storyHeader}>
+               <Small>{locationBtn}</Small>
               {story.title && story.title.length > 0 ? (
                 <h3>{story.title}</h3>
               ) : (
                 <h3> {t("story.untitled")} </h3>
               )}
               <Small>{exitBtn}</Small>
-            </div>
+            </div>*/}
             {story.text && (
               <div className={Styles.body}>
                 {parseCustomHtmlToReact(story.text)}

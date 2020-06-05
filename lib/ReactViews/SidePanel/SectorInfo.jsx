@@ -12,14 +12,14 @@ class SectorInfo extends React.Component {
     const { sector } = this.props;
     if (sector !== null) {
       return (
-        <div>
-          <div className={Styles.panelHeading}>
-            <span className={Styles.sectorTitle}>{sector.title}</span>
+        <div className={Styles.panel}>
+          <div>
             <Small>
               <button className={Styles.exitBtn} onClick={this.props.close}>
                 <Icon glyph={Icon.GLYPHS.close} />
               </button>
             </Small>
+            <h3 className={Styles.sectorTitle}>{sector.title}</h3>
           </div>
           <div className={Styles.infoContainer}>
             <div
@@ -34,11 +34,11 @@ class SectorInfo extends React.Component {
       );
     }
     return (
-      <>
-        <div className={Styles.panelHeading}>
-          <span className={Styles.sectorTitle}>Welcome</span>
+      <div className={Styles.panel}>
+        <div>
+          <h3 className={Styles.sectorTitle}>Welcome</h3>
         </div>
-        <div className={Styles.details}>
+        <div className={Styles.infoContainer}>
           <h4>
             The RECEIPT climate story explorer allows you to explore storylines
             that show indirect impact of climate change on EU.
@@ -57,7 +57,7 @@ class SectorInfo extends React.Component {
             https://climatestorylines.eu/{" "}
           </a>
         </div>
-      </>
+      </div>
     );
   }
 }

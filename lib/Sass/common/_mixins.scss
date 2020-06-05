@@ -1,12 +1,4 @@
 @import "~terriajs-variables";
-// Receipt Mixins
-@mixin headingContainer {
-  display: flex;
-  align-items: center;
-  height: $sectionHeight;
-}
-
-// Receipt Mixin Ends Here
 
 @mixin transition($transition...) {
   -moz-transition: $transition;

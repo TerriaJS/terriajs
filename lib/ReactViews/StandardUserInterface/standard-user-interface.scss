@@ -56,7 +56,7 @@
   flex-basis: $work-bench-width;
   max-width: $work-bench-width;
   box-sizing: border-box;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  box-shadow: $box-shadow-bigger;
   h1 {
     margin: 0;
   }
@@ -71,7 +71,8 @@
 }
 .map {
   @include transition(left $animation-fast ease-in);
-  height: 100%;
+  height: calc(35vh - 50px);
+
   @media (min-width: $sm) {
     position: absolute;
     left: 0;
@@ -81,19 +82,35 @@
   }
   @media (orientation: landscape) {
     flex: 1;
+    height: 100%;
   }
 }
 .smallMap {
-  height: 300px;
+  //height: 300px;
 }
 .storyPanelWrapper {
+  height: calc(100vh - 128px);
+
+  @media (max-width: $sm) {
+    background: $side-panel-background-image;
+    box-shadow: $box-shadow-bigger;
+    z-index: 10;
+  }
+
   @media (orientation: landscape) {
     flex: 1;
+    height: calc(100vh - 125px);
   }
 }
 .tabsContainer {
+  background: $side-panel-background-image;
+  box-shadow: $box-shadow-bigger;
+  z-index: 10;
+  height: calc(60vh - 44px);
+
   @media (orientation: landscape) {
     flex: 1;
+    height: calc(100vh - 125px);
   }
 }
 .feedback {
@@ -158,7 +175,7 @@
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   border-right: 1px solid rgba(255, 255, 255, 0.2);
   visibility: visible;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  box-shadow: $box-shadow-bigger;
   z-index: 10;
   padding: 16px;
 }

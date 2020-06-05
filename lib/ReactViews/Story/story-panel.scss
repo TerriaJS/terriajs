@@ -70,9 +70,13 @@
 .story {
   flex-grow: 2;
   max-width: 100%;
-  // @media (min-width: $sm) {
-  //   max-width: calc(100% - 104px);
-  // }
+  height: calc(100vh - 98px);
+  @media (max-width: $sm) {
+    height: calc(68vh - 50px);
+  }
+  @media (orientation: landscape) {
+    height: calc(94vh - 50px);
+  }
 }
 
 .storyHeader {
@@ -80,8 +84,6 @@
   max-width: 100%;
   overflow: hidden;
   padding: $padding;
-  // border-bottom: 1px solid $field-border;
-  padding: 0;
   h3 {
     margin: $padding;
     font-size: 1.2rem;
@@ -93,22 +95,15 @@
 }
 
 .body {
-  padding: $padding * 1.5 $padding;
+  background: red;
+  padding: $padding 4px;
   color: $dark;
   font-size: 14px;
   line-height: 1.5;
   font-family: $font-base;
-  height: calc(100vh - 200px);
+  height: calc(100% - 30px);
   overflow-y: auto;
 
-  @media (max-width: $xs) {
-    max-height: 250px;
-    height: calc(100vh - 100px);
-  }
-  @media (max-height: 640px) {
-    max-height: 150px;
-    height: inherit;
-  }
   img {
     max-width: 100%;
   }
@@ -139,7 +134,7 @@
   z-index: 999;
   composes: btn from "../../Sass/common/_buttons.scss";
   display: block;
-  padding: $padding * 0.8 $padding * 1.6;
+  padding: 0 8px;
   &:not([disabled]):hover {
     svg {
       fill: $color-primary;
@@ -158,9 +153,6 @@
     height: 15px;
   }
 }
-// .exitBtn {
-//   border-left: 1px solid $field-border;
-// }
 
 .locationBtn {
   border-right: 1px solid $field-border;
@@ -184,19 +176,16 @@
   }
 }
 .navs {
-  // display: flex;
-  // flex: 1;
-  // justify-content: center;
-  // align-items: center;
-  // height: 50px;
   text-align: center;
 }
 .navBtn {
-  padding: $padding * 0.8 $padding * 2.2;
+  height: 30px;
+  background: green;
   button {
     background: transparent;
     border: 0;
     box-shadow: 0;
+    margin-top: 10px;
   }
   svg {
     fill: #888888;

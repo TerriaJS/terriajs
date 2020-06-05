@@ -2,15 +2,14 @@
 @import "../../Sass/common/mixins";
 
 .ui {
-  // position: fixed;
-  // top: 0;
-  // left: 0;
   width: 100vw;
   height: $mobile-header-height;
   z-index: 102;
   @media (min-width: $sm) {
     left: -99999px;
   }
+  box-shadow: $box-shadow-bigger;
+  background: $side-panel-background-image;
 }
 
 .mobile-header {
@@ -19,7 +18,6 @@
   justify-content: space-between;
   font-family: $font-pop;
   width: 100%;
-  background: $light;
   padding: $padding-small;
   height: 100%;
   box-sizing: border-box;
@@ -93,11 +91,13 @@
 
 .group-left {
   position: absolute;
-  left: 5px;
+  left: 12px;
+  top: 12px;
 
-  > * {
-    display: inline-block;
-  }
+  //
+  //> * {
+  //  display: inline-block;
+  //}
 }
 
 .group-right {

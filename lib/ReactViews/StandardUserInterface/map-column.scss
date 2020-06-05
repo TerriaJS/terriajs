@@ -45,6 +45,13 @@
   top: 0;
   width: 100%;
   z-index: 0;
+  @media (max-width: $sm) {
+    height: calc(35vh - 50px) !important;
+  }
+  @media (orientation: landscape) {
+    flex: 1;
+    height: 100% !important;
+  }
 }
 
 @include empty-module("feedback");
