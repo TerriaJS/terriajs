@@ -25,10 +25,10 @@ import StoryPanel from "./../Story/StoryPanel.jsx";
 import RCStoryPanel from "./../Story/RCStoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 import ToolPanel from "./../ToolPanel.jsx";
-import SectorTabs from "./../SidePanel/SectorTabs";
+// import SectorTabs from "./../SidePanel/SectorTabs";
 import SatelliteGuide from "../Guide/SatelliteGuide.jsx";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage.jsx";
-import SectorInfo from "../SidePanel/SectorInfo";
+// import SectorInfo from "../SidePanel/SectorInfo";
 import { Small, Medium } from "../Generic/Responsive";
 import classNames from "classnames";
 import "inobounce";
@@ -151,7 +151,6 @@ const StandardUserInterface = createReactClass({
     );
 
     const terria = this.props.terria;
-    console.log("User Interface", terria.homeView, terria.initialView);
     const allBaseMaps = this.props.allBaseMaps;
 
     const showStoryBuilder =
@@ -204,20 +203,21 @@ const StandardUserInterface = createReactClass({
                       />
                     </section>
 
-                    {showStoryPanel && (
+                    {showStoryPanel ? (
                       <div className={Styles.storyPanelWrapper}>
                         <RCStoryPanel
                           terria={terria}
                           viewState={this.props.viewState}
                         />
                       </div>
+                    ) : null}
+
+                    {!showStoryPanel && (
+                      <div className={Styles.tabsContainer}>
+                        <SidePanelContent />
+                      </div>
                     )}
                   </div>
-                  {!showStoryPanel && (
-                    <div className={Styles.tabsContainer}>
-                      <SidePanelContent />
-                    </div>
-                  )}
                 </Small>
                 <Medium>
                   <section className={Styles.map}>
@@ -264,12 +264,12 @@ const StandardUserInterface = createReactClass({
                   >
                     <Branding terria={terria} version={this.props.version} />
                     {!showStoryPanel && <SidePanelContent />}
-                    {showStoryPanel && (
+                    {showStoryPanel ? (
                       <RCStoryPanel
                         terria={terria}
                         viewState={this.props.viewState}
                       />
-                    )}
+                    ) : null}
                     <SidePanel
                       terria={terria}
                       viewState={this.props.viewState}
@@ -313,18 +313,18 @@ const StandardUserInterface = createReactClass({
                   .explorerPanelIsVisible
               })}
             >
-              <MenuBar
+              {/*    <MenuBar
                 terria={terria}
                 viewState={this.props.viewState}
                 allBaseMaps={allBaseMaps}
                 menuItems={customElements.menu}
                 animationDuration={animationDuration}
-              />
-              {/* <MapNavigation
+              />*/}
+              <MapNavigation
                 terria={terria}
                 viewState={this.props.viewState}
                 navItems={customElements.nav}
-              /> */}
+              />
             </div>
           </If>
 
@@ -335,7 +335,7 @@ const StandardUserInterface = createReactClass({
             viewState={this.props.viewState}
           />
 
-          <If
+          {/* <If
             condition={
               !customElements.feedback.length &&
               this.props.terria.configParameters.feedbackUrl &&
@@ -345,7 +345,7 @@ const StandardUserInterface = createReactClass({
             <aside className={Styles.feedback}>
               <FeedbackForm viewState={this.props.viewState} />
             </aside>
-          </If>
+          </If> */}
 
           <div
             className={classNames(

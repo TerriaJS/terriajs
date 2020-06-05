@@ -6,7 +6,7 @@ import "mutationobserver-shim";
 import TerriaViewerWrapper from "../Map/TerriaViewerWrapper.jsx";
 import LocationBar from "../Map/Legend/LocationBar.jsx";
 import DistanceLegend from "../Map/Legend/DistanceLegend.jsx";
-import FeedbackButton from "../Feedback/FeedbackButton.jsx";
+// import FeedbackButton from "../Feedback/FeedbackButton.jsx";
 import ObserveModelMixin from "../ObserveModelMixin";
 import BottomDock from "../BottomDock/BottomDock.jsx";
 import defined from "terriajs-cesium/Source/Core/defined";
@@ -82,7 +82,7 @@ const MapColumn = createReactClass({
   },
 
   render() {
-    const { t } = this.props;
+    // const { t } = this.props;
     // TODO: remove? see: https://bugs.chromium.org/p/chromium/issues/detail?id=1001663
     const isAboveChrome75 =
       chromeVersion && chromeVersion[0] && Number(chromeVersion[0]) > 75;

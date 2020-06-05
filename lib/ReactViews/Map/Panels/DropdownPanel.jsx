@@ -1,7 +1,7 @@
 "use strict";
 
 // proptypes are in mixin
-/* eslint react/prop-types:0*/
+/* eslint react/prop-types:0 */
 
 import React from "react";
 import createReactClass from "create-react-class";
@@ -44,7 +44,7 @@ const DropdownPanel = createReactClass({
 
       this.setState({
         caretOffset: "3px", // caretOffset >= 0 && caretOffset + "px",
-        dropdownOffset: "0px" //dropdownOffset + "px",
+        dropdownOffset: "0px" // dropdownOffset + "px",
       });
     } else {
       this.setState({

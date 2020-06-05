@@ -38,7 +38,7 @@
 
 .ui {
   overflow: hidden;
-  background: $dark;
+  background: $light;
   width: 100%;
   height: 100vh;
 }
@@ -49,11 +49,14 @@
 
 .sidePanel {
   font-family: $font-pop;
-  background: $dark;
+  background-color: $side-panel-background-color;
+  background-image: $side-panel-background-image;
+  // background: $dark-blue;
   width: $work-bench-width;
   flex-basis: $work-bench-width;
   max-width: $work-bench-width;
   box-sizing: border-box;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
   h1 {
     margin: 0;
   }
@@ -89,10 +92,9 @@
   }
 }
 .tabsContainer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
+  @media (orientation: landscape) {
+    flex: 1;
+  }
 }
 .feedback {
   position: absolute;
@@ -156,6 +158,9 @@
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   border-right: 1px solid rgba(255, 255, 255, 0.2);
   visibility: visible;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  padding: 16px;
 }
 
 .sidePanelHide {

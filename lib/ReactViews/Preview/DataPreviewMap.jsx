@@ -54,7 +54,6 @@ const DataPreviewMap = createReactClass({
       analytics: new ConsoleAnalytics()
     });
 
-
     this.terriaPreview.configParameters.hideTerriaLogo = true;
 
     this.terriaPreview.viewerMode = ViewerMode.Leaflet;

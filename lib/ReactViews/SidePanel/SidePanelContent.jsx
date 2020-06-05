@@ -2,21 +2,21 @@ import React from "react";
 import SectorTabs from "./SectorTabs";
 import SectorInfo from "./SectorInfo";
 import { Small, Medium } from "../Generic/Responsive";
+import PropTypes from "prop-types";
+import defined from "terriajs-cesium/Source/Core/defined";
+import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 class SidePanelContent extends React.Component {
   state = {
     sector: null
   };
   showSectorInfo = sector => {
     this.setState({
-      sector: {
-        title: sector.title,
-        info: sector.info
-      }
+      sector
     });
   };
-
   render() {
     const { sector } = this.state;
+
     return (
       <>
         <Medium>
@@ -31,4 +31,11 @@ class SidePanelContent extends React.Component {
     );
   }
 }
+
+SidePanelContent.propTypes = {
+  /**
+   * Terria instance
+   */
+  terria: PropTypes.object.isRequired
+};
 export default SidePanelContent;
