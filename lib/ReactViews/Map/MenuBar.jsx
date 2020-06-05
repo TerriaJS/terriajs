@@ -55,6 +55,13 @@ const MenuBar = createReactClass({
   dismissSatelliteGuidanceAction() {
     this.props.viewState.toggleFeaturePrompt("mapGuidesLocation", true, true);
   },
+
+  onAddDataClicked(event) {
+    event.stopPropagation();
+    this.props.viewState.topElement = "AddData";
+    this.props.viewState.openAddData();
+  },
+
   render() {
     const { t } = this.props;
     const satelliteGuidancePrompted = this.props.terria.getLocalProperty(
@@ -95,7 +102,7 @@ const MenuBar = createReactClass({
         onClick={this.handleClick}
       >
         <ul className={Styles.menu}>
-          {/* <If condition={storyEnabled}>
+          {/*<If condition={storyEnabled}>
             <li className={Styles.menuItem}>
               <button
                 className={Styles.storyBtn}
@@ -116,21 +123,31 @@ const MenuBar = createReactClass({
                   />
                 )}
             </li>
-          </If> */}
-          <li className={Styles.menuItem}>
+          </If>*/}
+          {/*<li className={Styles.menuItem}>
             <SettingPanel
               terria={this.props.terria}
               allBaseMaps={this.props.allBaseMaps}
               viewState={this.props.viewState}
             />
-          </li>
-          <li className={Styles.menuItem}>
+          </li>*/}
+          {/*<li className={Styles.menuItem}>
             <SharePanel
               terria={this.props.terria}
               viewState={this.props.viewState}
             />
-          </li>
-          <li className={Styles.menuItem}>
+          </li>*/}
+          {/*<li className={Styles.menuItem}>
+            <button
+              type="button"
+              onClick={this.onAddDataClicked}
+              title="View data"
+              className={Styles.storyBtn}
+            >
+              Data
+            </button>
+          </li>*/}
+          {/*<li className={Styles.menuItem}>
             <HelpMenuPanelBasic
               terria={this.props.terria}
               viewState={this.props.viewState}
@@ -153,7 +170,7 @@ const MenuBar = createReactClass({
                   dismissAction={this.dismissSatelliteGuidanceAction}
                 />
               )}
-          </li>
+          </li>*/}
           {enableTools && (
             <li className={Styles.menuItem}>
               <ToolsPanel
