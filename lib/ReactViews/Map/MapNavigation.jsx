@@ -41,11 +41,11 @@ const MapNavigation = createReactClass({
       >
         <Medium>
           <div className={Styles.navs}>
-            <If condition={this.props.terria.viewerMode !== ViewerMode.Leaflet}>
+            {/*<If condition={this.props.terria.viewerMode !== ViewerMode.Leaflet}>
               <div className={Styles.control}>
                 <Compass terria={this.props.terria} />
               </div>
-            </If>
+            </If>*/}
             <div className={Styles.control}>
               <ZoomControl terria={this.props.terria} />
             </div>

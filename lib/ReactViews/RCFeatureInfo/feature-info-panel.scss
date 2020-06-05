@@ -4,8 +4,10 @@
 .panel {
   background: $feature-info-bg;
   color: $feature-info-color;
-  border-radius: $radius-small;
+  border-radius: $radius-big;
   display: none;
+  backdrop-filter: blur(0.8);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 
   svg {
     fill: $feature-info-color;
