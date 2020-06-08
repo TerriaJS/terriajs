@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### mobx-next-release (mobx-33)
+* Bug fix for `DatePicker` in `BottomDock` causing app crash
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-32
