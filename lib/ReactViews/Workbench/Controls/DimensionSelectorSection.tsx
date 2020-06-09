@@ -41,8 +41,8 @@ export default class DimensionSelectorSection extends React.Component<{
       <div className={Styles.dimensionSelector}>
         {selectableDimensions.map(dim => (
           <div key={dim.id} className={Styles.dimensionSelector}>
-            <label className={Styles.title} htmlFor={dim.name}>
-              {dim.name}
+            <label className={Styles.title} htmlFor={dim.name || dim.id}>
+              {dim.name || dim.id}
             </label>
             <Select
               name={dim.id}
@@ -62,7 +62,7 @@ export default class DimensionSelectorSection extends React.Component<{
               )}
               {dim.options.map(option => (
                 <option key={option.id} value={option.id}>
-                  {option.name}
+                  {option.name || option.id}
                 </option>
               ))}
             </Select>
