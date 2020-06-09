@@ -111,7 +111,8 @@ export const GLYPHS = {
   plusThick: require("../../wwwroot/images/icons/zoom-plus.svg"),
   refreshThick: require("../../wwwroot/images/icons/zoom-refresh.svg"),
   satellite: require("../../wwwroot/images/icons/satellite.svg"),
-  uploadThin: require("../../wwwroot/images/icons/upload-thin.svg")
+  uploadThin: require("../../wwwroot/images/icons/upload-thin.svg"),
+  oneTwoThree: require("../../wwwroot/images/icons/one-two-three.svg")
 };
 
 export const Icon = createReactClass({

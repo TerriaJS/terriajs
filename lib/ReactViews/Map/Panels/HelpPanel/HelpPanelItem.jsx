@@ -46,9 +46,11 @@ class HelpPanelItem extends React.Component {
       [Styles.isSelected]: itemSelected
     });
 
-    const iconName = this.props.content.icon
-      ? this.props.content.icon
-      : "video";
+    const contentIcon = this.props.content.icon;
+    // `content.icon` is user defined and can possibly force the UI to lookup a
+    // nonexistant icon.
+    const iconGlyph =
+      (contentIcon && Icon.GLYPHS[contentIcon]) || Icon.GLYPHS["video"];
     const reactComponents = this.props.content.markdownText
       ? parseCustomMarkdownToReact(this.props.content.markdownText).props
           .children
@@ -79,7 +81,7 @@ class HelpPanelItem extends React.Component {
               <StyledIcon
                 styledWidth={"27px"}
                 fillColor={this.props.theme.textDark}
-                glyph={Icon.GLYPHS[iconName]}
+                glyph={iconGlyph}
               />
             </MenuIconWrapper>
             <Text
@@ -102,6 +104,7 @@ class HelpPanelItem extends React.Component {
         <HelpVideoPanel
           terria={this.props.terria}
           viewState={this.props.viewState}
+          content={this.props.content}
           itemString={this.props.content.itemName}
           paneMode={this.props.content.paneMode}
           htmlContent={reactComponents}
