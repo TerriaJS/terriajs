@@ -27,12 +27,4 @@ export default class TransformationTraits extends ModelTraits {
     description: "The scale factor to apply to the model"
   })
   scale?: number;
-
-  @primitiveTrait({
-    type: "boolean",
-    name: "Is transformable?",
-    description:
-      "Flag indicating whether the user can interact with the model to move/rotate it"
-  })
-  isTransformable = false;
 }
