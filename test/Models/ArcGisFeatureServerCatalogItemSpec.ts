@@ -170,15 +170,16 @@ describe("ArcGisFeatureServerCatalogItem", function() {
       const aTime = new JulianDate();
       item.mapItems.map(mapItem => {
         mapItem.entities.values.map(entity => {
+          // Waiting on better Cesium typings
+          // entity.polygon.material.color returns a Property, but types
+          //  suggest it returns a Color. Type casts are neccessary due to this.
           const actualPolygonOutlineWidth = (<ConstantProperty>(
             entity.polygon.outlineWidth
           )).getValue(aTime);
           expect(actualPolygonOutlineWidth).toEqual(expectedOutlineWidth);
 
           const acutualPolygonColor = (<ConstantProperty>(
-            (<unknown>(
-              (<Cesium.ColorMaterialProperty>entity.polygon.material).color
-            ))
+            (<unknown>(<ColorMaterialProperty>entity.polygon.material).color)
           ))
             .getValue(aTime)
             .toRgba();
@@ -194,9 +195,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
           );
 
           const acutalPolylineColor = (<ConstantProperty>(
-            (<unknown>(
-              (<Cesium.ColorMaterialProperty>entity.polyline.material).color
-            ))
+            (<unknown>(<ColorMaterialProperty>entity.polyline.material).color)
           ))
             .getValue(aTime)
             .toRgba();
