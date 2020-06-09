@@ -167,27 +167,37 @@ describe("ArcGisFeatureServerCatalogItem", function() {
         255
       ).toRgba();
 
+      const aTime = new JulianDate();
       item.mapItems.map(mapItem => {
         mapItem.entities.values.map(entity => {
-          const aTime = new JulianDate();
           const actualPolygonOutlineWidth = (<ConstantProperty>(
             entity.polygon.outlineWidth
           )).getValue(aTime);
           expect(actualPolygonOutlineWidth).toEqual(expectedOutlineWidth);
 
-          const acutualPolygonColor = (<any>entity.polygon.material).color
+          const acutualPolygonColor = (<ConstantProperty>(
+            (<unknown>(
+              (<Cesium.ColorMaterialProperty>entity.polygon.material).color
+            ))
+          ))
             .getValue(aTime)
             .toRgba();
           expect(acutualPolygonColor).toEqual(expectedPolygonFilledColor);
 
-          const actualPolygonOutlineColor = (<any>(
-            (<any>entity.polygon.outlineColor).getValue(aTime)
-          )).toRgba();
+          const actualPolygonOutlineColor = (<ConstantProperty>(
+            (<unknown>entity.polygon.outlineColor)
+          ))
+            .getValue(aTime)
+            .toRgba();
           expect(actualPolygonOutlineColor).toEqual(
             expectedPolygonOutlineColor
           );
 
-          const acutalPolylineColor = (<any>entity.polyline.material).color
+          const acutalPolylineColor = (<ConstantProperty>(
+            (<unknown>(
+              (<Cesium.ColorMaterialProperty>entity.polyline.material).color
+            ))
+          ))
             .getValue(aTime)
             .toRgba();
           expect(acutalPolylineColor).toEqual(expectedPolylineColor);
