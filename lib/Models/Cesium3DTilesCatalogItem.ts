@@ -205,15 +205,18 @@ export default class Cesium3DTilesCatalogItem
       tilesetBaseSse * this.terria.baseMaximumScreenSpaceError;
 
     // To make it easier to perform transformation operations on the tileset we
-    // set the root transform to IDENTIY and instead control all
+    // set the root transform to IDENTIY (if it is already not) and instead control all
     // transformations using modelMatrix
-    const modelMatrix = Matrix4.equals(
-      this.tileset.root.transform,
-      Matrix4.IDENTITY
-    )
-      ? this.tileset.modelMatrix
-      : this.tileset.root.transform;
-    this.tileset.root.transform = Matrix4.IDENTITY.clone();
+    let modelMatrix: Matrix4;
+    if (
+      this.tileset.root &&
+      !Matrix4.equals(this.tileset.root.transform, Matrix4.IDENTITY)
+    ) {
+      modelMatrix = this.tileset.root.transform.clone();
+      this.tileset.root.transform = Matrix4.IDENTITY.clone();
+    } else {
+      modelMatrix = this.tileset.modelMatrix;
+    }
     this.tileset.modelMatrix = this.computeModelMatrixFromTransformationTraits(
       modelMatrix
     );
