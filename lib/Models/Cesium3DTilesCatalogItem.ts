@@ -67,6 +67,8 @@ export default class Cesium3DTilesCatalogItem
   }
 
   readonly canZoomTo = true;
+
+  @observable
   private tileset?: ObservableCesium3DTileset;
 
   get isMappable() {
@@ -138,7 +140,6 @@ export default class Cesium3DTilesCatalogItem
   /**
    * Computes a modelMatrix from the origin, rotation & scale traits
    */
-  @action
   private computeModelMatrixFromTransformationTraits(modelMatrix: Matrix4) {
     let scale = Matrix4.getScale(modelMatrix, new Cartesian3());
     let position = Matrix4.getTranslation(modelMatrix, new Cartesian3());
@@ -172,7 +173,8 @@ export default class Cesium3DTilesCatalogItem
     );
   }
 
-  @computed get mapItems() {
+  @computed
+  get mapItems() {
     if (this.isLoadingMapItems || !isDefined(this.tileset)) {
       return [];
     }
@@ -323,7 +325,7 @@ export default class Cesium3DTilesCatalogItem
   }
 
   buildFeatureFromPickResult(_screenPosition: Cartesian2, pickResult: any) {
-    if (isCesium3DTileFeature(pickResult)) {
+    if (pickResult instanceof Cesium3DTileFeature) {
       const properties: { [name: string]: unknown } = {};
       pickResult.getPropertyNames().forEach(name => {
         properties[name] = pickResult.getProperty(name);
@@ -337,8 +339,40 @@ export default class Cesium3DTilesCatalogItem
       return result;
     }
   }
+
+  /**
+   * Modifies the style traits to show/hide a 3d tile feature
+   *
+   */
+  @action
+  setFeatureVisibility(feature: Cesium3DTileFeature, visibiltiy: boolean) {
+    // If `featureIdProperties` is not set construct a filter that matches all properties
+    const idProperties = (
+      this.featureIdProperties?.slice() || feature.getPropertyNames()
+    ).sort();
+    const terms = idProperties.map(
+      (p: string) => `\${${p}} === ${JSON.stringify(feature.getProperty(p))}`
+    );
+    const showExpr = terms.join(" && ");
+    if (showExpr) {
+      const style = this.style || {};
+      const show = normalizeShowExpression(style?.show);
+      show.conditions.unshift([showExpr, visibiltiy]);
+      this.setTrait(CommonStrata.user, "style", { ...style, show });
+    }
+  }
 }
 
-function isCesium3DTileFeature(o: any): o is Cesium3DTileFeature {
-  return "getPropertyNames" in o && "getProperty" in o;
+function normalizeShowExpression(
+  show: any
+): { conditions: [string, boolean][] } {
+  let conditions;
+  if (Array.isArray(show?.conditions?.slice())) {
+    conditions = [...show.conditions];
+  } else if (typeof show === "string") {
+    conditions = [[show, true]];
+  } else {
+    conditions = [["true", true]];
+  }
+  return { ...show, conditions };
 }
