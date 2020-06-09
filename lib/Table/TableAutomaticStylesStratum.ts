@@ -1,6 +1,7 @@
 import { computed } from "mobx";
 import { createTransformer } from "mobx-utils";
 import isDefined from "../Core/isDefined";
+import { JsonObject } from "../Core/Json";
 import ConstantColorMap from "../Map/ConstantColorMap";
 import DiscreteColorMap from "../Map/DiscreteColorMap";
 import EnumColorMap from "../Map/EnumColorMap";
@@ -186,14 +187,19 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
             })
           ]
         : [];
-
+    let numberFormatOptions: JsonObject | undefined = undefined;
+    if (colorColumn !== undefined) {
+      numberFormatOptions = colorColumn.traits.format
+        ? colorColumn.traits.format
+        : undefined;
+    }
     return colorMap.maximums
       .map((maximum, i) => {
         const isBottom = i === 0;
         const formattedMin = isBottom
-          ? this._formatValue(minimum)
-          : this._formatValue(colorMap.maximums[i - 1]);
-        const formattedMax = this._formatValue(maximum);
+          ? this._formatValue(minimum, numberFormatOptions)
+          : this._formatValue(colorMap.maximums[i - 1], numberFormatOptions);
+        const formattedMax = this._formatValue(maximum, numberFormatOptions);
         return createStratumInstance(LegendItemTraits, {
           color: colorMap.colors[i].toCssColorString(),
           title: `${formattedMin} to ${formattedMax}`
@@ -243,7 +249,7 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
     ];
   }
 
-  private _formatValue(value: number): string {
-    return Math.round(value).toString();
+  private _formatValue(value: number, format: JsonObject | undefined): string {
+    return Math.round(value).toLocaleString(undefined, format);
   }
 }
