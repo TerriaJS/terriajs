@@ -2,6 +2,7 @@ import Compass from "./Navigation/Compass";
 import MyLocation from "./Navigation/MyLocation";
 import PropTypes from "prop-types";
 import React from "react";
+import { withTheme } from "styled-components";
 import { Medium } from "../Generic/Responsive";
 import Styles from "./map-navigation.scss";
 import ToggleSplitterTool from "./Navigation/ToggleSplitterTool";
@@ -27,6 +28,7 @@ class MapNavigation extends React.Component {
   static propTypes = {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
+    theme: PropTypes.object.isRequired,
     navItems: PropTypes.arrayOf(PropTypes.element)
   };
 
@@ -35,6 +37,7 @@ class MapNavigation extends React.Component {
   };
 
   render() {
+    const { theme, viewState } = this.props;
     const toolIsDifference =
       this.props.viewState.currentTool?.toolName === "Difference";
     const isDiffMode = this.props.viewState.isToolOpen && toolIsDifference;
@@ -46,6 +49,13 @@ class MapNavigation extends React.Component {
             this.props.terria.timelineStack.top
           )
         })}
+        css={`
+          ${viewState.trainerBarVisible &&
+            `
+          top: ${Number(theme.trainerHeight) +
+            Number(theme.mapNavigationTop)}px;
+        `}
+        `}
       >
         <Box centered column justifySpaceBetween fullHeight alignItemsFlexEnd>
           <Box column>
@@ -135,4 +145,4 @@ class MapNavigation extends React.Component {
   }
 }
 
-export default MapNavigation;
+export default withTheme(MapNavigation);

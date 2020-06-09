@@ -64,6 +64,9 @@ const StyledSelect = styled.select<SelectProps>`
 const ArrowPositioning = styled.div`
   ${props => props.theme.verticalAlign("absolute")}
   right: 10px;
+
+  // Stops presentational icon preventing select activation via mouse
+  pointer-events: none;
 `;
 
 interface SelectProps {

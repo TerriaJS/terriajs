@@ -1,4 +1,5 @@
 import React from "react";
+import { withTheme } from "styled-components";
 import triggerResize from "../../Core/triggerResize";
 // import createReactClass from "create-react-class";
 
@@ -19,7 +20,7 @@ import { useRefForTerria } from "../Hooks/useRefForTerria";
 // const MenuBar = createReactClass({
 const STORY_BUTTON_NAME = "MenuBarStoryButton";
 const MenuBar = props => {
-  const { t } = props;
+  const { t, theme } = props;
   const storyButtonRef = useRefForTerria(STORY_BUTTON_NAME, props.viewState);
   const menuItems = props.menuItems || [];
   const handleClick = () => {
@@ -79,6 +80,12 @@ const MenuBar = props => {
         }
       )}
       onClick={handleClick}
+      css={`
+        ${props.viewState.trainerBarVisible &&
+          `
+          top: ${Number(theme.trainerHeight) + Number(theme.mapButtonTop)}px;
+        `}
+      `}
     >
       <ul className={classNames(Styles.menu)}>
         {/* <li className={Styles.menuItem}>
@@ -168,7 +175,8 @@ MenuBar.propTypes = {
   animationDuration: PropTypes.number,
   menuItems: PropTypes.arrayOf(PropTypes.element),
   menuLeftItems: PropTypes.arrayOf(PropTypes.element),
+  theme: PropTypes.object.isRequired,
   t: PropTypes.func.isRequired
 };
 
-export default withTranslation()(MenuBar);
+export default withTranslation()(withTheme(MenuBar));

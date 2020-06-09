@@ -42,7 +42,7 @@ class TrainerPane extends React.Component {
   }
 
   render() {
-    const { content } = this.props;
+    const { content, viewState } = this.props;
     const { trainerItems, markdownText } = content;
     return (
       <Text textDark noFontSize>
@@ -64,7 +64,12 @@ class TrainerPane extends React.Component {
                 >
                   <TrainerButton
                     fullWidth
-                    onClick={() => console.log("clicked")}
+                    onClick={() => {
+                      viewState.hideHelpPanel();
+                      viewState.setSelectedTrainerItem(content.itemName);
+                      viewState.setCurrentTrainerItemIndex(index);
+                      viewState.setTrainerBarVisible(true);
+                    }}
                   >
                     <BoxSpan centered>
                       <BoxSpan

@@ -84,6 +84,28 @@ export default class ViewState {
   @observable disclaimerVisible: boolean = false;
   @observable videoGuideVisible: string = "";
 
+  @observable trainerBarVisible: boolean = false;
+  @observable selectedTrainerItem: string = "";
+  @observable currentTrainerItemIndex: number = 0;
+  @observable currentTrainerStepIndex: number = 0;
+  @action
+  setSelectedTrainerItem(trainerItem: string) {
+    this.selectedTrainerItem = trainerItem;
+  }
+  @action
+  setTrainerBarVisible(bool: boolean) {
+    this.trainerBarVisible = bool;
+  }
+  @action
+  setCurrentTrainerItemIndex(index: number) {
+    this.currentTrainerItemIndex = index;
+    this.currentTrainerStepIndex = 0;
+  }
+  @action
+  setCurrentTrainerStepIndex(index: number) {
+    this.currentTrainerStepIndex = index;
+  }
+
   @observable workbenchWithOpenControls: string | undefined = undefined;
 
   errorProvider: any | null = null;

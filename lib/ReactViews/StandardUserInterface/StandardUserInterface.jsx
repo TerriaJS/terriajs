@@ -14,6 +14,7 @@ import FeatureInfoPanel from "../FeatureInfo/FeatureInfoPanel";
 import FeedbackForm from "../Feedback/FeedbackForm";
 import MapColumn from "./MapColumn";
 import MapInteractionWindow from "../Notification/MapInteractionWindow";
+import TrainerBar from "../Map/TrainerBar/TrainerBar";
 import MapNavigation from "../Map/MapNavigation";
 import MenuBar from "../Map/MenuBar";
 import ExperimentalFeatures from "../Map/ExperimentalFeatures";
@@ -308,6 +309,7 @@ const StandardUserInterface = observer(
               </div>
 
               <If condition={!this.props.viewState.hideMapUi()}>
+                <TrainerBar terria={terria} viewState={this.props.viewState} />
                 <div
                   className={classNames({
                     [Styles.explorerPanelIsVisible]: this.props.viewState
