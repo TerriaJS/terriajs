@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### mobx-next-release (mobx-33)
+* Pass `format` trait on `TableColumnTraits` down to `TableAutomaticStylesStratum` for generating legends
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-32
