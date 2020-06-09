@@ -100,9 +100,16 @@ describe("Legend", function() {
         "tjs-legend__legendTitles"
       );
       expect(memberComponents.length).toEqual(2);
-      expect(memberComponents[0].props.children[1].props.children).toEqual(
-        "A$1,500 to A$2,000"
-      );
+      // Sadly toLocaleString in IE11 doesn't generate the same result
+      if (/MSIE|Trident/.test(window.navigator.userAgent)) {
+        expect(memberComponents[0].props.children[1].props.children).toEqual(
+          "$1,500 to $2,000"
+        );
+      } else {
+        expect(memberComponents[0].props.children[1].props.children).toEqual(
+          "A$1,500 to A$2,000"
+        );
+      }
     });
   });
 });
