@@ -1,9 +1,21 @@
 Change Log
 ==========
-### next release
+
+### next verion
+* Rework the handling of point datasets on the anti-meridian when using LeafletJS.
+
+### v7.11.5
 
 * Added `GeoRssCatalogItem` for displaying GeoRSS files comming from rss2 and atom feeds.
-* Rework the handling of point datasets on the anti-meridian when using LeafletJS.
+* Bug fix: Prevent geojson files from appearing twice in the workbench when dropped with the .json extension
+* Story related enhancements:
+  * Added a title to story panel with ability to close story panel. 
+  * Added a popup on remove all stories.
+  * Added button for sharing stories.
+  * Added a question popup on window close (if there are stories on the map so users don't lose their work).
+* Pinned `html-to-react` to version 1.3.4 to avoid IE11 incompatibility with newer version of deep dependency `entities`. See https://github.com/fb55/entities/issues/209
+* Added a `MapboxStyleCatalogItem` for showing Mapbox styles.
+* Add a `tileErrorThresholdBeforeDisabling` parameter to `ImageryLayerCatalogItem` to allow a threshold to set for allowed number of tile failures before disabling the layer.
 
 ### v7.11.4
 
