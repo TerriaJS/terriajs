@@ -43,7 +43,6 @@ class Breadcrumbs extends React.Component {
   }
 
   render() {
-    console.log(this.props.theme);
     const parentGroups = this.props.previewed
       ? getParentGroups(this.props.previewed)
       : undefined;
@@ -55,7 +54,7 @@ class Breadcrumbs extends React.Component {
       <Box
         left
         styledHeight={"32px"}
-        bgColor={this.props.theme.greyLighter}
+        backgroundColor={this.props.theme.greyLighter}
         paddedHorizontally={2.4}
         paddedVertically={1}
       >

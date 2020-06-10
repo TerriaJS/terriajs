@@ -86,8 +86,6 @@ namespace CatalogMemberMixin {
   export interface CatalogMemberMixin
     extends InstanceType<ReturnType<typeof CatalogMemberMixin>> {}
   export function isMixedInto(model: any): model is CatalogMemberMixin {
-    console.log(model);
-    console.log(model.hasCatalogMemberMixin);
     return model && model.hasCatalogMemberMixin;
   }
 }
