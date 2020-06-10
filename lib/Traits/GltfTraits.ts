@@ -26,4 +26,12 @@ export default class GltfTraits extends mixTraits(TransformationTraits) {
       'Indicates whether this tileset casts and receives shadows. Valid values are "NONE", "BOTH", "CAST", and "RECEIVE".'
   })
   shadows?: string = "NONE";
+
+  @primitiveTrait({
+    type: "string",
+    name: "Height reference",
+    description:
+      "Position relative to the ground. Accepted values are NONE, CLAMP_TO_GROUND & RELATIVE_TO_GROUND as described in the cesium doc - https://cesium.com/docs/cesiumjs-ref-doc/global.html#HeightReference"
+  })
+  heightReference = "NONE";
 }

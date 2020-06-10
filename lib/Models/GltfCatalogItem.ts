@@ -15,6 +15,7 @@ import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/Constan
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
+import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 
 export default class GltfCatalogItem
   extends UrlMixin(CatalogMemberMixin(CreateModel(GltfCatalogItemTraits)))
@@ -47,6 +48,14 @@ export default class GltfCatalogItem
       return Axis.Z;
     }
     return Axis.fromName(this.forwardAxis);
+  }
+
+  @computed
+  private get cesiumHeightReference() {
+    const heightReference: HeightReference =
+      // @ts-ignore
+      HeightReference[this.heightReference] || HeightReference.NONE;
+    return heightReference;
   }
 
   @computed
@@ -127,7 +136,8 @@ export default class GltfCatalogItem
       upAxis: this.cesiumUpAxis,
       forwardAxis: this.cesiumForwardAxis,
       scale: this.scale !== undefined ? this.scale : 1,
-      shadows: new ConstantProperty(this.cesiumShadows)
+      shadows: new ConstantProperty(this.cesiumShadows),
+      heightReference: new ConstantProperty(this.cesiumHeightReference)
     };
     return new ModelGraphics(options);
   }
