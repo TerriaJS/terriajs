@@ -32,11 +32,11 @@ const VideoWrapperBox = props => {
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0, 0, 0, 0.6);
+        background: rgba(0, 0, 0, 0.75);
       `}
     >
       <Box
-        paddedRatio={3}
+        paddedRatio={4}
         positionAbsolute
         css={`
           top: 0px;
@@ -45,7 +45,7 @@ const VideoWrapperBox = props => {
       >
         <RawButton onClick={handleClose.bind(null)}>
           <StyledIcon
-            styledWidth={"20px"}
+            styledWidth={"22px"}
             light
             glyph={Icon.GLYPHS.closeLight}
           />
@@ -89,7 +89,7 @@ class VideoGuide extends React.Component {
           <Box
             centered
             col11
-            styledHeight={"90%"}
+            styledHeight={"87%"}
             backgroundImage={this.props.background}
             css={`
               svg {
