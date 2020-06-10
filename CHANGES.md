@@ -6,6 +6,8 @@ Change Log
 #### mobx-next-release (mobx-33)
 * Updated generic select so icon doesn't block click
 * Re-added loading bar for leaflet & cesium viewers
+* Made changes to the video modals: close button has been added, pressing escape now closes the component and some basic unit tests created
+* Updated the video modal for _Data Stories: Getting Started_ to use the new `VideoGuide` component
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-32
@@ -26,9 +28,6 @@ Change Log
 * Fixed a chart bug where moment points do not stick to the basis item when they are of different scale.
 * Fixed a bug where the moment point selection highlight is lost when changing the satellite imagery date.
 * Removed sass from Clipboard
-* Made changes to the video modals: close button has been added, pressing escape now closes the component and some basic unit tests created
-* Updated the video modal for _Data Stories: Getting Started_ to use the new `VideoGuide` component
-* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 * Updated LocationSearchResults to support multiple search providers
 * Replaced lifesaver icon on the help button with a question mark button
 * Fix handling of points and markers around the anti-meridian in the `LeafletVisualizer`.
