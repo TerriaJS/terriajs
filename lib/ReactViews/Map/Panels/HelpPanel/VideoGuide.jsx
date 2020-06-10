@@ -22,8 +22,8 @@ const VideoWrapperBox = props => {
     <Box
       centered
       onClick={e => {
-        handleClose();
         e.stopPropagation();
+        handleClose();
       }}
       css={`
         position: fixed;
