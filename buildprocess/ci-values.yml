@@ -63,6 +63,32 @@ terriamap:
                   icon: "video"
                   videoUrl: "https://www.youtube.com/embed/NTtSM70rIvI"
                   placeholderImage: "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
+                -
+                  title: Step by step guide
+                  itemName: stepbystepguide
+                  paneMode: trainer
+                  markdownText: "# Step by step guide\n\nLaunch a step by step guide for various popular workflows below:"
+                  trainerItems:
+                  - title: Adding satellite imagery
+                    steps:
+                    - Open the data catalogue by clicking Explore map data
+                    - Navigate to some satellite data on the left hand side of the data catalog
+                    - Select the satellite catalog item of interest
+                    - Click Add to the map
+                    - You may need to adjust your zoom level to see the scope of the satellite imagery
+                      for the given date [...]
+                  - title: Adding data to the map
+                    steps:
+                    - Open the data catalogue by clicking Explore map data
+                    - Select a catalog item of interest
+                    - Select a catalog item of interest
+                  - title: Change detection
+                    steps:
+                    - Placeholder
+                  - title: Compare 2 dates
+                    steps:
+                    - Placeholder
+                  icon: oneTwoThree
     resources:
         requests:
             cpu: 10m
