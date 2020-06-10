@@ -2,7 +2,7 @@ Change Log
 ==========
 
 ### next verion
-
+* Rework the handling of point datasets on the anti-meridian when using LeafletJS.
 
 ### v7.11.5
 
