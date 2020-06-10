@@ -11,7 +11,6 @@ import CommonStrata from "../../../../Models/CommonStrata";
 import Dropdown from "../../../Generic/Dropdown";
 import FileInput from "./FileInput";
 import getDataType from "../../../../Core/getDataType";
-import ObserveModelMixin from "../../../ObserveModelMixin";
 import Styles from "./add-data.scss";
 import Loader from "../../../Loader";
 import TerriaError from "../../../../Core/TerriaError";
@@ -26,7 +25,6 @@ const localDataType = getDataType().localDataType;
  */
 const AddData = createReactClass({
   displayName: "AddData",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     terria: PropTypes.object,

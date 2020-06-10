@@ -72,9 +72,12 @@
   background-color: #519ac2;
   border-radius: $padding * 2;
 
+  min-width: 240px;
+  text-align: center;
+
   svg {
-    height: 20px;
-    width: 20px;
+    height: 18px;
+    width: 18px;
     fill: $faint-bg;
     vertical-align: bottom;
     display: inline-block;

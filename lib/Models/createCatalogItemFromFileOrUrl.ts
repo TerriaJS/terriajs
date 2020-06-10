@@ -2,21 +2,21 @@ import i18next from "i18next";
 import { runInAction } from "mobx";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import ViewState from "../ReactViewModels/ViewState";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import CommonStrata from "./CommonStrata";
-import createCatalogItemFromUrl from "./createCatalogItemFromUrl";
+import createUrlReferenceFromUrl from "./createUrlReferenceFromUrl";
 import { BaseModel } from "./Model";
 import Terria from "./Terria";
 import upsertModelFromJson from "./upsertModelFromJson";
+import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 
 export default function createCatalogItemFromFileOrUrl(
   terria: Terria,
   viewState: ViewState,
   fileOrUrl: File | string,
-  dataType: any,
-  confirmConversion: boolean
+  dataType?: string,
+  confirmConversion: boolean = false
 ): Promise<BaseModel | undefined> {
   dataType = isDefined(dataType) ? dataType : "auto";
 
@@ -30,8 +30,7 @@ export default function createCatalogItemFromFileOrUrl(
   }
 
   if (dataType === "auto") {
-    return createCatalogItemFromUrl(name, terria, isUrl).then(newItem => {
-      //##Doesn't work for file uploads
+    return createUrlReferenceFromUrl(name, terria, isUrl).then(newItem => {
       if (!isDefined(newItem)) {
         return tryConversionService(name, terria, viewState, confirmConversion);
       } else {
@@ -160,29 +159,30 @@ function getConfirmation(
   });
 }
 
-function loadItem(newCatalogItem: BaseModel, fileOrUrl: File | string) {
+async function loadItem(
+  newCatalogItem: BaseModel,
+  fileOrUrl: File | string
+): Promise<BaseModel> {
+  if (
+    ReferenceMixin.is(newCatalogItem) &&
+    newCatalogItem.target !== undefined
+  ) {
+    return loadItem(newCatalogItem.target, fileOrUrl);
+  }
+
   if (typeof fileOrUrl === "string") {
     newCatalogItem.setTrait(CommonStrata.user, "url", fileOrUrl);
-  } else {
-    if (hasFileInput(newCatalogItem)) {
-      newCatalogItem.setFileInput(fileOrUrl);
-    }
-    // TODO
-    // newCatalogItem.dataSourceUrl = fileOrUrl.name;
-    // newCatalogItem.dataUrlType = "local";
+  } else if (hasFileInput(newCatalogItem)) {
+    newCatalogItem.setFileInput(fileOrUrl);
   }
 
-  if (CatalogMemberMixin.isMixedInto(newCatalogItem)) {
-    return newCatalogItem.loadMetadata().then(() => newCatalogItem);
-  } else {
-    return Promise.resolve(newCatalogItem);
-  }
+  return newCatalogItem;
 }
 
-interface HasFileInput extends BaseModel {
+export interface HasFileInput extends BaseModel {
   setFileInput(file: File): void;
 }
 
-function hasFileInput(model: BaseModel): model is HasFileInput {
+export function hasFileInput(model: BaseModel): model is HasFileInput {
   return "setFileInput" in model;
 }

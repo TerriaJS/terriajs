@@ -128,7 +128,8 @@
   composes: btn from "../../../Sass/common/_buttons.scss";
   composes: btn--map from "../../../Sass/common/_buttons.scss";
 
-  border-radius: $radius-small;
+  // border-radius: $radius-small;
+  border-radius: 0;
   position: relative;
   border: 0;
 

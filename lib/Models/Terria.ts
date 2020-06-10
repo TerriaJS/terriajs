@@ -57,6 +57,7 @@ import Workbench from "./Workbench";
 import openGroup from "./openGroup";
 import getDereferencedIfExists from "../Core/getDereferencedIfExists";
 import SplitItemReference from "./SplitItemReference";
+// import overrides from "../Overrides/defaults.jsx";
 
 interface ConfigParameters {
   [key: string]: ConfigParameters[keyof ConfigParameters];
@@ -87,6 +88,10 @@ interface ConfigParameters {
   locationSearchBoundingBox?: number[];
   googleAnalyticsKey?: string;
   rollbarAccessToken?: string;
+  globalDisclaimer?: any;
+  showWelcomeMessage?: boolean;
+  showInAppGuides?: boolean;
+  helpContent?: any[];
 }
 
 interface StartOptions {
@@ -94,7 +99,7 @@ interface StartOptions {
   configUrlHeaders?: {
     [key: string]: string;
   };
-  applicationUrl?: string;
+  applicationUrl?: Location;
   shareDataService?: ShareDataService;
 }
 
@@ -123,10 +128,12 @@ export default class Terria {
 
   readonly baseUrl: string = "build/TerriaJS/";
   readonly error = new CesiumEvent();
+  readonly tileLoadProgressEvent = new CesiumEvent();
   readonly workbench = new Workbench();
   readonly overlays = new Workbench();
   readonly catalog = new Catalog(this);
   readonly timelineClock = new Clock({ shouldAnimate: false });
+  // readonly overrides: any = overrides; // TODO: add options.functionOverrides like in master
 
   @observable
   readonly mainViewer = new TerriaViewer(
@@ -193,7 +200,11 @@ export default class Terria {
     magdaReferenceHeaders: undefined,
     locationSearchBoundingBox: undefined,
     googleAnalyticsKey: undefined,
-    rollbarAccessToken: undefined
+    rollbarAccessToken: undefined,
+    globalDisclaimer: undefined,
+    showWelcomeMessage: false,
+    showInAppGuides: false,
+    helpContent: []
   };
 
   @observable
@@ -364,7 +375,7 @@ export default class Terria {
     const baseUri = new URI(options.configUrl).filename("");
 
     const launchUrlForAnalytics =
-      options.applicationUrl || getUriWithoutPath(baseUri);
+      options.applicationUrl?.href || getUriWithoutPath(baseUri);
     return loadJson5(options.configUrl, options.configUrlHeaders)
       .then((config: any) => {
         runInAction(() => {
@@ -403,7 +414,7 @@ export default class Terria {
         }
         this.loadPersistedMapSettings();
         if (options.applicationUrl) {
-          return this.updateApplicationUrl(options.applicationUrl);
+          return this.updateApplicationUrl(options.applicationUrl.href);
         }
       });
   }

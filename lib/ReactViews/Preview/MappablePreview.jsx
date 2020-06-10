@@ -13,7 +13,7 @@ import Terria from "../../Models/Terria";
 // eslint-disable-next-line no-unused-vars
 import ViewState from "../../ReactViewModels/ViewState";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
-import measureElement from "../measureElement";
+import measureElement from "../HOCs/measureElement";
 import DataPreviewMap from "./DataPreviewMap";
 // import DataPreviewMap from "./DataPreviewMap";
 import Description from "./Description";

@@ -1,13 +1,8 @@
 /*global require*/
 /// <reference types="jasmine" />
 import "../lib/Core/prerequisites";
-require("terriajs-jasmine-ajax");
-import { configure, spy } from "mobx";
-
-configure({
-  enforceActions: true,
-  computedRequiresReaction: true
-});
+import "jasmine-ajax";
+import { spy } from "mobx";
 
 // Fail the test if a MobX computed property throws an exception.
 spy(event => {
@@ -24,10 +19,3 @@ jasmine.getEnv().addReporter({
 });
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000;
-
-afterEach(function() {
-  const jasmineAny: any = jasmine;
-  if (jasmineAny.Ajax) {
-    jasmineAny.Ajax.uninstall();
-  }
-});
