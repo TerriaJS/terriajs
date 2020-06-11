@@ -190,7 +190,7 @@
   },
   "helpPanel": {
     "menuPaneTitle": "We're here to help",
-    "menuPaneBody": "Find useful tips on how to use the Digital Twin by either checking the video guides below or by contacting the team at [info@terria.io](mailto:info@terria.io)"
+    "menuPaneBody": "Find useful tips on how to use TerriaJS by either checking the guides below or by contacting the team at [info@terria.io](mailto:info@terria.io)"
   },
   "helpMenu": {
     "btnText": "Help",

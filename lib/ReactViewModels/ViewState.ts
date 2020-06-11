@@ -512,9 +512,11 @@ export default class ViewState {
     this.breadcrumbsShown = isActive;
   }
 
+  @action
   setDisclaimerVisible(bool: boolean) {
     this.disclaimerVisible = bool;
   }
+
   @action
   hideDisclaimer() {
     this.setDisclaimerVisible(false);

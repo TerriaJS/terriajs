@@ -95,4 +95,4 @@ class DataCatalogTab extends React.Component {
   }
 }
 
-module.exports = withTranslation()(withTheme(DataCatalogTab));
+export default withTranslation()(withTheme(DataCatalogTab));
