@@ -593,6 +593,16 @@ function updateEntityWithEsriStyle(
     if (isDefined(symbol.width)) {
       entity.polyline.width = new ConstantProperty(lineWidth);
     }
+  } else {
+    const polylineColor: number[] = [0, 0, 0, 0];
+
+    entity.polyline.material = new ColorMaterialProperty(
+      convertEsriColorToCesiumColor(polylineColor)
+    );
+
+    if (isDefined(symbol.width)) {
+      entity.polyline.width = new ConstantProperty(lineWidth);
+    }
   }
 }
 
