@@ -118,7 +118,7 @@ export default class TimelineStack {
   @action
   addToTop(item: TimeVarying) {
     var currentIndex = this.items.indexOf(item);
-    this.items.push(item);
+    this.items.unshift(item);
     if (currentIndex > -1) {
       this.items.splice(currentIndex, 1);
     }
