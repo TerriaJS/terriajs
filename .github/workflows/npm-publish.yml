@@ -45,6 +45,16 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Tag new version
+        if: steps.check.outputs.changed == 'true'
+        uses: steve9164/annotated-tag@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          tag-name: ${{ steps.check.outputs.version }}
+          tag-message: ${{ steps.check.outputs.version }}
+          tagger-name: Terria Bot via GitHub Actions
+          tagger-email: TerriaBot@users.noreply.github.com
+
       - name: action-slack
         if: always() # Pick up events even if the job fails or is canceled.
         uses: 8398a7/action-slack@v3
