@@ -32,14 +32,11 @@ describe("Breadcrumbs", function() {
       runInAction(() => {
         viewState.showBreadcrumbs(true);
       });
-  
+
       act(() => {
         testRenderer = create(
           <ThemeProvider theme={terriaTheme}>
-            <DataCatalogTab
-              terria={terria}
-              viewState={viewState}
-            />
+            <DataCatalogTab terria={terria} viewState={viewState} />
           </ThemeProvider>
         );
       });
@@ -56,14 +53,11 @@ describe("Breadcrumbs", function() {
       runInAction(() => {
         viewState.showBreadcrumbs(false);
       });
-  
+
       act(() => {
         testRenderer = create(
           <ThemeProvider theme={terriaTheme}>
-            <DataCatalogTab
-              terria={terria}
-              viewState={viewState}
-            />
+            <DataCatalogTab terria={terria} viewState={viewState} />
           </ThemeProvider>
         );
       });
