@@ -55,8 +55,23 @@ jobs:
           tagger-name: Terria Bot via GitHub Actions
           tagger-email: TerriaBot@users.noreply.github.com
 
-      - name: action-slack
-        if: always() # Pick up events even if the job fails or is canceled.
+      # These slack success and failure message actions can be combined but it means there'll be no notification on a failed
+      #  version-check (which is probably unlikely to fail). It also allows for a bit better message customisation
+      - name: action-slack-success
+        if: steps.check.outputs.changed == 'true'
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,commit,action,ref
+          author_name: ${{ github.workflow }}
+          mention: here
+          if_mention: always
+          text: ':white_check_mark: Published v${{ steps.check.outputs.version }} to https://www.npmjs.com/package/terriajs'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+
+      - name: action-slack-failure
+        if: failure() || cancelled() # Pick up events even if the job fails or is canceled.
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
