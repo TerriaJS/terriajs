@@ -3,7 +3,10 @@ Change Log
 
 ### MobX Development
 
-#### mobx-next-release (mobx-33)
+#### mobx-next-release (mobx-34)
+* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
+
+#### mobx-33
 * Updated generic select so icon doesn't block click
 * Re-added loading bar for leaflet & cesium viewers
 * Added breadcrumbs when clicking on a catalogue item from a catalogue search 
