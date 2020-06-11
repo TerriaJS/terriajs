@@ -20,16 +20,15 @@ describe("TimelineStack", function() {
   });
 
   it(" - is populated with items", async function() {
-    expect(terria.timelineStack.items.length).toBe(1)
+    expect(terria.timelineStack.items.length).toBe(1);
   });
 
-
   it(" - contains method works", async function() {
-    expect(terria.timelineStack.contains(wms)).toBe(true)
+    expect(terria.timelineStack.contains(wms)).toBe(true);
   });
 
   it(" - gets the right item from the top", async function() {
-    expect(terria.timelineStack.top).toBe(wms)
+    expect(terria.timelineStack.top).toBe(wms);
 
     const wms2 = new WebMapServiceCatalogItem("test2", terria);
     terria.addModel(wms2);
