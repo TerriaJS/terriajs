@@ -32,6 +32,12 @@ jobs:
       - name: Install dependencies
         if: steps.check.outputs.changed == 'true'
         run: npm install
+        
+      - name: Lint and build terriajs
+        if: steps.check.outputs.changed == 'true'
+        run: npx gulp lint release
+        env:
+          NODE_OPTIONS: '--max_old_space_size=8192'
 
       - name: Publish package to NPM
         if: steps.check.outputs.changed == 'true'
