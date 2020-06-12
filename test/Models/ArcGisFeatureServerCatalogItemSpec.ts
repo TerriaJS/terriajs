@@ -147,7 +147,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
       await item.loadMetadata();
       await item.loadMapItems();
 
-      const expectedOutlineWidth = 0.4;
+      const expectedOutlineWidth = 1;
       const expectedPolygonFilledColor: number = Color.fromBytes(
         215,
         203,
@@ -160,12 +160,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
         110,
         255
       ).toRgba();
-      const expectedPolylineColor: number = Color.fromBytes(
-        0,
-        0,
-        0,
-        255
-      ).toRgba();
+      const expectedPolylineColor = expectedPolygonOutlineColor;
 
       const aTime = new JulianDate();
       item.mapItems.map(mapItem => {

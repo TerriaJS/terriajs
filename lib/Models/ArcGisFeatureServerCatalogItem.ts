@@ -553,9 +553,6 @@ function updateEntityWithEsriStyle(
     }
   }
 
-  // Large strock seems not working. Use a fixed one.
-  const lineWidth = 0.4;
-
   // Update the styling of the Cesium Polygon
   if (entity.polygon && symbol.color) {
     const color = symbol.color;
@@ -571,27 +568,17 @@ function updateEntityWithEsriStyle(
       entity.polygon.outlineColor = convertEsriColorToCesiumColor(
         symbol.outline.color
       );
-      entity.polygon.outlineWidth = new ConstantProperty(lineWidth);
+      entity.polygon.outlineWidth = new ConstantProperty(symbol.outline.width);
     }
   }
 
   // Update the styling of the Cesium Polyline.
-  //
-  // The outline might be blocked by an 100% opaque polyline from top
-  // viewing angle in 3D mode rendering. However, other viewing angles
-  // may reduce the lighting conditions of polyline so that the outline
-  // may become visible. To make the outline always visible, ignore
-  // polyline styling if the entity is a polygon with outline.
-  if (
-    (entity.polygon === undefined || symbol.outline === undefined) &&
-    entity.polyline &&
-    symbol.color
-  ) {
+  if (entity.polyline && symbol.outline.color) {
     entity.polyline.material = new ColorMaterialProperty(
-      convertEsriColorToCesiumColor(symbol.color)
+      convertEsriColorToCesiumColor(symbol.outline.color)
     );
     if (isDefined(symbol.width)) {
-      entity.polyline.width = new ConstantProperty(lineWidth);
+      entity.polyline.width = new ConstantProperty(symbol.width);
     }
   }
 }
