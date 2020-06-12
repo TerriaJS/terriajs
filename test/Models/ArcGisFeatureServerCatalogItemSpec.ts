@@ -139,7 +139,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
   });
 
   describe("updateEntityWithEsriStyle", function() {
-    it("does not style polyline if polygon outline has style.", async function() {
+    it("correctly uses symbol.outline.color to style polyline.", async function() {
       runInAction(() => {
         item.setTrait(CommonStrata.definition, "url", featureServerUrl2);
       });

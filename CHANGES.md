@@ -4,9 +4,13 @@ Change Log
 ### MobX Development
 
 
-#### mobx-next-release (mobx-32)
-#### mobx-next-release (mobx-34)
+#### mobx-next-release (mobx-35)
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
+
+#### mobx-34
+* Support ArcGIS feature server.
+* Fix polygon outline style bug.
+* Add a unit test for polygon outline style.
 
 #### mobx-33
 * Updated generic select so icon doesn't block click
