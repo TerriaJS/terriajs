@@ -4,9 +4,14 @@ export enum PaneMode {
   trainer = "trainer"
 }
 
+export interface StepItem {
+  title: string;
+  description?: string;
+}
+
 export interface TrainerItem {
   title: string;
-  steps: string[];
+  steps: StepItem[];
 }
 
 export interface HelpContentItem {
