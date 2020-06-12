@@ -2,6 +2,7 @@ import Compass from "./Navigation/Compass";
 import MyLocation from "./Navigation/MyLocation";
 import PropTypes from "prop-types";
 import React from "react";
+import styled from "styled-components";
 import { withTheme } from "styled-components";
 import { Medium } from "../Generic/Responsive";
 import Styles from "./map-navigation.scss";
@@ -22,6 +23,14 @@ import MapIconButton from "../MapIconButton/MapIconButton";
 import FeedbackButton from "../Feedback/FeedbackButton";
 import CloseToolButton from "./Navigation/CloseToolButton";
 
+const StyledMapNavigation = styled.div`
+  ${p =>
+    p.trainerBarVisible &&
+    `
+    top: ${Number(p.theme.trainerHeight) + Number(p.theme.mapNavigationTop)}px;
+  `}
+`;
+
 // The map navigation region
 @observer
 class MapNavigation extends React.Component {
@@ -37,25 +46,19 @@ class MapNavigation extends React.Component {
   };
 
   render() {
-    const { theme, viewState } = this.props;
+    const { viewState } = this.props;
     const toolIsDifference =
       this.props.viewState.currentTool?.toolName === "Difference";
     const isDiffMode = this.props.viewState.isToolOpen && toolIsDifference;
 
     return (
-      <div
+      <StyledMapNavigation
         className={classNames(Styles.mapNavigation, {
           [Styles.withTimeSeriesControls]: defined(
             this.props.terria.timelineStack.top
           )
         })}
-        css={`
-          ${viewState.trainerBarVisible &&
-            `
-          top: ${Number(theme.trainerHeight) +
-            Number(theme.mapNavigationTop)}px;
-        `}
-        `}
+        trainerBarVisible={viewState.trainerBarVisible}
       >
         <Box centered column justifySpaceBetween fullHeight alignItemsFlexEnd>
           <Box column>
@@ -140,7 +143,7 @@ class MapNavigation extends React.Component {
             </div>
           </Box>
         </Box>
-      </div>
+      </StyledMapNavigation>
     );
   }
 }

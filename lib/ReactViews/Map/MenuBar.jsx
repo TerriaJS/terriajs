@@ -1,5 +1,5 @@
 import React from "react";
-import { withTheme } from "styled-components";
+import styled from "styled-components";
 import triggerResize from "../../Core/triggerResize";
 // import createReactClass from "create-react-class";
 
@@ -13,14 +13,22 @@ import Prompt from "../Generic/Prompt";
 import { withTranslation, Trans } from "react-i18next";
 import Styles from "./menu-bar.scss";
 import { runInAction } from "mobx";
+import { observer } from "mobx-react";
 
 import { useRefForTerria } from "../Hooks/useRefForTerria";
 
+const StyledMenuBar = styled.div`
+  ${p =>
+    p.trainerBarVisible &&
+    `
+    top: ${Number(p.theme.trainerHeight) + Number(p.theme.mapButtonTop)}px;
+  `}
+`;
 // The map navigation region
 // const MenuBar = createReactClass({
 const STORY_BUTTON_NAME = "MenuBarStoryButton";
-const MenuBar = props => {
-  const { t, theme } = props;
+const MenuBar = observer(props => {
+  const { t } = props;
   const storyButtonRef = useRefForTerria(STORY_BUTTON_NAME, props.viewState);
   const menuItems = props.menuItems || [];
   const handleClick = () => {
@@ -71,7 +79,7 @@ const MenuBar = props => {
   const delayTime =
     storyEnabled && props.terria.stories.length > 0 ? 1000 : 2000;
   return (
-    <div
+    <StyledMenuBar
       className={classNames(
         props.viewState.topElement === "MenuBar" ? "top-element" : "",
         Styles.menuBar,
@@ -80,12 +88,7 @@ const MenuBar = props => {
         }
       )}
       onClick={handleClick}
-      css={`
-        ${props.viewState.trainerBarVisible &&
-          `
-          top: ${Number(theme.trainerHeight) + Number(theme.mapButtonTop)}px;
-        `}
-      `}
+      trainerBarVisible={props.viewState.trainerBarVisible}
     >
       <ul className={classNames(Styles.menu)}>
         {/* <li className={Styles.menuItem}>
@@ -164,9 +167,9 @@ const MenuBar = props => {
           </For>
         </If>
       </ul>
-    </div>
+    </StyledMenuBar>
   );
-};
+});
 MenuBar.displayName = "MenuBar";
 MenuBar.propTypes = {
   terria: PropTypes.object,
@@ -179,4 +182,4 @@ MenuBar.propTypes = {
   t: PropTypes.func.isRequired
 };
 
-export default withTranslation()(withTheme(MenuBar));
+export default withTranslation()(MenuBar);
