@@ -59,6 +59,7 @@ terriamap:
             helpContent: 
                 - 
                   itemName: gettingstarted
+                  title: Getting Started
                   markdownText: "# Getting started with the map\n\nTemporarily removed until CI issues resolved"
                   icon: "video"
                   videoUrl: "https://www.youtube.com/embed/NTtSM70rIvI"
@@ -67,12 +68,14 @@ terriamap:
                   title: Step by step guide
                   itemName: stepbystepguide
                   paneMode: trainer
+                  icon: "oneTwoThree"
                   markdownText: "# Step by step guide\n\nLaunch a step by step guide for various popular workflows below:"
                   trainerItems:
-                    - title: Adding satellite imagery
-                      steps:
+                  - 
+                    title: Adding satellite imagery
+                    steps:
                       - title: Open the data catalogue by clicking Explore map data
-                        description: You'll find a button named "Explore map data" on your left hand menu
+                        description: You''ll find a button named "Explore map data" on your left hand menu
                       - title: Navigate to some satellite data on the left hand side of the data catalog
                         description: Select the satellite catalog item of interest
                       - title: Click Add to the map
@@ -81,20 +84,23 @@ terriamap:
                       - title: Adjust zoom level to suit
                         description: You may need to adjust your zoom level to see the scope of the satellite
                           imagery for the given date [...]
-                    - title: Adding data to the map
-                      steps:
+                  - 
+                    title: Adding data to the map
+                    steps:
                       - title: Open the data catalogue by clicking Explore map data
-                        description: You'll find a button named "Explore map data" on your left hand menu
+                        description: You''ll find a button named "Explore map data" on your left hand menu
                       - title: Select a catalogue item of interest
                         description: Navigate around the catalogue until you find some data of interest.
-                    - title: Change detection
-                      steps:
-                      - title: Placeholder
-                        description: Placeholder
-                    - title: Compare 2 dates
-                      steps:
-                      - title: Placeholder
-                        description: Placeholder
+                  - 
+                    title: Change detection
+                    steps:
+                    - title: Placeholder
+                      description: Placeholder
+                  - 
+                    title: Compare 2 dates
+                    steps:
+                    - title: Placeholder
+                      description: Placeholder
     resources:
         requests:
             cpu: 10m

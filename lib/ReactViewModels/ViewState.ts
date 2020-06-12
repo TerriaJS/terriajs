@@ -85,6 +85,7 @@ export default class ViewState {
   @observable videoGuideVisible: string = "";
 
   @observable trainerBarVisible: boolean = false;
+  @observable trainerBarPeeking: boolean = false;
   @observable selectedTrainerItem: string = "";
   @observable currentTrainerItemIndex: number = 0;
   @observable currentTrainerStepIndex: number = 0;
@@ -95,6 +96,10 @@ export default class ViewState {
   @action
   setTrainerBarVisible(bool: boolean) {
     this.trainerBarVisible = bool;
+  }
+  @action
+  setTrainerBarPeeking(bool: boolean) {
+    this.trainerBarPeeking = bool;
   }
   @action
   setCurrentTrainerItemIndex(index: number) {

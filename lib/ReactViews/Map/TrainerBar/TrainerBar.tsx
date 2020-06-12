@@ -24,12 +24,6 @@ const Text: any = require("../../../Styled/Text").default;
 const Spacing: any = require("../../../Styled/Spacing").default;
 import Select from "../../../Styled/Select";
 
-interface TrainerBarProps extends WithTranslation {
-  viewState: ViewState;
-  terria: Terria;
-  theme: DefaultTheme;
-}
-
 const TrainerBarWrapper = styled(Box)`
   top: 0;
   left: ${p => Number(p.theme.workbenchWidth)}px;
@@ -90,19 +84,23 @@ const renderStep = (
 );
 
 const renderOrderedStepList = function(steps: StepItem[]) {
-  return steps.map((step: StepItem, index: number) =>
-    renderStep(step, index + 1)
-  );
+  return steps.map((step: StepItem, index: number) => (
+    <>
+      {renderStep(step, index + 1)}
+      {index + 1 !== steps.length && <Spacing bottom={3} />}
+    </>
+  ));
 };
 
 interface StepAccordionProps {
   viewState: ViewState;
   selectedTrainerSteps: StepItem[];
   theme: DefaultTheme;
+  isPeeking: boolean;
+  setIsPeeking: (bool: boolean) => void;
   heightFromMeasureElementHOC: number | null;
 }
 interface StepAccordionState {
-  isPeeking: boolean;
   isExpanded: boolean;
 }
 
@@ -115,7 +113,6 @@ class StepAccordionRaw extends React.Component<
   constructor(props: StepAccordionProps) {
     super(props);
     this.state = {
-      isPeeking: false,
       isExpanded: false
     };
   }
@@ -124,10 +121,12 @@ class StepAccordionRaw extends React.Component<
       viewState,
       selectedTrainerSteps,
       theme,
+      isPeeking,
+      setIsPeeking,
       heightFromMeasureElementHOC
     } = this.props;
-    const { isPeeking, isExpanded } = this.state;
-    const setIsPeeking = (bool: any) => this.setState({ isPeeking: bool });
+    const { isExpanded } = this.state;
+    // const setIsPeeking = (bool: any) => this.setState({ isPeeking: bool });
     const setIsExpanded = (bool: any) => this.setState({ isExpanded: bool });
     // const [isPeeking, setIsPeeking] = useState(false);
     // const [isExpanded, setIsExpanded] = useState(false);
@@ -143,7 +142,6 @@ class StepAccordionRaw extends React.Component<
           css={`
             max-height: 64px;
           `}
-          ref={(component: any) => (this.refToMeasure = component)}
         >
           {renderStep(
             selectedTrainerSteps[viewState.currentTrainerStepIndex],
@@ -163,6 +161,7 @@ class StepAccordionRaw extends React.Component<
               padding-right: 45px;
             `}
             backgroundColor={theme.textBlack}
+            ref={(component: any) => (this.refToMeasure = component)}
             // onMouseOut={() => setIsPeeking(false)}
           >
             {renderStep(
@@ -177,8 +176,8 @@ class StepAccordionRaw extends React.Component<
             onClick={() => setIsExpanded(!isExpanded)}
             onMouseOver={() => setIsPeeking(true)}
             onFocus={() => setIsPeeking(true)}
-            onMouseOut={() => setIsPeeking(false)}
-            onBlur={() => setIsPeeking(false)}
+            // onMouseOut={() => setIsPeeking(false)}
+            // onBlur={() => setIsPeeking(false)}
             css={"z-index:2;"}
           >
             <StyledIcon styledWidth="26px" light glyph={GLYPHS.upDown} />
@@ -206,131 +205,135 @@ class StepAccordionRaw extends React.Component<
 }
 const StepAccordion = measureElement(StepAccordionRaw);
 
-@observer
-class TrainerBar extends React.Component<TrainerBarProps> {
-  // constructor(props: TrainerBarProps) {
-  //   super(props);
-  // }
-  render() {
-    const { terria, theme, viewState } = this.props;
-    const { helpContent } = terria.configParameters;
-
-    // All these null guards are because we are rendering based on nested
-    // map-owner defined (helpContent)content which could be malformed
-    if (!viewState.trainerBarVisible || !helpContent) {
-      return null;
-    }
-
-    const selectedTrainer = getSelectedTrainerFromHelpContent(
-      viewState,
-      helpContent
-    );
-    const selectedTrainerItems = selectedTrainer?.trainerItems;
-
-    if (!selectedTrainerItems) {
-      return null;
-    }
-
-    const trainerItemIndex =
-      viewState.currentTrainerItemIndex <= selectedTrainerItems.length
-        ? viewState.currentTrainerItemIndex
-        : 0;
-    const selectedTrainerSteps = selectedTrainerItems[trainerItemIndex]?.steps;
-    if (!selectedTrainerSteps) {
-      return null;
-    }
-
-    return (
-      <TrainerBarWrapper
-        centered
-        positionAbsolute
-        styledWidth={`calc(100% - ${Number(theme.workbenchWidth)}px)`}
-        onClick={() => this.props.viewState.setTopElement("TrainerBar")}
-      >
-        <Box
-          fullWidth
-          fullHeight
-          centered
-          justifySpaceBetween
-          backgroundColor={theme.textBlack}
-        >
-          {/* Trainer Items Dropdown */}
-          <Box css={"min-height: 64px;"}>
-            {/* <Spacing right={6} /> */}
-            <Select
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                viewState.setCurrentTrainerItemIndex(Number(e.target.value))
-              }
-              value={viewState.currentTrainerItemIndex}
-              // css={"min-width: 280px;"}
-            >
-              {selectedTrainerItems.map((item, index) => (
-                <option value={index}>{item.title}</option>
-              ))}
-            </Select>
-            {/* <Spacing right={8} /> */}
-          </Box>
-
-          {/* Trainer Steps within a Trainer Item */}
-
-          <StepAccordion
-            viewState={viewState}
-            selectedTrainerSteps={selectedTrainerSteps}
-            theme={theme}
-          />
-          <Spacing right={4} />
-
-          {/* Navigation & Close */}
-          <Box>
-            <Button
-              secondary
-              shortMinHeight
-              css={`
-                background: transparent;
-                color: ${theme.textLight};
-                border-color: ${theme.textLight};
-                ${viewState.currentTrainerStepIndex === 0 &&
-                  `visibility: hidden;`}
-              `}
-              onClick={() =>
-                viewState.setCurrentTrainerStepIndex(
-                  viewState.currentTrainerStepIndex - 1
-                )
-              }
-            >
-              Back
-            </Button>
-            <Spacing right={2} />
-            <Button
-              primary
-              shortMinHeight
-              css={`
-                ${viewState.currentTrainerStepIndex ===
-                  selectedTrainerSteps.length - 1 && `visibility: hidden;`}
-              `}
-              onClick={() =>
-                viewState.setCurrentTrainerStepIndex(
-                  viewState.currentTrainerStepIndex + 1
-                )
-              }
-            >
-              Next
-            </Button>
-            <Spacing right={5} />
-            <Box centered>
-              <CloseButton
-                noAbsolute
-                // topRight
-                color={this.props.theme.textLight}
-                onClick={() => viewState.setTrainerBarVisible(false)}
-              />
-            </Box>
-            <Spacing right={6} />
-          </Box>
-        </Box>
-      </TrainerBarWrapper>
-    );
-  }
+interface TrainerBarProps extends WithTranslation {
+  viewState: ViewState;
+  terria: Terria;
+  theme: DefaultTheme;
 }
+
+const TrainerBar = observer((props: TrainerBarProps) => {
+  const { terria, theme, viewState } = props;
+  const { helpContent } = terria.configParameters;
+
+  // All these null guards are because we are rendering based on nested
+  // map-owner defined (helpContent)content which could be malformed
+  if (!viewState.trainerBarVisible || !helpContent) {
+    return null;
+  }
+
+  const selectedTrainer = getSelectedTrainerFromHelpContent(
+    viewState,
+    helpContent
+  );
+  const selectedTrainerItems = selectedTrainer?.trainerItems;
+
+  if (!selectedTrainerItems) {
+    return null;
+  }
+
+  const trainerItemIndex =
+    viewState.currentTrainerItemIndex <= selectedTrainerItems.length
+      ? viewState.currentTrainerItemIndex
+      : 0;
+  const selectedTrainerSteps = selectedTrainerItems[trainerItemIndex]?.steps;
+  if (!selectedTrainerSteps) {
+    return null;
+  }
+
+  return (
+    <TrainerBarWrapper
+      centered
+      positionAbsolute
+      styledWidth={`calc(100% - ${Number(theme.workbenchWidth)}px)`}
+      onClick={() => viewState.setTopElement("TrainerBar")}
+    >
+      <Box
+        fullWidth
+        fullHeight
+        centered
+        justifySpaceBetween
+        backgroundColor={theme.textBlack}
+      >
+        {/* Trainer Items Dropdown */}
+        <Box css={"min-height: 64px;"}>
+          {/* <Spacing right={6} /> */}
+          <Select
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+              viewState.setCurrentTrainerItemIndex(Number(e.target.value))
+            }
+            value={viewState.currentTrainerItemIndex}
+            // css={"min-width: 280px;"}
+          >
+            {selectedTrainerItems.map((item, index) => (
+              <option value={index}>{item.title}</option>
+            ))}
+          </Select>
+          {/* <Spacing right={8} /> */}
+        </Box>
+
+        {/* Trainer Steps within a Trainer Item */}
+
+        <StepAccordion
+          viewState={viewState}
+          selectedTrainerSteps={selectedTrainerSteps}
+          isPeeking={viewState.trainerBarPeeking}
+          setIsPeeking={(bool: boolean) => viewState.setTrainerBarPeeking(bool)}
+          theme={theme}
+        />
+        <Spacing right={4} />
+
+        {/* Navigation & Close */}
+        <Box>
+          <Button
+            secondary
+            shortMinHeight
+            css={`
+              background: transparent;
+              color: ${theme.textLight};
+              border-color: ${theme.textLight};
+              ${viewState.currentTrainerStepIndex === 0 &&
+                `visibility: hidden;`}
+            `}
+            onClick={() => {
+              viewState.setTrainerBarPeeking(false);
+              viewState.setCurrentTrainerStepIndex(
+                viewState.currentTrainerStepIndex - 1
+              );
+            }}
+          >
+            Back
+          </Button>
+          <Spacing right={2} />
+          <Button
+            primary
+            shortMinHeight
+            css={`
+              ${viewState.currentTrainerStepIndex ===
+                selectedTrainerSteps.length - 1 && `visibility: hidden;`}
+            `}
+            onClick={() => {
+              viewState.setTrainerBarPeeking(false);
+              viewState.setCurrentTrainerStepIndex(
+                viewState.currentTrainerStepIndex + 1
+              );
+            }}
+          >
+            Next
+          </Button>
+          <Spacing right={5} />
+          <Box centered>
+            <CloseButton
+              noAbsolute
+              // topRight
+              color={theme.textLight}
+              onClick={() => viewState.setTrainerBarVisible(false)}
+            />
+          </Box>
+          <Spacing right={6} />
+        </Box>
+      </Box>
+    </TrainerBarWrapper>
+  );
+});
 
 export default withTranslation()(withTheme(TrainerBar));
