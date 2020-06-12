@@ -128,6 +128,7 @@ export default class Terria {
 
   readonly baseUrl: string = "build/TerriaJS/";
   readonly error = new CesiumEvent();
+  readonly tileLoadProgressEvent = new CesiumEvent();
   readonly workbench = new Workbench();
   readonly overlays = new Workbench();
   readonly catalog = new Catalog(this);
