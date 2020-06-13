@@ -34,6 +34,7 @@ import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraph
 import replaceUnderscores from "../Core/replaceUnderscores";
 import PolylineDashMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineDashMaterialProperty";
 import createInfoSection from "./createInfoSection";
+import { esriLineStyleCesium, supportedLineStyle } from "./esriLineStyle";
 
 const proj4 = require("proj4").default;
 
@@ -48,19 +49,6 @@ type esriStyleTypes =
   | "esriSFS"; // simple fill style
 
 //as defined https://developers.arcgis.com/web-map-specification/objects/esriSLS_symbol/
-type supportedLineStyle =
-  | "esriSLSSolid" // solid line
-  | "esriSLSDash" // dashes (-----)
-  | "esriSLSDashDot" // line (-.-.-)
-  | "esriSLSDashDotDot" // line (-..-..-)
-  | "esriSLSDot" // dotted line (.....)
-  | "esriSLSLongDash"
-  | "esriSLSLongDashDot"
-  | "esriSLSShortDash"
-  | "esriSLSShortDashDot"
-  | "esriSLSShortDashDotDot"
-  | "esriSLSShortDot"
-  | "esriSLSNull"; // line is not visible
 
 type supportedFillStyle =
   | "esriSFSSolid" // fill line with color
@@ -577,7 +565,7 @@ function updateEntityWithEsriStyle(
   catalogItem: ArcGisFeatureServerCatalogItem
 ): void {
   // type of geometry is point and the applied style is image
-  // TO DO: tweek the svg support
+  // TODO: tweek the svg support
   if (symbol.type === "esriPMS") {
     // Replace a general Cesium Point with a billboard
     if (entity.point && symbol.imageData) {
@@ -604,6 +592,7 @@ function updateEntityWithEsriStyle(
     }
   } else if (symbol.type === "esriSMS") {
     // Update the styling of the Cesium Point
+    // TODO extend support for cross, diamond, square, x, triangle
     if (entity.point && symbol.color) {
       entity.point.color = new ConstantProperty(
         convertEsriColorToCesiumColor(symbol.color)
@@ -661,72 +650,26 @@ function updateEntityWithEsriStyle(
 }
 
 function esriPolylineStyle(entity: Entity, symbol: Symbol | Outline): void {
-  if (symbol.style === "esriSFSSolid") {
-    // it is simple line just define color
-    entity.polyline.material = new ColorMaterialProperty(
-      convertEsriColorToCesiumColor(symbol.color!)
-    );
-  } else if (symbol.style === "esriSLSDash") {
-    // default PolylineDashMaterialProperty is dashed line ` -` (0x00FF)
-    entity.polyline.material = new PolylineDashMaterialProperty({
-      color: convertEsriColorToCesiumColor(symbol.color!)
-    });
-  } else if (symbol.style === "esriSLSDot") {
-    // "   -"
-    entity.polyline.material = new PolylineDashMaterialProperty({
-      color: convertEsriColorToCesiumColor(symbol.color!),
-      dashPattern: new ConstantProperty(7)
-    });
-  } else if (symbol.style === "esriSLSDashDot") {
-    // "   ----   -"
-    entity.polyline.material = new PolylineDashMaterialProperty({
-      color: convertEsriColorToCesiumColor(symbol.color!),
-      dashPattern: new ConstantProperty(2017)
-    });
-  } else if (symbol.style === "esriSLSDashDotDot") {
-    // '  --------   -   - '
-    entity.polyline.material = new PolylineDashMaterialProperty({
-      color: convertEsriColorToCesiumColor(symbol.color!),
-      dashPattern: new ConstantProperty(16273)
-    });
-  } else if (symbol.style === "esriSLSLongDash") {
-    // '   --------'
-    entity.polyline.material = new PolylineDashMaterialProperty({
-      color: convertEsriColorToCesiumColor(symbol.color!),
-      dashLength: new ConstantProperty(2047)
-    });
-  } else if (symbol.style === "esriSLSLongDashDot") {
-    // '   --------   -'
-    entity.polyline.material = new PolylineDashMaterialProperty({
-      color: convertEsriColorToCesiumColor(symbol.color!),
-      dashPattern: new ConstantProperty(4081)
-    });
-  } else if (symbol.style === "esriSLSShortDash") {
-    //' ----'
-    entity.polyline.material = new PolylineDashMaterialProperty({
-      color: convertEsriColorToCesiumColor(symbol.color!),
-      dashPattern: new ConstantProperty(4095)
-    });
-  } else if (symbol.style === "esriSLSShortDashDot") {
-    //' ---- -'
-    entity.polyline.material = new PolylineDashMaterialProperty({
-      color: convertEsriColorToCesiumColor(symbol.color!),
-      dashPattern: new ConstantProperty(8179)
-    });
-  } else if (symbol.style === "esriSLSShortDashDotDot") {
-    //' ---- - -'
-    entity.polyline.material = new PolylineDashMaterialProperty({
-      color: convertEsriColorToCesiumColor(symbol.color!),
-      dashPattern: new ConstantProperty(16281)
-    });
-  } else if (symbol.style === "esriSLSShortDot") {
-    //' - - - -'
-    entity.polyline.material = new PolylineDashMaterialProperty({
-      color: convertEsriColorToCesiumColor(symbol.color!),
-      dashPattern: new ConstantProperty(13107)
-    });
-  } else if (symbol.style === "esriSLSNull") {
-    entity.polyline.show = new ConstantProperty(false);
+  if (symbol.style && Object.keys(esriLineStyleCesium).includes(symbol.style)) {
+    const patternValue = esriLineStyleCesium[<supportedLineStyle>symbol.style];
+    if (patternValue) {
+      entity.polyline.material = new PolylineDashMaterialProperty({
+        color: convertEsriColorToCesiumColor(symbol.color!),
+        dashPattern: new ConstantProperty(patternValue)
+      });
+    } else if (symbol.style === "esriSLSSolid") {
+      // it is simple line just define color
+      entity.polyline.material = new ColorMaterialProperty(
+        convertEsriColorToCesiumColor(symbol.color!)
+      );
+    } else if (symbol.style === "esriSLSDash") {
+      // default PolylineDashMaterialProperty is dashed line ` -` (0x00FF)
+      entity.polyline.material = new PolylineDashMaterialProperty({
+        color: convertEsriColorToCesiumColor(symbol.color!)
+      });
+    } else if (symbol.style === "esriSLSNull") {
+      entity.polyline.show = new ConstantProperty(false);
+    }
   } else {
     // we don't know how to handle style make it default
     entity.polyline.material = new ColorMaterialProperty(

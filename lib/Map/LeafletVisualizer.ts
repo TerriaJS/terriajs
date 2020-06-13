@@ -10,11 +10,13 @@ import EntityCollection from "terriajs-cesium/Source/DataSources/EntityCollectio
 import EntityCluster from "terriajs-cesium/Source/DataSources/EntityCluster";
 import isDefined from "../Core/isDefined";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import L, { LatLngBounds } from "leaflet";
+import L, { LatLngBounds, PolylineOptions } from "leaflet";
 import LeafletScene from "./LeafletScene";
 import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
 import PolylineGlowMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineGlowMaterialProperty";
+import PolylineDashMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineDashMaterialProperty";
 import Property from "terriajs-cesium/Source/DataSources/Property";
+import { esriLineStyleLealet } from "../Models/esriLineStyle";
 
 const destroyObject = require("terriajs-cesium/Source/Core/destroyObject")
   .default;
@@ -775,7 +777,9 @@ class LeafletGeomVisualizer {
       );
     }
 
-    let color, width;
+    let color;
+    let dashArray: number[] | undefined;
+    let width: number;
     if (polylineGraphics.material instanceof PolylineGlowMaterialProperty) {
       color = defaultColor;
       width = defaultWidth;
@@ -791,12 +795,27 @@ class LeafletGeomVisualizer {
         defaultWidth
       );
     }
+    if (polylineGraphics.material instanceof PolylineDashMaterialProperty) {
+      const dashPattern = polylineGraphics.material.dashPattern
+        ? polylineGraphics.material.dashPattern.getValue(time)
+        : undefined;
 
-    const polylineOptions = {
+      if (esriLineStyleLealet[dashPattern]) {
+        dashArray = esriLineStyleLealet[dashPattern];
+      } else {
+        dashArray = esriLineStyleLealet[2];
+      }
+    }
+
+    const polylineOptions: PolylineOptions = {
       color: color.toCssColorString(),
       weight: width,
       opacity: color.alpha
     };
+
+    if (dashArray) {
+      polylineOptions.dashArray = dashArray.map(x => x * width).join(",");
+    }
 
     if (!isDefined(geomLayer)) {
       if (latlngs.length > 0) {
