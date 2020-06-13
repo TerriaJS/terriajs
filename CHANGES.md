@@ -3,9 +3,8 @@ Change Log
 
 ### MobX Development
 
-
-#### mobx-next-release (mobx-32)
 #### mobx-next-release (mobx-34)
+* Extended the support for styles for ESRI ArcGis Feature Server. Line styles are supported for lines and polygon outlines in both Cesium and Leaflet viewer. #4405
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-33
