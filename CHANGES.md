@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### mobx-next-release (mobx-34)
+* Fix leaflet zoom to work when bounding rectangle exists but doesn't have bounds defined
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-33
