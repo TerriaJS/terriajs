@@ -651,6 +651,17 @@ class LeafletGeomVisualizer {
       true
     );
     const outline = getValueOrDefault(polygonGraphics.outline, time, true);
+    let dashArray;
+    if (polygonGraphics.outline instanceof PolylineDashMaterialProperty) {
+      dashArray = getDashArray(polygonGraphics.outline, time);
+    }
+
+    const outlineWidth = getValueOrDefault(
+      (polygonGraphics.outlineWidth as unknown) as Property,
+      time,
+      defaultOutlineWidth
+    );
+
     const outlineColor = getValueOrDefault(
       (polygonGraphics.outlineColor as unknown) as Property,
       time,
@@ -670,14 +681,21 @@ class LeafletGeomVisualizer {
 
     let layer = details.layer;
     if (!isDefined(layer)) {
-      const polygonOptions = {
+      console.log(outlineColor);
+      const polygonOptions: PolylineOptions = {
         fill: fill,
         fillColor: fillColor.toCssColorString(),
         fillOpacity: fillColor.alpha,
-        weight: outline ? 1.0 : 0.0,
+        weight: outline ? outlineWidth : 0.0,
         color: outlineColor.toCssColorString(),
         opacity: outlineColor.alpha
       };
+
+      if (outline && dashArray) {
+        polygonOptions.dashArray = dashArray
+          .map(x => x * outlineWidth)
+          .join(",");
+      }
 
       layer = details.layer = L.polygon(
         hierarchyToLatLngs(hierarchy),
@@ -711,7 +729,7 @@ class LeafletGeomVisualizer {
     }
 
     if (outline !== details.lastOutline) {
-      options.weight = outline ? 1.0 : 0.0;
+      options.weight = outline ? outlineWidth : 0.0;
       details.lastOutline = outline;
       applyStyle = true;
     }
@@ -796,15 +814,7 @@ class LeafletGeomVisualizer {
       );
     }
     if (polylineGraphics.material instanceof PolylineDashMaterialProperty) {
-      const dashPattern = polylineGraphics.material.dashPattern
-        ? polylineGraphics.material.dashPattern.getValue(time)
-        : undefined;
-
-      if (esriLineStyleLealet[dashPattern]) {
-        dashArray = esriLineStyleLealet[dashPattern];
-      } else {
-        dashArray = esriLineStyleLealet[2];
-      }
+      dashArray = getDashArray(polylineGraphics.material, time);
     }
 
     const polylineOptions: PolylineOptions = {
@@ -916,6 +926,25 @@ class LeafletGeomVisualizer {
 
     return result;
   }
+}
+
+function getDashArray(
+  material: PolylineDashMaterialProperty,
+  time: JulianDate
+): number[] {
+  let dashArray;
+
+  const dashPattern = material.dashPattern
+    ? material.dashPattern.getValue(time)
+    : undefined;
+
+  if (esriLineStyleLealet[dashPattern]) {
+    dashArray = esriLineStyleLealet[dashPattern];
+  } else {
+    dashArray = esriLineStyleLealet[2];
+  }
+
+  return dashArray;
 }
 
 function cleanEntity(

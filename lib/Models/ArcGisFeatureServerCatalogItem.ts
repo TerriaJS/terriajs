@@ -643,6 +643,7 @@ function updateEntityWithEsriStyle(
         if (entity.polyline) {
           esriPolylineStyle(entity, symbol.outline);
           entity.polyline.width = new ConstantProperty(symbol.outline.width);
+          entity.polygon.outline = entity.polyline.material;
         }
       }
     }
