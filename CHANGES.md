@@ -5,6 +5,14 @@ Change Log
 
 
 #### mobx-next-release (mobx-32)
+#### mobx-next-release (mobx-34)
+* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
+
+#### mobx-33
+* Updated generic select so icon doesn't block click
+* Re-added loading bar for leaflet & cesium viewers
+
+#### mobx-32
 * Made expanded SOS chart item shareable.
 * Fixed a regression bug where the time filter is shown for all satellite imagery items
 * Add unit tests for `WelcomeMessage` and `Disclaimer`
@@ -16,16 +24,19 @@ Change Log
 * Fixed a bug where WMS items caused type errors in newer babel and typescript builds, due to mixed mixin methods on DiffableMixin & DiscretelyTimeVaryingMixin
 * Fixed a bug where KmlCatalogItem did not use the proxy for any urls.
 * Add support for `CkanCatalogGroup` and `CkanItemReference`.
+* Added unit test to ensure getAncestors behaviour
 * Hide the chart legend if there are more than four items to prevent things like FeatureInfo being pushed out of the view and the map resizing.
 * Prevent addedByUser stack overflow
 * Fixed a chart bug where moment points do not stick to the basis item when they are of different scale.
 * Fixed a bug where the moment point selection highlight is lost when changing the satellite imagery date.
 * Removed sass from Clipboard
 * Updated LocationSearchResults to support multiple search providers
-* Updated LocationSearchResults to support multiple search providers
 * Replaced lifesaver icon on the help button with a question mark button
 * Fix handling of points and markers around the anti-meridian in the `LeafletVisualizer`.
-* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
+* Fixed difference tool losing datepicker state by keeping it mounted
+* Disabled unhelpful Help button when in `useSmallScreenInterface`
+* Fixed a bug where a single incorrect catalog item in a group would prevent subsequent items from loading.
+* Improved catalog parsing to include a stub (`StubCatalogItem`) when terriajs can't parse something
 
 #### mobx-31
 * Fixes broken time filter location picker when other features are present on the map.
@@ -34,8 +45,6 @@ Change Log
 * Added `Title`, `ContactInformation`, `Fees` to the `CapabilitiesService` interface so they are pulled on metadata load.
 * Resolved name issue of `WebMapServiceCapabilities`. Now it returns a name resolved from `capabilities` unless it is set by user.
 * Added setting of `isOpenInWorkbench`, `isExperiencingIssues`, `hideLegendInWorkbench`, `hideSource` strats for `WebMapServiceCatalogItem` from `WebMapServiceCatalogGroup`.
-* Fixed a bug where a single incorrect catalog item in a group would prevent subsequent items from loading.
-* Improved catalog parsing to include a stub (`StubCatalogItem`) when terriajs can't parse something
 
 #### mobx-30
 * Ported welcome message to mobx with new designs
