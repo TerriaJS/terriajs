@@ -1,19 +1,7 @@
-export type supportedLineStyle =
-  | "esriSLSSolid" // solid line
-  | "esriSLSDash" // dashes (-----)
-  | "esriSLSDashDot" // line (-.-.-)
-  | "esriSLSDashDotDot" // line (-..-..-)
-  | "esriSLSDot" // dotted line (.....)
-  | "esriSLSLongDash"
-  | "esriSLSLongDashDot"
-  | "esriSLSShortDash"
-  | "esriSLSShortDashDot"
-  | "esriSLSShortDashDotDot"
-  | "esriSLSShortDot"
-  | "esriSLSNull"; // line is not visible
+const defaultDashArray = [4, 3];
 
-export const esriLineStyleCesium: {
-  [key in supportedLineStyle]: number | undefined;
+const esriLineStyleCesium: {
+  [key: string]: number;
 } = {
   esriSLSDot: 7, //"   -"
   esriSLSDashDot: 2017, //"   ----   -"
@@ -23,16 +11,12 @@ export const esriLineStyleCesium: {
   esriSLSShortDash: 4095, //' ----'
   esriSLSShortDot: 13107, //' ---- -'
   esriSLSShortDashDot: 8179, //' ---- - -'
-  esriSLSShortDashDotDot: 16281, //' - - - -'
-  esriSLSSolid: undefined,
-  esriSLSDash: undefined,
-  esriSLSNull: undefined
+  esriSLSShortDashDotDot: 16281 //' - - - -'
 };
 
-export const esriLineStyleLealet: {
+const esriLineStyleLealet: {
   [key: number]: number[];
 } = {
-  2: [4, 3],
   7: [1, 3],
   2017: [4, 3, 1, 3],
   16273: [8, 3, 1, 3, 1, 3],
@@ -43,3 +27,17 @@ export const esriLineStyleLealet: {
   8179: [4, 1, 1, 1],
   16281: [4, 1, 1, 1, 1, 1]
 };
+
+export function getLineStyleLeaflet(dashPattern: number): number[] {
+  if (esriLineStyleLealet[dashPattern]) {
+    return esriLineStyleLealet[dashPattern];
+  }
+  return defaultDashArray;
+}
+
+export function getLineStyleCesium(styleName: string) {
+  if (esriLineStyleCesium[styleName]) {
+    return esriLineStyleCesium[styleName];
+  }
+  return undefined;
+}
