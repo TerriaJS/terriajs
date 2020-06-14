@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### mobx-next-release (mobx-34)
+* Fixed a bug where user added data was removed from catalogue when Remove from map button in data catalog is clicked.
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-33
