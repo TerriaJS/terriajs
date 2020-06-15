@@ -21,7 +21,6 @@ import Color from "terriajs-cesium/Source/Core/Color";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import createStratumInstance from "./createStratumInstance";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import StratumFromTraits from "./StratumFromTraits";
 import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
 import proj4definitions from "../Map/Proj4Definitions";
@@ -78,6 +77,7 @@ export type supportedLineStyle =
   | "esriSLSNull";
 
 const defaultColor = [255, 255, 255, 255];
+const defaultFillColor = [255, 255, 255, 1];
 const defaultOutlineColor = [0, 0, 0, 255];
 
 // See actual Symbol at https://developers.arcgis.com/web-map-specification/objects/symbol/
@@ -349,6 +349,9 @@ class FeatureServerStratum extends LoadableStratum(
       const label = replaceUnderscores(info.label);
       const symbol = info.symbol;
       if (symbol) {
+        if (symbol.style === "esriSLSNull") {
+          return;
+        }
         const color = symbol.color;
         const imageUrl = symbol.imageData
           ? proxyCatalogItemUrl(
@@ -594,8 +597,8 @@ function updateEntityWithEsriStyle(
         heightReference: catalogItem.clampToGround
           ? HeightReference.RELATIVE_TO_GROUND
           : undefined,
-        width: symbol.width,
-        height: symbol.height,
+        width: convertEsriPointSizeToPixels(symbol.width!),
+        height: convertEsriPointSizeToPixels(symbol.height!),
         rotation: symbol.angle
       });
 
@@ -614,20 +617,26 @@ function updateEntityWithEsriStyle(
       entity.point.color = new ConstantProperty(
         convertEsriColorToCesiumColor(symbol.color)
       );
-      entity.point.pixelSize = new ConstantProperty(symbol.size);
+      entity.point.pixelSize = new ConstantProperty(
+        convertEsriPointSizeToPixels(symbol.size!)
+      );
 
       if (symbol.outline) {
         entity.point.outlineColor = new ConstantProperty(
           convertEsriColorToCesiumColor(symbol.outline.color)
         );
-        entity.point.outlineWidth = new ConstantProperty(symbol.outline.width);
+        entity.point.outlineWidth = new ConstantProperty(
+          convertEsriPointSizeToPixels(symbol.outline.width)
+        );
       }
     }
   } else if (symbol.type === "esriSLS") {
     /* Update the styling of the Cesium Polyline */
     if (entity.polyline) {
       if (isDefined(symbol.width)) {
-        entity.polyline.width = new ConstantProperty(symbol.width);
+        entity.polyline.width = new ConstantProperty(
+          convertEsriPointSizeToPixels(symbol.width)
+        );
       }
       const color = symbol.color ? symbol.color : defaultColor;
       /* 
@@ -640,15 +649,23 @@ function updateEntityWithEsriStyle(
   } else if (symbol.type === "esriSFS") {
     // Update the styling of the Cesium Polygon
     if (entity.polygon) {
-      const color = symbol.color ? symbol.color : defaultColor;
+      const color = symbol.color ? symbol.color : defaultFillColor;
 
       // feature picking doesn't work when the polygon interior is transparent, so
       // use an almost-transparent color instead
       if (color[3] === 0) {
         color[3] = 1;
       }
-      entity.polygon.material = convertEsriColorToCesiumColor(color);
 
+      if (
+        symbol.style === "esriSFSNull" &&
+        symbol.outline &&
+        symbol.outline.style === "esriSLSNull"
+      ) {
+        entity.polygon.show = new ConstantProperty(false);
+      } else {
+        entity.polygon.material = convertEsriColorToCesiumColor(color);
+      }
       if (symbol.outline) {
         const outlineColor = symbol.outline.color
           ? symbol.outline.color
@@ -659,11 +676,13 @@ function updateEntityWithEsriStyle(
           outlineColor
         );
         entity.polygon.outlineWidth = new ConstantProperty(
-          symbol.outline.width
+          convertEsriPointSizeToPixels(symbol.outline.width)
         );
         if (entity.polyline) {
-          esriPolylineStyle(entity, [], symbol.outline.style);
-          entity.polyline.width = new ConstantProperty(symbol.outline.width);
+          esriPolylineStyle(entity, outlineColor, symbol.outline.style);
+          entity.polyline.width = new ConstantProperty(
+            convertEsriPointSizeToPixels(symbol.outline.width)
+          );
           entity.polygon.outline = entity.polyline.material;
         }
       }
@@ -678,7 +697,6 @@ function esriPolylineStyle(
 ): void {
   if (style) {
     const patternValue = getLineStyleCesium(style);
-    console.log(patternValue);
     if (patternValue) {
       entity.polyline.material = new PolylineDashMaterialProperty({
         color: convertEsriColorToCesiumColor(color),
@@ -705,6 +723,13 @@ function esriPolylineStyle(
   if (style === "esriSLSNull") {
     entity.polyline.show = new ConstantProperty(false);
   }
+}
+
+// ESRI uses points for styling while cesium uses pixels
+export function convertEsriPointSizeToPixels(pointSize: number) {
+  // 1 px = 0.75 point
+  // 1 point = 4/3 point
+  return (pointSize * 4) / 3;
 }
 
 function loadGeoJson(catalogItem: ArcGisFeatureServerCatalogItem) {
