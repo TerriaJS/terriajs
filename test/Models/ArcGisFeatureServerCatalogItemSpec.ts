@@ -2,6 +2,7 @@ import { configure, runInAction } from "mobx";
 import _loadWithXhr from "../../lib/Core/loadWithXhr";
 import Terria from "../../lib/Models/Terria";
 import ArcGisFeatureServerCatalogItem from "../../lib/Models/ArcGisFeatureServerCatalogItem";
+import { getLineStyleCesium } from "../../lib/Models/esriLineStyle";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import isDefined from "../../lib/Core/isDefined";
 import { JsonArray } from "../../lib/Core/Json";
@@ -272,12 +273,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
         (<PolylineDashMaterialProperty>(
           entities[1].polyline.material
         )).dashPattern.getValue(time)
-      ).toEqual(7);
-      expect(
-        (<PolylineDashMaterialProperty>(
-          entities[1].polyline.material
-        )).dashPattern.getValue(time)
-      ).toEqual(7);
+      ).toEqual(getLineStyleCesium("esriSLSDot"));
       expect(entities[1].polyline.width.getValue(time)).toEqual(1.5);
 
       expect(entities[2].polyline).toBeDefined();
@@ -298,7 +294,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
         (<PolylineDashMaterialProperty>(
           entities[3].polyline.material
         )).dashPattern.getValue(time)
-      ).toEqual(2017);
+      ).toEqual(getLineStyleCesium("esriSLSDashDot"));
       expect(entities[3].polyline.width.getValue(time)).toEqual(1.5);
 
       expect(entities[4].polyline).toBeDefined();
@@ -309,7 +305,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
         (<PolylineDashMaterialProperty>(
           entities[4].polyline.material
         )).dashPattern.getValue(time)
-      ).toEqual(16273);
+      ).toEqual(getLineStyleCesium("esriSLSDashDotDot"));
       expect(entities[4].polyline.width.getValue(time)).toEqual(1.5);
 
       expect(entities[5].polyline).toBeDefined();
@@ -320,7 +316,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
         (<PolylineDashMaterialProperty>(
           entities[5].polyline.material
         )).dashPattern.getValue(time)
-      ).toEqual(2047);
+      ).toEqual(getLineStyleCesium("esriSLSLongDash"));
       expect(entities[5].polyline.width.getValue(time)).toEqual(1.5);
 
       expect(entities[6].polyline).toBeDefined();
@@ -331,7 +327,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
         (<PolylineDashMaterialProperty>(
           entities[6].polyline.material
         )).dashPattern.getValue(time)
-      ).toEqual(4081);
+      ).toEqual(getLineStyleCesium("esriSLSLongDashDot"));
       expect(entities[6].polyline.width.getValue(time)).toEqual(1.5);
 
       expect(entities[7].polyline).toBeDefined();
@@ -342,7 +338,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
         (<PolylineDashMaterialProperty>(
           entities[7].polyline.material
         )).dashPattern.getValue(time)
-      ).toEqual(4095);
+      ).toEqual(getLineStyleCesium("esriSLSShortDash"));
       expect(entities[7].polyline.width.getValue(time)).toEqual(1.5);
 
       expect(entities[8].polyline).toBeDefined();
@@ -353,7 +349,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
         (<PolylineDashMaterialProperty>(
           entities[8].polyline.material
         )).dashPattern.getValue(time)
-      ).toEqual(13107);
+      ).toEqual(getLineStyleCesium("esriSLSShortDot"));
       expect(entities[8].polyline.width.getValue(time)).toEqual(1.5);
 
       expect(entities[9].polyline).toBeDefined();
@@ -364,7 +360,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
         (<PolylineDashMaterialProperty>(
           entities[9].polyline.material
         )).dashPattern.getValue(time)
-      ).toEqual(8179);
+      ).toEqual(getLineStyleCesium("esriSLSShortDashDot"));
       expect(entities[9].polyline.width.getValue(time)).toEqual(1.5);
 
       expect(entities[10].polyline).toBeDefined();
@@ -375,7 +371,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
         (<PolylineDashMaterialProperty>(
           entities[10].polyline.material
         )).dashPattern.getValue(time)
-      ).toEqual(16281);
+      ).toEqual(getLineStyleCesium("esriSLSShortDashDotDot"));
       expect(entities[10].polyline.width.getValue(time)).toEqual(1.5);
 
       expect(entities[11].polyline).toBeDefined();
