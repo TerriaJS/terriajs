@@ -203,6 +203,47 @@ export default class Leaflet extends GlobeOrMap {
         });
       }
     });
+
+    this._initProgressEvent();
+  }
+
+  /**
+   * sets up loading listeners
+   */
+  private _initProgressEvent() {
+    const onTileLoadChange = () => {
+      var tilesLoadingCount = 0;
+
+      this.map.eachLayer(function(layerOrGridlayer) {
+        // _tiles is protected but our knockout-loading-logic accesses it here anyway
+        const layer = layerOrGridlayer as any;
+        if (layer?._tiles) {
+          // Count all tiles not marked as loaded
+          tilesLoadingCount += Object.keys(layer._tiles).filter(
+            key => !layer._tiles[key].loaded
+          ).length;
+        }
+      });
+
+      this._updateTilesLoadingCount(tilesLoadingCount);
+    };
+
+    this.map.on(
+      "layeradd",
+      function(evt: any) {
+        // This check makes sure we only watch tile layers, and also protects us if this private variable gets changed.
+        if (typeof evt.layer._tiles !== "undefined") {
+          evt.layer.on("tileloadstart tileload load", onTileLoadChange);
+        }
+      }.bind(this)
+    );
+
+    this.map.on(
+      "layerremove",
+      function(evt: any) {
+        evt.layer.off("tileloadstart tileload load", onTileLoadChange);
+      }.bind(this)
+    );
   }
 
   /**

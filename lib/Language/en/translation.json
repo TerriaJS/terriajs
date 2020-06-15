@@ -536,6 +536,9 @@
     "selectExistingPolygon": "Select existing polygon"
   },
   "core": {
+    "errors": {
+      "tooDeepAddedByUser": "Reached 100 catalog items when checking addedByUser and landing on ID: \"{{memberId}}\"? Check that you haven't got a recursive catalog group."
+    },
     "userAddedData": "User-Added Data",
     "chartData": "Chart Data",
     "dataUri": {
