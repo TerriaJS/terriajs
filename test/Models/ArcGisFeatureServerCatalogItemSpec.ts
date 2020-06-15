@@ -172,7 +172,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
         110,
         255
       ).toRgba();
-      const expectedPolylineColor = Color.WHITE.toRgba();
+      const expectedPolylineColor = expectedPolygonOutlineColor;
 
       const aTime = new JulianDate();
       item.mapItems.map(mapItem => {

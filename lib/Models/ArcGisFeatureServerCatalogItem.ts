@@ -662,7 +662,7 @@ function updateEntityWithEsriStyle(
           symbol.outline.width
         );
         if (entity.polyline) {
-          esriPolylineStyle(entity, [], symbol.outline.style);
+          esriPolylineStyle(entity, outlineColor, symbol.outline.style);
           entity.polyline.width = new ConstantProperty(symbol.outline.width);
           entity.polygon.outline = entity.polyline.material;
         }
