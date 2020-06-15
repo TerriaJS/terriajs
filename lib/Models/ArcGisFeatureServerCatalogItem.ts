@@ -678,7 +678,6 @@ function esriPolylineStyle(
 ): void {
   if (style) {
     const patternValue = getLineStyleCesium(style);
-    console.log(patternValue);
     if (patternValue) {
       entity.polyline.material = new PolylineDashMaterialProperty({
         color: convertEsriColorToCesiumColor(color),

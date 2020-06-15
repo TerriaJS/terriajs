@@ -681,7 +681,6 @@ class LeafletGeomVisualizer {
 
     let layer = details.layer;
     if (!isDefined(layer)) {
-      console.log(outlineColor);
       const polygonOptions: PolylineOptions = {
         fill: fill,
         fillColor: fillColor.toCssColorString(),
