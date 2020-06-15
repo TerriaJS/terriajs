@@ -1,17 +1,20 @@
 import { configure, runInAction } from "mobx";
 import _loadWithXhr from "../../lib/Core/loadWithXhr";
 import Terria from "../../lib/Models/Terria";
-import ArcGisFeatureServerCatalogItem from "../../lib/Models/ArcGisFeatureServerCatalogItem";
 import { getLineStyleCesium } from "../../lib/Models/esriLineStyle";
+import ArcGisFeatureServerCatalogItem, {
+  convertEsriPointSizeToPixels,
+  convertEsriColorToCesiumColor
+} from "../../lib/Models/ArcGisFeatureServerCatalogItem";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import isDefined from "../../lib/Core/isDefined";
 import { JsonArray } from "../../lib/Core/Json";
 import i18next from "i18next";
 import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
-import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import PolylineDashMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineDashMaterialProperty";
 import Color from "terriajs-cesium/Source/Core/Color";
+import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 
 configure({
   enforceActions: "observed",
@@ -47,7 +50,6 @@ describe("ArcGisFeatureServerCatalogItem", function() {
     // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
     spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
       let url = args[0];
-      console.log(url);
       if (url.match("Water_Network/FeatureServer")) {
         url = url.replace(/^.*\/FeatureServer/, "FeatureServer");
         url = url.replace(
@@ -72,7 +74,6 @@ describe("ArcGisFeatureServerCatalogItem", function() {
         );
         url = url.replace(/FeatureServer\/0\/?\?.*/i, "lines.json");
         args[0] = "test/ArcGisFeatureServer/styles/" + url;
-        console.log(args[0]);
       }
 
       return realLoadWithXhr(...args);
@@ -160,7 +161,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
       await item.loadMetadata();
       await item.loadMapItems();
 
-      const expectedOutlineWidth = 1;
+      const expectedOutlineWidth = convertEsriPointSizeToPixels(1);
       const expectedPolygonFilledColor: number = Color.fromBytes(
         215,
         203,
@@ -255,7 +256,6 @@ describe("ArcGisFeatureServerCatalogItem", function() {
 
       expect(entities).toBeDefined();
       expect(entities.length).toEqual(13);
-      console.log(entities);
       // first item
       const time = new JulianDate();
 
@@ -263,7 +263,9 @@ describe("ArcGisFeatureServerCatalogItem", function() {
       expect(
         entities[0].polyline.material instanceof ColorMaterialProperty
       ).toBeTruthy();
-      expect(entities[0].polyline.width.getValue(time)).toEqual(1.5);
+      expect(entities[0].polyline.width.getValue(time)).toEqual(
+        convertEsriPointSizeToPixels(1.5)
+      );
 
       expect(entities[1].polyline).toBeDefined();
       expect(
@@ -274,7 +276,16 @@ describe("ArcGisFeatureServerCatalogItem", function() {
           entities[1].polyline.material
         )).dashPattern.getValue(time)
       ).toEqual(getLineStyleCesium("esriSLSDot"));
-      expect(entities[1].polyline.width.getValue(time)).toEqual(1.5);
+      expect(
+        (<ConstantProperty>(
+          (<unknown>(
+            (<PolylineDashMaterialProperty>entities[1].polyline.material).color
+          ))
+        )).getValue(time)
+      ).toEqual(convertEsriColorToCesiumColor([20, 158, 206, 255]));
+      expect(entities[1].polyline.width.getValue(time)).toEqual(
+        convertEsriPointSizeToPixels(1.5)
+      );
 
       expect(entities[2].polyline).toBeDefined();
       expect(
@@ -284,7 +295,9 @@ describe("ArcGisFeatureServerCatalogItem", function() {
         (<PolylineDashMaterialProperty>entities[2].polyline.material)
           .dashPattern
       ).toBeUndefined();
-      expect(entities[2].polyline.width.getValue(time)).toEqual(1.5);
+      expect(entities[2].polyline.width.getValue(time)).toEqual(
+        convertEsriPointSizeToPixels(1.5)
+      );
 
       expect(entities[3].polyline).toBeDefined();
       expect(
@@ -295,7 +308,9 @@ describe("ArcGisFeatureServerCatalogItem", function() {
           entities[3].polyline.material
         )).dashPattern.getValue(time)
       ).toEqual(getLineStyleCesium("esriSLSDashDot"));
-      expect(entities[3].polyline.width.getValue(time)).toEqual(1.5);
+      expect(entities[3].polyline.width.getValue(time)).toEqual(
+        convertEsriPointSizeToPixels(1.5)
+      );
 
       expect(entities[4].polyline).toBeDefined();
       expect(
@@ -306,7 +321,9 @@ describe("ArcGisFeatureServerCatalogItem", function() {
           entities[4].polyline.material
         )).dashPattern.getValue(time)
       ).toEqual(getLineStyleCesium("esriSLSDashDotDot"));
-      expect(entities[4].polyline.width.getValue(time)).toEqual(1.5);
+      expect(entities[4].polyline.width.getValue(time)).toEqual(
+        convertEsriPointSizeToPixels(1.5)
+      );
 
       expect(entities[5].polyline).toBeDefined();
       expect(
@@ -317,7 +334,9 @@ describe("ArcGisFeatureServerCatalogItem", function() {
           entities[5].polyline.material
         )).dashPattern.getValue(time)
       ).toEqual(getLineStyleCesium("esriSLSLongDash"));
-      expect(entities[5].polyline.width.getValue(time)).toEqual(1.5);
+      expect(entities[5].polyline.width.getValue(time)).toEqual(
+        convertEsriPointSizeToPixels(1.5)
+      );
 
       expect(entities[6].polyline).toBeDefined();
       expect(
@@ -328,7 +347,9 @@ describe("ArcGisFeatureServerCatalogItem", function() {
           entities[6].polyline.material
         )).dashPattern.getValue(time)
       ).toEqual(getLineStyleCesium("esriSLSLongDashDot"));
-      expect(entities[6].polyline.width.getValue(time)).toEqual(1.5);
+      expect(entities[6].polyline.width.getValue(time)).toEqual(
+        convertEsriPointSizeToPixels(1.5)
+      );
 
       expect(entities[7].polyline).toBeDefined();
       expect(
@@ -339,7 +360,9 @@ describe("ArcGisFeatureServerCatalogItem", function() {
           entities[7].polyline.material
         )).dashPattern.getValue(time)
       ).toEqual(getLineStyleCesium("esriSLSShortDash"));
-      expect(entities[7].polyline.width.getValue(time)).toEqual(1.5);
+      expect(entities[7].polyline.width.getValue(time)).toEqual(
+        convertEsriPointSizeToPixels(1.5)
+      );
 
       expect(entities[8].polyline).toBeDefined();
       expect(
@@ -350,7 +373,9 @@ describe("ArcGisFeatureServerCatalogItem", function() {
           entities[8].polyline.material
         )).dashPattern.getValue(time)
       ).toEqual(getLineStyleCesium("esriSLSShortDot"));
-      expect(entities[8].polyline.width.getValue(time)).toEqual(1.5);
+      expect(entities[8].polyline.width.getValue(time)).toEqual(
+        convertEsriPointSizeToPixels(1.5)
+      );
 
       expect(entities[9].polyline).toBeDefined();
       expect(
@@ -361,7 +386,9 @@ describe("ArcGisFeatureServerCatalogItem", function() {
           entities[9].polyline.material
         )).dashPattern.getValue(time)
       ).toEqual(getLineStyleCesium("esriSLSShortDashDot"));
-      expect(entities[9].polyline.width.getValue(time)).toEqual(1.5);
+      expect(entities[9].polyline.width.getValue(time)).toEqual(
+        convertEsriPointSizeToPixels(1.5)
+      );
 
       expect(entities[10].polyline).toBeDefined();
       expect(
@@ -372,14 +399,18 @@ describe("ArcGisFeatureServerCatalogItem", function() {
           entities[10].polyline.material
         )).dashPattern.getValue(time)
       ).toEqual(getLineStyleCesium("esriSLSShortDashDotDot"));
-      expect(entities[10].polyline.width.getValue(time)).toEqual(1.5);
+      expect(entities[10].polyline.width.getValue(time)).toEqual(
+        convertEsriPointSizeToPixels(1.5)
+      );
 
       expect(entities[11].polyline).toBeDefined();
       expect(
         entities[11].polyline.material instanceof ColorMaterialProperty
       ).toBeTruthy();
       expect(entities[11].polyline.show.getValue(time)).toBeFalsy();
-      expect(entities[11].polyline.width.getValue(time)).toEqual(1.5);
+      expect(entities[11].polyline.width.getValue(time)).toEqual(
+        convertEsriPointSizeToPixels(1.5)
+      );
 
       expect(entities[12].polyline).toBeDefined();
       expect(
@@ -389,7 +420,9 @@ describe("ArcGisFeatureServerCatalogItem", function() {
         (<PolylineDashMaterialProperty>entities[12].polyline.material)
           .dashPattern
       ).toBeUndefined();
-      expect(entities[12].polyline.width.getValue(time)).toEqual(4.5);
+      expect(entities[12].polyline.width.getValue(time)).toEqual(
+        convertEsriPointSizeToPixels(4.5)
+      );
     });
   });
 });

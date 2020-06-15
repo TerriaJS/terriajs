@@ -1,6 +1,6 @@
 const defaultDashArray = [4, 3];
 
-const esriLineStyleCesium: {
+export const esriLineStyleCesium: {
   [key: string]: number;
 } = {
   esriSLSDot: 7, //"   -"

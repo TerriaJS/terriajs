@@ -50,6 +50,16 @@ describe("esriLineStyle", function() {
       expect(value).toEqual(16281);
     });
 
+    it("esriSLSNull", function() {
+      const value = getLineStyleCesium("esriSLSNull");
+      expect(value).toBeUndefined();
+    });
+
+    it("esriSLSSolid", function() {
+      const value = getLineStyleCesium("esriSLSSolid");
+      expect(value).toBeUndefined();
+    });
+
     it("unknown", function() {
       const value = getLineStyleCesium("unknown");
       expect(value).toBeUndefined();
