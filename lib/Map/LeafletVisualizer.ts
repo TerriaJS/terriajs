@@ -16,7 +16,7 @@ import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
 import PolylineGlowMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineGlowMaterialProperty";
 import PolylineDashMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineDashMaterialProperty";
 import Property from "terriajs-cesium/Source/DataSources/Property";
-import { esriLineStyleLealet } from "../Models/esriLineStyle";
+import { getLineStyleLeaflet } from "../Models/esriLineStyle";
 
 const destroyObject = require("terriajs-cesium/Source/Core/destroyObject")
   .default;
@@ -938,13 +938,7 @@ function getDashArray(
     ? material.dashPattern.getValue(time)
     : undefined;
 
-  if (esriLineStyleLealet[dashPattern]) {
-    dashArray = esriLineStyleLealet[dashPattern];
-  } else {
-    dashArray = esriLineStyleLealet[2];
-  }
-
-  return dashArray;
+  return getLineStyleLeaflet(dashPattern);
 }
 
 function cleanEntity(

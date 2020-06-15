@@ -34,7 +34,7 @@ import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraph
 import replaceUnderscores from "../Core/replaceUnderscores";
 import PolylineDashMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineDashMaterialProperty";
 import createInfoSection from "./createInfoSection";
-import { esriLineStyleCesium, supportedLineStyle } from "./esriLineStyle";
+import { getLineStyleCesium } from "./esriLineStyle";
 
 const proj4 = require("proj4").default;
 
@@ -62,6 +62,23 @@ type supportedSimpleMarkerStyle =
   | "esriSMSSquare"
   | "esriSMSTriangle"
   | "esriSMSX";
+
+export type supportedLineStyle =
+  | "esriSLSSolid" // solid line
+  | "esriSLSDash" // dashes (-----)
+  | "esriSLSDashDot" // line (-.-.-)
+  | "esriSLSDashDotDot" // line (-..-..-)
+  | "esriSLSDot" // dotted line (.....)
+  | "esriSLSLongDash"
+  | "esriSLSLongDashDot"
+  | "esriSLSShortDash"
+  | "esriSLSShortDashDot"
+  | "esriSLSShortDashDotDot"
+  | "esriSLSShortDot"
+  | "esriSLSNull";
+
+const defaultColor = [255, 255, 255, 255];
+const defaultOutlineColor = [0, 0, 0, 255];
 
 // See actual Symbol at https://developers.arcgis.com/web-map-specification/objects/symbol/
 interface Symbol {
@@ -550,7 +567,7 @@ function getClassBreaksSymbol(
   return classBreaksRenderer.defaultSymbol;
 }
 
-function convertEsriColorToCesiumColor(esriColor: number[]): Color {
+export function convertEsriColorToCesiumColor(esriColor: number[]): Color {
   return Color.fromBytes(
     esriColor[0],
     esriColor[1],
@@ -608,21 +625,22 @@ function updateEntityWithEsriStyle(
     }
   } else if (symbol.type === "esriSLS") {
     /* Update the styling of the Cesium Polyline */
-    if (entity.polyline && symbol.color) {
+    if (entity.polyline) {
       if (isDefined(symbol.width)) {
         entity.polyline.width = new ConstantProperty(symbol.width);
       }
+      const color = symbol.color ? symbol.color : defaultColor;
       /* 
         For line containing dashes PolylineDashMaterialProperty is used. 
         Definition is done using the line patterns converted from hex to decimal dashPattern.
         Source for some of the line patterns is https://www.opengl.org.ru/docs/pg/0204.html, others are created manually
       */
-      esriPolylineStyle(entity, symbol);
+      esriPolylineStyle(entity, color, <supportedLineStyle>symbol.style);
     }
   } else if (symbol.type === "esriSFS") {
     // Update the styling of the Cesium Polygon
-    if (entity.polygon && symbol.color) {
-      const color = symbol.color;
+    if (entity.polygon) {
+      const color = symbol.color ? symbol.color : defaultColor;
 
       // feature picking doesn't work when the polygon interior is transparent, so
       // use an almost-transparent color instead
@@ -631,17 +649,20 @@ function updateEntityWithEsriStyle(
       }
       entity.polygon.material = convertEsriColorToCesiumColor(color);
 
-      if (symbol.outline && symbol.outline.color) {
+      if (symbol.outline) {
+        const outlineColor = symbol.outline.color
+          ? symbol.outline.color
+          : defaultOutlineColor;
         /* It can actually happen that entity has both polygon and polyline defined at same time,
             check the implementation of GeoJsonCatalogItem for details. */
         entity.polygon.outlineColor = convertEsriColorToCesiumColor(
-          symbol.outline.color
+          outlineColor
         );
         entity.polygon.outlineWidth = new ConstantProperty(
           symbol.outline.width
         );
         if (entity.polyline) {
-          esriPolylineStyle(entity, symbol.outline);
+          esriPolylineStyle(entity, [], symbol.outline.style);
           entity.polyline.width = new ConstantProperty(symbol.outline.width);
           entity.polygon.outline = entity.polyline.material;
         }
@@ -650,32 +671,39 @@ function updateEntityWithEsriStyle(
   }
 }
 
-function esriPolylineStyle(entity: Entity, symbol: Symbol | Outline): void {
-  if (symbol.style && Object.keys(esriLineStyleCesium).includes(symbol.style)) {
-    const patternValue = esriLineStyleCesium[<supportedLineStyle>symbol.style];
+function esriPolylineStyle(
+  entity: Entity,
+  color: number[],
+  style?: supportedLineStyle
+): void {
+  if (style) {
+    const patternValue = getLineStyleCesium(style);
+    console.log(patternValue);
     if (patternValue) {
       entity.polyline.material = new PolylineDashMaterialProperty({
-        color: convertEsriColorToCesiumColor(symbol.color!),
+        color: convertEsriColorToCesiumColor(color),
         dashPattern: new ConstantProperty(patternValue)
       });
-    } else if (symbol.style === "esriSLSSolid") {
+    } else if (style === "esriSLSSolid") {
       // it is simple line just define color
       entity.polyline.material = new ColorMaterialProperty(
-        convertEsriColorToCesiumColor(symbol.color!)
+        convertEsriColorToCesiumColor(color)
       );
-    } else if (symbol.style === "esriSLSDash") {
+    } else if (style === "esriSLSDash") {
       // default PolylineDashMaterialProperty is dashed line ` -` (0x00FF)
       entity.polyline.material = new PolylineDashMaterialProperty({
-        color: convertEsriColorToCesiumColor(symbol.color!)
+        color: convertEsriColorToCesiumColor(color)
       });
-    } else if (symbol.style === "esriSLSNull") {
-      entity.polyline.show = new ConstantProperty(false);
     }
   } else {
     // we don't know how to handle style make it default
     entity.polyline.material = new ColorMaterialProperty(
-      convertEsriColorToCesiumColor(symbol.color!)
+      convertEsriColorToCesiumColor(color)
     );
+  }
+
+  if (style === "esriSLSNull") {
+    entity.polyline.show = new ConstantProperty(false);
   }
 }
 
