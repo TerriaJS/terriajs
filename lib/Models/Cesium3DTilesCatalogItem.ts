@@ -68,7 +68,7 @@ export default class Cesium3DTilesCatalogItem
 
   readonly canZoomTo = true;
 
-  @observable
+  //@observable
   private tileset?: ObservableCesium3DTileset;
 
   get isMappable() {
@@ -148,12 +148,17 @@ export default class Cesium3DTilesCatalogItem
     );
 
     const { latitude, longitude, height } = this.origin;
-    if (
-      latitude !== undefined &&
-      longitude !== undefined &&
-      height !== undefined
-    ) {
-      position = Cartesian3.fromDegrees(longitude, latitude, height);
+    if (latitude !== undefined && longitude !== undefined) {
+      const positionFromLatLng = Cartesian3.fromDegrees(
+        longitude,
+        latitude,
+        height
+      );
+      position.x = positionFromLatLng.x;
+      position.y = positionFromLatLng.y;
+      if (height !== undefined) {
+        position.z = positionFromLatLng.z;
+      }
     }
 
     const { heading, pitch, roll } = this.rotation;
@@ -343,16 +348,27 @@ export default class Cesium3DTilesCatalogItem
     }
   }
 
+  getIdPropertiesForFeature(feature: Cesium3DTileFeature): string[] {
+    // If `featureIdProperties` is set return it, otherwise if the feature has
+    // a property named `id` return it.
+    if (this.featureIdProperties) return this.featureIdProperties.slice();
+    const propretyNamedId = feature
+      .getPropertyNames()
+      .find(name => name.toLowerCase() === "id");
+    return propretyNamedId ? [propretyNamedId] : [];
+  }
+
   /**
    * Modifies the style traits to show/hide a 3d tile feature
    *
    */
   @action
   setFeatureVisibility(feature: Cesium3DTileFeature, visibiltiy: boolean) {
-    // If `featureIdProperties` is not set construct a filter that matches all properties
-    const idProperties = (
-      this.featureIdProperties?.slice() || feature.getPropertyNames()
-    ).sort();
+    const idProperties = this.getIdPropertiesForFeature(feature)?.sort();
+    if (idProperties.length === 0) {
+      return;
+    }
+
     const terms = idProperties.map(
       (p: string) => `\${${p}} === ${JSON.stringify(feature.getProperty(p))}`
     );
