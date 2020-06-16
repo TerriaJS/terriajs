@@ -92,6 +92,11 @@ export default class Cesium extends GlobeOrMap {
     | Mappable
     | /*TODO Cesium.Cesium3DTileset*/ any;
 
+  // When true, feature picking is paused. This is useful for temporarily
+  // disabling feature picking when some other interaction mode wants to take
+  // over the LEFT_CLICK behavior.
+  isFeaturePickingPaused = false;
+
   /* Disposers */
   private readonly _selectionIndicator: CesiumSelectionIndicator;
   private readonly _disposeSelectedFeatureSubscription: () => void;
@@ -254,7 +259,8 @@ export default class Cesium extends GlobeOrMap {
 
     // Handle left click by picking objects from the map.
     inputHandler.setInputAction(e => {
-      this.pickFromScreenPosition(e.position, false);
+      if (!this.isFeaturePickingPaused)
+        this.pickFromScreenPosition(e.position, false);
     }, ScreenSpaceEventType.LEFT_CLICK);
 
     this.pauser = new CesiumRenderLoopPauser(this.cesiumWidget, () => {
