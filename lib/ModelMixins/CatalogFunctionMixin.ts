@@ -19,6 +19,8 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
   abstract class CatalogFunctionMixin extends CatalogMemberMixin(Base) {
     abstract readonly jobType: string;
 
+    protected onSubmit?: (job: CatalogFunctionJobMixin) => Promise<void>;
+
     async submitJob() {
       try {
         const now = new Date();
@@ -51,31 +53,38 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
         }
 
         await newJob.loadMetadata();
-        await newJob.invoke();
+        if (typeof this.onSubmit === "function") {
+          await this.onSubmit(newJob);
+        }
 
+        const finished = await newJob.invoke();
+
+        runInAction(() => {
+          if (finished) {
+            newJob.setTrait(CommonStrata.user, "jobStatus", "finished");
+          } else {
+            newJob.setTrait(CommonStrata.user, "refreshEnabled", true);
+          }
+        });
         // Only add model if successfully invokes (doesn't throw exception)
         this.terria.workbench.add(newJob);
         this.terria.catalog.userAddedDataGroup.add(CommonStrata.user, newJob);
 
-        runInAction(() =>
-          newJob.setTrait(CommonStrata.user, "refreshEnabled", true)
-        );
-
         return true;
       } catch (error) {
-        this.throwInvalidWpsServerError(error);
-        return false;
+        if (typeof error === "string") {
+          throw new TerriaError({
+            title: `Error submitting ${this.typeName}`,
+            message: error
+          });
+        }
+        throw error;
       }
     }
 
     abstract get functionParameters(): FunctionParameter[];
 
-    throwInvalidWpsServerError(error: string) {
-      throw new TerriaError({
-        title: `Error submitting ${this.typeName}`,
-        message: error
-      });
-    }
+    throwError(error: string) {}
 
     get hasCatalogFunctionMixin() {
       return true;
