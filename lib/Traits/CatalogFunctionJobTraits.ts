@@ -30,7 +30,7 @@ export default class CatalogFunctionJobTraits extends mixTraits(
     description: "Job status.",
     type: "string"
   })
-  jobStatus: "inactive" | "running" | "finished" = "inactive";
+  jobStatus: "inactive" | "running" | "error" | "finished" = "inactive";
 
   @primitiveTrait({
     name: "Refresh enabled",

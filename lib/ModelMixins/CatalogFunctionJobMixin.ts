@@ -94,7 +94,11 @@ function CatalogFunctionJobMixin<
 
     protected logs: IObservableArray<string> = observable([]);
 
-    abstract async invoke(): Promise<void>;
+    /**
+     *
+     * @returns true for FINISHED, false for RUNNING (will then call pollForResults)
+     */
+    abstract async invoke(): Promise<boolean>;
 
     /**
      * Called every refreshInterval - return indicates whether job has finished (true = finished)
@@ -120,17 +124,26 @@ function CatalogFunctionJobMixin<
 
       this.pollingForResults = true;
 
-      this.pollForResults().then(finished => {
-        if (finished) {
-          runInAction(() =>
-            this.setTrait(CommonStrata.user, "jobStatus", "finished")
-          );
-          runInAction(() =>
-            this.setTrait(CommonStrata.user, "refreshEnabled", false)
-          );
-        }
-        this.pollingForResults = false;
-      });
+      this.pollForResults()
+        .then(finished => {
+          if (finished) {
+            runInAction(() => {
+              this.setTrait(CommonStrata.user, "jobStatus", "finished");
+              this.setTrait(CommonStrata.user, "refreshEnabled", false);
+            });
+          }
+          this.pollingForResults = false;
+        })
+        .catch(error => {
+          runInAction(() => {
+            this.setTrait(CommonStrata.user, "jobStatus", "error");
+            this.setTrait(CommonStrata.user, "refreshEnabled", false);
+            this.logs.push(error);
+          });
+          this.pollingForResults = false;
+
+          console.log(error);
+        });
     }
 
     loadPromise = Promise.resolve();
@@ -206,6 +219,8 @@ function CatalogFunctionJobMixin<
         } else {
           content = "Job is finished, downloading results...";
         }
+      } else {
+        content = "An error has occurred";
       }
       return content;
     }
