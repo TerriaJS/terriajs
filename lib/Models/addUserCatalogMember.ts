@@ -17,7 +17,6 @@ import getDereferencedIfExists from "../Core/getDereferencedIfExists";
 interface AddUserCatalogMemberOptions {
   enable?: boolean;
   open?: boolean;
-  zoomTo?: boolean;
 }
 
 /**
@@ -68,12 +67,6 @@ export default function addUserCatalogMember(
         ) {
           terria.workbench.add(dereferenced);
         }
-      }
-
-      if (defaultValue(options.zoomTo, true) && Mappable.is(dereferenced)) {
-        dereferenced
-          .loadMapItems()
-          .then(() => terria.currentViewer.zoomTo(dereferenced, 1));
       }
 
       return newCatalogItem;
