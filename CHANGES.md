@@ -3,12 +3,12 @@ Change Log
 
 ### MobX Development
 
-
 #### mobx-next-release (mobx-35)
+* Bug fix for `DatePicker` in `BottomDock` causing app crash
+* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-34
 * Extended the support for styles for ESRI ArcGis Feature Server. Line styles are supported for lines and polygon outlines in both Cesium and Leaflet viewer. #4405
-* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 * Fix polygon outline style bug.
 * Add a unit test for polygon outline style.
 
