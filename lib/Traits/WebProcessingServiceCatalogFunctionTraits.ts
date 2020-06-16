@@ -21,4 +21,11 @@ export default class WebProcessingServiceCatalogFunctionTraits extends mixTraits
       "If true, sends a `GET` request to the Execute endpoint instead of the default `POST` request."
   })
   executeWithHttpGet = false;
+
+  @primitiveTrait({
+    type: "string",
+    name: "WPS Response URL",
+    description: "An optional URL to fetch the WPS response"
+  })
+  wpsResponseUrl?: string;
 }

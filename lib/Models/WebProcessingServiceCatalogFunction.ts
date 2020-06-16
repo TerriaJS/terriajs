@@ -1,26 +1,13 @@
-import {
-  action,
-  computed,
-  isObservableArray,
-  observable,
-  runInAction
-} from "mobx";
-import Mustache from "mustache";
+import { computed, isObservableArray, observable, runInAction } from "mobx";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import URI from "urijs";
 import isDefined from "../Core/isDefined";
-import loadWithXhr from "../Core/loadWithXhr";
-import loadXML from "../Core/loadXML";
-import runLater from "../Core/runLater";
 import TerriaError from "../Core/TerriaError";
 import Reproject from "../Map/Reproject";
 import xml2json from "../ThirdParty/xml2json";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import WebProcessingServiceCatalogFunctionTraits from "../Traits/WebProcessingServiceCatalogFunctionTraits";
-import { ParameterTraits } from "../Traits/WebProcessingServiceCatalogItemTraits";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
-import createStratumInstance from "./createStratumInstance";
 import DateTimeParameter from "./FunctionParameters/DateTimeParameter";
 import EnumerationParameter from "./FunctionParameters/EnumerationParameter";
 import FunctionParameter, {
@@ -35,14 +22,12 @@ import RectangleParameter from "./FunctionParameters/RectangleParameter";
 import RegionParameter from "./FunctionParameters/RegionParameter";
 import RegionTypeParameter from "./FunctionParameters/RegionTypeParameter";
 import StringParameter from "./FunctionParameters/StringParameter";
-import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
+import WebProcessingServiceCatalogFunctionJob from "./WebProcessingServiceCatalogFunctionJob";
 import i18next from "i18next";
 import CatalogFunctionMixin from "../ModelMixins/CatalogFunctionMixin";
-import ResultPendingCatalogItem from "./ResultPendingCatalogItem";
-
-const sprintf = require("terriajs-cesium/Source/ThirdParty/sprintf").default;
-
-const executeWpsTemplate = require("./ExecuteWpsTemplate.xml");
+import CatalogFunctionJobMixin from "../ModelMixins/CatalogFunctionJobMixin";
+import updateModelFromJson from "./updateModelFromJson";
+import XmlRequestMixin from "../ModelMixins/XmlRequestMixin";
 
 type AllowedValues = {
   Value?: string | string[];
@@ -94,10 +79,10 @@ type ParameterConverter = {
   parameterToInput: (parameter: FunctionParameter) => WpsInputData | undefined;
 };
 
-export default class WebProcessingServiceCatalogFunction extends CatalogFunctionMixin(
-  CreateModel(WebProcessingServiceCatalogFunctionTraits)
+export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin(
+  CatalogFunctionMixin(CreateModel(WebProcessingServiceCatalogFunctionTraits))
 ) {
-  readonly jobType = WebProcessingServiceCatalogItem.type;
+  readonly jobType = WebProcessingServiceCatalogFunctionJob.type;
 
   static readonly type = "wps";
   readonly typeName = "Web Processing Service (WPS)";
@@ -134,22 +119,6 @@ export default class WebProcessingServiceCatalogFunction extends CatalogFunction
       Identifier: this.identifier
     });
 
-    return proxyCatalogItemUrl(this, uri.toString(), this.proxyCacheDuration);
-  }
-
-  /**
-   * Returns the proxied URL for the Execute endpoint.
-   */
-  @computed get executeUrl() {
-    if (!isDefined(this.url)) {
-      return;
-    }
-
-    const uri = new URI(this.url).query({
-      service: "WPS",
-      request: "Execute",
-      version: "1.0.0"
-    });
     return proxyCatalogItemUrl(this, uri.toString(), this.proxyCacheDuration);
   }
 
@@ -198,27 +167,6 @@ export default class WebProcessingServiceCatalogFunction extends CatalogFunction
   }
 
   /**
-   * Indicates if the output can be stored by the WPS server and be accessed via a URL.
-   */
-  @computed get storeSupported() {
-    return (
-      isDefined(this.processDescription) &&
-      this.processDescription.storeSupported === "true"
-    );
-  }
-
-  /**
-   * Indicates if Execute operation can return just the status information
-   * and perform the actual operation asynchronously.
-   */
-  @computed get statusSupported() {
-    return (
-      isDefined(this.processDescription) &&
-      this.processDescription.statusSupported === "true"
-    );
-  }
-
-  /**
    * Return the inputs in the processDescription
    */
   @computed get inputs(): Input[] {
@@ -252,192 +200,70 @@ export default class WebProcessingServiceCatalogFunction extends CatalogFunction
     return this._functionParameters;
   }
 
-  /**
-   * Performs the Execute request for the WPS process
-   *
-   * If `executeWithHttpGet` is true, a GET request is made
-   * instead of the default POST request.
-   */
-  @action
-  async invoke() {
-    if (!isDefined(this.identifier) || !isDefined(this.executeUrl)) {
-      return;
-    }
-    const identifier = this.identifier;
-    const executeUrl = this.executeUrl;
-    const pendingItem = this.createPendingCatalogItem();
+  onSubmit = async (job: CatalogFunctionJobMixin) => {
+    const wpsJob = job as WebProcessingServiceCatalogFunctionJob;
+
     let dataInputs = await Promise.all(
-      this.functionParameters.map(p => this.convertParameterToInput(p))
+      this.functionParameters
+        .filter(p => isDefined(p.value) && p.value !== null)
+        .map(p => this.convertParameterToInput(p))
     );
 
-    return runInAction(async () => {
-      const parameters = {
-        Identifier: htmlEscapeText(identifier),
-        DataInputs: dataInputs.filter(isDefined),
-        storeExecuteResponse: this.storeSupported,
-        status: this.statusSupported
-      };
-      let promise: Promise<any>;
-      if (this.executeWithHttpGet) {
-        promise = this.getXml(executeUrl, {
-          ...parameters,
-          DataInputs: parameters.DataInputs.map(
-            ({ inputIdentifier: id, inputValue: val }) => `${id}=${val}`
-          ).join(";")
-        });
-      } else {
-        const executeXml = Mustache.render(executeWpsTemplate, parameters);
-        promise = this.postXml(executeUrl, executeXml);
-      }
-
-      pendingItem.loadPromise = promise;
-      this.terria.workbench.add(pendingItem);
-      const executeResponseXml = await promise;
-      return this.handleExecuteResponse(executeResponseXml, pendingItem);
-    });
-  }
-
-  /**
-   * Handle the Execute response
-   *
-   * If execution succeeded, we create a WebProcessingServiceCatalogItem to show the result.
-   * If execution failed, mark the pendingItem item as error.
-   * Otherwise, if statusLocation is set, poll until we get a result or the pendingItem is removed from the workbench.
-   */
-  async handleExecuteResponse(
-    xml: any,
-    pendingItem: ResultPendingCatalogItem
-  ): Promise<void> {
-    if (
-      !xml ||
-      !xml.documentElement ||
-      xml.documentElement.localName !== "ExecuteResponse"
-    ) {
-      throwInvalidWpsServerError(this, "ExecuteResponse");
-    }
-    const json = xml2json(xml);
-    const status = json.Status;
-    if (!isDefined(status)) {
-      throw new TerriaError({
-        sender: this,
-        title: i18next.t(
-          "models.webProcessingService.invalidResponseErrorTitle"
-        ),
-        message: i18next.t(
-          "models.webProcessingService.invalidResponseErrorMessage",
-          {
-            name: this.name,
-            email:
-              '<a href="mailto:' +
-              this.terria.supportEmail +
-              '">' +
-              this.terria.supportEmail +
-              "</a>."
-          }
-        )
-      });
-    }
-
-    if (isDefined(status.ProcessFailed)) {
-      const e = status.ProcessFailed.ExceptionReport?.Exception;
-      this.setErrorOnPendingItem(pendingItem, e?.ExceptionText || e?.Exception);
-    } else if (isDefined(status.ProcessSucceeded)) {
-      const item = await this.createCatalogItem(pendingItem, json);
-      await item.loadMapItems();
-      this.terria.workbench.add(item);
-      this.terria.workbench.remove(pendingItem);
-    } else if (
-      isDefined(json.statusLocation) &&
-      this.terria.workbench.contains(pendingItem)
-    ) {
-      return runLater(async () => {
-        const promise = this.getXml(json.statusLocation);
-        pendingItem.loadPromise = promise;
-        const xml = await promise;
-        return this.handleExecuteResponse(xml, pendingItem);
-      }, 500) as Promise<void>;
-    }
-  }
-
-  createPendingCatalogItem() {
-    const now = new Date();
-    const timestamp = sprintf(
-      "%04d-%02d-%02dT%02d:%02d:%02d",
-      now.getFullYear(),
-      now.getMonth() + 1,
-      now.getDate(),
-      now.getHours(),
-      now.getMinutes(),
-      now.getSeconds()
+    wpsJob.setTrait(CommonStrata.user, "url", this.url);
+    wpsJob.setTrait(CommonStrata.user, "identifier", this.identifier);
+    wpsJob.setTrait(
+      CommonStrata.user,
+      "executeWithHttpGet",
+      this.executeWithHttpGet
+    );
+    wpsJob.setTrait(
+      CommonStrata.user,
+      "storeSupported",
+      isDefined(this.processDescription) &&
+        this.processDescription.storeSupported === "true"
+    );
+    wpsJob.setTrait(
+      CommonStrata.user,
+      "statusSupported",
+      isDefined(this.processDescription) &&
+        this.processDescription.statusSupported === "true"
     );
 
-    const id = `${this.name} ${timestamp}`;
-    const item = new ResultPendingCatalogItem(id, this.terria);
-    item.showsInfo = true;
-    item.isMappable = true;
-
-    const inputsSection =
-      '<table class="cesium-infoBox-defaultTable">' +
-      this.functionParameters.reduce((previousValue, parameter) => {
-        return (
-          previousValue +
-          "<tr>" +
-          '<td style="vertical-align: middle">' +
-          parameter.name +
-          "</td>" +
-          "<td>" +
-          parameter.formatValueAsString(parameter.value) +
-          "</td>" +
-          "</tr>"
-        );
-      }, "") +
-      "</table>";
-
-    runInAction(() => {
-      item.setTrait(CommonStrata.user, "name", id);
-      item.setTrait(
-        CommonStrata.user,
-        "description",
-        `This is the result of invoking the ${this.name} process or service at ${timestamp} with the input parameters below.`
-      );
-
-      const info = createStratumInstance(InfoSectionTraits, {
-        name: "Inputs",
-        content: inputsSection
-      });
-      item.setTrait(CommonStrata.user, "info", [info]);
+    updateModelFromJson(wpsJob, CommonStrata.user, {
+      geojsonFeatures: this.functionParameters
+        .map(param => param.geoJsonFeature)
+        .filter(isDefined),
+      wpsParameters: dataInputs
     });
+  };
 
-    return item;
-  }
+  // setErrorOnPendingItem(pendingItem: ResultPendingCatalogItem, failure: any) {
+  //   let errorMessage = "The reason for failure is unknown.";
+  //   if (
+  //     isDefined(failure.ExceptionReport) &&
+  //     isDefined(failure.ExceptionReport.Exception)
+  //   ) {
+  //     const e = failure.ExceptionReport.Exception;
+  //     errorMessage = e.ExceptionText || e.Exception || errorMessage;
+  //   }
 
-  setErrorOnPendingItem(pendingItem: ResultPendingCatalogItem, failure: any) {
-    let errorMessage = "The reason for failure is unknown.";
-    if (
-      isDefined(failure.ExceptionReport) &&
-      isDefined(failure.ExceptionReport.Exception)
-    ) {
-      const e = failure.ExceptionReport.Exception;
-      errorMessage = e.ExceptionText || e.Exception || errorMessage;
-    }
+  //   runInAction(() => {
+  //     pendingItem.setTrait(
+  //       CommonStrata.user,
+  //       "shortReport",
+  //       "Web Processing Service invocation failed.  More details are available on the Info panel."
+  //     );
 
-    runInAction(() => {
-      pendingItem.setTrait(
-        CommonStrata.user,
-        "shortReport",
-        "Web Processing Service invocation failed.  More details are available on the Info panel."
-      );
-
-      const errorInfo = createStratumInstance(InfoSectionTraits, {
-        name: "Error Details",
-        content: errorMessage
-      });
-      const info = pendingItem.getTrait(CommonStrata.user, "info");
-      if (isDefined(info)) {
-        info.push(errorInfo);
-      }
-    });
-  }
+  //     const errorInfo = createStratumInstance(InfoSectionTraits, {
+  //       name: "Error Details",
+  //       content: errorMessage
+  //     });
+  //     const info = pendingItem.getTrait(CommonStrata.user, "info");
+  //     if (isDefined(info)) {
+  //       info.push(errorInfo);
+  //     }
+  //   });
+  // }
 
   convertInputToParameter(catalogFunction: CatalogFunctionMixin, input: Input) {
     if (!isDefined(input.Identifier)) {
@@ -478,49 +304,6 @@ export default class WebProcessingServiceCatalogFunction extends CatalogFunction
       inputValue: inputValue,
       inputType: result.inputType
     };
-  }
-
-  async createCatalogItem(
-    pendingItem: ResultPendingCatalogItem,
-    wpsResponse: any
-  ) {
-    const id = `result-${pendingItem.uniqueId}`;
-    const item = new WebProcessingServiceCatalogItem(id, this.terria);
-    const parameterTraits = await Promise.all(
-      this.functionParameters.map(async p => {
-        const geoJsonFeature = await runInAction(() => p.geoJsonFeature);
-        const tmp = createStratumInstance(ParameterTraits, {
-          name: p.name,
-          value: p.formatValueAsString(),
-          geoJsonFeature: <any>geoJsonFeature
-        });
-        return tmp;
-      })
-    );
-    runInAction(() => {
-      item.setTrait(CommonStrata.user, "name", pendingItem.name);
-      item.setTrait(CommonStrata.user, "description", pendingItem.description);
-      item.setTrait(CommonStrata.user, "wpsResponse", wpsResponse);
-      item.setTrait(CommonStrata.user, "wpsParameters", parameterTraits);
-    });
-    return item;
-  }
-
-  getXml(url: string, parameters?: any) {
-    if (isDefined(parameters)) {
-      url = new URI(url).query(parameters).toString();
-    }
-    return loadXML(url);
-  }
-
-  postXml(url: string, data: string) {
-    return loadWithXhr({
-      url: url,
-      method: "POST",
-      data,
-      overrideMimeType: "text/xml",
-      responseType: "document"
-    });
   }
 }
 
@@ -794,11 +577,4 @@ function throwInvalidWpsServerError(
       endpoint
     })
   });
-}
-
-function htmlEscapeText(text: string) {
-  return text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
 }

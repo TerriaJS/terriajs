@@ -1,0 +1,75 @@
+import { JsonObject } from "../Core/Json";
+import anyTrait from "./anyTrait";
+import FeatureInfoTraits from "./FeatureInfoTraits";
+import MappableTraits from "./MappableTraits";
+import mixTraits from "./mixTraits";
+import ModelTraits from "./ModelTraits";
+import objectArrayTrait from "./objectArrayTrait";
+import primitiveTrait from "./primitiveTrait";
+import CatalogFunctionJobTraits from "./CatalogFunctionJobTraits";
+import WebProcessingServiceCatalogFunctionTraits from "./WebProcessingServiceCatalogFunctionTraits";
+
+export class WPSParameterTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "string",
+    name: "Input Identifier",
+    description: "WPS input parameter identifier"
+  })
+  inputIdentifier?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Input Value",
+    description: "WPS input parameter value"
+  })
+  inputValue?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Input Type",
+    description: "WPS input parameter type"
+  })
+  inputType?: string;
+}
+export default class WebProcessingServiceCatalogItemTraits extends mixTraits(
+  MappableTraits,
+  FeatureInfoTraits,
+  CatalogFunctionJobTraits,
+  WebProcessingServiceCatalogFunctionTraits
+) {
+  @anyTrait({
+    name: "WPS Response",
+    description: "The WPS response object"
+  })
+  wpsResponse?: JsonObject;
+
+  @anyTrait({
+    name: "Geojson features",
+    description: "Geojson feature collection of input features."
+  })
+  geojsonFeatures?: JsonObject;
+
+  @objectArrayTrait({
+    type: WPSParameterTraits,
+    idProperty: "inputIdentifier",
+    name: "Parameters",
+    description: "Parameter names & values for this result item"
+  })
+  wpsParameters?: WPSParameterTraits[];
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Store supported",
+    description:
+      "Indicates if the output can be stored by the WPS server and be accessed via a URL."
+  })
+  storeSupported?: boolean;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Status supported",
+    description:
+      "Indicates if Execute operation can return just the status information and perform the actual operation asynchronously."
+  })
+  statusSupported?: boolean;
+}

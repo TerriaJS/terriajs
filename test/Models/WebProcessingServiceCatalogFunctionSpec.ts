@@ -17,7 +17,7 @@ import Terria from "../../lib/Models/Terria";
 import WebProcessingServiceCatalogFunction, {
   PointConverter
 } from "../../lib/Models/WebProcessingServiceCatalogFunction";
-import WebProcessingServiceCatalogItem from "../../lib/Models/WebProcessingServiceCatalogItem";
+import WebProcessingServiceCatalogFunctionJob from "../../lib/Models/WebProcessingServiceCatalogFunctionJob";
 import Workbench from "../../lib/Models/Workbench";
 import xml2json from "../../lib/ThirdParty/xml2json";
 import "../SpecHelpers";
@@ -158,11 +158,11 @@ describe("WebProcessingServiceCatalogFunction", function() {
         workbench = wps.terria.workbench;
       });
 
-      it("adds a WebProcessingServiceCatalogItem to workbench", async function() {
+      it("adds a WebProcessingServiceCatalogFunctionJob to workbench", async function() {
         spyOn(workbench, "add").and.callThrough();
         await wps.invoke();
         expect(workbench.add).toHaveBeenCalledWith(
-          jasmine.any(WebProcessingServiceCatalogItem)
+          jasmine.any(WebProcessingServiceCatalogFunctionJob)
         );
       });
 

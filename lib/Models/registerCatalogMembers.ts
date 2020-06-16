@@ -21,12 +21,12 @@ import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
 import UrlReference, { UrlToCatalogMemberMapping } from "./UrlReference";
 import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFunction";
-import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
-import CompositeCatalogItem from "./CompositeCatalogItem";
-import SensorObservationServiceCatalogItem from "./SensorObservationServiceCatalogItem";
-import SplitItemReference from "./SplitItemReference";
+import WebProcessingServiceCatalogFunctionJob from "./WebProcessingServiceCatalogFunctionJob";
 import YDYRCatalogFunction from "./YDYRCatalogFunction";
 import YDYRCatalogFunctionJob from "./YDYRCatalogFunctionJob";
+import SplitItemReference from "./SplitItemReference";
+import SensorObservationServiceCatalogItem from "./SensorObservationServiceCatalogItem";
+import CompositeCatalogItem from "./CompositeCatalogItem";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
@@ -96,8 +96,8 @@ export default function registerCatalogMembers() {
     SensorObservationServiceCatalogItem
   );
   CatalogMemberFactory.register(
-    WebProcessingServiceCatalogItem.type,
-    WebProcessingServiceCatalogItem
+    WebProcessingServiceCatalogFunctionJob.type,
+    WebProcessingServiceCatalogFunctionJob
   );
   CatalogMemberFactory.register(
     CompositeCatalogItem.type,

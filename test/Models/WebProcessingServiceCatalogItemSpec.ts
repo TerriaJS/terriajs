@@ -6,7 +6,7 @@ import CommonStrata from "../../lib/Models/CommonStrata";
 import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
 import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
 import Terria from "../../lib/Models/Terria";
-import WebProcessingServiceCatalogItem from "../../lib/Models/WebProcessingServiceCatalogItem";
+import WebProcessingServiceCatalogFunctionJob from "../../lib/Models/WebProcessingServiceCatalogFunctionJob";
 import { xml } from "../SpecHelpers";
 
 configure({
@@ -18,14 +18,14 @@ const executeResponseXml = xml(
   require("raw-loader!../../wwwroot/test/WPS/ExecuteResponse.xml")
 );
 
-describe("WebProcessingServiceCatalogItem", function() {
-  let item: WebProcessingServiceCatalogItem;
+describe("WebProcessingServiceCatalogFunctionJob", function() {
+  let item: WebProcessingServiceCatalogFunctionJob;
 
   beforeEach(function() {
     const terria = initTerria();
     terria.configParameters.regionMappingDefinitionsUrl =
       "/data/regionMapping.json";
-    item = new WebProcessingServiceCatalogItem("test", terria);
+    item = new WebProcessingServiceCatalogFunctionJob("test", terria);
     runInAction(() => {
       const param1 = item.addObject(
         CommonStrata.user,
@@ -47,7 +47,7 @@ describe("WebProcessingServiceCatalogItem", function() {
   });
 
   it("has a type & typeName", function() {
-    expect(WebProcessingServiceCatalogItem.type).toBe("wps-result");
+    expect(WebProcessingServiceCatalogFunctionJob.type).toBe("wps-result");
     expect(item.typeName).toBe("Web Processing Service Result");
   });
 

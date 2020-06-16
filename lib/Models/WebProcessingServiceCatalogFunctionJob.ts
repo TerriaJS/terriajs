@@ -4,17 +4,13 @@ import {
   computed,
   isObservableArray,
   observable,
-  runInAction
+  runInAction,
+  toJS
 } from "mobx";
 import isDefined from "../Core/isDefined";
-import loadXML from "../Core/loadXML";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import {
-  InfoSectionTraits,
-  ShortReportTraits
-} from "../Traits/CatalogMemberTraits";
-import { FeatureInfoTemplateTraits } from "../Traits/FeatureInfoTraits";
-import WebProcessingServiceCatalogItemTraits from "../Traits/WebProcessingServiceCatalogItemTraits";
+import { ShortReportTraits } from "../Traits/CatalogMemberTraits";
+import WebProcessingServiceCatalogFunctionJobTraits from "../Traits/WebProcessingServiceCatalogFunctionJobTraits";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
@@ -30,26 +26,37 @@ import upsertModelFromJson from "./upsertModelFromJson";
 import CatalogFunctionJobMixin from "../ModelMixins/CatalogFunctionJobMixin";
 import { ChartItem } from "./Chartable";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import URI from "urijs";
+
+const executeWpsTemplate = require("./ExecuteWpsTemplate.xml");
+
+import Mustache from "mustache";
+
+import XmlRequestMixin from "../ModelMixins/XmlRequestMixin";
+import TerriaError from "../Core/TerriaError";
+import xml2json from "../ThirdParty/xml2json";
+import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
+import updateModelFromJson from "./updateModelFromJson";
 
 const createGuid = require("terriajs-cesium/Source/Core/createGuid").default;
 
 class WpsLoadableStratum extends LoadableStratum(
-  WebProcessingServiceCatalogItemTraits
+  WebProcessingServiceCatalogFunctionJobTraits
 ) {
   static stratumName = "wpsLoadable";
 
-  constructor(readonly item: WebProcessingServiceCatalogItem) {
+  constructor(readonly item: WebProcessingServiceCatalogFunctionJob) {
     super();
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
     return new WpsLoadableStratum(
-      newModel as WebProcessingServiceCatalogItem
+      newModel as WebProcessingServiceCatalogFunctionJob
     ) as this;
   }
 
   @action
-  static async load(item: WebProcessingServiceCatalogItem) {
+  static async load(item: WebProcessingServiceCatalogFunctionJob) {
     if (!isDefined(item.wpsResponse) && isDefined(item.wpsResponseUrl)) {
       const url = proxyCatalogItemUrl(item, item.wpsResponseUrl, "1d");
       const wpsResponse = await item.getXml(url);
@@ -75,64 +82,6 @@ class WpsLoadableStratum extends LoadableStratum(
       })
       .filter(isDefined);
     return reports;
-  }
-
-  @computed get info() {
-    return [
-      createStratumInstance(InfoSectionTraits, {
-        name: "Inputs",
-        content: this.inputsSectionHtml
-      })
-    ];
-  }
-
-  @computed get featureInfoTemplate() {
-    const template = [
-      "#### Inputs\n\n" + this.inputsSectionHtml,
-      "#### Outputs\n\n" + this.outputsSectionHtml
-    ].join("\n\n");
-    return createStratumInstance(FeatureInfoTemplateTraits, {
-      template
-    });
-  }
-
-  @computed get geoJsonItem() {
-    const features = this.item.wpsParameters
-      .map(param => param.geoJsonFeature)
-      .filter(isDefined);
-    const geoJsonItem = new GeoJsonCatalogItem(createGuid(), this.item.terria);
-    runInAction(() => {
-      geoJsonItem.setTrait(CommonStrata.user, "geoJsonData", {
-        type: "FeatureCollection",
-        features,
-        totalFeatures: features.length
-      });
-    });
-    return geoJsonItem;
-  }
-
-  @computed get rectangle() {
-    return this.geoJsonItem.rectangle;
-  }
-
-  @computed get inputsSectionHtml() {
-    const inputsSection =
-      '<table class="cesium-infoBox-defaultTable">' +
-      this.item.wpsParameters.reduce((previousValue, parameter) => {
-        return (
-          previousValue +
-          "<tr>" +
-          '<td style="vertical-align: middle">' +
-          parameter.name +
-          "</td>" +
-          '<td style="padding-left: 4px">' +
-          parameter.value +
-          "</td>" +
-          "</tr>"
-        );
-      }, "") +
-      "</table>";
-    return inputsSection;
   }
 
   @computed get outputsSectionHtml() {
@@ -185,40 +134,159 @@ class WpsLoadableStratum extends LoadableStratum(
 
 StratumOrder.addLoadStratum(WpsLoadableStratum.stratumName);
 
-export default class WebProcessingServiceCatalogItem
-  extends AsyncMappableMixin(
-    CatalogFunctionJobMixin(CreateModel(WebProcessingServiceCatalogItemTraits))
+export default class WebProcessingServiceCatalogFunctionJob
+  extends XmlRequestMixin(
+    AsyncMappableMixin(
+      CatalogFunctionJobMixin(
+        CreateModel(WebProcessingServiceCatalogFunctionJobTraits)
+      )
+    )
   )
   implements Mappable {
-  downloadResults(): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
-  invoke(): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
-  pollForResults() {
-    return Promise.resolve(true);
-  }
   static readonly type = "wps-result";
   get typeName() {
     return i18next.t("models.webProcessingService.wpsResult");
   }
+  readonly proxyCacheDuration = "1d";
 
   @observable
   private geoJsonItem?: GeoJsonCatalogItem;
 
-  async forceLoadMetadata() {
-    await this.loadResults();
+  /**
+   * Returns the proxied URL for the Execute endpoint.
+   */
+  @computed get executeUrl() {
+    if (!isDefined(this.url)) {
+      return;
+    }
+
+    console.log(this.url);
+
+    const uri = new URI(this.url).query({
+      service: "WPS",
+      request: "Execute",
+      version: "1.0.0"
+    });
+
+    return proxyCatalogItemUrl(this, uri.toString(), this.proxyCacheDuration);
   }
 
-  get chartItems(): ChartItem[] {
-    return [];
-  }
-  protected async forceLoadChartItems(): Promise<void> {}
-  protected async forceLoadMapItems(): Promise<void> {}
-  refreshData(): void {}
+  async invoke() {
+    if (
+      !isDefined(this.identifier) ||
+      !isDefined(this.executeUrl) ||
+      !isDefined(this.wpsParameters)
+    ) {
+      console.log(
+        `${this.identifier} ${this.executeUrl} ${this.wpsParameters}`
+      );
+      throw `Identifier, executeUrl and wpsParameters must be set`;
+    }
 
-  async loadResults() {
+    const identifier = this.identifier;
+    const executeUrl = this.executeUrl;
+
+    console.log(executeUrl);
+
+    const parameters = {
+      Identifier: htmlEscapeText(identifier),
+      DataInputs: toJS(this.wpsParameters),
+      storeExecuteResponse: toJS(this.storeSupported),
+      status: toJS(this.statusSupported)
+    };
+
+    let promise: Promise<any>;
+    if (this.executeWithHttpGet) {
+      promise = this.getXml(executeUrl, {
+        ...parameters,
+        DataInputs: parameters.DataInputs.map(
+          ({ inputIdentifier: id, inputValue: val }) => `${id}=${val}`
+        ).join(";")
+      });
+    } else {
+      const executeXml = Mustache.render(executeWpsTemplate, parameters);
+      promise = this.postXml(executeUrl, executeXml);
+    }
+
+    const executeResponseXml = await promise;
+    if (
+      !executeResponseXml ||
+      !executeResponseXml.documentElement ||
+      executeResponseXml.documentElement.localName !== "ExecuteResponse"
+    ) {
+      throw `Invalid XML response for WPS ExecuteResponse`;
+    }
+
+    console.log(executeResponseXml);
+
+    const json = xml2json(executeResponseXml);
+
+    // Check if finished
+    if (this.checkStatus(json)) {
+      return true;
+    }
+
+    runInAction(() =>
+      this.setTrait(CommonStrata.user, "wpsResponseUrl", json.statusLocation)
+    );
+
+    return false;
+  }
+
+  /**
+   * Return true for finished, false for running, throw error otherwise
+   */
+  @action
+  checkStatus(json: any) {
+    console.log(json);
+    const status = json.Status;
+    if (!isDefined(status)) {
+      throw new TerriaError({
+        sender: this,
+        title: i18next.t(
+          "models.webProcessingService.invalidResponseErrorTitle"
+        ),
+        message: i18next.t(
+          "models.webProcessingService.invalidResponseErrorMessage",
+          {
+            name: this.name,
+            email:
+              '<a href="mailto:' +
+              this.terria.supportEmail +
+              '">' +
+              this.terria.supportEmail +
+              "</a>."
+          }
+        )
+      });
+    }
+
+    if (isDefined(status.ProcessFailed)) {
+      const e = status.ProcessFailed.ExceptionReport?.Exception;
+
+      throw e;
+    } else if (isDefined(status.ProcessSucceeded)) {
+      this.setTrait(CommonStrata.user, "wpsResponse", json);
+      return true;
+    }
+
+    return false;
+  }
+
+  async pollForResults() {
+    if (!isDefined(this.wpsResponseUrl)) {
+      return true;
+    }
+    const promise = this.getXml(this.wpsResponseUrl);
+    const xml = await promise;
+
+    const json = xml2json(xml);
+
+    return this.checkStatus(json);
+  }
+
+  async downloadResults() {
+    console.log("download");
     const stratum = await WpsLoadableStratum.load(this);
     runInAction(() => {
       this.strata.set(WpsLoadableStratum.stratumName, stratum);
@@ -226,6 +294,10 @@ export default class WebProcessingServiceCatalogItem
 
     const reports: StratumFromTraits<ShortReportTraits>[] = [];
     const outputs = runInAction(() => this.outputs);
+
+    const results: CatalogMemberMixin.CatalogMemberMixin[] = [];
+
+    console.log(outputs);
     const promises = outputs.map(async (output, i) => {
       if (!output.Data.ComplexData) {
         return;
@@ -252,10 +324,20 @@ export default class WebProcessingServiceCatalogItem
       ) {
         // Create a catalog member from the embedded json
         const json = JSON.parse(output.Data.ComplexData.text);
+        console.log(json);
         const catalogItem = this.createCatalogItemFromJson(json);
+        console.log(catalogItem);
         if (isDefined(catalogItem)) {
-          await loadCatalogItem(catalogItem);
-          this.terria.workbench.add(catalogItem);
+          if (CatalogMemberMixin.isMixedInto(catalogItem)) {
+            results.push(catalogItem);
+            await catalogItem.loadMetadata();
+          }
+          if (AsyncMappableMixin.isMixedInto(catalogItem)) {
+            await catalogItem.loadMapItems();
+          }
+          if (AsyncChartableMixin.isMixedInto(catalogItem)) {
+            await catalogItem.loadChartItems();
+          }
           reportContent = "Chart " + output.Title + " generated.";
         }
       }
@@ -270,11 +352,35 @@ export default class WebProcessingServiceCatalogItem
 
     await Promise.all(promises);
 
+    // Create geojson catalog item for input features
+    if (isDefined(this.geojsonFeatures)) {
+      runInAction(() => {
+        this.geoJsonItem = new GeoJsonCatalogItem(createGuid(), this.terria);
+        updateModelFromJson(this.geoJsonItem, CommonStrata.user, {
+          name: `${this.name} Input Features`,
+          geoJsonData: {
+            type: "FeatureCollection",
+            features: this.geojsonFeatures!,
+            totalFeatures: this.geojsonFeatures!.length
+          }
+        });
+      });
+      await this.geoJsonItem!.loadMetadata();
+      await this.geoJsonItem!.loadMapItems();
+    }
+
     runInAction(() => {
       this.setTrait(CommonStrata.user, "shortReportSections", reports);
-      this.geoJsonItem = stratum.geoJsonItem;
     });
+
+    return results;
   }
+
+  get chartItems(): ChartItem[] {
+    return [];
+  }
+
+  protected async forceLoadMapItems(): Promise<void> {}
 
   async loadMapItems() {
     await this.loadMetadata();
@@ -314,30 +420,19 @@ export default class WebProcessingServiceCatalogItem
   }
 
   private createCatalogItemFromJson(json: any) {
-    if (json.isEnabled) {
-      // Fix the catalog item json to match the new schema.
-      // TODO: Remove this when mobx migration is complete
-      const itemJson = fixCatalogItemJson(json);
-      const catalogItem = upsertModelFromJson(
-        CatalogMemberFactory,
-        this.terria,
-        this.uniqueId || "",
-        undefined,
-        CommonStrata.user,
-        {
-          ...itemJson,
-          id: createGuid()
-        }
-      );
-      return catalogItem;
-    }
-  }
-
-  getXml(url: string, parameters?: any) {
-    if (isDefined(parameters)) {
-      url = new URI(url).query(parameters).toString();
-    }
-    return loadXML(url);
+    const itemJson = fixCatalogItemJson(json);
+    const catalogItem = upsertModelFromJson(
+      CatalogMemberFactory,
+      this.terria,
+      this.uniqueId || "",
+      undefined,
+      CommonStrata.user,
+      {
+        ...itemJson,
+        id: createGuid()
+      }
+    );
+    return catalogItem;
   }
 }
 
@@ -403,4 +498,11 @@ function fixCatalogItemJson(json: any) {
     return fixedCsvJson;
   }
   return fixedJson;
+}
+
+function htmlEscapeText(text: string) {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }
