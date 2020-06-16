@@ -1266,10 +1266,18 @@ function zoomToDataSource(
         }
       }
 
-      var boundingSphere = BoundingSphere.fromBoundingSpheres(boundingSpheres);
-      cesium.scene.camera.flyToBoundingSphere(boundingSphere, {
-        duration: flightDurationSeconds
-      });
+      // Test if boundingSpheres is empty to avoid zooming to nowhere
+      if (boundingSpheres.length > 0) {
+        var boundingSphere = BoundingSphere.fromBoundingSpheres(
+          boundingSpheres
+        );
+        cesium.scene.camera.flyToBoundingSphere(boundingSphere, {
+          duration: flightDurationSeconds,
+          // By passing range=0, cesium calculates an appropriate zoom distance
+          offset: new HeadingPitchRange(0, -0.5, 0)
+        });
+        cesium.scene.camera.lookAtTransform(Matrix4.IDENTITY);
+      }
       return true;
     },
     {
@@ -1283,13 +1291,13 @@ function zoomToBoundingSphere(
   cesium: Cesium,
   target: {
     boundingSphere: Cesium.BoundingSphere;
-    modelMatrix?: Cesium.Matrix4;
   },
   flightDurationSeconds?: number
 ) {
   var boundingSphere = target.boundingSphere;
   cesium.scene.camera.flyToBoundingSphere(boundingSphere, {
-    offset: new HeadingPitchRange(0.0, -0.5, boundingSphere.radius),
+    // By passing range=0, cesium calculates an appropriate zoom distance
+    offset: new HeadingPitchRange(0, -0.5, 0),
     duration: flightDurationSeconds
   });
 }
