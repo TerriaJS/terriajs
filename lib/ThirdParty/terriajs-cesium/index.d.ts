@@ -1424,3 +1424,7 @@ declare module "terriajs-cesium/Source/Core/Ion" {
 }
 
 declare module "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
+
+declare module "terriajs-cesium/Source/DataSources/PolylineDashMaterialProperty" {
+  export default Cesium.PolylineDashMaterialProperty;
+}
