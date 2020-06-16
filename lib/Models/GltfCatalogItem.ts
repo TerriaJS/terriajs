@@ -59,7 +59,7 @@ export default class GltfCatalogItem
   }
 
   @computed
-  private get position(): Cartesian3 {
+  private get cesiumPosition(): Cartesian3 {
     if (
       this.origin !== undefined &&
       this.origin.longitude !== undefined &&
@@ -88,7 +88,7 @@ export default class GltfCatalogItem
       roll || 0
     );
     const orientation = Transforms.headingPitchRollQuaternion(
-      this.position,
+      this.cesiumPosition,
       hpr
     );
     return orientation;
@@ -152,7 +152,7 @@ export default class GltfCatalogItem
     );
     dataSource.entities.add(
       new Entity({
-        position: new ConstantPositionProperty(this.position),
+        position: new ConstantPositionProperty(this.cesiumPosition),
         orientation: new ConstantProperty(this.orientation),
         model: this.model
       })
