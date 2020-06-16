@@ -16,8 +16,6 @@ import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
   CreateModel(YDYRCatalogFunctionJobTraits)
 ) {
-  private csvResult?: CsvCatalogItem;
-
   @computed
   get mapItems(): MapItem[] {
     return [];
@@ -188,6 +186,8 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
     //         detail: `Received ${r.status} response code and failed to parse response as JSON`
     //       }));
     // }
+
+    return false;
   }
 
   async pollForResults() {
@@ -232,7 +232,11 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
       return [];
     }
 
-    this.csvResult = new CsvCatalogItem(`${this.uniqueId}-result`, this.terria);
+    const csvResult = new CsvCatalogItem(
+      `${this.uniqueId}-result`,
+      this.terria,
+      undefined
+    );
 
     let regionColumnSplit = DATASETS.find(
       d => d.title === this.parameters?.["Output Geography"]
@@ -244,12 +248,8 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
     }
 
     runInAction(() => {
-      this.csvResult!.setTrait(
-        CommonStrata.user,
-        "name",
-        `${this.name} Results`
-      );
-      this.csvResult!.setTrait(
+      csvResult.setTrait(CommonStrata.user, "name", `${this.name} Results`);
+      csvResult.setTrait(
         CommonStrata.user,
         "url",
         proxyCatalogItemUrl(
@@ -257,20 +257,14 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
           `${this.parameters!["apiUrl"]}download/${this.resultId}?format=csv`
         )
       );
-      this.csvResult!.setTrait(
-        CommonStrata.user,
-        "enableManualRegionMapping",
-        true
-      );
+      csvResult.setTrait(CommonStrata.user, "enableManualRegionMapping", true);
 
       if (regionColumn !== "") {
-        this.csvResult!.setTrait(CommonStrata.user, "excludeStyles", [
-          regionColumn
-        ]);
+        csvResult.setTrait(CommonStrata.user, "excludeStyles", [regionColumn]);
       }
     });
-    await this.csvResult.loadMapItems();
+    await csvResult.loadMapItems();
 
-    return [this.csvResult];
+    return [csvResult];
   }
 }
