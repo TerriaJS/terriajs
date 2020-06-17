@@ -23,12 +23,16 @@ const RawButton: any = require("../../../Styled/Button").RawButton;
 const Text: any = require("../../../Styled/Text").default;
 const Spacing: any = require("../../../Styled/Spacing").default;
 import Select from "../../../Styled/Select";
+import { TFunction } from "i18next";
 
 const TrainerBarWrapper = styled(Box)`
   top: 0;
   left: ${p => Number(p.theme.workbenchWidth)}px;
   z-index: ${p => Number(p.theme.frontComponentZIndex) + 100};
 `;
+
+// Help with discoverability
+const BoxTrainerExpandedSteps = styled(Box)``;
 
 const getSelectedTrainerFromHelpContent = (
   viewState: ViewState,
@@ -95,6 +99,7 @@ const renderOrderedStepList = function(steps: StepItem[]) {
 interface StepAccordionProps {
   viewState: ViewState;
   selectedTrainerSteps: StepItem[];
+  t: TFunction;
   theme: DefaultTheme;
   isPeeking: boolean;
   setIsPeeking: (bool: boolean) => void;
@@ -120,6 +125,7 @@ class StepAccordionRaw extends React.Component<
     const {
       viewState,
       selectedTrainerSteps,
+      t,
       theme,
       isPeeking,
       setIsPeeking,
@@ -131,17 +137,28 @@ class StepAccordionRaw extends React.Component<
     // const [isPeeking, setIsPeeking] = useState(false);
     // const [isExpanded, setIsExpanded] = useState(false);
     return (
-      <Box fullWidth justifySpaceBetween>
+      <Box
+        css={`
+          // min-height: 64px;
+        `}
+        centered={!isPeeking}
+        fullWidth
+        justifySpaceBetween
+        onMouseOver={() => setIsPeeking(true)}
+      >
+        {/* Non-peeking step */}
         <Box
           paddedHorizontally={3}
           column
-          onMouseOver={() => setIsPeeking(true)}
-          // onMouseOut={() => setIsPeeking(false)}
           aria-hidden={isPeeking}
           overflow="hidden"
           css={`
             max-height: 64px;
+            pointer-events: none;
           `}
+          ref={(component: any) => {
+            if (!isExpanded) this.refToMeasure = component;
+          }}
         >
           {renderStep(
             selectedTrainerSteps[viewState.currentTrainerStepIndex],
@@ -149,6 +166,7 @@ class StepAccordionRaw extends React.Component<
             { renderDescription: false, comfortable: false }
           )}
         </Box>
+        {/* peeked version of the box step */}
         {isPeeking && (
           <Box
             paddedHorizontally={3}
@@ -157,12 +175,18 @@ class StepAccordionRaw extends React.Component<
             positionAbsolute
             fullWidth
             css={`
+              top: 0;
               padding-bottom: 15px;
-              padding-right: 45px;
+              // This padding forces the absolutely positioned box to align with
+              // the relative width in its clone
+              padding-right: 60px;
             `}
             backgroundColor={theme.textBlack}
             ref={(component: any) => (this.refToMeasure = component)}
-            // onMouseOut={() => setIsPeeking(false)}
+            onMouseLeave={() => {
+              // We only "unpeek" if user hasn't opted to expand.. confusing
+              if (!isExpanded) setIsPeeking(false);
+            }}
           >
             {renderStep(
               selectedTrainerSteps[viewState.currentTrainerStepIndex],
@@ -176,8 +200,10 @@ class StepAccordionRaw extends React.Component<
             onClick={() => setIsExpanded(!isExpanded)}
             onMouseOver={() => setIsPeeking(true)}
             onFocus={() => setIsPeeking(true)}
-            // onMouseOut={() => setIsPeeking(false)}
-            // onBlur={() => setIsPeeking(false)}
+            title={t("trainer.expandSteps")}
+            onBlur={() => {
+              if (!isExpanded) setIsPeeking(false);
+            }}
             css={"z-index:2;"}
           >
             <StyledIcon styledWidth="26px" light glyph={GLYPHS.upDown} />
@@ -185,7 +211,7 @@ class StepAccordionRaw extends React.Component<
         </Box>
         {/* Accordion / child steps? */}
         {isExpanded && (
-          <Box
+          <BoxTrainerExpandedSteps
             column
             positionAbsolute
             backgroundColor={theme.textBlack}
@@ -197,7 +223,7 @@ class StepAccordionRaw extends React.Component<
             `}
           >
             {renderOrderedStepList(selectedTrainerSteps)}
-          </Box>
+          </BoxTrainerExpandedSteps>
         )}
       </Box>
     );
@@ -207,12 +233,13 @@ const StepAccordion = measureElement(StepAccordionRaw);
 
 interface TrainerBarProps extends WithTranslation {
   viewState: ViewState;
+  t: TFunction;
   terria: Terria;
   theme: DefaultTheme;
 }
 
 const TrainerBar = observer((props: TrainerBarProps) => {
-  const { terria, theme, viewState } = props;
+  const { t, terria, theme, viewState } = props;
   const { helpContent } = terria.configParameters;
 
   // All these null guards are because we are rendering based on nested
@@ -279,6 +306,7 @@ const TrainerBar = observer((props: TrainerBarProps) => {
           isPeeking={viewState.trainerBarPeeking}
           setIsPeeking={(bool: boolean) => viewState.setTrainerBarPeeking(bool)}
           theme={theme}
+          t={t}
         />
         <Spacing right={4} />
 
@@ -295,13 +323,12 @@ const TrainerBar = observer((props: TrainerBarProps) => {
                 `visibility: hidden;`}
             `}
             onClick={() => {
-              viewState.setTrainerBarPeeking(false);
               viewState.setCurrentTrainerStepIndex(
                 viewState.currentTrainerStepIndex - 1
               );
             }}
           >
-            Back
+            {t("general.back")}
           </Button>
           <Spacing right={2} />
           <Button
@@ -312,13 +339,12 @@ const TrainerBar = observer((props: TrainerBarProps) => {
                 selectedTrainerSteps.length - 1 && `visibility: hidden;`}
             `}
             onClick={() => {
-              viewState.setTrainerBarPeeking(false);
               viewState.setCurrentTrainerStepIndex(
                 viewState.currentTrainerStepIndex + 1
               );
             }}
           >
-            Next
+            {t("general.next")}
           </Button>
           <Spacing right={5} />
           <Box centered>

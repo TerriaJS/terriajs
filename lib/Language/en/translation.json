@@ -7,6 +7,9 @@
     "skip": "Skip",
     "back": "Back"
   },
+  "trainer": {
+    "expandSteps": "Expand steps"
+  },
   "tour": {
     "preface": {
       "title": "Take the tour",
