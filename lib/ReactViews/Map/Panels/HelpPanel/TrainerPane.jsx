@@ -10,8 +10,8 @@ import StyledHtml from "./StyledHtml";
 import parseCustomMarkdownToReact from "../../../Custom/parseCustomMarkdownToReact";
 
 import Box, { BoxSpan } from "../../../../Styled/Box";
-import { RawButton } from "../../../../Styled/Button";
-// import Spacing from "../../../../Styled/Spacing";
+import Button from "../../../../Styled/Button";
+import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
 
 const UlTrainerItems = styled(Box).attrs({
@@ -20,12 +20,7 @@ const UlTrainerItems = styled(Box).attrs({
   ${p => p.theme.removeListStyles()}
 `;
 
-const TrainerButton = styled(RawButton)`
-  ${p => p.theme.addBasicHoverStyles()}
-  background: ${p => p.theme.greyLighter};
-  color: ${p => p.theme.dark};
-  border-radius: ${p => p.theme.radiusLarge};
-`;
+const TrainerButton = styled(Button)``;
 
 @observer
 class TrainerPane extends React.Component {
@@ -53,16 +48,11 @@ class TrainerPane extends React.Component {
             />
           )}
           {trainerItems?.map && (
-            <UlTrainerItems fullWidth wrap justifySpaceBetween>
+            <UlTrainerItems column fullWidth justifySpaceBetween>
               {trainerItems.map((item, index) => (
-                <li
-                  css={`
-                    width: calc(50% - 5px);
-                    margin-bottom: 10px;
-                  `}
-                  key={index}
-                >
+                <li key={index}>
                   <TrainerButton
+                    secondary
                     fullWidth
                     onClick={() => {
                       viewState.hideHelpPanel();
@@ -72,15 +62,10 @@ class TrainerPane extends React.Component {
                     }}
                   >
                     <BoxSpan centered>
-                      <BoxSpan
-                        centered
-                        styledMinHeight={"110px"}
-                        styledWidth={"70%"}
-                      >
-                        {item.title}
-                      </BoxSpan>
+                      <BoxSpan centered>{item.title}</BoxSpan>
                     </BoxSpan>
                   </TrainerButton>
+                  <Spacing bottom={2} />
                 </li>
               ))}
             </UlTrainerItems>
