@@ -8,13 +8,18 @@ import { GLYPHS, StyledIcon } from "../../Icon";
 import ViewState from "../../../ReactViewModels/ViewState";
 import {
   StepItem,
+  TrainerItem,
   HelpContentItem,
   PaneMode
 } from "../../../ReactViewModels/defaultHelpContent";
 import Terria from "../../../Models/Terria";
+// import parseCustomMarkdownToReact from "../../Custom/parseCustomMarkdownToReact";
 
 import measureElement from "../../HOCs/measureElement";
 
+const parseCustomMarkdownToReact: any = require("../../Custom/parseCustomMarkdownToReact");
+const StyledHtml: any = require("../../Map/Panels/HelpPanel/StyledHtml")
+  .default;
 const CloseButton: any = require("../../Generic/CloseButton").default;
 
 const Box: any = require("../../../Styled/Box").default;
@@ -53,6 +58,19 @@ const Numbers = styled(Text)`
   background-color: ${props => props.theme.textLight};
 `;
 
+const StepText = styled(Text).attrs({})`
+  ol,
+  ul {
+    padding: 0;
+    margin: 0;
+    // Dislike these arbitrary aligned numbers but leaving it in for now
+    padding-left: 17px;
+  }
+  li {
+    padding-left: 8px;
+  }
+`;
+
 const renderStep = (
   step: StepItem,
   number: number,
@@ -75,12 +93,19 @@ const renderStep = (
       <Text medium textLight>
         {step.title}
       </Text>
-      {options.renderDescription && step?.description && (
+      {options.renderDescription && step?.markdownDescription && (
         <>
-          {options.comfortable && <Spacing bottom={2} />}
-          <Text medium textLightDimmed>
-            {step.description}
-          </Text>
+          {/* {options.comfortable && <Spacing bottom={2} />} */}
+          <Spacing bottom={options.comfortable ? 2 : 1} />
+          <StepText medium textLightDimmed>
+            <StyledHtml
+              styledTextProps={{ textDark: false, textLightDimmed: true }}
+              content={[
+                parseCustomMarkdownToReact(step.markdownDescription).props
+                  .children
+              ]}
+            />
+          </StepText>
         </>
       )}
     </Box>
@@ -89,10 +114,10 @@ const renderStep = (
 
 const renderOrderedStepList = function(steps: StepItem[]) {
   return steps.map((step: StepItem, index: number) => (
-    <>
+    <React.Fragment key={index}>
       {renderStep(step, index + 1)}
       {index + 1 !== steps.length && <Spacing bottom={3} />}
-    </>
+    </React.Fragment>
   ));
 };
 
@@ -101,8 +126,11 @@ interface StepAccordionProps {
   selectedTrainerSteps: StepItem[];
   t: TFunction;
   theme: DefaultTheme;
+  selectedTrainer: TrainerItem;
   isPeeking: boolean;
   setIsPeeking: (bool: boolean) => void;
+  isExpanded: boolean;
+  setIsExpanded: (bool: boolean) => void;
   heightFromMeasureElementHOC: number | null;
 }
 interface StepAccordionState {
@@ -115,27 +143,19 @@ class StepAccordionRaw extends React.Component<
   StepAccordionState
 > {
   refToMeasure: any;
-  constructor(props: StepAccordionProps) {
-    super(props);
-    this.state = {
-      isExpanded: false
-    };
-  }
   render() {
     const {
       viewState,
       selectedTrainerSteps,
       t,
       theme,
+      selectedTrainer,
       isPeeking,
       setIsPeeking,
+      isExpanded,
+      setIsExpanded,
       heightFromMeasureElementHOC
     } = this.props;
-    const { isExpanded } = this.state;
-    // const setIsPeeking = (bool: any) => this.setState({ isPeeking: bool });
-    const setIsExpanded = (bool: any) => this.setState({ isExpanded: bool });
-    // const [isPeeking, setIsPeeking] = useState(false);
-    // const [isExpanded, setIsExpanded] = useState(false);
     return (
       <Box
         css={`
@@ -148,7 +168,7 @@ class StepAccordionRaw extends React.Component<
       >
         {/* Non-peeking step */}
         <Box
-          paddedHorizontally={3}
+          paddedHorizontally={4}
           column
           aria-hidden={isPeeking}
           overflow="hidden"
@@ -169,7 +189,7 @@ class StepAccordionRaw extends React.Component<
         {/* peeked version of the box step */}
         {isPeeking && (
           <Box
-            paddedHorizontally={3}
+            paddedHorizontally={4}
             column
             onMouseOver={() => setIsPeeking(true)}
             positionAbsolute
@@ -200,13 +220,19 @@ class StepAccordionRaw extends React.Component<
             onClick={() => setIsExpanded(!isExpanded)}
             onMouseOver={() => setIsPeeking(true)}
             onFocus={() => setIsPeeking(true)}
-            title={t("trainer.expandSteps")}
+            title={
+              isExpanded ? t("trainer.collapseSteps") : t("trainer.expandSteps")
+            }
             onBlur={() => {
               if (!isExpanded) setIsPeeking(false);
             }}
             css={"z-index:2;"}
           >
-            <StyledIcon styledWidth="26px" light glyph={GLYPHS.upDown} />
+            <StyledIcon
+              styledWidth="26px"
+              light
+              glyph={isExpanded ? GLYPHS.accordionClose : GLYPHS.accordionOpen}
+            />
           </RawButton>
         </Box>
         {/* Accordion / child steps? */}
@@ -216,13 +242,28 @@ class StepAccordionRaw extends React.Component<
             positionAbsolute
             backgroundColor={theme.textBlack}
             fullWidth
-            paddedRatio={3}
+            paddedRatio={4}
             css={`
               // top: 32px;
+              padding-bottom: 10px;
               top: ${heightFromMeasureElementHOC}px;
             `}
           >
             {renderOrderedStepList(selectedTrainerSteps)}
+            {selectedTrainer.footnote && (
+              <>
+                <Spacing bottom={3} />
+                <Text medium textLightDimmed>
+                  <StyledHtml
+                    styledTextProps={{ textDark: false, textLightDimmed: true }}
+                    content={[
+                      parseCustomMarkdownToReact(selectedTrainer.footnote).props
+                        .children
+                    ]}
+                  />
+                </Text>
+              </>
+            )}
           </BoxTrainerExpandedSteps>
         )}
       </Box>
@@ -262,7 +303,8 @@ const TrainerBar = observer((props: TrainerBarProps) => {
     viewState.currentTrainerItemIndex <= selectedTrainerItems.length
       ? viewState.currentTrainerItemIndex
       : 0;
-  const selectedTrainerSteps = selectedTrainerItems[trainerItemIndex]?.steps;
+  const selectedTrainerItem = selectedTrainerItems[trainerItemIndex];
+  const selectedTrainerSteps = selectedTrainerItem?.steps;
   if (!selectedTrainerSteps) {
     return null;
   }
@@ -305,6 +347,11 @@ const TrainerBar = observer((props: TrainerBarProps) => {
           selectedTrainerSteps={selectedTrainerSteps}
           isPeeking={viewState.trainerBarPeeking}
           setIsPeeking={(bool: boolean) => viewState.setTrainerBarPeeking(bool)}
+          isExpanded={viewState.trainerBarExpanded}
+          setIsExpanded={(bool: boolean) =>
+            viewState.setTrainerBarExpanded(bool)
+          }
+          selectedTrainer={selectedTrainerItem}
           theme={theme}
           t={t}
         />

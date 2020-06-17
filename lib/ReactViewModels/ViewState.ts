@@ -86,6 +86,7 @@ export default class ViewState {
 
   @observable trainerBarVisible: boolean = false;
   @observable trainerBarPeeking: boolean = false;
+  @observable trainerBarExpanded: boolean = false;
   @observable selectedTrainerItem: string = "";
   @observable currentTrainerItemIndex: number = 0;
   @observable currentTrainerStepIndex: number = 0;
@@ -100,6 +101,10 @@ export default class ViewState {
   @action
   setTrainerBarPeeking(bool: boolean) {
     this.trainerBarPeeking = bool;
+  }
+  @action
+  setTrainerBarExpanded(bool: boolean) {
+    this.trainerBarExpanded = bool;
   }
   @action
   setCurrentTrainerItemIndex(index: number) {

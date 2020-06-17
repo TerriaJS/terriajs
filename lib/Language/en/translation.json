@@ -8,7 +8,8 @@
     "back": "Back"
   },
   "trainer": {
-    "expandSteps": "Expand steps"
+    "expandSteps": "Expand steps",
+    "collapseSteps": "Collapse steps"
   },
   "tour": {
     "preface": {

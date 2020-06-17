@@ -6,11 +6,12 @@ export enum PaneMode {
 
 export interface StepItem {
   title: string;
-  description?: string;
+  markdownDescription?: string;
 }
 
 export interface TrainerItem {
   title: string;
+  footnote?: string;
   steps: StepItem[];
 }
 

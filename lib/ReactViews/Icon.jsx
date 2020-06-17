@@ -113,7 +113,8 @@ export const GLYPHS = {
   satellite: require("../../wwwroot/images/icons/satellite.svg"),
   uploadThin: require("../../wwwroot/images/icons/upload-thin.svg"),
   oneTwoThree: require("../../wwwroot/images/icons/one-two-three.svg"),
-  upDown: require("../../wwwroot/images/icons/up-down.svg")
+  accordionOpen: require("../../wwwroot/images/icons/accordion-open.svg"),
+  accordionClose: require("../../wwwroot/images/icons/accordion-close.svg")
 };
 
 export const Icon = createReactClass({
