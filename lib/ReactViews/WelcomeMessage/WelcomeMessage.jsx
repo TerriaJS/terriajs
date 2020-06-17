@@ -110,7 +110,7 @@ export const WelcomeMessagePure = props => {
   };
 
   useKeyPress("Escape", () => {
-    if (showWelcomeMessage) {
+    if (showWelcomeMessage && viewState.videoGuideVisible === "") {
       handleClose(false);
     }
   });

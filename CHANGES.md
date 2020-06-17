@@ -5,7 +5,16 @@ Change Log
 
 #### mobx-next-release (mobx-34)
 * Fix the timeline stack handling for when there are multiple time-enabled layers
+#### mobx-next-release (mobx-35)
+* Bug fix for `DatePicker` in `BottomDock` causing app crash
+* Made changes to the video modals: close button has been added, pressing escape now closes the component and some basic unit tests created
+* Updated the video modal for _Data Stories: Getting Started_ to use the new `VideoGuide` component
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
+
+#### mobx-34
+* Extended the support for styles for ESRI ArcGis Feature Server. Line styles are supported for lines and polygon outlines in both Cesium and Leaflet viewer. #4405
+* Fix polygon outline style bug.
+* Add a unit test for polygon outline style.
 
 #### mobx-33
 * Updated generic select so icon doesn't block click
