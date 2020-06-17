@@ -3,12 +3,11 @@ Change Log
 
 ### MobX Development
 
-#### mobx-next-release (mobx-34)
-* Fix the timeline stack handling for when there are multiple time-enabled layers
 #### mobx-next-release (mobx-35)
 * Bug fix for `DatePicker` in `BottomDock` causing app crash
 * Made changes to the video modals: close button has been added, pressing escape now closes the component and some basic unit tests created
 * Updated the video modal for _Data Stories: Getting Started_ to use the new `VideoGuide` component
+* Fix the timeline stack handling for when there are multiple time-enabled layers
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-34
