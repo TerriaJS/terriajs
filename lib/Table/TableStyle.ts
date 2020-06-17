@@ -520,7 +520,7 @@ export default class TableStyle {
       return;
     }
 
-    // If id columns is not defined, group columns by (lat, lon) so that the
+    // If id columns is not defined, group rows by (lat, lon) so that the
     // finish date for a row with a certain location will be the date for
     // the next row at the same location.
     const groupByCols =
