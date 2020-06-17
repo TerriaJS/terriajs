@@ -33,6 +33,7 @@ const AddData = createReactClass({
     activeTab: PropTypes.string,
     localDataTypes: PropTypes.arrayOf(PropTypes.object),
     remoteDataTypes: PropTypes.arrayOf(PropTypes.object),
+    onFileAddFinished: PropTypes.func.isRequired,
     t: PropTypes.func.isRequired
   },
 
