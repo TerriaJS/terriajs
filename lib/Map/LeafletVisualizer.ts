@@ -10,11 +10,13 @@ import EntityCollection from "terriajs-cesium/Source/DataSources/EntityCollectio
 import EntityCluster from "terriajs-cesium/Source/DataSources/EntityCluster";
 import isDefined from "../Core/isDefined";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import L, { LatLngBounds } from "leaflet";
+import L, { LatLngBounds, PolylineOptions } from "leaflet";
 import LeafletScene from "./LeafletScene";
 import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
 import PolylineGlowMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineGlowMaterialProperty";
+import PolylineDashMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineDashMaterialProperty";
 import Property from "terriajs-cesium/Source/DataSources/Property";
+import { getLineStyleLeaflet } from "../Models/esriLineStyle";
 
 const destroyObject = require("terriajs-cesium/Source/Core/destroyObject")
   .default;
@@ -649,6 +651,17 @@ class LeafletGeomVisualizer {
       true
     );
     const outline = getValueOrDefault(polygonGraphics.outline, time, true);
+    let dashArray;
+    if (polygonGraphics.outline instanceof PolylineDashMaterialProperty) {
+      dashArray = getDashArray(polygonGraphics.outline, time);
+    }
+
+    const outlineWidth = getValueOrDefault(
+      (polygonGraphics.outlineWidth as unknown) as Property,
+      time,
+      defaultOutlineWidth
+    );
+
     const outlineColor = getValueOrDefault(
       (polygonGraphics.outlineColor as unknown) as Property,
       time,
@@ -668,14 +681,20 @@ class LeafletGeomVisualizer {
 
     let layer = details.layer;
     if (!isDefined(layer)) {
-      const polygonOptions = {
+      const polygonOptions: PolylineOptions = {
         fill: fill,
         fillColor: fillColor.toCssColorString(),
         fillOpacity: fillColor.alpha,
-        weight: outline ? 1.0 : 0.0,
+        weight: outline ? outlineWidth : 0.0,
         color: outlineColor.toCssColorString(),
         opacity: outlineColor.alpha
       };
+
+      if (outline && dashArray) {
+        polygonOptions.dashArray = dashArray
+          .map(x => x * outlineWidth)
+          .join(",");
+      }
 
       layer = details.layer = L.polygon(
         hierarchyToLatLngs(hierarchy),
@@ -709,7 +728,7 @@ class LeafletGeomVisualizer {
     }
 
     if (outline !== details.lastOutline) {
-      options.weight = outline ? 1.0 : 0.0;
+      options.weight = outline ? outlineWidth : 0.0;
       details.lastOutline = outline;
       applyStyle = true;
     }
@@ -775,7 +794,9 @@ class LeafletGeomVisualizer {
       );
     }
 
-    let color, width;
+    let color;
+    let dashArray: number[] | undefined;
+    let width: number;
     if (polylineGraphics.material instanceof PolylineGlowMaterialProperty) {
       color = defaultColor;
       width = defaultWidth;
@@ -791,12 +812,19 @@ class LeafletGeomVisualizer {
         defaultWidth
       );
     }
+    if (polylineGraphics.material instanceof PolylineDashMaterialProperty) {
+      dashArray = getDashArray(polylineGraphics.material, time);
+    }
 
-    const polylineOptions = {
+    const polylineOptions: PolylineOptions = {
       color: color.toCssColorString(),
       weight: width,
       opacity: color.alpha
     };
+
+    if (dashArray) {
+      polylineOptions.dashArray = dashArray.map(x => x * width).join(",");
+    }
 
     if (!isDefined(geomLayer)) {
       if (latlngs.length > 0) {
@@ -897,6 +925,19 @@ class LeafletGeomVisualizer {
 
     return result;
   }
+}
+
+function getDashArray(
+  material: PolylineDashMaterialProperty,
+  time: JulianDate
+): number[] {
+  let dashArray;
+
+  const dashPattern = material.dashPattern
+    ? material.dashPattern.getValue(time)
+    : undefined;
+
+  return getLineStyleLeaflet(dashPattern);
 }
 
 function cleanEntity(

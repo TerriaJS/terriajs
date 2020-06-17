@@ -116,7 +116,7 @@ export const Timeline = observer(
             >
               <DateTimePicker
                 currentDate={JulianDate.toDate(currentDiscreteJulianDate)}
-                dates={discreteTimes.map(time => JulianDate.toDate(time))}
+                dates={discreteTimes.map(dt => JulianDate.toDate(dt.time))}
                 onChange={this.changeDateTime}
                 openDirection="up"
                 isOpen={this.state.isPickerOpen}
