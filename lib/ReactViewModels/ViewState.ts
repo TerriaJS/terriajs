@@ -586,5 +586,5 @@ interface Tool {
   toolName: string;
   getToolComponent: () => React.Component | Promise<React.Component>;
   showCloseButton: boolean;
-  params: any;
+  params?: any;
 }
