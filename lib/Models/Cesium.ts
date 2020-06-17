@@ -163,6 +163,12 @@ export default class Cesium extends GlobeOrMap {
       this.dataSourceDisplay.update(clock.currentTime);
     }));
 
+    // Progress
+    this._eventHelper.add(this.scene.globe.tileLoadProgressEvent, <any>(
+      ((currentLoadQueueLength: number) =>
+        this._updateTilesLoadingCount(currentLoadQueueLength))
+    ));
+
     // Disable HDR lighting for better performance and to avoid changing imagery colors.
     (<any>this.scene).highDynamicRange = false;
 

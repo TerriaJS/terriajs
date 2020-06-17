@@ -10,11 +10,13 @@ import EntityCollection from "terriajs-cesium/Source/DataSources/EntityCollectio
 import EntityCluster from "terriajs-cesium/Source/DataSources/EntityCluster";
 import isDefined from "../Core/isDefined";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import L, { LatLngBounds } from "leaflet";
+import L, { LatLngBounds, PolylineOptions } from "leaflet";
 import LeafletScene from "./LeafletScene";
 import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
 import PolylineGlowMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineGlowMaterialProperty";
+import PolylineDashMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineDashMaterialProperty";
 import Property from "terriajs-cesium/Source/DataSources/Property";
+import { getLineStyleLeaflet } from "../Models/esriLineStyle";
 
 const destroyObject = require("terriajs-cesium/Source/Core/destroyObject")
   .default;
@@ -78,6 +80,16 @@ const tmpImage =
 // Ellipse primitive - no need identified
 // Ellipsoid primitive - 3d prim - no plans for this
 // Model primitive - 3d prim - no plans for this
+
+/**
+ * A variable to store what sort of bounds our leaflet map has been looking at
+ * 0 = a normal extent
+ * 1 = zoomed in close to the east/left of anti-meridian
+ * 2 = zoomed in close to the west/right of the anti-meridian
+ * When this value changes we'll need to recompute the location of our points
+ * to help them wrap around the anti-meridian
+ */
+let prevBoundsType = 0;
 
 /**
  * A {@link Visualizer} which maps {@link Entity#point} to Leaflet primitives.
@@ -166,23 +178,40 @@ class LeafletGeomVisualizer {
   public update(time: JulianDate): boolean {
     const entities = this._entitiesToVisualize.values;
     const entityHash = this._entityHash;
-    let lastLeafletMarker: L.CircleMarker | undefined;
+
+    const bounds = this.leafletScene.map.getBounds();
+    let applyLocalisedAntiMeridianFix = false;
+    let currentBoundsType = 0;
+    if (_isCloseToEasternAntiMeridian(bounds)) {
+      applyLocalisedAntiMeridianFix = true;
+      currentBoundsType = 1;
+    } else if (_isCloseToWesternAntiMeridian(bounds)) {
+      applyLocalisedAntiMeridianFix = true;
+      currentBoundsType = 2;
+    }
 
     for (let i = 0, len = entities.length; i < len; i++) {
       const entity = entities[i];
       const entityDetails = entityHash[entity.id];
 
       if (isDefined(entity._point)) {
-        lastLeafletMarker = this._updatePoint(
+        this._updatePoint(
           entity,
           time,
           entityHash,
           entityDetails,
-          lastLeafletMarker
+          applyLocalisedAntiMeridianFix === true ? bounds : undefined,
+          prevBoundsType !== currentBoundsType
         );
       }
       if (isDefined(entity.billboard)) {
-        this._updateBillboard(entity, time, entityHash, entityDetails);
+        this._updateBillboard(
+          entity,
+          time,
+          entityHash,
+          entityDetails,
+          applyLocalisedAntiMeridianFix === true ? bounds : undefined
+        );
       }
       if (isDefined(entity.label)) {
         this._updateLabel(entity, time, entityHash, entityDetails);
@@ -194,7 +223,7 @@ class LeafletGeomVisualizer {
         this._updatePolygon(entity, time, entityHash, entityDetails);
       }
     }
-
+    prevBoundsType = currentBoundsType;
     return true;
   }
 
@@ -203,7 +232,8 @@ class LeafletGeomVisualizer {
     time: JulianDate,
     _entityHash: EntityHash,
     entityDetails: EntityDetails,
-    lastLeafletMarker?: L.CircleMarker
+    bounds: LatLngBounds | undefined,
+    boundsJustChanged: boolean
   ) {
     const featureGroup = this._featureGroup;
     const pointGraphics = entity.point;
@@ -264,7 +294,7 @@ class LeafletGeomVisualizer {
       };
 
       layer = details.layer = L.circleMarker(
-        positionToLatLng(position, lastLeafletMarker),
+        positionToLatLng(position, bounds),
         pointOptions
       );
       layer.on("click", featureClicked.bind(undefined, this, entity));
@@ -280,8 +310,11 @@ class LeafletGeomVisualizer {
       return layer;
     }
 
-    if (!Cartesian3.equals(position, details.lastPosition)) {
-      layer.setLatLng(positionToLatLng(position, lastLeafletMarker));
+    if (
+      !Cartesian3.equals(position, details.lastPosition) ||
+      boundsJustChanged
+    ) {
+      layer.setLatLng(positionToLatLng(position, bounds));
       Cartesian3.clone(position, details.lastPosition);
     }
 
@@ -322,7 +355,8 @@ class LeafletGeomVisualizer {
     entity: Entity,
     time: JulianDate,
     _entityHash: EntityHash,
-    entityDetails: EntityDetails
+    entityDetails: EntityDetails,
+    bounds: LatLngBounds | undefined
   ) {
     const markerGraphics = entity.billboard;
     const featureGroup = this._featureGroup;
@@ -351,10 +385,7 @@ class LeafletGeomVisualizer {
     }
 
     const cart = Ellipsoid.WGS84.cartesianToCartographic(position);
-    const latlng = L.latLng(
-      CesiumMath.toDegrees(cart.latitude),
-      CesiumMath.toDegrees(cart.longitude)
-    );
+    const latlng = positionToLatLng(position, bounds);
     const image: any = getValue(markerGraphics.image, time);
     const height: number | undefined = getValue(markerGraphics.height, time);
     const width: number | undefined = getValue(markerGraphics.width, time);
@@ -620,6 +651,17 @@ class LeafletGeomVisualizer {
       true
     );
     const outline = getValueOrDefault(polygonGraphics.outline, time, true);
+    let dashArray;
+    if (polygonGraphics.outline instanceof PolylineDashMaterialProperty) {
+      dashArray = getDashArray(polygonGraphics.outline, time);
+    }
+
+    const outlineWidth = getValueOrDefault(
+      (polygonGraphics.outlineWidth as unknown) as Property,
+      time,
+      defaultOutlineWidth
+    );
+
     const outlineColor = getValueOrDefault(
       (polygonGraphics.outlineColor as unknown) as Property,
       time,
@@ -639,14 +681,20 @@ class LeafletGeomVisualizer {
 
     let layer = details.layer;
     if (!isDefined(layer)) {
-      const polygonOptions = {
+      const polygonOptions: PolylineOptions = {
         fill: fill,
         fillColor: fillColor.toCssColorString(),
         fillOpacity: fillColor.alpha,
-        weight: outline ? 1.0 : 0.0,
+        weight: outline ? outlineWidth : 0.0,
         color: outlineColor.toCssColorString(),
         opacity: outlineColor.alpha
       };
+
+      if (outline && dashArray) {
+        polygonOptions.dashArray = dashArray
+          .map(x => x * outlineWidth)
+          .join(",");
+      }
 
       layer = details.layer = L.polygon(
         hierarchyToLatLngs(hierarchy),
@@ -680,7 +728,7 @@ class LeafletGeomVisualizer {
     }
 
     if (outline !== details.lastOutline) {
-      options.weight = outline ? 1.0 : 0.0;
+      options.weight = outline ? outlineWidth : 0.0;
       details.lastOutline = outline;
       applyStyle = true;
     }
@@ -746,7 +794,9 @@ class LeafletGeomVisualizer {
       );
     }
 
-    let color, width;
+    let color;
+    let dashArray: number[] | undefined;
+    let width: number;
     if (polylineGraphics.material instanceof PolylineGlowMaterialProperty) {
       color = defaultColor;
       width = defaultWidth;
@@ -762,12 +812,19 @@ class LeafletGeomVisualizer {
         defaultWidth
       );
     }
+    if (polylineGraphics.material instanceof PolylineDashMaterialProperty) {
+      dashArray = getDashArray(polylineGraphics.material, time);
+    }
 
-    const polylineOptions = {
+    const polylineOptions: PolylineOptions = {
       color: color.toCssColorString(),
       weight: width,
       opacity: color.alpha
     };
+
+    if (dashArray) {
+      polylineOptions.dashArray = dashArray.map(x => x * width).join(",");
+    }
 
     if (!isDefined(geomLayer)) {
       if (latlngs.length > 0) {
@@ -870,6 +927,19 @@ class LeafletGeomVisualizer {
   }
 }
 
+function getDashArray(
+  material: PolylineDashMaterialProperty,
+  time: JulianDate
+): number[] {
+  let dashArray;
+
+  const dashPattern = material.dashPattern
+    ? material.dashPattern.getValue(time)
+    : undefined;
+
+  return getLineStyleLeaflet(dashPattern);
+}
+
 function cleanEntity(
   entity: Entity,
   group: L.FeatureGroup,
@@ -941,18 +1011,41 @@ function cleanPolyline(
   }
 }
 
-function positionToLatLng(position: Cartesian3, prevMarker?: L.CircleMarker) {
-  const cartographic = Ellipsoid.WGS84.cartesianToCartographic(position);
+function _isCloseToEasternAntiMeridian(bounds: LatLngBounds) {
+  const w = bounds.getWest();
+  const e = bounds.getEast();
+  if (w > 140 && (e < -140 || e > 180)) {
+    return true;
+  }
+  return false;
+}
+
+function _isCloseToWesternAntiMeridian(bounds: LatLngBounds) {
+  const w = bounds.getWest();
+  const e = bounds.getEast();
+  if ((w > 180 || w < -140) && e < -140) {
+    return true;
+  }
+  return false;
+}
+
+function positionToLatLng(
+  position: Cartesian3,
+  bounds: LatLngBounds | undefined
+) {
+  var cartographic = Ellipsoid.WGS84.cartesianToCartographic(position);
   let lon = CesiumMath.toDegrees(cartographic.longitude);
-  if (prevMarker) {
-    const prevLon = prevMarker.getLatLng().lng;
-    if (prevLon - lon > 180) {
-      lon = lon + 360;
-    } else if (prevLon - lon < -180) {
-      lon = lon - 360;
+  if (bounds !== undefined) {
+    if (_isCloseToEasternAntiMeridian(bounds)) {
+      if (lon < -140) {
+        lon = lon + 360;
+      }
+    } else if (_isCloseToWesternAntiMeridian(bounds)) {
+      if (lon > 140) {
+        lon = lon - 360;
+      }
     }
   }
-
   return L.latLng(CesiumMath.toDegrees(cartographic.latitude), lon);
 }
 
