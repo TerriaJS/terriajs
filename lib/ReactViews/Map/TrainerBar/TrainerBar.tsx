@@ -266,7 +266,7 @@ class StepAccordionRaw extends React.Component<
             `}
           >
             {renderOrderedStepList(selectedTrainerSteps)}
-            {selectedTrainer.footnote && (
+            {selectedTrainer.footnote ? (
               <>
                 <Spacing bottom={3} />
                 <Text medium textLightDimmed>
@@ -279,6 +279,8 @@ class StepAccordionRaw extends React.Component<
                   />
                 </Text>
               </>
+            ) : (
+              <Spacing bottom={3} />
             )}
           </BoxTrainerExpandedSteps>
         )}
