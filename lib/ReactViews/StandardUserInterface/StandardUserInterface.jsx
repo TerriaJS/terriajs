@@ -262,6 +262,8 @@ const StandardUserInterface = observer(
                   <Medium>
                     <div
                       className={classNames(Styles.showWorkbenchButton, {
+                        [Styles.showWorkbenchButtonTrainerBarVisible]: this
+                          .props.viewState.trainerBarVisible,
                         [Styles.showWorkbenchButtonisVisible]: this.props
                           .viewState.isMapFullScreen,
                         [Styles.showWorkbenchButtonisNotVisible]: !this.props
@@ -309,7 +311,12 @@ const StandardUserInterface = observer(
               </div>
 
               <If condition={!this.props.viewState.hideMapUi()}>
-                <TrainerBar terria={terria} viewState={this.props.viewState} />
+                <Medium>
+                  <TrainerBar
+                    terria={terria}
+                    viewState={this.props.viewState}
+                  />
+                </Medium>
                 <div
                   className={classNames({
                     [Styles.explorerPanelIsVisible]: this.props.viewState

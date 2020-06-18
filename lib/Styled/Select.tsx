@@ -41,7 +41,7 @@ const StyledSelect = styled.select<SelectProps>`
 
   border: none;
   border-radius: ${p => p.theme.radiusSmall};
-  padding-left: 10px;
+  padding-left: ${p => p.paddingForLeftIcon || "10px"};
   padding-right: 30px; // For icon
 
   color: ${p => p.theme.textLight};
@@ -69,20 +69,43 @@ const ArrowPositioning = styled.div`
   pointer-events: none;
 `;
 
+const LeftIconPositioning = styled.div`
+  ${props => props.theme.verticalAlign("absolute")}
+
+  // Stops presentational icon preventing select activation via mouse
+  pointer-events: none;
+`;
+
 interface SelectProps {
   boxProps?: any;
   dropdownIconProps?: any;
   light?: boolean;
+  leftIcon?: () => React.ReactNode;
+  paddingForLeftIcon?: string;
   children: React.ReactNode;
   [spread: string]: any;
 }
 
 const Select: React.FC<SelectProps> = props => {
-  const { children, boxProps, dropdownIconProps, ...rest }: SelectProps = props;
+  const {
+    leftIcon,
+    children,
+    boxProps,
+    dropdownIconProps,
+    paddingForLeftIcon,
+    ...rest
+  }: SelectProps = props;
   const theme: any = useTheme();
   return (
     <Box fullWidth {...boxProps}>
-      <StyledSelect {...rest}>{children}</StyledSelect>
+      {leftIcon && <LeftIconPositioning>{leftIcon()}</LeftIconPositioning>}
+      <StyledSelect
+        leftIcon={leftIcon}
+        paddingForLeftIcon={paddingForLeftIcon}
+        {...rest}
+      >
+        {children}
+      </StyledSelect>
       <ArrowPositioning>
         <StyledIcon
           // light bg needs dark icon

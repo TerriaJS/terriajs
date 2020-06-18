@@ -32,7 +32,7 @@ import { TFunction } from "i18next";
 
 const TrainerBarWrapper = styled(Box)`
   top: 0;
-  left: ${p => Number(p.theme.workbenchWidth)}px;
+  left: ${p => (p.isMapFullScreen ? 0 : Number(p.theme.workbenchWidth))}px;
   z-index: ${p => Number(p.theme.frontComponentZIndex) + 100};
 `;
 
@@ -325,11 +325,18 @@ const TrainerBar = observer((props: TrainerBarProps) => {
     return null;
   }
 
+  const isMapFullScreen = viewState.isMapFullScreen;
+
   return (
     <TrainerBarWrapper
       centered
       positionAbsolute
-      styledWidth={`calc(100% - ${Number(theme.workbenchWidth)}px)`}
+      styledWidth={
+        isMapFullScreen
+          ? "100%"
+          : `calc(100% - ${Number(theme.workbenchWidth)}px)`
+      }
+      isMapFullScreen={isMapFullScreen}
       onClick={() => viewState.setTopElement("TrainerBar")}
     >
       <Box
@@ -343,6 +350,26 @@ const TrainerBar = observer((props: TrainerBarProps) => {
         <Box css={"min-height: 64px;"}>
           {/* <Spacing right={6} /> */}
           <Select
+            css={`
+              // Overrides on normal select here as we are using a non-normal
+              // nowhere-else-in-app usage of select
+              width: 290px;
+              @media (max-width: ${(p: any) => p.theme.lg}px) {
+                width: 84px;
+                // hack to effectively visually disable the current option
+                // without minimising select click target
+                color: transparent;
+              }
+            `}
+            paddingForLeftIcon={"45px"}
+            leftIcon={() => (
+              <StyledIcon
+                css={"padding-left:15px;"}
+                light
+                styledWidth={"21px"}
+                glyph={GLYPHS.oneTwoThree}
+              />
+            )}
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
               viewState.setCurrentTrainerItemIndex(Number(e.target.value))
             }
