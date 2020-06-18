@@ -85,8 +85,8 @@ export default class ViewState {
   @observable videoGuideVisible: string = "";
 
   @observable trainerBarVisible: boolean = false;
-  @observable trainerBarPeeking: boolean = false;
   @observable trainerBarExpanded: boolean = false;
+  @observable trainerBarShowingAllSteps: boolean = false;
   @observable selectedTrainerItem: string = "";
   @observable currentTrainerItemIndex: number = 0;
   @observable currentTrainerStepIndex: number = 0;
@@ -99,12 +99,16 @@ export default class ViewState {
     this.trainerBarVisible = bool;
   }
   @action
-  setTrainerBarPeeking(bool: boolean) {
-    this.trainerBarPeeking = bool;
+  setTrainerBarShowingAllSteps(bool: boolean) {
+    this.trainerBarShowingAllSteps = bool;
   }
   @action
   setTrainerBarExpanded(bool: boolean) {
     this.trainerBarExpanded = bool;
+    // if collapsing trainer bar, also hide steps
+    if (!bool) {
+      this.trainerBarShowingAllSteps = bool;
+    }
   }
   @action
   setCurrentTrainerItemIndex(index: number) {

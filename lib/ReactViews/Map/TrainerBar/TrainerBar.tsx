@@ -77,9 +77,11 @@ const renderStep = (
   options: {
     renderDescription: boolean;
     comfortable: boolean;
+    footerComponent?: () => void;
   } = {
     renderDescription: true,
-    comfortable: false
+    comfortable: false,
+    footerComponent: undefined
   }
 ) => (
   <Box key={number} paddedVertically>
@@ -90,7 +92,7 @@ const renderStep = (
       <Spacing right={3} />
     </Box>
     <Box column>
-      <Text medium textLight>
+      <Text textLight extraExtraLarge semiBold>
         {step.title}
       </Text>
       {options.renderDescription && step?.markdownDescription && (
@@ -106,6 +108,7 @@ const renderStep = (
               ]}
             />
           </StepText>
+          {options.footerComponent?.()}
         </>
       )}
     </Box>
@@ -127,8 +130,8 @@ interface StepAccordionProps {
   t: TFunction;
   theme: DefaultTheme;
   selectedTrainer: TrainerItem;
-  isPeeking: boolean;
-  setIsPeeking: (bool: boolean) => void;
+  isShowingAllSteps: boolean;
+  setIsShowingAllSteps: (bool: boolean) => void;
   isExpanded: boolean;
   setIsExpanded: (bool: boolean) => void;
   heightFromMeasureElementHOC: number | null;
@@ -150,27 +153,24 @@ class StepAccordionRaw extends React.Component<
       t,
       theme,
       selectedTrainer,
-      isPeeking,
-      setIsPeeking,
+      isShowingAllSteps,
+      setIsShowingAllSteps,
       isExpanded,
       setIsExpanded,
       heightFromMeasureElementHOC
     } = this.props;
     return (
       <Box
-        css={`
-          // min-height: 64px;
-        `}
-        centered={!isPeeking}
+        centered={!isExpanded}
         fullWidth
         justifySpaceBetween
-        onMouseOver={() => setIsPeeking(true)}
+        // onMouseOver={() => setIsPeeking(true)}
       >
-        {/* Non-peeking step */}
+        {/* Non-expanded step */}
         <Box
           paddedHorizontally={4}
           column
-          aria-hidden={isPeeking}
+          aria-hidden={isExpanded}
           overflow="hidden"
           css={`
             max-height: 64px;
@@ -183,49 +183,63 @@ class StepAccordionRaw extends React.Component<
           {renderStep(
             selectedTrainerSteps[viewState.currentTrainerStepIndex],
             viewState.currentTrainerStepIndex + 1,
-            { renderDescription: false, comfortable: false }
+            { renderDescription: false, comfortable: true }
           )}
         </Box>
-        {/* peeked version of the box step */}
-        {isPeeking && (
+        {/* expanded version of the box step */}
+        {isExpanded && (
           <Box
             paddedHorizontally={4}
             column
-            onMouseOver={() => setIsPeeking(true)}
             positionAbsolute
             fullWidth
             css={`
               top: 0;
-              padding-bottom: 15px;
+              padding-bottom: 20px;
               // This padding forces the absolutely positioned box to align with
               // the relative width in its clone
               padding-right: 60px;
             `}
             backgroundColor={theme.textBlack}
             ref={(component: any) => (this.refToMeasure = component)}
-            onMouseLeave={() => {
-              // We only "unpeek" if user hasn't opted to expand.. confusing
-              if (!isExpanded) setIsPeeking(false);
-            }}
           >
             {renderStep(
               selectedTrainerSteps[viewState.currentTrainerStepIndex],
               viewState.currentTrainerStepIndex + 1,
-              { renderDescription: true, comfortable: true }
+              {
+                renderDescription: true,
+                comfortable: true,
+                footerComponent: () => (
+                  <>
+                    <Spacing bottom={3} />
+                    <RawButton
+                      onClick={() => setIsShowingAllSteps(!isShowingAllSteps)}
+                    >
+                      <Text medium primary isLink textAlignLeft>
+                        {isShowingAllSteps
+                          ? t("trainer.hideAllSteps")
+                          : t("trainer.showAllSteps")}
+                      </Text>
+                    </RawButton>
+                  </>
+                )
+              }
             )}
           </Box>
         )}
         <Box paddedHorizontally={2}>
           <RawButton
             onClick={() => setIsExpanded(!isExpanded)}
-            onMouseOver={() => setIsPeeking(true)}
-            onFocus={() => setIsPeeking(true)}
+            // onMouseOver={() => setIsPeeking(true)}
+            // onFocus={() => setIsPeeking(true)}
             title={
-              isExpanded ? t("trainer.collapseSteps") : t("trainer.expandSteps")
+              isExpanded
+                ? t("trainer.collapseTrainer")
+                : t("trainer.expandTrainer")
             }
-            onBlur={() => {
-              if (!isExpanded) setIsPeeking(false);
-            }}
+            // onBlur={() => {
+            //   if (!isExpanded) setIsPeeking(false);
+            // }}
             css={"z-index:2;"}
           >
             <StyledIcon
@@ -236,17 +250,19 @@ class StepAccordionRaw extends React.Component<
           </RawButton>
         </Box>
         {/* Accordion / child steps? */}
-        {isExpanded && (
+        {isShowingAllSteps && (
           <BoxTrainerExpandedSteps
             column
             positionAbsolute
             backgroundColor={theme.textBlack}
             fullWidth
             paddedRatio={4}
+            overflowY={"auto"}
             css={`
               // top: 32px;
               padding-bottom: 10px;
               top: ${heightFromMeasureElementHOC}px;
+              max-height: calc(100vh - ${heightFromMeasureElementHOC}px - 20px);
             `}
           >
             {renderOrderedStepList(selectedTrainerSteps)}
@@ -345,8 +361,10 @@ const TrainerBar = observer((props: TrainerBarProps) => {
         <StepAccordion
           viewState={viewState}
           selectedTrainerSteps={selectedTrainerSteps}
-          isPeeking={viewState.trainerBarPeeking}
-          setIsPeeking={(bool: boolean) => viewState.setTrainerBarPeeking(bool)}
+          isShowingAllSteps={viewState.trainerBarShowingAllSteps}
+          setIsShowingAllSteps={(bool: boolean) =>
+            viewState.setTrainerBarShowingAllSteps(bool)
+          }
           isExpanded={viewState.trainerBarExpanded}
           setIsExpanded={(bool: boolean) =>
             viewState.setTrainerBarExpanded(bool)
