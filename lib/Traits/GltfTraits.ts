@@ -5,9 +5,7 @@ import ModelTraits from "./ModelTraits";
 import ShadowTraits from "./ShadowTraits";
 import mixTraits from "./mixTraits";
 
-export default class GltfTraits extends mixTraits(
-  ShadowTraits
-) {
+export default class GltfTraits extends mixTraits(ShadowTraits) {
   @objectTrait({
     type: LatLonHeightTraits,
     name: "Origin",
