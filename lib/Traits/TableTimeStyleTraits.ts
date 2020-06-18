@@ -36,4 +36,11 @@ export default class TableTimeStyleTraits extends ModelTraits {
     type: "boolean"
   })
   isSampled: boolean = true;
+
+  @primitiveTrait({
+    name: "Display Duration",
+    type: "number",
+    description: "Display duration for each row in the table, in minutes."
+  })
+  displayDuration?: number;
 }

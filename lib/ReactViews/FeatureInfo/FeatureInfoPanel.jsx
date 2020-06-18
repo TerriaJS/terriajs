@@ -290,10 +290,7 @@ class FeatureInfoPanel extends React.Component {
       defined(terria.selectedFeature.position)
     ) {
       // If the clock is avaliable then use it, otherwise don't.
-      let clock;
-      if (defined(terria.clock)) {
-        clock = terria.clock.currentTime;
-      }
+      const clock = terria.timelineClock?.currentTime;
 
       // If there is a selected feature then use the feature location.
       position = terria.selectedFeature.position.getValue(clock);

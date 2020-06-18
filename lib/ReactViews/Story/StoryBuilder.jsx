@@ -11,12 +11,15 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import triggerResize from "../../Core/triggerResize";
 import BadgeBar from "../BadgeBar.jsx";
 import Icon from "../Icon.jsx";
-import Loader from "../Loader";
 import { getShareData } from "../Map/Panels/SharePanel/BuildShareLink";
 import Styles from "./story-builder.scss";
 import Story from "./Story.jsx";
 import StoryEditor from "./StoryEditor.jsx";
 import { runInAction } from "mobx";
+import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
+import dataStoriesImg from "../../../wwwroot/images/data-stories-getting-started.jpg";
+
+const STORY_VIDEO = "storyVideo";
 
 const StoryBuilder = observer(
   createReactClass({
@@ -101,28 +104,6 @@ const StoryBuilder = observer(
           this.props.terria.stories.push(story);
         }
       });
-    },
-
-    toggleVideoGuide() {
-      const showVideoGuide = this.state.showVideoGuide;
-      // If not enabled
-      if (!showVideoGuide) {
-        this.setState({
-          showVideoGuide: !showVideoGuide,
-          videoGuideVisible: true
-        });
-      }
-      // Otherwise we immediately trigger exit animations, then close it 300ms later
-      if (showVideoGuide) {
-        this.slideOutTimer = this.setState({
-          videoGuideVisible: false
-        });
-        setTimeout(() => {
-          this.setState({
-            showVideoGuide: !showVideoGuide
-          });
-        }, 300);
-      }
     },
 
     recaptureScene(story) {
@@ -211,7 +192,9 @@ const StoryBuilder = observer(
               Create and share interactive stories directly from your map
               <div>
                 <button
-                  onClick={this.toggleVideoGuide}
+                  onClick={() =>
+                    this.props.viewState.setVideoGuideVisible(STORY_VIDEO)
+                  }
                   className={Styles.tutBtn}
                 >
                   <Icon glyph={Icon.GLYPHS.play} />
@@ -220,37 +203,6 @@ const StoryBuilder = observer(
               </div>
             </div>
           </Trans>
-        </div>
-      );
-    },
-
-    renderVideoGuide() {
-      return (
-        <div
-          className={classNames({
-            [Styles.videoGuideWrapper]: true,
-            [Styles.videoGuideWrapperClosing]: !this.state.videoGuideVisible
-          })}
-          onClick={this.toggleVideoGuide}
-        >
-          <div
-            className={Styles.videoGuide}
-            onClick={e => e.stopPropagation()}
-            style={{
-              backgroundImage: `url(${require("../../../wwwroot/images/data-stories-getting-started.jpg")})`
-            }}
-          >
-            <div className={Styles.videoGuideRatio}>
-              <div className={Styles.videoGuideLoading}>
-                <Loader message={` `} />
-              </div>
-              <iframe
-                className={Styles.videoGuideIframe}
-                src="https://www.youtube.com/embed/fbiQawV8IYY"
-                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-              />
-            </div>
-          </div>
         </div>
       );
     },
@@ -321,7 +273,12 @@ const StoryBuilder = observer(
       });
       return (
         <div className={className}>
-          {this.state.showVideoGuide && this.renderVideoGuide()}
+          <VideoGuide
+            viewState={this.props.viewState}
+            videoLink={"https://www.youtube.com/embed/fbiQawV8IYY"}
+            background={dataStoriesImg}
+            videoName={STORY_VIDEO}
+          />
           <div className={Styles.header}>
             {!hasStories && this.renderIntro()}
             <div className={Styles.actions}>
