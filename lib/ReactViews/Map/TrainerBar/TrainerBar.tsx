@@ -214,6 +214,11 @@ class StepAccordionRaw extends React.Component<
                     <Spacing bottom={3} />
                     <RawButton
                       onClick={() => setIsShowingAllSteps(!isShowingAllSteps)}
+                      title={
+                        isShowingAllSteps
+                          ? t("trainer.hideAllSteps")
+                          : t("trainer.showAllSteps")
+                      }
                     >
                       <Text medium primary isLink textAlignLeft>
                         {isShowingAllSteps
@@ -297,7 +302,7 @@ interface TrainerBarProps extends WithTranslation {
   theme: DefaultTheme;
 }
 
-const TrainerBar = observer((props: TrainerBarProps) => {
+export const TrainerBar = observer((props: TrainerBarProps) => {
   const { t, terria, theme, viewState } = props;
   const { helpContent } = terria.configParameters;
 
