@@ -247,7 +247,7 @@ class Main extends React.Component<MainPropsType> {
           style => style.id === diffStyleId
         )
       )
-    );
+    ) as AvailableStyle[];
   }
 
   @computed

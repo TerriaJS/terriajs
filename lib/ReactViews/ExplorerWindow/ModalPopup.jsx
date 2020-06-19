@@ -12,6 +12,7 @@ const ModalPopup = createReactClass({
   propTypes: {
     isVisible: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
+    viewState: PropTypes.object.isRequired,
     onStartAnimatingIn: PropTypes.func,
     onDoneAnimatingIn: PropTypes.func,
     children: PropTypes.node.isRequired,
@@ -39,7 +40,8 @@ const ModalPopup = createReactClass({
 
   componentDidMount() {
     this.escKeyListener = e => {
-      if (e.keyCode === 27) {
+      // Only explicitly check share modal state, move to levels/"layers of modals" logic if we need to go any deeper
+      if (e.keyCode === 27 && !this.props.viewState.shareModalIsVisible) {
         this.props.onClose();
       }
     };

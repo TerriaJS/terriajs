@@ -15,6 +15,7 @@ import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
 import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import isDefined from "../Core/isDefined";
+import DiscretelyTimeVaryingMixin from "../ModelMixins/DiscretelyTimeVaryingMixin";
 import { BaseModel } from "./Model";
 
 // Types of CSVs:
@@ -30,11 +31,15 @@ import { BaseModel } from "./Model";
 
 const automaticTableStylesStratumName = "automaticTableStyles";
 
-export default class CsvCatalogItem extends TableMixin(
-  AsyncChartableMixin(
-    AsyncMappableMixin(
-      AutoRefreshingMixin(
-        UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
+export default class CsvCatalogItem extends AsyncChartableMixin(
+  TableMixin(
+    // Since both TableMixin & DiscretelyTimeVaryingMixin defines
+    // `chartItems`, the order of mixing in is important here
+    DiscretelyTimeVaryingMixin(
+      AsyncMappableMixin(
+        AutoRefreshingMixin(
+          UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
+        )
       )
     )
   )
@@ -72,15 +77,7 @@ export default class CsvCatalogItem extends TableMixin(
 
   @computed
   get canZoomTo() {
-    const s = this.strata.get(automaticTableStylesStratumName);
-    // Zooming to tables with lat/lon columns works
-    if (
-      isDefined(s) &&
-      isDefined(s.defaultStyle) &&
-      s.defaultStyle.latitudeColumn !== undefined
-    )
-      return true;
-    return false;
+    return this.activeTableStyle.latitudeColumn !== undefined;
   }
 
   /*
@@ -97,6 +94,16 @@ export default class CsvCatalogItem extends TableMixin(
     if (this.refreshUrl) {
       return this.polling.seconds;
     }
+  }
+
+  @computed
+  get discreteTimes() {
+    const automaticTableStylesStratum:
+      | TableAutomaticStylesStratum
+      | undefined = this.strata.get(
+      automaticTableStylesStratumName
+    ) as TableAutomaticStylesStratum;
+    return automaticTableStylesStratum?.discreteTimes;
   }
 
   /*

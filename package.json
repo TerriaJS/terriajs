@@ -179,11 +179,12 @@
     "react-test-renderer": "^16.3.2",
     "regenerator-runtime": "^0.13.2",
     "terriajs-server": "^3.0.1",
+    "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.1.14"
   },
   "scripts": {
     "prepublish": "gulp post-npm-install",
-    "postpublish": "bash -c \"git tag -a ${npm_package_version} -m \"${npm_package_version}\" && git push origin ${npm_package_version}\"",
+    "postpublish": "bash -c \"if [ -z \"$GITHUB_ACTION\" ]; then git tag -a ${npm_package_version} -m \"${npm_package_version}\" && git push origin ${npm_package_version}; fi \"",
     "postinstall": "gulp post-npm-install",
     "gulp": "gulp",
     "make-schema": "gulp make-schema",
