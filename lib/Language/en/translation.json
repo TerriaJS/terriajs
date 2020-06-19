@@ -143,7 +143,11 @@
     "subTotals": "<div> {{name}}: {{items}} items / {{groups}} groups</div>",
     "recount": "Recount",
     "title": "Count Datasets",
-    "btnCount": "Count datasets"
+    "btnCount": "Count datasets",
+    "addedToMap": "added to map",
+    "noMapDataAdded": "No map data added",
+    "datasetSingular": "dataset",
+    "datasetPlural": "dataset"
   },
   "toolsPanel": {
     "btnText": "Tool",
