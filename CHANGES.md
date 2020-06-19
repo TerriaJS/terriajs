@@ -14,6 +14,7 @@ Change Log
 * Add a unit test for polygon outline style.
 * Use `1.x.x` of `karma-sauce-launcher` to fix CI build failures
 * Stop unknown icons specified in config.json from crashing UI
+* Creates a `ShadowTraits` class that is shared by `GltfCatalogItem` and `Cesium3DTilesCatalogItem`.
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 
