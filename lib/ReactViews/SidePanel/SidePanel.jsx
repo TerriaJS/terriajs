@@ -106,6 +106,7 @@ SidePanelButton.propTypes = {
 };
 
 export const EXPLORE_MAP_DATA_NAME = "ExploreMapDataButton";
+export const SIDE_PANEL_UPLOAD_BUTTON_NAME = "SidePanelUploadButton";
 
 const SidePanel = observer(
   createReactClass({
@@ -115,6 +116,7 @@ const SidePanel = observer(
       terria: PropTypes.object.isRequired,
       viewState: PropTypes.object.isRequired,
       refFromHOC: PropTypes.object.isRequired,
+      refFromHOCForUpload: PropTypes.object.isRequired,
       t: PropTypes.func.isRequired,
       theme: PropTypes.object.isRequired
     },
@@ -167,6 +169,7 @@ const SidePanel = observer(
                 />
               </SidePanelButton>
               <SidePanelButton
+                ref={this.props.refFromHOCForUpload}
                 onClick={() => this.onAddLocalDataClicked()}
                 title={t("addData.load")}
                 btnText={uploadText}
@@ -209,6 +212,24 @@ const SidePanel = observer(
   })
 );
 
+// Used to re-route a second re-HOC wrapping of withTerriaRef
+// a better solution is probably to update the HOC to take an array of keys
+const RefForUpload = props => {
+  const SidePanelWrappedForExplore = withTerriaRef(
+    SidePanel,
+    EXPLORE_MAP_DATA_NAME
+  );
+  // it's important we pull outt refFromHOC and not override it again on rest
+  // so that the second HOC can correctly provide the EXPLORE_MAP_DATA_NAME prop
+  const { refFromHOC, ...rest } = props;
+  return (
+    <SidePanelWrappedForExplore refFromHOCForUpload={refFromHOC} {...rest} />
+  );
+};
+RefForUpload.propTypes = {
+  refFromHOC: PropTypes.object.isRequired
+};
+
 module.exports = withTranslation()(
-  withTheme(withTerriaRef(SidePanel, EXPLORE_MAP_DATA_NAME))
+  withTheme(withTerriaRef(RefForUpload, SIDE_PANEL_UPLOAD_BUTTON_NAME))
 );
