@@ -15,6 +15,9 @@ Change Log
 * Extended the support for styles for ESRI ArcGis Feature Server. Line styles are supported for lines and polygon outlines in both Cesium and Leaflet viewer. #4405
 * Fix polygon outline style bug.
 * Add a unit test for polygon outline style.
+* Use `1.x.x` of `karma-sauce-launcher` to fix CI build failures
+* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
+
 
 #### mobx-33
 * Updated generic select so icon doesn't block click
