@@ -147,7 +147,7 @@
     "addedToMap": "added to map",
     "noMapDataAdded": "No map data added",
     "datasetSingular": "dataset",
-    "datasetPlural": "dataset"
+    "datasetPlural": "datasets"
   },
   "toolsPanel": {
     "btnText": "Tool",
