@@ -13,6 +13,7 @@ Change Log
 * Fix polygon outline style bug.
 * Add a unit test for polygon outline style.
 * Use `1.x.x` of `karma-sauce-launcher` to fix CI build failures
+* Stop unknown icons specified in config.json from crashing UI
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 
