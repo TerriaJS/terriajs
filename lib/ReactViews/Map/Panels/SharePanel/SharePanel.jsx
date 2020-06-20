@@ -11,6 +11,7 @@ import Clipboard from "../../../Clipboard";
 import Icon from "../../../Icon.jsx";
 import Loader from "../../../Loader";
 import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
+import StorySharePanel from "./StorySharePanel";
 import Input from "../../../Styled/Input/Input.jsx";
 import DropdownStyles from "../panel.scss";
 import {
@@ -32,10 +33,13 @@ const SharePanel = observer(
       userPropWhiteList: PropTypes.array,
       advancedIsOpen: PropTypes.bool,
       shortenUrls: PropTypes.bool,
+      storyShare: PropTypes.bool,
       catalogShare: PropTypes.bool,
       catalogShareWithoutText: PropTypes.bool,
       modalWidth: PropTypes.number,
       viewState: PropTypes.object.isRequired,
+      userOnClick: PropTypes.func,
+      btnDisabled: PropTypes.bool,
       t: PropTypes.func.isRequired
     },
 
@@ -194,7 +198,7 @@ const SharePanel = observer(
 
       if (open) {
         this.updateForShortening();
-        if (this.props.catalogShare) {
+        if (this.props.catalogShare || this.props.storyShare) {
           this.props.viewState.shareModalIsVisible = true;
         }
       }
@@ -329,6 +333,8 @@ const SharePanel = observer(
     renderContent() {
       if (this.props.catalogShare) {
         return this.renderContentForCatalogShare();
+      } else if (this.props.storyShare) {
+        return this.renderContentForStoryShare();
       } else {
         return this.renderContentWithPrintAndEmbed();
       }
@@ -343,6 +349,28 @@ const SharePanel = observer(
           </When>
           <Otherwise>
             <div className={Styles.clipboardForCatalogShare}>
+              <Clipboard
+                theme="light"
+                text={this.state.shareUrl}
+                source={this.getShareUrlInput("light")}
+                id="share-url"
+              />
+              {this.renderWarning()}
+            </div>
+          </Otherwise>
+        </Choose>
+      );
+    },
+
+    renderContentForStoryShare() {
+      const { t } = this.props;
+      return (
+        <Choose>
+          <When condition={this.state.shareUrl === ""}>
+            <Loader message={t("share.generatingUrl")} />
+          </When>
+          <Otherwise>
+            <div className={Styles.clipboardForStoryShare}>
               <Clipboard
                 theme="light"
                 text={this.state.shareUrl}
@@ -462,31 +490,51 @@ const SharePanel = observer(
       );
     },
 
+    openWithUserClick() {
+      if (this.props.userOnClick) {
+        this.props.userOnClick();
+      }
+      this.changeOpenState();
+      this.renderContentForStoryShare();
+    },
+
     render() {
       const { t } = this.props;
-      const { catalogShare, catalogShareWithoutText, modalWidth } = this.props;
+      const {
+        catalogShare,
+        storyShare,
+        catalogShareWithoutText,
+        modalWidth
+      } = this.props;
       const dropdownTheme = {
         btn: classNames({
           [Styles.btnCatalogShare]: catalogShare,
+          [Styles.btnStoryShare]: storyShare,
           [Styles.btnWithoutText]: catalogShareWithoutText
         }),
         outer: classNames(Styles.sharePanel, {
-          [Styles.catalogShare]: catalogShare
+          [Styles.catalogShare]: catalogShare,
+          [Styles.storyShare]: storyShare
         }),
         inner: classNames(Styles.dropdownInner, {
-          [Styles.catalogShareInner]: catalogShare
+          [Styles.catalogShareInner]: catalogShare,
+          [Styles.storyShareInner]: storyShare
         }),
         icon: "share"
       };
 
       const btnText = catalogShare
         ? t("share.btnCatalogShareText")
+        : storyShare
+        ? t("share.btnStoryShareText")
         : t("share.btnMapShareText");
       const btnTitle = catalogShare
         ? t("share.btnCatalogShareTitle")
+        : storyShare
+        ? t("share.btnStoryShareTitle")
         : t("share.btnMapShareTitle");
 
-      return (
+      return !storyShare ? (
         <div>
           <MenuPanel
             theme={dropdownTheme}
@@ -502,10 +550,30 @@ const SharePanel = observer(
               if (catalogShare)
                 this.props.viewState.shareModalIsVisible = false;
             }}
+            userOnClick={this.props.userOnClick}
           >
             <If condition={this.state.isOpen}>{this.renderContent()}</If>
           </MenuPanel>
         </div>
+      ) : (
+        <StorySharePanel
+          theme={dropdownTheme}
+          btnText={catalogShareWithoutText ? null : btnText}
+          viewState={this.props.viewState}
+          btnTitle={btnTitle}
+          isOpen={this.state.isOpen}
+          onOpenChanged={this.changeOpenState}
+          showDropdownAsModal={storyShare}
+          modalWidth={modalWidth}
+          smallScreen={this.props.viewState.useSmallScreenInterface}
+          btnDisabled={this.props.btnDisabled}
+          onDismissed={() => {
+            if (storyShare) this.props.viewState.shareModalIsVisible = false;
+          }}
+          userOnClick={this.props.userOnClick}
+        >
+          <If condition={this.state.isOpen}>{this.renderContent()}</If>
+        </StorySharePanel>
       );
     }
   })

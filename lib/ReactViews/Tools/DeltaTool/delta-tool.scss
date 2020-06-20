@@ -1,0 +1,112 @@
+@import "~terriajs-variables";
+
+.deltaTool {
+  composes: tool from "../../tool-panel.scss";
+}
+
+.title {
+  border-bottom: 1px solid $border-color;
+  padding: $padding;
+  font-size: $font-size-mid-small;
+  font-weight: bold;
+}
+
+.body {
+  padding: $padding;
+}
+
+.buttons {
+  display: flex;
+}
+
+.cancelBtn {
+  composes: btn-grey from "../../../Sass/common/_buttons.scss";
+  width: 10em;
+  margin-right: 1em;
+}
+
+.generateDeltaBtn {
+  composes: btn from "../../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../../Sass/common/_buttons.scss";
+}
+
+h4 {
+  font-size: $font-size-small;
+  margin-bottom: 5px;
+}
+
+.location {
+  font-size: $font-size-mid-small;
+  line-height: 32px;
+  text-align: center;
+  background-color: rgba(250, 250, 250, 0.2);
+}
+
+.datePickers {
+  section:first-child {
+    margin: 10px 0;
+  }
+
+  section {
+    margin-bottom: 25px;
+  }
+}
+
+.pickerButtons {
+  display: flex;
+  justify-content: center;
+  background-color: rgba(250, 250, 250, 0.2);
+}
+
+.currentDate {
+  composes: btn from "../../../Sass/common/_buttons.scss";
+  flex-grow: 3;
+  text-align: center;
+  padding: 2px 8px;
+  background-color: rgba(250, 250, 250, 0.2);
+}
+
+.previousDate,
+.nextDate {
+  composes: btn from "../../../Sass/common/_buttons.scss";
+  fill: #fff;
+  cursor: pointer;
+  padding: 12px;
+  background: rgba(250, 250, 250, 0.2);
+  &:hover {
+    background: rgba(250, 250, 250, 0.4);
+  }
+  &[disabled],
+  &[disabled]:hover,
+  &[disabled]:focus {
+    opacity: 0.4;
+    cursor: default;
+    outline: 0;
+    background: rgba(250, 250, 250, 0.2);
+  }
+  svg {
+    width: 8px;
+    height: 8px;
+  }
+
+  &.previousDate {
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  &.nextDate {
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+  }
+}
+
+.picker {
+  float: left;
+  position: relative;
+  width: 0;
+  height: 0;
+  margin-right: 5px;
+}
+
+.datePickerPopup {
+  top: 5px;
+  left: 0px;
+}
