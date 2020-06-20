@@ -106,7 +106,7 @@ const MapInteractionWindow = observer(
           {interactionMode && interactionMode.onCancel && (
             <button
               type="button"
-              onClick={interactionMode && interactionMode.onCancel}
+              onClick={interactionMode.onCancel}
               className={Styles.btn}
             >
               {interactionMode && interactionMode.buttonText}

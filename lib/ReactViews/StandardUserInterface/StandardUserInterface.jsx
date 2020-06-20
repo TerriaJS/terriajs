@@ -307,7 +307,12 @@ const StandardUserInterface = observer(
                 </div>
               </div>
 
-              <If condition={!this.props.viewState.hideMapUi()}>
+              <If
+                condition={
+                  !this.props.viewState.hideMapUi() &&
+                  !this.props.viewState.showToolPanel()
+                }
+              >
                 <div
                   className={classNames({
                     [Styles.explorerPanelIsVisible]: this.props.viewState

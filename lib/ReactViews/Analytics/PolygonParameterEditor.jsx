@@ -33,7 +33,7 @@ const PolygonParameterEditor = observer(
     },
 
     selectPolygonOnMap() {
-      PolygonParameterEditor.selectOnMap(
+      selectOnMap(
         this.props.previewed.terria,
         this.props.viewState,
         this.props.parameter
