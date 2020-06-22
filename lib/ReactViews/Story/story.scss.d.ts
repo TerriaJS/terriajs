@@ -4,6 +4,7 @@ interface CssExports {
   'body': string;
   'draggable': string;
   'footer': string;
+  'isRemoveOpen': string;
   'isSuccessful': string;
   'menu': string;
   'menuBtn': string;
