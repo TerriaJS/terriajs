@@ -29,6 +29,7 @@ class HelpPanelItem extends React.Component {
 
   render() {
     // const { t } = this.props;
+    const { icon } = this.props.content;
     const MenuIconWrapper = styled(Box).attrs({
       centered: true
     })`
@@ -46,11 +47,9 @@ class HelpPanelItem extends React.Component {
       [Styles.isSelected]: itemSelected
     });
 
-    const contentIcon = this.props.content.icon;
     // `content.icon` is user defined and can possibly force the UI to lookup a
     // nonexistant icon.
-    const iconGlyph =
-      (contentIcon && Icon.GLYPHS[contentIcon]) || Icon.GLYPHS["video"];
+    const iconGlyph = Icon.GLYPHS[icon] || Icon.GLYPHS.video;
     const reactComponents = this.props.content.markdownText
       ? parseCustomMarkdownToReact(this.props.content.markdownText).props
           .children
