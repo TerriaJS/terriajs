@@ -17,9 +17,7 @@ import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import isDefined from "../Core/isDefined";
 import DiscretelyTimeVaryingMixin from "../ModelMixins/DiscretelyTimeVaryingMixin";
 import { BaseModel } from "./Model";
-import CommonStrata from "./CommonStrata";
-import runLater from "../Core/runLater";
-import { DownloadableData } from "./DownloadableModelData";
+import { ExportableData } from "./ExportableData";
 
 // Types of CSVs:
 // - Points - Latitude and longitude columns or address
@@ -48,7 +46,7 @@ export default class CsvCatalogItem
       )
     )
   )
-  implements DownloadableData {
+  implements ExportableData {
   static get type() {
     return "csv";
   }
@@ -80,7 +78,7 @@ export default class CsvCatalogItem
     return isDefined(this._csvFile);
   }
 
-  async downloadData() {
+  async exportData() {
     if (isDefined(this._csvFile)) {
       return {
         name: (this.name || this.uniqueId)!,

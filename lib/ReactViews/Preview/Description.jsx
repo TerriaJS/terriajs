@@ -16,8 +16,9 @@ import Styles from "./mappable-preview.scss";
 import { observer } from "mobx-react";
 import AUpageAlert from "@gov.au/page-alerts";
 
-import DownloadableData from "../../Models/DownloadableModelData";
+import ExportableData from "../../Models/ExportableData";
 import FileSaver from "file-saver";
+import ExportData from "./ExportData";
 
 /**
  * CatalogItem description.
@@ -32,9 +33,9 @@ const Description = observer(
       t: PropTypes.func.isRequired
     },
 
-    downloadData(previewed) {
+    exportData(previewed) {
       previewed
-        .downloadData()
+        .exportData()
         .then(data => {
           if (typeof data === "string") {
             window.open(data);
@@ -286,7 +287,7 @@ const Description = observer(
                     {catalogItem.dataUrl.startsWith("data:") && (
                       <Link
                         url={catalogItem.dataUrl}
-                        text={t("description.downloadData")}
+                        text={t("description.exportData")}
                       />
                     )}
                     {!catalogItem.dataUrl.startsWith("data:") && (
@@ -355,13 +356,7 @@ const Description = observer(
               </If>
             </If>
           </If>
-          <If condition={catalogItem && DownloadableData.is(catalogItem)}>
-            <div className={Styles.metadata}>
-              <button onClick={this.downloadData.bind(this, catalogItem)}>
-                Download data
-              </button>
-            </div>
-          </If>
+          <ExportData item={catalogItem}></ExportData>
         </div>
       );
     }
