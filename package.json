@@ -168,7 +168,7 @@
     "karma-jasmine": "^1.1.0",
     "karma-opera-launcher": "^1.0.0",
     "karma-safari-launcher": "^1.0.0",
-    "karma-sauce-launcher": "^4.1.3",
+    "karma-sauce-launcher": "^1.0.0",
     "karma-spec-reporter": "^0.0.32",
     "klaw-sync": "^4.0.0",
     "node-notifier": "^5.1.2",
@@ -185,7 +185,7 @@
   },
   "scripts": {
     "prepublish": "gulp post-npm-install",
-    "postpublish": "bash -c \"git tag -a ${npm_package_version} -m \"${npm_package_version}\" && git push origin ${npm_package_version}\"",
+    "postpublish": "bash -c \"if [ -z \"$GITHUB_ACTION\" ]; then git tag -a ${npm_package_version} -m \"${npm_package_version}\" && git push origin ${npm_package_version}; fi \"",
     "postinstall": "gulp post-npm-install",
     "gulp": "gulp",
     "make-schema": "gulp make-schema",
