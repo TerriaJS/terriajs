@@ -17,7 +17,7 @@ import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import isDefined from "../Core/isDefined";
 import DiscretelyTimeVaryingMixin from "../ModelMixins/DiscretelyTimeVaryingMixin";
 import { BaseModel } from "./Model";
-import { ExportableData } from "./ExportableData";
+import ExportableData from "./ExportableData";
 
 // Types of CSVs:
 // - Points - Latitude and longitude columns or address
