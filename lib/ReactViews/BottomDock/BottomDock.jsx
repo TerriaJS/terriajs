@@ -1,15 +1,15 @@
 "use strict";
 
-import React from "react";
 import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
-import ChartPanel from "../Custom/Chart/ChartPanel";
-import { observer } from "mobx-react";
-import Timeline from "./Timeline/Timeline";
-//import ChartDisclaimer from "./ChartDisclaimer";
-import ObserveModelMixin from "../ObserveModelMixin";
-import Styles from "./bottom-dock.scss";
 import { runInAction } from "mobx";
+import { observer } from "mobx-react";
+import PropTypes from "prop-types";
+import React from "react";
+import ChartPanel from "../Custom/Chart/ChartPanel";
+import Styles from "./bottom-dock.scss";
+import Timeline from "./Timeline/Timeline";
+
+// import ChartDisclaimer from "./ChartDisclaimer";
 
 const BottomDock = observer(
   createReactClass({
@@ -42,7 +42,7 @@ const BottomDock = observer(
           tabIndex={0}
           onClick={this.handleClick}
         >
-          {/*<ChartDisclaimer terria={terria} viewState={this.props.viewState} />*/}
+          {/* <ChartDisclaimer terria={terria} viewState={this.props.viewState} /> */}
           <ChartPanel
             terria={terria}
             onHeightChange={this.onHeightChange}
