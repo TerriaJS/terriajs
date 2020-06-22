@@ -14,6 +14,11 @@ interface Options {
   buttonText?: string;
   drawRectangle?: boolean;
   uiMode?: UIMode; // diff tool hack for now
+  onMouseMove?: (coords: {
+    longitude: number;
+    latitude: number;
+    height?: number;
+  }) => void;
 }
 
 /**
@@ -37,6 +42,12 @@ export default class MapInteractionMode {
 
   @observable
   pickedFeatures?: PickedFeatures;
+
+  onMouseMove?: (coords: {
+    longitude: number;
+    latitude: number;
+    height?: number;
+  }) => void;
 
   constructor(options: Options) {
     /**
@@ -86,5 +97,7 @@ export default class MapInteractionMode {
      * Determines whether a rectangle will be requested from the user rather than a set of pickedFeatures.
      */
     this.drawRectangle = defaultValue(options.drawRectangle, false);
+
+    this.onMouseMove = options.onMouseMove;
   }
 }
