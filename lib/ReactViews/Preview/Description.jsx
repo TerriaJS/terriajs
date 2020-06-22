@@ -16,8 +16,6 @@ import Styles from "./mappable-preview.scss";
 import { observer } from "mobx-react";
 import AUpageAlert from "@gov.au/page-alerts";
 
-import ExportableData from "../../Models/ExportableData";
-import FileSaver from "file-saver";
 import ExportData from "./ExportData";
 
 /**
@@ -31,23 +29,6 @@ const Description = observer(
       item: PropTypes.object.isRequired,
       printView: PropTypes.bool,
       t: PropTypes.func.isRequired
-    },
-
-    exportData(previewed) {
-      previewed
-        .exportData()
-        .then(data => {
-          if (typeof data === "string") {
-            window.open(data);
-          } else {
-            FileSaver.saveAs(data.file, data.name);
-          }
-        })
-        .catch(e => {
-          if (e instanceof TerriaError) {
-            this.props.previewed.terria.error.raiseEvent(e);
-          }
-        });
     },
 
     render() {
