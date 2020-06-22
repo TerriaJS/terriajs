@@ -19,7 +19,7 @@ import { runInAction } from "mobx";
 import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
 import dataStoriesImg from "../../../wwwroot/images/data-stories-getting-started.jpg";
 import RemovePanel from "../RemovePanel/RemovePanel.jsx";
-import measureElement from "../measureElement";
+import measureElement from "../HOCs/measureElement";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
 
 const STORY_VIDEO = "storyVideo";
