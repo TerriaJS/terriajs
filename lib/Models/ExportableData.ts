@@ -1,5 +1,12 @@
-export interface ExportableData {
-  exportData: () => Promise<string | { name: string; file: Blob }>;
+import Model from "./Model";
+import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
+
+interface ExportableData extends Model<CatalogMemberTraits> {
+  /**
+   * @returns an async function which returns a URL (to download) or a Blob with filename
+   *
+   */
+  exportData: () => Promise<string | { name: string; file: Blob } | undefined>;
 }
 
 namespace ExportableData {
