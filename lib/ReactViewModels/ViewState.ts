@@ -189,6 +189,10 @@ export default class ViewState {
   @action
   setShowTour(bool: boolean) {
     this.showTour = bool;
+    // If we're enabling the tour, make sure the trainer is collapsed
+    if (bool) {
+      this.setTrainerBarExpanded(false);
+    }
   }
   @action
   closeTour() {
