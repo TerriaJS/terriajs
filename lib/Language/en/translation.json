@@ -144,8 +144,8 @@
     "recount": "Recount",
     "title": "Count Datasets",
     "btnCount": "Count datasets",
-    "addedToMap": "added to map",
-    "noMapDataAdded": "No map data added",
+    "enabledOnMap": "enabled on map",
+    "noMapDataEnabled": "No map data enabled",
     "datasetSingular": "dataset",
     "datasetPlural": "datasets"
   },

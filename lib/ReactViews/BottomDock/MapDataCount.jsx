@@ -26,8 +26,10 @@ const MapDataCount = withTranslation()(
     const datasetString =
       numberOfDatasets > 1 || numberOfDatasets === 0 ? datasetPlural : dataset;
     const mapDataText = hasMapData
-      ? `${numberOfDatasets} ${datasetString} ${t("countDatasets.addedToMap")}`
-      : t("countDatasets.noMapDataAdded");
+      ? `${numberOfDatasets} ${datasetString} ${t(
+          "countDatasets.enabledOnMap"
+        )}`
+      : t("countDatasets.noMapDataEnabled");
 
     return (
       <Box positionAbsolute css={" top: -72px; "}>
