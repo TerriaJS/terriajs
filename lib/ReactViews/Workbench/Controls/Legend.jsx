@@ -154,6 +154,9 @@ const Legend = createReactClass({
     let boxStyle = {
       border: legendItem.addSpacingAbove ? "1px solid black" : undefined
     };
+    if (legendItem.outlineColor) {
+      boxStyle.border = `1px solid ${legendItem.outlineColor}`;
+    }
 
     let boxContents = <></>;
 
@@ -169,7 +172,8 @@ const Legend = createReactClass({
         boxStyle = {
           color: legendItem.color,
           fontSize: "48px",
-          lineHeight: "16px"
+          lineHeight: "16px",
+          ...boxStyle
         };
       }
     } else {
@@ -183,9 +187,9 @@ const Legend = createReactClass({
         };
       } else {
         boxStyle = {
+          border: `1px solid ${legendItem.outlineColor}`,
           backgroundColor: legendItem.color,
-          minWidth: "20px",
-          ...boxStyle
+          minWidth: "20px"
         };
       }
     }
