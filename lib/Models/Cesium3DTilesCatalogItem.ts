@@ -48,11 +48,6 @@ class ObservableCesium3DTileset extends Cesium3DTileset {
   }
 }
 
-interface ObservableCesium3DTileset {
-  modelMatrix: Matrix4;
-  root: { transform: Matrix4 };
-}
-
 export default class Cesium3DTilesCatalogItem
   extends FeatureInfoMixin(
     AsyncMappableMixin(
