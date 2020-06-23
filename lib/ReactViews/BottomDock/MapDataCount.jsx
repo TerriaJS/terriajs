@@ -23,12 +23,13 @@ const MapDataCount = withTranslation()(
     const hasMapData = numberOfDatasets !== 0;
     const dataset = t("countDatasets.datasetSingular");
     const datasetPlural = t("countDatasets.datasetPlural");
-    const datasetString =
+    const singularOrPlural =
       numberOfDatasets > 1 || numberOfDatasets === 0 ? datasetPlural : dataset;
     const mapDataText = hasMapData
-      ? `${numberOfDatasets} ${datasetString} ${t(
-          "countDatasets.enabledOnMap"
-        )}`
+      ? t("countDatasets.mapDataState", {
+          numberOfDatasets,
+          singularOrPlural
+        })
       : t("countDatasets.noMapDataEnabled");
 
     return (

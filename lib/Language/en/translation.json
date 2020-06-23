@@ -147,7 +147,8 @@
     "enabledOnMap": "enabled on map",
     "noMapDataEnabled": "No map data enabled",
     "datasetSingular": "dataset",
-    "datasetPlural": "datasets"
+    "datasetPlural": "datasets",
+    "mapDataState": "{{numberOfDatasets}} {{singularOrPlural}} $t(countDatasets.enabledOnMap)"
   },
   "toolsPanel": {
     "btnText": "Tool",
