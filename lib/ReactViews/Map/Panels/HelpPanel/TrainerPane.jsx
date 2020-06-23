@@ -7,8 +7,6 @@ import styled from "styled-components";
 
 import StyledHtml from "./StyledHtml";
 
-import parseCustomMarkdownToReact from "../../../Custom/parseCustomMarkdownToReact";
-
 import Box, { BoxSpan } from "../../../../Styled/Box";
 import Button from "../../../../Styled/Button";
 import Spacing from "../../../../Styled/Spacing";
@@ -42,11 +40,7 @@ class TrainerPane extends React.Component {
     return (
       <Text textDark noFontSize>
         <Box column>
-          {markdownText && (
-            <StyledHtml
-              content={parseCustomMarkdownToReact(markdownText).props.children}
-            />
-          )}
+          {markdownText && <StyledHtml markdown={markdownText} />}
           {trainerItems?.map && (
             <UlTrainerItems column fullWidth justifySpaceBetween>
               {trainerItems.map((item, index) => (
