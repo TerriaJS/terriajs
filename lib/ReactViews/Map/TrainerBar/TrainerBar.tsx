@@ -17,7 +17,6 @@ import Terria from "../../../Models/Terria";
 
 import measureElement from "../../HOCs/measureElement";
 
-const parseCustomMarkdownToReact: any = require("../../Custom/parseCustomMarkdownToReact");
 const StyledHtml: any = require("../../Map/Panels/HelpPanel/StyledHtml")
   .default;
 const CloseButton: any = require("../../Generic/CloseButton").default;
@@ -102,10 +101,7 @@ const renderStep = (
           <StepText medium textLightDimmed>
             <StyledHtml
               styledTextProps={{ textDark: false, textLightDimmed: true }}
-              content={[
-                parseCustomMarkdownToReact(step.markdownDescription).props
-                  .children
-              ]}
+              markdown={step.markdownDescription}
             />
           </StepText>
           {options.footerComponent?.()}
@@ -277,10 +273,7 @@ class StepAccordionRaw extends React.Component<
                 <Text medium textLightDimmed>
                   <StyledHtml
                     styledTextProps={{ textDark: false, textLightDimmed: true }}
-                    content={[
-                      parseCustomMarkdownToReact(selectedTrainer.footnote).props
-                        .children
-                    ]}
+                    markdown={selectedTrainer.footnote}
                   />
                 </Text>
               </>

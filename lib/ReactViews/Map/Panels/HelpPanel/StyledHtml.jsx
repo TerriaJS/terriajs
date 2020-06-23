@@ -8,6 +8,8 @@ import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
 import styled from "styled-components";
 
+import parseCustomMarkdownToReact from "../../../Custom/parseCustomMarkdownToReact";
+
 const Numbers = styled(Text)`
   width: 22px;
   height: 22px;
@@ -39,7 +41,7 @@ class StyledHtml extends React.Component {
   static displayName = "StyledHtml";
 
   static propTypes = {
-    content: PropTypes.array,
+    markdown: PropTypes.string.isRequired,
     theme: PropTypes.object,
     styledTextProps: PropTypes.object,
     injectTooltips: PropTypes.bool,
@@ -52,10 +54,17 @@ class StyledHtml extends React.Component {
 
   render() {
     const styledTextProps = this.props.styledTextProps || {};
+
+    const parsed = parseCustomMarkdownToReact(this.props.markdown);
+    const content = Array.isArray(parsed.props.children)
+      ? parsed.props.children
+      : [parsed.props.children];
+    // const content = parsed.props.children;
+
     return (
       <div>
-        {this.props.content?.map && (
-          <For each="item" index="i" of={this.props.content}>
+        {content?.map && (
+          <For each="item" index="i" of={content}>
             <Choose>
               {/* Either a header or paragraph tag */}
               <When condition={/(h[0-6]|p)/i.test(item.type)}>
