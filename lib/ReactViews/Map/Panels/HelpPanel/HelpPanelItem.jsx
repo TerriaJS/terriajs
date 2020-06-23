@@ -29,6 +29,7 @@ class HelpPanelItem extends React.Component {
 
   render() {
     // const { t } = this.props;
+    const { icon } = this.props.content;
     const MenuIconWrapper = styled(Box).attrs({
       centered: true
     })`
@@ -46,9 +47,7 @@ class HelpPanelItem extends React.Component {
       [Styles.isSelected]: itemSelected
     });
 
-    const iconName = this.props.content.icon
-      ? this.props.content.icon
-      : "video";
+    const iconGlyph = Icon.GLYPHS[icon] || Icon.GLYPHS.video;
     const reactComponents = this.props.content.markdownText
       ? parseCustomMarkdownToReact(this.props.content.markdownText).props
           .children
@@ -79,7 +78,7 @@ class HelpPanelItem extends React.Component {
               <StyledIcon
                 styledWidth={"27px"}
                 fillColor={this.props.theme.textDark}
-                glyph={Icon.GLYPHS[iconName]}
+                glyph={iconGlyph}
               />
             </MenuIconWrapper>
             <Text

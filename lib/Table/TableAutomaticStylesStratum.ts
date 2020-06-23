@@ -19,6 +19,11 @@ import TableStyleTraits from "../Traits/TableStyleTraits";
 import TableTraits from "../Traits/TableTraits";
 import TableColumnType from "./TableColumnType";
 import TableStyle from "./TableStyle";
+import DiscreteTimeTraits from "../Traits/DiscreteTimeTraits";
+import filterOutUndefined from "../Core/filterOutUndefined";
+import TableTimeStyleTraits from "../Traits/TableTimeStyleTraits";
+
+const DEFAULT_ID_COLUMN = "id";
 
 interface TableCatalogItem
   extends InstanceType<ReturnType<typeof TableMixin>> {}
@@ -50,6 +55,14 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
       TableColumnType.region
     );
 
+    const timeColumn = this.catalogItem.findFirstColumnByType(
+      TableColumnType.time
+    );
+
+    // Set a default id column only when we also have a time column
+    const idColumn =
+      timeColumn && this.catalogItem.findColumnByName(DEFAULT_ID_COLUMN);
+
     if (
       regionColumn !== undefined ||
       (longitudeColumn !== undefined && latitudeColumn !== undefined)
@@ -59,7 +72,11 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
           longitudeColumn && latitudeColumn ? longitudeColumn.name : undefined,
         latitudeColumn:
           longitudeColumn && latitudeColumn ? latitudeColumn.name : undefined,
-        regionColumn: regionColumn ? regionColumn.name : undefined
+        regionColumn: regionColumn ? regionColumn.name : undefined,
+        time: createStratumInstance(TableTimeStyleTraits, {
+          timeColumn: timeColumn?.name,
+          idColumns: idColumn && [idColumn.name]
+        })
       });
     }
 
@@ -117,6 +134,26 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
         })
       })
     );
+  }
+
+  @computed
+  get discreteTimes(): { time: string; tag: string | undefined }[] | undefined {
+    const dates = this.catalogItem.activeTableStyle.timeColumn?.valuesAsDates
+      .values;
+    if (dates === undefined) {
+      return;
+    }
+    const times = filterOutUndefined(
+      dates.map(d =>
+        d ? { time: d.toISOString(), tag: undefined } : undefined
+      )
+    );
+    return times;
+  }
+
+  @computed
+  get initialTimeSource() {
+    return "start";
   }
 
   private readonly _createLegendForColorStyle = createTransformer(
