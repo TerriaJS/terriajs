@@ -1,3 +1,4 @@
+import "../SpecMain";
 import { reaction, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import IonResource from "terriajs-cesium/Source/Core/IonResource";
@@ -239,7 +240,7 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
             ).toBeTruthy();
           });
 
-          it("computes a new model matrix from the given transformations", function() {
+          it("computes a new model matrix from the given transformations", async function() {
             item.setTrait(
               CommonStrata.user,
               "rotation",
@@ -264,21 +265,21 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
                 Matrix4.getMatrix3(modelMatrix, new Matrix3())
               )
             );
-            expect(rotation.heading.toFixed(2)).toBe("1.82");
-            expect(rotation.pitch.toFixed(2)).toBe("-0.69");
-            expect(rotation.roll.toFixed(2)).toBe("2.34");
+            expect(rotation.heading.toFixed(2)).toBe("-1.85");
+            expect(rotation.pitch.toFixed(2)).toBe("0.89");
+            expect(rotation.roll.toFixed(2)).toBe("2.40");
 
             const scale = Matrix4.getScale(modelMatrix, new Cartesian3());
-            expect(scale.x).toEqual(5);
-            expect(scale.y).toEqual(5);
-            expect(scale.z).toEqual(5);
+            expect(scale.x.toFixed(2)).toEqual("5.00");
+            expect(scale.y.toFixed(2)).toEqual("5.00");
+            expect(scale.z.toFixed(2)).toEqual("5.00");
 
             const position = Matrix4.getTranslation(
               modelMatrix,
               new Cartesian3()
             );
-            expect(position.x.toFixed(2)).toEqual("1215107.76");
-            expect(position.y.toFixed(2)).toEqual("-4736682.90");
+            expect(position.x.toFixed(2)).toEqual("6186437.07");
+            expect(position.y.toFixed(2)).toEqual("1090835.77");
             expect(position.z.toFixed(2)).toEqual("4081926.10");
           });
         });
