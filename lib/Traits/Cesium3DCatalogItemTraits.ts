@@ -3,6 +3,7 @@ import anyTrait from "./anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import MappableTraits from "./MappableTraits";
+import ShadowTraits from "./ShadowTraits";
 import mixTraits from "./mixTraits";
 import ModelTraits from "./ModelTraits";
 import objectArrayTrait from "./objectArrayTrait";
@@ -103,7 +104,8 @@ export default class Cesium3DTilesCatalogItemTraits extends mixTraits(
   FeatureInfoTraits,
   MappableTraits,
   UrlTraits,
-  CatalogMemberTraits
+  CatalogMemberTraits,
+  ShadowTraits
 ) {
   @primitiveTrait({
     type: "number",
@@ -125,22 +127,6 @@ export default class Cesium3DTilesCatalogItemTraits extends mixTraits(
     description: "URL of the Cesium Ion API server."
   })
   ionServer?: string;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Shadows",
-    description:
-      "Determines whether the tileset casts or receives shadows from each light source."
-  })
-  shadows = "NONE";
-
-  @primitiveTrait({
-    type: "boolean",
-    name: "Show Shadow UI",
-    description:
-      "Determines whether the shadow UI component will be shown on the workbench item"
-  })
-  showShadowUi: boolean = true;
 
   @objectTrait({
     type: OptionsTraits,

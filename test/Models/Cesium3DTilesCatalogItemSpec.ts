@@ -186,7 +186,7 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
           });
 
           it("sets the shadow mode", function() {
-            runInAction(() => item.setTrait("definition", "shadows", "cast"));
+            runInAction(() => item.setTrait("definition", "shadows", "CAST"));
             expect(item.mapItems[0].shadows).toBe(ShadowMode.CAST_ONLY);
           });
 
@@ -207,7 +207,7 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
           });
 
           it("sets the shadow mode", function() {
-            runInAction(() => item.setTrait("definition", "shadows", "cast"));
+            runInAction(() => item.setTrait("definition", "shadows", "CAST"));
             expect(item.mapItems[0].shadows).toBe(ShadowMode.CAST_ONLY);
           });
 

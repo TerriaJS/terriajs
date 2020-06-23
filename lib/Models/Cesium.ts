@@ -493,7 +493,6 @@ export default class Cesium extends GlobeOrMap {
       return;
       //throw new DeveloperError("viewOrExtent is required.");
     }
-
     flightDurationSeconds = defaultValue(flightDurationSeconds, 3.0);
 
     var that = this;
