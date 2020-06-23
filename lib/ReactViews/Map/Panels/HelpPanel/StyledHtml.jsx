@@ -8,7 +8,7 @@ import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
 import styled from "styled-components";
 
-import parseCustomMarkdownToReact from "../../../Custom/parseCustomMarkdownToReact";
+import { parseCustomMarkdownToReactWithOptions } from "../../../Custom/parseCustomMarkdownToReact";
 
 const Numbers = styled(Text)`
   width: 22px;
@@ -36,16 +36,19 @@ const renderOrderedList = function(contents) {
   );
 };
 
-@observer
-class StyledHtml extends React.Component {
+export class StyledHtmlRaw extends React.Component {
   static displayName = "StyledHtml";
 
   static propTypes = {
     markdown: PropTypes.string.isRequired,
+    viewState: PropTypes.object.isRequired,
     theme: PropTypes.object,
     styledTextProps: PropTypes.object,
     injectTooltips: PropTypes.bool,
     t: PropTypes.func.isRequired
+  };
+  static defaultProps = {
+    injectTooltips: true
   };
 
   constructor(props) {
@@ -53,13 +56,16 @@ class StyledHtml extends React.Component {
   }
 
   render() {
+    const { viewState, injectTooltips } = this.props;
     const styledTextProps = this.props.styledTextProps || {};
 
-    const parsed = parseCustomMarkdownToReact(this.props.markdown);
+    const parsed = parseCustomMarkdownToReactWithOptions(this.props.markdown, {
+      injectTermsAsTooltips: injectTooltips,
+      tooltipTerms: viewState.terria.configParameters.helpContentTerms
+    });
     const content = Array.isArray(parsed.props.children)
       ? parsed.props.children
       : [parsed.props.children];
-    // const content = parsed.props.children;
 
     return (
       <div>
@@ -101,4 +107,4 @@ class StyledHtml extends React.Component {
   }
 }
 
-export default withTranslation()(withTheme(StyledHtml));
+export default withTranslation()(withTheme(observer(StyledHtmlRaw)));
