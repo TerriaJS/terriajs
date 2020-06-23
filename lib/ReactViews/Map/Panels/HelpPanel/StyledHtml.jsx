@@ -42,6 +42,7 @@ class StyledHtml extends React.Component {
     content: PropTypes.array,
     theme: PropTypes.object,
     styledTextProps: PropTypes.object,
+    injectTooltips: PropTypes.bool,
     t: PropTypes.func.isRequired
   };
 

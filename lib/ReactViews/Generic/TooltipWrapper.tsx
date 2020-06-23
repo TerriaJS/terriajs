@@ -10,12 +10,8 @@ const RawButton: any = require("../../Styled/Button").RawButton;
 type Props = {
   theme: DefaultTheme;
 
-  /** Does this require a click outside the tooltip to dismiss, or should it disappear after a delay?  */
-  requireClickToDismiss?: boolean;
   /** Invoked when the tooltip is dismissed by the user - not called if the tooltip disappears automatically  */
   onDismiss?: () => void;
-  /** Classname to apply to the wrapper element */
-  className?: string;
   /**
    * When dismiss/launch actions are handled within render prop, use this to disable default listeners
    * if using this, ensure you handle the dismiss case externally otherwise the tooltip can get stuck on open
@@ -33,8 +29,6 @@ type Props = {
     launch: () => void;
     forceSetState: (bool?: boolean) => void;
   }) => React.ReactNode;
-  /** Class to apply to the  actual tooltip */
-  innerElementClassName?: string;
   /** Styles to apply to the  actual tooltip */
   innerElementStyles?: Object;
   /** The tooltip content itself, as higher-order function that provides a function to dismiss the tooltip */
@@ -131,9 +125,7 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
         css={`
           position: relative;
           display: inline-block;
-          vertical-align: -2px;
         `}
-        // className={`tooltip ${className} ${openClass} `}
       >
         {/* Caution: if this is ever not the first element be sure to fix adjustOffset */}
         {this.props.launcher &&
@@ -217,12 +209,13 @@ export const TooltipWithButtonLauncher: React.SFC<ButtonLauncherProps> = props =
       launcher={launchObj => {
         const restButtonProps = dismissOnLeave
           ? {
-              onMouseOut: () => launchObj.forceSetState(false),
+              onMouseLeave: () => launchObj.forceSetState(false),
               onBlur: () => launchObj.forceSetState(false)
             }
           : {};
         return (
           <RawButton
+            css={"text-decoration: underline dashed;"}
             aria-expanded={launchObj.state.open}
             aria-describedby={idForAria}
             onClick={() => launchObj.forceSetState(!launchObj.state.open)}
