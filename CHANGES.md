@@ -15,6 +15,7 @@ Change Log
 * Use `1.x.x` of `karma-sauce-launcher` to fix CI build failures
 * Stop unknown icons specified in config.json from crashing UI
 * Creates a `ShadowTraits` class that is shared by `GltfCatalogItem` and `Cesium3DTilesCatalogItem`.
+* Added `TransformationTraits` that can be used to change position/rotation/scale of a model.
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 
@@ -40,12 +41,9 @@ Change Log
 * Fixed a chart bug where moment points do not stick to the basis item when they are of different scale.
 * Fixed a bug where the moment point selection highlight is lost when changing the satellite imagery date.
 * Removed sass from Clipboard
-* Added `TransformationTraits` that can be used to change position/rotation/scale of a model.
-* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 * Updated LocationSearchResults to support multiple search providers
 * Replaced lifesaver icon on the help button with a question mark button
 * Fix handling of points and markers around the anti-meridian in the `LeafletVisualizer`.
-* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 * Fixed difference tool losing datepicker state by keeping it mounted
 * Disabled unhelpful Help button when in `useSmallScreenInterface`
 * Fixed a bug where a single incorrect catalog item in a group would prevent subsequent items from loading.
