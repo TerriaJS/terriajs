@@ -3,20 +3,63 @@ import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
-import styled from "styled-components";
 import Box from "../../../../Styled/Box";
 import FadeIn from "../../../Transitions/FadeIn/FadeIn";
 import Loader from "../../../Loader";
+import { useKeyPress } from "../../../Hooks/useKeyPress.js";
+import { RawButton } from "../../../../Styled/Button";
+import Icon, { StyledIcon } from "../../../Icon";
 
-const VideoWrapperBox = styled(Box)`
-  position: fixed;
-  z-index: 99999;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-`;
+const VideoWrapperBox = props => {
+  const { viewState } = props;
+  const handleClose = () => viewState.setVideoGuideVisible("");
+
+  useKeyPress("Escape", () => {
+    handleClose();
+  });
+
+  return (
+    <Box
+      centered
+      onClick={e => {
+        e.stopPropagation();
+        handleClose();
+      }}
+      css={`
+        position: fixed;
+        z-index: 99999;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.75);
+      `}
+    >
+      <Box
+        paddedRatio={4}
+        positionAbsolute
+        css={`
+          top: 0px;
+          right: 0px;
+        `}
+      >
+        <RawButton onClick={handleClose.bind(null)}>
+          <StyledIcon
+            styledWidth={"22px"}
+            light
+            glyph={Icon.GLYPHS.closeLight}
+          />
+        </RawButton>
+      </Box>
+      {props.children}
+    </Box>
+  );
+};
+
+VideoWrapperBox.propTypes = {
+  viewState: PropTypes.object.isRequired,
+  children: PropTypes.node
+};
 
 @observer
 class VideoGuide extends React.Component {
@@ -24,9 +67,9 @@ class VideoGuide extends React.Component {
 
   static propTypes = {
     viewState: PropTypes.object.isRequired,
+    videoName: PropTypes.string.isRequired,
     videoLink: PropTypes.string,
     background: PropTypes.string,
-    videoName: PropTypes.string,
     theme: PropTypes.object,
     t: PropTypes.func
   };
@@ -42,17 +85,11 @@ class VideoGuide extends React.Component {
           this.props.viewState.videoGuideVisible === this.props.videoName
         }
       >
-        <VideoWrapperBox
-          centered
-          onClick={e => {
-            this.props.viewState.setVideoGuideVisible("");
-            e.stopPropagation();
-          }}
-        >
+        <VideoWrapperBox viewState={this.props.viewState}>
           <Box
             centered
             col11
-            styledHeight={"90%"}
+            styledHeight={"87%"}
             backgroundImage={this.props.background}
             css={`
               svg {

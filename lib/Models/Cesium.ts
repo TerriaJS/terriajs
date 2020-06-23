@@ -163,6 +163,12 @@ export default class Cesium extends GlobeOrMap {
       this.dataSourceDisplay.update(clock.currentTime);
     }));
 
+    // Progress
+    this._eventHelper.add(this.scene.globe.tileLoadProgressEvent, <any>(
+      ((currentLoadQueueLength: number) =>
+        this._updateTilesLoadingCount(currentLoadQueueLength))
+    ));
+
     // Disable HDR lighting for better performance and to avoid changing imagery colors.
     (<any>this.scene).highDynamicRange = false;
 
@@ -481,7 +487,6 @@ export default class Cesium extends GlobeOrMap {
       return;
       //throw new DeveloperError("viewOrExtent is required.");
     }
-
     flightDurationSeconds = defaultValue(flightDurationSeconds, 3.0);
 
     var that = this;
@@ -1266,11 +1271,16 @@ function zoomToDataSource(
         }
       }
 
-      var boundingSphere = BoundingSphere.fromBoundingSpheres(boundingSpheres);
-      cesium.scene.camera.flyToBoundingSphere(boundingSphere, {
-        duration: flightDurationSeconds
-      });
-      return true;
+      if (boundingSpheres.length > 0) {
+        var boundingSphere = BoundingSphere.fromBoundingSpheres(
+          boundingSpheres
+        );
+        cesium.scene.camera.flyToBoundingSphere(boundingSphere, {
+          duration: flightDurationSeconds
+        });
+        return true;
+      }
+      return false;
     },
     {
       pollInterval: 100,

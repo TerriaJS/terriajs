@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "7.10.0-mobx-31",
+  "version": "7.10.0-mobx-34",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "engines": {
@@ -44,6 +44,7 @@
     "@types/pbf": "^3.0.1",
     "@types/react": "^16.8.18",
     "@types/react-dom": "^16.9.1",
+    "@types/react-test-renderer": "^16.9.2",
     "@types/styled-components": "^5.1.0",
     "@types/urijs": "1.19.1",
     "@vx/axis": "^0.0.193-alpha.2",
@@ -178,11 +179,12 @@
     "react-test-renderer": "^16.3.2",
     "regenerator-runtime": "^0.13.2",
     "terriajs-server": "^3.0.1",
+    "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.1.14"
   },
   "scripts": {
     "prepublish": "gulp post-npm-install",
-    "postpublish": "bash -c \"git tag -a ${npm_package_version} -m \"${npm_package_version}\" && git push origin ${npm_package_version}\"",
+    "postpublish": "bash -c \"if [ -z \"$GITHUB_ACTION\" ]; then git tag -a ${npm_package_version} -m \"${npm_package_version}\" && git push origin ${npm_package_version}; fi \"",
     "postinstall": "gulp post-npm-install",
     "gulp": "gulp",
     "make-schema": "gulp make-schema",

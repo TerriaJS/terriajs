@@ -43,8 +43,6 @@ export const DataCatalogItem = observer(
           this.props.viewState.useSmallScreenInterface
         ) {
           this.setPreviewedItem();
-        } else if (this.props.removable) {
-          removeUserAddedData(this.props.terria, this.props.item);
         } else {
           this.toggleEnable(event);
         }
