@@ -8,9 +8,6 @@ Change Log
 * Made changes to the video modals: close button has been added, pressing escape now closes the component and some basic unit tests created
 * Updated the video modal for _Data Stories: Getting Started_ to use the new `VideoGuide` component
 * Tweaked MyData/AddData tabs to make it possible to invoke them without using the `ExplorerWindow` component and also customize the extensions listed in the dropdown.
-* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
-
-#### mobx-34
 * Fix the timeline stack handling for when there are multiple time-enabled layers
 * Ported timeseries tables.
 * Extended the support for styles for ESRI ArcGis Feature Server. Line styles are supported for lines and polygon outlines in both Cesium and Leaflet viewer. #4405
