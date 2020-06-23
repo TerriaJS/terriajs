@@ -10,8 +10,6 @@ Change Log
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 * Changed the `Tool` interface, now accepting prop `getToolComponent` instead of `toolComponent`
 * Added `ToolButton` for loading/unloading a tool
-
-#### mobx-34
 * Fix the timeline stack handling for when there are multiple time-enabled layers
 * Ported timeseries tables.
 * Extended the support for styles for ESRI ArcGis Feature Server. Line styles are supported for lines and polygon outlines in both Cesium and Leaflet viewer. #4405
