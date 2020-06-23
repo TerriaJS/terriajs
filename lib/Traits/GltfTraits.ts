@@ -2,8 +2,10 @@ import objectTrait from "./objectTrait";
 import LatLonHeightTraits from "./LatLonHeightTraits";
 import primitiveTrait from "./primitiveTrait";
 import ModelTraits from "./ModelTraits";
+import ShadowTraits from "./ShadowTraits";
+import mixTraits from "./mixTraits";
 
-export default class GltfTraits extends ModelTraits {
+export default class GltfTraits extends mixTraits(ShadowTraits) {
   @objectTrait({
     type: LatLonHeightTraits,
     name: "Origin",
@@ -34,12 +36,4 @@ export default class GltfTraits extends ModelTraits {
     description: "The scale factor to apply to the model"
   })
   scale?: number;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Shadows",
-    description:
-      'Indicates whether this tileset casts and receives shadows. Valid values are "NONE", "BOTH", "CAST", and "RECEIVE".'
-  })
-  shadows?: string = "NONE";
 }
