@@ -178,7 +178,6 @@ MenuBar.propTypes = {
   animationDuration: PropTypes.number,
   menuItems: PropTypes.arrayOf(PropTypes.element),
   menuLeftItems: PropTypes.arrayOf(PropTypes.element),
-  theme: PropTypes.object.isRequired,
   t: PropTypes.func.isRequired
 };
 
