@@ -114,7 +114,9 @@ export const GLYPHS = {
   uploadThin: require("../../wwwroot/images/icons/upload-thin.svg"),
   oneTwoThree: require("../../wwwroot/images/icons/one-two-three.svg"),
   accordionOpen: require("../../wwwroot/images/icons/accordion-open.svg"),
-  accordionClose: require("../../wwwroot/images/icons/accordion-close.svg")
+  accordionClose: require("../../wwwroot/images/icons/accordion-close.svg"),
+  mapDataActive: require("../../wwwroot/images/icons/map-data-active.svg"),
+  mapDataInactive: require("../../wwwroot/images/icons/map-data-inactive.svg")
 };
 
 export const Icon = createReactClass({

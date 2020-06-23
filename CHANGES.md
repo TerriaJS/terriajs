@@ -3,7 +3,12 @@ Change Log
 
 ### MobX Development
 
-#### mobx-next-release (mobx-34)
+#### next release (mobx-35)
+* Add "Upload" to tour points
+* Add "map state" map data count to highlight state of map data
+* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
+
+#### mobx-34
 * Bug fix for `DatePicker` in `BottomDock` causing app crash
 * Made changes to the video modals: close button has been added, pressing escape now closes the component and some basic unit tests created
 * Updated the video modal for _Data Stories: Getting Started_ to use the new `VideoGuide` component
@@ -18,6 +23,8 @@ Change Log
 * Creates a `ShadowTraits` class that is shared by `GltfCatalogItem` and `Cesium3DTilesCatalogItem`.
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
+* Fixed a bug where user added data was removed from catalogue when Remove from map button in data catalog is clicked.
+* Fix leaflet zoom to work when bounding rectangle exists but doesn't have bounds defined
 
 #### mobx-33
 * Updated generic select so icon doesn't block click

@@ -409,7 +409,8 @@ export default class Leaflet extends GlobeOrMap {
             ) {
               extent = Rectangle.fromDegrees(west, south, east, north);
             }
-          } else {
+          }
+          if (!isDefined(extent)) {
             // Zoom to the first item!
             return that.zoomTo(target.mapItems[0], flightDurationSeconds);
           }
