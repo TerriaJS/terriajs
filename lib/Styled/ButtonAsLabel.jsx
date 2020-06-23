@@ -1,8 +1,5 @@
-// import React from "react";
-// import PropTypes from "prop-types";
 import styled from "styled-components";
 import Box from "./Box";
-// import Text from "./Text";
 
 // a button styled thing which is actually just a label?
 const ButtonAsLabel = styled(Box).attrs({
