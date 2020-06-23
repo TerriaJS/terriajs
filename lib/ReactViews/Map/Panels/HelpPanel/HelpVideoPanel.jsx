@@ -93,7 +93,10 @@ class HelpVideoPanel extends React.Component {
               </div>
             )}
             {this.props.markdownContent && (
-              <StyledHtml markdown={this.props.markdownContent} />
+              <StyledHtml
+                viewState={this.props.viewState}
+                markdown={this.props.markdownContent}
+              />
             )}
           </If>
           <If condition={helpItemType === "slider"}>

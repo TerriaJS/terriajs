@@ -84,7 +84,10 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
     const rootElement = this.rootRef.current;
 
     // Why .firstChild? Because we can't attach a ref to a render prop unless whatever's passed in passes the ref through to its first dom element
-    const launcherElement = rootElement!.firstChild!;
+    const launcherElement = rootElement!?.firstChild!;
+    if (!launcherElement) {
+      return;
+    }
 
     const launcherElementStyle =
       (launcherElement as any).currentStyle ||
@@ -139,10 +142,11 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
           positionAbsolute
           rounded
           css={`
+            z-index: 10;
             visibility: ${this.state.open ? "visible" : "hidden"};
             background-color: ${theme.textDark};
             color: #fff;
-            text-align: center;
+            text-align: left;
             left: 50%;
             // transition-delay: 1s;
             // transition: visibility 1s ease;
@@ -154,7 +158,9 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
             @media screen and (hover: none) {
               transition: none !important;
             }
-            &::after {
+          `}
+          /**
+          &::after {
               content: "";
               position: absolute;
               left: 50%;
@@ -172,7 +178,7 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
                 top: 100%;
                 border-color: ${theme.textDark} transparent transparent transparent;
             `}
-          `}
+           */
           ref={this.tooltipTextElementRef}
           style={{
             marginLeft: "-" + this.state.offset + "px",
@@ -191,11 +197,18 @@ type ButtonLauncherProps = {
   launcherComponent: () => React.ReactNode;
   children: () => React.ReactNode;
   dismissOnLeave?: boolean;
+  orientation?: "below" | "above";
   [spread: string]: any;
 };
 
 export const TooltipWithButtonLauncher: React.SFC<ButtonLauncherProps> = props => {
-  const { launcherComponent, children, dismissOnLeave, ...rest } = props;
+  const {
+    launcherComponent,
+    children,
+    dismissOnLeave,
+    orientation,
+    ...rest
+  } = props;
 
   const idForAria = `ButtonLauncher-${useUID()}`;
 
@@ -204,13 +217,19 @@ export const TooltipWithButtonLauncher: React.SFC<ButtonLauncherProps> = props =
       innerElementStyles={{
         width: "200px"
       }}
+      orientation={orientation || "below"}
       {...rest}
       disableEventListeners
       launcher={launchObj => {
+        const handleClose = () => {
+          if (launchObj.state.open) {
+            launchObj.forceSetState(false);
+          }
+        };
         const restButtonProps = dismissOnLeave
           ? {
-              onMouseLeave: () => launchObj.forceSetState(false),
-              onBlur: () => launchObj.forceSetState(false)
+              onMouseLeave: () => handleClose(),
+              onBlur: () => handleClose()
             }
           : {};
         return (
@@ -220,7 +239,11 @@ export const TooltipWithButtonLauncher: React.SFC<ButtonLauncherProps> = props =
             aria-describedby={idForAria}
             onClick={() => launchObj.forceSetState(!launchObj.state.open)}
             onFocus={launchObj.launch}
-            onMouseOver={launchObj.launch}
+            onMouseOver={() => {
+              if (!launchObj.state.open) {
+                launchObj.launch();
+              }
+            }}
             {...restButtonProps}
           >
             {launcherComponent()}
