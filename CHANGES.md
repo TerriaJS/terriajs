@@ -15,6 +15,7 @@ Change Log
 * Use `1.x.x` of `karma-sauce-launcher` to fix CI build failures
 * Stop unknown icons specified in config.json from crashing UI
 * Creates a `ShadowTraits` class that is shared by `GltfCatalogItem` and `Cesium3DTilesCatalogItem`.
+* Fixed a bug where user added data was removed from catalogue when Remove from map button in data catalog is clicked.
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 
