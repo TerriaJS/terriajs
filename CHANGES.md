@@ -3,6 +3,10 @@ Change Log
 
 ### MobX Development
 
+#### next release (mobx-35)
+* Add "Upload" to tour points
+* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
+
 #### mobx-34
 * Bug fix for `DatePicker` in `BottomDock` causing app crash
 * Made changes to the video modals: close button has been added, pressing escape now closes the component and some basic unit tests created
