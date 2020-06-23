@@ -16,6 +16,7 @@ Change Log
 * Stop unknown icons specified in config.json from crashing UI
 * Creates a `ShadowTraits` class that is shared by `GltfCatalogItem` and `Cesium3DTilesCatalogItem`.
 * Added `TransformationTraits` that can be used to change position/rotation/scale of a model.
+* Fixed a bug where user added data was removed from catalogue when Remove from map button in data catalog is clicked.
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 
