@@ -4,6 +4,18 @@ Change Log
 ### MobX Development
 
 #### mobx-next-release (mobx-35)
+#### next release (7.11.5-mobx-35)
+* Add "Upload" to tour points
+* Merge master into mobx. This includes:
+  * Upgraded to Cesium v1.68.
+  * Story related enhancements:
+    * Added a title to story panel with ability to close story panel. 
+    * Added a popup on remove all stories.
+    * Added button for sharing stories.
+    * Added a question popup on window close (if there are stories on the map so users don't lose their work).
+* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
+
+#### mobx-34
 * Bug fix for `DatePicker` in `BottomDock` causing app crash
 * Made changes to the video modals: close button has been added, pressing escape now closes the component and some basic unit tests created
 * Updated the video modal for _Data Stories: Getting Started_ to use the new `VideoGuide` component
