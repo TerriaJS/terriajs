@@ -84,6 +84,42 @@ export default class ViewState {
   @observable disclaimerVisible: boolean = false;
   @observable videoGuideVisible: string = "";
 
+  @observable trainerBarVisible: boolean = false;
+  @observable trainerBarExpanded: boolean = false;
+  @observable trainerBarShowingAllSteps: boolean = false;
+  @observable selectedTrainerItem: string = "";
+  @observable currentTrainerItemIndex: number = 0;
+  @observable currentTrainerStepIndex: number = 0;
+  @action
+  setSelectedTrainerItem(trainerItem: string) {
+    this.selectedTrainerItem = trainerItem;
+  }
+  @action
+  setTrainerBarVisible(bool: boolean) {
+    this.trainerBarVisible = bool;
+  }
+  @action
+  setTrainerBarShowingAllSteps(bool: boolean) {
+    this.trainerBarShowingAllSteps = bool;
+  }
+  @action
+  setTrainerBarExpanded(bool: boolean) {
+    this.trainerBarExpanded = bool;
+    // if collapsing trainer bar, also hide steps
+    if (!bool) {
+      this.trainerBarShowingAllSteps = bool;
+    }
+  }
+  @action
+  setCurrentTrainerItemIndex(index: number) {
+    this.currentTrainerItemIndex = index;
+    this.currentTrainerStepIndex = 0;
+  }
+  @action
+  setCurrentTrainerStepIndex(index: number) {
+    this.currentTrainerStepIndex = index;
+  }
+
   @observable workbenchWithOpenControls: string | undefined = undefined;
 
   errorProvider: any | null = null;
@@ -153,6 +189,10 @@ export default class ViewState {
   @action
   setShowTour(bool: boolean) {
     this.showTour = bool;
+    // If we're enabling the tour, make sure the trainer is collapsed
+    if (bool) {
+      this.setTrainerBarExpanded(false);
+    }
   }
   @action
   closeTour() {

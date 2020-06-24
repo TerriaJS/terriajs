@@ -16,6 +16,7 @@ Change Log
 * Extended the support for styles for ESRI ArcGis Feature Server. Line styles are supported for lines and polygon outlines in both Cesium and Leaflet viewer. #4405
 * Fix polygon outline style bug.
 * Add a unit test for polygon outline style.
+* Add TrainerPane/TrainerBar "Terry the task trainer"
 * Use `1.x.x` of `karma-sauce-launcher` to fix CI build failures
 * Stop unknown icons specified in config.json from crashing UI
 * Creates a `ShadowTraits` class that is shared by `GltfCatalogItem` and `Cesium3DTilesCatalogItem`.
