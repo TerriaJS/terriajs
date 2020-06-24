@@ -19,9 +19,12 @@ import Icon from "../Icon";
 
 // import Icon from "../Icon";
 import Box from "../../Styled/Box";
+import Text from "../../Styled/Text";
 import MapIconButton from "../MapIconButton/MapIconButton";
 import FeedbackButton from "../Feedback/FeedbackButton";
 import CloseToolButton from "./Navigation/CloseToolButton";
+import Prompt from "../Generic/Prompt";
+import { runInAction } from "mobx";
 
 const StyledMapNavigation = styled.div`
   ${p =>
@@ -139,6 +142,32 @@ class MapNavigation extends React.Component {
                     Help
                   </MapIconButton>
                 </div>
+                {
+                  <Prompt
+                    content={
+                      <div>
+                        <Text bold extraLarge textLight>
+                          Find the Tour, how-to videos &amp; other help content
+                          here
+                        </Text>
+                      </div>
+                    }
+                    displayDelay={500}
+                    dismissText={"OK, got it"}
+                    dismissAction={() => {
+                      runInAction(() =>
+                        this.props.viewState.toggleFeaturePrompt(
+                          "help",
+                          false,
+                          true
+                        )
+                      );
+                    }}
+                    isVisible={
+                      this.props.viewState.featurePrompts.indexOf("help") >= 0
+                    }
+                  />
+                }
               </If>
             </div>
           </Box>

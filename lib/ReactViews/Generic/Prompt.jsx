@@ -2,44 +2,52 @@ import React from "react";
 import PropTypes from "prop-types";
 import Styles from "./prompt.scss";
 import classNames from "classnames";
+import FadeIn from "../Transitions/FadeIn/FadeIn";
+import Box, { BoxSpan } from "../../Styled/Box";
+import Spacing from "../../Styled/Spacing";
+import { TextSpan } from "../../Styled/Text";
+import { RawButton } from "../../Styled/Button";
+import { withTheme } from "styled-components";
+import Caret from "../Generic/Caret";
 
-export default class Prompt extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isShown: false
-    };
-  }
-  fadeIn() {
-    this.fadeInTimer = setTimeout(() => {
-      this.setState({
-        isShown: true
-      });
-    }, this.props.displayDelay);
-  }
-
-  componentWillUnmount() {
-    clearTimeout(this.fadeInTimer);
-  }
-  componentDidMount() {
-    this.fadeIn();
-  }
+class Prompt extends React.PureComponent {
   render() {
     return (
-      <div
-        className={classNames(Styles.prompt, {
-          [Styles.isVisible]: this.state.isShown
-        })}
-      >
-        {this.props.content}
-        <button
-          className={Styles.btn}
-          title={this.props.dismissText}
-          onClick={this.props.dismissAction}
+      <FadeIn isVisible={this.props.isVisible}>
+        <Box
+          column
+          rounded
+          positionAbsolute
+          backgroundColor={this.props.theme.colorPrimary}
+          paddedRatio={3}
+          styledWidth={"273px"}
+          css={`
+            bottom: 30px;
+            right: px;
+          `}
         >
-          {this.props.dismissText}
-        </button>
-      </div>
+          <Caret
+            style={{
+              top: `75px`,
+              left: `265px`
+            }}
+            size={15}
+            background={this.props.theme.colorPrimary}
+          />
+          {this.props.content}
+          <Spacing bottom={4} />
+          <RawButton
+            title={this.props.dismissText}
+            onClick={this.props.dismissAction}
+          >
+            <BoxSpan fullWidth left>
+              <TextSpan isLink medium textLight>
+                {this.props.dismissText}
+              </TextSpan>
+            </BoxSpan>
+          </RawButton>
+        </Box>
+      </FadeIn>
     );
   }
 }
@@ -48,5 +56,9 @@ Prompt.propTypes = {
   content: PropTypes.object,
   dismissText: PropTypes.string,
   dismissAction: PropTypes.func,
-  displayDelay: PropTypes.number
+  displayDelay: PropTypes.number,
+  isVisible: PropTypes.bool.isRequired,
+  theme: PropTypes.object
 };
+
+export default withTheme(Prompt);
