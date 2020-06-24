@@ -15,6 +15,9 @@
   left: 350px;
   top: $map-button-top;
 }
+.trainerBarVisible {
+  top: $map-button-top + $trainer-height;
+}
 
 .btn {
   composes: btn from "../../Sass/common/_buttons.scss";

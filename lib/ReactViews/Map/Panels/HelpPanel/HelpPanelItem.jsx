@@ -47,6 +47,8 @@ class HelpPanelItem extends React.Component {
       [Styles.isSelected]: itemSelected
     });
 
+    // `content.icon` is user defined and can possibly force the UI to lookup a
+    // nonexistant icon.
     const iconGlyph = Icon.GLYPHS[icon] || Icon.GLYPHS.video;
     const reactComponents = this.props.content.markdownText
       ? parseCustomMarkdownToReact(this.props.content.markdownText).props
@@ -101,6 +103,7 @@ class HelpPanelItem extends React.Component {
         <HelpVideoPanel
           terria={this.props.terria}
           viewState={this.props.viewState}
+          content={this.props.content}
           itemString={this.props.content.itemName}
           paneMode={this.props.content.paneMode}
           htmlContent={reactComponents}
