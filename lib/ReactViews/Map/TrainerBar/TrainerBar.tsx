@@ -385,7 +385,9 @@ export const TrainerBar = observer((props: TrainerBarProps) => {
             // css={"min-width: 280px;"}
           >
             {selectedTrainerItems.map((item, index) => (
-              <option value={index}>{item.title}</option>
+              <option key={item.title} value={index}>
+                {item.title}
+              </option>
             ))}
           </Select>
           {/* <Spacing right={8} /> */}
