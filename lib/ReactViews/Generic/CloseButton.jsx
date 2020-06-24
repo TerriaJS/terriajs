@@ -6,7 +6,7 @@ import Icon from "../Icon";
 import { RawButton } from "../../Styled/Button";
 
 const StyledCloseButton = styled(RawButton)`
-  position: absolute;
+  ${p => !p.noAbsolute && `position: absolute;`}
   // width: 20px;
   // height: 20px;
   width: 14px;

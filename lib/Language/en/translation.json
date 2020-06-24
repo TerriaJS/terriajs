@@ -9,6 +9,12 @@
     "cancel": "Cancel",
     "back": "Back"
   },
+  "trainer": {
+    "expandTrainer": "Show more step detail",
+    "collapseTrainer": "Hide step detail",
+    "showAllSteps": "Show all steps",
+    "hideAllSteps": "Hide all steps"
+  },
   "tour": {
     "preface": {
       "title": "Take the tour",
