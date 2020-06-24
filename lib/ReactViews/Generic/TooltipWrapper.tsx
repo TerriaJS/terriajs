@@ -2,9 +2,11 @@
  * base tooltipwrapperraw repurposed from magda, with some a11y modifications
  */
 import React from "react";
+import ReactDOM from "react-dom";
 import { withTheme, DefaultTheme } from "styled-components";
 import { useUID } from "react-uid";
 const Box: any = require("../../Styled/Box").default;
+const TextSpan: any = require("../../Styled/Text").TextSpan;
 const RawButton: any = require("../../Styled/Button").RawButton;
 
 type Props = {
@@ -32,7 +34,7 @@ type Props = {
   /** Styles to apply to the  actual tooltip */
   innerElementStyles?: Object;
   /** The tooltip content itself, as higher-order function that provides a function to dismiss the tooltip */
-  children: (dismiss: () => void) => React.ReactNode;
+  children: (applyAriaId: boolean, dismiss: () => void) => React.ReactNode;
 };
 
 type State = {
@@ -85,7 +87,7 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
 
     // Why .firstChild? Because we can't attach a ref to a render prop unless whatever's passed in passes the ref through to its first dom element
     const launcherElement = rootElement!?.firstChild!;
-    if (!launcherElement) {
+    if (!launcherElement || !tooltipTextElement) {
       return;
     }
 
@@ -108,6 +110,24 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
       });
     }
   }
+
+  /**
+   * get live-render-time values of tooltip ref - should already offset adjusted
+   * by the time its rendered
+   */
+  getTooltipCoords = () => {
+    const tooltipTextElement = this.tooltipTextElementRef.current;
+    if (!tooltipTextElement) {
+      return { x: 0, y: 0 };
+    }
+    const { x, y } = tooltipTextElement.getBoundingClientRect();
+    const maxX = document.documentElement.clientWidth;
+    const maxY = document.documentElement.clientHeight;
+    // make sure the tooltip doesn't get clipped by the browser edges
+    const adjustedX = x < 10 ? 10 : x > maxX ? maxX - 10 : x;
+    const adjustedY = y < 10 ? 10 : y > maxY ? maxY - 10 : y;
+    return { x: adjustedX, y: adjustedY };
+  };
 
   forceSetState = (bool: boolean = true) => {
     this.setState({
@@ -137,29 +157,47 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
             launch: () => this.forceSetState(true),
             forceSetState: this.forceSetState
           })}
+        {this.state.open &&
+          ReactDOM.createPortal(
+            <Box
+              paddedRatio={3}
+              positionAbsolute
+              rounded
+              style={{
+                ...innerElementStyles
+              }}
+              css={`
+                // TODO: find offending z-index - likely still in scss
+                z-index: ${theme.frontComponentZIndex + 999999 + 2};
+                background-color: ${theme.textDark};
+                color: ${theme.textLight};
+                text-align: left;
+                top: ${this.getTooltipCoords().y}px;
+                left: ${this.getTooltipCoords().x}px;
+              `}
+            >
+              {this.props.children(true, this.dismiss)}
+            </Box>,
+            document.body
+          )}
+        {/* Render this always so that the ref exists for calculations */}
         <Box
           paddedRatio={3}
           positionAbsolute
-          rounded
           css={`
-            z-index: 10;
-            visibility: ${this.state.open ? "visible" : "hidden"};
-            background-color: ${theme.textDark};
-            color: #fff;
-            text-align: left;
+            visibility: hidden;
             left: 50%;
-            // transition-delay: 1s;
-            // transition: visibility 1s ease;
 
             ${orientationAbove && `bottom: calc(100% + 10px);`}
-            ${orientationBelow &&
-              `top: calc(100% + 10px);`}
-
-            @media screen and (hover: none) {
-              transition: none !important;
-            }
+            ${orientationBelow && `top: calc(100% + 10px);`}
           `}
+          ref={this.tooltipTextElementRef}
+          style={{
+            marginLeft: "-" + this.state.offset + "px",
+            ...innerElementStyles
+          }}
           /**
+           caret styles if we need them again
           &::after {
               content: "";
               position: absolute;
@@ -179,13 +217,9 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
                 border-color: ${theme.textDark} transparent transparent transparent;
             `}
            */
-          ref={this.tooltipTextElementRef}
-          style={{
-            marginLeft: "-" + this.state.offset + "px",
-            ...innerElementStyles
-          }}
         >
-          {this.props.children(this.dismiss)}
+          {/* Unfortunately we MUST render children here so that we can correctly calculate offsets */}
+          {this.props.children(false, this.dismiss)}
         </Box>
       </div>
     );
@@ -195,7 +229,7 @@ export const TooltipWrapper = withTheme(TooltipWrapperRaw);
 
 type ButtonLauncherProps = {
   launcherComponent: () => React.ReactNode;
-  children: () => React.ReactNode;
+  children: (idForAria: string) => React.ReactNode;
   dismissOnLeave?: boolean;
   orientation?: "below" | "above";
   [spread: string]: any;
@@ -211,11 +245,12 @@ export const TooltipWithButtonLauncher: React.SFC<ButtonLauncherProps> = props =
   } = props;
 
   const idForAria = `ButtonLauncher-${useUID()}`;
+  const idForChildAria = `ButtonLauncher-child-${useUID()}`;
 
   return (
     <TooltipWrapper
       innerElementStyles={{
-        width: "200px"
+        width: "350px"
       }}
       orientation={orientation || "below"}
       {...rest}
@@ -236,7 +271,7 @@ export const TooltipWithButtonLauncher: React.SFC<ButtonLauncherProps> = props =
           <RawButton
             css={"text-decoration: underline dashed;"}
             aria-expanded={launchObj.state.open}
-            aria-describedby={idForAria}
+            aria-describedby={`${idForAria} ${idForChildAria}`}
             onClick={() => launchObj.forceSetState(!launchObj.state.open)}
             onFocus={launchObj.launch}
             onMouseOver={() => {
@@ -251,7 +286,19 @@ export const TooltipWithButtonLauncher: React.SFC<ButtonLauncherProps> = props =
         );
       }}
     >
-      {() => <span id={idForAria}>{children()}</span>}
+      {applyAriaId => (
+        <TextSpan
+          // provide some base text styles as a textspan,
+          // as this will be rendered outside the tree
+          large
+          semiBold
+          {...{
+            id: applyAriaId && idForAria
+          }}
+        >
+          {children((applyAriaId && idForChildAria) || "")}
+        </TextSpan>
+      )}
     </TooltipWrapper>
   );
 };
