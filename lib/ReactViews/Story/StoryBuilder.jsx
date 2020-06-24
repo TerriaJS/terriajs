@@ -232,8 +232,10 @@ const StoryBuilder = observer(
     },
 
     hideStoryBuilder() {
-      this.props.viewState.storyBuilderShown = !this.props.viewState
-        .storyBuilderShown;
+      runInAction(() => {
+        this.props.viewState.storyBuilderShown = !this.props.viewState
+          .storyBuilderShown;
+      });
       this.props.terria.currentViewer.notifyRepaintRequired();
       // Allow any animations to finish, then trigger a resize.
       setTimeout(function() {
