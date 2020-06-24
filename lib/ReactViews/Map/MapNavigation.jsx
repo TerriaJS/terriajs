@@ -25,6 +25,7 @@ import FeedbackButton from "../Feedback/FeedbackButton";
 import CloseToolButton from "./Navigation/CloseToolButton";
 import Prompt from "../Generic/Prompt";
 import { runInAction } from "mobx";
+import { withTranslation } from "react-i18next";
 
 const StyledMapNavigation = styled.div`
   ${p =>
@@ -41,6 +42,7 @@ class MapNavigation extends React.Component {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
+    t: PropTypes.func.isRequired,
     navItems: PropTypes.arrayOf(PropTypes.element)
   };
 
@@ -49,7 +51,7 @@ class MapNavigation extends React.Component {
   };
 
   render() {
-    const { viewState } = this.props;
+    const { viewState, t } = this.props;
     const toolIsDifference =
       this.props.viewState.currentTool?.toolName === "Difference";
     const isDiffMode = this.props.viewState.isToolOpen && toolIsDifference;
@@ -147,13 +149,12 @@ class MapNavigation extends React.Component {
                     content={
                       <div>
                         <Text bold extraLarge textLight>
-                          Find the Tour, how-to videos &amp; other help content
-                          here
+                          {t("helpPanel.promptMessage")}
                         </Text>
                       </div>
                     }
                     displayDelay={500}
-                    dismissText={"OK, got it"}
+                    dismissText={t("helpPanel.dismissText")}
                     dismissAction={() => {
                       runInAction(() =>
                         this.props.viewState.toggleFeaturePrompt(
@@ -163,6 +164,8 @@ class MapNavigation extends React.Component {
                         )
                       );
                     }}
+                    caretTopOffset={75}
+                    caretLeftOffset={265}
                     isVisible={
                       this.props.viewState.featurePrompts.indexOf("help") >= 0
                     }
@@ -177,4 +180,4 @@ class MapNavigation extends React.Component {
   }
 }
 
-export default withTheme(MapNavigation);
+export default withTranslation()(withTheme(MapNavigation));

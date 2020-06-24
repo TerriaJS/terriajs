@@ -22,14 +22,14 @@ class Prompt extends React.PureComponent {
           paddedRatio={3}
           styledWidth={"273px"}
           css={`
-            bottom: 30px;
-            right: px;
+            bottom: 1px;
+            right: 50px;
           `}
         >
           <Caret
             style={{
-              top: `75px`,
-              left: `265px`
+              top: `${this.props.caretTopOffset || -5}px`,
+              left: `${this.props.caretLeftOffset || 230}px`
             }}
             size={15}
             background={this.props.theme.colorPrimary}
@@ -57,8 +57,10 @@ Prompt.propTypes = {
   dismissText: PropTypes.string,
   dismissAction: PropTypes.func,
   displayDelay: PropTypes.number,
+  caretTopOffset: PropTypes.number,
+  caretLeftOffset: PropTypes.number,
   isVisible: PropTypes.bool.isRequired,
-  theme: PropTypes.object
+  theme: PropTypes.object.isRequired
 };
 
 export default withTheme(Prompt);
