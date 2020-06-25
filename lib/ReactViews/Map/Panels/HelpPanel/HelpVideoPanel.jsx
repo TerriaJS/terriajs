@@ -9,6 +9,7 @@ import Styles from "./help-panel.scss";
 import Spacing from "../../../../Styled/Spacing";
 import Box from "../../../../Styled/Box";
 import VideoGuide from "./VideoGuide";
+import TrainerPane from "./TrainerPane";
 import StyledHtml from "./StyledHtml";
 import SatelliteGuide from "../../../Guide/SatelliteGuide";
 
@@ -21,6 +22,7 @@ class HelpVideoPanel extends React.Component {
   static propTypes = {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
+    content: PropTypes.object.isRequired,
     itemString: PropTypes.string,
     paneMode: PropTypes.string,
     htmlContent: PropTypes.array,
@@ -96,6 +98,13 @@ class HelpVideoPanel extends React.Component {
           </If>
           <If condition={helpItemType === "slider"}>
             <SatelliteGuide
+              terria={this.props.terria}
+              viewState={this.props.viewState}
+            />
+          </If>
+          <If condition={helpItemType === "trainer"}>
+            <TrainerPane
+              content={this.props.content}
               terria={this.props.terria}
               viewState={this.props.viewState}
             />
