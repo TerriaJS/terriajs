@@ -67,7 +67,12 @@ export class ToolButton extends React.Component<ToolButtonProps> {
     if (this.isThisToolOpen) {
       viewState.closeTool();
     } else {
-      viewState.openTool({ ...this.props, showCloseButton: false });
+      viewState.openTool({
+        toolName: this.props.toolName,
+        getToolComponent: this.props.getToolComponent,
+        params: this.props.params,
+        showCloseButton: false
+      });
     }
   }
 
