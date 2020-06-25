@@ -186,8 +186,7 @@ const ViewingControls = observer(
 
         // Add it to terria.catalog, which is required so the new item can be shared.
         addUserCatalogMember(terria, splitRef, {
-          open: false,
-          zoomTo: false
+          open: false
         });
       });
     },

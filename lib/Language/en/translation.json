@@ -153,7 +153,12 @@
     "subTotals": "<div> {{name}}: {{items}} items / {{groups}} groups</div>",
     "recount": "Recount",
     "title": "Count Datasets",
-    "btnCount": "Count datasets"
+    "btnCount": "Count datasets",
+    "enabledOnMap": "enabled on map",
+    "noMapDataEnabled": "No map data enabled",
+    "datasetSingular": "dataset",
+    "datasetPlural": "datasets",
+    "mapDataState": "{{numberOfDatasets}} {{singularOrPlural}} $t(countDatasets.enabledOnMap)"
   },
   "toolsPanel": {
     "btnText": "Tool",
@@ -578,6 +583,7 @@
       "gpx": "GPX",
       "json": "JSON",
       "carto": "Carto",
+      "gltf": "GLTF",
       "other": "Other (use conversion service)"
     },
     "printWindow": {

@@ -89,7 +89,7 @@ const ModalPopup = createReactClass({
   },
 
   componentWillUnmount() {
-    window.removeEventListener("keydown", this.escKeyListener, false);
+    window.removeEventListener("keydown", this.escKeyListener, true);
   },
 
   render() {
