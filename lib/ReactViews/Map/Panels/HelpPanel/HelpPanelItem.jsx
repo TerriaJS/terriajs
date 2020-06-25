@@ -29,6 +29,7 @@ class HelpPanelItem extends React.Component {
 
   render() {
     // const { t } = this.props;
+    const { icon } = this.props.content;
     const MenuIconWrapper = styled(Box).attrs({
       centered: true
     })`
@@ -46,9 +47,9 @@ class HelpPanelItem extends React.Component {
       [Styles.isSelected]: itemSelected
     });
 
-    const iconName = this.props.content.icon
-      ? this.props.content.icon
-      : "video";
+    // `content.icon` is user defined and can possibly force the UI to lookup a
+    // nonexistant icon.
+    const iconGlyph = Icon.GLYPHS[icon] || Icon.GLYPHS.video;
     const reactComponents = this.props.content.markdownText
       ? parseCustomMarkdownToReact(this.props.content.markdownText).props
           .children
@@ -79,7 +80,7 @@ class HelpPanelItem extends React.Component {
               <StyledIcon
                 styledWidth={"27px"}
                 fillColor={this.props.theme.textDark}
-                glyph={Icon.GLYPHS[iconName]}
+                glyph={iconGlyph}
               />
             </MenuIconWrapper>
             <Text
@@ -102,6 +103,7 @@ class HelpPanelItem extends React.Component {
         <HelpVideoPanel
           terria={this.props.terria}
           viewState={this.props.viewState}
+          content={this.props.content}
           itemString={this.props.content.itemName}
           paneMode={this.props.content.paneMode}
           htmlContent={reactComponents}

@@ -151,6 +151,10 @@
   // transition-delay: 0.25s; // temporary disable delays for splitter lag w/o resizing on transitionend
 }
 
+.showWorkbenchButtonTrainerBarVisible {
+  top: 0;
+}
+
 .showWorkbenchButtonisVisible {
   left: 16px;
   transform: translateX(0);

@@ -14,6 +14,7 @@ import FeatureInfoPanel from "../FeatureInfo/FeatureInfoPanel";
 import FeedbackForm from "../Feedback/FeedbackForm";
 import MapColumn from "./MapColumn";
 import MapInteractionWindow from "../Notification/MapInteractionWindow";
+import TrainerBar from "../Map/TrainerBar/TrainerBar";
 import MapNavigation from "../Map/MapNavigation";
 import MenuBar from "../Map/MenuBar";
 import ExperimentalFeatures from "../Map/ExperimentalFeatures";
@@ -261,6 +262,8 @@ const StandardUserInterface = observer(
                   <Medium>
                     <div
                       className={classNames(Styles.showWorkbenchButton, {
+                        [Styles.showWorkbenchButtonTrainerBarVisible]: this
+                          .props.viewState.trainerBarVisible,
                         [Styles.showWorkbenchButtonisVisible]: this.props
                           .viewState.isMapFullScreen,
                         [Styles.showWorkbenchButtonisNotVisible]: !this.props
@@ -308,6 +311,12 @@ const StandardUserInterface = observer(
               </div>
 
               <If condition={!this.props.viewState.hideMapUi()}>
+                <Medium>
+                  <TrainerBar
+                    terria={terria}
+                    viewState={this.props.viewState}
+                  />
+                </Medium>
                 <div
                   className={classNames({
                     [Styles.explorerPanelIsVisible]: this.props.viewState

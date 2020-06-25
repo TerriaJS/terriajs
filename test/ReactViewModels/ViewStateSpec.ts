@@ -83,4 +83,22 @@ describe("ViewState", function() {
       );
     });
   });
+  describe("tour and trainer interaction", function() {
+    it("disables trainer bar if turning on tour", function() {
+      runInAction(() => {
+        viewState.setTrainerBarExpanded(true);
+        viewState.setTrainerBarShowingAllSteps(true);
+      });
+      expect(viewState.trainerBarExpanded).toEqual(true);
+      expect(viewState.trainerBarShowingAllSteps).toEqual(true);
+      expect(viewState.showTour).toEqual(false);
+
+      runInAction(() => {
+        viewState.setShowTour(true);
+      });
+      expect(viewState.trainerBarExpanded).toEqual(false);
+      expect(viewState.trainerBarShowingAllSteps).toEqual(false);
+      expect(viewState.showTour).toEqual(true);
+    });
+  });
 });

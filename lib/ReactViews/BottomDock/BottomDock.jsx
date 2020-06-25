@@ -6,8 +6,9 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import ChartPanel from "../Custom/Chart/ChartPanel";
-import Styles from "./bottom-dock.scss";
+import MapDataCount from "./MapDataCount";
 import Timeline from "./Timeline/Timeline";
+import Styles from "./bottom-dock.scss";
 
 // import ChartDisclaimer from "./ChartDisclaimer";
 
@@ -28,7 +29,7 @@ const BottomDock = observer(
     },
 
     render() {
-      const terria = this.props.terria;
+      const { terria } = this.props;
       const top = terria.timelineStack.top;
 
       return (
@@ -43,6 +44,7 @@ const BottomDock = observer(
           onClick={this.handleClick}
         >
           {/* <ChartDisclaimer terria={terria} viewState={this.props.viewState} /> */}
+          <MapDataCount terria={terria} viewState={this.props.viewState} />
           <ChartPanel
             terria={terria}
             onHeightChange={this.onHeightChange}

@@ -36,6 +36,7 @@ import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
+import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
 import CameraView from "./CameraView";
 import CatalogGroup from "./CatalogGroupNew";
 import CatalogMemberFactory from "./CatalogMemberFactory";
@@ -91,7 +92,7 @@ interface ConfigParameters {
   globalDisclaimer?: any;
   showWelcomeMessage?: boolean;
   showInAppGuides?: boolean;
-  helpContent?: any[];
+  helpContent?: HelpContentItem[];
 }
 
 interface StartOptions {
