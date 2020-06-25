@@ -77,7 +77,8 @@ MapIconButton.propTypes = {
   title: PropTypes.string,
   iconElement: PropTypes.func.isRequired,
   onClick: PropTypes.func,
-  handleClick: PropTypes.func
+  handleClick: PropTypes.func,
+  children: PropTypes.node
 };
 
 function MapIconButton(props) {

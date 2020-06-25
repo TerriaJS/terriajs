@@ -7,6 +7,12 @@
     "skip": "Skip",
     "back": "Back"
   },
+  "trainer": {
+    "expandTrainer": "Show more step detail",
+    "collapseTrainer": "Hide step detail",
+    "showAllSteps": "Show all steps",
+    "hideAllSteps": "Hide all steps"
+  },
   "tour": {
     "preface": {
       "title": "Take the tour",
@@ -143,7 +149,12 @@
     "subTotals": "<div> {{name}}: {{items}} items / {{groups}} groups</div>",
     "recount": "Recount",
     "title": "Count Datasets",
-    "btnCount": "Count datasets"
+    "btnCount": "Count datasets",
+    "enabledOnMap": "enabled on map",
+    "noMapDataEnabled": "No map data enabled",
+    "datasetSingular": "dataset",
+    "datasetPlural": "datasets",
+    "mapDataState": "{{numberOfDatasets}} {{singularOrPlural}} $t(countDatasets.enabledOnMap)"
   },
   "toolsPanel": {
     "btnText": "Tool",
@@ -561,6 +572,7 @@
       "gpx": "GPX",
       "json": "JSON",
       "carto": "Carto",
+      "gltf": "GLTF",
       "other": "Other (use conversion service)"
     },
     "printWindow": {
