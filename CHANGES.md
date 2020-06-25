@@ -6,14 +6,14 @@ Change Log
 #### next release (mobx-35)
 * Add "Upload" to tour points
 * Add "map state" map data count to highlight state of map data
+* Changed the `Tool` interface, now accepting prop `getToolComponent` instead of `toolComponent`
+* Added `ToolButton` for loading/unloading a tool
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-34
 * Bug fix for `DatePicker` in `BottomDock` causing app crash
 * Made changes to the video modals: close button has been added, pressing escape now closes the component and some basic unit tests created
 * Updated the video modal for _Data Stories: Getting Started_ to use the new `VideoGuide` component
-* Changed the `Tool` interface, now accepting prop `getToolComponent` instead of `toolComponent`
-* Added `ToolButton` for loading/unloading a tool
 * Fix the timeline stack handling for when there are multiple time-enabled layers
 * Ported timeseries tables.
 * Extended the support for styles for ESRI ArcGis Feature Server. Line styles are supported for lines and polygon outlines in both Cesium and Leaflet viewer. #4405
