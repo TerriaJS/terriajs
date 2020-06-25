@@ -31,12 +31,21 @@ export class WPSParameterTraits extends ModelTraits {
   })
   inputType?: string;
 }
-export default class WebProcessingServiceCatalogItemTraits extends mixTraits(
+
+export default class WebProcessingServiceCatalogJobTraits extends mixTraits(
   MappableTraits,
   FeatureInfoTraits,
   CatalogFunctionJobTraits,
   WebProcessingServiceCatalogFunctionTraits
 ) {
+  @objectArrayTrait({
+    type: WPSParameterTraits,
+    idProperty: "inputIdentifier",
+    name: "Parameters",
+    description: "Parameter names & values for this result item"
+  })
+  wpsParameters?: WPSParameterTraits[];
+
   @anyTrait({
     name: "WPS Response",
     description: "The WPS response object"
@@ -49,27 +58,10 @@ export default class WebProcessingServiceCatalogItemTraits extends mixTraits(
   })
   geojsonFeatures?: JsonObject;
 
-  @objectArrayTrait({
-    type: WPSParameterTraits,
-    idProperty: "inputIdentifier",
-    name: "Parameters",
-    description: "Parameter names & values for this result item"
-  })
-  wpsParameters?: WPSParameterTraits[];
-
   @primitiveTrait({
-    type: "boolean",
-    name: "Store supported",
-    description:
-      "Indicates if the output can be stored by the WPS server and be accessed via a URL."
+    type: "string",
+    name: "WPS response URL",
+    description: "WPS response URL"
   })
-  storeSupported?: boolean;
-
-  @primitiveTrait({
-    type: "boolean",
-    name: "Status supported",
-    description:
-      "Indicates if Execute operation can return just the status information and perform the actual operation asynchronously."
-  })
-  statusSupported?: boolean;
+  wpsResponseUrl?: string;
 }

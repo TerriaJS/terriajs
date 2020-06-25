@@ -8,13 +8,6 @@ export default class WebProcessingServiceCatalogFunctionTraits extends mixTraits
   UrlTraits
 ) {
   @primitiveTrait({
-    type: "string",
-    name: "Identifier",
-    description: "The identifier for the process"
-  })
-  identifier?: string;
-
-  @primitiveTrait({
     type: "boolean",
     name: "Execute with HTTP GET",
     description:
@@ -23,9 +16,25 @@ export default class WebProcessingServiceCatalogFunctionTraits extends mixTraits
   executeWithHttpGet = false;
 
   @primitiveTrait({
-    type: "string",
-    name: "WPS Response URL",
-    description: "An optional URL to fetch the WPS response"
+    type: "boolean",
+    name: "Store supported",
+    description:
+      "Indicates if the output can be stored by the WPS server and be accessed via a URL."
   })
-  wpsResponseUrl?: string;
+  storeSupported?: boolean;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Status supported",
+    description:
+      "Indicates if Execute operation can return just the status information and perform the actual operation asynchronously."
+  })
+  statusSupported?: boolean;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Identifier",
+    description: "The identifier for the process"
+  })
+  identifier?: string;
 }

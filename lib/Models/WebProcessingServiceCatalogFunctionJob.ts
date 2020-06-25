@@ -160,8 +160,6 @@ export default class WebProcessingServiceCatalogFunctionJob
       return;
     }
 
-    console.log(this.url);
-
     const uri = new URI(this.url).query({
       service: "WPS",
       request: "Execute",
@@ -177,16 +175,11 @@ export default class WebProcessingServiceCatalogFunctionJob
       !isDefined(this.executeUrl) ||
       !isDefined(this.wpsParameters)
     ) {
-      console.log(
-        `${this.identifier} ${this.executeUrl} ${this.wpsParameters}`
-      );
       throw `Identifier, executeUrl and wpsParameters must be set`;
     }
 
     const identifier = this.identifier;
     const executeUrl = this.executeUrl;
-
-    console.log(executeUrl);
 
     const parameters = {
       Identifier: htmlEscapeText(identifier),
@@ -217,8 +210,6 @@ export default class WebProcessingServiceCatalogFunctionJob
       throw `Invalid XML response for WPS ExecuteResponse`;
     }
 
-    console.log(executeResponseXml);
-
     const json = xml2json(executeResponseXml);
 
     // Check if finished
@@ -238,7 +229,6 @@ export default class WebProcessingServiceCatalogFunctionJob
    */
   @action
   checkStatus(json: any) {
-    console.log(json);
     const status = json.Status;
     if (!isDefined(status)) {
       throw new TerriaError({
@@ -262,9 +252,8 @@ export default class WebProcessingServiceCatalogFunctionJob
     }
 
     if (isDefined(status.ProcessFailed)) {
-      const e = status.ProcessFailed.ExceptionReport?.Exception;
-
-      throw e;
+      throw status.ProcessFailed.ExceptionReport?.Exception?.ExceptionText ||
+        JSON.stringify(status.ProcessFailed);
     } else if (isDefined(status.ProcessSucceeded)) {
       this.setTrait(CommonStrata.user, "wpsResponse", json);
       return true;
@@ -286,7 +275,6 @@ export default class WebProcessingServiceCatalogFunctionJob
   }
 
   async downloadResults() {
-    console.log("download");
     const stratum = await WpsLoadableStratum.load(this);
     runInAction(() => {
       this.strata.set(WpsLoadableStratum.stratumName, stratum);
@@ -297,7 +285,6 @@ export default class WebProcessingServiceCatalogFunctionJob
 
     const results: CatalogMemberMixin.CatalogMemberMixin[] = [];
 
-    console.log(outputs);
     const promises = outputs.map(async (output, i) => {
       if (!output.Data.ComplexData) {
         return;
@@ -324,9 +311,7 @@ export default class WebProcessingServiceCatalogFunctionJob
       ) {
         // Create a catalog member from the embedded json
         const json = JSON.parse(output.Data.ComplexData.text);
-        console.log(json);
         const catalogItem = this.createCatalogItemFromJson(json);
-        console.log(catalogItem);
         if (isDefined(catalogItem)) {
           if (CatalogMemberMixin.isMixedInto(catalogItem)) {
             results.push(catalogItem);

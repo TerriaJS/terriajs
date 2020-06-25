@@ -1,4 +1,10 @@
-import { computed, isObservableArray, observable, runInAction } from "mobx";
+import {
+  computed,
+  isObservableArray,
+  observable,
+  runInAction,
+  toJS
+} from "mobx";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import URI from "urijs";
 import isDefined from "../Core/isDefined";
@@ -28,6 +34,7 @@ import CatalogFunctionMixin from "../ModelMixins/CatalogFunctionMixin";
 import CatalogFunctionJobMixin from "../ModelMixins/CatalogFunctionJobMixin";
 import updateModelFromJson from "./updateModelFromJson";
 import XmlRequestMixin from "../ModelMixins/XmlRequestMixin";
+import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 
 type AllowedValues = {
   Value?: string | string[];
@@ -209,30 +216,21 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
         .map(p => this.convertParameterToInput(p))
     );
 
-    wpsJob.setTrait(CommonStrata.user, "url", this.url);
-    wpsJob.setTrait(CommonStrata.user, "identifier", this.identifier);
-    wpsJob.setTrait(
-      CommonStrata.user,
-      "executeWithHttpGet",
-      this.executeWithHttpGet
-    );
-    wpsJob.setTrait(
-      CommonStrata.user,
-      "storeSupported",
-      isDefined(this.processDescription) &&
-        this.processDescription.storeSupported === "true"
-    );
-    wpsJob.setTrait(
-      CommonStrata.user,
-      "statusSupported",
-      isDefined(this.processDescription) &&
-        this.processDescription.statusSupported === "true"
-    );
-
     updateModelFromJson(wpsJob, CommonStrata.user, {
       geojsonFeatures: this.functionParameters
         .map(param => param.geoJsonFeature)
         .filter(isDefined),
+      url: this.url,
+      identifier: this.identifier,
+      executeWithHttpGet: this.executeWithHttpGet,
+      statusSupported: isDefined(this.statusSupported)
+        ? this.statusSupported
+        : isDefined(this.processDescription) &&
+          this.processDescription.statusSupported === "true",
+      storeSupported: isDefined(this.storeSupported)
+        ? this.storeSupporte
+        : isDefined(this.processDescription) &&
+          this.processDescription.storeSupported === "true",
       wpsParameters: dataInputs
     });
   };
