@@ -12,7 +12,7 @@ interface ToolProps extends WithTranslation {
   viewState: ViewState;
   toolName: string;
   getToolComponent: () => React.Component | Promise<React.Component>;
-  params: unknown;
+  params?: any;
 }
 
 /**
@@ -48,7 +48,7 @@ class Tool extends React.Component<ToolProps> {
 }
 
 interface ToolButtonProps extends ToolProps {
-  icon: string;
+  icon: { id: string };
 }
 
 @observer
