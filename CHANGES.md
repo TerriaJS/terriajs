@@ -6,6 +6,9 @@ Change Log
 #### next release (mobx-35)
 * Add "Upload" to tour points
 * Add "map state" map data count to highlight state of map data
+* Add a reminder "pop-up" that shows the location of the help button
+* Fix bug causing story pop-up to be off screen
+* Fix bug causing helpful hints to be cut off on smaller screens
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-34
