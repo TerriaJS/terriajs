@@ -15,7 +15,6 @@ import Styles from "./menu-bar.scss";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import Text from "../../Styled/Text";
-import Spacing from "../../Styled/Spacing";
 
 import { useRefForTerria } from "../Hooks/useRefForTerria";
 
