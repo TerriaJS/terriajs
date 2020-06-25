@@ -44,7 +44,14 @@ function EmptyWorkbench(props) {
         </Text>
       </Box>
       <Spacing bottom={10} />
-      <Box column paddedRatio={3}>
+      <Box
+        column
+        paddedRatio={3}
+        positionAbsolute
+        css={`
+          bottom: 30px;
+        `}
+      >
         <Box left>
           <Text extraLarge bold>
             {t("emptyWorkbench.helpfulHints")}
