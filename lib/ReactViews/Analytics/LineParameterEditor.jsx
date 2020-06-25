@@ -12,6 +12,7 @@ import UserDrawing from "../../Models/UserDrawing";
 import Styles from "./parameter-editors.scss";
 import { withTranslation } from "react-i18next";
 import CommonStrata from "../../Models/CommonStrata";
+import { runInAction } from "mobx";
 
 const LineParameterEditor = createReactClass({
   displayName: "LineParameterEditor",
@@ -47,8 +48,9 @@ const LineParameterEditor = createReactClass({
     const pointsLongLats = [];
     for (let i = 0; i < pointEnts.length; i++) {
       const currentPoint = pointEnts[i];
+
       const currentPointPos = currentPoint.position.getValue(
-        this.props.previewed.terria.clock.currentTime
+        this.props.previewed.terria.clock?.currentTime
       );
       const cartographic = Ellipsoid.WGS84.cartesianToCartographic(
         currentPointPos
@@ -63,7 +65,7 @@ const LineParameterEditor = createReactClass({
 
   selectLineOnMap() {
     this.state.userDrawing.enterDrawMode();
-    this.props.viewState.explorerPanelIsVisible = false;
+    runInAction(() => (this.props.viewState.explorerPanelIsVisible = false));
   },
 
   render() {
