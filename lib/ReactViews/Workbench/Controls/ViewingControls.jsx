@@ -26,6 +26,8 @@ import { RawButton } from "../../../Styled/Button";
 import Icon, { StyledIcon } from "../../Icon";
 import WorkbenchButton from "../WorkbenchButton";
 import Styles from "./viewing-controls.scss";
+import ExportableData from "../../../Models/ExportableData";
+import { exportData } from "../../Preview/ExportData";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -224,7 +226,12 @@ const ViewingControls = observer(
 
     exportData() {
       const item = this.props.item;
-      item.exportData();
+
+      exportData(item).catch(e => {
+        if (e instanceof TerriaError) {
+          this.props.item.terria.error.raiseEvent(e);
+        }
+      });
     },
 
     renderViewingControlsMenu() {
@@ -283,7 +290,7 @@ const ViewingControls = observer(
               </ViewingControlMenuButton>
             </li>
           </If>
-          <If condition={defined(item.linkedWcsUrl)}>
+          <If condition={ExportableData.is(item)}>
             <li className={classNames(Styles.info)}>
               <ViewingControlMenuButton
                 onClick={this.exportData}
