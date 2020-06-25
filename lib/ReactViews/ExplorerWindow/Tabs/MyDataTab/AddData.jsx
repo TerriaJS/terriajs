@@ -113,13 +113,15 @@ const AddData = createReactClass({
       }
     }
     addUserCatalogMember(this.props.terria, promise).then(addedItem => {
+      if (addedItem && !(addedItem instanceof TerriaError)) {
+        this.onFileAddFinished([addedItem]);
+      }
+      // FIXME: Setting state here might result in a react warning if the
+      // component unmounts before the promise finishes
       this.setState({
         isLoading: false
       });
       this.props.resetTab();
-      if (addedItem && !(addedItem instanceof TerriaError)) {
-        this.onFileAddFinished([addedItem]);
-      }
     });
   },
 
