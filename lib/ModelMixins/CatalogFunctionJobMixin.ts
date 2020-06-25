@@ -18,6 +18,7 @@ import createStratumInstance from "../Models/createStratumInstance";
 import isDefined from "../Core/isDefined";
 import AsyncMappableMixin from "./AsyncMappableMixin";
 import runLater from "../Core/runLater";
+import { MapItem } from "../Models/Mappable";
 
 type CatalogFunctionJobMixin = Model<CatalogFunctionJobTraits>;
 
@@ -100,10 +101,16 @@ function CatalogFunctionJobMixin<
      */
     abstract async invoke(): Promise<boolean>;
 
+    get refreshInterval() {
+      return 2;
+    }
+
     /**
      * Called every refreshInterval - return indicates whether job has finished (true = finished)
      */
-    abstract async pollForResults(): Promise<boolean>;
+    async pollForResults(): Promise<boolean> {
+      throw "pollForResults not implemented";
+    }
 
     abstract async downloadResults(): Promise<
       CatalogMemberMixin.CatalogMemberMixin[] | void
@@ -184,6 +191,13 @@ function CatalogFunctionJobMixin<
       }
       return this.loadPromise;
     }
+
+    @computed
+    get mapItems(): MapItem[] {
+      return [];
+    }
+
+    protected async forceLoadMapItems(): Promise<void> {}
 
     @action
     protected setOnError(errorMessage?: string) {

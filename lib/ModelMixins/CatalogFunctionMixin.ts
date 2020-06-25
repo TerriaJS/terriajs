@@ -77,8 +77,10 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
             title: `Error submitting ${this.typeName}`,
             message: error
           });
+        } else if (error instanceof TerriaError) {
+          throw error;
         }
-        throw error;
+        console.error(error);
       }
     }
 
