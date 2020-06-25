@@ -1,7 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Styles from "./prompt.scss";
-import classNames from "classnames";
 import FadeIn from "../Transitions/FadeIn/FadeIn";
 import Box, { BoxSpan } from "../../Styled/Box";
 import Spacing from "../../Styled/Spacing";
@@ -11,6 +9,7 @@ import { withTheme } from "styled-components";
 import Caret from "../Generic/Caret";
 
 class Prompt extends React.PureComponent {
+  // Tried to keep/make use of the original story prompt css properties
   render() {
     return (
       <FadeIn isVisible={this.props.isVisible}>
@@ -20,18 +19,18 @@ class Prompt extends React.PureComponent {
           positionAbsolute
           backgroundColor={this.props.theme.colorPrimary}
           paddedRatio={3}
-          styledWidth={"273px"}
+          styledWidth={`${this.props.promptWidth || 200}px`}
           css={`
-            bottom: 1px;
-            right: 50px;
+            top: ${this.props.promptTopOffset || 40}px;
+            left: ${this.props.promptLeftOffset || -80}px;
           `}
         >
           <Caret
             style={{
-              top: `${this.props.caretTopOffset || -5}px`,
-              left: `${this.props.caretLeftOffset || 230}px`
+              top: `${this.props.caretTopOffset || -8}px`,
+              left: `${this.props.caretLeftOffset || 110}px`
             }}
-            size={15}
+            size={this.props.caretSize || 18}
             background={this.props.theme.colorPrimary}
           />
           {this.props.content}
@@ -57,8 +56,12 @@ Prompt.propTypes = {
   dismissText: PropTypes.string,
   dismissAction: PropTypes.func,
   displayDelay: PropTypes.number,
+  promptWidth: PropTypes.number,
+  promptTopOffset: PropTypes.number,
+  promptLeftOffset: PropTypes.number,
   caretTopOffset: PropTypes.number,
   caretLeftOffset: PropTypes.number,
+  caretSize: PropTypes.number,
   isVisible: PropTypes.bool.isRequired,
   theme: PropTypes.object.isRequired
 };

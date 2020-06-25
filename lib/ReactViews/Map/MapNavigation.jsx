@@ -140,37 +140,42 @@ class MapNavigation extends React.Component {
                     expandInPlace
                     iconElement={() => <Icon glyph={Icon.GLYPHS.helpThick} />}
                     onClick={() => this.props.viewState.showHelpPanel()}
+                    neverCollapse={
+                      this.props.viewState.featurePrompts.indexOf("help") >= 0
+                    }
                   >
                     Help
                   </MapIconButton>
                 </div>
-                {
-                  <Prompt
-                    content={
-                      <div>
-                        <Text bold extraLarge textLight>
-                          {t("helpPanel.promptMessage")}
-                        </Text>
-                      </div>
-                    }
-                    displayDelay={500}
-                    dismissText={t("helpPanel.dismissText")}
-                    dismissAction={() => {
-                      runInAction(() =>
-                        this.props.viewState.toggleFeaturePrompt(
-                          "help",
-                          false,
-                          true
-                        )
-                      );
-                    }}
-                    caretTopOffset={75}
-                    caretLeftOffset={265}
-                    isVisible={
-                      this.props.viewState.featurePrompts.indexOf("help") >= 0
-                    }
-                  />
-                }
+                <Prompt
+                  content={
+                    <div>
+                      <Text bold extraLarge textLight>
+                        {t("helpPanel.promptMessage")}
+                      </Text>
+                    </div>
+                  }
+                  displayDelay={500}
+                  dismissText={t("helpPanel.dismissText")}
+                  dismissAction={() => {
+                    runInAction(() =>
+                      this.props.viewState.toggleFeaturePrompt(
+                        "help",
+                        false,
+                        true
+                      )
+                    );
+                  }}
+                  caretTopOffset={75}
+                  caretLeftOffset={265}
+                  caretSize={15}
+                  promptWidth={273}
+                  promptTopOffset={-20}
+                  promptLeftOffset={-330}
+                  isVisible={
+                    this.props.viewState.featurePrompts.indexOf("help") >= 0
+                  }
+                />
               </If>
             </div>
           </Box>
