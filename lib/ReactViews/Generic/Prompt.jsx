@@ -14,37 +14,37 @@ class Prompt extends React.PureComponent {
     return (
       <FadeIn isVisible={this.props.isVisible}>
         <Box
-          column
+          displayInlineBlock
           rounded
           positionAbsolute
           backgroundColor={this.props.theme.colorPrimary}
           paddedRatio={3}
           styledWidth={`${this.props.promptWidth || 200}px`}
           css={`
-            top: ${this.props.promptTopOffset || 40}px;
-            left: ${this.props.promptLeftOffset || -80}px;
+            top: ${this.props.promptTopOffset || 50}px;
+            left: ${this.props.promptLeftOffset || -140}px;
           `}
         >
           <Caret
             style={{
               top: `${this.props.caretTopOffset || -8}px`,
-              left: `${this.props.caretLeftOffset || 110}px`
+              left: `${this.props.caretLeftOffset || 160}px`
             }}
             size={this.props.caretSize || 18}
             background={this.props.theme.colorPrimary}
           />
           {this.props.content}
-          <Spacing bottom={4} />
-          <RawButton
-            title={this.props.dismissText}
-            onClick={this.props.dismissAction}
-          >
-            <BoxSpan fullWidth left>
+          <Spacing bottom={3} />
+          <BoxSpan fullWidth centered={this.props.centered}>
+            <RawButton
+              title={this.props.dismissText}
+              onClick={this.props.dismissAction}
+            >
               <TextSpan isLink medium textLight>
                 {this.props.dismissText}
               </TextSpan>
-            </BoxSpan>
-          </RawButton>
+            </RawButton>
+          </BoxSpan>
         </Box>
       </FadeIn>
     );
@@ -62,6 +62,7 @@ Prompt.propTypes = {
   caretTopOffset: PropTypes.number,
   caretLeftOffset: PropTypes.number,
   caretSize: PropTypes.number,
+  centered: PropTypes.bool,
   isVisible: PropTypes.bool.isRequired,
   theme: PropTypes.object.isRequired
 };

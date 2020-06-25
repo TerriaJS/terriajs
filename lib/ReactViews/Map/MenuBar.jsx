@@ -14,6 +14,8 @@ import { withTranslation, Trans } from "react-i18next";
 import Styles from "./menu-bar.scss";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
+import Text from "../../Styled/Text";
+import Spacing from "../../Styled/Spacing";
 
 import { useRefForTerria } from "../Hooks/useRefForTerria";
 
@@ -63,16 +65,28 @@ const MenuBar = observer(props => {
   const promptHtml =
     props.terria.stories.length > 0 ? (
       <Trans i18nKey="story.promptHtml1">
-        <div>You can view and create stories at any time by clicking here.</div>
+        <Text extraLarge textLight textAlignCenter>
+          You can view and create stories at any time by clicking here.
+        </Text>
       </Trans>
     ) : (
       <Trans i18nKey="story.promptHtml2">
         <div>
-          <small>INTRODUCING</small>
-          <h3>Data Stories</h3>
-          <div>
+          <Text textLight textAlignCenter>
+            INTRODUCING
+          </Text>
+          <Text
+            bold
+            extraExtraLarge
+            styledLineHeight={"32px"}
+            textLight
+            textAlignCenter
+          >
+            Data Stories
+          </Text>
+          <Text medium textLight textAlignCenter>
             Create and share interactive stories directly from your map.
-          </div>
+          </Text>
         </div>
       </Trans>
     );
@@ -147,15 +161,17 @@ const MenuBar = observer(props => {
                 <Icon glyph={Icon.GLYPHS.story} />
                 <span>{t("story.story")}</span>
               </button>
-              {storyEnabled &&
-                props.viewState.featurePrompts.indexOf("story") >= 0 && (
-                  <Prompt
-                    content={promptHtml}
-                    displayDelay={delayTime}
-                    dismissText={t("story.dismissText")}
-                    dismissAction={dismissAction}
-                  />
-                )}
+              <Prompt
+                centered
+                isVisible={
+                  storyEnabled &&
+                  props.viewState.featurePrompts.indexOf("story") >= 0
+                }
+                content={promptHtml}
+                displayDelay={delayTime}
+                dismissText={t("story.dismissText")}
+                dismissAction={dismissAction}
+              />
             </div>
           </li>
         </If>
