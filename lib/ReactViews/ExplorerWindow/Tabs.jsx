@@ -11,6 +11,7 @@ import { withTranslation } from "react-i18next";
 import Styles from "./tabs.scss";
 import { observer } from "mobx-react";
 import { runInAction } from "mobx";
+import Mappable from "../../Models/Mappable";
 
 const Tabs = observer(
   createReactClass({
@@ -21,6 +22,17 @@ const Tabs = observer(
       viewState: PropTypes.object.isRequired,
       tabs: PropTypes.array,
       t: PropTypes.func.isRequired
+    },
+
+    onFileAddFinished(files) {
+      const file = files.find(f => Mappable.is(f));
+      if (file) {
+        file
+          .loadMapItems()
+          .then(() => this.props.terria.currentViewer.zoomTo(file, 1));
+        this.props.viewState.viewCatalogMember(file);
+      }
+      this.props.viewState.myDataIsUploadView = false;
     },
 
     getTabs() {
@@ -38,6 +50,7 @@ const Tabs = observer(
           <MyDataTab
             terria={this.props.terria}
             viewState={this.props.viewState}
+            onFileAddFinished={files => this.onFileAddFinished(files)}
           />
         )
       };

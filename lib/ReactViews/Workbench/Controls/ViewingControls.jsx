@@ -188,20 +188,21 @@ const ViewingControls = observer(
 
         // Add it to terria.catalog, which is required so the new item can be shared.
         addUserCatalogMember(terria, splitRef, {
-          open: false,
-          zoomTo: false
+          open: false
         });
       });
     },
 
     openDiffTool() {
-      this.props.viewState.openTool(
-        "Difference",
-        import("../../Tools/DiffTool/DiffTool"),
-        {
+      this.props.viewState.openTool({
+        toolName: "Difference",
+        getToolComponent: () =>
+          import("../../Tools/DiffTool/DiffTool").then(m => m.default),
+        showCloseButton: true,
+        params: {
           sourceItem: this.props.item
         }
-      );
+      });
     },
 
     previewItem() {

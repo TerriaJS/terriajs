@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import ChartPanel from "../Custom/Chart/ChartPanel";
 import { observer } from "mobx-react";
 import Timeline from "./Timeline/Timeline";
+import MapDataCount from "./MapDataCount";
 import Styles from "./bottom-dock.scss";
 import { runInAction } from "mobx";
 
@@ -26,7 +27,7 @@ const BottomDock = observer(
     },
 
     render() {
-      const terria = this.props.terria;
+      const { terria } = this.props;
       const top = terria.timelineStack.top;
 
       return (
@@ -40,6 +41,7 @@ const BottomDock = observer(
           tabIndex={0}
           onClick={this.handleClick}
         >
+          <MapDataCount terria={terria} viewState={this.props.viewState} />
           <ChartPanel
             terria={terria}
             onHeightChange={this.onHeightChange}
