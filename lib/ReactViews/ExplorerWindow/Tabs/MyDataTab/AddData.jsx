@@ -76,7 +76,7 @@ const AddData = createReactClass({
       this.state.localDataType
     ).then(addedCatalogItems => {
       if (addedCatalogItems && addedCatalogItems.length > 0) {
-        this.onFileAddFinished(addedCatalogItems);
+        this.props.onFileAddFinished(addedCatalogItems);
       }
       this.setState({
         isLoading: false
@@ -114,7 +114,7 @@ const AddData = createReactClass({
     }
     addUserCatalogMember(this.props.terria, promise).then(addedItem => {
       if (addedItem && !(addedItem instanceof TerriaError)) {
-        this.onFileAddFinished([addedItem]);
+        this.props.onFileAddFinished([addedItem]);
       }
       // FIXME: Setting state here might result in a react warning if the
       // component unmounts before the promise finishes
@@ -123,10 +123,6 @@ const AddData = createReactClass({
       });
       this.props.resetTab();
     });
-  },
-
-  onFileAddFinished(files) {
-    this.props.onFileAddFinished(files);
   },
 
   onRemoteUrlChange(event) {
