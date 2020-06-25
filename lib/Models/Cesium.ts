@@ -92,6 +92,11 @@ export default class Cesium extends GlobeOrMap {
     | Mappable
     | /*TODO Cesium.Cesium3DTileset*/ any;
 
+  // When true, feature picking is paused. This is useful for temporarily
+  // disabling feature picking when some other interaction mode wants to take
+  // over the LEFT_CLICK behavior.
+  isFeaturePickingPaused = false;
+
   /* Disposers */
   private readonly _selectionIndicator: CesiumSelectionIndicator;
   private readonly _disposeSelectedFeatureSubscription: () => void;
@@ -260,7 +265,8 @@ export default class Cesium extends GlobeOrMap {
 
     // Handle left click by picking objects from the map.
     inputHandler.setInputAction(e => {
-      this.pickFromScreenPosition(e.position, false);
+      if (!this.isFeaturePickingPaused)
+        this.pickFromScreenPosition(e.position, false);
     }, ScreenSpaceEventType.LEFT_CLICK);
 
     this.pauser = new CesiumRenderLoopPauser(this.cesiumWidget, () => {
@@ -1271,16 +1277,19 @@ function zoomToDataSource(
         }
       }
 
+      // Test if boundingSpheres is empty to avoid zooming to nowhere
       if (boundingSpheres.length > 0) {
         var boundingSphere = BoundingSphere.fromBoundingSpheres(
           boundingSpheres
         );
         cesium.scene.camera.flyToBoundingSphere(boundingSphere, {
-          duration: flightDurationSeconds
+          duration: flightDurationSeconds,
+          // By passing range=0, cesium calculates an appropriate zoom distance
+          offset: new HeadingPitchRange(0, -0.5, 0)
         });
-        return true;
+        cesium.scene.camera.lookAtTransform(Matrix4.IDENTITY);
       }
-      return false;
+      return true;
     },
     {
       pollInterval: 100,
@@ -1293,17 +1302,13 @@ function zoomToBoundingSphere(
   cesium: Cesium,
   target: {
     boundingSphere: Cesium.BoundingSphere;
-    modelMatrix?: Cesium.Matrix4;
   },
   flightDurationSeconds?: number
 ) {
   var boundingSphere = target.boundingSphere;
-  var modelMatrix = target.modelMatrix;
-  if (modelMatrix) {
-    boundingSphere = BoundingSphere.transform(boundingSphere, modelMatrix);
-  }
   cesium.scene.camera.flyToBoundingSphere(boundingSphere, {
-    offset: new HeadingPitchRange(0.0, -0.5, boundingSphere.radius),
+    // By passing range=0, cesium calculates an appropriate zoom distance
+    offset: new HeadingPitchRange(0, -0.5, 0),
     duration: flightDurationSeconds
   });
 }
