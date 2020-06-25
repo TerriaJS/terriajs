@@ -1,4 +1,11 @@
-import { autorun, computed, runInAction, reaction } from "mobx";
+import {
+  autorun,
+  computed,
+  runInAction,
+  reaction,
+  observe,
+  Lambda
+} from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
@@ -21,6 +28,7 @@ import i18next from "i18next";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
+import ViewState from "../ReactViewModels/ViewState";
 
 interface Options {
   terria: Terria;
@@ -44,7 +52,6 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
   private readonly onMakeDialogMessage?: () => string;
   private readonly buttonText?: string;
   private readonly onPointClicked?: (dataSource: CustomDataSource) => void;
-  private readonly onPointMoved?: (dataSource: CustomDataSource) => void;
   private readonly onCleanUp?: () => void;
   private readonly dragHelper: DragPoints;
 
@@ -56,6 +63,8 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
   private closeLoop: boolean;
   private disposePickedFeatureSubscription?: () => void;
   private drawRectangle: boolean;
+
+  private mouseMoveObserveDispose?: Lambda;
 
   constructor(options: Options) {
     super(createGuid(), options.terria);
@@ -87,11 +96,6 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
     this.onPointClicked = options.onPointClicked;
 
     /**
-     * Callback that occurs when point is moved. Function takes a CustomDataSource which is a list of PointEntities.
-     */
-    this.onPointMoved = options.onPointMoved;
-
-    /**
      * Callback that occurs on clean up, i.e. when drawing is done or cancelled.
      */
     this.onCleanUp = options.onCleanUp;
@@ -120,9 +124,6 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
 
     // helper for dragging points around
     this.dragHelper = new DragPoints(options.terria, customDataSource => {
-      if (this.onPointMoved) {
-        this.onPointMoved(customDataSource);
-      }
       this.prepareToAddNewPoint();
     });
   }
@@ -299,21 +300,25 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
           this.cleanUp();
         });
       },
-      onMouseMove: this.drawRectangle
-        ? coords => {
-            this.otherEntities.entities.getById(
+      onEnable: (viewState: ViewState) => {
+        viewState.closeCatalog();
+
+        if (this.drawRectangle) {
+          this.mouseMoveObserveDispose = observe(viewState.mouseCoords, () => {
+            const mousePoint = this.otherEntities.entities.getById(
               "mousePoint"
-            ).position = new ConstantPositionProperty(
-              Ellipsoid.WGS84.cartographicToCartesian(
-                new Cartographic(
-                  coords.longitude,
-                  coords.latitude,
-                  coords.height
-                )
-              )
             );
-          }
-        : undefined
+
+            if (isDefined(mousePoint)) {
+              mousePoint.position = new ConstantPositionProperty(
+                Ellipsoid.WGS84.cartographicToCartesian(
+                  viewState.mouseCoords.lastHeightSamplePosition
+                )
+              );
+            }
+          });
+        }
+      }
     });
     runInAction(() => {
       this.terria.mapInteractionModeStack.push(pickPointMode);
@@ -454,6 +459,10 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
       if (container !== null) {
         container.setAttribute("style", "cursor: auto");
       }
+    }
+
+    if (isDefined(this.mouseMoveObserveDispose)) {
+      this.mouseMoveObserveDispose();
     }
 
     // Allow client to clean up too

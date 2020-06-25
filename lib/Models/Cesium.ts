@@ -263,10 +263,6 @@ export default class Cesium extends GlobeOrMap {
       this.pickFromScreenPosition(e.position, false);
     }, ScreenSpaceEventType.LEFT_CLICK);
 
-    inputHandler.setInputAction(e => {
-      this.onMouseMove(e.startPosition, e.endPosition);
-    }, ScreenSpaceEventType.MOUSE_MOVE);
-
     this.pauser = new CesiumRenderLoopPauser(this.cesiumWidget, () => {
       // Post render, update selection indicator position
       const feature = this.terria.selectedFeature;
@@ -350,7 +346,7 @@ export default class Cesium extends GlobeOrMap {
     // this._enableSelectExtent(cesiumWidget.scene, false);
 
     const inputHandler = this.cesiumWidget.screenSpaceEventHandler;
-    inputHandler.removeInputAction(ScreenSpaceEventType.MOUSE_MOVE);
+    // inputHandler.removeInputAction(ScreenSpaceEventType.MOUSE_MOVE);
     // inputHandler.removeInputAction(ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
     // inputHandler.removeInputAction(ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT);
 
@@ -856,27 +852,6 @@ export default class Cesium extends GlobeOrMap {
         this.terria.pickedFeatures = result;
       }
     });
-  }
-
-  onMouseMove(startPosition: Cartesian2, endPosition: Cartesian2) {
-    const mapInteractionModeStack = this.terria.mapInteractionModeStack;
-
-    if (
-      isDefined(mapInteractionModeStack) &&
-      mapInteractionModeStack.length > 0 &&
-      typeof mapInteractionModeStack[mapInteractionModeStack.length - 1]
-        .onMouseMove === "function"
-    ) {
-      const pickRay = this.scene.camera.getPickRay(endPosition);
-      const pickPosition = this.scene.globe.pick(pickRay, this.scene);
-      const pickPositionCartographic = Ellipsoid.WGS84.cartesianToCartographic(
-        pickPosition
-      );
-
-      mapInteractionModeStack[mapInteractionModeStack.length - 1].onMouseMove!(
-        pickPositionCartographic
-      );
-    }
   }
 
   /**
