@@ -9,6 +9,8 @@ Change Log
 * Changed the `Tool` interface, now accepting prop `getToolComponent` instead of `toolComponent`
 * Added `ToolButton` for loading/unloading a tool
 * Added `TransformationTraits` that can be used to change position/rotation/scale of a model.
+* Added a new `editor` Icon
+* Changed `ToolButton` to show the same icon in open/close state. Previously it showed a close icon in close state.
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-34
