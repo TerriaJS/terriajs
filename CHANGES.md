@@ -3,7 +3,11 @@ Change Log
 
 ### MobX Development
 
-#### next release (mobx-35)
+#### next release (mobx-36)
+* (placeholder)
+* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
+
+#### mobx-35
 * Add "Upload" to tour points
 * Add tooltips anywhere required in UI via `parseCustomMarkdownToReactWithOptions` & customisable via `helpContentTerms` 
 * Add "map state" map data count to highlight state of map data
@@ -15,7 +19,6 @@ Change Log
 * Added `TransformationTraits` that can be used to change position/rotation/scale of a model.
 * Added a new `editor` Icon
 * Changed `ToolButton` to show the same icon in open/close state. Previously it showed a close icon in close state.
-* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-34
 * Bug fix for `DatePicker` in `BottomDock` causing app crash
