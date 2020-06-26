@@ -69,7 +69,7 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
   componentWillUnmount() {
     if (!this.props.disableEventListeners) {
       document.removeEventListener("mousedown", this.dismiss);
-      document.addEventListener("touchstart", this.dismiss);
+      document.removeEventListener("touchstart", this.dismiss);
     }
   }
 
@@ -120,9 +120,9 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
     if (!tooltipTextElement) {
       return { x: 0, y: 0 };
     }
-    const { x, y } = tooltipTextElement.getBoundingClientRect();
-    const maxX = document.documentElement.clientWidth;
-    const maxY = document.documentElement.clientHeight;
+    const { x, y, width, height } = tooltipTextElement.getBoundingClientRect();
+    const maxX = document.documentElement.clientWidth - width;
+    const maxY = document.documentElement.clientHeight - height;
     // make sure the tooltip doesn't get clipped by the browser edges
     const adjustedX = x < 10 ? 10 : x > maxX ? maxX - 10 : x;
     const adjustedY = y < 10 ? 10 : y > maxY ? maxY - 10 : y;
