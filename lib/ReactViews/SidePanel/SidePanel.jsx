@@ -15,6 +15,7 @@ import Box from "../../Styled/Box";
 import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";
 import Button from "../../Styled/Button";
+import styled from "styled-components";
 
 function EmptyWorkbench(props) {
   const t = props.t;
@@ -31,55 +32,61 @@ function EmptyWorkbench(props) {
       />
     );
   };
+  const ResponsiveSpacing = styled(Box)`
+    height: 110px;
+    // Hardcoded px value, TODO: make it not hardcoded
+    @media (max-height: 700px) {
+      height: 3vh;
+    }
+  `;
   return (
     <Text large textLight nunito>
-      <Box
-        centered
-        css={`
-          min-height: 240px;
-        `}
-      >
-        <Text large color={props.theme.textLightDimmed}>
-          {t("emptyWorkbench.emptyArea")}
-        </Text>
-      </Box>
-      <Spacing bottom={10} />
+      {/* Hardcoded top to 150px for now for very very small screens 
+          TODO: make it not hardcoded */}
       <Box
         column
-        paddedRatio={3}
-        positionAbsolute
-        css={`
-          bottom: 30px;
-        `}
+        fullWidth
+        justifySpaceBetween
+        styledHeight={"calc(100vh - 150px)"}
       >
-        <Box left>
-          <Text extraLarge bold>
-            {t("emptyWorkbench.helpfulHints")}
+        <Box centered column>
+          <ResponsiveSpacing />
+          <Text large color={props.theme.textLightDimmed}>
+            {t("emptyWorkbench.emptyArea")}
           </Text>
+          <ResponsiveSpacing />
         </Box>
-        <Spacing bottom={4} />
-        <Box>
-          <HelpfulHintsIcon />
-          <Spacing right={1} />
-          <Text medium light>
-            {t("emptyWorkbench.helpfulHintsOne")}
-          </Text>
-        </Box>
-        <Spacing bottom={3} />
-        <Box>
-          <HelpfulHintsIcon />
-          <Spacing right={1} />
-          <Text medium light>
-            {t("emptyWorkbench.helpfulHintsTwo")}
-          </Text>
-        </Box>
-        <Spacing bottom={3} />
-        <Box>
-          <HelpfulHintsIcon />
-          <Spacing right={1} />
-          <Text medium light>
-            {t("emptyWorkbench.helpfulHintsThree")}
-          </Text>
+        <Box column paddedRatio={3}>
+          <Box left>
+            <Text extraLarge bold>
+              {t("emptyWorkbench.helpfulHints")}
+            </Text>
+          </Box>
+          <Spacing bottom={4} />
+          <Box>
+            <HelpfulHintsIcon />
+            <Spacing right={1} />
+            <Text medium light>
+              {t("emptyWorkbench.helpfulHintsOne")}
+            </Text>
+          </Box>
+          <Spacing bottom={3} />
+          <Box>
+            <HelpfulHintsIcon />
+            <Spacing right={1} />
+            <Text medium light>
+              {t("emptyWorkbench.helpfulHintsTwo")}
+            </Text>
+          </Box>
+          <Spacing bottom={3} />
+          <Box>
+            <HelpfulHintsIcon />
+            <Spacing right={1} />
+            <Text medium light>
+              {t("emptyWorkbench.helpfulHintsThree")}
+            </Text>
+          </Box>
+          <ResponsiveSpacing />
         </Box>
       </Box>
     </Text>
