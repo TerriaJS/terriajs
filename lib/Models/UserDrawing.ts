@@ -301,7 +301,7 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
         });
       },
       onEnable: (viewState: ViewState) => {
-        viewState.closeCatalog();
+        runInAction(() => (viewState.explorerPanelIsVisible = false));
 
         if (this.drawRectangle) {
           this.mouseMoveObserveDispose = observe(viewState.mouseCoords, () => {
@@ -360,8 +360,9 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
 
             // If drawing a rectangle -> limit to 2 points
             if (
-              this.drawRectangle &&
-              this.pointEntities.entities.values.length < 2
+              !this.drawRectangle ||
+              (this.drawRectangle &&
+                this.pointEntities.entities.values.length < 2)
             ) {
               this.prepareToAddNewPoint();
             }
