@@ -25,7 +25,7 @@ class HelpVideoPanel extends React.Component {
     content: PropTypes.object.isRequired,
     itemString: PropTypes.string,
     paneMode: PropTypes.string,
-    htmlContent: PropTypes.array,
+    markdownContent: PropTypes.string,
     videoUrl: PropTypes.string,
     placeholderImage: PropTypes.string,
     theme: PropTypes.object,
@@ -69,6 +69,8 @@ class HelpVideoPanel extends React.Component {
           paddedVertically={18}
           css={`
             overflow: auto;
+            overflow-x: hidden;
+            overflow-y: auto;
           `}
         >
           <If condition={helpItemType === "videoAndContent"}>
@@ -92,8 +94,11 @@ class HelpVideoPanel extends React.Component {
                 <Spacing bottom={5} />
               </div>
             )}
-            {this.props.htmlContent && (
-              <StyledHtml key={"content"} content={this.props.htmlContent} />
+            {this.props.markdownContent && (
+              <StyledHtml
+                viewState={this.props.viewState}
+                markdown={this.props.markdownContent}
+              />
             )}
           </If>
           <If condition={helpItemType === "slider"}>

@@ -5,6 +5,7 @@ Change Log
 
 #### next release (mobx-35)
 * Add "Upload" to tour points
+* Add tooltips anywhere required in UI via `parseCustomMarkdownToReactWithOptions` & customisable via `helpContentTerms` 
 * Add "map state" map data count to highlight state of map data
 * Add a reminder "pop-up" that shows the location of the help button
 * Fix bug causing story pop-up to be off screen

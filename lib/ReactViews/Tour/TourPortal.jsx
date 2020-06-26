@@ -24,7 +24,7 @@ import Box from "../../Styled/Box";
 import Spacing from "../../Styled/Spacing";
 import Button from "../../Styled/Button";
 import Text from "../../Styled/Text";
-import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
+import { parseCustomMarkdownToReactWithOptions } from "../Custom/parseCustomMarkdownToReact";
 
 import {
   getOffsetsFromTourPoint,
@@ -264,7 +264,10 @@ const TourGrouping = observer(({ viewState, tourPoints }) => {
             indicatorOffsetTop={indicatorOffsetTop}
             indicatorOffsetLeft={indicatorOffsetLeft}
           >
-            {parseCustomMarkdownToReact(tourPoint?.content)}
+            {parseCustomMarkdownToReactWithOptions(tourPoint?.content, {
+              injectTermsAsTooltips: true,
+              tooltipTerms: viewState.terria.configParameters.helpContentTerms
+            })}
           </TourExplanation>
         );
       })}
