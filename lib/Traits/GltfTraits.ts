@@ -1,19 +1,12 @@
-import objectTrait from "./objectTrait";
-import LatLonHeightTraits from "./LatLonHeightTraits";
-import primitiveTrait from "./primitiveTrait";
-import ModelTraits from "./ModelTraits";
-import ShadowTraits from "./ShadowTraits";
 import mixTraits from "./mixTraits";
+import primitiveTrait from "./primitiveTrait";
+import ShadowTraits from "./ShadowTraits";
+import TransformationTraits from "./TransformationTraits";
 
-export default class GltfTraits extends mixTraits(ShadowTraits) {
-  @objectTrait({
-    type: LatLonHeightTraits,
-    name: "Origin",
-    description:
-      "The origin of the model, expressed as a longitude and latitude in degrees and a height in meters. If this property is specified, the model's axes will have X pointing East, Y pointing North, and Z pointing Up. If not specified, the model is located in the Earth-Centered Earth-Fixed frame."
-  })
-  origin?: LatLonHeightTraits;
-
+export default class GltfTraits extends mixTraits(
+  TransformationTraits,
+  ShadowTraits
+) {
   @primitiveTrait({
     type: "string",
     name: "Up axis",
@@ -31,9 +24,10 @@ export default class GltfTraits extends mixTraits(ShadowTraits) {
   forwardAxis?: string;
 
   @primitiveTrait({
-    type: "number",
-    name: "Scale",
-    description: "The scale factor to apply to the model"
+    type: "string",
+    name: "Height reference",
+    description:
+      "Position relative to the ground. Accepted values are NONE, CLAMP_TO_GROUND & RELATIVE_TO_GROUND as described in the cesium doc - https://cesium.com/docs/cesiumjs-ref-doc/global.html#HeightReference"
   })
-  scale?: number;
+  heightReference = "NONE";
 }

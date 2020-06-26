@@ -136,19 +136,19 @@ export default class ViewState {
   /**
    * we need a layering system for touring the app, but also a way for it to be
    * chopped and changed from a terriamap
-   * 
+   *
    * this will be slightly different to the help sequences that were done in
-   * the past, but may evolve to become a "sequence" (where the UI gets 
+   * the past, but may evolve to become a "sequence" (where the UI gets
    * programatically toggled to delve deeper into the app, e.g. show the user
    * how to add data via the data catalog window)
-   * 
+   *
    * rough points
    * - "all guide points visible"
-   * - 
-   * 
+   * -
+   *
 
    * draft structure(?):
-   * 
+   *
    * maybe each "guide" item will have
    * {
    *  ref: (react ref object)
@@ -268,13 +268,7 @@ export default class ViewState {
   /**
    * The currently open tool
    */
-  @observable currentTool:
-    | {
-        toolName: string;
-        toolComponent: React.Component | string;
-        params: unknown;
-      }
-    | undefined;
+  @observable currentTool?: Tool;
 
   private _unsubscribeErrorListener: any;
   private _pickedFeaturesSubscription: IReactionDisposer;
@@ -613,12 +607,8 @@ export default class ViewState {
   }
 
   @action
-  openTool(
-    toolName: string,
-    toolComponent: React.Component | string,
-    params?: any
-  ) {
-    this.currentTool = { toolName, toolComponent, params };
+  openTool(tool: Tool) {
+    this.currentTool = tool;
   }
 
   @action
@@ -630,4 +620,11 @@ export default class ViewState {
   get isToolOpen() {
     return this.currentTool !== undefined;
   }
+}
+
+interface Tool {
+  toolName: string;
+  getToolComponent: () => React.Component | Promise<React.Component>;
+  showCloseButton: boolean;
+  params?: any;
 }

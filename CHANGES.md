@@ -9,12 +9,16 @@ Change Log
 * Add a reminder "pop-up" that shows the location of the help button
 * Fix bug causing story pop-up to be off screen
 * Fix bug causing helpful hints to be cut off on smaller screens
+* Changed the `Tool` interface, now accepting prop `getToolComponent` instead of `toolComponent`
+* Added `ToolButton` for loading/unloading a tool
+* Added `TransformationTraits` that can be used to change position/rotation/scale of a model.
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-34
 * Bug fix for `DatePicker` in `BottomDock` causing app crash
 * Made changes to the video modals: close button has been added, pressing escape now closes the component and some basic unit tests created
 * Updated the video modal for _Data Stories: Getting Started_ to use the new `VideoGuide` component
+* Tweaked MyData/AddData tabs to make it possible to invoke them without using the `ExplorerWindow` component and also customize the extensions listed in the dropdown.
 * Fix the timeline stack handling for when there are multiple time-enabled layers
 * Ported timeseries tables.
 * Extended the support for styles for ESRI ArcGis Feature Server. Line styles are supported for lines and polygon outlines in both Cesium and Leaflet viewer. #4405
@@ -24,8 +28,6 @@ Change Log
 * Use `1.x.x` of `karma-sauce-launcher` to fix CI build failures
 * Stop unknown icons specified in config.json from crashing UI
 * Creates a `ShadowTraits` class that is shared by `GltfCatalogItem` and `Cesium3DTilesCatalogItem`.
-* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
-
 * Fixed a bug where user added data was removed from catalogue when Remove from map button in data catalog is clicked.
 * Fix leaflet zoom to work when bounding rectangle exists but doesn't have bounds defined
 
@@ -54,7 +56,6 @@ Change Log
 * Updated LocationSearchResults to support multiple search providers
 * Replaced lifesaver icon on the help button with a question mark button
 * Fix handling of points and markers around the anti-meridian in the `LeafletVisualizer`.
-* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 * Fixed difference tool losing datepicker state by keeping it mounted
 * Disabled unhelpful Help button when in `useSmallScreenInterface`
 * Fixed a bug where a single incorrect catalog item in a group would prevent subsequent items from loading.
