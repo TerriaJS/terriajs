@@ -77,14 +77,12 @@ export class ToolButton extends React.Component<ToolButtonProps> {
   }
 
   render() {
-    const { toolName, icon: openIcon } = this.props;
-    const closeIcon = Icon.GLYPHS.closeLight;
-    const icon = this.isThisToolOpen ? closeIcon : openIcon;
+    const { toolName, icon } = this.props;
     return (
       <div className={Styles.toolButton}>
         <MapIconButton
+          primary={this.isThisToolOpen}
           expandInPlace
-          splitter={this.isThisToolOpen}
           title={toolName}
           onClick={() => this.toggleOpen()}
           iconElement={() => <Icon glyph={icon} />}
