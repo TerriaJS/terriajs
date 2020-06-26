@@ -779,6 +779,22 @@
       "notCompatibleMessageI": "The CKAN dataset does not have a resource with the ID {{resourceId}} or it does not have a supported format.",
       "notCompatibleMessageII": "The CKAN dataset does not have any resources with a supported format."
     },
+    "arcgisPortal": {
+      "nameGroup": "ArcGIS Portal",
+      "errorLoadingTitle": "Error loading ArcGIS Portal catalogue",
+      "errorLoadingMessage": "The definition for this ArcGIS Portal catalogue does not have a valid filter query.",
+      "corsErrorMessage": "Couldn't retrieve packages from this ArcGIS Portal server.<br/><br/>If you entered the URL manually, please double-check it.<br/><br/>If it's your server, make sure {{corsLink}} is enabled.<br/><br/> Otherwise, if reloading doesn't fix it, please report the problem by sending an email to {{email}} with the technical details below.  Thank you!<br/><br/>",
+      "name": "ArcGIS Portal Item",
+      "dataSourceErrorMessage": "This data source does not have any details available.",
+      "serviceErrorMessage": "This service does not have any details available.",
+      "datasetDescription": "Dataset Description",
+      "licence": "Licence",
+      "openInPortal": "Open in ArcGIS Portal",
+      "idsNotSpecifiedTitle": "resourceId or datasetId must be specified",
+      "idsNotSpecifiedMessage": "ArcGIS Portal Item requires an itemId to be specified.",
+      "errorRetrievingUrlTitle": "Error retrieving ArcGIS Portal URL",
+      "errorRetrievingUrlMessage": "Could not retrieve URL as JSON: {{url}}."
+    },
     "catalog": {
       "name": "Unnamed Item",
       "group": "Group",
