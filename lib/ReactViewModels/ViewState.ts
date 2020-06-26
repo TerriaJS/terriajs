@@ -268,13 +268,7 @@ export default class ViewState {
   /**
    * The currently open tool
    */
-  @observable currentTool:
-    | {
-        toolName: string;
-        toolComponent: React.Component | string;
-        params: unknown;
-      }
-    | undefined;
+  @observable currentTool?: Tool;
 
   private _unsubscribeErrorListener: any;
   private _pickedFeaturesSubscription: IReactionDisposer;
@@ -632,12 +626,8 @@ export default class ViewState {
   }
 
   @action
-  openTool(
-    toolName: string,
-    toolComponent: React.Component | string,
-    params?: any
-  ) {
-    this.currentTool = { toolName, toolComponent, params };
+  openTool(tool: Tool) {
+    this.currentTool = tool;
   }
 
   @action
@@ -649,4 +639,11 @@ export default class ViewState {
   get isToolOpen() {
     return this.currentTool !== undefined;
   }
+}
+
+interface Tool {
+  toolName: string;
+  getToolComponent: () => React.Component | Promise<React.Component>;
+  showCloseButton: boolean;
+  params?: any;
 }
