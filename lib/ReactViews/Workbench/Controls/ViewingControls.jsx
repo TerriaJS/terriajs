@@ -16,6 +16,7 @@ import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDire
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import getDereferencedIfExists from "../../../Core/getDereferencedIfExists";
 import getPath from "../../../Core/getPath";
+import TerriaError from "../../../Core/TerriaError";
 import PickedFeatures from "../../../Map/PickedFeatures";
 import addUserCatalogMember from "../../../Models/addUserCatalogMember";
 import CommonStrata from "../../../Models/CommonStrata";
