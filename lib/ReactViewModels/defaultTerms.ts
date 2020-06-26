@@ -24,7 +24,7 @@ export const defaultTerms: Term[] = [
   },
   {
     term: "base maps",
-    aliases: ["basemap", "base map"],
+    aliases: ["basemap", "base map", "basemaps"],
     content:
       "different map options for the blank base map, such as Bing imagery, roads, dark or light maps"
   },
