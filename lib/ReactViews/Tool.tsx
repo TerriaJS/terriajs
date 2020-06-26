@@ -2,12 +2,17 @@ import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import ViewState from "../ReactViewModels/ViewState";
 import SplitPoint from "./SplitPoint";
+import { observer } from "mobx-react";
+import { computed } from "mobx";
+import Styles from "./Map/Navigation/tool_button.scss";
+import MapIconButton from "./MapIconButton/MapIconButton";
+import Icon from "./Icon";
 
-interface PropsType extends WithTranslation {
+interface ToolProps extends WithTranslation {
   viewState: ViewState;
   toolName: string;
-  toolComponent: React.Component | Promise<any>;
-  params: unknown;
+  getToolComponent: () => React.Component | Promise<React.Component>;
+  params?: any;
 }
 
 /**
@@ -18,21 +23,19 @@ interface PropsType extends WithTranslation {
  * module that exports a default React Component. The promise is useful for
  * lazy-loading the tool.
  */
-class Tool extends React.Component<PropsType> {
+class Tool extends React.Component<ToolProps> {
   render() {
-    const { viewState, toolComponent, params, toolName, t } = this.props;
+    const { viewState, getToolComponent, params, toolName, t } = this.props;
     const terria = viewState.terria;
     const loadComponent = (onLoad: any) => {
-      return toolComponent instanceof Promise
-        ? toolComponent
-            .then(module => onLoad(module.default))
-            .catch(() =>
-              terria.error.raiseEvent({
-                title: t("tool.loadingError.title", { toolName }),
-                message: t("tool.loadingError.message")
-              })
-            )
-        : onLoad(toolComponent);
+      Promise.resolve(getToolComponent())
+        .then(component => onLoad(component))
+        .catch(() =>
+          terria.error.raiseEvent({
+            title: t("tool.loadingError.title", { toolName }),
+            message: t("tool.loadingError.message")
+          })
+        );
     };
     return (
       <SplitPoint
@@ -40,6 +43,55 @@ class Tool extends React.Component<PropsType> {
         viewState={viewState}
         {...params}
       />
+    );
+  }
+}
+
+interface ToolButtonProps extends ToolProps {
+  icon: { id: string };
+}
+
+@observer
+export class ToolButton extends React.Component<ToolButtonProps> {
+  @computed
+  get isThisToolOpen() {
+    const currentTool = this.props.viewState.currentTool;
+    return (
+      currentTool &&
+      currentTool.getToolComponent === this.props.getToolComponent
+    );
+  }
+
+  toggleOpen() {
+    const { viewState } = this.props;
+    if (this.isThisToolOpen) {
+      viewState.closeTool();
+    } else {
+      viewState.openTool({
+        toolName: this.props.toolName,
+        getToolComponent: this.props.getToolComponent,
+        params: this.props.params,
+        showCloseButton: false
+      });
+    }
+  }
+
+  render() {
+    const { toolName, icon: openIcon } = this.props;
+    const closeIcon = Icon.GLYPHS.closeLight;
+    const icon = this.isThisToolOpen ? closeIcon : openIcon;
+    return (
+      <div className={Styles.toolButton}>
+        <MapIconButton
+          expandInPlace
+          splitter={this.isThisToolOpen}
+          title={toolName}
+          onClick={() => this.toggleOpen()}
+          iconElement={() => <Icon glyph={icon} />}
+        >
+          {toolName}
+        </MapIconButton>
+      </div>
     );
   }
 }
