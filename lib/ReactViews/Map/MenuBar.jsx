@@ -19,6 +19,7 @@ import Text from "../../Styled/Text";
 import { useRefForTerria } from "../Hooks/useRefForTerria";
 
 const StyledMenuBar = styled.div`
+  pointer-events: none;
   ${p =>
     p.trainerBarVisible &&
     `

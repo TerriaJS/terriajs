@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (mobx-36)
+* Added `pointer-events` to `MapNavigation` and `MenuBar` elements, so the bar don't block mouse click outside of the button.
 * (placeholder)
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
