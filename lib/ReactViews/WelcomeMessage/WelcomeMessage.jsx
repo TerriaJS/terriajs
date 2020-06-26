@@ -18,6 +18,7 @@ import styled from "styled-components";
 import Button, { RawButton } from "../../Styled/Button";
 import { TourPortalDisplayName } from "../Tour/TourPortal";
 import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
+import { runInAction } from "mobx";
 
 export const WELCOME_MESSAGE_NAME = "welcomeMessage";
 export const LOCAL_PROPERTY_KEY = `${WELCOME_MESSAGE_NAME}Prompted`;
@@ -136,6 +137,12 @@ export const WelcomeMessagePure = props => {
           if (shouldOpenHelp) {
             setShouldOpenHelp(false);
             viewState.showHelpPanel();
+          }
+          // Show where help is when never previously prompted
+          if (!viewState.terria.getLocalProperty("helpPrompted")) {
+            runInAction(() => {
+              viewState.toggleFeaturePrompt("help", true, false);
+            });
           }
         }
       }}

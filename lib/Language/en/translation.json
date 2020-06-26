@@ -201,7 +201,9 @@
   },
   "helpPanel": {
     "menuPaneTitle": "We're here to help",
-    "menuPaneBody": "Find useful tips on how to use TerriaJS by either checking the guides below or by contacting the team at [info@terria.io](mailto:info@terria.io)"
+    "menuPaneBody": "Find useful tips on how to use TerriaJS by either checking the guides below or by contacting the team at [info@terria.io](mailto:info@terria.io)",
+    "promptMessage": "Find the Tour, how-to videos & other help content here",
+    "dismissText": "Got it, thanks!"
   },
   "helpMenu": {
     "btnText": "Help",

@@ -6,6 +6,9 @@ Change Log
 #### next release (mobx-35)
 * Add "Upload" to tour points
 * Add "map state" map data count to highlight state of map data
+* Add a reminder "pop-up" that shows the location of the help button
+* Fix bug causing story pop-up to be off screen
+* Fix bug causing helpful hints to be cut off on smaller screens
 * Changed the `Tool` interface, now accepting prop `getToolComponent` instead of `toolComponent`
 * Added `ToolButton` for loading/unloading a tool
 * Added `TransformationTraits` that can be used to change position/rotation/scale of a model.
