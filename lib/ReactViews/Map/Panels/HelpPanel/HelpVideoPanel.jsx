@@ -69,6 +69,8 @@ class HelpVideoPanel extends React.Component {
           paddedVertically={18}
           css={`
             overflow: auto;
+            overflow-x: hidden;
+            overflow-y: auto;
           `}
         >
           <If condition={helpItemType === "videoAndContent"}>
