@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
-import { withTheme } from "styled-components";
+import styled, { withTheme } from "styled-components";
 import Icon, { StyledIcon } from "../Icon";
 import SearchBoxAndResults from "../Search/SearchBoxAndResults";
 import Workbench from "../Workbench/Workbench";
@@ -15,7 +15,8 @@ import Box from "../../Styled/Box";
 import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";
 import Button from "../../Styled/Button";
-import styled from "styled-components";
+
+const BoxHelpfulHints = styled(Box)``;
 
 function EmptyWorkbench(props) {
   const t = props.t;
@@ -56,7 +57,7 @@ function EmptyWorkbench(props) {
           </Text>
           <ResponsiveSpacing />
         </Box>
-        <Box column paddedRatio={3}>
+        <BoxHelpfulHints column paddedRatio={3} overflowY="auto">
           <Box left>
             <Text extraLarge bold>
               {t("emptyWorkbench.helpfulHints")}
@@ -87,7 +88,7 @@ function EmptyWorkbench(props) {
             </Text>
           </Box>
           <ResponsiveSpacing />
-        </Box>
+        </BoxHelpfulHints>
       </Box>
     </Text>
   );
