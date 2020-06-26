@@ -11,7 +11,18 @@ export const defaultTerms: Term[] = [
     // this alias should never occur?
     aliases: ["data set", "data sets", "datasets"],
     content:
-      "A collection of related information, organised together as one using a particular data structure, e.g. "
+      'A collection of related information, organised as one using a common data structure, e.g. "average house prices in Sydney for 2019" or "minimum and maximum daily temperature"'
+  },
+  {
+    term: "time series",
+    aliases: ["timeseries"],
+    content:
+      "A sequence of data collected over different points in time, e.g. temperature sensor data or a gallery of images of the same location"
+  },
+  {
+    term: "workbench",
+    content:
+      "The panel on the left side of the screen that shows what datasets you have added to the map"
   },
   {
     term: "4D",
@@ -26,7 +37,7 @@ export const defaultTerms: Term[] = [
     term: "base maps",
     aliases: ["basemap", "base map", "basemaps"],
     content:
-      "different map options for the blank base map, such as Bing imagery, roads, dark or light maps"
+      "Different map options for the blank base map, such as Bing imagery, roads, dark or light maps"
   },
   {
     term: "source dataset",
