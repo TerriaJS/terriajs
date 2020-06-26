@@ -4,7 +4,9 @@
     "open": "Open",
     "prev": "Prev",
     "next": "Next",
-    "skip": "Skip"
+    "skip": "Skip",
+    "delete": "Delete",
+    "cancel": "Cancel"
   },
   "measure": {
     "measureTool": "Measure Tool",
@@ -76,8 +78,10 @@
     "embedTitle": "To embed, copy this code to embed this map into an HTML page:",
     "shortenUsingService": "Shorten the share URL using a web service",
     "btnCatalogShareText": "Share",
+    "btnStoryShareText": "Share",
     "btnMapShareText": "Share / Print",
     "btnCatalogShareTitle": "Share your catalogue with others",
+    "btnStoryShareTitle": "Share your story with others",
     "btnMapShareTitle": "Share your map with others"
   },
   "countDatasets": {
@@ -193,6 +197,10 @@
     "doesNotExist": "Story does not exist",
     "message": "<2>This is your story editor</2><1>Create and share interactive stories directly from your map<1><0><0></0>Getting Started </0></1></1>",
     "removeAllStories": "Remove All",
+    "removeStoriesPanel": "Are you sure you wish to delete {{ count }} scene?",
+    "removeStoriesPanel_plural": "Are you sure you wish to delete {{ count }} scenes?",
+    "confirmRemove": "Delete",
+    "cancelRemove": "Cancel",
     "preview": "preview stories",
     "play": "Play Story",
     "captureSceneTitle": "capture current scene",
@@ -215,7 +223,9 @@
     "promptHtml2": "<0><0>INTRODUCING</0><1>Data Stories</1><2>Create and share interactive stories directly from your map.</2></0>",
     "story": "Story",
     "dismissText": "Got it, thanks!",
-    "mobileViewStory": "View Stories {{storiesLength}}"
+    "mobileViewStory": "View Stories {{storiesLength}}",
+    "storyEditor": "Story Editor",
+    "hideStoryPanel": "hide story builder"
   },
   "satelliteGuidance": {
     "menuTitle": "You can access map guides at any time by looking in the <0>help menu</0>.",
@@ -479,6 +489,7 @@
       "esri-featureServer": "Esri ArcGIS FeatureServer (single layer)",
       "open-street-map": "Open Street Map Server",
       "geojson": "GeoJSON",
+      "geoRss": "GeoRSS",
       "kml": "KML or KMZ",
       "csv": "CSV",
       "czml": "CZML",
@@ -535,6 +546,12 @@
       "missingExteriorRing": "GML polygon is missing its exterior ring.",
       "missingPosList": "GML polygon's exterior ring is missing a posList.",
       "containsUnsupportedFeatureType": "GML contains unsupported feature type: {{type}}"
+    },
+    "geoRssToGeoJson": {
+      "containsUnsupportedFeatureType": "GeoRSS contains unsupported feature type: {{type}}"
+    },
+    "w3cToGeoJson": {
+      "containsUnsupportedFeatureType": "GeoRSS with W3C geometry contains unsupported feature type: {{type}}"
     },
     "gnafAddressGeocoder": {
       "noAddresses": "This tableStructure has no addresses!",
@@ -826,6 +843,9 @@
     },
     "mapboxVectorTile": {
       "name": "Mapbox Vector Tile"
+    },
+    "mapboxStyle": {
+      "name": "Mapbox Style"
     },
     "ogr": {
       "name": "Unknown / Converted to GeoJSON",

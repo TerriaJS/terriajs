@@ -61,6 +61,13 @@ const DropdownPanel = createReactClass({
     }
   },
 
+  openWithUserClick(e) {
+    if (this.props.userOnClick) {
+      this.props.userOnClick();
+    }
+    this.openPanel(e);
+  },
+
   render() {
     let iconGlyph;
     if (defined(Icon.GLYPHS[this.props.theme.icon])) {
@@ -76,7 +83,7 @@ const DropdownPanel = createReactClass({
         })}
       >
         <button
-          onClick={this.openPanel}
+          onClick={this.openWithUserClick}
           type="button"
           className={classNames(Styles.button, this.props.theme.btn)}
           title={this.props.btnTitle}
