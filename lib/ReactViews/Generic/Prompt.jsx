@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import FadeIn from "../Transitions/FadeIn/FadeIn";
-import Box, { BoxSpan } from "../../Styled/Box";
+import Box from "../../Styled/Box";
 import Spacing from "../../Styled/Spacing";
 import { TextSpan } from "../../Styled/Text";
 import { RawButton } from "../../Styled/Button";
@@ -35,7 +35,7 @@ class Prompt extends React.PureComponent {
           />
           {this.props.content}
           <Spacing bottom={3} />
-          <BoxSpan fullWidth centered={this.props.centered}>
+          <Box fullWidth centered={this.props.centered}>
             <RawButton
               title={this.props.dismissText}
               onClick={this.props.dismissAction}
@@ -44,7 +44,7 @@ class Prompt extends React.PureComponent {
                 {this.props.dismissText}
               </TextSpan>
             </RawButton>
-          </BoxSpan>
+          </Box>
         </Box>
       </FadeIn>
     );

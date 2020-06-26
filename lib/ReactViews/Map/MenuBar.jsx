@@ -61,34 +61,29 @@ const MenuBar = observer(props => {
   const storyEnabled = props.terria.configParameters.storyEnabled;
   const enableTools = props.terria.getUserProperty("tools") === "1";
 
-  const promptHtml =
-    props.terria.stories.length > 0 ? (
-      <Trans i18nKey="story.promptHtml1">
-        <Text extraLarge textLight textAlignCenter>
-          You can view and create stories at any time by clicking here.
-        </Text>
-      </Trans>
-    ) : (
-      <Trans i18nKey="story.promptHtml2">
-        <div>
-          <Text textLight textAlignCenter>
-            INTRODUCING
+  const promptHtml = (
+    <Text textLight textAlignCenter>
+      {props.terria.stories.length > 0 ? (
+        <Trans i18nKey="story.promptHtml1">
+          <Text extraLarge>
+            You can view and create stories at any time by clicking here.
           </Text>
-          <Text
-            bold
-            extraExtraLarge
-            styledLineHeight={"32px"}
-            textLight
-            textAlignCenter
-          >
-            Data Stories
-          </Text>
-          <Text medium textLight textAlignCenter>
-            Create and share interactive stories directly from your map.
-          </Text>
-        </div>
-      </Trans>
-    );
+        </Trans>
+      ) : (
+        <Trans i18nKey="story.promptHtml2">
+          <div>
+            <Text>INTRODUCING</Text>
+            <Text bold extraExtraLarge styledLineHeight={"32px"}>
+              Data Stories
+            </Text>
+            <Text medium>
+              Create and share interactive stories directly from your map.
+            </Text>
+          </div>
+        </Trans>
+      )}
+    </Text>
+  );
   const delayTime =
     storyEnabled && props.terria.stories.length > 0 ? 1000 : 2000;
   return (
