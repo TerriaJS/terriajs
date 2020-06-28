@@ -35,7 +35,7 @@ export default class ShortReport extends React.Component<{
       (!isDefined(this.props.item.shortReportSections) ||
         this.props.item.shortReportSections.length === 0)
     ) {
-      return;
+      return null;
     }
     return (
       <div className={Styles.shortReport}>
