@@ -22,7 +22,7 @@
   box-shadow: $box-shadow;
   z-index: 20;
   border-radius: $radius-small;
-  background: $dark;
+  // background: $dark;
   color: $text-light;
   border: $border-style;
   max-width: calc(100vw - 10px);
@@ -96,7 +96,7 @@
   display: block;
   height: 20px;
   width: 20px;
-  background: $dark;
+  // background: $dark;
   position: absolute;
   top: -10px;
   z-index: -1;

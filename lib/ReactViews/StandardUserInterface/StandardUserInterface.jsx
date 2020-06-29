@@ -69,6 +69,35 @@ const GlobalTerriaStyles = createGlobalStyle`
       }
     }
   }
+
+  .tjs-_buttons__btn-primary {
+    color: ${p => p.theme.textLight};
+    background: ${p => p.theme.colorPrimary};
+    &:hover,
+    &:focus {
+      color: ${p => p.theme.textLight};
+      background: ${p => p.theme.colorPrimary};
+    }
+  }
+  .tjs-_buttons__btn-primary:hover,
+  .tjs-_buttons__btn-primary:focus,
+  .tjs-_buttons__btn-primary--hover {
+
+  }
+
+  .tjs-share-panel__catalog-share-inner {
+    background: ${p => p.theme.greyLightest};
+  }
+  
+  .tjs-share-panel__btn--catalogShare {
+    color: ${p => p.theme.colorPrimary};
+    background:transparent;
+    svg {
+      fill: ${p => p.theme.colorPrimary};
+    }
+  }
+
+
   ${props =>
     props.experimentalFeatures &&
     `

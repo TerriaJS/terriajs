@@ -272,7 +272,12 @@ const StoryBuilder = observer(
         [Styles.isHidden]: !this.props.isVisible
       });
       return (
-        <div className={className}>
+        <div
+          className={className}
+          css={`
+            background: ${p => p.theme.dark};
+          `}
+        >
           <VideoGuide
             viewState={this.props.viewState}
             videoLink={"https://www.youtube.com/embed/fbiQawV8IYY"}

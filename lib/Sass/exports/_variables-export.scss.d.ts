@@ -18,6 +18,7 @@ interface CssExports {
   'mapNavigationTop': string;
   'md': string;
   'mobile': string;
+  'modalHighlight': string;
   'overlay': string;
   'overlayInvert': string;
   'radius40Button': string;
