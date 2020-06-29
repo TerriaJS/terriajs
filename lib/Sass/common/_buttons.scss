@@ -230,13 +230,13 @@ $btn-setting-size: 35px;
 .btn--map {
   font-size: $font-size-small;
   padding: 5px;
-  color: $text-light;
+  // color: $text-light;
   display: block;
   // display: flex;
   min-height: 32px;
   font-family: $font-pop;
   // opacity: 0.95; // new design has opaque map buttons?
-  background-color: $dark;
+  // background-color: $dark;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
 
   // Can't apply these atm

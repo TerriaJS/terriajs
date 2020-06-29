@@ -39,7 +39,6 @@
 
 .ui {
   overflow: hidden;
-  background: $dark;
   width: 100%;
   height: 100%;
 }
@@ -51,7 +50,6 @@
 .sidePanel {
   position: relative;
   font-family: $font-pop;
-  background: $dark;
   width: $work-bench-width;
   flex-basis: $work-bench-width;
   max-width: $work-bench-width;

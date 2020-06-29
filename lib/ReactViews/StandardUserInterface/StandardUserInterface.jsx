@@ -52,6 +52,23 @@ export const showStoryPrompt = (viewState, terria) => {
     viewState.toggleFeaturePrompt("story", true);
 };
 const GlobalTerriaStyles = createGlobalStyle`
+  // Theme-ify sass classes until they are removed
+  .tjs-_buttons__btn--map {
+    color: ${p => p.theme.textLight};
+    background-color: ${p => p.theme.dark};
+    &:hover,
+    &:focus,
+    .is-open &,
+    &.is-active {
+      background: ${p => p.theme.colorPrimary};
+    }
+    &:hover,
+    &:focus {
+      svg {
+        fill: ${p => p.theme.textLight};
+      }
+    }
+  }
   ${props =>
     props.experimentalFeatures &&
     `
@@ -170,6 +187,7 @@ const StandardUserInterface = observer(
     render() {
       const { t } = this.props;
       const mergedTheme = combine(this.props.themeOverrides, terriaTheme, true);
+      const theme = mergedTheme;
 
       const customElements = processCustomElements(
         this.props.viewState.useSmallScreenInterface,
@@ -214,7 +232,12 @@ const StandardUserInterface = observer(
               `}
               ref={w => (this._wrapper = w)}
             >
-              <div className={Styles.ui}>
+              <div
+                className={Styles.ui}
+                css={`
+                  background: ${theme.dark};
+                `}
+              >
                 <div className={Styles.uiInner}>
                   <If condition={!this.props.viewState.hideMapUi()}>
                     <Small>
