@@ -5,6 +5,7 @@ Change Log
 
 #### next release (mobx-36)
 * (placeholder)
+* Re-added chart disclaimer
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-35
