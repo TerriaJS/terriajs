@@ -35,7 +35,17 @@ const ChartDisclaimer: React.FC<ChartDisclaimerProps> = ({ terria }) => {
   ];
 
   return (
-    <Box backgroundColor="#9a4b4b" column css={{ padding: "0 10px" }}>
+    <Box
+      backgroundColor="#9a4b4b"
+      column
+      css={`
+        padding: "0 10px";
+        a,
+        a:visited {
+          color: white;
+        }
+      `}
+    >
       <Spacing bottom={2} />
       {uniqueChartDisclaimers.map(chartDisclaimer => (
         <React.Fragment key={chartDisclaimer}>
