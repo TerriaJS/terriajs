@@ -96,6 +96,7 @@ class HelpVideoPanel extends React.Component {
             )}
             {this.props.markdownContent && (
               <StyledHtml
+                key={"markdownContent"}
                 viewState={this.props.viewState}
                 markdown={this.props.markdownContent}
               />
