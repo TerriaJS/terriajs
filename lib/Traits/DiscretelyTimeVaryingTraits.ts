@@ -36,6 +36,9 @@ export default class DiscretelyTimeVaryingTraits extends mixTraits(
   })
   chartType: ChartItemType = "momentLines";
 
+  // This trait proabably doesn't belong here and should instead be on a new
+  //  trait class ChartTraits, however there are complexities to changing
+  //  chart-related traits, mixins and interfaces to support this change.
   @primitiveTrait({
     type: "string",
     name: "Chart Disclaimer",

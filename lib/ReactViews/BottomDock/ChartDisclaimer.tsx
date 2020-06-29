@@ -39,7 +39,7 @@ const ChartDisclaimer: React.FC<ChartDisclaimerProps> = ({ terria }) => {
       backgroundColor="#9a4b4b"
       column
       css={`
-        padding: "0 10px";
+        padding: 0 10px;
         a,
         a:visited {
           color: white;
