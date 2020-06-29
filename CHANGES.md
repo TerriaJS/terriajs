@@ -4,7 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (mobx-36)
-* (placeholder)
+* Make welcome video url and placeholder configurable via configparameters
 * Re-added chart disclaimer
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
