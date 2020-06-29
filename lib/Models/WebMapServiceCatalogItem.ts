@@ -529,6 +529,11 @@ class WebMapServiceCatalogItem
     return this.loadMetadata();
   }
 
+  @computed
+  get exportEnabled() {
+    return isDefined(this.linkedWcsCoverage) && isDefined(this.linkedWcsUrl);
+  }
+
   exportData() {
     return callWebCoverageService(this);
   }
