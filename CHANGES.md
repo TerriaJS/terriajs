@@ -5,6 +5,12 @@ Change Log
 
 #### next release (mobx-36)
 * Make welcome video url and placeholder configurable via configparameters
+* Added `ExportableData` interface.
+* Added `ExportData` component for data catalog.
+* Added WCS "clip and ship" for WMS
+* Added basic CSV export function
+* Extend `UserDrawing` to handle rectangles
+* Tsxify `MapInteractionMode`
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-35
@@ -17,13 +23,6 @@ Change Log
 * Changed the `Tool` interface, now accepting prop `getToolComponent` instead of `toolComponent`
 * Added `ToolButton` for loading/unloading a tool
 * Added `TransformationTraits` that can be used to change position/rotation/scale of a model.
-* Added `ExportableData` interface.
-* Added `ExportData` component for data catalog.
-* Added WCS "clip and ship" for WMS
-* Added basic CSV export function
-* Extend `UserDrawing` to handle rectangles
-* Tsxify `MapInteractionMode`
-* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 * Added a new `editor` Icon
 * Changed `ToolButton` to show the same icon in open/close state. Previously it showed a close icon in close state.
 
