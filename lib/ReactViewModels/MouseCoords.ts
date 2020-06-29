@@ -29,7 +29,6 @@ export default class MouseCoords {
   readonly proj4Projection: string;
   readonly projectionUnits: string;
   readonly proj4longlat: string;
-  readonly lastHeightSamplePosition: Cartographic;
   readonly accurateSamplingDebounceTime: number;
   readonly debounceSampleAccurateHeight: ((
     terrainProvider: TerrainProvider,
@@ -44,6 +43,7 @@ export default class MouseCoords {
   @observable longitude?: string;
   @observable north?: unknown;
   @observable east?: unknown;
+  @observable cartographic?: Cartographic;
   @observable useProjection = false;
 
   constructor() {
@@ -55,7 +55,6 @@ export default class MouseCoords {
     this.proj4longlat =
       "+proj=longlat +ellps=WGS84 +datum=WGS84 +units=degrees +no_defs";
 
-    this.lastHeightSamplePosition = new Cartographic();
     this.accurateSamplingDebounceTime = 250;
     this.tileRequestInFlight = undefined;
 
@@ -139,7 +138,6 @@ export default class MouseCoords {
           Math.abs(maxHeightGeoid - approximateHeight)
         );
       }
-      Cartographic.clone(intersection, this.lastHeightSamplePosition);
       const terrainProvider = globe.terrainProvider;
 
       this.cartographicToFields(intersection, errorBar);
@@ -171,6 +169,8 @@ export default class MouseCoords {
 
   @action
   cartographicToFields(coordinates: Cartographic, errorBar?: number) {
+    this.cartographic = Cartographic.clone(coordinates);
+
     const latitude = CesiumMath.toDegrees(coordinates.latitude);
     const longitude = CesiumMath.toDegrees(coordinates.longitude);
 
@@ -219,7 +219,7 @@ export default class MouseCoords {
       .then(result => {
         const geoidHeight = result[0] || 0.0;
         this.tileRequestInFlight = undefined;
-        if (Cartographic.equals(position, this.lastHeightSamplePosition)) {
+        if (Cartographic.equals(position, this.cartographic)) {
           position.height = positionWithHeight.height - geoidHeight;
           this.cartographicToFields(position);
         } else {
