@@ -53,6 +53,10 @@ export const showStoryPrompt = (viewState, terria) => {
 };
 const GlobalTerriaStyles = createGlobalStyle`
   // Theme-ify sass classes until they are removed
+
+  // We override the primary, secondary, map and share buttons here as they
+  // are imported everywhere and used in various ways - until we remove sass
+  // this is the quickest way to tackle them for now
   .tjs-_buttons__btn--map {
     color: ${p => p.theme.textLight};
     background-color: ${p => p.theme.dark};
@@ -83,6 +87,18 @@ const GlobalTerriaStyles = createGlobalStyle`
   .tjs-_buttons__btn-primary:focus,
   .tjs-_buttons__btn-primary--hover {
 
+  }
+
+  .tjs-_buttons__btn--secondary, 
+  .tjs-_buttons__btn--close-modal {
+    color: ${p => p.theme.colorPrimary};
+    // Don't override border here on secondary, as it's set specifically on certain buttons e.g. story cancel button
+
+    &:hover,
+    &:focus {
+      border: 2px solid ${p => p.theme.colorPrimary};
+      color: ${p => p.theme.colorPrimary};
+    }
   }
 
   .tjs-share-panel__catalog-share-inner {

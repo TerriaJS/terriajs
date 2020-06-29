@@ -91,21 +91,21 @@
 }
 
 .intro {
-  background: $dark-with-overlay;
-  color: $text-light;
+  // background: $dark-with-overlay;
+  // color: $text-light;
   font-family: $font-pop;
   margin: $padding $padding 0 $padding;
   border-radius: 4px;
   text-align: center;
   padding: 30px 10px;
-  color: $text-light-dimmed;
+  // color: $text-light-dimmed;
   strong {
-    color: $text-light;
+    // color: $text-light;
   }
   svg {
     width: 70px;
     height: 70px;
-    fill: $text-light-dimmed;
+    // fill: $text-light-dimmed;
     margin: 20px auto;
   }
 }

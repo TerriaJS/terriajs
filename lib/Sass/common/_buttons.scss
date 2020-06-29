@@ -97,14 +97,14 @@ $btn-setting-size: 35px;
 }
 
 .btn--secondary {
-  color: $color-primary;
+  // color: $color-primary;
   border: $color-primary;
   border-radius: 4px;
 
   &:hover,
   &:focus {
-    border: 2px solid get-hover-color($color-primary);
-    color: get-hover-color($color-primary);
+    // border: 2px solid get-hover-color($color-primary);
+    // color: get-hover-color($color-primary);
   }
 }
 

@@ -184,7 +184,19 @@ const StoryBuilder = observer(
 
     renderIntro() {
       return (
-        <div className={Styles.intro}>
+        <div
+          className={Styles.intro}
+          css={`
+            background: ${p => p.theme.darkWithOverlay};
+            color: ${p => p.theme.textLightDimmed};
+            strong {
+              color: ${p => p.theme.textLight};
+            }
+            svg {
+              fill: ${p => p.theme.textLightDimmed};
+            }
+          `}
+        >
           <Icon glyph={Icon.GLYPHS.story} />{" "}
           <Trans i18nKey="story.message">
             <strong>This is your story editor</strong>
