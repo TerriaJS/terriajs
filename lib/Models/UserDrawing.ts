@@ -64,7 +64,7 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
   private disposePickedFeatureSubscription?: () => void;
   private drawRectangle: boolean;
 
-  private mouseMoveObserveDispose?: Lambda;
+  private mouseMoveDispose?: Lambda;
 
   constructor(options: Options) {
     super(createGuid(), options.terria);
@@ -304,19 +304,24 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
         runInAction(() => (viewState.explorerPanelIsVisible = false));
 
         if (this.drawRectangle) {
-          this.mouseMoveObserveDispose = observe(viewState.mouseCoords, () => {
-            const mousePoint = this.otherEntities.entities.getById(
-              "mousePoint"
-            );
+          this.mouseMoveDispose = reaction(
+            () => viewState.mouseCoords.cartographic,
+            mouseCoordsCartographic => {
+              if (!isDefined(mouseCoordsCartographic)) return;
 
-            if (isDefined(mousePoint)) {
-              mousePoint.position = new ConstantPositionProperty(
-                Ellipsoid.WGS84.cartographicToCartesian(
-                  viewState.mouseCoords.lastHeightSamplePosition
-                )
+              const mousePoint = this.otherEntities.entities.getById(
+                "mousePoint"
               );
+
+              if (isDefined(mousePoint)) {
+                mousePoint.position = new ConstantPositionProperty(
+                  Ellipsoid.WGS84.cartographicToCartesian(
+                    mouseCoordsCartographic
+                  )
+                );
+              }
             }
-          });
+          );
         }
       }
     });
@@ -462,8 +467,8 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
       }
     }
 
-    if (isDefined(this.mouseMoveObserveDispose)) {
-      this.mouseMoveObserveDispose();
+    if (isDefined(this.mouseMoveDispose)) {
+      this.mouseMoveDispose();
     }
 
     // Allow client to clean up too
