@@ -165,9 +165,12 @@ export const WelcomeMessagePure = props => {
         >
           <VideoGuide
             viewState={viewState}
-            videoLink={"https://www.youtube.com/embed/NTtSM70rIvI"}
+            videoLink={
+              viewState.terria.configParameters.welcomeMessageVideo.videoUrl
+            }
             background={
-              "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
+              viewState.terria.configParameters.welcomeMessageVideo
+                .placeholderImage
             }
             videoName={WELCOME_MESSAGE_VIDEO}
           />
@@ -221,7 +224,8 @@ export const WelcomeMessagePure = props => {
                     col6
                     centered
                     backgroundImage={
-                      "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
+                      viewState.terria.configParameters.welcomeMessageVideo
+                        .placeholderImage
                     }
                     backgroundBlackOverlay={"50%"}
                   >
