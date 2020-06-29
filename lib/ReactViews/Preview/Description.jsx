@@ -16,6 +16,8 @@ import Styles from "./mappable-preview.scss";
 import { observer } from "mobx-react";
 import AUpageAlert from "@gov.au/page-alerts";
 
+import ExportData from "./ExportData";
+
 /**
  * CatalogItem description.
  */
@@ -266,7 +268,7 @@ const Description = observer(
                     {catalogItem.dataUrl.startsWith("data:") && (
                       <Link
                         url={catalogItem.dataUrl}
-                        text={t("description.downloadData")}
+                        text={t("description.exportData")}
                       />
                     )}
                     {!catalogItem.dataUrl.startsWith("data:") && (
@@ -335,6 +337,7 @@ const Description = observer(
               </If>
             </If>
           </If>
+          <ExportData item={catalogItem}></ExportData>
         </div>
       );
     }
