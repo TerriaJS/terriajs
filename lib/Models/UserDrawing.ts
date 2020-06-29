@@ -1,34 +1,27 @@
-import {
-  autorun,
-  computed,
-  runInAction,
-  reaction,
-  observe,
-  Lambda
-} from "mobx";
+import i18next from "i18next";
+import { computed, IReactionDisposer, reaction, runInAction } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Color from "terriajs-cesium/Source/Core/Color";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import CallbackProperty from "terriajs-cesium/Source/DataSources/CallbackProperty";
+import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import PolylineGlowMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineGlowMaterialProperty";
 import isDefined from "../Core/isDefined";
 import DragPoints from "../Map/DragPoints";
+import ViewState from "../ReactViewModels/ViewState";
 import ModelTraits from "../Traits/ModelTraits";
 import CreateModel from "./CreateModel";
 import MapInteractionMode from "./MapInteractionMode";
 import Terria from "./Terria";
-import i18next from "i18next";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
-import ViewState from "../ReactViewModels/ViewState";
 
 interface Options {
   terria: Terria;
@@ -64,7 +57,7 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
   private disposePickedFeatureSubscription?: () => void;
   private drawRectangle: boolean;
 
-  private mouseMoveDispose?: Lambda;
+  private mouseMoveDispose?: IReactionDisposer;
 
   constructor(options: Options) {
     super(createGuid(), options.terria);
