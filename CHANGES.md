@@ -5,7 +5,14 @@ Change Log
 
 #### next release (mobx-36)
 * Added `pointer-events` to `MapNavigation` and `MenuBar` elements, so the bar don't block mouse click outside of the button.
-* (placeholder)
+* Use `useTranslation` instead of `withTranslation` in functional component (`MapDataCount`)
+* Make welcome video url and placeholder configurable via configparameters
+* Added `ExportableData` interface.
+* Added `ExportData` component for data catalog.
+* Added WCS "clip and ship" for WMS
+* Added basic CSV export function
+* Extend `UserDrawing` to handle rectangles
+* Tsxify `MapInteractionMode`
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-35

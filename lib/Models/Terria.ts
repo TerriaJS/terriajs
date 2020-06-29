@@ -92,6 +92,7 @@ interface ConfigParameters {
   rollbarAccessToken?: string;
   globalDisclaimer?: any;
   showWelcomeMessage?: boolean;
+  welcomeMessageVideo?: any;
   showInAppGuides?: boolean;
   helpContent?: HelpContentItem[];
   helpContentTerms?: Term[];
@@ -206,6 +207,11 @@ export default class Terria {
     rollbarAccessToken: undefined,
     globalDisclaimer: undefined,
     showWelcomeMessage: false,
+    welcomeMessageVideo: {
+      videoUrl: "https://www.youtube.com/embed/NTtSM70rIvI",
+      placeholderImage:
+        "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
+    },
     showInAppGuides: false,
     helpContent: [],
     helpContentTerms: defaultTerms

@@ -16,6 +16,7 @@ import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDire
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import getDereferencedIfExists from "../../../Core/getDereferencedIfExists";
 import getPath from "../../../Core/getPath";
+import TerriaError from "../../../Core/TerriaError";
 import PickedFeatures from "../../../Map/PickedFeatures";
 import addUserCatalogMember from "../../../Models/addUserCatalogMember";
 import CommonStrata from "../../../Models/CommonStrata";
@@ -26,6 +27,8 @@ import { RawButton } from "../../../Styled/Button";
 import Icon, { StyledIcon } from "../../Icon";
 import WorkbenchButton from "../WorkbenchButton";
 import Styles from "./viewing-controls.scss";
+import ExportableData from "../../../Models/ExportableData";
+import { exportData } from "../../Preview/ExportData";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -225,7 +228,12 @@ const ViewingControls = observer(
 
     exportData() {
       const item = this.props.item;
-      item.exportData();
+
+      exportData(item).catch(e => {
+        if (e instanceof TerriaError) {
+          this.props.item.terria.error.raiseEvent(e);
+        }
+      });
     },
 
     renderViewingControlsMenu() {
@@ -284,7 +292,7 @@ const ViewingControls = observer(
               </ViewingControlMenuButton>
             </li>
           </If>
-          <If condition={defined(item.linkedWcsUrl)}>
+          <If condition={ExportableData.is(item)}>
             <li className={classNames(Styles.info)}>
               <ViewingControlMenuButton
                 onClick={this.exportData}

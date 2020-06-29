@@ -748,6 +748,7 @@
     },
     "wcs": {
       "asyncResultDescription": "This is the result of exporting data from {{name}} service at {{timestamp}} with the input parameters below.",
+      "asyncPendingDescription": "WCS loading:<br/>{{name}} service at {{timestamp}}.",
       "exportFailedTitle": "Data export failed",
       "exportFailedMessage": "The Web Coverage Service failed",
       "exportFailedMessageII": "The Web Coverage Service failed: {{error}}"
