@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (mobx-36)
+* Use `useTranslation` instead of `withTranslation` in functional component (`MapDataCount`)
 * Make welcome video url and placeholder configurable via configparameters
 * Added `ExportableData` interface.
 * Added `ExportData` component for data catalog.
