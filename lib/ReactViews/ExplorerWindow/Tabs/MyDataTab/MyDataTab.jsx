@@ -72,6 +72,16 @@ const MyDataTab = observer(
                 className={classNames(Styles.tabListBtn, {
                   [Styles.isActive]: this.state.activeTab === tab.id
                 })}
+                css={`
+                  color: ${p => p.theme.colorPrimary};
+                  &:hover,
+                  &:focus {
+                    color: ${p => p.theme.grey};
+                  }
+                  svg {
+                    fill: ${p => p.theme.colorPrimary};
+                  }
+                `}
               >
                 <Icon glyph={Icon.GLYPHS[tab.id]} />
                 {tab.caption}
@@ -127,6 +137,16 @@ const MyDataTab = observer(
                 type="button"
                 onClick={this.resetTab}
                 className={Styles.btnBackToMyData}
+                css={`
+                  color: ${p => p.theme.colorPrimary};
+                  &:hover,
+                  &:focus {
+                    border: 1px solid ${p => p.theme.colorPrimary};
+                  }
+                  svg {
+                    fill: ${p => p.theme.colorPrimary};
+                  }
+                `}
               >
                 <Icon glyph={Icon.GLYPHS.left} />
                 {t("addData.back")}

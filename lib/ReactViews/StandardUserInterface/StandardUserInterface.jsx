@@ -101,6 +101,11 @@ const GlobalTerriaStyles = createGlobalStyle`
     }
   }
 
+  .tjs-_buttons__btn-small:hover,
+  .tjs-_buttons__btn-small:focus {
+    color: ${p => p.theme.colorPrimary};
+  }
+
   .tjs-share-panel__catalog-share-inner {
     background: ${p => p.theme.greyLightest};
   }
@@ -111,6 +116,19 @@ const GlobalTerriaStyles = createGlobalStyle`
     svg {
       fill: ${p => p.theme.colorPrimary};
     }
+  }
+  .tjs-dropdown__btn--dropdown {
+    color: ${p => p.theme.textDark};
+    background: ${p => p.theme.textLight};
+    &:hover,
+    &:focus {
+      color: ${p => p.theme.textDark};
+      background: ${p => p.theme.textLight};
+      border: 1px solid ${p => p.theme.colorPrimary};
+    }
+  }
+  .tjs-dropdown__btn--option.tjs-dropdown__is-selected {
+    color: ${p => p.theme.colorPrimary};
   }
 
 
