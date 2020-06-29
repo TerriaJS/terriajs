@@ -10,13 +10,14 @@ import EntityCollection from "terriajs-cesium/Source/DataSources/EntityCollectio
 import EntityCluster from "terriajs-cesium/Source/DataSources/EntityCluster";
 import isDefined from "../Core/isDefined";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import L, { LatLngBounds, PolylineOptions } from "leaflet";
+import L, { LatLngBounds, PolylineOptions, LatLngBoundsLiteral } from "leaflet";
 import LeafletScene from "./LeafletScene";
 import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
 import PolylineGlowMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineGlowMaterialProperty";
 import PolylineDashMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineDashMaterialProperty";
 import Property from "terriajs-cesium/Source/DataSources/Property";
 import { getLineStyleLeaflet } from "../Models/esriLineStyle";
+import { Rectangle } from "cesium";
 
 const destroyObject = require("terriajs-cesium/Source/Core/destroyObject")
   .default;
@@ -41,6 +42,14 @@ interface PolygonDetails {
   lastOutlineColor: Color;
 }
 
+interface RectangleDetails {
+  layer?: L.Rectangle;
+  lastFill?: boolean;
+  lastFillColor: Color;
+  lastOutline?: boolean;
+  lastOutlineColor: Color;
+}
+
 interface BillboardDetails {
   layer?: L.Marker;
 }
@@ -59,6 +68,7 @@ interface EntityDetails {
   billboard?: BillboardDetails;
   label?: LabelDetails;
   polyline?: PolylineDetails;
+  rectangle?: RectangleDetails;
 }
 
 interface EntityHash {
@@ -138,7 +148,8 @@ class LeafletGeomVisualizer {
           isDefined(entity.label)) &&
           isDefined(entity.position)) ||
         isDefined(entity.polyline) ||
-        isDefined(entity.polygon)
+        isDefined(entity.polygon) ||
+        isDefined(entity.rectangle)
       ) {
         entities.set(entity.id, entity);
         entityHash[entity.id] = {};
@@ -153,7 +164,8 @@ class LeafletGeomVisualizer {
           isDefined(entity.label)) &&
           isDefined(entity.position)) ||
         isDefined(entity.polyline) ||
-        isDefined(entity.polygon)
+        isDefined(entity.polygon) ||
+        isDefined(entity.rectangle)
       ) {
         entities.set(entity.id, entity);
         entityHash[entity.id] = entityHash[entity.id] || {};
@@ -221,6 +233,9 @@ class LeafletGeomVisualizer {
       }
       if (isDefined(entity.polygon)) {
         this._updatePolygon(entity, time, entityHash, entityDetails);
+      }
+      if (isDefined(entity.rectangle)) {
+        this._updateRectangle(entity, time, entityHash, entityDetails);
       }
     }
     prevBoundsType = currentBoundsType;
@@ -607,6 +622,152 @@ class LeafletGeomVisualizer {
         drawBillboard(img, imageUrl);
       };
       img.src = imageUrl;
+    }
+  }
+
+  private _updateRectangle(
+    entity: Entity,
+    time: JulianDate,
+    _entityHash: EntityHash,
+    entityDetails: EntityDetails
+  ) {
+    const featureGroup = this._featureGroup;
+    const rectangleGraphics = entity.rectangle;
+
+    const show =
+      entity.isAvailable(time) &&
+      getValueOrDefault(rectangleGraphics.show, time, true);
+
+    const rectangleCoordinates = rectangleGraphics.coordinates?.getValue(
+      time
+    ) as Rectangle;
+
+    if (!show || !isDefined(rectangleCoordinates)) {
+      cleanRectangle(entity, featureGroup, entityDetails);
+      return;
+    }
+
+    const rectangleBounds: LatLngBoundsLiteral = [
+      [
+        CesiumMath.toDegrees(rectangleCoordinates.south),
+        CesiumMath.toDegrees(rectangleCoordinates.west)
+      ],
+      [
+        CesiumMath.toDegrees(rectangleCoordinates.north),
+        CesiumMath.toDegrees(rectangleCoordinates.east)
+      ]
+    ];
+
+    let details = entityDetails.rectangle;
+    if (!isDefined(details)) {
+      details = entityDetails.rectangle = {
+        layer: undefined,
+        lastFill: undefined,
+        lastFillColor: new Color(),
+        lastOutline: undefined,
+        lastOutlineColor: new Color()
+      };
+    }
+    const fill = getValueOrDefault(
+      (rectangleGraphics.fill as unknown) as Property,
+      time,
+      true
+    );
+    const outline = getValueOrDefault(rectangleGraphics.outline, time, true);
+    let dashArray;
+    if (rectangleGraphics.outline instanceof PolylineDashMaterialProperty) {
+      dashArray = getDashArray(rectangleGraphics.outline, time);
+    }
+
+    const outlineWidth = getValueOrDefault(
+      (rectangleGraphics.outlineWidth as unknown) as Property,
+      time,
+      defaultOutlineWidth
+    );
+
+    const outlineColor = getValueOrDefault(
+      (rectangleGraphics.outlineColor as unknown) as Property,
+      time,
+      defaultOutlineColor
+    );
+
+    const material = getValueOrUndefined(
+      (rectangleGraphics.material as unknown) as Property,
+      time
+    );
+    let fillColor;
+    if (isDefined(material) && isDefined(material.color)) {
+      fillColor = material.color;
+    } else {
+      fillColor = defaultColor;
+    }
+
+    let layer = details.layer;
+    if (!isDefined(layer)) {
+      const polygonOptions: PolylineOptions = {
+        fill: fill,
+        fillColor: fillColor.toCssColorString(),
+        fillOpacity: fillColor.alpha,
+        weight: outline ? outlineWidth : 0.0,
+        color: outlineColor.toCssColorString(),
+        opacity: outlineColor.alpha
+      };
+
+      if (outline && dashArray) {
+        polygonOptions.dashArray = dashArray
+          .map(x => x * outlineWidth)
+          .join(",");
+      }
+
+      layer = details.layer = L.rectangle(rectangleBounds, polygonOptions);
+
+      layer.on("click", featureClicked.bind(undefined, this, entity));
+      layer.on("mousedown", featureMousedown.bind(undefined, this, entity));
+      featureGroup.addLayer(layer);
+
+      details.lastFill = fill;
+      details.lastOutline = outline;
+      Color.clone(fillColor, details.lastFillColor);
+      Color.clone(outlineColor, details.lastOutlineColor);
+
+      return;
+    }
+
+    const options = layer.options;
+    let applyStyle = false;
+
+    if (fill !== details.lastFill) {
+      options.fill = fill;
+      details.lastFill = fill;
+      applyStyle = true;
+    }
+
+    if (outline !== details.lastOutline) {
+      options.weight = outline ? outlineWidth : 0.0;
+      details.lastOutline = outline;
+      applyStyle = true;
+    }
+
+    if (!Color.equals(fillColor, details.lastFillColor)) {
+      options.fillColor = fillColor.toCssColorString();
+      options.fillOpacity = fillColor.alpha;
+      Color.clone(fillColor, details.lastFillColor);
+      applyStyle = true;
+    }
+
+    if (!Color.equals(outlineColor, details.lastOutlineColor)) {
+      options.color = outlineColor.toCssColorString();
+      options.opacity = outlineColor.alpha;
+      Color.clone(outlineColor, details.lastOutlineColor);
+      applyStyle = true;
+    }
+
+    if (!layer.getBounds().equals(rectangleBounds)) {
+      layer.setBounds(rectangleBounds);
+    }
+
+    if (applyStyle) {
+      layer.setStyle(options);
     }
   }
 
@@ -1008,6 +1169,17 @@ function cleanPolyline(
   if (isDefined(details.polyline) && isDefined(details.polyline.layer)) {
     group.removeLayer(details.polyline.layer);
     details.polyline = undefined;
+  }
+}
+
+function cleanRectangle(
+  _entity: Entity,
+  group: L.FeatureGroup,
+  details: EntityDetails
+) {
+  if (isDefined(details.rectangle) && isDefined(details.rectangle.layer)) {
+    group.removeLayer(details.rectangle.layer);
+    details.rectangle = undefined;
   }
 }
 
