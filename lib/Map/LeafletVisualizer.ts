@@ -16,8 +16,8 @@ import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
 import PolylineGlowMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineGlowMaterialProperty";
 import PolylineDashMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineDashMaterialProperty";
 import Property from "terriajs-cesium/Source/DataSources/Property";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import { getLineStyleLeaflet } from "../Models/esriLineStyle";
-import { Rectangle } from "cesium";
 
 const destroyObject = require("terriajs-cesium/Source/Core/destroyObject")
   .default;
