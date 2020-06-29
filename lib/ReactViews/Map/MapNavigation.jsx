@@ -28,6 +28,7 @@ import { runInAction } from "mobx";
 import { withTranslation } from "react-i18next";
 
 const StyledMapNavigation = styled.div`
+  pointer-events: none;
   ${p =>
     p.trainerBarVisible &&
     `
