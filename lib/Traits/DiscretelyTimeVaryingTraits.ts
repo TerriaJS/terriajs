@@ -37,6 +37,13 @@ export default class DiscretelyTimeVaryingTraits extends mixTraits(
   chartType: ChartItemType = "momentLines";
 
   @primitiveTrait({
+    type: "string",
+    name: "Chart Disclaimer",
+    description: "A HTML string to show above the chart as a disclaimer"
+  })
+  chartDisclaimer?: string;
+
+  @primitiveTrait({
     type: "boolean",
     name: "Disable date time selector",
     description: "When true, disables the date time selector in the workbench"
