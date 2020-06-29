@@ -3,12 +3,10 @@
 interface CssExports {
   'btn--advanced': string;
   'btn--catalogShare': string;
-  'btn--storyShare': string;
   'btn--withoutText': string;
   'btn--wrapper': string;
   'btnAdvanced': string;
   'btnCatalogShare': string;
-  'btnStoryShare': string;
   'btnWithoutText': string;
   'btnWrapper': string;
   'catalog-share': string;
@@ -40,10 +38,6 @@ interface CssExports {
   'shareUrlfield': string;
   'shorten-url': string;
   'shortenUrl': string;
-  'story-share': string;
-  'story-share-inner': string;
-  'storyShare': string;
-  'storyShareInner': string;
   'warning': string;
   'warning-link': string;
   'warningLink': string;

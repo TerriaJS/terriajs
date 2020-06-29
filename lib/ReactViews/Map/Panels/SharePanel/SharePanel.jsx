@@ -530,16 +530,13 @@ const SharePanel = observer(
       const dropdownTheme = {
         btn: classNames({
           [Styles.btnCatalogShare]: catalogShare,
-          [Styles.btnStoryShare]: storyShare,
           [Styles.btnWithoutText]: catalogShareWithoutText
         }),
         outer: classNames(Styles.sharePanel, {
-          [Styles.catalogShare]: catalogShare,
-          [Styles.storyShare]: storyShare
+          [Styles.catalogShare]: catalogShare
         }),
         inner: classNames(Styles.dropdownInner, {
-          [Styles.catalogShareInner]: catalogShare,
-          [Styles.storyShareInner]: storyShare
+          [Styles.catalogShareInner]: catalogShare
         }),
         icon: "share"
       };
