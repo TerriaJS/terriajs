@@ -3,9 +3,17 @@ Change Log
 
 ### MobX Development
 
-#### next release (mobx-35)
+#### next release (mobx-36)
+* Make welcome video url and placeholder configurable via configparameters
+* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
+
+#### mobx-35
 * Add "Upload" to tour points
+* Add tooltips anywhere required in UI via `parseCustomMarkdownToReactWithOptions` & customisable via `helpContentTerms` 
 * Add "map state" map data count to highlight state of map data
+* Add a reminder "pop-up" that shows the location of the help button
+* Fix bug causing story pop-up to be off screen
+* Fix bug causing helpful hints to be cut off on smaller screens
 * Changed the `Tool` interface, now accepting prop `getToolComponent` instead of `toolComponent`
 * Added `ToolButton` for loading/unloading a tool
 * Added `TransformationTraits` that can be used to change position/rotation/scale of a model.
@@ -16,6 +24,8 @@ Change Log
 * Extend `UserDrawing` to handle rectangles
 * Tsxify `MapInteractionMode`
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
+* Added a new `editor` Icon
+* Changed `ToolButton` to show the same icon in open/close state. Previously it showed a close icon in close state.
 
 #### mobx-34
 * Bug fix for `DatePicker` in `BottomDock` causing app crash

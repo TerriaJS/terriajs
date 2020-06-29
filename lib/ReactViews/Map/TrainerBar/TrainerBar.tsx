@@ -17,7 +17,6 @@ import Terria from "../../../Models/Terria";
 
 import measureElement from "../../HOCs/measureElement";
 
-const parseCustomMarkdownToReact: any = require("../../Custom/parseCustomMarkdownToReact");
 const StyledHtml: any = require("../../Map/Panels/HelpPanel/StyledHtml")
   .default;
 const CloseButton: any = require("../../Generic/CloseButton").default;
@@ -74,6 +73,7 @@ const StepText = styled(Text).attrs({})`
 const renderStep = (
   step: StepItem,
   number: number,
+  viewState: ViewState,
   options: {
     renderDescription: boolean;
     comfortable: boolean;
@@ -101,11 +101,9 @@ const renderStep = (
           <Spacing bottom={options.comfortable ? 2 : 1} />
           <StepText medium textLightDimmed>
             <StyledHtml
+              viewState={viewState}
               styledTextProps={{ textDark: false, textLightDimmed: true }}
-              content={[
-                parseCustomMarkdownToReact(step.markdownDescription).props
-                  .children
-              ]}
+              markdown={step.markdownDescription}
             />
           </StepText>
           {options.footerComponent?.()}
@@ -115,10 +113,13 @@ const renderStep = (
   </Box>
 );
 
-const renderOrderedStepList = function(steps: StepItem[]) {
+const renderOrderedStepList = function(
+  steps: StepItem[],
+  viewState: ViewState
+) {
   return steps.map((step: StepItem, index: number) => (
     <React.Fragment key={index}>
-      {renderStep(step, index + 1)}
+      {renderStep(step, index + 1, viewState)}
       {index + 1 !== steps.length && <Spacing bottom={3} />}
     </React.Fragment>
   ));
@@ -183,6 +184,7 @@ class StepAccordionRaw extends React.Component<
           {renderStep(
             selectedTrainerSteps[viewState.currentTrainerStepIndex],
             viewState.currentTrainerStepIndex + 1,
+            viewState,
             { renderDescription: false, comfortable: true }
           )}
         </Box>
@@ -206,6 +208,7 @@ class StepAccordionRaw extends React.Component<
             {renderStep(
               selectedTrainerSteps[viewState.currentTrainerStepIndex],
               viewState.currentTrainerStepIndex + 1,
+              viewState,
               {
                 renderDescription: true,
                 comfortable: true,
@@ -270,17 +273,15 @@ class StepAccordionRaw extends React.Component<
               max-height: calc(100vh - ${heightFromMeasureElementHOC}px - 20px);
             `}
           >
-            {renderOrderedStepList(selectedTrainerSteps)}
+            {renderOrderedStepList(selectedTrainerSteps, viewState)}
             {selectedTrainer.footnote ? (
               <>
                 <Spacing bottom={3} />
                 <Text medium textLightDimmed>
                   <StyledHtml
+                    viewState={viewState}
                     styledTextProps={{ textDark: false, textLightDimmed: true }}
-                    content={[
-                      parseCustomMarkdownToReact(selectedTrainer.footnote).props
-                        .children
-                    ]}
+                    markdown={selectedTrainer.footnote}
                   />
                 </Text>
               </>

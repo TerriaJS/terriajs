@@ -18,6 +18,7 @@ import styled from "styled-components";
 import Button, { RawButton } from "../../Styled/Button";
 import { TourPortalDisplayName } from "../Tour/TourPortal";
 import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
+import { runInAction } from "mobx";
 
 export const WELCOME_MESSAGE_NAME = "welcomeMessage";
 export const LOCAL_PROPERTY_KEY = `${WELCOME_MESSAGE_NAME}Prompted`;
@@ -137,6 +138,12 @@ export const WelcomeMessagePure = props => {
             setShouldOpenHelp(false);
             viewState.showHelpPanel();
           }
+          // Show where help is when never previously prompted
+          if (!viewState.terria.getLocalProperty("helpPrompted")) {
+            runInAction(() => {
+              viewState.toggleFeaturePrompt("help", true, false);
+            });
+          }
         }
       }}
     >
@@ -158,9 +165,12 @@ export const WelcomeMessagePure = props => {
         >
           <VideoGuide
             viewState={viewState}
-            videoLink={"https://www.youtube.com/embed/NTtSM70rIvI"}
+            videoLink={
+              viewState.terria.configParameters.welcomeMessageVideo.videoUrl
+            }
             background={
-              "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
+              viewState.terria.configParameters.welcomeMessageVideo
+                .placeholderImage
             }
             videoName={WELCOME_MESSAGE_VIDEO}
           />
@@ -214,7 +224,8 @@ export const WelcomeMessagePure = props => {
                     col6
                     centered
                     backgroundImage={
-                      "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
+                      viewState.terria.configParameters.welcomeMessageVideo
+                        .placeholderImage
                     }
                     backgroundBlackOverlay={"50%"}
                   >
