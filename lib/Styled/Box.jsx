@@ -11,6 +11,11 @@ export const Box = styled.div`
     position:absolute;
     z-index:1;
    `}
+  ${props =>
+    props.static &&
+    `
+    position: static;
+  `}
 
   box-sizing: border-box;
 
@@ -22,7 +27,9 @@ export const Box = styled.div`
   ${props => props.fullWidth && `width: 100%;`}
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
   ${props => props.styledHeight && `height: ${props.styledHeight};`}
+  ${props => props.styledMinWidth && `min-width: ${props.styledMinWidth};`}
   ${props => props.styledMinHeight && `min-height: ${props.styledMinHeight};`}
+  ${props => props.styledMaxHeight && `max-height: ${props.styledMaxHeight};`}
   
   ${props =>
     props.col &&
@@ -44,6 +51,7 @@ export const Box = styled.div`
   ${props => props.col11 && "width: 91.66667%;"}
   // ${props => props.col12 && "width: 100%;"}
 
+  ${props => props.verticalCenter && `align-items: center;`}
   ${props => props.centered && `align-items: center;`}
   ${props => props.centered && `justify-content: center;`}
 
@@ -127,6 +135,25 @@ export const Box = styled.div`
     `
       overflow-y: ${props.overflowY};
     `}
+
+  ${props =>
+    props.scroll &&
+    `
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+      width: 10px; /* for vertical scrollbars */
+      height: 8px; /* for horizontal scrollbars */
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgba(136,136,136,0.1);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(136,136,136,0.6);
+    }
+  `}
 `;
 
 export const BoxSpan = styled(Box).attrs({

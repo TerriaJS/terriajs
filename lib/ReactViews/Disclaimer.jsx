@@ -36,16 +36,10 @@ const DisclaimerButton = styled(Button).attrs({
   textProps: {
     semiBold: true
   },
-  rounded: true
+  rounded: true,
+  denyButton: true
 })`
   width: ${props => (props.fullWidth ? "100%" : "280px")};
-  ${props =>
-    props.denyButton &&
-    `
-    border: 2px solid ${props.theme.grey}; 
-    color: ${props.theme.grey}; 
-    background-color: transparent;
-  `}
 `;
 
 @observer

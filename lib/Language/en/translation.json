@@ -5,7 +5,9 @@
     "prev": "Prev",
     "next": "Next",
     "skip": "Skip",
-    "back": "Back"
+    "back": "Back",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
   },
   "trainer": {
     "expandTrainer": "Show more step detail",
@@ -137,8 +139,10 @@
     "embedTitle": "To embed, copy this code to embed this map into an HTML page:",
     "shortenUsingService": "Shorten the share URL using a web service",
     "btnCatalogShareText": "Share",
+    "btnStoryShareText": "Share",
     "btnMapShareText": "Share / Print",
     "btnCatalogShareTitle": "Share your catalogue with others",
+    "btnStoryShareTitle": "Share your story with others",
     "btnMapShareTitle": "Share your map with others"
   },
   "countDatasets": {
@@ -254,6 +258,13 @@
     "dismissText": "Close message and don't show me this again"
   },
   "story": {
+    "panelTitle": "Story editor",
+    "panelBody": "Create and share interactive stories directly from your map",
+    "gettingStarted": "Getting started",
+    "gettingStartedTitle": "Getting started",
+    "badgeBarLabel": "Scenes",
+    "share": "Share",
+    "shareTitle": "share stories",
     "viewStory": "view",
     "view": "View",
     "editStory": "edit",
@@ -266,8 +277,11 @@
     "doesNotExist": "Story does not exist",
     "message": "<2>This is your story editor</2><1>Create and share interactive stories directly from your map<1><0><0></0>Getting Started </0></1></1>",
     "removeAllStories": "Remove All",
+    "removeAllStoriesDialog": "Are you sure you wish to delete {{ count }} scene?",
+    "removeAllStoriesDialog_plural": "Are you sure you wish to delete {{ count }} scenes?",
+    "removeStoryDialog": "Are you sure you wish to delete '<1>{{storyName}}</1>'?",
     "preview": "preview stories",
-    "play": "Play Story",
+    "play": "Play",
     "captureSceneTitle": "capture current scene",
     "captureScene": "Capture Scene",
     "editor": {

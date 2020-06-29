@@ -131,6 +131,10 @@ export const Text = styled.div`
       color: ${props.theme.colorPrimary};
     }
   `}
+
+  ${props => props.overflowHide && ` overflow: hidden;`}
+  ${props => props.overflowEllipsis && ` text-overflow: ellipsis;`}
+
 `;
 
 export const TextSpan = styled(Text).attrs({

@@ -48,7 +48,9 @@ const StyledButton = styled.button`
     border-radius:20px;
   `}
   ${props => props.rounded && ` border-radius: 32px; `}
- 
+  ${props => props.roundLeft && `border-radius: 32px 0 0 32px;`}
+  ${props => props.roundRight && `border-radius: 0 32px 32px 0;`}
+
   ${props =>
     props.secondary &&
     `
@@ -57,6 +59,13 @@ const StyledButton = styled.button`
     color: ${props.theme.darkWithOverlay};
     border-radius: 20px;
     border: 2px solid ${props.theme.darkWithOverlay};
+  `}
+  ${props =>
+    props.denyButton &&
+    `
+    border: 2px solid ${props.theme.grey}; 
+    color: ${props.theme.grey}; 
+    background-color: transparent;
   `}
   ${props =>
     props.warning &&
