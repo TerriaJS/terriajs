@@ -5,6 +5,7 @@ Change Log
 
 #### next release (mobx-36)
 * Added `pointer-events` to `MapNavigation` and `MenuBar` elements, so the bar don't block mouse click outside of the button.
+* Fixes "reminder pop-up" for help button being unclickable
 * Use `useTranslation` instead of `withTranslation` in functional component (`MapDataCount`)
 * Make welcome video url and placeholder configurable via configparameters
 * Added `ExportableData` interface.
