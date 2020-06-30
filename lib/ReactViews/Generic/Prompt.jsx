@@ -23,6 +23,7 @@ class Prompt extends React.PureComponent {
           css={`
             top: ${this.props.promptTopOffset || 50}px;
             left: ${this.props.promptLeftOffset || -140}px;
+            pointer-events: auto;
           `}
         >
           <Caret
