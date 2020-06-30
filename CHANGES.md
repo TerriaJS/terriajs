@@ -15,6 +15,7 @@ Change Log
 * Extend `UserDrawing` to handle rectangles
 * Tsxify `MapInteractionMode`
 * Improve runtime themeing via styled components across main UI components
+* Added a title to welcome message video
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-35
