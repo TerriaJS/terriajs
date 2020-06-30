@@ -14,6 +14,7 @@ Change Log
 * Added basic CSV export function
 * Extend `UserDrawing` to handle rectangles
 * Tsxify `MapInteractionMode`
+* Changed default orientation for `GltfCatalogItem` to no rotation, instead of zero rotation wrt to terrain
 * Added a title to welcome message video
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
