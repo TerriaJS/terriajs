@@ -3,7 +3,7 @@ Change Log
 
 ### MobX Development
 
-#### next release (mobx-36)
+#### mobx-36
 * Added `pointer-events` to `MapNavigation` and `MenuBar` elements, so the bar don't block mouse click outside of the button.
 * Fixes "reminder pop-up" for help button being unclickable
 * Use `useTranslation` instead of `withTranslation` in functional component (`MapDataCount`)
@@ -16,7 +16,6 @@ Change Log
 * Tsxify `MapInteractionMode`
 * Changed default orientation for `GltfCatalogItem` to no rotation, instead of zero rotation wrt to terrain
 * Added a title to welcome message video
-* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-35
 * Add "Upload" to tour points
