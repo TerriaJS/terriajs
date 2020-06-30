@@ -226,7 +226,7 @@ const ViewingControls = observer(
       );
     },
 
-    exportData() {
+    exportDataClicked() {
       const item = this.props.item;
 
       exportData(item).catch(e => {
@@ -292,10 +292,10 @@ const ViewingControls = observer(
               </ViewingControlMenuButton>
             </li>
           </If>
-          <If condition={ExportableData.is(item)}>
+          <If condition={ExportableData.is(item) && item.canExportData}>
             <li className={classNames(Styles.info)}>
               <ViewingControlMenuButton
-                onClick={this.exportData}
+                onClick={this.exportDataClicked}
                 title={t("workbench.exportDataTitle")}
               >
                 <BoxViewingControl>

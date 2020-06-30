@@ -57,6 +57,7 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
   private disposePickedFeatureSubscription?: () => void;
   private drawRectangle: boolean;
 
+  private mousePointEntity?: Entity;
   private mouseMoveDispose?: IReactionDisposer;
 
   constructor(options: Options) {
@@ -174,7 +175,7 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
 
     // Rectangle will show up once user has a point.
     if (this.drawRectangle) {
-      this.otherEntities.entities.add(<any>{
+      this.mousePointEntity = new Entity({
         id: "mousePoint",
         position: undefined
       });
@@ -198,9 +199,7 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
                 (this.pointEntities.entities.values?.[1]?.position?.getValue(
                   time
                 ) as Cartesian3) ||
-                this.otherEntities.entities
-                  .getById("mousePoint")
-                  .position?.getValue(time);
+                this.mousePointEntity?.position?.getValue(time);
 
               return Rectangle.fromCartographicArray([
                 Cartographic.fromCartesian(point1),
@@ -302,12 +301,8 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
             mouseCoordsCartographic => {
               if (!isDefined(mouseCoordsCartographic)) return;
 
-              const mousePoint = this.otherEntities.entities.getById(
-                "mousePoint"
-              );
-
-              if (isDefined(mousePoint)) {
-                mousePoint.position = new ConstantPositionProperty(
+              if (isDefined(this.mousePointEntity)) {
+                this.mousePointEntity.position = new ConstantPositionProperty(
                   Ellipsoid.WGS84.cartographicToCartesian(
                     mouseCoordsCartographic
                   )

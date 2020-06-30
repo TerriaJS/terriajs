@@ -4,6 +4,8 @@ Change Log
 ### MobX Development
 
 #### next release (mobx-36)
+* Added `pointer-events` to `MapNavigation` and `MenuBar` elements, so the bar don't block mouse click outside of the button.
+* Use `useTranslation` instead of `withTranslation` in functional component (`MapDataCount`)
 * Make welcome video url and placeholder configurable via configparameters
 * Added `ExportableData` interface.
 * Added `ExportData` component for data catalog.
