@@ -78,6 +78,15 @@ export default class CsvCatalogItem
     return isDefined(this._csvFile);
   }
 
+  @computed
+  get canExportData() {
+    return (
+      isDefined(this._csvFile) ||
+      isDefined(this.csvString) ||
+      isDefined(this.url)
+    );
+  }
+
   async exportData() {
     if (isDefined(this._csvFile)) {
       return {
