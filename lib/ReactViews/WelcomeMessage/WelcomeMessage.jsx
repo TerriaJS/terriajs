@@ -208,7 +208,7 @@ export const WelcomeMessagePure = props => {
                   {t("welcomeMessage.title")}
                 </Text>
                 <Spacing bottom={3} />
-                <Text textLight>
+                <Text textLight medium>
                   <Trans i18nKey="welcomeMessage.welcomeMessage">
                     Interested in data discovery and exploration?
                     <br />
@@ -218,6 +218,12 @@ export const WelcomeMessagePure = props => {
                 </Text>
               </Box>
               <Spacing bottom={6} />
+              <If condition={!viewState.useSmallScreenInterface}>
+                <Text bold textLight extraLarge>
+                  {t("welcomeMessage.videoTitle")}
+                </Text>
+                <Spacing bottom={2} />
+              </If>
               <Box fullWidth styledMinHeight={"160px"}>
                 <If condition={!viewState.useSmallScreenInterface}>
                   <Box
