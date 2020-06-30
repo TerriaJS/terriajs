@@ -13,6 +13,7 @@ Change Log
 * Added basic CSV export function
 * Extend `UserDrawing` to handle rectangles
 * Tsxify `MapInteractionMode`
+* Port `GeoRssCatalogItem` to mobx, added support to skip entries without geometry
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-35
