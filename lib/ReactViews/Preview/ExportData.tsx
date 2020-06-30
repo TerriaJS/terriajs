@@ -31,7 +31,7 @@ export async function exportData(item: ExportableData) {
  */
 @observer
 class ExportData extends React.Component<PropsType> {
-  exportData(item: ExportableData) {
+  exportDataClicked(item: ExportableData) {
     exportData(item).catch(e => {
       if (e instanceof TerriaError) {
         this.props.item.terria.error.raiseEvent(e);
@@ -42,11 +42,16 @@ class ExportData extends React.Component<PropsType> {
   render() {
     const catalogItem = this.props.item;
 
-    if (!catalogItem || !ExportableData.is(catalogItem)) return;
+    if (
+      !catalogItem ||
+      !ExportableData.is(catalogItem) ||
+      !catalogItem.canExportData
+    )
+      return null;
 
     return (
       <div className={Styles.metadata}>
-        <button onClick={this.exportData.bind(this, catalogItem)}>
+        <button onClick={this.exportDataClicked.bind(this, catalogItem)}>
           Export data
         </button>
       </div>
