@@ -530,7 +530,7 @@ class WebMapServiceCatalogItem
   }
 
   @computed
-  get exportEnabled() {
+  get canExportData() {
     return isDefined(this.linkedWcsCoverage) && isDefined(this.linkedWcsUrl);
   }
 

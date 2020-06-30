@@ -292,7 +292,7 @@ const ViewingControls = observer(
               </ViewingControlMenuButton>
             </li>
           </If>
-          <If condition={ExportableData.is(item) && item.exportEnabled}>
+          <If condition={ExportableData.is(item) && item.canExportData}>
             <li className={classNames(Styles.info)}>
               <ViewingControlMenuButton
                 onClick={this.exportDataClicked}

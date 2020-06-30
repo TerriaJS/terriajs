@@ -45,7 +45,7 @@ class ExportData extends React.Component<PropsType> {
     if (
       !catalogItem ||
       !ExportableData.is(catalogItem) ||
-      !catalogItem.exportEnabled
+      !catalogItem.canExportData
     )
       return null;
 

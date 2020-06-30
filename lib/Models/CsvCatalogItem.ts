@@ -79,7 +79,7 @@ export default class CsvCatalogItem
   }
 
   @computed
-  get exportEnabled() {
+  get canExportData() {
     return (
       isDefined(this._csvFile) ||
       isDefined(this.csvString) ||
