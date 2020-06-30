@@ -1,24 +1,27 @@
 "use strict";
 
-/*global require*/
 import URI from "urijs";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import i18next from "i18next";
 
-const loadBlob = require("../Core/loadBlob");
+import { runInAction } from "mobx";
+
+import loadBlob from "../Core/loadBlob";
+
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
+var sprintf = require("terriajs-cesium/Source/ThirdParty/sprintf").default;
+
+import CommonStrata from "./CommonStrata";
+import createStratumInstance from "./createStratumInstance";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import ResultPendingCatalogItem from "./ResultPendingCatalogItem";
-import i18next from "i18next";
-import TerriaError from "../Core/TerriaError";
-import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
-import { runInAction } from "mobx";
-import CommonStrata from "./CommonStrata";
 import UserDrawing from "./UserDrawing";
+import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
 import isDefined from "../Core/isDefined";
 import makeRealPromise from "../Core/makeRealPromise";
-import createStratumInstance from "./createStratumInstance";
+import TerriaError from "../Core/TerriaError";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
-var sprintf = require("terriajs-cesium/Source/ThirdParty/sprintf").default;
 
 export const callWebCoverageService = function(
   wmsCatalogItem: WebMapServiceCatalogItem
@@ -59,15 +62,10 @@ export const callWebCoverageService = function(
   });
 };
 
-// WebCoverageServiceCaller.prototype.launch = function () {
 async function launch(
   wmsCatalogItem: WebMapServiceCatalogItem,
   bbox: Rectangle
 ): Promise<{ name: string; file: Blob }> {
-  // // At the moment just grab the screen extent
-  // // Calculate view extent in degrees
-  // const bbox = wmsCatalogItem.terria.currentViewer.getCurrentExtent();
-
   bbox.west = CesiumMath.toDegrees(bbox.west);
   bbox.south = CesiumMath.toDegrees(bbox.south);
   bbox.east = CesiumMath.toDegrees(bbox.east);
@@ -151,27 +149,43 @@ async function launch(
     const blob = await makeRealPromise<Blob>(loadBlob(url));
 
     runInAction(() => asyncResult.terria.workbench.remove(asyncResult));
-    if (isDefined(blob.type) && blob.type?.indexOf("xml") !== -1) {
-      // Geoserver errors -_-
-      throw new TerriaError({
-        sender: wmsCatalogItem,
-        title: i18next.t("models.wcs.exportFailedTitle"),
-        message: i18next.t("models.wcs.exportFailedMessage")
-      });
-
-      // Could fetch error details from XML to show to user
-    }
 
     return { name: `${wmsCatalogItem.name} clip.tiff`, file: blob };
   } catch (error) {
     if (error instanceof TerriaError) {
       throw error;
     }
+
+    // Attempt to get error message out of XML response
+    if (
+      error instanceof RequestErrorEvent &&
+      isDefined(error?.response?.type) &&
+      error.response.type?.indexOf("xml") !== -1
+    ) {
+      try {
+        const xml = new DOMParser().parseFromString(
+          await error.response.text(),
+          "text/xml"
+        );
+
+        if (xml.documentElement.localName === "ServiceExceptionReport") {
+          const message = xml.getElementsByTagName("ServiceException")?.[0]
+            .innerHTML;
+          if (isDefined(message)) {
+            error = message;
+          }
+        }
+      } catch (xmlParseError) {
+        console.log("Failed to parse WCS response");
+        console.log(xmlParseError);
+      }
+    }
+
     throw new TerriaError({
       sender: wmsCatalogItem,
       title: i18next.t("models.wcs.exportFailedTitle"),
       message: i18next.t("models.wcs.exportFailedMessageII", {
-        error: error
+        error
       })
     });
   } finally {

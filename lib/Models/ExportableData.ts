@@ -7,6 +7,8 @@ interface ExportableData extends Model<CatalogMemberTraits> {
    *
    */
   exportData: () => Promise<string | { name: string; file: Blob } | undefined>;
+
+  canExportData: boolean;
 }
 
 namespace ExportableData {

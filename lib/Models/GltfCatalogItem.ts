@@ -82,11 +82,13 @@ export default class GltfCatalogItem
   @computed
   private get orientation(): Quaternion {
     const { heading, pitch, roll } = this.rotation;
-    const hpr = HeadingPitchRoll.fromDegrees(
-      heading || 0,
-      pitch || 0,
-      roll || 0
-    );
+
+    // If no hpr rotation defined, we default to no rotation
+    if (heading === undefined || pitch === undefined || roll === undefined) {
+      return Quaternion.IDENTITY.clone();
+    }
+
+    const hpr = HeadingPitchRoll.fromDegrees(heading, pitch, roll);
     const orientation = Transforms.headingPitchRollQuaternion(
       this.cesiumPosition,
       hpr
