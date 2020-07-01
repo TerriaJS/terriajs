@@ -3,6 +3,7 @@ Change Log
 
 ### next verion
 * Rework the handling of point datasets on the anti-meridian when using LeafletJS.
+* Fix indices in some translation strings including strings for descriptions of WMS and WMS service.
 
 ### v7.11.5
 
