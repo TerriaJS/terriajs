@@ -153,7 +153,6 @@ export function selectOnMap(terria, viewState, parameter) {
       });
     }
   });
-  viewState.explorerPanelIsVisible = false;
   userDrawing.enterDrawMode();
 }
 

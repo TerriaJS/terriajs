@@ -37,6 +37,7 @@ import TimeVarying from "../ModelMixins/TimeVarying";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
+import { defaultTerms, Term } from "../ReactViewModels/defaultTerms";
 import CameraView from "./CameraView";
 import CatalogGroup from "./CatalogGroupNew";
 import CatalogMemberFactory from "./CatalogMemberFactory";
@@ -91,8 +92,10 @@ interface ConfigParameters {
   rollbarAccessToken?: string;
   globalDisclaimer?: any;
   showWelcomeMessage?: boolean;
+  welcomeMessageVideo?: any;
   showInAppGuides?: boolean;
   helpContent?: HelpContentItem[];
+  helpContentTerms?: Term[];
 }
 
 interface StartOptions {
@@ -204,8 +207,15 @@ export default class Terria {
     rollbarAccessToken: undefined,
     globalDisclaimer: undefined,
     showWelcomeMessage: false,
+    welcomeMessageVideo: {
+      videoTitle: "Getting started with the map",
+      videoUrl: "https://www.youtube.com/embed/NTtSM70rIvI",
+      placeholderImage:
+        "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
+    },
     showInAppGuides: false,
-    helpContent: []
+    helpContent: [],
+    helpContentTerms: defaultTerms
   };
 
   @observable

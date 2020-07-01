@@ -62,7 +62,6 @@ const LineParameterEditor = createReactClass({
 
   selectLineOnMap() {
     this.state.userDrawing.enterDrawMode();
-    this.props.viewState.explorerPanelIsVisible = false;
   },
 
   render() {

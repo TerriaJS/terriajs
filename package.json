@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "7.10.0-mobx-34",
+  "version": "7.10.0-mobx-36",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "engines": {
@@ -95,7 +95,7 @@
     "leaflet": "^1.4.0",
     "linkify-it": "^2.0.0",
     "lodash-es": "^4.17.11",
-    "markdown-it": "^8.0.0",
+    "markdown-it": "^11.0.0",
     "mini-css-extract-plugin": "^0.5.0",
     "mobx": "^4.15.4",
     "mobx-react": "^6.2.2",
@@ -121,6 +121,7 @@
     "react-responsive": "^5.0.0",
     "react-swipeable": "^5.1.0",
     "react-transition-group": "^4.3.0",
+    "react-uid": "^2.3.0",
     "resolve-url-loader": "^3.0.1",
     "retry": "^0.12.0",
     "rollbar": "2.15.2",

@@ -4,8 +4,30 @@ Change Log
 ### MobX Development
 
 #### next release (7.11.5-mobx-35)
+#### next release (mobx-37)
+* Added file upload support for `GltfCatalogItem`. The supported extension is glb.
+
+#### mobx-36
+* Added `pointer-events` to `MapNavigation` and `MenuBar` elements, so the bar don't block mouse click outside of the button.
+* Fixes "reminder pop-up" for help button being unclickable
+* Use `useTranslation` instead of `withTranslation` in functional component (`MapDataCount`)
+* Make welcome video url and placeholder configurable via configparameters
+* Added `ExportableData` interface.
+* Added `ExportData` component for data catalog.
+* Added WCS "clip and ship" for WMS
+* Added basic CSV export function
+* Extend `UserDrawing` to handle rectangles
+* Tsxify `MapInteractionMode`
+* Changed default orientation for `GltfCatalogItem` to no rotation, instead of zero rotation wrt to terrain
+* Added a title to welcome message video
+
+#### mobx-35
 * Add "Upload" to tour points
+* Add tooltips anywhere required in UI via `parseCustomMarkdownToReactWithOptions` & customisable via `helpContentTerms` 
 * Add "map state" map data count to highlight state of map data
+* Add a reminder "pop-up" that shows the location of the help button
+* Fix bug causing story pop-up to be off screen
+* Fix bug causing helpful hints to be cut off on smaller screens
 * Changed the `Tool` interface, now accepting prop `getToolComponent` instead of `toolComponent`
 * Added `ToolButton` for loading/unloading a tool
 * Added `TransformationTraits` that can be used to change position/rotation/scale of a model.
@@ -17,6 +39,8 @@ Change Log
     * Added button for sharing stories.
     * Added a question popup on window close (if there are stories on the map so users don't lose their work).
 * (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
+* Added a new `editor` Icon
+* Changed `ToolButton` to show the same icon in open/close state. Previously it showed a close icon in close state.
 
 #### mobx-34
 * Bug fix for `DatePicker` in `BottomDock` causing app crash

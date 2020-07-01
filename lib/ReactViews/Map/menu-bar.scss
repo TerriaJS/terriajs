@@ -32,6 +32,7 @@
 }
 
 .menu-item {
+  pointer-events: auto;
   position: relative;
   display: block;
   float: left;
