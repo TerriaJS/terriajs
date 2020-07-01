@@ -3,10 +3,9 @@ Change Log
 
 ### MobX Development
 
-#### mobx-next-release (mobx-34)
-* Added breadcrumbs when clicking on a catalogue item from a catalogue search 
 #### next release (mobx-37)
 * Added file upload support for `GltfCatalogItem`. The supported extension is glb.
+* Added breadcrumbs when clicking on a catalogue item from a catalogue search
 
 #### mobx-36
 * Added `pointer-events` to `MapNavigation` and `MenuBar` elements, so the bar don't block mouse click outside of the button.
