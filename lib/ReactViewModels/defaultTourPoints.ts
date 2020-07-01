@@ -26,7 +26,7 @@ export interface TourPoint {
 export const defaultTourPoints = [
   {
     appRefName: "LocationSearchInput",
-    priority: 20,
+    priority: 30,
     offsetLeft: 225,
     content:
       "## Location search\n\nEnter a locality or address to easily locate a point of interest on the map."
@@ -39,8 +39,15 @@ export const defaultTourPoints = [
       "## Explore map data\n\nBrowse the catalogue of available data and add it to the map here. You can add multiple datasets at any one time, and you’ll see them listed down below in the Workbench."
   },
   {
+    appRefName: "SidePanelUploadButton",
+    priority: 20,
+    offsetLeft: 70,
+    content:
+      "## Upload Data\n\nYou can upload your own data to the map to view it with other data sets. Upload a file or link to an existing online data set or data service. Supported data formats include CSV, GeoJSON, KML, GPX and CZML."
+  },
+  {
     appRefName: "MenuBarMapSettingsButton",
-    priority: 30,
+    priority: 40,
     caretOffsetLeft: TOUR_WIDTH - 25,
     offsetLeft: -TOUR_WIDTH - 30,
     positionLeft: RelativePosition.RECT_RIGHT,
@@ -49,7 +56,7 @@ export const defaultTourPoints = [
   },
   {
     appRefName: "MenuBarStoryButton",
-    priority: 40,
+    priority: 50,
     caretOffsetLeft: TOUR_WIDTH - 25,
     offsetLeft: -TOUR_WIDTH - 10,
     positionLeft: RelativePosition.RECT_RIGHT,
@@ -58,7 +65,7 @@ export const defaultTourPoints = [
   },
   {
     appRefName: "MapNavigationCompassOuterRing",
-    priority: 50,
+    priority: 60,
     caretOffsetTop: 18,
     caretOffsetLeft: TOUR_WIDTH - 18,
     indicatorOffsetTop: 15,
@@ -72,7 +79,7 @@ export const defaultTourPoints = [
   },
   {
     appRefName: "MapNavigationSplitterIcon",
-    priority: 60,
+    priority: 70,
     caretOffsetTop: 20,
     caretOffsetLeft: TOUR_WIDTH - 18,
     indicatorOffsetTop: 3,

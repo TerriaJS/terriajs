@@ -112,7 +112,13 @@ export const GLYPHS = {
   plusThick: require("../../wwwroot/images/icons/zoom-plus.svg"),
   refreshThick: require("../../wwwroot/images/icons/zoom-refresh.svg"),
   satellite: require("../../wwwroot/images/icons/satellite.svg"),
-  uploadThin: require("../../wwwroot/images/icons/upload-thin.svg")
+  mapDataActive: require("../../wwwroot/images/icons/map-data-active.svg"),
+  mapDataInactive: require("../../wwwroot/images/icons/map-data-inactive.svg"),
+  uploadThin: require("../../wwwroot/images/icons/upload-thin.svg"),
+  oneTwoThree: require("../../wwwroot/images/icons/one-two-three.svg"),
+  accordionOpen: require("../../wwwroot/images/icons/accordion-open.svg"),
+  accordionClose: require("../../wwwroot/images/icons/accordion-close.svg"),
+  editor: require("../../wwwroot/images/icons/editor.svg")
 };
 
 export const Icon = createReactClass({
