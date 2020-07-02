@@ -1344,6 +1344,7 @@ declare module "terriajs-cesium/Source/Scene/Cesium3DTileset" {
   import IonResource from "terriajs-cesium/Source/Core/IonResource";
   import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
   import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
+  import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 
   export default class Cesium3DTileset {
     url: string;
@@ -1355,6 +1356,8 @@ declare module "terriajs-cesium/Source/Scene/Cesium3DTileset" {
     extras: any;
     colorBlendMode: Cesium3DTileColorBlendMode;
     colorBlendAmount: number;
+    modelMatrix: Matrix4;
+    root: { transform: Matrix4 };
 
     constructor(options: {
       url: string | IonResource | Cesium.Resource;

@@ -9,7 +9,6 @@ import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
 import styled, { withTheme } from "styled-components";
 import HelpVideoPanel from "./HelpVideoPanel";
-import parseCustomMarkdownToReact from "../../../Custom/parseCustomMarkdownToReact";
 
 @observer
 class HelpPanelItem extends React.Component {
@@ -47,11 +46,9 @@ class HelpPanelItem extends React.Component {
       [Styles.isSelected]: itemSelected
     });
 
+    // `content.icon` is user defined and can possibly force the UI to lookup a
+    // nonexistant icon.
     const iconGlyph = Icon.GLYPHS[icon] || Icon.GLYPHS.video;
-    const reactComponents = this.props.content.markdownText
-      ? parseCustomMarkdownToReact(this.props.content.markdownText).props
-          .children
-      : undefined;
     const title = this.props.content.title || "";
     return (
       <div
@@ -101,9 +98,10 @@ class HelpPanelItem extends React.Component {
         <HelpVideoPanel
           terria={this.props.terria}
           viewState={this.props.viewState}
+          content={this.props.content}
           itemString={this.props.content.itemName}
           paneMode={this.props.content.paneMode}
-          htmlContent={reactComponents}
+          markdownContent={this.props.content.markdownText}
           videoUrl={this.props.content.videoUrl}
           placeholderImage={this.props.content.placeholderImage}
         />

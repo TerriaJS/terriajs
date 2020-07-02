@@ -10,6 +10,9 @@ import objectArrayTrait from "./objectArrayTrait";
 import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
 import UrlTraits from "./UrlTraits";
+import TransformationTraits from "./TransformationTraits";
+import PlaceEditorTraits from "./PlaceEditorTraits";
+import primitiveArrayTrait from "./primitiveArrayTrait";
 
 export class FilterTraits extends ModelTraits {
   @primitiveTrait({
@@ -96,6 +99,8 @@ export class OptionsTraits extends ModelTraits {
 }
 
 export default class Cesium3DTilesCatalogItemTraits extends mixTraits(
+  PlaceEditorTraits,
+  TransformationTraits,
   FeatureInfoTraits,
   MappableTraits,
   UrlTraits,
@@ -169,4 +174,12 @@ export default class Cesium3DTilesCatalogItemTraits extends mixTraits(
       "The color used to highlight a feature when it is picked. If not set, this defaults to `Terria.baseMapContrastColor`"
   })
   highlightColor?: string;
+
+  @primitiveArrayTrait({
+    name: "Feature ID properties",
+    type: "string",
+    description:
+      "One or many properties of a feature that together identify it uniquely. This is useful for setting properties for individual features. eg: ['lat', 'lon'], ['buildingId'] etc."
+  })
+  featureIdProperties?: string[];
 }

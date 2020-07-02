@@ -3,20 +3,48 @@ Change Log
 
 ### MobX Development
 
-#### next release (mobx-35)
-* Add "Upload" to tour points
+#### next release (mobx-37)
+* Added file upload support for `GltfCatalogItem`. The supported extension is glb.
 * Ensure there aren't more bins than unique values for a `TableStyle`
-* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
+
+#### mobx-36
+* Added `pointer-events` to `MapNavigation` and `MenuBar` elements, so the bar don't block mouse click outside of the button.
+* Fixes "reminder pop-up" for help button being unclickable
+* Use `useTranslation` instead of `withTranslation` in functional component (`MapDataCount`)
+* Make welcome video url and placeholder configurable via configparameters
+* Added `ExportableData` interface.
+* Added `ExportData` component for data catalog.
+* Added WCS "clip and ship" for WMS
+* Added basic CSV export function
+* Extend `UserDrawing` to handle rectangles
+* Tsxify `MapInteractionMode`
+* Changed default orientation for `GltfCatalogItem` to no rotation, instead of zero rotation wrt to terrain
+* Added a title to welcome message video
+
+#### mobx-35
+* Add "Upload" to tour points
+* Add tooltips anywhere required in UI via `parseCustomMarkdownToReactWithOptions` & customisable via `helpContentTerms` 
+* Add "map state" map data count to highlight state of map data
+* Add a reminder "pop-up" that shows the location of the help button
+* Fix bug causing story pop-up to be off screen
+* Fix bug causing helpful hints to be cut off on smaller screens
+* Changed the `Tool` interface, now accepting prop `getToolComponent` instead of `toolComponent`
+* Added `ToolButton` for loading/unloading a tool
+* Added `TransformationTraits` that can be used to change position/rotation/scale of a model.
+* Added a new `editor` Icon
+* Changed `ToolButton` to show the same icon in open/close state. Previously it showed a close icon in close state.
 
 #### mobx-34
 * Bug fix for `DatePicker` in `BottomDock` causing app crash
 * Made changes to the video modals: close button has been added, pressing escape now closes the component and some basic unit tests created
 * Updated the video modal for _Data Stories: Getting Started_ to use the new `VideoGuide` component
+* Tweaked MyData/AddData tabs to make it possible to invoke them without using the `ExplorerWindow` component and also customize the extensions listed in the dropdown.
 * Fix the timeline stack handling for when there are multiple time-enabled layers
 * Ported timeseries tables.
 * Extended the support for styles for ESRI ArcGis Feature Server. Line styles are supported for lines and polygon outlines in both Cesium and Leaflet viewer. #4405
 * Fix polygon outline style bug.
 * Add a unit test for polygon outline style.
+* Add TrainerPane/TrainerBar "Terry the task trainer"
 * Use `1.x.x` of `karma-sauce-launcher` to fix CI build failures
 * Stop unknown icons specified in config.json from crashing UI
 * Creates a `ShadowTraits` class that is shared by `GltfCatalogItem` and `Cesium3DTilesCatalogItem`.
@@ -48,7 +76,6 @@ Change Log
 * Updated LocationSearchResults to support multiple search providers
 * Replaced lifesaver icon on the help button with a question mark button
 * Fix handling of points and markers around the anti-meridian in the `LeafletVisualizer`.
-* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 * Fixed difference tool losing datepicker state by keeping it mounted
 * Disabled unhelpful Help button when in `useSmallScreenInterface`
 * Fixed a bug where a single incorrect catalog item in a group would prevent subsequent items from loading.

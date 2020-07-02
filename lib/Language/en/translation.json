@@ -7,6 +7,12 @@
     "skip": "Skip",
     "back": "Back"
   },
+  "trainer": {
+    "expandTrainer": "Show more step detail",
+    "collapseTrainer": "Hide step detail",
+    "showAllSteps": "Show all steps",
+    "hideAllSteps": "Hide all steps"
+  },
   "tour": {
     "preface": {
       "title": "Take the tour",
@@ -143,7 +149,12 @@
     "subTotals": "<div> {{name}}: {{items}} items / {{groups}} groups</div>",
     "recount": "Recount",
     "title": "Count Datasets",
-    "btnCount": "Count datasets"
+    "btnCount": "Count datasets",
+    "enabledOnMap": "enabled on map",
+    "noMapDataEnabled": "No map data enabled",
+    "datasetSingular": "dataset",
+    "datasetPlural": "datasets",
+    "mapDataState": "{{numberOfDatasets}} {{singularOrPlural}} $t(countDatasets.enabledOnMap)"
   },
   "toolsPanel": {
     "btnText": "Tool",
@@ -190,7 +201,9 @@
   },
   "helpPanel": {
     "menuPaneTitle": "We're here to help",
-    "menuPaneBody": "Find useful tips on how to use TerriaJS by either checking the guides below or by contacting the team at [info@terria.io](mailto:info@terria.io)"
+    "menuPaneBody": "Find useful tips on how to use TerriaJS by either checking the guides below or by contacting the team at [info@terria.io](mailto:info@terria.io)",
+    "promptMessage": "Find the Tour, how-to videos & other help content here",
+    "dismissText": "Got it, thanks!"
   },
   "helpMenu": {
     "btnText": "Help",
@@ -561,6 +574,7 @@
       "gpx": "GPX",
       "json": "JSON",
       "carto": "Carto",
+      "gltf": "GLTF",
       "other": "Other (use conversion service)"
     },
     "printWindow": {
@@ -734,6 +748,7 @@
     },
     "wcs": {
       "asyncResultDescription": "This is the result of exporting data from {{name}} service at {{timestamp}} with the input parameters below.",
+      "asyncPendingDescription": "WCS loading:<br/>{{name}} service at {{timestamp}}.",
       "exportFailedTitle": "Data export failed",
       "exportFailedMessage": "The Web Coverage Service failed",
       "exportFailedMessageII": "The Web Coverage Service failed: {{error}}"

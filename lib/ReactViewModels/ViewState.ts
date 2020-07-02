@@ -84,6 +84,42 @@ export default class ViewState {
   @observable disclaimerVisible: boolean = false;
   @observable videoGuideVisible: string = "";
 
+  @observable trainerBarVisible: boolean = false;
+  @observable trainerBarExpanded: boolean = false;
+  @observable trainerBarShowingAllSteps: boolean = false;
+  @observable selectedTrainerItem: string = "";
+  @observable currentTrainerItemIndex: number = 0;
+  @observable currentTrainerStepIndex: number = 0;
+  @action
+  setSelectedTrainerItem(trainerItem: string) {
+    this.selectedTrainerItem = trainerItem;
+  }
+  @action
+  setTrainerBarVisible(bool: boolean) {
+    this.trainerBarVisible = bool;
+  }
+  @action
+  setTrainerBarShowingAllSteps(bool: boolean) {
+    this.trainerBarShowingAllSteps = bool;
+  }
+  @action
+  setTrainerBarExpanded(bool: boolean) {
+    this.trainerBarExpanded = bool;
+    // if collapsing trainer bar, also hide steps
+    if (!bool) {
+      this.trainerBarShowingAllSteps = bool;
+    }
+  }
+  @action
+  setCurrentTrainerItemIndex(index: number) {
+    this.currentTrainerItemIndex = index;
+    this.currentTrainerStepIndex = 0;
+  }
+  @action
+  setCurrentTrainerStepIndex(index: number) {
+    this.currentTrainerStepIndex = index;
+  }
+
   @observable workbenchWithOpenControls: string | undefined = undefined;
 
   errorProvider: any | null = null;
@@ -100,19 +136,19 @@ export default class ViewState {
   /**
    * we need a layering system for touring the app, but also a way for it to be
    * chopped and changed from a terriamap
-   * 
+   *
    * this will be slightly different to the help sequences that were done in
-   * the past, but may evolve to become a "sequence" (where the UI gets 
+   * the past, but may evolve to become a "sequence" (where the UI gets
    * programatically toggled to delve deeper into the app, e.g. show the user
    * how to add data via the data catalog window)
-   * 
+   *
    * rough points
    * - "all guide points visible"
-   * - 
-   * 
+   * -
+   *
 
    * draft structure(?):
-   * 
+   *
    * maybe each "guide" item will have
    * {
    *  ref: (react ref object)
@@ -153,6 +189,10 @@ export default class ViewState {
   @action
   setShowTour(bool: boolean) {
     this.showTour = bool;
+    // If we're enabling the tour, make sure the trainer is collapsed
+    if (bool) {
+      this.setTrainerBarExpanded(false);
+    }
   }
   @action
   closeTour() {
@@ -228,13 +268,7 @@ export default class ViewState {
   /**
    * The currently open tool
    */
-  @observable currentTool:
-    | {
-        toolName: string;
-        toolComponent: React.Component | string;
-        params: unknown;
-      }
-    | undefined;
+  @observable currentTool?: Tool;
 
   private _unsubscribeErrorListener: any;
   private _pickedFeaturesSubscription: IReactionDisposer;
@@ -573,12 +607,8 @@ export default class ViewState {
   }
 
   @action
-  openTool(
-    toolName: string,
-    toolComponent: React.Component | string,
-    params?: any
-  ) {
-    this.currentTool = { toolName, toolComponent, params };
+  openTool(tool: Tool) {
+    this.currentTool = tool;
   }
 
   @action
@@ -590,4 +620,11 @@ export default class ViewState {
   get isToolOpen() {
     return this.currentTool !== undefined;
   }
+}
+
+interface Tool {
+  toolName: string;
+  getToolComponent: () => React.Component | Promise<React.Component>;
+  showCloseButton: boolean;
+  params?: any;
 }
