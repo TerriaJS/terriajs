@@ -32,7 +32,7 @@ import { RectangleTraits } from "../Traits/MappableTraits";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import StratumOrder from "./StratumOrder";
 import GroupMixin from "../ModelMixins/GroupMixin";
-import DOMPurify from "dompurify/dist/purify";
+import DOMPurify from "dompurify";
 
 import { ArcGisItem } from "./ArcGisPortalDefinitions";
 import ArcGisPortalCatalogGroup from "./ArcGisPortalCatalogGroup";
