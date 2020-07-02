@@ -40,9 +40,22 @@ describe("ArcGisPortalCatalogGroup", function() {
     const realLoadWithXhr = loadWithXhr.load;
     // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
     spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
-      if (args[0].indexOf('rest/content/groups/2dfa6cfea7774d9585700059e1fc8219') > -1) args[0] = "test/ArcGisPortal/group-2dfa6cfea7774d9585700059e1fc8219-items-search.json";
-      else if (args[0].indexOf('rest/content/groups/c86af18fa4a74336b1feee2a0ee4883d') > -1) args[0] = "test/ArcGisPortal/group-c86af18fa4a74336b1feee2a0ee4883d-items-search.json";
-      else if (args[0].indexOf('rest/community/groups?') > -1) args[0] = "test/ArcGisPortal/group-search-results.json";
+      if (
+        args[0].indexOf(
+          "rest/content/groups/2dfa6cfea7774d9585700059e1fc8219"
+        ) > -1
+      )
+        args[0] =
+          "test/ArcGisPortal/group-2dfa6cfea7774d9585700059e1fc8219-items-search.json";
+      else if (
+        args[0].indexOf(
+          "rest/content/groups/c86af18fa4a74336b1feee2a0ee4883d"
+        ) > -1
+      )
+        args[0] =
+          "test/ArcGisPortal/group-c86af18fa4a74336b1feee2a0ee4883d-items-search.json";
+      else if (args[0].indexOf("rest/community/groups?") > -1)
+        args[0] = "test/ArcGisPortal/group-search-results.json";
       else args[0] = "test/ArcGisPortal/search-result.json";
 
       return realLoadWithXhr(...args);
@@ -75,9 +88,15 @@ describe("ArcGisPortalCatalogGroup", function() {
   describe("change some settings - ", function() {
     beforeEach(async function() {
       runInAction(() => {
-        portalCatalogGroup.setTrait("definition", "groupBy", "organisationsGroups");
+        portalCatalogGroup.setTrait(
+          "definition",
+          "groupBy",
+          "organisationsGroups"
+        );
         portalCatalogGroup.setTrait("definition", "hideEmptyGroups", false);
-        portalCatalogGroup.setTrait("definition", "blacklist", ["Spatial Services Gallery"]);
+        portalCatalogGroup.setTrait("definition", "blacklist", [
+          "Spatial Services Gallery"
+        ]);
       });
       await portalCatalogGroup.loadMembers();
       portalServerStratum = <ArcGisPortalStratum>(
@@ -119,6 +138,5 @@ describe("ArcGisPortalCatalogGroup", function() {
         }
       }
     });
-
   });
 });

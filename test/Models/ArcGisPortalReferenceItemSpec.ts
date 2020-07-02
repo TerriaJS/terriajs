@@ -33,13 +33,17 @@ describe("ArcGisPortalItemReference", function() {
     terria = new Terria({
       baseUrl: "./"
     });
-    registerCatalogMembers()
-    arcGisPortalItemReference = new ArcGisPortalItemReference("portaltest", terria);
+    registerCatalogMembers();
+    arcGisPortalItemReference = new ArcGisPortalItemReference(
+      "portaltest",
+      terria
+    );
 
     const realLoadWithXhr = loadWithXhr.load;
     // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
     spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
-      if (args[0].indexOf('/data') > -1) args[0] = "test/ArcGisPortal/item-data.json"
+      if (args[0].indexOf("/data") > -1)
+        args[0] = "test/ArcGisPortal/item-data.json";
       else args[0] = "test/ArcGisPortal/item.json";
       return realLoadWithXhr(...args);
     });
@@ -53,17 +57,31 @@ describe("ArcGisPortalItemReference", function() {
   describe("Can load an item by datasetId - ", function() {
     beforeEach(async function() {
       runInAction(() => {
-        arcGisPortalItemReference.setTrait("definition", "url", "https://portal.spatial.nsw.gov.au/portal");
-        arcGisPortalItemReference.setTrait("definition", "name", "Road Segments");
-        arcGisPortalItemReference.setTrait("definition", "itemId", "66fabd8c23074ecc85883e0086419adc");
+        arcGisPortalItemReference.setTrait(
+          "definition",
+          "url",
+          "https://portal.spatial.nsw.gov.au/portal"
+        );
+        arcGisPortalItemReference.setTrait(
+          "definition",
+          "name",
+          "Road Segments"
+        );
+        arcGisPortalItemReference.setTrait(
+          "definition",
+          "itemId",
+          "66fabd8c23074ecc85883e0086419adc"
+        );
       });
       await arcGisPortalItemReference.loadReference();
 
       arcGisPortalItemStratum = <ArcGisPortalItemStratum>(
-        arcGisPortalItemReference.strata.get(ArcGisPortalItemStratum.stratumName)
+        arcGisPortalItemReference.strata.get(
+          ArcGisPortalItemStratum.stratumName
+        )
       );
 
-      portalItemTarget = arcGisPortalItemReference.target
+      portalItemTarget = arcGisPortalItemReference.target;
     });
 
     it("properly creates item", function() {
@@ -71,10 +89,14 @@ describe("ArcGisPortalItemReference", function() {
       expect(arcGisPortalItemReference.name).toBe("Road Segments");
 
       expect(arcGisPortalItemReference._arcgisItem).toBeDefined();
-      expect(arcGisPortalItemReference._arcgisPortalCatalogGroup).toBe(undefined);
+      expect(arcGisPortalItemReference._arcgisPortalCatalogGroup).toBe(
+        undefined
+      );
 
       expect(arcGisPortalItemReference).toBeDefined();
-      expect(portalItemTarget instanceof ArcGisFeatureServerCatalogItem).toBe(true);
+      expect(portalItemTarget instanceof ArcGisFeatureServerCatalogItem).toBe(
+        true
+      );
       expect(portalItemTarget.url).toBe(
         "https://portal.spatial.nsw.gov.au/server/rest/services/NSW_Transport_Theme/FeatureServer/5"
       );
@@ -92,6 +114,6 @@ describe("ArcGisPortalItemReference", function() {
         (i: any) => i.name === "Dataset Description"
       )[0];
       expect(datasetInfo.content).toBeDefined();
+    });
   });
-
 });

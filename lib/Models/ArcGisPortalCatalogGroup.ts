@@ -43,7 +43,6 @@ export class ArcGisPortalStratum extends LoadableStratum(
     this.filteredDatasets = this.getFilteredDatasets();
     this.groups = this.getGroups();
     this.filteredGroups = this.getFilteredGroups();
-
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -343,7 +342,7 @@ export default class ArcGisPortalCatalogGroup extends UrlMixin(
         });
       });
     } else {
-      return Promise.resolve()
+      return Promise.resolve();
     }
   }
 
