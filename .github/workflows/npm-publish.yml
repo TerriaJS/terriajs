@@ -12,53 +12,48 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
-      - name: Check version changes
-        uses: EndBug/version-check@v1
-        id: check
         with:
-          diff-search: true
+          fetch-depth: 2
+
+      - name: Detect a version change and tag the new version
+        uses: steve9164/action-detect-and-tag-new-version@v1
+        id: detect
+        with:
+          tag-template: '{VERSION}'
+          use-annotated-tag: 'true'
+          tagger-name: Terria Bot via GitHub Actions
+          tagger-email: TerriaBot@users.noreply.github.com
 
       - name: Version update detected
-        if: steps.check.outputs.changed == 'true'
-        run: 'echo "Version change found! New version: ${{ steps.check.outputs.version }} (${{ steps.check.outputs.type }})"'
+        if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
+        run: 'echo "Version change from ${{steps.detect.outputs.previous-version}} to ${{steps.detect.outputs.current-version}} detected"'
 
       - name: Set up Node.js for NPM
-        if: steps.check.outputs.changed == 'true'
+        if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
         uses: actions/setup-node@v1
         with:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
-        if: steps.check.outputs.changed == 'true'
+        if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
         run: npm install
 
       - name: Lint and build terriajs
-        if: steps.check.outputs.changed == 'true'
+        if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
         run: npx gulp lint release
         env:
           NODE_OPTIONS: '--max_old_space_size=8192'
 
       - name: Publish package to NPM
-        if: steps.check.outputs.changed == 'true'
+        if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
         run: npm publish --tag mobx
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Tag new version
-        if: steps.check.outputs.changed == 'true'
-        uses: steve9164/annotated-tag@v1
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          tag-name: ${{ steps.check.outputs.version }}
-          tag-message: ${{ steps.check.outputs.version }}
-          tagger-name: Terria Bot via GitHub Actions
-          tagger-email: TerriaBot@users.noreply.github.com
-
       # These slack success and failure message actions can be combined but it means there'll be no notification on a failed
-      #  version-check (which is probably unlikely to fail). It also allows for a bit better message customisation
+      #  action-detect-and-tag-new-version. It also allows for a bit better message customisation
       - name: Send success notification on Slack
-        if: steps.check.outputs.changed == 'true'
+        if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
@@ -66,7 +61,7 @@ jobs:
           author_name: ${{ github.workflow }}
           mention: here
           if_mention: always
-          text: ':white_check_mark: Published v${{ steps.check.outputs.version }} to https://www.npmjs.com/package/terriajs'
+          text: ':white_check_mark: Published v${{ steps.detect.outputs.current-version }} to https://www.npmjs.com/package/terriajs'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 
