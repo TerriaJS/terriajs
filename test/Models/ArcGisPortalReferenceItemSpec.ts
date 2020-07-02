@@ -110,10 +110,7 @@ describe("ArcGisPortalItemReference", function() {
       )[0];
       expect(licenceInfo.content).toBeDefined();
 
-      const datasetInfo = portalItemTarget.info.filter(
-        (i: any) => i.name === "Dataset Description"
-      )[0];
-      expect(datasetInfo.content).toBeDefined();
+      expect(portalItemTarget.description).toBeDefined();
     });
   });
 });

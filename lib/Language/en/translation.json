@@ -780,7 +780,7 @@
       "notCompatibleMessageII": "The CKAN dataset does not have any resources with a supported format."
     },
     "arcgisPortal": {
-      "nameGroup": "ArcGIS Portal",
+      "nameGroup": "ArcGIS Portal Group",
       "errorLoadingTitle": "Error loading ArcGIS Portal catalogue",
       "errorLoadingMessage": "The definition for this ArcGIS Portal catalogue does not have a valid filter query.",
       "corsErrorMessage": "Couldn't retrieve packages from this ArcGIS Portal server.<br/><br/>If you entered the URL manually, please double-check it.<br/><br/>If it's your server, make sure {{corsLink}} is enabled.<br/><br/> Otherwise, if reloading doesn't fix it, please report the problem by sending an email to {{email}} with the technical details below.  Thank you!<br/><br/>",
