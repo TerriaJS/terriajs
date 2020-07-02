@@ -146,7 +146,7 @@ export default function registerCatalogMembers() {
 
   // These items work by trying to match a URL, then loading the data. If it fails, they move on.
   UrlToCatalogMemberMapping.register(
-    matchesUrl(/\/wms/i),
+    matchesUrl(/\/wms|\=wms/i),
     WebMapServiceCatalogGroup.type,
     true
   );

@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, action, observable } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
@@ -16,11 +16,14 @@ import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
+import CommonStrata from "./CommonStrata";
 
 export default class GltfCatalogItem
   extends UrlMixin(CatalogMemberMixin(CreateModel(GltfCatalogItemTraits)))
   implements Mappable {
   static readonly type = "gltf";
+
+  @observable hasLocalData = false;
 
   get type() {
     return GltfCatalogItem.type;
@@ -82,11 +85,13 @@ export default class GltfCatalogItem
   @computed
   private get orientation(): Quaternion {
     const { heading, pitch, roll } = this.rotation;
-    const hpr = HeadingPitchRoll.fromDegrees(
-      heading || 0,
-      pitch || 0,
-      roll || 0
-    );
+
+    // If no hpr rotation defined, we default to no rotation
+    if (heading === undefined || pitch === undefined || roll === undefined) {
+      return Quaternion.IDENTITY.clone();
+    }
+
+    const hpr = HeadingPitchRoll.fromDegrees(heading, pitch, roll);
     const orientation = Transforms.headingPitchRollQuaternion(
       this.cesiumPosition,
       hpr
@@ -120,6 +125,13 @@ export default class GltfCatalogItem
 
   protected forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
+  }
+
+  @action
+  setFileInput(file: File | Blob) {
+    const dataUrl = URL.createObjectURL(file);
+    this.setTrait(CommonStrata.user, "url", dataUrl);
+    this.hasLocalData = true;
   }
 
   loadMapItems(): Promise<void> {
