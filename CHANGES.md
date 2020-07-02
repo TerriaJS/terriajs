@@ -6,6 +6,7 @@ Change Log
 #### next release (7.11.5-mobx-35)
 #### next release (mobx-37)
 * Added file upload support for `GltfCatalogItem`. The supported extension is glb.
+* Improve runtime themeing via styled components across main UI components
 
 #### mobx-36
 * Added `pointer-events` to `MapNavigation` and `MenuBar` elements, so the bar don't block mouse click outside of the button.
@@ -18,7 +19,6 @@ Change Log
 * Added basic CSV export function
 * Extend `UserDrawing` to handle rectangles
 * Tsxify `MapInteractionMode`
-* Improve runtime themeing via styled components across main UI components
 * Changed default orientation for `GltfCatalogItem` to no rotation, instead of zero rotation wrt to terrain
 * Added a title to welcome message video
 
