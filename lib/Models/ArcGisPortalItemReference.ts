@@ -136,7 +136,7 @@ export class ArcGisPortalItemStratum extends LoadableStratum(
   }
 
   @computed get info() {
-    function newInfo(name: string, content?: string) {
+    function newInfo(name: string, content: string) {
       const traits = createStratumInstance(InfoSectionTraits);
       runInAction(() => {
         traits.name = name;
@@ -147,12 +147,6 @@ export class ArcGisPortalItemStratum extends LoadableStratum(
         });
       });
       return traits;
-    }
-
-    function prettifyDate(date: string) {
-      if (date.match(/^\d\d\d\d-\d\d-\d\d.*/)) {
-        return date.substr(0, 10);
-      } else return date;
     }
 
     const outArray: any = [];
