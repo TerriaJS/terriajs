@@ -132,22 +132,6 @@ const GlobalTerriaStyles = createGlobalStyle`
       fill: ${p => p.theme.colorPrimary};
     }
   }
-  .tjs-panel__inner-close-btn {
-    svg {
-      fill: ${p => p.theme.textLight};
-    }
-    &:hover,
-    &:focus {
-      svg {
-        fill: ${p => p.theme.colorPrimary};
-      }
-    }
-  }
-  .tjs-panel__inner-close-btn--for-modal {
-    svg {
-      fill: ${p => p.theme.grey};
-    }
-  }
   .tjs-dropdown__btn--dropdown {
     color: ${p => p.theme.textDark};
     background: ${p => p.theme.textLight};

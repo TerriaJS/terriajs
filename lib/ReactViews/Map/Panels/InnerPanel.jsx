@@ -132,6 +132,25 @@ const InnerPanel = createReactClass({
           onClick={this.forceClose}
           title={t("general.close")}
           aria-label={t("general.close")}
+          showDropdownAsModal={this.props.showDropdownAsModal}
+          css={`
+            svg {
+              fill: ${p => p.theme.textLight};
+            }
+            &:hover,
+            &:focus {
+              svg {
+                fill: ${p => p.theme.colorPrimary};
+              }
+            }
+            ${p =>
+              p.showDropdownAsModal &&
+              `
+                svg {
+                  fill: ${p.theme.grey};
+                }
+            `}
+          `}
         >
           <Icon glyph={Icon.GLYPHS.close} />
         </button>
