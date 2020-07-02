@@ -140,6 +140,7 @@ export class ArcGisPortalItemStratum extends LoadableStratum(
       const traits = createStratumInstance(InfoSectionTraits);
       runInAction(() => {
         traits.name = name;
+        // traits.content = content;
         traits.content = DOMPurify.sanitize(content, {
           FORBID_ATTR: ["style"],
           FORBID_TAGS: ["font"]
@@ -347,6 +348,7 @@ export default class ArcGisPortalItemReference extends UrlMixin(
   ): Promise<BaseModel | undefined> {
     // So when we first crawl we'll get this far
     await this.setArcgisStrata(this);
+    // this.setSupportedFormatFromItem(this._arcgisItem);
     if (this._supportedFormat === undefined) return undefined;
 
     // See comments below re this sequence
@@ -368,6 +370,7 @@ export default class ArcGisPortalItemReference extends UrlMixin(
       this.terria,
       this
     );
+
     if (model === undefined) return;
     previousTarget = model;
     await this.setArcgisStrata(model);
@@ -412,7 +415,7 @@ interface PreparedSupportedFormat {
 
 async function loadPortalItem(portalItem: ArcGisPortalItemReference) {
   var uri = new URI(portalItem._portalRootUrl)
-    .segment(`/sharing/rest/content/items/${portalItem.uniqueId}`)
+    .segment(`/sharing/rest/content/items/${portalItem.itemId}`)
     .addQuery({ f: "json" });
 
   const response: ArcGisItem = await loadJson(
@@ -426,7 +429,6 @@ async function loadPortalItem(portalItem: ArcGisPortalItemReference) {
 // But this only relevant on some layers
 async function loadAdditionalPortalInfo(portalItem: ArcGisPortalItemReference) {
   if (portalItem._arcgisItem === undefined) return undefined;
-
   const baseUrl = portalItem._portalRootUrl;
   var uri = new URI(baseUrl)
     .segment(`/sharing/rest/content/items/${portalItem._arcgisItem.id}/data`)

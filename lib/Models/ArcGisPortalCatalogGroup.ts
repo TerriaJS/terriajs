@@ -28,6 +28,10 @@ export class ArcGisPortalStratum extends LoadableStratum(
   ArcGisPortalCatalogGroupTraits
 ) {
   static stratumName = "arcgisPortal";
+  groups: CatalogGroup[] = [];
+  filteredGroups: CatalogGroup[] = [];
+  datasets: ArcGisItem[] = [];
+  filteredDatasets: ArcGisItem[] = [];
 
   constructor(
     readonly _catalogGroup: ArcGisPortalCatalogGroup,
@@ -35,6 +39,11 @@ export class ArcGisPortalStratum extends LoadableStratum(
     readonly _arcgisGroupResponse: ArcGisPortalGroupSearchResponse | undefined
   ) {
     super();
+    this.datasets = this.getDatasets();
+    this.filteredDatasets = this.getFilteredDatasets();
+    this.groups = this.getGroups();
+    this.filteredGroups = this.getFilteredGroups();
+
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -90,7 +99,7 @@ export class ArcGisPortalStratum extends LoadableStratum(
           return undefined;
         }
         const groupSearchUri = new URI(catalogGroup.url)
-          .segment(`/sharing/rest/community/users/${portalUsername}`)
+          .segment(`/sharing/rest/community/self`)
           .addQuery({ num: 100, f: "json" });
 
         const response = await getPortalInformation(
@@ -198,13 +207,11 @@ export class ArcGisPortalStratum extends LoadableStratum(
     return references;
   }
 
-  @computed
-  get datasets(): ArcGisItem[] {
+  private getDatasets(): ArcGisItem[] {
     return this._arcgisResponse.results;
   }
 
-  @computed
-  get filteredDatasets(): ArcGisItem[] {
+  private getFilteredDatasets(): ArcGisItem[] {
     if (this.datasets.length === 0) return [];
     if (this._catalogGroup.blacklist !== undefined) {
       const bl = this._catalogGroup.blacklist;
@@ -213,8 +220,7 @@ export class ArcGisPortalStratum extends LoadableStratum(
     return this.datasets;
   }
 
-  @computed
-  get groups(): CatalogGroup[] {
+  private getGroups(): CatalogGroup[] {
     if (this._catalogGroup.groupBy === "none") return [];
 
     let groups: CatalogGroup[] = [];
@@ -232,8 +238,7 @@ export class ArcGisPortalStratum extends LoadableStratum(
     return groups;
   }
 
-  @computed
-  get filteredGroups(): CatalogGroup[] {
+  private getFilteredGroups(): CatalogGroup[] {
     if (this.groups.length === 0) return [];
     if (this._catalogGroup.blacklist !== undefined) {
       const bl = this._catalogGroup.blacklist;
@@ -327,12 +332,19 @@ export default class ArcGisPortalCatalogGroup extends UrlMixin(
   }
 
   protected forceLoadMetadata(): Promise<void> {
-    return ArcGisPortalStratum.load(this).then(stratum => {
-      if (stratum === undefined) return;
-      runInAction(() => {
-        this.strata.set(ArcGisPortalStratum.stratumName, stratum);
+    const portalStratum = <ArcGisPortalStratum | undefined>(
+      this.strata.get(ArcGisPortalStratum.stratumName)
+    );
+    if (!portalStratum) {
+      return ArcGisPortalStratum.load(this).then(stratum => {
+        if (stratum === undefined) return;
+        runInAction(() => {
+          this.strata.set(ArcGisPortalStratum.stratumName, stratum);
+        });
       });
-    });
+    } else {
+      return Promise.resolve()
+    }
   }
 
   protected forceLoadMembers(): Promise<void> {
