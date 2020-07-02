@@ -18,16 +18,74 @@
     visibility: hidden;
     margin-right: -400px;
   }
-}
-.header {
-  .actions {
-    border-bottom: 1px solid $overlay;
+  & .actions {
     padding: $padding;
   }
 }
 
+.title {
+  composes: clearfix from "../../Sass/common/_base.scss";
+  composes: list-reset from "../../Sass/common/_base.scss";
+
+  align-items: baseline;
+  padding-left: $padding-small + $padding;
+  padding-right: $padding-small + $padding;
+  padding-top: $padding-small;
+  padding-bottom: $padding-small;
+  color: $text-light;
+  height: $story-title-height;
+  line-height: $story-title-height;
+  border-bottom: 1px solid $overlay;
+  li {
+    display: inline-block;
+    float: left;
+    font-size: $font-size-mid-small;
+    font-weight: $font-weight-bold;
+    &:last-child {
+      float: right;
+    }
+  }
+}
+
+.hide-button {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  color: $text-light;
+  font-size: $font-size-mid-small;
+  text-transform: uppercase;
+  padding: $padding $padding $padding 5 * $padding;
+  border: 0;
+  svg {
+    height: $font-size-mid-small;
+    width: $font-size-mid-small;
+    fill: $text-light;
+    vertical-align: middle;
+    display: inline-block;
+    use {
+      pointer-events: none;
+    }
+  }
+  &:hover,
+  &:focus {
+    svg {
+      fill: $color-primary;
+    }
+  }
+}
+
+.header {
+  & .actions {
+    border-bottom: 1px solid $overlay;
+  }
+
+  & .stories-actions {
+    display: flex;
+  }
+}
+
 .stories {
-  height: calc(100vh - 121px);
+  composes: scrollbars from "../../Sass/common/_base.scss";
+
+  height: calc(100vh - 121px - 51px);
   overflow: auto;
   &.isActive {
     opacity: 0.7;
@@ -66,10 +124,15 @@
   padding: $padding;
 }
 
+.previewBtn {
+  width: 50%;
+}
+
 .captureBtn,
 .previewBtn {
   position: relative;
   padding-left: 35px;
+  height: inherit;
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn-primary from "../../Sass/common/_buttons.scss";
   svg {
@@ -80,10 +143,6 @@
     left: $padding;
     top: 8px;
   }
-}
-
-.previewBtn {
-  margin-bottom: $padding;
 }
 
 .story:hover {
