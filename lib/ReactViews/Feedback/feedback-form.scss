@@ -5,24 +5,25 @@
   composes: scrollbars from "../../Sass/common/_base.scss";
   font-family: $font-base;
   font-size: $font-size-mid-small;
-  z-index: 1;
+  z-index: 99999;
   position: fixed;
   background: #fff;
   color: $dark;
   border-radius: $radius-medium;
   box-shadow: $box-shadow;
   display: none;
+  overflow-y: auto;
 
   @media (min-width: $sm) {
     bottom: 75px;
     right: $padding * 2;
+    max-height: 60vh;
   }
   @media (max-width: $sm) {
     right: 0;
     top: $mobile-header-height;
     left: 0;
     max-height: calc(100vh - #{$mobile-header-height});
-    overflow-y: auto;
   }
   &.isOpen {
     display: block;

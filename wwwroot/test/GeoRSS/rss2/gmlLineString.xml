@@ -1,0 +1,25 @@
+<rss xmlns="http://www.w3.org/2005/Atom" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml">
+	<channel>
+		<title>GeoRSS feed samples</title>
+		<subtitle>To aid in unit testing</subtitle>
+		<link href="http://example.org/" />
+		<updated>2020-02-26T18:30:02Z</updated>
+		<author>
+			<name>TerriaJS</name>
+			<email>groldan@example.com</email>
+		</author>
+		<link href="http://www.georss.org/example" />
+		<item>
+			<title>LineString sample</title>
+			<link href="http://www.georss.org/example" />
+			<id>linestring-1</id>
+			<updated>2009-08-17T07:02:32Z</updated>
+			<content>a sample geometry</content>
+			<georss:where>
+				<gml:LineString>
+					<gml:posList>40.73615 -73.991309 40.736381 -73.991199</gml:posList>
+				</gml:LineString>
+			</georss:where>
+		</item>
+	</channel>
+</rss>

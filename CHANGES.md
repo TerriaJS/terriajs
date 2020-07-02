@@ -3,6 +3,7 @@ Change Log
 
 ### MobX Development
 
+#### next release (7.11.5-mobx-35)
 #### next release (mobx-37)
 * Added file upload support for `GltfCatalogItem`. The supported extension is glb.
 
@@ -30,6 +31,14 @@ Change Log
 * Changed the `Tool` interface, now accepting prop `getToolComponent` instead of `toolComponent`
 * Added `ToolButton` for loading/unloading a tool
 * Added `TransformationTraits` that can be used to change position/rotation/scale of a model.
+* Merge master into mobx. This includes:
+  * Upgraded to Cesium v1.68.
+  * Story related enhancements:
+    * Added a title to story panel with ability to close story panel. 
+    * Added a popup on remove all stories.
+    * Added button for sharing stories.
+    * Added a question popup on window close (if there are stories on the map so users don't lose their work).
+* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 * Added a new `editor` Icon
 * Changed `ToolButton` to show the same icon in open/close state. Previously it showed a close icon in close state.
 
@@ -238,7 +247,64 @@ Change Log
 
 
 ### Next Release
+### next verion
+* Rework the handling of point datasets on the anti-meridian when using LeafletJS.
+
+### v7.11.5
+
+* Added `GeoRssCatalogItem` for displaying GeoRSS files comming from rss2 and atom feeds.
+* Bug fix: Prevent geojson files from appearing twice in the workbench when dropped with the .json extension
+* Story related enhancements:
+  * Added a title to story panel with ability to close story panel. 
+  * Added a popup on remove all stories.
+  * Added button for sharing stories.
+  * Added a question popup on window close (if there are stories on the map so users don't lose their work).
+* Pinned `html-to-react` to version 1.3.4 to avoid IE11 incompatibility with newer version of deep dependency `entities`. See https://github.com/fb55/entities/issues/209
+* Added a `MapboxStyleCatalogItem` for showing Mapbox styles.
+* Add a `tileErrorThresholdBeforeDisabling` parameter to `ImageryLayerCatalogItem` to allow a threshold to set for allowed number of tile failures before disabling the layer.
+
+### v7.11.4
+
+* Add support for `classBreaks` renderer to `ArcGisFeatureServerCatalogItem`.
+* Upgraded to Cesium v1.68.
+* Replace `defineProperties` and `freezeObject` to `Object.defineProperties` and `Object.freeze` respectively.
+* Bumped travis build environment to node 10.
+* Upgraded to `generate-terriajs-schema` to v1.5.0.
+
+### v7.11.3
+
+* Added babel dynamic import plugin for webpack builds.
+* `ignoreUnknownTileErrors` will now also ignore HTTP 200 responses that are not proper images.
+
+### v7.11.2
+
+* Pass minimumLevel, in Cesium, to minNativeZoom, in Leaflet.
+* Upgraded to Cesium v1.66.
+
+### v7.11.1
+
+* Fix for color of markers on the map associated with chart items
+
+### v7.11.0
+
 * Fix draggable workbench/story items with translation HOC
+* Added first revision of "delta feature" for change detection of WMS catalog items which indicate `supportsDeltaComparison`
+* Improve menu bar button hover/focus states when interacting with its panel contents
+* Add ability to set opacity on `GeoJsonCatalogItem`
+* Expanded test cases to ensure WorkbenchItem & Story have the correct order of components composed
+* Fix broken catalog functions when used with translation HOC
+* Fix bug with momentPoints chart type when plotting against series with null values
+* Make the default `Legend` width a little smaller to account for the workbench scrollbar
+* Bug fix for expanding chart - avoid creating marker where no lat lon exists.
+* Add a `ChartDisclaimer` component to display an additional disclaimer above the chart panel in the bottom dock.
+* Add `allowFeatureInfoRequests` property to `Terria` and prevent unnecessary feature info requests when creating `UserDrawing`s.
+* Removes unsupported data that is drag and dropped from the workbench and user catalog.
+* Adjusted z-index values so that the explorer panel is on top of the side panel and the notification window appears at the very top layer.
+* Allow `CkanCatalogItem` names to be constructed from dataset and resource names where multiple resources are available for a single dataset
+* Set the name of ArcGis MapServer CatalogGroup and CatalogItem on load
+* Improve autodetecting WFS format, naming of the WFS catalog group and retaining the zoomToExtent
+* Remove unnecessary nbsp; from chart download and expand buttons introduced through internationalization.
+* Fix story prompt flag not being set after dismissing story, if `showFeaturePrompts` has been enabled
 
 ### v7.10.0
 
@@ -252,8 +318,11 @@ Change Log
 * Added support for `openAddData` option in config.json.  If true, the "Add Data" dialog is automatically opened at startup.
 * Welcome message, in-app guides & new feature prompts are now disabled by default. These can be re-enabled by setting the `showWelcomeMessage`, `showInAppGuides` & `showFeaturePrompts` options in config.json.
 * Updated Welcome Message to pass its props to `WelcomeMessagePrimaryBtnClick` & `WelcomeMessageSecondaryBtnClick` overrides
+* Welcome message, in-app guides & new feature prompts are now disabled by default. These can be re-enabled by setting the `showWelcomeMessage`, `showInAppGuides` & `showFeaturePrompts` options in config.json.
+* Updated Welcome Message to pass its props to `WelcomeMessagePrimaryBtnClick` & `WelcomeMessageSecondaryBtnClick` overrides.
 * Fixed a bug in anti-meridian handling causing excessive memory use.
 * Handled coordinate conversion for GeoJson geometries with an empty `coordinates` array.
+* Fixed height of My Data drag and drop box in Safari and IE.
 
 ### v7.9.0
 
