@@ -88,11 +88,7 @@ const DropdownPanel = createReactClass({
     }
 
     return (
-      <div
-        className={classNames(Styles.panel, this.props.theme.outer, {
-          [Styles.isOpen]: this.isOpen()
-        })}
-      >
+      <div className={classNames(Styles.panel, this.props.theme.outer)}>
         <button
           onClick={this.openWithUserClick}
           type="button"
@@ -101,6 +97,17 @@ const DropdownPanel = createReactClass({
           })}
           title={this.props.btnTitle}
           ref={this.props.btnRef || (element => (this.buttonElement = element))}
+          isOpen={this.isOpen()}
+          css={`
+            ${p =>
+              p.isOpen &&
+              `&:not(.foo) {
+                background: ${p.theme.colorPrimary};
+                svg {
+                  fill: ${p.theme.textLight};
+                }
+              }`}
+          `}
         >
           <If condition={this.props.theme.icon}>
             <Icon glyph={iconGlyph} />

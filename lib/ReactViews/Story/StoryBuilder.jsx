@@ -365,6 +365,9 @@ const StoryBuilder = observer(
                 onClick={this.hideStoryBuilder}
                 className={Styles.hideButton}
                 title={t("story.hideStoryPanel")}
+                css={`
+                  ${p => p.theme.addTerriaLightBtnStyles(p)}
+                `}
               >
                 <Icon glyph={Icon.GLYPHS.right} />
               </button>

@@ -6,4 +6,3 @@ export const terriaTheme = {
   ...Variables,
   ...Mixins
 };
-console.log("terriaTheme is", terriaTheme);

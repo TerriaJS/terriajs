@@ -52,15 +52,15 @@
 
 .btnSubmit {
   composes: btn from "../../Sass/common/_buttons.scss";
-  background: $color-primary;
-  color: $text-light;
+  // background: $color-primary;
+  // color: $text-light;
   margin-left: 10px;
   border-radius: $radius-medium;
   padding: $padding-small $padding * 2;
-  &:hover,
-  &--hover {
-    background: get-hover-color($color-primary);
-  }
+  // &:hover,
+  // &--hover {
+  //   background: get-hover-color($color-primary);
+  // }
 }
 
 .field {
@@ -109,7 +109,7 @@
     padding-right: 5px;
     height: 14px;
     width: 14px;
-    fill: $color-primary;
+    // fill: $color-primary;
   }
 }
 

@@ -49,7 +49,7 @@
 
 .hide-button {
   composes: btn from "../../Sass/common/_buttons.scss";
-  color: $text-light;
+  // color: $text-light;
   font-size: $font-size-mid-small;
   text-transform: uppercase;
   padding: $padding $padding $padding 5 * $padding;
@@ -57,7 +57,7 @@
   svg {
     height: $font-size-mid-small;
     width: $font-size-mid-small;
-    fill: $text-light;
+    // fill: $text-light;
     vertical-align: middle;
     display: inline-block;
     use {
@@ -67,7 +67,7 @@
   &:hover,
   &:focus {
     svg {
-      fill: $color-primary;
+      // fill: $color-primary;
     }
   }
 }

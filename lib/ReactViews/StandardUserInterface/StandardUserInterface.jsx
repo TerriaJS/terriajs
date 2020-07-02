@@ -66,6 +66,9 @@ const GlobalTerriaStyles = createGlobalStyle`
     &.is-active {
       background: ${p => p.theme.colorPrimary};
     }
+    svg {
+      fill: ${p => p.theme.mapButtonColor};
+    }
     &:hover,
     &:focus {
       svg {
@@ -101,6 +104,18 @@ const GlobalTerriaStyles = createGlobalStyle`
     }
   }
 
+  .tjs-_buttons__btn--tertiary {
+    color: ${p => p.theme.modalText};
+    background: ${p => p.theme.modalBg};
+    border: 2px solid ${p => p.theme.modalText};
+
+    &:hover,
+    &:focus {
+      border: 2px solid ${p => p.theme.colorPrimary};
+      color: ${p => p.theme.colorPrimary};
+    }
+  }
+
   .tjs-_buttons__btn-small:hover,
   .tjs-_buttons__btn-small:focus {
     color: ${p => p.theme.colorPrimary};
@@ -115,6 +130,22 @@ const GlobalTerriaStyles = createGlobalStyle`
     background:transparent;
     svg {
       fill: ${p => p.theme.colorPrimary};
+    }
+  }
+  .tjs-panel__inner-close-btn {
+    svg {
+      fill: ${p => p.theme.textLight};
+    }
+    &:hover,
+    &:focus {
+      svg {
+        fill: ${p => p.theme.colorPrimary};
+      }
+    }
+  }
+  .tjs-panel__inner-close-btn--for-modal {
+    svg {
+      fill: ${p => p.theme.grey};
     }
   }
   .tjs-dropdown__btn--dropdown {
@@ -483,14 +514,15 @@ const StandardUserInterface = observer(
                 <StoryPanel terria={terria} viewState={this.props.viewState} />
               )}
             </div>
-            {this.props.terria.configParameters.storyEnabled && (
-              <StoryBuilder
-                isVisible={showStoryBuilder}
-                terria={terria}
-                viewState={this.props.viewState}
-                animationDuration={animationDuration}
-              />
-            )}
+            {this.props.terria.configParameters.storyEnabled &&
+              showStoryBuilder && (
+                <StoryBuilder
+                  isVisible={showStoryBuilder}
+                  terria={terria}
+                  viewState={this.props.viewState}
+                  animationDuration={animationDuration}
+                />
+              )}
             <HelpPanel terria={terria} viewState={this.props.viewState} />
             <Disclaimer viewState={this.props.viewState} />
           </div>
