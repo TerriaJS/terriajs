@@ -188,7 +188,7 @@ class Story extends React.Component {
   calculateOffset() {
     const offsetTop = this.storyRef.current?.offsetTop || 0;
     const scrollTop = this.props.parentRef.current.scrollTop || 0;
-    const heightParrent = this.storyRef.current.offsetParent.offsetHeight;
+    const heightParrent = this.storyRef.current?.offsetParent.offsetHeight || 0;
     const offsetTopScroll = offsetTop - scrollTop + 25;
     if (offsetTopScroll + 125 > heightParrent) {
       return `bottom ${offsetTopScroll + 125 - heightParrent + 45}px;`;
@@ -200,7 +200,6 @@ class Story extends React.Component {
     const story = this.props.story;
     const bodyText = this.getTruncatedContent(story.text);
     const { t } = this.props;
-    // #3d434d
     return (
       <>
         <Box

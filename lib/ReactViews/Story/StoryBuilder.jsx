@@ -60,6 +60,7 @@ const StoryBuilder = observer(
 
     removeStory(index, story) {
       this.setState({
+        isSharing: false,
         isRemoving: true,
         storyToRemove: story,
         storyRemoveIndex: index
@@ -87,6 +88,7 @@ const StoryBuilder = observer(
 
     toggleRemoveDialog() {
       this.setState({
+        isSharing: false,
         isRemoving: !this.state.isRemoving,
         storyToRemove: undefined,
         storyRemoveIndex: undefined
@@ -148,6 +150,7 @@ const StoryBuilder = observer(
     },
 
     recaptureScene(story) {
+      this.closeShareRemoving();
       const { t } = this.props;
       clearTimeout(this.resetReCaptureStatus);
       const storyIndex = (this.props.terria.stories || [])
@@ -184,7 +187,15 @@ const StoryBuilder = observer(
       });
     },
 
+    closeShareRemoving() {
+      this.setState({
+        isRemoving: false,
+        isSharing: false
+      });
+    },
+
     runStories() {
+      this.closeShareRemoving();
       runInAction(() => {
         this.props.viewState.storyBuilderShown = false;
         this.props.viewState.storyShown = true;
@@ -196,6 +207,7 @@ const StoryBuilder = observer(
     },
 
     editStory(story) {
+      this.closeShareRemoving();
       runInAction(() => {
         this.props.viewState.storyBuilderShow = true;
         this.props.viewState.storyShown = false;
@@ -207,6 +219,7 @@ const StoryBuilder = observer(
     },
 
     viewStory(index, story) {
+      this.closeShareRemoving();
       runInAction(() => {
         this.props.viewState.currentStoryId = index;
       });
@@ -256,6 +269,7 @@ const StoryBuilder = observer(
 
     toggleSharePanel() {
       this.setState({
+        isRemoving: false,
         isSharing: !this.state.isSharing
       });
     },
