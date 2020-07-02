@@ -1,6 +1,8 @@
 import { configure, runInAction } from "mobx";
 import _loadWithXhr from "../../lib/Core/loadWithXhr";
 import Terria from "../../lib/Models/Terria";
+import registerCatalogMembers from "../../lib/Models/registerCatalogMembers";
+
 import CommonStrata from "../../lib/Models/CommonStrata";
 import i18next from "i18next";
 import ArcGisPortalItemReference, {
@@ -31,6 +33,7 @@ describe("ArcGisPortalItemReference", function() {
     terria = new Terria({
       baseUrl: "./"
     });
+    registerCatalogMembers()
     arcGisPortalItemReference = new ArcGisPortalItemReference("portaltest", terria);
 
     const realLoadWithXhr = loadWithXhr.load;
@@ -73,102 +76,22 @@ describe("ArcGisPortalItemReference", function() {
       expect(arcGisPortalItemReference).toBeDefined();
       expect(portalItemTarget instanceof ArcGisFeatureServerCatalogItem).toBe(true);
       expect(portalItemTarget.url).toBe(
-        "https://portal.spatial.nsw.gov.au/server/rest/services/NSW_Transport_Theme/FeatureServer"
+        "https://portal.spatial.nsw.gov.au/server/rest/services/NSW_Transport_Theme/FeatureServer/5"
       );
-    })
-  //     expect(ckanItemTarget.rectangle.west).toBe(96.816941408);
-  //     expect(ckanItemTarget.rectangle.south).toBe(-43.598215003);
-  //     expect(ckanItemTarget.rectangle.east).toBe(159.109219008);
-  //     expect(ckanItemTarget.rectangle.north).toBe(-9.142175977);
+      expect(portalItemTarget.rectangle.west).toBe(140.9839);
+      expect(portalItemTarget.rectangle.south).toBe(-37.5043);
+      expect(portalItemTarget.rectangle.east).toBe(159.0979);
+      expect(portalItemTarget.rectangle.north).toBe(-28.1555);
 
-  //     const licenceInfo = ckanItemTarget.info.filter(
-  //       (i: any) => i.name === "Licence"
-  //     )[0];
-  //     expect(licenceInfo.content).toBe(
-  //       "[Creative Commons Attribution 3.0 Australia](http://creativecommons.org/licenses/by/3.0/au/)"
-  //     );
+      const licenceInfo = portalItemTarget.info.filter(
+        (i: any) => i.name === "Licence"
+      )[0];
+      expect(licenceInfo.content).toBeDefined();
 
-  //     const contactInfo = ckanItemTarget.info.filter(
-  //       (i: any) => i.name === "Contact"
-  //     )[0];
-  //     expect(contactInfo.content).toBe("taxstats@ato.gov.au");
-
-  //     const datasetInfo = ckanItemTarget.info.filter(
-  //       (i: any) => i.name === "Dataset Description"
-  //     )[0];
-  //     expect(datasetInfo.content).toBe(
-  //       "Taxation statistics: an overview of the income and tax status of Australian individuals, companies, partnerships, trusts and funds for 2011-12. "
-  //     );
-
-  //     const authorInfo = ckanItemTarget.info.filter(
-  //       (i: any) => i.name === "Author"
-  //     )[0];
-  //     expect(authorInfo.content).toBe("Australian Taxation Office");
-
-  //     const createdInfo = ckanItemTarget.info.filter(
-  //       (i: any) => i.name === "Created"
-  //     )[0];
-  //     expect(createdInfo.content).toBe("2014-04-24");
-
-  //     const modifiedInfo = ckanItemTarget.info.filter(
-  //       (i: any) => i.name === "Modified"
-  //     )[0];
-  //     expect(modifiedInfo.content).toBe("2015-08-25");
-
-  //     const updateInfo = ckanItemTarget.info.filter(
-  //       (i: any) => i.name === "Update Frequency"
-  //     )[0];
-  //     expect(updateInfo.content).toBe("daily");
-
-  //     const custodianInfo = ckanItemTarget.info.filter(
-  //       (i: any) => i.name === "Dataset Custodian"
-  //     )[0];
-  //     expect(custodianInfo.content).toBe("Australian Taxation Office");
-  //   });
+      const datasetInfo = portalItemTarget.info.filter(
+        (i: any) => i.name === "Dataset Description"
+      )[0];
+      expect(datasetInfo.content).toBeDefined();
   });
 
-  // describe("Can load an item by resourceId - ", function() {
-  //   beforeEach(async function() {
-  //     runInAction(() => {
-  //       ckanItemReference.setTrait("definition", "url", "someresource");
-  //       ckanItemReference.setTrait("definition", "name", "Taxation Statistics");
-  //       ckanItemReference.setTrait("definition", "resourceId", "1234");
-  //     });
-  //     await ckanItemReference.loadReference();
-  //     ckanDatasetStratum = <CkanDatasetStratum>(
-  //       ckanItemReference.strata.get(CkanDatasetStratum.stratumName)
-  //     );
-  //     ckanItemTarget = ckanItemReference.target;
-  //   });
-
-  //   it("properly creates item", function() {
-  //     expect(ckanItemReference._ckanResource).toBeDefined();
-  //     expect(ckanItemReference._ckanDataset).toBe(undefined);
-  //     expect(ckanItemReference._ckanCatalogGroup).toBe(undefined);
-  //     // when creating a single item directly name is retained from the definition stratum
-  //     expect(ckanItemTarget.name).toBe("Taxation Statistics");
-
-  //     expect(ckanItemTarget).toBeDefined();
-  //     expect(ckanItemTarget instanceof WebMapServiceCatalogItem).toBe(true);
-  //     expect(ckanItemTarget.url).toBe(
-  //       "http://data.gov.au/geoserver/taxation-statistics-2011-12/wms?request=GetCapabilities"
-  //     );
-  //     expect(ckanItemTarget.rectangle.west).toBe(undefined);
-  //     expect(ckanItemTarget.info.length).toBe(0);
-  //   });
-  // });
-
-  // describe("Rejected if there is no datasetId or resourceId - ", function() {
-  //   beforeEach(async function() {
-  //     runInAction(() => {
-  //       ckanItemReference.setTrait("definition", "url", "someresource");
-  //       ckanItemReference.setTrait("definition", "name", "Taxation Statistics");
-  //     });
-  //     await ckanItemReference.loadReference();
-  //   });
-
-  //   it("No target can be created", function() {
-  //     expect(ckanItemReference.target).toBe(undefined);
-  //   });
-  // });
 });
