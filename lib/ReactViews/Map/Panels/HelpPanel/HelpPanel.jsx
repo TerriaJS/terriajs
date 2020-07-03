@@ -100,11 +100,7 @@ class HelpPanel extends React.Component {
                 });
               }}
               css={`
-                color: ${p => p.theme.textLight};
-                background-color: ${p => p.theme.colorPrimary};
-                svg {
-                  fill: ${p => p.theme.textLight};
-                }
+                ${p => p.theme.addTerriaPrimaryBtnStyles(p)}
               `}
             >
               {" "}

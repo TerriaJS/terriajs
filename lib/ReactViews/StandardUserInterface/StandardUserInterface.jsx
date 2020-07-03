@@ -58,62 +58,20 @@ const GlobalTerriaStyles = createGlobalStyle`
   // are imported everywhere and used in various ways - until we remove sass
   // this is the quickest way to tackle them for now
   .tjs-_buttons__btn--map {
-    color: ${p => p.theme.textLight};
-    background-color: ${p => p.theme.dark};
-    &:hover,
-    &:focus,
-    .is-open &,
-    &.is-active {
-      background: ${p => p.theme.colorPrimary};
-    }
-    svg {
-      fill: ${p => p.theme.mapButtonColor};
-    }
-    &:hover,
-    &:focus {
-      svg {
-        fill: ${p => p.theme.textLight};
-      }
-    }
+    ${p => p.theme.addTerriaMapBtnStyles(p)}
   }
 
   .tjs-_buttons__btn-primary {
-    color: ${p => p.theme.textLight};
-    background: ${p => p.theme.colorPrimary};
-    &:hover,
-    &:focus {
-      color: ${p => p.theme.textLight};
-      background: ${p => p.theme.colorPrimary};
-    }
-  }
-  .tjs-_buttons__btn-primary:hover,
-  .tjs-_buttons__btn-primary:focus,
-  .tjs-_buttons__btn-primary--hover {
-
+    ${p => p.theme.addTerriaPrimaryBtnStyles(p)}
   }
 
   .tjs-_buttons__btn--secondary, 
   .tjs-_buttons__btn--close-modal {
-    color: ${p => p.theme.colorPrimary};
-    // Don't override border here on secondary, as it's set specifically on certain buttons e.g. story cancel button
-
-    &:hover,
-    &:focus {
-      border: 2px solid ${p => p.theme.colorPrimary};
-      color: ${p => p.theme.colorPrimary};
-    }
+    ${p => p.theme.addTerriaSecondaryBtnStyles(p)}
   }
 
   .tjs-_buttons__btn--tertiary {
-    color: ${p => p.theme.modalText};
-    background: ${p => p.theme.modalBg};
-    border: 2px solid ${p => p.theme.modalText};
-
-    &:hover,
-    &:focus {
-      border: 2px solid ${p => p.theme.colorPrimary};
-      color: ${p => p.theme.colorPrimary};
-    }
+    ${p => p.theme.addTerriaTertiaryBtnStyles(p)}
   }
 
   .tjs-_buttons__btn-small:hover,

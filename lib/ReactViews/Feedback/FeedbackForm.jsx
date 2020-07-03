@@ -181,6 +181,13 @@ const FeedbackForm = observer(
                   type="button"
                   className={Styles.btnCancel}
                   onClick={this.onDismiss}
+                  css={`
+                    &:hover,
+                    &:focus {
+                      border: 1px solid ${p => p.theme.colorPrimary};
+                      color: ${p => p.theme.colorPrimary};
+                    }
+                  `}
                 >
                   {t("feedback.cancel")}
                 </button>
