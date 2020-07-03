@@ -84,6 +84,10 @@ export const WorkbenchItemRaw = observer(
           className={classNames(this.props.className, Styles.workbenchItem, {
             [Styles.isOpen]: workbenchItem.isOpenInWorkbench
           })}
+          css={`
+            color: ${p => p.theme.textLight};
+            background: ${p => p.theme.darkWithOverlay};
+          `}
         >
           <Box fullWidth justifySpaceBetween padded>
             <Box>
