@@ -10,7 +10,13 @@ export const Box = styled.div`
     `
     position:absolute;
     z-index:1;
-   `}
+  `}
+  ${props =>
+    props.topRight &&
+    `
+    right: 0px;
+    top: 0px;
+  `}
 
   box-sizing: border-box;
 

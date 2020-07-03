@@ -12,7 +12,7 @@ import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
 import parseCustomMarkdownToReact from "../../../Custom/parseCustomMarkdownToReact";
 import HelpPanelItem from "./HelpPanelItem";
-import { RawButton } from "../../../../Styled/Button.jsx";
+import Button, { RawButton } from "../../../../Styled/Button.jsx";
 
 @observer
 class HelpPanel extends React.Component {
@@ -31,7 +31,7 @@ class HelpPanel extends React.Component {
 
   render() {
     const { t } = this.props;
-    // const isVisible = this.props.viewState.showHelpMenu;
+    console.log(this.props.theme);
     const helpItems = this.props.terria.configParameters.helpContent;
     const isVisible =
       this.props.viewState.showHelpMenu &&
@@ -47,18 +47,28 @@ class HelpPanel extends React.Component {
       this.props.viewState.topElement === "HelpPanel" ? "top-element" : ""
     );
     return (
-      <div
-        className={className}
+      <Box
+        displayInlineBlock
+        backgroundColor={this.props.theme.textLight}
+        styledWidth={"320px"}
+        fullHeight
         onClick={() => this.props.viewState.setTopElement("HelpPanel")}
+        css={`
+          position: fixed;
+          z-index: ${this.props.viewState.topElement === "HelpPanel"
+            ? 99999
+            : 110};
+          transition: right 0.25s;
+          transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+          right: ${isVisible ? (isExpanded ? 490 : 0) : -320}px;
+        `}
       >
-        <div
+        <Box
+          positionAbsolute
+          paddedRatio={3}
           css={`
-            button {
-              padding: 15px;
-              position: absolute;
-              right: 0;
-              z-index: 110;
-            }
+            right: 0px;
+            top: 0px;
           `}
         >
           <RawButton onClick={() => this.props.viewState.hideHelpPanel()}>
@@ -69,7 +79,7 @@ class HelpPanel extends React.Component {
               glyph={Icon.GLYPHS.closeLight}
             />
           </RawButton>
-        </div>
+        </Box>
         <Box
           centered
           paddedHorizontally={5}
@@ -90,19 +100,29 @@ class HelpPanel extends React.Component {
           </Text>
           <Spacing bottom={5} />
           <Box centered>
-            <button
-              className={Styles.tourBtn}
-              title={"Take the tour"}
+            <Button
+              primary
+              rounded
+              styledMinWidth={"240px"}
               onClick={() => {
                 runInAction(() => {
                   this.props.viewState.hideHelpPanel();
                   this.props.viewState.setTourIndex(0);
                 });
               }}
+              renderIcon={() => (
+                <StyledIcon
+                  light
+                  styledWidth={"18px"}
+                  glyph={Icon.GLYPHS.tour}
+                />
+              )}
+              textProps={{
+                large: true
+              }}
             >
-              {" "}
-              <Icon glyph={Icon.GLYPHS.tour} /> {"Take the tour"}{" "}
-            </button>
+              {"Take the tour"}
+            </Button>
           </Box>
         </Box>
         <Spacing bottom={10} />
@@ -120,7 +140,7 @@ class HelpPanel extends React.Component {
             )}
           </Box>
         </Box>
-      </div>
+      </Box>
     );
   }
 }
