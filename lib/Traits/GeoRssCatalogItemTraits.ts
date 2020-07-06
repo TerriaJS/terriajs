@@ -21,7 +21,7 @@ export default class GeoRssCatalogItemTraits extends mixTraits(
   @primitiveTrait({
     type: "string",
     name: "geoRssString",
-    description: "A FeoRSSstring"
+    description: "A GeoRSSstring"
   })
   geoRssString?: string;
 }
