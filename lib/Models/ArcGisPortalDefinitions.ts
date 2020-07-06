@@ -7,6 +7,7 @@ export interface ArcGisItem {
   name: string;
   title: string;
   type: string;
+  categories: string[];
   typeKeywords: string[];
   description: string;
   tags: string[];

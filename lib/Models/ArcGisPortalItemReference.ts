@@ -358,6 +358,20 @@ export default class ArcGisPortalItemReference extends UrlMixin(
       this.setSupportedFormatFromItem(this._arcgisItem);
     }
 
+    // One final catch to handing types
+    // Tiled MapServices dont use a single layer
+    if (
+      this._arcgisItem !== undefined &&
+      this._arcgisItem.type === "Map Service" &&
+      this._arcgisItem.typeKeywords.indexOf("Tiled") > -1
+    ) {
+      const mapServerFormat = this.preparedSupportedFormats.filter(
+        f => f.definition.type === "esri-mapServer"
+      );
+      if (mapServerFormat.length === 1)
+        this._supportedFormat = mapServerFormat[0];
+    }
+
     const model = CatalogMemberFactory.create(
       this._supportedFormat.definition.type as string,
       this.uniqueId,

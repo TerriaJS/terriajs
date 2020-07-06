@@ -58,12 +58,16 @@ export default class ArcGisPortalCatalogGroupTraits extends mixTraits(
     description: `Gets or sets a value indicating how datasets should be grouped.  Valid values are:
      * none - All available datasets are put in a flat list; they are not grouped at all.
      * organisationsGroups - Data is retrieved and sorted by the organisations groups.
-     *
+     * portalCategories - Data is retrieved and sorted by categories specified by the portal items.
      * usersGroups - Data is retrieved and sorted by the groups particular to the user.
      * Note: This requires a user to be signed into portal, with a "portalUsername" to be set in "terria.userProperties", this is not available by default and requires custom configuration of TerriaMap.
     `
   })
-  groupBy?: "usersGroups" | "organisationsGroups" | "none" = "none";
+  groupBy?:
+    | "usersGroups"
+    | "organisationsGroups"
+    | "portalCategories"
+    | "none" = "none";
 
   @primitiveTrait({
     type: "string",
@@ -71,7 +75,7 @@ export default class ArcGisPortalCatalogGroupTraits extends mixTraits(
     description: `A title for the group holding all items that don't have a group in an ArcGIS Portal.
       If the value is a blank string or undefined, these items will be left at the top level, not grouped.`
   })
-  ungroupedTitle: string = "No group";
+  ungroupedTitle: string = "Ungrouped";
 
   @primitiveTrait({
     type: "boolean",

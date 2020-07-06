@@ -172,9 +172,40 @@ export class ArcGisPortalStratum extends LoadableStratum(
         itemSearchUri,
         catalogGroup
       );
+
+      if (
+        catalogGroup.groupBy === "portalCategories" &&
+        portalItemsServerResponse !== undefined
+      ) {
+        const categories = new Map();
+
+        portalItemsServerResponse.results.forEach(function(item) {
+          item.categories.forEach(function(category: string, index: number) {
+            if (index === 0) {
+              item.groupId = category;
+            }
+            // "/Categories/Land Parcel and Property"
+            if (!categories.has(category)) {
+              const categoryPieces = category.split("/");
+              const categoryGroup = {
+                id: category,
+                title: categoryPieces[categoryPieces.length - 1]
+              };
+
+              categories.set(category, categoryGroup);
+            }
+          });
+        });
+        portalGroupsServerResponse = {
+          total: categories.size,
+          results: Array.from(categories.values()),
+          start: 0,
+          num: 0,
+          nextStart: 0
+        };
+      }
     }
 
-    // If we don't have any portal items we're in strife
     if (portalItemsServerResponse === undefined) return undefined;
 
     return new ArcGisPortalStratum(
@@ -223,6 +254,7 @@ export class ArcGisPortalStratum extends LoadableStratum(
     if (this._catalogGroup.groupBy === "none") return [];
 
     let groups: CatalogGroup[] = [];
+    createUngroupedGroup(this, groups);
     createGroupsByPortalGroups(this, groups);
     groups.sort(function(a, b) {
       if (a.name === undefined || b.name === undefined) return 0;
@@ -307,7 +339,8 @@ export class ArcGisPortalStratum extends LoadableStratum(
       item.terria.addModel(item);
       if (
         this._catalogGroup.groupBy === "organisationsGroups" ||
-        this._catalogGroup.groupBy === "usersGroups"
+        this._catalogGroup.groupBy === "usersGroups" ||
+        this._catalogGroup.groupBy === "portalCategories"
       ) {
         this.addCatalogItemByPortalGroupsToCatalogGroup(item, arcgisDataset);
       }
@@ -402,7 +435,13 @@ function createGroupsByPortalGroups(
           arcgisPortal._catalogGroup.terria,
           group.title
         );
-        existingGroup.setTrait("definition", "description", group.description);
+        if (group.description) {
+          existingGroup.setTrait(
+            "definition",
+            "description",
+            group.description
+          );
+        }
       }
       groups.push(existingGroup);
     }
