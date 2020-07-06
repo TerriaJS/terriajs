@@ -2,7 +2,7 @@ name: npm-publish
 on:
   push:
     branches:
-      - mobx
+      - next
 
 jobs:
   publish:
