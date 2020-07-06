@@ -290,7 +290,11 @@ function parseMetadata(
   result.category = [];
   for (let i = 0; i < xmlElements.length; ++i) {
     const child = <Element>xmlElements[i];
-    if (child.localName === "item" || child.localName === "entry") {
+    if (
+      child.nodeType !== 1 ||
+      child.localName === "item" ||
+      child.localName === "entry"
+    ) {
       continue;
     }
     if (child.localName === "id") {
@@ -322,22 +326,28 @@ function parseMetadata(
     ) {
       result.copyright = child.textContent || undefined;
     } else if (child.localName === "author") {
-      const author = child.children;
-      if (author.length === 0) {
+      const authorNode = child.childNodes;
+      if (authorNode.length === 0) {
         result.author = {
           name: child.textContent || undefined
         };
       } else {
         let name, email, link;
-        for (let authorIndex = 0; authorIndex < author.length; ++authorIndex) {
-          const authorChild = author[authorIndex];
-          if (authorChild.localName === "name") {
-            name = authorChild.textContent || undefined;
-          } else if (authorChild.localName === "email") {
-            email = authorChild.textContent || undefined;
-          }
-          if (authorChild.localName === "link") {
-            link = authorChild.textContent || undefined;
+        for (
+          let authorIndex = 0;
+          authorIndex < authorNode.length;
+          ++authorIndex
+        ) {
+          const authorChild = <Element>authorNode[authorIndex];
+          if (authorChild.nodeType === 1) {
+            if (authorChild.localName === "name") {
+              name = authorChild.textContent || undefined;
+            } else if (authorChild.localName === "email") {
+              email = authorChild.textContent || undefined;
+            }
+            if (authorChild.localName === "link") {
+              link = authorChild.textContent || undefined;
+            }
           }
         }
         result.author = {
