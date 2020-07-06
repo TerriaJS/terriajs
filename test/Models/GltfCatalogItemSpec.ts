@@ -61,4 +61,15 @@ describe("GltfCatalogItem", function() {
       });
     });
   });
+
+  describe("hasLocalData", function() {
+    it("should be false by default", function() {
+      expect(gltf.hasLocalData).toBeFalsy();
+    });
+
+    it("should be true if the catalog item has local file data", function() {
+      gltf.setFileInput(new Blob());
+      expect(gltf.hasLocalData).toBeTruthy();
+    });
+  });
 });

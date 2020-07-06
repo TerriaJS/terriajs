@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, action, observable } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
@@ -16,11 +16,14 @@ import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
+import CommonStrata from "./CommonStrata";
 
 export default class GltfCatalogItem
   extends UrlMixin(CatalogMemberMixin(CreateModel(GltfCatalogItemTraits)))
   implements Mappable {
   static readonly type = "gltf";
+
+  @observable hasLocalData = false;
 
   get type() {
     return GltfCatalogItem.type;
@@ -122,6 +125,13 @@ export default class GltfCatalogItem
 
   protected forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
+  }
+
+  @action
+  setFileInput(file: File | Blob) {
+    const dataUrl = URL.createObjectURL(file);
+    this.setTrait(CommonStrata.user, "url", dataUrl);
+    this.hasLocalData = true;
   }
 
   loadMapItems(): Promise<void> {

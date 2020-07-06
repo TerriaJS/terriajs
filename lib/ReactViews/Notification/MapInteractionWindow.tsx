@@ -136,10 +136,10 @@ export default class MapInteractionWindow extends React.Component<{
         {this.currentInteractionMode?.onCancel && (
           <button
             type="button"
-            onClick={this.currentInteractionMode?.onCancel}
+            onClick={this.currentInteractionMode.onCancel}
             className={Styles.btn}
           >
-            {this.currentInteractionMode?.buttonText}
+            {this.currentInteractionMode.buttonText}
           </button>
         )}
       </MapInteractionWindowWrapper>
