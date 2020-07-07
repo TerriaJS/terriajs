@@ -9,9 +9,7 @@ interface CssExports {
   'datetimeSelector': string;
   'picker': string;
   'time': string;
-  'timeline-active': string;
   'timeline-button': string;
-  'timelineActive': string;
   'timelineButton': string;
   'title': string;
 }
