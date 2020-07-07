@@ -73,7 +73,7 @@ class TestDiffableItem extends DiffableMixin(
 
   clearDiffImage() {}
 
-  getLegendUrlForDiffStyle(
+  getLegendUrlForStyle(
     diffStyleId: string,
     firstDate: JulianDate,
     secondDate: JulianDate

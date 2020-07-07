@@ -31,10 +31,10 @@ function DiffableMixin<T extends Constructor<MixinModel>>(Base: T) {
 
     abstract clearDiffImage(): void;
 
-    abstract getLegendUrlForDiffStyle(
+    abstract getLegendUrlForStyle(
       diffStyleId: string,
-      firstDate: JulianDate,
-      secondDate: JulianDate
+      firstDate?: JulianDate,
+      secondDate?: JulianDate
     ): string;
 
     @computed

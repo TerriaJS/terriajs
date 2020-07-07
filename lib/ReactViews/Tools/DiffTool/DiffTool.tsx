@@ -1,5 +1,5 @@
 import hoistStatics from "hoist-non-react-statics";
-import { TFunction, WithT } from "i18next";
+import { TFunction } from "i18next";
 import { action, computed, observable, reaction, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { IDisposer } from "mobx-utils";
@@ -12,25 +12,26 @@ import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDire
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import LatLonHeight from "../../../Core/LatLonHeight";
 import PickedFeatures from "../../../Map/PickedFeatures";
+import prettifyCoordinates from "../../../Map/prettifyCoordinates";
 import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import CommonStrata from "../../../Models/CommonStrata";
 import Feature from "../../../Models/Feature";
+import hasTraits, { HasTrait } from "../../../Models/hasTraits";
+import {
+  isMarkerVisible,
+  removeMarker
+} from "../../../Models/LocationMarkerUtils";
 import Mappable, { ImageryParts } from "../../../Models/Mappable";
 import { AvailableStyle } from "../../../Models/SelectableStyle";
 import SplitItemReference from "../../../Models/SplitItemReference";
 import Terria from "../../../Models/Terria";
 import ViewState from "../../../ReactViewModels/ViewState";
 import Select from "../../../Styled/Select";
+import RasterLayerTraits from "../../../Traits/RasterLayerTraits";
 import { GLYPHS, StyledIcon } from "../../Icon";
 import DatePicker from "./DatePicker";
 import Styles from "./diff-tool.scss";
 import LocationPicker from "./LocationPicker";
-import prettifyCoordinates from "../../../Map/prettifyCoordinates";
-import {
-  isMarkerVisible,
-  removeMarker
-} from "../../../Models/LocationMarkerUtils";
-import { formatDate } from "../../BottomDock/Timeline/DateFormats";
 
 const Box: any = require("../../../Styled/Box").default;
 const Button: any = require("../../../Styled/Button").default;
@@ -38,6 +39,7 @@ const RawButton: any = require("../../../Styled/Button").RawButton;
 const Text: any = require("../../../Styled/Text").default;
 const Spacing: any = require("../../../Styled/Spacing").default;
 const dateFormat = require("dateformat");
+const Loader = require("../../Loader");
 
 type DiffableItem = DiffableMixin.Instance;
 
@@ -164,6 +166,7 @@ interface MainPropsType extends PropsType {
 class Main extends React.Component<MainPropsType> {
   @observable private _location?: LatLonHeight;
   @observable private _locationPickError = false;
+  @observable private _isPickingNewLocation = false;
 
   private openLeftDatePickerButton: React.RefObject<
     HTMLButtonElement
@@ -269,17 +272,38 @@ class Main extends React.Component<MainPropsType> {
   }
 
   @computed
-  get legendUrl(): string | undefined {
+  get diffLegendUrl(): string | undefined {
     return (
       this.diffStyle &&
       this.leftDate &&
       this.rightDate &&
-      this.diffItem.getLegendUrlForDiffStyle(
+      this.diffItem.getLegendUrlForStyle(
         this.diffStyle,
         this.leftDate,
         this.rightDate
       )
     );
+  }
+
+  @computed
+  get previewLegendUrl(): string | undefined {
+    return (
+      this.previewStyle && this.diffItem.getLegendUrlForStyle(this.previewStyle)
+    );
+  }
+
+  @action
+  showItem(model: DiffableItem) {
+    // We change the opacity instead of setting `show` to true/false, because
+    // we want the item to be on the map for date selection to work
+    hasOpacity(model) && model.setTrait(CommonStrata.user, "opacity", 0.8);
+  }
+
+  @action
+  hideItem(model: DiffableItem) {
+    // We change the opacity instead of setting `show` to true/false, because
+    // we want the item to be on the map for date selection to work
+    hasOpacity(model) && model.setTrait(CommonStrata.user, "opacity", 0);
   }
 
   @action.bound
@@ -309,6 +333,11 @@ class Main extends React.Component<MainPropsType> {
   }
 
   @action.bound
+  onUserPickingLocation(pickingLocation: LatLonHeight) {
+    this._isPickingNewLocation = true;
+  }
+
+  @action.bound
   onUserPickLocation(
     pickedFeatures: PickedFeatures,
     pickedLocation: LatLonHeight
@@ -328,14 +357,16 @@ class Main extends React.Component<MainPropsType> {
     } else {
       this._locationPickError = true;
     }
+    this._isPickingNewLocation = false;
   }
 
   @action.bound
   unsetDates() {
-    this.props.leftItem.setTrait(CommonStrata.user, "currentTime", undefined);
-    this.props.rightItem.setTrait(CommonStrata.user, "currentTime", undefined);
-    this.props.leftItem.setTrait(CommonStrata.user, "show", false);
-    this.props.rightItem.setTrait(CommonStrata.user, "show", false);
+    const { leftItem, rightItem } = this.props;
+    leftItem.setTrait(CommonStrata.user, "currentTime", undefined);
+    rightItem.setTrait(CommonStrata.user, "currentTime", undefined);
+    this.hideItem(leftItem);
+    this.hideItem(rightItem);
   }
 
   @action.bound
@@ -362,6 +393,7 @@ class Main extends React.Component<MainPropsType> {
   resetTool() {
     const terria = this.props.terria;
     this.diffItem.clearDiffImage();
+    setDefaultDiffStyle(this.diffItem);
     terria.overlays.add(this.props.leftItem);
     terria.overlays.add(this.props.rightItem);
     terria.workbench.remove(this.diffItem);
@@ -425,51 +457,57 @@ class Main extends React.Component<MainPropsType> {
             )}
             <Text textLight>{t("diffTool.computeDifference")}</Text>
             <Spacing bottom={3} />
-            {!isShowingDiff && (
-              <LocationAndDatesDisplayBox>
-                <Box>
-                  <div>Area:</div>
-                  <div>
-                    <Text large bold textLightDimmed>
-                      {t("diffTool.noLocationSelected.title")}
+            <LocationAndDatesDisplayBox>
+              <Box>
+                <div>Area:</div>
+                <div>
+                  <Text medium bold textLightDimmed>
+                    {this.location
+                      ? t("diffTool.locationDisplay.locationSelected.title")
+                      : t("diffTool.locationDisplay.noLocationSelected.title")}
+                  </Text>
+                  <Text textLight>
+                    {this.location
+                      ? t(
+                          "diffTool.locationDisplay.locationSelected.description"
+                        )
+                      : t(
+                          "diffTool.locationDisplay.noLocationSelected.description"
+                        )}
+                  </Text>
+                </div>
+              </Box>
+              <Box>
+                <div>Dates:</div>
+                <Box column alignItemsFlexStart>
+                  {this.leftDate && (
+                    <Text large>
+                      (A) {dateFormat(this.leftDate, "dd/mm/yyyy")}
                     </Text>
-                    <Text textLight>
-                      {t("diffTool.noLocationSelected.description")}
+                  )}
+                  {!this.leftDate && (
+                    <LinkButton ref={this.openLeftDatePickerButton}>
+                      Set date A
+                    </LinkButton>
+                  )}
+                  {this.rightDate && (
+                    <Text large>
+                      (B) {dateFormat(this.rightDate, "dd/mm/yyyy")}
                     </Text>
-                  </div>
+                  )}
+                  {!this.rightDate && (
+                    <LinkButton ref={this.openRightDatePickerButton}>
+                      Set date B
+                    </LinkButton>
+                  )}
+                  {this.leftDate && this.rightDate && (
+                    <LinkButton onClick={this.unsetDates}>
+                      Change dates
+                    </LinkButton>
+                  )}
                 </Box>
-                <Box>
-                  <div>Dates:</div>
-                  <Box column alignItemsFlexStart>
-                    {this.leftDate && (
-                      <Text large>
-                        (A) {dateFormat(this.leftDate, "dd/mm/yyyy")}
-                      </Text>
-                    )}
-                    {!this.leftDate && (
-                      <LinkButton ref={this.openLeftDatePickerButton}>
-                        Set date A
-                      </LinkButton>
-                    )}
-                    {this.rightDate && (
-                      <Text large>
-                        (B) {dateFormat(this.rightDate, "dd/mm/yyyy")}
-                      </Text>
-                    )}
-                    {!this.rightDate && (
-                      <LinkButton ref={this.openRightDatePickerButton}>
-                        Set date B
-                      </LinkButton>
-                    )}
-                    {this.leftDate && this.rightDate && (
-                      <LinkButton onClick={this.unsetDates}>
-                        Change dates
-                      </LinkButton>
-                    )}
-                  </Box>
-                </Box>
-              </LocationAndDatesDisplayBox>
-            )}
+              </Box>
+            </LocationAndDatesDisplayBox>
             {!isShowingDiff && (
               <>
                 <Spacing bottom={4} />
@@ -505,8 +543,12 @@ class Main extends React.Component<MainPropsType> {
                     </option>
                   ))}
                 </Selector>
+                {this.previewLegendUrl && (
+                  <LegendImage width="100%" src={this.previewLegendUrl} />
+                )}
               </>
             )}
+            <Spacing bottom={2} />
             <Selector
               value={this.diffStyle || ""}
               onChange={this.changeDiffStyle}
@@ -521,11 +563,8 @@ class Main extends React.Component<MainPropsType> {
                 </option>
               ))}
             </Selector>
-            {this.legendUrl && (
-              <>
-                <Spacing bottom={2} />
-                <img width="100%" src={this.legendUrl} />
-              </>
+            {isShowingDiff && this.diffLegendUrl && (
+              <LegendImage width="100%" src={this.diffLegendUrl} />
             )}
             {!isShowingDiff && (
               <>
@@ -563,32 +602,31 @@ class Main extends React.Component<MainPropsType> {
           <LocationPicker
             terria={terria}
             location={this.location}
-            title={this.locationPickerMessages.title}
-            messages={this.locationPickerMessages}
-            onPick={this.onUserPickLocation}
+            onPicking={this.onUserPickingLocation}
+            onPicked={this.onUserPickLocation}
           />
         )}
         {!isShowingDiff && (
-          <DatePanel>
+          <BottomPanel>
             <DatePicker
               title="Date Comparison A"
               item={this.props.leftItem}
               popupStyle={Styles.leftDatePickerPopup}
               externalOpenButton={this.openLeftDatePickerButton}
-              onDateSet={() =>
-                this.props.leftItem.setTrait(CommonStrata.user, "show", true)
-              }
+              onDateSet={() => this.showItem(this.props.leftItem)}
+            />
+            <AreaFilterSelection
+              location={this.location}
+              isPickingNewLocation={this._isPickingNewLocation}
             />
             <DatePicker
               title="Date Comparison B"
               item={this.props.rightItem}
               popupStyle={Styles.rightDatePickerPopup}
               externalOpenButton={this.openRightDatePickerButton}
-              onDateSet={() =>
-                this.props.rightItem.setTrait(CommonStrata.user, "show", true)
-              }
+              onDateSet={() => this.showItem(this.props.rightItem)}
             />
-          </DatePanel>
+          </BottomPanel>
         )}
       </Text>
     );
@@ -650,7 +688,7 @@ const DiffAccordion: React.FC<DiffAccordionProps> = props => {
 const DiffAccordionWrapper = styled(Box).attrs({
   column: true,
   positionAbsolute: true,
-  styledWidth: "324px"
+  styledWidth: "340px"
   // charcoalGreyBg: true
 })`
   top: 70px;
@@ -697,12 +735,12 @@ const Selector = (props: any) => (
       <Text textLight>{props.label}:</Text>
       <Spacing bottom={1} />
       <Select {...props}>{props.children}</Select>
-      {props.spacingBottom && <Spacing bottom={4} />}
+      {props.spacingBottom && <Spacing bottom={2} />}
     </label>
   </Box>
 );
 
-const DatePanel = styled(Box).attrs({
+const BottomPanel = styled(Box).attrs({
   centered: true,
   positionAbsolute: true,
   charcoalGreyBg: true,
@@ -721,19 +759,46 @@ const DatePanel = styled(Box).attrs({
   }
 `;
 
-const LocationAndDatesDisplay = (
-  props: {
-    location?: LatLonHeight;
-    leftDate?: JulianDate;
-    rightDate?: JulianDate;
-    openLeftDatePicker: () => void;
-    openRightDatePicker: () => void;
-  } & WithT
-) => {
-  const { location, leftDate, rightDate, t } = props;
-  const formattedDate = (date: JulianDate) =>
-    formatDate(JulianDate.toDate(date));
-  return null;
+const AreaFilterSelection = (props: {
+  location?: LatLonHeight;
+  isPickingNewLocation: boolean;
+}) => {
+  const { location, isPickingNewLocation } = props;
+  let locationText = "-";
+  if (location) {
+    const { longitude, latitude } = prettifyCoordinates(
+      location.longitude,
+      location.latitude,
+      {
+        digits: 2
+      }
+    );
+    locationText = `${longitude} ${latitude}`;
+  }
+  const progressComponent = (
+    <Text textLight extraExtraLarge bold>
+      <Loader message={`Querying ${location ? "new" : ""} position...`} />
+    </Text>
+  );
+
+  return (
+    <Box column centered>
+      <Text textLight semiBold>
+        Area filter selection
+      </Text>
+      {isPickingNewLocation && progressComponent}
+      {!isPickingNewLocation && (
+        <Text
+          textLight
+          extraExtraLarge
+          bold
+          css={"min-height: 40px; line-height: 40px;"}
+        >
+          {locationText}
+        </Text>
+      )}
+    </Box>
+  );
 };
 
 const LocationAndDatesDisplayBox = styled(Box).attrs({
@@ -751,6 +816,20 @@ const LocationAndDatesDisplayBox = styled(Box).attrs({
     min-width: 57px;
   }
 `;
+
+const LegendImage = function(props: any) {
+  return (
+    <img
+      {...props}
+      // Show the legend only if it loads successfully, so we start out hidden
+      style={{ display: "none", marginTop: "4px" }}
+      // @ts-ignore
+      onLoad={e => (e.target.style.display = "block")}
+      // @ts-ignore
+      onError={e => (e.target.style.display = "none")}
+    />
+  );
+};
 
 const LinkButton = styled(Button)`
   min-height: 0;
@@ -779,10 +858,40 @@ async function createSplitItem(
     newItem.setTrait(CommonStrata.user, "splitDirection", splitDirection);
     newItem.setTrait(CommonStrata.user, "currentTime", undefined);
     newItem.setTrait(CommonStrata.user, "initialTimeSource", "none");
-    newItem.setTrait(CommonStrata.user, "show", false);
+    if (hasOpacity(newItem)) {
+      // We want to show the item on the map only after date selection. At the
+      // same time we cannot set `show` to false because if we
+      // do so, date picking which relies on feature picking, will not work. So
+      // we simply set the opacity of the item to 0.
+      newItem.setTrait(CommonStrata.user, "opacity", 0);
+    }
+
+    setDefaultDiffStyle(newItem);
+
+    // Set the default style to true color style if it exists
+    const trueColor = newItem.styleSelector?.availableStyles.find(
+      style => style.name.search(/true/i) >= 0
+    );
+    if (trueColor) {
+      newItem.styleSelector?.chooseActiveStyle(CommonStrata.user, trueColor.id);
+    }
+
     terria.overlays.add(newItem);
     return newItem;
   });
+}
+
+/**
+ * If the item has only one available diff style, auto-select it
+ */
+function setDefaultDiffStyle(item: DiffableItem) {
+  if (item.diffStyleId === undefined && item.availableDiffStyles.length === 1) {
+    item.setTrait(
+      CommonStrata.user,
+      "diffStyleId",
+      item.availableDiffStyles[0]
+    );
+  }
 }
 
 function removeSplitItem(item: DiffableItem) {
@@ -805,6 +914,12 @@ function doesFeatureBelongToItem(
       m => ImageryParts.is(m) && m.imageryProvider === imageryProvider
     ) !== undefined
   );
+}
+
+function hasOpacity(
+  model: any
+): model is HasTrait<RasterLayerTraits, "opacity"> {
+  return hasTraits(model, RasterLayerTraits, "opacity");
 }
 
 export default hoistStatics(withTranslation()(withTheme(DiffTool)), DiffTool);
