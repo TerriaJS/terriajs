@@ -10,7 +10,6 @@ interface CssExports {
   'field': string;
   'h3': string;
   'h4': string;
-  'link': string;
   'metadata': string;
   'previewed--info': string;
   'previewedInfo': string;
