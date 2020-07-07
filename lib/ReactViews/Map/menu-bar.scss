@@ -32,6 +32,7 @@
 }
 
 .menu-item {
+  pointer-events: auto;
   position: relative;
   display: block;
   float: left;
@@ -68,6 +69,14 @@
 .storyBtn {
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn--map from "../../Sass/common/_buttons.scss";
+
+  &[aria-expanded="true"] {
+    background: $color-primary;
+    svg {
+      fill: #ffffff;
+    }
+  }
+
   &:hover,
   &:focus {
     svg {

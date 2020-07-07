@@ -21,6 +21,9 @@ const MyDataTab = observer(
     propTypes: {
       terria: PropTypes.object,
       viewState: PropTypes.object,
+      localDataTypes: PropTypes.arrayOf(PropTypes.object),
+      remoteDataTypes: PropTypes.arrayOf(PropTypes.object),
+      onFileAddFinished: PropTypes.func.isRequired,
       t: PropTypes.func.isRequired
     },
 
@@ -94,7 +97,7 @@ const MyDataTab = observer(
 
       return (
         <div className={Styles.dataTypeTab}>
-          <div>
+          <div className={Styles.dndBoxInfo}>
             <Trans i18nKey="addData.infoText">
               <div>Drag and drop a file here to view it locally on the map</div>
               <div>(it won’t be saved or uploaded to the internet)</div>
@@ -133,6 +136,9 @@ const MyDataTab = observer(
                 viewState={this.props.viewState}
                 activeTab={this.state.activeTab}
                 resetTab={this.resetTab}
+                localDataTypes={this.props.localDataTypes}
+                remoteDataTypes={this.props.remoteDataTypes}
+                onFileAddFinished={this.props.onFileAddFinished}
               />
             </If>
             <If condition={showTwoColumn}>

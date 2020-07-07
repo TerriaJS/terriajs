@@ -1,13 +1,16 @@
 "use strict";
 
-import React from "react";
 import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
-import ChartPanel from "../Custom/Chart/ChartPanel";
+import { runInAction } from "mobx";
 import { observer } from "mobx-react";
+import PropTypes from "prop-types";
+import React from "react";
+import ChartPanel from "../Custom/Chart/ChartPanel";
+import MapDataCount from "./MapDataCount";
 import Timeline from "./Timeline/Timeline";
 import Styles from "./bottom-dock.scss";
-import { runInAction } from "mobx";
+
+// import ChartDisclaimer from "./ChartDisclaimer";
 
 const BottomDock = observer(
   createReactClass({
@@ -26,7 +29,7 @@ const BottomDock = observer(
     },
 
     render() {
-      const terria = this.props.terria;
+      const { terria } = this.props;
       const top = terria.timelineStack.top;
 
       return (
@@ -40,6 +43,8 @@ const BottomDock = observer(
           tabIndex={0}
           onClick={this.handleClick}
         >
+          {/* <ChartDisclaimer terria={terria} viewState={this.props.viewState} /> */}
+          <MapDataCount terria={terria} viewState={this.props.viewState} />
           <ChartPanel
             terria={terria}
             onHeightChange={this.onHeightChange}

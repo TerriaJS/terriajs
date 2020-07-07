@@ -9,6 +9,7 @@ import Styles from "./help-panel.scss";
 import Spacing from "../../../../Styled/Spacing";
 import Box from "../../../../Styled/Box";
 import VideoGuide from "./VideoGuide";
+import TrainerPane from "./TrainerPane";
 import StyledHtml from "./StyledHtml";
 import SatelliteGuide from "../../../Guide/SatelliteGuide";
 
@@ -21,9 +22,10 @@ class HelpVideoPanel extends React.Component {
   static propTypes = {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
+    content: PropTypes.object.isRequired,
     itemString: PropTypes.string,
     paneMode: PropTypes.string,
-    htmlContent: PropTypes.array,
+    markdownContent: PropTypes.string,
     videoUrl: PropTypes.string,
     placeholderImage: PropTypes.string,
     theme: PropTypes.object,
@@ -67,6 +69,8 @@ class HelpVideoPanel extends React.Component {
           paddedVertically={18}
           css={`
             overflow: auto;
+            overflow-x: hidden;
+            overflow-y: auto;
           `}
         >
           <If condition={helpItemType === "videoAndContent"}>
@@ -90,12 +94,23 @@ class HelpVideoPanel extends React.Component {
                 <Spacing bottom={5} />
               </div>
             )}
-            {this.props.htmlContent && (
-              <StyledHtml key={"content"} content={this.props.htmlContent} />
+            {this.props.markdownContent && (
+              <StyledHtml
+                key={"markdownContent"}
+                viewState={this.props.viewState}
+                markdown={this.props.markdownContent}
+              />
             )}
           </If>
           <If condition={helpItemType === "slider"}>
             <SatelliteGuide
+              terria={this.props.terria}
+              viewState={this.props.viewState}
+            />
+          </If>
+          <If condition={helpItemType === "trainer"}>
+            <TrainerPane
+              content={this.props.content}
               terria={this.props.terria}
               viewState={this.props.viewState}
             />

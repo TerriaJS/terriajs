@@ -19,7 +19,7 @@
   }
 
   .top-element {
-    z-index: 99999 !important;
+    z-index: $notification-window-z-index - 10 !important;
     &:focus {
       outline: none;
     }
@@ -149,6 +149,10 @@
   transition: transform 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   // transition-delay: 0.25s; // temporary disable delays for splitter lag w/o resizing on transitionend
+}
+
+.showWorkbenchButtonTrainerBarVisible {
+  top: 0;
 }
 
 .showWorkbenchButtonisVisible {

@@ -32,7 +32,7 @@ import TimerSection from "./Controls/TimerSection";
 import ViewingControls from "./Controls/ViewingControls";
 import Styles from "./workbench-item.scss";
 
-const WorkbenchItem = observer(
+export const WorkbenchItemRaw = observer(
   createReactClass({
     displayName: "WorkbenchItem",
 
@@ -187,6 +187,15 @@ const WorkbenchItem = observer(
                 maxValue={workbenchItem.colorScaleMaximum}
               />
               <DisplayAsPercentSection item={workbenchItem} />
+              <If
+                condition={
+                  workbenchItem.shortReport ||
+                  (workbenchItem.shortReportSections &&
+                    workbenchItem.shortReportSections.length)
+                }
+              >
+                <ShortReport item={workbenchItem} />
+              </If>
               <Legend item={workbenchItem} />
               <If
                 condition={
@@ -197,15 +206,6 @@ const WorkbenchItem = observer(
               >
                 <ConceptViewer item={workbenchItem} />
               </If>
-              <If
-                condition={
-                  workbenchItem.shortReport ||
-                  (workbenchItem.shortReportSections &&
-                    workbenchItem.shortReportSections.length)
-                }
-              >
-                <ShortReport item={workbenchItem} />
-              </If>
             </div>
           </If>
         </li>
@@ -214,4 +214,4 @@ const WorkbenchItem = observer(
   })
 );
 
-module.exports = sortable(withTranslation()(WorkbenchItem));
+export default sortable(withTranslation()(WorkbenchItemRaw));

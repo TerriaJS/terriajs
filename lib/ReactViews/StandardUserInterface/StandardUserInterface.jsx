@@ -14,12 +14,13 @@ import FeatureInfoPanel from "../FeatureInfo/FeatureInfoPanel";
 import FeedbackForm from "../Feedback/FeedbackForm";
 import MapColumn from "./MapColumn";
 import MapInteractionWindow from "../Notification/MapInteractionWindow";
+import TrainerBar from "../Map/TrainerBar/TrainerBar";
 import MapNavigation from "../Map/MapNavigation";
 import MenuBar from "../Map/MenuBar";
 import ExperimentalFeatures from "../Map/ExperimentalFeatures";
 import MobileHeader from "../Mobile/MobileHeader";
 import Notification from "../Notification/Notification";
-// import ProgressBar from '../Map/ProgressBar';
+import ProgressBar from "../Map/ProgressBar";
 import SidePanel from "../SidePanel/SidePanel";
 import processCustomElements from "./processCustomElements";
 import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
@@ -261,6 +262,8 @@ const StandardUserInterface = observer(
                   <Medium>
                     <div
                       className={classNames(Styles.showWorkbenchButton, {
+                        [Styles.showWorkbenchButtonTrainerBarVisible]: this
+                          .props.viewState.trainerBarVisible,
                         [Styles.showWorkbenchButtonisVisible]: this.props
                           .viewState.isMapFullScreen,
                         [Styles.showWorkbenchButtonisNotVisible]: !this.props
@@ -278,7 +281,7 @@ const StandardUserInterface = observer(
                   </Medium>
 
                   <section className={Styles.map}>
-                    {/* <ProgressBar terria={terria}/> */}
+                    <ProgressBar terria={terria} />
                     <MapColumn
                       terria={terria}
                       viewState={this.props.viewState}
@@ -308,6 +311,12 @@ const StandardUserInterface = observer(
               </div>
 
               <If condition={!this.props.viewState.hideMapUi()}>
+                <Medium>
+                  <TrainerBar
+                    terria={terria}
+                    viewState={this.props.viewState}
+                  />
+                </Medium>
                 <div
                   className={classNames({
                     [Styles.explorerPanelIsVisible]: this.props.viewState

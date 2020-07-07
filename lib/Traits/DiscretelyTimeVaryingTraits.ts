@@ -24,7 +24,7 @@ export default class DiscretelyTimeVaryingTraits extends mixTraits(
   @primitiveTrait({
     type: "boolean",
     name: "Show in chart",
-    description: "Whether to show data availability on chart."
+    description: "Whether to plot data availability on a chart."
   })
   showInChartPanel = false;
 

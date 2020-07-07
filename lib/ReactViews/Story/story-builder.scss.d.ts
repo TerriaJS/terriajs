@@ -7,6 +7,8 @@ interface CssExports {
   'captureBtn': string;
   'footer': string;
   'header': string;
+  'hide-button': string;
+  'hideButton': string;
   'intro': string;
   'isActive': string;
   'isHidden': string;
@@ -16,6 +18,8 @@ interface CssExports {
   'removeBtn': string;
   'removeButton': string;
   'stories': string;
+  'stories-actions': string;
+  'storiesActions': string;
   'story': string;
   'story-fade-in': string;
   'story-fade-out': string;
@@ -27,6 +31,7 @@ interface CssExports {
   'storyPanel': string;
   'storySlideDown': string;
   'storySlideUp': string;
+  'title': string;
   'trashBtn': string;
   'tutBtn': string;
   'videoGuide': string;
