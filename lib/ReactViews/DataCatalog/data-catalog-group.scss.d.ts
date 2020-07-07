@@ -10,7 +10,6 @@ interface CssExports {
   'catalogGroup': string;
   'catalogGroupLowerLevel': string;
   'folder': string;
-  'isPreviewed': string;
   'label': string;
   'label--no-results': string;
   'labelNoResults': string;

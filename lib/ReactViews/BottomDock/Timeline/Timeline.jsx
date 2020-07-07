@@ -90,7 +90,12 @@ export const Timeline = observer(
 
       return (
         <div className={Styles.timeline}>
-          <div className={Styles.textRow}>
+          <div
+            className={Styles.textRow}
+            css={`
+              background: ${p => p.theme.dark};
+            `}
+          >
             <div
               className={Styles.textCell}
               title={t("dateTime.timeline.textCell")}

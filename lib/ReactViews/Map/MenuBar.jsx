@@ -153,6 +153,16 @@ const MenuBar = observer(props => {
                 type="button"
                 onClick={onStoryButtonClick}
                 aria-expanded={props.viewState.storyBuilderShown}
+                css={`
+                  ${p =>
+                    p["aria-expanded"] &&
+                    `&:not(.foo) {
+                      background: ${p.theme.colorPrimary};
+                      svg {
+                        fill: ${p.theme.textLight};
+                      }
+                    }`}
+                `}
               >
                 <Icon glyph={Icon.GLYPHS.story} />
                 <span>{t("story.story")}</span>

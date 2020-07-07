@@ -13,8 +13,6 @@ interface CssExports {
   'dndBoxInfo': string;
   'explanation': string;
   'h3': string;
-  'is-active': string;
-  'isActive': string;
   'left-col': string;
   'leftCol': string;
   'oneCol': string;
