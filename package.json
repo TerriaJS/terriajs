@@ -95,7 +95,7 @@
   "devDependencies": {
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "babel-eslint": "^10.0.1",
-    "electron": "^2.0.0",
+    "electron": "^9.1.0",
     "eslint": "^5.14.1",
     "eslint-plugin-jsx-control-statements": "^2.2.1",
     "eslint-plugin-react": "^7.12.4",
