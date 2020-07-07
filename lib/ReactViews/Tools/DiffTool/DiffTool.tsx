@@ -1,5 +1,5 @@
 import hoistStatics from "hoist-non-react-statics";
-import { TFunction } from "i18next";
+import { TFunction, WithT } from "i18next";
 import { action, computed, observable, reaction, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { IDisposer } from "mobx-utils";
@@ -30,6 +30,7 @@ import {
   isMarkerVisible,
   removeMarker
 } from "../../../Models/LocationMarkerUtils";
+import { formatDate } from "../../BottomDock/Timeline/DateFormats";
 
 const Box: any = require("../../../Styled/Box").default;
 const Button: any = require("../../../Styled/Button").default;
@@ -163,6 +164,13 @@ interface MainPropsType extends PropsType {
 class Main extends React.Component<MainPropsType> {
   @observable private _location?: LatLonHeight;
   @observable private _locationPickError = false;
+
+  private openLeftDatePickerButton: React.RefObject<
+    HTMLButtonElement
+  > = React.createRef();
+  private openRightDatePickerButton: React.RefObject<
+    HTMLButtonElement
+  > = React.createRef();
 
   constructor(props: MainPropsType) {
     super(props);
@@ -323,6 +331,14 @@ class Main extends React.Component<MainPropsType> {
   }
 
   @action.bound
+  unsetDates() {
+    this.props.leftItem.setTrait(CommonStrata.user, "currentTime", undefined);
+    this.props.rightItem.setTrait(CommonStrata.user, "currentTime", undefined);
+    this.props.leftItem.setTrait(CommonStrata.user, "show", false);
+    this.props.rightItem.setTrait(CommonStrata.user, "show", false);
+  }
+
+  @action.bound
   generateDiff() {
     if (
       this.leftDate === undefined ||
@@ -408,13 +424,59 @@ class Main extends React.Component<MainPropsType> {
               </>
             )}
             <Text textLight>{t("diffTool.computeDifference")}</Text>
-            {isShowingDiff && <Spacing bottom={3} />}
+            <Spacing bottom={3} />
+            {!isShowingDiff && (
+              <LocationAndDatesDisplayBox>
+                <Box>
+                  <div>Area:</div>
+                  <div>
+                    <Text large bold textLightDimmed>
+                      {t("diffTool.noLocationSelected.title")}
+                    </Text>
+                    <Text textLight>
+                      {t("diffTool.noLocationSelected.description")}
+                    </Text>
+                  </div>
+                </Box>
+                <Box>
+                  <div>Dates:</div>
+                  <Box column alignItemsFlexStart>
+                    {this.leftDate && (
+                      <Text large>
+                        (A) {dateFormat(this.leftDate, "dd/mm/yyyy")}
+                      </Text>
+                    )}
+                    {!this.leftDate && (
+                      <LinkButton ref={this.openLeftDatePickerButton}>
+                        Set date A
+                      </LinkButton>
+                    )}
+                    {this.rightDate && (
+                      <Text large>
+                        (B) {dateFormat(this.rightDate, "dd/mm/yyyy")}
+                      </Text>
+                    )}
+                    {!this.rightDate && (
+                      <LinkButton ref={this.openRightDatePickerButton}>
+                        Set date B
+                      </LinkButton>
+                    )}
+                    {this.leftDate && this.rightDate && (
+                      <LinkButton onClick={this.unsetDates}>
+                        Change dates
+                      </LinkButton>
+                    )}
+                  </Box>
+                </Box>
+              </LocationAndDatesDisplayBox>
+            )}
             {!isShowingDiff && (
               <>
                 <Spacing bottom={4} />
                 <Selector
                   value={sourceItem.uniqueId}
                   onChange={this.changeSourceItem}
+                  label="Source item"
                 >
                   <option disabled>Select source item</option>
                   {this.diffableItemsInWorkbench.map(item => (
@@ -428,12 +490,11 @@ class Main extends React.Component<MainPropsType> {
             {!isShowingDiff && (
               <>
                 <Spacing bottom={4} />
-                <Text textLight>{t("diffTool.styles")}</Text>
-                <Spacing bottom={2} />
                 <Selector
                   spacingBottom
                   value={this.previewStyle}
                   onChange={this.changePreviewStyle}
+                  label="Preview style"
                 >
                   <option disabled value="">
                     {t("diffTool.choosePreview")}
@@ -449,6 +510,7 @@ class Main extends React.Component<MainPropsType> {
             <Selector
               value={this.diffStyle || ""}
               onChange={this.changeDiffStyle}
+              label="Difference style"
             >
               <option disabled value="">
                 {t("diffTool.chooseDifference")}
@@ -509,12 +571,22 @@ class Main extends React.Component<MainPropsType> {
         {!isShowingDiff && (
           <DatePanel>
             <DatePicker
+              title="Date Comparison A"
               item={this.props.leftItem}
               popupStyle={Styles.leftDatePickerPopup}
+              externalOpenButton={this.openLeftDatePickerButton}
+              onDateSet={() =>
+                this.props.leftItem.setTrait(CommonStrata.user, "show", true)
+              }
             />
             <DatePicker
+              title="Date Comparison B"
               item={this.props.rightItem}
               popupStyle={Styles.rightDatePickerPopup}
+              externalOpenButton={this.openRightDatePickerButton}
+              onDateSet={() =>
+                this.props.rightItem.setTrait(CommonStrata.user, "show", true)
+              }
             />
           </DatePanel>
         )}
@@ -545,13 +617,13 @@ const DiffAccordion: React.FC<DiffAccordionProps> = props => {
           <StyledIcon styledWidth="20px" light glyph={GLYPHS.difference} />
           <Spacing right={1} />
           {/* font-size is non standard with what we have so far in terria,
-          lineheight as well to hit nonstandard paddings */}
+              lineheight as well to hit nonstandard paddings */}
           <Text css={"font-size: 17px;line-height: 26px;"} textLight>
             {t("diffTool.title")}
           </Text>
         </Box>
         {/* margin-right 5px for the padded button offset - larger click area
-        but visible should be inline with rest of box */}
+            but visible should be inline with rest of box */}
         <Box centered css={"margin-right:-5px;"}>
           <RawButton onClick={() => viewState.closeTool()}>
             <Text textLight small semiBold uppercase>
@@ -591,9 +663,10 @@ const DiffAccordionWrapper = styled(Box).attrs({
 
 const MainPanel = styled(Box).attrs({
   column: true,
-  paddedRatio: 2,
-  charcoalGreyBg: true
-})``;
+  paddedRatio: 2
+})`
+  background-color: ${p => p.theme.darkWithOverlay};
+`;
 
 const BackButton = styled(Button).attrs({
   secondary: true
@@ -620,8 +693,12 @@ const GenerateButton = styled(Button).attrs({
 
 const Selector = (props: any) => (
   <Box fullWidth column>
-    <Select {...props}>{props.children}</Select>
-    {props.spacingBottom && <Spacing bottom={2} />}
+    <label>
+      <Text textLight>{props.label}:</Text>
+      <Spacing bottom={1} />
+      <Select {...props}>{props.children}</Select>
+      {props.spacingBottom && <Spacing bottom={4} />}
+    </label>
   </Box>
 );
 
@@ -644,6 +721,46 @@ const DatePanel = styled(Box).attrs({
   }
 `;
 
+const LocationAndDatesDisplay = (
+  props: {
+    location?: LatLonHeight;
+    leftDate?: JulianDate;
+    rightDate?: JulianDate;
+    openLeftDatePicker: () => void;
+    openRightDatePicker: () => void;
+  } & WithT
+) => {
+  const { location, leftDate, rightDate, t } = props;
+  const formattedDate = (date: JulianDate) =>
+    formatDate(JulianDate.toDate(date));
+  return null;
+};
+
+const LocationAndDatesDisplayBox = styled(Box).attrs({
+  column: true,
+  charcoalGreyBg: true
+})`
+  color: ${p => p.theme.textLight};
+  padding: 15px;
+  > ${Box}:first-child {
+    margin-bottom: 13px;
+  }
+  > div > div:first-child {
+    /* The labels */
+    margin-right: 10px;
+    min-width: 57px;
+  }
+`;
+
+const LinkButton = styled(Button)`
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+  text-decoration: underline;
+`;
+
 async function createSplitItem(
   sourceItem: DiffableItem,
   splitDirection: ImagerySplitDirection
@@ -660,6 +777,9 @@ async function createSplitItem(
     const newItem = ref.target as DiffableItem;
     newItem.setTrait(CommonStrata.user, "show", true);
     newItem.setTrait(CommonStrata.user, "splitDirection", splitDirection);
+    newItem.setTrait(CommonStrata.user, "currentTime", undefined);
+    newItem.setTrait(CommonStrata.user, "initialTimeSource", "none");
+    newItem.setTrait(CommonStrata.user, "show", false);
     terria.overlays.add(newItem);
     return newItem;
   });
