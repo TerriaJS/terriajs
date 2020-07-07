@@ -7,6 +7,7 @@ Change Log
 #### next release (mobx-37)
 * Added file upload support for `GltfCatalogItem`. The supported extension is glb.
 * Improve runtime themeing via styled components across main UI components
+* Updated default welcome video defaults to a newer, slower video
 
 #### mobx-36
 * Added `pointer-events` to `MapNavigation` and `MenuBar` elements, so the bar don't block mouse click outside of the button.
