@@ -3,6 +3,9 @@ Change Log
 
 ### MobX Development
 
+#### next release (mobx-37)
+* Added "i18next/no-literal-string" rule to lint rules for `.js` and `.jsx` files, and i18n-ify strings
+
 #### mobx-36
 * Added `pointer-events` to `MapNavigation` and `MenuBar` elements, so the bar don't block mouse click outside of the button.
 * Fixes "reminder pop-up" for help button being unclickable
