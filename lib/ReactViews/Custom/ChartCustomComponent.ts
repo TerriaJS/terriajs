@@ -38,6 +38,7 @@ import CustomComponent, { ProcessNodeContext } from "./CustomComponent";
  * - [can-download]: 'false' to hide the Download button on the chart.  By default true and for any other value, the download button is shown.
  * - [hide-buttons]: 'true' to hide the Expand and Download buttons on the chart.  By default and for any other value, the buttons are shown when applicable.
  *                   Overrides can-download.
+ * - [chart-disclaimer]: Set to a non-empty string to display a disclaimer at the top of the chart panel when this chart is expanded into the chart panel.
  *
  * Provide the data in one of these four ways:
  * - [sources]:      Comma-separated URLs for data at each available time range. The first in the list is shown in the feature info panel preview.
@@ -84,7 +85,8 @@ export default class ChartCustomComponent extends CustomComponent {
     "poll-replace",
     "title",
     "can-download",
-    "hide-buttons"
+    "hide-buttons",
+    "chart-disclaimer"
   ];
 
   get name(): string {
@@ -260,6 +262,14 @@ export default class ChartCustomComponent extends CustomComponent {
 
       item.setTrait(CommonStrata.user, "activeStyle", "chart");
     }
+
+    if (attrs.chartDisclaimer) {
+      item.setTrait(
+        CommonStrata.user,
+        "chartDisclaimer",
+        attrs.chartDisclaimer
+      );
+    }
   }
 
   /**
@@ -377,6 +387,7 @@ function parseNodeAttrs(nodeAttrs: { [name: string]: string | undefined }) {
   return {
     title: nodeAttrs["title"],
     hideButtons: nodeAttrs["hide-buttons"] === "true",
+    chartDisclaimer: nodeAttrs["chart-disclaimer"],
     sources,
     sourceNames,
     canDownload: !(nodeAttrs["can-download"] === "false"),
