@@ -5,6 +5,7 @@ Change Log
 
 #### next release (7.11.5-mobx-35)
 #### next release (mobx-37)
+* Add `refreshEnabled` trait and `AsyncMappableMixin` to `AutoRefreshMixin`
 * Added file upload support for `GltfCatalogItem`. The supported extension is glb.
 
 #### mobx-36
