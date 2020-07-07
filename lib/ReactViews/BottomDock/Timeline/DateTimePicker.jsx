@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 import createReactClass from "create-react-class";
 import dateFormat from "dateformat";
 import DatePicker from "react-datepicker";
@@ -31,6 +32,18 @@ const monthNames = [
   "Nov",
   "Dec"
 ];
+
+const StyledGrid = styled.span`
+  background: ${p => p.theme.overlay};
+  ${p =>
+    p.active &&
+    `
+    & {
+      background: ${p.theme.colorPrimary};
+    }
+    opacity: 0.9;
+   `}
+`;
 
 const DateTimePicker = createReactClass({
   displayName: "DateTimePicker",
@@ -177,8 +190,16 @@ const DateTimePicker = createReactClass({
                 <span className={Styles.gridLabel}>{y}</span>
                 <span className={Styles.gridRowInner12}>
                   {monthOfYear.map(m => (
-                    <span
-                      className={datesObject[y][m] ? Styles.activeGrid : ""}
+                    <StyledGrid
+                      // className={datesObject[y][m] ? Styles.activeGrid : ""}
+                      active={datesObject[y][m]}
+                      // css={
+                      //   datesObject[y][m] &&
+                      //   `
+                      //     background: ${p => p.theme.colorPrimary};
+                      //     opacity:0.9;
+                      //   `
+                      // }
                       key={m}
                     />
                   ))}
@@ -228,13 +249,19 @@ const DateTimePicker = createReactClass({
                 <span className={Styles.gridLabel}>{m}</span>
                 <span className={Styles.gridRowInner31}>
                   {daysInMonth(i + 1, year).map(d => (
-                    <span
-                      className={
+                    <StyledGrid
+                      active={
                         defined(datesObject[year][i]) &&
                         defined(datesObject[year][i][d + 1])
-                          ? Styles.activeGrid
-                          : ""
                       }
+                      // css={
+                      //   defined(datesObject[year][i]) &&
+                      //   defined(datesObject[year][i][d + 1]) &&
+                      //   `
+                      //     background: ${p => p.theme.colorPrimary};
+                      //     opacity:0.9;
+                      //   `
+                      // }
                       key={d}
                     />
                   ))}

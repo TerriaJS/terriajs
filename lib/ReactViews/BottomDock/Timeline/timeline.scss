@@ -199,7 +199,7 @@
   display: inline-block;
   height: 10px;
   width: 2px;
-  background: $overlay;
+  // background: $overlay;
   margin-top: 1px;
 }
 
@@ -211,10 +211,10 @@
   margin-right: 3px;
 }
 
-.activeGrid {
-  opacity: 0.9;
-  background: $color-primary !important;
-}
+// .activeGrid {
+//   opacity: 0.9;
+//   background: $color-primary !important;
+// }
 
 .gridHeading {
   text-align: center;
