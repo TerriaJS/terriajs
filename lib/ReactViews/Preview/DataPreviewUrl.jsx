@@ -5,6 +5,7 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 
 import Styles from "./data-preview.scss";
+import { withTranslation, Trans } from "react-i18next";
 /**
  * URL section of the preview.
  */
@@ -12,7 +13,8 @@ const DataPreviewUrl = createReactClass({
   displayName: "DataPreviewUrl",
 
   propTypes: {
-    metadataItem: PropTypes.object.isRequired
+    metadataItem: PropTypes.object.isRequired,
+    t: PropTypes.func.isRequired
   },
 
   selectUrl(e) {
@@ -20,9 +22,14 @@ const DataPreviewUrl = createReactClass({
   },
 
   render() {
+    const { t } = this.props;
     return (
       <div>
-        <h4 className={Styles.h4}>{this.props.metadataItem.typeName} URL</h4>
+        <h4 className={Styles.h4}>
+          {t("description.typeNameUrl", {
+            typeName: this.props.metadataItem.typeName
+          })}
+        </h4>
         <If condition={this.props.metadataItem.type === "wms"}>
           <p>
             <Trans i18nKey="description.wms">
@@ -70,17 +77,18 @@ const DataPreviewUrl = createReactClass({
           }
         >
           <p>
-            Layer name
-            {this.props.metadataItem.layers.split(",").length > 1
-              ? "s"
-              : ""}: {this.props.metadataItem.layers}
+            {t("description.layerName", {
+              count: this.props.metadataItem.layers.split(",").length,
+              layers: this.props.metadataItem.layers
+            })}
           </p>
         </If>
         <If condition={this.props.metadataItem.type === "wfs"}>
           <p>
-            Type name
-            {this.props.metadataItem.typeNames.split(",").length > 1 ? "s" : ""}
-            : {this.props.metadataItem.typeNames}
+            {t("description.typeName", {
+              count: this.props.metadataItem.typeNames.split(",").length,
+              typeNames: this.props.metadataItem.typeNames
+            })}
           </p>
         </If>
       </div>
@@ -88,4 +96,4 @@ const DataPreviewUrl = createReactClass({
   }
 });
 
-export default DataPreviewUrl;
+export default withTranslation()(DataPreviewUrl);

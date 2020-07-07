@@ -62,6 +62,7 @@ const CompassIcon = styled(Icon)`
 `;
 
 function GyroscopeGuidancePanel(props) {
+  const { t } = useTranslation();
   // TODO: i18inify
   return (
     <Box
@@ -72,7 +73,7 @@ function GyroscopeGuidancePanel(props) {
         min-width: 295px;
       `}
     >
-      <Text large>Gyroscope Contols</Text>
+      <Text large>{t("gyroscope.controls")}</Text>
       <Spacing bottom={4} />
       <Text medium>
         <Box>
@@ -83,13 +84,10 @@ function GyroscopeGuidancePanel(props) {
           <Spacing right={2} />
           <Box column>
             <Text bold uppercase>
-              Outer Ring
+              {t("gyroscope.outerRingTitle")}
             </Text>
             <Spacing bottom={1} />
-            <Text>
-              Drag the outer ring in a circular motion to rotate the map view
-              360˚.
-            </Text>
+            <Text>{t("gyroscope.outerRingText")}</Text>
           </Box>
         </Box>
         <Spacing bottom={4} />
@@ -106,28 +104,20 @@ function GyroscopeGuidancePanel(props) {
           <Spacing right={2} />
           <Box column>
             <Text bold uppercase>
-              Inner Circle
+              {t("gyroscope.innerRingTitle")}
             </Text>
             <Spacing bottom={1} />
-            <Text>
-              Click in the centre and slowly drag up, down, left or right to
-              tilt and rotate the map at the same time.
-            </Text>
+            <Text>{t("gyroscope.innerRingText1")}</Text>
             <Spacing bottom={2} />
-            <Text>
-              Double click in here to reset view to its default state.
-            </Text>
+            <Text>{t("gyroscope.innerRingText2")}</Text>
           </Box>
         </Box>
         <Spacing bottom={4} />
-        <Text>
-          You can also tilt and rotate the map by holding the CTRL key and
-          dragging the map.
-        </Text>
+        <Text>{t("gyroscope.ctrlTilt")}</Text>
         <Spacing bottom={4} />
         <RawButton onClick={props.handleHelp}>
           <Text displayBlock primary isLink>
-            Find out more about the controls and how to use them.
+            {t("gyroscope.findMore")}
           </Text>
         </RawButton>
       </Text>
@@ -151,7 +141,7 @@ export default function GyroscopeGuidance(props) {
         onClick={props.handleHelp}
         iconElement={() => <Icon glyph={Icon.GLYPHS.helpThick} />}
       >
-        Help
+        {t("gyroscope.helpBtn")}
       </MapIconButton>
       <Spacing marginRight={1} />
       <div
@@ -166,7 +156,7 @@ export default function GyroscopeGuidance(props) {
           iconElement={() => <Icon glyph={Icon.GLYPHS.controls} />}
           onClick={() => setControlPanelOpen(!controlPanelOpen)}
         >
-          Controls
+          {t("gyroscope.controlsBtn")}
         </MapIconButton>
         <div
           onClick={e => e.preventDefault()}

@@ -20,6 +20,7 @@ class ZoomX extends React.Component {
     this.zoom = d3Zoom()
       .scaleExtent(props.scaleExtent)
       .translateExtent(props.translateExtent)
+      // eslint-disable-next-line i18next/no-literal-string
       .on("zoom", () =>
         props.onZoom(d3Event.transform.rescaleX(this.props.initialScale))
       );

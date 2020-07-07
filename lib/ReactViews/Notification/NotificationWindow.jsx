@@ -45,8 +45,8 @@ const NotificationWindow = createReactClass({
     const type = this.props.type;
 
     const divStyle = {
-      height: defined(this.props.height) ? this.props.height : "auto",
-      width: defined(this.props.width) ? this.props.width : "500px"
+      height: defined(this.props.height) ? this.props.height : "auto", // eslint-disable-line i18next/no-literal-string
+      width: defined(this.props.width) ? this.props.width : "500px" // eslint-disable-line i18next/no-literal-string
     };
 
     return (

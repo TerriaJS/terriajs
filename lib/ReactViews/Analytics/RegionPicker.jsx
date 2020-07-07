@@ -17,6 +17,7 @@ import { withTranslation } from "react-i18next";
 
 import RegionTypeParameterEditor from "./RegionTypeParameterEditor";
 import Styles from "./parameter-editors.scss";
+import i18next from "i18next";
 
 const RegionPicker = createReactClass({
   displayName: "RegionPicker",
@@ -128,7 +129,9 @@ const RegionPicker = createReactClass({
       this._selectedRegionCatalogItem = new GeoJsonCatalogItem(
         this.props.previewed.terria
       );
-      this._selectedRegionCatalogItem.name = "Selected Polygon";
+      this._selectedRegionCatalogItem.name = i18next.t(
+        "analytics.selectedPolygon"
+      );
       this._selectedRegionCatalogItem.data = feature.data;
       this._selectedRegionCatalogItem.isEnabled = true;
       this._selectedRegionCatalogItem.zoomTo();
@@ -173,11 +176,12 @@ const RegionPicker = createReactClass({
         that._regionsCatalogItem = new WebMapServiceCatalogItem(
           that.props.previewed.terria
         );
-        that._regionsCatalogItem.name = "Available Regions";
+        that._regionsCatalogItem.name = i18next.t("analytics.availableRegions");
         that._regionsCatalogItem.url = that.regionProvider.analyticsWmsServer;
         that._regionsCatalogItem.layers =
           that.regionProvider.analyticsWmsLayerName;
         that._regionsCatalogItem.parameters = {
+          // eslint-disable-next-line i18next/no-literal-string
           styles: "border_black_fill_aqua"
         };
         that._regionsCatalogItem.isEnabled = true;

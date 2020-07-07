@@ -6,12 +6,14 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 
 import Styles from "./dimension-selector-section.scss";
+import { withTranslation } from "react-i18next";
 
 const DimensionSelectorSection = createReactClass({
   displayName: "DimensionSelectorSection",
 
   propTypes: {
-    item: PropTypes.object.isRequired
+    item: PropTypes.object.isRequired,
+    t: PropTypes.func.isRequired
   },
 
   changeDimension(dimension, event) {
@@ -67,6 +69,7 @@ const DimensionSelectorSection = createReactClass({
   },
 
   renderDimensionSelector(dimension) {
+    const { t } = this.props;
     const dimensionValues = dimension.options;
     const selectedDimensions = this.props.item.dimensions || {};
     const value = selectedDimensions[dimension.name] || dimension.default || "";
@@ -94,7 +97,7 @@ const DimensionSelectorSection = createReactClass({
         >
           {addDefault && (
             <option key="__default__" value="">
-              Default
+              {t("dimensionSelectorSection.default")}
             </option>
           )}
           {dimensionValues.map(item => (
@@ -108,4 +111,4 @@ const DimensionSelectorSection = createReactClass({
   }
 });
 
-module.exports = DimensionSelectorSection;
+module.exports = withTranslation()(DimensionSelectorSection);

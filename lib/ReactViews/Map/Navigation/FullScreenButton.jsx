@@ -5,6 +5,7 @@ const PropTypes = require("prop-types");
 import Styles from "./full_screen_button.scss";
 import classNames from "classnames";
 import Icon from "../../Icon";
+import { withTranslation } from "react-i18next";
 
 // The button to make the map full screen and hide the workbench.
 const FullScreenButton = createReactClass({
@@ -13,7 +14,8 @@ const FullScreenButton = createReactClass({
   propTypes: {
     terria: PropTypes.object,
     viewState: PropTypes.object.isRequired,
-    animationDuration: PropTypes.number // Defaults to 1 millisecond.
+    animationDuration: PropTypes.number, // Defaults to 1 millisecond.
+    t: PropTypes.func.isRequired
   },
 
   getInitialState() {
@@ -29,20 +31,22 @@ const FullScreenButton = createReactClass({
   },
 
   renderButtonText() {
+    const { t } = this.props;
     if (this.props.viewState.isMapFullScreen) {
-      return <span className={Styles.exit}>Show Workbench</span>;
+      return <span className={Styles.exit}>{t("sui.showWorkbench")}</span>;
     } else {
       return <Icon glyph={Icon.GLYPHS.expand} />;
     }
   },
 
   render() {
+    const { t } = this.props;
     const btnClassName = classNames(Styles.btn, {
       [Styles.isActive]: this.props.viewState.isMapFullScreen
     });
     const btnTitle = this.props.viewState.isMapFullScreen
-      ? "Show workbench"
-      : "Hide workbench";
+      ? t("sui.showWorkbench")
+      : t("sui.hideWorkbench");
     return (
       <div className={Styles.fullScreen}>
         <button
@@ -57,4 +61,4 @@ const FullScreenButton = createReactClass({
     );
   }
 });
-module.exports = FullScreenButton;
+export default withTranslation()(FullScreenButton);

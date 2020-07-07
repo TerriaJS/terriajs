@@ -22,6 +22,7 @@ import GeoJsonParameterEditor from "./GeoJsonParameterEditor";
 import defined from "terriajs-cesium/Source/Core/defined";
 
 import Styles from "./parameter-editors.scss";
+import i18next from "i18next";
 
 const ParameterEditor = createReactClass({
   displayName: "ParameterEditor",
@@ -43,7 +44,9 @@ const ParameterEditor = createReactClass({
         htmlFor={this.fieldId + this.props.parameter.type}
       >
         {this.props.parameter.name}
-        {this.props.parameter.isRequired && <span> (required)</span>}
+        {this.props.parameter.isRequired && (
+          <span> {i18next.t("analytics.required")}</span>
+        )}
       </label>
     );
   },
@@ -64,6 +67,7 @@ const ParameterEditor = createReactClass({
         return item.id === "generic";
       }
     )[0];
+    // eslint-disable-next-line i18next/no-literal-string
     return genericEditor.parameterTypeToDiv("generic", this);
   },
 

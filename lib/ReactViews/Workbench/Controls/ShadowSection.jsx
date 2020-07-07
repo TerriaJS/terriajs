@@ -9,13 +9,15 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import CommonStrata from "../../../Models/CommonStrata";
 import Icon from "./../../Icon";
 import Styles from "./shadow-section.scss";
+import { withTranslation } from "react-i18next";
 
 const ShadowSection = observer(
   createReactClass({
     displayName: "ShadowSection",
 
     propTypes: {
-      item: PropTypes.object.isRequired
+      item: PropTypes.object.isRequired,
+      t: PropTypes.func.isRequired
     },
 
     changeShadows(event) {
@@ -30,6 +32,7 @@ const ShadowSection = observer(
     },
 
     render() {
+      const { t } = this.props;
       const item = this.props.item;
 
       // This section only makes sense if we have a layer that supports shadows.
@@ -44,7 +47,7 @@ const ShadowSection = observer(
       return (
         <div className={Styles.shadowSelector}>
           <label className={Styles.title} htmlFor="shadows">
-            Shadows
+            {t("workbench.shadows.label")}
           </label>
           <select
             className={Styles.field}
@@ -53,16 +56,16 @@ const ShadowSection = observer(
             onChange={this.changeShadows}
           >
             <option key="none" value="NONE">
-              None
+              {t("workbench.shadows.none")}
             </option>
             <option key="cast" value="CAST">
-              Cast Only
+              {t("workbench.shadows.cast")}
             </option>
             <option key="receive" value="RECEIVE">
-              Receive Only
+              {t("workbench.shadows.receive")}
             </option>
             <option key="both" value="BOTH">
-              Cast and Receive
+              {t("workbench.shadows.both")}
             </option>
           </select>
           <Icon glyph={Icon.GLYPHS.opened} />
@@ -71,4 +74,4 @@ const ShadowSection = observer(
     }
   })
 );
-module.exports = ShadowSection;
+module.exports = withTranslation()(ShadowSection);

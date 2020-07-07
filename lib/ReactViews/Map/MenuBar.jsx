@@ -35,6 +35,7 @@ const MenuBar = observer(props => {
   const menuItems = props.menuItems || [];
   const handleClick = () => {
     runInAction(() => {
+      // eslint-disable-next-line i18next/no-literal-string
       props.viewState.topElement = "MenuBar";
     });
   };
@@ -60,6 +61,7 @@ const MenuBar = observer(props => {
   //   "mapGuidesLocationPrompted"
   // );
   const storyEnabled = props.terria.configParameters.storyEnabled;
+  // eslint-disable-next-line i18next/no-literal-string
   const enableTools = props.terria.getUserProperty("tools") === "1";
 
   const promptHtml = (
@@ -181,6 +183,7 @@ const MenuBar = observer(props => {
     </StyledMenuBar>
   );
 });
+// eslint-disable-next-line i18next/no-literal-string
 MenuBar.displayName = "MenuBar";
 MenuBar.propTypes = {
   terria: PropTypes.object,

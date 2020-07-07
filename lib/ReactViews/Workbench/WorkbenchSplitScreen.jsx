@@ -3,6 +3,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
+import { withTranslation } from "react-i18next";
 // import styled from "styled-components";
 
 import classNames from "classnames";
@@ -25,7 +26,7 @@ class WorkbenchSplitScreen extends React.Component {
   render() {
     const props = this.props;
     const terria = props.terria;
-
+    const { t } = props;
     const showTerrainOnSide = (side, event) => {
       event && event.stopPropagation();
       runInAction(() => {
@@ -65,15 +66,15 @@ class WorkbenchSplitScreen extends React.Component {
     const supportsDepthTestAgainstTerrain = isCesiumWithTerrain;
 
     const supportsSide = isCesiumWithTerrain;
-    const sides = ["Left", "Both", "Right"];
-    let currentSide = "Both";
+    const sides = ["Left", "Both", "Right"]; // eslint-disable-line i18next/no-literal-string
+    let currentSide = "Both"; // eslint-disable-line i18next/no-literal-string
     if (supportsSide) {
       switch (terria.terrainSplitDirection) {
         case ImagerySplitDirection.LEFT:
-          currentSide = "Left";
+          currentSide = "Left"; // eslint-disable-line i18next/no-literal-string
           break;
         case ImagerySplitDirection.RIGHT:
-          currentSide = "Right";
+          currentSide = "Right"; // eslint-disable-line i18next/no-literal-string
           break;
       }
     }
@@ -87,9 +88,14 @@ class WorkbenchSplitScreen extends React.Component {
     //   terria.currentViewer.scene.globe &&
     //   terria.currentViewer.scene.globe.depthTestAgainstTerrain;
 
-    const depthTestAgainstTerrainLabel = `Press to start ${
-      depthTestAgainstTerrainEnabled ? "showing" : "hiding"
-    } features that are underneath the terrain surface`;
+    const depthTestAgainstTerrainLabel = t(
+      "settingPanel.depthTestAgainstTerrainLabel",
+      {
+        showing: depthTestAgainstTerrainEnabled
+          ? t("settingPanel.showing")
+          : t("settingPanel.hiding")
+      }
+    );
     // const { t } = useTranslation();
     return (
       <If condition={supportsSide}>
@@ -122,7 +128,7 @@ class WorkbenchSplitScreen extends React.Component {
               line-height: 34px;
             `}
           >
-            <Box>SPLIT SCREEN MODE</Box>
+            <Box>{t("workbench.splitScreenMode")}</Box>
             <RawButton
               onClick={() => {
                 runInAction(() => (terria.showSplitter = !terria.showSplitter));
@@ -140,7 +146,9 @@ class WorkbenchSplitScreen extends React.Component {
           >
             <Spacing bottom={1} />
             <Box>
-              <label className={DropdownStyles.heading}>Terrain position</label>
+              <label className={DropdownStyles.heading}>
+                {t("workbench.splitScreenMode")}
+              </label>
               <Spacing bottom={1} />
             </Box>
             <Box>
@@ -214,7 +222,7 @@ class WorkbenchSplitScreen extends React.Component {
                       Styles.nativeResolutionHeader
                     )}
                   >
-                    Terrain hides underground features
+                    {t("workbench.terrainHidesUnderground")}
                   </label>
                 </Box>
               </>
@@ -228,7 +236,8 @@ class WorkbenchSplitScreen extends React.Component {
 }
 
 WorkbenchSplitScreen.propTypes = {
-  terria: PropTypes.object
+  terria: PropTypes.object,
+  t: PropTypes.func.isRequired
 };
 
-export default WorkbenchSplitScreen;
+export default withTranslation()(WorkbenchSplitScreen);

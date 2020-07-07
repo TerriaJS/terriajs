@@ -13,7 +13,7 @@ import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
 
 const UlTrainerItems = styled(Box).attrs({
-  as: "ul"
+  as: "ul" // eslint-disable-line i18next/no-literal-string
 })`
   ${p => p.theme.removeListStyles()}
 `;

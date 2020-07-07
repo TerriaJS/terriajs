@@ -17,8 +17,10 @@ const BooleanParameterGroupEditor = createReactClass({
   toggleDiv: function(divID, ev) {
     const thisDiv = document.getElementById(divID);
     if (thisDiv.style.display === "none") {
+      // eslint-disable-next-line i18next/no-literal-string
       thisDiv.style.display = "block";
     } else {
+      // eslint-disable-next-line i18next/no-literal-string
       thisDiv.style.display = "none";
     }
   },
@@ -80,10 +82,12 @@ const BooleanParameterGroupEditor = createReactClass({
     const whichIcon = true;
     const OneForAll = this.props.parameter.OneForAll;
     let name;
+    /* eslint-disable i18next/no-literal-string */
     this.props.parameter.name
       ? (name = this.props.parameter.name + "_Group")
       : (name = this.props.parameter.id + "_Group");
     const OneForAllDivName = name + "_OneForAllDiv";
+    /* eslint-enable i18next/no-literal-string */
     const groupClick = this.toggleDiv.bind(this, name);
     const allClick = this.toggleAll.bind(this, {
       OneForAllId: OneForAllDivName,

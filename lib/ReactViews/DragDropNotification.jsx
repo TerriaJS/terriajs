@@ -7,6 +7,7 @@ import Styles from "./drag-drop-notification.scss";
 
 import { observer } from "mobx-react";
 import { reaction } from "mobx";
+import { withTranslation, Trans } from "react-i18next";
 
 @observer
 class DragDropNotification extends React.Component {
@@ -80,17 +81,23 @@ class DragDropNotification extends React.Component {
           <Icon glyph={Icon.GLYPHS.upload} />
         </div>
         <div className={Styles.info}>
-          <span className={Styles.filename}>
-            {'"'}
-            {fileNames}
-            {'"'}
-          </span>{" "}
-          {this.props.viewState.lastUploadedFiles.length > 1 ? "have" : "has"}{" "}
-          been added to <span className={Styles.action}>My data</span>
+          <Trans
+            i18nKey="dragDrop.notification"
+            count={this.props.viewState.lastUploadedFiles.length}
+            values={{ fileNames: fileNames }}
+          >
+            <span className={Styles.filename}>
+              {'"'}
+              {fileNames}
+              {'"'}
+            </span>
+            have/has been added to
+            <span className={Styles.action}>My data</span>
+          </Trans>
         </div>
       </button>
     );
   }
 }
 
-module.exports = DragDropNotification;
+module.exports = withTranslation()(DragDropNotification);

@@ -18,6 +18,7 @@ export default class LineChart extends React.PureComponent {
     const path = line()
       .x(p => scales.x(p.x))
       .y(p => scales.y(p.y));
+    // eslint-disable-next-line i18next/no-literal-string
     el.setAttribute("d", path(chartItem.points));
   }
 

@@ -26,8 +26,8 @@ const Dropdown = createReactClass({
     return {
       options: [],
       selected: undefined,
-      textProperty: "name",
-      align: "left",
+      textProperty: "name", // eslint-disable-line i18next/no-literal-string
+      align: "left", // eslint-disable-line i18next/no-literal-string
       disabled: false,
       theme: {}
     };

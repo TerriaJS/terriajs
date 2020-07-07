@@ -61,7 +61,7 @@ const LocationSearchResults = observer(
 
     getDefaultProps() {
       return {
-        theme: "light"
+        theme: "light" // eslint-disable-line i18next/no-literal-string
       };
     },
 

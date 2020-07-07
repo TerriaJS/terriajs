@@ -18,10 +18,12 @@ const Branding = createReactClass({
       .brandBarElements;
     if (!defined(brandingHtmlElements)) {
       brandingHtmlElements = [
+        // eslint-disable-next-line i18next/no-literal-string
         '<a target="_blank" href="http://terria.io"><img src="images/terria_logo.png" height="52" title="Version: {{ version }}" /></a>'
       ];
     }
 
+    // eslint-disable-next-line i18next/no-literal-string
     const version = this.props.version || "Unknown";
 
     return (

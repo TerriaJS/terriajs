@@ -41,7 +41,7 @@ export const SearchResult = createReactClass({
   getDefaultProps() {
     return {
       icon: false,
-      searchResultTheme: "light"
+      searchResultTheme: "light" // eslint-disable-line i18next/no-literal-string
     };
   },
 

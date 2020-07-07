@@ -149,7 +149,7 @@ const DateTimeSelectorSection = observer(
 
       return (
         <div className={Styles.datetimeSelector}>
-          <div className={Styles.title}>Time:</div>
+          <div className={Styles.title}>{t("dateTime.time")}</div>
           <div className={Styles.datetimeSelectorInner}>
             <div className={Styles.datetimeAndPicker}>
               <button
@@ -187,7 +187,7 @@ const DateTimeSelectorSection = observer(
                 }
                 dates={jsDates}
                 onChange={this.changeDateTime}
-                openDirection="down"
+                openDirection="down" // eslint-disable-line i18next/no-literal-string
                 isOpen={this.state.isOpen}
                 showCalendarButton={false}
                 onOpen={this.onOpen}

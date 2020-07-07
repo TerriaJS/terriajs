@@ -38,6 +38,7 @@ class HelpVideoPanel extends React.Component {
 
   render() {
     // const { t } = this.props;
+    // eslint-disable-next-line i18next/no-literal-string
     const helpItemType = this.props.paneMode || "videoAndContent"; // default is video panel
     const itemSelected =
       this.props.viewState.selectedHelpMenuItem === this.props.itemString;

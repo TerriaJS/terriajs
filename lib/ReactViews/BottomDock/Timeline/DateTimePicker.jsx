@@ -11,12 +11,14 @@ import { formatDateTime } from "./DateFormats";
 import Icon from "../../Icon";
 import Styles from "./timeline.scss";
 import combine from "terriajs-cesium/Source/Core/combine";
+import { withTranslation } from "react-i18next";
 
 function daysInMonth(month, year) {
   const n = new Date(year, month, 0).getDate();
   return Array.apply(null, { length: n }).map(Number.call, Number);
 }
 
+/* eslint-disable i18next/no-literal-string */
 const monthNames = [
   "Jan",
   "Feb",
@@ -31,6 +33,7 @@ const monthNames = [
   "Nov",
   "Dec"
 ];
+/* eslint-enable i18next/no-literal-string */
 
 const DateTimePicker = createReactClass({
   displayName: "DateTimePicker",
@@ -45,14 +48,15 @@ const DateTimePicker = createReactClass({
     onClose: PropTypes.func.isRequired,
     showCalendarButton: PropTypes.bool,
     dateFormat: PropTypes.string,
-    popupStyle: PropTypes.string
+    popupStyle: PropTypes.string,
+    t: PropTypes.func.isRequired
   },
 
   getDefaultProps() {
     return {
       currentDate: undefined,
       showCalendarButton: true,
-      openDirection: "down"
+      openDirection: "down" // eslint-disable-line i18next/no-literal-string
     };
   },
 
@@ -75,7 +79,7 @@ const DateTimePicker = createReactClass({
     let defaultYear = null;
     let defaultMonth = null;
     let defaultDay = null;
-    let defaultGranularity = "century";
+    let defaultGranularity = "century"; // eslint-disable-line i18next/no-literal-string
 
     if (datesObject.indice.length === 1) {
       // only one century
@@ -88,14 +92,14 @@ const DateTimePicker = createReactClass({
         const soleYear = dataFromThisCentury.indice[0];
         const dataFromThisYear = dataFromThisCentury[soleYear];
         defaultYear = soleYear;
-        defaultGranularity = "year";
+        defaultGranularity = "year"; // eslint-disable-line i18next/no-literal-string
 
         if (dataFromThisYear.indice === 1) {
           // only one month data from this one year, need to check day then
           const soleMonth = dataFromThisYear.indice[0];
           const dataFromThisMonth = dataFromThisYear[soleMonth];
           defaultMonth = soleMonth;
-          defaultGranularity = "month";
+          defaultGranularity = "month"; // eslint-disable-line i18next/no-literal-string
 
           if (dataFromThisMonth.indice === 1) {
             // only one day has data
@@ -134,11 +138,14 @@ const DateTimePicker = createReactClass({
   },
 
   renderCenturyGrid(datesObject) {
+    const { t } = this.props;
     const centuries = datesObject.indice;
     if (datesObject.dates && datesObject.dates.length >= 12) {
       return (
         <div className={Styles.grid}>
-          <div className={Styles.gridHeading}>Select a century</div>
+          <div className={Styles.gridHeading}>
+            {t("dateTime.selectCentury")}
+          </div>
           {centuries.map(c => (
             <button
               key={c}
@@ -156,6 +163,7 @@ const DateTimePicker = createReactClass({
   },
 
   renderYearGrid(datesObject) {
+    const { t } = this.props;
     if (datesObject.dates && datesObject.dates.length > 12) {
       const years = datesObject.indice;
       const monthOfYear = Array.apply(null, { length: 12 }).map(
@@ -164,7 +172,9 @@ const DateTimePicker = createReactClass({
       );
       return (
         <div className={Styles.grid}>
-          <div className={Styles.gridHeading}>Select a year</div>
+          <div className={Styles.gridHeading}>
+            {t("dateTime.selectCentury")}
+          </div>
           <div className={Styles.gridBody}>
             {years.map(y => (
               <div
@@ -316,10 +326,11 @@ const DateTimePicker = createReactClass({
   },
 
   renderList(items) {
+    const { t } = this.props;
     if (defined(items)) {
       return (
         <div className={Styles.grid}>
-          <div className={Styles.gridHeading}>Select a time</div>
+          <div className={Styles.gridHeading}>{t("dateTime.selectTime")}</div>
           <div className={Styles.gridBody}>
             {items.map(item => (
               <button
@@ -342,6 +353,7 @@ const DateTimePicker = createReactClass({
   },
 
   renderHourView(datesObject) {
+    const { t } = this.props;
     const timeOptions = datesObject[this.state.year][this.state.month][
       this.state.day
     ].dates.map(m => ({
@@ -353,9 +365,11 @@ const DateTimePicker = createReactClass({
       return (
         <div className={Styles.grid}>
           <div className={Styles.gridHeading}>
-            {`Select an hour on ${this.state.day} ${
-              monthNames[this.state.month + 1]
-            } ${this.state.year}`}{" "}
+            {t("dateTime.selectHour", {
+              day: this.state.day,
+              month: monthNames[this.state.month + 1],
+              year: this.state.year
+            })}
           </div>
           <div className={Styles.gridBody}>
             {datesObject[this.state.year][this.state.month][
@@ -367,16 +381,17 @@ const DateTimePicker = createReactClass({
                 onClick={() => this.setState({ hour: item })}
               >
                 <span>
+                  {/* eslint-disable i18next/no-literal-string */}
                   {item} : 00 - {item + 1} : 00
+                  {/* eslint-enable i18next/no-literal-string */}
                 </span>{" "}
                 <span>
-                  (
-                  {
-                    datesObject[this.state.year][this.state.month][
-                      this.state.day
-                    ][item].length
-                  }{" "}
-                  options)
+                  {t("dateTime.dateOptions", {
+                    date:
+                      datesObject[this.state.year][this.state.month][
+                        this.state.day
+                      ][item].length
+                  })}
                 </span>
               </button>
             ))}
@@ -655,4 +670,4 @@ function objectifyYearData(year, dates) {
   return { [year]: monthInYear };
 }
 
-module.exports = DateTimePicker;
+module.exports = withTranslation()(DateTimePicker);

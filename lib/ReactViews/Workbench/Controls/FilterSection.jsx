@@ -8,13 +8,15 @@ import { Range } from "rc-slider";
 import React from "react";
 import CommonStrata from "../../../Models/CommonStrata";
 import Styles from "./filter-section.scss";
+import { withTranslation } from "react-i18next";
 
 const FilterSection = observer(
   createReactClass({
     displayName: "FilterSection",
 
     propTypes: {
-      item: PropTypes.object.isRequired
+      item: PropTypes.object.isRequired,
+      t: PropTypes.func.isRequired
     },
 
     change(filter, values) {
@@ -38,11 +40,16 @@ const FilterSection = observer(
     },
 
     renderFilter(filter) {
+      const { t } = this.props;
       const values = [filter.minimumShown, filter.maximumShown];
       return (
         <div key={filter.property} className={Styles.filter}>
           <label htmlFor={filter.property}>
-            Show {filter.name}: {filter.minimumShown} to {filter.maximumShown}
+            {t("workbench.controlFilter", {
+              filterName: filter.name,
+              minimumShown: filter.minimumShown,
+              maximumShown: filter.minimumShown
+            })}
           </label>
           <Range
             value={values}
@@ -56,4 +63,4 @@ const FilterSection = observer(
     }
   })
 );
-module.exports = FilterSection;
+module.exports = withTranslation()(FilterSection);

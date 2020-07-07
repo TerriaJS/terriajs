@@ -43,8 +43,10 @@ const Tabs = observer(
       }
 
       const myDataTab = {
+        // eslint-disable-next-line i18next/no-literal-string
         title: "my-data",
         name: t("addData.myData"),
+        // eslint-disable-next-line i18next/no-literal-string
         category: "my-data",
         panel: (
           <MyDataTab
@@ -63,7 +65,9 @@ const Tabs = observer(
             )
             .map((member, i) => ({
               name: member.nameInCatalog,
+              // eslint-disable-next-line i18next/no-literal-string
               title: `data-catalog-${member.name}`,
+              // eslint-disable-next-line i18next/no-literal-string
               category: "data-catalog",
               idInCategory: member.name,
               panel: (
@@ -81,7 +85,9 @@ const Tabs = observer(
         return [
           {
             name: t("addData.dataCatalogue"),
+            // eslint-disable-next-line i18next/no-literal-string
             title: "data-catalog",
+            // eslint-disable-next-line i18next/no-literal-string
             category: "data-catalog",
             panel: (
               <DataCatalogTab

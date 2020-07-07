@@ -345,7 +345,7 @@ TourPreface.propTypes = {
   viewState: PropTypes.object.isRequired
 };
 
-export const TourPortalDisplayName = "TourPortal";
+export const TourPortalDisplayName = "TourPortal"; // eslint-disable-line i18next/no-literal-string
 export const TourPortal = observer(({ viewState }) => {
   const showPortal = viewState.currentTourIndex !== -1;
   const showPreface = showPortal && !viewState.showTour;

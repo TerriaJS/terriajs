@@ -50,6 +50,7 @@ class DragDropFile extends React.Component {
   handleDragEnter(e) {
     e.preventDefault();
     e.stopPropagation();
+    // eslint-disable-next-line i18next/no-literal-string
     e.dataTransfer.dropEffect = "copy";
     this.lastTarget = e.target;
   }

@@ -12,6 +12,7 @@ import Icon from "../Icon";
 
 import Styles from "./mobile-modal-window.scss";
 import { runInAction } from "mobx";
+import { withTranslation } from "react-i18next";
 
 const MobileModalWindow = observer(
   createReactClass({
@@ -19,7 +20,8 @@ const MobileModalWindow = observer(
 
     propTypes: {
       terria: PropTypes.object,
-      viewState: PropTypes.object.isRequired
+      viewState: PropTypes.object.isRequired,
+      t: PropTypes.func.isRequired
     },
 
     renderModalContent() {
@@ -102,6 +104,7 @@ const MobileModalWindow = observer(
     },
 
     render() {
+      const { t } = this.props;
       const modalClass = classNames(Styles.mobileModal, {
         [Styles.isOpen]:
           this.props.viewState.explorerPanelIsVisible &&
@@ -123,7 +126,7 @@ const MobileModalWindow = observer(
                   className={Styles.doneButton}
                   onClick={this.onClearMobileUI}
                 >
-                  Done
+                  {t("mobile.done")}
                 </button>
               </If>
               <button
@@ -149,4 +152,4 @@ const MobileModalWindow = observer(
     }
   })
 );
-module.exports = MobileModalWindow;
+module.exports = withTranslation()(MobileModalWindow);

@@ -1,6 +1,7 @@
 import React from "react";
 import { init, exec } from "pell";
 import PropTypes from "prop-types";
+import i18next from "i18next";
 
 export default class Editor extends React.PureComponent {
   constructor(props) {
@@ -32,21 +33,21 @@ Editor.propTypes = {
 
 Editor.defaultProps = {
   actions: [
-    "bold",
-    "italic",
-    "underline",
-    "heading1",
-    "heading2",
-    "olist",
-    "ulist",
-    "image",
+    "bold", // eslint-disable-line i18next/no-literal-string
+    "italic", // eslint-disable-line i18next/no-literal-string
+    "underline", // eslint-disable-line i18next/no-literal-string
+    "heading1", // eslint-disable-line i18next/no-literal-string
+    "heading2", // eslint-disable-line i18next/no-literal-string
+    "olist", // eslint-disable-line i18next/no-literal-string
+    "ulist", // eslint-disable-line i18next/no-literal-string
+    "image", // eslint-disable-line i18next/no-literal-string
     {
-      name: "link",
+      name: "link", // eslint-disable-line i18next/no-literal-string
       result: () => {
         /* eslint-disable-next-line no-alert */
-        const url = window.prompt("Enter the link URL", "http://");
+        const url = window.prompt(i18next.t("genericEditor"), "http://");
         if (url) {
-          exec("createLink", url);
+          exec("createLink", url); // eslint-disable-line i18next/no-literal-string
         }
       }
     }

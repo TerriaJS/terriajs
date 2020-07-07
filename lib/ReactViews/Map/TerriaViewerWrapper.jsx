@@ -13,6 +13,7 @@ import Terria from "../../Models/Terria";
 // eslint-disable-next-line no-unused-vars
 import ViewState from "../../ReactViewModels/ViewState";
 import { runInAction } from "mobx";
+import { withTranslation } from "react-i18next";
 
 /**
  * @typedef {object} Props
@@ -25,7 +26,8 @@ import { runInAction } from "mobx";
 class TerriaViewerWrapper extends React.Component {
   static propTypes = {
     terria: PropTypes.object.isRequired,
-    viewState: PropTypes.object.isRequired
+    viewState: PropTypes.object.isRequired,
+    t: PropTypes.func.isRequired
   };
   lastMouseX = -1;
   lastMouseY = -1;
@@ -99,10 +101,11 @@ class TerriaViewerWrapper extends React.Component {
   }
 
   render() {
+    const { t } = this.props;
     return (
       <aside className={Styles.container}>
         <div className={Styles.mapPlaceholder}>
-          Loading the map, please wait...
+          {t("terriaViewerWrapper.loading")}
         </div>
         <Splitter terria={this.props.terria} viewState={this.props.viewState} />
         <div
@@ -115,4 +118,4 @@ class TerriaViewerWrapper extends React.Component {
     );
   }
 }
-module.exports = TerriaViewerWrapper;
+module.exports = withTranslation()(TerriaViewerWrapper);

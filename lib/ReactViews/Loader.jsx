@@ -6,6 +6,7 @@ import Icon from "./Icon";
 import { withTranslation } from "react-i18next";
 
 import Styles from "./loader.scss";
+import i18next from "i18next";
 
 const Loader = createReactClass({
   displayName: "Loader",
@@ -13,7 +14,7 @@ const Loader = createReactClass({
   getDefaultProps() {
     return {
       className: "",
-      message: "Loading..."
+      message: i18next.t("loader.defaultMessage")
     };
   },
 

@@ -55,7 +55,9 @@ const CleanDropdownPanel = createReactClass({
       );
 
       this.setState({
+        // eslint-disable-next-line i18next/no-literal-string
         caretOffset: caretOffset >= 0 && caretOffset + "px",
+        // eslint-disable-next-line i18next/no-literal-string
         dropdownOffset: dropdownOffset + "px"
       });
     } else {

@@ -38,6 +38,7 @@ const ToggleSplitterTool = observer(function(props) {
     </div>
   );
 });
+// eslint-disable-next-line i18next/no-literal-string
 ToggleSplitterTool.displayName = "ToggleSplitterTool";
 ToggleSplitterTool.propTypes = {
   terria: PropTypes.object,

@@ -51,8 +51,11 @@ class MomentPointsChart extends React.Component {
           (spacing <= markerRadiusSmall
             ? markerRadiusSmall
             : markerRadiusLarge) + (point.isSelected ? 3 : 0);
+        // eslint-disable-next-line i18next/no-literal-string
         dot.setAttribute("cx", scales.x(point.x));
+        // eslint-disable-next-line i18next/no-literal-string
         dot.setAttribute("r", radius);
+        // eslint-disable-next-line i18next/no-literal-string
         dot.setAttribute("opacity", point.isSelected ? 1.0 : 0.3);
       }
     });

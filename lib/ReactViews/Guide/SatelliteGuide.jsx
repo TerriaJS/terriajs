@@ -22,6 +22,7 @@ class SatelliteGuide extends React.Component {
 
   @action.bound
   handleMakeTopElement() {
+    // eslint-disable-next-line i18next/no-literal-string
     this.props.viewState.topElement = "Guide";
   }
 
@@ -42,6 +43,7 @@ class SatelliteGuide extends React.Component {
           this.setShowSatelliteGuidance(bool);
           // If we're closing for any reason, set prompted to true
           if (!bool) {
+            // eslint-disable-next-line i18next/no-literal-string
             viewState.toggleFeaturePrompt("satelliteGuidance", true, true);
           }
         }}

@@ -13,15 +13,16 @@ import URI from "urijs";
 import proxyCatalogItemUrl from "../../../Models/proxyCatalogItemUrl";
 import Loader from "../../Loader";
 import Styles from "./legend.scss";
+import i18next from "i18next";
 
 /* A lookup map for displayable mime types */
 const DISPLAYABLE_MIME_TYPES = [
-  "image/jpeg",
-  "image/gif",
-  "image/png",
-  "image/svg+xml",
-  "image/bmp",
-  "image/x-bmp"
+  "image/jpeg", // eslint-disable-line i18next/no-literal-string
+  "image/gif", // eslint-disable-line i18next/no-literal-string
+  "image/png", // eslint-disable-line i18next/no-literal-string
+  "image/svg+xml", // eslint-disable-line i18next/no-literal-string
+  "image/bmp", // eslint-disable-line i18next/no-literal-string
+  "image/x-bmp" // eslint-disable-line i18next/no-literal-string
 ].reduce(function(acc, mimeType) {
   acc[mimeType] = true;
   return acc;
@@ -41,7 +42,8 @@ const Legend = createReactClass({
 
   propTypes: {
     item: PropTypes.object,
-    forPrint: PropTypes.bool
+    forPrint: PropTypes.bool,
+    t: PropTypes.func.isRequired
   },
 
   getDefaultProps() {
@@ -84,7 +86,7 @@ const Legend = createReactClass({
 
     const svg = legend.safeSvgContent;
     // Safari xlink NS issue fix
-    const processedSvg = svg ? svg.replace(/NS\d+:href/gi, "xlink:href") : null;
+    const processedSvg = svg ? svg.replace(/NS\d+:href/gi, "xlink:href") : null; // eslint-disable-line i18next/no-literal-string
     const safeSvgContent = { __html: processedSvg };
 
     // We proxy the legend so it's cached, and so that the Print/Export feature works with non-CORS servers.
@@ -132,7 +134,7 @@ const Legend = createReactClass({
               rel="noreferrer noopener"
               className={Styles.legendOpenExternally}
             >
-              Open legend in a separate tab
+              {i18next.t("workbench.legendNewWindow")}
             </a>
           </li>
         </Otherwise>
@@ -152,7 +154,7 @@ const Legend = createReactClass({
 
   renderLegendItem(legendItem, i) {
     let boxStyle = {
-      border: legendItem.addSpacingAbove ? "1px solid black" : undefined
+      border: legendItem.addSpacingAbove ? "1px solid black" : undefined // eslint-disable-line i18next/no-literal-string
     };
     if (legendItem.outlineColor) {
       boxStyle.border = `1px solid ${legendItem.outlineColor}`;
@@ -168,7 +170,7 @@ const Legend = createReactClass({
           <img width="20px" height="16px" src={legendItem.imageUrl} />
         );
       } else {
-        boxContents = <>&#9632;</>;
+        boxContents = <>&#9632;</>; // eslint-disable-line i18next/no-literal-string
         boxStyle = {
           color: legendItem.color,
           fontSize: "48px",
@@ -180,8 +182,8 @@ const Legend = createReactClass({
       if (legendItem.imageUrl) {
         boxStyle = {
           backgroundImage: `url(${legendItem.imageUrl})`,
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat", // eslint-disable-line i18next/no-literal-string
+          backgroundPosition: "center", // eslint-disable-line i18next/no-literal-string
           width: `${legendItem.imageWidth}px`,
           ...boxStyle
         };

@@ -23,6 +23,7 @@ const OpacitySection = observer(
 
     changeOpacity(value) {
       const item = this.props.item;
+      // eslint-disable-next-line i18next/no-literal-string
       if (hasTraits(item, RasterLayerTraits, "opacity")) {
         runInAction(() => {
           item.setTrait(CommonStrata.user, "opacity", value / 100.0);
@@ -34,7 +35,7 @@ const OpacitySection = observer(
       const item = this.props.item;
       const { t } = this.props;
       if (
-        !hasTraits(item, RasterLayerTraits, "opacity") ||
+        !hasTraits(item, RasterLayerTraits, "opacity") || // eslint-disable-line i18next/no-literal-string
         item.disableOpacityControl
       ) {
         return null;

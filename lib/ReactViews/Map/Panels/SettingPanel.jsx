@@ -20,6 +20,7 @@ import MenuPanel from "../../StandardUserInterface/customizable/MenuPanel";
 import withTerriaRef from "../../HOCs/withTerriaRef";
 import DropdownStyles from "./panel.scss";
 import Styles from "./setting-panel.scss";
+import i18next from "i18next";
 // The basemap and viewer setting panel
 /**
  * @typedef {object} Props
@@ -53,7 +54,7 @@ class SettingPanel extends React.Component {
       ? this._hoverBaseMap
       : this.props.terria.mainViewer.baseMap
       ? this.props.terria.mainViewer.baseMap.name
-      : "(None)";
+      : i18next.t("settingPanel.none");
   }
 
   selectBaseMap(baseMap, event) {
@@ -68,7 +69,7 @@ class SettingPanel extends React.Component {
     if (baseMap.mappable) {
       const baseMapId = baseMap.mappable.uniqueId;
       if (baseMapId) {
-        this.props.terria.setLocalProperty("basemap", baseMapId);
+        this.props.terria.setLocalProperty("basemap", baseMapId); // eslint-disable-line i18next/no-literal-string
       }
     }
   }
@@ -90,15 +91,15 @@ class SettingPanel extends React.Component {
     const mainViewer = this.props.terria.mainViewer;
     event.stopPropagation();
     if (viewer === "3d" || viewer === "3dsmooth") {
-      mainViewer.viewerMode = "cesium";
+      mainViewer.viewerMode = "cesium"; // eslint-disable-line i18next/no-literal-string
       mainViewer.viewerOptions.useTerrain = viewer === "3d";
     } else if (viewer === "2d") {
-      mainViewer.viewerMode = "leaflet";
+      mainViewer.viewerMode = "leaflet"; // eslint-disable-line i18next/no-literal-string
     } else {
       console.error(`Trying to select ViewerMode ${viewer} that doesn't exist`);
     }
     // We store the user's chosen viewer mode for future use.
-    this.props.terria.setLocalProperty("viewermode", viewer);
+    this.props.terria.setLocalProperty("viewermode", viewer); // eslint-disable-line i18next/no-literal-string
     this.props.terria.currentViewer.notifyRepaintRequired();
   }
 
@@ -149,9 +150,9 @@ class SettingPanel extends React.Component {
     const currentViewer =
       this.props.terria.mainViewer.viewerMode === ViewerMode.Cesium
         ? this.props.terria.mainViewer.viewerOptions.useTerrain
-          ? "3d"
-          : "3dsmooth"
-        : "2d";
+          ? "3d" // eslint-disable-line i18next/no-literal-string
+          : "3dsmooth" // eslint-disable-line i18next/no-literal-string
+        : "2d"; // eslint-disable-line i18next/no-literal-string
 
     const useNativeResolution = this.props.terria.useNativeResolution;
     const nativeResolutionLabel = t("settingPanel.nativeResolutionLabel", {
@@ -166,7 +167,7 @@ class SettingPanel extends React.Component {
       outer: Styles.settingPanel,
       inner: Styles.dropdownInner,
       btn: Styles.btnDropdown,
-      icon: "map"
+      icon: "map" // eslint-disable-line i18next/no-literal-string
     };
 
     const isCesiumWithTerrain =
@@ -181,9 +182,14 @@ class SettingPanel extends React.Component {
       supportsDepthTestAgainstTerrain &&
       this.props.terria.depthTestAgainstTerrainEnabled;
 
-    const depthTestAgainstTerrainLabel = `Press to start ${
-      depthTestAgainstTerrainEnabled ? "showing" : "hiding"
-    } features that are underneath the terrain surface`;
+    const depthTestAgainstTerrainLabel = t(
+      "settingPanel.depthTestAgainstTerrainLabel",
+      {
+        showing: depthTestAgainstTerrainEnabled
+          ? t("settingPanel.showing")
+          : t("settingPanel.hiding")
+      }
+    );
 
     const viewerModes = [];
 
@@ -191,22 +197,22 @@ class SettingPanel extends React.Component {
       this.props.terria.configParameters.useCesiumIonTerrain ||
       this.props.terria.configParameters.cesiumTerrainUrl
     ) {
-      viewerModes.push("3d");
+      viewerModes.push("3d"); // eslint-disable-line i18next/no-literal-string
     }
 
-    viewerModes.push("3dsmooth", "2d");
+    viewerModes.push("3dsmooth", "2d"); // eslint-disable-line i18next/no-literal-string
 
     const supportsSide = isCesiumWithTerrain;
-    const sides = ["Left", "Both", "Right"];
+    const sides = ["Left", "Both", "Right"]; // eslint-disable-line i18next/no-literal-string
 
-    let currentSide = "Both";
+    let currentSide = "Both"; // eslint-disable-line i18next/no-literal-string
     if (supportsSide) {
       switch (this.props.terria.terrainSplitDirection) {
         case ImagerySplitDirection.LEFT:
-          currentSide = "Left";
+          currentSide = "Left"; // eslint-disable-line i18next/no-literal-string
           break;
         case ImagerySplitDirection.RIGHT:
-          currentSide = "Right";
+          currentSide = "Right"; // eslint-disable-line i18next/no-literal-string
           break;
       }
     }
@@ -219,8 +225,8 @@ class SettingPanel extends React.Component {
       timelineStack.defaultTimeVarying.currentTimeAsJulianDate !== undefined;
 
     const alwaysShowTimelineLabel = alwaysShowTimeline
-      ? "Press to start only showing the timeline when there are time-varying datasets on the workbench"
-      : "Press to start always showing the timeline, even when no time-varying datasets are on the workbench";
+      ? t("settingPanel.alwaysShowTimelineTrue")
+      : t("settingPanel.alwaysShowTimelineFalse");
 
     return (
       <MenuPanel
@@ -254,7 +260,7 @@ class SettingPanel extends React.Component {
         <If condition={supportsSide}>
           <div className={classNames(Styles.viewer, DropdownStyles.section)}>
             <label className={DropdownStyles.heading}>
-              Show Terrain on the
+              {t("settingPanel.showTerrainSide")}
             </label>
             <ul className={Styles.viewerSelector}>
               <For each="side" of={sides}>
@@ -299,7 +305,7 @@ class SettingPanel extends React.Component {
                   Styles.nativeResolutionHeader
                 )}
               >
-                Terrain hides underground features
+                {t("settingPanel.terrainHidesUnderground")}
               </label>
             </section>
           </div>
@@ -335,7 +341,9 @@ class SettingPanel extends React.Component {
           </ul>
         </div>
         <div className={DropdownStyles.section}>
-          <label className={DropdownStyles.heading}>Timeline</label>
+          <label className={DropdownStyles.heading}>
+            {t("settingPanel.baseMap")}
+          </label>
           <section
             className={Styles.nativeResolutionWrapper}
             title={qualityLabels[this.props.terria.quality]}
@@ -369,7 +377,7 @@ class SettingPanel extends React.Component {
                 Styles.nativeResolutionHeader
               )}
             >
-              Always show
+              {t("settingPanel.alwaysShowTimelineText")}
             </label>
           </section>
         </div>

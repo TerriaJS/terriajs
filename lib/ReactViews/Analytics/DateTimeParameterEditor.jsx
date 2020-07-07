@@ -78,6 +78,7 @@ const DateTimeParameterEditor = createReactClass({
         <input
           className={style}
           type="time"
+          // eslint-disable-next-line i18next/no-literal-string
           placeholder="HH:mm:ss.sss"
           onChange={this.onChangeTime}
           value={this.state.time}

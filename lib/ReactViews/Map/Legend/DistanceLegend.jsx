@@ -166,8 +166,10 @@ class DistanceLegend extends React.Component {
     if (defined(distance)) {
       let label;
       if (distance >= 1000) {
+        // eslint-disable-next-line i18next/no-literal-string
         label = (distance / 1000).toString() + " km";
       } else {
+        // eslint-disable-next-line i18next/no-literal-string
         label = distance.toString() + " m";
       }
 
@@ -191,6 +193,7 @@ class DistanceLegend extends React.Component {
       .distanceTo(map.containerPointToLatLng([maxPixelWidth, halfHeight]));
 
     const meters = L.control.scale()._getRoundNum(maxMeters);
+    // eslint-disable-next-line i18next/no-literal-string
     const label = meters < 1000 ? meters + " m" : meters / 1000 + " km";
 
     this.setState({

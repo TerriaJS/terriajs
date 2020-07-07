@@ -9,7 +9,7 @@ import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 import VarType from "../../Map/VarType";
 import CatalogItem from "../DataCatalog/CatalogItem";
 import CatalogGroup from "../DataCatalog/CatalogGroup";
-
+import { Trans, withTranslation } from "react-i18next";
 import Styles from "./parameter-editors.scss";
 
 const RegionDataParameterEditor = createReactClass({
@@ -17,7 +17,8 @@ const RegionDataParameterEditor = createReactClass({
 
   propTypes: {
     previewed: PropTypes.object,
-    parameter: PropTypes.object
+    parameter: PropTypes.object,
+    t: PropTypes.func.isRequired
   },
 
   /* eslint-disable-next-line camelcase */
@@ -180,6 +181,7 @@ const RegionDataParameterEditor = createReactClass({
   },
 
   renderContent() {
+    const { t } = this.props;
     if (this.catalogItemsWithMatchingRegion().length > 0) {
       return (
         <div className={Styles.data}>
@@ -208,18 +210,30 @@ const RegionDataParameterEditor = createReactClass({
       // Don't break the lines around the link to csv-geo-au, or whitespace stripping will ruin the formatting in
       // the rendered version.
       <div className={Styles.parameterEditorImportantNote}>
-        No characteristics are available because you have not added any data to
-        the map for this region type,{" "}
-        {this.regionProvider() ? this.regionProvider().regionType : "None"}. You
-        may use your own data with this analysis by creating a CSV following the{" "}
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au"
+        <Trans
+          i18nKey="analytics.parameterEditorImportantNote"
+          values={{
+            regionType: this.regionProvider()
+              ? this.regionProvider().regionType
+              : t("analytics.none")
+          }}
         >
-          csv-geo-au
-        </a>{" "}
-        guidelines and dragging and dropping it onto the map.
+          No characteristics are available because you have not added any data
+          to the map for this region type,{" "}
+          {this.regionProvider()
+            ? this.regionProvider().regionType
+            : t("analytics.none")}
+          . You may use your own data with this analysis by creating a CSV
+          following the{" "}
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au"
+          >
+            csv-geo-au
+          </a>{" "}
+          guidelines and dragging and dropping it onto the map.
+        </Trans>
       </div>
     );
   },
@@ -236,6 +250,7 @@ const RegionDataParameterEditor = createReactClass({
                 selected={this.isActive(catalogItem, column)}
                 text={column.name}
                 onBtnClick={this.toggleActive.bind(this, catalogItem, column)}
+                // eslint-disable-next-line i18next/no-literal-string
                 btnState={this.isActive(catalogItem, column) ? "remove" : "add"}
               />
             );
@@ -245,4 +260,4 @@ const RegionDataParameterEditor = createReactClass({
     );
   }
 });
-module.exports = RegionDataParameterEditor;
+module.exports = withTranslation()(RegionDataParameterEditor);

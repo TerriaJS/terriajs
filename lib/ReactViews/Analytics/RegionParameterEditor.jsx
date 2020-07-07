@@ -9,6 +9,7 @@ import PropTypes from "prop-types";
 import Styles from "./parameter-editors.scss";
 import RegionPicker from "./RegionPicker";
 import MapInteractionMode from "../../Models/MapInteractionMode";
+import i18next from "i18next";
 
 const RegionParameterEditor = createReactClass({
   displayName: "RegionParameterEditor",
@@ -44,7 +45,7 @@ const RegionParameterEditor = createReactClass({
           onClick={this.selectRegionOnMap}
           className={Styles.btnSelector}
         >
-          Select region
+          {i18next.t("analytics.selectRegion")}
         </button>
       </div>
     );
@@ -63,12 +64,12 @@ RegionParameterEditor.selectOnMap = function(viewState, parameter, previewed) {
   terria.pickedFeatures = undefined;
 
   const pickPointMode = new MapInteractionMode({
-    message: "Select a region on the map",
+    message: i18next.t("analytics.selectRegionMessage"),
     onCancel: function() {
       terria.mapInteractionModeStack.pop();
       viewState.openAddData();
     },
-    buttonText: "Done",
+    buttonText: i18next.t("analytics.selectRegionDone"),
     customUi: function Done() {
       return (
         <RegionPicker

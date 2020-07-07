@@ -118,7 +118,7 @@ export const Timeline = observer(
                 currentDate={JulianDate.toDate(currentDiscreteJulianDate)}
                 dates={discreteTimes.map(dt => JulianDate.toDate(dt.time))}
                 onChange={this.changeDateTime}
-                openDirection="up"
+                openDirection="up" // eslint-disable-line i18next/no-literal-string
                 isOpen={this.state.isPickerOpen}
                 onOpen={this.onOpenPicker}
                 onClose={this.onClosePicker}

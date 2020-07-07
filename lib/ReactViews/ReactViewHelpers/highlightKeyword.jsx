@@ -5,7 +5,7 @@ import React from "react";
 // cons: ???
 export default function highlightKeyword(searchResult, keywordToHighlight) {
   if (!keywordToHighlight) return searchResult;
-  const parts = searchResult.split(new RegExp(`(${keywordToHighlight})`, "gi"));
+  const parts = searchResult.split(new RegExp(`(${keywordToHighlight})`, "gi")); // eslint-disable-line i18next/no-literal-string
   return (
     <>
       {parts.map((part, i) => (

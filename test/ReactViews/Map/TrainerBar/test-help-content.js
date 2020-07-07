@@ -1,3 +1,4 @@
+/* eslint-disable i18next/no-literal-string */
 export default {
   title: "Step by step guide",
   itemName: "stepbystepguide",

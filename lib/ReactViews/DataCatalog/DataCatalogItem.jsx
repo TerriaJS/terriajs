@@ -75,7 +75,9 @@ export const DataCatalogItem = observer(
           ) {
             this.props.viewState.closeCatalog();
             this.props.terria.analytics?.logEvent(
+              // eslint-disable-next-line i18next/no-literal-string
               "dataSource",
+              // eslint-disable-next-line i18next/no-literal-string
               toAdd ? "addFromCatalogue" : "removeFromCatalogue",
               getPath(this.props.item)
             );
@@ -146,14 +148,19 @@ export const DataCatalogItem = observer(
       if (this.props.overrideState) {
         return this.props.overrideState;
       } else if (this.props.item.isLoading) {
+        // eslint-disable-next-line i18next/no-literal-string
         return "loading";
       } else if (this.props.viewState.useSmallScreenInterface) {
+        // eslint-disable-next-line i18next/no-literal-string
         return "preview";
       } else if (this.props.item.terria.workbench.contains(this.props.item)) {
+        // eslint-disable-next-line i18next/no-literal-string
         return "remove";
       } else if (!defined(this.props.item.invoke)) {
+        // eslint-disable-next-line i18next/no-literal-string
         return "add";
       } else {
+        // eslint-disable-next-line i18next/no-literal-string
         return "stats";
       }
     }

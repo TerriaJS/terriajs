@@ -94,6 +94,7 @@ const LineParameterEditor = createReactClass({
  * @param {FunctionParameter} parameter Parameter to set value on.
  */
 LineParameterEditor.setValueFromText = function(e, parameter) {
+  // eslint-disable-next-line i18next/no-literal-string
   const coordinatePairs = e.target.value.split("], [");
   const pointsLongLats = [];
   for (let i = 0; i < coordinatePairs.length; i++) {

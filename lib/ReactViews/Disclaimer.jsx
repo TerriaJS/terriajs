@@ -15,6 +15,7 @@ import parseCustomMarkdownToReact from "./Custom/parseCustomMarkdownToReact";
 import Button from "../Styled/Button";
 import FadeIn from "./Transitions/FadeIn/FadeIn";
 
+/* eslint-disable i18next/no-literal-string */
 const TopElementBox = styled(Box)`
   z-index: 99999;
   top: 0;
@@ -31,7 +32,6 @@ const BackgroundImage = styled(Box)`
   // filter: blur(10px);
   z-index: 0;
 `;
-
 const DisclaimerButton = styled(Button).attrs({
   textProps: {
     semiBold: true
@@ -47,6 +47,7 @@ const DisclaimerButton = styled(Button).attrs({
     background-color: transparent;
   `}
 `;
+/* eslint-enable i18next/no-literal-string */
 
 @observer
 class Disclaimer extends React.Component {
@@ -78,12 +79,12 @@ class Disclaimer extends React.Component {
   }
 
   render() {
+    const { t } = this.props;
     const disclaimer = this.props.viewState.disclaimerSettings;
-    const disclaimerTitle = disclaimer?.title || "Disclaimer";
-    const disclaimerConfirm = disclaimer?.confirmText || "Ok";
-    const disclaimerDeny = disclaimer?.denyText || "Cancel";
-    const disclaimerMessage =
-      disclaimer?.message || "Disclaimer text goes here";
+    const disclaimerTitle = disclaimer?.title || t("disclaimer.title");
+    const disclaimerConfirm = disclaimer?.confirmText || t("disclaimer.ok");
+    const disclaimerDeny = disclaimer?.denyText || t("disclaimer.cancel");
+    const disclaimerMessage = disclaimer?.message || t("disclaimer.message");
     const useSmallScreenInterface = this.props.viewState
       .useSmallScreenInterface;
     return disclaimer ? (

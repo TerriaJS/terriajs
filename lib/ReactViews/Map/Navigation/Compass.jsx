@@ -279,14 +279,14 @@ class Compass extends React.Component {
 
   render() {
     const rotationMarkerStyle = {
-      transform: "rotate(-" + this.state.orbitCursorAngle + "rad)",
-      WebkitTransform: "rotate(-" + this.state.orbitCursorAngle + "rad)",
+      transform: "rotate(-" + this.state.orbitCursorAngle + "rad)", // eslint-disable-line i18next/no-literal-string
+      WebkitTransform: "rotate(-" + this.state.orbitCursorAngle + "rad)", // eslint-disable-line i18next/no-literal-string
       opacity: this.state.orbitCursorOpacity
     };
 
     const outerCircleStyle = {
-      transform: "rotate(-" + this.state.heading + "rad)",
-      WebkitTransform: "rotate(-" + this.state.heading + "rad)",
+      transform: "rotate(-" + this.state.heading + "rad)", // eslint-disable-line i18next/no-literal-string
+      WebkitTransform: "rotate(-" + this.state.heading + "rad)", // eslint-disable-line i18next/no-literal-string
       opacity: ""
     };
     const { t } = this.props;
@@ -378,7 +378,7 @@ class Compass extends React.Component {
               viewState={this.props.viewState}
               handleHelp={() => {
                 this.props.viewState.showHelpPanel();
-                this.props.viewState.selectHelpMenuItem("navigation");
+                this.props.viewState.selectHelpMenuItem("navigation"); // eslint-disable-line i18next/no-literal-string
               }}
               onClose={() => this.setState({ active: false })}
             />

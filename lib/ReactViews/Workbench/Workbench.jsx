@@ -45,8 +45,8 @@ const Workbench = observer(
     removeAll() {
       this.props.terria.workbench.items.forEach(item => {
         this.props.terria.analytics?.logEvent(
-          "dataSource",
-          "removeAllFromWorkbench",
+          "dataSource", // eslint-disable-line i18next/no-literal-string
+          "removeAllFromWorkbench", // eslint-disable-line i18next/no-literal-string
           getPath(item)
         );
       });

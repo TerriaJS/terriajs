@@ -95,6 +95,7 @@ const DataCatalogGroup = observer(
         <CatalogGroup
           text={this.getNameOrPrettyUrl()}
           isPrivate={group.isPrivate}
+          // eslint-disable-next-line i18next/no-literal-string
           title={getPath(this.props.group, " → ")}
           topLevel={this.props.isTopLevel}
           open={this.isOpen()}

@@ -1,3 +1,4 @@
+/* eslint-disable i18next/no-literal-string */
 import styled from "styled-components";
 
 export const Box = styled.div`

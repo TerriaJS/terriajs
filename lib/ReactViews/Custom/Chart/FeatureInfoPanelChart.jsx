@@ -9,6 +9,7 @@ import React from "react";
 import Chartable from "../../../Models/Chartable";
 import LineChart from "./LineChart";
 import Styles from "./chart-preview.scss";
+import { withTranslation } from "react-i18next";
 
 @withParentSize
 @observer
@@ -21,7 +22,8 @@ class FeatureInfoPanelChart extends React.Component {
     margin: PropTypes.object,
     item: PropTypes.object.isRequired,
     xAxisLabel: PropTypes.string,
-    baseColor: PropTypes.string
+    baseColor: PropTypes.string,
+    t: PropTypes.func.isRequired
   };
 
   static defaultProps = {
@@ -64,6 +66,7 @@ class FeatureInfoPanelChart extends React.Component {
           chartItem={this.chartItem}
           baseColor={this.props.baseColor}
           xAxisLabel={this.props.xAxisLabel}
+          t={this.props.t}
         />
       </div>
     );
@@ -78,7 +81,8 @@ class Chart extends React.Component {
     margin: PropTypes.object.isRequired,
     chartItem: PropTypes.object.isRequired,
     baseColor: PropTypes.string.isRequired,
-    xAxisLabel: PropTypes.string
+    xAxisLabel: PropTypes.string,
+    t: PropTypes.func.isRequired
   };
 
   xAxisHeight = 30;
@@ -114,10 +118,10 @@ class Chart extends React.Component {
   }
 
   render() {
-    const { height, margin, chartItem, baseColor } = this.props;
+    const { height, margin, chartItem, baseColor, t } = this.props;
 
     if (chartItem.points.length === 0) {
-      return <div className={Styles.empty}>No data available</div>;
+      return <div className={Styles.empty}>{t("customChart.noData")}</div>;
     }
 
     const id = `featureInfoPanelChart-${chartItem.name}`;
@@ -168,4 +172,4 @@ class Chart extends React.Component {
   }
 }
 
-export default FeatureInfoPanelChart;
+export default withTranslation()(FeatureInfoPanelChart);

@@ -11,6 +11,7 @@ import { runInAction } from "mobx";
 // See https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#Safely_detecting_option_support
 let passiveSupported = false;
 try {
+  // eslint-disable-next-line i18next/no-literal-string
   const options = Object.defineProperty({}, "passive", {
     get: function() {
       passiveSupported = true;

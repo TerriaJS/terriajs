@@ -25,6 +25,7 @@ export const SatelliteHelpPrompt = observer(({ viewState }) => {
       onAccept={() => {
         dismissSatellitePrompt();
         viewState.showHelpPanel();
+        // eslint-disable-next-line i18next/no-literal-string
         viewState.selectHelpMenuItem("satelliteimagery");
       }}
       onDismiss={() => dismissSatellitePrompt()}

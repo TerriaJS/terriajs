@@ -55,15 +55,15 @@ class MeasureTool extends React.Component {
       return "";
     }
     // Given a number representing a number in metres, make it human readable
-    let label = "m";
+    let label = "m"; // eslint-disable-line i18next/no-literal-string
     if (squared) {
       if (number > 999999) {
-        label = "km";
+        label = "km"; // eslint-disable-line i18next/no-literal-string
         number = number / 1000000.0;
       }
     } else {
       if (number > 999) {
-        label = "km";
+        label = "km"; // eslint-disable-line i18next/no-literal-string
         number = number / 1000.0;
       }
     }
@@ -72,7 +72,7 @@ class MeasureTool extends React.Component {
     number = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     let numberStr = number + " " + label;
     if (squared) {
-      numberStr += "\u00B2";
+      numberStr += "\u00B2"; // eslint-disable-line i18next/no-literal-string
     }
     return numberStr;
   }
@@ -225,7 +225,7 @@ class MeasureTool extends React.Component {
     let message = distance;
     if (this.totalAreaMetresSquared !== 0) {
       message +=
-        "<br>" + this.prettifyNumber(this.totalAreaMetresSquared, true);
+        "<br>" + this.prettifyNumber(this.totalAreaMetresSquared, true); // eslint-disable-line i18next/no-literal-string
     }
     return message;
   };

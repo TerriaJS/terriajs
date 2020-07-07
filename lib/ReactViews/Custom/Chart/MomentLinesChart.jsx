@@ -17,7 +17,9 @@ class MomentLines extends React.Component {
       const point = this.props.chartItem.points[i];
       if (point) {
         const x = scales.x(point.x);
+        // eslint-disable-next-line i18next/no-literal-string
         line.setAttribute("x1", x);
+        // eslint-disable-next-line i18next/no-literal-string
         line.setAttribute("x2", x);
       }
     });

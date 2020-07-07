@@ -43,6 +43,7 @@ const MobileSearch = observer(
     },
 
     render() {
+      // eslint-disable-next-line i18next/no-literal-string
       const theme = "light";
       return (
         <div className={Styles.mobileSearch}>

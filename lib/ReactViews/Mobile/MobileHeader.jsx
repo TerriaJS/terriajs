@@ -174,7 +174,7 @@ const MobileHeader = observer(
                     className={Styles.btnAdd}
                     onClick={this.onMobileDataCatalogClicked}
                   >
-                    Data
+                    {t("mobile.data")}
                     <Icon glyph={Icon.GLYPHS.increase} />
                   </button>
                   <If condition={nowViewingLength > 0}>

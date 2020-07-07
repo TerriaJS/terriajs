@@ -7,6 +7,7 @@ import styled, { withTheme } from "styled-components";
 import Box, { BoxSpan } from "../../Styled/Box";
 import Text from "../../Styled/Text";
 import { RawButton } from "../../Styled/Button";
+import i18next from "i18next";
 
 const SearchInput = styled.input`
   box-sizing: border-box;
@@ -52,7 +53,7 @@ export const SearchBox = createReactClass({
 
   getDefaultProps() {
     return {
-      placeholder: "Search",
+      placeholder: i18next.t("search.searchPlaceholder"),
       alwaysShowClear: false,
       autoFocus: false
     };
@@ -172,13 +173,13 @@ export const SearchBox = createReactClass({
             ref={this.props.inputBoxRef}
             id="search"
             type="text"
-            name="search"
+            name="search" // eslint-disable-line i18next/no-literal-string
             value={this.props.searchText}
             onChange={this.handleChange}
             onFocus={this.props.onFocus}
             onKeyDown={this.onKeyDown}
             placeholder={this.props.placeholder}
-            autoComplete="off"
+            autoComplete="off" // eslint-disable-line i18next/no-literal-string
             autoFocus={this.props.autoFocus}
             rounded
           />

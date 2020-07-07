@@ -101,7 +101,8 @@ class ChartExpandAndDownloadButtons extends React.Component {
             options={nameAndHrefObjects}
             theme={downloadDropdownTheme}
           >
-            {t("chart.download") + " ▾"}
+            {// eslint-disable-next-line i18next/no-literal-string
+            t("chart.download") + " ▾"}
           </Dropdown>
         );
       }
@@ -118,7 +119,8 @@ class ChartExpandAndDownloadButtons extends React.Component {
               options={sourceNameObjects}
               theme={dropdownTheme}
             >
-              {t("chart.expand") + " ▾"}
+              {// eslint-disable-next-line i18next/no-literal-string
+              t("chart.expand") + " ▾"}
             </Dropdown>
             {downloadButton}
           </div>

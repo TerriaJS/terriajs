@@ -89,6 +89,7 @@ const FeedbackForm = observer(
 
     handleChange(e) {
       this.setState({
+        // eslint-disable-next-line i18next/no-literal-string
         [e.target.getAttribute("name")]: e.target.value
       });
     },

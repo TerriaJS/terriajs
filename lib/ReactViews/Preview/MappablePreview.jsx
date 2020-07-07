@@ -68,8 +68,8 @@ class MappablePreview extends React.Component {
       ) {
         this.props.viewState.closeCatalog();
         this.props.terria.analytics?.logEvent(
-          "dataSource",
-          toAdd ? "addFromPreviewButton" : "removeFromPreviewButton",
+          "dataSource", // eslint-disable-line i18next/no-literal-string
+          toAdd ? "addFromPreviewButton" : "removeFromPreviewButton", // eslint-disable-line i18next/no-literal-string
           getPath(this.props.previewed)
         );
       }

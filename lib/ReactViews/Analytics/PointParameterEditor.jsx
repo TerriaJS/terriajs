@@ -83,6 +83,7 @@ const PointParameterEditor = createReactClass({
           onChange={this.inputOnChange}
           onBlur={this.inputOnBlur}
           value={this.getDisplayValue()}
+          // eslint-disable-next-line i18next/no-literal-string
           placeholder="131.0361, -25.3450"
         />
         <button

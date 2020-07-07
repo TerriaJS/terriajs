@@ -44,6 +44,7 @@ class HelpPanel extends React.Component {
         [Styles.isHidden]: !isVisible,
         [Styles.helpPanelShifted]: isVisible && isExpanded
       },
+      // eslint-disable-next-line i18next/no-literal-string
       this.props.viewState.topElement === "HelpPanel" ? "top-element" : ""
     );
     return (
@@ -92,7 +93,7 @@ class HelpPanel extends React.Component {
           <Box centered>
             <button
               className={Styles.tourBtn}
-              title={"Take the tour"}
+              title={t("helpPanel.takeTour")}
               onClick={() => {
                 runInAction(() => {
                   this.props.viewState.hideHelpPanel();
@@ -101,7 +102,7 @@ class HelpPanel extends React.Component {
               }}
             >
               {" "}
-              <Icon glyph={Icon.GLYPHS.tour} /> {"Take the tour"}{" "}
+              <Icon glyph={Icon.GLYPHS.tour} /> {t("helpPanel.takeTour")}
             </button>
           </Box>
         </Box>

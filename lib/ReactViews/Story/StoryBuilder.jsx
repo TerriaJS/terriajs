@@ -222,7 +222,10 @@ const StoryBuilder = observer(
       });
       return (
         <div className={className}>
-          <BadgeBar label="Scenes" badge={this.props.terria.stories.length}>
+          <BadgeBar
+            label={t("story.scenes")}
+            badge={this.props.terria.stories.length}
+          >
             <button
               type="button"
               onClick={this.removeAllStories}

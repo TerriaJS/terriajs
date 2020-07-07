@@ -154,9 +154,9 @@ class DataPreviewMap extends React.Component {
     this.previewViewer.attach(container);
     this._disposePreviewBadgeStateUpdater = autorun(() => {
       if (this.props.showMap && this.props.previewed !== undefined) {
-        this.setPreviewBadgeState("loading");
+        this.setPreviewBadgeState("loading"); // eslint-disable-line i18next/no-literal-string
         this.props.previewed.loadMapItems().then(() => {
-          this.setPreviewBadgeState("dataPreview");
+          this.setPreviewBadgeState("dataPreview"); // eslint-disable-line i18next/no-literal-string
         });
       }
     });
@@ -242,7 +242,7 @@ class DataPreviewMap extends React.Component {
     }
 
     const rectangleCatalogItem = new GeoJsonCatalogItem(
-      "__preview-data-extent",
+      "__preview-data-extent", // eslint-disable-line i18next/no-literal-string
       this.props.terria
     );
     rectangleCatalogItem.setTrait(CommonStrata.user, "geoJsonData", {

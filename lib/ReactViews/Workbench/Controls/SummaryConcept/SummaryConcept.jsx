@@ -74,7 +74,7 @@ const SummaryConcept = createReactClass({
             openDescendantsWithoutActiveChildren.length === 0
           }
         >
-          <div className={Styles.noConditions}>None</div>
+          <div className={Styles.noConditions}>{t("concept.summary.none")}</div>
         </If>
         <If
           condition={

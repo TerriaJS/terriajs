@@ -24,6 +24,12 @@
     "finish": "Finish",
     "previous": "Previous"
   },
+  "disclaimer": {
+    "title": "Disclaimer",
+    "ok": "Ok",
+    "cancel": "Cancel",
+    "message": "Disclaimer text goes here"
+  },
   "measure": {
     "measureTool": "Measure Tool",
     "measureToolTitle": "Line Measure",
@@ -59,6 +65,18 @@
   "compass": {
     "description": "Drag outer ring: rotate view.\nDrag inner gyroscope: free orbit.\nDouble-click: reset view.\nTIP: You can also free orbit by holding the CTRL key and dragging the map.",
     "title": "Click and drag to rotate the camera"
+  },
+  "gyroscope": {
+    "controls": "Gyroscope Contols",
+    "outerRingTitle": "Outer Ring",
+    "outerRingText": "Drag the outer ring in a circular motion to rotate the map view 360˚.",
+    "innerRingTitle": "Inner Circle",
+    "innerRingText1": "Click in the centre and slowly drag up, down, left or right to tilt and rotate the map at the same time.",
+    "innerRingText2": "Double click in here to reset view to its default state.",
+    "ctrlTilt": "You can also tilt and rotate the map by holding the CTRL key and dragging the map.",
+    "findMore": "Find out more about the controls and how to use them.",
+    "helpBtn": "Help",
+    "controlsBtn": "Controls"
   },
   "AR": {
     "title": "Experimental Feature: Augmented Reality",
@@ -139,7 +157,14 @@
     "btnCatalogShareText": "Share",
     "btnMapShareText": "Share / Print",
     "btnCatalogShareTitle": "Share your catalogue with others",
-    "btnMapShareTitle": "Share your map with others"
+    "btnMapShareTitle": "Share your map with others",
+    "legends": "Legends",
+    "datasetDetails": "Dataset Details",
+    "mapCredits": "Map Credits",
+    "printDisclaimer": "Print Disclaimer",
+    "time": "Time: {{time}}",
+    "featureInfo": "Feature Information",
+    "imageAlt": "Map snapshot"
   },
   "countDatasets": {
     "btnText": "Start",
@@ -183,7 +208,16 @@
     "nativeResolutionHeader": "Use native device resolution",
     "mapQuality": "Raster Map Quality:",
     "qualityLabel": "Quality",
-    "performanceLabel": "Performance"
+    "performanceLabel": "Performance",
+    "alwaysShowTimelineTrue": "Press to start only showing the timeline when there are time-varying datasets on the workbench",
+    "alwaysShowTimelineFalse": "Press to start always showing the timeline, even when no time-varying datasets are on the workbench",
+    "alwaysShowTimelineText": "Always show",
+    "showTerrainSide": "Show Terrain on the",
+    "terrainHidesUnderground": "Terrain hides underground features",
+    "timeline": "Timeline",
+    "showing": "showing",
+    "hiding": "hiding",
+    "depthTestAgainstTerrainLabel": "Press to start {{showing}} features that are underneath the terrain surface"
   },
   "feedback": {
     "feedbackPreamble": "We would love to hear from you!",
@@ -203,9 +237,12 @@
     "menuPaneTitle": "We're here to help",
     "menuPaneBody": "Find useful tips on how to use TerriaJS by either checking the guides below or by contacting the team at [info@terria.io](mailto:info@terria.io)",
     "promptMessage": "Find the Tour, how-to videos & other help content here",
-    "dismissText": "Got it, thanks!"
+    "dismissText": "Got it, thanks!",
+    "help": "Help",
+    "takeTour": "Take the tour"
   },
   "helpMenu": {
+    "help": "Help",
     "btnText": "Help",
     "btnTitle": "get help",
     "helpMenuHeader": "What would you like to do?",
@@ -243,7 +280,11 @@
     "locationMarker": "Location Marker",
     "noInfoAvailable": "No information available",
     "siteData": "Site Data",
-    "latLon": "Lat / Lon "
+    "latLon": "Lat / Lon ",
+    "rawData": "Show Raw Data",
+    "curatedData": "Show Curated Data",
+    "lat": "Lat",
+    "lon": "Lon"
   },
   "welcomeMessage": {
     "title": "Let's get you started",
@@ -288,7 +329,8 @@
     "promptHtml2": "<0><0>INTRODUCING</0><1>Data Stories</1><2>Create and share interactive stories directly from your map.</2></0>",
     "story": "Story",
     "dismissText": "Got it, thanks!",
-    "mobileViewStory": "View Stories {{storiesLength}}"
+    "mobileViewStory": "View Stories {{storiesLength}}",
+    "scenes": "Scenes"
   },
   "satelliteGuidance": {
     "menuTitle": "You can access map guides at any time by looking in the <0>help menu</0>.",
@@ -329,7 +371,8 @@
     "dragDrop": "Drag and Drop",
     "infoText": "<0>Drag and drop a file here to view it locally on the map</0><1>(it won’t be saved or uploaded to the internet)</1>",
     "back": "Back",
-    "note": "<0>Note: </0>Data added in this way is not saved or made visible to others."
+    "note": "<0>Note: </0>Data added in this way is not saved or made visible to others.",
+    "placeholder": "e.g. http://data.gov.au/geoserver/wms"
   },
   "search": {
     "resultsLabel": "Search Results",
@@ -340,10 +383,13 @@
     "viewLess": "View less {{name}} results",
     "viewMore": "View more {{name}} results",
     "placeholder": "Search for locations",
-    "searchCatalogue": "Search the catalogue"
+    "searchCatalogue": "Search the catalogue",
+    "searchPlaceholder": "Search"
   },
   "mobile": {
-    "toggleNavigation": "toggle navigation"
+    "toggleNavigation": "toggle navigation",
+    "data": "Data",
+    "done": "Done"
   },
   "preview": {
     "doesNotContainGeospatialData": "This file does not contain geospatial data.",
@@ -370,7 +416,9 @@
     "modified": "Modified",
     "updateFrequency": "Update Frequency",
     "dataCustodian": "Data Custodian",
-    "mayBeExperiencingIssues": "<0>This dataset may currently be experiencing issues</0>"
+    "mayBeExperiencingIssues": "<0>This dataset may currently be experiencing issues</0>",
+    "unableToResolveTitle": "Unable to resolve reference",
+    "unableToResolveMessage": "This reference could not be resolved because it is invalid or because it points to something that cannot be visualised."
   },
   "description": {
     "name": "Description",
@@ -378,8 +426,11 @@
     "dataNotLocal": "Please contact the provider of this data for more information, including information about usage rights and constraints.",
     "wms": "This is a <1>WMS service</1>, which generates map images on request. It can be used in GIS software with this URL:",
     "wfs": "This is a <1>WFS service</1>, which transfers raw spatial data on request. It can be used in GIS software with this URL:",
-    "layerName": "Layer name",
-    "typeName": "Type name",
+    "layerName": "Layer name: {{layers}}",
+    "layerName_plural": "Layer name: {{layers}}",
+    "typeName": "Type name: {{typeNames}}",
+    "typeName_plural": "Type names: {{typeNames}}",
+    "typeNameUrl": "{{typeName}} URL",
     "metadataUrl": "Metadata URL",
     "dataUrl": "Data URL",
     "useLinkBelow": "Use the link below to download the data. See the {{link}} for more information on customising URL query parameters.",
@@ -389,9 +440,13 @@
     "downloadData": "Download Data",
     "dataSourceDetails": "Data Source Details",
     "dataServiceDetails": "Data Service Details",
-    "dataCustodian": "Data Custodian"
+    "dataCustodian": "Data Custodian",
+    "wfsDoc": "Web Feature Service (WFS) documentation",
+    "wcsDoc": "Web Coverage Service (WCS) documentation"
   },
   "workbench": {
+    "controlFilter": "Show {{filterName}}: {{minimumShown}} to {{maximumShown}}",
+    "legendNewWindow": "Open legend in a separate tab",
     "colorScaleRangeTitle": "Invalid color scale range",
     "colorScaleRangeMin": "The minimum value must be a number.",
     "colorScaleRangeMax": "The maximum value must be a number.",
@@ -423,11 +478,26 @@
     "expandAll": "Expand All",
     "toggleVisibility": "Data show/hide",
     "addItemErrorTitle": "Catalog item could not be added to workbench.",
-    "addItemErrorMessage": "An error occurred while loading the catalog item."
+    "addItemErrorMessage": "An error occurred while loading the catalog item.",
+    "splitScreenMode": "SPLIT SCREEN MODE",
+    "terrainPosition": "Terrain position",
+    "terrainHidesUnderground": "Terrain hides underground features",
+    "shadows": {
+      "label": "Shadows",
+      "none": "None",
+      "cast": "Cast Only",
+      "receive": "Receive Only",
+      "both": "Cast and Receive"
+    }
   },
   "dateTime": {
+    "time": "Time:",
     "previous": "Previous time",
     "selectTime": "Select a time",
+    "selectCentury": "Select a century",
+    "selectYear": "Select a year",
+    "selectHour": "Select an hour on {{day}} {{month}} {{year}}",
+    "dateOptions": "({{date}} options)",
     "outOfRange": "Currently out of range.",
     "next": "Next time",
     "useTimeline": "Use timeline",
@@ -439,6 +509,9 @@
       "playSlower": "Play Slower",
       "playFaster": "Play Faster"
     }
+  },
+  "dimensionSelectorSection": {
+    "default": "Default"
   },
   "satellite": {
     "pickPoint": "Select a point by clicking on the map.",
@@ -464,7 +537,8 @@
     },
     "summary": {
       "addMoreText": "Add a condition",
-      "addFirstText": "Add new condition"
+      "addFirstText": "Add new condition",
+      "none": "None"
     }
   },
   "clipboard": {
@@ -476,10 +550,13 @@
   },
   "dragDrop": {
     "text": "<0>Drag & Drop</0><1>Your data anywhere to view on the map<1>",
-    "not": "<0>bbbb</0>"
+    "not": "<0>bbbb</0>",
+    "notification": "<0>\"{{fileNames}}\"</0> has been added to <2>My data</2>",
+    "notification_plural": "<0>\"{{fileNames}}\"</0> have been added to> <2>My data</2>"
   },
   "loader": {
-    "loadingMessage": "Loading"
+    "loadingMessage": "Loading",
+    "defaultMessage": "Loading..."
   },
   "emptyWorkbenchMessage": "<0><0>Your workbench is empty</0><1><strong>Click '$t(addData.addDataBtnText)' above to </strong></1><2><0>Browse the Data Catalogue</0><1>Load your own data onto the map</1></2><3><0></0><strong>TIP.</strong><2>All your active data sets will be listed here</2></3></0>",
   "emptyWorkbench": {
@@ -505,7 +582,8 @@
     "sectionLabel": "Charts",
     "closePanel": "Close Panel",
     "expand": "Expand",
-    "download": "Download"
+    "download": "Download",
+    "notImplemented": "Not implemented"
   },
   "viewModels": {
     "searchNoLocations": "Sorry, no locations match your search query.",
@@ -545,8 +623,28 @@
     "shiftToDrawRectangle": "Press the SHIFT key and hold down the left mouse button to draw a rectangle",
     "clickToDrawRectangle": "Click to draw rectangle",
     "selectedPolygon": "Selected Polygon",
+    "availableRegions": "Available Regions",
     "regionName": "Region name",
-    "selectExistingPolygon": "Select existing polygon"
+    "selectExistingPolygon": "Select existing polygon",
+    "selectRegion": "Select region",
+    "selectRegionMessage": "Select a region on the map",
+    "selectRegionDone": "Done",
+    "required": " (required)",
+    "parameterEditorImportantNote": "No characteristics are available because you have not added any data to the map for this region type, {{regionType}}. You may use your own data with this analysis by creating a CSV following the <4>csv-geo-au</4> guidelines and dragging and dropping it onto the map.",
+    "none": "None"
+  },
+  "customChart": {
+    "noData": "No data available",
+    "date": "Date",
+    "download": "Download",
+    "chartDataFileName": "chart data.csv"
+  },
+  "terriaViewerWrapper": {
+    "loading": "Loading the map, please wait..."
+  },
+  "genericEditor": "Enter the link URL",
+  "guide": {
+    "fromModal": " from inside modal"
   },
   "core": {
     "errors": {
@@ -659,7 +757,12 @@
       "csvRegionMappingTitle": "CSV region mapping",
       "csvRegionMappingMessageZeroFound": "Zero region names found for region type {{regionType}}",
       "csvRegionMappingMessageZeroBoundariesFound": "Zero region boundaries found for region {{regionName}}",
-      "csvRegionMappingMessageLoadError": "Couldn't load region boundaries for region {{regionName}} {{exception}}"
+      "csvRegionMappingMessageLoadError": "Couldn't load region boundaries for region {{regionName}} {{exception}}",
+      "csvRegionNamesMessageLoadError": "Couldn't load region boundaries for region {{regionType}} {{exception}}"
+    },
+    "unionRectangles": {
+      "first": "first is required",
+      "second": "second is required"
     }
   },
   "models": {
@@ -939,6 +1042,11 @@
       "errorLoadingMessage": "An error occurred while loading a KML or KMZ file.  This may indicate that the file is invalid or that it is not supported by {{appName}}. If you would like assistance or further information, please email us at {{email}}.",
       "unableToLoadItemTitle": "No KML available",
       "unableToLoadItemMessage": "The KML/KMZ catalog item cannot be loaded because it was not configured with a `url`, `kmlData` or `kmlString` property."
+    },
+    "legendHelper": {
+      "defaultNullLabel": "(No value)",
+      "otherValues": "{{number}} other values",
+      "values": "{{number}} values"
     },
     "magda": {
       "name": "MAGDA Distribution",

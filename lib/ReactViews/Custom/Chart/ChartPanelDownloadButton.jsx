@@ -8,12 +8,15 @@ import when from "terriajs-cesium/Source/ThirdParty/when";
 import VarType from "../../../Map/VarType";
 import Icon from "../../Icon";
 import Styles from "./chart-panel-download-button.scss";
+import { withTranslation } from "react-i18next";
+import i18next from "i18next";
 
 const ChartPanelDownloadButton = createReactClass({
   displayName: "ChartPanelDownloadButton",
 
   propTypes: {
-    chartableItems: PropTypes.array.isRequired
+    chartableItems: PropTypes.array.isRequired,
+    t: PropTypes.func.isRequired
   },
 
   /**
@@ -89,7 +92,7 @@ const ChartPanelDownloadButton = createReactClass({
           const blob = new Blob([event.data], {
             type: "text/csv;charset=utf-8"
           });
-          FileSaver.saveAs(blob, "chart data.csv");
+          FileSaver.saveAs(blob, i18next.t("customChart.chartDataFileName"));
         };
       }
     });
@@ -100,13 +103,14 @@ const ChartPanelDownloadButton = createReactClass({
       return null;
     }
 
+    const { t } = this.props;
     return (
       <button className={Styles.btnDownload} onClick={this.download}>
         <Icon glyph={Icon.GLYPHS.download} />
-        Download
+        {t("customChart.download")}
       </button>
     );
   }
 });
 
-module.exports = ChartPanelDownloadButton;
+module.exports = withTranslation()(ChartPanelDownloadButton);

@@ -22,6 +22,7 @@ function loadAndStubTextResources(done, resources) {
     jasmine.Ajax.install();
 
     jasmine.Ajax.stubRequest(/.*/).andCallFunction(function(stub, xhr) {
+      // eslint-disable-next-line i18next/no-literal-string
       done.fail("Unhandled request to URL: " + xhr.url);
     });
 

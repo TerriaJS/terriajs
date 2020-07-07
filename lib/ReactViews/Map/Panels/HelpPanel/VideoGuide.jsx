@@ -14,6 +14,7 @@ const VideoWrapperBox = props => {
   const { viewState } = props;
   const handleClose = () => viewState.setVideoGuideVisible("");
 
+  // eslint-disable-next-line i18next/no-literal-string
   useKeyPress("Escape", () => {
     handleClose();
   });

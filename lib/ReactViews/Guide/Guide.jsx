@@ -80,7 +80,9 @@ export const analyticsSetShowGuide = (
   const openOrClose = bool
     ? i18next.t("general.open")
     : i18next.t("general.close");
-  const actionSuffix = options.setCalledFromInside ? " from inside modal" : "";
+  const actionSuffix = options.setCalledFromInside
+    ? i18next.t("guide.fromModal")
+    : "";
 
   terria.analytics.logEvent(
     "guide",

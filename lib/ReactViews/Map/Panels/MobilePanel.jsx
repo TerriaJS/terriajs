@@ -31,7 +31,7 @@ const MobilePanel = createReactClass({
 
           <InnerPanel
             theme={this.props.theme}
-            caretOffset="15px"
+            caretOffset="15px" // eslint-disable-line i18next/no-literal-string
             doNotCloseFlag={this.getDoNotCloseFlag()}
             onDismissed={this.onDismissed}
           >

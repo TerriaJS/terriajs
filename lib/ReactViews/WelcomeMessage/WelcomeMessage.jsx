@@ -1,24 +1,19 @@
-import React, { useState } from "react";
-import { withTranslation } from "react-i18next";
-import { withTheme } from "styled-components";
+import { runInAction } from "mobx";
+import { observer } from "mobx-react";
 import PropTypes from "prop-types";
-
+import React, { useState } from "react";
+import { Trans, useTranslation, withTranslation } from "react-i18next";
+import styled, { withTheme } from "styled-components";
+import Box from "../../Styled/Box";
+import Button, { RawButton } from "../../Styled/Button";
+import Spacing from "../../Styled/Spacing";
+import Text, { TextSpan } from "../../Styled/Text";
+import { useKeyPress } from "../Hooks/useKeyPress.js";
 import Icon, { StyledIcon } from "../Icon.jsx";
+import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
+import { TourPortalDisplayName } from "../Tour/TourPortal";
 import FadeIn from "../Transitions/FadeIn/FadeIn";
 import SlideUpFadeIn from "../Transitions/SlideUpFadeIn/SlideUpFadeIn";
-
-import Spacing from "../../Styled/Spacing";
-import Box from "../../Styled/Box";
-import Text, { TextSpan } from "../../Styled/Text";
-
-import { useKeyPress } from "../Hooks/useKeyPress.js";
-import { useTranslation, Trans } from "react-i18next";
-import { observer } from "mobx-react";
-import styled from "styled-components";
-import Button, { RawButton } from "../../Styled/Button";
-import { TourPortalDisplayName } from "../Tour/TourPortal";
-import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
-import { runInAction } from "mobx";
 
 export const WELCOME_MESSAGE_NAME = "welcomeMessage";
 export const LOCAL_PROPERTY_KEY = `${WELCOME_MESSAGE_NAME}Prompted`;
@@ -110,6 +105,7 @@ export const WelcomeMessagePure = props => {
     setShouldOpenHelp(false);
   };
 
+  // eslint-disable-next-line i18next/no-literal-string
   useKeyPress("Escape", () => {
     if (showWelcomeMessage && viewState.videoGuideVisible === "") {
       handleClose(false);
@@ -132,13 +128,14 @@ export const WelcomeMessagePure = props => {
           if (shouldExploreData) {
             setShouldExploreData(false);
             viewState.openAddData();
-            viewState.setTopElement("AddData");
+            viewState.setTopElement("AddData"); // eslint-disable-line i18next/no-literal-string
           }
           if (shouldOpenHelp) {
             setShouldOpenHelp(false);
             viewState.showHelpPanel();
           }
           // Show where help is when never previously prompted
+          // eslint-disable-next-line i18next/no-literal-string
           if (!viewState.terria.getLocalProperty("helpPrompted")) {
             runInAction(() => {
               viewState.toggleFeaturePrompt("help", true, false);
@@ -181,7 +178,7 @@ export const WelcomeMessagePure = props => {
               displayInlineBlock
               paddedRatio={6}
               onClick={e => {
-                viewState.setTopElement("WelcomeMessage");
+                viewState.setTopElement("WelcomeMessage"); // eslint-disable-line i18next/no-literal-string
                 e.stopPropagation();
               }}
             >

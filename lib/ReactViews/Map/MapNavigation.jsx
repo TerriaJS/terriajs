@@ -145,7 +145,7 @@ class MapNavigation extends React.Component {
                       this.props.viewState.featurePrompts.indexOf("help") >= 0
                     }
                   >
-                    Help
+                    {t("helpPanel.help")}
                   </MapIconButton>
                 </div>
                 <Prompt

@@ -210,7 +210,7 @@ const AddData = createReactClass({
                 onChange={this.onRemoteUrlChange}
                 className={Styles.urlInputTextBox}
                 type="text"
-                placeholder="e.g. http://data.gov.au/geoserver/wms"
+                placeholder={t("addData.placeholder")}
               />
               <button
                 type="submit"

@@ -100,13 +100,13 @@ const StandardUserInterface = observer(
       this.dragOverListener = e => {
         if (
           !e.dataTransfer.types ||
-          !arrayContains(e.dataTransfer.types, "Files")
+          !arrayContains(e.dataTransfer.types, "Files") // eslint-disable-line i18next/no-literal-string
         ) {
           return;
         }
         e.preventDefault();
         e.stopPropagation();
-        e.dataTransfer.dropEffect = "copy";
+        e.dataTransfer.dropEffect = "copy"; // eslint-disable-line i18next/no-literal-string
         that.acceptDragDropFile();
       };
 

@@ -40,6 +40,7 @@ class Tooltip extends React.Component {
     if (items.length > 0) {
       // derive title from first item x
       const x = items[0].point.x;
+      // eslint-disable-next-line i18next/no-literal-string
       return x instanceof Date ? dateformat(x, "dd/mm/yyyy, HH:MMTT") : x;
     } else return undefined;
   }
@@ -51,6 +52,7 @@ class Tooltip extends React.Component {
       ({ chartItem }) =>
         chartItem.type !== "momentLines" && chartItem.type !== "momentPoints"
     );
+    // eslint-disable-next-line i18next/no-literal-string
     return Object.entries(groupBy(tooltipItems, "chartItem.categoryName")).map(
       o => ({
         name: o[0],

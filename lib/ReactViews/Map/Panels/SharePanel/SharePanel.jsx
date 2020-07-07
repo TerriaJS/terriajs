@@ -51,7 +51,7 @@ const SharePanel = observer(
         isOpen: false,
         shortenUrls:
           this.props.shortenUrls &&
-          this.props.terria.getLocalProperty("shortenShareUrls"),
+          this.props.terria.getLocalProperty("shortenShareUrls"), // eslint-disable-line i18next/no-literal-string
         shareUrl: "",
         creatingPrintView: false,
         creatingDownload: false
@@ -72,7 +72,7 @@ const SharePanel = observer(
         };
 
         if (window.matchMedia) {
-          const matcher = window.matchMedia("print");
+          const matcher = window.matchMedia("print"); // eslint-disable-line i18next/no-literal-string
           matcher.addListener(handlePrintMediaChange);
           this._unsubscribeFromPrintMediaChange = function() {
             matcher.removeListener(handlePrintMediaChange);
@@ -165,7 +165,7 @@ const SharePanel = observer(
 
     shouldShorten() {
       const localStoragePref = this.props.terria.getLocalProperty(
-        "shortenShareUrls"
+        "shortenShareUrls" // eslint-disable-line i18next/no-literal-string
       );
 
       return (
@@ -176,9 +176,9 @@ const SharePanel = observer(
 
     onShortenClicked(e) {
       if (this.shouldShorten()) {
-        this.props.terria.setLocalProperty("shortenShareUrls", false);
+        this.props.terria.setLocalProperty("shortenShareUrls", false); // eslint-disable-line i18next/no-literal-string
       } else if (this.isUrlShortenable()) {
-        this.props.terria.setLocalProperty("shortenShareUrls", true);
+        this.props.terria.setLocalProperty("shortenShareUrls", true); // eslint-disable-line i18next/no-literal-string
       } else {
         return;
       }
@@ -344,9 +344,9 @@ const SharePanel = observer(
           <Otherwise>
             <div className={Styles.clipboardForCatalogShare}>
               <Clipboard
-                theme="light"
+                theme="light" // eslint-disable-line i18next/no-literal-string
                 text={this.state.shareUrl}
-                source={this.getShareUrlInput("light")}
+                source={this.getShareUrlInput("light")} // eslint-disable-line i18next/no-literal-string
                 id="share-url"
               />
               {this.renderWarning()}
@@ -365,7 +365,9 @@ const SharePanel = observer(
       return (
         <div>
           <div className={DropdownStyles.section}>
+            {/* eslint-disable i18next/no-literal-string */}
             <Clipboard source={this.getShareUrlInput("dark")} id="share-url" />
+            {/* eslint-enable i18next/no-literal-string */}
             {this.renderWarning()}
           </div>
           <div className={DropdownStyles.section}>
@@ -476,7 +478,7 @@ const SharePanel = observer(
         inner: classNames(Styles.dropdownInner, {
           [Styles.catalogShareInner]: catalogShare
         }),
-        icon: "share"
+        icon: "share" // eslint-disable-line i18next/no-literal-string
       };
 
       const btnText = catalogShare

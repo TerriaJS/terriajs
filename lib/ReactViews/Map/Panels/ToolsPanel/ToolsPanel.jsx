@@ -44,6 +44,7 @@ const ToolsPanel = createReactClass({
       btn: Styles.btnShare,
       outer: Styles.ToolsPanel,
       inner: Styles.dropdownInner,
+      // eslint-disable-next-line i18next/no-literal-string
       icon: "settings"
     };
     const { t } = this.props;

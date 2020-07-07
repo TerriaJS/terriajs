@@ -243,8 +243,10 @@ export const FeatureInfoSection = observer(
           !contains(baseFilename, longitude, precision)
         ) {
           baseFilename +=
+            // eslint-disable-next-line i18next/no-literal-string
             " - Lat " +
             latitude.toFixed(precision) +
+            // eslint-disable-next-line i18next/no-literal-string
             " Lon " +
             longitude.toFixed(precision);
         }
@@ -282,8 +284,8 @@ export const FeatureInfoSection = observer(
                   onClick={this.toggleRawData}
                 >
                   {this.state.showRawData
-                    ? "Show Curated Data"
-                    : "Show Raw Data"}
+                    ? t("featureInfo.curatedData")
+                    : t("featureInfo.rawData")}
                 </button>
               </If>
               <div>
@@ -637,6 +639,7 @@ function formatDateTime(text, options) {
     return dateFormat(date, options.format);
   }
 
+  // eslint-disable-next-line i18next/no-literal-string
   return dateFormat(date, "isoDateTime");
 }
 
@@ -678,7 +681,7 @@ function mustacheURLEncodeText() {
     return encodeURI(render(text));
   };
 }
-
+/* eslint-disable i18next/no-literal-string */
 const simpleStyleIdentifiers = [
   "title",
   "description",
@@ -790,7 +793,7 @@ function getTimeSeriesChartContext(catalogItem, feature, getChartDetails) {
     }
   }
 }
-
+/* eslint-enable i18next/no-literal-string */
 /**
  * Wrangle the provided feature data into more convenient forms.
  * @private

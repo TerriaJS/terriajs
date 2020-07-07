@@ -25,8 +25,8 @@ export function activateStory(story, terria) {
   const analyticsLabel =
     window.location.hash.length > 0
       ? window.location.hash
-      : "No hash detected (story not shared yet?)";
-  terria.analytics?.logEvent("story", "scene", analyticsLabel);
+      : "No hash detected (story not shared yet?)"; // eslint-disable-line i18next/no-literal-string
+  terria.analytics?.logEvent("story", "scene", analyticsLabel); // eslint-disable-line i18next/no-literal-string
   return runInAction(() => {
     if (story.shareData) {
       return Promise.all(
@@ -41,7 +41,7 @@ export function activateStory(story, terria) {
     return Promise.resolve([]);
   }).then(() => {
     terria.workbench.items.forEach(item => {
-      terria.analytics?.logEvent("story", "datasetView", getPath(item));
+      terria.analytics?.logEvent("story", "datasetView", getPath(item)); // eslint-disable-line i18next/no-literal-string
     });
   });
 }
@@ -103,7 +103,7 @@ const StoryPanel = observer(
 
     onClickContainer() {
       runInAction(() => {
-        this.props.viewState.topElement = "StoryPanel";
+        this.props.viewState.topElement = "StoryPanel"; // eslint-disable-line i18next/no-literal-string
       });
     },
 

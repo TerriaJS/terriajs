@@ -103,8 +103,8 @@ const ViewingControls = observer(
       workbench.remove(this.props.item);
       this.props.viewState.terria.timelineStack.remove(this.props.item);
       this.props.viewState.terria.analytics?.logEvent(
-        "dataSource",
-        "removeFromWorkbench",
+        "dataSource", // eslint-disable-line i18next/no-literal-string
+        "removeFromWorkbench", // eslint-disable-line i18next/no-literal-string
         getPath(this.props.item)
       );
     },
@@ -196,7 +196,7 @@ const ViewingControls = observer(
 
     openDiffTool() {
       this.props.viewState.openTool({
-        toolName: "Difference",
+        toolName: "Difference", // eslint-disable-line i18next/no-literal-string
         getToolComponent: () =>
           import("../../Tools/DiffTool/DiffTool").then(m => m.default),
         showCloseButton: true,

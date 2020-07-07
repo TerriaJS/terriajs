@@ -210,6 +210,7 @@ class FeatureInfoPanel extends React.Component {
   }
 
   renderLocationItem(cartesianPosition) {
+    const { t } = this.props;
     const cartographic = Ellipsoid.WGS84.cartesianToCartographic(
       cartesianPosition
     );
@@ -232,7 +233,7 @@ class FeatureInfoPanel extends React.Component {
 
     return (
       <div className={Styles.location}>
-        <span>Lat / Lon&nbsp;</span>
+        <span>{t("featureInfo.latLon")}</span>
         <span>
           {pretty.latitude + ", " + pretty.longitude}
           {!this.props.printView && (

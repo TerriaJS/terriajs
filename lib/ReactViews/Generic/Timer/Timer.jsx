@@ -14,14 +14,14 @@ let hidden;
 let visibilityChange;
 if (typeof document.hidden !== "undefined") {
   // Opera 12.10 and Firefox 18 and later support
-  hidden = "hidden";
-  visibilityChange = "visibilitychange";
+  hidden = "hidden"; // eslint-disable-line i18next/no-literal-string
+  visibilityChange = "visibilitychange"; // eslint-disable-line i18next/no-literal-string
 } else if (typeof document.msHidden !== "undefined") {
-  hidden = "msHidden";
-  visibilityChange = "msvisibilitychange";
+  hidden = "msHidden"; // eslint-disable-line i18next/no-literal-string
+  visibilityChange = "msvisibilitychange"; // eslint-disable-line i18next/no-literal-string
 } else if (typeof document.webkitHidden !== "undefined") {
-  hidden = "webkitHidden";
-  visibilityChange = "webkitvisibilitychange";
+  hidden = "webkitHidden"; // eslint-disable-line i18next/no-literal-string
+  visibilityChange = "webkitvisibilitychange"; // eslint-disable-line i18next/no-literal-string
 }
 
 class Timer extends React.PureComponent {
@@ -30,7 +30,7 @@ class Timer extends React.PureComponent {
 
     // We need a unique selector for the timer container. If there are multiple timers, we need to know which one to
     // draw to.
-    this.containerId = "timer-container-" + createGuid();
+    this.containerId = "timer-container-" + createGuid(); // eslint-disable-line i18next/no-literal-string
   }
 
   // Calculates how long the timer should run for (in seconds).

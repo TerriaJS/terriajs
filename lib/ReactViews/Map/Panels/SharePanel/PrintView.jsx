@@ -9,6 +9,7 @@ import Legend from "../../../Workbench/Controls/Legend";
 import PropTypes from "prop-types";
 import React from "react";
 import ReactDOM from "react-dom";
+import { withTranslation } from "react-i18next";
 
 const PrintView = createReactClass({
   displayName: "PrintView",
@@ -17,7 +18,8 @@ const PrintView = createReactClass({
     terria: PropTypes.object,
     viewState: PropTypes.object,
     window: PropTypes.object,
-    readyCallback: PropTypes.func
+    readyCallback: PropTypes.func,
+    t: PropTypes.func.isRequired
   },
 
   getInitialState() {
@@ -110,8 +112,9 @@ const PrintView = createReactClass({
   },
 
   render() {
+    const { t } = this.props;
     if (!this.state.mapImageDataUrl) {
-      return <div>Creating print view...</div>;
+      return <div>{t("share.creatingPrintView")}</div>;
     }
 
     return (
@@ -120,18 +123,18 @@ const PrintView = createReactClass({
           <img
             className="map-image"
             src={this.state.mapImageDataUrl}
-            alt="Map snapshot"
+            alt={t("share.imageAlt")}
           />
         </p>
-        <h1>Legends</h1>
+        <h1>{t("share.legends")}</h1>
         {this.props.terria.workbench.items.map(this.renderLegend)}
         {this.renderFeatureInfo()}
-        <h1>Dataset Details</h1>
+        <h1>{t("share.datasetDetails")}</h1>
         {this.props.terria.workbench.items.map(this.renderDetails)}
-        <h1>Map Credits</h1>
+        <h1>{t("share.mapCredits")}</h1>
         {/* TODO: We don't have a way of getting credits yet*/}
         <If condition={this.props.terria.configParameters.printDisclaimer}>
-          <h1>Print Disclaimer</h1>
+          <h1>{t("share.printDisclaimer")}</h1>
           <p>{this.props.terria.configParameters.printDisclaimer.text}</p>
         </If>
       </div>
@@ -147,6 +150,7 @@ const PrintView = createReactClass({
   },
 
   renderLegend(catalogItem) {
+    const { t } = this.props;
     if (!catalogItem.isMappable) {
       return null;
     }
@@ -156,7 +160,9 @@ const PrintView = createReactClass({
         <div className="layer-title">{catalogItem.name}</div>
         {catalogItem.discreteTime && (
           <div className="layer-time">
-            Time: {formatDateTime(catalogItem.discreteTime)}
+            {t("share.time", {
+              time: formatDateTime(catalogItem.discreteTime)
+            })}
           </div>
         )}
         <Legend forPrint={true} item={catalogItem} />
@@ -179,6 +185,7 @@ const PrintView = createReactClass({
   },
 
   renderFeatureInfo() {
+    const { t } = this.props;
     if (
       !this.props.viewState.featureInfoPanelIsVisible ||
       !this.props.terria.pickedFeatures ||
@@ -190,7 +197,7 @@ const PrintView = createReactClass({
 
     return (
       <div className="feature-info">
-        <h1>Feature Information</h1>
+        <h1>{t("share.featureInfo")}</h1>
         <FeatureInfoPanel
           terria={this.props.terria}
           viewState={this.props.viewState}
@@ -295,4 +302,4 @@ PrintView.create = function(options) {
   ReactDOM.render(printView, printWindow.document.getElementById("print"));
 };
 
-module.exports = PrintView;
+module.exports = withTranslation()(PrintView);

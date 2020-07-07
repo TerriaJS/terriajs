@@ -135,6 +135,7 @@ const DataCatalogReference = observer(
               isPrivate={reference.isPrivate}
               title={path}
               btnState={
+                // eslint-disable-next-line i18next/no-literal-string
                 this.props.reference.isLoadingReference ? "loading" : "stats"
               }
               onBtnClick={this.setPreviewedItem}
@@ -148,6 +149,7 @@ const DataCatalogReference = observer(
               isPrivate={reference.isPrivate}
               title={path}
               btnState={
+                // eslint-disable-next-line i18next/no-literal-string
                 this.props.reference.isLoadingReference ? "loading" : "add"
               }
               onBtnClick={this.add}

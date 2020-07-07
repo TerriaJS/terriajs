@@ -16,6 +16,7 @@ const ProgressBar = createReactClass({
 
   getInitialState() {
     return {
+      // eslint-disable-next-line i18next/no-literal-string
       visible: "hidden"
     };
   },
@@ -55,6 +56,7 @@ const ProgressBar = createReactClass({
 
   render() {
     const width = this.state.percentage + "%";
+    // eslint-disable-next-line i18next/no-literal-string
     const visibility = this.state.percentage < 100 ? "visible" : "hidden";
     const complete = this.state.percentage === 100;
 

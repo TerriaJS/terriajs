@@ -114,6 +114,7 @@ const SidePanelButton = React.forwardRef((props, ref) => {
     </Button>
   );
 });
+// eslint-disable-next-line i18next/no-literal-string
 SidePanelButton.displayName = "SidePanelButton"; // for some reasons lint doesn't like not having this
 SidePanelButton.propTypes = {
   btnText: PropTypes.string,
@@ -137,7 +138,7 @@ const SidePanel = observer(
     },
 
     onAddDataClicked() {
-      this.props.viewState.setTopElement("AddData");
+      this.props.viewState.setTopElement("AddData"); // eslint-disable-line i18next/no-literal-string
       this.props.viewState.openAddData();
     },
 

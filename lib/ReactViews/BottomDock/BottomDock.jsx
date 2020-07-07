@@ -22,6 +22,7 @@ const BottomDock = observer(
 
     handleClick() {
       runInAction(() => {
+        // eslint-disable-next-line i18next/no-literal-string
         this.props.viewState.topElement = "BottomDock";
       });
     },

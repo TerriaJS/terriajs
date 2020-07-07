@@ -99,7 +99,11 @@ const Description = observer(
 
           <If condition={!catalogItem.hideSource}>
             <If condition={catalogItem.url}>
-              <h4 className={Styles.h4}>{catalogItem.typeName} URL</h4>
+              <h4 className={Styles.h4}>
+                {t("description.typeNameUrl", {
+                  typeName: catalogItem.typeName
+                })}
+              </h4>
               <Choose>
                 <When condition={catalogItem.type === "wms"}>
                   <p key="wms-description">
@@ -159,20 +163,18 @@ const Description = observer(
                   }
                 >
                   <p key="wms-layers">
-                    {t("description.layerName")}
-                    {(catalogItem.layers || "").split(",").length > 1
-                      ? "s"
-                      : ""}
-                    : {catalogItem.layers}
+                    {t("description.layerName", {
+                      count: (catalogItem.layers || "").split(",").length,
+                      typeNames: catalogItem.layers
+                    })}
                   </p>
                 </When>
                 <When condition={catalogItem.type === "wfs"}>
                   <p key="wfs-typeNames">
-                    {t("description.typeName")}
-                    {(catalogItem.typeNames || "").split(",").length > 1
-                      ? "s"
-                      : ""}
-                    : {catalogItem.typeNames}
+                    {t("description.typeName", {
+                      count: (catalogItem.typeNames || "").split(",").length,
+                      typeNames: catalogItem.typeNames
+                    })}
                   </p>
                 </When>
               </Choose>
@@ -217,7 +219,7 @@ const Description = observer(
                             rel="noopener noreferrer"
                             key="wfs"
                           >
-                            Web Feature Service (WFS) documentation
+                            {t("description.wfsDoc")}
                           </a>
                         )
                       })}
@@ -230,7 +232,7 @@ const Description = observer(
                             rel="noopener noreferrer"
                             key="wms"
                           >
-                            Web Coverage Service (WCS) documentation
+                            {t("description.wcsDoc")}
                           </a>
                         )
                       })}
@@ -373,7 +375,7 @@ function getBetterFileName(dataUrlType, itemName, format) {
   }
   // For local files, the file already exists on the user's computer with the original name, so give it a modified name.
   if (dataUrlType === "local") {
-    name = "processed " + name;
+    name = "processed " + name; // eslint-disable-line i18next/no-literal-string
   }
   return name;
 }

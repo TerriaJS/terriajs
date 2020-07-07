@@ -19,9 +19,12 @@ import MomentPointsChart from "./MomentPointsChart";
 import Tooltip from "./Tooltip";
 import ZoomX from "./ZoomX";
 import Styles from "./bottom-dock-chart.scss";
+import i18next from "i18next";
 
 const chartMinWidth = 110;
+// eslint-disable-next-line i18next/no-literal-string
 const defaultGridColor = "#efefef";
+// eslint-disable-next-line i18next/no-literal-string
 const labelColor = "#efefef";
 
 @withParentSize
@@ -125,6 +128,7 @@ class Chart extends React.Component {
   @computed
   get yAxes() {
     const range = [this.plotHeight, 0];
+    // eslint-disable-next-line i18next/no-literal-string
     const chartItemsByUnit = groupBy(this.chartItems, "units");
     return Object.entries(chartItemsByUnit).map(([units, chartItems]) => {
       return {
@@ -242,10 +246,13 @@ class Chart extends React.Component {
   render() {
     const { height, xAxis } = this.props;
     if (this.chartItems.length === 0)
-      return <div className={Styles.empty}>No data available</div>;
+      return (
+        <div className={Styles.empty}>{i18next.t("customChart.noData")}</div>
+      );
 
     return (
       <ZoomX
+        // eslint-disable-next-line i18next/no-literal-string
         surface="#zoomSurface"
         initialScale={this.initialXScale}
         scaleExtent={[1, Infinity]}
@@ -277,7 +284,11 @@ class Chart extends React.Component {
               <XAxis
                 top={this.plotHeight + 1}
                 scale={this.xScale}
-                label={xAxis.units || (xAxis.scale === "time" && "Date")}
+                label={
+                  xAxis.units ||
+                  (xAxis.scale === "time" &&
+                    i18next.t("bottomDoccustomChartkChart.date"))
+                }
                 labelProps={{
                   fill: labelColor,
                   fontSize: 12,
