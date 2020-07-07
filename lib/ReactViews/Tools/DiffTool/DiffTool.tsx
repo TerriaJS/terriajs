@@ -694,6 +694,7 @@ const DiffAccordionWrapper = styled(Box).attrs({
   top: 70px;
   left: 0px;
   min-height: 220px;
+  background: ${p => p.theme.dark};
   margin-left: ${props =>
     props.isMapFullScreen ? 16 : parseInt(props.theme.workbenchWidth) + 40}px;
   transition: margin-left 0.25s;
@@ -743,10 +744,10 @@ const Selector = (props: any) => (
 const BottomPanel = styled(Box).attrs({
   centered: true,
   positionAbsolute: true,
-  charcoalGreyBg: true,
   fullWidth: true,
   styledHeight: "80px"
 })`
+  background: ${p => p.theme.dark};
   z-index: 99999;
   left: 0;
   bottom: 0;
