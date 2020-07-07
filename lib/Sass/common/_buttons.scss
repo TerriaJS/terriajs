@@ -46,9 +46,9 @@ $btn-setting-size: 35px;
 
 .btn-primary {
   display: block;
-  background: $color-primary;
+  // background: $color-primary;
   font-family: $font-pop;
-  color: $text-light;
+  // color: $text-light;
   text-align: center;
   width: 100%;
   box-sizing: border-box;
@@ -97,29 +97,29 @@ $btn-setting-size: 35px;
 }
 
 .btn--secondary {
-  color: $color-primary;
+  // color: $color-primary;
   border: $color-primary;
   border-radius: 4px;
 
   &:hover,
   &:focus {
-    border: 2px solid get-hover-color($color-primary);
-    color: get-hover-color($color-primary);
+    // border: 2px solid get-hover-color($color-primary);
+    // color: get-hover-color($color-primary);
   }
 }
 
 .btn--tertiary {
-  background-color: $modal-bg;
-  color: $modal-text;
-  border: 2px solid $modal-text;
+  // background-color: $modal-bg;
+  // color: $modal-text;
+  // border: 2px solid $modal-text;
   border-radius: 4px;
   padding: 8px 10px;
 
-  &:hover,
-  &:focus {
-    border: 2px solid $color-primary;
-    color: $color-primary;
-  }
+  // &:hover,
+  // &:focus {
+  //   border: 2px solid $color-primary;
+  //   color: $color-primary;
+  // }
 }
 
 .btn--tertiary-dark {
@@ -230,13 +230,13 @@ $btn-setting-size: 35px;
 .btn--map {
   font-size: $font-size-small;
   padding: 5px;
-  color: $text-light;
+  // color: $text-light;
   display: block;
   // display: flex;
   min-height: 32px;
   font-family: $font-pop;
   // opacity: 0.95; // new design has opaque map buttons?
-  background-color: $dark;
+  // background-color: $dark;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
 
   // Can't apply these atm
@@ -251,13 +251,13 @@ $btn-setting-size: 35px;
   &:focus,
   .is-open &,
   &.is-active {
-    background: $color-primary;
+    // background: $color-primary;
     text-decoration: none;
   }
   &:hover,
   &:focus {
     svg {
-      fill: $text-light;
+      // fill: $text-light;
     }
   }
   // overrides on panel.scss's .button
@@ -277,7 +277,7 @@ $btn-setting-size: 35px;
 
     // fill: $text-light;
     // fill: #6487ae;
-    fill: $map-button-color;
+    // fill: $map-button-color;
   }
 
   span {

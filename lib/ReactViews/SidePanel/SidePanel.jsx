@@ -141,9 +141,8 @@ const SidePanel = observer(
       this.props.viewState.openAddData();
     },
 
-    onAddLocalDataClicked(event) {
-      event.stopPropagation();
-      this.props.viewState.topElement = "AddData";
+    onAddLocalDataClicked() {
+      this.props.viewState.setTopElement("AddData");
       this.props.viewState.openUserData();
     },
     render() {

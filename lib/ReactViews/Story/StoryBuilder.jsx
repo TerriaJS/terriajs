@@ -202,7 +202,19 @@ const StoryBuilder = observer(
 
     renderIntro() {
       return (
-        <div className={Styles.intro}>
+        <div
+          className={Styles.intro}
+          css={`
+            background: ${p => p.theme.darkWithOverlay};
+            color: ${p => p.theme.textLightDimmed};
+            strong {
+              color: ${p => p.theme.textLight};
+            }
+            svg {
+              fill: ${p => p.theme.textLightDimmed};
+            }
+          `}
+        >
           <Icon glyph={Icon.GLYPHS.story} />{" "}
           <Trans i18nKey="story.message">
             <strong>This is your story editor</strong>
@@ -332,7 +344,12 @@ const StoryBuilder = observer(
         [Styles.isHidden]: !this.props.isVisible
       });
       return (
-        <div className={className}>
+        <div
+          className={className}
+          css={`
+            background: ${p => p.theme.dark};
+          `}
+        >
           <VideoGuide
             viewState={this.props.viewState}
             videoLink={"https://www.youtube.com/embed/fbiQawV8IYY"}
@@ -348,6 +365,9 @@ const StoryBuilder = observer(
                 onClick={this.hideStoryBuilder}
                 className={Styles.hideButton}
                 title={t("story.hideStoryPanel")}
+                css={`
+                  ${p => p.theme.addTerriaLightBtnStyles(p)}
+                `}
               >
                 <Icon glyph={Icon.GLYPHS.right} />
               </button>
