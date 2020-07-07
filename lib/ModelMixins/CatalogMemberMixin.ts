@@ -11,6 +11,7 @@ type CatalogMember = Model<CatalogMemberTraits>;
 function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
   abstract class CatalogMemberMixin extends AccessControlMixin(Base) {
     abstract get type(): string;
+    readonly typeName?: string;
 
     private _metadataLoader = new AsyncLoader(
       this.forceLoadMetadata.bind(this)
@@ -52,7 +53,7 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
     @computed
     get nameSortKey() {
       var parts = (this.nameInCatalog || "").split(/(\d+)/);
-      return parts.map(function(part) {
+      return parts.map(function (part) {
         var parsed = parseInt(part, 10);
         if (parsed === parsed) {
           return parsed;
@@ -67,7 +68,7 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       return (
         (this.description !== undefined && this.description.length > 0) ||
         (this.info !== undefined &&
-          this.info.some(info => descriptionRegex.test(info.name || "")))
+          this.info.some((info) => descriptionRegex.test(info.name || "")))
       );
     }
 
