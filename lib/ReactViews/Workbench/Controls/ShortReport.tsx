@@ -8,7 +8,8 @@ import isDefined from "../../../Core/isDefined";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import CommonStrata from "../../../Models/CommonStrata";
 
-const parseCustomMarkdownToReact = require("../../Custom/parseCustomMarkdownToReact");
+import parseCustomMarkdownToReact from "../../Custom/parseCustomMarkdownToReact";
+import Icon from "../../Icon";
 
 @observer
 export default class ShortReport extends React.Component<{
@@ -35,7 +36,7 @@ export default class ShortReport extends React.Component<{
       (!isDefined(this.props.item.shortReportSections) ||
         this.props.item.shortReportSections.length === 0)
     ) {
-      return;
+      return null;
     }
     return (
       <div className={Styles.shortReport}>
@@ -44,22 +45,29 @@ export default class ShortReport extends React.Component<{
               catalogItem: this.props.item
             })
           : ""}
-        {this.props.item.shortReportSections.map((r, i) => (
-          <div key={i}>
-            <a
-              href="#"
-              onClick={this.clickShortReport.bind(this, r.name)}
-              style={{ color: "inherit", textDecoration: "none" }}
-            >
-              {r.name}
-            </a>
-            {r.show
-              ? parseCustomMarkdownToReact(r.content, {
-                  catalogItem: this.props.item
-                })
-              : ""}
-          </div>
-        ))}
+        {this.props.item.shortReportSections
+          .filter(r => isDefined(r.name))
+          .map((r, i) => (
+            <div key={r.name}>
+              <a
+                href="#"
+                onClick={this.clickShortReport.bind(this, r.name)}
+                className={Styles.shortReportTitle}
+              >
+                {r.name}
+                {r.show ? (
+                  <Icon glyph={Icon.GLYPHS.minusThick} />
+                ) : (
+                  <Icon glyph={Icon.GLYPHS.plusThick} />
+                )}
+              </a>
+              {r.show && isDefined(r.content)
+                ? parseCustomMarkdownToReact(r.content, {
+                    catalogItem: this.props.item
+                  })
+                : ""}
+            </div>
+          ))}
       </div>
     );
   }

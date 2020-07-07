@@ -8,7 +8,9 @@ interface CssExports {
   'now-viewing-item__short-report': string;
   'nowViewingItemShortReport': string;
   'short-report': string;
+  'short-report-title': string;
   'shortReport': string;
+  'shortReportTitle': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

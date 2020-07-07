@@ -3,15 +3,27 @@
 .short-report {
   padding: $padding;
 
-  h1 {
+  .short-report-title {
+    color: inherit;
     font-size: $font-size-mid-small;
+    font-weight: bold;
+    text-decoration: none;
+
+    svg {
+      height: 8px;
+      width: 8px;
+      fill: #fff;
+      display: inline;
+      padding-left: 10px;
+    }
   }
 
-  p {
+  > div {
     font-size: $font-size-small;
+    margin-bottom: 10px;
   }
 
-  p:last-child {
+  > div:last-child {
     margin-bottom: 0;
   }
 }
