@@ -193,13 +193,6 @@ const DateTimePicker = createReactClass({
                     <StyledGrid
                       // className={datesObject[y][m] ? Styles.activeGrid : ""}
                       active={datesObject[y][m]}
-                      // css={
-                      //   datesObject[y][m] &&
-                      //   `
-                      //     background: ${p => p.theme.colorPrimary};
-                      //     opacity:0.9;
-                      //   `
-                      // }
                       key={m}
                     />
                   ))}
@@ -254,14 +247,6 @@ const DateTimePicker = createReactClass({
                         defined(datesObject[year][i]) &&
                         defined(datesObject[year][i][d + 1])
                       }
-                      // css={
-                      //   defined(datesObject[year][i]) &&
-                      //   defined(datesObject[year][i][d + 1]) &&
-                      //   `
-                      //     background: ${p => p.theme.colorPrimary};
-                      //     opacity:0.9;
-                      //   `
-                      // }
                       key={d}
                     />
                   ))}
