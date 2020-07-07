@@ -48,7 +48,15 @@ const Description = observer(
         }
       }
       return (
-        <div className={Styles.description}>
+        <div
+          className={Styles.description}
+          css={`
+            a,
+            a:visited {
+              color: ${p => p.theme.colorPrimary};
+            }
+          `}
+        >
           <If condition={catalogItem.isExperiencingIssues}>
             <AUpageAlert as="warning">
               <div className={Styles.alertMessage}>
@@ -186,6 +194,9 @@ const Description = observer(
                   target="_blank"
                   rel="noopener noreferrer"
                   className={Styles.link}
+                  css={`
+                    color: ${p => p.theme.colorPrimary};
+                  `}
                 >
                   {catalogItem.metadataUrl}
                 </a>
