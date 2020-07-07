@@ -99,6 +99,9 @@ const GlobalTerriaStyles = createGlobalStyle`
       background: ${p => p.theme.textLight};
       border: 1px solid ${p => p.theme.colorPrimary};
     }
+    svg {
+      fill: ${p => p.theme.textDark};
+    }
   }
   .tjs-dropdown__btn--option.tjs-dropdown__is-selected {
     color: ${p => p.theme.colorPrimary};
