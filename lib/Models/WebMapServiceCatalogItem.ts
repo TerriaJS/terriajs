@@ -255,6 +255,13 @@ class GetCapabilitiesStratum extends LoadableStratum(
   get info(): StratumFromTraits<InfoSectionTraits>[] {
     const result: StratumFromTraits<InfoSectionTraits>[] = [];
 
+    function createInfoSection(name, content) {
+      const trait = createStratumInstance(InfoSectionTraits);
+      trait.name = name;
+      trait.content = content;
+      return trait;
+    }
+
     let firstDataDescription: string | undefined;
     for (const layer of this.capabilitiesLayers.values()) {
       if (
@@ -268,18 +275,29 @@ class GetCapabilitiesStratum extends LoadableStratum(
       const suffix =
         this.capabilitiesLayers.size === 1 ? "" : ` - ${layer.Title}`;
       const name = `Web Map Service Layer Description${suffix}`;
-
-      const traits = createStratumInstance(InfoSectionTraits);
-      traits.name = name;
-      traits.content = layer.Abstract;
-      result.push(traits);
-
+      result.push(createInfoSection(name, layer.Abstract));
       firstDataDescription = firstDataDescription || layer.Abstract;
     }
 
     // Show the service abstract if there is one and if it isn't the Geoserver default "A compliant implementation..."
     const service = this.capabilities && this.capabilities.Service;
     if (service) {
+      if (service.ContactInformation !== undefined) {
+        result.push(
+          createInfoSection(
+            i18next.t("models.webMapServiceCatalogItem.serviceContact"),
+            getServiceContactInformation(service.ContactInformation)
+          )
+        );
+      }
+
+      result.push(
+        createInfoSection(
+          i18next.t("models.webMapServiceCatalogItem.getCapabilitiesUrl"),
+          this.catalogItem.getCapabilitiesUrl
+        )
+      );
+
       if (
         service &&
         service.Abstract &&
@@ -289,10 +307,12 @@ class GetCapabilitiesStratum extends LoadableStratum(
         ) &&
         service.Abstract !== firstDataDescription
       ) {
-        const traits = createStratumInstance(InfoSectionTraits);
-        traits.name = "Web Map Service Description";
-        traits.content = service.Abstract;
-        result.push(traits);
+        result.push(
+          createInfoSection(
+            i18next.t("models.webMapServiceCatalogItem.serviceDescription"),
+            service.Abstract
+          )
+        );
       }
 
       // Show the Access Constraints if it isn't "none" (because that's the default, and usually a lie).
@@ -300,10 +320,12 @@ class GetCapabilitiesStratum extends LoadableStratum(
         service.AccessConstraints &&
         !/^none$/i.test(service.AccessConstraints)
       ) {
-        const traits = createStratumInstance(InfoSectionTraits);
-        traits.name = "Web Map Service Access Constraints";
-        traits.content = service.AccessConstraints;
-        result.push(traits);
+        result.push(
+          createInfoSection(
+            i18next.t("models.webMapServiceCatalogItem.accessConstraints"),
+            service.AccessConstraints
+          )
+        );
       }
     }
     return result;
@@ -1018,6 +1040,28 @@ function formatMomentForWms(m: moment.Moment, duration: moment.Duration) {
   }
 
   return m.format();
+}
+
+function getServiceContactInformation(contactInfo) {
+  const primary = contactInfo.ContactPersonPrimary;
+  let text = "";
+  if (isDefined(primary)) {
+    if (
+      isDefined(primary.ContactOrganization) &&
+      primary.ContactOrganization.length > 0
+    ) {
+      text += primary.ContactOrganization + "<br/>";
+    }
+  }
+
+  if (
+    isDefined(contactInfo.ContactElectronicMailAddress) &&
+    contactInfo.ContactElectronicMailAddress.length > 0
+  ) {
+    text += `[${contactInfo.ContactElectronicMailAddress}](mailto:${contactInfo.ContactElectronicMailAddress})`;
+  }
+
+  return text;
 }
 
 export default WebMapServiceCatalogItem;
