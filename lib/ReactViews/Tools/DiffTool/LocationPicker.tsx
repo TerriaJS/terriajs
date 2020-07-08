@@ -20,35 +20,12 @@ const Loader = require("../../Loader");
 interface PropsType {
   terria: Terria;
   location?: LatLonHeight;
-  title: string;
-  messages: {
-    beforePick: string;
-    afterPick: string;
-  };
-  onPick: (
+  onPicking: (pickingLocation: LatLonHeight) => void;
+  onPicked: (
     pickedFeatures: PickedFeatures,
     pickedLocation: LatLonHeight
   ) => void;
 }
-interface LocationPickerContentProps {
-  title: string;
-  content: string;
-}
-
-const LocationPickerContent: React.FC<LocationPickerContentProps> = props => {
-  return (
-    <Box column>
-      <Box left centered>
-        <StyledIcon light styledWidth="14px" glyph={GLYPHS.location2} />
-        <Spacing right={1} />
-        <Text bold medium>
-          {props.title}
-        </Text>
-      </Box>
-      <Text>{props.content}</Text>
-    </Box>
-  );
-};
 
 @observer
 export default class LocationPicker extends React.Component<PropsType> {
@@ -58,12 +35,10 @@ export default class LocationPicker extends React.Component<PropsType> {
 
   @action
   setupPicker() {
-    const { terria, location, messages, onPick, title } = this.props;
+    const { terria, location, onPicking, onPicked } = this.props;
     this.pickMode = new MapInteractionMode({
       message: "",
-      messageAsNode: (
-        <LocationPickerContent title={title} content={messages.beforePick} />
-      ),
+      messageAsNode: <div></div>,
       uiMode: UIMode.Difference
     });
     addInteractionModeToMap(terria, this.pickMode);
@@ -76,12 +51,6 @@ export default class LocationPicker extends React.Component<PropsType> {
           return;
         }
 
-        this.pickMode!.messageAsNode = () => (
-          <LocationPickerContent
-            title={title}
-            content={this.props.messages.afterPick}
-          />
-        );
         this.pickMode!.customUi = () => (
           <Loader message={`Querying ${location ? "new" : ""} position...`} />
         );
@@ -90,9 +59,10 @@ export default class LocationPicker extends React.Component<PropsType> {
         showMarker(this.props.terria, position);
 
         this.currentPick = newPick;
+        onPicking(position);
         newPick.allFeaturesAvailablePromise?.then(() => {
           if (newPick === this.currentPick) {
-            onPick(newPick, position);
+            onPicked(newPick, position);
           }
         });
       })

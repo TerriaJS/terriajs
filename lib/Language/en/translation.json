@@ -91,6 +91,16 @@
     "chooseDifference": "Choose a difference style",
     "disabledButtonPrompt": "Select a precise location and difference style to proceed with change detection.",
     "differenceResultsTitle": "Change detection results",
+    "locationDisplay": {
+      "noLocationSelected": {
+        "title": "No location selected",
+        "description": "To filter image date picker by location, please select a point on the map"
+      },
+      "locationSelected": {
+        "title": "Location selected & dates filtered",
+        "description": "To change, click another point on the map"
+      }
+    },
     "locationPicker": {
       "initialMessages": {
         "title": "Select a precise location",

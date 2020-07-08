@@ -17,6 +17,7 @@ const MapInteractionWindowWrapper = styled.div<{ isDiffTool: boolean }>`
   ${props =>
     props.isDiffTool &&
     `
+    display: none;
     top: initial;
     bottom: 100px;
     min-width: 330px;
