@@ -6,8 +6,11 @@ import { IDisposer } from "mobx-utils";
 import React, { useState } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, useTheme, withTheme } from "styled-components";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import LatLonHeight from "../../../Core/LatLonHeight";
@@ -18,6 +21,7 @@ import CommonStrata from "../../../Models/CommonStrata";
 import Feature from "../../../Models/Feature";
 import hasTraits, { HasTrait } from "../../../Models/hasTraits";
 import {
+  getMarkerLocation,
   isMarkerVisible,
   removeMarker
 } from "../../../Models/LocationMarkerUtils";
@@ -111,11 +115,6 @@ class DiffTool extends React.Component<PropsType> {
     terria.showSplitter = true;
     viewState.setIsMapFullScreen(true);
     this.sourceItem.setTrait(CommonStrata.user, "show", false);
-
-    if (isMarkerVisible(terria)) {
-      // If we have an active marker, remove it.
-      removeMarker(terria);
-    }
   }
 
   @action
@@ -164,7 +163,7 @@ interface MainPropsType extends PropsType {
 
 @observer
 class Main extends React.Component<MainPropsType> {
-  @observable private _location?: LatLonHeight;
+  @observable private location?: LatLonHeight;
   @observable private _locationPickError = false;
   @observable private _isPickingNewLocation = false;
 
@@ -177,11 +176,6 @@ class Main extends React.Component<MainPropsType> {
 
   constructor(props: MainPropsType) {
     super(props);
-  }
-
-  @computed
-  get location() {
-    return this._location; // || getMarkerLocation(this.props.terria);
   }
 
   @computed
@@ -352,7 +346,7 @@ class Main extends React.Component<MainPropsType> {
     if (feature) {
       leftItem.setTimeFilterFeature(feature, pickedFeatures.providerCoords);
       rightItem.setTimeFilterFeature(feature, pickedFeatures.providerCoords);
-      this._location = pickedLocation;
+      this.location = pickedLocation;
       this._locationPickError = false;
     } else {
       this._locationPickError = true;
@@ -408,6 +402,44 @@ class Main extends React.Component<MainPropsType> {
       "splitDirection",
       ImagerySplitDirection.RIGHT
     );
+  }
+
+  @action
+  async componentDidMount() {
+    // Look for any existing marker like from a search result and filter
+    // imagery at that location
+    const markerLocation = getMarkerLocation(this.props.terria);
+    const sourceItem = this.props.sourceItem;
+    if (
+      this.location === undefined &&
+      markerLocation &&
+      Mappable.is(sourceItem)
+    ) {
+      const part = sourceItem.mapItems.find(p => ImageryParts.is(p));
+      const imageryProvider =
+        part && ImageryParts.is(part) && part.imageryProvider;
+      if (imageryProvider) {
+        const promises = [
+          setTimeFilterFromLocation(
+            this.props.leftItem,
+            markerLocation,
+            imageryProvider
+          ),
+          setTimeFilterFromLocation(
+            this.props.rightItem,
+            markerLocation,
+            imageryProvider
+          )
+        ];
+        const someSuccessful = (await Promise.all(promises)).some(ok => ok);
+        if (someSuccessful) {
+          runInAction(() => (this.location = markerLocation));
+        } else {
+          // If we cannot resolve imagery at the marker location, remove it
+          removeMarker(this.props.terria);
+        }
+      }
+    }
   }
 
   // i want to restructure the render so that there's 2 distinct "showing diff"
@@ -915,6 +947,32 @@ function doesFeatureBelongToItem(
       m => ImageryParts.is(m) && m.imageryProvider === imageryProvider
     ) !== undefined
   );
+}
+
+function setTimeFilterFromLocation(
+  item: DiffableItem,
+  location: LatLonHeight,
+  im: ImageryProvider
+): Promise<boolean> {
+  const carto = new Cartographic(
+    CesiumMath.toRadians(location.longitude),
+    CesiumMath.toRadians(location.latitude)
+  );
+  // We just need to set this to a high enough level supported by the service
+  const level = 30;
+  const tile = im.tilingScheme.positionToTileXY(carto, level);
+  return item.setTimeFilterFromLocation({
+    position: {
+      latitude: location.latitude,
+      longitude: location.longitude,
+      height: location.height
+    },
+    tileCoords: {
+      x: tile.x,
+      y: tile.y,
+      level
+    }
+  });
 }
 
 function hasOpacity(

@@ -5,6 +5,8 @@ import CommonStrata from "./CommonStrata";
 import CzmlCatalogItem from "./CzmlCatalogItem";
 import Terria from "./Terria";
 import raiseErrorOnRejectedPromise from "./raiseErrorOnRejectedPromise";
+import LatLonHeight from "../Core/LatLonHeight";
+import { toJS } from "mobx";
 
 export const LOCATION_MARKER_DATA_SOURCE_NAME =
   "TerriaJS Location Marker Points";
@@ -91,7 +93,24 @@ export function removeMarker(terria: Terria) {
 }
 
 /** Determines whether the location marker is visible previously added in {@link #addMarker}. */
-export function isMarkerVisible(terria: Terria) {
+export function isMarkerVisible(terria: Terria): boolean {
   const catalogItem = terria.getModelById(CzmlCatalogItem, MARKER_UNIQUE_ID);
   return catalogItem !== undefined && terria.overlays.contains(catalogItem);
+}
+
+export function getMarkerLocation(terria: Terria): LatLonHeight | undefined {
+  const catalogItem = terria.getModelById(CzmlCatalogItem, MARKER_UNIQUE_ID);
+  if (catalogItem === undefined || !terria.overlays.contains(catalogItem)) {
+    return;
+  }
+  const marker = catalogItem.czmlData[1];
+  // @ts-ignore
+  const position = marker?.position?.cartographicDegrees;
+  if (Array.isArray(toJS(position))) {
+    const [longitude, latitude, height] = position;
+    if (longitude !== undefined && latitude !== undefined) {
+      return { longitude, latitude, height };
+    }
+  }
+  return undefined;
 }

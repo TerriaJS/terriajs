@@ -457,7 +457,7 @@ class DiffStratum extends LoadableStratum(WebMapServiceCatalogItemTraits) {
 
   @computed
   get availableDiffStyles() {
-    // Currently only NDVI
+    // Currently only NDVI - add both spellings
     return ["NDVI", "ndvi"];
   }
 

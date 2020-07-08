@@ -3,11 +3,13 @@ Change Log
 
 ### MobX Development
 
-#### next release (7.11.5-mobx-35)
 #### next release (mobx-37)
+* Add `header` option to `loadText`
+* Add `isMixtedInto` function for `AsyncMappableMixin` and `AsyncChartableMixin`
 * Added file upload support for `GltfCatalogItem`. The supported extension is glb.
 * Improve runtime themeing via styled components across main UI components
 * Updated default welcome video defaults to a newer, slower video
+* Difftool will now pick any existing marked location (like from a search result) and filter imagery for that location.
 
 #### mobx-36
 * Added `pointer-events` to `MapNavigation` and `MenuBar` elements, so the bar don't block mouse click outside of the button.
