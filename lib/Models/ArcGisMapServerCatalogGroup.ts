@@ -93,15 +93,15 @@ export class MapServerStratum extends LoadableStratum(
 
     return [
       newInfo(
-        i18next.t("models.arcGisFeatureServerCatalogGroup.serviceDescription"),
+        i18next.t("models.arcGisMapServerCatalogGroup.serviceDescription"),
         this._mapServer.serviceDescription
       ),
       newInfo(
-        i18next.t("models.arcGisFeatureServerCatalogGroup.dataDescription"),
+        i18next.t("models.arcGisMapServerCatalogGroup.dataDescription"),
         this._mapServer.description
       ),
       newInfo(
-        i18next.t("models.arcGisFeatureServerCatalogGroup.copyrightText"),
+        i18next.t("models.arcGisMapServerCatalogGroup.copyrightText"),
         this._mapServer.copyrightText
       )
     ];

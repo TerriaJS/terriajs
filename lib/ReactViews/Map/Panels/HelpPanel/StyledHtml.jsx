@@ -71,35 +71,39 @@ export class StyledHtmlRaw extends React.Component {
       <div>
         {content?.map && (
           <For each="item" index="i" of={content}>
-            <Choose>
-              {/* Either a header or paragraph tag */}
-              <When condition={/(h[0-6]|p)/i.test(item.type)}>
-                <Text
-                  key={i}
-                  textDark
-                  bold={/(h[0-6])/i.test(item.type)} // Only headers are bold
-                  subHeading={item.type === "h1"}
-                  medium={item.type === "p"}
-                  {...styledTextProps}
-                >
-                  {item.props.children}
-                  <Spacing bottom={3} />
-                </Text>
-              </When>
-              <When condition={item.type === "ol"}>
-                {renderOrderedList(
-                  item.props.children.map(point => point.props.children)
-                )}
-              </When>
-              <Otherwise>
+            {item && (
+              <Choose>
+                {/* Either a header or paragraph tag */}
+                <When condition={/(h[0-6]|p)/i.test(item.type)}>
+                  <Text
+                    key={i}
+                    textDark
+                    bold={/(h[0-6])/i.test(item.type)} // Only headers are bold
+                    subHeading={item.type === "h1"}
+                    medium={item.type === "p"}
+                    {...styledTextProps}
+                  >
+                    {item.props.children}
+                    <Spacing bottom={3} />
+                  </Text>
+                </When>
+                <When condition={item.type === "ol"}>
+                  {renderOrderedList(
+                    item.props.children.map(point => point.props.children)
+                  )}
+                </When>
+                <Otherwise>
+                  {/* If it's none of the above tags, just render as 
                 {/* If it's none of the above tags, just render as 
+                  {/* If it's none of the above tags, just render as 
                   normal html but with the same text formatting.
                   We can style more tags as necessary */}
-                <Text key={i} textDark medium {...styledTextProps}>
-                  {item}
-                </Text>
-              </Otherwise>
-            </Choose>
+                  <Text key={i} textDark medium {...styledTextProps}>
+                    {item}
+                  </Text>
+                </Otherwise>
+              </Choose>
+            )}
           </For>
         )}
       </div>

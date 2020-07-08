@@ -1,4 +1,5 @@
 import { Term } from "../ReactViewModels/defaultTerms";
+import i18next from "i18next";
 
 const findFirstTerm = (
   text: string,
@@ -13,7 +14,12 @@ const findFirstTerm = (
   terms.forEach((_, term) => {
     const foundIndex = text
       .toLowerCase()
-      .indexOf(term.toLowerCase(), fromIndex);
+      .indexOf(
+        i18next.exists(term)
+          ? i18next.t(term).toLowerCase()
+          : term.toLowerCase(),
+        fromIndex
+      );
     if (
       foundIndex !== -1 &&
       (foundIndex < termIndex ||
@@ -71,14 +77,28 @@ const injectTerms = (string: string, termDictionary: Term[]): string => {
   const injectedBoldSet = new Set();
   while (1) {
     let tooltipTerms = new Map<string, Term>();
+
     termDictionary.forEach((item: any) =>
-      tooltipTerms.set(item.term.toLowerCase(), item)
+      tooltipTerms.set(
+        i18next.exists(item.term)
+          ? i18next.t(item.term).toLowerCase()
+          : item.term.toLowerCase(),
+        item
+      )
     );
     // some help content things will have aliases / variants
+
     termDictionary.forEach(term => {
-      term.aliases?.forEach(alias => {
-        tooltipTerms.set(alias.toLowerCase(), term);
-      });
+      const aliasesTranslated = term.aliases
+        ? i18next.exists(term?.aliases)
+          ? i18next.t(term?.aliases, { returnObjects: true })
+          : term?.aliases
+        : [];
+      if (aliasesTranslated) {
+        (<Array<string>>aliasesTranslated).forEach(alias => {
+          tooltipTerms.set(alias.toLowerCase(), term);
+        });
+      }
     });
     const { termIndex, termToReplace, ignore } = findFirstTerm(
       string,
@@ -92,7 +112,11 @@ const injectTerms = (string: string, termDictionary: Term[]): string => {
     ) {
       const currentText = string;
       const termObj = tooltipTerms.get(termToReplace.toLowerCase());
-      const description = termObj?.content || "missing content";
+      const description = termObj
+        ? i18next.exists(termObj.content)
+          ? i18next.t(termObj.content)
+          : termObj.content
+        : i18next.t("term.missingContent");
       // const injectedLink = `**${termToReplace}**`;
       const injectedLink = `<terriatooltip title="${termToReplace}">${description}</terriatooltip>`;
       string = currentText.substring(0, termIndex);

@@ -13,9 +13,10 @@ export interface LanguageConfiguration {
 }
 const defaultLanguageConfiguration = {
   enabled: false,
-  debug: true,
+  debug: false,
   languages: {
-    en: "english"
+    en: "english",
+    sr: "serbian"
   },
   fallbackLanguage: "en",
   changeLanguageOnStartWhen: [

@@ -47,7 +47,7 @@ describe("CkanItemReference", function() {
 
   it("has a type and typeName", function() {
     expect(ckanItemReference.type).toBe("ckan-item");
-    expect(ckanItemReference.typeName).toBe("CKAN Resource");
+    expect(ckanItemReference.typeName).toBe(i18next.t("models.ckan.name"));
   });
 
   describe("Can load an item by datasetId - ", function() {

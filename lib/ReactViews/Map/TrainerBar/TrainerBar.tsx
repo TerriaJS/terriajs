@@ -27,7 +27,7 @@ const RawButton: any = require("../../../Styled/Button").RawButton;
 const Text: any = require("../../../Styled/Text").default;
 const Spacing: any = require("../../../Styled/Spacing").default;
 import Select from "../../../Styled/Select";
-import { TFunction } from "i18next";
+import i18next, { TFunction } from "i18next";
 
 const TrainerBarWrapper = styled(Box)`
   top: 0;
@@ -83,35 +83,37 @@ const renderStep = (
     comfortable: false,
     footerComponent: undefined
   }
-) => (
-  <Box key={number} paddedVertically>
-    <Box alignItemsFlexStart>
-      <Numbers textDarker textAlignCenter darkBg>
-        {number}
-      </Numbers>
-      <Spacing right={3} />
+) => {
+  return (
+    <Box key={number} paddedVertically>
+      <Box alignItemsFlexStart>
+        <Numbers textDarker textAlignCenter darkBg>
+          {number}
+        </Numbers>
+        <Spacing right={3} />
+      </Box>
+      <Box column>
+        <Text textLight extraExtraLarge semiBold>
+          {i18next.t(step.title)}
+        </Text>
+        {options.renderDescription && step?.markdownDescription && (
+          <>
+            {/* {options.comfortable && <Spacing bottom={2} />} */}
+            <Spacing bottom={options.comfortable ? 2 : 1} />
+            <StepText medium textLightDimmed>
+              <StyledHtml
+                viewState={viewState}
+                styledTextProps={{ textDark: false, textLightDimmed: true }}
+                markdown={i18next.t(step.markdownDescription)}
+              />
+            </StepText>
+            {options.footerComponent?.()}
+          </>
+        )}
+      </Box>
     </Box>
-    <Box column>
-      <Text textLight extraExtraLarge semiBold>
-        {step.title}
-      </Text>
-      {options.renderDescription && step?.markdownDescription && (
-        <>
-          {/* {options.comfortable && <Spacing bottom={2} />} */}
-          <Spacing bottom={options.comfortable ? 2 : 1} />
-          <StepText medium textLightDimmed>
-            <StyledHtml
-              viewState={viewState}
-              styledTextProps={{ textDark: false, textLightDimmed: true }}
-              markdown={step.markdownDescription}
-            />
-          </StepText>
-          {options.footerComponent?.()}
-        </>
-      )}
-    </Box>
-  </Box>
-);
+  );
+};
 
 const renderOrderedStepList = function(
   steps: StepItem[],
@@ -281,7 +283,7 @@ class StepAccordionRaw extends React.Component<
                   <StyledHtml
                     viewState={viewState}
                     styledTextProps={{ textDark: false, textLightDimmed: true }}
-                    markdown={selectedTrainer.footnote}
+                    markdown={t(selectedTrainer.footnote)}
                   />
                 </Text>
               </>
@@ -386,7 +388,7 @@ export const TrainerBar = observer((props: TrainerBarProps) => {
           >
             {selectedTrainerItems.map((item, index) => (
               <option key={item.title} value={index}>
-                {item.title}
+                {t(item.title)}
               </option>
             ))}
           </Select>

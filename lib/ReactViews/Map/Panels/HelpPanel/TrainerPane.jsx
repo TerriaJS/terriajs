@@ -27,7 +27,8 @@ class TrainerPane extends React.Component {
   static propTypes = {
     viewState: PropTypes.object.isRequired,
     content: PropTypes.object.isRequired,
-    t: PropTypes.func
+    t: PropTypes.func,
+    i18n: PropTypes.object.isRequired
   };
 
   constructor(props) {
@@ -35,13 +36,18 @@ class TrainerPane extends React.Component {
   }
 
   render() {
-    const { content, viewState } = this.props;
+    const { content, viewState, t, i18n } = this.props;
     const { trainerItems, markdownText } = content;
     return (
       <Text textDark noFontSize>
         <Box column>
           {markdownText && (
-            <StyledHtml viewState={viewState} markdown={markdownText} />
+            <StyledHtml
+              viewState={viewState}
+              markdown={
+                i18n.exists(markdownText) ? t(markdownText) : markdownText
+              }
+            />
           )}
           {trainerItems?.map && (
             <UlTrainerItems column fullWidth justifySpaceBetween>
@@ -58,7 +64,9 @@ class TrainerPane extends React.Component {
                     }}
                   >
                     <BoxSpan centered>
-                      <BoxSpan centered>{item.title}</BoxSpan>
+                      <BoxSpan centered>
+                        {i18n.exists(item.title) ? t(item.title) : item.title}
+                      </BoxSpan>
                     </BoxSpan>
                   </TrainerButton>
                   <Spacing bottom={2} />

@@ -12,6 +12,7 @@ import VideoGuide from "./VideoGuide";
 import TrainerPane from "./TrainerPane";
 import StyledHtml from "./StyledHtml";
 import SatelliteGuide from "../../../Guide/SatelliteGuide";
+import i18next from "i18next";
 
 const HELP_VIDEO_NAME = "helpVideo";
 
@@ -29,7 +30,8 @@ class HelpVideoPanel extends React.Component {
     videoUrl: PropTypes.string,
     placeholderImage: PropTypes.string,
     theme: PropTypes.object,
-    t: PropTypes.func.isRequired
+    t: PropTypes.func.isRequired,
+    i18n: PropTypes.object.isRequired
   };
 
   constructor(props) {
@@ -37,7 +39,7 @@ class HelpVideoPanel extends React.Component {
   }
 
   render() {
-    // const { t } = this.props;
+    const { t, i18n } = this.props;
     const helpItemType = this.props.paneMode || "videoAndContent"; // default is video panel
     const itemSelected =
       this.props.viewState.selectedHelpMenuItem === this.props.itemString;
@@ -98,7 +100,11 @@ class HelpVideoPanel extends React.Component {
               <StyledHtml
                 key={"markdownContent"}
                 viewState={this.props.viewState}
-                markdown={this.props.markdownContent}
+                markdown={
+                  i18n.exists(this.props.markdownContent)
+                    ? t(this.props.markdownContent)
+                    : this.props.markdownContent
+                }
               />
             )}
           </If>
