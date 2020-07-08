@@ -2,7 +2,8 @@ import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import ViewState from "../../../ReactViewModels/ViewState";
 import Icon from "../../Icon";
-import MapIconButton from "../../MapIconButton/MapIconButton";
+
+const MapIconButton: any = require("../../MapIconButton/MapIconButton").default;
 
 interface PropsType extends WithTranslation {
   viewState: ViewState;

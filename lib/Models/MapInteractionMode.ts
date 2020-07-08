@@ -1,6 +1,7 @@
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import PickedFeatures from "../Map/PickedFeatures";
 import { observable } from "mobx";
+import ViewState from "../ReactViewModels/ViewState";
 
 export enum UIMode {
   Difference
@@ -12,8 +13,9 @@ interface Options {
   messageAsNode?: React.ReactNode;
   customUi?: () => unknown;
   buttonText?: string;
-  drawRectangle?: boolean;
+  // drawRectangle?: boolean;
   uiMode?: UIMode; // diff tool hack for now
+  onEnable?: (viewState: ViewState) => void;
 }
 
 /**
@@ -23,11 +25,11 @@ export default class MapInteractionMode {
   readonly onCancel?: () => void;
 
   readonly buttonText: string;
-  readonly drawRectangle: boolean;
+  // readonly drawRectangle: boolean;
   readonly uiMode: UIMode;
 
   @observable
-  customUi: (() => unknown) | undefined;
+  customUi: (() => any) | undefined;
 
   @observable
   message: () => string;
@@ -37,6 +39,8 @@ export default class MapInteractionMode {
 
   @observable
   pickedFeatures?: PickedFeatures;
+
+  onEnable?: (viewState: ViewState) => void;
 
   constructor(options: Options) {
     /**
@@ -85,6 +89,8 @@ export default class MapInteractionMode {
     /**
      * Determines whether a rectangle will be requested from the user rather than a set of pickedFeatures.
      */
-    this.drawRectangle = defaultValue(options.drawRectangle, false);
+    // this.drawRectangle = defaultValue(options.drawRectangle, false);
+
+    this.onEnable = options.onEnable;
   }
 }

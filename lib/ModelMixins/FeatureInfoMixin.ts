@@ -6,6 +6,7 @@ import Feature from "../Models/Feature";
 import Model from "../Models/Model";
 import FeatureInfoTraits from "../Traits/FeatureInfoTraits";
 import loadJson from "../Core/loadJson";
+import { action } from "mobx";
 const proxyCatalogItemUrl = require("../Models/proxyCatalogItemUrl");
 
 type Target = Model<FeatureInfoTraits>;
@@ -26,6 +27,7 @@ export default function FeatureInfoMixin<T extends Constructor<Target>>(
      * Returns a {@link Feature} for the pick result. If `featureInfoUrlTemplate` is set,
      * it asynchronously loads additional info from the url.
      */
+    @action
     getFeaturesFromPickResult(
       screenPosition: Cartesian2,
       pickResult: any

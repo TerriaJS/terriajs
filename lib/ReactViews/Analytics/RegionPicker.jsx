@@ -308,7 +308,7 @@ const RegionPicker = createReactClass({
           autoComplete="off"
           value={
             this.state.autocompleteText ||
-            RegionPicker.getDisplayValue(this.regionValue, this.props.parameter)
+            getDisplayValue(this.regionValue, this.props.parameter)
           }
           onChange={this.textChange}
           placeholder={t("analytics.regionName")}
@@ -347,7 +347,7 @@ const RegionPicker = createReactClass({
  * @param {Object} value Native format of parameter value.
  * @return {String} String for display
  */
-RegionPicker.getDisplayValue = function(region, parameter) {
+export function getDisplayValue(region, parameter) {
   if (!defined(region)) {
     return "";
   }
@@ -363,6 +363,6 @@ RegionPicker.getDisplayValue = function(region, parameter) {
     return "";
   }
   return regionProvider.regionType + ": " + val;
-};
+}
 
-module.exports = withTranslation()(RegionPicker);
+export default withTranslation()(RegionPicker);

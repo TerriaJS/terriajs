@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 import triggerResize from "../../Core/triggerResize";
 // import createReactClass from "create-react-class";
 
@@ -12,13 +13,23 @@ import Prompt from "../Generic/Prompt";
 import { withTranslation, Trans } from "react-i18next";
 import Styles from "./menu-bar.scss";
 import { runInAction } from "mobx";
+import { observer } from "mobx-react";
+import Text from "../../Styled/Text";
 
 import { useRefForTerria } from "../Hooks/useRefForTerria";
 
+const StyledMenuBar = styled.div`
+  pointer-events: none;
+  ${p =>
+    p.trainerBarVisible &&
+    `
+    top: ${Number(p.theme.trainerHeight) + Number(p.theme.mapButtonTop)}px;
+  `}
+`;
 // The map navigation region
 // const MenuBar = createReactClass({
 const STORY_BUTTON_NAME = "MenuBarStoryButton";
-const MenuBar = props => {
+const MenuBar = observer(props => {
   const { t } = props;
   const storyButtonRef = useRefForTerria(STORY_BUTTON_NAME, props.viewState);
   const menuItems = props.menuItems || [];
@@ -51,26 +62,33 @@ const MenuBar = props => {
   const storyEnabled = props.terria.configParameters.storyEnabled;
   const enableTools = props.terria.getUserProperty("tools") === "1";
 
-  const promptHtml =
-    props.terria.stories.length > 0 ? (
-      <Trans i18nKey="story.promptHtml1">
-        <div>You can view and create stories at any time by clicking here.</div>
-      </Trans>
-    ) : (
-      <Trans i18nKey="story.promptHtml2">
-        <div>
-          <small>INTRODUCING</small>
-          <h3>Data Stories</h3>
+  const promptHtml = (
+    <Text textLight textAlignCenter>
+      {props.terria.stories.length > 0 ? (
+        <Trans i18nKey="story.promptHtml1">
+          <Text extraLarge>
+            You can view and create stories at any time by clicking here.
+          </Text>
+        </Trans>
+      ) : (
+        <Trans i18nKey="story.promptHtml2">
           <div>
-            Create and share interactive stories directly from your map.
+            <Text>INTRODUCING</Text>
+            <Text bold extraExtraLarge styledLineHeight={"32px"}>
+              Data Stories
+            </Text>
+            <Text medium>
+              Create and share interactive stories directly from your map.
+            </Text>
           </div>
-        </div>
-      </Trans>
-    );
+        </Trans>
+      )}
+    </Text>
+  );
   const delayTime =
     storyEnabled && props.terria.stories.length > 0 ? 1000 : 2000;
   return (
-    <div
+    <StyledMenuBar
       className={classNames(
         props.viewState.topElement === "MenuBar" ? "top-element" : "",
         Styles.menuBar,
@@ -79,6 +97,7 @@ const MenuBar = props => {
         }
       )}
       onClick={handleClick}
+      trainerBarVisible={props.viewState.trainerBarVisible}
     >
       <ul className={classNames(Styles.menu)}>
         {/* <li className={Styles.menuItem}>
@@ -133,19 +152,32 @@ const MenuBar = props => {
                 className={Styles.storyBtn}
                 type="button"
                 onClick={onStoryButtonClick}
+                aria-expanded={props.viewState.storyBuilderShown}
+                css={`
+                  ${p =>
+                    p["aria-expanded"] &&
+                    `&:not(.foo) {
+                      background: ${p.theme.colorPrimary};
+                      svg {
+                        fill: ${p.theme.textLight};
+                      }
+                    }`}
+                `}
               >
                 <Icon glyph={Icon.GLYPHS.story} />
                 <span>{t("story.story")}</span>
               </button>
-              {storyEnabled &&
-                props.viewState.featurePrompts.indexOf("story") >= 0 && (
-                  <Prompt
-                    content={promptHtml}
-                    displayDelay={delayTime}
-                    dismissText={t("story.dismissText")}
-                    dismissAction={dismissAction}
-                  />
-                )}
+              <Prompt
+                centered
+                isVisible={
+                  storyEnabled &&
+                  props.viewState.featurePrompts.indexOf("story") >= 0
+                }
+                content={promptHtml}
+                displayDelay={delayTime}
+                dismissText={t("story.dismissText")}
+                dismissAction={dismissAction}
+              />
             </div>
           </li>
         </If>
@@ -157,9 +189,9 @@ const MenuBar = props => {
           </For>
         </If>
       </ul>
-    </div>
+    </StyledMenuBar>
   );
-};
+});
 MenuBar.displayName = "MenuBar";
 MenuBar.propTypes = {
   terria: PropTypes.object,

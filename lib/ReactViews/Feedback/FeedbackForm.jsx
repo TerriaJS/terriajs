@@ -3,11 +3,12 @@
 import { observer } from "mobx-react";
 import React from "react";
 import createReactClass from "create-react-class";
+import { withTheme } from "styled-components";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import PropTypes from "prop-types";
 import sendFeedback from "../../Models/sendFeedback";
 import Styles from "./feedback-form.scss";
-import Icon from "../Icon";
+import Icon, { StyledIcon } from "../Icon";
 import classNames from "classnames";
 import { withTranslation, Trans } from "react-i18next";
 import { runInAction } from "mobx";
@@ -17,6 +18,7 @@ const FeedbackForm = observer(
     displayName: "FeedbackForm",
 
     propTypes: {
+      theme: PropTypes.object.isRequired,
       viewState: PropTypes.object.isRequired,
       t: PropTypes.func.isRequired
     },
@@ -117,6 +119,9 @@ const FeedbackForm = observer(
                 className={Styles.btnClose}
                 onClick={this.onDismiss}
                 title={t("feedback.close")}
+                css={`
+                  ${p => p.theme.addTerriaLightBtnStyles(p)}
+                `}
               >
                 <Icon glyph={Icon.GLYPHS.close} />
               </button>
@@ -156,11 +161,14 @@ const FeedbackForm = observer(
               />
               <div className={Styles.shareUrl}>
                 <button onClick={this.changeSendShareUrl} type="button">
-                  {this.state.sendShareURL ? (
-                    <Icon glyph={Icon.GLYPHS.checkboxOn} />
-                  ) : (
-                    <Icon glyph={Icon.GLYPHS.checkboxOff} />
-                  )}
+                  <StyledIcon
+                    fillColor={this.props.theme.colorPrimary}
+                    glyph={
+                      this.state.sendShareURL
+                        ? Icon.GLYPHS.checkboxOn
+                        : Icon.GLYPHS.checkboxOff
+                    }
+                  />
                   {t("feedback.shareWithDevelopers", {
                     appName: this.props.viewState.terria.appName
                   })}
@@ -173,6 +181,13 @@ const FeedbackForm = observer(
                   type="button"
                   className={Styles.btnCancel}
                   onClick={this.onDismiss}
+                  css={`
+                    &:hover,
+                    &:focus {
+                      border: 1px solid ${p => p.theme.colorPrimary};
+                      color: ${p => p.theme.colorPrimary};
+                    }
+                  `}
                 >
                   {t("feedback.cancel")}
                 </button>
@@ -180,6 +195,9 @@ const FeedbackForm = observer(
                   type="submit"
                   className={Styles.btnSubmit}
                   disabled={this.state.isSending}
+                  css={`
+                    ${p => p.theme.addTerriaPrimaryBtnStyles(p)}
+                  `}
                 >
                   {this.state.isSending
                     ? t("feedback.sending")
@@ -194,4 +212,4 @@ const FeedbackForm = observer(
   })
 );
 
-module.exports = withTranslation()(FeedbackForm);
+module.exports = withTranslation()(withTheme(FeedbackForm));

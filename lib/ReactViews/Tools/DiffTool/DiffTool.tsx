@@ -240,7 +240,7 @@ class Main extends React.Component<MainPropsType> {
           style => style.id === diffStyleId
         )
       )
-    );
+    ) as AvailableStyle[];
   }
 
   @computed
@@ -610,11 +610,11 @@ const DiffAccordionWrapper = styled(Box).attrs({
   column: true,
   positionAbsolute: true,
   styledWidth: "324px"
-  // charcoalGreyBg: true
 })`
   top: 70px;
   left: 0px;
   min-height: 220px;
+  background: ${p => p.theme.dark};
   margin-left: ${props =>
     props.isMapFullScreen ? 16 : parseInt(props.theme.workbenchWidth) + 40}px;
   transition: margin-left 0.25s;
@@ -622,9 +622,10 @@ const DiffAccordionWrapper = styled(Box).attrs({
 
 const MainPanel = styled(Box).attrs({
   column: true,
-  paddedRatio: 2,
-  charcoalGreyBg: true
-})``;
+  paddedRatio: 2
+})`
+  background: ${p => p.theme.dark};
+`;
 
 const BackButton = styled(Button).attrs({
   secondary: true
@@ -659,10 +660,10 @@ const Selector = (props: any) => (
 const DatePanel = styled(Box).attrs({
   centered: true,
   positionAbsolute: true,
-  charcoalGreyBg: true,
   fullWidth: true,
   styledHeight: "80px"
 })`
+  background: ${p => p.theme.dark};
   z-index: 99999;
   left: 0;
   bottom: 0;

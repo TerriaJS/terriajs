@@ -1,0 +1,53 @@
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml">
+	<title>GeoRSS feed samples</title>
+	<subtitle>To aid in unit testing</subtitle>
+	<link href="http://example.org/" />
+	<updated>2020-02-26T18:30:02Z</updated>
+	<author>
+		<name>TerriaJS</name>
+		<email>groldan@example.com</email>
+	</author>
+	<link href="http://www.georss.org/example" />
+	<entry>
+		<title>Point sample</title>
+		<link href="http://www.georss.org/example" />
+		<id>point-1</id>
+		<updated>2005-08-17T07:02:32Z</updated>
+		<content>a sample geometry</content>
+		<georss:where>
+			<gml:Point>
+				<gml:pos>45.256 -110.45</gml:pos>
+			</gml:Point>
+		</georss:where>
+	</entry>
+	<entry>
+		<title>Polygon sample</title>
+		<link href="http://www.georss.org/example" />
+		<id>uno</id>
+		<updated>2010-08-17T07:02:32Z</updated>
+		<content>a sample geometry</content>
+		<georss:where>
+			<gml:Polygon>
+				<gml:exterior>
+					<gml:LinearRing>
+						<gml:posList>45.256 -110.45 46.46 -109.48 43.84 -109.86
+              45.8 -109.2 45.256 -110.45</gml:posList>
+					</gml:LinearRing>
+				</gml:exterior>
+			</gml:Polygon>
+		</georss:where>
+	</entry>
+	<entry>
+		<title>LineString sample</title>
+		<link href="http://www.georss.org/example" />
+		<id>linestring-1</id>
+		<updated>2009-08-17T07:02:32Z</updated>
+		<content>a sample geometry</content>
+		<georss:where>
+			<gml:LineString>
+				<gml:posList>40.73615 -73.991309 40.736381 -73.991199</gml:posList>
+			</gml:LineString>
+		</georss:where>
+	</entry>
+
+</feed>

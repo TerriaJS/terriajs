@@ -4,6 +4,7 @@ import { reaction, runInAction } from "mobx";
 import { Trans } from "react-i18next";
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
+import styled from "styled-components";
 // import { ThemeContext } from "styled-components";
 
 import SearchBox from "../Search/SearchBox";
@@ -54,6 +55,21 @@ SearchInDataCatalog.propTypes = {
   handleClick: PropTypes.func.isRequired,
   viewState: PropTypes.object.isRequired
 };
+
+const PresentationBox = styled(Box).attrs({
+  fullWidth: true
+})`
+  ${props =>
+    props.highlightBottom &&
+    `
+      // styled-components doesn't seem to prefix linear-gradient.. soo
+      background-image: linear-gradient(bottom, ${props.theme.greyLightest} 50%, transparent 50%);
+      background-image: -o-linear-gradient(bottom, ${props.theme.greyLightest} 50%, transparent 50%);
+      background-image: -moz-linear-gradient(bottom, ${props.theme.greyLightest} 50%, transparent 50%);
+      background-image: -webkit-linear-gradient(bottom, ${props.theme.greyLightest} 50%, transparent 50%);
+      background-image: -ms-linear-gradient(bottom, ${props.theme.greyLightest} 50%, transparent 50%);
+    `}
+`;
 
 export const LOCATION_SEARCH_INPUT_NAME = "LocationSearchInput";
 export class SearchBoxAndResultsRaw extends React.Component {
@@ -132,24 +148,25 @@ export class SearchBoxAndResultsRaw extends React.Component {
     const searchState = viewState.searchState;
     const locationSearchText = searchState.locationSearchText;
 
+    const shouldShowResults =
+      searchState.locationSearchText.length > 0 &&
+      searchState.showLocationSearchResults;
+
     return (
       <Text textDarker>
         <Box fullWidth>
-          <SearchBox
-            ref={this.locationSearchRef}
-            onSearchTextChanged={this.changeSearchText.bind(this)}
-            onDoSearch={this.search.bind(this)}
-            onFocus={this.startLocationSearch.bind(this)}
-            searchText={searchState.locationSearchText}
-            placeholder={placeholder}
-          />
+          <PresentationBox highlightBottom={shouldShowResults}>
+            <SearchBox
+              ref={this.locationSearchRef}
+              onSearchTextChanged={this.changeSearchText.bind(this)}
+              onDoSearch={this.search.bind(this)}
+              onFocus={this.startLocationSearch.bind(this)}
+              searchText={searchState.locationSearchText}
+              placeholder={placeholder}
+            />
+          </PresentationBox>
           {/* Results */}
-          <If
-            condition={
-              searchState.locationSearchText.length > 0 &&
-              searchState.showLocationSearchResults
-            }
-          >
+          <If condition={shouldShowResults}>
             <Box
               positionAbsolute
               fullWidth
@@ -157,6 +174,9 @@ export class SearchBoxAndResultsRaw extends React.Component {
               css={`
                 top: 100%;
                 background-color: ${props => props.theme.greyLightest};
+                max-height: calc(100vh - 120px);
+                border-radius: 0 0 ${props => props.theme.radius40Button}px
+                  ${props => props.theme.radius40Button}px;
               `}
             >
               {/* search {searchterm} in data catalog */}
@@ -172,28 +192,35 @@ export class SearchBoxAndResultsRaw extends React.Component {
                   />
                 </Box>
               )}
-              <For
-                each="search"
-                of={this.props.viewState.searchState.locationSearchResults}
+              <Box
+                column
+                css={`
+                  overflow-y: auto;
+                `}
               >
-                <LocationSearchResults
-                  key={search.searchProvider.name}
-                  terria={this.props.terria}
-                  viewState={this.props.viewState}
-                  search={search}
-                  locationSearchText={locationSearchText}
-                  onLocationClick={result => {
-                    addMarker(this.props.terria, result);
-                    result.clickAction();
-                    runInAction(() => {
-                      searchState.showLocationSearchResults = false;
-                    });
-                  }}
-                  isWaitingForSearchToStart={
-                    searchState.isWaitingToStartLocationSearch
-                  }
-                />
-              </For>
+                <For
+                  each="search"
+                  of={this.props.viewState.searchState.locationSearchResults}
+                >
+                  <LocationSearchResults
+                    key={search.searchProvider.name}
+                    terria={this.props.terria}
+                    viewState={this.props.viewState}
+                    search={search}
+                    locationSearchText={locationSearchText}
+                    onLocationClick={result => {
+                      addMarker(this.props.terria, result);
+                      result.clickAction();
+                      runInAction(() => {
+                        searchState.showLocationSearchResults = false;
+                      });
+                    }}
+                    isWaitingForSearchToStart={
+                      searchState.isWaitingToStartLocationSearch
+                    }
+                  />
+                </For>
+              </Box>
             </Box>
           </If>
         </Box>

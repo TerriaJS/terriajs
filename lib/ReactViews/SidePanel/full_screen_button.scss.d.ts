@@ -10,6 +10,7 @@ interface CssExports {
   'minified': string;
   'minifiedFullscreenBtnWrapper': string;
   'toggleWorkbench': string;
+  'trainerBarVisible': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;
