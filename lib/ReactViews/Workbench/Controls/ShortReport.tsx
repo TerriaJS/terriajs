@@ -23,6 +23,15 @@ export default class ShortReport extends React.Component<{
 
     if (isDefined(clickedReport)) {
       runInAction(() => {
+        /**
+         * Ensure short report order is reflected by all strata up to this point
+         * & replicate all onto user stratum so that toggling doesn't re-order
+         * reports - a stopgap for the lack of consistent behaviour surrounding
+         * removals / re-ordering of objectArrayTraits
+         */
+        shortReportSections.forEach(report =>
+          report.setTrait(CommonStrata.user, "show", report.show)
+        );
         clickedReport.setTrait(CommonStrata.user, "show", !clickedReport.show);
       });
     }
