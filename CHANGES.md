@@ -6,6 +6,7 @@ Change Log
 #### next release (7.11.5-mobx-35)
 #### next release (mobx-37)
 * Added file upload support for `GltfCatalogItem`. The supported extension is glb.
+* Improve handling of `ArcGisMapServerCatalogItem` when dealing with tiled layers.
 
 #### mobx-36
 * Added `pointer-events` to `MapNavigation` and `MenuBar` elements, so the bar don't block mouse click outside of the button.
