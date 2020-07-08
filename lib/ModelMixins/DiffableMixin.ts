@@ -2,13 +2,13 @@ import { JulianDate } from "cesium";
 import { computed } from "mobx";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
-import SelectableStyle, { AvailableStyle } from "../Models/SelectableStyle";
 import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
 import DiffableTraits from "../Traits/DiffableTraits";
 import ShowableTraits from "../Traits/ShowableTraits";
 import SplitterTraits from "../Traits/SplitterTraits";
 import TimeFilterMixin from "./TimeFilterMixin";
 import StratumOrder from "../Models/StratumOrder";
+import { SelectableDimension } from "../Models/SelectableDimensions";
 
 type MixinModel = Model<
   DiffableTraits & ShowableTraits & CatalogMemberTraits & SplitterTraits
@@ -17,7 +17,7 @@ type MixinModel = Model<
 
 function DiffableMixin<T extends Constructor<MixinModel>>(Base: T) {
   abstract class DiffableMixin extends Base {
-    abstract get styleSelector(): SelectableStyle | undefined;
+    abstract get styleSelectableDimensions(): SelectableDimension | undefined;
 
     get hasDiffableMixin() {
       return true;

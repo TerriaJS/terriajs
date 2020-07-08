@@ -10,6 +10,7 @@ export interface SelectableDimension {
   readonly selectedId: string | undefined;
   readonly allowUndefined?: boolean;
   setDimensionValue(stratumId: string, selectedId: string): void;
+  disable?: boolean;
 }
 
 interface SelectableDimensions {

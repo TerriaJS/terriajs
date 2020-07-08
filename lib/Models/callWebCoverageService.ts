@@ -85,7 +85,7 @@ async function launch(
 
   query.time = wmsCatalogItem.currentDiscreteTimeTag;
 
-  query.styles = wmsCatalogItem.styleSelector?.activeStyleId;
+  query.styles = wmsCatalogItem.styleSelectableDimensions?.selectedId;
 
   var uri = new URI(wmsCatalogItem.linkedWcsUrl).query(query);
 

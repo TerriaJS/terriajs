@@ -16,7 +16,6 @@ import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import CommonStrata from "../../../Models/CommonStrata";
 import Feature from "../../../Models/Feature";
 import Mappable, { ImageryParts } from "../../../Models/Mappable";
-import { AvailableStyle } from "../../../Models/SelectableStyle";
 import SplitItemReference from "../../../Models/SplitItemReference";
 import Terria from "../../../Models/Terria";
 import ViewState from "../../../ReactViewModels/ViewState";
@@ -30,6 +29,7 @@ import {
   isMarkerVisible,
   removeMarker
 } from "../../../Models/LocationMarkerUtils";
+import { DimensionOption } from "../../../Models/SelectableDimensions";
 
 const Box: any = require("../../../Styled/Box").default;
 const Button: any = require("../../../Styled/Button").default;
@@ -231,7 +231,7 @@ class Main extends React.Component<MainPropsType> {
 
   @computed
   get previewStyle(): string | undefined {
-    return this.diffItem.styleSelector?.activeStyleId;
+    return this.diffItem.styleSelectableDimensions?.selectedId;
   }
 
   @computed
@@ -240,14 +240,14 @@ class Main extends React.Component<MainPropsType> {
   }
 
   @computed
-  get availableDiffStyles(): AvailableStyle[] {
+  get availableDiffStyles(): DimensionOption[] {
     return filterOutUndefined(
       this.diffItem.availableDiffStyles.map(diffStyleId =>
-        this.diffItem.styleSelector?.availableStyles.find(
+        this.diffItem.styleSelectableDimensions?.options.find(
           style => style.id === diffStyleId
         )
       )
-    ) as AvailableStyle[];
+    );
   }
 
   @computed
@@ -285,11 +285,11 @@ class Main extends React.Component<MainPropsType> {
   @action.bound
   changePreviewStyle(e: React.ChangeEvent<HTMLSelectElement>) {
     const styleId = e.target.value;
-    this.props.leftItem.styleSelector?.chooseActiveStyle(
+    this.props.leftItem.styleSelectableDimensions?.setDimensionValue(
       CommonStrata.user,
       styleId
     );
-    this.props.rightItem.styleSelector?.chooseActiveStyle(
+    this.props.rightItem.styleSelectableDimensions?.setDimensionValue(
       CommonStrata.user,
       styleId
     );
@@ -438,11 +438,13 @@ class Main extends React.Component<MainPropsType> {
                   <option disabled value="">
                     {t("diffTool.choosePreview")}
                   </option>
-                  {this.diffItem.styleSelector?.availableStyles.map(style => (
-                    <option key={style.id} value={style.id}>
-                      {style.name}
-                    </option>
-                  ))}
+                  {this.diffItem.styleSelectableDimensions?.options.map(
+                    style => (
+                      <option key={style.id} value={style.id}>
+                        {style.name}
+                      </option>
+                    )
+                  )}
                 </Selector>
               </>
             )}
