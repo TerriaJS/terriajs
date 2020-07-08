@@ -512,6 +512,9 @@ const DateTimePicker = createReactClass({
               className={classNames(Styles.datePicker, this.props.popupStyle, {
                 [Styles.openBelow]: this.props.openDirection === "down"
               })}
+              css={`
+                background: ${p => p.theme.dark};
+              `}
             >
               <button
                 className={Styles.backbutton}

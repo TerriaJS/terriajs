@@ -50,6 +50,8 @@ import WebMapServiceCapabilities, {
   CapabilitiesStyle,
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
+import { callWebCoverageService } from "./callWebCoverageService";
+import ExportableData from "./ExportableData";
 
 const dateFormat = require("dateformat");
 
@@ -480,7 +482,7 @@ class WebMapServiceCatalogItem
       )
     )
   )
-  implements Mappable {
+  implements Mappable, ExportableData {
   /**
    * The collection of strings that indicate an Abstract property should be ignored.  If these strings occur anywhere
    * in the Abstract, the Abstract will not be used.  This makes it easy to filter out placeholder data like
@@ -525,6 +527,15 @@ class WebMapServiceCatalogItem
 
   loadMapItems(): Promise<void> {
     return this.loadMetadata();
+  }
+
+  @computed
+  get canExportData() {
+    return isDefined(this.linkedWcsCoverage) && isDefined(this.linkedWcsUrl);
+  }
+
+  exportData() {
+    return callWebCoverageService(this);
   }
 
   @computed

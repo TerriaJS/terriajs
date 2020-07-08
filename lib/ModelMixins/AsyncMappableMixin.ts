@@ -5,9 +5,9 @@ import Model from "../Models/Model";
 import MappableTraits from "../Traits/MappableTraits";
 import AsyncLoader from "../Core/AsyncLoader";
 
-export default function AsyncMappableMixin<
-  T extends Constructor<Model<MappableTraits>>
->(Base: T) {
+function AsyncMappableMixin<T extends Constructor<Model<MappableTraits>>>(
+  Base: T
+) {
   abstract class AsyncMappableMixin extends Base implements Mappable {
     get isMappable() {
       return true;
@@ -49,3 +49,13 @@ export default function AsyncMappableMixin<
 
   return AsyncMappableMixin;
 }
+
+namespace AsyncMappableMixin {
+  export interface AsyncMappableMixin
+    extends InstanceType<ReturnType<typeof AsyncMappableMixin>> {}
+  export function isMixedInto(model: any): model is AsyncMappableMixin {
+    return model && model.isMappable;
+  }
+}
+
+export default AsyncMappableMixin;
