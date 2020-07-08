@@ -11,7 +11,10 @@ type CatalogMember = Model<CatalogMemberTraits>;
 function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
   abstract class CatalogMemberMixin extends AccessControlMixin(Base) {
     abstract get type(): string;
-    readonly typeName?: string;
+
+    get typeName(): string | undefined {
+      return;
+    }
 
     private _metadataLoader = new AsyncLoader(
       this.forceLoadMetadata.bind(this)
