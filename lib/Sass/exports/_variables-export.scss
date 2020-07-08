@@ -31,6 +31,7 @@
   frontComponentZIndex: $front-component-z-index;
 
   // ..radius? (no standardised radius at the moment, pull in as needed from variables
+  radius40Button: 20;
   radiusLarge: $radius-large;
   radiusSmall: $radius-small;
 
@@ -53,8 +54,15 @@
   greyLightest: $grey-lightest;
   charcoalGrey: $charcoal-grey;
 
+  modalBg: $modal-bg;
+  modalText: $modal-text;
+  modalHighlight: $modal-highlight;
+
   // TODO: fix, these are stopgaps & should get merged in with something else(?)
   mapButtonColor: $map-button-color;
+  mapButtonTop: 18;
+  mapNavigationTop: 80;
 
+  trainerHeight: 64;
   workbenchWidth: 350;
 }

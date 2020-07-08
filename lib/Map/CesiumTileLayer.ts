@@ -265,6 +265,10 @@ export default class CesiumTileLayer extends L.TileLayer {
           this.options.maxNativeZoom = this.imageryProvider.maximumLevel;
         }
 
+        if (defined(this.imageryProvider.minimumLevel)) {
+          this.options.minNativeZoom = this.imageryProvider.minimumLevel;
+        }
+
         if (isDefined(this.imageryProvider.credit)) {
           (<any>this._map).attributionControl.addAttribution(
             getCreditHtml(this.imageryProvider.credit)

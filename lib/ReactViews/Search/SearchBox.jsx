@@ -2,9 +2,25 @@ import React from "react";
 import PropTypes from "prop-types";
 import createReactClass from "create-react-class";
 import debounce from "lodash-es/debounce";
-import Icon from "../Icon";
+import Icon, { StyledIcon } from "../Icon";
+import styled, { withTheme } from "styled-components";
+import Box, { BoxSpan } from "../../Styled/Box";
+import Text from "../../Styled/Text";
+import { RawButton } from "../../Styled/Button";
 
-import Styles from "./search-box.scss";
+const SearchInput = styled.input`
+  box-sizing: border-box;
+  margin-top: 0;
+  margin-bottom: 0;
+  border: none;
+  border-radius: 20px;
+  height: 40px;
+  width: 100%;
+  display: block;
+  padding: 0.5rem 40px;
+  vertical-align: middle;
+  -webkit-appearance: none;
+`;
 
 export const DEBOUNCE_INTERVAL = 1000;
 
@@ -30,7 +46,8 @@ export const SearchBox = createReactClass({
     alwaysShowClear: PropTypes.bool,
     debounceDuration: PropTypes.number,
     inputBoxRef: PropTypes.object,
-    autoFocus: PropTypes.bool
+    autoFocus: PropTypes.bool,
+    theme: PropTypes.object
   },
 
   getDefaultProps() {
@@ -105,38 +122,67 @@ export const SearchBox = createReactClass({
 
   render() {
     const clearButton = (
-      <button
-        type="button"
-        className={Styles.searchClear}
-        onClick={this.clearSearch}
+      <RawButton
+        onClick={() => this.clearSearch()}
+        styledWidth={"40px"}
+        fullHeight
+        css={`
+          position: absolute;
+          right: 0px;
+          top: 0px;
+        `}
       >
-        <Icon glyph={Icon.GLYPHS.close} />
-      </button>
+        <BoxSpan centered>
+          <StyledIcon
+            glyph={Icon.GLYPHS.close}
+            styledWidth={"15px"}
+            fillColor={this.props.theme.charcoalGrey}
+            opacity={"0.5"}
+          />
+        </BoxSpan>
+      </RawButton>
     );
 
     return (
       <form
-        className={Styles.searchData}
         autoComplete="off"
         onSubmit={event => event.preventDefault()}
+        css={`
+          position: relative;
+          width: 100%;
+        `}
       >
-        <label htmlFor="search" className={Styles.formLabel}>
-          <Icon glyph={Icon.GLYPHS.search} />
+        <label
+          htmlFor="search"
+          css={`
+            position: absolute;
+          `}
+        >
+          <Box paddedRatio={2}>
+            <StyledIcon
+              glyph={Icon.GLYPHS.search}
+              styledWidth={"20px"}
+              fillColor={this.props.theme.charcoalGrey}
+              opacity={"0.5"}
+            />
+          </Box>
         </label>
-        <input
-          ref={this.props.inputBoxRef}
-          id="search"
-          type="text"
-          name="search"
-          value={this.props.searchText}
-          onChange={this.handleChange}
-          onFocus={this.props.onFocus}
-          onKeyDown={this.onKeyDown}
-          className={Styles.searchField}
-          placeholder={this.props.placeholder}
-          autoComplete="off"
-          autoFocus={this.props.autoFocus}
-        />
+        <Text large semiBold>
+          <SearchInput
+            ref={this.props.inputBoxRef}
+            id="search"
+            type="text"
+            name="search"
+            value={this.props.searchText}
+            onChange={this.handleChange}
+            onFocus={this.props.onFocus}
+            onKeyDown={this.onKeyDown}
+            placeholder={this.props.placeholder}
+            autoComplete="off"
+            autoFocus={this.props.autoFocus}
+            rounded
+          />
+        </Text>
         {(this.props.alwaysShowClear || this.hasValue()) && clearButton}
       </form>
     );
@@ -147,4 +193,4 @@ const SearchBoxWithRef = (props, ref) => (
   <SearchBox {...props} inputBoxRef={ref} />
 );
 
-export default React.forwardRef(SearchBoxWithRef);
+export default withTheme(React.forwardRef(SearchBoxWithRef));

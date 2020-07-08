@@ -1,0 +1,148 @@
+{
+  "currentVersion": 10.71,
+  "serviceDescription": "Vehicle Service Description",
+  "mapName": "Layers",
+  "description": "Vehicle Description",
+  "copyrightText": "Vehicle Copyright",
+  "supportsDynamicLayers": false,
+  "layers": [
+    {
+      "id": 0,
+      "name": "Ambulances",
+      "parentLayerId": -1,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 100000,
+      "maxScale": 0,
+      "type": "Feature Layer",
+      "geometryType": "esriGeometryPoint"
+    },
+    {
+      "id": 1,
+      "name": "Police",
+      "parentLayerId": -1,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 100000,
+      "maxScale": 0,
+      "type": "Feature Layer",
+      "geometryType": "esriGeometryPoint"
+    },
+    {
+      "id": 25,
+      "name": "Fire",
+      "parentLayerId": -1,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 100000,
+      "maxScale": 0,
+      "type": "Feature Layer",
+      "geometryType": "esriGeometryPoint"
+    },
+    {
+      "id": 17,
+      "name": "911 Calls Hotspot",
+      "parentLayerId": -1,
+      "defaultVisibility": true,
+      "subLayerIds": [
+        23,
+        27
+      ],
+      "minScale": 0,
+      "maxScale": 0,
+      "type": "Group Layer"
+    },
+    {
+      "id": 23,
+      "name": "Output_Features",
+      "parentLayerId": 17,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 0,
+      "maxScale": 0,
+      "type": "Feature Layer",
+      "geometryType": "esriGeometryPoint"
+    },
+    {
+      "id": 27,
+      "name": "Hotspot Raster",
+      "parentLayerId": 17,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 0,
+      "maxScale": 0,
+      "type": "Raster Layer"
+    }
+  ],
+  "tables": [],
+  "spatialReference": {
+    "wkid": 4326,
+    "latestWkid": 4326
+  },
+  "singleFusedMapCache": false,
+  "initialExtent": {
+    "xmin": -117.2811874924825,
+    "ymin": 33.99470075848109,
+    "xmax": -117.13223323351753,
+    "ymax": 34.164118382096209,
+    "spatialReference": {
+      "wkid": 4326,
+      "latestWkid": 4326
+    }
+  },
+  "fullExtent": {
+    "xmin": -152.92938125,
+    "ymin": 25.159020188,
+    "xmax": 55.27645578800002,
+    "ymax": 56.371027868,
+    "spatialReference": {
+      "wkid": 4326,
+      "latestWkid": 4326
+    }
+  },
+  "minScale": 100000,
+  "maxScale": 0,
+  "units": "esriDecimalDegrees",
+  "supportedImageFormatTypes": "PNG32,PNG24,PNG,JPG,DIB,TIFF,EMF,PS,PDF,GIF,SVG,SVGZ,BMP",
+  "documentInfo": {
+    "Title": "",
+    "Author": "",
+    "Comments": "Feeds",
+    "Subject": "Feeds",
+    "Category": "",
+    "AntialiasingMode": "None",
+    "TextAntialiasingMode": "Force",
+    "Keywords": "Feeds"
+  },
+  "capabilities": "Map,Query,Data",
+  "supportedQueryFormats": "JSON, geoJSON",
+  "hasVersionedData": true,
+  "exportTilesAllowed": false,
+  "datumTransformations": [
+    {
+      "geoTransforms": [
+        {
+          "wkid": 108001,
+          "latestWkid": 1241,
+          "transformForward": true,
+          "name": "NAD_1927_To_NAD_1983_NADCON"
+        }
+      ]
+    },
+    {
+      "geoTransforms": [
+        {
+          "wkid": 108001,
+          "latestWkid": 1241,
+          "transformForward": false,
+          "name": "NAD_1927_To_NAD_1983_NADCON"
+        }
+      ]
+    }
+  ],
+  "supportsDatumTransformation": true,
+  "maxRecordCount": 1000,
+  "maxImageHeight": 4096,
+  "maxImageWidth": 4096,
+  "supportedExtensions": "FeatureServer"
+}

@@ -51,8 +51,8 @@ export const SearchResult = createReactClass({
       theme,
       name,
       locationSearchText,
-      icon,
-      isLastResult
+      icon
+      // isLastResult
     } = this.props;
     const isDarkTheme = searchResultTheme === "dark";
     const isLightTheme = searchResultTheme === "light";
@@ -65,6 +65,13 @@ export const SearchResult = createReactClass({
             onClick={this.props.clickAction}
             fullWidth
           >
+            {/* {!isLastResult && ( */}
+            <BoxSpan>
+              <SpacingSpan right={2} />
+              <Hr size={1} fullWidth borderBottomColor={theme.greyLighter} />
+              <SpacingSpan right={2} />
+            </BoxSpan>
+            {/* )} */}
             <TextSpan
               breakWord
               large
@@ -103,13 +110,6 @@ export const SearchResult = createReactClass({
                 />
               </BoxSpan>
             </TextSpan>
-            {!isLastResult && (
-              <BoxSpan>
-                <SpacingSpan right={2} />
-                <Hr size={1} fullWidth borderBottomColor={theme.greyLighter} />
-                <SpacingSpan right={2} />
-              </BoxSpan>
-            )}
           </RawButtonAndHighlight>
         </Box>
       </li>

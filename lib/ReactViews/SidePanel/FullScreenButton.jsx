@@ -67,7 +67,8 @@ const FullScreenButton = observer(
       return (
         <div
           className={classNames(Styles.fullScreen, {
-            [Styles.minifiedFullscreenBtnWrapper]: this.props.minified
+            [Styles.minifiedFullscreenBtnWrapper]: this.props.minified,
+            [Styles.trainerBarVisible]: this.props.viewState.trainerBarVisible
           })}
         >
           {this.props.minified && (

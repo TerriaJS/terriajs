@@ -1,0 +1,212 @@
+{
+  "currentVersion": 10.61,
+  "cimVersion": "2.2.0",
+  "id": 3,
+  "name": "A_Test",
+  "type": "Feature Layer",
+  "parentLayer": null,
+  "defaultVisibility": true,
+  "minScale": 18489298,
+  "maxScale": 36111,
+  "geometryType": "esriGeometryPolygon",
+  "description": "",
+  "copyrightText": "",
+  "editFieldsInfo": null,
+  "syncCanReturnChanges": true,
+  "relationships": [
+    
+  ],
+  "isDataVersioned": false,
+  "isDataArchived": false,
+  "isCoGoEnabled": false,
+  "supportsRollbackOnFailureParameter": true,
+  "supportsStatistics": true,
+  "supportsAdvancedQueries": true,
+  "supportsValidateSQL": true,
+  "supportsCoordinatesQuantization": true,
+  "supportsCalculate": true,
+  "advancedQueryCapabilities": {
+    "supportsReturningQueryExtent": true,
+    "supportsStatistics": true,
+    "supportsDistinct": true,
+    "supportsPagination": true,
+    "supportsOrderBy": true,
+    "supportsQueryWithDistance": true,
+    "supportsLod": false,
+    "supportsPaginationOnAggregatedQueries": true,
+    "supportsQueryWithResultType": true,
+    "supportsCountDistinct": true,
+    "supportsReturningGeometryCentroid": true,
+    "supportsHavingClause": true
+  },
+  "extent": {
+    "xmin": 1.6699557568122052E7,
+    "ymin": -4074199.224050209,
+    "xmax": 1.684752587776097E7,
+    "ymax": -3894782.230000466,
+    "spatialReference": {
+      "wkid": 102100,
+      "latestWkid": 3857,
+      "xyTolerance": 0.001,
+      "zTolerance": 0.001,
+      "mTolerance": 0.001,
+      "falseX": -20037700,
+      "falseY": -30241100,
+      "xyUnits": 1.4892314192838538E8,
+      "falseZ": -100000,
+      "zUnits": 10000,
+      "falseM": -100000,
+      "mUnits": 10000
+    }
+  },
+  "sourceSpatialReference": {
+    "wkid": 102100,
+    "latestWkid": 3857,
+    "xyTolerance": 0.001,
+    "zTolerance": 0.001,
+    "mTolerance": 0.001,
+    "falseX": -20037700,
+    "falseY": -30241100,
+    "xyUnits": 1.48923141928385E8,
+    "falseZ": 0,
+    "zUnits": 1,
+    "falseM": 0,
+    "mUnits": 1
+  },
+  "drawingInfo": {
+    "renderer": {
+      "type": "simple",
+      "symbol": {
+        "type": "esriSFS",
+        "style": "esriSFSSolid",
+        "color": [
+          215,
+          203,
+          247,
+          255
+        ],
+        "outline": {
+          "type": "esriSLS",
+          "style": "esriSLSSolid",
+          "color": [
+            110,
+            110,
+            110,
+            255
+          ],
+          "width": 1
+        }
+      }
+    },
+    "transparency": 0,
+    "labelingInfo": null
+  },
+  "hasM": false,
+  "hasZ": false,
+  "allowTrueCurvesUpdates": false,
+  "onlyAllowTrueCurveUpdatesByTrueCurveClients": true,
+  "hasAttachments": false,
+  "supportsApplyEditsWithGlobalIds": false,
+  "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+  "objectIdField": "fid",
+  "globalIdField": null,
+  "displayField": "lganame",
+  "typeIdField": "",
+  "fields": [
+    {
+      "name": "fid",
+      "type": "esriFieldTypeOID",
+      "alias": "db_f86av.hsu_lrsts.SHSF2019_5yrs_LGA_SHSF2019_5yrs_LGA.fid",
+      "domain": null,
+      "nullable": false,
+      "editable": false
+    },
+    {
+      "name": "lganame",
+      "type": "esriFieldTypeString",
+      "alias": "lganame",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 60
+    },
+    {
+      "name": "councilnam",
+      "type": "esriFieldTypeString",
+      "alias": "councilnam",
+      "domain": null,
+      "editable": true,
+      "nullable": true,
+      "length": 80
+    },
+    {
+      "name": "fiveyearfo",
+      "type": "esriFieldTypeInteger",
+      "alias": "fiveyearfo",
+      "domain": null,
+      "editable": true,
+      "nullable": true
+    }
+  ],
+  "geometryField": {
+    "name": "shape",
+    "type": "esriFieldTypeGeometry",
+    "alias": "shape",
+    "domain": null,
+    "editable": true,
+    "nullable": true,
+    "defaultValue": null,
+    "modelName": "Shape"
+  },
+  "indexes": [
+    {
+      "name": "r1740_sde_rowid_uk",
+      "fields": "db_f86av.hsu_lrsts.SHSF2019_5yrs_LGA_SHSF2019_5yrs_LGA.fid",
+      "isAscending": true,
+      "isUnique": true,
+      "description": ""
+    },
+    {
+      "name": "a1671_ix1",
+      "fields": "shape",
+      "isAscending": true,
+      "isUnique": true,
+      "description": ""
+    }
+  ],
+  "dateFieldsTimeReference": {
+    "timeZone": "UTC",
+    "respectsDaylightSaving": false
+  },
+  "types": [
+    
+  ],
+  "templates": [
+    {
+      "name": "SHSF2019_5yrs_LGA",
+      "description": "",
+      "prototype": {
+        "attributes": {
+          "councilnam": null,
+          "fiveyearfo": null,
+          "lganame": null
+        }
+      },
+      "drawingTool": "esriFeatureEditToolPolygon"
+    }
+  ],
+  "useStandardizedQueries": true,
+  "standardMaxRecordCount": 2000,
+  "tileMaxRecordCount": 2000,
+  "maxRecordCountFactor": 1,
+  "supportedQueryFormats": "JSON, geoJSON",
+  "enableZDefaults": true,
+  "maxRecordCount": 2000,
+  "allowGeometryUpdates": true,
+  "capabilities": "Query",
+  "allowUpdateWithoutMValues": true,
+  "supportsAttachmentsByUploadId": false,
+  "hasStaticData": false,
+  "serviceItemId": "e927409d92bc4a998ea9219cdfb2a709",
+  "hasMetadata": true
+}

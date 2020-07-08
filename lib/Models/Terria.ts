@@ -36,6 +36,8 @@ import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
+import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
+import { defaultTerms, Term } from "../ReactViewModels/defaultTerms";
 import CameraView from "./CameraView";
 import CatalogGroup from "./CatalogGroupNew";
 import CatalogMemberFactory from "./CatalogMemberFactory";
@@ -93,8 +95,10 @@ interface ConfigParameters {
   rollbarAccessToken?: string;
   globalDisclaimer?: any;
   showWelcomeMessage?: boolean;
+  welcomeMessageVideo?: any;
   showInAppGuides?: boolean;
-  helpContent?: any[];
+  helpContent?: HelpContentItem[];
+  helpContentTerms?: Term[];
   languageConfiguration?: LanguageConfiguration;
 }
 
@@ -132,6 +136,7 @@ export default class Terria {
 
   readonly baseUrl: string = "build/TerriaJS/";
   readonly error = new CesiumEvent();
+  readonly tileLoadProgressEvent = new CesiumEvent();
   readonly workbench = new Workbench();
   readonly overlays = new Workbench();
   readonly catalog = new Catalog(this);
@@ -206,8 +211,15 @@ export default class Terria {
     rollbarAccessToken: undefined,
     globalDisclaimer: undefined,
     showWelcomeMessage: false,
+    welcomeMessageVideo: {
+      videoTitle: "Getting started with the map",
+      videoUrl: "https://www.youtube.com/embed/FjSxaviSLhc",
+      placeholderImage:
+        "https://img.youtube.com/vi/FjSxaviSLhc/maxresdefault.jpg"
+    },
     showInAppGuides: false,
     helpContent: [],
+    helpContentTerms: defaultTerms,
     languageConfiguration: undefined
   };
 

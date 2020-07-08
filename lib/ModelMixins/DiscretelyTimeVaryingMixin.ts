@@ -24,7 +24,7 @@ function DiscretelyTimeVaryingMixin<
 >(Base: T) {
   abstract class DiscretelyTimeVaryingMixin extends Base
     implements TimeVarying {
-    abstract discreteTimes:
+    abstract get discreteTimes():
       | { time: string; tag: string | undefined }[]
       | undefined;
 
@@ -270,7 +270,9 @@ function DiscretelyTimeVaryingMixin<
         dt => ({
           x: JulianDate.toDate(dt.time),
           y: 0.5,
-          isSelected: dt.time === this.currentDiscreteJulianDate
+          isSelected:
+            this.currentDiscreteJulianDate &&
+            this.currentDiscreteJulianDate.equals(dt.time)
         })
       );
 

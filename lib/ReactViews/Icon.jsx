@@ -110,7 +110,14 @@ export const GLYPHS = {
   minusThick: require("../../wwwroot/images/icons/zoom-minus.svg"),
   plusThick: require("../../wwwroot/images/icons/zoom-plus.svg"),
   refreshThick: require("../../wwwroot/images/icons/zoom-refresh.svg"),
-  satellite: require("../../wwwroot/images/icons/satellite.svg")
+  satellite: require("../../wwwroot/images/icons/satellite.svg"),
+  mapDataActive: require("../../wwwroot/images/icons/map-data-active.svg"),
+  mapDataInactive: require("../../wwwroot/images/icons/map-data-inactive.svg"),
+  uploadThin: require("../../wwwroot/images/icons/upload-thin.svg"),
+  oneTwoThree: require("../../wwwroot/images/icons/one-two-three.svg"),
+  accordionOpen: require("../../wwwroot/images/icons/accordion-open.svg"),
+  accordionClose: require("../../wwwroot/images/icons/accordion-close.svg"),
+  editor: require("../../wwwroot/images/icons/editor.svg")
 };
 
 export const Icon = createReactClass({
@@ -137,17 +144,18 @@ export const StyledIcon = styled(Icon)`
   display:block;
   flex-shrink: 0;
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
+  ${props => props.styledHeight && `height: ${props.styledHeight};`}
 
   ${props => props.light && `fill: ${props.theme.textLight};`}
   ${props => props.dark && `fill: ${props.theme.textDark};`}
+
+  // Until we sort out what "light / dark" means for components that have both
+  // modes, use "realDark" to get real
+  ${props => props.realDark && `fill: ${props.theme.dark};`}
 
   ${props => props.fillColor && `fill: ${props.fillColor};`}
 
   ${props => props.opacity && `opacity: ${props.opacity};`}
 `;
 
-export default Icon;
-// (?) are these cjs exports for the doc generator?
-module.exports = Icon;
-module.exports.GLYPHS = GLYPHS;
-module.exports.StyledIcon = StyledIcon;
+export default Object.assign(Icon, { GLYPHS });

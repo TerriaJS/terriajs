@@ -116,6 +116,17 @@ export const Box = styled.div`
       background-repeat: no-repeat;
       background-position: center;
     `}
+  
+  ${props =>
+    props.overflow &&
+    `
+      overflow: ${props.overflow};
+    `}
+  ${props =>
+    props.overflowY &&
+    `
+      overflow-y: ${props.overflowY};
+    `}
 `;
 
 export const BoxSpan = styled(Box).attrs({

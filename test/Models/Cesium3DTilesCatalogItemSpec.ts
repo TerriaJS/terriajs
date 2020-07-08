@@ -1,3 +1,4 @@
+import "../SpecMain";
 import { reaction, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import IonResource from "terriajs-cesium/Source/Core/IonResource";
@@ -14,10 +15,18 @@ import {
   OptionsTraits
 } from "../../lib/Traits/Cesium3DCatalogItemTraits";
 import i18next from "i18next";
+import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
+import HeadingPitchRollTraits from "../../lib/Traits/HeadingPitchRollTraits";
+import LatLonHeightTraits from "../../lib/Traits/LatLonHeightTraits";
+import CommonStrata from "../../lib/Models/CommonStrata";
+import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
+import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
+import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 
 describe("Cesium3DTilesCatalogItemSpec", function() {
   let item: Cesium3DTilesCatalogItem;
-  const testUrl = "http://nosuchhost";
+  const testUrl = "/test/Cesium3DTiles/tileset.json";
 
   beforeEach(function() {
     item = new Cesium3DTilesCatalogItem("test", new Terria());
@@ -178,7 +187,7 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
           });
 
           it("sets the shadow mode", function() {
-            runInAction(() => item.setTrait("definition", "shadows", "cast"));
+            runInAction(() => item.setTrait("definition", "shadows", "CAST"));
             expect(item.mapItems[0].shadows).toBe(ShadowMode.CAST_ONLY);
           });
 
@@ -199,7 +208,7 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
           });
 
           it("sets the shadow mode", function() {
-            runInAction(() => item.setTrait("definition", "shadows", "cast"));
+            runInAction(() => item.setTrait("definition", "shadows", "CAST"));
             expect(item.mapItems[0].shadows).toBe(ShadowMode.CAST_ONLY);
           });
 
@@ -225,6 +234,55 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
           //     expect(item.mapItems[0] === tileset).toBeFalsy();
           //   });
           // });
+
+          it("sets the rootTransform to IDENTITY", function() {
+            expect(
+              Matrix4.equals(item.mapItems[0].root.transform, Matrix4.IDENTITY)
+            ).toBeTruthy();
+          });
+
+          it("computes a new model matrix from the given transformations", async function() {
+            item.setTrait(
+              CommonStrata.user,
+              "rotation",
+              createStratumInstance(HeadingPitchRollTraits, {
+                heading: 42,
+                pitch: 42,
+                roll: 42
+              })
+            );
+            item.setTrait(
+              CommonStrata.user,
+              "origin",
+              createStratumInstance(LatLonHeightTraits, {
+                latitude: 10,
+                longitude: 10
+              })
+            );
+            item.setTrait(CommonStrata.user, "scale", 5);
+            const modelMatrix = item.mapItems[0].modelMatrix;
+            const rotation = HeadingPitchRoll.fromQuaternion(
+              Quaternion.fromRotationMatrix(
+                Matrix4.getMatrix3(modelMatrix, new Matrix3())
+              )
+            );
+            expect(rotation.heading.toFixed(2)).toBe("-1.85");
+            expect(rotation.pitch.toFixed(2)).toBe("0.89");
+            expect(rotation.roll.toFixed(2)).toBe("2.40");
+
+            const scale = Matrix4.getScale(modelMatrix, new Cartesian3());
+            expect(scale.x.toFixed(2)).toEqual("5.00");
+            expect(scale.y.toFixed(2)).toEqual("5.00");
+            expect(scale.z.toFixed(2)).toEqual("5.00");
+
+            const position = Matrix4.getTranslation(
+              modelMatrix,
+              new Cartesian3()
+            );
+            expect(position.x.toFixed(2)).toEqual("6186437.07");
+            expect(position.y.toFixed(2)).toEqual("1090835.77");
+            expect(position.z.toFixed(2)).toEqual("4081926.10");
+          });
         });
       });
     });
@@ -238,6 +296,24 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
     if (feature) {
       expect(feature._cesium3DTileFeature).toBe(picked);
     }
+  });
+
+  it("can change the visibility of a feature", function() {
+    const feature = new Cesium3DTileFeature();
+    spyOn(feature, "getProperty").and.callFake((prop: string) => {
+      const props: any = { doorNumber: 10, color: "red" };
+      return props[prop];
+    });
+    item.setTrait(CommonStrata.user, "featureIdProperties", [
+      "doorNumber",
+      "color"
+    ]);
+    item.setFeatureVisibility(feature, false);
+    // @ts-ignore
+    expect(item.style.show.conditions).toEqual([
+      ['${color} === "red" && ${doorNumber} === 10', false],
+      ["true", true] // fallback rule
+    ]);
   });
 });
 

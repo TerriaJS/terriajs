@@ -99,6 +99,9 @@ class HelpPanel extends React.Component {
                   this.props.viewState.setTourIndex(0);
                 });
               }}
+              css={`
+                ${p => p.theme.addTerriaPrimaryBtnStyles(p)}
+              `}
             >
               {" "}
               <Icon glyph={Icon.GLYPHS.tour} /> {"Take the tour"}{" "}
@@ -106,8 +109,8 @@ class HelpPanel extends React.Component {
           </Box>
         </Box>
         <Spacing bottom={10} />
-        <Box centered displayInlineBlock>
-          <Box displayInlineBlock>
+        <Box centered displayInlineBlock fullWidth>
+          <Box displayInlineBlock fullWidth>
             {helpItems && (
               <For each="item" index="i" of={helpItems}>
                 <HelpPanelItem

@@ -2,8 +2,13 @@
 /// <reference types="jasmine" />
 import "../lib/Core/prerequisites";
 import "jasmine-ajax";
-import { spy } from "mobx";
+import { configure, spy } from "mobx";
 import i18next from "i18next";
+
+configure({
+  enforceActions: true,
+  computedRequiresReaction: true
+});
 
 // Fail the test if a MobX computed property throws an exception.
 spy(event => {
