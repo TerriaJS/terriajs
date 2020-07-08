@@ -405,16 +405,12 @@ class Main extends React.Component<MainPropsType> {
   }
 
   @action
-  async componentDidMount() {
+  async setLocationFromActiveSearch() {
     // Look for any existing marker like from a search result and filter
     // imagery at that location
     const markerLocation = getMarkerLocation(this.props.terria);
     const sourceItem = this.props.sourceItem;
-    if (
-      this.location === undefined &&
-      markerLocation &&
-      Mappable.is(sourceItem)
-    ) {
+    if (markerLocation && Mappable.is(sourceItem)) {
       const part = sourceItem.mapItems.find(p => ImageryParts.is(p));
       const imageryProvider =
         part && ImageryParts.is(part) && part.imageryProvider;
@@ -438,6 +434,28 @@ class Main extends React.Component<MainPropsType> {
           // If we cannot resolve imagery at the marker location, remove it
           removeMarker(this.props.terria);
         }
+      }
+    }
+  }
+
+  @action
+  async componentDidMount() {
+    if (this.location === undefined) {
+      const {
+        latitude,
+        longitude,
+        height
+      } = this.diffItem.timeFilterCoordinates;
+      if (latitude !== undefined && longitude !== undefined) {
+        this.location = {
+          latitude,
+          longitude,
+          height
+        };
+        // remove any active search location marker to avoid showing two markers
+        removeMarker(this.props.terria);
+      } else {
+        await this.setLocationFromActiveSearch();
       }
     }
   }
