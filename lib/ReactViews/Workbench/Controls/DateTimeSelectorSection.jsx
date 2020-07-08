@@ -6,6 +6,7 @@ import React from "react";
 import createReactClass from "create-react-class";
 import classNames from "classnames";
 import PropTypes from "prop-types";
+import styled from "styled-components";
 import { observer } from "mobx-react";
 
 import defined from "terriajs-cesium/Source/Core/defined";
@@ -195,31 +196,47 @@ const DateTimeSelectorSection = observer(
                 dateFormat={format}
               />
             </div>
-            <button
+            <TimelineButton
               className={classNames(Styles.timelineButton, {
                 [Styles.timelineActive]: attachedToTimeline
               })}
+              active={attachedToTimeline}
               type="button"
               onClick={this.onTimelineButtonClicked}
               title={t("dateTime.useTimeline")}
             >
               <Icon glyph={Icon.GLYPHS.timeline} />
-            </button>
-            <button
+            </TimelineButton>
+            <TimelineButton
               className={classNames(Styles.timelineButton, {
                 [Styles.timelineActive]: item.showInChartPanel
               })}
+              active={item.showInChartPanel}
               type="button"
               onClick={this.onShowOnChartButtonClicked}
               title={t("dateTime.availableTimeChart")}
             >
               <Icon glyph={Icon.GLYPHS.lineChart} />
-            </button>
+            </TimelineButton>
           </div>
         </div>
       );
     }
   })
 );
+
+const TimelineButton = styled.button`
+  ${props => `
+    ${props.active &&
+      `
+      background-color: ${props.theme.colorPrimary};
+      color: ${props.theme.textLight};
+      &:hover,
+      &:focus {
+        color: ${props.theme.textLight};
+      }
+    `}
+  `}
+`;
 
 export default withTranslation()(DateTimeSelectorSection);

@@ -2,6 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
+import styled from "styled-components";
+import { observer } from "mobx-react";
 
 import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
 
@@ -13,6 +15,21 @@ import Styles from "./data-catalog-group.scss";
 import Box from "../../Styled/Box";
 import Text from "../../Styled/Text";
 
+const CatalogGroupButton = styled.button`
+  ${props => `
+    &:hover,
+    &:focus {
+      color: ${props.theme.textLight};
+      background-color: ${props.theme.modalHighlight};
+    }
+    ${props.active &&
+      `
+        color: ${props.theme.textLight};
+        background-color: ${props.theme.modalHighlight};
+      `}
+    `}
+`;
+
 /**
  * Dumb component that encapsulated the display logic for a catalog group.
  *
@@ -23,7 +40,7 @@ function CatalogGroup(props) {
   return (
     <li className={Styles.root}>
       <Text fullWidth primary={!props.selected && props.isPrivate}>
-        <button
+        <CatalogGroupButton
           type="button"
           className={classNames(
             Styles.btnCatalog,
@@ -33,6 +50,7 @@ function CatalogGroup(props) {
           )}
           title={props.title}
           onClick={props.onClick}
+          active={props.selected}
         >
           <If condition={!props.topLevel}>
             <span className={Styles.folder}>
@@ -70,7 +88,7 @@ function CatalogGroup(props) {
               </If>
             </Box>
           </Box>
-        </button>
+        </CatalogGroupButton>
       </Text>
       <If condition={props.open}>
         <ul
@@ -118,4 +136,4 @@ CatalogGroup.propTypes = {
   removeUserAddedData: PropTypes.func
 };
 
-export default CatalogGroup;
+export default observer(CatalogGroup);

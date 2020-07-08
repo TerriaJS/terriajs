@@ -5,7 +5,11 @@ Change Log
 
 #### next release (7.11.5-mobx-35)
 #### next release (mobx-37)
+* Add `header` option to `loadText`
+* Add `isMixtedInto` function for `AsyncMappableMixin` and `AsyncChartableMixin`
 * Added file upload support for `GltfCatalogItem`. The supported extension is glb.
+* Improve runtime themeing via styled components across main UI components
+* Updated default welcome video defaults to a newer, slower video
 * Ensure `CkanCatalogGroup` doesn't keep re-requesting data when opening and closing groups.
 
 #### mobx-36
