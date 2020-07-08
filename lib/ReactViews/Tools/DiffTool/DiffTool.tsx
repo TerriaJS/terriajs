@@ -936,12 +936,20 @@ async function createSplitItem(
  * If the item has only one available diff style, auto-select it
  */
 function setDefaultDiffStyle(item: DiffableItem) {
-  if (item.diffStyleId === undefined && item.availableDiffStyles.length === 1) {
-    item.setTrait(
-      CommonStrata.user,
-      "diffStyleId",
-      item.availableDiffStyles[0]
-    );
+  if (item.diffStyleId !== undefined) {
+    return;
+  }
+
+  const availableStyles = filterOutUndefined(
+    item.availableDiffStyles.map(diffStyleId =>
+      item.styleSelector?.availableStyles.find(
+        style => style.id === diffStyleId
+      )
+    )
+  );
+
+  if (availableStyles.length === 1) {
+    item.setTrait(CommonStrata.user, "diffStyleId", availableStyles[0].id);
   }
 }
 
