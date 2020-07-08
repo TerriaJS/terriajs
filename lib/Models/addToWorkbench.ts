@@ -1,3 +1,8 @@
+/**
+ * addToWorkbench.ts
+ * This sits in lib/Models but should really be in lib/ReactViewModels or
+ * somewhere else as it reaches into ViewState
+ */
 import filterOutUndefined from "../Core/filterOutUndefined";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";

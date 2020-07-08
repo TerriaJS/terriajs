@@ -9,7 +9,6 @@ import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
 import styled, { withTheme } from "styled-components";
 import HelpVideoPanel from "./HelpVideoPanel";
-import parseCustomMarkdownToReact from "../../../Custom/parseCustomMarkdownToReact";
 
 @observer
 class HelpPanelItem extends React.Component {
@@ -29,6 +28,7 @@ class HelpPanelItem extends React.Component {
 
   render() {
     // const { t } = this.props;
+    const { icon } = this.props.content;
     const MenuIconWrapper = styled(Box).attrs({
       centered: true
     })`
@@ -46,18 +46,10 @@ class HelpPanelItem extends React.Component {
       [Styles.isSelected]: itemSelected
     });
 
-    const iconName = this.props.content.icon
-      ? this.props.content.icon
-      : "video";
-    const reactComponents = this.props.content.markdownText
-      ? parseCustomMarkdownToReact(this.props.content.markdownText).props
-          .children
-      : undefined;
-    const title =
-      reactComponents !== undefined && reactComponents.length > 0
-        ? reactComponents.find(item => /(h[0-6])/i.test(item.type))?.props
-            .children
-        : "";
+    // `content.icon` is user defined and can possibly force the UI to lookup a
+    // nonexistant icon.
+    const iconGlyph = Icon.GLYPHS[icon] || Icon.GLYPHS.video;
+    const title = this.props.content.title || "";
     return (
       <div
         css={`
@@ -83,7 +75,7 @@ class HelpPanelItem extends React.Component {
               <StyledIcon
                 styledWidth={"27px"}
                 fillColor={this.props.theme.textDark}
-                glyph={Icon.GLYPHS[iconName]}
+                glyph={iconGlyph}
               />
             </MenuIconWrapper>
             <Text
@@ -106,8 +98,10 @@ class HelpPanelItem extends React.Component {
         <HelpVideoPanel
           terria={this.props.terria}
           viewState={this.props.viewState}
+          content={this.props.content}
           itemString={this.props.content.itemName}
-          htmlContent={reactComponents}
+          paneMode={this.props.content.paneMode}
+          markdownContent={this.props.content.markdownText}
           videoUrl={this.props.content.videoUrl}
           placeholderImage={this.props.content.placeholderImage}
         />

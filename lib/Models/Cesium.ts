@@ -58,6 +58,7 @@ import Terria from "./Terria";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import getElement from "terriajs-cesium/Source/Widgets/getElement";
 import LatLonHeight from "../Core/LatLonHeight";
+import filterOutUndefined from "../Core/filterOutUndefined";
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
 // Intermediary
@@ -90,6 +91,11 @@ export default class Cesium extends GlobeOrMap {
     | Cesium.DataSource
     | Mappable
     | /*TODO Cesium.Cesium3DTileset*/ any;
+
+  // When true, feature picking is paused. This is useful for temporarily
+  // disabling feature picking when some other interaction mode wants to take
+  // over the LEFT_CLICK behavior.
+  isFeaturePickingPaused = false;
 
   /* Disposers */
   private readonly _selectionIndicator: CesiumSelectionIndicator;
@@ -161,6 +167,12 @@ export default class Cesium extends GlobeOrMap {
     ) => {
       this.dataSourceDisplay.update(clock.currentTime);
     }));
+
+    // Progress
+    this._eventHelper.add(this.scene.globe.tileLoadProgressEvent, <any>(
+      ((currentLoadQueueLength: number) =>
+        this._updateTilesLoadingCount(currentLoadQueueLength))
+    ));
 
     // Disable HDR lighting for better performance and to avoid changing imagery colors.
     (<any>this.scene).highDynamicRange = false;
@@ -253,7 +265,8 @@ export default class Cesium extends GlobeOrMap {
 
     // Handle left click by picking objects from the map.
     inputHandler.setInputAction(e => {
-      this.pickFromScreenPosition(e.position, false);
+      if (!this.isFeaturePickingPaused)
+        this.pickFromScreenPosition(e.position, false);
     }, ScreenSpaceEventType.LEFT_CLICK);
 
     this.pauser = new CesiumRenderLoopPauser(this.cesiumWidget, () => {
@@ -480,7 +493,6 @@ export default class Cesium extends GlobeOrMap {
       return;
       //throw new DeveloperError("viewOrExtent is required.");
     }
-
     flightDurationSeconds = defaultValue(flightDurationSeconds, 3.0);
 
     var that = this;
@@ -1124,18 +1136,13 @@ export default class Cesium extends GlobeOrMap {
   }
 
   getImageryLayersForItem(item: Mappable): ImageryLayer[] {
-    const allImageryParts = item.mapItems.filter(ImageryParts.is);
-    const imageryLayers: ImageryLayer[] = [];
-
-    for (let i = 0; i < allImageryParts.length; i++) {
-      let index = this.scene.imageryLayers.indexOf(
-        this._makeImageryLayerFromParts(allImageryParts[i])
-      );
-      if (index !== -1) {
-        imageryLayers.push(<ImageryLayer>this.scene.imageryLayers.get(index));
-      }
-    }
-    return imageryLayers;
+    return filterOutUndefined(
+      item.mapItems.map(m => {
+        if (ImageryParts.is(m)) {
+          return this._makeImageryLayerFromParts(m) as ImageryLayer;
+        }
+      })
+    );
   }
 
   private _makeImageryLayerFromParts(parts: ImageryParts): Cesium.ImageryLayer {
@@ -1270,10 +1277,18 @@ function zoomToDataSource(
         }
       }
 
-      var boundingSphere = BoundingSphere.fromBoundingSpheres(boundingSpheres);
-      cesium.scene.camera.flyToBoundingSphere(boundingSphere, {
-        duration: flightDurationSeconds
-      });
+      // Test if boundingSpheres is empty to avoid zooming to nowhere
+      if (boundingSpheres.length > 0) {
+        var boundingSphere = BoundingSphere.fromBoundingSpheres(
+          boundingSpheres
+        );
+        cesium.scene.camera.flyToBoundingSphere(boundingSphere, {
+          duration: flightDurationSeconds,
+          // By passing range=0, cesium calculates an appropriate zoom distance
+          offset: new HeadingPitchRange(0, -0.5, 0)
+        });
+        cesium.scene.camera.lookAtTransform(Matrix4.IDENTITY);
+      }
       return true;
     },
     {
@@ -1287,17 +1302,13 @@ function zoomToBoundingSphere(
   cesium: Cesium,
   target: {
     boundingSphere: Cesium.BoundingSphere;
-    modelMatrix?: Cesium.Matrix4;
   },
   flightDurationSeconds?: number
 ) {
   var boundingSphere = target.boundingSphere;
-  var modelMatrix = target.modelMatrix;
-  if (modelMatrix) {
-    boundingSphere = BoundingSphere.transform(boundingSphere, modelMatrix);
-  }
   cesium.scene.camera.flyToBoundingSphere(boundingSphere, {
-    offset: new HeadingPitchRange(0.0, -0.5, boundingSphere.radius),
+    // By passing range=0, cesium calculates an appropriate zoom distance
+    offset: new HeadingPitchRange(0, -0.5, 0),
     duration: flightDurationSeconds
   });
 }

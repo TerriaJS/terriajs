@@ -77,7 +77,8 @@ MapIconButton.propTypes = {
   title: PropTypes.string,
   iconElement: PropTypes.func.isRequired,
   onClick: PropTypes.func,
-  handleClick: PropTypes.func
+  handleClick: PropTypes.func,
+  children: PropTypes.node
 };
 
 function MapIconButton(props) {
@@ -185,4 +186,11 @@ function MapIconButton(props) {
     );
   } else return MapIconButtonRaw;
 }
+
+// const MapIconButtonWithRef = (props, ref) => (
+//   <MapIconButton {...props} buttonRef={ref} />
+// );
+
+// export default React.forwardRef(MapIconButtonWithRef);
+
 export default MapIconButton;

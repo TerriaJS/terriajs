@@ -2,13 +2,11 @@
 const React = require("react");
 const createReactClass = require("create-react-class");
 const PropTypes = require("prop-types");
-import triggerResize from "../../Core/triggerResize";
 import Styles from "./full_screen_button.scss";
 import classNames from "classnames";
 import Icon from "../Icon.jsx";
 import { withTranslation } from "react-i18next";
 import { observer } from "mobx-react";
-import { runInAction } from "mobx";
 
 // The button to make the map full screen and hide the workbench.
 const FullScreenButton = observer(
@@ -31,17 +29,9 @@ const FullScreenButton = observer(
     },
 
     toggleFullScreen() {
-      runInAction(() => {
-        this.props.viewState.isMapFullScreen = !this.props.viewState
-          .isMapFullScreen;
-      });
-
-      // this.props.terria.currentViewer.notifyRepaintRequired();
-
-      // Allow any animations to finish, then trigger a resize.
-      setTimeout(function() {
-        triggerResize();
-      }, this.props.animationDuration || 1);
+      this.props.viewState.setIsMapFullScreen(
+        !this.props.viewState.isMapFullScreen
+      );
 
       // log a GA event
       this.props.terria.analytics.logEvent(
@@ -77,7 +67,8 @@ const FullScreenButton = observer(
       return (
         <div
           className={classNames(Styles.fullScreen, {
-            [Styles.minifiedFullscreenBtnWrapper]: this.props.minified
+            [Styles.minifiedFullscreenBtnWrapper]: this.props.minified,
+            [Styles.trainerBarVisible]: this.props.viewState.trainerBarVisible
           })}
         >
           {this.props.minified && (

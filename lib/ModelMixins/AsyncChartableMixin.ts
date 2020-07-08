@@ -5,9 +5,9 @@ import Chartable, { ChartAxis, ChartItem } from "../Models/Chartable";
 import Model from "../Models/Model";
 import MappableTraits from "../Traits/MappableTraits";
 
-export default function AsyncChartableMixin<
-  T extends Constructor<Model<MappableTraits>>
->(Base: T) {
+function AsyncChartableMixin<T extends Constructor<Model<MappableTraits>>>(
+  Base: T
+) {
   abstract class AsyncChartableMixin extends Base implements Chartable {
     get isChartable() {
       return true;
@@ -52,3 +52,13 @@ export default function AsyncChartableMixin<
 
   return AsyncChartableMixin;
 }
+
+namespace AsyncChartableMixin {
+  export interface AsyncChartableMixin
+    extends InstanceType<ReturnType<typeof AsyncChartableMixin>> {}
+  export function isMixedInto(model: any): model is AsyncChartableMixin {
+    return model && model.isChartable;
+  }
+}
+
+export default AsyncChartableMixin;

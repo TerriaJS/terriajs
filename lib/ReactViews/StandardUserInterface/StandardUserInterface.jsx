@@ -14,20 +14,22 @@ import FeatureInfoPanel from "../FeatureInfo/FeatureInfoPanel";
 import FeedbackForm from "../Feedback/FeedbackForm";
 import MapColumn from "./MapColumn";
 import MapInteractionWindow from "../Notification/MapInteractionWindow";
+import TrainerBar from "../Map/TrainerBar/TrainerBar";
 import MapNavigation from "../Map/MapNavigation";
 import MenuBar from "../Map/MenuBar";
 import ExperimentalFeatures from "../Map/ExperimentalFeatures";
 import MobileHeader from "../Mobile/MobileHeader";
 import Notification from "../Notification/Notification";
-// import ProgressBar from '../Map/ProgressBar';
+import ProgressBar from "../Map/ProgressBar";
 import SidePanel from "../SidePanel/SidePanel";
 import processCustomElements from "./processCustomElements";
 import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import StoryPanel from "./../Story/StoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 
-import SatelliteGuide from "../Guide/SatelliteGuide";
-// import WelcomeMessage from "../WelcomeMessage/WelcomeMessage";
+import TourPortal from "../Tour/TourPortal";
+import SatelliteHelpPrompt from "../HelpScreens/SatelliteHelpPrompt";
+import WelcomeMessage from "../WelcomeMessage/WelcomeMessage";
 
 import { Small, Medium } from "../Generic/Responsive";
 import classNames from "classnames";
@@ -40,6 +42,8 @@ import Styles from "./standard-user-interface.scss";
 import { observer } from "mobx-react";
 import { action, runInAction } from "mobx";
 import HelpPanel from "../Map/Panels/HelpPanel/HelpPanel";
+import Tool from "../Tool";
+import Disclaimer from "../Disclaimer";
 
 export const showStoryPrompt = (viewState, terria) => {
   terria.configParameters.showFeaturePrompts &&
@@ -48,6 +52,62 @@ export const showStoryPrompt = (viewState, terria) => {
     viewState.toggleFeaturePrompt("story", true);
 };
 const GlobalTerriaStyles = createGlobalStyle`
+  // Theme-ify sass classes until they are removed
+
+  // We override the primary, secondary, map and share buttons here as they
+  // are imported everywhere and used in various ways - until we remove sass
+  // this is the quickest way to tackle them for now
+  .tjs-_buttons__btn--map {
+    ${p => p.theme.addTerriaMapBtnStyles(p)}
+  }
+
+  .tjs-_buttons__btn-primary {
+    ${p => p.theme.addTerriaPrimaryBtnStyles(p)}
+  }
+
+  .tjs-_buttons__btn--secondary, 
+  .tjs-_buttons__btn--close-modal {
+    ${p => p.theme.addTerriaSecondaryBtnStyles(p)}
+  }
+
+  .tjs-_buttons__btn--tertiary {
+    ${p => p.theme.addTerriaTertiaryBtnStyles(p)}
+  }
+
+  .tjs-_buttons__btn-small:hover,
+  .tjs-_buttons__btn-small:focus {
+    color: ${p => p.theme.colorPrimary};
+  }
+
+  .tjs-share-panel__catalog-share-inner {
+    background: ${p => p.theme.greyLightest};
+  }
+  
+  .tjs-share-panel__btn--catalogShare {
+    color: ${p => p.theme.colorPrimary};
+    background:transparent;
+    svg {
+      fill: ${p => p.theme.colorPrimary};
+    }
+  }
+  .tjs-dropdown__btn--dropdown {
+    color: ${p => p.theme.textDark};
+    background: ${p => p.theme.textLight};
+    &:hover,
+    &:focus {
+      color: ${p => p.theme.textDark};
+      background: ${p => p.theme.textLight};
+      border: 1px solid ${p => p.theme.colorPrimary};
+    }
+    svg {
+      fill: ${p => p.theme.textDark};
+    }
+  }
+  .tjs-dropdown__btn--option.tjs-dropdown__is-selected {
+    color: ${p => p.theme.colorPrimary};
+  }
+
+
   ${props =>
     props.experimentalFeatures &&
     `
@@ -166,6 +226,7 @@ const StandardUserInterface = observer(
     render() {
       const { t } = this.props;
       const mergedTheme = combine(this.props.themeOverrides, terriaTheme, true);
+      const theme = mergedTheme;
 
       const customElements = processCustomElements(
         this.props.viewState.useSmallScreenInterface,
@@ -191,15 +252,31 @@ const StandardUserInterface = observer(
               this.props.terria.configParameters.experimentalFeatures
             }
           />
+          <TourPortal terria={terria} viewState={this.props.viewState} />
+          <SatelliteHelpPrompt
+            terria={terria}
+            viewState={this.props.viewState}
+          />
           <div className={Styles.storyWrapper}>
-            {/* <WelcomeMessage viewState={this.props.viewState} /> */}
+            <If condition={!this.props.viewState.disclaimerVisible}>
+              <WelcomeMessage viewState={this.props.viewState} />
+            </If>
             <div
               className={classNames(Styles.uiRoot, {
                 [Styles.withStoryBuilder]: showStoryBuilder
               })}
+              css={`
+                ${this.props.viewState.disclaimerVisible &&
+                  `filter: blur(10px);`}
+              `}
               ref={w => (this._wrapper = w)}
             >
-              <div className={Styles.ui}>
+              <div
+                className={Styles.ui}
+                css={`
+                  background: ${theme.dark};
+                `}
+              >
                 <div className={Styles.uiInner}>
                   <If condition={!this.props.viewState.hideMapUi()}>
                     <Small>
@@ -228,6 +305,10 @@ const StandardUserInterface = observer(
                         onClick={action(() => {
                           this.props.viewState.topElement = "SidePanel";
                         })}
+                        // TODO: debounce/batch
+                        onTransitionEnd={() =>
+                          this.props.viewState.triggerResizeEvent()
+                        }
                       >
                         <Branding
                           terria={terria}
@@ -243,6 +324,8 @@ const StandardUserInterface = observer(
                   <Medium>
                     <div
                       className={classNames(Styles.showWorkbenchButton, {
+                        [Styles.showWorkbenchButtonTrainerBarVisible]: this
+                          .props.viewState.trainerBarVisible,
                         [Styles.showWorkbenchButtonisVisible]: this.props
                           .viewState.isMapFullScreen,
                         [Styles.showWorkbenchButtonisNotVisible]: !this.props
@@ -260,7 +343,7 @@ const StandardUserInterface = observer(
                   </Medium>
 
                   <section className={Styles.map}>
-                    {/* <ProgressBar terria={terria}/> */}
+                    <ProgressBar terria={terria} />
                     <MapColumn
                       terria={terria}
                       viewState={this.props.viewState}
@@ -290,6 +373,12 @@ const StandardUserInterface = observer(
               </div>
 
               <If condition={!this.props.viewState.hideMapUi()}>
+                <Medium>
+                  <TrainerBar
+                    terria={terria}
+                    viewState={this.props.viewState}
+                  />
+                </Medium>
                 <div
                   className={classNames({
                     [Styles.explorerPanelIsVisible]: this.props.viewState
@@ -312,11 +401,17 @@ const StandardUserInterface = observer(
                 </div>
               </If>
 
+              <Medium>
+                {/* I think this does what the previous boolean condition does, but without the console error */}
+                <If condition={this.props.viewState.isToolOpen}>
+                  <Tool
+                    viewState={this.props.viewState}
+                    {...this.props.viewState.currentTool}
+                  />
+                </If>
+              </Medium>
+
               <Notification viewState={this.props.viewState} />
-              <SatelliteGuide
-                terria={terria}
-                viewState={this.props.viewState}
-              />
               <MapInteractionWindow
                 terria={terria}
                 viewState={this.props.viewState}
@@ -364,15 +459,17 @@ const StandardUserInterface = observer(
                 <StoryPanel terria={terria} viewState={this.props.viewState} />
               )}
             </div>
-            {this.props.terria.configParameters.storyEnabled && (
-              <StoryBuilder
-                isVisible={showStoryBuilder}
-                terria={terria}
-                viewState={this.props.viewState}
-                animationDuration={animationDuration}
-              />
-            )}
+            {this.props.terria.configParameters.storyEnabled &&
+              showStoryBuilder && (
+                <StoryBuilder
+                  isVisible={showStoryBuilder}
+                  terria={terria}
+                  viewState={this.props.viewState}
+                  animationDuration={animationDuration}
+                />
+              )}
             <HelpPanel terria={terria} viewState={this.props.viewState} />
+            <Disclaimer viewState={this.props.viewState} />
           </div>
         </ThemeProvider>
       );

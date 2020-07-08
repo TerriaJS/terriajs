@@ -136,6 +136,8 @@ export default class ChartCustomComponent extends CustomComponent {
     checkAllPropertyKeys(node.attribs, this.attributes);
 
     const attrs = parseNodeAttrs(node.attribs);
+    const csvString: any =
+      typeof children[0] == "string" ? children[0] : undefined;
     const chartElements = [];
     if (!attrs.hideButtons) {
       // Build expand/download buttons
@@ -146,11 +148,15 @@ export default class ChartCustomComponent extends CustomComponent {
             context.feature.id,
             source
           ].join(":");
-          const item = new CsvCatalogItem(id, context.terria);
+          const item = new CsvCatalogItem(id, context.terria, undefined);
           this.setTraitsFromAttrs(item, attrs, i);
+          if (csvString) {
+            item.setTrait(CommonStrata.user, "csvString", csvString);
+          }
           return item;
         }
       );
+
       chartElements.push(
         React.createElement(ChartExpandAndDownloadButtons, {
           key: "button",
@@ -166,8 +172,12 @@ export default class ChartCustomComponent extends CustomComponent {
     }
 
     // Build chart item to show in the info panel
-    const chartItem = new CsvCatalogItem(undefined, context.terria);
+    const chartItem = new CsvCatalogItem(undefined, context.terria, undefined);
     this.setTraitsFromAttrs(chartItem, attrs, 0);
+    if (csvString) {
+      chartItem.setTrait(CommonStrata.user, "csvString", csvString);
+    }
+
     chartElements.push(
       React.createElement(Chart, {
         key: "chart",

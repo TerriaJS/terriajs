@@ -1,0 +1,124 @@
+{
+  "currentVersion": 10.71,
+  "serviceDescription": "This map contains sample census data of the United States.\n\nThis is a sample service hosted by ESRI, powered by ArcGIS Server. ESRI reserves the right to change or remove this service at any time and without notice.",
+  "mapName": "Layers",
+  "description": "This service presents various population statistics from Census 2000, including total population, population density, racial counts, and more. The map service presents statistics at the state, county, block group, and block point levels.\n\nThis is a sample service hosted by ESRI, powered by ArcGIS Server. ESRI reserves the right to change or remove this service at any time and without notice.\n",
+  "copyrightText": "US Bureau of the Census: http://www.census.gov",
+  "supportsDynamicLayers": true,
+  "layers": [
+    {
+      "id": 0,
+      "name": "Census Block Points",
+      "parentLayerId": -1,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 99999.99998945338,
+      "maxScale": 0,
+      "type": "Feature Layer",
+      "geometryType": "esriGeometryPoint"
+    },
+    {
+      "id": 1,
+      "name": "Census Block Group",
+      "parentLayerId": -1,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 1000000,
+      "maxScale": 0,
+      "type": "Feature Layer",
+      "geometryType": "esriGeometryPolygon"
+    },
+    {
+      "id": 2,
+      "name": "Detailed Counties",
+      "parentLayerId": -1,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 0,
+      "maxScale": 0,
+      "type": "Feature Layer",
+      "geometryType": "esriGeometryPolygon"
+    },
+    {
+      "id": 3,
+      "name": "states",
+      "parentLayerId": -1,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 0,
+      "maxScale": 0,
+      "type": "Feature Layer",
+      "geometryType": "esriGeometryPolygon"
+    }
+  ],
+  "tables": [],
+  "spatialReference": {
+    "wkid": 4269,
+    "latestWkid": 4269
+  },
+  "singleFusedMapCache": false,
+  "initialExtent": {
+    "xmin": -198.45349142423788,
+    "ymin": 74.6395579647962,
+    "xmax": -46.40990543224093,
+    "ymax": 162.3196450943663,
+    "spatialReference": {
+      "wkid": 4269,
+      "latestWkid": 4269
+    }
+  },
+  "fullExtent": {
+    "xmin": -179.6191629086413,
+    "ymin": 17.881242000418013,
+    "xmax": -65.2442340001989,
+    "ymax": 71.40623536706858,
+    "spatialReference": {
+      "wkid": 4269,
+      "latestWkid": 4269
+    }
+  },
+  "minScale": 0,
+  "maxScale": 0,
+  "units": "esriDecimalDegrees",
+  "supportedImageFormatTypes": "PNG32,PNG24,PNG,JPG,DIB,TIFF,EMF,PS,PDF,GIF,SVG,SVGZ,BMP",
+  "documentInfo": {
+    "Title": "Census",
+    "Author": "ESRI",
+    "Comments": "This map contains sample census data of the United States.\n\nThis is a sample service hosted by ESRI, powered by ArcGIS Server. ESRI reserves the right to change or remove this service at any time and without notice.",
+    "Subject": "This map contains sample census data of the United States.",
+    "Category": "",
+    "AntialiasingMode": "None",
+    "TextAntialiasingMode": "Force",
+    "Keywords": "Census"
+  },
+  "capabilities": "Map,Query,Data",
+  "supportedQueryFormats": "JSON, geoJSON",
+  "exportTilesAllowed": false,
+  "datumTransformations": [
+    {
+      "geoTransforms": [
+        {
+          "wkid": 108001,
+          "latestWkid": 1241,
+          "transformForward": true,
+          "name": "NAD_1927_To_NAD_1983_NADCON"
+        }
+      ]
+    },
+    {
+      "geoTransforms": [
+        {
+          "wkid": 108001,
+          "latestWkid": 1241,
+          "transformForward": false,
+          "name": "NAD_1927_To_NAD_1983_NADCON"
+        }
+      ]
+    }
+  ],
+  "supportsDatumTransformation": true,
+  "maxRecordCount": 1000,
+  "maxImageHeight": 4096,
+  "maxImageWidth": 4096,
+  "supportedExtensions": "KmlServer"
+}

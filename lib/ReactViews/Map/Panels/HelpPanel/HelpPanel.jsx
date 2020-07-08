@@ -2,6 +2,7 @@ import classNames from "classnames";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
+import { runInAction } from "mobx";
 import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
 import Icon, { StyledIcon } from "../../../Icon.jsx";
@@ -30,6 +31,7 @@ class HelpPanel extends React.Component {
 
   render() {
     const { t } = this.props;
+    // const isVisible = this.props.viewState.showHelpMenu;
     const helpItems = this.props.terria.configParameters.helpContent;
     const isVisible =
       this.props.viewState.showHelpMenu &&
@@ -86,24 +88,33 @@ class HelpPanel extends React.Component {
           <Text medium textDark highlightLinks>
             {parseCustomMarkdownToReact(t("helpPanel.menuPaneBody"))}
           </Text>
-          {/* <Spacing bottom={5} />
+          <Spacing bottom={5} />
           <Box centered>
             <button
               className={Styles.tourBtn}
               title={"Take the tour"}
-              // onClick={}
+              onClick={() => {
+                runInAction(() => {
+                  this.props.viewState.hideHelpPanel();
+                  this.props.viewState.setTourIndex(0);
+                });
+              }}
+              css={`
+                ${p => p.theme.addTerriaPrimaryBtnStyles(p)}
+              `}
             >
               {" "}
               <Icon glyph={Icon.GLYPHS.tour} /> {"Take the tour"}{" "}
             </button>
-          </Box> */}
+          </Box>
         </Box>
         <Spacing bottom={10} />
-        <Box centered displayInlineBlock>
-          <Box displayInlineBlock>
+        <Box centered displayInlineBlock fullWidth>
+          <Box displayInlineBlock fullWidth>
             {helpItems && (
-              <For each="item" of={helpItems}>
+              <For each="item" index="i" of={helpItems}>
                 <HelpPanelItem
+                  key={i}
                   terria={this.props.terria}
                   viewState={this.props.viewState}
                   content={item}

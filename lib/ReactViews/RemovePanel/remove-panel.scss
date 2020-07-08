@@ -1,0 +1,49 @@
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
+.outer-div {
+  // needed to maintain width of panel to 100% of element
+  position: relative;
+  width: 100%;
+}
+
+.popup {
+  position: absolute;
+  border-radius: $radius-small;
+  background: $dark-with-overlay;
+  margin: $padding;
+  z-index: 100;
+  margin: $padding + $badge-height $padding $padding $padding;
+  box-shadow: $box-shadow;
+  width: calc(100% - $padding * 2);
+}
+
+.title {
+  margin: $padding 0px;
+}
+
+.inner {
+  position: relative;
+  color: $text-light;
+  padding: $padding-small $padding-small * 8;
+  p {
+    text-align: center;
+  }
+}
+
+.footer {
+  display: flex;
+  margin: $padding 0px;
+}
+
+.btn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../Sass/common/_buttons.scss";
+  &.delete {
+    margin-right: $padding-small;
+  }
+  &.cancel {
+    background: $grey-lighter;
+    margin-left: $padding-small;
+    color: $dark-with-overlay;
+  }
+}

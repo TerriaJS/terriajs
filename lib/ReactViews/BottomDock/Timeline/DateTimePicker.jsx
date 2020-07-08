@@ -44,7 +44,8 @@ const DateTimePicker = createReactClass({
     onOpen: PropTypes.func.isRequired,
     onClose: PropTypes.func.isRequired,
     showCalendarButton: PropTypes.bool,
-    dateFormat: PropTypes.string
+    dateFormat: PropTypes.string,
+    popupStyle: PropTypes.string
   },
 
   getDefaultProps() {
@@ -508,9 +509,12 @@ const DateTimePicker = createReactClass({
           )}
           {this.props.isOpen && (
             <div
-              className={classNames(Styles.datePicker, {
+              className={classNames(Styles.datePicker, this.props.popupStyle, {
                 [Styles.openBelow]: this.props.openDirection === "down"
               })}
+              css={`
+                background: ${p => p.theme.dark};
+              `}
             >
               <button
                 className={Styles.backbutton}

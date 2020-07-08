@@ -14,6 +14,7 @@ export interface MarkerDetails {
   name: string;
   location: { longitude: number; latitude: number; height?: number };
   heightReference?: "NONE" | "CLAMP_TO_GROUND" | "RELATIVE_TO_GROUND";
+  customMarkerIcon?: string;
 }
 /**
  * Adds a location marker to the map with the position supplied in the result, adding a data source to terria if one hasn't
@@ -33,8 +34,8 @@ export function addMarker(
   );
 
   const billboard: any = {
-    image: markerIcon,
-    scale: 0.5,
+    image: details.customMarkerIcon || markerIcon,
+    scale: details.customMarkerIcon ? 1 : 0.5,
     verticalOrigin: "BOTTOM",
     heightReference:
       details.heightReference ||

@@ -32,6 +32,7 @@ export default abstract class GlobeOrMap {
 
   private _removeHighlightCallback?: () => void;
   private _highlightPromise: Promise<void> | undefined;
+  private _tilesLoadingCountMax: number = 0;
   protected supportsPolylinesOnTerrain?: boolean;
 
   abstract destroy(): void;
@@ -84,6 +85,22 @@ export default abstract class GlobeOrMap {
     (<any>feature).coords = (<any>imageryFeature).coords;
 
     return feature;
+  }
+
+  /**
+   * Adds loading progress for cesium
+   */
+  protected _updateTilesLoadingCount(tilesLoadingCount: number): void {
+    if (tilesLoadingCount > this._tilesLoadingCountMax) {
+      this._tilesLoadingCountMax = tilesLoadingCount;
+    } else if (tilesLoadingCount === 0) {
+      this._tilesLoadingCountMax = 0;
+    }
+
+    this.terria.tileLoadProgressEvent.raiseEvent(
+      tilesLoadingCount,
+      this._tilesLoadingCountMax
+    );
   }
 
   /**

@@ -30,6 +30,7 @@ import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
 import CommonStrata from "./CommonStrata";
 import { SelectableDimension } from "./SelectableDimensions";
+import { BaseModel } from "./Model";
 
 interface GetFeatureOfInterestResponse {
   featureMember?: FeatureMember[] | FeatureMember;
@@ -86,6 +87,12 @@ StratumOrder.addLoadStratum(automaticTableStylesStratumName);
 class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
   constructor(readonly catalogItem: SensorObservationServiceCatalogItem) {
     super(catalogItem);
+  }
+
+  duplicateLoadableStratum(
+    newModel: SensorObservationServiceCatalogItem
+  ): this {
+    return new SosAutomaticStylesStratum(newModel) as this;
   }
 
   @computed
@@ -306,12 +313,12 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
   static readonly type = "sos";
   static defaultRequestTemplate = require("./SensorObservationServiceRequestTemplate.xml");
 
-  constructor(id: string | undefined, terria: Terria) {
-    super(id, terria);
-    this.initializeAutomaticStyleStratum();
-  }
-
-  initializeAutomaticStyleStratum() {
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel
+  ) {
+    super(id, terria, sourceReference);
     this.strata.set(
       automaticTableStylesStratumName,
       new SosAutomaticStylesStratum(this)
@@ -437,74 +444,79 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
       return [];
     }
 
-    const procedure = this.selectedProcedure!;
-    const observableProperty = this.selectedObservable!;
-    const datesCol = ["date"];
-    const valuesCol = ["values"];
-    const observationsCol = ["observations"];
-    const identifiersCol = ["identifiers"];
-    const proceduresCol = [this.proceduresName];
-    const observedPropertiesCol = [this.observablePropertiesName];
+    return runInAction(() => {
+      const procedure = this.selectedProcedure!;
+      const observableProperty = this.selectedObservable!;
+      const datesCol = ["date"];
+      const valuesCol = ["values"];
+      const observationsCol = ["observations"];
+      const identifiersCol = ["identifiers"];
+      const proceduresCol = [this.proceduresName];
+      const observedPropertiesCol = [this.observablePropertiesName];
 
-    const addObservationToColumns = (observation: Observation) => {
-      let points = observation?.result?.MeasurementTimeseries?.point;
-      if (!points) return;
-      if (!Array.isArray(points)) points = [points];
+      const addObservationToColumns = (observation: Observation) => {
+        let points = observation?.result?.MeasurementTimeseries?.point;
+        if (!points) return;
+        if (!Array.isArray(points)) points = [points];
 
-      var measurements = points.map(point => point.MeasurementTVP); // TVP = Time value pairs, I think.
-      var featureIdentifier = observation.featureOfInterest["xlink:href"] || "";
-      datesCol.push(
-        ...measurements.map(measurement =>
-          typeof measurement.time === "object" ? "" : measurement.time
-        )
-      );
-      valuesCol.push(
-        ...measurements.map(measurement =>
-          typeof measurement.value === "object" ? "" : measurement.value
-        )
-      );
-      identifiersCol.push(...measurements.map(_ => featureIdentifier));
-      proceduresCol.push(...measurements.map(_ => procedure.identifier || ""));
-      observedPropertiesCol.push(
-        ...measurements.map(_ => observableProperty.identifier || "")
-      );
-    };
+        var measurements = points.map(point => point.MeasurementTVP); // TVP = Time value pairs, I think.
+        var featureIdentifier =
+          observation.featureOfInterest["xlink:href"] || "";
+        datesCol.push(
+          ...measurements.map(measurement =>
+            typeof measurement.time === "object" ? "" : measurement.time
+          )
+        );
+        valuesCol.push(
+          ...measurements.map(measurement =>
+            typeof measurement.value === "object" ? "" : measurement.value
+          )
+        );
+        identifiersCol.push(...measurements.map(_ => featureIdentifier));
+        proceduresCol.push(
+          ...measurements.map(_ => procedure.identifier || "")
+        );
+        observedPropertiesCol.push(
+          ...measurements.map(_ => observableProperty.identifier || "")
+        );
+      };
 
-    let observationData = response.observationData;
-    observationData =
-      observationData === undefined || Array.isArray(observationData)
-        ? observationData
-        : [observationData];
-    if (!observationData) {
-      return [];
-    }
-
-    const observations = observationData.map(o => o.OM_Observation);
-    observations.forEach(observation => {
-      if (observation) {
-        addObservationToColumns(observation);
+      let observationData = response.observationData;
+      observationData =
+        observationData === undefined || Array.isArray(observationData)
+          ? observationData
+          : [observationData];
+      if (!observationData) {
+        return [];
       }
-    });
 
-    runInAction(() => {
-      // Set title for values column
-      const valueColumn = this.addObject(
-        CommonStrata.defaults,
-        "columns",
-        "values"
-      );
-      valueColumn?.setTrait(CommonStrata.defaults, "name", "values");
-      valueColumn?.setTrait(CommonStrata.defaults, "title", this.valueTitle);
-    });
+      const observations = observationData.map(o => o.OM_Observation);
+      observations.forEach(observation => {
+        if (observation) {
+          addObservationToColumns(observation);
+        }
+      });
 
-    return [
-      datesCol,
-      valuesCol,
-      observationsCol,
-      identifiersCol,
-      proceduresCol,
-      observedPropertiesCol
-    ];
+      runInAction(() => {
+        // Set title for values column
+        const valueColumn = this.addObject(
+          CommonStrata.defaults,
+          "columns",
+          "values"
+        );
+        valueColumn?.setTrait(CommonStrata.defaults, "name", "values");
+        valueColumn?.setTrait(CommonStrata.defaults, "title", this.valueTitle);
+      });
+
+      return [
+        datesCol,
+        valuesCol,
+        observationsCol,
+        identifiersCol,
+        proceduresCol,
+        observedPropertiesCol
+      ];
+    });
   }
 
   @computed

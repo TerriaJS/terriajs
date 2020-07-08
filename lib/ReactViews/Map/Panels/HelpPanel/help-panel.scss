@@ -66,16 +66,19 @@
 
 .tourBtn {
   composes: btn from "../../../../Sass/common/_buttons.scss";
-  color: $text-light;
+  // color: $text-light;
   font-size: $font-size-button;
   padding: $padding $padding * 2;
-  background-color: #519ac2;
+  // background-color: #519ac2;
   border-radius: $padding * 2;
 
+  min-width: 240px;
+  text-align: center;
+
   svg {
-    height: 20px;
-    width: 20px;
-    fill: $faint-bg;
+    height: 18px;
+    width: 18px;
+    // fill: $faint-bg;
     vertical-align: bottom;
     display: inline-block;
     margin-right: 5px;

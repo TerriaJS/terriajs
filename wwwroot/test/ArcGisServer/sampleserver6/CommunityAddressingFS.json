@@ -1,0 +1,94 @@
+{
+  "currentVersion": 10.71,
+  "serviceDescription": "The Community Addressing Map has been authored for the Address Crowdsourcing app and is used by citizens to submit proposed addresses / contact information.",
+  "hasVersionedData": false,
+  "hasArchivedData": false,
+  "supportsDisconnectedEditing": false,
+  "supportsQueryDataElements": true,
+  "supportsRelationshipsResource": true,
+  "syncEnabled": false,
+  "supportedQueryFormats": "JSON",
+  "maxRecordCount": 1000,
+  "maxRecordCountFactor": 1,
+  "capabilities": "Query,Create,Update,Uploads,Editing",
+  "description": "The Community Addressing Map has been authored for the Address Crowdsourcing app and is used by citizens to submit proposed addresses / contact information.",
+  "copyrightText": "City of Naperville, Esri., Inc.",
+  "spatialReference": {
+    "wkid": 102100,
+    "latestWkid": 3857
+  },
+  "initialExtent": {
+    "xmin": -9809977.594494058,
+    "ymin": 5131223.450303232,
+    "xmax": -9807907.225769984,
+    "ymax": 5132417.384982768,
+    "spatialReference": {
+      "wkid": 102100,
+      "latestWkid": 3857
+    }
+  },
+  "fullExtent": {
+    "xmin": -9817914.645231755,
+    "ymin": 5125487.091745195,
+    "xmax": -9807183.069456216,
+    "ymax": 5130803.929293123,
+    "spatialReference": {
+      "wkid": 102100,
+      "latestWkid": 3857
+    }
+  },
+  "allowGeometryUpdates": true,
+  "allowTrueCurvesUpdates": false,
+  "onlyAllowTrueCurveUpdatesByTrueCurveClients": true,
+  "supportsApplyEditsWithGlobalIds": false,
+  "supportsTrueCurve": true,
+  "units": "esriMeters",
+  "documentInfo": {
+    "Title": "Community Addressing",
+    "Author": "Esri., Inc.",
+    "Comments": "The Community Addressing Map has been authored for the Address Crowdsourcing app and is used by citizens to submit proposed addresses / contact information.",
+    "Subject": "This map document has been authored for the Address Crowdsourcing app and is used by citizens to submit proposed addresses / contact information.",
+    "Category": "",
+    "Keywords": "Local Government,Public Safety,Addresses,Roads,Facilities,Land Records,Water Utlilities"
+  },
+  "supportsQueryDomains": true,
+  "layers": [
+    {
+      "id": 0,
+      "name": "Community Addresses",
+      "parentLayerId": -1,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 12500.000000010317,
+      "maxScale": 0,
+      "type": "Feature Layer",
+      "geometryType": "esriGeometryPoint"
+    }
+  ],
+  "tables": [],
+  "relationships": [],
+  "enableZDefaults": false,
+  "allowUpdateWithoutMValues": false,
+  "datumTransformations": [
+    {
+      "geoTransforms": [
+        {
+          "wkid": 108001,
+          "latestWkid": 1241,
+          "transformForward": true,
+          "name": "NAD_1927_To_NAD_1983_NADCON"
+        }
+      ]
+    },
+    {
+      "geoTransforms": [
+        {
+          "wkid": 108001,
+          "latestWkid": 1241,
+          "transformForward": false,
+          "name": "NAD_1927_To_NAD_1983_NADCON"
+        }
+      ]
+    }
+  ]
+}

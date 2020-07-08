@@ -4,7 +4,27 @@
     "open": "Open",
     "prev": "Prev",
     "next": "Next",
-    "skip": "Skip"
+    "skip": "Skip",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "back": "Back"
+  },
+  "trainer": {
+    "expandTrainer": "Show more step detail",
+    "collapseTrainer": "Hide step detail",
+    "showAllSteps": "Show all steps",
+    "hideAllSteps": "Hide all steps"
+  },
+  "tour": {
+    "preface": {
+      "title": "Take the tour",
+      "content": "Unsure of where to begin? Take a quick tour of the main features of our software, and learn about some of the key functions to help you get on your way.",
+      "close": "Maybe later",
+      "start": "Start tour"
+    },
+    "end": "End tour",
+    "finish": "Finish",
+    "previous": "Previous"
   },
   "measure": {
     "measureTool": "Measure Tool",
@@ -55,6 +75,47 @@
     "btnRealign": "toggle manual alignment",
     "btnResetRealign": "reset compass alignment"
   },
+  "tool": {
+    "closeButtonTitle": "Close {{toolName}} Tool",
+    "loadingError": {
+      "title": "Error Loading {{toolName}} Tool",
+      "message": "An error occurred while trying to load the this tool from the server. Please try again."
+    }
+  },
+  "diffTool": {
+    "title": "Difference",
+    "exit": "Exit",
+    "computeDifference": "This layer visualizes the difference between imagery captured at two discrete points in time.",
+    "styles": "Styles",
+    "choosePreview": "Choose a preview style",
+    "chooseDifference": "Choose a difference style",
+    "disabledButtonPrompt": "Select a precise location and difference style to proceed with change detection.",
+    "differenceResultsTitle": "Change detection results",
+    "locationPicker": {
+      "initialMessages": {
+        "title": "Select a precise location",
+        "beforePick": "We need this to run our change detection process.",
+        "afterPick": "Click another point to change the selected region"
+      },
+      "nextMessages": {
+        "title": "You have selected the location {{latitude}} {{longitude}}",
+        "beforePick": "Click another point to change the selection",
+        "afterPick": "Click another point to change the selection"
+      },
+      "errorMessages": {
+        "title": "Select a precise location",
+        "beforePick": "Failed to resolve imagery at location! Please choose a different location or zoom-level.",
+        "afterPick": "Click another point to change the selection"
+      }
+    },
+    "datePicker": {
+      "previousDateTitle": "Previous date",
+      "nextDateTitle": "Previous date",
+      "dateButtonTitle": "Select a date",
+      "dateOutOfRange": "Currently out of range"
+    },
+    "generateDiffButtonText": "Generate change detection"
+  },
   "legend": {
     "lat": "Lat",
     "lon": "Lon",
@@ -78,8 +139,10 @@
     "embedTitle": "To embed, copy this code to embed this map into an HTML page:",
     "shortenUsingService": "Shorten the share URL using a web service",
     "btnCatalogShareText": "Share",
+    "btnStoryShareText": "Share",
     "btnMapShareText": "Share / Print",
     "btnCatalogShareTitle": "Share your catalogue with others",
+    "btnStoryShareTitle": "Share your story with others",
     "btnMapShareTitle": "Share your map with others"
   },
   "countDatasets": {
@@ -90,7 +153,12 @@
     "subTotals": "<div> {{name}}: {{items}} items / {{groups}} groups</div>",
     "recount": "Recount",
     "title": "Count Datasets",
-    "btnCount": "Count datasets"
+    "btnCount": "Count datasets",
+    "enabledOnMap": "enabled on map",
+    "noMapDataEnabled": "No map data enabled",
+    "datasetSingular": "dataset",
+    "datasetPlural": "datasets",
+    "mapDataState": "{{numberOfDatasets}} {{singularOrPlural}} $t(countDatasets.enabledOnMap)"
   },
   "toolsPanel": {
     "btnText": "Tool",
@@ -137,7 +205,9 @@
   },
   "helpPanel": {
     "menuPaneTitle": "We're here to help",
-    "menuPaneBody": "Find useful tips on how to use TerriaJS by either checking the guides below or by contacting the team at [info@terria.io](mailto:info@terria.io)"
+    "menuPaneBody": "Find useful tips on how to use TerriaJS by either checking the guides below or by contacting the team at [info@terria.io](mailto:info@terria.io)",
+    "promptMessage": "Find the Tour, how-to videos & other help content here",
+    "dismissText": "Got it, thanks!"
   },
   "helpMenu": {
     "btnText": "Help",
@@ -180,11 +250,12 @@
     "latLon": "Lat / Lon "
   },
   "welcomeMessage": {
-    "title": "Spatial data made <2>easy.</2>",
-    "WelcomeMessage": "Access rich spatial data from multiple data sources, all from one convenient location.",
-    "WelcomeMessagePrimaryBtn": "Explore Data",
-    "WelcomeMessageSecondaryBtn": "Take a tour",
-    "WelcomeMessageDissmissText": "Don't show me this again"
+    "title": "Let's get you started",
+    "welcomeMessage": "Interested in data discovery and exploration?<br/>Dive right in and get started or check the following help guide options.",
+    "tourBtnText": "Take the tour",
+    "helpBtnText": "I'll need some help",
+    "exploreDataBtnText": "Explore map data",
+    "dismissText": "Close message and don't show me this again"
   },
   "story": {
     "viewStory": "view",
@@ -199,6 +270,10 @@
     "doesNotExist": "Story does not exist",
     "message": "<2>This is your story editor</2><1>Create and share interactive stories directly from your map<1><0><0></0>Getting Started </0></1></1>",
     "removeAllStories": "Remove All",
+    "removeStoriesPanel": "Are you sure you wish to delete {{ count }} scene?",
+    "removeStoriesPanel_plural": "Are you sure you wish to delete {{ count }} scenes?",
+    "confirmRemove": "Delete",
+    "cancelRemove": "Cancel",
     "preview": "preview stories",
     "play": "Play Story",
     "captureSceneTitle": "capture current scene",
@@ -221,7 +296,9 @@
     "promptHtml2": "<0><0>INTRODUCING</0><1>Data Stories</1><2>Create and share interactive stories directly from your map.</2></0>",
     "story": "Story",
     "dismissText": "Got it, thanks!",
-    "mobileViewStory": "View Stories {{storiesLength}}"
+    "mobileViewStory": "View Stories {{storiesLength}}",
+    "storyEditor": "Story Editor",
+    "hideStoryPanel": "hide story builder"
   },
   "satelliteGuidance": {
     "menuTitle": "You can access map guides at any time by looking in the <0>help menu</0>.",
@@ -296,6 +373,7 @@
     "resourceDescription": "Resource Description",
     "licence": "Licence",
     "accessConstraints": "Access Constraints",
+    "fees": "Fees",
     "author": "Author",
     "contact": "Contact",
     "created": "Created",
@@ -343,6 +421,8 @@
     "previewItem": "About Data",
     "splitItemTitle": "Duplicate and show splitter",
     "splitItem": "Compare",
+    "diffImageTitle": "View image differences between two dates",
+    "diffImage": "Difference",
     "exportDataTitle": "Export map data",
     "exportData": "Export",
     "removeFromMapTitle": "Remove this data",
@@ -415,8 +495,9 @@
   "emptyWorkbench": {
     "emptyArea": "Your workbench is empty",
     "helpfulHints": "Helpful hints",
-    "helpfulHintsOne": "All your active data sets will be listed here.",
-    "helpfulHintsTwo": "<0>Click <1>'$t(addData.addDataBtnText)'</1> above to browse the Data Catalogue or click <1>'$t(models.catalog.upload)'</1> to load your own data onto the map.</0>"
+    "helpfulHintsOne": "Browse available data by selecting ‘Explore map data’ or click ‘Upload’ to add your own data to the map.",
+    "helpfulHintsTwo": "Once you’ve added data to the map, your active data sets are listed here in your workbench. The workbench will help you to interact with the data.",
+    "helpfulHintsThree": "In the workbench you can toggle data sets on and off, change their opacity, activate the split screen comparison, change styles, and navigate through dates and times, if the data supports this functionality."
   },
   "dataCatalog": {
     "groupRemove": "remove this group",
@@ -478,6 +559,9 @@
     "selectExistingPolygon": "Select existing polygon"
   },
   "core": {
+    "errors": {
+      "tooDeepAddedByUser": "Reached 100 catalog items when checking addedByUser and landing on ID: \"{{memberId}}\"? Check that you haven't got a recursive catalog group."
+    },
     "userAddedData": "User-Added Data",
     "chartData": "Chart Data",
     "dataUri": {
@@ -494,12 +578,14 @@
       "esri-featureServer": "Esri ArcGIS FeatureServer (single layer)",
       "open-street-map": "Open Street Map Server",
       "geojson": "GeoJSON",
+      "geoRss": "GeoRSS",
       "kml": "KML or KMZ",
       "csv": "CSV",
       "czml": "CZML",
       "gpx": "GPX",
       "json": "JSON",
       "carto": "Carto",
+      "gltf": "GLTF",
       "other": "Other (use conversion service)"
     },
     "printWindow": {
@@ -557,6 +643,12 @@
       "missingExteriorRing": "GML polygon is missing its exterior ring.",
       "missingPosList": "GML polygon's exterior ring is missing a posList.",
       "containsUnsupportedFeatureType": "GML contains unsupported feature type: {{type}}"
+    },
+    "geoRssToGeoJson": {
+      "containsUnsupportedFeatureType": "GeoRSS contains unsupported feature type: {{type}}"
+    },
+    "w3cToGeoJson": {
+      "containsUnsupportedFeatureType": "GeoRSS with W3C geometry contains unsupported feature type: {{type}}"
     },
     "gnafAddressGeocoder": {
       "noAddresses": "This tableStructure has no addresses!",
@@ -649,6 +741,9 @@
     },
     "arcGisMapServerCatalogGroup": {
       "name": "ArcGIS Map Server Group",
+      "dataDescription": "Data Description",
+      "serviceDescription": "Service Description",
+      "copyrightText": "Copyright Text",
       "invalidServiceTitle": "Invalid ArcGIS Map Service",
       "invalidServiceMessage": "An error occurred while invoking the ArcGIS Map Service.  The server's response does not appear to be a valid Map Service document. <p>If you entered the link manually, please verify that the link is correct.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
       "groupNotAvailableTitle": "Group is not available",
@@ -670,6 +765,7 @@
     },
     "wcs": {
       "asyncResultDescription": "This is the result of exporting data from {{name}} service at {{timestamp}} with the input parameters below.",
+      "asyncPendingDescription": "WCS loading:<br/>{{name}} service at {{timestamp}}.",
       "exportFailedTitle": "Data export failed",
       "exportFailedMessage": "The Web Coverage Service failed",
       "exportFailedMessageII": "The Web Coverage Service failed: {{error}}"
@@ -688,7 +784,7 @@
       "errorRenderingMessage": "<p>An error occurred while rendering in 3D.  This probably indicates a bug in {{appName}} or an incompatibility with your system or web browser.  We'll now switch you to 2D so that you can continue your work. We would appreciate it if you report this error by sending an email to {{email}} with the technical details below.  Thank you!</p>"
     },
     "ckan": {
-      "nameServer": "ckanServer",
+      "nameServer": "CKAN Server",
       "errorLoadingTitle": "Error loading CKAN catalogue",
       "errorLoadingMessage": "The definition for this CKAN catalogue does not have a valid filter query.",
       "corsErrorMessage": "Couldn't retrieve packages from this CKAN server.<br/><br/>If you entered the URL manually, please double-check it.<br/><br/>If it's your server, make sure {{corsLink}} is enabled.<br/><br/> Otherwise, if reloading doesn't fix it, please report the problem by sending an email to {{email}} with the technical details below.  Thank you!<br/><br/>",
@@ -698,6 +794,7 @@
       "datasetDescription": "Dataset Description",
       "dataDescription": "Data Description",
       "resourceDescription": "Resource Description",
+      "datasetCustodian": "Dataset Custodian",
       "licence": "Licence",
       "author": "Author",
       "contact_point": "Contact",
@@ -725,6 +822,7 @@
       "chartDataGroup": "A group for chart data.",
       "dataSourceErrorMessage": "This data source does not have any details available.",
       "serviceErrorMessage": "This service does not have any details available.",
+      "stubCreationFailure": "Could not stub out catalog item {{item}}",
       "unsupportedTypeTitle": "Unknown type",
       "unsupportedTypeMessage": "Could not create unknown model type {{type}}.",
       "unsupportedFileTypeTitle": "Unsupported file type",
@@ -877,6 +975,9 @@
     },
     "mapboxVectorTile": {
       "name": "Mapbox Vector Tile"
+    },
+    "mapboxStyle": {
+      "name": "Mapbox Style"
     },
     "senaps": {
       "name": "Senaps Locations",
@@ -1073,7 +1174,10 @@
       "groupNotAvailableTitle": "Group is not available",
       "groupNotAvailableMessage": "An error occurred while invoking GetCapabilities on the WMS server. <p>If you entered the link manually, please verify that the link is correct.</p> <p>This error may also indicate that the server does not support <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' Map team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by '{{appName}}' itself.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection. Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
       "missingUrlTitle": "Unable to load GetCapabilities",
-      "missingUrlMessage": "Could not load the Web Map Service (WMS) GetCapabilities document because the catalog item does not have a `url`."
+      "missingUrlMessage": "Could not load the Web Map Service (WMS) GetCapabilities document because the catalog item does not have a `url`.",
+      "abstract": "Web Map Service Description",
+      "accessConstraints": "Web Map Service Access Constraints",
+      "fees": "Web Map Service Fees"
     },
     "webMapServiceCatalogItem": {
       "wms": "Web Map Service (WMS)",
@@ -1141,6 +1245,28 @@
     "commonModelErrors": {
       "datasetScaleErrorTitle": "Dataset will not be shown at this scale",
       "datasetScaleErrorMessage": "The {{name}} dataset will not be shown when zoomed in this close to the map because the data custodian has indicated that the data is not intended or suitable for display at this scale.  Click the dataset's Info button on the Now Viewing tab for more information about the dataset and the data custodian."
+    }
+  },
+  "deltaTool": {
+    "titlePrefix": "Change Detection",
+    "description": "This tool visualizes the difference between imagery captured at two discrete points in time.",
+    "pickLocation": "To view available imagery, please select your location of interest on the map opposite.",
+    "cancelBtn": "Cancel",
+    "generateDeltaBtn": "Generate Difference Map",
+    "selectedLocation": "Selected Location",
+    "primaryImage": "Primary Image",
+    "secondaryImage": "Secondary Image",
+    "pickerMessage": {
+      "pickFirst": "Select a point by clicking on the map",
+      "pickAnother": "Click another point to change the selection",
+      "pickError": "Error when trying to resolve imagery at location! Please select a point again by clicking on the map."
+    },
+    "catalogItem": {
+      "description": "This layer visualizes the difference between imagery captured at two discrete points in time"
+    },
+    "loadingError": {
+      "title": "Error loading Delta Tool",
+      "message": "An error occurred while trying to load the delta tool from the server. Please try again."
     }
   }
 }

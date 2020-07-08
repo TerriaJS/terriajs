@@ -1,32 +1,46 @@
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import PickedFeatures from "../Map/PickedFeatures";
 import { observable } from "mobx";
+import ViewState from "../ReactViewModels/ViewState";
+
+export enum UIMode {
+  Difference
+}
 
 interface Options {
-  onCancel: () => void;
+  onCancel?: () => void;
   message: string;
+  messageAsNode?: React.ReactNode;
   customUi?: () => unknown;
   buttonText?: string;
-  drawRectangle?: boolean;
+  // drawRectangle?: boolean;
+  uiMode?: UIMode; // diff tool hack for now
+  onEnable?: (viewState: ViewState) => void;
 }
 
 /**
  * A mode for interacting with the map.
  */
 export default class MapInteractionMode {
-  readonly onCancel: () => void;
+  readonly onCancel?: () => void;
 
   readonly buttonText: string;
-  readonly drawRectangle: boolean;
+  // readonly drawRectangle: boolean;
+  readonly uiMode: UIMode;
 
   @observable
-  customUi: (() => unknown) | undefined;
+  customUi: (() => any) | undefined;
 
   @observable
   message: () => string;
 
   @observable
+  messageAsNode: () => React.ReactNode;
+
+  @observable
   pickedFeatures?: PickedFeatures;
+
+  onEnable?: (viewState: ViewState) => void;
 
   constructor(options: Options) {
     /**
@@ -51,6 +65,13 @@ export default class MapInteractionMode {
     };
 
     /**
+     * Gets or sets the react node displayed on the map when in this mode.
+     */
+    this.messageAsNode = function() {
+      return options.messageAsNode;
+    };
+
+    /**
      * Set the text of the button for the dialog the message is displayed on.
      */
     this.buttonText = defaultValue(options.buttonText, "Cancel");
@@ -61,8 +82,15 @@ export default class MapInteractionMode {
     this.pickedFeatures = undefined;
 
     /**
+     * Gets or sets whether to use the diff tool UI+styles
+     */
+    this.uiMode = defaultValue(options.uiMode, undefined);
+
+    /**
      * Determines whether a rectangle will be requested from the user rather than a set of pickedFeatures.
      */
-    this.drawRectangle = defaultValue(options.drawRectangle, false);
+    // this.drawRectangle = defaultValue(options.drawRectangle, false);
+
+    this.onEnable = options.onEnable;
   }
 }

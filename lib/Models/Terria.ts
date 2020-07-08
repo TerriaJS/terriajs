@@ -36,6 +36,8 @@ import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
+import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
+import { defaultTerms, Term } from "../ReactViewModels/defaultTerms";
 import CameraView from "./CameraView";
 import CatalogGroup from "./CatalogGroupNew";
 import CatalogMemberFactory from "./CatalogMemberFactory";
@@ -57,6 +59,7 @@ import Workbench from "./Workbench";
 import openGroup from "./openGroup";
 import getDereferencedIfExists from "../Core/getDereferencedIfExists";
 import SplitItemReference from "./SplitItemReference";
+// import overrides from "../Overrides/defaults.jsx";
 
 interface ConfigParameters {
   [key: string]: ConfigParameters[keyof ConfigParameters];
@@ -87,7 +90,12 @@ interface ConfigParameters {
   locationSearchBoundingBox?: number[];
   googleAnalyticsKey?: string;
   rollbarAccessToken?: string;
-  helpContent?: any[];
+  globalDisclaimer?: any;
+  showWelcomeMessage?: boolean;
+  welcomeMessageVideo?: any;
+  showInAppGuides?: boolean;
+  helpContent?: HelpContentItem[];
+  helpContentTerms?: Term[];
 }
 
 interface StartOptions {
@@ -124,10 +132,12 @@ export default class Terria {
 
   readonly baseUrl: string = "build/TerriaJS/";
   readonly error = new CesiumEvent();
+  readonly tileLoadProgressEvent = new CesiumEvent();
   readonly workbench = new Workbench();
   readonly overlays = new Workbench();
   readonly catalog = new Catalog(this);
   readonly timelineClock = new Clock({ shouldAnimate: false });
+  // readonly overrides: any = overrides; // TODO: add options.functionOverrides like in master
 
   @observable
   readonly mainViewer = new TerriaViewer(
@@ -195,7 +205,17 @@ export default class Terria {
     locationSearchBoundingBox: undefined,
     googleAnalyticsKey: undefined,
     rollbarAccessToken: undefined,
-    helpContent: []
+    globalDisclaimer: undefined,
+    showWelcomeMessage: false,
+    welcomeMessageVideo: {
+      videoTitle: "Getting started with the map",
+      videoUrl: "https://www.youtube.com/embed/FjSxaviSLhc",
+      placeholderImage:
+        "https://img.youtube.com/vi/FjSxaviSLhc/maxresdefault.jpg"
+    },
+    showInAppGuides: false,
+    helpContent: [],
+    helpContentTerms: defaultTerms
   };
 
   @observable
