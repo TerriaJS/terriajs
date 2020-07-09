@@ -9,11 +9,11 @@
   padding-right: 5px;
   font-family: $font-base;
 
-  @media (max-width: $mobile) {
-    position: fixed;
-    bottom: 0px;
-    background: $dark;
-  }
+  // @media (max-width: $mobile) {
+  //   position: fixed;
+  //   bottom: 0px;
+  //   background: $dark;
+  // }
 }
 
 .text-row {
@@ -26,9 +26,9 @@
   // background: $dark;
   padding: 3px 5px;
 
-  @media (max-width: $mobile) {
-    position: fixed;
-  }
+  // @media (max-width: $mobile) {
+  //   position: fixed;
+  // }
 }
 
 .text-cell {

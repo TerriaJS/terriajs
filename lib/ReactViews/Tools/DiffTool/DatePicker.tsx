@@ -7,16 +7,17 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import CommonStrata from "../../../Models/CommonStrata";
 import { formatDateTime } from "../../BottomDock/Timeline/DateFormats";
-import Icon from "../../Icon";
+import Icon, { StyledIcon } from "../../Icon";
 
 const DateTimePicker = require("../../../ReactViews/BottomDock/Timeline/DateTimePicker.jsx");
 const dateFormat = require("dateformat");
 const Box: any = require("../../../Styled/Box").default;
 const Text: any = require("../../../Styled/Text").default;
 const Button: any = require("../../../Styled/Button").default;
+const Spacing: any = require("../../../Styled/Spacing").default;
 
 interface PropsType extends WithTranslation {
-  title: string;
+  heading: string;
   item: DiffableMixin.Instance;
   popupStyle: string;
   externalOpenButton: React.RefObject<HTMLButtonElement>;
@@ -116,12 +117,22 @@ class DatePicker extends React.Component<PropsType> {
   }
 
   render() {
-    const { title, item, t } = this.props;
+    const { heading, item, t } = this.props;
     return (
-      <Box column centered>
-        <Text textLight semiBold>
-          {title}
-        </Text>
+      <Box column centered flex={1}>
+        <Box centered>
+          <StyledIcon
+            light
+            styledWidth="21px"
+            glyph={Icon.GLYPHS.calendar2}
+            css={"margin-top:-2px;"}
+          />
+          <Spacing right={2} />
+          <Text textLight extraLarge>
+            {heading}
+          </Text>
+        </Box>
+        <Spacing bottom={2} />
         <Box>
           <PrevButton
             disabled={item.isPreviousDiscreteTimeAvailable === false}

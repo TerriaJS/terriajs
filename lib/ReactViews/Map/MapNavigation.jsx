@@ -59,11 +59,7 @@ class MapNavigation extends React.Component {
 
     return (
       <StyledMapNavigation
-        className={classNames(Styles.mapNavigation, {
-          [Styles.withTimeSeriesControls]: defined(
-            this.props.terria.timelineStack.top
-          )
-        })}
+        className={classNames(Styles.mapNavigation)}
         trainerBarVisible={viewState.trainerBarVisible}
       >
         <Box centered column justifySpaceBetween fullHeight alignItemsFlexEnd>
