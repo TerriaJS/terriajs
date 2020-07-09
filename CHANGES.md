@@ -13,6 +13,8 @@ Change Log
 * Added file upload support for `GltfCatalogItem`. The supported extension is glb.
 * Improve runtime themeing via styled components across main UI components
 * Updated default welcome video defaults to a newer, slower video
+* Update date picker to use theme colours
+* Removed some sass overrides on `Select` through `StyleSelectorSection`
 
 #### mobx-36
 * Added `pointer-events` to `MapNavigation` and `MenuBar` elements, so the bar don't block mouse click outside of the button.

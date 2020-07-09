@@ -2,7 +2,6 @@
 
 import React from "react";
 import { observer } from "mobx-react";
-const Icon = require("../../Icon");
 import Styles from "./dimension-selector-section.scss";
 import CommonStrata from "../../../Models/CommonStrata";
 import { runInAction } from "mobx";
@@ -10,6 +9,7 @@ import SelectableDimensions, {
   SelectableDimension
 } from "../../../Models/SelectableDimensions";
 import Select from "../../../Styled/Select";
+import { Box } from "../../../Styled/Box";
 
 @observer
 export default class DimensionSelectorSection extends React.Component<{
@@ -40,34 +40,37 @@ export default class DimensionSelectorSection extends React.Component<{
     );
 
     return (
-      <div className={Styles.dimensionSelector}>
+      <div>
         {selectableDimensions.map(dim => (
-          <div key={dim.id} className={Styles.dimensionSelector}>
+          <div key={dim.id}>
             <label className={Styles.title} htmlFor={dim.name || dim.id}>
               {dim.name || dim.id}
             </label>
-            <Select
-              name={dim.id}
-              value={
-                typeof dim.selectedId === "undefined"
-                  ? "__undefined__"
-                  : dim.selectedId
-              }
-              onChange={this.setDimensionValue.bind(this, dim)}
-            >
-              {/* If no value as been selected -> add option */}
-              {(typeof dim.selectedId === "undefined" ||
-                dim.allowUndefined) && (
-                <option key="__undefined__" value="">
-                  Not specified
-                </option>
-              )}
-              {dim.options.map(option => (
-                <option key={option.id} value={option.id}>
-                  {option.name || option.id}
-                </option>
-              ))}
-            </Select>
+            <Box>
+              <Select
+                light
+                name={dim.id}
+                value={
+                  typeof dim.selectedId === "undefined"
+                    ? "__undefined__"
+                    : dim.selectedId
+                }
+                onChange={this.setDimensionValue.bind(this, dim)}
+              >
+                {/* If no value as been selected -> add option */}
+                {(typeof dim.selectedId === "undefined" ||
+                  dim.allowUndefined) && (
+                  <option key="__undefined__" value="">
+                    Not specified
+                  </option>
+                )}
+                {dim.options.map(option => (
+                  <option key={option.id} value={option.id}>
+                    {option.name || option.id}
+                  </option>
+                ))}
+              </Select>
+            </Box>
           </div>
         ))}
       </div>
