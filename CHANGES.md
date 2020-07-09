@@ -3,12 +3,11 @@ Change Log
 
 ### MobX Development
 
-#### mobx-next-release (mobx-30)
+#### next release (7.11.5-mobx-35)
+#### next release (mobx-37)
 * Added option for manual Table region mapping - with `enableManualRegionMapping` TableTrait. This provides `SelectableDimensions` for the region column and region type.
 * Added WMS Dimensions (using `SelectableDimensions`)
 * Merged the `StyleSelector` and `DimensionsSelector`, and created a `SelectableDimensions` interface.
-#### next release (7.11.5-mobx-35)
-#### next release (mobx-37)
 * Add `header` option to `loadText`
 * Add `isMixtedInto` function for `AsyncMappableMixin` and `AsyncChartableMixin`
 * Added file upload support for `GltfCatalogItem`. The supported extension is glb.
