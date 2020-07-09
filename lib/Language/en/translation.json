@@ -97,6 +97,8 @@
     "labels": {
       "area": "Area",
       "dates": "Dates",
+      "dateComparisonA": "Date Comparison A",
+      "dateComparisonB": "Date Comparison B",
       "sourceDataset": "Source dataset",
       "previewStyle": "Preview style",
       "differenceOutput": "Difference output",

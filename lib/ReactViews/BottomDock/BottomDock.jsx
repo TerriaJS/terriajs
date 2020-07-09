@@ -56,6 +56,7 @@ const BottomDock = observer(
           <If condition={top}>
             <Timeline terria={terria} />
           </If>
+          <div id="TJS-BottomDockPortalForTool" />
         </div>
       );
     }

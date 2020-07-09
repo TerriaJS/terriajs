@@ -4,6 +4,7 @@ import { action, computed, observable, reaction, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { IDisposer } from "mobx-utils";
 import React, { useState } from "react";
+import ReactDOM from "react-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, useTheme, withTheme } from "styled-components";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
@@ -681,28 +682,36 @@ class Main extends React.Component<MainPropsType> {
             onPicked={this.onUserPickLocation}
           />
         )}
-        {!isShowingDiff && (
-          <BottomPanel>
-            <DatePicker
-              title="Date Comparison A"
-              item={this.props.leftItem}
-              popupStyle={Styles.leftDatePickerPopup}
-              externalOpenButton={this.openLeftDatePickerButton}
-              onDateSet={() => this.showItem(this.props.leftItem)}
-            />
-            <AreaFilterSelection
-              location={this.location}
-              isPickingNewLocation={this._isPickingNewLocation}
-            />
-            <DatePicker
-              title="Date Comparison B"
-              item={this.props.rightItem}
-              popupStyle={Styles.rightDatePickerPopup}
-              externalOpenButton={this.openRightDatePickerButton}
-              onDateSet={() => this.showItem(this.props.rightItem)}
-            />
-          </BottomPanel>
-        )}
+        {!isShowingDiff &&
+          ReactDOM.createPortal(
+            // Bottom Panel
+            <Box
+              centered
+              fullWidth
+              styledHeight="115px"
+              backgroundColor={theme.dark}
+            >
+              <DatePicker
+                heading={t("diffTool.labels.dateComparisonA")}
+                item={this.props.leftItem}
+                popupStyle={Styles.leftDatePickerPopup}
+                externalOpenButton={this.openLeftDatePickerButton}
+                onDateSet={() => this.showItem(this.props.leftItem)}
+              />
+              <AreaFilterSelection
+                location={this.location}
+                isPickingNewLocation={this._isPickingNewLocation}
+              />
+              <DatePicker
+                heading={t("diffTool.labels.dateComparisonA")}
+                item={this.props.rightItem}
+                popupStyle={Styles.rightDatePickerPopup}
+                externalOpenButton={this.openRightDatePickerButton}
+                onDateSet={() => this.showItem(this.props.rightItem)}
+              />
+            </Box>,
+            document.getElementById("TJS-BottomDockPortalForTool")!
+          )}
       </Text>
     );
   }
@@ -833,25 +842,6 @@ const Selector = (props: any) => (
   </Box>
 );
 
-const BottomPanel = styled(Box).attrs({
-  centered: true,
-  positionAbsolute: true,
-  fullWidth: true,
-  styledHeight: "80px"
-})`
-  background: ${p => p.theme.dark};
-  z-index: 99999;
-  left: 0;
-  bottom: 0;
-
-  > div {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    max-height: 64px;
-  }
-`;
-
 const AreaFilterSelection = (props: {
   location?: LatLonHeight;
   isPickingNewLocation: boolean;
@@ -876,19 +866,25 @@ const AreaFilterSelection = (props: {
 
   return (
     <Box column centered>
-      <Text textLight semiBold>
-        Area filter selection
-      </Text>
+      <Box centered>
+        <StyledIcon light styledWidth="16px" glyph={GLYPHS.location2} />
+        <Spacing right={2} />
+        <Text textLight extraLarge>
+          Area filter selection
+        </Text>
+      </Box>
       {isPickingNewLocation && progressComponent}
       {!isPickingNewLocation && (
-        <Text
-          textLight
-          extraExtraLarge
-          bold
-          css={"min-height: 40px; line-height: 40px;"}
-        >
-          {locationText}
-        </Text>
+        <>
+          <Spacing bottom={3} />
+          <Text
+            textLight
+            bold
+            css={"min-height: 40px; font-size: 26px; line-height: 32px;"}
+          >
+            {locationText}
+          </Text>
+        </>
       )}
     </Box>
   );
