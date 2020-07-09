@@ -3,8 +3,7 @@ Change Log
 
 ### MobX Development
 
-#### next release (7.11.5-mobx-35)
-#### next release (mobx-37)
+#### next release (8.0.0-alpha.37)
 * Add `header` option to `loadText`
 * Add `isMixtedInto` function for `AsyncMappableMixin` and `AsyncChartableMixin`
 * Added file upload support for `GltfCatalogItem`. The supported extension is glb.
@@ -12,6 +11,9 @@ Change Log
 * Updated default welcome video defaults to a newer, slower video
 * ChartCustomComponent now `abstract`, no longer specific to CSV catalog items. Implement it for custom feature info charts.
 * (💫The next rad feature💫)
+* Update date picker to use theme colours
+* Removed some sass overrides on `Select` through `StyleSelectorSection`
+* Ported `GeoRssCatalogItem` to mobx, added support to skip entries without geometry.
 
 #### mobx-36
 * Added `pointer-events` to `MapNavigation` and `MenuBar` elements, so the bar don't block mouse click outside of the button.
