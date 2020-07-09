@@ -11,6 +11,8 @@ Change Log
 * Updated default welcome video defaults to a newer, slower video
 * Difftool will now pick any existing marked location (like from a search result) and filter imagery for that location.
 * Updated labelling & copy in Difftool to clarify workflow
+* Update date picker to use theme colours
+* Removed some sass overrides on `Select` through `StyleSelectorSection`
 
 #### mobx-36
 * Added `pointer-events` to `MapNavigation` and `MenuBar` elements, so the bar don't block mouse click outside of the button.
