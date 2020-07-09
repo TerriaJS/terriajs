@@ -10,6 +10,7 @@ Change Log
 * Improve runtime themeing via styled components across main UI components
 * Updated default welcome video defaults to a newer, slower video
 * Difftool will now pick any existing marked location (like from a search result) and filter imagery for that location.
+* Updated labelling & copy in Difftool to clarify workflow
 
 #### mobx-36
 * Added `pointer-events` to `MapNavigation` and `MenuBar` elements, so the bar don't block mouse click outside of the button.
