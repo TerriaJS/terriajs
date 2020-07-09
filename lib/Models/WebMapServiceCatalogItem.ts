@@ -456,12 +456,6 @@ class DiffStratum extends LoadableStratum(WebMapServiceCatalogItemTraits) {
   }
 
   @computed
-  get availableDiffStyles() {
-    // Currently only NDVI - add both spellings
-    return ["NDVI", "ndvi"];
-  }
-
-  @computed
   get disableStyleSelector() {
     return this.catalogItem.isShowingDiff;
   }
@@ -621,6 +615,14 @@ class WebMapServiceCatalogItem
     } else {
       return undefined;
     }
+  }
+
+  @computed
+  get canDiffImages(): boolean {
+    const hasValidDiffStyles = this.availableDiffStyles.some(diffStyle =>
+      this.styleSelector?.availableStyles.find(style => style.id === diffStyle)
+    );
+    return hasValidDiffStyles === true;
   }
 
   showDiffImage(

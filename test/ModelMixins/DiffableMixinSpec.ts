@@ -61,6 +61,10 @@ class TestDiffableItem extends DiffableMixin(
 ) {
   styleSelector: SelectableStyle | undefined = undefined;
 
+  get canDiffImages() {
+    return true;
+  }
+
   get discreteTimes() {
     return undefined;
   }
