@@ -4,6 +4,7 @@ import classNames from "classnames";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import React from "react";
+import styled from "styled-components";
 
 import defined from "terriajs-cesium/Source/Core/defined";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
@@ -14,6 +15,21 @@ import Styles from "./left-right-section.scss";
 import { observer } from "mobx-react";
 import CommonStrata from "../../../Models/CommonStrata";
 import { runInAction } from "mobx";
+
+const LeftRightButton = styled.button`
+  text-align: center;
+  color: ${p => p.theme.textLight};
+  background-color: ${p => p.theme.dark};
+  ${p =>
+    p.isActive &&
+    `
+    background-color: ${p.theme.colorSplitter};
+  `}
+  &:hover,
+  &:focus {
+    background-color: ${p => p.theme.colorSplitter};
+  }
+`;
 
 const LeftRightSection = observer(
   createReactClass({
@@ -67,36 +83,33 @@ const LeftRightSection = observer(
       }
       return (
         <div className={Styles.leftRightSection}>
-          <button
+          <LeftRightButton
             type="button"
             onClick={this.goLeft}
-            className={classNames(Styles.goLeft, {
-              [Styles.isActive]: splitDirection === ImagerySplitDirection.LEFT
-            })}
+            className={classNames(Styles.goLeft)}
             title={t("splitterTool.workbench.goleftTitle")}
+            isActive={splitDirection === ImagerySplitDirection.LEFT}
           >
             {t("splitterTool.workbench.goleft")}
-          </button>
-          <button
+          </LeftRightButton>
+          <LeftRightButton
             type="button"
             onClick={this.goBoth}
-            className={classNames(Styles.goBoth, {
-              [Styles.isActive]: splitDirection === ImagerySplitDirection.NONE
-            })}
+            className={classNames(Styles.goBoth)}
             title={t("splitterTool.workbench.bothTitle")}
+            isActive={splitDirection === ImagerySplitDirection.NONE}
           >
             {t("splitterTool.workbench.both")}
-          </button>
-          <button
+          </LeftRightButton>
+          <LeftRightButton
             type="button"
             onClick={this.goRight}
-            className={classNames(Styles.goRight, {
-              [Styles.isActive]: splitDirection === ImagerySplitDirection.RIGHT
-            })}
+            className={classNames(Styles.goRight)}
             title={t("splitterTool.workbench.gorightTitle")}
+            isActive={splitDirection === ImagerySplitDirection.RIGHT}
           >
             {t("splitterTool.workbench.goright")}
-          </button>
+          </LeftRightButton>
         </div>
       );
     }

@@ -3,7 +3,6 @@ Change Log
 
 ### MobX Development
 
-#### next release (7.11.5-mobx-35)
 #### next release (mobx-37)
 * Add `header` option to `loadText`
 * Add `isMixtedInto` function for `AsyncMappableMixin` and `AsyncChartableMixin`
@@ -12,6 +11,7 @@ Change Log
 * Updated default welcome video defaults to a newer, slower video
 * Update date picker to use theme colours
 * Removed some sass overrides on `Select` through `StyleSelectorSection`
+* Update LeftRightSection to use theme colours
 
 #### mobx-36
 * Added `pointer-events` to `MapNavigation` and `MenuBar` elements, so the bar don't block mouse click outside of the button.
