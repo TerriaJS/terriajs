@@ -6,6 +6,7 @@ Change Log
 #### next release (7.11.5-mobx-35)
 #### next release (mobx-37)
 * Added file upload support for `GltfCatalogItem`. The supported extension is glb.
+* Port `GeoRssCatalogItem` to mobx, added support to skip entries without geometry
 
 #### mobx-36
 * Added `pointer-events` to `MapNavigation` and `MenuBar` elements, so the bar don't block mouse click outside of the button.
@@ -20,8 +21,6 @@ Change Log
 * Tsxify `MapInteractionMode`
 * Changed default orientation for `GltfCatalogItem` to no rotation, instead of zero rotation wrt to terrain
 * Added a title to welcome message video
-* Port `GeoRssCatalogItem` to mobx, added support to skip entries without geometry
-* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 
 #### mobx-35
 * Add "Upload" to tour points
