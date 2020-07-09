@@ -48,6 +48,7 @@ import StratumFromTraits from "./StratumFromTraits";
 import WebMapServiceCapabilities, {
   CapabilitiesLayer,
   CapabilitiesStyle,
+  CapabilitiesContactInformation,
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
 import { callWebCoverageService } from "./callWebCoverageService";
@@ -255,7 +256,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   get info(): StratumFromTraits<InfoSectionTraits>[] {
     const result: StratumFromTraits<InfoSectionTraits>[] = [];
 
-    function createInfoSection(name, content) {
+    function createInfoSection(name: string, content: string | undefined) {
       const trait = createStratumInstance(InfoSectionTraits);
       trait.name = name;
       trait.content = content;
@@ -1042,7 +1043,7 @@ function formatMomentForWms(m: moment.Moment, duration: moment.Duration) {
   return m.format();
 }
 
-function getServiceContactInformation(contactInfo) {
+function getServiceContactInformation(contactInfo: CapabilitiesContactInformation) {
   const primary = contactInfo.ContactPersonPrimary;
   let text = "";
   if (isDefined(primary)) {
