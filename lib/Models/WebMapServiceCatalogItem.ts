@@ -1043,7 +1043,9 @@ function formatMomentForWms(m: moment.Moment, duration: moment.Duration) {
   return m.format();
 }
 
-function getServiceContactInformation(contactInfo: CapabilitiesContactInformation) {
+function getServiceContactInformation(
+  contactInfo: CapabilitiesContactInformation
+) {
   const primary = contactInfo.ContactPersonPrimary;
   let text = "";
   if (isDefined(primary)) {
