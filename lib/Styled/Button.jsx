@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { BoxSpan } from "./Box";
-import Text from "./Text";
+import { TextSpan } from "./Text";
 
 const Icon = styled.span`
   margin-right: 8px;
@@ -134,7 +134,7 @@ export const Button = (props, ref) => {
           </Icon>
         )}
         {props.children && (
-          <Text
+          <TextSpan
             white={primary || secondary || warning}
             medium={secondary}
             // bold
@@ -142,7 +142,7 @@ export const Button = (props, ref) => {
             {...textProps}
           >
             {props.children}
-          </Text>
+          </TextSpan>
         )}
       </BoxSpan>
     </StyledButton>

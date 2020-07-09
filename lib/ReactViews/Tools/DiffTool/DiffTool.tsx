@@ -39,10 +39,12 @@ import LocationPicker from "./LocationPicker";
 import { parseCustomMarkdownToReactWithOptions } from "../../Custom/parseCustomMarkdownToReact";
 
 const Box: any = require("../../../Styled/Box").default;
+const BoxSpan: any = require("../../../Styled/Box").BoxSpan;
 const Button: any = require("../../../Styled/Button").default;
 const RawButton: any = require("../../../Styled/Button").RawButton;
 const Text: any = require("../../../Styled/Text").default;
 const Spacing: any = require("../../../Styled/Spacing").default;
+const TextSpan: any = require("../../../Styled/Text").TextSpan;
 const dateFormat = require("dateformat");
 const Loader = require("../../Loader");
 
@@ -488,15 +490,15 @@ class Main extends React.Component<MainPropsType> {
                     transparentBg
                     onClick={this.resetTool}
                   >
-                    <Box centered>
+                    <BoxSpan centered>
                       <StyledIcon
                         css="transform:rotate(90deg);"
                         light
                         styledWidth="16px"
                         glyph={GLYPHS.arrowDown}
                       />
-                      <Text noFontSize>{t("general.back")}</Text>
-                    </Box>
+                      <TextSpan noFontSize>{t("general.back")}</TextSpan>
+                    </BoxSpan>
                   </BackButton>
                 </Box>
                 <Spacing bottom={3} />
@@ -538,9 +540,9 @@ class Main extends React.Component<MainPropsType> {
                   )}
                   {!this.leftDate && (
                     <RawButton ref={this.openLeftDatePickerButton}>
-                      <Text isLink small>
+                      <TextSpan isLink small>
                         {t("diffTool.instructions.setDateA")}
-                      </Text>
+                      </TextSpan>
                     </RawButton>
                   )}
                   <Spacing bottom={1} />
@@ -551,16 +553,16 @@ class Main extends React.Component<MainPropsType> {
                   )}
                   {!this.rightDate && (
                     <RawButton ref={this.openRightDatePickerButton}>
-                      <Text isLink small>
+                      <TextSpan isLink small>
                         {t("diffTool.instructions.setDateB")}
-                      </Text>
+                      </TextSpan>
                     </RawButton>
                   )}
                   {this.leftDate && this.rightDate && (
                     <RawButton onClick={this.unsetDates}>
-                      <Text small>
+                      <TextSpan small>
                         {t("diffTool.instructions.changeDates")}
-                      </Text>
+                      </TextSpan>
                     </RawButton>
                   )}
                 </Box>
@@ -638,9 +640,9 @@ class Main extends React.Component<MainPropsType> {
                   disabled={!isReadyToGenerateDiff}
                   aria-describedby="TJSDifferenceDisabledButtonPrompt"
                 >
-                  <Text large>
+                  <TextSpan large>
                     {t("diffTool.labels.generateDiffButtonText")}
-                  </Text>
+                  </TextSpan>
                 </GenerateButton>
 
                 {!isReadyToGenerateDiff && (
@@ -732,9 +734,14 @@ const DiffAccordion: React.FC<DiffAccordionProps> = props => {
         <Box centered>
           <StyledIcon styledWidth="20px" light glyph={GLYPHS.difference} />
           <Spacing right={1} />
-          {/* font-size is non standard with what we have so far in terria,
-              lineheight as well to hit nonstandard paddings */}
-          <Text css={"font-size: 17px;line-height: 30px;"} textLight semiBold>
+          <Text
+            textLight
+            semiBold
+            // font-size is non standard with what we have so far in terria,
+            // lineheight as well to hit nonstandard paddings
+            styledFontSize="17px"
+            styledLineHeight="30px"
+          >
             {t("diffTool.title")}
           </Text>
         </Box>
