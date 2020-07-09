@@ -23,7 +23,7 @@
   position: absolute;
   bottom: 44px;
   left: 0px;
-  background: $dark;
+  // background: $dark;
   padding: 3px 5px;
 
   @media (max-width: $mobile) {
@@ -95,7 +95,7 @@
   position: absolute;
   left: 10px;
   bottom: 70px;
-  background: $dark;
+  // background: $dark;
   z-index: 100;
 
   &.openBelow {
@@ -199,7 +199,7 @@
   display: inline-block;
   height: 10px;
   width: 2px;
-  background: $overlay;
+  // background: $overlay;
   margin-top: 1px;
 }
 
@@ -209,11 +209,6 @@
 
 .gridRowInner31 span {
   margin-right: 3px;
-}
-
-.activeGrid {
-  opacity: 0.9;
-  background: $color-primary !important;
 }
 
 .gridHeading {

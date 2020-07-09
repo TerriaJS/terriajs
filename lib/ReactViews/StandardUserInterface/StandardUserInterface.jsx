@@ -52,6 +52,62 @@ export const showStoryPrompt = (viewState, terria) => {
     viewState.toggleFeaturePrompt("story", true);
 };
 const GlobalTerriaStyles = createGlobalStyle`
+  // Theme-ify sass classes until they are removed
+
+  // We override the primary, secondary, map and share buttons here as they
+  // are imported everywhere and used in various ways - until we remove sass
+  // this is the quickest way to tackle them for now
+  .tjs-_buttons__btn--map {
+    ${p => p.theme.addTerriaMapBtnStyles(p)}
+  }
+
+  .tjs-_buttons__btn-primary {
+    ${p => p.theme.addTerriaPrimaryBtnStyles(p)}
+  }
+
+  .tjs-_buttons__btn--secondary, 
+  .tjs-_buttons__btn--close-modal {
+    ${p => p.theme.addTerriaSecondaryBtnStyles(p)}
+  }
+
+  .tjs-_buttons__btn--tertiary {
+    ${p => p.theme.addTerriaTertiaryBtnStyles(p)}
+  }
+
+  .tjs-_buttons__btn-small:hover,
+  .tjs-_buttons__btn-small:focus {
+    color: ${p => p.theme.colorPrimary};
+  }
+
+  .tjs-share-panel__catalog-share-inner {
+    background: ${p => p.theme.greyLightest};
+  }
+  
+  .tjs-share-panel__btn--catalogShare {
+    color: ${p => p.theme.colorPrimary};
+    background:transparent;
+    svg {
+      fill: ${p => p.theme.colorPrimary};
+    }
+  }
+  .tjs-dropdown__btn--dropdown {
+    color: ${p => p.theme.textDark};
+    background: ${p => p.theme.textLight};
+    &:hover,
+    &:focus {
+      color: ${p => p.theme.textDark};
+      background: ${p => p.theme.textLight};
+      border: 1px solid ${p => p.theme.colorPrimary};
+    }
+    svg {
+      fill: ${p => p.theme.textDark};
+    }
+  }
+  .tjs-dropdown__btn--option.tjs-dropdown__is-selected {
+    color: ${p => p.theme.colorPrimary};
+  }
+
+
   ${props =>
     props.experimentalFeatures &&
     `
@@ -170,6 +226,7 @@ const StandardUserInterface = observer(
     render() {
       const { t } = this.props;
       const mergedTheme = combine(this.props.themeOverrides, terriaTheme, true);
+      const theme = mergedTheme;
 
       const customElements = processCustomElements(
         this.props.viewState.useSmallScreenInterface,
@@ -214,7 +271,12 @@ const StandardUserInterface = observer(
               `}
               ref={w => (this._wrapper = w)}
             >
-              <div className={Styles.ui}>
+              <div
+                className={Styles.ui}
+                css={`
+                  background: ${theme.dark};
+                `}
+              >
                 <div className={Styles.uiInner}>
                   <If condition={!this.props.viewState.hideMapUi()}>
                     <Small>
@@ -397,14 +459,15 @@ const StandardUserInterface = observer(
                 <StoryPanel terria={terria} viewState={this.props.viewState} />
               )}
             </div>
-            {this.props.terria.configParameters.storyEnabled && (
-              <StoryBuilder
-                isVisible={showStoryBuilder}
-                terria={terria}
-                viewState={this.props.viewState}
-                animationDuration={animationDuration}
-              />
-            )}
+            {this.props.terria.configParameters.storyEnabled &&
+              showStoryBuilder && (
+                <StoryBuilder
+                  isVisible={showStoryBuilder}
+                  terria={terria}
+                  viewState={this.props.viewState}
+                  animationDuration={animationDuration}
+                />
+              )}
             <HelpPanel terria={terria} viewState={this.props.viewState} />
             <Disclaimer viewState={this.props.viewState} />
           </div>
