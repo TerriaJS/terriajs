@@ -94,7 +94,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
                 loader: require.resolve('string-replace-loader'),
                 options: {
                     search: 'function _get\\(target, property, receiver\\).*',
-                    replace: 'var _get = require(\'../Core/superGet\').default;',
+                    replace: 'var _get = require(\'' + path.resolve(terriaJSBasePath, 'lib') + '/Core/superGet\').default;',
                     flags: 'g'
                 }
             },

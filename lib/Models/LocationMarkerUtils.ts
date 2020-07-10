@@ -103,8 +103,7 @@ export function getMarkerLocation(terria: Terria): LatLonHeight | undefined {
   if (catalogItem === undefined || !terria.overlays.contains(catalogItem)) {
     return;
   }
-  const marker = catalogItem.czmlData[1];
-  // @ts-ignore
+  const marker: any = catalogItem.czmlData[1];
   const position = marker?.position?.cartographicDegrees;
   if (Array.isArray(toJS(position))) {
     const [longitude, latitude, height] = position;
