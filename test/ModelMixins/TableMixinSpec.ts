@@ -14,15 +14,12 @@ describe("TableMixin", function() {
   let item: CsvCatalogItem;
 
   beforeEach(function() {
-    runInAction(
-      () =>
-        (item = new CsvCatalogItem(
-          "test",
-          new Terria({
-            baseUrl: "./"
-          }),
-          undefined
-        ))
+    item = new CsvCatalogItem(
+      "test",
+      new Terria({
+        baseUrl: "./"
+      }),
+      undefined
     );
 
     jasmine.Ajax.install();
