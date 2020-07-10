@@ -7,7 +7,6 @@ interface CssExports {
   'goBoth': string;
   'goLeft': string;
   'goRight': string;
-  'isActive': string;
   'left-right-section': string;
   'leftRightSection': string;
 }
