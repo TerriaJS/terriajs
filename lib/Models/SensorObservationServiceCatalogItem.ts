@@ -624,7 +624,7 @@ function createChartColumn(
   name: string | undefined
 ): string {
   const nameAttr = name == undefined ? "" : `name="${name}"`;
-  return `<sos-chart identifier="${identifier}" ${nameAttr}></sos-chart>`;
+  return `<sos-chart identifier="${identifier}" ${nameAttr} can-download="false"></sos-chart>`;
 }
 
 async function loadSoapBody(

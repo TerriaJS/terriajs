@@ -22,9 +22,6 @@ describe("ChartCustomComponent", function() {
     terria = new Terria({
       baseUrl: "./"
     });
-    // viewState = new ViewState({
-    //   terria: terria
-    // });
   });
 
   fit("correctly creates the chart", () => {

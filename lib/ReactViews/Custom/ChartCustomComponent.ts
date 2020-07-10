@@ -192,7 +192,7 @@ export default abstract class ChartCustomComponent<
     const chartElements = [];
     if (!attrs.hideButtons) {
       // Build expand/download buttons
-      const sourceItems = (attrs.sources || []).map(
+      const sourceItems = (attrs.downloads || attrs.sources || [""]).map(
         (source: string, i: number) => {
           const id = [
             context.catalogItem.uniqueId,
@@ -203,11 +203,15 @@ export default abstract class ChartCustomComponent<
 
           runInAction(() => {
             this.setTraitsFromAttrs(item, attrs, i);
+
+            if (
+              csvString &&
+              hasTraits(item, CsvCatalogItemTraits, "csvString")
+            ) {
+              item.setTrait(CommonStrata.user, "csvString", csvString);
+            }
           });
 
-          if (csvString && hasTraits(item, CsvCatalogItemTraits, "csvString")) {
-            item.setTrait(CommonStrata.user, "csvString", csvString);
-          }
           return item;
         }
       );
@@ -230,10 +234,14 @@ export default abstract class ChartCustomComponent<
     const chartItem = this.constructCatalogItem(undefined, context, undefined);
     runInAction(() => {
       this.setTraitsFromAttrs(chartItem, attrs, 0);
+
+      if (
+        csvString &&
+        hasTraits(chartItem, CsvCatalogItemTraits, "csvString")
+      ) {
+        chartItem.setTrait(CommonStrata.user, "csvString", csvString);
+      }
     });
-    if (csvString && hasTraits(chartItem, CsvCatalogItemTraits, "csvString")) {
-      chartItem.setTrait(CommonStrata.user, "csvString", csvString);
-    }
 
     chartElements.push(
       React.createElement(Chart, {
