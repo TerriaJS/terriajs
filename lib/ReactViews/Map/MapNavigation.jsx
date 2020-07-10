@@ -12,7 +12,6 @@ import ZoomControl from "./Navigation/ZoomControl";
 
 import classNames from "classnames";
 import { observer } from "mobx-react";
-import defined from "terriajs-cesium/Source/Core/defined";
 // import HelpTool from "./Navigation/HelpTool";
 // import StylesToolButton from "./Navigation/tool_button.scss";
 import Icon from "../Icon";
