@@ -2,7 +2,7 @@ import ModelTraits from "./ModelTraits";
 import objectArrayTrait from "./objectArrayTrait";
 import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
-import primitiveArrayTrait from './primitiveArrayTrait'
+import primitiveArrayTrait from "./primitiveArrayTrait";
 import i18next from "i18next";
 
 export class InfoSectionTraits extends ModelTraits {
@@ -79,7 +79,7 @@ export default class CatalogMemberTraits extends ModelTraits {
     type: "string",
     name: "InfoSectionOrder",
     description: `An array of section titles definining the display order of info sections.
-    If this property is not defined, {@link DataPreviewSections}'s DEFAULT_SECTION_ORDER is used`,
+    If this property is not defined, {@link DataPreviewSections}'s DEFAULT_SECTION_ORDER is used`
   })
   infoSectionOrder?: string[] = [
     i18next.t("preview.disclaimer"),

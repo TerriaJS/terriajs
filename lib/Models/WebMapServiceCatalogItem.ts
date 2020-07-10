@@ -333,8 +333,8 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get infoSectionOrder(): string[] { 
-    let suffix =''
+  get infoSectionOrder(): string[] {
+    let suffix = "";
     for (const layer of this.capabilitiesLayers.values()) {
       if (
         !layer ||
@@ -347,7 +347,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
         suffix = ` - ${layer.Title}`;
       }
     }
- 
+
     return [
       i18next.t("preview.disclaimer"),
       i18next.t("description.name"),
@@ -362,7 +362,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       i18next.t("preview.created"),
       i18next.t("preview.modified"),
       i18next.t("preview.updateFrequency")
-    ]
+    ];
   }
 
   @computed
