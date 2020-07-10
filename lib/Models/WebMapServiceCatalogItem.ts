@@ -333,6 +333,39 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
+  get infoSectionOrder(): string[] { 
+    let suffix =''
+    for (const layer of this.capabilitiesLayers.values()) {
+      if (
+        !layer ||
+        !layer.Abstract ||
+        containsAny(layer.Abstract, WebMapServiceCatalogItem.abstractsToIgnore)
+      ) {
+        continue;
+      }
+      if (this.capabilitiesLayers.size > 1) {
+        suffix = ` - ${layer.Title}`;
+      }
+    }
+ 
+    return [
+      i18next.t("preview.disclaimer"),
+      i18next.t("description.name"),
+      `Web Map Service Layer Description${suffix}`,
+      i18next.t("preview.datasetDescription"),
+      i18next.t("preview.serviceDescription"),
+      i18next.t("preview.resourceDescription"),
+      i18next.t("preview.licence"),
+      i18next.t("preview.accessConstraints"),
+      i18next.t("preview.author"),
+      i18next.t("preview.contact"),
+      i18next.t("preview.created"),
+      i18next.t("preview.modified"),
+      i18next.t("preview.updateFrequency")
+    ]
+  }
+
+  @computed
   get shortReport() {
     const catalogItem = this.catalogItem;
     if (catalogItem.isShowingDiff) {
