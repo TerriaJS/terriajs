@@ -3,6 +3,7 @@ Change Log
 
 ### MobX Development
 
+#### next release (8.0.0-alpha.37)
 * Add `typeName` to `CatalogMemberMixin`
 * Add `header` option to `loadText`
 * Add `isMixtedInto` function for `AsyncMappableMixin` and `AsyncChartableMixin`
