@@ -6,30 +6,36 @@ import { IDisposer } from "mobx-utils";
 import React, { useState } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, useTheme, withTheme } from "styled-components";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import LatLonHeight from "../../../Core/LatLonHeight";
 import PickedFeatures from "../../../Map/PickedFeatures";
+import prettifyCoordinates from "../../../Map/prettifyCoordinates";
 import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import CommonStrata from "../../../Models/CommonStrata";
 import Feature from "../../../Models/Feature";
+import hasTraits, { HasTrait } from "../../../Models/hasTraits";
+import {
+  getMarkerLocation,
+  isMarkerVisible,
+  removeMarker
+} from "../../../Models/LocationMarkerUtils";
 import Mappable, { ImageryParts } from "../../../Models/Mappable";
 import { AvailableStyle } from "../../../Models/SelectableStyle";
 import SplitItemReference from "../../../Models/SplitItemReference";
 import Terria from "../../../Models/Terria";
 import ViewState from "../../../ReactViewModels/ViewState";
 import Select from "../../../Styled/Select";
+import RasterLayerTraits from "../../../Traits/RasterLayerTraits";
 import { GLYPHS, StyledIcon } from "../../Icon";
 import DatePicker from "./DatePicker";
 import Styles from "./diff-tool.scss";
 import LocationPicker from "./LocationPicker";
-import prettifyCoordinates from "../../../Map/prettifyCoordinates";
-import {
-  isMarkerVisible,
-  removeMarker
-} from "../../../Models/LocationMarkerUtils";
 
 const Box: any = require("../../../Styled/Box").default;
 const Button: any = require("../../../Styled/Button").default;
@@ -37,6 +43,7 @@ const RawButton: any = require("../../../Styled/Button").RawButton;
 const Text: any = require("../../../Styled/Text").default;
 const Spacing: any = require("../../../Styled/Spacing").default;
 const dateFormat = require("dateformat");
+const Loader = require("../../Loader");
 
 type DiffableItem = DiffableMixin.Instance;
 
@@ -108,11 +115,6 @@ class DiffTool extends React.Component<PropsType> {
     terria.showSplitter = true;
     viewState.setIsMapFullScreen(true);
     this.sourceItem.setTrait(CommonStrata.user, "show", false);
-
-    if (isMarkerVisible(terria)) {
-      // If we have an active marker, remove it.
-      removeMarker(terria);
-    }
   }
 
   @action
@@ -161,16 +163,19 @@ interface MainPropsType extends PropsType {
 
 @observer
 class Main extends React.Component<MainPropsType> {
-  @observable private _location?: LatLonHeight;
+  @observable private location?: LatLonHeight;
   @observable private _locationPickError = false;
+  @observable private _isPickingNewLocation = false;
+
+  private openLeftDatePickerButton: React.RefObject<
+    HTMLButtonElement
+  > = React.createRef();
+  private openRightDatePickerButton: React.RefObject<
+    HTMLButtonElement
+  > = React.createRef();
 
   constructor(props: MainPropsType) {
     super(props);
-  }
-
-  @computed
-  get location() {
-    return this._location; // || getMarkerLocation(this.props.terria);
   }
 
   @computed
@@ -261,17 +266,38 @@ class Main extends React.Component<MainPropsType> {
   }
 
   @computed
-  get legendUrl(): string | undefined {
+  get diffLegendUrl(): string | undefined {
     return (
       this.diffStyle &&
       this.leftDate &&
       this.rightDate &&
-      this.diffItem.getLegendUrlForDiffStyle(
+      this.diffItem.getLegendUrlForStyle(
         this.diffStyle,
         this.leftDate,
         this.rightDate
       )
     );
+  }
+
+  @computed
+  get previewLegendUrl(): string | undefined {
+    return (
+      this.previewStyle && this.diffItem.getLegendUrlForStyle(this.previewStyle)
+    );
+  }
+
+  @action
+  showItem(model: DiffableItem) {
+    // We change the opacity instead of setting `show` to true/false, because
+    // we want the item to be on the map for date selection to work
+    hasOpacity(model) && model.setTrait(CommonStrata.user, "opacity", 0.8);
+  }
+
+  @action
+  hideItem(model: DiffableItem) {
+    // We change the opacity instead of setting `show` to true/false, because
+    // we want the item to be on the map for date selection to work
+    hasOpacity(model) && model.setTrait(CommonStrata.user, "opacity", 0);
   }
 
   @action.bound
@@ -301,6 +327,11 @@ class Main extends React.Component<MainPropsType> {
   }
 
   @action.bound
+  onUserPickingLocation(pickingLocation: LatLonHeight) {
+    this._isPickingNewLocation = true;
+  }
+
+  @action.bound
   onUserPickLocation(
     pickedFeatures: PickedFeatures,
     pickedLocation: LatLonHeight
@@ -315,11 +346,21 @@ class Main extends React.Component<MainPropsType> {
     if (feature) {
       leftItem.setTimeFilterFeature(feature, pickedFeatures.providerCoords);
       rightItem.setTimeFilterFeature(feature, pickedFeatures.providerCoords);
-      this._location = pickedLocation;
+      this.location = pickedLocation;
       this._locationPickError = false;
     } else {
       this._locationPickError = true;
     }
+    this._isPickingNewLocation = false;
+  }
+
+  @action.bound
+  unsetDates() {
+    const { leftItem, rightItem } = this.props;
+    leftItem.setTrait(CommonStrata.user, "currentTime", undefined);
+    rightItem.setTrait(CommonStrata.user, "currentTime", undefined);
+    this.hideItem(leftItem);
+    this.hideItem(rightItem);
   }
 
   @action.bound
@@ -346,6 +387,7 @@ class Main extends React.Component<MainPropsType> {
   resetTool() {
     const terria = this.props.terria;
     this.diffItem.clearDiffImage();
+    setDefaultDiffStyle(this.diffItem);
     terria.overlays.add(this.props.leftItem);
     terria.overlays.add(this.props.rightItem);
     terria.workbench.remove(this.diffItem);
@@ -360,6 +402,62 @@ class Main extends React.Component<MainPropsType> {
       "splitDirection",
       ImagerySplitDirection.RIGHT
     );
+  }
+
+  @action
+  async setLocationFromActiveSearch() {
+    // Look for any existing marker like from a search result and filter
+    // imagery at that location
+    const markerLocation = getMarkerLocation(this.props.terria);
+    const sourceItem = this.props.sourceItem;
+    if (markerLocation && Mappable.is(sourceItem)) {
+      const part = sourceItem.mapItems.find(p => ImageryParts.is(p));
+      const imageryProvider =
+        part && ImageryParts.is(part) && part.imageryProvider;
+      if (imageryProvider) {
+        const promises = [
+          setTimeFilterFromLocation(
+            this.props.leftItem,
+            markerLocation,
+            imageryProvider
+          ),
+          setTimeFilterFromLocation(
+            this.props.rightItem,
+            markerLocation,
+            imageryProvider
+          )
+        ];
+        const someSuccessful = (await Promise.all(promises)).some(ok => ok);
+        if (someSuccessful) {
+          runInAction(() => (this.location = markerLocation));
+        } else {
+          // If we cannot resolve imagery at the marker location, remove it
+          removeMarker(this.props.terria);
+        }
+      }
+    }
+  }
+
+  @action
+  async componentDidMount() {
+    if (this.location === undefined) {
+      const {
+        latitude,
+        longitude,
+        height
+      } = this.diffItem.timeFilterCoordinates;
+      if (latitude !== undefined && longitude !== undefined) {
+        this.location = {
+          latitude,
+          longitude,
+          height
+        };
+        // remove any active search location marker to avoid showing two markers
+        removeMarker(this.props.terria);
+      } else {
+        await this.setLocationFromActiveSearch();
+      }
+    }
   }
 
   // i want to restructure the render so that there's 2 distinct "showing diff"
@@ -408,13 +506,65 @@ class Main extends React.Component<MainPropsType> {
               </>
             )}
             <Text textLight>{t("diffTool.computeDifference")}</Text>
-            {isShowingDiff && <Spacing bottom={3} />}
+            <Spacing bottom={3} />
+            <LocationAndDatesDisplayBox>
+              <Box>
+                <div>Area:</div>
+                <div>
+                  <Text medium bold textLightDimmed>
+                    {this.location
+                      ? t("diffTool.locationDisplay.locationSelected.title")
+                      : t("diffTool.locationDisplay.noLocationSelected.title")}
+                  </Text>
+                  <Text textLight>
+                    {this.location
+                      ? t(
+                          "diffTool.locationDisplay.locationSelected.description"
+                        )
+                      : t(
+                          "diffTool.locationDisplay.noLocationSelected.description"
+                        )}
+                  </Text>
+                </div>
+              </Box>
+              <Box>
+                <div>Dates:</div>
+                <Box column alignItemsFlexStart>
+                  {this.leftDate && (
+                    <Text large>
+                      (A) {dateFormat(this.leftDate, "dd/mm/yyyy")}
+                    </Text>
+                  )}
+                  {!this.leftDate && (
+                    <LinkButton ref={this.openLeftDatePickerButton}>
+                      Set date A
+                    </LinkButton>
+                  )}
+                  {this.rightDate && (
+                    <Text large>
+                      (B) {dateFormat(this.rightDate, "dd/mm/yyyy")}
+                    </Text>
+                  )}
+                  {!this.rightDate && (
+                    <LinkButton ref={this.openRightDatePickerButton}>
+                      Set date B
+                    </LinkButton>
+                  )}
+                  {this.leftDate && this.rightDate && (
+                    <LinkButton onClick={this.unsetDates}>
+                      Change dates
+                    </LinkButton>
+                  )}
+                </Box>
+              </Box>
+            </LocationAndDatesDisplayBox>
             {!isShowingDiff && (
               <>
                 <Spacing bottom={4} />
                 <Selector
                   value={sourceItem.uniqueId}
                   onChange={this.changeSourceItem}
+                  label="Source item"
                 >
                   <option disabled>Select source item</option>
                   {this.diffableItemsInWorkbench.map(item => (
@@ -428,12 +578,11 @@ class Main extends React.Component<MainPropsType> {
             {!isShowingDiff && (
               <>
                 <Spacing bottom={4} />
-                <Text textLight>{t("diffTool.styles")}</Text>
-                <Spacing bottom={2} />
                 <Selector
                   spacingBottom
                   value={this.previewStyle}
                   onChange={this.changePreviewStyle}
+                  label="Preview style"
                 >
                   <option disabled value="">
                     {t("diffTool.choosePreview")}
@@ -444,11 +593,16 @@ class Main extends React.Component<MainPropsType> {
                     </option>
                   ))}
                 </Selector>
+                {this.previewLegendUrl && (
+                  <LegendImage width="100%" src={this.previewLegendUrl} />
+                )}
               </>
             )}
+            <Spacing bottom={2} />
             <Selector
               value={this.diffStyle || ""}
               onChange={this.changeDiffStyle}
+              label="Difference style"
             >
               <option disabled value="">
                 {t("diffTool.chooseDifference")}
@@ -459,11 +613,8 @@ class Main extends React.Component<MainPropsType> {
                 </option>
               ))}
             </Selector>
-            {this.legendUrl && (
-              <>
-                <Spacing bottom={2} />
-                <img width="100%" src={this.legendUrl} />
-              </>
+            {isShowingDiff && this.diffLegendUrl && (
+              <LegendImage width="100%" src={this.diffLegendUrl} />
             )}
             {!isShowingDiff && (
               <>
@@ -501,22 +652,31 @@ class Main extends React.Component<MainPropsType> {
           <LocationPicker
             terria={terria}
             location={this.location}
-            title={this.locationPickerMessages.title}
-            messages={this.locationPickerMessages}
-            onPick={this.onUserPickLocation}
+            onPicking={this.onUserPickingLocation}
+            onPicked={this.onUserPickLocation}
           />
         )}
         {!isShowingDiff && (
-          <DatePanel>
+          <BottomPanel>
             <DatePicker
+              title="Date Comparison A"
               item={this.props.leftItem}
               popupStyle={Styles.leftDatePickerPopup}
+              externalOpenButton={this.openLeftDatePickerButton}
+              onDateSet={() => this.showItem(this.props.leftItem)}
+            />
+            <AreaFilterSelection
+              location={this.location}
+              isPickingNewLocation={this._isPickingNewLocation}
             />
             <DatePicker
+              title="Date Comparison B"
               item={this.props.rightItem}
               popupStyle={Styles.rightDatePickerPopup}
+              externalOpenButton={this.openRightDatePickerButton}
+              onDateSet={() => this.showItem(this.props.rightItem)}
             />
-          </DatePanel>
+          </BottomPanel>
         )}
       </Text>
     );
@@ -545,13 +705,13 @@ const DiffAccordion: React.FC<DiffAccordionProps> = props => {
           <StyledIcon styledWidth="20px" light glyph={GLYPHS.difference} />
           <Spacing right={1} />
           {/* font-size is non standard with what we have so far in terria,
-          lineheight as well to hit nonstandard paddings */}
+              lineheight as well to hit nonstandard paddings */}
           <Text css={"font-size: 17px;line-height: 26px;"} textLight>
             {t("diffTool.title")}
           </Text>
         </Box>
         {/* margin-right 5px for the padded button offset - larger click area
-        but visible should be inline with rest of box */}
+            but visible should be inline with rest of box */}
         <Box centered css={"margin-right:-5px;"}>
           <RawButton onClick={() => viewState.closeTool()}>
             <Text textLight small semiBold uppercase>
@@ -578,7 +738,8 @@ const DiffAccordion: React.FC<DiffAccordionProps> = props => {
 const DiffAccordionWrapper = styled(Box).attrs({
   column: true,
   positionAbsolute: true,
-  styledWidth: "324px"
+  styledWidth: "340px"
+  // charcoalGreyBg: true
 })`
   top: 70px;
   left: 0px;
@@ -593,7 +754,7 @@ const MainPanel = styled(Box).attrs({
   column: true,
   paddedRatio: 2
 })`
-  background: ${p => p.theme.dark};
+  background-color: ${p => p.theme.darkWithOverlay};
 `;
 
 const BackButton = styled(Button).attrs({
@@ -621,12 +782,16 @@ const GenerateButton = styled(Button).attrs({
 
 const Selector = (props: any) => (
   <Box fullWidth column>
-    <Select {...props}>{props.children}</Select>
-    {props.spacingBottom && <Spacing bottom={2} />}
+    <label>
+      <Text textLight>{props.label}:</Text>
+      <Spacing bottom={1} />
+      <Select {...props}>{props.children}</Select>
+      {props.spacingBottom && <Spacing bottom={2} />}
+    </label>
   </Box>
 );
 
-const DatePanel = styled(Box).attrs({
+const BottomPanel = styled(Box).attrs({
   centered: true,
   positionAbsolute: true,
   fullWidth: true,
@@ -645,6 +810,87 @@ const DatePanel = styled(Box).attrs({
   }
 `;
 
+const AreaFilterSelection = (props: {
+  location?: LatLonHeight;
+  isPickingNewLocation: boolean;
+}) => {
+  const { location, isPickingNewLocation } = props;
+  let locationText = "-";
+  if (location) {
+    const { longitude, latitude } = prettifyCoordinates(
+      location.longitude,
+      location.latitude,
+      {
+        digits: 2
+      }
+    );
+    locationText = `${longitude} ${latitude}`;
+  }
+  const progressComponent = (
+    <Text textLight extraExtraLarge bold>
+      <Loader message={`Querying ${location ? "new" : ""} position...`} />
+    </Text>
+  );
+
+  return (
+    <Box column centered>
+      <Text textLight semiBold>
+        Area filter selection
+      </Text>
+      {isPickingNewLocation && progressComponent}
+      {!isPickingNewLocation && (
+        <Text
+          textLight
+          extraExtraLarge
+          bold
+          css={"min-height: 40px; line-height: 40px;"}
+        >
+          {locationText}
+        </Text>
+      )}
+    </Box>
+  );
+};
+
+const LocationAndDatesDisplayBox = styled(Box).attrs({
+  column: true,
+  charcoalGreyBg: true
+})`
+  color: ${p => p.theme.textLight};
+  padding: 15px;
+  > ${Box}:first-child {
+    margin-bottom: 13px;
+  }
+  > div > div:first-child {
+    /* The labels */
+    margin-right: 10px;
+    min-width: 57px;
+  }
+`;
+
+const LegendImage = function(props: any) {
+  return (
+    <img
+      {...props}
+      // Show the legend only if it loads successfully, so we start out hidden
+      style={{ display: "none", marginTop: "4px" }}
+      // @ts-ignore
+      onLoad={e => (e.target.style.display = "block")}
+      // @ts-ignore
+      onError={e => (e.target.style.display = "none")}
+    />
+  );
+};
+
+const LinkButton = styled(Button)`
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+  text-decoration: underline;
+`;
+
 async function createSplitItem(
   sourceItem: DiffableItem,
   splitDirection: ImagerySplitDirection
@@ -661,9 +907,50 @@ async function createSplitItem(
     const newItem = ref.target as DiffableItem;
     newItem.setTrait(CommonStrata.user, "show", true);
     newItem.setTrait(CommonStrata.user, "splitDirection", splitDirection);
+    newItem.setTrait(CommonStrata.user, "currentTime", undefined);
+    newItem.setTrait(CommonStrata.user, "initialTimeSource", "none");
+    if (hasOpacity(newItem)) {
+      // We want to show the item on the map only after date selection. At the
+      // same time we cannot set `show` to false because if we
+      // do so, date picking which relies on feature picking, will not work. So
+      // we simply set the opacity of the item to 0.
+      newItem.setTrait(CommonStrata.user, "opacity", 0);
+    }
+
+    setDefaultDiffStyle(newItem);
+
+    // Set the default style to true color style if it exists
+    const trueColor = newItem.styleSelector?.availableStyles.find(
+      style => style.name.search(/true/i) >= 0
+    );
+    if (trueColor) {
+      newItem.styleSelector?.chooseActiveStyle(CommonStrata.user, trueColor.id);
+    }
+
     terria.overlays.add(newItem);
     return newItem;
   });
+}
+
+/**
+ * If the item has only one available diff style, auto-select it
+ */
+function setDefaultDiffStyle(item: DiffableItem) {
+  if (item.diffStyleId !== undefined) {
+    return;
+  }
+
+  const availableStyles = filterOutUndefined(
+    item.availableDiffStyles.map(diffStyleId =>
+      item.styleSelector?.availableStyles.find(
+        style => style.id === diffStyleId
+      )
+    )
+  );
+
+  if (availableStyles.length === 1) {
+    item.setTrait(CommonStrata.user, "diffStyleId", availableStyles[0].id);
+  }
 }
 
 function removeSplitItem(item: DiffableItem) {
@@ -686,6 +973,38 @@ function doesFeatureBelongToItem(
       m => ImageryParts.is(m) && m.imageryProvider === imageryProvider
     ) !== undefined
   );
+}
+
+function setTimeFilterFromLocation(
+  item: DiffableItem,
+  location: LatLonHeight,
+  im: ImageryProvider
+): Promise<boolean> {
+  const carto = new Cartographic(
+    CesiumMath.toRadians(location.longitude),
+    CesiumMath.toRadians(location.latitude)
+  );
+  // We just need to set this to a high enough level supported by the service
+  const level = 30;
+  const tile = im.tilingScheme.positionToTileXY(carto, level);
+  return item.setTimeFilterFromLocation({
+    position: {
+      latitude: location.latitude,
+      longitude: location.longitude,
+      height: location.height
+    },
+    tileCoords: {
+      x: tile.x,
+      y: tile.y,
+      level
+    }
+  });
+}
+
+function hasOpacity(
+  model: any
+): model is HasTrait<RasterLayerTraits, "opacity"> {
+  return hasTraits(model, RasterLayerTraits, "opacity");
 }
 
 export default hoistStatics(withTranslation()(withTheme(DiffTool)), DiffTool);

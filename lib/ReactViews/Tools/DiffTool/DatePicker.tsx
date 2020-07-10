@@ -12,11 +12,15 @@ import Icon from "../../Icon";
 const DateTimePicker = require("../../../ReactViews/BottomDock/Timeline/DateTimePicker.jsx");
 const dateFormat = require("dateformat");
 const Box: any = require("../../../Styled/Box").default;
+const Text: any = require("../../../Styled/Text").default;
 const Button: any = require("../../../Styled/Button").default;
 
 interface PropsType extends WithTranslation {
+  title: string;
   item: DiffableMixin.Instance;
   popupStyle: string;
+  externalOpenButton: React.RefObject<HTMLButtonElement>;
+  onDateSet: () => void;
 }
 
 @observer
@@ -71,12 +75,53 @@ class DatePicker extends React.Component<PropsType> {
       "currentTime",
       date.toISOString()
     );
+    this.props.onDateSet();
+  }
+
+  @action.bound
+  onClickExternalButton(event: MouseEvent) {
+    this.setIsOpen(true);
+    // stopPropagation is required to prevent the datetime picker popup from closing when
+    // the external button is clicked
+    event.stopPropagation();
+  }
+
+  registerExternalButtonClick() {
+    this.props.externalOpenButton.current?.addEventListener(
+      "click",
+      this.onClickExternalButton
+    );
+  }
+
+  unregisterExternalButtonClick(
+    externalOpenButton: React.RefObject<HTMLButtonElement>
+  ) {
+    externalOpenButton.current?.removeEventListener(
+      "click",
+      this.onClickExternalButton
+    );
+  }
+
+  componentDidMount() {
+    this.registerExternalButtonClick();
+  }
+
+  componentDidUpdate(prevProps: PropsType) {
+    this.unregisterExternalButtonClick(prevProps.externalOpenButton);
+    this.registerExternalButtonClick();
+  }
+
+  componentWillUnmount() {
+    this.unregisterExternalButtonClick(this.props.externalOpenButton);
   }
 
   render() {
-    const { item, t } = this.props;
+    const { title, item, t } = this.props;
     return (
-      <div>
+      <Box column centered>
+        <Text textLight semiBold>
+          {title}
+        </Text>
         <Box>
           <PrevButton
             disabled={item.isPreviousDiscreteTimeAvailable === false}
@@ -87,8 +132,7 @@ class DatePicker extends React.Component<PropsType> {
             onClick={this.toggleOpen}
             title={t("diffTool.datePicker.dateButtonTitle")}
           >
-            {this.formattedCurrentDate ||
-              t("diffTool.datePicker.dateOutOfRange")}
+            {this.formattedCurrentDate || "-"}
           </DateButton>
           <NextButton
             disabled={item.isNextDiscreteTimeAvailable === false}
@@ -114,7 +158,7 @@ class DatePicker extends React.Component<PropsType> {
             onClose={() => this.setIsOpen(false)}
           />
         </div>
-      </div>
+      </Box>
     );
   }
 }
@@ -154,9 +198,11 @@ const NextButton = styled(PagerButton).attrs({
 `;
 
 const DateButton = styled(Button).attrs({ secondary: true })`
+  z-index: 1000; // So that we don't loose the button clicks to the date picker popup
   cursor: pointer;
   color: ${props => props.theme.textLight};
   background-color: ${props => props.theme.darkWithOverlay};
+  min-width: 235px;
   // height: 34px;
   border-radius: 0px;
   border: 1px solid ${props => props.theme.darkWithOverlay};
