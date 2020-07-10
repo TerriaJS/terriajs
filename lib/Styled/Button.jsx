@@ -8,6 +8,8 @@ const Icon = styled.span`
   margin-right: 8px;
 `;
 const StyledButton = styled.button`
+  pointer-events: auto;
+  cursor: pointer;
   min-height: 40px;
   ${props => props.shortMinHeight && `min-height: 34px;`}
   // min-width: 75px;

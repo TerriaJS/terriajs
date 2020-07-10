@@ -470,11 +470,9 @@ class Main extends React.Component<MainPropsType> {
   render() {
     const { terria, viewState, sourceItem, t, theme } = this.props;
     const isShowingDiff = this.diffItem.isShowingDiff;
+    const datesSelected = this.leftDate && this.rightDate;
     const isReadyToGenerateDiff =
-      this.location &&
-      this.leftDate &&
-      this.rightDate &&
-      this.diffStyle !== undefined;
+      this.location && datesSelected && this.diffStyle !== undefined;
 
     return (
       <Text large>
@@ -607,7 +605,10 @@ class Main extends React.Component<MainPropsType> {
                   ))}
                 </Selector>
                 {this.previewLegendUrl && (
-                  <LegendImage width="100%" src={this.previewLegendUrl} />
+                  <>
+                    <Spacing bottom={2} />
+                    <LegendImage width="100%" src={this.previewLegendUrl} />
+                  </>
                 )}
               </>
             )}
@@ -648,7 +649,7 @@ class Main extends React.Component<MainPropsType> {
 
                 {!isReadyToGenerateDiff && (
                   <>
-                    <Spacing bottom={2} />
+                    <Spacing bottom={3} />
                     <Text
                       small
                       light
@@ -699,6 +700,7 @@ class Main extends React.Component<MainPropsType> {
                 onDateSet={() => this.showItem(this.props.leftItem)}
               />
               <AreaFilterSelection
+                t={t}
                 location={this.location}
                 isPickingNewLocation={this._isPickingNewLocation}
               />
@@ -843,10 +845,11 @@ const Selector = (props: any) => (
 );
 
 const AreaFilterSelection = (props: {
+  t: TFunction;
   location?: LatLonHeight;
   isPickingNewLocation: boolean;
 }) => {
-  const { location, isPickingNewLocation } = props;
+  const { t, location, isPickingNewLocation } = props;
   let locationText = "-";
   if (location) {
     const { longitude, latitude } = prettifyCoordinates(
@@ -858,11 +861,6 @@ const AreaFilterSelection = (props: {
     );
     locationText = `${longitude} ${latitude}`;
   }
-  const progressComponent = (
-    <Text textLight extraExtraLarge bold>
-      <Loader message={`Querying ${location ? "new" : ""} position...`} />
-    </Text>
-  );
 
   return (
     <Box column centered>
@@ -870,22 +868,33 @@ const AreaFilterSelection = (props: {
         <StyledIcon light styledWidth="16px" glyph={GLYPHS.location2} />
         <Spacing right={2} />
         <Text textLight extraLarge>
-          Area filter selection
+          {t("diffTool.labels.areaFilterSelection")}
         </Text>
       </Box>
-      {isPickingNewLocation && progressComponent}
-      {!isPickingNewLocation && (
-        <>
-          <Spacing bottom={3} />
+      <Spacing bottom={3} />
+      <Box styledMinHeight="40px">
+        {isPickingNewLocation ? (
           <Text
             textLight
+            extraExtraLarge
             bold
-            css={"min-height: 40px; font-size: 26px; line-height: 32px;"}
+            // Using legacy Loader.jsx means we override at a higher level to inherit
+            // this fills tyle
+            css={`
+              fill: ${({ theme }: any) => theme.textLight};
+            `}
           >
+            <Loader
+              light
+              message={`Querying ${location ? "new" : ""} position...`}
+            />
+          </Text>
+        ) : (
+          <Text textLight bold heading textAlignCenter>
             {locationText}
           </Text>
-        </>
-      )}
+        )}
+      </Box>
     </Box>
   );
 };

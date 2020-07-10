@@ -3,7 +3,6 @@ Change Log
 
 ### MobX Development
 
-#### next release (mobx-37)
 #### next release (8.0.0-alpha.37)
 * Ensure `CkanCatalogGroup` doesn't keep re-requesting data when opening and closing groups.
 * Add `typeName` to `CatalogMemberMixin`
@@ -20,6 +19,7 @@ Change Log
 * Removed some sass overrides on `Select` through `StyleSelectorSection`
 * Update LeftRightSection to use theme colours
 * Ported `GeoRssCatalogItem` to mobx, added support to skip entries without geometry.
+* Update Difftool BottomPanel UI to clearer "area filter" and date pickers
 
 #### mobx-36
 * Added `pointer-events` to `MapNavigation` and `MenuBar` elements, so the bar don't block mouse click outside of the button.
