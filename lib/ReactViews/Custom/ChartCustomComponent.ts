@@ -417,7 +417,6 @@ function checkAllPropertyKeys(object: any, allowedKeys: string[]) {
     if (object.hasOwnProperty(key)) {
       if (allowedKeys.indexOf(key) === -1) {
         console.log("Unknown attribute " + key);
-        throw new DeveloperError("Unknown attribute " + key);
       }
     }
   }
