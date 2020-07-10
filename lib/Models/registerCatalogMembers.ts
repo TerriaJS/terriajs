@@ -16,6 +16,7 @@ import createUrlReferenceFromUrl from "./createUrlReferenceFromUrl";
 import CsvCatalogItem from "./CsvCatalogItem";
 import CzmlCatalogItem from "./CzmlCatalogItem";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
+import GeoRssCatalogItem from "./GeoRssCatalogItem";
 import GltfCatalogItem from "./GltfCatalogItem";
 import GtfsCatalogItem from "./GtfsCatalogItem";
 import IonImageryCatalogItem from "./IonImageryCatalogItem";
@@ -45,6 +46,7 @@ export default function registerCatalogMembers() {
   );
   CatalogMemberFactory.register(GltfCatalogItem.type, GltfCatalogItem);
   CatalogMemberFactory.register(GeoJsonCatalogItem.type, GeoJsonCatalogItem);
+  CatalogMemberFactory.register(GeoRssCatalogItem.type, GeoRssCatalogItem);
   CatalogMemberFactory.register(CsvCatalogItem.type, CsvCatalogItem);
   CatalogMemberFactory.register(CzmlCatalogItem.type, CzmlCatalogItem);
   CatalogMemberFactory.register(ArcGisCatalogGroup.type, ArcGisCatalogGroup);
@@ -142,6 +144,10 @@ export default function registerCatalogMembers() {
   UrlToCatalogMemberMapping.register(
     matchesExtension("topojson"),
     GeoJsonCatalogItem.type
+  );
+  UrlToCatalogMemberMapping.register(
+    matchesExtension("georss"),
+    GeoRssCatalogItem.type
   );
 
   // These items work by trying to match a URL, then loading the data. If it fails, they move on.
