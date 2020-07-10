@@ -48,6 +48,11 @@ export const defaultTerms: Term[] = [
     term: "preview style",
     content:
       "The way the dataset appears in the preview window. We recommend true colour to search for cloud-free images"
+  },
+  {
+    term: "difference output",
+    content:
+      "Imagery showing differences in landscape according to specific styles and data sources"
   }
 ];
 export default defaultTerms;
