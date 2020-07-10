@@ -13,6 +13,7 @@ const DateTimePicker = require("../../../ReactViews/BottomDock/Timeline/DateTime
 const dateFormat = require("dateformat");
 const Box: any = require("../../../Styled/Box").default;
 const Text: any = require("../../../Styled/Text").default;
+const TextSpan: any = require("../../../Styled/Text").TextSpan;
 const Button: any = require("../../../Styled/Button").default;
 const Spacing: any = require("../../../Styled/Spacing").default;
 
@@ -143,7 +144,7 @@ class DatePicker extends React.Component<PropsType> {
             onClick={this.toggleOpen}
             title={t("diffTool.datePicker.dateButtonTitle")}
           >
-            {this.formattedCurrentDate || "-"}
+            <TextSpan extraLarge>{this.formattedCurrentDate || "-"}</TextSpan>
           </DateButton>
           <NextButton
             disabled={item.isNextDiscreteTimeAvailable === false}
@@ -180,43 +181,51 @@ const PagerButton = styled(Button).attrs({
   }
 })`
   cursor: pointer;
-  background-color: ${props => props.theme.darkWithOverlay};
-  width: 34px;
-  height: 34px;
-  border-radius: 2px 0 0 2px;
-  border: 1px solid ${props => props.theme.darkWithOverlay};
-  display: flex;
+  background-color: ${props => props.theme.colorPrimary};
+  width: 40px;
+  border: 1px solid transparent;
+
+  ${({ theme }) => theme.centerWithFlex()}
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  svg {
-    width: 8px;
-    height: 8px;
-    padding: 6px 0;
-  }
 `;
 
 const PrevButton = styled(PagerButton).attrs({
-  renderIcon: () => <Icon glyph={Icon.GLYPHS.previous} />
+  renderIcon: () => (
+    <StyledIcon
+      css="transform:rotate(90deg);"
+      light
+      styledWidth="15px"
+      glyph={Icon.GLYPHS.arrowDown}
+    />
+  )
 })`
-  border-right: 1px solid rgba(255, 255, 255, 0.15);
+  ${({ theme }) => theme.borderRadiusLeft(theme.radius40Button)}
+  margin-right: 1px;
 `;
 
 const NextButton = styled(PagerButton).attrs({
-  renderIcon: () => <Icon glyph={Icon.GLYPHS.next} />
+  renderIcon: () => (
+    <StyledIcon
+      css="transform:rotate(270deg);"
+      light
+      styledWidth="15px"
+      glyph={Icon.GLYPHS.arrowDown}
+    />
+  )
 })`
-  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  ${({ theme }) => theme.borderRadiusRight(theme.radius40Button)}
+  margin-left: 1px;
 `;
 
 const DateButton = styled(Button).attrs({ secondary: true })`
   z-index: 1000; // So that we don't loose the button clicks to the date picker popup
   cursor: pointer;
   color: ${props => props.theme.textLight};
-  background-color: ${props => props.theme.darkWithOverlay};
+  background-color: ${props => props.theme.colorPrimary};
   min-width: 235px;
   // height: 34px;
   border-radius: 0px;
-  border: 1px solid ${props => props.theme.darkWithOverlay};
+  border: 1px solid ${props => props.theme.colorPrimary};
 `;
 
 export default withTranslation()(DatePicker);
