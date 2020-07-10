@@ -18,6 +18,7 @@ export default class TimeVaryingTraits extends mixTraits(CatalogMemberTraits) {
       "  * `start` - the dataset's start time\n" +
       "  * `stop` - the dataset's stop time\n" +
       "  * `now` - the current system time. If the system time is after `Stop Time`, `Stop Time` is used. If the system time is before `Start Time`, `Start Time` is used.\n\n" +
+      "  * `none` - do not automatically set an initial time\n" +
       "This value is ignored if `Current Time` is specified",
     type: "string"
   })

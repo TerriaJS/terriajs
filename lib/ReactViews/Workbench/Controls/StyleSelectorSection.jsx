@@ -75,9 +75,8 @@ const StyleSelectorSection = createReactClass({
 
   renderMultipleStyleSelectors(styleSelectors) {
     return (
-      <div className={Styles.styleSelector}>
-        {styleSelectors.map(this.renderSingleStyleSelector)}
-      </div>
+      // <div className={Styles.styleSelector}>
+      <div>{styleSelectors.map(this.renderSingleStyleSelector)}</div>
     );
   }
 });

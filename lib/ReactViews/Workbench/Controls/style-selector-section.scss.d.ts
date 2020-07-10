@@ -2,8 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'field': string;
-  'style-selector': string;
-  'styleSelector': string;
   'title': string;
 }
 declare var cssExports: CssExports;
