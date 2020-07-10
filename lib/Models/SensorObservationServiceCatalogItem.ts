@@ -624,6 +624,8 @@ function createChartColumn(
   name: string | undefined
 ): string {
   const nameAttr = name == undefined ? "" : `name="${name}"`;
+  // The API that provides the chart data is a SOAP API, and the download button is essentially just a link, so when you click it you get an error page.
+  // can-download="false" will disable this broken download button.
   return `<sos-chart identifier="${identifier}" ${nameAttr} can-download="false"></sos-chart>`;
 }
 
