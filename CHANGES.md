@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.37)
 * Add `refreshEnabled` trait and `AsyncMappableMixin` to `AutoRefreshMixin`
+* Add `typeName` to `CatalogMemberMixin`
 * Add `header` option to `loadText`
 * Add `isMixtedInto` function for `AsyncMappableMixin` and `AsyncChartableMixin`
 * Added file upload support for `GltfCatalogItem`. The supported extension is glb.

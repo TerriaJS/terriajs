@@ -96,7 +96,9 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
   CreateModel(WebProcessingServiceCatalogFunctionTraits)
 ) {
   static readonly type = "wps";
-  readonly typeName = "Web Processing Service (WPS)";
+  get typeName() {
+    return "Web Processing Service (WPS)";
+  }
   readonly proxyCacheDuration = "1d";
 
   readonly parameterConverters: ParameterConverter[] = [
