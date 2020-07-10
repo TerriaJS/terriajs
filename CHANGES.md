@@ -13,6 +13,7 @@ Change Log
 * Improve runtime themeing via styled components across main UI components
 * Updated default welcome video defaults to a newer, slower video
 * Difftool will now pick any existing marked location (like from a search result) and filter imagery for that location.
+* Updated labelling & copy in Difftool to clarify workflow
 * ChartCustomComponent now `abstract`, no longer specific to CSV catalog items. Implement it for custom feature info charts.
 * (💫The next rad feature💫)
 * Update date picker to use theme colours

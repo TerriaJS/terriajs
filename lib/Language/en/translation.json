@@ -85,12 +85,24 @@
   "diffTool": {
     "title": "Difference",
     "exit": "Exit",
-    "computeDifference": "This layer visualizes the difference between imagery captured at two discrete points in time.",
-    "styles": "Styles",
+    "instructions": {
+      "setDateA": "Set date A",
+      "setDateB": "Set date B",
+      "changeDates": "Change dates",
+      "paneDescription": "Visualise and compare the difference of data between two dates at one location."
+    },
     "choosePreview": "Choose a preview style",
-    "chooseDifference": "Choose a difference style",
-    "disabledButtonPrompt": "Select a precise location and difference style to proceed with change detection.",
+    "chooseDifference": "Choose a difference output",
     "differenceResultsTitle": "Change detection results",
+    "labels": {
+      "area": "Area",
+      "dates": "Dates",
+      "sourceDataset": "Source dataset",
+      "previewStyle": "Preview style",
+      "differenceOutput": "Difference output",
+      "generateDiffButtonText": "Generate change detection",
+      "disabledButtonPrompt": "Please note: A location and dates must be selected to proceed with change detection"
+    },
     "locationDisplay": {
       "noLocationSelected": {
         "title": "No location selected",
@@ -123,8 +135,7 @@
       "nextDateTitle": "Previous date",
       "dateButtonTitle": "Select a date",
       "dateOutOfRange": "Currently out of range"
-    },
-    "generateDiffButtonText": "Generate change detection"
+    }
   },
   "legend": {
     "lat": "Lat",
