@@ -255,12 +255,19 @@ export default class CkanCatalogGroup extends UrlMixin(
   }
 
   protected forceLoadMetadata(): Promise<void> {
-    return CkanServerStratum.load(this).then(stratum => {
-      if (stratum === undefined) return;
-      runInAction(() => {
-        this.strata.set(CkanServerStratum.stratumName, stratum);
+    const ckanServerStratum = <CkanServerStratum | undefined>(
+      this.strata.get(CkanServerStratum.stratumName)
+    );
+    if (!ckanServerStratum) {
+      return CkanServerStratum.load(this).then(stratum => {
+        if (stratum === undefined) return;
+        runInAction(() => {
+          this.strata.set(CkanServerStratum.stratumName, stratum);
+        });
       });
-    });
+    } else {
+      return Promise.resolve();
+    }
   }
 
   protected forceLoadMembers(): Promise<void> {

@@ -921,6 +921,20 @@
       "errorLoadingTitle": "Error loading GPX",
       "errorLoadingMessage": "An error occurred while loading a GPX file.  This may indicate that the file is invalid or that it is not supported by {{appName}}. If you would like assistance or further information, please email us at {{email}}"
     },
+    "georss": {
+      "name": "GeoRSS",
+      "subtitle": "Subtitle",
+      "updated": "Updated",
+      "category": "Category",
+      "description": "Description",
+      "copyrightText": "Copyright Text",
+      "link": "Link",
+      "author": "Author",
+      "errorLoadingTitle": "Could not load GeoRSS",
+      "errorLoadingMessage": "An error occurred while loading a GeoRSS file. <p>If you entered the link manually, please verify that the link is correct.</p><p>This error may also indicate that the server does not support {{cors}}.  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by 'appName' itself. <p>If you did not enter this link manually, this error may indicate that the data source you're trying to add is temporarily unavailable or there is a problem with your internet connection.  Try adding the data source again, and if the problem persists, please report it by sending an email to {{email}}.",
+      "unableToLoadItemTitle": "No GeoRSS available",
+      "unableToLoadItemMessage": "The GeoRSS catalog item cannot be loaded because it was not configured with a `url`, or `geoRss` property."
+    },
     "imageryLayer": {
       "intervalSupportErrorTitle": "Intervals not supported",
       "intervalSupportErrorMessage": "Sorry, {{typeName}} ({{type}}) catalog items cannot currently be made time-varying by specifying the \"intervals\" property.",
