@@ -3,6 +3,7 @@ Change Log
 
 ### MobX Development
 
+#### next release (mobx-37)
 #### next release (8.0.0-alpha.37)
 * Ensure `CkanCatalogGroup` doesn't keep re-requesting data when opening and closing groups.
 * Add `typeName` to `CatalogMemberMixin`
@@ -15,6 +16,7 @@ Change Log
 * (💫The next rad feature💫)
 * Update date picker to use theme colours
 * Removed some sass overrides on `Select` through `StyleSelectorSection`
+* Update LeftRightSection to use theme colours
 * Ported `GeoRssCatalogItem` to mobx, added support to skip entries without geometry.
 
 #### mobx-36
