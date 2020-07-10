@@ -20,6 +20,8 @@ Change Log
 * Update LeftRightSection to use theme colours
 * Ported `GeoRssCatalogItem` to mobx, added support to skip entries without geometry.
 * Update Difftool BottomPanel UI to clearer "area filter" and date pickers
+* Update Difftool BottomPanel to load into Terria's BottomDock
+* Rearrange MapButton layout in DOM to properly reflow with BottomDock
 
 #### mobx-36
 * Added `pointer-events` to `MapNavigation` and `MenuBar` elements, so the bar don't block mouse click outside of the button.
