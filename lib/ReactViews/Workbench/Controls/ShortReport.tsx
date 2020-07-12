@@ -70,14 +70,15 @@ export default class ShortReport extends React.Component<{
           </Text>
         )}
         {shortReportSections.map((r, i) => (
-          <>
+          <React.Fragment key={r.name}>
             <RawButton
-              key={r.name}
               fullWidth
               onClick={this.clickShortReport.bind(this, r.name)}
               css={`
                 text-align: left;
               `}
+              aria-expanded={r.show}
+              aria-controls={`${this.props.item.uniqueId}-${r.name}`}
             >
               <Text
                 as="span"
@@ -104,7 +105,11 @@ export default class ShortReport extends React.Component<{
             </RawButton>
 
             {r.show && isDefined(r.content) ? (
-              <Text textLight small>
+              <Text
+                textLight
+                small
+                id={`${this.props.item.uniqueId}-${r.name}`}
+              >
                 {parseCustomMarkdownToReact(r.content, {
                   catalogItem: this.props.item
                 })}
@@ -114,7 +119,7 @@ export default class ShortReport extends React.Component<{
             )}
 
             {i < shortReportSections.length - 1 && <Spacing bottom={2} />}
-          </>
+          </React.Fragment>
         ))}
       </Box>
     );
