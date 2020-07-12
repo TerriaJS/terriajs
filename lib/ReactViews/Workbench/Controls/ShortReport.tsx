@@ -1,7 +1,6 @@
 "use strict";
 
 import React from "react";
-import Styles from "./short-report.scss";
 import { observer } from "mobx-react";
 import { runInAction } from "mobx";
 import isDefined from "../../../Core/isDefined";
@@ -9,7 +8,14 @@ import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import CommonStrata from "../../../Models/CommonStrata";
 
 import parseCustomMarkdownToReact from "../../Custom/parseCustomMarkdownToReact";
-import Icon from "../../Icon";
+
+import { GLYPHS, StyledIcon } from "../../Icon";
+
+// :(
+const RawButton: any = require("../../../Styled/Button").RawButton;
+const Text: any = require("../../../Styled/Text").default;
+const Box: any = require("../../../Styled/Box").default;
+const Spacing: any = require("../../../Styled/Spacing").default;
 
 @observer
 export default class ShortReport extends React.Component<{
@@ -47,37 +53,70 @@ export default class ShortReport extends React.Component<{
     ) {
       return null;
     }
+
+    // const theme = useTheme();
+
+    const shortReportSections = this.props.item.shortReportSections.filter(r =>
+      isDefined(r.name)
+    );
+
     return (
-      <div className={Styles.shortReport}>
-        {isDefined(this.props.item.shortReport)
-          ? parseCustomMarkdownToReact(this.props.item.shortReport, {
+      <Box fullWidth displayInlineBlock padded>
+        {isDefined(this.props.item.shortReport) && (
+          <Text textLight medium>
+            {parseCustomMarkdownToReact(this.props.item.shortReport, {
               catalogItem: this.props.item
-            })
-          : ""}
-        {this.props.item.shortReportSections
-          .filter(r => isDefined(r.name))
-          .map((r, i) => (
-            <div key={r.name}>
-              <a
-                href="#"
-                onClick={this.clickShortReport.bind(this, r.name)}
-                className={Styles.shortReportTitle}
+            })}
+          </Text>
+        )}
+        {shortReportSections.map((r, i) => (
+          <>
+            <RawButton
+              key={r.name}
+              fullWidth
+              onClick={this.clickShortReport.bind(this, r.name)}
+              css={`
+                text-align: left;
+              `}
+            >
+              <Text
+                as="span"
+                textLight
+                bold
+                noWrap
+                medium
+                css={`
+                  display: inline;
+                `}
               >
                 {r.name}
-                {r.show ? (
-                  <Icon glyph={Icon.GLYPHS.minusThick} />
-                ) : (
-                  <Icon glyph={Icon.GLYPHS.plusThick} />
-                )}
-              </a>
-              {r.show && isDefined(r.content)
-                ? parseCustomMarkdownToReact(r.content, {
-                    catalogItem: this.props.item
-                  })
-                : ""}
-            </div>
-          ))}
-      </div>
+              </Text>
+
+              <StyledIcon
+                styledWidth={"8px"}
+                light
+                glyph={r.show ? GLYPHS.minusThick : GLYPHS.plusThick}
+                css={`
+                  padding-left: 10px;
+                  display: inline;
+                `}
+              />
+            </RawButton>
+
+            {r.show && isDefined(r.content) ? (
+              <Text textLight small>
+                {parseCustomMarkdownToReact(r.content, {
+                  catalogItem: this.props.item
+                })}
+              </Text>
+            ) : (
+              ""
+            )}
+
+            {i < shortReportSections.length - 1 && <Spacing bottom={2} />}
+          </>
+        ))}
+      </Box>
     );
   }
 }
