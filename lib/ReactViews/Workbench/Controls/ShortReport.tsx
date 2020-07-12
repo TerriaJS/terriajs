@@ -59,6 +59,7 @@ export default class ShortReport extends React.Component<{
 
     return (
       <Box fullWidth displayInlineBlock padded>
+        {/* Show shortReport */}
         {isDefined(this.props.item.shortReport) && (
           <Text textLight medium>
             {parseCustomMarkdownToReact(this.props.item.shortReport, {
@@ -66,6 +67,8 @@ export default class ShortReport extends React.Component<{
             })}
           </Text>
         )}
+
+        {/* Show shortReportSections */}
         {shortReportSections.map((r, i) => (
           <React.Fragment key={r.name}>
             <RawButton
@@ -92,7 +95,7 @@ export default class ShortReport extends React.Component<{
               />
             </RawButton>
 
-            {r.show && isDefined(r.content) ? (
+            {r.show && isDefined(r.content) && (
               <Text
                 textLight
                 small
@@ -102,8 +105,6 @@ export default class ShortReport extends React.Component<{
                   catalogItem: this.props.item
                 })}
               </Text>
-            ) : (
-              ""
             )}
 
             {i < shortReportSections.length - 1 && <Spacing bottom={2} />}
