@@ -70,6 +70,7 @@ export const Text = styled.div`
     props.small &&
     `
     font-size: 12px;
+    line-height: 16px;
   `}
 
   ${props =>
