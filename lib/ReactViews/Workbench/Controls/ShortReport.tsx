@@ -45,20 +45,17 @@ export default class ShortReport extends React.Component<{
   }
 
   render() {
+    const shortReportSections = this.props.item?.shortReportSections?.filter(
+      r => isDefined(r.name)
+    );
+
     if (
       (!isDefined(this.props.item.shortReport) ||
         this.props.item.shortReport === "") &&
-      (!isDefined(this.props.item.shortReportSections) ||
-        this.props.item.shortReportSections.length === 0)
+      (!isDefined(shortReportSections) || shortReportSections.length === 0)
     ) {
       return null;
     }
-
-    // const theme = useTheme();
-
-    const shortReportSections = this.props.item.shortReportSections.filter(r =>
-      isDefined(r.name)
-    );
 
     return (
       <Box fullWidth displayInlineBlock padded>
@@ -80,16 +77,7 @@ export default class ShortReport extends React.Component<{
               aria-expanded={r.show}
               aria-controls={`${this.props.item.uniqueId}-${r.name}`}
             >
-              <Text
-                as="span"
-                textLight
-                bold
-                noWrap
-                medium
-                css={`
-                  display: inline;
-                `}
-              >
+              <Text as="span" textLight bold medium>
                 {r.name}
               </Text>
 
