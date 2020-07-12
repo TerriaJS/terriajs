@@ -61,6 +61,10 @@ class TestDiffableItem extends DiffableMixin(
 ) {
   styleSelector: SelectableStyle | undefined = undefined;
 
+  get canDiffImages() {
+    return true;
+  }
+
   get discreteTimes() {
     return undefined;
   }
@@ -73,7 +77,7 @@ class TestDiffableItem extends DiffableMixin(
 
   clearDiffImage() {}
 
-  getLegendUrlForDiffStyle(
+  getLegendUrlForStyle(
     diffStyleId: string,
     firstDate: JulianDate,
     secondDate: JulianDate

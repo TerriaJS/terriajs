@@ -199,7 +199,7 @@
   display: inline-block;
   height: 10px;
   width: 2px;
-  background: $overlay;
+  // background: $overlay;
   margin-top: 1px;
 }
 
@@ -209,11 +209,6 @@
 
 .gridRowInner31 span {
   margin-right: 3px;
-}
-
-.activeGrid {
-  opacity: 0.9;
-  background: $color-primary !important;
 }
 
 .gridHeading {
