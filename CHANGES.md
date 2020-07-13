@@ -15,19 +15,17 @@ Change Log
 * Difftool will now pick any existing marked location (like from a search result) and filter imagery for that location.
 * Updated labelling & copy in Difftool to clarify workflow
 * ChartCustomComponent now `abstract`, no longer specific to CSV catalog items. Implement it for custom feature info charts.
-* (💫The next rad feature💫)
 * Update date picker to use theme colours
 * Removed some sass overrides on `Select` through `StyleSelectorSection`
 * Update LeftRightSection to use theme colours
 * Ported `GeoRssCatalogItem` to mobx, added support to skip entries without geometry.
+* Re-added chart disclaimer.
 
 #### mobx-36
 * Added `pointer-events` to `MapNavigation` and `MenuBar` elements, so the bar don't block mouse click outside of the button.
 * Fixes "reminder pop-up" for help button being unclickable
 * Use `useTranslation` instead of `withTranslation` in functional component (`MapDataCount`)
 * Make welcome video url and placeholder configurable via configparameters
-* Re-added chart disclaimer
-* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 * Added `ExportableData` interface.
 * Added `ExportData` component for data catalog.
 * Added WCS "clip and ship" for WMS
