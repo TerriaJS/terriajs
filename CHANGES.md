@@ -7,6 +7,7 @@ Change Log
 #### next release (8.0.0-alpha.37)
 * Add `show` to `ShortReportTraits` and Tsxify `ShortReport`
 * Convert `ShortReport` to styled-components, add accordian-like UI
+* Add `refreshEnabled` trait and `AsyncMappableMixin` to `AutoRefreshMixin`
 * Ensure `CkanCatalogGroup` doesn't keep re-requesting data when opening and closing groups.
 * Add `typeName` to `CatalogMemberMixin`
 * Add `header` option to `loadText`
