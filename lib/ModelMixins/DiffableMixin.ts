@@ -2,13 +2,13 @@ import { JulianDate } from "cesium";
 import { computed } from "mobx";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
+import { SelectableDimension } from "../Models/SelectableDimensions";
+import StratumOrder from "../Models/StratumOrder";
 import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
 import DiffableTraits from "../Traits/DiffableTraits";
 import ShowableTraits from "../Traits/ShowableTraits";
 import SplitterTraits from "../Traits/SplitterTraits";
 import TimeFilterMixin from "./TimeFilterMixin";
-import StratumOrder from "../Models/StratumOrder";
-import { SelectableDimension } from "../Models/SelectableDimensions";
 
 type MixinModel = Model<
   DiffableTraits & ShowableTraits & CatalogMemberTraits & SplitterTraits
@@ -23,6 +23,8 @@ function DiffableMixin<T extends Constructor<MixinModel>>(Base: T) {
       return true;
     }
 
+    abstract get canDiffImages(): boolean;
+
     abstract showDiffImage(
       firstDate: JulianDate,
       secondDate: JulianDate,
@@ -31,10 +33,10 @@ function DiffableMixin<T extends Constructor<MixinModel>>(Base: T) {
 
     abstract clearDiffImage(): void;
 
-    abstract getLegendUrlForDiffStyle(
+    abstract getLegendUrlForStyle(
       diffStyleId: string,
-      firstDate: JulianDate,
-      secondDate: JulianDate
+      firstDate?: JulianDate,
+      secondDate?: JulianDate
     ): string;
 
     @computed

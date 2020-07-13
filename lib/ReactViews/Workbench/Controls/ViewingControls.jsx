@@ -199,7 +199,6 @@ const ViewingControls = observer(
         toolName: "Difference",
         getToolComponent: () =>
           import("../../Tools/DiffTool/DiffTool").then(m => m.default),
-        showCloseButton: true,
         params: {
           sourceItem: this.props.item
         }
