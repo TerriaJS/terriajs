@@ -63,13 +63,13 @@ export const Text = styled.div`
   ${props => props.fullWidth && `width: 100%;`}
   ${props => props.noWrap && `white-space: nowrap;`}
 
+  line-height: 20px;
   ${props =>
     !props.noFontSize &&
     `
     font-size: 13px;
     line-height: normal;
   `}
-  line-height: 20px;
 
   ${props =>
     props.small &&
