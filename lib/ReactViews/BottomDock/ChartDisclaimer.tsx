@@ -38,8 +38,8 @@ const ChartDisclaimer: React.FC<ChartDisclaimerProps> = ({ terria }) => {
     <Box
       backgroundColor="#9a4b4b"
       column
+      paddedHorizontally={2}
       css={`
-        padding: 0 10px;
         a,
         a:visited {
           color: white;
@@ -49,7 +49,7 @@ const ChartDisclaimer: React.FC<ChartDisclaimerProps> = ({ terria }) => {
       <Spacing bottom={2} />
       {uniqueChartDisclaimers.map(chartDisclaimer => (
         <React.Fragment key={chartDisclaimer}>
-          <Text color="white">{parseCustomHtmlToReact(chartDisclaimer!)}</Text>
+          <Text textLight>{parseCustomHtmlToReact(chartDisclaimer!)}</Text>
           <Spacing bottom={2} />
         </React.Fragment>
       ))}
