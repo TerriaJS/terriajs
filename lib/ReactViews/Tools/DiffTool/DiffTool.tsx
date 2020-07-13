@@ -477,7 +477,10 @@ class Main extends React.Component<MainPropsType> {
     return (
       <Text large>
         <DiffAccordion viewState={viewState} t={t}>
-          <MainPanel isMapFullScreen={viewState.isMapFullScreen}>
+          <MainPanel
+            isMapFullScreen={viewState.isMapFullScreen}
+            styledMaxHeight={`calc(100vh - ${viewState.bottomDockHeight}px - 150px)`}
+          >
             {isShowingDiff && (
               <>
                 <Box centered left>
@@ -798,6 +801,7 @@ const DiffAccordionWrapper = styled(Box).attrs({
 
 const MainPanel = styled(Box).attrs({
   column: true,
+  overflowY: "auto",
   paddedRatio: 2
 })`
   ${({ theme }) => theme.borderRadiusBottom(theme.radius40Button)}

@@ -23,6 +23,7 @@ export const Box = styled.div`
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
   ${props => props.styledHeight && `height: ${props.styledHeight};`}
   ${props => props.styledMinHeight && `min-height: ${props.styledMinHeight};`}
+  ${props => props.styledMaxHeight && `max-height: ${props.styledMaxHeight};`}
   
   ${props =>
     props.col &&

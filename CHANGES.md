@@ -22,6 +22,8 @@ Change Log
 * Update Difftool BottomPanel UI to clearer "area filter" and date pickers
 * Update Difftool BottomPanel to load into Terria's BottomDock
 * Rearrange MapButton layout in DOM to properly reflow with BottomDock
+* Update Difftool MainPanel to not get clipped by BottomDock
+* Rearrange MapDataCount to exist inside MapColumn for more correct DOM structure & behaviour
 
 #### mobx-36
 * Added `pointer-events` to `MapNavigation` and `MenuBar` elements, so the bar don't block mouse click outside of the button.

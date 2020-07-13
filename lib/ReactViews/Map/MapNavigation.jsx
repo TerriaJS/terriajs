@@ -26,8 +26,17 @@ import Prompt from "../Generic/Prompt";
 import { runInAction } from "mobx";
 import { withTranslation } from "react-i18next";
 
+/**
+ * TODO: fix this so that we don't need to override pointer events like this.
+ * a fix would look like breaking up the top and bottom parts, so there is
+ * no element "drawn/painted" between the top and bottom parts of map
+ * navigation
+ */
 const StyledMapNavigation = styled.div`
   pointer-events: none;
+  button {
+    pointer-events: auto;
+  }
   ${p =>
     p.trainerBarVisible &&
     `

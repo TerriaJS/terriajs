@@ -9,6 +9,7 @@ import DistanceLegend from "../Map/Legend/DistanceLegend";
 import LocationBar from "../Map/Legend/LocationBar";
 import MapNavigation from "../Map/MapNavigation";
 import MenuBar from "../Map/MenuBar";
+import MapDataCount from "../BottomDock/MapDataCount";
 // import defined from "terriajs-cesium/Source/Core/defined";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import BottomDock from "../BottomDock/BottomDock";
@@ -140,6 +141,10 @@ const MapColumn = observer(
                 />
               </div>
               <If condition={!this.props.viewState.hideMapUi()}>
+                <MapDataCount
+                  terria={this.props.terria}
+                  viewState={this.props.viewState}
+                />
                 <div className={Styles.locationDistance}>
                   <LocationBar
                     terria={this.props.terria}
