@@ -19,6 +19,7 @@ import Text from "../../Styled/Text";
 import { useRefForTerria } from "../Hooks/useRefForTerria";
 
 const StyledMenuBar = styled.div`
+  pointer-events: none;
   ${p =>
     p.trainerBarVisible &&
     `
@@ -151,6 +152,17 @@ const MenuBar = observer(props => {
                 className={Styles.storyBtn}
                 type="button"
                 onClick={onStoryButtonClick}
+                aria-expanded={props.viewState.storyBuilderShown}
+                css={`
+                  ${p =>
+                    p["aria-expanded"] &&
+                    `&:not(.foo) {
+                      background: ${p.theme.colorPrimary};
+                      svg {
+                        fill: ${p.theme.textLight};
+                      }
+                    }`}
+                `}
               >
                 <Icon glyph={Icon.GLYPHS.story} />
                 <span>{t("story.story")}</span>

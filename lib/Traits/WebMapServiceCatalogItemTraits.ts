@@ -156,4 +156,20 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
     description: "When true, disables the style selector in the workbench"
   })
   disableStyleSelector = false;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Linked WCS URL",
+    description:
+      "Gets or sets the URL of a WCS that enables clip-and-ship for this WMS item."
+  })
+  linkedWcsUrl?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Linked WCS Coverage Name",
+    description:
+      "Gets or sets the coverage name for linked WCS for clip-and-ship."
+  })
+  linkedWcsCoverage?: string;
 }

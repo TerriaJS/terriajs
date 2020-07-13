@@ -28,6 +28,7 @@ import { runInAction } from "mobx";
 import { withTranslation } from "react-i18next";
 
 const StyledMapNavigation = styled.div`
+  pointer-events: none;
   ${p =>
     p.trainerBarVisible &&
     `
@@ -128,12 +129,15 @@ class MapNavigation extends React.Component {
             // bottom map buttons
           >
             <div className={Styles.controls}>
-              <div className={Styles.control}>
-                <FeedbackButton
-                  terria={this.props.terria}
-                  viewState={this.props.viewState}
-                />
-              </div>
+              {this.props.terria.configParameters.feedbackUrl &&
+                !this.props.viewState.hideMapUi() && (
+                  <div className={Styles.control}>
+                    <FeedbackButton
+                      terria={this.props.terria}
+                      viewState={this.props.viewState}
+                    />
+                  </div>
+                )}
               <If condition={!this.props.viewState.useSmallScreenInterface}>
                 <div className={Styles.control}>
                   <MapIconButton

@@ -208,9 +208,10 @@ export default class Terria {
     globalDisclaimer: undefined,
     showWelcomeMessage: false,
     welcomeMessageVideo: {
-      videoUrl: "https://www.youtube.com/embed/NTtSM70rIvI",
+      videoTitle: "Getting started with the map",
+      videoUrl: "https://www.youtube.com/embed/FjSxaviSLhc",
       placeholderImage:
-        "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
+        "https://img.youtube.com/vi/FjSxaviSLhc/maxresdefault.jpg"
     },
     showInAppGuides: false,
     helpContent: [],

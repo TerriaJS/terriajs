@@ -41,6 +41,9 @@ const BottomDock = observer(
           ref={this.props.domElementRef}
           tabIndex={0}
           onClick={this.handleClick}
+          css={`
+            background: ${p => p.theme.dark};
+          `}
         >
           <ChartDisclaimer terria={terria} viewState={this.props.viewState} />
           <MapDataCount terria={terria} viewState={this.props.viewState} />

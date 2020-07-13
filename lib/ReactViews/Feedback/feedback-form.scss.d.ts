@@ -5,8 +5,6 @@ interface CssExports {
   'btnCancel': string;
   'btnClose': string;
   'btnSubmit': string;
-  'btnSubmit--hover': string;
-  'btnSubmitHover': string;
   'description': string;
   'field': string;
   'form': string;

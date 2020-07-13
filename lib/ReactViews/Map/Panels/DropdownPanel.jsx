@@ -72,6 +72,13 @@ const DropdownPanel = createReactClass({
     }
   },
 
+  openWithUserClick(e) {
+    if (this.props.userOnClick) {
+      this.props.userOnClick();
+    }
+    this.openPanel(e);
+  },
+
   render() {
     let iconGlyph;
     if (defined(Icon.GLYPHS[this.props.theme.icon])) {
@@ -83,13 +90,24 @@ const DropdownPanel = createReactClass({
     return (
       <div className={classNames(Styles.panel, this.props.theme.outer)}>
         <button
-          onClick={this.openPanel}
+          onClick={this.openWithUserClick}
           type="button"
           className={classNames(Styles.button, this.props.theme.btn, {
             [Styles.buttonForModalDropdown]: this.props.showDropdownAsModal
           })}
           title={this.props.btnTitle}
           ref={this.props.btnRef || (element => (this.buttonElement = element))}
+          isOpen={this.isOpen()}
+          css={`
+            ${p =>
+              p.isOpen &&
+              `&:not(.foo) {
+                background: ${p.theme.colorPrimary};
+                svg {
+                  fill: ${p.theme.textLight};
+                }
+              }`}
+          `}
         >
           <If condition={this.props.theme.icon}>
             <Icon glyph={iconGlyph} />
