@@ -121,6 +121,7 @@ class DatePicker extends React.Component<PropsType> {
     const { heading, item, t } = this.props;
     return (
       <Box column centered flex={1}>
+        <Spacing bottom={4} />
         <Box centered>
           <StyledIcon
             light
@@ -141,6 +142,8 @@ class DatePicker extends React.Component<PropsType> {
             onClick={() => item.moveToPreviousDiscreteTime(CommonStrata.user)}
           />
           <DateButton
+            primary
+            isOpen={this.isOpen}
             onClick={this.toggleOpen}
             title={t("diffTool.datePicker.dateButtonTitle")}
           >
@@ -170,6 +173,7 @@ class DatePicker extends React.Component<PropsType> {
             onClose={() => this.setIsOpen(false)}
           />
         </div>
+        <Spacing bottom={4} />
       </Box>
     );
   }
@@ -217,15 +221,18 @@ const NextButton = styled(PagerButton).attrs({
   margin-left: 1px;
 `;
 
-const DateButton = styled(Button).attrs({ secondary: true })`
-  z-index: 1000; // So that we don't loose the button clicks to the date picker popup
-  cursor: pointer;
-  color: ${props => props.theme.textLight};
-  background-color: ${props => props.theme.colorPrimary};
-  min-width: 235px;
-  // height: 34px;
+const DateButton = styled(Button)`
+  // z-index: 1000; // (Nanda): So that we don't loose the button clicks to the date picker popup
+  z-index: 0;
+  ${props => props.isOpen && `z-index: 1000;`};
+
   border-radius: 0px;
   border: 1px solid ${props => props.theme.colorPrimary};
+
+  min-width: 235px;
+  @media (max-width: ${(props: any) => props.theme.lg}px) {
+    min-width: 150px;
+  }
 `;
 
 export default withTranslation()(DatePicker);

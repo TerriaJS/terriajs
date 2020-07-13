@@ -689,12 +689,7 @@ class Main extends React.Component<MainPropsType> {
         {!isShowingDiff &&
           ReactDOM.createPortal(
             // Bottom Panel
-            <Box
-              centered
-              fullWidth
-              styledHeight="115px"
-              backgroundColor={theme.dark}
-            >
+            <Box centered fullWidth wrap backgroundColor={theme.dark}>
               <DatePicker
                 heading={t("diffTool.labels.dateComparisonA")}
                 item={this.props.leftItem}
@@ -796,6 +791,7 @@ const DiffAccordionWrapper = styled(Box).attrs({
   // background: ${p => p.theme.dark};
   margin-left: ${props =>
     props.isMapFullScreen ? 16 : parseInt(props.theme.workbenchWidth) + 40}px;
+  // TODO: Transitioning on margin-left incurs an expensive layout re-calculation, consider disabling
   transition: margin-left 0.25s;
 `;
 
@@ -867,7 +863,15 @@ const AreaFilterSelection = (props: {
   }
 
   return (
-    <Box column centered>
+    <Box
+      column
+      centered
+      css={`
+        @media (max-width: ${(props: any) => props.theme.md}px) {
+          width: 100%;
+        }
+      `}
+    >
       <Box centered>
         <StyledIcon light styledWidth="16px" glyph={GLYPHS.location2} />
         <Spacing right={2} />

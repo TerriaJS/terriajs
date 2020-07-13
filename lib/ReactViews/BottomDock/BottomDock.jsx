@@ -70,6 +70,7 @@ const BottomDock = observer(
           <If condition={top}>
             <Timeline terria={terria} />
           </If>
+          {/* Used for react portals - do not remove without updating portals using this */}
           <div id="TJS-BottomDockPortalForTool" />
         </div>
       );
