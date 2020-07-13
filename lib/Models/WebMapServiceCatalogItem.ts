@@ -777,23 +777,16 @@ class WebMapServiceCatalogItem
 
       console.log(`Creating new ImageryProvider for time ${time}`);
 
-      const diffModeParameters = this.isShowingDiff
-        ? this.diffModeParameters
-        : {};
-      const parameters: { [key: string]: any } = {
-        ...WebMapServiceCatalogItem.defaultParameters,
-        ...(this.parameters || {}),
-        ...diffModeParameters
-      };
-
       // Override parameters set by user (in `parameters` trait)
+      const layerParameters: { [key: string]: any } = {};
+
       if (isDefined(this.parameters)) {
         Object.keys(this.parameters).forEach(
           key =>
             // elevation is specified as simply "elevation", styles is specified as "styles"
             // Other (custom) dimensions are prefixed with 'dim_'.
             // See WMS 1.3.0 spec section C.3.2 and C.3.3.
-            (parameters[
+            (layerParameters[
               key?.toLowerCase() !== "elevation" &&
               key?.toLowerCase() !== "styles"
                 ? `dim_${key}`
@@ -803,8 +796,17 @@ class WebMapServiceCatalogItem
       }
 
       if (time !== undefined) {
-        parameters.time = time;
+        layerParameters.time = time;
       }
+
+      const diffModeParameters = this.isShowingDiff
+        ? this.diffModeParameters
+        : {};
+      const parameters: { [key: string]: any } = {
+        ...WebMapServiceCatalogItem.defaultParameters,
+        ...layerParameters,
+        ...diffModeParameters
+      };
 
       const maximumLevel = scaleDenominatorToLevel(this.minScaleDenominator);
 
@@ -847,6 +849,7 @@ class WebMapServiceCatalogItem
         url: proxyCatalogItemUrl(this, baseUrl.toString()),
         layers: this.layers || "",
         parameters: parameters,
+        getFeatureInfoParameters: layerParameters,
         tilingScheme: /*defined(this.tilingScheme) ? this.tilingScheme :*/ new WebMercatorTilingScheme(),
         maximumLevel: maximumLevel,
         rectangle: rectangle
