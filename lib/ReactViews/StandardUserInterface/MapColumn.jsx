@@ -102,32 +102,32 @@ const MapColumn = observer(
           })}
         >
           <div className={Styles.mapRow}>
-            <If condition={!this.props.viewState.hideMapUi()}>
-              <div
-                css={`
-                  ${this.props.viewState.explorerPanelIsVisible &&
-                    "opacity: 0.3;"}
-                `}
-              >
-                <MenuBar
-                  terria={this.props.terria}
-                  viewState={this.props.viewState}
-                  allBaseMaps={this.props.allBaseMaps}
-                  menuItems={customElements.menu}
-                  menuLeftItems={customElements.menuLeft}
-                  animationDuration={this.props.animationDuration}
-                />
-                <MapNavigation
-                  terria={this.props.terria}
-                  viewState={this.props.viewState}
-                  navItems={customElements.nav}
-                />
-              </div>
-            </If>
             <div
               className={classNames(mapCellClass, Styles.mapCellMap)}
               ref={this.newMapCell}
             >
+              <If condition={!this.props.viewState.hideMapUi()}>
+                <div
+                  css={`
+                    ${this.props.viewState.explorerPanelIsVisible &&
+                      "opacity: 0.3;"}
+                  `}
+                >
+                  <MenuBar
+                    terria={this.props.terria}
+                    viewState={this.props.viewState}
+                    allBaseMaps={this.props.allBaseMaps}
+                    menuItems={customElements.menu}
+                    menuLeftItems={customElements.menuLeft}
+                    animationDuration={this.props.animationDuration}
+                  />
+                  <MapNavigation
+                    terria={this.props.terria}
+                    viewState={this.props.viewState}
+                    navItems={customElements.nav}
+                  />
+                </div>
+              </If>
               <div
                 className={Styles.mapWrapper}
                 style={{
