@@ -3,11 +3,12 @@ Change Log
 
 ### MobX Development
 
-#### next release (mobx-37)
-#### next release (8.0.0-alpha.37)
+#### next release (8.0.0-alpha.38)
 * Added option for manual Table region mapping - with `enableManualRegionMapping` TableTrait. This provides `SelectableDimensions` for the region column and region type.
 * Added WMS Dimensions (using `SelectableDimensions`)
 * Merged the `StyleSelector` and `DimensionsSelector`, and created a `SelectableDimensions` interface.
+
+#### 8.0.0-alpha.37
 * Add `refreshEnabled` trait and `AsyncMappableMixin` to `AutoRefreshMixin`
 * Ensure `CkanCatalogGroup` doesn't keep re-requesting data when opening and closing groups.
 * Add `typeName` to `CatalogMemberMixin`
@@ -19,11 +20,16 @@ Change Log
 * Difftool will now pick any existing marked location (like from a search result) and filter imagery for that location.
 * Updated labelling & copy in Difftool to clarify workflow
 * ChartCustomComponent now `abstract`, no longer specific to CSV catalog items. Implement it for custom feature info charts.
-* (💫The next rad feature💫)
 * Update date picker to use theme colours
 * Removed some sass overrides on `Select` through `StyleSelectorSection`
 * Update LeftRightSection to use theme colours
 * Ported `GeoRssCatalogItem` to mobx, added support to skip entries without geometry.
+* Update Difftool BottomPanel UI to clearer "area filter" and date pickers
+* Update Difftool BottomPanel to load into Terria's BottomDock
+* Rearrange MapButton layout in DOM to properly reflow with BottomDock
+* Update Difftool MainPanel to not get clipped by BottomDock
+* Rearrange MapDataCount to exist inside MapColumn for more correct DOM structure & behaviour
+* Re-added chart disclaimer.
 
 #### mobx-36
 * Added `pointer-events` to `MapNavigation` and `MenuBar` elements, so the bar don't block mouse click outside of the button.

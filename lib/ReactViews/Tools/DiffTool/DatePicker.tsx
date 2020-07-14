@@ -7,16 +7,18 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import CommonStrata from "../../../Models/CommonStrata";
 import { formatDateTime } from "../../BottomDock/Timeline/DateFormats";
-import Icon from "../../Icon";
+import Icon, { StyledIcon } from "../../Icon";
 
 const DateTimePicker = require("../../../ReactViews/BottomDock/Timeline/DateTimePicker.jsx");
 const dateFormat = require("dateformat");
 const Box: any = require("../../../Styled/Box").default;
 const Text: any = require("../../../Styled/Text").default;
+const TextSpan: any = require("../../../Styled/Text").TextSpan;
 const Button: any = require("../../../Styled/Button").default;
+const Spacing: any = require("../../../Styled/Spacing").default;
 
 interface PropsType extends WithTranslation {
-  title: string;
+  heading: string;
   item: DiffableMixin.Instance;
   popupStyle: string;
   externalOpenButton: React.RefObject<HTMLButtonElement>;
@@ -116,12 +118,23 @@ class DatePicker extends React.Component<PropsType> {
   }
 
   render() {
-    const { title, item, t } = this.props;
+    const { heading, item, t } = this.props;
     return (
-      <Box column centered>
-        <Text textLight semiBold>
-          {title}
-        </Text>
+      <Box column centered flex={1}>
+        <Spacing bottom={4} />
+        <Box centered>
+          <StyledIcon
+            light
+            styledWidth="21px"
+            glyph={Icon.GLYPHS.calendar2}
+            css={"margin-top:-2px;"}
+          />
+          <Spacing right={2} />
+          <Text textLight extraLarge>
+            {heading}
+          </Text>
+        </Box>
+        <Spacing bottom={2} />
         <Box>
           <PrevButton
             disabled={item.isPreviousDiscreteTimeAvailable === false}
@@ -129,10 +142,12 @@ class DatePicker extends React.Component<PropsType> {
             onClick={() => item.moveToPreviousDiscreteTime(CommonStrata.user)}
           />
           <DateButton
+            primary
+            isOpen={this.isOpen}
             onClick={this.toggleOpen}
             title={t("diffTool.datePicker.dateButtonTitle")}
           >
-            {this.formattedCurrentDate || "-"}
+            <TextSpan extraLarge>{this.formattedCurrentDate || "-"}</TextSpan>
           </DateButton>
           <NextButton
             disabled={item.isNextDiscreteTimeAvailable === false}
@@ -158,6 +173,7 @@ class DatePicker extends React.Component<PropsType> {
             onClose={() => this.setIsOpen(false)}
           />
         </div>
+        <Spacing bottom={4} />
       </Box>
     );
   }
@@ -169,43 +185,54 @@ const PagerButton = styled(Button).attrs({
   }
 })`
   cursor: pointer;
-  background-color: ${props => props.theme.darkWithOverlay};
-  width: 34px;
-  height: 34px;
-  border-radius: 2px 0 0 2px;
-  border: 1px solid ${props => props.theme.darkWithOverlay};
-  display: flex;
+  background-color: ${props => props.theme.colorPrimary};
+  width: 40px;
+  border: 1px solid transparent;
+
+  ${({ theme }) => theme.centerWithFlex()}
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  svg {
-    width: 8px;
-    height: 8px;
-    padding: 6px 0;
-  }
 `;
 
 const PrevButton = styled(PagerButton).attrs({
-  renderIcon: () => <Icon glyph={Icon.GLYPHS.previous} />
+  renderIcon: () => (
+    <StyledIcon
+      css="transform:rotate(90deg);"
+      light
+      styledWidth="15px"
+      glyph={Icon.GLYPHS.arrowDown}
+    />
+  )
 })`
-  border-right: 1px solid rgba(255, 255, 255, 0.15);
+  ${({ theme }) => theme.borderRadiusLeft(theme.radius40Button)}
+  margin-right: 1px;
 `;
 
 const NextButton = styled(PagerButton).attrs({
-  renderIcon: () => <Icon glyph={Icon.GLYPHS.next} />
+  renderIcon: () => (
+    <StyledIcon
+      css="transform:rotate(270deg);"
+      light
+      styledWidth="15px"
+      glyph={Icon.GLYPHS.arrowDown}
+    />
+  )
 })`
-  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  ${({ theme }) => theme.borderRadiusRight(theme.radius40Button)}
+  margin-left: 1px;
 `;
 
-const DateButton = styled(Button).attrs({ secondary: true })`
-  z-index: 1000; // So that we don't loose the button clicks to the date picker popup
-  cursor: pointer;
-  color: ${props => props.theme.textLight};
-  background-color: ${props => props.theme.darkWithOverlay};
-  min-width: 235px;
-  // height: 34px;
+const DateButton = styled(Button)`
+  // z-index: 1000; // (Nanda): So that we don't loose the button clicks to the date picker popup
+  z-index: 0;
+  ${props => props.isOpen && `z-index: 1000;`};
+
   border-radius: 0px;
-  border: 1px solid ${props => props.theme.darkWithOverlay};
+  border: 1px solid ${props => props.theme.colorPrimary};
+
+  min-width: 235px;
+  @media (max-width: ${(props: any) => props.theme.lg}px) {
+    min-width: 150px;
+  }
 `;
 
 export default withTranslation()(DatePicker);

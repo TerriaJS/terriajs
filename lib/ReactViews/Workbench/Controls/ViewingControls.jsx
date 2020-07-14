@@ -195,10 +195,14 @@ const ViewingControls = observer(
     },
 
     openDiffTool() {
+      // Disable timeline
+      // Should we do this? Difference is quite a specific use case
+      this.props.item.terria.timelineStack.removeAll();
       this.props.viewState.openTool({
         toolName: "Difference",
         getToolComponent: () =>
           import("../../Tools/DiffTool/DiffTool").then(m => m.default),
+        showCloseButton: true,
         params: {
           sourceItem: this.props.item
         }

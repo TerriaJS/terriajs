@@ -23,6 +23,7 @@ export const Box = styled.div`
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
   ${props => props.styledHeight && `height: ${props.styledHeight};`}
   ${props => props.styledMinHeight && `min-height: ${props.styledMinHeight};`}
+  ${props => props.styledMaxHeight && `max-height: ${props.styledMaxHeight};`}
   
   ${props =>
     props.col &&
@@ -64,6 +65,7 @@ export const Box = styled.div`
   ${props => props.column && `flex-direction: column;`}
   ${props => props.wrap && `flex-wrap: wrap;`}
 
+  ${props => props.flex && `flex: ${props.flex};`}
   ${props => props.flexShrinkZero && `flex-shrink: 0;`}
 
   ${props => props.boxShadow && `box-shadow: 0 2px 8px 0 rgba(0,0,0,0.16);`}

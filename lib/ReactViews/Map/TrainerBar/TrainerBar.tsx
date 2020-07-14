@@ -1,21 +1,20 @@
+import { TFunction } from "i18next";
 import { observer } from "mobx-react";
-import React, { useState } from "react";
+import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import styled, { DefaultTheme, useTheme, withTheme } from "styled-components";
-
-import { GLYPHS, StyledIcon } from "../../Icon";
-
-import ViewState from "../../../ReactViewModels/ViewState";
-import {
-  StepItem,
-  TrainerItem,
-  HelpContentItem,
-  PaneMode
-} from "../../../ReactViewModels/defaultHelpContent";
+import styled, { DefaultTheme, withTheme } from "styled-components";
 import Terria from "../../../Models/Terria";
-// import parseCustomMarkdownToReact from "../../Custom/parseCustomMarkdownToReact";
-
+import {
+  HelpContentItem,
+  PaneMode,
+  StepItem,
+  TrainerItem
+} from "../../../ReactViewModels/defaultHelpContent";
+import ViewState from "../../../ReactViewModels/ViewState";
+import Select from "../../../Styled/Select";
+import parseCustomMarkdownToReact from "../../Custom/parseCustomMarkdownToReact";
 import measureElement from "../../HOCs/measureElement";
+import { GLYPHS, StyledIcon } from "../../Icon";
 
 const StyledHtml: any = require("../../Map/Panels/HelpPanel/StyledHtml")
   .default;
@@ -26,8 +25,6 @@ const Button: any = require("../../../Styled/Button").default;
 const RawButton: any = require("../../../Styled/Button").RawButton;
 const Text: any = require("../../../Styled/Text").default;
 const Spacing: any = require("../../../Styled/Spacing").default;
-import Select from "../../../Styled/Select";
-import { TFunction } from "i18next";
 
 const TrainerBarWrapper = styled(Box)`
   top: 0;
