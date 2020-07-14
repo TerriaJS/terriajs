@@ -15,7 +15,7 @@
   }
 
   @media (max-width: $mobile) {
-    position: fixed;
+    // position: fixed;
     & > div {
       flex-direction: row;
     }

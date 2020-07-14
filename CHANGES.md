@@ -3,7 +3,6 @@ Change Log
 
 ### MobX Development
 
-#### next release (mobx-37)
 #### next release (8.0.0-alpha.37)
 * Add `refreshEnabled` trait and `AsyncMappableMixin` to `AutoRefreshMixin`
 * Ensure `CkanCatalogGroup` doesn't keep re-requesting data when opening and closing groups.
@@ -20,6 +19,11 @@ Change Log
 * Removed some sass overrides on `Select` through `StyleSelectorSection`
 * Update LeftRightSection to use theme colours
 * Ported `GeoRssCatalogItem` to mobx, added support to skip entries without geometry.
+* Update Difftool BottomPanel UI to clearer "area filter" and date pickers
+* Update Difftool BottomPanel to load into Terria's BottomDock
+* Rearrange MapButton layout in DOM to properly reflow with BottomDock
+* Update Difftool MainPanel to not get clipped by BottomDock
+* Rearrange MapDataCount to exist inside MapColumn for more correct DOM structure & behaviour
 * Re-added chart disclaimer.
 
 #### mobx-36
