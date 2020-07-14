@@ -1,18 +1,17 @@
-import DimensionSelectorSection from "../../lib/ReactViews/Workbench/Controls/DimensionSelectorSection";
 import TestRenderer from "react-test-renderer";
 import React from "react";
+import { runInAction } from "mobx";
+import { ThemeProvider } from "styled-components";
+
+import CommonStrata from "../../lib/Models/CommonStrata";
+import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
+import SelectableDimensions from "../../lib/Models/SelectableDimensions";
 import Terria from "../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import { runInAction } from "mobx";
-import SelectableDimensions from "../../lib/Models/SelectableDimensions";
-import Select from "../../lib/Styled/Select";
-import ViewState from "../../lib/ReactViewModels/ViewState";
-import { ThemeProvider } from "styled-components";
+
+import DimensionSelectorSection from "../../lib/ReactViews/Workbench/Controls/DimensionSelectorSection";
 import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface/StandardTheme";
-import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
-import loadText from "../../lib/Core/loadText";
-// import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
+import Select from "../../lib/Styled/Select";
 
 describe("DimensionSelectorSection", function() {
   let terria: Terria;

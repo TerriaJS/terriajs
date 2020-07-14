@@ -1,5 +1,6 @@
 import { action, computed, observable, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
+
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
@@ -15,6 +16,7 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
+
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import RegionProvider from "../Map/RegionProvider";
 import JSRegionProviderList from "../Map/RegionProviderList";
@@ -24,9 +26,9 @@ import { ImageryParts } from "../Models/Mappable";
 import Model from "../Models/Model";
 import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import SelectableDimensions, {
-  SelectableDimension,
-  DimensionOption
+  SelectableDimension
 } from "../Models/SelectableDimensions";
+
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
@@ -268,27 +270,19 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       if (this.mapItems.length === 0 && !this.enableManualRegionMapping) {
         return;
       }
-      const tableModel = this;
+
       return {
-        get id(): string {
-          return "activeStyle";
-        },
-        get name(): string {
-          return "Display Variable";
-        },
-        get options(): readonly DimensionOption[] {
-          return tableModel.tableStyles.map(style => {
-            return {
-              id: style.id,
-              name: style.styleTraits.title || style.id
-            };
-          });
-        },
-        get selectedId(): string | undefined {
-          return tableModel.activeStyle;
-        },
-        setDimensionValue(stratumId: string, styleId: string) {
-          tableModel.setTrait(stratumId, "activeStyle", styleId);
+        id: "activeStyle",
+        name: "Display Variable",
+        options: this.tableStyles.map(style => {
+          return {
+            id: style.id,
+            name: style.styleTraits.title || style.id
+          };
+        }),
+        selectedId: this.activeStyle,
+        setDimensionValue: (stratumId: string, styleId: string) => {
+          this.setTrait(stratumId, "activeStyle", styleId);
         }
       };
     }
@@ -308,12 +302,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       }
 
       return {
-        get id(): string {
-          return "regionMapping";
-        },
-        get name(): string {
-          return "Region Mapping";
-        },
+        id: "regionMapping",
+        name: "Region Mapping",
         options: this.regionProviderList!.regionProviders.map(
           regionProvider => {
             return {
@@ -360,12 +350,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       }
 
       return {
-        get id(): string {
-          return "regionColumn";
-        },
-        get name(): string {
-          return "Region Column";
-        },
+        id: "regionColumn",
+        name: "Region Column",
         options: this.tableStyles.map(tableStyle => {
           return {
             name: tableStyle.id,
