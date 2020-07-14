@@ -98,14 +98,22 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
   @computed
   get styles(): StratumFromTraits<TableStyleTraits>[] {
     // Create a style to color by every scalar and enum.
-    const columns = this.catalogItem.tableColumns.filter(
+    let columns = this.catalogItem.tableColumns.filter(
       column =>
         !this.catalogItem.excludeStyles?.includes(column.name) &&
         (column.type === TableColumnType.scalar ||
           column.type === TableColumnType.enum ||
-          column.type === TableColumnType.region ||
           column.type === TableColumnType.text)
     );
+
+    // If no styles for scalar, enum or text, try to create a style using region columns
+    if (columns.length === 0) {
+      columns = this.catalogItem.tableColumns.filter(
+        column =>
+          !this.catalogItem.excludeStyles?.includes(column.name) &&
+          column.type === TableColumnType.region
+      );
+    }
 
     return columns.map((column, i) =>
       createStratumInstance(TableStyleTraits, {
