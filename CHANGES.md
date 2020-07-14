@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.37)
+* Add `refreshEnabled` trait and `AsyncMappableMixin` to `AutoRefreshMixin`
 * Ensure `CkanCatalogGroup` doesn't keep re-requesting data when opening and closing groups.
 * Add `typeName` to `CatalogMemberMixin`
 * Add `header` option to `loadText`
@@ -14,7 +15,6 @@ Change Log
 * Difftool will now pick any existing marked location (like from a search result) and filter imagery for that location.
 * Updated labelling & copy in Difftool to clarify workflow
 * ChartCustomComponent now `abstract`, no longer specific to CSV catalog items. Implement it for custom feature info charts.
-* (💫The next rad feature💫)
 * Update date picker to use theme colours
 * Removed some sass overrides on `Select` through `StyleSelectorSection`
 * Update LeftRightSection to use theme colours
@@ -24,6 +24,7 @@ Change Log
 * Rearrange MapButton layout in DOM to properly reflow with BottomDock
 * Update Difftool MainPanel to not get clipped by BottomDock
 * Rearrange MapDataCount to exist inside MapColumn for more correct DOM structure & behaviour
+* Re-added chart disclaimer.
 
 #### mobx-36
 * Added `pointer-events` to `MapNavigation` and `MenuBar` elements, so the bar don't block mouse click outside of the button.

@@ -5,12 +5,11 @@ import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
-import ChartPanel from "../Custom/Chart/ChartPanel";
-import Timeline from "./Timeline/Timeline";
-import Styles from "./bottom-dock.scss";
 import measureElement from "../../ReactViews/HOCs/measureElement";
-
-// import ChartDisclaimer from "./ChartDisclaimer";
+import ChartPanel from "../Custom/Chart/ChartPanel";
+import Styles from "./bottom-dock.scss";
+import ChartDisclaimer from "./ChartDisclaimer";
+import Timeline from "./Timeline/Timeline";
 
 const BottomDock = observer(
   createReactClass({
@@ -61,7 +60,7 @@ const BottomDock = observer(
             background: ${p => p.theme.dark};
           `}
         >
-          {/* <ChartDisclaimer terria={terria} viewState={this.props.viewState} /> */}
+          <ChartDisclaimer terria={terria} viewState={this.props.viewState} />
           <ChartPanel
             terria={terria}
             onHeightChange={this.onHeightChange}
