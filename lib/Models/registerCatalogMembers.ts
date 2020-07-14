@@ -16,6 +16,7 @@ import createUrlReferenceFromUrl from "./createUrlReferenceFromUrl";
 import CsvCatalogItem from "./CsvCatalogItem";
 import CzmlCatalogItem from "./CzmlCatalogItem";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
+import GeoRssCatalogItem from "./GeoRssCatalogItem";
 import GltfCatalogItem from "./GltfCatalogItem";
 import GtfsCatalogItem from "./GtfsCatalogItem";
 import IonImageryCatalogItem from "./IonImageryCatalogItem";
@@ -25,6 +26,7 @@ import OpenStreetMapCatalogItem from "./OpenStreetMapCatalogItem";
 import SenapsLocationsCatalogItem from "./SenapsLocationsCatalogItem";
 import SensorObservationServiceCatalogItem from "./SensorObservationServiceCatalogItem";
 import SplitItemReference from "./SplitItemReference";
+import StubCatalogItem from "./StubCatalogItem";
 import UrlReference, { UrlToCatalogMemberMapping } from "./UrlReference";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
@@ -33,6 +35,7 @@ import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
+  CatalogMemberFactory.register(StubCatalogItem.type, StubCatalogItem);
   CatalogMemberFactory.register(
     WebMapServiceCatalogItem.type,
     WebMapServiceCatalogItem
@@ -43,6 +46,7 @@ export default function registerCatalogMembers() {
   );
   CatalogMemberFactory.register(GltfCatalogItem.type, GltfCatalogItem);
   CatalogMemberFactory.register(GeoJsonCatalogItem.type, GeoJsonCatalogItem);
+  CatalogMemberFactory.register(GeoRssCatalogItem.type, GeoRssCatalogItem);
   CatalogMemberFactory.register(CsvCatalogItem.type, CsvCatalogItem);
   CatalogMemberFactory.register(CzmlCatalogItem.type, CzmlCatalogItem);
   CatalogMemberFactory.register(ArcGisCatalogGroup.type, ArcGisCatalogGroup);
@@ -141,10 +145,14 @@ export default function registerCatalogMembers() {
     matchesExtension("topojson"),
     GeoJsonCatalogItem.type
   );
+  UrlToCatalogMemberMapping.register(
+    matchesExtension("georss"),
+    GeoRssCatalogItem.type
+  );
 
   // These items work by trying to match a URL, then loading the data. If it fails, they move on.
   UrlToCatalogMemberMapping.register(
-    matchesUrl(/\/wms/i),
+    matchesUrl(/\/wms|\=wms/i),
     WebMapServiceCatalogGroup.type,
     true
   );

@@ -7,6 +7,7 @@ import Model from "../Models/Model";
 import TableColumnTraits from "../Traits/TableColumnTraits";
 import TableTraits from "../Traits/TableTraits";
 import TableColumnType, { stringToTableColumnType } from "./TableColumnType";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
 //   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
@@ -196,6 +197,21 @@ export default class TableColumn {
       maximum: maximum === minDate ? undefined : maximum,
       numberOfValidDates: numberOfValidDates,
       numberOfNonDates: numberOfNonDates
+    };
+  }
+
+  @computed
+  get valuesAsJulianDates() {
+    const valuesAsDates = this.valuesAsDates;
+    return {
+      ...this.valuesAsDates,
+      values: valuesAsDates.values.map(
+        date => date && JulianDate.fromDate(date)
+      ),
+      minimum:
+        valuesAsDates.minimum && JulianDate.fromDate(valuesAsDates.minimum),
+      maximum:
+        valuesAsDates.maximum && JulianDate.fromDate(valuesAsDates.maximum)
     };
   }
 

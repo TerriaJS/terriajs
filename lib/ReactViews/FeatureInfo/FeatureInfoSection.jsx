@@ -772,32 +772,20 @@ function getTimeSeriesChartContext(catalogItem, feature, getChartDetails) {
     CustomComponent.isRegistered("chart")
   ) {
     const chartDetails = getChartDetails();
+    const { title, csvData } = chartDetails;
     const distinguishingId = catalogItem.dataViewId;
     const featureId = defined(distinguishingId)
       ? distinguishingId + "--" + feature.id
       : feature.id;
     if (chartDetails) {
       const result = {
-        xName: chartDetails.xName.replace(/\"/g, ""),
-        yName: chartDetails.yName.replace(/\"/g, ""),
-        title: chartDetails.yName,
         id: featureId.replace(/\"/g, ""),
-        data: chartDetails.csvData.replace(/\\n/g, "\\n"),
-        units: chartDetails.units.join(",").replace(/\"/g, "")
+        data: csvData.replace(/\\n/g, "\\n")
       };
-      const xAttribute = 'x-column="' + result.xName + '" ';
-      const yAttribute = 'y-column="' + result.yName + '" ';
-      const idAttribute = 'id="' + result.id + '" ';
-      const unitsAttribute = 'column-units = "' + result.units + '" ';
-      result.chart =
-        "<chart " +
-        xAttribute +
-        yAttribute +
-        unitsAttribute +
-        idAttribute +
-        ">" +
-        result.data +
-        "</chart>";
+      const idAttr = 'id="' + result.id + '" ';
+      const sourceAttr = 'sources="1"';
+      const titleAttr = title ? `title="${title}"` : "";
+      result.chart = `<chart ${idAttr} ${sourceAttr} ${titleAttr}>${result.data}</chart>`;
       return result;
     }
   }

@@ -445,74 +445,79 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
       return [];
     }
 
-    const procedure = this.selectedProcedure!;
-    const observableProperty = this.selectedObservable!;
-    const datesCol = ["date"];
-    const valuesCol = ["values"];
-    const observationsCol = ["observations"];
-    const identifiersCol = ["identifiers"];
-    const proceduresCol = [this.proceduresName];
-    const observedPropertiesCol = [this.observablePropertiesName];
+    return runInAction(() => {
+      const procedure = this.selectedProcedure!;
+      const observableProperty = this.selectedObservable!;
+      const datesCol = ["date"];
+      const valuesCol = ["values"];
+      const observationsCol = ["observations"];
+      const identifiersCol = ["identifiers"];
+      const proceduresCol = [this.proceduresName];
+      const observedPropertiesCol = [this.observablePropertiesName];
 
-    const addObservationToColumns = (observation: Observation) => {
-      let points = observation?.result?.MeasurementTimeseries?.point;
-      if (!points) return;
-      if (!Array.isArray(points)) points = [points];
+      const addObservationToColumns = (observation: Observation) => {
+        let points = observation?.result?.MeasurementTimeseries?.point;
+        if (!points) return;
+        if (!Array.isArray(points)) points = [points];
 
-      var measurements = points.map(point => point.MeasurementTVP); // TVP = Time value pairs, I think.
-      var featureIdentifier = observation.featureOfInterest["xlink:href"] || "";
-      datesCol.push(
-        ...measurements.map(measurement =>
-          typeof measurement.time === "object" ? "" : measurement.time
-        )
-      );
-      valuesCol.push(
-        ...measurements.map(measurement =>
-          typeof measurement.value === "object" ? "" : measurement.value
-        )
-      );
-      identifiersCol.push(...measurements.map(_ => featureIdentifier));
-      proceduresCol.push(...measurements.map(_ => procedure.identifier || ""));
-      observedPropertiesCol.push(
-        ...measurements.map(_ => observableProperty.identifier || "")
-      );
-    };
+        var measurements = points.map(point => point.MeasurementTVP); // TVP = Time value pairs, I think.
+        var featureIdentifier =
+          observation.featureOfInterest["xlink:href"] || "";
+        datesCol.push(
+          ...measurements.map(measurement =>
+            typeof measurement.time === "object" ? "" : measurement.time
+          )
+        );
+        valuesCol.push(
+          ...measurements.map(measurement =>
+            typeof measurement.value === "object" ? "" : measurement.value
+          )
+        );
+        identifiersCol.push(...measurements.map(_ => featureIdentifier));
+        proceduresCol.push(
+          ...measurements.map(_ => procedure.identifier || "")
+        );
+        observedPropertiesCol.push(
+          ...measurements.map(_ => observableProperty.identifier || "")
+        );
+      };
 
-    let observationData = response.observationData;
-    observationData =
-      observationData === undefined || Array.isArray(observationData)
-        ? observationData
-        : [observationData];
-    if (!observationData) {
-      return [];
-    }
-
-    const observations = observationData.map(o => o.OM_Observation);
-    observations.forEach(observation => {
-      if (observation) {
-        addObservationToColumns(observation);
+      let observationData = response.observationData;
+      observationData =
+        observationData === undefined || Array.isArray(observationData)
+          ? observationData
+          : [observationData];
+      if (!observationData) {
+        return [];
       }
-    });
 
-    runInAction(() => {
-      // Set title for values column
-      const valueColumn = this.addObject(
-        CommonStrata.defaults,
-        "columns",
-        "values"
-      );
-      valueColumn?.setTrait(CommonStrata.defaults, "name", "values");
-      valueColumn?.setTrait(CommonStrata.defaults, "title", this.valueTitle);
-    });
+      const observations = observationData.map(o => o.OM_Observation);
+      observations.forEach(observation => {
+        if (observation) {
+          addObservationToColumns(observation);
+        }
+      });
 
-    return [
-      datesCol,
-      valuesCol,
-      observationsCol,
-      identifiersCol,
-      proceduresCol,
-      observedPropertiesCol
-    ];
+      runInAction(() => {
+        // Set title for values column
+        const valueColumn = this.addObject(
+          CommonStrata.defaults,
+          "columns",
+          "values"
+        );
+        valueColumn?.setTrait(CommonStrata.defaults, "name", "values");
+        valueColumn?.setTrait(CommonStrata.defaults, "title", this.valueTitle);
+      });
+
+      return [
+        datesCol,
+        valuesCol,
+        observationsCol,
+        identifiersCol,
+        proceduresCol,
+        observedPropertiesCol
+      ];
+    });
   }
 
   @computed
@@ -619,7 +624,9 @@ function createChartColumn(
   name: string | undefined
 ): string {
   const nameAttr = name == undefined ? "" : `name="${name}"`;
-  return `<sos-chart identifier="${identifier}" ${nameAttr}></sos-chart>`;
+  // The API that provides the chart data is a SOAP API, and the download button is essentially just a link, so when you click it you get an error page.
+  // can-download="false" will disable this broken download button.
+  return `<sos-chart identifier="${identifier}" ${nameAttr} can-download="false"></sos-chart>`;
 }
 
 async function loadSoapBody(

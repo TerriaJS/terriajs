@@ -5,7 +5,15 @@
     "prev": "Prev",
     "next": "Next",
     "skip": "Skip",
+    "delete": "Delete",
+    "cancel": "Cancel",
     "back": "Back"
+  },
+  "trainer": {
+    "expandTrainer": "Show more step detail",
+    "collapseTrainer": "Hide step detail",
+    "showAllSteps": "Show all steps",
+    "hideAllSteps": "Hide all steps"
   },
   "tour": {
     "preface": {
@@ -77,12 +85,37 @@
   "diffTool": {
     "title": "Difference",
     "exit": "Exit",
-    "computeDifference": "This layer visualizes the difference between imagery captured at two discrete points in time.",
-    "styles": "Styles",
+    "instructions": {
+      "setDateA": "Set date A",
+      "setDateB": "Set date B",
+      "changeDates": "Change dates",
+      "paneDescription": "Visualise and compare the difference of data between two dates at one location."
+    },
     "choosePreview": "Choose a preview style",
-    "chooseDifference": "Choose a difference style",
-    "disabledButtonPrompt": "Select a precise location and difference style to proceed with change detection.",
+    "chooseDifference": "Choose a difference output",
     "differenceResultsTitle": "Change detection results",
+    "labels": {
+      "area": "Area",
+      "dates": "Dates",
+      "dateComparisonA": "Date Comparison A",
+      "dateComparisonB": "Date Comparison B",
+      "sourceDataset": "Source dataset",
+      "previewStyle": "Preview style",
+      "differenceOutput": "Difference output",
+      "generateDiffButtonText": "Generate change detection",
+      "disabledButtonPrompt": "Please note: A location and dates must be selected to proceed with change detection",
+      "areaFilterSelection": "Area filter selection"
+    },
+    "locationDisplay": {
+      "noLocationSelected": {
+        "title": "No location selected",
+        "description": "To filter image date picker by location, please select a point on the map"
+      },
+      "locationSelected": {
+        "title": "Location selected & dates filtered",
+        "description": "To change, click another point on the map"
+      }
+    },
     "locationPicker": {
       "initialMessages": {
         "title": "Select a precise location",
@@ -102,11 +135,10 @@
     },
     "datePicker": {
       "previousDateTitle": "Previous date",
-      "nextDateTitle": "Previous date",
+      "nextDateTitle": "Next date",
       "dateButtonTitle": "Select a date",
       "dateOutOfRange": "Currently out of range"
-    },
-    "generateDiffButtonText": "Generate change detection"
+    }
   },
   "legend": {
     "lat": "Lat",
@@ -131,8 +163,10 @@
     "embedTitle": "To embed, copy this code to embed this map into an HTML page:",
     "shortenUsingService": "Shorten the share URL using a web service",
     "btnCatalogShareText": "Share",
+    "btnStoryShareText": "Share",
     "btnMapShareText": "Share / Print",
     "btnCatalogShareTitle": "Share your catalogue with others",
+    "btnStoryShareTitle": "Share your story with others",
     "btnMapShareTitle": "Share your map with others"
   },
   "countDatasets": {
@@ -143,7 +177,12 @@
     "subTotals": "<div> {{name}}: {{items}} items / {{groups}} groups</div>",
     "recount": "Recount",
     "title": "Count Datasets",
-    "btnCount": "Count datasets"
+    "btnCount": "Count datasets",
+    "enabledOnMap": "enabled on map",
+    "noMapDataEnabled": "No map data enabled",
+    "datasetSingular": "dataset",
+    "datasetPlural": "datasets",
+    "mapDataState": "{{numberOfDatasets}} {{singularOrPlural}} $t(countDatasets.enabledOnMap)"
   },
   "toolsPanel": {
     "btnText": "Tool",
@@ -190,7 +229,9 @@
   },
   "helpPanel": {
     "menuPaneTitle": "We're here to help",
-    "menuPaneBody": "Find useful tips on how to use TerriaJS by either checking the guides below or by contacting the team at [info@terria.io](mailto:info@terria.io)"
+    "menuPaneBody": "Find useful tips on how to use TerriaJS by either checking the guides below or by contacting the team at [info@terria.io](mailto:info@terria.io)",
+    "promptMessage": "Find the Tour, how-to videos & other help content here",
+    "dismissText": "Got it, thanks!"
   },
   "helpMenu": {
     "btnText": "Help",
@@ -253,6 +294,10 @@
     "doesNotExist": "Story does not exist",
     "message": "<2>This is your story editor</2><1>Create and share interactive stories directly from your map<1><0><0></0>Getting Started </0></1></1>",
     "removeAllStories": "Remove All",
+    "removeStoriesPanel": "Are you sure you wish to delete {{ count }} scene?",
+    "removeStoriesPanel_plural": "Are you sure you wish to delete {{ count }} scenes?",
+    "confirmRemove": "Delete",
+    "cancelRemove": "Cancel",
     "preview": "preview stories",
     "play": "Play Story",
     "captureSceneTitle": "capture current scene",
@@ -275,7 +320,9 @@
     "promptHtml2": "<0><0>INTRODUCING</0><1>Data Stories</1><2>Create and share interactive stories directly from your map.</2></0>",
     "story": "Story",
     "dismissText": "Got it, thanks!",
-    "mobileViewStory": "View Stories {{storiesLength}}"
+    "mobileViewStory": "View Stories {{storiesLength}}",
+    "storyEditor": "Story Editor",
+    "hideStoryPanel": "hide story builder"
   },
   "satelliteGuidance": {
     "menuTitle": "You can access map guides at any time by looking in the <0>help menu</0>.",
@@ -536,6 +583,9 @@
     "selectExistingPolygon": "Select existing polygon"
   },
   "core": {
+    "errors": {
+      "tooDeepAddedByUser": "Reached 100 catalog items when checking addedByUser and landing on ID: \"{{memberId}}\"? Check that you haven't got a recursive catalog group."
+    },
     "userAddedData": "User-Added Data",
     "chartData": "Chart Data",
     "dataUri": {
@@ -552,12 +602,14 @@
       "esri-featureServer": "Esri ArcGIS FeatureServer (single layer)",
       "open-street-map": "Open Street Map Server",
       "geojson": "GeoJSON",
+      "geoRss": "GeoRSS",
       "kml": "KML or KMZ",
       "csv": "CSV",
       "czml": "CZML",
       "gpx": "GPX",
       "json": "JSON",
       "carto": "Carto",
+      "gltf": "GLTF",
       "other": "Other (use conversion service)"
     },
     "printWindow": {
@@ -615,6 +667,12 @@
       "missingExteriorRing": "GML polygon is missing its exterior ring.",
       "missingPosList": "GML polygon's exterior ring is missing a posList.",
       "containsUnsupportedFeatureType": "GML contains unsupported feature type: {{type}}"
+    },
+    "geoRssToGeoJson": {
+      "containsUnsupportedFeatureType": "GeoRSS contains unsupported feature type: {{type}}"
+    },
+    "w3cToGeoJson": {
+      "containsUnsupportedFeatureType": "GeoRSS with W3C geometry contains unsupported feature type: {{type}}"
     },
     "gnafAddressGeocoder": {
       "noAddresses": "This tableStructure has no addresses!",
@@ -731,6 +789,7 @@
     },
     "wcs": {
       "asyncResultDescription": "This is the result of exporting data from {{name}} service at {{timestamp}} with the input parameters below.",
+      "asyncPendingDescription": "WCS loading:<br/>{{name}} service at {{timestamp}}.",
       "exportFailedTitle": "Data export failed",
       "exportFailedMessage": "The Web Coverage Service failed",
       "exportFailedMessageII": "The Web Coverage Service failed: {{error}}"
@@ -787,6 +846,7 @@
       "chartDataGroup": "A group for chart data.",
       "dataSourceErrorMessage": "This data source does not have any details available.",
       "serviceErrorMessage": "This service does not have any details available.",
+      "stubCreationFailure": "Could not stub out catalog item {{item}}",
       "unsupportedTypeTitle": "Unknown type",
       "unsupportedTypeMessage": "Could not create unknown model type {{type}}.",
       "unsupportedFileTypeTitle": "Unsupported file type",
@@ -885,6 +945,20 @@
       "errorLoadingTitle": "Error loading GPX",
       "errorLoadingMessage": "An error occurred while loading a GPX file.  This may indicate that the file is invalid or that it is not supported by {{appName}}. If you would like assistance or further information, please email us at {{email}}"
     },
+    "georss": {
+      "name": "GeoRSS",
+      "subtitle": "Subtitle",
+      "updated": "Updated",
+      "category": "Category",
+      "description": "Description",
+      "copyrightText": "Copyright Text",
+      "link": "Link",
+      "author": "Author",
+      "errorLoadingTitle": "Could not load GeoRSS",
+      "errorLoadingMessage": "An error occurred while loading a GeoRSS file. <p>If you entered the link manually, please verify that the link is correct.</p><p>This error may also indicate that the server does not support {{cors}}.  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by 'appName' itself. <p>If you did not enter this link manually, this error may indicate that the data source you're trying to add is temporarily unavailable or there is a problem with your internet connection.  Try adding the data source again, and if the problem persists, please report it by sending an email to {{email}}.",
+      "unableToLoadItemTitle": "No GeoRSS available",
+      "unableToLoadItemMessage": "The GeoRSS catalog item cannot be loaded because it was not configured with a `url`, or `geoRss` property."
+    },
     "imageryLayer": {
       "intervalSupportErrorTitle": "Intervals not supported",
       "intervalSupportErrorMessage": "Sorry, {{typeName}} ({{type}}) catalog items cannot currently be made time-varying by specifying the \"intervals\" property.",
@@ -939,6 +1013,9 @@
     },
     "mapboxVectorTile": {
       "name": "Mapbox Vector Tile"
+    },
+    "mapboxStyle": {
+      "name": "Mapbox Style"
     },
     "senaps": {
       "name": "Senaps Locations",
@@ -1206,6 +1283,28 @@
     "commonModelErrors": {
       "datasetScaleErrorTitle": "Dataset will not be shown at this scale",
       "datasetScaleErrorMessage": "The {{name}} dataset will not be shown when zoomed in this close to the map because the data custodian has indicated that the data is not intended or suitable for display at this scale.  Click the dataset's Info button on the Now Viewing tab for more information about the dataset and the data custodian."
+    }
+  },
+  "deltaTool": {
+    "titlePrefix": "Change Detection",
+    "description": "This tool visualizes the difference between imagery captured at two discrete points in time.",
+    "pickLocation": "To view available imagery, please select your location of interest on the map opposite.",
+    "cancelBtn": "Cancel",
+    "generateDeltaBtn": "Generate Difference Map",
+    "selectedLocation": "Selected Location",
+    "primaryImage": "Primary Image",
+    "secondaryImage": "Secondary Image",
+    "pickerMessage": {
+      "pickFirst": "Select a point by clicking on the map",
+      "pickAnother": "Click another point to change the selection",
+      "pickError": "Error when trying to resolve imagery at location! Please select a point again by clicking on the map."
+    },
+    "catalogItem": {
+      "description": "This layer visualizes the difference between imagery captured at two discrete points in time"
+    },
+    "loadingError": {
+      "title": "Error loading Delta Tool",
+      "message": "An error occurred while trying to load the delta tool from the server. Please try again."
     }
   }
 }

@@ -3,44 +3,67 @@ import {
   IReactionDisposer,
   onBecomeObserved,
   onBecomeUnobserved,
-  reaction
+  reaction,
+  autorun
 } from "mobx";
 import { now } from "mobx-utils";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
-import MappableTraits from "../Traits/MappableTraits";
+import AutoRefreshingTraits from "../Traits/AutoRefreshingTraits";
+import AsyncMappableMixin from "./AsyncMappableMixin";
 
-type AutoRefreshing = Model<MappableTraits>;
+type AutoRefreshing = Model<AutoRefreshingTraits>;
 
 export default function AutoRefreshingMixin<
   T extends Constructor<AutoRefreshing>
 >(Base: T) {
-  abstract class AutoRefreshingMixin extends Base {
-    _autoRefreshDisposer: IReactionDisposer | undefined;
+  abstract class AutoRefreshingMixin extends AsyncMappableMixin(Base) {
+    private autoRefreshDisposer: IReactionDisposer | undefined;
+    private autorunRefreshEnableDisposer: IReactionDisposer | undefined;
 
-    /* Return the interval in seconds to poll for updates. */
+    /** Return the interval in seconds to poll for updates. */
     abstract get refreshInterval(): number | undefined;
 
-    /* Call hook for refreshing the item */
+    /** Call hook for refreshing the item */
     abstract refreshData(): void;
 
     constructor(...args: any[]) {
       super(...args);
       // We should only poll when our map items have consumers
-      onBecomeObserved(this, "mapItems", () => {
-        this._autoRefreshDisposer = reaction(
+      onBecomeObserved(this, "mapItems", this.startAutoRefresh.bind(this));
+      onBecomeUnobserved(this, "mapItems", this.stopAutoRefresh.bind(this));
+    }
+
+    private startAutoRefresh() {
+      if (!this.autorunRefreshEnableDisposer) {
+        // Toggle autorefresh when `refreshEnabled` trait changes
+        this.autorunRefreshEnableDisposer = autorun(() => {
+          if (this.refreshEnabled) {
+            this.startAutoRefresh();
+          } else {
+            this.stopAutoRefresh();
+          }
+        });
+      }
+      if (!this.autoRefreshDisposer && this.refreshEnabled) {
+        this.autoRefreshDisposer = reaction(
           () => this._pollingTimer,
           () => {
             this.refreshData();
           }
         );
-      });
-      onBecomeUnobserved(this, "mapItems", () => {
-        if (this._autoRefreshDisposer) {
-          this._autoRefreshDisposer();
-          this._autoRefreshDisposer = undefined;
-        }
-      });
+      }
+    }
+
+    private stopAutoRefresh() {
+      if (this.autorunRefreshEnableDisposer) {
+        this.autorunRefreshEnableDisposer();
+        this.autorunRefreshEnableDisposer = undefined;
+      }
+      if (this.autoRefreshDisposer) {
+        this.autoRefreshDisposer();
+        this.autoRefreshDisposer = undefined;
+      }
     }
 
     @computed
@@ -60,6 +83,7 @@ export default function AutoRefreshingMixin<
     @computed
     get nextScheduledUpdateTime(): Date | undefined {
       if (
+        this.refreshEnabled &&
         this._pollingTimer !== undefined &&
         this.refreshInterval !== undefined
       ) {

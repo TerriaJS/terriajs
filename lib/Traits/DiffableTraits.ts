@@ -3,13 +3,13 @@ import primitiveTrait from "./primitiveTrait";
 import primitiveArrayTrait from "./primitiveArrayTrait";
 
 export default class DiffableTraits extends ModelTraits {
-  @primitiveTrait({
-    type: "boolean",
-    name: "Can diff images",
+  @primitiveArrayTrait({
+    type: "string",
+    name: "Available diff styles",
     description:
-      "True if this service supports computing imagery difference between two dates"
+      "List of styles that can be used for computing difference image"
   })
-  canDiffImages = false;
+  availableDiffStyles?: string[] = [];
 
   @primitiveTrait({
     type: "boolean",
@@ -38,12 +38,4 @@ export default class DiffableTraits extends ModelTraits {
     description: "The ID of the style used to compute the difference image"
   })
   diffStyleId?: string;
-
-  @primitiveArrayTrait({
-    type: "string",
-    name: "Available diff styles",
-    description:
-      "List of styles that can be used for computing difference image"
-  })
-  availableDiffStyles?: string[];
 }

@@ -38,6 +38,8 @@ function DiscretelyTimeVaryingMixin<
           return this.startTime;
         } else if (this.initialTimeSource === "stop") {
           return this.stopTime;
+        } else if (this.initialTimeSource === "none") {
+          return undefined;
         } else {
           throw new TerriaError({
             sender: this,
@@ -270,7 +272,9 @@ function DiscretelyTimeVaryingMixin<
         dt => ({
           x: JulianDate.toDate(dt.time),
           y: 0.5,
-          isSelected: dt.time === this.currentDiscreteJulianDate
+          isSelected:
+            this.currentDiscreteJulianDate &&
+            this.currentDiscreteJulianDate.equals(dt.time)
         })
       );
 
