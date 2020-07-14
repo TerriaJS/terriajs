@@ -5,6 +5,9 @@ Change Log
 
 #### next release (8.0.0-alpha.38)
 * [The next improvement]
+* Add `multipleTitles` and `maxMultipleTitlesShowed` to `LegendItemTraits`
+* Aggregate legend items in `createLegendItemsFromEnumColorMap` by colour, that is merge legend items with the same colour (using `multipleTitles`)
+* Only generate `tableStyles` for region columns if no other styles exist
 
 #### 8.0.0-alpha.37
 * Add `refreshEnabled` trait and `AsyncMappableMixin` to `AutoRefreshMixin`
