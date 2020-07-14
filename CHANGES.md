@@ -3,7 +3,10 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.37)
+#### next release (8.0.0-alpha.38)
+* [The next improvement]
+
+#### 8.0.0-alpha.37
 * Add `refreshEnabled` trait and `AsyncMappableMixin` to `AutoRefreshMixin`
 * Ensure `CkanCatalogGroup` doesn't keep re-requesting data when opening and closing groups.
 * Add `typeName` to `CatalogMemberMixin`
