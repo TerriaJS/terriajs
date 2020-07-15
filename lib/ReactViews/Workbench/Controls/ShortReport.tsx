@@ -14,8 +14,10 @@ import { GLYPHS, StyledIcon } from "../../Icon";
 // :(
 const RawButton: any = require("../../../Styled/Button").RawButton;
 const Text: any = require("../../../Styled/Text").default;
+const TextSpan: any = require("../../../Styled/Text").TextSpan;
 const Box: any = require("../../../Styled/Box").default;
 const Spacing: any = require("../../../Styled/Spacing").default;
+const SpacingSpan: any = require("../../../Styled/Spacing").SpacingSpan;
 
 @observer
 export default class ShortReport extends React.Component<{
@@ -80,18 +82,15 @@ export default class ShortReport extends React.Component<{
               aria-expanded={r.show}
               aria-controls={`${this.props.item.uniqueId}-${r.name}`}
             >
-              <Text as="span" textLight bold medium>
+              <TextSpan textLight bold medium>
                 {r.name}
-              </Text>
-
+              </TextSpan>
+              <SpacingSpan right={2} />
               <StyledIcon
+                displayInline
                 styledWidth={"8px"}
                 light
                 glyph={r.show ? GLYPHS.minusThick : GLYPHS.plusThick}
-                css={`
-                  padding-left: 10px;
-                  display: inline;
-                `}
               />
             </RawButton>
 
