@@ -1,5 +1,7 @@
 var path = require('path');
 var StringReplacePlugin = require("string-replace-webpack-plugin");
+var ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+var ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
 var webpack = require('webpack');
 
 function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtractPlugin, disableStyleLoader) {
@@ -256,6 +258,25 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
         new StringReplacePlugin(),
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
     ]);
+
+    // Fork type checking to a separate thread
+    config.plugins.push(
+        new ForkTsCheckerWebpackPlugin({
+            typescript: {
+                diagnosticOptions: {
+                    semantic: true,
+                    syntactic: true,
+                },
+            },
+        })
+    );
+    config.plugins.push(
+        new ForkTsCheckerNotifierWebpackPlugin({
+            excludeWarnings: true,
+            // probably don't need to know first check worked as well - disable it
+            skipFirstNotification: true
+        })
+    );
 
     if (hot && !disableStyleLoader) {
         config.module.rules.push({

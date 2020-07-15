@@ -23,7 +23,7 @@ module.exports = function(hot, dev) {
             publicPath: 'build/'
         },
         // devtool: 'source-map',
-        devtool: dev ? 'eval-source-map' : 'source-map',
+        devtool: dev ? 'eval-cheap-module-source-map' : 'source-map',
         module: {
             rules: [
                 {
