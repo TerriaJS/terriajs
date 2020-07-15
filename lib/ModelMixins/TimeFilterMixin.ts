@@ -53,23 +53,37 @@ function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
             }
 
             const coords = coordinatesFromTraits(this.timeFilterCoordinates);
-            if (this.timeFilterPropertyName && coords) {
-              const resolved = await resolveFeature(
-                this,
-                this.timeFilterPropertyName,
-                coords.position,
-                coords.tileCoords
-              );
-              if (resolved) {
-                this.setTimeFilterFeature(resolved.feature, resolved.providers);
-                disposeListener();
-              }
-            } else {
-              disposeListener();
+            if (coords) {
+              this.setTimeFilterFromLocation(coords);
             }
+            disposeListener();
           })
         );
       });
+    }
+
+    @action
+    async setTimeFilterFromLocation(coordinates: {
+      position: LatLonHeight;
+      tileCoords: { x: number; y: number; level: number };
+    }): Promise<boolean> {
+      const propertyName = this.timeFilterPropertyName;
+      if (propertyName === undefined || !Mappable.is(this)) {
+        return false;
+      }
+
+      const resolved = await resolveFeature(
+        this,
+        propertyName,
+        coordinates.position,
+        coordinates.tileCoords
+      );
+
+      if (resolved) {
+        this.setTimeFilterFeature(resolved.feature, resolved.providers);
+        return true;
+      }
+      return false;
     }
 
     get hasTimeFilterMixin() {
@@ -162,7 +176,7 @@ function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
         CommonStrata.user,
         "timeFilterCoordinates",
         createStratumInstance(TimeFilterCoordinates, {
-          ...tileCoords,
+          tile: tileCoords,
           longitude: CesiumMath.toDegrees(cartographic.longitude),
           latitude: CesiumMath.toDegrees(cartographic.latitude),
           height: cartographic.height
@@ -219,7 +233,7 @@ const resolveFeature = action(async function(
     }
 
     const prop = feature.properties[propertyName];
-    const times = prop.getValue(model.currentTimeAsJulianDate);
+    const times = prop?.getValue(model.currentTimeAsJulianDate);
     return Array.isArray(times) && times.length > 0;
   });
 

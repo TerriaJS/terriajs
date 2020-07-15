@@ -9,11 +9,11 @@
   padding-right: 5px;
   font-family: $font-base;
 
-  @media (max-width: $mobile) {
-    position: fixed;
-    bottom: 0px;
-    background: $dark;
-  }
+  // @media (max-width: $mobile) {
+  //   position: fixed;
+  //   bottom: 0px;
+  //   background: $dark;
+  // }
 }
 
 .text-row {
@@ -26,9 +26,9 @@
   // background: $dark;
   padding: 3px 5px;
 
-  @media (max-width: $mobile) {
-    position: fixed;
-  }
+  // @media (max-width: $mobile) {
+  //   position: fixed;
+  // }
 }
 
 .text-cell {
@@ -118,8 +118,8 @@
   position: relative;
 
   svg {
-    height: 20px;
-    width: 25px;
+    height: 15px;
+    width: 20px;
     fill: #ffffff;
     display: inline-block;
     vertical-align: bottom;
@@ -199,7 +199,7 @@
   display: inline-block;
   height: 10px;
   width: 2px;
-  background: $overlay;
+  // background: $overlay;
   margin-top: 1px;
 }
 
@@ -211,15 +211,11 @@
   margin-right: 3px;
 }
 
-.activeGrid {
-  opacity: 0.9;
-  background: $color-primary !important;
-}
-
 .gridHeading {
   text-align: center;
   color: #fff;
   font-size: 12px;
+  margin-bottom: 10px;
 }
 
 .hourview {

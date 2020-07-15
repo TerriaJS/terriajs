@@ -147,6 +147,14 @@ export default class TimelineStack {
   }
 
   /**
+   * Removes all layers.
+   */
+  @action
+  removeAll() {
+    this.items = [];
+  }
+
+  /**
    * Promotes the supplied {@link CatalogItem} to the top of the stack if it is already in the stack. If the item is not
    * already in the stack it won't be added.
    *

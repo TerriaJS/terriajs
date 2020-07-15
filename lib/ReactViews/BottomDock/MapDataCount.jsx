@@ -33,7 +33,10 @@ const MapDataCount = observer(function(props) {
     : t("countDatasets.noMapDataEnabled");
 
   return (
-    <Box positionAbsolute css={" top: -72px; "}>
+    // Should we even provide a wrapper Box? makes sense not to, but most of the
+    // components as they stand come with their own "wrapper" via scss
+    // <Box styledMinHeight="72px">
+    <Box positionAbsolute css={"bottom: 40px;"}>
       <ButtonAsLabel light={hasMapData} dark={!hasMapData}>
         <Spacing right={1} />
         <StyledIcon
