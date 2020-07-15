@@ -114,13 +114,6 @@ export class WebMapServiceAvailableDimensionTraits extends ModelTraits {
     description: "The nearest value of the dimension."
   })
   nearestValue?: boolean;
-
-  @primitiveTrait({
-    type: "boolean",
-    name: "Current",
-    description: "The current value of the dimension."
-  })
-  current?: boolean;
 }
 
 export class WebMapServiceAvailableLayerDimensionsTraits extends ModelTraits {
@@ -162,16 +155,24 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   @primitiveTrait({
     type: "string",
     name: "Layer(s)",
-    description: "The layer or layers to display."
+    description: "The layer or layers to display (comma separated values)."
   })
   layers?: string;
 
   @primitiveTrait({
     type: "string",
     name: "Style(s)",
-    description: "The styles to use with each of the `Layer(s)`."
+    description:
+      "The styles to use with each of the `Layer(s)` (comma separated values). This maps one-to-one with `Layer(s)`"
   })
   styles?: string;
+
+  @anyTrait({
+    name: "Dimensions",
+    description:
+      "Dimension parameters used to request a particular layer along one or more dimensional axes (including elevation, excluding time). Do not include `_dim` prefx for parameter keys. These dimensions will be applied to all layers (if applicable)"
+  })
+  dimensions?: { [key: string]: string };
 
   @objectArrayTrait({
     type: WebMapServiceAvailableLayerStylesTraits,
@@ -200,7 +201,7 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   @anyTrait({
     name: "Parameters",
     description:
-      "Additional parameters to pass to the MapServer when requesting images. Style parameters are stored as CSV in `styles`."
+      "Additional parameters to pass to the MapServer when requesting images. Style parameters are stored as CSV in `styles`, dimension parameters are stored in `dimensions`."
   })
   parameters?: JsonObject;
 

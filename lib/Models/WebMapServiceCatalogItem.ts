@@ -59,22 +59,6 @@ import ExportableData from "./ExportableData";
 
 const dateFormat = require("dateformat");
 
-interface LegendUrl {
-  url: string;
-  mimeType?: string;
-}
-
-interface WebMapServiceStyle {
-  name: string;
-  title: string;
-  abstract?: string;
-  legendUrl?: LegendUrl;
-}
-
-interface WebMapServiceStyles {
-  [layerName: string]: WebMapServiceStyle[];
-}
-
 class GetCapabilitiesStratum extends LoadableStratum(
   WebMapServiceCatalogItemTraits
 ) {
@@ -176,6 +160,13 @@ class GetCapabilitiesStratum extends LoadableStratum(
               );
 
         if (layerStyle !== undefined && layerStyle.legend !== undefined) {
+          layerStyle.legend.setTrait(
+            CommonStrata.defaults,
+            "title",
+            this.capabilitiesLayers.get(layerStyle.name!)?.Title ||
+              layerStyle.name
+          );
+
           result.push(
             <StratumFromTraits<LegendTraits>>(<unknown>layerStyle.legend)
           );
@@ -789,36 +780,28 @@ class WebMapServiceCatalogItem
 
       console.log(`Creating new ImageryProvider for time ${time}`);
 
-      // Override parameters set by user (in `parameters` trait)
-      const layerParameters: { [key: string]: any } = {};
-
-      if (isDefined(this.parameters)) {
-        Object.keys(this.parameters).forEach(
-          key =>
-            // elevation is specified as simply "elevation", styles is specified as "styles"
-            // Other (custom) dimensions are prefixed with 'dim_'.
-            // See WMS 1.3.0 spec section C.3.2 and C.3.3.
-            (layerParameters[
-              key?.toLowerCase() !== "elevation" &&
-              key?.toLowerCase() !== "styles"
-                ? `dim_${key}`
-                : key
-            ] = this.parameters![key])
-        );
-      }
+      // Set dimensionParameters
+      const dimensionParameters = formatDimensionsForOws(this.dimensions);
 
       if (time !== undefined) {
-        layerParameters.time = time;
+        dimensionParameters.time = time;
       }
 
       const diffModeParameters = this.isShowingDiff
         ? this.diffModeParameters
         : {};
+
       const parameters: { [key: string]: any } = {
         ...WebMapServiceCatalogItem.defaultParameters,
-        ...layerParameters,
-        ...diffModeParameters
+        ...this.parameters,
+        ...dimensionParameters
       };
+
+      if (isDefined(this.styles)) {
+        parameters.styles = this.styles;
+      }
+
+      Object.assign(parameters, diffModeParameters);
 
       const maximumLevel = scaleDenominatorToLevel(this.minScaleDenominator);
 
@@ -861,7 +844,10 @@ class WebMapServiceCatalogItem
         url: proxyCatalogItemUrl(this, baseUrl.toString()),
         layers: this.layers || "",
         parameters: parameters,
-        getFeatureInfoParameters: layerParameters,
+        getFeatureInfoParameters: {
+          ...dimensionParameters,
+          styles: this.styles
+        },
         tilingScheme: /*defined(this.tilingScheme) ? this.tilingScheme :*/ new WebMercatorTilingScheme(),
         maximumLevel: maximumLevel,
         rectangle: rectangle
@@ -919,53 +905,55 @@ class WebMapServiceCatalogItem
 
   @computed
   get styleSelectableDimensions(): SelectableDimension[] {
-    return filterOutUndefined(
-      this.availableStyles.map((layer, layerIndex) => {
-        if (layer.styles.length < 2) {
-          return;
-        }
-        // If multiple layers -> prepend layer name to dimension label
-        const name =
-          this.availableStyles.length > 1
-            ? `${layer.layerName} styles`
-            : `Styles`;
-        return {
-          name,
-          id: `${this.uniqueId}-${layer.layerName}-styles`,
-          options: filterOutUndefined(
-            layer.styles.map(function(s) {
-              if (isDefined(s.name)) {
-                return {
-                  name: s.title || s.name || "",
-                  id: s.name as string
-                };
-              }
-            })
-          ),
+    return this.availableStyles.map((layer, layerIndex) => {
+      let name = "Styles";
 
-          // Set selectedId to value stored in `parameters` trait or the first available value
-          // The `styles` parameter is CSV values, a style for each layer
-          selectedId:
-            this.parameters?.styles?.toString()?.split(",")?.[layerIndex] ||
-            layer.styles[0].name,
+      // If multiple layers -> prepend layer name to name
+      if (this.availableStyles.length > 1) {
+        // Attempt to get layer title from GetCapabilitiesStratum
+        const layerTitle =
+          layer.layerName &&
+          (this.strata.get(
+            GetCapabilitiesMixin.getCapabilitiesStratumName
+          ) as GetCapabilitiesStratum).capabilitiesLayers.get(layer.layerName)
+            ?.Title;
 
-          setDimensionValue: (stratumId: string, newStyle: string) => {
-            let newParameters = {
-              styles: this.styleSelectableDimensions
-                .map(style => style.selectedId || "")
-                .join(",")
-            };
-            if (isDefined(this.parameters)) {
-              newParameters = combine(newParameters, this.parameters);
+        name = `${layerTitle ||
+          layer.layerName ||
+          `Layer ${layerIndex + 1}`} styles`;
+      }
+
+      return {
+        name,
+        id: `${this.uniqueId}-${layer.layerName}-styles`,
+        options: filterOutUndefined(
+          layer.styles.map(function(s) {
+            if (isDefined(s.name)) {
+              return {
+                name: s.title || s.name || "",
+                id: s.name as string
+              };
             }
-            runInAction(() => {
-              this.setTrait(stratumId, "parameters", newParameters);
-            });
-          },
-          disable: this.isShowingDiff
-        };
-      })
-    );
+          })
+        ),
+
+        // Set selectedId to value stored in `parameters` trait or the first available value
+        // The `styles` parameter is CSV values, a style for each layer
+        selectedId:
+          this.styles?.split(",")?.[layerIndex] || layer.styles[0].name,
+
+        setDimensionValue: (stratumId: string, newStyle: string) => {
+          runInAction(() => {
+            const styles = this.styleSelectableDimensions.map(
+              style => style.selectedId || ""
+            );
+            styles[layerIndex] = newStyle;
+            this.setTrait(stratumId, "styles", styles.join(","));
+          });
+        },
+        disable: this.isShowingDiff
+      };
+    });
   }
 
   @computed
@@ -1003,22 +991,22 @@ class WebMapServiceCatalogItem
             };
           }),
 
-          // Set selectedId to value stored in `parameters` trait, the default value, or the first available value
+          // Set selectedId to value stored in `dimensions` trait, the default value, or the first available value
           selectedId:
-            this.parameters?.[dim.name]?.toString() ||
+            this.dimensions?.[dim.name]?.toString() ||
             dim.default ||
             dim.values[0],
 
           setDimensionValue: (stratumId: string, newDimension: string) => {
-            let newParameters: any = {};
+            let newDimensions: any = {};
 
-            newParameters[dim.name!] = newDimension;
+            newDimensions[dim.name!] = newDimension;
 
-            if (isDefined(this.parameters)) {
-              newParameters = combine(newParameters, this.parameters);
+            if (isDefined(this.dimensions)) {
+              newDimensions = combine(newDimensions, this.dimensions);
             }
             runInAction(() => {
-              this.setTrait(stratumId, "parameters", newParameters);
+              this.setTrait(stratumId, "dimensions", newDimensions);
             });
           }
         });
@@ -1174,6 +1162,32 @@ function formatMomentForWms(m: moment.Moment, duration: moment.Duration) {
   }
 
   return m.format();
+}
+
+/**
+ * Add `_dim` prefix to dimensions for OWS (WMS, WCS...) excluding time, styles and elevation
+ */
+export function formatDimensionsForOws(
+  dimensions: { [key: string]: string } | undefined
+) {
+  if (!isDefined(dimensions)) {
+    return {};
+  }
+  return Object.entries(dimensions).reduce<{ [key: string]: string }>(
+    (formattedDimensions, [key, value]) =>
+      // elevation is specified as simply "elevation", styles is specified as "styles"
+      // Other (custom) dimensions are prefixed with 'dim_'.
+      // See WMS 1.3.0 spec section C.3.2 and C.3.3.
+      {
+        formattedDimensions[
+          key?.toLowerCase() !== "elevation" && key?.toLowerCase() !== "styles"
+            ? `dim_${key}`
+            : key
+        ] = value;
+        return formattedDimensions;
+      },
+    {}
+  );
 }
 
 export default WebMapServiceCatalogItem;

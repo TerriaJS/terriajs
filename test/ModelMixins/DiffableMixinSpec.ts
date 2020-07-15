@@ -59,7 +59,7 @@ class TestDiffableItem extends DiffableMixin(
     )
   )
 ) {
-  styleSelectableDimensions: SelectableDimension | undefined = undefined;
+  styleSelectableDimensions: SelectableDimension[] | undefined = undefined;
 
   get canDiffImages() {
     return true;

@@ -240,7 +240,7 @@ class Main extends React.Component<MainPropsType> {
 
   @computed
   get previewStyle(): string | undefined {
-    return this.diffItem.styleSelectableDimensions?.selectedId;
+    return this.diffItem.styleSelectableDimensions?.[0]?.selectedId;
   }
 
   @computed
@@ -252,7 +252,7 @@ class Main extends React.Component<MainPropsType> {
   get availableDiffStyles(): DimensionOption[] {
     return filterOutUndefined(
       this.diffItem.availableDiffStyles.map(diffStyleId =>
-        this.diffItem.styleSelectableDimensions?.options.find(
+        this.diffItem.styleSelectableDimensions?.[0]?.options.find(
           style => style.id === diffStyleId
         )
       )
@@ -315,11 +315,11 @@ class Main extends React.Component<MainPropsType> {
   @action.bound
   changePreviewStyle(e: React.ChangeEvent<HTMLSelectElement>) {
     const styleId = e.target.value;
-    this.props.leftItem.styleSelectableDimensions?.setDimensionValue(
+    this.props.leftItem.styleSelectableDimensions?.[0]?.setDimensionValue(
       CommonStrata.user,
       styleId
     );
-    this.props.rightItem.styleSelectableDimensions?.setDimensionValue(
+    this.props.rightItem.styleSelectableDimensions?.[0]?.setDimensionValue(
       CommonStrata.user,
       styleId
     );
@@ -601,7 +601,7 @@ class Main extends React.Component<MainPropsType> {
                   <option disabled value="">
                     {t("diffTool.choosePreview")}
                   </option>
-                  {this.diffItem.styleSelectableDimensions?.options.map(
+                  {this.diffItem.styleSelectableDimensions?.[0]?.options.map(
                     style => (
                       <option key={style.id} value={style.id}>
                         {style.name}
@@ -968,11 +968,11 @@ async function createSplitItem(
     setDefaultDiffStyle(newItem);
 
     // Set the default style to true color style if it exists
-    const trueColor = newItem.styleSelectableDimensions?.options.find(
+    const trueColor = newItem.styleSelectableDimensions?.[0]?.options.find(
       style => isDefined(style.name) && style.name.search(/true/i) >= 0
     );
     if (trueColor) {
-      newItem.styleSelectableDimensions?.setDimensionValue(
+      newItem.styleSelectableDimensions?.[0]?.setDimensionValue(
         CommonStrata.user,
         trueColor.id
       );
@@ -993,7 +993,7 @@ function setDefaultDiffStyle(item: DiffableItem) {
 
   const availableStyles = filterOutUndefined(
     item.availableDiffStyles.map(diffStyleId =>
-      item.styleSelectableDimensions?.options.find(
+      item.styleSelectableDimensions?.[0]?.options.find(
         style => style.id === diffStyleId
       )
     )
