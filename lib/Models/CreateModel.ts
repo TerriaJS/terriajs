@@ -30,7 +30,15 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
     readonly traits = Traits.traits;
     readonly TraitsClass: TraitsConstructor<InstanceType<T>> = <any>Traits;
     readonly strata: Map<string, StratumTraits>;
-    readonly sourceReference: BaseModel | undefined;
+
+    /**
+     * Babel transpiles this to assigning undefined to this property, whereas
+     * typescript strips the type completely. Given we don't actually do
+     * anything different to the main constructor call in `BaseModel`, it feels
+     * more correct to remove this annotation rather than declare it here and
+     * re-assigning it in the `Model` constructor
+     */
+    // readonly sourceReference: BaseModel | undefined;
 
     /**
      * Gets the uniqueIds of models that are known to contain this one.

@@ -125,7 +125,17 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
                         require.resolve('@babel/plugin-syntax-dynamic-import')
                     ]
                 }
-            }
+            },
+            // Re-enable this if we need to observe any differences in the
+            // transpilation via ts-loader, & babel's stripping of types,
+            // or if TypeScript has newer features that babel hasn't
+            // caught up with
+            // {
+            //     loader: 'ts-loader',
+            //     options: {
+            //       transpileOnly: true
+            //     }
+            // }
         ]
     });
 
