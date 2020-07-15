@@ -15,8 +15,6 @@ import FeedbackForm from "../Feedback/FeedbackForm";
 import MapColumn from "./MapColumn";
 import MapInteractionWindow from "../Notification/MapInteractionWindow";
 import TrainerBar from "../Map/TrainerBar/TrainerBar";
-import MapNavigation from "../Map/MapNavigation";
-import MenuBar from "../Map/MenuBar";
 import ExperimentalFeatures from "../Map/ExperimentalFeatures";
 import MobileHeader from "../Mobile/MobileHeader";
 import Notification from "../Notification/Notification";
@@ -348,6 +346,9 @@ const StandardUserInterface = observer(
                       terria={terria}
                       viewState={this.props.viewState}
                       customFeedbacks={customElements.feedback}
+                      customElements={customElements}
+                      allBaseMaps={allBaseMaps}
+                      animationDuration={animationDuration}
                     />
                     <main>
                       <ExplorerWindow
@@ -379,26 +380,6 @@ const StandardUserInterface = observer(
                     viewState={this.props.viewState}
                   />
                 </Medium>
-                <div
-                  className={classNames({
-                    [Styles.explorerPanelIsVisible]: this.props.viewState
-                      .explorerPanelIsVisible
-                  })}
-                >
-                  <MenuBar
-                    terria={terria}
-                    viewState={this.props.viewState}
-                    allBaseMaps={allBaseMaps}
-                    menuItems={customElements.menu}
-                    menuLeftItems={customElements.menuLeft}
-                    animationDuration={animationDuration}
-                  />
-                  <MapNavigation
-                    terria={terria}
-                    viewState={this.props.viewState}
-                    navItems={customElements.nav}
-                  />
-                </div>
               </If>
 
               <Medium>

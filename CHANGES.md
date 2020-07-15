@@ -3,8 +3,13 @@ Change Log
 
 ### MobX Development
 
-#### next release (mobx-37)
-#### next release (8.0.0-alpha.37)
+#### next release (8.0.0-alpha.38)
+* Add `show` to `ShortReportTraits` and Tsxify `ShortReport`
+* Convert `ShortReport` to styled-components, add accordian-like UI
+* [The next improvement]
+
+#### 8.0.0-alpha.37
+* Add `refreshEnabled` trait and `AsyncMappableMixin` to `AutoRefreshMixin`
 * Ensure `CkanCatalogGroup` doesn't keep re-requesting data when opening and closing groups.
 * Add `typeName` to `CatalogMemberMixin`
 * Add `header` option to `loadText`
@@ -20,7 +25,12 @@ Change Log
 * Update LeftRightSection to use theme colours
 * Ported `GeoRssCatalogItem` to mobx, added support to skip entries without geometry.
 * 3D tiles support is now implemented as a Mixin.
-* (💫The next rad feature💫)
+* Update Difftool BottomPanel UI to clearer "area filter" and date pickers
+* Update Difftool BottomPanel to load into Terria's BottomDock
+* Rearrange MapButton layout in DOM to properly reflow with BottomDock
+* Update Difftool MainPanel to not get clipped by BottomDock
+* Rearrange MapDataCount to exist inside MapColumn for more correct DOM structure & behaviour
+* Re-added chart disclaimer.
 
 #### mobx-36
 * Added `pointer-events` to `MapNavigation` and `MenuBar` elements, so the bar don't block mouse click outside of the button.

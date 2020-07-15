@@ -4,6 +4,7 @@ import { action, computed, observable, reaction, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { IDisposer } from "mobx-utils";
 import React, { useState } from "react";
+import ReactDOM from "react-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, useTheme, withTheme } from "styled-components";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
@@ -469,16 +470,17 @@ class Main extends React.Component<MainPropsType> {
   render() {
     const { terria, viewState, sourceItem, t, theme } = this.props;
     const isShowingDiff = this.diffItem.isShowingDiff;
+    const datesSelected = this.leftDate && this.rightDate;
     const isReadyToGenerateDiff =
-      this.location &&
-      this.leftDate &&
-      this.rightDate &&
-      this.diffStyle !== undefined;
+      this.location && datesSelected && this.diffStyle !== undefined;
 
     return (
       <Text large>
         <DiffAccordion viewState={viewState} t={t}>
-          <MainPanel isMapFullScreen={viewState.isMapFullScreen}>
+          <MainPanel
+            isMapFullScreen={viewState.isMapFullScreen}
+            styledMaxHeight={`calc(100vh - ${viewState.bottomDockHeight}px - 150px)`}
+          >
             {isShowingDiff && (
               <>
                 <Box centered left>
@@ -606,7 +608,10 @@ class Main extends React.Component<MainPropsType> {
                   ))}
                 </Selector>
                 {this.previewLegendUrl && (
-                  <LegendImage width="100%" src={this.previewLegendUrl} />
+                  <>
+                    <Spacing bottom={2} />
+                    <LegendImage width="100%" src={this.previewLegendUrl} />
+                  </>
                 )}
               </>
             )}
@@ -647,7 +652,7 @@ class Main extends React.Component<MainPropsType> {
 
                 {!isReadyToGenerateDiff && (
                   <>
-                    <Spacing bottom={2} />
+                    <Spacing bottom={3} />
                     <Text
                       small
                       light
@@ -681,28 +686,32 @@ class Main extends React.Component<MainPropsType> {
             onPicked={this.onUserPickLocation}
           />
         )}
-        {!isShowingDiff && (
-          <BottomPanel>
-            <DatePicker
-              title="Date Comparison A"
-              item={this.props.leftItem}
-              popupStyle={Styles.leftDatePickerPopup}
-              externalOpenButton={this.openLeftDatePickerButton}
-              onDateSet={() => this.showItem(this.props.leftItem)}
-            />
-            <AreaFilterSelection
-              location={this.location}
-              isPickingNewLocation={this._isPickingNewLocation}
-            />
-            <DatePicker
-              title="Date Comparison B"
-              item={this.props.rightItem}
-              popupStyle={Styles.rightDatePickerPopup}
-              externalOpenButton={this.openRightDatePickerButton}
-              onDateSet={() => this.showItem(this.props.rightItem)}
-            />
-          </BottomPanel>
-        )}
+        {!isShowingDiff &&
+          ReactDOM.createPortal(
+            // Bottom Panel
+            <Box centered fullWidth wrap backgroundColor={theme.dark}>
+              <DatePicker
+                heading={t("diffTool.labels.dateComparisonA")}
+                item={this.props.leftItem}
+                popupStyle={Styles.leftDatePickerPopup}
+                externalOpenButton={this.openLeftDatePickerButton}
+                onDateSet={() => this.showItem(this.props.leftItem)}
+              />
+              <AreaFilterSelection
+                t={t}
+                location={this.location}
+                isPickingNewLocation={this._isPickingNewLocation}
+              />
+              <DatePicker
+                heading={t("diffTool.labels.dateComparisonA")}
+                item={this.props.rightItem}
+                popupStyle={Styles.rightDatePickerPopup}
+                externalOpenButton={this.openRightDatePickerButton}
+                onDateSet={() => this.showItem(this.props.rightItem)}
+              />
+            </Box>,
+            document.getElementById("TJS-BottomDockPortalForTool")!
+          )}
       </Text>
     );
   }
@@ -782,11 +791,13 @@ const DiffAccordionWrapper = styled(Box).attrs({
   // background: ${p => p.theme.dark};
   margin-left: ${props =>
     props.isMapFullScreen ? 16 : parseInt(props.theme.workbenchWidth) + 40}px;
+  // TODO: Transitioning on margin-left incurs an expensive layout re-calculation, consider disabling
   transition: margin-left 0.25s;
 `;
 
 const MainPanel = styled(Box).attrs({
   column: true,
+  overflowY: "auto",
   paddedRatio: 2
 })`
   ${({ theme }) => theme.borderRadiusBottom(theme.radius40Button)}
@@ -833,30 +844,12 @@ const Selector = (props: any) => (
   </Box>
 );
 
-const BottomPanel = styled(Box).attrs({
-  centered: true,
-  positionAbsolute: true,
-  fullWidth: true,
-  styledHeight: "80px"
-})`
-  background: ${p => p.theme.dark};
-  z-index: 99999;
-  left: 0;
-  bottom: 0;
-
-  > div {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    max-height: 64px;
-  }
-`;
-
 const AreaFilterSelection = (props: {
+  t: TFunction;
   location?: LatLonHeight;
   isPickingNewLocation: boolean;
 }) => {
-  const { location, isPickingNewLocation } = props;
+  const { t, location, isPickingNewLocation } = props;
   let locationText = "-";
   if (location) {
     const { longitude, latitude } = prettifyCoordinates(
@@ -868,28 +861,48 @@ const AreaFilterSelection = (props: {
     );
     locationText = `${longitude} ${latitude}`;
   }
-  const progressComponent = (
-    <Text textLight extraExtraLarge bold>
-      <Loader message={`Querying ${location ? "new" : ""} position...`} />
-    </Text>
-  );
 
   return (
-    <Box column centered>
-      <Text textLight semiBold>
-        Area filter selection
-      </Text>
-      {isPickingNewLocation && progressComponent}
-      {!isPickingNewLocation && (
-        <Text
-          textLight
-          extraExtraLarge
-          bold
-          css={"min-height: 40px; line-height: 40px;"}
-        >
-          {locationText}
+    <Box
+      column
+      centered
+      css={`
+        @media (max-width: ${(props: any) => props.theme.md}px) {
+          width: 100%;
+        }
+      `}
+    >
+      <Box centered>
+        <StyledIcon light styledWidth="16px" glyph={GLYPHS.location2} />
+        <Spacing right={2} />
+        <Text textLight extraLarge>
+          {t("diffTool.labels.areaFilterSelection")}
         </Text>
-      )}
+      </Box>
+      <Spacing bottom={3} />
+      <Box styledMinHeight="40px">
+        {isPickingNewLocation ? (
+          <Text
+            textLight
+            extraExtraLarge
+            bold
+            // Using legacy Loader.jsx means we override at a higher level to inherit
+            // this fills tyle
+            css={`
+              fill: ${({ theme }: any) => theme.textLight};
+            `}
+          >
+            <Loader
+              light
+              message={`Querying ${location ? "new" : ""} position...`}
+            />
+          </Text>
+        ) : (
+          <Text textLight bold heading textAlignCenter>
+            {locationText}
+          </Text>
+        )}
+      </Box>
     </Box>
   );
 };
