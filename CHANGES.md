@@ -3,6 +3,10 @@ Change Log
 
 ### MobX Development
 
+#### next release (mobx-37)
+#### next release (8.0.0-alpha.37)
+* Add `show` to `ShortReportTraits` and Tsxify `ShortReport`
+* Convert `ShortReport` to styled-components, add accordian-like UI
 #### next release (8.0.0-alpha.38)
 * [The next improvement]
 
