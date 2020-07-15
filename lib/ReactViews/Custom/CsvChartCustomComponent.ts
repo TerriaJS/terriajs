@@ -19,6 +19,9 @@ interface CsvChartCustomComponentAttributes
 
   /** Either 'true' or 'false' (case sensitive). Pass 'true' to completely replace the data, 'false' to update the existing data. Defaults to false (updating). */
   pollReplace?: boolean;
+
+  /** Set to a non-empty string to display a disclaimer at the top of the chart panel when this chart is expanded into the chart panel. */
+  chartDisclaimer?: string;
 }
 
 type CsvCatalogItemType = Model<CsvCatalogItemTraits>;
@@ -34,7 +37,8 @@ export default class CsvChartCustomComponent extends ChartCustomComponent<
     return super.attributes.concat([
       "poll-seconds",
       "poll-sources",
-      "poll-replace"
+      "poll-replace",
+      "chart-disclaimer"
     ]);
   }
 
@@ -77,6 +81,14 @@ export default class CsvChartCustomComponent extends ChartCustomComponent<
       );
     }
 
+    if (!!attrs.chartDisclaimer) {
+      item.setTrait(
+        CommonStrata.user,
+        "chartDisclaimer",
+        attrs.chartDisclaimer
+      );
+    }
+
     if (attrs.columnTitles !== undefined) {
       // Set column titles
       attrs.columnTitles.forEach(({ name, title }) => {
@@ -116,9 +128,10 @@ export default class CsvChartCustomComponent extends ChartCustomComponent<
     const parsed: CsvChartCustomComponentAttributes = super.parseNodeAttrs(
       nodeAttrs
     );
-    (parsed.pollSeconds = parseIntOrUndefined(nodeAttrs["poll-seconds"])),
-      (parsed.pollSources = splitStringIfDefined(nodeAttrs["poll-sources"])),
-      (parsed.pollReplace = nodeAttrs["poll-replace"] === "true");
+    parsed.pollSeconds = parseIntOrUndefined(nodeAttrs["poll-seconds"]);
+    parsed.pollSources = splitStringIfDefined(nodeAttrs["poll-sources"]);
+    parsed.pollReplace = nodeAttrs["poll-replace"] === "true";
+    parsed.chartDisclaimer = nodeAttrs["chart-disclaimer"] || undefined;
     return parsed;
   }
 }

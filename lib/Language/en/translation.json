@@ -97,11 +97,14 @@
     "labels": {
       "area": "Area",
       "dates": "Dates",
+      "dateComparisonA": "Date Comparison A",
+      "dateComparisonB": "Date Comparison B",
       "sourceDataset": "Source dataset",
       "previewStyle": "Preview style",
       "differenceOutput": "Difference output",
       "generateDiffButtonText": "Generate change detection",
-      "disabledButtonPrompt": "Please note: A location and dates must be selected to proceed with change detection"
+      "disabledButtonPrompt": "Please note: A location and dates must be selected to proceed with change detection",
+      "areaFilterSelection": "Area filter selection"
     },
     "locationDisplay": {
       "noLocationSelected": {
@@ -132,7 +135,7 @@
     },
     "datePicker": {
       "previousDateTitle": "Previous date",
-      "nextDateTitle": "Previous date",
+      "nextDateTitle": "Next date",
       "dateButtonTitle": "Select a date",
       "dateOutOfRange": "Currently out of range"
     }

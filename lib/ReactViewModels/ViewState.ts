@@ -120,6 +120,17 @@ export default class ViewState {
     this.currentTrainerStepIndex = index;
   }
 
+  /**
+   * Bottom dock state & action
+   */
+  @observable bottomDockHeight: number = 0;
+  @action
+  setBottomDockHeight(height: number) {
+    if (this.bottomDockHeight !== height) {
+      this.bottomDockHeight = height;
+    }
+  }
+
   @observable workbenchWithOpenControls: string | undefined = undefined;
 
   errorProvider: any | null = null;
