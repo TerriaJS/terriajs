@@ -99,11 +99,16 @@ describe("DimensionSelectorSection", function() {
         "test/WMS/styles_and_dimensions.xml"
       );
       wmsItem.setTrait(CommonStrata.definition, "layers", "A,B");
-      wmsItem.setTrait(CommonStrata.definition, "parameters", {
+      wmsItem.setTrait(CommonStrata.definition, "dimensions", {
         styles: "contour/ferret,shadefill/alg2",
         custom: "Another thing",
         elevation: "-0.59375"
       });
+      wmsItem.setTrait(
+        CommonStrata.definition,
+        "styles",
+        "contour/ferret,shadefill/alg2"
+      );
     });
 
     wmsItem
@@ -117,9 +122,9 @@ describe("DimensionSelectorSection", function() {
 
         const selects = section.root.findAllByType(Select);
 
+        console.log(selects);
+
         const labels = section.root.findAllByType("label");
-        expect(selects.length).toBe(3);
-        expect(labels.length).toBe(3);
 
         // Expect 2 styles (layer A, layer B) + 3 dimensions (elevation, custom, another)
         expect(selects.length).toBe(5);
@@ -128,18 +133,25 @@ describe("DimensionSelectorSection", function() {
         // Check Style A
         expect(selects[0].props.name).toContain(`${wmsItem.uniqueId}-A-styles`);
         expect(selects[0].props.value).toBe("contour/ferret");
-        const styleOptions = selects[0].findAllByType("option");
-        expect(styleOptions.length).toBe(40);
+        expect(selects[0].findAllByType("option").length).toBe(40);
 
-        expect(selects[1].props.name).toContain("dimensions-elevation");
-        expect(selects[1].props.value).toBe("-0.59375");
-        const elevationOptions = selects[1].findAllByType("option");
-        expect(elevationOptions.length).toBe(16);
+        expect(selects[1].props.name).toContain(`${wmsItem.uniqueId}-B-styles`);
+        expect(selects[1].props.value).toBe("shadefill/alg2");
+        expect(selects[1].findAllByType("option").length).toBe(40);
 
-        expect(selects[2].props.name).toContain("dimensions-custom");
-        expect(selects[2].props.value).toBe("Another thing");
-        const customOptions = selects[2].findAllByType("option");
-        expect(customOptions.length).toBe(4);
+        expect(selects[2].props.name).toContain(
+          `${wmsItem.uniqueId}-elevation`
+        );
+        expect(selects[2].props.value).toBe("-0.59375");
+        expect(selects[2].findAllByType("option").length).toBe(16);
+
+        expect(selects[3].props.name).toContain(`${wmsItem.uniqueId}-custom`);
+        expect(selects[3].props.value).toBe("Another thing");
+        expect(selects[3].findAllByType("option").length).toBe(4);
+
+        expect(selects[4].props.name).toContain(`${wmsItem.uniqueId}-another`);
+        expect(selects[4].props.value).toBe("Second");
+        expect(selects[4].findAllByType("option").length).toBe(3);
       })
       .then(done)
       .catch(done.fail);
