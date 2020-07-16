@@ -160,13 +160,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
               );
 
         if (layerStyle !== undefined && layerStyle.legend !== undefined) {
-          layerStyle.legend.setTrait(
-            CommonStrata.defaults,
-            "title",
-            this.capabilitiesLayers.get(layerStyle.name!)?.Title ||
-              layerStyle.name
-          );
-
           result.push(
             <StratumFromTraits<LegendTraits>>(<unknown>layerStyle.legend)
           );
@@ -493,12 +486,6 @@ class DiffStratum extends LoadableStratum(WebMapServiceCatalogItemTraits) {
       );
     }
     return undefined;
-  }
-
-  @computed
-  get availableDiffStyles() {
-    // Currently only NDVI
-    return ["NDVI"];
   }
 
   @computed
