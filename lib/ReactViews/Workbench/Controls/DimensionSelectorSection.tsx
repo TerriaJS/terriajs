@@ -44,12 +44,13 @@ export default class DimensionSelectorSection extends React.Component<{
     }
 
     return (
-      <Box padding displayInlineBlock fullWidth>
+      <Box displayInlineBlock fullWidth>
+        <Spacing bottom={2} />
         {selectableDimensions.map((dim, i) => (
           <React.Fragment key={dim.id}>
             <label htmlFor={dim.id}>
-              <Text bold textLight medium as="span">
-                {dim.name || dim.id}
+              <Text textLight medium as="span">
+                {dim.name || dim.id}:
               </Text>
             </label>
             <Spacing bottom={1} />

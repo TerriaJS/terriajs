@@ -267,7 +267,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
             ? undefined
             : createStratumInstance(LegendTraits, {
                 url: legendUri.toString(),
-                urlMimeType: legendMimeType
+                urlMimeType: legendMimeType,
+                title:
+                  (capabilitiesLayers.size > 1 && layer?.Title) || undefined // Add layer Title as legend title if showing multiple layers
               });
 
           return {
