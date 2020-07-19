@@ -8,6 +8,9 @@ Change Log
 * Added WMS Dimensions (using `SelectableDimensions`)
 * Added WMS multi-layer style, dimension and legend support.
 * Merged the `StyleSelector` and `DimensionsSelector`, and created a `SelectableDimensions` interface.
+* Add `show` to `ShortReportTraits` and Tsxify `ShortReport`
+* Convert `ShortReport` to styled-components, add accordian-like UI
+* [The next improvement]
 
 #### 8.0.0-alpha.37
 * Add `refreshEnabled` trait and `AsyncMappableMixin` to `AutoRefreshMixin`
