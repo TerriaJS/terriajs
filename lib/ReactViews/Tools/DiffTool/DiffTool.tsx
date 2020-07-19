@@ -14,13 +14,21 @@ import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
+import isDefined from "../../../Core/isDefined";
 import LatLonHeight from "../../../Core/LatLonHeight";
+import { parseCustomMarkdownToReactWithOptions } from "../../Custom/parseCustomMarkdownToReact";
 import PickedFeatures from "../../../Map/PickedFeatures";
+import prettifyCoordinates from "../../../Map/prettifyCoordinates";
 import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import CommonStrata from "../../../Models/CommonStrata";
 import Feature from "../../../Models/Feature";
 import hasTraits, { HasTrait } from "../../../Models/hasTraits";
+import {
+  removeMarker,
+  getMarkerLocation
+} from "../../../Models/LocationMarkerUtils";
 import Mappable, { ImageryParts } from "../../../Models/Mappable";
+import { DimensionOption } from "../../../Models/SelectableDimensions";
 import SplitItemReference from "../../../Models/SplitItemReference";
 import Terria from "../../../Models/Terria";
 import ViewState from "../../../ReactViewModels/ViewState";
@@ -30,14 +38,6 @@ import { GLYPHS, StyledIcon } from "../../Icon";
 import DatePicker from "./DatePicker";
 import Styles from "./diff-tool.scss";
 import LocationPicker from "./LocationPicker";
-import prettifyCoordinates from "../../../Map/prettifyCoordinates";
-import {
-  removeMarker,
-  getMarkerLocation
-} from "../../../Models/LocationMarkerUtils";
-import { DimensionOption } from "../../../Models/SelectableDimensions";
-import { parseCustomMarkdownToReactWithOptions } from "../../Custom/parseCustomMarkdownToReact";
-import isDefined from "../../../Core/isDefined";
 
 const Box: any = require("../../../Styled/Box").default;
 const BoxSpan: any = require("../../../Styled/Box").BoxSpan;
