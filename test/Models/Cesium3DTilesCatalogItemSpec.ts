@@ -10,10 +10,6 @@ import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
 import Cesium3DTilesCatalogItem from "../../lib/Models/Cesium3DTilesCatalogItem";
 import createStratumInstance from "../../lib/Models/createStratumInstance";
 import Terria from "../../lib/Models/Terria";
-import {
-  FilterTraits,
-  OptionsTraits
-} from "../../lib/Traits/Cesium3DCatalogItemTraits";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import HeadingPitchRollTraits from "../../lib/Traits/HeadingPitchRollTraits";
 import LatLonHeightTraits from "../../lib/Traits/LatLonHeightTraits";
@@ -22,6 +18,10 @@ import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
 import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import {
+  OptionsTraits,
+  FilterTraits
+} from "../../lib/Traits/Cesium3dTilesTraits";
 
 describe("Cesium3DTilesCatalogItemSpec", function() {
   let item: Cesium3DTilesCatalogItem;

@@ -24,6 +24,7 @@ Change Log
 * Removed some sass overrides on `Select` through `StyleSelectorSection`
 * Update LeftRightSection to use theme colours
 * Ported `GeoRssCatalogItem` to mobx, added support to skip entries without geometry.
+* 3D tiles support is now implemented as a Mixin.
 * Update Difftool BottomPanel UI to clearer "area filter" and date pickers
 * Update Difftool BottomPanel to load into Terria's BottomDock
 * Rearrange MapButton layout in DOM to properly reflow with BottomDock
