@@ -32,11 +32,25 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
     readonly strata: Map<string, StratumTraits>;
 
     /**
-     * Babel transpiles this to assigning undefined to this property, whereas
-     * typescript strips the type completely. Given we don't actually do
-     * anything different to the main constructor call in `BaseModel`, it feels
-     * more correct to remove this annotation rather than declare it here and
-     * re-assigning it in the `Model` constructor
+     * Babel transpiles this & correctly assigns undefined to this property as
+     * under `proposal-class-fields` declaring a property without initialising
+     * it still declares it, thus treated as
+     *
+     * `sourceReference = undefined;`
+     * >This differs a bit from certain transpiler implementations, which would
+     * >just entirely ignore a field declaration which has no initializer.
+     *
+     * instead of what we had expected with TypeScript's treatment of this class
+     * property being:
+     * `readonly sourceReference: BaseModel | undefined;`
+     *
+     * whereas ts-loader strips the type completely along with the implicit
+     * undefined assignment getting removed entirely before it hits
+     * babel-loader, side-stepping this case.
+     *
+     * Given we don't actually do anything different to the main constructor
+     * call in `BaseModel`, it feels more correct to remove this annotation
+     * rather than declare it here + re-assigning it in the `Model` constructor
      */
     // readonly sourceReference: BaseModel | undefined;
 
