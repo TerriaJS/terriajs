@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.39)
+* Add `cacheDuration` to `UrlTraits` and add to various catalog models.
 * [The next improvement]
 
 #### 8.0.0-alpha.38
