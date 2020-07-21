@@ -3,10 +3,13 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.38)
+#### next release (8.0.0-alpha.39)
+* [The next improvement]
+
+#### 8.0.0-alpha.38
 * Add `show` to `ShortReportTraits` and Tsxify `ShortReport`
 * Convert `ShortReport` to styled-components, add accordian-like UI
-* [The next improvement]
+* 3D tiles support is now implemented as a Mixin.
 
 #### 8.0.0-alpha.37
 * Add `refreshEnabled` trait and `AsyncMappableMixin` to `AutoRefreshMixin`
