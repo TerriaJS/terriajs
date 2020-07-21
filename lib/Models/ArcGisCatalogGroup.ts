@@ -70,7 +70,13 @@ class ArcGisServerStratum extends LoadableStratum(ArcGisCatalogGroupTraits) {
   ): Promise<ArcGisServerStratum> {
     var terria = catalogGroup.terria;
     var uri = new URI(catalogGroup.url).addQuery("f", "json");
-    return loadJson(proxyCatalogItemUrl(catalogGroup, uri.toString(), catalogGroup.cacheDuration))
+    return loadJson(
+      proxyCatalogItemUrl(
+        catalogGroup,
+        uri.toString(),
+        catalogGroup.cacheDuration
+      )
+    )
       .then((arcgisServer: ArcGisServer) => {
         // Is this really a ArcGisServer REST response?
         if (
@@ -268,13 +274,13 @@ export default class ArcGisCatalogGroup extends UrlMixin(
     return i18next.t("models.arcGisService.name");
   }
 
-  @computed get cacheDuration (): string {
+  @computed get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration
+      return super.cacheDuration;
     }
-    return '1d'
+    return "1d";
   }
-  
+
   protected forceLoadMetadata(): Promise<void> {
     const url = this.url || "";
     if (/\/MapServer(\/?.*)?$/i.test(url)) {

@@ -44,11 +44,11 @@ class KmlCatalogItem extends AsyncMappableMixin(
     return isDefined(this._kmlFile);
   }
 
-  @computed get cacheDuration (): string {
+  @computed get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration
+      return super.cacheDuration;
     }
-    return '1d'
+    return "1d";
   }
 
   protected forceLoadMapItems(): Promise<void> {

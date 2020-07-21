@@ -714,11 +714,11 @@ export default class MagdaReference extends AccessControlMixin(
     return undefined;
   }
 
-  @computed get cacheDuration (): string {
+  @computed get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration
+      return super.cacheDuration;
     }
-    return '1d'
+    return "1d";
   }
 
   protected loadMagdaRecord(options: RecordOptions): Promise<JsonObject> {
@@ -732,7 +732,11 @@ export default class MagdaReference extends AccessControlMixin(
         })
       );
     }
-    const proxiedUrl = proxyCatalogItemUrl(this, recordUri.toString(), this.cacheDuration);
+    const proxiedUrl = proxyCatalogItemUrl(
+      this,
+      recordUri.toString(),
+      this.cacheDuration
+    );
 
     return loadJson(proxiedUrl, options.magdaReferenceHeaders);
   }

@@ -81,11 +81,11 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
     return isDefined(this._geoJsonFile);
   }
 
-  @computed get cacheDuration ():string {
+  @computed get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration
+      return super.cacheDuration;
     }
-    return '1d'
+    return "1d";
   }
 
   /**
@@ -142,9 +142,13 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
               })
             });
           }
-          resolve(loadZipFile(proxyCatalogItemUrl(this, this.url, this.cacheDuration)));
+          resolve(
+            loadZipFile(proxyCatalogItemUrl(this, this.url, this.cacheDuration))
+          );
         } else {
-          resolve(loadJson(proxyCatalogItemUrl(this, this.url, this.cacheDuration)));
+          resolve(
+            loadJson(proxyCatalogItemUrl(this, this.url, this.cacheDuration))
+          );
         }
       } else {
         throw new TerriaError({

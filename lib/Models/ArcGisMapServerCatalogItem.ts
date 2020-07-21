@@ -347,11 +347,11 @@ export default class ArcGisMapServerCatalogItem
     return this.loadMetadata();
   }
 
-  @computed get cacheDuration (): string {
+  @computed get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration
+      return super.cacheDuration;
     }
-    return '1d'
+    return "1d";
   }
 
   @computed get imageryProvider() {
@@ -473,7 +473,11 @@ function getBaseURI(item: ArcGisMapServerCatalogItem) {
 
 function getJson(item: ArcGisMapServerCatalogItem, uri: any) {
   return loadJson(
-    proxyCatalogItemUrl(item, uri.addQuery("f", "json").toString(), item.cacheDuration)
+    proxyCatalogItemUrl(
+      item,
+      uri.addQuery("f", "json").toString(),
+      item.cacheDuration
+    )
   );
 }
 
@@ -604,7 +608,11 @@ function cleanAndProxyUrl(
   catalogItem: ArcGisMapServerCatalogItem,
   url: string
 ) {
-  return proxyCatalogItemUrl(catalogItem, cleanUrl(url), catalogItem.cacheDuration);
+  return proxyCatalogItemUrl(
+    catalogItem,
+    cleanUrl(url),
+    catalogItem.cacheDuration
+  );
 }
 
 function cleanUrl(url: string) {

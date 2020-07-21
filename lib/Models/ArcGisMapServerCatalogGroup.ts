@@ -123,7 +123,13 @@ export class MapServerStratum extends LoadableStratum(
     var terria = catalogGroup.terria;
     var uri = new URI(catalogGroup.url).addQuery("f", "json");
 
-    return loadJson(proxyCatalogItemUrl(catalogGroup, uri.toString(), catalogGroup.cacheDuration))
+    return loadJson(
+      proxyCatalogItemUrl(
+        catalogGroup,
+        uri.toString(),
+        catalogGroup.cacheDuration
+      )
+    )
       .then((mapServer: MapServer) => {
         // Is this really a MapServer REST response?
         if (!mapServer || (!mapServer.layers && !mapServer.subLayers)) {
@@ -277,11 +283,11 @@ export default class ArcGisMapServerCatalogGroup extends UrlMixin(
     return i18next.t("models.arcGisMapServerCatalogGroup.name");
   }
 
-  @computed get cacheDuration (): string {
+  @computed get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration
+      return super.cacheDuration;
     }
-    return '1d'
+    return "1d";
   }
 
   protected forceLoadMetadata(): Promise<void> {

@@ -413,11 +413,11 @@ export default class CkanItemReference extends UrlMixin(
     this._supportedFormat = this.isResourceInSupportedFormats(resource);
   }
 
-  @computed get cacheDuration (): string {
+  @computed get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration
+      return super.cacheDuration;
     }
-    return '1d'
+    return "1d";
   }
 
   // We will first attach this to the CkanItemReference

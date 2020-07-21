@@ -488,11 +488,11 @@ export default class ArcGisFeatureServerCatalogItem
     });
   }
 
-  @computed get cacheDuration (): string {
+  @computed get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration
+      return super.cacheDuration;
     }
-    return '1d'
+    return "1d";
   }
 
   @computed get geoJsonItem(): GeoJsonCatalogItem | undefined {

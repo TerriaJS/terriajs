@@ -113,11 +113,11 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
   @observable
   private processDescription?: ProcessDescription;
 
-  @computed get cacheDuration (): string {
+  @computed get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration
+      return super.cacheDuration;
     }
-    return '0d'
+    return "0d";
   }
 
   /**

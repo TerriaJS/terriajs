@@ -254,11 +254,11 @@ export default class CkanCatalogGroup extends UrlMixin(
     return i18next.t("models.ckan.nameServer");
   }
 
-  @computed get cacheDuration (): string {
+  @computed get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration
+      return super.cacheDuration;
     }
-    return '1d'
+    return "1d";
   }
 
   protected forceLoadMetadata(): Promise<void> {
@@ -404,7 +404,11 @@ async function getCkanDatasets(
 ): Promise<CkanServerResponse | undefined> {
   try {
     const response: CkanServerResponse = await loadJson(
-      proxyCatalogItemUrl(catalogGroup, uri.toString(), catalogGroup.cacheDuration)
+      proxyCatalogItemUrl(
+        catalogGroup,
+        uri.toString(),
+        catalogGroup.cacheDuration
+      )
     );
     return response;
   } catch (err) {

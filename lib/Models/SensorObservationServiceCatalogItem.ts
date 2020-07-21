@@ -342,11 +342,11 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     }
   }
 
-  @computed get cacheDuration (): string {
+  @computed get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration
+      return super.cacheDuration;
     }
-    return '0d'
+    return "0d";
   }
 
   @action
