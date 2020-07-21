@@ -1,5 +1,7 @@
 var path = require('path');
 var StringReplacePlugin = require("string-replace-webpack-plugin");
+var ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+var ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
 var webpack = require('webpack');
 
 function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtractPlugin, disableStyleLoader) {
@@ -101,6 +103,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
             {
                 loader: 'babel-loader',
                 options: {
+                    cacheDirectory: true,
                     presets: [
                       [
                         '@babel/preset-env',
@@ -109,17 +112,30 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
                           useBuiltIns: "usage"
                         }
                       ],
-                      '@babel/preset-react'
+                      '@babel/preset-react',
+                      ['@babel/typescript', {allowNamespaces: true}]
                     ],
                     plugins: [
-                        'babel-plugin-styled-components',
                         'babel-plugin-jsx-control-statements',
                         '@babel/plugin-transform-modules-commonjs',
+                        ["@babel/plugin-proposal-decorators", { "legacy": true }],
+                        '@babel/proposal-class-properties',
+                        '@babel/proposal-object-rest-spread',
+                        'babel-plugin-styled-components',
                         require.resolve('@babel/plugin-syntax-dynamic-import')
                     ]
                 }
             },
-            require.resolve('ts-loader')
+            // Re-enable this if we need to observe any differences in the
+            // transpilation via ts-loader, & babel's stripping of types,
+            // or if TypeScript has newer features that babel hasn't
+            // caught up with
+            // {
+            //     loader: 'ts-loader',
+            //     options: {
+            //       transpileOnly: true
+            //     }
+            // }
         ]
     });
 
@@ -252,6 +268,25 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
         new StringReplacePlugin(),
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
     ]);
+
+    // Fork type checking to a separate thread
+    config.plugins.push(
+        new ForkTsCheckerWebpackPlugin({
+            typescript: {
+                diagnosticOptions: {
+                    semantic: true,
+                    syntactic: true,
+                },
+            },
+        })
+    );
+    config.plugins.push(
+        new ForkTsCheckerNotifierWebpackPlugin({
+            excludeWarnings: true,
+            // probably don't need to know first check worked as well - disable it
+            skipFirstNotification: true
+        })
+    );
 
     if (hot && !disableStyleLoader) {
         config.module.rules.push({

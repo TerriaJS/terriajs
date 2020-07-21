@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.39)
 * Add basic support for nested WMS groups
+* Development builds sped up by 3~20x - ts-loader is now optional & TypeScript being transpiled by babel-loader, keeping type check safety on a separate thread
 * [The next improvement]
 
 #### 8.0.0-alpha.38
