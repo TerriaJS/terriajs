@@ -926,8 +926,8 @@ class WebMapServiceCatalogItem
           })
         ),
 
-        // Set selectedId to value stored in `parameters` trait or the first available value
-        // The `styles` parameter is CSV values, a style for each layer
+        // Set selectedId to value stored in `styles` trait for this `layerIndex` or the first available style value
+        // The `styles` parameter is CSV, a style for each layer
         selectedId:
           this.styles?.split(",")?.[layerIndex] || layer.styles[0].name,
 
@@ -1169,9 +1169,9 @@ export function formatDimensionsForOws(
       // See WMS 1.3.0 spec section C.3.2 and C.3.3.
       {
         formattedDimensions[
-          key?.toLowerCase() !== "elevation" && key?.toLowerCase() !== "styles"
-            ? `dim_${key}`
-            : key
+          ["time", "styles", "elevation"].includes(key?.toLowerCase())
+            ? key
+            : `dim_${key}`
         ] = value;
         return formattedDimensions;
       },

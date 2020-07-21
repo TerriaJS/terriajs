@@ -120,7 +120,7 @@ export class WebMapServiceAvailableLayerDimensionsTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
     name: "Layer Name",
-    description: "The name of the layer for which styles are available."
+    description: "The name of the layer for which dimensions are available."
   })
   layerName?: string;
 
