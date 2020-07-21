@@ -59,6 +59,39 @@ the various gulp tasks we use.
 Finally it doesn't exclude being able to use `ts-loader` down the track, we can
 always toggle it back on with ease.
 
+### With these changes
+
+All builds under a I9-9980HK, so there are better single threaded processors out there which will see even greater speeds
+
+#### Fresh build samples
+
+`npm run gulp watch` without these changes
+```
+Time: 76565ms
+```
+
+`npm run gulp watch` with these changes & empty babel loader cache:
+```
+Time: 40781ms
+```
+
+`npm run gulp watch` with these changes & cached babel loader files:
+```
+Time: 19542ms
+```
+
+#### Incremental build samples
+
+Changing a `.ts` file being watched without these changes (Generally 10~15 seconds)
+```
+Time: 14201ms
+```
+
+Changing a `.ts` file being watched with these changes (Generally 500~1000ms)
+```
+Time: 734ms
+```
+
 ## Consequences
 Any differences in how babel transpiles TypeScript can surface some runtime
 issues. The only suspected bug observed so far was a logic error in terriajs -
