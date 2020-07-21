@@ -81,6 +81,13 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
     return isDefined(this._geoJsonFile);
   }
 
+  @computed get cacheDuration ():string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration
+    }
+    return '1d'
+  }
+
   /**
    * Returns the final raw data after all transformations are applied.
    */
@@ -135,9 +142,9 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
               })
             });
           }
-          resolve(loadZipFile(proxyCatalogItemUrl(this, this.url, "1d")));
+          resolve(loadZipFile(proxyCatalogItemUrl(this, this.url, this.cacheDuration)));
         } else {
-          resolve(loadJson(proxyCatalogItemUrl(this, this.url, "1d")));
+          resolve(loadJson(proxyCatalogItemUrl(this, this.url, this.cacheDuration)));
         }
       } else {
         throw new TerriaError({
@@ -253,7 +260,7 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
       fill: defaultColor(style.fill, (this.name || "") + " fill"),
       clampToGround: this.clampToGround,
       markerUrl: style["marker-url"] // not in SimpleStyle spec but gives an alternate to maki marker symbols
-        ? proxyCatalogItemUrl(this, style["marker-url"])
+        ? proxyCatalogItemUrl(this, style["marker-url"], this.cacheDuration)
         : undefined
     };
 

@@ -44,6 +44,13 @@ class KmlCatalogItem extends AsyncMappableMixin(
     return isDefined(this._kmlFile);
   }
 
+  @computed get cacheDuration (): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration
+    }
+    return '1d'
+  }
+
   protected forceLoadMapItems(): Promise<void> {
     const createLoadError = () =>
       new TerriaError({
@@ -71,7 +78,7 @@ class KmlCatalogItem extends AsyncMappableMixin(
           resolve(readXml(this._kmlFile));
         }
       } else if (isDefined(this.url)) {
-        resolve(proxyCatalogItemUrl(this, this.url));
+        resolve(proxyCatalogItemUrl(this, this.url, this.cacheDuration));
       } else {
         throw new TerriaError({
           sender: this,

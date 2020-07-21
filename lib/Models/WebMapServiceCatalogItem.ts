@@ -523,6 +523,13 @@ class WebMapServiceCatalogItem
     return this.loadMetadata();
   }
 
+  @computed get cacheDuration (): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration
+    }
+    return '0d'
+  }
+  
   @computed
   get canExportData() {
     return isDefined(this.linkedWcsCoverage) && isDefined(this.linkedWcsUrl);
@@ -826,7 +833,7 @@ class WebMapServiceCatalogItem
       }
 
       const imageryOptions = {
-        url: proxyCatalogItemUrl(this, baseUrl.toString()),
+        url: proxyCatalogItemUrl(this, baseUrl.toString(), this.cacheDuration),
         layers: this.layers || "",
         parameters: parameters,
         tilingScheme: /*defined(this.tilingScheme) ? this.tilingScheme :*/ new WebMercatorTilingScheme(),

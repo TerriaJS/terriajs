@@ -150,6 +150,13 @@ export default class CartoMapCatalogItem
     });
   }
 
+  @computed get cacheDuration (): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration
+    }
+    return '1d'
+  }
+
   @computed get imageryProvider() {
     const stratum = <CartoLoadableStratum>(
       this.strata.get(CartoLoadableStratum.stratumName)
@@ -178,7 +185,7 @@ export default class CartoMapCatalogItem
     }
 
     return new UrlTemplateImageryProvider({
-      url: proxyCatalogItemUrl(this, stratum.tileUrl),
+      url: proxyCatalogItemUrl(this, stratum.tileUrl, this.cacheDuration),
       maximumLevel: this.maximumLevel,
       minimumLevel: this.minimumLevel,
       credit: this.attribution,

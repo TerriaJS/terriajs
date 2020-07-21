@@ -356,7 +356,8 @@ class FeatureServerStratum extends LoadableStratum(
         const imageUrl = symbol.imageData
           ? proxyCatalogItemUrl(
               this,
-              `data:${symbol.contentType};base64,${symbol.imageData}`
+              `data:${symbol.contentType};base64,${symbol.imageData}`,
+              this.cacheDuration
             )
           : undefined;
         const outlineColor = symbol.outline?.color;
@@ -485,6 +486,13 @@ export default class ArcGisFeatureServerCatalogItem
         });
       }
     });
+  }
+
+  @computed get cacheDuration (): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration
+    }
+    return '1d'
   }
 
   @computed get geoJsonItem(): GeoJsonCatalogItem | undefined {
@@ -748,7 +756,8 @@ function loadMetadata(catalogItem: ArcGisFeatureServerCatalogItem) {
 function buildMetadataUrl(catalogItem: ArcGisFeatureServerCatalogItem) {
   return proxyCatalogItemUrl(
     catalogItem,
-    new URI(catalogItem.url).addQuery("f", "json").toString()
+    new URI(catalogItem.url).addQuery("f", "json").toString(),
+    catalogItem.cacheDuration
   );
 }
 
@@ -774,7 +783,8 @@ function buildGeoJsonUrl(catalogItem: ArcGisFeatureServerCatalogItem) {
       .segment("query")
       .addQuery("f", "json")
       .addQuery("layerDefs", "{" + layerId + ':"' + catalogItem.layerDef + '"}')
-      .toString()
+      .toString(),
+    catalogItem.cacheDuration
   );
 }
 

@@ -224,6 +224,13 @@ export default class GeoRssCatalogItem
     });
   }
 
+  @computed get cacheDuration (): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration
+    }
+    return '1d'
+  }
+
   @computed get geoJsonItem(): GeoJsonCatalogItem | undefined {
     const stratum = <GeoRssStratum>this.strata.get(GeoRssStratum.stratumName);
     return isDefined(stratum) ? stratum.geoJsonItem : undefined;
@@ -251,7 +258,7 @@ function loadGeoRss(item: GeoRssCatalogItem) {
       const parser = new DOMParser();
       resolve(parser.parseFromString(item.geoRssString, "text/xml"));
     } else if (isDefined(item.url)) {
-      resolve(loadXML(proxyCatalogItemUrl(item, item.url)));
+      resolve(loadXML(proxyCatalogItemUrl(item, item.url, item.cacheDuration)));
     } else {
       throw new TerriaError({
         sender: item,

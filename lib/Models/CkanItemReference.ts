@@ -9,6 +9,7 @@ import {
   JsonArray,
   JsonObject
 } from "../Core/Json";
+import isDefined from "../Core/isDefined";
 import loadJson from "../Core/loadJson";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import TerriaError from "../Core/TerriaError";
@@ -412,6 +413,13 @@ export default class CkanItemReference extends UrlMixin(
     this._supportedFormat = this.isResourceInSupportedFormats(resource);
   }
 
+  @computed get cacheDuration (): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration
+    }
+    return '1d'
+  }
+
   // We will first attach this to the CkanItemReference
   // and then we'll attach it to the target model
   // I wonder if it needs to be on both?
@@ -487,7 +495,7 @@ async function loadCkanDataset(ckanItem: CkanItemReference) {
     .addQuery({ id: ckanItem.datasetId });
 
   const response: CkanDatasetServerResponse = await loadJson(
-    proxyCatalogItemUrl(ckanItem, uri.toString(), "1d")
+    proxyCatalogItemUrl(ckanItem, uri.toString(), ckanItem.cacheDuration)
   );
   if (response.result) return response.result;
   return undefined;
@@ -499,7 +507,7 @@ async function loadCkanResource(ckanItem: CkanItemReference) {
     .addQuery({ id: ckanItem.resourceId });
 
   const response: CkanResourceServerResponse = await loadJson(
-    proxyCatalogItemUrl(ckanItem, uri.toString(), "1d")
+    proxyCatalogItemUrl(ckanItem, uri.toString(), ckanItem.cacheDuration)
   );
   if (response.result) return response.result;
   return undefined;
