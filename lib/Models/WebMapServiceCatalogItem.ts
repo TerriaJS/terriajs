@@ -484,6 +484,9 @@ class WebMapServiceCatalogItem
    */
   static abstractsToIgnore = ["A compliant implementation of WMS"];
 
+  // hide elements in the info section which might show information about the datasource
+  static _sourceInfoItemNames = ["GetCapabilities URL"];
+
   static defaultParameters = {
     transparent: true,
     format: "image/png",
