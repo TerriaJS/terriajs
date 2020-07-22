@@ -329,6 +329,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
         );
       }
     }
+
     return result;
   }
 
@@ -1088,7 +1089,9 @@ function getServiceContactInformation(
   if (isDefined(primary)) {
     if (
       isDefined(primary.ContactOrganization) &&
-      primary.ContactOrganization.length > 0
+      primary.ContactOrganization.length > 0 &&
+      // Geoserver default
+      primary.ContactOrganization !== "The Ancient Geographers"
     ) {
       text += primary.ContactOrganization + "<br/>";
     }
@@ -1096,7 +1099,9 @@ function getServiceContactInformation(
 
   if (
     isDefined(contactInfo.ContactElectronicMailAddress) &&
-    contactInfo.ContactElectronicMailAddress.length > 0
+    contactInfo.ContactElectronicMailAddress.length > 0 &&
+    // Geoserver default
+    contactInfo.ContactElectronicMailAddress !== "claudius.ptolomaeus@gmail.com"
   ) {
     text += `[${contactInfo.ContactElectronicMailAddress}](mailto:${contactInfo.ContactElectronicMailAddress})`;
   }
