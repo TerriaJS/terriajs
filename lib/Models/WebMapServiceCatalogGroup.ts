@@ -2,6 +2,7 @@ import i18next from "i18next";
 import { action, computed, runInAction } from "mobx";
 import containsAny from "../Core/containsAny";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import isDefined from "../Core/isDefined";
 import isReadOnlyArray from "../Core/isReadOnlyArray";
 import replaceUnderscores from "../Core/replaceUnderscores";
 import TerriaError from "../Core/TerriaError";
@@ -12,6 +13,7 @@ import UrlMixin from "../ModelMixins/UrlMixin";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import ModelReference from "../Traits/ModelReference";
 import WebMapServiceCatalogGroupTraits from "../Traits/WebMapServiceCatalogGroupTraits";
+import CatalogGroup from "./CatalogGroupNew";
 import CommonStrata from "./CommonStrata";
 import createInfoSection from "./createInfoSection";
 import CreateModel from "./CreateModel";
@@ -128,12 +130,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   @computed
   get members(): ModelReference[] {
     return filterOutUndefined(
-      this.topLevelLayers.map(layer => {
-        if (!layer.Name) {
-          return undefined;
-        }
-        return this.catalogGroup.uniqueId + "/" + layer.Name;
-      })
+      this.topLevelLayers.map(layer => this.getLayerId(layer))
     );
   }
 
@@ -171,12 +168,63 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
   @action
   createMemberFromLayer(layer: CapabilitiesLayer) {
-    if (!layer.Name) {
+    const layerId = this.getLayerId(layer);
+
+    if (!layerId) {
       return;
     }
 
-    const id = this.catalogGroup.uniqueId;
-    const layerId = id + "/" + layer.Name;
+    // If has nested layers -> create model for CatalogGroup
+    if (layer.Layer) {
+      // Create nested layers
+      let members: CapabilitiesLayer[] = [];
+      if (Array.isArray(layer.Layer)) {
+        members = layer.Layer;
+      } else {
+        members = [layer.Layer as CapabilitiesLayer];
+      }
+
+      members.forEach(member => this.createMemberFromLayer(member));
+
+      // Create group
+      const existingModel = this.catalogGroup.terria.getModelById(
+        CatalogGroup,
+        layerId
+      );
+
+      let model: CatalogGroup;
+      if (existingModel === undefined) {
+        model = new CatalogGroup(layerId, this.catalogGroup.terria);
+        this.catalogGroup.terria.addModel(model);
+      } else {
+        model = existingModel;
+      }
+
+      model.setTrait(CommonStrata.underride, "name", layer.Title);
+      model.setTrait(
+        CommonStrata.underride,
+        "members",
+        filterOutUndefined(members.map(member => this.getLayerId(member)))
+      );
+
+      // Set group `info` trait if applicable
+      if (
+        layer &&
+        layer.Abstract &&
+        !containsAny(layer.Abstract, WebMapServiceCatalogItem.abstractsToIgnore)
+      ) {
+        model.setTrait(CommonStrata.underride, "info", [
+          createInfoSection(
+            i18next.t("models.webMapServiceCatalogGroup.abstract"),
+            layer.Abstract
+          )
+        ]);
+      }
+
+      return;
+    }
+
+    // No nested layers -> create model for WebMapServiceCatalogItem
     const existingModel = this.catalogGroup.terria.getModelById(
       WebMapServiceCatalogItem,
       layerId
@@ -226,6 +274,13 @@ class GetCapabilitiesStratum extends LoadableStratum(
       "hideLegendInWorkbench",
       this.catalogGroup.hideLegendInWorkbench
     );
+  }
+
+  getLayerId(layer: CapabilitiesLayer) {
+    if (!isDefined(this.catalogGroup.uniqueId)) {
+      return;
+    }
+    return `${this.catalogGroup.uniqueId}/${layer.Name || layer.Title}`;
   }
 }
 

@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.40)
+* Add support for nested WMS groups
 * [The next improvement]
 
 #### 8.0.0-alpha.39
