@@ -38,6 +38,10 @@ interface CssExports {
   'shareUrlfield': string;
   'shorten-url': string;
   'shortenUrl': string;
+  'story-share': string;
+  'story-share-inner': string;
+  'storyShare': string;
+  'storyShareInner': string;
   'warning': string;
   'warning-link': string;
   'warningLink': string;

@@ -38,10 +38,8 @@ export default class CsvCatalogItem
       // Since both TableMixin & DiscretelyTimeVaryingMixin defines
       // `chartItems`, the order of mixing in is important here
       DiscretelyTimeVaryingMixin(
-        AsyncMappableMixin(
-          AutoRefreshingMixin(
-            UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
-          )
+        AutoRefreshingMixin(
+          UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
         )
       )
     )
@@ -76,6 +74,15 @@ export default class CsvCatalogItem
   @computed
   get hasLocalData(): boolean {
     return isDefined(this._csvFile);
+  }
+
+  @computed
+  get canExportData() {
+    return (
+      isDefined(this._csvFile) ||
+      isDefined(this.csvString) ||
+      isDefined(this.url)
+    );
   }
 
   async exportData() {

@@ -8,13 +8,17 @@
     cursor: move;
   }
   h3 {
-    font-weight: normal;
+    font-weight: bold;
     margin: 0;
+    margin-right: 20px;
   }
   img {
     max-width: 100%;
     height: auto;
     max-height: 500px;
+  }
+  &.isRemoveOpen {
+    opacity: 0.5;
   }
 }
 

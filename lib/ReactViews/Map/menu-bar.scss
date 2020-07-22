@@ -10,7 +10,8 @@
   // todo: find some non-layout-change animation technique for
   // this flex-menu-bar-workbench problem
   transition: margin-left 0.25s;
-  margin-left: $work-bench-width + 40px;
+  // margin-left: $work-bench-width + 40px;
+  margin-left: 50px;
 
   display: flex;
   justify-content: space-between;
@@ -69,6 +70,14 @@
 .storyBtn {
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn--map from "../../Sass/common/_buttons.scss";
+
+  // &[aria-expanded="true"] {
+  //   background: $color-primary;
+  //   svg {
+  //     fill: #ffffff;
+  //   }
+  // }
+
   &:hover,
   &:focus {
     svg {

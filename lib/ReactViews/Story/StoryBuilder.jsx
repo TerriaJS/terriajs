@@ -58,6 +58,18 @@ const StoryBuilder = observer(
       };
     },
 
+    togglePopup() {
+      this.setState({
+        showPopup: !this.state.showPopup
+      });
+    },
+
+    closePopup() {
+      this.setState({
+        showPopup: false
+      });
+    },
+
     removeStory(index, story) {
       this.setState({
         isSharing: false,
@@ -99,6 +111,7 @@ const StoryBuilder = observer(
       runInAction(() => {
         this.props.terria.stories = [];
       });
+      this.togglePopup();
     },
 
     onSave(_story) {
@@ -304,6 +317,19 @@ const StoryBuilder = observer(
       this.setState({
         storyWithOpenMenu: story
       });
+    },
+
+    hideStoryBuilder() {
+      runInAction(() => {
+        this.props.viewState.storyBuilderShown = !this.props.viewState
+          .storyBuilderShown;
+      });
+      this.props.terria.currentViewer.notifyRepaintRequired();
+      // Allow any animations to finish, then trigger a resize.
+      setTimeout(function() {
+        triggerResize();
+      }, this.props.animationDuration || 1);
+      this.props.viewState.toggleFeaturePrompt("story", false, true);
     },
 
     renderStories(editingMode) {

@@ -12,7 +12,6 @@ import ZoomControl from "./Navigation/ZoomControl";
 
 import classNames from "classnames";
 import { observer } from "mobx-react";
-import defined from "terriajs-cesium/Source/Core/defined";
 // import HelpTool from "./Navigation/HelpTool";
 // import StylesToolButton from "./Navigation/tool_button.scss";
 import Icon from "../Icon";
@@ -27,8 +26,17 @@ import Prompt from "../Generic/Prompt";
 import { runInAction } from "mobx";
 import { withTranslation } from "react-i18next";
 
+/**
+ * TODO: fix this so that we don't need to override pointer events like this.
+ * a fix would look like breaking up the top and bottom parts, so there is
+ * no element "drawn/painted" between the top and bottom parts of map
+ * navigation
+ */
 const StyledMapNavigation = styled.div`
   pointer-events: none;
+  button {
+    pointer-events: auto;
+  }
   ${p =>
     p.trainerBarVisible &&
     `
@@ -59,11 +67,7 @@ class MapNavigation extends React.Component {
 
     return (
       <StyledMapNavigation
-        className={classNames(Styles.mapNavigation, {
-          [Styles.withTimeSeriesControls]: defined(
-            this.props.terria.timelineStack.top
-          )
-        })}
+        className={classNames(Styles.mapNavigation)}
         trainerBarVisible={viewState.trainerBarVisible}
       >
         <Box centered column justifySpaceBetween fullHeight alignItemsFlexEnd>
@@ -129,12 +133,15 @@ class MapNavigation extends React.Component {
             // bottom map buttons
           >
             <div className={Styles.controls}>
-              <div className={Styles.control}>
-                <FeedbackButton
-                  terria={this.props.terria}
-                  viewState={this.props.viewState}
-                />
-              </div>
+              {this.props.terria.configParameters.feedbackUrl &&
+                !this.props.viewState.hideMapUi() && (
+                  <div className={Styles.control}>
+                    <FeedbackButton
+                      terria={this.props.terria}
+                      viewState={this.props.viewState}
+                    />
+                  </div>
+                )}
               <If condition={!this.props.viewState.useSmallScreenInterface}>
                 <div className={Styles.control}>
                   <MapIconButton

@@ -5,7 +5,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { withTheme, DefaultTheme } from "styled-components";
 import { useUID } from "react-uid";
-const Box: any = require("../../Styled/Box").default;
+const BoxSpan: any = require("../../Styled/Box").BoxSpan;
 const TextSpan: any = require("../../Styled/Text").TextSpan;
 const RawButton: any = require("../../Styled/Button").RawButton;
 
@@ -143,7 +143,7 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
       orientation === "above" || orientation === undefined;
 
     return (
-      <div
+      <span
         ref={this.rootRef}
         css={`
           position: relative;
@@ -159,7 +159,7 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
           })}
         {this.state.open &&
           ReactDOM.createPortal(
-            <Box
+            <BoxSpan
               paddedRatio={3}
               positionAbsolute
               rounded
@@ -177,11 +177,11 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
               `}
             >
               {this.props.children(true, this.dismiss)}
-            </Box>,
+            </BoxSpan>,
             document.body
           )}
         {/* Render this always so that the ref exists for calculations */}
-        <Box
+        <BoxSpan
           paddedRatio={3}
           positionAbsolute
           css={`
@@ -220,8 +220,8 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
         >
           {/* Unfortunately we MUST render children here so that we can correctly calculate offsets */}
           {this.props.children(false, this.dismiss)}
-        </Box>
-      </div>
+        </BoxSpan>
+      </span>
     );
   }
 }

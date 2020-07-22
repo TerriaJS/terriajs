@@ -3,7 +3,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-const parseCustomHtmlToReact = require("../Custom/parseCustomHtmlToReact");
+const parseCustomHtmlToReact = require("../Custom/parseCustomHtmlToReact")
+  .default;
 import Styles from "./map-interaction-window.scss";
 import classNames from "classnames";
 import { observer } from "mobx-react";
@@ -17,6 +18,7 @@ const MapInteractionWindowWrapper = styled.div<{ isDiffTool: boolean }>`
   ${props =>
     props.isDiffTool &&
     `
+    display: none;
     top: initial;
     bottom: 100px;
     min-width: 330px;
@@ -136,10 +138,10 @@ export default class MapInteractionWindow extends React.Component<{
         {this.currentInteractionMode?.onCancel && (
           <button
             type="button"
-            onClick={this.currentInteractionMode?.onCancel}
+            onClick={this.currentInteractionMode.onCancel}
             className={Styles.btn}
           >
-            {this.currentInteractionMode?.buttonText}
+            {this.currentInteractionMode.buttonText}
           </button>
         )}
       </MapInteractionWindowWrapper>

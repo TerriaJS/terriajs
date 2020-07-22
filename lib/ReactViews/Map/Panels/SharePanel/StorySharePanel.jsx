@@ -73,7 +73,6 @@ const StorySharePanel = createReactClass({
             large: true
           }}
           onClick={this.openWithUserClick}
-          ref={element => (this.buttonElement = element)}
         >
           {this.props.btnText ? this.props.btnText : ""}
         </Button>

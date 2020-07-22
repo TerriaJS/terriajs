@@ -5,6 +5,7 @@ import createReactClass from "create-react-class";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
+import { Trans, withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import printWindow from "../../../../Core/printWindow";
 import Clipboard from "../../../Clipboard";
@@ -14,12 +15,11 @@ import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
 import Input from "../../../Styled/Input/Input.jsx";
 import DropdownStyles from "../panel.scss";
 import {
-  isShareable,
   buildShareLink,
   buildShortShareLink,
-  canShorten
+  canShorten,
+  isShareable
 } from "./BuildShareLink";
-import { withTranslation, Trans } from "react-i18next";
 import PrintView from "./PrintView";
 import Styles from "./share-panel.scss";
 import StorySharePanel from "./StorySharePanel";
@@ -405,6 +405,28 @@ const SharePanel = observer(
       );
     },
 
+    renderContentForStoryShare() {
+      const { t } = this.props;
+      return (
+        <Choose>
+          <When condition={this.state.shareUrl === ""}>
+            <Loader message={t("share.generatingUrl")} />
+          </When>
+          <Otherwise>
+            <div className={Styles.clipboardForStoryShare}>
+              <Clipboard
+                theme="light"
+                text={this.state.shareUrl}
+                source={this.getShareUrlInput("light")}
+                id="share-url"
+              />
+              {this.renderWarning()}
+            </div>
+          </Otherwise>
+        </Choose>
+      );
+    },
+
     renderContentWithPrintAndEmbed() {
       const { t } = this.props;
       const iframeCode = this.state.shareUrl.length
@@ -530,13 +552,16 @@ const SharePanel = observer(
       const dropdownTheme = {
         btn: classNames({
           [Styles.btnCatalogShare]: catalogShare,
+          [Styles.btnStoryShare]: storyShare,
           [Styles.btnWithoutText]: catalogShareWithoutText
         }),
         outer: classNames(Styles.sharePanel, {
-          [Styles.catalogShare]: catalogShare
+          [Styles.catalogShare]: catalogShare,
+          [Styles.storyShare]: storyShare
         }),
         inner: classNames(Styles.dropdownInner, {
-          [Styles.catalogShareInner]: catalogShare
+          [Styles.catalogShareInner]: catalogShare,
+          [Styles.storyShareInner]: storyShare
         }),
         icon: "share"
       };
