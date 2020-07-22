@@ -3,8 +3,20 @@ Change Log
 
 ### MobX Development
 
-#### next release (mobx-37)
-#### next release (8.0.0-alpha.37)
+#### next release (8.0.0-alpha.40)
+* Add support for nested WMS groups
+* [The next improvement]
+
+#### 8.0.0-alpha.39
+* Development builds sped up by 3~20x - ts-loader is now optional & TypeScript being transpiled by babel-loader, keeping type check safety on a separate thread
+
+#### 8.0.0-alpha.38
+* Add `show` to `ShortReportTraits` and Tsxify `ShortReport`
+* Convert `ShortReport` to styled-components, add accordian-like UI
+* 3D tiles support is now implemented as a Mixin.
+
+#### 8.0.0-alpha.37
+* Add `refreshEnabled` trait and `AsyncMappableMixin` to `AutoRefreshMixin`
 * Ensure `CkanCatalogGroup` doesn't keep re-requesting data when opening and closing groups.
 * Add `typeName` to `CatalogMemberMixin`
 * Add `header` option to `loadText`
@@ -17,11 +29,16 @@ Change Log
 * Difftool will now pick any existing marked location (like from a search result) and filter imagery for that location.
 * Updated labelling & copy in Difftool to clarify workflow
 * ChartCustomComponent now `abstract`, no longer specific to CSV catalog items. Implement it for custom feature info charts.
-* (💫The next rad feature💫)
 * Update date picker to use theme colours
 * Removed some sass overrides on `Select` through `StyleSelectorSection`
 * Update LeftRightSection to use theme colours
 * Ported `GeoRssCatalogItem` to mobx, added support to skip entries without geometry.
+* Update Difftool BottomPanel UI to clearer "area filter" and date pickers
+* Update Difftool BottomPanel to load into Terria's BottomDock
+* Rearrange MapButton layout in DOM to properly reflow with BottomDock
+* Update Difftool MainPanel to not get clipped by BottomDock
+* Rearrange MapDataCount to exist inside MapColumn for more correct DOM structure & behaviour
+* Re-added chart disclaimer.
 
 
 #### mobx-36

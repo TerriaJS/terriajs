@@ -24,7 +24,7 @@ describe("ChartCustomComponent", function() {
     });
   });
 
-  fit("correctly creates the chart", () => {
+  it("correctly creates the chart", () => {
     const component = new TestChartCustomComponent();
     const context: ProcessNodeContext = {
       terria: terria,

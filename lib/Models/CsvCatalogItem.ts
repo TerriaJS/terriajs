@@ -38,10 +38,8 @@ export default class CsvCatalogItem
       // Since both TableMixin & DiscretelyTimeVaryingMixin defines
       // `chartItems`, the order of mixing in is important here
       DiscretelyTimeVaryingMixin(
-        AsyncMappableMixin(
-          AutoRefreshingMixin(
-            UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
-          )
+        AutoRefreshingMixin(
+          UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
         )
       )
     )

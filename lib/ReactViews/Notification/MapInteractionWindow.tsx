@@ -3,7 +3,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-const parseCustomHtmlToReact = require("../Custom/parseCustomHtmlToReact");
+const parseCustomHtmlToReact = require("../Custom/parseCustomHtmlToReact")
+  .default;
 import Styles from "./map-interaction-window.scss";
 import classNames from "classnames";
 import { observer } from "mobx-react";

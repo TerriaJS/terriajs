@@ -10,7 +10,8 @@
   // todo: find some non-layout-change animation technique for
   // this flex-menu-bar-workbench problem
   transition: margin-left 0.25s;
-  margin-left: $work-bench-width + 40px;
+  // margin-left: $work-bench-width + 40px;
+  margin-left: 50px;
 
   display: flex;
   justify-content: space-between;
