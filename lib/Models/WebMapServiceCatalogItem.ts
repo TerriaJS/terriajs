@@ -255,6 +255,13 @@ class GetCapabilitiesStratum extends LoadableStratum(
   get info(): StratumFromTraits<InfoSectionTraits>[] {
     const result: StratumFromTraits<InfoSectionTraits>[] = [];
 
+    const capabilitiesTraits = createStratumInstance(InfoSectionTraits);
+    capabilitiesTraits.name = i18next.t(
+      "models.webMapServiceCatalogItem.getCapabilitiesUrl"
+    );
+    capabilitiesTraits.content = this.catalogItem.getCapabilitiesUrl;
+    result.push(capabilitiesTraits);
+
     let firstDataDescription: string | undefined;
     for (const layer of this.capabilitiesLayers.values()) {
       if (
@@ -485,7 +492,9 @@ class WebMapServiceCatalogItem
   static abstractsToIgnore = ["A compliant implementation of WMS"];
 
   // hide elements in the info section which might show information about the datasource
-  static _sourceInfoItemNames = ["GetCapabilities URL"];
+  _sourceInfoItemNames = [
+    i18next.t("models.webMapServiceCatalogItem.getCapabilitiesUrl")
+  ];
 
   static defaultParameters = {
     transparent: true,
