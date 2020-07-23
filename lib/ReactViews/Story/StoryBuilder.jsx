@@ -319,19 +319,6 @@ const StoryBuilder = observer(
       });
     },
 
-    hideStoryBuilder() {
-      runInAction(() => {
-        this.props.viewState.storyBuilderShown = !this.props.viewState
-          .storyBuilderShown;
-      });
-      this.props.terria.currentViewer.notifyRepaintRequired();
-      // Allow any animations to finish, then trigger a resize.
-      setTimeout(function() {
-        triggerResize();
-      }, this.props.animationDuration || 1);
-      this.props.viewState.toggleFeaturePrompt("story", false, true);
-    },
-
     renderStories(editingMode) {
       const { t } = this.props;
       const stories = this.props.terria.stories || [];

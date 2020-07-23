@@ -405,28 +405,6 @@ const SharePanel = observer(
       );
     },
 
-    renderContentForStoryShare() {
-      const { t } = this.props;
-      return (
-        <Choose>
-          <When condition={this.state.shareUrl === ""}>
-            <Loader message={t("share.generatingUrl")} />
-          </When>
-          <Otherwise>
-            <div className={Styles.clipboardForStoryShare}>
-              <Clipboard
-                theme="light"
-                text={this.state.shareUrl}
-                source={this.getShareUrlInput("light")}
-                id="share-url"
-              />
-              {this.renderWarning()}
-            </div>
-          </Otherwise>
-        </Choose>
-      );
-    },
-
     renderContentWithPrintAndEmbed() {
       const { t } = this.props;
       const iframeCode = this.state.shareUrl.length
