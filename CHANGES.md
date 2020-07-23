@@ -3,10 +3,17 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.38)
+#### next release (8.0.0-alpha.40)
+* Add support for nested WMS groups
+* [The next improvement]
+
+#### 8.0.0-alpha.39
+* Development builds sped up by 3~20x - ts-loader is now optional & TypeScript being transpiled by babel-loader, keeping type check safety on a separate thread
+
+#### 8.0.0-alpha.38
 * Add `show` to `ShortReportTraits` and Tsxify `ShortReport`
 * Convert `ShortReport` to styled-components, add accordian-like UI
-* [The next improvement]
+* 3D tiles support is now implemented as a Mixin.
 
 #### 8.0.0-alpha.37
 * Add `refreshEnabled` trait and `AsyncMappableMixin` to `AutoRefreshMixin`
