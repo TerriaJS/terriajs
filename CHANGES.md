@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.40)
 * Add support for nested WMS groups
+* Simplified SidePanel React refs by removing the double wrapping of the `withTerriaRef()` HOC
 * [The next improvement]
 
 #### 8.0.0-alpha.39
