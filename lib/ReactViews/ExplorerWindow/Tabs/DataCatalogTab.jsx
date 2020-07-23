@@ -9,6 +9,7 @@ import DataPreview from "../../Preview/DataPreview";
 import SearchBox, { DEBOUNCE_INTERVAL } from "../../Search/SearchBox.jsx";
 import Styles from "./data-catalog-tab.scss";
 import Breadcrumbs from "../../Search/Breadcrumbs";
+import Box from "../../../Styled/Box";
 
 // The DataCatalog Tab
 @observer
@@ -47,49 +48,56 @@ class DataCatalogTab extends React.Component {
     const showBreadcrumbs = this.props.viewState.breadcrumbsShown;
     return (
       <div className={Styles.root}>
-        <div
-          className={Styles.dataExplorer}
-          css={`
-            height: ${showBreadcrumbs ? `calc(100% - 32px)` : `100%`};
-          `}
-        >
-          {/* ~TODO: Put this back once we add a MobX DataCatalogSearch Provider~ */}
-          {/* TODO2: Implement a more generic MobX DataCatalogSearch */}
-          {searchState.catalogSearchProvider && (
-            <SearchBox
-              searchText={searchState.catalogSearchText}
-              onSearchTextChanged={val => this.changeSearchText(val)}
-              onDoSearch={() => this.search()}
-              onClear={() => this.props.viewState.showBreadcrumbs(false)}
-              placeholder={this.searchPlaceholder}
-              debounceDuration={
-                terria.catalogReferencesLoaded &&
-                searchState.catalogSearchProvider
-                  ? searchState.catalogSearchProvider.debounceDurationOnceLoaded
-                  : DEBOUNCE_INTERVAL
-              }
+        <Box fullHeight column>
+          <Box
+            css={`
+              height: ${showBreadcrumbs ? `calc(100% - 32px)` : `100%`};
+            `}
+          >
+            <Box className={Styles.dataExplorer} flex="1 1 40rem">
+              {/* ~TODO: Put this back once we add a MobX DataCatalogSearch Provider~ */}
+              {/* TODO2: Implement a more generic MobX DataCatalogSearch */}
+              {searchState.catalogSearchProvider && (
+                <SearchBox
+                  searchText={searchState.catalogSearchText}
+                  onSearchTextChanged={val => this.changeSearchText(val)}
+                  onDoSearch={() => this.search()}
+                  onClear={() => this.props.viewState.showBreadcrumbs(false)}
+                  placeholder={this.searchPlaceholder}
+                  debounceDuration={
+                    terria.catalogReferencesLoaded &&
+                    searchState.catalogSearchProvider
+                      ? searchState.catalogSearchProvider
+                          .debounceDurationOnceLoaded
+                      : DEBOUNCE_INTERVAL
+                  }
+                />
+              )}
+              <DataCatalog
+                terria={this.props.terria}
+                viewState={this.props.viewState}
+                overrideState={this.props.overrideState}
+                onActionButtonClicked={this.props.onActionButtonClicked}
+                items={this.props.items}
+              />
+            </Box>
+            <Box flex="1 1 60rem">
+              <DataPreview
+                terria={terria}
+                viewState={this.props.viewState}
+                previewed={previewed}
+              />
+            </Box>
+          </Box>
+
+          {showBreadcrumbs && (
+            <Breadcrumbs
+              terria={this.props.terria}
+              viewState={this.props.viewState}
+              previewed={previewed}
             />
           )}
-          <DataCatalog
-            terria={this.props.terria}
-            viewState={this.props.viewState}
-            overrideState={this.props.overrideState}
-            onActionButtonClicked={this.props.onActionButtonClicked}
-            items={this.props.items}
-          />
-        </div>
-        <DataPreview
-          terria={terria}
-          viewState={this.props.viewState}
-          previewed={previewed}
-        />
-        {showBreadcrumbs && (
-          <Breadcrumbs
-            terria={this.props.terria}
-            viewState={this.props.viewState}
-            previewed={previewed}
-          />
-        )}
+        </Box>
       </div>
     );
   }

@@ -54,6 +54,7 @@ class Breadcrumbs extends React.Component {
       <Box
         left
         styledHeight={"32px"}
+        fullWidth
         backgroundColor={this.props.theme.greyLighter}
         paddedHorizontally={2.4}
         paddedVertically={1}

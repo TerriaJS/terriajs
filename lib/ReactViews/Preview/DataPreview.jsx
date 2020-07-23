@@ -52,14 +52,7 @@ const DataPreview = observer(
       }
 
       return (
-        <div
-          className={Styles.preview}
-          css={`
-            height: ${this.props.viewState.breadcrumbsShown
-              ? `calc(100% - 32px)`
-              : `100%`};
-          `}
-        >
+        <div className={Styles.preview}>
           <Choose>
             <When condition={previewed && previewed.isMappable}>
               <div className={Styles.previewInner}>
