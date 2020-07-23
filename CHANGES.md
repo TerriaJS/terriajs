@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.40)
 * Add support for nested WMS groups
+* Added breadcrumbs when clicking on a catalogue item from a catalogue search
 * [The next improvement]
 
 #### 8.0.0-alpha.39
@@ -22,7 +23,6 @@ Change Log
 * Add `header` option to `loadText`
 * Add `isMixtedInto` function for `AsyncMappableMixin` and `AsyncChartableMixin`
 * Added file upload support for `GltfCatalogItem`. The supported extension is glb.
-* Added breadcrumbs when clicking on a catalogue item from a catalogue search
 * Improve runtime themeing via styled components across main UI components
 * Updated default welcome video defaults to a newer, slower video
 * Difftool will now pick any existing marked location (like from a search result) and filter imagery for that location.
