@@ -8,6 +8,7 @@ import Styles from "./icon.scss";
 // icon.jsx
 export const GLYPHS = {
   calendar: require("../../wwwroot/images/icons/calendar.svg"),
+  calendar2: require("../../wwwroot/images/icons/calendar2.svg"),
   about: require("../../wwwroot/images/icons/about.svg"),
   add: require("../../wwwroot/images/icons/add.svg"),
   arHover0: require("../../wwwroot/images/icons/ar-hover0.svg"),
@@ -142,7 +143,7 @@ export const Icon = createReactClass({
 });
 
 export const StyledIcon = styled(Icon)`
-  display:block;
+  display: ${props => (props.displayInline ? `inline` : `block`)};
   flex-shrink: 0;
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
   ${props => props.styledHeight && `height: ${props.styledHeight};`}

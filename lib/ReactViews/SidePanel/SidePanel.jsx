@@ -136,12 +136,15 @@ const SidePanel = observer(
       theme: PropTypes.object.isRequired
     },
 
-    onAddDataClicked() {
+    onAddDataClicked(e) {
+      e.stopPropagation();
       this.props.viewState.setTopElement("AddData");
       this.props.viewState.openAddData();
     },
 
-    onAddLocalDataClicked() {
+    onAddLocalDataClicked(e) {
+      e.stopPropagation();
+      this.props.viewState.setTopElement("AddData");
       this.props.viewState.openUserData();
     },
     render() {
@@ -172,7 +175,7 @@ const SidePanel = observer(
             <Box justifySpaceBetween>
               <SidePanelButton
                 ref={this.props.refFromHOC}
-                onClick={() => this.onAddDataClicked()}
+                onClick={e => this.onAddDataClicked(e)}
                 title={addData}
                 btnText={addData}
                 styledWidth={"200px"}
@@ -185,7 +188,7 @@ const SidePanel = observer(
               </SidePanelButton>
               <SidePanelButton
                 ref={this.props.refFromHOCForUpload}
-                onClick={() => this.onAddLocalDataClicked()}
+                onClick={e => this.onAddLocalDataClicked(e)}
                 title={t("addData.load")}
                 btnText={uploadText}
                 styledWidth={"130px"}
