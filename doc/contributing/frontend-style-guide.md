@@ -28,7 +28,7 @@ used from other parts of the UI.
 A really basic example would be an extremely local state item like a hover state
 of a tooltip, where it doesn't necessarily need to be known to the rest of the
 app (until it does). So don't feel everything needs to be in `ViewState.ts`,
-however for these cases you may benefit from the simplicity ease of the
+however for these cases you may benefit from the simplicity & ease of the
 `useState()` hook & pattern in your functional components, rather than setting
 up a class component purely to use local-component-mobx-state.
 
@@ -58,7 +58,8 @@ this.props.viewState.selectHelpMenuItem(this.props.content.itemName);
 
 This additional level of abstraction means we get to more freely refactor what
 `selectHelpMenuItem` does, not having to trace down every use of it across the
-app but also the ability to 
+app but also the ability to compose actions that call a group of actions
+together.
 
 ### When to use a class or function component
 The React ecosystem at large heavily utilises composition, but at our model
@@ -102,6 +103,15 @@ Some of our `TerriaMap`s utilise https://reactjs.org/docs/error-boundaries.html
 as a way of better handling UI errors, we have not yet added this to TerriaJS.
 If you think of good spots to insert these for `terriajs`, please submit a
 contribution!
+
+### Testing
+Try to add tests for all components, even a basic "it renders" test as seen in
+`test/ReactViews/Map/Navigation/Compass/CompassSpec.tsx` can help catch runtime
+errors. Some slightly longer, but still in the spirit of "it renders", can be
+seen in tests like `test/ReactViews/ShortReportSpec.tsx` &
+`test/ReactViews/Search/SearchBoxAndResultsSpec.tsx`.
+Some UI-related tests not involving rendering can be seen at
+`test/Models/parseCustomMarkdownToReactTsSpec.ts`
 
 ## TypeScript
 TypeScript should be the default choice when writing components. Lean towards
