@@ -75,7 +75,8 @@ do not need to think about the order these are applied in. However there is one
 case across terriajs - when using `react-anything-sortable` `sortable` that you
 should be aware of. The <Sortable /> component expects each child to be
 something wrapped with `sortable`, when you add a HOC over that, you will break
-the sorting functionality.
+the sorting functionality - to avoid breakage, simply ensure `sortable` is the
+outermost HOC.
 
 Finally, when writing a new HOC, consider whether it would be better suited as a
 hook - one of the strength of HOCs lie in the ability to apply it to any
