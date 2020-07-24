@@ -4,6 +4,8 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.40)
+* Improve info section of `WebMapServiceCatalogItem` with content from GetCapabilities
+* Re-implement `infoSectionOrder` as `CatalogMember` trait.
 * Add `infoWithoutSources` getter to `CatalogMemberMixin` to prevent app crash when using `hideSources`
 * Add support for nested WMS groups
 * Added breadcrumbs when clicking on a catalogue item from a catalogue search
@@ -26,8 +28,6 @@ Change Log
 * Added file upload support for `GltfCatalogItem`. The supported extension is glb.
 * Improve runtime themeing via styled components across main UI components
 * Updated default welcome video defaults to a newer, slower video
-* Improve info section of `WebMapServiceCatalogItem` with content from GetCapabilities
-* Re-implement `infoSectionOrder` as `CatalogMember` trait.
 * Difftool will now pick any existing marked location (like from a search result) and filter imagery for that location.
 * Updated labelling & copy in Difftool to clarify workflow
 * ChartCustomComponent now `abstract`, no longer specific to CSV catalog items. Implement it for custom feature info charts.
