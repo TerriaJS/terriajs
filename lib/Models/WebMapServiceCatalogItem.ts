@@ -355,14 +355,18 @@ class GetCapabilitiesStratum extends LoadableStratum(
       `Web Map Service Layer Description${suffix}`,
       i18next.t("preview.datasetDescription"),
       i18next.t("preview.serviceDescription"),
+      i18next.t("models.webMapServiceCatalogItem.serviceDescription"),
       i18next.t("preview.resourceDescription"),
       i18next.t("preview.licence"),
       i18next.t("preview.accessConstraints"),
+      i18next.t("models.webMapServiceCatalogItem.accessConstraints"),
       i18next.t("preview.author"),
       i18next.t("preview.contact"),
+      i18next.t("models.webMapServiceCatalogItem.serviceContact"),
       i18next.t("preview.created"),
       i18next.t("preview.modified"),
-      i18next.t("preview.updateFrequency")
+      i18next.t("preview.updateFrequency"),
+      i18next.t("models.webMapServiceCatalogItem.getCapabilitiesUrl")
     ];
   }
 
