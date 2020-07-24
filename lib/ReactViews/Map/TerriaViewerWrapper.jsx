@@ -76,21 +76,9 @@ class TerriaViewerWrapper extends React.Component {
       ) {
         return;
       }
-      this.lastMouseX = event.clientX;
-      this.lastMouseY = event.clientY;
-      if (this.props.terria.cesium) {
-        const mapElement = this.props.terria.cesium.getContainer();
-        const rect = mapElement.getBoundingClientRect();
-        const position = new Cartesian2(
-          event.clientX - rect.left,
-          event.clientY - rect.top
-        );
-        this.props.viewState.mouseCoords.updateCoordinatesFromCesium(
-          this.props.terria,
-          position
-        );
-      } else if (this.props.terria.leaflet) {
-        this.props.viewState.mouseCoords.updateCoordinatesFromLeaflet(
+
+      if (this.props.terria.leaflet) {
+        this.props.terria.currentViewer.mouseCoords.updateCoordinatesFromLeaflet(
           this.props.terria,
           event.nativeEvent
         );

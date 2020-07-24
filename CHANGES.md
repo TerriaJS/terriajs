@@ -9,6 +9,7 @@ Change Log
 * Add `infoWithoutSources` getter to `CatalogMemberMixin` to prevent app crash when using `hideSources`
 * Add support for nested WMS groups
 * Added breadcrumbs when clicking on a catalogue item from a catalogue search
+* Added shift-drag quick zoom
 * [The next improvement]
 
 #### 8.0.0-alpha.39

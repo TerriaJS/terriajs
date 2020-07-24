@@ -108,9 +108,14 @@ export default class MapInteractionWindow extends React.Component<{
   // }
 
   render() {
+    const isActive =
+      isDefined(this.currentInteractionMode) &&
+      !this.currentInteractionMode.invisible;
+
     const windowClass = classNames(Styles.window, {
-      [Styles.isActive]: isDefined(this.currentInteractionMode)
+      [Styles.isActive]: isActive
     });
+
     const isDiffTool =
       this.currentInteractionMode?.uiMode === UIMode.Difference;
 
@@ -119,7 +124,7 @@ export default class MapInteractionWindow extends React.Component<{
     return (
       <MapInteractionWindowWrapper
         className={windowClass}
-        aria-hidden={!isDefined(this.currentInteractionMode)}
+        aria-hidden={!isActive}
         isDiffTool={isDiffTool}
       >
         <div

@@ -33,6 +33,7 @@ interface Options {
   onPointClicked?: (dataSource: DataSource) => void;
   onPointMoved?: (dataSource: DataSource) => void;
   onCleanUp?: () => void;
+  invisible?: boolean;
 }
 
 class EmptyTraits extends ModelTraits {
@@ -46,6 +47,7 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
   private readonly buttonText?: string;
   private readonly onPointClicked?: (dataSource: CustomDataSource) => void;
   private readonly onCleanUp?: () => void;
+  private readonly invisible?: boolean;
   private readonly dragHelper: DragPoints;
 
   pointEntities: CustomDataSource;
@@ -115,6 +117,8 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
     this.closeLoop = false;
 
     this.drawRectangle = defaultValue(options.drawRectangle, false);
+
+    this.invisible = options.invisible;
 
     // helper for dragging points around
     this.dragHelper = new DragPoints(options.terria, customDataSource => {
@@ -301,7 +305,7 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
 
         if (this.drawRectangle) {
           this.mouseMoveDispose = reaction(
-            () => viewState.mouseCoords.cartographic,
+            () => this.terria.currentViewer.mouseCoords.cartographic,
             mouseCoordsCartographic => {
               if (!isDefined(mouseCoordsCartographic)) return;
 
@@ -315,7 +319,8 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
             }
           );
         }
-      }
+      },
+      invisible: this.invisible
     });
     runInAction(() => {
       this.terria.mapInteractionModeStack.push(pickPointMode);

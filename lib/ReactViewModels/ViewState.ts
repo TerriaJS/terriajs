@@ -4,7 +4,6 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import DisclaimerHandler from "./DisclaimerHandler";
 import addedByUser from "../Core/addedByUser";
 import getAncestors from "../Models/getAncestors";
-import MouseCoords from "./MouseCoords";
 import SearchState from "./SearchState";
 import Terria from "../Models/Terria";
 import triggerResize from "../Core/triggerResize";
@@ -67,7 +66,6 @@ export default class ViewState {
   @observable isMapFullScreen: boolean = false;
   @observable readonly notifications: any[] = [];
   @observable myDataIsUploadView: boolean = true;
-  @observable mouseCoords: MouseCoords = new MouseCoords();
   @observable mobileMenuVisible: boolean = false;
   @observable explorerPanelAnimating: boolean = false;
   @observable topElement: string = "FeatureInfo";

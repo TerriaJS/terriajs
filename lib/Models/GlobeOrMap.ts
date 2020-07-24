@@ -22,6 +22,8 @@ import Terria from "./Terria";
 import { ProviderCoordsMap } from "../Map/PickedFeatures";
 import LatLonHeight from "../Core/LatLonHeight";
 import Cesium3DTilesCatalogItem from "./Cesium3DTilesCatalogItem";
+import { observable } from "mobx";
+import MouseCoords from "../ReactViewModels/MouseCoords";
 
 require("./ImageryLayerFeatureInfo"); // overrides Cesium's prototype.configureDescriptionFromProperties
 
@@ -34,6 +36,8 @@ export default abstract class GlobeOrMap {
   private _highlightPromise: Promise<void> | undefined;
   private _tilesLoadingCountMax: number = 0;
   protected supportsPolylinesOnTerrain?: boolean;
+
+  @observable mouseCoords: MouseCoords = new MouseCoords();
 
   abstract destroy(): void;
   abstract zoomTo(

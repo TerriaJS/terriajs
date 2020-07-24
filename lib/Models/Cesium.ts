@@ -61,6 +61,7 @@ import LatLonHeight from "../Core/LatLonHeight";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import KeyboardEventModifier from "terriajs-cesium/Source/Core/KeyboardEventModifier";
 import UserDrawing from "./UserDrawing";
+import i18next from "i18next";
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
 // Intermediary
@@ -265,6 +266,22 @@ export default class Cesium extends GlobeOrMap {
     //     },
     //     ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT);
 
+    // Handle mouse move
+    inputHandler.setInputAction(e => {
+      this.mouseCoords.updateCoordinatesFromCesium(this.terria, e.endPosition);
+    }, ScreenSpaceEventType.MOUSE_MOVE);
+
+    inputHandler.setInputAction(
+      e => {
+        this.mouseCoords.updateCoordinatesFromCesium(
+          this.terria,
+          e.endPosition
+        );
+      },
+      ScreenSpaceEventType.MOUSE_MOVE,
+      KeyboardEventModifier.SHIFT
+    );
+
     // Handle left click by picking objects from the map.
     inputHandler.setInputAction(e => {
       if (!this.isFeaturePickingPaused)
@@ -278,35 +295,52 @@ export default class Cesium extends GlobeOrMap {
       e => {
         if (!this.isFeaturePickingPaused && !isDefined(zoomUserDrawing)) {
           this.scene.screenSpaceCameraController.enableInputs = false;
+
+          const exitZoom = () => {
+            document.removeEventListener("keyup", onKeyUp);
+            runInAction(() => {
+              this.terria.mapInteractionModeStack.pop();
+              zoomUserDrawing && zoomUserDrawing.cleanUp();
+            });
+          };
+
+          const onKeyUp = (e: KeyboardEvent) =>
+            e.key === "Shift" && zoomUserDrawing && exitZoom();
+
+          document.addEventListener("keyup", onKeyUp);
+
+          let pointClickCount = 0;
+
           zoomUserDrawing = new UserDrawing({
             terria: this.terria,
-            messageHeader: "Drag to zoom in.",
+            messageHeader: i18next.t("map.drawExtentHelper.drawExtent"),
             onPointClicked: () => {
+              pointClickCount++;
               if (
-                isDefined(zoomUserDrawing) &&
+                zoomUserDrawing &&
                 zoomUserDrawing.pointEntities.entities.values.length >= 2
               ) {
                 const rectangle = zoomUserDrawing.otherEntities.entities
                   .getById("rectangle")
-                  .rectangle.coordinates.getValue(
+                  ?.rectangle.coordinates.getValue(
                     this.terria.timelineClock.currentTime
                   );
 
-                this.zoomTo(rectangle);
+                if (rectangle) this.zoomTo(rectangle, 1);
 
-                runInAction(() => {
-                  this.terria.mapInteractionModeStack.pop();
-                  zoomUserDrawing && zoomUserDrawing.cleanUp();
-                });
-
-                zoomUserDrawing = undefined;
-                this.scene.screenSpaceCameraController.enableInputs = true;
+                exitZoom();
+              } else if (pointClickCount >= 2) {
+                exitZoom();
               }
             },
+            onCleanUp: () => {
+              zoomUserDrawing = undefined;
+              this.scene.screenSpaceCameraController.enableInputs = true;
+            },
             allowPolygon: false,
-            drawRectangle: true
+            drawRectangle: true,
+            invisible: true
           });
-          console.log("enter draw mode");
           zoomUserDrawing.enterDrawMode();
 
           this.pickFromScreenPosition(e.position, false);
@@ -315,6 +349,8 @@ export default class Cesium extends GlobeOrMap {
       ScreenSpaceEventType.LEFT_DOWN,
       KeyboardEventModifier.SHIFT
     );
+
+    // Handle SHIFT + CLICK for zooming
 
     inputHandler.setInputAction(
       e => {
@@ -409,7 +445,11 @@ export default class Cesium extends GlobeOrMap {
     // this._enableSelectExtent(cesiumWidget.scene, false);
 
     const inputHandler = this.cesiumWidget.screenSpaceEventHandler;
-    // inputHandler.removeInputAction(ScreenSpaceEventType.MOUSE_MOVE);
+    inputHandler.removeInputAction(ScreenSpaceEventType.MOUSE_MOVE);
+    inputHandler.removeInputAction(
+      ScreenSpaceEventType.MOUSE_MOVE,
+      KeyboardEventModifier.SHIFT
+    );
     // inputHandler.removeInputAction(ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
     // inputHandler.removeInputAction(ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT);
 
