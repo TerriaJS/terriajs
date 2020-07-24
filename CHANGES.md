@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.40)
 * Add support for nested WMS groups
+* Added breadcrumbs when clicking on a catalogue item from a catalogue search
 * [The next improvement]
 
 #### 8.0.0-alpha.39
