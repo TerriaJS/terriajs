@@ -42,7 +42,6 @@ Change Log
 * Rearrange MapDataCount to exist inside MapColumn for more correct DOM structure & behaviour
 * Re-added chart disclaimer.
 
-
 #### mobx-36
 * Added `pointer-events` to `MapNavigation` and `MenuBar` elements, so the bar don't block mouse click outside of the button.
 * Fixes "reminder pop-up" for help button being unclickable
