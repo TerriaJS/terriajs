@@ -103,6 +103,7 @@ export const GLYPHS = {
   layers: require("../../wwwroot/images/icons/pulling-away-layers-icon.svg"),
   start: require("../../wwwroot/images/icons/getting-started-icon.svg"),
   cube: require("../../wwwroot/images/icons/interact.svg"),
+  globe: require("../../wwwroot/images/icons/globe.svg"),
   playInverted: require("../../wwwroot/images/icons/play-inverted.svg"),
   video: require("../../wwwroot/images/icons/video.svg"),
   compare: require("../../wwwroot/images/icons/compare.svg"),
