@@ -261,8 +261,10 @@ class SenapsLocationsCatalogItem extends AsyncMappableMixin(
     return Promise.resolve();
   }
 
-  _constructLocationsUrl() {
-    var uri = new URI(`${this.baseUrl}/locations`);
+  _constructLocationsUrl(baseUrl?: string) {
+    const theBaseUrl = baseUrl ? baseUrl : this.baseUrl;
+
+    var uri = new URI(`${theBaseUrl}/locations`);
     if (this.locationIdFilter !== undefined) {
       uri.setSearch("id", this.locationIdFilter);
     }
@@ -271,8 +273,10 @@ class SenapsLocationsCatalogItem extends AsyncMappableMixin(
     return uri.toString();
   }
 
-  _constructStreamsUrl(locationId: string) {
-    var uri = new URI(`${this.baseUrl}/streams`);
+  _constructStreamsUrl(locationId: string, baseUrl?: string) {
+    const theBaseUrl = baseUrl ? baseUrl : this.baseUrl;
+
+    var uri = new URI(`${theBaseUrl}/streams`);
     if (this.streamIdFilter !== undefined) {
       uri.setSearch("id", this.streamIdFilter);
     }

@@ -23,6 +23,11 @@ describe("SenapsLocationsCatalogItem", function() {
   let geoJsonData: SenapsFeatureCollection;
   let feature: SenapsFeature;
 
+  const recordId = "a-record-id";
+  const proxy = "/api/v0/data/proxy";
+  const remoteUrl = "https://senaps.io/api/sensor/v2";
+  const newBaseUrl = `${proxy}/${recordId}/${remoteUrl}`;
+
   beforeEach(function() {
     terria = new Terria({
       baseUrl: "./"
@@ -76,9 +81,21 @@ describe("SenapsLocationsCatalogItem", function() {
       );
     });
 
+    it("- constructs correct locations from a given base url", function() {
+      expect(item._constructLocationsUrl(newBaseUrl)).toBe(
+        `${newBaseUrl}/locations?count=1000&expand=true`
+      );
+    });
+
     it("- constructs correct streams url", function() {
       expect(item._constructStreamsUrl("123")).toBe(
         "https://senaps.io/api/sensor/v2/streams?locationid=123"
+      );
+    });
+
+    it("- constructs correct streams from a given base url", function() {
+      expect(item._constructStreamsUrl("123", newBaseUrl)).toBe(
+        `${newBaseUrl}/streams?locationid=123`
       );
     });
 
@@ -120,9 +137,21 @@ describe("SenapsLocationsCatalogItem", function() {
       );
     });
 
+    it("- constructs correct locations from a given base url", function() {
+      expect(item._constructLocationsUrl(newBaseUrl)).toBe(
+        `${newBaseUrl}/locations?id=boor&count=1000&expand=true`
+      );
+    });
+
     it("- constructs correct streams url", function() {
       expect(item._constructStreamsUrl("123")).toBe(
         "https://senaps.io/api/sensor/v2/streams?id=temp&locationid=123"
+      );
+    });
+
+    it("- constructs correct streams from a given base url", function() {
+      expect(item._constructStreamsUrl("123", newBaseUrl)).toBe(
+        `${newBaseUrl}/streams?id=temp&locationid=123`
       );
     });
 
