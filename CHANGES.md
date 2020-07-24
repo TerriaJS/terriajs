@@ -4,7 +4,6 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.40)
-* Development builds sped up by 3~20x - ts-loader is now optional & TypeScript being transpiled by babel-loader, keeping type check safety on a separate thread
 * Add `infoWithoutSources` getter to `CatalogMemberMixin` to prevent app crash when using `hideSources`
 * Add support for nested WMS groups
 * Added breadcrumbs when clicking on a catalogue item from a catalogue search
