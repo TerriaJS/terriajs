@@ -4,6 +4,8 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.40)
+* Improve info section of `WebMapServiceCatalogItem` with content from GetCapabilities
+* Re-implement `infoSectionOrder` as `CatalogMember` trait.
 * Add `infoWithoutSources` getter to `CatalogMemberMixin` to prevent app crash when using `hideSources`
 * Add support for nested WMS groups
 * Added breadcrumbs when clicking on a catalogue item from a catalogue search
