@@ -13,7 +13,6 @@ interface Options {
   messageAsNode?: React.ReactNode;
   customUi?: () => unknown;
   buttonText?: string;
-  // drawRectangle?: boolean;
   uiMode?: UIMode; // diff tool hack for now
   onEnable?: (viewState: ViewState) => void;
 }
@@ -25,7 +24,6 @@ export default class MapInteractionMode {
   readonly onCancel?: () => void;
 
   readonly buttonText: string;
-  // readonly drawRectangle: boolean;
   readonly uiMode: UIMode;
 
   @observable

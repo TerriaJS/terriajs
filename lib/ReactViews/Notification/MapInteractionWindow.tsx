@@ -68,10 +68,7 @@ export default class MapInteractionWindow extends React.Component<{
           this.props.terria.mapInteractionModeStack.length - 1
         ];
 
-        if (
-          mapInteractionMode !== this.currentInteractionMode ||
-          !isDefined(this.currentInteractionMode)
-        ) {
+        if (mapInteractionMode !== this.currentInteractionMode) {
           this.currentInteractionMode = mapInteractionMode;
         }
 
@@ -116,6 +113,8 @@ export default class MapInteractionWindow extends React.Component<{
     });
     const isDiffTool =
       this.currentInteractionMode?.uiMode === UIMode.Difference;
+
+    console.log(this.currentInteractionMode);
 
     return (
       <MapInteractionWindowWrapper

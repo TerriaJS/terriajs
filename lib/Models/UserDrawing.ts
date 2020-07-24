@@ -195,16 +195,20 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
                 time
               ) as Cartesian3;
 
-              let point2 =
+              const point2 =
                 (this.pointEntities.entities.values?.[1]?.position?.getValue(
                   time
                 ) as Cartesian3) ||
                 this.mousePointEntity?.position?.getValue(time);
 
-              return Rectangle.fromCartographicArray([
-                Cartographic.fromCartesian(point1),
-                Cartographic.fromCartesian(point2)
-              ]);
+              return (
+                point1 &&
+                point2 &&
+                Rectangle.fromCartographicArray([
+                  Cartographic.fromCartesian(point1),
+                  Cartographic.fromCartesian(point2)
+                ])
+              );
             }).bind(this),
             false
           ),
@@ -353,9 +357,10 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
 
             // If drawing a rectangle -> limit to 2 points
             if (
-              !this.drawRectangle ||
-              (this.drawRectangle &&
-                this.pointEntities.entities.values.length < 2)
+              this.inDrawMode &&
+              (!this.drawRectangle ||
+                (this.drawRectangle &&
+                  this.pointEntities.entities.values.length < 2))
             ) {
               this.prepareToAddNewPoint();
             }

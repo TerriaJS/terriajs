@@ -59,6 +59,8 @@ import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvi
 import getElement from "terriajs-cesium/Source/Widgets/getElement";
 import LatLonHeight from "../Core/LatLonHeight";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import KeyboardEventModifier from "terriajs-cesium/Source/Core/KeyboardEventModifier";
+import UserDrawing from "./UserDrawing";
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
 // Intermediary
@@ -269,6 +271,61 @@ export default class Cesium extends GlobeOrMap {
         this.pickFromScreenPosition(e.position, false);
     }, ScreenSpaceEventType.LEFT_CLICK);
 
+    let zoomUserDrawing: UserDrawing | undefined;
+
+    // Handle zooming on SHIFT + MOUSE DOWN
+    inputHandler.setInputAction(
+      e => {
+        if (!this.isFeaturePickingPaused && !isDefined(zoomUserDrawing)) {
+          this.scene.screenSpaceCameraController.enableInputs = false;
+          zoomUserDrawing = new UserDrawing({
+            terria: this.terria,
+            messageHeader: "Drag to zoom in.",
+            onPointClicked: () => {
+              if (
+                isDefined(zoomUserDrawing) &&
+                zoomUserDrawing.pointEntities.entities.values.length >= 2
+              ) {
+                const rectangle = zoomUserDrawing.otherEntities.entities
+                  .getById("rectangle")
+                  .rectangle.coordinates.getValue(
+                    this.terria.timelineClock.currentTime
+                  );
+
+                this.zoomTo(rectangle);
+
+                runInAction(() => {
+                  this.terria.mapInteractionModeStack.pop();
+                  zoomUserDrawing && zoomUserDrawing.cleanUp();
+                });
+
+                zoomUserDrawing = undefined;
+                this.scene.screenSpaceCameraController.enableInputs = true;
+              }
+            },
+            allowPolygon: false,
+            drawRectangle: true
+          });
+          console.log("enter draw mode");
+          zoomUserDrawing.enterDrawMode();
+
+          this.pickFromScreenPosition(e.position, false);
+        }
+      },
+      ScreenSpaceEventType.LEFT_DOWN,
+      KeyboardEventModifier.SHIFT
+    );
+
+    inputHandler.setInputAction(
+      e => {
+        if (!this.isFeaturePickingPaused && isDefined(zoomUserDrawing)) {
+          this.pickFromScreenPosition(e.position, false);
+        }
+      },
+      ScreenSpaceEventType.LEFT_UP,
+      KeyboardEventModifier.SHIFT
+    );
+
     this.pauser = new CesiumRenderLoopPauser(this.cesiumWidget, () => {
       // Post render, update selection indicator position
       const feature = this.terria.selectedFeature;
@@ -357,6 +414,14 @@ export default class Cesium extends GlobeOrMap {
     // inputHandler.removeInputAction(ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT);
 
     inputHandler.removeInputAction(ScreenSpaceEventType.LEFT_CLICK);
+    inputHandler.removeInputAction(
+      ScreenSpaceEventType.LEFT_DOWN,
+      KeyboardEventModifier.SHIFT
+    );
+    inputHandler.removeInputAction(
+      ScreenSpaceEventType.LEFT_UP,
+      KeyboardEventModifier.SHIFT
+    );
 
     // if (defined(this.monitor)) {
     //     this.monitor.destroy();
@@ -487,7 +552,7 @@ export default class Cesium extends GlobeOrMap {
       | Cesium.DataSource
       | Mappable
       | /*TODO Cesium.Cesium3DTileset*/ any,
-    flightDurationSeconds: number
+    flightDurationSeconds?: number
   ): void {
     if (!defined(target)) {
       return;
