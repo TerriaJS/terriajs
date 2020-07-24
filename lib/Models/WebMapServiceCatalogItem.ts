@@ -335,24 +335,31 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
   @computed
   get infoSectionOrder(): string[] {
-    let suffix = "";
-    for (const layer of this.capabilitiesLayers.values()) {
-      if (
-        !layer ||
-        !layer.Abstract ||
-        containsAny(layer.Abstract, WebMapServiceCatalogItem.abstractsToIgnore)
-      ) {
-        continue;
-      }
-      if (this.capabilitiesLayers.size > 1) {
-        suffix = ` - ${layer.Title}`;
-      }
+    let layerDescriptions = [`Web Map Service Layer Description`];
+
+    // If more than one layer, push layer description titles for each applicable layer
+    if (this.capabilitiesLayers.size > 1) {
+      layerDescriptions = [];
+      this.capabilitiesLayers.forEach(layer => {
+        if (
+          layer &&
+          layer.Abstract &&
+          !containsAny(
+            layer.Abstract,
+            WebMapServiceCatalogItem.abstractsToIgnore
+          )
+        ) {
+          layerDescriptions.push(
+            `Web Map Service Layer Description - ${layer.Title}`
+          );
+        }
+      });
     }
 
     return [
       i18next.t("preview.disclaimer"),
       i18next.t("description.name"),
-      `Web Map Service Layer Description${suffix}`,
+      ...layerDescriptions,
       i18next.t("preview.datasetDescription"),
       i18next.t("preview.serviceDescription"),
       i18next.t("models.webMapServiceCatalogItem.serviceDescription"),
