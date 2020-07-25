@@ -11,6 +11,7 @@ import objectTrait from "./objectTrait";
 import { JsonObject } from "../Core/Json";
 import { StyleTraits } from "./GeoJsonCatalogItemTraits";
 import UrlTraits from "./UrlTraits";
+import ProxyUrlTraits from "./ProxyUrlTraits";
 
 export default class SenapsLocationsCatalogItemTraits extends mixTraits(
   FeatureInfoTraits,
@@ -18,7 +19,8 @@ export default class SenapsLocationsCatalogItemTraits extends mixTraits(
   DataCustodianTraits,
   MappableTraits,
   CatalogMemberTraits,
-  UrlTraits
+  UrlTraits,
+  ProxyUrlTraits
 ) {
   @primitiveTrait({
     type: "string",

@@ -64,6 +64,15 @@ interface LocationsData {
   };
 }
 
+function getBaseUrl(senapsLocationsCatalogItem: SenapsLocationsCatalogItem) {
+  const proxyUrl = senapsLocationsCatalogItem.proxyUrl
+    ? senapsLocationsCatalogItem.proxyUrl + "/"
+    : "";
+  const baseUrl = senapsLocationsCatalogItem.url;
+  const newBaseUrl = baseUrl ? baseUrl : senapsLocationsCatalogItem.baseUrl;
+  return proxyUrl + newBaseUrl;
+}
+
 export class SenapsLocationsStratum extends LoadableStratum(
   SenapsLocationsCatalogItemTraits
 ) {
@@ -74,7 +83,6 @@ export class SenapsLocationsStratum extends LoadableStratum(
     private readonly geojsonItem: GeoJsonCatalogItem
   ) {
     super();
-    this.senapsLocationsCatalogItem = senapsLocationsCatalogItem;
     this.geojsonItem = geojsonItem;
   }
 
@@ -118,6 +126,9 @@ export class SenapsLocationsStratum extends LoadableStratum(
         }
       }
 
+      const theProxyUrl = senapsLocationsCatalogItem.proxyUrl
+        ? senapsLocationsCatalogItem.proxyUrl + "/"
+        : "";
       const fc: SenapsFeatureCollection = {
         type: "FeatureCollection",
         features: locations.map((site: SenapsLocation, i: number) => {
@@ -126,7 +137,7 @@ export class SenapsLocationsStratum extends LoadableStratum(
             properties: {
               id: site.id,
               description: site.description,
-              endpoint: site._links.self.href,
+              endpoint: theProxyUrl + site._links.self.href,
               hasStreams: null,
               streamIds: []
             },
@@ -157,6 +168,8 @@ export class SenapsLocationsStratum extends LoadableStratum(
         );
       }
 
+      const theBaseUrl = getBaseUrl(senapsLocationsCatalogItem);
+
       const featureInfo = createStratumInstance(FeatureInfoTemplateTraits, {
         template: `<h4>${i18next.t(
           "models.senaps.locationHeadingFeatureInfo"
@@ -172,17 +185,9 @@ export class SenapsLocationsStratum extends LoadableStratum(
     <chart
       id='{{id}}'
       title='{{id}}'
-      sources='${
-        senapsLocationsCatalogItem.baseUrl
-      }/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=1440&media=csv&csvheader=false&sort=descending,${
-          senapsLocationsCatalogItem.baseUrl
-        }/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=7200&media=csv&csvheader=false&sort=descending'
+      sources='${theBaseUrl}/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=1440&media=csv&csvheader=false&sort=descending,${theBaseUrl}/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=7200&media=csv&csvheader=false&sort=descending'
       source-names='1d,5d'
-      downloads='${
-        senapsLocationsCatalogItem.baseUrl
-      }/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=1440&media=csv&csvheader=false&sort=descending,${
-          senapsLocationsCatalogItem.baseUrl
-        }/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=7200&media=csv&csvheader=false&sort=descending'
+      downloads='${theBaseUrl}/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=1440&media=csv&csvheader=false&sort=descending,${theBaseUrl}/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=7200&media=csv&csvheader=false&sort=descending'
       download-names='1d,5d'
     >
     </chart>
@@ -270,9 +275,7 @@ class SenapsLocationsCatalogItem extends AsyncMappableMixin(
   }
 
   _constructLocationsUrl() {
-    const baseUrl = this.url;
-    const theBaseUrl = baseUrl ? baseUrl : this.baseUrl;
-
+    const theBaseUrl = getBaseUrl(this);
     var uri = new URI(`${theBaseUrl}/locations`);
     if (this.locationIdFilter !== undefined) {
       uri.setSearch("id", this.locationIdFilter);
@@ -283,9 +286,7 @@ class SenapsLocationsCatalogItem extends AsyncMappableMixin(
   }
 
   _constructStreamsUrl(locationId: string) {
-    const baseUrl = this.url;
-    const theBaseUrl = baseUrl ? baseUrl : this.baseUrl;
-
+    const theBaseUrl = getBaseUrl(this);
     var uri = new URI(`${theBaseUrl}/streams`);
     if (this.streamIdFilter !== undefined) {
       uri.setSearch("id", this.streamIdFilter);
