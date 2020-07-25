@@ -20,10 +20,9 @@ describe("SenapsLocationsCatalogItem", function() {
   let geoJsonData: SenapsFeatureCollection;
   let feature: SenapsFeature;
 
-  const recordId = "a-record-id";
-  const proxy = "/api/v0/data/proxy";
+  const proxyUrl = "/api/v0/data/proxy/a-record-id";
   const remoteUrl = "https://senaps.io/api/sensor/v2";
-  const newBaseUrl = `${proxy}/${recordId}/${remoteUrl}`;
+  const newBaseUrl = `${proxyUrl}/${remoteUrl}`;
 
   beforeEach(function() {
     terria = new Terria({
@@ -107,7 +106,8 @@ describe("SenapsLocationsCatalogItem", function() {
     beforeEach(async function() {
       runInAction(() => {
         item = new SenapsLocationsCatalogItem("test", new Terria());
-        item.setTrait("definition", "url", newBaseUrl);
+        item.setTrait("definition", "url", remoteUrl);
+        item.setTrait("definition", "proxyUrl", proxyUrl);
       });
       await item.loadMapItems();
       geoJsonItem = item.geoJsonItem;
@@ -188,7 +188,8 @@ describe("SenapsLocationsCatalogItem", function() {
         item = new SenapsLocationsCatalogItem("test", new Terria());
         item.setTrait("definition", "locationIdFilter", "boor");
         item.setTrait("definition", "streamIdFilter", "temp");
-        item.setTrait("definition", "url", newBaseUrl);
+        item.setTrait("definition", "url", remoteUrl);
+        item.setTrait("definition", "proxyUrl", proxyUrl);
       });
       await item.loadMapItems();
       geoJsonItem = item.geoJsonItem;
