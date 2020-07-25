@@ -8,6 +8,7 @@ import SenapsLocationsCatalogItem, {
 import CommonStrata from "../../lib/Models/CommonStrata";
 import isDefined from "../../lib/Core/isDefined";
 import { JsonArray, JsonObject } from "../../lib/Core/Json";
+import { urlInput } from "../../lib/ReactViews/ExplorerWindow/Tabs/MyDataTab/add-data.scss";
 
 interface ExtendedLoadWithXhr {
   (): any;
@@ -81,20 +82,51 @@ describe("SenapsLocationsCatalogItem", function() {
       );
     });
 
-    it("- constructs correct locations from a given base url", function() {
-      expect(item._constructLocationsUrl(newBaseUrl)).toBe(
-        `${newBaseUrl}/locations?count=1000&expand=true`
-      );
-    });
-
     it("- constructs correct streams url", function() {
       expect(item._constructStreamsUrl("123")).toBe(
         "https://senaps.io/api/sensor/v2/streams?locationid=123"
       );
     });
 
+    it("- has the right number of features", function() {
+      expect(item.geoJsonItem).toBeDefined();
+      expect(geoJsonData).toBeDefined();
+      expect(geoJsonData.features.length).toEqual(2);
+    });
+
+    it("- has a feature with the right properties", function() {
+      expect(feature.geometry.coordinates).toEqual([148.699683, -34.470083]);
+      expect(feature.properties).toBeDefined();
+      expect(feature.properties.id).toBe("boorowa.temprh.site5a");
+      expect(feature.properties.description).toBe("Boorowa TempRH Site5a");
+      expect(feature.properties.hasStreams).toBe(true);
+      expect(feature.properties.streamIds).toEqual([
+        "tdfnode.0.323831395a368714-99.SHT31DIS_ALL.temperature",
+        "tdfnode.0.323831395a368714-99.SHT31DIS_ALL.humidity"
+      ]);
+    });
+  });
+
+  describe("Can get all items from given base url", async function() {
+    beforeEach(async function() {
+      runInAction(() => {
+        item = new SenapsLocationsCatalogItem("test", new Terria());
+        item.setTrait("definition", "url", newBaseUrl);
+      });
+      await item.loadMapItems();
+      geoJsonItem = item.geoJsonItem;
+      geoJsonData = (geoJsonItem.geoJsonData as any) as SenapsFeatureCollection;
+      feature = geoJsonData.features[0];
+    });
+
+    it("- constructs correct locations from a given base url", function() {
+      expect(item._constructLocationsUrl()).toBe(
+        `${newBaseUrl}/locations?count=1000&expand=true`
+      );
+    });
+
     it("- constructs correct streams from a given base url", function() {
-      expect(item._constructStreamsUrl("123", newBaseUrl)).toBe(
+      expect(item._constructStreamsUrl("123")).toBe(
         `${newBaseUrl}/streams?locationid=123`
       );
     });
@@ -137,20 +169,45 @@ describe("SenapsLocationsCatalogItem", function() {
       );
     });
 
-    it("- constructs correct locations from a given base url", function() {
-      expect(item._constructLocationsUrl(newBaseUrl)).toBe(
-        `${newBaseUrl}/locations?id=boor&count=1000&expand=true`
-      );
-    });
-
     it("- constructs correct streams url", function() {
       expect(item._constructStreamsUrl("123")).toBe(
         "https://senaps.io/api/sensor/v2/streams?id=temp&locationid=123"
       );
     });
 
+    it("- only retrieves matching features", async function() {
+      expect(item.geoJsonItem).toBeDefined();
+      expect(geoJsonData.type).toEqual("FeatureCollection");
+      expect(geoJsonData.features.length).toEqual(1);
+    });
+
+    it("- only retrieves matching streams", async function() {
+      expect(feature.properties.streamIds.length).toEqual(1);
+    });
+  });
+
+  describe("Can get filtered items from given base url", async function() {
+    beforeEach(async function() {
+      runInAction(() => {
+        item = new SenapsLocationsCatalogItem("test", new Terria());
+        item.setTrait("definition", "locationIdFilter", "boor");
+        item.setTrait("definition", "streamIdFilter", "temp");
+        item.setTrait("definition", "url", newBaseUrl);
+      });
+      await item.loadMapItems();
+      geoJsonItem = item.geoJsonItem;
+      geoJsonData = (geoJsonItem.geoJsonData as any) as SenapsFeatureCollection;
+      feature = geoJsonData.features[0];
+    });
+
+    it("- constructs correct locations from a given base url", function() {
+      expect(item._constructLocationsUrl()).toBe(
+        `${newBaseUrl}/locations?id=boor&count=1000&expand=true`
+      );
+    });
+
     it("- constructs correct streams from a given base url", function() {
-      expect(item._constructStreamsUrl("123", newBaseUrl)).toBe(
+      expect(item._constructStreamsUrl("123")).toBe(
         `${newBaseUrl}/streams?id=temp&locationid=123`
       );
     });
