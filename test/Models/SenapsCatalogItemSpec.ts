@@ -5,10 +5,6 @@ import SenapsLocationsCatalogItem, {
   SenapsFeature,
   SenapsFeatureCollection
 } from "../../lib/Models/SenapsLocationsCatalogItem";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import isDefined from "../../lib/Core/isDefined";
-import { JsonArray, JsonObject } from "../../lib/Core/Json";
-import { urlInput } from "../../lib/ReactViews/ExplorerWindow/Tabs/MyDataTab/add-data.scss";
 
 interface ExtendedLoadWithXhr {
   (): any;

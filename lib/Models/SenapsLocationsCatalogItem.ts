@@ -11,7 +11,6 @@ import SenapsLocationsCatalogItemTraits from "../Traits/SenapsLocationsCatalogIt
 import { FeatureInfoTemplateTraits } from "../Traits/FeatureInfoTraits";
 import CreateModel from "./CreateModel";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
-import Terria from "./Terria";
 import StratumOrder from "./StratumOrder";
 import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
@@ -75,6 +74,7 @@ export class SenapsLocationsStratum extends LoadableStratum(
     private readonly geojsonItem: GeoJsonCatalogItem
   ) {
     super();
+    this.senapsLocationsCatalogItem = senapsLocationsCatalogItem;
     this.geojsonItem = geojsonItem;
   }
 
@@ -172,9 +172,17 @@ export class SenapsLocationsStratum extends LoadableStratum(
     <chart
       id='{{id}}'
       title='{{id}}'
-      sources='https://senaps.io/api/sensor/v2/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=1440&media=csv&csvheader=false&sort=descending,https://senaps.io/api/sensor/v2/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=7200&media=csv&csvheader=false&sort=descending'
+      sources='${
+        senapsLocationsCatalogItem.baseUrl
+      }/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=1440&media=csv&csvheader=false&sort=descending,${
+          senapsLocationsCatalogItem.baseUrl
+        }/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=7200&media=csv&csvheader=false&sort=descending'
       source-names='1d,5d'
-      downloads='https://senaps.io/api/sensor/v2/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=1440&media=csv&csvheader=false&sort=descending,https://senaps.io/api/sensor/v2/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=7200&media=csv&csvheader=false&sort=descending'
+      downloads='${
+        senapsLocationsCatalogItem.baseUrl
+      }/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=1440&media=csv&csvheader=false&sort=descending,${
+          senapsLocationsCatalogItem.baseUrl
+        }/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=7200&media=csv&csvheader=false&sort=descending'
       download-names='1d,5d'
     >
     </chart>
