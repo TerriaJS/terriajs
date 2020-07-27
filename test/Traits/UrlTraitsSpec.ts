@@ -6,6 +6,7 @@ import i18next from "i18next";
 import CatalogGroup from "../../lib/Models/CatalogGroupNew";
 import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
 import { BaseModel } from "../../lib/Models/Model";
+import UrlMixin from "../../lib/ModelMixins/UrlMixin";
 
 configure({
   enforceActions: "observed",
@@ -21,6 +22,10 @@ describe("UrlTraits", function() {
       baseUrl: "./"
     });
     geoJsonCatalogItem = new GeoJsonCatalogItem("test", terria);
+  });
+
+  it(" - returns true UrlMixin.isMixedInto", function() {
+    expect(UrlMixin.isMixedInto(geoJsonCatalogItem)).toBeTruthy();
   });
 
   it(" - gets default cache duration", function() {
