@@ -72,8 +72,7 @@ function getBaseUrl(senapsLocationsCatalogItem: SenapsLocationsCatalogItem) {
 
   if (baseUrl) {
     return proxyUrl + baseUrl;
-  }
-  else {
+  } else {
     const msg = "models.senaps.missingSenapsBaseUrl";
 
     throw new TerriaError({
@@ -185,8 +184,8 @@ export class SenapsLocationsStratum extends LoadableStratum(
           "models.senaps.locationHeadingFeatureInfo"
         )}: {{id}}</h4>
   <h5 style="margin-bottom:5px;">${i18next.t(
-          "models.senaps.availableStreamsHeadingFeatureInfo"
-        )}</h5>
+    "models.senaps.availableStreamsHeadingFeatureInfo"
+  )}</h5>
   {{#hasStreams}}
     <ul>{{#streamIds}}
       <li>{{.}}</li>
