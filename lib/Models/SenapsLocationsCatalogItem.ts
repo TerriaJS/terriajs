@@ -69,8 +69,18 @@ function getBaseUrl(senapsLocationsCatalogItem: SenapsLocationsCatalogItem) {
     ? senapsLocationsCatalogItem.proxyUrl + "/"
     : "";
   const baseUrl = senapsLocationsCatalogItem.url;
-  const newBaseUrl = baseUrl ? baseUrl : senapsLocationsCatalogItem.baseUrl;
-  return proxyUrl + newBaseUrl;
+
+  if (baseUrl) {
+    return proxyUrl + baseUrl;
+  }
+  else {
+    const msg = "models.senaps.missingSenapsBaseUrl";
+
+    throw new TerriaError({
+      title: i18next.t("models.senaps.retrieveErrorTitle"),
+      message: i18next.t(msg)
+    });
+  }
 }
 
 export class SenapsLocationsStratum extends LoadableStratum(
@@ -175,8 +185,8 @@ export class SenapsLocationsStratum extends LoadableStratum(
           "models.senaps.locationHeadingFeatureInfo"
         )}: {{id}}</h4>
   <h5 style="margin-bottom:5px;">${i18next.t(
-    "models.senaps.availableStreamsHeadingFeatureInfo"
-  )}</h5>
+          "models.senaps.availableStreamsHeadingFeatureInfo"
+        )}</h5>
   {{#hasStreams}}
     <ul>{{#streamIds}}
       <li>{{.}}</li>
@@ -231,8 +241,6 @@ class SenapsLocationsCatalogItem extends AsyncMappableMixin(
   CatalogMemberMixin(CreateModel(SenapsLocationsCatalogItemTraits))
 ) {
   static readonly type = "senaps-locations";
-
-  readonly baseUrl = "https://senaps.io/api/sensor/v2";
 
   get type() {
     return SenapsLocationsCatalogItem.type;

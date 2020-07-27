@@ -1024,7 +1024,8 @@
       "missingKeyErrorMessage": "A Senaps API Key should be added to the terriajs-server config using the appendParamToQueryString option",
       "locationHeadingFeatureInfo": "Location",
       "availableStreamsHeadingFeatureInfo": "Available Streams",
-      "noStreamsMessageFeatureInfo": "No streams at this location."
+      "noStreamsMessageFeatureInfo": "No streams at this location.",
+      "missingSenapsBaseUrl": "Senaps base url not provided."
     },
     "ogr": {
       "name": "Unknown / Converted to GeoJSON",
