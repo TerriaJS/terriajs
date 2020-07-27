@@ -78,18 +78,22 @@ describe("SenapsLocationsCatalogItem", function() {
     });
 
     it("- fail to load map items", async function() {
+      let passed: boolean = false;
       try {
         await item.loadMapItems();
       } catch (e) {
-        console.log(`${e.message}`);
+        console.log(
+          `Passed! item.loadMapItems() -> error message: ${e.message}`
+        );
+        passed = true;
       }
+      console.log("--- a trial way");
+      expect(passed === true);
 
-      try {
+      console.log("--- a proper way");
+      expect(async function() {
         await item.loadMapItems();
-        item._constructLocationsUrl();
-      } catch (e) {
-        console.log(`${e.message}`);
-      }
+      }).toThrow(expectedError);
     });
   });
 
