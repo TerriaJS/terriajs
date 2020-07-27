@@ -1,4 +1,3 @@
-import i18next from "i18next";
 import { runInAction } from "mobx";
 import _loadWithXhr from "../../lib/Core/loadWithXhr";
 import Terria from "../../lib/Models/Terria";
@@ -63,7 +62,6 @@ describe("SenapsLocationsCatalogItem", function() {
   });
 
   describe("Can not construct urls without base url", async function() {
-    let TerriaError = require("../../lib/Core/TerriaError");
     beforeEach(async function() {
       runInAction(() => {
         item = new SenapsLocationsCatalogItem("test", new Terria());
@@ -77,13 +75,13 @@ describe("SenapsLocationsCatalogItem", function() {
     it("- fail to construct locations url", function() {
       expect(function() {
         item._constructLocationsUrl();
-      }).toThrowError(TerriaError);
+      }).toThrowError("Senaps base url not provided.");
     });
 
     it("- fail to construct streams url", function() {
       expect(function() {
         item._constructStreamsUrl("123");
-      }).toThrowError(TerriaError);
+      }).toThrowError("Senaps base url not provided.");
     });
   });
 
