@@ -29,11 +29,11 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import GeoJsonCatalogItemTraits from "../Traits/GeoJsonCatalogItemTraits";
 import CreateModel from "./CreateModel";
+import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 
 const formatPropertyValue = require("../Core/formatPropertyValue");
 const hashFromString = require("../Core/hashFromString");
 const loadBlob = require("../Core/loadBlob");
-const proxyCatalogItemUrl = require("./proxyCatalogItemUrl");
 const Reproject = require("../Map/Reproject");
 const zip = require("terriajs-cesium/Source/ThirdParty/zip").default;
 
@@ -142,13 +142,9 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
               })
             });
           }
-          resolve(
-            loadZipFile(proxyCatalogItemUrl(this, this.url, this.cacheDuration))
-          );
+          resolve(loadZipFile(proxyCatalogItemUrl(this, this.url)));
         } else {
-          resolve(
-            loadJson(proxyCatalogItemUrl(this, this.url, this.cacheDuration))
-          );
+          resolve(loadJson(proxyCatalogItemUrl(this, this.url)));
         }
       } else {
         throw new TerriaError({
@@ -264,7 +260,7 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
       fill: defaultColor(style.fill, (this.name || "") + " fill"),
       clampToGround: this.clampToGround,
       markerUrl: style["marker-url"] // not in SimpleStyle spec but gives an alternate to maki marker symbols
-        ? proxyCatalogItemUrl(this, style["marker-url"], this.cacheDuration)
+        ? proxyCatalogItemUrl(this, style["marker-url"])
         : undefined
     };
 

@@ -404,11 +404,7 @@ async function getCkanDatasets(
 ): Promise<CkanServerResponse | undefined> {
   try {
     const response: CkanServerResponse = await loadJson(
-      proxyCatalogItemUrl(
-        catalogGroup,
-        uri.toString(),
-        catalogGroup.cacheDuration
-      )
+      proxyCatalogItemUrl(catalogGroup, uri.toString())
     );
     return response;
   } catch (err) {

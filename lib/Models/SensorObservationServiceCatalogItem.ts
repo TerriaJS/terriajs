@@ -646,7 +646,7 @@ async function loadSoapBody(
   const requestXml = Mustache.render(requestTemplate, templateContext);
 
   const responseXml = await loadWithXhr({
-    url: proxyCatalogItemUrl(item, url, item.cacheDuration),
+    url: proxyCatalogItemUrl(item, url),
     responseType: "document",
     method: "POST",
     overrideMimeType: "text/xml",

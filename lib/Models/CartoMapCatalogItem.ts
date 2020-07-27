@@ -185,7 +185,7 @@ export default class CartoMapCatalogItem
     }
 
     return new UrlTemplateImageryProvider({
-      url: proxyCatalogItemUrl(this, stratum.tileUrl, this.cacheDuration),
+      url: proxyCatalogItemUrl(this, stratum.tileUrl),
       maximumLevel: this.maximumLevel,
       minimumLevel: this.minimumLevel,
       credit: this.attribution,

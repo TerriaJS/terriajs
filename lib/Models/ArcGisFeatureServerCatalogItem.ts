@@ -355,7 +355,7 @@ class FeatureServerStratum extends LoadableStratum(
         const color = symbol.color;
         const imageUrl = symbol.imageData
           ? proxyCatalogItemUrl(
-              this,
+              this._item,
               `data:${symbol.contentType};base64,${symbol.imageData}`,
               this.cacheDuration
             )
@@ -647,8 +647,8 @@ function updateEntityWithEsriStyle(
         );
       }
       const color = symbol.color ? symbol.color : defaultColor;
-      /* 
-        For line containing dashes PolylineDashMaterialProperty is used. 
+      /*
+        For line containing dashes PolylineDashMaterialProperty is used.
         Definition is done using the line patterns converted from hex to decimal dashPattern.
         Source for some of the line patterns is https://www.opengl.org.ru/docs/pg/0204.html, others are created manually
       */
@@ -756,8 +756,7 @@ function loadMetadata(catalogItem: ArcGisFeatureServerCatalogItem) {
 function buildMetadataUrl(catalogItem: ArcGisFeatureServerCatalogItem) {
   return proxyCatalogItemUrl(
     catalogItem,
-    new URI(catalogItem.url).addQuery("f", "json").toString(),
-    catalogItem.cacheDuration
+    new URI(catalogItem.url).addQuery("f", "json").toString()
   );
 }
 
@@ -783,8 +782,7 @@ function buildGeoJsonUrl(catalogItem: ArcGisFeatureServerCatalogItem) {
       .segment("query")
       .addQuery("f", "json")
       .addQuery("layerDefs", "{" + layerId + ':"' + catalogItem.layerDef + '"}')
-      .toString(),
-    catalogItem.cacheDuration
+      .toString()
   );
 }
 

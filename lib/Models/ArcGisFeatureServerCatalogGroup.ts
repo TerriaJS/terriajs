@@ -118,13 +118,7 @@ export class FeatureServerStratum extends LoadableStratum(
     var terria = catalogGroup.terria;
     var uri = new URI(catalogGroup.url).addQuery("f", "json");
 
-    return loadJson(
-      proxyCatalogItemUrl(
-        catalogGroup,
-        uri.toString(),
-        catalogGroup.cacheDuration
-      )
-    )
+    return loadJson(proxyCatalogItemUrl(catalogGroup, uri.toString()))
       .then((featureServer: FeatureServer) => {
         // Is this really a FeatureServer REST response?
         if (!featureServer || !featureServer.layers) {

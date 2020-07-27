@@ -123,13 +123,7 @@ export class MapServerStratum extends LoadableStratum(
     var terria = catalogGroup.terria;
     var uri = new URI(catalogGroup.url).addQuery("f", "json");
 
-    return loadJson(
-      proxyCatalogItemUrl(
-        catalogGroup,
-        uri.toString(),
-        catalogGroup.cacheDuration
-      )
-    )
+    return loadJson(proxyCatalogItemUrl(catalogGroup, uri.toString()))
       .then((mapServer: MapServer) => {
         // Is this really a MapServer REST response?
         if (!mapServer || (!mapServer.layers && !mapServer.subLayers)) {

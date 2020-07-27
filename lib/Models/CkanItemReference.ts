@@ -495,7 +495,7 @@ async function loadCkanDataset(ckanItem: CkanItemReference) {
     .addQuery({ id: ckanItem.datasetId });
 
   const response: CkanDatasetServerResponse = await loadJson(
-    proxyCatalogItemUrl(ckanItem, uri.toString(), ckanItem.cacheDuration)
+    proxyCatalogItemUrl(ckanItem, uri.toString())
   );
   if (response.result) return response.result;
   return undefined;
@@ -507,7 +507,7 @@ async function loadCkanResource(ckanItem: CkanItemReference) {
     .addQuery({ id: ckanItem.resourceId });
 
   const response: CkanResourceServerResponse = await loadJson(
-    proxyCatalogItemUrl(ckanItem, uri.toString(), ckanItem.cacheDuration)
+    proxyCatalogItemUrl(ckanItem, uri.toString())
   );
   if (response.result) return response.result;
   return undefined;

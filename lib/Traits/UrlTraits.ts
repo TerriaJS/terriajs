@@ -10,6 +10,13 @@ export default class UrlTraits extends ModelTraits {
   url?: string;
 
   @primitiveTrait({
+    type: "boolean",
+    name: "Force proxy",
+    description: "Force the proxy to be used for all network requests."
+  })
+  forceProxy = false;
+
+  @primitiveTrait({
     type: "string",
     name: "Cache Duration",
     description:

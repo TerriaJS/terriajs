@@ -258,7 +258,7 @@ function loadGeoRss(item: GeoRssCatalogItem) {
       const parser = new DOMParser();
       resolve(parser.parseFromString(item.geoRssString, "text/xml"));
     } else if (isDefined(item.url)) {
-      resolve(loadXML(proxyCatalogItemUrl(item, item.url, item.cacheDuration)));
+      resolve(loadXML(proxyCatalogItemUrl(item, item.url)));
     } else {
       throw new TerriaError({
         sender: item,

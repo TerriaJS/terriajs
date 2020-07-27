@@ -70,13 +70,7 @@ class ArcGisServerStratum extends LoadableStratum(ArcGisCatalogGroupTraits) {
   ): Promise<ArcGisServerStratum> {
     var terria = catalogGroup.terria;
     var uri = new URI(catalogGroup.url).addQuery("f", "json");
-    return loadJson(
-      proxyCatalogItemUrl(
-        catalogGroup,
-        uri.toString(),
-        catalogGroup.cacheDuration
-      )
-    )
+    return loadJson(proxyCatalogItemUrl(catalogGroup, uri.toString()))
       .then((arcgisServer: ArcGisServer) => {
         // Is this really a ArcGisServer REST response?
         if (

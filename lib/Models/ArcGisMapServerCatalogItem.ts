@@ -473,11 +473,7 @@ function getBaseURI(item: ArcGisMapServerCatalogItem) {
 
 function getJson(item: ArcGisMapServerCatalogItem, uri: any) {
   return loadJson(
-    proxyCatalogItemUrl(
-      item,
-      uri.addQuery("f", "json").toString(),
-      item.cacheDuration
-    )
+    proxyCatalogItemUrl(item, uri.addQuery("f", "json").toString())
   );
 }
 
@@ -608,11 +604,7 @@ function cleanAndProxyUrl(
   catalogItem: ArcGisMapServerCatalogItem,
   url: string
 ) {
-  return proxyCatalogItemUrl(
-    catalogItem,
-    cleanUrl(url),
-    catalogItem.cacheDuration
-  );
+  return proxyCatalogItemUrl(catalogItem, cleanUrl(url));
 }
 
 function cleanUrl(url: string) {

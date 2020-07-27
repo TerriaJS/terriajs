@@ -732,11 +732,7 @@ export default class MagdaReference extends AccessControlMixin(
         })
       );
     }
-    const proxiedUrl = proxyCatalogItemUrl(
-      this,
-      recordUri.toString(),
-      this.cacheDuration
-    );
+    const proxiedUrl = proxyCatalogItemUrl(this, recordUri.toString());
 
     return loadJson(proxiedUrl, options.magdaReferenceHeaders);
   }

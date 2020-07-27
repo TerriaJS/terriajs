@@ -78,7 +78,7 @@ class KmlCatalogItem extends AsyncMappableMixin(
           resolve(readXml(this._kmlFile));
         }
       } else if (isDefined(this.url)) {
-        resolve(proxyCatalogItemUrl(this, this.url, this.cacheDuration));
+        resolve(proxyCatalogItemUrl(this, this.url));
       } else {
         throw new TerriaError({
           sender: this,

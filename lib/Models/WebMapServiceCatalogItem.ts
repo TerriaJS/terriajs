@@ -906,7 +906,7 @@ class WebMapServiceCatalogItem
       }
 
       const imageryOptions = {
-        url: proxyCatalogItemUrl(this, baseUrl.toString(), this.cacheDuration),
+        url: proxyCatalogItemUrl(this, baseUrl.toString()),
         layers: this.layers || "",
         parameters: parameters,
         tilingScheme: /*defined(this.tilingScheme) ? this.tilingScheme :*/ new WebMercatorTilingScheme(),
