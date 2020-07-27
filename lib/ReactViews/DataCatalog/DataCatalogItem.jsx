@@ -101,6 +101,11 @@ export const DataCatalogItem = observer(
       this.props.viewState.switchMobileView(
         this.props.viewState.mobileViewOptions.preview
       );
+
+      // Show search breadcrumbs
+      if (this.props.viewState.searchState.catalogSearchText.length > 0) {
+        this.props.viewState.showBreadcrumbs(true);
+      }
     },
 
     isSelected() {

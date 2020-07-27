@@ -3,9 +3,19 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.39)
+#### next release (8.0.0-alpha.41)
 * Add `cacheDuration` to `UrlTraits` and add to various catalog models.
 * [The next improvement]
+
+#### 8.0.0-alpha.40
+* Improve info section of `WebMapServiceCatalogItem` with content from GetCapabilities
+* Re-implement `infoSectionOrder` as `CatalogMember` trait.
+* Add `infoWithoutSources` getter to `CatalogMemberMixin` to prevent app crash when using `hideSources`
+* Add support for nested WMS groups
+* Added breadcrumbs when clicking on a catalogue item from a catalogue search
+
+#### 8.0.0-alpha.39
+* Development builds sped up by 3~20x - ts-loader is now optional & TypeScript being transpiled by babel-loader, keeping type check safety on a separate thread
 
 #### 8.0.0-alpha.38
 * Add `show` to `ShortReportTraits` and Tsxify `ShortReport`

@@ -1,7 +1,9 @@
 import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGroup";
-import { autorun, runInAction } from "mobx";
+import { runInAction } from "mobx";
 import Terria from "../../lib/Models/Terria";
 import i18next from "i18next";
+import GroupMixin from "../../lib/ModelMixins/GroupMixin";
+import CatalogMemberMixin from "../../lib/ModelMixins/CatalogMemberMixin";
 
 describe("WebMapServiceCatalogGroup", function() {
   let terria: Terria;
@@ -54,7 +56,7 @@ describe("WebMapServiceCatalogGroup", function() {
         "models.webMapServiceCatalogGroup.accessConstraints"
       );
       const fees = i18next.t("models.webMapServiceCatalogGroup.fees");
-      console.log(wms.info);
+
       expect(wms.info.map(({ name }) => name)).toEqual([
         abstract,
         accessConstraints,
@@ -80,7 +82,38 @@ describe("WebMapServiceCatalogGroup", function() {
     it("loads", async function() {
       expect(wms.members.length).toEqual(1);
       expect(wms.memberModels.length).toEqual(1);
-      console.log(wms.members);
+    });
+  });
+
+  describe("loadNestedMembers", function() {
+    beforeEach(async function() {
+      runInAction(() => {
+        wms.setTrait("definition", "url", "test/WMS/wms_nested_groups.xml");
+      });
+      await wms.loadMembers();
+    });
+
+    it("loads", async function() {
+      expect(wms.members.length).toEqual(3);
+      expect(wms.memberModels.length).toEqual(3);
+
+      const firstGroup = wms.memberModels[0];
+      expect(
+        GroupMixin.isMixedInto(firstGroup) && firstGroup.members.length
+      ).toEqual(3);
+
+      const firstGroupFirstModel =
+        GroupMixin.isMixedInto(firstGroup) && firstGroup.memberModels[0];
+      expect(
+        firstGroupFirstModel &&
+          CatalogMemberMixin.isMixedInto(firstGroupFirstModel) &&
+          firstGroupFirstModel.name
+      ).toEqual("Surface Reflectance 25m Annual Geomedian (Landsat 8)");
+
+      const thirdGroup = wms.memberModels[2];
+      expect(
+        GroupMixin.isMixedInto(thirdGroup) && thirdGroup.members.length
+      ).toEqual(1);
     });
   });
 });
