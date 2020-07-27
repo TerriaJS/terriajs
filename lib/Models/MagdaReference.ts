@@ -718,7 +718,7 @@ export default class MagdaReference extends AccessControlMixin(
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
     }
-    return "1d";
+    return "0d";
   }
 
   protected loadMagdaRecord(options: RecordOptions): Promise<JsonObject> {
