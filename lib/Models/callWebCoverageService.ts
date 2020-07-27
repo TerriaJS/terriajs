@@ -30,7 +30,7 @@ export const callWebCoverageService = function(
     const terria = wmsCatalogItem.terria;
     runInAction(() => (terria.pickedFeatures = undefined));
 
-    let rectange: Rectangle;
+    let rectangle: Rectangle;
 
     const userDrawing = new UserDrawing({
       terria: wmsCatalogItem.terria,
@@ -38,16 +38,16 @@ export const callWebCoverageService = function(
       buttonText: "Download Extent",
       onPointClicked: () => {
         if (userDrawing.pointEntities.entities.values.length >= 2) {
-          rectange = userDrawing.otherEntities.entities
-            .getById("rectangle")
-            .rectangle.coordinates.getValue(
+          rectangle = userDrawing?.otherEntities?.entities
+            ?.getById("rectangle")
+            ?.rectangle?.coordinates?.getValue(
               wmsCatalogItem.terria.timelineClock.currentTime
             );
         }
       },
       onCleanUp: () => {
-        if (isDefined(rectange)) {
-          launch(wmsCatalogItem, rectange)
+        if (isDefined(rectangle)) {
+          launch(wmsCatalogItem, rectangle)
             .then(resolve)
             .catch(reject);
         } else {

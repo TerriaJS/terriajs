@@ -12,6 +12,7 @@ import SampledProperty from "terriajs-cesium/Source/DataSources/SampledProperty"
 import TimeIntervalCollectionPositionProperty from "terriajs-cesium/Source/DataSources/TimeIntervalCollectionPositionProperty";
 import TimeIntervalCollectionProperty from "terriajs-cesium/Source/DataSources/TimeIntervalCollectionProperty";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
+import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
 import { JsonObject } from "../Core/Json";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";

@@ -8,6 +8,7 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import { JsonObject } from "../Core/Json";
 import TableColumn from "./TableColumn";
 import TableStyle from "./TableStyle";
+import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
 
 type RequiredTableStyle = TableStyle & {
   longitudeColumn: TableColumn;
@@ -51,7 +52,7 @@ export default function createLongitudeLatitudeFeaturePerRow(
       const timeInterval = intervals[rowId];
       if (timeInterval)
         feature.availability = new TimeIntervalCollection([timeInterval]);
-      feature.properties = getRowValues(rowId, tableColumns);
+      feature.properties = getRowValues(rowId, tableColumns) as PropertyBag;
       return feature;
     })
   );
