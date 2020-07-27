@@ -8,6 +8,10 @@ type UrlModel = Model<UrlTraits>;
 
 function UrlMixin<T extends Constructor<UrlModel>>(Base: T) {
   class UrlMixin extends Base {
+    get hasUrlMixin() {
+      return true;
+    }
+
     @computed
     get uri(): uri.URI | undefined {
       if (this.url === undefined) {
@@ -23,7 +27,7 @@ function UrlMixin<T extends Constructor<UrlModel>>(Base: T) {
 namespace UrlMixin {
   export interface UrlMixin extends InstanceType<ReturnType<typeof UrlMixin>> {}
   export function isMixedInto(model: any): model is UrlMixin {
-    return model && model.isGroup;
+    return model && model.hasUrlMixin;
   }
 }
 
