@@ -294,18 +294,21 @@ export default class Cesium extends GlobeOrMap {
     inputHandler.setInputAction(
       e => {
         if (!this.isFeaturePickingPaused && !isDefined(zoomUserDrawing)) {
-          this.scene.screenSpaceCameraController.enableInputs = false;
+          this.pauseMapInteraction();
 
-          const exitZoom = () => {
+          const exitZoom = (zoomTo = true) => {
             document.removeEventListener("keyup", onKeyUp);
             runInAction(() => {
               this.terria.mapInteractionModeStack.pop();
-              zoomUserDrawing && zoomUserDrawing.cleanUp();
+              zoomTo && zoomUserDrawing && zoomUserDrawing.cleanUp();
             });
+            this.resumeMapInteraction();
+            zoomUserDrawing = undefined;
           };
 
+          // If the shift key is released -> exit zoom
           const onKeyUp = (e: KeyboardEvent) =>
-            e.key === "Shift" && zoomUserDrawing && exitZoom();
+            e.key === "Shift" && zoomUserDrawing && exitZoom(false);
 
           document.addEventListener("keyup", onKeyUp);
 
@@ -329,20 +332,20 @@ export default class Cesium extends GlobeOrMap {
                 if (rectangle) this.zoomTo(rectangle, 1);
 
                 exitZoom();
+
+                // If more than two points are clicked but a rectangle hasn't been drawn -> exit zoom
               } else if (pointClickCount >= 2) {
-                exitZoom();
+                exitZoom(false);
               }
-            },
-            onCleanUp: () => {
-              zoomUserDrawing = undefined;
-              this.scene.screenSpaceCameraController.enableInputs = true;
             },
             allowPolygon: false,
             drawRectangle: true,
             invisible: true
           });
+
           zoomUserDrawing.enterDrawMode();
 
+          // Pick first point of rectangle on start
           this.pickFromScreenPosition(e.position, false);
         }
       },
