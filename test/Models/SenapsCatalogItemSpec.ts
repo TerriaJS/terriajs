@@ -63,7 +63,7 @@ describe("SenapsLocationsCatalogItem", function () {
     expect(item.showsInfo).toBeTruthy();
   });
 
-  describe("Can not construct urls without base url", async function () {
+  describe("Can get any items without base url", async function () {
     const msg = "models.senaps.missingSenapsBaseUrl";
     const expectedError = new TerriaError({
       title: i18next.t("models.senaps.retrieveErrorTitle"),
@@ -74,21 +74,11 @@ describe("SenapsLocationsCatalogItem", function () {
       runInAction(() => {
         item = new SenapsLocationsCatalogItem("test", new Terria());
       });
-      await item.loadMapItems();
-      geoJsonItem = item.geoJsonItem;
-      geoJsonData = (geoJsonItem.geoJsonData as any) as SenapsFeatureCollection;
-      feature = geoJsonData.features[0];
     });
 
-    it("- fail to construct locations url", function () {
-      expect(function () {
-        item._constructLocationsUrl();
-      }).toThrow(expectedError);
-    });
-
-    it("- fail to construct streams url", function () {
-      expect(function () {
-        item._constructStreamsUrl("123");
+    it("- fail to load map items", function () {
+      expect(async function () {
+        await item.loadMapItems();
       }).toThrow(expectedError);
     });
   });
