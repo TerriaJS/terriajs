@@ -356,8 +356,7 @@ class FeatureServerStratum extends LoadableStratum(
         const imageUrl = symbol.imageData
           ? proxyCatalogItemUrl(
               this._item,
-              `data:${symbol.contentType};base64,${symbol.imageData}`,
-              this.cacheDuration
+              `data:${symbol.contentType};base64,${symbol.imageData}`
             )
           : undefined;
         const outlineColor = symbol.outline?.color;
