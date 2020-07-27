@@ -1025,7 +1025,7 @@
       "locationHeadingFeatureInfo": "Location",
       "availableStreamsHeadingFeatureInfo": "Available Streams",
       "noStreamsMessageFeatureInfo": "No streams at this location.",
-      "missingSenapsBaseUrl": "Senaps base url not provided."
+      "missingSenapsBaseUrl": "Senaps base url not provided. Have you logged in?"
     },
     "ogr": {
       "name": "Unknown / Converted to GeoJSON",

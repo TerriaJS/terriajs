@@ -32,6 +32,7 @@ describe("SenapsLocationsCatalogItem", function () {
       baseUrl: "./"
     });
     item = new SenapsLocationsCatalogItem("test", terria);
+    item.setTrait("definition", "url", remoteUrl);
 
     const realLoadWithXhr = loadWithXhr.load;
     spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
@@ -63,7 +64,7 @@ describe("SenapsLocationsCatalogItem", function () {
     expect(item.showsInfo).toBeTruthy();
   });
 
-  describe("Can get any items without base url", async function () {
+  describe("Can not get any items without base url", async function () {
     const msg = "models.senaps.missingSenapsBaseUrl";
     const expectedError = new TerriaError({
       title: i18next.t("models.senaps.retrieveErrorTitle"),
