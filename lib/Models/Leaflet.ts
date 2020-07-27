@@ -187,6 +187,15 @@ export default class Leaflet extends GlobeOrMap {
         this._featurePicked(entity, event);
       };
 
+      // Update mouse coords on mouse move
+      this.map.on("mousemove", (e: L.LeafletEvent) => {
+        const mouseEvent = <L.LeafletMouseEvent>e;
+        this.mouseCoords.updateCoordinatesFromLeaflet(
+          this.terria,
+          mouseEvent.originalEvent
+        );
+      });
+
       if (this.terriaViewer.disableInteraction) {
         interactions.forEach(handler => handler.disable());
         this.map.off("click", pickLocation);

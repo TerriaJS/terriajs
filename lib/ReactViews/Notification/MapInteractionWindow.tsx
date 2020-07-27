@@ -119,8 +119,6 @@ export default class MapInteractionWindow extends React.Component<{
     const isDiffTool =
       this.currentInteractionMode?.uiMode === UIMode.Difference;
 
-    console.log(this.currentInteractionMode);
-
     return (
       <MapInteractionWindowWrapper
         className={windowClass}
