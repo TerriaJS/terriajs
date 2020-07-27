@@ -65,12 +65,6 @@ describe("SenapsLocationsCatalogItem", function() {
   });
 
   describe("Can not get any items without base url", async function() {
-    const msg = "models.senaps.missingSenapsBaseUrl";
-    const expectedError = new TerriaError({
-      title: i18next.t("models.senaps.retrieveErrorTitle"),
-      message: i18next.t(msg)
-    });
-
     beforeEach(async function() {
       runInAction(() => {
         item = new SenapsLocationsCatalogItem("test", new Terria());
@@ -78,22 +72,18 @@ describe("SenapsLocationsCatalogItem", function() {
     });
 
     it("- fail to load map items", async function() {
-      let passed: boolean = false;
+      const msg = "models.senaps.missingSenapsBaseUrl";
+      const expectedError = new TerriaError({
+        title: i18next.t("models.senaps.retrieveErrorTitle"),
+        message: i18next.t(msg)
+      });
+      let errorMessage: string = "";
       try {
         await item.loadMapItems();
       } catch (e) {
-        console.log(
-          `Passed! item.loadMapItems() -> error message: ${e.message}`
-        );
-        passed = true;
+        errorMessage = e.message;
       }
-      console.log("--- a trial way");
-      expect(passed === true);
-
-      console.log("--- a proper way");
-      expect(async function() {
-        await item.loadMapItems();
-      }).toThrow(expectedError);
+      expect(errorMessage === expectedError.message);
     });
   });
 
