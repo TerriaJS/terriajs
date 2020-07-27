@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### Next Release
+
+* Add additional region mapping boundaries.
+
 ### v7.11.6
 
 * Rework the handling of point datasets on the anti-meridian when using LeafletJS.
