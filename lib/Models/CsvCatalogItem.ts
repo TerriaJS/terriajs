@@ -146,7 +146,8 @@ export default class CsvCatalogItem
     return automaticTableStylesStratum?.discreteTimes?.reduce?.(
       // is it correct for discrete times to remove duplicates?
       // duplicates will mess up the indexing problem as our `<DateTimePicker />`
-      // will eliminate duplicates on the UI front
+      // will eliminate duplicates on the UI front, so given the datepicker
+      // expects uniques, return uniques here
       (acc: DiscreteTimeAsJS[], time) =>
         !acc.some(
           accTime => accTime.time === time.time && accTime.tag === time.tag

@@ -8,6 +8,7 @@ Change Log
 * Tsify `proxyCatalogItemUrl`.
 * Simplified SidePanel React refs by removing the double wrapping of the `withTerriaRef()` HOC
 * Merged `withTerriaRef()` HOC with `useRefForTerria()` hook logic
+* CsvCatalogItem only returns unique `discreteTimes`s now
 * [The next improvement]
 
 #### 8.0.0-alpha.40
