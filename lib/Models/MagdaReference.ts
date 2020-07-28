@@ -2,6 +2,7 @@ import i18next from "i18next";
 import { computed, toJS } from "mobx";
 import { createTransformer } from "mobx-utils";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import isDefined from "../Core/isDefined";
 import {
   isJsonObject,
   isJsonString,
@@ -713,6 +714,13 @@ export default class MagdaReference extends AccessControlMixin(
     return undefined;
   }
 
+  @computed get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    }
+    return "0d";
+  }
+
   protected loadMagdaRecord(options: RecordOptions): Promise<JsonObject> {
     const recordUri = this.buildMagdaRecordUri(options);
     if (recordUri === undefined) {
@@ -724,7 +732,7 @@ export default class MagdaReference extends AccessControlMixin(
         })
       );
     }
-    const proxiedUrl = proxyCatalogItemUrl(this, recordUri.toString(), "0d");
+    const proxiedUrl = proxyCatalogItemUrl(this, recordUri.toString());
 
     return loadJson(proxiedUrl, options.magdaReferenceHeaders);
   }
