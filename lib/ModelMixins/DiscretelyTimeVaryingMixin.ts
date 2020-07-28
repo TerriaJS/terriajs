@@ -1,4 +1,4 @@
-import { action, computed, runInAction } from "mobx";
+import { action, computed, runInAction, trace } from "mobx";
 import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import { ChartPoint } from "../Charts/ChartData";
@@ -11,10 +11,12 @@ import CommonStrata from "../Models/CommonStrata";
 import Model from "../Models/Model";
 import DiscretelyTimeVaryingTraits from "../Traits/DiscretelyTimeVaryingTraits";
 import TimeVarying from "./TimeVarying";
+import { uniq } from "lodash-es";
+import isDefined from "../Core/isDefined";
 
 type DiscretelyTimeVarying = Model<DiscretelyTimeVaryingTraits>;
 
-interface AsJulian {
+export interface AsJulian {
   time: JulianDate;
   tag: string;
 }
@@ -67,6 +69,20 @@ function DiscretelyTimeVaryingMixin<
     @computed({ equals: JulianDate.equals })
     get stopTimeAsJulianDate(): JulianDate | undefined {
       return toJulianDate(this.stopTime);
+    }
+
+    @computed
+    get objectifiedDates(): ObjectifiedDates {
+      trace(true);
+      if (!isDefined(this.discreteTimesAsSortedJulianDates)) {
+        return { indice: [], dates: [] };
+      }
+
+      const jsDates = this.discreteTimesAsSortedJulianDates.map(julianDate =>
+        JulianDate.toDate(julianDate.time)
+      );
+
+      return objectifyDates(jsDates);
     }
 
     @computed
@@ -333,4 +349,129 @@ function toJulianDate(time: string | undefined): JulianDate | undefined {
     return undefined;
   }
   return JulianDate.fromIso8601(time);
+}
+
+type DatesObject<T> = {
+  [key: number]: T;
+  dates: Date[];
+  indice: number[];
+};
+export type ObjectifiedDates = DatesObject<ObjectifiedYears>;
+export type ObjectifiedYears = DatesObject<ObjectifiedMonths>;
+export type ObjectifiedMonths = DatesObject<ObjectifiedDays>;
+export type ObjectifiedDays = DatesObject<ObjectifiedHours>;
+export type ObjectifiedHours = DatesObject<Date[]>;
+
+/**
+ * Process an array of dates into layered objects of years, months and days.
+ * @param  {Date[]} An array of dates.
+ * @return {Object} Returns an object whose keys are years, whose values are objects whose keys are months (0=Jan),
+ *   whose values are objects whose keys are days, whose values are arrays of all the datetimes on that day.
+ * WARNING THIS IS EXPENSIVE!
+ */
+function objectifyDates(dates: Date[]): ObjectifiedDates {
+  const years = uniq(dates.map(date => date.getFullYear()));
+  const centuries = uniq(years.map(year => Math.floor(year / 100)));
+  const result = centuries.reduce<ObjectifiedDates>(
+    (accumulator, currentValue) => {
+      accumulator[currentValue] = objectifyCenturyData(
+        currentValue,
+        dates,
+        years
+      );
+      return accumulator;
+    },
+    { dates, indice: centuries }
+  );
+
+  return result;
+}
+
+function objectifyCenturyData(
+  century: number,
+  dates: Date[],
+  years: number[]
+): ObjectifiedYears {
+  // century is a number like 18, 19 or 20.
+  const yearsInThisCentury = years.filter(
+    year => Math.floor(year / 100) === century
+  );
+  const centuryData = getOneCentury(century, dates);
+  const centuryDates = yearsInThisCentury.reduce<ObjectifiedYears>(
+    (accumulator, currentValue) => {
+      accumulator[currentValue] = objectifyYearData(currentValue, dates);
+      return accumulator;
+    },
+    { dates: centuryData, indice: yearsInThisCentury }
+  );
+  return centuryDates;
+}
+
+function objectifyYearData(year: number, dates: Date[]): ObjectifiedMonths {
+  const yearData = getOneYear(year, dates);
+  const monthInYear: ObjectifiedMonths = {
+    indice: getMonthForYear(yearData),
+    dates: yearData
+  };
+
+  getMonthForYear(yearData).forEach(monthIndex => {
+    const monthData = getOneMonth(yearData, monthIndex);
+    const daysInMonth: ObjectifiedDays = {
+      dates: monthData,
+      indice: getDaysForMonth(monthData)
+    };
+
+    getDaysForMonth(monthData).forEach(dayIndex => {
+      const dayData = getOneDay(monthData, dayIndex);
+      const hoursInDay: ObjectifiedHours = {
+        dates: dayData,
+        indice: getHoursForDay(dayData)
+      };
+      getHoursForDay(dayData).forEach(hourIndex => {
+        hoursInDay[hourIndex] = getOneHour(dayData, hourIndex);
+      });
+
+      daysInMonth[dayIndex] = hoursInDay;
+    });
+    monthInYear[monthIndex] = daysInMonth;
+  });
+
+  return monthInYear;
+}
+
+function getOneYear(year: number, dates: Date[]) {
+  // All data from a given year.
+  return dates.filter(d => d.getFullYear() === year);
+}
+
+function getOneMonth(yearData: Date[], monthIndex: number) {
+  // All data from certain month of that year.
+  return yearData.filter(y => y.getMonth() === monthIndex);
+}
+
+function getOneDay(monthData: Date[], dayIndex: number) {
+  return monthData.filter(m => m.getDate() === dayIndex);
+}
+
+function getMonthForYear(yearData: Date[]) {
+  // get available months for a given year
+  return uniq(yearData.map(d => d.getMonth()));
+}
+
+function getDaysForMonth(monthData: Date[]) {
+  // Get all available days given a month in a year.
+  return uniq(monthData.map(m => m.getDate()));
+}
+
+function getOneHour(dayData: Date[], hourIndex: number) {
+  // All data from certain month of that year.
+  return dayData.filter(y => y.getHours() === hourIndex);
+}
+
+function getHoursForDay(dayData: Date[]) {
+  return uniq(dayData.map(m => m.getHours()));
+}
+
+function getOneCentury(century: number, dates: Date[]) {
+  return dates.filter(d => Math.floor(d.getFullYear() / 100) === century);
 }

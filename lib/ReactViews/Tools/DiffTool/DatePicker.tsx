@@ -8,8 +8,8 @@ import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import CommonStrata from "../../../Models/CommonStrata";
 import { formatDateTime } from "../../BottomDock/Timeline/DateFormats";
 import Icon, { StyledIcon } from "../../Icon";
+import DateTimePicker from "../../BottomDock/Timeline/DateTimePicker";
 
-const DateTimePicker = require("../../../ReactViews/BottomDock/Timeline/DateTimePicker.jsx");
 const dateFormat = require("dateformat");
 const Box: any = require("../../../Styled/Box").default;
 const Text: any = require("../../../Styled/Text").default;
@@ -46,15 +46,6 @@ class DatePicker extends React.Component<PropsType> {
         ? dateFormat(this.currentDate, dateFormatting)
         : formatDateTime(this.currentDate);
     return formattedDate;
-  }
-
-  @computed
-  get availableDates(): Date[] {
-    return (
-      this.props.item.discreteTimesAsSortedJulianDates?.map(dt =>
-        JulianDate.toDate(dt.time)
-      ) || []
-    );
   }
 
   @action.bound
@@ -163,7 +154,7 @@ class DatePicker extends React.Component<PropsType> {
         >
           <DateTimePicker
             currentDate={this.currentDate}
-            dates={this.availableDates}
+            dates={this.props.item.objectifiedDates}
             onChange={this.changeCurrentDate}
             popupStyle={this.props.popupStyle}
             openDirection="none"
