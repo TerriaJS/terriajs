@@ -4,6 +4,8 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.41)
+* Add `cacheDuration` and `forceProxy` to `UrlTraits` and add `cacheDuration` defaults to various catalog models.
+* Tsify `proxyCatalogItemUrl`.
 * [The next improvement]
 
 #### 8.0.0-alpha.40
