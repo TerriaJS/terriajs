@@ -6,6 +6,8 @@ Change Log
 #### next release (8.0.0-alpha.41)
 * Add `cacheDuration` and `forceProxy` to `UrlTraits` and add `cacheDuration` defaults to various catalog models.
 * Tsify `proxyCatalogItemUrl`.
+* Simplified SidePanel React refs by removing the double wrapping of the `withTerriaRef()` HOC
+* Merged `withTerriaRef()` HOC with `useRefForTerria()` hook logic
 * [The next improvement]
 
 #### 8.0.0-alpha.40
