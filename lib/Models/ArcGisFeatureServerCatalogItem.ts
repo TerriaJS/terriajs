@@ -685,7 +685,9 @@ function updateEntityWithEsriStyle(
       ) {
         entity.polygon.show = new ConstantProperty(false);
       } else {
-        entity.polygon.material = convertEsriColorToCesiumColor(color);
+        entity.polygon.material = new ColorMaterialProperty(
+          new ConstantProperty(convertEsriColorToCesiumColor(color))
+        );
       }
       if (symbol.outline) {
         const outlineColor = symbol.outline.color
