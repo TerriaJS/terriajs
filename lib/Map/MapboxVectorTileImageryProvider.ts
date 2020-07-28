@@ -49,8 +49,7 @@ interface MapboxVectorTileImageryProviderOptions {
   featureInfoFunc?: (feature: any) => ImageryLayerFeatureInfo | undefined;
 }
 
-export default class MapboxVectorTileImageryProvider
-  implements ImageryProvider {
+export default class MapboxVectorTileImageryProvider extends ImageryProvider {
   private readonly _uriTemplate: uri.URITemplate;
   private readonly _layerName: string;
   private readonly _subdomains: string[];
@@ -70,6 +69,7 @@ export default class MapboxVectorTileImageryProvider
   private readonly _ready = true;
 
   constructor(options: MapboxVectorTileImageryProviderOptions) {
+    super();
     this._uriTemplate = new URITemplate(options.url);
     this._layerName = options.layerName;
 
