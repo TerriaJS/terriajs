@@ -14,7 +14,9 @@ import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
 import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import isDefined from "../Core/isDefined";
-import DiscretelyTimeVaryingMixin from "../ModelMixins/DiscretelyTimeVaryingMixin";
+import DiscretelyTimeVaryingMixin, {
+  DiscreteTimeAsJS
+} from "../ModelMixins/DiscretelyTimeVaryingMixin";
 import { BaseModel } from "./Model";
 import ExportableData from "./ExportableData";
 
@@ -141,7 +143,18 @@ export default class CsvCatalogItem
       | undefined = this.strata.get(
       automaticTableStylesStratumName
     ) as TableAutomaticStylesStratum;
-    return automaticTableStylesStratum?.discreteTimes;
+    return automaticTableStylesStratum?.discreteTimes?.reduce?.(
+      // is it correct for discrete times to remove duplicates?
+      // duplicates will mess up the indexing problem as our `<DateTimePicker />`
+      // will eliminate duplicates on the UI front
+      (acc: DiscreteTimeAsJS[], time) =>
+        !acc.some(
+          accTime => accTime.time === time.time && accTime.tag === time.tag
+        )
+          ? [...acc, time]
+          : acc,
+      []
+    );
   }
 
   /*
