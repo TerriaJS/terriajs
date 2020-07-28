@@ -4,7 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.41)
-* [The next improvement]
+* Remove hard coded senaps base url.
 
 #### 8.0.0-alpha.40
 * Improve info section of `WebMapServiceCatalogItem` with content from GetCapabilities
