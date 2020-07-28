@@ -89,7 +89,6 @@ class DateTimePicker extends React.Component<PropsType> {
   } = { granularity: "century" };
 
   componentWillMount() {
-    console.log("COMPONENT WILL MOUNT");
     const datesObject = this.props.dates;
     let defaultCentury: number | undefined;
     let defaultYear: number | undefined;
