@@ -144,7 +144,7 @@ function createFeature(
     }),
     availability
   });
-  feature.properties = properties;
+  feature.properties = new PropertyBag(properties);
   feature.description = description;
   return feature;
 }
