@@ -53,7 +53,6 @@ class Breadcrumbs extends React.Component {
       // Note: should it reset the text if a person deletes current search and starts a new search?
       <Box
         left
-        // styledHeight={"32px"}
         styledMinHeight={"32px"}
         fullWidth
         backgroundColor={this.props.theme.greyLighter}
