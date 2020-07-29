@@ -229,12 +229,9 @@ export class ArcGisPortalStratum extends LoadableStratum(
       return groupIds;
     }
     // Otherwise return the id's of all the resources of all the filtered datasets
-    const that = this;
-    const references: ModelReference[] = [];
-    this.filteredDatasets.forEach(ds => {
-      references.push(that._catalogGroup.uniqueId + "/" + ds.id);
-    });
-    return references;
+    return this.filteredDatasets.map(ds => {
+      return this._catalogGroup.uniqueId + "/" + ds.id;
+    }, this);
   }
 
   private getDatasets(): ArcGisItem[] {
@@ -253,15 +250,17 @@ export class ArcGisPortalStratum extends LoadableStratum(
   private getGroups(): CatalogGroup[] {
     if (this._catalogGroup.groupBy === "none") return [];
 
-    let groups: CatalogGroup[] = [];
-    createUngroupedGroup(this, groups);
-    createGroupsByPortalGroups(this, groups);
+    let groups: CatalogGroup[] = [
+      ...createUngroupedGroup(this),
+      ...createGroupsByPortalGroups(this)
+    ];
     groups.sort(function(a, b) {
-      if (a.name === undefined || b.name === undefined) return 0;
-      if (a.name < b.name) {
+      if (a.nameInCatalog === undefined || b.nameInCatalog === undefined)
+        return 0;
+      if (a.nameInCatalog < b.nameInCatalog) {
         return -1;
       }
-      if (a.name > b.name) {
+      if (a.nameInCatalog > b.nameInCatalog) {
         return 1;
       }
       return 0;
@@ -398,10 +397,7 @@ function createGroup(groupId: string, terria: Terria, groupName: string) {
   return g;
 }
 
-function createUngroupedGroup(
-  arcgisPortal: ArcGisPortalStratum,
-  groups: CatalogGroup[]
-) {
+function createUngroupedGroup(arcgisPortal: ArcGisPortalStratum) {
   const groupId = arcgisPortal._catalogGroup.uniqueId + "/ungrouped";
   let existingGroup = arcgisPortal._catalogGroup.terria.getModelById(
     CatalogGroup,
@@ -414,14 +410,12 @@ function createUngroupedGroup(
       arcgisPortal._catalogGroup.ungroupedTitle
     );
   }
-  groups.push(existingGroup);
+  return [existingGroup];
 }
 
-function createGroupsByPortalGroups(
-  arcgisPortal: ArcGisPortalStratum,
-  groups: CatalogGroup[]
-) {
-  if (arcgisPortal._arcgisGroupResponse === undefined) return;
+function createGroupsByPortalGroups(arcgisPortal: ArcGisPortalStratum) {
+  if (arcgisPortal._arcgisGroupResponse === undefined) return [];
+  const out: CatalogGroup[] = [];
   arcgisPortal._arcgisGroupResponse.results.forEach(
     (group: ArcGisPortalGroup) => {
       const groupId = arcgisPortal._catalogGroup.uniqueId + "/" + group.id;
@@ -443,9 +437,10 @@ function createGroupsByPortalGroups(
           );
         }
       }
-      groups.push(existingGroup);
+      out.push(existingGroup);
     }
   );
+  return out;
 }
 
 async function paginateThroughResults(
