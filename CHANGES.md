@@ -2,14 +2,15 @@ Change Log
 ==========
 
 ### MobX Development
+#### next release (8.0.0-alpha.42)
+* [The next improvement]
 
-#### next release (8.0.0-alpha.41)
+#### 8.0.0-alpha.41
 * Add `cacheDuration` and `forceProxy` to `UrlTraits` and add `cacheDuration` defaults to various catalog models.
 * Tsify `proxyCatalogItemUrl`.
 * Simplified SidePanel React refs by removing the double wrapping of the `withTerriaRef()` HOC
 * Merged `withTerriaRef()` HOC with `useRefForTerria()` hook logic
 * Breadcrumbs are always shown instead of only when doing a catalog search
-* [The next improvement]
 
 #### 8.0.0-alpha.40
 * Improve info section of `WebMapServiceCatalogItem` with content from GetCapabilities
