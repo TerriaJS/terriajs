@@ -32,6 +32,8 @@ import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
 import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFunction";
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
+import WebFeatureServiceCatalogItem from "./WebFeatureServiceCatalogItem";
+import WebFeatureServiceCatalogGroup from "./WebFeatureServiceCatalogGroup";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
@@ -43,6 +45,14 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(
     WebMapServiceCatalogGroup.type,
     WebMapServiceCatalogGroup
+  );
+  CatalogMemberFactory.register(
+    WebFeatureServiceCatalogItem.type,
+    WebFeatureServiceCatalogItem
+  );
+  CatalogMemberFactory.register(
+    WebFeatureServiceCatalogGroup.type,
+    WebFeatureServiceCatalogGroup
   );
   CatalogMemberFactory.register(GltfCatalogItem.type, GltfCatalogItem);
   CatalogMemberFactory.register(GeoJsonCatalogItem.type, GeoJsonCatalogItem);
@@ -154,6 +164,11 @@ export default function registerCatalogMembers() {
   UrlToCatalogMemberMapping.register(
     matchesUrl(/\/wms|\=wms/i),
     WebMapServiceCatalogGroup.type,
+    true
+  );
+  UrlToCatalogMemberMapping.register(
+    matchesUrl(/\/wfs|\=wfs/i),
+    WebFeatureServiceCatalogGroup.type,
     true
   );
   UrlToCatalogMemberMapping.register(
