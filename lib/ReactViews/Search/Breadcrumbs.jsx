@@ -40,7 +40,6 @@ class Breadcrumbs extends React.Component {
     });
     this.props.viewState.viewCatalogMember(items[0]);
     this.props.viewState.changeSearchState("");
-    this.props.viewState.showBreadcrumbs(false);
   }
 
   render() {
