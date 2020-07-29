@@ -38,6 +38,7 @@ class Breadcrumbs extends React.Component {
         item.setTrait(CommonStrata.user, "isOpen", true);
       });
     });
+    this.props.viewState.viewCatalogMember(items[0]);
     this.props.viewState.changeSearchState("");
     this.props.viewState.showBreadcrumbs(false);
   }
@@ -53,11 +54,13 @@ class Breadcrumbs extends React.Component {
       // Note: should it reset the text if a person deletes current search and starts a new search?
       <Box
         left
-        styledHeight={"32px"}
+        // styledHeight={"32px"}
+        styledMinHeight={"32px"}
         fullWidth
         backgroundColor={this.props.theme.greyLighter}
         paddedHorizontally={2.4}
         paddedVertically={1}
+        wordBreak="break-all"
       >
         <StyledIcon
           styledWidth={"16px"}
@@ -65,35 +68,47 @@ class Breadcrumbs extends React.Component {
           glyph={Icon.GLYPHS.globe}
         />
         <Spacing right={1.2} />
-        {parentGroups && (
-          <For each="parent" index="i" of={parentGroups}>
-            {/* The first and last two groups use the full name */}
-            <If condition={i <= 1 || i >= parentGroups.length - 2}>
-              <RawButtonAndUnderline
-                type="button"
-                onClick={() => this.openInCatalog(ancestors.slice(0, i + 1))}
-              >
-                <Text small textDark>
-                  {parent}
-                </Text>
-              </RawButtonAndUnderline>
-            </If>
-            {/* The remainder are just '..' to prevent/minimise overflowing */}
-            <If condition={i > 1 && i < parentGroups.length - 2}>
-              <Text small textDark>
-                {"..."}
-              </Text>
-            </If>
+        <Box wrap>
+          {parentGroups && (
+            <For each="parent" index="i" of={parentGroups}>
+              <Choose>
+                {/* No link when it's the current member */}
+                <When condition={i === parentGroups.length - 1}>
+                  <Text small textDark>
+                    {parent}
+                  </Text>
+                </When>
+                {/* The first and last two groups use the full name */}
+                <When condition={i <= 1 || i >= parentGroups.length - 2}>
+                  <RawButtonAndUnderline
+                    type="button"
+                    onClick={() =>
+                      this.openInCatalog(ancestors.slice(i, i + 1))
+                    }
+                  >
+                    <Text small textDark>
+                      {parent}
+                    </Text>
+                  </RawButtonAndUnderline>
+                </When>
+                {/* The remainder are just '..' to prevent/minimise overflowing */}
+                <When condition={i > 1 && i < parentGroups.length - 2}>
+                  <Text small textDark>
+                    {"..."}
+                  </Text>
+                </When>
+              </Choose>
 
-            <If condition={i !== parentGroups.length - 1}>
-              <Box paddedHorizontally={1}>
-                <Text small textDark>
-                  {">"}
-                </Text>
-              </Box>
-            </If>
-          </For>
-        )}
+              <If condition={i !== parentGroups.length - 1}>
+                <Box paddedHorizontally={1}>
+                  <Text small textDark>
+                    {">"}
+                  </Text>
+                </Box>
+              </If>
+            </For>
+          )}
+        </Box>
       </Box>
     );
   }

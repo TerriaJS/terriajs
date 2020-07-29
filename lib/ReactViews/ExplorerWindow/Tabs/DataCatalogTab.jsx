@@ -49,12 +49,8 @@ class DataCatalogTab extends React.Component {
     return (
       <div className={Styles.root}>
         <Box fullHeight column>
-          <Box
-            css={`
-              height: ${showBreadcrumbs ? `calc(100% - 32px)` : `100%`};
-            `}
-          >
-            <Box className={Styles.dataExplorer} flex="1 1 40rem">
+          <Box fullHeight overflow="hidden">
+            <Box className={Styles.dataExplorer} styledWidth="40%">
               {/* ~TODO: Put this back once we add a MobX DataCatalogSearch Provider~ */}
               {/* TODO2: Implement a more generic MobX DataCatalogSearch */}
               {searchState.catalogSearchProvider && (
@@ -81,7 +77,7 @@ class DataCatalogTab extends React.Component {
                 items={this.props.items}
               />
             </Box>
-            <Box flex="1 1 60rem">
+            <Box styledWidth="60%" wordBreak="break-all">
               <DataPreview
                 terria={terria}
                 viewState={this.props.viewState}
