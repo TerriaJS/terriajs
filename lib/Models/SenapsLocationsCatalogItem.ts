@@ -64,23 +64,10 @@ interface LocationsData {
   };
 }
 
-function getBaseUrl(senapsLocationsCatalogItem: SenapsLocationsCatalogItem) {
-  const proxyUrl = senapsLocationsCatalogItem.proxyUrl
-    ? senapsLocationsCatalogItem.proxyUrl + "/"
-    : "";
-  const baseUrl = senapsLocationsCatalogItem.url;
-
-  if (baseUrl) {
-    return proxyUrl + baseUrl;
-  } else {
-    const msg = "models.senaps.missingSenapsBaseUrl";
-
-    throw new TerriaError({
-      title: i18next.t("models.senaps.retrieveErrorTitle"),
-      message: i18next.t(msg)
-    });
-  }
-}
+const missingUrlError = new TerriaError({
+  title: i18next.t("models.senaps.retrieveErrorTitle"),
+  message: i18next.t("models.senaps.missingSenapsBaseUrl")
+});
 
 export class SenapsLocationsStratum extends LoadableStratum(
   SenapsLocationsCatalogItemTraits
@@ -135,9 +122,6 @@ export class SenapsLocationsStratum extends LoadableStratum(
         }
       }
 
-      const theProxyUrl = senapsLocationsCatalogItem.proxyUrl
-        ? senapsLocationsCatalogItem.proxyUrl + "/"
-        : "";
       const fc: SenapsFeatureCollection = {
         type: "FeatureCollection",
         features: locations.map((site: SenapsLocation, i: number) => {
@@ -146,7 +130,7 @@ export class SenapsLocationsStratum extends LoadableStratum(
             properties: {
               id: site.id,
               description: site.description,
-              endpoint: theProxyUrl + site._links.self.href,
+              endpoint: site._links.self.href,
               hasStreams: null,
               streamIds: []
             },
@@ -177,7 +161,13 @@ export class SenapsLocationsStratum extends LoadableStratum(
         );
       }
 
-      const theBaseUrl = getBaseUrl(senapsLocationsCatalogItem);
+      if (!senapsLocationsCatalogItem.url) {
+        throw missingUrlError;
+      }
+      const theBaseUrl = proxyCatalogItemUrl(
+        senapsLocationsCatalogItem,
+        senapsLocationsCatalogItem.url
+      );
 
       const featureInfo = createStratumInstance(FeatureInfoTemplateTraits, {
         template: `<h4>${i18next.t(
@@ -282,8 +272,10 @@ class SenapsLocationsCatalogItem extends AsyncMappableMixin(
   }
 
   _constructLocationsUrl() {
-    const theBaseUrl = getBaseUrl(this);
-    var uri = new URI(`${theBaseUrl}/locations`);
+    if (!this.url) {
+      throw missingUrlError;
+    }
+    var uri = new URI(`${this.url}/locations`);
     if (this.locationIdFilter !== undefined) {
       uri.setSearch("id", this.locationIdFilter);
     }
@@ -293,8 +285,10 @@ class SenapsLocationsCatalogItem extends AsyncMappableMixin(
   }
 
   _constructStreamsUrl(locationId: string) {
-    const theBaseUrl = getBaseUrl(this);
-    var uri = new URI(`${theBaseUrl}/streams`);
+    if (!this.url) {
+      throw missingUrlError;
+    }
+    var uri = new URI(`${this.url}/streams`);
     if (this.streamIdFilter !== undefined) {
       uri.setSearch("id", this.streamIdFilter);
     }
