@@ -5,7 +5,8 @@ export default class ProxyUrlTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
     name: "Proxy URL",
-    description: "The proxy URL of a file or service."
+    description:
+      "An alternative proxy URL of a file or service. If present, it will override the default proxy URL (terriajs-server)."
   })
   proxyUrl?: string;
 }
