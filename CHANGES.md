@@ -2,8 +2,11 @@ Change Log
 ==========
 
 ### MobX Development
-#### next release (8.0.0-alpha.42)
+#### next release (8.0.0-alpha.43)
 * [The next improvement]
+
+#### 8.0.0-alpha.42
+* Added ArcGIS catalog support via ArcGisPortalItemReference
 
 #### 8.0.0-alpha.41
 * Add `cacheDuration` and `forceProxy` to `UrlTraits` and add `cacheDuration` defaults to various catalog models.
