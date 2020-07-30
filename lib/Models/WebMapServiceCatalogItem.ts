@@ -48,6 +48,7 @@ import StratumFromTraits from "./StratumFromTraits";
 import WebMapServiceCapabilities, {
   CapabilitiesLayer,
   CapabilitiesStyle,
+  CapabilitiesContactInformation,
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
 import { callWebCoverageService } from "./callWebCoverageService";
@@ -255,6 +256,13 @@ class GetCapabilitiesStratum extends LoadableStratum(
   get info(): StratumFromTraits<InfoSectionTraits>[] {
     const result: StratumFromTraits<InfoSectionTraits>[] = [];
 
+    function createInfoSection(name: string, content: string | undefined) {
+      const trait = createStratumInstance(InfoSectionTraits);
+      trait.name = name;
+      trait.content = content;
+      return trait;
+    }
+
     let firstDataDescription: string | undefined;
     for (const layer of this.capabilitiesLayers.values()) {
       if (
@@ -268,18 +276,29 @@ class GetCapabilitiesStratum extends LoadableStratum(
       const suffix =
         this.capabilitiesLayers.size === 1 ? "" : ` - ${layer.Title}`;
       const name = `Web Map Service Layer Description${suffix}`;
-
-      const traits = createStratumInstance(InfoSectionTraits);
-      traits.name = name;
-      traits.content = layer.Abstract;
-      result.push(traits);
-
+      result.push(createInfoSection(name, layer.Abstract));
       firstDataDescription = firstDataDescription || layer.Abstract;
     }
 
     // Show the service abstract if there is one and if it isn't the Geoserver default "A compliant implementation..."
     const service = this.capabilities && this.capabilities.Service;
     if (service) {
+      if (service.ContactInformation !== undefined) {
+        result.push(
+          createInfoSection(
+            i18next.t("models.webMapServiceCatalogItem.serviceContact"),
+            getServiceContactInformation(service.ContactInformation)
+          )
+        );
+      }
+
+      result.push(
+        createInfoSection(
+          i18next.t("models.webMapServiceCatalogItem.getCapabilitiesUrl"),
+          this.catalogItem.getCapabilitiesUrl
+        )
+      );
+
       if (
         service &&
         service.Abstract &&
@@ -289,10 +308,12 @@ class GetCapabilitiesStratum extends LoadableStratum(
         ) &&
         service.Abstract !== firstDataDescription
       ) {
-        const traits = createStratumInstance(InfoSectionTraits);
-        traits.name = "Web Map Service Description";
-        traits.content = service.Abstract;
-        result.push(traits);
+        result.push(
+          createInfoSection(
+            i18next.t("models.webMapServiceCatalogItem.serviceDescription"),
+            service.Abstract
+          )
+        );
       }
 
       // Show the Access Constraints if it isn't "none" (because that's the default, and usually a lie).
@@ -300,13 +321,60 @@ class GetCapabilitiesStratum extends LoadableStratum(
         service.AccessConstraints &&
         !/^none$/i.test(service.AccessConstraints)
       ) {
-        const traits = createStratumInstance(InfoSectionTraits);
-        traits.name = "Web Map Service Access Constraints";
-        traits.content = service.AccessConstraints;
-        result.push(traits);
+        result.push(
+          createInfoSection(
+            i18next.t("models.webMapServiceCatalogItem.accessConstraints"),
+            service.AccessConstraints
+          )
+        );
       }
     }
+
     return result;
+  }
+
+  @computed
+  get infoSectionOrder(): string[] {
+    let layerDescriptions = [`Web Map Service Layer Description`];
+
+    // If more than one layer, push layer description titles for each applicable layer
+    if (this.capabilitiesLayers.size > 1) {
+      layerDescriptions = [];
+      this.capabilitiesLayers.forEach(layer => {
+        if (
+          layer &&
+          layer.Abstract &&
+          !containsAny(
+            layer.Abstract,
+            WebMapServiceCatalogItem.abstractsToIgnore
+          )
+        ) {
+          layerDescriptions.push(
+            `Web Map Service Layer Description - ${layer.Title}`
+          );
+        }
+      });
+    }
+
+    return [
+      i18next.t("preview.disclaimer"),
+      i18next.t("description.name"),
+      ...layerDescriptions,
+      i18next.t("preview.datasetDescription"),
+      i18next.t("preview.serviceDescription"),
+      i18next.t("models.webMapServiceCatalogItem.serviceDescription"),
+      i18next.t("preview.resourceDescription"),
+      i18next.t("preview.licence"),
+      i18next.t("preview.accessConstraints"),
+      i18next.t("models.webMapServiceCatalogItem.accessConstraints"),
+      i18next.t("preview.author"),
+      i18next.t("preview.contact"),
+      i18next.t("models.webMapServiceCatalogItem.serviceContact"),
+      i18next.t("preview.created"),
+      i18next.t("preview.modified"),
+      i18next.t("preview.updateFrequency"),
+      i18next.t("models.webMapServiceCatalogItem.getCapabilitiesUrl")
+    ];
   }
 
   @computed
@@ -484,6 +552,11 @@ class WebMapServiceCatalogItem
    */
   static abstractsToIgnore = ["A compliant implementation of WMS"];
 
+  // hide elements in the info section which might show information about the datasource
+  _sourceInfoItemNames = [
+    i18next.t("models.webMapServiceCatalogItem.getCapabilitiesUrl")
+  ];
+
   static defaultParameters = {
     transparent: true,
     format: "image/png",
@@ -521,6 +594,13 @@ class WebMapServiceCatalogItem
 
   loadMapItems(): Promise<void> {
     return this.loadMetadata();
+  }
+
+  @computed get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    }
+    return "0d";
   }
 
   @computed
@@ -1020,6 +1100,34 @@ function formatMomentForWms(m: moment.Moment, duration: moment.Duration) {
   }
 
   return m.format();
+}
+
+function getServiceContactInformation(
+  contactInfo: CapabilitiesContactInformation
+) {
+  const primary = contactInfo.ContactPersonPrimary;
+  let text = "";
+  if (isDefined(primary)) {
+    if (
+      isDefined(primary.ContactOrganization) &&
+      primary.ContactOrganization.length > 0 &&
+      // Geoserver default
+      primary.ContactOrganization !== "The Ancient Geographers"
+    ) {
+      text += primary.ContactOrganization + "<br/>";
+    }
+  }
+
+  if (
+    isDefined(contactInfo.ContactElectronicMailAddress) &&
+    contactInfo.ContactElectronicMailAddress.length > 0 &&
+    // Geoserver default
+    contactInfo.ContactElectronicMailAddress !== "claudius.ptolomaeus@gmail.com"
+  ) {
+    text += `[${contactInfo.ContactElectronicMailAddress}](mailto:${contactInfo.ContactElectronicMailAddress})`;
+  }
+
+  return text;
 }
 
 export default WebMapServiceCatalogItem;

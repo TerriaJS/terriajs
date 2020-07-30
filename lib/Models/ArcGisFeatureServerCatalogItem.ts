@@ -355,7 +355,7 @@ class FeatureServerStratum extends LoadableStratum(
         const color = symbol.color;
         const imageUrl = symbol.imageData
           ? proxyCatalogItemUrl(
-              this,
+              this._item,
               `data:${symbol.contentType};base64,${symbol.imageData}`
             )
           : undefined;
@@ -485,6 +485,13 @@ export default class ArcGisFeatureServerCatalogItem
         });
       }
     });
+  }
+
+  @computed get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    }
+    return "1d";
   }
 
   @computed get geoJsonItem(): GeoJsonCatalogItem | undefined {
@@ -657,8 +664,8 @@ function updateEntityWithEsriStyle(
         );
       }
       const color = symbol.color ? symbol.color : defaultColor;
-      /* 
-        For line containing dashes PolylineDashMaterialProperty is used. 
+      /*
+        For line containing dashes PolylineDashMaterialProperty is used.
         Definition is done using the line patterns converted from hex to decimal dashPattern.
         Source for some of the line patterns is https://www.opengl.org.ru/docs/pg/0204.html, others are created manually
       */

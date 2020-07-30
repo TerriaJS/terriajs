@@ -89,7 +89,7 @@ async function launch(
 
   var uri = new URI(wmsCatalogItem.linkedWcsUrl).query(query);
 
-  var url = proxyCatalogItemUrl(wmsCatalogItem, uri.toString(), "1d");
+  var url = proxyCatalogItemUrl(wmsCatalogItem, uri.toString());
 
   var now = new Date();
   var timestamp = sprintf(
