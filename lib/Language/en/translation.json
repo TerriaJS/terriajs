@@ -404,7 +404,7 @@
     "modified": "Modified",
     "updateFrequency": "Update Frequency",
     "dataCustodian": "Data Custodian",
-    "mayBeExperiencingIssues": "<0>This dataset may currently be experiencing issues</0>"
+    "mayBeExperiencingIssues": "This dataset may currently be experiencing issues"
   },
   "description": {
     "name": "Description",
