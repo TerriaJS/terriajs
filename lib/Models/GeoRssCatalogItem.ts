@@ -224,6 +224,13 @@ export default class GeoRssCatalogItem
     });
   }
 
+  @computed get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    }
+    return "1d";
+  }
+
   @computed get geoJsonItem(): GeoJsonCatalogItem | undefined {
     const stratum = <GeoRssStratum>this.strata.get(GeoRssStratum.stratumName);
     return isDefined(stratum) ? stratum.geoJsonItem : undefined;

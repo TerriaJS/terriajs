@@ -1,0 +1,259 @@
+{
+  "query": "(type:\"Scene Service\" OR          type:\"Feature Service\" OR          type:\"Map Service\" OR          type:\"WMS\" OR          type:\"WFS\" OR          type:\"KML\")",
+  "total": 4,
+  "start": 1,
+  "num": 100,
+  "nextStart": -1,
+  "results": [
+    {
+      "id": "66fabd8c23074ecc85883e0086419adc",
+      "owner": "ss-sds",
+      "created": 1581027970369,
+      "modified": 1582265103917,
+      "guid": null,
+      "name": null,
+      "title": "NSW Transport Theme - Road Segment",
+      "type": "Feature Service",
+      "typeKeywords": [
+        "ArcGIS Server",
+        "Data",
+        "Feature Access",
+        "Feature Service",
+        "Service",
+        "Singlelayer"
+      ],
+      "description": "<p style='margin-top:6px;'><a href='https://portal.spatial.nsw.gov.au/static/exportcontent.html?featureservername=NSW_Transport_Theme&amp;title=NSW Transport Theme - Road Segment' style='-webkit-border-radius:4;-moz-border-radius:4;border-radius:4px;font-family:Arial;color:#ffffff;font-size:18px;background:#0079c1;padding:8px 16px 8px 16px;text-decoration:none;'>Export Data</a></p>\n\n<p><span style='font-size:14.0pt;line-height:107%;font-family:\n&quot;Arial&quot;,sans-serif'>A line feature class representing a section of road having\ncommon attributes and terminating at its physical end or at an intersection\nwith another road at the same grade (same level).</span></p>\n\n<p><span style='font-size:14.0pt;line-height:107%;font-family:\n&quot;Arial&quot;,sans-serif;background:white'>Its position is determined by the\nmethodology used to input into the Topographic Database. Common methods of\ninput include GPS, traced from the cadastre or traced from an orthorectified\nimage. </span></p>\n\n<p style='margin-top:12.0pt;margin-right:0cm;margin-bottom:\n0cm;margin-left:0cm;margin-bottom:.0001pt;line-height:normal'><span style='font-size:14.0pt;font-family:&quot;Arial&quot;,sans-serif;mso-fareast-font-family:\n&quot;Times New Roman&quot;;mso-fareast-language:EN-AU'>Data included in Road Segment\nincludes: </span></p><p style='margin-top:12.0pt;margin-right:0cm;margin-bottom:\n0cm;margin-left:0cm;margin-bottom:.0001pt;line-height:normal'><span style='font-size:14.0pt;font-family:&quot;Arial&quot;,sans-serif;mso-fareast-font-family:\n&quot;Times New Roman&quot;;mso-fareast-language:EN-AU'><br /></span></p>\n\n<p style='mso-margin-top-alt:auto;mso-margin-bottom-alt:\nauto;margin-left:14.2pt;mso-add-space:auto;text-indent:-14.2pt;line-height:\nnormal;mso-list:l0 level1 lfo1'><span style='font-size:\n14.0pt;font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:\nSymbol;mso-fareast-language:EN-AU'><span style='mso-list:Ignore'>·<span style='font:7.0pt &quot;Times New Roman&quot;'>     </span></span></span><span style='font-size:14.0pt;font-family:&quot;Arial&quot;,sans-serif;mso-fareast-font-family:\n&quot;Times New Roman&quot;;mso-fareast-language:EN-AU'>Vehicular Track</span></p>\n\n<p style='mso-margin-top-alt:auto;mso-margin-bottom-alt:\nauto;margin-left:14.2pt;mso-add-space:auto;text-indent:-14.2pt;line-height:\nnormal;mso-list:l0 level1 lfo1'><span style='font-size:\n14.0pt;font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:\nSymbol;mso-fareast-language:EN-AU'><span style='mso-list:Ignore'>·<span style='font:7.0pt &quot;Times New Roman&quot;'>     </span></span></span><span style='font-size:14.0pt;font-family:&quot;Arial&quot;,sans-serif;mso-fareast-font-family:\n&quot;Times New Roman&quot;;mso-fareast-language:EN-AU'>Pathway</span></p>\n\n<p style='mso-margin-top-alt:auto;mso-margin-bottom-alt:\nauto;margin-left:14.2pt;mso-add-space:auto;text-indent:-14.2pt;line-height:\nnormal;mso-list:l0 level1 lfo1'><span style='font-size:\n14.0pt;font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:\nSymbol;mso-fareast-language:EN-AU'><span style='mso-list:Ignore'>·<span style='font:7.0pt &quot;Times New Roman&quot;'>     </span></span></span><span style='font-size:14.0pt;font-family:&quot;Arial&quot;,sans-serif;mso-fareast-font-family:\n&quot;Times New Roman&quot;;mso-fareast-language:EN-AU'>Continuity Line</span></p>\n\n<p style='mso-margin-top-alt:auto;mso-margin-bottom-alt:\nauto;margin-left:14.2pt;mso-add-space:auto;text-indent:-14.2pt;line-height:\nnormal;mso-list:l0 level1 lfo1'><span style='font-size:\n14.0pt;font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:\nSymbol;mso-fareast-language:EN-AU'><span style='mso-list:Ignore'>·<span style='font:7.0pt &quot;Times New Roman&quot;'>     </span></span></span><span style='font-size:14.0pt;font-family:&quot;Arial&quot;,sans-serif;mso-fareast-font-family:\n&quot;Times New Roman&quot;;mso-fareast-language:EN-AU'>Standard Road</span></p>\n\n<p style='mso-margin-top-alt:auto;mso-margin-bottom-alt:\nauto;margin-left:14.2pt;mso-add-space:auto;text-indent:-14.2pt;line-height:\nnormal;mso-list:l0 level1 lfo1'><span style='font-size:\n14.0pt;font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:\nSymbol;mso-fareast-language:EN-AU'><span style='mso-list:Ignore'>·<span style='font:7.0pt &quot;Times New Roman&quot;'>     </span></span></span><span style='font-size:14.0pt;font-family:&quot;Arial&quot;,sans-serif;mso-fareast-font-family:\n&quot;Times New Roman&quot;;mso-fareast-language:EN-AU'>On-off Ramp</span></p>\n\n<p style='mso-margin-top-alt:auto;mso-margin-bottom-alt:\nauto;margin-left:14.2pt;mso-add-space:auto;text-indent:-14.2pt;line-height:\nnormal;mso-list:l0 level1 lfo1'><span style='font-size:\n14.0pt;font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:\nSymbol;mso-fareast-language:EN-AU'><span style='mso-list:Ignore'>·<span style='font:7.0pt &quot;Times New Roman&quot;'>     </span></span></span><span style='font-size:14.0pt;font-family:&quot;Arial&quot;,sans-serif;mso-fareast-font-family:\n&quot;Times New Roman&quot;;mso-fareast-language:EN-AU'>Dual Carriageway</span></p>\n\n<p style='margin-top:0cm;background:white'><span style='font-size:14.0pt;\nfont-family:&quot;Arial&quot;,sans-serif'>Metadata</span></p>\n\n<table border='1' cellpadding='0' cellspacing='0' style='100%;background:white;border-collapse:collapse;border:none;' width='614'>\n <tbody><tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes'>\n  <td style='width:127.2pt;border:solid #CCCCCC 1.0pt;border-bottom:\n  none;mso-border-top-alt:solid #CCCCCC .75pt;mso-border-left-alt:solid #CCCCCC .75pt;\n  mso-border-right-alt:solid #CCCCCC .75pt;padding:.75pt .75pt .75pt .75pt' width='170'>\n  <p><span style='font-size:14.0pt;line-height:107%;font-family:\n  &quot;Arial&quot;,sans-serif'>Type</span></p>\n  </td>\n  <td style='width:333.1pt;border:solid #CCCCCC 1.0pt;border-left:\n  none;mso-border-left-alt:solid #CCCCCC .75pt;mso-border-alt:solid #CCCCCC .75pt;\n  padding:.75pt .75pt .75pt .75pt' width='444'>\n  <p><span style='font-size:14.0pt;line-height:107%;font-family:\n  &quot;Arial&quot;,sans-serif'>Hosted Feature Layer</span></p>\n  </td>\n </tr>\n <tr style='mso-yfti-irow:1'>\n  <td style='width:127.2pt;border-top:none;border-left:solid #CCCCCC 1.0pt;\n  border-bottom:none;border-right:solid #CCCCCC 1.0pt;mso-border-left-alt:solid #CCCCCC .75pt;\n  mso-border-right-alt:solid #CCCCCC .75pt;padding:.75pt .75pt .75pt .75pt' width='170'>\n  <p><span style='font-size:14.0pt;line-height:107%;font-family:\n  &quot;Arial&quot;,sans-serif'>Update Frequency</span></p>\n  </td>\n  <td style='width:333.1pt;border-top:none;border-left:none;\n  border-bottom:solid #CCCCCC 1.0pt;border-right:solid #CCCCCC 1.0pt;\n  mso-border-top-alt:solid #CCCCCC .75pt;mso-border-left-alt:solid #CCCCCC .75pt;\n  mso-border-alt:solid #CCCCCC .75pt;padding:.75pt .75pt .75pt .75pt' width='444'>\n  <p><span style='font-size:14.0pt;line-height:107%;font-family:\n  &quot;Arial&quot;,sans-serif'>As Required</span></p>\n  </td>\n </tr>\n <tr style='mso-yfti-irow:2'>\n  <td style='width:127.2pt;border-top:none;border-left:solid #CCCCCC 1.0pt;\n  border-bottom:none;border-right:solid #CCCCCC 1.0pt;mso-border-left-alt:solid #CCCCCC .75pt;\n  mso-border-right-alt:solid #CCCCCC .75pt;padding:.75pt .75pt .75pt .75pt' width='170'>\n  <p><span style='font-size:14.0pt;line-height:107%;font-family:\n  &quot;Arial&quot;,sans-serif'>Contact Details</span></p>\n  </td>\n  <td style='width:333.1pt;border-top:none;border-left:none;\n  border-bottom:solid #CCCCCC 1.0pt;border-right:solid #CCCCCC 1.0pt;\n  mso-border-top-alt:solid #CCCCCC .75pt;mso-border-left-alt:solid #CCCCCC .75pt;\n  mso-border-alt:solid #CCCCCC .75pt;padding:.75pt .75pt .75pt .75pt' width='444'>\n  <p><span><span style='font-size:14.0pt;\n  line-height:107%;font-family:&quot;Arial&quot;,sans-serif;mso-color-alt:windowtext'><a href='mailto:SS-SDS@customerservice.nsw.gov.au'><span style='mso-color-alt:\n  windowtext'>SS-SDS@customerservice.nsw.gov.au</span></a></span></span><span style='font-size:14.0pt;line-height:107%;font-family:&quot;Arial&quot;,sans-serif'></span></p>\n  </td>\n </tr>\n <tr style='mso-yfti-irow:3'>\n  <td style='width:127.2pt;border-top:none;border-left:solid #CCCCCC 1.0pt;\n  border-bottom:none;border-right:solid #CCCCCC 1.0pt;mso-border-left-alt:solid #CCCCCC .75pt;\n  mso-border-right-alt:solid #CCCCCC .75pt;padding:.75pt .75pt .75pt .75pt' width='170'>\n  <p><span style='font-size:14.0pt;line-height:107%;font-family:\n  &quot;Arial&quot;,sans-serif'>Relationship to Themes and Datasets</span></p>\n  </td>\n  <td style='width:333.1pt;border-top:none;border-left:none;\n  border-bottom:solid #CCCCCC 1.0pt;border-right:solid #CCCCCC 1.0pt;\n  mso-border-top-alt:solid #CCCCCC .75pt;mso-border-left-alt:solid #CCCCCC .75pt;\n  mso-border-alt:solid #CCCCCC .75pt;padding:.75pt .75pt .75pt .75pt' width='444'>\n  <p style='margin-bottom:12.0pt'><span style='font-size:14.0pt;\n  line-height:107%;font-family:&quot;Arial&quot;,sans-serif'>NSW Transport Theme of the\n  Foundation Spatial Data Framework</span></p>\n  </td>\n </tr>\n <tr style='mso-yfti-irow:4'>\n  <td style='width:127.2pt;border-top:none;border-left:solid #CCCCCC 1.0pt;\n  border-bottom:none;border-right:solid #CCCCCC 1.0pt;mso-border-left-alt:solid #CCCCCC .75pt;\n  mso-border-right-alt:solid #CCCCCC .75pt;padding:.75pt .75pt .75pt .75pt' width='170'>\n  <p style='margin-bottom:0cm;margin-bottom:.0001pt'><span style='font-size:14.0pt;line-height:107%;font-family:&quot;Arial&quot;,sans-serif'>Accuracy</span></p>\n  </td>\n  <td style='width:333.1pt;border-top:none;border-left:none;\n  border-bottom:solid #CCCCCC 1.0pt;border-right:solid #CCCCCC 1.0pt;\n  mso-border-top-alt:solid #CCCCCC .75pt;mso-border-left-alt:solid #CCCCCC .75pt;\n  mso-border-alt:solid #CCCCCC .75pt;padding:.75pt .75pt .75pt .75pt' width='444'>\n  <p><span style='font-size:14.0pt;line-height:107%;font-family:\n  &quot;Arial&quot;,sans-serif'>The dataset maintains a positional relationship to, and\n  alignment with, the Lot and Property digital datasets. The Lot and Property\n  data was captured by digitising the best available cadastral mapping at a\n  variety of scales and accuracies, ranging from 1:500 to 1:250 000 according\n  to the National Mapping Council of Australia, Standards of Map Accuracy\n  (1975). Therefore, the position of the feature instance will be within 0.5mm\n  at map scale for 90% of the well-defined points. That is, 1:500 = 0.25m,\n  1:2000 = 1m, 1:4000 = 2m, 1:25000 = 12.5m, 1:50000 = 25m and 1:100000 = 50m.\n  A program of positional upgrade (accuracy improvement) is currently underway.</span></p>\n  </td>\n </tr>\n <tr style='mso-yfti-irow:5'>\n  <td style='width:127.2pt;border-top:none;border-left:solid #CCCCCC 1.0pt;\n  border-bottom:none;border-right:solid #CCCCCC 1.0pt;mso-border-left-alt:solid #CCCCCC .75pt;\n  mso-border-right-alt:solid #CCCCCC .75pt;padding:.75pt .75pt .75pt .75pt' width='170'>\n  <p><span style='font-size:14.0pt;line-height:107%;font-family:\n  &quot;Arial&quot;,sans-serif'>Standards and Specifications</span></p>\n  </td>\n  <td style='width:333.1pt;border-top:none;border-left:none;\n  border-bottom:solid #CCCCCC 1.0pt;border-right:solid #CCCCCC 1.0pt;\n  mso-border-top-alt:solid #CCCCCC .75pt;mso-border-left-alt:solid #CCCCCC .75pt;\n  mso-border-alt:solid #CCCCCC .75pt;padding:.75pt .75pt .75pt .75pt' width='444'>\n  <p><span style='font-size:14.0pt;line-height:107%;font-family:\n  &quot;Arial&quot;,sans-serif'>Open Geospatial Consortium (OGC) implemented and\n  compatible for consumption by common GIS platforms. Available as either cache\n  or non-cache, depending on client use or requirement.</span></p>\n  </td>\n </tr>\n <tr style='mso-yfti-irow:6'>\n  <td style='width:127.2pt;border-top:none;border-left:solid #CCCCCC 1.0pt;\n  border-bottom:none;border-right:solid #CCCCCC 1.0pt;mso-border-left-alt:solid #CCCCCC .75pt;\n  mso-border-right-alt:solid #CCCCCC .75pt;padding:.75pt .75pt .75pt .75pt' width='170'>\n  <p><span style='font-size:14.0pt;line-height:107%;font-family:\n  &quot;Arial&quot;,sans-serif'>Aggregators</span></p>\n  </td>\n  <td style='width:333.1pt;border-top:none;border-left:none;\n  border-bottom:solid #CCCCCC 1.0pt;border-right:solid #CCCCCC 1.0pt;\n  mso-border-top-alt:solid #CCCCCC .75pt;mso-border-left-alt:solid #CCCCCC .75pt;\n  mso-border-alt:solid #CCCCCC .75pt;padding:.75pt .75pt .75pt .75pt' width='444'>\n  <p><span style='font-size:14.0pt;line-height:107%;font-family:\n  &quot;Arial&quot;,sans-serif'>Spatial Services | Department of Customer Service</span></p>\n  </td>\n </tr>\n <tr style='mso-yfti-irow:7'>\n  <td style='width:127.2pt;border-top:none;border-left:solid #CCCCCC 1.0pt;\n  border-bottom:none;border-right:solid #CCCCCC 1.0pt;mso-border-left-alt:solid #CCCCCC .75pt;\n  mso-border-right-alt:solid #CCCCCC .75pt;padding:.75pt .75pt .75pt .75pt' width='170'>\n  <p><span style='font-size:14.0pt;line-height:107%;font-family:\n  &quot;Arial&quot;,sans-serif'>Distributors</span></p>\n  </td>\n  <td style='width:333.1pt;border-top:none;border-left:none;\n  border-bottom:solid #CCCCCC 1.0pt;border-right:solid #CCCCCC 1.0pt;\n  mso-border-top-alt:solid #CCCCCC .75pt;mso-border-left-alt:solid #CCCCCC .75pt;\n  mso-border-alt:solid #CCCCCC .75pt;padding:.75pt .75pt .75pt .75pt' width='444'>\n  <p><span style='font-size:14.0pt;line-height:107%;font-family:\n  &quot;Arial&quot;,sans-serif'>Spatial Services | Department of Customer Service</span></p>\n  </td>\n </tr>\n <tr style='mso-yfti-irow:8;mso-yfti-lastrow:yes'>\n  <td style='width:127.2pt;border:solid #CCCCCC 1.0pt;border-top:\n  none;mso-border-left-alt:solid #CCCCCC .75pt;mso-border-bottom-alt:solid #CCCCCC .75pt;\n  mso-border-right-alt:solid #CCCCCC .75pt;padding:.75pt .75pt .75pt .75pt' width='170'>\n  <p><span style='font-size:14.0pt;line-height:107%;font-family:\n  &quot;Arial&quot;,sans-serif'>Dataset Producers and Contributors</span></p>\n  </td>\n  <td style='width:333.1pt;border-top:none;border-left:none;\n  border-bottom:solid #CCCCCC 1.0pt;border-right:solid #CCCCCC 1.0pt;\n  mso-border-top-alt:solid #CCCCCC .75pt;mso-border-left-alt:solid #CCCCCC .75pt;\n  mso-border-alt:solid #CCCCCC .75pt;padding:.75pt .75pt .75pt .75pt' width='444'>\n  <p><span style='font-size:14.0pt;line-height:107%;font-family:\n  &quot;Arial&quot;,sans-serif'>Spatial Services | Department of Customer Service</span></p>\n  </td>\n </tr>\n</tbody></table>\n\n<p><span style='font-size:14.0pt;line-height:107%;\nfont-family:&quot;Arial&quot;,sans-serif'> </span></p>",
+      "tags": [
+        "roadsegment",
+        "standardroad",
+        "onofframp",
+        "dualcarriageway",
+        "vehiculartrack",
+        "pathway",
+        "continuityline"
+      ],
+      "snippet": "A road is a line feature dataset maintained within the Foundation Spatial data Framework Transport Theme.",
+      "thumbnail": "thumbnail/thumbnail1581028005916.png",
+      "documentation": null,
+      "extent": [
+        [
+          140.9839,
+          -37.5043
+        ],
+        [
+          159.0979,
+          -28.1555
+        ]
+      ],
+      "categories": [
+        "/Categories/Transport"
+      ],
+      "spatialReference": null,
+      "accessInformation": null,
+      "licenseInfo": "<p style='margin-top:0cm;margin-right:0cm;margin-bottom:7.5pt;margin-left:0cm;\nbackground:white'><span style='font-size:14.0pt;font-family:&quot;Arial&quot;,sans-serif'>Spatial\nServices, a division of the Department of Customer Service creates and manages\nIntellectual Property for the Crown in right of New South Wales. Acquisition of\nthis data is subject to the customer entering into an appropriate Creative\nCommons license agreement. To the extent that Creative Commons licensing\napplies, all data and other material produced by Spatial Services constitutes Crown\ncopyright. Spatial Services has applied the Creative Commons Attribution 4.0\nAustralia Licence. Spatial Services asserts the right to be attributed as\nauthor of the original material in the following manner: </span></p>\n\n<p style='margin-top:0cm;margin-right:0cm;margin-bottom:7.5pt;margin-left:0cm;\nbackground:white'><img alt='' src='https://i.creativecommons.org/l/by/3.0/88x31.png' style='background-color: transparent;' /> <span style='font-size:14.0pt;font-family:&quot;Arial&quot;,sans-serif'>©\nSpatial Services 2019.</span></p>\n\n<p style='margin-top:0cm;margin-right:0cm;margin-bottom:7.5pt;margin-left:0cm;\nbackground:white'><span style='font-size:14.0pt;font-family:&quot;Arial&quot;,sans-serif'>Additional\nterms for the use of Spatial Services material. Any derived products which are\ncreated will be required to clearly mark the date that any extractions from the\nSpatial Services Spatial Database occurred. All Intellectual Property which is\nowned by Spatial Services should only be loaded on any external cloud platforms\nif Spatial Services’ Intellectual Property remains unchanged, maintained and\npreserved.</span></p>",
+      "culture": "english (united states)",
+      "properties": null,
+      "url": "https://portal.spatial.nsw.gov.au/server/rest/services/NSW_Transport_Theme/FeatureServer",
+      "proxyFilter": null,
+      "access": "public",
+      "size": -1,
+      "appCategories": [],
+      "industries": [],
+      "languages": [],
+      "largeThumbnail": null,
+      "banner": null,
+      "screenshots": [],
+      "listed": false,
+      "numComments": 0,
+      "numRatings": 0,
+      "avgRating": 0,
+      "numViews": 10260,
+      "scoreCompleteness": 100,
+      "groupDesignations": null
+    },
+    {
+      "id": "5155f71ab3154eb286278879021c24b8",
+      "owner": "ss-sds",
+      "created": 1565790193119,
+      "modified": 1588914259205,
+      "guid": null,
+      "name": null,
+      "title": "TopoShp",
+      "type": "Feature Service",
+      "typeKeywords": [
+        "ArcGIS Server",
+        "Data",
+        "Feature Access",
+        "Feature Service",
+        "Metadata",
+        "providerSDS",
+        "Service",
+        "Hosted Service"
+      ],
+      "description": "<p>Add a description of the item.</p><p>Use multiple paragraphs if necessary.</p><p><font size='5'>Metadata</font></p><table><tbody><tr><td style='width:50%;'>Type</td><td style='border: 1px solid #ccc'></td></tr><tr><td>Update Frequency</td><td style='border: 1px solid #ccc'></td></tr><tr><td>Contact Details</td><td style='border: 1px solid #ccc'></td></tr><tr><td>Relationship to Themes and Datasets</td><td style='border: 1px solid #ccc'><br /></td></tr><tr><td>Accuracy</td><td style='border: 1px solid #ccc'></td></tr><tr><td>Standards and Specifications</td><td style='border: 1px solid #ccc'><br /></td></tr><tr><td>Aggregators</td><td style='border: 1px solid #ccc'></td></tr><tr><td>Distributors</td><td style='border: 1px solid #ccc'><br /></td></tr><tr><td>Dataset Producers and Contributors</td><td style='border: 1px solid #ccc'><br /></td></tr></tbody></table><a style='-webkit-border-radius:4;-moz-border-radius:4;border-radius:4px;font-family:Arial;color:#ffffff;font-size:18px;background:#0079c1;padding:8px 16px 8px 16px;text-decoration:none;' href='/static/exportcontent.html?featureservername=TopoShp'>Export Data</a>",
+      "tags": [
+        "topo"
+      ],
+      "snippet": null,
+      "thumbnail": null,
+      "documentation": null,
+      "extent": [
+        [
+          140.999279035799,
+          -37.505942651320034
+        ],
+        [
+          159.2566666637356,
+          -28.12499999956465
+        ]
+      ],
+      "categories": [],
+      "spatialReference": "WGS_1984_Web_Mercator_Auxiliary_Sphere",
+      "accessInformation": null,
+      "licenseInfo": null,
+      "culture": "en-us",
+      "properties": null,
+      "url": "https://portal.spatial.nsw.gov.au/server/rest/services/Hosted/TopoShp/FeatureServer",
+      "proxyFilter": null,
+      "access": "public",
+      "size": -1,
+      "appCategories": [],
+      "industries": [],
+      "languages": [],
+      "largeThumbnail": null,
+      "banner": null,
+      "screenshots": [],
+      "listed": false,
+      "numComments": 0,
+      "numRatings": 0,
+      "avgRating": 0,
+      "numViews": 10932,
+      "scoreCompleteness": 15,
+      "groupDesignations": null
+    },
+    {
+      "id": "0ab1011d6ab7427d9a0a590b06cfcd40",
+      "owner": "nswrfs",
+      "created": 1591322717100,
+      "modified": 1591754362991,
+      "guid": null,
+      "name": null,
+      "title": "NSW Bush Fire Prone Land (WFS)",
+      "type": "WFS",
+      "typeKeywords": [
+        "Map Service",
+        "Multilayer",
+        "WFS",
+        "ArcGIS Server",
+        "Web Feature Service",
+        "Metadata",
+        "Service",
+        "Data",
+        "OGC"
+      ],
+      "description": "<div><p style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:\nnormal'><span style='font-size: 11.5pt; font-family: Helvetica, sans-serif;'>Bush Fire Prone Land is mapped within a local government area, which\nbecomes the trigger for planning for bush fire protection. Bush Fire Prone Land\nmapping is intended to designate areas of the State that are considered to be\nhigher bush fire risk for development control purposes. Not being designated\nbush fire prone is not a guarantee that losses from bush fires will not occur.<br />\nThe NSW Bush Fire Prone Land dataset is a map prepared in accordance with the\nGuide for Bush Fire Prone Land Mapping (BFPL Mapping Guide) and certified by\nthe Commissioner of NSW RFS under purposes of Section 10.3 of the Environmental\nPlanning and Assessment Act 1979 No 203. </span></p>\n\n<p style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:\nnormal'><span style='font-size: 11.5pt; font-family: Helvetica, sans-serif;'>Over time there has been various releases of the BFPL Mapping Guide, in\nwhich the categories and types of vegetation included in the BFPL map have\nchanged. The version of the guide under which, each polygon or LGA was\ncertified is contained in the data. An area of land that can support a bush\nfire or is likely to be subject to bush fire attack, as designated on a bush\nfire prone land map. </span></p>\n\n<p style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:\nnormal'><span style='font-size: 11.5pt; font-family: Helvetica, sans-serif;'>The definition of bush fire vegetation categories under guideline version\n5b: <br />\n* Vegetation Category 1 consists of: &gt; Areas of forest, woodlands, heaths\n(tall and short), forested wetlands and timber plantations. <br />\n* Vegetation Category 2 consists of: &gt;Rainforests. &gt;Lower risk vegetation\nparcels. These vegetation parcels represent a lower bush fire risk to\nsurrounding development and consist of: - Remnant vegetation; - Land with\nongoing land management practices that actively reduces bush fire risk. <br />\n* Vegetation Category 3 consists of: &gt; Grasslands, freshwater wetlands,\nsemi-arid woodlands, alpine complex and arid shrublands. <br />\n* Buffers are created based on the bushfire vegetation, with buffering distance\nbeing 100 metres for vegetation category 1 and 30 metres for vegetation\ncategory 2 and 3. </span><span style='font-size:12.0pt;font-family:&quot;Times New Roman&quot;,serif;\nmso-fareast-font-family:&quot;Times New Roman&quot;;mso-fareast-language:EN-AU'></span></p>\n\n<p style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:\nnormal'><span style='font-size: 11.5pt; font-family: Helvetica, sans-serif;'>Vegetation excluded from the bushfire vegetation categories include\nisolated areas of vegetation less than one hectare, managed lands and some\nagricultural lands. Please refer to BFPL Mapping Guide for a full list of\nexclusions.</span></p>\n\n<p style='margin-bottom:0cm;margin-bottom:.0001pt;line-height:\nnormal'><span style='font-size: 11.5pt; font-family: Helvetica, sans-serif;'>The legislative context of this dataset is as follows: <br />\nOn 1 August 2002, the Rural Fires and Environmental Assessment Legislation\nAmendment Act 2002 (Amendment Act) came into effect. The Act amended both the\nEnvironmental Planning and Assessment Act 1979 and the Rural Fire Services Act\n1997 to ensure that people, property and the environment are more fully\nprotected against the dangers that may arise from bushfires. Councils are\nrequired to map bushfire prone land within their local government area, which\nbecomes the trigger for the consideration of bushfire protection measures when\ndeveloping land. BFPL Mapping Guidelines are available from www.rfs.nsw.gov.au</span></p>\n\n<p><a href='http://www.rfs.nsw.gov.au/__data/assets/pdf_file/0011/4412/Guideline-for-Councils-to-Bushfire-Prone-Area-Land-Mapping.pdf'>http://www.rfs.nsw.gov.au/__data/assets/pdf_file/0011/4412/Guideline-for-Councils-to-Bushfire-Prone-Area-Land-Mapping.pdf</a></p><p><font size='5'>Metadata</font></p><table><tbody><tr><td style='width:50%;'>Type</td><td style='border: 1px solid #ccc'></td></tr><tr><td>Update Frequency</td><td style='border: 1px solid #ccc'>As Required</td></tr><tr><td>Contact Details</td><td style='border: 1px solid #ccc'>gis@rfs.nsw.gov.au</td></tr><tr><td>Relationship to Themes and Datasets</td><td style='border: 1px solid #ccc'>Often based of local and state government vegetation maps</td></tr><tr><td>Accuracy</td><td style='border: 1px solid #ccc'>+/- 5m</td></tr><tr><td>Standards and Specifications</td><td style='border: 1px solid #ccc'>Display Colours:<br />Category 1:  RGB (255,0,0) ; HexDec: FFF0000<br />Category 2:  RGB (255,210,0) ; HexDec: FFD200<br />Category 3:  RGB (255,128,0) ; HexDec: FF8000<br />Buffer (0):  RGB (255,255,115) ; HexDec FFFF73<br /></td></tr><tr><td>Aggregators</td><td style='border: 1px solid #ccc'></td></tr><tr><td>Distributors</td><td style='border: 1px solid #ccc'>NSW RFS</td></tr><tr><td>Dataset Producers and Contributors</td><td style='border: 1px solid #ccc'>NSW Local and State Government, as well as contracted firms.</td></tr></tbody></table></div><a href='/static/exportcontent.html?featureservername=NSW_Bush_Fire_Prone_Land' style='-webkit-border-radius:4;-moz-border-radius:4;border-radius:4px;font-family:Arial;color:#ffffff;font-size:18px;background:#0079c1;padding:8px 16px 8px 16px;text-decoration:none;'>Export Data</a>",
+      "tags": [
+        "administration",
+        "planning",
+        "NSW Rural Fire Service",
+        "emergency management",
+        "fire"
+      ],
+      "snippet": "Bush Fire Prone Land is mapped within a local government area, which becomes the trigger for planning for bush fire protection. BFPL mapping is intended to designate areas of NSW that are considered to be higher bush fire risk for development control",
+      "thumbnail": "thumbnail/thumbnail1583993368746.jpeg",
+      "documentation": null,
+      "extent": [
+        [
+          140,
+          -37
+        ],
+        [
+          153,
+          -28
+        ]
+      ],
+      "categories": [],
+      "spatialReference": "WGS_1984_Web_Mercator_Auxiliary_Sphere",
+      "accessInformation": "NSW Rural Fires Service 2019",
+      "licenseInfo": "CC BY<div>with attribution &quot;NSW Rural Fire Service 2019&quot;</div><div>Organisations are requested to display and symbolise the map using this data according the the BFPL guidelines.</div>",
+      "culture": "en-us",
+      "properties": null,
+      "url": "https://portal.spatial.nsw.gov.au/portal/services/Hosted/NSW_Bush_Fire_Prone_Land_(WFS)/MapServer/WFSServer",
+      "proxyFilter": null,
+      "access": "public",
+      "size": -1,
+      "appCategories": [],
+      "industries": [],
+      "languages": [],
+      "largeThumbnail": null,
+      "banner": null,
+      "screenshots": [],
+      "listed": false,
+      "numComments": 0,
+      "numRatings": 1,
+      "avgRating": 3.75,
+      "numViews": 11,
+      "scoreCompleteness": 83,
+      "groupDesignations": null
+    },
+    {
+      "id": "575b8e050c62476e81cde280fb17c115",
+      "owner": "ss-sds",
+      "created": 1562895345483,
+      "modified": 1574141848476,
+      "guid": null,
+      "name": "Historical_Imagery_1970s",
+      "title": "Historical Imagery 1970s",
+      "type": "Map Service",
+      "typeKeywords": [
+        "ArcGIS Server",
+        "Data",
+        "Map Service",
+        "Service",
+        "WMTS",
+        "Metadata",
+        "Hosted Service"
+      ],
+      "description": "<p>Add a description of the item.</p><p>Use multiple paragraphs if necessary.</p><p><font size='5'>Metadata</font></p><table><tbody><tr><td style='width:50%;'>Type</td><td style='border: 1px solid #ccc'></td></tr><tr><td>Update Frequency</td><td style='border: 1px solid #ccc'></td></tr><tr><td>Contact Details</td><td style='border: 1px solid #ccc'></td></tr><tr><td>Relationship to Themes and Datasets</td><td style='border: 1px solid #ccc'><br /></td></tr><tr><td>Accuracy</td><td style='border: 1px solid #ccc'></td></tr><tr><td>Standards and Specifications</td><td style='border: 1px solid #ccc'><br /></td></tr><tr><td>Aggregators</td><td style='border: 1px solid #ccc'></td></tr><tr><td>Distributors</td><td style='border: 1px solid #ccc'><br /></td></tr><tr><td>Dataset Producers and Contributors</td><td style='border: 1px solid #ccc'><br /></td></tr></tbody></table>",
+      "tags": [
+        "HAP"
+      ],
+      "snippet": "Historical Imagery 1970s",
+      "thumbnail": "thumbnail/thumbnail.JPEG",
+      "documentation": null,
+      "extent": [
+        [
+          150,
+          -33
+        ],
+        [
+          151,
+          -33
+        ]
+      ],
+      "categories": [],
+      "spatialReference": "WGS_1984_Web_Mercator_Auxiliary_Sphere",
+      "accessInformation": null,
+      "licenseInfo": null,
+      "culture": "en-au",
+      "properties": null,
+      "url": "https://portal.spatial.nsw.gov.au/server/rest/services/Hosted/Historical_Imagery_1970s/MapServer",
+      "proxyFilter": null,
+      "access": "public",
+      "size": -1,
+      "appCategories": [],
+      "industries": [],
+      "languages": [],
+      "largeThumbnail": null,
+      "banner": null,
+      "screenshots": [],
+      "listed": false,
+      "numComments": 0,
+      "numRatings": 0,
+      "avgRating": 0,
+      "numViews": 12413,
+      "scoreCompleteness": 51,
+      "groupDesignations": null
+    }
+  ]
+}
