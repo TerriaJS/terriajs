@@ -240,7 +240,7 @@ describe("SenapsLocationsCatalogItem", function() {
     });
   });
 
-  describe("Can get filtered items default proxy", async function() {
+  describe("Can get filtered items via default proxy", async function() {
     beforeEach(async function() {
       runInAction(() => {
         item = new SenapsLocationsCatalogItem("test", new Terria());
