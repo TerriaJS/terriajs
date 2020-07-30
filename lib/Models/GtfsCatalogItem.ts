@@ -22,7 +22,6 @@ import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ModelGraphics from "terriajs-cesium/Source/DataSources/ModelGraphics";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
 import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
-import Axis from "terriajs-cesium/Source/Scene/Axis";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import URI from "urijs";
 import loadArrayBuffer from "../Core/loadArrayBuffer";
@@ -49,6 +48,8 @@ import Terria from "./Terria";
 import VehicleData from "./VehicleData";
 import { BaseModel } from "./Model";
 import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
+
+const Axis: Axis = require("terriajs-cesium/Source/Scene/Axis").default;
 
 interface RectangleExtent {
   east: number;

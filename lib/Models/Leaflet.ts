@@ -10,7 +10,6 @@ import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
-import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import cesiumRequestAnimationFrame from "terriajs-cesium/Source/Core/requestAnimationFrame";
@@ -47,6 +46,9 @@ import LatLonHeight from "../Core/LatLonHeight";
 import MapInteractionMode from "./MapInteractionMode";
 import i18next from "i18next";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+
+const FeatureDetection: FeatureDetection = require("terriajs-cesium/Source/Core/FeatureDetection")
+  .default;
 
 interface SplitterClips {
   left: string;

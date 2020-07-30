@@ -15,8 +15,8 @@ import TweenCollection from "terriajs-cesium/Source/Scene/TweenCollection";
 import isDefined from "../Core/isDefined";
 
 declare module "terriajs-cesium/Source/Scene/Scene" {
-  export default class Scene {
-    get tweens(): TweenCollection;
+  export default interface Scene {
+    tweens: TweenCollection;
   }
 }
 
