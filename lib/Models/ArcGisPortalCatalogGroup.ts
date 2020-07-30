@@ -89,17 +89,9 @@ export class ArcGisPortalStratum extends LoadableStratum(
         );
         if (portalGroupsServerResponse === undefined) return undefined;
       } else if (catalogGroup.groupBy === "usersGroups") {
-        const portalUsername = terria.userProperties.get("portalUsername");
-        if (portalUsername === undefined) {
-          throw new TerriaError({
-            title: i18next.t("models.arcgisPortal.errorLoadingTitle"),
-            message: "still"
-          });
-          return undefined;
-        }
         const groupSearchUri = new URI(catalogGroup.url)
           .segment(`/sharing/rest/community/self`)
-          .addQuery({ num: 100, f: "json" });
+          .addQuery({ f: "json" });
 
         const response = await getPortalInformation(
           groupSearchUri,
