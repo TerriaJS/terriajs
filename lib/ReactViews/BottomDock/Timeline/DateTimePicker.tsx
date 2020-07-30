@@ -290,6 +290,7 @@ class DateTimePicker extends React.Component<PropsType> {
     ) {
       return null;
     }
+
     const dayObject =
       datesObject[this.currentDateIndice.year][this.currentDateIndice.month];
     if (dayObject.dates.length > 31) {
@@ -391,9 +392,9 @@ class DateTimePicker extends React.Component<PropsType> {
 
   renderHourView(datesObject: ObjectifiedYears) {
     if (
-      !this.currentDateIndice.year ||
-      !this.currentDateIndice.month ||
-      !this.currentDateIndice.day
+      !isDefined(this.currentDateIndice.year) ||
+      !isDefined(this.currentDateIndice.month) ||
+      !isDefined(this.currentDateIndice.day)
     ) {
       return null;
     }
@@ -453,10 +454,10 @@ class DateTimePicker extends React.Component<PropsType> {
 
   renderMinutesView(datesObject: ObjectifiedYears) {
     if (
-      !this.currentDateIndice.year ||
-      !this.currentDateIndice.month ||
-      !this.currentDateIndice.day ||
-      !this.currentDateIndice.hour
+      !isDefined(this.currentDateIndice.year) ||
+      !isDefined(this.currentDateIndice.month) ||
+      !isDefined(this.currentDateIndice.day) ||
+      !isDefined(this.currentDateIndice.hour)
     ) {
       return null;
     }
