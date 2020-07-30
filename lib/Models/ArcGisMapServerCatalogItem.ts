@@ -352,6 +352,13 @@ export default class ArcGisMapServerCatalogItem
     return this.loadMetadata();
   }
 
+  @computed get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    }
+    return "1d";
+  }
+
   @computed get imageryProvider() {
     const stratum = <MapServerStratum>(
       this.strata.get(MapServerStratum.stratumName)
@@ -472,7 +479,7 @@ function getBaseURI(item: ArcGisMapServerCatalogItem) {
 async function getJson(item: ArcGisMapServerCatalogItem, uri: any) {
   try {
     const response = await loadJson(
-      proxyCatalogItemUrl(item, uri.addQuery("f", "json").toString(), "1d")
+      proxyCatalogItemUrl(item, uri.addQuery("f", "json").toString())
     );
     return response;
   } catch (err) {

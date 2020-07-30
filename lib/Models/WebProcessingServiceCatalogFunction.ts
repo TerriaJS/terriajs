@@ -99,7 +99,6 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
   get typeName() {
     return "Web Processing Service (WPS)";
   }
-  readonly proxyCacheDuration = "1d";
 
   readonly parameterConverters: ParameterConverter[] = [
     LiteralDataConverter,
@@ -113,6 +112,13 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
 
   @observable
   private processDescription?: ProcessDescription;
+
+  @computed get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    }
+    return "0d";
+  }
 
   /**
    * Returns the proxied URL for the DescribeProcess endpoint.
@@ -129,7 +135,7 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
       Identifier: this.identifier
     });
 
-    return proxyCatalogItemUrl(this, uri.toString(), this.proxyCacheDuration);
+    return proxyCatalogItemUrl(this, uri.toString());
   }
 
   /**
@@ -145,7 +151,7 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
       request: "Execute",
       version: "1.0.0"
     });
-    return proxyCatalogItemUrl(this, uri.toString(), this.proxyCacheDuration);
+    return proxyCatalogItemUrl(this, uri.toString());
   }
 
   async forceLoadMetadata() {

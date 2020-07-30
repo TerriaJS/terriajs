@@ -2,7 +2,6 @@ import i18next from "i18next";
 import { runInAction, computed } from "mobx";
 import TerriaError from "../Core/TerriaError";
 import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../ModelMixins/TableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -85,6 +84,11 @@ export default class CsvCatalogItem
     );
   }
 
+  @computed
+  get cacheDuration() {
+    return super.cacheDuration || "1d";
+  }
+
   async exportData() {
     if (isDefined(this._csvFile)) {
       return {
@@ -152,7 +156,7 @@ export default class CsvCatalogItem
       return;
     }
 
-    Csv.parseUrl(proxyCatalogItemUrl(this, this.refreshUrl, "1d"), true).then(
+    Csv.parseUrl(proxyCatalogItemUrl(this, this.refreshUrl), true).then(
       dataColumnMajor => {
         runInAction(() => {
           if (this.polling.shouldReplaceData) {
@@ -175,7 +179,7 @@ export default class CsvCatalogItem
     } else if (this._csvFile !== undefined) {
       return Csv.parseFile(this._csvFile, true);
     } else if (this.url !== undefined) {
-      return Csv.parseUrl(proxyCatalogItemUrl(this, this.url, "1d"), true);
+      return Csv.parseUrl(proxyCatalogItemUrl(this, this.url), true);
     } else {
       return Promise.reject(
         new TerriaError({

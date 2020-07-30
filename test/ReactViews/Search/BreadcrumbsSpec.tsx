@@ -2,6 +2,7 @@ const create: any = require("react-test-renderer").create;
 import React from "react";
 import { act } from "react-dom/test-utils";
 import Terria from "../../../lib/Models/Terria";
+import CatalogGroup from "../../../lib/Models/CatalogGroupNew";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import Breadcrumbs from "../../../lib/ReactViews/Search/Breadcrumbs";
 const DataCatalogTab: any = require("../../../lib/ReactViews/ExplorerWindow/Tabs/DataCatalogTab")
@@ -14,6 +15,7 @@ import { runInAction } from "mobx";
 describe("Breadcrumbs", function() {
   let terria: Terria;
   let viewState: ViewState;
+  let catalogGroup: CatalogGroup;
 
   let testRenderer: any;
 
@@ -26,12 +28,14 @@ describe("Breadcrumbs", function() {
       catalogSearchProvider: null,
       locationSearchProviders: []
     });
+    catalogGroup = new CatalogGroup("group-of-geospatial-cats", terria);
+    terria.addModel(catalogGroup);
   });
 
-  describe("with breadcrumbsShown set to true", function() {
+  describe("with a prevewied catalog item", function() {
     it("renders", function() {
       runInAction(() => {
-        viewState.showBreadcrumbs(true);
+        viewState.viewCatalogMember(catalogGroup);
       });
 
       act(() => {
@@ -49,11 +53,14 @@ describe("Breadcrumbs", function() {
     });
   });
 
-  describe("with breadcrumbsShown set to false", function() {
+  describe("without a previewed catalog item", function() {
     it("does not render", function() {
       runInAction(() => {
-        viewState.showBreadcrumbs(false);
+        viewState.clearPreviewedItem();
       });
+      // ensure it's truly undefined
+      expect(viewState.previewedItem).toBeUndefined();
+      expect(viewState.userDataPreviewedItem).toBeUndefined();
 
       act(() => {
         testRenderer = create(
