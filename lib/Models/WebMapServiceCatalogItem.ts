@@ -255,6 +255,13 @@ class GetCapabilitiesStratum extends LoadableStratum(
   get info(): StratumFromTraits<InfoSectionTraits>[] {
     const result: StratumFromTraits<InfoSectionTraits>[] = [];
 
+    const capabilitiesTraits = createStratumInstance(InfoSectionTraits);
+    capabilitiesTraits.name = i18next.t(
+      "models.webMapServiceCatalogItem.getCapabilitiesUrl"
+    );
+    capabilitiesTraits.content = this.catalogItem.getCapabilitiesUrl;
+    result.push(capabilitiesTraits);
+
     let firstDataDescription: string | undefined;
     for (const layer of this.capabilitiesLayers.values()) {
       if (
@@ -446,19 +453,13 @@ class DiffStratum extends LoadableStratum(WebMapServiceCatalogItemTraits) {
     const firstDate = this.catalogItem.firstDiffDate;
     const secondDate = this.catalogItem.secondDiffDate;
     if (diffStyleId && firstDate && secondDate) {
-      return this.catalogItem.getLegendUrlForDiffStyle(
+      return this.catalogItem.getLegendUrlForStyle(
         diffStyleId,
         JulianDate.fromIso8601(firstDate),
         JulianDate.fromIso8601(secondDate)
       );
     }
     return undefined;
-  }
-
-  @computed
-  get availableDiffStyles() {
-    // Currently only NDVI
-    return ["NDVI"];
   }
 
   @computed
@@ -489,6 +490,11 @@ class WebMapServiceCatalogItem
    * Geoserver's "A compliant implementation of WMS..." stock abstract.
    */
   static abstractsToIgnore = ["A compliant implementation of WMS"];
+
+  // hide elements in the info section which might show information about the datasource
+  _sourceInfoItemNames = [
+    i18next.t("models.webMapServiceCatalogItem.getCapabilitiesUrl")
+  ];
 
   static defaultParameters = {
     transparent: true,
@@ -623,6 +629,14 @@ class WebMapServiceCatalogItem
     }
   }
 
+  @computed
+  get canDiffImages(): boolean {
+    const hasValidDiffStyles = this.availableDiffStyles.some(diffStyle =>
+      this.styleSelector?.availableStyles.find(style => style.id === diffStyle)
+    );
+    return hasValidDiffStyles === true;
+  }
+
   showDiffImage(
     firstDate: JulianDate,
     secondDate: JulianDate,
@@ -648,24 +662,26 @@ class WebMapServiceCatalogItem
     this.setTrait(CommonStrata.user, "isShowingDiff", false);
   }
 
-  getLegendUrlForDiffStyle(
-    diffStyleId: string,
-    firstDate: JulianDate,
-    secondDate: JulianDate
+  getLegendUrlForStyle(
+    styleId: string,
+    firstDate?: JulianDate,
+    secondDate?: JulianDate
   ) {
-    const firstTag = this.getTagForTime(firstDate);
-    const secondTag = this.getTagForTime(secondDate);
-    const time = `${firstTag},${secondTag}`;
+    const firstTag = firstDate && this.getTagForTime(firstDate);
+    const secondTag = secondDate && this.getTagForTime(secondDate);
+    const time = filterOutUndefined([firstTag, secondTag]).join(",");
     const layerName = this.availableStyles.find(style =>
-      style.styles.some(s => s.name === diffStyleId)
+      style.styles.some(s => s.name === styleId)
     )?.layerName;
-    return URI(
+    const uri = URI(
       `${this.url}?service=WMS&version=1.1.0&request=GetLegendGraphic&format=image/png&transparent=True`
     )
       .addQuery("layer", encodeURIComponent(layerName || ""))
-      .addQuery("styles", encodeURIComponent(diffStyleId))
-      .addQuery("time", time)
-      .toString();
+      .addQuery("styles", encodeURIComponent(styleId));
+    if (time) {
+      uri.addQuery("time", time);
+    }
+    return uri.toString();
   }
 
   @computed

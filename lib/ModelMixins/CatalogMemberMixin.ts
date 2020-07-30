@@ -1,8 +1,7 @@
-import { computed, observable, runInAction } from "mobx";
+import { computed } from "mobx";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
 import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
-import { createTransformer } from "mobx-utils";
 import AsyncLoader from "../Core/AsyncLoader";
 import AccessControlMixin from "./AccessControlMixin";
 
@@ -11,6 +10,14 @@ type CatalogMember = Model<CatalogMemberTraits>;
 function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
   abstract class CatalogMemberMixin extends AccessControlMixin(Base) {
     abstract get type(): string;
+
+    // The names of items in the CatalogMember's info array that contain details of the source of this CatalogMember's data.
+    // This should be overridden by children of this class. For an example see the WebMapServiceCatalogItem
+    _sourceInfoItemNames: string[] | undefined = undefined;
+
+    get typeName(): string | undefined {
+      return;
+    }
 
     private _metadataLoader = new AsyncLoader(
       this.forceLoadMetadata.bind(this)
@@ -69,6 +76,19 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
         (this.info !== undefined &&
           this.info.some(info => descriptionRegex.test(info.name || "")))
       );
+    }
+
+    @computed
+    get infoWithoutSources() {
+      const sourceInfoItemNames = this._sourceInfoItemNames;
+      if (sourceInfoItemNames === undefined) {
+        return this.info;
+      } else {
+        return this.info.filter(infoItem => {
+          if (infoItem.name === undefined) return true;
+          return sourceInfoItemNames.indexOf(infoItem.name) === -1;
+        });
+      }
     }
 
     dispose() {

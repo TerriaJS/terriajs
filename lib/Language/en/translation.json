@@ -85,12 +85,37 @@
   "diffTool": {
     "title": "Difference",
     "exit": "Exit",
-    "computeDifference": "This layer visualizes the difference between imagery captured at two discrete points in time.",
-    "styles": "Styles",
+    "instructions": {
+      "setDateA": "Set date A",
+      "setDateB": "Set date B",
+      "changeDates": "Change dates",
+      "paneDescription": "Visualise and compare the difference of data between two dates at one location."
+    },
     "choosePreview": "Choose a preview style",
-    "chooseDifference": "Choose a difference style",
-    "disabledButtonPrompt": "Select a precise location and difference style to proceed with change detection.",
+    "chooseDifference": "Choose a difference output",
     "differenceResultsTitle": "Change detection results",
+    "labels": {
+      "area": "Area",
+      "dates": "Dates",
+      "dateComparisonA": "Date Comparison A",
+      "dateComparisonB": "Date Comparison B",
+      "sourceDataset": "Source dataset",
+      "previewStyle": "Preview style",
+      "differenceOutput": "Difference output",
+      "generateDiffButtonText": "Generate change detection",
+      "disabledButtonPrompt": "Please note: A location and dates must be selected to proceed with change detection",
+      "areaFilterSelection": "Area filter selection"
+    },
+    "locationDisplay": {
+      "noLocationSelected": {
+        "title": "No location selected",
+        "description": "To filter image date picker by location, please select a point on the map"
+      },
+      "locationSelected": {
+        "title": "Location selected & dates filtered",
+        "description": "To change, click another point on the map"
+      }
+    },
     "locationPicker": {
       "initialMessages": {
         "title": "Select a precise location",
@@ -110,11 +135,10 @@
     },
     "datePicker": {
       "previousDateTitle": "Previous date",
-      "nextDateTitle": "Previous date",
+      "nextDateTitle": "Next date",
       "dateButtonTitle": "Select a date",
       "dateOutOfRange": "Currently out of range"
-    },
-    "generateDiffButtonText": "Generate change detection"
+    }
   },
   "legend": {
     "lat": "Lat",
@@ -920,6 +944,20 @@
       "serviceErrorMessage": "This service does not have any details available.",
       "errorLoadingTitle": "Error loading GPX",
       "errorLoadingMessage": "An error occurred while loading a GPX file.  This may indicate that the file is invalid or that it is not supported by {{appName}}. If you would like assistance or further information, please email us at {{email}}"
+    },
+    "georss": {
+      "name": "GeoRSS",
+      "subtitle": "Subtitle",
+      "updated": "Updated",
+      "category": "Category",
+      "description": "Description",
+      "copyrightText": "Copyright Text",
+      "link": "Link",
+      "author": "Author",
+      "errorLoadingTitle": "Could not load GeoRSS",
+      "errorLoadingMessage": "An error occurred while loading a GeoRSS file. <p>If you entered the link manually, please verify that the link is correct.</p><p>This error may also indicate that the server does not support {{cors}}.  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by 'appName' itself. <p>If you did not enter this link manually, this error may indicate that the data source you're trying to add is temporarily unavailable or there is a problem with your internet connection.  Try adding the data source again, and if the problem persists, please report it by sending an email to {{email}}.",
+      "unableToLoadItemTitle": "No GeoRSS available",
+      "unableToLoadItemMessage": "The GeoRSS catalog item cannot be loaded because it was not configured with a `url`, or `geoRss` property."
     },
     "imageryLayer": {
       "intervalSupportErrorTitle": "Intervals not supported",
