@@ -1,20 +1,20 @@
-import React from "react";
-import styled from "styled-components";
-import moment from "moment";
 import classNames from "classnames";
-
-import { formatDateTime } from "./DateFormats";
-import Icon from "../../Icon";
-import Styles from "./timeline.scss";
-import { withTranslation, WithTranslation } from "react-i18next";
+import { action, observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
-import { observable, runInAction, action, computed } from "mobx";
+import moment from "moment";
+import React from "react";
+import { withTranslation, WithTranslation } from "react-i18next";
+import styled from "styled-components";
+
 import isDefined from "../../../Core/isDefined";
 import {
-  AsJulian,
   ObjectifiedDates,
   ObjectifiedYears
 } from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
+import Icon from "../../Icon";
+
+import { formatDateTime } from "./DateFormats";
+import Styles from "./timeline.scss";
 
 const dateFormat = require("dateformat");
 const DatePicker = require("react-datepicker");

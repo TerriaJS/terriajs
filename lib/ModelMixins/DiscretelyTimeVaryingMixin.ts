@@ -1,18 +1,16 @@
-import { action, computed, runInAction, trace } from "mobx";
+import { action, computed, runInAction } from "mobx";
 import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
 import Constructor from "../Core/Constructor";
-import filterOutUndefined from "../Core/filterOutUndefined";
+import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
 import { calculateDomain, ChartItem } from "../Models/Chartable";
 import CommonStrata from "../Models/CommonStrata";
 import Model from "../Models/Model";
 import DiscretelyTimeVaryingTraits from "../Traits/DiscretelyTimeVaryingTraits";
 import TimeVarying from "./TimeVarying";
-import { uniq } from "lodash-es";
-import isDefined from "../Core/isDefined";
 
 type DiscretelyTimeVarying = Model<DiscretelyTimeVaryingTraits>;
 
