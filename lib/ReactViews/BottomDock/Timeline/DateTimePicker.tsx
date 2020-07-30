@@ -1,12 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import dateFormat from "dateformat";
-import DatePicker from "react-datepicker";
 import moment from "moment";
 import classNames from "classnames";
-import uniq from "lodash-es/uniq";
-
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 
 import { formatDateTime } from "./DateFormats";
 import Icon from "../../Icon";
@@ -20,6 +15,9 @@ import {
   ObjectifiedDates,
   ObjectifiedYears
 } from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
+
+const dateFormat = require("dateformat");
+const DatePicker = require("react-datepicker");
 
 function daysInMonth(month: number, year: number) {
   const n = new Date(year, month, 0).getDate();
