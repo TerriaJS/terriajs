@@ -91,9 +91,15 @@ export class SenapsLocationsStratum extends LoadableStratum(
 
   static async load(senapsLocationsCatalogItem: SenapsLocationsCatalogItem) {
     const locationsUrl = senapsLocationsCatalogItem._constructLocationsUrl();
+    const proxyUrl = senapsLocationsCatalogItem.proxyUrl;
     try {
       const locationsResponse: LocationsData = await loadJson(
-        proxyCatalogItemUrl(senapsLocationsCatalogItem, locationsUrl, "0d")
+        proxyCatalogItemUrl(
+          senapsLocationsCatalogItem,
+          locationsUrl,
+          "0d",
+          proxyUrl
+        )
       );
       const locations = locationsResponse._embedded.locations;
 
@@ -104,7 +110,8 @@ export class SenapsLocationsStratum extends LoadableStratum(
         const streamUrl = proxyCatalogItemUrl(
           senapsLocationsCatalogItem,
           senapsLocationsCatalogItem._constructStreamsUrl(locationId),
-          "0d"
+          "0d",
+          proxyUrl
         );
         streamPromises.push(loadJson(streamUrl));
       }
@@ -164,9 +171,11 @@ export class SenapsLocationsStratum extends LoadableStratum(
       if (!senapsLocationsCatalogItem.url) {
         throw missingUrlError;
       }
-      const theBaseUrl = proxyCatalogItemUrl(
+      const proxiedBaseUrl = proxyCatalogItemUrl(
         senapsLocationsCatalogItem,
-        senapsLocationsCatalogItem.url
+        senapsLocationsCatalogItem.url,
+        "0d",
+        proxyUrl
       );
 
       const featureInfo = createStratumInstance(FeatureInfoTemplateTraits, {
@@ -184,9 +193,9 @@ export class SenapsLocationsStratum extends LoadableStratum(
     <chart
       id='{{id}}'
       title='{{id}}'
-      sources='${theBaseUrl}/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=1440&media=csv&csvheader=false&sort=descending,${theBaseUrl}/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=7200&media=csv&csvheader=false&sort=descending'
+      sources='${proxiedBaseUrl}/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=1440&media=csv&csvheader=false&sort=descending,${proxiedBaseUrl}/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=7200&media=csv&csvheader=false&sort=descending'
       source-names='1d,5d'
-      downloads='${theBaseUrl}/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=1440&media=csv&csvheader=false&sort=descending,${theBaseUrl}/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=7200&media=csv&csvheader=false&sort=descending'
+      downloads='${proxiedBaseUrl}/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=1440&media=csv&csvheader=false&sort=descending,${proxiedBaseUrl}/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=7200&media=csv&csvheader=false&sort=descending'
       download-names='1d,5d'
     >
     </chart>

@@ -9,7 +9,7 @@ import SearchBoxAndResults from "../Search/SearchBoxAndResults";
 import Workbench from "../Workbench/Workbench";
 import FullScreenButton from "./FullScreenButton";
 
-import { withTerriaRef } from "../HOCs/withTerriaRef";
+import { useRefForTerria } from "../Hooks/useRefForTerria";
 
 import Box from "../../Styled/Box";
 import Spacing from "../../Styled/Spacing";
@@ -130,8 +130,8 @@ const SidePanel = observer(
     propTypes: {
       terria: PropTypes.object.isRequired,
       viewState: PropTypes.object.isRequired,
-      refFromHOC: PropTypes.object.isRequired,
-      refFromHOCForUpload: PropTypes.object.isRequired,
+      refForExploreMapData: PropTypes.object.isRequired,
+      refForUploadData: PropTypes.object.isRequired,
       t: PropTypes.func.isRequired,
       theme: PropTypes.object.isRequired
     },
@@ -174,7 +174,7 @@ const SidePanel = observer(
             <Spacing bottom={2} />
             <Box justifySpaceBetween>
               <SidePanelButton
-                ref={this.props.refFromHOC}
+                ref={this.props.refForExploreMapData}
                 onClick={e => this.onAddDataClicked(e)}
                 title={addData}
                 btnText={addData}
@@ -187,7 +187,7 @@ const SidePanel = observer(
                 />
               </SidePanelButton>
               <SidePanelButton
-                ref={this.props.refFromHOCForUpload}
+                ref={this.props.refForUploadData}
                 onClick={e => this.onAddLocalDataClicked(e)}
                 title={t("addData.load")}
                 btnText={uploadText}
@@ -230,24 +230,27 @@ const SidePanel = observer(
   })
 );
 
-// Used to re-route a second re-HOC wrapping of withTerriaRef
-// a better solution is probably to update the HOC to take an array of keys
-const RefForUpload = props => {
-  const SidePanelWrappedForExplore = withTerriaRef(
-    SidePanel,
-    EXPLORE_MAP_DATA_NAME
+// Used to create two refs for <SidePanel /> to consume, rather than
+// using the withTerriaRef() HOC twice, designed for a single ref
+const SidePanelWithRefs = props => {
+  const refForExploreMapData = useRefForTerria(
+    EXPLORE_MAP_DATA_NAME,
+    props.viewState
   );
-  // it's important we pull outt refFromHOC and not override it again on rest
-  // so that the second HOC can correctly provide the EXPLORE_MAP_DATA_NAME prop
-  const { refFromHOC, ...rest } = props;
+  const refForUploadData = useRefForTerria(
+    SIDE_PANEL_UPLOAD_BUTTON_NAME,
+    props.viewState
+  );
   return (
-    <SidePanelWrappedForExplore refFromHOCForUpload={refFromHOC} {...rest} />
+    <SidePanel
+      {...props}
+      refForExploreMapData={refForExploreMapData}
+      refForUploadData={refForUploadData}
+    />
   );
 };
-RefForUpload.propTypes = {
-  refFromHOC: PropTypes.object.isRequired
+SidePanelWithRefs.propTypes = {
+  viewState: PropTypes.object.isRequired
 };
 
-module.exports = withTranslation()(
-  withTheme(withTerriaRef(RefForUpload, SIDE_PANEL_UPLOAD_BUTTON_NAME))
-);
+module.exports = withTranslation()(withTheme(SidePanelWithRefs));

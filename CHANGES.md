@@ -5,6 +5,18 @@ Change Log
 
 #### next release (8.0.0-alpha.41)
 * Remove hard coded senaps base url.
+#### next release (8.0.0-alpha.43)
+* [The next improvement]
+
+#### 8.0.0-alpha.42
+* Added ArcGIS catalog support via ArcGisPortalItemReference
+
+#### 8.0.0-alpha.41
+* Add `cacheDuration` and `forceProxy` to `UrlTraits` and add `cacheDuration` defaults to various catalog models.
+* Tsify `proxyCatalogItemUrl`.
+* Simplified SidePanel React refs by removing the double wrapping of the `withTerriaRef()` HOC
+* Merged `withTerriaRef()` HOC with `useRefForTerria()` hook logic
+* Breadcrumbs are always shown instead of only when doing a catalog search
 
 #### 8.0.0-alpha.40
 * Improve info section of `WebMapServiceCatalogItem` with content from GetCapabilities
