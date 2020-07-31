@@ -1,5 +1,6 @@
 import { computed } from "mobx";
 import { createTransformer } from "mobx-utils";
+import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import ConstantColorMap from "../Map/ConstantColorMap";
 import DiscreteColorMap from "../Map/DiscreteColorMap";
@@ -16,12 +17,10 @@ import TableChartStyleTraits, {
 import TableColorStyleTraits from "../Traits/TableColorStyleTraits";
 import TablePointSizeStyleTraits from "../Traits/TablePointSizeStyleTraits";
 import TableStyleTraits from "../Traits/TableStyleTraits";
+import TableTimeStyleTraits from "../Traits/TableTimeStyleTraits";
 import TableTraits from "../Traits/TableTraits";
 import TableColumnType from "./TableColumnType";
 import TableStyle from "./TableStyle";
-import DiscreteTimeTraits from "../Traits/DiscreteTimeTraits";
-import filterOutUndefined from "../Core/filterOutUndefined";
-import TableTimeStyleTraits from "../Traits/TableTimeStyleTraits";
 
 const DEFAULT_ID_COLUMN = "id";
 
@@ -274,12 +273,12 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
     }, {});
 
     return Object.entries(colorMapValues)
-      .map(value => {
-        return createStratumInstance(LegendItemTraits, {
-          multipleTitles: value[1],
-          color: value[0]
-        });
-      })
+      .map(([color, multipleTitles]) =>
+        createStratumInstance(LegendItemTraits, {
+          multipleTitles,
+          color
+        })
+      )
       .concat(nullBin);
   }
 
