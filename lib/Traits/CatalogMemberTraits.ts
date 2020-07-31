@@ -2,6 +2,8 @@ import ModelTraits from "./ModelTraits";
 import objectArrayTrait from "./objectArrayTrait";
 import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
+import primitiveArrayTrait from "./primitiveArrayTrait";
+import i18next from "i18next";
 
 export class InfoSectionTraits extends ModelTraits {
   @primitiveTrait({
@@ -79,6 +81,28 @@ export default class CatalogMemberTraits extends ModelTraits {
     idProperty: "name"
   })
   info: InfoSectionTraits[] = [];
+
+  @primitiveArrayTrait({
+    type: "string",
+    name: "InfoSectionOrder",
+    description: `An array of section titles definining the display order of info sections.
+    If this property is not defined, {@link DataPreviewSections}'s DEFAULT_SECTION_ORDER is used`
+  })
+  infoSectionOrder?: string[] = [
+    i18next.t("preview.disclaimer"),
+    i18next.t("description.name"),
+    i18next.t("preview.dataDescription"),
+    i18next.t("preview.datasetDescription"),
+    i18next.t("preview.serviceDescription"),
+    i18next.t("preview.resourceDescription"),
+    i18next.t("preview.licence"),
+    i18next.t("preview.accessConstraints"),
+    i18next.t("preview.author"),
+    i18next.t("preview.contact"),
+    i18next.t("preview.created"),
+    i18next.t("preview.modified"),
+    i18next.t("preview.updateFrequency")
+  ];
 
   @primitiveTrait({
     type: "boolean",

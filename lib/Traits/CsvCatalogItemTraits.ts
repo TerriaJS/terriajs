@@ -55,15 +55,6 @@ export default class CsvCatalogItemTraits extends mixTraits(
   })
   csvString?: string;
 
-  // TODO: move this to a common trait
-  @primitiveTrait({
-    type: "string",
-    name: "URL Cache Duration",
-    description:
-      "The amount of time to cache the contents of the URL when it is accessed via the proxy."
-  })
-  cacheDuration?: string;
-
   @objectTrait({
     name: "Polling",
     description: "Polling configuration",

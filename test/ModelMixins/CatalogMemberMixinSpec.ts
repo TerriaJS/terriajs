@@ -24,11 +24,11 @@ describe("CatalogMemberMixin", function() {
     });
 
     it(" - info and infoWithoutSources can produce different results", function() {
-      expect(wmsItem.info.length).toBe(4);
+      expect(wmsItem.info.length).toBe(5);
       if (wmsItem._sourceInfoItemNames !== undefined) {
         expect(wmsItem._sourceInfoItemNames.length).toBe(1);
       }
-      expect(wmsItem.infoWithoutSources.length).toBe(3);
+      expect(wmsItem.infoWithoutSources.length).toBe(4);
     });
   });
 });
