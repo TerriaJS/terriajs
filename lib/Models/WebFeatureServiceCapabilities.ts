@@ -14,6 +14,7 @@ import {
   CapabilitiesExtent
 } from "./WebMapServiceCapabilities";
 import { computed } from "mobx";
+import isDefined from "../Core/isDefined";
 
 export interface FeatureType {
   readonly Name?: string;
@@ -108,30 +109,34 @@ export default class WebFeatureServiceCapabilities {
   }
 
   get featureTypes(): FeatureType[] {
+    const featureTypesJson = this.json.FeatureTypeList?.FeatureType as Array<
+      any
+    >;
+    if (!isDefined(featureTypesJson) || !Array.isArray(featureTypesJson)) {
+      return [];
+    }
     return (
-      (this.json.FeatureTypeList?.FeatureType as Array<any>)?.map<FeatureType>(
-        (json: any) => {
-          const lowerCorner = json["WGS84BoundingBox"]?.["LowerCorner"].split(
-            " "
-          );
-          const upperCorner = json["WGS84BoundingBox"]?.["UpperCorner"].split(
-            " "
-          );
+      featureTypesJson.map<FeatureType>((json: any) => {
+        const lowerCorner = json["WGS84BoundingBox"]?.["LowerCorner"].split(
+          " "
+        );
+        const upperCorner = json["WGS84BoundingBox"]?.["UpperCorner"].split(
+          " "
+        );
 
-          return {
-            Title: json.Title,
-            Name: json.Name,
-            Abstract: json.Abstract,
-            Keyword: json["Keywords"]?.["Keyword"],
-            WGS84BoundingBox: {
-              westBoundLongitude: lowerCorner && parseFloat(lowerCorner[0]),
-              southBoundLatitude: lowerCorner && parseFloat(lowerCorner[1]),
-              eastBoundLongitude: upperCorner && parseFloat(upperCorner[0]),
-              northBoundLatitude: upperCorner && parseFloat(upperCorner[1])
-            }
-          };
-        }
-      ) || []
+        return {
+          Title: json.Title,
+          Name: json.Name,
+          Abstract: json.Abstract,
+          Keyword: json["Keywords"]?.["Keyword"],
+          WGS84BoundingBox: {
+            westBoundLongitude: lowerCorner && parseFloat(lowerCorner[0]),
+            southBoundLatitude: lowerCorner && parseFloat(lowerCorner[1]),
+            eastBoundLongitude: upperCorner && parseFloat(upperCorner[0]),
+            northBoundLatitude: upperCorner && parseFloat(upperCorner[1])
+          }
+        };
+      }) || []
     );
   }
 
