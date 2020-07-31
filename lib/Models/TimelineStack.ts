@@ -1,9 +1,10 @@
-import { action, computed, observable, IReactionDisposer, autorun } from "mobx";
+import { action, autorun, computed, IReactionDisposer, observable } from "mobx";
+import ClockRange from "terriajs-cesium/Source/Core/ClockRange";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import TimeVarying from "../ModelMixins/TimeVarying";
-import CommonStrata from "./CommonStrata";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
+import TimeVarying from "../ModelMixins/TimeVarying";
+import CommonStrata from "./CommonStrata";
 
 /**
  * Manages a stack of all the time-varying datasets currently attached to the timeline. Provides
@@ -24,7 +25,7 @@ export default class TimelineStack {
   defaultTimeVarying: TimeVarying | undefined;
 
   private _disposeClockAutorun: IReactionDisposer;
-  private _disposeTickSubscription: Cesium.Event.RemoveCallback;
+  private _disposeTickSubscription: Cesium.Event.RemoveCallback | undefined;
 
   constructor(readonly clock: Cesium.Clock) {
     // Keep the Cesium clock in sync with the top layer's clock.
@@ -57,10 +58,17 @@ export default class TimelineStack {
         this.clock.multiplier = 60.0;
       }
       this.clock.shouldAnimate = !topLayer.isPaused;
-    });
+      this.clock.clockRange = ClockRange.LOOP_STOP;
 
-    this._disposeTickSubscription = this.clock.onTick.addEventListener(() => {
-      this.syncToClock(this.tickStratumId);
+      if (this._disposeTickSubscription === undefined) {
+        // We should start synchronizing only after first run of this autorun so that
+        // the clock parameters are set correctly.
+        this._disposeTickSubscription = this.clock.onTick.addEventListener(
+          () => {
+            this.syncToClock(this.tickStratumId);
+          }
+        );
+      }
     });
   }
 
@@ -118,7 +126,7 @@ export default class TimelineStack {
   @action
   addToTop(item: TimeVarying) {
     var currentIndex = this.items.indexOf(item);
-    this.items.push(item);
+    this.items.unshift(item);
     if (currentIndex > -1) {
       this.items.splice(currentIndex, 1);
     }
@@ -134,6 +142,14 @@ export default class TimelineStack {
   remove(item: TimeVarying) {
     var index = this.items.indexOf(item);
     this.items.splice(index, 1);
+  }
+
+  /**
+   * Removes all layers.
+   */
+  @action
+  removeAll() {
+    this.items = [];
   }
 
   /**

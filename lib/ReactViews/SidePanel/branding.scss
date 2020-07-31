@@ -9,7 +9,7 @@
 
   @media (min-width: $sm) {
     width: 100%;
-    padding: $padding;
+    padding: 0 $padding;
     height: $logo-height;
   }
 
@@ -18,7 +18,7 @@
     max-width: 100%;
 
     // For some reason without this IE9 flips out and stretches the images.
-    width: auto;
-    height: auto;
+    // width: auto;
+    // height: auto;
   }
 }

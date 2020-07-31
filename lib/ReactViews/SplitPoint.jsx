@@ -6,7 +6,8 @@ import PropTypes from "prop-types";
 
 const SplitPoint = createReactClass({
   propTypes: {
-    loadComponent: PropTypes.func.isRequired
+    loadComponent: PropTypes.func.isRequired,
+    loadingProgress: PropTypes.node
   },
   getInitialState() {
     return { component: null };
@@ -16,7 +17,10 @@ const SplitPoint = createReactClass({
   },
   render() {
     const ChunkComponent = this.state.component;
-    return ChunkComponent && <ChunkComponent {...this.props} />;
+    const loadingProgress = this.props.loadingProgress;
+    if (ChunkComponent) return <ChunkComponent {...this.props} />;
+    else if (loadingProgress) return loadingProgress;
+    else return null;
   }
 });
 

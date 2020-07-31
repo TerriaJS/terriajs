@@ -8,6 +8,7 @@ import Styles from "./icon.scss";
 // icon.jsx
 export const GLYPHS = {
   calendar: require("../../wwwroot/images/icons/calendar.svg"),
+  calendar2: require("../../wwwroot/images/icons/calendar2.svg"),
   about: require("../../wwwroot/images/icons/about.svg"),
   add: require("../../wwwroot/images/icons/add.svg"),
   arHover0: require("../../wwwroot/images/icons/ar-hover0.svg"),
@@ -102,6 +103,7 @@ export const GLYPHS = {
   layers: require("../../wwwroot/images/icons/pulling-away-layers-icon.svg"),
   start: require("../../wwwroot/images/icons/getting-started-icon.svg"),
   cube: require("../../wwwroot/images/icons/interact.svg"),
+  globe: require("../../wwwroot/images/icons/globe.svg"),
   playInverted: require("../../wwwroot/images/icons/play-inverted.svg"),
   video: require("../../wwwroot/images/icons/video.svg"),
   compare: require("../../wwwroot/images/icons/compare.svg"),
@@ -111,7 +113,13 @@ export const GLYPHS = {
   plusThick: require("../../wwwroot/images/icons/zoom-plus.svg"),
   refreshThick: require("../../wwwroot/images/icons/zoom-refresh.svg"),
   satellite: require("../../wwwroot/images/icons/satellite.svg"),
-  uploadThin: require("../../wwwroot/images/icons/upload-thin.svg")
+  mapDataActive: require("../../wwwroot/images/icons/map-data-active.svg"),
+  mapDataInactive: require("../../wwwroot/images/icons/map-data-inactive.svg"),
+  uploadThin: require("../../wwwroot/images/icons/upload-thin.svg"),
+  oneTwoThree: require("../../wwwroot/images/icons/one-two-three.svg"),
+  accordionOpen: require("../../wwwroot/images/icons/accordion-open.svg"),
+  accordionClose: require("../../wwwroot/images/icons/accordion-close.svg"),
+  editor: require("../../wwwroot/images/icons/editor.svg")
 };
 
 export const Icon = createReactClass({
@@ -135,7 +143,7 @@ export const Icon = createReactClass({
 });
 
 export const StyledIcon = styled(Icon)`
-  display:block;
+  display: ${props => (props.displayInline ? `inline` : `block`)};
   flex-shrink: 0;
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
   ${props => props.styledHeight && `height: ${props.styledHeight};`}

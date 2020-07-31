@@ -24,7 +24,7 @@ export default class DiscretelyTimeVaryingTraits extends mixTraits(
   @primitiveTrait({
     type: "boolean",
     name: "Show in chart",
-    description: "Whether to show data availability on chart."
+    description: "Whether to plot data availability on a chart."
   })
   showInChartPanel = false;
 
@@ -35,6 +35,16 @@ export default class DiscretelyTimeVaryingTraits extends mixTraits(
       "Type determines how the data availibility will be plotted on chart. eg: momentLines, momentPoints"
   })
   chartType: ChartItemType = "momentLines";
+
+  // This trait proabably doesn't belong here and should instead be on a new
+  //  trait class ChartTraits, however there are complexities to changing
+  //  chart-related traits, mixins and interfaces to support this change.
+  @primitiveTrait({
+    type: "string",
+    name: "Chart Disclaimer",
+    description: "A HTML string to show above the chart as a disclaimer"
+  })
+  chartDisclaimer?: string;
 
   @primitiveTrait({
     type: "boolean",

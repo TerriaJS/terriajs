@@ -142,7 +142,8 @@ describe("ImageryLayerCatalogItem", function() {
         error: new CesiumEvent()
       };
       catalogItem = {
-        terria: terria
+        terria: terria,
+        tileErrorThresholdBeforeDisabling: 5
       };
       imageryProvider = {
         requestImage: function(x, y, level) {

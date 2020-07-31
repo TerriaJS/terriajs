@@ -254,13 +254,27 @@ export default class CkanCatalogGroup extends UrlMixin(
     return i18next.t("models.ckan.nameServer");
   }
 
+  @computed get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    }
+    return "1d";
+  }
+
   protected forceLoadMetadata(): Promise<void> {
-    return CkanServerStratum.load(this).then(stratum => {
-      if (stratum === undefined) return;
-      runInAction(() => {
-        this.strata.set(CkanServerStratum.stratumName, stratum);
+    const ckanServerStratum = <CkanServerStratum | undefined>(
+      this.strata.get(CkanServerStratum.stratumName)
+    );
+    if (!ckanServerStratum) {
+      return CkanServerStratum.load(this).then(stratum => {
+        if (stratum === undefined) return;
+        runInAction(() => {
+          this.strata.set(CkanServerStratum.stratumName, stratum);
+        });
       });
-    });
+    } else {
+      return Promise.resolve();
+    }
   }
 
   protected forceLoadMembers(): Promise<void> {
@@ -390,7 +404,7 @@ async function getCkanDatasets(
 ): Promise<CkanServerResponse | undefined> {
   try {
     const response: CkanServerResponse = await loadJson(
-      proxyCatalogItemUrl(catalogGroup, uri.toString(), "1d")
+      proxyCatalogItemUrl(catalogGroup, uri.toString())
     );
     return response;
   } catch (err) {
