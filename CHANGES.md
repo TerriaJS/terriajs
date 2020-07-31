@@ -3,6 +3,9 @@ Change Log
 
 ### Next Release
 
+
+### v7.11.7
+
 * Add additional region mapping boundaries.
 
 ### v7.11.6
