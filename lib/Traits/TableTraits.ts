@@ -64,12 +64,4 @@ export default class TableTraits extends mixTraits(
     type: "string"
   })
   activeStyle?: string;
-
-  @primitiveArrayTrait({
-    name: "Exclude Styles",
-    description:
-      "The set of styles which are excluded. This can be used to exclude columns from layers which use automatic styles.",
-    type: "string"
-  })
-  excludeStyles?: string[];
 }
