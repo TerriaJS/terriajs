@@ -10,9 +10,17 @@ export default class UrlTraits extends ModelTraits {
   url?: string;
 
   @primitiveTrait({
+    type: "string",
+    name: "Proxy URL",
+    description: "A proxy service that must be used."
+  })
+  proxyUrl?: string;
+
+  @primitiveTrait({
     type: "boolean",
     name: "Force proxy",
-    description: "Force the proxy to be used for all network requests."
+    description:
+      "Force the default proxy to be used for all network requests. This rule is overridden by proxyUrl."
   })
   forceProxy = false;
 
@@ -20,7 +28,7 @@ export default class UrlTraits extends ModelTraits {
     type: "string",
     name: "Cache Duration",
     description:
-      "The cache duration to use for proxied URLs for this catalog member. If undefined, proxied URLs are effectively cachable forever. The duration is expressed as a Varnish-like duration string, such as '1d' (one day) or '10000s' (ten thousand seconds)."
+      "The cache duration to use for proxied URLs for this catalog member. If undefined, proxied URLs are effectively cachable forever. The duration is expressed as a Varnish-like duration string, such as '1d' (one day) or '10000s' (ten thousand seconds). Ignored if proxyUrl exists."
   })
   cacheDuration?: string;
 }

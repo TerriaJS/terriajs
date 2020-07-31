@@ -19,6 +19,14 @@ function UrlMixin<T extends Constructor<UrlModel>>(Base: T) {
       }
       return new URI(this.url);
     }
+
+    @computed
+    get proxyUri(): uri.URI | undefined {
+      if (this.proxyUrl === undefined) {
+        return undefined;
+      }
+      return new URI(this.proxyUrl);
+    }
   }
 
   return UrlMixin;

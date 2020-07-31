@@ -4,14 +4,10 @@ import CatalogMemberTraits from "./CatalogMemberTraits";
 import primitiveTrait from "./primitiveTrait";
 import MappableTraits from "./MappableTraits";
 import DataCustodianTraits from "./DataCustodianTraits";
-import objectArrayTrait from "./objectArrayTrait";
 import SplitterTraits from "./SplitterTraits";
-import anyTrait from "./anyTrait";
 import objectTrait from "./objectTrait";
-import { JsonObject } from "../Core/Json";
 import { StyleTraits } from "./GeoJsonCatalogItemTraits";
 import UrlTraits from "./UrlTraits";
-import ProxyUrlTraits from "./ProxyUrlTraits";
 
 export default class SenapsLocationsCatalogItemTraits extends mixTraits(
   FeatureInfoTraits,
@@ -19,8 +15,7 @@ export default class SenapsLocationsCatalogItemTraits extends mixTraits(
   DataCustodianTraits,
   MappableTraits,
   CatalogMemberTraits,
-  UrlTraits,
-  ProxyUrlTraits
+  UrlTraits
 ) {
   @primitiveTrait({
     type: "string",

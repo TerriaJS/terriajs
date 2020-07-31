@@ -8,20 +8,22 @@ import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 
 /**
  * The terriajs-server is the default server that proxies a URL associated with a catalog item, if necessary.
- * If an alternative proxy URL is given by proxyUrl, it will always be used instead.
+ * If an alternative proxy URL is given, it will always be used instead.
  * @param {CatalogItem} [catalogItem] The catalog item.
  * @param {string} url The URL to be proxied.
- * @param {string} [cacheDuration] The cache duration to override catalogItem.cacheDuration.
- * @param {string} proxyUrl An alternative proxy service URL that must be used.
+ * @param {string} [cacheDuration] The cache duration to override catalogItem.cacheDuration. Ignored if catalogItem.proxyUrl exists.
  * @returns {string} The URL, now cached if necessary.
  */
 export default function proxyCatalogItemUrl(
   catalogItem: BaseModel | UrlReference | undefined,
   url: string,
-  cacheDuration?: string,
-  proxyUrl?: string
+  cacheDuration?: string
 ) {
   const corsProxy = catalogItem?.terria?.corsProxy;
+
+  const proxyUrl = UrlMixin.isMixedInto(catalogItem)
+    ? catalogItem.proxyUrl
+    : undefined;
 
   if (isDefined(proxyUrl)) {
     return proxyUrl + "/" + url;

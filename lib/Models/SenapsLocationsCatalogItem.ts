@@ -17,6 +17,7 @@ import { BaseModel } from "./Model";
 import { JsonObject } from "../Core/Json";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import createStratumInstance from "./createStratumInstance";
+import UrlMixin from "../ModelMixins/UrlMixin";
 
 export interface SenapsFeature {
   type: string;
@@ -91,15 +92,9 @@ export class SenapsLocationsStratum extends LoadableStratum(
 
   static async load(senapsLocationsCatalogItem: SenapsLocationsCatalogItem) {
     const locationsUrl = senapsLocationsCatalogItem._constructLocationsUrl();
-    const proxyUrl = senapsLocationsCatalogItem.proxyUrl;
     try {
       const locationsResponse: LocationsData = await loadJson(
-        proxyCatalogItemUrl(
-          senapsLocationsCatalogItem,
-          locationsUrl,
-          "0d",
-          proxyUrl
-        )
+        proxyCatalogItemUrl(senapsLocationsCatalogItem, locationsUrl, "0d")
       );
       const locations = locationsResponse._embedded.locations;
 
@@ -110,8 +105,7 @@ export class SenapsLocationsStratum extends LoadableStratum(
         const streamUrl = proxyCatalogItemUrl(
           senapsLocationsCatalogItem,
           senapsLocationsCatalogItem._constructStreamsUrl(locationId),
-          "0d",
-          proxyUrl
+          "0d"
         );
         streamPromises.push(loadJson(streamUrl));
       }
@@ -174,8 +168,7 @@ export class SenapsLocationsStratum extends LoadableStratum(
       const proxiedBaseUrl = proxyCatalogItemUrl(
         senapsLocationsCatalogItem,
         senapsLocationsCatalogItem.url,
-        "0d",
-        proxyUrl
+        "0d"
       );
 
       const featureInfo = createStratumInstance(FeatureInfoTemplateTraits, {
@@ -236,7 +229,7 @@ export class SenapsLocationsStratum extends LoadableStratum(
 StratumOrder.addLoadStratum(SenapsLocationsStratum.stratumName);
 
 class SenapsLocationsCatalogItem extends AsyncMappableMixin(
-  CatalogMemberMixin(CreateModel(SenapsLocationsCatalogItemTraits))
+  UrlMixin(CatalogMemberMixin(CreateModel(SenapsLocationsCatalogItemTraits)))
 ) {
   static readonly type = "senaps-locations";
 
