@@ -3,10 +3,8 @@ Change Log
 
 ### MobX Development
 
-#### mobx-next-release (mobx-33)
-* Pass `format` trait on `TableColumnTraits` down to `TableAutomaticStylesStratum` for generating legends
-* Re-added loading bar for leaflet & cesium viewers
 #### next release (8.0.0-alpha.44)
+* Pass `format` trait on `TableColumnTraits` down to `TableAutomaticStylesStratum` for generating legends
 * [The next improvement]
 
 #### 8.0.0-alpha.43
