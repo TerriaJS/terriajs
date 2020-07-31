@@ -27,9 +27,9 @@ However, by running a proxy server, our TerriaMap server potentially opens itsel
 
 ## Specify an alternative proxy server URL
 
-The data service proxied by TerriaJS-Server is inherently public to any users. In the case that a data service must be restricted to certain authenticated users, use an alternative proxy server that enforces required access control. An alternative proxy URL should be provided via [ProxyUrlTraits](/lib/Traits/ProxyUrlTraits.ts). Ideally the hostname of server that provides non-public data service should be removed from `allowProxyFor` list.
+The data service proxied by TerriaJS-Server is inherently public to any users. In the case that a data service must be restricted to certain authenticated users, use an alternative proxy server that enforces required access control. An alternative proxy URL should be provided by `proxyUrl` via [UrlMixin](/lib/ModelMixins/UrlMixin.ts). Ideally the hostname of server that provides non-public data service should be removed from `allowProxyFor` list.
 
-Currently only [SenapsLocationsCatalogItem](/lib/Models/SenapsLocationsCatalogItem.ts) has `ProxyUrlTraits`. An example using alternative proxy URL `/api/v0/data/proxy/senaps-locations-as-private-record` to proxy senaps service at `https://senaps.io/api/sensor/v2` follows.
+Currently only [SenapsLocationsCatalogItem](/lib/Models/SenapsLocationsCatalogItem.ts) has `UrlMixin`. An example using alternative proxy URL `/api/v0/data/proxy/senaps-locations-as-private-record` to proxy senaps service at `https://senaps.io/api/sensor/v2` follows.
 
 ```
 {
@@ -46,7 +46,7 @@ Currently only [SenapsLocationsCatalogItem](/lib/Models/SenapsLocationsCatalogIt
 }
 ```
 
-If a calalog item is not public but has no `ProxyUrlTraits`, a work-around is to prepend the proxy URL to the data service URL. An example using alternative proxy URL `/api/v0/data/proxy/<record id>` to proxy a geoserver service follows.
+If a calalog item is not public but has no `UrlMixin`, prepend the proxy URL to the data service URL. An example using alternative proxy URL `/api/v0/data/proxy/<record id>` to proxy a geoserver service follows.
 
 ```
 {
