@@ -3,6 +3,7 @@ Change Log
 
 ### MobX Development
 #### next release (8.0.0-alpha.43)
+* Replace `@gov.au/page-alerts` dependency with our own warning box component. This removes all `pancake` processes which were sometimes problematic.
 * [The next improvement]
 
 #### 8.0.0-alpha.42
