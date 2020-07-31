@@ -1,15 +1,14 @@
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import TableColumnTraits from "./TableColumnTraits";
-import TableStyleTraits from "./TableStyleTraits";
+import LayerOrderingTraits from "./LayerOrderingTraits";
 import MappableTraits from "./MappableTraits";
 import mixTraits from "./mixTraits";
 import objectArrayTrait from "./objectArrayTrait";
 import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
+import TableColumnTraits from "./TableColumnTraits";
+import TableStyleTraits from "./TableStyleTraits";
 import TimeVaryingTraits from "./TimeVaryingTraits";
-import LayerOrderingTraits from "./LayerOrderingTraits";
-import primitiveArrayTrait from "./primitiveArrayTrait";
 
 export default class TableTraits extends mixTraits(
   LayerOrderingTraits,
