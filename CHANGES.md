@@ -2,9 +2,12 @@ Change Log
 ==========
 
 ### MobX Development
-#### next release (8.0.0-alpha.43)
-* Replace `@gov.au/page-alerts` dependency with our own warning box component. This removes all `pancake` processes which were sometimes problematic.
+
+#### next release (8.0.0-alpha.44)
 * [The next improvement]
+
+#### 8.0.0-alpha.43
+* Replace `@gov.au/page-alerts` dependency with our own warning box component. This removes all `pancake` processes which were sometimes problematic.
 
 #### 8.0.0-alpha.42
 * Added ArcGIS catalog support via ArcGisPortalItemReference
