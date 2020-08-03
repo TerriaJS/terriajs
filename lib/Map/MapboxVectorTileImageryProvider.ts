@@ -49,7 +49,8 @@ interface MapboxVectorTileImageryProviderOptions {
   featureInfoFunc?: (feature: any) => ImageryLayerFeatureInfo | undefined;
 }
 
-export default class MapboxVectorTileImageryProvider extends ImageryProvider {
+export default class MapboxVectorTileImageryProvider
+  implements ImageryProvider {
   private readonly _uriTemplate: uri.URITemplate;
   private readonly _layerName: string;
   private readonly _subdomains: string[];
@@ -67,9 +68,10 @@ export default class MapboxVectorTileImageryProvider extends ImageryProvider {
   ) => ImageryLayerFeatureInfo | undefined;
   private readonly _errorEvent = new CesiumEvent();
   private readonly _ready = true;
+  private readonly _defaultNightAlpha: number | undefined;
+  private readonly _defaultDayAlpha: number | undefined;
 
   constructor(options: MapboxVectorTileImageryProviderOptions) {
-    super();
     this._uriTemplate = new URITemplate(options.url);
     this._layerName = options.layerName;
 
@@ -158,6 +160,14 @@ export default class MapboxVectorTileImageryProvider extends ImageryProvider {
 
   get ready() {
     return this._ready;
+  }
+
+  get defaultNightAlpha() {
+    return this._defaultNightAlpha;
+  }
+
+  get defaultDayAlpha() {
+    return this._defaultDayAlpha;
   }
 
   get hasAlphaChannel() {
