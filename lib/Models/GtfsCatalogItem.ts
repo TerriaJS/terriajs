@@ -49,6 +49,9 @@ import VehicleData from "./VehicleData";
 import { BaseModel } from "./Model";
 import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
 
+// We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
+// and import doesn't allows us to do that, so instead we use require + type casting to ensure
+// we still maintain the type checking, without TS screaming with errors
 const Axis: Axis = require("terriajs-cesium/Source/Scene/Axis").default;
 
 interface RectangleExtent {
