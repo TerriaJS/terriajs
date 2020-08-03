@@ -3,9 +3,29 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.40)
-* Add support for nested WMS groups
+#### next release (8.0.0-alpha.44)
+* Pass `format` trait on `TableColumnTraits` down to `TableAutomaticStylesStratum` for generating legends
 * [The next improvement]
+
+#### 8.0.0-alpha.43
+* Replace `@gov.au/page-alerts` dependency with our own warning box component. This removes all `pancake` processes which were sometimes problematic.
+
+#### 8.0.0-alpha.42
+* Added ArcGIS catalog support via ArcGisPortalItemReference
+
+#### 8.0.0-alpha.41
+* Add `cacheDuration` and `forceProxy` to `UrlTraits` and add `cacheDuration` defaults to various catalog models.
+* Tsify `proxyCatalogItemUrl`.
+* Simplified SidePanel React refs by removing the double wrapping of the `withTerriaRef()` HOC
+* Merged `withTerriaRef()` HOC with `useRefForTerria()` hook logic
+* Breadcrumbs are always shown instead of only when doing a catalog search
+
+#### 8.0.0-alpha.40
+* Improve info section of `WebMapServiceCatalogItem` with content from GetCapabilities
+* Re-implement `infoSectionOrder` as `CatalogMember` trait.
+* Add `infoWithoutSources` getter to `CatalogMemberMixin` to prevent app crash when using `hideSources`
+* Add support for nested WMS groups
+* Added breadcrumbs when clicking on a catalogue item from a catalogue search
 
 #### 8.0.0-alpha.39
 * Development builds sped up by 3~20x - ts-loader is now optional & TypeScript being transpiled by babel-loader, keeping type check safety on a separate thread

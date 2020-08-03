@@ -565,9 +565,15 @@ export default class ViewState {
   }
 
   @action
+  changeSearchState(newText: string) {
+    this.searchState.catalogSearchText = newText;
+  }
+
+  @action
   setDisclaimerVisible(bool: boolean) {
     this.disclaimerVisible = bool;
   }
+
   @action
   hideDisclaimer() {
     this.setDisclaimerVisible(false);
@@ -644,6 +650,14 @@ export default class ViewState {
   @action
   closeTool() {
     this.currentTool = undefined;
+  }
+
+  @computed
+  get breadcrumbsShown() {
+    return (
+      this.previewedItem !== undefined ||
+      this.userDataPreviewedItem !== undefined
+    );
   }
 
   @computed
