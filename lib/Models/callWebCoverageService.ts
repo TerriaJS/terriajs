@@ -30,7 +30,7 @@ export const callWebCoverageService = function(
     const terria = wmsCatalogItem.terria;
     runInAction(() => (terria.pickedFeatures = undefined));
 
-    let rectangle: Rectangle;
+    let rectangle: Rectangle | undefined;
 
     const userDrawing = new UserDrawing({
       terria: wmsCatalogItem.terria,
