@@ -1,70 +1,33 @@
-// const mobx = require('mobx');
-// const mobxUtils = require('mobx-utils');
-// Problems in current architecture:
-// 1. After loading, can't tell what user actually set versus what came from e.g. GetCapabilities.
-//  Solution: layering
-// 2. CkanCatalogItem producing a WebFeatureServiceCatalogItem on load
-// 3. Observable spaghetti
-//  Solution: think in terms of pipelines with computed observables, document patterns.
-// 4. All code for all catalog item types needs to be loaded before we can do anything.
 import i18next from "i18next";
 import { computed, runInAction } from "mobx";
+import combine from "terriajs-cesium/Source/Core/combine";
+import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import containsAny from "../Core/containsAny";
-import createTransformerAllowUndefined from "../Core/createTransformerAllowUndefined";
-import filterOutUndefined from "../Core/filterOutUndefined";
-import isDefined from "../Core/isDefined";
 import isReadOnlyArray from "../Core/isReadOnlyArray";
+import loadText from "../Core/loadText";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import DiffableMixin from "../ModelMixins/DiffableMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
-import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
+import xml2json from "../ThirdParty/xml2json";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
-import DiscreteTimeTraits from "../Traits/DiscreteTimeTraits";
-import LegendTraits from "../Traits/LegendTraits";
 import { RectangleTraits } from "../Traits/MappableTraits";
 import WebFeatureServiceCatalogItemTraits from "../Traits/WebFeatureServiceCatalogItemTraits";
-import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
+import ExportableData from "./ExportableData";
+import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import LoadableStratum from "./LoadableStratum";
-import Mappable, { ImageryParts } from "./Mappable";
+import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import { AvailableStyle } from "./SelectableStyle";
 import StratumFromTraits from "./StratumFromTraits";
 import WebFeatureServiceCapabilities, {
-  getRectangleFromLayer,
-  FeatureType
+  FeatureType,
+  getRectangleFromLayer
 } from "./WebFeatureServiceCapabilities";
-import { callWebCoverageService } from "./callWebCoverageService";
-import ExportableData from "./ExportableData";
-import combine from "terriajs-cesium/Source/Core/combine";
-import loadJson from "../Core/loadJson";
-import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
-
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
-import xml2json from "../ThirdParty/xml2json";
-import loadText from "../Core/loadText";
-
-const dateFormat = require("dateformat");
-
-interface LegendUrl {
-  url: string;
-  mimeType?: string;
-}
-
-interface WebFeatureServiceStyle {
-  name: string;
-  title: string;
-  abstract?: string;
-  legendUrl?: LegendUrl;
-}
-
-interface WebFeatureServiceStyles {
-  [layerName: string]: WebFeatureServiceStyle[];
-}
+import isDefined from "../Core/isDefined";
+import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 
 class GetCapabilitiesStratum extends LoadableStratum(
   WebFeatureServiceCatalogItemTraits
@@ -194,9 +157,10 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
   @computed
   get rectangle(): StratumFromTraits<RectangleTraits> | undefined {
-    const layers: FeatureType[] = [...this.capabilitiesFeatureTypes.values()]
-      .filter(layer => layer !== undefined)
-      .map(l => l!);
+    const layers: FeatureType[] = [
+      ...this.capabilitiesFeatureTypes.values()
+    ].filter(isDefined);
+
     // Needs to take union of all layer rectangles
     return layers.length > 0 ? getRectangleFromLayer(layers[0]) : undefined;
     // if (layers.length === 1) {
@@ -239,9 +203,11 @@ class GetCapabilitiesStratum extends LoadableStratum(
 }
 
 class WebFeatureServiceCatalogItem
-  extends GetCapabilitiesMixin(
-    UrlMixin(
-      CatalogMemberMixin(CreateModel(WebFeatureServiceCatalogItemTraits))
+  extends AsyncMappableMixin(
+    GetCapabilitiesMixin(
+      UrlMixin(
+        CatalogMemberMixin(CreateModel(WebFeatureServiceCatalogItemTraits))
+      )
     )
   )
   implements Mappable, ExportableData {
@@ -257,14 +223,6 @@ class WebFeatureServiceCatalogItem
     i18next.t("models.WebFeatureServiceCatalogItem.getCapabilitiesUrl")
   ];
 
-  static defaultParameters = {
-    transparent: true,
-    format: "image/png",
-    exceptions: "application/vnd.ogc.se_xml",
-    styles: "",
-    tiled: true
-  };
-
   static readonly type = "wfs";
   readonly canZoomTo = true;
   readonly supportsSplitting = true;
@@ -273,11 +231,6 @@ class WebFeatureServiceCatalogItem
 
   get type() {
     return WebFeatureServiceCatalogItem.type;
-  }
-
-  // TODO
-  get isMappable() {
-    return true;
   }
 
   protected get defaultGetCapabilitiesUrl(): string | undefined {
@@ -306,7 +259,7 @@ class WebFeatureServiceCatalogItem
     });
   }
 
-  async loadMapItems(): Promise<void> {
+  async forceLoadMapItems(): Promise<void> {
     await this.loadMetadata();
     const getCapabilitiesStratum:
       | GetCapabilitiesStratum
@@ -344,11 +297,22 @@ class WebFeatureServiceCatalogItem
       if (geojson.startsWith("<")) {
         try {
           const error = xml2json(geojson);
-          throw `Failed to GetFeature:
-${error.ExceptionReport?.Exception?.ExceptionText || error.toString()}`;
+
+          throw new TerriaError({
+            title: i18next.t(
+              "models.WebFeatureServiceCatalogItem.missingDataTitle"
+            ),
+            message: `Failed to GetFeature:
+  ${error.ExceptionReport?.Exception?.ExceptionText || error.toString()}`
+          });
         } catch (e) {
         } finally {
-          throw `Failed to parse WFS GetFeature response: ${geojson}`;
+          throw new TerriaError({
+            title: i18next.t(
+              "models.WebFeatureServiceCatalogItem.missingDataTitle"
+            ),
+            message: `Failed to parse WFS GetFeature response: ${geojson}`
+          });
         }
       }
 
@@ -382,12 +346,17 @@ ${error.ExceptionReport?.Exception?.ExceptionText || error.toString()}`;
 
   @computed
   get canExportData() {
-    // return isDefined(this.linkedWcsCoverage) && isDefined(this.linkedWcsUrl);
-    return false;
+    return isDefined(this.geojsonCatalogItem?.geoJsonData);
   }
 
   async exportData() {
-    return undefined;
+    if (isDefined(this.geojsonCatalogItem?.geoJsonData)) {
+      return {
+        name: `${this.name} export.json`,
+        file: new Blob([this.geojsonCatalogItem!.geoJsonData.toString()])
+      };
+    }
+    return;
   }
 
   @computed
