@@ -1,12 +1,35 @@
-import i18next from "i18next";
+import i18next, { ReactOptions } from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
 import HttpApi from "i18next-http-backend";
 import translationEN from "../Language/en/translation.json";
 
+export interface I18nBackendOptions {
+  /**
+   *  A few overrides that would be useful from a TerriaMap. The
+   *  i18next-http-backend library is still in its early stages, so the
+   *  documentation is sparse - the types are a quick glean from upstream
+   *  `i18next-http-backend` source
+   *  */
+  crossDomain?: boolean;
+  loadPath?: string;
+  parse?: (data: any, languages: string | [string], namespaces: string) => void;
+  request?: (
+    options: any,
+    url: string,
+    payload: any,
+    callback: () => void
+  ) => void;
+}
+
+export interface I18nStartOptions {
+  backend?: I18nBackendOptions;
+}
+
 export interface LanguageConfiguration {
   enabled: boolean;
   debug: boolean;
+  react: ReactOptions;
   languages: Object;
   fallbackLanguage: string;
   changeLanguageOnStartWhen: string[];
@@ -14,6 +37,9 @@ export interface LanguageConfiguration {
 const defaultLanguageConfiguration = {
   enabled: false,
   debug: false,
+  react: {
+    useSuspense: false
+  },
   languages: {
     en: "english",
     sr: "serbian"
@@ -28,7 +54,15 @@ const defaultLanguageConfiguration = {
 };
 
 class Internationalization {
-  static initLanguage(languageConfiguration?: LanguageConfiguration): void {
+  static initLanguage(
+    languageConfiguration: LanguageConfiguration | undefined,
+    /**
+     * i18nOptions is explicitly a separate option from `languageConfiguration`,
+     * as `languageConfiguration` can be serialised, but `i18nOptions` may have
+     * some functions that are passed in from a TerriaMap
+     */
+    i18StartOptions: I18nStartOptions | undefined
+  ): void {
     const languageConfig = Object.assign(
       defaultLanguageConfiguration,
       languageConfiguration
@@ -48,6 +82,7 @@ class Internationalization {
       .use(initReactI18next)
       .init({
         debug: languageConfig.debug,
+        react: languageConfig.react,
         fallbackLng: languageConfig.fallbackLanguage,
         whitelist: Object.keys(languageConfig.languages),
 
@@ -61,7 +96,7 @@ class Internationalization {
         partialBundledLanguages: true,
 
         /*
-          This setting adds a posibility for users to override translations using their own translation json file stored in 
+          This setting adds a posibility for users to override translations using their own translation json file stored in
           `TerriaMap/wwwroot/Languages/{{lng}}/languageOverrides.json`
           It will first look in defaultNS for translation and then check the fallbackNS
         */
@@ -75,10 +110,13 @@ class Internationalization {
           }
         },
 
-        backend: {
-          loadPath: "/Language/{{lng}}/{{ns}}.json",
-          crossDomain: false
-        },
+        backend: Object.assign(
+          {
+            loadPath: "/Languages/{{lng}}/{{ns}}.json",
+            crossDomain: false
+          },
+          { ...i18StartOptions?.backend }
+        ),
 
         detection: {
           // order and from where user language should be detected
