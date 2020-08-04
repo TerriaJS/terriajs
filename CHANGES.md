@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.44)
 * Pass `format` trait on `TableColumnTraits` down to `TableAutomaticStylesStratum` for generating legends
+* Upgraded to Cesium v1.71.
 * [The next improvement]
 
 #### 8.0.0-alpha.43
