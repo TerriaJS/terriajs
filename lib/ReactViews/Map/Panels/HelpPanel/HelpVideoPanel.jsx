@@ -12,7 +12,6 @@ import VideoGuide from "./VideoGuide";
 import TrainerPane from "./TrainerPane";
 import StyledHtml from "./StyledHtml";
 import SatelliteGuide from "../../../Guide/SatelliteGuide";
-import i18next from "i18next";
 
 const HELP_VIDEO_NAME = "helpVideo";
 
