@@ -4,7 +4,6 @@ import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantPropert
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ModelGraphics from "terriajs-cesium/Source/DataSources/ModelGraphics";
-import Axis from "terriajs-cesium/Source/Scene/Axis";
 import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -18,11 +17,10 @@ import Transforms from "terriajs-cesium/Source/Core/Transforms";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import CommonStrata from "./CommonStrata";
 
-declare module "terriajs-cesium/Source/Scene/Axis" {
-  export default class Axis {
-    static fromName(name: string): number;
-  }
-}
+// We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
+// and import doesn't allows us to do that, so instead we use require + type casting to ensure
+// we still maintain the type checking, without TS screaming with errors
+const Axis: Axis = require("terriajs-cesium/Source/Scene/Axis").default;
 
 export default class GltfCatalogItem
   extends UrlMixin(CatalogMemberMixin(CreateModel(GltfCatalogItemTraits)))

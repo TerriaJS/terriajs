@@ -22,7 +22,6 @@ import ModelTraits from "../Traits/ModelTraits";
 import CreateModel from "./CreateModel";
 import MapInteractionMode from "./MapInteractionMode";
 import Terria from "./Terria";
-import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
 
 interface Options {
   terria: Terria;
@@ -192,9 +191,15 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
                 this.pointEntities.entities.values.length < 1
               )
                 return;
-              const point1 = this.pointEntities.entities.values[0].position.getValue(
-                time
-              ) as Cartesian3;
+              const point1 =
+                this.pointEntities.entities.values[0].position &&
+                (this.pointEntities.entities.values[0].position.getValue(
+                  time
+                ) as Cartesian3);
+
+              if (!point1) {
+                return;
+              }
 
               let point2 =
                 (this.pointEntities.entities.values?.[1]?.position?.getValue(

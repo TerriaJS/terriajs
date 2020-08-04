@@ -3,15 +3,12 @@ import URI from "urijs";
 import defined from "terriajs-cesium/Source/Core/defined";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import loadJson from "./loadJson";
-import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 
-declare module "terriajs-cesium/Source/Core/FeatureDetection" {
-  export default class FeatureDetection {
-    static isEdge(): boolean;
-    static isInternetExplorer(): boolean;
-    static internetExplorerVersion(): number[];
-  }
-}
+// We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
+// and import doesn't allows us to do that, so instead we use require + type casting to ensure
+// we still maintain the type checking, without TS screaming with errors
+const FeatureDetection: FeatureDetection = require("terriajs-cesium/Source/Core/FeatureDetection")
+  .default;
 
 /**
  * Rewrites URLs so that they're resolved via the TerriaJS-Server proxy rather than going direct. This is most useful

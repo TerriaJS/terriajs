@@ -634,6 +634,10 @@ class LeafletGeomVisualizer {
     const featureGroup = this._featureGroup;
     const rectangleGraphics = entity.rectangle;
 
+    if (!isDefined(rectangleGraphics)) {
+      return;
+    }
+
     const show =
       entity.isAvailable(time) &&
       getValueOrDefault(rectangleGraphics.show, time, true);

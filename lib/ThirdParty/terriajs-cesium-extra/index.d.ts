@@ -41,3 +41,16 @@ declare module "terriajs-cesium/Source/Widgets/getElement" {
     element: string | HTMLElement
   ): HTMLElement | undefined;
 }
+
+declare interface Axis {
+  X: number;
+  Y: number;
+  Z: number;
+  fromName(name: string): number;
+}
+
+declare interface FeatureDetection {
+  isEdge(): boolean;
+  isInternetExplorer(): boolean;
+  internetExplorerVersion(): number[];
+}

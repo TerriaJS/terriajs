@@ -602,7 +602,7 @@ function polygonIsFilled(polygon: PolygonGraphics) {
   if (polygon.material instanceof Color) {
     color = polygon.material.getValue(new JulianDate());
   } else {
-    color = (polygon.material as ColorMaterialProperty).color.getValue(
+    color = (polygon.material as ColorMaterialProperty).color?.getValue(
       new JulianDate()
     );
   }

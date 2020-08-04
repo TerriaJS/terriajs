@@ -395,19 +395,6 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
           features = createLongitudeLatitudeFeaturePerId(style);
         } else {
           features = createLongitudeLatitudeFeaturePerRow(style);
-              position: new ConstantPositionProperty(
-                Cartesian3.fromDegrees(longitude, latitude, 0.0)
-              ),
-                color: new ConstantProperty(colorMap.mapValueToColor(value)),
-                pixelSize: new ConstantProperty(
-                  pointSizeMap.mapValueToPointSize(value)
-                ),
-                outlineWidth: new ConstantProperty(1),
-                outlineColor: new ConstantProperty(outlineColor),
-                heightReference: new ConstantProperty(
-                  HeightReference.CLAMP_TO_GROUND
-                )
-          entity.properties = new PropertyBag(this.getRowValues(i));
         }
 
         features.forEach(f => dataSource.entities.add(f));
