@@ -211,7 +211,24 @@ const Legend = createReactClass({
                 {legendItem.titleAbove}
               </div>
             )}
-            <div>{legendItem.title}</div>
+            <div
+              title={
+                isDefined(legendItem.multipleTitles)
+                  ? legendItem.multipleTitles.join(", ")
+                  : legendItem.title
+              }
+            >
+              {isDefined(legendItem.multipleTitles)
+                ? `${legendItem.multipleTitles
+                    .slice(0, legendItem.maxMultipleTitlesShowed)
+                    .join(", ")}${
+                    legendItem.multipleTitles.length >
+                    legendItem.maxMultipleTitlesShowed
+                      ? "..."
+                      : ""
+                  }`
+                : legendItem.title}
+            </div>
             {legendItem.titleBelow && (
               <div className={Styles.legendTitleBelow}>
                 {legendItem.titleBelow}
