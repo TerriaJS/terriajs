@@ -5,6 +5,9 @@ Change Log
 
 #### next release (8.0.0-alpha.44)
 * Pass `format` trait on `TableColumnTraits` down to `TableAutomaticStylesStratum` for generating legends
+* Added an option for translation override from TerriaMap
+* Help content, trainer bar & help terms can use translation overrides
+* Accepts `backend` options under a new `terria.start()` property, `i18nOptions`
 * [The next improvement]
 
 #### 8.0.0-alpha.43
@@ -165,7 +168,6 @@ Change Log
 * Fixes a splitter bug where split direction is not applied to new layers.
 * Re-added satellite guide prompt option via `showInAppGuides`
 * Changed tour "go back 1 tour point" messaging from "previous" to "back"
-* Added an option for translation override from TerriaMap
 
 #### mobx-29
 * Fix handling of urls on `Cesium3DTilesCatalogItem` related to proxying and getting confused between Resource vs URL.
