@@ -1,13 +1,11 @@
 import { action, computed, observable, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
-
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
-
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
 import AsyncLoader from "../Core/AsyncLoader";
@@ -16,7 +14,6 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
-
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import RegionProvider from "../Map/RegionProvider";
 import JSRegionProviderList from "../Map/RegionProviderList";
@@ -28,14 +25,13 @@ import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import SelectableDimensions, {
   SelectableDimension
 } from "../Models/SelectableDimensions";
-
+import createLongitudeLatitudeFeaturePerId from "../Table/createLongitudeLatitudeFeaturePerId";
+import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
 import LegendTraits from "../Traits/LegendTraits";
 import TableTraits from "../Traits/TableTraits";
-import createLongitudeLatitudeFeaturePerId from "../Table/createLongitudeLatitudeFeaturePerId";
-import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
 
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
 //   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
