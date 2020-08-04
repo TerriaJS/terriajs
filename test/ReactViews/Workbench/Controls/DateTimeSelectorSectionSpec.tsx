@@ -1,18 +1,18 @@
-const create: any = require("react-test-renderer").create;
 import { act } from "react-dom/test-utils";
-const findAllWithType = require("react-shallow-testutils").findAllWithType;
-import { getShallowRenderedOutput } from "../../MoreShallowTools";
+import TestRenderer, { ReactTestRenderer } from "react-test-renderer";
+
 import React from "react";
 
 import Terria from "../../../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../../../lib/Models/WebMapServiceCatalogItem";
 import DateTimeSelectorSection from "../../../../lib/ReactViews/Workbench/Controls/DateTimeSelectorSection";
 import { formatDateTime } from "../../../../lib/ReactViews/BottomDock/Timeline/DateFormats";
+import DateTimePicker from "../../../../lib/ReactViews/BottomDock/Timeline/DateTimePicker";
 
 describe("DateTimeSelectorSection", function() {
   let terria: Terria;
   let wmsItem: WebMapServiceCatalogItem;
-  let testRenderer: any;
+  let testRenderer: ReactTestRenderer;
   let buttons: any;
   let currentDateBtn: any;
 
@@ -26,11 +26,12 @@ describe("DateTimeSelectorSection", function() {
     wmsItem.setTrait("definition", "layers", "13_intervals");
     await wmsItem.loadMapItems();
     act(() => {
-      testRenderer = create(
+      testRenderer = TestRenderer.create(
         <DateTimeSelectorSection t={() => {}} item={wmsItem} />
       );
     });
     buttons = testRenderer.root.findAllByType("button");
+    console.log(buttons);
     currentDateBtn = buttons.filter((b: any) => {
       if (b.props.className.indexOf("currentDate") > -1) return true;
       return false;
@@ -52,5 +53,9 @@ describe("DateTimeSelectorSection", function() {
     expect(buttons).toBeDefined();
     expect(buttons.length).toEqual(5);
     expect(currentDateBtn.children[0]).toEqual("2014");
+  });
+
+  it("Renders date buttons", async function() {
+    console.log(testRenderer.root.findByType(DateTimePicker));
   });
 });
