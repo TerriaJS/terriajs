@@ -1,5 +1,6 @@
 import "../SpecMain";
 import { reaction, runInAction } from "mobx";
+import i18next from "i18next";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import IonResource from "terriajs-cesium/Source/Core/IonResource";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
@@ -10,11 +11,6 @@ import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
 import Cesium3DTilesCatalogItem from "../../lib/Models/Cesium3DTilesCatalogItem";
 import createStratumInstance from "../../lib/Models/createStratumInstance";
 import Terria from "../../lib/Models/Terria";
-import {
-  FilterTraits,
-  OptionsTraits
-} from "../../lib/Traits/Cesium3DCatalogItemTraits";
-import i18next from "i18next";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import HeadingPitchRollTraits from "../../lib/Traits/HeadingPitchRollTraits";
 import LatLonHeightTraits from "../../lib/Traits/LatLonHeightTraits";
@@ -23,6 +19,10 @@ import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
 import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import {
+  OptionsTraits,
+  FilterTraits
+} from "../../lib/Traits/Cesium3dTilesTraits";
 
 describe("Cesium3DTilesCatalogItemSpec", function() {
   let item: Cesium3DTilesCatalogItem;
@@ -156,10 +156,7 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
         await item.loadMapItems();
       } catch {}
       // observe mapItems
-      dispose = reaction(
-        () => item.mapItems,
-        () => {}
-      );
+      dispose = reaction(() => item.mapItems, () => {});
     });
 
     afterEach(function() {

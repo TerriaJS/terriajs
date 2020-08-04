@@ -27,7 +27,6 @@ or with overrides on icon
 
 import React from "react";
 import styled, { useTheme } from "styled-components";
-import {} from "styled-components/cssprop";
 const Box: any = require("./Box").default;
 import { default as IconComponent, StyledIcon } from "../ReactViews/Icon";
 const Icon: any = IconComponent;
