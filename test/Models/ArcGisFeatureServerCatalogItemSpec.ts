@@ -198,7 +198,9 @@ describe("ArcGisFeatureServerCatalogItem", function() {
             expect(acutualPolygonColor).toEqual(expectedPolygonFilledColor);
 
             const actualPolygonOutlineColor = (<ConstantProperty>(
-              (<unknown>entity.polygon.outlineColor)
+              (<unknown>(
+                (<ColorMaterialProperty>entity.polygon.outlineColor).color
+              ))
             ))
               .getValue(aTime)
               .toRgba();
