@@ -87,7 +87,10 @@ class Internationalization {
         whitelist: Object.keys(languageConfig.languages),
 
         // to allow en-US when only en is on the whitelist - nonExplicitWhitelist must be set to true
-        nonExplicitWhitelist: true,
+        // nonExplicitWhitelist: true,
+        // deprecated, it's now the inverse
+        nonExplicitSupportedLngs: false,
+
         // to not look into a folder like /locals/en-US/... when en-US is detected, use load: "languageOnly" to avoid using Country-Code in path
         load: "languageOnly",
         // send not translated keys to endpoint
