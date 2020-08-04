@@ -19,6 +19,10 @@
   background: #ffffff;
   border-right: 1px solid $grey-lighter;
   padding-right: 0;
+
+  .dataTypeTab {
+    margin-right: $padding-small;
+  }
 }
 
 .oneCol {
@@ -71,13 +75,17 @@
     font-weight: $font-weight-medium;
     width: 100%;
     padding: $padding 0;
-    color: $color-primary;
+    // color: $color-primary;
     &:hover,
     &:focus,
     &.is-active {
-      color: $grey;
+      // color: $grey;
     }
   }
+}
+
+.dndBoxInfo {
+  flex-shrink: 0;
 }
 
 .dndBox {
@@ -105,11 +113,17 @@
   }
 }
 
+.addedData {
+  flex-shrink: 0;
+}
+
 .dataTypeTab {
-  width: 100%;
+  width: auto;
   display: flex;
   flex-direction: column;
+  align-items: center;
   height: 100%;
+  min-height: 300px;
   padding: $padding;
   box-sizing: border-box;
 }
@@ -132,11 +146,11 @@
   border-radius: 2px;
   padding: 3px 10px;
   border: 1px solid #ddd;
-  color: $color-primary;
+  // color: $color-primary;
 
   &:hover,
   &:focus {
-    border: 1px solid $color-primary;
+    // border: 1px solid $color-primary;
   }
 
   svg {
@@ -145,7 +159,7 @@
     display: inline-block;
     vertical-align: baseline;
     margin-right: 8px;
-    fill: $color-primary;
+    // fill: $color-primary;
   }
 }
 

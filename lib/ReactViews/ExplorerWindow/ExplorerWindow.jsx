@@ -44,6 +44,7 @@ const ExplorerWindow = observer(
     render() {
       return (
         <ModalPopup
+          viewState={this.props.viewState}
           isVisible={this.isVisible()}
           isTopElement={this.props.viewState.topElement === "AddData"}
           onClose={this.onClose}

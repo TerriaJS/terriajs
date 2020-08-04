@@ -3,18 +3,20 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
-import { withTheme } from "styled-components";
+import styled, { withTheme } from "styled-components";
 import Icon, { StyledIcon } from "../Icon";
 import SearchBoxAndResults from "../Search/SearchBoxAndResults";
 import Workbench from "../Workbench/Workbench";
 import FullScreenButton from "./FullScreenButton";
 
-import { withTerriaRef } from "../HOCs/withTerriaRef";
+import { useRefForTerria } from "../Hooks/useRefForTerria";
 
 import Box from "../../Styled/Box";
 import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";
 import Button from "../../Styled/Button";
+
+const BoxHelpfulHints = styled(Box)``;
 
 function EmptyWorkbench(props) {
   const t = props.t;
@@ -31,49 +33,62 @@ function EmptyWorkbench(props) {
       />
     );
   };
+  const ResponsiveSpacing = styled(Box)`
+    height: 110px;
+    // Hardcoded px value, TODO: make it not hardcoded
+    @media (max-height: 700px) {
+      height: 3vh;
+    }
+  `;
   return (
     <Text large textLight nunito>
+      {/* Hardcoded top to 150px for now for very very small screens 
+          TODO: make it not hardcoded */}
       <Box
-        centered
-        css={`
-          min-height: 240px;
-        `}
+        column
+        fullWidth
+        justifySpaceBetween
+        styledHeight={"calc(100vh - 150px)"}
       >
-        <Text large color={props.theme.textLightDimmed}>
-          {t("emptyWorkbench.emptyArea")}
-        </Text>
-      </Box>
-      <Spacing bottom={10} />
-      <Box column paddedRatio={3}>
-        <Box left>
-          <Text extraLarge bold>
-            {t("emptyWorkbench.helpfulHints")}
+        <Box centered column>
+          <ResponsiveSpacing />
+          <Text large color={props.theme.textLightDimmed}>
+            {t("emptyWorkbench.emptyArea")}
           </Text>
+          <ResponsiveSpacing />
         </Box>
-        <Spacing bottom={4} />
-        <Box>
-          <HelpfulHintsIcon />
-          <Spacing right={1} />
-          <Text medium light>
-            {t("emptyWorkbench.helpfulHintsOne")}
-          </Text>
-        </Box>
-        <Spacing bottom={3} />
-        <Box>
-          <HelpfulHintsIcon />
-          <Spacing right={1} />
-          <Text medium light>
-            {t("emptyWorkbench.helpfulHintsTwo")}
-          </Text>
-        </Box>
-        <Spacing bottom={3} />
-        <Box>
-          <HelpfulHintsIcon />
-          <Spacing right={1} />
-          <Text medium light>
-            {t("emptyWorkbench.helpfulHintsThree")}
-          </Text>
-        </Box>
+        <BoxHelpfulHints column paddedRatio={3} overflowY="auto">
+          <Box left>
+            <Text extraLarge bold>
+              {t("emptyWorkbench.helpfulHints")}
+            </Text>
+          </Box>
+          <Spacing bottom={4} />
+          <Box>
+            <HelpfulHintsIcon />
+            <Spacing right={1} />
+            <Text medium light>
+              {t("emptyWorkbench.helpfulHintsOne")}
+            </Text>
+          </Box>
+          <Spacing bottom={3} />
+          <Box>
+            <HelpfulHintsIcon />
+            <Spacing right={1} />
+            <Text medium light>
+              {t("emptyWorkbench.helpfulHintsTwo")}
+            </Text>
+          </Box>
+          <Spacing bottom={3} />
+          <Box>
+            <HelpfulHintsIcon />
+            <Spacing right={1} />
+            <Text medium light>
+              {t("emptyWorkbench.helpfulHintsThree")}
+            </Text>
+          </Box>
+          <ResponsiveSpacing />
+        </BoxHelpfulHints>
       </Box>
     </Text>
   );
@@ -106,6 +121,7 @@ SidePanelButton.propTypes = {
 };
 
 export const EXPLORE_MAP_DATA_NAME = "ExploreMapDataButton";
+export const SIDE_PANEL_UPLOAD_BUTTON_NAME = "SidePanelUploadButton";
 
 const SidePanel = observer(
   createReactClass({
@@ -114,17 +130,21 @@ const SidePanel = observer(
     propTypes: {
       terria: PropTypes.object.isRequired,
       viewState: PropTypes.object.isRequired,
-      refFromHOC: PropTypes.object.isRequired,
+      refForExploreMapData: PropTypes.object.isRequired,
+      refForUploadData: PropTypes.object.isRequired,
       t: PropTypes.func.isRequired,
       theme: PropTypes.object.isRequired
     },
 
-    onAddDataClicked() {
+    onAddDataClicked(e) {
+      e.stopPropagation();
       this.props.viewState.setTopElement("AddData");
       this.props.viewState.openAddData();
     },
 
-    onAddLocalDataClicked() {
+    onAddLocalDataClicked(e) {
+      e.stopPropagation();
+      this.props.viewState.setTopElement("AddData");
       this.props.viewState.openUserData();
     },
     render() {
@@ -154,8 +174,8 @@ const SidePanel = observer(
             <Spacing bottom={2} />
             <Box justifySpaceBetween>
               <SidePanelButton
-                ref={this.props.refFromHOC}
-                onClick={() => this.onAddDataClicked()}
+                ref={this.props.refForExploreMapData}
+                onClick={e => this.onAddDataClicked(e)}
                 title={addData}
                 btnText={addData}
                 styledWidth={"200px"}
@@ -167,7 +187,8 @@ const SidePanel = observer(
                 />
               </SidePanelButton>
               <SidePanelButton
-                onClick={() => this.onAddLocalDataClicked()}
+                ref={this.props.refForUploadData}
+                onClick={e => this.onAddLocalDataClicked(e)}
                 title={t("addData.load")}
                 btnText={uploadText}
                 styledWidth={"130px"}
@@ -209,6 +230,27 @@ const SidePanel = observer(
   })
 );
 
-module.exports = withTranslation()(
-  withTheme(withTerriaRef(SidePanel, EXPLORE_MAP_DATA_NAME))
-);
+// Used to create two refs for <SidePanel /> to consume, rather than
+// using the withTerriaRef() HOC twice, designed for a single ref
+const SidePanelWithRefs = props => {
+  const refForExploreMapData = useRefForTerria(
+    EXPLORE_MAP_DATA_NAME,
+    props.viewState
+  );
+  const refForUploadData = useRefForTerria(
+    SIDE_PANEL_UPLOAD_BUTTON_NAME,
+    props.viewState
+  );
+  return (
+    <SidePanel
+      {...props}
+      refForExploreMapData={refForExploreMapData}
+      refForUploadData={refForUploadData}
+    />
+  );
+};
+SidePanelWithRefs.propTypes = {
+  viewState: PropTypes.object.isRequired
+};
+
+module.exports = withTranslation()(withTheme(SidePanelWithRefs));

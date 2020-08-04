@@ -2,12 +2,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { BoxSpan } from "./Box";
-import Text from "./Text";
+import { TextSpan } from "./Text";
 
 const Icon = styled.span`
   margin-right: 8px;
 `;
 const StyledButton = styled.button`
+  pointer-events: auto;
+  cursor: pointer;
   min-height: 40px;
   ${props => props.shortMinHeight && `min-height: 34px;`}
   // min-width: 75px;
@@ -134,7 +136,7 @@ export const Button = (props, ref) => {
           </Icon>
         )}
         {props.children && (
-          <Text
+          <TextSpan
             white={primary || secondary || warning}
             medium={secondary}
             // bold
@@ -142,7 +144,7 @@ export const Button = (props, ref) => {
             {...textProps}
           >
             {props.children}
-          </Text>
+          </TextSpan>
         )}
       </BoxSpan>
     </StyledButton>

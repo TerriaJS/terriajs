@@ -38,6 +38,8 @@ function DiscretelyTimeVaryingMixin<
           return this.startTime;
         } else if (this.initialTimeSource === "stop") {
           return this.stopTime;
+        } else if (this.initialTimeSource === "none") {
+          return undefined;
         } else {
           throw new TerriaError({
             sender: this,

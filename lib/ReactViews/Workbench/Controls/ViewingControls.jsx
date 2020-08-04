@@ -16,6 +16,7 @@ import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDire
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import getDereferencedIfExists from "../../../Core/getDereferencedIfExists";
 import getPath from "../../../Core/getPath";
+import TerriaError from "../../../Core/TerriaError";
 import PickedFeatures from "../../../Map/PickedFeatures";
 import addUserCatalogMember from "../../../Models/addUserCatalogMember";
 import CommonStrata from "../../../Models/CommonStrata";
@@ -26,6 +27,8 @@ import { RawButton } from "../../../Styled/Button";
 import Icon, { StyledIcon } from "../../Icon";
 import WorkbenchButton from "../WorkbenchButton";
 import Styles from "./viewing-controls.scss";
+import ExportableData from "../../../Models/ExportableData";
+import { exportData } from "../../Preview/ExportData";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -186,20 +189,24 @@ const ViewingControls = observer(
 
         // Add it to terria.catalog, which is required so the new item can be shared.
         addUserCatalogMember(terria, splitRef, {
-          open: false,
-          zoomTo: false
+          open: false
         });
       });
     },
 
     openDiffTool() {
-      this.props.viewState.openTool(
-        "Difference",
-        import("../../Tools/DiffTool/DiffTool"),
-        {
+      // Disable timeline
+      // Should we do this? Difference is quite a specific use case
+      this.props.item.terria.timelineStack.removeAll();
+      this.props.viewState.openTool({
+        toolName: "Difference",
+        getToolComponent: () =>
+          import("../../Tools/DiffTool/DiffTool").then(m => m.default),
+        showCloseButton: true,
+        params: {
           sourceItem: this.props.item
         }
-      );
+      });
     },
 
     previewItem() {
@@ -222,9 +229,14 @@ const ViewingControls = observer(
       );
     },
 
-    exportData() {
+    exportDataClicked() {
       const item = this.props.item;
-      item.exportData();
+
+      exportData(item).catch(e => {
+        if (e instanceof TerriaError) {
+          this.props.item.terria.error.raiseEvent(e);
+        }
+      });
     },
 
     renderViewingControlsMenu() {
@@ -283,10 +295,10 @@ const ViewingControls = observer(
               </ViewingControlMenuButton>
             </li>
           </If>
-          <If condition={defined(item.linkedWcsUrl)}>
+          <If condition={ExportableData.is(item) && item.canExportData}>
             <li className={classNames(Styles.info)}>
               <ViewingControlMenuButton
-                onClick={this.exportData}
+                onClick={this.exportDataClicked}
                 title={t("workbench.exportDataTitle")}
               >
                 <BoxViewingControl>

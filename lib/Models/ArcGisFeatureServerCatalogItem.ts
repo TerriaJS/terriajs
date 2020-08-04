@@ -21,9 +21,8 @@ import Color from "terriajs-cesium/Source/Core/Color";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import createStratumInstance from "./createStratumInstance";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import StratumFromTraits from "./StratumFromTraits";
-import LegendTraits from "../Traits/LegendTraits";
+import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
 import proj4definitions from "../Map/Proj4Definitions";
 import { RectangleTraits } from "../Traits/MappableTraits";
 import TerriaError from "../Core/TerriaError";
@@ -32,7 +31,9 @@ import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantPropert
 import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
 import replaceUnderscores from "../Core/replaceUnderscores";
+import PolylineDashMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineDashMaterialProperty";
 import createInfoSection from "./createInfoSection";
+import { getLineStyleCesium } from "./esriLineStyle";
 
 const proj4 = require("proj4").default;
 
@@ -40,12 +41,50 @@ interface DocumentInfo {
   Author?: string;
 }
 
+type esriStyleTypes =
+  | "esriPMS" // simple picture style
+  | "esriSMS" // simple marker style
+  | "esriSLS" // simple line style
+  | "esriSFS"; // simple fill style
+
+//as defined https://developers.arcgis.com/web-map-specification/objects/esriSLS_symbol/
+
+type supportedFillStyle =
+  | "esriSFSSolid" // fill line with color
+  | "esriSFSNull"; // no fill
+
+// as defined https://developers.arcgis.com/web-map-specification/objects/esriSMS_symbol/
+type supportedSimpleMarkerStyle =
+  | "esriSMSCircle"
+  | "esriSMSCross"
+  | "esriSMSDiamond"
+  | "esriSMSSquare"
+  | "esriSMSTriangle"
+  | "esriSMSX";
+
+export type supportedLineStyle =
+  | "esriSLSSolid" // solid line
+  | "esriSLSDash" // dashes (-----)
+  | "esriSLSDashDot" // line (-.-.-)
+  | "esriSLSDashDotDot" // line (-..-..-)
+  | "esriSLSDot" // dotted line (.....)
+  | "esriSLSLongDash"
+  | "esriSLSLongDashDot"
+  | "esriSLSShortDash"
+  | "esriSLSShortDashDot"
+  | "esriSLSShortDashDotDot"
+  | "esriSLSShortDot"
+  | "esriSLSNull";
+
+const defaultColor = [255, 255, 255, 255];
+const defaultFillColor = [255, 255, 255, 1];
+const defaultOutlineColor = [0, 0, 0, 255];
+
 // See actual Symbol at https://developers.arcgis.com/web-map-specification/objects/symbol/
 interface Symbol {
   contentType: string;
   color?: number[];
-  outline?: any;
-  outlineColor?: number[];
+  outline?: Outline;
   imageData?: any;
   xoffset?: number;
   yoffset?: number;
@@ -53,17 +92,24 @@ interface Symbol {
   height?: number;
   angle?: number;
   size?: number;
+  type: esriStyleTypes;
+  style?: supportedSimpleMarkerStyle | supportedLineStyle | supportedFillStyle;
+}
+
+interface Outline {
+  type: esriStyleTypes;
+  color: number[];
+  width: number;
+  style?: supportedLineStyle;
 }
 
 interface Renderer {
   type: string;
 }
 
-interface ClassBreakInfo {
+interface ClassBreakInfo extends SimpleRenderer {
   classMaxValue: number;
   classMinValue?: number;
-  label?: string;
-  symbol: Symbol | null;
 }
 
 interface ClassBreaksRenderer extends Renderer {
@@ -72,10 +118,8 @@ interface ClassBreaksRenderer extends Renderer {
   defaultSymbol: Symbol | null;
 }
 
-interface UniqueValueInfo {
+interface UniqueValueInfo extends SimpleRenderer {
   value: string;
-  label?: string;
-  symbol: Symbol | null;
 }
 
 interface UniqueValueRenderer extends Renderer {
@@ -139,11 +183,11 @@ class FeatureServerStratum extends LoadableStratum(
     ) as this;
   }
 
-  get featureServerData() {
+  get featureServerData(): FeatureServer {
     return this._featureServer;
   }
 
-  get geoJsonItem() {
+  get geoJsonItem(): GeoJsonCatalogItem {
     return this._geoJsonItem;
   }
 
@@ -191,17 +235,17 @@ class FeatureServerStratum extends LoadableStratum(
       });
   }
 
-  @computed get maximumScale() {
+  @computed get maximumScale(): number | undefined {
     return this._featureServer.maxScale;
   }
 
-  @computed get name() {
+  @computed get name(): string | undefined {
     if (this._featureServer.name && this._featureServer.name.length > 0) {
       return replaceUnderscores(this._featureServer.name);
     }
   }
 
-  @computed get dataCustodian() {
+  @computed get dataCustodian(): string | undefined {
     if (
       this._featureServer.documentInfo &&
       this._featureServer.documentInfo.Author &&
@@ -211,7 +255,7 @@ class FeatureServerStratum extends LoadableStratum(
     }
   }
 
-  @computed get rectangle() {
+  @computed get rectangle(): StratumFromTraits<RectangleTraits> | undefined {
     const extent = this._featureServer.extent;
 
     if (
@@ -258,6 +302,24 @@ class FeatureServerStratum extends LoadableStratum(
   }
 
   @computed get legends(): StratumFromTraits<LegendTraits>[] | undefined {
+    function newLegendItem(
+      title: string,
+      imageUrl?: string,
+      color?: string,
+      outlineColor?: string,
+      addSpacingAbove?: boolean
+    ): StratumFromTraits<LegendItemTraits> {
+      const item = createStratumInstance(LegendItemTraits);
+      runInAction(() => {
+        item.title = title;
+        item.imageUrl = imageUrl;
+        item.color = color;
+        item.outlineColor = outlineColor;
+        item.addSpacingAbove = addSpacingAbove;
+      });
+      return item;
+    }
+
     if (
       !this._item.useStyleInformationFromService ||
       !this._featureServer.drawingInfo
@@ -266,46 +328,54 @@ class FeatureServerStratum extends LoadableStratum(
     }
     const renderer = this._featureServer.drawingInfo.renderer;
     const rendererType = renderer.type;
-    let infos: UniqueValueInfo[] | ClassBreakInfo[];
+    let infos: SimpleRenderer[] | UniqueValueInfo[] | ClassBreakInfo[];
 
     if (rendererType === "uniqueValue") {
       infos = (<UniqueValueRenderer>renderer).uniqueValueInfos;
     } else if (rendererType === "classBreaks") {
       infos = (<ClassBreaksRenderer>renderer).classBreakInfos;
+    } else if (rendererType === "simple") {
+      infos = [<SimpleRenderer>renderer];
     } else {
       return undefined;
     }
 
-    const items = [];
-    for (var i = 0; i < infos.length; i++) {
-      const label = replaceUnderscores(infos[i].label);
-      const symbol = infos[i].symbol;
+    const legend = createStratumInstance(LegendTraits);
+    runInAction(() => {
+      legend.items = legend.items || [];
+    });
+
+    infos.forEach(info => {
+      const label = replaceUnderscores(info.label);
+      const symbol = info.symbol;
       if (symbol) {
+        if (symbol.style === "esriSLSNull") {
+          return;
+        }
         const color = symbol.color;
         const imageUrl = symbol.imageData
           ? proxyCatalogItemUrl(
-              this,
+              this._item,
               `data:${symbol.contentType};base64,${symbol.imageData}`
             )
           : undefined;
-
-        if (color) {
-          const item = {
-            title: label,
-            color: convertEsriColorToCesiumColor(color).toCssColorString()
-          };
-          items.push(item);
-        } else if (imageUrl) {
-          const item = {
-            title: label,
-            imageUrl: imageUrl
-          };
-          items.push(item);
+        const outlineColor = symbol.outline?.color;
+        if (isDefined(legend.items)) {
+          legend.items.push(
+            newLegendItem(
+              label,
+              imageUrl,
+              color
+                ? convertEsriColorToCesiumColor(color).toCssColorString()
+                : undefined,
+              outlineColor
+                ? convertEsriColorToCesiumColor(outlineColor).toCssColorString()
+                : undefined
+            )
+          );
         }
       }
-    }
-
-    const legend = <StratumFromTraits<LegendTraits>>(<unknown>{ items: items });
+    });
     return [legend];
   }
 }
@@ -321,23 +391,23 @@ export default class ArcGisFeatureServerCatalogItem
   implements Mappable {
   static readonly type = "esri-featureServer";
 
-  get type() {
+  get type(): string {
     return ArcGisFeatureServerCatalogItem.type;
   }
 
-  get typeName() {
+  get typeName(): string {
     return i18next.t("models.arcGisFeatureServerCatalogItem.name");
   }
 
-  get isMappable() {
+  get isMappable(): boolean {
     return true;
   }
 
-  get canZoomTo() {
+  get canZoomTo(): boolean {
     return true;
   }
 
-  get showsInfo() {
+  get showsInfo(): boolean {
     return true;
   }
 
@@ -417,14 +487,21 @@ export default class ArcGisFeatureServerCatalogItem
     });
   }
 
-  @computed get geoJsonItem() {
+  @computed get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    }
+    return "1d";
+  }
+
+  @computed get geoJsonItem(): GeoJsonCatalogItem | undefined {
     const stratum = <FeatureServerStratum>(
       this.strata.get(FeatureServerStratum.stratumName)
     );
     return isDefined(stratum) ? stratum.geoJsonItem : undefined;
   }
 
-  @computed get featureServerData() {
+  @computed get featureServerData(): FeatureServer | undefined {
     const stratum = <FeatureServerStratum>(
       this.strata.get(FeatureServerStratum.stratumName)
     );
@@ -462,13 +539,13 @@ function getUniqueValueSymbol(
 
   // accumulate values if there is more than one field defined
   if (uniqueValueRenderer.fieldDelimiter && uniqueValueRenderer.field2) {
-    let val2 = entity.properties[uniqueValueRenderer.field2].getValue();
+    const val2 = entity.properties[uniqueValueRenderer.field2].getValue();
 
     if (val2) {
       entityUniqueValue += uniqueValueRenderer.fieldDelimiter + val2;
 
       if (uniqueValueRenderer.field3) {
-        let val3 = entity.properties[uniqueValueRenderer.field3].getValue();
+        const val3 = entity.properties[uniqueValueRenderer.field3].getValue();
 
         if (val3) {
           entityUniqueValue += uniqueValueRenderer.fieldDelimiter + val3;
@@ -490,7 +567,7 @@ function getClassBreaksSymbol(
   entity: Entity,
   classBreaksRenderer: ClassBreaksRenderer
 ): Symbol | null {
-  let entityValue = entity.properties[classBreaksRenderer.field].getValue();
+  const entityValue = entity.properties[classBreaksRenderer.field].getValue();
   for (var i = 0; i < classBreaksRenderer.classBreakInfos.length; i++) {
     if (entityValue <= classBreaksRenderer.classBreakInfos[i].classMaxValue) {
       return classBreaksRenderer.classBreakInfos[i].symbol;
@@ -500,7 +577,7 @@ function getClassBreaksSymbol(
   return classBreaksRenderer.defaultSymbol;
 }
 
-function convertEsriColorToCesiumColor(esriColor: number[]) {
+export function convertEsriColorToCesiumColor(esriColor: number[]): Color {
   return Color.fromBytes(
     esriColor[0],
     esriColor[1],
@@ -513,74 +590,153 @@ function updateEntityWithEsriStyle(
   entity: Entity,
   symbol: Symbol,
   catalogItem: ArcGisFeatureServerCatalogItem
-) {
-  // Replace a general Cesium Point with a billboard
-  if (entity.point && symbol.imageData) {
-    entity.billboard = new BillboardGraphics({
-      image: proxyCatalogItemUrl(
-        catalogItem,
-        `data:${symbol.contentType};base64,${symbol.imageData}`
-      ),
-      heightReference: catalogItem.clampToGround
-        ? HeightReference.RELATIVE_TO_GROUND
-        : undefined,
-      width: symbol.width,
-      height: symbol.height,
-      rotation: symbol.angle
-    });
+): void {
+  // type of geometry is point and the applied style is image
+  // TODO: tweek the svg support
+  if (symbol.type === "esriPMS") {
+    // Replace a general Cesium Point with a billboard
+    if (entity.point && symbol.imageData) {
+      entity.billboard = new BillboardGraphics({
+        image: proxyCatalogItemUrl(
+          catalogItem,
+          `data:${symbol.contentType};base64,${symbol.imageData}`
+        ),
+        heightReference: catalogItem.clampToGround
+          ? HeightReference.RELATIVE_TO_GROUND
+          : undefined,
+        width: convertEsriPointSizeToPixels(symbol.width!),
+        height: convertEsriPointSizeToPixels(symbol.height!),
+        rotation: symbol.angle
+      });
 
-    if (symbol.xoffset || symbol.yoffset) {
-      const x = isDefined(symbol.xoffset) ? symbol.xoffset : 0;
-      const y = isDefined(symbol.yoffset) ? symbol.yoffset : 0;
-      entity.billboard.pixelOffset = new Cartesian3(x, y);
+      if (symbol.xoffset || symbol.yoffset) {
+        const x = isDefined(symbol.xoffset) ? symbol.xoffset : 0;
+        const y = isDefined(symbol.yoffset) ? symbol.yoffset : 0;
+        entity.billboard.pixelOffset = new Cartesian3(x, y);
+      }
+
+      entity.point.show = new ConstantProperty(false);
     }
+  } else if (symbol.type === "esriSMS") {
+    // Update the styling of the Cesium Point
+    // TODO extend support for cross, diamond, square, x, triangle
+    if (entity.point && symbol.color) {
+      entity.point.color = new ConstantProperty(
+        convertEsriColorToCesiumColor(symbol.color)
+      );
+      entity.point.pixelSize = new ConstantProperty(
+        convertEsriPointSizeToPixels(symbol.size!)
+      );
 
-    entity.point.show = new ConstantProperty(false);
+      if (symbol.outline) {
+        entity.point.outlineColor = new ConstantProperty(
+          convertEsriColorToCesiumColor(symbol.outline.color)
+        );
+        entity.point.outlineWidth = new ConstantProperty(
+          convertEsriPointSizeToPixels(symbol.outline.width)
+        );
+      }
+    }
+  } else if (symbol.type === "esriSLS") {
+    /* Update the styling of the Cesium Polyline */
+    if (entity.polyline) {
+      if (isDefined(symbol.width)) {
+        entity.polyline.width = new ConstantProperty(
+          convertEsriPointSizeToPixels(symbol.width)
+        );
+      }
+      const color = symbol.color ? symbol.color : defaultColor;
+      /*
+        For line containing dashes PolylineDashMaterialProperty is used.
+        Definition is done using the line patterns converted from hex to decimal dashPattern.
+        Source for some of the line patterns is https://www.opengl.org.ru/docs/pg/0204.html, others are created manually
+      */
+      esriPolylineStyle(entity, color, <supportedLineStyle>symbol.style);
+    }
+  } else if (symbol.type === "esriSFS") {
+    // Update the styling of the Cesium Polygon
+    if (entity.polygon) {
+      const color = symbol.color ? symbol.color : defaultFillColor;
+
+      // feature picking doesn't work when the polygon interior is transparent, so
+      // use an almost-transparent color instead
+      if (color[3] === 0) {
+        color[3] = 1;
+      }
+
+      if (
+        symbol.style === "esriSFSNull" &&
+        symbol.outline &&
+        symbol.outline.style === "esriSLSNull"
+      ) {
+        entity.polygon.show = new ConstantProperty(false);
+      } else {
+        entity.polygon.material = convertEsriColorToCesiumColor(color);
+      }
+      if (symbol.outline) {
+        const outlineColor = symbol.outline.color
+          ? symbol.outline.color
+          : defaultOutlineColor;
+        /* It can actually happen that entity has both polygon and polyline defined at same time,
+            check the implementation of GeoJsonCatalogItem for details. */
+        entity.polygon.outlineColor = convertEsriColorToCesiumColor(
+          outlineColor
+        );
+        entity.polygon.outlineWidth = new ConstantProperty(
+          convertEsriPointSizeToPixels(symbol.outline.width)
+        );
+        if (entity.polyline) {
+          esriPolylineStyle(entity, outlineColor, symbol.outline.style);
+          entity.polyline.width = new ConstantProperty(
+            convertEsriPointSizeToPixels(symbol.outline.width)
+          );
+          entity.polygon.outline = entity.polyline.material;
+        }
+      }
+    }
   }
+}
 
-  // Update the styling of the Cesium Polyline
-  if (entity.polyline && symbol.color) {
+function esriPolylineStyle(
+  entity: Entity,
+  color: number[],
+  style?: supportedLineStyle
+): void {
+  if (style) {
+    const patternValue = getLineStyleCesium(style);
+    if (patternValue) {
+      entity.polyline.material = new PolylineDashMaterialProperty({
+        color: convertEsriColorToCesiumColor(color),
+        dashPattern: new ConstantProperty(patternValue)
+      });
+    } else if (style === "esriSLSSolid") {
+      // it is simple line just define color
+      entity.polyline.material = new ColorMaterialProperty(
+        convertEsriColorToCesiumColor(color)
+      );
+    } else if (style === "esriSLSDash") {
+      // default PolylineDashMaterialProperty is dashed line ` -` (0x00FF)
+      entity.polyline.material = new PolylineDashMaterialProperty({
+        color: convertEsriColorToCesiumColor(color)
+      });
+    }
+  } else {
+    // we don't know how to handle style make it default
     entity.polyline.material = new ColorMaterialProperty(
-      convertEsriColorToCesiumColor(symbol.color)
+      convertEsriColorToCesiumColor(color)
     );
-    if (isDefined(symbol.width)) {
-      entity.polyline.width = new ConstantProperty(symbol.width);
-    }
   }
 
-  // Update the styling of the Cesium Point
-  if (entity.point && symbol.color) {
-    entity.point.color = new ConstantProperty(
-      convertEsriColorToCesiumColor(symbol.color)
-    );
-    entity.point.pixelSize = new ConstantProperty(symbol.size);
-
-    if (symbol.outline) {
-      entity.point.outlineColor = new ConstantProperty(
-        convertEsriColorToCesiumColor(symbol.outline.color)
-      );
-      entity.point.outlineWidth = symbol.outline.width;
-    }
+  if (style === "esriSLSNull") {
+    entity.polyline.show = new ConstantProperty(false);
   }
+}
 
-  // Update the styling of the Cesium Polygon
-  if (entity.polygon && symbol.color) {
-    const color = symbol.color;
-
-    // feature picking doesn't work when the polygon interior is transparent, so
-    // use an almost-transparent color instead
-    if (color[3] === 0) {
-      color[3] = 1;
-    }
-    entity.polygon.material = convertEsriColorToCesiumColor(color);
-
-    if (symbol.outline) {
-      entity.polygon.outlineColor = convertEsriColorToCesiumColor(
-        symbol.outline.color
-      );
-      entity.polygon.outlineWidth = symbol.outline.width;
-    }
-  }
+// ESRI uses points for styling while cesium uses pixels
+export function convertEsriPointSizeToPixels(pointSize: number) {
+  // 1 px = 0.75 point
+  // 1 point = 4/3 point
+  return (pointSize * 4) / 3;
 }
 
 function loadGeoJson(catalogItem: ArcGisFeatureServerCatalogItem) {
@@ -643,7 +799,7 @@ function splitLayerIdFromPath(url: string) {
   };
 }
 
-function cleanUrl(url: string) {
+function cleanUrl(url: string): string {
   // Strip off the search portion of the URL
   const uri = new URI(url);
   uri.search("");

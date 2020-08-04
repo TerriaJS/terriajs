@@ -33,7 +33,7 @@ const PolygonParameterEditor = observer(
     },
 
     selectPolygonOnMap() {
-      PolygonParameterEditor.selectOnMap(
+      selectOnMap(
         this.props.previewed.terria,
         this.props.viewState,
         this.props.parameter
@@ -153,7 +153,6 @@ export function selectOnMap(terria, viewState, parameter) {
       });
     }
   });
-  viewState.explorerPanelIsVisible = false;
   userDrawing.enterDrawMode();
 }
 
