@@ -12,6 +12,21 @@ export class LegendItemTraits extends ModelTraits {
   title?: string;
 
   @primitiveTrait({
+    name: "Multiple Titles",
+    description: "Multiple titles to display next to this legend item.",
+    type: "string"
+  })
+  multipleTitles?: string[];
+
+  @primitiveTrait({
+    name: "Maximum multiple titles showed",
+    description:
+      "Maximum number of multiple titles to display next to this legend item. (Default is 10)",
+    type: "string"
+  })
+  maxMultipleTitlesShowed: number = 10;
+
+  @primitiveTrait({
     name: "Title",
     description:
       "The title to display above this legend item, i.e. marking the top of " +
