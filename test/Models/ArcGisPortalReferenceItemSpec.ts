@@ -108,7 +108,7 @@ describe("ArcGisPortalItemReference", function() {
       expect(portalItemTarget.rectangle.north).toBe(-28.1555);
 
       const licenceInfo = portalItemTarget.info.filter(
-        (i: any) => i.name === "Licence"
+        (i: any) => i.name === i18next.t("models.arcgisPortal.licence")
       )[0];
       expect(licenceInfo.content).toBeDefined();
 
