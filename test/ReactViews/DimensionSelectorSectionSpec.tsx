@@ -195,6 +195,8 @@ describe("DimensionSelectorSection", function() {
       </ThemeProvider>
     );
 
+    // Note: there will only be 2 selects: one for region column and one for region mapping.
+    // The activeStyle select is hidden as there is only one option
     const selects = section.root.findAllByType(Select);
     expect(selects.length).toBe(2);
 
