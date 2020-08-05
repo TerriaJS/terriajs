@@ -56,12 +56,6 @@
   float: right;
 }
 
-.alert-message {
-  font-family: $font-base;
-  font-size: $font-size-mid-small;
-  color: $data-catalog-color;
-}
-
 .h3 {
   composes: h3 from "../../Sass/common/_base.scss";
   margin-top: 0;

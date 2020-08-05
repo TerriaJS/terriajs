@@ -67,11 +67,6 @@ const DataCatalogGroup = observer(
       this.toggleOpen();
       this.props.group.loadMembers();
       this.props.viewState.viewCatalogMember(this.props.group);
-
-      // Show search breadcrumbs
-      if (this.props.viewState.searchState.catalogSearchText.length > 0) {
-        this.props.viewState.showBreadcrumbs(true);
-      }
     },
 
     isSelected() {
