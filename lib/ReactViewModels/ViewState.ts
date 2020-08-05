@@ -120,6 +120,17 @@ export default class ViewState {
     this.currentTrainerStepIndex = index;
   }
 
+  /**
+   * Bottom dock state & action
+   */
+  @observable bottomDockHeight: number = 0;
+  @action
+  setBottomDockHeight(height: number) {
+    if (this.bottomDockHeight !== height) {
+      this.bottomDockHeight = height;
+    }
+  }
+
   @observable workbenchWithOpenControls: string | undefined = undefined;
 
   errorProvider: any | null = null;
@@ -554,9 +565,15 @@ export default class ViewState {
   }
 
   @action
+  changeSearchState(newText: string) {
+    this.searchState.catalogSearchText = newText;
+  }
+
+  @action
   setDisclaimerVisible(bool: boolean) {
     this.disclaimerVisible = bool;
   }
+
   @action
   hideDisclaimer() {
     this.setDisclaimerVisible(false);
@@ -633,6 +650,14 @@ export default class ViewState {
   @action
   closeTool() {
     this.currentTool = undefined;
+  }
+
+  @computed
+  get breadcrumbsShown() {
+    return (
+      this.previewedItem !== undefined ||
+      this.userDataPreviewedItem !== undefined
+    );
   }
 
   @computed

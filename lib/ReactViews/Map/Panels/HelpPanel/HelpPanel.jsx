@@ -113,6 +113,9 @@ class HelpPanel extends React.Component {
               textProps={{
                 large: true
               }}
+              css={`
+                ${p => p.theme.addTerriaPrimaryBtnStyles(p)}
+              `}
             >
               {"Take the tour"}
             </Button>

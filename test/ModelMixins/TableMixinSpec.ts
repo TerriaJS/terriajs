@@ -2,6 +2,7 @@ import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
 import Terria from "../../lib/Models/Terria";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
+import { runInAction } from "mobx";
 
 const LatLonValCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_val.csv");
 const LatLonEnumDateIdCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum_date_id.csv");
@@ -13,7 +14,14 @@ describe("TableMixin", function() {
   let item: CsvCatalogItem;
 
   beforeEach(function() {
-    item = new CsvCatalogItem("test", new Terria(), undefined);
+    item = new CsvCatalogItem(
+      "test",
+      new Terria({
+        baseUrl: "./"
+      }),
+      undefined
+    );
+
     jasmine.Ajax.install();
     jasmine.Ajax.stubRequest(
       "build/TerriaJS/data/regionMapping.json"
@@ -63,7 +71,10 @@ describe("TableMixin", function() {
 
   describe("when the table has lat/lon columns but no time & id columns", function() {
     it("creates one entity per row", async function() {
-      item.setTrait(CommonStrata.user, "csvString", LatLonValCsv);
+      runInAction(() =>
+        item.setTrait(CommonStrata.user, "csvString", LatLonValCsv)
+      );
+
       await item.loadMapItems();
       const mapItem = item.mapItems[0];
       expect(mapItem instanceof CustomDataSource).toBe(true);
