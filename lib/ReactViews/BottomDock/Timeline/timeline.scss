@@ -79,144 +79,144 @@
   color: black;
 }
 
-.timelineDatePicker {
-  color: #fff;
-  display: table-cell;
-  width: 30px;
-  height: 30px;
-}
+// .timelineDatePicker {
+//   color: #fff;
+//   display: table-cell;
+//   width: 30px;
+//   height: 30px;
+// }
 
-.datePicker {
-  width: 260px;
-  height: 300px;
-  border: 1px solid $grey;
-  border-radius: 5px;
-  padding: 5px;
-  position: absolute;
-  left: 10px;
-  bottom: 70px;
-  // background: $dark;
-  z-index: 100;
+// .datePicker {
+//   width: 260px;
+//   height: 300px;
+//   border: 1px solid $grey;
+//   border-radius: 5px;
+//   padding: 5px;
+//   position: absolute;
+//   left: 10px;
+//   bottom: 70px;
+//   // background: $dark;
+//   z-index: 100;
 
-  &.openBelow {
-    top: 40px;
-    left: -190px;
-  }
-}
+//   &.openBelow {
+//     top: 40px;
+//     left: -190px;
+//   }
+// }
 
-.dayPicker {
-  text-align: center;
-  margin-top: -10px;
-}
+// .dayPicker {
+//   text-align: center;
+//   margin-top: -10px;
+// }
 
-.backbutton,
-.backbtn {
-  composes: btn from "../../../Sass/common/_buttons.scss";
-  composes: btn-transparent from "../../../Sass/common/_buttons.scss";
-  display: inline-block;
-  z-index: 99;
-  position: relative;
+// .backbutton,
+// .backbtn {
+//   composes: btn from "../../../Sass/common/_buttons.scss";
+//   composes: btn-transparent from "../../../Sass/common/_buttons.scss";
+//   display: inline-block;
+//   z-index: 99;
+//   position: relative;
 
-  svg {
-    height: 15px;
-    width: 20px;
-    fill: #ffffff;
-    display: inline-block;
-    vertical-align: bottom;
-  }
+//   svg {
+//     height: 15px;
+//     width: 20px;
+//     fill: #ffffff;
+//     display: inline-block;
+//     vertical-align: bottom;
+//   }
 
-  &[disabled],
-  &:disabled {
-    opacity: 0.1;
-  }
-}
+//   &[disabled],
+//   &:disabled {
+//     opacity: 0.1;
+//   }
+// }
 
-.backbtn {
-  padding-bottom: 5px;
-  padding-right: 5px;
-}
+// .backbtn {
+//   padding-bottom: 5px;
+//   padding-right: 5px;
+// }
 
-.togglebutton {
-  background: transparent;
-  padding: 0px 6px;
-  border: 0;
-  height: 30px;
-  width: 30px;
-  margin-right: 5px;
-  display: inline-block;
-  svg {
-    width: 18px;
-    height: 18px;
-    float: left;
-    fill: #fff;
-  }
-}
+// .togglebutton {
+//   background: transparent;
+//   padding: 0px 6px;
+//   border: 0;
+//   height: 30px;
+//   width: 30px;
+//   margin-right: 5px;
+//   display: inline-block;
+//   svg {
+//     width: 18px;
+//     height: 18px;
+//     float: left;
+//     fill: #fff;
+//   }
+// }
 
-.grid {
-  display: block;
-  width: 100%;
-  height: 100%;
-  margin: 0 auto;
-  color: #fff;
-  padding: 0px 5px;
-  border-radius: 3px;
-  margin-top: -20px;
-}
+// .grid {
+//   display: block;
+//   width: 100%;
+//   height: 100%;
+//   margin: 0 auto;
+//   color: #fff;
+//   padding: 0px 5px;
+//   border-radius: 3px;
+//   margin-top: -20px;
+// }
 
-.gridBody {
-  height: calc(100% - 30px);
-  overflow: auto;
-  composes: scrollbars from "../../../Sass/common/_base.scss";
-}
+// .gridBody {
+//   height: calc(100% - 30px);
+//   overflow: auto;
+//   composes: scrollbars from "../../../Sass/common/_base.scss";
+// }
 
-.gridRow:hover {
-  background: $overlay;
-  cursor: pointer;
-}
+// .gridRow:hover {
+//   background: $overlay;
+//   cursor: pointer;
+// }
 
-.inactiveGridRow:hover {
-  background: transparent;
-  cursor: default;
-}
+// .inactiveGridRow:hover {
+//   background: transparent;
+//   cursor: default;
+// }
 
-.gridLabel {
-  float: left;
-  display: inline-block;
-  width: 35px;
-  font-size: 10px;
-  padding-left: 3px;
-}
+// .gridLabel {
+//   float: left;
+//   display: inline-block;
+//   width: 35px;
+//   font-size: 10px;
+//   padding-left: 3px;
+// }
 
-.gridRowInner12,
-.gridRowInner31 {
-  display: table-row;
-  padding: 3px;
-  border-radius: 3px;
-}
+// .gridRowInner12,
+// .gridRowInner31 {
+//   display: table-row;
+//   padding: 3px;
+//   border-radius: 3px;
+// }
 
-.gridRowInner12 span,
-.gridRowInner31 span {
-  display: inline-block;
-  height: 10px;
-  width: 2px;
-  // background: $overlay;
-  margin-top: 1px;
-}
+// .gridRowInner12 span,
+// .gridRowInner31 span {
+//   display: inline-block;
+//   height: 10px;
+//   width: 2px;
+//   // background: $overlay;
+//   margin-top: 1px;
+// }
 
-.gridRowInner12 span {
-  margin-right: 11px;
-}
+// .gridRowInner12 span {
+//   margin-right: 11px;
+// }
 
-.gridRowInner31 span {
-  margin-right: 3px;
-}
+// .gridRowInner31 span {
+//   margin-right: 3px;
+// }
 
-.gridHeading {
-  text-align: center;
-  color: #fff;
-  font-size: 12px;
-  margin-bottom: 10px;
-}
+// .gridHeading {
+//   text-align: center;
+//   color: #fff;
+//   font-size: 12px;
+//   margin-bottom: 10px;
+// }
 
 .hourview {
 }
@@ -228,15 +228,15 @@
 .open {
 }
 
-.centuryBtn,
-.dateBtn {
-  composes: btn from "../../../Sass/common/_buttons.scss";
-  composes: btn-primary from "../../../Sass/common/_buttons.scss";
-  width: calc(100% - 20px);
-  margin: 5px;
-}
+// .centuryBtn,
+// .dateBtn {
+//   composes: btn from "../../../Sass/common/_buttons.scss";
+//   composes: btn-primary from "../../../Sass/common/_buttons.scss";
+//   width: calc(100% - 20px);
+//   margin: 5px;
+// }
 
-.centuryBtn {
-  display: inline-block;
-  width: 40%;
-}
+// .centuryBtn {
+//   display: inline-block;
+//   width: 40%;
+// }

@@ -14,7 +14,7 @@ import {
 import Icon from "../../Icon";
 
 import { formatDateTime } from "./DateFormats";
-import Styles from "./timeline.scss";
+import Button, { RawButton } from "../../../Styled/Button";
 
 const dateFormat = require("dateformat");
 const DatePicker = require("react-datepicker");
@@ -42,7 +42,7 @@ const monthNames = [
   "Dec"
 ];
 
-const StyledGrid = styled.span<{ active: boolean }>`
+const GridItem = styled.span<{ active: boolean }>`
   background: ${p => p.theme.overlay};
   ${p =>
     p.active &&
@@ -52,6 +52,82 @@ const StyledGrid = styled.span<{ active: boolean }>`
     }
     opacity: 0.9;
    `}
+`;
+
+const GridRowInner = styled.span<{ marginRight: string }>`
+  display: table-row;
+  padding: 3px;
+  border-radius: 3px;
+
+  span {
+    display: inline-block;
+    height: 10px;
+    width: 2px;
+    margin-top: 1px;
+    margin-right: ${p => p.marginRight}px;
+  }
+`;
+
+const Grid = styled.div`
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  color: #fff;
+  padding: 0px 5px;
+  border-radius: 3px;
+  margin-top: -20px;
+`;
+
+const GridHeading = styled.div`
+  text-align: center;
+  color: #fff;
+  font-size: 12px;
+  margin-bottom: 10px;
+`;
+
+const GridRow = styled.div`
+  :hover {
+    background: $overlay;
+    cursor: hover;
+  }
+`;
+
+const GridLabel = styled.span`
+  float: left;
+  display: inline-block;
+  width: 35px;
+  font-size: 10px;
+  padding-left: 3px;
+`;
+
+const GridBody = styled.div`
+  height: calc(100% - 30px);
+  overflow: auto;
+`;
+
+const BackButton = styled(RawButton)`
+  display: inline-block;
+  z-index: 99;
+  position: relative;
+
+  svg {
+    height: 15px;
+    width: 20px;
+    fill: #ffffff;
+    display: inline-block;
+    vertical-align: bottom;
+  }
+
+  &[disabled],
+  &:disabled {
+    opacity: 0.1;
+  }
+`;
+
+const DateButton = styled(BackButton)`
+  width: calc(100% - 20px);
+  margin: 5px;
 `;
 
 interface PropsType extends WithTranslation {
@@ -64,7 +140,6 @@ interface PropsType extends WithTranslation {
   onClose: () => void;
   showCalendarButton?: boolean;
   dateFormat?: string;
-  popupStyle?: string;
 }
 
 type Granularity = "century" | "year" | "month" | "day" | "time" | "hour";
@@ -156,20 +231,23 @@ class DateTimePicker extends React.Component<PropsType> {
     const centuries = datesObject.indice;
     if (datesObject.dates && datesObject.dates.length >= 12) {
       return (
-        <div className={Styles.grid}>
-          <div className={Styles.gridHeading}>Select a century</div>
+        <Grid>
+          <GridHeading>Select a century</GridHeading>
           {centuries.map(c => (
-            <button
+            <DateButton
               key={c}
-              className={Styles.centuryBtn}
+              css={`
+                display: inline-block;
+                width: 40%;
+              `}
               onClick={() =>
                 runInAction(() => (this.currentDateIndice.century = c))
               }
             >
               {c}00
-            </button>
+            </DateButton>
           ))}
-        </div>
+        </Grid>
       );
     } else {
       return this.renderList(datesObject.dates);
@@ -184,12 +262,11 @@ class DateTimePicker extends React.Component<PropsType> {
         Number
       ) as number[];
       return (
-        <div className={Styles.grid}>
-          <div className={Styles.gridHeading}>Select a year</div>
-          <div className={Styles.gridBody}>
+        <Grid>
+          <GridHeading>Select a year</GridHeading>
+          <GridBody>
             {years.map(y => (
-              <div
-                className={Styles.gridRow}
+              <GridRow
                 key={y}
                 onClick={() =>
                   runInAction(() => {
@@ -200,20 +277,20 @@ class DateTimePicker extends React.Component<PropsType> {
                   })
                 }
               >
-                <span className={Styles.gridLabel}>{y}</span>
-                <span className={Styles.gridRowInner12}>
+                <GridLabel>{y}</GridLabel>
+                <GridRowInner marginRight="11">
                   {monthOfYear.map(m => (
-                    <StyledGrid
+                    <GridItem
                       // className={datesObject[y][m] ? Styles.activeGrid : ""}
                       active={isDefined(datesObject[y][m])}
                       key={m}
                     />
                   ))}
-                </span>
-              </div>
+                </GridRowInner>
+              </GridRow>
             ))}
-          </div>
-        </div>
+          </GridBody>
+        </Grid>
       );
     } else {
       return this.renderList(datesObject.dates);
@@ -227,10 +304,9 @@ class DateTimePicker extends React.Component<PropsType> {
     }
     if (datesObject[year].dates && datesObject[year].dates.length > 12) {
       return (
-        <div className={Styles.grid}>
-          <div className={Styles.gridHeading}>
-            <button
-              className={Styles.backbtn}
+        <Grid>
+          <GridHeading>
+            <BackButton
               onClick={() => {
                 runInAction(() => {
                   this.currentDateIndice.year = undefined;
@@ -241,14 +317,19 @@ class DateTimePicker extends React.Component<PropsType> {
               }}
             >
               {year}
-            </button>
-          </div>
-          <div className={Styles.gridBody}>
+            </BackButton>
+          </GridHeading>
+          <GridBody>
             {monthNames.map((m, i) => (
-              <div
-                className={classNames(Styles.gridRow, {
-                  [Styles.inactiveGridRow]: !isDefined(datesObject[year][i])
-                })}
+              <GridRow
+                css={`
+                  ${!isDefined(datesObject[year][i])
+                    ? `:hover {
+                  background: transparent;
+                  cursor: default;
+                }`
+                    : ""}
+                `}
                 key={m}
                 onClick={() =>
                   isDefined(datesObject[year][i]) &&
@@ -259,10 +340,10 @@ class DateTimePicker extends React.Component<PropsType> {
                   })
                 }
               >
-                <span className={Styles.gridLabel}>{m}</span>
-                <span className={Styles.gridRowInner31}>
+                <GridLabel>{m}</GridLabel>
+                <GridRowInner marginRight="2">
                   {daysInMonth(i + 1, year).map(d => (
-                    <StyledGrid
+                    <GridItem
                       active={
                         isDefined(datesObject[year][i]) &&
                         isDefined(datesObject[year][i][d + 1])
@@ -270,11 +351,11 @@ class DateTimePicker extends React.Component<PropsType> {
                       key={d}
                     />
                   ))}
-                </span>
-              </div>
+                </GridRowInner>
+              </GridRow>
             ))}
-          </div>
-        </div>
+          </GridBody>
+        </Grid>
       );
     } else {
       return this.renderList(datesObject[year].dates);
@@ -314,10 +395,14 @@ class DateTimePicker extends React.Component<PropsType> {
       // const daysToDisplay = Object.keys(monthObject).map(dayNumber => monthObject[dayNumber][0]);
       // const selected = isDefined(this.currentDateIndice.day) ? this.props.datesObject[this.currentDateIndice.year][this.currentDateIndice.month][this.currentDateIndice.day][0] : null;
       return (
-        <div className={Styles.dayPicker}>
+        <div
+          css={`
+            text-align: center;
+            margin-top: -10px;
+          `}
+        >
           <div>
-            <button
-              className={Styles.backbtn}
+            <BackButton
               onClick={() =>
                 runInAction(() => {
                   this.currentDateIndice.year = undefined;
@@ -328,9 +413,8 @@ class DateTimePicker extends React.Component<PropsType> {
               }
             >
               {this.currentDateIndice.year}
-            </button>
-            <button
-              className={Styles.backbtn}
+            </BackButton>
+            <BackButton
               onClick={() =>
                 runInAction(() => {
                   this.currentDateIndice.month = undefined;
@@ -340,7 +424,7 @@ class DateTimePicker extends React.Component<PropsType> {
               }
             >
               {monthNames[this.currentDateIndice.month]}
-            </button>
+            </BackButton>
           </div>
           <DatePicker
             inline
@@ -365,13 +449,12 @@ class DateTimePicker extends React.Component<PropsType> {
   renderList(items: Date[]) {
     if (isDefined(items)) {
       return (
-        <div className={Styles.grid}>
-          <div className={Styles.gridHeading}>Select a time</div>
-          <div className={Styles.gridBody}>
+        <Grid>
+          <GridHeading>Select a time</GridHeading>
+          <GridBody>
             {items.map(item => (
-              <button
+              <DateButton
                 key={formatDateTime(item)}
-                className={Styles.dateBtn}
                 onClick={() => {
                   this.closePicker(item);
                   this.props.onChange(item);
@@ -380,10 +463,10 @@ class DateTimePicker extends React.Component<PropsType> {
                 {isDefined(this.props.dateFormat)
                   ? dateFormat(item, this.props.dateFormat)
                   : formatDateTime(item)}
-              </button>
+              </DateButton>
             ))}
-          </div>
-        </div>
+          </GridBody>
+        </Grid>
       );
     }
   }
@@ -405,19 +488,18 @@ class DateTimePicker extends React.Component<PropsType> {
 
     if (timeOptions.length > 24) {
       return (
-        <div className={Styles.grid}>
-          <div className={Styles.gridHeading}>
+        <Grid>
+          <GridHeading>
             {`Select an hour on ${this.currentDateIndice.day} ${
               monthNames[this.currentDateIndice.month + 1]
             } ${this.currentDateIndice.year}`}{" "}
-          </div>
-          <div className={Styles.gridBody}>
+          </GridHeading>
+          <GridBody>
             {datesObject[this.currentDateIndice.year][
               this.currentDateIndice.month
             ][this.currentDateIndice.day].indice.map(item => (
-              <button
+              <DateButton
                 key={item}
-                className={Styles.dateBtn}
                 onClick={() =>
                   runInAction(() => {
                     this.currentDateIndice.hour = item;
@@ -436,10 +518,10 @@ class DateTimePicker extends React.Component<PropsType> {
                   }{" "}
                   options)
                 </span>
-              </button>
+              </DateButton>
             ))}
-          </div>
-        </div>
+          </GridBody>
+        </Grid>
       );
     } else {
       return this.renderList(
@@ -532,14 +614,33 @@ class DateTimePicker extends React.Component<PropsType> {
       const datesObject = this.props.dates;
       return (
         <div
-          className={Styles.timelineDatePicker}
+          css={`
+            color: #fff;
+            display: table-cell;
+            width: 30px;
+            height: 30px;
+          `}
           onClick={event => {
             event.stopPropagation();
           }}
         >
           {this.props.showCalendarButton && (
             <button
-              className={Styles.togglebutton}
+              css={`
+                background: transparent;
+                padding: 0px 6px;
+                border: 0;
+                height: 30px;
+                width: 30px;
+                margin-right: 5px;
+                display: inline-block;
+                svg {
+                  width: 18px;
+                  height: 18px;
+                  float: left;
+                  fill: #fff;
+                }
+              `}
               onClick={() => {
                 this.toggleDatePicker();
               }}
@@ -549,15 +650,31 @@ class DateTimePicker extends React.Component<PropsType> {
           )}
           {this.props.isOpen && (
             <div
-              className={classNames(Styles.datePicker, this.props.popupStyle, {
-                [Styles.openBelow]: this.props.openDirection === "down"
-              })}
               css={`
                 background: ${(p: any) => p.theme.dark};
+                width: 260px;
+                height: 300px;
+                border: 1px solid $grey;
+                border-radius: 5px;
+                padding: 5px;
+                position: relative;
+                top: -170px;
+                left: 0;
+                z-index: 100;
+
+                ${this.props.openDirection === "down"
+                  ? `&.openBelow {
+                  top: 40px;
+                  left: -190px;
+                }`
+                  : ""}
               `}
             >
-              <button
-                className={Styles.backbutton}
+              <BackButton
+                css={`
+                  padding-bottom: 5px;
+                  padding-right: 5px;
+                `}
                 disabled={
                   !isDefined(
                     this.currentDateIndice[this.currentDateIndice.granularity]
@@ -567,7 +684,7 @@ class DateTimePicker extends React.Component<PropsType> {
                 onClick={() => this.goBack()}
               >
                 <Icon glyph={Icon.GLYPHS.left} />
-              </button>
+              </BackButton>
               {!isDefined(this.currentDateIndice.century) &&
                 this.renderCenturyGrid(datesObject)}
               {isDefined(this.currentDateIndice.century) &&

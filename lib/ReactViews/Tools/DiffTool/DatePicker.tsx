@@ -20,7 +20,6 @@ const Spacing: any = require("../../../Styled/Spacing").default;
 interface PropsType extends WithTranslation {
   heading: string;
   item: DiffableMixin.Instance;
-  popupStyle: string;
   externalOpenButton: React.RefObject<HTMLButtonElement>;
   onDateSet: () => void;
 }
@@ -156,7 +155,6 @@ class DatePicker extends React.Component<PropsType> {
             currentDate={this.currentDate}
             dates={this.props.item.objectifiedDates}
             onChange={this.changeCurrentDate}
-            popupStyle={this.props.popupStyle}
             openDirection="none"
             isOpen={this.isOpen}
             showCalendarButton={false}
