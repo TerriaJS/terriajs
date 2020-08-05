@@ -157,7 +157,7 @@ describe("DimensionSelectorSection", function() {
       .catch(done.fail);
   });
 
-  it("shows csv styles and region mapping options", async function(done) {
+  it("shows csv region mapping options", async function(done) {
     jasmine.Ajax.install();
     jasmine.Ajax.stubRequest(
       "build/TerriaJS/data/regionMapping.json"
@@ -196,22 +196,18 @@ describe("DimensionSelectorSection", function() {
     );
 
     const selects = section.root.findAllByType(Select);
-    expect(selects.length).toBe(3);
+    expect(selects.length).toBe(2);
 
-    if (selects.length < 3) {
+    if (selects.length < 2) {
       done.fail("Not enough select objects");
     }
 
-    expect(selects[0].props.name).toContain("activeStyle");
-    expect(selects[0].props.value).toBe("number");
+    expect(selects[0].props.name).toContain("regionColumn");
+    expect(selects[0].props.value).toBe("lga_code_2015");
     expect(selects[0].findAllByType("option").length).toBe(2);
 
-    expect(selects[1].props.name).toContain("regionColumn");
-    expect(selects[1].props.value).toBe("lga_code_2015");
-    expect(selects[1].findAllByType("option").length).toBe(2);
-
-    expect(selects[2].props.name).toContain("regionMapping");
-    expect(selects[2].props.value).toBe("LGA_2015");
+    expect(selects[1].props.name).toContain("regionMapping");
+    expect(selects[1].props.value).toBe("LGA_2015");
 
     done();
 

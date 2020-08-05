@@ -348,10 +348,10 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return {
         id: "regionColumn",
         name: "Region Column",
-        options: this.tableStyles.map(tableStyle => {
+        options: this.tableColumns.map(col => {
           return {
-            name: tableStyle.id,
-            id: tableStyle.id
+            name: col.name,
+            id: col.name
           };
         }),
         selectedId: this.activeTableStyle.regionColumn?.name,
