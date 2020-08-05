@@ -3,18 +3,16 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.38)
+#### next release (8.0.0-alpha.44)
+* Pass `format` trait on `TableColumnTraits` down to `TableAutomaticStylesStratum` for generating legends
+* Add `multipleTitles` and `maxMultipleTitlesShowed` to `LegendItemTraits`
+* Aggregate legend items in `createLegendItemsFromEnumColorMap` by colour, that is merge legend items with the same colour (using `multipleTitles`)
+* Only generate `tableStyles` for region columns if no other styles exist
 * Added option for manual Table region mapping - with `enableManualRegionMapping` TableTrait. This provides `SelectableDimensions` for the region column and region type.
 * Added WMS Dimensions (using `SelectableDimensions`)
 * Added WMS multi-layer style, dimension and legend support.
 * Merged the `StyleSelector` and `DimensionsSelector`, and created a `SelectableDimensions` interface.
-#### next release (8.0.0-alpha.39)
-#### next release (8.0.0-alpha.44)
-* Pass `format` trait on `TableColumnTraits` down to `TableAutomaticStylesStratum` for generating legends
 * [The next improvement]
-* Add `multipleTitles` and `maxMultipleTitlesShowed` to `LegendItemTraits`
-* Aggregate legend items in `createLegendItemsFromEnumColorMap` by colour, that is merge legend items with the same colour (using `multipleTitles`)
-* Only generate `tableStyles` for region columns if no other styles exist
 
 #### 8.0.0-alpha.43
 * Replace `@gov.au/page-alerts` dependency with our own warning box component. This removes all `pancake` processes which were sometimes problematic.
