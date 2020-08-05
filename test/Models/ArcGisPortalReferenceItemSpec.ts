@@ -51,7 +51,9 @@ describe("ArcGisPortalItemReference", function() {
 
   it("has a type and typeName", function() {
     expect(arcGisPortalItemReference.type).toBe("arcgis-portal-item");
-    expect(arcGisPortalItemReference.typeName).toBe("ArcGIS Portal Item");
+    expect(arcGisPortalItemReference.typeName).toBe(
+      i18next.t("models.arcgisPortal.name")
+    );
   });
 
   describe("Can load an item by datasetId - ", function() {
