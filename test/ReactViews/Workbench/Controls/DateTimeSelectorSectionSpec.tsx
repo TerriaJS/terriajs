@@ -7,7 +7,6 @@ import Terria from "../../../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../../../lib/Models/WebMapServiceCatalogItem";
 import DateTimeSelectorSection from "../../../../lib/ReactViews/Workbench/Controls/DateTimeSelectorSection";
 import { formatDateTime } from "../../../../lib/ReactViews/BottomDock/Timeline/DateFormats";
-import DateTimePicker from "../../../../lib/ReactViews/BottomDock/Timeline/DateTimePicker";
 
 describe("DateTimeSelectorSection", function() {
   let terria: Terria;
@@ -53,9 +52,5 @@ describe("DateTimeSelectorSection", function() {
     expect(buttons).toBeDefined();
     expect(buttons.length).toEqual(5);
     expect(currentDateBtn.children[0]).toEqual("2014");
-  });
-
-  it("Renders date buttons", async function() {
-    console.log(testRenderer.root.findByType(DateTimePicker));
   });
 });
