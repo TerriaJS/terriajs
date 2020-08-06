@@ -1,20 +1,16 @@
 import { createTransformer } from "mobx-utils";
 import defined from "terriajs-cesium/Source/Core/defined";
-import xml2json from "../ThirdParty/xml2json";
-import loadXML from "../Core/loadXML";
-import TerriaError from "../Core/TerriaError";
-import isReadOnlyArray from "../Core/isReadOnlyArray";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import StratumFromTraits from "./StratumFromTraits";
-import { RectangleTraits } from "../Traits/MappableTraits";
-import {
-  CapabilitiesService,
-  CapabilitiesLatLonBoundingBox,
-  CapabilitiesGeographicBoundingBox,
-  CapabilitiesExtent
-} from "./WebMapServiceCapabilities";
-import { computed } from "mobx";
 import isDefined from "../Core/isDefined";
+import loadXML from "../Core/loadXML";
+import makeRealPromise from "../Core/makeRealPromise";
+import TerriaError from "../Core/TerriaError";
+import xml2json from "../ThirdParty/xml2json";
+import { RectangleTraits } from "../Traits/MappableTraits";
+import StratumFromTraits from "./StratumFromTraits";
+import {
+  CapabilitiesGeographicBoundingBox,
+  CapabilitiesService
+} from "./WebMapServiceCapabilities";
 
 export interface FeatureType {
   readonly Name?: string;
@@ -44,7 +40,7 @@ export default class WebFeatureServiceCapabilities {
     url: string
   ) => Promise<WebFeatureServiceCapabilities> = createTransformer(
     (url: string) => {
-      return Promise.resolve(loadXML(url)).then(function(capabilitiesXml) {
+      return makeRealPromise(loadXML(url)).then(function(capabilitiesXml: any) {
         const json = xml2json(capabilitiesXml);
         if (!defined(json.ServiceIdentification)) {
           throw new TerriaError({
