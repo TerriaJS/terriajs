@@ -1,11 +1,13 @@
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { computed, observable, runInAction } from "mobx";
 import combine from "terriajs-cesium/Source/Core/combine";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import containsAny from "../Core/containsAny";
+import isDefined from "../Core/isDefined";
 import isReadOnlyArray from "../Core/isReadOnlyArray";
 import loadText from "../Core/loadText";
 import TerriaError from "../Core/TerriaError";
+import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -26,8 +28,6 @@ import WebFeatureServiceCapabilities, {
   FeatureType,
   getRectangleFromLayer
 } from "./WebFeatureServiceCapabilities";
-import isDefined from "../Core/isDefined";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 
 class GetCapabilitiesStratum extends LoadableStratum(
   WebFeatureServiceCatalogItemTraits
@@ -40,11 +40,14 @@ class GetCapabilitiesStratum extends LoadableStratum(
     if (catalogItem.getCapabilitiesUrl === undefined) {
       return Promise.reject(
         new TerriaError({
+          sender: this,
           title: i18next.t(
-            "models.WebFeatureServiceCatalogItem.missingUrlTitle"
+            "models.webFeatureServiceCatalogItem.missingUrlTitle",
+            this
           ),
           message: i18next.t(
-            "models.WebFeatureServiceCatalogItem.missingUrlMessage"
+            "models.webFeatureServiceCatalogItem.missingUrlMessage",
+            this
           )
         })
       );
@@ -84,19 +87,26 @@ class GetCapabilitiesStratum extends LoadableStratum(
       name,
       this.capabilities && this.capabilities.findLayer(name)
     ];
-    return new Map(this.catalogItem.layersArray.map(lookup));
+    return new Map(this.catalogItem.typeNamesArray.map(lookup));
   }
 
   @computed
   get info(): StratumFromTraits<InfoSectionTraits>[] {
     const result: StratumFromTraits<InfoSectionTraits>[] = [];
 
-    const capabilitiesTraits = createStratumInstance(InfoSectionTraits);
-    capabilitiesTraits.name = i18next.t(
-      "models.WebFeatureServiceCatalogItem.getCapabilitiesUrl"
+    function createInfoSection(name: string, content: string | undefined) {
+      const trait = createStratumInstance(InfoSectionTraits);
+      trait.name = name;
+      trait.content = content;
+      return trait;
+    }
+
+    result.push(
+      createInfoSection(
+        i18next.t("models.webFeatureServiceCatalogItem.getCapabilitiesUrl"),
+        this.catalogItem.getCapabilitiesUrl
+      )
     );
-    capabilitiesTraits.content = this.catalogItem.getCapabilitiesUrl;
-    result.push(capabilitiesTraits);
 
     let firstDataDescription: string | undefined;
     for (const layer of this.capabilitiesFeatureTypes.values()) {
@@ -113,12 +123,11 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
       const suffix =
         this.capabilitiesFeatureTypes.size === 1 ? "" : ` - ${layer.Title}`;
-      const name = `Web Map Service Layer Description${suffix}`;
+      const name = `${i18next.t(
+        "models.webFeatureServiceCatalogItem.abstract"
+      )}${suffix}`;
 
-      const traits = createStratumInstance(InfoSectionTraits);
-      traits.name = name;
-      traits.content = layer.Abstract;
-      result.push(traits);
+      result.push(createInfoSection(name, layer.Abstract));
 
       firstDataDescription = firstDataDescription || layer.Abstract;
     }
@@ -135,10 +144,12 @@ class GetCapabilitiesStratum extends LoadableStratum(
         ) &&
         service.Abstract !== firstDataDescription
       ) {
-        const traits = createStratumInstance(InfoSectionTraits);
-        traits.name = "Web Map Service Description";
-        traits.content = service.Abstract;
-        result.push(traits);
+        result.push(
+          createInfoSection(
+            i18next.t("models.webFeatureServiceCatalogItem.abstract"),
+            service.Abstract
+          )
+        );
       }
 
       // Show the Access Constraints if it isn't "none" (because that's the default, and usually a lie).
@@ -146,13 +157,63 @@ class GetCapabilitiesStratum extends LoadableStratum(
         service.AccessConstraints &&
         !/^none$/i.test(service.AccessConstraints)
       ) {
-        const traits = createStratumInstance(InfoSectionTraits);
-        traits.name = "Web Map Service Access Constraints";
-        traits.content = service.AccessConstraints;
-        result.push(traits);
+        result.push(
+          createInfoSection(
+            i18next.t("models.webFeatureServiceCatalogItem.accessConstraints"),
+            service.AccessConstraints
+          )
+        );
       }
     }
     return result;
+  }
+
+  @computed
+  get infoSectionOrder(): string[] {
+    let layerDescriptions = [
+      i18next.t("models.webFeatureServiceCatalogItem.abstract")
+    ];
+
+    // If more than one layer, push layer description titles for each applicable layer
+    if (this.capabilitiesFeatureTypes.size > 1) {
+      layerDescriptions = [];
+      this.capabilitiesFeatureTypes.forEach(layer => {
+        if (
+          layer &&
+          layer.Abstract &&
+          !containsAny(
+            layer.Abstract,
+            WebFeatureServiceCatalogItem.abstractsToIgnore
+          )
+        ) {
+          layerDescriptions.push(
+            `${i18next.t("models.webFeatureServiceCatalogItem.abstract")} - ${
+              layer.Title
+            }`
+          );
+        }
+      });
+    }
+
+    return [
+      i18next.t("preview.disclaimer"),
+      i18next.t("description.name"),
+      ...layerDescriptions,
+      i18next.t("preview.datasetDescription"),
+      i18next.t("preview.serviceDescription"),
+      i18next.t("models.webFeatureServiceCatalogItem.serviceDescription"),
+      i18next.t("preview.resourceDescription"),
+      i18next.t("preview.licence"),
+      i18next.t("preview.accessConstraints"),
+      i18next.t("models.webFeatureServiceCatalogItem.accessConstraints"),
+      i18next.t("preview.author"),
+      i18next.t("preview.contact"),
+      i18next.t("models.webFeatureServiceCatalogItem.serviceContact"),
+      i18next.t("preview.created"),
+      i18next.t("preview.modified"),
+      i18next.t("preview.updateFrequency"),
+      i18next.t("models.webFeatureServiceCatalogItem.getCapabilitiesUrl")
+    ];
   }
 
   @computed
@@ -216,17 +277,21 @@ class WebFeatureServiceCatalogItem
    * in the Abstract, the Abstract will not be used.  This makes it easy to filter out placeholder data like
    * Geoserver's "A compliant implementation of WFS..." stock abstract.
    */
-  static abstractsToIgnore = ["A compliant implementation of WFS"];
+  static abstractsToIgnore = [
+    "A compliant implementation of WFS",
+    "This is the reference implementation of WFS 1.0.0 and WFS 1.1.0, supports all WFS operations including Transaction."
+  ];
 
   // hide elements in the info section which might show information about the datasource
   _sourceInfoItemNames = [
-    i18next.t("models.WebFeatureServiceCatalogItem.getCapabilitiesUrl")
+    i18next.t("models.webFeatureServiceCatalogItem.getCapabilitiesUrl")
   ];
 
   static readonly type = "wfs";
   readonly canZoomTo = true;
   readonly supportsSplitting = true;
 
+  @observable
   private geojsonCatalogItem: GeoJsonCatalogItem | undefined;
 
   get type() {
@@ -267,55 +332,106 @@ class WebFeatureServiceCatalogItem
       GetCapabilitiesMixin.getCapabilitiesStratumName
     ) as GetCapabilitiesStratum;
 
-    if (!this.uri) return;
+    if (!this.uri) {
+      throw new TerriaError({
+        sender: this,
+        title: i18next.t("models.webFeatureServiceCatalogItem.missingUrlTitle"),
+        message: i18next.t(
+          "models.webFeatureServiceCatalogItem.missingUrlMessage",
+          this
+        )
+      });
+    }
 
+    // Check if layers exist
+    const missingLayers = this.typeNamesArray.filter(
+      layer => !getCapabilitiesStratum.capabilitiesFeatureTypes.has(layer)
+    );
+    if (missingLayers.length > 0) {
+      throw new TerriaError({
+        sender: this,
+        title: i18next.t(
+          "models.webFeatureServiceCatalogItem.noLayerFoundTitle"
+        ),
+        message: i18next.t(
+          "models.webFeatureServiceCatalogItem.noLayerFoundMessage",
+          this
+        )
+      });
+    }
+
+    // Check if geojson output is supported
     if (
-      getCapabilitiesStratum.outputFormats.find(format =>
-        ["json", "JSON", "application/json"].includes(format)
+      !isDefined(
+        getCapabilitiesStratum.outputFormats.find(format =>
+          ["json", "JSON", "application/json"].includes(format)
+        )
       )
     ) {
-      const url = this.uri
-        .clone()
-        .setSearch(
-          combine(
-            {
-              service: "WFS",
-              request: "GetFeature",
-              typeName: this.layers,
-              version: "1.1.0",
-              outputFormat: "JSON",
-              srsName: "EPSG:4326",
-              maxFeatures: 10
-            },
-            this.parameters
-          )
+      throw new TerriaError({
+        sender: this,
+        title: i18next.t(
+          "models.webFeatureServiceCatalogItem.unsupportedGeojsonOutputTitle"
+        ),
+        message: i18next.t(
+          "models.webFeatureServiceCatalogItem.unsupportedGeojsonOutputMessage",
+          this
         )
-        .toString();
+      });
+    }
 
-      const geojson = await loadText(proxyCatalogItemUrl(this, url));
+    const url = this.uri
+      .clone()
+      .setSearch(
+        combine(
+          {
+            service: "WFS",
+            request: "GetFeature",
+            typeName: this.typeNames,
+            version: "1.1.0",
+            outputFormat: "JSON",
+            srsName: "EPSG:4326",
+            maxFeatures: 10
+          },
+          this.parameters
+        )
+      )
+      .toString();
 
-      if (geojson.startsWith("<")) {
-        try {
-          const error = xml2json(geojson);
+    const geojson = await loadText(proxyCatalogItemUrl(this, url));
 
-          throw new TerriaError({
-            title: i18next.t(
-              "models.WebFeatureServiceCatalogItem.missingDataTitle"
-            ),
-            message: `Failed to GetFeature:
-  ${error.ExceptionReport?.Exception?.ExceptionText || error.toString()}`
-          });
-        } catch (e) {
-        } finally {
-          throw new TerriaError({
-            title: i18next.t(
-              "models.WebFeatureServiceCatalogItem.missingDataTitle"
-            ),
-            message: `Failed to parse WFS GetFeature response: ${geojson}`
-          });
-        }
+    // If request returns XML, try to find error message
+    if (geojson.startsWith("<")) {
+      try {
+        const error = xml2json(geojson);
+
+        throw new TerriaError({
+          sender: this,
+          title: i18next.t(
+            "models.webFeatureServiceCatalogItem.missingDataTitle"
+          ),
+          message: `${i18next.t(
+            "models.webFeatureServiceCatalogItem.missingDataMessage",
+            this
+          )} <br/>Error: ${error.ExceptionReport?.Exception?.ExceptionText ||
+            error.toString()}`
+        });
+      } catch (e) {
+        console.log(geojson);
+        throw new TerriaError({
+          sender: this,
+          title: i18next.t(
+            "models.webFeatureServiceCatalogItem.missingDataTitle"
+          ),
+          message: `${i18next.t(
+            "models.webFeatureServiceCatalogItem.missingDataMessage",
+            this
+          )}`
+        });
       }
+    }
 
+    runInAction(() => {
       this.geojsonCatalogItem = new GeoJsonCatalogItem(
         createGuid(),
         this.terria
@@ -328,17 +444,17 @@ class WebFeatureServiceCatalogItem
       );
 
       this.geojsonCatalogItem.setTrait("definition", "clampToGround", true);
+    });
 
-      await this.geojsonCatalogItem.loadMapItems();
-    }
+    await this.geojsonCatalogItem!.loadMapItems();
   }
 
   @computed
-  get layersArray(): ReadonlyArray<string> {
-    if (Array.isArray(this.layers)) {
-      return this.layers;
-    } else if (this.layers) {
-      return this.layers.split(",");
+  get typeNamesArray(): ReadonlyArray<string> {
+    if (Array.isArray(this.typeNames)) {
+      return this.typeNames;
+    } else if (this.typeNames) {
+      return this.typeNames.split(",");
     } else {
       return [];
     }

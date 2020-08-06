@@ -21,10 +21,10 @@ export default class WebFeatureServiceCatalogItemTraits extends mixTraits(
 ) {
   @primitiveTrait({
     type: "string",
-    name: "Layer(s)",
-    description: "The layer or layers to display."
+    name: "Type Name(s)",
+    description: "The typeName or typeNames to display."
   })
-  layers?: string;
+  typeNames?: string;
 
   @anyTrait({
     name: "Parameters",

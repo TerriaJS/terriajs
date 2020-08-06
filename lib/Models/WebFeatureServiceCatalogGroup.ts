@@ -34,10 +34,11 @@ class GetCapabilitiesStratum extends LoadableStratum(
       return Promise.reject(
         new TerriaError({
           title: i18next.t(
-            "models.WebFeatureServiceCatalogGroup.missingUrlTitle"
+            "models.webFeatureServiceCatalogGroup.invalidWFSServerTitle"
           ),
           message: i18next.t(
-            "models.WebFeatureServiceCatalogGroup.missingUrlMessage"
+            "models.webFeatureServiceCatalogGroup.invalidWFSServerMessage",
+            this
           )
         })
       );
@@ -95,7 +96,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       ) {
         result.push(
           createInfoSection(
-            i18next.t("models.WebFeatureServiceCatalogGroup.abstract"),
+            i18next.t("models.webFeatureServiceCatalogGroup.abstract"),
             this.capabilities.Service.Abstract
           )
         );
@@ -109,7 +110,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       ) {
         result.push(
           createInfoSection(
-            i18next.t("models.WebFeatureServiceCatalogGroup.accessConstraints"),
+            i18next.t("models.webFeatureServiceCatalogGroup.accessConstraints"),
             this.capabilities.Service.AccessConstraints
           )
         );
@@ -119,7 +120,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       if (service && service.Fees && !/^none$/i.test(service.Fees)) {
         result.push(
           createInfoSection(
-            i18next.t("models.WebFeatureServiceCatalogGroup.fees"),
+            i18next.t("models.webFeatureServiceCatalogGroup.fees"),
             this.capabilities.Service.Fees
           )
         );
@@ -185,7 +186,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       "getCapabilitiesCacheDuration",
       this.catalogGroup.getCapabilitiesCacheDuration
     );
-    model.setTrait(stratum, "layers", layer.Name);
+    model.setTrait(stratum, "typeNames", layer.Name);
 
     // if user defined following properties on th group level we should pass them to all group members
     model.setTrait(stratum, "hideSource", this.catalogGroup.hideSource);
