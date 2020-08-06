@@ -35,8 +35,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
   static load(
     catalogItem: WebFeatureServiceCatalogItem
   ): Promise<GetCapabilitiesStratum> {
-    console.log("Loading GetCapabilities");
-
     if (catalogItem.getCapabilitiesUrl === undefined) {
       return Promise.reject(
         new TerriaError({
@@ -398,12 +396,12 @@ class WebFeatureServiceCatalogItem
       )
       .toString();
 
-    const geojson = await loadText(proxyCatalogItemUrl(this, url));
+    const getFeatureResponse = await loadText(proxyCatalogItemUrl(this, url));
 
     // If request returns XML, try to find error message
-    if (geojson.startsWith("<")) {
+    if (getFeatureResponse.startsWith("<")) {
       try {
-        const error = xml2json(geojson);
+        const error = xml2json(getFeatureResponse);
 
         throw new TerriaError({
           sender: this,
@@ -417,7 +415,7 @@ class WebFeatureServiceCatalogItem
             error.toString()}`
         });
       } catch (e) {
-        console.log(geojson);
+        console.log(getFeatureResponse);
         throw new TerriaError({
           sender: this,
           title: i18next.t(
@@ -440,7 +438,7 @@ class WebFeatureServiceCatalogItem
       this.geojsonCatalogItem.setTrait(
         "definition",
         "geoJsonData",
-        JSON.parse(geojson)
+        JSON.parse(getFeatureResponse)
       );
 
       this.geojsonCatalogItem.setTrait("definition", "clampToGround", true);

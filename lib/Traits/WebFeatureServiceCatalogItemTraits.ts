@@ -22,14 +22,14 @@ export default class WebFeatureServiceCatalogItemTraits extends mixTraits(
   @primitiveTrait({
     type: "string",
     name: "Type Name(s)",
-    description: "The typeName or typeNames to display."
+    description: "The type name or names to display."
   })
   typeNames?: string;
 
   @anyTrait({
     name: "Parameters",
     description:
-      "Additional parameters to pass to the MapServer when requesting images."
+      "Additional parameters to pass to the WFS Server when requesting features."
   })
   parameters?: JsonObject;
 }
