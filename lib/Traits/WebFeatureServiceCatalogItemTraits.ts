@@ -28,6 +28,13 @@ export default class WebFeatureServiceCatalogItemTraits extends mixTraits(
   })
   typeNames?: string;
 
+  @primitiveTrait({
+    type: "number",
+    name: "Max features",
+    description: "Maximum number of features to display."
+  })
+  maxFeatures = 1000;
+
   @anyTrait({
     name: "Parameters",
     description:

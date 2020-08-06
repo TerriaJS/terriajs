@@ -385,7 +385,7 @@ class WebFeatureServiceCatalogItem
             version: "1.1.0",
             outputFormat: "JSON",
             srsName: "EPSG:4326",
-            maxFeatures: 10
+            maxFeatures: this.maxFeatures
           },
           this.parameters
         )
