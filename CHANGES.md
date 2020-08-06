@@ -4,6 +4,10 @@ Change Log
 ### Next Release
 
 
+### v7.11.8
+
+* Upgraded to terriajs-cesium v1.71.3 which fixes a bug running gulp tasks on node v14.
+
 ### v7.11.7
 
 * Add additional region mapping boundaries.
