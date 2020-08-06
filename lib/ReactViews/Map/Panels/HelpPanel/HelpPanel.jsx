@@ -1,4 +1,3 @@
-import classNames from "classnames";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
@@ -6,7 +5,6 @@ import { runInAction } from "mobx";
 import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
 import Icon, { StyledIcon } from "../../../Icon.jsx";
-import Styles from "./help-panel.scss";
 import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
@@ -37,15 +35,6 @@ class HelpPanel extends React.Component {
       this.props.viewState.showHelpMenu &&
       this.props.viewState.topElement === "HelpPanel";
     const isExpanded = this.props.viewState.helpPanelExpanded;
-    const className = classNames(
-      {
-        [Styles.helpPanel]: true,
-        [Styles.isVisible]: isVisible && !isExpanded,
-        [Styles.isHidden]: !isVisible,
-        [Styles.helpPanelShifted]: isVisible && isExpanded
-      },
-      this.props.viewState.topElement === "HelpPanel" ? "top-element" : ""
-    );
     return (
       <Box
         displayInlineBlock
