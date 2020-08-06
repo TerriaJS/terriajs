@@ -152,7 +152,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       return;
     }
 
-    // No nested layers -> create model for WebFeatureServiceCatalogItem
+    // Create model for WebFeatureServiceCatalogItem
     const existingModel = this.catalogGroup.terria.getModelById(
       WebFeatureServiceCatalogItem,
       layerId
@@ -251,7 +251,7 @@ export default class WebFeatureServiceCatalogGroup extends GetCapabilitiesMixin(
         .clone()
         .setSearch({
           service: "WFS",
-          version: "1.3.0",
+          version: "1.1.0",
           request: "GetCapabilities"
         })
         .toString();

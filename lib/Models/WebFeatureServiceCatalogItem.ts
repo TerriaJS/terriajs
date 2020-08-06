@@ -15,6 +15,7 @@ import xml2json from "../ThirdParty/xml2json";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import { RectangleTraits } from "../Traits/MappableTraits";
 import WebFeatureServiceCatalogItemTraits from "../Traits/WebFeatureServiceCatalogItemTraits";
+import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import ExportableData from "./ExportableData";
@@ -220,13 +221,8 @@ class GetCapabilitiesStratum extends LoadableStratum(
       ...this.capabilitiesFeatureTypes.values()
     ].filter(isDefined);
 
-    // Needs to take union of all layer rectangles
+    // Only return first layer's rectangle - as we don't support multiple WFS layers
     return layers.length > 0 ? getRectangleFromLayer(layers[0]) : undefined;
-    // if (layers.length === 1) {
-    //     return getRectangleFromLayer(layers[0]);
-    // }
-    // Otherwise get the union of rectangles from all layers
-    // return undefined;
   }
 
   @computed
@@ -436,12 +432,17 @@ class WebFeatureServiceCatalogItem
       );
 
       this.geojsonCatalogItem.setTrait(
-        "definition",
+        CommonStrata.definition,
         "geoJsonData",
         JSON.parse(getFeatureResponse)
       );
 
-      this.geojsonCatalogItem.setTrait("definition", "clampToGround", true);
+      if (isDefined(this.style))
+        this.geojsonCatalogItem.setTrait(
+          CommonStrata.definition,
+          "style",
+          this.style
+        );
     });
 
     await this.geojsonCatalogItem!.loadMapItems();

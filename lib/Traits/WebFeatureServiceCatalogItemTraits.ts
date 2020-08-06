@@ -1,14 +1,16 @@
+import { JsonObject } from "../Core/Json";
+import anyTrait from "./anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
 import MappableTraits from "./MappableTraits";
 import mixTraits from "./mixTraits";
+import primitiveTrait from "./primitiveTrait";
 import SplitterTraits from "./SplitterTraits";
 import UrlTraits from "./UrlTraits";
-import primitiveTrait from "./primitiveTrait";
-import anyTrait from "./anyTrait";
-import { JsonObject } from "../Core/Json";
+import objectTrait from "./objectTrait";
+import { StyleTraits } from "./GeoJsonCatalogItemTraits";
 
 export default class WebFeatureServiceCatalogItemTraits extends mixTraits(
   FeatureInfoTraits,
@@ -32,4 +34,11 @@ export default class WebFeatureServiceCatalogItemTraits extends mixTraits(
       "Additional parameters to pass to the WFS Server when requesting features."
   })
   parameters?: JsonObject;
+
+  @objectTrait({
+    type: StyleTraits,
+    name: "Style",
+    description: "Styling rules that follow simplestyle-spec"
+  })
+  style?: StyleTraits;
 }
