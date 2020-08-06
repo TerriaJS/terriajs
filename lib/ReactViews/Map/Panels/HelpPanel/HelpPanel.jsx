@@ -29,7 +29,6 @@ class HelpPanel extends React.Component {
 
   render() {
     const { t } = this.props;
-    console.log(this.props.theme);
     const helpItems = this.props.terria.configParameters.helpContent;
     const isVisible =
       this.props.viewState.showHelpMenu &&
