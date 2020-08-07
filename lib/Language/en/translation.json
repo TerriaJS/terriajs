@@ -1237,7 +1237,8 @@
       "unsupportedGeojsonOutputTitle": "Unsupported WFS Server",
       "unsupportedGeojsonOutputMessage": "This WFS Server does not support geojson output. Terria only supports WFS Servers with geojson output.",
       "missingUrlTitle": "Unable to load GetCapabilities",
-      "missingUrlMessage": "Could not load the Web Feature Service (WFS) GetCapabilities document because the catalog item does not have a `url`."
+      "missingUrlMessage": "Could not load the Web Feature Service (WFS) GetCapabilities document because the catalog item does not have a `url`.",
+      "reachedMaxFeatureLimit": "Warning: This layer has reached the WFS feature limit ({{maxFeatures}})"
     },
     "webMapServiceCatalogGroup": {
       "wmsServer": "Web Map Service (WMS) Server",

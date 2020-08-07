@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, observable, runInAction } from "mobx";
+import { computed, observable, runInAction, isObservableArray } from "mobx";
 import combine from "terriajs-cesium/Source/Core/combine";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import containsAny from "../Core/containsAny";
@@ -12,7 +12,10 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import xml2json from "../ThirdParty/xml2json";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
+import {
+  InfoSectionTraits,
+  ShortReportTraits
+} from "../Traits/CatalogMemberTraits";
 import { RectangleTraits } from "../Traits/MappableTraits";
 import WebFeatureServiceCatalogItemTraits from "../Traits/WebFeatureServiceCatalogItemTraits";
 import CommonStrata from "./CommonStrata";
@@ -479,6 +482,21 @@ class WebFeatureServiceCatalogItem
       return this.geojsonCatalogItem.mapItems;
     }
     return [];
+  }
+
+  @computed
+  get shortReport() {
+    // Show notice if reached
+    if (
+      isObservableArray(this.geojsonCatalogItem?.geoJsonData?.features) &&
+      this.geojsonCatalogItem!.geoJsonData!.features.length >= this.maxFeatures
+    ) {
+      return i18next.t(
+        "models.webFeatureServiceCatalogItem.reachedMaxFeatureLimit",
+        this
+      );
+    }
+    return undefined;
   }
 }
 
