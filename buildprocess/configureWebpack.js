@@ -121,8 +121,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
                         '@babel/proposal-class-properties',
                         '@babel/proposal-object-rest-spread',
                         'babel-plugin-styled-components',
-                        require.resolve('@babel/plugin-syntax-dynamic-import'),
-                        '@babel/plugin-proposal-optional-chaining'
+                        require.resolve('@babel/plugin-syntax-dynamic-import')
                     ]
                 }
             },
