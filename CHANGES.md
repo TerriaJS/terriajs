@@ -3,6 +3,7 @@ Change Log
 
 ### Next Release
 
+* Update Geoscience Australia Topo basemap.
 
 ### v7.11.8
 
