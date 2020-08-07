@@ -10,6 +10,7 @@ Change Log
 * Only generate `tableStyles` for region columns if no other styles exist
 * Add basic WFS support with `WebFeatureServiceCatalogGroup` and `WebFeatureServiceCatalogItem`
 * [The next improvement]
+* TableAutomaticStylesStratum & CsvCatalogItem only returns unique `discreteTimes`s now
 
 #### 8.0.0-alpha.43
 * Replace `@gov.au/page-alerts` dependency with our own warning box component. This removes all `pancake` processes which were sometimes problematic.
@@ -22,6 +23,7 @@ Change Log
 * Tsify `proxyCatalogItemUrl`.
 * Simplified SidePanel React refs by removing the double wrapping of the `withTerriaRef()` HOC
 * Merged `withTerriaRef()` HOC with `useRefForTerria()` hook logic
+* [The next improvement]
 * Breadcrumbs are always shown instead of only when doing a catalog search
 
 #### 8.0.0-alpha.40
