@@ -19,14 +19,17 @@ interface AsJulian {
   tag: string;
 }
 
+export interface DiscreteTimeAsJS {
+  time: string;
+  tag: string | undefined;
+}
+
 function DiscretelyTimeVaryingMixin<
   T extends Constructor<DiscretelyTimeVarying>
 >(Base: T) {
   abstract class DiscretelyTimeVaryingMixin extends Base
     implements TimeVarying {
-    abstract get discreteTimes():
-      | { time: string; tag: string | undefined }[]
-      | undefined;
+    abstract get discreteTimes(): DiscreteTimeAsJS[] | undefined;
 
     @computed
     get currentTime(): string | undefined {
