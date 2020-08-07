@@ -3,6 +3,7 @@ Change Log
 
 ### Next Release
 
+* remove caching from WPS requests.
 
 ### v7.11.8
 
