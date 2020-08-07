@@ -485,7 +485,7 @@ class WebFeatureServiceCatalogItem
   }
 
   @computed
-  get shortReport() {
+  get shortReport(): string | undefined {
     // Show notice if reached
     if (
       isObservableArray(this.geojsonCatalogItem?.geoJsonData?.features) &&
