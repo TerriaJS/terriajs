@@ -8,6 +8,7 @@ Change Log
 * Add `multipleTitles` and `maxMultipleTitlesShowed` to `LegendItemTraits`
 * Aggregate legend items in `createLegendItemsFromEnumColorMap` by colour, that is merge legend items with the same colour (using `multipleTitles`)
 * Only generate `tableStyles` for region columns if no other styles exist
+* TableAutomaticStylesStratum & CsvCatalogItem only returns unique `discreteTimes`s now
 * Added option for manual Table region mapping with `enableManualRegionMapping` TableTrait. This provides `SelectableDimensions` for the region column and region type.
 * Added WMS Dimensions (using `SelectableDimensions`)
 * Added WMS multi-layer style, dimension and legend support.
@@ -25,6 +26,7 @@ Change Log
 * Tsify `proxyCatalogItemUrl`.
 * Simplified SidePanel React refs by removing the double wrapping of the `withTerriaRef()` HOC
 * Merged `withTerriaRef()` HOC with `useRefForTerria()` hook logic
+* [The next improvement]
 * Breadcrumbs are always shown instead of only when doing a catalog search
 
 #### 8.0.0-alpha.40
