@@ -163,11 +163,11 @@ export default class MapboxVectorTileImageryProvider
   }
 
   get defaultNightAlpha() {
-    return this._defaultNightAlpha;
+    return undefined;
   }
 
   get defaultDayAlpha() {
-    return this._defaultDayAlpha;
+    return undefined;
   }
 
   get hasAlphaChannel() {
