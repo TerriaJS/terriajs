@@ -283,7 +283,6 @@ class WebFeatureServiceCatalogItem
 
   static readonly type = "wfs";
   readonly canZoomTo = true;
-  readonly supportsSplitting = true;
 
   @observable
   private geojsonCatalogItem: GeoJsonCatalogItem | undefined;
@@ -468,7 +467,7 @@ class WebFeatureServiceCatalogItem
     if (isDefined(this.geojsonCatalogItem?.geoJsonData)) {
       return {
         name: `${this.name} export.json`,
-        file: new Blob([this.geojsonCatalogItem!.geoJsonData.toString()])
+        file: new Blob([JSON.stringify(this.geojsonCatalogItem!.geoJsonData)])
       };
     }
     return;
