@@ -3,6 +3,9 @@ Change Log
 
 ### MobX Development
 
+#### next release (8.0.0-alpha.45)
+* [The next improvement]
+
 #### next release (8.0.0-alpha.44)
 * Pass `format` trait on `TableColumnTraits` down to `TableAutomaticStylesStratum` for generating legends
 * Add `multipleTitles` and `maxMultipleTitlesShowed` to `LegendItemTraits`
@@ -11,6 +14,7 @@ Change Log
 * TableAutomaticStylesStratum & CsvCatalogItem only returns unique `discreteTimes`s now
 * Add basic WFS support with `WebFeatureServiceCatalogGroup` and `WebFeatureServiceCatalogItem`
 * [The next improvement]
+* Specified specific terriajs config for ForkTsCheckerWebpackPlugin
 
 #### 8.0.0-alpha.43
 * Replace `@gov.au/page-alerts` dependency with our own warning box component. This removes all `pancake` processes which were sometimes problematic.
