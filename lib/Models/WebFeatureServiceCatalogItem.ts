@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, observable, runInAction, isObservableArray } from "mobx";
+import { computed, isObservableArray, observable, runInAction } from "mobx";
 import combine from "terriajs-cesium/Source/Core/combine";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import containsAny from "../Core/containsAny";
@@ -7,15 +7,14 @@ import isDefined from "../Core/isDefined";
 import isReadOnlyArray from "../Core/isReadOnlyArray";
 import loadText from "../Core/loadText";
 import TerriaError from "../Core/TerriaError";
+import gmlToGeoJson from "../Map/gmlToGeoJson";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import ExportableMixin from "../ModelMixins/ExportableMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import xml2json from "../ThirdParty/xml2json";
-import {
-  InfoSectionTraits,
-  ShortReportTraits
-} from "../Traits/CatalogMemberTraits";
+import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import { RectangleTraits } from "../Traits/MappableTraits";
 import WebFeatureServiceCatalogItemTraits from "../Traits/WebFeatureServiceCatalogItemTraits";
 import CommonStrata from "./CommonStrata";
@@ -31,7 +30,6 @@ import WebFeatureServiceCapabilities, {
   FeatureType,
   getRectangleFromLayer
 } from "./WebFeatureServiceCapabilities";
-import ExportableMixin from "../ModelMixins/ExportableMixin";
 
 class GetCapabilitiesStratum extends LoadableStratum(
   WebFeatureServiceCatalogItemTraits
@@ -349,37 +347,24 @@ class WebFeatureServiceCatalogItem
       });
     }
 
-    const hasOutputFormat = (
-      outputFormats: string[] | undefined,
-      contains: string[] = ["json", "JSON", "application/json"]
-    ) => {
+    // Check if geojson output is supported (by checking GetCapabilities OutputTypes OR FeatureType OutputTypes)
+    const hasOutputFormat = (outputFormats: string[] | undefined) => {
       return isDefined(
-        outputFormats?.find(format => contains.includes(format))
+        outputFormats?.find(format =>
+          ["json", "JSON", "application/json"].includes(format)
+        )
       );
     };
 
-    // Check if geojson output is supported (by checking GetCapabilities OutputTypes OR FeatureType OutputTypes)
-    if (
-      !hasOutputFormat(getCapabilitiesStratum.capabilities.outputTypes) &&
-      ![...getCapabilitiesStratum.capabilitiesFeatureTypes.values()].reduce<
+    const supportsGeojson =
+      hasOutputFormat(getCapabilitiesStratum.capabilities.outputTypes) ||
+      [...getCapabilitiesStratum.capabilitiesFeatureTypes.values()].reduce<
         boolean
       >(
         (hasGeojson, current) =>
           hasGeojson && hasOutputFormat(current?.OutputFormats),
         true
-      )
-    ) {
-      throw new TerriaError({
-        sender: this,
-        title: i18next.t(
-          "models.webFeatureServiceCatalogItem.unsupportedGeojsonOutputTitle"
-        ),
-        message: i18next.t(
-          "models.webFeatureServiceCatalogItem.unsupportedGeojsonOutputMessage",
-          this
-        )
-      });
-    }
+      );
 
     const url = this.uri
       .clone()
@@ -390,8 +375,8 @@ class WebFeatureServiceCatalogItem
             request: "GetFeature",
             typeName: this.typeNames,
             version: "1.1.0",
-            outputFormat: "JSON",
-            srsName: "EPSG:4326",
+            outputFormat: supportsGeojson ? "JSON" : "gml3",
+            srsName: "urn:ogc:def:crs:EPSG::4326", // srsName must be formatted like this for correct lat/long order  >:(
             maxFeatures: this.maxFeatures
           },
           this.parameters
@@ -401,36 +386,31 @@ class WebFeatureServiceCatalogItem
 
     const getFeatureResponse = await loadText(proxyCatalogItemUrl(this, url));
 
-    // If request returns XML, try to find error message
-    if (getFeatureResponse.startsWith("<")) {
+    // Check for errors (if supportsGeojson and the request returns XML, OR the response includes ExceptionReport)
+    if (
+      (supportsGeojson && getFeatureResponse.startsWith("<")) ||
+      getFeatureResponse.includes("ExceptionReport")
+    ) {
+      let errorMessage: string | undefined;
       try {
-        const error = xml2json(getFeatureResponse);
+        errorMessage = xml2json(getFeatureResponse).Exception?.ExceptionText;
+      } catch {}
 
-        throw new TerriaError({
-          sender: this,
-          title: i18next.t(
-            "models.webFeatureServiceCatalogItem.missingDataTitle"
-          ),
-          message: `${i18next.t(
-            "models.webFeatureServiceCatalogItem.missingDataMessage",
-            this
-          )} <br/>Error: ${error.ExceptionReport?.Exception?.ExceptionText ||
-            error.toString()}`
-        });
-      } catch (e) {
-        console.log(getFeatureResponse);
-        throw new TerriaError({
-          sender: this,
-          title: i18next.t(
-            "models.webFeatureServiceCatalogItem.missingDataTitle"
-          ),
-          message: `${i18next.t(
-            "models.webFeatureServiceCatalogItem.missingDataMessage",
-            this
-          )}`
-        });
-      }
+      throw new TerriaError({
+        sender: this,
+        title: i18next.t(
+          "models.webFeatureServiceCatalogItem.missingDataTitle"
+        ),
+        message: `${i18next.t(
+          "models.webFeatureServiceCatalogItem.missingDataMessage",
+          this
+        )} ${isDefined(errorMessage) ? `<br/>Error: ${errorMessage}` : ""}`
+      });
     }
+
+    let geojsonData = supportsGeojson
+      ? JSON.parse(getFeatureResponse)
+      : gmlToGeoJson(getFeatureResponse);
 
     runInAction(() => {
       this.geojsonCatalogItem = new GeoJsonCatalogItem(
@@ -441,7 +421,7 @@ class WebFeatureServiceCatalogItem
       this.geojsonCatalogItem.setTrait(
         CommonStrata.definition,
         "geoJsonData",
-        JSON.parse(getFeatureResponse)
+        geojsonData
       );
 
       if (isDefined(this.style))

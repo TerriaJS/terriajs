@@ -1234,8 +1234,6 @@
       "noLayerFoundMessage": "The WFS dataset '{{name}}' has no layers matching '{{typeNames}}'. {{suggested}} {{line}}{{line}}Either the catalog file has been set up incorrectly, or the WFS server has changed.{{line}}{{line}}Please report this error by sending an email to {{email}}.",
       "missingDataTitle": "Missing data",
       "missingDataMessage": "The WFS dataset '{{name}}' did not return any data.{{line}}{{line}}Either the catalog file has been set up incorrectly, or the server address has changed.{{line}}{{line}}Please report this error by emailing {{email}}.",
-      "unsupportedGeojsonOutputTitle": "Unsupported WFS Server",
-      "unsupportedGeojsonOutputMessage": "This WFS Server does not support geojson output. Terria only supports WFS Servers with geojson output.",
       "missingUrlTitle": "Unable to load GetCapabilities",
       "missingUrlMessage": "Could not load the Web Feature Service (WFS) GetCapabilities document because the catalog item does not have a `url`.",
       "reachedMaxFeatureLimit": "Warning: This layer has reached the WFS feature limit ({{maxFeatures}})"
