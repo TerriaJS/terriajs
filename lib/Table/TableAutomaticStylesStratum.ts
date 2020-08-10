@@ -22,6 +22,7 @@ import TableTimeStyleTraits from "../Traits/TableTimeStyleTraits";
 import TableTraits from "../Traits/TableTraits";
 import TableColumnType from "./TableColumnType";
 import TableStyle from "./TableStyle";
+import { DiscreteTimeAsJS } from "../ModelMixins/DiscretelyTimeVaryingMixin";
 
 const DEFAULT_ID_COLUMN = "id";
 
@@ -153,6 +154,19 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
       dates.map(d =>
         d ? { time: d.toISOString(), tag: undefined } : undefined
       )
+    ).reduce(
+      // is it correct for discrete times to remove duplicates?
+      // see discussion on https://github.com/TerriaJS/terriajs/pull/4577
+      // duplicates will mess up the indexing problem as our `<DateTimePicker />`
+      // will eliminate duplicates on the UI front, so given the datepicker
+      // expects uniques, return uniques here
+      (acc: DiscreteTimeAsJS[], time) =>
+        !acc.some(
+          accTime => accTime.time === time.time && accTime.tag === time.tag
+        )
+          ? [...acc, time]
+          : acc,
+      []
     );
     return times;
   }
