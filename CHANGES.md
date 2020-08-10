@@ -4,6 +4,7 @@ Change Log
 ### Next Release
 
 * Update Geoscience Australia Topo basemap.
+* remove caching from WPS requests.
 
 ### v7.11.8
 
