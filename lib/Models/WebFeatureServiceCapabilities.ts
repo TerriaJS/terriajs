@@ -105,11 +105,14 @@ export default class WebFeatureServiceCapabilities {
   }
 
   get featureTypes(): FeatureType[] {
-    const featureTypesJson = this.json.FeatureTypeList?.FeatureType as Array<
-      any
-    >;
-    if (!isDefined(featureTypesJson) || !Array.isArray(featureTypesJson)) {
+    let featureTypesJson = this.json.FeatureTypeList?.FeatureType as
+      | Array<any>
+      | string;
+    if (!isDefined(featureTypesJson)) {
       return [];
+    }
+    if (!Array.isArray(featureTypesJson)) {
+      featureTypesJson = [featureTypesJson];
     }
     return (
       featureTypesJson.map<FeatureType>((json: any) => {
