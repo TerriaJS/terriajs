@@ -249,15 +249,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
       return keyword === "GEOSERVER";
     }
   }
-
-  @computed
-  get outputFormats(): string[] {
-    return (
-      this.capabilities.json.OperationsMetadata?.Operation?.find(
-        (op: any) => op.name === "GetFeature"
-      )?.Parameter?.find((p: any) => p.name === "outputFormat")?.Value || []
-    );
-  }
 }
 
 class WebFeatureServiceCatalogItem
@@ -358,12 +349,24 @@ class WebFeatureServiceCatalogItem
       });
     }
 
-    // Check if geojson output is supported
+    const hasOutputFormat = (
+      outputFormats: string[] | undefined,
+      contains: string[] = ["json", "JSON", "application/json"]
+    ) => {
+      return isDefined(
+        outputFormats?.find(format => contains.includes(format))
+      );
+    };
+
+    // Check if geojson output is supported (by checking GetCapabilities OutputTypes OR FeatureType OutputTypes)
     if (
-      !isDefined(
-        getCapabilitiesStratum.outputFormats.find(format =>
-          ["json", "JSON", "application/json"].includes(format)
-        )
+      !hasOutputFormat(getCapabilitiesStratum.capabilities.outputTypes) &&
+      ![...getCapabilitiesStratum.capabilitiesFeatureTypes.values()].reduce<
+        boolean
+      >(
+        (hasGeojson, current) =>
+          hasGeojson && hasOutputFormat(current?.OutputFormats),
+        true
       )
     ) {
       throw new TerriaError({

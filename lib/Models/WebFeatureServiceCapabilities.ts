@@ -11,6 +11,7 @@ import {
   CapabilitiesGeographicBoundingBox,
   CapabilitiesService
 } from "./WebMapServiceCapabilities";
+import { computed } from "mobx";
 
 export interface FeatureType {
   readonly Name?: string;
@@ -18,6 +19,7 @@ export interface FeatureType {
   readonly Abstract?: string;
   readonly WGS84BoundingBox?: CapabilitiesGeographicBoundingBox;
   readonly Keywords?: string | string[];
+  readonly OutputFormats?: string[];
 }
 
 export function getRectangleFromLayer(
@@ -59,6 +61,7 @@ export default class WebFeatureServiceCapabilities {
   /**
    * Get CapabilitiesService (in WMS form)
    */
+  @computed
   get Service(): CapabilitiesService {
     const serviceProviderJson = this.json["ServiceProvider"];
     const serviceIdentificationJson = this.json["ServiceIdentification"];
@@ -104,6 +107,7 @@ export default class WebFeatureServiceCapabilities {
     return service;
   }
 
+  @computed
   get featureTypes(): FeatureType[] {
     let featureTypesJson = this.json.FeatureTypeList?.FeatureType as
       | Array<any>
@@ -123,6 +127,13 @@ export default class WebFeatureServiceCapabilities {
           " "
         );
 
+        let outputFormats: string[] | undefined;
+        if (isDefined(json.OutputFormats)) {
+          outputFormats = Array.isArray(json.OutputFormats)
+            ? json.OutputFormats.map((o: any) => o.Format)
+            : [json.OutputFormats.Format];
+        }
+
         return {
           Title: json.Title,
           Name: json.Name,
@@ -133,10 +144,24 @@ export default class WebFeatureServiceCapabilities {
             southBoundLatitude: lowerCorner && parseFloat(lowerCorner[1]),
             eastBoundLongitude: upperCorner && parseFloat(upperCorner[0]),
             northBoundLatitude: upperCorner && parseFloat(upperCorner[1])
-          }
+          },
+          OutputFormats: outputFormats
         };
       }) || []
     );
+  }
+
+  @computed
+  get outputTypes(): string[] | undefined {
+    let outputTypes = this.json.OperationsMetadata?.Operation?.find(
+      (op: any) => op.name === "GetFeature"
+    )?.Parameter?.find((p: any) => p.name === "outputFormat")?.Value;
+
+    if (!isDefined(outputTypes)) {
+      return;
+    }
+
+    return Array.isArray(outputTypes) ? outputTypes : [outputTypes];
   }
 
   private constructor(readonly xml: XMLDocument, readonly json: any) {}
