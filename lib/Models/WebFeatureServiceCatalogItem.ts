@@ -21,7 +21,6 @@ import WebFeatureServiceCatalogItemTraits from "../Traits/WebFeatureServiceCatal
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
-import ExportableData from "./ExportableData";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import LoadableStratum from "./LoadableStratum";
 import Mappable from "./Mappable";
@@ -32,6 +31,7 @@ import WebFeatureServiceCapabilities, {
   FeatureType,
   getRectangleFromLayer
 } from "./WebFeatureServiceCapabilities";
+import ExportableMixin from "../ModelMixins/ExportableMixin";
 
 class GetCapabilitiesStratum extends LoadableStratum(
   WebFeatureServiceCatalogItemTraits
@@ -261,14 +261,16 @@ class GetCapabilitiesStratum extends LoadableStratum(
 }
 
 class WebFeatureServiceCatalogItem
-  extends AsyncMappableMixin(
-    GetCapabilitiesMixin(
-      UrlMixin(
-        CatalogMemberMixin(CreateModel(WebFeatureServiceCatalogItemTraits))
+  extends ExportableMixin(
+    AsyncMappableMixin(
+      GetCapabilitiesMixin(
+        UrlMixin(
+          CatalogMemberMixin(CreateModel(WebFeatureServiceCatalogItemTraits))
+        )
       )
     )
   )
-  implements Mappable, ExportableData {
+  implements Mappable {
   /**
    * The collection of strings that indicate an Abstract property should be ignored.  If these strings occur anywhere
    * in the Abstract, the Abstract will not be used.  This makes it easy to filter out placeholder data like
@@ -462,11 +464,11 @@ class WebFeatureServiceCatalogItem
   }
 
   @computed
-  get canExportData() {
+  get _canExportData() {
     return isDefined(this.geojsonCatalogItem?.geoJsonData);
   }
 
-  async exportData() {
+  async _exportData() {
     if (isDefined(this.geojsonCatalogItem?.geoJsonData)) {
       return {
         name: `${this.name} export.json`,
