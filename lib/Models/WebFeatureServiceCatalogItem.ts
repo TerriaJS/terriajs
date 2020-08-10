@@ -479,7 +479,10 @@ class WebFeatureServiceCatalogItem
   @computed
   get mapItems() {
     if (this.geojsonCatalogItem) {
-      return this.geojsonCatalogItem.mapItems;
+      return this.geojsonCatalogItem.mapItems.map(mapItem => {
+        mapItem.show = this.show;
+        return mapItem;
+      });
     }
     return [];
   }
