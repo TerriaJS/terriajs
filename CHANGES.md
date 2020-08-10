@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.45)
+* Remove sass code from the `HelpPanel` component
 * [The next improvement]
 
 #### next release (8.0.0-alpha.44)
