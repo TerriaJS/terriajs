@@ -669,13 +669,24 @@ class Main extends React.Component<MainPropsType> {
           </MainPanel>
         </DiffAccordion>
         {isShowingDiff && (
-          // rushing a bunch of this inline css!
           <CloseDifferenceButton
+            primary
+            rounded
+            textProps={{
+              semiBold: true,
+              extraLarge: true
+            }}
             theme={theme}
             activeStyles
             onClick={this.resetTool}
+            renderIcon={() => (
+              <StyledIcon light styledWidth="13px" glyph={GLYPHS.closeLight} />
+            )}
+            iconProps={{
+              css: `margin-right: 10px;`
+            }}
           >
-            <StyledIcon light styledWidth="19px" glyph={GLYPHS.closeLight} />
+            Close
           </CloseDifferenceButton>
         )}
         {!isShowingDiff && (
@@ -808,17 +819,13 @@ const BackButton = styled(Button).attrs({
   secondary: true
 })``;
 
-const CloseDifferenceButton = styled(RawButton)`
+const CloseDifferenceButton = styled(Button)`
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 60px;
+  top: 18px;
 
-  border-radius: 50%;
-  padding: 13px;
-  color: ${p => p.theme.textLight};
-  border-color: ${p => p.theme.textLight};
-  background-color: ${p => p.theme.colorPrimary};
+  padding: 0 20px;
 `;
 
 const GenerateButton = styled(Button).attrs({
