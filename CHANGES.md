@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.45)
+* Update style of diff tool close button to match new design
 * Remove sass code from the `HelpPanel` component
 * [The next improvement]
 
