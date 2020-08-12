@@ -90,7 +90,7 @@ class Internationalization {
         // to allow en-US when only en is on the whitelist - nonExplicitWhitelist must be set to true
         // nonExplicitWhitelist: true,
         // deprecated, it's now the inverse
-        nonExplicitSupportedLngs: false,
+        nonExplicitSupportedLngs: true,
 
         // to not look into a folder like /locals/en-US/... when en-US is detected, use load: "languageOnly" to avoid using Country-Code in path
         load: "languageOnly",
