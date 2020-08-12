@@ -88,8 +88,18 @@ class Internationalization {
         supportedLngs: Object.keys(languageConfig.languages),
 
         // to allow en-US when only en is on the whitelist - nonExplicitWhitelist must be set to true
-        // nonExplicitWhitelist: true,
-        // deprecated, it's now the inverse
+        /**
+         * for anyone else confused as I was, `nonExplicitSupportedLngs` &&
+         * `load: "languageOnly"` seems functionally equivalent but perhaps this
+         * will change in the future
+         *
+         * > also in my mind I conflated the config surrounding this a little
+         * > bit with `load: "languageOnly"` - but upon looking at the source in
+         * > i18next this confirms that they both intend to do similar things:
+         *
+         * https://github.com/i18next/i18next/blob/80a38100d21a7e7c1f9cb2acff5f709063027b9f/src/LanguageUtils.js#L78-L80
+         *
+         *  */
         nonExplicitSupportedLngs: true,
 
         // to not look into a folder like /locals/en-US/... when en-US is detected, use load: "languageOnly" to avoid using Country-Code in path
