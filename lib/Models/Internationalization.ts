@@ -41,8 +41,7 @@ const defaultLanguageConfiguration = {
     useSuspense: false
   },
   languages: {
-    en: "english",
-    sr: "serbian"
+    en: "english"
   },
   fallbackLanguage: "en",
   changeLanguageOnStartWhen: [
@@ -84,7 +83,9 @@ class Internationalization {
         debug: languageConfig.debug,
         react: languageConfig.react,
         fallbackLng: languageConfig.fallbackLanguage,
-        whitelist: Object.keys(languageConfig.languages),
+        // whitelist: Object.keys(languageConfig.languages),
+        // deprecated
+        supportedLngs: Object.keys(languageConfig.languages),
 
         // to allow en-US when only en is on the whitelist - nonExplicitWhitelist must be set to true
         // nonExplicitWhitelist: true,

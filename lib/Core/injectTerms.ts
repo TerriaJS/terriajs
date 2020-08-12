@@ -90,9 +90,11 @@ const injectTerms = (string: string, termDictionary: Term[]): string => {
 
     termDictionary.forEach(term => {
       const aliasesTranslated = term.aliases
-        ? i18next.exists(term?.aliases)
-          ? i18next.t(term?.aliases, { returnObjects: true })
-          : term?.aliases
+        ? i18next.exists(term.aliases)
+          ? <Array<string>>i18next.t(term?.aliases, { returnObjects: true })
+          : Array.isArray(term.aliases.slice())
+          ? term.aliases
+          : [term.aliases]
         : [];
       if (aliasesTranslated) {
         (<Array<string>>aliasesTranslated).forEach(alias => {
