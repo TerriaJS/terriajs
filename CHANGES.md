@@ -6,6 +6,8 @@ Change Log
 #### next release (8.0.0-alpha.45)
 * Change `ExportableData` interface to `ExportableMixin` and add `disableExport` trait.
 * Add basic WFS support with `WebFeatureServiceCatalogGroup` and `WebFeatureServiceCatalogItem`
+* Update style of diff tool close button to match new design
+* Remove sass code from the `HelpPanel` component
 * [The next improvement]
 
 #### (8.0.0-alpha.44)
