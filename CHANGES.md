@@ -6,6 +6,7 @@ Change Log
 #### next release (8.0.0-alpha.45)
 * Update style of diff tool close button to match new design
 * Remove sass code from the `HelpPanel` component
+* Use `wms_api_url` for CKAN resources where it exists
 * [The next improvement]
 
 #### next release (8.0.0-alpha.44)
