@@ -18,3 +18,5 @@ package-lock.json
 dist
 .history/
 pancake/
+modeldocs/
+outputdocs/

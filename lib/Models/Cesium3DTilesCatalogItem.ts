@@ -6,6 +6,16 @@ import CreateModel from "./CreateModel";
 import Mappable from "./Mappable";
 import Cesium3dTilesMixin from "../ModelMixins/Cesium3dTilesMixin";
 
+/**
+ * This is a description
+ * of the 3D Tiles Catalog Item
+ * @example
+ * {
+ *   "type": "3d-tiles",
+ *   "ionAssetId": "1234",
+ *   "name": "My 3D-Tiles dataset"
+ * }
+ */
 export default class Cesium3DTilesCatalogItem
   extends FeatureInfoMixin(
     Cesium3dTilesMixin(
