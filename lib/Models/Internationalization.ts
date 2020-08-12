@@ -111,7 +111,7 @@ class Internationalization {
 
         /*
           This setting adds a posibility for users to override translations using their own translation json file stored in
-          `TerriaMap/wwwroot/Languages/{{lng}}/languageOverrides.json`
+          `TerriaMap/wwwroot/languages/{{lng}}/languageOverrides.json`
           It will first look in defaultNS for translation and then check the fallbackNS
         */
         ns: ["translation", "languageOverrides"],
@@ -126,7 +126,7 @@ class Internationalization {
 
         backend: Object.assign(
           {
-            loadPath: "/Languages/{{lng}}/{{ns}}.json",
+            loadPath: "/languages/{{lng}}/{{ns}}.json",
             crossDomain: false
           },
           { ...i18StartOptions?.backend }
