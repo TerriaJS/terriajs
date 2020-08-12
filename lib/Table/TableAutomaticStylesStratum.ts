@@ -1,5 +1,6 @@
 import { computed } from "mobx";
 import { createTransformer } from "mobx-utils";
+import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import ConstantColorMap from "../Map/ConstantColorMap";
@@ -17,12 +18,11 @@ import TableChartStyleTraits, {
 import TableColorStyleTraits from "../Traits/TableColorStyleTraits";
 import TablePointSizeStyleTraits from "../Traits/TablePointSizeStyleTraits";
 import TableStyleTraits from "../Traits/TableStyleTraits";
+import TableTimeStyleTraits from "../Traits/TableTimeStyleTraits";
 import TableTraits from "../Traits/TableTraits";
 import TableColumnType from "./TableColumnType";
 import TableStyle from "./TableStyle";
-import DiscreteTimeTraits from "../Traits/DiscreteTimeTraits";
-import filterOutUndefined from "../Core/filterOutUndefined";
-import TableTimeStyleTraits from "../Traits/TableTimeStyleTraits";
+import { DiscreteTimeAsJS } from "../ModelMixins/DiscretelyTimeVaryingMixin";
 
 const DEFAULT_ID_COLUMN = "id";
 
@@ -115,13 +115,19 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
   @computed
   get styles(): StratumFromTraits<TableStyleTraits>[] {
     // Create a style to color by every scalar and enum.
-    const columns = this.catalogItem.tableColumns.filter(
+    let columns = this.catalogItem.tableColumns.filter(
       column =>
         column.type === TableColumnType.scalar ||
         column.type === TableColumnType.enum ||
-        column.type === TableColumnType.region ||
         column.type === TableColumnType.text
     );
+
+    // If no styles for scalar, enum or text, try to create a style using region columns
+    if (columns.length === 0) {
+      columns = this.catalogItem.tableColumns.filter(
+        column => column.type === TableColumnType.region
+      );
+    }
 
     return columns.map((column, i) =>
       createStratumInstance(TableStyleTraits, {
@@ -148,6 +154,19 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
       dates.map(d =>
         d ? { time: d.toISOString(), tag: undefined } : undefined
       )
+    ).reduce(
+      // is it correct for discrete times to remove duplicates?
+      // see discussion on https://github.com/TerriaJS/terriajs/pull/4577
+      // duplicates will mess up the indexing problem as our `<DateTimePicker />`
+      // will eliminate duplicates on the UI front, so given the datepicker
+      // expects uniques, return uniques here
+      (acc: DiscreteTimeAsJS[], time) =>
+        !acc.some(
+          accTime => accTime.time === time.time && accTime.tag === time.tag
+        )
+          ? [...acc, time]
+          : acc,
+      []
     );
     return times;
   }
@@ -180,14 +199,6 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
   get items(): StratumFromTraits<LegendItemTraits>[] {
     const activeStyle = this.catalogItem.activeTableStyle;
     if (activeStyle === undefined) {
-      return [];
-    }
-
-    // Don't created a legend if we're using a region column
-    if (
-      isDefined(activeStyle.colorColumn) &&
-      activeStyle.colorColumn.type === TableColumnType.region
-    ) {
       return [];
     }
 
@@ -264,13 +275,26 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
           ]
         : [];
 
-    return colorMap.values
-      .map((value, i) => {
-        return createStratumInstance(LegendItemTraits, {
-          title: value,
-          color: colorMap.colors[i].toCssColorString()
-        });
-      })
+    // Aggregate colours (don't show multiple legend items for the same colour)
+    const colorMapValues = colorMap.values.reduce<{
+      [color: string]: string[];
+    }>((prev, current, i) => {
+      const cssCol = colorMap.colors[i].toCssColorString();
+      if (isDefined(prev[cssCol])) {
+        prev[cssCol].push(current);
+      } else {
+        prev[cssCol] = [current];
+      }
+      return prev;
+    }, {});
+
+    return Object.entries(colorMapValues)
+      .map(([color, multipleTitles]) =>
+        createStratumInstance(LegendItemTraits, {
+          multipleTitles,
+          color
+        })
+      )
       .concat(nullBin);
   }
 
