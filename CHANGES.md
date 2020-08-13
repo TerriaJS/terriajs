@@ -5,6 +5,7 @@ Change Log
 
 * Update Geoscience Australia Topo basemap.
 * remove caching from WPS requests.
+* Fix entity outline alpha value when de-selecting a feature
 
 ### v7.11.8
 
