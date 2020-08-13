@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const Box = styled.div`
   ${props => props.relative && `position:relative;`}
-  
+
   display: flex;
   position: relative;
   ${props =>
@@ -10,7 +10,13 @@ export const Box = styled.div`
     `
     position:absolute;
     z-index:1;
-   `}
+  `}
+  ${props =>
+    props.topRight &&
+    `
+    right: 0px;
+    top: 0px;
+  `}
 
   box-sizing: border-box;
 
@@ -23,7 +29,8 @@ export const Box = styled.div`
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
   ${props => props.styledHeight && `height: ${props.styledHeight};`}
   ${props => props.styledMinHeight && `min-height: ${props.styledMinHeight};`}
-  
+  ${props => props.styledMaxHeight && `max-height: ${props.styledMaxHeight};`}
+
   ${props =>
     props.col &&
     `
@@ -50,7 +57,7 @@ export const Box = styled.div`
   ${props =>
     props.justifyContentSpaceAround && `justify-content: space-around;`}
   ${props => props.justifySpaceBetween && `justify-content: space-between;`}
-  
+
   ${props => props.left && `align-items: center;`}
   ${props => props.alignItemsFlexStart && `align-items: flex-start;`}
   ${props => props.left && `justify-content: flex-start;`}
@@ -64,6 +71,7 @@ export const Box = styled.div`
   ${props => props.column && `flex-direction: column;`}
   ${props => props.wrap && `flex-wrap: wrap;`}
 
+  ${props => props.flex && `flex: ${props.flex};`}
   ${props => props.flexShrinkZero && `flex-shrink: 0;`}
 
   ${props => props.boxShadow && `box-shadow: 0 2px 8px 0 rgba(0,0,0,0.16);`}
@@ -80,7 +88,7 @@ export const Box = styled.div`
   /* Unsure of padding API as yet */
 
   ${props => props.padded && `padding: 5px;`}
-  
+
   ${props => props.paddedRatio && `padding: ${5 * props.paddedRatio}px;`}
   ${props =>
     props.paddedHorizontally &&
@@ -98,7 +106,7 @@ export const Box = styled.div`
       padding-bottom: ${5 *
         (props.paddedVertically === true ? 1 : props.paddedVertically)}px;
     `}
-  
+
   ${props =>
     props.backgroundImage &&
     `
@@ -116,7 +124,8 @@ export const Box = styled.div`
       background-repeat: no-repeat;
       background-position: center;
     `}
-  
+
+  ${props => props.wordBreak && `word-break: ${props.wordBreak};`}
   ${props =>
     props.overflow &&
     `

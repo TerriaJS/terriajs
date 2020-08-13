@@ -22,7 +22,7 @@ const GenericParameterEditor = createReactClass({
         className={Styles.field}
         type="text"
         onChange={this.onChange}
-        value={this.props.parameter.value}
+        value={this.props.parameter.value || ""}
       />
     );
   }

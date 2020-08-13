@@ -4,6 +4,7 @@ import Mustache from "mustache";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import isDefined from "../Core/isDefined";
 import loadWithXhr from "../Core/loadWithXhr";
 import TerriaError from "../Core/TerriaError";
 import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
@@ -341,6 +342,13 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     }
   }
 
+  @computed get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    }
+    return "0d";
+  }
+
   @action
   private async loadFeaturesData() {
     const request = new GetFeatureOfInterestRequest(
@@ -624,7 +632,9 @@ function createChartColumn(
   name: string | undefined
 ): string {
   const nameAttr = name == undefined ? "" : `name="${name}"`;
-  return `<sos-chart identifier="${identifier}" ${nameAttr}></sos-chart>`;
+  // The API that provides the chart data is a SOAP API, and the download button is essentially just a link, so when you click it you get an error page.
+  // can-download="false" will disable this broken download button.
+  return `<sos-chart identifier="${identifier}" ${nameAttr} can-download="false"></sos-chart>`;
 }
 
 async function loadSoapBody(
@@ -636,7 +646,7 @@ async function loadSoapBody(
   const requestXml = Mustache.render(requestTemplate, templateContext);
 
   const responseXml = await loadWithXhr({
-    url: proxyCatalogItemUrl(item, url, "0d"),
+    url: proxyCatalogItemUrl(item, url),
     responseType: "document",
     method: "POST",
     overrideMimeType: "text/xml",

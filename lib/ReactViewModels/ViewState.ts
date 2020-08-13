@@ -120,6 +120,17 @@ export default class ViewState {
     this.currentTrainerStepIndex = index;
   }
 
+  /**
+   * Bottom dock state & action
+   */
+  @observable bottomDockHeight: number = 0;
+  @action
+  setBottomDockHeight(height: number) {
+    if (this.bottomDockHeight !== height) {
+      this.bottomDockHeight = height;
+    }
+  }
+
   @observable workbenchWithOpenControls: string | undefined = undefined;
 
   errorProvider: any | null = null;
@@ -279,6 +290,7 @@ export default class ViewState {
   private _storyPromptSubscription: IReactionDisposer;
   private _previewedItemIdSubscription: IReactionDisposer;
   private _workbenchHasTimeWMSSubscription: IReactionDisposer;
+  private _storyBeforeUnloadSubscription: IReactionDisposer;
   private _disclaimerHandler: DisclaimerHandler;
 
   constructor(options: ViewStateOptions) {
@@ -412,6 +424,24 @@ export default class ViewState {
         }
       }
     );
+
+    const handleWindowClose = (e: BeforeUnloadEvent) => {
+      // Cancel the event
+      e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
+      // Chrome requires returnValue to be set
+      e.returnValue = "";
+    };
+
+    this._storyBeforeUnloadSubscription = reaction(
+      () => this.terria.stories.length > 0,
+      hasScenes => {
+        if (hasScenes) {
+          window.addEventListener("beforeunload", handleWindowClose);
+        } else {
+          window.removeEventListener("beforeunload", handleWindowClose);
+        }
+      }
+    );
   }
 
   dispose() {
@@ -535,9 +565,15 @@ export default class ViewState {
   }
 
   @action
+  changeSearchState(newText: string) {
+    this.searchState.catalogSearchText = newText;
+  }
+
+  @action
   setDisclaimerVisible(bool: boolean) {
     this.disclaimerVisible = bool;
   }
+
   @action
   hideDisclaimer() {
     this.setDisclaimerVisible(false);
@@ -614,6 +650,14 @@ export default class ViewState {
   @action
   closeTool() {
     this.currentTool = undefined;
+  }
+
+  @computed
+  get breadcrumbsShown() {
+    return (
+      this.previewedItem !== undefined ||
+      this.userDataPreviewedItem !== undefined
+    );
   }
 
   @computed

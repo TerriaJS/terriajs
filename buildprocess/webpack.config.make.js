@@ -23,7 +23,8 @@ module.exports = function(hot, dev) {
             publicPath: 'build/'
         },
         // devtool: 'source-map',
-        devtool: dev ? 'eval-source-map' : 'source-map',
+        // Use eval cheap module source map for quicker incremental tests
+        devtool: dev ? 'eval-cheap-module-source-map' : 'source-map',
         module: {
             rules: [
                 {
