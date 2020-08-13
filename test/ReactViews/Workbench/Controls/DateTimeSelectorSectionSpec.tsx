@@ -1,12 +1,10 @@
+import React from "react";
 import { act } from "react-dom/test-utils";
 import TestRenderer, { ReactTestRenderer } from "react-test-renderer";
-
-import React from "react";
-
 import Terria from "../../../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../../../lib/Models/WebMapServiceCatalogItem";
-import DateTimeSelectorSection from "../../../../lib/ReactViews/Workbench/Controls/DateTimeSelectorSection";
 import { formatDateTime } from "../../../../lib/ReactViews/BottomDock/Timeline/DateFormats";
+import DateTimeSelectorSection from "../../../../lib/ReactViews/Workbench/Controls/DateTimeSelectorSection";
 
 describe("DateTimeSelectorSection", function() {
   let terria: Terria;
@@ -30,7 +28,7 @@ describe("DateTimeSelectorSection", function() {
       );
     });
     buttons = testRenderer.root.findAllByType("button");
-    console.log(buttons);
+
     currentDateBtn = buttons.filter((b: any) => {
       if (b.props.className.indexOf("currentDate") > -1) return true;
       return false;
