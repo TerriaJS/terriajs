@@ -14,10 +14,13 @@ import {
 import Icon from "../../Icon";
 
 import { formatDateTime } from "./DateFormats";
-import Button, { RawButton } from "../../../Styled/Button";
+import { scrollBars } from "../../../Styled/mixins";
 
 const dateFormat = require("dateformat");
-const DatePicker = require("react-datepicker");
+const DatePicker = require("react-datepicker").default;
+const Spacing = require("../../../Styled/Spacing").default;
+const RawButton = require("../../../Styled/Button").RawButton;
+const Button = require("../../../Styled/Button").default;
 
 function daysInMonth(month: number, year: number) {
   const n = new Date(year, month, 0).getDate();
@@ -86,10 +89,10 @@ const GridHeading = styled.div`
   margin-bottom: 10px;
 `;
 
-const GridRow = styled.div`
+export const GridRow = styled.div`
   :hover {
-    background: $overlay;
-    cursor: hover;
+    background: ${p => p.theme.overlay};
+    cursor: pointer;
   }
 `;
 
@@ -104,6 +107,7 @@ const GridLabel = styled.span`
 const GridBody = styled.div`
   height: calc(100% - 30px);
   overflow: auto;
+  ${scrollBars()}
 `;
 
 const BackButton = styled(RawButton)`
@@ -125,9 +129,13 @@ const BackButton = styled(RawButton)`
   }
 `;
 
-const DateButton = styled(BackButton)`
+export const DateButton = styled(Button).attrs({
+  primary: true,
+  textProps: { medium: true }
+})`
   width: calc(100% - 20px);
-  margin: 5px;
+  margin: 3px 5px;
+  border-radius: 4px;
 `;
 
 interface PropsType extends WithTranslation {
@@ -341,7 +349,7 @@ class DateTimePicker extends React.Component<PropsType> {
                 }
               >
                 <GridLabel>{m}</GridLabel>
-                <GridRowInner marginRight="2">
+                <GridRowInner marginRight="3">
                   {daysInMonth(i + 1, year).map(d => (
                     <GridItem
                       active={
@@ -414,6 +422,7 @@ class DateTimePicker extends React.Component<PropsType> {
             >
               {this.currentDateIndice.year}
             </BackButton>
+            &nbsp;
             <BackButton
               onClick={() =>
                 runInAction(() => {
@@ -425,6 +434,7 @@ class DateTimePicker extends React.Component<PropsType> {
             >
               {monthNames[this.currentDateIndice.month]}
             </BackButton>
+            <Spacing bottom={1} />
           </div>
           <DatePicker
             inline
@@ -654,7 +664,7 @@ class DateTimePicker extends React.Component<PropsType> {
                 background: ${(p: any) => p.theme.dark};
                 width: 260px;
                 height: 300px;
-                border: 1px solid $grey;
+                border: 1px solid ${(p: any) => p.theme.grey};
                 border-radius: 5px;
                 padding: 5px;
                 position: relative;
@@ -663,12 +673,13 @@ class DateTimePicker extends React.Component<PropsType> {
                 z-index: 100;
 
                 ${this.props.openDirection === "down"
-                  ? `&.openBelow {
+                  ? `
                   top: 40px;
                   left: -190px;
-                }`
+                `
                   : ""}
               `}
+              className={"scrollbars"}
             >
               <BackButton
                 css={`

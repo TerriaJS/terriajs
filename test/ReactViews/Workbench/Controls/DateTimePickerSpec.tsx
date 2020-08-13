@@ -5,7 +5,10 @@ import React from "react";
 
 import Terria from "../../../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../../../lib/Models/WebMapServiceCatalogItem";
-import DateTimePicker from "../../../../lib/ReactViews/BottomDock/Timeline/DateTimePicker";
+import DateTimePicker, {
+  DateButton,
+  GridRow
+} from "../../../../lib/ReactViews/BottomDock/Timeline/DateTimePicker";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 
 import Styles from "../../../../lib/ReactViews/BottomDock/Timeline/timeline.scss";
@@ -45,9 +48,7 @@ describe("DateTimePicker", function() {
       );
     });
 
-    const dates = testRenderer.root
-      .findAllByType("div")
-      .filter(d => d.props.className === Styles.gridRow);
+    const dates = testRenderer.root.findAllByType(GridRow);
     expect(dates.length).toBe(13);
 
     let firstDate = dates[0].children[0];
@@ -83,9 +84,7 @@ describe("DateTimePicker", function() {
       );
     });
 
-    const dates = testRenderer.root.findAllByProps({
-      className: Styles.dateBtn
-    });
+    const dates = testRenderer.root.findAllByType(DateButton);
     expect(dates.length).toBe(
       wmsItem.objectifiedDates[20][2015][3][28].indice.length
     );
