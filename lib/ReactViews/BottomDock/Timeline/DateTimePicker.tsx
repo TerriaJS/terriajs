@@ -1,4 +1,10 @@
-import { action, observable, runInAction } from "mobx";
+import {
+  action,
+  observable,
+  runInAction,
+  IReactionDisposer,
+  reaction
+} from "mobx";
 import { observer } from "mobx-react";
 import moment from "moment";
 import React from "react";
@@ -166,6 +172,8 @@ class DateTimePicker extends React.Component<PropsType> {
     granularity: Granularity;
   } = { granularity: "century" };
 
+  private currentDateAutorunDisposer: IReactionDisposer | undefined;
+
   componentWillMount() {
     const datesObject = this.props.dates;
     let defaultCentury: number | undefined;
@@ -210,9 +218,36 @@ class DateTimePicker extends React.Component<PropsType> {
     };
 
     window.addEventListener("click", this.closePickerEventHandler.bind(this));
+
+    // Update currentDateIndice when currentDate changes
+    this.currentDateAutorunDisposer = reaction(
+      () => this.props.currentDate,
+      () => {
+        // The current date must be one of the available item.dates, or null/undefined.
+        const currentDate = this.props.currentDate;
+        if (isDefined(currentDate)) {
+          Object.assign(this.currentDateIndice, {
+            day: isDefined(this.currentDateIndice.day)
+              ? currentDate.getDate()
+              : undefined,
+            month: isDefined(this.currentDateIndice.month)
+              ? currentDate.getMonth()
+              : undefined,
+            year: isDefined(this.currentDateIndice.year)
+              ? currentDate.getFullYear()
+              : undefined,
+            century: isDefined(this.currentDateIndice.century)
+              ? Math.floor(currentDate.getFullYear() / 100)
+              : undefined,
+            time: currentDate
+          });
+        }
+      }
+    );
   }
 
   componentWillUnmount() {
+    this.currentDateAutorunDisposer && this.currentDateAutorunDisposer();
     window.removeEventListener("click", () =>
       this.closePickerEventHandler.bind(this)
     );
@@ -586,30 +621,8 @@ class DateTimePicker extends React.Component<PropsType> {
     }
   }
 
-  @action
   toggleDatePicker() {
     if (!this.props.isOpen) {
-      // When the date picker is opened, we should update the old state with the new currentDate, but to the same granularity.
-      // The current date must be one of the available item.dates, or null/undefined.
-      const currentDate = this.props.currentDate;
-      if (isDefined(currentDate)) {
-        Object.assign(this.currentDateIndice, {
-          day: isDefined(this.currentDateIndice.day)
-            ? currentDate.getDate()
-            : undefined,
-          month: isDefined(this.currentDateIndice.month)
-            ? currentDate.getMonth()
-            : undefined,
-          year: isDefined(this.currentDateIndice.year)
-            ? currentDate.getFullYear()
-            : undefined,
-          century: isDefined(this.currentDateIndice.century)
-            ? Math.floor(currentDate.getFullYear() / 100)
-            : undefined,
-          time: currentDate
-        });
-      }
-
       this.props.onOpen();
     } else {
       this.props.onClose();
