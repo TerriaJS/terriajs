@@ -9,7 +9,7 @@ Change Log
 * Add support for splitting CSVs (TableMixins) that are using region mapping.
 * [The next improvement]
 
-#### next release (8.0.0-alpha.44)
+#### 8.0.0-alpha.44
 * Pass `format` trait on `TableColumnTraits` down to `TableAutomaticStylesStratum` for generating legends
 * Add `multipleTitles` and `maxMultipleTitlesShowed` to `LegendItemTraits`
 * Aggregate legend items in `createLegendItemsFromEnumColorMap` by colour, that is merge legend items with the same colour (using `multipleTitles`)
