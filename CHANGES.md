@@ -7,9 +7,10 @@ Change Log
 * Update style of diff tool close button to match new design
 * Remove sass code from the `HelpPanel` component
 * Added shift-drag quick zoom
+* Tsxified `DateTimePicker` and refactored `objectifiedDates` (moved to `DiscretelyTimeVaryingMixin`).
 * [The next improvement]
 
-#### next release (8.0.0-alpha.44)
+#### (8.0.0-alpha.44)
 * Pass `format` trait on `TableColumnTraits` down to `TableAutomaticStylesStratum` for generating legends
 * Add `multipleTitles` and `maxMultipleTitlesShowed` to `LegendItemTraits`
 * Aggregate legend items in `createLegendItemsFromEnumColorMap` by colour, that is merge legend items with the same colour (using `multipleTitles`)
