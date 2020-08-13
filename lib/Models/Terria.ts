@@ -283,6 +283,11 @@ export default class Terria {
   @observable useNativeResolution = false;
 
   /**
+   * Gets ot sets whether to use antialiasing
+   */
+  @observable antiAliasingEnabled = true;
+
+  /**
    * Whether we think all references in the catalog have been loaded
    * @type {boolean}
    */
