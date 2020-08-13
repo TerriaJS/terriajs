@@ -296,11 +296,11 @@ export default class Cesium extends GlobeOrMap {
         if (!this.isFeaturePickingPaused && !isDefined(zoomUserDrawing)) {
           this.pauseMapInteraction();
 
-          const exitZoom = (zoomTo = true) => {
+          const exitZoom = () => {
             document.removeEventListener("keyup", onKeyUp);
             runInAction(() => {
               this.terria.mapInteractionModeStack.pop();
-              zoomTo && zoomUserDrawing && zoomUserDrawing.cleanUp();
+              zoomUserDrawing && zoomUserDrawing.cleanUp();
             });
             this.resumeMapInteraction();
             zoomUserDrawing = undefined;
@@ -308,7 +308,7 @@ export default class Cesium extends GlobeOrMap {
 
           // If the shift key is released -> exit zoom
           const onKeyUp = (e: KeyboardEvent) =>
-            e.key === "Shift" && zoomUserDrawing && exitZoom(false);
+            e.key === "Shift" && zoomUserDrawing && exitZoom();
 
           document.addEventListener("keyup", onKeyUp);
 
@@ -335,7 +335,7 @@ export default class Cesium extends GlobeOrMap {
 
                 // If more than two points are clicked but a rectangle hasn't been drawn -> exit zoom
               } else if (pointClickCount >= 2) {
-                exitZoom(false);
+                exitZoom();
               }
             },
             allowPolygon: false,
@@ -357,7 +357,7 @@ export default class Cesium extends GlobeOrMap {
 
     inputHandler.setInputAction(
       e => {
-        if (!this.isFeaturePickingPaused && isDefined(zoomUserDrawing)) {
+        if (isDefined(zoomUserDrawing)) {
           this.pickFromScreenPosition(e.position, false);
         }
       },
