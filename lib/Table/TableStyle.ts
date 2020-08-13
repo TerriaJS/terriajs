@@ -1,6 +1,6 @@
 import groupBy from "lodash-es/groupBy";
-import sortedIndex from "lodash-es/sortedIndex";
 import { computed } from "mobx";
+import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
 import Color from "terriajs-cesium/Source/Core/Color";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
@@ -28,7 +28,6 @@ import TableTraits from "../Traits/TableTraits";
 import ColorPalette from "./ColorPalette";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
-import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
 
 const getColorForId = createColorForIdTransformer();
 const defaultColor = "yellow";
@@ -283,6 +282,7 @@ export default class TableStyle {
     }
   }
 
+  @computed
   get numberOfBins(): number {
     const colorColumn = this.colorColumn;
     if (colorColumn === undefined) return this.binMaximums.length;
@@ -306,7 +306,6 @@ export default class TableStyle {
    */
   @computed
   get binColors(): readonly Readonly<Color>[] {
-    const colorColumn = this.colorColumn;
     const numberOfBins = this.numberOfBins;
 
     // Pick a color for every bin.
