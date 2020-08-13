@@ -5,13 +5,13 @@ import React from "react";
 
 import Terria from "../../../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../../../lib/Models/WebMapServiceCatalogItem";
-import DateTimePicker, {
-  DateButton,
-  GridRow
-} from "../../../../lib/ReactViews/BottomDock/Timeline/DateTimePicker";
+import DateTimePicker from "../../../../lib/ReactViews/BottomDock/Timeline/DateTimePicker";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 
-import Styles from "../../../../lib/ReactViews/BottomDock/Timeline/timeline.scss";
+const DateButton = require("../../../../lib/ReactViews/BottomDock/Timeline/DateTimePicker")
+  .DateButton;
+const GridRow = require("../../../../lib/ReactViews/BottomDock/Timeline/DateTimePicker")
+  .GridRow;
 
 describe("DateTimePicker", function() {
   let terria: Terria;
@@ -51,9 +51,10 @@ describe("DateTimePicker", function() {
     const dates = testRenderer.root.findAllByType(GridRow);
     expect(dates.length).toBe(13);
 
-    let firstDate = dates[0].children[0];
-
-    expect(typeof firstDate !== "string" && firstDate.children[0]).toBe("2002");
+    expect(
+      // ಠ_ಥ
+      (dates[0] as any).children[0].children?.[0].children[0].children[0]
+    ).toBe("2002");
   });
 
   it("A datetime selector is rendered for WMS with many dates", async function() {
