@@ -66,11 +66,6 @@ export default class CsvCatalogItem
     return CsvCatalogItem.type;
   }
 
-  get supportsSplitting() {
-    if (isDefined(this.activeTableStyle.regionColumn)) return true;
-    return false;
-  }
-
   setFileInput(file: File) {
     this._csvFile = file;
   }

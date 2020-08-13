@@ -6,6 +6,7 @@ Change Log
 #### next release (8.0.0-alpha.45)
 * Update style of diff tool close button to match new design
 * Remove sass code from the `HelpPanel` component
+* Add support for splitting CSVs (TableMixins) that are using region mapping.
 * [The next improvement]
 
 #### next release (8.0.0-alpha.44)
@@ -27,7 +28,6 @@ Change Log
 * Tsify `proxyCatalogItemUrl`.
 * Simplified SidePanel React refs by removing the double wrapping of the `withTerriaRef()` HOC
 * Merged `withTerriaRef()` HOC with `useRefForTerria()` hook logic
-* [The next improvement]
 * Breadcrumbs are always shown instead of only when doing a catalog search
 
 #### 8.0.0-alpha.40
@@ -289,7 +289,6 @@ Change Log
 * Fixed bug causing full app crash or viewer zoom refresh when using 3D view and changing settings or changing the terrain provider.
 * Implements `SensorObservationServiceCatalogItem`.
 * Add support for styling CSVs using a region mapped or text columns.
-* Add support for splitting CSVs that are using region mapping.
 * Update Compass UI to include larger rotation target, remove sass from compass
 * Link Compass "help" button to `navigation` HelpPanelItem (requires generalisation later down the track)
 * Improve keyboard traversal through right-hand-side map icon buttons

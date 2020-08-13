@@ -156,13 +156,17 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       return this.activeTableStyle.isPoints();
     }
 
+    @computed
+    get supportsSplitting() {
+      if (isDefined(this.activeTableStyle.regionColumn)) return true;
+      return false;
+    }
+
     /**
      * Gets the items to show on the map.
      */
     @computed
     get mapItems(): (DataSource | ImageryParts)[] {
-      const result: (DataSource | ImageryParts)[] = [];
-
       return filterOutUndefined([
         this.createLongitudeLatitudeDataSource(this.activeTableStyle),
         this.createRegionMappedImageryLayer(this.activeTableStyle)
