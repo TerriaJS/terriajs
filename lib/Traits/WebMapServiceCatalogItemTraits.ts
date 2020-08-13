@@ -1,5 +1,7 @@
+import { JsonObject } from "../Core/Json";
+import anyTrait from "./anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
+import DiffableTraits from "./DiffableTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
@@ -12,10 +14,8 @@ import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
 import SplitterTraits from "./SplitterTraits";
-import UrlTraits from "./UrlTraits";
-import anyTrait from "./anyTrait";
-import { JsonObject } from "../Core/Json";
 import TimeFilterTraits from "./TimeFilterTraits";
+import UrlTraits from "./UrlTraits";
 
 export class WebMapServiceAvailableStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -65,10 +65,10 @@ export class WebMapServiceAvailableLayerStylesTraits extends ModelTraits {
 }
 
 export default class WebMapServiceCatalogItemTraits extends mixTraits(
+  DiffableTraits,
   FeatureInfoTraits,
   LayerOrderingTraits,
   SplitterTraits,
-  DiscretelyTimeVaryingTraits,
   TimeFilterTraits,
   GetCapabilitiesTraits,
   RasterLayerTraits,
@@ -149,4 +149,27 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
       "`2015-04-27T16:15:00/2015-04-27T18:45:00/PT15M` has 11 times."
   })
   maxRefreshIntervals: number = 1000;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Disable style selector",
+    description: "When true, disables the style selector in the workbench"
+  })
+  disableStyleSelector = false;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Linked WCS URL",
+    description:
+      "Gets or sets the URL of a WCS that enables clip-and-ship for this WMS item."
+  })
+  linkedWcsUrl?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Linked WCS Coverage Name",
+    description:
+      "Gets or sets the coverage name for linked WCS for clip-and-ship."
+  })
+  linkedWcsCoverage?: string;
 }

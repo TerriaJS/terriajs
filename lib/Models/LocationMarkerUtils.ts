@@ -5,6 +5,8 @@ import CommonStrata from "./CommonStrata";
 import CzmlCatalogItem from "./CzmlCatalogItem";
 import Terria from "./Terria";
 import raiseErrorOnRejectedPromise from "./raiseErrorOnRejectedPromise";
+import LatLonHeight from "../Core/LatLonHeight";
+import { toJS } from "mobx";
 
 export const LOCATION_MARKER_DATA_SOURCE_NAME =
   "TerriaJS Location Marker Points";
@@ -14,6 +16,7 @@ export interface MarkerDetails {
   name: string;
   location: { longitude: number; latitude: number; height?: number };
   heightReference?: "NONE" | "CLAMP_TO_GROUND" | "RELATIVE_TO_GROUND";
+  customMarkerIcon?: string;
 }
 /**
  * Adds a location marker to the map with the position supplied in the result, adding a data source to terria if one hasn't
@@ -33,8 +36,8 @@ export function addMarker(
   );
 
   const billboard: any = {
-    image: markerIcon,
-    scale: 0.5,
+    image: details.customMarkerIcon || markerIcon,
+    scale: details.customMarkerIcon ? 1 : 0.5,
     verticalOrigin: "BOTTOM",
     heightReference:
       details.heightReference ||
@@ -90,7 +93,23 @@ export function removeMarker(terria: Terria) {
 }
 
 /** Determines whether the location marker is visible previously added in {@link #addMarker}. */
-export function isMarkerVisible(terria: Terria) {
+export function isMarkerVisible(terria: Terria): boolean {
   const catalogItem = terria.getModelById(CzmlCatalogItem, MARKER_UNIQUE_ID);
   return catalogItem !== undefined && terria.overlays.contains(catalogItem);
+}
+
+export function getMarkerLocation(terria: Terria): LatLonHeight | undefined {
+  const catalogItem = terria.getModelById(CzmlCatalogItem, MARKER_UNIQUE_ID);
+  if (catalogItem === undefined || !terria.overlays.contains(catalogItem)) {
+    return;
+  }
+  const marker: any = catalogItem.czmlData[1];
+  const position = marker?.position?.cartographicDegrees;
+  if (Array.isArray(toJS(position))) {
+    const [longitude, latitude, height] = position;
+    if (longitude !== undefined && latitude !== undefined) {
+      return { longitude, latitude, height };
+    }
+  }
+  return undefined;
 }

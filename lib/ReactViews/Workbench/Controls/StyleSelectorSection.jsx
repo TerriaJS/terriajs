@@ -5,9 +5,11 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
-import Icon from "./../../Icon";
+// import Icon from "./../../Icon";
 import Styles from "./style-selector-section.scss";
 import CommonStrata from "../../../Models/CommonStrata";
+import Box from "../../../Styled/Box";
+import Select from "../../../Styled/Select";
 import { runInAction } from "mobx";
 
 const StyleSelectorSection = createReactClass({
@@ -25,7 +27,9 @@ const StyleSelectorSection = createReactClass({
 
   render() {
     const item = this.props.item;
-    if (defined(item.styleSelector)) {
+    if (item.disableStyleSelector) {
+      return null;
+    } else if (defined(item.styleSelector)) {
       return this.renderSingleStyleSelector(item.styleSelector);
     } else if (defined(item.styleSelectors)) {
       return this.renderMultipleStyleSelectors(item.styleSelectors);
@@ -42,35 +46,37 @@ const StyleSelectorSection = createReactClass({
 
     const label = styleSelector.name && styleSelector.name.length > 0 && (
       <label className={Styles.title} htmlFor={styleSelector.name}>
-        {label}
+        {styleSelector.name}
       </label>
     );
 
     return (
-      <div key={styleSelector.id} className={Styles.styleSelector}>
+      // <div key={styleSelector.id} className={Styles.styleSelector}>
+      <div key={styleSelector.id}>
         {label}
-        <select
-          className={Styles.field}
-          name={styleSelector.id}
-          value={styleSelector.activeStyleId}
-          onChange={this.changeStyle.bind(this, styleSelector)}
-        >
-          {availableStyles.map(item => (
-            <option key={item.id} value={item.id}>
-              {item.name}
-            </option>
-          ))}
-        </select>
-        <Icon glyph={Icon.GLYPHS.opened} />
+        <Box>
+          <Select
+            light
+            name={styleSelector.id}
+            value={styleSelector.activeStyleId}
+            onChange={this.changeStyle.bind(this, styleSelector)}
+          >
+            {availableStyles.map(item => (
+              <option key={item.id} value={item.id}>
+                {item.name}
+              </option>
+            ))}
+          </Select>
+        </Box>
+        {/* <Icon glyph={Icon.GLYPHS.opened} /> */}
       </div>
     );
   },
 
   renderMultipleStyleSelectors(styleSelectors) {
     return (
-      <div className={Styles.styleSelector}>
-        {styleSelectors.map(this.renderSingleStyleSelector)}
-      </div>
+      // <div className={Styles.styleSelector}>
+      <div>{styleSelectors.map(this.renderSingleStyleSelector)}</div>
     );
   }
 });

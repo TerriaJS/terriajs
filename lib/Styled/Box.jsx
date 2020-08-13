@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const Box = styled.div`
   ${props => props.relative && `position:relative;`}
-  
+
   display: flex;
   position: relative;
   ${props =>
@@ -10,7 +10,13 @@ export const Box = styled.div`
     `
     position:absolute;
     z-index:1;
-   `}
+  `}
+  ${props =>
+    props.topRight &&
+    `
+    right: 0px;
+    top: 0px;
+  `}
 
   box-sizing: border-box;
 
@@ -21,7 +27,10 @@ export const Box = styled.div`
   ${props => props.fullHeight && `height: 100%;`}
   ${props => props.fullWidth && `width: 100%;`}
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
-  
+  ${props => props.styledHeight && `height: ${props.styledHeight};`}
+  ${props => props.styledMinHeight && `min-height: ${props.styledMinHeight};`}
+  ${props => props.styledMaxHeight && `max-height: ${props.styledMaxHeight};`}
+
   ${props =>
     props.col &&
     `
@@ -34,12 +43,12 @@ export const Box = styled.div`
   // ${props => props.col3 && "width: 25%;"}
   // ${props => props.col4 && "width: 33.33333%;"}
   // ${props => props.col5 && "width: 41.66667%;"}
-  // ${props => props.col6 && "width: 50%;"}
+  ${props => props.col6 && "width: 50%;"}
   // ${props => props.col7 && "width: 58.33333%;"}
   // ${props => props.col8 && "width: 66.66667%;"}
   // ${props => props.col9 && "width: 75%;"}
-  // ${props => props.col10 && "width: 83.33333%;"}
-  // ${props => props.col11 && "width: 91.66667%;"}
+  ${props => props.col10 && "width: 83.33333%;"}
+  ${props => props.col11 && "width: 91.66667%;"}
   // ${props => props.col12 && "width: 100%;"}
 
   ${props => props.centered && `align-items: center;`}
@@ -48,7 +57,7 @@ export const Box = styled.div`
   ${props =>
     props.justifyContentSpaceAround && `justify-content: space-around;`}
   ${props => props.justifySpaceBetween && `justify-content: space-between;`}
-  
+
   ${props => props.left && `align-items: center;`}
   ${props => props.alignItemsFlexStart && `align-items: flex-start;`}
   ${props => props.left && `justify-content: flex-start;`}
@@ -62,6 +71,7 @@ export const Box = styled.div`
   ${props => props.column && `flex-direction: column;`}
   ${props => props.wrap && `flex-wrap: wrap;`}
 
+  ${props => props.flex && `flex: ${props.flex};`}
   ${props => props.flexShrinkZero && `flex-shrink: 0;`}
 
   ${props => props.boxShadow && `box-shadow: 0 2px 8px 0 rgba(0,0,0,0.16);`}
@@ -70,11 +80,15 @@ export const Box = styled.div`
   ${props =>
     props.charcoalGreyBg && `background-color: ${props.theme.charcoalGrey};`}
 
+  /* background color can be set on box or passed in through props read via theme...? */
+  ${props =>
+    props.backgroundColor && `background-color: ${props.backgroundColor};`}
+
 
   /* Unsure of padding API as yet */
 
   ${props => props.padded && `padding: 5px;`}
-  
+
   ${props => props.paddedRatio && `padding: ${5 * props.paddedRatio}px;`}
   ${props =>
     props.paddedHorizontally &&
@@ -91,6 +105,36 @@ export const Box = styled.div`
         (props.paddedVertically === true ? 1 : props.paddedVertically)}px;
       padding-bottom: ${5 *
         (props.paddedVertically === true ? 1 : props.paddedVertically)}px;
+    `}
+
+  ${props =>
+    props.backgroundImage &&
+    `
+      ${
+        props.backgroundBlackOverlay
+          ? `
+      background-image: linear-gradient(
+          rgba(0, 0, 0, ${props.backgroundBlackOverlay}),
+          rgba(0, 0, 0, ${props.backgroundBlackOverlay})
+        ),
+        url(${props.backgroundImage});`
+          : `background-image: url(${props.backgroundImage});`
+      }
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+    `}
+
+  ${props => props.wordBreak && `word-break: ${props.wordBreak};`}
+  ${props =>
+    props.overflow &&
+    `
+      overflow: ${props.overflow};
+    `}
+  ${props =>
+    props.overflowY &&
+    `
+      overflow-y: ${props.overflowY};
     `}
 `;
 

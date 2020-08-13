@@ -10,8 +10,10 @@ import openGroup from "../../lib/Models/openGroup";
 import { BaseModel } from "../../lib/Models/Model";
 import { runInAction } from "mobx";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
-import UrlReference from "../../lib/Models/UrlReference";
-import createCatalogItemFromUrl from "../../lib/Models/createCatalogItemFromUrl";
+import UrlReference, {
+  UrlToCatalogMemberMapping
+} from "../../lib/Models/UrlReference";
+import createUrlReferenceFromUrl from "../../lib/Models/createUrlReferenceFromUrl";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
 import PickedFeatures from "../../lib/Map/PickedFeatures";
 import Feature from "../../lib/Models/Feature";
@@ -47,7 +49,7 @@ describe("Terria", function() {
       );
       CatalogMemberFactory.register(UrlReference.type, UrlReference);
 
-      createCatalogItemFromUrl.register(
+      UrlToCatalogMemberMapping.register(
         s => true,
         WebMapServiceCatalogItem.type,
         true

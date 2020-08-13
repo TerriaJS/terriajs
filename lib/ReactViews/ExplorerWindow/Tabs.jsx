@@ -2,6 +2,7 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import classNames from "classnames";
+import styled from "styled-components";
 
 import DataCatalogTab from "./Tabs/DataCatalogTab";
 import MyDataTab from "./Tabs/MyDataTab/MyDataTab";
@@ -11,6 +12,7 @@ import { withTranslation } from "react-i18next";
 import Styles from "./tabs.scss";
 import { observer } from "mobx-react";
 import { runInAction } from "mobx";
+import Mappable from "../../Models/Mappable";
 
 const Tabs = observer(
   createReactClass({
@@ -21,6 +23,17 @@ const Tabs = observer(
       viewState: PropTypes.object.isRequired,
       tabs: PropTypes.array,
       t: PropTypes.func.isRequired
+    },
+
+    onFileAddFinished(files) {
+      const file = files.find(f => Mappable.is(f));
+      if (file) {
+        file
+          .loadMapItems()
+          .then(() => this.props.terria.currentViewer.zoomTo(file, 1));
+        this.props.viewState.viewCatalogMember(file);
+      }
+      this.props.viewState.myDataIsUploadView = false;
     },
 
     getTabs() {
@@ -38,6 +51,7 @@ const Tabs = observer(
           <MyDataTab
             terria={this.props.terria}
             viewState={this.props.viewState}
+            onFileAddFinished={files => this.onFileAddFinished(files)}
           />
         )
       };
@@ -119,7 +133,13 @@ const Tabs = observer(
 
       return (
         <div className={Styles.tabs}>
-          <ul className={Styles.tabList} role="tablist">
+          <ul
+            className={Styles.tabList}
+            role="tablist"
+            css={`
+              background-color: ${p => p.theme.colorPrimary};
+            `}
+          >
             <For each="item" index="i" of={tabs}>
               <li
                 key={i}
@@ -129,7 +149,7 @@ const Tabs = observer(
                 aria-controls={"panel--" + item.title}
                 aria-selected={item === currentTab}
               >
-                <button
+                <ButtonTab
                   type="button"
                   onClick={this.activateTab.bind(
                     this,
@@ -139,9 +159,10 @@ const Tabs = observer(
                   className={classNames(Styles.btnTab, {
                     [Styles.btnSelected]: item === currentTab
                   })}
+                  isCurrent={item === currentTab}
                 >
                   {item.name}
-                </button>
+                </ButtonTab>
               </li>
             </For>
           </ul>
@@ -161,5 +182,23 @@ const Tabs = observer(
     }
   })
 );
+
+const ButtonTab = styled.button`
+  ${props => `
+    background: transparent;
+    color: ${props.theme.textLight};
+    &:hover,
+    &:focus {
+      background: ${props.theme.textLight};
+      color: ${props.theme.colorPrimary};
+    }
+    ${props.isCurrent &&
+      `
+      background: ${props.theme.textLight};
+      color: ${props.theme.colorPrimary};
+    `}
+
+  `}
+`;
 
 module.exports = withTranslation()(Tabs);

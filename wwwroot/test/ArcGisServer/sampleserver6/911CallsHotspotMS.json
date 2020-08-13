@@ -1,0 +1,104 @@
+{
+  "currentVersion": 10.71,
+  "serviceDescription": "",
+  "mapName": "911CallsHotspot",
+  "description": "",
+  "copyrightText": "",
+  "supportsDynamicLayers": true,
+  "layers": [
+    {
+      "id": 0,
+      "name": "911 Calls Hotspot",
+      "parentLayerId": -1,
+      "defaultVisibility": true,
+      "subLayerIds": [
+        1,
+        2
+      ],
+      "minScale": 0,
+      "maxScale": 0,
+      "type": "Group Layer"
+    },
+    {
+      "id": 1,
+      "name": "Output_Features",
+      "parentLayerId": 0,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 0,
+      "maxScale": 0,
+      "type": "Feature Layer",
+      "geometryType": "esriGeometryPoint"
+    },
+    {
+      "id": 2,
+      "name": "Hotspot Raster",
+      "parentLayerId": 0,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 0,
+      "maxScale": 0,
+      "type": "Raster Layer"
+    }
+  ],
+  "tables": [],
+  "spatialReference": {
+    "wkid": 102726,
+    "latestWkid": 102726
+  },
+  "singleFusedMapCache": false,
+  "initialExtent": {
+    "xmin": 7586498.2203842085,
+    "ymin": 648193.5629549571,
+    "xmax": 7628948.291202798,
+    "ymax": 684915.0775039099,
+    "spatialReference": {
+      "wkid": 102726,
+      "latestWkid": 102726
+    }
+  },
+  "fullExtent": {
+    "xmin": 7588427.7690577805,
+    "ymin": 649862.7227071823,
+    "xmax": 7627018.742529226,
+    "ymax": 683245.9177516848,
+    "spatialReference": {
+      "wkid": 102726,
+      "latestWkid": 102726
+    }
+  },
+  "timeInfo": {
+    "timeExtent": [
+      883785600000,
+      885686400000
+    ],
+    "timeReference": null,
+    "timeRelation": "esriTimeRelationOverlaps",
+    "defaultTimeInterval": 2,
+    "defaultTimeIntervalUnits": "esriTimeUnitsDays",
+    "defaultTimeWindow": 0,
+    "hasLiveData": false
+  },
+  "minScale": 0,
+  "maxScale": 0,
+  "units": "esriFeet",
+  "supportedImageFormatTypes": "PNG32,PNG24,PNG,JPG,DIB,TIFF,EMF,PS,PDF,GIF,SVG,SVGZ,BMP",
+  "documentInfo": {
+    "Title": "",
+    "Author": "",
+    "Comments": "",
+    "Subject": "",
+    "Category": "",
+    "AntialiasingMode": "None",
+    "TextAntialiasingMode": "Force",
+    "Keywords": ""
+  },
+  "capabilities": "Map,Query,Data",
+  "supportedQueryFormats": "JSON, geoJSON",
+  "exportTilesAllowed": false,
+  "supportsDatumTransformation": true,
+  "maxRecordCount": 1000,
+  "maxImageHeight": 4096,
+  "maxImageWidth": 4096,
+  "supportedExtensions": "WMSServer"
+}

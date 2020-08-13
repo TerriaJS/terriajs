@@ -7,25 +7,27 @@
 // 3. Observable spaghetti
 //  Solution: think in terms of pipelines with computed observables, document patterns.
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
-import { computed, runInAction, trace, observable } from "mobx";
+import i18next from "i18next";
+import { computed, runInAction } from "mobx";
 import moment from "moment";
 import combine from "terriajs-cesium/Source/Core/combine";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
 import URI from "urijs";
-import isDefined from "../Core/isDefined";
 import containsAny from "../Core/containsAny";
 import createTransformerAllowUndefined from "../Core/createTransformerAllowUndefined";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import isDefined from "../Core/isDefined";
 import isReadOnlyArray from "../Core/isReadOnlyArray";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import DiscretelyTimeVaryingMixin from "../ModelMixins/DiscretelyTimeVaryingMixin";
-import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
+import DiffableMixin from "../ModelMixins/DiffableMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
+import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import DiscreteTimeTraits from "../Traits/DiscreteTimeTraits";
@@ -34,20 +36,25 @@ import { RectangleTraits } from "../Traits/MappableTraits";
 import WebMapServiceCatalogItemTraits, {
   WebMapServiceAvailableLayerStylesTraits
 } from "../Traits/WebMapServiceCatalogItemTraits";
+import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
-import CommonStrata from "./CommonStrata";
 import LoadableStratum from "./LoadableStratum";
 import Mappable, { ImageryParts } from "./Mappable";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
+import { AvailableStyle } from "./SelectableStyle";
 import StratumFromTraits from "./StratumFromTraits";
 import WebMapServiceCapabilities, {
   CapabilitiesLayer,
   CapabilitiesStyle,
+  CapabilitiesContactInformation,
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
-import i18next from "i18next";
+import { callWebCoverageService } from "./callWebCoverageService";
+import ExportableData from "./ExportableData";
+
+const dateFormat = require("dateformat");
 
 interface LegendUrl {
   url: string;
@@ -164,6 +171,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
             : layerAvailableStyles.styles.find(
                 candidate => candidate.name === style
               );
+
         if (layerStyle !== undefined && layerStyle.legend !== undefined) {
           result.push(
             <StratumFromTraits<LegendTraits>>(<unknown>layerStyle.legend)
@@ -199,7 +207,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
     }
 
     const capabilitiesLayers = this.capabilitiesLayers;
-
     for (const layerTuple of capabilitiesLayers) {
       const layerName = layerTuple[0];
       const layer = layerTuple[1];
@@ -225,7 +232,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
             );
             legendMimeType = wmsLegendUrl.Format;
           }
-
           const legend = !legendUri
             ? undefined
             : createStratumInstance(LegendTraits, {
@@ -250,6 +256,13 @@ class GetCapabilitiesStratum extends LoadableStratum(
   get info(): StratumFromTraits<InfoSectionTraits>[] {
     const result: StratumFromTraits<InfoSectionTraits>[] = [];
 
+    function createInfoSection(name: string, content: string | undefined) {
+      const trait = createStratumInstance(InfoSectionTraits);
+      trait.name = name;
+      trait.content = content;
+      return trait;
+    }
+
     let firstDataDescription: string | undefined;
     for (const layer of this.capabilitiesLayers.values()) {
       if (
@@ -263,18 +276,29 @@ class GetCapabilitiesStratum extends LoadableStratum(
       const suffix =
         this.capabilitiesLayers.size === 1 ? "" : ` - ${layer.Title}`;
       const name = `Web Map Service Layer Description${suffix}`;
-
-      const traits = createStratumInstance(InfoSectionTraits);
-      traits.name = name;
-      traits.content = layer.Abstract;
-      result.push(traits);
-
+      result.push(createInfoSection(name, layer.Abstract));
       firstDataDescription = firstDataDescription || layer.Abstract;
     }
 
     // Show the service abstract if there is one and if it isn't the Geoserver default "A compliant implementation..."
     const service = this.capabilities && this.capabilities.Service;
     if (service) {
+      if (service.ContactInformation !== undefined) {
+        result.push(
+          createInfoSection(
+            i18next.t("models.webMapServiceCatalogItem.serviceContact"),
+            getServiceContactInformation(service.ContactInformation)
+          )
+        );
+      }
+
+      result.push(
+        createInfoSection(
+          i18next.t("models.webMapServiceCatalogItem.getCapabilitiesUrl"),
+          this.catalogItem.getCapabilitiesUrl
+        )
+      );
+
       if (
         service &&
         service.Abstract &&
@@ -284,10 +308,12 @@ class GetCapabilitiesStratum extends LoadableStratum(
         ) &&
         service.Abstract !== firstDataDescription
       ) {
-        const traits = createStratumInstance(InfoSectionTraits);
-        traits.name = "Web Map Service Description";
-        traits.content = service.Abstract;
-        result.push(traits);
+        result.push(
+          createInfoSection(
+            i18next.t("models.webMapServiceCatalogItem.serviceDescription"),
+            service.Abstract
+          )
+        );
       }
 
       // Show the Access Constraints if it isn't "none" (because that's the default, and usually a lie).
@@ -295,14 +321,71 @@ class GetCapabilitiesStratum extends LoadableStratum(
         service.AccessConstraints &&
         !/^none$/i.test(service.AccessConstraints)
       ) {
-        const traits = createStratumInstance(InfoSectionTraits);
-        traits.name = "Web Map Service Access Constraints";
-        traits.content = service.AccessConstraints;
-        result.push(traits);
+        result.push(
+          createInfoSection(
+            i18next.t("models.webMapServiceCatalogItem.accessConstraints"),
+            service.AccessConstraints
+          )
+        );
       }
     }
 
     return result;
+  }
+
+  @computed
+  get infoSectionOrder(): string[] {
+    let layerDescriptions = [`Web Map Service Layer Description`];
+
+    // If more than one layer, push layer description titles for each applicable layer
+    if (this.capabilitiesLayers.size > 1) {
+      layerDescriptions = [];
+      this.capabilitiesLayers.forEach(layer => {
+        if (
+          layer &&
+          layer.Abstract &&
+          !containsAny(
+            layer.Abstract,
+            WebMapServiceCatalogItem.abstractsToIgnore
+          )
+        ) {
+          layerDescriptions.push(
+            `Web Map Service Layer Description - ${layer.Title}`
+          );
+        }
+      });
+    }
+
+    return [
+      i18next.t("preview.disclaimer"),
+      i18next.t("description.name"),
+      ...layerDescriptions,
+      i18next.t("preview.datasetDescription"),
+      i18next.t("preview.serviceDescription"),
+      i18next.t("models.webMapServiceCatalogItem.serviceDescription"),
+      i18next.t("preview.resourceDescription"),
+      i18next.t("preview.licence"),
+      i18next.t("preview.accessConstraints"),
+      i18next.t("models.webMapServiceCatalogItem.accessConstraints"),
+      i18next.t("preview.author"),
+      i18next.t("preview.contact"),
+      i18next.t("models.webMapServiceCatalogItem.serviceContact"),
+      i18next.t("preview.created"),
+      i18next.t("preview.modified"),
+      i18next.t("preview.updateFrequency"),
+      i18next.t("models.webMapServiceCatalogItem.getCapabilitiesUrl")
+    ];
+  }
+
+  @computed
+  get shortReport() {
+    const catalogItem = this.catalogItem;
+    if (catalogItem.isShowingDiff) {
+      const format = "yyyy/mm/dd";
+      const d1 = dateFormat(catalogItem.firstDiffDate, format);
+      const d2 = dateFormat(catalogItem.secondDiffDate, format);
+      return `Showing difference image computed for ${catalogItem.diffStyleId} style on dates ${d1} and ${d2}`;
+    }
   }
 
   @computed
@@ -342,8 +425,8 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get discreteTimes(): StratumFromTraits<DiscreteTimeTraits>[] | undefined {
-    const result: StratumFromTraits<DiscreteTimeTraits>[] = [];
+  get discreteTimes(): { time: string; tag: string | undefined }[] | undefined {
+    const result = [];
 
     for (let layer of this.capabilitiesLayers.values()) {
       if (!layer) {
@@ -401,9 +484,59 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 }
 
+class DiffStratum extends LoadableStratum(WebMapServiceCatalogItemTraits) {
+  constructor(readonly catalogItem: WebMapServiceCatalogItem) {
+    super();
+  }
+
+  duplicateLoadableStratum(model: BaseModel): this {
+    return new DiffStratum(model as WebMapServiceCatalogItem) as this;
+  }
+
+  @computed
+  get legends() {
+    if (this.catalogItem.isShowingDiff && this.diffLegendUrl) {
+      const urlMimeType =
+        new URL(this.diffLegendUrl).searchParams.get("format") || undefined;
+      return [
+        createStratumInstance(LegendTraits, {
+          url: this.diffLegendUrl,
+          urlMimeType
+        })
+      ];
+    }
+    return undefined;
+  }
+
+  @computed
+  get diffLegendUrl() {
+    const diffStyleId = this.catalogItem.diffStyleId;
+    const firstDate = this.catalogItem.firstDiffDate;
+    const secondDate = this.catalogItem.secondDiffDate;
+    if (diffStyleId && firstDate && secondDate) {
+      return this.catalogItem.getLegendUrlForStyle(
+        diffStyleId,
+        JulianDate.fromIso8601(firstDate),
+        JulianDate.fromIso8601(secondDate)
+      );
+    }
+    return undefined;
+  }
+
+  @computed
+  get disableStyleSelector() {
+    return this.catalogItem.isShowingDiff;
+  }
+
+  @computed
+  get disableDateTimeSelector() {
+    return this.catalogItem.isShowingDiff;
+  }
+}
+
 class WebMapServiceCatalogItem
-  extends TimeFilterMixin(
-    DiscretelyTimeVaryingMixin(
+  extends DiffableMixin(
+    TimeFilterMixin(
       GetCapabilitiesMixin(
         UrlMixin(
           CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
@@ -411,13 +544,18 @@ class WebMapServiceCatalogItem
       )
     )
   )
-  implements Mappable {
+  implements Mappable, ExportableData {
   /**
    * The collection of strings that indicate an Abstract property should be ignored.  If these strings occur anywhere
    * in the Abstract, the Abstract will not be used.  This makes it easy to filter out placeholder data like
    * Geoserver's "A compliant implementation of WMS..." stock abstract.
    */
   static abstractsToIgnore = ["A compliant implementation of WMS"];
+
+  // hide elements in the info section which might show information about the datasource
+  _sourceInfoItemNames = [
+    i18next.t("models.webMapServiceCatalogItem.getCapabilitiesUrl")
+  ];
 
   static defaultParameters = {
     transparent: true,
@@ -447,12 +585,31 @@ class WebMapServiceCatalogItem
           GetCapabilitiesMixin.getCapabilitiesStratumName,
           stratum
         );
+
+        const diffStratum = new DiffStratum(this);
+        this.strata.set(DiffableMixin.diffStratumName, diffStratum);
       });
     });
   }
 
   loadMapItems(): Promise<void> {
     return this.loadMetadata();
+  }
+
+  @computed get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    }
+    return "0d";
+  }
+
+  @computed
+  get canExportData() {
+    return isDefined(this.linkedWcsCoverage) && isDefined(this.linkedWcsUrl);
+  }
+
+  exportData() {
+    return callWebCoverageService(this);
   }
 
   @computed
@@ -486,8 +643,8 @@ class WebMapServiceCatalogItem
       activeStyleId: activeStyle,
       availableStyles: this.availableStyles[0].styles.map(function(s) {
         return {
-          name: s.title,
-          id: s.name
+          name: s.title!,
+          id: s.name!
         };
       }),
       chooseActiveStyle: (strata: string, newStyle: string) => {
@@ -515,6 +672,16 @@ class WebMapServiceCatalogItem
     }
   }
 
+  @computed
+  get discreteTimes() {
+    const getCapabilitiesStratum:
+      | GetCapabilitiesStratum
+      | undefined = this.strata.get(
+      GetCapabilitiesMixin.getCapabilitiesStratumName
+    ) as GetCapabilitiesStratum;
+    return getCapabilitiesStratum?.discreteTimes;
+  }
+
   protected get defaultGetCapabilitiesUrl(): string | undefined {
     if (this.uri) {
       return this.uri
@@ -531,7 +698,66 @@ class WebMapServiceCatalogItem
   }
 
   @computed
+  get canDiffImages(): boolean {
+    const hasValidDiffStyles = this.availableDiffStyles.some(diffStyle =>
+      this.styleSelector?.availableStyles.find(style => style.id === diffStyle)
+    );
+    return hasValidDiffStyles === true;
+  }
+
+  showDiffImage(
+    firstDate: JulianDate,
+    secondDate: JulianDate,
+    diffStyleId: string
+  ) {
+    if (this.canDiffImages === false) {
+      return;
+    }
+
+    // A helper to get the diff tag given a date string
+    const firstDateStr = this.getTagForTime(firstDate);
+    const secondDateStr = this.getTagForTime(secondDate);
+    this.setTrait(CommonStrata.user, "firstDiffDate", firstDateStr);
+    this.setTrait(CommonStrata.user, "secondDiffDate", secondDateStr);
+    this.setTrait(CommonStrata.user, "diffStyleId", diffStyleId);
+    this.setTrait(CommonStrata.user, "isShowingDiff", true);
+  }
+
+  clearDiffImage() {
+    this.setTrait(CommonStrata.user, "firstDiffDate", undefined);
+    this.setTrait(CommonStrata.user, "secondDiffDate", undefined);
+    this.setTrait(CommonStrata.user, "diffStyleId", undefined);
+    this.setTrait(CommonStrata.user, "isShowingDiff", false);
+  }
+
+  getLegendUrlForStyle(
+    styleId: string,
+    firstDate?: JulianDate,
+    secondDate?: JulianDate
+  ) {
+    const firstTag = firstDate && this.getTagForTime(firstDate);
+    const secondTag = secondDate && this.getTagForTime(secondDate);
+    const time = filterOutUndefined([firstTag, secondTag]).join(",");
+    const layerName = this.availableStyles.find(style =>
+      style.styles.some(s => s.name === styleId)
+    )?.layerName;
+    const uri = URI(
+      `${this.url}?service=WMS&version=1.1.0&request=GetLegendGraphic&format=image/png&transparent=True`
+    )
+      .addQuery("layer", encodeURIComponent(layerName || ""))
+      .addQuery("styles", encodeURIComponent(styleId));
+    if (time) {
+      uri.addQuery("time", time);
+    }
+    return uri.toString();
+  }
+
+  @computed
   get mapItems() {
+    if (this.isShowingDiff === true) {
+      return this._diffImageryParts ? [this._diffImageryParts] : [];
+    }
+
     const result = [];
 
     const current = this._currentImageryParts;
@@ -581,6 +807,40 @@ class WebMapServiceCatalogItem
     }
   }
 
+  @computed
+  private get _diffImageryParts(): ImageryParts | undefined {
+    const diffStyleId = this.diffStyleId;
+    if (
+      this.firstDiffDate === undefined ||
+      this.secondDiffDate === undefined ||
+      diffStyleId === undefined
+    ) {
+      return;
+    }
+    const time = `${this.firstDiffDate},${this.secondDiffDate}`;
+    const imageryProvider = this._createImageryProvider(time);
+    if (imageryProvider) {
+      return {
+        imageryProvider,
+        alpha: this.opacity,
+        show: this.show !== undefined ? this.show : true
+      };
+    }
+    return undefined;
+  }
+
+  @computed
+  get diffModeParameters() {
+    return { styles: this.diffStyleId };
+  }
+
+  getTagForTime(date: JulianDate): string | undefined {
+    const index = this.getDiscreteTimeIndex(date);
+    return index !== undefined
+      ? this.discreteTimesAsSortedJulianDates?.[index].tag
+      : undefined;
+  }
+
   private _createImageryProvider = createTransformerAllowUndefined(
     (
       time: string | undefined
@@ -595,9 +855,13 @@ class WebMapServiceCatalogItem
 
       console.log(`Creating new ImageryProvider for time ${time}`);
 
+      const diffModeParameters = this.isShowingDiff
+        ? this.diffModeParameters
+        : {};
       const parameters: any = {
         ...WebMapServiceCatalogItem.defaultParameters,
-        ...(this.parameters || {})
+        ...(this.parameters || {}),
+        ...diffModeParameters
       };
 
       if (time !== undefined) {
@@ -659,7 +923,6 @@ class WebMapServiceCatalogItem
       }
 
       const imageryProvider = new WebMapServiceImageryProvider(imageryOptions);
-
       if (
         maximumLevel !== undefined &&
         this.hideLayerAfterMinScaleDenominator
@@ -839,6 +1102,34 @@ function formatMomentForWms(m: moment.Moment, duration: moment.Duration) {
   }
 
   return m.format();
+}
+
+function getServiceContactInformation(
+  contactInfo: CapabilitiesContactInformation
+) {
+  const primary = contactInfo.ContactPersonPrimary;
+  let text = "";
+  if (isDefined(primary)) {
+    if (
+      isDefined(primary.ContactOrganization) &&
+      primary.ContactOrganization.length > 0 &&
+      // Geoserver default
+      primary.ContactOrganization !== "The Ancient Geographers"
+    ) {
+      text += primary.ContactOrganization + "<br/>";
+    }
+  }
+
+  if (
+    isDefined(contactInfo.ContactElectronicMailAddress) &&
+    contactInfo.ContactElectronicMailAddress.length > 0 &&
+    // Geoserver default
+    contactInfo.ContactElectronicMailAddress !== "claudius.ptolomaeus@gmail.com"
+  ) {
+    text += `[${contactInfo.ContactElectronicMailAddress}](mailto:${contactInfo.ContactElectronicMailAddress})`;
+  }
+
+  return text;
 }
 
 export default WebMapServiceCatalogItem;

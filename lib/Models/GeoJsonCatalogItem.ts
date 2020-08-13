@@ -29,11 +29,11 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import GeoJsonCatalogItemTraits from "../Traits/GeoJsonCatalogItemTraits";
 import CreateModel from "./CreateModel";
+import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 
 const formatPropertyValue = require("../Core/formatPropertyValue");
 const hashFromString = require("../Core/hashFromString");
 const loadBlob = require("../Core/loadBlob");
-const proxyCatalogItemUrl = require("./proxyCatalogItemUrl");
 const Reproject = require("../Map/Reproject");
 const zip = require("terriajs-cesium/Source/ThirdParty/zip").default;
 
@@ -79,6 +79,13 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
   @computed
   get hasLocalData(): boolean {
     return isDefined(this._geoJsonFile);
+  }
+
+  @computed get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    }
+    return "1d";
   }
 
   /**
@@ -135,9 +142,9 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
               })
             });
           }
-          resolve(loadZipFile(proxyCatalogItemUrl(this, this.url, "1d")));
+          resolve(loadZipFile(proxyCatalogItemUrl(this, this.url)));
         } else {
-          resolve(loadJson(proxyCatalogItemUrl(this, this.url, "1d")));
+          resolve(loadJson(proxyCatalogItemUrl(this, this.url)));
         }
       } else {
         throw new TerriaError({
@@ -626,6 +633,7 @@ function createEntityFromHole(
   entity.polyline.show = mainEntity.polyline.show;
   entity.polyline.material = mainEntity.polyline.material;
   entity.polyline.width = mainEntity.polyline.width;
+  entity.polyline.clampToGround = mainEntity.polyline.clampToGround;
 
   closePolyline(hole.positions);
   entity.polyline.positions = new ConstantProperty(hole.positions);

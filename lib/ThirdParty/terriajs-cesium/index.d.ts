@@ -1,3 +1,5 @@
+/// <reference types="cesium" />
+
 // Generated from the intersection of:
 // - properties available on Cesium object
 // - files in Source/**/*
@@ -1342,6 +1344,7 @@ declare module "terriajs-cesium/Source/Scene/Cesium3DTileset" {
   import IonResource from "terriajs-cesium/Source/Core/IonResource";
   import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
   import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
+  import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 
   export default class Cesium3DTileset {
     url: string;
@@ -1353,6 +1356,8 @@ declare module "terriajs-cesium/Source/Scene/Cesium3DTileset" {
     extras: any;
     colorBlendMode: Cesium3DTileColorBlendMode;
     colorBlendAmount: number;
+    modelMatrix: Matrix4;
+    root: { transform: Matrix4 };
 
     constructor(options: {
       url: string | IonResource | Cesium.Resource;
@@ -1422,3 +1427,7 @@ declare module "terriajs-cesium/Source/Core/Ion" {
 }
 
 declare module "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
+
+declare module "terriajs-cesium/Source/DataSources/PolylineDashMaterialProperty" {
+  export default Cesium.PolylineDashMaterialProperty;
+}

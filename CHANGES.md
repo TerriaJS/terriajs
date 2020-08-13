@@ -2,6 +2,199 @@ Change Log
 ==========
 
 ### MobX Development
+
+#### next release (8.0.0-alpha.45)
+* Update style of diff tool close button to match new design
+* Remove sass code from the `HelpPanel` component
+* [The next improvement]
+
+#### next release (8.0.0-alpha.44)
+* Pass `format` trait on `TableColumnTraits` down to `TableAutomaticStylesStratum` for generating legends
+* Add `multipleTitles` and `maxMultipleTitlesShowed` to `LegendItemTraits`
+* Aggregate legend items in `createLegendItemsFromEnumColorMap` by colour, that is merge legend items with the same colour (using `multipleTitles`)
+* Only generate `tableStyles` for region columns if no other styles exist
+* TableAutomaticStylesStratum & CsvCatalogItem only returns unique `discreteTimes`s now
+* Specified specific terriajs config for ForkTsCheckerWebpackPlugin
+
+#### 8.0.0-alpha.43
+* Replace `@gov.au/page-alerts` dependency with our own warning box component. This removes all `pancake` processes which were sometimes problematic.
+
+#### 8.0.0-alpha.42
+* Added ArcGIS catalog support via ArcGisPortalItemReference
+
+#### 8.0.0-alpha.41
+* Add `cacheDuration` and `forceProxy` to `UrlTraits` and add `cacheDuration` defaults to various catalog models.
+* Tsify `proxyCatalogItemUrl`.
+* Simplified SidePanel React refs by removing the double wrapping of the `withTerriaRef()` HOC
+* Merged `withTerriaRef()` HOC with `useRefForTerria()` hook logic
+* [The next improvement]
+* Breadcrumbs are always shown instead of only when doing a catalog search
+
+#### 8.0.0-alpha.40
+* Improve info section of `WebMapServiceCatalogItem` with content from GetCapabilities
+* Re-implement `infoSectionOrder` as `CatalogMember` trait.
+* Add `infoWithoutSources` getter to `CatalogMemberMixin` to prevent app crash when using `hideSources`
+* Add support for nested WMS groups
+* Added breadcrumbs when clicking on a catalogue item from a catalogue search
+
+#### 8.0.0-alpha.39
+* Development builds sped up by 3~20x - ts-loader is now optional & TypeScript being transpiled by babel-loader, keeping type check safety on a separate thread
+
+#### 8.0.0-alpha.38
+* Add `show` to `ShortReportTraits` and Tsxify `ShortReport`
+* Convert `ShortReport` to styled-components, add accordian-like UI
+* 3D tiles support is now implemented as a Mixin.
+
+#### 8.0.0-alpha.37
+* Add `refreshEnabled` trait and `AsyncMappableMixin` to `AutoRefreshMixin`
+* Ensure `CkanCatalogGroup` doesn't keep re-requesting data when opening and closing groups.
+* Add `typeName` to `CatalogMemberMixin`
+* Add `header` option to `loadText`
+* Add `isMixtedInto` function for `AsyncMappableMixin` and `AsyncChartableMixin`
+* Added file upload support for `GltfCatalogItem`. The supported extension is glb.
+* Improve runtime themeing via styled components across main UI components
+* Updated default welcome video defaults to a newer, slower video
+* Difftool will now pick any existing marked location (like from a search result) and filter imagery for that location.
+* Updated labelling & copy in Difftool to clarify workflow
+* ChartCustomComponent now `abstract`, no longer specific to CSV catalog items. Implement it for custom feature info charts.
+* Update date picker to use theme colours
+* Removed some sass overrides on `Select` through `StyleSelectorSection`
+* Update LeftRightSection to use theme colours
+* Ported `GeoRssCatalogItem` to mobx, added support to skip entries without geometry.
+* Update Difftool BottomPanel UI to clearer "area filter" and date pickers
+* Update Difftool BottomPanel to load into Terria's BottomDock
+* Rearrange MapButton layout in DOM to properly reflow with BottomDock
+* Update Difftool MainPanel to not get clipped by BottomDock
+* Rearrange MapDataCount to exist inside MapColumn for more correct DOM structure & behaviour
+* Re-added chart disclaimer.
+
+#### mobx-36
+* Added `pointer-events` to `MapNavigation` and `MenuBar` elements, so the bar don't block mouse click outside of the button.
+* Fixes "reminder pop-up" for help button being unclickable
+* Use `useTranslation` instead of `withTranslation` in functional component (`MapDataCount`)
+* Make welcome video url and placeholder configurable via configparameters
+* Added `ExportableData` interface.
+* Added `ExportData` component for data catalog.
+* Added WCS "clip and ship" for WMS
+* Added basic CSV export function
+* Extend `UserDrawing` to handle rectangles
+* Tsxify `MapInteractionMode`
+* Changed default orientation for `GltfCatalogItem` to no rotation, instead of zero rotation wrt to terrain
+* Added a title to welcome message video
+
+#### mobx-35
+* Add "Upload" to tour points
+* Add tooltips anywhere required in UI via `parseCustomMarkdownToReactWithOptions` & customisable via `helpContentTerms` 
+* Add "map state" map data count to highlight state of map data
+* Add a reminder "pop-up" that shows the location of the help button
+* Fix bug causing story pop-up to be off screen
+* Fix bug causing helpful hints to be cut off on smaller screens
+* Changed the `Tool` interface, now accepting prop `getToolComponent` instead of `toolComponent`
+* Added `ToolButton` for loading/unloading a tool
+* Added `TransformationTraits` that can be used to change position/rotation/scale of a model.
+* Merge master into mobx. This includes:
+  * Upgraded to Cesium v1.68.
+  * Story related enhancements:
+    * Added a title to story panel with ability to close story panel. 
+    * Added a popup on remove all stories.
+    * Added button for sharing stories.
+    * Added a question popup on window close (if there are stories on the map so users don't lose their work).
+* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
+* Added a new `editor` Icon
+* Changed `ToolButton` to show the same icon in open/close state. Previously it showed a close icon in close state.
+
+#### mobx-34
+* Bug fix for `DatePicker` in `BottomDock` causing app crash
+* Made changes to the video modals: close button has been added, pressing escape now closes the component and some basic unit tests created
+* Updated the video modal for _Data Stories: Getting Started_ to use the new `VideoGuide` component
+* Tweaked MyData/AddData tabs to make it possible to invoke them without using the `ExplorerWindow` component and also customize the extensions listed in the dropdown.
+* Fix the timeline stack handling for when there are multiple time-enabled layers
+* Ported timeseries tables.
+* Extended the support for styles for ESRI ArcGis Feature Server. Line styles are supported for lines and polygon outlines in both Cesium and Leaflet viewer. #4405
+* Fix polygon outline style bug.
+* Add a unit test for polygon outline style.
+* Add TrainerPane/TrainerBar "Terry the task trainer"
+* Use `1.x.x` of `karma-sauce-launcher` to fix CI build failures
+* Stop unknown icons specified in config.json from crashing UI
+* Creates a `ShadowTraits` class that is shared by `GltfCatalogItem` and `Cesium3DTilesCatalogItem`.
+* Fixed a bug where user added data was removed from catalogue when Remove from map button in data catalog is clicked.
+* Fix leaflet zoom to work when bounding rectangle exists but doesn't have bounds defined
+
+#### mobx-33
+* Updated generic select so icon doesn't block click
+* Re-added loading bar for leaflet & cesium viewers
+
+#### mobx-32
+* Made expanded SOS chart item shareable.
+* Fixed a regression bug where the time filter is shown for all satellite imagery items
+* Add unit tests for `WelcomeMessage` and `Disclaimer`
+* Fixed minor UI errors in console
+* Replaced helpful hints text with the new version
+* Made the shapes of some of the workbench components rounded
+* Add `clampToGround` property on to holes within polygons in `GeoJsonCatalogItem`
+* Set default `clampToGround` trait to `true` for `GeoJsonCatalogItem`
+* Fixed a bug where WMS items caused type errors in newer babel and typescript builds, due to mixed mixin methods on DiffableMixin & DiscretelyTimeVaryingMixin
+* Fixed a bug where KmlCatalogItem did not use the proxy for any urls.
+* Add support for `CkanCatalogGroup` and `CkanItemReference`.
+* Added unit test to ensure getAncestors behaviour
+* Hide the chart legend if there are more than four items to prevent things like FeatureInfo being pushed out of the view and the map resizing.
+* Prevent addedByUser stack overflow
+* Fixed a chart bug where moment points do not stick to the basis item when they are of different scale.
+* Fixed a bug where the moment point selection highlight is lost when changing the satellite imagery date.
+* Removed sass from Clipboard
+* Updated LocationSearchResults to support multiple search providers
+* Replaced lifesaver icon on the help button with a question mark button
+* Fix handling of points and markers around the anti-meridian in the `LeafletVisualizer`.
+* Fixed difference tool losing datepicker state by keeping it mounted
+* Disabled unhelpful Help button when in `useSmallScreenInterface`
+* Fixed a bug where a single incorrect catalog item in a group would prevent subsequent items from loading.
+* Improved catalog parsing to include a stub (`StubCatalogItem`) when terriajs can't parse something
+
+#### mobx-31
+* Fixes broken time filter location picker when other features are present on the map.
+* Fixes the feature info panel button to show imagery at the selected location.
+* Added `hideSource` trait to `CatalogMemberTraits`. When set to true source URL won't be visible in the explorer window.
+* Added `Title`, `ContactInformation`, `Fees` to the `CapabilitiesService` interface so they are pulled on metadata load.
+* Resolved name issue of `WebMapServiceCapabilities`. Now it returns a name resolved from `capabilities` unless it is set by user.
+* Added setting of `isOpenInWorkbench`, `isExperiencingIssues`, `hideLegendInWorkbench`, `hideSource` strats for `WebMapServiceCatalogItem` from `WebMapServiceCatalogGroup`.
+
+#### mobx-30
+* Ported welcome message to mobx with new designs
+* Updated CI clientConfig values to include new help panel default
+* Bumped explicit base typescript to 3.9.2
+* Lock rollbar to 2.15.2
+* Ported disclaimer to mobx with new designs
+* Added diff tool for visualizing difference (delta) of images between 2 dates for services that support it.
+* Updated workbench ViewingControls styles to line up with icons
+* Prevent re-diff on workbench items that are already a diff
+* Updated splitter to force trigger resizes so it catches up on any animation delays from the workbench
+* Update workbench to trigger resize events onTransitionEnd on top of view-model-triggers
+* Added satellite imagery to help panel
+* Stop disclaimer clashing with welcome message by only loading WelcomeMessage after disclaimer is no longer visible
+* Fixes a difftool bug where left/right items loose their split direction settings when the tool is reset
+* Fixes a splitter bug where split direction is not applied to new layers.
+* Re-added satellite guide prompt option via `showInAppGuides`
+* Changed tour "go back 1 tour point" messaging from "previous" to "back"
+
+#### mobx-29
+* Fix handling of urls on `Cesium3DTilesCatalogItem` related to proxying and getting confused between Resource vs URL.
+* Renamed `UrlReference.createUrlReferenceFromUrlReference` to `UrlReference.createCatalogMemberFromUrlReference`
+* Moved url to catalog member mapping from `createUrlRefernceFromUrl.register` to `UrlToCatalogMemberMapping` (now in `UrlReference.ts` file) 
+* Added in-app tour framework & base tour items
+* Make the help panel customisable for different maps by modifying `config.json`
+* Added generic styled select
+* Remove maxZoom from leaflet map.
+* Run & configure prettier on terriajs lib/ json files
+* Changed most of the icons for the `MapNavigation` section (on the right hand side) of the screen
+* Added a close button to story panel
+* Made `MapIconButton` to animate when expanding
+* Remove requirement for browser to render based on make half pixel calculations for the Compass & stop it jumping around when animating
+
+#### mobx-28
+* Fix SASS exports causing some build errors in certain webpack conditions
+
+#### mobx-1 through mobx-27
+* Fixed DragDropFile and `createCatalogItemFromFileOrUrl` which wasn't enabled/working in mobx, added tests for `createCatalogItemFromFileOrUrl` and renamed `createCatalogItemFromUrl` to `createUrlRefernceFromUrl`.
 * Fixed bug in StratumOrder where `sortBottomToTop` would sort strata in the wrong order.
 * Allow member re-ordering via GroupMixin's `moveMemberToIndex`
 * Fixed a bug where `updateModelFromJson` would ignore its `replaceStratum` parameter.
@@ -94,11 +287,86 @@ Change Log
 * Fix bug that caused contents on the video panel of the help UI to overlay the actual video
 * Overhauled location search to be a dropdown instead of list of results
 * Fixed bug causing full app crash or viewer zoom refresh when using 3D view and changing settings or changing the terrain provider.
+* Implements `SensorObservationServiceCatalogItem`.
 * Add support for styling CSVs using a region mapped or text columns.
 * Add support for splitting CSVs that are using region mapping.
+* Update Compass UI to include larger rotation target, remove sass from compass
+* Link Compass "help" button to `navigation` HelpPanelItem (requires generalisation later down the track)
+* Improve keyboard traversal through right-hand-side map icon buttons
+* Link Compass Gyroscope guidance footer text to `navigation` HelpPanelItem (requires generalisation later down the track)
+* Removed hardcoded workbench & Panel button colours
+* Ensure CSV column names are trimmed of whitespace.
+* Really stop analytics launch event sending bad & now empty & now finally the real label
+* Re-added `ArcGisMapServerCatalogGroup` and `ArcGisServerGroup`.
+* Tidy Compass UI animations, styles, titles
+* Bumped mobx minor to 4.15.x, mobx-react major to 6.x.x
+* Add `dateFormat` trait to `TimeVaryingTraits` to allowing formatting of datestrings in workbench and bottomdock.
+* Tidy Gyroscope Guidance positioning
+* Fixed FeatureInfoPanel using old class state
+* Fixed MapIconButton & FeedbackButton proptypes being defined incorrectly
+* Implement SenapsLocationsCatalogItem
+* Update papaparse and improve handling for retrieveing CSVs via chunking that have no ContentLenth header
+
 
 ### Next Release
+### next verion
+* Rework the handling of point datasets on the anti-meridian when using LeafletJS.
+
+### v7.11.5
+
+* Added `GeoRssCatalogItem` for displaying GeoRSS files comming from rss2 and atom feeds.
+* Bug fix: Prevent geojson files from appearing twice in the workbench when dropped with the .json extension
+* Story related enhancements:
+  * Added a title to story panel with ability to close story panel. 
+  * Added a popup on remove all stories.
+  * Added button for sharing stories.
+  * Added a question popup on window close (if there are stories on the map so users don't lose their work).
+* Pinned `html-to-react` to version 1.3.4 to avoid IE11 incompatibility with newer version of deep dependency `entities`. See https://github.com/fb55/entities/issues/209
+* Added a `MapboxStyleCatalogItem` for showing Mapbox styles.
+* Add a `tileErrorThresholdBeforeDisabling` parameter to `ImageryLayerCatalogItem` to allow a threshold to set for allowed number of tile failures before disabling the layer.
+
+### v7.11.4
+
+* Add support for `classBreaks` renderer to `ArcGisFeatureServerCatalogItem`.
+* Upgraded to Cesium v1.68.
+* Replace `defineProperties` and `freezeObject` to `Object.defineProperties` and `Object.freeze` respectively.
+* Bumped travis build environment to node 10.
+* Upgraded to `generate-terriajs-schema` to v1.5.0.
+
+### v7.11.3
+
+* Added babel dynamic import plugin for webpack builds.
+* `ignoreUnknownTileErrors` will now also ignore HTTP 200 responses that are not proper images.
+
+### v7.11.2
+
+* Pass minimumLevel, in Cesium, to minNativeZoom, in Leaflet.
+* Upgraded to Cesium v1.66.
+
+### v7.11.1
+
+* Fix for color of markers on the map associated with chart items
+
+### v7.11.0
+
 * Fix draggable workbench/story items with translation HOC
+* Added first revision of "delta feature" for change detection of WMS catalog items which indicate `supportsDeltaComparison`
+* Improve menu bar button hover/focus states when interacting with its panel contents
+* Add ability to set opacity on `GeoJsonCatalogItem`
+* Expanded test cases to ensure WorkbenchItem & Story have the correct order of components composed
+* Fix broken catalog functions when used with translation HOC
+* Fix bug with momentPoints chart type when plotting against series with null values
+* Make the default `Legend` width a little smaller to account for the workbench scrollbar
+* Bug fix for expanding chart - avoid creating marker where no lat lon exists.
+* Add a `ChartDisclaimer` component to display an additional disclaimer above the chart panel in the bottom dock.
+* Add `allowFeatureInfoRequests` property to `Terria` and prevent unnecessary feature info requests when creating `UserDrawing`s.
+* Removes unsupported data that is drag and dropped from the workbench and user catalog.
+* Adjusted z-index values so that the explorer panel is on top of the side panel and the notification window appears at the very top layer.
+* Allow `CkanCatalogItem` names to be constructed from dataset and resource names where multiple resources are available for a single dataset
+* Set the name of ArcGis MapServer CatalogGroup and CatalogItem on load
+* Improve autodetecting WFS format, naming of the WFS catalog group and retaining the zoomToExtent
+* Remove unnecessary nbsp; from chart download and expand buttons introduced through internationalization.
+* Fix story prompt flag not being set after dismissing story, if `showFeaturePrompts` has been enabled
 
 ### v7.10.0
 
@@ -112,8 +380,11 @@ Change Log
 * Added support for `openAddData` option in config.json.  If true, the "Add Data" dialog is automatically opened at startup.
 * Welcome message, in-app guides & new feature prompts are now disabled by default. These can be re-enabled by setting the `showWelcomeMessage`, `showInAppGuides` & `showFeaturePrompts` options in config.json.
 * Updated Welcome Message to pass its props to `WelcomeMessagePrimaryBtnClick` & `WelcomeMessageSecondaryBtnClick` overrides
+* Welcome message, in-app guides & new feature prompts are now disabled by default. These can be re-enabled by setting the `showWelcomeMessage`, `showInAppGuides` & `showFeaturePrompts` options in config.json.
+* Updated Welcome Message to pass its props to `WelcomeMessagePrimaryBtnClick` & `WelcomeMessageSecondaryBtnClick` overrides.
 * Fixed a bug in anti-meridian handling causing excessive memory use.
 * Handled coordinate conversion for GeoJson geometries with an empty `coordinates` array.
+* Fixed height of My Data drag and drop box in Safari and IE.
 
 ### v7.9.0
 

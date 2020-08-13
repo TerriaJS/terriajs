@@ -6,15 +6,12 @@ import createReactClass from "create-react-class";
 
 import PropTypes from "prop-types";
 
-import ObserveModelMixin from "../ObserveModelMixin";
-
 import Styles from "./parameter-editors.scss";
-import RegionPicker from "./RegionPicker";
+import RegionPicker, { getDisplayValue } from "./RegionPicker";
 import MapInteractionMode from "../../Models/MapInteractionMode";
 
 const RegionParameterEditor = createReactClass({
   displayName: "RegionParameterEditor",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     previewed: PropTypes.object,
@@ -37,7 +34,7 @@ const RegionParameterEditor = createReactClass({
           className={Styles.field}
           type="text"
           readOnly
-          value={RegionPicker.getDisplayValue(
+          value={getDisplayValue(
             this.props.parameter.value,
             this.props.parameter
           )}

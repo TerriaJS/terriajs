@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 import createReactClass from "create-react-class";
 import dateFormat from "dateformat";
 import DatePicker from "react-datepicker";
@@ -9,7 +10,6 @@ import uniq from "lodash-es/uniq";
 import defined from "terriajs-cesium/Source/Core/defined";
 import { formatDateTime } from "./DateFormats";
 import Icon from "../../Icon";
-import ObserveModelMixin from "../../ObserveModelMixin";
 import Styles from "./timeline.scss";
 import combine from "terriajs-cesium/Source/Core/combine";
 
@@ -33,9 +33,20 @@ const monthNames = [
   "Dec"
 ];
 
+const StyledGrid = styled.span`
+  background: ${p => p.theme.overlay};
+  ${p =>
+    p.active &&
+    `
+    & {
+      background: ${p.theme.colorPrimary};
+    }
+    opacity: 0.9;
+   `}
+`;
+
 const DateTimePicker = createReactClass({
   displayName: "DateTimePicker",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     dates: PropTypes.array.isRequired, // Array of JS Date objects.
@@ -46,7 +57,8 @@ const DateTimePicker = createReactClass({
     onOpen: PropTypes.func.isRequired,
     onClose: PropTypes.func.isRequired,
     showCalendarButton: PropTypes.bool,
-    dateFormat: PropTypes.object
+    dateFormat: PropTypes.string,
+    popupStyle: PropTypes.string
   },
 
   getDefaultProps() {
@@ -178,8 +190,9 @@ const DateTimePicker = createReactClass({
                 <span className={Styles.gridLabel}>{y}</span>
                 <span className={Styles.gridRowInner12}>
                   {monthOfYear.map(m => (
-                    <span
-                      className={datesObject[y][m] ? Styles.activeGrid : ""}
+                    <StyledGrid
+                      // className={datesObject[y][m] ? Styles.activeGrid : ""}
+                      active={datesObject[y][m]}
                       key={m}
                     />
                   ))}
@@ -229,12 +242,10 @@ const DateTimePicker = createReactClass({
                 <span className={Styles.gridLabel}>{m}</span>
                 <span className={Styles.gridRowInner31}>
                   {daysInMonth(i + 1, year).map(d => (
-                    <span
-                      className={
+                    <StyledGrid
+                      active={
                         defined(datesObject[year][i]) &&
                         defined(datesObject[year][i][d + 1])
-                          ? Styles.activeGrid
-                          : ""
                       }
                       key={d}
                     />
@@ -332,7 +343,7 @@ const DateTimePicker = createReactClass({
                 }}
               >
                 {defined(this.props.dateFormat)
-                  ? dateFormat(item, this.props.dateFormat.currentTime)
+                  ? dateFormat(item, this.props.dateFormat)
                   : formatDateTime(item)}
               </button>
             ))}
@@ -510,9 +521,12 @@ const DateTimePicker = createReactClass({
           )}
           {this.props.isOpen && (
             <div
-              className={classNames(Styles.datePicker, {
+              className={classNames(Styles.datePicker, this.props.popupStyle, {
                 [Styles.openBelow]: this.props.openDirection === "down"
               })}
+              css={`
+                background: ${p => p.theme.dark};
+              `}
             >
               <button
                 className={Styles.backbutton}

@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
-import { StyledIcon } from "../../../Icon.jsx";
+import Icon, { StyledIcon } from "../../../Icon.jsx";
 import Styles from "./help-panel.scss";
 import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
@@ -17,18 +17,9 @@ class HelpPanelItem extends React.Component {
   static propTypes = {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
-    iconElement: PropTypes.object.isRequired,
-    title: PropTypes.string.isRequired,
-    itemString: PropTypes.string,
-    description: PropTypes.array,
-    videoLink: PropTypes.string,
-    background: PropTypes.string,
+    content: PropTypes.object.isRequired,
     theme: PropTypes.object,
     t: PropTypes.func.isRequired
-  };
-
-  static defaultProps = {
-    videoLink: "https://www.youtube.com/watch?v=fbiQawV8IYY"
   };
 
   constructor(props) {
@@ -37,6 +28,7 @@ class HelpPanelItem extends React.Component {
 
   render() {
     // const { t } = this.props;
+    const { icon } = this.props.content;
     const MenuIconWrapper = styled(Box).attrs({
       centered: true
     })`
@@ -48,11 +40,16 @@ class HelpPanelItem extends React.Component {
       padding-left: 25px;
     `;
     const itemSelected =
-      this.props.viewState.selectedHelpMenuItem === this.props.itemString;
+      this.props.viewState.selectedHelpMenuItem === this.props.content.itemName;
     const className = classNames({
       [Styles.panelItem]: true,
       [Styles.isSelected]: itemSelected
     });
+
+    // `content.icon` is user defined and can possibly force the UI to lookup a
+    // nonexistant icon.
+    const iconGlyph = Icon.GLYPHS[icon] || Icon.GLYPHS.video;
+    const title = this.props.content.title || "";
     return (
       <div
         css={`
@@ -62,7 +59,7 @@ class HelpPanelItem extends React.Component {
         <button
           className={className}
           onClick={() =>
-            this.props.viewState.selectHelpMenuItem(this.props.itemString)
+            this.props.viewState.selectHelpMenuItem(this.props.content.itemName)
           }
         >
           <Box
@@ -74,10 +71,11 @@ class HelpPanelItem extends React.Component {
             `}
           >
             <MenuIconWrapper>
+              {/* TODO: Enable overriding non-terriajs icons */}
               <StyledIcon
                 styledWidth={"27px"}
                 fillColor={this.props.theme.textDark}
-                glyph={this.props.iconElement}
+                glyph={iconGlyph}
               />
             </MenuIconWrapper>
             <Text
@@ -93,18 +91,19 @@ class HelpPanelItem extends React.Component {
                 line-height: 17px;
               `}
             >
-              {this.props.title}
+              {title}
             </Text>
           </Box>
         </button>
         <HelpVideoPanel
           terria={this.props.terria}
           viewState={this.props.viewState}
-          title={this.props.title}
-          itemString={this.props.itemString}
-          description={this.props.description}
-          videoLink={this.props.videoLink}
-          background={this.props.background}
+          content={this.props.content}
+          itemString={this.props.content.itemName}
+          paneMode={this.props.content.paneMode}
+          markdownContent={this.props.content.markdownText}
+          videoUrl={this.props.content.videoUrl}
+          placeholderImage={this.props.content.placeholderImage}
         />
       </div>
     );

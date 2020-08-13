@@ -1,7 +1,7 @@
 /*global require*/
 /// <reference types="jasmine" />
 import "../lib/Core/prerequisites";
-require("terriajs-jasmine-ajax");
+import "jasmine-ajax";
 import { configure, spy } from "mobx";
 
 configure({
@@ -24,10 +24,3 @@ jasmine.getEnv().addReporter({
 });
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000;
-
-afterEach(function() {
-  const jasmineAny: any = jasmine;
-  if (jasmineAny.Ajax) {
-    jasmineAny.Ajax.uninstall();
-  }
-});

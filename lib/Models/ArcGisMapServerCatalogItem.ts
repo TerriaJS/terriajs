@@ -2,7 +2,6 @@ import i18next from "i18next";
 import uniqWith from "lodash-es/uniqWith";
 import { computed, runInAction } from "mobx";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ArcGisMapServerImageryProvider from "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
@@ -16,9 +15,9 @@ import proj4definitions from "../Map/Proj4Definitions";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import ArcGisMapServerCatalogItemTraits from "../Traits/ArcGisMapServerCatalogItemTraits";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
 import { RectangleTraits } from "../Traits/MappableTraits";
+import createInfoSection from "./createInfoSection";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import getToken from "./getToken";
@@ -26,8 +25,8 @@ import LoadableStratum from "./LoadableStratum";
 import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import StratumOrder from "./StratumOrder";
 import StratumFromTraits from "./StratumFromTraits";
+import StratumOrder from "./StratumOrder";
 
 const proj4 = require("proj4").default;
 const unionRectangleArray = require("../Map/unionRectangleArray");
@@ -234,30 +233,21 @@ class MapServerStratum extends LoadableStratum(
   }
 
   @computed get info() {
-    function newInfo(name: string, content?: string) {
-      const traits = createStratumInstance(InfoSectionTraits);
-      runInAction(() => {
-        traits.name = name;
-        traits.content = content;
-      });
-      return traits;
-    }
-
     const layer = this.allLayers[0];
     if (!isDefined(layer)) {
       return [];
     }
 
     return [
-      newInfo(
+      createInfoSection(
         i18next.t("models.arcGisMapServerCatalogItem.dataDescription"),
         layer.description
       ),
-      newInfo(
+      createInfoSection(
         i18next.t("models.arcGisMapServerCatalogItem.serviceDescription"),
         this._mapServer.description
       ),
-      newInfo(
+      createInfoSection(
         i18next.t("models.arcGisMapServerCatalogItem.copyrightText"),
         isDefined(layer.copyrightText) && layer.copyrightText.length > 0
           ? layer.copyrightText
@@ -355,6 +345,13 @@ export default class ArcGisMapServerCatalogItem
 
   loadMapItems() {
     return this.loadMetadata();
+  }
+
+  @computed get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    }
+    return "1d";
   }
 
   @computed get imageryProvider() {
@@ -476,7 +473,7 @@ function getBaseURI(item: ArcGisMapServerCatalogItem) {
 
 function getJson(item: ArcGisMapServerCatalogItem, uri: any) {
   return loadJson(
-    proxyCatalogItemUrl(item, uri.addQuery("f", "json").toString(), "1d")
+    proxyCatalogItemUrl(item, uri.addQuery("f", "json").toString())
   );
 }
 

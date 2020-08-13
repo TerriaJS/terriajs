@@ -11,7 +11,7 @@ import TerriaError from "../Core/TerriaError";
 import isDefined from "../Core/isDefined";
 
 interface FileType {
-  value: String;
+  value: string;
 }
 
 export default function addUserFiles(
@@ -105,6 +105,8 @@ export default function addUserFiles(
         terria.catalog.userAddedDataGroup.remove(CommonStrata.user, item);
         terria.workbench.remove(item);
       });
+
+      items.forEach(item => terria.timelineStack.addToTop(item));
       return items;
     }
   });

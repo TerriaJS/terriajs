@@ -2,6 +2,8 @@ import ModelTraits from "./ModelTraits";
 import objectArrayTrait from "./objectArrayTrait";
 import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
+import primitiveArrayTrait from "./primitiveArrayTrait";
+import i18next from "i18next";
 
 export class InfoSectionTraits extends ModelTraits {
   @primitiveTrait({
@@ -39,6 +41,13 @@ export class ShortReportTraits extends ModelTraits {
     description: "The content of the section."
   })
   content?: string;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Show",
+    description: "Indicates if this short report section showing."
+  })
+  show = true;
 }
 
 export default class CatalogMemberTraits extends ModelTraits {
@@ -72,6 +81,28 @@ export default class CatalogMemberTraits extends ModelTraits {
     idProperty: "name"
   })
   info: InfoSectionTraits[] = [];
+
+  @primitiveArrayTrait({
+    type: "string",
+    name: "InfoSectionOrder",
+    description: `An array of section titles definining the display order of info sections.
+    If this property is not defined, {@link DataPreviewSections}'s DEFAULT_SECTION_ORDER is used`
+  })
+  infoSectionOrder?: string[] = [
+    i18next.t("preview.disclaimer"),
+    i18next.t("description.name"),
+    i18next.t("preview.dataDescription"),
+    i18next.t("preview.datasetDescription"),
+    i18next.t("preview.serviceDescription"),
+    i18next.t("preview.resourceDescription"),
+    i18next.t("preview.licence"),
+    i18next.t("preview.accessConstraints"),
+    i18next.t("preview.author"),
+    i18next.t("preview.contact"),
+    i18next.t("preview.created"),
+    i18next.t("preview.modified"),
+    i18next.t("preview.updateFrequency")
+  ];
 
   @primitiveTrait({
     type: "boolean",
@@ -110,4 +141,12 @@ export default class CatalogMemberTraits extends ModelTraits {
       "Whether the legend is hidden in the workbench for this catalog member."
   })
   hideLegendInWorkbench: boolean = false;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Hide source in explorer window",
+    description:
+      "Indicates that the source of this data should be hidden from the UI (obviously this isn't super-secure as you can just look at the network requests)."
+  })
+  hideSource: boolean = false;
 }

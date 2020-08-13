@@ -12,7 +12,6 @@ import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 
 import GeoJsonCatalogItem from "../../Models/GeoJsonCatalogItem";
-import ObserveModelMixin from "../ObserveModelMixin";
 import WebMapServiceCatalogItem from "../../Models/WebMapServiceCatalogItem";
 import { withTranslation } from "react-i18next";
 
@@ -21,7 +20,6 @@ import Styles from "./parameter-editors.scss";
 
 const RegionPicker = createReactClass({
   displayName: "RegionPicker",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     previewed: PropTypes.object,
@@ -310,7 +308,7 @@ const RegionPicker = createReactClass({
           autoComplete="off"
           value={
             this.state.autocompleteText ||
-            RegionPicker.getDisplayValue(this.regionValue, this.props.parameter)
+            getDisplayValue(this.regionValue, this.props.parameter)
           }
           onChange={this.textChange}
           placeholder={t("analytics.regionName")}
@@ -349,7 +347,7 @@ const RegionPicker = createReactClass({
  * @param {Object} value Native format of parameter value.
  * @return {String} String for display
  */
-RegionPicker.getDisplayValue = function(region, parameter) {
+export function getDisplayValue(region, parameter) {
   if (!defined(region)) {
     return "";
   }
@@ -365,6 +363,6 @@ RegionPicker.getDisplayValue = function(region, parameter) {
     return "";
   }
   return regionProvider.regionType + ": " + val;
-};
+}
 
-module.exports = withTranslation()(RegionPicker);
+export default withTranslation()(RegionPicker);

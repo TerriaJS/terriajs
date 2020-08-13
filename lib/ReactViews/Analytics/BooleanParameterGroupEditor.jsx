@@ -4,14 +4,12 @@ import PropTypes from "prop-types";
 // import Icon from '../Icon.jsx';
 import MoreOrLess from "../Generic/MoreOrLess.jsx";
 
-import ObserveModelMixin from "../ObserveModelMixin";
 import BooleanParameterEditor from "./BooleanParameterEditor.jsx";
 
 import Styles from "./parameter-editors.scss";
 
 const BooleanParameterGroupEditor = createReactClass({
   displayName: "BooleanParameterGroupEditor",
-  mixins: [ObserveModelMixin],
   propTypes: {
     previewed: PropTypes.object,
     parameter: PropTypes.object

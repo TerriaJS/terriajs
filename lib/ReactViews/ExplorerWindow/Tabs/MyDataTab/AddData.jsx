@@ -11,35 +11,43 @@ import CommonStrata from "../../../../Models/CommonStrata";
 import Dropdown from "../../../Generic/Dropdown";
 import FileInput from "./FileInput";
 import getDataType from "../../../../Core/getDataType";
-import ObserveModelMixin from "../../../ObserveModelMixin";
 import Styles from "./add-data.scss";
 import Loader from "../../../Loader";
 import TerriaError from "../../../../Core/TerriaError";
 import addUserFiles from "../../../../Models/addUserFiles";
 
 // Local and remote data have different dataType options
-const remoteDataType = getDataType().remoteDataType;
-const localDataType = getDataType().localDataType;
+const defaultRemoteDataTypes = getDataType().remoteDataType;
+const defaultLocalDataTypes = getDataType().localDataType;
 
 /**
  * Add data panel in modal window -> My data tab
  */
 const AddData = createReactClass({
   displayName: "AddData",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     terria: PropTypes.object,
     viewState: PropTypes.object,
     resetTab: PropTypes.func,
     activeTab: PropTypes.string,
+    localDataTypes: PropTypes.arrayOf(PropTypes.object),
+    remoteDataTypes: PropTypes.arrayOf(PropTypes.object),
+    onFileAddFinished: PropTypes.func.isRequired,
     t: PropTypes.func.isRequired
+  },
+
+  getDefaultProps() {
+    return {
+      remoteDataTypes: defaultRemoteDataTypes,
+      localDataTypes: defaultLocalDataTypes
+    };
   },
 
   getInitialState() {
     return {
-      localDataType: localDataType[0], // By default select the first item (auto)
-      remoteDataType: remoteDataType[0],
+      localDataType: this.props.localDataTypes[0], // By default select the first item (auto)
+      remoteDataType: this.props.remoteDataTypes[0],
       remoteUrl: "", // By default there's no remote url
       isLoading: false
     };
@@ -68,7 +76,7 @@ const AddData = createReactClass({
       this.state.localDataType
     ).then(addedCatalogItems => {
       if (addedCatalogItems && addedCatalogItems.length > 0) {
-        this.onFileAddFinished(addedCatalogItems[0]);
+        this.props.onFileAddFinished(addedCatalogItems);
       }
       this.setState({
         isLoading: false
@@ -106,18 +114,15 @@ const AddData = createReactClass({
     }
     addUserCatalogMember(this.props.terria, promise).then(addedItem => {
       if (addedItem && !(addedItem instanceof TerriaError)) {
-        this.onFileAddFinished(addedItem);
+        this.props.onFileAddFinished([addedItem]);
       }
+      // FIXME: Setting state here might result in a react warning if the
+      // component unmounts before the promise finishes
       this.setState({
         isLoading: false
       });
       this.props.resetTab();
     });
-  },
-
-  onFileAddFinished(fileToSelect) {
-    this.props.viewState.myDataIsUploadView = false;
-    this.props.viewState.viewCatalogMember(fileToSelect);
   },
 
   onRemoteUrlChange(event) {
@@ -135,7 +140,10 @@ const AddData = createReactClass({
       icon: <Icon glyph={Icon.GLYPHS.opened} />
     };
 
-    const dataTypes = localDataType.reduce(function(result, currentDataType) {
+    const dataTypes = this.props.localDataTypes.reduce(function(
+      result,
+      currentDataType
+    ) {
       if (currentDataType.extensions) {
         return result.concat(
           currentDataType.extensions.map(extension => "." + extension)
@@ -143,7 +151,8 @@ const AddData = createReactClass({
       } else {
         return result;
       }
-    }, []);
+    },
+    []);
 
     return (
       <div className={Styles.tabPanels}>
@@ -156,7 +165,7 @@ const AddData = createReactClass({
               </Trans>
             </label>
             <Dropdown
-              options={localDataType}
+              options={this.props.localDataTypes}
               selected={this.state.localDataType}
               selectOption={this.selectLocalOption}
               matchWidth={true}
@@ -183,7 +192,7 @@ const AddData = createReactClass({
               </Trans>
             </label>
             <Dropdown
-              options={remoteDataType}
+              options={this.props.remoteDataTypes}
               selected={this.state.remoteDataType}
               selectOption={this.selectRemoteOption}
               matchWidth={true}

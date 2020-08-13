@@ -27,6 +27,7 @@ $grey-lighter2: #e6e6e6;
 $grey-lightest: #f2f2f2;
 $field-border: #ddd;
 $overlay: rgba(255, 255, 255, 0.15);
+$overlay-invert: rgba(255, 255, 255, 0.85);
 
 $text-black: #000;
 $text-dark: #595b60;
@@ -117,7 +118,8 @@ $font-size-mid-small: 0.9rem;
 $font-size-feature-info: 0.9rem;
 // todo: update during overhaul
 $font-size-data-preview: 0.875rem;
-$font-size-button: 0.85rem;
+$font-size-button: 0.9375rem;
+// $font-size-button: 0.85rem;
 $font-size-small: 0.8125rem;
 $font-size-mid-mini: 0.7rem;
 $font-size-mini: 0.625rem;
@@ -130,6 +132,7 @@ $font-weight-light: 100;
 
 $map-button-color: #9ca1aa;
 $map-button-top: 18px;
+$trainer-height: 64px;
 $map-button-border-radius: 16px;
 $work-bench-width: 350px;
 $setting-panel: 300px;
@@ -138,6 +141,7 @@ $share-panel-caret-left: 215px;
 $feature-info-panel-width: 500px;
 $branding-height: 55px;
 $badge-height: $input-height;
+$story-title-height: $input-height;
 $workbench-header: $input-height * 2 + $padding-small * 2 + $badge-height + 1px;
 $chart-height: 250px;
 
@@ -159,6 +163,7 @@ $md: 992px;
 $lg: 1300px;
 
 $front-component-z-index: 99;
+$notification-window-z-index: 99999;
 
 $chart-area-color: rgba(#fff, 0.075);
 $chart-axis-color: #fff;

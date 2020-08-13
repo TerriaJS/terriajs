@@ -1,22 +1,17 @@
 import { action, computed, observable, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Color from "terriajs-cesium/Source/Core/Color";
-import combine from "terriajs-cesium/Source/Core/combine";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
-import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
-import isDefined from "../Core/isDefined";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
@@ -28,6 +23,8 @@ import { ImageryParts } from "../Models/Mappable";
 import Model from "../Models/Model";
 import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import SelectableStyle, { AvailableStyle } from "../Models/SelectableStyle";
+import createLongitudeLatitudeFeaturePerId from "../Table/createLongitudeLatitudeFeaturePerId";
+import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
@@ -66,7 +63,6 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       if (this.dataColumnMajor === undefined) {
         return [];
       }
-
       return this.dataColumnMajor.map((_, i) => this.getTableColumn(i));
     }
 
@@ -95,7 +91,9 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
      * Gets the {@link TableStyleTraits#id} of the currently-active style.
      * Note that this is a trait so there is no guarantee that a style
      * with this ID actually exists. If no active style is explicitly
-     * specified, the ID of the first of the {@link #styles} is used.
+     * specified, the ID of the first style with a scalar color column is used.
+     * If there is no such style the id of the first style of the {@link #styles}
+     * is used.
      */
     @computed
     get activeStyle(): string | undefined {
@@ -103,7 +101,16 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       if (value !== undefined) {
         return value;
       } else if (this.styles && this.styles.length > 0) {
-        return this.styles[0].id;
+        // Find and return a style with scalar color column if it exists,
+        // otherwise just return the first available style id.
+        const styleWithScalarColorColumn = this.styles.find(s => {
+          const colName = s.color.colorColumn;
+          return (
+            colName &&
+            this.findColumnByName(colName)?.type === TableColumnType.scalar
+          );
+        });
+        return styleWithScalarColorColumn?.id || this.styles[0].id;
       }
       return undefined;
     }
@@ -209,11 +216,11 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
             points.push({ x, y });
           }
 
-          const colorId = `color-${this.name}-${yColumn.name}`;
+          const colorId = `color-${this.uniqueId}-${this.name}-${yColumn.name}`;
 
           return {
             item: this,
-            name: yColumn.name,
+            name: yColumn.traits.title || yColumn.name,
             categoryName: this.name,
             key: `key${this.uniqueId}-${this.name}-${yColumn.name}`,
             type: "line",
@@ -269,6 +276,18 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
           tableModel.setTrait(stratumId, "activeStyle", styleId);
         }
       };
+    }
+
+    @computed
+    get rowIds(): number[] {
+      const nRows = (this.dataColumnMajor?.[0]?.length || 1) - 1;
+      const ids = [...new Array(nRows).keys()];
+      return ids;
+    }
+
+    @computed
+    get isSampled(): boolean {
+      return this.activeTableStyle.timeTraits.isSampled;
     }
 
     get legends(): readonly ModelPropertiesFromTraits<LegendTraits>[] {
@@ -354,50 +373,17 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
           return undefined;
         }
 
-        const longitudes = style.longitudeColumn.valuesAsNumbers.values;
-        const latitudes = style.latitudeColumn.valuesAsNumbers.values;
-
-        const colorColumn = style.colorColumn;
-        const valueFunction =
-          colorColumn !== undefined
-            ? colorColumn.valueFunctionForType
-            : () => null;
-
-        const colorMap = (this.activeTableStyle || this.defaultTableStyle)
-          .colorMap;
-        const pointSizeMap = (this.activeTableStyle || this.defaultTableStyle)
-          .pointSizeMap;
-
-        const outlineColor = Color.fromCssColorString(
-          "black" //this.terria.baseMapContrastColor;
-        );
-
         const dataSource = new CustomDataSource(this.name || "Table");
         dataSource.entities.suspendEvents();
 
-        for (let i = 0; i < longitudes.length && i < latitudes.length; ++i) {
-          const longitude = longitudes[i];
-          const latitude = latitudes[i];
-          const value = valueFunction(i);
-          if (longitude === null || latitude === null) {
-            continue;
-          }
-
-          const entity = dataSource.entities.add(
-            new Entity({
-              position: Cartesian3.fromDegrees(longitude, latitude, 0.0),
-              point: new PointGraphics({
-                color: colorMap.mapValueToColor(value),
-                pixelSize: pointSizeMap.mapValueToPointSize(value),
-                outlineWidth: 1,
-                outlineColor: outlineColor,
-                heightReference: HeightReference.CLAMP_TO_GROUND
-              })
-            })
-          );
-          entity.properties = this.getRowValues(i);
+        let features: Entity[];
+        if (style.isTimeVaryingPointsWithId()) {
+          features = createLongitudeLatitudeFeaturePerId(style);
+        } else {
+          features = createLongitudeLatitudeFeaturePerRow(style);
         }
 
+        features.forEach(f => dataSource.entities.add(f));
         dataSource.show = this.show;
         dataSource.entities.resumeEvents();
         return dataSource;

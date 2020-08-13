@@ -1,27 +1,35 @@
-import { autorun, computed, runInAction, reaction } from "mobx";
+import i18next from "i18next";
+import { computed, IReactionDisposer, reaction, runInAction } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Color from "terriajs-cesium/Source/Core/Color";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import CallbackProperty from "terriajs-cesium/Source/DataSources/CallbackProperty";
+import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import PolylineGlowMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineGlowMaterialProperty";
 import isDefined from "../Core/isDefined";
 import DragPoints from "../Map/DragPoints";
+import ViewState from "../ReactViewModels/ViewState";
 import ModelTraits from "../Traits/ModelTraits";
 import CreateModel from "./CreateModel";
 import MapInteractionMode from "./MapInteractionMode";
 import Terria from "./Terria";
-import i18next from "i18next";
 
 interface Options {
   terria: Terria;
   messageHeader?: string;
   allowPolygon?: boolean;
+  drawRectangle?: boolean;
   onMakeDialogMessage?: () => string;
+  buttonText?: string;
   onPointClicked?: (dataSource: DataSource) => void;
   onPointMoved?: (dataSource: DataSource) => void;
   onCleanUp?: () => void;
@@ -35,8 +43,8 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
   private readonly messageHeader: string;
   private readonly allowPolygon: boolean;
   private readonly onMakeDialogMessage?: () => string;
+  private readonly buttonText?: string;
   private readonly onPointClicked?: (dataSource: CustomDataSource) => void;
-  private readonly onPointMoved?: (dataSource: CustomDataSource) => void;
   private readonly onCleanUp?: () => void;
   private readonly dragHelper: DragPoints;
 
@@ -47,6 +55,10 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
   private inDrawMode: boolean;
   private closeLoop: boolean;
   private disposePickedFeatureSubscription?: () => void;
+  private drawRectangle: boolean;
+
+  private mousePointEntity?: Entity;
+  private mouseMoveDispose?: IReactionDisposer;
 
   constructor(options: Options) {
     super(createGuid(), options.terria);
@@ -69,16 +81,13 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
      */
     this.onMakeDialogMessage = options.onMakeDialogMessage;
 
+    this.buttonText = options.buttonText;
+
     /**
      * Callback that occurs when point is clicked (may be added or removed). Function takes a CustomDataSource which is
      * a list of PointEntities.
      */
     this.onPointClicked = options.onPointClicked;
-
-    /**
-     * Callback that occurs when point is moved. Function takes a CustomDataSource which is a list of PointEntities.
-     */
-    this.onPointMoved = options.onPointMoved;
 
     /**
      * Callback that occurs on clean up, i.e. when drawing is done or cancelled.
@@ -105,11 +114,10 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
      */
     this.closeLoop = false;
 
+    this.drawRectangle = defaultValue(options.drawRectangle, false);
+
     // helper for dragging points around
     this.dragHelper = new DragPoints(options.terria, customDataSource => {
-      if (this.onPointMoved) {
-        this.onPointMoved(customDataSource);
-      }
       this.prepareToAddNewPoint();
     });
   }
@@ -165,25 +173,67 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
     });
     const that = this;
 
-    // Line will show up once user has drawn some points. Vertices of line are user points.
-    this.otherEntities.entities.add(<any>{
-      name: "Line",
-      polyline: <any>{
-        positions: new CallbackProperty(function() {
-          const pos = that.getPointsForShape();
-          if (isDefined(pos) && that.closeLoop) {
-            pos.push(pos[0]);
-          }
-          return pos;
-        }, false),
+    // Rectangle will show up once user has a point.
+    if (this.drawRectangle) {
+      this.mousePointEntity = new Entity({
+        id: "mousePoint",
+        position: undefined
+      });
 
-        material: new PolylineGlowMaterialProperty(<any>{
-          color: new Color(0.0, 0.0, 0.0, 0.1),
-          glowPower: 0.25
-        }),
-        width: 20
-      }
-    });
+      const rectangle = {
+        name: "Rectangle",
+        id: "rectangle",
+        rectangle: {
+          coordinates: new CallbackProperty(
+            ((time: JulianDate | undefined) => {
+              if (
+                !isDefined(time) ||
+                this.pointEntities.entities.values.length < 1
+              )
+                return;
+              const point1 = this.pointEntities.entities.values[0].position.getValue(
+                time
+              ) as Cartesian3;
+
+              let point2 =
+                (this.pointEntities.entities.values?.[1]?.position?.getValue(
+                  time
+                ) as Cartesian3) ||
+                this.mousePointEntity?.position?.getValue(time);
+
+              return Rectangle.fromCartographicArray([
+                Cartographic.fromCartesian(point1),
+                Cartographic.fromCartesian(point2)
+              ]);
+            }).bind(this),
+            false
+          ),
+          material: new Color(1.0, 1.0, 1.0, 0.5)
+        }
+      };
+
+      this.otherEntities.entities.add(<any>rectangle);
+    } else {
+      // Line will show up once user has drawn some points. Vertices of line are user points.
+      this.otherEntities.entities.add(<any>{
+        name: "Line",
+        polyline: <any>{
+          positions: new CallbackProperty(function() {
+            const pos = that.getPointsForShape();
+            if (isDefined(pos) && that.closeLoop) {
+              pos.push(pos[0]);
+            }
+            return pos;
+          }, false),
+
+          material: new PolylineGlowMaterialProperty(<any>{
+            color: new Color(0.0, 0.0, 0.0, 0.1),
+            glowPower: 0.25
+          }),
+          width: 20
+        }
+      });
+    }
 
     this.terria.overlays.add(this);
 
@@ -241,6 +291,26 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
           this.terria.mapInteractionModeStack.pop();
           this.cleanUp();
         });
+      },
+      onEnable: (viewState: ViewState) => {
+        runInAction(() => (viewState.explorerPanelIsVisible = false));
+
+        if (this.drawRectangle) {
+          this.mouseMoveDispose = reaction(
+            () => viewState.mouseCoords.cartographic,
+            mouseCoordsCartographic => {
+              if (!isDefined(mouseCoordsCartographic)) return;
+
+              if (isDefined(this.mousePointEntity)) {
+                this.mousePointEntity.position = new ConstantPositionProperty(
+                  Ellipsoid.WGS84.cartographicToCartesian(
+                    mouseCoordsCartographic
+                  )
+                );
+              }
+            }
+          );
+        }
       }
     });
     runInAction(() => {
@@ -280,7 +350,15 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
               this.dragHelper.resetDragCount();
             }
             reaction.dispose();
-            this.prepareToAddNewPoint();
+
+            // If drawing a rectangle -> limit to 2 points
+            if (
+              !this.drawRectangle ||
+              (this.drawRectangle &&
+                this.pointEntities.entities.values.length < 2)
+            ) {
+              this.prepareToAddNewPoint();
+            }
           }
         }
       }
@@ -377,6 +455,10 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
       }
     }
 
+    if (isDefined(this.mouseMoveDispose)) {
+      this.mouseMoveDispose();
+    }
+
     // Allow client to clean up too
     if (typeof this.onCleanUp === "function") {
       this.onCleanUp();
@@ -416,9 +498,12 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
    * Figure out the text for the dialog button.
    */
   getButtonText() {
-    return this.pointEntities.entities.values.length >= 2
-      ? i18next.t("models.userDrawing.btnDone")
-      : i18next.t("models.userDrawing.btnCancel");
+    return defaultValue(
+      this.buttonText,
+      this.pointEntities.entities.values.length >= 2
+        ? i18next.t("models.userDrawing.btnDone")
+        : i18next.t("models.userDrawing.btnCancel")
+    );
   }
 
   /**

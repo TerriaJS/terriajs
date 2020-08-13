@@ -16,20 +16,24 @@ import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDire
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import getDereferencedIfExists from "../../../Core/getDereferencedIfExists";
 import getPath from "../../../Core/getPath";
+import TerriaError from "../../../Core/TerriaError";
 import PickedFeatures from "../../../Map/PickedFeatures";
 import addUserCatalogMember from "../../../Models/addUserCatalogMember";
 import CommonStrata from "../../../Models/CommonStrata";
 import getAncestors from "../../../Models/getAncestors";
+import SplitItemReference from "../../../Models/SplitItemReference";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
-import Icon from "../../Icon";
+import Icon, { StyledIcon } from "../../Icon";
 import WorkbenchButton from "../WorkbenchButton";
-import SplitItemReference from "../../../Models/SplitItemReference";
 import Styles from "./viewing-controls.scss";
+import ExportableData from "../../../Models/ExportableData";
+import { exportData } from "../../Preview/ExportData";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
-  justifyContentSpaceAround: true
+  left: true,
+  justifySpaceBetween: true
 })``;
 
 const ViewingControlMenuButton = styled(RawButton).attrs({
@@ -37,6 +41,10 @@ const ViewingControlMenuButton = styled(RawButton).attrs({
 })`
   color: ${props => props.theme.textDarker};
   background-color: ${props => props.theme.textLight};
+
+  ${StyledIcon} {
+    width: 35px;
+  }
 
   svg {
     fill: ${props => props.theme.textDarker};
@@ -51,7 +59,8 @@ const ViewingControlMenuButton = styled(RawButton).attrs({
   border-radius: 0;
 
   width: 114px;
-  height: 32px;
+  // ensure we support long strings
+  min-height: 32px;
   display: block;
 
   &:hover,
@@ -180,9 +189,23 @@ const ViewingControls = observer(
 
         // Add it to terria.catalog, which is required so the new item can be shared.
         addUserCatalogMember(terria, splitRef, {
-          open: false,
-          zoomTo: false
+          open: false
         });
+      });
+    },
+
+    openDiffTool() {
+      // Disable timeline
+      // Should we do this? Difference is quite a specific use case
+      this.props.item.terria.timelineStack.removeAll();
+      this.props.viewState.openTool({
+        toolName: "Difference",
+        getToolComponent: () =>
+          import("../../Tools/DiffTool/DiffTool").then(m => m.default),
+        showCloseButton: true,
+        params: {
+          sourceItem: this.props.item
+        }
       });
     },
 
@@ -206,13 +229,18 @@ const ViewingControls = observer(
       );
     },
 
-    exportData() {
+    exportDataClicked() {
       const item = this.props.item;
-      item.exportData();
+
+      exportData(item).catch(e => {
+        if (e instanceof TerriaError) {
+          this.props.item.terria.error.raiseEvent(e);
+        }
+      });
     },
 
     renderViewingControlsMenu() {
-      const { t, item } = this.props;
+      const { t, item, viewState } = this.props;
       const canSplit =
         !item.terria.configParameters.disableSplitter &&
         item.supportsSplitting &&
@@ -229,7 +257,7 @@ const ViewingControls = observer(
                 title={t("workbench.openFeatureTitle")}
               >
                 <BoxViewingControl>
-                  <Icon glyph={Icon.GLYPHS.upload} />
+                  <StyledIcon glyph={Icon.GLYPHS.upload} />
                   <span>{t("workbench.openFeature")}</span>
                 </BoxViewingControl>
               </ViewingControlMenuButton>
@@ -241,27 +269,40 @@ const ViewingControls = observer(
                 onClick={this.splitItem}
                 title={t("workbench.splitItemTitle")}
               >
-                <BoxViewingControl
-                  css={`
-                    svg:not(:root) {
-                      width: 26px;
-                    }
-                  `}
-                >
-                  <Icon glyph={Icon.GLYPHS.splitterOn} />
+                <BoxViewingControl>
+                  <StyledIcon glyph={Icon.GLYPHS.compare} />
                   <span>{t("workbench.splitItem")}</span>
                 </BoxViewingControl>
               </ViewingControlMenuButton>
             </li>
           </If>
-          <If condition={defined(item.linkedWcsUrl)}>
+          <If
+            condition={
+              viewState.useSmallScreenInterface === false &&
+              !item.isShowingDiff &&
+              item.canDiffImages
+            }
+          >
+            <li className={classNames(Styles.split)}>
+              <ViewingControlMenuButton
+                onClick={this.openDiffTool}
+                title={t("workbench.diffImageTitle")}
+              >
+                <BoxViewingControl>
+                  <StyledIcon glyph={Icon.GLYPHS.difference} />
+                  <span>{t("workbench.diffImage")}</span>
+                </BoxViewingControl>
+              </ViewingControlMenuButton>
+            </li>
+          </If>
+          <If condition={ExportableData.is(item) && item.canExportData}>
             <li className={classNames(Styles.info)}>
               <ViewingControlMenuButton
-                onClick={this.exportData}
+                onClick={this.exportDataClicked}
                 title={t("workbench.exportDataTitle")}
               >
                 <BoxViewingControl>
-                  <Icon glyph={Icon.GLYPHS.upload} />
+                  <StyledIcon glyph={Icon.GLYPHS.upload} />
                   <span>{t("workbench.exportData")}</span>
                 </BoxViewingControl>
               </ViewingControlMenuButton>
@@ -273,7 +314,7 @@ const ViewingControls = observer(
               title={t("workbench.removeFromMapTitle")}
             >
               <BoxViewingControl>
-                <Icon glyph={Icon.GLYPHS.cancel} />
+                <StyledIcon glyph={Icon.GLYPHS.cancel} />
                 <span>{t("workbench.removeFromMap")}</span>
               </BoxViewingControl>
             </ViewingControlMenuButton>
