@@ -1,11 +1,13 @@
-import React from "react";
 import { act } from "react-dom/test-utils";
 import TestRenderer, { ReactTestRenderer } from "react-test-renderer";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+
+import React from "react";
+
 import Terria from "../../../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../../../lib/Models/WebMapServiceCatalogItem";
-import { formatDateTime } from "../../../../lib/ReactViews/BottomDock/Timeline/DateFormats";
 import DateTimePicker from "../../../../lib/ReactViews/BottomDock/Timeline/DateTimePicker";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import { formatDateTime } from "../../../../lib/ReactViews/BottomDock/Timeline/DateFormats";
 
 const DateButton = require("../../../../lib/ReactViews/BottomDock/Timeline/DateTimePicker")
   .DateButton;
@@ -86,16 +88,12 @@ describe("DateTimePicker", function() {
 
     const dates = testRenderer.root.findAllByType(DateButton);
 
-    const expectedDate = formatDateTime(new Date("2015-03-28T00:00:00.000Z"));
-
-    console.log(expectedDate);
-
-    const dateSplit = expectedDate.split("/");
+    const firstDate = wmsItem.objectifiedDates.dates[0];
 
     expect(dates.length).toBe(
-      wmsItem.objectifiedDates[20][parseInt(dateSplit[2])][
-        parseInt(dateSplit[1])
-      ][parseInt(dateSplit[0])].indice.length
+      wmsItem.objectifiedDates[20][firstDate.getFullYear()][
+        firstDate.getMonth()
+      ][firstDate.getDate()].indice.length
     );
   });
 });
