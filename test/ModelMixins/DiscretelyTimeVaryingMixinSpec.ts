@@ -1,0 +1,35 @@
+import Terria from "../../lib/Models/Terria";
+import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+
+describe("DiscretelyTimeVaryingMixin", () => {
+  let terria: Terria;
+  let wmsItem: WebMapServiceCatalogItem;
+
+  beforeEach(async function() {
+    terria = new Terria({
+      baseUrl: "./"
+    });
+  });
+
+  it("ObjectifiedDates returns correct object", async function() {
+    wmsItem = new WebMapServiceCatalogItem("mywms2", terria);
+    wmsItem.setTrait(
+      "definition",
+      "url",
+      "/test/WMS/period_datetimes_many_intervals.xml"
+    );
+    wmsItem.setTrait("definition", "layers", "single_period");
+    await wmsItem.loadMapItems();
+
+    const years = wmsItem.objectifiedDates[20];
+    expect(years.dates.length).toBe(1000);
+    expect(years.indice[0]).toBe(2015);
+    const months = years[years.indice[0]];
+    expect(months.dates.length).toBe(1000);
+    expect(months.indice[0]).toBe(3);
+    const days = months[months.indice[0]];
+
+    const expectedDates = days[days.indice[0]];
+    expect(expectedDates.indice.length).toBe(17);
+  });
+});
