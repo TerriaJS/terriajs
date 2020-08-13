@@ -71,7 +71,6 @@ export default class ViewState {
   @observable topElement: string = "FeatureInfo";
   @observable lastUploadedFiles: any[] = [];
   @observable storyBuilderShown: boolean = false;
-  @observable breadcrumbsShown: boolean = false;
 
   // Flesh out later
   @observable showHelpMenu: boolean = false;
@@ -509,7 +508,6 @@ export default class ViewState {
     this.explorerPanelIsVisible = false;
     this.switchMobileView(null);
     this.clearPreviewedItem();
-    this.showBreadcrumbs(false);
   }
 
   @action
@@ -567,11 +565,6 @@ export default class ViewState {
   @action
   changeSearchState(newText: string) {
     this.searchState.catalogSearchText = newText;
-  }
-
-  @action
-  showBreadcrumbs(isActive: boolean) {
-    this.breadcrumbsShown = isActive;
   }
 
   @action
@@ -655,6 +648,14 @@ export default class ViewState {
   @action
   closeTool() {
     this.currentTool = undefined;
+  }
+
+  @computed
+  get breadcrumbsShown() {
+    return (
+      this.previewedItem !== undefined ||
+      this.userDataPreviewedItem !== undefined
+    );
   }
 
   @computed

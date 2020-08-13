@@ -7,7 +7,7 @@ import Model from "../Models/Model";
 import FeatureInfoTraits from "../Traits/FeatureInfoTraits";
 import loadJson from "../Core/loadJson";
 import { action } from "mobx";
-const proxyCatalogItemUrl = require("../Models/proxyCatalogItemUrl");
+import proxyCatalogItemUrl from "../Models/proxyCatalogItemUrl";
 
 type Target = Model<FeatureInfoTraits>;
 
@@ -38,8 +38,9 @@ export default function FeatureInfoMixin<T extends Constructor<Target>>(
       );
       if (isDefined(feature)) {
         feature._catalogItem = this;
-        if (isDefined(this.featureInfoUrlTemplate)) {
-          (async () => {
+
+        (async () => {
+          if (isDefined(this.featureInfoUrlTemplate)) {
             const resource = new Resource({
               url: proxyCatalogItemUrl(this, this.featureInfoUrlTemplate, "0d"),
               templateValues: feature.properties.getValue()
@@ -55,8 +56,8 @@ export default function FeatureInfoMixin<T extends Constructor<Target>>(
                 "Unable to retrieve feature details from:\n\n" + resource.url
               );
             }
-          })();
-        }
+          }
+        })();
       }
       return feature;
     }
