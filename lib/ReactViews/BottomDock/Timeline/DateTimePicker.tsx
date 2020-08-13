@@ -242,7 +242,8 @@ class DateTimePicker extends React.Component<PropsType> {
             time: currentDate
           });
         }
-      }
+      },
+      { fireImmediately: true }
     );
   }
 

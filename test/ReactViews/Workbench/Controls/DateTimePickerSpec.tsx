@@ -8,6 +8,9 @@ import WebMapServiceCatalogItem from "../../../../lib/Models/WebMapServiceCatalo
 import DateTimePicker from "../../../../lib/ReactViews/BottomDock/Timeline/DateTimePicker";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import { formatDateTime } from "../../../../lib/ReactViews/BottomDock/Timeline/DateFormats";
+import { runInAction } from "mobx";
+import CommonStrata from "../../../../lib/Models/CommonStrata";
+import isDefined from "../../../../lib/Core/isDefined";
 
 const DateButton = require("../../../../lib/ReactViews/BottomDock/Timeline/DateTimePicker")
   .DateButton;
@@ -67,6 +70,18 @@ describe("DateTimePicker", function() {
     );
     wmsItem.setTrait("definition", "layers", "single_period");
     await wmsItem.loadMapItems();
+
+    if (isDefined(wmsItem.discreteTimesAsSortedJulianDates?.[0])) {
+      runInAction(() => {
+        wmsItem.setTrait(
+          CommonStrata.user,
+          "currentTime",
+          JulianDate.toIso8601(
+            wmsItem.discreteTimesAsSortedJulianDates![0].time
+          )
+        );
+      });
+    }
     act(() => {
       testRenderer = TestRenderer.create(
         <DateTimePicker
