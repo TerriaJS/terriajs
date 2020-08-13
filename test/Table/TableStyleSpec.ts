@@ -19,7 +19,7 @@ describe("Table Style", function() {
     let csvItem: CsvCatalogItem;
 
     beforeEach(async function() {
-      csvItem = new CsvCatalogItem("SmallCsv", terria);
+      csvItem = new CsvCatalogItem("SmallCsv", terria, undefined);
     });
 
     it(" - Gets default bin length when many values", async function() {
