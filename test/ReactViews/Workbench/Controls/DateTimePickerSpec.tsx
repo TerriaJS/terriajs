@@ -88,12 +88,11 @@ describe("DateTimePicker", function() {
 
     const dates = testRenderer.root.findAllByType(DateButton);
 
-    const firstDate = wmsItem.objectifiedDates.dates[0];
+    const years = wmsItem.objectifiedDates[20];
+    const months = years[years.indice[0]];
+    const days = months[months.indice[0]];
+    const expectedDates = days[days.indice[0]];
 
-    expect(dates.length).toBe(
-      wmsItem.objectifiedDates[20][firstDate.getFullYear()][
-        firstDate.getMonth()
-      ][firstDate.getDate()].indice.length
-    );
+    expect(dates.length).toBe(expectedDates.indice.length);
   });
 });
