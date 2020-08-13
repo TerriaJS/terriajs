@@ -6,14 +6,14 @@ Change Log
 #### next release (8.0.0-alpha.45)
 * Update style of diff tool close button to match new design
 * Remove sass code from the `HelpPanel` component
-* [The next improvement]
-
-#### next release (8.0.0-alpha.44)
-* Pass `format` trait on `TableColumnTraits` down to `TableAutomaticStylesStratum` for generating legends
 * Added an option for translation override from TerriaMap
 * Help content, trainer bar & help terms can use translation overrides
 * Accepts `backend` options under a new `terria.start()` property, `i18nOptions`
+
 * [The next improvement]
+
+#### 8.0.0-alpha.44
+* Pass `format` trait on `TableColumnTraits` down to `TableAutomaticStylesStratum` for generating legends
 * Add `multipleTitles` and `maxMultipleTitlesShowed` to `LegendItemTraits`
 * Aggregate legend items in `createLegendItemsFromEnumColorMap` by colour, that is merge legend items with the same colour (using `multipleTitles`)
 * Only generate `tableStyles` for region columns if no other styles exist
