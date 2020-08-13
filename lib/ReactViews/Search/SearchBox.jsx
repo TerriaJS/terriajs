@@ -122,25 +122,18 @@ export const SearchBox = createReactClass({
 
   render() {
     const clearButton = (
-      <RawButton
-        onClick={() => this.clearSearch()}
-        styledWidth={"40px"}
-        fullHeight
-        css={`
-          position: absolute;
-          right: 0px;
-          top: 0px;
-        `}
-      >
-        <BoxSpan centered>
-          <StyledIcon
-            glyph={Icon.GLYPHS.close}
-            styledWidth={"15px"}
-            fillColor={this.props.theme.charcoalGrey}
-            opacity={"0.5"}
-          />
-        </BoxSpan>
-      </RawButton>
+      <Box positionAbsolute topRight fullHeight styledWidth={"40px"}>
+        <RawButton onClick={() => this.clearSearch()} fullWidth fullHeight>
+          <BoxSpan centered>
+            <StyledIcon
+              glyph={Icon.GLYPHS.close}
+              styledWidth={"15px"}
+              fillColor={this.props.theme.charcoalGrey}
+              opacity={"0.5"}
+            />
+          </BoxSpan>
+        </RawButton>
+      </Box>
     );
 
     return (

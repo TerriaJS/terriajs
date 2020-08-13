@@ -3,10 +3,20 @@ Change Log
 
 ### MobX Development
 
+#### next release (8.0.0-alpha.45)
+* Update style of diff tool close button to match new design
+* Remove sass code from the `HelpPanel` component
+* [The next improvement]
+
 #### next release (8.0.0-alpha.44)
 * Pass `format` trait on `TableColumnTraits` down to `TableAutomaticStylesStratum` for generating legends
 * Tsxified `DateTimePicker` and refactored `objectifiedDates` (moved to `DiscretelyTimeVaryingMixin`).
 * [The next improvement]
+* Add `multipleTitles` and `maxMultipleTitlesShowed` to `LegendItemTraits`
+* Aggregate legend items in `createLegendItemsFromEnumColorMap` by colour, that is merge legend items with the same colour (using `multipleTitles`)
+* Only generate `tableStyles` for region columns if no other styles exist
+* TableAutomaticStylesStratum & CsvCatalogItem only returns unique `discreteTimes`s now
+* Specified specific terriajs config for ForkTsCheckerWebpackPlugin
 
 #### 8.0.0-alpha.43
 * Replace `@gov.au/page-alerts` dependency with our own warning box component. This removes all `pancake` processes which were sometimes problematic.
@@ -19,6 +29,7 @@ Change Log
 * Tsify `proxyCatalogItemUrl`.
 * Simplified SidePanel React refs by removing the double wrapping of the `withTerriaRef()` HOC
 * Merged `withTerriaRef()` HOC with `useRefForTerria()` hook logic
+* [The next improvement]
 * Breadcrumbs are always shown instead of only when doing a catalog search
 
 #### 8.0.0-alpha.40
