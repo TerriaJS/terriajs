@@ -2,19 +2,13 @@
 // Please do not change this file!
 interface CssExports {
   'controlsRow': string;
-  'field': string;
   'layer-name-truncated': string;
   'layerNameTruncated': string;
-  'style-selector': string;
-  'styleSelector': string;
-  'summary': string;
   'text-cell': string;
   'text-row': string;
   'textCell': string;
   'textRow': string;
-  'time': string;
   'timeline': string;
-  'title': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;
