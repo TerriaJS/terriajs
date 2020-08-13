@@ -10,6 +10,7 @@ import supportsWebGL from "../../lib/Core/supportsWebGL";
 import PickedFeatures from "../../lib/Map/PickedFeatures";
 import Terria from "../../lib/Models/Terria";
 import UserDrawing from "../../lib/Models/UserDrawing";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 
 const describeIfSupported = supportsWebGL() ? describe : xdescribe;
 
@@ -514,5 +515,65 @@ describe("UserDrawing", function() {
     });
 
     expect(userDrawing.pointEntities.entities.values.length).toEqual(2);
+  });
+
+  it("draws rectangle", function() {
+    const userDrawing = new UserDrawing({
+      terria,
+      allowPolygon: false,
+      drawRectangle: true
+    });
+    userDrawing.enterDrawMode();
+    const pickedFeatures = new PickedFeatures();
+
+    // First point
+    // Points around Parliament house
+    const pt1Position = new Cartographic(
+      CesiumMath.toRadians(149.121),
+      CesiumMath.toRadians(-35.309),
+      CesiumMath.toRadians(0)
+    );
+    const pt1CartesianPosition = Ellipsoid.WGS84.cartographicToCartesian(
+      pt1Position
+    );
+    pickedFeatures.pickPosition = pt1CartesianPosition;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
+
+    expect(userDrawing.pointEntities.entities.values.length).toEqual(1);
+    expect(userDrawing.otherEntities.entities.values.length).toEqual(1);
+
+    let rectangle: Rectangle = userDrawing.otherEntities.entities
+      .getById("rectangle")
+      .rectangle.coordinates.getValue(terria.timelineClock.currentTime);
+
+    expect(rectangle).toBeUndefined();
+
+    // Second point
+    const pt2Position = new Cartographic(
+      CesiumMath.toRadians(149.124),
+      CesiumMath.toRadians(-35.311),
+      CesiumMath.toRadians(0)
+    );
+    const pt2CartesianPosition = Ellipsoid.WGS84.cartographicToCartesian(
+      pt2Position
+    );
+    pickedFeatures.pickPosition = pt2CartesianPosition;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
+
+    expect(userDrawing.pointEntities.entities.values.length).toEqual(2);
+    expect(userDrawing.otherEntities.entities.values.length).toEqual(1);
+
+    rectangle = userDrawing.otherEntities.entities
+      .getById("rectangle")
+      .rectangle.coordinates.getValue(terria.timelineClock.currentTime);
+
+    expect(rectangle.east).toBeCloseTo(CesiumMath.toRadians(149.124));
+    expect(rectangle.west).toBeCloseTo(CesiumMath.toRadians(149.121));
+    expect(rectangle.north).toBeCloseTo(CesiumMath.toRadians(-35.309));
+    expect(rectangle.south).toBeCloseTo(CesiumMath.toRadians(-35.311));
   });
 });
