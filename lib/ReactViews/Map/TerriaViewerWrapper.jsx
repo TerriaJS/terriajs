@@ -7,8 +7,6 @@ import Styles from "./terria-viewer-wrapper.scss";
 import Splitter from "./Splitter";
 // eslint-disable-next-line no-unused-vars
 import TerriaViewer from "../../ViewModels/TerriaViewer";
-import Terria from "../../Models/Terria";
-import ViewState from "../../ReactViewModels/ViewState";
 import { runInAction } from "mobx";
 
 /**
