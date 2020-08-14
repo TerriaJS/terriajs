@@ -5,6 +5,10 @@ export interface CkanResource {
   url: string;
   license_id: string;
   id: string;
+  // Present on data.vic.gov.au
+  wms_url?: string;
+  wms_layer?: string;
+  wms_api_url?: string;
 }
 
 export interface CkanOrganisation {
