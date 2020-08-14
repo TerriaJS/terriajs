@@ -873,6 +873,7 @@ const AreaFilterSelection = (props: {
     <Box
       column
       centered
+      styledMinWidth="230px"
       css={`
         @media (max-width: ${(props: any) => props.theme.md}px) {
           width: 100%;
