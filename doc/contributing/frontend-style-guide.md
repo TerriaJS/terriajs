@@ -114,6 +114,22 @@ seen in tests like `test/ReactViews/ShortReportSpec.tsx` &
 Some UI-related tests not involving rendering can be seen at
 `test/Models/parseCustomMarkdownToReactTsSpec.ts`
 
+### Internationalisation (Internationalization / i18n)
+Any strings within the application should be through a translation file - a base
+English one is used under `lib/Language/en/translation.json`.
+
+For the most part, simple strings should go through fine by calling
+`i18next.t()`. There are a few notable cases where this can get tricky:
+
+1. When loading an object (array) from translation. For example, `"aliases":
+   "helpContentTerm1.aliases"` mapping to an array in the translation file, to
+   keep things in one place when loading strings straight from config.json or
+   overridden in translation overrides
+
+2. When loading really long strings, they can get truncated, e.g. `markdown`
+   striaght into `i18next.t()` will result in losing some markdown inside the
+   string
+
 ## TypeScript
 TypeScript should be the default choice when writing components. Lean towards
 `tsx` when writing React components, with the following caveats:
