@@ -7,6 +7,7 @@ import TableTraits from "./TableTraits";
 import UrlTraits from "./UrlTraits";
 import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import AutoRefreshingTraits from "./AutoRefreshingTraits";
+import ExportableTraits from "./ExportableTraits";
 
 class PollingTraits extends ModelTraits {
   @primitiveTrait({
@@ -34,6 +35,7 @@ class PollingTraits extends ModelTraits {
 }
 
 export default class CsvCatalogItemTraits extends mixTraits(
+  ExportableTraits,
   AutoRefreshingTraits,
   DiscretelyTimeVaryingTraits,
   FeatureInfoTraits,

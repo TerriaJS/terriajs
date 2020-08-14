@@ -4,6 +4,8 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.45)
+* Change `ExportableData` interface to `ExportableMixin` and add `disableExport` trait.
+* Add basic WFS support with `WebFeatureServiceCatalogGroup` and `WebFeatureServiceCatalogItem`
 * Update style of diff tool close button to match new design
 * Remove sass code from the `HelpPanel` component
 * Added an option for translation override from TerriaMap
@@ -13,6 +15,7 @@ Change Log
 * [The next improvement]
 
 #### 8.0.0-alpha.44
+#### (8.0.0-alpha.44)
 * Pass `format` trait on `TableColumnTraits` down to `TableAutomaticStylesStratum` for generating legends
 * Add `multipleTitles` and `maxMultipleTitlesShowed` to `LegendItemTraits`
 * Aggregate legend items in `createLegendItemsFromEnumColorMap` by colour, that is merge legend items with the same colour (using `multipleTitles`)
@@ -31,7 +34,6 @@ Change Log
 * Tsify `proxyCatalogItemUrl`.
 * Simplified SidePanel React refs by removing the double wrapping of the `withTerriaRef()` HOC
 * Merged `withTerriaRef()` HOC with `useRefForTerria()` hook logic
-* [The next improvement]
 * Breadcrumbs are always shown instead of only when doing a catalog search
 
 #### 8.0.0-alpha.40
