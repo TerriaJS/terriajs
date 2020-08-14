@@ -12,6 +12,8 @@ import Button from "../../../../Styled/Button";
 import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
 
+import { useTranslationIfExists } from "../../../../Language/languageHelpers";
+
 const UlTrainerItems = styled(Box).attrs({
   as: "ul"
 })`
@@ -44,9 +46,7 @@ class TrainerPane extends React.Component {
           {markdownText && (
             <StyledHtml
               viewState={viewState}
-              markdown={
-                i18n.exists(markdownText) ? t(markdownText) : markdownText
-              }
+              markdown={useTranslationIfExists(markdownText)}
             />
           )}
           {trainerItems?.map && (
@@ -65,7 +65,7 @@ class TrainerPane extends React.Component {
                   >
                     <BoxSpan centered>
                       <BoxSpan centered>
-                        {i18n.exists(item.title) ? t(item.title) : item.title}
+                        {useTranslationIfExists(item.title)}
                       </BoxSpan>
                     </BoxSpan>
                   </TrainerButton>

@@ -12,6 +12,7 @@ import VideoGuide from "./VideoGuide";
 import TrainerPane from "./TrainerPane";
 import StyledHtml from "./StyledHtml";
 import SatelliteGuide from "../../../Guide/SatelliteGuide";
+import { useTranslationIfExists } from "../../../../Language/languageHelpers";
 
 const HELP_VIDEO_NAME = "helpVideo";
 
@@ -99,11 +100,7 @@ class HelpVideoPanel extends React.Component {
               <StyledHtml
                 key={"markdownContent"}
                 viewState={this.props.viewState}
-                markdown={
-                  i18n.exists(this.props.markdownContent)
-                    ? t(this.props.markdownContent)
-                    : this.props.markdownContent
-                }
+                markdown={useTranslationIfExists(this.props.markdownContent)}
               />
             )}
           </If>
