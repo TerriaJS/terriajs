@@ -8,6 +8,7 @@ import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
 import styled from "styled-components";
 
+import { useTranslationIfExists } from "../../../../Language/languageHelpers";
 import { parseCustomMarkdownToReactWithOptions } from "../../../Custom/parseCustomMarkdownToReact";
 
 const Numbers = styled(Text)`
@@ -59,7 +60,9 @@ export class StyledHtmlRaw extends React.Component {
     const { viewState, injectTooltips } = this.props;
     const styledTextProps = this.props.styledTextProps || {};
 
-    const parsed = parseCustomMarkdownToReactWithOptions(this.props.markdown, {
+    const markdownToParse = useTranslationIfExists(this.props.markdown);
+
+    const parsed = parseCustomMarkdownToReactWithOptions(markdownToParse, {
       injectTermsAsTooltips: injectTooltips,
       tooltipTerms: viewState.terria.configParameters.helpContentTerms
     });
@@ -93,9 +96,9 @@ export class StyledHtmlRaw extends React.Component {
                   )}
                 </When>
                 <Otherwise>
-                  {/* If it's none of the above tags, just render as 
-                {/* If it's none of the above tags, just render as 
-                  {/* If it's none of the above tags, just render as 
+                  {/* If it's none of the above tags, just render as
+                {/* If it's none of the above tags, just render as
+                  {/* If it's none of the above tags, just render as
                   normal html but with the same text formatting.
                   We can style more tags as necessary */}
                   <Text key={i} textDark medium {...styledTextProps}>

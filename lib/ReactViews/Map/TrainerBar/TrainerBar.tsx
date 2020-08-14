@@ -101,7 +101,7 @@ const renderStep = (
               <StyledHtml
                 viewState={viewState}
                 styledTextProps={{ textDark: false, textLightDimmed: true }}
-                markdown={i18next.t(step.markdownDescription)}
+                markdown={step.markdownDescription}
               />
             </StepText>
             {options.footerComponent?.()}
@@ -280,7 +280,7 @@ class StepAccordionRaw extends React.Component<
                   <StyledHtml
                     viewState={viewState}
                     styledTextProps={{ textDark: false, textLightDimmed: true }}
-                    markdown={t(selectedTrainer.footnote)}
+                    markdown={selectedTrainer.footnote}
                   />
                 </Text>
               </>

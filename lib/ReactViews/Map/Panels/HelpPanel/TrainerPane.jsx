@@ -38,16 +38,13 @@ class TrainerPane extends React.Component {
   }
 
   render() {
-    const { content, viewState, t, i18n } = this.props;
+    const { content, viewState } = this.props;
     const { trainerItems, markdownText } = content;
     return (
       <Text textDark noFontSize>
         <Box column>
           {markdownText && (
-            <StyledHtml
-              viewState={viewState}
-              markdown={useTranslationIfExists(markdownText)}
-            />
+            <StyledHtml viewState={viewState} markdown={markdownText} />
           )}
           {trainerItems?.map && (
             <UlTrainerItems column fullWidth justifySpaceBetween>
