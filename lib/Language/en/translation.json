@@ -231,7 +231,8 @@
     "menuPaneTitle": "We're here to help",
     "menuPaneBody": "Find useful tips on how to use TerriaJS by either checking the guides below or by contacting the team at [info@terria.io](mailto:info@terria.io)",
     "promptMessage": "Find the Tour, how-to videos & other help content here",
-    "dismissText": "Got it, thanks!"
+    "dismissText": "Got it, thanks!",
+    "takeTour": "Take the tour"
   },
   "helpMenu": {
     "btnText": "Help",
@@ -1339,5 +1340,8 @@
       "title": "Error loading Delta Tool",
       "message": "An error occurred while trying to load the delta tool from the server. Please try again."
     }
+  },
+  "term": {
+    "missingContent": "missing content"
   }
 }

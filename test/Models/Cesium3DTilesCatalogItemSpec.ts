@@ -1,5 +1,6 @@
 import "../SpecMain";
 import { reaction, runInAction } from "mobx";
+import i18next from "i18next";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import IonResource from "terriajs-cesium/Source/Core/IonResource";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
@@ -37,7 +38,7 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
   it("should have a type and a typeName", function() {
     expect(Cesium3DTilesCatalogItem.type).toBe("3d-tiles");
     expect(item.type).toBe("3d-tiles");
-    expect(item.typeName).toBe("Cesium 3D Tiles");
+    expect(item.typeName).toBe(i18next.t("models.cesiumTerrain.name3D"));
   });
 
   it("supports zooming", function() {
