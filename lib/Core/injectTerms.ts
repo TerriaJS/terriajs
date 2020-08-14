@@ -89,17 +89,40 @@ const injectTerms = (string: string, termDictionary: Term[]): string => {
     // some help content things will have aliases / variants
 
     termDictionary.forEach(term => {
-      const aliasesTranslated = term.aliases
-        ? i18next.exists(term.aliases)
-          ? <Array<string>>i18next.t(term?.aliases, { returnObjects: true })
-          : Array.isArray(term.aliases.slice())
-          ? term.aliases
-          : [term.aliases]
-        : [];
-      if (aliasesTranslated) {
-        (<Array<string>>aliasesTranslated).forEach(alias => {
+      const termAliases = term.aliases;
+      if (!termAliases) {
+        return;
+      }
+      const addAliasesToTooltipTerms = (aliases: string[]) =>
+        aliases.forEach(alias => {
           tooltipTerms.set(alias.toLowerCase(), term);
         });
+      if (Array.isArray(termAliases)) {
+        /**
+         * If provided an array of terms, we'll assume direct from config.json
+         *
+         * e.g. `termAliases` is ["data set", "data sets", "datasets"]
+         */
+        addAliasesToTooltipTerms(termAliases);
+      } else if (i18next.exists(termAliases)) {
+        /**
+         * If provided a string, try and translate it - if it returns an array
+         * we can add those to the term dictionary
+         *
+         * e.g. `termAliases` is `helpContentTerm1.aliases`
+         * then `i18next.t()` resolves to ["data set", "data sets", "datasets"]
+         *
+         * Otherwise if `termAliases` is a simple string "data set" do not try
+         * and add a single string as plain strings should be provided in an
+         * array
+         */
+        const translated = i18next.t(termAliases, { returnObjects: true });
+        if (
+          Array.isArray(translated) &&
+          translated.every(item => typeof item === "string")
+        ) {
+          addAliasesToTooltipTerms(translated);
+        }
       }
     });
     const { termIndex, termToReplace, ignore } = findFirstTerm(
