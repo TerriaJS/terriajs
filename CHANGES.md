@@ -11,6 +11,7 @@ Change Log
 * Added an option for translation override from TerriaMap
 * Help content, trainer bar & help terms can use translation overrides
 * Accepts `backend` options under a new `terria.start()` property, `i18nOptions`
+* Use `wms_api_url` for CKAN resources where it exists
 
 * [The next improvement]
 
