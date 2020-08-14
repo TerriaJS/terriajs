@@ -119,6 +119,14 @@ export class CkanDatasetStratum extends LoadableStratum(
 
   @computed get url() {
     if (this.ckanResource === undefined) return undefined;
+    if (this.ckanItemReference._supportedFormat !== undefined) {
+      if (
+        this.ckanItemReference._supportedFormat.definition.type === "wms" &&
+        this.ckanResource.wms_api_url
+      ) {
+        return this.ckanResource.wms_api_url;
+      }
+    }
     return this.ckanResource.url;
   }
 

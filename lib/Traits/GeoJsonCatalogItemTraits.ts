@@ -94,7 +94,8 @@ export default class GeoJsonCatalogItemTraits extends mixTraits(
   @objectTrait({
     type: StyleTraits,
     name: "Style",
-    description: "Styling rules that follow simplestyle-spec"
+    description:
+      "Styling rules that follow [simplestyle-spec](https://github.com/mapbox/simplestyle-spec)"
   })
   style?: StyleTraits;
 

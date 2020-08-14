@@ -18,6 +18,7 @@ import getDereferencedIfExists from "../../../Core/getDereferencedIfExists";
 import getPath from "../../../Core/getPath";
 import TerriaError from "../../../Core/TerriaError";
 import PickedFeatures from "../../../Map/PickedFeatures";
+import ExportableMixin from "../../../ModelMixins/ExportableMixin";
 import addUserCatalogMember from "../../../Models/addUserCatalogMember";
 import CommonStrata from "../../../Models/CommonStrata";
 import getAncestors from "../../../Models/getAncestors";
@@ -25,10 +26,9 @@ import SplitItemReference from "../../../Models/SplitItemReference";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
 import Icon, { StyledIcon } from "../../Icon";
+import { exportData } from "../../Preview/ExportData";
 import WorkbenchButton from "../WorkbenchButton";
 import Styles from "./viewing-controls.scss";
-import ExportableData from "../../../Models/ExportableData";
-import { exportData } from "../../Preview/ExportData";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -295,7 +295,9 @@ const ViewingControls = observer(
               </ViewingControlMenuButton>
             </li>
           </If>
-          <If condition={ExportableData.is(item) && item.canExportData}>
+          <If
+            condition={ExportableMixin.isMixedInto(item) && item.canExportData}
+          >
             <li className={classNames(Styles.info)}>
               <ViewingControlMenuButton
                 onClick={this.exportDataClicked}
