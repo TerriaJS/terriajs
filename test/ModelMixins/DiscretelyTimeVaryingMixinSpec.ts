@@ -27,9 +27,5 @@ describe("DiscretelyTimeVaryingMixin", () => {
     const months = years[years.indice[0]];
     expect(months.dates.length).toBe(1000);
     expect(months.indice[0]).toBe(3);
-    const days = months[months.indice[0]];
-
-    const expectedDates = days[days.indice[0]];
-    expect(expectedDates.indice.length).toBe(17);
   });
 });
