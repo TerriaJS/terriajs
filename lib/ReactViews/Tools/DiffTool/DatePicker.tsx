@@ -157,7 +157,6 @@ class DatePicker extends React.Component<PropsType> {
             onChange={this.changeCurrentDate}
             openDirection="none"
             isOpen={this.isOpen}
-            showCalendarButton={false}
             onOpen={() => this.setIsOpen(true)}
             onClose={() => this.setIsOpen(false)}
           />

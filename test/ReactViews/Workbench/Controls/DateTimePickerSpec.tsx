@@ -37,7 +37,6 @@ describe("DateTimePicker", function() {
           onChange={() => {}}
           openDirection="down"
           isOpen={true}
-          showCalendarButton={false}
           onOpen={() => {}}
           onClose={() => {}}
         />
