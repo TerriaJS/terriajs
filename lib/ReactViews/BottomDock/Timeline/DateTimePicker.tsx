@@ -79,7 +79,7 @@ const Grid = styled.div`
   width: 100%;
   height: 100%;
   margin: 0 auto;
-  color: #fff;
+  color: ${(p: any) => p.theme.textLight};
   padding: 0px 5px;
   border-radius: 3px;
   margin-top: -20px;
@@ -87,7 +87,7 @@ const Grid = styled.div`
 
 const GridHeading = styled.div`
   text-align: center;
-  color: #fff;
+  color: ${(p: any) => p.theme.textLight};
   font-size: 12px;
   margin-bottom: 10px;
 `;
@@ -121,7 +121,7 @@ const BackButton = styled(RawButton)`
   svg {
     height: 15px;
     width: 20px;
-    fill: #ffffff;
+    fill: ${(p: any) => p.theme.textLight};
     display: inline-block;
     vertical-align: bottom;
   }
@@ -149,7 +149,6 @@ interface PropsType extends WithTranslation {
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
-  showCalendarButton?: boolean;
   dateFormat?: string;
 }
 
@@ -348,6 +347,7 @@ class DateTimePicker extends React.Component<PropsType> {
         <Grid>
           <GridHeading>
             <BackButton
+              title={this.props.t("dateTime.back")}
               onClick={() => {
                 runInAction(() => {
                   this.currentDateIndice.year = undefined;
@@ -444,6 +444,7 @@ class DateTimePicker extends React.Component<PropsType> {
         >
           <div>
             <BackButton
+              title={this.props.t("dateTime.back")}
               onClick={() =>
                 runInAction(() => {
                   this.currentDateIndice.year = undefined;
@@ -457,6 +458,7 @@ class DateTimePicker extends React.Component<PropsType> {
             </BackButton>
             &nbsp;
             <BackButton
+              title={this.props.t("dateTime.back")}
               onClick={() =>
                 runInAction(() => {
                   this.currentDateIndice.month = undefined;
@@ -636,7 +638,7 @@ class DateTimePicker extends React.Component<PropsType> {
       return (
         <div
           css={`
-            color: #fff;
+            color: ${(p: any) => p.theme.textLight};
             display: table-cell;
             width: 30px;
             height: 30px;
@@ -645,30 +647,6 @@ class DateTimePicker extends React.Component<PropsType> {
             event.stopPropagation();
           }}
         >
-          {this.props.showCalendarButton && (
-            <button
-              css={`
-                background: transparent;
-                padding: 0px 6px;
-                border: 0;
-                height: 30px;
-                width: 30px;
-                margin-right: 5px;
-                display: inline-block;
-                svg {
-                  width: 18px;
-                  height: 18px;
-                  float: left;
-                  fill: #fff;
-                }
-              `}
-              onClick={() => {
-                this.toggleDatePicker();
-              }}
-            >
-              <Icon glyph={Icon.GLYPHS.calendar} />
-            </button>
-          )}
           {this.props.isOpen && (
             <div
               css={`
@@ -693,6 +671,7 @@ class DateTimePicker extends React.Component<PropsType> {
               className={"scrollbars"}
             >
               <BackButton
+                title={this.props.t("dateTime.back")}
                 css={`
                   padding-bottom: 5px;
                   padding-right: 5px;

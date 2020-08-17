@@ -187,7 +187,6 @@ const DateTimeSelectorSection = observer(
                 onChange={this.changeDateTime}
                 openDirection="down"
                 isOpen={this.state.isOpen}
-                showCalendarButton={false}
                 onOpen={this.onOpen}
                 onClose={this.onClose}
                 dateFormat={format}

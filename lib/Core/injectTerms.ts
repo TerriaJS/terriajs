@@ -1,4 +1,6 @@
 import { Term } from "../ReactViewModels/defaultTerms";
+import i18next from "i18next";
+import { useTranslationIfExists } from "../Language/languageHelpers";
 
 const findFirstTerm = (
   text: string,
@@ -13,7 +15,7 @@ const findFirstTerm = (
   terms.forEach((_, term) => {
     const foundIndex = text
       .toLowerCase()
-      .indexOf(term.toLowerCase(), fromIndex);
+      .indexOf(useTranslationIfExists(term).toLowerCase(), fromIndex);
     if (
       foundIndex !== -1 &&
       (foundIndex < termIndex ||
@@ -71,14 +73,48 @@ const injectTerms = (string: string, termDictionary: Term[]): string => {
   const injectedBoldSet = new Set();
   while (1) {
     let tooltipTerms = new Map<string, Term>();
+
     termDictionary.forEach((item: any) =>
-      tooltipTerms.set(item.term.toLowerCase(), item)
+      tooltipTerms.set(useTranslationIfExists(item.term).toLowerCase(), item)
     );
     // some help content things will have aliases / variants
+
     termDictionary.forEach(term => {
-      term.aliases?.forEach(alias => {
-        tooltipTerms.set(alias.toLowerCase(), term);
-      });
+      const termAliases = term.aliases;
+      if (!termAliases) {
+        return;
+      }
+      const addAliasesToTooltipTerms = (aliases: string[]) =>
+        aliases.forEach(alias => {
+          tooltipTerms.set(alias.toLowerCase(), term);
+        });
+      if (Array.isArray(termAliases)) {
+        /**
+         * If provided an array of terms, we'll assume direct from config.json
+         *
+         * e.g. `termAliases` is ["data set", "data sets", "datasets"]
+         */
+        addAliasesToTooltipTerms(termAliases);
+      } else if (i18next.exists(termAliases)) {
+        /**
+         * If provided a string, try and translate it - if it returns an array
+         * we can add those to the term dictionary
+         *
+         * e.g. `termAliases` is `helpContentTerm1.aliases`
+         * then `i18next.t()` resolves to ["data set", "data sets", "datasets"]
+         *
+         * Otherwise if `termAliases` is a simple string "data set" do not try
+         * and add a single string as plain strings should be provided in an
+         * array
+         */
+        const translated = i18next.t(termAliases, { returnObjects: true });
+        if (
+          Array.isArray(translated) &&
+          translated.every(item => typeof item === "string")
+        ) {
+          addAliasesToTooltipTerms(translated);
+        }
+      }
     });
     const { termIndex, termToReplace, ignore } = findFirstTerm(
       string,
@@ -92,7 +128,9 @@ const injectTerms = (string: string, termDictionary: Term[]): string => {
     ) {
       const currentText = string;
       const termObj = tooltipTerms.get(termToReplace.toLowerCase());
-      const description = termObj?.content || "missing content";
+      const description = termObj
+        ? useTranslationIfExists(termObj.content)
+        : i18next.t("term.missingContent");
       // const injectedLink = `**${termToReplace}**`;
       const injectedLink = `<terriatooltip title="${termToReplace}">${description}</terriatooltip>`;
       string = currentText.substring(0, termIndex);
