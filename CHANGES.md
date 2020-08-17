@@ -12,7 +12,8 @@ Change Log
 * Help content, trainer bar & help terms can use translation overrides
 * Accepts `backend` options under a new `terria.start()` property, `i18nOptions`
 * Use `wms_api_url` for CKAN resources where it exists
-
+* Update style of 'Change dates' button in delta to be underlined
+* Fix issue with delta 'Date comparison' shifting places when querying new location
 * [The next improvement]
 
 #### 8.0.0-alpha.44

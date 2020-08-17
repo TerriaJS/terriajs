@@ -562,7 +562,7 @@ class Main extends React.Component<MainPropsType> {
                   )}
                   {this.leftDate && this.rightDate && (
                     <RawButton onClick={this.unsetDates}>
-                      <TextSpan small>
+                      <TextSpan isLink small>
                         {t("diffTool.instructions.changeDates")}
                       </TextSpan>
                     </RawButton>
@@ -873,6 +873,7 @@ const AreaFilterSelection = (props: {
     <Box
       column
       centered
+      styledMinWidth="230px"
       css={`
         @media (max-width: ${(props: any) => props.theme.md}px) {
           width: 100%;
