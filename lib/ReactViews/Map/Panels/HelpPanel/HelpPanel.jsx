@@ -105,7 +105,7 @@ class HelpPanel extends React.Component {
                 ${p => p.theme.addTerriaPrimaryBtnStyles(p)}
               `}
             >
-              {"Take the tour"}
+              {t("helpPanel.takeTour")}
             </Button>
           </Box>
         </Box>

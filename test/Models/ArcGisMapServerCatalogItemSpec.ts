@@ -9,6 +9,7 @@ import ArcGisMapServerCatalogItem from "../../lib/Models/ArcGisMapServerCatalogI
 import Terria from "../../lib/Models/Terria";
 import { RectangleTraits } from "../../lib/Traits/MappableTraits";
 import createStratumInstance from "../../lib/Models/createStratumInstance";
+import i18next from "i18next";
 
 configure({
   enforceActions: "observed",
@@ -60,7 +61,9 @@ describe("ArcGisMapServerCatalogItem", function() {
 
   it("has a type and type name", function() {
     expect(ArcGisMapServerCatalogItem.type).toBe("esri-mapServer");
-    expect(item.typeName).toBe("Esri ArcGIS MapServer");
+    expect(item.typeName).toBe(
+      i18next.t("models.arcGisMapServerCatalogItem.name")
+    );
   });
 
   it("supports splitting", function() {
@@ -234,9 +237,9 @@ describe("ArcGisMapServerCatalogItem", function() {
 
     it("defines info", function() {
       expect(item.info.map(({ name }) => name)).toEqual([
-        "Data Description",
-        "Service Description",
-        "Copyright Text"
+        i18next.t("models.arcGisMapServerCatalogItem.dataDescription"),
+        i18next.t("models.arcGisMapServerCatalogItem.serviceDescription"),
+        i18next.t("models.arcGisMapServerCatalogItem.copyrightText")
       ]);
     });
 

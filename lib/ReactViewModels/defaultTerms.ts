@@ -1,7 +1,9 @@
+type TranslationKey = string;
+
 export interface Term {
   term: string;
   content: string;
-  aliases?: string[];
+  aliases?: string[] | TranslationKey;
 }
 
 export const defaultTerms: Term[] = [
