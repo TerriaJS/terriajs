@@ -12,7 +12,7 @@ export interface SearchResultOptions {
   clickAction?: () => void;
   catalogItem?: BaseModel;
   location?: { longitude: number; latitude: number };
-  id?: number;
+  id?: string;
 }
 
 export default class SearchResult {
