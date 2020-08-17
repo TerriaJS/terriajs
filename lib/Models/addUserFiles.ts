@@ -2,7 +2,7 @@ import getDataType from "../Core/getDataType";
 import isDefined from "../Core/isDefined";
 import readJson from "../Core/readJson";
 import TerriaError from "../Core/TerriaError";
-import { isTimeVarying } from "../ModelMixins/TimeVarying";
+import TimeVarying from "../ModelMixins/TimeVarying";
 import ViewState from "../ReactViewModels/ViewState";
 import addUserCatalogMember from "./addUserCatalogMember";
 import CommonStrata from "./CommonStrata";
@@ -107,7 +107,7 @@ export default async function addUserFiles(
       terria.workbench.remove(item);
     });
     items.forEach(
-      item => isTimeVarying(item) && terria.timelineStack.addToTop(item)
+      item => TimeVarying.is(item) && terria.timelineStack.addToTop(item)
     );
     return items;
   }
