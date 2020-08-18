@@ -5,16 +5,16 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import Styles from "./mappable-preview.scss";
 import { observer } from "mobx-react";
 
-import ExportableData from "../../Models/ExportableData";
 import TerriaError from "../../Core/TerriaError";
 import isDefined from "../../Core/isDefined";
+import ExportableMixin from "../../ModelMixins/ExportableMixin";
 const FileSaver = require("file-saver");
 
 interface PropsType extends WithTranslation {
-  item: ExportableData;
+  item: ExportableMixin.ExportableMixin;
 }
 
-export async function exportData(item: ExportableData) {
+export async function exportData(item: ExportableMixin.ExportableMixin) {
   const data = await item.exportData();
   if (!isDefined(data)) {
     return;
@@ -31,7 +31,7 @@ export async function exportData(item: ExportableData) {
  */
 @observer
 class ExportData extends React.Component<PropsType> {
-  exportDataClicked(item: ExportableData) {
+  exportDataClicked(item: ExportableMixin.ExportableMixin) {
     exportData(item).catch(e => {
       if (e instanceof TerriaError) {
         this.props.item.terria.error.raiseEvent(e);
@@ -44,7 +44,7 @@ class ExportData extends React.Component<PropsType> {
 
     if (
       !catalogItem ||
-      !ExportableData.is(catalogItem) ||
+      !ExportableMixin.isMixedInto(catalogItem) ||
       !catalogItem.canExportData
     )
       return null;

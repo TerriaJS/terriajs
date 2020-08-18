@@ -46,7 +46,9 @@ describe("ArcGisFeatureServerCatalogGroup", function() {
 
   it("has a type and typeName", function() {
     expect(group.type).toBe("esri-featureServer-group");
-    expect(group.typeName).toBe("ArcGIS Feature Server Group");
+    expect(group.typeName).toBe(
+      i18next.t("models.arcGisFeatureServerCatalogGroup.name")
+    );
   });
 
   describe("after loading metadata", function() {
