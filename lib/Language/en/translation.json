@@ -42,6 +42,7 @@
   "splitterTool": {
     "toggleSplitterToolTitle": "Compare",
     "toggleSplitterTool": "Enable side-by-side comparison between two different sets of data",
+    "toggleSplitterToolDisabled": "Please disable other side-by-side comparison features in order to enable standard compare",
     "title": "Drag left or right to adjust views",
     "workbench": {
       "goleftTitle": "Show on the left side",
