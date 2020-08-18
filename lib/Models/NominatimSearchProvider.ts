@@ -15,7 +15,6 @@ import SearchResult from "./SearchResult";
 interface NominatimSearchProviderOptions {
   terria: Terria;
   url?: string;
-  key?: string;
   flightDurationSeconds?: number;
   countryCodes?: string[];
 }
@@ -73,7 +72,7 @@ export default class NominatimSearchProvider extends SearchProvider {
         queryParameters: {
           q: searchText,
           limit: this.limitOthers,
-          countryCodes: this.countryCodes,
+          countrycodes: this.countryCodes,
           format: "json",
           bounded: 1,
           viewbox: bbox.join(",")
@@ -87,7 +86,7 @@ export default class NominatimSearchProvider extends SearchProvider {
         queryParameters: {
           q: searchText,
           limit: this.limitOthers,
-          countryCodes: this.countryCodes.join(","),
+          countrycodes: this.countryCodes.join(","),
           format: "json"
         }
       })
