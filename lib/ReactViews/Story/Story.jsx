@@ -141,7 +141,9 @@ export class StoryRaw extends React.Component {
     const { t } = this.props;
     return (
       <div
-        className={classNames(this.props.className, Styles.story)}
+        className={classNames(this.props.className, Styles.story, {
+          [Styles.isRemoveOpen]: this.props.removePopupOpen
+        })}
         onMouseDown={this.props.onMouseDown}
         style={this.props.style}
         onTouchStart={this.props.onTouchStart}
@@ -183,6 +185,7 @@ StoryRaw.propTypes = {
   className: PropTypes.string,
   menuOpen: PropTypes.bool,
   openMenu: PropTypes.func,
+  removePopupOpen: PropTypes.bool.isRequired,
   t: PropTypes.func.isRequired
 };
 

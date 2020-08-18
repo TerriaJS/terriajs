@@ -1,21 +1,21 @@
 "use strict";
 
 // proptypes are in mixin
-/* eslint react/prop-types:0 */
+/* eslint react/prop-types:0*/
 
 import React from "react";
 import createReactClass from "create-react-class";
 import classNames from "classnames";
-import Icon from "../../Icon.jsx";
-import InnerPanel from "./InnerPanel";
-import BaseOuterPanel from "./BaseOuterPanel";
+import Icon from "../../../Icon.jsx";
+import InnerPanel from "../InnerPanel";
+import BaseOuterPanel from "../BaseOuterPanel";
 
-import Styles from "./panel.scss";
+import Styles from "../panel.scss";
 
 import defined from "terriajs-cesium/Source/Core/defined";
 
-const DropdownPanel = createReactClass({
-  displayName: "DropdownPanel",
+const StorySharePanel = createReactClass({
+  displayName: "StorySharePanel",
   mixins: [BaseOuterPanel],
 
   getInitialState() {
@@ -29,22 +29,22 @@ const DropdownPanel = createReactClass({
   onInnerMounted(innerElement) {
     if (innerElement) {
       // how much further right the panel is from the button
-      // const offset = this.buttonElement.offsetLeft - innerElement.offsetLeft;
+      const offset = this.buttonElement.offsetLeft - innerElement.offsetLeft;
       // if the panel is left of the button leave its offset as is, otherwise move it right so it's level with the button.
-      // const dropdownOffset =
-      //   offset < innerElement.offsetLeft ? offset : innerElement.offsetLeft;
+      const dropdownOffset =
+        offset < innerElement.offsetLeft ? offset : innerElement.offsetLeft;
       // offset the caret to line up with the middle of the button - note that the caret offset is relative to the panel, whereas
       // the offsets for the button/panel are relative to their container.
-      // const caretOffset = Math.max(
-      //   this.buttonElement.clientWidth / 2 -
-      //     10 -
-      //     (dropdownOffset - this.buttonElement.offsetLeft),
-      //   0
-      // );
+      const caretOffset = Math.max(
+        this.buttonElement.clientWidth / 2 -
+          10 -
+          (dropdownOffset - this.buttonElement.offsetLeft),
+        0
+      );
 
       this.setState({
-        caretOffset: "3px", // caretOffset >= 0 && caretOffset + "px",
-        dropdownOffset: "0px" // dropdownOffset + "px",
+        caretOffset: caretOffset >= 0 && caretOffset + "px",
+        dropdownOffset: dropdownOffset + "px"
       });
     } else {
       this.setState({
@@ -85,7 +85,8 @@ const DropdownPanel = createReactClass({
         <button
           onClick={this.openWithUserClick}
           type="button"
-          className={classNames(Styles.button, this.props.theme.btn)}
+          disabled={this.props.btnDisabled}
+          className={classNames(this.props.theme.btn)}
           title={this.props.btnTitle}
           ref={element => (this.buttonElement = element)}
         >
@@ -115,4 +116,4 @@ const DropdownPanel = createReactClass({
   }
 });
 
-export default DropdownPanel;
+export default StorySharePanel;
