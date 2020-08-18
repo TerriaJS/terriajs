@@ -12,7 +12,7 @@ export interface SearchResultOptions {
   clickAction?: () => void;
   catalogItem?: BaseModel;
   location?: { longitude: number; latitude: number };
-  id?: number;
+  id?: string;
 }
 
 export default class SearchResult {
@@ -24,7 +24,7 @@ export default class SearchResult {
   @observable isOpen = false;
   @observable type: string = "search_result";
   @observable location: { longitude: number; latitude: number } | undefined;
-  @observable id: number | undefined;
+  @observable id: string | undefined;
 
   constructor(options: SearchResultOptions) {
     this.name = defaultValue(options.name, "Unknown");

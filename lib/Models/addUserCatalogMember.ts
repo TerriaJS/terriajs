@@ -1,23 +1,19 @@
-"use strict";
-
-import Terria from "./Terria";
-import { BaseModel } from "./Model";
-import isDefined from "../Core/isDefined";
-import hasTraits from "./hasTraits";
-import GroupTraits from "../Traits/GroupTraits";
-import TerriaError from "../Core/TerriaError";
-import CommonStrata from "./CommonStrata";
-import Mappable from "./Mappable";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
-import GroupMixin from "../ModelMixins/GroupMixin";
 import i18next from "i18next";
-import ReferenceMixin from "../ModelMixins/ReferenceMixin";
+import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import getDereferencedIfExists from "../Core/getDereferencedIfExists";
+import isDefined from "../Core/isDefined";
+import TerriaError from "../Core/TerriaError";
+import GroupMixin from "../ModelMixins/GroupMixin";
+import GroupTraits from "../Traits/GroupTraits";
+import CommonStrata from "./CommonStrata";
+import hasTraits from "./hasTraits";
+import Mappable from "./Mappable";
+import { BaseModel } from "./Model";
+import Terria from "./Terria";
 
 interface AddUserCatalogMemberOptions {
   enable?: boolean;
   open?: boolean;
-  zoomTo?: boolean;
 }
 
 /**
@@ -68,12 +64,6 @@ export default function addUserCatalogMember(
         ) {
           terria.workbench.add(dereferenced);
         }
-      }
-
-      if (defaultValue(options.zoomTo, true) && Mappable.is(dereferenced)) {
-        dereferenced
-          .loadMapItems()
-          .then(() => terria.currentViewer.zoomTo(dereferenced, 1));
       }
 
       return newCatalogItem;

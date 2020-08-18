@@ -1,95 +1,137 @@
 import { DomElement } from "domhandler";
-import { action } from "mobx";
+import { runInAction } from "mobx";
 import React, { ReactElement } from "react";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import CommonStrata from "../../Models/CommonStrata";
-import CsvCatalogItem from "../../Models/CsvCatalogItem";
 import ChartPreviewStyles from "./Chart/chart-preview.scss";
 import ChartExpandAndDownloadButtons from "./Chart/ChartExpandAndDownloadButtons";
 import Chart from "./Chart/FeatureInfoPanelChart";
 import CustomComponent, { ProcessNodeContext } from "./CustomComponent";
+import Model, { BaseModel } from "../../Models/Model";
+import CatalogMemberTraits from "../../Traits/CatalogMemberTraits";
+import CsvCatalogItemTraits from "../../Traits/CsvCatalogItemTraits";
+import hasTraits from "../../Models/hasTraits";
+
+export interface ChartCustomComponentAttributes {
+  /**  The title of the chart.  If not supplied, defaults to the name of the context-supplied feature, if available, or else simply "Chart". */
+  title?: string;
+
+  /** An id for the chart; give different charts from the same feature different ids. The actual catalogItem.id used for the expanded chart will also incorporate the chart title and the catalog item name it came from. */
+  identifier?: string;
+
+  /** 'true' to hide the Expand and Download buttons on the chart.  By default and for any other value, the buttons are shown when applicable.
+   * Overrides can-download. */
+  hideButtons?: boolean;
+
+  /** Comma-separated URLs for data at each available time range. The first in the list is shown in the feature info panel preview.
+   * Eg. `sources="http://example.com/series?offset=1d,http://example.com/series?offset=5d,http://example.com/series?all"`*/
+  sources?: string[];
+
+  /** Comma-separated display names for each available time range, used in the expand-chart dropdown button.
+   * Eg. `source-names="1d,5d,30d"`. */
+  sourceNames?: string[];
+
+  /** 'false' to hide the Download button on the chart.  By default true and for any other value, the download button is shown. */
+  canDownload?: boolean;
+
+  /** Same as sources, but for download only. Defaults to the same as sources.
+   *  Eg. `sources="http://example.com/series?offset=1d,http://example.com/series?offset=5d,http://example.com/series?all"` */
+  downloads?: string[];
+
+  /** Same as source-names, but for download only. Defaults to the same as source-names.
+   *  Eg. `source-names="1d,5d,30d,max"`. */
+  downloadNames?: string[];
+
+  /** Defaults to 'feature-info'. Can also be 'histogram'. TODO: improve. */
+  styling?: string;
+
+  /** Maps column names to titles. Eg. column-names="time:Time,height:Height,speed:Speed" */
+  columnTitles?: { name: string; title: string }[];
+
+  /** Maps column names to units. Eg. column-units="height:m,speed:km/h" */
+  columnUnits?: { name: string; units: string }[];
+
+  /** The x column name or number to show in the preview, if not the first appropriate column. NOT FULLY IMPLEMENTED YET. */
+  xColumn?: string;
+
+  /** The y column name or number to show in the preview, if not the first scalar column. */
+  yColumn?: string;
+
+  /** Comma-separated list of y column names or numbers to show in the preview. Overrides "y-column" if provided. */
+  yColumns?: string[];
+
+  /** The preview chart x-axis label. Defaults to empty string. Eg. long-names="Last 24 hours,Last 5 days,Time". */
+  previewXLabel?: string;
+
+  /** An x-coordinate to highlight. */
+  highlightX?: string;
+
+  /** The URL of the data to show in the chart panel, once "expand" is clicked. Eg. `src="http://example.com/full_time_series.csv"`. */
+  src?: string;
+
+  /** The URL of the data to show in the feature info panel. Defaults to src. Eg. `src-preview="http://example.com/preview_time_series.csv"`. */
+  srcPreview?: string;
+
+  /** csv-formatted data, with \n for newlines. Eg. data="time,a,b\n2016-01-01,2,3\n2016-01-02,5,6".
+   * or json-formatted string data, with \quot; for quotes, eg. `data="[[\quot;a\quot;,\quot;b\quot;],[2,3],[5,6]]"`. */
+  data?: string;
+}
 
 /**
- * A `<chart>` custom component. It displays an interactive chart along with
+ * A chart custom component. It displays an interactive chart along with
  * "expand" and "download" buttons. The expand button adds a catalog item with
  * the data to the workbench, causing it to be displayed on the Chart Panel.
  * The chart detects if it appears in the second column of a <table> and, if so,
  * rearranges itself to span two columns.
  *
- * A `<chart>` component may have the following attributes:
- * - [title]:        The title of the chart.  If not supplied, defaults to the name of the context-supplied feature, if available, or else simply "Chart".
- * - [x-column]:     The x column name or number to show in the preview, if not the first appropriate column. NOT FULLY IMPLEMENTED YET.
- * - [y-column]:     The y column name or number to show in the preview, if not the first scalar column.
- * - [y-columns]:    Comma-separated list of y column names or numbers to show in the preview. Overrides "y-column" if provided.
- * - [colors]:       Comma-separated list of css colors to apply to data columns.
- * - [column-titles]: Maps column names to titles. Eg. column-names="time:Time,height:Height,speed:Speed"
- * - [column-units]: Maps column names to units. Eg. column-units="height:m,speed:km/h"
- * - [preview-x-label]: The preview chart x-axis label. Defaults to empty string. Eg. long-names="Last 24 hours,Last 5 days,Time".
- * - [id]:           An id for the chart; give different charts from the same feature different ids. The actual catalogItem.id used for the expanded chart will
- *                   also incorporate the chart title and the catalog item name it came from.
- * - [styling]:      Defaults to 'feature-info'. Can also be 'histogram'. TODO: improve.
- * - [highlight-x]:  An x-coordinate to highlight.
- * - [poll-seconds]: If present, the chart is updated from [poll-sources] every [poll-seconds] seconds.
- *                   TODO: Returned data is merged into existing data and shown.
- * - [poll-sources]: Comma-separated list of URLs to poll every [poll-seconds] seconds. Defaults to sources.
- * - [poll-replace]: Either 'true' or 'false' (case sensitive). Pass 'true' to completely replace the data, 'false' to update
- *                   the existing data. Defaults to false (updating).
- * - [can-download]: 'false' to hide the Download button on the chart.  By default true and for any other value, the download button is shown.
- * - [hide-buttons]: 'true' to hide the Expand and Download buttons on the chart.  By default and for any other value, the buttons are shown when applicable.
- *                   Overrides can-download.
+ * See {see ChartCustomComponentAttributes} for a full list of attributes.
  *
  * Provide the data in one of these four ways:
- * - [sources]:      Comma-separated URLs for data at each available time range. The first in the list is shown in the feature info panel preview.
- *                   Eg. `sources="http://example.com/series?offset=1d,http://example.com/series?offset=5d,http://example.com/series?all"`
- * - [source-names]: Comma-separated display names for each available time range, used in the expand-chart dropdown button.
- *                   Eg. `source-names="1d,5d,30d"`.
- * - [downloads]:    Same as sources, but for download only. Defaults to the same as sources.
- *                   Eg. `sources="http://example.com/series?offset=1d,http://example.com/series?offset=5d,http://example.com/series?all"`
- * - [download-names]: Same as source-names, but for download only. Defaults to the same as source-names.
- *                   Eg. `source-names="1d,5d,30d,max"`.
+ * - [sources]:        {see ChartCustomComponentAttributes.sources}
+ * - [source-names]:   {see ChartCustomComponentAttributes.sourceNames}
+ * - [downloads]:      {see ChartCustomComponentAttributes.downloads}
+ * - [download-names]: {see ChartCustomComponentAttributes.downloadNames}
  * Or:
- * - [src]:          The URL of the data to show in the chart panel, once "expand" is clicked. Eg. `src="http://example.com/full_time_series.csv"`.
- * - [src-preview]:  The URL of the data to show in the feature info panel. Defaults to src. Eg. `src-preview="http://example.com/preview_time_series.csv"`.
+ * - [src]:          {see ChartCustomComponentAttributes.src}
+ * - [src-preview]:  {see ChartCustomComponentAttributes.srcPreview}
  * Or:
- * - [data]:         csv-formatted data, with \n for newlines. Eg. data="time,a,b\n2016-01-01,2,3\n2016-01-02,5,6".
- *                   or json-formatted string data, with \quot; for quotes, eg. `data="[[\quot;a\quot;,\quot;b\quot;],[2,3],[5,6]]"`.
+ * - [data]:        {see ChartCustomComponentAttributes.data}
  * Or:
  * - None of the above, but supply csv or json-formatted data as the content of the chart data, with \n for newlines.
  *                   Eg. `<chart>time,a,b\n2016-01-01,2,3\n2016-01-02,5,6</chart>`.
  *                   or  `<chart>[["x","y","z"],[1,10,3],[2,15,9],[3,8,12],[5,25,4]]</chart>`.
  */
-export default class ChartCustomComponent extends CustomComponent {
-  readonly attributes = [
-    "src",
-    "src-preview",
-    "sources",
-    "source-names",
-    "downloads",
-    "download-names",
-    "preview-x-label",
-    "data",
-    "id",
-    "x-column",
-    "y-column",
-    "y-columns",
-    "colors",
-    "column-titles",
-    "column-units",
-    "styling",
-    "highlight-x",
-    "poll-seconds",
-    "poll-sources",
-    "poll-id-columns",
-    "poll-replace",
-    "title",
-    "can-download",
-    "hide-buttons"
-  ];
 
-  get name(): string {
-    return "chart";
+type CatalogMemberType = Model<CatalogMemberTraits>;
+export default abstract class ChartCustomComponent<
+  CatalogItemType extends CatalogMemberType
+> extends CustomComponent {
+  get attributes(): Array<string> {
+    return [
+      "src",
+      "src-preview",
+      "sources",
+      "source-names",
+      "downloads",
+      "download-names",
+      "preview-x-label",
+      "data",
+      "identifier",
+      "x-column",
+      "y-column",
+      "y-columns",
+      "column-titles",
+      "column-units",
+      "styling",
+      "highlight-x",
+      "title",
+      "can-download",
+      "hide-buttons"
+    ];
   }
+
+  abstract get name(): string;
 
   shouldProcessNode(context: ProcessNodeContext, node: DomElement): boolean {
     return (
@@ -123,6 +165,15 @@ export default class ChartCustomComponent extends CustomComponent {
     return node.name === this.name;
   }
 
+  /**
+   * Used to construct a new catalog item to form the basis of the chart.
+   */
+  protected abstract constructCatalogItem(
+    id: string | undefined,
+    context: ProcessNodeContext,
+    sourceReference: BaseModel | undefined
+  ): CatalogItemType;
+
   private processChart(
     context: ProcessNodeContext,
     node: DomElement,
@@ -135,22 +186,36 @@ export default class ChartCustomComponent extends CustomComponent {
 
     checkAllPropertyKeys(node.attribs, this.attributes);
 
-    const attrs = parseNodeAttrs(node.attribs);
+    const attrs = this.parseNodeAttrs(node.attribs);
+    const csvString: any =
+      typeof children[0] == "string" ? children[0] : undefined;
     const chartElements = [];
     if (!attrs.hideButtons) {
       // Build expand/download buttons
-      const sourceItems = (attrs.sources || []).map(
+      const sourceItems = (attrs.downloads || attrs.sources || [""]).map(
         (source: string, i: number) => {
           const id = [
             context.catalogItem.uniqueId,
             context.feature.id,
             source
           ].join(":");
-          const item = new CsvCatalogItem(id, context.terria, undefined);
-          this.setTraitsFromAttrs(item, attrs, i);
+          const item = this.constructCatalogItem(id, context, undefined);
+
+          runInAction(() => {
+            this.setTraitsFromAttrs(item, attrs, i);
+
+            if (
+              csvString &&
+              hasTraits(item, CsvCatalogItemTraits, "csvString")
+            ) {
+              item.setTrait(CommonStrata.user, "csvString", csvString);
+            }
+          });
+
           return item;
         }
       );
+
       chartElements.push(
         React.createElement(ChartExpandAndDownloadButtons, {
           key: "button",
@@ -166,8 +231,18 @@ export default class ChartCustomComponent extends CustomComponent {
     }
 
     // Build chart item to show in the info panel
-    const chartItem = new CsvCatalogItem(undefined, context.terria, undefined);
-    this.setTraitsFromAttrs(chartItem, attrs, 0);
+    const chartItem = this.constructCatalogItem(undefined, context, undefined);
+    runInAction(() => {
+      this.setTraitsFromAttrs(chartItem, attrs, 0);
+
+      if (
+        csvString &&
+        hasTraits(chartItem, CsvCatalogItemTraits, "csvString")
+      ) {
+        chartItem.setTrait(CommonStrata.user, "csvString", csvString);
+      }
+    });
+
     chartElements.push(
       React.createElement(Chart, {
         key: "chart",
@@ -191,66 +266,18 @@ export default class ChartCustomComponent extends CustomComponent {
     );
   }
 
-  @action
-  private setTraitsFromAttrs(
-    item: CsvCatalogItem,
-    attrs: ReturnType<typeof parseNodeAttrs>,
+  /**
+   * Populate the traits in the supplied catalog item with the values from the attributes of the component.
+   * Assume it will be run in an action.
+   * @param item
+   * @param attrs
+   * @param sourceIndex
+   */
+  protected abstract setTraitsFromAttrs(
+    item: CatalogItemType,
+    attrs: ChartCustomComponentAttributes,
     sourceIndex: number
-  ) {
-    // Set url
-    item.setTrait(
-      CommonStrata.user,
-      "url",
-      attrs.sources && attrs.sources[sourceIndex]
-    );
-
-    // Set name
-    let name = attrs.title;
-    if (attrs.sourceNames && attrs.sourceNames[sourceIndex]) {
-      name = `${name} - ${attrs.sourceNames[sourceIndex]}`;
-    }
-    item.setTrait(CommonStrata.user, "name", name);
-
-    // Set polling traits
-    if (attrs.pollSeconds) {
-      const pollUrl = attrs.pollSources && attrs.pollSources[sourceIndex];
-      item.polling.setTrait(CommonStrata.user, "seconds", attrs.pollSeconds);
-      item.polling.setTrait(CommonStrata.user, "url", pollUrl);
-      item.polling.setTrait(
-        CommonStrata.user,
-        "shouldReplaceData",
-        attrs.pollReplace
-      );
-    }
-
-    // Set column titles
-    attrs.columnTitles.forEach(({ name, title }) => {
-      const column = item.addObject(CommonStrata.user, "columns", name)!;
-      column.setTrait(CommonStrata.user, "title", title);
-    });
-
-    // Set column units
-    attrs.columnUnits.forEach(({ name, units }) => {
-      const column = item.addObject(CommonStrata.user, "columns", name)!;
-      column.setTrait(CommonStrata.user, "units", units);
-    });
-
-    // Set chart axes
-    if (attrs.xColumn || attrs.yColumns) {
-      const chartStyle = item.addObject(CommonStrata.user, "styles", "chart")!;
-      chartStyle.chart.setTrait(
-        CommonStrata.user,
-        "xAxisColumn",
-        attrs.xColumn
-      );
-
-      (attrs.yColumns || []).forEach(y => {
-        chartStyle.chart.addObject(CommonStrata.user, "lines", y)!;
-      });
-
-      item.setTrait(CommonStrata.user, "activeStyle", "chart");
-    }
-  }
+  ): void;
 
   /**
    * Is this node the first column of a two-column table where the second
@@ -326,63 +353,63 @@ export default class ChartCustomComponent extends CustomComponent {
       revisedChildren
     );
   }
-}
 
-/**
- * Parse node attrs to an easier to process structure.
- */
-function parseNodeAttrs(nodeAttrs: { [name: string]: string | undefined }) {
-  let sources = splitStringIfDefined(nodeAttrs.sources);
-  if (sources === undefined && nodeAttrs.src !== undefined) {
-    // [src-preview, src], or [src] if src-preview is not defined.
-    sources = [nodeAttrs.src];
-    const srcPreview = nodeAttrs["src-preview"];
-    if (srcPreview !== undefined) {
-      sources.unshift(srcPreview);
+  /**
+   * Parse node attrs to an easier to process structure.
+   */
+  protected parseNodeAttrs(nodeAttrs: {
+    [name: string]: string | undefined;
+  }): ChartCustomComponentAttributes {
+    let sources = splitStringIfDefined(nodeAttrs.sources);
+    if (sources === undefined && nodeAttrs.src !== undefined) {
+      // [src-preview, src], or [src] if src-preview is not defined.
+      sources = [nodeAttrs.src];
+      const srcPreview = nodeAttrs["src-preview"];
+      if (srcPreview !== undefined) {
+        sources.unshift(srcPreview);
+      }
     }
+    const sourceNames = splitStringIfDefined(nodeAttrs["source-names"]);
+    const downloads = splitStringIfDefined(nodeAttrs.downloads) || sources;
+    const downloadNames =
+      splitStringIfDefined(nodeAttrs["download-names"]) || sourceNames;
+
+    const columnTitles = filterOutUndefined(
+      (nodeAttrs["column-titles"] || "").split(",").map(s => {
+        const [name, title] = rsplit2(s, ":");
+        return name ? { name, title } : undefined;
+      })
+    );
+
+    const columnUnits = filterOutUndefined(
+      (nodeAttrs["column-units"] || "").split(",").map(s => {
+        const [name, units] = rsplit2(s, ":");
+        return name ? { name, units } : undefined;
+      })
+    );
+
+    const yColumns = splitStringIfDefined(
+      nodeAttrs["y-columns"] || nodeAttrs["y-column"]
+    );
+
+    return {
+      title: nodeAttrs["title"],
+      identifier: nodeAttrs["identifier"],
+      hideButtons: nodeAttrs["hide-buttons"] === "true",
+      sources,
+      sourceNames,
+      canDownload: !(nodeAttrs["can-download"] === "false"),
+      downloads,
+      downloadNames,
+      styling: nodeAttrs["styling"] || "feature-info",
+      highlightX: nodeAttrs["highlight-x"],
+      columnTitles,
+      columnUnits,
+      xColumn: nodeAttrs["x-column"],
+      previewXLabel: nodeAttrs["preview-x-label"],
+      yColumns
+    };
   }
-  const sourceNames = splitStringIfDefined(nodeAttrs["source-names"]);
-  const downloads = splitStringIfDefined(nodeAttrs.downloads) || sources;
-  const downloadNames =
-    splitStringIfDefined(nodeAttrs["download-names"]) || sourceNames;
-
-  const columnTitles = filterOutUndefined(
-    (nodeAttrs["column-titles"] || "").split(",").map(s => {
-      const [name, title] = rsplit2(s, ":");
-      return name ? { name, title } : undefined;
-    })
-  );
-
-  const columnUnits = filterOutUndefined(
-    (nodeAttrs["column-units"] || "").split(",").map(s => {
-      const [name, units] = rsplit2(s, ":");
-      return name ? { name, units } : undefined;
-    })
-  );
-
-  const yColumns = splitStringIfDefined(
-    nodeAttrs["y-columns"] || nodeAttrs["y-column"]
-  );
-
-  return {
-    title: nodeAttrs["title"],
-    hideButtons: nodeAttrs["hide-buttons"] === "true",
-    sources,
-    sourceNames,
-    canDownload: !(nodeAttrs["can-download"] === "false"),
-    downloads,
-    downloadNames,
-    styling: nodeAttrs["styling"] || "feature-info",
-    highlightX: nodeAttrs["highlight-x"],
-    pollSeconds: parseIntOrUndefined(nodeAttrs["poll-seconds"]),
-    pollSources: splitStringIfDefined(nodeAttrs["poll-sources"]),
-    pollReplace: nodeAttrs["poll-replace"] === "true",
-    columnTitles,
-    columnUnits,
-    xColumn: nodeAttrs["x-column"],
-    previewXLabel: nodeAttrs["preview-x-label"],
-    yColumns
-  };
 }
 
 function checkAllPropertyKeys(object: any, allowedKeys: string[]) {
@@ -390,13 +417,12 @@ function checkAllPropertyKeys(object: any, allowedKeys: string[]) {
     if (object.hasOwnProperty(key)) {
       if (allowedKeys.indexOf(key) === -1) {
         console.log("Unknown attribute " + key);
-        throw new DeveloperError("Unknown attribute " + key);
       }
     }
   }
 }
 
-function splitStringIfDefined(s: string | undefined) {
+export function splitStringIfDefined(s: string | undefined) {
   return s !== undefined ? s.split(",") : undefined;
 }
 
@@ -412,11 +438,6 @@ function rsplit2(s: string, sep: string) {
     const last = pieces[pieces.length - 1];
     return [head, last];
   }
-}
-
-function parseIntOrUndefined(s: string | undefined): number | undefined {
-  const maybeInt = parseInt(s || "");
-  return isNaN(maybeInt) ? undefined : maybeInt;
 }
 
 function getInsertedTitle(node: DomElement) {

@@ -7,6 +7,7 @@ interface CssExports {
   'feedback': string;
   'map': string;
   'showWorkbenchButton': string;
+  'showWorkbenchButtonTrainerBarVisible': string;
   'showWorkbenchButtonisNotVisible': string;
   'showWorkbenchButtonisVisible': string;
   'sidePanel': string;

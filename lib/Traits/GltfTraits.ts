@@ -1,17 +1,12 @@
-import objectTrait from "./objectTrait";
-import LatLonHeightTraits from "./LatLonHeightTraits";
+import mixTraits from "./mixTraits";
 import primitiveTrait from "./primitiveTrait";
-import ModelTraits from "./ModelTraits";
+import ShadowTraits from "./ShadowTraits";
+import TransformationTraits from "./TransformationTraits";
 
-export default class GltfTraits extends ModelTraits {
-  @objectTrait({
-    type: LatLonHeightTraits,
-    name: "Origin",
-    description:
-      "The origin of the model, expressed as a longitude and latitude in degrees and a height in meters. If this property is specified, the model's axes will have X pointing East, Y pointing North, and Z pointing Up. If not specified, the model is located in the Earth-Centered Earth-Fixed frame."
-  })
-  origin?: LatLonHeightTraits;
-
+export default class GltfTraits extends mixTraits(
+  TransformationTraits,
+  ShadowTraits
+) {
   @primitiveTrait({
     type: "string",
     name: "Up axis",
@@ -29,17 +24,10 @@ export default class GltfTraits extends ModelTraits {
   forwardAxis?: string;
 
   @primitiveTrait({
-    type: "number",
-    name: "Scale",
-    description: "The scale factor to apply to the model"
-  })
-  scale?: number;
-
-  @primitiveTrait({
     type: "string",
-    name: "Shadows",
+    name: "Height reference",
     description:
-      'Indicates whether this tileset casts and receives shadows. Valid values are "NONE", "BOTH", "CAST", and "RECEIVE".'
+      "Position relative to the ground. Accepted values are NONE, CLAMP_TO_GROUND & RELATIVE_TO_GROUND as described in the cesium doc - https://cesium.com/docs/cesiumjs-ref-doc/global.html#HeightReference"
   })
-  shadows?: string = "NONE";
+  heightReference = "NONE";
 }

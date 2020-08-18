@@ -18,7 +18,7 @@ TerriaJS has a number of subdirectories of the `lib` directory, each of which co
 
 TerriaJS uses the [React](https://reactjs.org/) library as the basis for its user interface.  The top-level entry point is [StandardUserInterface.jsx](https://github.com/TerriaJS/terriajs/blob/master/lib/ReactViews/StandardUserInterface/StandardUserInterface.jsx).  It is expected that most applications will use this standard user interface, but a sophisticated TerriaJS application could use its own version instead in order to allow extreme customization of the interface.
 
-For styling, we use [Sass](http://sass-lang.com/) in CSS modules loaded via the Webpack `css-loader`, meaning that each React component imports its own local CSS styles from a `.scss` file.
+For styling, we use [Sass](http://sass-lang.com/) in CSS modules loaded via the Webpack `css-loader`, meaning that each React component imports its own local CSS styles from a `.scss` file. However in version 8, we will be removing Sass &  move toward `styled-components` - see the [frontend style guide](./frontend-style-guide.md#MobX-UI-refactor)
 
 The user interface is meant to be a thin layer with minimal domain-specific logic.  Ideally, all domain-specific logic would reside in the `Models` layer or perhaps in the `ViewModels` layer.  This approach allows the UI to be replaced (including by a user of TerriaJS rather than its developers) without needing to re-implement large chunks of TerriaJS logic.  In fact, the entire user interface can be viewed as optional.  A TerriaJS-based application could replace it with its own custom UI.
 

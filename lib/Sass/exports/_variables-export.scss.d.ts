@@ -14,8 +14,13 @@ interface CssExports {
   'greyLightest': string;
   'lg': string;
   'mapButtonColor': string;
+  'mapButtonTop': string;
+  'mapNavigationTop': string;
   'md': string;
   'mobile': string;
+  'modalBg': string;
+  'modalHighlight': string;
+  'modalText': string;
   'overlay': string;
   'overlayInvert': string;
   'radius40Button': string;
@@ -29,6 +34,7 @@ interface CssExports {
   'textDarker': string;
   'textLight': string;
   'textLightDimmed': string;
+  'trainerHeight': string;
   'workbenchWidth': string;
 }
 declare var cssExports: CssExports;
