@@ -14,6 +14,8 @@ Change Log
 * Use `wms_api_url` for CKAN resources where it exists
 * Update style of 'Change dates' button in delta to be underlined
 * Fix issue with delta 'Date comparison' shifting places when querying new location
+* Make Drag & Drop work again (tsxify `DragDropFile.tsx` and refactor `addUserFiles.ts`)
+* Add `TimeVarying.is` function
 * [The next improvement]
 
 #### 8.0.0-alpha.44
