@@ -3,6 +3,8 @@ Change Log
 
 ### Next Release
 
+* Remove caching from TerriaJsonCatalogFunction requests.
+
 
 ### v7.11.9
 
