@@ -50,7 +50,7 @@ const StyledButton = styled.button`
     border-radius:20px;
   `}
   ${props => props.rounded && ` border-radius: 32px; `}
- 
+
   ${props =>
     props.secondary &&
     `
@@ -102,6 +102,13 @@ export const RawButton = styled.button`
     &:hover,
     &:focus {
       opacity: 0.9;
+    }
+  `}
+  ${props =>
+    props.disabled &&
+    `
+    &[disabled] {
+      cursor: not-allowed;
     }
   `}
 
