@@ -13,6 +13,14 @@ class SidePanelContent extends React.Component {
     this.setState({
       sector
     });
+    const { terria } = this.props;
+    terria.selectedSector = sector.title.toLowerCase();
+    console.log(sector);
+    knockout.getObservable(terria, "selectedSector").subscribe(() => {
+      const selectedSector = terria.selectedSector;
+      console.log(selectedSector);
+      terria.selectedSector = "agriculture";
+    });
   };
   closeSectorInfo = () => {
     this.setState({ sector: null });
