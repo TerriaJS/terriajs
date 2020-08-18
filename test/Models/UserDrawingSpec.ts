@@ -10,6 +10,7 @@ import supportsWebGL from "../../lib/Core/supportsWebGL";
 import PickedFeatures from "../../lib/Map/PickedFeatures";
 import Terria from "../../lib/Models/Terria";
 import UserDrawing from "../../lib/Models/UserDrawing";
+import i18next from "i18next";
 
 const describeIfSupported = supportsWebGL() ? describe : xdescribe;
 
@@ -54,7 +55,7 @@ describe("UserDrawing", function() {
     var userDrawing = new UserDrawing(options);
 
     expect(userDrawing.getDialogMessage()).toEqual(
-      "<div><strong>Draw on Map</strong></br><i>Click to add a point</i></div>"
+      "<div><strong>models.userDrawing.messageHeader</strong></br><i>models.userDrawing.clickToAddFirstPoint</i></div>"
     );
   });
 
@@ -68,7 +69,7 @@ describe("UserDrawing", function() {
     var userDrawing = new UserDrawing(options);
 
     expect(userDrawing.getDialogMessage()).toEqual(
-      "<div><strong>Draw on Map</strong></br>HELLO</br><i>Click to add a point</i></div>"
+      "<div><strong>models.userDrawing.messageHeader</strong></br>HELLO</br><i>models.userDrawing.clickToAddFirstPoint</i></div>"
     );
   });
 
@@ -202,11 +203,17 @@ describe("UserDrawing", function() {
     const options = { terria: terria };
     const userDrawing = new UserDrawing(options);
 
-    expect(userDrawing.getButtonText()).toEqual("Cancel");
+    expect(userDrawing.getButtonText()).toEqual(
+      i18next.t("models.userDrawing.btnCancel")
+    );
     userDrawing.pointEntities.entities.values.push(new Entity());
-    expect(userDrawing.getButtonText()).toEqual("Cancel");
+    expect(userDrawing.getButtonText()).toEqual(
+      i18next.t("models.userDrawing.btnCancel")
+    );
     userDrawing.pointEntities.entities.values.push(new Entity());
-    expect(userDrawing.getButtonText()).toEqual("Done");
+    expect(userDrawing.getButtonText()).toEqual(
+      i18next.t("models.userDrawing.btnDone")
+    );
   });
 
   it("cleans up when cleanup is called", function() {

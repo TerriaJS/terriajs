@@ -26,6 +26,7 @@ import isReadOnlyArray from "../Core/isReadOnlyArray";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import DiffableMixin from "../ModelMixins/DiffableMixin";
+import ExportableMixin from "../ModelMixins/ExportableMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
 import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -44,7 +45,6 @@ import { callWebCoverageService } from "./callWebCoverageService";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
-import ExportableData from "./ExportableData";
 import LoadableStratum from "./LoadableStratum";
 import Mappable, { ImageryParts } from "./Mappable";
 import { BaseModel } from "./Model";
@@ -565,16 +565,18 @@ class DiffStratum extends LoadableStratum(WebMapServiceCatalogItemTraits) {
 }
 
 class WebMapServiceCatalogItem
-  extends DiffableMixin(
-    TimeFilterMixin(
-      GetCapabilitiesMixin(
-        UrlMixin(
-          CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
+  extends ExportableMixin(
+    DiffableMixin(
+      TimeFilterMixin(
+        GetCapabilitiesMixin(
+          UrlMixin(
+            CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
+          )
         )
       )
     )
   )
-  implements Mappable, SelectableDimensions, ExportableData {
+  implements Mappable, SelectableDimensions {
   /**
    * The collection of strings that indicate an Abstract property should be ignored.  If these strings occur anywhere
    * in the Abstract, the Abstract will not be used.  This makes it easy to filter out placeholder data like
@@ -634,11 +636,11 @@ class WebMapServiceCatalogItem
   }
 
   @computed
-  get canExportData() {
+  get _canExportData() {
     return isDefined(this.linkedWcsCoverage) && isDefined(this.linkedWcsUrl);
   }
 
-  exportData() {
+  _exportData() {
     return callWebCoverageService(this);
   }
 

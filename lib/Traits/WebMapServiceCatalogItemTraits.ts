@@ -17,6 +17,7 @@ import SplitterTraits from "./SplitterTraits";
 import TimeFilterTraits from "./TimeFilterTraits";
 import primitiveArrayTrait from "./primitiveArrayTrait";
 import UrlTraits from "./UrlTraits";
+import ExportableTraits from "./ExportableTraits";
 
 export class WebMapServiceAvailableStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -134,6 +135,7 @@ export class WebMapServiceAvailableLayerDimensionsTraits extends ModelTraits {
 }
 
 export default class WebMapServiceCatalogItemTraits extends mixTraits(
+  ExportableTraits,
   DiffableTraits,
   FeatureInfoTraits,
   LayerOrderingTraits,

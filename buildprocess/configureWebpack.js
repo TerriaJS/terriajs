@@ -272,6 +272,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
     config.plugins.push(
         new ForkTsCheckerWebpackPlugin({
             typescript: {
+                configFile: path.resolve(__dirname, '..', 'tsconfig.json'),
                 diagnosticOptions: {
                     semantic: true,
                     syntactic: true,

@@ -42,7 +42,7 @@ function EmptyWorkbench(props) {
   `;
   return (
     <Text large textLight nunito>
-      {/* Hardcoded top to 150px for now for very very small screens 
+      {/* Hardcoded top to 150px for now for very very small screens
           TODO: make it not hardcoded */}
       <Box
         column

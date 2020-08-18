@@ -10,7 +10,13 @@ export const Box = styled.div`
     `
     position:absolute;
     z-index:1;
-   `}
+  `}
+  ${props =>
+    props.topRight &&
+    `
+    right: 0px;
+    top: 0px;
+  `}
 
   box-sizing: border-box;
 
@@ -22,6 +28,7 @@ export const Box = styled.div`
   ${props => props.fullWidth && `width: 100%;`}
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
   ${props => props.styledHeight && `height: ${props.styledHeight};`}
+  ${props => props.styledMinWidth && `min-width: ${props.styledMinWidth};`}
   ${props => props.styledMinHeight && `min-height: ${props.styledMinHeight};`}
   ${props => props.styledMaxHeight && `max-height: ${props.styledMaxHeight};`}
 
