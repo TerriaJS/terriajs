@@ -63,7 +63,6 @@ class MapNavigation extends React.Component {
     const { viewState, t } = this.props;
     const toolIsDifference =
       this.props.viewState.currentTool?.toolName === "Difference";
-    const isDiffMode = this.props.viewState.isToolOpen && toolIsDifference;
 
     return (
       <StyledMapNavigation
@@ -103,10 +102,7 @@ class MapNavigation extends React.Component {
                 </div>
               </If>
               <If
-                condition={
-                  !this.props.terria.configParameters.disableSplitter &&
-                  !isDiffMode
-                }
+                condition={!this.props.terria.configParameters.disableSplitter}
               >
                 <div className={Styles.control}>
                   <ToggleSplitterTool

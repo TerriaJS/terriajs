@@ -46,7 +46,7 @@ describe("CkanCatalogGroup", function() {
 
   it("has a type and typeName", function() {
     expect(ckanCatalogGroup.type).toBe("ckan-group");
-    expect(ckanCatalogGroup.typeName).toBe("CKAN Server");
+    expect(ckanCatalogGroup.typeName).toBe(i18next.t("models.ckan.nameServer"));
   });
 
   describe("after loading metadata - default settings - ", function() {

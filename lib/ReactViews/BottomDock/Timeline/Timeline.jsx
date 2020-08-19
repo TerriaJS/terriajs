@@ -86,6 +86,7 @@ export const Timeline = observer(
       }
 
       const discreteTimes = catalogItem.discreteTimesAsSortedJulianDates;
+      const objectifiedDates = catalogItem.objectifiedDates;
       const currentDiscreteJulianDate = catalogItem.currentDiscreteJulianDate;
 
       return (
@@ -121,7 +122,7 @@ export const Timeline = observer(
             >
               <DateTimePicker
                 currentDate={JulianDate.toDate(currentDiscreteJulianDate)}
-                dates={discreteTimes.map(dt => JulianDate.toDate(dt.time))}
+                dates={objectifiedDates}
                 onChange={this.changeDateTime}
                 openDirection="up"
                 isOpen={this.state.isPickerOpen}

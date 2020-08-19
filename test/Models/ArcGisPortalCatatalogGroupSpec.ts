@@ -64,7 +64,9 @@ describe("ArcGisPortalCatalogGroup", function() {
 
   it("has a type and typeName", function() {
     expect(portalCatalogGroup.type).toBe("arcgis-portal-group");
-    expect(portalCatalogGroup.typeName).toBe("ArcGIS Portal Group");
+    expect(portalCatalogGroup.typeName).toBe(
+      i18next.t("models.arcgisPortal.nameGroup")
+    );
   });
 
   describe("default settings - ", function() {

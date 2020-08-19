@@ -562,7 +562,7 @@ class Main extends React.Component<MainPropsType> {
                   )}
                   {this.leftDate && this.rightDate && (
                     <RawButton onClick={this.unsetDates}>
-                      <TextSpan small>
+                      <TextSpan isLink small>
                         {t("diffTool.instructions.changeDates")}
                       </TextSpan>
                     </RawButton>
@@ -669,13 +669,24 @@ class Main extends React.Component<MainPropsType> {
           </MainPanel>
         </DiffAccordion>
         {isShowingDiff && (
-          // rushing a bunch of this inline css!
           <CloseDifferenceButton
+            primary
+            rounded
+            textProps={{
+              semiBold: true,
+              extraLarge: true
+            }}
             theme={theme}
             activeStyles
             onClick={this.resetTool}
+            renderIcon={() => (
+              <StyledIcon light styledWidth="13px" glyph={GLYPHS.closeLight} />
+            )}
+            iconProps={{
+              css: `margin-right: 10px;`
+            }}
           >
-            <StyledIcon light styledWidth="19px" glyph={GLYPHS.closeLight} />
+            Close
           </CloseDifferenceButton>
         )}
         {!isShowingDiff && (
@@ -693,7 +704,6 @@ class Main extends React.Component<MainPropsType> {
               <DatePicker
                 heading={t("diffTool.labels.dateComparisonA")}
                 item={this.props.leftItem}
-                popupStyle={Styles.leftDatePickerPopup}
                 externalOpenButton={this.openLeftDatePickerButton}
                 onDateSet={() => this.showItem(this.props.leftItem)}
               />
@@ -705,7 +715,6 @@ class Main extends React.Component<MainPropsType> {
               <DatePicker
                 heading={t("diffTool.labels.dateComparisonA")}
                 item={this.props.rightItem}
-                popupStyle={Styles.rightDatePickerPopup}
                 externalOpenButton={this.openRightDatePickerButton}
                 onDateSet={() => this.showItem(this.props.rightItem)}
               />
@@ -808,17 +817,13 @@ const BackButton = styled(Button).attrs({
   secondary: true
 })``;
 
-const CloseDifferenceButton = styled(RawButton)`
+const CloseDifferenceButton = styled(Button)`
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 60px;
+  top: 18px;
 
-  border-radius: 50%;
-  padding: 13px;
-  color: ${p => p.theme.textLight};
-  border-color: ${p => p.theme.textLight};
-  background-color: ${p => p.theme.colorPrimary};
+  padding: 0 20px;
 `;
 
 const GenerateButton = styled(Button).attrs({
@@ -866,6 +871,7 @@ const AreaFilterSelection = (props: {
     <Box
       column
       centered
+      styledMinWidth="230px"
       css={`
         @media (max-width: ${(props: any) => props.theme.md}px) {
           width: 100%;

@@ -122,7 +122,7 @@ const Description = observer(
                 <When condition={catalogItem.type === "wfs"}>
                   <p key="wfs-description">
                     <Trans i18nKey="description.wfs">
-                      This is a{" "}
+                      This is a
                       <a
                         href="https://en.wikipedia.org/wiki/Web_Feature_Service"
                         target="_blank"
