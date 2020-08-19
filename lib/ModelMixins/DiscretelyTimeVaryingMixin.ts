@@ -4,7 +4,7 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
 import Constructor from "../Core/Constructor";
-import filterOutUndefined from "../Core/filterOutUndefined";
+import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
 import { calculateDomain, ChartItem } from "../Models/Chartable";
 import CommonStrata from "../Models/CommonStrata";
@@ -14,7 +14,7 @@ import TimeVarying from "./TimeVarying";
 
 type DiscretelyTimeVarying = Model<DiscretelyTimeVaryingTraits>;
 
-interface AsJulian {
+export interface AsJulian {
   time: JulianDate;
   tag: string;
 }
@@ -70,6 +70,19 @@ function DiscretelyTimeVaryingMixin<
     @computed({ equals: JulianDate.equals })
     get stopTimeAsJulianDate(): JulianDate | undefined {
       return toJulianDate(this.stopTime);
+    }
+
+    @computed
+    get objectifiedDates(): ObjectifiedDates {
+      if (!isDefined(this.discreteTimesAsSortedJulianDates)) {
+        return { indice: [], dates: [] };
+      }
+
+      const jsDates = this.discreteTimesAsSortedJulianDates.map(julianDate =>
+        JulianDate.toDate(julianDate.time)
+      );
+
+      return objectifyDates(jsDates);
     }
 
     @computed
@@ -336,4 +349,76 @@ function toJulianDate(time: string | undefined): JulianDate | undefined {
     return undefined;
   }
   return JulianDate.fromIso8601(time);
+}
+
+type DatesObject<T> = {
+  [key: number]: T;
+  dates: Date[];
+  indice: number[];
+};
+export type ObjectifiedDates = DatesObject<ObjectifiedYears>;
+export type ObjectifiedYears = DatesObject<ObjectifiedMonths>;
+export type ObjectifiedMonths = DatesObject<ObjectifiedDays>;
+export type ObjectifiedDays = DatesObject<ObjectifiedHours>;
+export type ObjectifiedHours = DatesObject<Date[]>;
+
+/**
+ * Process an array of dates into layered objects of years, months and days.
+ * @param  {Date[]} An array of dates.
+ * @return {Object} Returns an object whose keys are years, whose values are objects whose keys are months (0=Jan),
+ *   whose values are objects whose keys are days, whose values are arrays of all the datetimes on that day.
+ */
+function objectifyDates(dates: Date[]): ObjectifiedDates {
+  let result: ObjectifiedDates = { indice: [], dates };
+
+  for (let i = 0; i < dates.length; i++) {
+    let date = dates[i];
+    let year = date.getFullYear();
+    let century = Math.floor(year / 100);
+    let month = date.getMonth();
+    let day = date.getDate();
+    let hour = date.getHours();
+
+    // ObjectifiedDates
+    if (!result[century]) {
+      result[century] = { indice: [], dates: [] };
+      result.indice.push(century);
+    }
+
+    result[century].dates.push(date);
+
+    // ObjectifiedYears
+    if (!result[century][year]) {
+      result[century][year] = { indice: [], dates: [] };
+      result[century].indice.push(year);
+    }
+
+    result[century][year].dates.push(date);
+
+    // ObjectifiedMonths
+    if (!result[century][year][month]) {
+      result[century][year][month] = { indice: [], dates: [] };
+      result[century][year].indice.push(month);
+    }
+
+    result[century][year][month].dates.push(date);
+
+    // ObjectifiedDays
+    if (!result[century][year][month][day]) {
+      result[century][year][month][day] = { indice: [], dates: [] };
+      result[century][year][month].indice.push(day);
+    }
+
+    result[century][year][month][day].dates.push(date);
+
+    // ObjectifiedHours
+    if (!result[century][year][month][day][hour]) {
+      result[century][year][month][day][hour] = [];
+      result[century][year][month][day].indice.push(hour);
+    }
+
+    result[century][year][month][day][hour].push(date);
+  }
+
+  return result;
 }

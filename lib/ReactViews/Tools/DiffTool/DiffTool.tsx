@@ -704,7 +704,6 @@ class Main extends React.Component<MainPropsType> {
               <DatePicker
                 heading={t("diffTool.labels.dateComparisonA")}
                 item={this.props.leftItem}
-                popupStyle={Styles.leftDatePickerPopup}
                 externalOpenButton={this.openLeftDatePickerButton}
                 onDateSet={() => this.showItem(this.props.leftItem)}
               />
@@ -716,7 +715,6 @@ class Main extends React.Component<MainPropsType> {
               <DatePicker
                 heading={t("diffTool.labels.dateComparisonA")}
                 item={this.props.rightItem}
-                popupStyle={Styles.rightDatePickerPopup}
                 externalOpenButton={this.openRightDatePickerButton}
                 onDateSet={() => this.showItem(this.props.rightItem)}
               />

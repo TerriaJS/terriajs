@@ -12,6 +12,7 @@ Change Log
 * Help content, trainer bar & help terms can use translation overrides
 * Accepts `backend` options under a new `terria.start()` property, `i18nOptions`
 * Use `wms_api_url` for CKAN resources where it exists
+* Tsxified `DateTimePicker` and refactored `objectifiedDates` (moved to `DiscretelyTimeVaryingMixin`).
 * Update style of 'Change dates' button in delta to be underlined
 * Fix issue with delta 'Date comparison' shifting places when querying new location
 * Shows a disabled splitter button when entering diff

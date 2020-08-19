@@ -135,6 +135,7 @@
       }
     },
     "datePicker": {
+      "back": "Go back",
       "previousDateTitle": "Previous date",
       "nextDateTitle": "Next date",
       "dateButtonTitle": "Select a date",
@@ -462,6 +463,7 @@
     "addItemErrorMessage": "An error occurred while loading the catalog item."
   },
   "dateTime": {
+    "back": "Go back",
     "previous": "Previous time",
     "selectTime": "Select a time",
     "outOfRange": "Currently out of range.",
