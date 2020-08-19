@@ -8,6 +8,7 @@ import SenapsLocationsCatalogItem, {
 import CommonStrata from "../../lib/Models/CommonStrata";
 import isDefined from "../../lib/Core/isDefined";
 import { JsonArray, JsonObject } from "../../lib/Core/Json";
+import i18next from "i18next";
 
 interface ExtendedLoadWithXhr {
   (): any;
@@ -48,7 +49,7 @@ describe("SenapsLocationsCatalogItem", function() {
 
   it("- has a type and typename", function() {
     expect(item.type).toBe("senaps-locations");
-    expect(item.typeName).toBe("Senaps Locations");
+    expect(item.typeName).toBe(i18next.t("models.senaps.name"));
   });
 
   it("- supports zooming to extent", function() {

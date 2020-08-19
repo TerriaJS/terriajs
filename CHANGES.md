@@ -3,12 +3,30 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.44)
-* Pass `format` trait on `TableColumnTraits` down to `TableAutomaticStylesStratum` for generating legends
+#### next release (8.0.0-alpha.45)
+* Change `ExportableData` interface to `ExportableMixin` and add `disableExport` trait.
+* Add basic WFS support with `WebFeatureServiceCatalogGroup` and `WebFeatureServiceCatalogItem`
+* Update style of diff tool close button to match new design
+* Remove sass code from the `HelpPanel` component
+* Added an option for translation override from TerriaMap
+* Help content, trainer bar & help terms can use translation overrides
+* Accepts `backend` options under a new `terria.start()` property, `i18nOptions`
+* Use `wms_api_url` for CKAN resources where it exists
+* Tsxified `DateTimePicker` and refactored `objectifiedDates` (moved to `DiscretelyTimeVaryingMixin`).
+* Update style of 'Change dates' button in delta to be underlined
+* Fix issue with delta 'Date comparison' shifting places when querying new location
+* Shows a disabled splitter button when entering diff
+* Make Drag & Drop work again (tsxify `DragDropFile.tsx` and refactor `addUserFiles.ts`)
+* Add `TimeVarying.is` function
 * [The next improvement]
+
+#### 8.0.0-alpha.44
+* Pass `format` trait on `TableColumnTraits` down to `TableAutomaticStylesStratum` for generating legends
 * Add `multipleTitles` and `maxMultipleTitlesShowed` to `LegendItemTraits`
 * Aggregate legend items in `createLegendItemsFromEnumColorMap` by colour, that is merge legend items with the same colour (using `multipleTitles`)
 * Only generate `tableStyles` for region columns if no other styles exist
+* TableAutomaticStylesStratum & CsvCatalogItem only returns unique `discreteTimes`s now
+* Specified specific terriajs config for ForkTsCheckerWebpackPlugin
 * Toggle in map settings to enable anti-aliasing of Cesium
 
 #### 8.0.0-alpha.43

@@ -24,7 +24,7 @@ export default function addUserCatalogMember(
   terria: Terria,
   newCatalogMemberOrPromise: BaseModel | Promise<BaseModel | undefined>,
   options: AddUserCatalogMemberOptions = {}
-) {
+): Promise<BaseModel | undefined> {
   const promise =
     newCatalogMemberOrPromise instanceof Promise
       ? newCatalogMemberOrPromise

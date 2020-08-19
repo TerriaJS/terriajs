@@ -47,7 +47,7 @@ describe("CkanItemReference", function() {
 
   it("has a type and typeName", function() {
     expect(ckanItemReference.type).toBe("ckan-item");
-    expect(ckanItemReference.typeName).toBe("CKAN Resource");
+    expect(ckanItemReference.typeName).toBe(i18next.t("models.ckan.name"));
   });
 
   describe("Can load an item by datasetId - ", function() {
@@ -84,46 +84,46 @@ describe("CkanItemReference", function() {
       expect(ckanItemTarget.rectangle.north).toBe(-9.142175977);
 
       const licenceInfo = ckanItemTarget.info.filter(
-        (i: any) => i.name === "Licence"
+        (i: any) => i.name === i18next.t("models.ckan.licence")
       )[0];
       expect(licenceInfo.content).toBe(
         "[Creative Commons Attribution 3.0 Australia](http://creativecommons.org/licenses/by/3.0/au/)"
       );
 
       const contactInfo = ckanItemTarget.info.filter(
-        (i: any) => i.name === "Contact"
+        (i: any) => i.name === i18next.t("models.ckan.contact_point")
       )[0];
       expect(contactInfo.content).toBe("taxstats@ato.gov.au");
 
       const datasetInfo = ckanItemTarget.info.filter(
-        (i: any) => i.name === "Dataset Description"
+        (i: any) => i.name === i18next.t("models.ckan.datasetDescription")
       )[0];
       expect(datasetInfo.content).toBe(
         "Taxation statistics: an overview of the income and tax status of Australian individuals, companies, partnerships, trusts and funds for 2011-12. "
       );
 
       const authorInfo = ckanItemTarget.info.filter(
-        (i: any) => i.name === "Author"
+        (i: any) => i.name === i18next.t("models.ckan.author")
       )[0];
       expect(authorInfo.content).toBe("Australian Taxation Office");
 
       const createdInfo = ckanItemTarget.info.filter(
-        (i: any) => i.name === "Created"
+        (i: any) => i.name === i18next.t("models.ckan.metadata_created")
       )[0];
       expect(createdInfo.content).toBe("2014-04-24");
 
       const modifiedInfo = ckanItemTarget.info.filter(
-        (i: any) => i.name === "Modified"
+        (i: any) => i.name === i18next.t("models.ckan.metadata_modified")
       )[0];
       expect(modifiedInfo.content).toBe("2015-08-25");
 
       const updateInfo = ckanItemTarget.info.filter(
-        (i: any) => i.name === "Update Frequency"
+        (i: any) => i.name === i18next.t("models.ckan.update_freq")
       )[0];
       expect(updateInfo.content).toBe("daily");
 
       const custodianInfo = ckanItemTarget.info.filter(
-        (i: any) => i.name === "Dataset Custodian"
+        (i: any) => i.name === i18next.t("models.ckan.datasetCustodian")
       )[0];
       expect(custodianInfo.content).toBe("Australian Taxation Office");
     });

@@ -16,7 +16,7 @@ import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import isDefined from "../Core/isDefined";
 import DiscretelyTimeVaryingMixin from "../ModelMixins/DiscretelyTimeVaryingMixin";
 import { BaseModel } from "./Model";
-import ExportableData from "./ExportableData";
+import ExportableMixin from "../ModelMixins/ExportableMixin";
 
 // Types of CSVs:
 // - Points - Latitude and longitude columns or address
@@ -31,19 +31,19 @@ import ExportableData from "./ExportableData";
 
 const automaticTableStylesStratumName = "automaticTableStyles";
 
-export default class CsvCatalogItem
-  extends AsyncChartableMixin(
-    TableMixin(
-      // Since both TableMixin & DiscretelyTimeVaryingMixin defines
-      // `chartItems`, the order of mixing in is important here
-      DiscretelyTimeVaryingMixin(
+export default class CsvCatalogItem extends AsyncChartableMixin(
+  TableMixin(
+    // Since both TableMixin & DiscretelyTimeVaryingMixin defines
+    // `chartItems`, the order of mixing in is important here
+    DiscretelyTimeVaryingMixin(
+      ExportableMixin(
         AutoRefreshingMixin(
           UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
         )
       )
     )
   )
-  implements ExportableData {
+) {
   static get type() {
     return "csv";
   }
@@ -76,7 +76,7 @@ export default class CsvCatalogItem
   }
 
   @computed
-  get canExportData() {
+  get _canExportData() {
     return (
       isDefined(this._csvFile) ||
       isDefined(this.csvString) ||
@@ -89,7 +89,7 @@ export default class CsvCatalogItem
     return super.cacheDuration || "1d";
   }
 
-  async exportData() {
+  protected async _exportData() {
     if (isDefined(this._csvFile)) {
       return {
         name: (this.name || this.uniqueId)!,
