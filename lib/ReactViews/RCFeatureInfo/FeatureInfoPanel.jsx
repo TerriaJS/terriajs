@@ -279,21 +279,21 @@ export const FeatureInfoPanel = createReactClass({
       [Styles.isTranslucent]: viewState.explorerPanelIsVisible
     });
 
-    const filterableCatalogItems = catalogItems
-      .filter(
-        catalogItem =>
-          defined(catalogItem) && catalogItem.canFilterIntervalsByFeature
-      )
-      .map(catalogItem => {
-        const features = featureCatalogItemPairs.filter(
-          pair => pair.catalogItem === catalogItem
-        );
-        return {
-          catalogItem: catalogItem,
-          feature: defined(features[0]) ? features[0].feature : undefined
-        };
-      })
-      .filter(pair => defined(pair.feature));
+    // const filterableCatalogItems = catalogItems
+    //   .filter(
+    //     catalogItem =>
+    //       defined(catalogItem) && catalogItem.canFilterIntervalsByFeature
+    //   )
+    //   .map(catalogItem => {
+    //     const features = featureCatalogItemPairs.filter(
+    //       pair => pair.catalogItem === catalogItem
+    //     );
+    //     return {
+    //       catalogItem: catalogItem,
+    //       feature: defined(features[0]) ? features[0].feature : undefined
+    //     };
+    //   })
+    //   .filter(pair => defined(pair.feature));
 
     let position;
     if (
@@ -332,120 +332,113 @@ export const FeatureInfoPanel = createReactClass({
     );
     this.ref = React.createRef();
 
-    return (
-      <DragWrapper ref={this.ref}>
-        <div
-          className={panelClassName}
-          aria-hidden={!viewState.featureInfoPanelIsVisible}
-        >
-          {!this.props.printView && (
-            <div className={Styles.header}>
-              <div
-                className={classNames("drag-handle", Styles.btnPanelHeading)}
-              >
-                {/*<span>{t("featureInfo.panelHeading")}</span>*/}
-                <span>{type}</span>
-                {/*<button
-                  type="button"
-                  onClick={this.toggleCollapsed}
-                  className={Styles.btnToggleFeature}
+    if (featureInfoCatalogItems.length > 0) {
+      return (
+        <DragWrapper ref={this.ref}>
+          <div
+            className={panelClassName}
+            aria-hidden={!viewState.featureInfoPanelIsVisible}
+          >
+            {!this.props.printView && (
+              <div className={Styles.header}>
+                <div
+                  className={classNames("drag-handle", Styles.btnPanelHeading)}
                 >
-                  {this.props.viewState.featureInfoPanelIsCollapsed ? (
-                    <Icon glyph={Icon.GLYPHS.closed} />
-                  ) : (
-                    <Icon glyph={Icon.GLYPHS.opened} />
-                  )}
-                </button>*/}
-              </div>
-              <button
-                type="button"
-                onClick={this.close}
-                className={Styles.btnCloseFeature}
-                title={t("featureInfo.btnCloseFeature")}
-              >
-                <Icon glyph={Icon.GLYPHS.close} />
-              </button>
-            </div>
-          )}
-
-          <ul className={Styles.body}>
-            {this.props.printView && locationElements}
-            <Choose>
-              {/*<When
-                condition={
-                  viewState.featureInfoPanelIsCollapsed ||
-                  !viewState.featureInfoPanelIsVisible
-                }
-              />*/}
-              <When
-                condition={
-                  defined(terria.pickedFeatures) &&
-                  terria.pickedFeatures.isLoading
-                }
-              >
-                <li>
-                  <Loader />
-                </li>
-              </When>
-              <When
-                condition={
-                  !featureInfoCatalogItems ||
-                  featureInfoCatalogItems.length === 0
-                }
-              >
-                <li className={Styles.noResults}>
-                  {this.getMessageForNoResults()}
-                </li>
-              </When>
-              <Otherwise>
-                {/*  {featureInfoCatalogItems}*/}
-
-                <div className={Styles.tooltipContent}>
-                  {sector && (
-                    <div className={Styles.icons}>
-                      <Icon
-                        className={Styles.icon}
-                        glyph={Icon.GLYPHS[sector]}
-                      />
-                    </div>
-                  )}
-                  {title && <h3>{title}</h3>}
-                  {description && <p>{description}</p>}
-                </div>
-                {storyId && (
-                  <button
+                  {/*<span>{t("featureInfo.panelHeading")}</span>*/}
+                  <span>{type}</span>
+                  {/*<button
                     type="button"
-                    className={Styles.satelliteSuggestionBtn}
-                    onClick={this.openStory.bind(this, storyId)}
+                    onClick={this.toggleCollapsed}
+                    className={Styles.btnToggleFeature}
                   >
-                    View story
-                  </button>
-                )}
-              </Otherwise>
-            </Choose>
+                    {this.props.viewState.featureInfoPanelIsCollapsed ? (
+                      <Icon glyph={Icon.GLYPHS.closed} />
+                    ) : (
+                      <Icon glyph={Icon.GLYPHS.opened} />
+                    )}
+                  </button>*/}
+                </div>
+                <button
+                  type="button"
+                  onClick={this.close}
+                  className={Styles.btnCloseFeature}
+                  title={t("featureInfo.btnCloseFeature")}
+                >
+                  <Icon glyph={Icon.GLYPHS.close} />
+                </button>
+              </div>
+            )}
 
-            {/* {!this.props.printView && locationElements}*/}
+            <ul className={Styles.body}>
+              {this.props.printView && locationElements}
+              <Choose>
+                {/*<When
+                  condition={
+                    viewState.featureInfoPanelIsCollapsed ||
+                    !viewState.featureInfoPanelIsVisible
+                  }
+                />*/}
+                <When
+                  condition={
+                    defined(terria.pickedFeatures) &&
+                    terria.pickedFeatures.isLoading
+                  }
+                >
+                  <li>
+                    <Loader />
+                  </li>
+                </When>
+                <Otherwise>
+                  {/*  {featureInfoCatalogItems}*/}
 
-            {/* {filterableCatalogItems.map(pair => (
-              <button
-                key={pair.catalogItem.id}
-                type="button"
-                onClick={this.filterIntervalsByFeature.bind(
-                  this,
-                  pair.catalogItem,
-                  pair.feature
-                )}
-                className={Styles.satelliteSuggestionBtn}
-              >
-                {t("featureInfo.satelliteSuggestionBtn", {
-                  catalogItemName: pair.catalogItem.name
-                })}
-              </button>
-            ))}*/}
-          </ul>
-        </div>
-      </DragWrapper>
-    );
+                  <div className={Styles.tooltipContent}>
+                    {sector && (
+                      <div className={Styles.icons}>
+                        <Icon
+                          className={Styles.icon}
+                          glyph={Icon.GLYPHS[sector]}
+                        />
+                      </div>
+                    )}
+                    {title && <h3>{title}</h3>}
+                    {description && <p>{description}</p>}
+                  </div>
+                  {storyId && (
+                    <button
+                      type="button"
+                      className={Styles.satelliteSuggestionBtn}
+                      onClick={this.openStory.bind(this, storyId)}
+                    >
+                      View story
+                    </button>
+                  )}
+                </Otherwise>
+              </Choose>
+
+              {/* {!this.props.printView && locationElements}*/}
+
+              {/* {filterableCatalogItems.map(pair => (
+                <button
+                  key={pair.catalogItem.id}
+                  type="button"
+                  onClick={this.filterIntervalsByFeature.bind(
+                    this,
+                    pair.catalogItem,
+                    pair.feature
+                  )}
+                  className={Styles.satelliteSuggestionBtn}
+                >
+                  {t("featureInfo.satelliteSuggestionBtn", {
+                    catalogItemName: pair.catalogItem.name
+                  })}
+                </button>
+              ))}*/}
+            </ul>
+          </div>
+        </DragWrapper>
+      );
+    }
+    return null;
   }
 });
 
