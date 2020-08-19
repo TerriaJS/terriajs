@@ -251,7 +251,7 @@ class LeafletGeomVisualizer {
     boundsJustChanged: boolean
   ) {
     const featureGroup = this._featureGroup;
-    const pointGraphics = entity.point;
+    const pointGraphics = entity.point!;
 
     const show =
       entity.isAvailable(time) &&
@@ -373,7 +373,7 @@ class LeafletGeomVisualizer {
     entityDetails: EntityDetails,
     bounds: LatLngBounds | undefined
   ) {
-    const markerGraphics = entity.billboard;
+    const markerGraphics = entity.billboard!;
     const featureGroup = this._featureGroup;
     let position;
     let marker: L.Marker;
@@ -508,7 +508,7 @@ class LeafletGeomVisualizer {
     _entityHash: EntityHash,
     entityDetails: EntityDetails
   ) {
-    const labelGraphics = entity.label;
+    const labelGraphics = entity.label!;
     const featureGroup = this._featureGroup;
     let position;
     let marker: L.Marker;
@@ -633,6 +633,10 @@ class LeafletGeomVisualizer {
   ) {
     const featureGroup = this._featureGroup;
     const rectangleGraphics = entity.rectangle;
+
+    if (!isDefined(rectangleGraphics)) {
+      return;
+    }
 
     const show =
       entity.isAvailable(time) &&
@@ -778,7 +782,7 @@ class LeafletGeomVisualizer {
     entityDetails: EntityDetails
   ) {
     const featureGroup = this._featureGroup;
-    const polygonGraphics = entity.polygon;
+    const polygonGraphics = entity.polygon!;
 
     const show =
       entity.isAvailable(time) &&
@@ -919,7 +923,7 @@ class LeafletGeomVisualizer {
     _entityHash: EntityHash,
     entityDetails: EntityDetails
   ) {
-    const polylineGraphics = entity.polyline;
+    const polylineGraphics = entity.polyline!;
     const featureGroup = this._featureGroup;
     let positions, polyline;
 

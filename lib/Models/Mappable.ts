@@ -4,6 +4,7 @@ import "terriajs-cesium/Source/Scene/ImageryProvider";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import MappableTraits from "../Traits/MappableTraits";
 import Model, { BaseModel } from "./Model";
+import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 
 export type MapItem =
   | ImageryParts
@@ -18,7 +19,7 @@ export interface ImageryParts {
   // wms: boolean;
   // isGeoServer: boolean;
   show: boolean;
-  imageryProvider: Cesium.ImageryProvider;
+  imageryProvider: ImageryProvider;
 }
 
 // This discriminator only discriminates between ImageryParts and DataSource

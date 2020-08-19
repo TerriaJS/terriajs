@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.45)
+* Upgraded to Cesium v1.71.
 * Change `ExportableData` interface to `ExportableMixin` and add `disableExport` trait.
 * Add basic WFS support with `WebFeatureServiceCatalogGroup` and `WebFeatureServiceCatalogItem`
 * Update style of diff tool close button to match new design

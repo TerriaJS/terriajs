@@ -191,9 +191,15 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
                 this.pointEntities.entities.values.length < 1
               )
                 return;
-              const point1 = this.pointEntities.entities.values[0].position.getValue(
-                time
-              ) as Cartesian3;
+              const point1 =
+                this.pointEntities.entities.values[0].position &&
+                (this.pointEntities.entities.values[0].position.getValue(
+                  time
+                ) as Cartesian3);
+
+              if (!point1) {
+                return;
+              }
 
               let point2 =
                 (this.pointEntities.entities.values?.[1]?.position?.getValue(
@@ -263,7 +269,7 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
   private addPointToPointEntities(name: string, position: Cartesian3) {
     var pointEntity = new Entity({
       name: name,
-      position: position,
+      position: new ConstantPositionProperty(position),
       billboard: <any>{
         image: this.svgPoint,
         eyeOffset: new Cartesian3(0.0, 0.0, -50.0)

@@ -22,7 +22,6 @@
           //"../node_modules/@types"
       ],
       "types": [
-          "cesium",
           "terriajs-cesium",
           "mapbox__point-geometry",
           "mapbox__vector-tile",
@@ -39,6 +38,7 @@
       "./lib/ModelMixins/**/*",
       "./lib/Traits/**/*",
       "./lib/Language/**/*",
-      "./lib/ReactViews/**/*"
+      "./lib/ReactViews/**/*",
+      "./lib/ThirdParty/**/*"
   ]
 }

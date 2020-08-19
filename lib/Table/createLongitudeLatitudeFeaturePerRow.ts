@@ -8,6 +8,9 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import { JsonObject } from "../Core/Json";
 import TableColumn from "./TableColumn";
 import TableStyle from "./TableStyle";
+import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
+import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
+import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 
 type RequiredTableStyle = TableStyle & {
   longitudeColumn: TableColumn;
@@ -39,19 +42,23 @@ export default function createLongitudeLatitudeFeaturePerRow(
       }
       const value = valueFunction(rowId);
       const feature = new Entity({
-        position: Cartesian3.fromDegrees(longitude, latitude, 0.0),
+        position: new ConstantPositionProperty(
+          Cartesian3.fromDegrees(longitude, latitude, 0.0)
+        ),
         point: new PointGraphics({
-          color: colorMap.mapValueToColor(value),
-          pixelSize: pointSizeMap.mapValueToPointSize(value),
-          outlineWidth: 1,
-          outlineColor: outlineColor,
-          heightReference: HeightReference.CLAMP_TO_GROUND
+          color: new ConstantProperty(colorMap.mapValueToColor(value)),
+          pixelSize: new ConstantProperty(
+            pointSizeMap.mapValueToPointSize(value)
+          ),
+          outlineWidth: new ConstantProperty(1),
+          outlineColor: new ConstantProperty(outlineColor),
+          heightReference: new ConstantProperty(HeightReference.CLAMP_TO_GROUND)
         })
       });
       const timeInterval = intervals[rowId];
       if (timeInterval)
         feature.availability = new TimeIntervalCollection([timeInterval]);
-      feature.properties = getRowValues(rowId, tableColumns);
+      feature.properties = new PropertyBag(getRowValues(rowId, tableColumns));
       return feature;
     })
   );
