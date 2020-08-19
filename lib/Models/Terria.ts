@@ -297,7 +297,7 @@ export default class Terria {
   /**
    * Gets ot sets whether to use antialiasing
    */
-  @observable antiAliasingEnabled = true;
+  @observable antiAliasingEnabled = false;
 
   /**
    * Whether we think all references in the catalog have been loaded
