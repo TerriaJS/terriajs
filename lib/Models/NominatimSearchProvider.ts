@@ -104,7 +104,7 @@ export default class NominatimSearchProvider extends SearchProvider {
       }
       const locations: SearchResult[] = [];
       // Locations in the bounded query go on top, locations elsewhere go undernearth
-      const findDbl = function(locations: SearchResult[], place_id: number) {
+      const findDbl = function(locations: SearchResult[], place_id: string) {
         return locations.filter(function(location) {
           return location.id === place_id;
         })[0];
@@ -153,13 +153,4 @@ function createZoomToFunction(model: NominatimSearchProvider, resource: any) {
     const terria = model.terria;
     terria.currentViewer.zoomTo(rectangle, model.flightDurationSeconds);
   };
-}
-
-export class ExtendedNominatimSearchProvider extends NominatimSearchProvider {
-  doSearch(
-    searchText: string,
-    searchResults: SearchProviderResults
-  ): Promise<void> {
-    return super.doSearch(searchText, searchResults);
-  }
 }

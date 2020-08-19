@@ -1,6 +1,15 @@
 import Terria from "../../lib/Models/Terria";
-import { ExtendedNominatimSearchProvider } from "../../lib/Models/NominatimSearchProvider";
+import NominatimSearchProvider from "../../lib/Models/NominatimSearchProvider";
 import SearchProviderResults from "../../lib/Models/SearchProviderResults";
+
+class ExtendedNominatimSearchProvider extends NominatimSearchProvider {
+  doSearch(
+    searchText: string,
+    searchResults: SearchProviderResults
+  ): Promise<void> {
+    return super.doSearch(searchText, searchResults);
+  }
+}
 
 describe("NominatimSearchProvider", function() {
   let terria: Terria;
@@ -18,12 +27,12 @@ describe("NominatimSearchProvider", function() {
     jasmine.Ajax.uninstall();
   });
 
-  it("find a simple location", function(done) {
+  it("find a simple location", function() {
     jasmine.Ajax.install();
 
     jasmine.Ajax.stubRequest(
       new RegExp(
-        "nominatim\\.openstreetmap\\.org/search\\?q=la%20tour%20du%20pin&limit=2&countryCodes=fr&format=json&bounded=1"
+        "nominatim\\.openstreetmap\\.org/search\\?q=la%20tour%20du%20pin&limit=2&countrycodes=fr&format=json&bounded=1"
       )
     ).andReturn({
       responseText: JSON.stringify([
@@ -66,7 +75,7 @@ describe("NominatimSearchProvider", function() {
 
     jasmine.Ajax.stubRequest(
       new RegExp(
-        "nominatim\\.openstreetmap\\.org/search\\?q=la%20tour%20du%20pin&limit=2&countryCodes=fr&format=json"
+        "nominatim\\.openstreetmap\\.org/search\\?q=la%20tour%20du%20pin&limit=2&countrycodes=fr&format=json"
       )
     ).andReturn({
       responseText: JSON.stringify([
@@ -112,16 +121,15 @@ describe("NominatimSearchProvider", function() {
     );
     searchProvider.doSearch("la tour du pin", searchResults).then(function() {
       expect(searchResults.results.length > 0).toBe(true);
-      done();
     });
   });
 
-  it("finds catalog items only located in France", function(done) {
+  it("finds catalog items only located in France", function() {
     jasmine.Ajax.install();
 
     jasmine.Ajax.stubRequest(
       new RegExp(
-        "nominatim\\.openstreetmap\\.org/search\\?q=place&limit=2&countryCodes=fr&format=json&bounded=1"
+        "nominatim\\.openstreetmap\\.org/search\\?q=place&limit=2&countrycodes=fr&format=json&bounded=1"
       )
     ).andReturn({
       responseText: JSON.stringify([
@@ -164,7 +172,7 @@ describe("NominatimSearchProvider", function() {
 
     jasmine.Ajax.stubRequest(
       new RegExp(
-        "nominatim\\.openstreetmap\\.org/search\\?q=place&limit=2&countryCodes=fr&format=json"
+        "nominatim\\.openstreetmap\\.org/search\\?q=place&limit=2&countrycodes=fr&format=json"
       )
     ).andReturn({
       responseText: JSON.stringify([
@@ -213,7 +221,6 @@ describe("NominatimSearchProvider", function() {
       for (var i = 0; i < searchResults.results.length; ++i) {
         expect(searchResults.results[i].name).toContain("France");
       }
-      done();
     });
   });
 });
