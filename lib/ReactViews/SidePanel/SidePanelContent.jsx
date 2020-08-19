@@ -5,6 +5,9 @@ import { Small, Medium } from "../Generic/Responsive";
 import PropTypes from "prop-types";
 import defined from "terriajs-cesium/Source/Core/defined";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
+import NowViewing from "../../Models/NowViewing";
+const cloneDeep = require("lodash/clonedeep");
+
 class SidePanelContent extends React.Component {
   state = {
     sector: null
@@ -13,14 +16,33 @@ class SidePanelContent extends React.Component {
     this.setState({
       sector
     });
+
+    this._nowViewingChangedSubscription = knockout
+      .getObservable(this.props.terria.nowViewing, "items")
+      .subscribe(function() {
+        alert("minimumLevel changed!");
+      });
+
+    // terria.selectedSector = sector.title.toLowerCase();
+    this.filterHotspots(sector.title.toLowerCase());
+  };
+
+  filterHotspots = sector => {
     const { terria } = this.props;
-    terria.selectedSector = sector.title.toLowerCase();
-    console.log(sector);
-    knockout.getObservable(terria, "selectedSector").subscribe(() => {
-      const selectedSector = terria.selectedSector;
-      console.log(selectedSector);
-      terria.selectedSector = "agriculture";
+    const nowViewing_Item = cloneDeep(terria.nowViewing.items[0]);
+    const val = nowViewing_Item._readyData.features.filter(feature => {
+      return Object.values(feature.properties).includes(sector);
     });
+    nowViewing_Item._readyData.features.splice(
+      0,
+      nowViewing_Item._readyData.features.length,
+      val
+    );
+    terria.nowViewing.items.shift();
+    terria.nowViewing.add(nowViewing_Item);
+    terria.nowViewing.items[0].isEnabled = true;
+
+    console.log(terria.nowViewing);
   };
   closeSectorInfo = () => {
     this.setState({ sector: null });
