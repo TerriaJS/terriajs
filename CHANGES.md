@@ -17,6 +17,7 @@ Change Log
 * Shows a disabled splitter button when entering diff
 * Make Drag & Drop work again (tsxify `DragDropFile.tsx` and refactor `addUserFiles.ts`)
 * Add `TimeVarying.is` function
+* Ported Nominatim search provider
 * [The next improvement]
 
 #### 8.0.0-alpha.44
@@ -24,8 +25,6 @@ Change Log
 * Add `multipleTitles` and `maxMultipleTitlesShowed` to `LegendItemTraits`
 * Aggregate legend items in `createLegendItemsFromEnumColorMap` by colour, that is merge legend items with the same colour (using `multipleTitles`)
 * Only generate `tableStyles` for region columns if no other styles exist
-* Ported Nominatim search provider
-
 * TableAutomaticStylesStratum & CsvCatalogItem only returns unique `discreteTimes`s now
 * Specified specific terriajs config for ForkTsCheckerWebpackPlugin
 
