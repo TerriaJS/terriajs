@@ -1,5 +1,7 @@
+import objectTrait from "./objectTrait";
 import ModelTraits from "./ModelTraits";
 import primitiveTrait from "./primitiveTrait";
+import UrlOptionsTraits from "./UrlOptionsTraits";
 
 export default class UrlTraits extends ModelTraits {
   @primitiveTrait({
@@ -9,12 +11,12 @@ export default class UrlTraits extends ModelTraits {
   })
   url?: string;
 
-  @primitiveTrait({
-    type: "string",
-    name: "Proxy URL",
-    description: "A proxy service that must be used."
+  @objectTrait({
+    type: UrlOptionsTraits,
+    name: "URL options",
+    description: "URL options to be used. E.g. may include proxy URL."
   })
-  proxyUrl?: string;
+  urlOptions?: UrlOptionsTraits;
 
   @primitiveTrait({
     type: "boolean",

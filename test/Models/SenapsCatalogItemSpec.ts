@@ -23,6 +23,7 @@ describe("SenapsLocationsCatalogItem", function() {
   let feature: SenapsFeature;
 
   const altProxyUrl = "/api/v0/data/proxy/a-record-id";
+  const urlOptions = { proxyUrl: altProxyUrl };
   const senapsCatalogItemUrl = "https://senaps.io/api/sensor/v2";
   const altProxiedBaseUrl = `${altProxyUrl}/${senapsCatalogItemUrl}`;
   const defaultProxiedBaseUrl = `${senapsCatalogItemUrl}`;
@@ -142,7 +143,7 @@ describe("SenapsLocationsCatalogItem", function() {
       runInAction(() => {
         item = new SenapsLocationsCatalogItem("test", new Terria());
         item.setTrait("definition", "url", senapsCatalogItemUrl);
-        item.setTrait("definition", "proxyUrl", altProxyUrl);
+        item.setTrait("definition", "urlOptions", urlOptions);
       });
       await item.loadMapItems();
       geoJsonItem = item.geoJsonItem;
@@ -292,7 +293,7 @@ describe("SenapsLocationsCatalogItem", function() {
         item.setTrait("definition", "locationIdFilter", "boor");
         item.setTrait("definition", "streamIdFilter", "temp");
         item.setTrait("definition", "url", senapsCatalogItemUrl);
-        item.setTrait("definition", "proxyUrl", altProxyUrl);
+        item.setTrait("definition", "urlOptions", urlOptions);
       });
       await item.loadMapItems();
       geoJsonItem = item.geoJsonItem;

@@ -22,7 +22,9 @@ export default function proxyCatalogItemUrl(
   const corsProxy = catalogItem?.terria?.corsProxy;
 
   const proxyUrl = UrlMixin.isMixedInto(catalogItem)
-    ? catalogItem.proxyUrl
+    ? catalogItem.urlOptions
+      ? catalogItem.urlOptions.proxyUrl
+      : undefined
     : undefined;
 
   if (isDefined(proxyUrl)) {
