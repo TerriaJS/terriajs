@@ -68,8 +68,6 @@ export default class MapboxVectorTileImageryProvider
   ) => ImageryLayerFeatureInfo | undefined;
   private readonly _errorEvent = new CesiumEvent();
   private readonly _ready = true;
-  private readonly _defaultNightAlpha: number | undefined;
-  private readonly _defaultDayAlpha: number | undefined;
 
   constructor(options: MapboxVectorTileImageryProviderOptions) {
     this._uriTemplate = new URITemplate(options.url);
