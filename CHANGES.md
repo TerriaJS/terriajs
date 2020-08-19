@@ -19,6 +19,7 @@ Change Log
 * Shows a disabled splitter button when entering diff
 * Make Drag & Drop work again (tsxify `DragDropFile.tsx` and refactor `addUserFiles.ts`)
 * Add `TimeVarying.is` function
+* Ported Nominatim search provider
 * [The next improvement]
 
 #### 8.0.0-alpha.44
