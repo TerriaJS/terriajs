@@ -16,6 +16,9 @@ Change Log
 * Tsxified `DateTimePicker` and refactored `objectifiedDates` (moved to `DiscretelyTimeVaryingMixin`).
 * Update style of 'Change dates' button in delta to be underlined
 * Fix issue with delta 'Date comparison' shifting places when querying new location
+* Shows a disabled splitter button when entering diff
+* Make Drag & Drop work again (tsxify `DragDropFile.tsx` and refactor `addUserFiles.ts`)
+* Add `TimeVarying.is` function
 * [The next improvement]
 
 #### 8.0.0-alpha.44
