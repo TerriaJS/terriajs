@@ -14,7 +14,6 @@ import CesiumTerrainCatalogItem from "./CesiumTerrainCatalogItem";
 import CkanCatalogGroup from "./CkanCatalogGroup";
 import CkanItemReference from "./CkanItemReference";
 import CompositeCatalogItem from "./CompositeCatalogItem";
-import createUrlReferenceFromUrl from "./createUrlReferenceFromUrl";
 import CsvCatalogItem from "./CsvCatalogItem";
 import CzmlCatalogItem from "./CzmlCatalogItem";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
@@ -36,7 +35,7 @@ import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFu
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
 import WebFeatureServiceCatalogItem from "./WebFeatureServiceCatalogItem";
 import WebFeatureServiceCatalogGroup from "./WebFeatureServiceCatalogGroup";
-import SdmxCatalogGroup from "./SdmxCatalogGroup";
+import SdmxCatalogGroup from "./SdmxJson/SdmxJsonCatalogGroup";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
