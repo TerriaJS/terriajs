@@ -1,24 +1,26 @@
-import Terria from "./Terria";
-import ViewState from "../ReactViewModels/ViewState";
-import ResultPendingCatalogItem from "./ResultPendingCatalogItem";
-import CommonStrata from "./CommonStrata";
-import readJson from "../Core/readJson";
 import getDataType from "../Core/getDataType";
-import raiseErrorOnRejectedPromise from "./raiseErrorOnRejectedPromise";
-import createCatalogItemFromFileOrUrl from "./createCatalogItemFromFileOrUrl";
-import addUserCatalogMember from "./addUserCatalogMember";
-import TerriaError from "../Core/TerriaError";
 import isDefined from "../Core/isDefined";
+import readJson from "../Core/readJson";
+import TerriaError from "../Core/TerriaError";
+import TimeVarying from "../ModelMixins/TimeVarying";
+import ViewState from "../ReactViewModels/ViewState";
+import addUserCatalogMember from "./addUserCatalogMember";
+import CommonStrata from "./CommonStrata";
+import createCatalogItemFromFileOrUrl from "./createCatalogItemFromFileOrUrl";
+import { BaseModel } from "./Model";
+import raiseErrorOnRejectedPromise from "./raiseErrorOnRejectedPromise";
+import ResultPendingCatalogItem from "./ResultPendingCatalogItem";
+import Terria from "./Terria";
 
 interface FileType {
   value: string;
 }
 
-export default function addUserFiles(
-  files: File[],
+export default async function addUserFiles(
+  files: FileList,
   terria: Terria,
   viewState: ViewState,
-  fileType: FileType
+  fileType?: FileType | undefined
 ) {
   const dataType = fileType || getDataType().localDataType[0];
   const tempCatalogItemList: ResultPendingCatalogItem[] = [];
@@ -57,7 +59,7 @@ export default function addUserFiles(
     );
     terria.catalog.userAddedDataGroup.add(CommonStrata.user, tempCatalogItem);
 
-    let loadPromise;
+    let loadPromise: Promise<BaseModel | undefined>;
     if (file.name.toUpperCase().indexOf(".JSON") !== -1) {
       const promise = readJson(file).then((json: any) => {
         if (isDefined(json.catalog) || isDefined(json.stories)) {
@@ -91,23 +93,22 @@ export default function addUserFiles(
     tempCatalogItemList.push(tempCatalogItem);
   }
 
-  return Promise.all(promises).then(addedItems => {
-    // if addedItem has only undefined item, means init files
-    // have been uploaded
-    if (addedItems.every(item => item === undefined)) {
-      viewState.openAddData();
-    } else {
-      const items = addedItems.filter(
-        item => item && !(item instanceof TerriaError)
-      );
-
-      tempCatalogItemList.forEach(item => {
-        terria.catalog.userAddedDataGroup.remove(CommonStrata.user, item);
-        terria.workbench.remove(item);
-      });
-
-      items.forEach(item => terria.timelineStack.addToTop(item));
-      return items;
-    }
-  });
+  const addedItems = await Promise.all(promises);
+  // if addedItem has only undefined item, means init files
+  // have been uploaded
+  if (addedItems.every(item => item === undefined)) {
+    viewState.openAddData();
+  } else {
+    const items = addedItems.filter(
+      item => isDefined(item) && !(item instanceof TerriaError)
+    ) as BaseModel[];
+    tempCatalogItemList.forEach(item => {
+      terria.catalog.userAddedDataGroup.remove(CommonStrata.user, item);
+      terria.workbench.remove(item);
+    });
+    items.forEach(
+      item => TimeVarying.is(item) && terria.timelineStack.addToTop(item)
+    );
+    return items;
+  }
 }

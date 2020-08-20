@@ -52,7 +52,7 @@ import WebMapServiceCapabilities, {
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
 import { callWebCoverageService } from "./callWebCoverageService";
-import ExportableData from "./ExportableData";
+import ExportableMixin from "../ModelMixins/ExportableMixin";
 
 const dateFormat = require("dateformat");
 
@@ -535,16 +535,18 @@ class DiffStratum extends LoadableStratum(WebMapServiceCatalogItemTraits) {
 }
 
 class WebMapServiceCatalogItem
-  extends DiffableMixin(
-    TimeFilterMixin(
-      GetCapabilitiesMixin(
-        UrlMixin(
-          CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
+  extends ExportableMixin(
+    DiffableMixin(
+      TimeFilterMixin(
+        GetCapabilitiesMixin(
+          UrlMixin(
+            CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
+          )
         )
       )
     )
   )
-  implements Mappable, ExportableData {
+  implements Mappable {
   /**
    * The collection of strings that indicate an Abstract property should be ignored.  If these strings occur anywhere
    * in the Abstract, the Abstract will not be used.  This makes it easy to filter out placeholder data like
@@ -604,11 +606,11 @@ class WebMapServiceCatalogItem
   }
 
   @computed
-  get canExportData() {
+  get _canExportData() {
     return isDefined(this.linkedWcsCoverage) && isDefined(this.linkedWcsUrl);
   }
 
-  exportData() {
+  _exportData() {
     return callWebCoverageService(this);
   }
 
@@ -842,9 +844,7 @@ class WebMapServiceCatalogItem
   }
 
   private _createImageryProvider = createTransformerAllowUndefined(
-    (
-      time: string | undefined
-    ): Cesium.WebMapServiceImageryProvider | undefined => {
+    (time: string | undefined): WebMapServiceImageryProvider | undefined => {
       // Don't show anything on the map until GetCapabilities finishes loading.
       if (this.isLoadingMetadata) {
         return undefined;

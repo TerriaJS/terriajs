@@ -15,20 +15,30 @@ export const SPLITTER_ICON_NAME = "MapNavigationSplitterIcon";
 const ToggleSplitterTool = observer(function(props) {
   const { t, terria, viewState } = props;
   const splitterIconRef = useRefForTerria(SPLITTER_ICON_NAME, viewState);
+  const toolIsDifference = viewState.currentTool?.toolName === "Difference";
+  const isDiffMode = viewState.isToolOpen && toolIsDifference;
+
   return (
     <div className={Styles.toggle_splitter_tool}>
       <MapIconButton
+        disabled={isDiffMode}
         buttonRef={splitterIconRef}
         splitter={terria.showSplitter}
         expandInPlace
-        title={t("splitterTool.toggleSplitterTool")}
+        title={
+          isDiffMode
+            ? t("splitterTool.toggleSplitterToolDisabled")
+            : t("splitterTool.toggleSplitterTool")
+        }
         onClick={() => {
           runInAction(() => (terria.showSplitter = !terria.showSplitter));
         }}
         iconElement={() => (
           <Icon
             glyph={
-              terria.showSplitter ? Icon.GLYPHS.splitterOn : Icon.GLYPHS.compare
+              terria.showSplitter && !isDiffMode
+                ? Icon.GLYPHS.splitterOn
+                : Icon.GLYPHS.compare
             }
           />
         )}

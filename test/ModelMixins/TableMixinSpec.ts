@@ -50,7 +50,7 @@ describe("TableMixin", function() {
     describe("the entities", function() {
       it("has availability defined over the correct span", function() {
         expect(
-          dataSource.entities.values.map(e => e.availability.start.toString())
+          dataSource.entities.values.map(e => e.availability?.start.toString())
         ).toEqual([
           "2015-08-01T00:00:00Z",
           "2015-08-01T00:00:00Z",
@@ -58,7 +58,7 @@ describe("TableMixin", function() {
           "2015-08-03T00:00:00Z"
         ]);
         expect(
-          dataSource.entities.values.map(e => e.availability.stop.toString())
+          dataSource.entities.values.map(e => e.availability?.stop.toString())
         ).toEqual([
           "2015-08-07T06:00:00Z",
           "2015-08-07T00:00:00Z",

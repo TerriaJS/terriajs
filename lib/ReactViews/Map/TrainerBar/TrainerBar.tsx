@@ -1,4 +1,4 @@
-import { TFunction } from "i18next";
+import i18next, { TFunction } from "i18next";
 import { observer } from "mobx-react";
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
@@ -80,35 +80,37 @@ const renderStep = (
     comfortable: false,
     footerComponent: undefined
   }
-) => (
-  <Box key={number} paddedVertically>
-    <Box alignItemsFlexStart>
-      <Numbers textDarker textAlignCenter darkBg>
-        {number}
-      </Numbers>
-      <Spacing right={3} />
+) => {
+  return (
+    <Box key={number} paddedVertically>
+      <Box alignItemsFlexStart>
+        <Numbers textDarker textAlignCenter darkBg>
+          {number}
+        </Numbers>
+        <Spacing right={3} />
+      </Box>
+      <Box column>
+        <Text textLight extraExtraLarge semiBold>
+          {i18next.t(step.title)}
+        </Text>
+        {options.renderDescription && step?.markdownDescription && (
+          <>
+            {/* {options.comfortable && <Spacing bottom={2} />} */}
+            <Spacing bottom={options.comfortable ? 2 : 1} />
+            <StepText medium textLightDimmed>
+              <StyledHtml
+                viewState={viewState}
+                styledTextProps={{ textDark: false, textLightDimmed: true }}
+                markdown={step.markdownDescription}
+              />
+            </StepText>
+            {options.footerComponent?.()}
+          </>
+        )}
+      </Box>
     </Box>
-    <Box column>
-      <Text textLight extraExtraLarge semiBold>
-        {step.title}
-      </Text>
-      {options.renderDescription && step?.markdownDescription && (
-        <>
-          {/* {options.comfortable && <Spacing bottom={2} />} */}
-          <Spacing bottom={options.comfortable ? 2 : 1} />
-          <StepText medium textLightDimmed>
-            <StyledHtml
-              viewState={viewState}
-              styledTextProps={{ textDark: false, textLightDimmed: true }}
-              markdown={step.markdownDescription}
-            />
-          </StepText>
-          {options.footerComponent?.()}
-        </>
-      )}
-    </Box>
-  </Box>
-);
+  );
+};
 
 const renderOrderedStepList = function(
   steps: StepItem[],
@@ -383,7 +385,7 @@ export const TrainerBar = observer((props: TrainerBarProps) => {
           >
             {selectedTrainerItems.map((item, index) => (
               <option key={item.title} value={index}>
-                {item.title}
+                {t(item.title)}
               </option>
             ))}
           </Select>

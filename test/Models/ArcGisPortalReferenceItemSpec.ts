@@ -51,7 +51,9 @@ describe("ArcGisPortalItemReference", function() {
 
   it("has a type and typeName", function() {
     expect(arcGisPortalItemReference.type).toBe("arcgis-portal-item");
-    expect(arcGisPortalItemReference.typeName).toBe("ArcGIS Portal Item");
+    expect(arcGisPortalItemReference.typeName).toBe(
+      i18next.t("models.arcgisPortal.name")
+    );
   });
 
   describe("Can load an item by datasetId - ", function() {
@@ -106,7 +108,7 @@ describe("ArcGisPortalItemReference", function() {
       expect(portalItemTarget.rectangle.north).toBe(-28.1555);
 
       const licenceInfo = portalItemTarget.info.filter(
-        (i: any) => i.name === "Licence"
+        (i: any) => i.name === i18next.t("models.arcgisPortal.licence")
       )[0];
       expect(licenceInfo.content).toBeDefined();
 

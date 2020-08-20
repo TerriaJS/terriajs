@@ -50,7 +50,9 @@ describe("ArcGisMapServerCatalogGroup", function() {
 
   it("has a type and typeName", function() {
     expect(group.type).toBe("esri-mapServer-group");
-    expect(group.typeName).toBe("ArcGIS Map Server Group");
+    expect(group.typeName).toBe(
+      i18next.t("models.arcGisMapServerCatalogGroup.name")
+    );
   });
 
   describe("after loading metadata", function() {

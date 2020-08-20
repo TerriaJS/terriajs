@@ -12,6 +12,8 @@ import Button from "../../../../Styled/Button";
 import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
 
+import { useTranslationIfExists } from "../../../../Language/languageHelpers";
+
 const UlTrainerItems = styled(Box).attrs({
   as: "ul"
 })`
@@ -27,7 +29,8 @@ class TrainerPane extends React.Component {
   static propTypes = {
     viewState: PropTypes.object.isRequired,
     content: PropTypes.object.isRequired,
-    t: PropTypes.func
+    t: PropTypes.func,
+    i18n: PropTypes.object.isRequired
   };
 
   constructor(props) {
@@ -58,7 +61,9 @@ class TrainerPane extends React.Component {
                     }}
                   >
                     <BoxSpan centered>
-                      <BoxSpan centered>{item.title}</BoxSpan>
+                      <BoxSpan centered>
+                        {useTranslationIfExists(item.title)}
+                      </BoxSpan>
                     </BoxSpan>
                   </TrainerButton>
                   <Spacing bottom={2} />
