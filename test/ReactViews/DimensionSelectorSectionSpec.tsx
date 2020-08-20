@@ -122,8 +122,6 @@ describe("DimensionSelectorSection", function() {
 
         const selects = section.root.findAllByType(Select);
 
-        console.log(selects);
-
         const labels = section.root.findAllByType("label");
 
         // Expect 2 styles (layer A, layer B) + 3 dimensions (elevation, custom, another)
