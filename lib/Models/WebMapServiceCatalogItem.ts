@@ -838,9 +838,7 @@ class WebMapServiceCatalogItem
   }
 
   private _createImageryProvider = createTransformerAllowUndefined(
-    (
-      time: string | undefined
-    ): Cesium.WebMapServiceImageryProvider | undefined => {
+    (time: string | undefined): WebMapServiceImageryProvider | undefined => {
       // Don't show anything on the map until GetCapabilities finishes loading.
       if (this.isLoadingMetadata) {
         return undefined;

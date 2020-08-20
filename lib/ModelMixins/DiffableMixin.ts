@@ -1,5 +1,5 @@
-import { JulianDate } from "cesium";
 import { computed } from "mobx";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
 import { SelectableDimension } from "../Models/SelectableDimensions";
