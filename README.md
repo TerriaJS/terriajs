@@ -14,7 +14,7 @@ TerriaJS is a library for building rich, web-based geospatial data explorers, us
 
 We will soon be posting docs outlining this new version: 
 
-- how it differes from the current version 
+- how it differs from the current version 
 - how it will impact users (including guides and tools to help you upgrade)
 - release roadmap (including which features are supported, and which we are in development)
 
