@@ -404,15 +404,19 @@ export default class Terria {
         runInAction(() => {
           if (config.parameters) {
             this.updateParameters(config.parameters);
+            Internationalization.initLanguage(
+              config.parameters.languageConfiguration,
+              options.i18nOptions
+            );
           }
 
-          Internationalization.initLanguage(
-            config.parameters.languageConfiguration,
-            options.i18nOptions
-          );
-
           if (config.aspects) {
-            return this.loadMagdaConfig(options.configUrl, config);
+            return this.loadMagdaConfig(options.configUrl, config).then(() => {
+              Internationalization.initLanguage(
+                this.configParameters.languageConfiguration,
+                options.i18nOptions
+              );
+            });
           }
 
           const initializationUrls: string[] = config.initializationUrls || [];
