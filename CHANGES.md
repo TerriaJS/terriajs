@@ -3,8 +3,11 @@ Change Log
 
 ### Next Release
 
-* Remove caching from TerriaJsonCatalogFunction requests.
 
+### v7.11.10
+
+* Remove caching from TerriaJsonCatalogFunction requests.
+* Upgraded minimum node-sass version to one that has binaries for node v14.
 
 ### v7.11.9
 
