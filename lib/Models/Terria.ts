@@ -405,7 +405,7 @@ export default class Terria {
           if (config.parameters) {
             this.updateParameters(config.parameters);
             Internationalization.initLanguage(
-              config.parameters?.languageConfiguration,
+              config.parameters.languageConfiguration,
               options.i18nOptions
             );
           }
