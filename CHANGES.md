@@ -3,7 +3,13 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.45)
+#### next release (8.0.0-alpha.47)
+* [The next improvement]
+
+#### 8.0.0-alpha.46
+* Fixed i18n initialisation for magda based configurations
+
+#### 8.0.0-alpha.45
 * Upgraded to Cesium v1.71.
 * Change `ExportableData` interface to `ExportableMixin` and add `disableExport` trait.
 * Add basic WFS support with `WebFeatureServiceCatalogGroup` and `WebFeatureServiceCatalogItem`
@@ -19,7 +25,6 @@ Change Log
 * Shows a disabled splitter button when entering diff
 * Make Drag & Drop work again (tsxify `DragDropFile.tsx` and refactor `addUserFiles.ts`)
 * Add `TimeVarying.is` function
-* [The next improvement]
 
 #### 8.0.0-alpha.44
 * Pass `format` trait on `TableColumnTraits` down to `TableAutomaticStylesStratum` for generating legends
@@ -320,8 +325,32 @@ Change Log
 
 
 ### Next Release
-### next verion
+
+
+### v7.11.10
+
+* Remove caching from TerriaJsonCatalogFunction requests.
+* Upgraded minimum node-sass version to one that has binaries for node v14.
+
+### v7.11.9
+
+* Update Geoscience Australia Topo basemap.
+* Remove caching from WPS requests.
+* Fix entity outline alpha value when de-selecting a feature.
+
+### v7.11.8
+
+* Upgraded to terriajs-cesium v1.71.3 which fixes a bug running gulp tasks on node v14.
+
+### v7.11.7
+
+* Add additional region mapping boundaries.
+
+### v7.11.6
+
 * Rework the handling of point datasets on the anti-meridian when using LeafletJS.
+* Fix indices in some translation strings including strings for descriptions of WMS and WMS service.
+* Upgraded to Cesium v1.71.
 
 ### v7.11.5
 
