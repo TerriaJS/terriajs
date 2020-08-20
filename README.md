@@ -16,7 +16,7 @@ We will soon be posting docs outlining this new version:
 
 - how it differs from the current version 
 - how it will impact users (including guides and tools to help you upgrade)
-- release roadmap (including which features are supported, and which we are in development)
+- release roadmap (including which features are supported or in development)
 
 Stay tuned!
 
