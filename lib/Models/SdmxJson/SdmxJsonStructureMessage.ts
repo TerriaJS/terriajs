@@ -13,14 +13,17 @@ export type AgencyScheme = MaintainableType & {
 
 export type AgencySchemes = ArrayOneOrMore<AgencyScheme>;
 
-// WARNING (this was manually created)
 export type CategoryScheme = MaintainableType & {
   isPartial?: boolean;
-  categories?: (NameableTypeWithNCNameID & {
-    [k: string]: unknown;
-  })[];
+  categories?: Categories;
   [k: string]: unknown;
 };
+
+export type Category = NameableTypeWithNCNameID & {
+  [k: string]: unknown;
+};
+
+export type Categories = Category[];
 
 export type CategorySchemes = ArrayOneOrMore<CategoryScheme>;
 

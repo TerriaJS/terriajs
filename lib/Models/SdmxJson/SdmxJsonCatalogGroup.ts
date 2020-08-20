@@ -25,12 +25,12 @@ export default class SdmxCatalogGroup extends UrlMixin(
 
   protected forceLoadMembers(): Promise<void> {
     return this.loadMetadata().then(() => {
-      const getCapabilitiesStratum = <SdmxServerStratum | undefined>(
+      const sdmxServerStratum = <SdmxServerStratum | undefined>(
         this.strata.get(SdmxServerStratum.stratumName)
       );
-      // if (getCapabilitiesStratum) {
-      //   getCapabilitiesStratum.createMembersFromLayers();
-      // }
+      if (sdmxServerStratum) {
+        sdmxServerStratum.createMembers();
+      }
     });
   }
 }
