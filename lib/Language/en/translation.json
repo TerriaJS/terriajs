@@ -328,7 +328,7 @@
     "hideStoryPanel": "hide story builder"
   },
   "satelliteGuidance": {
-    "menuTitle": "You can access map guides at any time by looking in the <0>help menu</0>.",
+    "menuTitle": "You can access map guides at any time by looking in the <2>help menu</2>.",
     "dismissText": "Got it, thanks!",
     "titleI": "Satellite Imagery: How do I…?",
     "bodyI": "A super-quick guide to getting the most out of historical satellite imagery.",
