@@ -3,7 +3,10 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.45)
+#### next release (8.0.0-alpha.46)
+* [The next improvement]
+
+#### 8.0.0-alpha.45
 * Upgraded to Cesium v1.71.
 * Change `ExportableData` interface to `ExportableMixin` and add `disableExport` trait.
 * Add basic WFS support with `WebFeatureServiceCatalogGroup` and `WebFeatureServiceCatalogItem`
@@ -19,7 +22,6 @@ Change Log
 * Shows a disabled splitter button when entering diff
 * Make Drag & Drop work again (tsxify `DragDropFile.tsx` and refactor `addUserFiles.ts`)
 * Add `TimeVarying.is` function
-* [The next improvement]
 
 #### 8.0.0-alpha.44
 * Pass `format` trait on `TableColumnTraits` down to `TableAutomaticStylesStratum` for generating legends
