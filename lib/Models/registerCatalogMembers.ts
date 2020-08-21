@@ -35,7 +35,8 @@ import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFu
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
 import WebFeatureServiceCatalogItem from "./WebFeatureServiceCatalogItem";
 import WebFeatureServiceCatalogGroup from "./WebFeatureServiceCatalogGroup";
-import SdmxCatalogGroup from "./SdmxJson/SdmxJsonCatalogGroup";
+import SdmxJsonCatalogGroup from "./SdmxJson/SdmxJsonCatalogGroup";
+import SdmxJsonCatalogItem from "./SdmxJson/SdmxJsonCatalogItem";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
@@ -110,7 +111,11 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CartoMapCatalogItem.type, CartoMapCatalogItem);
   CatalogMemberFactory.register(UrlReference.type, UrlReference);
   CatalogMemberFactory.register(SplitItemReference.type, SplitItemReference);
-  CatalogMemberFactory.register(SdmxCatalogGroup.type, SdmxCatalogGroup);
+  CatalogMemberFactory.register(
+    SdmxJsonCatalogGroup.type,
+    SdmxJsonCatalogGroup
+  );
+  CatalogMemberFactory.register(SdmxJsonCatalogItem.type, SdmxJsonCatalogItem);
   CatalogMemberFactory.register(
     SenapsLocationsCatalogItem.type,
     SenapsLocationsCatalogItem

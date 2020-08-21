@@ -21,13 +21,12 @@ import TerriaError from "../../Core/TerriaError";
 import isDefined from "../../Core/isDefined";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import filterOutUndefined from "../../Core/filterOutUndefined";
-import URI from "urijs";
-import { data } from "../../ReactViews/Analytics/parameter-editors.scss";
 import CatalogGroup from "../CatalogGroupNew";
 import CommonStrata from "../CommonStrata";
 import createInfoSection from "../createInfoSection";
 import { regexMatches } from "../../Core/regexMatches";
 import flatten from "../../Core/flatten";
+import SdmxJsonCatalogItem from "./SdmxJsonCatalogItem";
 
 export interface SdmxServer {
   agencySchemes?: AgencySchemes;
@@ -126,10 +125,7 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
   ): Promise<SdmxServerStratum> {
     let agencySchemes = (
       await loadSdmxJsonStructure(
-        proxyCatalogItemUrl(
-          catalogGroup,
-          "https://stats-nsi-stable.pacificdata.org/rest/agencyscheme/"
-        ),
+        proxyCatalogItemUrl(catalogGroup, `${catalogGroup.url}/agencyscheme/`),
         true
       )
     )?.data?.agencySchemes;
@@ -137,7 +133,7 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
     let categorySchemeResponse = await loadSdmxJsonStructure(
       proxyCatalogItemUrl(
         catalogGroup,
-        "https://stats-nsi-stable.pacificdata.org/rest/categoryscheme?references=parentsandsiblings"
+        `${catalogGroup.url}/categoryscheme?references=parentsandsiblings`
       ),
       true
     );
@@ -148,10 +144,7 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
     if (!isDefined(dataflows)) {
       dataflows = (
         await loadSdmxJsonStructure(
-          proxyCatalogItemUrl(
-            catalogGroup,
-            "https://stats-nsi-stable.pacificdata.org/rest/dataflow/"
-          ),
+          proxyCatalogItemUrl(catalogGroup, `${catalogGroup.url}/dataflow/`),
           true
         )
       )?.data?.dataflows;
@@ -236,15 +229,21 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
       return;
     }
 
-    // No nested layers -> create model for WebMapServiceCatalogItem
+    // No nested layers (and type is dataflow) -> create model for SdmxJsonCatalogItem
+    if (node.type !== "dataflow") return;
+
     const existingModel = this.catalogGroup.terria.getModelById(
-      CatalogGroup,
+      SdmxJsonCatalogItem,
       layerId
     );
 
-    let model: CatalogGroup;
+    let model: SdmxJsonCatalogItem;
     if (existingModel === undefined) {
-      model = new CatalogGroup(layerId, this.catalogGroup.terria);
+      model = new SdmxJsonCatalogItem(
+        layerId,
+        this.catalogGroup.terria,
+        undefined
+      );
       this.catalogGroup.terria.addModel(model);
     } else {
       model = existingModel;
@@ -256,8 +255,10 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
     model.strata.delete(stratum);
 
     model.setTrait(stratum, "name", node.item.name || node.item.id);
+    model.setTrait(stratum, "url", this.catalogGroup.url);
+    model.setTrait(stratum, "dataflowId", node.item.id);
 
-    model.setTrait(CommonStrata.underride, "info", [
+    model.setTrait(stratum, "info", [
       createInfoSection("Description", node.item.description)
     ]);
   }

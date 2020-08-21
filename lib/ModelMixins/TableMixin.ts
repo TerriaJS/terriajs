@@ -19,7 +19,7 @@ import RegionProvider from "../Map/RegionProvider";
 import JSRegionProviderList from "../Map/RegionProviderList";
 import { calculateDomain, ChartAxis, ChartItem } from "../Models/Chartable";
 import CommonStrata from "../Models/CommonStrata";
-import { ImageryParts } from "../Models/Mappable";
+import Mappable, { ImageryParts } from "../Models/Mappable";
 import Model from "../Models/Model";
 import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import SelectableStyle, { AvailableStyle } from "../Models/SelectableStyle";
@@ -30,6 +30,7 @@ import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
 import LegendTraits from "../Traits/LegendTraits";
 import TableTraits from "../Traits/TableTraits";
+import AsyncMappableMixin from "./AsyncMappableMixin";
 
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
 //   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
@@ -39,7 +40,7 @@ class RegionProviderList extends JSRegionProviderList {}
 export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
   Base: T
 ) {
-  abstract class TableMixin extends Base {
+  abstract class TableMixin extends AsyncMappableMixin(Base) {
     /**
      * The raw data table in column-major format, i.e. the outer array is an
      * array of columns.
@@ -155,6 +156,8 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       // disable opacity control for point tables
       return this.activeTableStyle.isPoints();
     }
+
+    async loadMapItems(): Promise<void> {}
 
     /**
      * Gets the items to show on the map.
