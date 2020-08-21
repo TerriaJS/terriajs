@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.46)
+* Fixed i18n initialisation for magda based configurations
 * [The next improvement]
 
 #### 8.0.0-alpha.45
@@ -22,7 +23,6 @@ Change Log
 * Shows a disabled splitter button when entering diff
 * Make Drag & Drop work again (tsxify `DragDropFile.tsx` and refactor `addUserFiles.ts`)
 * Add `TimeVarying.is` function
-* Fixed i18n initialisation for magda based configurations
 * [The next improvement]
 
 #### 8.0.0-alpha.44
