@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.46)
+* Fixed i18n initialisation for magda based configurations
 * [The next improvement]
 
 #### 8.0.0-alpha.45
