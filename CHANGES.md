@@ -3,9 +3,11 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.46)
-* Fixed i18n initialisation for magda based configurations
+#### next release (8.0.0-alpha.47)
 * [The next improvement]
+
+#### 8.0.0-alpha.46
+* Fixed i18n initialisation for magda based configurations
 
 #### 8.0.0-alpha.45
 * Upgraded to Cesium v1.71.
