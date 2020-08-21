@@ -14,9 +14,9 @@ import {
   Dataflow,
   CategoryScheme,
   AgencyScheme,
-  Category
+  Category,
+  Agency
 } from "./SdmxJsonStructureMessage";
-import { Resource, RequestErrorEvent } from "terriajs-cesium";
 import TerriaError from "../../Core/TerriaError";
 import isDefined from "../../Core/isDefined";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
@@ -27,6 +27,8 @@ import createInfoSection from "../createInfoSection";
 import { regexMatches } from "../../Core/regexMatches";
 import flatten from "../../Core/flatten";
 import SdmxJsonCatalogItem from "./SdmxJsonCatalogItem";
+import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 
 export interface SdmxServer {
   agencySchemes?: AgencySchemes;
@@ -68,6 +70,7 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
         if (!isDefined(this.dataflowTree[agencyId])) {
           const agency = this.getAgency(agencyId);
           if (!isDefined(agency)) return;
+          agency;
           this.dataflowTree[agencyId] = {
             type: "agencyScheme",
             item: agency,
@@ -346,7 +349,9 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
 
     if (!isDefined(agencies)) return;
 
-    return flatten(filterOutUndefined(agencies)).find(d => d.id === id);
+    return flatten(filterOutUndefined(agencies)).find(
+      d => d.id === id
+    ) as Agency;
   }
 }
 

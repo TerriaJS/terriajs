@@ -4,14 +4,18 @@ export type ArrayOneOrMore<T> = {
 
 export type AgencyScheme = MaintainableType & {
   isPartial?: boolean;
-  agencies?: (NameableTypeWithNCNameID & {
-    contacts?: ContactType[];
-    [k: string]: unknown;
-  })[];
+  agencies?: Agencies;
   [k: string]: unknown;
 };
 
 export type AgencySchemes = ArrayOneOrMore<AgencyScheme>;
+
+export type Agency = NameableTypeWithNCNameID & {
+  contacts?: ContactType[];
+  [k: string]: unknown;
+};
+
+export type Agencies = Agency[];
 
 export type CategoryScheme = MaintainableType & {
   isPartial?: boolean;
@@ -20,6 +24,7 @@ export type CategoryScheme = MaintainableType & {
 };
 
 export type Category = NameableTypeWithNCNameID & {
+  categories?: Categories;
   [k: string]: unknown;
 };
 
