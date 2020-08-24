@@ -7,7 +7,7 @@ import ExportableMixin from "../../ModelMixins/ExportableMixin";
 import UrlMixin from "../../ModelMixins/UrlMixin";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
 import CreateModel from "../CreateModel";
-import SdmxJsonCatalogItemTraits from "../../Traits/SdmxJsonCatalogItemTraits";
+import SdmxCatalogItemTraits from "../../Traits/SdmxCatalogItemTraits";
 import Terria from "../Terria";
 import { BaseModel } from "../Model";
 import TableAutomaticStylesStratum from "../../Table/TableAutomaticStylesStratum";
@@ -17,7 +17,6 @@ import Csv from "../../Table/Csv";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumOrder from "../StratumOrder";
 import Resource from "terriajs-cesium/Source/Core/Resource";
-import { SdmxJsonStructureMessage } from "./SdmxJsonStructureMessage";
 import { SdmxJsonDataflowStratum } from "./SdmxJsonDataflowStratum";
 
 const automaticTableStylesStratumName = "automaticTableStyles";
@@ -28,7 +27,7 @@ export default class SdmxJsonCatalogItem extends AsyncChartableMixin(
     // `chartItems`, the order of mixing in is important here
     DiscretelyTimeVaryingMixin(
       ExportableMixin(
-        UrlMixin(CatalogMemberMixin(CreateModel(SdmxJsonCatalogItemTraits)))
+        UrlMixin(CatalogMemberMixin(CreateModel(SdmxCatalogItemTraits)))
       )
     )
   )
@@ -99,7 +98,7 @@ export default class SdmxJsonCatalogItem extends AsyncChartableMixin(
     runInAction(() => {
       this.strata.set(SdmxJsonDataflowStratum.stratumName, stratum);
     });
-    console.log(stratum.dimensions);
+    console.log(this.dimensions);
   }
 
   protected async forceLoadTableData(): Promise<string[][]> {

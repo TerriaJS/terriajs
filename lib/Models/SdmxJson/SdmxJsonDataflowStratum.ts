@@ -13,7 +13,7 @@ import {
 } from "./SdmxJsonStructureMessage";
 import isDefined from "../../Core/isDefined";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import SdmxJsonCatalogItemTraits from "../../Traits/SdmxJsonCatalogItemTraits";
+import SdmxCatalogItemTraits from "../../Traits/SdmxCatalogItemTraits";
 import TerriaError from "../../Core/TerriaError";
 import { loadSdmxJsonStructure, parseSdmxUrn } from "./SdmxJsonServerStratum";
 import { computed } from "mobx";
@@ -26,7 +26,7 @@ export interface SdmxJsonDataflow {
   contentConstraints?: ContentConstraints;
 }
 export class SdmxJsonDataflowStratum extends LoadableStratum(
-  SdmxJsonCatalogItemTraits
+  SdmxCatalogItemTraits
 ) {
   static stratumName = "sdmxJsonDataflow";
 
@@ -95,9 +95,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   }
 
   @computed
-  get dimensions():
-    | { id: string; name?: string; options: { id: string; name?: string }[] }[]
-    | undefined {
+  get dimensions() {
     const dimensionList = this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.dimensionList.dimensions?.filter(
       isDefined
     );
