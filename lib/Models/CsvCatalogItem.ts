@@ -29,7 +29,7 @@ import ExportableMixin from "../ModelMixins/ExportableMixin";
 // - points, no ID, time -> "blips" with a duration (perhaps provided by another column)
 //
 
-const automaticTableStylesStratumName = "automaticTableStyles";
+const automaticTableStylesStratumName = TableAutomaticStylesStratum.stratumName;
 
 export default class CsvCatalogItem extends AsyncChartableMixin(
   TableMixin(

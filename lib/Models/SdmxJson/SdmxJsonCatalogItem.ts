@@ -19,7 +19,7 @@ import StratumOrder from "../StratumOrder";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import { SdmxJsonDataflowStratum } from "./SdmxJsonDataflowStratum";
 
-const automaticTableStylesStratumName = "automaticTableStyles";
+const automaticTableStylesStratumName = TableAutomaticStylesStratum.stratumName;
 
 export default class SdmxJsonCatalogItem extends AsyncChartableMixin(
   TableMixin(
@@ -45,7 +45,7 @@ export default class SdmxJsonCatalogItem extends AsyncChartableMixin(
   ) {
     super(id, terria, sourceReference);
     this.strata.set(
-      automaticTableStylesStratumName,
+      TableAutomaticStylesStratum.name,
       new TableAutomaticStylesStratum(this)
     );
   }
