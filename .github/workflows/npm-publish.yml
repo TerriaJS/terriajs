@@ -1,0 +1,79 @@
+name: npm-publish
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  publish:
+    name: Publish to NPM on version change
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - name: Detect a version change and tag the new version
+        uses: steve9164/action-detect-and-tag-new-version@v1
+        id: detect
+        with:
+          tag-template: '{VERSION}'
+          use-annotated-tag: 'true'
+          tagger-name: Terria Bot via GitHub Actions
+          tagger-email: TerriaBot@users.noreply.github.com
+
+      - name: Version update detected
+        if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
+        run: 'echo "Version change from ${{steps.detect.outputs.previous-version}} to ${{steps.detect.outputs.current-version}} detected"'
+
+      - name: Set up Node.js for NPM
+        if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
+        uses: actions/setup-node@v1
+        with:
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
+        run: npm install
+
+      - name: Lint and build terriajs
+        if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
+        run: npx gulp lint release
+        env:
+          NODE_OPTIONS: '--max_old_space_size=8192'
+
+      - name: Publish package to NPM
+        if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
+        run: npm publish --tag latest
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # These slack success and failure message actions can be combined but it means there'll be no notification on a failed
+      #  action-detect-and-tag-new-version. It also allows for a bit better message customisation
+      - name: Send success notification on Slack
+        if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,commit,action,ref
+          author_name: ${{ github.workflow }}
+          mention: here
+          if_mention: always
+          text: ':white_check_mark: Published v${{ steps.detect.outputs.current-version }} to https://www.npmjs.com/package/terriajs'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+
+      - name: Send failure or cancellation notification on Slack
+        if: failure() || cancelled() # Pick up events even if the job fails or is canceled.
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,commit,action,ref
+          author_name: ${{ github.workflow }}
+          mention: here
+          if_mention: always
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+
