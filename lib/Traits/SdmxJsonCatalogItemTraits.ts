@@ -19,4 +19,11 @@ export default class SdmxJsonCatalogItemTraits extends mixTraits(
     description: "SDMX JSON Dataflow ID"
   })
   dataflowId?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Agency ID",
+    description: "SDMX JSON Agency ID"
+  })
+  agencyId?: string;
 }

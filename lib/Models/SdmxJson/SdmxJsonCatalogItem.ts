@@ -17,6 +17,8 @@ import Csv from "../../Table/Csv";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumOrder from "../StratumOrder";
 import Resource from "terriajs-cesium/Source/Core/Resource";
+import { SdmxJsonStructureMessage } from "./SdmxJsonStructureMessage";
+import { SdmxJsonDataflowStratum } from "./SdmxJsonDataflowStratum";
 
 const automaticTableStylesStratumName = "automaticTableStyles";
 
@@ -92,11 +94,16 @@ export default class SdmxJsonCatalogItem extends AsyncChartableMixin(
     return automaticTableStylesStratum?.discreteTimes;
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return Promise.resolve();
+  protected async forceLoadMetadata(): Promise<void> {
+    const stratum = await SdmxJsonDataflowStratum.load(this);
+    runInAction(() => {
+      this.strata.set(SdmxJsonDataflowStratum.stratumName, stratum);
+    });
+    console.log(stratum.dimensions);
   }
 
   protected async forceLoadTableData(): Promise<string[][]> {
+    await this.loadMetadata();
     if (!isDefined(this._csvString)) {
       this._csvString = await new Resource({
         url: proxyCatalogItemUrl(this, `${this.url}/data/${this.dataflowId}`),

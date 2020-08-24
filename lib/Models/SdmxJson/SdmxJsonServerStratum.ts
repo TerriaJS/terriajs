@@ -50,13 +50,14 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
     // TODO: move this stuff somewhere else (similar to WebMapServiceGetCapabilities)
     // If categorisations exist => organise Dataflows into a tree!
     if (isDefined(this.sdmxServer.categorisations)) {
-      this.sdmxServer.categorisations.forEach(cat => {
-        const categorisation = this.parseCategorisationUrn(cat.target);
+      this.sdmxServer.categorisations.forEach(categorisiation => {
+        const categorySchemeUrn = parseSdmxUrn(categorisiation.target);
 
-        const agencyId = categorisation?.agency;
-        const categorySchemeId = categorisation?.categoryScheme;
-        const categoryId = categorisation?.category;
-        const dataflowId = this.parseDataflowUrn(cat.source)?.dataflow;
+        const agencyId = categorySchemeUrn?.agencyId;
+        const categorySchemeId = categorySchemeUrn?.resourceId;
+        const categoryId = categorySchemeUrn?.descendantIds?.[0]; // Only support 1 level of categorisiation for now
+
+        const dataflowId = parseSdmxUrn(categorisiation.source)?.resourceId;
 
         if (
           !isDefined(agencyId) ||
@@ -233,7 +234,12 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
     }
 
     // No nested layers (and type is dataflow) -> create model for SdmxJsonCatalogItem
-    if (node.type !== "dataflow") return;
+    if (
+      node.type !== "dataflow" ||
+      !isDefined(node.item.id) ||
+      !isDefined(node.item.agencyID)
+    )
+      return;
 
     const existingModel = this.catalogGroup.terria.getModelById(
       SdmxJsonCatalogItem,
@@ -259,6 +265,7 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
 
     model.setTrait(stratum, "name", node.item.name || node.item.id);
     model.setTrait(stratum, "url", this.catalogGroup.url);
+    model.setTrait(stratum, "agencyId", node.item.agencyID as string);
     model.setTrait(stratum, "dataflowId", node.item.id);
 
     model.setTrait(stratum, "info", [
@@ -278,44 +285,6 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
   //   const sources = this.sdmxServer.categorisations?.filter(cat => cat.target === categorySchemeUrn)?.map(cat => cat.source)
   //   return isDefined(sources) ? filterOutUndefined(sources) : []
   // }
-
-  parseCategorisationUrn(urn?: string) {
-    if (!isDefined(urn)) return;
-    // Example urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_TOPIC(1.0).ECO
-    // "ECO" is the category in the "CAS_COM_TOPIC" category scheme - the category is optional
-    const matches = regexMatches(/.+=(.+):(.+)\((.+)\)\.(.*)/g, urn);
-
-    if (
-      matches.length >= 1 &&
-      matches[0].length >= 3 &&
-      !isDefined([0, 1, 2].find(idx => matches[0][idx] === null))
-    ) {
-      return {
-        agency: matches[0][0],
-        categoryScheme: matches[0][1],
-        version: matches[0][2],
-        category: matches[0][3] !== null ? matches[0][3] : undefined
-      };
-    }
-  }
-
-  parseDataflowUrn(urn?: string) {
-    if (!isDefined(urn)) return;
-    // Example urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_COMMODITY_PRICES(1.0)
-    const matches = regexMatches(/.+=(.+):(.+)\((.+)\)/g, urn);
-
-    if (
-      matches.length >= 1 &&
-      matches[0].length >= 3 &&
-      !isDefined([0, 1, 2].find(idx => matches[0][idx] === null))
-    ) {
-      return {
-        agency: matches[0][0],
-        dataflow: matches[0][1],
-        version: matches[0][2]
-      };
-    }
-  }
 
   getDataflow(id?: string) {
     if (!isDefined(id)) return;
@@ -355,12 +324,28 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
   }
 }
 
-type DataflowTreeTypes = AgencyScheme | CategoryScheme | Category | Dataflow;
-type DataflowTreeNode = {
-  type: "agencyScheme" | "categoryScheme" | "category" | "dataflow";
-  item: DataflowTreeTypes;
+type DataflowTreeNodeBase<T, I> = {
+  type: T;
+  item: I;
   members?: DataflowTree;
 };
+
+type DataflowTreeNodeAgencyScheme = DataflowTreeNodeBase<
+  "agencyScheme",
+  AgencyScheme
+>;
+type DataflowTreeNodeCategoryScheme = DataflowTreeNodeBase<
+  "categoryScheme",
+  CategoryScheme
+>;
+type DataflowTreeNodeCategory = DataflowTreeNodeBase<"category", Category>;
+type DataflowTreeNodeDataflow = DataflowTreeNodeBase<"dataflow", Dataflow>;
+
+type DataflowTreeNode =
+  | DataflowTreeNodeAgencyScheme
+  | DataflowTreeNodeCategoryScheme
+  | DataflowTreeNodeCategory
+  | DataflowTreeNodeDataflow;
 
 type DataflowTree = { [key: string]: DataflowTreeNode };
 
@@ -368,15 +353,41 @@ StratumOrder.addLoadStratum(SdmxServerStratum.stratumName);
 
 // function categorySchemeToUrn()
 
-async function loadSdmxJsonStructure(
+export function parseSdmxUrn(urn?: string) {
+  if (!isDefined(urn)) return;
+  // Format urn:sdmx:org.sdmx.infomodel.xxx.xxx=AGENCY:RESOURCEID(VERSION).SUBRESOURCEID.SUBSUBRESOURCEID...
+  // Example urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_TOPIC(1.0).ECO
+
+  // Sub resource ID and (and sub sub...) are optional
+  const matches = regexMatches(/.+=(.+):(.+)\((.+)\)\.*(.*)/g, urn);
+
+  if (
+    matches.length >= 1 &&
+    matches[0].length >= 3 &&
+    !isDefined([0, 1, 2].find(idx => matches[0][idx] === null))
+  ) {
+    return {
+      agencyId: matches[0][0],
+      resourceId: matches[0][1],
+      version: matches[0][2],
+      descendantIds:
+        matches[0][3] !== null ? matches[0][3].split(".") : undefined
+    };
+  }
+}
+
+export async function loadSdmxJsonStructure(
   url: string,
   allowNotImplemeted: false
 ): Promise<SdmxJsonStructureMessage>;
-async function loadSdmxJsonStructure(
+export async function loadSdmxJsonStructure(
   url: string,
   allowNotImplemeted: true
 ): Promise<SdmxJsonStructureMessage | undefined>;
-async function loadSdmxJsonStructure(url: string, allowNotImplemeted: boolean) {
+export async function loadSdmxJsonStructure(
+  url: string,
+  allowNotImplemeted: boolean
+) {
   try {
     return JSON.parse(
       await new Resource({
@@ -395,13 +406,13 @@ async function loadSdmxJsonStructure(url: string, allowNotImplemeted: boolean) {
           error.statusCode !== SdmxHttpErrorCodes.NotImplemented)
       ) {
         throw new TerriaError({
-          title: "Could not load SDMX group",
+          title: `Could not load SDMX`,
           message: `Message from server: ${error.response}`
         });
       }
     } else {
       throw new TerriaError({
-        title: "Could not load SDMX group",
+        title: `Could not load SDMX`,
         message: `Unkown error occurred${
           isDefined(error)
             ? typeof error === "string"
