@@ -10,6 +10,8 @@ Change Log
 * Fixed i18n initialisation for magda based configurations
 
 #### 8.0.0-alpha.45
+#### next release (8.0.0-alpha.44)
+#### next release (8.0.0-alpha.45)
 * Upgraded to Cesium v1.71.
 * Change `ExportableData` interface to `ExportableMixin` and add `disableExport` trait.
 * Add basic WFS support with `WebFeatureServiceCatalogGroup` and `WebFeatureServiceCatalogItem`
@@ -32,6 +34,11 @@ Change Log
 * Aggregate legend items in `createLegendItemsFromEnumColorMap` by colour, that is merge legend items with the same colour (using `multipleTitles`)
 * Only generate `tableStyles` for region columns if no other styles exist
 * TableAutomaticStylesStratum & CsvCatalogItem only returns unique `discreteTimes`s now
+* Added option for manual Table region mapping with `enableManualRegionMapping` TableTrait. This provides `SelectableDimensions` for the region column and region type.
+* Added WMS Dimensions (using `SelectableDimensions`)
+* Added WMS multi-layer style, dimension and legend support.
+* Merged the `StyleSelector` and `DimensionsSelector`, and created a `SelectableDimensions` interface.
+* [The next improvement]
 * Specified specific terriajs config for ForkTsCheckerWebpackPlugin
 
 #### 8.0.0-alpha.43

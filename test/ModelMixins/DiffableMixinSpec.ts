@@ -4,7 +4,6 @@ import DiffableMixin from "../../lib/ModelMixins/DiffableMixin";
 import TimeFilterMixin from "../../lib/ModelMixins/TimeFilterMixin";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import CreateModel from "../../lib/Models/CreateModel";
-import SelectableStyle from "../../lib/Models/SelectableStyle";
 import Terria from "../../lib/Models/Terria";
 import CatalogMemberTraits from "../../lib/Traits/CatalogMemberTraits";
 import DiffableTraits from "../../lib/Traits/DiffableTraits";
@@ -14,6 +13,7 @@ import mixTraits from "../../lib/Traits/mixTraits";
 import ShowableTraits from "../../lib/Traits/ShowableTraits";
 import SplitterTraits from "../../lib/Traits/SplitterTraits";
 import TimeFilterTraits from "../../lib/Traits/TimeFilterTraits";
+import { SelectableDimension } from "../../lib/Models/SelectableDimensions";
 
 describe("DiffableMixin", function() {
   describe("canFilterTimeByFeature", function() {
@@ -59,7 +59,7 @@ class TestDiffableItem extends DiffableMixin(
     )
   )
 ) {
-  styleSelector: SelectableStyle | undefined = undefined;
+  styleSelectableDimensions: SelectableDimension[] | undefined = undefined;
 
   get canDiffImages() {
     return true;

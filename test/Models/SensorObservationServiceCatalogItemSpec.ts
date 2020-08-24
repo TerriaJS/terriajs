@@ -215,8 +215,7 @@ describe("SensorObservationServiceCatalogItem", function() {
       });
 
       it("sets the style selectors correctly", function() {
-        expect(item.styleSelector).toBeUndefined();
-        expect(item.styleSelectors.map(s => s.name)).toEqual([
+        expect(item.selectableDimensions.map(s => s.name)).toEqual([
           "Frequency",
           "Observation Type"
         ]);

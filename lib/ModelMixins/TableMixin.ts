@@ -22,7 +22,9 @@ import CommonStrata from "../Models/CommonStrata";
 import Mappable, { ImageryParts } from "../Models/Mappable";
 import Model from "../Models/Model";
 import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
-import SelectableStyle, { AvailableStyle } from "../Models/SelectableStyle";
+import SelectableDimensions, {
+  SelectableDimension
+} from "../Models/SelectableDimensions";
 import createLongitudeLatitudeFeaturePerId from "../Table/createLongitudeLatitudeFeaturePerId";
 import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
 import TableColumn from "../Table/TableColumn";
@@ -36,11 +38,12 @@ import AsyncMappableMixin from "./AsyncMappableMixin";
 //   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
 // This is a dodgy workaround.
 class RegionProviderList extends JSRegionProviderList {}
-
-export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
-  Base: T
-) {
-  abstract class TableMixin extends AsyncMappableMixin(Base) {
+function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
+  abstract class TableMixin extends AsyncMappableMixin(Base)
+    implements SelectableDimensions {
+    get hasTableMixin() {
+      return true;
+    }
     /**
      * The raw data table in column-major format, i.e. the outer array is an
      * array of columns.
@@ -251,32 +254,113 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
     }
 
     @computed
-    get styleSelector(): SelectableStyle | undefined {
-      if (this.mapItems.length === 0) {
+    get selectableDimensions(): SelectableDimension[] {
+      return filterOutUndefined([
+        this.styleDimensions,
+        this.regionColumnDimensions,
+        this.regionProviderDimensions
+      ]);
+    }
+
+    /**
+     * Takes {@link TableStyle}s and returns a SelectableDimension which can be rendered in a Select dropdown
+     */
+    @computed
+    get styleDimensions(): SelectableDimension | undefined {
+      if (this.mapItems.length === 0 && !this.enableManualRegionMapping) {
         return;
       }
 
-      const tableModel = this;
       return {
-        get id(): string {
-          return "style";
-        },
-        get name(): string {
-          return "";
-        },
-        get availableStyles(): readonly AvailableStyle[] {
-          return tableModel.tableStyles.map(style => {
+        id: "activeStyle",
+        name: "Display Variable",
+        options: this.tableStyles.map(style => {
+          return {
+            id: style.id,
+            name: style.styleTraits.title || style.id
+          };
+        }),
+        selectedId: this.activeStyle,
+        setDimensionValue: (stratumId: string, styleId: string) => {
+          this.setTrait(stratumId, "activeStyle", styleId);
+        }
+      };
+    }
+
+    /**
+     * Creates SelectableDimension for regionProviderList - the list of all available region providers.
+     * {@link TableTraits#enableManualRegionMapping} must be enabled.
+     */
+    @computed
+    get regionProviderDimensions(): SelectableDimension | undefined {
+      if (
+        !this.enableManualRegionMapping ||
+        !Array.isArray(this.regionProviderList?.regionProviders) ||
+        !isDefined(this.activeTableStyle.regionColumn)
+      ) {
+        return;
+      }
+
+      return {
+        id: "regionMapping",
+        name: "Region Mapping",
+        options: this.regionProviderList!.regionProviders.map(
+          regionProvider => {
             return {
-              id: style.id,
-              name: style.styleTraits.title || style.id
+              name: regionProvider.regionType,
+              id: regionProvider.regionType
             };
-          });
-        },
-        get activeStyleId(): string | undefined {
-          return tableModel.activeStyle;
-        },
-        chooseActiveStyle(stratumId: string, styleId: string) {
-          tableModel.setTrait(stratumId, "activeStyle", styleId);
+          }
+        ),
+        allowUndefined: true,
+        selectedId: this.activeTableStyle.regionColumn?.regionType?.regionType,
+        setDimensionValue: (stratumId: string, regionType: string) => {
+          let columnTraits = this.columns?.find(
+            column => column.name === this.activeTableStyle.regionColumn?.name
+          );
+          if (!isDefined(columnTraits)) {
+            columnTraits = this.addObject(
+              stratumId,
+              "columns",
+              this.activeTableStyle.regionColumn!.name
+            )!;
+            columnTraits.setTrait(
+              stratumId,
+              "name",
+              this.activeTableStyle.regionColumn!.name
+            );
+          }
+
+          columnTraits.setTrait(stratumId, "regionType", regionType);
+        }
+      };
+    }
+
+    /**
+     * Creates SelectableDimension for region column - the options contains a list of all columns.
+     * {@link TableTraits#enableManualRegionMapping} must be enabled.
+     */
+    @computed
+    get regionColumnDimensions(): SelectableDimension | undefined {
+      if (
+        !this.enableManualRegionMapping ||
+        !Array.isArray(this.regionProviderList?.regionProviders)
+      ) {
+        return;
+      }
+
+      return {
+        id: "regionColumn",
+        name: "Region Column",
+        options: this.tableColumns.map(col => {
+          return {
+            name: col.name,
+            id: col.name
+          };
+        }),
+        selectedId: this.activeTableStyle.regionColumn?.name,
+        setDimensionValue: (stratumId: string, regionCol: string) => {
+          this.defaultStyle.setTrait(stratumId, "regionColumn", regionCol);
         }
       };
     }
@@ -540,3 +624,14 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
 
   return TableMixin;
 }
+
+namespace TableMixin {
+  export interface TableMixin
+    extends InstanceType<ReturnType<typeof TableMixin>> {}
+
+  export function isMixedInto(model: any): model is TableMixin {
+    return model && model.hasTableMixin;
+  }
+}
+
+export default TableMixin;

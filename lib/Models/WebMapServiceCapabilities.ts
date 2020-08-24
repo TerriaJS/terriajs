@@ -46,6 +46,7 @@ export type CapabilitiesDimension = string & {
   readonly units: string;
   readonly unitSymbol?: string;
   readonly default?: string;
+  readonly text?: string;
   readonly multipleValues?: boolean;
   readonly nearestValue?: boolean;
   readonly current?: boolean;
