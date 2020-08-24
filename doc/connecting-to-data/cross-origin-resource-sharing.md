@@ -27,20 +27,19 @@ However, by running a proxy server, our TerriaMap server potentially opens itsel
 
 ## Specify an alternative proxy server URL
 
-The data service proxied by TerriaJS-Server is inherently public to any users. In the case that a data service must be restricted to certain authorised users, use an alternative proxy server that enforces required access control. An alternative proxy URL should be provided by `urlOptions.proxyUrl` via [UrlMixin](/lib/ModelMixins/UrlMixin.ts). Ideally the hostname of server that provides non-public data service should be removed from `allowProxyFor` list.
+The data service proxied by TerriaJS-Server is inherently public to any users. In the case that a data service must be restricted to certain authorised users, use an alternative proxy server that enforces required access control and ideally the hostname of server that provides non-public data service should be removed from `allowProxyFor` list.
 
-Currently only [SenapsLocationsCatalogItem](/lib/Models/SenapsLocationsCatalogItem.ts) has `UrlMixin`. An example using alternative proxy URL `/api/v0/data/proxy/senaps-locations-as-private-record` to proxy senaps service at `https://senaps.io/api/sensor/v2` follows.
+If using the proxy service of magda-datastore-api that enforces access control, a proxy URL with pattern `/api/v0/data/proxy/<record id>` should be prepended before the proxied URL. 
+
+An example using alternative proxy URL `/api/v0/data/proxy/senaps-locations-as-private-record` to proxy senaps service at `https://senaps.io/api/sensor/v2` follows.
 
 ```
 {
     "id": "senaps-locations-as-private-record",
     "type": "senaps-locations",
     "definition": {
-        "url": "https://senaps.io/api/sensor/v2",
+        "url": "/api/v0/data/proxy/senaps-locations-as-private-record/https://senaps.io/api/sensor/v2",
         "name": "Observations",
-        "urlOptions": {
-            "proxyUrl": "/api/v0/data/proxy/senaps-locations-as-private-record"
-        },
         "description": "Demonstrate that the catalog is shown as private and the underlying data also requires private api key.",
         "dataCustodian": "Some custodian",
         "locationIdFilter": "some location id"
@@ -48,7 +47,7 @@ Currently only [SenapsLocationsCatalogItem](/lib/Models/SenapsLocationsCatalogIt
 }
 ```
 
-If a calalog item is not public but has no `UrlMixin`, prepend the proxy URL to the data service URL. An example using alternative proxy URL `/api/v0/data/proxy/<record id>` to proxy a geoserver service follows.
+Another example using alternative proxy URL `/api/v0/data/proxy/<record id>` to proxy a geoserver service follows.
 
 ```
 {
@@ -67,5 +66,3 @@ If a calalog item is not public but has no `UrlMixin`, prepend the proxy URL to 
     }
 }
 ```
-
-The first approach explicitly specifies a proxy url while the second one implicitly. The senaps catalog items must use the first approach because the proxied url is only a base url.
