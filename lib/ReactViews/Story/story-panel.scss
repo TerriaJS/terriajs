@@ -13,7 +13,7 @@
   pointer-events: none;
   @include transition(padding, 0.2s);
   @media (min-width: $md) {
-    padding-left: 30px + $work-bench-width;
+    padding-left: $work-bench-width;
     bottom: 90px;
     padding-right: 50px;
   }
