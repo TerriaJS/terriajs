@@ -23,7 +23,6 @@ describe("SenapsLocationsCatalogItem", function() {
   let feature: SenapsFeature;
 
   const altProxyUrl = "/api/v0/data/proxy/a-record-id";
-  const urlOptions = { proxyUrl: altProxyUrl };
   const senapsCatalogItemUrl = "https://senaps.io/api/sensor/v2";
   const altProxiedBaseUrl = `${altProxyUrl}/${senapsCatalogItemUrl}`;
   const defaultProxiedBaseUrl = `${senapsCatalogItemUrl}`;
@@ -138,12 +137,11 @@ describe("SenapsLocationsCatalogItem", function() {
     });
   });
 
-  describe("Can get all items via alternative proxy", async function() {
+  describe("Can get all items via implicitly specified proxy", async function() {
     beforeEach(async function() {
       runInAction(() => {
         item = new SenapsLocationsCatalogItem("test", new Terria());
-        item.setTrait("definition", "url", senapsCatalogItemUrl);
-        item.setTrait("definition", "urlOptions", urlOptions);
+        item.setTrait("definition", "url", altProxiedBaseUrl);
       });
       await item.loadMapItems();
       geoJsonItem = item.geoJsonItem;
@@ -153,13 +151,13 @@ describe("SenapsLocationsCatalogItem", function() {
 
     it("- constructs correct locations url", function() {
       expect(item._constructLocationsUrl()).toBe(
-        `${senapsCatalogItemUrl}/locations?count=1000&expand=true`
+        `${altProxiedBaseUrl}/locations?count=1000&expand=true`
       );
     });
 
     it("- constructs correct streams url", function() {
       expect(item._constructStreamsUrl("123")).toBe(
-        `${senapsCatalogItemUrl}/streams?locationid=123`
+        `${altProxiedBaseUrl}/streams?locationid=123`
       );
     });
 
@@ -286,14 +284,13 @@ describe("SenapsLocationsCatalogItem", function() {
     });
   });
 
-  describe("Can get filtered items via alternative proxy", async function() {
+  describe("Can get filtered items via implicitly specified alternative proxy", async function() {
     beforeEach(async function() {
       runInAction(() => {
         item = new SenapsLocationsCatalogItem("test", new Terria());
         item.setTrait("definition", "locationIdFilter", "boor");
         item.setTrait("definition", "streamIdFilter", "temp");
-        item.setTrait("definition", "url", senapsCatalogItemUrl);
-        item.setTrait("definition", "urlOptions", urlOptions);
+        item.setTrait("definition", "url", altProxiedBaseUrl);
       });
       await item.loadMapItems();
       geoJsonItem = item.geoJsonItem;
@@ -303,13 +300,13 @@ describe("SenapsLocationsCatalogItem", function() {
 
     it("- constructs correct locations url", function() {
       expect(item._constructLocationsUrl()).toBe(
-        `${senapsCatalogItemUrl}/locations?id=boor&count=1000&expand=true`
+        `${altProxiedBaseUrl}/locations?id=boor&count=1000&expand=true`
       );
     });
 
     it("- constructs correct streams url", function() {
       expect(item._constructStreamsUrl("123")).toBe(
-        `${senapsCatalogItemUrl}/streams?id=temp&locationid=123`
+        `${altProxiedBaseUrl}/streams?id=temp&locationid=123`
       );
     });
 
