@@ -165,7 +165,9 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
             return {
               id: dim.id!,
               name: concept?.name as string,
-              options: options
+              options: options,
+              position: dim.position,
+              selectedId: options[0].id // Not sure where to get a better default value from?,
             };
           }
         })

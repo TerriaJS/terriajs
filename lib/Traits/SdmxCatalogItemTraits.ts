@@ -7,9 +7,10 @@ import ExportableTraits from "./ExportableTraits";
 import primitiveTrait from "./primitiveTrait";
 import ModelTraits from "./ModelTraits";
 import objectArrayTrait from "./objectArrayTrait";
-import objectTrait from "./objectTrait";
+import { Dimension, DimensionOption } from "../Models/SelectableDimensions";
 
-export class SdmxDimensionsOption extends ModelTraits {
+export class SdmxDimensionsOption extends ModelTraits
+  implements DimensionOption {
   @primitiveTrait({
     type: "string",
     name: "ID",
@@ -24,7 +25,7 @@ export class SdmxDimensionsOption extends ModelTraits {
   })
   name?: string;
 }
-export class SdmxDimension extends ModelTraits {
+export class SdmxDimension extends ModelTraits implements Dimension {
   @primitiveTrait({
     type: "string",
     name: "ID",
@@ -46,6 +47,21 @@ export class SdmxDimension extends ModelTraits {
     description: "Dimension options"
   })
   options?: SdmxDimensionsOption[];
+
+  @primitiveTrait({
+    type: "string",
+    name: "Selected ID",
+    description: "Selected Option's ID"
+  })
+  selectedId?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Position",
+    description:
+      "The position attribute specifies the position of the dimension in the data structure definition, starting at 0. This is important for making requesting sdmx-csv"
+  })
+  position?: number;
 }
 
 export default class SdmxCatalogItemTraits extends mixTraits(
