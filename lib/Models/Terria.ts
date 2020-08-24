@@ -402,14 +402,8 @@ export default class Terria {
     return loadJson5(options.configUrl, options.configUrlHeaders)
       .then((config: any) => {
         runInAction(() => {
-          if (config.parameters) {
-            this.updateParameters(config.parameters);
-            Internationalization.initLanguage(
-              config.parameters.languageConfiguration,
-              options.i18nOptions
-            );
-          }
-
+          // If it's a magda config, we only load magda config and parameters should never be a property on the direct
+          // config aspect (it would be under the `terria-config` aspect)
           if (config.aspects) {
             return this.loadMagdaConfig(options.configUrl, config).then(() => {
               Internationalization.initLanguage(
@@ -417,6 +411,15 @@ export default class Terria {
                 options.i18nOptions
               );
             });
+          }
+
+          // If it's a regular config.json, continue on with parsing remaining init sources
+          if (config.parameters) {
+            this.updateParameters(config.parameters);
+            Internationalization.initLanguage(
+              config.parameters.languageConfiguration,
+              options.i18nOptions
+            );
           }
 
           const initializationUrls: string[] = config.initializationUrls || [];
