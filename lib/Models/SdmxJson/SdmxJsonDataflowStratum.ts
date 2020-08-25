@@ -94,6 +94,29 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     return this.sdmxJsonDataflow.dataflow.description;
   }
 
+  get primaryMeasureConceptId() {
+    return parseSdmxUrn(
+      this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.measureList
+        .primaryMeasure?.conceptIdentity
+    )?.resourceId;
+  }
+
+  get primaryMeasureDimenionId() {
+    return this.sdmxJsonDataflow.dataStructure.dataStructureComponents
+      ?.measureList.primaryMeasure?.id;
+  }
+
+  /**
+   * By default, if a concept id starts with geo_ (case insenitive) treat it as region mapped
+   */
+  get regionMappedConceptIds() {
+    return this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.dimensionList.dimensions
+      ?.map(dim => parseSdmxUrn(dim.conceptIdentity)?.resourceId)
+      .filter(
+        id => isDefined(id) && id.toLowerCase().startsWith("geo_")
+      ) as string[];
+  }
+
   @computed
   get dimensions() {
     const dimensionList = this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.dimensionList.dimensions?.filter(

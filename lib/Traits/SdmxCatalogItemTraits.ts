@@ -8,6 +8,7 @@ import primitiveTrait from "./primitiveTrait";
 import ModelTraits from "./ModelTraits";
 import objectArrayTrait from "./objectArrayTrait";
 import { Dimension, DimensionOption } from "../Models/SelectableDimensions";
+import primitiveArrayTrait from "./primitiveArrayTrait";
 
 export class SdmxDimensionsOption extends ModelTraits
   implements DimensionOption {
@@ -92,4 +93,26 @@ export default class SdmxCatalogItemTraits extends mixTraits(
     idProperty: "id"
   })
   dimensions?: SdmxDimension[];
+
+  @primitiveTrait({
+    type: "string",
+    name: "Primary measure concept ID",
+    description: "ID of primary measure concept."
+  })
+  primaryMeasureConceptId?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Primary measure dimenion ID",
+    description:
+      "ID of primary measure dimenion. This is used to find the actual values!"
+  })
+  primaryMeasureDimenionId?: string;
+
+  @primitiveArrayTrait({
+    type: "string",
+    name: "Region mapped concept IDs",
+    description: "Concept IDs which are treated as region-mapped columns."
+  })
+  regionMappedConceptIds?: string[];
 }
