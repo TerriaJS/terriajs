@@ -99,7 +99,7 @@
 
   @media (orientation: landscape) {
     flex: 1;
-    height: calc(100vh - 125px);
+    height: 100vh;
   }
 }
 .tabsContainer {
@@ -135,7 +135,7 @@
   left: 0;
 
   @media (min-width: $md) {
-    right: $work-bench-width + 22px;
+    right: $work-bench-width;
     top: 62px;
     left: 96px;
     bottom: 0;
@@ -182,7 +182,7 @@
 
 .sidePanelHide {
   display: block;
-  margin-left: 0-$work-bench-width;
+  margin-left: -$work-bench-width;
   visibility: hidden;
 }
 
@@ -233,6 +233,6 @@
     right: auto;
     overflow: hidden;
     flex-grow: 1;
-    flex-basis: calc(100% - #{$work-bench-width});
+    //flex-basis: calc(100% - $work-bench-width);
   }
 }
