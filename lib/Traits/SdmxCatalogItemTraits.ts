@@ -1,14 +1,13 @@
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import mixTraits from "./mixTraits";
 import TableTraits from "./TableTraits";
-import UrlTraits from "./UrlTraits";
 import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
-import ExportableTraits from "./ExportableTraits";
 import primitiveTrait from "./primitiveTrait";
 import ModelTraits from "./ModelTraits";
 import objectArrayTrait from "./objectArrayTrait";
 import { Dimension, DimensionOption } from "../Models/SelectableDimensions";
 import primitiveArrayTrait from "./primitiveArrayTrait";
+import { SdmxCommonTraits } from "./SdmxCatalogGroupTraits";
 
 export class SdmxDimensionsOption extends ModelTraits
   implements DimensionOption {
@@ -68,8 +67,8 @@ export class SdmxDimension extends ModelTraits implements Dimension {
 export default class SdmxCatalogItemTraits extends mixTraits(
   DiscretelyTimeVaryingTraits,
   FeatureInfoTraits,
-  UrlTraits,
-  TableTraits
+  TableTraits,
+  SdmxCommonTraits
 ) {
   @primitiveTrait({
     type: "string",
@@ -95,10 +94,11 @@ export default class SdmxCatalogItemTraits extends mixTraits(
 
   @primitiveTrait({
     type: "string",
-    name: "Primary measure concept ID",
-    description: "ID of primary measure concept."
+    name: "View mode",
+    description:
+      "Data view mode: `region` will show region-mapped data for a single time value or `time` will show time-series for a specific region"
   })
-  primaryMeasureConceptId?: string;
+  viewBy?: "region" | "time" | undefined;
 
   @primitiveTrait({
     type: "string",
@@ -110,8 +110,17 @@ export default class SdmxCatalogItemTraits extends mixTraits(
 
   @primitiveArrayTrait({
     type: "string",
-    name: "Region mapped concept IDs",
-    description: "Concept IDs which are treated as region-mapped columns."
+    name: "Time measure dimenion ID",
+    description:
+      "ID of time dimenion. This is used to find show values by time-series or to filter a specific time-slice."
   })
-  regionMappedConceptIds?: string[];
+  timeDimensionIds?: string[];
+
+  @primitiveArrayTrait({
+    type: "string",
+    name: "Region mapped dimension IDs",
+    description:
+      "Dimension IDs which are treated as region-mapped columns or to filter by a specific region"
+  })
+  regionMappedDimensionIds?: string[];
 }

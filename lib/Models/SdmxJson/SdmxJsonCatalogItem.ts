@@ -25,7 +25,8 @@ import StratumOrder from "../StratumOrder";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import { SdmxJsonDataflowStratum } from "./SdmxJsonDataflowStratum";
 import SelectableDimensions, {
-  SelectableDimension
+  SelectableDimension,
+  Dimension
 } from "../SelectableDimensions";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 
@@ -46,7 +47,6 @@ export default class SdmxJsonCatalogItem
     return "sdmx-json";
   }
 
-  private _csvString?: string;
   private csvDownloadDisposer: IReactionDisposer;
 
   constructor(
@@ -63,7 +63,7 @@ export default class SdmxJsonCatalogItem
     this.csvDownloadDisposer = reaction(
       () => this.csvUrl,
       async () => {
-        const data = await Csv.parseString(await this.downloadCsv(), true);
+        const data = await this.downloadData();
         runInAction(() => {
           this.dataColumnMajor = data;
         });
@@ -95,6 +95,37 @@ export default class SdmxJsonCatalogItem
     return automaticTableStylesStratum?.discreteTimes;
   }
 
+  /**
+   * Disable dimension if viewing time-series and this dimenion is a time dimension OR viewing region-mapping and this dimension is for region-mapping
+   */
+  isDimDisabled(dim: Dimension) {
+    return (
+      (this.viewBy === "time" && this.timeDimensionIds.includes(dim.id!)) ||
+      (this.viewBy === "region" &&
+        this.regionMappedDimensionIds.includes(dim.id!))
+    );
+  }
+
+  @computed get sdmxViewModeDimension(): SelectableDimension {
+    return {
+      id: `viewMode`,
+      name: "View by",
+      options: [
+        { id: "region", name: "Region" },
+        { id: "time", name: "Time-series" }
+      ],
+      selectedId: this.viewBy,
+      disable:
+        !Array.isArray(this.timeDimensionIds) ||
+        this.timeDimensionIds.length === 0 ||
+        !Array.isArray(this.regionMappedDimensionIds) ||
+        this.regionMappedDimensionIds.length === 0,
+      setDimensionValue: (stratumId: string, value: "time" | "region") => {
+        this.setTrait(stratumId, "viewBy", value);
+      }
+    };
+  }
+
   @computed
   get sdmxSelectableDimensions(): SelectableDimension[] {
     return this.dimensions.map(dim => {
@@ -103,6 +134,7 @@ export default class SdmxJsonCatalogItem
         name: dim.name,
         options: dim.options,
         selectedId: dim.selectedId,
+        disable: this.isDimDisabled(dim),
         setDimensionValue: (stratumId: string, value: string) => {
           let dimensionTraits = this.dimensions?.find(
             sdmxDim => sdmxDim.id === dim.id
@@ -120,29 +152,38 @@ export default class SdmxJsonCatalogItem
   @computed
   get selectableDimensions(): SelectableDimension[] {
     return filterOutUndefined([
+      this.sdmxViewModeDimension,
       ...this.sdmxSelectableDimensions,
       this.regionColumnDimensions,
       this.regionProviderDimensions
     ]);
   }
 
-  // A string compliant with the KeyType defined in the SDMX WADL (period separated dimension values) - dimension order is very important!
+  /**
+   * Returns string compliant with the KeyType defined in the SDMX WADL (period separated dimension values) - dimension order is very important!
+   */
   @computed get dataKey(): string {
     const max = this.dimensions.length;
     // We must sort the dimensions by position as traits lose their order across strata
-    return this.dimensions
-      .slice()
-      .sort(
-        (a, b) =>
-          (isDefined(a.position) ? a.position : max) -
-          (isDefined(b.position) ? b.position : max)
-      )
-      .map(dim => dim.selectedId)
-      .join(".");
+    return (
+      this.dimensions
+        .slice()
+        .sort(
+          (a, b) =>
+            (isDefined(a.position) ? a.position : max) -
+            (isDefined(b.position) ? b.position : max)
+        )
+        // If a dimension is disabled, use empty string (which is wildcard)
+        .map(dim => (!this.isDimDisabled(dim) ? dim.selectedId : ""))
+        .join(".")
+    );
   }
 
   @computed
   get csvUrl(): string {
+    if (this.viewBy === "time") {
+      // do something with time
+    }
     return `${this.url}/data/${this.dataflowId}/${this.dataKey}`;
   }
 
@@ -155,30 +196,56 @@ export default class SdmxJsonCatalogItem
     }
   }
 
-  private async downloadCsv(): Promise<string> {
-    this._csvString = await new Resource({
+  private async downloadData(): Promise<string[][]> {
+    const csvString = await new Resource({
       url: proxyCatalogItemUrl(this, this.csvUrl),
       headers: {
         Accept: "application/vnd.sdmx.data+csv; version=1.0.0"
       }
     }).fetch();
 
-    if (!isDefined(this._csvString)) {
+    if (!isDefined(csvString)) {
       throw "ahh";
     }
 
-    return this._csvString;
+    const columns = await Csv.parseString(csvString, true);
+
+    // Filter colums to only include primary measure, region mapped and time dimensions
+    if (isDefined(this.primaryMeasureDimenionId)) {
+      let colNames = [this.primaryMeasureDimenionId];
+
+      // If viewing region-mapping, add region-map dimension columns
+      if (
+        this.viewBy === "region" &&
+        this.regionMappedDimensionIds.length > 0
+      ) {
+        colNames.push(...this.regionMappedDimensionIds);
+        colNames.push(...this.timeDimensionIds);
+
+        // If viewing time-series, add time dimension column
+      } else if (this.viewBy === "time" && this.timeDimensionIds.length > 0) {
+        colNames.push(...this.timeDimensionIds);
+
+        // If no filter available - just return all columns and hope for the best
+      } else {
+        return columns;
+      }
+
+      // Return filtered columns
+      return columns.filter(col => colNames.includes(col[0]));
+    }
+
+    return columns;
   }
 
   protected async forceLoadTableData(): Promise<string[][]> {
     await this.loadMetadata();
 
-    let csv = this._csvString;
-    if (!isDefined(csv)) {
-      csv = await this.downloadCsv();
+    if (!isDefined(this.dataColumnMajor)) {
+      return await this.downloadData();
     }
 
-    return await Csv.parseString(csv, true);
+    return this.dataColumnMajor;
   }
 }
 

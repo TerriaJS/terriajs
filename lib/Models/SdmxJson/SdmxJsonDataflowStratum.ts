@@ -90,10 +90,87 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     });
   }
 
+  @computed
   get description() {
     return this.sdmxJsonDataflow.dataflow.description;
   }
 
+  @computed
+  get columns() {
+    const primaryMeasure = this.sdmxJsonDataflow.dataStructure
+      .dataStructureComponents?.measureList.primaryMeasure;
+    const primaryMeasureConceptUrn = parseSdmxUrn(
+      primaryMeasure?.conceptIdentity
+    );
+    const primaryMeasureConcept = this.getConcept(
+      primaryMeasureConceptUrn?.resourceId,
+      primaryMeasureConceptUrn?.descendantIds?.[0]
+    );
+    const primaryMeasureColumn = {
+      name: primaryMeasure?.id,
+      title: primaryMeasureConcept?.name,
+      units: undefined,
+      type: undefined,
+      regionType: undefined,
+      regionDisambiguationColumn: undefined,
+      replaceWithZeroValues: undefined,
+      replaceWithNullValues: undefined,
+      format: undefined
+    };
+
+    const dimColums = [
+      ...(this.sdmxJsonDataflow.dataStructure.dataStructureComponents
+        ?.dimensionList.dimensions || []),
+      ...(this.sdmxJsonDataflow.dataStructure.dataStructureComponents
+        ?.dimensionList.timeDimensions || [])
+    ].map(dim => {
+      const conceptUrn = parseSdmxUrn(dim.conceptIdentity);
+      const concept = this.getConcept(
+        conceptUrn?.resourceId,
+        conceptUrn?.descendantIds?.[0]
+      );
+
+      let regionType: string | undefined;
+
+      console.log(this.catalogItem.regionMappedDimensionIds);
+
+      if (
+        dim.id &&
+        this.catalogItem.regionMappedDimensionIds.includes(dim.id)
+      ) {
+        // Try to look for manual regionType in regionTypeMap
+        regionType = this.catalogItem.regionTypeMap?.find(
+          map => map.id === dim.id
+        )?.regionType;
+
+        // If TableColumn failed to find suitable region provider -> use country as default
+        if (
+          !regionType &&
+          !super.columns?.find(col => col.name === dim.id)?.regionType
+        ) {
+          regionType = "country";
+        }
+      }
+
+      console.log(regionType);
+
+      return {
+        name: dim.id,
+        title: concept?.name,
+        units: undefined,
+        type: undefined,
+        regionType,
+        regionDisambiguationColumn: undefined,
+        replaceWithZeroValues: undefined,
+        replaceWithNullValues: undefined,
+        format: undefined
+      };
+    });
+
+    return [primaryMeasureColumn, ...dimColums];
+  }
+
+  @computed
   get primaryMeasureConceptId() {
     return parseSdmxUrn(
       this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.measureList
@@ -101,20 +178,48 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     )?.resourceId;
   }
 
+  @computed
   get primaryMeasureDimenionId() {
     return this.sdmxJsonDataflow.dataStructure.dataStructureComponents
       ?.measureList.primaryMeasure?.id;
   }
 
   /**
-   * By default, if a concept id starts with geo_ (case insenitive) treat it as region mapped
+   * Returns array of dimensions which can be treated as region columns.
+   * By default, if a concept id starts with geo_ (case insenitive) treat it as region mapped,
+   * or if the dimensionID is included in this.regionTypeMap
    */
-  get regionMappedConceptIds() {
+  @computed
+  get regionMappedDimensionIds() {
     return this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.dimensionList.dimensions
-      ?.map(dim => parseSdmxUrn(dim.conceptIdentity)?.resourceId)
+      ?.map(dim => dim.id)
       .filter(
-        id => isDefined(id) && id.toLowerCase().startsWith("geo_")
+        id =>
+          isDefined(id) &&
+          (id.toLowerCase().startsWith("geo_") ||
+            this.regionTypeMap?.find(map => id === map.id))
       ) as string[];
+  }
+
+  @computed
+  get timeDimensionIds() {
+    return this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.dimensionList.timeDimensions
+      ?.filter(dim => dim.id)
+      .map(dim => dim.id) as string[];
+  }
+
+  /**
+   * By default, view by region if there are regionMapped dimensions
+   * Otherwise, view by time-series
+   */
+  @computed
+  get viewBy() {
+    if (this.catalogItem.regionMappedDimensionIds.length > 0) {
+      return "region";
+    }
+    if (this.catalogItem.timeDimensionIds.length > 0) {
+      return "time";
+    }
   }
 
   @computed

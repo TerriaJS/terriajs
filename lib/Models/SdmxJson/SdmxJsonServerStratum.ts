@@ -1,8 +1,10 @@
 import LoadableStratum from "../LoadableStratum";
-import SdmxCatalogGroupTraits from "../../Traits/SdmxCatalogGroupTraits";
+import SdmxCatalogGroupTraits, {
+  SdmxCommonTraits
+} from "../../Traits/SdmxCatalogGroupTraits";
 import SdmxCatalogGroup from "./SdmxJsonCatalogGroup";
 import { BaseModel } from "../Model";
-import { computed, action } from "mobx";
+import { computed, action, toJS } from "mobx";
 import ModelReference from "../../Traits/ModelReference";
 import StratumOrder from "../StratumOrder";
 import {
@@ -267,6 +269,16 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
     model.setTrait(stratum, "url", this.catalogGroup.url);
     model.setTrait(stratum, "agencyId", node.item.agencyID as string);
     model.setTrait(stratum, "dataflowId", node.item.id);
+
+    console.log(this.catalogGroup.regionTypeMap);
+    // Copy over common traits
+    model.setTrait(
+      stratum,
+      "regionTypeMap",
+      this.catalogGroup.traits["regionTypeMap"].toJson(
+        this.catalogGroup.regionTypeMap
+      )
+    );
 
     model.setTrait(stratum, "info", [
       createInfoSection("Description", node.item.description)
