@@ -37,9 +37,7 @@ export default class SdmxJsonCatalogItem
       // Since both TableMixin & DiscretelyTimeVaryingMixin defines
       // `chartItems`, the order of mixing in is important here
       DiscretelyTimeVaryingMixin(
-        ExportableMixin(
-          UrlMixin(CatalogMemberMixin(CreateModel(SdmxCatalogItemTraits)))
-        )
+        UrlMixin(CatalogMemberMixin(CreateModel(SdmxCatalogItemTraits)))
       )
     )
   )
@@ -78,27 +76,8 @@ export default class SdmxJsonCatalogItem
   }
 
   @computed
-  get _canExportData() {
-    return isDefined(this._csvString);
-  }
-
-  @computed
   get cacheDuration() {
     return super.cacheDuration || "1d";
-  }
-
-  protected async _exportData() {
-    if (isDefined(this._csvString)) {
-      return {
-        name: (this.name || this.uniqueId)!,
-        file: new Blob([this._csvString])
-      };
-    }
-
-    throw new TerriaError({
-      sender: this,
-      message: "No data available to download."
-    });
   }
 
   @computed

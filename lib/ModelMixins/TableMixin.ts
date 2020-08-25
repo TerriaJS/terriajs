@@ -33,13 +33,15 @@ import TableStyle from "../Table/TableStyle";
 import LegendTraits from "../Traits/LegendTraits";
 import TableTraits from "../Traits/TableTraits";
 import AsyncMappableMixin from "./AsyncMappableMixin";
+import ExportableMixin, { ExportData } from "./ExportableMixin";
+import TerriaError from "../Core/TerriaError";
 
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
 //   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
 // This is a dodgy workaround.
 class RegionProviderList extends JSRegionProviderList {}
 function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
-  abstract class TableMixin extends AsyncMappableMixin(Base)
+  abstract class TableMixin extends ExportableMixin(AsyncMappableMixin(Base))
     implements SelectableDimensions {
     get hasTableMixin() {
       return true;
@@ -158,6 +160,32 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     get disableOpacityControl() {
       // disable opacity control for point tables
       return this.activeTableStyle.isPoints();
+    }
+
+    @computed
+    get _canExportData() {
+      return isDefined(this.dataColumnMajor);
+    }
+
+    protected async _exportData(): Promise<ExportData | undefined> {
+      if (isDefined(this.dataColumnMajor)) {
+        // I am assuming all columns have the same length -> so use first column
+        let csvString = this.dataColumnMajor[0]
+          .map((row, rowIndex) =>
+            this.dataColumnMajor!.map(col => col[rowIndex]).join(",")
+          )
+          .join("\n");
+
+        return {
+          name: (this.name || this.uniqueId)!,
+          file: new Blob([csvString])
+        };
+      }
+
+      throw new TerriaError({
+        sender: this,
+        message: "No data available to download."
+      });
     }
 
     async loadMapItems(): Promise<void> {}

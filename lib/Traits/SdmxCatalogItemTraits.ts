@@ -66,7 +66,6 @@ export class SdmxDimension extends ModelTraits implements Dimension {
 }
 
 export default class SdmxCatalogItemTraits extends mixTraits(
-  ExportableTraits,
   DiscretelyTimeVaryingTraits,
   FeatureInfoTraits,
   UrlTraits,
