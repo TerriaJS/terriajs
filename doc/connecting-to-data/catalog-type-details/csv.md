@@ -1,8 +1,6 @@
 
 
 
-
-
 ## Properties
 
 "type": "csv"

@@ -1,7 +1,4 @@
-
 This is a description of the 3D Tiles Catalog Item
-
-
 ## Example usage
 ````json
 {

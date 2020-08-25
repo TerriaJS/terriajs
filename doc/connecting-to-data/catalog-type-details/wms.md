@@ -1,8 +1,5 @@
-
 Creates a single item in the catalog from one or many WMS layers. <br/> 
  <strong> Note: </strong>   <i> To present all layers in an available WMS as individual items in the catalog use the  ` WebMapServiceCatalogGroup `. </i>
-
-
 ## Example usage
 ````json
 {

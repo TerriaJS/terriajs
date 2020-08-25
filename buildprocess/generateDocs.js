@@ -109,8 +109,7 @@ async function processMember (sampleMember, memberName) {
             description = getDescription(jsDocJson[0].description.children[0].children)
           }
           if (jsDocJson[0].examples[0]) {
-            example = `
-## Example usage
+            example = `## Example usage
 \`\`\`\`json
 ${jsDocJson[0].examples[0].description}
 \`\`\`\`
@@ -118,9 +117,7 @@ ${jsDocJson[0].examples[0].description}
           }
     }
 
-    let content = `
-${description}
-
+    let content = `${description}
 ${example}
 
 ## Properties
