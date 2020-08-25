@@ -151,7 +151,7 @@ const StandardUserInterface = createReactClass({
     );
 
     const terria = this.props.terria;
-    console.log("User Interface", terria.homeView, terria.initialView);
+
     const allBaseMaps = this.props.allBaseMaps;
 
     const showStoryBuilder =
@@ -215,7 +215,7 @@ const StandardUserInterface = createReactClass({
 
                     {!showStoryPanel && (
                       <div className={Styles.tabsContainer}>
-                        <SidePanelContent />
+                        <SidePanelContent terria={terria} />
                       </div>
                     )}
                   </div>
@@ -264,7 +264,7 @@ const StandardUserInterface = createReactClass({
                     }}
                   >
                     <Branding terria={terria} version={this.props.version} />
-                    {!showStoryPanel && <SidePanelContent />}
+                    {!showStoryPanel && <SidePanelContent terria={terria} />}
                     {showStoryPanel ? (
                       <RCStoryPanel
                         terria={terria}
