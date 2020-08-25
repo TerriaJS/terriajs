@@ -266,10 +266,12 @@ const StandardUserInterface = createReactClass({
                     <Branding terria={terria} version={this.props.version} />
                     {!showStoryPanel && <SidePanelContent terria={terria} />}
                     {showStoryPanel ? (
-                      <RCStoryPanel
-                        terria={terria}
-                        viewState={this.props.viewState}
-                      />
+                      <div>
+                        <RCStoryPanel
+                          terria={terria}
+                          viewState={this.props.viewState}
+                        />
+                      </div>
                     ) : null}
                     <SidePanel
                       terria={terria}
