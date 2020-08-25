@@ -512,7 +512,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         }
 
         const regionColumn = style.regionColumn;
-        const regionType: any = regionColumn.regionType;
+        const regionType = regionColumn.regionType;
         if (regionType === undefined) {
           return undefined;
         }
@@ -566,12 +566,15 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
               };
             },
             subdomains: regionType.serverSubdomains,
-            rectangle: Rectangle.fromDegrees(
-              regionType.bbox[0],
-              regionType.bbox[1],
-              regionType.bbox[2],
-              regionType.bbox[3]
-            ),
+            rectangle:
+              Array.isArray(regionType.bbox) && regionType.bbox.length >= 4
+                ? Rectangle.fromDegrees(
+                    regionType.bbox[0],
+                    regionType.bbox[1],
+                    regionType.bbox[2],
+                    regionType.bbox[3]
+                  )
+                : undefined,
             minimumZoom: regionType.serverMinZoom,
             maximumNativeZoom: regionType.serverMaxNativeZoom,
             maximumZoom: regionType.serverMaxZoom,
