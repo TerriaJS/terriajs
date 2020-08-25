@@ -1,16 +1,30 @@
+import fs from 'fs';
+import documentation from 'documentation';
+import YAML from 'yaml';
+
 import registerCatalogMembers from '../lib/Models/registerCatalogMembers';
 import CatalogMemberFactory from '../lib/Models/CatalogMemberFactory';
-import documentation from 'documentation';
  
 import { PrimitiveArrayTrait } from '../lib/Traits/primitiveArrayTrait';
 import { PrimitiveTrait } from '../lib/Traits/primitiveTrait';
 import { ObjectArrayTrait } from '../lib/Traits/objectArrayTrait';
 import { ObjectTrait } from '../lib/Traits/objectTrait';
-import fs from 'fs';
 
 registerCatalogMembers();
 const catalogMembers = Array.from(CatalogMemberFactory.constructors)
 
+const members = catalogMembers.map(member => {
+    const memberName = member[1]
+    return new memberName();
+}, this).sort(function(a, b){
+    if (a.constructor.name < b.constructor.name) return -1
+    else if (a.constructor.name > b.constructor.name) return 1
+    return 0
+})
+
+
+const mkDocsConfig = YAML.parse(fs.readFileSync('./mkdocs.yml', 'utf8'))
+let items = [] 
 
 function markdownFromTraitType(trait) {
     let base = '';
@@ -55,39 +69,63 @@ function markdownFromObjectTrait(objectTrait, traitKey, sampleMember) {
     return out;
 }
 
+
+function getDescription (metadata) {
+    return concatTags(metadata, true)
+}
+
+function concatTags (inNode) {
+    if (!inNode) return false
+    let outDescr = inNode.map(node => {
+      return node.value
+    })
+    outDescr = outDescr.join(' ').replace(' .', '.')
+    if (outDescr === 'Optional parameters') outDescr = outDescr.concat(': see below')
+    return outDescr
+  }
+
 async function getJsDoc (memberName) {
     return new Promise(function(resolve) {
-        documentation.build([`./lib/Models/${memberName}.ts`], {
+        documentation.build([`./lib/Traits/${memberName}Traits.ts`], {
             shallow: true
         }).then(documentation.formats.json)
         .then(output => {
-            resolve(JSON.parse(output))
+            resolve(JSON.parse(output));
         })
-    })
+        .catch(err => {
+            console.log(`${memberName}: ${err}`)
+        });
+    });
 }
 
-async function processMember (member) {
-    const sampleMember = new member()
-    const memberName = sampleMember.constructor.name
+async function processMember (sampleMember, memberName) {
     let description = '';
     let example = '';
-    if (memberName === 'Cesium3DTilesCatalogItem') {
-        const jsDocJson = await getJsDoc(memberName)
-        description = jsDocJson[0].description.children[0].children[0].value.replace(/\n/g, '');;
-        example = jsDocJson[0].examples[0].description;
+
+    const jsDocJson = await getJsDoc(memberName);
+
+    if (jsDocJson[0]) {
+        if (jsDocJson[0].description) {
+            description = getDescription(jsDocJson[0].description.children[0].children)
+          }
+          if (jsDocJson[0].examples[0]) {
+            example = `
+## Example usage
+\`\`\`\`json
+${jsDocJson[0].examples[0].description}
+\`\`\`\`
+`;
+          }
     }
 
     let content = `
 ${description}
 
-## Example usage
-\`\`\`\`json
 ${example}
-\`\`\`\`
 
 ## Properties
 
-"type": "${member.type}"
+"type": "${sampleMember.type}"
 `
 
 content += `
@@ -98,14 +136,14 @@ content += `
 let additionalContent = ` 
 `
 ;
-    Object.entries(member.traits).forEach(([k, trait]) => {
+    Object.entries(sampleMember.traits).forEach(([k, trait]) => {
         const traitType = markdownFromTraitType(trait);
         if (trait instanceof ObjectTrait || trait instanceof ObjectArrayTrait ) {
             additionalContent += markdownFromObjectTrait(trait, k, sampleMember);
-            content += `| ${k} | **${traitType}** - see below | | ${trait.description} - see below |
+            content += `| ${k} | **${traitType}** <br> see below | | ${trait.description} |
 `
         } else {
-            const defaultValue = sampleMember[k] === undefined ? '' : sampleMember[k]
+            const defaultValue = sampleMember[k] === undefined || k === 'currentTime' ? '' : sampleMember[k]
             content += `| ${k} | **${traitType}** | ${defaultValue} | ${trait.description} |
 `
         }
@@ -114,11 +152,43 @@ let additionalContent = `
     return [content, additionalContent].join('');
 }
 
-async function processArray(catalogMembers) {
-    for (const m of catalogMembers) {
-        const member = m[1];
-        const content = await processMember(member);
-        fs.writeFileSync(`outputdocs/${member.type}.md`, content)
+let catalogItemsContent = `A Catalog Item is a dataset or service that can be enabled for display on the map or in a chart.  The Type column in the table below indicates the \`"type"\` property to use in the [Initialization File](../customizing/initialization-files.md).
+
+| Name | Type |
+|------|------|
+`
+
+let catalogGroupsContent = `A Catalog Group is a folder in the TerriaJS catalog that contains [Catalog Items](catalog-items.md), [Catalog Functions](catalog-functions.md), and other groups. The Type column in the table below indicates the \`"type"\` property to use in the [Initialization File](../customizing/initialization-files.md).
+
+| Name | Type |
+|------|------|
+`
+
+async function processArray() {
+
+    for (let i = 0; i < members.length; i++) {
+        const sampleMember = members[i];
+        const memberName = sampleMember.constructor.name;
+
+        console.log(memberName, sampleMember.type)
+        if (memberName.indexOf('Item') > -1) {
+            catalogItemsContent += `| [${memberName}](catalog-type-details/${sampleMember.type}.md) | \`${sampleMember.type}\` |
+`
+        } else {
+            catalogGroupsContent += `| [${memberName}](catalog-type-details/${sampleMember.type}.md) | \`${sampleMember.type}\` |
+`
+        }
+        const out = {}
+        out[memberName] = `connecting-to-data/catalog-type-details/${sampleMember.type}.md`
+        items.push(out)
+        const content = await processMember(sampleMember, memberName);
+        fs.writeFileSync(`doc/connecting-to-data/catalog-type-details/${sampleMember.type}.md`, content)
     };
+    mkDocsConfig.nav[3]['Connecting to Data'][6]['Catalog Type Details'] = items;
+
+    fs.writeFileSync('./mkdocs.yml', YAML.stringify(mkDocsConfig))
+    fs.writeFileSync('./doc/connecting-to-data/catalog-items.md', catalogItemsContent)
+    fs.writeFileSync('./doc/connecting-to-data/catalog-groups.md', catalogGroupsContent)
+
 }
-processArray(catalogMembers)
+processArray()

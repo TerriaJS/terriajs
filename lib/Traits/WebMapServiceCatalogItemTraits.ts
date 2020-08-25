@@ -64,6 +64,17 @@ export class WebMapServiceAvailableLayerStylesTraits extends ModelTraits {
   styles?: WebMapServiceAvailableStyleTraits[];
 }
 
+/**
+ * Creates a single item in the catalog from one or many WMS layers.<br/>
+ * <strong>Note:</strong> <i>To present all layers in an available WMS as individual items in the catalog use the \`WebMapServiceCatalogGroup\`.</i>
+ * @example
+ * {
+ *   "type": "wms",
+ *   "name": "Mangrove Cover",
+ *   "url": "https://ows.services.dea.ga.gov.au",
+ *   "layers": "mangrove_cover_v2_0_2"
+ * }
+ */
 export default class WebMapServiceCatalogItemTraits extends mixTraits(
   DiffableTraits,
   FeatureInfoTraits,

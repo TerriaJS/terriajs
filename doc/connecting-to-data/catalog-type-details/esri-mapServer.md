@@ -5,19 +5,19 @@
 
 ## Properties
 
-"type": "geojson"
+"type": "esri-mapServer"
 
 | Trait | Type | Default | Description |
 | ------ | ------ | ------ | ------ |
-| featureInfoTemplate | **object** <br> see below | | A template object for formatting content in feature info panel |
-| featureInfoUrlTemplate | **string** |  | A template URL string for fetching feature info. Template values of the form {x} will be replaced with corresponding property values from the picked feature. |
-| showStringIfPropertyValueIsNull | **string** |  | If the value of a property is null or undefined, show the specified string as the value of the property. Otherwise, the property name will not be listed at all. |
-| url | **string** |  | The base URL of the file or service. |
-| forceProxy | **boolean** | false | Force the proxy to be used for all network requests. |
-| cacheDuration | **string** | 1d | The cache duration to use for proxied URLs for this catalog member. If undefined, proxied URLs are effectively cachable forever. The duration is expressed as a Varnish-like duration string, such as '1d' (one day) or '10000s' (ten thousand seconds). |
+| splitDirection | **number** | 0 | The side of the splitter to display this imagery layer on. Defaults to both sides. |
+| dataCustodian | **string** |  | Gets or sets a description of the custodian of this data item. |
+| opacity | **number** | 0.8 | The opacity of the map layers. |
 | show | **boolean** | true | Show or hide a workbench item. When show is false, a mappable item is removed from the map and a chartable item is removed from the chart panel. |
 | rectangle | **object** <br> see below | | The bounding box rectangle that contains all the data in this catalog item. |
 | disablePreview | **boolean** | false | Disables the preview on the Add Data panel. This is useful when the preview will be very slow to load. |
+| url | **string** |  | The base URL of the file or service. |
+| forceProxy | **boolean** | false | Force the proxy to be used for all network requests. |
+| cacheDuration | **string** | 1d | The cache duration to use for proxied URLs for this catalog member. If undefined, proxied URLs are effectively cachable forever. The duration is expressed as a Varnish-like duration string, such as '1d' (one day) or '10000s' (ten thousand seconds). |
 | name | **string** |  | The name of the catalog item. |
 | description | **string** |  | The description of the catalog item. Markdown and HTML may be used. |
 | nameInCatalog | **string** |  | The name of the item to be displayed in the catalog, if it is different from the one to display in the workbench. |
@@ -29,19 +29,15 @@
 | isExperiencingIssues | **boolean** | false | Whether the catalog item is experiencing issues which may cause its data to be unavailable |
 | hideLegendInWorkbench | **boolean** | false | Whether the legend is hidden in the workbench for this catalog member. |
 | hideSource | **boolean** | false | Indicates that the source of this data should be hidden from the UI (obviously this isn't super-secure as you can just look at the network requests). |
-| style | **object** <br> see below | | Styling rules that follow simplestyle-spec |
-| geoJsonData | **** |  | A geojson data object |
-| geoJsonString | **string** |  | A geojson string |
-| clampToGround | **boolean** | true | Whether the features in this GeoJSON should be clamped to the terrain surface. |
+| layers | **string** |  | The layer or layers to display. |
+| maximumScale | **number** |  | Gets or sets the denominator of the largest scale (smallest denominator) for which tiles should be requested.  For example, if this value is 1000, then tiles representing a scale larger than 1:1000 (i.e. numerically smaller denominator, when zooming in closer) will not be requested.  Instead, tiles of the largest-available scale, as specified by this property, will be used and will simply get blurier as the user zooms in closer. |
 | legends | **object[]** <br> see below | | The legends to display on the workbench. |
+| parameters | **** |  | Additional parameters to pass to the MapServer when requesting images. |
+| allowFeaturePicking | **boolean** | true | Indicates whether features in this catalog item can be selected by clicking them on the map. |
+| maximumScaleBeforeMessage | **number** |  | The denominator of the largest scale (smallest denominator) beyond which to show a message explaining that no further zoom levels are available, at the request |
+| showTilesAfterMessage | **boolean** | true | Value indicating whether to continue showing tiles when the `maximumScaleBeforeMessage` is exceeded. |
+| tokenUrl | **string** |  | URL to use for fetching request tokens |
  
-
-### Feature info template
-| Trait | Type | Default | Description |
-| ------ | ------ | ------ | ------ |
-| name | **string** |  | A mustache template string for formatting name |
-| template | **string** |  | A Mustache template string for formatting description |
-| partials | **** |  | An object, mapping partial names to a template string. Defines the partials used in Template. |
 
 ### Rectangle
 | Trait | Type | Default | Description |
@@ -63,20 +59,6 @@
 | name | **string** |  | The name of the section. |
 | content | **string** |  | The content of the section. |
 | show | **boolean** |  | Indicates if this short report section showing. |
-
-### Style
-| Trait | Type | Default | Description |
-| ------ | ------ | ------ | ------ |
-| marker-size | **string** |  | Marker size. Valid values are `small`, `medium`, or `large`. If the value is a number, it is the size in pixels. |
-| marker-color | **string** |  | Marker color |
-| marker-symbol | **string** |  | Marker symbol. |
-| marker-opacity | **number** |  | Marker opacity. |
-| marker-url | **string** |  | Marker URL. |
-| stroke | **string** |  | Stroke color. |
-| stroke-opacity | **string** |  | Stroke opacity. |
-| stroke-width | **number** |  | Stroke width. |
-| fill | **string** |  | Fill color. |
-| fill-opacity | **number** |  | Fill opacity. |
 
 ### Legend URLs
 | Trait | Type | Default | Description |

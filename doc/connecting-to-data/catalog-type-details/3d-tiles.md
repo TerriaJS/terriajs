@@ -1,6 +1,7 @@
 
 This is a description of the 3D Tiles Catalog Item
 
+
 ## Example usage
 ````json
 {
@@ -10,21 +11,22 @@ This is a description of the 3D Tiles Catalog Item
 }
 ````
 
+
 ## Properties
 
 "type": "3d-tiles"
 
 | Trait | Type | Default | Description |
 | ------ | ------ | ------ | ------ |
-| editing | **object** - see below | | Editor traits - see below |
-| origin | **object** - see below | | The origin of the model, expressed as a longitude and latitude in degrees and a height in meters. If this property is specified, the model's axes will have X pointing East, Y pointing North, and Z pointing Up. If not specified, the model is located in the Earth-Centered Earth-Fixed frame. - see below |
-| rotation | **object** - see below | | The rotation of the model expressed as heading, pitch and roll in the local frame of reference. - see below |
+| editing | **object** <br> see below | | Editor traits |
+| origin | **object** <br> see below | | The origin of the model, expressed as a longitude and latitude in degrees and a height in meters. If this property is specified, the model's axes will have X pointing East, Y pointing North, and Z pointing Up. If not specified, the model is located in the Earth-Centered Earth-Fixed frame. |
+| rotation | **object** <br> see below | | The rotation of the model expressed as heading, pitch and roll in the local frame of reference. |
 | scale | **number** |  | The scale factor to apply to the model |
-| featureInfoTemplate | **object** - see below | | A template object for formatting content in feature info panel - see below |
+| featureInfoTemplate | **object** <br> see below | | A template object for formatting content in feature info panel |
 | featureInfoUrlTemplate | **string** |  | A template URL string for fetching feature info. Template values of the form {x} will be replaced with corresponding property values from the picked feature. |
 | showStringIfPropertyValueIsNull | **string** |  | If the value of a property is null or undefined, show the specified string as the value of the property. Otherwise, the property name will not be listed at all. |
 | show | **boolean** | true | Show or hide a workbench item. When show is false, a mappable item is removed from the map and a chartable item is removed from the chart panel. |
-| rectangle | **object** - see below | | The bounding box rectangle that contains all the data in this catalog item. - see below |
+| rectangle | **object** <br> see below | | The bounding box rectangle that contains all the data in this catalog item. |
 | disablePreview | **boolean** | false | Disables the preview on the Add Data panel. This is useful when the preview will be very slow to load. |
 | url | **string** |  | The base URL of the file or service. |
 | forceProxy | **boolean** | false | Force the proxy to be used for all network requests. |
@@ -32,11 +34,11 @@ This is a description of the 3D Tiles Catalog Item
 | name | **string** |  | The name of the catalog item. |
 | description | **string** |  | The description of the catalog item. Markdown and HTML may be used. |
 | nameInCatalog | **string** |  | The name of the item to be displayed in the catalog, if it is different from the one to display in the workbench. |
-| info | **object[]** - see below | | Human-readable information about this dataset. - see below |
+| info | **object[]** <br> see below | | Human-readable information about this dataset. |
 | infoSectionOrder | **string[]** | ,,,,,,,,,,,, | An array of section titles definining the display order of info sections. If this property is not defined, {@link DataPreviewSections}'s DEFAULT_SECTION_ORDER is used |
 | isOpenInWorkbench | **boolean** | true | Whether the item in the workbench open or collapsed. |
 | shortReport | **string** |  | A short report to show on the now viewing tab. |
-| shortReportSections | **object[]** - see below | | A list of collapsible sections of the short report - see below |
+| shortReportSections | **object[]** <br> see below | | A list of collapsible sections of the short report |
 | isExperiencingIssues | **boolean** | false | Whether the catalog item is experiencing issues which may cause its data to be unavailable |
 | hideLegendInWorkbench | **boolean** | false | Whether the legend is hidden in the workbench for this catalog member. |
 | hideSource | **boolean** | false | Indicates that the source of this data should be hidden from the UI (obviously this isn't super-secure as you can just look at the network requests). |
@@ -45,9 +47,9 @@ This is a description of the 3D Tiles Catalog Item
 | ionAssetId | **number** |  | The Cesium Ion asset id. |
 | ionAccessToken | **string** |  | Cesium Ion access token id. |
 | ionServer | **string** |  | URL of the Cesium Ion API server. |
-| options | **object** - see below | | Additional options to pass to Cesium's Cesium3DTileset constructor. - see below |
+| options | **object** <br> see below | | Additional options to pass to Cesium's Cesium3DTileset constructor. |
 | style | **** |  | The style to use, specified according to the [Cesium 3D Tiles Styling Language](https://github.com/AnalyticalGraphicsInc/3d-tiles/tree/master/specification/Styling). |
-| filters | **object[]** - see below | | The filters to apply to this catalog item. - see below |
+| filters | **object[]** <br> see below | | The filters to apply to this catalog item. |
 | colorBlendMode | **string** | MIX | The color blend mode decides how per-feature color is blended with color defined in the tileset. Acceptable values are HIGHLIGHT, MIX & REPLACE as defined in the cesium documentation - https://cesium.com/docs/cesiumjs-ref-doc/Cesium3DTileColorBlendMode.html |
 | colorBlendAmount | **number** | 0.5 | When the colorBlendMode is MIX this value is used to interpolate between source color and feature color. A value of 0.0 results in the source color while a value of 1.0 results in the feature color, with any value in-between resulting in a mix of the source color and feature color. |
 | highlightColor | **string** |  | The color used to highlight a feature when it is picked. If not set, this defaults to `Terria.baseMapContrastColor` |

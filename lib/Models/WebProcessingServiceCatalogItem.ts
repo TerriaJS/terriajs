@@ -190,6 +190,10 @@ export default class WebProcessingServiceCatalogItem
     return i18next.t("models.webProcessingService.wpsResult");
   }
 
+  get type() {
+    return WebProcessingServiceCatalogItem.type;
+  }
+
   readonly isMappable = true;
 
   @observable

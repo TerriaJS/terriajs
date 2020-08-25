@@ -100,6 +100,10 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
     return "Web Processing Service (WPS)";
   }
 
+  get type() {
+    return WebProcessingServiceCatalogFunction.type;
+  }
+
   readonly parameterConverters: ParameterConverter[] = [
     LiteralDataConverter,
     DateTimeConverter,

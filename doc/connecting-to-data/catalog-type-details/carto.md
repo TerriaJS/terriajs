@@ -5,13 +5,12 @@
 
 ## Properties
 
-"type": "geojson"
+"type": "carto"
 
 | Trait | Type | Default | Description |
 | ------ | ------ | ------ | ------ |
-| featureInfoTemplate | **object** <br> see below | | A template object for formatting content in feature info panel |
-| featureInfoUrlTemplate | **string** |  | A template URL string for fetching feature info. Template values of the form {x} will be replaced with corresponding property values from the picked feature. |
-| showStringIfPropertyValueIsNull | **string** |  | If the value of a property is null or undefined, show the specified string as the value of the property. Otherwise, the property name will not be listed at all. |
+| splitDirection | **number** | 0 | The side of the splitter to display this imagery layer on. Defaults to both sides. |
+| opacity | **number** | 0.8 | The opacity of the map layers. |
 | url | **string** |  | The base URL of the file or service. |
 | forceProxy | **boolean** | false | Force the proxy to be used for all network requests. |
 | cacheDuration | **string** | 1d | The cache duration to use for proxied URLs for this catalog member. If undefined, proxied URLs are effectively cachable forever. The duration is expressed as a Varnish-like duration string, such as '1d' (one day) or '10000s' (ten thousand seconds). |
@@ -29,19 +28,13 @@
 | isExperiencingIssues | **boolean** | false | Whether the catalog item is experiencing issues which may cause its data to be unavailable |
 | hideLegendInWorkbench | **boolean** | false | Whether the legend is hidden in the workbench for this catalog member. |
 | hideSource | **boolean** | false | Indicates that the source of this data should be hidden from the UI (obviously this isn't super-secure as you can just look at the network requests). |
-| style | **object** <br> see below | | Styling rules that follow simplestyle-spec |
-| geoJsonData | **** |  | A geojson data object |
-| geoJsonString | **string** |  | A geojson string |
-| clampToGround | **boolean** | true | Whether the features in this GeoJSON should be clamped to the terrain surface. |
+| config | **** |  | The configuration information to pass to the Carto Maps API |
+| auth_token | **string** |  | The authorization token to pass to the Carto Maps API |
+| minimumLevel | **number** | 0 | The minimum tile level to retrieve from the map data |
+| maximumLevel | **number** | 25 | The maximum tile level to retrieve from the map data |
+| attribution | **string** |  | The attribution to display with the data. |
 | legends | **object[]** <br> see below | | The legends to display on the workbench. |
  
-
-### Feature info template
-| Trait | Type | Default | Description |
-| ------ | ------ | ------ | ------ |
-| name | **string** |  | A mustache template string for formatting name |
-| template | **string** |  | A Mustache template string for formatting description |
-| partials | **** |  | An object, mapping partial names to a template string. Defines the partials used in Template. |
 
 ### Rectangle
 | Trait | Type | Default | Description |
@@ -63,20 +56,6 @@
 | name | **string** |  | The name of the section. |
 | content | **string** |  | The content of the section. |
 | show | **boolean** |  | Indicates if this short report section showing. |
-
-### Style
-| Trait | Type | Default | Description |
-| ------ | ------ | ------ | ------ |
-| marker-size | **string** |  | Marker size. Valid values are `small`, `medium`, or `large`. If the value is a number, it is the size in pixels. |
-| marker-color | **string** |  | Marker color |
-| marker-symbol | **string** |  | Marker symbol. |
-| marker-opacity | **number** |  | Marker opacity. |
-| marker-url | **string** |  | Marker URL. |
-| stroke | **string** |  | Stroke color. |
-| stroke-opacity | **string** |  | Stroke opacity. |
-| stroke-width | **number** |  | Stroke width. |
-| fill | **string** |  | Fill color. |
-| fill-opacity | **number** |  | Fill opacity. |
 
 ### Legend URLs
 | Trait | Type | Default | Description |

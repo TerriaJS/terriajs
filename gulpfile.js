@@ -61,17 +61,6 @@ gulp.task('lint', function(done) {
     done();
 });
 
-gulp.task('reference-guide', function(done) {
-    var runExternalModule = require('./buildprocess/runExternalModule');
-
-    runExternalModule('jsdoc/jsdoc.js', [
-        './lib',
-        '-c', './buildprocess/jsdoc.json'
-    ]);
-
-    done();
-});
-
 gulp.task('copy-cesium-assets', function() {
     var path = require('path');
 
@@ -143,7 +132,7 @@ gulp.task('user-guide', gulp.series(gulp.parallel('make-schema', 'code-attributi
     var PluginError = require('plugin-error');
     var spawnSync = require('child_process').spawnSync;
 
-    fse.copySync('doc/mkdocs.yml', 'build/mkdocs.yml');
+    fse.copySync('mkdocs.yml', 'build/mkdocs.yml');
     fse.copySync('doc', 'build/doc');
 
     var files = klawSync('build/doc').map(o => o.path);
@@ -169,8 +158,6 @@ gulp.task('user-guide', gulp.series(gulp.parallel('make-schema', 'code-attributi
     mkdocsyml = mkdocsyml.replace(/README\.md/g, 'index.md');
     fse.writeFileSync('build/mkdocs.yml', mkdocsyml, 'UTF-8');
 
-    generateCatalogMemberPages('wwwroot/schema', 'build/doc/connecting-to-data/catalog-type-details');
-
     var result = spawnSync('mkdocs', ['build', '--clean', '--config-file', 'mkdocs.yml'], {
         cwd: 'build',
         stdio: 'inherit',
@@ -183,63 +170,11 @@ gulp.task('user-guide', gulp.series(gulp.parallel('make-schema', 'code-attributi
     done();
 }));
 
-gulp.task('docs', gulp.series('user-guide', 'reference-guide', function docs(done) {
+gulp.task('docs', gulp.series('user-guide', function docs(done) {
     var fse = require('fs-extra');
     fse.copySync('doc/index-built.html', 'wwwroot/doc/index.html');
     done();
 }));
-
-function generateCatalogMemberPages(schemaPath, outputPath) {
-    var fse = require('fs-extra');
-    var klawSync = require('klaw-sync');
-    var path = require('path');
-
-    var schemaFiles = klawSync(schemaPath).map(o => o.path);
-    var typeFiles = schemaFiles.filter(name => name.endsWith('_type.json'));
-
-    typeFiles.forEach(function(typeFile) {
-        var json = JSON.parse(fse.readFileSync(typeFile, 'UTF-8'));
-        var type = json.properties.type.enum[0];
-        var file = path.join(outputPath, type + '.md');
-        var propertiesFile = typeFile.replace(/_type\.json/, '.json');
-
-        var properties = {};
-        addProperties(propertiesFile, properties);
-
-        var content = '!!! note\r\r' +
-                      '    This page is automatically generated from the source code, and is a bit rough.  If you have\r' +
-                      '    trouble, check the [source code for this type](https://github.com/TerriaJS/terriajs/blob/master/lib/Models/' + path.basename(propertiesFile, '.json') + '.js) or post a message to the [forum](https://groups.google.com/forum/#!forum/terriajs).\r\r';
-        content += json.description + '\r\r';
-        content += '## [Initialization File](../../customizing/initialization-files.md) properties:\r\r';
-        content += '`"type": "' + type + '"`\r\r';
-
-        var propertyKeys = Object.keys(properties);
-        propertyKeys.sort().forEach(function(property) {
-            var details = properties[property];
-            content += '`' + property + '`\r\r';
-            content += details.description + '\r\r';
-        });
-
-        fse.writeFileSync(file, content, 'UTF-8');
-    });
-}
-
-function addProperties(file, result) {
-    var fse = require('fs-extra');
-    var path = require('path');
-
-    var propertiesJson = JSON.parse(fse.readFileSync(file, 'UTF-8'));
-
-    if (propertiesJson.allOf) {
-        propertiesJson.allOf.forEach(function(allOf) {
-            addProperties(path.join(path.dirname(file), allOf['$ref']), result);
-        });
-    }
-
-    for (var property in propertiesJson.properties) {
-        result[property] = propertiesJson.properties[property];
-    }
-}
 
 gulp.task('build', gulp.series('copy-cesium-assets', 'build-specs'));
 gulp.task('release', gulp.series('copy-cesium-assets', 'release-specs'));

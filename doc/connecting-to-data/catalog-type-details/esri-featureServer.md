@@ -5,16 +5,14 @@
 
 ## Properties
 
-"type": "geojson"
+"type": "esri-featureServer"
 
 | Trait | Type | Default | Description |
 | ------ | ------ | ------ | ------ |
-| featureInfoTemplate | **object** <br> see below | | A template object for formatting content in feature info panel |
-| featureInfoUrlTemplate | **string** |  | A template URL string for fetching feature info. Template values of the form {x} will be replaced with corresponding property values from the picked feature. |
-| showStringIfPropertyValueIsNull | **string** |  | If the value of a property is null or undefined, show the specified string as the value of the property. Otherwise, the property name will not be listed at all. |
 | url | **string** |  | The base URL of the file or service. |
 | forceProxy | **boolean** | false | Force the proxy to be used for all network requests. |
 | cacheDuration | **string** | 1d | The cache duration to use for proxied URLs for this catalog member. If undefined, proxied URLs are effectively cachable forever. The duration is expressed as a Varnish-like duration string, such as '1d' (one day) or '10000s' (ten thousand seconds). |
+| dataCustodian | **string** |  | Gets or sets a description of the custodian of this data item. |
 | show | **boolean** | true | Show or hide a workbench item. When show is false, a mappable item is removed from the map and a chartable item is removed from the chart panel. |
 | rectangle | **object** <br> see below | | The bounding box rectangle that contains all the data in this catalog item. |
 | disablePreview | **boolean** | false | Disables the preview on the Add Data panel. This is useful when the preview will be very slow to load. |
@@ -29,19 +27,11 @@
 | isExperiencingIssues | **boolean** | false | Whether the catalog item is experiencing issues which may cause its data to be unavailable |
 | hideLegendInWorkbench | **boolean** | false | Whether the legend is hidden in the workbench for this catalog member. |
 | hideSource | **boolean** | false | Indicates that the source of this data should be hidden from the UI (obviously this isn't super-secure as you can just look at the network requests). |
-| style | **object** <br> see below | | Styling rules that follow simplestyle-spec |
-| geoJsonData | **** |  | A geojson data object |
-| geoJsonString | **string** |  | A geojson string |
-| clampToGround | **boolean** | true | Whether the features in this GeoJSON should be clamped to the terrain surface. |
+| clampToGround | **boolean** | true | Whether the features in this service should be clamped to the terrain surface. |
+| useStyleInformationFromService | **boolean** | true | Whether to symbolise the data using the drawingInfo object available in the service endpoint. |
+| layerDef | **string** | 1=1 | The 'layerDef' string to pass to the server when requesting geometry. |
 | legends | **object[]** <br> see below | | The legends to display on the workbench. |
  
-
-### Feature info template
-| Trait | Type | Default | Description |
-| ------ | ------ | ------ | ------ |
-| name | **string** |  | A mustache template string for formatting name |
-| template | **string** |  | A Mustache template string for formatting description |
-| partials | **** |  | An object, mapping partial names to a template string. Defines the partials used in Template. |
 
 ### Rectangle
 | Trait | Type | Default | Description |
@@ -63,20 +53,6 @@
 | name | **string** |  | The name of the section. |
 | content | **string** |  | The content of the section. |
 | show | **boolean** |  | Indicates if this short report section showing. |
-
-### Style
-| Trait | Type | Default | Description |
-| ------ | ------ | ------ | ------ |
-| marker-size | **string** |  | Marker size. Valid values are `small`, `medium`, or `large`. If the value is a number, it is the size in pixels. |
-| marker-color | **string** |  | Marker color |
-| marker-symbol | **string** |  | Marker symbol. |
-| marker-opacity | **number** |  | Marker opacity. |
-| marker-url | **string** |  | Marker URL. |
-| stroke | **string** |  | Stroke color. |
-| stroke-opacity | **string** |  | Stroke opacity. |
-| stroke-width | **number** |  | Stroke width. |
-| fill | **string** |  | Fill color. |
-| fill-opacity | **number** |  | Fill opacity. |
 
 ### Legend URLs
 | Trait | Type | Default | Description |

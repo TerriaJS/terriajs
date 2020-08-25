@@ -5,7 +5,7 @@
 
 ## Properties
 
-"type": "geojson"
+"type": "georss"
 
 | Trait | Type | Default | Description |
 | ------ | ------ | ------ | ------ |
@@ -18,6 +18,8 @@
 | show | **boolean** | true | Show or hide a workbench item. When show is false, a mappable item is removed from the map and a chartable item is removed from the chart panel. |
 | rectangle | **object** <br> see below | | The bounding box rectangle that contains all the data in this catalog item. |
 | disablePreview | **boolean** | false | Disables the preview on the Add Data panel. This is useful when the preview will be very slow to load. |
+| refreshInterval | **number** |  | How often the data in this model is refreshed, in seconds |
+| refreshEnabled | **boolean** |  | Toggle for enabling auto refresh. |
 | name | **string** |  | The name of the catalog item. |
 | description | **string** |  | The description of the catalog item. Markdown and HTML may be used. |
 | nameInCatalog | **string** |  | The name of the item to be displayed in the catalog, if it is different from the one to display in the workbench. |
@@ -29,11 +31,8 @@
 | isExperiencingIssues | **boolean** | false | Whether the catalog item is experiencing issues which may cause its data to be unavailable |
 | hideLegendInWorkbench | **boolean** | false | Whether the legend is hidden in the workbench for this catalog member. |
 | hideSource | **boolean** | false | Indicates that the source of this data should be hidden from the UI (obviously this isn't super-secure as you can just look at the network requests). |
-| style | **object** <br> see below | | Styling rules that follow simplestyle-spec |
-| geoJsonData | **** |  | A geojson data object |
-| geoJsonString | **string** |  | A geojson string |
-| clampToGround | **boolean** | true | Whether the features in this GeoJSON should be clamped to the terrain surface. |
-| legends | **object[]** <br> see below | | The legends to display on the workbench. |
+| clampToGround | **boolean** | true | Whether the features in this service should be clamped to the terrain surface. |
+| geoRssString | **string** |  | A GeoRSSstring |
  
 
 ### Feature info template
@@ -63,35 +62,3 @@
 | name | **string** |  | The name of the section. |
 | content | **string** |  | The content of the section. |
 | show | **boolean** |  | Indicates if this short report section showing. |
-
-### Style
-| Trait | Type | Default | Description |
-| ------ | ------ | ------ | ------ |
-| marker-size | **string** |  | Marker size. Valid values are `small`, `medium`, or `large`. If the value is a number, it is the size in pixels. |
-| marker-color | **string** |  | Marker color |
-| marker-symbol | **string** |  | Marker symbol. |
-| marker-opacity | **number** |  | Marker opacity. |
-| marker-url | **string** |  | Marker URL. |
-| stroke | **string** |  | Stroke color. |
-| stroke-opacity | **string** |  | Stroke opacity. |
-| stroke-width | **number** |  | Stroke width. |
-| fill | **string** |  | Fill color. |
-| fill-opacity | **number** |  | Fill opacity. |
-
-### Legend URLs
-| Trait | Type | Default | Description |
-| ------ | ------ | ------ | ------ |
-| title | **string** |  | A title to be displayed above the legend. |
-| url | **string** |  | The URL of the legend image. |
-| urlMimeType | **string** |  | The MIME type of the `URL` legend image. |
-| items | **object[]** |  |  |
-| title | **string** |  | The title to display next to this legend item. |
-| titleAbove | **string** |  | The title to display above this legend item, i.e. marking the top of a box on the legend. |
-| titleBelow | **string** |  | The title to display below this legend item, i.e. marking the bottom of a box on the legend. |
-| color | **string** |  | The CSS color to display for this item. This property is ignored if `Legend URL` is specified. |
-| outlineColor | **string** |  | The CSS color with which to outline this item. |
-| multipleColors | **string[]** |  | Multiple colors to show with this item in a grid arrangement. |
-| imageUrl | **string** |  | The URL of an image to display with this item. |
-| addSpacingAbove | **boolean** |  | True to add a bit of extra spacing above this item in order to separate it visually from the rest of the legend. |
-| imageHeight | **number** |  | The height of the legend image. |
-| imageWidth | **number** |  | The width of the legend image. |

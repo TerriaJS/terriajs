@@ -8,7 +8,7 @@ import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import { runInAction, computed, toJS, action, observable } from "mobx";
 import CommonStrata from "../Models/CommonStrata";
 import createStratumInstance from "../Models/createStratumInstance";
-import Cesium3DTilesCatalogItemTraits from "../Traits/Cesium3DCatalogItemTraits";
+import Cesium3DTilesCatalogItemTraits from "../Traits/Cesium3DTilesCatalogItemTraits";
 import isDefined from "../Core/isDefined";
 import proxyCatalogItemUrl from "../Models/proxyCatalogItemUrl";
 import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
