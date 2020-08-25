@@ -3,23 +3,25 @@ import SectorTabs from "./SectorTabs";
 import SectorInfo from "./SectorInfo";
 import { Small, Medium } from "../Generic/Responsive";
 import PropTypes from "prop-types";
-import defined from "terriajs-cesium/Source/Core/defined";
-import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
+
 class SidePanelContent extends React.Component {
   state = {
-    sector: null
+    sector: null,
+    item: null
   };
   showSectorInfo = sector => {
     this.setState({
       sector
     });
+    this.filterHotspots(sector.title);
+  };
+
+  filterHotspots = sector => {
     const { terria } = this.props;
-    terria.selectedSector = sector.title.toLowerCase();
-    console.log(sector);
-    knockout.getObservable(terria, "selectedSector").subscribe(() => {
-      const selectedSector = terria.selectedSector;
-      console.log(selectedSector);
-      terria.selectedSector = "agriculture";
+    terria.nowViewing.items.map(item => {
+      if (item.type === "geojson") {
+        item.isShown = item.name === sector;
+      }
     });
   };
   closeSectorInfo = () => {

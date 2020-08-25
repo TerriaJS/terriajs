@@ -29,6 +29,7 @@ import ToolPanel from "./../ToolPanel.jsx";
 import SatelliteGuide from "../Guide/SatelliteGuide.jsx";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage.jsx";
 // import SectorInfo from "../SidePanel/SectorInfo";
+import { exitStory } from "../../Models/Receipt";
 import { Small, Medium } from "../Generic/Responsive";
 import classNames from "classnames";
 import "inobounce";
@@ -141,6 +142,10 @@ const StandardUserInterface = createReactClass({
 
   shouldUseMobileInterface() {
     return document.body.clientWidth < this.props.minimumLargeScreenWidth;
+  },
+
+  onExitStory() {
+    exitStory(this.props.terria, this.props.viewState);
   },
 
   render() {
@@ -266,10 +271,13 @@ const StandardUserInterface = createReactClass({
                     <Branding terria={terria} version={this.props.version} />
                     {!showStoryPanel && <SidePanelContent terria={terria} />}
                     {showStoryPanel ? (
-                      <RCStoryPanel
-                        terria={terria}
-                        viewState={this.props.viewState}
-                      />
+                      <div>
+                        <button onClick={this.onExitStory}>Exit story</button>
+                        <RCStoryPanel
+                          terria={terria}
+                          viewState={this.props.viewState}
+                        />
+                      </div>
                     ) : null}
                     <SidePanel
                       terria={terria}
