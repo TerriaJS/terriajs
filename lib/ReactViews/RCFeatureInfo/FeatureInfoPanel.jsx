@@ -287,22 +287,6 @@ export const FeatureInfoPanel = createReactClass({
       [Styles.isTranslucent]: viewState.explorerPanelIsVisible
     });
 
-    // const filterableCatalogItems = catalogItems
-    //   .filter(
-    //     catalogItem =>
-    //       defined(catalogItem) && catalogItem.canFilterIntervalsByFeature
-    //   )
-    //   .map(catalogItem => {
-    //     const features = featureCatalogItemPairs.filter(
-    //       pair => pair.catalogItem === catalogItem
-    //     );
-    //     return {
-    //       catalogItem: catalogItem,
-    //       feature: defined(features[0]) ? features[0].feature : undefined
-    //     };
-    //   })
-    //   .filter(pair => defined(pair.feature));
-
     let position;
     if (
       defined(terria.selectedFeature) &&
