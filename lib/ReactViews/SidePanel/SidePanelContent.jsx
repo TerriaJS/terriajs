@@ -3,38 +3,26 @@ import SectorTabs from "./SectorTabs";
 import SectorInfo from "./SectorInfo";
 import { Small, Medium } from "../Generic/Responsive";
 import PropTypes from "prop-types";
-import defined from "terriajs-cesium/Source/Core/defined";
-import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
-import NowViewing from "../../Models/NowViewing";
-const cloneDeep = require("lodash/clonedeep");
 
 class SidePanelContent extends React.Component {
   state = {
-    sector: null
+    sector: null,
+    item: null
   };
   showSectorInfo = sector => {
     this.setState({
       sector
     });
-
-    this._nowViewingChangedSubscription = knockout
-      .getObservable(this.props.terria.nowViewing, "items")
-      .subscribe(function() {
-        alert("minimumLevel changed!");
-      });
-
-    // terria.selectedSector = sector.title.toLowerCase();
-    this.filterHotspots(sector.title.toLowerCase());
+    this.filterHotspots(sector.title);
   };
 
   filterHotspots = sector => {
     const { terria } = this.props;
-    const geoJsonItem = terria.nowViewing.items[0];
-    const geoJson = geoJsonItem._readyData;
-    geoJson.features = geoJson.features.filter(feature => {
-      return Object.values(feature.properties).includes(sector);
+    terria.nowViewing.items.map(item => {
+      if (item.type === "geojson") {
+        item.isShown = item.name === sector;
+      }
     });
-    geoJsonItem.loadGeoJson(geoJsonItem);
   };
   closeSectorInfo = () => {
     this.setState({ sector: null });
