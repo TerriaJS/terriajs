@@ -79,6 +79,17 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
     }
 
     @computed
+    get infoAsObject() {
+      const infoObject: any = {};
+      this.info.forEach(infoItem => {
+        if (infoItem.name !== undefined && infoItem.name.length > 0) {
+          infoObject[infoItem.name.replace(/ /g, "")] = infoItem.content;
+        }
+      });
+      return infoObject;
+    }
+
+    @computed
     get infoWithoutSources() {
       const sourceInfoItemNames = this._sourceInfoItemNames;
       if (sourceInfoItemNames === undefined) {

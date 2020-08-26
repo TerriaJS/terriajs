@@ -53,6 +53,7 @@ import WebMapServiceCapabilities, {
 } from "./WebMapServiceCapabilities";
 import { callWebCoverageService } from "./callWebCoverageService";
 import ExportableMixin from "../ModelMixins/ExportableMixin";
+import { JsonObject } from "../Core/Json";
 
 const dateFormat = require("dateformat");
 
@@ -256,7 +257,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   get info(): StratumFromTraits<InfoSectionTraits>[] {
     const result: StratumFromTraits<InfoSectionTraits>[] = [];
 
-    function createInfoSection(name: string, content: string | undefined) {
+    function createInfoSection(name: string, content: any) {
       const trait = createStratumInstance(InfoSectionTraits);
       trait.name = name;
       trait.content = content;
@@ -264,6 +265,14 @@ class GetCapabilitiesStratum extends LoadableStratum(
     }
 
     let firstDataDescription: string | undefined;
+
+    result.push(
+      createInfoSection(
+        i18next.t("models.webMapServiceCatalogItem.dataDescription"),
+        this.capabilities.Service as JsonObject
+      )
+    );
+
     for (const layer of this.capabilitiesLayers.values()) {
       if (
         !layer ||

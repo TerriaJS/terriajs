@@ -3,7 +3,9 @@ import objectArrayTrait from "./objectArrayTrait";
 import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
 import primitiveArrayTrait from "./primitiveArrayTrait";
+import anyTrait from "./anyTrait";
 import i18next from "i18next";
+import { JsonObject } from "../Core/Json";
 
 export class InfoSectionTraits extends ModelTraits {
   @primitiveTrait({
@@ -13,18 +15,16 @@ export class InfoSectionTraits extends ModelTraits {
   })
   name?: string;
 
-  @primitiveTrait({
-    type: "string",
+  @anyTrait({
     name: "Content",
     description:
-      "The content of the section, in Markdown and HTML format. Set this property to null to remove this section entirely.",
-    isNullable: true
+      "The content of the section, this either accepts a string in Markdown and HTML format, or a JSON object, which will be rendered as a table. Set this property to null to remove this section entirely."
   })
-  content?: string | null;
+  content?: string | JsonObject | null;
 
-  static isRemoval(infoSection: InfoSectionTraits) {
-    return infoSection.content === null;
-  }
+  // static isRemoval(infoSection: InfoSectionTraits) {
+  //   return infoSection.content === null;
+  // }
 }
 
 export class ShortReportTraits extends ModelTraits {
