@@ -247,16 +247,15 @@ export const FeatureInfoPanel = createReactClass({
     );
   },
 
-  openStory(storyId) {
-    launchStory(storyId, this.props.terria).then(() => {
-      this.props.viewState.storyBuilderShown = false;
-      this.props.viewState.storyShown = true;
-      setTimeout(function() {
-        triggerResize();
-      }, 1);
-      this.props.terria.currentViewer.notifyRepaintRequired();
-      this.close();
-    });
+  openStorySummary(featureProperties) {
+    // close possible opened stories
+    this.props.viewState.storyShown = false;
+    this.props.terria.currentViewer.notifyRepaintRequired();
+
+    this.props.viewState.selectedHotspot = featureProperties;
+    this.props.viewState.hotspotSummaryEnabled = true;
+    this.props.terria.currentViewer.notifyRepaintRequired();
+    this.close();
   },
 
   render() {
@@ -270,6 +269,7 @@ export const FeatureInfoPanel = createReactClass({
     const description =
       terria.selectedFeature?.properties?.["_rc-description"]?._value;
     const storyId = terria.selectedFeature?.properties?.["_story-id"]?._value;
+    const featureProperties = terria.selectedFeature?.properties;
 
     const {
       catalogItems,
@@ -388,7 +388,10 @@ export const FeatureInfoPanel = createReactClass({
                     <button
                       type="button"
                       className={Styles.satelliteSuggestionBtn}
-                      onClick={this.openStory.bind(this, storyId)}
+                      onClick={this.openStorySummary.bind(
+                        this,
+                        featureProperties
+                      )}
                     >
                       View story
                     </button>

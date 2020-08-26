@@ -3,6 +3,7 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import arrayContains from "../../Core/arrayContains";
 import Branding from "./../SidePanel/Branding.jsx";
+import RCHotspotSummary from "./../RCHotspotSummary/RCHotspotSummary.jsx";
 import DragDropFile from "./../DragDropFile.jsx";
 import DragDropNotification from "./../DragDropNotification.jsx";
 import ExplorerWindow from "./../ExplorerWindow/ExplorerWindow.jsx";
@@ -156,6 +157,7 @@ const StandardUserInterface = createReactClass({
     );
 
     const terria = this.props.terria;
+    const viewState = this.props.viewState;
 
     const allBaseMaps = this.props.allBaseMaps;
 
@@ -168,6 +170,9 @@ const StandardUserInterface = createReactClass({
       this.props.viewState.storyShown &&
       !this.props.viewState.explorerPanelIsVisible &&
       !this.props.viewState.storyBuilderShown;
+
+    const showHotspotSummary = this.props.viewState.hotspotSummaryEnabled;
+
     return (
       <div className={Styles.storyWrapper}>
         <WelcomeMessage viewState={this.props.viewState} />
@@ -269,7 +274,14 @@ const StandardUserInterface = createReactClass({
                     }}
                   >
                     <Branding terria={terria} version={this.props.version} />
-                    {!showStoryPanel && <SidePanelContent terria={terria} />}
+
+                    {showHotspotSummary && (
+                      <RCHotspotSummary terria={terria} viewState={viewState} />
+                    )}
+
+                    {!(showStoryPanel || showHotspotSummary) && (
+                      <SidePanelContent terria={terria} />
+                    )}
                     {showStoryPanel ? (
                       <div>
                         <button onClick={this.onExitStory}>Exit story</button>
