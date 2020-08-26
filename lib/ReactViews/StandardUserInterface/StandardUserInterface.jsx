@@ -272,7 +272,6 @@ const StandardUserInterface = createReactClass({
                     {!showStoryPanel && <SidePanelContent terria={terria} />}
                     {showStoryPanel ? (
                       <div>
-                        <button onClick={this.onExitStory}>Exit story</button>
                         <RCStoryPanel
                           terria={terria}
                           viewState={this.props.viewState}

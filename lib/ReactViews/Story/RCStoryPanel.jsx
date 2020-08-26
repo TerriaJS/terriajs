@@ -199,15 +199,15 @@ const RCStoryPanel = createReactClass({
             </div>
           </Medium>
           <div className={Styles.story}>
-            {/*<div className={Styles.storyHeader}>
-               <Small>{locationBtn}</Small>
+            <div className={Styles.storyHeader}>
+              {/*<Small>{locationBtn}</Small>*/}
               {story.title && story.title.length > 0 ? (
                 <h3>{story.title}</h3>
               ) : (
                 <h3> {t("story.untitled")} </h3>
               )}
-              <Small>{exitBtn}</Small>
-            </div>*/}
+              {exitBtn}
+            </div>
             {story.text && (
               <div className={Styles.body}>
                 {parseCustomHtmlToReact(story.text)}
@@ -242,7 +242,6 @@ const RCStoryPanel = createReactClass({
           </div>
           <Medium>
             <div className={Styles.right}>
-              {/* {exitBtn} */}
               <button
                 disabled={this.props.terria.stories.length <= 1}
                 className={Styles.nextBtn}
