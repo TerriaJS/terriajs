@@ -1,22 +1,22 @@
+import { computed } from "mobx";
+import isDefined from "../../Core/isDefined";
+import TerriaError from "../../Core/TerriaError";
+import SdmxCatalogItemTraits from "../../Traits/SdmxCatalogItemTraits";
 import LoadableStratum from "../LoadableStratum";
-import SdmxJsonCatalogItem from "./SdmxJsonCatalogItem";
 import { BaseModel } from "../Model";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumOrder from "../StratumOrder";
+import SdmxJsonCatalogItem from "./SdmxJsonCatalogItem";
+import { loadSdmxJsonStructure, parseSdmxUrn } from "./SdmxJsonServerStratum";
 import {
-  Dataflow,
   CodeLists,
+  ConceptScheme,
   ConceptSchemes,
   ContentConstraints,
+  Dataflow,
   DataStructure,
-  SdmxJsonStructureMessage,
-  ConceptScheme
+  SdmxJsonStructureMessage
 } from "./SdmxJsonStructureMessage";
-import isDefined from "../../Core/isDefined";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import SdmxCatalogItemTraits from "../../Traits/SdmxCatalogItemTraits";
-import TerriaError from "../../Core/TerriaError";
-import { loadSdmxJsonStructure, parseSdmxUrn } from "./SdmxJsonServerStratum";
-import { computed } from "mobx";
 
 export interface SdmxJsonDataflow {
   dataflow: Dataflow;
@@ -258,36 +258,41 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
           );
           const codelist = this.getCodelist(codelistUrn?.resourceId);
 
-          // Get allowed options from cubeRegions (there may be multiple - take union of all values - which is probably wrong)
-          const allowedOptionIdsSet = contraints?.reduce<Set<string>>(
-            (keys, constraint) => {
-              constraint.cubeRegions?.forEach(cubeRegion =>
-                cubeRegion.keyValues
-                  ?.filter(kv => kv.id === dim.id)
-                  ?.forEach(
-                    regionKey =>
-                      regionKey.values &&
-                      regionKey.values.forEach(value => keys.add(value))
-                  )
-              );
-              return keys;
-            },
-            new Set()
-          );
+          // Get allowed options from contraints.cubeRegions (there may be multiple - take union of all values - which is probably wrong)
+          const allowedOptionIdsSet = Array.isArray(contraints)
+            ? contraints.reduce<Set<string>>((keys, constraint) => {
+                constraint.cubeRegions?.forEach(cubeRegion =>
+                  cubeRegion.keyValues
+                    ?.filter(kv => kv.id === dim.id)
+                    ?.forEach(
+                      regionKey =>
+                        regionKey.values &&
+                        regionKey.values.forEach(value => keys.add(value))
+                    )
+                );
+                return keys;
+              }, new Set())
+            : undefined;
 
           // Convert set to array
           const allowedOptionIds = isDefined(allowedOptionIdsSet)
             ? Array.from(allowedOptionIdsSet)
             : undefined;
 
-          // Create options object by merging allowedOptionIds with codelist (to find labels)
-          const options = codelist?.codes
-            ?.filter(
-              code => allowedOptionIds && allowedOptionIds.includes(code.id!)
-            )
-            .map(code => {
-              return { id: code.id!, name: code.name };
-            });
+          // Get codes by merging allowedOptionIds with codelist
+          let codes =
+            isDefined(allowedOptionIds) && allowedOptionIds.length > 0
+              ? codelist?.codes?.filter(
+                  code =>
+                    allowedOptionIds && allowedOptionIds.includes(code.id!)
+                )
+              : // If no allowedOptions were found -> return all codes
+                codelist?.codes;
+
+          // Create options object
+          const options = codes?.map(code => {
+            return { id: code.id!, name: code.name };
+          });
 
           if (isDefined(options)) {
             return {

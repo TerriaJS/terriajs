@@ -1,36 +1,34 @@
-import LoadableStratum from "../LoadableStratum";
-import SdmxCatalogGroupTraits, {
-  SdmxCommonTraits
-} from "../../Traits/SdmxCatalogGroupTraits";
-import SdmxCatalogGroup from "./SdmxJsonCatalogGroup";
-import { BaseModel } from "../Model";
-import { computed, action, toJS } from "mobx";
-import ModelReference from "../../Traits/ModelReference";
-import StratumOrder from "../StratumOrder";
-import {
-  SdmxJsonStructureMessage,
-  AgencySchemes,
-  Categorisations,
-  Dataflows,
-  CategorySchemes,
-  Dataflow,
-  CategoryScheme,
-  AgencyScheme,
-  Category,
-  Agency
-} from "./SdmxJsonStructureMessage";
-import TerriaError from "../../Core/TerriaError";
-import isDefined from "../../Core/isDefined";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import { action, computed } from "mobx";
+import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 import filterOutUndefined from "../../Core/filterOutUndefined";
+import flatten from "../../Core/flatten";
+import isDefined from "../../Core/isDefined";
+import { regexMatches } from "../../Core/regexMatches";
+import TerriaError from "../../Core/TerriaError";
+import ModelReference from "../../Traits/ModelReference";
+import SdmxCatalogGroupTraits from "../../Traits/SdmxCatalogGroupTraits";
 import CatalogGroup from "../CatalogGroupNew";
 import CommonStrata from "../CommonStrata";
 import createInfoSection from "../createInfoSection";
-import { regexMatches } from "../../Core/regexMatches";
-import flatten from "../../Core/flatten";
+import LoadableStratum from "../LoadableStratum";
+import { BaseModel } from "../Model";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import StratumOrder from "../StratumOrder";
+import SdmxCatalogGroup from "./SdmxJsonCatalogGroup";
 import SdmxJsonCatalogItem from "./SdmxJsonCatalogItem";
-import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
-import Resource from "terriajs-cesium/Source/Core/Resource";
+import {
+  Agency,
+  AgencyScheme,
+  AgencySchemes,
+  Categorisations,
+  Category,
+  CategoryScheme,
+  CategorySchemes,
+  Dataflow,
+  Dataflows,
+  SdmxJsonStructureMessage
+} from "./SdmxJsonStructureMessage";
 
 export interface SdmxServer {
   agencySchemes?: AgencySchemes;
@@ -116,6 +114,17 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
           categoryId
         ].members![dataflowId] = { type: "dataflow", item: dataflow };
       });
+      // No categorisations exist => add flat list of dataflows
+    } else {
+      this.dataflowTree = this.sdmxServer.dataflows.reduce<DataflowTree>(
+        (tree, dataflow) => {
+          if (isDefined(dataflow.id)) {
+            tree[dataflow.id] = { type: "dataflow", item: dataflow };
+          }
+          return tree;
+        },
+        {}
+      );
     }
   }
 
@@ -411,7 +420,8 @@ export async function loadSdmxJsonStructure(
       }).fetch()
     ) as SdmxJsonStructureMessage;
   } catch (error) {
-    if (error instanceof RequestErrorEvent) {
+    // If SDMX server has returned an error message
+    if (error instanceof RequestErrorEvent && isDefined(error.response)) {
       if (
         !allowNotImplemeted ||
         (allowNotImplemeted &&
@@ -422,7 +432,8 @@ export async function loadSdmxJsonStructure(
           message: `Message from server: ${error.response}`
         });
       }
-    } else {
+      // Not sure what happened (maybe CORS)
+    } else if (!allowNotImplemeted) {
       throw new TerriaError({
         title: `Could not load SDMX`,
         message: `Unkown error occurred${
