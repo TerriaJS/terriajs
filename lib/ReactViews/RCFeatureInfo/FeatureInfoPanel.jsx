@@ -252,9 +252,11 @@ export const FeatureInfoPanel = createReactClass({
     this.props.viewState.storyShown = false;
     this.props.terria.currentViewer.notifyRepaintRequired();
 
+    // Close preview summary (important to force rerender)
+    this.props.viewState.hotspotSummaryEnabled = false;
+
     this.props.viewState.selectedHotspot = featureProperties;
     this.props.viewState.hotspotSummaryEnabled = true;
-    this.props.terria.currentViewer.notifyRepaintRequired();
     this.close();
   },
 
