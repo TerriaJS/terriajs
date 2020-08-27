@@ -6,9 +6,10 @@ import { withRouter } from "react-router-dom";
 import { withTranslation } from "react-i18next";
 
 import {
+  ROOT_ROUTE,
   CATALOG_ROUTE,
   CATALOG_MEMBER_ROUTE
-} from "../../ReactViewModels/TerriaRouting.js";
+} from "../../ReactViewModels/TerriaRouting";
 
 import ModalPopup from "./ModalPopup";
 import Tabs from "./Tabs.jsx";
@@ -27,6 +28,7 @@ const ExplorerWindow = observer(
     onClose() {
       this.props.viewState.closeCatalog();
       this.props.viewState.switchMobileView("nowViewing");
+      this.props.viewState.history.push(ROOT_ROUTE);
     },
 
     onStartAnimatingIn() {

@@ -10,7 +10,7 @@ import { Helmet } from "react-helmet";
 import {
   CATALOG_ROUTE,
   CATALOG_MEMBER_ROUTE
-} from "../../ReactViewModels/TerriaRouting.js";
+} from "../../ReactViewModels/TerriaRouting";
 
 import { terriaTheme } from "./StandardTheme";
 import arrayContains from "../../Core/arrayContains";

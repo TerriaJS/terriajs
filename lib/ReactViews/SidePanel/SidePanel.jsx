@@ -11,7 +11,7 @@ import FullScreenButton from "./FullScreenButton";
 
 import { useRefForTerria } from "../Hooks/useRefForTerria";
 
-import { CATALOG_ROUTE } from "../../ReactViewModels/TerriaRouting.js";
+import { CATALOG_ROUTE } from "../../ReactViewModels/TerriaRouting";
 
 import Box from "../../Styled/Box";
 import Spacing from "../../Styled/Spacing";
