@@ -118,11 +118,36 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
       format: undefined
     };
 
+    const dimensionsList = this.sdmxJsonDataflow.dataStructure
+      .dataStructureComponents?.dimensionList;
+
+    let regionTypeFromDimension: string | undefined;
+
+    // Use this.catalogItem.regionTypeConcepts to see if any region types can be extracted from dimensions
+    if (
+      isDefined(this.catalogItem.regionTypeConcepts) &&
+      this.catalogItem.regionTypeConcepts.length > 0
+    ) {
+      this.catalogItem.regionTypeConcepts.forEach(concept => {
+        // Find dimension id with concept
+        const dimId = dimensionsList?.dimensions?.find(
+          dim => dim.conceptIdentity === concept
+        )?.id;
+
+        const dim = this.catalogItem.dimensions?.find(d => d.id === dimId);
+
+        // Set region type to dimension's selected id
+        regionTypeFromDimension = dim?.selectedId;
+      });
+
+      console.log(`found regionTypeFromStructure ${regionTypeFromDimension}`);
+    }
+
+    console.log(this.catalogItem);
+
     const dimColums = [
-      ...(this.sdmxJsonDataflow.dataStructure.dataStructureComponents
-        ?.dimensionList.dimensions || []),
-      ...(this.sdmxJsonDataflow.dataStructure.dataStructureComponents
-        ?.dimensionList.timeDimensions || [])
+      ...(dimensionsList?.dimensions || []),
+      ...(dimensionsList?.timeDimensions || [])
     ].map(dim => {
       const conceptUrn = parseSdmxUrn(dim.conceptIdentity);
       const concept = this.getConcept(
@@ -132,27 +157,24 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
 
       let regionType: string | undefined;
 
-      console.log(this.catalogItem.regionMappedDimensionIds);
-
       if (
         dim.id &&
         this.catalogItem.regionMappedDimensionIds.includes(dim.id)
       ) {
-        // Try to look for manual regionType in regionTypeMap
-        regionType = this.catalogItem.regionTypeMap?.find(
-          map => map.id === dim.id
-        )?.regionType;
+        // use regionTypeFromDimension or try to look for manual regionType in regionConceptRegionTypeMap
+        regionType =
+          this.catalogItem.regionConceptRegionTypeMap?.find(
+            map => map.id === dim.conceptIdentity
+          )?.regionType || regionTypeFromDimension;
 
         // If TableColumn failed to find suitable region provider -> use country as default
-        if (
-          !regionType &&
-          !super.columns?.find(col => col.name === dim.id)?.regionType
-        ) {
-          regionType = "country";
-        }
+        // if (
+        //   !regionType &&
+        //   !super.columns?.find(col => col.name === dim.id)?.regionType
+        // ) {
+        //   regionType = "country";
+        // }
       }
-
-      console.log(regionType);
 
       return {
         name: dim.id,
@@ -192,13 +214,16 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   @computed
   get regionMappedDimensionIds() {
     return this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.dimensionList.dimensions
+      ?.filter(
+        dim =>
+          dim.conceptIdentity &&
+          (this.catalogItem.regionConceptRegionTypeMap?.find(
+            map => dim.conceptIdentity === map.id
+          ) ||
+            this.catalogItem.regionConcepts?.includes(dim.conceptIdentity))
+      )
       ?.map(dim => dim.id)
-      .filter(
-        id =>
-          isDefined(id) &&
-          (id.toLowerCase().startsWith("geo_") ||
-            this.regionTypeMap?.find(map => id === map.id))
-      ) as string[];
+      .filter(isDefined);
   }
 
   @computed
@@ -300,7 +325,13 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
               name: concept?.name as string,
               options: options,
               position: dim.position,
-              selectedId: options[0].id // Not sure where to get a better default value from?,
+              selectedId:
+                dim.conceptIdentity &&
+                this.catalogItem.allowUndefinedConcepts.includes(
+                  dim.conceptIdentity
+                )
+                  ? undefined
+                  : options[0].id // Not sure where to get a better default value from?,
             };
           }
         })

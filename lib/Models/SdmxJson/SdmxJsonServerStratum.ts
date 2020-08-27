@@ -279,13 +279,36 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
     model.setTrait(stratum, "agencyId", node.item.agencyID as string);
     model.setTrait(stratum, "dataflowId", node.item.id);
 
-    console.log(this.catalogGroup.regionTypeMap);
     // Copy over common traits
     model.setTrait(
       stratum,
-      "regionTypeMap",
-      this.catalogGroup.traits["regionTypeMap"].toJson(
-        this.catalogGroup.regionTypeMap
+      "regionConcepts",
+      this.catalogGroup.traits["regionConcepts"].toJson(
+        this.catalogGroup.regionConcepts
+      )
+    );
+
+    model.setTrait(
+      stratum,
+      "regionConceptRegionTypeMap",
+      this.catalogGroup.traits["regionConceptRegionTypeMap"].toJson(
+        this.catalogGroup.regionConceptRegionTypeMap
+      )
+    );
+
+    model.setTrait(
+      stratum,
+      "regionTypeConcepts",
+      this.catalogGroup.traits["regionTypeConcepts"].toJson(
+        this.catalogGroup.regionTypeConcepts
+      )
+    );
+
+    model.setTrait(
+      stratum,
+      "allowUndefinedConcepts",
+      this.catalogGroup.traits["allowUndefinedConcepts"].toJson(
+        this.catalogGroup.allowUndefinedConcepts
       )
     );
 

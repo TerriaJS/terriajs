@@ -99,11 +99,12 @@ export default class SdmxJsonCatalogItem
    * Disable dimension if viewing time-series and this dimenion is a time dimension OR viewing region-mapping and this dimension is for region-mapping
    */
   isDimDisabled(dim: Dimension) {
-    return (
+    const disable =
       (this.viewBy === "time" && this.timeDimensionIds.includes(dim.id!)) ||
       (this.viewBy === "region" &&
-        this.regionMappedDimensionIds.includes(dim.id!))
-    );
+        this.regionMappedDimensionIds.includes(dim.id!));
+    console.log(`dim ${dim.id} disable is ${disable}`);
+    return disable;
   }
 
   @computed get sdmxViewModeDimension(): SelectableDimension {
@@ -240,6 +241,8 @@ export default class SdmxJsonCatalogItem
 
   protected async forceLoadTableData(): Promise<string[][]> {
     await this.loadMetadata();
+
+    console.log(this.regionMappedDimensionIds);
 
     if (!isDefined(this.dataColumnMajor)) {
       return await this.downloadData();
