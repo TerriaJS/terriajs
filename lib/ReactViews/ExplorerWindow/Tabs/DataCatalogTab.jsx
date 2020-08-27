@@ -54,7 +54,7 @@ class DataCatalogTab extends React.Component {
     const idToDecode =
       this.props.match.params && this.props.match.params.catalogMemberId;
     const cleanPath = URI.decode(idToDecode);
-    const previewedItem = this.props.terria.catalog.shareKeyIndex[cleanPath];
+    const previewedItem = this.props.terria.catalog.shareKeyIndex?.[cleanPath];
 
     return (
       <div className={Styles.root}>
