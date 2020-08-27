@@ -50,6 +50,24 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
     }
 
     @action
+    sortMembers(
+      stratumId: string,
+      sortFunction: (a: BaseModel, b: BaseModel) => number
+    ) {
+      const members: any = this.getTrait(stratumId, "members");
+      const models = this.memberModels as Array<BaseModel>;
+      if (members === undefined || models.length === 0) return;
+      const unsortedModels = models.splice(0);
+      members.clear();
+      const sortedModels = filterOutUndefined(
+        unsortedModels.sort(sortFunction)
+      );
+      sortedModels.forEach((m: BaseModel) => {
+        this.add(stratumId, m);
+      }, this);
+    }
+
+    @action
     toggleOpen(stratumId: string) {
       this.setTrait(stratumId, "isOpen", !this.isOpen);
     }

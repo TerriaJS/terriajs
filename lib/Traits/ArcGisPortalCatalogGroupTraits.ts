@@ -71,6 +71,17 @@ export default class ArcGisPortalCatalogGroupTraits extends mixTraits(
 
   @primitiveTrait({
     type: "string",
+    name: "Sort By",
+    description: `Determines how items should be sorted in the catalog. Valid values are:
+       * title - Items are sorted by the dataset title.
+       * dateCreated - Items are sorted by when they were created.
+       * dateModified - Items are sorted by when they were last modified.
+      Defaults to being sorted by title.`
+  })
+  sortBy?: "dateCreated" | "dateModified" | "title" = "title";
+
+  @primitiveTrait({
+    type: "string",
     name: "Ungrouped title",
     description: `A title for the group holding all items that don't have a group in an ArcGIS Portal.
       If the value is a blank string or undefined, these items will be left at the top level, not grouped.`

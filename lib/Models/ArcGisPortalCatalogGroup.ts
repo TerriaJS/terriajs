@@ -20,6 +20,7 @@ import ArcGisPortalItemReference from "./ArcGisPortalItemReference";
 import CreateModel from "./CreateModel";
 import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
+import filterOutUndefined from "../Core/filterOutUndefined";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
@@ -208,6 +209,16 @@ export class ArcGisPortalStratum extends LoadableStratum(
   }
 
   @computed
+  get sortingComparitor() {
+    let comparitor = sortByDatasetTitle;
+    if (this._catalogGroup.sortBy === "dateCreated")
+      comparitor = sortByDateCreated;
+    if (this._catalogGroup.sortBy === "dateModified")
+      comparitor = sortByDateModified;
+    return comparitor;
+  }
+
+  @computed
   get members(): ModelReference[] {
     if (this.filteredGroups.length > 0) {
       const groupIds: ModelReference[] = [];
@@ -221,9 +232,17 @@ export class ArcGisPortalStratum extends LoadableStratum(
       return groupIds;
     }
     // Otherwise return the id's of all the resources of all the filtered datasets
-    return this.filteredDatasets.map(ds => {
+    return this.filteredDatasets.sort(this.sortingComparitor).map(ds => {
       return this._catalogGroup.uniqueId + "/" + ds.id;
     }, this);
+  }
+
+  private sortGroupContent() {
+    if (this.filteredGroups.length > 0) {
+      this.filteredGroups.forEach(g => {
+        g.sortMembers("definition", this.sortingComparitor);
+      }, this);
+    }
   }
 
   private getDatasets(): ArcGisItem[] {
@@ -246,17 +265,7 @@ export class ArcGisPortalStratum extends LoadableStratum(
       ...createUngroupedGroup(this),
       ...createGroupsByPortalGroups(this)
     ];
-    groups.sort(function(a, b) {
-      if (a.nameInCatalog === undefined || b.nameInCatalog === undefined)
-        return 0;
-      if (a.nameInCatalog < b.nameInCatalog) {
-        return -1;
-      }
-      if (a.nameInCatalog > b.nameInCatalog) {
-        return 1;
-      }
-      return 0;
-    });
+    groups.sort(sortByNameInCatalog);
     return groups;
   }
 
@@ -277,6 +286,7 @@ export class ArcGisPortalStratum extends LoadableStratum(
     this.filteredDatasets.forEach(dataset => {
       this.createMemberFromDataset(dataset);
     });
+    this.sortGroupContent();
   }
 
   @action
@@ -501,4 +511,41 @@ async function getMoreResults(
     console.log(err);
     return -1;
   }
+}
+
+function sortByAttribute(a: any, b: any, attribute: string) {
+  if (
+    a._arcgisItem[attribute] === undefined ||
+    b._arcgisItem[attribute] === undefined
+  ) {
+    return 0;
+  } else if (a._arcgisItem[attribute] < b._arcgisItem[attribute]) {
+    return -1;
+  } else if (a._arcgisItem[attribute] > b._arcgisItem[attribute]) {
+    return 1;
+  }
+  return 0;
+}
+
+function sortByDatasetTitle(a: any, b: any) {
+  return sortByAttribute(a, b, "title");
+}
+
+function sortByDateCreated(a: any, b: any) {
+  return sortByAttribute(a, b, "dateCreated");
+}
+
+function sortByDateModified(a: any, b: any) {
+  return sortByAttribute(a, b, "dateModified");
+}
+
+function sortByNameInCatalog(a: any, b: any) {
+  if (a.nameInCatalog === undefined || b.nameInCatalog === undefined) {
+    return 0;
+  } else if (a.nameInCatalog < b.nameInCatalog) {
+    return -1;
+  } else if (a.nameInCatalog > b.nameInCatalog) {
+    return 1;
+  }
+  return 0;
 }

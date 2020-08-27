@@ -19,4 +19,8 @@ export default interface Group {
     member: BaseModel,
     newIndex: number
   ): void;
+  sortMembers(
+    stratumId: string,
+    sortFunction: (a: BaseModel, b: BaseModel) => number
+  ): void;
 }
