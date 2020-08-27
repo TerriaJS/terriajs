@@ -17,12 +17,15 @@ class SidePanelContent extends React.Component {
   };
 
   filterHotspots = sector => {
-    const { terria } = this.props;
+    const { terria, viewState } = this.props;
+
     terria.nowViewing.items.map(item => {
       if (item.type === "geojson") {
         item.isShown = item.name === sector;
       }
     });
+    // set isHotspots filtered to true to make back to all hotspots button visible
+    viewState.isHotspotsFiltered = true;
   };
   closeSectorInfo = () => {
     this.setState({ sector: null });
@@ -49,6 +52,7 @@ SidePanelContent.propTypes = {
   /**
    * Terria instance
    */
-  terria: PropTypes.object.isRequired
+  terria: PropTypes.object.isRequired,
+  viewState: PropTypes.object.isRequired
 };
 export default SidePanelContent;
