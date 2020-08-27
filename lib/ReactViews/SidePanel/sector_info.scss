@@ -21,7 +21,7 @@
   background-color: $grey-lightest;
   font-size: $font-size-small;
   border-radius: $radius-small;
-  background-image: url("../../../wwwroot/images/sectors/agriculture.png");
+  background-image: url("../../../wwwroot/images/receipt/sectors/agriculture.png");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -33,7 +33,7 @@
 }
 .imageContainer {
   background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(0, 0, 0, 0.6)),
-    url("../../../wwwroot/images/sectors/agriculture.png");
+    url("../../../wwwroot/images/receipt/sectors/agriculture.png");
   background-size: cover;
   height: 200px;
   margin: 5px 0;

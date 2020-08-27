@@ -78,12 +78,14 @@ const GLYPHS = {
   story: require("../../wwwroot/images/icons/story.svg"),
   recapture: require("../../wwwroot/images/icons/recapture.svg"),
   menuDotted: require("../../wwwroot/images/icons/menu-dotted.svg"),
-  // Receipt-Sectors
-  agriculture: require("../../wwwroot/images/icons/sector-icons/agriculture.svg"),
-  manufacturing: require("../../wwwroot/images/icons/sector-icons/manufacturing.svg"),
-  internationalCooperationAndDevelopment: require("../../wwwroot/images/icons/sector-icons/international_cooperation_and_development.svg"),
-  coastalInfrastructure: require("../../wwwroot/images/icons/sector-icons/coastal_infrastructure.svg"),
-  finance: require("../../wwwroot/images/icons/sector-icons/finance.svg")
+  // Receipt
+  agriculture: require("../../wwwroot/images/icons/receipt/sector-icons/agriculture.svg"),
+  manufacturing: require("../../wwwroot/images/icons/receipt/sector-icons/manufacturing.svg"),
+  internationalCooperationAndDevelopment: require("../../wwwroot/images/icons/receipt/sector-icons/international_cooperation_and_development.svg"),
+  coastalInfrastructure: require("../../wwwroot/images/icons/receipt/sector-icons/coastal_infrastructure.svg"),
+  finance: require("../../wwwroot/images/icons/receipt/sector-icons/finance.svg"),
+
+  back: require("../../wwwroot/images/icons/receipt/backTo.svg")
 };
 
 const Icon = createReactClass({
