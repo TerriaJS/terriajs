@@ -7,7 +7,7 @@ import primitiveTrait from "./primitiveTrait";
 import objectArrayTrait from "./objectArrayTrait";
 import primitiveArrayTrait from "./primitiveArrayTrait";
 
-export class RegionTypeMap extends ModelTraits {
+export class MapTrait extends ModelTraits {
   @primitiveTrait({
     type: "string",
     name: "ID",
@@ -20,7 +20,7 @@ export class RegionTypeMap extends ModelTraits {
     name: "Name",
     description: "Region type to use for a given concepts ID."
   })
-  regionType?: string;
+  value?: string;
 }
 
 export class SdmxCommonTraits extends mixTraits(
@@ -35,12 +35,12 @@ export class SdmxCommonTraits extends mixTraits(
   regionConcepts?: string[];
 
   @objectArrayTrait({
-    type: RegionTypeMap,
+    type: MapTrait,
     idProperty: "index",
     name: "Region concepts mapping",
     description: "Manual region type overrides for concepts"
   })
-  regionConceptRegionTypeMap?: RegionTypeMap[];
+  regionConceptRegionTypeMap?: MapTrait[];
 
   @primitiveArrayTrait({
     type: "string",
@@ -55,6 +55,14 @@ export class SdmxCommonTraits extends mixTraits(
     description: "Concepts used to find region types"
   })
   allowUndefinedConcepts?: string[];
+
+  @objectArrayTrait({
+    type: MapTrait,
+    idProperty: "index",
+    name: "Default values for concepts",
+    description: "Default values for concepts"
+  })
+  conceptDefaultValueMap?: MapTrait[];
 }
 
 export default class SdmxCatalogGroupTraits extends mixTraits(

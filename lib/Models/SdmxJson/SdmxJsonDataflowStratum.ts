@@ -165,7 +165,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
         regionType =
           this.catalogItem.regionConceptRegionTypeMap?.find(
             map => map.id === dim.conceptIdentity
-          )?.regionType || regionTypeFromDimension;
+          )?.value || regionTypeFromDimension;
 
         // If TableColumn failed to find suitable region provider -> use country as default
         // if (
@@ -180,7 +180,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
         name: dim.id,
         title: concept?.name,
         units: undefined,
-        type: undefined,
+        type: isDefined(regionType) ? "region" : undefined,
         regionType,
         regionDisambiguationColumn: undefined,
         replaceWithZeroValues: undefined,
@@ -320,18 +320,30 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
           });
 
           if (isDefined(options)) {
+            let selectedId: string | undefined = options[0].id;
+
+            const defaultValue = this.catalogItem.conceptDefaultValueMap?.find(
+              map => map.id === dim.conceptIdentity
+            )?.value;
+
+            if (defaultValue) {
+              selectedId = defaultValue;
+            } else if (
+              dim.conceptIdentity &&
+              this.catalogItem.allowUndefinedConcepts?.includes(
+                dim.conceptIdentity
+              )
+            ) {
+              selectedId = undefined;
+            }
+
             return {
               id: dim.id!,
               name: concept?.name as string,
               options: options,
               position: dim.position,
-              selectedId:
-                dim.conceptIdentity &&
-                this.catalogItem.allowUndefinedConcepts.includes(
-                  dim.conceptIdentity
-                )
-                  ? undefined
-                  : options[0].id // Not sure where to get a better default value from?,
+              selectedId
+              // Not sure where to get a better default value from?,
             };
           }
         })
