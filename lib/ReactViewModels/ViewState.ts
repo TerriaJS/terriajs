@@ -1,4 +1,6 @@
 import { Ref } from "react";
+import { History } from "history";
+
 import clone from "terriajs-cesium/Source/Core/clone";
 import defined from "terriajs-cesium/Source/Core/defined";
 import DisclaimerHandler from "./DisclaimerHandler";
@@ -56,6 +58,7 @@ export default class ViewState {
   readonly searchState: SearchState;
   readonly terria: Terria;
   readonly relativePosition = RelativePosition;
+  history: History | undefined;
 
   @observable previewedItem: BaseModel | undefined;
   @observable userDataPreviewedItem: BaseModel | undefined;
@@ -497,12 +500,14 @@ export default class ViewState {
     this.explorerPanelIsVisible = true;
     this.activeTabCategory = DATA_CATALOG_NAME;
     this.switchMobileView(this.mobileViewOptions.data);
+    this.history?.push("/catalog/");
   }
 
   @action
   openUserData() {
     this.explorerPanelIsVisible = true;
     this.activeTabCategory = USER_DATA_NAME;
+    this.history?.push("/catalog/");
   }
 
   @action
