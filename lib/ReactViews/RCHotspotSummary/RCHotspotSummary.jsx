@@ -44,9 +44,8 @@ const HotspotSummary = createReactClass({
       <div>
         <div className={Styles.flex}>
           <div className={Styles.flexGrow}>
-            {sector} - {type}
+            <Icon glyph={Icon.GLYPHS[sector]} className={Styles.icon} />
           </div>
-
           <button
             type="button"
             onClick={this.close}
@@ -56,8 +55,8 @@ const HotspotSummary = createReactClass({
             <Icon glyph={Icon.GLYPHS.close} />
           </button>
         </div>
-        <h1>{title}</h1>
-        <p>{description}</p>
+        <h1>{title || "No title provided"}</h1>
+        <p>{description || "No description provided"}</p>
       </div>
     );
   }

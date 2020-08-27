@@ -11,6 +11,7 @@
 .flex {
   display: flex;
 }
+
 .flexGrow {
   flex-grow: 1;
 }
@@ -19,16 +20,26 @@
 .btnToggleFeature {
   composes: btn from "../../Sass/common/_buttons.scss";
   vertical-align: middle;
+
   &:hover,
   &:focus {
     svg {
       fill: $dark;
     }
   }
+
   svg {
     height: 16px;
     width: 16px;
     display: block;
     fill: $close-icon-info-panel-button;
   }
+}
+
+.icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  vertical-align: -6px;
+  margin-right: 8px;
 }
