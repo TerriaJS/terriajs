@@ -5,6 +5,7 @@ import createReactClass from "create-react-class";
 import Styles from "./RCHotspotSummary.scss";
 import { launchStory } from "../../Models/Receipt";
 import triggerResize from "../../Core/triggerResize";
+import Icon from "../Icon";
 
 const HotspotSummary = createReactClass({
   propTypes: {
@@ -28,6 +29,10 @@ const HotspotSummary = createReactClass({
     });
   },
 
+  close() {
+    this.props.viewState.hotspotSummaryEnabled = false;
+  },
+
   render() {
     const hotspot = this.props.viewState.selectedHotspot;
     const type = hotspot["_rc-type"]?._value;
@@ -37,17 +42,22 @@ const HotspotSummary = createReactClass({
 
     return (
       <div>
-        {sector} - {type}
+        <div className={Styles.flex}>
+          <div className={Styles.flexGrow}>
+            {sector} - {type}
+          </div>
+
+          <button
+            type="button"
+            onClick={this.close}
+            className={Styles.btnCloseFeature}
+            title="Close"
+          >
+            <Icon glyph={Icon.GLYPHS.close} />
+          </button>
+        </div>
         <h1>{title}</h1>
         <p>{description}</p>
-        <br />
-        <button
-          type="button"
-          className={Styles.satelliteSuggestionBtn}
-          onClick={this.openStory}
-        >
-          Play story
-        </button>
       </div>
     );
   }
