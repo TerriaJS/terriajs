@@ -4,7 +4,8 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.47)
-* [The next improvement]
+* Ad `sortMembers` method to `GroupMixin`
+* Implement member sorting within `ArcGisPortalCatalogGroup`
 
 #### 8.0.0-alpha.46
 * Fixed i18n initialisation for magda based configurations
