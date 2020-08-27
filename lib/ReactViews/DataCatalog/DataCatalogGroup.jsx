@@ -19,6 +19,7 @@ const DataCatalogGroup = observer(
     propTypes: {
       group: PropTypes.object.isRequired,
       viewState: PropTypes.object.isRequired,
+      match: PropTypes.object.isRequired,
       /** Overrides whether to get the open state of the group from the group model or manage it internally */
       manageIsOpenLocally: PropTypes.bool,
       userData: PropTypes.bool,

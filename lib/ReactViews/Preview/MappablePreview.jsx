@@ -6,7 +6,7 @@ import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import getPath from "../../Core/getPath";
 import addToWorkbench from "../../Models/addToWorkbench";
-import Mappable from "../../Models/Mappable";
+// import Mappable from "../../Models/Mappable";
 import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
 // eslint-disable-next-line no-unused-vars
 import Terria from "../../Models/Terria";

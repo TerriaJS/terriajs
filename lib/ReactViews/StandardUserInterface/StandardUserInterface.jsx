@@ -40,7 +40,7 @@ import TourPortal from "../Tour/TourPortal";
 import SatelliteHelpPrompt from "../HelpScreens/SatelliteHelpPrompt";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage";
 import withRoutingTracker from "./withRoutingTracker";
-import SatelliteGuide from "../Guide/SatelliteGuide.jsx";
+// import SatelliteGuide from "../Guide/SatelliteGuide.jsx";
 
 import { Small, Medium } from "../Generic/Responsive";
 import classNames from "classnames";
