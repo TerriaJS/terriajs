@@ -232,7 +232,7 @@ export class ArcGisPortalStratum extends LoadableStratum(
       return groupIds;
     }
     // Otherwise return the id's of all the resources of all the filtered datasets
-    return this.filteredDatasets.sort(this.sortingComparitor).map(ds => {
+    return this.filteredDatasets.sort(sortByNameInCatalog).map(ds => {
       return this._catalogGroup.uniqueId + "/" + ds.id;
     }, this);
   }
