@@ -367,6 +367,8 @@ const ViewingControls = observer(
             {/* </If> */}
             {/* <If condition={item.showsInfo}> */}
             <WorkbenchButton
+              // to={`${CATALOG_ROUTE}${URI.encode(item.uniqueId)}`}
+              // type="button"
               onClick={this.previewItem}
               title={t("workbench.previewItemTitle")}
               iconElement={() => <Icon glyph={Icon.GLYPHS.about} />}

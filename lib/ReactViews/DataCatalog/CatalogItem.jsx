@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import Icon from "../Icon";
@@ -33,7 +34,8 @@ function CatalogItem(props) {
   return (
     <li className={classNames(Styles.root)}>
       <Text fullWidth primary={props.isPrivate}>
-        <button
+        <Link
+          to={props.linkTo}
           type="button"
           onClick={props.onTextClick}
           title={props.title}
@@ -43,7 +45,7 @@ function CatalogItem(props) {
           })}
         >
           {props.text}
-        </button>
+        </Link>
       </Text>
       <Box>
         {props.isPrivate && <PrivateIndicator />}
@@ -76,6 +78,7 @@ CatalogItem.propTypes = {
   selected: PropTypes.bool,
   text: PropTypes.string,
   title: PropTypes.string,
+  linkTo: PropTypes.string,
   trashable: PropTypes.bool,
   onTrashClick: PropTypes.func,
   onBtnClick: PropTypes.func,

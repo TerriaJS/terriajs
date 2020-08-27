@@ -173,6 +173,25 @@ const SidePanel = observer(
             />
             <Spacing bottom={2} />
             <Box justifySpaceBetween>
+              {/* <Link
+              to={CATALOG_ROUTE}
+              type="button"
+              onClick={this.onAddDataClicked}
+              className={Styles.button}
+              title={addData}
+            >
+              <Icon glyph={Icon.GLYPHS.add} />
+              {addData}
+            </Link>
+            <Link
+              to={CATALOG_ROUTE}
+              type="button"
+              onClick={this.onAddLocalDataClicked}
+              className={Styles.uploadData}
+              title={t("addData.load")}
+            >
+              <Icon glyph={Icon.GLYPHS.upload} />
+            </Link> */}
               <SidePanelButton
                 ref={this.props.refForExploreMapData}
                 onClick={e => this.onAddDataClicked(e)}

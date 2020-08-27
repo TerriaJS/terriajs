@@ -2,9 +2,16 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
+import { withRouter } from "react-router-dom";
+import { withTranslation } from "react-i18next";
+
+import {
+  CATALOG_ROUTE,
+  CATALOG_MEMBER_ROUTE
+} from "../../ReactViewModels/TerriaRouting.js";
 
 import ModalPopup from "./ModalPopup";
-import Tabs from "./Tabs";
+import Tabs from "./Tabs.jsx";
 import { runInAction } from "mobx";
 
 const ExplorerWindow = observer(
@@ -13,7 +20,8 @@ const ExplorerWindow = observer(
 
     propTypes: {
       terria: PropTypes.object.isRequired,
-      viewState: PropTypes.object.isRequired
+      viewState: PropTypes.object.isRequired,
+      match: PropTypes.object.isRequired
     },
 
     onClose() {
@@ -35,9 +43,8 @@ const ExplorerWindow = observer(
 
     isVisible() {
       return (
-        !this.props.viewState.useSmallScreenInterface &&
-        !this.props.viewState.hideMapUi() &&
-        this.props.viewState.explorerPanelIsVisible
+        this.props.match.path === CATALOG_MEMBER_ROUTE ||
+        this.props.match.path === CATALOG_ROUTE
       );
     },
 
@@ -58,4 +65,4 @@ const ExplorerWindow = observer(
   })
 );
 
-module.exports = ExplorerWindow;
+module.exports = withRouter(withTranslation()(ExplorerWindow));

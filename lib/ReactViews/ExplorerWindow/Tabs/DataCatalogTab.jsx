@@ -2,10 +2,13 @@ import { computed, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
+import URI from "urijs";
+
+import { withRouter } from "react-router-dom";
+import DataCatalog from "../../DataCatalog/DataCatalog.jsx";
+import DataPreview from "../../Preview/DataPreview.jsx";
 import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
-import DataCatalog from "../../DataCatalog/DataCatalog";
-import DataPreview from "../../Preview/DataPreview";
 import SearchBox, { DEBOUNCE_INTERVAL } from "../../Search/SearchBox.jsx";
 import Styles from "./data-catalog-tab.scss";
 import Breadcrumbs from "../../Search/Breadcrumbs";
@@ -17,6 +20,7 @@ class DataCatalogTab extends React.Component {
   static propTypes = {
     terria: PropTypes.object,
     viewState: PropTypes.object,
+    match: PropTypes.object,
     items: PropTypes.array,
     searchPlaceholder: PropTypes.string,
     overrideState: PropTypes.string,
@@ -46,6 +50,12 @@ class DataCatalogTab extends React.Component {
     const searchState = this.props.viewState.searchState;
     const previewed = this.props.viewState.previewedItem;
     const showBreadcrumbs = this.props.viewState.breadcrumbsShown;
+
+    const idToDecode =
+      this.props.match.params && this.props.match.params.catalogMemberId;
+    const cleanPath = URI.decode(idToDecode);
+    const previewedItem = this.props.terria.catalog.shareKeyIndex[cleanPath];
+
     return (
       <div className={Styles.root}>
         <Box fullHeight column>
@@ -80,7 +90,8 @@ class DataCatalogTab extends React.Component {
               <DataPreview
                 terria={terria}
                 viewState={this.props.viewState}
-                previewed={previewed}
+                // previewed={this.props.viewState.previewedItem}
+                previewed={previewedItem}
               />
             </Box>
           </Box>
@@ -98,4 +109,4 @@ class DataCatalogTab extends React.Component {
   }
 }
 
-export default withTranslation()(withTheme(DataCatalogTab));
+export default withRouter(withTranslation()(withTheme(DataCatalogTab)));
