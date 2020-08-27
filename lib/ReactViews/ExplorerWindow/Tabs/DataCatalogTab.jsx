@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import URI from "urijs";
 
+import { BaseModel } from "../../../Models/Model";
 import { withRouter } from "react-router-dom";
 import DataCatalog from "../../DataCatalog/DataCatalog.jsx";
 import DataPreview from "../../Preview/DataPreview.jsx";
@@ -54,7 +55,8 @@ class DataCatalogTab extends React.Component {
     const idToDecode =
       this.props.match.params && this.props.match.params.catalogMemberId;
     const cleanPath = URI.decode(idToDecode);
-    const previewedItem = this.props.terria.catalog.shareKeyIndex?.[cleanPath];
+    // const previewedItem = this.props.terria.catalog.shareKeyIndex?.[cleanPath];
+    const previewedItem = this.props.terria.getModelById(BaseModel, cleanPath);
 
     return (
       <div className={Styles.root}>

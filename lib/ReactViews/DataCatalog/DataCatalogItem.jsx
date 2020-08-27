@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
-import addedByUser from "../../Core/addedByUser";
+// import addedByUser from "../../Core/addedByUser";
 import getPath from "../../Core/getPath";
 import addToWorkbench from "../../Models/addToWorkbench";
 import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";

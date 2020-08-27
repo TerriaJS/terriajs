@@ -19,6 +19,8 @@ import Text from "../../Styled/Text";
 // const CatalogGroupButton = styled.button`
 const CatalogGroupButton = styled(Link)`
   ${props => `
+    color: ${props.theme.textBlack};
+
     &:hover,
     &:focus {
       color: ${props.theme.textLight};
