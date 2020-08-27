@@ -102,7 +102,7 @@ class MappablePreview extends React.Component {
                 this.props.viewState.explorerPanelIsVisible
               ]}
               terria={this.props.terria}
-              previewedCatalogItem={catalogItem}
+              previewed={catalogItem}
               showMap={
                 !this.props.viewState.explorerPanelAnimating ||
                 this.props.viewState.useSmallScreenInterface

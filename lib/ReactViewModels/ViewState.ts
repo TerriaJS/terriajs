@@ -500,14 +500,12 @@ export default class ViewState {
     this.explorerPanelIsVisible = true;
     this.activeTabCategory = DATA_CATALOG_NAME;
     this.switchMobileView(this.mobileViewOptions.data);
-    this.history?.push("/catalog/");
   }
 
   @action
   openUserData() {
     this.explorerPanelIsVisible = true;
     this.activeTabCategory = USER_DATA_NAME;
-    this.history?.push("/catalog/");
   }
 
   @action
