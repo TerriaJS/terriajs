@@ -57,6 +57,14 @@ const HotspotSummary = createReactClass({
         </div>
         <h1>{title || "No title provided"}</h1>
         <p>{description || "No description provided"}</p>
+        <br />
+        <button
+          type="button"
+          className={Styles.satelliteSuggestionBtn}
+          onClick={this.openStory}
+        >
+          Play story
+        </button>
       </div>
     );
   }
