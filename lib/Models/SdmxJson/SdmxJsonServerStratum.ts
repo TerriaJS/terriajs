@@ -312,6 +312,14 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
       )
     );
 
+    model.setTrait(
+      stratum,
+      "conceptDefaultValueMap",
+      this.catalogGroup.traits["conceptDefaultValueMap"].toJson(
+        this.catalogGroup.conceptDefaultValueMap
+      )
+    );
+
     model.setTrait(stratum, "info", [
       createInfoSection("Description", node.item.description)
     ]);

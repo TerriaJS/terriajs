@@ -176,6 +176,18 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
         // }
       }
 
+      if (isDefined(regionType)) {
+        // Resolve regionType to region provider (this will also match against region provider aliases)
+        const matchingRegionProviders = this.catalogItem.regionProviderList?.getRegionDetails(
+          [regionType],
+          undefined,
+          undefined
+        );
+        if (matchingRegionProviders && matchingRegionProviders.length > 0) {
+          regionType = matchingRegionProviders[0].regionProvider.regionType;
+        }
+      }
+
       return {
         name: dim.id,
         title: concept?.name,
@@ -321,6 +333,8 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
 
           if (isDefined(options)) {
             let selectedId: string | undefined = options[0].id;
+
+            console.log(this.catalogItem.conceptDefaultValueMap);
 
             const defaultValue = this.catalogItem.conceptDefaultValueMap?.find(
               map => map.id === dim.conceptIdentity
