@@ -15,6 +15,7 @@ Change Log
 * Add basic WFS support with `WebFeatureServiceCatalogGroup` and `WebFeatureServiceCatalogItem`
 * Update style of diff tool close button to match new design
 * Remove sass code from the `HelpPanel` component
+* Added shift-drag quick zoom
 * Added an option for translation override from TerriaMap
 * Help content, trainer bar & help terms can use translation overrides
 * Accepts `backend` options under a new `terria.start()` property, `i18nOptions`
