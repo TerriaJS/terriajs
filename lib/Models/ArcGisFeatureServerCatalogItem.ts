@@ -533,6 +533,10 @@ function getUniqueValueSymbol(
   uniqueValueRenderer: UniqueValueRenderer,
   rendererObj: any
 ): Symbol | null {
+  if (!entity.properties) {
+    return uniqueValueRenderer.defaultSymbol;
+  }
+
   let entityUniqueValue = entity.properties[
     uniqueValueRenderer.field1
   ].getValue();
@@ -567,7 +571,11 @@ function getClassBreaksSymbol(
   entity: Entity,
   classBreaksRenderer: ClassBreaksRenderer
 ): Symbol | null {
-  const entityValue = entity.properties[classBreaksRenderer.field].getValue();
+  if (!entity.properties) {
+    return classBreaksRenderer.defaultSymbol;
+  }
+
+  let entityValue = entity.properties[classBreaksRenderer.field].getValue();
   for (var i = 0; i < classBreaksRenderer.classBreakInfos.length; i++) {
     if (entityValue <= classBreaksRenderer.classBreakInfos[i].classMaxValue) {
       return classBreaksRenderer.classBreakInfos[i].symbol;
@@ -597,22 +605,32 @@ function updateEntityWithEsriStyle(
     // Replace a general Cesium Point with a billboard
     if (entity.point && symbol.imageData) {
       entity.billboard = new BillboardGraphics({
-        image: proxyCatalogItemUrl(
-          catalogItem,
-          `data:${symbol.contentType};base64,${symbol.imageData}`
+        image: new ConstantProperty(
+          proxyCatalogItemUrl(
+            catalogItem,
+            `data:${symbol.contentType};base64,${symbol.imageData}`
+          )
         ),
-        heightReference: catalogItem.clampToGround
-          ? HeightReference.RELATIVE_TO_GROUND
-          : undefined,
-        width: convertEsriPointSizeToPixels(symbol.width!),
-        height: convertEsriPointSizeToPixels(symbol.height!),
-        rotation: symbol.angle
+        heightReference: new ConstantProperty(
+          catalogItem.clampToGround
+            ? HeightReference.RELATIVE_TO_GROUND
+            : undefined
+        ),
+        width: new ConstantProperty(
+          convertEsriPointSizeToPixels(symbol.width!)
+        ),
+        height: new ConstantProperty(
+          convertEsriPointSizeToPixels(symbol.height!)
+        ),
+        rotation: new ConstantProperty(symbol.angle)
       });
 
       if (symbol.xoffset || symbol.yoffset) {
         const x = isDefined(symbol.xoffset) ? symbol.xoffset : 0;
         const y = isDefined(symbol.yoffset) ? symbol.yoffset : 0;
-        entity.billboard.pixelOffset = new Cartesian3(x, y);
+        entity.billboard.pixelOffset = new ConstantProperty(
+          new Cartesian3(x, y)
+        );
       }
 
       entity.point.show = new ConstantProperty(false);
@@ -663,6 +681,9 @@ function updateEntityWithEsriStyle(
       if (color[3] === 0) {
         color[3] = 1;
       }
+      entity.polygon.material = new ColorMaterialProperty(
+        new ConstantProperty(convertEsriColorToCesiumColor(color))
+      );
 
       if (
         symbol.style === "esriSFSNull" &&
@@ -671,7 +692,9 @@ function updateEntityWithEsriStyle(
       ) {
         entity.polygon.show = new ConstantProperty(false);
       } else {
-        entity.polygon.material = convertEsriColorToCesiumColor(color);
+        entity.polygon.material = new ColorMaterialProperty(
+          new ConstantProperty(convertEsriColorToCesiumColor(color))
+        );
       }
       if (symbol.outline) {
         const outlineColor = symbol.outline.color
@@ -679,8 +702,8 @@ function updateEntityWithEsriStyle(
           : defaultOutlineColor;
         /* It can actually happen that entity has both polygon and polyline defined at same time,
             check the implementation of GeoJsonCatalogItem for details. */
-        entity.polygon.outlineColor = convertEsriColorToCesiumColor(
-          outlineColor
+        entity.polygon.outlineColor = new ColorMaterialProperty(
+          new ConstantProperty(convertEsriColorToCesiumColor(outlineColor))
         );
         entity.polygon.outlineWidth = new ConstantProperty(
           convertEsriPointSizeToPixels(symbol.outline.width)
@@ -702,33 +725,35 @@ function esriPolylineStyle(
   color: number[],
   style?: supportedLineStyle
 ): void {
-  if (style) {
-    const patternValue = getLineStyleCesium(style);
-    if (patternValue) {
-      entity.polyline.material = new PolylineDashMaterialProperty({
-        color: convertEsriColorToCesiumColor(color),
-        dashPattern: new ConstantProperty(patternValue)
-      });
-    } else if (style === "esriSLSSolid") {
-      // it is simple line just define color
+  if (entity.polyline) {
+    if (style) {
+      const patternValue = getLineStyleCesium(style);
+      if (patternValue) {
+        entity.polyline.material = new PolylineDashMaterialProperty({
+          color: convertEsriColorToCesiumColor(color),
+          dashPattern: new ConstantProperty(patternValue)
+        });
+      } else if (style === "esriSLSSolid") {
+        // it is simple line just define color
+        entity.polyline.material = new ColorMaterialProperty(
+          convertEsriColorToCesiumColor(color)
+        );
+      } else if (style === "esriSLSDash") {
+        // default PolylineDashMaterialProperty is dashed line ` -` (0x00FF)
+        entity.polyline.material = new PolylineDashMaterialProperty({
+          color: convertEsriColorToCesiumColor(color)
+        });
+      }
+    } else {
+      // we don't know how to handle style make it default
       entity.polyline.material = new ColorMaterialProperty(
         convertEsriColorToCesiumColor(color)
       );
-    } else if (style === "esriSLSDash") {
-      // default PolylineDashMaterialProperty is dashed line ` -` (0x00FF)
-      entity.polyline.material = new PolylineDashMaterialProperty({
-        color: convertEsriColorToCesiumColor(color)
-      });
     }
-  } else {
-    // we don't know how to handle style make it default
-    entity.polyline.material = new ColorMaterialProperty(
-      convertEsriColorToCesiumColor(color)
-    );
-  }
 
-  if (style === "esriSLSNull") {
-    entity.polyline.show = new ConstantProperty(false);
+    if (style === "esriSLSNull") {
+      entity.polyline.show = new ConstantProperty(false);
+    }
   }
 }
 

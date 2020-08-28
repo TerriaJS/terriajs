@@ -75,7 +75,7 @@ export class CartoLoadableStratum extends LoadableStratum(
           });
         }
 
-        const map = JSON.parse(<string>response);
+        const map = JSON.parse(response);
 
         let url: string;
         let subdomains: string[];
