@@ -575,7 +575,7 @@ describe("UserDrawing", function() {
 
     let rectangle: Rectangle = userDrawing.otherEntities.entities
       .getById("rectangle")
-      .rectangle.coordinates.getValue(terria.timelineClock.currentTime);
+      ?.rectangle?.coordinates?.getValue(terria.timelineClock.currentTime);
 
     expect(rectangle).toBeUndefined();
 
@@ -598,7 +598,7 @@ describe("UserDrawing", function() {
 
     rectangle = userDrawing.otherEntities.entities
       .getById("rectangle")
-      .rectangle.coordinates.getValue(terria.timelineClock.currentTime);
+      ?.rectangle?.coordinates?.getValue(terria.timelineClock.currentTime);
 
     expect(rectangle.east).toBeCloseTo(CesiumMath.toRadians(149.124));
     expect(rectangle.west).toBeCloseTo(CesiumMath.toRadians(149.121));
