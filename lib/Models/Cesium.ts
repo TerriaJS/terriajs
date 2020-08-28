@@ -340,7 +340,7 @@ export default class Cesium extends GlobeOrMap {
               ) {
                 const rectangle = zoomUserDrawing.otherEntities.entities
                   .getById("rectangle")
-                  ?.rectangle.coordinates.getValue(
+                  ?.rectangle?.coordinates?.getValue(
                     this.terria.timelineClock.currentTime
                   );
 

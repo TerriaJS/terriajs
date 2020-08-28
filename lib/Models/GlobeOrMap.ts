@@ -24,11 +24,8 @@ import Feature from "./Feature";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import Mappable from "./Mappable";
 import Terria from "./Terria";
-import { ProviderCoordsMap } from "../Map/PickedFeatures";
-import Cesium3DTilesCatalogItem from "./Cesium3DTilesCatalogItem";
 import { observable } from "mobx";
 import MouseCoords from "../ReactViewModels/MouseCoords";
-
 
 require("./ImageryLayerFeatureInfo"); // overrides Cesium's prototype.configureDescriptionFromProperties
 
