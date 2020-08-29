@@ -2,13 +2,20 @@ import React, { useState, useEffect } from "react";
 import Styles from "./rc-menu-bar.scss";
 import classNames from "classnames";
 import Icon from "../Icon.jsx";
-
+import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 const RCMenuBar = props => {
   const { viewState } = props;
-  const [showButton, setShowButton] = useState(true);
+  const [showButton, setShowButton] = useState(false);
 
   useEffect(() => {
-    setShowButton(viewState.isHotspotsFiltered);
+    const viewStateChangeHandler = knockout
+      .getObservable(viewState, "isHotspotsFiltered")
+      .subscribe(function() {
+        setShowButton(viewState.isHotspotsFiltered);
+      });
+    return () => {
+      viewStateChangeHandler.dispose();
+    };
   }, [viewState.isHotspotsFiltered]);
 
   const onBackToAllHotspots = () => {
