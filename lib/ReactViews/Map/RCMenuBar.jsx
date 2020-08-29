@@ -33,7 +33,7 @@ const RCMenuBar = props => {
         <If condition={showButton}>
           <li className={Styles.menuItem}>
             <button
-              className={Styles.storyBtn}
+              className={Styles.backToBtn}
               type="button"
               onClick={onBackToAllHotspots}
             >

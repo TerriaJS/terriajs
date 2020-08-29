@@ -27,33 +27,8 @@
   }
 }
 
-.storyBtn {
+.backToBtn {
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn--map from "../../Sass/common/_buttons.scss";
-  display: inline-block;
-  margin-left: 8px;
-  svg {
-    fill: #fff;
-    margin: 0 3px 0 4px;
-    vertical-align: bottom;
-  }
-  span {
-    vertical-align: top;
-    margin: 0 5px;
-    line-height: 1.3;
-  }
-
-  &[aria-expanded="true"] {
-    background: $color-primary;
-    svg {
-      fill: #ffffff;
-    }
-  }
-
-  &:hover,
-  &:focus {
-    svg {
-      fill: #ffffff;
-    }
-  }
+  composes: rc-btn-primary from "../../Sass/common/_buttons.scss";
 }
