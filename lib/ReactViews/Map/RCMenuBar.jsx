@@ -1,18 +1,19 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Styles from "./rc-menu-bar.scss";
 import classNames from "classnames";
 import Icon from "../Icon.jsx";
 
 const RCMenuBar = props => {
-  const { viewState, terria } = props;
+  const { viewState } = props;
+  const [showButton, setShowButton] = useState(true);
+
+  useEffect(() => {
+    setShowButton(viewState.isHotspotsFiltered);
+  }, [viewState.isHotspotsFiltered]);
 
   const onBackToAllHotspots = () => {
     viewState.isHotspotsFiltered = false;
-    terria.nowViewing.items.map(item => {
-      if (item.type === "geojson") {
-        item.isShown = true;
-      }
-    });
+    setShowButton(false);
   };
   return (
     <div
@@ -22,7 +23,7 @@ const RCMenuBar = props => {
       )}
     >
       <ul className={Styles.menu}>
-        <If condition={viewState.isHotspotsFiltered}>
+        <If condition={showButton}>
           <li className={Styles.menuItem}>
             <button
               className={Styles.storyBtn}
