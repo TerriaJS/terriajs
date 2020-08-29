@@ -92,21 +92,14 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
   @computed
   get info(): StratumFromTraits<InfoSectionTraits>[] {
-    const result: StratumFromTraits<InfoSectionTraits>[] = [];
-
-    function createInfoSection(name: string, content: string | undefined) {
-      const trait = createStratumInstance(InfoSectionTraits);
-      trait.name = name;
-      trait.content = content;
-      return trait;
-    }
-
-    result.push(
-      createInfoSection(
-        i18next.t("models.webFeatureServiceCatalogItem.getCapabilitiesUrl"),
-        this.catalogItem.getCapabilitiesUrl
-      )
-    );
+    const result: StratumFromTraits<InfoSectionTraits>[] = [
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t(
+          "models.webFeatureServiceCatalogItem.getCapabilitiesUrl"
+        ),
+        content: this.catalogItem.getCapabilitiesUrl
+      })
+    ];
 
     let firstDataDescription: string | undefined;
     for (const layer of this.capabilitiesFeatureTypes.values()) {
@@ -127,7 +120,12 @@ class GetCapabilitiesStratum extends LoadableStratum(
         "models.webFeatureServiceCatalogItem.abstract"
       )}${suffix}`;
 
-      result.push(createInfoSection(name, layer.Abstract));
+      result.push(
+        createStratumInstance(InfoSectionTraits, {
+          name,
+          content: layer.Abstract
+        })
+      );
 
       firstDataDescription = firstDataDescription || layer.Abstract;
     }
@@ -145,10 +143,10 @@ class GetCapabilitiesStratum extends LoadableStratum(
         service.Abstract !== firstDataDescription
       ) {
         result.push(
-          createInfoSection(
-            i18next.t("models.webFeatureServiceCatalogItem.abstract"),
-            service.Abstract
-          )
+          createStratumInstance(InfoSectionTraits, {
+            name: i18next.t("models.webFeatureServiceCatalogItem.abstract"),
+            content: service.Abstract
+          })
         );
       }
 
@@ -158,10 +156,12 @@ class GetCapabilitiesStratum extends LoadableStratum(
         !/^none$/i.test(service.AccessConstraints)
       ) {
         result.push(
-          createInfoSection(
-            i18next.t("models.webFeatureServiceCatalogItem.accessConstraints"),
-            service.AccessConstraints
-          )
+          createStratumInstance(InfoSectionTraits, {
+            name: i18next.t(
+              "models.webFeatureServiceCatalogItem.accessConstraints"
+            ),
+            content: service.AccessConstraints
+          })
         );
       }
     }

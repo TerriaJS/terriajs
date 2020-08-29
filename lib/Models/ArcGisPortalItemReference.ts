@@ -136,37 +136,28 @@ export class ArcGisPortalItemStratum extends LoadableStratum(
   }
 
   @computed get info() {
-    function newInfo(name: string, content: string) {
-      const traits = createStratumInstance(InfoSectionTraits);
-      runInAction(() => {
-        traits.name = name;
-        // traits.content = content;
-        traits.content = DOMPurify.sanitize(content, {
-          FORBID_ATTR: ["style"],
-          FORBID_TAGS: ["font"]
-        });
-      });
-      return traits;
-    }
-
-    const outArray: any = [];
+    const outArray: StratumFromTraits<InfoSectionTraits>[] = [];
     if (this.arcgisPortalItem === undefined) return outArray;
     if (this.arcgisPortalItem.licenseInfo !== undefined) {
       outArray.push(
-        newInfo(
-          i18next.t("models.arcgisPortal.licence"),
-          this.arcgisPortalItem.licenseInfo
-        )
+        createStratumInstance(InfoSectionTraits, {
+          name: i18next.t("models.arcgisPortal.licence"),
+          content: DOMPurify.sanitize(this.arcgisPortalItem.licenseInfo, {
+            FORBID_ATTR: ["style"],
+            FORBID_TAGS: ["font"]
+          })
+        })
       );
     }
 
+    // TODO: Check that this doesn't need to be sanitized
     outArray.push(
-      newInfo(
-        i18next.t("models.arcgisPortal.openInPortal"),
-        `<a href="${this.portalItemUrl}"><button>${i18next.t(
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t("models.arcgisPortal.openInPortal"),
+        content: `<a href="${this.portalItemUrl}"><button>${i18next.t(
           "models.arcgisPortal.openInPortal"
         )}</button></a>`
-      )
+      })
     );
 
     return outArray;

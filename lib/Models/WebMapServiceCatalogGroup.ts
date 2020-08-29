@@ -15,8 +15,8 @@ import ModelReference from "../Traits/ModelReference";
 import WebMapServiceCatalogGroupTraits from "../Traits/WebMapServiceCatalogGroupTraits";
 import CatalogGroup from "./CatalogGroupNew";
 import CommonStrata from "./CommonStrata";
-import createInfoSection from "./createInfoSection";
 import CreateModel from "./CreateModel";
+import createStratumInstance from "./createStratumInstance";
 import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
@@ -92,10 +92,10 @@ class GetCapabilitiesStratum extends LoadableStratum(
         )
       ) {
         result.push(
-          createInfoSection(
-            i18next.t("models.webMapServiceCatalogGroup.abstract"),
-            this.capabilities.Service.Abstract
-          )
+          createStratumInstance(InfoSectionTraits, {
+            name: i18next.t("models.webMapServiceCatalogGroup.abstract"),
+            content: this.capabilities.Service.Abstract
+          })
         );
       }
 
@@ -106,20 +106,22 @@ class GetCapabilitiesStratum extends LoadableStratum(
         !/^none$/i.test(service.AccessConstraints)
       ) {
         result.push(
-          createInfoSection(
-            i18next.t("models.webMapServiceCatalogGroup.accessConstraints"),
-            this.capabilities.Service.AccessConstraints
-          )
+          createStratumInstance(InfoSectionTraits, {
+            name: i18next.t(
+              "models.webMapServiceCatalogGroup.accessConstraints"
+            ),
+            content: this.capabilities.Service.AccessConstraints
+          })
         );
       }
 
       // Show the Fees if it isn't "none".
       if (service && service.Fees && !/^none$/i.test(service.Fees)) {
         result.push(
-          createInfoSection(
-            i18next.t("models.webMapServiceCatalogGroup.fees"),
-            this.capabilities.Service.Fees
-          )
+          createStratumInstance(InfoSectionTraits, {
+            name: i18next.t("models.webMapServiceCatalogGroup.fees"),
+            content: this.capabilities.Service.Fees
+          })
         );
       }
     }
@@ -214,10 +216,10 @@ class GetCapabilitiesStratum extends LoadableStratum(
         !containsAny(layer.Abstract, WebMapServiceCatalogItem.abstractsToIgnore)
       ) {
         model.setTrait(CommonStrata.underride, "info", [
-          createInfoSection(
-            i18next.t("models.webMapServiceCatalogGroup.abstract"),
-            layer.Abstract
-          )
+          createStratumInstance(InfoSectionTraits, {
+            name: i18next.t("models.webMapServiceCatalogGroup.abstract"),
+            content: layer.Abstract
+          })
         ]);
       }
 
