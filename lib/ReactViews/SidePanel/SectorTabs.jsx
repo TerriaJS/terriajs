@@ -7,6 +7,7 @@ import CoastalInfra from "../../../wwwroot/images/receipt/sectors/coastal-Infra.
 import Finance from "../../../wwwroot/images/receipt/sectors/finance.png";
 import Manufacturing from "../../../wwwroot/images/receipt/sectors/manufacturing.png";
 import InternationalCooperation from "../../../wwwroot/images/receipt/sectors/international-cooperation.png";
+import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 class SectorTabs extends React.Component {
   constructor(props) {
     super(props);
@@ -14,6 +15,20 @@ class SectorTabs extends React.Component {
   state = {
     selectedId: -1
   };
+  componentDidMount() {
+    this._viewStateChangeHandler = knockout
+      .getObservable(viewState, "isHotspotsFiltered")
+      .subscribe(isHotspotsFiltered => {
+        if (!isHotspotsFiltered) {
+          this.setState({
+            selectedId: -1
+          });
+        }
+      });
+  }
+  componentWillUnmount() {
+    this._viewStateChangeHandler.dispose();
+  }
   render() {
     const sectors = [
       {
