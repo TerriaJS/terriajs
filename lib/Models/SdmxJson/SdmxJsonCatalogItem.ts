@@ -1,34 +1,25 @@
-import i18next from "i18next";
-import {
-  runInAction,
-  computed,
-  IReactionDisposer,
-  autorun,
-  reaction
-} from "mobx";
-import AsyncChartableMixin from "../../ModelMixins/AsyncChartableMixin";
-import TableMixin from "../../ModelMixins/TableMixin";
-import DiscretelyTimeVaryingMixin from "../../ModelMixins/DiscretelyTimeVaryingMixin";
-import ExportableMixin from "../../ModelMixins/ExportableMixin";
-import UrlMixin from "../../ModelMixins/UrlMixin";
-import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
-import CreateModel from "../CreateModel";
-import SdmxCatalogItemTraits from "../../Traits/SdmxCatalogItemTraits";
-import Terria from "../Terria";
-import { BaseModel } from "../Model";
-import TableAutomaticStylesStratum from "../../Table/TableAutomaticStylesStratum";
-import isDefined from "../../Core/isDefined";
-import TerriaError from "../../Core/TerriaError";
-import Csv from "../../Table/Csv";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import StratumOrder from "../StratumOrder";
+import { computed, IReactionDisposer, reaction, runInAction } from "mobx";
 import Resource from "terriajs-cesium/Source/Core/Resource";
-import { SdmxJsonDataflowStratum } from "./SdmxJsonDataflowStratum";
-import SelectableDimensions, {
-  SelectableDimension,
-  Dimension
-} from "../SelectableDimensions";
 import filterOutUndefined from "../../Core/filterOutUndefined";
+import isDefined from "../../Core/isDefined";
+import AsyncChartableMixin from "../../ModelMixins/AsyncChartableMixin";
+import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
+import DiscretelyTimeVaryingMixin from "../../ModelMixins/DiscretelyTimeVaryingMixin";
+import TableMixin from "../../ModelMixins/TableMixin";
+import UrlMixin from "../../ModelMixins/UrlMixin";
+import Csv from "../../Table/Csv";
+import TableAutomaticStylesStratum from "../../Table/TableAutomaticStylesStratum";
+import SdmxCatalogItemTraits from "../../Traits/SdmxCatalogItemTraits";
+import CreateModel from "../CreateModel";
+import { BaseModel } from "../Model";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import SelectableDimensions, {
+  Dimension,
+  SelectableDimension
+} from "../SelectableDimensions";
+import StratumOrder from "../StratumOrder";
+import Terria from "../Terria";
+import { SdmxJsonDataflowStratum } from "./SdmxJsonDataflowStratum";
 
 const automaticTableStylesStratumName = TableAutomaticStylesStratum.stratumName;
 
@@ -135,7 +126,8 @@ export default class SdmxJsonCatalogItem
         name: dim.name,
         options: dim.options,
         selectedId: dim.selectedId,
-        disable: this.isDimDisabled(dim),
+        allowUndefined: dim.allowUndefined,
+        disable: this.isDimDisabled(dim) || dim.disable,
         setDimensionValue: (stratumId: string, value: string) => {
           let dimensionTraits = this.dimensions?.find(
             sdmxDim => sdmxDim.id === dim.id
@@ -190,6 +182,7 @@ export default class SdmxJsonCatalogItem
 
   protected async forceLoadMetadata(): Promise<void> {
     if (!isDefined(this.strata.get(SdmxJsonDataflowStratum.stratumName))) {
+      console.log(this.url);
       const stratum = await SdmxJsonDataflowStratum.load(this);
       runInAction(() => {
         this.strata.set(SdmxJsonDataflowStratum.stratumName, stratum);

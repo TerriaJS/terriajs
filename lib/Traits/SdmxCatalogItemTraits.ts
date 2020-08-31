@@ -1,75 +1,39 @@
+import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import mixTraits from "./mixTraits";
-import TableTraits from "./TableTraits";
-import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
-import primitiveTrait from "./primitiveTrait";
-import ModelTraits from "./ModelTraits";
 import objectArrayTrait from "./objectArrayTrait";
-import { Dimension, DimensionOption } from "../Models/SelectableDimensions";
 import primitiveArrayTrait from "./primitiveArrayTrait";
-import { SdmxCommonTraits } from "./SdmxCatalogGroupTraits";
+import primitiveTrait from "./primitiveTrait";
+import TableTraits from "./TableTraits";
+import UrlTraits from "./UrlTraits";
+import CatalogMemberTraits from "./CatalogMemberTraits";
+import { DimensionTraits, ConceptTraits } from "./SdmxCommonTraits";
 
-export class SdmxDimensionsOption extends ModelTraits
-  implements DimensionOption {
-  @primitiveTrait({
-    type: "string",
-    name: "ID",
-    description: "Option ID"
-  })
-  id?: string;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Name",
-    description: "Option name (human-readable)"
-  })
-  name?: string;
-}
-export class SdmxDimension extends ModelTraits implements Dimension {
-  @primitiveTrait({
-    type: "string",
-    name: "ID",
-    description: "Dimension ID"
-  })
-  id?: string;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Name",
-    description: "Dimension name (human-readable)"
-  })
-  name?: string;
-
-  @objectArrayTrait({
-    type: SdmxDimensionsOption,
-    idProperty: "id",
-    name: "Options",
-    description: "Dimension options"
-  })
-  options?: SdmxDimensionsOption[];
-
-  @primitiveTrait({
-    type: "string",
-    name: "Selected ID",
-    description: "Selected Option's ID"
-  })
-  selectedId?: string;
-
+export class SdmxDimensionTraits extends DimensionTraits {
   @primitiveTrait({
     type: "string",
     name: "Position",
     description:
-      "The position attribute specifies the position of the dimension in the data structure definition, starting at 0. This is important for making requesting sdmx-csv"
+      "The position attribute specifies the position of the dimension in the data structure definition, starting at 0. This is important for making sdmx-csv requests"
   })
   position?: number;
 }
-
 export default class SdmxCatalogItemTraits extends mixTraits(
+  UrlTraits,
   DiscretelyTimeVaryingTraits,
   FeatureInfoTraits,
   TableTraits,
-  SdmxCommonTraits
+  CatalogMemberTraits
 ) {
+  @objectArrayTrait({
+    type: ConceptTraits,
+    idProperty: "id",
+    name: "Concept overrides",
+    description:
+      "This provides ability to override Dataflow dimensions by concept id. For example, setting a default value for a given concept."
+  })
+  conceptOverrides?: ConceptTraits[];
+
   @primitiveTrait({
     type: "string",
     name: "Dataflow ID",
@@ -85,12 +49,12 @@ export default class SdmxCatalogItemTraits extends mixTraits(
   agencyId?: string;
 
   @objectArrayTrait({
-    type: SdmxDimension,
+    type: SdmxDimensionTraits,
     name: "Dimensions",
     description: "Dimensions",
     idProperty: "id"
   })
-  dimensions?: SdmxDimension[];
+  dimensions?: SdmxDimensionTraits[];
 
   @primitiveTrait({
     type: "string",

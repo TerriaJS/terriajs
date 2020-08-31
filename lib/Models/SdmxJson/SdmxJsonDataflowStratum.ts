@@ -35,6 +35,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     private readonly sdmxJsonDataflow: SdmxJsonDataflow
   ) {
     super();
+    console.log(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -123,27 +124,26 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
 
     let regionTypeFromDimension: string | undefined;
 
-    // Use this.catalogItem.regionTypeConcepts to see if any region types can be extracted from dimensions
+    // Find conceptOverrides with type 'region-type' to try to extract region-type from another dimension
     if (
-      isDefined(this.catalogItem.regionTypeConcepts) &&
-      this.catalogItem.regionTypeConcepts.length > 0
+      isDefined(this.catalogItem.conceptOverrides) &&
+      this.catalogItem.conceptOverrides.length > 0
     ) {
-      this.catalogItem.regionTypeConcepts.forEach(concept => {
-        // Find dimension id with concept
-        const dimId = dimensionsList?.dimensions?.find(
-          dim => dim.conceptIdentity === concept
-        )?.id;
+      // Find conceptOverrides with type 'region-type'
+      this.catalogItem.conceptOverrides
+        .filter(concept => concept.type === "region-type")
+        .forEach(concept => {
+          // Find dimension id with concept
+          const dimId = dimensionsList?.dimensions?.find(
+            dim => dim.conceptIdentity === concept.id
+          )?.id;
 
-        const dim = this.catalogItem.dimensions?.find(d => d.id === dimId);
+          const dim = this.catalogItem.dimensions?.find(d => d.id === dimId);
 
-        // Set region type to dimension's selected id
-        regionTypeFromDimension = dim?.selectedId;
-      });
-
-      console.log(`found regionTypeFromStructure ${regionTypeFromDimension}`);
+          // Set region type to dimension's selected id
+          regionTypeFromDimension = dim?.selectedId;
+        });
     }
-
-    console.log(this.catalogItem);
 
     const dimColums = [
       ...(dimensionsList?.dimensions || []),
@@ -155,37 +155,31 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
         conceptUrn?.descendantIds?.[0]
       );
 
+      const conceptOverride = this.catalogItem.conceptOverrides.find(
+        concept => concept.id === dim.conceptIdentity
+      );
+
+      // Try to find region type
       let regionType: string | undefined;
 
-      if (
-        dim.id &&
-        this.catalogItem.regionMappedDimensionIds.includes(dim.id)
-      ) {
-        // use regionTypeFromDimension or try to look for manual regionType in regionConceptRegionTypeMap
-        regionType =
-          this.catalogItem.regionConceptRegionTypeMap?.find(
-            map => map.id === dim.conceptIdentity
-          )?.value || regionTypeFromDimension;
+      if (dim.id) {
+        // Are any regionTypes present in conceptOverrides
+        regionType = this.matchRegionType(conceptOverride?.regionType);
 
-        // If TableColumn failed to find suitable region provider -> use country as default
-        // if (
-        //   !regionType &&
-        //   !super.columns?.find(col => col.name === dim.id)?.regionType
-        // ) {
-        //   regionType = "country";
-        // }
-      }
+        // Next try regionTypeFromDimension (only if this concept has type 'region')
+        if (
+          !isDefined(regionType) &&
+          conceptOverride &&
+          conceptOverride.type === "region"
+        )
+          regionType = this.matchRegionType(regionTypeFromDimension);
 
-      if (isDefined(regionType)) {
-        // Resolve regionType to region provider (this will also match against region provider aliases)
-        const matchingRegionProviders = this.catalogItem.regionProviderList?.getRegionDetails(
-          [regionType],
-          undefined,
-          undefined
-        );
-        if (matchingRegionProviders && matchingRegionProviders.length > 0) {
-          regionType = matchingRegionProviders[0].regionProvider.regionType;
-        }
+        // Then check if dimension name (column name) is valid regionType
+        if (!isDefined(regionType)) regionType = this.matchRegionType(dim.id);
+
+        // Finally, try concept name
+        if (!isDefined(regionType))
+          regionType = this.matchRegionType(concept?.name);
       }
 
       return {
@@ -204,6 +198,19 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     return [primaryMeasureColumn, ...dimColums];
   }
 
+  matchRegionType(regionType?: string): string | undefined {
+    if (!isDefined(regionType)) return;
+    // Resolve regionType to region provider (this will also match against region provider aliases)
+    const matchingRegionProviders = this.catalogItem.regionProviderList?.getRegionDetails(
+      [regionType],
+      undefined,
+      undefined
+    );
+    if (matchingRegionProviders && matchingRegionProviders.length > 0) {
+      return matchingRegionProviders[0].regionProvider.regionType;
+    }
+  }
+
   @computed
   get primaryMeasureConceptId() {
     return parseSdmxUrn(
@@ -219,22 +226,13 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   }
 
   /**
-   * Returns array of dimensions which can be treated as region columns.
-   * By default, if a concept id starts with geo_ (case insenitive) treat it as region mapped,
-   * or if the dimensionID is included in this.regionTypeMap
+   * Returns array of dimension id's which are treated as region columns.
    */
   @computed
   get regionMappedDimensionIds() {
-    return this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.dimensionList.dimensions
-      ?.filter(
-        dim =>
-          dim.conceptIdentity &&
-          (this.catalogItem.regionConceptRegionTypeMap?.find(
-            map => dim.conceptIdentity === map.id
-          ) ||
-            this.catalogItem.regionConcepts?.includes(dim.conceptIdentity))
-      )
-      ?.map(dim => dim.id)
+    return this.columns
+      .filter(col => col.type === "region")
+      .map(col => col.name)
       .filter(isDefined);
   }
 
@@ -282,6 +280,10 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
             dim.localRepresentation?.enumeration
         )
         .map(dim => {
+          const conceptOverride = this.catalogItem.conceptOverrides?.find(
+            concept => concept.id === dim.conceptIdentity
+          );
+
           // Concept maps dimension's ID to a human-readable name
           const conceptUrn = parseSdmxUrn(dim.conceptIdentity);
           const concept = this.getConcept(
@@ -326,38 +328,39 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
               : // If no allowedOptions were found -> return all codes
                 codelist?.codes;
 
-          // Create options object
-          const options = codes?.map(code => {
-            return { id: code.id!, name: code.name };
-          });
+          // Create options object - use conceptOverride or options generated from codeslist
+          const options =
+            isDefined(conceptOverride?.options) &&
+            conceptOverride!.options.length > 0
+              ? conceptOverride?.options.map(option => {
+                  return { id: option.id, name: option.name };
+                })
+              : codes?.map(code => {
+                  return { id: code.id!, name: code.name };
+                });
 
           if (isDefined(options)) {
-            let selectedId: string | undefined = options[0].id;
+            // Use first option as default if no other default is provided
+            let selectedId: string | undefined = conceptOverride?.allowUndefined
+              ? undefined
+              : options[0].id;
 
-            console.log(this.catalogItem.conceptDefaultValueMap);
-
-            const defaultValue = this.catalogItem.conceptDefaultValueMap?.find(
-              map => map.id === dim.conceptIdentity
-            )?.value;
-
-            if (defaultValue) {
-              selectedId = defaultValue;
-            } else if (
-              dim.conceptIdentity &&
-              this.catalogItem.allowUndefinedConcepts?.includes(
-                dim.conceptIdentity
-              )
+            // Override selectedId if it a valid option
+            if (
+              isDefined(conceptOverride?.selectedId) &&
+              options.find(option => option.id === conceptOverride?.selectedId)
             ) {
-              selectedId = undefined;
+              selectedId = conceptOverride?.selectedId;
             }
 
             return {
               id: dim.id!,
-              name: concept?.name as string,
+              name: conceptOverride?.name || concept?.name,
               options: options,
               position: dim.position,
-              selectedId
-              // Not sure where to get a better default value from?,
+              disable: conceptOverride?.disable,
+              allowUndefined: conceptOverride?.allowUndefined,
+              selectedId: selectedId
             };
           }
         })
