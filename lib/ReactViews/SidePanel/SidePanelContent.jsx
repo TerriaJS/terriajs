@@ -3,11 +3,10 @@ import SectorTabs from "./SectorTabs";
 import SectorInfo from "./SectorInfo";
 import { Small, Medium } from "../Generic/Responsive";
 import PropTypes from "prop-types";
-
+import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 class SidePanelContent extends React.Component {
   state = {
-    sector: null,
-    item: null
+    sector: null
   };
   showSectorInfo = sector => {
     this.setState({
@@ -15,7 +14,20 @@ class SidePanelContent extends React.Component {
     });
     this.filterHotspots(sector.title);
   };
-
+  componentDidMount() {
+    this._viewStateChangeHandler = knockout
+      .getObservable(viewState, "isHotspotsFiltered")
+      .subscribe(isHotspotsFiltered => {
+        if (!isHotspotsFiltered) {
+          this.setState({
+            sector: null
+          });
+        }
+      });
+  }
+  componentWillUnmount() {
+    this._viewStateChangeHandler.dispose();
+  }
   filterHotspots = sector => {
     const { terria, viewState } = this.props;
     terria.nowViewing.items.map(item => {
