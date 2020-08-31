@@ -15,7 +15,9 @@
 .mobile-header {
   composes: sm-hide from "../../Sass/common/_base.scss";
   composes: clearfix from "../../Sass/common/_base.scss";
-  justify-content: space-between;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
   font-family: $font-pop;
   width: 100%;
   padding: $padding-small;
