@@ -257,10 +257,11 @@ class GetCapabilitiesStratum extends LoadableStratum(
   get info(): StratumFromTraits<InfoSectionTraits>[] {
     const result: StratumFromTraits<InfoSectionTraits>[] = [];
 
-    function createInfoSection(name: string, content: any) {
+    function createInfoSection(name: string, content: string | JsonObject) {
       const trait = createStratumInstance(InfoSectionTraits);
       trait.name = name;
-      trait.content = content;
+      if (typeof content === "string") trait.content = content;
+      else if (typeof content === "object") trait.contentAsObject = content;
       return trait;
     }
 
@@ -268,10 +269,23 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
     result.push(
       createInfoSection(
-        i18next.t("models.webMapServiceCatalogItem.dataDescription"),
+        i18next.t("models.webMapServiceCatalogItem.serviceDescription"),
         this.capabilities.Service as JsonObject
       )
     );
+
+    const onlyHasSingleLayer = this.catalogItem.layersArray.length === 1;
+
+    if (onlyHasSingleLayer) {
+      result.push(
+        createInfoSection(
+          i18next.t("models.webMapServiceCatalogItem.dataDescription"),
+          (this.capabilitiesLayers.get(
+            this.catalogItem.layersArray[0]
+          ) as any) as JsonObject
+        )
+      );
+    }
 
     for (const layer of this.capabilitiesLayers.values()) {
       if (
@@ -304,7 +318,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       result.push(
         createInfoSection(
           i18next.t("models.webMapServiceCatalogItem.getCapabilitiesUrl"),
-          this.catalogItem.getCapabilitiesUrl
+          this.catalogItem.getCapabilitiesUrl as string
         )
       );
 

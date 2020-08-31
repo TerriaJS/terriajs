@@ -15,16 +15,25 @@ export class InfoSectionTraits extends ModelTraits {
   })
   name?: string;
 
-  @anyTrait({
+  @primitiveTrait({
+    type: "string",
     name: "Content",
     description:
-      "The content of the section, this either accepts a string in Markdown and HTML format, or a JSON object, which will be rendered as a table. Set this property to null to remove this section entirely."
+      "The content of the section, in Markdown and HTML format. Set this property to null to remove this section entirely.",
+    isNullable: true
   })
-  content?: string | JsonObject | null;
+  content?: string | null;
 
-  // static isRemoval(infoSection: InfoSectionTraits) {
-  //   return infoSection.content === null;
-  // }
+  @anyTrait({
+    name: "Content As Object",
+    description:
+      "The content of the section which is a JSON object. Set this property to null to remove this section entirely."
+  })
+  contentAsObject?: JsonObject | null;
+
+  static isRemoval(infoSection: InfoSectionTraits) {
+    return infoSection.content === null && infoSection.contentAsObject === null;
+  }
 }
 
 export class ShortReportTraits extends ModelTraits {

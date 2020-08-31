@@ -94,7 +94,6 @@ function isStringOrNumber(obj) {
  * @private
  */
 function isJoinable(array) {
-  console.log(array, array.every(isStringOrNumber));
   return array.every(isStringOrNumber);
 }
 
