@@ -222,6 +222,13 @@ class SettingPanel extends React.Component {
       ? "Press to start only showing the timeline when there are time-varying datasets on the workbench"
       : "Press to start always showing the timeline, even when no time-varying datasets are on the workbench";
 
+    const antiAliasingEnabled = this.props.terria.antiAliasingEnabled;
+    const antiAliasingLabel = t("settingPanel.antiAliasingLabel", {
+      antiAliasingStatus: antiAliasingEnabled
+        ? t("settingPanel.enable")
+        : t("settingPanel.disable")
+    });
+
     return (
       <MenuPanel
         theme={dropdownTheme}
@@ -410,6 +417,40 @@ class SettingPanel extends React.Component {
                 {t("settingPanel.nativeResolutionHeader")}
               </label>
             </section>
+
+            <section
+              className={Styles.nativeResolutionWrapper}
+              title={qualityLabels[this.props.terria.quality]}
+            >
+              <button
+                id="mapAntialiasingEnabled"
+                type="button"
+                onClick={() => {
+                  runInAction(() => {
+                    this.props.terria.antiAliasingEnabled = !antiAliasingEnabled;
+                  });
+                }}
+                title={antiAliasingLabel}
+                className={Styles.btnNativeResolution}
+              >
+                {antiAliasingEnabled ? (
+                  <Icon glyph={Icon.GLYPHS.checkboxOn} />
+                ) : (
+                  <Icon glyph={Icon.GLYPHS.checkboxOff} />
+                )}
+              </button>
+              <label
+                title={antiAliasingLabel}
+                htmlFor="mapAntialiasingEnabled"
+                className={classNames(
+                  DropdownStyles.subHeading,
+                  Styles.nativeResolutionHeader
+                )}
+              >
+                {t("settingPanel.antiAliasingHeader")}
+              </label>
+            </section>
+
             <label
               htmlFor="mapQuality"
               className={classNames(DropdownStyles.subHeading)}

@@ -434,6 +434,11 @@ export default class Cesium extends GlobeOrMap {
         .useNativeResolution;
       this.cesiumWidget.scene.globe.maximumScreenSpaceError = this.terria.baseMaximumScreenSpaceError;
     });
+
+    autorun(() => {
+      // Toggle antialiasing
+      this.scene.postProcessStages.fxaa.enabled = this.terria.antiAliasingEnabled;
+    });
   }
 
   getContainer() {
