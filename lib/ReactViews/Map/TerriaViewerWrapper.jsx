@@ -2,16 +2,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Styles from "./terria-viewer-wrapper.scss";
 
 import Splitter from "./Splitter";
 // eslint-disable-next-line no-unused-vars
 import TerriaViewer from "../../ViewModels/TerriaViewer";
-// eslint-disable-next-line no-unused-vars
-import Terria from "../../Models/Terria";
-// eslint-disable-next-line no-unused-vars
-import ViewState from "../../ReactViewModels/ViewState";
 import { runInAction } from "mobx";
 
 /**
@@ -27,8 +22,6 @@ class TerriaViewerWrapper extends React.Component {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired
   };
-  lastMouseX = -1;
-  lastMouseY = -1;
 
   /**
    * @argument {HTMLDivElement} container
@@ -65,39 +58,6 @@ class TerriaViewerWrapper extends React.Component {
       this.props.terria.mainViewer.detach();
   }
 
-  onMouseMove(event) {
-    runInAction(() => {
-      // Avoid duplicate mousemove events.  Why would we get duplicate mousemove events?  I'm glad you asked:
-      // http://stackoverflow.com/questions/17818493/mousemove-event-repeating-every-second/17819113
-      // I (Kevin Ring) see this consistently on my laptop when Windows Media Player is running.
-      if (
-        event.clientX === this.lastMouseX &&
-        event.clientY === this.lastMouseY
-      ) {
-        return;
-      }
-      this.lastMouseX = event.clientX;
-      this.lastMouseY = event.clientY;
-      if (this.props.terria.cesium) {
-        const mapElement = this.props.terria.cesium.getContainer();
-        const rect = mapElement.getBoundingClientRect();
-        const position = new Cartesian2(
-          event.clientX - rect.left,
-          event.clientY - rect.top
-        );
-        this.props.viewState.mouseCoords.updateCoordinatesFromCesium(
-          this.props.terria,
-          position
-        );
-      } else if (this.props.terria.leaflet) {
-        this.props.viewState.mouseCoords.updateCoordinatesFromLeaflet(
-          this.props.terria,
-          event.nativeEvent
-        );
-      }
-    });
-  }
-
   render() {
     return (
       <aside className={Styles.container}>
@@ -109,7 +69,6 @@ class TerriaViewerWrapper extends React.Component {
           id="cesiumContainer"
           className={Styles.cesiumContainer}
           ref={this.containerRef}
-          onMouseMove={this.onMouseMove.bind(this)}
         />
       </aside>
     );
