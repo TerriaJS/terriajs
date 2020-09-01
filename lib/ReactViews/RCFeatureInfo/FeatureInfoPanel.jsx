@@ -248,6 +248,9 @@ export const FeatureInfoPanel = createReactClass({
   },
 
   openStorySummary(featureProperties) {
+    if (!featureProperties) {
+      return;
+    }
     // close possible opened stories
     this.props.viewState.storyShown = false;
     this.props.terria.currentViewer.notifyRepaintRequired();
@@ -325,6 +328,15 @@ export const FeatureInfoPanel = createReactClass({
       </If>
     );
     this.ref = React.createRef();
+    if (featureInfoCatalogItems.length > 0) {
+      // Open directly the story summary panel
+      this.props.viewState.hotspotSummaryEnabled = false;
+      this.openStorySummary(terria.selectedFeature?.properties);
+      return null;
+    }
+    return null;
+
+    // Bellow code won't execute when the feature panel is disabled.
     if (featureInfoCatalogItems.length > 0) {
       return (
         <DragWrapper ref={this.ref}>
