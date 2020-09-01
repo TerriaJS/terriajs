@@ -4,6 +4,8 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.47)
+* Removed hard coded senaps base url.
+* Added `chartColor` trait for DiscretelyTimeVarying items.
 * Replaced all instances of `createInfoSection` and `newInfo` with calls to `createStratumInstance` using an initialisation object.
 * [The next improvement]
 
@@ -16,6 +18,7 @@ Change Log
 * Add basic WFS support with `WebFeatureServiceCatalogGroup` and `WebFeatureServiceCatalogItem`
 * Update style of diff tool close button to match new design
 * Remove sass code from the `HelpPanel` component
+* Added shift-drag quick zoom
 * Added an option for translation override from TerriaMap
 * Help content, trainer bar & help terms can use translation overrides
 * Accepts `backend` options under a new `terria.start()` property, `i18nOptions`
