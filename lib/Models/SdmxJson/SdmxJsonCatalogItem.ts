@@ -1,4 +1,11 @@
-import { computed, IReactionDisposer, reaction, runInAction } from "mobx";
+import {
+  computed,
+  IReactionDisposer,
+  reaction,
+  runInAction,
+  onBecomeObserved,
+  onBecomeUnobserved
+} from "mobx";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
@@ -20,6 +27,7 @@ import SelectableDimensions, {
 import StratumOrder from "../StratumOrder";
 import Terria from "../Terria";
 import { SdmxJsonDataflowStratum } from "./SdmxJsonDataflowStratum";
+import TerriaError from "../../Core/TerriaError";
 
 const automaticTableStylesStratumName = TableAutomaticStylesStratum.stratumName;
 
@@ -38,7 +46,7 @@ export default class SdmxJsonCatalogItem
     return "sdmx-json";
   }
 
-  private csvDownloadDisposer: IReactionDisposer;
+  private csvDownloadDisposer: IReactionDisposer | undefined;
 
   constructor(
     id: string | undefined,
@@ -51,8 +59,31 @@ export default class SdmxJsonCatalogItem
       new TableAutomaticStylesStratum(this)
     );
 
+    onBecomeObserved(this, "mapItems", this.enableCsvAutoDownloader.bind(this));
+    onBecomeUnobserved(
+      this,
+      "mapItems",
+      this.disableCsvAutoDownloader.bind(this)
+    );
+  }
+
+  protected async forceLoadMetadata(): Promise<void> {
+    // Load SdmxJsonDataflowStratum if needed
+    if (!isDefined(this.strata.get(SdmxJsonDataflowStratum.stratumName))) {
+      const stratum = await SdmxJsonDataflowStratum.load(this);
+      runInAction(() => {
+        this.strata.set(SdmxJsonDataflowStratum.stratumName, stratum);
+      });
+    }
+  }
+
+  /**
+   * This will automatically update CSV data when the URL changes (eg, dimension values change)
+   */
+  enableCsvAutoDownloader() {
+    if (isDefined(this.csvDownloadDisposer)) return;
     this.csvDownloadDisposer = reaction(
-      () => this.csvUrl,
+      () => this.regionProviderList || this.csvUrl,
       async () => {
         const data = await this.downloadData();
         runInAction(() => {
@@ -60,6 +91,12 @@ export default class SdmxJsonCatalogItem
         });
       }
     );
+  }
+
+  disableCsvAutoDownloader() {
+    if (!isDefined(this.csvDownloadDisposer)) return;
+    this.csvDownloadDisposer();
+    delete this.csvDownloadDisposer;
   }
 
   get type() {
@@ -98,6 +135,9 @@ export default class SdmxJsonCatalogItem
     return disable;
   }
 
+  /**
+   * View by Selectable dimension allows user to select viewby region or time-series.
+   */
   @computed get sdmxViewModeDimension(): SelectableDimension {
     return {
       id: `viewMode`,
@@ -107,6 +147,7 @@ export default class SdmxJsonCatalogItem
         { id: "time", name: "Time-series" }
       ],
       selectedId: this.viewBy,
+      // Disable if there aren't time dimensions and region-mapped dimensions
       disable:
         !Array.isArray(this.timeDimensionIds) ||
         this.timeDimensionIds.length === 0 ||
@@ -118,6 +159,9 @@ export default class SdmxJsonCatalogItem
     };
   }
 
+  /**
+   * Map SdmxDataflowStratum.dimensions to selectable dimensions
+   */
   @computed
   get sdmxSelectableDimensions(): SelectableDimension[] {
     return this.dimensions.map(dim => {
@@ -175,22 +219,18 @@ export default class SdmxJsonCatalogItem
   @computed
   get csvUrl(): string {
     if (this.viewBy === "time") {
-      // do something with time
+      // do something with time?
+      // Currently all time slices are returned at once - which is probably fine for the moment
     }
     return `${this.url}/data/${this.dataflowId}/${this.dataKey}`;
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
-    if (!isDefined(this.strata.get(SdmxJsonDataflowStratum.stratumName))) {
-      console.log(this.url);
-      const stratum = await SdmxJsonDataflowStratum.load(this);
-      runInAction(() => {
-        this.strata.set(SdmxJsonDataflowStratum.stratumName, stratum);
-      });
-    }
-  }
+  /**
+   * Even though this is Sdmx**Json**CatalogItem, we download sdmx-csv.
+   */
+  private async downloadData(): Promise<string[][] | undefined> {
+    if (!isDefined(this.regionProviderList)) return;
 
-  private async downloadData(): Promise<string[][]> {
     const csvString = await new Resource({
       url: proxyCatalogItemUrl(this, this.csvUrl),
       headers: {
@@ -199,14 +239,17 @@ export default class SdmxJsonCatalogItem
     }).fetch();
 
     if (!isDefined(csvString)) {
-      throw "ahh";
+      throw new TerriaError({
+        title: `Could not load SDMX CSV`,
+        message: `Invalid response from ${this.csvUrl}`
+      });
     }
 
     const columns = await Csv.parseString(csvString, true);
 
     // Filter colums to only include primary measure, region mapped and time dimensions
-    if (isDefined(this.primaryMeasureDimenionId)) {
-      let colNames = [this.primaryMeasureDimenionId];
+    if (isDefined(this.primaryMeasureDimensionId)) {
+      let colNames = [this.primaryMeasureDimensionId];
 
       // If viewing region-mapping, add region-map dimension columns
       if (
@@ -222,26 +265,26 @@ export default class SdmxJsonCatalogItem
 
         // If no filter available - just return all columns and hope for the best
       } else {
+        console.log(
+          `WARNING: no time or region dimensions are found for ${this.name}, therefore styling may be unpredictable!`
+        );
         return columns;
       }
 
       // Return filtered columns
       return columns.filter(col => colNames.includes(col[0]));
+    } else {
+      console.log(
+        `WARNING: no primary measure dimension was defined for ${this.name}, therefore styling may be unpredictable!`
+      );
     }
 
     return columns;
   }
-
   protected async forceLoadTableData(): Promise<string[][]> {
     await this.loadMetadata();
 
-    console.log(this.regionMappedDimensionIds);
-
-    if (!isDefined(this.dataColumnMajor)) {
-      return await this.downloadData();
-    }
-
-    return this.dataColumnMajor;
+    return (await this.downloadData()) || [];
   }
 }
 

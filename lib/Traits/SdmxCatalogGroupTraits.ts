@@ -15,7 +15,7 @@ export default class SdmxCatalogGroupTraits extends mixTraits(
     idProperty: "id",
     name: "Concept overrides",
     description:
-      "This provides ability to override Dataflow dimensions by concept id. For example, setting a default value for a given concept."
+      "This provides ability to override Dataflow dimensions by concept id. For example, setting a default value for a given concept. This is copied to each catalog member (SdmxJsonCatalogItem)"
   })
   conceptOverrides?: ConceptTraits[];
 }

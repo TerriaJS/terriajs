@@ -39,105 +39,11 @@ export interface SdmxServer {
 
 export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
   static stratumName = "sdmxServer";
-  private readonly dataflowTree: DataflowTree = {};
-
-  constructor(
-    private readonly catalogGroup: SdmxCatalogGroup,
-    private readonly sdmxServer: SdmxServer
-  ) {
-    super();
-
-    // TODO: move this stuff somewhere else (similar to WebMapServiceGetCapabilities)
-    // If categorisations exist => organise Dataflows into a tree!
-    if (isDefined(this.sdmxServer.categorisations)) {
-      this.sdmxServer.categorisations.forEach(categorisiation => {
-        const categorySchemeUrn = parseSdmxUrn(categorisiation.target);
-
-        const agencyId = categorySchemeUrn?.agencyId;
-        const categorySchemeId = categorySchemeUrn?.resourceId;
-        const categoryId = categorySchemeUrn?.descendantIds?.[0]; // Only support 1 level of categorisiation for now
-
-        const dataflowId = parseSdmxUrn(categorisiation.source)?.resourceId;
-
-        if (
-          !isDefined(agencyId) ||
-          !isDefined(categorySchemeId) ||
-          !isDefined(categoryId) ||
-          !isDefined(dataflowId)
-        )
-          return;
-
-        // Create agency node if it doesn't exist
-        if (!isDefined(this.dataflowTree[agencyId])) {
-          const agency = this.getAgency(agencyId);
-          if (!isDefined(agency)) return;
-          agency;
-          this.dataflowTree[agencyId] = {
-            type: "agencyScheme",
-            item: agency,
-            members: {}
-          };
-        }
-
-        // Create categoryScheme node if it doesn't exist
-        if (
-          !isDefined(this.dataflowTree[agencyId].members![categorySchemeId])
-        ) {
-          const categoryScheme = this.getCategoryScheme(categorySchemeId);
-          if (!isDefined(categoryScheme)) return;
-          this.dataflowTree[agencyId].members![categorySchemeId] = {
-            type: "categoryScheme",
-            item: categoryScheme,
-            members: {}
-          };
-        }
-
-        // Create category node if it doesn't exist
-        if (
-          !isDefined(
-            this.dataflowTree[agencyId].members![categorySchemeId].members![
-              categoryId
-            ]
-          )
-        ) {
-          const category = this.getCategory(categorySchemeId, categoryId);
-          if (!isDefined(category)) return;
-          this.dataflowTree[agencyId].members![categorySchemeId].members![
-            categoryId
-          ] = { type: "category", item: category, members: {} };
-        }
-
-        // Create dataflow!
-        const dataflow = this.getDataflow(dataflowId);
-        if (!isDefined(dataflow)) return;
-        this.dataflowTree[agencyId].members![categorySchemeId].members![
-          categoryId
-        ].members![dataflowId] = { type: "dataflow", item: dataflow };
-      });
-      // No categorisations exist => add flat list of dataflows
-    } else {
-      this.dataflowTree = this.sdmxServer.dataflows.reduce<DataflowTree>(
-        (tree, dataflow) => {
-          if (isDefined(dataflow.id)) {
-            tree[dataflow.id] = { type: "dataflow", item: dataflow };
-          }
-          return tree;
-        },
-        {}
-      );
-    }
-  }
-
-  duplicateLoadableStratum(model: BaseModel): this {
-    return new SdmxServerStratum(
-      model as SdmxCatalogGroup,
-      this.sdmxServer
-    ) as this;
-  }
 
   static async load(
     catalogGroup: SdmxCatalogGroup
   ): Promise<SdmxServerStratum> {
+    // Load agency schemes (may be undefined)
     let agencySchemes = (
       await loadSdmxJsonStructure(
         proxyCatalogItemUrl(catalogGroup, `${catalogGroup.url}/agencyscheme/`),
@@ -145,6 +51,7 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
       )
     )?.data?.agencySchemes;
 
+    // Load category schemes (may be undefined)
     let categorySchemeResponse = await loadSdmxJsonStructure(
       proxyCatalogItemUrl(
         catalogGroup,
@@ -155,7 +62,7 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
 
     let dataflows = categorySchemeResponse?.data?.dataflows;
 
-    // If no dataflows -> try getting all of them through `dataflow` endpoint
+    // If no dataflows from category schemes -> try getting all of them through `dataflow` endpoint
     if (!isDefined(dataflows)) {
       dataflows = (
         await loadSdmxJsonStructure(
@@ -180,9 +87,114 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
     });
   }
 
+  duplicateLoadableStratum(model: BaseModel): this {
+    return new SdmxServerStratum(
+      model as SdmxCatalogGroup,
+      this.sdmxServer
+    ) as this;
+  }
+
+  private readonly dataflowTree: DataflowTree = {};
+
+  constructor(
+    private readonly catalogGroup: SdmxCatalogGroup,
+    private readonly sdmxServer: SdmxServer
+  ) {
+    super();
+
+    // If categorisations exist => organise Dataflows into a tree!
+    if (isDefined(this.sdmxServer.categorisations)) {
+      this.sdmxServer.categorisations.forEach(categorisiation => {
+        const categorySchemeUrn = parseSdmxUrn(categorisiation.target);
+
+        const agencyId = categorySchemeUrn?.agencyId;
+        const categorySchemeId = categorySchemeUrn?.resourceId;
+        const categoryIds = categorySchemeUrn?.descendantIds; // Only support 1 level of categorisiation for now
+
+        const dataflowId = parseSdmxUrn(categorisiation.source)?.resourceId;
+
+        if (
+          !isDefined(agencyId) ||
+          !isDefined(categorySchemeId) ||
+          !isDefined(categoryIds) ||
+          !isDefined(dataflowId)
+        )
+          return;
+
+        let agencyNode = this.dataflowTree[agencyId];
+
+        // Create agency node if it doesn't exist
+        if (!isDefined(agencyNode)) {
+          const agency = this.getAgency(agencyId);
+          if (!isDefined(agency)) return;
+
+          this.dataflowTree[agencyId] = {
+            type: "agencyScheme",
+            item: agency,
+            members: {}
+          };
+
+          agencyNode = this.dataflowTree[agencyId];
+        }
+
+        let categorySchemeNode = agencyNode.members![categorySchemeId];
+
+        // Create categoryScheme node if it doesn't exist
+        if (!isDefined(categorySchemeNode)) {
+          const categoryScheme = this.getCategoryScheme(categorySchemeId);
+          if (!isDefined(categoryScheme)) return;
+          agencyNode.members![categorySchemeId] = {
+            type: "categoryScheme",
+            item: categoryScheme,
+            members: {}
+          };
+
+          categorySchemeNode = agencyNode.members![categorySchemeId];
+        }
+
+        let categoryParentNode = categorySchemeNode;
+
+        // Make category nodes (may be nested)
+        categoryIds.forEach(categoryId => {
+          // Create category node if it doesn't exist
+          if (!isDefined(categoryParentNode.members![categoryId])) {
+            const category = this.getCategory(categorySchemeId, categoryId);
+            if (!isDefined(category)) return;
+            categoryParentNode.members![categoryId] = {
+              type: "category",
+              item: category,
+              members: {}
+            };
+          }
+          // Swap parent node to newly created category node
+          categoryParentNode = categoryParentNode.members![categoryId];
+        });
+
+        // Create dataflow!
+        const dataflow = this.getDataflow(dataflowId);
+        if (!isDefined(dataflow)) return;
+        categoryParentNode.members![dataflowId] = {
+          type: "dataflow",
+          item: dataflow
+        };
+      });
+      // No categorisations exist => add flat list of dataflows
+    } else {
+      this.dataflowTree = this.sdmxServer.dataflows.reduce<DataflowTree>(
+        (tree, dataflow) => {
+          if (isDefined(dataflow.id)) {
+            tree[dataflow.id] = { type: "dataflow", item: dataflow };
+          }
+          return tree;
+        },
+        {}
+      );
+    }
+  }
+
   @computed
   get members(): ModelReference[] {
-    return Object.values(this.dataflowTree).map(node => this.getLayerId(node));
+    return Object.values(this.dataflowTree).map(node => this.getMemberId(node));
   }
 
   createMembers() {
@@ -193,7 +205,7 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
 
   @action
   createMemberFromLayer(node: DataflowTreeNode) {
-    const layerId = this.getLayerId(node);
+    const layerId = this.getMemberId(node);
 
     if (!layerId) {
       return;
@@ -208,35 +220,35 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
       );
 
       // Create group
-      const existingModel = this.catalogGroup.terria.getModelById(
+      const existingGroupModel = this.catalogGroup.terria.getModelById(
         CatalogGroup,
         layerId
       );
 
-      let model: CatalogGroup;
-      if (existingModel === undefined) {
-        model = new CatalogGroup(layerId, this.catalogGroup.terria);
-        this.catalogGroup.terria.addModel(model);
+      let groupModel: CatalogGroup;
+      if (existingGroupModel === undefined) {
+        groupModel = new CatalogGroup(layerId, this.catalogGroup.terria);
+        this.catalogGroup.terria.addModel(groupModel);
       } else {
-        model = existingModel;
+        groupModel = existingGroupModel;
       }
 
-      model.setTrait(
+      groupModel.setTrait(
         CommonStrata.underride,
         "name",
         node.item.name || node.item.id
       );
-      model.setTrait(
+      groupModel.setTrait(
         CommonStrata.underride,
         "members",
         filterOutUndefined(
-          Object.values(node.members).map(member => this.getLayerId(member))
+          Object.values(node.members).map(member => this.getMemberId(member))
         )
       );
 
       // Set group `info` trait if applicable
       if (node.item.description) {
-        model.setTrait(CommonStrata.underride, "info", [
+        groupModel.setTrait(CommonStrata.underride, "info", [
           createInfoSection("Description", node.item.description)
         ]);
       }
@@ -252,58 +264,46 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
     )
       return;
 
-    const existingModel = this.catalogGroup.terria.getModelById(
+    const existingItemModel = this.catalogGroup.terria.getModelById(
       SdmxJsonCatalogItem,
       layerId
     );
 
-    let model: SdmxJsonCatalogItem;
-    if (existingModel === undefined) {
-      model = new SdmxJsonCatalogItem(
+    let itemModel: SdmxJsonCatalogItem;
+    if (existingItemModel === undefined) {
+      itemModel = new SdmxJsonCatalogItem(
         layerId,
         this.catalogGroup.terria,
         undefined
       );
-      this.catalogGroup.terria.addModel(model);
+      this.catalogGroup.terria.addModel(itemModel);
     } else {
-      model = existingModel;
+      itemModel = existingItemModel;
     }
 
     // Replace the stratum inherited from the parent group.
     const stratum = CommonStrata.underride;
 
-    model.strata.delete(stratum);
+    itemModel.strata.delete(stratum);
 
-    model.setTrait(stratum, "name", node.item.name || node.item.id);
-    model.setTrait(stratum, "url", this.catalogGroup.url);
-    model.setTrait(stratum, "agencyId", node.item.agencyID as string);
-    model.setTrait(stratum, "dataflowId", node.item.id);
+    itemModel.setTrait(stratum, "name", node.item.name || node.item.id);
+    itemModel.setTrait(stratum, "url", this.catalogGroup.url);
 
-    model.setTrait(
+    itemModel.setTrait(stratum, "agencyId", node.item.agencyID as string);
+    itemModel.setTrait(stratum, "dataflowId", node.item.id);
+
+    itemModel.setTrait(
       stratum,
       "conceptOverrides",
       this.catalogGroup.traits.conceptOverrides.toJson(
         this.catalogGroup.conceptOverrides
       )
     );
-
-    model.setTrait(stratum, "info", [
-      createInfoSection("Description", node.item.description)
-    ]);
   }
 
-  getLayerId(node: DataflowTreeNode) {
+  getMemberId(node: DataflowTreeNode) {
     return `${this.catalogGroup.uniqueId}/${node.type}-${node.item.id}`;
   }
-
-  // get categorySchemes(agencyId?:string) {
-  //   this.sdmxServer.categorySchemes
-  // }
-
-  // get dataflowsForCategory(categorySchemeUrn:string) {
-  //   const sources = this.sdmxServer.categorisations?.filter(cat => cat.target === categorySchemeUrn)?.map(cat => cat.source)
-  //   return isDefined(sources) ? filterOutUndefined(sources) : []
-  // }
 
   getDataflow(id?: string) {
     if (!isDefined(id)) return;
@@ -343,34 +343,7 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
   }
 }
 
-type DataflowTreeNodeBase<T, I> = {
-  type: T;
-  item: I;
-  members?: DataflowTree;
-};
-
-type DataflowTreeNodeAgencyScheme = DataflowTreeNodeBase<
-  "agencyScheme",
-  AgencyScheme
->;
-type DataflowTreeNodeCategoryScheme = DataflowTreeNodeBase<
-  "categoryScheme",
-  CategoryScheme
->;
-type DataflowTreeNodeCategory = DataflowTreeNodeBase<"category", Category>;
-type DataflowTreeNodeDataflow = DataflowTreeNodeBase<"dataflow", Dataflow>;
-
-type DataflowTreeNode =
-  | DataflowTreeNodeAgencyScheme
-  | DataflowTreeNodeCategoryScheme
-  | DataflowTreeNodeCategory
-  | DataflowTreeNodeDataflow;
-
-type DataflowTree = { [key: string]: DataflowTreeNode };
-
 StratumOrder.addLoadStratum(SdmxServerStratum.stratumName);
-
-// function categorySchemeToUrn()
 
 export function parseSdmxUrn(urn?: string) {
   if (!isDefined(urn)) return;
@@ -446,9 +419,34 @@ export async function loadSdmxJsonStructure(
   }
 }
 
+type DataflowTreeNodeBase<T, I> = {
+  type: T;
+  item: I;
+  members?: DataflowTree;
+};
+
+type DataflowTreeNodeAgencyScheme = DataflowTreeNodeBase<
+  "agencyScheme",
+  AgencyScheme
+>;
+type DataflowTreeNodeCategoryScheme = DataflowTreeNodeBase<
+  "categoryScheme",
+  CategoryScheme
+>;
+type DataflowTreeNodeCategory = DataflowTreeNodeBase<"category", Category>;
+type DataflowTreeNodeDataflow = DataflowTreeNodeBase<"dataflow", Dataflow>;
+
+type DataflowTreeNode =
+  | DataflowTreeNodeAgencyScheme
+  | DataflowTreeNodeCategoryScheme
+  | DataflowTreeNodeCategory
+  | DataflowTreeNodeDataflow;
+
+type DataflowTree = { [key: string]: DataflowTreeNode };
+
 export enum SdmxHttpErrorCodes {
   // SDMX to HTTP Error Mapping - taken from https://github.com/sdmx-twg/sdmx-rest/blob/7366f56ac08fe4eed758204e32d2e1ca62c78acf/v2_1/ws/rest/docs/4_7_errors.md#sdmx-to-http-error-mapping
-  NoChages = 304,
+  NoChanges = 304,
   // 100 No results found = 404 Not found
   NoResults = 404,
   // 110 Unauthorized = 401 Unauthorized

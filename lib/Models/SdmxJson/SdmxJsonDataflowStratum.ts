@@ -30,14 +30,6 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
 ) {
   static stratumName = "sdmxJsonDataflow";
 
-  constructor(
-    private readonly catalogItem: SdmxJsonCatalogItem,
-    private readonly sdmxJsonDataflow: SdmxJsonDataflow
-  ) {
-    super();
-    console.log(this);
-  }
-
   duplicateLoadableStratum(model: BaseModel): this {
     return new SdmxJsonDataflowStratum(
       model as SdmxJsonCatalogItem,
@@ -48,6 +40,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   static async load(
     catalogItem: SdmxJsonCatalogItem
   ): Promise<SdmxJsonDataflowStratum> {
+    // Load dataflow (+ all related references)
     let dataflowStructure: SdmxJsonStructureMessage = await loadSdmxJsonStructure(
       proxyCatalogItemUrl(
         catalogItem,
@@ -91,40 +84,26 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     });
   }
 
+  constructor(
+    private readonly catalogItem: SdmxJsonCatalogItem,
+    private readonly sdmxJsonDataflow: SdmxJsonDataflow
+  ) {
+    super();
+  }
+
   @computed
   get description() {
     return this.sdmxJsonDataflow.dataflow.description;
   }
 
+  /**
+   * Find conceptOverrides with type 'region-type' to try to extract regionType from another dimension
+   * For example, ABS have a regionType column which may have values (SA1, SA2, ...), which could be used to determine regionType
+   */
   @computed
-  get columns() {
-    const primaryMeasure = this.sdmxJsonDataflow.dataStructure
-      .dataStructureComponents?.measureList.primaryMeasure;
-    const primaryMeasureConceptUrn = parseSdmxUrn(
-      primaryMeasure?.conceptIdentity
-    );
-    const primaryMeasureConcept = this.getConcept(
-      primaryMeasureConceptUrn?.resourceId,
-      primaryMeasureConceptUrn?.descendantIds?.[0]
-    );
-    const primaryMeasureColumn = {
-      name: primaryMeasure?.id,
-      title: primaryMeasureConcept?.name,
-      units: undefined,
-      type: undefined,
-      regionType: undefined,
-      regionDisambiguationColumn: undefined,
-      replaceWithZeroValues: undefined,
-      replaceWithNullValues: undefined,
-      format: undefined
-    };
-
-    const dimensionsList = this.sdmxJsonDataflow.dataStructure
-      .dataStructureComponents?.dimensionList;
-
+  get regionTypeFromDimension() {
     let regionTypeFromDimension: string | undefined;
 
-    // Find conceptOverrides with type 'region-type' to try to extract region-type from another dimension
     if (
       isDefined(this.catalogItem.conceptOverrides) &&
       this.catalogItem.conceptOverrides.length > 0
@@ -134,7 +113,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
         .filter(concept => concept.type === "region-type")
         .forEach(concept => {
           // Find dimension id with concept
-          const dimId = dimensionsList?.dimensions?.find(
+          const dimId = this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.dimensionList?.dimensions?.find(
             dim => dim.conceptIdentity === concept.id
           )?.id;
 
@@ -145,62 +124,110 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
         });
     }
 
-    const dimColums = [
-      ...(dimensionsList?.dimensions || []),
-      ...(dimensionsList?.timeDimensions || [])
-    ].map(dim => {
-      const conceptUrn = parseSdmxUrn(dim.conceptIdentity);
-      const concept = this.getConcept(
-        conceptUrn?.resourceId,
-        conceptUrn?.descendantIds?.[0]
-      );
-
-      const conceptOverride = this.catalogItem.conceptOverrides.find(
-        concept => concept.id === dim.conceptIdentity
-      );
-
-      // Try to find region type
-      let regionType: string | undefined;
-
-      if (dim.id) {
-        // Are any regionTypes present in conceptOverrides
-        regionType = this.matchRegionType(conceptOverride?.regionType);
-
-        // Next try regionTypeFromDimension (only if this concept has type 'region')
-        if (
-          !isDefined(regionType) &&
-          conceptOverride &&
-          conceptOverride.type === "region"
-        )
-          regionType = this.matchRegionType(regionTypeFromDimension);
-
-        // Then check if dimension name (column name) is valid regionType
-        if (!isDefined(regionType)) regionType = this.matchRegionType(dim.id);
-
-        // Finally, try concept name
-        if (!isDefined(regionType))
-          regionType = this.matchRegionType(concept?.name);
-      }
-
-      return {
-        name: dim.id,
-        title: concept?.name,
-        units: undefined,
-        type: isDefined(regionType) ? "region" : undefined,
-        regionType,
-        regionDisambiguationColumn: undefined,
-        replaceWithZeroValues: undefined,
-        replaceWithNullValues: undefined,
-        format: undefined
-      };
-    });
-
-    return [primaryMeasureColumn, ...dimColums];
+    return regionTypeFromDimension;
   }
 
+  @computed
+  get primaryMeasureColumn() {
+    // Get primary measure column
+    const primaryMeasure = this.sdmxJsonDataflow.dataStructure
+      .dataStructureComponents?.measureList.primaryMeasure;
+    const primaryMeasureConceptUrn = parseSdmxUrn(
+      primaryMeasure?.conceptIdentity
+    );
+    const primaryMeasureConcept = this.getConcept(
+      primaryMeasureConceptUrn?.resourceId,
+      primaryMeasureConceptUrn?.descendantIds?.[0]
+    );
+    return {
+      name: primaryMeasure?.id,
+      title: primaryMeasureConcept?.name,
+      units: undefined,
+      type: undefined,
+      regionType: undefined,
+      regionDisambiguationColumn: undefined,
+      replaceWithZeroValues: undefined,
+      replaceWithNullValues: undefined,
+      format: undefined
+    };
+  }
+
+  /**
+   * Gets column traits based on dimension/concept information
+   * The main purpose of this is to try to find the region type for columns
+   */
+  @computed
+  get columns() {
+    const dimensionsList = this.sdmxJsonDataflow.dataStructure
+      .dataStructureComponents?.dimensionList;
+
+    // Get columns for all dimensions (excluding time dimensions)
+    const dimColums = dimensionsList?.dimensions
+      // Filter out disabled dimensions
+      ?.filter(
+        dim =>
+          isDefined(dim.id) &&
+          !this.dimensions?.find(d => d.id === dim.id)?.disable
+      )
+      .map(dim => {
+        // Get concept information for the current dimension
+        const conceptUrn = parseSdmxUrn(dim.conceptIdentity);
+        const concept = this.getConcept(
+          conceptUrn?.resourceId,
+          conceptUrn?.descendantIds?.[0]
+        );
+        const conceptOverride = this.catalogItem.conceptOverrides.find(
+          concept => concept.id === dim.conceptIdentity
+        );
+
+        // Try to find region type
+        let regionType: string | undefined;
+
+        if (dim.id) {
+          // Are any regionTypes present in conceptOverrides for the current concept
+          regionType = this.matchRegionType(conceptOverride?.regionType);
+
+          // Next try regionTypeFromDimension (only if this concept has override type 'region')
+          if (
+            !isDefined(regionType) &&
+            conceptOverride &&
+            conceptOverride.type === "region"
+          )
+            regionType = this.matchRegionType(this.regionTypeFromDimension);
+
+          // Then check if dimension name (column name) is valid regionType
+          if (!isDefined(regionType)) regionType = this.matchRegionType(dim.id);
+
+          // Try concept name?
+          if (!isDefined(regionType))
+            regionType = this.matchRegionType(concept?.name);
+
+          // Finally, try concept id (the string, not the full URN)
+          if (!isDefined(regionType))
+            regionType = this.matchRegionType(concept?.id);
+        }
+
+        return {
+          name: dim.id,
+          title: concept?.name,
+          units: undefined,
+          type: isDefined(regionType) ? "region" : undefined,
+          regionType,
+          regionDisambiguationColumn: undefined,
+          replaceWithZeroValues: undefined,
+          replaceWithNullValues: undefined,
+          format: undefined
+        };
+      });
+
+    return [this.primaryMeasureColumn, ...(dimColums || [])];
+  }
+
+  /**
+   * Try to resolve `regionType` to a region provider (this will also match against region provider aliases)
+   */
   matchRegionType(regionType?: string): string | undefined {
     if (!isDefined(regionType)) return;
-    // Resolve regionType to region provider (this will also match against region provider aliases)
     const matchingRegionProviders = this.catalogItem.regionProviderList?.getRegionDetails(
       [regionType],
       undefined,
@@ -220,14 +247,11 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   }
 
   @computed
-  get primaryMeasureDimenionId() {
+  get primaryMeasureDimensionId() {
     return this.sdmxJsonDataflow.dataStructure.dataStructureComponents
       ?.measureList.primaryMeasure?.id;
   }
 
-  /**
-   * Returns array of dimension id's which are treated as region columns.
-   */
   @computed
   get regionMappedDimensionIds() {
     return this.columns
@@ -255,6 +279,14 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     if (this.catalogItem.timeDimensionIds.length > 0) {
       return "time";
     }
+  }
+
+  /**
+   * Enable manual region mapping if viewby is undefined (no region or time dimensions)
+   */
+  @computed
+  get enableManualRegionMapping() {
+    return !isDefined(this.viewBy);
   }
 
   @computed
@@ -390,11 +422,6 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     if (!isDefined(id)) return;
     return this.sdmxJsonDataflow.codelists?.find(c => c.id === id);
   }
-
-  // get dataflowsForCategory(categorySchemeUrn:string) {
-  //   const sources = this.SdmxJsonDataflow.categorisations?.filter(cat => cat.target === categorySchemeUrn)?.map(cat => cat.source)
-  //   return isDefined(sources) ? filterOutUndefined(sources) : []
-  // }
 }
 
 StratumOrder.addLoadStratum(SdmxJsonDataflowStratum.stratumName);

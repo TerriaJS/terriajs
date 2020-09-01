@@ -66,17 +66,17 @@ export default class SdmxCatalogItemTraits extends mixTraits(
 
   @primitiveTrait({
     type: "string",
-    name: "Primary measure dimenion ID",
+    name: "Primary measure dimension ID",
     description:
-      "ID of primary measure dimenion. This is used to find the actual values!"
+      "ID of primary measure dimension. This is used to find the actual values!"
   })
-  primaryMeasureDimenionId?: string;
+  primaryMeasureDimensionId?: string;
 
   @primitiveArrayTrait({
     type: "string",
     name: "Time measure dimenion ID",
     description:
-      "ID of time dimenion. This is used to find show values by time-series or to filter a specific time-slice."
+      "ID of time dimenions. This is used to find show values by time-series or to filter a specific time-slice."
   })
   timeDimensionIds?: string[];
 
