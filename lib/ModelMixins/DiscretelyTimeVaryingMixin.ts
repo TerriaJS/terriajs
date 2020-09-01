@@ -313,7 +313,9 @@ function DiscretelyTimeVaryingMixin<
             });
           },
           getColor: () => {
-            return getChartColorForId(colorId);
+            return this.chartColor
+              ? this.chartColor
+              : getChartColorForId(colorId);
           },
           onClick: (point: any) => {
             runInAction(() => {
