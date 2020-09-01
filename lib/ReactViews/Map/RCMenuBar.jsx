@@ -50,7 +50,7 @@ const RCMenuBar = props => {
 };
 
 RCMenuBar.propTypes = {
-  viewState: PropTypes.func
+  viewState: PropTypes.object
 };
 
 export default RCMenuBar;

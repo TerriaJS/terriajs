@@ -32,7 +32,7 @@ export const FeatureInfoPanel = createReactClass({
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
     printView: PropTypes.bool,
-    t: PropTypes.func.isRequire
+    t: PropTypes.func.isRequired
   },
 
   ref: null,
@@ -251,7 +251,6 @@ export const FeatureInfoPanel = createReactClass({
 
     // Close preview summary (important to force rerender)
     this.props.viewState.hotspotSummaryEnabled = false;
-
     this.props.viewState.selectedHotspot = featureProperties;
     this.props.viewState.hotspotSummaryEnabled = true;
     this.close();

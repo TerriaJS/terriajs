@@ -193,6 +193,8 @@ const StandardUserInterface = createReactClass({
                     version={this.props.version}
                     allBaseMaps={allBaseMaps}
                   />
+                </Small>
+                <Small>
                   <div className={Styles.middleContainer}>
                     <section
                       className={classNames(
@@ -245,6 +247,8 @@ const StandardUserInterface = createReactClass({
                       customFeedbacks={customElements.feedback}
                     />
                   </section>
+                </Medium>
+                <Medium>
                   <div
                     className={classNames(
                       Styles.sidePanel,
@@ -327,6 +331,8 @@ const StandardUserInterface = createReactClass({
                   animationDuration={animationDuration}
                 /> */}
                 <RCMenuBar terria={terria} viewState={this.props.viewState} />
+              </Medium>
+              <Medium>
                 <MapNavigation
                   terria={terria}
                   viewState={this.props.viewState}
@@ -375,6 +381,7 @@ const StandardUserInterface = createReactClass({
               terria={terria}
               viewState={this.props.viewState}
             />
+            op
           </div>
           <DragDropFile
             terria={this.props.terria}
