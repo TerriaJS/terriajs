@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.47)
 * Removed hard coded senaps base url.
+* Added `chartColor` trait for DiscretelyTimeVarying items.
 * [The next improvement]
 
 #### 8.0.0-alpha.46
