@@ -381,7 +381,6 @@ const StandardUserInterface = createReactClass({
               terria={terria}
               viewState={this.props.viewState}
             />
-            op
           </div>
           <DragDropFile
             terria={this.props.terria}
