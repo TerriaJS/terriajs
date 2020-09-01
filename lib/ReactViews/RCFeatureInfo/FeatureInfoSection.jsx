@@ -36,7 +36,7 @@ export const FeatureInfoSection = createReactClass({
   mixins: [ObserveModelMixin],
 
   propTypes: {
-    viewState: PropTypes.object.isRequired,
+    viewState: PropTypes.object,
     template: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
     feature: PropTypes.object,
     position: PropTypes.object,

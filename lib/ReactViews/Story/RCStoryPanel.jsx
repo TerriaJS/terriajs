@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import ObserveModelMixin from "../ObserveModelMixin";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
-import { Small, Medium } from "../Generic/Responsive";
+import { Medium } from "../Generic/Responsive";
 import Icon from "../Icon.jsx";
 import { Swipeable } from "react-swipeable";
 import when from "terriajs-cesium/Source/ThirdParty/when";

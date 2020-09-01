@@ -4,8 +4,6 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import FeatureInfoCatalogItem from "./FeatureInfoCatalogItem.jsx";
-import DragWrapper from "../DragWrapper.jsx";
-import Loader from "../Loader.jsx";
 import ObserveModelMixin from "../ObserveModelMixin";
 import React from "react";
 import createReactClass from "create-react-class";
@@ -23,12 +21,8 @@ import {
 } from "../../Models/LocationMarkerUtils";
 import prettifyCoordinates from "../../Map/prettifyCoordinates";
 import raiseErrorToUser from "../../Models/raiseErrorToUser";
-import triggerResize from "../../Core/triggerResize";
 
 import Styles from "./feature-info-panel.scss";
-import classNames from "classnames";
-
-import { launchStory } from "../../Models/Receipt";
 
 export const FeatureInfoPanel = createReactClass({
   displayName: "FeatureInfoPanel",
@@ -38,7 +32,7 @@ export const FeatureInfoPanel = createReactClass({
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
     printView: PropTypes.bool,
-    t: PropTypes.func.isRequired
+    t: PropTypes.func.isRequire
   },
 
   ref: null,
@@ -264,17 +258,7 @@ export const FeatureInfoPanel = createReactClass({
   },
 
   render() {
-    const { t } = this.props;
     const terria = this.props.terria;
-    const viewState = this.props.viewState;
-
-    const type = terria.selectedFeature?.properties?.["_rc-type"]?._value;
-    const sector = terria.selectedFeature?.properties?.["_rc-sector"]?._value;
-    const title = terria.selectedFeature?.properties?.["_rc-title"]?._value;
-    const description =
-      terria.selectedFeature?.properties?.["_rc-description"]?._value;
-    const storyId = terria.selectedFeature?.properties?.["_story-id"]?._value;
-    const featureProperties = terria.selectedFeature?.properties;
 
     const {
       catalogItems,
@@ -285,12 +269,6 @@ export const FeatureInfoPanel = createReactClass({
       catalogItems,
       featureCatalogItemPairs
     );
-
-    const panelClassName = classNames(Styles.panel, {
-      [Styles.isCollapsed]: viewState.featureInfoPanelIsCollapsed,
-      [Styles.isVisible]: viewState.featureInfoPanelIsVisible,
-      [Styles.isTranslucent]: viewState.explorerPanelIsVisible
-    });
 
     let position;
     if (
@@ -322,100 +300,12 @@ export const FeatureInfoPanel = createReactClass({
       }
     }
 
-    const locationElements = (
-      <If condition={position}>
-        <li>{this.renderLocationItem(position)}</li>
-      </If>
-    );
     this.ref = React.createRef();
     if (featureInfoCatalogItems.length > 0) {
       // Open directly the story summary panel
       this.props.viewState.hotspotSummaryEnabled = false;
       this.openStorySummary(terria.selectedFeature?.properties);
       return null;
-    }
-    return null;
-
-    // Bellow code won't execute when the feature panel is disabled.
-    if (featureInfoCatalogItems.length > 0) {
-      return (
-        <DragWrapper ref={this.ref}>
-          <div
-            className={panelClassName}
-            aria-hidden={!viewState.featureInfoPanelIsVisible}
-          >
-            {!this.props.printView && (
-              <div className={Styles.header}>
-                <div
-                  className={classNames("drag-handle", Styles.btnPanelHeading)}
-                >
-                  <span>{type}</span>
-                </div>
-                <button
-                  type="button"
-                  onClick={this.close}
-                  className={Styles.btnCloseFeature}
-                  title={t("featureInfo.btnCloseFeature")}
-                >
-                  <Icon glyph={Icon.GLYPHS.close} />
-                </button>
-              </div>
-            )}
-
-            <ul className={Styles.body}>
-              {this.props.printView && locationElements}
-              <Choose>
-                <When
-                  condition={
-                    defined(terria.pickedFeatures) &&
-                    terria.pickedFeatures.isLoading
-                  }
-                >
-                  <li>
-                    <Loader />
-                  </li>
-                </When>
-                <When
-                  condition={
-                    !featureInfoCatalogItems ||
-                    featureInfoCatalogItems.length === 0
-                  }
-                >
-                  <li className={Styles.noResults}>
-                    {this.getMessageForNoResults()}
-                  </li>
-                </When>
-                <Otherwise>
-                  <div className={Styles.tooltipContent}>
-                    {sector && (
-                      <div className={Styles.icons}>
-                        <Icon
-                          className={Styles.icon}
-                          glyph={Icon.GLYPHS[sector]}
-                        />
-                      </div>
-                    )}
-                    {title && <h3>{title}</h3>}
-                    {description && <p>{description}</p>}
-                  </div>
-                  {storyId && (
-                    <button
-                      type="button"
-                      className={Styles.satelliteSuggestionBtn}
-                      onClick={this.openStorySummary.bind(
-                        this,
-                        featureProperties
-                      )}
-                    >
-                      View story
-                    </button>
-                  )}
-                </Otherwise>
-              </Choose>
-            </ul>
-          </div>
-        </DragWrapper>
-      );
     }
     return null;
   }

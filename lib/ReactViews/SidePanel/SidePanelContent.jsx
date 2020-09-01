@@ -16,6 +16,7 @@ class SidePanelContent extends React.Component {
   };
   componentDidMount() {
     this._viewStateChangeHandler = knockout
+      // eslint-disable-next-line jsx-control-statements/jsx-jcs-no-undef
       .getObservable(viewState, "isHotspotsFiltered")
       .subscribe(isHotspotsFiltered => {
         if (!isHotspotsFiltered) {

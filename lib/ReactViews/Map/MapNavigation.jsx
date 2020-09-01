@@ -1,13 +1,13 @@
-import Compass from "./Navigation/Compass.jsx";
+// import Compass from "./Navigation/Compass.jsx";
 import createReactClass from "create-react-class";
-import MyLocation from "./Navigation/MyLocation.jsx";
+// import MyLocation from "./Navigation/MyLocation.jsx";
 import ObserveModelMixin from "../ObserveModelMixin";
 import PropTypes from "prop-types";
 import React from "react";
 import { Medium } from "../Generic/Responsive";
 import Styles from "./map-navigation.scss";
-import ToggleSplitterTool from "./Navigation/ToggleSplitterTool";
-import ViewerMode from "../../Models/ViewerMode";
+// import ToggleSplitterTool from "./Navigation/ToggleSplitterTool";
+// import ViewerMode from "../../Models/ViewerMode";
 import ZoomControl from "./Navigation/ZoomControl.jsx";
 
 import classNames from "classnames";
@@ -41,7 +41,7 @@ const MapNavigation = createReactClass({
       >
         <Medium>
           <div className={Styles.navs}>
-            {/*<If condition={this.props.terria.viewerMode !== ViewerMode.Leaflet}>
+            {/* <If condition={this.props.terria.viewerMode !== ViewerMode.Leaflet}>
               <div className={Styles.control}>
                 <Compass terria={this.props.terria} />
               </div>

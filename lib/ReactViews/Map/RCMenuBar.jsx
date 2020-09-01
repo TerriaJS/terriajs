@@ -3,6 +3,8 @@ import Styles from "./rc-menu-bar.scss";
 import classNames from "classnames";
 import Icon from "../Icon.jsx";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
+import PropTypes from "prop-types";
+
 const RCMenuBar = props => {
   const { viewState } = props;
   const [showButton, setShowButton] = useState(false);
@@ -45,6 +47,10 @@ const RCMenuBar = props => {
       </ul>
     </div>
   );
+};
+
+RCMenuBar.propTypes = {
+  viewState: PropTypes.func
 };
 
 export default RCMenuBar;

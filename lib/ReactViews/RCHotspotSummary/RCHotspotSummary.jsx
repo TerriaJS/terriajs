@@ -35,7 +35,7 @@ const HotspotSummary = createReactClass({
 
   render() {
     const hotspot = this.props.viewState.selectedHotspot;
-    const type = hotspot["_rc-type"]?._value;
+    // const type = hotspot["_rc-type"]?._value;
     const sector = hotspot["_rc-sector"]?._value;
     const title = hotspot["_rc-title"]?._value;
     const description = hotspot["_rc-description"]?._value;

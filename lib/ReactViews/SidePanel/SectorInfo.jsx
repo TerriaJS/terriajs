@@ -62,7 +62,8 @@ class SectorInfo extends React.Component {
   }
 }
 SectorInfo.propTypes = {
-  sector: PropTypes.object.isRequired
+  sector: PropTypes.object.isRequired,
+  close: PropTypes.func
 };
 
 export default SectorInfo;
