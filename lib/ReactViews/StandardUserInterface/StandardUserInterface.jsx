@@ -3,16 +3,14 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import arrayContains from "../../Core/arrayContains";
 import Branding from "./../SidePanel/Branding.jsx";
+import RCHotspotSummary from "./../RCHotspotSummary/RCHotspotSummary.jsx";
 import DragDropFile from "./../DragDropFile.jsx";
 import DragDropNotification from "./../DragDropNotification.jsx";
-import ExplorerWindow from "./../ExplorerWindow/ExplorerWindow.jsx";
 import FeatureInfoPanel from "./../RCFeatureInfo/FeatureInfoPanel.jsx";
-import FeedbackForm from "../Feedback/FeedbackForm.jsx";
 import MapColumn from "./MapColumn.jsx";
 import MapInteractionWindow from "./../Notification/MapInteractionWindow.jsx";
 import MapNavigation from "./../Map/MapNavigation.jsx";
 import RCMenuBar from "./../Map/RCMenuBar.jsx";
-import ExperimentalFeatures from "./../Map/ExperimentalFeatures.jsx";
 import MobileHeader from "./../Mobile/MobileHeader.jsx";
 import Notification from "./../Notification/Notification.jsx";
 import ObserveModelMixin from "./../ObserveModelMixin";
@@ -21,7 +19,6 @@ import SidePanel from "./../SidePanel/SidePanel.jsx";
 import SidePanelContent from "./../SidePanel/SidePanelContent";
 import processCustomElements from "./processCustomElements";
 import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
-import StoryPanel from "./../Story/StoryPanel.jsx";
 import RCStoryPanel from "./../Story/RCStoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 import ToolPanel from "./../ToolPanel.jsx";
@@ -154,6 +151,7 @@ const StandardUserInterface = createReactClass({
     );
 
     const terria = this.props.terria;
+    const viewState = this.props.viewState;
 
     const allBaseMaps = this.props.allBaseMaps;
 
@@ -166,6 +164,9 @@ const StandardUserInterface = createReactClass({
       this.props.viewState.storyShown &&
       !this.props.viewState.explorerPanelIsVisible &&
       !this.props.viewState.storyBuilderShown;
+
+    const showHotspotSummary = this.props.viewState.hotspotSummaryEnabled;
+
     return (
       <div className={Styles.storyWrapper}>
         <WelcomeMessage viewState={this.props.viewState} />
@@ -192,6 +193,8 @@ const StandardUserInterface = createReactClass({
                     version={this.props.version}
                     allBaseMaps={allBaseMaps}
                   />
+                </Small>
+                <Small>
                   <div className={Styles.middleContainer}>
                     <section
                       className={classNames(
@@ -216,11 +219,20 @@ const StandardUserInterface = createReactClass({
                       </div>
                     ) : null}
 
-                    {!showStoryPanel && (
+                    {!(showStoryPanel || showHotspotSummary) && (
                       <div className={Styles.tabsContainer}>
                         <SidePanelContent
                           terria={terria}
                           viewState={this.props.viewState}
+                        />
+                      </div>
+                    )}
+
+                    {showHotspotSummary && (
+                      <div className={Styles.mobilePadding}>
+                        <RCHotspotSummary
+                          terria={terria}
+                          viewState={viewState}
                         />
                       </div>
                     )}
@@ -235,6 +247,8 @@ const StandardUserInterface = createReactClass({
                       customFeedbacks={customElements.feedback}
                     />
                   </section>
+                </Medium>
+                <Medium>
                   <div
                     className={classNames(
                       Styles.sidePanel,
@@ -252,11 +266,13 @@ const StandardUserInterface = createReactClass({
                     }}
                   >
                     <Branding terria={terria} version={this.props.version} />
-                    {!showStoryPanel && (
-                      <SidePanelContent
-                        terria={terria}
-                        viewState={this.props.viewState}
-                      />
+
+                    {showHotspotSummary && (
+                      <RCHotspotSummary terria={terria} viewState={viewState} />
+                    )}
+
+                    {!(showStoryPanel || showHotspotSummary) && (
+                      <SidePanelContent terria={terria} />
                     )}
                     {showStoryPanel ? (
                       <div>
@@ -315,6 +331,8 @@ const StandardUserInterface = createReactClass({
                   animationDuration={animationDuration}
                 /> */}
                 <RCMenuBar terria={terria} viewState={this.props.viewState} />
+              </Medium>
+              <Medium>
                 <MapNavigation
                   terria={terria}
                   viewState={this.props.viewState}

@@ -17,6 +17,7 @@ class SectorTabs extends React.Component {
   };
   componentDidMount() {
     this._viewStateChangeHandler = knockout
+      // eslint-disable-next-line jsx-control-statements/jsx-jcs-no-undef
       .getObservable(viewState, "isHotspotsFiltered")
       .subscribe(isHotspotsFiltered => {
         if (!isHotspotsFiltered) {
@@ -34,21 +35,21 @@ class SectorTabs extends React.Component {
       {
         title: "Agriculture",
         icon: Icon.GLYPHS.agriculture,
-        info: `European food security and agri-food based economy are vulnerable to anomalous weather features, for example concerning water scarcity and drought affecting soybean, rice, cocoa and coffee production outside Europe. 
+        info: `European food security and agri-food based economy are vulnerable to anomalous weather features, for example concerning water scarcity and drought affecting soybean, rice, cocoa and coffee production outside Europe.
                This may impact raw material supply chains, food security or price volatility. `,
         image: Agriculture
       },
       {
         title: "Manufacturing",
         icon: Icon.GLYPHS.manufacturing,
-        info: `Supply of raw or processed input materials for European industries can be disrupted temporarily in case of heatwaves, 
+        info: `Supply of raw or processed input materials for European industries can be disrupted temporarily in case of heatwaves,
                floods or storms in source areas `,
         image: Manufacturing
       },
       {
         title: "International Cooperation And Development",
         icon: Icon.GLYPHS.internationalCooperationAndDevelopment,
-        info: `Europe’s foreign and development policy involving concerns for migration, food security, political crises, 
+        info: `Europe’s foreign and development policy involving concerns for migration, food security, political crises,
                development aid and disaster risk reduction is highly affected by climatic risks and extremes,
                and the forced displacement and migration patterns in response to these.`,
         image: InternationalCooperation
@@ -56,15 +57,15 @@ class SectorTabs extends React.Component {
       {
         title: "Coastal Infrastructure",
         icon: Icon.GLYPHS.coastalInfrastructure,
-        info: `Civil protection and industrial production are heavily affected when storms or floods, 
-               aggravated by remote ice-sheet melting and sea level rise, 
+        info: `Civil protection and industrial production are heavily affected when storms or floods,
+               aggravated by remote ice-sheet melting and sea level rise,
                lead to large damage to cities, ports or industrial plants in connected areas.`,
         image: CoastalInfra
       },
       {
         title: "Finance",
         icon: Icon.GLYPHS.finance,
-        info: `Strong or multiple tropical cyclones may affect the solvency of (re)insurance companies, investors and EU public finance.  
+        info: `Strong or multiple tropical cyclones may affect the solvency of (re)insurance companies, investors and EU public finance.
               The finance sector and business are exposed via their portfolio and foreign direct investments`,
         image: Finance
       }
@@ -93,6 +94,7 @@ class SectorTabs extends React.Component {
   }
 }
 SectorTabs.propTypes = {
-  showSectorInfo: PropTypes.func.isRequired
+  showSectorInfo: PropTypes.func.isRequired,
+  viewState: PropTypes.func || PropTypes.object
 };
 export default SectorTabs;
