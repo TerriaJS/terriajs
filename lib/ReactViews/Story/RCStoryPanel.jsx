@@ -11,6 +11,7 @@ import when from "terriajs-cesium/Source/ThirdParty/when";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Styles from "./story-panel.scss";
 import { withTranslation } from "react-i18next";
+import { exitStory as rcExitStory } from "../../Models/Receipt";
 
 export function activateStory(story, terria) {
   if (story.shareData) {
@@ -148,8 +149,7 @@ const RCStoryPanel = createReactClass({
   },
 
   exitStory() {
-    this.props.viewState.storyShown = false;
-    this.props.terria.currentViewer.notifyRepaintRequired();
+    rcExitStory(this.props.terria, this.props.viewState);
   },
 
   render() {
