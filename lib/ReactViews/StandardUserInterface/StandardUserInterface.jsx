@@ -223,9 +223,18 @@ const StandardUserInterface = createReactClass({
                       </div>
                     ) : null}
 
-                    {!showStoryPanel && (
+                    {!(showStoryPanel || showHotspotSummary) && (
                       <div className={Styles.tabsContainer}>
                         <SidePanelContent terria={terria} />
+                      </div>
+                    )}
+
+                    {showHotspotSummary && (
+                      <div className={Styles.mobilePadding}>
+                        <RCHotspotSummary
+                          terria={terria}
+                          viewState={viewState}
+                        />
                       </div>
                     )}
                   </div>
@@ -296,9 +305,6 @@ const StandardUserInterface = createReactClass({
                     />
                   </div>
                 </Medium>
-                {/* <Small>
-
-                </Small> */}
               </If>
 
               <If condition={this.props.viewState.showToolPanel()}>
