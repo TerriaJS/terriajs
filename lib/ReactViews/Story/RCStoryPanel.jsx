@@ -156,15 +156,7 @@ const RCStoryPanel = createReactClass({
     const { t } = this.props;
     const stories = this.props.terria.stories || [];
     const story = stories[this.props.viewState.currentStoryId];
-    const locationBtn = (
-      <button
-        className={Styles.locationBtn}
-        title={t("story.locationBtn")}
-        onClick={this.onCenterScene.bind(this, story)}
-      >
-        <Icon glyph={Icon.GLYPHS.location} />
-      </button>
-    );
+
     const exitBtn = (
       <button
         className={Styles.exitBtn}
@@ -187,7 +179,6 @@ const RCStoryPanel = createReactClass({
         >
           <Medium>
             <div className={Styles.left}>
-              {/* {locationBtn} */}
               <button
                 className={Styles.previousBtn}
                 disabled={this.props.terria.stories.length <= 1}
@@ -200,7 +191,6 @@ const RCStoryPanel = createReactClass({
           </Medium>
           <div className={Styles.story}>
             <div className={Styles.storyHeader}>
-              {/*<Small>{locationBtn}</Small>*/}
               {story.title && story.title.length > 0 ? (
                 <h3>{story.title}</h3>
               ) : (
@@ -215,7 +205,6 @@ const RCStoryPanel = createReactClass({
             )}
             <div className={Styles.navs}>
               <If condition={this.props.terria.stories.length >= 2}>
-                {/* <Medium> */}
                 <div className={Styles.navBtn}>
                   {" "}
                   {stories.map((story, i) => (
@@ -236,7 +225,6 @@ const RCStoryPanel = createReactClass({
                     </button>
                   ))}
                 </div>
-                {/* </Medium> */}
               </If>
             </div>
           </div>
@@ -252,24 +240,6 @@ const RCStoryPanel = createReactClass({
               </button>
             </div>
           </Medium>
-          {/* <Small>
-            <div className={Styles.navBtnMobile}>
-              {" "}
-              {stories.map((story, i) => (
-                <button
-                  title={t("story.navBtnMobile", { title: story.title })}
-                  type="button"
-                  key={story.id}
-                  className={classNames(Styles.mobileNavBtn, {
-                    [Styles.isActive]: i === this.props.viewState.currentStoryId
-                  })}
-                  onClick={() => this.navigateStory(i)}
-                >
-                  {i}
-                </button>
-              ))}
-            </div>
-          </Small> */}
         </div>
       </Swipeable>
     );

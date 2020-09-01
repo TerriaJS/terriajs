@@ -3,7 +3,7 @@ import Styles from "./sector_info.scss";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import Icon from "../Icon.jsx";
-import { Small, Medium } from "../Generic/Responsive";
+import { Small } from "../Generic/Responsive";
 class SectorInfo extends React.Component {
   constructor(props) {
     super(props);

@@ -1,0 +1,35 @@
+@import "~terriajs-variables";
+
+.menu-area {
+  @media (min-width: $sm) {
+    position: absolute;
+    top: 20px;
+    left: 50px;
+    z-index: 108;
+  }
+}
+
+.menu {
+  composes: list-reset from "../../Sass/common/_base.scss";
+  composes: clearfix from "../../Sass/common/_base.scss";
+
+  /* Align About button with compass */
+  margin-right: 7px;
+}
+
+.menu-item {
+  position: relative;
+  display: block;
+  float: left;
+  margin-right: $padding;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.backToBtn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn--map from "../../Sass/common/_buttons.scss";
+  composes: rc-btn-primary from "../../Sass/common/_buttons.scss";
+}

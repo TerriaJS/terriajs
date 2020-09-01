@@ -2,11 +2,12 @@ import React from "react";
 import Icon from "../Icon";
 import Styles from "./sector_tabs.scss";
 import PropTypes from "prop-types";
-import Agriculture from "../../../wwwroot/images/sectors/agriculture.png";
-import CoastalInfra from "../../../wwwroot/images/sectors/coastal-Infra.png";
-import Finance from "../../../wwwroot/images/sectors/finance.png";
-import Manufacturing from "../../../wwwroot/images/sectors/manufacturing.png";
-import InternationalCooperation from "../../../wwwroot/images/sectors/international-cooperation.png";
+import Agriculture from "../../../wwwroot/images/receipt/sectors/agriculture.png";
+import CoastalInfra from "../../../wwwroot/images/receipt/sectors/coastal-Infra.png";
+import Finance from "../../../wwwroot/images/receipt/sectors/finance.png";
+import Manufacturing from "../../../wwwroot/images/receipt/sectors/manufacturing.png";
+import InternationalCooperation from "../../../wwwroot/images/receipt/sectors/international-cooperation.png";
+import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 class SectorTabs extends React.Component {
   constructor(props) {
     super(props);
@@ -14,6 +15,20 @@ class SectorTabs extends React.Component {
   state = {
     selectedId: -1
   };
+  componentDidMount() {
+    this._viewStateChangeHandler = knockout
+      .getObservable(viewState, "isHotspotsFiltered")
+      .subscribe(isHotspotsFiltered => {
+        if (!isHotspotsFiltered) {
+          this.setState({
+            selectedId: -1
+          });
+        }
+      });
+  }
+  componentWillUnmount() {
+    this._viewStateChangeHandler.dispose();
+  }
   render() {
     const sectors = [
       {

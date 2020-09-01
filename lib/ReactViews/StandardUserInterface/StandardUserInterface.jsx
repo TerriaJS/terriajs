@@ -12,7 +12,7 @@ import FeedbackForm from "../Feedback/FeedbackForm.jsx";
 import MapColumn from "./MapColumn.jsx";
 import MapInteractionWindow from "./../Notification/MapInteractionWindow.jsx";
 import MapNavigation from "./../Map/MapNavigation.jsx";
-import MenuBar from "./../Map/MenuBar.jsx";
+import RCMenuBar from "./../Map/RCMenuBar.jsx";
 import ExperimentalFeatures from "./../Map/ExperimentalFeatures.jsx";
 import MobileHeader from "./../Mobile/MobileHeader.jsx";
 import Notification from "./../Notification/Notification.jsx";
@@ -26,10 +26,8 @@ import StoryPanel from "./../Story/StoryPanel.jsx";
 import RCStoryPanel from "./../Story/RCStoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 import ToolPanel from "./../ToolPanel.jsx";
-// import SectorTabs from "./../SidePanel/SectorTabs";
 import SatelliteGuide from "../Guide/SatelliteGuide.jsx";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage.jsx";
-// import SectorInfo from "../SidePanel/SectorInfo";
 import { exitStory } from "../../Models/Receipt";
 import { Small, Medium } from "../Generic/Responsive";
 import classNames from "classnames";
@@ -46,7 +44,6 @@ export const showStoryPrompt = (viewState, terria) => {
     viewState.toggleFeaturePrompt("story", true);
 };
 const animationDuration = 250;
-/** blah */
 const StandardUserInterface = createReactClass({
   displayName: "StandardUserInterface",
   mixins: [ObserveModelMixin],
@@ -124,6 +121,7 @@ const StandardUserInterface = createReactClass({
   },
 
   componentDidMount() {
+    this.props.viewState.isHotspotsFiltered = false;
     this._wrapper.addEventListener("dragover", this.dragOverListener, false);
     showStoryPrompt(this.props.viewState, this.props.terria);
   },
@@ -225,7 +223,10 @@ const StandardUserInterface = createReactClass({
 
                     {!(showStoryPanel || showHotspotSummary) && (
                       <div className={Styles.tabsContainer}>
-                        <SidePanelContent terria={terria} />
+                        <SidePanelContent
+                          terria={terria}
+                          viewState={this.props.viewState}
+                        />
                       </div>
                     )}
 
@@ -247,24 +248,6 @@ const StandardUserInterface = createReactClass({
                       viewState={this.props.viewState}
                       customFeedbacks={customElements.feedback}
                     />
-                    {/* <main>
-                  <ExplorerWindow
-                    terria={terria}
-                    viewState={this.props.viewState}
-                  />
-                  <If
-                    condition={
-                      this.props.terria.configParameters.experimentalFeatures &&
-                      !this.props.viewState.hideMapUi()
-                    }
-                  >
-                    <ExperimentalFeatures
-                      terria={terria}
-                      viewState={this.props.viewState}
-                      experimentalItems={customElements.experimentalMenu}
-                    />
-                  </If>
-                </main> */}
                   </section>
                   <div
                     className={classNames(
@@ -340,13 +323,14 @@ const StandardUserInterface = createReactClass({
               })}
             >
               <Medium>
-                <MenuBar
+                {/* <MenuBar
                   terria={terria}
                   viewState={this.props.viewState}
                   allBaseMaps={allBaseMaps}
                   menuItems={customElements.menu}
                   animationDuration={animationDuration}
-                />
+                /> */}
+                <RCMenuBar terria={terria} viewState={this.props.viewState} />
                 <MapNavigation
                   terria={terria}
                   viewState={this.props.viewState}
