@@ -150,7 +150,6 @@ export class ArcGisPortalItemStratum extends LoadableStratum(
       );
     }
 
-    // TODO: Check that this doesn't need to be sanitized
     outArray.push(
       createStratumInstance(InfoSectionTraits, {
         name: i18next.t("models.arcgisPortal.openInPortal"),
