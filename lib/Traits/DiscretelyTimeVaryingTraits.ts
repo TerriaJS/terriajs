@@ -49,7 +49,8 @@ export default class DiscretelyTimeVaryingTraits extends mixTraits(
   @primitiveTrait({
     type: "string",
     name: "Chart color",
-    description: "The color to use when the data set is displayed on the chart"
+    description:
+      "The color to use when the data set is displayed on the chart. The value can be any html color string, eg: 'cyan' or '#00ffff' or 'rgba(0, 255, 255, 1)' for the color cyan."
   })
   chartColor?: string;
 
