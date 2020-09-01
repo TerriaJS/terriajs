@@ -1,39 +1,39 @@
 import i18next from "i18next";
-import ArcGisFeatureServerCatalogItemTraits from "../Traits/ArcGisFeatureServerCatalogItemTraits";
-import LoadableStratum from "./LoadableStratum";
-import { BaseModel } from "./Model";
-import StratumOrder from "./StratumOrder";
-import UrlMixin from "../ModelMixins/UrlMixin";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import CreateModel from "./CreateModel";
-import Mappable from "./Mappable";
-import { runInAction, computed } from "mobx";
-import URI from "urijs";
-import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import loadJson from "../Core/loadJson";
-import featureDataToGeoJson from "../Map/featureDataToGeoJson";
-import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
-import isDefined from "../Core/isDefined";
-import CommonStrata from "./CommonStrata";
+import { computed, runInAction } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import Color from "terriajs-cesium/Source/Core/Color";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
-import createStratumInstance from "./createStratumInstance";
-import StratumFromTraits from "./StratumFromTraits";
-import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
-import proj4definitions from "../Map/Proj4Definitions";
-import { RectangleTraits } from "../Traits/MappableTraits";
-import TerriaError from "../Core/TerriaError";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
-import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
-import replaceUnderscores from "../Core/replaceUnderscores";
+import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
+import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import PolylineDashMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineDashMaterialProperty";
-import createInfoSection from "./createInfoSection";
+import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
+import URI from "urijs";
+import isDefined from "../Core/isDefined";
+import loadJson from "../Core/loadJson";
+import replaceUnderscores from "../Core/replaceUnderscores";
+import TerriaError from "../Core/TerriaError";
+import featureDataToGeoJson from "../Map/featureDataToGeoJson";
+import proj4definitions from "../Map/Proj4Definitions";
+import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import UrlMixin from "../ModelMixins/UrlMixin";
+import ArcGisFeatureServerCatalogItemTraits from "../Traits/ArcGisFeatureServerCatalogItemTraits";
+import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
+import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
+import { RectangleTraits } from "../Traits/MappableTraits";
+import CommonStrata from "./CommonStrata";
+import CreateModel from "./CreateModel";
+import createStratumInstance from "./createStratumInstance";
 import { getLineStyleCesium } from "./esriLineStyle";
+import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
+import LoadableStratum from "./LoadableStratum";
+import Mappable from "./Mappable";
+import { BaseModel } from "./Model";
+import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
+import StratumFromTraits from "./StratumFromTraits";
+import StratumOrder from "./StratumOrder";
 
 const proj4 = require("proj4").default;
 
@@ -290,36 +290,18 @@ class FeatureServerStratum extends LoadableStratum(
 
   @computed get info() {
     return [
-      createInfoSection(
-        i18next.t("models.arcGisMapServerCatalogItem.dataDescription"),
-        this._featureServer.description
-      ),
-      createInfoSection(
-        i18next.t("models.arcGisMapServerCatalogItem.copyrightText"),
-        this._featureServer.copyrightText
-      )
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t("models.arcGisMapServerCatalogItem.dataDescription"),
+        content: this._featureServer.description
+      }),
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t("models.arcGisMapServerCatalogItem.copyrightText"),
+        content: this._featureServer.copyrightText
+      })
     ];
   }
 
   @computed get legends(): StratumFromTraits<LegendTraits>[] | undefined {
-    function newLegendItem(
-      title: string,
-      imageUrl?: string,
-      color?: string,
-      outlineColor?: string,
-      addSpacingAbove?: boolean
-    ): StratumFromTraits<LegendItemTraits> {
-      const item = createStratumInstance(LegendItemTraits);
-      runInAction(() => {
-        item.title = title;
-        item.imageUrl = imageUrl;
-        item.color = color;
-        item.outlineColor = outlineColor;
-        item.addSpacingAbove = addSpacingAbove;
-      });
-      return item;
-    }
-
     if (
       !this._item.useStyleInformationFromService ||
       !this._featureServer.drawingInfo
@@ -340,43 +322,36 @@ class FeatureServerStratum extends LoadableStratum(
       return undefined;
     }
 
-    const legend = createStratumInstance(LegendTraits);
-    runInAction(() => {
-      legend.items = legend.items || [];
-    });
+    const items: StratumFromTraits<LegendItemTraits>[] = [];
 
     infos.forEach(info => {
       const label = replaceUnderscores(info.label);
       const symbol = info.symbol;
-      if (symbol) {
-        if (symbol.style === "esriSLSNull") {
-          return;
-        }
-        const color = symbol.color;
-        const imageUrl = symbol.imageData
-          ? proxyCatalogItemUrl(
-              this._item,
-              `data:${symbol.contentType};base64,${symbol.imageData}`
-            )
-          : undefined;
-        const outlineColor = symbol.outline?.color;
-        if (isDefined(legend.items)) {
-          legend.items.push(
-            newLegendItem(
-              label,
-              imageUrl,
-              color
-                ? convertEsriColorToCesiumColor(color).toCssColorString()
-                : undefined,
-              outlineColor
-                ? convertEsriColorToCesiumColor(outlineColor).toCssColorString()
-                : undefined
-            )
-          );
-        }
+      if (!symbol || symbol.style === "esriSLSNull") {
+        return;
       }
+      const color = symbol.color;
+      const imageUrl = symbol.imageData
+        ? proxyCatalogItemUrl(
+            this._item,
+            `data:${symbol.contentType};base64,${symbol.imageData}`
+          )
+        : undefined;
+      const outlineColor = symbol.outline?.color;
+      items.push(
+        createStratumInstance(LegendItemTraits, {
+          title: label,
+          imageUrl,
+          color: color
+            ? convertEsriColorToCesiumColor(color).toCssColorString()
+            : undefined,
+          outlineColor: outlineColor
+            ? convertEsriColorToCesiumColor(outlineColor).toCssColorString()
+            : undefined
+        })
+      );
     });
-    return [legend];
+    return [createStratumInstance(LegendTraits, { items })];
   }
 }
 

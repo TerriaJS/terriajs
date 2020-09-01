@@ -6,6 +6,7 @@ Change Log
 #### next release (8.0.0-alpha.47)
 * Removed hard coded senaps base url.
 * Added `chartColor` trait for DiscretelyTimeVarying items.
+* Replaced all instances of `createInfoSection` and `newInfo` with calls to `createStratumInstance` using an initialisation object.
 * [The next improvement]
 
 #### 8.0.0-alpha.46
