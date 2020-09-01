@@ -47,6 +47,13 @@ export default class DiscretelyTimeVaryingTraits extends mixTraits(
   chartDisclaimer?: string;
 
   @primitiveTrait({
+    type: "string",
+    name: "Chart color",
+    description: "The color to use when the data set is displayed on the chart"
+  })
+  chartColor?: string;
+
+  @primitiveTrait({
     type: "boolean",
     name: "Disable date time selector",
     description: "When true, disables the date time selector in the workbench"
