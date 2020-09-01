@@ -282,3 +282,16 @@ $btn-setting-size: 35px;
   margin-right: 4px;
   font-size: $font-size-small;
 }
+.rc-btn-primary {
+  display: flex;
+  background: $floating-buttons-bg;
+  color: $floating-buttons-text-color;
+  border-radius: 3px;
+  &:hover {
+    background: $floating-buttons-bg-hover;
+  }
+  span {
+    display: flex;
+    line-height: 1;
+  }
+}

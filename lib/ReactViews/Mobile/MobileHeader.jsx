@@ -1,14 +1,11 @@
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-// import SearchBox from "../Search/SearchBox.jsx";
 import ObserveModelMixin from "../ObserveModelMixin";
-// import MobileModalWindow from "./MobileModalWindow";
+import RCMenuBar from "../Map/RCMenuBar.jsx";
 import Branding from "../SidePanel/Branding.jsx";
 import Styles from "./mobile-header.scss";
-// import Icon from "../Icon.jsx";
-// import MobileMenu from "./MobileMenu";
-// import classNames from "classnames";
+
 import { removeMarker } from "../../Models/LocationMarkerUtils";
 import { withTranslation } from "react-i18next";
 
@@ -117,7 +114,9 @@ const MobileHeader = createReactClass({
   },
 
   render() {
-    const searchState = this.props.viewState.searchState;
+    const { terria, viewState, version } = this.props;
+    const searchState = viewState.searchState;
+    const isHotspotsFiltered = viewState.isHotspotsFiltered;
     // const nowViewingLength = this.props.terria.nowViewing.items.length;
     // const { t } = this.props;
 
@@ -131,7 +130,7 @@ const MobileHeader = createReactClass({
                 !searchState.showMobileCatalogSearch
               }
             >
-              <div className={Styles.groupLeft}>
+              <div>
                 {/* <button
                   type="button"
                   onClick={() =>
@@ -142,10 +141,11 @@ const MobileHeader = createReactClass({
                 >
                   <Icon glyph={Icon.GLYPHS.menu} />
                 </button> */}
-                <Branding
-                  terria={this.props.terria}
-                  version={this.props.version}
-                />
+
+                <RCMenuBar terria={terria} viewState={this.props.viewState} />
+                <If condition={!isHotspotsFiltered}>
+                  <Branding terria={terria} version={version} />
+                </If>
               </div>
               {/*  <div className={Styles.groupRight}>
                   <button

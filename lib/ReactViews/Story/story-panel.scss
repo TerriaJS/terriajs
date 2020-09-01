@@ -48,20 +48,12 @@
   min-height: 100px;
   max-width: 1200px;
   background-color: transparent;
-  //background-image: linear-gradient(315deg, #ffffff 0%, #d7e1ec 74%);
   color: $text-dark;
   text-align: left;
   box-sizing: border-box;
   margin: 0 -16px 0 -16px;
   border-radius: 2px;
-  // box-shadow: 0 0 15px 6px rgba(100, 100, 100, 0.3);
 
-  // .left {
-  //   border-right: 1px solid $field-border;
-  // }
-  // .right {
-  //   border-left: 1px solid $field-border;
-  // }
   @media (max-width: $sm) {
     margin: 0 auto;
   }
@@ -85,11 +77,13 @@
   display: flex;
   max-width: 100%;
   overflow: hidden;
-  padding: $padding;
+  padding: $padding 0;
+  align-items: center;
   h3 {
-    margin: $padding;
+    margin: $padding-small;
     font-size: 1.2rem;
     color: $dark;
+    flex: 2;
     @media (max-width: $sm) {
       flex-grow: 2;
     }
