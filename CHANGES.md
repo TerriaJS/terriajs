@@ -3,13 +3,8 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.41)
-* Remove hard coded senaps base url.
-#### next release (8.0.0-alpha.43)
-#### next release (8.0.0-alpha.44)
-* Pass `format` trait on `TableColumnTraits` down to `TableAutomaticStylesStratum` for generating legends
-#### next release (8.0.0-alpha.45)
 #### next release (8.0.0-alpha.47)
+* Removed hard coded senaps base url.
 * [The next improvement]
 
 #### 8.0.0-alpha.46
