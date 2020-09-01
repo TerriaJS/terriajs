@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.47)
+* Removed hard coded senaps base url.
 * [The next improvement]
 
 #### 8.0.0-alpha.46
