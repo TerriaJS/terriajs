@@ -106,11 +106,16 @@ export const IEMessagePure = props => {
                 </p>
                 <p>
                   Please switch to{" "}
-                  <a target="_blank" href="https://www.google.com/chrome/">
+                  <a
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    href="https://www.google.com/chrome/"
+                  >
                     Google Chrome
                   </a>{" "}
                   or{" "}
                   <a
+                    rel="noopener noreferrer"
                     target="_blank"
                     href="https://www.mozilla.org/en-US/firefox/new/"
                   >
@@ -121,6 +126,7 @@ export const IEMessagePure = props => {
                 <p>
                   For more information, read{" "}
                   <a
+                    rel="noopener noreferrer"
                     target="_blank"
                     href="https://medium.com/terria/terria-is-ending-support-for-internet-explorer-11-a75383f4b18e"
                   >
