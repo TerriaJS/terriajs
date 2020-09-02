@@ -9,6 +9,8 @@ Change Log
 * Added WMS Dimensions (using `SelectableDimensions`)
 * Added WMS multi-layer style, dimension and legend support.
 * Merged the `StyleSelector` and `DimensionsSelector`, and created a `SelectableDimensions` interface.
+* Added `chartColor` trait for DiscretelyTimeVarying items.
+* Replaced all instances of `createInfoSection` and `newInfo` with calls to `createStratumInstance` using an initialisation object.
 * [The next improvement]
 
 #### 8.0.0-alpha.46

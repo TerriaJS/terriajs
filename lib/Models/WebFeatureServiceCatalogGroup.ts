@@ -13,8 +13,8 @@ import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import ModelReference from "../Traits/ModelReference";
 import WebFeatureServiceCatalogGroupTraits from "../Traits/WebFeatureServiceCatalogGroupTraits";
 import CommonStrata from "./CommonStrata";
-import createInfoSection from "./createInfoSection";
 import CreateModel from "./CreateModel";
+import createStratumInstance from "./createStratumInstance";
 import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
@@ -95,10 +95,10 @@ class GetCapabilitiesStratum extends LoadableStratum(
         )
       ) {
         result.push(
-          createInfoSection(
-            i18next.t("models.webFeatureServiceCatalogGroup.abstract"),
-            this.capabilities.Service.Abstract
-          )
+          createStratumInstance(InfoSectionTraits, {
+            name: i18next.t("models.webFeatureServiceCatalogGroup.abstract"),
+            content: this.capabilities.Service.Abstract
+          })
         );
       }
 
@@ -109,20 +109,22 @@ class GetCapabilitiesStratum extends LoadableStratum(
         !/^none$/i.test(service.AccessConstraints)
       ) {
         result.push(
-          createInfoSection(
-            i18next.t("models.webFeatureServiceCatalogGroup.accessConstraints"),
-            this.capabilities.Service.AccessConstraints
-          )
+          createStratumInstance(InfoSectionTraits, {
+            name: i18next.t(
+              "models.webFeatureServiceCatalogGroup.accessConstraints"
+            ),
+            content: this.capabilities.Service.AccessConstraints
+          })
         );
       }
 
       // Show the Fees if it isn't "none".
       if (service && service.Fees && !/^none$/i.test(service.Fees)) {
         result.push(
-          createInfoSection(
-            i18next.t("models.webFeatureServiceCatalogGroup.fees"),
-            this.capabilities.Service.Fees
-          )
+          createStratumInstance(InfoSectionTraits, {
+            name: i18next.t("models.webFeatureServiceCatalogGroup.fees"),
+            content: this.capabilities.Service.Fees
+          })
         );
       }
     }

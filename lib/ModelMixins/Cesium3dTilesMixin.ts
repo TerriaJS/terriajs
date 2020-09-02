@@ -1,33 +1,33 @@
+import { action, computed, observable, runInAction, toJS } from "mobx";
+import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import clone from "terriajs-cesium/Source/Core/clone";
+import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
+import IonResource from "terriajs-cesium/Source/Core/IonResource";
+import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
+import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
+import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
+import Resource from "terriajs-cesium/Source/Core/Resource";
+import Transforms from "terriajs-cesium/Source/Core/Transforms";
+import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
+import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
+import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
+import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
+import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
+import Constructor from "../Core/Constructor";
+import isDefined from "../Core/isDefined";
+import makeRealPromise from "../Core/makeRealPromise";
+import runLater from "../Core/runLater";
+import CommonStrata from "../Models/CommonStrata";
+import createStratumInstance from "../Models/createStratumInstance";
+import Feature from "../Models/Feature";
+import Model from "../Models/Model";
+import proxyCatalogItemUrl from "../Models/proxyCatalogItemUrl";
+import Cesium3DTilesCatalogItemTraits from "../Traits/Cesium3DCatalogItemTraits";
 import Cesium3dTilesTraits, {
   OptionsTraits
 } from "../Traits/Cesium3dTilesTraits";
-import Constructor from "../Core/Constructor";
-import Model from "../Models/Model";
-import makeRealPromise from "../Core/makeRealPromise";
-import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
-import { runInAction, computed, toJS, action, observable } from "mobx";
-import CommonStrata from "../Models/CommonStrata";
-import createStratumInstance from "../Models/createStratumInstance";
-import Cesium3DTilesCatalogItemTraits from "../Traits/Cesium3DCatalogItemTraits";
-import isDefined from "../Core/isDefined";
-import proxyCatalogItemUrl from "../Models/proxyCatalogItemUrl";
-import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
-import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
-import IonResource from "terriajs-cesium/Source/Core/IonResource";
-import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
-import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
-import Feature from "../Models/Feature";
-import runLater from "../Core/runLater";
 import AsyncMappableMixin from "./AsyncMappableMixin";
-import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
-import Resource from "terriajs-cesium/Source/Core/Resource";
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
-import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
-import clone from "terriajs-cesium/Source/Core/clone";
-import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
-import Transforms from "terriajs-cesium/Source/Core/Transforms";
 
 interface Cesium3DTilesCatalogItemIface
   extends InstanceType<ReturnType<typeof Cesium3dTilesMixin>> {}
