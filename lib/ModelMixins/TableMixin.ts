@@ -426,24 +426,27 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
     protected abstract forceLoadTableData(): Promise<string[][]>;
 
-    private forceLoadTableMixin(): Promise<void> {
-      const regionProvidersPromise: Promise<
-        RegionProviderList | undefined
-      > = makeRealPromise(
+    protected async loadRegionProviderList() {
+      if (isDefined(this.regionProviderList)) return;
+
+      const regionProvidersPromise:
+        | RegionProviderList
+        | undefined = await makeRealPromise(
         RegionProviderList.fromUrl(
           this.terria.configParameters.regionMappingDefinitionsUrl,
           this.terria.corsProxy
         )
       );
-      const dataPromise = this.forceLoadTableData();
-      return Promise.all([regionProvidersPromise, dataPromise]).then(
-        ([regionProviderList, dataColumnMajor]) => {
-          runInAction(() => {
-            this.regionProviderList = regionProviderList;
-            this.dataColumnMajor = dataColumnMajor;
-          });
-        }
-      );
+      runInAction(() => (this.regionProviderList = regionProvidersPromise));
+    }
+
+    private async forceLoadTableMixin(): Promise<void> {
+      await this.loadRegionProviderList();
+
+      const dataColumnMajor = await this.forceLoadTableData();
+      runInAction(() => {
+        this.dataColumnMajor = dataColumnMajor;
+      });
     }
 
     protected forceLoadChartItems() {
