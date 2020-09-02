@@ -63,4 +63,12 @@ export default class TableTraits extends mixTraits(
     type: "string"
   })
   activeStyle?: string;
+
+  @primitiveTrait({
+    name: "Enable manual region mapping",
+    description:
+      "If enabled, there will be controls to set region column and region type.",
+    type: "boolean"
+  })
+  enableManualRegionMapping?: boolean;
 }
