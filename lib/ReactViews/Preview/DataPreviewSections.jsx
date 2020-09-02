@@ -54,34 +54,33 @@ const DataPreviewSections = observer(
 
     render() {
       const metadataItem = this.props.metadataItem;
-      // const items = metadataItem.hideSource
-      //   ? metadataItem.infoWithoutSources
-      //   : metadataItem.info.slice();
+      const items = metadataItem.hideSource
+        ? metadataItem.infoWithoutSources
+        : metadataItem.info.slice();
 
-      return null;
-      // return (
-      //   <div>
-      //     <For each="item" index="i" of={this.sortInfoSections(items)}>
-      //       <Choose>
-      //         <When condition={item.content !== undefined}>
-      //           <div key={i}>
-      //             <h4 className={Styles.h4}>{item.name}</h4>
-      //             {parseCustomMarkdownToReact(
-      //               Mustache.render(item.content, metadataItem),
-      //               {
-      //                 catalogItem: metadataItem
-      //               }
-      //             )}
-      //           </div>
-      //         </When>
-      //         {/* <When condition={item.contentAsObject !== undefined}>
-      //           <h4 className={Styles.h4}>{item.name}</h4>
-      //           <MetadataTable metadataItem={item.contentAsObject} />
-      //         </When> */}
-      //       </Choose>
-      //     </For>
-      //   </div>
-      // );
+      return (
+        <div>
+          <For each="item" index="i" of={this.sortInfoSections(items)}>
+            <Choose>
+              <When condition={item.content !== undefined}>
+                <div key={i}>
+                  <h4 className={Styles.h4}>{item.name}</h4>
+                  {parseCustomMarkdownToReact(
+                    Mustache.render(item.content, metadataItem),
+                    {
+                      catalogItem: metadataItem
+                    }
+                  )}
+                </div>
+              </When>
+              <When condition={item.contentAsObject !== undefined}>
+                <h4 className={Styles.h4}>{item.name}</h4>
+                <MetadataTable metadataItem={item.contentAsObject} />
+              </When>
+            </Choose>
+          </For>
+        </div>
+      );
     }
   })
 );
