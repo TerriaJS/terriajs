@@ -57,6 +57,7 @@ import WebMapServiceCapabilities, {
   CapabilitiesStyle,
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
+import { JsonObject } from "../Core/Json";
 
 const dateFormat = require("dateformat");
 
@@ -293,10 +294,10 @@ class GetCapabilitiesStratum extends LoadableStratum(
     let firstDataDescription: string | undefined;
 
     result.push(
-      createInfoSection(
-        i18next.t("models.webMapServiceCatalogItem.serviceDescription"),
-        this.capabilities.Service as JsonObject
-      )
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t("models.webMapServiceCatalogItem.serviceDescription"),
+        contentAsObject: this.capabilities.Service as JsonObject
+      })
     );
 
     const onlyHasSingleLayer = this.catalogItem.layersArray.length === 1;
@@ -312,10 +313,10 @@ class GetCapabilitiesStratum extends LoadableStratum(
         delete out._parent;
 
         result.push(
-          createInfoSection(
-            i18next.t("models.webMapServiceCatalogItem.dataDescription"),
-            out as JsonObject
-          )
+          createStratumInstance(InfoSectionTraits, {
+            name: i18next.t("models.webMapServiceCatalogItem.dataDescription"),
+            contentAsObject: out as JsonObject
+          })
         );
       }
     }
