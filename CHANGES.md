@@ -11,6 +11,7 @@ Change Log
 * Merged the `StyleSelector` and `DimensionsSelector`, and created a `SelectableDimensions` interface.
 * Added `chartColor` trait for DiscretelyTimeVarying items.
 * Replaced all instances of `createInfoSection` and `newInfo` with calls to `createStratumInstance` using an initialisation object.
+* Added trait `leafletUpdateInterval` to RasterLayerTraits.
 * [The next improvement]
 
 #### 8.0.0-alpha.46
