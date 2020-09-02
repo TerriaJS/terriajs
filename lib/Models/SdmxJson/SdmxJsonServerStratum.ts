@@ -395,11 +395,7 @@ export async function loadSdmxJsonStructure(
   } catch (error) {
     // If SDMX server has returned an error message
     if (error instanceof RequestErrorEvent && isDefined(error.response)) {
-      if (
-        !allowNotImplemeted ||
-        (allowNotImplemeted &&
-          error.statusCode !== SdmxHttpErrorCodes.NotImplemented)
-      ) {
+      if (!allowNotImplemeted) {
         throw new TerriaError({
           title: `Could not load SDMX`,
           message: `Message from server: ${error.response}`
