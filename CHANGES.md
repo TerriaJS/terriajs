@@ -4,6 +4,13 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.47)
+* Removed hard coded senaps base url.
+* Added option for manual Table region mapping with `enableManualRegionMapping` TableTrait. This provides `SelectableDimensions` for the region column and region type.
+* Added WMS Dimensions (using `SelectableDimensions`)
+* Added WMS multi-layer style, dimension and legend support.
+* Merged the `StyleSelector` and `DimensionsSelector`, and created a `SelectableDimensions` interface.
+* Added `chartColor` trait for DiscretelyTimeVarying items.
+* Replaced all instances of `createInfoSection` and `newInfo` with calls to `createStratumInstance` using an initialisation object.
 * [The next improvement]
 
 #### 8.0.0-alpha.46
@@ -15,6 +22,7 @@ Change Log
 * Add basic WFS support with `WebFeatureServiceCatalogGroup` and `WebFeatureServiceCatalogItem`
 * Update style of diff tool close button to match new design
 * Remove sass code from the `HelpPanel` component
+* Added shift-drag quick zoom
 * Added an option for translation override from TerriaMap
 * Help content, trainer bar & help terms can use translation overrides
 * Accepts `backend` options under a new `terria.start()` property, `i18nOptions`

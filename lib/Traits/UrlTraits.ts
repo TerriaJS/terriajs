@@ -12,7 +12,7 @@ export default class UrlTraits extends ModelTraits {
   @primitiveTrait({
     type: "boolean",
     name: "Force proxy",
-    description: "Force the proxy to be used for all network requests."
+    description: "Force the default proxy to be used for all network requests."
   })
   forceProxy = false;
 
