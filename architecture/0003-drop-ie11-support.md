@@ -119,10 +119,18 @@ Our options laid out by @steve9164
 3. Support IE11. We spend a week before the next TerriaJS v8 release to work on
    all the layout problems and ensure it looks nice in IE11 before each
    subsequent release.
+   
+4. Deprecate IE11 support ASAP. Add dismissable message to maps warning them 
+   that on November 1, users will be unable to use new releases of Terria maps
+   in IE11. During the deprecation window, we will not use features that IE11
+   doesn't support. On November 1, new releases of Terria maps will display a 
+   message to IE11 users asking them to switch to another browser. They will 
+   not be able to use Terria in IE. Both messages will include a way for users
+   to send us feedback so that we can assess the impact.
 
 ## Decision
 
-We go all in with option number 1. Terria v8 is **not going to support IE11**.
+We go with option number 4. Terria v8 is **not going to support IE11**.
 
 Given the amount of products and websites out there who are dropping IE11
 support, and the wider movement to drop IE11, **including Microsoft** themselves
@@ -130,9 +138,12 @@ in the near future for Teams and its 365 products:
 
 https://techcommunity.microsoft.com/t5/microsoft-365-blog/microsoft-365-apps-say-farewell-to-internet-explorer-11-and/ba-p/1591666
 
+The advantage of option 4 over option 1 is that it gives users more notice
+on the change, and gives us more of a chance to assess the impact.
 
 ## Consequences
 * Make wider announcements, as part of the general v8 community announcements.
+  * This includes announcements in new releases of maps themselves.
 * Include an "upgrade your browser" / "try these browsers" notice when IE11
   tries to use v8 Terria.
 * Users using IE11 will not be able to run Terria
