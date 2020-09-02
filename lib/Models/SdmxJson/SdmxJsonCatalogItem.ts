@@ -223,27 +223,46 @@ export default class SdmxJsonCatalogItem
     return `${this.url}/data/${this.dataflowId}/${this.dataKey}`;
   }
 
+  @computed
+  get shortReport() {
+    if (
+      !isDefined(this.dataColumnMajor) ||
+      this.isLoadingMapItems ||
+      this.isLoadingChartItems
+    )
+      return;
+
+    return this.dataColumnMajor.length === 0 ? "No data available" : undefined;
+  }
+
   /**
    * Even though this is Sdmx**Json**CatalogItem, we download sdmx-csv.
    */
   private async downloadData(): Promise<string[][] | undefined> {
     if (!isDefined(this.regionProviderList)) return;
 
-    const csvString = await new Resource({
-      url: proxyCatalogItemUrl(this, this.csvUrl),
-      headers: {
-        Accept: "application/vnd.sdmx.data+csv; version=1.0.0"
+    let columns: string[][] = [];
+
+    try {
+      const csvString = await new Resource({
+        url: proxyCatalogItemUrl(this, this.csvUrl),
+        headers: {
+          Accept: "application/vnd.sdmx.data+csv; version=1.0.0"
+        }
+      }).fetch();
+
+      if (!isDefined(csvString)) {
+        throw new TerriaError({
+          title: `Could not load SDMX CSV`,
+          message: `Invalid response from ${this.csvUrl}`
+        });
       }
-    }).fetch();
 
-    if (!isDefined(csvString)) {
-      throw new TerriaError({
-        title: `Could not load SDMX CSV`,
-        message: `Invalid response from ${this.csvUrl}`
-      });
+      columns = await Csv.parseString(csvString, true);
+    } catch (error) {
+      console.log(`Could not load sdmx-csv:`);
+      console.log(error);
     }
-
-    const columns = await Csv.parseString(csvString, true);
 
     // Filter colums to only include primary measure, region mapped and time dimensions
     if (isDefined(this.primaryMeasureDimensionId)) {
