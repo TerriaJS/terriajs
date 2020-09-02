@@ -3,6 +3,7 @@ import { autorun, runInAction, observable } from "mobx";
 import Terria from "../../lib/Models/Terria";
 import { ImageryParts } from "../../lib/Models/Mappable";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
+import CommonStrata from "../../lib/Models/CommonStrata";
 
 describe("WebMapServiceCatalogItem", function() {
   it("derives getCapabilitiesUrl from url if getCapabilitiesUrl is not specified", function() {
@@ -94,5 +95,76 @@ describe("WebMapServiceCatalogItem", function() {
     } finally {
       cleanup();
     }
+  });
+
+  it("dimensions and styles for a 'real' WMS layer", function(done) {
+    const terria = new Terria();
+    const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
+    runInAction(() => {
+      wmsItem.setTrait(CommonStrata.definition, "url", "http://example.com");
+      wmsItem.setTrait(
+        CommonStrata.definition,
+        "getCapabilitiesUrl",
+        "test/WMS/styles_and_dimensions.xml"
+      );
+      wmsItem.setTrait(CommonStrata.definition, "layers", "A,B");
+      wmsItem.setTrait(CommonStrata.definition, "dimensions", {
+        styles: "contour/ferret,shadefill/alg2",
+        custom: "Another thing",
+        elevation: "-0.59375"
+      });
+      wmsItem.setTrait(
+        CommonStrata.definition,
+        "styles",
+        "contour/ferret,shadefill/alg2"
+      );
+    });
+
+    wmsItem
+      .loadMetadata()
+      .then(function() {
+        expect(wmsItem.styleSelectableDimensions.length).toBe(2);
+
+        // Check Styles and dimensions
+        expect(wmsItem.styleSelectableDimensions[0].selectedId).toBe(
+          "contour/ferret"
+        );
+        expect(wmsItem.styleSelectableDimensions[0].options.length).toBe(40);
+
+        expect(wmsItem.styleSelectableDimensions[1].selectedId).toBe(
+          "shadefill/alg2"
+        );
+        expect(wmsItem.styleSelectableDimensions[0].options.length).toBe(40);
+
+        expect(wmsItem.wmsDimensionSelectableDimensions[0].name).toBe(
+          "elevation"
+        );
+        expect(wmsItem.wmsDimensionSelectableDimensions[0].selectedId).toBe(
+          "-0.59375"
+        );
+        expect(wmsItem.wmsDimensionSelectableDimensions[0].options.length).toBe(
+          16
+        );
+
+        expect(wmsItem.wmsDimensionSelectableDimensions[1].name).toBe("custom");
+        expect(wmsItem.wmsDimensionSelectableDimensions[1].selectedId).toBe(
+          "Another thing"
+        );
+        expect(wmsItem.wmsDimensionSelectableDimensions[1].options.length).toBe(
+          4
+        );
+
+        expect(wmsItem.wmsDimensionSelectableDimensions[2].name).toBe(
+          "another"
+        );
+        expect(wmsItem.wmsDimensionSelectableDimensions[2].selectedId).toBe(
+          "Second"
+        );
+        expect(wmsItem.wmsDimensionSelectableDimensions[2].options.length).toBe(
+          3
+        );
+      })
+      .then(done)
+      .catch(done.fail);
   });
 });

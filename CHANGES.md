@@ -10,6 +10,10 @@ Change Log
 * Merged the `StyleSelector` and `DimensionsSelector`, and created a `SelectableDimensions` interface.
 * Add SDMX-json support for groups and items (using SDMX-csv for data queries)
 * Removed hard coded senaps base url.
+* Added option for manual Table region mapping with `enableManualRegionMapping` TableTrait. This provides `SelectableDimensions` for the region column and region type.
+* Added WMS Dimensions (using `SelectableDimensions`)
+* Added WMS multi-layer style, dimension and legend support.
+* Merged the `StyleSelector` and `DimensionsSelector`, and created a `SelectableDimensions` interface.
 * Added `chartColor` trait for DiscretelyTimeVarying items.
 * Replaced all instances of `createInfoSection` and `newInfo` with calls to `createStratumInstance` using an initialisation object.
 * [The next improvement]
