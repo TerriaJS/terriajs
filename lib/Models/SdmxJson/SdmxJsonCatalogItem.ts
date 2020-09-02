@@ -83,12 +83,9 @@ export default class SdmxJsonCatalogItem
   enableCsvAutoDownloader() {
     if (isDefined(this.csvDownloadDisposer)) return;
     this.csvDownloadDisposer = reaction(
-      () => this.regionProviderList || this.csvUrl,
-      async () => {
-        const data = await this.downloadData();
-        runInAction(() => {
-          this.dataColumnMajor = data;
-        });
+      () => this.csvUrl,
+      () => {
+        this.downloadData();
       }
     );
   }
@@ -228,7 +225,7 @@ export default class SdmxJsonCatalogItem
   /**
    * Even though this is Sdmx**Json**CatalogItem, we download sdmx-csv.
    */
-  private async downloadData(): Promise<string[][] | undefined> {
+  private async downloadData(): Promise<void> {
     if (!isDefined(this.regionProviderList)) return;
 
     const csvString = await new Resource({
@@ -246,6 +243,7 @@ export default class SdmxJsonCatalogItem
     }
 
     const columns = await Csv.parseString(csvString, true);
+    let filteredColumns: string[][] = columns;
 
     // Filter colums to only include primary measure, region mapped and time dimensions
     if (isDefined(this.primaryMeasureDimensionId)) {
@@ -259,32 +257,41 @@ export default class SdmxJsonCatalogItem
         colNames.push(...this.regionMappedDimensionIds);
         colNames.push(...this.timeDimensionIds);
 
+        filteredColumns = columns.filter(col => colNames.includes(col[0]));
+
         // If viewing time-series, add time dimension column
       } else if (this.viewBy === "time" && this.timeDimensionIds.length > 0) {
         colNames.push(...this.timeDimensionIds);
-
-        // If no filter available - just return all columns and hope for the best
+        filteredColumns = columns.filter(col => colNames.includes(col[0]));
+        // If no filter available - just use all columns and hope for the best
       } else {
         console.log(
           `WARNING: no time or region dimensions are found for ${this.name}, therefore styling may be unpredictable!`
         );
-        return columns;
       }
-
-      // Return filtered columns
-      return columns.filter(col => colNames.includes(col[0]));
     } else {
       console.log(
         `WARNING: no primary measure dimension was defined for ${this.name}, therefore styling may be unpredictable!`
       );
     }
 
-    return columns;
+    runInAction(() => {
+      this.dataColumnMajor = filteredColumns;
+    });
   }
   protected async forceLoadTableData(): Promise<string[][]> {
     await this.loadMetadata();
 
-    return (await this.downloadData()) || [];
+    // We have to load data after regionProviderList is loaded in TableMixin.forceLoadTableMixin
+    const regionProviderListReaction = reaction(
+      () => this.regionProviderList,
+      () => {
+        this.downloadData();
+        regionProviderListReaction();
+      }
+    );
+
+    return [];
   }
 }
 
