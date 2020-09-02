@@ -138,9 +138,11 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
 
     xit("sets the extra options", async function() {
       runInAction(() => {
-        let options = createStratumInstance(OptionsTraits);
-        options.maximumScreenSpaceError = 3;
-        item.setTrait("definition", "options", options);
+        item.setTrait(
+          "definition",
+          "options",
+          createStratumInstance(OptionsTraits, { maximumScreenSpaceError: 3 })
+        );
       });
       try {
         await item.loadMapItems();
@@ -323,14 +325,13 @@ function createStratumLevelFilter(
   minimumValueShown: number,
   maximumValueShown: number
 ) {
-  let filter = createStratumInstance(FilterTraits);
-  runInAction(() => {
-    filter.name = "Stratum Level";
-    filter.property = "stratumlev";
-    filter.minimumValue = minimumValue;
-    filter.maximumValue = maximumValue;
-    filter.minimumShown = minimumValueShown;
-    filter.maximumShown = maximumValueShown;
+  let filter = createStratumInstance(FilterTraits, {
+    name: "Stratum Level",
+    property: "stratumlev",
+    minimumValue,
+    maximumValue,
+    minimumShown: minimumValueShown,
+    maximumShown: maximumValueShown
   });
   return filter;
 }

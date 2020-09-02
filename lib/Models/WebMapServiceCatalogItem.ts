@@ -289,14 +289,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
   @computed
   get info(): StratumFromTraits<InfoSectionTraits>[] {
     const result: StratumFromTraits<InfoSectionTraits>[] = [];
-
-    function createInfoSection(name: string, content: string | undefined) {
-      const trait = createStratumInstance(InfoSectionTraits);
-      trait.name = name;
-      trait.content = content;
-      return trait;
-    }
-
     let firstDataDescription: string | undefined;
     for (const layer of this.capabilitiesLayers.values()) {
       if (
@@ -310,7 +302,12 @@ class GetCapabilitiesStratum extends LoadableStratum(
       const suffix =
         this.capabilitiesLayers.size === 1 ? "" : ` - ${layer.Title}`;
       const name = `Web Map Service Layer Description${suffix}`;
-      result.push(createInfoSection(name, layer.Abstract));
+      result.push(
+        createStratumInstance(InfoSectionTraits, {
+          name,
+          content: layer.Abstract
+        })
+      );
       firstDataDescription = firstDataDescription || layer.Abstract;
     }
 
@@ -319,18 +316,18 @@ class GetCapabilitiesStratum extends LoadableStratum(
     if (service) {
       if (service.ContactInformation !== undefined) {
         result.push(
-          createInfoSection(
-            i18next.t("models.webMapServiceCatalogItem.serviceContact"),
-            getServiceContactInformation(service.ContactInformation)
-          )
+          createStratumInstance(InfoSectionTraits, {
+            name: i18next.t("models.webMapServiceCatalogItem.serviceContact"),
+            content: getServiceContactInformation(service.ContactInformation)
+          })
         );
       }
 
       result.push(
-        createInfoSection(
-          i18next.t("models.webMapServiceCatalogItem.getCapabilitiesUrl"),
-          this.catalogItem.getCapabilitiesUrl
-        )
+        createStratumInstance(InfoSectionTraits, {
+          name: i18next.t("models.webMapServiceCatalogItem.getCapabilitiesUrl"),
+          content: this.catalogItem.getCapabilitiesUrl
+        })
       );
 
       if (
@@ -343,10 +340,12 @@ class GetCapabilitiesStratum extends LoadableStratum(
         service.Abstract !== firstDataDescription
       ) {
         result.push(
-          createInfoSection(
-            i18next.t("models.webMapServiceCatalogItem.serviceDescription"),
-            service.Abstract
-          )
+          createStratumInstance(InfoSectionTraits, {
+            name: i18next.t(
+              "models.webMapServiceCatalogItem.serviceDescription"
+            ),
+            content: service.Abstract
+          })
         );
       }
 
@@ -356,10 +355,12 @@ class GetCapabilitiesStratum extends LoadableStratum(
         !/^none$/i.test(service.AccessConstraints)
       ) {
         result.push(
-          createInfoSection(
-            i18next.t("models.webMapServiceCatalogItem.accessConstraints"),
-            service.AccessConstraints
-          )
+          createStratumInstance(InfoSectionTraits, {
+            name: i18next.t(
+              "models.webMapServiceCatalogItem.accessConstraints"
+            ),
+            content: service.AccessConstraints
+          })
         );
       }
     }

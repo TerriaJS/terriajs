@@ -11,13 +11,13 @@ import SenapsLocationsCatalogItemTraits from "../Traits/SenapsLocationsCatalogIt
 import { FeatureInfoTemplateTraits } from "../Traits/FeatureInfoTraits";
 import CreateModel from "./CreateModel";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
-import Terria from "./Terria";
 import StratumOrder from "./StratumOrder";
 import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
 import { JsonObject } from "../Core/Json";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import createStratumInstance from "./createStratumInstance";
+import UrlMixin from "../ModelMixins/UrlMixin";
 
 export interface SenapsFeature {
   type: string;
@@ -64,6 +64,11 @@ interface LocationsData {
     locations: SenapsLocation[];
   };
 }
+
+const missingUrlError = new TerriaError({
+  title: i18next.t("models.senaps.retrieveErrorTitle"),
+  message: i18next.t("models.senaps.missingSenapsBaseUrl")
+});
 
 export class SenapsLocationsStratum extends LoadableStratum(
   SenapsLocationsCatalogItemTraits
@@ -157,6 +162,15 @@ export class SenapsLocationsStratum extends LoadableStratum(
         );
       }
 
+      if (!senapsLocationsCatalogItem.url) {
+        throw missingUrlError;
+      }
+      const proxiedBaseUrl = proxyCatalogItemUrl(
+        senapsLocationsCatalogItem,
+        senapsLocationsCatalogItem.url,
+        "0d"
+      );
+
       const featureInfo = createStratumInstance(FeatureInfoTemplateTraits, {
         template: `<h4>${i18next.t(
           "models.senaps.locationHeadingFeatureInfo"
@@ -172,9 +186,9 @@ export class SenapsLocationsStratum extends LoadableStratum(
     <chart
       id='{{id}}'
       title='{{id}}'
-      sources='https://senaps.io/api/sensor/v2/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=1440&media=csv&csvheader=false&sort=descending,https://senaps.io/api/sensor/v2/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=7200&media=csv&csvheader=false&sort=descending'
+      sources='${proxiedBaseUrl}/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=1440&media=csv&csvheader=false&sort=descending,${proxiedBaseUrl}/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=7200&media=csv&csvheader=false&sort=descending'
       source-names='1d,5d'
-      downloads='https://senaps.io/api/sensor/v2/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=1440&media=csv&csvheader=false&sort=descending,https://senaps.io/api/sensor/v2/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=7200&media=csv&csvheader=false&sort=descending'
+      downloads='${proxiedBaseUrl}/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=1440&media=csv&csvheader=false&sort=descending,${proxiedBaseUrl}/observations?streamid={{#terria.urlEncodeComponent}}{{streamIds}}{{/terria.urlEncodeComponent}}&limit=7200&media=csv&csvheader=false&sort=descending'
       download-names='1d,5d'
     >
     </chart>
@@ -215,11 +229,9 @@ export class SenapsLocationsStratum extends LoadableStratum(
 StratumOrder.addLoadStratum(SenapsLocationsStratum.stratumName);
 
 class SenapsLocationsCatalogItem extends AsyncMappableMixin(
-  CatalogMemberMixin(CreateModel(SenapsLocationsCatalogItemTraits))
+  UrlMixin(CatalogMemberMixin(CreateModel(SenapsLocationsCatalogItemTraits)))
 ) {
   static readonly type = "senaps-locations";
-
-  readonly baseUrl = "https://senaps.io/api/sensor/v2";
 
   get type() {
     return SenapsLocationsCatalogItem.type;
@@ -262,7 +274,10 @@ class SenapsLocationsCatalogItem extends AsyncMappableMixin(
   }
 
   _constructLocationsUrl() {
-    var uri = new URI(`${this.baseUrl}/locations`);
+    if (!this.url) {
+      throw missingUrlError;
+    }
+    var uri = new URI(`${this.url}/locations`);
     if (this.locationIdFilter !== undefined) {
       uri.setSearch("id", this.locationIdFilter);
     }
@@ -272,7 +287,10 @@ class SenapsLocationsCatalogItem extends AsyncMappableMixin(
   }
 
   _constructStreamsUrl(locationId: string) {
-    var uri = new URI(`${this.baseUrl}/streams`);
+    if (!this.url) {
+      throw missingUrlError;
+    }
+    var uri = new URI(`${this.url}/streams`);
     if (this.streamIdFilter !== undefined) {
       uri.setSearch("id", this.streamIdFilter);
     }
