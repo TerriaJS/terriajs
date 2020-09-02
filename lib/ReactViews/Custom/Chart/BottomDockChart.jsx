@@ -278,12 +278,6 @@ class Chart extends React.Component {
                 top={this.plotHeight + 1}
                 scale={this.xScale}
                 label={xAxis.units || (xAxis.scale === "time" && "Date")}
-                labelProps={{
-                  fill: labelColor,
-                  fontSize: 12,
-                  textAnchor: "middle",
-                  fontFamily: "Arial"
-                }}
               />
               <For each="y" index="i" of={this.yAxes}>
                 <YAxis
@@ -402,6 +396,12 @@ class Plot extends React.Component {
 }
 
 class XAxis extends React.PureComponent {
+  static propTypes = {
+    top: PropTypes.number.isRequired,
+    scale: PropTypes.func.isRequired,
+    label: PropTypes.bool.isRequired
+  };
+
   render() {
     return (
       <AxisBottom
@@ -413,6 +413,12 @@ class XAxis extends React.PureComponent {
           fontSize: 12,
           fontFamily: "Arial"
         })}
+        labelProps={{
+          fill: labelColor,
+          fontSize: 12,
+          textAnchor: "middle",
+          fontFamily: "Arial"
+        }}
         {...this.props}
       />
     );
