@@ -1,4 +1,4 @@
-import { autorun, computed, runInAction } from "mobx";
+import { autorun, computed, runInAction, comparer } from "mobx";
 import { createTransformer } from "mobx-utils";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
@@ -105,7 +105,7 @@ export default class Cesium extends GlobeOrMap {
   /* Disposers */
   private readonly _selectionIndicator: CesiumSelectionIndicator;
   private readonly _disposeSelectedFeatureSubscription: () => void;
-  private readonly _disposeWorkbenchMapItemsSubscription: () => void;
+  private readonly _disposeWorkbenchMapItemsReactions: () => void;
   private readonly _disposeTerrainReaction: () => void;
   private readonly _disposeSplitterReaction: () => void;
 
@@ -416,7 +416,7 @@ export default class Cesium extends GlobeOrMap {
       this._selectFeature();
     });
 
-    this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
+    this._disposeWorkbenchMapItemsReactions = this._reactToMapItems();
     this._disposeTerrainReaction = autorun(() => {
       this.scene.globe.terrainProvider = this._terrainProvider;
       this.scene.globe.splitDirection = this.terria.showSplitter
@@ -491,7 +491,7 @@ export default class Cesium extends GlobeOrMap {
     }
 
     this.pauser.destroy();
-    this.stopObserving();
+    this._disposeWorkbenchMapItemsReactions();
     this._eventHelper.removeAll();
     this.dataSourceDisplay.destroy();
 
@@ -515,92 +515,105 @@ export default class Cesium extends GlobeOrMap {
     );
   }
 
-  private observeModelLayer() {
-    return autorun(() => {
-      // TODO: Look up the type in a map and call the associated function.
-      //       That way the supported types of map items is extensible.
-      const allDataSources = this._allMapItems.filter(isDataSource);
-
-      // Remove deleted data sources
-      let dataSources = this.dataSources;
-      for (let i = 0; i < dataSources.length; i++) {
-        const d = dataSources.get(i);
-        if (allDataSources.indexOf(d) === -1) {
-          dataSources.remove(d);
-        }
-      }
-
-      // Add new data sources
-      allDataSources.forEach(d => {
-        if (!dataSources.contains(d)) {
-          dataSources.add(d);
-        }
-      });
-
-      const allImageryParts = this._allMapItems
-        .filter(ImageryParts.is)
-        .map(this._makeImageryLayerFromParts.bind(this));
-
-      // Delete imagery layers that are no longer in the model
-      for (let i = 0; i < this.scene.imageryLayers.length; i++) {
-        const imageryLayer = this.scene.imageryLayers.get(i);
-        if (allImageryParts.indexOf(imageryLayer) === -1) {
-          this.scene.imageryLayers.remove(imageryLayer);
-          --i;
-        }
-      }
-      // Iterate backwards so that adding multiple layers adds them in increasing cesium index order
-      for (
-        let modelIndex = allImageryParts.length - 1;
-        modelIndex >= 0;
-        modelIndex--
-      ) {
-        const mapItem = allImageryParts[modelIndex];
-
-        const targetCesiumIndex = allImageryParts.length - modelIndex - 1;
-        const currentCesiumIndex = this.scene.imageryLayers.indexOf(mapItem);
-        if (currentCesiumIndex === -1) {
-          this.scene.imageryLayers.add(mapItem, targetCesiumIndex);
-        } else if (currentCesiumIndex > targetCesiumIndex) {
-          for (let j = currentCesiumIndex; j > targetCesiumIndex; j--) {
-            this.scene.imageryLayers.lower(mapItem);
-          }
-        } else if (currentCesiumIndex < targetCesiumIndex) {
-          for (let j = currentCesiumIndex; j < targetCesiumIndex; j++) {
-            this.scene.imageryLayers.raise(mapItem);
-          }
-        }
-      }
-
-      const allCesium3DTilesets = this._allMapItems.filter(isCesium3DTileset);
-
-      // Remove deleted tilesets
-      const primitives = this.scene.primitives;
-      for (let i = 0; i < this.scene.primitives.length; i++) {
-        const prim = primitives.get(i);
-        if (
-          isCesium3DTileset(prim) &&
-          allCesium3DTilesets.indexOf(prim) === -1
-        ) {
-          this.scene.primitives.remove(prim);
-        }
-      }
-
-      // Add new tilesets
-      allCesium3DTilesets.forEach(tileset => {
-        if (!primitives.contains(tileset)) {
-          primitives.add(tileset);
-        }
-      });
-
-      this.notifyRepaintRequired();
-    });
+  @computed({ equals: comparer.shallow })
+  private get _allDataSources() {
+    return this._allMapItems.filter(isDataSource);
   }
 
-  stopObserving() {
-    if (this._disposeWorkbenchMapItemsSubscription !== undefined) {
-      this._disposeWorkbenchMapItemsSubscription();
-    }
+  @computed({ equals: comparer.shallow })
+  private get _allImageryLayers() {
+    return this._allMapItems
+      .filter(ImageryParts.is)
+      .map(this._makeImageryLayerFromParts.bind(this));
+  }
+
+  @computed({ equals: comparer.shallow })
+  private get _allCesium3DTilesets() {
+    return this._allMapItems.filter(isCesium3DTileset);
+  }
+
+  private _reactToMapItems(): () => void {
+    const reactions = [
+      autorun(() => {
+        // Remove deleted data sources
+        let dataSources = this.dataSources;
+        for (let i = 0; i < dataSources.length; i++) {
+          const d = dataSources.get(i);
+          if (this._allDataSources.indexOf(d) === -1) {
+            dataSources.remove(d);
+          }
+        }
+
+        // Add new data sources
+        this._allDataSources.forEach(d => {
+          if (!dataSources.contains(d)) {
+            dataSources.add(d);
+          }
+        });
+
+        this.notifyRepaintRequired();
+      }),
+      autorun(() => {
+        // Delete imagery layers that are no longer in the model
+        for (let i = 0; i < this.scene.imageryLayers.length; i++) {
+          const imageryLayer = this.scene.imageryLayers.get(i);
+          if (this._allImageryLayers.indexOf(imageryLayer) === -1) {
+            this.scene.imageryLayers.remove(imageryLayer);
+            --i;
+          }
+        }
+        // Iterate backwards so that adding multiple layers adds them in increasing cesium index order
+        for (
+          let modelIndex = this._allImageryLayers.length - 1;
+          modelIndex >= 0;
+          modelIndex--
+        ) {
+          const mapItem = this._allImageryLayers[modelIndex];
+
+          const targetCesiumIndex =
+            this._allImageryLayers.length - modelIndex - 1;
+          const currentCesiumIndex = this.scene.imageryLayers.indexOf(mapItem);
+          if (currentCesiumIndex === -1) {
+            this.scene.imageryLayers.add(mapItem, targetCesiumIndex);
+          } else if (currentCesiumIndex > targetCesiumIndex) {
+            for (let j = currentCesiumIndex; j > targetCesiumIndex; j--) {
+              this.scene.imageryLayers.lower(mapItem);
+            }
+          } else if (currentCesiumIndex < targetCesiumIndex) {
+            for (let j = currentCesiumIndex; j < targetCesiumIndex; j++) {
+              this.scene.imageryLayers.raise(mapItem);
+            }
+          }
+        }
+
+        this.notifyRepaintRequired();
+      }),
+      autorun(() => {
+        // Remove deleted tilesets
+        const primitives = this.scene.primitives;
+        for (let i = 0; i < this.scene.primitives.length; i++) {
+          const prim = primitives.get(i);
+          if (
+            isCesium3DTileset(prim) &&
+            this._allCesium3DTilesets.indexOf(prim) === -1
+          ) {
+            this.scene.primitives.remove(prim);
+          }
+        }
+
+        // Add new tilesets
+        this._allCesium3DTilesets.forEach(tileset => {
+          if (!primitives.contains(tileset)) {
+            primitives.add(tileset);
+          }
+        });
+
+        this.notifyRepaintRequired();
+      })
+    ];
+    return () => {
+      reactions.forEach(dispose => dispose);
+    };
   }
 
   zoomTo(
@@ -1274,6 +1287,10 @@ export default class Cesium extends GlobeOrMap {
     layer.alpha = parts.alpha;
     layer.show = parts.show;
     return layer;
+  }
+
+  private _setAlphaAndShowReaction() {
+    return autorun(() => {});
   }
 
   /**
