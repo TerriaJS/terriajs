@@ -22,7 +22,7 @@ describe("DimensionSelectorSection", function() {
     });
   });
 
-  it("shows all dimensions and styles for a mock wms layer", function(done) {
+  it("shows all dimensions and styles for a mock layer", function(done) {
     const mockItem: SelectableDimensions = {
       selectableDimensions: [
         {
