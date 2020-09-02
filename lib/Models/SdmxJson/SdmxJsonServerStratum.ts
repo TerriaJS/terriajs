@@ -10,7 +10,6 @@ import ModelReference from "../../Traits/ModelReference";
 import SdmxCatalogGroupTraits from "../../Traits/SdmxCatalogGroupTraits";
 import CatalogGroup from "../CatalogGroupNew";
 import CommonStrata from "../CommonStrata";
-import createInfoSection from "../createInfoSection";
 import LoadableStratum from "../LoadableStratum";
 import { BaseModel } from "../Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
@@ -29,6 +28,8 @@ import {
   Dataflows,
   SdmxJsonStructureMessage
 } from "./SdmxJsonStructureMessage";
+import createStratumInstance from "../createStratumInstance";
+import { InfoSectionTraits } from "../../Traits/CatalogMemberTraits";
 
 export interface SdmxServer {
   agencySchemes?: AgencySchemes;
@@ -248,9 +249,10 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
 
       // Set group `info` trait if applicable
       if (node.item.description) {
-        groupModel.setTrait(CommonStrata.underride, "info", [
-          createInfoSection("Description", node.item.description)
-        ]);
+        createStratumInstance(InfoSectionTraits, {
+          name: "Description",
+          content: node.item.description
+        });
       }
 
       return;

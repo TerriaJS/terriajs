@@ -188,7 +188,9 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       });
     }
 
-    async loadMapItems(): Promise<void> {}
+    async loadMapItems(): Promise<void> {
+      await super.loadMapItems();
+    }
 
     /**
      * Gets the items to show on the map.
