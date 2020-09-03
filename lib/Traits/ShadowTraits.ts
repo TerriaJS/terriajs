@@ -1,6 +1,8 @@
 import primitiveTrait from "./primitiveTrait";
 import ModelTraits from "./ModelTraits";
 
+export type Shadows = "CAST" | "RECEIVE" | "BOTH" | "NONE";
+
 export default class ShadowTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
@@ -8,7 +10,7 @@ export default class ShadowTraits extends ModelTraits {
     description:
       "Determines whether the tileset casts or receives shadows from each light source."
   })
-  shadows: "CAST" | "RECEIVE" | "BOTH" | "NONE" = "NONE";
+  shadows: Shadows = "NONE";
 
   @primitiveTrait({
     type: "boolean",
