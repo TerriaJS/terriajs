@@ -3,6 +3,9 @@ Change Log
 
 ### Next Release
 
+
+### v7.11.11
+
 * If `showIEMessage` is `true` in config.json, warn IE11 users that support is ending.
 
 ### v7.11.10
