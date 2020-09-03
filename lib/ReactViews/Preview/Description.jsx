@@ -18,6 +18,7 @@ import { observer } from "mobx-react";
 import ExportData from "./ExportData";
 import WarningBox from "./WarningBox";
 
+// TODO: v8ify
 export const getMetaDescriptionSummary = catalogItem => {
   const description =
     (catalogItem.description && `${catalogItem.description} `) || "";
