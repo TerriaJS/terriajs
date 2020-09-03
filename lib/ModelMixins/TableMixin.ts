@@ -252,9 +252,9 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     @computed
     get selectableDimensions(): SelectableDimension[] {
       return filterOutUndefined([
-        this.styleDimensions,
         this.regionColumnDimensions,
-        this.regionProviderDimensions
+        this.regionProviderDimensions,
+        this.styleDimensions
       ]);
     }
 
