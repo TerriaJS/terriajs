@@ -26,6 +26,7 @@ import ToolPanel from "./../ToolPanel.jsx";
 
 import SatelliteGuide from "../Guide/SatelliteGuide.jsx";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage.jsx";
+import InternetExplorerOverlay from "../InternetExplorerOverlay/InternetExplorerOverlay.jsx";
 
 import { Small, Medium } from "../Generic/Responsive";
 import classNames from "classnames";
@@ -163,6 +164,7 @@ const StandardUserInterface = createReactClass({
       !this.props.viewState.storyBuilderShown;
     return (
       <div className={Styles.storyWrapper}>
+        <InternetExplorerOverlay viewState={this.props.viewState} />
         <WelcomeMessage viewState={this.props.viewState} />
         <div
           className={classNames(Styles.uiRoot, {
