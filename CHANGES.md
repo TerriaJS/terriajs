@@ -13,6 +13,7 @@ Change Log
 * Replaced all instances of `createInfoSection` and `newInfo` with calls to `createStratumInstance` using an initialisation object.
 * Fix styling of WFS and GeoRSS.
 * Fixed a bug that caused re-rendering of xAxis of charts on mouse move. Chart cursor should be somewhat faster as a result of this fix.
+* Replaces `ShadowSection` with `ShadowMixin` using `SelectableDimensions`
 * [The next improvement]
 
 #### 8.0.0-alpha.46
