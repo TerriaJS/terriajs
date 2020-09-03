@@ -81,7 +81,7 @@ class GeoRssStratum extends LoadableStratum(GeoRssCatalogItemTraits) {
   }
 
   static async load(item: GeoRssCatalogItem) {
-    const geoJsonItem = new GeoJsonCatalogItem(createGuid(), item.terria);
+    const geoJsonItem = new GeoJsonCatalogItem(createGuid(), item.terria, item);
     geoJsonItem.setTrait(
       CommonStrata.definition,
       "clampToGround",
