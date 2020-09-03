@@ -59,7 +59,7 @@ export default class ColorPalette {
   selectColor(index: number): Color {
     return this._colors[index % this._colors.length];
   }
-  
+
   reverseColorOrder(): void {
     this._colors.reverse();
   }
