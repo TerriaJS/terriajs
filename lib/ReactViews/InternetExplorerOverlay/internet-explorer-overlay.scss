@@ -70,7 +70,7 @@
 
     padding: 10px 25px;
 
-    margin-right: 5px;
+    margin-right: 10px;
   }
 }
 .IEMessage-buttonPrimary {
@@ -78,6 +78,11 @@
 }
 .IEMessage-buttonTertiary {
   composes: btn--tertiary from "../../Sass/common/_buttons.scss";
+  border-width: 1px;
+  &:hover,
+  &:focus {
+    border-width: 1px;
+  }
 }
 
 .IEMessage-body {

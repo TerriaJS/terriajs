@@ -105,7 +105,7 @@ export const IEMessagePure = props => {
                   After then, this map won&apos;t work in your current browser.
                 </p>
                 <p>
-                  Please switch to{" "}
+                  Please switch to a more modern browser like{" "}
                   <a
                     rel="noopener noreferrer"
                     target="_blank"
@@ -153,7 +153,7 @@ export const IEMessagePure = props => {
                 <button
                   className={classNames(
                     Styles.ieMessageButton,
-                    Styles.iEMessageButtonTertiary
+                    Styles.ieMessageButtonTertiary
                   )}
                   onClick={() => {
                     handleClose();
