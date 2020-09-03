@@ -371,6 +371,7 @@ export default class Leaflet extends GlobeOrMap {
         const d = dataSources.get(i);
         if (allDataSources.indexOf(d) === -1) {
           dataSources.remove(d);
+          --i;
         }
       }
 
