@@ -15,6 +15,7 @@ Change Log
 * Fix styling of WFS and GeoRSS.
 * Fixed a bug that caused re-rendering of xAxis of charts on mouse move. Chart cursor should be somewhat faster as a result of this fix.
 * Fixed a bug that caused some catalogue items to remain on the map after clicking "Remove all" on the workbench.
+* Add short report to `ArcGisFeatureServerItem` for exceeding the feature limit.
 * [The next improvement]
 
 #### 8.0.0-alpha.46
