@@ -1,11 +1,11 @@
+import { computed, runInAction } from "mobx";
+import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
-import ShadowTraits, { Shadows } from "../Traits/ShadowTraits";
 import SelectableDimensions, {
   SelectableDimension
 } from "../Models/SelectableDimensions";
-import { computed, runInAction } from "mobx";
-import { ShadowMode } from "terriajs-cesium";
+import ShadowTraits, { Shadows } from "../Traits/ShadowTraits";
 
 function ShadowMixin<T extends Constructor<Model<ShadowTraits>>>(Base: T) {
   abstract class ShadowMixin extends Base implements SelectableDimensions {
