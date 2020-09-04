@@ -563,16 +563,41 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         function filterRows(
           rowNumbers: number | readonly number[] | undefined
         ): number | undefined {
+          if (!isDefined(rowNumbers)) return;
+
+          if (!isDefined(currentTimeRows)) {
+            return Array.isArray(rowNumbers) ? rowNumbers[0] : rowNumbers;
+          }
+
           if (
             typeof rowNumbers === "number" &&
-            isDefined(currentTimeRows) &&
             currentTimeRows.includes(rowNumbers)
           ) {
             return rowNumbers;
           } else if (Array.isArray(rowNumbers)) {
-            return isDefined(currentTimeRows)
-              ? rowNumbers.find(row => currentTimeRows.includes(row))
-              : rowNumbers[0];
+            const matchingTimeRows: number[] = rowNumbers.filter(row =>
+              currentTimeRows.includes(row)
+            );
+            if (matchingTimeRows.length <= 1) {
+              return matchingTimeRows[0];
+            }
+            //In a time-varying dataset, intervals may
+            // overlap at their endpoints (i.e. the end of one interval is the start of the next).
+            // In that case, we want the later interval to apply.
+            return matchingTimeRows.reduce((latestRow, currentRow) => {
+              const currentInterval =
+                input.style.timeIntervals?.[currentRow]?.stop;
+              const latestInterval =
+                input.style.timeIntervals?.[latestRow]?.stop;
+              if (
+                currentInterval &&
+                latestInterval &&
+                JulianDate.lessThan(latestInterval, currentInterval)
+              ) {
+                return currentRow;
+              }
+              return latestRow;
+            }, matchingTimeRows[0]);
           }
         }
 
