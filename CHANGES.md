@@ -18,6 +18,7 @@ Change Log
 * Deleted old `ChartDisclaimer.jsx`
 * Moved `DiscretelyTimeVaryingMixin` from `TableAutomaticStylesStratum` to `TableMixin`
 * Added basic region-mapping time support
+* Add short report to `ArcGisFeatureServerItem` for exceeding the feature limit.
 * [The next improvement]
 
 #### 8.0.0-alpha.46
