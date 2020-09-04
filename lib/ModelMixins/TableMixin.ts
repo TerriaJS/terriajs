@@ -32,13 +32,19 @@ import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
 import LegendTraits from "../Traits/LegendTraits";
 import TableTraits from "../Traits/TableTraits";
+import DiscretelyTimeVaryingMixin, {
+  DiscreteTimeAsJS
+} from "./DiscretelyTimeVaryingMixin";
+import TimeVarying from "./TimeVarying";
+import { TimeInterval, JulianDate } from "terriajs-cesium";
 
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
 //   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
 // This is a dodgy workaround.
 class RegionProviderList extends JSRegionProviderList {}
 function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
-  abstract class TableMixin extends Base implements SelectableDimensions {
+  abstract class TableMixin extends DiscretelyTimeVaryingMixin(Base)
+    implements SelectableDimensions, TimeVarying {
     get hasTableMixin() {
       return true;
     }
@@ -167,7 +173,10 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
       return filterOutUndefined([
         this.createLongitudeLatitudeDataSource(this.activeTableStyle),
-        this.createRegionMappedImageryLayer(this.activeTableStyle)
+        this.createRegionMappedImageryLayer({
+          style: this.activeTableStyle,
+          currentTime: this.currentTimeAsJulianDate
+        })
       ]);
     }
 
@@ -373,6 +382,35 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return this.activeTableStyle.timeTraits.isSampled;
     }
 
+    @computed
+    get discreteTimes():
+      | { time: string; tag: string | undefined }[]
+      | undefined {
+      const dates = this.activeTableStyle.timeColumn?.valuesAsDates.values;
+      if (dates === undefined) {
+        return;
+      }
+      const times = filterOutUndefined(
+        dates.map(d =>
+          d ? { time: d.toISOString(), tag: undefined } : undefined
+        )
+      ).reduce(
+        // is it correct for discrete times to remove duplicates?
+        // see discussion on https://github.com/TerriaJS/terriajs/pull/4577
+        // duplicates will mess up the indexing problem as our `<DateTimePicker />`
+        // will eliminate duplicates on the UI front, so given the datepicker
+        // expects uniques, return uniques here
+        (acc: DiscreteTimeAsJS[], time) =>
+          !acc.some(
+            accTime => accTime.time === time.time && accTime.tag === time.tag
+          )
+            ? [...acc, time]
+            : acc,
+        []
+      );
+      return times;
+    }
+
     get legends(): readonly ModelPropertiesFromTraits<LegendTraits>[] {
       if (this.mapItems.length > 0) {
         const colorLegend = this.activeTableStyle.colorTraits.legend;
@@ -474,12 +512,15 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     );
 
     private readonly createRegionMappedImageryLayer = createTransformer(
-      (style: TableStyle): ImageryParts | undefined => {
-        if (!style.isRegions()) {
+      (input: {
+        style: TableStyle;
+        currentTime: JulianDate | undefined;
+      }): ImageryParts | undefined => {
+        if (!input.style.isRegions()) {
           return undefined;
         }
 
-        const regionColumn = style.regionColumn;
+        const regionColumn = input.style.regionColumn;
         const regionType: any = regionColumn.regionType;
         if (regionType === undefined) {
           return undefined;
@@ -487,7 +528,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
         const baseMapContrastColor = "white"; //this.terria.baseMapContrastColor;
 
-        const colorColumn = style.colorColumn;
+        const colorColumn = input.style.colorColumn;
         const valueFunction =
           colorColumn !== undefined
             ? colorColumn.valueFunctionForType
@@ -495,6 +536,44 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         const colorMap = (this.activeTableStyle || this.defaultTableStyle)
           .colorMap;
         const valuesAsRegions = regionColumn.valuesAsRegions;
+
+        let currentTimeRows: number[];
+
+        // TODO: this is already implemented in RegionProvider.prototype.mapRegionsToIndicesInto, but regionTypes require "loading" for this to work. I think the whole RegionProvider thing needs to be re-done in TypeScript at some point and then we can move stuff into that.
+        // If time varying, get row indices which match
+        if (input.currentTime && input.style.timeIntervals) {
+          currentTimeRows = input.style.timeIntervals.reduce<number[]>(
+            (rows, timeInterval, index) => {
+              if (
+                timeInterval &&
+                TimeInterval.contains(timeInterval, input.currentTime!)
+              ) {
+                rows.push(index);
+              }
+              return rows;
+            },
+            []
+          );
+        }
+
+        /**
+         * Filters row numbers by time (if applicable)
+         */
+        function filterRows(
+          rowNumbers: number | readonly number[] | undefined
+        ): number | undefined {
+          if (
+            typeof rowNumbers === "number" &&
+            isDefined(currentTimeRows) &&
+            currentTimeRows.includes(rowNumbers)
+          ) {
+            return rowNumbers;
+          } else if (Array.isArray(rowNumbers)) {
+            return isDefined(currentTimeRows)
+              ? rowNumbers.find(row => currentTimeRows.includes(row))
+              : rowNumbers[0];
+          }
+        }
 
         return {
           alpha: this.opacity,
@@ -507,19 +586,14 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
                 featureRegion !== undefined && featureRegion !== null
                   ? featureRegion.toString()
                   : "";
-              const rowNumbers = valuesAsRegions.regionIdToRowNumbersMap.get(
-                regionIdString.toLowerCase()
+              let rowNumber = filterRows(
+                valuesAsRegions.regionIdToRowNumbersMap.get(
+                  regionIdString.toLowerCase()
+                )
               );
-              let value: string | number | null;
-
-              if (rowNumbers === undefined) {
-                value = null;
-              } else if (typeof rowNumbers === "number") {
-                value = valueFunction(rowNumbers);
-              } else {
-                // TODO: multiple rows have data for this region
-                value = valueFunction(rowNumbers[0]);
-              }
+              let value: string | number | null = isDefined(rowNumber)
+                ? valueFunction(rowNumber)
+                : null;
 
               const color = colorMap.mapValueToColor(value);
               if (color === undefined) {
@@ -546,26 +620,27 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
             uniqueIdProp: regionType.uniqueIdProp,
             featureInfoFunc: (feature: any) => {
               if (
-                isDefined(style.regionColumn) &&
-                isDefined(style.regionColumn.regionType) &&
-                isDefined(style.regionColumn.regionType.regionProp)
+                isDefined(input.style.regionColumn) &&
+                isDefined(input.style.regionColumn.regionType) &&
+                isDefined(input.style.regionColumn.regionType.regionProp)
               ) {
-                const regionColumn = style.regionColumn;
+                const regionColumn = input.style.regionColumn;
                 const regionType = regionColumn.regionType;
 
                 if (!isDefined(regionType)) return undefined;
 
-                const regionId: any = regionColumn.valuesAsRegions.regionIdToRowNumbersMap.get(
-                  feature.properties[regionType.regionProp]
+                const regionId = filterRows(
+                  regionColumn.valuesAsRegions.regionIdToRowNumbersMap.get(
+                    feature.properties[regionType.regionProp]
+                  )
                 );
-                let d = null;
 
-                // TODO - find a better way to handle time-varying feature info's
-                if (Array.isArray(regionId)) {
-                  d = this.getRowValues(regionId[0]);
-                } else {
-                  d = this.getRowValues(regionId);
-                }
+                let d: JsonObject | null = isDefined(regionId)
+                  ? this.getRowValues(regionId)
+                  : null;
+
+                if (d === null) return;
+
                 return this.featureInfoFromFeature(
                   regionType,
                   d,
