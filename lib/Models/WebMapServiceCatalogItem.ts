@@ -1089,8 +1089,8 @@ class WebMapServiceCatalogItem
   @computed
   get selectableDimensions() {
     return filterOutUndefined([
-      ...this.styleSelectableDimensions,
-      ...this.wmsDimensionSelectableDimensions
+      ...this.wmsDimensionSelectableDimensions,
+      ...this.styleSelectableDimensions
     ]);
   }
 }
