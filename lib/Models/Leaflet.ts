@@ -46,6 +46,7 @@ import LatLonHeight from "../Core/LatLonHeight";
 import MapInteractionMode from "./MapInteractionMode";
 import i18next from "i18next";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import RasterLayerTraits from "../Traits/RasterLayerTraits";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
@@ -324,14 +325,29 @@ export default class Leaflet extends GlobeOrMap {
         this.terriaViewer.baseMap
       ];
       // Flatmap
-      const allMapItems = ([] as MapItem[]).concat(
-        ...catalogItems.filter(isDefined).map(item => item.mapItems)
+      const allImageryMapItems = ([] as {
+        item: Mappable;
+        parts: ImageryParts;
+      }[]).concat(
+        ...catalogItems
+          .filter(isDefined)
+          .map(item =>
+            item.mapItems
+              .filter(ImageryParts.is)
+              .map(parts => ({ item, parts }))
+          )
       );
 
-      const allImagery = allMapItems.filter(ImageryParts.is).map(parts => ({
-        parts: parts,
-        layer: this._createImageryLayer(parts.imageryProvider)
-      }));
+      const allImagery = allImageryMapItems.map(({ item, parts }) => {
+        if (hasTraits(item, RasterLayerTraits, "leafletUpdateInterval")) {
+          (parts.imageryProvider as any)._leafletUpdateInterval =
+            item.leafletUpdateInterval;
+        }
+        return {
+          parts: parts,
+          layer: this._createImageryLayer(parts.imageryProvider)
+        };
+      });
 
       // Delete imagery layers no longer in the model
       this.map.eachLayer(mapLayer => {
@@ -363,6 +379,9 @@ export default class Leaflet extends GlobeOrMap {
       });
 
       /* Handle datasources */
+      const allMapItems = ([] as MapItem[]).concat(
+        ...catalogItems.filter(isDefined).map(item => item.mapItems)
+      );
       const allDataSources = allMapItems.filter(isDataSource);
 
       // Remove deleted data sources
@@ -371,6 +390,7 @@ export default class Leaflet extends GlobeOrMap {
         const d = dataSources.get(i);
         if (allDataSources.indexOf(d) === -1) {
           dataSources.remove(d);
+          --i;
         }
       }
 

@@ -16,6 +16,14 @@ Change Log
 * Merged the `StyleSelector` and `DimensionsSelector`, and created a `SelectableDimensions` interface.
 * Added `chartColor` trait for DiscretelyTimeVarying items.
 * Replaced all instances of `createInfoSection` and `newInfo` with calls to `createStratumInstance` using an initialisation object.
+* Added trait `leafletUpdateInterval` to RasterLayerTraits.
+* Fix styling of WFS and GeoRSS.
+* Fixed a bug that caused re-rendering of xAxis of charts on mouse move. Chart cursor should be somewhat faster as a result of this fix.
+* Fixed a bug that caused some catalogue items to remain on the map after clicking "Remove all" on the workbench.
+* Deleted old `ChartDisclaimer.jsx`
+* Moved `DiscretelyTimeVaryingMixin` from `TableAutomaticStylesStratum` to `TableMixin`
+* Added basic region-mapping time support
+* Add short report to `ArcGisFeatureServerItem` for exceeding the feature limit.
 * [The next improvement]
 
 #### 8.0.0-alpha.46

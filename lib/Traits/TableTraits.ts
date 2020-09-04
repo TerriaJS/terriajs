@@ -1,4 +1,6 @@
 import CatalogMemberTraits from "./CatalogMemberTraits";
+import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
+import ExportableTraits from "./ExportableTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
 import MappableTraits from "./MappableTraits";
 import mixTraits from "./mixTraits";
@@ -8,14 +10,12 @@ import primitiveTrait from "./primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
 import TableColumnTraits from "./TableColumnTraits";
 import TableStyleTraits from "./TableStyleTraits";
-import TimeVaryingTraits from "./TimeVaryingTraits";
-import ExportableTraits from "./ExportableTraits";
 
 export default class TableTraits extends mixTraits(
+  DiscretelyTimeVaryingTraits,
   ExportableTraits,
   LayerOrderingTraits,
   CatalogMemberTraits,
-  TimeVaryingTraits,
   MappableTraits,
   RasterLayerTraits
 ) {

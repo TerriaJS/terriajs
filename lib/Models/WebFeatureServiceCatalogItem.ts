@@ -415,7 +415,8 @@ class WebFeatureServiceCatalogItem
     runInAction(() => {
       this.geojsonCatalogItem = new GeoJsonCatalogItem(
         createGuid(),
-        this.terria
+        this.terria,
+        this
       );
 
       this.geojsonCatalogItem.setTrait(
