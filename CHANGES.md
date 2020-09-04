@@ -15,6 +15,9 @@ Change Log
 * Fix styling of WFS and GeoRSS.
 * Fixed a bug that caused re-rendering of xAxis of charts on mouse move. Chart cursor should be somewhat faster as a result of this fix.
 * Fixed a bug that caused some catalogue items to remain on the map after clicking "Remove all" on the workbench.
+* Deleted old `ChartDisclaimer.jsx`
+* Moved `DiscretelyTimeVaryingMixin` from `TableAutomaticStylesStratum` to `TableMixin`
+* Added basic region-mapping time support
 * [The next improvement]
 
 #### 8.0.0-alpha.46
