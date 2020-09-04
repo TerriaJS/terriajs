@@ -33,13 +33,7 @@ const automaticTableStylesStratumName = TableAutomaticStylesStratum.stratumName;
 
 export default class SdmxJsonCatalogItem
   extends AsyncChartableMixin(
-    TableMixin(
-      // Since both TableMixin & DiscretelyTimeVaryingMixin defines
-      // `chartItems`, the order of mixing in is important here
-      DiscretelyTimeVaryingMixin(
-        UrlMixin(CatalogMemberMixin(CreateModel(SdmxCatalogItemTraits)))
-      )
-    )
+    TableMixin(UrlMixin(CatalogMemberMixin(CreateModel(SdmxCatalogItemTraits))))
   )
   implements SelectableDimensions {
   static get type() {
@@ -109,16 +103,6 @@ export default class SdmxJsonCatalogItem
   @computed
   get canZoomTo() {
     return this.activeTableStyle.latitudeColumn !== undefined;
-  }
-
-  @computed
-  get discreteTimes() {
-    const automaticTableStylesStratum:
-      | TableAutomaticStylesStratum
-      | undefined = this.strata.get(
-      automaticTableStylesStratumName
-    ) as TableAutomaticStylesStratum;
-    return automaticTableStylesStratum?.discreteTimes;
   }
 
   /**
