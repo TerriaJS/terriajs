@@ -4,6 +4,9 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.47)
+* [The next improvement]
+
+#### 8.0.0-alpha.47
 * Removed hard coded senaps base url.
 * Added option for manual Table region mapping with `enableManualRegionMapping` TableTrait. This provides `SelectableDimensions` for the region column and region type.
 * Added WMS Dimensions (using `SelectableDimensions`)
@@ -19,7 +22,6 @@ Change Log
 * Moved `DiscretelyTimeVaryingMixin` from `TableAutomaticStylesStratum` to `TableMixin`
 * Added basic region-mapping time support
 * Add short report to `ArcGisFeatureServerItem` for exceeding the feature limit.
-* [The next improvement]
 
 #### 8.0.0-alpha.46
 * Fixed i18n initialisation for magda based configurations
