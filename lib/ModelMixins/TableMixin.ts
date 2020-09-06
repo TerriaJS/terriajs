@@ -176,7 +176,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         this.createLongitudeLatitudeDataSource(this.activeTableStyle),
         this.createRegionMappedImageryLayer({
           style: this.activeTableStyle,
-          currentTime: this.currentTimeAsJulianDate
+          currentTime: this.currentDiscreteJulianDate
         })
       ]);
     }
