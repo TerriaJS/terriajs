@@ -3,15 +3,10 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.45)
-* Update style of diff tool close button to match new design
-* Remove sass code from the `HelpPanel` component
-* Add support for splitting CSVs (TableMixins) that are using region mapping.
-* [The next improvement]
-
 #### next release (8.0.0-alpha.48)
 * Allow `cacheDuration` to be set on `ArcGisPortalCatalogGroup` and `ArcGisPortalItemReference`.
 * Set default `ArcGisPortalCatalogGroup` item sorting by title using REST API parameter.
+* Add support for splitting CSVs (TableMixins) that are using region mapping.
 * [The next improvement]
 
 #### 8.0.0-alpha.47
