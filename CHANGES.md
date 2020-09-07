@@ -6,6 +6,7 @@ Change Log
 #### next release (8.0.0-alpha.48)
 * Allow `cacheDuration` to be set on `ArcGisPortalCatalogGroup` and `ArcGisPortalItemReference`.
 * Set default `ArcGisPortalCatalogGroup` item sorting by title using REST API parameter.
+* Replaces `ShadowSection` with `ShadowMixin` using `SelectableDimensions`
 * [The next improvement]
 
 #### 8.0.0-alpha.47
@@ -19,8 +20,6 @@ Change Log
 * Added trait `leafletUpdateInterval` to RasterLayerTraits.
 * Fix styling of WFS and GeoRSS.
 * Fixed a bug that caused re-rendering of xAxis of charts on mouse move. Chart cursor should be somewhat faster as a result of this fix.
-* Replaces `ShadowSection` with `ShadowMixin` using `SelectableDimensions`
-* [The next improvement]
 * Fixed a bug that caused some catalogue items to remain on the map after clicking "Remove all" on the workbench.
 * Deleted old `ChartDisclaimer.jsx`
 * Moved `DiscretelyTimeVaryingMixin` from `TableAutomaticStylesStratum` to `TableMixin`
