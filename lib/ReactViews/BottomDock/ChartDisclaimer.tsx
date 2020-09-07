@@ -3,19 +3,12 @@ import React from "react";
 import ChartView from "../../Charts/ChartView";
 import DiscretelyTimeVaryingMixin from "../../ModelMixins/DiscretelyTimeVaryingMixin";
 import Chartable from "../../Models/Chartable";
-import { BaseModel } from "../../Models/Model";
 import Terria from "../../Models/Terria";
 import ViewState from "../../ReactViewModels/ViewState";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 const Spacing: any = require("../../Styled/Spacing").default;
 const Text: any = require("../../Styled/Text").default;
 const Box: any = require("../../Styled/Box").default;
-
-function isDiscretelyTimeVarying(
-  model: BaseModel | DiscretelyTimeVaryingMixin.Instance
-): model is DiscretelyTimeVaryingMixin.Instance {
-  return "discreteTimesAsSortedJulianDates" in model;
-}
 
 interface ChartDisclaimerProps {
   terria: Terria;
@@ -26,8 +19,8 @@ const ChartDisclaimer: React.FC<ChartDisclaimerProps> = ({ terria }) => {
   const chartView = new ChartView(terria);
 
   const chartableItemsWithDisclaimers: (Chartable &
-    DiscretelyTimeVaryingMixin.Instance)[] = chartView.chartableItems
-    .filter(isDiscretelyTimeVarying)
+    DiscretelyTimeVaryingMixin.DiscretelyTimeVaryingMixin)[] = chartView.chartableItems
+    .filter(DiscretelyTimeVaryingMixin.isMixedInto)
     .filter(item => item.chartDisclaimer);
   if (chartableItemsWithDisclaimers.length === 0) return null;
   const uniqueChartDisclaimers = [

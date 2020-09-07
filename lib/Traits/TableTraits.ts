@@ -8,12 +8,12 @@ import primitiveTrait from "./primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
 import TableColumnTraits from "./TableColumnTraits";
 import TableStyleTraits from "./TableStyleTraits";
-import TimeVaryingTraits from "./TimeVaryingTraits";
+import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 
 export default class TableTraits extends mixTraits(
+  DiscretelyTimeVaryingTraits,
   LayerOrderingTraits,
   CatalogMemberTraits,
-  TimeVaryingTraits,
   MappableTraits,
   RasterLayerTraits
 ) {
