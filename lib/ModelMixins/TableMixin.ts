@@ -167,8 +167,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
     @computed
     get supportsSplitting() {
-      if (isDefined(this.activeTableStyle.regionColumn)) return true;
-      return false;
+      return isDefined(this.activeTableStyle.regionColumn);
     }
 
     /**
