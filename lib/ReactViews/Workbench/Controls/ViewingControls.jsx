@@ -29,8 +29,6 @@ import Icon, { StyledIcon } from "../../Icon";
 import { exportData } from "../../Preview/ExportData";
 import WorkbenchButton from "../WorkbenchButton";
 import Styles from "./viewing-controls.scss";
-import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
-import Mappable from "../../../Models/Mappable";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -167,9 +165,9 @@ const ViewingControls = observer(
         terria.showSplitter = true;
 
         await splitRef.loadReference();
-        const target = splitRef.target;
-        if (target) {
-          runInAction(() => {
+        runInAction(() => {
+          const target = splitRef.target;
+          if (target) {
             target.setTrait(
               CommonStrata.user,
               "name",
@@ -186,13 +184,8 @@ const ViewingControls = observer(
                 ? ImagerySplitDirection.RIGHT
                 : ImagerySplitDirection.LEFT
             );
-          });
-
-          CatalogMemberMixin.isMixedInto(target)
-            ? await target.loadMetadata()
-            : false;
-          Mappable.is(target) ? await target.loadMapItems() : false;
-        }
+          }
+        });
 
         // Add it to terria.catalog, which is required so the new item can be shared.
         addUserCatalogMember(terria, splitRef, {

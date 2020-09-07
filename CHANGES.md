@@ -7,6 +7,7 @@ Change Log
 * Allow `cacheDuration` to be set on `ArcGisPortalCatalogGroup` and `ArcGisPortalItemReference`.
 * Set default `ArcGisPortalCatalogGroup` item sorting by title using REST API parameter.
 * Add support for splitting CSVs (TableMixins) that are using region mapping.
+* `splitItem` will now call `loadMetadata` and `loadMapItems`.
 * [The next improvement]
 
 #### 8.0.0-alpha.47
