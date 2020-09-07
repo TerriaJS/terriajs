@@ -26,6 +26,9 @@ Change Log
 * Added basic region-mapping time support
 * Add short report to `ArcGisFeatureServerItem` for exceeding the feature limit.
 * Added shift-drag quick zoom
+* Replaces `ShadowSection` with `ShadowMixin` using `SelectableDimensions`
+* Fixed a bug that caused some catalogue items to remain on the map after clicking "Remove all" on the workbench.
+* [The next improvement]
 
 #### 8.0.0-alpha.46
 * Fixed i18n initialisation for magda based configurations
