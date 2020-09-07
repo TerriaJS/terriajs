@@ -373,8 +373,6 @@ class WmtsCapabilitiesStratum extends LoadableStratum(
       return;
     }
     const bbox = layer.WGS84BoundingBox;
-    console.log(bbox);
-    console.log(layer);
     if (bbox) {
       const lowerCorner = bbox.LowerCorner.split(" ");
       const upperCorner = bbox.UpperCorner.split(" ");
@@ -410,7 +408,7 @@ class WebMapTileServiceCatalogItem
     i18next.t("models.webMapTileServiceCatalogItem.getCapabilitiesUrl")
   ];
 
-  static readonly type = "wfs";
+  static readonly type = "wmts";
   readonly canZoomTo = true;
 
   get type() {
@@ -523,7 +521,7 @@ class WebMapTileServiceCatalogItem
     if (!isDefined(tileMatrixSet)) {
       return;
     }
-    let rectangle;
+    let rectangle: Rectangle;
     if (
       this.rectangle !== undefined &&
       this.rectangle.west !== undefined &&
@@ -538,8 +536,9 @@ class WebMapTileServiceCatalogItem
         this.rectangle.north
       );
     } else {
-      rectangle = undefined;
+      rectangle = Rectangle.MAX_VALUE;
     }
+
     const imageryProvider = new WebMapTileServiceImageryProvider({
       url: proxyCatalogItemUrl(this, baseUrl),
       layer: layerIdentifier,
@@ -551,8 +550,7 @@ class WebMapTileServiceCatalogItem
       tileWidth: tileMatrixSet.tileWidth,
       tileHeight: tileMatrixSet.tileHeight,
       tilingScheme: new WebMercatorTilingScheme(),
-      format: format,
-      rectangle: rectangle
+      format: format
     });
     return imageryProvider;
   }
@@ -571,10 +569,10 @@ class WebMapTileServiceCatalogItem
     const stratum = <WmtsCapabilitiesStratum>(
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
     );
-    if (!this.name) {
+    if (!this.layer) {
       return;
     }
-    const layer = stratum.capabilities.findLayer(this.name);
+    const layer = stratum.capabilities.findLayer(this.layer);
     if (!layer) {
       return;
     }
@@ -602,8 +600,8 @@ class WebMapTileServiceCatalogItem
       if (usableTileMatrixSets && usableTileMatrixSets[tileMatrixSet]) {
         tileMatrixSetId = tileMatrixSet;
         tileMatrixSetLabels = usableTileMatrixSets[tileMatrixSet].identifiers;
-        tileWidth = usableTileMatrixSets[tileMatrixSet].tileWidth;
-        tileHeight = usableTileMatrixSets[tileMatrixSet].tileHeight;
+        tileWidth = Number(usableTileMatrixSets[tileMatrixSet].tileWidth);
+        tileHeight = Number(usableTileMatrixSets[tileMatrixSet].tileHeight);
         break;
       }
     }
