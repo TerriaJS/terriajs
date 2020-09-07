@@ -51,9 +51,11 @@ class WmtsCapabilitiesStratum extends LoadableStratum(
     if (catalogItem.getCapabilitiesUrl === undefined) {
       return Promise.reject(
         new TerriaError({
-          title: i18next.t("models.webMapServiceCatalogItem.missingUrlTitle"),
+          title: i18next.t(
+            "models.webMapTileServiceCatalogItem.missingUrlTitle"
+          ),
           message: i18next.t(
-            "models.webMapServiceCatalogItem.missingUrlMessage"
+            "models.webMapTileServiceCatalogItem.missingUrlMessage"
           )
         })
       );
@@ -107,7 +109,7 @@ class WmtsCapabilitiesStratum extends LoadableStratum(
     const result: StratumFromTraits<InfoSectionTraits>[] = [
       createStratumInstance(InfoSectionTraits, {
         name: i18next.t(
-          "models.webFeatureServiceCatalogItem.getCapabilitiesUrl"
+          "models.webMapTileServiceCatalogItem.getCapabilitiesUrl"
         ),
         content: this.catalogItem.getCapabilitiesUrl
       })
@@ -124,7 +126,9 @@ class WmtsCapabilitiesStratum extends LoadableStratum(
     ) {
       result.push(
         createStratumInstance(InfoSectionTraits, {
-          name: i18next.t("models.webMapTileServiceCatalogItem.abstract"),
+          name: i18next.t(
+            "models.webMapTileServiceCatalogItem.dataDescription"
+          ),
           content: layer.Abstract
         })
       );
@@ -145,7 +149,7 @@ class WmtsCapabilitiesStratum extends LoadableStratum(
         result.push(
           createStratumInstance(InfoSectionTraits, {
             name: i18next.t(
-              "models.webMapTileServiceCatalogItem.serviceAbstract"
+              "models.webMapTileServiceCatalogItem.serviceDescription"
             ),
             content: serviceIdentification.Abstract
           })
@@ -403,7 +407,7 @@ class WebMapTileServiceCatalogItem
 
   // hide elements in the info section which might show information about the datasource
   _sourceInfoItemNames = [
-    i18next.t("models.webFeatureServiceCatalogItem.getCapabilitiesUrl")
+    i18next.t("models.webMapTileServiceCatalogItem.getCapabilitiesUrl")
   ];
 
   static readonly type = "wfs";

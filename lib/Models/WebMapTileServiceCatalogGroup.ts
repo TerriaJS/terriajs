@@ -35,10 +35,10 @@ class GetCapabilitiesStratum extends LoadableStratum(
       return Promise.reject(
         new TerriaError({
           title: i18next.t(
-            "models.webFeatureServiceCatalogGroup.invalidWMTSServerTitle"
+            "models.webMapTileServiceCatalogGroup.invalidWMTSServerTitle"
           ),
           message: i18next.t(
-            "models.webFeatureServiceCatalogGroup.invalidWMTSServerMessage",
+            "models.webMapTileServiceCatalogGroup.invalidWMTSServerMessage",
             this
           )
         })
@@ -100,7 +100,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     ) {
       result.push(
         createStratumInstance(InfoSectionTraits, {
-          name: i18next.t("models.webFeatureServiceCatalogGroup.abstract"),
+          name: i18next.t("models.webMapTileServiceCatalogGroup.abstract"),
           content: service.Abstract
         })
       );
@@ -113,7 +113,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       result.push(
         createStratumInstance(InfoSectionTraits, {
           name: i18next.t(
-            "models.webFeatureServiceCatalogGroup.accessConstraints"
+            "models.webMapTileServiceCatalogGroup.accessConstraints"
           ),
           content: service.AccessConstraints
         })
@@ -124,7 +124,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     if (service.Fees && !/^none$/i.test(service.Fees)) {
       result.push(
         createStratumInstance(InfoSectionTraits, {
-          name: i18next.t("models.webFeatureServiceCatalogGroup.fees"),
+          name: i18next.t("models.webMapTileServiceCatalogGroup.fees"),
           content: service.Fees
         })
       );

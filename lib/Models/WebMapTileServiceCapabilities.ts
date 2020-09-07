@@ -11,6 +11,7 @@ import {
   ServiceIdentification,
   ServiceProvider
 } from "./OwsInterfaces";
+import i18next from "i18next";
 
 export interface WmtsLayer {
   // according to start WMTS only have title
@@ -116,10 +117,15 @@ export default class WebMapTileServiceCapabilities {
         const json = xml2json(capabilitiesXml);
         if (!defined(json.ServiceIdentification)) {
           throw new TerriaError({
-            title: "Invalid GetCapabilities",
-            message:
-              `The URL ${url} was retrieved successfully but it does not appear to be a valid Web Map Tile Service (WMTS) GetCapabilities document.` +
-              `\n\nEither the catalog file has been set up incorrectly, or the server address has changed.`
+            title: i18next.t(
+              "models.webMapTileServiceCatalogGroup.invalidCapabilitiesTitle"
+            ),
+            message: i18next.t(
+              "models.webMapTileServiceCatalogGroup.invalidCapabilitiesMessage",
+              {
+                url: url
+              }
+            )
           });
         }
 
