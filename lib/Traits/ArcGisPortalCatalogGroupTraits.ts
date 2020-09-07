@@ -32,7 +32,8 @@ export default class ArcGisPortalCatalogGroupTraits extends mixTraits(
          type:"Map Service" OR
          type:"WMS" OR
          type:"WFS" OR
-         type:"KML")`
+         type:"KML")`,
+    sortField: "title"
   };
 
   @anyTrait({
