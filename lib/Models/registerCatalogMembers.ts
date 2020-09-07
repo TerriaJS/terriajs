@@ -36,6 +36,8 @@ import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFu
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
 import WebFeatureServiceCatalogItem from "./WebFeatureServiceCatalogItem";
 import WebFeatureServiceCatalogGroup from "./WebFeatureServiceCatalogGroup";
+import WebMapTileServiceCatalogGroup from "./WebMapTileServiceCatalogGroup";
+import WebMapTileServiceCatalogItem from "./WebMapTileServiceCatalogItem";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
@@ -55,6 +57,14 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(
     WebFeatureServiceCatalogGroup.type,
     WebFeatureServiceCatalogGroup
+  );
+  CatalogMemberFactory.register(
+    WebMapTileServiceCatalogGroup.type,
+    WebMapTileServiceCatalogGroup
+  );
+  CatalogMemberFactory.register(
+    WebMapTileServiceCatalogItem.type,
+    WebMapTileServiceCatalogItem
   );
   CatalogMemberFactory.register(GltfCatalogItem.type, GltfCatalogItem);
   CatalogMemberFactory.register(GeoJsonCatalogItem.type, GeoJsonCatalogItem);
@@ -182,6 +192,11 @@ export default function registerCatalogMembers() {
     true
   );
   UrlToCatalogMemberMapping.register(
+    matchesUrl(/\/wmts|\=wmts/i),
+    WebMapTileServiceCatalogGroup.type,
+    true
+  );
+  UrlToCatalogMemberMapping.register(
     matchesUrl(/\/arcgis\/rest\/.*\/MapServer\/\d+\b/i),
     ArcGisMapServerCatalogItem.type,
     true
@@ -241,6 +256,11 @@ export default function registerCatalogMembers() {
   UrlToCatalogMemberMapping.register(
     s => true,
     WebMapServiceCatalogGroup.type,
+    true
+  );
+  UrlToCatalogMemberMapping.register(
+    s => true,
+    WebFeatureServiceCatalogGroup.type,
     true
   );
   UrlToCatalogMemberMapping.register(

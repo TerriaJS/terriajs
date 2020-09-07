@@ -7,25 +7,7 @@ import isReadOnlyArray from "../Core/isReadOnlyArray";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import StratumFromTraits from "./StratumFromTraits";
 import { RectangleTraits } from "../Traits/MappableTraits";
-
-export interface OnlineResource {
-  "xlink:type": string;
-  "xlink:href": string;
-}
-
-export interface CapabilitiesLegend {
-  readonly OnlineResource?: OnlineResource;
-  readonly Format?: string;
-  readonly width?: number;
-  readonly height?: number;
-}
-
-export interface CapabilitiesStyle {
-  readonly Name: string;
-  readonly Title: string;
-  readonly Abstract?: string;
-  readonly LegendURL?: CapabilitiesLegend | ReadonlyArray<CapabilitiesLegend>;
-}
+import { CapabilitiesStyle, OwsKeywordList } from "./OwsInterfaces";
 
 export interface CapabilitiesGeographicBoundingBox {
   readonly westBoundLongitude: number;
@@ -90,11 +72,7 @@ export interface CapabilitiesService {
   /** Access contraints for this service. */
   readonly AccessConstraints?: string;
   /** List of keywords or keyword phrases to help catalog searching. */
-  readonly KeywordList?: CapabilitiesKeywordList;
-}
-
-export interface CapabilitiesKeywordList {
-  readonly Keyword: string | string[];
+  readonly KeywordList?: OwsKeywordList;
 }
 
 /**

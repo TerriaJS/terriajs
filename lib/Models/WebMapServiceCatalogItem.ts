@@ -54,9 +54,9 @@ import WebMapServiceCapabilities, {
   CapabilitiesContactInformation,
   CapabilitiesDimension,
   CapabilitiesLayer,
-  CapabilitiesStyle,
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
+import { CapabilitiesStyle } from "./OwsInterfaces";
 
 const dateFormat = require("dateformat");
 
