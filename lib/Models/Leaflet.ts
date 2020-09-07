@@ -10,7 +10,6 @@ import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
-import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import cesiumRequestAnimationFrame from "terriajs-cesium/Source/Core/requestAnimationFrame";
@@ -46,6 +45,14 @@ import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvi
 import LatLonHeight from "../Core/LatLonHeight";
 import MapInteractionMode from "./MapInteractionMode";
 import i18next from "i18next";
+import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import RasterLayerTraits from "../Traits/RasterLayerTraits";
+
+// We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
+// and import doesn't allows us to do that, so instead we use require + type casting to ensure
+// we still maintain the type checking, without TS screaming with errors
+const FeatureDetection: FeatureDetection = require("terriajs-cesium/Source/Core/FeatureDetection")
+  .default;
 
 interface SplitterClips {
   left: string;
@@ -94,8 +101,8 @@ export default class Leaflet extends GlobeOrMap {
   private _disposeSplitterReaction: () => void;
 
   private _createImageryLayer: (
-    ip: Cesium.ImageryProvider
-  ) => GridLayer = createTransformer((ip: Cesium.ImageryProvider) => {
+    ip: ImageryProvider
+  ) => GridLayer = createTransformer((ip: ImageryProvider) => {
     if (ip instanceof MapboxVectorTileImageryProvider) {
       return new MapboxVectorCanvasTileLayer(ip, {});
     } else {
@@ -186,6 +193,15 @@ export default class Leaflet extends GlobeOrMap {
       const pickFeature = (entity: Entity, event: L.LeafletMouseEvent) => {
         this._featurePicked(entity, event);
       };
+
+      // Update mouse coords on mouse move
+      this.map.on("mousemove", (e: L.LeafletEvent) => {
+        const mouseEvent = <L.LeafletMouseEvent>e;
+        this.mouseCoords.updateCoordinatesFromLeaflet(
+          this.terria,
+          mouseEvent.originalEvent
+        );
+      });
 
       if (this.terriaViewer.disableInteraction) {
         interactions.forEach(handler => handler.disable());
@@ -309,14 +325,29 @@ export default class Leaflet extends GlobeOrMap {
         this.terriaViewer.baseMap
       ];
       // Flatmap
-      const allMapItems = ([] as MapItem[]).concat(
-        ...catalogItems.filter(isDefined).map(item => item.mapItems)
+      const allImageryMapItems = ([] as {
+        item: Mappable;
+        parts: ImageryParts;
+      }[]).concat(
+        ...catalogItems
+          .filter(isDefined)
+          .map(item =>
+            item.mapItems
+              .filter(ImageryParts.is)
+              .map(parts => ({ item, parts }))
+          )
       );
 
-      const allImagery = allMapItems.filter(ImageryParts.is).map(parts => ({
-        parts: parts,
-        layer: this._createImageryLayer(parts.imageryProvider)
-      }));
+      const allImagery = allImageryMapItems.map(({ item, parts }) => {
+        if (hasTraits(item, RasterLayerTraits, "leafletUpdateInterval")) {
+          (parts.imageryProvider as any)._leafletUpdateInterval =
+            item.leafletUpdateInterval;
+        }
+        return {
+          parts: parts,
+          layer: this._createImageryLayer(parts.imageryProvider)
+        };
+      });
 
       // Delete imagery layers no longer in the model
       this.map.eachLayer(mapLayer => {
@@ -348,6 +379,9 @@ export default class Leaflet extends GlobeOrMap {
       });
 
       /* Handle datasources */
+      const allMapItems = ([] as MapItem[]).concat(
+        ...catalogItems.filter(isDefined).map(item => item.mapItems)
+      );
       const allDataSources = allMapItems.filter(isDataSource);
 
       // Remove deleted data sources
@@ -356,6 +390,7 @@ export default class Leaflet extends GlobeOrMap {
         const d = dataSources.get(i);
         if (allDataSources.indexOf(d) === -1) {
           dataSources.remove(d);
+          --i;
         }
       }
 
@@ -373,7 +408,7 @@ export default class Leaflet extends GlobeOrMap {
   }
 
   zoomTo(
-    target: CameraView | Cesium.Rectangle | Cesium.DataSource | Mappable | any,
+    target: CameraView | Rectangle | DataSource | Mappable | any,
     flightDurationSeconds: number
   ): void {
     if (!isDefined(target)) {
@@ -937,7 +972,7 @@ export default class Leaflet extends GlobeOrMap {
 
   _addVectorTileHighlight(
     imageryProvider: MapboxVectorTileImageryProvider,
-    rectangle: Cesium.Rectangle
+    rectangle: Rectangle
   ): () => void {
     const map = this.map;
     const options: any = {

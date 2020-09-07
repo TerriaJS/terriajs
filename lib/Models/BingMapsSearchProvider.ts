@@ -25,7 +25,7 @@ interface BingMapsSearchProviderOptions {
 export default class BingMapsSearchProvider extends SearchProvider {
   readonly terria: Terria;
   @observable url: string;
-  @observable key: string;
+  @observable key: string | undefined;
   @observable flightDurationSeconds: number;
   @observable primaryCountry: string;
   @observable culture: string;

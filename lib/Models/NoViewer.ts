@@ -22,7 +22,7 @@ class NoViewer extends GlobeOrMap {
 
   destroy() {}
 
-  zoomTo(v: CameraView | Cesium.Rectangle | Mappable, t: any) {
+  zoomTo(v: CameraView | Rectangle | Mappable, t: any) {
     if (v instanceof CameraView) {
       this._currentView = v;
     } else if (v instanceof Rectangle) {
@@ -55,7 +55,7 @@ class NoViewer extends GlobeOrMap {
   resumeMapInteraction() {}
   _addVectorTileHighlight(
     imageryProvider: MapboxVectorTileImageryProvider,
-    rectangle: Cesium.Rectangle
+    rectangle: Rectangle
   ) {
     return () => {};
   }

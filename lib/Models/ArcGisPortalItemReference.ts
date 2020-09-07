@@ -2,6 +2,7 @@ import i18next from "i18next";
 import { runInAction, computed } from "mobx";
 import { createTransformer } from "mobx-utils";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import isDefined from "../Core/isDefined";
 import URI from "urijs";
 import {
   isJsonObject,
@@ -136,37 +137,27 @@ export class ArcGisPortalItemStratum extends LoadableStratum(
   }
 
   @computed get info() {
-    function newInfo(name: string, content: string) {
-      const traits = createStratumInstance(InfoSectionTraits);
-      runInAction(() => {
-        traits.name = name;
-        // traits.content = content;
-        traits.content = DOMPurify.sanitize(content, {
-          FORBID_ATTR: ["style"],
-          FORBID_TAGS: ["font"]
-        });
-      });
-      return traits;
-    }
-
-    const outArray: any = [];
+    const outArray: StratumFromTraits<InfoSectionTraits>[] = [];
     if (this.arcgisPortalItem === undefined) return outArray;
     if (this.arcgisPortalItem.licenseInfo !== undefined) {
       outArray.push(
-        newInfo(
-          i18next.t("models.arcgisPortal.licence"),
-          this.arcgisPortalItem.licenseInfo
-        )
+        createStratumInstance(InfoSectionTraits, {
+          name: i18next.t("models.arcgisPortal.licence"),
+          content: DOMPurify.sanitize(this.arcgisPortalItem.licenseInfo, {
+            FORBID_ATTR: ["style"],
+            FORBID_TAGS: ["font"]
+          })
+        })
       );
     }
 
     outArray.push(
-      newInfo(
-        i18next.t("models.arcgisPortal.openInPortal"),
-        `<a href="${this.portalItemUrl}"><button>${i18next.t(
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t("models.arcgisPortal.openInPortal"),
+        content: `<a href="${this.portalItemUrl}"><button>${i18next.t(
           "models.arcgisPortal.openInPortal"
         )}</button></a>`
-      )
+      })
     );
 
     return outArray;
@@ -273,6 +264,16 @@ export default class ArcGisPortalItemReference extends UrlMixin(
       "supportedFormats",
       ArcGisPortalItemReference.defaultSupportedFormats
     );
+  }
+
+  @computed
+  get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    } else if (isDefined(this._arcgisPortalCatalogGroup)) {
+      return this._arcgisPortalCatalogGroup.cacheDuration;
+    }
+    return "0d";
   }
 
   @computed
@@ -427,7 +428,7 @@ async function loadPortalItem(portalItem: ArcGisPortalItemReference) {
     .addQuery({ f: "json" });
 
   const response: ArcGisItem = await loadJson(
-    proxyCatalogItemUrl(portalItem, uri.toString(), "1d")
+    proxyCatalogItemUrl(portalItem, uri.toString(), portalItem.cacheDuration)
   );
   return response;
 }
@@ -446,7 +447,7 @@ async function loadAdditionalPortalInfo(portalItem: ArcGisPortalItemReference) {
   // Sometimes it actually returns json containing an error, but not always
   try {
     const response: ArcGisItemInfo = await loadJson(
-      proxyCatalogItemUrl(portalItem, uri.toString(), "1d")
+      proxyCatalogItemUrl(portalItem, uri.toString(), portalItem.cacheDuration)
     );
     return response;
   } catch (err) {

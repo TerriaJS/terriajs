@@ -8,14 +8,14 @@ import primitiveTrait from "./primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
 import TableColumnTraits from "./TableColumnTraits";
 import TableStyleTraits from "./TableStyleTraits";
-import TimeVaryingTraits from "./TimeVaryingTraits";
+import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import SplitterTraits from "./SplitterTraits";
 
 export default class TableTraits extends mixTraits(
   SplitterTraits,
+  DiscretelyTimeVaryingTraits,
   LayerOrderingTraits,
   CatalogMemberTraits,
-  TimeVaryingTraits,
   MappableTraits,
   RasterLayerTraits
 ) {
@@ -65,4 +65,12 @@ export default class TableTraits extends mixTraits(
     type: "string"
   })
   activeStyle?: string;
+
+  @primitiveTrait({
+    name: "Enable manual region mapping",
+    description:
+      "If enabled, there will be controls to set region column and region type.",
+    type: "boolean"
+  })
+  enableManualRegionMapping?: boolean;
 }

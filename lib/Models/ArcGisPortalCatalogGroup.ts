@@ -354,6 +354,14 @@ export default class ArcGisPortalCatalogGroup extends UrlMixin(
     return i18next.t("models.arcgisPortal.nameGroup");
   }
 
+  @computed
+  get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    }
+    return "0d";
+  }
+
   protected forceLoadMetadata(): Promise<void> {
     const portalStratum = <ArcGisPortalStratum | undefined>(
       this.strata.get(ArcGisPortalStratum.stratumName)
@@ -472,7 +480,11 @@ async function getPortalInformation(
 ) {
   try {
     const response = await loadJson(
-      proxyCatalogItemUrl(catalogGroup, uri.toString(), "1d")
+      proxyCatalogItemUrl(
+        catalogGroup,
+        uri.toString(),
+        catalogGroup.cacheDuration
+      )
     );
     return response;
   } catch (err) {
