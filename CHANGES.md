@@ -7,7 +7,7 @@ Change Log
 * Allow `cacheDuration` to be set on `ArcGisPortalCatalogGroup` and `ArcGisPortalItemReference`.
 * Set default `ArcGisPortalCatalogGroup` item sorting by title using REST API parameter.
 * Add support for splitting CSVs (TableMixins) that are using region mapping.
-* `addToWorkbench` will now call `addToWorkbench` instead of `workbench.add`.
+* `addUserCatalogMember` will now call `addToWorkbench` instead of `workbench.add`.
 * [The next improvement]
 
 #### 8.0.0-alpha.47
