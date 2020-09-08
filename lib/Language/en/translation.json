@@ -1200,6 +1200,9 @@
       "disclaimer": "Disclaimer",
       "buttonTitleConfirm": "I Agree"
     },
+    "thredds": {
+      "nameGroup": "THREDDS Catalog Group"
+    },
     "urlTemplateMapServer": {
       "name": "URL Template Map Server"
     },

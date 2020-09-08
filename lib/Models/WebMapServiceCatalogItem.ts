@@ -460,6 +460,19 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
+  get isThredds(): boolean {
+    if (this.catalogItem.url) {
+      if (this.catalogItem.url.indexOf("thredds") > -1) return true;
+    }
+    return false;
+  }
+
+  @computed
+  get supportsColorScaleRange(): boolean {
+    return this.isThredds;
+  }
+
+  @computed
   get discreteTimes(): { time: string; tag: string | undefined }[] | undefined {
     const result = [];
 
@@ -866,6 +879,10 @@ class WebMapServiceCatalogItem
         ...this.parameters,
         ...dimensionParameters
       };
+
+      if (this.supportsColorScaleRange) {
+        parameters.COLORSCALERANGE = `${this.colorScaleMinimum},${this.colorScaleMaximum}`;
+      }
 
       if (isDefined(this.styles)) {
         parameters.styles = this.styles;

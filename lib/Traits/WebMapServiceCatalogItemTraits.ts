@@ -259,4 +259,35 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
       "Gets or sets the coverage name for linked WCS for clip-and-ship."
   })
   linkedWcsCoverage?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Is Thredds",
+    description: "True if this WMS is from a THREDDS server; otherwise, false."
+  })
+  isThredds: boolean = false;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Supports color scale range",
+    description:
+      "Gets or sets whether this WMS server has been identified as supporting the COLORSCALERANGE parameter."
+  })
+  supportsColorScaleRange: boolean = false;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Color scale minimum",
+    description:
+      "The minumum of the color scale range. Because COLORSCALERANGE is a non-standard property supported by ncWMS servers, this property is ignored unless WebMapServiceCatalogItem's supportsColorScaleRange is true. WebMapServiceCatalogItem's colorScaleMaximum must be set as well."
+  })
+  colorScaleMinimum: number = -50;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Color scale maximum",
+    description:
+      "The maximum of the color scale range. Because COLORSCALERANGE is a non-standard property supported by ncWMS servers, this property is ignored unless WebMapServiceCatalogItem's supportsColorScaleRange is true. WebMapServiceCatalogItem's colorScaleMinimum must be set as well."
+  })
+  colorScaleMaximum: number = 50;
 }

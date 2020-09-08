@@ -72,9 +72,8 @@ const ColorScaleRangeSection = createReactClass({
       });
       return;
     }
-
-    this.props.item.colorScaleMinimum = min;
-    this.props.item.colorScaleMaximum = max;
+    this.props.item.setTrait("user", "colorScaleMinimum", min);
+    this.props.item.setTrait("user", "colorScaleMaximum", max);
   },
 
   changeRangeMin(event) {
