@@ -73,17 +73,17 @@ class GetCapabilitiesStratum extends LoadableStratum(
   @computed get name() {
     if (
       this.capabilities &&
-      this.capabilities.Service &&
-      this.capabilities.Service.Title
+      this.capabilities.service &&
+      this.capabilities.service.Title
     ) {
-      return replaceUnderscores(this.capabilities.Service.Title);
+      return replaceUnderscores(this.capabilities.service.Title);
     }
   }
 
   @computed get info() {
     const result: StratumFromTraits<InfoSectionTraits>[] = [];
 
-    const service = this.capabilities && this.capabilities.Service;
+    const service = this.capabilities && this.capabilities.service;
     if (service) {
       // Show the service abstract if there is one and if it isn't the Geoserver default "A compliant implementation..."
       if (
@@ -97,7 +97,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
         result.push(
           createStratumInstance(InfoSectionTraits, {
             name: i18next.t("models.webFeatureServiceCatalogGroup.abstract"),
-            content: this.capabilities.Service.Abstract
+            content: this.capabilities.service.Abstract
           })
         );
       }
@@ -113,7 +113,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
             name: i18next.t(
               "models.webFeatureServiceCatalogGroup.accessConstraints"
             ),
-            content: this.capabilities.Service.AccessConstraints
+            content: this.capabilities.service.AccessConstraints
           })
         );
       }
@@ -123,7 +123,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
         result.push(
           createStratumInstance(InfoSectionTraits, {
             name: i18next.t("models.webFeatureServiceCatalogGroup.fees"),
-            content: this.capabilities.Service.Fees
+            content: this.capabilities.service.Fees
           })
         );
       }
