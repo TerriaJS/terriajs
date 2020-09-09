@@ -43,3 +43,39 @@
   vertical-align: -6px;
   margin-right: 8px;
 }
+
+// Microstories
+.microstoriesWrapper {
+  margin-top: 60px;
+}
+.microstories {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1fr;
+  gap: 10px;
+}
+
+.microstory-card:hover {
+  cursor: pointer;
+  box-shadow: 0 0 8px 0 #33333390;
+}
+
+.microstory-card {
+  display: grid;
+  align-items: end;
+  padding: 4px;
+  color: white;
+  height: 180px;
+  border-radius: 5px;
+  background-size: cover;
+  transition: box-shadow 200ms ease;
+}
+
+.microstory-title {
+  font-weight: bold;
+}
+
+.microstory-desc {
+  opacity: 0.8;
+  font-size: 13px;
+}
