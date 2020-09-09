@@ -261,7 +261,7 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   linkedWcsCoverage?: string;
 
   @primitiveTrait({
-    type: "string",
+    type: "boolean",
     name: "Is Thredds",
     description: "True if this WMS is from a THREDDS server; otherwise, false."
   })
