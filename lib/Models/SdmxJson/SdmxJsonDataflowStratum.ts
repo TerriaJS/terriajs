@@ -2,6 +2,8 @@ import { computed } from "mobx";
 import isDefined from "../../Core/isDefined";
 import TerriaError from "../../Core/TerriaError";
 import SdmxCatalogItemTraits from "../../Traits/SdmxCatalogItemTraits";
+import TableColumnTraits from "../../Traits/TableColumnTraits";
+import createStratumInstance from "../createStratumInstance";
 import LoadableStratum from "../LoadableStratum";
 import { BaseModel } from "../Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
@@ -139,88 +141,83 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
       primaryMeasureConceptUrn?.resourceId,
       primaryMeasureConceptUrn?.descendantIds?.[0]
     );
-    return {
+    return createStratumInstance(TableColumnTraits, {
       name: primaryMeasure?.id,
-      title: primaryMeasureConcept?.name,
-      units: undefined,
-      type: undefined,
-      regionType: undefined,
-      regionDisambiguationColumn: undefined,
-      replaceWithZeroValues: undefined,
-      replaceWithNullValues: undefined,
-      format: undefined
-    };
+      title: primaryMeasureConcept?.name
+    });
   }
 
   /**
    * Gets column traits based on dimension/concept information
    * The main purpose of this is to try to find the region type for columns
    */
+
   @computed
-  get columns() {
+  get dimensionColumns() {
     const dimensionsList = this.sdmxJsonDataflow.dataStructure
       .dataStructureComponents?.dimensionList;
 
     // Get columns for all dimensions (excluding time dimensions)
-    const dimColums = dimensionsList?.dimensions
-      // Filter out disabled dimensions
-      ?.filter(
-        dim =>
-          isDefined(dim.id) &&
-          !this.dimensions?.find(d => d.id === dim.id)?.disable
-      )
-      .map(dim => {
-        // Get concept information for the current dimension
-        const conceptUrn = parseSdmxUrn(dim.conceptIdentity);
-        const concept = this.getConcept(
-          conceptUrn?.resourceId,
-          conceptUrn?.descendantIds?.[0]
-        );
-        const conceptOverride = this.catalogItem.conceptOverrides.find(
-          concept => concept.id === dim.conceptIdentity
-        );
+    return (
+      dimensionsList?.dimensions
+        // Filter out disabled dimensions
+        ?.filter(
+          dim =>
+            isDefined(dim.id) &&
+            !this.dimensions?.find(d => d.id === dim.id)?.disable
+        )
+        .map(dim => {
+          // Get concept information for the current dimension
+          const conceptUrn = parseSdmxUrn(dim.conceptIdentity);
+          const concept = this.getConcept(
+            conceptUrn?.resourceId,
+            conceptUrn?.descendantIds?.[0]
+          );
+          const conceptOverride = this.catalogItem.conceptOverrides.find(
+            concept => concept.id === dim.conceptIdentity
+          );
 
-        // Try to find region type
-        let regionType: string | undefined;
+          // Try to find region type
+          let regionType: string | undefined;
 
-        if (dim.id) {
-          // Are any regionTypes present in conceptOverrides for the current concept
-          regionType = this.matchRegionType(conceptOverride?.regionType);
+          if (dim.id) {
+            // Are any regionTypes present in conceptOverrides for the current concept
+            regionType = this.matchRegionType(conceptOverride?.regionType);
 
-          // Next try regionTypeFromDimension (only if this concept has override type 'region')
-          if (
-            !isDefined(regionType) &&
-            conceptOverride &&
-            conceptOverride.type === "region"
-          )
-            regionType = this.matchRegionType(this.regionTypeFromDimension);
+            // Next try regionTypeFromDimension (only if this concept has override type 'region')
+            if (
+              !isDefined(regionType) &&
+              conceptOverride &&
+              conceptOverride.type === "region"
+            )
+              regionType = this.matchRegionType(this.regionTypeFromDimension);
 
-          // Then check if dimension name (column name) is valid regionType
-          if (!isDefined(regionType)) regionType = this.matchRegionType(dim.id);
+            // Then check if dimension name (column name) is valid regionType
+            if (!isDefined(regionType))
+              regionType = this.matchRegionType(dim.id);
 
-          // Try concept name?
-          if (!isDefined(regionType))
-            regionType = this.matchRegionType(concept?.name);
+            // Try concept name?
+            if (!isDefined(regionType))
+              regionType = this.matchRegionType(concept?.name);
 
-          // Finally, try concept id (the string, not the full URN)
-          if (!isDefined(regionType))
-            regionType = this.matchRegionType(concept?.id);
-        }
+            // Finally, try concept id (the string, not the full URN)
+            if (!isDefined(regionType))
+              regionType = this.matchRegionType(concept?.id);
+          }
 
-        return {
-          name: dim.id,
-          title: concept?.name,
-          units: undefined,
-          type: isDefined(regionType) ? "region" : undefined,
-          regionType,
-          regionDisambiguationColumn: undefined,
-          replaceWithZeroValues: undefined,
-          replaceWithNullValues: undefined,
-          format: undefined
-        };
-      });
+          return createStratumInstance(TableColumnTraits, {
+            name: dim.id,
+            title: concept?.name,
+            type: isDefined(regionType) ? "region" : undefined,
+            regionType
+          });
+        }) || []
+    );
+  }
 
-    return [this.primaryMeasureColumn, ...(dimColums || [])];
+  @computed
+  get columns() {
+    return [this.primaryMeasureColumn, ...this.dimensionColumns];
   }
 
   /**
