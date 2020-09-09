@@ -901,7 +901,6 @@ class WebMapServiceCatalogItem
       if (isDefined(this.styles)) {
         parameters.styles = this.styles;
       }
-      console.log(parameters);
       Object.assign(parameters, diffModeParameters);
 
       const maximumLevel = scaleDenominatorToLevel(this.minScaleDenominator);

@@ -6,6 +6,10 @@ Change Log
 #### next release (8.0.0-alpha.48)
 * Allow `cacheDuration` to be set on `ArcGisPortalCatalogGroup` and `ArcGisPortalItemReference`.
 * Set default `ArcGisPortalCatalogGroup` item sorting by title using REST API parameter.
+* Add `ThreddsCatalogGroup` model.
+* Port `supportsColorScaleRange`, `colorScaleMinimum` and `colorScaleMaximimum` from `master` to `WebMapServiceCatalogItem` model.
+* Fix small bug with `WebMapServiceCatalogItem` GetFeatureInfo operations to ensure that styles is not undefined.
+
 * [The next improvement]
 
 #### 8.0.0-alpha.47
