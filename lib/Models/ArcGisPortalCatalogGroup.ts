@@ -9,14 +9,15 @@ import GroupMixin from "../ModelMixins/GroupMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import ArcGisPortalCatalogGroupTraits from "../Traits/ArcGisPortalCatalogGroupTraits";
 import ModelReference from "../Traits/ModelReference";
-import CatalogGroup from "./CatalogGroupNew";
 import {
   ArcGisItem,
-  ArcGisPortalSearchResponse,
+  ArcGisPortalGroup,
   ArcGisPortalGroupSearchResponse,
-  ArcGisPortalGroup
+  ArcGisPortalSearchResponse
 } from "./ArcGisPortalDefinitions";
 import ArcGisPortalItemReference from "./ArcGisPortalItemReference";
+import CatalogGroup from "./CatalogGroupNew";
+import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
@@ -292,7 +293,7 @@ export class ArcGisPortalStratum extends LoadableStratum(
       groupId
     );
     if (group !== undefined) {
-      group.add("definition", catalogItem);
+      group.add(CommonStrata.definition, catalogItem);
     }
   }
 
@@ -384,7 +385,7 @@ export default class ArcGisPortalCatalogGroup extends UrlMixin(
 
 function createGroup(groupId: string, terria: Terria, groupName: string) {
   const g = new CatalogGroup(groupId, terria);
-  g.setTrait("definition", "name", groupName);
+  g.setTrait(CommonStrata.definition, "name", groupName);
   terria.addModel(g);
   return g;
 }
@@ -423,7 +424,7 @@ function createGroupsByPortalGroups(arcgisPortal: ArcGisPortalStratum) {
         );
         if (group.description) {
           existingGroup.setTrait(
-            "definition",
+            CommonStrata.definition,
             "description",
             group.description
           );
