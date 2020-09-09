@@ -90,7 +90,11 @@ const ColorScaleRangeSection = createReactClass({
 
   render() {
     const item = this.props.item;
-    if (!defined(item.colorScaleMinimum) || !defined(item.colorScaleMaximum)) {
+    if (
+      !defined(item.colorScaleMinimum) ||
+      !defined(item.colorScaleMaximum) ||
+      !item.supportsColorScaleRange
+    ) {
       return null;
     }
     const { t } = this.props;

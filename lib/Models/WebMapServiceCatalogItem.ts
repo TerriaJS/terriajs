@@ -164,11 +164,12 @@ class GetCapabilitiesStratum extends LoadableStratum(
           let url = this.catalogItem.supportsColorScaleRange
             ? `${layerStyle.legend.url}&colorscalerange=${this.catalogItem.colorScaleRange}`
             : layerStyle.legend.url;
-          result.push(<StratumFromTraits<LegendTraits>>(<unknown>{
-            ...layerStyle.legend,
-            url,
-            urlMimeType: layerStyle.legend.urlMimeType
-          }));
+          result.push(
+            createStratumInstance(LegendTraits, {
+              url,
+              urlMimeType: layerStyle.legend.urlMimeType
+            })
+          );
         }
       }
     }
@@ -900,7 +901,7 @@ class WebMapServiceCatalogItem
       if (isDefined(this.styles)) {
         parameters.styles = this.styles;
       }
-
+      console.log(parameters);
       Object.assign(parameters, diffModeParameters);
 
       const maximumLevel = scaleDenominatorToLevel(this.minScaleDenominator);
@@ -947,7 +948,7 @@ class WebMapServiceCatalogItem
         parameters: parameters,
         getFeatureInfoParameters: {
           ...dimensionParameters,
-          styles: this.styles
+          styles: this.styles === undefined ? "" : this.styles
         },
         tilingScheme: /*defined(this.tilingScheme) ? this.tilingScheme :*/ new WebMercatorTilingScheme(),
         maximumLevel: maximumLevel,
