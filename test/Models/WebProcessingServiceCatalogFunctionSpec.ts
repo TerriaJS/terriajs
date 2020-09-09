@@ -363,11 +363,6 @@ describe("WebProcessingServiceCatalogFunction", function() {
 });
 
 function initTerria() {
-  CatalogMemberFactory.register(CsvCatalogItem.type, <any>CsvCatalogItem);
-  CatalogMemberFactory.register(
-    GeoJsonCatalogItem.type,
-    <any>GeoJsonCatalogItem
-  );
   const terria = new Terria();
   terria.configParameters.regionMappingDefinitionsUrl =
     "/data/regionMapping.json";
