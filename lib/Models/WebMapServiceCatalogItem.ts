@@ -161,9 +161,14 @@ class GetCapabilitiesStratum extends LoadableStratum(
               );
 
         if (layerStyle !== undefined && layerStyle.legend !== undefined) {
-          result.push(
-            <StratumFromTraits<LegendTraits>>(<unknown>layerStyle.legend)
-          );
+          let url = this.catalogItem.supportsColorScaleRange
+            ? `${layerStyle.legend.url}&colorscalerange=${this.catalogItem.colorScaleRange}`
+            : layerStyle.legend.url;
+          result.push(<StratumFromTraits<LegendTraits>>(<unknown>{
+            ...layerStyle.legend,
+            url,
+            urlMimeType: layerStyle.legend.urlMimeType
+          }));
         }
       }
     }
@@ -740,6 +745,14 @@ class WebMapServiceCatalogItem
     this.setTrait(CommonStrata.user, "isShowingDiff", false);
   }
 
+  @computed
+  get colorScaleRange(): string | undefined {
+    if (this.supportsColorScaleRange) {
+      return `${this.colorScaleMinimum},${this.colorScaleMaximum}`;
+    }
+    return undefined;
+  }
+
   getLegendUrlForStyle(
     styleId: string,
     firstDate?: JulianDate,
@@ -881,7 +894,7 @@ class WebMapServiceCatalogItem
       };
 
       if (this.supportsColorScaleRange) {
-        parameters.COLORSCALERANGE = `${this.colorScaleMinimum},${this.colorScaleMaximum}`;
+        parameters.COLORSCALERANGE = this.colorScaleRange;
       }
 
       if (isDefined(this.styles)) {
@@ -900,7 +913,8 @@ class WebMapServiceCatalogItem
         "width",
         "height",
         "bbox",
-        "layers"
+        "layers",
+        "version"
       ];
 
       const baseUrl = queryParametersToRemove.reduce(
