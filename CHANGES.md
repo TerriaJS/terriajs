@@ -7,6 +7,7 @@ Change Log
 * Allow `cacheDuration` to be set on `ArcGisPortalCatalogGroup` and `ArcGisPortalItemReference`.
 * Set default `ArcGisPortalCatalogGroup` item sorting by title using REST API parameter.
 * Call `registerCatalogMembers` before running tests and remove manual calls to `CatalogMemberFactory.register` and `UrlMapping.register` in various tests so that tests reflect the way the library is used.
+* Updated stratum definitions which used hardcoded string to use `CommonStrata` values.
 * [The next improvement]
 
 #### 8.0.0-alpha.47
@@ -17,8 +18,6 @@ Change Log
 * Merged the `StyleSelector` and `DimensionsSelector`, and created a `SelectableDimensions` interface.
 * Added `chartColor` trait for DiscretelyTimeVarying items.
 * Replaced all instances of `createInfoSection` and `newInfo` with calls to `createStratumInstance` using an initialisation object.
-* Updated stratum definitions which used hardcoded string to use `CommonStrata` values.
-* [The next improvement]
 * Added trait `leafletUpdateInterval` to RasterLayerTraits.
 * Fix styling of WFS and GeoRSS.
 * Fixed a bug that caused re-rendering of xAxis of charts on mouse move. Chart cursor should be somewhat faster as a result of this fix.
