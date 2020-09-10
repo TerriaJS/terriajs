@@ -3,6 +3,7 @@ import i18next from "i18next";
 import { computed, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import URI from "urijs";
+import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import loadJson from "../Core/loadJson";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
@@ -255,6 +256,16 @@ export default class ArcGisPortalItemReference extends UrlMixin(
   }
 
   @computed
+  get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    } else if (isDefined(this._arcgisPortalCatalogGroup)) {
+      return this._arcgisPortalCatalogGroup.cacheDuration;
+    }
+    return "0d";
+  }
+
+  @computed
   get preparedSupportedFormats(): PreparedSupportedFormat[] {
     return (
       this.supportedFormats && this.supportedFormats.map(prepareSupportedFormat)
@@ -406,7 +417,7 @@ async function loadPortalItem(portalItem: ArcGisPortalItemReference) {
     .addQuery({ f: "json" });
 
   const response: ArcGisItem = await loadJson(
-    proxyCatalogItemUrl(portalItem, uri.toString(), "1d")
+    proxyCatalogItemUrl(portalItem, uri.toString(), portalItem.cacheDuration)
   );
   return response;
 }
@@ -425,7 +436,7 @@ async function loadAdditionalPortalInfo(portalItem: ArcGisPortalItemReference) {
   // Sometimes it actually returns json containing an error, but not always
   try {
     const response: ArcGisItemInfo = await loadJson(
-      proxyCatalogItemUrl(portalItem, uri.toString(), "1d")
+      proxyCatalogItemUrl(portalItem, uri.toString(), portalItem.cacheDuration)
     );
     return response;
   } catch (err) {
