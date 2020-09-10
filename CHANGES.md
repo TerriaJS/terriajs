@@ -7,6 +7,7 @@ Change Log
 * Allow `cacheDuration` to be set on `ArcGisPortalCatalogGroup` and `ArcGisPortalItemReference`.
 * Set default `ArcGisPortalCatalogGroup` item sorting by title using REST API parameter.
 * Call `registerCatalogMembers` before running tests and remove manual calls to `CatalogMemberFactory.register` and `UrlMapping.register` in various tests so that tests reflect the way the library is used.
+* Implemented new design for story panel.
 * [The next improvement]
 
 #### 8.0.0-alpha.47
@@ -117,8 +118,6 @@ Change Log
 * Added basic CSV export function
 * Extend `UserDrawing` to handle rectangles
 * Tsxify `MapInteractionMode`
-* Implemented new design for story panel.
-* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 * Changed default orientation for `GltfCatalogItem` to no rotation, instead of zero rotation wrt to terrain
 * Added a title to welcome message video
 
@@ -139,7 +138,6 @@ Change Log
     * Added a popup on remove all stories.
     * Added button for sharing stories.
     * Added a question popup on window close (if there are stories on the map so users don't lose their work).
-* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 * Added a new `editor` Icon
 * Changed `ToolButton` to show the same icon in open/close state. Previously it showed a close icon in close state.
 
