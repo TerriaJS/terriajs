@@ -47,6 +47,7 @@ import MapInteractionMode from "./MapInteractionMode";
 import i18next from "i18next";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import RasterLayerTraits from "../Traits/RasterLayerTraits";
+import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
@@ -109,6 +110,22 @@ export default class Leaflet extends GlobeOrMap {
       return new CesiumTileLayer(ip);
     }
   });
+
+  private _makeImageryLayerFromParts(parts: ImageryParts, item: Mappable) {
+    if (TileErrorHandlerMixin.isMixedInto(item)) {
+      // because this code path can run multiple times, make sure we remove the
+      // handler if it is already registered
+      parts.imageryProvider.errorEvent.removeEventListener(
+        item.onTileLoadError,
+        item
+      );
+      parts.imageryProvider.errorEvent.addEventListener(
+        item.onTileLoadError,
+        item
+      );
+    }
+    return this._createImageryLayer(parts.imageryProvider);
+  }
 
   constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
     super();
@@ -345,7 +362,7 @@ export default class Leaflet extends GlobeOrMap {
         }
         return {
           parts: parts,
-          layer: this._createImageryLayer(parts.imageryProvider)
+          layer: this._makeImageryLayerFromParts(parts, item)
         };
       });
 
@@ -791,7 +808,7 @@ export default class Leaflet extends GlobeOrMap {
     return filterOutUndefined(
       item.mapItems.map(m => {
         if (ImageryParts.is(m)) {
-          const layer = this._createImageryLayer(m.imageryProvider);
+          const layer = this._makeImageryLayerFromParts(m, item);
           return layer instanceof CesiumTileLayer ? layer : undefined;
         }
       })
