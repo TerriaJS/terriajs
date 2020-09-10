@@ -170,6 +170,8 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
               if (runInAction(() => opts.ignoreUnknownTileErrors)) {
                 tellMapToSilentlyGiveUp();
               } else if ((e as any).target !== undefined) {
+                // This is a failed image element, which means we got a 200 response but
+                // could not load it as an image.
                 failTile({
                   name: i18next.t("models.imageryLayer.tileErrorTitle"),
                   message: i18next.t("models.imageryLayer.tileErrorMessageII", {
@@ -182,6 +184,7 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
                   })
                 });
               } else {
+                // Unknown error
                 failTile({
                   name: i18next.t("models.imageryLayer.unknownTileErrorTitle"),
                   message: i18next.t(
