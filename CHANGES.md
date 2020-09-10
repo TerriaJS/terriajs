@@ -8,6 +8,7 @@ Change Log
 * Set default `ArcGisPortalCatalogGroup` item sorting by title using REST API parameter.
 * Add support for splitting CSVs (TableMixins) that are using region mapping.
 * `addUserCatalogMember` will now call `addToWorkbench` instead of `workbench.add`.
+* Call `registerCatalogMembers` before running tests and remove manual calls to `CatalogMemberFactory.register` and `UrlMapping.register` in various tests so that tests reflect the way the library is used.
 * [The next improvement]
 
 #### 8.0.0-alpha.47

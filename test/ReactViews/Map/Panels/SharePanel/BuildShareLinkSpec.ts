@@ -38,11 +38,6 @@ beforeEach(function() {
     catalogSearchProvider: null,
     locationSearchProviders: []
   });
-
-  CatalogMemberFactory.register(
-    WebMapServiceCatalogItem.type,
-    WebMapServiceCatalogItem
-  );
 });
 
 const decodeAndParseStartHash = (url: string) => {
