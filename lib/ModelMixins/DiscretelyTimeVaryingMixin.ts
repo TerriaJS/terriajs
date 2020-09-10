@@ -29,6 +29,9 @@ function DiscretelyTimeVaryingMixin<
 >(Base: T) {
   abstract class DiscretelyTimeVaryingMixin extends Base
     implements TimeVarying {
+    get hasDiscreteTimes() {
+      return true;
+    }
     abstract get discreteTimes(): DiscreteTimeAsJS[] | undefined;
 
     get hasDiscretelyTimeVaryingMixin() {
@@ -343,12 +346,11 @@ function DiscretelyTimeVaryingMixin<
 }
 
 namespace DiscretelyTimeVaryingMixin {
-  export type Instance = InstanceType<
-    ReturnType<typeof DiscretelyTimeVaryingMixin>
-  >;
+  export interface DiscretelyTimeVaryingMixin
+    extends InstanceType<ReturnType<typeof DiscretelyTimeVaryingMixin>> {}
 
-  export function isMixedInto(model: any): model is Instance {
-    return model?.hasDiscretelyTimeVaryingMixin;
+  export function isMixedInto(model: any): model is DiscretelyTimeVaryingMixin {
+    return model && model.hasDiscreteTimes;
   }
 }
 
