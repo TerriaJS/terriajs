@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" name="My Parent Catalog" version="1.0.1">
-  <catalogRef name="sub-catalog 1" ID="subCatalog" xlink:href="http://localhost:3002/test/thredds/sub-catalog-a/catalog.xml" xlink:title="Some Catalog 1">
+  <catalogRef name="sub-catalog 1" ID="subCatalog" xlink:href="/sub-catalog-a/catalog.xml" xlink:title="Some Catalog 1">
   </catalogRef>
-  <catalogRef name="sub-catalog 2" ID="subCatalog2" xlink:href="http://localhost:3002/test/thredds/sub-catalog-b/catalog.xml" xlink:title="Some Catalog 2">
+  <catalogRef name="sub-catalog 2" ID="subCatalog2" xlink:href="/sub-catalog-b/catalog.xml" xlink:title="Some Catalog 2">
   </catalogRef>
   <service name="all" serviceType="Compound" base="">
     <service name="ncdods" serviceType="OPENDAP" base="/thredds/dodsC/"/>

@@ -1,5 +1,4 @@
 import { configure } from "mobx";
-import _loadWithXhr from "../../lib/Core/loadWithXhr";
 import Terria from "../../lib/Models/Terria";
 import ThreddsCatalogGroup, {
   ThreddsStratum
@@ -23,11 +22,8 @@ describe("ThreddsCatalogGroup", function() {
       baseUrl: "./"
     });
     threddsCatalogGroup = new ThreddsCatalogGroup("test", terria);
-    threddsCatalogGroup.setTrait(
-      "definition",
-      "url",
-      "http://localhost:3002/test/thredds/catalog.xml"
-    );
+    const url = `${window.location.origin}/test/thredds/catalog.xml`;
+    threddsCatalogGroup.setTrait("definition", "url", url);
 
     await threddsCatalogGroup.loadMembers();
     threddsStratum = <ThreddsStratum>(
