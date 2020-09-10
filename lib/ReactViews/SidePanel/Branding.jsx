@@ -6,9 +6,7 @@ import Styles from "./branding.scss";
 
 const Branding = createReactClass({
   propTypes: {
-    terria: PropTypes.object.isRequired,
-    version: PropTypes.string,
-    onClick: PropTypes.func
+    terria: PropTypes.object.isRequired
   },
 
   render() {
