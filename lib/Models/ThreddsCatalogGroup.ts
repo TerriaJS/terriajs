@@ -13,6 +13,7 @@ import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
 import StratumOrder from "./StratumOrder";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
+import CommonStrata from "./CommonStrata";
 
 interface ThreddsCatalog {
   id: string;
@@ -92,8 +93,8 @@ export class ThreddsStratum extends LoadableStratum(ThreddsCatalogGroupTraits) {
       `${this._catalogGroup.uniqueId}/${catalog.id}`,
       this._catalogGroup.terria
     );
-    threddsGroup.setTrait("definition", "name", catalog.name);
-    threddsGroup.setTrait("definition", "url", catalog.url);
+    threddsGroup.setTrait(CommonStrata.definition, "name", catalog.name);
+    threddsGroup.setTrait(CommonStrata.definition, "url", catalog.url);
     threddsGroup.terria.addModel(threddsGroup);
   }
 
@@ -118,10 +119,11 @@ export class ThreddsStratum extends LoadableStratum(ThreddsCatalogGroupTraits) {
           this._catalogGroup.terria
         );
         fakeThreddsGroup.terria.addModel(fakeThreddsGroup);
-        fakeThreddsGroup.setTrait("definition", "name", ds.name);
+        fakeThreddsGroup.setTrait(CommonStrata.definition, "name", ds.name);
         ds.datasets.forEach(dataset => {
           const item = this.createMemberFromDataset(dataset);
-          if (item !== undefined) fakeThreddsGroup.add("definition", item);
+          if (item !== undefined)
+            fakeThreddsGroup.add(CommonStrata.definition, item);
         });
       } else if (ds.supportsWms) this.createMemberFromDataset(ds);
     }
@@ -143,10 +145,8 @@ export class ThreddsStratum extends LoadableStratum(ThreddsCatalogGroupTraits) {
     );
     if (item === undefined) {
       item = new WebMapServiceCatalogGroup(itemId, this._catalogGroup.terria);
-      item.setTrait("definition", "name", threddsDataset.name);
-      item.setTrait("definition", "url", threddsDataset.wmsUrl);
-      // add the THREDDS dataset endpoint to infoSection - threddsDataset.url
-
+      item.setTrait(CommonStrata.definition, "name", threddsDataset.name);
+      item.setTrait(CommonStrata.definition, "url", threddsDataset.wmsUrl);
       item.terria.addModel(item);
     }
     return item;
@@ -196,128 +196,3 @@ export default class ThreddsCatalogGroup extends UrlMixin(
     return this.loadMetadata();
   }
 }
-
-// function createGroup(groupId: string, terria: Terria, groupName: string) {
-//   const g = new CatalogGroup(groupId, terria);
-//   g.setTrait("definition", "name", groupName);
-//   terria.addModel(g);
-//   return g;
-// }
-
-// function createUngroupedGroup(thredds: ThreddsStratum) {
-//   const groupId = arcgisPortal._catalogGroup.uniqueId + "/ungrouped";
-//   let existingGroup = arcgisPortal._catalogGroup.terria.getModelById(
-//     CatalogGroup,
-//     groupId
-//   );
-//   if (existingGroup === undefined) {
-//     existingGroup = createGroup(
-//       groupId,
-//       arcgisPortal._catalogGroup.terria,
-//       arcgisPortal._catalogGroup.ungroupedTitle
-//     );
-//   }
-//   return [existingGroup];
-// }
-
-// function createGroupsByPortalGroups(arcgisPortal: ThreddsStratum) {
-//   if (arcgisPortal._arcgisGroupResponse === undefined) return [];
-//   const out: CatalogGroup[] = [];
-//   arcgisPortal._arcgisGroupResponse.results.forEach(
-//     (group: ArcGisPortalGroup) => {
-//       const groupId = arcgisPortal._catalogGroup.uniqueId + "/" + group.id;
-//       let existingGroup = arcgisPortal._catalogGroup.terria.getModelById(
-//         CatalogGroup,
-//         groupId
-//       );
-//       if (existingGroup === undefined) {
-//         existingGroup = createGroup(
-//           groupId,
-//           arcgisPortal._catalogGroup.terria,
-//           group.title
-//         );
-//         if (group.description) {
-//           existingGroup.setTrait(
-//             "definition",
-//             "description",
-//             group.description
-//           );
-//         }
-//       }
-//       out.push(existingGroup);
-//     }
-//   );
-//   return out;
-// }
-
-// async function paginateThroughResults(
-//   uri: any,
-//   catalogGroup: ThreddsCatalogGroup
-// ) {
-//   const arcgisPortalResponse = await getPortalInformation(uri, catalogGroup);
-//   if (arcgisPortalResponse === undefined || !arcgisPortalResponse) {
-//     throw new TerriaError({
-//       title: i18next.t("models.arcgisPortal.errorLoadingTitle"),
-//       message: i18next.t("models.arcgisPortal.errorLoadingMessage", {
-//         email:
-//           '<a href="mailto:' +
-//           catalogGroup.terria.supportEmail +
-//           '">' +
-//           catalogGroup.terria.supportEmail +
-//           "</a>"
-//       })
-//     });
-//     return;
-//   }
-//   let nextStart: number = arcgisPortalResponse.nextStart;
-//   while (nextStart !== -1) {
-//     nextStart = await getMoreResults(
-//       uri,
-//       catalogGroup,
-//       arcgisPortalResponse,
-//       nextStart
-//     );
-//   }
-//   return arcgisPortalResponse;
-// }
-
-// async function getPortalInformation(
-//   uri: any,
-//   catalogGroup: ThreddsCatalogGroup
-// ) {
-//   try {
-//     const response = await loadJson(
-//       proxyCatalogItemUrl(
-//         catalogGroup,
-//         uri.toString(),
-//         catalogGroup.cacheDuration
-//       )
-//     );
-//     return response;
-//   } catch (err) {
-//     console.log(err);
-//     return undefined;
-//   }
-// }
-
-// async function getMoreResults(
-//   uri: any,
-//   catalogGroup: ThreddsCatalogGroup,
-//   baseResults: ThreddsSearchResponse,
-//   nextResultStart: number
-// ) {
-//   uri.setQuery("start", nextResultStart);
-//   try {
-//     const arcgisPortalResponse = await getPortalInformation(uri, catalogGroup);
-//     if (arcgisPortalResponse === undefined) {
-//       return -1;
-//     }
-//     baseResults.results = baseResults.results.concat(
-//       arcgisPortalResponse.results
-//     );
-//     return arcgisPortalResponse.nextStart;
-//   } catch (err) {
-//     console.log(err);
-//     return -1;
-//   }
-// }
