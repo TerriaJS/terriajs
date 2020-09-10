@@ -28,6 +28,7 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import DiffableMixin from "../ModelMixins/DiffableMixin";
 import ExportableMixin from "../ModelMixins/ExportableMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
+import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
 import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import SelectableDimensions, {
@@ -566,12 +567,14 @@ class DiffStratum extends LoadableStratum(WebMapServiceCatalogItemTraits) {
 }
 
 class WebMapServiceCatalogItem
-  extends ExportableMixin(
-    DiffableMixin(
-      TimeFilterMixin(
-        GetCapabilitiesMixin(
-          UrlMixin(
-            CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
+  extends TileErrorHandlerMixin(
+    ExportableMixin(
+      DiffableMixin(
+        TimeFilterMixin(
+          GetCapabilitiesMixin(
+            UrlMixin(
+              CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
+            )
           )
         )
       )

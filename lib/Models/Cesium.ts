@@ -63,6 +63,7 @@ import KeyboardEventModifier from "terriajs-cesium/Source/Core/KeyboardEventModi
 import UserDrawing from "./UserDrawing";
 import i18next from "i18next";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
+import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
 
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
@@ -503,16 +504,22 @@ export default class Cesium extends GlobeOrMap {
     destroyObject(this);
   }
 
-  @computed
-  private get _allMapItems() {
+  private get _allMappables() {
     const catalogItems = [
       ...this.terriaViewer.items.get(),
       this.terriaViewer.baseMap
     ];
     // Flatmap
-    return ([] as MapItem[]).concat(
-      ...catalogItems.filter(isDefined).map(item => item.mapItems)
+    return ([] as { item: Mappable; mapItem: MapItem }[]).concat(
+      ...catalogItems
+        .filter(isDefined)
+        .map(item => item.mapItems.map(mapItem => ({ mapItem, item })))
     );
+  }
+
+  @computed
+  private get _allMapItems(): MapItem[] {
+    return this._allMappables.map(({ mapItem }) => mapItem);
   }
 
   private observeModelLayer() {
@@ -537,9 +544,13 @@ export default class Cesium extends GlobeOrMap {
         }
       });
 
-      const allImageryParts = this._allMapItems
-        .filter(ImageryParts.is)
-        .map(this._makeImageryLayerFromParts.bind(this));
+      const allImageryParts = this._allMappables
+        .map(m =>
+          ImageryParts.is(m.mapItem)
+            ? this._makeImageryLayerFromParts(m.mapItem, m.item)
+            : undefined
+        )
+        .filter(isDefined);
 
       // Delete imagery layers that are no longer in the model
       for (let i = 0; i < this.scene.imageryLayers.length; i++) {
@@ -1262,14 +1273,29 @@ export default class Cesium extends GlobeOrMap {
     return filterOutUndefined(
       item.mapItems.map(m => {
         if (ImageryParts.is(m)) {
-          return this._makeImageryLayerFromParts(m) as ImageryLayer;
+          return this._makeImageryLayerFromParts(m, item) as ImageryLayer;
         }
       })
     );
   }
 
-  private _makeImageryLayerFromParts(parts: ImageryParts): ImageryLayer {
+  private _makeImageryLayerFromParts(
+    parts: ImageryParts,
+    item: Mappable
+  ): ImageryLayer {
     const layer = this._createImageryLayer(parts.imageryProvider);
+    if (TileErrorHandlerMixin.isMixedInto(item)) {
+      // because this code path can run multiple times, make sure we remove the
+      // handler if it is already registered
+      parts.imageryProvider.errorEvent.removeEventListener(
+        item.onTileLoadError,
+        item
+      );
+      parts.imageryProvider.errorEvent.addEventListener(
+        item.onTileLoadError,
+        item
+      );
+    }
 
     layer.alpha = parts.alpha;
     layer.show = parts.show;

@@ -31,6 +31,10 @@ function DiscretelyTimeVaryingMixin<
     implements TimeVarying {
     abstract get discreteTimes(): DiscreteTimeAsJS[] | undefined;
 
+    get hasDiscretelyTimeVaryingMixin() {
+      return true;
+    }
+
     @computed
     get currentTime(): string | undefined {
       const time = super.currentTime;
@@ -342,6 +346,10 @@ namespace DiscretelyTimeVaryingMixin {
   export type Instance = InstanceType<
     ReturnType<typeof DiscretelyTimeVaryingMixin>
   >;
+
+  export function isMixedInto(model: any): model is Instance {
+    return model?.hasDiscretelyTimeVaryingMixin;
+  }
 }
 
 export default DiscretelyTimeVaryingMixin;
