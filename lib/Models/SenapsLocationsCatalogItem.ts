@@ -1,23 +1,23 @@
 import i18next from "i18next";
 import { computed, runInAction } from "mobx";
 import URI from "urijs";
-
 import isDefined from "../Core/isDefined";
+import { JsonObject } from "../Core/Json";
 import loadJson from "../Core/loadJson";
 import TerriaError from "../Core/TerriaError";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import SenapsLocationsCatalogItemTraits from "../Traits/SenapsLocationsCatalogItemTraits";
+import UrlMixin from "../ModelMixins/UrlMixin";
 import { FeatureInfoTemplateTraits } from "../Traits/FeatureInfoTraits";
+import SenapsLocationsCatalogItemTraits from "../Traits/SenapsLocationsCatalogItemTraits";
+import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
+import createStratumInstance from "./createStratumInstance";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
-import StratumOrder from "./StratumOrder";
 import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
-import { JsonObject } from "../Core/Json";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import createStratumInstance from "./createStratumInstance";
-import UrlMixin from "../ModelMixins/UrlMixin";
+import StratumOrder from "./StratumOrder";
 
 export interface SenapsFeature {
   type: string;
@@ -147,16 +147,20 @@ export class SenapsLocationsStratum extends LoadableStratum(
         senapsLocationsCatalogItem.terria
       );
       geojsonCatalogItem.setTrait(
-        "definition",
+        CommonStrata.definition,
         "geoJsonData",
         (fc as any) as JsonObject
       );
 
-      geojsonCatalogItem.setTrait("definition", "clampToGround", true);
+      geojsonCatalogItem.setTrait(
+        CommonStrata.definition,
+        "clampToGround",
+        true
+      );
 
       if (isDefined(senapsLocationsCatalogItem.style)) {
         geojsonCatalogItem.setTrait(
-          "definition",
+          CommonStrata.definition,
           "style",
           senapsLocationsCatalogItem.style
         );
@@ -199,7 +203,7 @@ export class SenapsLocationsStratum extends LoadableStratum(
   `
       });
       senapsLocationsCatalogItem.setTrait(
-        "definition",
+        CommonStrata.definition,
         "featureInfoTemplate",
         featureInfo
       );
