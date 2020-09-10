@@ -34,10 +34,6 @@ function DiscretelyTimeVaryingMixin<
     }
     abstract get discreteTimes(): DiscreteTimeAsJS[] | undefined;
 
-    get hasDiscretelyTimeVaryingMixin() {
-      return true;
-    }
-
     @computed
     get currentTime(): string | undefined {
       const time = super.currentTime;
