@@ -6,7 +6,6 @@ var webpack = require('webpack');
 
 function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtractPlugin, disableStyleLoader) {
     const cesiumDir = path.dirname(require.resolve('terriajs-cesium/package.json'));
-    const govAuPageAlertsDir = path.dirname(require.resolve('@gov.au/page-alerts/package.json'));
     // const fontAwesomeDir = path.resolve(path.dirname(require.resolve('font-awesome/package.json')));
     // const reactMdeDir = path.resolve(path.dirname(require.resolve('react-mde/package.json')));
     // console.log(fontAwesomeDir);
@@ -273,6 +272,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
     config.plugins.push(
         new ForkTsCheckerWebpackPlugin({
             typescript: {
+                configFile: path.resolve(__dirname, '..', 'tsconfig.json'),
                 diagnosticOptions: {
                     semantic: true,
                     syntactic: true,
@@ -332,12 +332,6 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
                 'resolve-url-loader?sourceMap',
                 'sass-loader?sourceMap'
             ]
-        });
-
-        config.module.rules.push({
-            include: [path.resolve(govAuPageAlertsDir, 'lib', 'css')],
-            test: /\.css$/,
-            loaders: ['style-loader', 'css-loader']
         });
 
         // config.module.loaders.push({

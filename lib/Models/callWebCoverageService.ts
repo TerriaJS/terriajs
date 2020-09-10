@@ -17,7 +17,9 @@ import createStratumInstance from "./createStratumInstance";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import ResultPendingCatalogItem from "./ResultPendingCatalogItem";
 import UserDrawing from "./UserDrawing";
-import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
+import WebMapServiceCatalogItem, {
+  formatDimensionsForOws
+} from "./WebMapServiceCatalogItem";
 import isDefined from "../Core/isDefined";
 import makeRealPromise from "../Core/makeRealPromise";
 import TerriaError from "../Core/TerriaError";
@@ -30,7 +32,7 @@ export const callWebCoverageService = function(
     const terria = wmsCatalogItem.terria;
     runInAction(() => (terria.pickedFeatures = undefined));
 
-    let rectange: Rectangle;
+    let rectangle: Rectangle | undefined;
 
     const userDrawing = new UserDrawing({
       terria: wmsCatalogItem.terria,
@@ -38,16 +40,16 @@ export const callWebCoverageService = function(
       buttonText: "Download Extent",
       onPointClicked: () => {
         if (userDrawing.pointEntities.entities.values.length >= 2) {
-          rectange = userDrawing.otherEntities.entities
-            .getById("rectangle")
-            .rectangle.coordinates.getValue(
+          rectangle = userDrawing?.otherEntities?.entities
+            ?.getById("rectangle")
+            ?.rectangle?.coordinates?.getValue(
               wmsCatalogItem.terria.timelineClock.currentTime
             );
         }
       },
       onCleanUp: () => {
-        if (isDefined(rectange)) {
-          launch(wmsCatalogItem, rectange)
+        if (isDefined(rectangle)) {
+          launch(wmsCatalogItem, rectangle)
             .then(resolve)
             .catch(reject);
         } else {
@@ -80,16 +82,15 @@ async function launch(
     width: 1024,
     height: Math.round((1024 * bbox.height) / bbox.width),
     coverage: wmsCatalogItem.linkedWcsCoverage,
-    bbox: `${bbox.west},${bbox.south},${bbox.east},${bbox.north}`
+    bbox: `${bbox.west},${bbox.south},${bbox.east},${bbox.north}`,
+    ...formatDimensionsForOws(wmsCatalogItem.dimensions),
+    time: wmsCatalogItem.currentDiscreteTimeTag,
+    styles: wmsCatalogItem.styles
   };
-
-  query.time = wmsCatalogItem.currentDiscreteTimeTag;
-
-  query.styles = wmsCatalogItem.styleSelector?.activeStyleId;
 
   var uri = new URI(wmsCatalogItem.linkedWcsUrl).query(query);
 
-  var url = proxyCatalogItemUrl(wmsCatalogItem, uri.toString(), "1d");
+  var url = proxyCatalogItemUrl(wmsCatalogItem, uri.toString());
 
   var now = new Date();
   var timestamp = sprintf(

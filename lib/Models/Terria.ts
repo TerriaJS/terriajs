@@ -59,6 +59,10 @@ import Workbench from "./Workbench";
 import openGroup from "./openGroup";
 import getDereferencedIfExists from "../Core/getDereferencedIfExists";
 import SplitItemReference from "./SplitItemReference";
+import Internationalization, {
+  I18nStartOptions,
+  LanguageConfiguration
+} from "./Internationalization";
 // import overrides from "../Overrides/defaults.jsx";
 
 interface ConfigParameters {
@@ -96,6 +100,7 @@ interface ConfigParameters {
   showInAppGuides?: boolean;
   helpContent?: HelpContentItem[];
   helpContentTerms?: Term[];
+  languageConfiguration?: LanguageConfiguration;
 }
 
 interface StartOptions {
@@ -105,6 +110,12 @@ interface StartOptions {
   };
   applicationUrl?: Location;
   shareDataService?: ShareDataService;
+  /**
+   * i18nOptions is explicitly a separate option from `languageConfiguration`,
+   * as `languageConfiguration` can be serialised, but `i18nOptions` may have
+   * some functions that are passed in from a TerriaMap
+   *  */
+  i18nOptions?: I18nStartOptions;
 }
 
 type Analytics = any;
@@ -215,7 +226,8 @@ export default class Terria {
     },
     showInAppGuides: false,
     helpContent: [],
-    helpContentTerms: defaultTerms
+    helpContentTerms: defaultTerms,
+    languageConfiguration: undefined
   };
 
   @observable
@@ -390,12 +402,24 @@ export default class Terria {
     return loadJson5(options.configUrl, options.configUrlHeaders)
       .then((config: any) => {
         runInAction(() => {
-          if (config.parameters) {
-            this.updateParameters(config.parameters);
+          // If it's a magda config, we only load magda config and parameters should never be a property on the direct
+          // config aspect (it would be under the `terria-config` aspect)
+          if (config.aspects) {
+            return this.loadMagdaConfig(options.configUrl, config).then(() => {
+              Internationalization.initLanguage(
+                this.configParameters.languageConfiguration,
+                options.i18nOptions
+              );
+            });
           }
 
-          if (config.aspects) {
-            return this.loadMagdaConfig(options.configUrl, config);
+          // If it's a regular config.json, continue on with parsing remaining init sources
+          if (config.parameters) {
+            this.updateParameters(config.parameters);
+            Internationalization.initLanguage(
+              config.parameters.languageConfiguration,
+              options.i18nOptions
+            );
           }
 
           const initializationUrls: string[] = config.initializationUrls || [];

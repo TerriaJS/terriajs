@@ -29,11 +29,11 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import GeoJsonCatalogItemTraits from "../Traits/GeoJsonCatalogItemTraits";
 import CreateModel from "./CreateModel";
+import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 
 const formatPropertyValue = require("../Core/formatPropertyValue");
 const hashFromString = require("../Core/hashFromString");
 const loadBlob = require("../Core/loadBlob");
-const proxyCatalogItemUrl = require("./proxyCatalogItemUrl");
 const Reproject = require("../Map/Reproject");
 const zip = require("terriajs-cesium/Source/ThirdParty/zip").default;
 
@@ -76,9 +76,23 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
     this._geoJsonFile = file;
   }
 
+  @computed get name() {
+    if (CatalogMemberMixin.isMixedInto(this.sourceReference)) {
+      return super.name || this.sourceReference.name;
+    }
+    return super.name;
+  }
+
   @computed
   get hasLocalData(): boolean {
     return isDefined(this._geoJsonFile);
+  }
+
+  @computed get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    }
+    return "1d";
   }
 
   /**
@@ -135,9 +149,9 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
               })
             });
           }
-          resolve(loadZipFile(proxyCatalogItemUrl(this, this.url, "1d")));
+          resolve(loadZipFile(proxyCatalogItemUrl(this, this.url)));
         } else {
-          resolve(loadJson(proxyCatalogItemUrl(this, this.url, "1d")));
+          resolve(loadJson(proxyCatalogItemUrl(this, this.url)));
         }
       } else {
         throw new TerriaError({
@@ -274,15 +288,24 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
       for (let i = 0; i < entities.values.length; ++i) {
         const entity = entities.values[i];
 
-        const properties = entity.properties || {};
+        const properties = entity.properties;
         if (isDefined(entity.billboard) && isDefined(options.markerUrl)) {
           entity.billboard = new BillboardGraphics({
-            image: options.markerUrl,
-            width: properties["marker-width"],
-            height: properties["marker-height"],
-            rotation: properties["marker-angle"],
+            image: new ConstantProperty(options.markerUrl),
+            width:
+              properties && properties["marker-width"]
+                ? new ConstantProperty(properties["marker-width"])
+                : undefined,
+            height:
+              properties && properties["marker-height"]
+                ? new ConstantProperty(properties["marker-height"])
+                : undefined,
+            rotation:
+              properties && properties["marker-angle"]
+                ? new ConstantProperty(properties["marker-angle"])
+                : undefined,
             heightReference: options.clampToGround
-              ? HeightReference.RELATIVE_TO_GROUND
+              ? new ConstantProperty(HeightReference.RELATIVE_TO_GROUND)
               : undefined
           });
 
@@ -290,38 +313,59 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
                a filled circle instead of the default marker. */
         } else if (
           isDefined(entity.billboard) &&
-          !isDefined(properties["marker-symbol"]) &&
+          (!properties || !isDefined(properties["marker-symbol"])) &&
           !isDefined(options.markerSymbol)
         ) {
           entity.point = new PointGraphics({
-            color: getColor(
-              defaultValue(properties["marker-color"], options.markerColor)
+            color: new ConstantProperty(
+              getColor(
+                defaultValue(
+                  properties && properties["marker-color"],
+                  options.markerColor
+                )
+              )
             ),
-            pixelSize: defaultValue(
-              properties["marker-size"],
-              options.markerSize / 2
+            pixelSize: new ConstantProperty(
+              defaultValue(
+                properties && properties["marker-size"],
+                options.markerSize / 2
+              )
             ),
-            outlineWidth: defaultValue(
-              properties["stroke-width"],
-              options.strokeWidth
+            outlineWidth: new ConstantProperty(
+              defaultValue(
+                properties && properties["stroke-width"],
+                options.strokeWidth
+              )
             ),
-            outlineColor: getColor(
-              defaultValue(properties.stroke, options.polygonStroke)
+            outlineColor: new ConstantProperty(
+              getColor(
+                defaultValue(
+                  properties && properties.stroke,
+                  options.polygonStroke
+                )
+              )
             ),
-            heightReference: options.clampToGround
-              ? HeightReference.RELATIVE_TO_GROUND
-              : undefined
+            heightReference: new ConstantProperty(
+              options.clampToGround
+                ? HeightReference.RELATIVE_TO_GROUND
+                : undefined
+            )
           });
-          if (isDefined(properties["marker-opacity"])) {
+          if (
+            properties &&
+            isDefined(properties["marker-opacity"]) &&
+            entity.point.color
+          ) {
             // not part of SimpleStyle spec, but why not?
             const color: Color = entity.point.color.getValue(now);
             color.alpha = parseFloat(properties["marker-opacity"]);
           }
 
-          entity.billboard = (undefined as unknown) as BillboardGraphics;
+          entity.billboard = undefined;
         }
         if (
           isDefined(entity.billboard) &&
+          properties &&
           isDefined(properties["marker-opacity"])
         ) {
           entity.billboard.color = new ConstantProperty(
@@ -361,27 +405,32 @@ function createPolylineFromPolygon(
   entity: Entity,
   now: JulianDate
 ) {
-  entity.polyline = new PolylineGraphics();
-  entity.polyline.show = entity.polygon.show;
+  const polygon = entity.polygon!;
 
-  if (isPolygonOnTerrain(entity.polygon, now)) {
+  entity.polyline = new PolylineGraphics();
+  entity.polyline.show = polygon.show;
+
+  if (isPolygonOnTerrain(polygon, now)) {
     (entity.polyline as any).clampToGround = true;
   }
 
-  if (isDefined(entity.polygon.outlineColor)) {
-    entity.polyline.material = new ColorMaterialProperty(
-      entity.polygon.outlineColor
-    );
+  if (isDefined(polygon.outlineColor)) {
+    entity.polyline.material = new ColorMaterialProperty(polygon.outlineColor);
   }
 
-  const hierarchy: PolygonHierarchy = getPropertyValue(
-    entity.polygon.hierarchy
+  const hierarchy: PolygonHierarchy | undefined = getPropertyValue(
+    polygon.hierarchy
   );
+
+  if (!hierarchy) {
+    return;
+  }
 
   const positions = closePolyline(hierarchy.positions);
 
   entity.polyline.positions = new ConstantProperty(positions);
-  entity.polyline.width = entity.polygon.outlineWidth.getValue(now);
+  entity.polyline.width =
+    polygon.outlineWidth && polygon.outlineWidth.getValue(now);
 
   createEntitiesFromHoles(entities, hierarchy.holes, entity);
 }
@@ -544,7 +593,7 @@ function polygonHasWideOutline(polygon: PolygonGraphics, now: JulianDate) {
 function polygonIsFilled(polygon: PolygonGraphics) {
   let fill = true;
   if (isDefined(polygon.fill)) {
-    fill = polygon.fill;
+    fill = polygon.fill.getValue(new JulianDate());
   }
 
   if (!fill) {
@@ -556,14 +605,16 @@ function polygonIsFilled(polygon: PolygonGraphics) {
     return true;
   }
 
-  let color;
+  let color: Color | undefined;
   if (polygon.material instanceof Color) {
-    color = polygon.material;
+    color = polygon.material.getValue(new JulianDate());
   } else {
-    color = (polygon.material as ColorMaterialProperty).color;
+    color = (polygon.material as ColorMaterialProperty).color?.getValue(
+      new JulianDate()
+    );
   }
 
-  if (color.alpha === 0.0) {
+  if (color && color.alpha === 0.0) {
     return false;
   }
 
@@ -623,10 +674,10 @@ function createEntityFromHole(
   entity.properties = mainEntity.properties;
 
   entity.polyline = new PolylineGraphics();
-  entity.polyline.show = mainEntity.polyline.show;
-  entity.polyline.material = mainEntity.polyline.material;
-  entity.polyline.width = mainEntity.polyline.width;
-  entity.polyline.clampToGround = mainEntity.polyline.clampToGround;
+  entity.polyline.show = mainEntity.polyline!.show;
+  entity.polyline.material = mainEntity.polyline!.material;
+  entity.polyline.width = mainEntity.polyline!.width;
+  entity.polyline.clampToGround = mainEntity.polyline!.clampToGround;
 
   closePolyline(hole.positions);
   entity.polyline.positions = new ConstantProperty(hole.positions);
@@ -636,7 +687,10 @@ function createEntityFromHole(
   createEntitiesFromHoles(entityCollection, hole.holes, mainEntity);
 }
 
-function getPropertyValue<T>(property: Property): T {
+function getPropertyValue<T>(property: Property | undefined): T | undefined {
+  if (property === undefined) {
+    return undefined;
+  }
   return property.getValue(JulianDate.now());
 }
 

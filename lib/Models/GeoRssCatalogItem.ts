@@ -1,26 +1,27 @@
 import i18next from "i18next";
-import { action, computed, runInAction } from "mobx";
+import { computed, runInAction } from "mobx";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import getFilenameFromUri from "terriajs-cesium/Source/Core/getFilenameFromUri";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import isDefined from "../Core/isDefined";
 import loadXML from "../Core/loadXML";
 import replaceUnderscores from "../Core/replaceUnderscores";
 import TerriaError from "../Core/TerriaError";
+import { geoRss2ToGeoJson, geoRssAtomToGeoJson } from "../Map/geoRssConvertor";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
+import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import GeoRssCatalogItemTraits from "../Traits/GeoRssCatalogItemTraits";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
+import createStratumInstance from "./createStratumInstance";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import LoadableStratum from "./LoadableStratum";
 import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import createInfoSection from "./createInfoSection";
 import StratumOrder from "./StratumOrder";
-import { geoRss2ToGeoJson, geoRssAtomToGeoJson } from "../Map/geoRssConvertor";
-import getFilenameFromUri from "terriajs-cesium/Source/Core/getFilenameFromUri";
 
 enum GeoRssFormat {
   RSS = "rss",
@@ -80,7 +81,7 @@ class GeoRssStratum extends LoadableStratum(GeoRssCatalogItemTraits) {
   }
 
   static async load(item: GeoRssCatalogItem) {
-    const geoJsonItem = new GeoJsonCatalogItem(createGuid(), item.terria);
+    const geoJsonItem = new GeoJsonCatalogItem(createGuid(), item.terria, item);
     geoJsonItem.setTrait(
       CommonStrata.definition,
       "clampToGround",
@@ -145,36 +146,37 @@ class GeoRssStratum extends LoadableStratum(GeoRssCatalogItemTraits) {
 
   @computed get info() {
     return [
-      createInfoSection(
-        i18next.t("models.georss.subtitle"),
-        this._feed.subtitle
-      ),
-      createInfoSection(
-        i18next.t("models.georss.updated"),
-        this._feed.updated?.toString()
-      ),
-      createInfoSection(
-        i18next.t("models.georss.category"),
-        this._feed.category?.join(", ")
-      ),
-      createInfoSection(
-        i18next.t("models.georss.description"),
-        this._feed.description
-      ),
-      createInfoSection(
-        i18next.t("models.georss.copyrightText"),
-        this._feed.copyright
-      ),
-      createInfoSection(
-        i18next.t("models.georss.author"),
-        this._feed.author?.name
-      ),
-      createInfoSection(
-        i18next.t("models.georss.link"),
-        typeof this._feed.link === "string"
-          ? this._feed.link
-          : this._feed.link?.join(", ")
-      )
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t("models.georss.subtitle"),
+        content: this._feed.subtitle
+      }),
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t("models.georss.updated"),
+        content: this._feed.updated?.toString()
+      }),
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t("models.georss.category"),
+        content: this._feed.category?.join(", ")
+      }),
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t("models.georss.description"),
+        content: this._feed.description
+      }),
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t("models.georss.copyrightText"),
+        content: this._feed.copyright
+      }),
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t("models.georss.author"),
+        content: this._feed.author?.name
+      }),
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t("models.georss.link"),
+        content:
+          typeof this._feed.link === "string"
+            ? this._feed.link
+            : this._feed.link?.join(", ")
+      })
     ];
   }
 }
@@ -222,6 +224,13 @@ export default class GeoRssCatalogItem
         return that.geoJsonItem.loadMapItems();
       }
     });
+  }
+
+  @computed get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    }
+    return "1d";
   }
 
   @computed get geoJsonItem(): GeoJsonCatalogItem | undefined {

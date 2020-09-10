@@ -1,27 +1,26 @@
 import i18next from "i18next";
-import LoadableStratum from "./LoadableStratum";
-import ArcGisFeatureServerCatalogGroupTraits from "../Traits/ArcGisFeatureServerCatalogGroupTraits";
-import { computed, runInAction, action } from "mobx";
-import { BaseModel } from "./Model";
-import UrlMixin from "../ModelMixins/UrlMixin";
-import GroupMixin from "../ModelMixins/GroupMixin";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import CreateModel from "./CreateModel";
-import StratumOrder from "./StratumOrder";
+import { action, computed, runInAction } from "mobx";
 import URI from "urijs";
-import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import TerriaError from "../Core/TerriaError";
-import loadJson from "../Core/loadJson";
-import isDefined from "../Core/isDefined";
-import createStratumInstance from "./createStratumInstance";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
-import ArcGisFeatureServerCatalogItem from "./ArcGisFeatureServerCatalogItem";
-import ArcGisCatalogGroup from "./ArcGisCatalogGroup";
 import filterOutUndefined from "../Core/filterOutUndefined";
-import ModelReference from "../Traits/ModelReference";
-import CommonStrata from "./CommonStrata";
+import isDefined from "../Core/isDefined";
+import loadJson from "../Core/loadJson";
 import replaceUnderscores from "../Core/replaceUnderscores";
-import createInfoSection from "./createInfoSection";
+import TerriaError from "../Core/TerriaError";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import GroupMixin from "../ModelMixins/GroupMixin";
+import UrlMixin from "../ModelMixins/UrlMixin";
+import ArcGisFeatureServerCatalogGroupTraits from "../Traits/ArcGisFeatureServerCatalogGroupTraits";
+import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
+import ModelReference from "../Traits/ModelReference";
+import ArcGisCatalogGroup from "./ArcGisCatalogGroup";
+import ArcGisFeatureServerCatalogItem from "./ArcGisFeatureServerCatalogItem";
+import CommonStrata from "./CommonStrata";
+import CreateModel from "./CreateModel";
+import createStratumInstance from "./createStratumInstance";
+import LoadableStratum from "./LoadableStratum";
+import { BaseModel } from "./Model";
+import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
+import StratumOrder from "./StratumOrder";
 
 interface DocumentInfo {
   Title?: string;
@@ -80,19 +79,30 @@ export class FeatureServerStratum extends LoadableStratum(
 
   @computed get info() {
     return [
-      createInfoSection(
-        i18next.t("models.arcGisFeatureServerCatalogGroup.serviceDescription"),
-        this._featureServer.serviceDescription
-      ),
-      createInfoSection(
-        i18next.t("models.arcGisFeatureServerCatalogGroup.dataDescription"),
-        this._featureServer.description
-      ),
-      createInfoSection(
-        i18next.t("models.arcGisFeatureServerCatalogGroup.copyrightText"),
-        this._featureServer.copyrightText
-      )
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t(
+          "models.arcGisFeatureServerCatalogGroup.serviceDescription"
+        ),
+        content: this._featureServer.serviceDescription
+      }),
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t(
+          "models.arcGisFeatureServerCatalogGroup.dataDescription"
+        ),
+        content: this._featureServer.description
+      }),
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t("models.arcGisFeatureServerCatalogGroup.copyrightText"),
+        content: this._featureServer.copyrightText
+      })
     ];
+  }
+
+  @computed get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    }
+    return "1d";
   }
 
   @computed get dataCustodian() {
@@ -111,7 +121,7 @@ export class FeatureServerStratum extends LoadableStratum(
     var terria = catalogGroup.terria;
     var uri = new URI(catalogGroup.url).addQuery("f", "json");
 
-    return loadJson(proxyCatalogItemUrl(catalogGroup, uri.toString(), "1d"))
+    return loadJson(proxyCatalogItemUrl(catalogGroup, uri.toString()))
       .then((featureServer: FeatureServer) => {
         // Is this really a FeatureServer REST response?
         if (!featureServer || !featureServer.layers) {

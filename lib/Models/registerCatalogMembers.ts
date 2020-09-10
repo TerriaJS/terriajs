@@ -3,6 +3,8 @@ import ArcGisFeatureServerCatalogGroup from "./ArcGisFeatureServerCatalogGroup";
 import ArcGisFeatureServerCatalogItem from "./ArcGisFeatureServerCatalogItem";
 import ArcGisMapServerCatalogGroup from "./ArcGisMapServerCatalogGroup";
 import ArcGisMapServerCatalogItem from "./ArcGisMapServerCatalogItem";
+import ArcGisPortalCatalogGroup from "./ArcGisPortalCatalogGroup";
+import ArcGisPortalItemReference from "./ArcGisPortalItemReference";
 import BingMapsCatalogItem from "./BingMapsCatalogItem";
 import CartoMapCatalogItem from "./CartoMapCatalogItem";
 import CatalogGroup from "./CatalogGroupNew";
@@ -32,6 +34,8 @@ import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
 import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFunction";
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
+import WebFeatureServiceCatalogItem from "./WebFeatureServiceCatalogItem";
+import WebFeatureServiceCatalogGroup from "./WebFeatureServiceCatalogGroup";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
@@ -43,6 +47,14 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(
     WebMapServiceCatalogGroup.type,
     WebMapServiceCatalogGroup
+  );
+  CatalogMemberFactory.register(
+    WebFeatureServiceCatalogItem.type,
+    WebFeatureServiceCatalogItem
+  );
+  CatalogMemberFactory.register(
+    WebFeatureServiceCatalogGroup.type,
+    WebFeatureServiceCatalogGroup
   );
   CatalogMemberFactory.register(GltfCatalogItem.type, GltfCatalogItem);
   CatalogMemberFactory.register(GeoJsonCatalogItem.type, GeoJsonCatalogItem);
@@ -65,6 +77,14 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(
     ArcGisFeatureServerCatalogGroup.type,
     ArcGisFeatureServerCatalogGroup
+  );
+  CatalogMemberFactory.register(
+    ArcGisPortalCatalogGroup.type,
+    ArcGisPortalCatalogGroup
+  );
+  CatalogMemberFactory.register(
+    ArcGisPortalItemReference.type,
+    ArcGisPortalItemReference
   );
   CatalogMemberFactory.register(
     Cesium3DTilesCatalogItem.type,
@@ -154,6 +174,11 @@ export default function registerCatalogMembers() {
   UrlToCatalogMemberMapping.register(
     matchesUrl(/\/wms|\=wms/i),
     WebMapServiceCatalogGroup.type,
+    true
+  );
+  UrlToCatalogMemberMapping.register(
+    matchesUrl(/\/wfs|\=wfs/i),
+    WebFeatureServiceCatalogGroup.type,
     true
   );
   UrlToCatalogMemberMapping.register(

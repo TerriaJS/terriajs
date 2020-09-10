@@ -1,26 +1,26 @@
 import i18next from "i18next";
-import LoadableStratum from "./LoadableStratum";
-import ArcGisMapServerCatalogGroupTraits from "../Traits/ArcGisMapServerCatalogGroupTraits";
-import { computed, runInAction, action } from "mobx";
-import { BaseModel } from "./Model";
-import UrlMixin from "../ModelMixins/UrlMixin";
-import GroupMixin from "../ModelMixins/GroupMixin";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import CreateModel from "./CreateModel";
-import StratumOrder from "./StratumOrder";
+import { action, computed, runInAction } from "mobx";
 import URI from "urijs";
-import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import TerriaError from "../Core/TerriaError";
-import loadJson from "../Core/loadJson";
-import isDefined from "../Core/isDefined";
-import createStratumInstance from "./createStratumInstance";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
-import ArcGisMapServerCatalogItem from "./ArcGisMapServerCatalogItem";
-import ArcGisCatalogGroup from "./ArcGisCatalogGroup";
 import filterOutUndefined from "../Core/filterOutUndefined";
-import ModelReference from "../Traits/ModelReference";
-import CommonStrata from "./CommonStrata";
+import isDefined from "../Core/isDefined";
+import loadJson from "../Core/loadJson";
 import replaceUnderscores from "../Core/replaceUnderscores";
+import TerriaError from "../Core/TerriaError";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import GroupMixin from "../ModelMixins/GroupMixin";
+import UrlMixin from "../ModelMixins/UrlMixin";
+import ArcGisMapServerCatalogGroupTraits from "../Traits/ArcGisMapServerCatalogGroupTraits";
+import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
+import ModelReference from "../Traits/ModelReference";
+import ArcGisCatalogGroup from "./ArcGisCatalogGroup";
+import ArcGisMapServerCatalogItem from "./ArcGisMapServerCatalogItem";
+import CommonStrata from "./CommonStrata";
+import CreateModel from "./CreateModel";
+import createStratumInstance from "./createStratumInstance";
+import LoadableStratum from "./LoadableStratum";
+import { BaseModel } from "./Model";
+import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
+import StratumOrder from "./StratumOrder";
 
 interface DocumentInfo {
   Title?: string;
@@ -82,28 +82,21 @@ export class MapServerStratum extends LoadableStratum(
   }
 
   @computed get info() {
-    function newInfo(name: string, content?: string) {
-      const traits = createStratumInstance(InfoSectionTraits);
-      runInAction(() => {
-        traits.name = name;
-        traits.content = content;
-      });
-      return traits;
-    }
-
     return [
-      newInfo(
-        i18next.t("models.arcGisFeatureServerCatalogGroup.serviceDescription"),
-        this._mapServer.serviceDescription
-      ),
-      newInfo(
-        i18next.t("models.arcGisFeatureServerCatalogGroup.dataDescription"),
-        this._mapServer.description
-      ),
-      newInfo(
-        i18next.t("models.arcGisFeatureServerCatalogGroup.copyrightText"),
-        this._mapServer.copyrightText
-      )
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t(
+          "models.arcGisMapServerCatalogGroup.serviceDescription"
+        ),
+        content: this._mapServer.serviceDescription
+      }),
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t("models.arcGisMapServerCatalogGroup.dataDescription"),
+        content: this._mapServer.description
+      }),
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t("models.arcGisMapServerCatalogGroup.copyrightText"),
+        content: this._mapServer.copyrightText
+      })
     ];
   }
 
@@ -123,7 +116,7 @@ export class MapServerStratum extends LoadableStratum(
     var terria = catalogGroup.terria;
     var uri = new URI(catalogGroup.url).addQuery("f", "json");
 
-    return loadJson(proxyCatalogItemUrl(catalogGroup, uri.toString(), "1d"))
+    return loadJson(proxyCatalogItemUrl(catalogGroup, uri.toString()))
       .then((mapServer: MapServer) => {
         // Is this really a MapServer REST response?
         if (!mapServer || (!mapServer.layers && !mapServer.subLayers)) {
@@ -275,6 +268,13 @@ export default class ArcGisMapServerCatalogGroup extends UrlMixin(
 
   get typeName() {
     return i18next.t("models.arcGisMapServerCatalogGroup.name");
+  }
+
+  @computed get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    }
+    return "1d";
   }
 
   protected forceLoadMetadata(): Promise<void> {

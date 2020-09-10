@@ -3,6 +3,8 @@ import ClockRange from "terriajs-cesium/Source/Core/ClockRange";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
+import Clock from "terriajs-cesium/Source/Core/Clock";
+import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import CommonStrata from "./CommonStrata";
 
@@ -25,9 +27,9 @@ export default class TimelineStack {
   defaultTimeVarying: TimeVarying | undefined;
 
   private _disposeClockAutorun: IReactionDisposer;
-  private _disposeTickSubscription: Cesium.Event.RemoveCallback | undefined;
+  private _disposeTickSubscription: CesiumEvent.RemoveCallback | undefined;
 
-  constructor(readonly clock: Cesium.Clock) {
+  constructor(readonly clock: Clock) {
     // Keep the Cesium clock in sync with the top layer's clock.
     this._disposeClockAutorun = autorun(() => {
       const topLayer = this.top;

@@ -5,10 +5,11 @@ import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
-import Property from "terriajs-cesium/Source/Core/Property";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import sampleTerrain from "terriajs-cesium/Source/Core/sampleTerrain";
+import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import KmlDataSource from "terriajs-cesium/Source/DataSources/KmlDataSource";
+import Property from "terriajs-cesium/Source/DataSources/Property";
 import isDefined from "../Core/isDefined";
 import readXml from "../Core/readXml";
 import TerriaError from "../Core/TerriaError";
@@ -42,6 +43,13 @@ class KmlCatalogItem extends AsyncMappableMixin(
   @computed
   get hasLocalData(): boolean {
     return isDefined(this._kmlFile);
+  }
+
+  @computed get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    }
+    return "1d";
   }
 
   protected forceLoadMapItems(): Promise<void> {
@@ -125,11 +133,13 @@ class KmlCatalogItem extends AsyncMappableMixin(
           const polygonHierarchy = getPropertyValue<PolygonHierarchy>(
             polygon.hierarchy
           );
-          samplePolygonHierarchyPositions(
-            polygonHierarchy,
-            positionsToSample,
-            correspondingCartesians
-          );
+          if (polygonHierarchy) {
+            samplePolygonHierarchyPositions(
+              polygonHierarchy,
+              positionsToSample,
+              correspondingCartesians
+            );
+          }
         }
       }
       const terrainProvider = this.terria.cesium.scene.globe.terrainProvider;
@@ -156,10 +166,14 @@ class KmlCatalogItem extends AsyncMappableMixin(
           const existingHierarchy = getPropertyValue<PolygonHierarchy>(
             polygon.hierarchy
           );
-          polygon.hierarchy = new PolygonHierarchy(
-            existingHierarchy.positions,
-            existingHierarchy.holes
-          );
+          if (existingHierarchy) {
+            polygon.hierarchy = new ConstantProperty(
+              new PolygonHierarchy(
+                existingHierarchy.positions,
+                existingHierarchy.holes
+              )
+            );
+          }
         }
       });
     }
@@ -168,7 +182,10 @@ class KmlCatalogItem extends AsyncMappableMixin(
 
 export default KmlCatalogItem;
 
-function getPropertyValue<T>(property: Property): T {
+function getPropertyValue<T>(property: Property | undefined): T | undefined {
+  if (property === undefined) {
+    return undefined;
+  }
   return property.getValue(JulianDate.now());
 }
 

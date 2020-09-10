@@ -75,7 +75,7 @@ export class CartoLoadableStratum extends LoadableStratum(
           });
         }
 
-        const map = JSON.parse(<string>response);
+        const map = JSON.parse(response);
 
         let url: string;
         let subdomains: string[];
@@ -148,6 +148,13 @@ export default class CartoMapCatalogItem
         this.strata.set(CartoLoadableStratum.stratumName, stratum);
       });
     });
+  }
+
+  @computed get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    }
+    return "1d";
   }
 
   @computed get imageryProvider() {

@@ -25,6 +25,7 @@ import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import StoryPanel from "./../Story/StoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 
+import withFallback from "../HOCs/withFallback";
 import TourPortal from "../Tour/TourPortal";
 import SatelliteHelpPrompt from "../HelpScreens/SatelliteHelpPrompt";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage";
@@ -63,7 +64,7 @@ const GlobalTerriaStyles = createGlobalStyle`
     ${p => p.theme.addTerriaPrimaryBtnStyles(p)}
   }
 
-  .tjs-_buttons__btn--secondary, 
+  .tjs-_buttons__btn--secondary,
   .tjs-_buttons__btn--close-modal {
     ${p => p.theme.addTerriaSecondaryBtnStyles(p)}
   }
@@ -80,7 +81,7 @@ const GlobalTerriaStyles = createGlobalStyle`
   .tjs-share-panel__catalog-share-inner {
     background: ${p => p.theme.greyLightest};
   }
-  
+
   .tjs-share-panel__btn--catalogShare {
     color: ${p => p.theme.colorPrimary};
     background:transparent;
@@ -460,4 +461,4 @@ const StandardUserInterface = observer(
 
 export const StandardUserInterfaceWithoutTranslation = StandardUserInterface;
 
-export default withTranslation()(StandardUserInterface);
+export default withFallback(withTranslation()(StandardUserInterface));

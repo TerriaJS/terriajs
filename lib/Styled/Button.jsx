@@ -65,8 +65,8 @@ const StyledButton = styled.button`
   ${props =>
     props.denyButton &&
     `
-    border: 2px solid ${props.theme.grey}; 
-    color: ${props.theme.grey}; 
+    border: 2px solid ${props.theme.grey};
+    color: ${props.theme.grey};
     background-color: transparent;
   `}
   ${props =>
@@ -111,6 +111,13 @@ export const RawButton = styled.button`
     &:hover,
     &:focus {
       opacity: 0.9;
+    }
+  `}
+  ${props =>
+    props.disabled &&
+    `
+    &[disabled] {
+      cursor: not-allowed;
     }
   `}
 

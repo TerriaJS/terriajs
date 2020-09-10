@@ -1,8 +1,10 @@
+import i18next from "i18next";
 import { runInAction } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import makeRealPromise from "../../lib/Core/makeRealPromise";
 import pollToPromise from "../../lib/Core/pollToPromise";
@@ -54,7 +56,7 @@ describe("UserDrawing", function() {
     var userDrawing = new UserDrawing(options);
 
     expect(userDrawing.getDialogMessage()).toEqual(
-      "<div><strong>Draw on Map</strong></br><i>Click to add a point</i></div>"
+      "<div><strong>models.userDrawing.messageHeader</strong></br><i>models.userDrawing.clickToAddFirstPoint</i></div>"
     );
   });
 
@@ -68,7 +70,7 @@ describe("UserDrawing", function() {
     var userDrawing = new UserDrawing(options);
 
     expect(userDrawing.getDialogMessage()).toEqual(
-      "<div><strong>Draw on Map</strong></br>HELLO</br><i>Click to add a point</i></div>"
+      "<div><strong>models.userDrawing.messageHeader</strong></br>HELLO</br><i>models.userDrawing.clickToAddFirstPoint</i></div>"
     );
   });
 
@@ -153,21 +155,32 @@ describe("UserDrawing", function() {
 
     // Check point
     const currentPoint = userDrawing.pointEntities.entities.values[0];
-    let currentPointPos = currentPoint.position.getValue(
-      terria.timelineClock.currentTime
-    );
-    expect(currentPointPos.x).toEqual(x);
-    expect(currentPointPos.y).toEqual(y);
-    expect(currentPointPos.z).toEqual(z);
+    expect(currentPoint.position).toBeDefined();
+
+    if (currentPoint.position !== undefined) {
+      let currentPointPos = currentPoint.position.getValue(
+        terria.timelineClock.currentTime
+      );
+      expect(currentPointPos.x).toEqual(x);
+      expect(currentPointPos.y).toEqual(y);
+      expect(currentPointPos.z).toEqual(z);
+    }
 
     // Check line as well
     let lineEntity = userDrawing.otherEntities.entities.values[0];
-    currentPointPos = lineEntity.polyline.positions.getValue(
-      terria.timelineClock.currentTime
-    )[0];
-    expect(currentPointPos.x).toEqual(x);
-    expect(currentPointPos.y).toEqual(y);
-    expect(currentPointPos.z).toEqual(z);
+    expect(lineEntity.polyline).toBeDefined();
+
+    if (lineEntity.polyline !== undefined) {
+      expect(lineEntity.polyline.positions).toBeDefined();
+      if (lineEntity.polyline.positions !== undefined) {
+        let currentPointPos = lineEntity.polyline.positions.getValue(
+          terria.timelineClock.currentTime
+        )[0];
+        expect(currentPointPos.x).toEqual(x);
+        expect(currentPointPos.y).toEqual(y);
+        expect(currentPointPos.z).toEqual(z);
+      }
+    }
 
     // Okay, now change points. LA.
     const newPickedFeatures = new PickedFeatures();
@@ -181,32 +194,49 @@ describe("UserDrawing", function() {
 
     // Check point
     const newPoint = userDrawing.pointEntities.entities.values[1];
-    let newPointPos = newPoint.position.getValue(
-      terria.timelineClock.currentTime
-    );
-    expect(newPointPos.x).toEqual(newX);
-    expect(newPointPos.y).toEqual(newY);
-    expect(newPointPos.z).toEqual(newZ);
+    expect(newPoint.position).toBeDefined();
+
+    if (newPoint.position !== undefined) {
+      let newPointPos = newPoint.position.getValue(
+        terria.timelineClock.currentTime
+      );
+      expect(newPointPos.x).toEqual(newX);
+      expect(newPointPos.y).toEqual(newY);
+      expect(newPointPos.z).toEqual(newZ);
+    }
 
     // Check line as well
     lineEntity = userDrawing.otherEntities.entities.values[0];
-    newPointPos = lineEntity.polyline.positions.getValue(
-      terria.timelineClock.currentTime
-    )[1];
-    expect(newPointPos.x).toEqual(newX);
-    expect(newPointPos.y).toEqual(newY);
-    expect(newPointPos.z).toEqual(newZ);
+    expect(lineEntity.polyline).toBeDefined();
+
+    if (lineEntity.polyline !== undefined) {
+      expect(lineEntity.polyline.positions).toBeDefined();
+      if (lineEntity.polyline.positions !== undefined) {
+        let newPointPos = lineEntity.polyline.positions.getValue(
+          terria.timelineClock.currentTime
+        )[1];
+        expect(newPointPos.x).toEqual(newX);
+        expect(newPointPos.y).toEqual(newY);
+        expect(newPointPos.z).toEqual(newZ);
+      }
+    }
   });
 
   it("returns correct button text for any given number of points on map", function() {
     const options = { terria: terria };
     const userDrawing = new UserDrawing(options);
 
-    expect(userDrawing.getButtonText()).toEqual("Cancel");
+    expect(userDrawing.getButtonText()).toEqual(
+      i18next.t("models.userDrawing.btnCancel")
+    );
     userDrawing.pointEntities.entities.values.push(new Entity());
-    expect(userDrawing.getButtonText()).toEqual("Cancel");
+    expect(userDrawing.getButtonText()).toEqual(
+      i18next.t("models.userDrawing.btnCancel")
+    );
     userDrawing.pointEntities.entities.values.push(new Entity());
-    expect(userDrawing.getButtonText()).toEqual("Done");
+    expect(userDrawing.getButtonText()).toEqual(
+      i18next.t("models.userDrawing.btnDone")
+    );
   });
 
   it("cleans up when cleanup is called", function() {
@@ -514,5 +544,65 @@ describe("UserDrawing", function() {
     });
 
     expect(userDrawing.pointEntities.entities.values.length).toEqual(2);
+  });
+
+  it("draws rectangle", function() {
+    const userDrawing = new UserDrawing({
+      terria,
+      allowPolygon: false,
+      drawRectangle: true
+    });
+    userDrawing.enterDrawMode();
+    const pickedFeatures = new PickedFeatures();
+
+    // First point
+    // Points around Parliament house
+    const pt1Position = new Cartographic(
+      CesiumMath.toRadians(149.121),
+      CesiumMath.toRadians(-35.309),
+      CesiumMath.toRadians(0)
+    );
+    const pt1CartesianPosition = Ellipsoid.WGS84.cartographicToCartesian(
+      pt1Position
+    );
+    pickedFeatures.pickPosition = pt1CartesianPosition;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
+
+    expect(userDrawing.pointEntities.entities.values.length).toEqual(1);
+    expect(userDrawing.otherEntities.entities.values.length).toEqual(1);
+
+    let rectangle: Rectangle = userDrawing.otherEntities.entities
+      .getById("rectangle")
+      ?.rectangle?.coordinates?.getValue(terria.timelineClock.currentTime);
+
+    expect(rectangle).toBeUndefined();
+
+    // Second point
+    const pt2Position = new Cartographic(
+      CesiumMath.toRadians(149.124),
+      CesiumMath.toRadians(-35.311),
+      CesiumMath.toRadians(0)
+    );
+    const pt2CartesianPosition = Ellipsoid.WGS84.cartographicToCartesian(
+      pt2Position
+    );
+    pickedFeatures.pickPosition = pt2CartesianPosition;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
+
+    expect(userDrawing.pointEntities.entities.values.length).toEqual(2);
+    expect(userDrawing.otherEntities.entities.values.length).toEqual(1);
+
+    rectangle = userDrawing.otherEntities.entities
+      .getById("rectangle")
+      ?.rectangle?.coordinates?.getValue(terria.timelineClock.currentTime);
+
+    expect(rectangle.east).toBeCloseTo(CesiumMath.toRadians(149.124));
+    expect(rectangle.west).toBeCloseTo(CesiumMath.toRadians(149.121));
+    expect(rectangle.north).toBeCloseTo(CesiumMath.toRadians(-35.309));
+    expect(rectangle.south).toBeCloseTo(CesiumMath.toRadians(-35.311));
   });
 });

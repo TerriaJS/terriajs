@@ -2,7 +2,6 @@ import i18next from "i18next";
 import { runInAction, computed } from "mobx";
 import TerriaError from "../Core/TerriaError";
 import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../ModelMixins/TableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -15,9 +14,8 @@ import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
 import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import isDefined from "../Core/isDefined";
-import DiscretelyTimeVaryingMixin from "../ModelMixins/DiscretelyTimeVaryingMixin";
 import { BaseModel } from "./Model";
-import ExportableData from "./ExportableData";
+import ExportableMixin from "../ModelMixins/ExportableMixin";
 
 // Types of CSVs:
 // - Points - Latitude and longitude columns or address
@@ -32,19 +30,15 @@ import ExportableData from "./ExportableData";
 
 const automaticTableStylesStratumName = "automaticTableStyles";
 
-export default class CsvCatalogItem
-  extends AsyncChartableMixin(
-    TableMixin(
-      // Since both TableMixin & DiscretelyTimeVaryingMixin defines
-      // `chartItems`, the order of mixing in is important here
-      DiscretelyTimeVaryingMixin(
-        AutoRefreshingMixin(
-          UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
-        )
+export default class CsvCatalogItem extends AsyncChartableMixin(
+  TableMixin(
+    ExportableMixin(
+      AutoRefreshingMixin(
+        UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
       )
     )
   )
-  implements ExportableData {
+) {
   static get type() {
     return "csv";
   }
@@ -77,7 +71,7 @@ export default class CsvCatalogItem
   }
 
   @computed
-  get canExportData() {
+  get _canExportData() {
     return (
       isDefined(this._csvFile) ||
       isDefined(this.csvString) ||
@@ -85,7 +79,12 @@ export default class CsvCatalogItem
     );
   }
 
-  async exportData() {
+  @computed
+  get cacheDuration() {
+    return super.cacheDuration || "1d";
+  }
+
+  protected async _exportData() {
     if (isDefined(this._csvFile)) {
       return {
         name: (this.name || this.uniqueId)!,
@@ -130,16 +129,6 @@ export default class CsvCatalogItem
     }
   }
 
-  @computed
-  get discreteTimes() {
-    const automaticTableStylesStratum:
-      | TableAutomaticStylesStratum
-      | undefined = this.strata.get(
-      automaticTableStylesStratumName
-    ) as TableAutomaticStylesStratum;
-    return automaticTableStylesStratum?.discreteTimes;
-  }
-
   /*
    * Hook called by AutoRefreshingMixin to refresh data.
    *
@@ -152,7 +141,7 @@ export default class CsvCatalogItem
       return;
     }
 
-    Csv.parseUrl(proxyCatalogItemUrl(this, this.refreshUrl, "1d"), true).then(
+    Csv.parseUrl(proxyCatalogItemUrl(this, this.refreshUrl), true).then(
       dataColumnMajor => {
         runInAction(() => {
           if (this.polling.shouldReplaceData) {
@@ -175,7 +164,7 @@ export default class CsvCatalogItem
     } else if (this._csvFile !== undefined) {
       return Csv.parseFile(this._csvFile, true);
     } else if (this.url !== undefined) {
-      return Csv.parseUrl(proxyCatalogItemUrl(this, this.url, "1d"), true);
+      return Csv.parseUrl(proxyCatalogItemUrl(this, this.url), true);
     } else {
       return Promise.reject(
         new TerriaError({

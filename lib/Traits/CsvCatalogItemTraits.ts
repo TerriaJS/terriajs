@@ -5,8 +5,8 @@ import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
 import TableTraits from "./TableTraits";
 import UrlTraits from "./UrlTraits";
-import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import AutoRefreshingTraits from "./AutoRefreshingTraits";
+import ExportableTraits from "./ExportableTraits";
 
 class PollingTraits extends ModelTraits {
   @primitiveTrait({
@@ -34,8 +34,8 @@ class PollingTraits extends ModelTraits {
 }
 
 export default class CsvCatalogItemTraits extends mixTraits(
+  ExportableTraits,
   AutoRefreshingTraits,
-  DiscretelyTimeVaryingTraits,
   FeatureInfoTraits,
   UrlTraits,
   TableTraits
@@ -54,15 +54,6 @@ export default class CsvCatalogItemTraits extends mixTraits(
     type: "string"
   })
   csvString?: string;
-
-  // TODO: move this to a common trait
-  @primitiveTrait({
-    type: "string",
-    name: "URL Cache Duration",
-    description:
-      "The amount of time to cache the contents of the URL when it is accessed via the proxy."
-  })
-  cacheDuration?: string;
 
   @objectTrait({
     name: "Polling",
