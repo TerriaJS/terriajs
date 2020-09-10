@@ -34,9 +34,7 @@ const StoryControl = styled(Box).attrs({
   justifySpaceBetween: true
 })``;
 
-const StoryMenuButton = styled(RawButton).attrs({
-  // primaryHover: true
-})`
+const StoryMenuButton = styled(RawButton)`
   color: ${props => props.theme.textDarker};
   background-color: ${props => props.theme.textLight};
 
@@ -206,8 +204,8 @@ class Story extends React.Component {
           ref={this.storyRef}
           column
           backgroundColor={this.props.theme.darkWithOverlay}
+          rounded
           css={`
-            border-radius: 20px;
             cursor: move;
             float: none !important;
           `}
@@ -225,9 +223,9 @@ class Story extends React.Component {
             verticalCenter
             styledHeight={"40px"}
             backgroundColor={this.props.theme.darkWithOverlay}
+            rounded
             css={`
               padding-left: 15px;
-              border-radius: 20px;
               padding-right: 0;
               border-bottom: 1px solid rgba(255, 255, 255, 0.15);
             `}
@@ -251,7 +249,7 @@ class Story extends React.Component {
                   />
                 </RawButton>
               )}
-              <MenuButton onClick={this.toggleMenu}>
+              <MenuButton theme={this.props.theme} onClick={this.toggleMenu}>
                 <StyledIcon
                   styledWidth="20px"
                   light
@@ -295,9 +293,9 @@ class Story extends React.Component {
 }
 
 const MenuButton = styled(RawButton)`
-  padding: 0 16px 0 10px;
+  padding: 0 10px 0 10px;
   min-height: 40px;
-  border-radius: 0 32px 32px 0;
+  border-radius: ${props => props.theme.radiusLarge};
   background: transparent;
   &:hover,
   &:focus {

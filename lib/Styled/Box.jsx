@@ -11,12 +11,7 @@ export const Box = styled.div`
     position:absolute;
     z-index:1;
    `}
-  ${props =>
-    props.static &&
-    `
-    position: static;
-  `}
-  `}
+  ${props => props.static && `position: static;`}
   ${props =>
     props.topRight &&
     `
