@@ -10,6 +10,8 @@ Change Log
 #### 8.0.0-alpha.48
 * Allow `cacheDuration` to be set on `ArcGisPortalCatalogGroup` and `ArcGisPortalItemReference`.
 * Set default `ArcGisPortalCatalogGroup` item sorting by title using REST API parameter.
+* Add support for splitting CSVs (TableMixins) that are using region mapping.
+* `addUserCatalogMember` will now call `addToWorkbench` instead of `workbench.add`.
 * Call `registerCatalogMembers` before running tests and remove manual calls to `CatalogMemberFactory.register` and `UrlMapping.register` in various tests so that tests reflect the way the library is used.
 * Updated stratum definitions which used hardcoded string to use `CommonStrata` values.
 * Implemented new design for story panel.
