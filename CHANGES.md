@@ -7,12 +7,12 @@ Change Log
 * WMS GetFeatureInfo fix to ensure `style=undefined` is not sent to server
 * Add support for splitting CSVs (TableMixins) that are using region mapping.
 * `addUserCatalogMember` will now call `addToWorkbench` instead of `workbench.add`.
+* Remove `@computed` props from `WebFeatureServiceCapabilities`
 * [The next improvement]
 
 #### 8.0.0-alpha.48
 * Allow `cacheDuration` to be set on `ArcGisPortalCatalogGroup` and `ArcGisPortalItemReference`.
 * Set default `ArcGisPortalCatalogGroup` item sorting by title using REST API parameter.
-* Remove `@computed` props from `WebFeatureServiceCapabilities`
 * Call `registerCatalogMembers` before running tests and remove manual calls to `CatalogMemberFactory.register` and `UrlMapping.register` in various tests so that tests reflect the way the library is used.
 * Updated stratum definitions which used hardcoded string to use `CommonStrata` values.
 * Implemented new design for story panel.
