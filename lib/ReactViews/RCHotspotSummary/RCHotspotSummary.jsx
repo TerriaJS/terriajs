@@ -14,19 +14,24 @@ const HotspotSummary = createReactClass({
     onClick: PropTypes.func
   },
 
-  openStory() {
-    launchStory(
-      this.props.viewState.selectedHotspot?.["_story-id"]?._value,
-      this.props.terria
-    ).then(() => {
-      this.props.viewState.storyBuilderShown = false;
-      this.props.viewState.storyShown = true;
-      setTimeout(function() {
-        triggerResize();
-      }, 1);
-      this.props.terria.currentViewer.notifyRepaintRequired();
-      this.props.viewState.hotspotSummaryEnabled = false;
-    });
+  openStory(id) {
+    const storyId =
+      typeof id === "string"
+        ? id
+        : this.props.viewState.selectedHotspot?.["_story-id"]?._value;
+    if (storyId) {
+      launchStory(storyId, this.props.terria).then(() => {
+        this.props.viewState.storyBuilderShown = false;
+        this.props.viewState.storyShown = true;
+        setTimeout(function() {
+          triggerResize();
+        }, 1);
+        this.props.terria.currentViewer.notifyRepaintRequired();
+        this.props.viewState.hotspotSummaryEnabled = false;
+      });
+    } else {
+      console.error("Story id not provided");
+    }
   },
 
   close() {
@@ -39,6 +44,35 @@ const HotspotSummary = createReactClass({
     const sector = hotspot["_rc-sector"]?._value;
     const title = hotspot["_rc-title"]?._value;
     const description = hotspot["_rc-description"]?._value;
+    const microstories = hotspot["_rc-microstories"]?._value;
+
+    const listMicrostories =
+      Array.isArray(microstories) &&
+      microstories.map(microstory => {
+        const imgStyle = {
+          backgroundImage:
+            "linear-gradient(rgba(0, 0, 0, 0.1),rgba(0, 0, 0, 0.6)), url(" +
+            microstory["micro-story-img"] +
+            ")"
+        };
+        return (
+          <div
+            key={microstory["micro-story-title"]}
+            className={Styles["microstory-card"]}
+            style={imgStyle}
+            onClick={() => this.openStory(microstory["story-id"])}
+          >
+            <div>
+              <div className={Styles["microstory-title"]}>
+                {microstory["micro-story-title"]}
+              </div>
+              <div className={Styles["microstory-desc"]}>
+                {microstory["micro-story-desc"]}
+              </div>
+            </div>
+          </div>
+        );
+      });
 
     return (
       <div>
@@ -48,7 +82,7 @@ const HotspotSummary = createReactClass({
           </div>
           <button
             type="button"
-            onClick={this.close}
+            onClick={this.openStory}
             className={Styles.btnCloseFeature}
             title="Close"
           >
@@ -65,6 +99,13 @@ const HotspotSummary = createReactClass({
         >
           Play story
         </button>
+
+        {listMicrostories.length > 0 ? (
+          <div className={Styles.microstoriesWrapper}>
+            <h3>Microstories</h3>
+            <div className={Styles.microstories}>{listMicrostories}</div>
+          </div>
+        ) : null}
       </div>
     );
   }
