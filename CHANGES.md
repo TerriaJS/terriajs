@@ -3,10 +3,14 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.48)
+#### next release (8.0.0-alpha.49)
+
+
+#### 8.0.0-alpha.48
 * Allow `cacheDuration` to be set on `ArcGisPortalCatalogGroup` and `ArcGisPortalItemReference`.
 * Set default `ArcGisPortalCatalogGroup` item sorting by title using REST API parameter.
 * Call `registerCatalogMembers` before running tests and remove manual calls to `CatalogMemberFactory.register` and `UrlMapping.register` in various tests so that tests reflect the way the library is used.
+* Updated stratum definitions which used hardcoded string to use `CommonStrata` values.
 * Implemented new design for story panel.
 * [The next improvement]
 
