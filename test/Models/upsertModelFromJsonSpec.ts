@@ -7,11 +7,6 @@ import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem"
 
 describe("upsertModelFromJson", function() {
   it("can create basic WMS item", function() {
-    CatalogMemberFactory.register(
-      WebMapServiceCatalogItem.type,
-      WebMapServiceCatalogItem
-    );
-
     const terria = new Terria();
 
     const json = {
@@ -39,15 +34,6 @@ describe("upsertModelFromJson", function() {
   });
 
   it("can merge members from multiple strata", async function() {
-    CatalogMemberFactory.register(
-      WebMapServiceCatalogGroup.type,
-      WebMapServiceCatalogGroup
-    );
-    CatalogMemberFactory.register(
-      WebMapServiceCatalogItem.type,
-      WebMapServiceCatalogItem
-    );
-
     const terria = new Terria();
 
     const json = {

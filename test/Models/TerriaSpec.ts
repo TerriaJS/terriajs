@@ -39,16 +39,6 @@ describe("Terria", function() {
         locationSearchProviders: []
       });
 
-      CatalogMemberFactory.register(
-        WebMapServiceCatalogItem.type,
-        WebMapServiceCatalogItem
-      );
-      CatalogMemberFactory.register(
-        WebMapServiceCatalogGroup.type,
-        WebMapServiceCatalogGroup
-      );
-      CatalogMemberFactory.register(UrlReference.type, UrlReference);
-
       UrlToCatalogMemberMapping.register(
         s => true,
         WebMapServiceCatalogItem.type,
