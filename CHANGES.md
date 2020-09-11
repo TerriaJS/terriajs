@@ -4,7 +4,8 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.49)
-
+* WMS GetFeatureInfo fix to ensure `style=undefined` is not sent to server
+* [The next improvement]
 
 #### 8.0.0-alpha.48
 * Allow `cacheDuration` to be set on `ArcGisPortalCatalogGroup` and `ArcGisPortalItemReference`.
@@ -12,7 +13,6 @@ Change Log
 * Call `registerCatalogMembers` before running tests and remove manual calls to `CatalogMemberFactory.register` and `UrlMapping.register` in various tests so that tests reflect the way the library is used.
 * Updated stratum definitions which used hardcoded string to use `CommonStrata` values.
 * Implemented new design for story panel.
-* [The next improvement]
 
 #### 8.0.0-alpha.47
 * Removed hard coded senaps base url.

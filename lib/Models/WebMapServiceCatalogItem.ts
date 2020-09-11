@@ -916,7 +916,7 @@ class WebMapServiceCatalogItem
         parameters: parameters,
         getFeatureInfoParameters: {
           ...dimensionParameters,
-          styles: this.styles
+          styles: this.styles === undefined ? "" : this.styles
         },
         tilingScheme: /*defined(this.tilingScheme) ? this.tilingScheme :*/ new WebMercatorTilingScheme(),
         maximumLevel: maximumLevel,
