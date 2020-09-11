@@ -1,12 +1,12 @@
 import defined from "terriajs-cesium/Source/Core/defined";
 import destroyObject from "terriajs-cesium/Source/Core/destroyObject";
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import TaskProcessor from "terriajs-cesium/Source/Core/TaskProcessor";
 import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget";
 import loadWithXhr from "../Core/loadWithXhr";
+import Event from "terriajs-cesium/Source/Core/Event";
 
 export default class CesiumRenderLoopPauser {
   /**
@@ -28,7 +28,7 @@ export default class CesiumRenderLoopPauser {
 
   private _boundNotifyRepaintRequired: (() => void) | undefined;
   private _wheelEvent: string | undefined;
-  private _removePostRenderListener: CesiumEvent.RemoveCallback | undefined;
+  private _removePostRenderListener: Event.RemoveCallback | undefined;
   private _lastCameraViewMatrix = new Matrix4();
   private _lastCameraMoveTime: number = -Number.MAX_VALUE;
 

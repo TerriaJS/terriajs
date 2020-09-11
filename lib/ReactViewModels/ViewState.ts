@@ -25,6 +25,7 @@ import {
 
 import { SATELLITE_HELP_PROMPT_KEY } from "../ReactViews/HelpScreens/SatelliteHelpPrompt";
 import { LOCAL_PROPERTY_KEY as WELCOME_PROPERTY_KEY } from "../ReactViews/WelcomeMessage/WelcomeMessage";
+import isDefined from "../Core/isDefined";
 
 export const DATA_CATALOG_NAME = "data-catalog";
 export const USER_DATA_NAME = "my-data";
@@ -38,6 +39,19 @@ interface ViewStateOptions {
   catalogSearchProvider: any;
   locationSearchProviders: any[];
   errorHandlingProvider?: any;
+}
+
+export interface Notification {
+  title: string;
+  message: string;
+  confirmText?: string;
+  denyText?: string;
+  confirmAction: () => void;
+  denyAction: () => void;
+  hideUi?: boolean;
+  type?: string;
+  width?: number | string;
+  height?: number | string;
 }
 
 /**
@@ -64,7 +78,7 @@ export default class ViewState {
   @observable isDraggingDroppingFile: boolean = false;
   @observable mobileView: string | null = null;
   @observable isMapFullScreen: boolean = false;
-  @observable readonly notifications: any[] = [];
+  @observable readonly notifications: Notification[] = [];
   @observable myDataIsUploadView: boolean = true;
   @observable mobileMenuVisible: boolean = false;
   @observable explorerPanelAnimating: boolean = false;
@@ -279,7 +293,8 @@ export default class ViewState {
    */
   @observable currentTool?: Tool;
 
-  private _unsubscribeErrorListener: any;
+  private _unsubscribeErrorListener: () => void;
+  private _unsubscribeNotificationListener: () => void;
   private _pickedFeaturesSubscription: IReactionDisposer;
   private _disclaimerVisibleSubscription: IReactionDisposer;
   private _isMapFullScreenSubscription: IReactionDisposer;
@@ -303,6 +318,23 @@ export default class ViewState {
       ? options.errorHandlingProvider
       : null;
     this.terria = terria;
+
+    this._unsubscribeNotificationListener = terria.notification.addEventListener(
+      notification => {
+        // Only add this notification if an identical one doesn't already exist.
+        if (
+          this.notifications.filter(
+            item =>
+              item.title === notification.title &&
+              item.message === notification.message
+          ).length === 0
+        ) {
+          runInAction(() => {
+            this.notifications.push(clone(notification));
+          });
+        }
+      }
+    );
 
     // Show errors to the user as notifications.
     this._unsubscribeErrorListener = terria.error.addEventListener(<any>((
@@ -445,6 +477,7 @@ export default class ViewState {
   dispose() {
     this._pickedFeaturesSubscription();
     this._disclaimerVisibleSubscription();
+    this._unsubscribeNotificationListener();
     this._unsubscribeErrorListener();
     this._mobileMenuSubscription();
     this._isMapFullScreenSubscription();
@@ -603,11 +636,14 @@ export default class ViewState {
   }
 
   getNextNotification() {
-    return this.notifications.length && this.notifications[0];
+    return this.notifications.length > 0 ? this.notifications[0] : undefined;
   }
 
   hideMapUi() {
-    return this.getNextNotification() && this.getNextNotification().hideUi;
+    return (
+      isDefined(this.getNextNotification()) &&
+      this.getNextNotification()!.hideUi
+    );
   }
 
   toggleFeaturePrompt(

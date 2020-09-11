@@ -4,7 +4,6 @@ import Clock from "terriajs-cesium/Source/Core/Clock";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
@@ -63,6 +62,8 @@ import Internationalization, {
   I18nStartOptions,
   LanguageConfiguration
 } from "./Internationalization";
+import { Notification } from "../ReactViewModels/ViewState";
+import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 // import overrides from "../Overrides/defaults.jsx";
 
 interface ConfigParameters {
@@ -142,6 +143,7 @@ export default class Terria {
   private models = observable.map<string, BaseModel>();
 
   readonly baseUrl: string = "build/TerriaJS/";
+  readonly notification = new CesiumEvent<Notification>();
   readonly error = new CesiumEvent();
   readonly tileLoadProgressEvent = new CesiumEvent();
   readonly workbench = new Workbench();
@@ -1050,6 +1052,12 @@ function interpretHash(
       });
 
       if (shareProps) {
+        if (shareProps.converted) {
+          console.log(`Share conversion messages:`);
+          if (Array.isArray(shareProps.messages)) {
+            shareProps.messages.forEach(console.log);
+          }
+        }
         interpretStartData(terria, shareProps);
       }
     });
