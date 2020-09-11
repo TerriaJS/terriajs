@@ -14,13 +14,12 @@ const HotspotSummary = createReactClass({
     onClick: PropTypes.func
   },
 
-  openStory(id) {
-    const storyId =
-      typeof id === "string"
-        ? id
-        : this.props.viewState.selectedHotspot?.["_story-id"]?._value;
-    if (storyId) {
-      launchStory(storyId, this.props.terria).then(() => {
+  openStory(paramsUrl) {
+    const storyParams =
+      (paramsUrl.story && paramsUrl) ||
+      this.props.viewState.selectedHotspot?.["_story-id"]?._value;
+    if (storyParams) {
+      launchStory(storyParams, this.props.terria).then(() => {
         this.props.viewState.storyBuilderShown = false;
         this.props.viewState.storyShown = true;
         setTimeout(function() {
@@ -82,7 +81,7 @@ const HotspotSummary = createReactClass({
           </div>
           <button
             type="button"
-            onClick={this.openStory}
+            onClick={this.close}
             className={Styles.btnCloseFeature}
             title="Close"
           >
