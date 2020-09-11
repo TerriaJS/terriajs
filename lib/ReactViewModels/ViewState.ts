@@ -46,8 +46,8 @@ export interface Notification {
   message: string;
   confirmText?: string;
   denyText?: string;
-  confirmAction: () => void;
-  denyAction: () => void;
+  confirmAction?: () => void;
+  denyAction?: () => void;
   hideUi?: boolean;
   type?: string;
   width?: number | string;

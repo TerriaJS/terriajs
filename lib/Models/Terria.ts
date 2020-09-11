@@ -1053,10 +1053,32 @@ function interpretHash(
 
       if (shareProps) {
         if (shareProps.converted) {
-          console.log(`Share conversion messages:`);
-          if (Array.isArray(shareProps.messages)) {
-            shareProps.messages.forEach(console.log);
+          let message =
+            "This share link was made with an older version of Terria and has been converted to work in Terria version 8\n\n";
+          if (shareProps.messages?.length > 0) {
+            message += `### Warning${
+              shareProps.messages?.length > 1 ? "s" : ""
+            }\n\n`;
           }
+          const messagesForPath: { [path: string]: string[] } = {};
+          shareProps.messages.forEach((message: any) => {
+            const pathString = message.path.join(".");
+            isDefined(messagesForPath[pathString])
+              ? messagesForPath[pathString].push(message.message)
+              : (messagesForPath[pathString] = [message.message]);
+          });
+
+          message += Object.entries(messagesForPath).reduce<string>(
+            (m, [path, messages]) =>
+              `${m}${path !== "" ? `#### ${path}\n\n` : ``}- ${messages.join(
+                "  \n- "
+              )}\n\n`,
+            ""
+          );
+          terria.notification.raiseEvent({
+            title: "Warning: share link upgraded",
+            message
+          });
         }
         interpretStartData(terria, shareProps);
       }

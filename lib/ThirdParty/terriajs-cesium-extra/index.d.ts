@@ -74,7 +74,7 @@ declare module "terriajs-cesium/Source/Core/Event" {
     addEventListener(
       listener: (event: T, ...param: any[]) => any,
       scope?: any
-    ): CesiumEvent.RemoveCallback;
+    ): RemoveCallback;
     /**
      * Unregisters a previously registered callback.
      * @param listener - The function to be unregistered.
@@ -92,10 +92,8 @@ declare module "terriajs-cesium/Source/Core/Event" {
     raiseEvent(event: T, ...param: any[]): void;
   }
 
-  export namespace CesiumEvent {
-    /**
-     * A function that removes a listener.
-     */
-    type RemoveCallback = () => void;
-  }
+  /**
+   * A function that removes a listener.
+   */
+  export type RemoveCallback = () => void;
 }
