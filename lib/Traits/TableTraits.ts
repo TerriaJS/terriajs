@@ -9,8 +9,10 @@ import RasterLayerTraits from "./RasterLayerTraits";
 import TableColumnTraits from "./TableColumnTraits";
 import TableStyleTraits from "./TableStyleTraits";
 import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
+import SplitterTraits from "./SplitterTraits";
 
 export default class TableTraits extends mixTraits(
+  SplitterTraits,
   DiscretelyTimeVaryingTraits,
   LayerOrderingTraits,
   CatalogMemberTraits,

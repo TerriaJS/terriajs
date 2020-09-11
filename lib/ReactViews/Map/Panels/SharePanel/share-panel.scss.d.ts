@@ -3,12 +3,10 @@
 interface CssExports {
   'btn--advanced': string;
   'btn--catalogShare': string;
-  'btn--storyShare': string;
   'btn--withoutText': string;
   'btn--wrapper': string;
   'btnAdvanced': string;
   'btnCatalogShare': string;
-  'btnStoryShare': string;
   'btnWithoutText': string;
   'btnWrapper': string;
   'catalog-share': string;
