@@ -9,7 +9,7 @@ import Credit from "terriajs-cesium/Source/Core/Credit";
 import DefaultProxy from "terriajs-cesium/Source/Core/DefaultProxy";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
-import { CesiumEvent } from "terriajs-cesium/Source/Core/Event";
+import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import Intersect from "terriajs-cesium/Source/Core/Intersect";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";

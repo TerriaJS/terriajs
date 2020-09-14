@@ -63,7 +63,7 @@ import Internationalization, {
   LanguageConfiguration
 } from "./Internationalization";
 import { Notification } from "../ReactViewModels/ViewState";
-import { CesiumEvent } from "terriajs-cesium/Source/Core/Event";
+import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 // import overrides from "../Overrides/defaults.jsx";
 
 interface ConfigParameters {
@@ -143,7 +143,7 @@ export default class Terria {
   private models = observable.map<string, BaseModel>();
 
   readonly baseUrl: string = "build/TerriaJS/";
-  readonly notification = new CesiumEvent<Notification>();
+  readonly notification = new CesiumEvent();
   readonly error = new CesiumEvent();
   readonly tileLoadProgressEvent = new CesiumEvent();
   readonly workbench = new Workbench();

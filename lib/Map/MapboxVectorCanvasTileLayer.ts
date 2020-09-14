@@ -1,5 +1,5 @@
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import { CesiumEvent } from "terriajs-cesium/Source/Core/Event";
+import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import L from "leaflet";
 

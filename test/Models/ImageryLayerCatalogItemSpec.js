@@ -1,7 +1,7 @@
 "use strict";
 
 /*global require,beforeEach*/
-const CesiumEvent = require("terriajs-cesium/Source/Core/Event").CesiumEvent;
+const CesiumEvent = require("terriajs-cesium/Source/Core/Event").default;
 const ImageryLayer = require("terriajs-cesium/Source/Scene/ImageryLayer")
   .default;
 const ImageryProvider = require("terriajs-cesium/Source/Scene/ImageryProvider")

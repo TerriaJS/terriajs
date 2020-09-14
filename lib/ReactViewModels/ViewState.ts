@@ -320,7 +320,7 @@ export default class ViewState {
     this.terria = terria;
 
     this._unsubscribeNotificationListener = terria.notification.addEventListener(
-      notification => {
+      (notification: Notification) => {
         // Only add this notification if an identical one doesn't already exist.
         if (
           this.notifications.filter(

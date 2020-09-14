@@ -6,7 +6,7 @@ import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import TaskProcessor from "terriajs-cesium/Source/Core/TaskProcessor";
 import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget";
 import loadWithXhr from "../Core/loadWithXhr";
-import Event, { RemoveCallback } from "terriajs-cesium/Source/Core/Event";
+import Event from "terriajs-cesium/Source/Core/Event";
 
 export default class CesiumRenderLoopPauser {
   /**
@@ -28,7 +28,7 @@ export default class CesiumRenderLoopPauser {
 
   private _boundNotifyRepaintRequired: (() => void) | undefined;
   private _wheelEvent: string | undefined;
-  private _removePostRenderListener: RemoveCallback | undefined;
+  private _removePostRenderListener: (() => void) | undefined;
   private _lastCameraViewMatrix = new Matrix4();
   private _lastCameraMoveTime: number = -Number.MAX_VALUE;
 
