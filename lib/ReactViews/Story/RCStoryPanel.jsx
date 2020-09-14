@@ -69,7 +69,6 @@ const RCStoryPanel = createReactClass({
   },
   componentDidMount() {
     const { terria } = this.props;
-    console.log("Component Did Mount", terria.initialView, terria.homeView);
     this.slideIn();
     this.escKeyListener = e => {
       if (e.keyCode === 27) {
@@ -159,7 +158,7 @@ const RCStoryPanel = createReactClass({
 
     const exitBtn = (
       <button
-        className={Styles.exitBtn}
+        className={classNames(Styles.exitBtn, Styles.absoluteRight)}
         title={t("story.exitBtn")}
         onClick={this.slideOut}
       >
@@ -177,33 +176,34 @@ const RCStoryPanel = createReactClass({
           })}
           key={story.id}
         >
-          <Medium>
-            <div className={Styles.left}>
-              <button
-                className={Styles.previousBtn}
-                disabled={this.props.terria.stories.length <= 1}
-                title={t("story.previousBtn")}
-                onClick={this.goToPrevStory}
-              >
-                <Icon glyph={Icon.GLYPHS.left} />
-              </button>
-            </div>
-          </Medium>
-          <div className={Styles.story}>
-            <div className={Styles.storyHeader}>
+          <div className={classNames(Styles.story, Styles.relative)}>
+            {/* <div className={Styles.storyHeader}>
               {story.title && story.title.length > 0 ? (
                 <h3>{story.title}</h3>
               ) : (
                 <h3> {t("story.untitled")} </h3>
               )}
-              {exitBtn}
-            </div>
+              
+            </div> */}
+            {exitBtn}
             {story.text && (
               <div className={Styles.body}>
                 {parseCustomHtmlToReact(story.text)}
               </div>
             )}
             <div className={Styles.navs}>
+              <Medium>
+                <div className={Styles.left}>
+                  <button
+                    className={Styles.previousBtn}
+                    disabled={this.props.terria.stories.length <= 1}
+                    title={t("story.previousBtn")}
+                    onClick={this.goToPrevStory}
+                  >
+                    <Icon glyph={Icon.GLYPHS.left} />
+                  </button>
+                </div>
+              </Medium>
               <If condition={this.props.terria.stories.length >= 2}>
                 <div className={Styles.navBtn}>
                   {" "}
@@ -226,20 +226,20 @@ const RCStoryPanel = createReactClass({
                   ))}
                 </div>
               </If>
+              <Medium>
+                <div className={Styles.right}>
+                  <button
+                    disabled={this.props.terria.stories.length <= 1}
+                    className={Styles.nextBtn}
+                    title={t("story.nextBtn")}
+                    onClick={this.goToNextStory}
+                  >
+                    <Icon glyph={Icon.GLYPHS.right} />
+                  </button>
+                </div>
+              </Medium>
             </div>
           </div>
-          <Medium>
-            <div className={Styles.right}>
-              <button
-                disabled={this.props.terria.stories.length <= 1}
-                className={Styles.nextBtn}
-                title={t("story.nextBtn")}
-                onClick={this.goToNextStory}
-              >
-                <Icon glyph={Icon.GLYPHS.right} />
-              </button>
-            </div>
-          </Medium>
         </div>
       </Swipeable>
     );

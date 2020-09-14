@@ -45,32 +45,42 @@
   display: flex;
   opacity: 0;
   height: 100vh;
+  max-height: 100vh;
+  overflow-y: scroll;
   min-height: 100px;
   max-width: 1200px;
   background-color: transparent;
   color: $text-dark;
   text-align: left;
   box-sizing: border-box;
-  margin: 0 -16px 0 -16px;
   border-radius: 2px;
 
-  @media (max-width: $sm) {
-    margin: 0 auto;
+  @media (max-width: $xs) and (orientation: portrait) {
+    height: 60vh;
+  }
+  @media (max-width: $sm) and (orientation: landscape) {
+    height: 100vh;
   }
 }
-
+.relative {
+  position: relative;
+}
+.absoluteRight {
+  position: absolute;
+  right: 0;
+}
 .story {
   display: flex;
   flex-direction: column;
   flex-grow: 2;
   max-width: 100%;
-  height: calc(100vh - 98px);
-  @media (max-width: $sm) {
-    height: calc(68vh - 50px);
-  }
-  @media (orientation: landscape) {
-    height: calc(94vh - 50px);
-  }
+  // height: calc(100vh - 98px);
+  // @media (max-width: $sm) {
+  //   height: calc(68vh - 50px);
+  // }
+  // @media (orientation: landscape) {
+  //   height: calc(94vh - 50px);
+  // }
 }
 
 .storyHeader {
@@ -91,12 +101,11 @@
 }
 
 .body {
-  padding: $padding 4px;
   color: $dark;
   font-size: 14px;
   line-height: 1.5;
   font-family: $font-base;
-  height: calc(100% - 30px);
+  height: 100%;
   overflow-y: auto;
 
   img {
@@ -171,6 +180,9 @@
   }
 }
 .navs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
 }
 .navBtn {
