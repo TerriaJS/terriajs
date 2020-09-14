@@ -4,7 +4,7 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import Clock from "terriajs-cesium/Source/Core/Clock";
-import CesiumEvent, { RemoveCallback } from "terriajs-cesium/Source/Core/Event";
+import { CesiumEvent, RemoveCallback } from "terriajs-cesium/Source/Core/Event";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import CommonStrata from "./CommonStrata";
 
