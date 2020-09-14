@@ -2,6 +2,7 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import arrayContains from "../../Core/arrayContains";
+import Branding from "./../SidePanel/Branding.jsx";
 import RCHotspotSummary from "./../RCHotspotSummary/RCHotspotSummary.jsx";
 import DragDropFile from "./../DragDropFile.jsx";
 import DragDropNotification from "./../DragDropNotification.jsx";
@@ -184,7 +185,7 @@ const StandardUserInterface = createReactClass({
                   !this.props.viewState.showToolPanel()
                 }
               >
-                <Small>
+                {/* <Small>
                   <MobileHeader
                     terria={terria}
                     menuItems={customElements.menu}
@@ -192,7 +193,7 @@ const StandardUserInterface = createReactClass({
                     version={this.props.version}
                     allBaseMaps={allBaseMaps}
                   />
-                </Small>
+                </Small> */}
                 <Small>
                   <div className={Styles.middleContainer}>
                     <section
@@ -264,22 +265,18 @@ const StandardUserInterface = createReactClass({
                       this.props.viewState.topElement = "SidePanel";
                     }}
                   >
-                    {/* <Branding terria={terria} version={this.props.version} /> */}
-
                     {showHotspotSummary && (
                       <RCHotspotSummary terria={terria} viewState={viewState} />
                     )}
 
                     {!(showStoryPanel || showHotspotSummary) && (
-                      <SidePanelContent terria={terria} viewState={viewState} />
+                      <SidePanelContent terria={terria} />
                     )}
                     {showStoryPanel ? (
-                      <div>
-                        <RCStoryPanel
-                          terria={terria}
-                          viewState={this.props.viewState}
-                        />
-                      </div>
+                      <RCStoryPanel
+                        terria={terria}
+                        viewState={this.props.viewState}
+                      />
                     ) : null}
                     <SidePanel
                       terria={terria}
