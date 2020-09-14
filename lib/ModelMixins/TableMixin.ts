@@ -201,18 +201,20 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       await super.loadMapItems();
     }
 
+    get supportsSplitting() {
+      return isDefined(this.activeTableStyle.regionColumn);
+    }
+
     /**
      * Gets the items to show on the map.
      */
     @computed
     get mapItems(): (DataSource | ImageryParts)[] {
-      const result: (DataSource | ImageryParts)[] = [];
-
       return filterOutUndefined([
         this.createLongitudeLatitudeDataSource(this.activeTableStyle),
         this.createRegionMappedImageryLayer({
           style: this.activeTableStyle,
-          currentTime: this.currentTimeAsJulianDate
+          currentTime: this.currentDiscreteJulianDate
         })
       ]);
     }

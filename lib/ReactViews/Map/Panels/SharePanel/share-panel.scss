@@ -47,23 +47,6 @@
   }
 }
 
-.btn--storyShare {
-  position: relative;
-  padding-left: 35px;
-  height: inherit;
-
-  composes: btn from "../../../../Sass/common/_buttons.scss";
-  composes: btn-primary from "../../../../Sass/common/_buttons.scss";
-  svg {
-    width: 15px;
-    height: 15px;
-    fill: #ffffff;
-    position: absolute;
-    left: 15px;
-    top: 13px;
-  }
-}
-
 .btn--withoutText {
   svg {
     fill: $text-darker;
@@ -108,7 +91,8 @@
   display: block;
 }
 
-.clipboard-for-catalog-share {
+.clipboard-for-catalog-share,
+.clipboard-for-story-share {
   margin: 15px;
 }
 

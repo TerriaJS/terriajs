@@ -8,10 +8,12 @@ import objectArrayTrait from "./objectArrayTrait";
 import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
+import SplitterTraits from "./SplitterTraits";
 import TableColumnTraits from "./TableColumnTraits";
 import TableStyleTraits from "./TableStyleTraits";
 
 export default class TableTraits extends mixTraits(
+  SplitterTraits,
   DiscretelyTimeVaryingTraits,
   ExportableTraits,
   LayerOrderingTraits,
