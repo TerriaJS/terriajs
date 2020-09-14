@@ -3,13 +3,8 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.47)
-* Added option for manual Table region mapping with `enableManualRegionMapping` TableTrait. This provides `SelectableDimensions` for the region column and region type.
-* Added WMS Dimensions (using `SelectableDimensions`)
-* Added WMS multi-layer style, dimension and legend support.
-* Merged the `StyleSelector` and `DimensionsSelector`, and created a `SelectableDimensions` interface.
-* Add SDMX-json support for groups and items (using SDMX-csv for data queries)
 #### next release (8.0.0-alpha.49)
+* Add SDMX-json support for groups and items (using SDMX-csv for data queries)
 * WMS GetFeatureInfo fix to ensure `style=undefined` is not sent to server
 * Add support for splitting CSVs (TableMixins) that are using region mapping.
 * `addUserCatalogMember` will now call `addToWorkbench` instead of `workbench.add`.

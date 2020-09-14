@@ -16,12 +16,13 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
+import TerriaError from "../Core/TerriaError";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import RegionProvider from "../Map/RegionProvider";
 import JSRegionProviderList from "../Map/RegionProviderList";
 import { calculateDomain, ChartAxis, ChartItem } from "../Models/Chartable";
 import CommonStrata from "../Models/CommonStrata";
-import Mappable, { ImageryParts } from "../Models/Mappable";
+import { ImageryParts } from "../Models/Mappable";
 import Model from "../Models/Model";
 import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import SelectableDimensions, {
@@ -35,11 +36,10 @@ import TableStyle from "../Table/TableStyle";
 import LegendTraits from "../Traits/LegendTraits";
 import TableTraits from "../Traits/TableTraits";
 import AsyncMappableMixin from "./AsyncMappableMixin";
-import ExportableMixin, { ExportData } from "./ExportableMixin";
-import TerriaError from "../Core/TerriaError";
 import DiscretelyTimeVaryingMixin, {
   DiscreteTimeAsJS
 } from "./DiscretelyTimeVaryingMixin";
+import ExportableMixin, { ExportData } from "./ExportableMixin";
 import TimeVarying from "./TimeVarying";
 
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
