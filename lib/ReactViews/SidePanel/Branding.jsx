@@ -13,7 +13,7 @@ const Branding = createReactClass({
     return (
       <div className={Styles.branding}>
         <img
-          src={require("../../../wwwroot/images/receipt-blue-logo.png")}
+          src={require("../../../wwwroot/images/receipt/receipt-logo.svg")}
           className="{Styles.logo}"
         />
       </div>
