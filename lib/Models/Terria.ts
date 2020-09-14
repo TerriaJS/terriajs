@@ -63,7 +63,7 @@ import Internationalization, {
   LanguageConfiguration
 } from "./Internationalization";
 import { Notification } from "../ReactViewModels/ViewState";
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
+import { CesiumEvent } from "terriajs-cesium/Source/Core/Event";
 // import overrides from "../Overrides/defaults.jsx";
 
 interface ConfigParameters {

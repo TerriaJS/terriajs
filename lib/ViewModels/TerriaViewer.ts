@@ -7,7 +7,7 @@ import {
   untracked
 } from "mobx";
 import { fromPromise, FULFILLED } from "mobx-utils";
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
+import { CesiumEvent } from "terriajs-cesium/Source/Core/Event";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import CameraView from "../Models/CameraView";
 import GlobeOrMap from "../Models/GlobeOrMap";

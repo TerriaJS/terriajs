@@ -56,7 +56,7 @@ declare interface FeatureDetection {
 }
 
 declare module "terriajs-cesium/Source/Core/Event" {
-  export default class CesiumEvent<T = any> {
+  export class CesiumEvent<T = any> {
     constructor();
     /**
      * The number of listeners currently subscribed to the event.
