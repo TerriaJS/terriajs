@@ -8,6 +8,7 @@ Change Log
 * Add support for splitting CSVs (TableMixins) that are using region mapping.
 * `addUserCatalogMember` will now call `addToWorkbench` instead of `workbench.add`.
 * Fix Webpack Windows path issue
+* Updated icons for view and edit story in the hamburger menu.
 * [The next improvement]
 
 #### 8.0.0-alpha.48
