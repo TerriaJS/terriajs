@@ -7,6 +7,7 @@ Change Log
 * WMS GetFeatureInfo fix to ensure `style=undefined` is not sent to server
 * Add support for splitting CSVs (TableMixins) that are using region mapping.
 * `addUserCatalogMember` will now call `addToWorkbench` instead of `workbench.add`.
+* Add warning messages if catalog/share link has been converted by `terriajs-server`.
 * [The next improvement]
 
 #### 8.0.0-alpha.48
