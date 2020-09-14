@@ -2,13 +2,8 @@
 @import "~terriajs-variables";
 
 .panel {
-  background: $side-panel-background-image;
-  height: 100%;
-  overflow-y: auto;
   position: relative;
-  @media (max-width: $sm) {
-    padding: $padding;
-  }
+  padding: 0 $padding;
 }
 
 .sectorTitle {
@@ -30,6 +25,17 @@
   }
 }
 .infoContainer {
+  max-height: 85vh;
+  overflow-y: scroll;
+  height: 85vh;
+  padding: 10px 0;
+  box-sizing: border-box;
+  @media (max-width: $xs) and (orientation: portrait) {
+    height: 50vh;
+  }
+  @media (max-width: $sm) and (orientation: landscape) {
+    height: 70vh;
+  }
 }
 .imageContainer {
   background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(0, 0, 0, 0.6)),
