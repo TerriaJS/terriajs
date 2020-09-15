@@ -1,11 +1,12 @@
 import i18next from "i18next";
 import TerriaError from "../Core/TerriaError";
+import CommonStrata from "./CommonStrata";
+import createStubCatalogItem from "./createStubCatalogItem";
 import { BaseModel } from "./Model";
 import ModelFactory from "./ModelFactory";
+import StubCatalogItem from "./StubCatalogItem";
 import Terria from "./Terria";
 import updateModelFromJson from "./updateModelFromJson";
-import StubCatalogItem from "./StubCatalogItem";
-import createStubCatalogItem from "./createStubCatalogItem";
 
 export default function upsertModelFromJson(
   factory: ModelFactory,
@@ -50,8 +51,8 @@ export default function upsertModelFromJson(
         model = createStubCatalogItem(terria, uniqueId);
         if (model && model.type === StubCatalogItem.type) {
           const stub = model;
-          stub.setTrait("underride", "isExperiencingIssues", true);
-          stub.setTrait("override", "name", `${uniqueId} (Stub)`);
+          stub.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
+          stub.setTrait(CommonStrata.override, "name", `${uniqueId} (Stub)`);
         } else {
           throw new TerriaError({
             title: i18next.t("models.catalog.stubCreationFailure"),
@@ -71,7 +72,7 @@ export default function upsertModelFromJson(
   try {
     updateModelFromJson(model, stratumName, json, replaceStratum);
   } catch {
-    model.setTrait("underride", "isExperiencingIssues", true);
+    model.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
   }
   return model;
 }
