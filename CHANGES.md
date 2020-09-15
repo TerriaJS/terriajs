@@ -6,6 +6,8 @@ Change Log
 #### next release (8.0.0-alpha.48)
 * Allow `cacheDuration` to be set on `ArcGisPortalCatalogGroup` and `ArcGisPortalItemReference`.
 * Set default `ArcGisPortalCatalogGroup` item sorting by title using REST API parameter.
+* Support for searching WFS features with WebFeatureServiceSearchProvider
+* WFS-based AustralianGazetteerSearchProvider
 * [The next improvement]
 
 #### 8.0.0-alpha.47
