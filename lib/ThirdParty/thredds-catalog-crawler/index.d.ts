@@ -1,1 +1,1 @@
-declare module "thredds-catalog-crawler";
+declare module "thredds-catalog-crawler/src/entryBrowser";

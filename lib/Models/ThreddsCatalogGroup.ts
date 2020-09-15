@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import { action, computed, runInAction } from "mobx";
-import threddsCrawler from "thredds-catalog-crawler";
+import threddsCrawler from "thredds-catalog-crawler/src/entryBrowser";
 import isDefined from "../Core/isDefined";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
