@@ -11,10 +11,13 @@ import {
 } from "../Core/Json";
 import loadJson from "../Core/loadJson";
 import TerriaError from "../Core/TerriaError";
+import AccessControlMixin from "../ModelMixins/AccessControlMixin";
+import GroupMixin from "../ModelMixins/GroupMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import MagdaDistributionFormatTraits from "../Traits/MagdaDistributionFormatTraits";
 import MagdaReferenceTraits from "../Traits/MagdaReferenceTraits";
+import ModelTraits from "../Traits/ModelTraits";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
@@ -23,12 +26,9 @@ import { BaseModel } from "./Model";
 import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
+import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
 import updateModelFromJson from "./updateModelFromJson";
-import ModelTraits from "../Traits/ModelTraits";
-import StratumOrder from "./StratumOrder";
-import AccessControlMixin from "../ModelMixins/AccessControlMixin";
-import GroupMixin from "../ModelMixins/GroupMixin";
 
 const magdaRecordStratum = "magda-record";
 StratumOrder.addDefaultStratum(magdaRecordStratum);
@@ -520,7 +520,7 @@ export default class MagdaReference extends AccessControlMixin(
       try {
         updateModelFromJson(result, stratum, terriaAspect[stratum], true);
       } catch (err) {
-        result.setTrait("underride", "isExperiencingIssues", true);
+        result.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
       }
     });
 

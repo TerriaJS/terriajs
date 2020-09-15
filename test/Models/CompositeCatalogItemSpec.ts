@@ -16,9 +16,6 @@ describe("CompositeCatalogItem", function() {
       baseUrl: "./"
     });
     composite = new CompositeCatalogItem("test", terria);
-    CatalogMemberFactory.register("composite", CompositeCatalogItem);
-    CatalogMemberFactory.register("geojson", GeoJsonCatalogItem);
-    CatalogMemberFactory.register("wms", WebMapServiceCatalogItem);
   });
 
   it("loads map items after members are added", function(done) {
