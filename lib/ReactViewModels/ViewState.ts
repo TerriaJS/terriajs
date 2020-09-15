@@ -1,31 +1,30 @@
+import {
+  action,
+  computed,
+  IReactionDisposer,
+  observable,
+  reaction,
+  runInAction
+} from "mobx";
 import { Ref } from "react";
 import clone from "terriajs-cesium/Source/Core/clone";
 import defined from "terriajs-cesium/Source/Core/defined";
-import DisclaimerHandler from "./DisclaimerHandler";
+import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import addedByUser from "../Core/addedByUser";
-import getAncestors from "../Models/getAncestors";
-import SearchState from "./SearchState";
-import Terria from "../Models/Terria";
-import triggerResize from "../Core/triggerResize";
-import {
-  observable,
-  reaction,
-  IReactionDisposer,
-  action,
-  runInAction,
-  computed
-} from "mobx";
-import { BaseModel } from "../Models/Model";
-import PickedFeatures from "../Map/PickedFeatures";
-import {
-  TourPoint,
-  defaultTourPoints,
-  RelativePosition
-} from "./defaultTourPoints";
-
-import { SATELLITE_HELP_PROMPT_KEY } from "../ReactViews/HelpScreens/SatelliteHelpPrompt";
-import { LOCAL_PROPERTY_KEY as WELCOME_PROPERTY_KEY } from "../ReactViews/WelcomeMessage/WelcomeMessage";
 import isDefined from "../Core/isDefined";
+import triggerResize from "../Core/triggerResize";
+import PickedFeatures from "../Map/PickedFeatures";
+import getAncestors from "../Models/getAncestors";
+import { BaseModel } from "../Models/Model";
+import Terria from "../Models/Terria";
+import { SATELLITE_HELP_PROMPT_KEY } from "../ReactViews/HelpScreens/SatelliteHelpPrompt";
+import {
+  defaultTourPoints,
+  RelativePosition,
+  TourPoint
+} from "./defaultTourPoints";
+import DisclaimerHandler from "./DisclaimerHandler";
+import SearchState from "./SearchState";
 
 export const DATA_CATALOG_NAME = "data-catalog";
 export const USER_DATA_NAME = "my-data";
@@ -293,8 +292,8 @@ export default class ViewState {
    */
   @observable currentTool?: Tool;
 
-  private _unsubscribeErrorListener: () => void;
-  private _unsubscribeNotificationListener: () => void;
+  private _unsubscribeErrorListener: CesiumEvent.RemoveCallback;
+  private _unsubscribeNotificationListener: CesiumEvent.RemoveCallback;
   private _pickedFeaturesSubscription: IReactionDisposer;
   private _disclaimerVisibleSubscription: IReactionDisposer;
   private _isMapFullScreenSubscription: IReactionDisposer;
