@@ -6,7 +6,7 @@ Change Log
 #### next release (8.0.0-alpha.50)
 * [The next improvement]
 
-#### next release (8.0.0-alpha.49)
+#### 8.0.0-alpha.49
 * WMS GetFeatureInfo fix to ensure `style=undefined` is not sent to server
 * Add support for splitting CSVs (TableMixins) that are using region mapping.
 * `addUserCatalogMember` will now call `addToWorkbench` instead of `workbench.add`.
