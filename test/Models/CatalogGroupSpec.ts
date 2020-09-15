@@ -12,7 +12,6 @@ describe("CatalogGroup", function() {
   let terria: Terria, json: any, catalogGroup: CatalogGroup;
 
   beforeEach(function() {
-    CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
     terria = new Terria();
     json = {
       type: "group",
@@ -87,7 +86,6 @@ describe("CatalogGroup", function() {
   });
 
   it("loads valid items and ignores broken items", function() {
-    CatalogMemberFactory.register(GeoJsonCatalogItem.type, GeoJsonCatalogItem);
     const groupWithBrokenItem = [
       {
         type: "geojson",

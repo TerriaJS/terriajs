@@ -3,14 +3,22 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.48)
-* Allow `cacheDuration` to be set on `ArcGisPortalCatalogGroup` and `ArcGisPortalItemReference`.
-* Set default `ArcGisPortalCatalogGroup` item sorting by title using REST API parameter.
+#### next release (8.0.0-alpha.49)
+* WMS GetFeatureInfo fix to ensure `style=undefined` is not sent to server
+* Add support for splitting CSVs (TableMixins) that are using region mapping.
+* `addUserCatalogMember` will now call `addToWorkbench` instead of `workbench.add`.
+* Fix Webpack Windows path issue
+* Updated icons for view and edit story in the hamburger menu.
 * Add `ThreddsCatalogGroup` model.
 * Port `supportsColorScaleRange`, `colorScaleMinimum` and `colorScaleMaximimum` from `master` to `WebMapServiceCatalogItem` model.
-* Fix small bug with `WebMapServiceCatalogItem` GetFeatureInfo operations to ensure that styles is not undefined.
-
 * [The next improvement]
+
+#### 8.0.0-alpha.48
+* Allow `cacheDuration` to be set on `ArcGisPortalCatalogGroup` and `ArcGisPortalItemReference`.
+* Set default `ArcGisPortalCatalogGroup` item sorting by title using REST API parameter.
+* Call `registerCatalogMembers` before running tests and remove manual calls to `CatalogMemberFactory.register` and `UrlMapping.register` in various tests so that tests reflect the way the library is used.
+* Updated stratum definitions which used hardcoded string to use `CommonStrata` values.
+* Implemented new design for story panel.
 
 #### 8.0.0-alpha.47
 * Removed hard coded senaps base url.
@@ -140,7 +148,6 @@ Change Log
     * Added a popup on remove all stories.
     * Added button for sharing stories.
     * Added a question popup on window close (if there are stories on the map so users don't lose their work).
-* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 * Added a new `editor` Icon
 * Changed `ToolButton` to show the same icon in open/close state. Previously it showed a close icon in close state.
 

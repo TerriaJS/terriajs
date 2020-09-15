@@ -9,8 +9,7 @@
 .go-left,
 .go-right,
 .go-both {
-  width: 33%;
-  float: left;
+  width: 33.333%;
   padding: 5px;
   composes: btn from "../../../Sass/common/_buttons.scss";
 }
