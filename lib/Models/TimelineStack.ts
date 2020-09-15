@@ -27,7 +27,7 @@ export default class TimelineStack {
   defaultTimeVarying: TimeVarying | undefined;
 
   private _disposeClockAutorun: IReactionDisposer;
-  private _disposeTickSubscription: (() => void) | undefined;
+  private _disposeTickSubscription: CesiumEvent.RemoveCallback | undefined;
 
   constructor(readonly clock: Clock) {
     // Keep the Cesium clock in sync with the top layer's clock.
