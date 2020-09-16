@@ -9,6 +9,7 @@ import Terria from "../../lib/Models/Terria";
 import UrlReference from "../../lib/Models/UrlReference";
 import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGroup";
 import ViewState from "../../lib/ReactViewModels/ViewState";
+import { USER_ADDED_CATEGORY_ID } from "../../lib/Core/addedByUser";
 
 const Water_Network = {
   layerDefs: JSON.stringify(
@@ -77,6 +78,15 @@ describe("createUrlReferenceFromUrl", function() {
     expect(item).toBeDefined();
     if (item !== undefined) {
       expect(item instanceof CsvCatalogItem).toBe(true);
+    }
+  });
+
+  it("should create an item that has the user-added data unique id in its knownContainerUniqueIds", async function() {
+    const url = "test/csv/lat_lon_val.csv";
+    const item = await createUrlReferenceFromUrl(url, terria, true);
+    expect(item).toBeDefined();
+    if (item !== undefined) {
+      expect(item.knownContainerUniqueIds.includes(USER_ADDED_CATEGORY_ID));
     }
   });
 
