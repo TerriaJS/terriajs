@@ -81,7 +81,7 @@ describe("createUrlReferenceFromUrl", function() {
     }
   });
 
-  it("should create an item that has the user-added data unique id in its knownContainerUniqueIds", async function() {
+  it("should create an item that has the USER_ADDED_CATEGORY_ID in its knownContainerUniqueIds", async function() {
     const url = "test/csv/lat_lon_val.csv";
     const item = await createUrlReferenceFromUrl(url, terria, true);
     expect(item).toBeDefined();
