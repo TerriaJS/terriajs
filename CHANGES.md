@@ -4,6 +4,8 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.50)
+* Fixed a bug causing users to be brought back to the Data Catalogue tab when clicking on an auto-detected user added catalogue item.
+* Fixed a bug causing Data Preview to not appear under the My Data tab.
 * [The next improvement]
 
 #### 8.0.0-alpha.49
