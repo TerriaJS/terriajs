@@ -1010,7 +1010,7 @@ class WebMapServiceCatalogItem
         // Set selectedId to value stored in `styles` trait for this `layerIndex` or the first available style value
         // The `styles` parameter is CSV, a style for each layer
         selectedId:
-          this.styles?.split(",")?.[layerIndex] || layer.styles[0].name,
+          this.styles?.split(",")?.[layerIndex] || layer.styles[0]?.name,
 
         setDimensionValue: (stratumId: string, newStyle: string) => {
           runInAction(() => {

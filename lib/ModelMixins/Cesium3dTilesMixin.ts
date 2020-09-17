@@ -13,7 +13,6 @@ import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTil
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
-import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import makeRealPromise from "../Core/makeRealPromise";
@@ -28,6 +27,7 @@ import Cesium3dTilesTraits, {
   OptionsTraits
 } from "../Traits/Cesium3dTilesTraits";
 import AsyncMappableMixin from "./AsyncMappableMixin";
+import ShadowMixin from "./ShadowMixin";
 
 interface Cesium3DTilesCatalogItemIface
   extends InstanceType<ReturnType<typeof Cesium3dTilesMixin>> {}
@@ -52,7 +52,9 @@ class ObservableCesium3DTileset extends Cesium3DTileset {
 export default function Cesium3dTilesMixin<
   T extends Constructor<Model<Cesium3dTilesTraits>>
 >(Base: T) {
-  abstract class Cesium3dTilesMixin extends AsyncMappableMixin(Base) {
+  abstract class Cesium3dTilesMixin extends ShadowMixin(
+    AsyncMappableMixin(Base)
+  ) {
     readonly canZoomTo = true;
 
     private tileset?: ObservableCesium3DTileset;
@@ -305,21 +307,6 @@ export default function Cesium3dTilesMixin<
         style.show = toJS(this.showExpressionFromFilters);
       }
       return new Cesium3DTileStyle(style);
-    }
-
-    @computed get cesiumShadows() {
-      switch (this.shadows.toLowerCase()) {
-        case "none":
-          return ShadowMode.DISABLED;
-        case "both":
-          return ShadowMode.ENABLED;
-        case "cast":
-          return ShadowMode.CAST_ONLY;
-        case "receive":
-          return ShadowMode.RECEIVE_ONLY;
-        default:
-          return ShadowMode.DISABLED;
-      }
     }
 
     buildFeatureFromPickResult(_screenPosition: Cartesian2, pickResult: any) {
