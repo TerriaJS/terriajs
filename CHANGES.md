@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.50)
 * Fix WMS style `DimensionSelector` for layers with no styles
+* Add WMS legend for items with no styles
 * [The next improvement]
 
 #### 8.0.0-alpha.49
