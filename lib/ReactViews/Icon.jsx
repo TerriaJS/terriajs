@@ -119,7 +119,9 @@ export const GLYPHS = {
   oneTwoThree: require("../../wwwroot/images/icons/one-two-three.svg"),
   accordionOpen: require("../../wwwroot/images/icons/accordion-open.svg"),
   accordionClose: require("../../wwwroot/images/icons/accordion-close.svg"),
-  editor: require("../../wwwroot/images/icons/editor.svg")
+  editor: require("../../wwwroot/images/icons/editor.svg"),
+  viewStory: require("../../wwwroot/images/icons/view-story.svg"),
+  editStory: require("../../wwwroot/images/icons/edit-story.svg")
 };
 
 export const Icon = createReactClass({

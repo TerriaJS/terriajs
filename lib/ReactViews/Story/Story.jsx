@@ -141,7 +141,7 @@ class Story extends React.Component {
             title={t("story.viewStory")}
           >
             <StoryControl>
-              <StyledIcon glyph={Icon.GLYPHS.eye} />
+              <StyledIcon glyph={Icon.GLYPHS.viewStory} />
               <span>{t("story.view")}</span>
             </StoryControl>
           </StoryMenuButton>
@@ -152,7 +152,7 @@ class Story extends React.Component {
             title={t("story.editStory")}
           >
             <StoryControl>
-              <StyledIcon glyph={Icon.GLYPHS.story} />
+              <StyledIcon glyph={Icon.GLYPHS.editStory} />
               <span>{t("story.edit")}</span>
             </StoryControl>
           </StoryMenuButton>
