@@ -10,6 +10,7 @@ Change Log
 * Fix Webpack Windows path issue
 * Updated icons for view and edit story in the hamburger menu.
 * Fixed a bug that caused the feature info chart for SOS items to not load.
+* SOS & CSV charts are now shareable.
 * [The next improvement]
 
 #### 8.0.0-alpha.48
