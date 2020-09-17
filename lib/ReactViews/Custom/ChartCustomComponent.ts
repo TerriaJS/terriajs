@@ -430,6 +430,9 @@ export default abstract class ChartCustomComponent<
     };
   }
 
+  /**
+   * A helper method to create a shareable reference to an item.
+   */
   async createItemReference(
     sourceItem: CatalogItemType
   ): Promise<CatalogItemType | undefined> {
