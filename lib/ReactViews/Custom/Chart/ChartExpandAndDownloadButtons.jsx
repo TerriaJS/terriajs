@@ -173,6 +173,9 @@ function expandItem(sourceItems, sourceIndex, terria) {
     });
   });
   workbench.add(sourceItem);
+  try {
+    terria.addModel(sourceItem);
+  } catch {}
   runInAction(() =>
     raiseErrorOnRejectedPromise(terria, sourceItem.loadChartItems())
   );
