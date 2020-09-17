@@ -2,7 +2,6 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import arrayContains from "../../Core/arrayContains";
-import Branding from "./../SidePanel/Branding.jsx";
 import RCHotspotSummary from "./../RCHotspotSummary/RCHotspotSummary.jsx";
 import DragDropFile from "./../DragDropFile.jsx";
 import DragDropNotification from "./../DragDropNotification.jsx";
@@ -265,14 +264,14 @@ const StandardUserInterface = createReactClass({
                       this.props.viewState.topElement = "SidePanel";
                     }}
                   >
-                    <Branding terria={terria} version={this.props.version} />
+                    {/* <Branding terria={terria} version={this.props.version} /> */}
 
                     {showHotspotSummary && (
                       <RCHotspotSummary terria={terria} viewState={viewState} />
                     )}
 
                     {!(showStoryPanel || showHotspotSummary) && (
-                      <SidePanelContent terria={terria} />
+                      <SidePanelContent terria={terria} viewState={viewState} />
                     )}
                     {showStoryPanel ? (
                       <div>
