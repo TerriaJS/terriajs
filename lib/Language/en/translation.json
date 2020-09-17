@@ -5,9 +5,10 @@
     "prev": "Prev",
     "next": "Next",
     "skip": "Skip",
+    "back": "Back",
     "delete": "Delete",
     "cancel": "Cancel",
-    "back": "Back"
+    "confirm": "Confirm"
   },
   "trainer": {
     "expandTrainer": "Show more step detail",
@@ -285,6 +286,13 @@
     "dismissText": "Close message and don't show me this again"
   },
   "story": {
+    "panelTitle": "Story editor",
+    "panelBody": "Create and share interactive stories directly from your map",
+    "gettingStarted": "Getting started",
+    "gettingStartedTitle": "Getting started",
+    "badgeBarLabel": "Scenes",
+    "share": "Share",
+    "shareTitle": "share stories",
     "viewStory": "view",
     "view": "View",
     "editStory": "edit",
@@ -297,12 +305,11 @@
     "doesNotExist": "Story does not exist",
     "message": "<2>This is your story editor</2><1>Create and share interactive stories directly from your map<1><0><0></0>Getting Started </0></1></1>",
     "removeAllStories": "Remove All",
-    "removeStoriesPanel": "Are you sure you wish to delete {{ count }} scene?",
-    "removeStoriesPanel_plural": "Are you sure you wish to delete {{ count }} scenes?",
-    "confirmRemove": "Delete",
-    "cancelRemove": "Cancel",
+    "removeAllStoriesDialog": "Are you sure you wish to delete {{ count }} scene?",
+    "removeAllStoriesDialog_plural": "Are you sure you wish to delete {{ count }} scenes?",
+    "removeStoryDialog": "Are you sure you wish to delete '<1>{{storyName}}</1>'?",
     "preview": "preview stories",
-    "play": "Play Story",
+    "play": "Play",
     "captureSceneTitle": "capture current scene",
     "captureScene": "Capture Scene",
     "editor": {
@@ -764,6 +771,7 @@
       "missingUrlMessage": "Could not load the ArcGis FeatureServer endpoint because the catalog item does not have a `url`.",
       "invalidServiceTitle": "Invalid ArcGIS Feature Service layer",
       "invalidServiceMessage": "An error occurred while invoking the ArcGIS Feature Service.  The server's response does not appear to be a valid Feature Service layer.",
+      "reachedMaxFeatureLimit": "Warning: This layer has reached the FeatureService feature limit.",
       "unusableMetadataTitle": "ArcGIS FeatureServer Error",
       "unusableMetadataDefaultMessage": "This dataset returned unusable metadata."
     },
