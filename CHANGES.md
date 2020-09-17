@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.50)
+* Fix WMS style `DimensionSelector` for layers with no styles
 * [The next improvement]
 
 #### 8.0.0-alpha.49
