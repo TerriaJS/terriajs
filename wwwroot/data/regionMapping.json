@@ -2700,11 +2700,47 @@
             ]
         },
         "ARGENTINA_ADM2": {
-            "layerName": "receipt:argentina_adm2_fixed",
-            "server": "http://localhost:6800/receipt/ows",
+            "NONSENSE_server": "http://localhost:8600/geoserver/gwc/service/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&LAYER=receipt:argentina_3857_adm2&STYLE=&TILEMATRIX=EPSG:3857:{z}&TILEMATRIXSET=EPSG:3857&FORMAT=application/vnd.mapbox-vector-tile&TILECOL={x}&TILEROW={y}",
+            "NONSENSE_serverType": "MVT",
+            "NONSENSE_serverMaxNativeZoom": 12,
+            "NONSENSE_serverMinZoom": 0,
+            "NONSENSE_serverMaxZoom": 28,  
+            "NONSENSE_regionIdsFile": "public/data/region_map-FID_ARG_ADM2.json",
+
+            "layerName": "receipt:argentina_3857_adm2",            
+            "server": "http://localhost:8600/geoserver/receipt/ows?tilesorigin=-77.4,-57.6&",
             "regionProp": "ADM2_PCODE",
             "aliases": ["adm2_pcode"],
-            "description": "Argentina administrative boundaries level 2"
+            "description": "Argentina administrative boundaries level 2",
+            "digits": 8,
+            "textCodes": true,
+            "bbox": [
+                -77.4,-57.6,-51.4,-19.4
+            ]
+        },
+        "NUTS_ADM_2": {
+            "NONSENSE_server": "http://localhost:8600/geoserver/gwc/service/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&LAYER=receipt:eu_nuts_3857_adm2&STYLE=&TILEMATRIX=EPSG:3857:{z}&TILEMATRIXSET=EPSG:3857&FORMAT=application/vnd.mapbox-vector-tile&TILECOL={x}&TILEROW={y}",
+            "NONSENSE_serverType": "MVT",
+            "NONSENSE_serverMaxNativeZoom": 12,
+            "NONSENSE_serverMinZoom": 0,
+            "NONSENSE_serverMaxZoom": 28,      
+            "NONSENSE_analyticsWmsLayerName": "receipt:eu_nuts_3857_adm2",
+            "NONSENSE_analyticsWmsServer": "http://localhost:8600/geoserver/receipt/ows",
+            "NONSENSE_regionIdsFile": "public/data/region_map-FID_EU_ADM2.json",
+            
+            "layerName": "receipt:eu_nuts_3857_adm2",
+            "server": "http://localhost:8600/geoserver/receipt/ows?tilesorigin=-26.4,24.3&",
+            "regionProp": "NUTS_ID",
+            "aliases": ["eu_nuts_level_2"],
+            "description": "EU administrative boundaries level 2",
+            "digits": 4,
+            "textCodes": true,
+            "bbox": [
+                -26.4,
+                24.3,
+                49.0,
+                72.5
+            ]
         }
     }
 }
