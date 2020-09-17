@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.50)
 * Fix WMS style `DimensionSelector` for layers with no styles
+* Update the scroll style in `HelpVideoPanel` and `SidePanel` helpful hints.
 * [The next improvement]
 
 #### 8.0.0-alpha.49
