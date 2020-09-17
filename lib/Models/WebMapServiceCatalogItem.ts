@@ -466,19 +466,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get isThredds(): boolean {
-    if (this.catalogItem.url) {
-      if (this.catalogItem.url.indexOf("thredds") > -1) return true;
-    }
-    return false;
-  }
-
-  @computed
-  get supportsColorScaleRange(): boolean {
-    return this.isThredds;
-  }
-
-  @computed
   get discreteTimes(): { time: string; tag: string | undefined }[] | undefined {
     const result = [];
 
@@ -630,6 +617,35 @@ class WebMapServiceCatalogItem
     return true;
   }
 
+  // TODO - There is possibly a better way to do this
+  @computed
+  get isThredds(): boolean {
+    if (this.url && this.url.indexOf("thredds") > -1) {
+      return true;
+    }
+    return false;
+  }
+
+  // TODO - Geoserver also support NCWMS via a plugin, just need to work out how to detect that
+  @computed
+  get isNcWMS(): boolean {
+    if (this.isThredds) return true;
+    return false;
+  }
+
+  @computed
+  get supportsColorScaleRange(): boolean {
+    return this.isNcWMS;
+  }
+
+  @computed
+  get colorScaleRange(): string | undefined {
+    if (this.supportsColorScaleRange) {
+      return `${this.colorScaleMinimum},${this.colorScaleMaximum}`;
+    }
+    return undefined;
+  }
+
   protected forceLoadMetadata(): Promise<void> {
     return GetCapabilitiesStratum.load(this).then(stratum => {
       runInAction(() => {
@@ -744,14 +760,6 @@ class WebMapServiceCatalogItem
     this.setTrait(CommonStrata.user, "secondDiffDate", undefined);
     this.setTrait(CommonStrata.user, "diffStyleId", undefined);
     this.setTrait(CommonStrata.user, "isShowingDiff", false);
-  }
-
-  @computed
-  get colorScaleRange(): string | undefined {
-    if (this.supportsColorScaleRange) {
-      return `${this.colorScaleMinimum},${this.colorScaleMaximum}`;
-    }
-    return undefined;
   }
 
   getLegendUrlForStyle(

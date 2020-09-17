@@ -260,20 +260,27 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   })
   linkedWcsCoverage?: string;
 
-  @primitiveTrait({
-    type: "boolean",
-    name: "Is Thredds",
-    description: "True if this WMS is from a THREDDS server; otherwise, false."
-  })
-  isThredds: boolean = false;
+  // @primitiveTrait({
+  //   type: "boolean",
+  //   name: "Is Thredds",
+  //   description: "True if this WMS is from a THREDDS server; otherwise, false."
+  // })
+  // isThredds: boolean = false;
 
-  @primitiveTrait({
-    type: "boolean",
-    name: "Supports color scale range",
-    description:
-      "Gets or sets whether this WMS server has been identified as supporting the COLORSCALERANGE parameter."
-  })
-  supportsColorScaleRange: boolean = false;
+  // @primitiveTrait({
+  //   type: "boolean",
+  //   name: "Is NcWMS",
+  //   description: "True if this WMS supports NcWMS."
+  // })
+  // isNcWMS: boolean = false;
+
+  // @primitiveTrait({
+  //   type: "boolean",
+  //   name: "Supports color scale range",
+  //   description:
+  //     "Gets or sets whether this WMS server has been identified as supporting the COLORSCALERANGE parameter."
+  // })
+  // supportsColorScaleRange: boolean = false;
 
   @primitiveTrait({
     type: "number",

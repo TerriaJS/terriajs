@@ -18,6 +18,7 @@ import CommonStrata from "./CommonStrata";
 interface ThreddsCatalog {
   id: string;
   name: string;
+  title: string;
   isLoaded: boolean;
   url: string;
   supportsWms: boolean;
@@ -28,6 +29,7 @@ interface ThreddsCatalog {
   getAllChildDatasets: Function;
   loadAllNestedCatalogs: Function;
   loadNestedCatalogById: Function;
+  parentCatalog: ThreddsCatalog;
 }
 
 interface ThreddsDataset {
@@ -39,39 +41,31 @@ interface ThreddsDataset {
   isParentDataset: boolean;
   datasets: ThreddsDataset[];
   catalogs: ThreddsCatalog[];
+  loadAllNestedCatalogs: Function;
 }
 
 export class ThreddsStratum extends LoadableStratum(ThreddsCatalogGroupTraits) {
   static stratumName = "thredds";
+  private threddsCatalog: ThreddsCatalog | undefined = undefined;
 
-  constructor(
-    readonly _catalogGroup: ThreddsCatalogGroup,
-    readonly threddsCatalog: ThreddsCatalog
-  ) {
+  constructor(readonly _catalogGroup: ThreddsCatalogGroup) {
     super();
-    this.createMembers();
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
-    return new ThreddsStratum(
-      model as ThreddsCatalogGroup,
-      this.threddsCatalog
-    ) as this;
+    return new ThreddsStratum(model as ThreddsCatalogGroup) as this;
   }
 
   static async load(
     catalogGroup: ThreddsCatalogGroup
   ): Promise<ThreddsStratum | undefined> {
-    var terria = catalogGroup.terria;
-    const threddsCatalog: ThreddsCatalog = await threddsCrawler(
-      catalogGroup.url
-    );
-
-    return new ThreddsStratum(catalogGroup, threddsCatalog);
+    return new ThreddsStratum(catalogGroup);
   }
 
   @computed
   get members(): ModelReference[] {
+    if (this.threddsCatalog === undefined) return [];
+
     const memberIds: ModelReference[] = [];
 
     this.threddsCatalog.catalogs.forEach((catalog: ThreddsCatalog) => {
@@ -93,13 +87,16 @@ export class ThreddsStratum extends LoadableStratum(ThreddsCatalogGroupTraits) {
       `${this._catalogGroup.uniqueId}/${catalog.id}`,
       this._catalogGroup.terria
     );
-    threddsGroup.setTrait(CommonStrata.definition, "name", catalog.name);
+
+    threddsGroup.setTrait(CommonStrata.definition, "name", catalog.title);
     threddsGroup.setTrait(CommonStrata.definition, "url", catalog.url);
     threddsGroup.terria.addModel(threddsGroup);
   }
 
   @action
   async createMembers() {
+    this.threddsCatalog = await threddsCrawler(this._catalogGroup.url);
+    if (this.threddsCatalog === undefined) return;
     // Create sub-groups for any nested catalogs
     for (let i = 0; i < this.threddsCatalog.catalogs.length; i++) {
       this.createThreddsCatalog(this.threddsCatalog.catalogs[i]);
@@ -108,24 +105,31 @@ export class ThreddsStratum extends LoadableStratum(ThreddsCatalogGroupTraits) {
     // Create members for individual datasets
     for (let i = 0; i < this.threddsCatalog.datasets.length; i++) {
       const ds = this.threddsCatalog.datasets[i];
-
+      await ds.loadAllNestedCatalogs();
       for (let ii = 0; ii < ds.catalogs.length; ii++) {
         this.createThreddsCatalog(ds.catalogs[ii]);
       }
 
       if (ds.isParentDataset) {
-        const fakeThreddsGroup = new CatalogGroup(
-          `${this._catalogGroup.uniqueId}/${ds.id}`,
-          this._catalogGroup.terria
-        );
-        fakeThreddsGroup.terria.addModel(fakeThreddsGroup);
-        fakeThreddsGroup.setTrait(CommonStrata.definition, "name", ds.name);
+        let parent: CatalogGroup | ThreddsCatalogGroup = this._catalogGroup;
+
+        if (this.threddsCatalog.datasets.length > 1) {
+          const fakeThreddsGroup = new CatalogGroup(
+            `${this._catalogGroup.uniqueId}/${ds.id}`,
+            this._catalogGroup.terria
+          );
+          fakeThreddsGroup.terria.addModel(fakeThreddsGroup);
+          fakeThreddsGroup.setTrait(CommonStrata.definition, "name", ds.name);
+          parent = fakeThreddsGroup;
+        }
+
         ds.datasets.forEach(dataset => {
           const item = this.createMemberFromDataset(dataset);
-          if (item !== undefined)
-            fakeThreddsGroup.add(CommonStrata.definition, item);
+          if (item !== undefined) parent.add(CommonStrata.definition, item);
         });
-      } else if (ds.supportsWms) this.createMemberFromDataset(ds);
+      } else if (ds.supportsWms) {
+        this.createMemberFromDataset(ds);
+      }
     }
   }
 
@@ -177,12 +181,17 @@ export default class ThreddsCatalogGroup extends UrlMixin(
   }
 
   protected forceLoadMetadata(): Promise<void> {
+    return Promise.resolve();
+  }
+
+  protected forceLoadMembers(): Promise<void> {
     const threddsStratum = <ThreddsStratum | undefined>(
       this.strata.get(ThreddsStratum.stratumName)
     );
     if (!threddsStratum) {
-      return ThreddsStratum.load(this).then(stratum => {
+      return ThreddsStratum.load(this).then(async stratum => {
         if (stratum === undefined) return;
+        await stratum.createMembers();
         runInAction(() => {
           this.strata.set(ThreddsStratum.stratumName, stratum);
         });
@@ -190,9 +199,5 @@ export default class ThreddsCatalogGroup extends UrlMixin(
     } else {
       return Promise.resolve();
     }
-  }
-
-  protected forceLoadMembers(): Promise<void> {
-    return this.loadMetadata();
   }
 }
