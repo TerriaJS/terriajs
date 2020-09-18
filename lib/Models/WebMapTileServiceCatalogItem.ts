@@ -302,10 +302,9 @@ class WmtsCapabilitiesStratum extends LoadableStratum(
     for (let i = 0; i < matrixSets.length; i++) {
       const matrixSet = matrixSets[i];
       if (
-        matrixSet.SupportedCRS !== "urn:ogc:def:crs:EPSG::900913" &&
-        matrixSet.SupportedCRS !== "urn:ogc:def:crs:EPSG:6.18:3:3857" &&
-        matrixSet.SupportedCRS !== "urn:ogc:def:crs:EPSG:6.18.3:3857" && // found in esri wmts
-        matrixSet.SupportedCRS !== "urn:ogc:def:crs:EPSG::3857"
+        !matrixSet.SupportedCRS ||
+        (!/EPSG.*900913/.test(matrixSet.SupportedCRS) &&
+          !/EPSG.*3857/.test(matrixSet.SupportedCRS))
       ) {
         continue;
       }
