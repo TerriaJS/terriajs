@@ -3,6 +3,7 @@ Change Log
 
 ### Next Release
 
+* Fixed a crash with GeoJsonCatalogItem when you set a `stroke-opacity` in `styles`.
 
 ### v7.11.11
 
