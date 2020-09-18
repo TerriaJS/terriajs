@@ -37,6 +37,105 @@ export function getRectangleFromLayer(
   return undefined;
 }
 
+/**
+ * Get CapabilitiesService (in WMS form)
+ */
+function getService(json: any): CapabilitiesService {
+  const serviceProviderJson = json["ServiceProvider"];
+  const serviceIdentificationJson = json["ServiceIdentification"];
+  const serviceAddressJson =
+    serviceProviderJson?.["ServiceContact"]?.["ContactInfo"]?.["Address"];
+  const service: CapabilitiesService = {
+    Title: serviceIdentificationJson?.["Title"],
+    Abstract: serviceIdentificationJson?.["Abstract"],
+    Fees: serviceIdentificationJson?.["Fees"],
+    AccessConstraints: serviceIdentificationJson?.["AccessConstraints"],
+    KeywordList: {
+      Keyword: serviceIdentificationJson?.["Keywords"]?.["Keyword"]
+    },
+    ContactInformation: {
+      ContactPersonPrimary: {
+        ContactPerson:
+          serviceProviderJson?.["ServiceContact"]?.["IndividualName"],
+        ContactOrganization: serviceProviderJson?.["ProviderName"]
+      },
+      ContactPosition:
+        serviceProviderJson?.["ServiceContact"]?.["PositionName"],
+      ContactAddress: {
+        Address: serviceAddressJson?.["DeliveryPoint"],
+        City: serviceAddressJson?.["City"],
+        StateOrProvince: serviceAddressJson?.["AdministrativeArea"],
+        PostCode: serviceAddressJson?.["PostalCode"],
+        Country: serviceAddressJson?.["Country"]
+      },
+      ContactVoiceTelephone:
+        serviceProviderJson?.["ServiceContact"]?.["ContactInfo"]?.["Phone"]?.[
+          "Voice"
+        ],
+      ContactFacsimileTelephone:
+        serviceProviderJson?.["ServiceContact"]?.["ContactInfo"]?.["Phone"]?.[
+          "Facsimile"
+        ],
+      ContactElectronicMailAddress:
+        serviceProviderJson?.["ServiceContact"]?.["ContactInfo"]?.["Address"]?.[
+          "ElectronicMailAddress"
+        ]
+    }
+  };
+  return service;
+}
+
+function getFeatureTypes(json: any): FeatureType[] {
+  let featureTypesJson = json.FeatureTypeList?.FeatureType as
+    | Array<any>
+    | string;
+  if (!isDefined(featureTypesJson)) {
+    return [];
+  }
+  if (!Array.isArray(featureTypesJson)) {
+    featureTypesJson = [featureTypesJson];
+  }
+  return (
+    featureTypesJson.map<FeatureType>((json: any) => {
+      const lowerCorner = json["WGS84BoundingBox"]?.["LowerCorner"].split(" ");
+      const upperCorner = json["WGS84BoundingBox"]?.["UpperCorner"].split(" ");
+
+      let outputFormats: string[] | undefined;
+      if (isDefined(json.OutputFormats)) {
+        outputFormats = Array.isArray(json.OutputFormats)
+          ? json.OutputFormats.map((o: any) => o.Format)
+          : [json.OutputFormats.Format];
+      }
+
+      return {
+        Title: json.Title,
+        Name: json.Name,
+        Abstract: json.Abstract,
+        Keyword: json["Keywords"]?.["Keyword"],
+        WGS84BoundingBox: {
+          westBoundLongitude: lowerCorner && parseFloat(lowerCorner[0]),
+          southBoundLatitude: lowerCorner && parseFloat(lowerCorner[1]),
+          eastBoundLongitude: upperCorner && parseFloat(upperCorner[0]),
+          northBoundLatitude: upperCorner && parseFloat(upperCorner[1])
+        },
+        OutputFormats: outputFormats
+      };
+    }) || []
+  );
+}
+
+function getOutputTypes(json: any): string[] | undefined {
+  let outputTypes = json.OperationsMetadata?.Operation?.find(
+    (op: any) => op.name === "GetFeature"
+  )?.Parameter?.find((p: any) => p.name === "outputFormat")?.Value;
+
+  if (!isDefined(outputTypes)) {
+    return;
+  }
+
+  return Array.isArray(outputTypes) ? outputTypes : [outputTypes];
+}
+
 export default class WebFeatureServiceCapabilities {
   static fromUrl: (
     url: string
@@ -58,113 +157,15 @@ export default class WebFeatureServiceCapabilities {
     }
   );
 
-  /**
-   * Get CapabilitiesService (in WMS form)
-   */
-  @computed
-  get Service(): CapabilitiesService {
-    const serviceProviderJson = this.json["ServiceProvider"];
-    const serviceIdentificationJson = this.json["ServiceIdentification"];
-    const serviceAddressJson =
-      serviceProviderJson?.["ServiceContact"]?.["ContactInfo"]?.["Address"];
-    const service: CapabilitiesService = {
-      Title: serviceIdentificationJson?.["Title"],
-      Abstract: serviceIdentificationJson?.["Abstract"],
-      Fees: serviceIdentificationJson?.["Fees"],
-      AccessConstraints: serviceIdentificationJson?.["AccessConstraints"],
-      KeywordList: {
-        Keyword: serviceIdentificationJson?.["Keywords"]?.["Keyword"]
-      },
-      ContactInformation: {
-        ContactPersonPrimary: {
-          ContactPerson:
-            serviceProviderJson?.["ServiceContact"]?.["IndividualName"],
-          ContactOrganization: serviceProviderJson?.["ProviderName"]
-        },
-        ContactPosition:
-          serviceProviderJson?.["ServiceContact"]?.["PositionName"],
-        ContactAddress: {
-          Address: serviceAddressJson?.["DeliveryPoint"],
-          City: serviceAddressJson?.["City"],
-          StateOrProvince: serviceAddressJson?.["AdministrativeArea"],
-          PostCode: serviceAddressJson?.["PostalCode"],
-          Country: serviceAddressJson?.["Country"]
-        },
-        ContactVoiceTelephone:
-          serviceProviderJson?.["ServiceContact"]?.["ContactInfo"]?.["Phone"]?.[
-            "Voice"
-          ],
-        ContactFacsimileTelephone:
-          serviceProviderJson?.["ServiceContact"]?.["ContactInfo"]?.["Phone"]?.[
-            "Facsimile"
-          ],
-        ContactElectronicMailAddress:
-          serviceProviderJson?.["ServiceContact"]?.["ContactInfo"]?.[
-            "Address"
-          ]?.["ElectronicMailAddress"]
-      }
-    };
-    return service;
+  readonly service: CapabilitiesService;
+  readonly outputTypes: string[] | undefined;
+  readonly featureTypes: FeatureType[];
+
+  private constructor(xml: XMLDocument, json: any) {
+    this.service = getService(json);
+    this.outputTypes = getOutputTypes(json);
+    this.featureTypes = getFeatureTypes(json);
   }
-
-  @computed
-  get featureTypes(): FeatureType[] {
-    let featureTypesJson = this.json.FeatureTypeList?.FeatureType as
-      | Array<any>
-      | string;
-    if (!isDefined(featureTypesJson)) {
-      return [];
-    }
-    if (!Array.isArray(featureTypesJson)) {
-      featureTypesJson = [featureTypesJson];
-    }
-    return (
-      featureTypesJson.map<FeatureType>((json: any) => {
-        const lowerCorner = json["WGS84BoundingBox"]?.["LowerCorner"].split(
-          " "
-        );
-        const upperCorner = json["WGS84BoundingBox"]?.["UpperCorner"].split(
-          " "
-        );
-
-        let outputFormats: string[] | undefined;
-        if (isDefined(json.OutputFormats)) {
-          outputFormats = Array.isArray(json.OutputFormats)
-            ? json.OutputFormats.map((o: any) => o.Format)
-            : [json.OutputFormats.Format];
-        }
-
-        return {
-          Title: json.Title,
-          Name: json.Name,
-          Abstract: json.Abstract,
-          Keyword: json["Keywords"]?.["Keyword"],
-          WGS84BoundingBox: {
-            westBoundLongitude: lowerCorner && parseFloat(lowerCorner[0]),
-            southBoundLatitude: lowerCorner && parseFloat(lowerCorner[1]),
-            eastBoundLongitude: upperCorner && parseFloat(upperCorner[0]),
-            northBoundLatitude: upperCorner && parseFloat(upperCorner[1])
-          },
-          OutputFormats: outputFormats
-        };
-      }) || []
-    );
-  }
-
-  @computed
-  get outputTypes(): string[] | undefined {
-    let outputTypes = this.json.OperationsMetadata?.Operation?.find(
-      (op: any) => op.name === "GetFeature"
-    )?.Parameter?.find((p: any) => p.name === "outputFormat")?.Value;
-
-    if (!isDefined(outputTypes)) {
-      return;
-    }
-
-    return Array.isArray(outputTypes) ? outputTypes : [outputTypes];
-  }
-
-  private constructor(readonly xml: XMLDocument, readonly json: any) {}
 
   /**
    * Finds the layer in GetCapabilities corresponding to a given layer name. Names are
