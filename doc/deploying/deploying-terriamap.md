@@ -14,17 +14,11 @@ Then, you can host your TerriaMap using either the included Node.js-based web se
 
 The easiest way to deploy your TerriaMap is to use the included Node.js-based web server, called [terriajs-server](https://github.com/TerriaJS/terriajs-server).  You'll need Node.js 8.0+ installed on the server in order to run terriajs-server.  
 
-Then, run:
-
-```
-npm run gulp make-productionserverconfig
-```
-
-And copy the following files and directories from your local system where you built TerriaMap onto the server:
+Then, copy the following files and directories from your local system where you built TerriaMap onto the server:
 
 * `wwwroot`
 * `node_modules`
-* `productionserverconfig.json`
+* `devserverconfig.json` but rename this to `productionserverconfig.json` (and add any private access keys/passwords/secrets)
 * `ecosystem-production.config.js`
 
 And on the server, change to the directory where you copied those files and directories and run:
