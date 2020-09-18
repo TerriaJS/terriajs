@@ -1,41 +1,31 @@
+import DOMPurify from "dompurify";
 import i18next from "i18next";
-import { runInAction, computed } from "mobx";
+import { computed, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
-import filterOutUndefined from "../Core/filterOutUndefined";
 import URI from "urijs";
-import {
-  isJsonObject,
-  isJsonString,
-  JsonArray,
-  JsonObject
-} from "../Core/Json";
+import isDefined from "../Core/isDefined";
+import { JsonObject } from "../Core/Json";
 import loadJson from "../Core/loadJson";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import TerriaError from "../Core/TerriaError";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import ArcGisPortalItemTraits from "../Traits/ArcGisPortalItemTraits";
 import ArcGisPortalItemFormatTraits from "../Traits/ArcGisPortalItemFormatTraits";
+import ArcGisPortalItemTraits from "../Traits/ArcGisPortalItemTraits";
+import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
+import { RectangleTraits } from "../Traits/MappableTraits";
+import ModelTraits from "../Traits/ModelTraits";
+import ArcGisPortalCatalogGroup from "./ArcGisPortalCatalogGroup";
+import { ArcGisItem } from "./ArcGisPortalDefinitions";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
+import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
 import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
-import LoadableStratum from "./LoadableStratum";
-import Terria from "./Terria";
-import updateModelFromJson from "./updateModelFromJson";
-import ModelTraits from "../Traits/ModelTraits";
-import { RectangleTraits } from "../Traits/MappableTraits";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import StratumOrder from "./StratumOrder";
-import GroupMixin from "../ModelMixins/GroupMixin";
-import DOMPurify from "dompurify";
-
-import { ArcGisItem } from "./ArcGisPortalDefinitions";
-import ArcGisPortalCatalogGroup from "./ArcGisPortalCatalogGroup";
+import Terria from "./Terria";
 
 export class ArcGisPortalItemStratum extends LoadableStratum(
   ArcGisPortalItemTraits
@@ -266,6 +256,16 @@ export default class ArcGisPortalItemReference extends UrlMixin(
   }
 
   @computed
+  get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    } else if (isDefined(this._arcgisPortalCatalogGroup)) {
+      return this._arcgisPortalCatalogGroup.cacheDuration;
+    }
+    return "0d";
+  }
+
+  @computed
   get preparedSupportedFormats(): PreparedSupportedFormat[] {
     return (
       this.supportedFormats && this.supportedFormats.map(prepareSupportedFormat)
@@ -373,10 +373,10 @@ export default class ArcGisPortalItemReference extends UrlMixin(
     previousTarget = model;
     await this.setArcgisStrata(model);
 
-    const defintionStratum = this.strata.get("definition");
+    const defintionStratum = this.strata.get(CommonStrata.definition);
     if (defintionStratum) {
-      model.strata.set("definition", defintionStratum);
-      model.setTrait("definition", "url", undefined);
+      model.strata.set(CommonStrata.definition, defintionStratum);
+      model.setTrait(CommonStrata.definition, "url", undefined);
     }
 
     if (this.itemProperties !== undefined) {
@@ -417,7 +417,7 @@ async function loadPortalItem(portalItem: ArcGisPortalItemReference) {
     .addQuery({ f: "json" });
 
   const response: ArcGisItem = await loadJson(
-    proxyCatalogItemUrl(portalItem, uri.toString(), "1d")
+    proxyCatalogItemUrl(portalItem, uri.toString(), portalItem.cacheDuration)
   );
   return response;
 }
@@ -436,7 +436,7 @@ async function loadAdditionalPortalInfo(portalItem: ArcGisPortalItemReference) {
   // Sometimes it actually returns json containing an error, but not always
   try {
     const response: ArcGisItemInfo = await loadJson(
-      proxyCatalogItemUrl(portalItem, uri.toString(), "1d")
+      proxyCatalogItemUrl(portalItem, uri.toString(), portalItem.cacheDuration)
     );
     return response;
   } catch (err) {

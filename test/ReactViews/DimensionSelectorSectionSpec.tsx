@@ -121,35 +121,34 @@ describe("DimensionSelectorSection", function() {
         );
 
         const selects = section.root.findAllByType(Select);
-
         const labels = section.root.findAllByType("label");
 
-        // Expect 2 styles (layer A, layer B) + 3 dimensions (elevation, custom, another)
+        // Expect 3 dimensions (elevation, custom, another) + 2 styles (layer A, layer B)
         expect(selects.length).toBe(5);
         expect(labels.length).toBe(5);
 
-        // Check Style A
-        expect(selects[0].props.name).toContain(`${wmsItem.uniqueId}-A-styles`);
-        expect(selects[0].props.value).toBe("contour/ferret");
-        expect(selects[0].findAllByType("option").length).toBe(40);
-
-        expect(selects[1].props.name).toContain(`${wmsItem.uniqueId}-B-styles`);
-        expect(selects[1].props.value).toBe("shadefill/alg2");
-        expect(selects[1].findAllByType("option").length).toBe(40);
-
-        expect(selects[2].props.name).toContain(
+        expect(selects[0].props.name).toContain(
           `${wmsItem.uniqueId}-elevation`
         );
-        expect(selects[2].props.value).toBe("-0.59375");
-        expect(selects[2].findAllByType("option").length).toBe(16);
+        expect(selects[0].props.value).toBe("-0.59375");
+        expect(selects[0].findAllByType("option").length).toBe(16);
 
-        expect(selects[3].props.name).toContain(`${wmsItem.uniqueId}-custom`);
-        expect(selects[3].props.value).toBe("Another thing");
-        expect(selects[3].findAllByType("option").length).toBe(4);
+        expect(selects[1].props.name).toContain(`${wmsItem.uniqueId}-custom`);
+        expect(selects[1].props.value).toBe("Another thing");
+        expect(selects[1].findAllByType("option").length).toBe(4);
 
-        expect(selects[4].props.name).toContain(`${wmsItem.uniqueId}-another`);
-        expect(selects[4].props.value).toBe("Second");
-        expect(selects[4].findAllByType("option").length).toBe(3);
+        expect(selects[2].props.name).toContain(`${wmsItem.uniqueId}-another`);
+        expect(selects[2].props.value).toBe("Second");
+        expect(selects[2].findAllByType("option").length).toBe(3);
+
+        // Check Style A
+        expect(selects[3].props.name).toContain(`${wmsItem.uniqueId}-A-styles`);
+        expect(selects[3].props.value).toBe("contour/ferret");
+        expect(selects[3].findAllByType("option").length).toBe(40);
+
+        expect(selects[4].props.name).toContain(`${wmsItem.uniqueId}-B-styles`);
+        expect(selects[4].props.value).toBe("shadefill/alg2");
+        expect(selects[4].findAllByType("option").length).toBe(40);
       })
       .then(done)
       .catch(done.fail);

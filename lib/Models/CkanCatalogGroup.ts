@@ -12,6 +12,7 @@ import ModelReference from "../Traits/ModelReference";
 import CatalogGroup from "./CatalogGroupNew";
 import { CkanDataset, CkanServerResponse } from "./CkanDefinitions";
 import CkanItemReference from "./CkanItemReference";
+import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
@@ -172,7 +173,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
       groupId
     );
     if (group !== undefined) {
-      group.add("definition", catalogItem);
+      group.add(CommonStrata.definition, catalogItem);
     }
   }
 
@@ -291,7 +292,7 @@ export default class CkanCatalogGroup extends UrlMixin(
 
 function createGroup(groupId: string, terria: Terria, groupName: string) {
   const g = new CatalogGroup(groupId, terria);
-  g.setTrait("definition", "name", groupName);
+  g.setTrait(CommonStrata.definition, "name", groupName);
   terria.addModel(g);
   return g;
 }
@@ -356,7 +357,11 @@ function createGroupsByCkanGroups(
           ckanServer._catalogGroup.terria,
           g.display_name
         );
-        existingGroup.setTrait("definition", "description", g.description);
+        existingGroup.setTrait(
+          CommonStrata.definition,
+          "description",
+          g.description
+        );
       }
       groups.push(existingGroup);
     });
