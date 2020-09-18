@@ -19,6 +19,7 @@ Then, copy the following files and directories from your local system where you 
 * `wwwroot`
 * `node_modules`
 * `devserverconfig.json` but rename this to `productionserverconfig.json` (and add any private access keys/passwords/secrets)
+* `ecosystem.config.js`
 * `ecosystem-production.config.js`
 
 And on the server, change to the directory where you copied those files and directories and run:
