@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { createTransformer } from "mobx-utils";
 import defined from "terriajs-cesium/Source/Core/defined";
 import loadXML from "../Core/loadXML";
@@ -11,7 +12,6 @@ import {
   ServiceIdentification,
   ServiceProvider
 } from "./OwsInterfaces";
-import i18next from "i18next";
 
 export interface WmtsLayer {
   // according to start WMTS only have title
@@ -143,37 +143,35 @@ export default class WebMapTileServiceCapabilities {
   ) {
     this.layers = [];
     this.tileMatrixSets = [];
-    const layers = this.layers;
-    const tileMatrixSets = this.tileMatrixSets;
 
     const layerElements = this.json.Contents?.Layer as
       | Array<WmtsLayer>
       | WmtsLayer;
     if (layerElements && Array.isArray(layerElements)) {
-      layers.push(...layerElements);
+      this.layers.push(...layerElements);
     } else if (layerElements) {
-      layers.push(layerElements);
+      this.layers.push(layerElements);
     }
 
     const tileMatrixSetsElements = this.json.Contents?.TileMatrixSet as
       | Array<TileMatrixSet>
       | TileMatrixSet;
     if (tileMatrixSetsElements && Array.isArray(tileMatrixSetsElements)) {
-      tileMatrixSets.push(...tileMatrixSetsElements);
+      this.tileMatrixSets.push(...tileMatrixSetsElements);
     } else if (tileMatrixSetsElements) {
-      tileMatrixSets.push(tileMatrixSetsElements);
+      this.tileMatrixSets.push(tileMatrixSetsElements);
     }
   }
 
-  get ServiceIdentification(): ServiceIdentification | undefined {
+  get ServiceIdentification() {
     return this.json.ServiceIdentification;
   }
 
-  get OperationsMetadata(): any {
+  get OperationsMetadata() {
     return this.json.OperationsMetadata;
   }
 
-  get ServiceProvider(): ServiceProvider | undefined {
+  get ServiceProvider() {
     return this.json.ServiceProvider;
   }
 

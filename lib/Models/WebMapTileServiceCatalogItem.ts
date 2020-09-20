@@ -1,15 +1,17 @@
 import i18next from "i18next";
 import { computed, runInAction } from "mobx";
 import defined from "terriajs-cesium/Source/Core/defined";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import WebMapTileServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapTileServiceImageryProvider";
 import URI from "urijs";
+import containsAny from "../Core/containsAny";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
+import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
+import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import LegendTraits from "../Traits/LegendTraits";
 import { RectangleTraits } from "../Traits/MappableTraits";
 import WebMapTileServiceCatalogItemTraits, {
@@ -19,7 +21,6 @@ import isReadOnlyArray from "./../Core/isReadOnlyArray";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import LoadableStratum from "./LoadableStratum";
-import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
 import { CapabilitiesLegend, ServiceProvider } from "./OwsInterfaces";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
@@ -30,8 +31,6 @@ import WebMapTileServiceCapabilities, {
   TileMatrixSetLink,
   WmtsLayer
 } from "./WebMapTileServiceCapabilities";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
-import containsAny from "../Core/containsAny";
 
 interface UsableTileMatrixSets {
   identifiers: string[];
@@ -384,13 +383,13 @@ class WmtsCapabilitiesStratum extends LoadableStratum(
   }
 }
 
-class WebMapTileServiceCatalogItem
-  extends GetCapabilitiesMixin(
+class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
+  GetCapabilitiesMixin(
     UrlMixin(
       CatalogMemberMixin(CreateModel(WebMapTileServiceCatalogItemTraits))
     )
   )
-  implements Mappable {
+) {
   /**
    * The collection of strings that indicate an Abstract property should be ignored.  If these strings occur anywhere
    * in the Abstract, the Abstract will not be used.  This makes it easy to filter out placeholder data like
@@ -413,11 +412,6 @@ class WebMapTileServiceCatalogItem
     return WebMapTileServiceCatalogItem.type;
   }
 
-  // TODO
-  get isMappable() {
-    return true;
-  }
-
   protected forceLoadMetadata(): Promise<void> {
     return WmtsCapabilitiesStratum.load(this).then(stratum => {
       runInAction(() => {
@@ -429,7 +423,7 @@ class WebMapTileServiceCatalogItem
     });
   }
 
-  loadMapItems(): Promise<void> {
+  forceLoadMapItems(): Promise<void> {
     return this.loadMetadata();
   }
 
@@ -518,23 +512,6 @@ class WebMapTileServiceCatalogItem
     const tileMatrixSet = this.tileMatrixSet;
     if (!isDefined(tileMatrixSet)) {
       return;
-    }
-    let rectangle: Rectangle;
-    if (
-      this.rectangle !== undefined &&
-      this.rectangle.west !== undefined &&
-      this.rectangle.south !== undefined &&
-      this.rectangle.east !== undefined &&
-      this.rectangle.north !== undefined
-    ) {
-      rectangle = Rectangle.fromDegrees(
-        this.rectangle.west,
-        this.rectangle.south,
-        this.rectangle.east,
-        this.rectangle.north
-      );
-    } else {
-      rectangle = Rectangle.MAX_VALUE;
     }
 
     const imageryProvider = new WebMapTileServiceImageryProvider({

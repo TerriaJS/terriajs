@@ -1,22 +1,19 @@
-import ModelTraits from "./ModelTraits";
-import mixTraits from "./mixTraits";
-import ExportableTraits from "./ExportableTraits";
-import DiffableTraits from "./DiffableTraits";
-import FeatureInfoTraits from "./FeatureInfoTraits";
-import LayerOrderingTraits from "./LayerOrderingTraits";
-import SplitterTraits from "./SplitterTraits";
-import TimeFilterTraits from "./TimeFilterTraits";
-import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
-import RasterLayerTraits from "./RasterLayerTraits";
-import UrlTraits from "./UrlTraits";
-import MappableTraits from "./MappableTraits";
-import CatalogMemberTraits from "./CatalogMemberTraits";
-import primitiveTrait from "./primitiveTrait";
-import objectArrayTrait from "./objectArrayTrait";
-import LegendTraits from "./LegendTraits";
-import anyTrait from "./anyTrait";
 import { JsonObject } from "../Core/Json";
+import anyTrait from "./anyTrait";
+import CatalogMemberTraits from "./CatalogMemberTraits";
+import FeatureInfoTraits from "./FeatureInfoTraits";
+import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
+import LayerOrderingTraits from "./LayerOrderingTraits";
+import LegendTraits from "./LegendTraits";
+import MappableTraits from "./MappableTraits";
+import mixTraits from "./mixTraits";
+import ModelTraits from "./ModelTraits";
+import objectArrayTrait from "./objectArrayTrait";
 import objectTrait from "./objectTrait";
+import primitiveTrait from "./primitiveTrait";
+import RasterLayerTraits from "./RasterLayerTraits";
+import SplitterTraits from "./SplitterTraits";
+import UrlTraits from "./UrlTraits";
 
 export class WebMapTileServiceAvailableStyleTraits extends ModelTraits {
   @primitiveTrait({

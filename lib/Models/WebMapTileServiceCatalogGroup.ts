@@ -153,7 +153,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       return;
     }
 
-    // Create model for WebFeatureServiceCatalogItem
+    // Create model for WMTSCatalogItem
     const existingModel = this.catalogGroup.terria.getModelById(
       WebMapTileServiceCatalogItem,
       layerId
