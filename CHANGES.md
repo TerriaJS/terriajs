@@ -4,6 +4,8 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.50)
+* Fixed a bug causing users to be brought back to the Data Catalogue tab when clicking on an auto-detected user added catalogue item.
+* Fixed a bug causing Data Preview to not appear under the My Data tab.
 * Fix WMS style `DimensionSelector` for layers with no styles
 * Update the scroll style in `HelpVideoPanel` and `SidePanel` helpful hints.
 * Updated leaflet attribution to match the style of cesium credits.
