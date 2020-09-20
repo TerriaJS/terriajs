@@ -75,11 +75,16 @@
 
       .leaflet-bottom {
         font-size: $font-size-credits;
-
         font-family: $font-base;
+
         opacity: 0.75;
         background: linear-gradient(180deg, #000000 0%, #000000 100%);
         width: 100%;
+
+        a {
+          color: #fff;
+          text-decoration: underline;
+        }
       }
 
       .leaflet-control-attribution {
