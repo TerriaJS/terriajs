@@ -47,7 +47,6 @@ class WmtsCapabilitiesStratum extends LoadableStratum(
   static load(
     catalogItem: WebMapTileServiceCatalogItem
   ): Promise<WmtsCapabilitiesStratum> {
-    console.log("Loading GetCapabilities");
     if (catalogItem.getCapabilitiesUrl === undefined) {
       return Promise.reject(
         new TerriaError({

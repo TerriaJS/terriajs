@@ -66,8 +66,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
   static load(
     catalogItem: WebMapServiceCatalogItem
   ): Promise<GetCapabilitiesStratum> {
-    console.log("Loading GetCapabilities");
-
     if (catalogItem.getCapabilitiesUrl === undefined) {
       return Promise.reject(
         new TerriaError({

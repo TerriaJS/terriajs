@@ -73,9 +73,7 @@ describe("WebMapTileServiceCatalogItem", function() {
 
     try {
       await wmts.loadMapItems();
-      console.log(wmts);
-      console.log(wmts.mapItems);
-      console.log(mapItems);
+
       expect(mapItems.length).toBe(1);
       expect(mapItems[0].alpha).toBeCloseTo(0.8);
       expect(
@@ -107,9 +105,7 @@ describe("WebMapTileServiceCatalogItem", function() {
 
     try {
       await wmts.loadMapItems();
-      console.log(wmts);
-      console.log(wmts.mapItems);
-      console.log(mapItems);
+
       expect(mapItems.length).toBe(1);
       expect(mapItems[0].alpha).toBeCloseTo(0.8);
       expect(

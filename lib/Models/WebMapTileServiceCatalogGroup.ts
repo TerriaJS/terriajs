@@ -1,27 +1,27 @@
-import LoadableStratum from "./LoadableStratum";
-import WebMapTileServiceCatalogGroupTraits from "../Traits/WebMapTileServiceCatalogGroupTraits";
-import { BaseModel } from "./Model";
-import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
-import UrlMixin from "../ModelMixins/UrlMixin";
-import GroupMixin from "../ModelMixins/GroupMixin";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import CreateModel from "./CreateModel";
-import { runInAction, computed, action } from "mobx";
-import TerriaError from "../Core/TerriaError";
 import i18next from "i18next";
-import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import replaceUnderscores from "../Core/replaceUnderscores";
-import StratumFromTraits from "./StratumFromTraits";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
-import ModelReference from "../Traits/ModelReference";
+import { action, computed, runInAction } from "mobx";
+import containsAny from "../Core/containsAny";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
+import replaceUnderscores from "../Core/replaceUnderscores";
+import TerriaError from "../Core/TerriaError";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
+import GroupMixin from "../ModelMixins/GroupMixin";
+import UrlMixin from "../ModelMixins/UrlMixin";
+import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
+import ModelReference from "../Traits/ModelReference";
+import WebMapTileServiceCatalogGroupTraits from "../Traits/WebMapTileServiceCatalogGroupTraits";
+import CommonStrata from "./CommonStrata";
+import CreateModel from "./CreateModel";
+import createStratumInstance from "./createStratumInstance";
+import LoadableStratum from "./LoadableStratum";
+import { BaseModel } from "./Model";
+import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
+import StratumFromTraits from "./StratumFromTraits";
 import WebMapTileServiceCapabilities, {
   WmtsLayer
 } from "./WebMapTileServiceCapabilities";
-import containsAny from "../Core/containsAny";
-import createStratumInstance from "./createStratumInstance";
-import CommonStrata from "./CommonStrata";
 import WebMapTileServiceCatalogItem from "./WebMapTileServiceCatalogItem";
 
 class GetCapabilitiesStratum extends LoadableStratum(
@@ -30,7 +30,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
   static load(
     catalogItem: WebMapTileServiceCatalogGroup
   ): Promise<GetCapabilitiesStratum> {
-    console.log(catalogItem);
     if (catalogItem.getCapabilitiesUrl === undefined) {
       return Promise.reject(
         new TerriaError({
@@ -44,7 +43,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
         })
       );
     }
-    console.log(catalogItem.getCapabilitiesUrl);
 
     const proxiedUrl = proxyCatalogItemUrl(
       catalogItem,
@@ -53,7 +51,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
     );
     return WebMapTileServiceCapabilities.fromUrl(proxiedUrl).then(
       capabilities => {
-        console.log(capabilities);
         return new GetCapabilitiesStratum(catalogItem, capabilities);
       }
     );

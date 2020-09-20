@@ -1284,7 +1284,6 @@
     },
     "webMapTileServiceCatalogGroup": {
       "wmtsServer": "Web Map Tile Service (WMTS) Server",
-
       "invalidWMTSServerTitle": "Invalid WMTS server",
       "invalidWMTSServerMessage": "An error occurred while invoking GetCapabilities on the WMTS server. The server's response does not appear to be a valid GetCapabilities document. <p>If you entered the link manually, please verify that the link is correct.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
       "groupNotAvailableTitle": "Group is not available",
