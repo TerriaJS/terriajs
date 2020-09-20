@@ -131,7 +131,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     }
 
     // Show the service abstract if there is one and if it isn't the Geoserver default "A compliant implementation..."
-    const service = this.capabilities && this.capabilities.Service;
+    const service = this.capabilities && this.capabilities.service;
     if (service) {
       if (
         service &&
@@ -233,14 +233,14 @@ class GetCapabilitiesStratum extends LoadableStratum(
     }
 
     if (
-      !this.capabilities.Service ||
-      !this.capabilities.Service.KeywordList ||
-      !this.capabilities.Service.KeywordList.Keyword
+      !this.capabilities.service ||
+      !this.capabilities.service.KeywordList ||
+      !this.capabilities.service.KeywordList.Keyword
     ) {
       return false;
     }
 
-    const keyword = this.capabilities.Service.KeywordList.Keyword;
+    const keyword = this.capabilities.service.KeywordList.Keyword;
     if (isReadOnlyArray(keyword)) {
       return keyword.indexOf("GEOSERVER") >= 0;
     } else {

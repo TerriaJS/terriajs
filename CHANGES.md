@@ -3,19 +3,26 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.49)
+#### next release (8.0.0-alpha.50)
+* Fix WMS style `DimensionSelector` for layers with no styles
+* Remove `@computed` props from `WebFeatureServiceCapabilities`
+* Fixed bug causing the Related Maps dropdown to be clipped.
+* [The next improvement]
+
+#### 8.0.0-alpha.49
 * WMS GetFeatureInfo fix to ensure `style=undefined` is not sent to server
 * Add support for splitting CSVs (TableMixins) that are using region mapping.
 * `addUserCatalogMember` will now call `addToWorkbench` instead of `workbench.add`.
-* Fixed bug causing the Related Maps dropdown to be clipped.
-* [The next improvement]
+* Replaces `ShadowSection` with `ShadowMixin` using `SelectableDimensions`
+* Fix Webpack Windows path issue
+* Updated icons for view and edit story in the hamburger menu.
+* Implemented new design for story panel.
 
 #### 8.0.0-alpha.48
 * Allow `cacheDuration` to be set on `ArcGisPortalCatalogGroup` and `ArcGisPortalItemReference`.
 * Set default `ArcGisPortalCatalogGroup` item sorting by title using REST API parameter.
 * Call `registerCatalogMembers` before running tests and remove manual calls to `CatalogMemberFactory.register` and `UrlMapping.register` in various tests so that tests reflect the way the library is used.
 * Updated stratum definitions which used hardcoded string to use `CommonStrata` values.
-* Implemented new design for story panel.
 
 #### 8.0.0-alpha.47
 * Removed hard coded senaps base url.
