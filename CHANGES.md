@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.50)
 * Fix WMS style `DimensionSelector` for layers with no styles
+* Update the scroll style in `HelpVideoPanel` and `SidePanel` helpful hints.
 * Updated leaflet attribution to match the style of cesium credits.
 * Remove `@computed` props from `WebFeatureServiceCapabilities`
 * Fixed bug causing the Related Maps dropdown to be clipped.
