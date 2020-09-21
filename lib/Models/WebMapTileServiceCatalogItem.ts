@@ -495,7 +495,10 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
       if (Array.isArray(resourceUrl)) {
         for (let i = 0; i < resourceUrl.length; i++) {
           const url: ResourceUrl = resourceUrl[i];
-          if (url.format.indexOf(format) || url.format.indexOf("png")) {
+          if (
+            url.format.indexOf(format) !== -1 ||
+            url.format.indexOf("png") !== -1
+          ) {
             baseUrl = url.template;
           }
         }
