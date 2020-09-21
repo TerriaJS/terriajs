@@ -251,7 +251,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
 
   @computed
   get regionMappedDimensionIds() {
-    return this.columns
+    return this.dimensionColumns
       .filter(col => col.type === "region")
       .map(col => col.name)
       .filter(isDefined);

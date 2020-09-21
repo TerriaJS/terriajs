@@ -1,17 +1,10 @@
-import {
-  computed,
-  IReactionDisposer,
-  reaction,
-  runInAction,
-  onBecomeObserved,
-  onBecomeUnobserved
-} from "mobx";
+import { computed, runInAction } from "mobx";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
+import TerriaError from "../../Core/TerriaError";
 import AsyncChartableMixin from "../../ModelMixins/AsyncChartableMixin";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
-import DiscretelyTimeVaryingMixin from "../../ModelMixins/DiscretelyTimeVaryingMixin";
 import TableMixin from "../../ModelMixins/TableMixin";
 import UrlMixin from "../../ModelMixins/UrlMixin";
 import Csv from "../../Table/Csv";
@@ -27,7 +20,6 @@ import SelectableDimensions, {
 import StratumOrder from "../StratumOrder";
 import Terria from "../Terria";
 import { SdmxJsonDataflowStratum } from "./SdmxJsonDataflowStratum";
-import TerriaError from "../../Core/TerriaError";
 
 const automaticTableStylesStratumName = TableAutomaticStylesStratum.stratumName;
 
@@ -40,8 +32,6 @@ export default class SdmxJsonCatalogItem
     return "sdmx-json";
   }
 
-  private csvDownloadDisposer: IReactionDisposer | undefined;
-
   constructor(
     id: string | undefined,
     terria: Terria,
@@ -51,13 +41,6 @@ export default class SdmxJsonCatalogItem
     this.strata.set(
       TableAutomaticStylesStratum.stratumName,
       new TableAutomaticStylesStratum(this)
-    );
-
-    onBecomeObserved(this, "mapItems", this.enableCsvAutoDownloader.bind(this));
-    onBecomeUnobserved(
-      this,
-      "mapItems",
-      this.disableCsvAutoDownloader.bind(this)
     );
   }
 
@@ -69,26 +52,6 @@ export default class SdmxJsonCatalogItem
         this.strata.set(SdmxJsonDataflowStratum.stratumName, stratum);
       });
     }
-  }
-
-  /**
-   * This will automatically update CSV data when the URL changes (eg, dimension values change)
-   */
-  enableCsvAutoDownloader() {
-    if (isDefined(this.csvDownloadDisposer)) return;
-    this.csvDownloadDisposer = reaction(
-      () => this.csvUrl,
-      async () => {
-        const data = await this.downloadData();
-        runInAction(() => (this.dataColumnMajor = data));
-      }
-    );
-  }
-
-  disableCsvAutoDownloader() {
-    if (!isDefined(this.csvDownloadDisposer)) return;
-    this.csvDownloadDisposer();
-    delete this.csvDownloadDisposer;
   }
 
   get type() {
@@ -113,7 +76,6 @@ export default class SdmxJsonCatalogItem
       (this.viewBy === "time" && this.timeDimensionIds.includes(dim.id!)) ||
       (this.viewBy === "region" &&
         this.regionMappedDimensionIds.includes(dim.id!));
-    console.log(`dim ${dim.id} disable is ${disable}`);
     return disable;
   }
 
@@ -137,6 +99,7 @@ export default class SdmxJsonCatalogItem
         this.regionMappedDimensionIds.length === 0,
       setDimensionValue: (stratumId: string, value: "time" | "region") => {
         this.setTrait(stratumId, "viewBy", value);
+        this.forceLoadMapItems(true);
       }
     };
   }
@@ -163,6 +126,7 @@ export default class SdmxJsonCatalogItem
           }
 
           dimensionTraits.setTrait(stratumId, "selectedId", value);
+          this.forceLoadMapItems(true);
         }
       };
     });
@@ -281,8 +245,6 @@ export default class SdmxJsonCatalogItem
   }
   protected async forceLoadTableData(): Promise<string[][]> {
     await this.loadMetadata();
-    // We have to load data after regionProviderList is loaded
-    await this.loadRegionProviderList();
 
     return (await this.downloadData()) || [];
   }

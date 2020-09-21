@@ -492,12 +492,12 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       });
     }
 
-    protected forceLoadChartItems() {
-      return this._dataLoader.load();
+    protected forceLoadChartItems(force?: boolean) {
+      return this._dataLoader.load(force);
     }
 
-    protected forceLoadMapItems() {
-      return this._dataLoader.load();
+    protected forceLoadMapItems(force?: boolean) {
+      return this._dataLoader.load(force);
     }
 
     dispose() {
