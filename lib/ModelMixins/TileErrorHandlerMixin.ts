@@ -97,6 +97,92 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
         return;
       }
 
+      /** Helper methods **/
+
+      // Give up loading this (definitively, unexpectedly bad) tile and
+      // possibly give up on this layer entirely.
+      const failTile = action((e: Error) => {
+        this.tileFailures += 1;
+        const opts = this.tileErrorHandlingOptions;
+        const thresholdBeforeDisablingItem =
+          opts.thresholdBeforeDisablingItem === undefined
+            ? 5
+            : opts.thresholdBeforeDisablingItem;
+
+        if (this.tileFailures > thresholdBeforeDisablingItem && this.show) {
+          if (isThisItemABaseMap()) {
+            this.terria.error.raiseEvent(
+              new TerriaError({
+                sender: this,
+                title: i18next.t(
+                  "models.imageryLayer.accessingBaseMapErrorTitle"
+                ),
+                message:
+                  i18next.t(
+                    "models.imageryLayer.accessingBaseMapErrorMessage",
+                    { name: this.name }
+                  ) +
+                  "<pre>" +
+                  formatError(e) +
+                  "</pre>"
+              })
+            );
+          } else {
+            this.terria.error.raiseEvent(
+              new TerriaError({
+                sender: this,
+                title: i18next.t(
+                  "models.imageryLayer.accessingCatalogItemErrorTitle"
+                ),
+                message:
+                  i18next.t(
+                    "models.imageryLayer.accessingCatalogItemErrorMessage",
+                    { name: this.name }
+                  ) +
+                  "<pre>" +
+                  formatError(e) +
+                  "</pre>"
+              })
+            );
+          }
+          this.setTrait(CommonStrata.user, "show", false);
+        }
+        operation.stop();
+        result.reject();
+      });
+
+      const tellMapToSilentlyGiveUp = () => {
+        operation.stop();
+        result.reject();
+      };
+
+      const retryWithBackoff = (e: Error) => {
+        operation.retry(e) || failTile(e);
+      };
+
+      const tellMapToRetry = () => {
+        operation.stop();
+        result.resolve();
+      };
+
+      const getTileKey = (tile: { x: number; y: number; level: number }) => {
+        const time = DiscretelyTimeVaryingMixin.isMixedInto(this)
+          ? this.currentTime
+          : "";
+        const key = `L${tile.level}X${tile.x}Y${tile.y}${time}`;
+        return key;
+      };
+
+      const isThisItemABaseMap = () => {
+        const baseMap = this.terria.mainViewer.baseMap;
+        return this === (baseMap as any)
+          ? true
+          : baseMap instanceof CompositeCatalogItem
+          ? baseMap.memberModels.includes(this)
+          : false;
+      };
+      /** End helper methods **/
+
       // By setting retry to a promise, we tell cesium/leaflet to
       // reload the tile if the promise resolves successfully
       // https://github.com/TerriaJS/cesium/blob/terriajs/Source/Core/TileProviderError.js#L161
@@ -219,89 +305,6 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
           }
         })
       );
-
-      // Give up loading this (definitively, unexpectedly bad) tile and
-      // possibly give up on this layer entirely.
-      const failTile = action((e: Error) => {
-        this.tileFailures += 1;
-        const opts = this.tileErrorHandlingOptions;
-        const thresholdBeforeDisablingItem =
-          opts.thresholdBeforeDisablingItem === undefined
-            ? 5
-            : opts.thresholdBeforeDisablingItem;
-
-        if (this.tileFailures > thresholdBeforeDisablingItem && this.show) {
-          if (isThisItemABaseMap()) {
-            this.terria.error.raiseEvent(
-              new TerriaError({
-                sender: this,
-                title: i18next.t(
-                  "models.imageryLayer.accessingBaseMapErrorTitle"
-                ),
-                message:
-                  i18next.t(
-                    "models.imageryLayer.accessingBaseMapErrorMessage",
-                    { name: this.name }
-                  ) +
-                  "<pre>" +
-                  formatError(e) +
-                  "</pre>"
-              })
-            );
-          } else {
-            this.terria.error.raiseEvent(
-              new TerriaError({
-                sender: this,
-                title: i18next.t(
-                  "models.imageryLayer.accessingCatalogItemErrorTitle"
-                ),
-                message:
-                  i18next.t(
-                    "models.imageryLayer.accessingCatalogItemErrorMessage",
-                    { name: this.name }
-                  ) +
-                  "<pre>" +
-                  formatError(e) +
-                  "</pre>"
-              })
-            );
-          }
-          this.setTrait(CommonStrata.user, "show", false);
-        }
-        operation.stop();
-        result.reject();
-      });
-
-      const tellMapToSilentlyGiveUp = () => {
-        operation.stop();
-        result.reject();
-      };
-
-      const retryWithBackoff = (e: Error) => {
-        operation.retry(e) || failTile(e);
-      };
-
-      const tellMapToRetry = () => {
-        operation.stop();
-        result.resolve();
-      };
-
-      const getTileKey = (tile: { x: number; y: number; level: number }) => {
-        const time = DiscretelyTimeVaryingMixin.isMixedInto(this)
-          ? this.currentTime
-          : "";
-        const key = `L${tile.level}X${tile.x}Y${tile.y}${time}`;
-        return key;
-      };
-
-      const isThisItemABaseMap = () => {
-        const baseMap = this.terria.mainViewer.baseMap;
-        return this === (baseMap as any)
-          ? true
-          : baseMap instanceof CompositeCatalogItem
-          ? baseMap.memberModels.includes(this)
-          : false;
-      };
     }
   }
 
