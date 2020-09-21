@@ -178,7 +178,9 @@
     bottom: auto;
     left: auto;
     right: auto;
-    overflow: hidden;
+    // Temporary disabling this property for the related maps
+    // bug, if anything goes wrong revert this back
+    // overflow: hidden;
     flex-grow: 1;
     flex-basis: calc(100% - #{$work-bench-width});
   }
