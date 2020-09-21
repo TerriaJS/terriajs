@@ -307,22 +307,6 @@ class WmtsCapabilitiesStratum extends LoadableStratum(
       }
 
       const levelZeroMatrix = matrices[0];
-      /* if (
-        (levelZeroMatrix.TileWidth | 0) !== 256 ||
-        (levelZeroMatrix.TileHeight | 0) !== 256 ||
-        (levelZeroMatrix.MatrixWidth | 0) !== 1 ||
-        (levelZeroMatrix.MatrixHeight | 0) !== 1
-      ) {
-        continue;
-      }
-
-      const levelZeroScaleDenominator = 559082264.0287178; // from WMTS 1.0.0 spec section E.4.
-      if (
-        Math.abs(levelZeroMatrix.ScaleDenominator - levelZeroScaleDenominator) >
-        1
-      ) {
-        continue;
-      } */
 
       if (!isDefined(levelZeroMatrix.TopLeftCorner)) {
         continue;
