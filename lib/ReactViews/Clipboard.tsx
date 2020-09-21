@@ -21,10 +21,11 @@ interface ClipboardProps {
   id: string;
   source: React.ReactElement;
   theme: "dark" | "light";
+  rounded?: boolean;
 }
 
 const Clipboard: React.FC<ClipboardProps> = props => {
-  const { id, source, theme } = props;
+  const { id, source, theme, rounded } = props;
   const { t } = useTranslation();
   const [status, setStatus] = useState<CopyStatus>(
     CopyStatus.NotCopiedOrWaiting
@@ -73,6 +74,7 @@ const Clipboard: React.FC<ClipboardProps> = props => {
           css={`
             width: 80px;
             border-radius: 2px;
+            ${rounded && `border-radius:  0 32px 32px 0;`}
           `}
           className={`btn-copy-${id}`}
           data-clipboard-target={`#${id}`}

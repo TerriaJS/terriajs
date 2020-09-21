@@ -72,6 +72,7 @@ class HelpVideoPanel extends React.Component {
             overflow-x: hidden;
             overflow-y: auto;
           `}
+          scroll
         >
           <If condition={helpItemType === "videoAndContent"}>
             {this.props.videoUrl && this.props.placeholderImage && (
