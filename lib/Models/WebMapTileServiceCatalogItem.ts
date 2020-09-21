@@ -12,7 +12,7 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
-import LegendTraits from "../Traits/LegendTraits";
+import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
 import { RectangleTraits } from "../Traits/MappableTraits";
 import WebMapTileServiceCatalogItemTraits, {
   WebMapTileServiceAvailableLayerStylesTraits
@@ -29,8 +29,10 @@ import WebMapTileServiceCapabilities, {
   CapabilitiesStyle,
   ResourceUrl,
   TileMatrixSetLink,
-  WmtsLayer
+  WmtsLayer,
+  WmtsCapabilitiesLegend
 } from "./WebMapTileServiceCapabilities";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 
 interface UsableTileMatrixSets {
   identifiers: string[];
@@ -197,24 +199,23 @@ class WmtsCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get legend(): StratumFromTraits<LegendTraits> | undefined {
-    const availableStyles = this.catalogItem.availableStyles || [];
-    const layer = this.catalogItem.layer;
-    const style = this.catalogItem.defaultStyle;
-
-    let result: StratumFromTraits<LegendTraits> | undefined;
-    const layerAvailableStyles = availableStyles.find(
-      candidate => candidate.layerName === layer
+  get legends() {
+    const layerAvailableStyles = this.catalogItem.availableStyles.find(
+      candidate => candidate.layerName === this.capabilitiesLayer?.Identifier
     )?.styles;
 
     const layerStyle = layerAvailableStyles?.find(
-      candidate => candidate.identifier
+      candidate => candidate.identifier === this.catalogItem.style
     );
-    if (layerStyle !== undefined && layerStyle.legend !== undefined) {
-      result = <StratumFromTraits<LegendTraits>>(<unknown>layerStyle.legend);
-    }
 
-    return result;
+    if (isDefined(layerStyle?.legend)) {
+      return [
+        createStratumInstance(LegendTraits, {
+          url: layerStyle!.legend.url,
+          urlMimeType: layerStyle!.legend.urlMimeType
+        })
+      ];
+    }
   }
 
   @computed
@@ -246,28 +247,21 @@ class WmtsCapabilitiesStratum extends LoadableStratum(
     result.push({
       layerName: layer?.Identifier,
       styles: styles.map((style: CapabilitiesStyle) => {
-        let wmtsLegendUrl: CapabilitiesLegend | undefined = isReadOnlyArray(
+        let wmtsLegendUrl: WmtsCapabilitiesLegend | undefined = isReadOnlyArray(
           style.LegendURL
         )
           ? style.LegendURL[0]
           : style.LegendURL;
         let legendUri, legendMimeType;
-        if (
-          wmtsLegendUrl &&
-          wmtsLegendUrl.OnlineResource &&
-          wmtsLegendUrl.OnlineResource["xlink:href"]
-        ) {
-          legendUri = new URI(
-            decodeURIComponent(wmtsLegendUrl.OnlineResource["xlink:href"])
-          );
+        if (wmtsLegendUrl && wmtsLegendUrl["xlink:href"]) {
+          legendUri = new URI(decodeURIComponent(wmtsLegendUrl["xlink:href"]));
           legendMimeType = wmtsLegendUrl.Format;
         }
         const legend = !legendUri
           ? undefined
           : createStratumInstance(LegendTraits, {
               url: legendUri.toString(),
-              urlMimeType: legendMimeType,
-              title: layer?.Identifier
+              urlMimeType: legendMimeType
             });
         return {
           identifier: style.Identifier,
@@ -381,6 +375,19 @@ class WmtsCapabilitiesStratum extends LoadableStratum(
       };
     }
   }
+
+  @computed get style(): string | undefined {
+    if (!isDefined(this.catalogItem.layer)) return;
+
+    const layerAvailableStyles = this.availableStyles.find(
+      candidate => candidate.layerName === this.capabilitiesLayer?.Identifier
+    )?.styles;
+
+    return (
+      layerAvailableStyles?.find(style => style.isDefault)?.identifier ??
+      layerAvailableStyles?.[0]?.identifier
+    );
+  }
 }
 
 class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
@@ -434,44 +441,22 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
     return "1d";
   }
 
-  @computed get defaultStyle(): string {
-    let defaultStyle = this.style;
-    if (defaultStyle) {
-      return defaultStyle;
-    }
-
-    const availableStyles = this.availableStyles;
-    const layerAvailableStyles = availableStyles.find(
-      candidate => candidate.layerName === this.layer
-    )?.styles;
-    if (!layerAvailableStyles) {
-      return defaultStyle || "";
-    }
-    for (let i = 0; i < layerAvailableStyles.length; ++i) {
-      const style = layerAvailableStyles[i];
-      if (style.isDefault) {
-        defaultStyle = style.identifier;
-      }
-    }
-
-    if (!defaultStyle && layerAvailableStyles.length > 0) {
-      defaultStyle = layerAvailableStyles[0].identifier;
-    }
-
-    return defaultStyle || "";
-  }
-
   @computed
   get imageryProvider() {
     const stratum = <WmtsCapabilitiesStratum>(
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
     );
 
-    if (!isDefined(this.layer) || !isDefined(this.url) || !isDefined(stratum)) {
+    if (
+      !isDefined(this.layer) ||
+      !isDefined(this.url) ||
+      !isDefined(stratum) ||
+      !isDefined(this.style)
+    ) {
       return;
     }
 
-    const layer = stratum.capabilities.findLayer(this.layer);
+    const layer = stratum.capabilitiesLayer;
     const layerIdentifier = layer?.Identifier;
     if (!isDefined(layer) || !isDefined(layerIdentifier)) {
       return;
@@ -481,8 +466,8 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
     const formats = layer.Format;
     if (
       formats &&
-      formats?.indexOf("image/png") < 0 &&
-      formats?.indexOf("image/jpeg")
+      formats?.indexOf("image/png") === -1 &&
+      formats?.indexOf("image/jpeg") !== -1
     ) {
       format = "image/jpeg";
     }
@@ -505,7 +490,7 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
       } else {
         if (
           format === resourceUrl.format ||
-          resourceUrl.format.indexOf("png")
+          resourceUrl.format.indexOf("png") !== -1
         ) {
           baseUrl = resourceUrl.template;
         }
@@ -517,10 +502,29 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
       return;
     }
 
+    let rectangle;
+
+    if (
+      this.rectangle !== undefined &&
+      this.rectangle.east !== undefined &&
+      this.rectangle.west !== undefined &&
+      this.rectangle.north !== undefined &&
+      this.rectangle.south !== undefined
+    ) {
+      rectangle = Rectangle.fromDegrees(
+        this.rectangle.west,
+        this.rectangle.south,
+        this.rectangle.east,
+        this.rectangle.north
+      );
+    } else {
+      rectangle = undefined;
+    }
+
     const imageryProvider = new WebMapTileServiceImageryProvider({
       url: proxyCatalogItemUrl(this, baseUrl),
       layer: layerIdentifier,
-      style: this.defaultStyle,
+      style: this.style,
       tileMatrixSetID: tileMatrixSet.id,
       tileMatrixLabels: tileMatrixSet.labels,
       minimumLevel: tileMatrixSet.minLevel,
@@ -528,7 +532,8 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
       tileWidth: tileMatrixSet.tileWidth,
       tileHeight: tileMatrixSet.tileHeight,
       tilingScheme: new WebMercatorTilingScheme(),
-      format: format
+      format,
+      rectangle
     });
     return imageryProvider;
   }
@@ -550,7 +555,7 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
     if (!this.layer) {
       return;
     }
-    const layer = stratum.capabilities.findLayer(this.layer);
+    const layer = stratum.capabilitiesLayer;
     if (!layer) {
       return;
     }

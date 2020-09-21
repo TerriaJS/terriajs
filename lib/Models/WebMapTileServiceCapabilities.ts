@@ -26,6 +26,22 @@ export interface WmtsLayer {
   readonly ResourceURL?: ResourceUrl | ResourceUrl[];
 }
 
+/* For some reason LegendUrls are formatted differently from WMS - this makes me very upset >:(
+  WMTS Example:
+    <LegendURL format="image/png"
+    xlink:href="http://www.maps.bob/etopo2/legend.png" />
+
+  WMS Example:
+  <LegendURL width="184" height="220">
+    <Format>image/png</Format>
+    <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://www.maps.bob/etopo2/legend.png"/>
+  </LegendURL>
+*/
+export interface WmtsCapabilitiesLegend extends CapabilitiesLegend {
+  readonly OnlineResource?: undefined;
+  readonly "xlink:href"?: string;
+}
+
 export interface ResourceUrl {
   format: string;
   resourceType: "tile";
@@ -37,7 +53,9 @@ export interface CapabilitiesStyle {
   readonly Title: string;
   readonly Abstract?: string;
   readonly Keywords?: OwsKeywordList;
-  readonly LegendURL?: CapabilitiesLegend | ReadonlyArray<CapabilitiesLegend>;
+  readonly LegendURL?:
+    | WmtsCapabilitiesLegend
+    | ReadonlyArray<WmtsCapabilitiesLegend>;
   readonly isDefault?: boolean;
 }
 
