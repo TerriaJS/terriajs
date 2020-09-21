@@ -5,6 +5,7 @@ import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
 import AsyncLoader from "../Core/AsyncLoader";
 import AccessControlMixin from "./AccessControlMixin";
 import { JsonObject } from "../Core/Json";
+import isDefined from "../Core/isDefined";
 
 type CatalogMember = Model<CatalogMemberTraits>;
 
@@ -86,9 +87,12 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       this.info.forEach(infoItem => {
         if (infoItem.name !== undefined && infoItem.name.length > 0) {
           const infoNameNoSpaces = infoItem.name.replace(/ /g, "");
-          if (infoItem.content !== undefined) {
+          if (
+            isDefined(infoItem.content) &&
+            !isDefined(infoObject[infoNameNoSpaces])
+          ) {
             infoObject[infoNameNoSpaces] = infoItem.content;
-          } else if (infoItem.contentAsObject !== undefined) {
+          } else if (isDefined(infoItem.contentAsObject)) {
             infoObject[infoNameNoSpaces] = infoItem.contentAsObject;
           }
         }
