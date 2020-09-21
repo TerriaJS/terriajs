@@ -29,10 +29,10 @@ export class InfoSectionTraits extends ModelTraits {
     description:
       "The content of the section which is a JSON object. Set this property to null to remove this section entirely."
   })
-  contentAsObject?: JsonObject | null;
+  contentAsObject?: JsonObject;
 
   static isRemoval(infoSection: InfoSectionTraits) {
-    return infoSection.content === null && infoSection.contentAsObject === null;
+    return infoSection.content === null;
   }
 }
 

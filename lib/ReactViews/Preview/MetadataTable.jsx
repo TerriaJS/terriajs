@@ -1,5 +1,5 @@
 import React from "react";
-
+import { isArrayLike } from "mobx";
 import createReactClass from "create-react-class";
 
 import PropTypes from "prop-types";
@@ -19,9 +19,7 @@ const MetadataTable = createReactClass({
   render() {
     const metadataItem = this.props.metadataItem;
     const keys = Object.keys(metadataItem);
-    const isArr =
-      Array.isArray(metadataItem) ||
-      metadataItem.constructor.name === "ObservableArray";
+    const isArr = isArrayLike(metadataItem);
     if (keys.length === 0 && !isArr) return null;
 
     return (
@@ -47,13 +45,7 @@ const MetadataTable = createReactClass({
                         <When condition={typeof metadataItem[key] === "object"}>
                           <MetadataTable metadataItem={metadataItem[key]} />
                         </When>
-                        <When
-                          condition={
-                            Array.isArray(metadataItem[key]) ||
-                            metadataItem[key].constructor.name ===
-                              "ObservableArray"
-                          }
-                        >
+                        <When condition={isArrayLike(metadataItem[key])}>
                           <If
                             condition={
                               metadataItem[key].length > 0 &&
