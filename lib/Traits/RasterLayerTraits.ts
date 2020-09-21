@@ -57,7 +57,7 @@ export default class RasterLayerTraits extends ModelTraits {
     description: "Options for handling tile errors"
   })
   tileErrorHandlingOptions: TileErrorHandlingTraits = {
-    thresholdBeforeDisablingItem: 0,
+    thresholdBeforeDisablingItem: 5,
     treat403AsError: true,
     treat404AsError: false,
     ignoreUnknownTileErrors: false
