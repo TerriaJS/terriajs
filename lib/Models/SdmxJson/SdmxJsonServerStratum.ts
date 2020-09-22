@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { action, computed } from "mobx";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import Resource from "terriajs-cesium/Source/Core/Resource";
@@ -6,10 +7,12 @@ import flatten from "../../Core/flatten";
 import isDefined from "../../Core/isDefined";
 import { regexMatches } from "../../Core/regexMatches";
 import TerriaError from "../../Core/TerriaError";
+import { InfoSectionTraits } from "../../Traits/CatalogMemberTraits";
 import ModelReference from "../../Traits/ModelReference";
 import SdmxCatalogGroupTraits from "../../Traits/SdmxCatalogGroupTraits";
 import CatalogGroup from "../CatalogGroupNew";
 import CommonStrata from "../CommonStrata";
+import createStratumInstance from "../createStratumInstance";
 import LoadableStratum from "../LoadableStratum";
 import { BaseModel } from "../Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
@@ -28,8 +31,6 @@ import {
   Dataflows,
   SdmxJsonStructureMessage
 } from "./SdmxJsonStructureMessage";
-import createStratumInstance from "../createStratumInstance";
-import { InfoSectionTraits } from "../../Traits/CatalogMemberTraits";
 
 export interface SdmxServer {
   agencySchemes?: AgencySchemes;
@@ -74,8 +75,8 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
 
       if (!isDefined(dataflows)) {
         throw new TerriaError({
-          title: "Failed to load SDMX group",
-          message: "The server has no dataflows"
+          title: i18next.t("models.sdmxServerStratum.loadDataErrorTitle"),
+          message: i18next.t("models.sdmxServerStratum.loadDataErrorMessage")
         });
       }
     }
@@ -397,14 +398,18 @@ export async function loadSdmxJsonStructure(
     if (error instanceof RequestErrorEvent && isDefined(error.response)) {
       if (!allowNotImplemeted) {
         throw new TerriaError({
-          title: `Could not load SDMX`,
-          message: `Message from server: ${error.response}`
+          title: i18next.t(
+            "models.sdmxServerStratum.sdmxStructureLoadErrorTitle"
+          ),
+          message: `${error.response}`
         });
       }
       // Not sure what happened (maybe CORS)
     } else if (!allowNotImplemeted) {
       throw new TerriaError({
-        title: `Could not load SDMX`,
+        title: i18next.t(
+          "models.sdmxServerStratum.sdmxStructureLoadErrorTitle"
+        ),
         message: `Unkown error occurred${
           isDefined(error)
             ? typeof error === "string"

@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { computed } from "mobx";
 import isDefined from "../../Core/isDefined";
 import TerriaError from "../../Core/TerriaError";
@@ -54,8 +55,10 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     // Check response
     if (!isDefined(dataflowStructure.data)) {
       throw new TerriaError({
-        title: `Could not load SDMX Dataflow`,
-        message: `Invalid JSON object`
+        title: i18next.t("models.sdmxJsonDataflowStratum.loadDataErrorTitle"),
+        message: i18next.t(
+          "models.sdmxJsonDataflowStratum.loadDataErrorMessage.invalidResponse"
+        )
       });
     }
     if (
@@ -63,8 +66,11 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
       dataflowStructure.data.dataflows.length === 0
     ) {
       throw new TerriaError({
-        title: `Could not load SDMX Dataflow`,
-        message: `Dataflow ${catalogItem.dataflowId} is invalid`
+        title: i18next.t("models.sdmxJsonDataflowStratum.loadDataErrorTitle"),
+        message: i18next.t(
+          "models.sdmxJsonDataflowStratum.loadDataErrorMessage.noDataflow",
+          this
+        )
       });
     }
     if (
@@ -72,8 +78,11 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
       dataflowStructure.data.dataStructures.length === 0
     ) {
       throw new TerriaError({
-        title: `Could not load SDMX Dataflow`,
-        message: `No data structure could be found for dataflow ${catalogItem.dataflowId} is invalid`
+        title: i18next.t("models.sdmxJsonDataflowStratum.loadDataErrorTitle"),
+        message: i18next.t(
+          "models.sdmxJsonDataflowStratum.loadDataErrorMessage.noDatastructure",
+          this
+        )
       });
     }
 

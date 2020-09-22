@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { computed, runInAction } from "mobx";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import filterOutUndefined from "../../Core/filterOutUndefined";
@@ -87,10 +88,13 @@ export default class SdmxJsonCatalogItem
   @computed get sdmxViewModeDimension(): SelectableDimension {
     return {
       id: `viewMode`,
-      name: "View by",
+      name: i18next.t("models.sdmxCatalogItem.viewBy.title"),
       options: [
-        { id: "region", name: "Region" },
-        { id: "time", name: "Time-series" }
+        {
+          id: "region",
+          name: i18next.t("models.sdmxCatalogItem.viewBy.region")
+        },
+        { id: "time", name: i18next.t("models.sdmxCatalogItem.viewBy.time") }
       ],
       selectedId: this.viewBy,
       // Disable if there aren't time dimensions and region-mapped dimensions
@@ -184,7 +188,9 @@ export default class SdmxJsonCatalogItem
     )
       return;
 
-    return this.dataColumnMajor.length === 0 ? "No data available" : undefined;
+    return this.dataColumnMajor.length === 0
+      ? i18next.t("models.sdmxCatalogItem.noData")
+      : undefined;
   }
 
   /**
@@ -212,8 +218,8 @@ export default class SdmxJsonCatalogItem
 
       if (!isDefined(csvString)) {
         throw new TerriaError({
-          title: `Could not load SDMX CSV`,
-          message: `Invalid response from ${this.csvUrl}`
+          title: i18next.t("models.sdmxCatalogItem.loadDataErrorTitle"),
+          message: i18next.t("models.sdmxCatalogItem.loadDataErrorTitle", this)
         });
       }
 
