@@ -13,6 +13,12 @@ Change Log
 * Updated leaflet attribution to match the style of cesium credits.
 * Remove `@computed` props from `WebFeatureServiceCapabilities`
 * Fixed bug causing the Related Maps dropdown to be clipped.
+* Add SDMX-json support for groups and items (using SDMX-csv for data queries)
+* `TableMixin` now uses `ExportableMixin` and `AsyncMappableMixin`
+* Move region provider loading in `TableMixin` `forceLoadTableMixin` to `loadRegionProviderList`
+* Added `TableAutomaticStylesStratum.stratumName` instead of hard-coded strings
+* Added `Dimension` interface for `SelectableDimension` - which can be used for Traits
+* Make `SelectableDimension.options` optional
 * [The next improvement]
 
 #### 8.0.0-alpha.49

@@ -710,7 +710,7 @@ class WebMapServiceCatalogItem
   @computed
   get canDiffImages(): boolean {
     const hasValidDiffStyles = this.availableDiffStyles.some(diffStyle =>
-      this.styleSelectableDimensions?.[0]?.options.find(
+      this.styleSelectableDimensions?.[0]?.options?.find(
         style => style.id === diffStyle
       )
     );
