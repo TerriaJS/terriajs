@@ -197,10 +197,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       });
     }
 
-    async loadMapItems(): Promise<void> {
-      await super.loadMapItems();
-    }
-
     get supportsSplitting() {
       return isDefined(this.activeTableStyle.regionColumn);
     }
