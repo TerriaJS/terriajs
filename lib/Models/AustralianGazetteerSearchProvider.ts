@@ -1,6 +1,7 @@
 import WebFeatureServiceSearchProvider from "./WebFeatureServiceSearchProvider";
 import SearchResult from "./SearchResult";
 import Terria from "./Terria";
+import i18next from "i18next";
 
 const featureCodesToNamesMap = new Map([
   ["AF", "Aviation"],
@@ -234,7 +235,7 @@ export default function createAustralianGazetteerSearchProvider(
     searchPropertyName: SEARCH_PROPERTY_NAME,
     searchPropertyTypeName: SEARCH_PROPERTY_TYPE_NAME,
     transformSearchText: searchText => searchText.toUpperCase(),
-    name: "Place names",
+    name: i18next.t("viewModels.searchPlaceNames"),
     searchResultFilterFunction: searchResultFilterFunction,
     searchResultScoreFunction: searchResultScoreFunction
   });

@@ -119,9 +119,9 @@ export default class WebFeatureServiceSearchProvider extends SearchProvider {
     return this.getXml()
       .then((xml: any) => {
         let json: any = xml2json(xml);
-        console.log(json);
         let features: any[];
         if (json === undefined) {
+          results.message = i18next.t("viewModels.searchErrorOccurred");
           return;
         }
 
@@ -130,6 +130,7 @@ export default class WebFeatureServiceSearchProvider extends SearchProvider {
         } else if (json.featureMember !== undefined) {
           features = json.featureMember;
         } else {
+          results.message = i18next.t("viewModels.searchNoPlaceNames");
           return;
         }
 
@@ -143,6 +144,11 @@ export default class WebFeatureServiceSearchProvider extends SearchProvider {
         runInAction(() => {
           if (this._searchResultFilterFunction !== undefined) {
             features = features.filter(this._searchResultFilterFunction);
+          }
+
+          if (features.length === 0) {
+            results.message = i18next.t("viewModels.searchNoPlaceNames");
+            return;
           }
 
           if (this._searchResultScoreFunction !== undefined) {
