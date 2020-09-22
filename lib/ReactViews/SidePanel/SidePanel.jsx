@@ -57,7 +57,7 @@ function EmptyWorkbench(props) {
           </Text>
           <ResponsiveSpacing />
         </Box>
-        <BoxHelpfulHints column paddedRatio={3} overflowY="auto">
+        <BoxHelpfulHints column paddedRatio={3} overflowY="auto" scroll>
           <Box left>
             <Text extraLarge bold>
               {t("emptyWorkbench.helpfulHints")}
