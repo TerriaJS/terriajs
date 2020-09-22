@@ -9,7 +9,7 @@ site_dir: '../wwwroot/doc/guide'
 markdown_extensions:
   - markdown.extensions.admonition
 strict: true
-pages:
+nav:
 - Home: 'README.md'
 - Getting Started: 'getting-started.md'
 - Customizing:
@@ -89,5 +89,5 @@ pages:
     - Using a Custom Version of Cesium: 'contributing/using-a-custom-version-of-cesium.md'
     - Setting up Saucelabs: 'contributing/setting-up-saucelabs.md'
     - Problems and Solutions: 'contributing/problems-and-solutions.md'
-- Acknowledgements: 
+- Acknowledgements:
     - Attributions: 'acknowledgements/attributions.md'
