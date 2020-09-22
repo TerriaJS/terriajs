@@ -78,6 +78,7 @@ nav:
     - Deploying to AWS: 'deploying/deploying-to-aws.md'
     - Deploying with Kubernetes: 'deploying/deploying-with-kubernetes.md'
     - Setting Up a Region Mapping Server: 'deploying/setting-up-a-region-mapping-server.md'
+    - (Deprecated) Setting Up WMS Region Mapping: 'deploying/deprecated-wms-region-mapping.md'
     - Setting Up Geoserver: 'deploying/setting-up-geoserver.md'
     - Using as a CKAN Previewer: 'deploying/using-as-a-ckan-previewer.md'
     - Controlling with URL Parameters: 'deploying/controlling-with-url-parameters.md'
