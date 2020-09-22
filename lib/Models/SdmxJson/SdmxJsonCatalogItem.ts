@@ -32,6 +32,8 @@ export default class SdmxJsonCatalogItem
     return "sdmx-json";
   }
 
+  private _currentCsvUrl: string | undefined;
+
   constructor(
     id: string | undefined,
     terria: Terria,
@@ -46,7 +48,7 @@ export default class SdmxJsonCatalogItem
 
   protected async forceLoadMetadata(): Promise<void> {
     // Load SdmxJsonDataflowStratum if needed
-    if (!isDefined(this.strata.get(SdmxJsonDataflowStratum.stratumName))) {
+    if (!this.strata.has(SdmxJsonDataflowStratum.stratumName)) {
       const stratum = await SdmxJsonDataflowStratum.load(this);
       runInAction(() => {
         this.strata.set(SdmxJsonDataflowStratum.stratumName, stratum);
@@ -100,6 +102,7 @@ export default class SdmxJsonCatalogItem
       setDimensionValue: (stratumId: string, value: "time" | "region") => {
         this.setTrait(stratumId, "viewBy", value);
         this.forceLoadMapItems(true);
+        this.forceLoadChartItems(true);
       }
     };
   }
@@ -127,6 +130,7 @@ export default class SdmxJsonCatalogItem
 
           dimensionTraits.setTrait(stratumId, "selectedId", value);
           this.forceLoadMapItems(true);
+          this.forceLoadChartItems(true);
         }
       };
     });
@@ -187,7 +191,13 @@ export default class SdmxJsonCatalogItem
    * Even though this is Sdmx**Json**CatalogItem, we download sdmx-csv.
    */
   private async downloadData(): Promise<string[][] | undefined> {
-    if (!isDefined(this.regionProviderList)) return;
+    if (
+      !isDefined(this.regionProviderList) ||
+      this._currentCsvUrl === this.csvUrl
+    )
+      return;
+
+    this._currentCsvUrl = this.csvUrl;
 
     let columns: string[][] = [];
 

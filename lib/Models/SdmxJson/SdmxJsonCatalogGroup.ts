@@ -15,12 +15,13 @@ export default class SdmxCatalogGroup extends UrlMixin(
     return SdmxCatalogGroup.type;
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return SdmxServerStratum.load(this).then(stratum => {
+  protected async forceLoadMetadata(): Promise<void> {
+    if (!this.strata.has(SdmxServerStratum.stratumName)) {
+      const stratum = await SdmxServerStratum.load(this);
       runInAction(() => {
         this.strata.set(SdmxServerStratum.stratumName, stratum);
       });
-    });
+    }
   }
 
   protected forceLoadMembers(): Promise<void> {
