@@ -39,13 +39,6 @@ const DisclaimerButton = styled(Button).attrs({
   rounded: true
 })`
   width: ${props => (props.fullWidth ? "100%" : "280px")};
-  ${props =>
-    props.denyButton &&
-    `
-    border: 2px solid ${props.theme.grey}; 
-    color: ${props.theme.grey}; 
-    background-color: transparent;
-  `}
 `;
 
 @observer

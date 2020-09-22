@@ -1,7 +1,7 @@
-import WebFeatureServiceSearchProvider from "./WebFeatureServiceSearchProvider";
+import i18next from "i18next";
 import SearchResult from "./SearchResult";
 import Terria from "./Terria";
-import i18next from "i18next";
+import WebFeatureServiceSearchProvider from "./WebFeatureServiceSearchProvider";
 
 const featureCodesToNamesMap = new Map([
   ["AF", "Aviation"],

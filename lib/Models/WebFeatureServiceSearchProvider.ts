@@ -1,15 +1,14 @@
+import i18next from "i18next";
+import { runInAction } from "mobx";
+import URI from "urijs";
+import zoomRectangleFromPoint from "../Map/zoomRectangleFromPoint";
+import xml2json from "../ThirdParty/xml2json";
 import SearchProvider from "./SearchProvider";
 import SearchProviderResults from "./SearchProviderResults";
-import loadXML from "../Core/loadXML";
-import URI from "urijs";
-import xml2json from "../ThirdParty/xml2json";
 import SearchResult from "./SearchResult";
-import { runInAction, observable } from "mobx";
-import i18next from "i18next";
 import Terria from "./Terria";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import Resource from "terriajs-cesium/Source/Core/Resource";
-import zoomRectangleFromPoint from "../Map/zoomRectangleFromPoint";
 import makeRealPromise from "../Core/makeRealPromise";
 
 export interface WebFeatureServiceSearchProviderOptions {
