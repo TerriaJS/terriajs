@@ -8,6 +8,7 @@ import { runInAction, observable } from "mobx";
 import i18next from "i18next";
 import Terria from "./Terria";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 import zoomRectangleFromPoint from "../Map/zoomRectangleFromPoint";
 import makeRealPromise from "../Core/makeRealPromise";
 
@@ -38,13 +39,15 @@ export default class WebFeatureServiceSearchProvider extends SearchProvider {
   private _searchPropertyName: string;
   private _searchPropertyTypeName: string;
   private _featureToSearchResultFunction: (feature: any) => SearchResult;
-  @observable flightDurationSeconds: number;
+  flightDurationSeconds: number;
   readonly terria: Terria;
   private _transformSearchText: ((searchText: string) => string) | undefined;
   private _searchResultFilterFunction: ((feature: any) => boolean) | undefined;
   private _searchResultScoreFunction:
     | ((feature: any, searchText: string) => number)
     | undefined;
+  cancelRequest?: () => void;
+  private _waitingForResults: boolean = false;
 
   constructor(options: WebFeatureServiceSearchProviderOptions) {
     super();
@@ -63,15 +66,31 @@ export default class WebFeatureServiceSearchProvider extends SearchProvider {
     this.name = options.name;
   }
 
-  getXml(): Promise<string> {
-    return makeRealPromise(loadXML(this._wfsServiceUrl.toString()));
+  getXml(): Promise<XMLDocument> {
+    const resource = new Resource({ url: this._wfsServiceUrl.toString() });
+    this._waitingForResults = true;
+    const xmlPromise = resource.fetchXML();
+    this.cancelRequest = resource.request.cancelFunction;
+    return makeRealPromise<XMLDocument>(xmlPromise).finally(() => {
+      this._waitingForResults = false;
+    });
   }
 
   protected doSearch(
     searchText: string,
     results: SearchProviderResults
   ): Promise<void> {
+    results.results.length = 0;
     results.message = undefined;
+
+    if (this._waitingForResults) {
+      // There's been a new search! Cancel the previous one.
+      if (this.cancelRequest !== undefined) {
+        this.cancelRequest();
+        this.cancelRequest = undefined;
+      }
+      this._waitingForResults = false;
+    }
 
     const originalSearchText = searchText;
 
@@ -79,7 +98,7 @@ export default class WebFeatureServiceSearchProvider extends SearchProvider {
     if (this._transformSearchText !== undefined) {
       searchText = this._transformSearchText(searchText);
     }
-    if (searchText.length === 0) {
+    if (searchText.length < 2) {
       return Promise.resolve();
     }
 
@@ -99,11 +118,6 @@ export default class WebFeatureServiceSearchProvider extends SearchProvider {
 
     return this.getXml()
       .then((xml: any) => {
-        if (results.isCanceled) {
-          // A new search has superseded this one, so ignore the result.
-          return;
-        }
-
         let json: any = xml2json(xml);
         console.log(json);
         let features: any[];
