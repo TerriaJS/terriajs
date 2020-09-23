@@ -147,13 +147,6 @@ describe("WebMapTileServiceCatalogItem", function() {
     });
     await wmts.loadMapItems();
 
-    expect(wmts.tileMatrixSet!.id).toEqual(
-      "urn:ogc:def:wkss:OGC:1.0:GoogleMapsCompatible"
-    );
-    expect(wmts.tileMatrixSet!.labels.length).toBe(0);
-    expect(wmts.tileMatrixSet!.maxLevel).toBe(0);
-    expect(wmts.tileMatrixSet!.minLevel).toBe(0);
-    expect(wmts.tileMatrixSet!.tileWidth).toEqual(256);
-    expect(wmts.tileMatrixSet!.tileHeight).toEqual(256);
+    expect(wmts.tileMatrixSet).toBeUndefined();
   });
 });
