@@ -77,8 +77,8 @@ describe("WebMapTileServiceCatalogGroup", function() {
     });
 
     it("loads", async function() {
-      expect(wmts.members.length).toEqual(2);
-      expect(wmts.memberModels.length).toEqual(2);
+      expect(wmts.members.length).toEqual(3);
+      expect(wmts.memberModels.length).toEqual(3);
     });
   });
 });
