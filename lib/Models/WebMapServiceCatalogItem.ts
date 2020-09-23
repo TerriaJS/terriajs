@@ -57,6 +57,7 @@ import WebMapServiceCapabilities, {
   CapabilitiesStyle,
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
+import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 
 const dateFormat = require("dateformat");
 
@@ -596,6 +597,8 @@ class WebMapServiceCatalogItem
     i18next.t("models.webMapServiceCatalogItem.getCapabilitiesUrl")
   ];
 
+  _webMapServiceCatalogGroup: undefined | WebMapServiceCatalogGroup = undefined;
+
   static defaultParameters = {
     transparent: true,
     format: "image/png",
@@ -620,7 +623,10 @@ class WebMapServiceCatalogItem
   // TODO - There is possibly a better way to do this
   @computed
   get isThredds(): boolean {
-    if (this.url && this.url.indexOf("thredds") > -1) {
+    if (
+      this.url &&
+      (this.url.indexOf("thredds") > -1 || this.url.indexOf("tds") > -1)
+    ) {
       return true;
     }
     return false;

@@ -387,8 +387,8 @@ export default class TableColumn {
 
       const numbers = this.valuesAsNumbers;
       if (
-        numbers.numberOfNonNumbers <=
-        Math.ceil(numbers.numberOfValidNumbers * 0.1)
+        numbers.numberOfNonNumbers <= 100
+        // Math.ceil(numbers.numberOfValidNumbers * 0.1)
       ) {
         type = TableColumnType.scalar;
       } else {

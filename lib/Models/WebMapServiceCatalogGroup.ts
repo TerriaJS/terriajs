@@ -247,6 +247,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
     model.setTrait(stratum, "name", layer.Title);
     model.setTrait(stratum, "url", this.catalogGroup.url);
+    model._webMapServiceCatalogGroup = this.catalogGroup;
     model.setTrait(
       stratum,
       "getCapabilitiesUrl",
