@@ -1,14 +1,17 @@
 export interface DimensionOption {
-  readonly id: string;
+  readonly id?: string;
   readonly name?: string;
 }
 
-export interface SelectableDimension {
-  readonly id: string;
+export interface Dimension {
+  readonly id?: string;
   readonly name?: string;
-  readonly options: readonly DimensionOption[];
-  readonly selectedId: string | undefined;
+  readonly options?: readonly DimensionOption[];
+  readonly selectedId?: string;
   readonly allowUndefined?: boolean;
+}
+
+export interface SelectableDimension extends Dimension {
   setDimensionValue(stratumId: string, selectedId: string): void;
   disable?: boolean;
 }
