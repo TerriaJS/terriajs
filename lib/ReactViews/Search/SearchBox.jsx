@@ -123,7 +123,13 @@ export const SearchBox = createReactClass({
   render() {
     const clearButton = (
       <Box positionAbsolute topRight fullHeight styledWidth={"40px"}>
-        <RawButton onClick={() => this.clearSearch()} fullWidth fullHeight>
+        {/* The type="button" here stops the browser from assuming the close button is the submit button */}
+        <RawButton
+          type="button"
+          onClick={() => this.clearSearch()}
+          fullWidth
+          fullHeight
+        >
           <BoxSpan centered>
             <StyledIcon
               glyph={Icon.GLYPHS.close}
@@ -139,7 +145,11 @@ export const SearchBox = createReactClass({
     return (
       <form
         autoComplete="off"
-        onSubmit={event => event.preventDefault()}
+        onSubmit={event => {
+          event.preventDefault();
+          event.stopPropagation();
+          this.search();
+        }}
         css={`
           position: relative;
           width: 100%;

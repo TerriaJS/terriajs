@@ -557,7 +557,7 @@
     "searchErrorOccurred": "An error occurred while searching.  Please check your internet connection or try again later.",
     "searchAddresses": "Addresses",
     "searchPlaceNames": "Official Place Names",
-    "searchNoPlaceNames": "Sorry, no official place names match your search query",
+    "searchNoPlaceNames": "Sorry, no official place names match your search query.",
     "searchLocations": "Locations",
     "searchCatalogueItem": "Catalogue Items",
     "searchNoCatalogueItem": "Sorry, no catalogue items match your search query.",
