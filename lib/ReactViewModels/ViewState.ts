@@ -645,6 +645,7 @@ export default class ViewState {
     );
   }
 
+  @action
   toggleFeaturePrompt(
     feature: string,
     state: boolean,
