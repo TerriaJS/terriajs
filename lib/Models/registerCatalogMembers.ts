@@ -3,6 +3,8 @@ import ArcGisFeatureServerCatalogGroup from "./ArcGisFeatureServerCatalogGroup";
 import ArcGisFeatureServerCatalogItem from "./ArcGisFeatureServerCatalogItem";
 import ArcGisMapServerCatalogGroup from "./ArcGisMapServerCatalogGroup";
 import ArcGisMapServerCatalogItem from "./ArcGisMapServerCatalogItem";
+import ArcGisPortalCatalogGroup from "./ArcGisPortalCatalogGroup";
+import ArcGisPortalItemReference from "./ArcGisPortalItemReference";
 import BingMapsCatalogItem from "./BingMapsCatalogItem";
 import CartoMapCatalogItem from "./CartoMapCatalogItem";
 import CatalogGroup from "./CatalogGroupNew";
@@ -12,7 +14,6 @@ import CesiumTerrainCatalogItem from "./CesiumTerrainCatalogItem";
 import CkanCatalogGroup from "./CkanCatalogGroup";
 import CkanItemReference from "./CkanItemReference";
 import CompositeCatalogItem from "./CompositeCatalogItem";
-import createUrlReferenceFromUrl from "./createUrlReferenceFromUrl";
 import CsvCatalogItem from "./CsvCatalogItem";
 import CzmlCatalogItem from "./CzmlCatalogItem";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
@@ -32,6 +33,10 @@ import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
 import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFunction";
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
+import WebFeatureServiceCatalogItem from "./WebFeatureServiceCatalogItem";
+import WebFeatureServiceCatalogGroup from "./WebFeatureServiceCatalogGroup";
+import SdmxJsonCatalogGroup from "./SdmxJson/SdmxJsonCatalogGroup";
+import SdmxJsonCatalogItem from "./SdmxJson/SdmxJsonCatalogItem";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
@@ -43,6 +48,14 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(
     WebMapServiceCatalogGroup.type,
     WebMapServiceCatalogGroup
+  );
+  CatalogMemberFactory.register(
+    WebFeatureServiceCatalogItem.type,
+    WebFeatureServiceCatalogItem
+  );
+  CatalogMemberFactory.register(
+    WebFeatureServiceCatalogGroup.type,
+    WebFeatureServiceCatalogGroup
   );
   CatalogMemberFactory.register(GltfCatalogItem.type, GltfCatalogItem);
   CatalogMemberFactory.register(GeoJsonCatalogItem.type, GeoJsonCatalogItem);
@@ -65,6 +78,14 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(
     ArcGisFeatureServerCatalogGroup.type,
     ArcGisFeatureServerCatalogGroup
+  );
+  CatalogMemberFactory.register(
+    ArcGisPortalCatalogGroup.type,
+    ArcGisPortalCatalogGroup
+  );
+  CatalogMemberFactory.register(
+    ArcGisPortalItemReference.type,
+    ArcGisPortalItemReference
   );
   CatalogMemberFactory.register(
     Cesium3DTilesCatalogItem.type,
@@ -90,6 +111,11 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CartoMapCatalogItem.type, CartoMapCatalogItem);
   CatalogMemberFactory.register(UrlReference.type, UrlReference);
   CatalogMemberFactory.register(SplitItemReference.type, SplitItemReference);
+  CatalogMemberFactory.register(
+    SdmxJsonCatalogGroup.type,
+    SdmxJsonCatalogGroup
+  );
+  CatalogMemberFactory.register(SdmxJsonCatalogItem.type, SdmxJsonCatalogItem);
   CatalogMemberFactory.register(
     SenapsLocationsCatalogItem.type,
     SenapsLocationsCatalogItem
@@ -154,6 +180,11 @@ export default function registerCatalogMembers() {
   UrlToCatalogMemberMapping.register(
     matchesUrl(/\/wms|\=wms/i),
     WebMapServiceCatalogGroup.type,
+    true
+  );
+  UrlToCatalogMemberMapping.register(
+    matchesUrl(/\/wfs|\=wfs/i),
+    WebFeatureServiceCatalogGroup.type,
     true
   );
   UrlToCatalogMemberMapping.register(

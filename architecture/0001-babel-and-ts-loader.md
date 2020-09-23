@@ -4,7 +4,7 @@ Date: 2020-07-15
 
 ## Status
 
-Proposal
+Accepted
 
 ## Context
 Mobx build times are slow.

@@ -4,8 +4,6 @@ import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantPropert
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ModelGraphics from "terriajs-cesium/Source/DataSources/ModelGraphics";
-import Axis from "terriajs-cesium/Source/Scene/Axis";
-import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import CreateModel from "./CreateModel";
@@ -17,9 +15,17 @@ import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import CommonStrata from "./CommonStrata";
+import ShadowMixin from "../ModelMixins/ShadowMixin";
+
+// We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
+// and import doesn't allows us to do that, so instead we use require + type casting to ensure
+// we still maintain the type checking, without TS screaming with errors
+const Axis: Axis = require("terriajs-cesium/Source/Scene/Axis").default;
 
 export default class GltfCatalogItem
-  extends UrlMixin(CatalogMemberMixin(CreateModel(GltfCatalogItemTraits)))
+  extends ShadowMixin(
+    UrlMixin(CatalogMemberMixin(CreateModel(GltfCatalogItemTraits)))
+  )
   implements Mappable {
   static readonly type = "gltf";
 
@@ -99,30 +105,6 @@ export default class GltfCatalogItem
     return orientation;
   }
 
-  @computed
-  private get cesiumShadows() {
-    let result;
-
-    switch (this.shadows !== undefined ? this.shadows.toLowerCase() : "none") {
-      case "none":
-        result = ShadowMode.DISABLED;
-        break;
-      case "both":
-        result = ShadowMode.ENABLED;
-        break;
-      case "cast":
-        result = ShadowMode.CAST_ONLY;
-        break;
-      case "receive":
-        result = ShadowMode.RECEIVE_ONLY;
-        break;
-      default:
-        result = ShadowMode.DISABLED;
-        break;
-    }
-    return result;
-  }
-
   protected forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
@@ -144,10 +126,10 @@ export default class GltfCatalogItem
       return undefined;
     }
     const options = {
-      uri: this.url,
-      upAxis: this.cesiumUpAxis,
-      forwardAxis: this.cesiumForwardAxis,
-      scale: this.scale !== undefined ? this.scale : 1,
+      uri: new ConstantProperty(this.url),
+      upAxis: new ConstantProperty(this.cesiumUpAxis),
+      forwardAxis: new ConstantProperty(this.cesiumForwardAxis),
+      scale: new ConstantProperty(this.scale !== undefined ? this.scale : 1),
       shadows: new ConstantProperty(this.cesiumShadows),
       heightReference: new ConstantProperty(this.cesiumHeightReference)
     };
@@ -156,9 +138,11 @@ export default class GltfCatalogItem
 
   @computed
   get mapItems() {
-    if (this.model === undefined) return [];
+    if (this.model === undefined) {
+      return [];
+    }
 
-    this.model.show = this.show;
+    this.model.show = new ConstantProperty(this.show);
     const dataSource: CustomDataSource = new CustomDataSource(
       this.name || "glTF model"
     );

@@ -42,7 +42,7 @@ function EmptyWorkbench(props) {
   `;
   return (
     <Text large textLight nunito>
-      {/* Hardcoded top to 150px for now for very very small screens 
+      {/* Hardcoded top to 150px for now for very very small screens
           TODO: make it not hardcoded */}
       <Box
         column
@@ -57,7 +57,7 @@ function EmptyWorkbench(props) {
           </Text>
           <ResponsiveSpacing />
         </Box>
-        <BoxHelpfulHints column paddedRatio={3} overflowY="auto">
+        <BoxHelpfulHints column paddedRatio={3} overflowY="auto" scroll>
           <Box left>
             <Text extraLarge bold>
               {t("emptyWorkbench.helpfulHints")}

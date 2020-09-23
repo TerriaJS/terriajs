@@ -33,12 +33,6 @@ describe("MagdaReference", function() {
     }
   };
 
-  beforeEach(function() {
-    CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
-    CatalogMemberFactory.register(CsvCatalogItem.type, CsvCatalogItem);
-    CatalogMemberFactory.register(GeoJsonCatalogItem.type, GeoJsonCatalogItem);
-  });
-
   it("can dereference to a group", function(done) {
     const terria = new Terria();
 

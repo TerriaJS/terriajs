@@ -14,9 +14,9 @@ import MetadataTable from "./MetadataTable";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import Styles from "./mappable-preview.scss";
 import { observer } from "mobx-react";
-import AUpageAlert from "@gov.au/page-alerts";
 
 import ExportData from "./ExportData";
+import WarningBox from "./WarningBox";
 
 /**
  * CatalogItem description.
@@ -58,13 +58,7 @@ const Description = observer(
           `}
         >
           <If condition={catalogItem.isExperiencingIssues}>
-            <AUpageAlert as="warning">
-              <div className={Styles.alertMessage}>
-                <Trans i18nKey="preview.mayBeExperiencingIssues">
-                  <p>This dataset may currently be experiencing issues</p>
-                </Trans>
-              </div>
-            </AUpageAlert>
+            <WarningBox>{t("preview.mayBeExperiencingIssues")}</WarningBox>
           </If>
 
           <If
@@ -128,7 +122,7 @@ const Description = observer(
                 <When condition={catalogItem.type === "wfs"}>
                   <p key="wfs-description">
                     <Trans i18nKey="description.wfs">
-                      This is a{" "}
+                      This is a
                       <a
                         href="https://en.wikipedia.org/wiki/Web_Feature_Service"
                         target="_blank"

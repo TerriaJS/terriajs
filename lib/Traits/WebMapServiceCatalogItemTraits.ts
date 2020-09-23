@@ -15,7 +15,9 @@ import primitiveTrait from "./primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
 import SplitterTraits from "./SplitterTraits";
 import TimeFilterTraits from "./TimeFilterTraits";
+import primitiveArrayTrait from "./primitiveArrayTrait";
 import UrlTraits from "./UrlTraits";
+import ExportableTraits from "./ExportableTraits";
 
 export class WebMapServiceAvailableStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -75,7 +77,76 @@ export class WebMapServiceAvailableLayerStylesTraits extends ModelTraits {
  *   "layers": "mangrove_cover_v2_0_2"
  * }
  */
+export class WebMapServiceAvailableDimensionTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "string",
+    name: "Dimension Name",
+    description: "The name of the dimension."
+  })
+  name?: string;
+
+  @primitiveArrayTrait({
+    type: "string",
+    name: "Dimension values",
+    description: "Possible dimension values."
+  })
+  values?: string[];
+
+  @primitiveTrait({
+    type: "string",
+    name: "Units",
+    description: "The units of the dimension."
+  })
+  units?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Unit Symbol",
+    description: "The unitSymbol of the dimension."
+  })
+  unitSymbol?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Default",
+    description: "The default value for the dimension."
+  })
+  default?: string;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Multiple Values",
+    description: "Can the dimension support multiple values."
+  })
+  multipleValues?: boolean;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Nearest Value",
+    description: "The nearest value of the dimension."
+  })
+  nearestValue?: boolean;
+}
+
+export class WebMapServiceAvailableLayerDimensionsTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "string",
+    name: "Layer Name",
+    description: "The name of the layer for which dimensions are available."
+  })
+  layerName?: string;
+
+  @objectArrayTrait({
+    type: WebMapServiceAvailableDimensionTraits,
+    name: "Dimensions",
+    description: "The dimensions available for this layer.",
+    idProperty: "name"
+  })
+  dimensions?: WebMapServiceAvailableDimensionTraits[];
+}
+
 export default class WebMapServiceCatalogItemTraits extends mixTraits(
+  ExportableTraits,
   DiffableTraits,
   FeatureInfoTraits,
   LayerOrderingTraits,
@@ -97,16 +168,24 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   @primitiveTrait({
     type: "string",
     name: "Layer(s)",
-    description: "The layer or layers to display."
+    description: "The layer or layers to display (comma separated values)."
   })
   layers?: string;
 
   @primitiveTrait({
     type: "string",
     name: "Style(s)",
-    description: "The styles to use with each of the `Layer(s)`."
+    description:
+      "The styles to use with each of the `Layer(s)` (comma separated values). This maps one-to-one with `Layer(s)`"
   })
   styles?: string;
+
+  @anyTrait({
+    name: "Dimensions",
+    description:
+      "Dimension parameters used to request a particular layer along one or more dimensional axes (including elevation, excluding time). Do not include `_dim` prefx for parameter keys. These dimensions will be applied to all layers (if applicable)"
+  })
+  dimensions?: { [key: string]: string };
 
   @objectArrayTrait({
     type: WebMapServiceAvailableLayerStylesTraits,
@@ -115,6 +194,14 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
     idProperty: "layerName"
   })
   availableStyles?: WebMapServiceAvailableLayerStylesTraits[];
+
+  @objectArrayTrait({
+    type: WebMapServiceAvailableLayerDimensionsTraits,
+    name: "Available Dimensions",
+    description: "The available dimensions.",
+    idProperty: "layerName"
+  })
+  availableDimensions?: WebMapServiceAvailableLayerDimensionsTraits[];
 
   @objectArrayTrait({
     name: "Legend URLs",
@@ -127,7 +214,7 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   @anyTrait({
     name: "Parameters",
     description:
-      "Additional parameters to pass to the MapServer when requesting images."
+      "Additional parameters to pass to the MapServer when requesting images. Style parameters are stored as CSV in `styles`, dimension parameters are stored in `dimensions`."
   })
   parameters?: JsonObject;
 

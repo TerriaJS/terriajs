@@ -4,7 +4,6 @@ import Clock from "terriajs-cesium/Source/Core/Clock";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
@@ -59,6 +58,12 @@ import Workbench from "./Workbench";
 import openGroup from "./openGroup";
 import getDereferencedIfExists from "../Core/getDereferencedIfExists";
 import SplitItemReference from "./SplitItemReference";
+import Internationalization, {
+  I18nStartOptions,
+  LanguageConfiguration
+} from "./Internationalization";
+import { Notification } from "../ReactViewModels/ViewState";
+import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 // import overrides from "../Overrides/defaults.jsx";
 
 interface ConfigParameters {
@@ -96,6 +101,7 @@ interface ConfigParameters {
   showInAppGuides?: boolean;
   helpContent?: HelpContentItem[];
   helpContentTerms?: Term[];
+  languageConfiguration?: LanguageConfiguration;
 }
 
 interface StartOptions {
@@ -105,6 +111,12 @@ interface StartOptions {
   };
   applicationUrl?: Location;
   shareDataService?: ShareDataService;
+  /**
+   * i18nOptions is explicitly a separate option from `languageConfiguration`,
+   * as `languageConfiguration` can be serialised, but `i18nOptions` may have
+   * some functions that are passed in from a TerriaMap
+   *  */
+  i18nOptions?: I18nStartOptions;
 }
 
 type Analytics = any;
@@ -131,6 +143,7 @@ export default class Terria {
   private models = observable.map<string, BaseModel>();
 
   readonly baseUrl: string = "build/TerriaJS/";
+  readonly notification = new CesiumEvent();
   readonly error = new CesiumEvent();
   readonly tileLoadProgressEvent = new CesiumEvent();
   readonly workbench = new Workbench();
@@ -215,7 +228,8 @@ export default class Terria {
     },
     showInAppGuides: false,
     helpContent: [],
-    helpContentTerms: defaultTerms
+    helpContentTerms: defaultTerms,
+    languageConfiguration: undefined
   };
 
   @observable
@@ -390,12 +404,24 @@ export default class Terria {
     return loadJson5(options.configUrl, options.configUrlHeaders)
       .then((config: any) => {
         runInAction(() => {
-          if (config.parameters) {
-            this.updateParameters(config.parameters);
+          // If it's a magda config, we only load magda config and parameters should never be a property on the direct
+          // config aspect (it would be under the `terria-config` aspect)
+          if (config.aspects) {
+            return this.loadMagdaConfig(options.configUrl, config).then(() => {
+              Internationalization.initLanguage(
+                this.configParameters.languageConfiguration,
+                options.i18nOptions
+              );
+            });
           }
 
-          if (config.aspects) {
-            return this.loadMagdaConfig(options.configUrl, config);
+          // If it's a regular config.json, continue on with parsing remaining init sources
+          if (config.parameters) {
+            this.updateParameters(config.parameters);
+            Internationalization.initLanguage(
+              config.parameters.languageConfiguration,
+              options.i18nOptions
+            );
           }
 
           const initializationUrls: string[] = config.initializationUrls || [];
@@ -1026,6 +1052,34 @@ function interpretHash(
       });
 
       if (shareProps) {
+        if (shareProps.converted) {
+          let message =
+            "This share link was made with an older version of Terria and has been converted to work in Terria version 8\n\n";
+          if (shareProps.messages?.length > 0) {
+            message += `### Warning${
+              shareProps.messages?.length > 1 ? "s" : ""
+            }\n\n`;
+          }
+          const messagesForPath: { [path: string]: string[] } = {};
+          shareProps.messages.forEach((message: any) => {
+            const pathString = message.path.join(".");
+            isDefined(messagesForPath[pathString])
+              ? messagesForPath[pathString].push(message.message)
+              : (messagesForPath[pathString] = [message.message]);
+          });
+
+          message += Object.entries(messagesForPath).reduce<string>(
+            (m, [path, messages]) =>
+              `${m}${path !== "" ? `#### ${path}\n\n` : ``}- ${messages.join(
+                "  \n- "
+              )}\n\n`,
+            ""
+          );
+          terria.notification.raiseEvent({
+            title: "Warning: share link upgraded",
+            message
+          });
+        }
         interpretStartData(terria, shareProps);
       }
     });

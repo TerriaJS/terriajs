@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import {
   action,
   computed,
@@ -38,7 +39,6 @@ import RegionTypeParameter from "./RegionTypeParameter";
 import ResultPendingCatalogItem from "./ResultPendingCatalogItem";
 import StringParameter from "./StringParameter";
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
-import i18next from "i18next";
 
 const sprintf = require("terriajs-cesium/Source/ThirdParty/sprintf").default;
 const executeWpsTemplate = require("./ExecuteWpsTemplate.xml");
@@ -416,12 +416,11 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
     const parameterTraits = await Promise.all(
       this.parameters.map(async p => {
         const geoJsonFeature = await runInAction(() => p.geoJsonFeature);
-        const tmp = createStratumInstance(ParameterTraits, {
+        return createStratumInstance(ParameterTraits, {
           name: p.name,
           value: p.formatValueAsString(),
           geoJsonFeature: <any>geoJsonFeature
         });
-        return tmp;
       })
     );
     runInAction(() => {

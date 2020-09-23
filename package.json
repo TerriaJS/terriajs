@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "8.0.0-alpha.40",
+  "version": "8.0.0-alpha.50",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "engines": {
@@ -19,11 +19,9 @@
     "@babel/preset-env": "^7.10.4",
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.10.4",
-    "@gov.au/page-alerts": "^2.1.3",
     "@mapbox/point-geometry": "^0.1.0",
     "@mapbox/togeojson": "^0.16.0",
     "@mapbox/vector-tile": "^1.3.0",
-    "@types/cesium": "1.66.0",
     "@types/classnames": "^2.2.7",
     "@types/clipboard": "^2.0.1",
     "@types/create-react-class": "^15.6.2",
@@ -32,8 +30,8 @@
     "@types/d3-selection": "^1.4.1",
     "@types/d3-transition": "^1.1.4",
     "@types/domhandler": "^2.4.1",
+    "@types/dompurify": "^2.0.2",
     "@types/geojson": "^7946.0.7",
-    "@types/i18next": "^13.0.0",
     "@types/jasmine": "^2.8.8",
     "@types/jasmine-ajax": "^3.3.0",
     "@types/json5": "^0.0.30",
@@ -85,8 +83,9 @@
     "hammerjs": "^2.0.6",
     "hoist-non-react-statics": "^3.3.2",
     "html-to-react": "1.3.4",
-    "i18next": "^19.0.0",
+    "i18next": "^19.6.3",
     "i18next-browser-languagedetector": "^4.0.1",
+    "i18next-http-backend": "^1.0.11",
     "imports-loader": "^0.8.0",
     "inobounce": "^0.1.2",
     "interactjs": "1.4.0-alpha.17",
@@ -132,7 +131,7 @@
     "style-loader": "^0.23.1",
     "styled-components": "^5.1.0",
     "svg-sprite-loader": "4.1.3",
-    "terriajs-cesium": "1.68.0",
+    "terriajs-cesium": "1.71.3",
     "terriajs-html2canvas": "1.0.0-alpha.12-terriajs-1",
     "ts-loader": "^5.3.3",
     "ts-node": "^5.0.1",
@@ -175,7 +174,7 @@
     "karma-spec-reporter": "^0.0.32",
     "klaw-sync": "^4.0.0",
     "node-notifier": "^5.1.2",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.14.1",
     "plugin-error": "^1.0.1",
     "prettier": "^1.19.1",
     "pretty-quick": "^1.10.0",
@@ -208,43 +207,6 @@
   "husky": {
     "hooks": {
       "pre-commit": "pretty-quick --staged"
-    }
-  },
-  "pancake": {
-    "auto-save": true,
-    "plugins": true,
-    "ignore": [],
-    "json": {
-      "enable": false,
-      "location": "pancake/",
-      "name": "pancake",
-      "content": {
-        "name": true,
-        "version": true,
-        "dependencies": true,
-        "path": true,
-        "settings": true
-      }
-    },
-    "css": {
-      "minified": true,
-      "modules": false,
-      "browsers": [
-        "last 2 versions",
-        "ie 8",
-        "ie 9",
-        "ie 10"
-      ],
-      "location": "pancake/css/",
-      "name": "pancake.min.css"
-    },
-    "sass": {
-      "modules": false,
-      "location": "pancake/sass/",
-      "name": "pancake.scss"
-    },
-    "react": {
-      "location": "pancake/react/"
     }
   }
 }

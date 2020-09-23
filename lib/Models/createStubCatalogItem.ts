@@ -1,9 +1,7 @@
-import ModelFactory from "./ModelFactory";
-import Terria from "./Terria";
-import StubCatalogItem from "./StubCatalogItem";
-import { uniqueId } from "lodash-es";
+import CommonStrata from "./CommonStrata";
 import { BaseModel } from "./Model";
-import CatalogMemberFactory from "./CatalogMemberFactory";
+import StubCatalogItem from "./StubCatalogItem";
+import Terria from "./Terria";
 
 export const getUniqueStubName = (terria: Terria) => {
   const stubName = "[StubCatalogItem]";
@@ -23,7 +21,7 @@ export default function createStubCatalogItem(
   const idToUse = uniqueId || getUniqueStubName(terria);
   const stub = new StubCatalogItem(idToUse, terria);
 
-  stub.setTrait("underride", "name", stub.uniqueId);
+  stub.setTrait(CommonStrata.underride, "name", stub.uniqueId);
   terria.addModel(stub);
   return stub;
 }

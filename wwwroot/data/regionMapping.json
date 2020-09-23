@@ -2632,6 +2632,72 @@
             ],
             "description": "Australian Electoral Comission Commonwealth Electoral Boundaries for ABS   Australian Marriage Law Survey",
             "regionIdsFile": "build/TerriaJS/data/regionids/region_map-AEC_FED_2017_AMLS_FED_ABB.json"
+        },
+        "RRA_Name": {
+            "layerName": "Regional_Recovery_Areas",
+            "server": "https://tiles.terria.io/Regional_Recovery_Areas/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMinZoom": 0,
+            "serverMaxZoom": 28,
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-RRA_Name_Regional_Recovery_Areas.json",
+            "regionProp": "RRA_Name",
+            "nameProp": "RRA_Name",
+            "aliases": [
+                "RRA_NAME",
+                "RRA"
+            ],
+            "description": "Bushfire Regional Recovery Areas",
+            "bbox": [
+                96.81694140799998,
+                -43.74050960300003,
+                159.10921900799997,
+                -9.142175976999999
+            ]
+        },
+        "ABARES_CODE": {
+            "layerName": "ABARES_Ag_Regions",
+            "server": "https://tiles.terria.io/ABARES_Ag_Regions/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMinZoom": 0,
+            "serverMaxZoom": 28,
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-ABARES_CODE_ABARES_Ag_Regions.json",
+            "regionProp": "AbaresCode",
+            "nameProp": "AbaresName",
+            "aliases": [
+                "abares_code",
+                "abares_region_code"
+            ],
+            "description": "ABARES regions, farm survey statistical aggregation areas",
+            "bbox": [
+                96.81694140799998,
+                -43.74050960300003,
+                159.10921900799997,
+                -9.142175976999999
+            ]
+        },
+        "ABARES_NAME": {
+            "layerName": "ABARES_Ag_Regions",
+            "server": "https://tiles.terria.io/ABARES_Ag_Regions/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMinZoom": 0,
+            "serverMaxZoom": 28,
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-ABARES_NAME_ABARES_Ag_Regions.json",
+            "regionProp": "AbaresName",
+            "nameProp": "AbaresName",
+            "description": "ABARES regions, farm survey statistical aggregation areas",
+            "aliases": [
+                "abares_name",
+                "abares_region_name"
+            ],
+            "bbox": [
+                96.81694140799998,
+                -43.74050960300003,
+                159.10921900799997,
+                -9.142175976999999
+            ]
         }
     }
 }

@@ -38,7 +38,7 @@ const NotificationWindow = createReactClass({
   },
 
   render() {
-    const title = this.props.title;
+    const title = this.props.title || "";
     const message = this.props.message;
     const confirmText = this.props.confirmText || "OK";
     const denyText = this.props.denyText;
