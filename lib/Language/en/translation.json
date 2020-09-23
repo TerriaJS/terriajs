@@ -1326,7 +1326,9 @@
       "serviceContact": "Service Contact",
       "getCapabilitiesUrl": "GetCapabilities URL",
       "missingUrlTitle": "Unable to load GetCapabilities",
-      "missingUrlMessage": "Could not load the Web Map Tile Service (WMTS) GetCapabilities document because the catalog item does not have a `url`."
+      "missingUrlMessage": "Could not load the Web Map Tile Service (WMTS) GetCapabilities document because the catalog item does not have a `url`.",
+      "noUsableTileMatrixTitle": "Warning",
+      "noUsableTileMatrixMessage": "This WMTS layer has no Web Mercator tile matrix set - it may not display correctly"
     },
     "webProcessingService": {
       "wps": "Web Processing Service (WPS)",

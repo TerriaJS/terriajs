@@ -195,7 +195,56 @@ class WmtsCapabilitiesStratum extends LoadableStratum(
         })
       );
     }
+
+    if (!isDefined(this.catalogItem.tileMatrixSet)) {
+      result.push(
+        createStratumInstance(InfoSectionTraits, {
+          name: i18next.t(
+            "models.webMapTileServiceCatalogItem.noUsableTileMatrixTitle"
+          ),
+          content: i18next.t(
+            "models.webMapTileServiceCatalogItem.noUsableTileMatrixMessage"
+          )
+        })
+      );
+    }
     return result;
+  }
+
+  @computed
+  get infoSectionOrder(): string[] {
+    return [
+      i18next.t("preview.disclaimer"),
+      i18next.t("models.webMapTileServiceCatalogItem.noUsableTileMatrixTitle"),
+      i18next.t("description.name"),
+      i18next.t("preview.datasetDescription"),
+      i18next.t("models.webMapTileServiceCatalogItem.dataDescription"),
+      i18next.t("preview.serviceDescription"),
+      i18next.t("models.webMapTileServiceCatalogItem.serviceDescription"),
+      i18next.t("preview.resourceDescription"),
+      i18next.t("preview.licence"),
+      i18next.t("preview.accessConstraints"),
+      i18next.t("models.webMapTileServiceCatalogItem.accessConstraints"),
+      i18next.t("models.webMapTileServiceCatalogItem.fees"),
+      i18next.t("preview.author"),
+      i18next.t("preview.contact"),
+      i18next.t("models.webMapTileServiceCatalogItem.serviceContact"),
+      i18next.t("preview.created"),
+      i18next.t("preview.modified"),
+      i18next.t("preview.updateFrequency"),
+      i18next.t("models.webMapTileServiceCatalogItem.getCapabilitiesUrl")
+    ];
+  }
+
+  @computed
+  get shortReport() {
+    return !isDefined(this.catalogItem.tileMatrixSet)
+      ? `${i18next.t(
+          "models.webMapTileServiceCatalogItem.noUsableTileMatrixTitle"
+        )}: ${i18next.t(
+          "models.webMapTileServiceCatalogItem.noUsableTileMatrixMessage"
+        )}`
+      : undefined;
   }
 
   @computed
@@ -562,9 +611,11 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
     let tileWidth: number = 256;
     let tileHeight: number = 256;
     let tileMatrixSetLabels: string[] = [];
+    let found = false;
     for (let i = 0; i < tileMatrixSetLinks.length; i++) {
       const tileMatrixSet = tileMatrixSetLinks[i].TileMatrixSet;
       if (usableTileMatrixSets && usableTileMatrixSets[tileMatrixSet]) {
+        found = true;
         tileMatrixSetId = tileMatrixSet;
         tileMatrixSetLabels = usableTileMatrixSets[tileMatrixSet].identifiers;
         tileWidth = Number(usableTileMatrixSets[tileMatrixSet].tileWidth);
@@ -572,6 +623,8 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
         break;
       }
     }
+
+    if (!found) return;
 
     if (Array.isArray(tileMatrixSetLabels)) {
       const levels = tileMatrixSetLabels.map(label => {
