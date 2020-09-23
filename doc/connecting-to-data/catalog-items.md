@@ -15,8 +15,8 @@ A Catalog Item is a dataset or service that can be enabled for display on the ma
 | [Comma-Separated Values (CSV)](catalog-type-details/csv.md) | `csv` |
 | [Format Conversion Service (based on OGR)](catalog-type-details/ogr.md) | `ogr` |
 | [GeoJSON](catalog-type-details/geojson.md) | `geojson` |
-| [GeoRSS](connecting-to-data/catalog-type-details/georss.md) | `georss` |
-| [GLTF](connecting-to-data/catalog-type-details/gltf.md) | `gltf` |
+| [GeoRSS](catalog-type-details/georss.md) | `georss` |
+| [GLTF](catalog-type-details/gltf.md) | `gltf` |
 | [GPX](catalog-type-details/gpx.md) | `gpx` |
 | [Keyhole Markup Language (KML)](catalog-type-details/kml.md) | `kml` |
 | [MAGDA Distribution](catalog-type-details/magda-distribution.md) | `magda-distribution` |
