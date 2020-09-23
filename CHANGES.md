@@ -3,7 +3,10 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.50)
+#### next release (8.0.0-alpha.51)
+* [The next improvement]
+
+#### 8.0.0-alpha.50
 * Support for searching WFS features with WebFeatureServiceSearchProvider
 * WFS-based AustralianGazetteerSearchProvider
 * Fixed a bug causing users to be brought back to the Data Catalogue tab when clicking on an auto-detected user added catalogue item.
@@ -21,7 +24,6 @@ Change Log
 * Added `TableAutomaticStylesStratum.stratumName` instead of hard-coded strings
 * Added `Dimension` interface for `SelectableDimension` - which can be used for Traits
 * Make `SelectableDimension.options` optional
-* [The next improvement]
 
 #### 8.0.0-alpha.49
 * WMS GetFeatureInfo fix to ensure `style=undefined` is not sent to server
