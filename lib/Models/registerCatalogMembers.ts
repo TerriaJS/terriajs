@@ -35,6 +35,8 @@ import WebFeatureServiceCatalogGroup from "./WebFeatureServiceCatalogGroup";
 import WebFeatureServiceCatalogItem from "./WebFeatureServiceCatalogItem";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
+import WebMapTileServiceCatalogGroup from "./WebMapTileServiceCatalogGroup";
+import WebMapTileServiceCatalogItem from "./WebMapTileServiceCatalogItem";
 import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFunction";
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
 
