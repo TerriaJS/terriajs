@@ -16,6 +16,7 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
+import TerriaError from "../Core/TerriaError";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import RegionProvider from "../Map/RegionProvider";
 import JSRegionProviderList from "../Map/RegionProviderList";
@@ -34,9 +35,11 @@ import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
 import LegendTraits from "../Traits/LegendTraits";
 import TableTraits from "../Traits/TableTraits";
+import AsyncMappableMixin from "./AsyncMappableMixin";
 import DiscretelyTimeVaryingMixin, {
   DiscreteTimeAsJS
 } from "./DiscretelyTimeVaryingMixin";
+import ExportableMixin, { ExportData } from "./ExportableMixin";
 import TimeVarying from "./TimeVarying";
 
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
@@ -44,7 +47,10 @@ import TimeVarying from "./TimeVarying";
 // This is a dodgy workaround.
 class RegionProviderList extends JSRegionProviderList {}
 function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
-  abstract class TableMixin extends DiscretelyTimeVaryingMixin(Base)
+  abstract class TableMixin
+    extends ExportableMixin(
+      AsyncMappableMixin(DiscretelyTimeVaryingMixin(Base))
+    )
     implements SelectableDimensions, TimeVarying {
     get hasTableMixin() {
       return true;
@@ -166,6 +172,31 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     }
 
     @computed
+    get _canExportData() {
+      return isDefined(this.dataColumnMajor);
+    }
+
+    protected async _exportData(): Promise<ExportData | undefined> {
+      if (isDefined(this.dataColumnMajor)) {
+        // I am assuming all columns have the same length -> so use first column
+        let csvString = this.dataColumnMajor[0]
+          .map((row, rowIndex) =>
+            this.dataColumnMajor!.map(col => col[rowIndex]).join(",")
+          )
+          .join("\n");
+
+        return {
+          name: (this.name || this.uniqueId)!,
+          file: new Blob([csvString])
+        };
+      }
+
+      throw new TerriaError({
+        sender: this,
+        message: "No data available to download."
+      });
+    }
+
     get supportsSplitting() {
       return isDefined(this.activeTableStyle.regionColumn);
     }
@@ -434,32 +465,35 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
     protected abstract forceLoadTableData(): Promise<string[][]>;
 
-    private forceLoadTableMixin(): Promise<void> {
-      const regionProvidersPromise: Promise<
-        RegionProviderList | undefined
-      > = makeRealPromise(
+    protected async loadRegionProviderList() {
+      if (isDefined(this.regionProviderList)) return;
+
+      const regionProvidersPromise:
+        | RegionProviderList
+        | undefined = await makeRealPromise(
         RegionProviderList.fromUrl(
           this.terria.configParameters.regionMappingDefinitionsUrl,
           this.terria.corsProxy
         )
       );
-      const dataPromise = this.forceLoadTableData();
-      return Promise.all([regionProvidersPromise, dataPromise]).then(
-        ([regionProviderList, dataColumnMajor]) => {
-          runInAction(() => {
-            this.regionProviderList = regionProviderList;
-            this.dataColumnMajor = dataColumnMajor;
-          });
-        }
-      );
+      runInAction(() => (this.regionProviderList = regionProvidersPromise));
     }
 
-    protected forceLoadChartItems() {
-      return this._dataLoader.load();
+    private async forceLoadTableMixin(): Promise<void> {
+      await this.loadRegionProviderList();
+
+      const dataColumnMajor = await this.forceLoadTableData();
+      runInAction(() => {
+        this.dataColumnMajor = dataColumnMajor;
+      });
     }
 
-    protected forceLoadMapItems() {
-      return this._dataLoader.load();
+    protected forceLoadChartItems(force?: boolean) {
+      return this._dataLoader.load(force);
+    }
+
+    protected forceLoadMapItems(force?: boolean) {
+      return this._dataLoader.load(force);
     }
 
     dispose() {
@@ -525,7 +559,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         }
 
         const regionColumn = input.style.regionColumn;
-        const regionType: any = regionColumn.regionType;
+        const regionType = regionColumn.regionType;
         if (regionType === undefined) {
           return undefined;
         }
@@ -637,12 +671,15 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
               };
             },
             subdomains: regionType.serverSubdomains,
-            rectangle: Rectangle.fromDegrees(
-              regionType.bbox[0],
-              regionType.bbox[1],
-              regionType.bbox[2],
-              regionType.bbox[3]
-            ),
+            rectangle:
+              Array.isArray(regionType.bbox) && regionType.bbox.length >= 4
+                ? Rectangle.fromDegrees(
+                    regionType.bbox[0],
+                    regionType.bbox[1],
+                    regionType.bbox[2],
+                    regionType.bbox[3]
+                  )
+                : undefined,
             minimumZoom: regionType.serverMinZoom,
             maximumNativeZoom: regionType.serverMaxNativeZoom,
             maximumZoom: regionType.serverMaxZoom,

@@ -557,7 +557,7 @@
     "searchErrorOccurred": "An error occurred while searching.  Please check your internet connection or try again later.",
     "searchAddresses": "Addresses",
     "searchPlaceNames": "Official Place Names",
-    "searchNoPlaceNames": "Sorry, no official place names match your search query",
+    "searchNoPlaceNames": "Sorry, no official place names match your search query.",
     "searchLocations": "Locations",
     "searchCatalogueItem": "Catalogue Items",
     "searchNoCatalogueItem": "Sorry, no catalogue items match your search query.",
@@ -1130,6 +1130,29 @@
       "noFeatures": "There are no features matching your query.",
       "unknownFormat": "The server responded with an unknown feature format.",
       "noMatchingFeatures": "The Sensor Observation Service did not return any features matching your query."
+    },
+    "sdmxServerStratum": {
+      "sdmxStructureLoadErrorTitle": "SDMX structure request failed",
+      "loadDataErrorTitle": "Failed to load SDMX group",
+      "loadDataErrorMessage": "The server has no dataflows"
+    },
+    "sdmxJsonDataflowStratum": {
+      "loadDataErrorTitle": "Could not load SDMX dataflow",
+      "loadDataErrorMessage": {
+        "invalidResponse": "Invalid JSON object",
+        "noDatastructure": "No data structures could be found for dataflow {{catalogItem.dataflowId}}",
+        "noDataflow": "Dataflow {{catalogItem.dataflowId}} is invalid"
+      }
+    },
+    "sdmxCatalogItem": {
+      "viewBy": {
+        "title": "View by",
+        "time": "Time-series",
+        "region": "Region"
+      },
+      "noData": "No data available",
+      "loadDataErrorTitle": "Could not load SDMX CSV",
+      "loadDataErrorMessage": "Invalid response from {{csvUrl}}"
     },
     "time": {
       "invalidDate": "Invalid Date",

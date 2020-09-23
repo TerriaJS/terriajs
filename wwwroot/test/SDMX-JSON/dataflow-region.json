@@ -1,0 +1,3110 @@
+{
+  "data": {
+    "dataflows": [
+      {
+        "id": "DF_CPI",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Inflation rates",
+        "names": {
+          "en": "Inflation rates"
+        },
+        "description": "Inflation rates for the Pacific island countries and territories per year.",
+        "descriptions": {
+          "en": "Inflation rates for the Pacific island countries and territories per year."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "UNIT_MEASURE,UNIT_MULT,BASE_PER",
+            "type": "UNIT_MEASURE_CONCEPTS"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "INDICATOR=INF",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/a2vsj|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/a2vsj|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_CPI(3.0)"
+      }
+    ],
+    "categorySchemes": [
+      {
+        "id": "CAS_COM_TOPIC",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categoryscheme"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Topic",
+        "names": {
+          "en": "Topic"
+        },
+        "isPartial": false,
+        "categories": [
+          {
+            "id": "ECO",
+            "name": "Economy",
+            "names": {
+              "en": "Economy"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "10",
+                "texts": {
+                  "en": "10"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "category"
+              }
+            ]
+          },
+          {
+            "id": "ENV",
+            "name": "Environment",
+            "names": {
+              "en": "Environment"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "20",
+                "texts": {
+                  "en": "20"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "category"
+              }
+            ]
+          },
+          {
+            "id": "HEA",
+            "name": "Health",
+            "names": {
+              "en": "Health"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "30",
+                "texts": {
+                  "en": "30"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "category"
+              }
+            ]
+          },
+          {
+            "id": "IND",
+            "name": "Industry and Services",
+            "names": {
+              "en": "Industry and Services"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "40",
+                "texts": {
+                  "en": "40"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "category"
+              }
+            ]
+          },
+          {
+            "id": "POP",
+            "name": "Population",
+            "names": {
+              "en": "Population"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "50",
+                "texts": {
+                  "en": "50"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "category"
+              }
+            ]
+          },
+          {
+            "id": "SOC",
+            "name": "Social",
+            "names": {
+              "en": "Social"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "60",
+                "texts": {
+                  "en": "60"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "category"
+              }
+            ]
+          },
+          {
+            "id": "XDO",
+            "name": "Multi-domain",
+            "names": {
+              "en": "Multi-domain"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "70",
+                "texts": {
+                  "en": "70"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "category"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "categorisations": [
+      {
+        "id": "CAT_CPI",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation of dataflow DF_CPI to category ECO of categrory scheme CAS_COM_TOPIC",
+        "names": {
+          "en": "Categorisation of dataflow DF_CPI to category ECO of categrory scheme CAS_COM_TOPIC"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_CPI(3.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_TOPIC(1.0).ECO"
+      }
+    ],
+    "conceptSchemes": [
+      {
+        "id": "CS_COMMON",
+        "links": [
+          {
+            "rel": "self",
+            "type": "conceptscheme"
+          }
+        ],
+        "version": "2.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Common concepts for SPC .Stat data",
+        "names": {
+          "en": "Common concepts for SPC .Stat data"
+        },
+        "isPartial": false,
+        "concepts": [
+          {
+            "id": "TIME_PERIOD",
+            "name": "Time",
+            "names": {
+              "en": "Time"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "concept"
+              }
+            ]
+          },
+          {
+            "id": "FREQ",
+            "name": "Frequency",
+            "names": {
+              "en": "Frequency"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "concept"
+              }
+            ]
+          },
+          {
+            "id": "OBS_VALUE",
+            "name": "Observation value",
+            "names": {
+              "en": "Observation value"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "concept"
+              }
+            ]
+          },
+          {
+            "id": "OBS_SATUS",
+            "name": "Observation Status",
+            "names": {
+              "en": "Observation Status"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "concept"
+              }
+            ]
+          },
+          {
+            "id": "CONF_STATUS",
+            "name": "Confidentiality status",
+            "names": {
+              "en": "Confidentiality status"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "concept"
+              }
+            ]
+          },
+          {
+            "id": "UNIT_MEASURE",
+            "name": "Unit of measure",
+            "names": {
+              "en": "Unit of measure"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "concept"
+              }
+            ]
+          },
+          {
+            "id": "UNIT_MULT",
+            "name": "Unit multiplier",
+            "names": {
+              "en": "Unit multiplier"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "concept"
+              }
+            ]
+          },
+          {
+            "id": "COMMENT",
+            "name": "Comment",
+            "names": {
+              "en": "Comment"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "concept"
+              }
+            ]
+          },
+          {
+            "id": "DECIMALS",
+            "name": "Decimals",
+            "names": {
+              "en": "Decimals"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "concept"
+              }
+            ]
+          },
+          {
+            "id": "GEO_AREA",
+            "name": "Geographical area",
+            "names": {
+              "en": "Geographical area"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "concept"
+              }
+            ]
+          },
+          {
+            "id": "GEO_PICT",
+            "name": "Pacific Island Countries and territories",
+            "names": {
+              "en": "Pacific Island Countries and territories"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "concept"
+              }
+            ]
+          },
+          {
+            "id": "SEX",
+            "name": "Sex",
+            "names": {
+              "en": "Sex"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "concept"
+              }
+            ]
+          },
+          {
+            "id": "AGE",
+            "name": "Age",
+            "names": {
+              "en": "Age"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "concept"
+              }
+            ]
+          },
+          {
+            "id": "CURRENCY",
+            "name": "Currency",
+            "names": {
+              "en": "Currency"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "concept"
+              }
+            ]
+          },
+          {
+            "id": "DATA_SOURCE",
+            "name": "Data source",
+            "names": {
+              "en": "Data source"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "concept"
+              }
+            ]
+          },
+          {
+            "id": "INDICATOR",
+            "name": "Indicator",
+            "names": {
+              "en": "Indicator"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "concept"
+              }
+            ]
+          },
+          {
+            "id": "COMMODITY",
+            "name": "Commodity",
+            "names": {
+              "en": "Commodity"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "concept"
+              }
+            ]
+          },
+          {
+            "id": "URBANIZATION",
+            "name": "Urbanization",
+            "names": {
+              "en": "Urbanization"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "concept"
+              }
+            ]
+          },
+          {
+            "id": "EDUCATION",
+            "name": "Education level",
+            "names": {
+              "en": "Education level"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "concept"
+              }
+            ]
+          },
+          {
+            "id": "OCCUPATION",
+            "name": "Occupation",
+            "names": {
+              "en": "Occupation"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "concept"
+              }
+            ]
+          },
+          {
+            "id": "DISABILITY",
+            "name": "Disability",
+            "names": {
+              "en": "Disability"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "concept"
+              }
+            ]
+          },
+          {
+            "id": "INCOME",
+            "name": "Income",
+            "names": {
+              "en": "Income"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "concept"
+              }
+            ]
+          },
+          {
+            "id": "COMPOSITE_BREAKDOWN",
+            "name": "Composite breakdown",
+            "names": {
+              "en": "Composite breakdown"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "concept"
+              }
+            ]
+          },
+          {
+            "id": "ECONOMIC_SECTOR",
+            "name": "Economic sector",
+            "names": {
+              "en": "Economic sector"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "concept"
+              }
+            ]
+          },
+          {
+            "id": "LABOUR_FORCE_STATUS",
+            "name": "Labour force status",
+            "names": {
+              "en": "Labour force status"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "concept"
+              }
+            ]
+          },
+          {
+            "id": "EMPLOYMENT_STATUS",
+            "name": "Employment status",
+            "names": {
+              "en": "Employment status"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "concept"
+              }
+            ]
+          },
+          {
+            "id": "BASE_PER",
+            "name": "Base period",
+            "names": {
+              "en": "Base period"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "concept"
+              }
+            ]
+          },
+          {
+            "id": "TIME_FORMAT",
+            "name": "Time format",
+            "names": {
+              "en": "Time format"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "concept"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "codelists": [
+      {
+        "id": "CL_COM_FREQ",
+        "links": [
+          {
+            "rel": "self",
+            "type": "codelist"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Common codelist for data frequencies",
+        "names": {
+          "en": "Common codelist for data frequencies"
+        },
+        "isPartial": false,
+        "codes": [
+          {
+            "id": "X",
+            "name": "Non-periodic",
+            "names": {
+              "en": "Non-periodic"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "A",
+            "name": "Annual",
+            "names": {
+              "en": "Annual"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "Q",
+            "name": "Quarterly",
+            "names": {
+              "en": "Quarterly"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "M",
+            "name": "Monthly",
+            "names": {
+              "en": "Monthly"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "CL_COM_GEO_PICT",
+        "links": [
+          {
+            "rel": "self",
+            "type": "codelist"
+          }
+        ],
+        "version": "2.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Common hierarchical codelist for PICTs",
+        "names": {
+          "en": "Common hierarchical codelist for PICTs"
+        },
+        "isPartial": false,
+        "codes": [
+          {
+            "id": "_T",
+            "name": "Pacific region",
+            "names": {
+              "en": "Pacific region"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "1000",
+                "texts": {
+                  "en": "1000"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "_TXPNG",
+            "name": "Pacific region (excluding PNG)",
+            "names": {
+              "en": "Pacific region (excluding PNG)"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "5000",
+                "texts": {
+                  "en": "5000"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "MEL",
+            "name": "Melanesia",
+            "names": {
+              "en": "Melanesia"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "2000",
+                "texts": {
+                  "en": "2000"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "FJ",
+            "name": "Fiji",
+            "names": {
+              "en": "Fiji"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "30",
+                "texts": {
+                  "en": "30"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ],
+            "parent": "MEL"
+          },
+          {
+            "id": "MELXPNG",
+            "name": "Melanesia (excluding PNG)",
+            "names": {
+              "en": "Melanesia (excluding PNG)"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "6000",
+                "texts": {
+                  "en": "6000"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "MIC",
+            "name": "Micronesia",
+            "names": {
+              "en": "Micronesia"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "3000",
+                "texts": {
+                  "en": "3000"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "FM",
+            "name": "Micronesia (Federated States of)",
+            "names": {
+              "en": "Micronesia (Federated States of)"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "80",
+                "texts": {
+                  "en": "80"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ],
+            "parent": "MIC"
+          },
+          {
+            "id": "GU",
+            "name": "Guam",
+            "names": {
+              "en": "Guam"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "50",
+                "texts": {
+                  "en": "50"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ],
+            "parent": "MIC"
+          },
+          {
+            "id": "KI",
+            "name": "Kiribati",
+            "names": {
+              "en": "Kiribati"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "60",
+                "texts": {
+                  "en": "60"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ],
+            "parent": "MIC"
+          },
+          {
+            "id": "MH",
+            "name": "Marshall Islands",
+            "names": {
+              "en": "Marshall Islands"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "70",
+                "texts": {
+                  "en": "70"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ],
+            "parent": "MIC"
+          },
+          {
+            "id": "MP",
+            "name": "Northern Mariana Islands",
+            "names": {
+              "en": "Northern Mariana Islands"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "120",
+                "texts": {
+                  "en": "120"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ],
+            "parent": "MIC"
+          },
+          {
+            "id": "NC",
+            "name": "New Caledonia",
+            "names": {
+              "en": "New Caledonia"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "100",
+                "texts": {
+                  "en": "100"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ],
+            "parent": "MEL"
+          },
+          {
+            "id": "NR",
+            "name": "Nauru",
+            "names": {
+              "en": "Nauru"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "90",
+                "texts": {
+                  "en": "90"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ],
+            "parent": "MIC"
+          },
+          {
+            "id": "PG",
+            "name": "Papua New Guinea",
+            "names": {
+              "en": "Papua New Guinea"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "140",
+                "texts": {
+                  "en": "140"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ],
+            "parent": "MEL"
+          },
+          {
+            "id": "POL",
+            "name": "Polynesia",
+            "names": {
+              "en": "Polynesia"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "4000",
+                "texts": {
+                  "en": "4000"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "AS",
+            "name": "American Samoa",
+            "names": {
+              "en": "American Samoa"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "10",
+                "texts": {
+                  "en": "10"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ],
+            "parent": "POL"
+          },
+          {
+            "id": "CK",
+            "name": "Cook Islands",
+            "names": {
+              "en": "Cook Islands"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "20",
+                "texts": {
+                  "en": "20"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ],
+            "parent": "POL"
+          },
+          {
+            "id": "NU",
+            "name": "Niue",
+            "names": {
+              "en": "Niue"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "110",
+                "texts": {
+                  "en": "110"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ],
+            "parent": "POL"
+          },
+          {
+            "id": "PF",
+            "name": "French Polynesia",
+            "names": {
+              "en": "French Polynesia"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "40",
+                "texts": {
+                  "en": "40"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ],
+            "parent": "POL"
+          },
+          {
+            "id": "PN",
+            "name": "Pitcairn",
+            "names": {
+              "en": "Pitcairn"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "150",
+                "texts": {
+                  "en": "150"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ],
+            "parent": "POL"
+          },
+          {
+            "id": "PW",
+            "name": "Palau",
+            "names": {
+              "en": "Palau"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "130",
+                "texts": {
+                  "en": "130"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ],
+            "parent": "MIC"
+          },
+          {
+            "id": "SB",
+            "name": "Solomon Islands",
+            "names": {
+              "en": "Solomon Islands"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "170",
+                "texts": {
+                  "en": "170"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ],
+            "parent": "MEL"
+          },
+          {
+            "id": "TK",
+            "name": "Tokelau",
+            "names": {
+              "en": "Tokelau"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "180",
+                "texts": {
+                  "en": "180"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ],
+            "parent": "POL"
+          },
+          {
+            "id": "TO",
+            "name": "Tonga",
+            "names": {
+              "en": "Tonga"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "190",
+                "texts": {
+                  "en": "190"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ],
+            "parent": "POL"
+          },
+          {
+            "id": "TV",
+            "name": "Tuvalu",
+            "names": {
+              "en": "Tuvalu"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "200",
+                "texts": {
+                  "en": "200"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ],
+            "parent": "POL"
+          },
+          {
+            "id": "VU",
+            "name": "Vanuatu",
+            "names": {
+              "en": "Vanuatu"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "210",
+                "texts": {
+                  "en": "210"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ],
+            "parent": "MEL"
+          },
+          {
+            "id": "WF",
+            "name": "Wallis and Futuna",
+            "names": {
+              "en": "Wallis and Futuna"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "220",
+                "texts": {
+                  "en": "220"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ],
+            "parent": "POL"
+          },
+          {
+            "id": "WS",
+            "name": "Samoa",
+            "names": {
+              "en": "Samoa"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "160",
+                "texts": {
+                  "en": "160"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ],
+            "parent": "POL"
+          }
+        ]
+      },
+      {
+        "id": "CL_COM_OBS_STATUS",
+        "links": [
+          {
+            "rel": "self",
+            "type": "codelist"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Common codelist for observation statuses",
+        "names": {
+          "en": "Common codelist for observation statuses"
+        },
+        "isPartial": false,
+        "codes": [
+          {
+            "id": "A",
+            "name": "Normal value",
+            "names": {
+              "en": "Normal value"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "E",
+            "name": "Estimated value",
+            "names": {
+              "en": "Estimated value"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "F",
+            "name": "Forecasted value",
+            "names": {
+              "en": "Forecasted value"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "O",
+            "name": "Missing value",
+            "names": {
+              "en": "Missing value"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "M",
+            "name": "Missing value, data cannot exist",
+            "names": {
+              "en": "Missing value, data cannot exist"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "L",
+            "name": "Missing value, data exist but was not collected",
+            "names": {
+              "en": "Missing value, data exist but was not collected"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "P",
+            "name": "Provisional value",
+            "names": {
+              "en": "Provisional value"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "B",
+            "name": "Time series break",
+            "names": {
+              "en": "Time series break"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "I",
+            "name": "Value imputed by a receiving agency",
+            "names": {
+              "en": "Value imputed by a receiving agency"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "U",
+            "name": "Low reliability",
+            "names": {
+              "en": "Low reliability"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "CL_COM_PACCOICOP20",
+        "links": [
+          {
+            "rel": "self",
+            "type": "codelist"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Common codelist for PACCOICOP 2020",
+        "names": {
+          "en": "Common codelist for PACCOICOP 2020"
+        },
+        "isPartial": false,
+        "codes": [
+          {
+            "id": "_T",
+            "name": "All commodities",
+            "names": {
+              "en": "All commodities"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "10",
+                "texts": {
+                  "en": "10"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "CL_COM_UNIT_MEASURE",
+        "links": [
+          {
+            "rel": "self",
+            "type": "codelist"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Common codelist for units of measure",
+        "names": {
+          "en": "Common codelist for units of measure"
+        },
+        "isPartial": false,
+        "codes": [
+          {
+            "id": "N",
+            "name": "units",
+            "names": {
+              "en": "units"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "PERCENT",
+            "name": "percent",
+            "names": {
+              "en": "percent"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "KM2",
+            "name": "square kilometre",
+            "names": {
+              "en": "square kilometre"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "POP_KM2",
+            "name": "persons per square kilometre",
+            "names": {
+              "en": "persons per square kilometre"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "RATIO_POP",
+            "name": "ratio to total population",
+            "names": {
+              "en": "ratio to total population"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "INDEX",
+            "name": "index",
+            "names": {
+              "en": "index"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "PER_100000_LIVE_BIRTHS",
+            "name": "per 100,000 live births",
+            "names": {
+              "en": "per 100,000 live births"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "PER_100000_POP",
+            "name": "per 100,000 population",
+            "names": {
+              "en": "per 100,000 population"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "PER_1000_POP",
+            "name": "per 1,000 population",
+            "names": {
+              "en": "per 1,000 population"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "LITRES_PURE_ALCOHOL",
+            "name": "litres pure alcohol",
+            "names": {
+              "en": "litres pure alcohol"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "PER_100_POP",
+            "name": "per 100 population",
+            "names": {
+              "en": "per 100 population"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "USD_MILLIONS",
+            "name": "usd in millions",
+            "names": {
+              "en": "usd in millions"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "USD",
+            "name": "USD",
+            "names": {
+              "en": "USD"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "T",
+            "name": "metric tons",
+            "names": {
+              "en": "metric tons"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "CUR_LCU",
+            "name": "local currency",
+            "names": {
+              "en": "local currency"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "USDBBL",
+            "name": "$/bbl",
+            "names": {
+              "en": "$/bbl"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "USDMT",
+            "name": "$/mt",
+            "names": {
+              "en": "$/mt"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "USDMMBTU",
+            "name": "$/mmbtu",
+            "names": {
+              "en": "$/mmbtu"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "BASE2010",
+            "name": "2010=100",
+            "names": {
+              "en": "2010=100"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "USDKG",
+            "name": "$/kg",
+            "names": {
+              "en": "$/kg"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "USDCM",
+            "name": "$/cubic meter",
+            "names": {
+              "en": "$/cubic meter"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "USHSHEET",
+            "name": "¢/sheet",
+            "names": {
+              "en": "¢/sheet"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "USDDMTU",
+            "name": "$/dmtu",
+            "names": {
+              "en": "$/dmtu"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "USDTROYOZ",
+            "name": "$/troy oz",
+            "names": {
+              "en": "$/troy oz"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "BASE2005",
+            "name": "2005=100",
+            "names": {
+              "en": "2005=100"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "CENTSKG",
+            "name": "cents/kg",
+            "names": {
+              "en": "cents/kg"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "NZD",
+            "name": "New Zealand Dollar",
+            "names": {
+              "en": "New Zealand Dollar"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "FJD",
+            "name": "Fiji Dollar",
+            "names": {
+              "en": "Fiji Dollar"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "AUD",
+            "name": "Australian Dollar",
+            "names": {
+              "en": "Australian Dollar"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "XPF",
+            "name": "CFP Franc",
+            "names": {
+              "en": "CFP Franc"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "PGK",
+            "name": "Kina",
+            "names": {
+              "en": "Kina"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "SBD",
+            "name": "Solomon Islands Dollar",
+            "names": {
+              "en": "Solomon Islands Dollar"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "TOP",
+            "name": "Pa’anga",
+            "names": {
+              "en": "Pa’anga"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "VUV",
+            "name": "Vatu",
+            "names": {
+              "en": "Vatu"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "WST",
+            "name": "Tala",
+            "names": {
+              "en": "Tala"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "USD_POP",
+            "name": "USD per person",
+            "names": {
+              "en": "USD per person"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "NZD_POP",
+            "name": "New Zealand Dollar per person",
+            "names": {
+              "en": "New Zealand Dollar per person"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "FJD_POP",
+            "name": "Fiji Dollar per person",
+            "names": {
+              "en": "Fiji Dollar per person"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "AUD_POP",
+            "name": "Australian Dollar per person",
+            "names": {
+              "en": "Australian Dollar per person"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "XPF_POP",
+            "name": "CFP Franc per person",
+            "names": {
+              "en": "CFP Franc per person"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "PGK_POP",
+            "name": "Kina per person",
+            "names": {
+              "en": "Kina per person"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "SBD_POP",
+            "name": "Solomon Islands Dollar per person",
+            "names": {
+              "en": "Solomon Islands Dollar per person"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "TOP_POP",
+            "name": "Pa’anga per person",
+            "names": {
+              "en": "Pa’anga per person"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "VUV_POP",
+            "name": "Vatu per person",
+            "names": {
+              "en": "Vatu per person"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "WST_POP",
+            "name": "Tala per person",
+            "names": {
+              "en": "Tala per person"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "GY",
+            "name": "Growth Rate, Over 1 Year",
+            "names": {
+              "en": "Growth Rate, Over 1 Year"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "USD_R_POP",
+            "name": "Per Capita, US $, Exchange Rates Converted",
+            "names": {
+              "en": "Per Capita, US $, Exchange Rates Converted"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "PERCENT_GDP",
+            "name": "As a % of GDP",
+            "names": {
+              "en": "As a % of GDP"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "YR",
+            "name": "Years",
+            "names": {
+              "en": "Years"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "PER_1000_LIVE_BIRTHS",
+            "name": "per 1,000 live births",
+            "names": {
+              "en": "per 1,000 live births"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "RF",
+            "name": "Relative frequency (% of total)",
+            "names": {
+              "en": "Relative frequency (% of total)"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "g",
+            "name": "g",
+            "names": {
+              "en": "g"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "kcal",
+            "name": "kcal",
+            "names": {
+              "en": "kcal"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "kj",
+            "name": "kj",
+            "names": {
+              "en": "kj"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "mg",
+            "name": "mg",
+            "names": {
+              "en": "mg"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "YEAR",
+            "name": "years",
+            "names": {
+              "en": "years"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "BOOL",
+            "name": "Boolean or binary measure",
+            "names": {
+              "en": "Boolean or binary measure"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "CON_USD",
+            "name": "Constant USD",
+            "names": {
+              "en": "Constant USD"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "HA",
+            "name": "Hectares",
+            "names": {
+              "en": "Hectares"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "MJ_PER_GDP_CON_PPP_USD",
+            "name": "Megajoules per USD constant PPP GDP",
+            "names": {
+              "en": "Megajoules per USD constant PPP GDP"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "CL_COM_UNIT_MULT",
+        "links": [
+          {
+            "rel": "self",
+            "type": "codelist"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Common codelist for unit multipliers",
+        "names": {
+          "en": "Common codelist for unit multipliers"
+        },
+        "isPartial": false,
+        "codes": [
+          {
+            "id": "0",
+            "name": "units",
+            "names": {
+              "en": "units"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "3",
+            "name": "thousands",
+            "names": {
+              "en": "thousands"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "6",
+            "name": "millions",
+            "names": {
+              "en": "millions"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "1",
+            "name": "Tens",
+            "names": {
+              "en": "Tens"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "2",
+            "name": "Hundreds",
+            "names": {
+              "en": "Hundreds"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "4",
+            "name": "Tens of thousands",
+            "names": {
+              "en": "Tens of thousands"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "5",
+            "name": "Hundreds of thousands",
+            "names": {
+              "en": "Hundreds of thousands"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "7",
+            "name": "Tens of millions",
+            "names": {
+              "en": "Tens of millions"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "8",
+            "name": "Hundreds of millions",
+            "names": {
+              "en": "Hundreds of millions"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "9",
+            "name": "Billions",
+            "names": {
+              "en": "Billions"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "10",
+            "name": "Tens of billions",
+            "names": {
+              "en": "Tens of billions"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "11",
+            "name": "Hundreds of billions",
+            "names": {
+              "en": "Hundreds of billions"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "12",
+            "name": "Trillions",
+            "names": {
+              "en": "Trillions"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "13",
+            "name": "Tens of trillions",
+            "names": {
+              "en": "Tens of trillions"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "14",
+            "name": "Hundreds of trillions",
+            "names": {
+              "en": "Hundreds of trillions"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "15",
+            "name": "Quadrillions",
+            "names": {
+              "en": "Quadrillions"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "-1",
+            "name": "Tenths",
+            "names": {
+              "en": "Tenths"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "-2",
+            "name": "Hundredths",
+            "names": {
+              "en": "Hundredths"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "-3",
+            "name": "Thousandths",
+            "names": {
+              "en": "Thousandths"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "CL_CPI_INDICATORS",
+        "links": [
+          {
+            "rel": "self",
+            "type": "codelist"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Codelist for consumer prices indicators",
+        "names": {
+          "en": "Codelist for consumer prices indicators"
+        },
+        "isPartial": false,
+        "codes": [
+          {
+            "id": "INF",
+            "name": "Inflation rate",
+            "names": {
+              "en": "Inflation rate"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "IDX",
+            "name": "Index",
+            "names": {
+              "en": "Index"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          },
+          {
+            "id": "WGT",
+            "name": "Weight",
+            "names": {
+              "en": "Weight"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "code"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "dataStructures": [
+      {
+        "id": "DSD_CPI",
+        "links": [
+          {
+            "rel": "self",
+            "type": "datastructure"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Data structure definition for consummer prices",
+        "names": {
+          "en": "Data structure definition for consummer prices"
+        },
+        "dataStructureComponents": {
+          "attributeList": {
+            "id": "AttributeDescriptor",
+            "links": [
+              {
+                "rel": "self",
+                "type": "attributedescriptor"
+              }
+            ],
+            "attributes": [
+              {
+                "id": "OBS_STATUS",
+                "links": [
+                  {
+                    "rel": "self",
+                    "type": "dataattribute"
+                  }
+                ],
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).OBS_SATUS",
+                "localRepresentation": {
+                  "enumeration": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SPC:CL_COM_OBS_STATUS(1.0)"
+                },
+                "assignmentStatus": "Conditional",
+                "attributeRelationship": {
+                  "primaryMeasure": "OBS_VALUE"
+                }
+              },
+              {
+                "id": "UNIT_MULT",
+                "links": [
+                  {
+                    "rel": "self",
+                    "type": "dataattribute"
+                  }
+                ],
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).UNIT_MULT",
+                "localRepresentation": {
+                  "enumeration": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SPC:CL_COM_UNIT_MULT(1.0)"
+                },
+                "assignmentStatus": "Conditional",
+                "attributeRelationship": {
+                  "dimensions": [
+                    "GEO_PICT",
+                    "INDICATOR"
+                  ]
+                }
+              },
+              {
+                "id": "UNIT_MEASURE",
+                "links": [
+                  {
+                    "rel": "self",
+                    "type": "dataattribute"
+                  }
+                ],
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).UNIT_MEASURE",
+                "localRepresentation": {
+                  "enumeration": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SPC:CL_COM_UNIT_MEASURE(1.0)"
+                },
+                "assignmentStatus": "Conditional",
+                "attributeRelationship": {
+                  "dimensions": [
+                    "GEO_PICT",
+                    "INDICATOR"
+                  ]
+                }
+              },
+              {
+                "id": "BASE_PER",
+                "links": [
+                  {
+                    "rel": "self",
+                    "type": "dataattribute"
+                  }
+                ],
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).BASE_PER",
+                "localRepresentation": {
+                  "textFormat": {
+                    "textType": "String",
+                    "isSequence": false,
+                    "isMultiLingual": false
+                  }
+                },
+                "assignmentStatus": "Conditional",
+                "attributeRelationship": {
+                  "dimensions": [
+                    "GEO_PICT",
+                    "INDICATOR"
+                  ]
+                }
+              },
+              {
+                "id": "OBS_COMMENT",
+                "links": [
+                  {
+                    "rel": "self",
+                    "type": "dataattribute"
+                  }
+                ],
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).COMMENT",
+                "localRepresentation": {
+                  "textFormat": {
+                    "textType": "String",
+                    "isSequence": false,
+                    "isMultiLingual": false
+                  }
+                },
+                "assignmentStatus": "Conditional",
+                "attributeRelationship": {
+                  "primaryMeasure": "OBS_VALUE"
+                }
+              }
+            ]
+          },
+          "dimensionList": {
+            "id": "DimensionDescriptor",
+            "links": [
+              {
+                "rel": "self",
+                "type": "dimensiondescriptor"
+              }
+            ],
+            "dimensions": [
+              {
+                "id": "FREQ",
+                "links": [
+                  {
+                    "rel": "self",
+                    "type": "dimension"
+                  }
+                ],
+                "position": 0,
+                "type": "Dimension",
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).FREQ",
+                "localRepresentation": {
+                  "enumeration": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SPC:CL_COM_FREQ(1.0)"
+                }
+              },
+              {
+                "id": "GEO_PICT",
+                "links": [
+                  {
+                    "rel": "self",
+                    "type": "dimension"
+                  }
+                ],
+                "position": 1,
+                "type": "Dimension",
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).GEO_PICT",
+                "localRepresentation": {
+                  "enumeration": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SPC:CL_COM_GEO_PICT(2.0)"
+                }
+              },
+              {
+                "id": "INDICATOR",
+                "links": [
+                  {
+                    "rel": "self",
+                    "type": "dimension"
+                  }
+                ],
+                "position": 2,
+                "type": "Dimension",
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).INDICATOR",
+                "localRepresentation": {
+                  "enumeration": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SPC:CL_CPI_INDICATORS(3.0)"
+                }
+              },
+              {
+                "id": "COMMODITY",
+                "links": [
+                  {
+                    "rel": "self",
+                    "type": "dimension"
+                  }
+                ],
+                "position": 3,
+                "type": "Dimension",
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).COMMODITY",
+                "localRepresentation": {
+                  "enumeration": "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SPC:CL_COM_PACCOICOP20(1.0)"
+                }
+              }
+            ],
+            "timeDimensions": [
+              {
+                "id": "TIME_PERIOD",
+                "links": [
+                  {
+                    "rel": "self",
+                    "type": "timedimension"
+                  }
+                ],
+                "position": 4,
+                "type": "TimeDimension",
+                "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).TIME_PERIOD",
+                "localRepresentation": {
+                  "textFormat": {
+                    "textType": "ObservationalTimePeriod",
+                    "isSequence": false,
+                    "isMultiLingual": false
+                  }
+                }
+              }
+            ]
+          },
+          "measureList": {
+            "id": "MeasureDescriptor",
+            "links": [
+              {
+                "rel": "self",
+                "type": "measuredescriptor"
+              }
+            ],
+            "primaryMeasure": {
+              "id": "OBS_VALUE",
+              "links": [
+                {
+                  "rel": "self",
+                  "type": "primarymeasure"
+                }
+              ],
+              "conceptIdentity": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).OBS_VALUE"
+            }
+          }
+        }
+      }
+    ],
+    "contentConstraints": [
+      {
+        "id": "CON_CPI",
+        "links": [
+          {
+            "rel": "self",
+            "type": "contentconstraint"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Content constraint for DF_CPI",
+        "names": {
+          "en": "Content constraint for DF_CPI"
+        },
+        "type": "Allowed",
+        "constraintAttachment": {
+          "dataflows": [
+            "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_CPI(3.0)"
+          ]
+        },
+        "cubeRegions": [
+          {
+            "isIncluded": true,
+            "keyValues": [
+              {
+                "id": "FREQ",
+                "values": [
+                  "A"
+                ]
+              },
+              {
+                "id": "INDICATOR",
+                "values": [
+                  "INF"
+                ]
+              },
+              {
+                "id": "GEO_PICT",
+                "values": [
+                  "AS",
+                  "CK",
+                  "FJ",
+                  "FM",
+                  "GU",
+                  "KI",
+                  "MH",
+                  "MP",
+                  "NC",
+                  "NR",
+                  "NU",
+                  "PF",
+                  "PG",
+                  "PN",
+                  "PW",
+                  "SB",
+                  "TK",
+                  "TO",
+                  "TV",
+                  "VU",
+                  "WF",
+                  "WS"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "CR_A_DF_CPI",
+        "links": [
+          {
+            "rel": "self",
+            "type": "contentconstraint"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Availability (A) for DF_CPI",
+        "names": {
+          "en": "Availability (A) for DF_CPI"
+        },
+        "annotations": [
+          {
+            "title": "A",
+            "type": "ReleaseVersion"
+          }
+        ],
+        "type": "Actual",
+        "constraintAttachment": {
+          "dataflows": [
+            "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_CPI(3.0)"
+          ]
+        },
+        "cubeRegions": [
+          {
+            "isIncluded": true,
+            "keyValues": [
+              {
+                "id": "FREQ",
+                "values": [
+                  "A"
+                ]
+              },
+              {
+                "id": "GEO_PICT",
+                "values": [
+                  "AS",
+                  "CK",
+                  "FJ",
+                  "FM",
+                  "GU",
+                  "KI",
+                  "MH",
+                  "MP",
+                  "NC",
+                  "NR",
+                  "NU",
+                  "PF",
+                  "PG",
+                  "PN",
+                  "PW",
+                  "SB",
+                  "TK",
+                  "TO",
+                  "TV",
+                  "VU",
+                  "WF",
+                  "WS"
+                ]
+              },
+              {
+                "id": "INDICATOR",
+                "values": [
+                  "INF"
+                ]
+              },
+              {
+                "id": "COMMODITY",
+                "values": [
+                  "_T"
+                ]
+              },
+              {
+                "id": "TIME_PERIOD",
+                "timeRange": {
+                  "startPeriod": {
+                    "period": "2005-01-01T00:00:00Z",
+                    "isInclusive": true
+                  },
+                  "endPeriod": {
+                    "period": "2019-12-31T23:59:59Z",
+                    "isInclusive": true
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "meta": {
+    "schema": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+    "content-languages": [
+      "en"
+    ],
+    "id": "IDREF2930",
+    "prepared": "2020-09-22T03:37:04.9410168Z",
+    "test": false,
+    "sender": {
+      "id": "Unknown"
+    },
+    "receiver": [
+      {
+        "id": "Unknown"
+      }
+    ]
+  }
+}

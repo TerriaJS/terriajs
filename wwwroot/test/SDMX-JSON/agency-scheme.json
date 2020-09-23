@@ -1,0 +1,55 @@
+{
+  "data": {
+    "agencySchemes": [
+      {
+        "id": "AGENCIES",
+        "links": [
+          {
+            "rel": "self",
+            "type": "agencyscheme"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "SPC agency scheme",
+        "names": {
+          "en": "SPC agency scheme"
+        },
+        "isPartial": false,
+        "agencies": [
+          {
+            "id": "SPC",
+            "name": "Pacific Community (SPC)",
+            "names": {
+              "en": "Pacific Community (SPC)"
+            },
+            "links": [
+              {
+                "rel": "self",
+                "type": "agency"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "meta": {
+    "schema": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+    "content-languages": [
+      "en"
+    ],
+    "id": "IDREF2927",
+    "prepared": "2020-09-22T03:36:47.2551975Z",
+    "test": false,
+    "sender": {
+      "id": "Unknown"
+    },
+    "receiver": [
+      {
+        "id": "Unknown"
+      }
+    ]
+  }
+}

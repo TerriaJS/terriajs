@@ -3,15 +3,27 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.50)
+#### next release (8.0.0-alpha.51)
+* [The next improvement]
+
+#### 8.0.0-alpha.50
+* Support for searching WFS features with WebFeatureServiceSearchProvider
+* WFS-based AustralianGazetteerSearchProvider
 * Fixed a bug causing users to be brought back to the Data Catalogue tab when clicking on an auto-detected user added catalogue item.
 * Fixed a bug causing Data Preview to not appear under the My Data tab.
 * Fix WMS style `DimensionSelector` for layers with no styles
+* Add WMS legend for items with no styles
+* Add warning messages if catalog/share link has been converted by `terriajs-server`.
 * Update the scroll style in `HelpVideoPanel` and `SidePanel` helpful hints.
 * Updated leaflet attribution to match the style of cesium credits.
 * Remove `@computed` props from `WebFeatureServiceCapabilities`
 * Fixed bug causing the Related Maps dropdown to be clipped.
-* [The next improvement]
+* Add SDMX-json support for groups and items (using SDMX-csv for data queries)
+* `TableMixin` now uses `ExportableMixin` and `AsyncMappableMixin`
+* Move region provider loading in `TableMixin` `forceLoadTableMixin` to `loadRegionProviderList`
+* Added `TableAutomaticStylesStratum.stratumName` instead of hard-coded strings
+* Added `Dimension` interface for `SelectableDimension` - which can be used for Traits
+* Make `SelectableDimension.options` optional
 
 #### 8.0.0-alpha.49
 * WMS GetFeatureInfo fix to ensure `style=undefined` is not sent to server
