@@ -6,6 +6,8 @@ Change Log
 #### next release (8.0.0-alpha.51)
 * Fix story prompt being permanent/un-dismissable
 * Fixed a bug that caused the feature info chart for SOS items to not load.
+* Upgraded to Cesium v1.73.
+* Removed any references to `BingMapsApi` (now deprecated).
 * [The next improvement]
 
 #### 8.0.0-alpha.50
