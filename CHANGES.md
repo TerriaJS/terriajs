@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.51)
+* Fix story prompt being permanent/un-dismissable
 * Fixed a bug that caused the feature info chart for SOS items to not load.
 * [The next improvement]
 
