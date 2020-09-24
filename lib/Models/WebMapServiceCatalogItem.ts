@@ -146,7 +146,8 @@ class GetCapabilitiesStratum extends LoadableStratum(
       );
       if (
         layerAvailableStyles !== undefined &&
-        layerAvailableStyles.styles !== undefined
+        Array.isArray(layerAvailableStyles.styles) &&
+        layerAvailableStyles.styles.length > 0
       ) {
         // Use the first style if none is explicitly specified.
         // Note that the WMS 1.3.0 spec (section 7.3.3.4) explicitly says we can't assume this,
@@ -154,9 +155,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
         // sanity prevails.
         const layerStyle =
           style === undefined
-            ? layerAvailableStyles.styles.length > 0
-              ? layerAvailableStyles.styles[0]
-              : undefined
+            ? layerAvailableStyles.styles[0]
             : layerAvailableStyles.styles.find(
                 candidate => candidate.name === style
               );
@@ -166,6 +165,22 @@ class GetCapabilitiesStratum extends LoadableStratum(
             <StratumFromTraits<LegendTraits>>(<unknown>layerStyle.legend)
           );
         }
+
+        // If no styles - make up legend
+      } else if (isDefined(this.catalogItem.url)) {
+        result.push(
+          createStratumInstance(LegendTraits, {
+            url: URI(
+              `${proxyCatalogItemUrl(
+                this.catalogItem,
+                this.catalogItem.url
+              )}?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&transparent=True`
+            )
+              .addQuery("layer", layer)
+              .toString(),
+            urlMimeType: "image/png"
+          })
+        );
       }
     }
 
@@ -702,7 +717,7 @@ class WebMapServiceCatalogItem
   @computed
   get canDiffImages(): boolean {
     const hasValidDiffStyles = this.availableDiffStyles.some(diffStyle =>
-      this.styleSelectableDimensions?.[0]?.options.find(
+      this.styleSelectableDimensions?.[0]?.options?.find(
         style => style.id === diffStyle
       )
     );
@@ -1017,7 +1032,7 @@ class WebMapServiceCatalogItem
         // Set selectedId to value stored in `styles` trait for this `layerIndex` or the first available style value
         // The `styles` parameter is CSV, a style for each layer
         selectedId:
-          this.styles?.split(",")?.[layerIndex] || layer.styles[0].name,
+          this.styles?.split(",")?.[layerIndex] || layer.styles[0]?.name,
 
         setDimensionValue: (stratumId: string, newStyle: string) => {
           runInAction(() => {

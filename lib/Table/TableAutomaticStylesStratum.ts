@@ -31,6 +31,7 @@ interface TableCatalogItem
 export default class TableAutomaticStylesStratum extends LoadableStratum(
   TableTraits
 ) {
+  static stratumName = "automaticTableStyles";
   constructor(readonly catalogItem: TableCatalogItem) {
     super();
   }

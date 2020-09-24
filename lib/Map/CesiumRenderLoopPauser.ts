@@ -127,7 +127,7 @@ export default class CesiumRenderLoopPauser {
       timeout: any
     ) => {
       deferred.promise.always(this._boundNotifyRepaintRequired);
-      this._originalLoadWithXhr(
+      return this._originalLoadWithXhr(
         url,
         responseType,
         method,

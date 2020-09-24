@@ -129,12 +129,12 @@ describe("WebMapServiceCatalogItem", function() {
         expect(wmsItem.styleSelectableDimensions[0].selectedId).toBe(
           "contour/ferret"
         );
-        expect(wmsItem.styleSelectableDimensions[0].options.length).toBe(40);
+        expect(wmsItem.styleSelectableDimensions[0].options!.length).toBe(40);
 
         expect(wmsItem.styleSelectableDimensions[1].selectedId).toBe(
           "shadefill/alg2"
         );
-        expect(wmsItem.styleSelectableDimensions[0].options.length).toBe(40);
+        expect(wmsItem.styleSelectableDimensions[0].options!.length).toBe(40);
 
         expect(wmsItem.wmsDimensionSelectableDimensions[0].name).toBe(
           "elevation"
@@ -142,17 +142,17 @@ describe("WebMapServiceCatalogItem", function() {
         expect(wmsItem.wmsDimensionSelectableDimensions[0].selectedId).toBe(
           "-0.59375"
         );
-        expect(wmsItem.wmsDimensionSelectableDimensions[0].options.length).toBe(
-          16
-        );
+        expect(
+          wmsItem.wmsDimensionSelectableDimensions[0].options!.length
+        ).toBe(16);
 
         expect(wmsItem.wmsDimensionSelectableDimensions[1].name).toBe("custom");
         expect(wmsItem.wmsDimensionSelectableDimensions[1].selectedId).toBe(
           "Another thing"
         );
-        expect(wmsItem.wmsDimensionSelectableDimensions[1].options.length).toBe(
-          4
-        );
+        expect(
+          wmsItem.wmsDimensionSelectableDimensions[1].options!.length
+        ).toBe(4);
 
         expect(wmsItem.wmsDimensionSelectableDimensions[2].name).toBe(
           "another"
@@ -160,9 +160,9 @@ describe("WebMapServiceCatalogItem", function() {
         expect(wmsItem.wmsDimensionSelectableDimensions[2].selectedId).toBe(
           "Second"
         );
-        expect(wmsItem.wmsDimensionSelectableDimensions[2].options.length).toBe(
-          3
-        );
+        expect(
+          wmsItem.wmsDimensionSelectableDimensions[2].options!.length
+        ).toBe(3);
       })
       .then(done)
       .catch(done.fail);

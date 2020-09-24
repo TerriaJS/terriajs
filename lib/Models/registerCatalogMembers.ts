@@ -14,7 +14,6 @@ import CesiumTerrainCatalogItem from "./CesiumTerrainCatalogItem";
 import CkanCatalogGroup from "./CkanCatalogGroup";
 import CkanItemReference from "./CkanItemReference";
 import CompositeCatalogItem from "./CompositeCatalogItem";
-import createUrlReferenceFromUrl from "./createUrlReferenceFromUrl";
 import CsvCatalogItem from "./CsvCatalogItem";
 import CzmlCatalogItem from "./CzmlCatalogItem";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
@@ -36,6 +35,8 @@ import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFu
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
 import WebFeatureServiceCatalogItem from "./WebFeatureServiceCatalogItem";
 import WebFeatureServiceCatalogGroup from "./WebFeatureServiceCatalogGroup";
+import SdmxJsonCatalogGroup from "./SdmxJson/SdmxJsonCatalogGroup";
+import SdmxJsonCatalogItem from "./SdmxJson/SdmxJsonCatalogItem";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
@@ -110,6 +111,11 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CartoMapCatalogItem.type, CartoMapCatalogItem);
   CatalogMemberFactory.register(UrlReference.type, UrlReference);
   CatalogMemberFactory.register(SplitItemReference.type, SplitItemReference);
+  CatalogMemberFactory.register(
+    SdmxJsonCatalogGroup.type,
+    SdmxJsonCatalogGroup
+  );
+  CatalogMemberFactory.register(SdmxJsonCatalogItem.type, SdmxJsonCatalogItem);
   CatalogMemberFactory.register(
     SenapsLocationsCatalogItem.type,
     SenapsLocationsCatalogItem
