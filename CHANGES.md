@@ -4,6 +4,8 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.51)
+* Add WMTS group/item support
+* Create `OwsInterfaces` to reduce duplicate code across OWS servies
 * [The next improvement]
 
 #### 8.0.0-alpha.50
