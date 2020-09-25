@@ -166,6 +166,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
         layerId,
         this.catalogGroup.terria
       );
+      model.createGetCapabilitiesStratumFromParent(this.capabilities);
       this.catalogGroup.terria.addModel(model);
     } else {
       model = existingModel;
@@ -226,6 +227,11 @@ export default class WebFeatureServiceCatalogGroup extends GetCapabilitiesMixin(
   }
 
   protected forceLoadMetadata(): Promise<void> {
+    if (
+      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
+      undefined
+    )
+      return Promise.resolve();
     return GetCapabilitiesStratum.load(this).then(stratum => {
       runInAction(() => {
         this.strata.set(

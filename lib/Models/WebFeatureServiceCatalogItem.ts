@@ -65,6 +65,13 @@ class GetCapabilitiesStratum extends LoadableStratum(
     );
   }
 
+  static createFromParent(
+    catalogItem: WebFeatureServiceCatalogItem,
+    capabilities: WebFeatureServiceCapabilities
+  ): GetCapabilitiesStratum {
+    return new GetCapabilitiesStratum(catalogItem, capabilities);
+  }
+
   constructor(
     readonly catalogItem: WebFeatureServiceCatalogItem,
     readonly capabilities: WebFeatureServiceCapabilities
@@ -300,7 +307,21 @@ class WebFeatureServiceCatalogItem
     }
   }
 
+  createGetCapabilitiesStratumFromParent(
+    capabilities: WebFeatureServiceCapabilities
+  ) {
+    const stratum = GetCapabilitiesStratum.createFromParent(this, capabilities);
+    runInAction(() => {
+      this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
+    });
+  }
+
   protected forceLoadMetadata(): Promise<void> {
+    if (
+      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
+      undefined
+    )
+      return Promise.resolve();
     return GetCapabilitiesStratum.load(this).then(stratum => {
       runInAction(() => {
         this.strata.set(

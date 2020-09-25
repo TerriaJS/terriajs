@@ -235,6 +235,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     let model: WebMapServiceCatalogItem;
     if (existingModel === undefined) {
       model = new WebMapServiceCatalogItem(layerId, this.catalogGroup.terria);
+      model.createGetCapabilitiesStratumFromParent(this.capabilities);
       this.catalogGroup.terria.addModel(model);
     } else {
       model = existingModel;
@@ -298,6 +299,11 @@ export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(
   }
 
   protected forceLoadMetadata(): Promise<void> {
+    if (
+      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
+      undefined
+    )
+      return Promise.resolve();
     return GetCapabilitiesStratum.load(this).then(stratum => {
       runInAction(() => {
         this.strata.set(
