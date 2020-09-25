@@ -27,6 +27,7 @@ import URI from "urijs";
 import loadArrayBuffer from "../Core/loadArrayBuffer";
 import TerriaError from "../Core/TerriaError";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import GtfsCatalogItemTraits from "../Traits/GtfsCatalogItemTraits";
@@ -89,7 +90,9 @@ StratumOrder.addLoadStratum(GtfsStratum.stratumName);
  * for the spec.
  */
 export default class GtfsCatalogItem extends AsyncMappableMixin(
-  UrlMixin(CatalogMemberMixin(CreateModel(GtfsCatalogItemTraits)))
+  UrlMixin(
+    AutoRefreshingMixin(CatalogMemberMixin(CreateModel(GtfsCatalogItemTraits)))
+  )
 ) {
   disposer: IReactionDisposer | undefined;
 
@@ -125,13 +128,6 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   @observable
   protected gtfsFeedEntities: FeedEntity[] = [];
-
-  @computed
-  protected get _pollingTimer(): number | undefined {
-    if (this.refreshInterval !== null && this.refreshInterval !== undefined) {
-      return now(this.refreshInterval * 1000);
-    }
-  }
 
   protected convertManyFeedEntitiesToBillboardData: ITransformer<
     FeedEntity[],
@@ -258,23 +254,8 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     return this._dataSource;
   }
 
-  @computed
-  get nextScheduledUpdateTime(): Date | undefined {
-    if (
-      this._pollingTimer !== null &&
-      this._pollingTimer !== undefined &&
-      this.refreshInterval !== undefined &&
-      this.refreshInterval !== null
-    ) {
-      return new Date(this._pollingTimer + this.refreshInterval * 1000);
-    } else {
-      return undefined;
-    }
-  }
-
-  @computed
-  get isPolling() {
-    return this._pollingTimer !== null && this._pollingTimer !== undefined;
+  refreshData() {
+    this.forceLoadMapItems();
   }
 
   @computed
@@ -328,28 +309,6 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     sourceReference?: BaseModel
   ) {
     super(id, terria, sourceReference);
-    // We should only poll when our map items have consumers
-    onBecomeObserved(this, "mapItems", () => {
-      this.disposer = reaction(
-        () => this._pollingTimer,
-        () => {
-          this._bbox = {
-            west: Infinity,
-            south: Infinity,
-            east: -Infinity,
-            north: -Infinity
-          };
-          console.log("ping");
-          raiseErrorOnRejectedPromise(this.forceLoadMapItems());
-          // console.log(getObserverTree(this, "mapItems"));
-        }
-      );
-    });
-    onBecomeUnobserved(this, "mapItems", () => {
-      if (this.disposer !== undefined && this.disposer !== null) {
-        this.disposer();
-      }
-    });
   }
 
   protected forceLoadMetadata(): Promise<void> {
