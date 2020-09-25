@@ -6,6 +6,7 @@ Change Log
 #### next release (8.0.0-alpha.51)
 * Fix story prompt being permanent/un-dismissable
 * Fixed a bug that caused the feature info chart for SOS items to not load.
+* Prevent duplicate loading of GetCapabilities
 * [The next improvement]
 
 #### 8.0.0-alpha.50
