@@ -55,9 +55,9 @@ import WebMapServiceCapabilities, {
   CapabilitiesContactInformation,
   CapabilitiesDimension,
   CapabilitiesLayer,
-  CapabilitiesStyle,
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
+import { CapabilitiesStyle } from "./OwsInterfaces";
 
 const dateFormat = require("dateformat");
 
@@ -67,8 +67,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
   static load(
     catalogItem: WebMapServiceCatalogItem
   ): Promise<GetCapabilitiesStratum> {
-    console.log("Loading GetCapabilities");
-
     if (catalogItem.getCapabilitiesUrl === undefined) {
       return Promise.reject(
         new TerriaError({
