@@ -1,6 +1,7 @@
 import i18next from "i18next";
 import { computed, runInAction } from "mobx";
 import defined from "terriajs-cesium/Source/Core/defined";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import WebMapTileServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapTileServiceImageryProvider";
 import URI from "urijs";
@@ -12,7 +13,7 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
-import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
+import LegendTraits from "../Traits/LegendTraits";
 import { RectangleTraits } from "../Traits/MappableTraits";
 import WebMapTileServiceCatalogItemTraits, {
   WebMapTileServiceAvailableLayerStylesTraits
@@ -22,17 +23,16 @@ import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
-import { CapabilitiesLegend, ServiceProvider } from "./OwsInterfaces";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
 import WebMapTileServiceCapabilities, {
   CapabilitiesStyle,
   ResourceUrl,
   TileMatrixSetLink,
+  WmtsCapabilitiesLegend,
   WmtsLayer,
-  WmtsCapabilitiesLegend
+  ServiceProvider
 } from "./WebMapTileServiceCapabilities";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 
 interface UsableTileMatrixSets {
   identifiers: string[];
