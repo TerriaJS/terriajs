@@ -11,6 +11,7 @@ Change Log
 * Updated leaflet attribution to match the style of cesium credits.
 * Remove `@computed` props from `WebFeatureServiceCapabilities`
 * Fixed bug causing the Related Maps dropdown to be clipped.
+* Made possible to internationalize tour contend.
 * [The next improvement]
 
 #### 8.0.0-alpha.49
