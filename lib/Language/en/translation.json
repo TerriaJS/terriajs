@@ -1210,6 +1210,9 @@
     "thredds": {
       "nameGroup": "THREDDS Catalog Group"
     },
+    "threddsItem": {
+      "name": "THREDDS Item Reference"
+    },
     "urlTemplateMapServer": {
       "name": "URL Template Map Server"
     },

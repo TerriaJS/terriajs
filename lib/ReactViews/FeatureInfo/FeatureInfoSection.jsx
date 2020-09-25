@@ -258,34 +258,40 @@ export const FeatureInfoSection = observer(
       const reactInfo = getInfoAsReactComponent(this);
 
       let threddsChart = null;
+      let includeThreddsChart = false;
       if (
         this.props.catalogItem.isThredds &&
+        this.props.catalogItem._webMapServiceCatalogGroup &&
         this.props.catalogItem.discreteTimes.length > 1
       ) {
+        includeThreddsChart = true;
         let threddsChartUrl = null;
-        const pixelDrillUri = new URI(
-          this.props.catalogItem.url.split("?")[0].replace("wms", "ncss/grid")
+        const threddsStrata = this.props.catalogItem._webMapServiceCatalogGroup.strata.get(
+          "threddsDataset"
         );
-        pixelDrillUri.addSearch({
-          accept: "csv",
-          var: this.props.catalogItem.layers,
-          time_start: this.props.catalogItem.discreteTimes[0].time,
-          time_end: this.props.catalogItem.discreteTimes[
-            this.props.catalogItem.discreteTimes.length - 1
-          ].time,
-          latitude,
-          longitude
-        });
+        if (threddsStrata !== undefined) {
+          const pixelDrillUri = new URI(threddsStrata.threddsDataset.ncssUrl);
+          pixelDrillUri.addSearch({
+            accept: "csv",
+            var: this.props.catalogItem.layers,
+            time_start: this.props.catalogItem.discreteTimes[0].time,
+            time_end: this.props.catalogItem.discreteTimes[
+              this.props.catalogItem.discreteTimes.length - 1
+            ].time,
+            latitude,
+            longitude
+          });
 
-        threddsChartUrl = pixelDrillUri.toString();
-        threddsChart = parseCustomMarkdownToReact(
-          `<chart src="${threddsChartUrl}"></chart>`,
-          {
-            terria: this.props.viewState.terria,
-            catalogItem: this.props.catalogItem,
-            feature: this.props.feature
-          }
-        );
+          threddsChartUrl = pixelDrillUri.toString();
+          threddsChart = parseCustomMarkdownToReact(
+            `<chart src="${threddsChartUrl}"></chart>`,
+            {
+              terria: this.props.viewState.terria,
+              catalogItem: this.props.catalogItem,
+              feature: this.props.feature
+            }
+          );
+        }
       }
       return (
         <li className={classNames(Styles.section)}>
@@ -355,7 +361,7 @@ export const FeatureInfoSection = observer(
                         name={baseFilename}
                       />
                     </If>
-                    <If condition={this.props.catalogItem.isThredds}>
+                    <If condition={includeThreddsChart}>
                       <div>{threddsChart}</div>
                     </If>
                   </When>

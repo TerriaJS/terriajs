@@ -12,6 +12,7 @@ import CreateModel from "./CreateModel";
 import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
 import StratumOrder from "./StratumOrder";
+import ThreddsItemReference from "./ThreddsItemReference";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 import CommonStrata from "./CommonStrata";
 
@@ -32,7 +33,7 @@ interface ThreddsCatalog {
   parentCatalog: ThreddsCatalog;
 }
 
-interface ThreddsDataset {
+export interface ThreddsDataset {
   id: string;
   name: string;
   url: string;
@@ -144,13 +145,14 @@ export class ThreddsStratum extends LoadableStratum(ThreddsCatalogGroupTraits) {
     const id = this._catalogGroup.uniqueId;
     const itemId = id + "/" + threddsDataset.id;
     let item = this._catalogGroup.terria.getModelById(
-      WebMapServiceCatalogGroup,
+      ThreddsItemReference,
       itemId
     );
     if (item === undefined) {
-      item = new WebMapServiceCatalogGroup(itemId, this._catalogGroup.terria);
-      item.setTrait(CommonStrata.definition, "name", threddsDataset.name);
-      item.setTrait(CommonStrata.definition, "url", threddsDataset.wmsUrl);
+      item = new ThreddsItemReference(itemId, this._catalogGroup.terria);
+      item.setTrait(CommonStrata.definition, "isGroup", true);
+      item.setDataset(threddsDataset);
+      item.setThreddsStrata(item);
       item.terria.addModel(item);
     }
     return item;
