@@ -1,12 +1,4 @@
-import {
-  computed,
-  IReactionDisposer,
-  observable,
-  onBecomeObserved,
-  onBecomeUnobserved,
-  reaction,
-  runInAction
-} from "mobx";
+import { computed, IReactionDisposer, observable, runInAction } from "mobx";
 import { createTransformer, ITransformer, now } from "mobx-utils";
 import Pbf from "pbf";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";

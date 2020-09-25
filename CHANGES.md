@@ -6,6 +6,8 @@ Change Log
 #### next release (8.0.0-alpha.51)
 * Fix story prompt being permanent/un-dismissable
 * Fixed a bug that caused the feature info chart for SOS items to not load.
+* Update the `GtfsCatalogItem` to use the `AutoRefreshingMixin`.
+* Add a condition to the `AutoRefreshingMixin` to prevent unnecessary polling when an item is disabled in the workbench.
 * [The next improvement]
 
 #### 8.0.0-alpha.50
