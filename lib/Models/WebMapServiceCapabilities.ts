@@ -1,13 +1,12 @@
 import { createTransformer } from "mobx-utils";
 import defined from "terriajs-cesium/Source/Core/defined";
-import xml2json from "../ThirdParty/xml2json";
+import isReadOnlyArray from "../Core/isReadOnlyArray";
 import loadXML from "../Core/loadXML";
 import TerriaError from "../Core/TerriaError";
-import isReadOnlyArray from "../Core/isReadOnlyArray";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import StratumFromTraits from "./StratumFromTraits";
+import xml2json from "../ThirdParty/xml2json";
 import { RectangleTraits } from "../Traits/MappableTraits";
 import { CapabilitiesStyle, OwsKeywordList } from "./OwsInterfaces";
+import StratumFromTraits from "./StratumFromTraits";
 
 export interface CapabilitiesGeographicBoundingBox {
   readonly westBoundLongitude: number;
