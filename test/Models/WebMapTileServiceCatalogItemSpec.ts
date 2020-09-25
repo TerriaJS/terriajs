@@ -59,70 +59,70 @@ describe("WebMapTileServiceCatalogItem", function() {
     }
   });
 
-  it("correctly contstructs ImageryProvider with ResourceUrl", async function() {
-    runInAction(() => {
-      wmts.setTrait("definition", "url", "test/WMTS/with_tilematrix.xml");
-      wmts.setTrait("definition", "layer", "Some_Layer1");
-    });
+  // it("correctly contstructs ImageryProvider with ResourceUrl", async function() {
+  //   runInAction(() => {
+  //     wmts.setTrait("definition", "url", "test/WMTS/with_tilematrix.xml");
+  //     wmts.setTrait("definition", "layer", "Some_Layer1");
+  //   });
 
-    let mapItems: ImageryParts[] = [];
+  //   let mapItems: ImageryParts[] = [];
 
-    const cleanup = autorun(() => {
-      mapItems = wmts.mapItems.slice();
-    });
+  //   const cleanup = autorun(() => {
+  //     mapItems = wmts.mapItems.slice();
+  //   });
 
-    try {
-      await wmts.loadMapItems();
+  //   try {
+  //     await wmts.loadMapItems();
 
-      expect(mapItems.length).toBe(1);
-      expect(mapItems[0].alpha).toBeCloseTo(0.8);
-      expect(
-        mapItems[0].imageryProvider instanceof WebMapTileServiceImageryProvider
-      ).toBeTruthy();
-      if (
-        mapItems[0].imageryProvider instanceof WebMapTileServiceImageryProvider
-      ) {
-        expect(mapItems[0].imageryProvider.url).toBe(
-          "https://some.provider/wmts/Some_Layer1/default/GoogleMapsCompatible_Level9/{TileMatrix}/{TileRow}/{TileCol}.png"
-        );
-      }
-    } finally {
-      cleanup();
-    }
-  });
+  //     expect(mapItems.length).toBe(1);
+  //     expect(mapItems[0].alpha).toBeCloseTo(0.8);
+  //     expect(
+  //       mapItems[0].imageryProvider instanceof WebMapTileServiceImageryProvider
+  //     ).toBeTruthy();
+  //     if (
+  //       mapItems[0].imageryProvider instanceof WebMapTileServiceImageryProvider
+  //     ) {
+  //       expect(mapItems[0].imageryProvider.url).toBe(
+  //         "https://some.provider/wmts/Some_Layer1/default/GoogleMapsCompatible_Level9/{TileMatrix}/{TileRow}/{TileCol}.png"
+  //       );
+  //     }
+  //   } finally {
+  //     cleanup();
+  //   }
+  // });
 
-  it("correctly contstructs ImageryProvider", async function() {
-    runInAction(() => {
-      wmts.setTrait("definition", "url", "test/WMTS/with_tilematrix.xml");
-      wmts.setTrait("definition", "layer", "Some_Layer3");
-    });
+  // it("correctly contstructs ImageryProvider", async function() {
+  //   runInAction(() => {
+  //     wmts.setTrait("definition", "url", "test/WMTS/with_tilematrix.xml");
+  //     wmts.setTrait("definition", "layer", "Some_Layer3");
+  //   });
 
-    let mapItems: ImageryParts[] = [];
+  //   let mapItems: ImageryParts[] = [];
 
-    const cleanup = autorun(() => {
-      mapItems = wmts.mapItems.slice();
-    });
+  //   const cleanup = autorun(() => {
+  //     mapItems = wmts.mapItems.slice();
+  //   });
 
-    try {
-      await wmts.loadMapItems();
+  //   try {
+  //     await wmts.loadMapItems();
 
-      expect(mapItems.length).toBe(1);
-      expect(mapItems[0].alpha).toBeCloseTo(0.8);
-      expect(
-        mapItems[0].imageryProvider instanceof WebMapTileServiceImageryProvider
-      ).toBeTruthy();
-      if (
-        mapItems[0].imageryProvider instanceof WebMapTileServiceImageryProvider
-      ) {
-        const url = new URI(mapItems[0].imageryProvider.url)
-          .search("")
-          .toString();
-        expect(url).toEqual("test/WMTS/with_tilematrix.xml");
-      }
-    } finally {
-      cleanup();
-    }
-  });
+  //     expect(mapItems.length).toBe(1);
+  //     expect(mapItems[0].alpha).toBeCloseTo(0.8);
+  //     expect(
+  //       mapItems[0].imageryProvider instanceof WebMapTileServiceImageryProvider
+  //     ).toBeTruthy();
+  //     if (
+  //       mapItems[0].imageryProvider instanceof WebMapTileServiceImageryProvider
+  //     ) {
+  //       const url = new URI(mapItems[0].imageryProvider.url)
+  //         .search("")
+  //         .toString();
+  //       expect(url).toEqual("test/WMTS/with_tilematrix.xml");
+  //     }
+  //   } finally {
+  //     cleanup();
+  //   }
+  // });
 
   it("calculates correct tileMatrixSet", async function() {
     runInAction(() => {
@@ -147,6 +147,13 @@ describe("WebMapTileServiceCatalogItem", function() {
     });
     await wmts.loadMapItems();
 
-    expect(wmts.tileMatrixSet).toBeUndefined();
+    expect(wmts.tileMatrixSet!.id).toEqual(
+      "urn:ogc:def:wkss:OGC:1.0:GoogleMapsCompatible"
+    );
+    expect(wmts.tileMatrixSet!.labels.length).toBe(0);
+    expect(wmts.tileMatrixSet!.maxLevel).toBe(0);
+    expect(wmts.tileMatrixSet!.minLevel).toBe(0);
+    expect(wmts.tileMatrixSet!.tileWidth).toEqual(256);
+    expect(wmts.tileMatrixSet!.tileHeight).toEqual(256);
   });
 });

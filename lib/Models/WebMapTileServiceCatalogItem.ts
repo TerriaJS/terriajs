@@ -611,11 +611,9 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
     let tileWidth: number = 256;
     let tileHeight: number = 256;
     let tileMatrixSetLabels: string[] = [];
-    let found = false;
     for (let i = 0; i < tileMatrixSetLinks.length; i++) {
       const tileMatrixSet = tileMatrixSetLinks[i].TileMatrixSet;
       if (usableTileMatrixSets && usableTileMatrixSets[tileMatrixSet]) {
-        found = true;
         tileMatrixSetId = tileMatrixSet;
         tileMatrixSetLabels = usableTileMatrixSets[tileMatrixSet].identifiers;
         tileWidth = Number(usableTileMatrixSets[tileMatrixSet].tileWidth);
@@ -623,8 +621,6 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
         break;
       }
     }
-
-    if (!found) return;
 
     if (Array.isArray(tileMatrixSetLabels)) {
       const levels = tileMatrixSetLabels.map(label => {
