@@ -24,6 +24,7 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import isReadOnlyArray from "../Core/isReadOnlyArray";
 import TerriaError from "../Core/TerriaError";
+import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import DiffableMixin from "../ModelMixins/DiffableMixin";
 import ExportableMixin from "../ModelMixins/ExportableMixin";
@@ -582,9 +583,11 @@ class WebMapServiceCatalogItem
   extends ExportableMixin(
     DiffableMixin(
       TimeFilterMixin(
-        GetCapabilitiesMixin(
-          UrlMixin(
-            CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
+        AsyncChartableMixin(
+          GetCapabilitiesMixin(
+            UrlMixin(
+              CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
+            )
           )
         )
       )
@@ -636,6 +639,10 @@ class WebMapServiceCatalogItem
         this.strata.set(DiffableMixin.diffStratumName, diffStratum);
       });
     });
+  }
+
+  protected forceLoadChartItems(): Promise<void> {
+    return this.forceLoadMetadata();
   }
 
   loadMapItems(): Promise<void> {
