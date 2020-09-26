@@ -332,10 +332,6 @@ function DiscretelyTimeVaryingMixin<
         }
       ];
     }
-
-    loadChartItems() {
-      return Promise.resolve();
-    }
   }
 
   return DiscretelyTimeVaryingMixin;

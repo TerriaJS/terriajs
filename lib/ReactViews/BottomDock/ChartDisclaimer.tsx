@@ -1,10 +1,11 @@
 import { observer } from "mobx-react";
 import React from "react";
 import ChartView from "../../Charts/ChartView";
-import DiscretelyTimeVaryingMixin from "../../ModelMixins/DiscretelyTimeVaryingMixin";
-import Chartable from "../../Models/Chartable";
+import filterOutUndefined from "../../Core/filterOutUndefined";
+import hasTraits from "../../Models/hasTraits";
 import Terria from "../../Models/Terria";
 import ViewState from "../../ReactViewModels/ViewState";
+import DiscretelyTimeVaryingTraits from "../../Traits/DiscretelyTimeVaryingTraits";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 const Spacing: any = require("../../Styled/Spacing").default;
 const Text: any = require("../../Styled/Text").default;
@@ -18,14 +19,18 @@ interface ChartDisclaimerProps {
 const ChartDisclaimer: React.FC<ChartDisclaimerProps> = ({ terria }) => {
   const chartView = new ChartView(terria);
 
-  const chartableItemsWithDisclaimers: (Chartable &
-    DiscretelyTimeVaryingMixin.DiscretelyTimeVaryingMixin)[] = chartView.chartableItems
-    .filter(DiscretelyTimeVaryingMixin.isMixedInto)
-    .filter(item => item.chartDisclaimer);
-  if (chartableItemsWithDisclaimers.length === 0) return null;
-  const uniqueChartDisclaimers = [
-    ...new Set(chartableItemsWithDisclaimers.map(i => i.chartDisclaimer))
+  const uniqueChartDisclaimers: string[] = [
+    ...new Set(
+      filterOutUndefined(
+        chartView.chartableItems.map(item =>
+          hasTraits(item, DiscretelyTimeVaryingTraits, "chartDisclaimer")
+            ? item.chartDisclaimer
+            : undefined
+        )
+      )
+    )
   ];
+  if (uniqueChartDisclaimers.length === 0) return null;
 
   return (
     <Box
