@@ -308,11 +308,13 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
   }
 
   protected forceLoadMapItems(): Promise<void> {
-    GtfsStratum.load(this).then(stratum => {
-      runInAction(() => {
-        this.strata.set(GtfsStratum.stratumName, stratum);
+    if (this.strata.get(GtfsStratum.stratumName) === undefined) {
+      GtfsStratum.load(this).then(stratum => {
+        runInAction(() => {
+          this.strata.set(GtfsStratum.stratumName, stratum);
+        });
       });
-    });
+    }
     const promise: Promise<void> = this.retrieveData()
       .then((data: FeedMessage) => {
         runInAction(() => {
