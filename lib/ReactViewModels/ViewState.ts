@@ -7,6 +7,7 @@ import {
   runInAction
 } from "mobx";
 import { Ref } from "react";
+import i18next from "i18next";
 import clone from "terriajs-cesium/Source/Core/clone";
 import defined from "terriajs-cesium/Source/Core/defined";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
@@ -632,6 +633,31 @@ export default class ViewState {
     if (this.previewedItem === model) this.previewedItem = undefined;
     if (this.userDataPreviewedItem === model)
       this.userDataPreviewedItem = undefined;
+  }
+
+  @action
+  notifyUserIfStoryExists() {
+    if (
+      this.terria.configParameters.storyEnabled &&
+      this.terria.stories &&
+      this.terria.stories.length &&
+      !this.storyShown
+    ) {
+      this.notifications.push({
+        title: i18next.t("sui.notifications.title"),
+        message: i18next.t("sui.notifications.message"),
+        confirmText: i18next.t("sui.notifications.confirmText"),
+        denyText: i18next.t("sui.notifications.denyText"),
+        confirmAction: action(() => {
+          this.storyShown = true;
+        }),
+        denyAction: action(() => {
+          this.storyShown = false;
+        }),
+        type: "story",
+        width: 300
+      });
+    }
   }
 
   getNextNotification() {

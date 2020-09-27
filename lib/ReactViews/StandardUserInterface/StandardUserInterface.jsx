@@ -175,27 +175,7 @@ const StandardUserInterface = observer(
 
       this.resizeListener();
 
-      if (
-        this.props.terria.configParameters.storyEnabled &&
-        this.props.terria.stories &&
-        this.props.terria.stories.length &&
-        !this.props.viewState.storyShown
-      ) {
-        this.props.viewState.notifications.push({
-          title: t("sui.notifications.title"),
-          message: t("sui.notifications.message"),
-          confirmText: t("sui.notifications.confirmText"),
-          denyText: t("sui.notifications.denyText"),
-          confirmAction: action(() => {
-            this.props.viewState.storyShown = true;
-          }),
-          denyAction: action(() => {
-            this.props.viewState.storyShown = false;
-          }),
-          type: "story",
-          width: 300
-        });
-      }
+      this.props.viewState.notifyUserIfStoryExists();
     },
 
     componentDidMount() {
