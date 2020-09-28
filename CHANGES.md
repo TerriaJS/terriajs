@@ -8,6 +8,7 @@ Change Log
 * Create `OwsInterfaces` to reduce duplicate code across OWS servies
 * Fix story prompt being permanent/un-dismissable
 * Fixed a bug that caused the feature info chart for SOS items to not load.
+* Add support for resolving `layer` parameter from `Title` and not just `Name` in `WebMapServiceCatalogItem`.
 * [The next improvement]
 
 #### 8.0.0-alpha.50

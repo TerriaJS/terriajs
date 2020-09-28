@@ -930,9 +930,19 @@ class WebMapServiceCatalogItem
         rectangle = undefined;
       }
 
+      let lyrs: any = "";
+      const gcStratum: GetCapabilitiesStratum | undefined = this.strata.get(
+        GetCapabilitiesMixin.getCapabilitiesStratumName
+      ) as GetCapabilitiesStratum;
+      if (this.layers && gcStratum !== undefined) {
+        lyrs = this.layersArray.map(
+          lyr => gcStratum.capabilities.findLayer(lyr).Name
+        );
+      }
+
       const imageryOptions = {
         url: proxyCatalogItemUrl(this, baseUrl.toString()),
-        layers: this.layers || "",
+        layers: lyrs,
         parameters: parameters,
         getFeatureInfoParameters: {
           ...dimensionParameters,
