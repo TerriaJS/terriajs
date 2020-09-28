@@ -3,13 +3,17 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.51)
+#### next release (8.0.0-alpha.52)
+* Update the `GtfsCatalogItem` to use the `AutoRefreshingMixin`.
+* Add a condition to the `AutoRefreshingMixin` to prevent unnecessary polling when an item is disabled in the workbench.
+* Add support for resolving `layers` parameter from `Title` and not just `Name` in `WebMapServiceCatalogItem`.
+* [The next improvement]
+
+#### 8.0.0-alpha.51
 * Add WMTS group/item support
 * Create `OwsInterfaces` to reduce duplicate code across OWS servies
 * Fix story prompt being permanent/un-dismissable
 * Fixed a bug that caused the feature info chart for SOS items to not load.
-* Add support for resolving `layers` parameter from `Title` and not just `Name` in `WebMapServiceCatalogItem`.
-* [The next improvement]
 
 #### 8.0.0-alpha.50
 * Support for searching WFS features with WebFeatureServiceSearchProvider
