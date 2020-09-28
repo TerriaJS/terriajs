@@ -97,6 +97,31 @@ describe("WebMapServiceCatalogItem", function() {
     }
   });
 
+  it("constructs correct ImageryProvider when layers trait provided Title", async function() {
+    let wms: WebMapServiceCatalogItem;
+    const terria = new Terria();
+    wms = new WebMapServiceCatalogItem("test", terria);
+    runInAction(() => {
+      wms.setTrait("definition", "url", "test/WMS/wms_nested_groups.xml");
+      wms.setTrait(
+        "definition",
+        "layers",
+        "Landsat 30+ Barest Earth 25m albers (Combined Landsat)"
+      );
+    });
+    let mapItems: ImageryParts[] = [];
+    const cleanup = autorun(() => {
+      mapItems = wms.mapItems.slice();
+    });
+    try {
+      await wms.loadMetadata();
+      //@ts-ignore
+      expect(mapItems[0].imageryProvider.layers).toBe("landsat_barest_earth");
+    } finally {
+      cleanup();
+    }
+  });
+
   it("dimensions and styles for a 'real' WMS layer", function(done) {
     const terria = new Terria();
     const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
