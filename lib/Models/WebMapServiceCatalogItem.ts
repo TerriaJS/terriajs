@@ -930,19 +930,21 @@ class WebMapServiceCatalogItem
         rectangle = undefined;
       }
 
-      let lyrs: any = "";
       const gcStratum: GetCapabilitiesStratum | undefined = this.strata.get(
         GetCapabilitiesMixin.getCapabilitiesStratumName
       ) as GetCapabilitiesStratum;
+
+      let lyrs: string[] = [];
       if (this.layers && gcStratum !== undefined) {
-        lyrs = this.layersArray.map(
-          lyr => gcStratum.capabilities.findLayer(lyr).Name
-        );
+        this.layersArray.forEach(function(lyr) {
+          const gcLayer = gcStratum.capabilities.findLayer(lyr);
+          if (gcLayer !== undefined && gcLayer.Name) lyrs.push(gcLayer.Name);
+        });
       }
 
       const imageryOptions = {
         url: proxyCatalogItemUrl(this, baseUrl.toString()),
-        layers: lyrs,
+        layers: lyrs.length > 0 ? lyrs.join(",") : "",
         parameters: parameters,
         getFeatureInfoParameters: {
           ...dimensionParameters,
