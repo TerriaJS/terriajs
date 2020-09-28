@@ -27,33 +27,29 @@ import WebFeatureServiceCatalogItem from "./WebFeatureServiceCatalogItem";
 class GetCapabilitiesStratum extends LoadableStratum(
   WebFeatureServiceCatalogGroupTraits
 ) {
-  static load(
+  static async load(
     catalogItem: WebFeatureServiceCatalogGroup
   ): Promise<GetCapabilitiesStratum> {
     if (catalogItem.getCapabilitiesUrl === undefined) {
-      return Promise.reject(
-        new TerriaError({
-          title: i18next.t(
-            "models.webFeatureServiceCatalogGroup.invalidWFSServerTitle"
-          ),
-          message: i18next.t(
-            "models.webFeatureServiceCatalogGroup.invalidWFSServerMessage",
-            this
-          )
-        })
-      );
+      throw new TerriaError({
+        title: i18next.t(
+          "models.webFeatureServiceCatalogGroup.invalidWFSServerTitle"
+        ),
+        message: i18next.t(
+          "models.webFeatureServiceCatalogGroup.invalidWFSServerMessage",
+          this
+        )
+      });
     }
 
-    const proxiedUrl = proxyCatalogItemUrl(
-      catalogItem,
-      catalogItem.getCapabilitiesUrl,
-      catalogItem.getCapabilitiesCacheDuration
+    const capabilities = await WebFeatureServiceCapabilities.fromUrl(
+      proxyCatalogItemUrl(
+        catalogItem,
+        catalogItem.getCapabilitiesUrl,
+        catalogItem.getCapabilitiesCacheDuration
+      )
     );
-    return WebFeatureServiceCapabilities.fromUrl(proxiedUrl).then(
-      capabilities => {
-        return new GetCapabilitiesStratum(catalogItem, capabilities);
-      }
-    );
+    return new GetCapabilitiesStratum(catalogItem, capabilities);
   }
 
   constructor(
@@ -167,6 +163,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
         this.catalogGroup.terria
       );
       model.createGetCapabilitiesStratumFromParent(this.capabilities);
+
       this.catalogGroup.terria.addModel(model);
     } else {
       model = existingModel;
@@ -226,31 +223,26 @@ export default class WebFeatureServiceCatalogGroup extends GetCapabilitiesMixin(
     return WebFeatureServiceCatalogGroup.type;
   }
 
-  protected forceLoadMetadata(): Promise<void> {
+  protected async forceLoadMetadata(): Promise<void> {
     if (
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
       undefined
     )
-      return Promise.resolve();
-    return GetCapabilitiesStratum.load(this).then(stratum => {
-      runInAction(() => {
-        this.strata.set(
-          GetCapabilitiesMixin.getCapabilitiesStratumName,
-          stratum
-        );
-      });
+      return;
+    const stratum = await GetCapabilitiesStratum.load(this);
+    runInAction(() => {
+      this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
     });
   }
 
-  protected forceLoadMembers(): Promise<void> {
-    return this.loadMetadata().then(() => {
-      const getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
-        this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
-      );
-      if (getCapabilitiesStratum) {
-        getCapabilitiesStratum.createMembersFromLayers();
-      }
-    });
+  protected async forceLoadMembers(): Promise<void> {
+    await this.loadMetadata();
+    const getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
+      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
+    );
+    if (getCapabilitiesStratum) {
+      getCapabilitiesStratum.createMembersFromLayers();
+    }
   }
 
   protected get defaultGetCapabilitiesUrl(): string | undefined {
