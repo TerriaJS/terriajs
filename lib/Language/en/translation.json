@@ -170,7 +170,12 @@
     "btnMapShareText": "Share / Print",
     "btnCatalogShareTitle": "Share your catalogue with others",
     "btnStoryShareTitle": "Share your story with others",
-    "btnMapShareTitle": "Share your map with others"
+    "btnMapShareTitle": "Share your map with others",
+    "convertNotificationTitle": "Warning: share link upgraded",
+    "convertNotificationMessage": "This share link is based on an older version of TerriaJS - the software powering this web map. While best efforts are made to preserve the link, you might encounter issues with visualising the data.  \n\nIf you're a user of the share link, click OK to make the warning message disappear and continue with accessing the data.",
+    "convertNotificationHelp": "If you have created the share link, check the Help menu to see tips on updating the share link.",
+    "convertNotificationFeedback": "For questions or feedback, click here.",
+    "convertNotificationWarningsTitle": "Warnings"
   },
   "countDatasets": {
     "btnText": "Start",

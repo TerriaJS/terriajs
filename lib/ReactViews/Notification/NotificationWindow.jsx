@@ -1,10 +1,10 @@
 "use strict";
 
 import classNames from "classnames";
-import defined from "terriajs-cesium/Source/Core/defined";
-import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
+import React from "react";
+import defined from "terriajs-cesium/Source/Core/defined";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import Styles from "./notification-window.scss";
 
@@ -12,8 +12,12 @@ const NotificationWindow = createReactClass({
   displayName: "NotificationWindow",
 
   propTypes: {
+    viewState: PropTypes.object,
     title: PropTypes.string.isRequired,
-    message: PropTypes.string.isRequired,
+    message: PropTypes.oneOfType([
+      PropTypes.string.isRequired,
+      PropTypes.node.isRequired
+    ]),
     confirmText: PropTypes.string,
     denyText: PropTypes.string,
     onConfirm: PropTypes.func.isRequired,
@@ -61,7 +65,9 @@ const NotificationWindow = createReactClass({
                 </div>
               )}
             <div className={Styles.body}>
-              {parseCustomMarkdownToReact(message)}
+              {typeof message === "function"
+                ? message(this.props.viewState)
+                : parseCustomMarkdownToReact(message)}
             </div>
           </div>
           <div className={Styles.footer}>
