@@ -5,6 +5,11 @@ Change Log
 
 #### next release (8.0.0-alpha.53)
 * Ported an implementation of CatalogSearchProvider and set it as the default
+* Make share conversion notification more pretty (moved from `Terria.ts` to `shareConvertNotification.tsx`)
+* Tsxify `Collapsible`
+* `ShortReportSections` now uses `Collapsible`
+* Add `onToggle`, `btnRight`, `btnStyle`, `titleTextProps` and `bodyBoxProps` props in `Collapsible`
+* Add `Notification.message` support for `(viewState: ViewState) => React.ReactNode`
 * [The next improvement]
 
 #### 8.0.0-alpha.52
