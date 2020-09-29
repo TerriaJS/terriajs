@@ -79,16 +79,13 @@ export class StyledHtmlRaw extends React.Component {
                 {/* Either a header or paragraph tag */}
                 <When condition={/(h[0-6]|p)/i.test(item.type)}>
                   <Text
-                    // as={item.type[0] === "h" && item.type}
                     as={item.type}
                     key={i}
                     textDark
-                    // bold={/(h[0-2])/i.test(item.type)} // Only headers are bold
                     medium={item.type === "p"}
                     {...styledTextProps}
                   >
                     {item.props.children}
-                    {/* <Spacing bottom={3} /> */}
                   </Text>
                 </When>
                 <When condition={item.type === "ol"}>
