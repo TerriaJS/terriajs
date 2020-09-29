@@ -48,10 +48,22 @@ const NotificationWindow = createReactClass({
       height: defined(this.props.height) ? this.props.height : "auto",
       width: defined(this.props.width) ? this.props.width : "500px"
     };
+    const isStory = type === "story";
 
     return (
       <div className={classNames(Styles.wrapper, `${type}`)}>
-        <div className={Styles.notification}>
+        <div
+          className={Styles.notification}
+          isStory={isStory}
+          css={`
+            background: ${p =>
+              p.isStory ? p.theme.colorPrimary : p.theme.dark};
+            a,
+            a:visited {
+              color: ${p => p.theme.primary};
+            }
+          `}
+        >
           <div className={Styles.inner} style={divStyle}>
             <h3 className="title">{title}</h3>
             {window.location.host === "localhost:3001" &&
