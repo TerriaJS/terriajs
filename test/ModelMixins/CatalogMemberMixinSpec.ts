@@ -31,6 +31,19 @@ describe("CatalogMemberMixin", function() {
       );
     });
 
+    it(" - info section can contain both content and contentAsObject ", function() {
+      wmsItem.info.forEach(i => {
+        // Something a bit funky with i18n strings not yet being transformed
+        if (i.name === "models.webMapServiceCatalogItem.dataDescription") {
+          expect(i.content).toBeUndefined();
+          expect(i.contentAsObject).toBeDefined();
+        } else if (i.name === "Web Map Service Layer Description") {
+          expect(i.contentAsObject).toBeUndefined();
+          expect(i.content).toBeDefined();
+        }
+      });
+    });
+
     it(" - info and infoWithoutSources can produce different results", function() {
       expect(wmsItem.info.length).toBe(6);
       if (wmsItem._sourceInfoItemNames !== undefined) {
