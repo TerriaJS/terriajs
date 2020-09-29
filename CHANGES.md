@@ -10,6 +10,9 @@ Change Log
 * Removed any references to `BingMapsApi` (now deprecated).
 * Add support for resolving `layers` parameter from `Title` and not just `Name` in `WebMapServiceCatalogItem`.
 * Change TrainerBar to show all steps even if `markdownDescription` is not provided
+* Add a `infoAsObject` property to the `CatalogMemberMixin` for providing simpler access to `info` entries within templating
+* Add a `contentAsObject` trait to `InfoSectionTraits` where a json object is more suitable than a string.
+* Add `serviceDescription` and `dataDescription` to `WebMapServiceCatalogItem` info section.
 * [The next improvement]
 
 #### 8.0.0-alpha.51
