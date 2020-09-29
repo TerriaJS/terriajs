@@ -1,4 +1,4 @@
-import { observable, runInAction } from "mobx";
+import { autorun, observable, runInAction } from "mobx";
 import SearchProvider from "terriajs/lib/Models/SearchProvider";
 import SearchResult from "terriajs/lib/Models/SearchResult";
 import Terria from "terriajs/lib/Models/Terria";
@@ -36,21 +36,23 @@ export function loadAndSearchCatalogRecursively(
       // saveModelToJson(modelToSave, {
       //   includeStrata: [CommonStrata.definition]
       // });
-      const matchesString =
-        `${modelToSave.name} ${modelToSave.uniqueId} ${modelToSave.description}`
-          .toLowerCase()
-          .indexOf(searchTextLowercase) !== -1;
-      resultMap.set(model.uniqueId, matchesString);
-      if (matchesString) {
-        runInAction(() => {
-          searchResults.results.push(
-            new SearchResult({
-              name: name,
-              catalogItem: model
-            })
-          );
-        });
-      }
+      autorun(reaction => {
+        const searchString = `${modelToSave.name} ${modelToSave.uniqueId} ${modelToSave.description}`;
+        const matchesString =
+          searchString.toLowerCase().indexOf(searchTextLowercase) !== -1;
+        resultMap.set(model.uniqueId, matchesString);
+        if (matchesString) {
+          runInAction(() => {
+            searchResults.results.push(
+              new SearchResult({
+                name: name,
+                catalogItem: modelToSave
+              })
+            );
+          });
+        }
+        reaction.dispose();
+      });
     }
 
     if (ReferenceMixin.is(model) || GroupMixin.isMixedInto(model)) {
@@ -65,25 +67,30 @@ export function loadAndSearchCatalogRecursively(
     return Promise.resolve(terria);
   }
   return new Promise(resolve => {
-    Promise.all(
-      referencesAndGroupsToLoad.map(model => {
-        if (ReferenceMixin.is(model)) {
-          return model.loadReference();
-        } else if (GroupMixin.isMixedInto(model)) {
-          return model.loadMembers();
-        }
-      })
-    ).then(() => {
-      // Then call this function again to see if new child references were loaded in
-      resolve(
-        loadAndSearchCatalogRecursively(
-          terria,
-          searchTextLowercase,
-          searchResults,
-          resultMap,
-          iteration + 1
-        )
-      );
+    autorun(reaction => {
+      Promise.all(
+        referencesAndGroupsToLoad.map(model => {
+          if (ReferenceMixin.is(model)) {
+            return model.loadReference();
+          }
+          // TODO: investigate performant route for calling loadMembers on additional groupmixins
+          // else if (GroupMixin.isMixedInto(model)) {
+          //   return model.loadMembers();
+          // }
+        })
+      ).then(() => {
+        // Then call this function again to see if new child references were loaded in
+        resolve(
+          loadAndSearchCatalogRecursively(
+            terria,
+            searchTextLowercase,
+            searchResults,
+            resultMap,
+            iteration + 1
+          )
+        );
+      });
+      reaction.dispose();
     });
   });
 }
