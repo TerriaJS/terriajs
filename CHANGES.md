@@ -8,6 +8,11 @@ Change Log
 * Notification window & SatelliteImageryTimeFilterSection now uses theme colours
 * Improved look and feel of `StyledHtml` parsing
 * Fix `applyAriaId` on TooltipWrapper causing prop warnings
+* Make share conversion notification more pretty (moved from `Terria.ts` to `shareConvertNotification.tsx`)
+* Tsxify `Collapsible`
+* `ShortReportSections` now uses `Collapsible`
+* Add `onToggle`, `btnRight`, `btnStyle`, `titleTextProps` and `bodyBoxProps` props in `Collapsible`
+* Add `Notification.message` support for `(viewState: ViewState) => React.ReactNode`
 * [The next improvement]
 
 #### 8.0.0-alpha.52
