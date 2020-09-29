@@ -4,7 +4,6 @@ import Model from "../Models/Model";
 import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
 import AsyncLoader from "../Core/AsyncLoader";
 import AccessControlMixin from "./AccessControlMixin";
-import { JsonObject } from "../Core/Json";
 import isDefined from "../Core/isDefined";
 
 type CatalogMember = Model<CatalogMemberTraits>;

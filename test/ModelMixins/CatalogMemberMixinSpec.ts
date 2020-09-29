@@ -23,6 +23,14 @@ describe("CatalogMemberMixin", function() {
       await wmsItem.loadMetadata();
     });
 
+    it(" - infoAsObject exists", function() {
+      expect(wmsItem.info.length).toBe(6);
+      expect(Object.keys(wmsItem.infoAsObject).length).toBe(6);
+      expect(wmsItem.infoAsObject.WebMapServiceLayerDescription).toBe(
+        "description foo bar baz"
+      );
+    });
+
     it(" - info and infoWithoutSources can produce different results", function() {
       expect(wmsItem.info.length).toBe(6);
       if (wmsItem._sourceInfoItemNames !== undefined) {
