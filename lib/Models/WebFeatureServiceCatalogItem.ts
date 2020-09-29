@@ -295,7 +295,15 @@ class WebFeatureServiceCatalogItem extends ExportableMixin(
   async createGetCapabilitiesStratumFromParent(
     capabilities: WebFeatureServiceCapabilities
   ) {
-    const stratum = await GetCapabilitiesStratum.load(this, capabilities);
+    const that = this;
+    const stratum = await GetCapabilitiesStratum.load(this, capabilities).catch(
+      function(e) {
+        if (e instanceof TerriaError) {
+          that.terria.error.raiseEvent(e);
+        }
+      }
+    );
+    if (!stratum) return;
     runInAction(() => {
       this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
     });
@@ -307,7 +315,13 @@ class WebFeatureServiceCatalogItem extends ExportableMixin(
       undefined
     )
       return;
-    const stratum = await GetCapabilitiesStratum.load(this);
+    const that = this;
+    const stratum = await GetCapabilitiesStratum.load(this).catch(function(e) {
+      if (e instanceof TerriaError) {
+        that.terria.error.raiseEvent(e);
+      }
+    });
+    if (!stratum) return;
     runInAction(() => {
       this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
     });
@@ -434,8 +448,12 @@ class WebFeatureServiceCatalogItem extends ExportableMixin(
           this.style
         );
     });
-
-    await this.geojsonCatalogItem!.loadMapItems();
+    const that = this;
+    await this.geojsonCatalogItem!.loadMapItems().catch(function(e) {
+      if (e instanceof TerriaError) {
+        that.terria.error.raiseEvent(e);
+      }
+    });
   }
 
   @computed

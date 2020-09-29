@@ -1,10 +1,11 @@
+import i18next from "i18next";
 import { autorun, observable, runInAction } from "mobx";
-import SearchProvider from "./SearchProvider";
-import SearchResult from "./SearchResult";
-import Terria from "./Terria";
-import SearchProviderResults from "./SearchProviderResults";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
+import SearchProvider from "./SearchProvider";
+import SearchProviderResults from "./SearchProviderResults";
+import SearchResult from "./SearchResult";
+import Terria from "./Terria";
 
 interface CatalogSearchProviderOptions {
   terria: Terria;
@@ -31,15 +32,14 @@ export function loadAndSearchCatalogRecursively(
   ).filter((model: any) => {
     if (resultMap.get(model.uniqueId) === undefined) {
       const modelToSave = model.target || model;
-      // Use a flattened string of definition data later,
-      // without only checking name/id/descriptions?
-      // saveModelToJson(modelToSave, {
-      //   includeStrata: [CommonStrata.definition]
-      // });
+
       autorun(reaction => {
-        const searchString = `${modelToSave.name} ${modelToSave.uniqueId} ${modelToSave.description}`;
+        let modelInformation: string = JSON.stringify(
+          prepareCatalogMemberForSearch(modelToSave)
+        );
+
         const matchesString =
-          searchString.toLowerCase().indexOf(searchTextLowercase) !== -1;
+          modelInformation.toLowerCase().indexOf(searchTextLowercase) !== -1;
         resultMap.set(model.uniqueId, matchesString);
         if (matchesString) {
           runInAction(() => {
@@ -58,9 +58,6 @@ export function loadAndSearchCatalogRecursively(
     if (ReferenceMixin.is(model) || GroupMixin.isMixedInto(model)) {
       return true;
     }
-    // Could also check for loadMembers() here, but will be even slower
-    // (relies on external non-magda services to be performant)
-
     return false;
   });
   if (referencesAndGroupsToLoad.length === 0) {
@@ -72,11 +69,10 @@ export function loadAndSearchCatalogRecursively(
         referencesAndGroupsToLoad.map(model => {
           if (ReferenceMixin.is(model)) {
             return model.loadReference();
+          } else if (GroupMixin.isMixedInto(model)) {
+            // TODO: investigate performant route for calling loadMembers on additional groupmixins
+            return model.loadMembers();
           }
-          // TODO: investigate performant route for calling loadMembers on additional groupmixins
-          // else if (GroupMixin.isMixedInto(model)) {
-          //   return model.loadMembers();
-          // }
         })
       ).then(() => {
         // Then call this function again to see if new child references were loaded in
@@ -104,7 +100,7 @@ export default class CatalogSearchProvider extends SearchProvider {
     super();
 
     this.terria = options.terria;
-    this.name = "Catalog Items";
+    this.name = i18next.t("search.catalog.name");
   }
 
   protected doSearch(
@@ -146,8 +142,7 @@ export default class CatalogSearchProvider extends SearchProvider {
         });
 
         if (searchResults.results.length === 0) {
-          searchResults.message =
-            "Sorry, no locations match your search query.";
+          searchResults.message = i18next.t("search.catalog.noResults");
         }
       })
       .catch(() => {
@@ -156,8 +151,29 @@ export default class CatalogSearchProvider extends SearchProvider {
           return;
         }
 
-        searchResults.message =
-          "An error occurred while searching.  Please check your internet connection or try again later.";
+        searchResults.message = i18next.t("search.catalog.error");
       });
   }
+}
+
+function prepareCatalogMemberForSearch(model: any) {
+  const result = [];
+  const name = model.name;
+  if (name) {
+    result.push(name);
+  }
+  const uniqueId = model.uniqueId;
+  if (uniqueId) result.push(uniqueId);
+  const description = model.description;
+  if (description) {
+    result.push(description);
+  }
+  const info = model.info;
+  if (info && Array.isArray(info)) {
+    for (let i = 0; i < info.length; i++) {
+      const content = info[i].content;
+      if (content) result.push(content);
+    }
+  }
+  return result;
 }

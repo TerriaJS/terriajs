@@ -389,7 +389,12 @@
     "viewLess": "View less {{name}} results",
     "viewMore": "View more {{name}} results",
     "placeholder": "Search for locations",
-    "searchCatalogue": "Search the catalogue"
+    "searchCatalogue": "Search the catalogue",
+    "catalog": {
+      "noResults": "Sorry, no catalog items match your search query.",
+      "error": "An error occurred while searching.  Please check your internet connection or try again later.",
+      "name": "Catalog Items"
+    }
   },
   "mobile": {
     "toggleNavigation": "toggle navigation"

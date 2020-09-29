@@ -629,7 +629,15 @@ class WebMapServiceCatalogItem
   async createGetCapabilitiesStratumFromParent(
     capabilities: WebMapServiceCapabilities
   ) {
-    const stratum = await GetCapabilitiesStratum.load(this, capabilities);
+    const that = this;
+    const stratum = await GetCapabilitiesStratum.load(this, capabilities).catch(
+      function(e) {
+        if (e instanceof TerriaError) {
+          that.terria.error.raiseEvent(e);
+        }
+      }
+    );
+    if (!stratum) return;
     runInAction(() => {
       this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
     });
@@ -641,7 +649,13 @@ class WebMapServiceCatalogItem
       undefined
     )
       return;
-    const stratum = await GetCapabilitiesStratum.load(this);
+    const that = this;
+    const stratum = await GetCapabilitiesStratum.load(this).catch(function(e) {
+      if (e instanceof TerriaError) {
+        that.terria.error.raiseEvent(e);
+      }
+    });
+    if (!stratum) return;
     runInAction(() => {
       this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
 
