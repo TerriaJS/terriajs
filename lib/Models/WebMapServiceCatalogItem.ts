@@ -930,9 +930,21 @@ class WebMapServiceCatalogItem
         rectangle = undefined;
       }
 
+      const gcStratum: GetCapabilitiesStratum | undefined = this.strata.get(
+        GetCapabilitiesMixin.getCapabilitiesStratumName
+      ) as GetCapabilitiesStratum;
+
+      let lyrs: string[] = [];
+      if (this.layers && gcStratum !== undefined) {
+        this.layersArray.forEach(function(lyr) {
+          const gcLayer = gcStratum.capabilities.findLayer(lyr);
+          if (gcLayer !== undefined && gcLayer.Name) lyrs.push(gcLayer.Name);
+        });
+      }
+
       const imageryOptions = {
         url: proxyCatalogItemUrl(this, baseUrl.toString()),
-        layers: this.layers || "",
+        layers: lyrs.length > 0 ? lyrs.join(",") : "",
         parameters: parameters,
         getFeatureInfoParameters: {
           ...dimensionParameters,
