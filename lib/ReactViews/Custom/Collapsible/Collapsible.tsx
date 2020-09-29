@@ -15,10 +15,10 @@ interface CollapsibleProps {
   isOpen?: boolean;
   isInverse?: boolean;
   onToggle?: (isOpen: boolean) => void;
+  btnRight?: boolean;
   /**
    * caret is default style
    */
-  btnRight?: boolean;
   btnStyle?: "plus" | "caret";
   titleTextProps?: any;
   bodyBoxProps?: any;

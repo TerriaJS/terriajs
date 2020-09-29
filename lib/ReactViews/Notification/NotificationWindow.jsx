@@ -16,7 +16,7 @@ const NotificationWindow = createReactClass({
     title: PropTypes.string.isRequired,
     message: PropTypes.oneOfType([
       PropTypes.string.isRequired,
-      PropTypes.node.isRequired
+      PropTypes.func.isRequired
     ]),
     confirmText: PropTypes.string,
     denyText: PropTypes.string,
