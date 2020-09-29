@@ -16,6 +16,7 @@ Change Log
 * `ShortReportSections` now uses `Collapsible`
 * Add `onToggle`, `btnRight`, `btnStyle`, `titleTextProps` and `bodyBoxProps` props in `Collapsible`
 * Add `Notification.message` support for `(viewState: ViewState) => React.ReactNode`
+* Added splitting support to `WebMapTileServiceCatalogItem`.
 
 #### 8.0.0-alpha.52
 * Prevent duplicate loading of GetCapabilities

@@ -444,6 +444,7 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
 
   static readonly type = "wmts";
   readonly canZoomTo = true;
+  readonly supportsSplitting = true;
 
   get type() {
     return WebMapTileServiceCatalogItem.type;
