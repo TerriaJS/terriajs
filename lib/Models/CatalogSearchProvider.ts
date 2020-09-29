@@ -1,8 +1,8 @@
 import { autorun, observable, runInAction } from "mobx";
-import SearchProvider from "terriajs/lib/Models/SearchProvider";
-import SearchResult from "terriajs/lib/Models/SearchResult";
-import Terria from "terriajs/lib/Models/Terria";
-import SearchProviderResults from "terriajs/lib/Models/SearchProviderResults";
+import SearchProvider from "./SearchProvider";
+import SearchResult from "./SearchResult";
+import Terria from "./Terria";
+import SearchProviderResults from "./SearchProviderResults";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 
