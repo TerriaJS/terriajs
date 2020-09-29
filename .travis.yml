@@ -8,7 +8,7 @@ matrix:
     script:
     - npm run prettier-check
     - pyenv shell 3.6
-    - pip install -r doc/requirements.txt
+    - pip install -r requirements.txt
     - gulp lint docs release
     - gulp test-travis
     env:
