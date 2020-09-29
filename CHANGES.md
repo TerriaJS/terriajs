@@ -3,7 +3,10 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.53)
+#### next release (8.0.0-alpha.54)
+* [The next improvement]
+
+#### 8.0.0-alpha.53
 * Ported an implementation of CatalogSearchProvider and set it as the default
 * Notification window & SatelliteImageryTimeFilterSection now uses theme colours
 * Improved look and feel of `StyledHtml` parsing
@@ -14,7 +17,6 @@ Change Log
 * Add `onToggle`, `btnRight`, `btnStyle`, `titleTextProps` and `bodyBoxProps` props in `Collapsible`
 * Add `Notification.message` support for `(viewState: ViewState) => React.ReactNode`
 * Added splitting support to `WebMapTileServiceCatalogItem`.
-* [The next improvement]
 
 #### 8.0.0-alpha.52
 * Prevent duplicate loading of GetCapabilities
