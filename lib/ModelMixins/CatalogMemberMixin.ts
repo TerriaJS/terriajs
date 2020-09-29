@@ -5,7 +5,7 @@ import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
 import AsyncLoader from "../Core/AsyncLoader";
 import AccessControlMixin from "./AccessControlMixin";
 
-type CatalogMember = Model<CatalogMemberTraits>;
+export type CatalogMember = Model<CatalogMemberTraits>;
 
 function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
   abstract class CatalogMemberMixin extends AccessControlMixin(Base) {
