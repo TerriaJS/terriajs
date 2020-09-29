@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.53)
 * Ported an implementation of CatalogSearchProvider and set it as the default
+* Notification window & SatelliteImageryTimeFilterSection now uses theme colours
 * [The next improvement]
 
 #### 8.0.0-alpha.52
