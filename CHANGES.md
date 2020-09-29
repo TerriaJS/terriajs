@@ -7,6 +7,7 @@ Change Log
 * Update the `GtfsCatalogItem` to use the `AutoRefreshingMixin`.
 * Add a condition to the `AutoRefreshingMixin` to prevent unnecessary polling when an item is disabled in the workbench.
 * Add support for resolving `layers` parameter from `Title` and not just `Name` in `WebMapServiceCatalogItem`.
+* Change TrainerBar to show all steps even if `markdownDescription` is not provided
 * [The next improvement]
 
 #### 8.0.0-alpha.51
