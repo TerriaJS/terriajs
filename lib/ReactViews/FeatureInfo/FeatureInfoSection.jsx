@@ -2,7 +2,6 @@
 
 import Mustache from "mustache";
 import React from "react";
-import URI from "urijs";
 
 import createReactClass from "create-react-class";
 
@@ -230,14 +229,12 @@ export const FeatureInfoSection = observer(
         (this.props.catalogItem && this.props.catalogItem.name) || "";
       let baseFilename = catalogItemName;
       // Add the Lat, Lon to the baseFilename if it is possible and not already present.
-      let latitude = null;
-      let longitude = null;
       if (this.props.position) {
         const position = Ellipsoid.WGS84.cartesianToCartographic(
           this.props.position
         );
-        latitude = CesiumMath.toDegrees(position.latitude);
-        longitude = CesiumMath.toDegrees(position.longitude);
+        const latitude = CesiumMath.toDegrees(position.latitude);
+        const longitude = CesiumMath.toDegrees(position.longitude);
         const precision = 5;
         // Check that baseFilename doesn't already contain the lat, lon with the similar or better precision.
         if (
@@ -257,42 +254,6 @@ export const FeatureInfoSection = observer(
         this.renderDataTitle();
       const reactInfo = getInfoAsReactComponent(this);
 
-      let threddsChart = null;
-      let includeThreddsChart = false;
-      if (
-        this.props.catalogItem.isThredds &&
-        this.props.catalogItem._webMapServiceCatalogGroup &&
-        this.props.catalogItem.discreteTimes.length > 1
-      ) {
-        includeThreddsChart = true;
-        let threddsChartUrl = null;
-        const threddsStrata = this.props.catalogItem._webMapServiceCatalogGroup.strata.get(
-          "threddsDataset"
-        );
-        if (threddsStrata !== undefined) {
-          const pixelDrillUri = new URI(threddsStrata.threddsDataset.ncssUrl);
-          pixelDrillUri.addSearch({
-            accept: "csv",
-            var: this.props.catalogItem.layers,
-            time_start: this.props.catalogItem.discreteTimes[0].time,
-            time_end: this.props.catalogItem.discreteTimes[
-              this.props.catalogItem.discreteTimes.length - 1
-            ].time,
-            latitude,
-            longitude
-          });
-
-          threddsChartUrl = pixelDrillUri.toString();
-          threddsChart = parseCustomMarkdownToReact(
-            `<chart src="${threddsChartUrl}"></chart>`,
-            {
-              terria: this.props.viewState.terria,
-              catalogItem: this.props.catalogItem,
-              feature: this.props.feature
-            }
-          );
-        }
-      }
       return (
         <li className={classNames(Styles.section)}>
           <If condition={this.props.printView}>
@@ -360,9 +321,6 @@ export const FeatureInfoSection = observer(
                         data={reactInfo.downloadableData}
                         name={baseFilename}
                       />
-                    </If>
-                    <If condition={includeThreddsChart}>
-                      <div>{threddsChart}</div>
                     </If>
                   </When>
                   <Otherwise>{reactInfo.info}</Otherwise>
