@@ -449,10 +449,10 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
     return WebMapTileServiceCatalogItem.type;
   }
 
-  createGetCapabilitiesStratumFromParent(
+  async createGetCapabilitiesStratumFromParent(
     capabilities: WebMapTileServiceCapabilities
   ) {
-    const stratum = GetCapabilitiesStratum.load(this, capabilities);
+    const stratum = await GetCapabilitiesStratum.load(this, capabilities);
     runInAction(() => {
       this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
     });

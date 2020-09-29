@@ -162,7 +162,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
         layerId,
         this.catalogGroup.terria
       );
-      model.createGetCapabilitiesStratumFromParent(this.capabilities);
+
       this.catalogGroup.terria.addModel(model);
     } else {
       model = existingModel;
@@ -198,6 +198,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       "isExperiencingIssues",
       this.catalogGroup.isExperiencingIssues
     );
+    model.createGetCapabilitiesStratumFromParent(this.capabilities);
   }
 
   getLayerId(layer: WmtsLayer) {

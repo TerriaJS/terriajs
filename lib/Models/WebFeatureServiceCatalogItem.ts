@@ -292,10 +292,10 @@ class WebFeatureServiceCatalogItem extends ExportableMixin(
     }
   }
 
-  createGetCapabilitiesStratumFromParent(
+  async createGetCapabilitiesStratumFromParent(
     capabilities: WebFeatureServiceCapabilities
   ) {
-    const stratum = GetCapabilitiesStratum.load(this, capabilities);
+    const stratum = await GetCapabilitiesStratum.load(this, capabilities);
     runInAction(() => {
       this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
     });

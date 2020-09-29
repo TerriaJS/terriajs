@@ -231,7 +231,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     let model: WebMapServiceCatalogItem;
     if (existingModel === undefined) {
       model = new WebMapServiceCatalogItem(layerId, this.catalogGroup.terria);
-      model.createGetCapabilitiesStratumFromParent(this.capabilities);
+
       this.catalogGroup.terria.addModel(model);
     } else {
       model = existingModel;
@@ -273,6 +273,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       "hideLegendInWorkbench",
       this.catalogGroup.hideLegendInWorkbench
     );
+    model.createGetCapabilitiesStratumFromParent(this.capabilities);
   }
 
   getLayerId(layer: CapabilitiesLayer) {

@@ -621,10 +621,15 @@ class WebMapServiceCatalogItem
     return WebMapServiceCatalogItem.type;
   }
 
-  createGetCapabilitiesStratumFromParent(
+  // TODO
+  get isMappable() {
+    return true;
+  }
+
+  async createGetCapabilitiesStratumFromParent(
     capabilities: WebMapServiceCapabilities
   ) {
-    const stratum = GetCapabilitiesStratum.load(this, capabilities);
+    const stratum = await GetCapabilitiesStratum.load(this, capabilities);
     runInAction(() => {
       this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
     });
