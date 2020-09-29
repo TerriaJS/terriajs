@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.52)
+* Prevent duplicate loading of GetCapabilities
 * Update the `GtfsCatalogItem` to use the `AutoRefreshingMixin`.
 * Add a condition to the `AutoRefreshingMixin` to prevent unnecessary polling when an item is disabled in the workbench.
 * Upgraded to Cesium v1.73.
