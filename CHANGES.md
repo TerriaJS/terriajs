@@ -10,6 +10,7 @@ Change Log
 * `ShortReportSections` now uses `Collapsible`
 * Add `onToggle`, `btnRight`, `btnStyle`, `titleTextProps` and `bodyBoxProps` props in `Collapsible`
 * Add `Notification.message` support for `(viewState: ViewState) => React.ReactNode`
+* Ported a support for `GpxCatalogItem`.
 * [The next improvement]
 
 #### 8.0.0-alpha.52
