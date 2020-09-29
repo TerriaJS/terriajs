@@ -441,10 +441,10 @@ export default class CkanItemReference extends UrlMixin(
     previousTarget = model;
     await this.setCkanStrata(model);
 
-    const defintionStratum = this.strata.get("definition");
+    const defintionStratum = this.strata.get(CommonStrata.definition);
     if (defintionStratum) {
-      model.strata.set("definition", defintionStratum);
-      model.setTrait("definition", "url", undefined);
+      model.strata.set(CommonStrata.definition, defintionStratum);
+      model.setTrait(CommonStrata.definition, "url", undefined);
     }
 
     // Tried to make this sequence an updateModelFromJson but wouldn't work?

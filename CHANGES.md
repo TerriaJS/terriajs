@@ -3,7 +3,56 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.47)
+#### next release (8.0.0-alpha.52)
+* Update the `GtfsCatalogItem` to use the `AutoRefreshingMixin`.
+* Add a condition to the `AutoRefreshingMixin` to prevent unnecessary polling when an item is disabled in the workbench.
+* Upgraded to Cesium v1.73.
+* Removed any references to `BingMapsApi` (now deprecated).
+* Add support for resolving `layers` parameter from `Title` and not just `Name` in `WebMapServiceCatalogItem`.
+* Change TrainerBar to show all steps even if `markdownDescription` is not provided
+* [The next improvement]
+
+#### 8.0.0-alpha.51
+* Add WMTS group/item support
+* Create `OwsInterfaces` to reduce duplicate code across OWS servies
+* Fix story prompt being permanent/un-dismissable
+* Fixed a bug that caused the feature info chart for SOS items to not load.
+
+#### 8.0.0-alpha.50
+* Support for searching WFS features with WebFeatureServiceSearchProvider
+* WFS-based AustralianGazetteerSearchProvider
+* Fixed a bug causing users to be brought back to the Data Catalogue tab when clicking on an auto-detected user added catalogue item.
+* Fixed a bug causing Data Preview to not appear under the My Data tab.
+* Fix WMS style `DimensionSelector` for layers with no styles
+* Add WMS legend for items with no styles
+* Add warning messages if catalog/share link has been converted by `terriajs-server`.
+* Update the scroll style in `HelpVideoPanel` and `SidePanel` helpful hints.
+* Updated leaflet attribution to match the style of cesium credits.
+* Remove `@computed` props from `WebFeatureServiceCapabilities`
+* Fixed bug causing the Related Maps dropdown to be clipped.
+* Add SDMX-json support for groups and items (using SDMX-csv for data queries)
+* `TableMixin` now uses `ExportableMixin` and `AsyncMappableMixin`
+* Move region provider loading in `TableMixin` `forceLoadTableMixin` to `loadRegionProviderList`
+* Added `TableAutomaticStylesStratum.stratumName` instead of hard-coded strings
+* Added `Dimension` interface for `SelectableDimension` - which can be used for Traits
+* Make `SelectableDimension.options` optional
+
+#### 8.0.0-alpha.49
+* WMS GetFeatureInfo fix to ensure `style=undefined` is not sent to server
+* Add support for splitting CSVs (TableMixins) that are using region mapping.
+* `addUserCatalogMember` will now call `addToWorkbench` instead of `workbench.add`.
+* Replaces `ShadowSection` with `ShadowMixin` using `SelectableDimensions`
+* Fix Webpack Windows path issue
+* Updated icons for view and edit story in the hamburger menu.
+* Implemented new design for story panel.
+
+#### 8.0.0-alpha.48
+* Allow `cacheDuration` to be set on `ArcGisPortalCatalogGroup` and `ArcGisPortalItemReference`.
+* Set default `ArcGisPortalCatalogGroup` item sorting by title using REST API parameter.
+* Call `registerCatalogMembers` before running tests and remove manual calls to `CatalogMemberFactory.register` and `UrlMapping.register` in various tests so that tests reflect the way the library is used.
+* Updated stratum definitions which used hardcoded string to use `CommonStrata` values.
+
+#### 8.0.0-alpha.47
 * Removed hard coded senaps base url.
 * Added option for manual Table region mapping with `enableManualRegionMapping` TableTrait. This provides `SelectableDimensions` for the region column and region type.
 * Added WMS Dimensions (using `SelectableDimensions`)
@@ -11,7 +60,15 @@ Change Log
 * Merged the `StyleSelector` and `DimensionsSelector`, and created a `SelectableDimensions` interface.
 * Added `chartColor` trait for DiscretelyTimeVarying items.
 * Replaced all instances of `createInfoSection` and `newInfo` with calls to `createStratumInstance` using an initialisation object.
-* [The next improvement]
+* Added trait `leafletUpdateInterval` to RasterLayerTraits.
+* Fix styling of WFS and GeoRSS.
+* Fixed a bug that caused re-rendering of xAxis of charts on mouse move. Chart cursor should be somewhat faster as a result of this fix.
+* Fixed a bug that caused some catalogue items to remain on the map after clicking "Remove all" on the workbench.
+* Deleted old `ChartDisclaimer.jsx`
+* Moved `DiscretelyTimeVaryingMixin` from `TableAutomaticStylesStratum` to `TableMixin`
+* Added basic region-mapping time support
+* Add short report to `ArcGisFeatureServerItem` for exceeding the feature limit.
+* Added shift-drag quick zoom
 
 #### 8.0.0-alpha.46
 * Fixed i18n initialisation for magda based configurations
@@ -22,7 +79,6 @@ Change Log
 * Add basic WFS support with `WebFeatureServiceCatalogGroup` and `WebFeatureServiceCatalogItem`
 * Update style of diff tool close button to match new design
 * Remove sass code from the `HelpPanel` component
-* Added shift-drag quick zoom
 * Added an option for translation override from TerriaMap
 * Help content, trainer bar & help terms can use translation overrides
 * Accepts `backend` options under a new `terria.start()` property, `i18nOptions`
@@ -124,7 +180,6 @@ Change Log
     * Added a popup on remove all stories.
     * Added button for sharing stories.
     * Added a question popup on window close (if there are stories on the map so users don't lose their work).
-* (💫The next rad feature💫 but please be mostly bug fixes from now until June!)
 * Added a new `editor` Icon
 * Changed `ToolButton` to show the same icon in open/close state. Previously it showed a close icon in close state.
 

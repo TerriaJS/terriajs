@@ -25,7 +25,6 @@ import LeftRightSection from "./Controls/LeftRightSection";
 import Legend from "./Controls/Legend";
 import OpacitySection from "./Controls/OpacitySection";
 import SatelliteImageryTimeFilterSection from "./Controls/SatelliteImageryTimeFilterSection";
-import ShadowSection from "./Controls/ShadowSection";
 import ShortReport from "./Controls/ShortReport";
 import TimerSection from "./Controls/TimerSection";
 import ViewingControls from "./Controls/ViewingControls";
@@ -179,7 +178,6 @@ export const WorkbenchItemRaw = observer(
               </If>
               <ChartItemSelector item={workbenchItem} />
               <FilterSection item={workbenchItem} />
-              <ShadowSection item={workbenchItem} />
               <DateTimeSelectorSection item={workbenchItem} />
               <SatelliteImageryTimeFilterSection item={workbenchItem} />
               <DimensionSelectorSection item={workbenchItem} />

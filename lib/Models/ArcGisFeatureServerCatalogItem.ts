@@ -170,7 +170,8 @@ class FeatureServerStratum extends LoadableStratum(
   constructor(
     private readonly _item: ArcGisFeatureServerCatalogItem,
     private readonly _geoJsonItem: GeoJsonCatalogItem,
-    private readonly _featureServer: FeatureServer
+    private readonly _featureServer: FeatureServer,
+    private _esriJson: any
   ) {
     super();
   }
@@ -179,7 +180,8 @@ class FeatureServerStratum extends LoadableStratum(
     return new FeatureServerStratum(
       newModel as ArcGisFeatureServerCatalogItem,
       this._geoJsonItem,
-      this._featureServer
+      this._featureServer,
+      this._esriJson
     ) as this;
   }
 
@@ -211,15 +213,18 @@ class FeatureServerStratum extends LoadableStratum(
       "clampToGround",
       item.clampToGround
     );
-
+    let tempEsriJson: any = null;
     return Promise.resolve()
       .then(() => loadGeoJson(item))
-      .then(geoJsonData => {
+      .then(esriJson => {
+        tempEsriJson = esriJson;
+        const geoJsonData = featureDataToGeoJson(esriJson.layers[0]);
         geoJsonItem.setTrait(
           CommonStrata.definition,
           "geoJsonData",
           geoJsonData
         );
+
         return geoJsonItem.loadMetadata();
       })
       .then(() => {
@@ -229,10 +234,23 @@ class FeatureServerStratum extends LoadableStratum(
         const stratum = new FeatureServerStratum(
           item,
           geoJsonItem,
-          featureServer
+          featureServer,
+          tempEsriJson
         );
         return stratum;
       });
+  }
+
+  @computed
+  get shortReport(): string | undefined {
+    // Show notice if reached
+    if (this._esriJson.exceededTransferLimit) {
+      return i18next.t(
+        "models.arcGisFeatureServerCatalogItem.reachedMaxFeatureLimit",
+        this
+      );
+    }
+    return undefined;
   }
 
   @computed get maximumScale(): number | undefined {
@@ -741,7 +759,7 @@ export function convertEsriPointSizeToPixels(pointSize: number) {
 
 function loadGeoJson(catalogItem: ArcGisFeatureServerCatalogItem) {
   return loadJson(buildGeoJsonUrl(catalogItem)).then(function(json) {
-    return featureDataToGeoJson(json.layers[0]);
+    return json;
   });
 }
 
