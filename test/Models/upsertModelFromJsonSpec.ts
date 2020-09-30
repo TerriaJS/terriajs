@@ -20,9 +20,9 @@ describe("upsertModelFromJson", function() {
       CatalogMemberFactory,
       terria,
       "",
-      undefined,
       "definition",
-      json
+      json,
+      {}
     );
     expect(model instanceof WebMapServiceCatalogItem).toBe(true);
     expect(model.type).toBe("wms");
@@ -56,9 +56,9 @@ describe("upsertModelFromJson", function() {
         CatalogMemberFactory,
         terria,
         "",
-        undefined,
         "definition",
-        json
+        json,
+        {}
       );
       expect(model instanceof WebMapServiceCatalogGroup).toBe(true);
       expect(model.type).toBe("wms-group");

@@ -299,12 +299,12 @@ export default class WebProcessingServiceCatalogItem
         CatalogMemberFactory,
         this.terria,
         this.uniqueId || "",
-        undefined,
         CommonStrata.user,
         {
           ...itemJson,
           id: createGuid()
-        }
+        },
+        {}
       );
       return catalogItem;
     }

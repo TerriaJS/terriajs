@@ -642,13 +642,15 @@ export default class Terria {
           CatalogMemberFactory,
           this,
           "/",
-          undefined,
           stratumId,
           {
             ...cleanStratumData,
             id: modelId
           },
-          replaceStratum
+          {
+            replaceStratum,
+            matchByShareKeys: true
+          }
         );
 
         if (Array.isArray(containerIds)) {
