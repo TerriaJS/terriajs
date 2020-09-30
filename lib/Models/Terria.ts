@@ -426,7 +426,10 @@ export default class Terria {
                 this.configParameters.languageConfiguration,
                 options.i18nOptions
               );
-              this.setupInitializationUrls(baseUri, config);
+              this.setupInitializationUrls(
+                baseUri,
+                config.aspects?.["terria-config"]
+              );
             });
           }
 
