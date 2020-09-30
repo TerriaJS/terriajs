@@ -4,6 +4,10 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.54)
+* Add a `infoAsObject` property to the `CatalogMemberMixin` for providing simpler access to `info` entries within templating
+* Add a `contentAsObject` trait to `InfoSectionTraits` where a json object is more suitable than a string.
+* Add `serviceDescription` and `dataDescription` to `WebMapServiceCatalogItem` info section.
+* Extend `DataPreviewSections.jsx` to support Mustache templates with context provided by the catalog item.
 * [The next improvement]
 
 #### 8.0.0-alpha.53

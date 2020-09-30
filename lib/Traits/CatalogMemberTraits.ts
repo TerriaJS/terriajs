@@ -3,7 +3,9 @@ import objectArrayTrait from "./objectArrayTrait";
 import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
 import primitiveArrayTrait from "./primitiveArrayTrait";
+import anyTrait from "./anyTrait";
 import i18next from "i18next";
+import { JsonObject } from "../Core/Json";
 
 export class InfoSectionTraits extends ModelTraits {
   @primitiveTrait({
@@ -21,6 +23,13 @@ export class InfoSectionTraits extends ModelTraits {
     isNullable: true
   })
   content?: string | null;
+
+  @anyTrait({
+    name: "Content As Object",
+    description:
+      "The content of the section which is a JSON object. Set this property to null to remove this section entirely."
+  })
+  contentAsObject?: JsonObject;
 
   static isRemoval(infoSection: InfoSectionTraits) {
     return infoSection.content === null;
