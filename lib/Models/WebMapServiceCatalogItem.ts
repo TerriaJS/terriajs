@@ -26,7 +26,6 @@ import isReadOnlyArray from "../Core/isReadOnlyArray";
 import TerriaError from "../Core/TerriaError";
 import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import DiffableMixin from "../ModelMixins/DiffableMixin";
 import ExportableMixin from "../ModelMixins/ExportableMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
 import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
@@ -43,12 +42,12 @@ import WebMapServiceCatalogItemTraits, {
   WebMapServiceAvailableLayerStylesTraits
 } from "../Traits/WebMapServiceCatalogItemTraits";
 import { callWebCoverageService } from "./callWebCoverageService";
-import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import LoadableStratum from "./LoadableStratum";
 import Mappable, { ImageryParts } from "./Mappable";
 import { BaseModel } from "./Model";
+import { CapabilitiesStyle } from "./OwsInterfaces";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
 import WebMapServiceCapabilities, {
@@ -57,9 +56,6 @@ import WebMapServiceCapabilities, {
   CapabilitiesLayer,
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
-import { CapabilitiesStyle } from "./OwsInterfaces";
-
-const dateFormat = require("dateformat");
 
 class GetCapabilitiesStratum extends LoadableStratum(
   WebMapServiceCatalogItemTraits
@@ -427,17 +423,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get shortReport() {
-    const catalogItem = this.catalogItem;
-    if (catalogItem.isShowingDiff) {
-      const format = "yyyy/mm/dd";
-      const d1 = dateFormat(catalogItem.firstDiffDate, format);
-      const d2 = dateFormat(catalogItem.secondDiffDate, format);
-      return `Showing difference image computed for ${catalogItem.diffStyleId} style on dates ${d1} and ${d2}`;
-    }
-  }
-
-  @computed
   get rectangle(): StratumFromTraits<RectangleTraits> | undefined {
     const layers: CapabilitiesLayer[] = [...this.capabilitiesLayers.values()]
       .filter(layer => layer !== undefined)
@@ -534,60 +519,13 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 }
 
-class DiffStratum extends LoadableStratum(WebMapServiceCatalogItemTraits) {
-  constructor(readonly catalogItem: WebMapServiceCatalogItem) {
-    super();
-  }
-
-  duplicateLoadableStratum(model: BaseModel): this {
-    return new DiffStratum(model as WebMapServiceCatalogItem) as this;
-  }
-
-  @computed
-  get legends() {
-    if (this.catalogItem.isShowingDiff && this.diffLegendUrl) {
-      const urlMimeType =
-        new URL(this.diffLegendUrl).searchParams.get("format") || undefined;
-      return [
-        createStratumInstance(LegendTraits, {
-          url: this.diffLegendUrl,
-          urlMimeType
-        })
-      ];
-    }
-    return undefined;
-  }
-
-  @computed
-  get diffLegendUrl() {
-    const diffStyleId = this.catalogItem.diffStyleId;
-    const firstDate = this.catalogItem.firstDiffDate;
-    const secondDate = this.catalogItem.secondDiffDate;
-    if (diffStyleId && firstDate && secondDate) {
-      return this.catalogItem.getLegendUrlForStyle(
-        diffStyleId,
-        JulianDate.fromIso8601(firstDate),
-        JulianDate.fromIso8601(secondDate)
-      );
-    }
-    return undefined;
-  }
-
-  @computed
-  get disableDateTimeSelector() {
-    return this.catalogItem.isShowingDiff;
-  }
-}
-
 class WebMapServiceCatalogItem
   extends ExportableMixin(
-    DiffableMixin(
-      TimeFilterMixin(
-        AsyncChartableMixin(
-          GetCapabilitiesMixin(
-            UrlMixin(
-              CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
-            )
+    TimeFilterMixin(
+      AsyncChartableMixin(
+        GetCapabilitiesMixin(
+          UrlMixin(
+            CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
           )
         )
       )
@@ -634,9 +572,6 @@ class WebMapServiceCatalogItem
           GetCapabilitiesMixin.getCapabilitiesStratumName,
           stratum
         );
-
-        const diffStratum = new DiffStratum(this);
-        this.strata.set(DiffableMixin.diffStratumName, diffStratum);
       });
     });
   }
@@ -713,68 +648,7 @@ class WebMapServiceCatalogItem
   }
 
   @computed
-  get canDiffImages(): boolean {
-    const hasValidDiffStyles = this.availableDiffStyles.some(diffStyle =>
-      this.styleSelectableDimensions?.[0]?.options?.find(
-        style => style.id === diffStyle
-      )
-    );
-    return hasValidDiffStyles === true;
-  }
-
-  showDiffImage(
-    firstDate: JulianDate,
-    secondDate: JulianDate,
-    diffStyleId: string
-  ) {
-    if (this.canDiffImages === false) {
-      return;
-    }
-
-    // A helper to get the diff tag given a date string
-    const firstDateStr = this.getTagForTime(firstDate);
-    const secondDateStr = this.getTagForTime(secondDate);
-    this.setTrait(CommonStrata.user, "firstDiffDate", firstDateStr);
-    this.setTrait(CommonStrata.user, "secondDiffDate", secondDateStr);
-    this.setTrait(CommonStrata.user, "diffStyleId", diffStyleId);
-    this.setTrait(CommonStrata.user, "isShowingDiff", true);
-  }
-
-  clearDiffImage() {
-    this.setTrait(CommonStrata.user, "firstDiffDate", undefined);
-    this.setTrait(CommonStrata.user, "secondDiffDate", undefined);
-    this.setTrait(CommonStrata.user, "diffStyleId", undefined);
-    this.setTrait(CommonStrata.user, "isShowingDiff", false);
-  }
-
-  getLegendUrlForStyle(
-    styleId: string,
-    firstDate?: JulianDate,
-    secondDate?: JulianDate
-  ) {
-    const firstTag = firstDate && this.getTagForTime(firstDate);
-    const secondTag = secondDate && this.getTagForTime(secondDate);
-    const time = filterOutUndefined([firstTag, secondTag]).join(",");
-    const layerName = this.availableStyles.find(style =>
-      style.styles.some(s => s.name === styleId)
-    )?.layerName;
-    const uri = URI(
-      `${this.url}?service=WMS&version=1.1.0&request=GetLegendGraphic&format=image/png&transparent=True`
-    )
-      .addQuery("layer", encodeURIComponent(layerName || ""))
-      .addQuery("styles", encodeURIComponent(styleId));
-    if (time) {
-      uri.addQuery("time", time);
-    }
-    return uri.toString();
-  }
-
-  @computed
   get mapItems() {
-    if (this.isShowingDiff === true) {
-      return this._diffImageryParts ? [this._diffImageryParts] : [];
-    }
-
     const result = [];
 
     const current = this._currentImageryParts;
@@ -824,33 +698,6 @@ class WebMapServiceCatalogItem
     }
   }
 
-  @computed
-  private get _diffImageryParts(): ImageryParts | undefined {
-    const diffStyleId = this.diffStyleId;
-    if (
-      this.firstDiffDate === undefined ||
-      this.secondDiffDate === undefined ||
-      diffStyleId === undefined
-    ) {
-      return;
-    }
-    const time = `${this.firstDiffDate},${this.secondDiffDate}`;
-    const imageryProvider = this._createImageryProvider(time);
-    if (imageryProvider) {
-      return {
-        imageryProvider,
-        alpha: this.opacity,
-        show: this.show !== undefined ? this.show : true
-      };
-    }
-    return undefined;
-  }
-
-  @computed
-  get diffModeParameters() {
-    return { styles: this.diffStyleId };
-  }
-
   getTagForTime(date: JulianDate): string | undefined {
     const index = this.getDiscreteTimeIndex(date);
     return index !== undefined
@@ -858,7 +705,7 @@ class WebMapServiceCatalogItem
       : undefined;
   }
 
-  private _createImageryProvider = createTransformerAllowUndefined(
+  protected _createImageryProvider = createTransformerAllowUndefined(
     (time: string | undefined): WebMapServiceImageryProvider | undefined => {
       // Don't show anything on the map until GetCapabilities finishes loading.
       if (this.isLoadingMetadata) {
@@ -877,21 +724,12 @@ class WebMapServiceCatalogItem
         dimensionParameters.time = time;
       }
 
-      const diffModeParameters = this.isShowingDiff
-        ? this.diffModeParameters
-        : {};
-
       const parameters: { [key: string]: any } = {
         ...WebMapServiceCatalogItem.defaultParameters,
+        ...(isDefined(this.styles) ? { styles: this.styles } : {}),
         ...this.parameters,
         ...dimensionParameters
       };
-
-      if (isDefined(this.styles)) {
-        parameters.styles = this.styles;
-      }
-
-      Object.assign(parameters, diffModeParameters);
 
       const maximumLevel = scaleDenominatorToLevel(this.minScaleDenominator);
 
@@ -1052,8 +890,7 @@ class WebMapServiceCatalogItem
             styles[layerIndex] = newStyle;
             this.setTrait(stratumId, "styles", styles.join(","));
           });
-        },
-        disable: this.isShowingDiff
+        }
       };
     });
   }

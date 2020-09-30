@@ -16,6 +16,7 @@ import CkanItemReference from "./CkanItemReference";
 import CompositeCatalogItem from "./CompositeCatalogItem";
 import CsvCatalogItem from "./CsvCatalogItem";
 import CzmlCatalogItem from "./CzmlCatalogItem";
+import DiffableWebMapServiceCatalogItem from "./DiffableWebMapServiceCatalogItem";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import GeoRssCatalogItem from "./GeoRssCatalogItem";
 import GltfCatalogItem from "./GltfCatalogItem";
@@ -46,6 +47,10 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(
     WebMapServiceCatalogItem.type,
     WebMapServiceCatalogItem
+  );
+  CatalogMemberFactory.register(
+    DiffableWebMapServiceCatalogItem.type,
+    DiffableWebMapServiceCatalogItem
   );
   CatalogMemberFactory.register(
     WebMapServiceCatalogGroup.type,
