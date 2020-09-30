@@ -95,7 +95,6 @@
   "devDependencies": {
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "babel-eslint": "^10.0.1",
-    "electron": "^2.0.0",
     "eslint": "^5.14.1",
     "eslint-plugin-jsx-control-statements": "^2.2.1",
     "eslint-plugin-react": "^7.12.4",
@@ -109,7 +108,6 @@
     "karma-browserstack-launcher": "^1.4.0",
     "karma-chrome-launcher": "^2.0.0",
     "karma-detect-browsers": "^2.0.2",
-    "karma-electron": "^6.0.0",
     "karma-firefox-launcher": "^1.0.0",
     "karma-ie-launcher": "^1.0.0",
     "karma-jasmine": "^1.1.0",
