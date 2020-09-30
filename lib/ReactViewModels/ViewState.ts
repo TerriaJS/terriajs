@@ -42,7 +42,7 @@ interface ViewStateOptions {
 
 export interface Notification {
   title: string;
-  message: string;
+  message: string | ((viewState: ViewState) => React.ReactNode);
   confirmText?: string;
   denyText?: string;
   confirmAction?: () => void;

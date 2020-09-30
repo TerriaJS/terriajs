@@ -3,18 +3,33 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.52)
+#### next release (8.0.0-alpha.54)
+* Add a `infoAsObject` property to the `CatalogMemberMixin` for providing simpler access to `info` entries within templating
+* Add a `contentAsObject` trait to `InfoSectionTraits` where a json object is more suitable than a string.
+* Add `serviceDescription` and `dataDescription` to `WebMapServiceCatalogItem` info section.
+* Extend `DataPreviewSections.jsx` to support Mustache templates with context provided by the catalog item.
+* [The next improvement]
+
+#### 8.0.0-alpha.53
+* Ported an implementation of CatalogSearchProvider and set it as the default
+* Notification window & SatelliteImageryTimeFilterSection now uses theme colours
+* Improved look and feel of `StyledHtml` parsing
+* Fix `applyAriaId` on TooltipWrapper causing prop warnings
+* Make share conversion notification more pretty (moved from `Terria.ts` to `shareConvertNotification.tsx`)
+* Tsxify `Collapsible`
+* `ShortReportSections` now uses `Collapsible`
+* Add `onToggle`, `btnRight`, `btnStyle`, `titleTextProps` and `bodyBoxProps` props in `Collapsible`
+* Add `Notification.message` support for `(viewState: ViewState) => React.ReactNode`
+* Added splitting support to `WebMapTileServiceCatalogItem`.
+
+#### 8.0.0-alpha.52
+* Prevent duplicate loading of GetCapabilities
 * Update the `GtfsCatalogItem` to use the `AutoRefreshingMixin`.
 * Add a condition to the `AutoRefreshingMixin` to prevent unnecessary polling when an item is disabled in the workbench.
 * Upgraded to Cesium v1.73.
 * Removed any references to `BingMapsApi` (now deprecated).
 * Add support for resolving `layers` parameter from `Title` and not just `Name` in `WebMapServiceCatalogItem`.
 * Change TrainerBar to show all steps even if `markdownDescription` is not provided
-* Add a `infoAsObject` property to the `CatalogMemberMixin` for providing simpler access to `info` entries within templating
-* Add a `contentAsObject` trait to `InfoSectionTraits` where a json object is more suitable than a string.
-* Add `serviceDescription` and `dataDescription` to `WebMapServiceCatalogItem` info section.
-* Extend `DataPreviewSections.jsx` to support Mustache templates with context provided by the catalog item.
-* [The next improvement]
 
 #### 8.0.0-alpha.51
 * Add WMTS group/item support
