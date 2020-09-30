@@ -9,6 +9,7 @@ Change Log
 * Add support for resolving `layers` parameter from `Title` and not just `Name` in `WebMapServiceCatalogItem`.
 * Change TrainerBar to show all steps even if `markdownDescription` is not provided
 * Add `ExtendModel` mixin for extending an existing model with new traits
+* Move diffable WMS features to a new catalog item `DiffableWebMapServiceCatalogItem`
 * [The next improvement]
 
 #### 8.0.0-alpha.51
