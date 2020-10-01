@@ -1,11 +1,11 @@
-import { createTransformer } from "mobx-utils";
+import memoize from "lodash-es/memoize";
 import CreateModel from "../Models/CreateModel";
 import ModelTraits from "./ModelTraits";
 import TraitsConstructor from "./TraitsConstructor";
 
-const traitsClassToModelClass = createTransformer(function<
-  T extends ModelTraits
->(traitsClass: TraitsConstructor<T>) {
+const traitsClassToModelClass = memoize(function<T extends ModelTraits>(
+  traitsClass: TraitsConstructor<T>
+) {
   return CreateModel(traitsClass);
 });
 
