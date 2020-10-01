@@ -208,7 +208,11 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
             return;
           }
 
-          const opts = this.tileErrorHandlingOptions;
+          const {
+            ignoreUnknownTileErrors,
+            treat403AsError,
+            treat404AsError
+          } = this.tileErrorHandlingOptions;
 
           // Browsers don't tell us much about a failed image load, so we do an
           // XHR to get more error information if needed.
@@ -259,7 +263,7 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
             // depending on the status code.
             const e: Error & { statusCode?: number } = error || {};
             if (e.statusCode === undefined) {
-              if (runInAction(() => opts.ignoreUnknownTileErrors)) {
+              if (runInAction(() => ignoreUnknownTileErrors)) {
                 tellMapToSilentlyGiveUp();
               } else if ((e as any).target !== undefined) {
                 // This is a failed image element, which means we got a 200 response but
@@ -293,12 +297,9 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
                 });
               }
             } else if (e.statusCode >= 400 && e.statusCode < 500) {
-              if (e.statusCode === 403 && opts.treat403AsError === false) {
+              if (e.statusCode === 403 && treat403AsError === false) {
                 tellMapToSilentlyGiveUp();
-              } else if (
-                e.statusCode === 404 &&
-                opts.treat404AsError === false
-              ) {
+              } else if (e.statusCode === 404 && treat404AsError === false) {
                 tellMapToSilentlyGiveUp();
               } else {
                 failTile(e);
