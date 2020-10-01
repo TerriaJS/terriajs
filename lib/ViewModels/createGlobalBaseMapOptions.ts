@@ -83,11 +83,9 @@ export default function createGlobalBaseMapOptions(
       "https://basemaps.cartocdn.com/light_all/"
     );
 
-    // https://cartodb.com/basemaps/ gives two different attribution strings. In any case HTML gets swallowed, so we have to adapt.
-    // 1 '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy;
-    //   <a href="http://cartodb.com/attributions">CartoDB</a>'
-    // 2 Map tiles by <a href="http://cartodb.com/attributions#basemaps">CartoDB</a>, under <a href="https://creativecommons.org/licenses/by/3.0/">
-    //   CC BY 3.0</a>. Data by <a href="http://www.openstreetmap.org/">OpenStreetMap</a>, under ODbL.
+    // https://github.com/CartoDB/basemap-styles#1-web-raster-basemaps gives the following attribution string.
+    // '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy;
+    //   <a href="http://carto.com/attributions">Carto</a>'
     positron.setTrait(
       CommonStrata.user,
       "attribution",
