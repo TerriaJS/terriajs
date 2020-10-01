@@ -2,6 +2,7 @@ import i18next from "i18next";
 import uniqWith from "lodash-es/uniqWith";
 import { computed, runInAction } from "mobx";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ArcGisMapServerImageryProvider from "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
@@ -357,6 +358,14 @@ export default class ArcGisMapServerCatalogItem
       tilingScheme: new WebMercatorTilingScheme(),
       maximumLevel: maximumLevel,
       parameters: this.parameters,
+      rectangle: this.clipToRectangle
+        ? Rectangle.fromDegrees(
+            this.rectangle.west,
+            this.rectangle.south,
+            this.rectangle.east,
+            this.rectangle.north
+          )
+        : undefined,
       enablePickFeatures: this.allowFeaturePicking,
       usePreCachedTilesIfAvailable: !dynamicRequired,
       mapServerData: stratum.mapServerData,
