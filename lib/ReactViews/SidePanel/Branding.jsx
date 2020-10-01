@@ -10,6 +10,7 @@ const Branding = createReactClass({
   propTypes: {
     terria: PropTypes.object.isRequired,
     version: PropTypes.string,
+    displayOne: PropTypes.number,
     onClick: PropTypes.func
   },
 
@@ -18,7 +19,9 @@ const Branding = createReactClass({
       .brandBarElements;
     if (!defined(brandingHtmlElements)) {
       brandingHtmlElements = [
-        '<a target="_blank" href="http://terria.io"><img src="images/terria_logo.png" height="52" title="Version: {{ version }}" /></a>'
+        "",
+        '<a target="_blank" href="http://terria.io"><img src="images/terria_logo.png" height="52" title="Version: {{ version }}" /></a>',
+        ""
       ];
     }
 
@@ -26,10 +29,16 @@ const Branding = createReactClass({
 
     return (
       <div className={Styles.branding}>
-        <For each="element" of={brandingHtmlElements}>
-          {parseCustomHtmlToReact(
-            element.replace(/\{\{\s*version\s*\}\}/g, version)
-          )}
+        <For each="element" index="i" of={brandingHtmlElements}>
+          <If
+            condition={
+              this.props.displayOne === undefined || i === this.props.displayOne
+            }
+          >
+            {parseCustomHtmlToReact(
+              element.replace(/\{\{\s*version\s*\}\}/g, version)
+            )}
+          </If>
         </For>
       </div>
     );
