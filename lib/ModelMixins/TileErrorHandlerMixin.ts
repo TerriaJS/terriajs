@@ -75,9 +75,15 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
      */
     onTileLoadError(tileProviderError: TileProviderError): void {
       const operation = retry.operation(this.tileRetryOptions);
+
+      // Ideally this should be a `Promise` but we use a less ideal `when` for now
+      // because our cesium fork expects a when object here:
+      // https://github.com/TerriaJS/cesium/blob/terriajs/Source/Core/TileProviderError.js#L161
+      //
       // result.reject = stop trying to load this tile
       // result.resolve = retry loading this tile
       const result = when.defer();
+
       const imageryProvider = tileProviderError.provider as ImageryProvider;
       const tile = {
         x: tileProviderError.x,
