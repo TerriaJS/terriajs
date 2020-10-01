@@ -8,6 +8,7 @@ Change Log
 * Add a `contentAsObject` trait to `InfoSectionTraits` where a json object is more suitable than a string.
 * Add `serviceDescription` and `dataDescription` to `WebMapServiceCatalogItem` info section.
 * Extend `DataPreviewSections.jsx` to support Mustache templates with context provided by the catalog item.
+* Update Carto basemaps URL and attribution.
 * [The next improvement]
 
 #### 8.0.0-alpha.53
