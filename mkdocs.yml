@@ -3,7 +3,7 @@ theme:
   name: material
   logo: terria.png
 docs_dir: doc
-site_dir: ../wwwroot/doc/guide
+site_dir: ./wwwroot/doc/guide
 markdown_extensions:
   - markdown.extensions.admonition
 strict: false
@@ -33,6 +33,8 @@ nav:
           - ArcGisFeatureServerCatalogItem: connecting-to-data/catalog-type-details/esri-featureServer.md
           - ArcGisMapServerCatalogGroup: connecting-to-data/catalog-type-details/esri-mapServer-group.md
           - ArcGisMapServerCatalogItem: connecting-to-data/catalog-type-details/esri-mapServer.md
+          - ArcGisPortalCatalogGroup: connecting-to-data/catalog-type-details/arcgis-portal-group.md
+          - ArcGisPortalItemReference: connecting-to-data/catalog-type-details/arcgis-portal-item.md
           - BingMapsCatalogItem: connecting-to-data/catalog-type-details/bing-maps.md
           - CartoMapCatalogItem: connecting-to-data/catalog-type-details/carto.md
           - CatalogGroup: connecting-to-data/catalog-type-details/group.md
@@ -51,11 +53,15 @@ nav:
           - KmlCatalogItem: connecting-to-data/catalog-type-details/kml.md
           - MagdaReference: connecting-to-data/catalog-type-details/magda.md
           - OpenStreetMapCatalogItem: connecting-to-data/catalog-type-details/open-street-map.md
+          - SdmxCatalogGroup: connecting-to-data/catalog-type-details/sdmx-group.md
+          - SdmxJsonCatalogItem: connecting-to-data/catalog-type-details/sdmx-json.md
           - SenapsLocationsCatalogItem: connecting-to-data/catalog-type-details/senaps-locations.md
           - SensorObservationServiceCatalogItem: connecting-to-data/catalog-type-details/sos.md
           - SplitItemReference: connecting-to-data/catalog-type-details/split-reference.md
           - StubCatalogItem: connecting-to-data/catalog-type-details/stub.md
           - UrlReference: connecting-to-data/catalog-type-details/url-reference.md
+          - WebFeatureServiceCatalogGroup: connecting-to-data/catalog-type-details/wfs-group.md
+          - WebFeatureServiceCatalogItem: connecting-to-data/catalog-type-details/wfs.md
           - WebMapServiceCatalogGroup: connecting-to-data/catalog-type-details/wms-group.md
           - WebMapServiceCatalogItem: connecting-to-data/catalog-type-details/wms.md
           - WebProcessingServiceCatalogFunction: connecting-to-data/catalog-type-details/wps.md

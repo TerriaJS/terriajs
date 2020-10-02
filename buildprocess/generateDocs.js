@@ -23,7 +23,7 @@ const members = catalogMembers.map(member => {
 })
 
 
-const mkDocsConfig = YAML.parse(fs.readFileSync('./mkdocs.yml', 'utf8'))
+const mkDocsConfig = YAML.parse(fs.readFileSync('./doc/mkdocs.yml', 'utf8'))
 let items = [] 
 
 function markdownFromTraitType(trait) {
@@ -183,7 +183,7 @@ async function processArray() {
     };
     mkDocsConfig.nav[3]['Connecting to Data'][6]['Catalog Type Details'] = items;
 
-    fs.writeFileSync('./mkdocs.yml', YAML.stringify(mkDocsConfig))
+    fs.writeFileSync('./doc/mkdocs.yml', YAML.stringify(mkDocsConfig))
     fs.writeFileSync('./doc/connecting-to-data/catalog-items.md', catalogItemsContent)
     fs.writeFileSync('./doc/connecting-to-data/catalog-groups.md', catalogGroupsContent)
 

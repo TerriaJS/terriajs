@@ -1,4 +1,5 @@
 docs/
+doc/connecting-to-data/catalog-type-details/
 node_modules/
 .idea/
 build/
@@ -17,5 +18,3 @@ package-lock.json
 *.swp
 dist
 .history/
-modeldocs/
-outputdocs/

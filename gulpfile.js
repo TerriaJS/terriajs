@@ -61,6 +61,17 @@ gulp.task('lint', function(done) {
     done();
 });
 
+gulp.task('reference-guide', function(done) {
+    var runExternalModule = require('./buildprocess/runExternalModule');
+
+    runExternalModule('jsdoc/jsdoc.js', [
+        './lib',
+        '-c', './buildprocess/jsdoc.json'
+    ]);
+
+    done();
+});
+
 gulp.task('copy-cesium-assets', function() {
     var path = require('path');
 

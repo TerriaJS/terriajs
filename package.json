@@ -195,7 +195,7 @@
     "start": "terriajs-server --port 3002",
     "dev": "webpack-dev-server --inline --config buildprocess/webpack.config.dev.js --host 0.0.0.0",
     "hot": "webpack-dev-server --inline --config buildprocess/webpack.config.hot.js --hot --host 0.0.0.0",
-    "build-docs": "webpack --config buildprocess/webpack-docs.config.js && node modeldocs/generateDocs.js",
+    "build-docs": "webpack --config buildprocess/webpack-docs.config.js && node build/generateDocs.js",
     "watch-docs": "webpack --watch --config buildprocess/webpack-docs.config.js",
     "publish-doc": "bash -c \"rm -rf wwwroot/doc && mkdir wwwroot/doc && cp doc/index-built.html wwwroot/doc/index.html && cp doc/CNAME wwwroot/doc/CNAME && gulp docs && cd wwwroot/doc && git init && git remote add origin $npm_package_config_docRepo && git add . && git commit -m 'Generate Documentation' && git push -f origin HEAD:gh-pages\"",
     "prettier": "prettier --write \"**/*\"",

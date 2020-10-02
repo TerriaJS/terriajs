@@ -7,7 +7,7 @@ module.exports = function() {
       mode: 'development',
       entry: path.resolve(__dirname, 'generateDocs.js'),
       output: {
-          path: path.resolve(__dirname, '..', 'modeldocs'),
+          path: path.resolve(__dirname, '..', 'build'),
           filename: 'generateDocs.js',
           sourcePrefix: '', // to avoid breaking multi-line string literals by inserting extra tabs.
           globalObject: '(self || window)' // to avoid breaking in web worker (https://github.com/webpack/webpack/issues/6642)
