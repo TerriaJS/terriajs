@@ -9,6 +9,7 @@ Change Log
 * Add `serviceDescription` and `dataDescription` to `WebMapServiceCatalogItem` info section.
 * Extend `DataPreviewSections.jsx` to support Mustache templates with context provided by the catalog item.
 * Add support for `initializationUrls` when loading configuration from Magda.
+* Add support for `formats` traits within `featureInfoTemplate` traits.
 * [The next improvement]
 
 #### 8.0.0-alpha.53

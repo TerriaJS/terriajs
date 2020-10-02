@@ -26,6 +26,21 @@ class FeatureInfoFormatTraits extends ModelTraits {
     description: "To show thousands separators"
   })
   useGrouping: boolean = true;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Type",
+    description: "Set to 'datetime' if you want to format as a date time"
+  })
+  type?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Datetime format",
+    description:
+      "A date format style using the npm dateformat package, e.g. 'dd-mm-yyyy HH:MM:ss' or 'isoDateTime'"
+  })
+  format?: string;
 }
 
 export class FeatureInfoTemplateTraits extends ModelTraits {
