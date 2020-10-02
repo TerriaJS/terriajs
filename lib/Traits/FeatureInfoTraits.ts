@@ -3,6 +3,31 @@ import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
 import anyTrait from "./anyTrait";
 
+class FeatureInfoFormatTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "number",
+    name: "Maximum Fraction Digits",
+    description:
+      "To reduce the number of decimal places to a maximum of X digits."
+  })
+  maximumFractionDigits: number = 20;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Minimum Fraction Digits",
+    description:
+      "To increase the number of decimal places to a minimum of X digits."
+  })
+  minimumFractionDigits: number = 0;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Use grouping",
+    description: "To show thousands separators"
+  })
+  useGrouping: boolean = true;
+}
+
 export class FeatureInfoTemplateTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
@@ -25,6 +50,12 @@ export class FeatureInfoTemplateTraits extends ModelTraits {
       "An object, mapping partial names to a template string. Defines the partials used in Template."
   })
   partials?: { [partial_name: string]: string };
+
+  @anyTrait({
+    name: "Formats",
+    description: "An object, mapping field names to formatting options."
+  })
+  formats?: { [key_name: string]: FeatureInfoFormatTraits };
 }
 
 export default class FeatureInfoTraits extends ModelTraits {
