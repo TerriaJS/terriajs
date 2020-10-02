@@ -104,6 +104,7 @@ interface ConfigParameters {
   helpContent?: HelpContentItem[];
   helpContentTerms?: Term[];
   languageConfiguration?: LanguageConfiguration;
+  displayOneBrand?: number;
 }
 
 interface StartOptions {
@@ -231,7 +232,8 @@ export default class Terria {
     showInAppGuides: false,
     helpContent: [],
     helpContentTerms: defaultTerms,
-    languageConfiguration: undefined
+    languageConfiguration: undefined,
+    displayOneBrand: 0 // index of which brandBarElements to show for mobile header
   };
 
   @observable
