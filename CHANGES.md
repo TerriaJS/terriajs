@@ -9,6 +9,7 @@ Change Log
 * Add `serviceDescription` and `dataDescription` to `WebMapServiceCatalogItem` info section.
 * Extend `DataPreviewSections.jsx` to support Mustache templates with context provided by the catalog item.
 * Add support for `initializationUrls` when loading configuration from Magda.
+* Add `clipToRectangle` trait to `RasterLayerTraits` and implement on `WebMapServiceCatalogItem`, `ArcGisMapServiceCatalogItem`, `CartoMapCatalogItem`, `WebMapTileServiceCatalogItem`.
 * [The next improvement]
 
 #### 8.0.0-alpha.53
@@ -410,7 +411,18 @@ Change Log
 
 
 ### Next Release
+### v7.11.13
 
+* Upgraded to Cesium v1.73.
+* Removed any references to `BingMapsApi` (now deprecated).
+
+### v7.11.12
+
+* Fixed a crash with GeoJsonCatalogItem when you set a `stroke-opacity` in `styles`.
+
+### v7.11.11
+
+* If `showIEMessage` is `true` in config.json, warn IE11 users that support is ending.
 
 ### v7.11.10
 
