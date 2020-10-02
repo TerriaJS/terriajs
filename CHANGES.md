@@ -4,6 +4,7 @@ Change Log
 ### v7.11.14
 
 * Update CARTO Basemaps CDN URL and attribution.
+* Testing the external PR build.
 
 ### v7.11.13
 
