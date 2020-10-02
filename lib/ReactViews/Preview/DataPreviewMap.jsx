@@ -83,12 +83,7 @@ const DataPreviewMap = createReactClass({
     positron.attribution =
       "© OpenStreetMap contributors ODbL, © CARTO CC-BY 3.0";
     positron.opacity = 1.0;
-    positron.subdomains = [
-      "a",
-      "b",
-      "c",
-      "d"
-    ];
+    positron.subdomains = ["a", "b", "c", "d"];
     this.terriaPreview.baseMap = positron;
 
     this.isZoomedToExtent = false;
