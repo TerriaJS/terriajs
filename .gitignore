@@ -1,5 +1,5 @@
 docs/
-doc/connecting-to-data/catalog-type-details/
+/doc/connecting-to-data/catalog-type-details/
 node_modules/
 .idea/
 build/
