@@ -13,29 +13,10 @@ import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import getFilenameFromUri from "terriajs-cesium/Source/Core/getFilenameFromUri";
 import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
 import StratumOrder from "./StratumOrder";
 const toGeoJSON = require("@mapbox/togeojson");
-
-class GpxStratum extends LoadableStratum(GpxCatalogItemTraits) {
-  static readonly stratumName = "gpxLoadable";
-
-  constructor(private readonly _item: GpxCatalogItem) {
-    super();
-  }
-
-  duplicateLoadableStratum(newModel: BaseModel): this {
-    return new GpxStratum(newModel as GpxCatalogItem) as this;
-  }
-
-  static async load(item: GpxCatalogItem) {
-    return new GpxStratum(item);
-  }
-}
-
-StratumOrder.addDefinitionStratum(GpxStratum.stratumName);
 
 class GpxCatalogItem extends AsyncMappableMixin(
   UrlMixin(CatalogMemberMixin(CreateModel(GpxCatalogItemTraits)))
@@ -77,11 +58,6 @@ class GpxCatalogItem extends AsyncMappableMixin(
   }
 
   protected forceLoadMapItems(): Promise<void> {
-    GpxStratum.load(this).then(stratum => {
-      runInAction(() => {
-        this.strata.set(GpxStratum.stratumName, stratum);
-      });
-    });
     return new Promise<string>(resolve => {
       if (isDefined(this.gpxString)) {
         resolve(this.gpxString);
@@ -114,7 +90,7 @@ class GpxCatalogItem extends AsyncMappableMixin(
     return Promise.resolve();
   }
 
-  get mapItems(): import("./Mappable").MapItem[] {
+  get mapItems() {
     if (isDefined(this._geoJsonItem)) {
       return this._geoJsonItem.mapItems.map(mapItem => {
         mapItem.show = this.show;
