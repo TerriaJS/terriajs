@@ -156,6 +156,13 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
 
   @primitiveTrait({
     type: "string",
+    name: "Is Esri",
+    description: "True if this WMS is from Esri; otherwise, false."
+  })
+  isEsri: boolean = false;
+
+  @primitiveTrait({
+    type: "string",
     name: "Layer(s)",
     description: "The layer or layers to display (comma separated values)."
   })

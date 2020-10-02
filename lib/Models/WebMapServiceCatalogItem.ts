@@ -640,6 +640,13 @@ class WebMapServiceCatalogItem
   }
 
   @computed
+  get isEsri(): boolean {
+    if (this.url !== undefined)
+      return this.url.indexOf("MapServer/WMSServer") > -1;
+    return false;
+  }
+
+  @computed
   get supportsColorScaleRange(): boolean {
     return this.isNcWMS;
   }
