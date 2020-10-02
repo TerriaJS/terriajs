@@ -408,7 +408,18 @@ Change Log
 
 
 ### Next Release
+### v7.11.13
 
+* Upgraded to Cesium v1.73.
+* Removed any references to `BingMapsApi` (now deprecated).
+
+### v7.11.12
+
+* Fixed a crash with GeoJsonCatalogItem when you set a `stroke-opacity` in `styles`.
+
+### v7.11.11
+
+* If `showIEMessage` is `true` in config.json, warn IE11 users that support is ending.
 
 ### v7.11.10
 
