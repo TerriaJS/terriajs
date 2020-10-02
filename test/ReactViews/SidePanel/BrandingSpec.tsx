@@ -28,7 +28,7 @@ describe("Branding", function() {
     );
     expect(rendered.root.findByType("a")).toBeDefined();
   });
-  it("renders when provided displayOne inside of index, but targetting empty string", function() {
+  it("renders when provided displayOne inside of index", function() {
     terria.configParameters.brandBarElements = [
       "<details><summary>a thing</summary></details>"
     ];
