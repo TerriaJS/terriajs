@@ -12,7 +12,7 @@ import { removeMarker } from "../../Models/LocationMarkerUtils";
 import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
 import { observer } from "mobx-react";
-import { runInAction, action } from "mobx";
+import { runInAction } from "mobx";
 import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
 
