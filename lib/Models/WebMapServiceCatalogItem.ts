@@ -953,14 +953,7 @@ class WebMapServiceCatalogItem
 
       let rectangle;
 
-      if (
-        this.clipToRectangle &&
-        this.rectangle !== undefined &&
-        this.rectangle.east !== undefined &&
-        this.rectangle.west !== undefined &&
-        this.rectangle.north !== undefined &&
-        this.rectangle.south !== undefined
-      ) {
+      if (this.clipToRectangle && this.rectangle !== undefined) {
         rectangle = Rectangle.fromDegrees(
           this.rectangle.west,
           this.rectangle.south,
