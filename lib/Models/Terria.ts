@@ -233,7 +233,7 @@ export default class Terria {
     helpContent: [],
     helpContentTerms: defaultTerms,
     languageConfiguration: undefined,
-    displayOneBrand: 1 // seems to be the default on master
+    displayOneBrand: 0 // index of which brandBarElements to show for mobile header
   };
 
   @observable
