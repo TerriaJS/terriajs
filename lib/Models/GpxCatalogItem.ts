@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { computed } from "mobx";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import isDefined from "../Core/isDefined";
 import loadText from "../Core/loadText";
@@ -13,9 +13,6 @@ import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import LoadableStratum from "./LoadableStratum";
-import { BaseModel } from "./Model";
-import StratumOrder from "./StratumOrder";
 const toGeoJSON = require("@mapbox/togeojson");
 
 class GpxCatalogItem extends AsyncMappableMixin(
