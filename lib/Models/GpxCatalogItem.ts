@@ -13,6 +13,7 @@ import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
+import getFilenameFromUri from "terriajs-cesium/Source/Core/getFilenameFromUri";
 const toGeoJSON = require("@mapbox/togeojson");
 
 class GpxCatalogItem extends AsyncMappableMixin(
@@ -95,6 +96,13 @@ class GpxCatalogItem extends AsyncMappableMixin(
       });
     }
     return [];
+  }
+
+  @computed get name() {
+    if (this.url && super.name === this.url) {
+      return getFilenameFromUri(this.url);
+    }
+    return super.name;
   }
 }
 
