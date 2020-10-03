@@ -3,15 +3,30 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.53)
+#### next release (8.0.0-alpha.54)
+* Add a `infoAsObject` property to the `CatalogMemberMixin` for providing simpler access to `info` entries within templating
+* Add a `contentAsObject` trait to `InfoSectionTraits` where a json object is more suitable than a string.
+* Add `serviceDescription` and `dataDescription` to `WebMapServiceCatalogItem` info section.
+* Extend `DataPreviewSections.jsx` to support Mustache templates with context provided by the catalog item.
+* Add support for `initializationUrls` when loading configuration from Magda.
+* Improve Branding component for mobile header
+* Add support for `displayOne` configuration parameter to choose which brand element to show in mobile view
+* Update Carto basemaps URL and attribution.
+* Add `clipToRectangle` trait to `RasterLayerTraits` and implement on `WebMapServiceCatalogItem`, `ArcGisMapServiceCatalogItem`, `CartoMapCatalogItem`, `WebMapTileServiceCatalogItem`.
+* Ported a support for `GpxCatalogItem`.
+* [The next improvement]
+
+#### 8.0.0-alpha.53
 * Ported an implementation of CatalogSearchProvider and set it as the default
+* Notification window & SatelliteImageryTimeFilterSection now uses theme colours
+* Improved look and feel of `StyledHtml` parsing
+* Fix `applyAriaId` on TooltipWrapper causing prop warnings
 * Make share conversion notification more pretty (moved from `Terria.ts` to `shareConvertNotification.tsx`)
 * Tsxify `Collapsible`
 * `ShortReportSections` now uses `Collapsible`
 * Add `onToggle`, `btnRight`, `btnStyle`, `titleTextProps` and `bodyBoxProps` props in `Collapsible`
 * Add `Notification.message` support for `(viewState: ViewState) => React.ReactNode`
-* Ported a support for `GpxCatalogItem`.
-* [The next improvement]
+* Added splitting support to `WebMapTileServiceCatalogItem`.
 
 #### 8.0.0-alpha.52
 * Prevent duplicate loading of GetCapabilities
@@ -40,6 +55,8 @@ Change Log
 * Updated leaflet attribution to match the style of cesium credits.
 * Remove `@computed` props from `WebFeatureServiceCapabilities`
 * Fixed bug causing the Related Maps dropdown to be clipped.
+* Added TileErrorHandlerMixin for handling raster layer tile errors.
+* [The next improvement]
 * Add SDMX-json support for groups and items (using SDMX-csv for data queries)
 * `TableMixin` now uses `ExportableMixin` and `AsyncMappableMixin`
 * Move region provider loading in `TableMixin` `forceLoadTableMixin` to `loadRegionProviderList`
@@ -398,7 +415,18 @@ Change Log
 
 
 ### Next Release
+### v7.11.13
 
+* Upgraded to Cesium v1.73.
+* Removed any references to `BingMapsApi` (now deprecated).
+
+### v7.11.12
+
+* Fixed a crash with GeoJsonCatalogItem when you set a `stroke-opacity` in `styles`.
+
+### v7.11.11
+
+* If `showIEMessage` is `true` in config.json, warn IE11 users that support is ending.
 
 ### v7.11.10
 

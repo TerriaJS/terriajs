@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "8.0.0-alpha.52",
+  "version": "8.0.0-alpha.53",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "engines": {
@@ -43,6 +43,7 @@
     "@types/react": "^16.8.18",
     "@types/react-dom": "^16.9.1",
     "@types/react-test-renderer": "^16.9.2",
+    "@types/retry": "^0.12.0",
     "@types/styled-components": "^5.1.0",
     "@types/urijs": "1.19.1",
     "@vx/axis": "^0.0.193-alpha.2",

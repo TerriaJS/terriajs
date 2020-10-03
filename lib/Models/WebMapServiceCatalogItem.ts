@@ -23,12 +23,14 @@ import createTransformerAllowUndefined from "../Core/createTransformerAllowUndef
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import isReadOnlyArray from "../Core/isReadOnlyArray";
+import { JsonObject } from "../Core/Json";
 import TerriaError from "../Core/TerriaError";
 import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import DiffableMixin from "../ModelMixins/DiffableMixin";
 import ExportableMixin from "../ModelMixins/ExportableMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
+import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
 import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import SelectableDimensions, {
@@ -49,6 +51,7 @@ import createStratumInstance from "./createStratumInstance";
 import LoadableStratum from "./LoadableStratum";
 import Mappable, { ImageryParts } from "./Mappable";
 import { BaseModel } from "./Model";
+import { CapabilitiesStyle } from "./OwsInterfaces";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
 import WebMapServiceCapabilities, {
@@ -57,7 +60,6 @@ import WebMapServiceCapabilities, {
   CapabilitiesLayer,
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
-import { CapabilitiesStyle } from "./OwsInterfaces";
 
 const dateFormat = require("dateformat");
 
@@ -302,7 +304,37 @@ class GetCapabilitiesStratum extends LoadableStratum(
   @computed
   get info(): StratumFromTraits<InfoSectionTraits>[] {
     const result: StratumFromTraits<InfoSectionTraits>[] = [];
+
     let firstDataDescription: string | undefined;
+
+    result.push(
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t("models.webMapServiceCatalogItem.serviceDescription"),
+        contentAsObject: this.capabilities.Service as JsonObject
+      })
+    );
+
+    const onlyHasSingleLayer = this.catalogItem.layersArray.length === 1;
+
+    if (onlyHasSingleLayer) {
+      // Clone the capabilitiesLayer as we'll modify it in a second
+      const out = Object.assign(
+        {},
+        this.capabilitiesLayers.get(this.catalogItem.layersArray[0])
+      ) as any;
+      if (out !== undefined) {
+        // remove a circular reference to the parent
+        delete out._parent;
+
+        result.push(
+          createStratumInstance(InfoSectionTraits, {
+            name: i18next.t("models.webMapServiceCatalogItem.dataDescription"),
+            contentAsObject: out as JsonObject
+          })
+        );
+      }
+    }
+
     for (const layer of this.capabilitiesLayers.values()) {
       if (
         !layer ||
@@ -579,13 +611,15 @@ class DiffStratum extends LoadableStratum(WebMapServiceCatalogItemTraits) {
 }
 
 class WebMapServiceCatalogItem
-  extends ExportableMixin(
-    DiffableMixin(
-      TimeFilterMixin(
-        AsyncChartableMixin(
-          GetCapabilitiesMixin(
-            UrlMixin(
-              CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
+  extends TileErrorHandlerMixin(
+    ExportableMixin(
+      DiffableMixin(
+        TimeFilterMixin(
+          AsyncChartableMixin(
+            GetCapabilitiesMixin(
+              UrlMixin(
+                CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
+              )
             )
           )
         )
@@ -923,6 +957,7 @@ class WebMapServiceCatalogItem
       let rectangle;
 
       if (
+        this.clipToRectangle &&
         this.rectangle !== undefined &&
         this.rectangle.east !== undefined &&
         this.rectangle.west !== undefined &&

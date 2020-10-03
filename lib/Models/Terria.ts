@@ -104,6 +104,7 @@ interface ConfigParameters {
   helpContent?: HelpContentItem[];
   helpContentTerms?: Term[];
   languageConfiguration?: LanguageConfiguration;
+  displayOneBrand?: number;
 }
 
 interface StartOptions {
@@ -231,7 +232,8 @@ export default class Terria {
     showInAppGuides: false,
     helpContent: [],
     helpContentTerms: defaultTerms,
-    languageConfiguration: undefined
+    languageConfiguration: undefined,
+    displayOneBrand: 0 // index of which brandBarElements to show for mobile header
   };
 
   @observable
@@ -396,6 +398,18 @@ export default class Terria {
     }
   }
 
+  setupInitializationUrls(baseUri: uri.URI, config: any) {
+    const initializationUrls: string[] = config.initializationUrls || [];
+    const initSources = initializationUrls.map(url =>
+      generateInitializationUrl(
+        baseUri,
+        this.configParameters.initFragmentPaths,
+        url
+      )
+    );
+    this.initSources.push(...initSources);
+  }
+
   start(options: StartOptions) {
     this.shareDataService = options.shareDataService;
 
@@ -414,6 +428,10 @@ export default class Terria {
                 this.configParameters.languageConfiguration,
                 options.i18nOptions
               );
+              this.setupInitializationUrls(
+                baseUri,
+                config.aspects?.["terria-config"]
+              );
             });
           }
 
@@ -426,16 +444,7 @@ export default class Terria {
             );
           }
 
-          const initializationUrls: string[] = config.initializationUrls || [];
-          const initSources = initializationUrls.map(url =>
-            generateInitializationUrl(
-              baseUri,
-              this.configParameters.initFragmentPaths,
-              url
-            )
-          );
-
-          this.initSources.push(...initSources);
+          this.setupInitializationUrls(baseUri, config);
         });
       })
       .then(() => {
@@ -867,6 +876,8 @@ export default class Terria {
     const configParams =
       aspects["terria-config"] && aspects["terria-config"].parameters;
 
+    configParams.initializationUrls =
+      aspects["terria-config"] && aspects["terria-config"].initializationUrls;
     if (configParams) {
       this.updateParameters(configParams);
     }
