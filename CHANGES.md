@@ -14,6 +14,7 @@ Change Log
 * Add support for `displayOne` configuration parameter to choose which brand element to show in mobile view
 * Update Carto basemaps URL and attribution.
 * Add `clipToRectangle` trait to `RasterLayerTraits` and implement on `WebMapServiceCatalogItem`, `ArcGisMapServiceCatalogItem`, `CartoMapCatalogItem`, `WebMapTileServiceCatalogItem`.
+* Ported a support for `GpxCatalogItem`.
 * [The next improvement]
 
 #### 8.0.0-alpha.53
