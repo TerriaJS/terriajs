@@ -4,6 +4,7 @@ A Catalog Item is a dataset or service that can be enabled for display on the ma
 |------|------|
 | [ArcGisFeatureServerCatalogItem](catalog-type-details/esri-featureServer.md) | `esri-featureServer` |
 | [ArcGisMapServerCatalogItem](catalog-type-details/esri-mapServer.md) | `esri-mapServer` |
+| [ArcGisPortalItemReference](catalog-type-details/arcgis-portal-item.md) | `arcgis-portal-item` |
 | [BingMapsCatalogItem](catalog-type-details/bing-maps.md) | `bing-maps` |
 | [CartoMapCatalogItem](catalog-type-details/carto.md) | `carto` |
 | [Cesium3DTilesCatalogItem](catalog-type-details/3d-tiles.md) | `3d-tiles` |
@@ -19,9 +20,11 @@ A Catalog Item is a dataset or service that can be enabled for display on the ma
 | [IonImageryCatalogItem](catalog-type-details/ion-imagery.md) | `ion-imagery` |
 | [KmlCatalogItem](catalog-type-details/kml.md) | `kml` |
 | [OpenStreetMapCatalogItem](catalog-type-details/open-street-map.md) | `open-street-map` |
+| [SdmxJsonCatalogItem](catalog-type-details/sdmx-json.md) | `sdmx-json` |
 | [SenapsLocationsCatalogItem](catalog-type-details/senaps-locations.md) | `senaps-locations` |
 | [SensorObservationServiceCatalogItem](catalog-type-details/sos.md) | `sos` |
 | [SplitItemReference](catalog-type-details/split-reference.md) | `split-reference` |
 | [StubCatalogItem](catalog-type-details/stub.md) | `stub` |
+| [WebFeatureServiceCatalogItem](catalog-type-details/wfs.md) | `wfs` |
 | [WebMapServiceCatalogItem](catalog-type-details/wms.md) | `wms` |
 | [WebProcessingServiceCatalogItem](catalog-type-details/wps-result.md) | `wps-result` |

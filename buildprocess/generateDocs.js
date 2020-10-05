@@ -14,17 +14,17 @@ registerCatalogMembers();
 const catalogMembers = Array.from(CatalogMemberFactory.constructors)
 
 const members = catalogMembers.map(member => {
-    const memberName = member[1]
+    const memberName = member[1];
     return new memberName();
 }, this).sort(function(a, b){
-    if (a.constructor.name < b.constructor.name) return -1
-    else if (a.constructor.name > b.constructor.name) return 1
-    return 0
-})
+    if (a.constructor.name < b.constructor.name) return -1;
+    else if (a.constructor.name > b.constructor.name) return 1;
+    return 0;
+});
 
 
-const mkDocsConfig = YAML.parse(fs.readFileSync('./doc/mkdocs.yml', 'utf8'))
-let items = [] 
+const mkDocsConfig = YAML.parse(fs.readFileSync('./mkdocs.yml', 'utf8'));
+const items = [];
 
 function markdownFromTraitType(trait) {
     let base = '';
@@ -71,17 +71,17 @@ function markdownFromObjectTrait(objectTrait, traitKey, sampleMember) {
 
 
 function getDescription (metadata) {
-    return concatTags(metadata, true)
+    return concatTags(metadata, true);
 }
 
 function concatTags (inNode) {
-    if (!inNode) return false
+    if (!inNode) return false;
     let outDescr = inNode.map(node => {
-      return node.value
+      return node.value;
     })
-    outDescr = outDescr.join(' ').replace(' .', '.')
-    if (outDescr === 'Optional parameters') outDescr = outDescr.concat(': see below')
-    return outDescr
+    outDescr = outDescr.join(' ').replace(' .', '.');
+    if (outDescr === 'Optional parameters') outDescr = outDescr.concat(': see below');
+    return outDescr;
   }
 
 async function getJsDoc (memberName) {
@@ -93,7 +93,7 @@ async function getJsDoc (memberName) {
             resolve(JSON.parse(output));
         })
         .catch(err => {
-            console.log(`${memberName}: ${err}`)
+            console.log(`${memberName}: ${err}`);
         });
     });
 }
@@ -106,7 +106,7 @@ async function processMember (sampleMember, memberName) {
 
     if (jsDocJson[0]) {
         if (jsDocJson[0].description) {
-            description = getDescription(jsDocJson[0].description.children[0].children)
+            description = getDescription(jsDocJson[0].description.children[0].children);
           }
           if (jsDocJson[0].examples[0]) {
             example = `## Example usage
@@ -123,12 +123,12 @@ ${example}
 ## Properties
 
 "type": "${sampleMember.type}"
-`
+`;
 
 content += `
 | Trait | Type | Default | Description |
 | ------ | ------ | ------ | ------ |
-`
+`;
 
 let additionalContent = ` 
 `
@@ -138,11 +138,11 @@ let additionalContent = `
         if (trait instanceof ObjectTrait || trait instanceof ObjectArrayTrait ) {
             additionalContent += markdownFromObjectTrait(trait, k, sampleMember);
             content += `| ${k} | **${traitType}** <br> see below | | ${trait.description} |
-`
+`;
         } else {
-            const defaultValue = sampleMember[k] === undefined || k === 'currentTime' ? '' : sampleMember[k]
+            const defaultValue = sampleMember[k] === undefined || k === 'currentTime' ? '' : sampleMember[k];
             content += `| ${k} | **${traitType}** | ${defaultValue} | ${trait.description} |
-`
+`;
         }
     });
 
@@ -153,13 +153,13 @@ let catalogItemsContent = `A Catalog Item is a dataset or service that can be en
 
 | Name | Type |
 |------|------|
-`
+`;
 
 let catalogGroupsContent = `A Catalog Group is a folder in the TerriaJS catalog that contains [Catalog Items](catalog-items.md), [Catalog Functions](catalog-functions.md), and other groups. The Type column in the table below indicates the \`"type"\` property to use in the [Initialization File](../customizing/initialization-files.md).
 
 | Name | Type |
 |------|------|
-`
+`;
 
 async function processArray() {
 
@@ -170,22 +170,22 @@ async function processArray() {
         console.log(memberName, sampleMember.type)
         if (memberName.indexOf('Item') > -1) {
             catalogItemsContent += `| [${memberName}](catalog-type-details/${sampleMember.type}.md) | \`${sampleMember.type}\` |
-`
+`;
         } else {
             catalogGroupsContent += `| [${memberName}](catalog-type-details/${sampleMember.type}.md) | \`${sampleMember.type}\` |
-`
+`;
         }
-        const out = {}
-        out[memberName] = `connecting-to-data/catalog-type-details/${sampleMember.type}.md`
-        items.push(out)
+        const out = {};
+        out[memberName] = `connecting-to-data/catalog-type-details/${sampleMember.type}.md`;
+        items.push(out);
         const content = await processMember(sampleMember, memberName);
-        fs.writeFileSync(`doc/connecting-to-data/catalog-type-details/${sampleMember.type}.md`, content)
-    };
+        fs.writeFileSync(`doc/connecting-to-data/catalog-type-details/${sampleMember.type}.md`, content);
+    }
     mkDocsConfig.nav[3]['Connecting to Data'][6]['Catalog Type Details'] = items;
 
-    fs.writeFileSync('./doc/mkdocs.yml', YAML.stringify(mkDocsConfig))
-    fs.writeFileSync('./doc/connecting-to-data/catalog-items.md', catalogItemsContent)
-    fs.writeFileSync('./doc/connecting-to-data/catalog-groups.md', catalogGroupsContent)
+    fs.writeFileSync('./mkdocs.yml', YAML.stringify(mkDocsConfig));
+    fs.writeFileSync('./doc/connecting-to-data/catalog-items.md', catalogItemsContent);
+    fs.writeFileSync('./doc/connecting-to-data/catalog-groups.md', catalogGroupsContent);
 
 }
-processArray()
+processArray();
