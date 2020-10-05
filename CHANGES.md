@@ -9,6 +9,7 @@ Change Log
 * Add `serviceDescription` and `dataDescription` to `WebMapServiceCatalogItem` info section.
 * Extend `DataPreviewSections.jsx` to support Mustache templates with context provided by the catalog item.
 * Add support for `initializationUrls` when loading configuration from Magda.
+* Add `:only-child` styling for `menu-bar.scss` to ensure correctly rounded corners on isolated buttons.
 * Improve Branding component for mobile header
 * Add support for `displayOne` configuration parameter to choose which brand element to show in mobile view
 * Update Carto basemaps URL and attribution.
