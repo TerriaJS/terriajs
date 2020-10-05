@@ -13,6 +13,7 @@ Change Log
 * Add support for `displayOne` configuration parameter to choose which brand element to show in mobile view
 * Update Carto basemaps URL and attribution.
 * Add `clipToRectangle` trait to `RasterLayerTraits` and implement on `WebMapServiceCatalogItem`, `ArcGisMapServiceCatalogItem`, `CartoMapCatalogItem`, `WebMapTileServiceCatalogItem`.
+* Allow Magda backed maps to use an inline `terria-init` catalog without it getting overwritten by map-config before it can be parsed
 * [The next improvement]
 
 #### 8.0.0-alpha.53

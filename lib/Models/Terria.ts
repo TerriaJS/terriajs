@@ -423,14 +423,14 @@ export default class Terria {
           // If it's a magda config, we only load magda config and parameters should never be a property on the direct
           // config aspect (it would be under the `terria-config` aspect)
           if (config.aspects) {
-            return this.loadMagdaConfig(options.configUrl, config).then(() => {
+            return this.loadMagdaConfig(
+              options.configUrl,
+              config,
+              baseUri
+            ).then(() => {
               Internationalization.initLanguage(
                 this.configParameters.languageConfiguration,
                 options.i18nOptions
-              );
-              this.setupInitializationUrls(
-                baseUri,
-                config.aspects?.["terria-config"]
               );
             });
           }
@@ -866,7 +866,7 @@ export default class Terria {
     this.mainViewer.homeCamera = CameraView.fromJson(homeCameraInit);
   }
 
-  async loadMagdaConfig(configUrl: string, config: any) {
+  async loadMagdaConfig(configUrl: string, config: any, baseUri: uri.URI) {
     const magdaRoot = new URI(configUrl)
       .path("")
       .query("")
@@ -876,16 +876,20 @@ export default class Terria {
     const configParams =
       aspects["terria-config"] && aspects["terria-config"].parameters;
 
-    configParams.initializationUrls =
-      aspects["terria-config"] && aspects["terria-config"].initializationUrls;
+    // TODO: what purpose does this serve? it's not a config parameter
+    // configParams.initializationUrls =
+    //   aspects["terria-config"] && aspects["terria-config"].initializationUrls;
     if (configParams) {
       this.updateParameters(configParams);
     }
 
     const initObj = aspects["terria-init"];
     if (isJsonObject(initObj)) {
+      const { catalog, ...initObjWithoutCatalog } = initObj;
+      /** Load the init data without the catalog yet, as we'll push the catalog
+       * source up as an init source later */
       await this.applyInitData({
-        initData: initObj as any
+        initData: initObjWithoutCatalog as any
       });
     }
 
@@ -907,6 +911,19 @@ export default class Terria {
         if (reference.target instanceof CatalogGroup) {
           runInAction(() => {
             this.catalog.group = <CatalogGroup>reference.target;
+          });
+        }
+        this.setupInitializationUrls(
+          baseUri,
+          config.aspects?.["terria-config"]
+        );
+        /** Load up rest of terria catalog if one is inlined in terria-init */
+        if (config.aspects?.["terria-init"]) {
+          const { catalog, ...rest } = initObj;
+          this.initSources.push({
+            data: {
+              catalog: catalog
+            }
           });
         }
       });
