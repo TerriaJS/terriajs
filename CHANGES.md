@@ -14,6 +14,7 @@ Change Log
 * Update Carto basemaps URL and attribution.
 * Add `clipToRectangle` trait to `RasterLayerTraits` and implement on `WebMapServiceCatalogItem`, `ArcGisMapServiceCatalogItem`, `CartoMapCatalogItem`, `WebMapTileServiceCatalogItem`.
 * Allow Magda backed maps to use an inline `terria-init` catalog without it getting overwritten by map-config before it can be parsed
+* Deprecated `proxyableDomainsUrl` configuration parameter in favour of `serverconfig` route
 * [The next improvement]
 
 #### 8.0.0-alpha.53
