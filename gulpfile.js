@@ -138,36 +138,11 @@ gulp.task('code-attribution', function userAttribution(done) {
 
 gulp.task('user-guide', gulp.series(gulp.parallel('make-schema', 'code-attribution'), function userGuide(done) {
     var fse = require('fs-extra');
-    var klawSync = require('klaw-sync');
-    var path = require('path');
     var PluginError = require('plugin-error');
     var spawnSync = require('child_process').spawnSync;
 
     fse.copySync('doc/mkdocs.yml', 'build/mkdocs.yml');
     fse.copySync('doc', 'build/doc');
-
-    var files = klawSync('build/doc').map(o => o.path);
-    var markdown = files.filter(name => path.extname(name) === '.md');
-    var readmes = markdown.filter(name => name.indexOf('README.md') === name.length - 'README.md'.length);
-
-    // Rename all README.md to index.md
-    readmes.forEach(readme => fse.renameSync(readme, path.join(path.dirname(readme), 'index.md')));
-
-    // Replace links to README.md with links to index.md
-    markdown.forEach(function(name) {
-        name = name.replace(/README\.md/, 'index.md');
-        var content = fse.readFileSync(name, 'UTF-8');
-        var replaced = content.replace(/README\.md/g, 'index.md');
-        if (content !== replaced) {
-            fse.writeFileSync(name, replaced, 'UTF-8');
-        }
-    });
-
-    // Replace README.md with index.md in mkdocs.yml.
-    // Also replace swap in the actual path to mkdocs-material in node_modules.
-    var mkdocsyml = fse.readFileSync('build/mkdocs.yml', 'UTF-8');
-    mkdocsyml = mkdocsyml.replace(/README\.md/g, 'index.md');
-    fse.writeFileSync('build/mkdocs.yml', mkdocsyml, 'UTF-8');
 
     generateCatalogMemberPages('wwwroot/schema', 'build/doc/connecting-to-data/catalog-type-details');
 

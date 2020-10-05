@@ -1,4 +1,4 @@
-dist: xenial
+dist: bionic
 sudo: false
 matrix:
   include:
@@ -9,7 +9,8 @@ matrix:
       - xvfb
     script:
     - npm run prettier-check
-    - pip install -r doc/requirements.txt
+    - pyenv shell 3.6
+    - pip install -r requirements.txt
     - gulp lint docs release
     - gulp test-travis
     env:
