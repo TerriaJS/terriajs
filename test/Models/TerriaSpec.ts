@@ -329,33 +329,42 @@ describe("Terria", function() {
     });
   });
 
-  it("initializes proxy with parameters from config file", function(done) {
-    jasmine.Ajax.install();
-    jasmine.Ajax.stubRequest(/.*(test\/init\/configProxy).*/).andReturn({
-      responseText: JSON.stringify(
-        require("../../wwwroot/test/init/configProxy.json")
-      )
-    });
-    jasmine.Ajax.stubRequest(/.*(serverconfig).*/).andReturn({
-      responseText: JSON.stringify(
-        require("../../wwwroot/test/init/serverconfig.json")
-      )
-    });
-    terria
-      .start({
-        configUrl: "test/init/configProxy.json"
-      })
-      .then(function() {
-        expect(terria.corsProxy.baseProxyUrl).toBe("/myproxy/");
-        expect(terria.corsProxy.proxyDomains).toEqual([
-          "example.com",
-          "csiro.au"
-        ]);
-        done();
-      })
-      .catch(error => {
-        done.fail();
+  describe("proxyConfiguration", function() {
+    beforeEach(function() {
+      jasmine.Ajax.install();
+      jasmine.Ajax.stubRequest(/.*(test\/init\/configProxy).*/).andReturn({
+        responseText: JSON.stringify(
+          require("../../wwwroot/test/init/configProxy.json")
+        )
       });
+      jasmine.Ajax.stubRequest(/.*(serverconfig).*/).andReturn({
+        responseText: JSON.stringify(
+          require("../../wwwroot/test/init/serverconfig.json")
+        )
+      });
+    });
+
+    afterEach(function() {
+      jasmine.Ajax.uninstall();
+    });
+
+    it("initializes proxy with parameters from config file", function(done) {
+      terria
+        .start({
+          configUrl: "test/init/configProxy.json"
+        })
+        .then(function() {
+          expect(terria.corsProxy.baseProxyUrl).toBe("/myproxy/");
+          expect(terria.corsProxy.proxyDomains).toEqual([
+            "example.com",
+            "csiro.au"
+          ]);
+          done();
+        })
+        .catch(error => {
+          done.fail();
+        });
+    });
   });
 
   describe("removeModelReferences", function() {
