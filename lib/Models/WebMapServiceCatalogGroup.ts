@@ -29,28 +29,24 @@ import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
 class GetCapabilitiesStratum extends LoadableStratum(
   WebMapServiceCatalogGroupTraits
 ) {
-  static load(
+  static async load(
     catalogItem: WebMapServiceCatalogGroup
   ): Promise<GetCapabilitiesStratum> {
     if (catalogItem.getCapabilitiesUrl === undefined) {
-      return Promise.reject(
-        new TerriaError({
-          title: i18next.t("models.webMapServiceCatalogGroup.missingUrlTitle"),
-          message: i18next.t(
-            "models.webMapServiceCatalogGroup.missingUrlMessage"
-          )
-        })
-      );
+      throw new TerriaError({
+        title: i18next.t("models.webMapServiceCatalogGroup.missingUrlTitle"),
+        message: i18next.t("models.webMapServiceCatalogGroup.missingUrlMessage")
+      });
     }
 
-    const proxiedUrl = proxyCatalogItemUrl(
-      catalogItem,
-      catalogItem.getCapabilitiesUrl,
-      catalogItem.getCapabilitiesCacheDuration
+    const capabilities = await WebMapServiceCapabilities.fromUrl(
+      proxyCatalogItemUrl(
+        catalogItem,
+        catalogItem.getCapabilitiesUrl,
+        catalogItem.getCapabilitiesCacheDuration
+      )
     );
-    return WebMapServiceCapabilities.fromUrl(proxiedUrl).then(capabilities => {
-      return new GetCapabilitiesStratum(catalogItem, capabilities);
-    });
+    return new GetCapabilitiesStratum(catalogItem, capabilities);
   }
 
   constructor(
@@ -235,6 +231,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     let model: WebMapServiceCatalogItem;
     if (existingModel === undefined) {
       model = new WebMapServiceCatalogItem(layerId, this.catalogGroup.terria);
+
       this.catalogGroup.terria.addModel(model);
     } else {
       model = existingModel;
@@ -276,6 +273,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       "hideLegendInWorkbench",
       this.catalogGroup.hideLegendInWorkbench
     );
+    model.createGetCapabilitiesStratumFromParent(this.capabilities);
   }
 
   getLayerId(layer: CapabilitiesLayer) {
@@ -297,26 +295,26 @@ export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(
     return WebMapServiceCatalogGroup.type;
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return GetCapabilitiesStratum.load(this).then(stratum => {
-      runInAction(() => {
-        this.strata.set(
-          GetCapabilitiesMixin.getCapabilitiesStratumName,
-          stratum
-        );
-      });
+  protected async forceLoadMetadata(): Promise<void> {
+    if (
+      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
+      undefined
+    )
+      return;
+    const stratum = await GetCapabilitiesStratum.load(this);
+    runInAction(() => {
+      this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
     });
   }
 
-  protected forceLoadMembers(): Promise<void> {
-    return this.loadMetadata().then(() => {
-      const getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
-        this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
-      );
-      if (getCapabilitiesStratum) {
-        getCapabilitiesStratum.createMembersFromLayers();
-      }
-    });
+  protected async forceLoadMembers(): Promise<void> {
+    await this.loadMetadata();
+    const getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
+      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
+    );
+    if (getCapabilitiesStratum) {
+      getCapabilitiesStratum.createMembersFromLayers();
+    }
   }
 
   protected get defaultGetCapabilitiesUrl(): string | undefined {

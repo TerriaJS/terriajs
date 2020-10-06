@@ -49,7 +49,7 @@ export default function AutoRefreshingMixin<
         this.autoRefreshDisposer = reaction(
           () => this._pollingTimer,
           () => {
-            this.refreshData();
+            if (this.show) this.refreshData();
           }
         );
       }

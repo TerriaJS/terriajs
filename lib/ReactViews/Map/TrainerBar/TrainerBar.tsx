@@ -104,9 +104,9 @@ const renderStep = (
                 markdown={step.markdownDescription}
               />
             </StepText>
-            {options.footerComponent?.()}
           </>
         )}
+        {options.footerComponent?.()}
       </Box>
     </Box>
   );

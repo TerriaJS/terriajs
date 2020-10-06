@@ -27,33 +27,29 @@ import WebMapTileServiceCatalogItem from "./WebMapTileServiceCatalogItem";
 class GetCapabilitiesStratum extends LoadableStratum(
   WebMapTileServiceCatalogGroupTraits
 ) {
-  static load(
+  static async load(
     catalogItem: WebMapTileServiceCatalogGroup
   ): Promise<GetCapabilitiesStratum> {
     if (catalogItem.getCapabilitiesUrl === undefined) {
-      return Promise.reject(
-        new TerriaError({
-          title: i18next.t(
-            "models.webMapTileServiceCatalogGroup.invalidWMTSServerTitle"
-          ),
-          message: i18next.t(
-            "models.webMapTileServiceCatalogGroup.invalidWMTSServerMessage",
-            this
-          )
-        })
-      );
+      throw new TerriaError({
+        title: i18next.t(
+          "models.webMapTileServiceCatalogGroup.invalidWMTSServerTitle"
+        ),
+        message: i18next.t(
+          "models.webMapTileServiceCatalogGroup.invalidWMTSServerMessage",
+          this
+        )
+      });
     }
 
-    const proxiedUrl = proxyCatalogItemUrl(
-      catalogItem,
-      catalogItem.getCapabilitiesUrl,
-      catalogItem.getCapabilitiesCacheDuration
+    const capabilities = await WebMapTileServiceCapabilities.fromUrl(
+      proxyCatalogItemUrl(
+        catalogItem,
+        catalogItem.getCapabilitiesUrl,
+        catalogItem.getCapabilitiesCacheDuration
+      )
     );
-    return WebMapTileServiceCapabilities.fromUrl(proxiedUrl).then(
-      capabilities => {
-        return new GetCapabilitiesStratum(catalogItem, capabilities);
-      }
-    );
+    return new GetCapabilitiesStratum(catalogItem, capabilities);
   }
 
   constructor(
@@ -166,6 +162,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
         layerId,
         this.catalogGroup.terria
       );
+
       this.catalogGroup.terria.addModel(model);
     } else {
       model = existingModel;
@@ -201,6 +198,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       "isExperiencingIssues",
       this.catalogGroup.isExperiencingIssues
     );
+    model.createGetCapabilitiesStratumFromParent(this.capabilities);
   }
 
   getLayerId(layer: WmtsLayer) {
@@ -224,26 +222,26 @@ export default class WebMapTileServiceCatalogGroup extends GetCapabilitiesMixin(
     return WebMapTileServiceCatalogGroup.type;
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return GetCapabilitiesStratum.load(this).then(stratum => {
-      runInAction(() => {
-        this.strata.set(
-          GetCapabilitiesMixin.getCapabilitiesStratumName,
-          stratum
-        );
-      });
+  protected async forceLoadMetadata() {
+    if (
+      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
+      undefined
+    )
+      return;
+    const stratum = await GetCapabilitiesStratum.load(this);
+    runInAction(() => {
+      this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
     });
   }
 
-  protected forceLoadMembers(): Promise<void> {
-    return this.loadMetadata().then(() => {
-      const getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
-        this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
-      );
-      if (getCapabilitiesStratum) {
-        getCapabilitiesStratum.createMembersFromLayers();
-      }
-    });
+  protected async forceLoadMembers(): Promise<void> {
+    await this.loadMetadata();
+    const getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
+      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
+    );
+    if (getCapabilitiesStratum) {
+      getCapabilitiesStratum.createMembersFromLayers();
+    }
   }
 
   protected get defaultGetCapabilitiesUrl(): string | undefined {
