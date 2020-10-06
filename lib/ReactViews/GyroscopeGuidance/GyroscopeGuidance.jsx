@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
-import Icon from "../Icon.jsx";
+import Icon, { StyledIcon } from "../Icon.jsx";
 import Box from "../../Styled/Box";
 import { TextSpan } from "../../Styled/Text";
 import { RawButton } from "../../Styled/Button";
@@ -145,7 +145,7 @@ export default function GyroscopeGuidance(props) {
   const { t } = useTranslation();
   return (
     <>
-      <MapIconButton
+      {/* <MapIconButton
         roundRight
         neverCollapse
         onClick={props.handleHelp}
@@ -153,7 +153,7 @@ export default function GyroscopeGuidance(props) {
       >
         Help
       </MapIconButton>
-      <Spacing marginRight={1} />
+      <Spacing marginRight={1} />*/}
       <div
         css={`
           position: relative;
@@ -163,11 +163,16 @@ export default function GyroscopeGuidance(props) {
           roundLeft
           buttonRef={controlsMapIcon}
           neverCollapse
-          iconElement={() => <Icon glyph={Icon.GLYPHS.controls} />}
+          iconElement={() => <Icon glyph={Icon.GLYPHS.left} />}
           onClick={() => setControlPanelOpen(!controlPanelOpen)}
-        >
-          Controls
-        </MapIconButton>
+          inverted
+          css={`
+            svg {
+              width: 14px;
+              height: 14px;
+            }
+          `}
+        />
         <div
           onClick={e => e.preventDefault()}
           css={`
@@ -190,6 +195,7 @@ export default function GyroscopeGuidance(props) {
               .tjs-sc-InnerPanel__caret {
                 background: ${p => p.theme.textBlack};
               }
+              margin: 0;
             `}
             refForCaret={controlsMapIcon}
             isOpen={controlPanelOpen}
@@ -204,7 +210,7 @@ export default function GyroscopeGuidance(props) {
           </CleanDropdownPanel>
         </div>
       </div>
-      <Spacing right={2} />
+      {/* <Spacing right={2} />
       <div
         css={`
           transform: scale(0.75);
@@ -221,7 +227,7 @@ export default function GyroscopeGuidance(props) {
           onClick={props.onClose}
           iconElement={() => <Icon glyph={Icon.GLYPHS.closeLight} />}
         />
-      </div>
+      </div> */}
     </>
   );
 }

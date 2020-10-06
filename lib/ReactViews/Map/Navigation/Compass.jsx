@@ -370,7 +370,7 @@ class Compass extends React.Component {
             css={`
               ${p => p.theme.verticalAlign("absolute")}
               direction: rtl;
-              right: 72px;
+              right: 55px;
             `}
           >
             <GyroscopeGuidance
@@ -381,6 +381,7 @@ class Compass extends React.Component {
                 this.props.viewState.selectHelpMenuItem("navigation");
               }}
               onClose={() => this.setState({ active: false })}
+              theme={this.props.theme}
             />
           </Box>
         </FadeIn>
