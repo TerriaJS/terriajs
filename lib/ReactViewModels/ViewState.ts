@@ -686,6 +686,11 @@ export default class ViewState {
     this.currentTool = undefined;
   }
 
+  @action
+  toggleMobileMenu() {
+    this.mobileMenuVisible = !this.mobileMenuVisible;
+  }
+
   @computed
   get breadcrumbsShown() {
     return (
