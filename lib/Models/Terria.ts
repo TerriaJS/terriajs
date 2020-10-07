@@ -876,9 +876,6 @@ export default class Terria {
     const configParams =
       aspects["terria-config"] && aspects["terria-config"].parameters;
 
-    // TODO: what purpose does this serve? it's not a config parameter
-    // configParams.initializationUrls =
-    //   aspects["terria-config"] && aspects["terria-config"].initializationUrls;
     if (configParams) {
       this.updateParameters(configParams);
     }
