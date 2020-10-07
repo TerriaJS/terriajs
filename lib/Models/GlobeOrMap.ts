@@ -62,6 +62,19 @@ export default abstract class GlobeOrMap {
   abstract notifyRepaintRequired(): void;
 
   /**
+   * Picks features based off a latitude, longitude and (optionally) height.
+   * @param latLngHeight The position on the earth to pick.
+   * @param imageryLayerCoords A map of imagery provider urls to the coords used to get features for those imagery
+   *     providers - i.e. x, y, level
+   * @param existingFeatures An optional list of existing features to concatenate the ones found from asynchronous picking to.
+   */
+  abstract pickFromLocation(
+    latLngHeight: LatLonHeight,
+    providerCoords: ProviderCoordsMap,
+    existingFeatures: Feature[]
+  ): void;
+
+  /**
    * Return features at a latitude, longitude and (optionally) height for the given imagery layers.
    * @param latLngHeight The position on the earth to pick
    * @param providerCoords A map of imagery provider urls to the tile coords used to get features for those imagery

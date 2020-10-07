@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, observable, runInAction, toJS } from "mobx";
+import { action, computed, observable, runInAction, toJS, when } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
@@ -8,6 +8,7 @@ import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import URI from "urijs";
 import AsyncLoader from "../Core/AsyncLoader";
@@ -17,6 +18,7 @@ import CorsProxy from "../Core/CorsProxy";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import getDereferencedIfExists from "../Core/getDereferencedIfExists";
 import GoogleAnalytics from "../Core/GoogleAnalytics";
+import hashEntity from "../Core/hashEntity";
 import instanceOf from "../Core/instanceOf";
 import isDefined from "../Core/isDefined";
 import JsonValue, {
@@ -26,12 +28,14 @@ import JsonValue, {
   isJsonString,
   JsonObject
 } from "../Core/Json";
+import LatLonHeight, { isLatLonHeight } from "../Core/LatLonHeight";
 import loadJson5 from "../Core/loadJson5";
 import ServerConfig from "../Core/ServerConfig";
 import TerriaError from "../Core/TerriaError";
 import { getUriWithoutPath } from "../Core/uriHelpers";
 import PickedFeatures, {
-  featureBelongsToCatalogItem
+  featureBelongsToCatalogItem,
+  isProviderCoordsMap
 } from "../Map/PickedFeatures";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
@@ -40,6 +44,7 @@ import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
 import { defaultTerms, Term } from "../ReactViewModels/defaultTerms";
 import { Notification } from "../ReactViewModels/ViewState";
 import { shareConvertNotification } from "../ReactViews/Notification/shareConvertNotification";
+import ShowableTraits from "../Traits/ShowableTraits";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
@@ -49,6 +54,7 @@ import Catalog from "./CatalogNew";
 import CommonStrata from "./CommonStrata";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
+import hasTraits from "./hasTraits";
 import InitSource, { isInitOptions, isInitUrl } from "./InitSource";
 import Internationalization, {
   I18nStartOptions,
@@ -56,8 +62,9 @@ import Internationalization, {
 } from "./Internationalization";
 import MagdaReference, { MagdaReferenceHeaders } from "./MagdaReference";
 import MapInteractionMode from "./MapInteractionMode";
-import Mappable from "./Mappable";
+import Mappable, { isDataSource } from "./Mappable";
 import { BaseModel } from "./Model";
+import NoViewer from "./NoViewer";
 import openGroup from "./openGroup";
 import ShareDataService from "./ShareDataService";
 import SplitItemReference from "./SplitItemReference";
@@ -727,6 +734,7 @@ export default class Terria {
     replaceStratum = false
   }: ApplyInitDataOptions): Promise<void> {
     initData = toJS(initData);
+    console.log("**initData**", initData);
     const stratumId =
       typeof initData.stratum === "string"
         ? initData.stratum
@@ -810,7 +818,7 @@ export default class Terria {
       promise = Promise.resolve();
     }
 
-    return promise.then(() => {
+    promise = promise.then(() => {
       return runInAction(() => {
         if (isJsonString(initData.previewedItemId)) {
           this.previewedItemId = initData.previewedItemId;
@@ -859,6 +867,18 @@ export default class Terria {
         return Promise.all(promises).then(() => undefined);
       });
     });
+
+    if (isJsonObject(initData.pickedFeatures)) {
+      promise.then(() =>
+        when(() => !(this.currentViewer instanceof NoViewer)).then(
+          () =>
+            isJsonObject(initData.pickedFeatures) &&
+            this.loadPickedFeatures(initData.pickedFeatures)
+        )
+      );
+    }
+
+    return promise;
   }
 
   @action
@@ -911,6 +931,88 @@ export default class Terria {
         }
       });
     }
+  }
+
+  @action
+  loadPickedFeatures(pickedFeatures: JsonObject) {
+    let vectorFeatures: Entity[] = [];
+    let featureIndex: { [hash: number]: Entity[] | undefined } = {};
+
+    if (Array.isArray(pickedFeatures.entities)) {
+      // Build index of terria features by a hash of their properties.
+      const relevantItems: Mappable[] = this.workbench.items.filter(item => {
+        return (
+          hasTraits(item, ShowableTraits, "show") &&
+          item.show &&
+          Mappable.is(item)
+        );
+      }) as Mappable[];
+
+      relevantItems.forEach(item => {
+        const entities: Entity[] = item.mapItems
+          .filter(isDataSource)
+          .reduce((arr: Entity[], ds) => arr.concat(ds.entities.values), []);
+
+        entities.forEach(entity => {
+          const hash = hashEntity(entity, this.timelineClock);
+          const feature = Feature.fromEntityCollectionOrEntity(entity);
+          featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
+        });
+      });
+
+      // Go through the features we've got from terria match them up to the id/name info we got from the
+      // share link, filtering out any without a match.
+      vectorFeatures = filterOutUndefined(
+        pickedFeatures.entities.map(e => {
+          if (isJsonObject(e) && typeof e.hash === "number") {
+            const features = featureIndex[e.hash] || [];
+            const match = features.find(f => f.name === e.name);
+            return match;
+          }
+        })
+      );
+    }
+
+    // Set the current pick location, if we have a valid coord
+    const maybeCoords: any = pickedFeatures.pickCoords;
+    const pickCoords = {
+      latitude: maybeCoords?.lat,
+      longitude: maybeCoords?.lng,
+      height: maybeCoords?.height
+    };
+    if (
+      isLatLonHeight(pickCoords) &&
+      isProviderCoordsMap(pickedFeatures.providerCoords)
+    ) {
+      this.currentViewer.pickFromLocation(
+        pickCoords,
+        pickedFeatures.providerCoords,
+        vectorFeatures as Feature[]
+      );
+    }
+
+    // When feature picking is done, set the selected feature
+    this.pickedFeatures?.allFeaturesAvailablePromise?.then(() => {
+      this.pickedFeatures?.features.forEach((entity: Entity) => {
+        const hash = hashEntity(entity, this.timelineClock);
+        const feature = entity;
+        featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
+      });
+
+      const current = pickedFeatures.current;
+      if (
+        isJsonObject(current) &&
+        typeof current.hash === "number" &&
+        typeof current.name === "string"
+      ) {
+        const selectedFeature = (featureIndex[current.hash] || []).find(
+          feature => feature.name === current.name
+        );
+        if (selectedFeature) {
+          this.selectedFeature = selectedFeature as Feature;
+        }
+      }
+    });
   }
 
   initCorsProxy(config: any, serverConfig: any): Promise<void> {

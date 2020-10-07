@@ -51,6 +51,7 @@ import hasTraits from "./hasTraits";
 import Mappable, {
   ImageryParts,
   isCesium3DTileset,
+  isDataSource,
   isTerrainProvider,
   MapItem
 } from "./Mappable";
@@ -992,6 +993,73 @@ export default class Cesium extends GlobeOrMap {
     });
   }
 
+  pickFromLocation(
+    latLngHeight: LatLonHeight,
+    providerCoords: ProviderCoordsMap,
+    existingFeatures: Feature[]
+  ) {
+    const pickPosition = this.scene.globe.ellipsoid.cartographicToCartesian(
+      Cartographic.fromDegrees(
+        latLngHeight.longitude,
+        latLngHeight.latitude,
+        latLngHeight.height
+      )
+    );
+    const pickPositionCartographic = Ellipsoid.WGS84.cartesianToCartographic(
+      pickPosition
+    );
+
+    const promises: (Promise<ImageryLayerFeatureInfo[]> | undefined)[] = [];
+    const imageryLayers: ImageryLayer[] = [];
+
+    if (this.terria.allowFeatureInfoRequests) {
+      for (let i = this.scene.imageryLayers.length - 1; i >= 0; i--) {
+        const imageryLayer = this.scene.imageryLayers.get(i);
+        const imageryProvider = imageryLayer.imageryProvider;
+
+        function hasUrl(o: any): o is { url: string } {
+          return o && typeof o.url === "string";
+        }
+
+        if (hasUrl(imageryProvider) && providerCoords[imageryProvider.url]) {
+          var coords = providerCoords[imageryProvider.url];
+          promises.push(
+            imageryProvider.pickFeatures(
+              coords.x,
+              coords.y,
+              coords.level,
+              pickPositionCartographic.longitude,
+              pickPositionCartographic.latitude
+            )
+          );
+          imageryLayers.push(imageryLayer);
+        }
+      }
+    }
+
+    const result = this._buildPickedFeatures(
+      providerCoords,
+      pickPosition,
+      existingFeatures,
+      filterOutUndefined(promises),
+      imageryLayers,
+      pickPositionCartographic.height,
+      false
+    );
+
+    const mapInteractionModeStack = this.terria.mapInteractionModeStack;
+    if (
+      defined(mapInteractionModeStack) &&
+      mapInteractionModeStack.length > 0
+    ) {
+      mapInteractionModeStack[
+        mapInteractionModeStack.length - 1
+      ].pickedFeatures = result;
+    } else {
+      this.terria.pickedFeatures = result;
+    }
+  }
+
   /**
    * Return features at a latitude, longitude and (optionally) height for the given imagery layers.
    * @param latLngHeight The position on the earth to pick
@@ -1461,8 +1529,4 @@ function zoomToBoundingSphere(
     offset: new HeadingPitchRange(0, -0.5, 0),
     duration: flightDurationSeconds
   });
-}
-
-function isDataSource(object: MapItem): object is DataSource {
-  return "entities" in object;
 }
