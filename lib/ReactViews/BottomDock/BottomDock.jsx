@@ -77,4 +77,4 @@ const BottomDock = observer(
   })
 );
 
-module.exports = measureElement(BottomDock);
+module.exports = measureElement(BottomDock, false);

@@ -29,7 +29,6 @@ import withFallback from "../HOCs/withFallback";
 import TourPortal from "../Tour/TourPortal";
 import SatelliteHelpPrompt from "../HelpScreens/SatelliteHelpPrompt";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage";
-import InternetExplorerOverlay from "../InternetExplorerOverlay/InternetExplorerOverlay";
 
 import { Small, Medium } from "../Generic/Responsive";
 import classNames from "classnames";
@@ -258,7 +257,6 @@ const StandardUserInterface = observer(
             viewState={this.props.viewState}
           />
           <div className={Styles.storyWrapper}>
-            <InternetExplorerOverlay viewState={this.props.viewState} />
             <If condition={!this.props.viewState.disclaimerVisible}>
               <WelcomeMessage viewState={this.props.viewState} />
             </If>

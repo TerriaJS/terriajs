@@ -8,6 +8,16 @@ Change Log
 * Add a `contentAsObject` trait to `InfoSectionTraits` where a json object is more suitable than a string.
 * Add `serviceDescription` and `dataDescription` to `WebMapServiceCatalogItem` info section.
 * Extend `DataPreviewSections.jsx` to support Mustache templates with context provided by the catalog item.
+* Add support for `initializationUrls` when loading configuration from Magda.
+* Add `:only-child` styling for `menu-bar.scss` to ensure correctly rounded corners on isolated buttons.
+* Improve Branding component for mobile header
+* Add support for `displayOne` configuration parameter to choose which brand element to show in mobile view
+* Update Carto basemaps URL and attribution.
+* Add `clipToRectangle` trait to `RasterLayerTraits` and implement on `WebMapServiceCatalogItem`, `ArcGisMapServiceCatalogItem`, `CartoMapCatalogItem`, `WebMapTileServiceCatalogItem`.
+* Allow Magda backed maps to use an inline `terria-init` catalog without it getting overwritten by map-config before it can be parsed
+* Deprecated `proxyableDomainsUrl` configuration parameter in favour of `serverconfig` route
+* Ported a support for `GpxCatalogItem`.
+* Fixes a bug that showed the chart download button when there is no downloadable source.
 * [The next improvement]
 
 #### 8.0.0-alpha.53
@@ -49,6 +59,8 @@ Change Log
 * Updated leaflet attribution to match the style of cesium credits.
 * Remove `@computed` props from `WebFeatureServiceCapabilities`
 * Fixed bug causing the Related Maps dropdown to be clipped.
+* Added TileErrorHandlerMixin for handling raster layer tile errors.
+* [The next improvement]
 * Add SDMX-json support for groups and items (using SDMX-csv for data queries)
 * `TableMixin` now uses `ExportableMixin` and `AsyncMappableMixin`
 * Move region provider loading in `TableMixin` `forceLoadTableMixin` to `loadRegionProviderList`
