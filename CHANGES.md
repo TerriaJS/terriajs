@@ -16,6 +16,7 @@ Change Log
 * Add `clipToRectangle` trait to `RasterLayerTraits` and implement on `WebMapServiceCatalogItem`, `ArcGisMapServiceCatalogItem`, `CartoMapCatalogItem`, `WebMapTileServiceCatalogItem`.
 * Ported a support for `GpxCatalogItem`.
 * Fixes a bug that showed the chart download button when there is no downloadable source.
+* Ensure the `chartDisclaimer` is passed from catalog items to derived chart items.
 * [The next improvement]
 
 #### 8.0.0-alpha.53
