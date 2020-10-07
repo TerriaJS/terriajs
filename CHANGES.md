@@ -14,6 +14,8 @@ Change Log
 * Add support for `displayOne` configuration parameter to choose which brand element to show in mobile view
 * Update Carto basemaps URL and attribution.
 * Add `clipToRectangle` trait to `RasterLayerTraits` and implement on `WebMapServiceCatalogItem`, `ArcGisMapServiceCatalogItem`, `CartoMapCatalogItem`, `WebMapTileServiceCatalogItem`.
+* Allow Magda backed maps to use an inline `terria-init` catalog without it getting overwritten by map-config before it can be parsed
+* Deprecated `proxyableDomainsUrl` configuration parameter in favour of `serverconfig` route
 * Ported a support for `GpxCatalogItem`.
 * Fixes a bug that showed the chart download button when there is no downloadable source.
 * [The next improvement]
