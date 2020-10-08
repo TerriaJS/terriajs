@@ -146,15 +146,6 @@ export default function GyroscopeGuidance(props) {
   const { t } = useTranslation();
   return (
     <>
-      {/* <MapIconButton
-        roundRight
-        neverCollapse
-        onClick={props.handleHelp}
-        iconElement={() => <Icon glyph={Icon.GLYPHS.helpThick} />}
-      >
-        Help
-      </MapIconButton>
-      <Spacing marginRight={1} />*/}
       <div
         css={`
           position: relative;
@@ -196,7 +187,6 @@ export default function GyroscopeGuidance(props) {
               .tjs-sc-InnerPanel__caret {
                 background: ${p => p.theme.textBlack};
               }
-              margin: 0;
             `}
             refForCaret={controlsMapIcon}
             isOpen={controlPanelOpen}
@@ -220,24 +210,6 @@ export default function GyroscopeGuidance(props) {
           </CleanDropdownPanel>
         </div>
       </div>
-      {/* <Spacing right={2} />
-      <div
-        css={`
-          transform: scale(0.75);
-          transform-origin: right;
-          svg {
-            width: 15px;
-            height: 15px;
-          }
-        `}
-      >
-        <MapIconButton
-          css={"opacity: 0.8;"}
-          inverted
-          onClick={props.onClose}
-          iconElement={() => <Icon glyph={Icon.GLYPHS.closeLight} />}
-        />
-      </div> */}
     </>
   );
 }
