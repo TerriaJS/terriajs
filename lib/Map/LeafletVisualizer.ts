@@ -1226,13 +1226,13 @@ function positionToLatLng(
 }
 
 function hierarchyToLatLngs(hierarchy: PolygonHierarchy) {
-  let holes: any = [];
+  let holes: L.LatLng[][] = [];
   const positions = Array.isArray(hierarchy) ? hierarchy : hierarchy.positions;
   if (hierarchy.holes.length > 0) {
     hierarchy.holes.forEach(hole => {
       holes.push(convertEntityPositionsToLatLons(hole.positions));
     });
-    return [convertEntityPositionsToLatLons(positions), holes];
+    return [convertEntityPositionsToLatLons(positions), ...holes];
   } else {
     return convertEntityPositionsToLatLons(positions);
   }
