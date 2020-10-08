@@ -19,7 +19,7 @@ Change Log
 * Ported a support for `GpxCatalogItem`.
 * Fixes a bug that showed the chart download button when there is no downloadable source.
 * Ensure the `chartDisclaimer` is passed from catalog items to derived chart items.
-* Only use an arcgis portal item extent to calculate `rectangle` when we have valid one.
+* Don't calculate a `rectangle` on a `ArcGisPortalReferenceItem` as they appear to contain less precision than the services they point to.
 * Allow an `ArcGisPortalReferenceItem` to belong to multiple `CatalogGroup`'s.
 * [The next improvement]
 
