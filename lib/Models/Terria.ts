@@ -28,7 +28,7 @@ import JsonValue, {
   isJsonString,
   JsonObject
 } from "../Core/Json";
-import LatLonHeight, { isLatLonHeight } from "../Core/LatLonHeight";
+import { isLatLonHeight } from "../Core/LatLonHeight";
 import loadJson5 from "../Core/loadJson5";
 import ServerConfig from "../Core/ServerConfig";
 import TerriaError from "../Core/TerriaError";
@@ -208,7 +208,7 @@ export default class Terria {
     conversionServiceBaseUrl: "convert/",
     proj4ServiceBaseUrl: "proj4/",
     corsProxyBaseUrl: "proxy/",
-    proxyableDomainsUrl: "proxyabledomains/",
+    proxyableDomainsUrl: "proxyabledomains/", // deprecated, will be determined from serverconfig
     serverConfigUrl: "serverconfig/",
     shareUrl: "share",
     feedbackUrl: undefined,
@@ -430,14 +430,14 @@ export default class Terria {
           // If it's a magda config, we only load magda config and parameters should never be a property on the direct
           // config aspect (it would be under the `terria-config` aspect)
           if (config.aspects) {
-            return this.loadMagdaConfig(options.configUrl, config).then(() => {
+            return this.loadMagdaConfig(
+              options.configUrl,
+              config,
+              baseUri
+            ).then(() => {
               Internationalization.initLanguage(
                 this.configParameters.languageConfiguration,
                 options.i18nOptions
-              );
-              this.setupInitializationUrls(
-                baseUri,
-                config.aspects?.["terria-config"]
               );
             });
           }
@@ -885,7 +885,7 @@ export default class Terria {
     this.mainViewer.homeCamera = CameraView.fromJson(homeCameraInit);
   }
 
-  async loadMagdaConfig(configUrl: string, config: any) {
+  async loadMagdaConfig(configUrl: string, config: any, baseUri: uri.URI) {
     const magdaRoot = new URI(configUrl)
       .path("")
       .query("")
@@ -895,16 +895,17 @@ export default class Terria {
     const configParams =
       aspects["terria-config"] && aspects["terria-config"].parameters;
 
-    configParams.initializationUrls =
-      aspects["terria-config"] && aspects["terria-config"].initializationUrls;
     if (configParams) {
       this.updateParameters(configParams);
     }
 
     const initObj = aspects["terria-init"];
     if (isJsonObject(initObj)) {
+      const { catalog, ...initObjWithoutCatalog } = initObj;
+      /** Load the init data without the catalog yet, as we'll push the catalog
+       * source up as an init source later */
       await this.applyInitData({
-        initData: initObj as any
+        initData: initObjWithoutCatalog as any
       });
     }
 
@@ -926,6 +927,19 @@ export default class Terria {
         if (reference.target instanceof CatalogGroup) {
           runInAction(() => {
             this.catalog.group = <CatalogGroup>reference.target;
+          });
+        }
+        this.setupInitializationUrls(
+          baseUri,
+          config.aspects?.["terria-config"]
+        );
+        /** Load up rest of terria catalog if one is inlined in terria-init */
+        if (config.aspects?.["terria-init"]) {
+          const { catalog, ...rest } = initObj;
+          this.initSources.push({
+            data: {
+              catalog: catalog
+            }
           });
         }
       });
@@ -1016,33 +1030,16 @@ export default class Terria {
     );
   }
 
-  initCorsProxy(config: any, serverConfig: any): Promise<void> {
-    // All the "proxyableDomains" bits here are due to a pre-serverConfig mechanism for whitelisting domains.
-    // We should deprecate it.s
-
-    // If a URL was specified in the config parameters to get the proxyable domains from, get them from that
-    var pdu = this.configParameters.proxyableDomainsUrl;
-    const proxyableDomainsPromise: Promise<JsonValue | void> = pdu
-      ? loadJson5(pdu)
-      : Promise.resolve();
-    return proxyableDomainsPromise.then((proxyableDomains: any | void) => {
-      if (proxyableDomains) {
-        // format of proxyableDomains JSON file slightly differs from serverConfig format.
-        proxyableDomains.allowProxyFor =
-          proxyableDomains.allowProxyFor || proxyableDomains.proxyableDomains;
-      }
-
-      // If there isn't anything there, check the server config
-      if (typeof serverConfig === "object") {
-        serverConfig = serverConfig.config; // if server config is unavailable, this remains undefined.
-      }
-
-      this.corsProxy.init(
-        proxyableDomains || serverConfig,
-        this.configParameters.corsProxyBaseUrl,
-        config.proxyDomains // fall back to local config
-      );
-    });
+  initCorsProxy(config: ConfigParameters, serverConfig: any): Promise<void> {
+    if (config.proxyableDomainsUrl) {
+      console.warn(i18next.t("models.terria.proxyableDomainsDeprecation"));
+    }
+    this.corsProxy.init(
+      serverConfig,
+      this.configParameters.corsProxyBaseUrl,
+      []
+    );
+    return Promise.resolve();
   }
 
   getUserProperty(key: string) {
