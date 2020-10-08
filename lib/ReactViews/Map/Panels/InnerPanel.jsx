@@ -114,6 +114,8 @@ const InnerPanel = createReactClass({
         style={{
           width: this.props.modalWidth,
           left: this.props.dropdownOffset,
+          // the modal should be right-aligned with the button
+          right: "0px",
           transformOrigin: this.props.showDropdownInCenter
             ? "0 top"
             : this.props.caretOffset && `${this.props.caretOffset} top`

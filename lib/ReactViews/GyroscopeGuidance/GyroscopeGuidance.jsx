@@ -125,9 +125,9 @@ function GyroscopeGuidancePanel(props) {
           dragging the map.
         </Text>
         <Spacing bottom={4} />
-        <RawButton onClick={props.handleHelp}>
+        <RawButton onClick={props.onClose}>
           <Text displayBlock primary isLink>
-            Find out more about the controls and how to use them.
+            Close and don't show again
           </Text>
         </RawButton>
       </Text>
@@ -163,7 +163,7 @@ export default function GyroscopeGuidance(props) {
           roundLeft
           buttonRef={controlsMapIcon}
           neverCollapse
-          iconElement={() => <Icon glyph={Icon.GLYPHS.left} />}
+          iconElement={() => <Icon glyph={Icon.GLYPHS.arrowDown} />}
           onClick={() => setControlPanelOpen(!controlPanelOpen)}
           inverted
           css={`
@@ -206,7 +206,7 @@ export default function GyroscopeGuidance(props) {
             viewState={props.viewState}
             smallScreen={props.viewState.useSmallScreenInterface}
           >
-            <GyroscopeGuidancePanel handleHelp={props.handleHelp} />
+            <GyroscopeGuidancePanel onClose={props.onClose} />
           </CleanDropdownPanel>
         </div>
       </div>
