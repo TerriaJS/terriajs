@@ -15,6 +15,7 @@ Change Log
 * Update Carto basemaps URL and attribution.
 * Add `clipToRectangle` trait to `RasterLayerTraits` and implement on `WebMapServiceCatalogItem`, `ArcGisMapServiceCatalogItem`, `CartoMapCatalogItem`, `WebMapTileServiceCatalogItem`.
 * Ported a support for `GpxCatalogItem`.
+* Feature info is now shareable.
 * [The next improvement]
 
 #### 8.0.0-alpha.53
