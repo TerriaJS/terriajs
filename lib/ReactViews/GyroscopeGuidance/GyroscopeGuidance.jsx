@@ -11,6 +11,7 @@ import Spacing from "../../Styled/Spacing";
 import MapIconButton from "../MapIconButton/MapIconButton";
 // import MenuPanel from "../StandardUserInterface/customizable/MenuPanel";
 import CleanDropdownPanel from "../CleanDropdownPanel/CleanDropdownPanel";
+import { COMPASS_LOCAL_PROPERTY_KEY } from "../Map/Navigation/Compass";
 
 GyroscopeGuidance.propTypes = {
   viewState: PropTypes.object.isRequired,
@@ -136,7 +137,7 @@ function GyroscopeGuidancePanel(props) {
 }
 
 GyroscopeGuidancePanel.propTypes = {
-  handleHelp: PropTypes.func.isRequired
+  onClose: PropTypes.func.isRequired
 };
 
 export default function GyroscopeGuidance(props) {
@@ -206,7 +207,16 @@ export default function GyroscopeGuidance(props) {
             viewState={props.viewState}
             smallScreen={props.viewState.useSmallScreenInterface}
           >
-            <GyroscopeGuidancePanel onClose={props.onClose} />
+            <GyroscopeGuidancePanel
+              onClose={() => {
+                setControlPanelOpen(false);
+                props.onClose();
+                props.viewState.terria.setLocalProperty(
+                  COMPASS_LOCAL_PROPERTY_KEY,
+                  true
+                );
+              }}
+            />
           </CleanDropdownPanel>
         </div>
       </div>
