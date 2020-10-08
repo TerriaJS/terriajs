@@ -317,7 +317,10 @@ export class ArcGisPortalStratum extends LoadableStratum(
       return;
     }
     const id = this._catalogGroup.uniqueId;
-    const itemId = id + "/" + arcgisDataset.id;
+    const itemId =
+      arcgisDataset.groupId === undefined
+        ? `${id}/${arcgisDataset.id}`
+        : `${id}/${arcgisDataset.groupId}/${arcgisDataset.id}`;
     let item = this._catalogGroup.terria.getModelById(
       ArcGisPortalItemReference,
       itemId
