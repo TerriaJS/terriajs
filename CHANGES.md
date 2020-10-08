@@ -19,6 +19,7 @@ Change Log
 * Ported a support for `GpxCatalogItem`.
 * Fixes a bug that showed the chart download button when there is no downloadable source.
 * Add `hideWelcomeMessage` url parameter to allow the Welcome Message to be disabled for iframe embeds or sharing scenarios.
+* Ensure the `chartDisclaimer` is passed from catalog items to derived chart items.
 * [The next improvement]
 
 #### 8.0.0-alpha.53
