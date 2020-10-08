@@ -192,8 +192,8 @@ export default function GyroscopeGuidance(props) {
             isOpen={controlPanelOpen}
             onOpenChanged={() => controlPanelOpen}
             // onDismissed={() => setControlPanelOpen(false)}
-            btnTitle={t("settingPanel.btnTitle")}
-            btnText={t("settingPanel.btnText")}
+            btnTitle={t("compass.guidanceBtnTitle")}
+            btnText={t("compass.guidanceBtnText")}
             viewState={props.viewState}
             smallScreen={props.viewState.useSmallScreenInterface}
           >
