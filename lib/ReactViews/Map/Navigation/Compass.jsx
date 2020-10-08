@@ -388,12 +388,7 @@ class Compass extends React.Component {
               <GyroscopeGuidance
                 rightOffset="72px"
                 viewState={this.props.viewState}
-                handleHelp={() => {
-                  this.props.viewState.showHelpPanel();
-                  this.props.viewState.selectHelpMenuItem("navigation");
-                }}
                 onClose={() => this.setState({ active: false })}
-                theme={this.props.theme}
               />
             </Box>
           </FadeIn>
