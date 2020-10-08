@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
-import Icon, { StyledIcon } from "../Icon.jsx";
+import Icon from "../Icon.jsx";
 import Box from "../../Styled/Box";
 import { TextSpan } from "../../Styled/Text";
 import { RawButton } from "../../Styled/Button";
@@ -128,7 +128,7 @@ function GyroscopeGuidancePanel(props) {
         <Spacing bottom={4} />
         <RawButton onClick={props.onClose}>
           <Text displayBlock primary isLink>
-            Close and don't show again
+            Close and don&apos;t show again
           </Text>
         </RawButton>
       </Text>

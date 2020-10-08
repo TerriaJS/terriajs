@@ -8,7 +8,6 @@
 
 import React from "react";
 import createReactClass from "create-react-class";
-import classNames from "classnames";
 // import Icon from "../../Icon";
 import InnerPanel from "../Map/Panels/InnerPanel";
 import BaseOuterPanel from "../Map/Panels/BaseOuterPanel";
