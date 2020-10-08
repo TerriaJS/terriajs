@@ -1226,10 +1226,16 @@ function positionToLatLng(
 }
 
 function hierarchyToLatLngs(hierarchy: PolygonHierarchy) {
-  // This function currently does not handle polygons with holes.
-
+  let holes: L.LatLng[][] = [];
   const positions = Array.isArray(hierarchy) ? hierarchy : hierarchy.positions;
-  return convertEntityPositionsToLatLons(positions);
+  if (hierarchy.holes.length > 0) {
+    hierarchy.holes.forEach(hole => {
+      holes.push(convertEntityPositionsToLatLons(hole.positions));
+    });
+    return [convertEntityPositionsToLatLons(positions), ...holes];
+  } else {
+    return convertEntityPositionsToLatLons(positions);
+  }
 }
 
 //Recolor an image using 2d canvas
@@ -1307,9 +1313,9 @@ function getValueOrUndefined(property: Property | undefined, time: JulianDate) {
   }
 }
 
-function convertEntityPositionsToLatLons(positions: Cartesian3[]) {
+function convertEntityPositionsToLatLons(positions: Cartesian3[]): L.LatLng[] {
   var carts = Ellipsoid.WGS84.cartesianArrayToCartographicArray(positions);
-  var latlngs = [];
+  var latlngs: L.LatLng[] = [];
   let lastLongitude;
   for (var p = 0; p < carts.length; p++) {
     let lon = CesiumMath.toDegrees(carts[p].longitude);
