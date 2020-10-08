@@ -145,7 +145,6 @@ describe("ArcGisPortalItemReference", function() {
     });
 
     it("creates item with rectangle undefined", function() {
-      console.log(portalItemTarget, arcGisPortalItemReference);
       expect(portalItemTarget.rectangle.east).toBeUndefined();
     });
   });
