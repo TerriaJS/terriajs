@@ -1230,6 +1230,7 @@
       "notSupportedErrorMessage": "{{name}} cannot be show in the 2D view.  Switch to 3D and try again"
     },
     "terria": {
+      "proxyableDomainsDeprecation": "`proxyableDomainsUrl` is no longer supported in v8",
       "initErrorTitle": "Failed to initialize services",
       "initErrorMessage": "A problem occurred with the Terria server. This may cause some layers or the conversion service to be unavailable.",
       "urlLoadErrorTitle": "Problem loading URL",
