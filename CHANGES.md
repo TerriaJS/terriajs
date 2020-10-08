@@ -20,6 +20,8 @@ Change Log
 * Properly render for polygons with holes in Leaflet.
 * Fixes a bug that showed the chart download button when there is no downloadable source.
 * Ensure the `chartDisclaimer` is passed from catalog items to derived chart items.
+* Made possible to internationalize tour contend.
+
 * [The next improvement]
 
 #### 8.0.0-alpha.53
