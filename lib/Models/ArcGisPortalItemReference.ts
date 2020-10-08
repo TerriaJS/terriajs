@@ -114,7 +114,10 @@ export class ArcGisPortalItemStratum extends LoadableStratum(
   @computed get rectangle() {
     if (this.arcgisPortalItem === undefined) return undefined;
 
-    if (this.arcgisPortalItem.extent !== null) {
+    if (
+      this.arcgisPortalItem.extent !== null &&
+      this.arcgisPortalItem.extent.length === 2
+    ) {
       return createStratumInstance(RectangleTraits, {
         west: this.arcgisPortalItem.extent[0][0],
         south: this.arcgisPortalItem.extent[0][1],
