@@ -18,6 +18,7 @@ Change Log
 * Deprecated `proxyableDomainsUrl` configuration parameter in favour of `serverconfig` route
 * Ported a support for `GpxCatalogItem`.
 * Fixes a bug that showed the chart download button when there is no downloadable source.
+* Ensure the `chartDisclaimer` is passed from catalog items to derived chart items.
 * [The next improvement]
 
 #### 8.0.0-alpha.53
