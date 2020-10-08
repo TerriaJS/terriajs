@@ -21,6 +21,10 @@ export function isInitUrl(initSource: InitSource): initSource is InitUrl {
   return "initUrl" in initSource;
 }
 
+export function isInitData(initSource: InitSource): initSource is InitData {
+  return "data" in initSource;
+}
+
 export function isInitOptions(
   initSource: InitSource
 ): initSource is InitOptions {
