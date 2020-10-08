@@ -293,7 +293,7 @@ export const TooltipWithButtonLauncher: React.SFC<ButtonLauncherProps> = props =
           large
           semiBold
           {...{
-            id: applyAriaId && idForAria
+            id: (applyAriaId && idForAria) || undefined
           }}
         >
           {children((applyAriaId && idForChildAria) || "")}

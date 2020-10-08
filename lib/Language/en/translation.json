@@ -170,7 +170,12 @@
     "btnMapShareText": "Share / Print",
     "btnCatalogShareTitle": "Share your catalogue with others",
     "btnStoryShareTitle": "Share your story with others",
-    "btnMapShareTitle": "Share your map with others"
+    "btnMapShareTitle": "Share your map with others",
+    "convertNotificationTitle": "Warning: share link upgraded",
+    "convertNotificationMessage": "This share link is based on an older version of TerriaJS - the software powering this web map. While best efforts are made to preserve the link, you might encounter issues with visualising the data.  \n\nIf you're a user of the share link, click OK to make the warning message disappear and continue with accessing the data.",
+    "convertNotificationHelp": "If you have created the share link, check the Help menu to see tips on updating the share link.",
+    "convertNotificationFeedback": "For questions or feedback, click here.",
+    "convertNotificationWarningsTitle": "Warnings"
   },
   "countDatasets": {
     "btnText": "Start",
@@ -1204,6 +1209,7 @@
       "notSupportedErrorMessage": "{{name}} cannot be show in the 2D view.  Switch to 3D and try again"
     },
     "terria": {
+      "proxyableDomainsDeprecation": "`proxyableDomainsUrl` is no longer supported in v8",
       "initErrorTitle": "Failed to initialize services",
       "initErrorMessage": "A problem occurred with the Terria server. This may cause some layers or the conversion service to be unavailable.",
       "urlLoadErrorTitle": "Problem loading URL",
@@ -1308,15 +1314,27 @@
     "webMapTileServiceCatalogGroup": {
       "wmtsServer": "Web Map Tile Service (WMTS) Server",
       "invalidWMTSServerTitle": "Invalid WMTS server",
-      "invalidWMTSServerMessage": "An error occurred while invoking GetCapabilities on the WMS server. The server's response does not appear to be a valid GetCapabilities document. <p>If you entered the link manually, please verify that the link is correct.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "invalidWMTSServerMessage": "An error occurred while invoking GetCapabilities on the WMTS server. The server's response does not appear to be a valid GetCapabilities document. <p>If you entered the link manually, please verify that the link is correct.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
       "groupNotAvailableTitle": "Group is not available",
-      "groupNotAvailableMessage": "An error occurred while invoking GetCapabilities on the WMTS server. <p>If you entered the link manually, please verify that the link is correct.</p> <p>This error may also indicate that the server does not support <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' Map team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by '{{appName}}' itself.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection. Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>"
+      "groupNotAvailableMessage": "An error occurred while invoking GetCapabilities on the WMTS server. <p>If you entered the link manually, please verify that the link is correct.</p> <p>This error may also indicate that the server does not support <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' Map team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by '{{appName}}' itself.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection. Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "abstract": "Web Map Service Description",
+      "accessConstraints": "Web Map Service Access Constraints",
+      "fees": "Web Map Service Fees",
+      "invalidCapabilitiesTitle": "Invalid GetCapabilities",
+      "invalidCapabilitiesMessage": "The URL {{url}} was retrieved successfully but it does not appear to be a valid Web Map Tile Service (WMTS) GetCapabilities document. \n\nEither the catalog file has been set up incorrectly, or the server address has changed."
     },
     "webMapTileServiceCatalogItem": {
       "wmts": "Web Map Tile Service (WMTS)",
       "dataDescription": "Data Description",
       "serviceDescription": "Service Description",
-      "accessConstraints": "Access Constraints"
+      "accessConstraints": "Access Constraints",
+      "fees": "Web Map Tile Service Fees",
+      "serviceContact": "Service Contact",
+      "getCapabilitiesUrl": "GetCapabilities URL",
+      "missingUrlTitle": "Unable to load GetCapabilities",
+      "missingUrlMessage": "Could not load the Web Map Tile Service (WMTS) GetCapabilities document because the catalog item does not have a `url`.",
+      "noUsableTileMatrixTitle": "Warning",
+      "noUsableTileMatrixMessage": "This WMTS layer has no Web Mercator tile matrix set - it may not display correctly"
     },
     "webProcessingService": {
       "wps": "Web Processing Service (WPS)",
