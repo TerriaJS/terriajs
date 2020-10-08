@@ -44,8 +44,6 @@ describe("ArcGisPortalItemReference", function() {
     spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
       if (args[0].indexOf("/data") > -1) {
         args[0] = "test/ArcGisPortal/item-data.json";
-      } else if (args[0].indexOf("no-extent") > -1) {
-        args[0] = "test/ArcGisPortal/item-empty-extent.json";
       } else args[0] = "test/ArcGisPortal/item.json";
       return realLoadWithXhr(...args);
     });
@@ -104,10 +102,6 @@ describe("ArcGisPortalItemReference", function() {
       expect(portalItemTarget.url).toBe(
         "https://portal.spatial.nsw.gov.au/server/rest/services/NSW_Transport_Theme/FeatureServer/5"
       );
-      expect(portalItemTarget.rectangle.west).toBe(140.9839);
-      expect(portalItemTarget.rectangle.south).toBe(-37.5043);
-      expect(portalItemTarget.rectangle.east).toBe(159.0979);
-      expect(portalItemTarget.rectangle.north).toBe(-28.1555);
 
       const licenceInfo = portalItemTarget.info.filter(
         (i: any) => i.name === i18next.t("models.arcgisPortal.licence")
@@ -115,37 +109,6 @@ describe("ArcGisPortalItemReference", function() {
       expect(licenceInfo.content).toBeDefined();
 
       expect(portalItemTarget.description).toBeDefined();
-    });
-  });
-
-  describe("Can handle no extent ", function() {
-    beforeEach(async function() {
-      runInAction(() => {
-        arcGisPortalItemReference.setTrait(
-          "definition",
-          "url",
-          "https://portal.spatial.nsw.gov.au/portal"
-        );
-        arcGisPortalItemReference.setTrait(
-          "definition",
-          "name",
-          "Road Segments"
-        );
-        arcGisPortalItemReference.setTrait("definition", "itemId", "no-extent");
-      });
-      await arcGisPortalItemReference.loadReference();
-
-      arcGisPortalItemStratum = <ArcGisPortalItemStratum>(
-        arcGisPortalItemReference.strata.get(
-          ArcGisPortalItemStratum.stratumName
-        )
-      );
-
-      portalItemTarget = arcGisPortalItemReference.target;
-    });
-
-    it("creates item with rectangle undefined", function() {
-      expect(portalItemTarget.rectangle.east).toBeUndefined();
     });
   });
 });

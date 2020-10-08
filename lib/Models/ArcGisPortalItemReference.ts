@@ -111,23 +111,6 @@ export class ArcGisPortalItemStratum extends LoadableStratum(
     });
   }
 
-  @computed get rectangle() {
-    if (this.arcgisPortalItem === undefined) return undefined;
-
-    if (
-      this.arcgisPortalItem.extent !== null &&
-      this.arcgisPortalItem.extent.length === 2
-    ) {
-      return createStratumInstance(RectangleTraits, {
-        west: this.arcgisPortalItem.extent[0][0],
-        south: this.arcgisPortalItem.extent[0][1],
-        east: this.arcgisPortalItem.extent[1][0],
-        north: this.arcgisPortalItem.extent[1][1]
-      });
-    }
-    return undefined;
-  }
-
   @computed get info() {
     const outArray: StratumFromTraits<InfoSectionTraits>[] = [];
     if (this.arcgisPortalItem === undefined) return outArray;
