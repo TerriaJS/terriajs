@@ -20,6 +20,7 @@ Change Log
 * Fixes a bug that showed the chart download button when there is no downloadable source.
 * Ensure the `chartDisclaimer` is passed from catalog items to derived chart items.
 * Only use an arcgis portal item extent to calculate `rectangle` when we have valid one.
+* Allow an `ArcGisPortalReferenceItem` to belong to multiple `CatalogGroup`'s.
 * [The next improvement]
 
 #### 8.0.0-alpha.53
