@@ -42,9 +42,11 @@ describe("ArcGisPortalItemReference", function() {
     const realLoadWithXhr = loadWithXhr.load;
     // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
     spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
-      if (args[0].indexOf("/data") > -1)
+      if (args[0].indexOf("/data") > -1) {
         args[0] = "test/ArcGisPortal/item-data.json";
-      else args[0] = "test/ArcGisPortal/item.json";
+      } else if (args[0].indexOf("no-extent") > -1) {
+        args[0] = "test/ArcGisPortal/item-empty-extent.json";
+      } else args[0] = "test/ArcGisPortal/item.json";
       return realLoadWithXhr(...args);
     });
   });
@@ -113,6 +115,38 @@ describe("ArcGisPortalItemReference", function() {
       expect(licenceInfo.content).toBeDefined();
 
       expect(portalItemTarget.description).toBeDefined();
+    });
+  });
+
+  describe("Can handle no extent ", function() {
+    beforeEach(async function() {
+      runInAction(() => {
+        arcGisPortalItemReference.setTrait(
+          "definition",
+          "url",
+          "https://portal.spatial.nsw.gov.au/portal"
+        );
+        arcGisPortalItemReference.setTrait(
+          "definition",
+          "name",
+          "Road Segments"
+        );
+        arcGisPortalItemReference.setTrait("definition", "itemId", "no-extent");
+      });
+      await arcGisPortalItemReference.loadReference();
+
+      arcGisPortalItemStratum = <ArcGisPortalItemStratum>(
+        arcGisPortalItemReference.strata.get(
+          ArcGisPortalItemStratum.stratumName
+        )
+      );
+
+      portalItemTarget = arcGisPortalItemReference.target;
+    });
+
+    it("creates item with rectangle undefined", function() {
+      console.log(portalItemTarget, arcGisPortalItemReference);
+      expect(portalItemTarget.rectangle.east).toBeUndefined();
     });
   });
 });
