@@ -734,7 +734,7 @@ export default class Terria {
     replaceStratum = false
   }: ApplyInitDataOptions): Promise<void> {
     initData = toJS(initData);
-    console.log("**initData**", initData);
+
     const stratumId =
       typeof initData.stratum === "string"
         ? initData.stratum
@@ -870,11 +870,10 @@ export default class Terria {
 
     if (isJsonObject(initData.pickedFeatures)) {
       promise.then(() =>
-        when(() => !(this.currentViewer instanceof NoViewer)).then(
-          () =>
-            isJsonObject(initData.pickedFeatures) &&
-            this.loadPickedFeatures(initData.pickedFeatures)
-        )
+        when(() => !(this.currentViewer instanceof NoViewer)).then(() => {
+          isJsonObject(initData.pickedFeatures) &&
+            this.loadPickedFeatures(initData.pickedFeatures);
+        })
       );
     }
 
@@ -934,9 +933,9 @@ export default class Terria {
   }
 
   @action
-  loadPickedFeatures(pickedFeatures: JsonObject) {
+  loadPickedFeatures(pickedFeatures: JsonObject): Promise<void> | undefined {
     let vectorFeatures: Entity[] = [];
-    let featureIndex: { [hash: number]: Entity[] | undefined } = {};
+    let featureIndex: Record<number, Entity[] | undefined> = {};
 
     if (Array.isArray(pickedFeatures.entities)) {
       // Build index of terria features by a hash of their properties.
@@ -992,27 +991,29 @@ export default class Terria {
     }
 
     // When feature picking is done, set the selected feature
-    this.pickedFeatures?.allFeaturesAvailablePromise?.then(() => {
-      this.pickedFeatures?.features.forEach((entity: Entity) => {
-        const hash = hashEntity(entity, this.timelineClock);
-        const feature = entity;
-        featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
-      });
+    return this.pickedFeatures?.allFeaturesAvailablePromise?.then(
+      action(() => {
+        this.pickedFeatures?.features.forEach((entity: Entity) => {
+          const hash = hashEntity(entity, this.timelineClock);
+          const feature = entity;
+          featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
+        });
 
-      const current = pickedFeatures.current;
-      if (
-        isJsonObject(current) &&
-        typeof current.hash === "number" &&
-        typeof current.name === "string"
-      ) {
-        const selectedFeature = (featureIndex[current.hash] || []).find(
-          feature => feature.name === current.name
-        );
-        if (selectedFeature) {
-          this.selectedFeature = selectedFeature as Feature;
+        const current = pickedFeatures.current;
+        if (
+          isJsonObject(current) &&
+          typeof current.hash === "number" &&
+          typeof current.name === "string"
+        ) {
+          const selectedFeature = (featureIndex[current.hash] || []).find(
+            feature => feature.name === current.name
+          );
+          if (selectedFeature) {
+            this.selectedFeature = selectedFeature as Feature;
+          }
         }
-      }
-    });
+      })
+    );
   }
 
   initCorsProxy(config: any, serverConfig: any): Promise<void> {

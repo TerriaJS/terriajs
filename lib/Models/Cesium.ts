@@ -1018,7 +1018,7 @@ export default class Cesium extends GlobeOrMap {
         const imageryProvider = imageryLayer.imageryProvider;
 
         function hasUrl(o: any): o is { url: string } {
-          return o && typeof o.url === "string";
+          return typeof o?.url === "string";
         }
 
         if (hasUrl(imageryProvider) && providerCoords[imageryProvider.url]) {
