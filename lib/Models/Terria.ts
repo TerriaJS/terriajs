@@ -139,6 +139,9 @@ interface TerriaOptions {
 interface ApplyInitDataOptions {
   initData: JsonObject;
   replaceStratum?: boolean;
+  // When feature picking state is missing from the initData, unset the state only if this flag is true
+  // This is for eg, set to true when switching through story slides.
+  canUnsetFeaturePickingState?: boolean;
 }
 
 interface HomeCameraInit {
@@ -731,7 +734,8 @@ export default class Terria {
   @action
   applyInitData({
     initData,
-    replaceStratum = false
+    replaceStratum = false,
+    canUnsetFeaturePickingState = false
   }: ApplyInitDataOptions): Promise<void> {
     initData = toJS(initData);
 
@@ -871,10 +875,14 @@ export default class Terria {
     if (isJsonObject(initData.pickedFeatures)) {
       promise.then(() =>
         when(() => !(this.currentViewer instanceof NoViewer)).then(() => {
-          isJsonObject(initData.pickedFeatures) &&
+          if (isJsonObject(initData.pickedFeatures)) {
             this.loadPickedFeatures(initData.pickedFeatures);
+          }
         })
       );
+    } else if (canUnsetFeaturePickingState) {
+      this.pickedFeatures = undefined;
+      this.selectedFeature = undefined;
     }
 
     return promise;

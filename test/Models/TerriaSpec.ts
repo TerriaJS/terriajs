@@ -427,6 +427,31 @@ describe("Terria", function() {
   //       .otherwise(done.fail);
   //   });
 
+  describe("applyInitData", function() {
+    describe("when pickedFeatures is not present in initData", function() {
+      it("unsets the feature picking state if `canUnsetFeaturePickingState` is `true`", function() {
+        terria.pickedFeatures = new PickedFeatures();
+        terria.selectedFeature = new Entity({ name: "selected" }) as Feature;
+        terria.applyInitData({
+          initData: {},
+          canUnsetFeaturePickingState: true
+        });
+        expect(terria.pickedFeatures).toBeUndefined();
+        expect(terria.selectedFeature).toBeUndefined();
+      });
+
+      it("otherwise, should not unset feature picking state", function() {
+        terria.pickedFeatures = new PickedFeatures();
+        terria.selectedFeature = new Entity({ name: "selected" }) as Feature;
+        terria.applyInitData({
+          initData: {}
+        });
+        expect(terria.pickedFeatures).toBeDefined();
+        expect(terria.selectedFeature).toBeDefined();
+      });
+    });
+  });
+
   describe("loadPickedFeatures", function() {
     beforeEach(async function() {
       // Attach cesium viewer and wait for it to be loaded
