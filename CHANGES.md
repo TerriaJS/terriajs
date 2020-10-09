@@ -18,6 +18,7 @@ Change Log
 * Deprecated `proxyableDomainsUrl` configuration parameter in favour of `serverconfig` route
 * Ported a support for `GpxCatalogItem`.
 * Feature info is now shareable.
+* Add option `canUnsetFeaturePickingState` to `applyInitData` for unsetting feature picking state if it is missing from `initData`. Useful for showing/hiding feature info panel when switching through story slides.
 * Fixes a bug that showed the chart download button when there is no downloadable source.
 * Ensure the `chartDisclaimer` is passed from catalog items to derived chart items.
 * [The next improvement]
