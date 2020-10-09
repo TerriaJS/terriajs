@@ -68,7 +68,6 @@ class DiffStratum extends LoadableStratum(
   @computed
   get shortReport() {
     const catalogItem = this.catalogItem;
-    console.log("**here**", catalogItem.isShowingDiff);
     if (catalogItem.isShowingDiff) {
       const format = "yyyy/mm/dd";
       const d1 = dateFormat(catalogItem.firstDiffDate, format);

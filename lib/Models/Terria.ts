@@ -1,9 +1,11 @@
+import i18next from "i18next";
 import { action, computed, observable, runInAction, toJS } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
@@ -13,15 +15,16 @@ import Class from "../Core/Class";
 import ConsoleAnalytics from "../Core/ConsoleAnalytics";
 import CorsProxy from "../Core/CorsProxy";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import getDereferencedIfExists from "../Core/getDereferencedIfExists";
 import GoogleAnalytics from "../Core/GoogleAnalytics";
 import instanceOf from "../Core/instanceOf";
 import isDefined from "../Core/isDefined";
 import JsonValue, {
+  isJsonBoolean,
+  isJsonNumber,
   isJsonObject,
   isJsonString,
-  JsonObject,
-  isJsonBoolean,
-  isJsonNumber
+  JsonObject
 } from "../Core/Json";
 import loadJson5 from "../Core/loadJson5";
 import ServerConfig from "../Core/ServerConfig";
@@ -33,10 +36,12 @@ import PickedFeatures, {
 import GroupMixin from "../ModelMixins/GroupMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
-import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
-import TerriaViewer from "../ViewModels/TerriaViewer";
 import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
 import { defaultTerms, Term } from "../ReactViewModels/defaultTerms";
+import { Notification } from "../ReactViewModels/ViewState";
+import { shareConvertNotification } from "../ReactViews/Notification/shareConvertNotification";
+import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
+import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
 import CatalogGroup from "./CatalogGroupNew";
 import CatalogMemberFactory from "./CatalogMemberFactory";
@@ -45,25 +50,22 @@ import CommonStrata from "./CommonStrata";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import InitSource, { isInitOptions, isInitUrl } from "./InitSource";
+import Internationalization, {
+  I18nStartOptions,
+  LanguageConfiguration
+} from "./Internationalization";
 import MagdaReference, { MagdaReferenceHeaders } from "./MagdaReference";
 import MapInteractionMode from "./MapInteractionMode";
 import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
+import openGroup from "./openGroup";
 import ShareDataService from "./ShareDataService";
+import SplitItemReference from "./SplitItemReference";
 import TimelineStack from "./TimelineStack";
 import updateModelFromJson from "./updateModelFromJson";
 import upsertModelFromJson from "./upsertModelFromJson";
 import ViewerMode from "./ViewerMode";
 import Workbench from "./Workbench";
-import openGroup from "./openGroup";
-import getDereferencedIfExists from "../Core/getDereferencedIfExists";
-import SplitItemReference from "./SplitItemReference";
-import Internationalization, {
-  I18nStartOptions,
-  LanguageConfiguration
-} from "./Internationalization";
-import { Notification } from "../ReactViewModels/ViewState";
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 // import overrides from "../Overrides/defaults.jsx";
 
 interface ConfigParameters {
@@ -102,6 +104,7 @@ interface ConfigParameters {
   helpContent?: HelpContentItem[];
   helpContentTerms?: Term[];
   languageConfiguration?: LanguageConfiguration;
+  displayOneBrand?: number;
 }
 
 interface StartOptions {
@@ -198,7 +201,7 @@ export default class Terria {
     conversionServiceBaseUrl: "convert/",
     proj4ServiceBaseUrl: "proj4/",
     corsProxyBaseUrl: "proxy/",
-    proxyableDomainsUrl: "proxyabledomains/",
+    proxyableDomainsUrl: "proxyabledomains/", // deprecated, will be determined from serverconfig
     serverConfigUrl: "serverconfig/",
     shareUrl: "share",
     feedbackUrl: undefined,
@@ -229,7 +232,8 @@ export default class Terria {
     showInAppGuides: false,
     helpContent: [],
     helpContentTerms: defaultTerms,
-    languageConfiguration: undefined
+    languageConfiguration: undefined,
+    displayOneBrand: 0 // index of which brandBarElements to show for mobile header
   };
 
   @observable
@@ -394,6 +398,18 @@ export default class Terria {
     }
   }
 
+  setupInitializationUrls(baseUri: uri.URI, config: any) {
+    const initializationUrls: string[] = config.initializationUrls || [];
+    const initSources = initializationUrls.map(url =>
+      generateInitializationUrl(
+        baseUri,
+        this.configParameters.initFragmentPaths,
+        url
+      )
+    );
+    this.initSources.push(...initSources);
+  }
+
   start(options: StartOptions) {
     this.shareDataService = options.shareDataService;
 
@@ -407,7 +423,11 @@ export default class Terria {
           // If it's a magda config, we only load magda config and parameters should never be a property on the direct
           // config aspect (it would be under the `terria-config` aspect)
           if (config.aspects) {
-            return this.loadMagdaConfig(options.configUrl, config).then(() => {
+            return this.loadMagdaConfig(
+              options.configUrl,
+              config,
+              baseUri
+            ).then(() => {
               Internationalization.initLanguage(
                 this.configParameters.languageConfiguration,
                 options.i18nOptions
@@ -424,16 +444,7 @@ export default class Terria {
             );
           }
 
-          const initializationUrls: string[] = config.initializationUrls || [];
-          const initSources = initializationUrls.map(url =>
-            generateInitializationUrl(
-              baseUri,
-              this.configParameters.initFragmentPaths,
-              url
-            )
-          );
-
-          this.initSources.push(...initSources);
+          this.setupInitializationUrls(baseUri, config);
         });
       })
       .then(() => {
@@ -855,7 +866,7 @@ export default class Terria {
     this.mainViewer.homeCamera = CameraView.fromJson(homeCameraInit);
   }
 
-  async loadMagdaConfig(configUrl: string, config: any) {
+  async loadMagdaConfig(configUrl: string, config: any, baseUri: uri.URI) {
     const magdaRoot = new URI(configUrl)
       .path("")
       .query("")
@@ -871,8 +882,11 @@ export default class Terria {
 
     const initObj = aspects["terria-init"];
     if (isJsonObject(initObj)) {
+      const { catalog, ...initObjWithoutCatalog } = initObj;
+      /** Load the init data without the catalog yet, as we'll push the catalog
+       * source up as an init source later */
       await this.applyInitData({
-        initData: initObj as any
+        initData: initObjWithoutCatalog as any
       });
     }
 
@@ -896,37 +910,33 @@ export default class Terria {
             this.catalog.group = <CatalogGroup>reference.target;
           });
         }
+        this.setupInitializationUrls(
+          baseUri,
+          config.aspects?.["terria-config"]
+        );
+        /** Load up rest of terria catalog if one is inlined in terria-init */
+        if (config.aspects?.["terria-init"]) {
+          const { catalog, ...rest } = initObj;
+          this.initSources.push({
+            data: {
+              catalog: catalog
+            }
+          });
+        }
       });
     }
   }
 
-  initCorsProxy(config: any, serverConfig: any): Promise<void> {
-    // All the "proxyableDomains" bits here are due to a pre-serverConfig mechanism for whitelisting domains.
-    // We should deprecate it.s
-
-    // If a URL was specified in the config parameters to get the proxyable domains from, get them from that
-    var pdu = this.configParameters.proxyableDomainsUrl;
-    const proxyableDomainsPromise: Promise<JsonValue | void> = pdu
-      ? loadJson5(pdu)
-      : Promise.resolve();
-    return proxyableDomainsPromise.then((proxyableDomains: any | void) => {
-      if (proxyableDomains) {
-        // format of proxyableDomains JSON file slightly differs from serverConfig format.
-        proxyableDomains.allowProxyFor =
-          proxyableDomains.allowProxyFor || proxyableDomains.proxyableDomains;
-      }
-
-      // If there isn't anything there, check the server config
-      if (typeof serverConfig === "object") {
-        serverConfig = serverConfig.config; // if server config is unavailable, this remains undefined.
-      }
-
-      this.corsProxy.init(
-        proxyableDomains || serverConfig,
-        this.configParameters.corsProxyBaseUrl,
-        config.proxyDomains // fall back to local config
-      );
-    });
+  initCorsProxy(config: ConfigParameters, serverConfig: any): Promise<void> {
+    if (config.proxyableDomainsUrl) {
+      console.warn(i18next.t("models.terria.proxyableDomainsDeprecation"));
+    }
+    this.corsProxy.init(
+      serverConfig,
+      this.configParameters.corsProxyBaseUrl,
+      []
+    );
+    return Promise.resolve();
   }
 
   getUserProperty(key: string) {
@@ -1053,32 +1063,10 @@ function interpretHash(
 
       if (shareProps) {
         if (shareProps.converted) {
-          let message =
-            "This share link was made with an older version of Terria and has been converted to work in Terria version 8\n\n";
-          if (shareProps.messages?.length > 0) {
-            message += `### Warning${
-              shareProps.messages?.length > 1 ? "s" : ""
-            }\n\n`;
-          }
-          const messagesForPath: { [path: string]: string[] } = {};
-          shareProps.messages.forEach((message: any) => {
-            const pathString = message.path.join(".");
-            isDefined(messagesForPath[pathString])
-              ? messagesForPath[pathString].push(message.message)
-              : (messagesForPath[pathString] = [message.message]);
-          });
-
-          message += Object.entries(messagesForPath).reduce<string>(
-            (m, [path, messages]) =>
-              `${m}${path !== "" ? `#### ${path}\n\n` : ``}- ${messages.join(
-                "  \n- "
-              )}\n\n`,
-            ""
-          );
           terria.notification.raiseEvent({
-            title: "Warning: share link upgraded",
-            message
-          });
+            title: i18next.t("share.convertNotificationTitle"),
+            message: shareConvertNotification(shareProps)
+          } as Notification);
         }
         interpretStartData(terria, shareProps);
       }
