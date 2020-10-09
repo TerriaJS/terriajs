@@ -24,6 +24,7 @@ Change Log
 * Don't calculate a `rectangle` on a `ArcGisPortalReferenceItem` as they appear to contain less precision than the services they point to.
 * Allow an `ArcGisPortalReferenceItem` to belong to multiple `CatalogGroup`'s.
 * Made possible to internationalize tour contend.
+* Testing the CI for external PR, #4822
 * [The next improvement]
 
 #### 8.0.0-alpha.53
