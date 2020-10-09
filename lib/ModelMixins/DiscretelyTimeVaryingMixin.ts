@@ -340,6 +340,7 @@ function DiscretelyTimeVaryingMixin<
 namespace DiscretelyTimeVaryingMixin {
   export interface DiscretelyTimeVaryingMixin
     extends InstanceType<ReturnType<typeof DiscretelyTimeVaryingMixin>> {}
+
   export function isMixedInto(model: any): model is DiscretelyTimeVaryingMixin {
     return model && model.hasDiscreteTimes;
   }

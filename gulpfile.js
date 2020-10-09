@@ -94,16 +94,16 @@ gulp.task('test-saucelabs', function(done) {
     runKarma('./buildprocess/karma-saucelabs.conf.js', done);
 });
 
-gulp.task('test-electron', function(done) {
-    runKarma('./buildprocess/karma-electron.conf.js', done);
+gulp.task('test-firefox', function(done) {
+    runKarma('./buildprocess/karma-firefox.conf.js', done);
 });
 
 gulp.task('test-travis', function(done) {
     if (process.env.SAUCE_ACCESS_KEY) {
         runKarma('./buildprocess/karma-saucelabs.conf.js', done);
     } else {
-        console.log('SauceLabs testing is not available for pull requests outside the main repo; using Electron instead.');
-        runKarma('./buildprocess/karma-electron.conf.js', done);
+        console.log('SauceLabs testing is not available for pull requests outside the main repo; using local headless Firefox instead.');
+        runKarma('./buildprocess/karma-firefox.conf.js', done);
     }
 });
 
@@ -124,7 +124,7 @@ function runKarma(configFile, done) {
 
 gulp.task('code-attribution', function userAttribution(done) {
     var spawnSync = require('child_process').spawnSync;
-    
+
     var result = spawnSync('yarn', ['licenses generate-disclaimer > doc/acknowledgements/attributions.md'], {
         stdio: 'inherit',
         shell: true

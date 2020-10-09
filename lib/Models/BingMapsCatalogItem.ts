@@ -42,7 +42,7 @@ export default class BingMapsCatalogItem
     const result = new BingMapsImageryProvider({
       url: "//dev.virtualearth.net",
       mapStyle: <any>this.mapStyle,
-      key: this.key
+      key: this.key!
     });
 
     // open in a new window

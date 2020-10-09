@@ -34,6 +34,7 @@ interface CssExports {
   'textDarker': string;
   'textLight': string;
   'textLightDimmed': string;
+  'textLightTranslucent': string;
   'trainerHeight': string;
   'workbenchWidth': string;
 }
