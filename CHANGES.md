@@ -19,6 +19,7 @@ Change Log
 * Ported a support for `GpxCatalogItem`.
 * Properly render for polygons with holes in Leaflet.
 * Fixes a bug that showed the chart download button when there is no downloadable source.
+* Add `hideWelcomeMessage` url parameter to allow the Welcome Message to be disabled for iframe embeds or sharing scenarios.
 * Ensure the `chartDisclaimer` is passed from catalog items to derived chart items.
 * Don't calculate a `rectangle` on a `ArcGisPortalReferenceItem` as they appear to contain less precision than the services they point to.
 * Allow an `ArcGisPortalReferenceItem` to belong to multiple `CatalogGroup`'s.
