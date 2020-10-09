@@ -167,7 +167,7 @@ export default class CartoMapCatalogItem
     }
 
     let rectangle: Rectangle | undefined;
-    if (isDefined(this.rectangle)) {
+    if (isDefined(this.rectangle) && this.clipToRectangle) {
       const { west, south, east, north } = this.rectangle;
       if (
         isDefined(west) &&

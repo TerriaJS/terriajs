@@ -67,9 +67,12 @@ class ChartExpandAndDownloadButtons extends React.Component {
     }
 
     // The downloads and download names default to the sources and source names if not defined.
-    const downloads = runInAction(() => {
-      return this.props.downloads || this.sourceItems.map(item => item.url);
-    });
+    let downloads = filterOutUndefined(
+      runInAction(() => {
+        return this.props.downloads || this.sourceItems.map(item => item.url);
+      })
+    );
+    downloads = downloads.length > 0 ? downloads : undefined;
     const downloadNames = this.props.downloadNames || this.props.sourceNames;
     let downloadButton;
     const { t } = this.props;

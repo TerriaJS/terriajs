@@ -80,27 +80,20 @@ export default function createGlobalBaseMapOptions(
     positron.setTrait(
       CommonStrata.user,
       "url",
-      "https://global.ssl.fastly.net/light_all/"
+      "https://basemaps.cartocdn.com/light_all/"
     );
 
-    // https://cartodb.com/basemaps/ gives two different attribution strings. In any case HTML gets swallowed, so we have to adapt.
-    // 1 '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy;
-    //   <a href="http://cartodb.com/attributions">CartoDB</a>'
-    // 2 Map tiles by <a href="http://cartodb.com/attributions#basemaps">CartoDB</a>, under <a href="https://creativecommons.org/licenses/by/3.0/">
-    //   CC BY 3.0</a>. Data by <a href="http://www.openstreetmap.org/">OpenStreetMap</a>, under ODbL.
+    // https://github.com/CartoDB/basemap-styles#1-web-raster-basemaps gives the following attribution string.
+    // '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy;
+    //   <a href="http://carto.com/attributions">Carto</a>'
     positron.setTrait(
       CommonStrata.user,
       "attribution",
-      "© OpenStreetMap contributors ODbL, © CartoDB CC-BY 3.0"
+      "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>"
     );
 
     positron.setTrait(CommonStrata.user, "opacity", 1.0);
-    positron.setTrait(CommonStrata.user, "subdomains", [
-      "cartodb-basemaps-a",
-      "cartodb-basemaps-b",
-      "cartodb-basemaps-c",
-      "cartodb-basemaps-d"
-    ]);
+    positron.setTrait(CommonStrata.user, "subdomains", ["a", "b", "c", "d"]);
   });
   result.push(
     new BaseMapViewModel(positron, require("../../wwwroot/images/positron.png"))
@@ -112,20 +105,15 @@ export default function createGlobalBaseMapOptions(
     darkMatter.setTrait(
       CommonStrata.user,
       "url",
-      "https://global.ssl.fastly.net/dark_all/"
+      "https://basemaps.cartocdn.com/dark_all/"
     );
     darkMatter.setTrait(
       CommonStrata.user,
       "attribution",
-      "© OpenStreetMap contributors ODbL, © CartoDB CC-BY 3.0"
+      "© <a href'https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>"
     );
     darkMatter.setTrait(CommonStrata.user, "opacity", 1.0);
-    darkMatter.setTrait(CommonStrata.user, "subdomains", [
-      "cartodb-basemaps-a",
-      "cartodb-basemaps-b",
-      "cartodb-basemaps-c",
-      "cartodb-basemaps-d"
-    ]);
+    darkMatter.setTrait(CommonStrata.user, "subdomains", ["a", "b", "c", "d"]);
   });
 
   result.push(

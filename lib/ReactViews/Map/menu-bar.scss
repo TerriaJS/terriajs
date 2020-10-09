@@ -65,6 +65,13 @@
   &:last-child > a {
     border-radius: 0 $map-button-border-radius $map-button-border-radius 0;
   }
+  &:only-child > div > button,
+  &:only-child > div > a,
+  &:only-child > button,
+  &:only-child > a {
+    border-radius: $map-button-border-radius $map-button-border-radius
+      $map-button-border-radius $map-button-border-radius;
+  }
 }
 
 .storyBtn {

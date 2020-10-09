@@ -317,7 +317,7 @@ export class ArcGisPortalStratum extends LoadableStratum(
       return;
     }
     const id = this._catalogGroup.uniqueId;
-    const itemId = id + "/" + arcgisDataset.id;
+    const itemId = `${id}/${arcgisDataset.id}`;
     let item = this._catalogGroup.terria.getModelById(
       ArcGisPortalItemReference,
       itemId
@@ -329,13 +329,13 @@ export class ArcGisPortalStratum extends LoadableStratum(
       item.setSupportedFormatFromItem(arcgisDataset);
       item.setArcgisStrata(item);
       item.terria.addModel(item);
-      if (
-        this._catalogGroup.groupBy === "organisationsGroups" ||
-        this._catalogGroup.groupBy === "usersGroups" ||
-        this._catalogGroup.groupBy === "portalCategories"
-      ) {
-        this.addCatalogItemByPortalGroupsToCatalogGroup(item, arcgisDataset);
-      }
+    }
+    if (
+      this._catalogGroup.groupBy === "organisationsGroups" ||
+      this._catalogGroup.groupBy === "usersGroups" ||
+      this._catalogGroup.groupBy === "portalCategories"
+    ) {
+      this.addCatalogItemByPortalGroupsToCatalogGroup(item, arcgisDataset);
     }
   }
 }

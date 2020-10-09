@@ -40,37 +40,34 @@ interface UsableTileMatrixSets {
   tileHeight: number;
 }
 
-class WmtsCapabilitiesStratum extends LoadableStratum(
+class GetCapabilitiesStratum extends LoadableStratum(
   WebMapTileServiceCatalogItemTraits
 ) {
   static stratumName = "wmtsServer";
 
-  static load(
-    catalogItem: WebMapTileServiceCatalogItem
-  ): Promise<WmtsCapabilitiesStratum> {
-    if (catalogItem.getCapabilitiesUrl === undefined) {
-      return Promise.reject(
-        new TerriaError({
-          title: i18next.t(
-            "models.webMapTileServiceCatalogItem.missingUrlTitle"
-          ),
-          message: i18next.t(
-            "models.webMapTileServiceCatalogItem.missingUrlMessage"
-          )
-        })
-      );
+  static async load(
+    catalogItem: WebMapTileServiceCatalogItem,
+    capabilities?: WebMapTileServiceCapabilities
+  ): Promise<GetCapabilitiesStratum> {
+    if (!isDefined(catalogItem.getCapabilitiesUrl)) {
+      throw new TerriaError({
+        title: i18next.t("models.webMapTileServiceCatalogItem.missingUrlTitle"),
+        message: i18next.t(
+          "models.webMapTileServiceCatalogItem.missingUrlMessage"
+        )
+      });
     }
 
-    const proxiedUrl = proxyCatalogItemUrl(
-      catalogItem,
-      catalogItem.getCapabilitiesUrl,
-      catalogItem.getCapabilitiesCacheDuration
-    );
-    return WebMapTileServiceCapabilities.fromUrl(proxiedUrl).then(
-      capabilities => {
-        return new WmtsCapabilitiesStratum(catalogItem, capabilities);
-      }
-    );
+    if (!isDefined(capabilities))
+      capabilities = await WebMapTileServiceCapabilities.fromUrl(
+        proxyCatalogItemUrl(
+          catalogItem,
+          catalogItem.getCapabilitiesUrl,
+          catalogItem.getCapabilitiesCacheDuration
+        )
+      );
+
+    return new GetCapabilitiesStratum(catalogItem, capabilities);
   }
 
   constructor(
@@ -81,7 +78,7 @@ class WmtsCapabilitiesStratum extends LoadableStratum(
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
-    return new WmtsCapabilitiesStratum(
+    return new GetCapabilitiesStratum(
       model as WebMapTileServiceCatalogItem,
       this.capabilities
     ) as this;
@@ -447,19 +444,30 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
 
   static readonly type = "wmts";
   readonly canZoomTo = true;
+  readonly supportsSplitting = true;
 
   get type() {
     return WebMapTileServiceCatalogItem.type;
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return WmtsCapabilitiesStratum.load(this).then(stratum => {
-      runInAction(() => {
-        this.strata.set(
-          GetCapabilitiesMixin.getCapabilitiesStratumName,
-          stratum
-        );
-      });
+  async createGetCapabilitiesStratumFromParent(
+    capabilities: WebMapTileServiceCapabilities
+  ) {
+    const stratum = await GetCapabilitiesStratum.load(this, capabilities);
+    runInAction(() => {
+      this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
+    });
+  }
+
+  protected async forceLoadMetadata(): Promise<void> {
+    if (
+      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
+      undefined
+    )
+      return;
+    const stratum = await GetCapabilitiesStratum.load(this);
+    runInAction(() => {
+      this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
     });
   }
 
@@ -476,7 +484,7 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
 
   @computed
   get imageryProvider() {
-    const stratum = <WmtsCapabilitiesStratum>(
+    const stratum = <GetCapabilitiesStratum>(
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
     );
 
@@ -538,6 +546,7 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
     let rectangle;
 
     if (
+      this.clipToRectangle &&
       this.rectangle !== undefined &&
       this.rectangle.east !== undefined &&
       this.rectangle.west !== undefined &&
@@ -582,7 +591,7 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
         tileHeight: number;
       }
     | undefined {
-    const stratum = <WmtsCapabilitiesStratum>(
+    const stratum = <GetCapabilitiesStratum>(
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
     );
     if (!this.layer) {

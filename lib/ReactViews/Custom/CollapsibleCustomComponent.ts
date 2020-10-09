@@ -16,7 +16,7 @@ export default class CollapsibleCustomComponent extends CustomComponent {
   }
 
   get attributes(): string[] {
-    return ["title", "open"];
+    return ["title", "open", "rightbtn", "btnstyle"];
   }
 
   processNode(
@@ -26,15 +26,18 @@ export default class CollapsibleCustomComponent extends CustomComponent {
   ): ReactElement {
     const title =
       node.attribs && node.attribs.title ? node.attribs.title : "Collapsible";
-    const startsOpen = node.attribs ? Boolean(node.attribs.open) : false;
+    const isOpen = node.attribs ? Boolean(node.attribs.open) : false;
+    const btnRight = Boolean(node.attribs?.rightbtn);
+    const btnStyle = node.attribs?.btnstyle;
 
     return React.createElement(
       Collapsible,
       {
         key: title,
-        displayName: title,
-        title: title,
-        startsOpen: startsOpen
+        title,
+        isOpen,
+        btnRight,
+        btnStyle: btnStyle === "plus" ? "plus" : undefined
       },
       children
     );

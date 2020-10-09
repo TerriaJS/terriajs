@@ -12,6 +12,7 @@ import Model, { BaseModel } from "../../Models/Model";
 import CatalogMemberTraits from "../../Traits/CatalogMemberTraits";
 import CsvCatalogItemTraits from "../../Traits/CsvCatalogItemTraits";
 import hasTraits from "../../Models/hasTraits";
+import DiscretelyTimeVaryingTraits from "../../Traits/DiscretelyTimeVaryingTraits";
 
 export interface ChartCustomComponentAttributes {
   /**  The title of the chart.  If not supplied, defaults to the name of the context-supplied feature, if available, or else simply "Chart". */
@@ -186,6 +187,8 @@ export default abstract class ChartCustomComponent<
 
     checkAllPropertyKeys(node.attribs, this.attributes);
 
+    const chartDisclaimer = (context.catalogItem as any).chartDisclaimer;
+
     const attrs = this.parseNodeAttrs(node.attribs);
     const csvString: any =
       typeof children[0] == "string" ? children[0] : undefined;
@@ -209,6 +212,16 @@ export default abstract class ChartCustomComponent<
               hasTraits(item, CsvCatalogItemTraits, "csvString")
             ) {
               item.setTrait(CommonStrata.user, "csvString", csvString);
+            }
+            if (
+              hasTraits(item, DiscretelyTimeVaryingTraits, "chartDisclaimer") &&
+              chartDisclaimer !== undefined
+            ) {
+              item.setTrait(
+                CommonStrata.definition,
+                "chartDisclaimer",
+                chartDisclaimer
+              );
             }
           });
 
@@ -240,6 +253,17 @@ export default abstract class ChartCustomComponent<
         hasTraits(chartItem, CsvCatalogItemTraits, "csvString")
       ) {
         chartItem.setTrait(CommonStrata.user, "csvString", csvString);
+      }
+
+      if (
+        hasTraits(chartItem, DiscretelyTimeVaryingTraits, "chartDisclaimer") &&
+        chartDisclaimer !== undefined
+      ) {
+        chartItem.setTrait(
+          CommonStrata.definition,
+          "chartDisclaimer",
+          chartDisclaimer
+        );
       }
     });
 

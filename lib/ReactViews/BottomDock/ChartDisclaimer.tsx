@@ -30,7 +30,9 @@ const ChartDisclaimer: React.FC<ChartDisclaimerProps> = ({ terria }) => {
       )
     )
   ];
-  if (uniqueChartDisclaimers.length === 0) return null;
+  const chartItems = chartView.chartItems.filter(c => c.showInChartPanel);
+  if (uniqueChartDisclaimers.length === 0 || chartItems.length === 0)
+    return null;
 
   return (
     <Box

@@ -90,25 +90,26 @@ export const Text = styled.div`
     font-size: 15px;
   `}
   ${props =>
-    props.extraLarge &&
+    (props?.as === "h4" || props.extraLarge) &&
     `
     font-size: 16px;
   `}
 
   // yeah extra extra large - will re-port to h4 once we re-add Heading.tsx
   ${props =>
-    props.extraExtraLarge &&
+    (props?.as === "h3" || props.extraExtraLarge) &&
     `
     font-size: 18px;
   `}
   ${props =>
-    props.subHeading &&
+    (props?.as === "h2" || props.subHeading) &&
     `
+    font-weight: bold;
     font-size: 23px;
     line-height: 31px;
   `}
   ${props =>
-    props.heading &&
+    (props?.as === "h1" || props.heading) &&
     `
     font-weight: 800;
     font-size: 26px;
@@ -118,7 +119,7 @@ export const Text = styled.div`
   ${props => props.styledSize && `font-size: ${props.styledSize}`};
   ${props =>
     props.styledLineHeight && `line-height: ${props.styledLineHeight}`};
-  
+
   ${props =>
     props.styledFontSize &&
     `
@@ -129,7 +130,7 @@ export const Text = styled.div`
     `
     line-height: ${props.styledLineHeight};
   `}
-  
+
   ${props =>
     props.highlightLinks &&
     `

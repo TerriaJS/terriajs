@@ -34,35 +34,29 @@ import WebFeatureServiceCapabilities, {
 class GetCapabilitiesStratum extends LoadableStratum(
   WebFeatureServiceCatalogItemTraits
 ) {
-  static load(
-    catalogItem: WebFeatureServiceCatalogItem
+  static async load(
+    catalogItem: WebFeatureServiceCatalogItem,
+    capabilities?: WebFeatureServiceCapabilities
   ): Promise<GetCapabilitiesStratum> {
-    if (catalogItem.getCapabilitiesUrl === undefined) {
-      return Promise.reject(
-        new TerriaError({
-          sender: this,
-          title: i18next.t(
-            "models.webFeatureServiceCatalogItem.missingUrlTitle",
-            this
-          ),
-          message: i18next.t(
-            "models.webFeatureServiceCatalogItem.missingUrlMessage",
-            this
-          )
-        })
-      );
+    if (!isDefined(catalogItem.getCapabilitiesUrl)) {
+      throw new TerriaError({
+        title: i18next.t("models.webFeatureServiceCatalogItem.missingUrlTitle"),
+        message: i18next.t(
+          "models.webFeatureServiceCatalogItem.missingUrlMessage"
+        )
+      });
     }
 
-    const proxiedUrl = proxyCatalogItemUrl(
-      catalogItem,
-      catalogItem.getCapabilitiesUrl,
-      catalogItem.getCapabilitiesCacheDuration
-    );
-    return WebFeatureServiceCapabilities.fromUrl(proxiedUrl).then(
-      capabilities => {
-        return new GetCapabilitiesStratum(catalogItem, capabilities);
-      }
-    );
+    if (!isDefined(capabilities))
+      capabilities = await WebFeatureServiceCapabilities.fromUrl(
+        proxyCatalogItemUrl(
+          catalogItem,
+          catalogItem.getCapabilitiesUrl,
+          catalogItem.getCapabilitiesCacheDuration
+        )
+      );
+
+    return new GetCapabilitiesStratum(catalogItem, capabilities);
   }
 
   constructor(
@@ -249,17 +243,15 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 }
 
-class WebFeatureServiceCatalogItem
-  extends ExportableMixin(
-    AsyncMappableMixin(
-      GetCapabilitiesMixin(
-        UrlMixin(
-          CatalogMemberMixin(CreateModel(WebFeatureServiceCatalogItemTraits))
-        )
+class WebFeatureServiceCatalogItem extends ExportableMixin(
+  AsyncMappableMixin(
+    GetCapabilitiesMixin(
+      UrlMixin(
+        CatalogMemberMixin(CreateModel(WebFeatureServiceCatalogItemTraits))
       )
     )
   )
-  implements Mappable {
+) {
   /**
    * The collection of strings that indicate an Abstract property should be ignored.  If these strings occur anywhere
    * in the Abstract, the Abstract will not be used.  This makes it easy to filter out placeholder data like
@@ -300,14 +292,24 @@ class WebFeatureServiceCatalogItem
     }
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return GetCapabilitiesStratum.load(this).then(stratum => {
-      runInAction(() => {
-        this.strata.set(
-          GetCapabilitiesMixin.getCapabilitiesStratumName,
-          stratum
-        );
-      });
+  async createGetCapabilitiesStratumFromParent(
+    capabilities: WebFeatureServiceCapabilities
+  ) {
+    const stratum = await GetCapabilitiesStratum.load(this, capabilities);
+    runInAction(() => {
+      this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
+    });
+  }
+
+  protected async forceLoadMetadata(): Promise<void> {
+    if (
+      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
+      undefined
+    )
+      return;
+    const stratum = await GetCapabilitiesStratum.load(this);
+    runInAction(() => {
+      this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
     });
   }
 
