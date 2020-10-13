@@ -3,7 +3,10 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.54)
+#### next release (8.0.0-alpha.55)
+* [The next improvement]
+
+#### 8.0.0-alpha.54
 * Add a `infoAsObject` property to the `CatalogMemberMixin` for providing simpler access to `info` entries within templating
 * Add a `contentAsObject` trait to `InfoSectionTraits` where a json object is more suitable than a string.
 * Add `serviceDescription` and `dataDescription` to `WebMapServiceCatalogItem` info section.
@@ -11,6 +14,24 @@ Change Log
 * Add support for `initializationUrls` when loading configuration from Magda.
 * Fix memoization of `traitsClassToModelClass`.
 * [The next improvement]
+* Add `:only-child` styling for `menu-bar.scss` to ensure correctly rounded corners on isolated buttons.
+* Improve Branding component for mobile header
+* Add support for `displayOne` configuration parameter to choose which brand element to show in mobile view
+* Update Carto basemaps URL and attribution.
+* Add `clipToRectangle` trait to `RasterLayerTraits` and implement on `WebMapServiceCatalogItem`, `ArcGisMapServiceCatalogItem`, `CartoMapCatalogItem`, `WebMapTileServiceCatalogItem`.
+* Allow Magda backed maps to use an inline `terria-init` catalog without it getting overwritten by map-config before it can be parsed
+* Deprecated `proxyableDomainsUrl` configuration parameter in favour of `serverconfig` route
+* Ported a support for `GpxCatalogItem`.
+* Feature info is now shareable.
+* Add option `canUnsetFeaturePickingState` to `applyInitData` for unsetting feature picking state if it is missing from `initData`. Useful for showing/hiding feature info panel when switching through story slides.
+* Properly render for polygons with holes in Leaflet.
+* Fixes a bug that showed the chart download button when there is no downloadable source.
+* Add `hideWelcomeMessage` url parameter to allow the Welcome Message to be disabled for iframe embeds or sharing scenarios.
+* Ensure the `chartDisclaimer` is passed from catalog items to derived chart items.
+* Don't calculate a `rectangle` on a `ArcGisPortalReferenceItem` as they appear to contain less precision than the services they point to.
+* Allow an `ArcGisPortalReferenceItem` to belong to multiple `CatalogGroup`'s.
+* Fix argis reference bug.
+* Made possible to internationalize tour contend.
 
 #### 8.0.0-alpha.53
 * Ported an implementation of CatalogSearchProvider and set it as the default
@@ -51,6 +72,8 @@ Change Log
 * Updated leaflet attribution to match the style of cesium credits.
 * Remove `@computed` props from `WebFeatureServiceCapabilities`
 * Fixed bug causing the Related Maps dropdown to be clipped.
+* Added TileErrorHandlerMixin for handling raster layer tile errors.
+* [The next improvement]
 * Add SDMX-json support for groups and items (using SDMX-csv for data queries)
 * `TableMixin` now uses `ExportableMixin` and `AsyncMappableMixin`
 * Move region provider loading in `TableMixin` `forceLoadTableMixin` to `loadRegionProviderList`
@@ -65,6 +88,9 @@ Change Log
 * Replaces `ShadowSection` with `ShadowMixin` using `SelectableDimensions`
 * Fix Webpack Windows path issue
 * Updated icons for view and edit story in the hamburger menu.
+* Fixed a bug that caused the feature info chart for SOS items to not load.
+* SOS & CSV charts are now shareable.
+* [The next improvement]
 * Implemented new design for story panel.
 
 #### 8.0.0-alpha.48
@@ -409,7 +435,18 @@ Change Log
 
 
 ### Next Release
+### v7.11.13
 
+* Upgraded to Cesium v1.73.
+* Removed any references to `BingMapsApi` (now deprecated).
+
+### v7.11.12
+
+* Fixed a crash with GeoJsonCatalogItem when you set a `stroke-opacity` in `styles`.
+
+### v7.11.11
+
+* If `showIEMessage` is `true` in config.json, warn IE11 users that support is ending.
 
 ### v7.11.10
 

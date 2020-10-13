@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "8.0.0-alpha.53",
+  "version": "8.0.0-alpha.54",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "engines": {
@@ -43,6 +43,7 @@
     "@types/react": "^16.8.18",
     "@types/react-dom": "^16.9.1",
     "@types/react-test-renderer": "^16.9.2",
+    "@types/retry": "^0.12.0",
     "@types/styled-components": "^5.1.0",
     "@types/urijs": "1.19.1",
     "@vx/axis": "^0.0.193-alpha.2",
@@ -146,7 +147,6 @@
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "babel-eslint": "^10.0.1",
     "babel-plugin-styled-components": "^1.10.7",
-    "electron": "^2.0.0",
     "eslint": "^5.14.1",
     "eslint-plugin-jsx-control-statements": "^2.2.1",
     "eslint-plugin-react": "^7.19.0",
@@ -165,7 +165,6 @@
     "karma-chrome-launcher": "^2.0.0",
     "karma-coverage-istanbul-reporter": "^2.0.5",
     "karma-detect-browsers": "^2.0.2",
-    "karma-electron": "^6.0.0",
     "karma-firefox-launcher": "^1.0.0",
     "karma-ie-launcher": "^1.0.0",
     "karma-jasmine": "^1.1.0",
