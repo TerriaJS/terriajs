@@ -14,28 +14,32 @@ import CesiumTerrainCatalogItem from "./CesiumTerrainCatalogItem";
 import CkanCatalogGroup from "./CkanCatalogGroup";
 import CkanItemReference from "./CkanItemReference";
 import CompositeCatalogItem from "./CompositeCatalogItem";
-import createUrlReferenceFromUrl from "./createUrlReferenceFromUrl";
 import CsvCatalogItem from "./CsvCatalogItem";
 import CzmlCatalogItem from "./CzmlCatalogItem";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import GeoRssCatalogItem from "./GeoRssCatalogItem";
 import GltfCatalogItem from "./GltfCatalogItem";
 import GtfsCatalogItem from "./GtfsCatalogItem";
+import GpxCatalogItem from "./GpxCatalogItem";
 import IonImageryCatalogItem from "./IonImageryCatalogItem";
 import KmlCatalogItem from "./KmlCatalogItem";
 import MagdaReference from "./MagdaReference";
 import OpenStreetMapCatalogItem from "./OpenStreetMapCatalogItem";
+import SdmxJsonCatalogGroup from "./SdmxJson/SdmxJsonCatalogGroup";
+import SdmxJsonCatalogItem from "./SdmxJson/SdmxJsonCatalogItem";
 import SenapsLocationsCatalogItem from "./SenapsLocationsCatalogItem";
 import SensorObservationServiceCatalogItem from "./SensorObservationServiceCatalogItem";
 import SplitItemReference from "./SplitItemReference";
 import StubCatalogItem from "./StubCatalogItem";
 import UrlReference, { UrlToCatalogMemberMapping } from "./UrlReference";
+import WebFeatureServiceCatalogGroup from "./WebFeatureServiceCatalogGroup";
+import WebFeatureServiceCatalogItem from "./WebFeatureServiceCatalogItem";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
+import WebMapTileServiceCatalogGroup from "./WebMapTileServiceCatalogGroup";
+import WebMapTileServiceCatalogItem from "./WebMapTileServiceCatalogItem";
 import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFunction";
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
-import WebFeatureServiceCatalogItem from "./WebFeatureServiceCatalogItem";
-import WebFeatureServiceCatalogGroup from "./WebFeatureServiceCatalogGroup";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
@@ -56,8 +60,17 @@ export default function registerCatalogMembers() {
     WebFeatureServiceCatalogGroup.type,
     WebFeatureServiceCatalogGroup
   );
+  CatalogMemberFactory.register(
+    WebMapTileServiceCatalogGroup.type,
+    WebMapTileServiceCatalogGroup
+  );
+  CatalogMemberFactory.register(
+    WebMapTileServiceCatalogItem.type,
+    WebMapTileServiceCatalogItem
+  );
   CatalogMemberFactory.register(GltfCatalogItem.type, GltfCatalogItem);
   CatalogMemberFactory.register(GeoJsonCatalogItem.type, GeoJsonCatalogItem);
+  CatalogMemberFactory.register(GpxCatalogItem.type, GpxCatalogItem);
   CatalogMemberFactory.register(GeoRssCatalogItem.type, GeoRssCatalogItem);
   CatalogMemberFactory.register(CsvCatalogItem.type, CsvCatalogItem);
   CatalogMemberFactory.register(CzmlCatalogItem.type, CzmlCatalogItem);
@@ -111,6 +124,11 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(UrlReference.type, UrlReference);
   CatalogMemberFactory.register(SplitItemReference.type, SplitItemReference);
   CatalogMemberFactory.register(
+    SdmxJsonCatalogGroup.type,
+    SdmxJsonCatalogGroup
+  );
+  CatalogMemberFactory.register(SdmxJsonCatalogItem.type, SdmxJsonCatalogItem);
+  CatalogMemberFactory.register(
     SenapsLocationsCatalogItem.type,
     SenapsLocationsCatalogItem
   );
@@ -158,6 +176,10 @@ export default function registerCatalogMembers() {
     KmlCatalogItem.type
   );
   UrlToCatalogMemberMapping.register(
+    matchesExtension("gpx"),
+    GpxCatalogItem.type
+  );
+  UrlToCatalogMemberMapping.register(
     matchesExtension("kmz"),
     KmlCatalogItem.type
   );
@@ -179,6 +201,11 @@ export default function registerCatalogMembers() {
   UrlToCatalogMemberMapping.register(
     matchesUrl(/\/wfs|\=wfs/i),
     WebFeatureServiceCatalogGroup.type,
+    true
+  );
+  UrlToCatalogMemberMapping.register(
+    matchesUrl(/\/wmts|\=wmts/i),
+    WebMapTileServiceCatalogGroup.type,
     true
   );
   UrlToCatalogMemberMapping.register(
@@ -241,6 +268,11 @@ export default function registerCatalogMembers() {
   UrlToCatalogMemberMapping.register(
     s => true,
     WebMapServiceCatalogGroup.type,
+    true
+  );
+  UrlToCatalogMemberMapping.register(
+    s => true,
+    WebFeatureServiceCatalogGroup.type,
     true
   );
   UrlToCatalogMemberMapping.register(

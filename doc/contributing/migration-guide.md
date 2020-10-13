@@ -8,7 +8,6 @@ There are a few features in v7 that we are considering deprecating, we’ll have
 
 * ABS ITT
 * Socrata(?)
-* GPX(?)
 * WMS region mapping
 
 Reach out to us if you are using these, we only know about the things we have seen.
