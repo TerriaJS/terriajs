@@ -1,11 +1,11 @@
+import CommonStrata from "../../Models/CommonStrata";
+import CsvCatalogItem from "../../Models/CsvCatalogItem";
+import Model, { BaseModel } from "../../Models/Model";
+import CsvCatalogItemTraits from "../../Traits/CsvCatalogItemTraits";
 import ChartCustomComponent, {
   ChartCustomComponentAttributes,
   splitStringIfDefined
 } from "./ChartCustomComponent";
-import CsvCatalogItemTraits from "../../Traits/CsvCatalogItemTraits";
-import Model, { BaseModel } from "../../Models/Model";
-import CommonStrata from "../../Models/CommonStrata";
-import CsvCatalogItem from "../../Models/CsvCatalogItem";
 import { ProcessNodeContext } from "./CustomComponent";
 
 interface CsvChartCustomComponentAttributes
@@ -143,6 +143,10 @@ export default class CsvChartCustomComponent extends ChartCustomComponent<
       item.setTrait(CommonStrata.user, "activeStyle", "chart");
     }
   }
+
+  setTraitsFromBody = (item: CsvCatalogItemType, csvString: string) => {
+    item.setTrait(CommonStrata.user, "csvString", csvString);
+  };
 
   protected parseNodeAttrs(nodeAttrs: {
     [name: string]: string | undefined;
