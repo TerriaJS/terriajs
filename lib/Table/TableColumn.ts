@@ -334,6 +334,20 @@ export default class TableColumn {
     return data[this.columnNumber][0];
   }
 
+  @computed
+  get title(): string {
+    return this.tableModel.columnTitles[this.columnNumber]
+      ? this.tableModel.columnTitles[this.columnNumber]
+      : this.traits.title || this.name;
+  }
+
+  @computed
+  get units(): string | undefined {
+    return this.tableModel.columnUnits[this.columnNumber]
+      ? this.tableModel.columnUnits[this.columnNumber]
+      : this.traits.units;
+  }
+
   /**
    * Gets the {@link TableColumnTraits} for this column. The trait are derived
    * from the default column plus this column layered on top of the default.

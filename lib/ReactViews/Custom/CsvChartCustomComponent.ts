@@ -91,17 +91,39 @@ export default class CsvChartCustomComponent extends ChartCustomComponent<
 
     if (attrs.columnTitles !== undefined) {
       // Set column titles
-      attrs.columnTitles.forEach(({ name, title }) => {
-        const column = item.addObject(CommonStrata.user, "columns", name)!;
-        column.setTrait(CommonStrata.user, "title", title);
+      // there are 2 ways to set column title
+      // if a {name, title} object is given, directly set the title on the column object
+      // if a plain string is given, then we do not know the name of the column, so set the
+      // title on the items `columnTitles` array.
+      attrs.columnTitles.forEach((entry, colNumber) => {
+        if (typeof entry === "string") {
+          const titles = item.columnTitles.slice();
+          titles[colNumber] = entry;
+          item.setTrait(CommonStrata.user, "columnTitles", titles);
+        } else {
+          const { name, title } = entry;
+          const column = item.addObject(CommonStrata.user, "columns", name)!;
+          column.setTrait(CommonStrata.user, "title", title);
+        }
       });
     }
 
     if (attrs.columnUnits !== undefined) {
       // Set column units
-      attrs.columnUnits.forEach(({ name, units }) => {
-        const column = item.addObject(CommonStrata.user, "columns", name)!;
-        column.setTrait(CommonStrata.user, "units", units);
+      // there are 2 ways to set column unit
+      // if a {name, unit} object is given, directly set the unit on the column object
+      // if a plain string is given, then we do not know the name of the column, so set the
+      // unit on the items `columnUnits` array.
+      attrs.columnUnits.forEach((entry, colNumber) => {
+        if (typeof entry === "string") {
+          const units = item.columnUnits.slice();
+          units[colNumber] = entry;
+          item.setTrait(CommonStrata.user, "columnUnits", units);
+        } else {
+          const { name, units } = entry;
+          const column = item.addObject(CommonStrata.user, "columns", name)!;
+          column.setTrait(CommonStrata.user, "units", units);
+        }
       });
     }
 
