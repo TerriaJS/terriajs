@@ -1,7 +1,7 @@
 import ChartCustomComponent, {
   ChartCustomComponentAttributes
 } from "../../../../lib/ReactViews/Custom/ChartCustomComponent";
-import Model from "../../../../lib/Models/Model";
+import Model, { BaseModel } from "../../../../lib/Models/Model";
 import CatalogMemberTraits from "../../../../lib/Traits/CatalogMemberTraits";
 import { ProcessNodeContext } from "../../../../lib/ReactViews/Custom/CustomComponent";
 import StubCatalogItem from "../../../../lib/Models/StubCatalogItem";
@@ -53,6 +53,32 @@ describe("ChartCustomComponent", function() {
         isComponentOfType(child, ChartExpandAndDownloadButtons)
       )
     ).toBeTruthy();
+  });
+
+  it("creates shareable chart items for the expand menu", function() {
+    const TestComponentWithShareableChartItem = class extends TestChartCustomComponent {
+      constructShareableCatalogItem = (
+        id: string | undefined,
+        context: ProcessNodeContext,
+        sourceReference: BaseModel | undefined
+      ) => this.createItemReference(context.catalogItem as any);
+    };
+    const component = new TestComponentWithShareableChartItem();
+    const context: ProcessNodeContext = {
+      terria: terria,
+      catalogItem: new StubCatalogItem(undefined, terria, undefined),
+      feature: new Feature({})
+    };
+    const node: DomElement = {
+      name: component.name,
+      attribs: {
+        data: '[["x","y","z"],[1,10,3],[2,15,9],[3,8,12],[5,25,4]]',
+        sources: "a, b"
+      }
+    };
+    spyOn(component, "constructShareableCatalogItem").and.callThrough();
+    component.processNode(context, node, [], 0);
+    expect(component.constructShareableCatalogItem).toHaveBeenCalledTimes(2);
   });
 });
 

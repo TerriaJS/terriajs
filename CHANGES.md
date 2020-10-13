@@ -83,6 +83,9 @@ Change Log
 * Replaces `ShadowSection` with `ShadowMixin` using `SelectableDimensions`
 * Fix Webpack Windows path issue
 * Updated icons for view and edit story in the hamburger menu.
+* Fixed a bug that caused the feature info chart for SOS items to not load.
+* SOS & CSV charts are now shareable.
+* [The next improvement]
 * Implemented new design for story panel.
 
 #### 8.0.0-alpha.48
