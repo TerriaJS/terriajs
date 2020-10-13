@@ -26,6 +26,8 @@ Change Log
 * Don't calculate a `rectangle` on a `ArcGisPortalReferenceItem` as they appear to contain less precision than the services they point to.
 * Allow an `ArcGisPortalReferenceItem` to belong to multiple `CatalogGroup`'s.
 * Made possible to internationalize tour contend.
+* Chart expanded from feature info panel will now by default show only the first chart line.
+* Chart component attribtues `column-titles` and `column-units` will now accept a simpler syntax like: "Time,Speed" or "ms,kmph"
 * [The next improvement]
 
 #### 8.0.0-alpha.53
