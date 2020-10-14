@@ -503,6 +503,22 @@ export default class Leaflet extends GlobeOrMap {
     // No action necessary.
   }
 
+  pickFromLocation(
+    latLngHeight: LatLonHeight,
+    providerCoords: ProviderCoordsMap,
+    existingFeatures: Feature[]
+  ) {
+    this._pickFeatures(
+      L.latLng({
+        lat: latLngHeight.latitude,
+        lng: latLngHeight.longitude,
+        alt: latLngHeight.height
+      }),
+      providerCoords,
+      existingFeatures
+    );
+  }
+
   /**
    * Return features at a latitude, longitude and (optionally) height for the given imageryLayer.
    * @param latLngHeight The position on the earth to pick

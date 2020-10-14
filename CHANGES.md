@@ -3,7 +3,14 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.54)
+#### next release (8.0.0-alpha.56)
+* Add `itemProperties` trait to `WebMapMapCatalogGroup`.
+* [The next improvement]
+
+#### 8.0.0-alpha.55
+* Upgraded to patched terriajs-cesium v1.73.1 to avoid build error on node 12 & 14.
+
+#### 8.0.0-alpha.54
 * Add a `infoAsObject` property to the `CatalogMemberMixin` for providing simpler access to `info` entries within templating
 * Add a `contentAsObject` trait to `InfoSectionTraits` where a json object is more suitable than a string.
 * Add `serviceDescription` and `dataDescription` to `WebMapServiceCatalogItem` info section.
@@ -17,15 +24,16 @@ Change Log
 * Allow Magda backed maps to use an inline `terria-init` catalog without it getting overwritten by map-config before it can be parsed
 * Deprecated `proxyableDomainsUrl` configuration parameter in favour of `serverconfig` route
 * Ported a support for `GpxCatalogItem`.
+* Feature info is now shareable.
+* Add option `canUnsetFeaturePickingState` to `applyInitData` for unsetting feature picking state if it is missing from `initData`. Useful for showing/hiding feature info panel when switching through story slides.
 * Properly render for polygons with holes in Leaflet.
 * Fixes a bug that showed the chart download button when there is no downloadable source.
 * Add `hideWelcomeMessage` url parameter to allow the Welcome Message to be disabled for iframe embeds or sharing scenarios.
 * Ensure the `chartDisclaimer` is passed from catalog items to derived chart items.
 * Don't calculate a `rectangle` on a `ArcGisPortalReferenceItem` as they appear to contain less precision than the services they point to.
 * Allow an `ArcGisPortalReferenceItem` to belong to multiple `CatalogGroup`'s.
+* Fix argis reference bug.
 * Made possible to internationalize tour contend.
-* Add `itemProperties` trait to `WebMapMapCatalogGroup`.
-* [The next improvement]
 
 #### 8.0.0-alpha.53
 * Ported an implementation of CatalogSearchProvider and set it as the default
@@ -82,6 +90,9 @@ Change Log
 * Replaces `ShadowSection` with `ShadowMixin` using `SelectableDimensions`
 * Fix Webpack Windows path issue
 * Updated icons for view and edit story in the hamburger menu.
+* Fixed a bug that caused the feature info chart for SOS items to not load.
+* SOS & CSV charts are now shareable.
+* [The next improvement]
 * Implemented new design for story panel.
 
 #### 8.0.0-alpha.48

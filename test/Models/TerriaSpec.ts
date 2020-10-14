@@ -6,7 +6,7 @@ import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem"
 import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGroup";
 import openGroup from "../../lib/Models/openGroup";
 import { BaseModel } from "../../lib/Models/Model";
-import { runInAction } from "mobx";
+import { action, runInAction } from "mobx";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import UrlReference, {
   UrlToCatalogMemberMapping
@@ -14,6 +14,10 @@ import UrlReference, {
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
 import PickedFeatures from "../../lib/Map/PickedFeatures";
 import Feature from "../../lib/Models/Feature";
+import Cesium from "../../lib/Models/Cesium";
+import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import hashEntity from "../../lib/Core/hashEntity";
 import { isInitUrl, isInitData } from "../../lib/Models/InitSource";
 import CameraView from "../../lib/Models/CameraView";
 import MagdaReference from "../../lib/Models/MagdaReference";
@@ -422,4 +426,98 @@ describe("Terria", function() {
   //       })
   //       .otherwise(done.fail);
   //   });
+
+  describe("applyInitData", function() {
+    describe("when pickedFeatures is not present in initData", function() {
+      it("unsets the feature picking state if `canUnsetFeaturePickingState` is `true`", function() {
+        terria.pickedFeatures = new PickedFeatures();
+        terria.selectedFeature = new Entity({ name: "selected" }) as Feature;
+        terria.applyInitData({
+          initData: {},
+          canUnsetFeaturePickingState: true
+        });
+        expect(terria.pickedFeatures).toBeUndefined();
+        expect(terria.selectedFeature).toBeUndefined();
+      });
+
+      it("otherwise, should not unset feature picking state", function() {
+        terria.pickedFeatures = new PickedFeatures();
+        terria.selectedFeature = new Entity({ name: "selected" }) as Feature;
+        terria.applyInitData({
+          initData: {}
+        });
+        expect(terria.pickedFeatures).toBeDefined();
+        expect(terria.selectedFeature).toBeDefined();
+      });
+    });
+  });
+
+  describe("loadPickedFeatures", function() {
+    beforeEach(async function() {
+      // Attach cesium viewer and wait for it to be loaded
+      const container = document.createElement("div");
+      document.body.appendChild(container);
+      terria.mainViewer.attach(container);
+      return (terria.mainViewer as any)._cesiumPromise;
+    });
+
+    it("sets the pickCoords", async function() {
+      expect(terria.currentViewer instanceof Cesium).toBeTruthy();
+      await terria.loadPickedFeatures({
+        pickCoords: {
+          lat: 84.93,
+          lng: 77.91,
+          height: -5400810.41
+        },
+        providerCoords: {
+          "https://foo": { x: 123, y: 456, level: 7 },
+          "https://bar": { x: 42, y: 42, level: 4 }
+        }
+      });
+      const pickPosition = terria.pickedFeatures?.pickPosition;
+      expect(pickPosition).toBeDefined();
+      if (pickPosition) {
+        const { x, y, z } = pickPosition;
+        expect(x.toFixed(2)).toBe("18483.85");
+        expect(y.toFixed(2)).toBe("86292.94");
+        expect(z.toFixed(2)).toBe("952035.13");
+      }
+    });
+
+    it("sets the selectedFeature", async function() {
+      const testItem = new SimpleCatalogItem("test", terria);
+      const ds = new CustomDataSource("ds");
+      const entity = new Entity({ name: "foo" });
+      ds.entities.add(entity);
+      testItem.mapItems = [ds];
+      terria.workbench.add(testItem);
+      // It is irrelevant what we pass as argument for `clock` param because
+      // the current implementation of `hashEntity` is broken because as it
+      // expects a `Clock` but actually uses it as a `JulianDate`
+      const entityHash = hashEntity(entity, undefined);
+      await terria.loadPickedFeatures({
+        pickCoords: {
+          lat: 84.93,
+          lng: 77.91,
+          height: -5400810.41
+        },
+        providerCoords: {
+          "https://foo": { x: 123, y: 456, level: 7 },
+          "https://bar": { x: 42, y: 42, level: 4 }
+        },
+        entities: [
+          {
+            hash: entityHash,
+            name: "foo"
+          }
+        ],
+        current: {
+          hash: entityHash,
+          name: "foo"
+        }
+      });
+      expect(terria.selectedFeature).toBeDefined();
+      expect(terria.selectedFeature?.name).toBe("foo");
+    });
+  });
 });
