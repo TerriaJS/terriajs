@@ -3,8 +3,11 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.55)
+#### next release (8.0.0-alpha.56)
 * [The next improvement]
+
+#### 8.0.0-alpha.55
+* Upgraded to patched terriajs-cesium v1.73.1 to avoid build error on node 12 & 14.
 
 #### 8.0.0-alpha.54
 * Add a `infoAsObject` property to the `CatalogMemberMixin` for providing simpler access to `info` entries within templating
