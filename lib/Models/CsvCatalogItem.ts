@@ -1,23 +1,21 @@
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
-import isDefined from "../Core/isDefined";
-import runLater from "../Core/runLater";
+import { runInAction, computed } from "mobx";
 import TerriaError from "../Core/TerriaError";
 import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
-import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import ExportableMixin from "../ModelMixins/ExportableMixin";
 import TableMixin from "../ModelMixins/TableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import Csv from "../Table/Csv";
 import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 import CsvCatalogItemTraits from "../Traits/CsvCatalogItemTraits";
 import CreateModel from "./CreateModel";
-import { DownloadableData } from "./DownloadableModelData";
-import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
+import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
+import isDefined from "../Core/isDefined";
+import { BaseModel } from "./Model";
+import ExportableMixin from "../ModelMixins/ExportableMixin";
 
 // Types of CSVs:
 // - Points - Latitude and longitude columns or address
@@ -32,17 +30,15 @@ import Terria from "./Terria";
 
 const automaticTableStylesStratumName = TableAutomaticStylesStratum.stratumName;
 
-export default class CsvCatalogItem
-  extends AsyncChartableMixin(
-    TableMixin(
-      ExportableMixin(
-        AutoRefreshingMixin(
-          UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
-        )
+export default class CsvCatalogItem extends AsyncChartableMixin(
+  TableMixin(
+    ExportableMixin(
+      AutoRefreshingMixin(
+        UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
       )
     )
   )
-  implements DownloadableData {
+) {
   static get type() {
     return "csv";
   }
@@ -55,14 +51,9 @@ export default class CsvCatalogItem
     sourceReference: BaseModel | undefined
   ) {
     super(id, terria, sourceReference);
-
-    runLater(() =>
-      runInAction(() =>
-        this.strata.set(
-          automaticTableStylesStratumName,
-          new TableAutomaticStylesStratum(this)
-        )
-      )
+    this.strata.set(
+      automaticTableStylesStratumName,
+      new TableAutomaticStylesStratum(this)
     );
   }
 
@@ -77,30 +68,6 @@ export default class CsvCatalogItem
   @computed
   get hasLocalData(): boolean {
     return isDefined(this._csvFile);
-  }
-
-  async downloadData() {
-    if (isDefined(this._csvFile)) {
-      return {
-        name: (this.name || this.uniqueId)!,
-        file: this._csvFile
-      };
-    }
-    if (isDefined(this.csvString)) {
-      return {
-        name: (this.name || this.uniqueId)!,
-        file: new Blob([this.csvString])
-      };
-    }
-
-    if (isDefined(this.url)) {
-      return this.url;
-    }
-
-    throw new TerriaError({
-      sender: this,
-      message: "No data available to download."
-    });
   }
 
   @computed

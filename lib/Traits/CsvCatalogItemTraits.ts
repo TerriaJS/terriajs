@@ -38,8 +38,7 @@ export default class CsvCatalogItemTraits extends mixTraits(
   AutoRefreshingTraits,
   FeatureInfoTraits,
   UrlTraits,
-  TableTraits,
-  AutoRefreshingTraits
+  TableTraits
 ) {
   @primitiveTrait({
     name: "Character Set",

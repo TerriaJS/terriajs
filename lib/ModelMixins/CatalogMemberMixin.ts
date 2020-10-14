@@ -11,7 +11,6 @@ type CatalogMember = Model<CatalogMemberTraits>;
 function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
   abstract class CatalogMemberMixin extends AccessControlMixin(Base) {
     abstract get type(): string;
-    readonly typeName?: string;
 
     // The names of items in the CatalogMember's info array that contain details of the source of this CatalogMember's data.
     // This should be overridden by children of this class. For an example see the WebMapServiceCatalogItem

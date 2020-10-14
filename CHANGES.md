@@ -3,10 +3,6 @@ Change Log
 
 ### MobX Development
 
-#### mobx-next-release (mobx-30)
-* Added option for manual Table region mapping - with `enableManualRegionMapping` TableTrait. This provides `SelectableDimensions` for the region column and region type.
-* Added WMS Dimensions (using `SelectableDimensions`)
-* Merged the `StyleSelector` and `DimensionsSelector`, and created a `SelectableDimensions` interface.
 #### next release (8.0.0-alpha.56)
 * [The next improvement]
 
