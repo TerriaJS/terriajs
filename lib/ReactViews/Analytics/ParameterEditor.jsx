@@ -24,7 +24,7 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import Styles from "./parameter-editors.scss";
 import InfoParameterEditor from "./InfoParameterEditor";
 
-const parseCustomMarkdownToReact = require("../Custom/parseCustomMarkdownToReact");
+import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 
 const ParameterEditor = createReactClass({
   displayName: "ParameterEditor",

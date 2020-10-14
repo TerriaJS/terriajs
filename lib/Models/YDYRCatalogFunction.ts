@@ -184,7 +184,9 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
     return new YDYRCatalogFunctionJob(id, this.terria);
   }
 
-  async forceLoadMetadata() {}
+  async forceLoadMetadata() {
+    // https://ydyr.info/api/v1/capability?format=json
+  }
 
   @computed
   get description() {
@@ -224,7 +226,7 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
 
     this._inputLayers = new EnumerationParameter(this, {
       id: "Input Layer",
-      description: `Select a layer which contains the tabular data you want to convert to another geography, It should contain at least two columns:  
+      description: `Select a layer which contains the tabular data you want to convert to another geography, It should contain at least two columns:
 - A geography column containing unique codes (eg postcodes)
 - A data column containing the values you want to convert (eg number of households by postcode)`,
       possibleValues,
@@ -296,9 +298,9 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
         errorMessage: true,
         value: `No region columns available, the selected layer "${
           this.inputLayers.value
-        }" doesn't have any supported region columns.  
-The region mapping can be set in the Workbench.  
-  
+        }" doesn't have any supported region columns.
+The region mapping can be set in the Workbench.
+
 **Supported regions:**
 ${DATASETS.map(d => `\n- ${d.title}`)}`
       });

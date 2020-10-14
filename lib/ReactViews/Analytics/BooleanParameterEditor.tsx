@@ -1,11 +1,10 @@
-import React from "react";
-import { observer } from "mobx-react";
-import Styles from "./parameter-editors.scss";
 import { action } from "mobx";
-import BooleanParameter from "../../Models/FunctionParameters/BooleanParameter";
+import { observer } from "mobx-react";
+import React from "react";
 import CommonStrata from "../../Models/CommonStrata";
-
-const Icon = require("../Icon");
+import BooleanParameter from "../../Models/FunctionParameters/BooleanParameter";
+import Icon from "../Icon";
+import Styles from "./parameter-editors.scss";
 
 @observer
 export default class BooleanParameterEditor extends React.Component<{
