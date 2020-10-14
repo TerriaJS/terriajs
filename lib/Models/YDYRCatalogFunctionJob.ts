@@ -23,7 +23,6 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
 
   protected async forceLoadMapItems(): Promise<void> {}
 
-  // why is this here?
   readonly typeName = "YourDataYourRegions Job";
 
   static readonly type = "ydyr-job";
@@ -258,10 +257,6 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
         )
       );
       csvResult.setTrait(CommonStrata.user, "enableManualRegionMapping", true);
-
-      if (regionColumn !== "") {
-        csvResult.setTrait(CommonStrata.user, "excludeStyles", [regionColumn]);
-      }
     });
     await csvResult.loadMapItems();
 
