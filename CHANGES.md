@@ -1,9 +1,12 @@
 Change Log
 ==========
 
+### Next version
+
 ### v7.11.14
 
 * Update CARTO Basemaps CDN URL and attribution.
+* Fixed issue with node 12 & 14 introduced in Cesium upgrade.
 
 ### v7.11.13
 
