@@ -1,10 +1,11 @@
 var path = require('path');
 var StringReplacePlugin = require("string-replace-webpack-plugin");
+var ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+var ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
 var webpack = require('webpack');
 
 function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtractPlugin, disableStyleLoader) {
     const cesiumDir = path.dirname(require.resolve('terriajs-cesium/package.json'));
-    const govAuPageAlertsDir = path.dirname(require.resolve('@gov.au/page-alerts/package.json'));
     // const fontAwesomeDir = path.resolve(path.dirname(require.resolve('font-awesome/package.json')));
     // const reactMdeDir = path.resolve(path.dirname(require.resolve('react-mde/package.json')));
     // console.log(fontAwesomeDir);
@@ -38,7 +39,11 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
                 {
                     pattern: /buildModuleUrl\([\'|\"](.*)[\'|\"]\)/ig,
                     replacement: function (match, p1, offset, string) {
-                        return "require('" + cesiumDir.replace(/\\/g, '\\\\') + "/Source/" + p1.replace(/\\/g, '\\\\') + "')";
+                        // The original string might have double quotes in it, so we'll replace them with single quotes
+                        // That way, the quotes in "require" will hopefully always match
+                        let p1_modified = p1.replace(/\"/g, '\'');
+                        p1_modified = p1_modified.replace(/\\/g, '\\\\')
+                        return "require('" + cesiumDir.replace(/\\/g, '\\\\') + "/Source/" + p1_modified + "')";
                     }
                 },
                 {
@@ -90,13 +95,14 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
                 loader: require.resolve('string-replace-loader'),
                 options: {
                     search: 'function _get\\(target, property, receiver\\).*',
-                    replace: 'var _get = require(\'../Core/superGet\').default;',
+                    replace: 'var _get = require(\'' + path.resolve(terriaJSBasePath, 'lib').replace(/\\/g, "/") + '/Core/superGet\').default;',
                     flags: 'g'
                 }
             },
             {
                 loader: 'babel-loader',
                 options: {
+                    cacheDirectory: true,
                     presets: [
                       [
                         '@babel/preset-env',
@@ -105,17 +111,30 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
                           useBuiltIns: "usage"
                         }
                       ],
-                      '@babel/preset-react'
+                      '@babel/preset-react',
+                      ['@babel/typescript', {allowNamespaces: true}]
                     ],
                     plugins: [
-                        'babel-plugin-styled-components',
                         'babel-plugin-jsx-control-statements',
                         '@babel/plugin-transform-modules-commonjs',
+                        ["@babel/plugin-proposal-decorators", { "legacy": true }],
+                        '@babel/proposal-class-properties',
+                        '@babel/proposal-object-rest-spread',
+                        'babel-plugin-styled-components',
                         require.resolve('@babel/plugin-syntax-dynamic-import')
                     ]
                 }
             },
-            require.resolve('ts-loader')
+            // Re-enable this if we need to observe any differences in the
+            // transpilation via ts-loader, & babel's stripping of types,
+            // or if TypeScript has newer features that babel hasn't
+            // caught up with
+            // {
+            //     loader: 'ts-loader',
+            //     options: {
+            //       transpileOnly: true
+            //     }
+            // }
         ]
     });
 
@@ -249,6 +268,26 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
     ]);
 
+    // Fork type checking to a separate thread
+    config.plugins.push(
+        new ForkTsCheckerWebpackPlugin({
+            typescript: {
+                configFile: path.resolve(__dirname, '..', 'tsconfig.json'),
+                diagnosticOptions: {
+                    semantic: true,
+                    syntactic: true,
+                },
+            },
+        })
+    );
+    config.plugins.push(
+        new ForkTsCheckerNotifierWebpackPlugin({
+            excludeWarnings: true,
+            // probably don't need to know first check worked as well - disable it
+            skipFirstNotification: true
+        })
+    );
+
     if (hot && !disableStyleLoader) {
         config.module.rules.push({
             include: path.resolve(terriaJSBasePath),
@@ -293,12 +332,6 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
                 'resolve-url-loader?sourceMap',
                 'sass-loader?sourceMap'
             ]
-        });
-
-        config.module.rules.push({
-            include: [path.resolve(govAuPageAlertsDir, 'lib', 'css')],
-            test: /\.css$/,
-            loaders: ['style-loader', 'css-loader']
         });
 
         // config.module.loaders.push({

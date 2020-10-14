@@ -1,5 +1,7 @@
+import { JsonObject } from "../Core/Json";
+import anyTrait from "./anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
+import DiffableTraits from "./DiffableTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
@@ -12,11 +14,10 @@ import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
 import SplitterTraits from "./SplitterTraits";
-import UrlTraits from "./UrlTraits";
-import anyTrait from "./anyTrait";
-import { JsonObject } from "../Core/Json";
 import TimeFilterTraits from "./TimeFilterTraits";
 import primitiveArrayTrait from "./primitiveArrayTrait";
+import UrlTraits from "./UrlTraits";
+import ExportableTraits from "./ExportableTraits";
 
 export class WebMapServiceAvailableStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -114,20 +115,13 @@ export class WebMapServiceAvailableDimensionTraits extends ModelTraits {
     description: "The nearest value of the dimension."
   })
   nearestValue?: boolean;
-
-  @primitiveTrait({
-    type: "boolean",
-    name: "Current",
-    description: "The current value of the dimension."
-  })
-  current?: boolean;
 }
 
 export class WebMapServiceAvailableLayerDimensionsTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
     name: "Layer Name",
-    description: "The name of the layer for which styles are available."
+    description: "The name of the layer for which dimensions are available."
   })
   layerName?: string;
 
@@ -141,10 +135,11 @@ export class WebMapServiceAvailableLayerDimensionsTraits extends ModelTraits {
 }
 
 export default class WebMapServiceCatalogItemTraits extends mixTraits(
+  ExportableTraits,
+  DiffableTraits,
   FeatureInfoTraits,
   LayerOrderingTraits,
   SplitterTraits,
-  DiscretelyTimeVaryingTraits,
   TimeFilterTraits,
   GetCapabilitiesTraits,
   RasterLayerTraits,
@@ -162,16 +157,24 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   @primitiveTrait({
     type: "string",
     name: "Layer(s)",
-    description: "The layer or layers to display."
+    description: "The layer or layers to display (comma separated values)."
   })
   layers?: string;
 
   @primitiveTrait({
     type: "string",
     name: "Style(s)",
-    description: "The styles to use with each of the `Layer(s)`."
+    description:
+      "The styles to use with each of the `Layer(s)` (comma separated values). This maps one-to-one with `Layer(s)`"
   })
   styles?: string;
+
+  @anyTrait({
+    name: "Dimensions",
+    description:
+      "Dimension parameters used to request a particular layer along one or more dimensional axes (including elevation, excluding time). Do not include `_dim` prefx for parameter keys. These dimensions will be applied to all layers (if applicable)"
+  })
+  dimensions?: { [key: string]: string };
 
   @objectArrayTrait({
     type: WebMapServiceAvailableLayerStylesTraits,
@@ -200,7 +203,7 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   @anyTrait({
     name: "Parameters",
     description:
-      "Additional parameters to pass to the MapServer when requesting images."
+      "Additional parameters to pass to the MapServer when requesting images. Style parameters are stored as CSV in `styles`, dimension parameters are stored in `dimensions`."
   })
   parameters?: JsonObject;
 
@@ -233,4 +236,27 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
       "`2015-04-27T16:15:00/2015-04-27T18:45:00/PT15M` has 11 times."
   })
   maxRefreshIntervals: number = 1000;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Disable style selector",
+    description: "When true, disables the style selector in the workbench"
+  })
+  disableStyleSelector = false;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Linked WCS URL",
+    description:
+      "Gets or sets the URL of a WCS that enables clip-and-ship for this WMS item."
+  })
+  linkedWcsUrl?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Linked WCS Coverage Name",
+    description:
+      "Gets or sets the coverage name for linked WCS for clip-and-ship."
+  })
+  linkedWcsCoverage?: string;
 }

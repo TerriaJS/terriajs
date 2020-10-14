@@ -22,12 +22,12 @@
           //"../node_modules/@types"
       ],
       "types": [
-          "cesium",
           "terriajs-cesium",
           "mapbox__point-geometry",
           "mapbox__vector-tile",
           "terriajs-html2canvas",
           "urijs",
+          "styled-components", // eventually it will be required anyway for SSR.
           //"react"
       ]
   },
@@ -38,6 +38,7 @@
       "./lib/ModelMixins/**/*",
       "./lib/Traits/**/*",
       "./lib/Language/**/*",
-      "./lib/ReactViews/**/*"
+      "./lib/ReactViews/**/*",
+      "./lib/ThirdParty/**/*"
   ]
 }

@@ -4,6 +4,7 @@ import Mustache from "mustache";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import isDefined from "../Core/isDefined";
 import loadWithXhr from "../Core/loadWithXhr";
 import TerriaError from "../Core/TerriaError";
 import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
@@ -30,6 +31,7 @@ import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
 import CommonStrata from "./CommonStrata";
 import { SelectableDimension } from "./SelectableDimensions";
+import { BaseModel } from "./Model";
 
 interface GetFeatureOfInterestResponse {
   featureMember?: FeatureMember[] | FeatureMember;
@@ -80,12 +82,18 @@ interface MeasurementTimeValuePair {
   value: Object | string;
 }
 
-const automaticTableStylesStratumName = "automaticTableStyles";
+const automaticTableStylesStratumName = TableAutomaticStylesStratum.stratumName;
 StratumOrder.addLoadStratum(automaticTableStylesStratumName);
 
 class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
   constructor(readonly catalogItem: SensorObservationServiceCatalogItem) {
     super(catalogItem);
+  }
+
+  duplicateLoadableStratum(
+    newModel: SensorObservationServiceCatalogItem
+  ): this {
+    return new SosAutomaticStylesStratum(newModel) as this;
   }
 
   @computed
@@ -306,12 +314,12 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
   static readonly type = "sos";
   static defaultRequestTemplate = require("./SensorObservationServiceRequestTemplate.xml");
 
-  constructor(id: string | undefined, terria: Terria) {
-    super(id, terria);
-    this.initializeAutomaticStyleStratum();
-  }
-
-  initializeAutomaticStyleStratum() {
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel
+  ) {
+    super(id, terria, sourceReference);
     this.strata.set(
       automaticTableStylesStratumName,
       new SosAutomaticStylesStratum(this)
@@ -331,6 +339,13 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     } else {
       return this.loadFeaturesData();
     }
+  }
+
+  @computed get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    }
+    return "0d";
   }
 
   @action
@@ -437,74 +452,79 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
       return [];
     }
 
-    const procedure = this.selectedProcedure!;
-    const observableProperty = this.selectedObservable!;
-    const datesCol = ["date"];
-    const valuesCol = ["values"];
-    const observationsCol = ["observations"];
-    const identifiersCol = ["identifiers"];
-    const proceduresCol = [this.proceduresName];
-    const observedPropertiesCol = [this.observablePropertiesName];
+    return runInAction(() => {
+      const procedure = this.selectedProcedure!;
+      const observableProperty = this.selectedObservable!;
+      const datesCol = ["date"];
+      const valuesCol = ["values"];
+      const observationsCol = ["observations"];
+      const identifiersCol = ["identifiers"];
+      const proceduresCol = [this.proceduresName];
+      const observedPropertiesCol = [this.observablePropertiesName];
 
-    const addObservationToColumns = (observation: Observation) => {
-      let points = observation?.result?.MeasurementTimeseries?.point;
-      if (!points) return;
-      if (!Array.isArray(points)) points = [points];
+      const addObservationToColumns = (observation: Observation) => {
+        let points = observation?.result?.MeasurementTimeseries?.point;
+        if (!points) return;
+        if (!Array.isArray(points)) points = [points];
 
-      var measurements = points.map(point => point.MeasurementTVP); // TVP = Time value pairs, I think.
-      var featureIdentifier = observation.featureOfInterest["xlink:href"] || "";
-      datesCol.push(
-        ...measurements.map(measurement =>
-          typeof measurement.time === "object" ? "" : measurement.time
-        )
-      );
-      valuesCol.push(
-        ...measurements.map(measurement =>
-          typeof measurement.value === "object" ? "" : measurement.value
-        )
-      );
-      identifiersCol.push(...measurements.map(_ => featureIdentifier));
-      proceduresCol.push(...measurements.map(_ => procedure.identifier || ""));
-      observedPropertiesCol.push(
-        ...measurements.map(_ => observableProperty.identifier || "")
-      );
-    };
+        var measurements = points.map(point => point.MeasurementTVP); // TVP = Time value pairs, I think.
+        var featureIdentifier =
+          observation.featureOfInterest["xlink:href"] || "";
+        datesCol.push(
+          ...measurements.map(measurement =>
+            typeof measurement.time === "object" ? "" : measurement.time
+          )
+        );
+        valuesCol.push(
+          ...measurements.map(measurement =>
+            typeof measurement.value === "object" ? "" : measurement.value
+          )
+        );
+        identifiersCol.push(...measurements.map(_ => featureIdentifier));
+        proceduresCol.push(
+          ...measurements.map(_ => procedure.identifier || "")
+        );
+        observedPropertiesCol.push(
+          ...measurements.map(_ => observableProperty.identifier || "")
+        );
+      };
 
-    let observationData = response.observationData;
-    observationData =
-      observationData === undefined || Array.isArray(observationData)
-        ? observationData
-        : [observationData];
-    if (!observationData) {
-      return [];
-    }
-
-    const observations = observationData.map(o => o.OM_Observation);
-    observations.forEach(observation => {
-      if (observation) {
-        addObservationToColumns(observation);
+      let observationData = response.observationData;
+      observationData =
+        observationData === undefined || Array.isArray(observationData)
+          ? observationData
+          : [observationData];
+      if (!observationData) {
+        return [];
       }
-    });
 
-    runInAction(() => {
-      // Set title for values column
-      const valueColumn = this.addObject(
-        CommonStrata.defaults,
-        "columns",
-        "values"
-      );
-      valueColumn?.setTrait(CommonStrata.defaults, "name", "values");
-      valueColumn?.setTrait(CommonStrata.defaults, "title", this.valueTitle);
-    });
+      const observations = observationData.map(o => o.OM_Observation);
+      observations.forEach(observation => {
+        if (observation) {
+          addObservationToColumns(observation);
+        }
+      });
 
-    return [
-      datesCol,
-      valuesCol,
-      observationsCol,
-      identifiersCol,
-      proceduresCol,
-      observedPropertiesCol
-    ];
+      runInAction(() => {
+        // Set title for values column
+        const valueColumn = this.addObject(
+          CommonStrata.defaults,
+          "columns",
+          "values"
+        );
+        valueColumn?.setTrait(CommonStrata.defaults, "name", "values");
+        valueColumn?.setTrait(CommonStrata.defaults, "title", this.valueTitle);
+      });
+
+      return [
+        datesCol,
+        valuesCol,
+        observationsCol,
+        identifiersCol,
+        proceduresCol,
+        observedPropertiesCol
+      ];
+    });
   }
 
   @computed
@@ -606,7 +626,9 @@ function createChartColumn(
   name: string | undefined
 ): string {
   const nameAttr = name == undefined ? "" : `name="${name}"`;
-  return `<sos-chart identifier="${identifier}" ${nameAttr}></sos-chart>`;
+  // The API that provides the chart data is a SOAP API, and the download button is essentially just a link, so when you click it you get an error page.
+  // can-download="false" will disable this broken download button.
+  return `<sos-chart identifier="${identifier}" ${nameAttr} can-download="false"></sos-chart>`;
 }
 
 async function loadSoapBody(
@@ -618,7 +640,7 @@ async function loadSoapBody(
   const requestXml = Mustache.render(requestTemplate, templateContext);
 
   const responseXml = await loadWithXhr({
-    url: proxyCatalogItemUrl(item, url, "0d"),
+    url: proxyCatalogItemUrl(item, url),
     responseType: "document",
     method: "POST",
     overrideMimeType: "text/xml",

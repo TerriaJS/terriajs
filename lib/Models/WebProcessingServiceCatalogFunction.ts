@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import {
   computed,
   isObservableArray,
@@ -29,12 +30,10 @@ import RegionParameter from "./FunctionParameters/RegionParameter";
 import RegionTypeParameter from "./FunctionParameters/RegionTypeParameter";
 import StringParameter from "./FunctionParameters/StringParameter";
 import WebProcessingServiceCatalogFunctionJob from "./WebProcessingServiceCatalogFunctionJob";
-import i18next from "i18next";
 import CatalogFunctionMixin from "../ModelMixins/CatalogFunctionMixin";
 import CatalogFunctionJobMixin from "../ModelMixins/CatalogFunctionJobMixin";
 import updateModelFromJson from "./updateModelFromJson";
 import XmlRequestMixin from "../ModelMixins/XmlRequestMixin";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 
 type AllowedValues = {
   Value?: string | string[];
@@ -92,8 +91,9 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
   readonly jobType = WebProcessingServiceCatalogFunctionJob.type;
 
   static readonly type = "wps";
-  readonly typeName = "Web Processing Service (WPS)";
-  readonly proxyCacheDuration = "1d";
+  get typeName() {
+    return "Web Processing Service (WPS)";
+  }
 
   readonly parameterConverters: ParameterConverter[] = [
     LiteralDataConverter,
@@ -111,6 +111,13 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
   @observable
   private _functionParameters: FunctionParameter[] = [];
 
+  @computed get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    }
+    return "0d";
+  }
+
   /**
    * Returns the proxied URL for the DescribeProcess endpoint.
    */
@@ -126,7 +133,7 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
       Identifier: this.identifier
     });
 
-    return proxyCatalogItemUrl(this, uri.toString(), this.proxyCacheDuration);
+    return proxyCatalogItemUrl(this, uri.toString());
   }
 
   async forceLoadMetadata() {

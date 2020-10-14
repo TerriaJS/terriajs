@@ -1,23 +1,19 @@
-"use strict";
-
-import Terria from "./Terria";
-import { BaseModel } from "./Model";
-import isDefined from "../Core/isDefined";
-import hasTraits from "./hasTraits";
-import GroupTraits from "../Traits/GroupTraits";
-import TerriaError from "../Core/TerriaError";
-import CommonStrata from "./CommonStrata";
-import Mappable from "./Mappable";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
-import GroupMixin from "../ModelMixins/GroupMixin";
 import i18next from "i18next";
-import ReferenceMixin from "../ModelMixins/ReferenceMixin";
+import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import getDereferencedIfExists from "../Core/getDereferencedIfExists";
+import isDefined from "../Core/isDefined";
+import TerriaError from "../Core/TerriaError";
+import GroupMixin from "../ModelMixins/GroupMixin";
+import GroupTraits from "../Traits/GroupTraits";
+import addToWorkbench from "./addToWorkbench";
+import CommonStrata from "./CommonStrata";
+import hasTraits from "./hasTraits";
+import { BaseModel } from "./Model";
+import Terria from "./Terria";
 
 interface AddUserCatalogMemberOptions {
   enable?: boolean;
   open?: boolean;
-  zoomTo?: boolean;
 }
 
 /**
@@ -28,7 +24,7 @@ export default function addUserCatalogMember(
   terria: Terria,
   newCatalogMemberOrPromise: BaseModel | Promise<BaseModel | undefined>,
   options: AddUserCatalogMemberOptions = {}
-) {
+): Promise<BaseModel | undefined> {
   const promise =
     newCatalogMemberOrPromise instanceof Promise
       ? newCatalogMemberOrPromise
@@ -60,20 +56,7 @@ export default function addUserCatalogMember(
         defaultValue(options.enable, true) &&
         !GroupMixin.isMixedInto(dereferenced)
       ) {
-        // add to workbench if it doesn't hold an item by the same id
-        if (
-          !terria.workbench.items.find(
-            item => item.uniqueId === dereferenced.uniqueId
-          )
-        ) {
-          terria.workbench.add(dereferenced);
-        }
-      }
-
-      if (defaultValue(options.zoomTo, true) && Mappable.is(dereferenced)) {
-        dereferenced
-          .loadMapItems()
-          .then(() => terria.currentViewer.zoomTo(dereferenced, 1));
+        addToWorkbench(terria.workbench, dereferenced);
       }
 
       return newCatalogItem;

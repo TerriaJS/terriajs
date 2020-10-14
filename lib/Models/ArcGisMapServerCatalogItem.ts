@@ -26,8 +26,8 @@ import LoadableStratum from "./LoadableStratum";
 import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import StratumOrder from "./StratumOrder";
 import StratumFromTraits from "./StratumFromTraits";
+import StratumOrder from "./StratumOrder";
 
 const proj4 = require("proj4").default;
 const unionRectangleArray = require("../Map/unionRectangleArray");
@@ -234,64 +234,38 @@ class MapServerStratum extends LoadableStratum(
   }
 
   @computed get info() {
-    function newInfo(name: string, content?: string) {
-      const traits = createStratumInstance(InfoSectionTraits);
-      runInAction(() => {
-        traits.name = name;
-        traits.content = content;
-      });
-      return traits;
-    }
-
     const layer = this.allLayers[0];
     if (!isDefined(layer)) {
       return [];
     }
 
     return [
-      newInfo(
-        i18next.t("models.arcGisMapServerCatalogItem.dataDescription"),
-        layer.description
-      ),
-      newInfo(
-        i18next.t("models.arcGisMapServerCatalogItem.serviceDescription"),
-        this._mapServer.description
-      ),
-      newInfo(
-        i18next.t("models.arcGisMapServerCatalogItem.copyrightText"),
-        isDefined(layer.copyrightText) && layer.copyrightText.length > 0
-          ? layer.copyrightText
-          : this._mapServer.copyrightText
-      )
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t("models.arcGisMapServerCatalogItem.dataDescription"),
+        content: layer.description
+      }),
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t("models.arcGisMapServerCatalogItem.serviceDescription"),
+        content: this._mapServer.description
+      }),
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t("models.arcGisMapServerCatalogItem.copyrightText"),
+        content:
+          isDefined(layer.copyrightText) && layer.copyrightText.length > 0
+            ? layer.copyrightText
+            : this._mapServer.copyrightText
+      })
     ];
   }
 
   @computed get legends() {
-    function newLegendItem(
-      title: string,
-      imageUrl: string,
-      width: number,
-      height: number
-    ) {
-      const item = createStratumInstance(LegendItemTraits);
-      runInAction(() => {
-        item.title = title;
-        item.imageUrl = imageUrl;
-        item.imageHeight = width;
-        item.imageWidth = height;
-      });
-      return item;
-    }
-
     const layers = isDefined(this._item.layers)
       ? this._item.layers.split(",")
       : [];
     const noDataRegex = /^No[\s_-]?Data$/i;
     const labelsRegex = /_Labels$/;
-    const legend = createStratumInstance(LegendTraits);
-    runInAction(() => {
-      legend.items = legend.items || [];
-    });
+
+    let items: StratumFromTraits<LegendItemTraits>[] = [];
 
     (this._legends.layers || []).forEach(l => {
       if (noDataRegex.test(l.layerName) || labelsRegex.test(l.layerName)) {
@@ -311,17 +285,20 @@ class MapServerStratum extends LoadableStratum(
           leg.label !== "" ? leg.label : l.layerName
         );
         const dataUrl = "data:" + leg.contentType + ";base64," + leg.imageData;
-        if (isDefined(legend.items)) {
-          legend.items.push(
-            newLegendItem(title, dataUrl, leg.width, leg.height)
-          );
-        }
+        items.push(
+          createStratumInstance(LegendItemTraits, {
+            title,
+            imageUrl: dataUrl,
+            imageWidth: leg.width,
+            imageHeight: leg.height
+          })
+        );
       });
     });
 
-    legend.items = uniqWith(legend.items, (a, b) => a.imageUrl === b.imageUrl);
+    items = uniqWith(items, (a, b) => a.imageUrl === b.imageUrl);
 
-    return [legend];
+    return [createStratumInstance(LegendTraits, { items })];
   }
 }
 
@@ -357,6 +334,13 @@ export default class ArcGisMapServerCatalogItem
     return this.loadMetadata();
   }
 
+  @computed get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    }
+    return "1d";
+  }
+
   @computed get imageryProvider() {
     const stratum = <MapServerStratum>(
       this.strata.get(MapServerStratum.stratumName)
@@ -364,6 +348,26 @@ export default class ArcGisMapServerCatalogItem
 
     if (!isDefined(this.url) || !isDefined(stratum)) {
       return;
+    }
+
+    let rectangle;
+
+    if (
+      this.clipToRectangle &&
+      this.rectangle !== undefined &&
+      this.rectangle.east !== undefined &&
+      this.rectangle.west !== undefined &&
+      this.rectangle.north !== undefined &&
+      this.rectangle.south !== undefined
+    ) {
+      rectangle = Rectangle.fromDegrees(
+        this.rectangle.west,
+        this.rectangle.south,
+        this.rectangle.east,
+        this.rectangle.north
+      );
+    } else {
+      rectangle = undefined;
     }
 
     const maximumLevel = maximumScaleToLevel(this.maximumScale);
@@ -374,6 +378,7 @@ export default class ArcGisMapServerCatalogItem
       tilingScheme: new WebMercatorTilingScheme(),
       maximumLevel: maximumLevel,
       parameters: this.parameters,
+      rectangle: rectangle,
       enablePickFeatures: this.allowFeaturePicking,
       usePreCachedTilesIfAvailable: !dynamicRequired,
       mapServerData: stratum.mapServerData,
@@ -476,7 +481,7 @@ function getBaseURI(item: ArcGisMapServerCatalogItem) {
 
 function getJson(item: ArcGisMapServerCatalogItem, uri: any) {
   return loadJson(
-    proxyCatalogItemUrl(item, uri.addQuery("f", "json").toString(), "1d")
+    proxyCatalogItemUrl(item, uri.addQuery("f", "json").toString())
   );
 }
 

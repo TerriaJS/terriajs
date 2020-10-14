@@ -18,6 +18,8 @@ const ButtonWrapper = styled(Box).attrs({
 `;
 // styles half ripped from nav.scss
 const StyledMapIconButton = styled(RawButton)`
+
+
   border-radius: 16px;
   ${props => props.roundLeft && `border-radius: 16px 0 0 16px;`}
   ${props => props.roundRight && `border-radius: 0 16px 16px 0;`}
@@ -48,6 +50,7 @@ const StyledMapIconButton = styled(RawButton)`
   `}
   ${props =>
     props.splitter &&
+    !props.disabled &&
     `
     background: ${props.theme.colorSplitter};
     color: ${props.theme.textLight};
@@ -65,6 +68,18 @@ const StyledMapIconButton = styled(RawButton)`
       fill: ${props.theme.textLight};
     }
   `}
+
+
+  ${props =>
+    props.disabled &&
+    `
+    background-color: ${props.theme.grey};
+    color: ${props.theme.grey};
+    opacity: 0.7;
+    svg {
+      fill: ${props.theme.textLightDimmed};
+    }
+  `}
 `;
 MapIconButton.propTypes = {
   primary: PropTypes.bool,
@@ -77,7 +92,8 @@ MapIconButton.propTypes = {
   title: PropTypes.string,
   iconElement: PropTypes.func.isRequired,
   onClick: PropTypes.func,
-  handleClick: PropTypes.func
+  handleClick: PropTypes.func,
+  children: PropTypes.node
 };
 
 function MapIconButton(props) {
@@ -91,13 +107,19 @@ function MapIconButton(props) {
     neverCollapse,
     primary,
     splitter,
-    inverted
+    inverted,
+    disabled
   } = props;
   const expanded = (isExpanded || neverCollapse) && children;
   const buttonRef = props.buttonRef || useRef();
 
   // const handleAway = () => setTimeout(() => setExpanded(false), 1000);
   const handleAway = () => setExpanded(false);
+  const handleFocus = bool => {
+    if (!disabled) {
+      setExpanded(bool);
+    }
+  };
 
   const MapIconButtonRaw = (
     <StyledMapIconButton
@@ -108,10 +130,11 @@ function MapIconButton(props) {
       inverted={inverted}
       roundLeft={roundLeft}
       roundRight={roundRight}
+      disabled={disabled}
       type="button"
       title={title}
-      onMouseOver={() => setExpanded(true)}
-      onFocus={() => setExpanded(true)}
+      onMouseOver={() => handleFocus(true)}
+      onFocus={() => handleFocus(true)}
       onMouseOut={handleAway}
       onBlur={handleAway}
       // onClick={props.handleClick}
@@ -185,4 +208,11 @@ function MapIconButton(props) {
     );
   } else return MapIconButtonRaw;
 }
+
+// const MapIconButtonWithRef = (props, ref) => (
+//   <MapIconButton {...props} buttonRef={ref} />
+// );
+
+// export default React.forwardRef(MapIconButtonWithRef);
+
 export default MapIconButton;

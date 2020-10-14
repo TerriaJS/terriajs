@@ -46,7 +46,7 @@ const PointParameterEditor = createReactClass({
   },
 
   selectPointOnMap() {
-    PointParameterEditor.selectOnMap(
+    selectOnMap(
       this.props.previewed.terria,
       this.props.viewState,
       this.props.parameter,
@@ -61,7 +61,7 @@ const PointParameterEditor = createReactClass({
     }
 
     // Show the parameter's value if there is one.
-    return PointParameterEditor.getDisplayValue(this.props.parameter.value);
+    return getDisplayValue(this.props.parameter.value);
   },
 
   render() {

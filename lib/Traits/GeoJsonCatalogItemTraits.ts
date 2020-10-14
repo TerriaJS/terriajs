@@ -94,7 +94,8 @@ export default class GeoJsonCatalogItemTraits extends mixTraits(
   @objectTrait({
     type: StyleTraits,
     name: "Style",
-    description: "Styling rules that follow simplestyle-spec"
+    description:
+      "Styling rules that follow [simplestyle-spec](https://github.com/mapbox/simplestyle-spec)"
   })
   style?: StyleTraits;
 
@@ -117,7 +118,7 @@ export default class GeoJsonCatalogItemTraits extends mixTraits(
     description:
       "Whether the features in this GeoJSON should be clamped to the terrain surface."
   })
-  clampToGround: boolean = false;
+  clampToGround: boolean = true;
 
   @objectArrayTrait({
     name: "Legend URLs",

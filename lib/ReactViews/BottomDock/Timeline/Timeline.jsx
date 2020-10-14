@@ -86,11 +86,17 @@ export const Timeline = observer(
       }
 
       const discreteTimes = catalogItem.discreteTimesAsSortedJulianDates;
+      const objectifiedDates = catalogItem.objectifiedDates;
       const currentDiscreteJulianDate = catalogItem.currentDiscreteJulianDate;
 
       return (
         <div className={Styles.timeline}>
-          <div className={Styles.textRow}>
+          <div
+            className={Styles.textRow}
+            css={`
+              background: ${p => p.theme.dark};
+            `}
+          >
             <div
               className={Styles.textCell}
               title={t("dateTime.timeline.textCell")}
@@ -116,7 +122,7 @@ export const Timeline = observer(
             >
               <DateTimePicker
                 currentDate={JulianDate.toDate(currentDiscreteJulianDate)}
-                dates={discreteTimes.map(time => JulianDate.toDate(time))}
+                dates={objectifiedDates}
                 onChange={this.changeDateTime}
                 openDirection="up"
                 isOpen={this.state.isPickerOpen}

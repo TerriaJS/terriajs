@@ -8,6 +8,7 @@
 import { observer } from "mobx-react";
 import React from "react";
 import createReactClass from "create-react-class";
+import styled from "styled-components";
 import PropTypes from "prop-types";
 import { withTranslation } from "react-i18next";
 import SearchHeader from "./SearchHeader";
@@ -16,7 +17,24 @@ import classNames from "classnames";
 import Styles from "./location-search-result.scss";
 import isDefined from "../../Core/isDefined";
 
-import Text from "../../Styled/Text";
+import Icon, { StyledIcon } from "../Icon";
+// import Box, { BoxSpan } from "../../Styled/Box";
+import { BoxSpan } from "../../Styled/Box";
+import Text, { TextSpan } from "../../Styled/Text";
+
+import { RawButton } from "../../Styled/Button";
+
+const RawButtonAndHighlight = styled(RawButton)`
+  ${p => `
+  &:hover, &:focus {
+    background-color: ${p.theme.greyLighter};
+    ${StyledIcon} {
+      fill-opacity: 1;
+    }
+  }`}
+`;
+
+const MAX_RESULTS_BEFORE_TRUNCATING = 5;
 
 const LocationSearchResults = observer(
   createReactClass({
@@ -36,7 +54,6 @@ const LocationSearchResults = observer(
     getInitialState() {
       return {
         isOpen: true,
-        // isExpanded: false
         isExpanded: false
       };
     },
@@ -47,17 +64,17 @@ const LocationSearchResults = observer(
       };
     },
 
-    // toggleGroup() {
-    //   this.setState({
-    //     isOpen: !this.state.isOpen
-    //   });
-    // },
+    toggleIsOpen() {
+      this.setState({
+        isOpen: !this.state.isOpen
+      });
+    },
 
-    // toggleExpand() {
-    //   this.setState({
-    //     isExpanded: !this.state.isExpanded
-    //   });
-    // },
+    toggleExpand() {
+      this.setState({
+        isExpanded: !this.state.isExpanded
+      });
+    },
 
     renderResultsFooter() {
       const { t } = this.props;
@@ -73,6 +90,7 @@ const LocationSearchResults = observer(
 
     render() {
       const search = this.props.search;
+      const { isOpen, isExpanded } = this.state;
       const searchProvider = search.searchProvider;
       const locationSearchBoundingBox = this.props.terria.configParameters
         .locationSearchBoundingBox;
@@ -89,10 +107,10 @@ const LocationSearchResults = observer(
         : search.results;
 
       const results =
-        validResults.length > 5
-          ? this.state.isExpanded
+        validResults.length > MAX_RESULTS_BEFORE_TRUNCATING
+          ? isExpanded
             ? validResults
-            : validResults.slice(0, 5)
+            : validResults.slice(0, MAX_RESULTS_BEFORE_TRUNCATING)
           : validResults;
 
       return (
@@ -112,11 +130,32 @@ const LocationSearchResults = observer(
               }
             />
           </button> */}
-          <SearchHeader
-            searchResults={search}
-            isWaitingForSearchToStart={this.props.isWaitingForSearchToStart}
-          />
+          <RawButtonAndHighlight
+            type="button"
+            fullWidth
+            onClick={this.toggleIsOpen}
+          >
+            <BoxSpan
+              paddedRatio={2}
+              paddedVertically={3}
+              centered
+              justifySpaceBetween
+            >
+              <TextSpan
+                textDarker
+                uppercase
+              >{`${search.searchProvider.name} (${validResults?.length})`}</TextSpan>
+              <StyledIcon
+                styledWidth={"9px"}
+                glyph={isOpen ? Icon.GLYPHS.opened : Icon.GLYPHS.closed}
+              />
+            </BoxSpan>
+          </RawButtonAndHighlight>
           <Text textDarker>
+            <SearchHeader
+              searchResults={search}
+              isWaitingForSearchToStart={this.props.isWaitingForSearchToStart}
+            />
             <ul className={Styles.items}>
               {results.map((result, i) => (
                 <SearchResult
@@ -129,19 +168,21 @@ const LocationSearchResults = observer(
                   isLastResult={results.length === i + 1}
                 />
               ))}
-              {/* {search.results.length > 5 && (
-              <button className={Styles.footer} onClick={this.toggleExpand}>
-                {this.renderResultsFooter()}
-                <Icon
-                  glyph={
-                    this.state.isExpanded
-                      ? Icon.GLYPHS.opened
-                      : Icon.GLYPHS.closed
-                  }
-                />
-              </button>
-            )} */}
             </ul>
+            {isOpen && validResults.length > MAX_RESULTS_BEFORE_TRUNCATING && (
+              <BoxSpan
+                paddedRatio={2}
+                paddedVertically={3}
+                left
+                justifySpaceBetween
+              >
+                <RawButton onClick={this.toggleExpand}>
+                  <Text small isLink>
+                    {this.renderResultsFooter()}
+                  </Text>
+                </RawButton>
+              </BoxSpan>
+            )}
           </Text>
         </div>
       );

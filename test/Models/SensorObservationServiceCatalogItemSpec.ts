@@ -2,6 +2,8 @@ import { runInAction } from "mobx";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import SensorObservationServiceCatalogItem from "../../lib/Models/SensorObservationServiceCatalogItem";
 import Terria from "../../lib/Models/Terria";
+import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
+import TableAutomaticStylesStratum from "../../lib/Table/TableAutomaticStylesStratum";
 
 const GetFeatureOfInterestResponse = require("raw-loader!../../wwwroot/test/sos/GetFeatureOfInterestResponse.xml");
 const EmptyGetFeatureOfInterestResponse = require("raw-loader!../../wwwroot/test/sos/GetFeatureOfInterestResponse_NoMembers.xml");
@@ -59,6 +61,32 @@ describe("SensorObservationServiceCatalogItem", function() {
 
   afterEach(function() {
     jasmine.Ajax.uninstall();
+  });
+
+  describe("when constructed", function() {
+    it("correctly sets the sourceReference", function() {
+      const terria = new Terria();
+      const sourceItem = new SimpleCatalogItem(undefined, terria);
+      const sosItem = new SensorObservationServiceCatalogItem(
+        undefined,
+        terria,
+        sourceItem
+      );
+      expect(sosItem.sourceReference).toBe(sourceItem);
+    });
+
+    it("correctly initializes the automatic stratum", function() {
+      const terria = new Terria();
+      const sourceItem = new SimpleCatalogItem(undefined, terria);
+      const sosItem = new SensorObservationServiceCatalogItem(
+        undefined,
+        terria,
+        sourceItem
+      );
+      expect(
+        sosItem.strata.get(TableAutomaticStylesStratum.stratumName)
+      ).toBeDefined();
+    });
   });
 
   describe("features table", function() {

@@ -18,7 +18,8 @@ export default function AutoRefreshingMixin<
   T extends Constructor<AutoRefreshing>
 >(Base: T) {
   abstract class AutoRefreshingMixin extends AsyncMappableMixin(Base) {
-    _autoRefreshDisposer: IReactionDisposer | undefined;
+    private autoRefreshDisposer: IReactionDisposer | undefined;
+    private autorunRefreshEnableDisposer: IReactionDisposer | undefined;
 
     /** Return the interval in seconds to poll for updates. */
     abstract get refreshInterval(): number | undefined;
@@ -31,32 +32,37 @@ export default function AutoRefreshingMixin<
       // We should only poll when our map items have consumers
       onBecomeObserved(this, "mapItems", this.startAutoRefresh.bind(this));
       onBecomeUnobserved(this, "mapItems", this.stopAutoRefresh.bind(this));
-
-      // Toggle autorefresh when `refreshEnabled` trait changes
-      autorun(() => {
-        if (this.refreshEnabled) {
-          this.startAutoRefresh();
-        } else {
-          this.stopAutoRefresh();
-        }
-      });
     }
 
     private startAutoRefresh() {
-      if (!this._autoRefreshDisposer && this.refreshEnabled) {
-        this._autoRefreshDisposer = reaction(
+      if (!this.autorunRefreshEnableDisposer) {
+        // Toggle autorefresh when `refreshEnabled` trait changes
+        this.autorunRefreshEnableDisposer = autorun(() => {
+          if (this.refreshEnabled) {
+            this.startAutoRefresh();
+          } else {
+            this.stopAutoRefresh();
+          }
+        });
+      }
+      if (!this.autoRefreshDisposer && this.refreshEnabled) {
+        this.autoRefreshDisposer = reaction(
           () => this._pollingTimer,
           () => {
-            this.refreshData();
+            if (this.show) this.refreshData();
           }
         );
       }
     }
 
     private stopAutoRefresh() {
-      if (this._autoRefreshDisposer) {
-        this._autoRefreshDisposer();
-        this._autoRefreshDisposer = undefined;
+      if (this.autorunRefreshEnableDisposer) {
+        this.autorunRefreshEnableDisposer();
+        this.autorunRefreshEnableDisposer = undefined;
+      }
+      if (this.autoRefreshDisposer) {
+        this.autoRefreshDisposer();
+        this.autoRefreshDisposer = undefined;
       }
     }
 

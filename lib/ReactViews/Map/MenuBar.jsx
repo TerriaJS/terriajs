@@ -1,6 +1,7 @@
 import React from "react";
+import styled from "styled-components";
 import triggerResize from "../../Core/triggerResize";
-import createReactClass from "create-react-class";
+// import createReactClass from "create-react-class";
 
 import PropTypes from "prop-types";
 import classNames from "classnames";
@@ -12,101 +13,102 @@ import Prompt from "../Generic/Prompt";
 import { withTranslation, Trans } from "react-i18next";
 import Styles from "./menu-bar.scss";
 import { runInAction } from "mobx";
+import { observer } from "mobx-react";
+import Text from "../../Styled/Text";
 
+import { useRefForTerria } from "../Hooks/useRefForTerria";
+
+const StyledMenuBar = styled.div`
+  pointer-events: none;
+  ${p =>
+    p.trainerBarVisible &&
+    `
+    top: ${Number(p.theme.trainerHeight) + Number(p.theme.mapButtonTop)}px;
+  `}
+`;
 // The map navigation region
-const MenuBar = createReactClass({
-  displayName: "MenuBar",
-
-  propTypes: {
-    terria: PropTypes.object,
-    viewState: PropTypes.object.isRequired,
-    allBaseMaps: PropTypes.array, // Not implemented yet
-    animationDuration: PropTypes.number,
-    menuItems: PropTypes.arrayOf(PropTypes.element),
-    menuLeftItems: PropTypes.arrayOf(PropTypes.element),
-    t: PropTypes.func.isRequired
-  },
-
-  getDefaultProps() {
-    return {
-      menuItems: []
-    };
-  },
-
-  handleClick() {
+// const MenuBar = createReactClass({
+const STORY_BUTTON_NAME = "MenuBarStoryButton";
+const MenuBar = observer(props => {
+  const { t } = props;
+  const storyButtonRef = useRefForTerria(STORY_BUTTON_NAME, props.viewState);
+  const menuItems = props.menuItems || [];
+  const handleClick = () => {
     runInAction(() => {
-      this.props.viewState.topElement = "MenuBar";
+      props.viewState.topElement = "MenuBar";
     });
-  },
-
-  onStoryButtonClick() {
-    this.props.viewState.toggleStoryBuilder();
-    this.props.terria.currentViewer.notifyRepaintRequired();
+  };
+  const onStoryButtonClick = () => {
+    props.viewState.toggleStoryBuilder();
+    props.terria.currentViewer.notifyRepaintRequired();
     // Allow any animations to finish, then trigger a resize.
     setTimeout(function() {
       triggerResize();
-    }, this.props.animationDuration || 1);
-    this.props.viewState.toggleFeaturePrompt("story", false, true);
-  },
-  dismissAction() {
-    this.props.viewState.toggleFeaturePrompt("story", false, true);
-  },
-  dismissSatelliteGuidanceAction() {
-    this.props.viewState.toggleFeaturePrompt("mapGuidesLocation", true, true);
-  },
-  render() {
-    const { t } = this.props;
-    // const satelliteGuidancePrompted = this.props.terria.getLocalProperty(
-    //   "satelliteGuidancePrompted"
-    // );
-    // const mapGuidesLocationPrompted = this.props.terria.getLocalProperty(
-    //   "mapGuidesLocationPrompted"
-    // );
-    const storyEnabled = this.props.terria.configParameters.storyEnabled;
-    const enableTools = this.props.terria.getUserProperty("tools") === "1";
+    }, props.animationDuration || 1);
+    props.viewState.toggleFeaturePrompt("story", false, true);
+  };
+  const dismissAction = () => {
+    props.viewState.toggleFeaturePrompt("story", false, true);
+  };
+  // const dismissSatelliteGuidanceAction = () => {
+  //   props.viewState.toggleFeaturePrompt("mapGuidesLocation", true, true);
+  // };
+  // const satelliteGuidancePrompted = props.terria.getLocalProperty(
+  //   "satelliteGuidancePrompted"
+  // );
+  // const mapGuidesLocationPrompted = props.terria.getLocalProperty(
+  //   "mapGuidesLocationPrompted"
+  // );
+  const storyEnabled = props.terria.configParameters.storyEnabled;
+  const enableTools = props.terria.getUserProperty("tools") === "1";
 
-    const promptHtml =
-      this.props.terria.stories.length > 0 ? (
+  const promptHtml = (
+    <Text textLight textAlignCenter>
+      {props.terria.stories.length > 0 ? (
         <Trans i18nKey="story.promptHtml1">
-          <div>
+          <Text extraLarge>
             You can view and create stories at any time by clicking here.
-          </div>
+          </Text>
         </Trans>
       ) : (
         <Trans i18nKey="story.promptHtml2">
           <div>
-            <small>INTRODUCING</small>
-            <h3>Data Stories</h3>
-            <div>
+            <Text>INTRODUCING</Text>
+            <Text bold extraExtraLarge styledLineHeight={"32px"}>
+              Data Stories
+            </Text>
+            <Text medium>
               Create and share interactive stories directly from your map.
-            </div>
+            </Text>
           </div>
         </Trans>
-      );
-    const delayTime =
-      storyEnabled && this.props.terria.stories.length > 0 ? 1000 : 2000;
-    return (
-      <div
-        className={classNames(
-          this.props.viewState.topElement === "MenuBar" ? "top-element" : "",
-          Styles.menuBar,
-          {
-            [Styles.menuBarWorkbenchClosed]: this.props.viewState
-              .isMapFullScreen
-          }
-        )}
-        onClick={this.handleClick}
-      >
-        <ul className={classNames(Styles.menu)}>
-          {/* <li className={Styles.menuItem}>
+      )}
+    </Text>
+  );
+  const delayTime =
+    storyEnabled && props.terria.stories.length > 0 ? 1000 : 2000;
+  return (
+    <StyledMenuBar
+      className={classNames(
+        props.viewState.topElement === "MenuBar" ? "top-element" : "",
+        Styles.menuBar,
+        {
+          [Styles.menuBarWorkbenchClosed]: props.viewState.isMapFullScreen
+        }
+      )}
+      onClick={handleClick}
+      trainerBarVisible={props.viewState.trainerBarVisible}
+    >
+      <ul className={classNames(Styles.menu)}>
+        {/* <li className={Styles.menuItem}>
             <HelpMenuPanelBasic
-              terria={this.props.terria}
-              viewState={this.props.viewState}
+              terria={props.terria}
+              viewState={props.viewState}
             />
-            {this.props.terria.configParameters.showFeaturePrompts &&
+            {props.terria.configParameters.showFeaturePrompts &&
               satelliteGuidancePrompted &&
               !mapGuidesLocationPrompted &&
-              !this.props.viewState.showSatelliteGuidance && (
+              !props.viewState.showSatelliteGuidance && (
                 <Prompt
                   content={
                     <div>
@@ -118,73 +120,87 @@ const MenuBar = createReactClass({
                   }
                   displayDelay={1000}
                   dismissText={t("satelliteGuidance.dismissText")}
-                  dismissAction={this.dismissSatelliteGuidanceAction}
+                  dismissAction={dismissSatelliteGuidanceAction}
                 />
               )}
           </li> */}
-          {enableTools && (
-            <li className={Styles.menuItem}>
-              <ToolsPanel
-                terria={this.props.terria}
-                viewState={this.props.viewState}
+        {enableTools && (
+          <li className={Styles.menuItem}>
+            <ToolsPanel terria={props.terria} viewState={props.viewState} />
+          </li>
+        )}
+        <If condition={!props.viewState.useSmallScreenInterface}>
+          <For each="element" of={props.menuLeftItems} index="i">
+            <li className={Styles.menuItem} key={i}>
+              {element}
+            </li>
+          </For>
+        </If>
+      </ul>
+      <ul className={classNames(Styles.menu)}>
+        <li className={Styles.menuItem}>
+          <SettingPanel terria={props.terria} viewState={props.viewState} />
+        </li>
+        <li className={Styles.menuItem}>
+          <SharePanel terria={props.terria} viewState={props.viewState} />
+        </li>
+        <If condition={storyEnabled}>
+          <li className={Styles.menuItem}>
+            <div>
+              <button
+                ref={storyButtonRef}
+                className={Styles.storyBtn}
+                type="button"
+                onClick={onStoryButtonClick}
+                aria-expanded={props.viewState.storyBuilderShown}
+                css={`
+                  ${p =>
+                    p["aria-expanded"] &&
+                    `&:not(.foo) {
+                      background: ${p.theme.colorPrimary};
+                      svg {
+                        fill: ${p.theme.textLight};
+                      }
+                    }`}
+                `}
+              >
+                <Icon glyph={Icon.GLYPHS.story} />
+                <span>{t("story.story")}</span>
+              </button>
+              <Prompt
+                centered
+                isVisible={
+                  storyEnabled &&
+                  props.viewState.featurePrompts.indexOf("story") >= 0
+                }
+                content={promptHtml}
+                displayDelay={delayTime}
+                dismissText={t("story.dismissText")}
+                dismissAction={dismissAction}
               />
-            </li>
-          )}
-          <If condition={!this.props.viewState.useSmallScreenInterface}>
-            <For each="element" of={this.props.menuLeftItems} index="i">
-              <li className={Styles.menuItem} key={i}>
-                {element}
-              </li>
-            </For>
-          </If>
-        </ul>
-        <ul className={classNames(Styles.menu)}>
-          <li className={Styles.menuItem}>
-            <SettingPanel
-              terria={this.props.terria}
-              viewState={this.props.viewState}
-            />
+            </div>
           </li>
-          <li className={Styles.menuItem}>
-            <SharePanel
-              terria={this.props.terria}
-              viewState={this.props.viewState}
-            />
-          </li>
-          <If condition={storyEnabled}>
-            <li className={Styles.menuItem}>
-              <div>
-                <button
-                  className={Styles.storyBtn}
-                  type="button"
-                  onClick={this.onStoryButtonClick}
-                >
-                  <Icon glyph={Icon.GLYPHS.story} />
-                  <span>{t("story.story")}</span>
-                </button>
-                {storyEnabled &&
-                  this.props.viewState.featurePrompts.indexOf("story") >= 0 && (
-                    <Prompt
-                      content={promptHtml}
-                      displayDelay={delayTime}
-                      dismissText={t("story.dismissText")}
-                      dismissAction={this.dismissAction}
-                    />
-                  )}
-              </div>
+        </If>
+        <If condition={!props.viewState.useSmallScreenInterface}>
+          <For each="element" of={menuItems} index="i">
+            <li className={Styles.menuItem} key={i}>
+              {element}
             </li>
-          </If>
-          <If condition={!this.props.viewState.useSmallScreenInterface}>
-            <For each="element" of={this.props.menuItems} index="i">
-              <li className={Styles.menuItem} key={i}>
-                {element}
-              </li>
-            </For>
-          </If>
-        </ul>
-      </div>
-    );
-  }
+          </For>
+        </If>
+      </ul>
+    </StyledMenuBar>
+  );
 });
+MenuBar.displayName = "MenuBar";
+MenuBar.propTypes = {
+  terria: PropTypes.object,
+  viewState: PropTypes.object.isRequired,
+  allBaseMaps: PropTypes.array, // Not implemented yet
+  animationDuration: PropTypes.number,
+  menuItems: PropTypes.arrayOf(PropTypes.element),
+  menuLeftItems: PropTypes.arrayOf(PropTypes.element),
+  t: PropTypes.func.isRequired
+};
 
 export default withTranslation()(MenuBar);

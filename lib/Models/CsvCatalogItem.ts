@@ -1,24 +1,23 @@
 import i18next from "i18next";
-import { runInAction, computed } from "mobx";
+import { computed, runInAction } from "mobx";
+import isDefined from "../Core/isDefined";
+import runLater from "../Core/runLater";
 import TerriaError from "../Core/TerriaError";
 import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import ExportableMixin from "../ModelMixins/ExportableMixin";
 import TableMixin from "../ModelMixins/TableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import Csv from "../Table/Csv";
 import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 import CsvCatalogItemTraits from "../Traits/CsvCatalogItemTraits";
 import CreateModel from "./CreateModel";
+import { DownloadableData } from "./DownloadableModelData";
+import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
-import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
-import isDefined from "../Core/isDefined";
-import { BaseModel } from "./Model";
-import CommonStrata from "./CommonStrata";
-import runLater from "../Core/runLater";
-import { DownloadableData } from "./DownloadableModelData";
 
 // Types of CSVs:
 // - Points - Latitude and longitude columns or address
@@ -31,13 +30,15 @@ import { DownloadableData } from "./DownloadableModelData";
 // - points, no ID, time -> "blips" with a duration (perhaps provided by another column)
 //
 
-const automaticTableStylesStratumName = "automaticTableStyles";
+const automaticTableStylesStratumName = TableAutomaticStylesStratum.stratumName;
 
 export default class CsvCatalogItem
-  extends TableMixin(
-    AsyncChartableMixin(
-      AutoRefreshingMixin(
-        UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
+  extends AsyncChartableMixin(
+    TableMixin(
+      ExportableMixin(
+        AutoRefreshingMixin(
+          UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
+        )
       )
     )
   )
@@ -51,7 +52,7 @@ export default class CsvCatalogItem
   constructor(
     id: string | undefined,
     terria: Terria,
-    sourceReference?: BaseModel
+    sourceReference: BaseModel | undefined
   ) {
     super(id, terria, sourceReference);
 
@@ -103,16 +104,46 @@ export default class CsvCatalogItem
   }
 
   @computed
+  get _canExportData() {
+    return (
+      isDefined(this._csvFile) ||
+      isDefined(this.csvString) ||
+      isDefined(this.url)
+    );
+  }
+
+  @computed
+  get cacheDuration() {
+    return super.cacheDuration || "1d";
+  }
+
+  protected async _exportData() {
+    if (isDefined(this._csvFile)) {
+      return {
+        name: (this.name || this.uniqueId)!,
+        file: this._csvFile
+      };
+    }
+    if (isDefined(this.csvString)) {
+      return {
+        name: (this.name || this.uniqueId)!,
+        file: new Blob([this.csvString])
+      };
+    }
+
+    if (isDefined(this.url)) {
+      return this.url;
+    }
+
+    throw new TerriaError({
+      sender: this,
+      message: "No data available to download."
+    });
+  }
+
+  @computed
   get canZoomTo() {
-    const s = this.strata.get(automaticTableStylesStratumName);
-    // Zooming to tables with lat/lon columns works
-    if (
-      isDefined(s) &&
-      isDefined(s.defaultStyle) &&
-      s.defaultStyle.latitudeColumn !== undefined
-    )
-      return true;
-    return false;
+    return this.activeTableStyle.latitudeColumn !== undefined;
   }
 
   /*
@@ -143,7 +174,7 @@ export default class CsvCatalogItem
       return;
     }
 
-    Csv.parseUrl(proxyCatalogItemUrl(this, this.refreshUrl, "1d"), true).then(
+    Csv.parseUrl(proxyCatalogItemUrl(this, this.refreshUrl), true).then(
       dataColumnMajor => {
         runInAction(() => {
           if (this.polling.shouldReplaceData) {
@@ -166,7 +197,7 @@ export default class CsvCatalogItem
     } else if (this._csvFile !== undefined) {
       return Csv.parseFile(this._csvFile, true);
     } else if (this.url !== undefined) {
-      return Csv.parseUrl(proxyCatalogItemUrl(this, this.url, "1d"), true);
+      return Csv.parseUrl(proxyCatalogItemUrl(this, this.url), true);
     } else {
       return Promise.reject(
         new TerriaError({

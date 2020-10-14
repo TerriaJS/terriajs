@@ -1,7 +1,10 @@
 import i18next from "i18next";
 import TerriaError from "../Core/TerriaError";
+import CommonStrata from "./CommonStrata";
+import createStubCatalogItem from "./createStubCatalogItem";
 import { BaseModel } from "./Model";
 import ModelFactory from "./ModelFactory";
+import StubCatalogItem from "./StubCatalogItem";
 import Terria from "./Terria";
 import updateModelFromJson from "./updateModelFromJson";
 
@@ -39,19 +42,37 @@ export default function upsertModelFromJson(
     if (model === undefined) {
       model = factory.create(json.type, uniqueId, terria);
       if (model === undefined) {
-        throw new TerriaError({
+        new TerriaError({
           title: i18next.t("models.catalog.unsupportedTypeTitle"),
           message: i18next.t("models.catalog.unsupportedTypeMessage", {
             type: json.type
           })
         });
+        model = createStubCatalogItem(terria, uniqueId);
+        if (model && model.type === StubCatalogItem.type) {
+          const stub = model;
+          stub.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
+          stub.setTrait(CommonStrata.override, "name", `${uniqueId} (Stub)`);
+        } else {
+          throw new TerriaError({
+            title: i18next.t("models.catalog.stubCreationFailure"),
+            message: i18next.t("models.catalog.stubCreationFailure", {
+              item: json
+            })
+          });
+        }
       }
 
-      model.terria.addModel(model);
+      if (model.type !== StubCatalogItem.type) {
+        model.terria.addModel(model);
+      }
     }
   }
 
-  updateModelFromJson(model, stratumName, json, replaceStratum);
-
+  try {
+    updateModelFromJson(model, stratumName, json, replaceStratum);
+  } catch {
+    model.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
+  }
   return model;
 }

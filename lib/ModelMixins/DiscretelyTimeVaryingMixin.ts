@@ -4,24 +4,38 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
 import Constructor from "../Core/Constructor";
-import filterOutUndefined from "../Core/filterOutUndefined";
+import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
 import { calculateDomain, ChartItem } from "../Models/Chartable";
 import CommonStrata from "../Models/CommonStrata";
 import Model from "../Models/Model";
 import DiscretelyTimeVaryingTraits from "../Traits/DiscretelyTimeVaryingTraits";
 import TimeVarying from "./TimeVarying";
-import TimeFilterMixin from "./TimeFilterMixin";
 
 type DiscretelyTimeVarying = Model<DiscretelyTimeVaryingTraits>;
 
-export default function DiscretelyTimeVaryingMixin<
+export interface AsJulian {
+  time: JulianDate;
+  tag: string;
+}
+
+export interface DiscreteTimeAsJS {
+  time: string;
+  tag: string | undefined;
+}
+
+function DiscretelyTimeVaryingMixin<
   T extends Constructor<DiscretelyTimeVarying>
 >(Base: T) {
   abstract class DiscretelyTimeVaryingMixin extends Base
     implements TimeVarying {
+    get hasDiscreteTimes() {
+      return true;
+    }
+    abstract get discreteTimes(): DiscreteTimeAsJS[] | undefined;
+
     @computed
-    get currentTime() {
+    get currentTime(): string | undefined {
       const time = super.currentTime;
       if (time === undefined) {
         if (this.initialTimeSource === "now") {
@@ -30,6 +44,8 @@ export default function DiscretelyTimeVaryingMixin<
           return this.startTime;
         } else if (this.initialTimeSource === "stop") {
           return this.stopTime;
+        } else if (this.initialTimeSource === "none") {
+          return undefined;
         } else {
           throw new TerriaError({
             sender: this,
@@ -50,56 +66,53 @@ export default function DiscretelyTimeVaryingMixin<
     }
 
     @computed({ equals: JulianDate.equals })
-    get startTimeAsJulianDate() {
+    get startTimeAsJulianDate(): JulianDate | undefined {
       return toJulianDate(this.startTime);
     }
 
     @computed({ equals: JulianDate.equals })
-    get stopTimeAsJulianDate() {
+    get stopTimeAsJulianDate(): JulianDate | undefined {
       return toJulianDate(this.stopTime);
     }
 
     @computed
-    get discreteTimesAsSortedJulianDates() {
-      let discreteTimes;
-      if (
-        TimeFilterMixin.isMixedInto(this) &&
-        this.filteredDiscreteTimes !== undefined
-      ) {
-        discreteTimes = this.filteredDiscreteTimes;
-      } else discreteTimes = this.discreteTimes;
+    get objectifiedDates(): ObjectifiedDates {
+      if (!isDefined(this.discreteTimesAsSortedJulianDates)) {
+        return { indice: [], dates: [] };
+      }
 
+      const jsDates = this.discreteTimesAsSortedJulianDates.map(julianDate =>
+        JulianDate.toDate(julianDate.time)
+      );
+
+      return objectifyDates(jsDates);
+    }
+
+    @computed
+    get discreteTimesAsSortedJulianDates(): AsJulian[] | undefined {
+      const discreteTimes = this.discreteTimes;
       if (discreteTimes === undefined) {
         return undefined;
       }
 
-      const asJulian = filterOutUndefined(
-        discreteTimes.map(dt => {
-          if (dt.time === undefined) {
-            return undefined;
-          }
-          try {
-            return {
-              time: JulianDate.fromIso8601(dt.time),
+      const asJulian: AsJulian[] = [];
+      for (let i = 0; i < discreteTimes.length; i++) {
+        const dt = discreteTimes[i];
+        try {
+          if (dt.time !== undefined) {
+            const time = JulianDate.fromIso8601(dt.time);
+            asJulian.push({
+              time,
               tag: dt.tag !== undefined ? dt.tag : dt.time
-            };
-          } catch {
-            return undefined;
+            });
           }
-        })
-      );
-
+        } catch {}
+      }
       asJulian.sort((a, b) => JulianDate.compare(a.time, b.time));
       return asJulian;
     }
 
-    @computed
-    get currentDiscreteTimeIndex(): number | undefined {
-      const currentTime = this.currentTimeAsJulianDate;
-      if (currentTime === undefined) {
-        return undefined;
-      }
-
+    getDiscreteTimeIndex(time: JulianDate): number | undefined {
       const discreteTimes = this.discreteTimesAsSortedJulianDates;
       if (discreteTimes === undefined || discreteTimes.length === 0) {
         return undefined;
@@ -107,7 +120,7 @@ export default function DiscretelyTimeVaryingMixin<
 
       const exactIndex = binarySearch(
         discreteTimes,
-        currentTime,
+        time,
         (candidate, currentTime) =>
           JulianDate.compare(candidate.time, currentTime)
       );
@@ -130,16 +143,24 @@ export default function DiscretelyTimeVaryingMixin<
         const nextTime = discreteTimes[nextIndex].time;
 
         const timeFromPrevious = JulianDate.secondsDifference(
-          currentTime,
+          time,
           previousTime
         );
-        const timeToNext = JulianDate.secondsDifference(nextTime, currentTime);
+        const timeToNext = JulianDate.secondsDifference(nextTime, time);
         if (timeToNext > timeFromPrevious) {
           return nextIndex - 1;
         } else {
           return nextIndex;
         }
       }
+    }
+
+    @computed
+    get currentDiscreteTimeIndex(): number | undefined {
+      return (
+        this.currentTimeAsJulianDate &&
+        this.getDiscreteTimeIndex(this.currentTimeAsJulianDate)
+      );
     }
 
     @computed
@@ -206,7 +227,7 @@ export default function DiscretelyTimeVaryingMixin<
     }
 
     @computed
-    get startTime() {
+    get startTime(): string | undefined {
       const time = super.startTime;
       if (
         time === undefined &&
@@ -221,7 +242,7 @@ export default function DiscretelyTimeVaryingMixin<
     }
 
     @computed
-    get stopTime() {
+    get stopTime(): string | undefined {
       const time = super.stopTime;
       if (
         time === undefined &&
@@ -270,7 +291,9 @@ export default function DiscretelyTimeVaryingMixin<
         dt => ({
           x: JulianDate.toDate(dt.time),
           y: 0.5,
-          isSelected: dt.time === this.currentDiscreteJulianDate
+          isSelected:
+            this.currentDiscreteJulianDate &&
+            this.currentDiscreteJulianDate.equals(dt.time)
         })
       );
 
@@ -293,7 +316,9 @@ export default function DiscretelyTimeVaryingMixin<
             });
           },
           getColor: () => {
-            return getChartColorForId(colorId);
+            return this.chartColor
+              ? this.chartColor
+              : getChartColorForId(colorId);
           },
           onClick: (point: any) => {
             runInAction(() => {
@@ -307,18 +332,97 @@ export default function DiscretelyTimeVaryingMixin<
         }
       ];
     }
-
-    loadChartItems() {
-      return Promise.resolve();
-    }
   }
 
   return DiscretelyTimeVaryingMixin;
 }
+
+namespace DiscretelyTimeVaryingMixin {
+  export interface DiscretelyTimeVaryingMixin
+    extends InstanceType<ReturnType<typeof DiscretelyTimeVaryingMixin>> {}
+
+  export function isMixedInto(model: any): model is DiscretelyTimeVaryingMixin {
+    return model && model.hasDiscreteTimes;
+  }
+}
+
+export default DiscretelyTimeVaryingMixin;
 
 function toJulianDate(time: string | undefined): JulianDate | undefined {
   if (time === undefined) {
     return undefined;
   }
   return JulianDate.fromIso8601(time);
+}
+
+type DatesObject<T> = {
+  [key: number]: T;
+  dates: Date[];
+  indice: number[];
+};
+export type ObjectifiedDates = DatesObject<ObjectifiedYears>;
+export type ObjectifiedYears = DatesObject<ObjectifiedMonths>;
+export type ObjectifiedMonths = DatesObject<ObjectifiedDays>;
+export type ObjectifiedDays = DatesObject<ObjectifiedHours>;
+export type ObjectifiedHours = DatesObject<Date[]>;
+
+/**
+ * Process an array of dates into layered objects of years, months and days.
+ * @param  {Date[]} An array of dates.
+ * @return {Object} Returns an object whose keys are years, whose values are objects whose keys are months (0=Jan),
+ *   whose values are objects whose keys are days, whose values are arrays of all the datetimes on that day.
+ */
+function objectifyDates(dates: Date[]): ObjectifiedDates {
+  let result: ObjectifiedDates = { indice: [], dates };
+
+  for (let i = 0; i < dates.length; i++) {
+    let date = dates[i];
+    let year = date.getFullYear();
+    let century = Math.floor(year / 100);
+    let month = date.getMonth();
+    let day = date.getDate();
+    let hour = date.getHours();
+
+    // ObjectifiedDates
+    if (!result[century]) {
+      result[century] = { indice: [], dates: [] };
+      result.indice.push(century);
+    }
+
+    result[century].dates.push(date);
+
+    // ObjectifiedYears
+    if (!result[century][year]) {
+      result[century][year] = { indice: [], dates: [] };
+      result[century].indice.push(year);
+    }
+
+    result[century][year].dates.push(date);
+
+    // ObjectifiedMonths
+    if (!result[century][year][month]) {
+      result[century][year][month] = { indice: [], dates: [] };
+      result[century][year].indice.push(month);
+    }
+
+    result[century][year][month].dates.push(date);
+
+    // ObjectifiedDays
+    if (!result[century][year][month][day]) {
+      result[century][year][month][day] = { indice: [], dates: [] };
+      result[century][year][month].indice.push(day);
+    }
+
+    result[century][year][month][day].dates.push(date);
+
+    // ObjectifiedHours
+    if (!result[century][year][month][day][hour]) {
+      result[century][year][month][day][hour] = [];
+      result[century][year][month][day].indice.push(hour);
+    }
+
+    result[century][year][month][day][hour].push(date);
+  }
+
+  return result;
 }

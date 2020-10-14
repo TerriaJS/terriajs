@@ -7,6 +7,9 @@ import TerriaViewerWrapper from "../Map/TerriaViewerWrapper";
 import DistanceLegend from "../Map/Legend/DistanceLegend";
 // import FeedbackButton from "../Feedback/FeedbackButton";
 import LocationBar from "../Map/Legend/LocationBar";
+import MapNavigation from "../Map/MapNavigation";
+import MenuBar from "../Map/MenuBar";
+import MapDataCount from "../BottomDock/MapDataCount";
 // import defined from "terriajs-cesium/Source/Core/defined";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import BottomDock from "../BottomDock/BottomDock";
@@ -34,6 +37,9 @@ const MapColumn = observer(
       terria: PropTypes.object.isRequired,
       viewState: PropTypes.object.isRequired,
       customFeedbacks: PropTypes.array.isRequired,
+      allBaseMaps: PropTypes.array.isRequired,
+      animationDuration: PropTypes.number.isRequired,
+      customElements: PropTypes.object.isRequired,
       t: PropTypes.func.isRequired
     },
 
@@ -82,6 +88,7 @@ const MapColumn = observer(
     },
 
     render() {
+      const { customElements } = this.props;
       // const { t } = this.props;
       // TODO: remove? see: https://bugs.chromium.org/p/chromium/issues/detail?id=1001663
       const isAboveChrome75 =
@@ -100,6 +107,28 @@ const MapColumn = observer(
               className={classNames(mapCellClass, Styles.mapCellMap)}
               ref={this.newMapCell}
             >
+              <If condition={!this.props.viewState.hideMapUi()}>
+                <div
+                  css={`
+                    ${this.props.viewState.explorerPanelIsVisible &&
+                      "opacity: 0.3;"}
+                  `}
+                >
+                  <MenuBar
+                    terria={this.props.terria}
+                    viewState={this.props.viewState}
+                    allBaseMaps={this.props.allBaseMaps}
+                    menuItems={customElements.menu}
+                    menuLeftItems={customElements.menuLeft}
+                    animationDuration={this.props.animationDuration}
+                  />
+                  <MapNavigation
+                    terria={this.props.terria}
+                    viewState={this.props.viewState}
+                    navItems={customElements.nav}
+                  />
+                </div>
+              </If>
               <div
                 className={Styles.mapWrapper}
                 style={{
@@ -112,10 +141,14 @@ const MapColumn = observer(
                 />
               </div>
               <If condition={!this.props.viewState.hideMapUi()}>
+                <MapDataCount
+                  terria={this.props.terria}
+                  viewState={this.props.viewState}
+                />
                 <div className={Styles.locationDistance}>
                   <LocationBar
                     terria={this.props.terria}
-                    mouseCoords={this.props.viewState.mouseCoords}
+                    mouseCoords={this.props.terria.currentViewer.mouseCoords}
                   />
                   <DistanceLegend terria={this.props.terria} />
                 </div>

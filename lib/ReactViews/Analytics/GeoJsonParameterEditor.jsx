@@ -118,14 +118,14 @@ const GeoJsonParameterEditor = observer(
             className={Styles.field}
             type="text"
             readOnly
-            value={GeoJsonParameterEditor.getDisplayValue(
+            value={getDisplayValue(
               this.props.parameter.value,
               this.props.parameter
             )}
           />
           <If
             condition={
-              GeoJsonParameterEditor.getDisplayValue(
+              getDisplayValue(
                 this.props.parameter.value,
                 this.props.parameter
               ) === ""
@@ -139,7 +139,7 @@ const GeoJsonParameterEditor = observer(
   })
 );
 
-GeoJsonParameterEditor.getDisplayValue = function(value, parameter) {
+function getDisplayValue(value, parameter) {
   if (!defined(parameter.subtype)) {
     return "";
   }
@@ -153,6 +153,6 @@ GeoJsonParameterEditor.getDisplayValue = function(value, parameter) {
     return getPolygonParameterDisplayValue(value);
   }
   return getRegionPickerDisplayValue(value, parameter);
-};
+}
 
 module.exports = withTranslation()(GeoJsonParameterEditor);

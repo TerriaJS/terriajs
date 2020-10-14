@@ -3,7 +3,7 @@ import GroupTraits from "./GroupTraits";
 import mixTraits from "./mixTraits";
 import UrlTraits from "./UrlTraits";
 
-export default class WebMapServiceCatalogGroupTraits extends mixTraits(
+export default class ArcGisFeatureServerCatalogGroupTraits extends mixTraits(
   GroupTraits,
   UrlTraits,
   CatalogMemberTraits

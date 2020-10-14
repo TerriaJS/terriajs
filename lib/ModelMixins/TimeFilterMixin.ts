@@ -1,42 +1,41 @@
+import { action, computed, observable, onBecomeObserved } from "mobx";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import Constructor from "../Core/Constructor";
+import filterOutUndefined from "../Core/filterOutUndefined";
+import LatLonHeight from "../Core/LatLonHeight";
+import runLater from "../Core/runLater";
+import { ProviderCoords, ProviderCoordsMap } from "../Map/PickedFeatures";
+import CommonStrata from "../Models/CommonStrata";
+import createStratumInstance from "../Models/createStratumInstance";
+import Mappable, { ImageryParts } from "../Models/Mappable";
 import Model from "../Models/Model";
+import DiscretelyTimeVaryingTraits from "../Traits/DiscretelyTimeVaryingTraits";
+import MappableTraits from "../Traits/MappableTraits";
 import TimeFilterTraits, {
   TimeFilterCoordinates
 } from "../Traits/TimeFilterTraits";
-import DiscretelyTimeVaryingTraits from "../Traits/DiscretelyTimeVaryingTraits";
-import { ProviderCoordsMap, ProviderCoords } from "../Map/PickedFeatures";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import createStratumInstance from "../Models/createStratumInstance";
-import DiscreteTimeTraits from "../Traits/DiscreteTimeTraits";
-import sortedIndexOf from "lodash/sortedIndexOf";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import filterOutUndefined from "../Core/filterOutUndefined";
-import CommonStrata from "../Models/CommonStrata";
-import { computed, action, observable, onBecomeObserved } from "mobx";
+import DiscretelyTimeVaryingMixin from "./DiscretelyTimeVaryingMixin";
 import TimeVarying from "./TimeVarying";
-import Mappable, { ImageryParts } from "../Models/Mappable";
-import MappableTraits from "../Traits/MappableTraits";
-import runLater from "../Core/runLater";
-import LatLonHeight from "../Core/LatLonHeight";
 
 type MixinModel = Model<
   TimeFilterTraits & DiscretelyTimeVaryingTraits & MappableTraits
-> &
-  TimeVarying;
+>;
 
 /**
  * A Mixin for filtering the dates for which imagery is available at a location
- * picked by the user.
+ * picked by the user
  *
  * When `timeFilterPropertyName` is set, we look for a property of that name in
- * the feature query response at the picked location. The property value should be set
- * to an array of dates for which imagery is available at the location. This
+ * the feature query response at the picked location. The property value should be
+ * an array of dates for which imagery is available at the location. This
  * Mixin is used to implement the Location filter feature for Satellite
  * Imagery.
  */
 function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
-  abstract class TimeFilterMixin extends Base {
+  abstract class TimeFilterMixin extends DiscretelyTimeVaryingMixin(Base) {
     @observable _currentTimeFilterFeature?: Entity;
 
     constructor(...args: any[]) {
@@ -54,23 +53,37 @@ function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
             }
 
             const coords = coordinatesFromTraits(this.timeFilterCoordinates);
-            if (this.timeFilterPropertyName && coords) {
-              const resolved = await resolveFeature(
-                this,
-                this.timeFilterPropertyName,
-                coords.position,
-                coords.tileCoords
-              );
-              if (resolved) {
-                this.setTimeFilterFeature(resolved.feature, resolved.providers);
-                disposeListener();
-              }
-            } else {
-              disposeListener();
+            if (coords) {
+              this.setTimeFilterFromLocation(coords);
             }
+            disposeListener();
           })
         );
       });
+    }
+
+    @action
+    async setTimeFilterFromLocation(coordinates: {
+      position: LatLonHeight;
+      tileCoords: { x: number; y: number; level: number };
+    }): Promise<boolean> {
+      const propertyName = this.timeFilterPropertyName;
+      if (propertyName === undefined || !Mappable.is(this)) {
+        return false;
+      }
+
+      const resolved = await resolveFeature(
+        this,
+        propertyName,
+        coordinates.position,
+        coordinates.tileCoords
+      );
+
+      if (resolved) {
+        this.setTimeFilterFeature(resolved.feature, resolved.providers);
+        return true;
+      }
+      return false;
     }
 
     get hasTimeFilterMixin() {
@@ -94,7 +107,7 @@ function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
     }
 
     @computed
-    get filteredDiscreteTimes(): ReadonlyArray<DiscreteTimeTraits> | undefined {
+    get featureTimesAsJulianDates() {
       if (
         this._currentTimeFilterFeature === undefined ||
         this._currentTimeFilterFeature.properties === undefined ||
@@ -102,23 +115,35 @@ function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
       ) {
         return;
       }
-      const featureTimesProperty = this._currentTimeFilterFeature.properties[
+
+      const featureTimes = this._currentTimeFilterFeature.properties[
         this.timeFilterPropertyName
-      ];
+      ]?.getValue(this.currentTime);
 
-      if (featureTimesProperty === undefined) return;
+      if (!Array.isArray(featureTimes)) {
+        return;
+      }
 
-      // Return the dates in the `featureTimesProperty`, but also ensure that
-      // these dates are present in the full list of available dates for the item
-      const featureTimes: any = featureTimesProperty.getValue(this.currentTime);
-      if (!Array.isArray(featureTimes)) return;
-      const sortedDiscreteTimes = this.discreteTimes.map(dt => dt.time).sort();
       return filterOutUndefined(
-        featureTimes.map(time => {
-          if (sortedIndexOf(sortedDiscreteTimes, time) >= 0)
-            return createStratumInstance(DiscreteTimeTraits, { time });
-          else return undefined;
+        featureTimes.map(s => {
+          try {
+            return s === undefined ? undefined : JulianDate.fromIso8601(s);
+          } catch {
+            return undefined;
+          }
         })
+      );
+    }
+
+    @computed
+    get discreteTimesAsSortedJulianDates() {
+      const featureTimes = this.featureTimesAsJulianDates;
+      if (featureTimes === undefined) {
+        return super.discreteTimesAsSortedJulianDates;
+      }
+
+      return super.discreteTimesAsSortedJulianDates?.filter(dt =>
+        featureTimes.some(d => d.equals(dt.time))
       );
     }
 
@@ -135,6 +160,10 @@ function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
       if (!this.currentTimeAsJulianDate) {
         return;
       }
+      if (!feature.position) {
+        return;
+      }
+
       const position = feature.position.getValue(this.currentTimeAsJulianDate);
       const cartographic = Ellipsoid.WGS84.cartesianToCartographic(position);
       const featureImageryUrl = this.imageryUrls.find(
@@ -147,7 +176,7 @@ function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
         CommonStrata.user,
         "timeFilterCoordinates",
         createStratumInstance(TimeFilterCoordinates, {
-          ...tileCoords,
+          tile: tileCoords,
           longitude: CesiumMath.toDegrees(cartographic.longitude),
           latitude: CesiumMath.toDegrees(cartographic.latitude),
           height: cartographic.height
@@ -166,10 +195,10 @@ function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
 }
 
 namespace TimeFilterMixin {
-  export interface TimeFilterMixin
+  export interface Instance
     extends InstanceType<ReturnType<typeof TimeFilterMixin>> {}
 
-  export function isMixedInto(model: any): model is TimeFilterMixin {
+  export function isMixedInto(model: any): model is Instance {
     return model && model.hasTimeFilterMixin;
   }
 }
@@ -199,8 +228,12 @@ const resolveFeature = action(async function(
   );
 
   const feature = (features || []).find(feature => {
+    if (!feature.properties) {
+      return false;
+    }
+
     const prop = feature.properties[propertyName];
-    const times = prop.getValue(model.currentTimeAsJulianDate);
+    const times = prop?.getValue(model.currentTimeAsJulianDate);
     return Array.isArray(times) && times.length > 0;
   });
 

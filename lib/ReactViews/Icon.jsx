@@ -6,8 +6,9 @@ import classNames from "classnames";
 import Styles from "./icon.scss";
 
 // icon.jsx
-const GLYPHS = {
+export const GLYPHS = {
   calendar: require("../../wwwroot/images/icons/calendar.svg"),
+  calendar2: require("../../wwwroot/images/icons/calendar2.svg"),
   about: require("../../wwwroot/images/icons/about.svg"),
   add: require("../../wwwroot/images/icons/add.svg"),
   arHover0: require("../../wwwroot/images/icons/ar-hover0.svg"),
@@ -73,6 +74,8 @@ const GLYPHS = {
   splitter: require("../../wwwroot/images/icons/splitter.svg"),
   splitterOn: require("../../wwwroot/images/icons/splitterOn.svg"),
   splitterOff: require("../../wwwroot/images/icons/splitterOff.svg"),
+  difference: require("../../wwwroot/images/icons/difference.svg"),
+  diffImage: require("../../wwwroot/images/icons/splitter.svg"),
   previous: require("../../wwwroot/images/icons/previous.svg"),
   next: require("../../wwwroot/images/icons/next.svg"),
   timeline: require("../../wwwroot/images/icons/timeline.svg"),
@@ -100,13 +103,25 @@ const GLYPHS = {
   layers: require("../../wwwroot/images/icons/pulling-away-layers-icon.svg"),
   start: require("../../wwwroot/images/icons/getting-started-icon.svg"),
   cube: require("../../wwwroot/images/icons/interact.svg"),
+  globe: require("../../wwwroot/images/icons/globe.svg"),
+  playInverted: require("../../wwwroot/images/icons/play-inverted.svg"),
   video: require("../../wwwroot/images/icons/video.svg"),
   compare: require("../../wwwroot/images/icons/compare.svg"),
   newHelp: require("../../wwwroot/images/icons/help-2.svg"),
   geolocationThick: require("../../wwwroot/images/icons/location-thick.svg"),
   minusThick: require("../../wwwroot/images/icons/zoom-minus.svg"),
   plusThick: require("../../wwwroot/images/icons/zoom-plus.svg"),
-  refreshThick: require("../../wwwroot/images/icons/zoom-refresh.svg")
+  refreshThick: require("../../wwwroot/images/icons/zoom-refresh.svg"),
+  satellite: require("../../wwwroot/images/icons/satellite.svg"),
+  mapDataActive: require("../../wwwroot/images/icons/map-data-active.svg"),
+  mapDataInactive: require("../../wwwroot/images/icons/map-data-inactive.svg"),
+  uploadThin: require("../../wwwroot/images/icons/upload-thin.svg"),
+  oneTwoThree: require("../../wwwroot/images/icons/one-two-three.svg"),
+  accordionOpen: require("../../wwwroot/images/icons/accordion-open.svg"),
+  accordionClose: require("../../wwwroot/images/icons/accordion-close.svg"),
+  editor: require("../../wwwroot/images/icons/editor.svg"),
+  viewStory: require("../../wwwroot/images/icons/view-story.svg"),
+  editStory: require("../../wwwroot/images/icons/edit-story.svg")
 };
 
 export const Icon = createReactClass({
@@ -130,19 +145,21 @@ export const Icon = createReactClass({
 });
 
 export const StyledIcon = styled(Icon)`
+  display: ${props => (props.displayInline ? `inline` : `block`)};
   flex-shrink: 0;
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
+  ${props => props.styledHeight && `height: ${props.styledHeight};`}
 
   ${props => props.light && `fill: ${props.theme.textLight};`}
   ${props => props.dark && `fill: ${props.theme.textDark};`}
 
+  // Until we sort out what "light / dark" means for components that have both
+  // modes, use "realDark" to get real
+  ${props => props.realDark && `fill: ${props.theme.dark};`}
+
   ${props => props.fillColor && `fill: ${props.fillColor};`}
-  
+
   ${props => props.opacity && `opacity: ${props.opacity};`}
 `;
 
-export default Icon;
-// (?) are these cjs exports for the doc generator?
-module.exports = Icon;
-module.exports.GLYPHS = GLYPHS;
-module.exports.StyledIcon = StyledIcon;
+export default Object.assign(Icon, { GLYPHS });

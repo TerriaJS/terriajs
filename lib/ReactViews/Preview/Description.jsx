@@ -14,10 +14,9 @@ import MetadataTable from "./MetadataTable";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import Styles from "./mappable-preview.scss";
 import { observer } from "mobx-react";
-import AUpageAlert from "@gov.au/page-alerts";
 
-import DownloadableData from "../../Models/DownloadableModelData";
-import FileSaver from "file-saver";
+import ExportData from "./ExportData";
+import WarningBox from "./WarningBox";
 
 /**
  * CatalogItem description.
@@ -30,23 +29,6 @@ const Description = observer(
       item: PropTypes.object.isRequired,
       printView: PropTypes.bool,
       t: PropTypes.func.isRequired
-    },
-
-    downloadData(previewed) {
-      previewed
-        .downloadData()
-        .then(data => {
-          if (typeof data === "string") {
-            window.open(data);
-          } else {
-            FileSaver.saveAs(data.file, data.name);
-          }
-        })
-        .catch(e => {
-          if (e instanceof TerriaError) {
-            this.props.previewed.terria.error.raiseEvent(e);
-          }
-        });
     },
 
     render() {
@@ -66,15 +48,17 @@ const Description = observer(
         }
       }
       return (
-        <div className={Styles.description}>
+        <div
+          className={Styles.description}
+          css={`
+            a,
+            a:visited {
+              color: ${p => p.theme.colorPrimary};
+            }
+          `}
+        >
           <If condition={catalogItem.isExperiencingIssues}>
-            <AUpageAlert as="warning">
-              <div className={Styles.alertMessage}>
-                <Trans i18nKey="preview.mayBeExperiencingIssues">
-                  <p>This dataset may currently be experiencing issues</p>
-                </Trans>
-              </div>
-            </AUpageAlert>
+            <WarningBox>{t("preview.mayBeExperiencingIssues")}</WarningBox>
           </If>
 
           <If
@@ -138,7 +122,7 @@ const Description = observer(
                 <When condition={catalogItem.type === "wfs"}>
                   <p key="wfs-description">
                     <Trans i18nKey="description.wfs">
-                      This is a{" "}
+                      This is a
                       <a
                         href="https://en.wikipedia.org/wiki/Web_Feature_Service"
                         target="_blank"
@@ -204,6 +188,9 @@ const Description = observer(
                   target="_blank"
                   rel="noopener noreferrer"
                   className={Styles.link}
+                  css={`
+                    color: ${p => p.theme.colorPrimary};
+                  `}
                 >
                   {catalogItem.metadataUrl}
                 </a>
@@ -286,7 +273,7 @@ const Description = observer(
                     {catalogItem.dataUrl.startsWith("data:") && (
                       <Link
                         url={catalogItem.dataUrl}
-                        text={t("description.downloadData")}
+                        text={t("description.exportData")}
                       />
                     )}
                     {!catalogItem.dataUrl.startsWith("data:") && (
@@ -355,13 +342,7 @@ const Description = observer(
               </If>
             </If>
           </If>
-          <If condition={catalogItem && DownloadableData.is(catalogItem)}>
-            <div className={Styles.metadata}>
-              <button onClick={this.downloadData.bind(this, catalogItem)}>
-                Download data
-              </button>
-            </div>
-          </If>
+          <ExportData item={catalogItem}></ExportData>
         </div>
       );
     }

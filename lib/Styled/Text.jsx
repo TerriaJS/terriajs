@@ -21,6 +21,7 @@ export const Text = styled.div`
   `}
 
   font-weight: 400;
+  ${props => props.light && `font-weight: 300;`}
   ${props => props.bold && `font-weight: bold;`}
   ${props => props.semiBold && `font-weight: 600;`}
   ${props => props.extraBold && `font-weight: 800;`}
@@ -62,13 +63,19 @@ export const Text = styled.div`
   ${props => props.fullWidth && `width: 100%;`}
   ${props => props.noWrap && `white-space: nowrap;`}
 
-  ${props => !props.noFontSize && `font-size: 13px;`}
   line-height: 20px;
+  ${props =>
+    !props.noFontSize &&
+    `
+    font-size: 13px;
+    line-height: normal;
+  `}
 
   ${props =>
     props.small &&
     `
     font-size: 12px;
+    line-height: 16px;
   `}
 
   ${props =>
@@ -83,23 +90,47 @@ export const Text = styled.div`
     font-size: 15px;
   `}
   ${props =>
-    props.extraLarge &&
+    (props?.as === "h4" || props.extraLarge) &&
     `
     font-size: 16px;
   `}
+
+  // yeah extra extra large - will re-port to h4 once we re-add Heading.tsx
   ${props =>
-    props.subHeading &&
+    (props?.as === "h3" || props.extraExtraLarge) &&
     `
+    font-size: 18px;
+  `}
+  ${props =>
+    (props?.as === "h2" || props.subHeading) &&
+    `
+    font-weight: bold;
     font-size: 23px;
     line-height: 31px;
   `}
   ${props =>
-    props.heading &&
+    (props?.as === "h1" || props.heading) &&
     `
     font-weight: 800;
     font-size: 26px;
     line-height: 32px;
   `}
+
+  ${props => props.styledSize && `font-size: ${props.styledSize}`};
+  ${props =>
+    props.styledLineHeight && `line-height: ${props.styledLineHeight}`};
+
+  ${props =>
+    props.styledFontSize &&
+    `
+    font-size: ${props.styledFontSize};
+  `}
+  ${props =>
+    props.styledLineHeight &&
+    `
+    line-height: ${props.styledLineHeight};
+  `}
+
   ${props =>
     props.highlightLinks &&
     `
@@ -107,6 +138,10 @@ export const Text = styled.div`
       color: ${props.theme.colorPrimary};
     }
   `}
+
+  ${props => props.overflowHide && ` overflow: hidden;`}
+  ${props => props.overflowEllipsis && ` text-overflow: ellipsis;`}
+
 `;
 
 export const TextSpan = styled(Text).attrs({

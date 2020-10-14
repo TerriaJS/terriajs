@@ -75,7 +75,7 @@ export class CartoLoadableStratum extends LoadableStratum(
           });
         }
 
-        const map = JSON.parse(<string>response);
+        const map = JSON.parse(response);
 
         let url: string;
         let subdomains: string[];
@@ -150,6 +150,13 @@ export default class CartoMapCatalogItem
     });
   }
 
+  @computed get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    }
+    return "1d";
+  }
+
   @computed get imageryProvider() {
     const stratum = <CartoLoadableStratum>(
       this.strata.get(CartoLoadableStratum.stratumName)
@@ -160,7 +167,7 @@ export default class CartoMapCatalogItem
     }
 
     let rectangle: Rectangle | undefined;
-    if (isDefined(this.rectangle)) {
+    if (isDefined(this.rectangle) && this.clipToRectangle) {
       const { west, south, east, north } = this.rectangle;
       if (
         isDefined(west) &&

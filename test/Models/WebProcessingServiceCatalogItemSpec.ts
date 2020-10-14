@@ -8,6 +8,7 @@ import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
 import Terria from "../../lib/Models/Terria";
 import WebProcessingServiceCatalogFunctionJob from "../../lib/Models/WebProcessingServiceCatalogFunctionJob";
 import { xml } from "../SpecHelpers";
+import i18next from "i18next";
 
 configure({
   enforceActions: "observed",
@@ -26,29 +27,26 @@ describe("WebProcessingServiceCatalogFunctionJob", function() {
     terria.configParameters.regionMappingDefinitionsUrl =
       "/data/regionMapping.json";
     item = new WebProcessingServiceCatalogFunctionJob("test", terria);
-    runInAction(() => {
-      const param1 = item.addObject(
-        CommonStrata.user,
-        "wpsParameters",
-        "param1"
-      )!;
-      if (isDefined(param1)) {
-        param1.setTrait(CommonStrata.user, "name", "point");
-        param1.setTrait(CommonStrata.user, "value", "144.97228,-37.77138");
-        param1.setTrait(CommonStrata.user, "geoJsonFeature", {
+    runInAction(() =>
+      item.setTrait(CommonStrata.user, "parameters", {
+        name: "point",
+        value: "144.97228,-37.77138",
+        geoJsonFeature: {
           type: "Feature",
           geometry: {
             type: "Point",
             coordinates: [144.97228, -37.77138, null]
           }
-        });
-      }
-    });
+        }
+      })
+    );
   });
 
   it("has a type & typeName", function() {
     expect(WebProcessingServiceCatalogFunctionJob.type).toBe("wps-result");
-    expect(item.typeName).toBe("Web Processing Service Result");
+    expect(item.typeName).toBe(
+      i18next.t("models.webProcessingService.wpsResult")
+    );
   });
 
   it("loads metadata from `wpsResponseUrl` if it is set", async function() {
@@ -177,11 +175,6 @@ describe("WebProcessingServiceCatalogFunctionJob", function() {
 });
 
 function initTerria() {
-  CatalogMemberFactory.register(CsvCatalogItem.type, <any>CsvCatalogItem);
-  CatalogMemberFactory.register(
-    GeoJsonCatalogItem.type,
-    <any>GeoJsonCatalogItem
-  );
   const terria = new Terria();
   terria.configParameters.regionMappingDefinitionsUrl =
     "/data/regionMapping.json";

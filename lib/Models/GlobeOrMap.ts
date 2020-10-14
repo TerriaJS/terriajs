@@ -1,27 +1,31 @@
 import { Feature as GeoJSONFeature, Position } from "geojson";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
 import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
-import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
+import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
+import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import isDefined from "../Core/isDefined";
+import LatLonHeight from "../Core/LatLonHeight";
 import featureDataToGeoJson from "../Map/featureDataToGeoJson";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
+import { ProviderCoordsMap } from "../Map/PickedFeatures";
 import CameraView from "./CameraView";
+import Cesium3DTilesCatalogItem from "./Cesium3DTilesCatalogItem";
 import CommonStrata from "./CommonStrata";
 import Feature from "./Feature";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import Mappable from "./Mappable";
 import Terria from "./Terria";
-import { ProviderCoordsMap } from "../Map/PickedFeatures";
-import LatLonHeight from "../Core/LatLonHeight";
-import Cesium3DTilesCatalogItem from "./Cesium3DTilesCatalogItem";
+import { observable } from "mobx";
+import MouseCoords from "../ReactViewModels/MouseCoords";
 
 require("./ImageryLayerFeatureInfo"); // overrides Cesium's prototype.configureDescriptionFromProperties
 
@@ -32,11 +36,18 @@ export default abstract class GlobeOrMap {
 
   private _removeHighlightCallback?: () => void;
   private _highlightPromise: Promise<void> | undefined;
+  private _tilesLoadingCountMax: number = 0;
   protected supportsPolylinesOnTerrain?: boolean;
+
+  // This is updated by Leaflet and Cesium objects.
+  // Avoid duplicate mousemove events.  Why would we get duplicate mousemove events?  I'm glad you asked:
+  // http://stackoverflow.com/questions/17818493/mousemove-event-repeating-every-second/17819113
+  // I (Kevin Ring) see this consistently on my laptop when Windows Media Player is running.
+  @observable mouseCoords: MouseCoords = new MouseCoords();
 
   abstract destroy(): void;
   abstract zoomTo(
-    viewOrExtent: CameraView | Cesium.Rectangle | Mappable,
+    viewOrExtent: CameraView | Rectangle | Mappable,
     flightDurationSeconds: number
   ): void;
   abstract getCurrentCameraView(): CameraView;
@@ -49,6 +60,19 @@ export default abstract class GlobeOrMap {
   abstract resumeMapInteraction(): void;
 
   abstract notifyRepaintRequired(): void;
+
+  /**
+   * Picks features based off a latitude, longitude and (optionally) height.
+   * @param latLngHeight The position on the earth to pick.
+   * @param providerCoords A map of imagery provider urls to the coords used to get features for those imagery
+   *     providers - i.e. x, y, level
+   * @param existingFeatures An optional list of existing features to concatenate the ones found from asynchronous picking to.
+   */
+  abstract pickFromLocation(
+    latLngHeight: LatLonHeight,
+    providerCoords: ProviderCoordsMap,
+    existingFeatures: Feature[]
+  ): void;
 
   /**
    * Return features at a latitude, longitude and (optionally) height for the given imagery layers.
@@ -73,17 +97,38 @@ export default abstract class GlobeOrMap {
       id: imageryFeature.name
     });
     feature.name = imageryFeature.name;
-    (<any>feature).description = imageryFeature.description; // already defined by the new Entity
-    feature.properties = (<any>imageryFeature).properties;
-    (<any>feature).data = imageryFeature.data;
+    if (imageryFeature.description) {
+      feature.description = new ConstantProperty(imageryFeature.description); // already defined by the new Entity
+    }
+    feature.properties = imageryFeature.properties;
+    feature.data = imageryFeature.data;
+    feature.imageryLayer = imageryFeature.imageryLayer;
 
-    (<any>feature).imageryLayer = (<any>imageryFeature).imageryLayer;
-    feature.position = Ellipsoid.WGS84.cartographicToCartesian(
-      imageryFeature.position
-    );
+    if (imageryFeature.position) {
+      feature.position = new ConstantPositionProperty(
+        Ellipsoid.WGS84.cartographicToCartesian(imageryFeature.position)
+      );
+    }
+
     (<any>feature).coords = (<any>imageryFeature).coords;
 
     return feature;
+  }
+
+  /**
+   * Adds loading progress for cesium
+   */
+  protected _updateTilesLoadingCount(tilesLoadingCount: number): void {
+    if (tilesLoadingCount > this._tilesLoadingCountMax) {
+      this._tilesLoadingCountMax = tilesLoadingCount;
+    } else if (tilesLoadingCount === 0) {
+      this._tilesLoadingCountMax = 0;
+    }
+
+    this.terria.tileLoadProgressEvent.raiseEvent(
+      tilesLoadingCount,
+      this._tilesLoadingCountMax
+    );
   }
 
   /**
@@ -110,7 +155,7 @@ export default abstract class GlobeOrMap {
 
   abstract _addVectorTileHighlight(
     imageryProvider: MapboxVectorTileImageryProvider,
-    rectangle: Cesium.Rectangle
+    rectangle: Rectangle
   ): () => void;
 
   _highlightFeature(feature: Feature | undefined) {
@@ -162,39 +207,47 @@ export default abstract class GlobeOrMap {
 
         const cesiumPolygon = feature.cesiumEntity || feature;
 
-        const polygonOutline = cesiumPolygon.polygon.outline;
-        const polygonOutlineColor = cesiumPolygon.polygon.outlineColor;
-        const polygonMaterial = cesiumPolygon.polygon.material;
+        const polygonOutline = cesiumPolygon.polygon!.outline;
+        const polygonOutlineColor = cesiumPolygon.polygon!.outlineColor;
+        const polygonMaterial = cesiumPolygon.polygon!.material;
 
-        (<any>cesiumPolygon).polygon.outline = true;
-        cesiumPolygon.polygon.outlineColor = Color.fromCssColorString(
-          this.terria.baseMapContrastColor
+        cesiumPolygon.polygon!.outline = new ConstantProperty(true);
+        cesiumPolygon.polygon!.outlineColor = new ConstantProperty(
+          Color.fromCssColorString(this.terria.baseMapContrastColor)
         );
-        cesiumPolygon.polygon.material = Color.fromCssColorString(
-          this.terria.baseMapContrastColor
-        ).withAlpha(0.75);
+        cesiumPolygon.polygon!.material = new ColorMaterialProperty(
+          new ConstantProperty(
+            Color.fromCssColorString(
+              this.terria.baseMapContrastColor
+            ).withAlpha(0.75)
+          )
+        );
 
         this._removeHighlightCallback = function() {
-          cesiumPolygon.polygon.outline = polygonOutline;
-          cesiumPolygon.polygon.outlineColor = polygonOutlineColor;
-          cesiumPolygon.polygon.material = polygonMaterial;
+          if (cesiumPolygon.polygon) {
+            cesiumPolygon.polygon.outline = polygonOutline;
+            cesiumPolygon.polygon.outlineColor = polygonOutlineColor;
+            cesiumPolygon.polygon.material = polygonMaterial;
+          }
         };
       } else if (isDefined(feature.polyline)) {
         hasGeometry = true;
 
         const cesiumPolyline = feature.cesiumEntity || feature;
 
-        const polylineMaterial = cesiumPolyline.polyline.material;
-        const polylineWidth = cesiumPolyline.polyline.width;
+        const polylineMaterial = cesiumPolyline.polyline!.material;
+        const polylineWidth = cesiumPolyline.polyline!.width;
 
         (<any>cesiumPolyline).polyline.material = Color.fromCssColorString(
           this.terria.baseMapContrastColor
         );
-        cesiumPolyline.polyline.width = new ConstantProperty(2);
+        cesiumPolyline.polyline!.width = new ConstantProperty(2);
 
         this._removeHighlightCallback = function() {
-          cesiumPolyline.polyline.material = polylineMaterial;
-          cesiumPolyline.polyline.width = polylineWidth;
+          if (cesiumPolyline.polyline) {
+            cesiumPolyline.polyline.material = polylineMaterial;
+            cesiumPolyline.polyline.width = polylineWidth;
+          }
         };
       }
 

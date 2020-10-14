@@ -1,31 +1,46 @@
-import classNames from "classnames";
 import createReactClass from "create-react-class";
+import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import Sortable from "react-anything-sortable";
-import { withTranslation, Trans } from "react-i18next";
+import { Trans, useTranslation, withTranslation } from "react-i18next";
+import styled, { withTheme } from "styled-components";
 import combine from "terriajs-cesium/Source/Core/combine";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import defined from "terriajs-cesium/Source/Core/defined";
+import dataStoriesImg from "../../../wwwroot/images/data-stories-getting-started.jpg";
 import triggerResize from "../../Core/triggerResize";
+import { RawButton } from "../../Styled/Button";
+import { TextSpan } from "../../Styled/Text";
 import BadgeBar from "../BadgeBar.jsx";
-import Icon from "../Icon.jsx";
-import Loader from "../Loader";
+import measureElement from "../HOCs/measureElement";
+import Icon, { StyledIcon } from "../Icon";
+import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
 import { getShareData } from "../Map/Panels/SharePanel/BuildShareLink";
+import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
 import Styles from "./story-builder.scss";
 import Story from "./Story.jsx";
 import StoryEditor from "./StoryEditor.jsx";
-import { runInAction } from "mobx";
+
+const Spacing = require("../../Styled/Spacing").default;
+const Box = require("../../Styled/Box").default;
+const Text = require("../../Styled/Text").default;
+const Button = require("../../Styled/Button").default;
+
+const STORY_VIDEO = "storyVideo";
 
 const StoryBuilder = observer(
   createReactClass({
     displayName: "StoryBuilder",
+    storiesWrapperRef: React.createRef(),
     propTypes: {
       terria: PropTypes.object.isRequired,
       isVisible: PropTypes.bool,
       viewState: PropTypes.object.isRequired,
       animationDuration: PropTypes.number,
+      widthFromMeasureElementHOC: PropTypes.number,
+      theme: PropTypes.object.isRequired,
       t: PropTypes.func.isRequired
     },
 
@@ -35,18 +50,60 @@ const StoryBuilder = observer(
         currentStory: undefined,
         recaptureSuccessful: undefined,
         showVideoGuide: false, // for whether to actually render `renderVideoGuide()`
-        videoGuideVisible: false // for animating
+        videoGuideVisible: false, // for animating
+        isRemoving: false,
+        isSharing: false,
+        storyToRemove: undefined,
+        storyRemoveIndex: undefined
       };
     },
 
+    togglePopup() {
+      this.setState({
+        showPopup: !this.state.showPopup
+      });
+    },
+
+    closePopup() {
+      this.setState({
+        showPopup: false
+      });
+    },
+
     removeStory(index, story) {
-      runInAction(() => {
-        this.props.terria.stories = this.props.terria.stories.filter(
-          st => st.id !== story.id
-        );
-        if (index < this.props.viewState.currentStoryId) {
-          this.props.viewState.currentStoryId -= 1;
-        }
+      this.setState({
+        isSharing: false,
+        isRemoving: true,
+        storyToRemove: story,
+        storyRemoveIndex: index
+      });
+    },
+
+    removeAction() {
+      if (this.state.storyToRemove) {
+        runInAction(() => {
+          this.props.terria.stories = this.props.terria.stories.filter(
+            st => st.id !== this.state.storyToRemove.id
+          );
+          if (this.state.index < this.props.viewState.currentStoryId) {
+            this.props.viewState.currentStoryId -= 1;
+          }
+        });
+      } else {
+        this.removeAllStories();
+      }
+      this.setState({
+        storyToRemove: undefined,
+        storyRemoveIndex: undefined
+      });
+    },
+
+    toggleRemoveDialog() {
+      this.setState({
+        isSharing: false,
+        isRemoving: !this.state.isRemoving,
+        storyToRemove: undefined,
+        storyRemoveIndex: undefined
       });
     },
 
@@ -54,7 +111,9 @@ const StoryBuilder = observer(
       runInAction(() => {
         this.props.terria.stories = [];
       });
+      this.togglePopup();
     },
+
     onSave(_story) {
       const story = {
         title: _story.title,
@@ -103,29 +162,8 @@ const StoryBuilder = observer(
       });
     },
 
-    toggleVideoGuide() {
-      const showVideoGuide = this.state.showVideoGuide;
-      // If not enabled
-      if (!showVideoGuide) {
-        this.setState({
-          showVideoGuide: !showVideoGuide,
-          videoGuideVisible: true
-        });
-      }
-      // Otherwise we immediately trigger exit animations, then close it 300ms later
-      if (showVideoGuide) {
-        this.slideOutTimer = this.setState({
-          videoGuideVisible: false
-        });
-        setTimeout(() => {
-          this.setState({
-            showVideoGuide: !showVideoGuide
-          });
-        }, 300);
-      }
-    },
-
     recaptureScene(story) {
+      this.closeShareRemoving();
       const { t } = this.props;
       clearTimeout(this.resetReCaptureStatus);
       const storyIndex = (this.props.terria.stories || [])
@@ -162,7 +200,15 @@ const StoryBuilder = observer(
       });
     },
 
+    closeShareRemoving() {
+      this.setState({
+        isRemoving: false,
+        isSharing: false
+      });
+    },
+
     runStories() {
+      this.closeShareRemoving();
       runInAction(() => {
         this.props.viewState.storyBuilderShown = false;
         this.props.viewState.storyShown = true;
@@ -174,6 +220,7 @@ const StoryBuilder = observer(
     },
 
     editStory(story) {
+      this.closeShareRemoving();
       runInAction(() => {
         this.props.viewState.storyBuilderShow = true;
         this.props.viewState.storyShown = false;
@@ -185,6 +232,7 @@ const StoryBuilder = observer(
     },
 
     viewStory(index, story) {
+      this.closeShareRemoving();
       runInAction(() => {
         this.props.viewState.currentStoryId = index;
       });
@@ -202,56 +250,66 @@ const StoryBuilder = observer(
     },
 
     renderIntro() {
+      const { t } = this.props;
       return (
-        <div className={Styles.intro}>
-          <Icon glyph={Icon.GLYPHS.story} />{" "}
-          <Trans i18nKey="story.message">
-            <strong>This is your story editor</strong>
-            <div className={Styles.instructions}>
-              Create and share interactive stories directly from your map
-              <div>
-                <button
-                  onClick={this.toggleVideoGuide}
-                  className={Styles.tutBtn}
-                >
-                  <Icon glyph={Icon.GLYPHS.play} />
-                  Getting Started{" "}
-                </button>
-              </div>
-            </div>
-          </Trans>
-        </div>
+        <Box column>
+          <VideoGuide
+            /*
+          // @ts-ignore */
+            viewState={this.props.viewState}
+            videoLink={"https://www.youtube.com/embed/fbiQawV8IYY"}
+            background={dataStoriesImg}
+            videoName={STORY_VIDEO}
+          />
+          <StoryButton
+            title={t("story.gettingStartedTitle")}
+            btnText={t("story.gettingStarted")}
+            onClick={() => {
+              this.props.viewState.setVideoGuideVisible(STORY_VIDEO);
+            }}
+          >
+            <StyledIcon glyph={Icon.GLYPHS.play} light styledWidth={"20px"} />
+          </StoryButton>
+          <Spacing bottom={2} />
+          <CaptureScene
+            disabled={this.state.isRemoving}
+            t={t}
+            onClickCapture={this.onClickCapture}
+          ></CaptureScene>
+        </Box>
       );
     },
 
-    renderVideoGuide() {
+    toggleSharePanel() {
+      this.setState({
+        isRemoving: false,
+        isSharing: !this.state.isSharing
+      });
+    },
+
+    renderPlayShare(hasStories) {
+      const { t } = this.props;
       return (
-        <div
-          className={classNames({
-            [Styles.videoGuideWrapper]: true,
-            [Styles.videoGuideWrapperClosing]: !this.state.videoGuideVisible
-          })}
-          onClick={this.toggleVideoGuide}
-        >
-          <div
-            className={Styles.videoGuide}
-            onClick={e => e.stopPropagation()}
-            style={{
-              backgroundImage: `url(${require("../../../wwwroot/images/data-stories-getting-started.jpg")})`
-            }}
+        <Box justifySpaceBetween>
+          <StoryButton
+            fullWidth
+            disabled={this.state.editingMode || !hasStories}
+            title={t("story.preview")}
+            btnText={t("story.play")}
+            onClick={this.runStories}
           >
-            <div className={Styles.videoGuideRatio}>
-              <div className={Styles.videoGuideLoading}>
-                <Loader message={` `} />
-              </div>
-              <iframe
-                className={Styles.videoGuideIframe}
-                src="https://www.youtube.com/embed/fbiQawV8IYY"
-                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-              />
-            </div>
-          </div>
-        </div>
+            <StyledIcon glyph={Icon.GLYPHS.play} light styledWidth={"20px"} />
+          </StoryButton>
+          <Spacing right={1} />
+          <SharePanel
+            storyShare
+            btnDisabled={this.state.editingMode || !hasStories}
+            terria={this.props.terria}
+            viewState={this.props.viewState}
+            modalWidth={this.props.widthFromMeasureElementHOC - 22}
+            onUserClick={this.toggleSharePanel}
+          />
+        </Box>
       );
     },
 
@@ -264,41 +322,114 @@ const StoryBuilder = observer(
     renderStories(editingMode) {
       const { t } = this.props;
       const stories = this.props.terria.stories || [];
-      const className = classNames({
-        [Styles.stories]: true,
-        [Styles.isActive]: editingMode
-      });
+      const storyName = this.state.storyToRemove
+        ? this.state.storyToRemove.title.length
+          ? this.state.storyToRemove.title
+          : t("story.untitledScene")
+        : "";
       return (
-        <div className={className}>
-          <BadgeBar label="Scenes" badge={this.props.terria.stories.length}>
-            <button
+        <Box displayInlineBlock>
+          <BadgeBar
+            smallBadge
+            label={t("story.badgeBarLabel")}
+            badge={this.props.terria.stories.length}
+          >
+            <RawButton
               type="button"
-              onClick={this.removeAllStories}
+              onClick={this.toggleRemoveDialog}
               className={Styles.removeButton}
             >
-              {t("story.removeAllStories")} <Icon glyph={Icon.GLYPHS.remove} />
-            </button>
+              <Icon glyph={Icon.GLYPHS.remove} /> {t("story.removeAllStories")}
+            </RawButton>
           </BadgeBar>
-
-          <Sortable onSort={this.onSort} direction="vertical" dynamic={true}>
-            <For each="story" index="index" of={stories}>
-              <Story
-                key={story.id}
-                story={story}
-                sortData={story}
-                deleteStory={this.removeStory.bind(this, index)}
-                recaptureStory={this.recaptureScene}
-                recaptureStorySuccessful={Boolean(
-                  story.id === this.state.recaptureSuccessful
-                )}
-                viewStory={this.viewStory.bind(this, index)}
-                menuOpen={this.state.storyWithOpenMenu === story}
-                openMenu={this.openMenu}
-                editStory={this.editStory}
+          <Spacing bottom={2} />
+          <Box column paddedHorizontally={2}>
+            {this.state.isRemoving && (
+              <RemoveDialog
+                theme={this.props.theme}
+                text={
+                  this.state.storyToRemove ? (
+                    <Text textLight large>
+                      <Trans
+                        i18nKey="story.removeStoryDialog"
+                        storyName={storyName}
+                      >
+                        Are you sure you wish to delete
+                        <TextSpan textLight large bold>
+                          {{ storyName }}
+                        </TextSpan>
+                        ?
+                      </Trans>
+                    </Text>
+                  ) : (
+                    <Text textLight large>
+                      {t("story.removeAllStoriesDialog", {
+                        count: this.props.terria.stories.length
+                      })}
+                    </Text>
+                  )
+                }
+                onConfirm={this.removeAction}
+                closeDialog={this.toggleRemoveDialog}
               />
-            </For>
-          </Sortable>
-        </div>
+            )}
+            <Box
+              column
+              static
+              css={`
+                ${(this.state.isRemoving || this.state.isSharing) &&
+                  `opacity: 0.3`}
+              `}
+            >
+              <Box
+                column
+                scroll
+                overflowY={"auto"}
+                styledMaxHeight={"calc(100vh - 283px)"}
+                static
+                ref={this.storiesWrapperRef}
+                css={`
+                  margin-right: -10px;
+                `}
+              >
+                <Sortable
+                  onSort={this.onSort}
+                  direction="vertical"
+                  dynamic={true}
+                  css={`
+                    position: static;
+                    margin-right: 10px;
+                  `}
+                >
+                  <For each="story" index="index" of={stories}>
+                    <Story
+                      key={`${story.id}`}
+                      story={story}
+                      sortData={story}
+                      deleteStory={this.removeStory.bind(this, index)}
+                      recaptureStory={this.recaptureScene}
+                      recaptureStorySuccessful={Boolean(
+                        story.id === this.state.recaptureSuccessful
+                      )}
+                      viewStory={this.viewStory.bind(this, index)}
+                      menuOpen={this.state.storyWithOpenMenu === story}
+                      openMenu={this.openMenu}
+                      editStory={this.editStory}
+                      parentRef={this.storiesWrapperRef}
+                    />
+                  </For>
+                </Sortable>
+              </Box>
+              <Spacing bottom={2} />
+              <CaptureScene
+                disabled={this.state.isRemoving}
+                t={t}
+                onClickCapture={this.onClickCapture}
+              ></CaptureScene>
+            </Box>
+            <Spacing bottom={2} />
+          </Box>
+        </Box>
       );
     },
 
@@ -309,44 +440,63 @@ const StoryBuilder = observer(
       });
     },
 
+    hideStoryBuilder() {
+      this.props.viewState.toggleStoryBuilder();
+      this.props.terria.currentViewer.notifyRepaintRequired();
+      // Allow any animations to finish, then trigger a resize.
+      setTimeout(function() {
+        triggerResize();
+      }, this.props.animationDuration || 1);
+      this.props.viewState.toggleFeaturePrompt("story", false, true);
+    },
+
     render() {
       const { t } = this.props;
       const hasStories =
         defined(this.props.terria.stories) &&
         this.props.terria.stories.length > 0;
-      const className = classNames({
-        [Styles.storyPanel]: true,
-        [Styles.isVisible]: this.props.isVisible,
-        [Styles.isHidden]: !this.props.isVisible
-      });
       return (
-        <div className={className}>
-          {this.state.showVideoGuide && this.renderVideoGuide()}
-          <div className={Styles.header}>
+        <Panel
+          ref={component => (this.refToMeasure = component)}
+          isVisible={this.props.isVisible}
+          isHidden={!this.props.isVisible}
+          styledWidth={"320px"}
+          styledMinWidth={"320px"}
+          charcoalGreyBg
+          column
+        >
+          <Box right>
+            <RawButton
+              css={`
+                padding: 15px;
+              `}
+              onClick={this.hideStoryBuilder}
+            >
+              <StyledIcon
+                styledWidth={"16px"}
+                fillColor={this.props.theme.textLightDimmed}
+                opacity={"0.5"}
+                glyph={Icon.GLYPHS.closeLight}
+              />
+            </RawButton>
+          </Box>
+          <Box centered={true} paddedHorizontally={2} displayInlineBlock>
+            <Text bold extraExtraLarge textLight>
+              {t("story.panelTitle")}
+            </Text>
+            <Spacing bottom={2} />
+            <Text
+              medium
+              color={this.props.theme.textLightDimmed}
+              highlightLinks
+            >
+              {t("story.panelBody")}
+            </Text>
+            <Spacing bottom={3} />
             {!hasStories && this.renderIntro()}
-            <div className={Styles.actions}>
-              {hasStories && (
-                <button
-                  disabled={this.state.editingMode || !hasStories}
-                  className={Styles.previewBtn}
-                  onClick={this.runStories}
-                  title={t("story.preview")}
-                >
-                  <Icon glyph={Icon.GLYPHS.play} />
-                  {t("story.play")}
-                </button>
-              )}
-              <button
-                disabled={this.state.editingMode}
-                className={Styles.captureBtn}
-                title={t("story.captureSceneTitle")}
-                onClick={this.onClickCapture}
-              >
-                {" "}
-                <Icon glyph={Icon.GLYPHS.story} /> {t("story.captureScene")}{" "}
-              </button>
-            </div>
-          </div>
+            {hasStories && this.renderPlayShare(hasStories)}
+          </Box>
+          <Spacing bottom={2} />
           {hasStories && this.renderStories(this.state.editingMode)}
           {this.state.editingMode && (
             <StoryEditor
@@ -356,10 +506,127 @@ const StoryBuilder = observer(
               saveStory={this.onSave}
             />
           )}
-        </div>
+        </Panel>
       );
     }
   })
 );
 
-export default withTranslation()(StoryBuilder);
+const Panel = styled(Box)`
+  transition: all 0.25s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  ${props =>
+    props.isVisible &&
+    `
+    visibility: visible;
+    margin-right: 0;
+  `}
+  ${props =>
+    props.isHidden &&
+    `
+    visibility: hidden;
+    margin-right: -${props.styledWidth ? props.styledWidth : "320px"};
+  `}
+`;
+
+const CaptureScene = props => {
+  const { t } = props;
+  return (
+    <StoryButton
+      title={t("story.captureSceneTitle")}
+      btnText={t("story.captureScene")}
+      onClick={props.onClickCapture}
+      disabled={props.disabled}
+      fullWidth
+    >
+      <StyledIcon glyph={Icon.GLYPHS.story} light styledWidth={"20px"} />
+    </StoryButton>
+  );
+};
+
+CaptureScene.propTypes = {
+  t: PropTypes.func.isRequired,
+  onClickCapture: PropTypes.func.isRequired,
+  disabled: PropTypes.bool
+};
+
+export const StoryButton = props => {
+  const { btnText, ...rest } = props;
+  return (
+    <Button
+      primary
+      renderIcon={props.children && (() => props.children)}
+      textProps={{
+        large: true
+      }}
+      {...rest}
+    >
+      {btnText ? btnText : ""}
+    </Button>
+  );
+};
+StoryButton.defaultName = "StoryButton";
+StoryButton.propTypes = {
+  btnText: PropTypes.string,
+  children: PropTypes.node
+};
+
+const RemoveDialog = props => {
+  const { t } = useTranslation();
+  return (
+    <Box
+      backgroundColor={props.theme.darkWithOverlay}
+      absolute
+      positionAbsolute
+      rounded
+      paddedVertically={3}
+      paddedHorizontally={2}
+      column
+      css={`
+        width: calc(100% - 20px);
+      `}
+    >
+      {props.text}
+      <Spacing bottom={2} />
+      <Box row>
+        <Button
+          denyButton
+          rounded
+          fullWidth
+          textProps={{
+            large: true,
+            semiBold: true
+          }}
+          onClick={props.closeDialog}
+        >
+          {t("general.cancel")}
+        </Button>
+        <Spacing right={2} />
+        <Button
+          primary
+          fullWidth
+          textProps={{
+            large: true,
+            semiBold: true
+          }}
+          onClick={() => {
+            props.onConfirm();
+            props.closeDialog();
+          }}
+        >
+          {t("general.confirm")}
+        </Button>
+      </Box>
+    </Box>
+  );
+};
+
+RemoveDialog.defaultName = "RemoveDialog";
+RemoveDialog.propTypes = {
+  theme: PropTypes.object.isRequired,
+  text: PropTypes.element.isRequired,
+  onConfirm: PropTypes.func.isRequired,
+  closeDialog: PropTypes.func.isRequired
+};
+
+export default withTranslation()(withTheme(measureElement(StoryBuilder)));

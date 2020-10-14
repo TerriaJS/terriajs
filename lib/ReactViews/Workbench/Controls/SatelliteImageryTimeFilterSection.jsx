@@ -87,7 +87,7 @@ const SatelliteImageryTimeFilterSection = observer(
                 mapItem =>
                   mapItem.imageryProvider &&
                   mapItem.imageryProvider ===
-                    feature.imageryLayer.imageryProvider
+                    feature.imageryLayer?.imageryProvider
               ) !== undefined
             );
           })[0];
@@ -145,7 +145,12 @@ const SatelliteImageryTimeFilterSection = observer(
           : undefined;
 
       return (
-        <div className={Styles.active}>
+        <div
+          className={Styles.active}
+          css={`
+            background: ${p => p.theme.colorPrimary};
+          `}
+        >
           <div className={Styles.infoGroup}>
             <div>{t("satellite.infoGroup")}</div>
             <LocationItem position={position} />

@@ -65,7 +65,6 @@ const LineParameterEditor = createReactClass({
 
   selectLineOnMap() {
     this.state.userDrawing.enterDrawMode();
-    runInAction(() => (this.props.viewState.explorerPanelIsVisible = false));
   },
 
   render() {
@@ -76,9 +75,7 @@ const LineParameterEditor = createReactClass({
           className={Styles.field}
           type="text"
           onChange={this.setValueFromText}
-          value={LineParameterEditor.getDisplayValue(
-            this.props.parameter.value
-          )}
+          value={getDisplayValue(this.props.parameter.value)}
         />
         <button
           type="button"
@@ -119,7 +116,7 @@ LineParameterEditor.setValueFromText = function(e, parameter) {
  * @param {Object} value Native format of parameter value.
  * @return {String} String for display
  */
-LineParameterEditor.getDisplayValue = function(value) {
+export function getDisplayValue(value) {
   const pointsLongLats = value;
   if (!defined(pointsLongLats) || pointsLongLats.length < 1) {
     return "";
@@ -142,6 +139,6 @@ LineParameterEditor.getDisplayValue = function(value) {
   } else {
     return "";
   }
-};
+}
 
-module.exports = withTranslation()(LineParameterEditor);
+export default withTranslation()(LineParameterEditor);
