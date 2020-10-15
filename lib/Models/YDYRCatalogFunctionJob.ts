@@ -211,11 +211,19 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
     );
 
     if (typeof status !== "string") {
-      runInAction(() => this.logs.push(JSON.stringify(status)));
+      runInAction(() =>
+        this.setTrait(CommonStrata.user, "logs", [
+          ...this.logs,
+          JSON.stringify(status)
+        ])
+      );
+
       this.setTrait(CommonStrata.user, "resultId", status.key);
       return true;
     } else {
-      runInAction(() => this.logs.push(status));
+      runInAction(() =>
+        this.setTrait(CommonStrata.user, "logs", [...this.logs, status])
+      );
 
       return false;
     }

@@ -1,17 +1,15 @@
 import createReactClass from "create-react-class";
+import { observable, runInAction } from "mobx";
+import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
+import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import TerriaError from "../../Core/TerriaError";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import Loader from "../Loader";
-import ParameterEditor from "./ParameterEditor";
 import Styles from "./invoke-function.scss";
-import { withTranslation } from "react-i18next";
-import { observer } from "mobx-react";
-import { runInAction, observable } from "mobx";
-import Terria from "../../Models/Terria";
-import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
+import ParameterEditor from "./ParameterEditor";
 
 class FunctionViewModel {
   constructor(catalogFunction) {

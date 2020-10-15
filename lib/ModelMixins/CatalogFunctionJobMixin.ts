@@ -1,24 +1,71 @@
-import CatalogMemberMixin from "./CatalogMemberMixin";
-import AutoRefreshingMixin from "./AutoRefreshingMixin";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import {
-  runInAction,
   action,
-  reaction,
   computed,
   observable,
-  IObservableArray,
-  onBecomeObserved
+  onBecomeObserved,
+  reaction,
+  runInAction,
+  trace
 } from "mobx";
-import CatalogFunctionJobTraits from "../Traits/CatalogFunctionJobTraits";
 import Constructor from "../Core/Constructor";
-import Model from "../Models/Model";
+import isDefined from "../Core/isDefined";
+import runLater from "../Core/runLater";
 import CommonStrata from "../Models/CommonStrata";
 import createStratumInstance from "../Models/createStratumInstance";
-import isDefined from "../Core/isDefined";
-import AsyncMappableMixin from "./AsyncMappableMixin";
-import runLater from "../Core/runLater";
+import LoadableStratum from "../Models/LoadableStratum";
 import { MapItem } from "../Models/Mappable";
+import Model, { BaseModel } from "../Models/Model";
+import StratumOrder from "../Models/StratumOrder";
+import CatalogFunctionJobTraits from "../Traits/CatalogFunctionJobTraits";
+import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
+import AsyncMappableMixin from "./AsyncMappableMixin";
+import AutoRefreshingMixin from "./AutoRefreshingMixin";
+import CatalogMemberMixin from "./CatalogMemberMixin";
+
+class FunctionJobStratum extends LoadableStratum(CatalogFunctionJobTraits) {
+  constructor(
+    readonly catalogFunctionJob: CatalogFunctionJobMixin.CatalogFunctionJobMixin
+  ) {
+    super();
+  }
+
+  duplicateLoadableStratum(model: BaseModel): this {
+    return new FunctionJobStratum(
+      model as CatalogFunctionJobMixin.CatalogFunctionJobMixin
+    ) as this;
+  }
+
+  @computed
+  get shortReportSections() {
+    if (this.catalogFunctionJob.logs.length === 0) return;
+    return [
+      {
+        name: "Job Logs",
+        content: this.catalogFunctionJob.logs.join("\n"),
+        show: true
+      }
+    ];
+  }
+
+  @computed
+  get shortReport() {
+    let content = "";
+    if (this.jobStatus === "inactive") {
+      content = "Job is inactive";
+    } else if (this.jobStatus === "running") {
+      content = "Job is running...";
+    } else if (this.jobStatus === "finished") {
+      if (this.catalogFunctionJob.downloadedResults) {
+        content = "Job is finished";
+      } else {
+        content = "Job is finished, downloading results...";
+      }
+    } else {
+      content = "An error has occurred";
+    }
+    return content;
+  }
+}
 
 type CatalogFunctionJobMixin = Model<CatalogFunctionJobTraits>;
 
@@ -30,6 +77,10 @@ function CatalogFunctionJobMixin<
   ) {
     constructor(...args: any[]) {
       super(...args);
+
+      runInAction(() => {
+        this.strata.set(FunctionJobStratum.name, new FunctionJobStratum(this));
+      });
 
       // If this is showing in workbench, make sure result layers are also in workbench
       onBecomeObserved(this, "mapItems", () => {
@@ -48,7 +99,7 @@ function CatalogFunctionJobMixin<
         async () => {
           // Download results when finished
           if (this.jobStatus === "finished" && !this.downloadedResults) {
-            this.downloadedResults = true;
+            this._downloadedResults = true;
             this.results = (await this.downloadResults()) || [];
             this.results.forEach(result => {
               this.terria.workbench.add(result);
@@ -63,14 +114,6 @@ function CatalogFunctionJobMixin<
               this.setTrait(CommonStrata.user, "refreshEnabled", true)
             );
           }
-        }
-      );
-
-      // Update logs
-      reaction(
-        () => this.logs.map(log => log),
-        () => {
-          this.updateLogsShortReport();
         }
       );
 
@@ -90,10 +133,14 @@ function CatalogFunctionJobMixin<
 
     protected results: CatalogMemberMixin.CatalogMemberMixin[] = [];
 
-    @observable private downloadedResults = false;
-    private pollingForResults = false;
+    @observable protected _downloadedResults = false;
 
-    protected logs: IObservableArray<string> = observable([]);
+    @computed
+    get downloadedResults() {
+      return this._downloadedResults;
+    }
+
+    private pollingForResults = false;
 
     /**
      *
@@ -145,7 +192,7 @@ function CatalogFunctionJobMixin<
           runInAction(() => {
             this.setTrait(CommonStrata.user, "jobStatus", "error");
             this.setTrait(CommonStrata.user, "refreshEnabled", false);
-            this.logs.push(error);
+            this.setTrait(CommonStrata.user, "logs", [...this.logs, error]);
           });
           this.pollingForResults = false;
 
@@ -153,9 +200,7 @@ function CatalogFunctionJobMixin<
         });
     }
 
-    loadPromise = Promise.resolve();
-
-    protected forceLoadMetadata() {
+    protected async forceLoadMetadata() {
       if (isDefined(this.parameters)) {
         const inputsSection =
           '<table class="cesium-infoBox-defaultTable">' +
@@ -189,7 +234,6 @@ function CatalogFunctionJobMixin<
           ]);
         });
       }
-      return this.loadPromise;
     }
 
     @computed
@@ -204,7 +248,7 @@ function CatalogFunctionJobMixin<
       this.setTrait(
         CommonStrata.user,
         "shortReport",
-        `${this.type ||
+        `${this.typeName ||
           this
             .type} invocation failed. More details are available on the Info panel.`
       );
@@ -220,49 +264,6 @@ function CatalogFunctionJobMixin<
       }
     }
 
-    @computed
-    get shortReport() {
-      let content = "";
-      if (this.jobStatus === "inactive") {
-        content = "Job is inactive";
-      } else if (this.jobStatus === "running") {
-        content = "Job is running...";
-      } else if (this.jobStatus === "finished") {
-        if (this.downloadedResults) {
-          content = "Job is finished";
-        } else {
-          content = "Job is finished, downloading results...";
-        }
-      } else {
-        content = "An error has occurred";
-      }
-      return content;
-    }
-
-    @action
-    updateLogsShortReport() {
-      if (this.logs.length === 0) {
-        return;
-      }
-
-      let report = this.shortReportSections.find(
-        report => report.name === "Job Logs"
-      );
-
-      if (!isDefined(report)) {
-        report = this.addObject(
-          CommonStrata.user,
-          "shortReportSections",
-          "Job Logs"
-        );
-        if (!isDefined(report)) {
-          return;
-        }
-      }
-
-      report.setTrait(CommonStrata.user, "content", this.logs.join("\n"));
-    }
-
     get hasCatalogFunctionJobMixin() {
       return true;
     }
@@ -272,6 +273,7 @@ function CatalogFunctionJobMixin<
 }
 
 namespace CatalogFunctionJobMixin {
+  StratumOrder.addLoadStratum(FunctionJobStratum.name);
   export interface CatalogFunctionJobMixin
     extends InstanceType<ReturnType<typeof CatalogFunctionJobMixin>> {}
   export function isMixedInto(model: any): model is CatalogFunctionJobMixin {

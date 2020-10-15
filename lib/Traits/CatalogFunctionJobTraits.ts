@@ -1,9 +1,10 @@
-import CatalogMemberTraits from "./CatalogMemberTraits";
-import ModelTraits from "./ModelTraits";
-import primitiveTrait from "./primitiveTrait";
-import mixTraits from "./mixTraits";
-import CatalogFunctionTraits from "./CatalogFunctionTraits";
 import AutoRefreshingTraits from "./AutoRefreshingTraits";
+import CatalogFunctionTraits from "./CatalogFunctionTraits";
+import CatalogMemberTraits from "./CatalogMemberTraits";
+import mixTraits from "./mixTraits";
+import ModelTraits from "./ModelTraits";
+import primitiveArrayTrait from "./primitiveArrayTrait";
+import primitiveTrait from "./primitiveTrait";
 
 export class FunctionParameterTraits extends ModelTraits {
   @primitiveTrait({
@@ -25,6 +26,13 @@ export default class CatalogFunctionJobTraits extends mixTraits(
   AutoRefreshingTraits,
   CatalogMemberTraits
 ) {
+  @primitiveArrayTrait({
+    name: "Logs",
+    description: "Job logs.",
+    type: "string"
+  })
+  logs: string[] = [];
+
   @primitiveTrait({
     name: "Job status",
     description: "Job status.",

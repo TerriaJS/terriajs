@@ -460,19 +460,6 @@ function formatOutputValue(title: string, value: string | undefined) {
 }
 
 /**
- * Completely load a catalog item
- */
-async function loadCatalogItem(item: any) {
-  if (CatalogMemberMixin.isMixedInto(item)) {
-    await runInAction(() => item.loadMetadata());
-  }
-  if (Mappable.is(item)) {
-    await runInAction(() => item.loadMapItems());
-  }
-  return item;
-}
-
-/**
  * Transform old catalog definitions to match new schema.
  */
 function fixCatalogItemJson(json: any) {
