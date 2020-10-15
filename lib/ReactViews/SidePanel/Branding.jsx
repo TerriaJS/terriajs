@@ -10,6 +10,7 @@ const Branding = createReactClass({
   propTypes: {
     terria: PropTypes.object.isRequired,
     version: PropTypes.string,
+    displayOne: PropTypes.number, // pass in a number here to only show one item from brandBarElements
     onClick: PropTypes.func
   },
 
@@ -24,13 +25,27 @@ const Branding = createReactClass({
 
     const version = this.props.version || "Unknown";
 
+    const displayOne = this.props.displayOne;
+    const displayContent =
+      // If the index exists, use that
+      (displayOne && brandingHtmlElements[displayOne]) ||
+      // If it doesn't exist, find the first item that isn't an empty string (for backward compatability of old terriamap defaults)
+      (displayOne && brandingHtmlElements.find(item => item?.length > 0)) ||
+      undefined;
+
     return (
       <div className={Styles.branding}>
-        <For each="element" of={brandingHtmlElements}>
-          {parseCustomHtmlToReact(
-            element.replace(/\{\{\s*version\s*\}\}/g, version)
+        {displayContent &&
+          parseCustomHtmlToReact(
+            displayContent.replace(/\{\{\s*version\s*\}\}/g, version)
           )}
-        </For>
+        {!displayContent && (
+          <For each="element" index="i" of={brandingHtmlElements}>
+            {parseCustomHtmlToReact(
+              element.replace(/\{\{\s*version\s*\}\}/g, version)
+            )}
+          </For>
+        )}
       </div>
     );
   }

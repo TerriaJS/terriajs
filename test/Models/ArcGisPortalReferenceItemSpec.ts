@@ -42,9 +42,9 @@ describe("ArcGisPortalItemReference", function() {
     const realLoadWithXhr = loadWithXhr.load;
     // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
     spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
-      if (args[0].indexOf("/data") > -1)
+      if (args[0].indexOf("/data") > -1) {
         args[0] = "test/ArcGisPortal/item-data.json";
-      else args[0] = "test/ArcGisPortal/item.json";
+      } else args[0] = "test/ArcGisPortal/item.json";
       return realLoadWithXhr(...args);
     });
   });
@@ -102,10 +102,6 @@ describe("ArcGisPortalItemReference", function() {
       expect(portalItemTarget.url).toBe(
         "https://portal.spatial.nsw.gov.au/server/rest/services/NSW_Transport_Theme/FeatureServer/5"
       );
-      expect(portalItemTarget.rectangle.west).toBe(140.9839);
-      expect(portalItemTarget.rectangle.south).toBe(-37.5043);
-      expect(portalItemTarget.rectangle.east).toBe(159.0979);
-      expect(portalItemTarget.rectangle.north).toBe(-28.1555);
 
       const licenceInfo = portalItemTarget.info.filter(
         (i: any) => i.name === i18next.t("models.arcgisPortal.licence")

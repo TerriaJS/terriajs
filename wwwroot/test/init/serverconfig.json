@@ -1,5 +1,5 @@
 {
-    "proxyableDomains": [
+    "allowProxyFor": [
         "example.com",
         "csiro.au"
     ],

@@ -20,6 +20,7 @@ import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import GeoRssCatalogItem from "./GeoRssCatalogItem";
 import GltfCatalogItem from "./GltfCatalogItem";
 import GtfsCatalogItem from "./GtfsCatalogItem";
+import GpxCatalogItem from "./GpxCatalogItem";
 import IonImageryCatalogItem from "./IonImageryCatalogItem";
 import KmlCatalogItem from "./KmlCatalogItem";
 import MagdaReference from "./MagdaReference";
@@ -69,6 +70,7 @@ export default function registerCatalogMembers() {
   );
   CatalogMemberFactory.register(GltfCatalogItem.type, GltfCatalogItem);
   CatalogMemberFactory.register(GeoJsonCatalogItem.type, GeoJsonCatalogItem);
+  CatalogMemberFactory.register(GpxCatalogItem.type, GpxCatalogItem);
   CatalogMemberFactory.register(GeoRssCatalogItem.type, GeoRssCatalogItem);
   CatalogMemberFactory.register(CsvCatalogItem.type, CsvCatalogItem);
   CatalogMemberFactory.register(CzmlCatalogItem.type, CzmlCatalogItem);
@@ -172,6 +174,10 @@ export default function registerCatalogMembers() {
   UrlToCatalogMemberMapping.register(
     matchesExtension("kml"),
     KmlCatalogItem.type
+  );
+  UrlToCatalogMemberMapping.register(
+    matchesExtension("gpx"),
+    GpxCatalogItem.type
   );
   UrlToCatalogMemberMapping.register(
     matchesExtension("kmz"),

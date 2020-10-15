@@ -51,6 +51,7 @@ import hasTraits from "./hasTraits";
 import Mappable, {
   ImageryParts,
   isCesium3DTileset,
+  isDataSource,
   isTerrainProvider,
   MapItem
 } from "./Mappable";
@@ -63,6 +64,7 @@ import KeyboardEventModifier from "terriajs-cesium/Source/Core/KeyboardEventModi
 import UserDrawing from "./UserDrawing";
 import i18next from "i18next";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
+import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
 
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
@@ -503,16 +505,22 @@ export default class Cesium extends GlobeOrMap {
     destroyObject(this);
   }
 
-  @computed
-  private get _allMapItems() {
+  private get _allMappables() {
     const catalogItems = [
       ...this.terriaViewer.items.get(),
       this.terriaViewer.baseMap
     ];
     // Flatmap
-    return ([] as MapItem[]).concat(
-      ...catalogItems.filter(isDefined).map(item => item.mapItems)
+    return ([] as { item: Mappable; mapItem: MapItem }[]).concat(
+      ...catalogItems
+        .filter(isDefined)
+        .map(item => item.mapItems.map(mapItem => ({ mapItem, item })))
     );
+  }
+
+  @computed
+  private get _allMapItems(): MapItem[] {
+    return this._allMappables.map(({ mapItem }) => mapItem);
   }
 
   private observeModelLayer() {
@@ -538,9 +546,13 @@ export default class Cesium extends GlobeOrMap {
         }
       });
 
-      const allImageryParts = this._allMapItems
-        .filter(ImageryParts.is)
-        .map(this._makeImageryLayerFromParts.bind(this));
+      const allImageryParts = this._allMappables
+        .map(m =>
+          ImageryParts.is(m.mapItem)
+            ? this._makeImageryLayerFromParts(m.mapItem, m.item)
+            : undefined
+        )
+        .filter(isDefined);
 
       // Delete imagery layers that are no longer in the model
       for (let i = 0; i < this.scene.imageryLayers.length; i++) {
@@ -981,6 +993,73 @@ export default class Cesium extends GlobeOrMap {
     });
   }
 
+  pickFromLocation(
+    latLngHeight: LatLonHeight,
+    providerCoords: ProviderCoordsMap,
+    existingFeatures: Feature[]
+  ) {
+    const pickPosition = this.scene.globe.ellipsoid.cartographicToCartesian(
+      Cartographic.fromDegrees(
+        latLngHeight.longitude,
+        latLngHeight.latitude,
+        latLngHeight.height
+      )
+    );
+    const pickPositionCartographic = Ellipsoid.WGS84.cartesianToCartographic(
+      pickPosition
+    );
+
+    const promises: (Promise<ImageryLayerFeatureInfo[]> | undefined)[] = [];
+    const imageryLayers: ImageryLayer[] = [];
+
+    if (this.terria.allowFeatureInfoRequests) {
+      for (let i = this.scene.imageryLayers.length - 1; i >= 0; i--) {
+        const imageryLayer = this.scene.imageryLayers.get(i);
+        const imageryProvider = imageryLayer.imageryProvider;
+
+        function hasUrl(o: any): o is { url: string } {
+          return typeof o?.url === "string";
+        }
+
+        if (hasUrl(imageryProvider) && providerCoords[imageryProvider.url]) {
+          var coords = providerCoords[imageryProvider.url];
+          promises.push(
+            imageryProvider.pickFeatures(
+              coords.x,
+              coords.y,
+              coords.level,
+              pickPositionCartographic.longitude,
+              pickPositionCartographic.latitude
+            )
+          );
+          imageryLayers.push(imageryLayer);
+        }
+      }
+    }
+
+    const result = this._buildPickedFeatures(
+      providerCoords,
+      pickPosition,
+      existingFeatures,
+      filterOutUndefined(promises),
+      imageryLayers,
+      pickPositionCartographic.height,
+      false
+    );
+
+    const mapInteractionModeStack = this.terria.mapInteractionModeStack;
+    if (
+      defined(mapInteractionModeStack) &&
+      mapInteractionModeStack.length > 0
+    ) {
+      mapInteractionModeStack[
+        mapInteractionModeStack.length - 1
+      ].pickedFeatures = result;
+    } else {
+      this.terria.pickedFeatures = result;
+    }
+  }
+
   /**
    * Return features at a latitude, longitude and (optionally) height for the given imagery layers.
    * @param latLngHeight The position on the earth to pick
@@ -1263,14 +1342,29 @@ export default class Cesium extends GlobeOrMap {
     return filterOutUndefined(
       item.mapItems.map(m => {
         if (ImageryParts.is(m)) {
-          return this._makeImageryLayerFromParts(m) as ImageryLayer;
+          return this._makeImageryLayerFromParts(m, item) as ImageryLayer;
         }
       })
     );
   }
 
-  private _makeImageryLayerFromParts(parts: ImageryParts): ImageryLayer {
+  private _makeImageryLayerFromParts(
+    parts: ImageryParts,
+    item: Mappable
+  ): ImageryLayer {
     const layer = this._createImageryLayer(parts.imageryProvider);
+    if (TileErrorHandlerMixin.isMixedInto(item)) {
+      // because this code path can run multiple times, make sure we remove the
+      // handler if it is already registered
+      parts.imageryProvider.errorEvent.removeEventListener(
+        item.onTileLoadError,
+        item
+      );
+      parts.imageryProvider.errorEvent.addEventListener(
+        item.onTileLoadError,
+        item
+      );
+    }
 
     layer.alpha = parts.alpha;
     layer.show = parts.show;
@@ -1435,8 +1529,4 @@ function zoomToBoundingSphere(
     offset: new HeadingPitchRange(0, -0.5, 0),
     duration: flightDurationSeconds
   });
-}
-
-function isDataSource(object: MapItem): object is DataSource {
-  return "entities" in object;
 }

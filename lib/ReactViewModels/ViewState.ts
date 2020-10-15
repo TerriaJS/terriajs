@@ -358,6 +358,8 @@ export default class ViewState {
         if (defined(pickedFeatures)) {
           this.featureInfoPanelIsVisible = true;
           this.featureInfoPanelIsCollapsed = false;
+        } else {
+          this.featureInfoPanelIsVisible = false;
         }
       }
     );
@@ -684,6 +686,11 @@ export default class ViewState {
   @action
   closeTool() {
     this.currentTool = undefined;
+  }
+
+  @action
+  toggleMobileMenu() {
+    this.mobileMenuVisible = !this.mobileMenuVisible;
   }
 
   @computed
