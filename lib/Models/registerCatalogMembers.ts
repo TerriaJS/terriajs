@@ -191,6 +191,11 @@ export default function registerCatalogMembers() {
     matchesExtension("georss"),
     GeoRssCatalogItem.type
   );
+  // We try to convert zipped shapefiles to geojson
+  UrlToCatalogMemberMapping.register(
+    matchesExtension("zip"),
+    GeoJsonCatalogItem.type
+  );
 
   // These items work by trying to match a URL, then loading the data. If it fails, they move on.
   UrlToCatalogMemberMapping.register(

@@ -1,5 +1,7 @@
 import i18next from "i18next";
 import { computed, observable, runInAction, toJS } from "mobx";
+import * as shp from "shpjs";
+import * as geoJsonMerge from "@mapbox/geojson-merge";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
@@ -18,7 +20,7 @@ import PolylineGraphics from "terriajs-cesium/Source/DataSources/PolylineGraphic
 import Property from "terriajs-cesium/Source/DataSources/Property";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import isDefined from "../Core/isDefined";
-import JsonValue, { isJsonObject, JsonObject } from "../Core/Json";
+import JsonValue, { isJsonArray, isJsonObject, JsonObject } from "../Core/Json";
 import loadJson from "../Core/loadJson";
 import makeRealPromise from "../Core/makeRealPromise";
 import readJson from "../Core/readJson";
@@ -125,7 +127,9 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
       } else if (isDefined(this.geoJsonString)) {
         resolve(<JsonValue>JSON.parse(this.geoJsonString));
       } else if (isDefined(this._geoJsonFile)) {
-        resolve(readJson(this._geoJsonFile));
+        this.loadFromFile(this._geoJsonFile)
+          .then(resolve)
+          .catch(reject);
       } else if (isDefined(this.url)) {
         // try loading from a zip file url or a regular url
         if (zipFileRegex.test(this.url)) {
@@ -149,7 +153,7 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
               })
             });
           }
-          resolve(loadZipFile(proxyCatalogItemUrl(this, this.url)));
+          resolve(loadZipFileFromUrl(proxyCatalogItemUrl(this, this.url)));
         } else {
           resolve(loadJson(proxyCatalogItemUrl(this, this.url)));
         }
@@ -395,6 +399,22 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
       }
       return dataSource;
     });
+  }
+
+  protected async loadFromFile(file: File): Promise<any> {
+    let json: any;
+    // We use promise syntax here because a try-catch breaks our error handling
+    await readJson(file)
+      .then(innerJson => (json = innerJson))
+      .catch(async () => {
+        const asAb = await file.arrayBuffer();
+        json = await shp.parseZip(asAb);
+        if (isJsonArray(json)) {
+          // There were multiple shapefiles in this zip file. Merge them.
+          json = geoJsonMerge.merge(json);
+        }
+      });
+    return json;
   }
 }
 
@@ -694,7 +714,7 @@ function getPropertyValue<T>(property: Property | undefined): T | undefined {
   return property.getValue(JulianDate.now());
 }
 
-function loadZipFile(url: string): Promise<JsonValue> {
+function loadZipFileFromUrl(url: string): Promise<JsonValue> {
   return makeRealPromise<Blob>(loadBlob(url)).then(function(blob: Blob) {
     return new Promise((resolve, reject) => {
       zip.createReader(

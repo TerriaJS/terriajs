@@ -16,6 +16,15 @@ export function isJsonObject(
   );
 }
 
+export function isJsonArray(value: JsonValue | undefined): value is JsonArray {
+  return (
+    value !== undefined &&
+    value !== null &&
+    Array.isArray(value) &&
+    value.every(child => isJsonObject(child) || isJsonArray(child))
+  );
+}
+
 export function isJsonBoolean(value: JsonValue | undefined): value is boolean {
   return typeof value === "boolean";
 }
