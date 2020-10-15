@@ -1,16 +1,12 @@
 import i18next from "i18next";
-import {
-  computed,
-  isObservableArray,
-  observable,
-  runInAction,
-  toJS
-} from "mobx";
+import { computed, isObservableArray, observable, runInAction } from "mobx";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import URI from "urijs";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
 import Reproject from "../Map/Reproject";
+import CatalogFunctionMixin from "../ModelMixins/CatalogFunctionMixin";
+import XmlRequestMixin from "../ModelMixins/XmlRequestMixin";
 import xml2json from "../ThirdParty/xml2json";
 import WebProcessingServiceCatalogFunctionTraits from "../Traits/WebProcessingServiceCatalogFunctionTraits";
 import CommonStrata from "./CommonStrata";
@@ -24,16 +20,13 @@ import GeoJsonParameter from "./FunctionParameters/GeoJsonParameter";
 import LineParameter from "./FunctionParameters/LineParameter";
 import PointParameter from "./FunctionParameters/PointParameter";
 import PolygonParameter from "./FunctionParameters/PolygonParameter";
-import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import RectangleParameter from "./FunctionParameters/RectangleParameter";
 import RegionParameter from "./FunctionParameters/RegionParameter";
 import RegionTypeParameter from "./FunctionParameters/RegionTypeParameter";
 import StringParameter from "./FunctionParameters/StringParameter";
-import WebProcessingServiceCatalogFunctionJob from "./WebProcessingServiceCatalogFunctionJob";
-import CatalogFunctionMixin from "../ModelMixins/CatalogFunctionMixin";
-import CatalogFunctionJobMixin from "../ModelMixins/CatalogFunctionJobMixin";
+import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import updateModelFromJson from "./updateModelFromJson";
-import XmlRequestMixin from "../ModelMixins/XmlRequestMixin";
+import WebProcessingServiceCatalogFunctionJob from "./WebProcessingServiceCatalogFunctionJob";
 
 type AllowedValues = {
   Value?: string | string[];
@@ -88,8 +81,6 @@ type ParameterConverter = {
 export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin(
   CatalogFunctionMixin(CreateModel(WebProcessingServiceCatalogFunctionTraits))
 ) {
-  readonly jobType = WebProcessingServiceCatalogFunctionJob.type;
-
   static readonly type = "wps";
   get typeName() {
     return "Web Processing Service (WPS)";
@@ -214,8 +205,8 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
     return this._functionParameters;
   }
 
-  onSubmit = async (job: CatalogFunctionJobMixin) => {
-    const wpsJob = job as WebProcessingServiceCatalogFunctionJob;
+  protected async createJob(id: string) {
+    const job = new WebProcessingServiceCatalogFunctionJob(id, this.terria);
 
     let dataInputs = await Promise.all(
       this.functionParameters
@@ -223,24 +214,28 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
         .map(p => this.convertParameterToInput(p))
     );
 
-    updateModelFromJson(wpsJob, CommonStrata.user, {
-      geojsonFeatures: this.functionParameters
-        .map(param => param.geoJsonFeature)
-        .filter(isDefined),
-      url: this.url,
-      identifier: this.identifier,
-      executeWithHttpGet: this.executeWithHttpGet,
-      statusSupported: isDefined(this.statusSupported)
-        ? this.statusSupported
-        : isDefined(this.processDescription) &&
-          this.processDescription.statusSupported === "true",
-      storeSupported: isDefined(this.storeSupported)
-        ? this.storeSupporte
-        : isDefined(this.processDescription) &&
-          this.processDescription.storeSupported === "true",
-      wpsParameters: dataInputs
-    });
-  };
+    runInAction(() =>
+      updateModelFromJson(job, CommonStrata.user, {
+        geojsonFeatures: this.functionParameters
+          .map(param => param.geoJsonFeature)
+          .filter(isDefined),
+        url: this.url,
+        identifier: this.identifier,
+        executeWithHttpGet: this.executeWithHttpGet,
+        statusSupported: isDefined(this.statusSupported)
+          ? this.statusSupported
+          : isDefined(this.processDescription) &&
+            this.processDescription.statusSupported === "true",
+        storeSupported: isDefined(this.storeSupported)
+          ? this.storeSupported
+          : isDefined(this.processDescription) &&
+            this.processDescription.storeSupported === "true",
+        wpsParameters: dataInputs
+      })
+    );
+
+    return job;
+  }
 
   // setErrorOnPendingItem(pendingItem: ResultPendingCatalogItem, failure: any) {
   //   let errorMessage = "The reason for failure is unknown.";

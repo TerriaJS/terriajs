@@ -1,14 +1,14 @@
+import { runInAction, toJS } from "mobx";
 import Constructor from "../Core/Constructor";
+import TerriaError from "../Core/TerriaError";
+import CommonStrata from "../Models/CommonStrata";
+import FunctionParameter from "../Models/FunctionParameters/FunctionParameter";
 import Model from "../Models/Model";
 import CatalogFunctionTraits from "../Traits/CatalogFunctionTraits";
-import CatalogMemberMixin from "./CatalogMemberMixin";
-import FunctionParameter from "../Models/FunctionParameters/FunctionParameter";
 import CatalogFunctionJobMixin from "./CatalogFunctionJobMixin";
-import CommonStrata from "../Models/CommonStrata";
-import { toJS, runInAction } from "mobx";
-import TerriaError from "../Core/TerriaError";
-import upsertModelFromJson from "../Models/upsertModelFromJson";
-import CatalogMemberFactory from "../Models/CatalogMemberFactory";
+import CatalogMemberMixin from "./CatalogMemberMixin";
+import addUserCatalogMember from "../Models/addUserCatalogMember";
+import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 const sprintf = require("terriajs-cesium/Source/ThirdParty/sprintf").default;
 
 type CatalogFunctionMixin = Model<CatalogFunctionTraits>;
@@ -17,10 +17,19 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
   Base: T
 ) {
   abstract class CatalogFunctionMixin extends CatalogMemberMixin(Base) {
-    abstract readonly jobType: string;
+    /**
+     * Create new job.
+     * Note: `name` and `parameters` traits are automatically copied across.
+     * All user-configurated job parameters should be in the `parameters` trait, this is the ensure that function parameter state behave correctly, and that values can be easily copied across jobs.
+     *
+     * Other job traits can be set in this function, as long as they aren't related to function parameters - for example the `url` and `processIdentier` trait for WPS are copied from the WPSCatalogFunction.
+     */
+    protected abstract createJob(id: string): Promise<CatalogFunctionJobMixin>;
 
-    protected onSubmit?: (job: CatalogFunctionJobMixin) => Promise<void>;
-
+    /**
+     * Submit job.
+     * @returns true if successfuly submited
+     */
     async submitJob() {
       try {
         const now = new Date();
@@ -34,28 +43,20 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
           now.getSeconds()
         );
 
-        const newJob = upsertModelFromJson(
-          CatalogMemberFactory,
-          this.terria,
-          this.uniqueId || "",
-          undefined,
-          CommonStrata.user,
-          {
-            id: `${this.uniqueId}-${timestamp}`,
-            name: `${this.typeName} ${timestamp}`,
-            parameters: toJS(this.parameters),
-            type: this.jobType
-          }
-        );
+        const newJob = await this.createJob(`${this.uniqueId}-${timestamp}`);
 
         if (!CatalogFunctionJobMixin.isMixedInto(newJob)) {
-          throw `Error creating job catalog item - ${this.jobType} is not a valid jobType`;
+          throw `Error creating job catalog item - ${newJob.type} is not a valid jobType`;
         }
 
+        newJob.setTrait(
+          CommonStrata.user,
+          "name",
+          `${newJob.typeName} ${timestamp}`
+        );
+        newJob.setTrait(CommonStrata.user, "parameters", toJS(this.parameters));
+
         await newJob.loadMetadata();
-        if (typeof this.onSubmit === "function") {
-          await this.onSubmit(newJob);
-        }
 
         const finished = await newJob.invoke();
 
@@ -67,26 +68,40 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
           }
         });
         // Only add model if successfully invokes (doesn't throw exception)
-        this.terria.workbench.add(newJob);
-        this.terria.catalog.userAddedDataGroup.add(CommonStrata.user, newJob);
+        this.terria.addModel(newJob);
+        await addUserCatalogMember(this.terria, newJob, { enable: true });
 
         return true;
       } catch (error) {
-        if (typeof error === "string") {
-          throw new TerriaError({
-            title: `Error submitting ${this.typeName}`,
-            message: error
-          });
-        } else if (error instanceof TerriaError) {
+        if (error instanceof TerriaError) {
           throw error;
         }
-        console.error(error);
+
+        let message = error;
+
+        if (typeof message !== "string") {
+          if (
+            message instanceof RequestErrorEvent &&
+            typeof message.response?.detail === "string"
+          )
+            message = message.response.detail;
+        }
+
+        throw new TerriaError({
+          title: `Error submitting ${this.typeName} job`,
+          message
+        });
       }
     }
 
+    /**
+     * Function parameters are rendered as ParameterEditors, their values directly map to the `parameters` trait. When a FunctionParameter value is modified, it will automatically update `parameters` trait.
+     *
+     * When a job is created, the `parameters` are copied across automatically.
+     *
+     * See {@link CatalogFunctionMixin#createJob} and {@link CatalogFunctionMixin#submitJob}
+     */
     abstract get functionParameters(): FunctionParameter[];
-
-    throwError(error: string) {}
 
     get hasCatalogFunctionMixin() {
       return true;

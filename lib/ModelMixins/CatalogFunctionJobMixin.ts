@@ -1,15 +1,6 @@
-import {
-  action,
-  computed,
-  observable,
-  onBecomeObserved,
-  reaction,
-  runInAction,
-  trace
-} from "mobx";
+import { action, computed, observable, reaction, runInAction } from "mobx";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
-import runLater from "../Core/runLater";
 import CommonStrata from "../Models/CommonStrata";
 import createStratumInstance from "../Models/createStratumInstance";
 import LoadableStratum from "../Models/LoadableStratum";
@@ -50,11 +41,11 @@ class FunctionJobStratum extends LoadableStratum(CatalogFunctionJobTraits) {
   @computed
   get shortReport() {
     let content = "";
-    if (this.jobStatus === "inactive") {
+    if (this.catalogFunctionJob.jobStatus === "inactive") {
       content = "Job is inactive";
-    } else if (this.jobStatus === "running") {
+    } else if (this.catalogFunctionJob.jobStatus === "running") {
       content = "Job is running...";
-    } else if (this.jobStatus === "finished") {
+    } else if (this.catalogFunctionJob.jobStatus === "finished") {
       if (this.catalogFunctionJob.downloadedResults) {
         content = "Job is finished";
       } else {
@@ -83,15 +74,18 @@ function CatalogFunctionJobMixin<
       });
 
       // If this is showing in workbench, make sure result layers are also in workbench
-      onBecomeObserved(this, "mapItems", () => {
-        runLater(() =>
-          this.results.forEach(
-            result =>
-              this.terria.workbench.contains(result) ||
-              runInAction(() => this.terria.workbench.add(result))
-          )
-        );
-      });
+      reaction(
+        () => this.inWorkbench,
+        inWorkbench => {
+          if (inWorkbench) {
+            this.results.forEach(
+              result =>
+                this.terria.workbench.contains(result) ||
+                runInAction(() => this.terria.workbench.add(result))
+            );
+          }
+        }
+      );
 
       // Handle changes in job status
       reaction(
@@ -153,7 +147,9 @@ function CatalogFunctionJobMixin<
     }
 
     /**
-     * Called every refreshInterval - return indicates whether job has finished (true = finished)
+     * Called every refreshInterval
+     *
+     * @return true if job has finished, false otherwise
      */
     async pollForResults(): Promise<boolean> {
       throw "pollForResults not implemented";

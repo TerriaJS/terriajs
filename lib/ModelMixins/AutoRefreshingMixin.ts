@@ -1,11 +1,4 @@
-import {
-  computed,
-  IReactionDisposer,
-  onBecomeObserved,
-  onBecomeUnobserved,
-  reaction,
-  autorun
-} from "mobx";
+import { autorun, computed, IReactionDisposer, reaction } from "mobx";
 import { now } from "mobx-utils";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
@@ -30,8 +23,13 @@ export default function AutoRefreshingMixin<
     constructor(...args: any[]) {
       super(...args);
       // We should only poll when our map items have consumers
-      onBecomeObserved(this, "mapItems", this.startAutoRefresh.bind(this));
-      onBecomeUnobserved(this, "mapItems", this.stopAutoRefresh.bind(this));
+      reaction(
+        () => this.inWorkbench,
+        inWorkbench => {
+          if (inWorkbench) this.startAutoRefresh();
+          else this.stopAutoRefresh();
+        }
+      );
     }
 
     private startAutoRefresh() {

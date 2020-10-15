@@ -1,17 +1,17 @@
 import { computed } from "mobx";
+import filterOutUndefined from "../Core/filterOutUndefined";
+import isDefined from "../Core/isDefined";
+import CatalogFunctionMixin from "../ModelMixins/CatalogFunctionMixin";
+import TableMixin from "../ModelMixins/TableMixin";
+import TableColumnType from "../Table/TableColumnType";
 import YDYRCatalogFunctionTraits from "../Traits/YDYRCatalogFunctionTraits";
 import CreateModel from "./CreateModel";
-import FunctionParameter from "./FunctionParameters/FunctionParameter";
-import CatalogFunctionMixin from "../ModelMixins/CatalogFunctionMixin";
-import EnumerationParameter from "./FunctionParameters/EnumerationParameter";
-import TableMixin from "../ModelMixins/TableMixin";
-import isDefined from "../Core/isDefined";
-import TableColumnType from "../Table/TableColumnType";
 import BooleanParameter from "./FunctionParameters/BooleanParameter";
-import YDYRCatalogFunctionJob from "./YDYRCatalogFunctionJob";
-import filterOutUndefined from "../Core/filterOutUndefined";
+import EnumerationParameter from "./FunctionParameters/EnumerationParameter";
+import FunctionParameter from "./FunctionParameters/FunctionParameter";
 import InfoParameter from "./FunctionParameters/InfoParameter";
 import StringParameter from "./FunctionParameters/StringParameter";
+import YDYRCatalogFunctionJob from "./YDYRCatalogFunctionJob";
 
 export const DATASETS = [
   {
@@ -172,7 +172,9 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
   CreateModel(YDYRCatalogFunctionTraits)
 ) {
   static readonly type = "ydyr";
-  readonly jobType = YDYRCatalogFunctionJob.type;
+  get type(): string {
+    return YDYRCatalogFunction.type;
+  }
 
   readonly typeName = "YourDataYourRegions";
 
@@ -185,7 +187,7 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
   }
 
   async forceLoadMetadata() {
-    // https://ydyr.info/api/v1/capability?format=json
+    // TODO: load capabilities from https://ydyr.info/api/v1/capability?format=json
   }
 
   @computed
