@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.56)
 * Add `itemProperties` trait to `WebMapMapCatalogGroup`.
+* Add support for `formats` traits within `featureInfoTemplate` traits.
 * [The next improvement]
 
 #### 8.0.0-alpha.55
