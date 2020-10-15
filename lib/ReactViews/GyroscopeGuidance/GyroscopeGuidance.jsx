@@ -155,13 +155,14 @@ export default function GyroscopeGuidance(props) {
           roundLeft
           buttonRef={controlsMapIcon}
           neverCollapse
-          iconElement={() => <Icon glyph={Icon.GLYPHS.arrowDown} />}
+          iconElement={() => <Icon glyph={Icon.GLYPHS.questionMark} />}
           onClick={() => setControlPanelOpen(!controlPanelOpen)}
           inverted
           css={`
             svg {
-              width: 14px;
-              height: 14px;
+              margin: 0px;
+              width: 25px;
+              height: 25px;
             }
           `}
         />
