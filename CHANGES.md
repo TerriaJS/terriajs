@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.56)
+* Add `itemProperties` trait to `WebMapMapCatalogGroup`.
 * [The next improvement]
 
 #### 8.0.0-alpha.55
