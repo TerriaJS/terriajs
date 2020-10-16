@@ -14,6 +14,7 @@ import hasTraits from "../../Models/hasTraits";
 import SplitItemReference from "../../Models/SplitItemReference";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import DiscretelyTimeVaryingTraits from "../../Traits/DiscretelyTimeVaryingTraits";
+import Chartable from "../../Models/Chartable";
 
 export interface ChartCustomComponentAttributes {
   /**  The title of the chart.  If not supplied, defaults to the name of the context-supplied feature, if available, or else simply "Chart". */
@@ -105,9 +106,8 @@ export interface ChartCustomComponentAttributes {
  *                   or  `<chart>[["x","y","z"],[1,10,3],[2,15,9],[3,8,12],[5,25,4]]</chart>`.
  */
 
-type CatalogMemberType = Model<CatalogMemberTraits>;
 export default abstract class ChartCustomComponent<
-  CatalogItemType extends CatalogMemberType
+  CatalogItemType extends Chartable
 > extends CustomComponent {
   get attributes(): Array<string> {
     return [
@@ -214,11 +214,7 @@ export default abstract class ChartCustomComponent<
       // Build expand/download buttons
       const sourceItems = (attrs.downloads || attrs.sources || [""]).map(
         (source: string, i: number) => {
-          const id = [
-            context.catalogItem.uniqueId,
-            context.feature.id,
-            source
-          ].join(":");
+          const id = `${context.catalogItem.uniqueId}:${source}`;
 
           const itemOrPromise = this.constructShareableCatalogItem
             ? this.constructShareableCatalogItem(id, context, undefined)
@@ -254,7 +250,7 @@ export default abstract class ChartCustomComponent<
           terria: context.terria,
           sourceItems: sourceItems,
           sourceNames: attrs.sourceNames,
-          canDownload: attrs.canDownload,
+          canDownload: attrs.canDownload === true ? true : false,
           downloads: attrs.downloads,
           downloadNames: attrs.downloadNames,
           raiseToTitle: !!getInsertedTitle(node)
