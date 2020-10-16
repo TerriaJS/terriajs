@@ -31,14 +31,14 @@ export default class EnumerationParameterEditor extends React.Component<{
         )}
         {/* Create option if value is invalid (not in possibleValues) */}
         {isDefined(value) &&
-          !this.props.parameter.possibleValues.includes(value) && (
+          !this.props.parameter.options.find(option => option.id === value) && (
             <option key="__invalid__" value={value}>
               Invalid value ({value})
             </option>
           )}
-        {this.props.parameter.possibleValues.map((v, i) => (
-          <option value={v} key={i}>
-            {v}
+        {this.props.parameter.options.map((v, i) => (
+          <option value={v.id} key={i}>
+            {v.name ?? v.id}
           </option>
         ))}
       </select>

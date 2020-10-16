@@ -1,24 +1,25 @@
+import { computed, observable, reaction } from "mobx";
+import isDefined from "../../Core/isDefined";
+import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
+import CommonStrata from "../CommonStrata";
+import { DimensionOption } from "../SelectableDimensions";
 import FunctionParameter, {
   Options as FunctionParameterOptions
 } from "./FunctionParameter";
-import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
-import { autorun, observable, reaction, computed } from "mobx";
-import CommonStrata from "../CommonStrata";
-import isDefined from "../../Core/isDefined";
 
 interface Options extends FunctionParameterOptions {
-  possibleValues: string[];
+  options: DimensionOption[];
 }
 
 export default class EnumerationParameter extends FunctionParameter<string> {
   readonly type = "enumeration";
 
   @observable
-  readonly possibleValues: string[];
+  readonly options: DimensionOption[];
 
   constructor(catalogFunction: CatalogFunctionMixin, options: Options) {
     super(catalogFunction, options);
-    this.possibleValues = options.possibleValues;
+    this.options = options.options;
 
     // Set value to something useful if undefined (and a value isRequired)
     reaction(
@@ -27,9 +28,9 @@ export default class EnumerationParameter extends FunctionParameter<string> {
         if (
           !isDefined(this.value) &&
           this.isRequired &&
-          this.possibleValues.length > 0
+          this.options?.[0]?.id
         ) {
-          this.setValue(CommonStrata.user, this.possibleValues[0]);
+          this.setValue(CommonStrata.user, this.options[0].id);
         }
       },
       { fireImmediately: true }
@@ -42,10 +43,6 @@ export default class EnumerationParameter extends FunctionParameter<string> {
       return !this.isRequired;
     }
 
-    if (this.possibleValues.includes(this.value)) {
-      return true;
-    }
-
-    return false;
+    return isDefined(this.options.find(option => option.id === this.value));
   }
 }

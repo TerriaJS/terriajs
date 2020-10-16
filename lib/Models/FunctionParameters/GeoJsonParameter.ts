@@ -26,7 +26,7 @@ export default class GeoJsonParameter extends FunctionParameter<
   static readonly SelectAPolygonType = "selectAPolygon";
 
   @observable
-  subtype?: string;
+  public subtype?: string;
 
   readonly regionParameter: RegionParameter;
 

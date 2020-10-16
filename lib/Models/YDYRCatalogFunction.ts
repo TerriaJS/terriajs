@@ -12,6 +12,7 @@ import FunctionParameter from "./FunctionParameters/FunctionParameter";
 import InfoParameter from "./FunctionParameters/InfoParameter";
 import StringParameter from "./FunctionParameters/StringParameter";
 import YDYRCatalogFunctionJob from "./YDYRCatalogFunctionJob";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 
 export const DATASETS = [
   {
@@ -178,10 +179,6 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
 
   readonly typeName = "YourDataYourRegions";
 
-  private _inputLayers?: EnumerationParameter;
-  private _dataColumn?: EnumerationParameter;
-  private _regionColumn?: EnumerationParameter;
-
   protected async createJob(id: string) {
     return new YDYRCatalogFunctionJob(id, this.terria);
   }
@@ -223,19 +220,23 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
         item =>
           TableMixin.isMixedInto(item) && item.activeTableStyle.isRegions()
       )
-      .map(item => item.uniqueId)
-      .filter(isDefined);
+      .filter(item => item.uniqueId)
+      .map(item => {
+        return {
+          id: item.uniqueId,
+          name: CatalogMemberMixin.isMixedInto(item) ? item.name : undefined
+        };
+      });
 
-    this._inputLayers = new EnumerationParameter(this, {
+    return new EnumerationParameter(this, {
       id: "Input Layer",
       description: `Select a layer which contains the tabular data you want to convert to another geography, It should contain at least two columns:
 - A geography column containing unique codes (eg postcodes)
 - A data column containing the values you want to convert (eg number of households by postcode)`,
-      possibleValues,
+      options: possibleValues,
 
       isRequired: true
     });
-    return this._inputLayers;
   }
 
   @computed
@@ -246,7 +247,7 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
       value = `The selected layer "${this.inputLayers.value} does not exist in the map". `;
     }
 
-    if (this.inputLayers.possibleValues.length === 0) {
+    if (this.inputLayers.options.length === 0) {
       value = `No supported input layers available, please add a region-mapped data layer to the map.`;
     }
 
@@ -275,25 +276,23 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
               DATASETS.find(d => d.dataCol === col.regionType?.regionProp)
             )
         )
-        .map(col => col.name) || [];
+        .map(col => {
+          return { id: col.name };
+        }) || [];
 
-    this._regionColumn = new EnumerationParameter(this, {
+    return new EnumerationParameter(this, {
       id: "Region Column",
       description:
         "The data source field which contains unique codes for the input geography.",
-      possibleValues,
+      options: possibleValues,
 
       isRequired: true
     });
-    return this._regionColumn;
   }
 
   @computed
   get regionColumnInfo() {
-    if (
-      this.inputLayers.isValid &&
-      this.regionColumn?.possibleValues.length === 0
-    ) {
+    if (this.inputLayers.isValid && this.regionColumn?.options.length === 0) {
       return new InfoParameter(this, {
         id: "regionColumnError",
         name: "Region Column Error",
@@ -317,25 +316,23 @@ ${DATASETS.map(d => `\n- ${d.title}`)}`
     const possibleValues =
       this.selectedTableCatalogMember?.tableColumns
         .filter(col => col.type === TableColumnType.scalar)
-        .map(col => col.name) || [];
+        .map(col => {
+          return { id: col.name };
+        }) || [];
     if (possibleValues.length === 0) {
     }
-    this._dataColumn = new EnumerationParameter(this, {
+    return new EnumerationParameter(this, {
       id: "Data Column",
       description:
         "The data source field which contains the values for the data to be converted.",
-      possibleValues,
+      options: possibleValues,
       isRequired: true
     });
-    return this._dataColumn;
   }
 
   @computed
   get dataColumnInfo() {
-    if (
-      this.inputLayers.isValid &&
-      this.dataColumn?.possibleValues.length === 0
-    ) {
+    if (this.inputLayers.isValid && this.dataColumn?.options.length === 0) {
       return new InfoParameter(this, {
         id: "dataColumnError",
         name: "Data Column Error",
@@ -352,7 +349,9 @@ ${DATASETS.map(d => `\n- ${d.title}`)}`
     return new EnumerationParameter(this, {
       id: "Output Geography",
       description: "The output geography to be converted to.",
-      possibleValues: DATASETS.map(d => d.title),
+      options: DATASETS.map(d => {
+        return { id: d.title };
+      }),
       isRequired: true
     });
   }
