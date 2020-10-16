@@ -7,11 +7,20 @@ import {
   runInAction,
   toJS
 } from "mobx";
+import Mustache from "mustache";
+import URI from "urijs";
 import isDefined from "../Core/isDefined";
+import TerriaError from "../Core/TerriaError";
+import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
+import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import CatalogFunctionJobMixin from "../ModelMixins/CatalogFunctionJobMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import XmlRequestMixin from "../ModelMixins/XmlRequestMixin";
+import xml2json from "../ThirdParty/xml2json";
 import { ShortReportTraits } from "../Traits/CatalogMemberTraits";
 import WebProcessingServiceCatalogFunctionJobTraits from "../Traits/WebProcessingServiceCatalogFunctionJobTraits";
 import CatalogMemberFactory from "./CatalogMemberFactory";
+import { ChartItem } from "./Chartable";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
@@ -22,21 +31,10 @@ import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
+import updateModelFromJson from "./updateModelFromJson";
 import upsertModelFromJson from "./upsertModelFromJson";
-import CatalogFunctionJobMixin from "../ModelMixins/CatalogFunctionJobMixin";
-import { ChartItem } from "./Chartable";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
-import URI from "urijs";
 
 const executeWpsTemplate = require("./ExecuteWpsTemplate.xml");
-
-import Mustache from "mustache";
-
-import XmlRequestMixin from "../ModelMixins/XmlRequestMixin";
-import TerriaError from "../Core/TerriaError";
-import xml2json from "../ThirdParty/xml2json";
-import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
-import updateModelFromJson from "./updateModelFromJson";
 
 const createGuid = require("terriajs-cesium/Source/Core/createGuid").default;
 
@@ -134,19 +132,21 @@ class WpsLoadableStratum extends LoadableStratum(
 
 StratumOrder.addLoadStratum(WpsLoadableStratum.stratumName);
 
-export default class WebProcessingServiceCatalogFunctionJob
-  extends XmlRequestMixin(
-    AsyncMappableMixin(
-      CatalogFunctionJobMixin(
-        CreateModel(WebProcessingServiceCatalogFunctionJobTraits)
-      )
-    )
+export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMixin(
+  CatalogFunctionJobMixin(
+    CreateModel(WebProcessingServiceCatalogFunctionJobTraits)
   )
-  implements Mappable {
+) {
   static readonly type = "wps-result";
+
+  get type() {
+    return WebProcessingServiceCatalogFunctionJob.type;
+  }
+
   get typeName() {
     return i18next.t("models.webProcessingService.wpsResult");
   }
+
   readonly proxyCacheDuration = "1d";
 
   @observable
@@ -217,6 +217,7 @@ export default class WebProcessingServiceCatalogFunctionJob
       return true;
     }
 
+    // If not finished, set response URL for polling
     runInAction(() =>
       this.setTrait(CommonStrata.user, "wpsResponseUrl", json.statusLocation)
     );
@@ -361,13 +362,21 @@ export default class WebProcessingServiceCatalogFunctionJob
     return results;
   }
 
+  @computed get mapItems() {
+    if (isDefined(this.geoJsonItem)) {
+      return this.geoJsonItem.mapItems.map(mapItem => {
+        mapItem.show = this.show;
+        return mapItem;
+      });
+    }
+    return [];
+  }
+
   get chartItems(): ChartItem[] {
     return [];
   }
 
-  protected async forceLoadMapItems(): Promise<void> {}
-
-  async loadMapItems() {
+  protected async forceLoadMapItems(): Promise<void> {
     await this.loadMetadata();
     if (isDefined(this.geoJsonItem)) {
       const geoJsonItem = this.geoJsonItem;
@@ -392,16 +401,6 @@ export default class WebProcessingServiceCatalogFunctionJob
     return outputs.filter(
       o => o.Identifier !== ".context" && isDefined(o.Data)
     );
-  }
-
-  @computed get mapItems() {
-    if (isDefined(this.geoJsonItem)) {
-      return this.geoJsonItem.mapItems.map(mapItem => {
-        mapItem.show = this.show;
-        return mapItem;
-      });
-    }
-    return [];
   }
 
   private createCatalogItemFromJson(json: any) {

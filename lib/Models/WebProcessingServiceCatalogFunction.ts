@@ -82,6 +82,10 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
   CatalogFunctionMixin(CreateModel(WebProcessingServiceCatalogFunctionTraits))
 ) {
   static readonly type = "wps";
+  get type() {
+    return WebProcessingServiceCatalogFunction.type;
+  }
+
   get typeName() {
     return "Web Processing Service (WPS)";
   }
@@ -98,9 +102,6 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
 
   @observable
   private processDescription?: ProcessDescription;
-
-  @observable
-  private _functionParameters: FunctionParameter[] = [];
 
   @computed get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
@@ -156,18 +157,6 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
 
     runInAction(() => {
       this.processDescription = json.ProcessDescription;
-
-      this._functionParameters = this.inputs.map(input => {
-        const parameter = this.convertInputToParameter(this, input);
-        if (isDefined(parameter)) {
-          return parameter;
-        }
-        throw new TerriaError({
-          sender: this,
-          title: "Unsupported parameter type",
-          message: `The parameter ${input.Identifier} is not a supported type of parameter.`
-        });
-      });
     });
   }
 
@@ -202,7 +191,17 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
    */
   @computed
   get functionParameters() {
-    return this._functionParameters;
+    return this.inputs.map(input => {
+      const parameter = this.convertInputToParameter(this, input);
+      if (isDefined(parameter)) {
+        return parameter;
+      }
+      throw new TerriaError({
+        sender: this,
+        title: "Unsupported parameter type",
+        message: `The parameter ${input.Identifier} is not a supported type of parameter.`
+      });
+    });
   }
 
   protected async createJob(id: string) {
@@ -236,34 +235,6 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
 
     return job;
   }
-
-  // setErrorOnPendingItem(pendingItem: ResultPendingCatalogItem, failure: any) {
-  //   let errorMessage = "The reason for failure is unknown.";
-  //   if (
-  //     isDefined(failure.ExceptionReport) &&
-  //     isDefined(failure.ExceptionReport.Exception)
-  //   ) {
-  //     const e = failure.ExceptionReport.Exception;
-  //     errorMessage = e.ExceptionText || e.Exception || errorMessage;
-  //   }
-
-  //   runInAction(() => {
-  //     pendingItem.setTrait(
-  //       CommonStrata.user,
-  //       "shortReport",
-  //       "Web Processing Service invocation failed.  More details are available on the Info panel."
-  //     );
-
-  //     const errorInfo = createStratumInstance(InfoSectionTraits, {
-  //       name: "Error Details",
-  //       content: errorMessage
-  //     });
-  //     const info = pendingItem.getTrait(CommonStrata.user, "info");
-  //     if (isDefined(info)) {
-  //       info.push(errorInfo);
-  //     }
-  //   });
-  // }
 
   convertInputToParameter(catalogFunction: CatalogFunctionMixin, input: Input) {
     if (!isDefined(input.Identifier)) {

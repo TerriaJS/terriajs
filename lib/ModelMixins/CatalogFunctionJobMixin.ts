@@ -4,7 +4,6 @@ import isDefined from "../Core/isDefined";
 import CommonStrata from "../Models/CommonStrata";
 import createStratumInstance from "../Models/createStratumInstance";
 import LoadableStratum from "../Models/LoadableStratum";
-import { MapItem } from "../Models/Mappable";
 import Model, { BaseModel } from "../Models/Model";
 import StratumOrder from "../Models/StratumOrder";
 import CatalogFunctionJobTraits from "../Traits/CatalogFunctionJobTraits";
@@ -12,6 +11,7 @@ import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import AsyncMappableMixin from "./AsyncMappableMixin";
 import AutoRefreshingMixin from "./AutoRefreshingMixin";
 import CatalogMemberMixin from "./CatalogMemberMixin";
+import { MapItem } from "../Models/Mappable";
 
 class FunctionJobStratum extends LoadableStratum(CatalogFunctionJobTraits) {
   constructor(
@@ -56,6 +56,43 @@ class FunctionJobStratum extends LoadableStratum(CatalogFunctionJobTraits) {
     }
     return content;
   }
+
+  @computed
+  get description() {
+    return `This is the result of invoking ${this.catalogFunctionJob.name} with the input parameters below.`;
+  }
+
+  @computed
+  get info() {
+    if (isDefined(this.catalogFunctionJob.parameters)) {
+      const inputsSection =
+        '<table class="cesium-infoBox-defaultTable">' +
+        Object.keys(this.catalogFunctionJob.parameters).reduce(
+          (previousValue, key) => {
+            return (
+              previousValue +
+              "<tr>" +
+              '<td style="vertical-align: middle">' +
+              key +
+              "</td>" +
+              "<td>" +
+              this.catalogFunctionJob.parameters![key] +
+              "</td>" +
+              "</tr>"
+            );
+          },
+          ""
+        ) +
+        "</table>";
+
+      return [
+        createStratumInstance(InfoSectionTraits, {
+          name: "Inputs",
+          content: inputsSection
+        })
+      ];
+    }
+  }
 }
 
 type CatalogFunctionJobMixin = Model<CatalogFunctionJobTraits>;
@@ -69,6 +106,7 @@ function CatalogFunctionJobMixin<
     constructor(...args: any[]) {
       super(...args);
 
+      // Add FunctionJobStratum to strata
       runInAction(() => {
         this.strata.set(FunctionJobStratum.name, new FunctionJobStratum(this));
       });
@@ -155,6 +193,10 @@ function CatalogFunctionJobMixin<
       throw "pollForResults not implemented";
     }
 
+    /**
+     * Called when `jobStatus` is `finished`, and `!_downloadedResults`
+     * @returns catalog members to add to workbench
+     */
     abstract async downloadResults(): Promise<
       CatalogMemberMixin.CatalogMemberMixin[] | void
     >;
@@ -188,59 +230,16 @@ function CatalogFunctionJobMixin<
           runInAction(() => {
             this.setTrait(CommonStrata.user, "jobStatus", "error");
             this.setTrait(CommonStrata.user, "refreshEnabled", false);
-            this.setTrait(CommonStrata.user, "logs", [...this.logs, error]);
+            this.setOnError(error);
           });
           this.pollingForResults = false;
-
-          console.log(error);
         });
     }
-
-    protected async forceLoadMetadata() {
-      if (isDefined(this.parameters)) {
-        const inputsSection =
-          '<table class="cesium-infoBox-defaultTable">' +
-          Object.keys(this.parameters).reduce((previousValue, key) => {
-            return (
-              previousValue +
-              "<tr>" +
-              '<td style="vertical-align: middle">' +
-              key +
-              "</td>" +
-              "<td>" +
-              this.parameters![key] +
-              "</td>" +
-              "</tr>"
-            );
-          }, "") +
-          "</table>";
-
-        runInAction(() => {
-          this.setTrait(
-            CommonStrata.user,
-            "description",
-            `This is the result of invoking ${this.name} with the input parameters below.`
-          );
-
-          this.setTrait(CommonStrata.user, "info", [
-            createStratumInstance(InfoSectionTraits, {
-              name: "Inputs",
-              content: inputsSection
-            })
-          ]);
-        });
-      }
-    }
-
-    @computed
-    get mapItems(): MapItem[] {
-      return [];
-    }
-
-    protected async forceLoadMapItems(): Promise<void> {}
 
     @action
     protected setOnError(errorMessage?: string) {
+      isDefined(errorMessage) &&
+        this.setTrait(CommonStrata.user, "logs", [...this.logs, errorMessage]);
       this.setTrait(
         CommonStrata.user,
         "shortReport",
@@ -258,6 +257,17 @@ function CatalogFunctionJobMixin<
       if (isDefined(info)) {
         info.push(errorInfo);
       }
+    }
+
+    get mapItems(): MapItem[] {
+      return [];
+    }
+    protected async forceLoadMapItems() {
+      return;
+    }
+
+    protected async forceLoadMetadata() {
+      return;
     }
 
     get hasCatalogFunctionJobMixin() {

@@ -1,37 +1,25 @@
-import { action, computed, runInAction } from "mobx";
-import CreateModel from "./CreateModel";
-import TableMixin from "../ModelMixins/TableMixin";
-import isDefined from "../Core/isDefined";
-import loadWithXhr from "../Core/loadWithXhr";
+import { action, runInAction } from "mobx";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import isDefined from "../Core/isDefined";
 import loadJson from "../Core/loadJson";
-import CsvCatalogItem from "./CsvCatalogItem";
-import CommonStrata from "./CommonStrata";
+import loadWithXhr from "../Core/loadWithXhr";
 import CatalogFunctionJobMixin from "../ModelMixins/CatalogFunctionJobMixin";
+import TableMixin from "../ModelMixins/TableMixin";
 import YDYRCatalogFunctionJobTraits from "../Traits/YDYRCatalogFunctionJobTraits";
-import { ALGORITHMS, DATASETS } from "./YDYRCatalogFunction";
-import { MapItem } from "./Mappable";
+import CommonStrata from "./CommonStrata";
+import CreateModel from "./CreateModel";
+import CsvCatalogItem from "./CsvCatalogItem";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
+import { ALGORITHMS, DATASETS } from "./YDYRCatalogFunction";
 
 export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
   CreateModel(YDYRCatalogFunctionJobTraits)
 ) {
-  @computed
-  get mapItems(): MapItem[] {
-    return [];
-  }
-
-  protected async forceLoadMapItems(): Promise<void> {}
-
   readonly typeName = "YourDataYourRegions Job";
 
   static readonly type = "ydyr-job";
   get type() {
     return YDYRCatalogFunctionJob.type;
-  }
-
-  async forceLoadMetadata() {
-    await super.forceLoadMetadata();
   }
 
   @action

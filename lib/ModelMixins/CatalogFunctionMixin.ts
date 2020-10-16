@@ -18,6 +18,15 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
 ) {
   abstract class CatalogFunctionMixin extends CatalogMemberMixin(Base) {
     /**
+     * Function parameters are rendered as ParameterEditors, their values directly map to the `parameters` trait. When a FunctionParameter value is modified, it will automatically update `parameters` trait.
+     *
+     * When a job is created, the `parameters` are copied across automatically.
+     *
+     * See {@link CatalogFunctionMixin#createJob} and {@link CatalogFunctionMixin#submitJob}
+     */
+    abstract get functionParameters(): FunctionParameter[];
+
+    /**
      * Create new job.
      * Note: `name` and `parameters` traits are automatically copied across.
      * All user-configurated job parameters should be in the `parameters` trait, this is the ensure that function parameter state behave correctly, and that values can be easily copied across jobs.
@@ -73,6 +82,7 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
 
         return true;
       } catch (error) {
+        // Try to get meaningful error message
         if (error instanceof TerriaError) {
           throw error;
         }
@@ -93,15 +103,6 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
         });
       }
     }
-
-    /**
-     * Function parameters are rendered as ParameterEditors, their values directly map to the `parameters` trait. When a FunctionParameter value is modified, it will automatically update `parameters` trait.
-     *
-     * When a job is created, the `parameters` are copied across automatically.
-     *
-     * See {@link CatalogFunctionMixin#createJob} and {@link CatalogFunctionMixin#submitJob}
-     */
-    abstract get functionParameters(): FunctionParameter[];
 
     get hasCatalogFunctionMixin() {
       return true;
