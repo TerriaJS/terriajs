@@ -3,11 +3,13 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.56)
+#### next release (8.0.0-alpha.57)
+* [The next improvement]
+  
+#### 8.0.0-alpha.56
 * Add `itemProperties` trait to `WebMapMapCatalogGroup`.
 * Add support for `formats` traits within `featureInfoTemplate` traits.
 * Fix handling of `ArcGisPortalItemReference` for when a feature layer contains multiple sublayers.
-* [The next improvement]
 
 #### 8.0.0-alpha.55
 * Upgraded to patched terriajs-cesium v1.73.1 to avoid build error on node 12 & 14.
