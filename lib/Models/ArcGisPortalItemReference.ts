@@ -327,7 +327,7 @@ export default class ArcGisPortalItemReference extends UrlMixin(
       | undefined = await loadAdditionalPortalInfo(this);
     if (itemDataInfo !== undefined && this._arcgisItem !== undefined) {
       if (!itemDataInfo.error && itemDataInfo.layers) {
-        if (itemDataInfo.layers.length > 0) {
+        if (itemDataInfo.layers.length === 1) {
           this._arcgisItem.url = `${this._arcgisItem.url}/${itemDataInfo.layers[0].id}`;
         }
       }
