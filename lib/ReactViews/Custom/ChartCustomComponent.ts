@@ -15,6 +15,14 @@ import SplitItemReference from "../../Models/SplitItemReference";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import DiscretelyTimeVaryingTraits from "../../Traits/DiscretelyTimeVaryingTraits";
 import Chartable from "../../Models/Chartable";
+import LatLonHeight from "../../Core/LatLonHeight";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import Feature from "../../Models/Feature";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import ChartPointOnMapTraits from "../../Traits/ChartPointOnMapTraits";
+import LatLonHeightTraits from "../../Traits/LatLonHeightTraits";
+import createStratumInstance from "../../Models/createStratumInstance";
 
 export interface ChartCustomComponentAttributes {
   /**  The title of the chart.  If not supplied, defaults to the name of the context-supplied feature, if available, or else simply "Chart". */
@@ -204,6 +212,7 @@ export default abstract class ChartCustomComponent<
     checkAllPropertyKeys(node.attribs, this.attributes);
 
     const chartDisclaimer = (context.catalogItem as any).chartDisclaimer;
+    const featurePosition = getFeaturePosition(context.feature);
 
     const attrs = this.parseNodeAttrs(node.attribs);
     const child = children[0];
@@ -236,6 +245,17 @@ export default abstract class ChartCustomComponent<
                   CommonStrata.definition,
                   "chartDisclaimer",
                   chartDisclaimer
+                );
+              }
+
+              if (
+                featurePosition &&
+                hasTraits(item, ChartPointOnMapTraits, "chartPointOnMap")
+              ) {
+                item.setTrait(
+                  CommonStrata.user,
+                  "chartPointOnMap",
+                  createStratumInstance(LatLonHeightTraits, featurePosition)
                 );
               }
             }
@@ -522,5 +542,16 @@ function getInsertedTitle(node: DomElement) {
     node.parent.parent.children[0].children[0] !== undefined
   ) {
     return node.parent.parent.children[0].children[0].data;
+  }
+}
+
+function getFeaturePosition(feature: Feature): LatLonHeight | undefined {
+  const cartesian = feature.position?.getValue(JulianDate.now());
+  if (cartesian) {
+    const carto = Ellipsoid.WGS84.cartesianToCartographic(cartesian);
+    return {
+      longitude: CesiumMath.toDegrees(carto.longitude),
+      latitude: CesiumMath.toDegrees(carto.latitude)
+    };
   }
 }

@@ -1,5 +1,6 @@
 import maxBy from "lodash-es/maxBy";
 import minBy from "lodash-es/minBy";
+import LatLonHeight from "../Core/LatLonHeight";
 import ModelTraits from "../Traits/ModelTraits";
 import Model, { BaseModel } from "./Model";
 
@@ -53,6 +54,7 @@ export interface ChartItem {
   getColor: () => string; // Gets the color representing the chart item
   updateIsSelectedInWorkbench: (isSelected: boolean) => void; // Unselect the chart item in workbench
   onClick?: any;
+  pointOnMap?: LatLonHeight;
 }
 
 interface Chartable extends Model<ModelTraits> {
