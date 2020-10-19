@@ -33,7 +33,6 @@ export class WPSParameterTraits extends ModelTraits {
 }
 
 export default class WebProcessingServiceCatalogJobTraits extends mixTraits(
-  MappableTraits,
   FeatureInfoTraits,
   CatalogFunctionJobTraits,
   WebProcessingServiceCatalogFunctionTraits

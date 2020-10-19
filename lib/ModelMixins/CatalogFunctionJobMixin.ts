@@ -1,19 +1,9 @@
-import {
-  action,
-  computed,
-  observable,
-  onBecomeObserved,
-  reaction,
-  runInAction,
-  trace
-} from "mobx";
+import { action, computed, observable, reaction, runInAction } from "mobx";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
-import runLater from "../Core/runLater";
 import CommonStrata from "../Models/CommonStrata";
 import createStratumInstance from "../Models/createStratumInstance";
 import LoadableStratum from "../Models/LoadableStratum";
-import { MapItem } from "../Models/Mappable";
 import Model, { BaseModel } from "../Models/Model";
 import StratumOrder from "../Models/StratumOrder";
 import CatalogFunctionJobTraits from "../Traits/CatalogFunctionJobTraits";
@@ -21,6 +11,7 @@ import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import AsyncMappableMixin from "./AsyncMappableMixin";
 import AutoRefreshingMixin from "./AutoRefreshingMixin";
 import CatalogMemberMixin from "./CatalogMemberMixin";
+import { MapItem } from "../Models/Mappable";
 
 class FunctionJobStratum extends LoadableStratum(CatalogFunctionJobTraits) {
   constructor(
@@ -50,11 +41,11 @@ class FunctionJobStratum extends LoadableStratum(CatalogFunctionJobTraits) {
   @computed
   get shortReport() {
     let content = "";
-    if (this.jobStatus === "inactive") {
+    if (this.catalogFunctionJob.jobStatus === "inactive") {
       content = "Job is inactive";
-    } else if (this.jobStatus === "running") {
+    } else if (this.catalogFunctionJob.jobStatus === "running") {
       content = "Job is running...";
-    } else if (this.jobStatus === "finished") {
+    } else if (this.catalogFunctionJob.jobStatus === "finished") {
       if (this.catalogFunctionJob.downloadedResults) {
         content = "Job is finished";
       } else {
@@ -64,6 +55,43 @@ class FunctionJobStratum extends LoadableStratum(CatalogFunctionJobTraits) {
       content = "An error has occurred";
     }
     return content;
+  }
+
+  @computed
+  get description() {
+    return `This is the result of invoking ${this.catalogFunctionJob.name} with the input parameters below.`;
+  }
+
+  @computed
+  get info() {
+    if (isDefined(this.catalogFunctionJob.parameters)) {
+      const inputsSection =
+        '<table class="cesium-infoBox-defaultTable">' +
+        Object.keys(this.catalogFunctionJob.parameters).reduce(
+          (previousValue, key) => {
+            return (
+              previousValue +
+              "<tr>" +
+              '<td style="vertical-align: middle">' +
+              key +
+              "</td>" +
+              "<td>" +
+              this.catalogFunctionJob.parameters![key] +
+              "</td>" +
+              "</tr>"
+            );
+          },
+          ""
+        ) +
+        "</table>";
+
+      return [
+        createStratumInstance(InfoSectionTraits, {
+          name: "Inputs",
+          content: inputsSection
+        })
+      ];
+    }
   }
 }
 
@@ -78,20 +106,24 @@ function CatalogFunctionJobMixin<
     constructor(...args: any[]) {
       super(...args);
 
+      // Add FunctionJobStratum to strata
       runInAction(() => {
         this.strata.set(FunctionJobStratum.name, new FunctionJobStratum(this));
       });
 
       // If this is showing in workbench, make sure result layers are also in workbench
-      onBecomeObserved(this, "mapItems", () => {
-        runLater(() =>
-          this.results.forEach(
-            result =>
-              this.terria.workbench.contains(result) ||
-              runInAction(() => this.terria.workbench.add(result))
-          )
-        );
-      });
+      reaction(
+        () => this.inWorkbench,
+        inWorkbench => {
+          if (inWorkbench) {
+            this.results.forEach(
+              result =>
+                this.terria.workbench.contains(result) ||
+                runInAction(() => this.terria.workbench.add(result))
+            );
+          }
+        }
+      );
 
       // Handle changes in job status
       reaction(
@@ -156,12 +188,18 @@ function CatalogFunctionJobMixin<
     }
 
     /**
-     * Called every refreshInterval - return indicates whether job has finished (true = finished)
+     * Called every refreshInterval
+     *
+     * @return true if job has finished, false otherwise
      */
     async pollForResults(): Promise<boolean> {
       throw "pollForResults not implemented";
     }
 
+    /**
+     * Called when `jobStatus` is `finished`, and `!_downloadedResults`
+     * @returns catalog members to add to workbench
+     */
     abstract async downloadResults(): Promise<
       CatalogMemberMixin.CatalogMemberMixin[] | void
     >;
@@ -195,59 +233,16 @@ function CatalogFunctionJobMixin<
           runInAction(() => {
             this.setTrait(CommonStrata.user, "jobStatus", "error");
             this.setTrait(CommonStrata.user, "refreshEnabled", false);
-            this.setTrait(CommonStrata.user, "logs", [...this.logs, error]);
+            this.setOnError(error);
           });
           this.pollingForResults = false;
-
-          console.log(error);
         });
     }
-
-    protected async forceLoadMetadata() {
-      if (isDefined(this.parameters)) {
-        const inputsSection =
-          '<table class="cesium-infoBox-defaultTable">' +
-          Object.keys(this.parameters).reduce((previousValue, key) => {
-            return (
-              previousValue +
-              "<tr>" +
-              '<td style="vertical-align: middle">' +
-              key +
-              "</td>" +
-              "<td>" +
-              this.parameters![key] +
-              "</td>" +
-              "</tr>"
-            );
-          }, "") +
-          "</table>";
-
-        runInAction(() => {
-          this.setTrait(
-            CommonStrata.user,
-            "description",
-            `This is the result of invoking ${this.name} with the input parameters below.`
-          );
-
-          this.setTrait(CommonStrata.user, "info", [
-            createStratumInstance(InfoSectionTraits, {
-              name: "Inputs",
-              content: inputsSection
-            })
-          ]);
-        });
-      }
-    }
-
-    @computed
-    get mapItems(): MapItem[] {
-      return [];
-    }
-
-    protected async forceLoadMapItems(): Promise<void> {}
 
     @action
     protected setOnError(errorMessage?: string) {
+      isDefined(errorMessage) &&
+        this.setTrait(CommonStrata.user, "logs", [...this.logs, errorMessage]);
       this.setTrait(
         CommonStrata.user,
         "shortReport",
@@ -265,6 +260,17 @@ function CatalogFunctionJobMixin<
       if (isDefined(info)) {
         info.push(errorInfo);
       }
+    }
+
+    get mapItems(): MapItem[] {
+      return [];
+    }
+    protected async forceLoadMapItems() {
+      return;
+    }
+
+    protected async forceLoadMetadata() {
+      return;
     }
 
     get hasCatalogFunctionJobMixin() {

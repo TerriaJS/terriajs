@@ -1,16 +1,12 @@
 import i18next from "i18next";
-import {
-  computed,
-  isObservableArray,
-  observable,
-  runInAction,
-  toJS
-} from "mobx";
+import { action, computed, isObservableArray, runInAction, trace } from "mobx";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import URI from "urijs";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
 import Reproject from "../Map/Reproject";
+import CatalogFunctionMixin from "../ModelMixins/CatalogFunctionMixin";
+import XmlRequestMixin from "../ModelMixins/XmlRequestMixin";
 import xml2json from "../ThirdParty/xml2json";
 import WebProcessingServiceCatalogFunctionTraits from "../Traits/WebProcessingServiceCatalogFunctionTraits";
 import CommonStrata from "./CommonStrata";
@@ -24,16 +20,16 @@ import GeoJsonParameter from "./FunctionParameters/GeoJsonParameter";
 import LineParameter from "./FunctionParameters/LineParameter";
 import PointParameter from "./FunctionParameters/PointParameter";
 import PolygonParameter from "./FunctionParameters/PolygonParameter";
-import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import RectangleParameter from "./FunctionParameters/RectangleParameter";
 import RegionParameter from "./FunctionParameters/RegionParameter";
 import RegionTypeParameter from "./FunctionParameters/RegionTypeParameter";
 import StringParameter from "./FunctionParameters/StringParameter";
-import WebProcessingServiceCatalogFunctionJob from "./WebProcessingServiceCatalogFunctionJob";
-import CatalogFunctionMixin from "../ModelMixins/CatalogFunctionMixin";
-import CatalogFunctionJobMixin from "../ModelMixins/CatalogFunctionJobMixin";
+import LoadableStratum from "./LoadableStratum";
+import { BaseModel } from "./Model";
+import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
+import StratumOrder from "./StratumOrder";
 import updateModelFromJson from "./updateModelFromJson";
-import XmlRequestMixin from "../ModelMixins/XmlRequestMixin";
+import WebProcessingServiceCatalogFunctionJob from "./WebProcessingServiceCatalogFunctionJob";
 
 type AllowedValues = {
   Value?: string | string[];
@@ -85,69 +81,38 @@ type ParameterConverter = {
   parameterToInput: (parameter: FunctionParameter) => WpsInputData | undefined;
 };
 
-export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin(
-  CatalogFunctionMixin(CreateModel(WebProcessingServiceCatalogFunctionTraits))
+class WpsLoadableStratum extends LoadableStratum(
+  WebProcessingServiceCatalogFunctionTraits
 ) {
-  readonly jobType = WebProcessingServiceCatalogFunctionJob.type;
+  static stratumName = "wpsLoadable";
 
-  static readonly type = "wps";
-  get typeName() {
-    return "Web Processing Service (WPS)";
+  constructor(
+    readonly item: WebProcessingServiceCatalogFunction,
+    readonly processDescription: ProcessDescription
+  ) {
+    super();
   }
 
-  readonly parameterConverters: ParameterConverter[] = [
-    LiteralDataConverter,
-    DateTimeConverter,
-    PointConverter,
-    LineConverter,
-    PolygonConverter,
-    RectangleConverter,
-    GeoJsonGeometryConverter
-  ];
-
-  @observable
-  private processDescription?: ProcessDescription;
-
-  @observable
-  private _functionParameters: FunctionParameter[] = [];
-
-  @computed get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
-    }
-    return "0d";
+  duplicateLoadableStratum(newModel: BaseModel): this {
+    return new WpsLoadableStratum(
+      newModel as WebProcessingServiceCatalogFunction,
+      this.processDescription
+    ) as this;
   }
 
-  /**
-   * Returns the proxied URL for the DescribeProcess endpoint.
-   */
-  @computed get describeProcessUrl() {
-    if (!isDefined(this.url) || !isDefined(this.identifier)) {
+  @action
+  static async load(item: WebProcessingServiceCatalogFunction) {
+    if (!isDefined(item.describeProcessUrl)) {
       return;
     }
 
-    const uri = new URI(this.url).query({
-      service: "WPS",
-      request: "DescribeProcess",
-      version: "1.0.0",
-      Identifier: this.identifier
-    });
-
-    return proxyCatalogItemUrl(this, uri.toString());
-  }
-
-  async forceLoadMetadata() {
-    if (!isDefined(this.describeProcessUrl)) {
-      return;
-    }
-
-    const xml = await this.getXml(this.describeProcessUrl);
+    const xml = await item.getXml(item.describeProcessUrl);
     if (
       !isDefined(xml) ||
       !isDefined(xml.documentElement) ||
       xml.documentElement.localName !== "ProcessDescriptions"
     ) {
-      throwInvalidWpsServerError(this, "DescribeProcess");
+      throwInvalidWpsServerError(item, "DescribeProcess");
     }
 
     const json = xml2json(xml);
@@ -163,21 +128,7 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
       });
     }
 
-    runInAction(() => {
-      this.processDescription = json.ProcessDescription;
-
-      this._functionParameters = this.inputs.map(input => {
-        const parameter = this.convertInputToParameter(this, input);
-        if (isDefined(parameter)) {
-          return parameter;
-        }
-        throw new TerriaError({
-          sender: this,
-          title: "Unsupported parameter type",
-          message: `The parameter ${input.Identifier} is not a supported type of parameter.`
-        });
-      });
-    });
+    return new WpsLoadableStratum(item, json.ProcessDescription);
   }
 
   /**
@@ -205,17 +156,95 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
         : [dataInputs.Input];
     return inputs;
   }
+}
+
+StratumOrder.addLoadStratum(WpsLoadableStratum.stratumName);
+
+export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin(
+  CatalogFunctionMixin(CreateModel(WebProcessingServiceCatalogFunctionTraits))
+) {
+  static readonly type = "wps";
+  get type() {
+    return WebProcessingServiceCatalogFunction.type;
+  }
+
+  get typeName() {
+    return "Web Processing Service (WPS)";
+  }
+
+  readonly parameterConverters: ParameterConverter[] = [
+    LiteralDataConverter,
+    DateTimeConverter,
+    PointConverter,
+    LineConverter,
+    PolygonConverter,
+    RectangleConverter,
+    GeoJsonGeometryConverter
+  ];
+
+  @computed get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    }
+    return "0d";
+  }
+
+  /**
+   * Returns the proxied URL for the DescribeProcess endpoint.
+   */
+  @computed get describeProcessUrl() {
+    if (!isDefined(this.url) || !isDefined(this.identifier)) {
+      return;
+    }
+
+    const uri = new URI(this.url).query({
+      service: "WPS",
+      request: "DescribeProcess",
+      version: "1.0.0",
+      Identifier: this.identifier
+    });
+
+    return proxyCatalogItemUrl(this, uri.toString());
+  }
+
+  async forceLoadMetadata() {
+    if (!this.strata.has(WpsLoadableStratum.stratumName)) {
+      const stratum = await WpsLoadableStratum.load(this);
+      if (isDefined(stratum)) {
+        runInAction(() => {
+          this.strata.set(WpsLoadableStratum.stratumName, stratum);
+        });
+      }
+    }
+  }
 
   /**
    *  Maps the input to function parameters.
    */
-  @computed
+  @computed({
+    keepAlive: true
+  })
   get functionParameters() {
-    return this._functionParameters;
+    const stratum = this.strata.get(
+      WpsLoadableStratum.stratumName
+    ) as WpsLoadableStratum;
+    if (!isDefined(stratum)) return [];
+
+    return stratum.inputs.map(input => {
+      const parameter = this.convertInputToParameter(this, input);
+      if (isDefined(parameter)) {
+        return parameter;
+      }
+      throw new TerriaError({
+        sender: this,
+        title: "Unsupported parameter type",
+        message: `The parameter ${input.Identifier} is not a supported type of parameter.`
+      });
+    });
   }
 
-  onSubmit = async (job: CatalogFunctionJobMixin) => {
-    const wpsJob = job as WebProcessingServiceCatalogFunctionJob;
+  protected async createJob(id: string) {
+    const job = new WebProcessingServiceCatalogFunctionJob(id, this.terria);
 
     let dataInputs = await Promise.all(
       this.functionParameters
@@ -223,52 +252,28 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
         .map(p => this.convertParameterToInput(p))
     );
 
-    updateModelFromJson(wpsJob, CommonStrata.user, {
-      geojsonFeatures: this.functionParameters
-        .map(param => param.geoJsonFeature)
-        .filter(isDefined),
-      url: this.url,
-      identifier: this.identifier,
-      executeWithHttpGet: this.executeWithHttpGet,
-      statusSupported: isDefined(this.statusSupported)
-        ? this.statusSupported
-        : isDefined(this.processDescription) &&
-          this.processDescription.statusSupported === "true",
-      storeSupported: isDefined(this.storeSupported)
-        ? this.storeSupporte
-        : isDefined(this.processDescription) &&
-          this.processDescription.storeSupported === "true",
-      wpsParameters: dataInputs
-    });
-  };
+    runInAction(() =>
+      updateModelFromJson(job, CommonStrata.user, {
+        geojsonFeatures: this.functionParameters
+          .map(param => param.geoJsonFeature)
+          .filter(isDefined),
+        url: this.url,
+        identifier: this.identifier,
+        executeWithHttpGet: this.executeWithHttpGet,
+        statusSupported: isDefined(this.statusSupported)
+          ? this.statusSupported
+          : isDefined(this.processDescription) &&
+            this.processDescription.statusSupported === "true",
+        storeSupported: isDefined(this.storeSupported)
+          ? this.storeSupported
+          : isDefined(this.processDescription) &&
+            this.processDescription.storeSupported === "true",
+        wpsParameters: dataInputs
+      })
+    );
 
-  // setErrorOnPendingItem(pendingItem: ResultPendingCatalogItem, failure: any) {
-  //   let errorMessage = "The reason for failure is unknown.";
-  //   if (
-  //     isDefined(failure.ExceptionReport) &&
-  //     isDefined(failure.ExceptionReport.Exception)
-  //   ) {
-  //     const e = failure.ExceptionReport.Exception;
-  //     errorMessage = e.ExceptionText || e.Exception || errorMessage;
-  //   }
-
-  //   runInAction(() => {
-  //     pendingItem.setTrait(
-  //       CommonStrata.user,
-  //       "shortReport",
-  //       "Web Processing Service invocation failed.  More details are available on the Info panel."
-  //     );
-
-  //     const errorInfo = createStratumInstance(InfoSectionTraits, {
-  //       name: "Error Details",
-  //       content: errorMessage
-  //     });
-  //     const info = pendingItem.getTrait(CommonStrata.user, "info");
-  //     if (isDefined(info)) {
-  //       info.push(errorInfo);
-  //     }
-  //   });
-  // }
+    return job;
+  }
 
   convertInputToParameter(catalogFunction: CatalogFunctionMixin, input: Input) {
     if (!isDefined(input.Identifier)) {
@@ -327,11 +332,13 @@ const LiteralDataConverter = {
     if (isDefined(allowedValues) && isDefined(allowedValues.Value)) {
       return new EnumerationParameter(catalogFunction, {
         ...options,
-        possibleValues:
-          Array.isArray(allowedValues.Value) ||
-          isObservableArray(allowedValues.Value)
-            ? allowedValues.Value
-            : [allowedValues.Value]
+        options: (Array.isArray(allowedValues.Value) ||
+        isObservableArray(allowedValues.Value)
+          ? (allowedValues.Value as string[])
+          : [allowedValues.Value]
+        ).map(id => {
+          return { id };
+        })
       });
     } else if (isDefined(input.LiteralData.AnyValue)) {
       return new StringParameter(catalogFunction, {
