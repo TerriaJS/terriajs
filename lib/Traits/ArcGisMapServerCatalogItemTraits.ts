@@ -3,6 +3,7 @@ import CatalogMemberTraits from "./CatalogMemberTraits";
 import UrlTraits from "./UrlTraits";
 import primitiveTrait from "./primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
+import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import MappableTraits from "./MappableTraits";
 import DataCustodianTraits from "./DataCustodianTraits";
 import LegendTraits from "./LegendTraits";
@@ -18,7 +19,8 @@ export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
   RasterLayerTraits,
   MappableTraits,
   UrlTraits,
-  CatalogMemberTraits
+  CatalogMemberTraits,
+  DiscretelyTimeVaryingTraits
 ) {
   @primitiveTrait({
     type: "string",
@@ -80,4 +82,13 @@ export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
     type: "string"
   })
   tokenUrl?: string;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Maximum Refresh Intervals",
+    description:
+      "The maximum number of discrete times that can be created by a single " +
+      "date range when layer in time-enabled."
+  })
+  maxRefreshIntervals: number = 1000;
 }
