@@ -246,7 +246,7 @@ class MapServerStratum extends LoadableStratum(
     | undefined {
     if (this._mapServer.timeInfo === undefined) return undefined;
     const result: any = [];
-    console.log(this._mapServer.timeInfo.timeExtent[0]);
+
     createDiscreteTimesFromIsoSegments(
       result,
       new Date(this._mapServer.timeInfo.timeExtent[0]).toISOString(),

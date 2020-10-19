@@ -53,6 +53,8 @@ describe("ArcGisMapServerCatalogItem", function() {
         args[2] = "GET";
         args[3] = undefined;
         return realLoadWithXhr(...args);
+      } else if (url.match("/cadastre_history/MapServer")) {
+        args[0] = "test/ArcGisMapServer/time-enabled.json";
       }
 
       return realLoadWithXhr(...args);
@@ -251,6 +253,25 @@ describe("ArcGisMapServerCatalogItem", function() {
           expect(item.legends[0].items.length).toBe(30);
         }
       }
+    });
+  });
+
+  describe("time-enabled layer", function() {
+    it("can load a time-enabled layer", async function() {
+      runInAction(() => {
+        item = new ArcGisMapServerCatalogItem("test", new Terria());
+        item.setTrait(
+          "definition",
+          "url",
+          "http://example.com/cadastre_history/MapServer"
+        );
+      });
+      await item.loadMapItems();
+      if (item.discreteTimes !== undefined) {
+        expect(item.discreteTimes.length).toBe(781);
+      }
+      expect(item.startTime).toBe("2004-11-26T09:43:22Z");
+      expect(item.stopTime).toBe("2019-11-03T14:00:00Z");
     });
   });
 });
