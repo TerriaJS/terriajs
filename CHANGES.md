@@ -4,7 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.57)
-* [The next improvement]
+* Add support for time on `ArcGisMapServerCatalogItem`
   
 #### 8.0.0-alpha.56
 * Add `itemProperties` trait to `WebMapMapCatalogGroup`.
