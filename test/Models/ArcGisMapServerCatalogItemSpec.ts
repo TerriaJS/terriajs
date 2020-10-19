@@ -134,7 +134,7 @@ describe("ArcGisMapServerCatalogItem", function() {
 
       it("passess the token to the imageryProvider", async function() {
         await item.loadMapItems();
-        const imageryProvider = item.mapItems[0].imageryProvider;
+        const imageryProvider: any = item.mapItems[0].imageryProvider;
         expect(imageryProvider.token).toBe("fakeToken");
       });
     });
@@ -165,7 +165,7 @@ describe("ArcGisMapServerCatalogItem", function() {
       });
 
       describe("imageryProvider", function() {
-        let imageryProvider: ArcGisMapServerImageryProvider;
+        let imageryProvider: any;
 
         beforeEach(function() {
           runInAction(() => {

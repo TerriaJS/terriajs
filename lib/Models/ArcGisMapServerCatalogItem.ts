@@ -461,7 +461,9 @@ export default class ArcGisMapServerCatalogItem
       }
 
       const params: any = Object.assign({}, this.parameters);
-      params.time = time;
+      if (time !== undefined) {
+        params.time = time;
+      }
 
       const maximumLevel = maximumScaleToLevel(this.maximumScale);
       const dynamicRequired = this.layers && this.layers.length > 0;
