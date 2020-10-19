@@ -60,6 +60,7 @@ export default BottomDockChart;
 @observer
 class Chart extends React.Component {
   static propTypes = {
+    terria: PropTypes.object.isRequired,
     width: PropTypes.number,
     height: PropTypes.number,
     chartItems: PropTypes.array.isRequired,
