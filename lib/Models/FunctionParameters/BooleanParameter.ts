@@ -1,10 +1,8 @@
+import { computed } from "mobx";
+import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 import FunctionParameter, {
   Options as FunctionParameterOptions
 } from "./FunctionParameter";
-import { observable, computed } from "mobx";
-import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
-import CommonStrata from "./../CommonStrata";
-import isDefined from "../../Core/isDefined";
 
 interface Options extends FunctionParameterOptions {
   /** The name for the "true" value of the boolean parameter. */
@@ -19,6 +17,7 @@ interface Options extends FunctionParameterOptions {
 
 export default class BooleanParameter extends FunctionParameter<boolean>
   implements Options {
+  static readonly type = "boolean";
   readonly type = "boolean";
   readonly trueName?: string;
   readonly trueDescription?: string;

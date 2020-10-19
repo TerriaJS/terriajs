@@ -111,6 +111,9 @@ function CatalogFunctionJobMixin<
         this.strata.set(FunctionJobStratum.name, new FunctionJobStratum(this));
       });
 
+      // Handle changes in job status
+      reaction(() => this.jobStatus, this.onJobStatusChanged.bind(this));
+
       // If this is showing in workbench, make sure result layers are also in workbench
       reaction(
         () => this.inWorkbench,
@@ -120,30 +123,6 @@ function CatalogFunctionJobMixin<
               result =>
                 this.terria.workbench.contains(result) ||
                 runInAction(() => this.terria.workbench.add(result))
-            );
-          }
-        }
-      );
-
-      // Handle changes in job status
-      reaction(
-        () => this.jobStatus,
-        async () => {
-          // Download results when finished
-          if (this.jobStatus === "finished" && !this._downloadedResults) {
-            this._downloadedResults = true;
-            this.results = (await this.downloadResults()) || [];
-            this.results.forEach(result => {
-              this.terria.workbench.add(result);
-              this.terria.catalog.userAddedDataGroup.add(
-                CommonStrata.user,
-                result
-              );
-            });
-            // Poll for results when running
-          } else if (this.jobStatus === "running" && !this.refreshEnabled) {
-            runInAction(() =>
-              this.setTrait(CommonStrata.user, "refreshEnabled", true)
             );
           }
         }
@@ -163,28 +142,37 @@ function CatalogFunctionJobMixin<
       );
     }
 
-    protected results: CatalogMemberMixin.CatalogMemberMixin[] = [];
-
-    /**
-     * Flag if results have been downloaded. This is used to recover results after sharing a Catalog Function - eg if `jobStatus = "finished"` and `_downloadedResults = false`, then we download results!
-     */
-    @observable protected _downloadedResults = false;
-
-    @computed
-    get downloadedResults() {
-      return this._downloadedResults;
-    }
-
-    private pollingForResults = false;
-
     /**
      *
      * @returns true for FINISHED, false for RUNNING (will then call pollForResults)
      */
-    abstract async invoke(): Promise<boolean>;
+    protected abstract async _invoke(): Promise<boolean>;
 
-    get refreshInterval() {
-      return 2;
+    public async invoke() {
+      const finished = await this._invoke();
+      if (finished) {
+        this.setTrait(CommonStrata.user, "jobStatus", "finished");
+      } else {
+        this.setTrait(CommonStrata.user, "refreshEnabled", true);
+      }
+    }
+
+    private async onJobStatusChanged() {
+      // Download results when finished
+      if (this.jobStatus === "finished" && !this._downloadedResults) {
+        this._downloadedResults = true;
+        this.results = (await this.downloadResults()) || [];
+        this.results.forEach(result => {
+          this.terria.workbench.add(result);
+          this.terria.catalog.userAddedDataGroup.add(CommonStrata.user, result);
+        });
+
+        // Poll for results when running
+      } else if (this.jobStatus === "running" && !this.refreshEnabled) {
+        runInAction(() =>
+          this.setTrait(CommonStrata.user, "refreshEnabled", true)
+        );
+      }
     }
 
     /**
@@ -197,12 +185,33 @@ function CatalogFunctionJobMixin<
     }
 
     /**
+     * Job result CatalogMembers - set from calling {@link CatalogFunctionJobMixin#downloadResults}
+     */
+    protected results: CatalogMemberMixin.CatalogMemberMixin[] = [];
+
+    /**
+     * Flag if results have been downloaded. This is used to recover results after sharing a Catalog Function - eg if `jobStatus = "finished"` and `_downloadedResults = false`, then we download results!
+     */
+    @observable protected _downloadedResults = false;
+
+    @computed
+    get downloadedResults() {
+      return this._downloadedResults;
+    }
+
+    /**
      * Called when `jobStatus` is `finished`, and `!_downloadedResults`
      * @returns catalog members to add to workbench
      */
     abstract async downloadResults(): Promise<
       CatalogMemberMixin.CatalogMemberMixin[] | void
     >;
+
+    get refreshInterval() {
+      return 2;
+    }
+
+    private pollingForResults = false;
 
     /**
      * This function adapts AutoRefreshMixin's refreshData with this Mixin's pollForResults - adding the boolean return value which triggers refresh disable

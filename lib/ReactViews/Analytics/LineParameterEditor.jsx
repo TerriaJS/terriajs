@@ -1,18 +1,13 @@
-import React from "react";
-
 import createReactClass from "create-react-class";
-
 import PropTypes from "prop-types";
-
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import React from "react";
+import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import CommonStrata from "../../Models/CommonStrata";
 import UserDrawing from "../../Models/UserDrawing";
 import Styles from "./parameter-editors.scss";
-import { withTranslation } from "react-i18next";
-import CommonStrata from "../../Models/CommonStrata";
-import { runInAction } from "mobx";
 
 const LineParameterEditor = createReactClass({
   displayName: "LineParameterEditor",

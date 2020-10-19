@@ -1,17 +1,14 @@
 import { computed, runInAction } from "mobx";
-import isDefined from "../../Core/isDefined";
-import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
-import JsonValue, { JsonObject } from "../../Core/Json";
-import { Feature } from "geojson";
-
 import combine from "terriajs-cesium/Source/Core/combine";
+import isDefined from "../../Core/isDefined";
+import JsonValue, { JsonObject } from "../../Core/Json";
+import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 
-export interface Options<T extends JsonValue | undefined = JsonValue> {
+export interface Options {
   id: string;
   name?: string;
   description?: string;
   isRequired?: boolean;
-  converter?: unknown;
 }
 
 export default abstract class FunctionParameter<
@@ -23,9 +20,6 @@ export default abstract class FunctionParameter<
   readonly name: string;
   readonly description: string;
   readonly isRequired: boolean;
-  readonly converter?: unknown;
-
-  readonly geoJsonFeature?: Promise<Feature> | Feature | JsonObject | undefined;
 
   constructor(
     protected readonly catalogFunction: CatalogFunctionMixin,
@@ -35,7 +29,6 @@ export default abstract class FunctionParameter<
     this.name = options.name || this.id;
     this.description = options.description || "";
     this.isRequired = options.isRequired || false;
-    this.converter = options.converter;
   }
 
   @computed

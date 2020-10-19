@@ -1,5 +1,8 @@
+import { Feature } from "geojson";
 import { computed, observable } from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import { JsonObject } from "../../Core/Json";
+import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 import FunctionParameter, {
   Options as FunctionParameterOptions
 } from "./FunctionParameter";
@@ -7,17 +10,31 @@ import PointParameter, { CartographicPoint } from "./PointParameter";
 import PolygonParameter, { PolygonCoordinates } from "./PolygonParameter";
 import RegionParameter from "./RegionParameter";
 import SelectAPolygonParameter from "./SelectAPolygonParameter";
-import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
-import { FeatureCollection, Feature } from "geojson";
-import { JsonArray, JsonObject } from "../../Core/Json";
+import LineParameter from "./LineParameter";
+
+export interface GeoJsonFunctionParameter {
+  geoJsonFeature: Feature | Feature[] | undefined;
+}
+
+export function isGeoJsonFunctionParameter(
+  fp: any
+): fp is GeoJsonFunctionParameter {
+  return [
+    PointParameter.type,
+    LineParameter.type,
+    PolygonParameter.type,
+    GeoJsonParameter.type
+  ].includes(fp.type);
+}
 
 interface Options extends FunctionParameterOptions {
   regionParameter: RegionParameter;
 }
 
-export default class GeoJsonParameter extends FunctionParameter<
-  CartographicPoint | PolygonCoordinates | JsonObject
-> {
+export default class GeoJsonParameter
+  extends FunctionParameter<CartographicPoint | PolygonCoordinates | JsonObject>
+  implements GeoJsonFunctionParameter {
+  static readonly type = "geojson";
   readonly type = "geojson";
 
   static readonly PointType = "point";
@@ -63,7 +80,7 @@ export default class GeoJsonParameter extends FunctionParameter<
     }
   }
 
-  @computed get geoJsonFeature(): Feature | JsonObject | undefined {
+  @computed get geoJsonFeature(): Feature | Feature[] | undefined {
     if (this.subtype === GeoJsonParameter.PointType) {
       return PointParameter.getGeoJsonFeature(<Cartographic>this.value);
     }

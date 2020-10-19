@@ -1,16 +1,20 @@
+import { computed, observable } from "mobx";
+import isDefined from "../../Core/isDefined";
+import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 import FunctionParameter, {
   Options as FunctionParameterOptions
 } from "./FunctionParameter";
-import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
-import { observable, computed } from "mobx";
-import isDefined from "../../Core/isDefined";
 
 interface Options extends FunctionParameterOptions {
   errorMessage?: boolean;
   value?: string;
 }
 
+/**
+ * Function Parameter for showing information - this makes no changes to `parameters`, all values are stored locally.
+ */
 export default class InfoParameter extends FunctionParameter<string> {
+  static readonly type = "info";
   readonly type = "info";
 
   @observable _value: string | undefined;

@@ -20,24 +20,27 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
     /**
      * Function parameters are rendered as ParameterEditors, their values directly map to the `parameters` trait. When a FunctionParameter value is modified, it will automatically update `parameters` trait.
      *
-     * When a job is created, the `parameters` are copied across automatically.
+     * When a job is created, the `parameters` are copied across automatically (see {@link CatalogFunctionMixin#submitJob})
      *
-     * See {@link CatalogFunctionMixin#createJob} and {@link CatalogFunctionMixin#submitJob}
      */
     abstract get functionParameters(): FunctionParameter[];
 
     /**
      * Create new job.
-     * Note: `name` and `parameters` traits are automatically copied across.
-     * All user-configurated job parameters should be in the `parameters` trait, this is the ensure that function parameter state behave correctly, and that values can be easily copied across jobs.
+     * Note: `name` and `parameters` traits are automatically copied across when submitted ({@link CatalogFunctionMixin#submitJob})
+     * All user-configured job parameters should be in the `parameters` trait, this is the ensure that function parameter state behaves correctly, and that values can be easily copied across jobs.
      *
      * Other job traits can be set in this function, as long as they aren't related to function parameters - for example the `url` and `processIdentier` trait for WPS are copied from the WPSCatalogFunction.
      */
     protected abstract createJob(id: string): Promise<CatalogFunctionJobMixin>;
 
     /**
-     * Submit job.
-     * @returns true if successfuly submited
+     * Submit job:
+     * - create new job {@link CatalogFunctionMixin#createJob}
+     * - sets job traits (`name`, `parameters`, ...)
+     * - invokes job {@link CatalogFunctionJobMixin#invoke}
+     * - adds to workbench/models (in user added data) if successfully submitted
+     * @returns true if successfully submitted
      */
     async submitJob() {
       try {
@@ -67,15 +70,8 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
 
         await newJob.loadMetadata();
 
-        const finished = await newJob.invoke();
+        await newJob.invoke();
 
-        runInAction(() => {
-          if (finished) {
-            newJob.setTrait(CommonStrata.user, "jobStatus", "finished");
-          } else {
-            newJob.setTrait(CommonStrata.user, "refreshEnabled", true);
-          }
-        });
         // Only add model if successfully invokes (doesn't throw exception)
         this.terria.addModel(newJob);
         await addUserCatalogMember(this.terria, newJob, { enable: true });

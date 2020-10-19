@@ -169,7 +169,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
     return proxyCatalogItemUrl(this, uri.toString(), this.proxyCacheDuration);
   }
 
-  async invoke() {
+  async _invoke() {
     if (
       !isDefined(this.identifier) ||
       !isDefined(this.executeUrl) ||

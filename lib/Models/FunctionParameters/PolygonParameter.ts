@@ -2,14 +2,16 @@ import FunctionParameter from "./FunctionParameter";
 import { observable, computed } from "mobx";
 import isDefined from "../../Core/isDefined";
 import { Feature, Polygon } from "geojson";
+import { GeoJsonFunctionParameter } from "./GeoJsonParameter";
 
 type Coordinates = number[];
 type LinearRing = Coordinates[];
 export type PolygonCoordinates = LinearRing[];
 
-export default class PolygonParameter extends FunctionParameter<
-  PolygonCoordinates
-> {
+export default class PolygonParameter
+  extends FunctionParameter<PolygonCoordinates>
+  implements GeoJsonFunctionParameter {
+  static readonly type = "polygon";
   readonly type = "polygon";
 
   static formatValueForUrl(value: PolygonCoordinates) {

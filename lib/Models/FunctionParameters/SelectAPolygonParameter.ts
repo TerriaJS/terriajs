@@ -1,13 +1,15 @@
+import { Feature, Polygon } from "geojson";
+import { computed } from "mobx";
 import isDefined from "../../Core/isDefined";
-import FunctionParameter from "./FunctionParameter";
-import { FeatureCollection, Feature } from "geojson";
 import { JsonObject } from "../../Core/Json";
+import FunctionParameter from "./FunctionParameter";
+import { GeoJsonFunctionParameter } from "./GeoJsonParameter";
 /**
  * A parameter that specifies an arbitrary polygon on the globe, which has been selected from a different layer.
  */
-export default class SelectAPolygonParameter extends FunctionParameter<
-  JsonObject[]
-> {
+export default class SelectAPolygonParameter
+  extends FunctionParameter<JsonObject[]>
+  implements GeoJsonFunctionParameter {
   readonly type = "polygon";
 
   static formatValueForUrl(value: Feature[]) {
@@ -28,7 +30,7 @@ export default class SelectAPolygonParameter extends FunctionParameter<
     });
   }
 
-  static getGeoJsonFeature(value: any): JsonObject {
+  static getGeoJsonFeature(value: any): Feature<Polygon>[] {
     return value.map(function(featureData: Feature) {
       return {
         type: "Feature",
@@ -36,5 +38,9 @@ export default class SelectAPolygonParameter extends FunctionParameter<
         properties: {}
       };
     }) as any;
+  }
+
+  @computed get geoJsonFeature() {
+    return SelectAPolygonParameter.getGeoJsonFeature(this.value);
   }
 }

@@ -12,6 +12,7 @@ interface Options extends FunctionParameterOptions {
 }
 
 export default class EnumerationParameter extends FunctionParameter<string> {
+  static readonly type = "enumeration";
   readonly type = "enumeration";
 
   @observable

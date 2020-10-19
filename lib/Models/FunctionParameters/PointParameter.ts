@@ -4,6 +4,7 @@ import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import FunctionParameter from "./FunctionParameter";
 import isDefined from "../../Core/isDefined";
 import { Feature, Point } from "geojson";
+import { GeoJsonFunctionParameter } from "./GeoJsonParameter";
 
 export type CartographicPoint = {
   longitude: number;
@@ -11,9 +12,9 @@ export type CartographicPoint = {
   height: number;
 };
 
-export default class PointParameter extends FunctionParameter<
-  CartographicPoint
-> {
+export default class PointParameter extends FunctionParameter<CartographicPoint>
+  implements GeoJsonFunctionParameter {
+  static readonly type = "point";
   readonly type = "point";
 
   /**

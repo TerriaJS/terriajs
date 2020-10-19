@@ -349,8 +349,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
 
   it("can convert a parameter to data input", async function() {
     const parameter = new PointParameter(wps, {
-      id: "foo",
-      converter: PointConverter
+      id: "foo"
     });
     parameter.setValue(CommonStrata.user, Cartographic.ZERO);
     const input = await wps.convertParameterToInput(parameter);

@@ -1,7 +1,7 @@
 import FunctionParameter from "./FunctionParameter";
-import { observable } from "mobx";
 
 export default class DateTimeParameter extends FunctionParameter<string> {
+  static readonly type = "dateTime";
   readonly type = "dateTime";
 
   /**

@@ -9,6 +9,7 @@ interface Options extends FunctionParameterOptions {
 }
 
 export default class RegionParameter extends FunctionParameter {
+  static readonly type = "region";
   readonly type = "region";
   readonly regionProvider: RegionTypeParameter;
 

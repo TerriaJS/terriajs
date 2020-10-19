@@ -16,7 +16,9 @@ import EnumerationParameter from "./FunctionParameters/EnumerationParameter";
 import FunctionParameter, {
   Options as FunctionParameterOptions
 } from "./FunctionParameters/FunctionParameter";
-import GeoJsonParameter from "./FunctionParameters/GeoJsonParameter";
+import GeoJsonParameter, {
+  isGeoJsonFunctionParameter
+} from "./FunctionParameters/GeoJsonParameter";
 import LineParameter from "./FunctionParameters/LineParameter";
 import PointParameter from "./FunctionParameters/PointParameter";
 import PolygonParameter from "./FunctionParameters/PolygonParameter";
@@ -30,6 +32,7 @@ import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumOrder from "./StratumOrder";
 import updateModelFromJson from "./updateModelFromJson";
 import WebProcessingServiceCatalogFunctionJob from "./WebProcessingServiceCatalogFunctionJob";
+import BooleanParameter from "./FunctionParameters/BooleanParameter";
 
 type AllowedValues = {
   Value?: string | string[];
@@ -172,16 +175,6 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
     return "Web Processing Service (WPS)";
   }
 
-  readonly parameterConverters: ParameterConverter[] = [
-    LiteralDataConverter,
-    DateTimeConverter,
-    PointConverter,
-    LineConverter,
-    PolygonConverter,
-    RectangleConverter,
-    GeoJsonGeometryConverter
-  ];
-
   @computed get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
@@ -219,7 +212,7 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
   }
 
   /**
-   *  Maps the input to function parameters.
+   *  Must be kept alive due to `subtype` observable property of GeoJsonFunctionParameter
    */
   @computed({
     keepAlive: true
@@ -255,7 +248,9 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
     runInAction(() =>
       updateModelFromJson(job, CommonStrata.user, {
         geojsonFeatures: this.functionParameters
-          .map(param => param.geoJsonFeature)
+          .map(param =>
+            isGeoJsonFunctionParameter(param) ? param.geoJsonFeature : undefined
+          )
           .filter(isDefined),
         url: this.url,
         identifier: this.identifier,
@@ -282,14 +277,13 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
 
     const isRequired = isDefined(input.minOccurs) && input.minOccurs > 0;
 
-    for (let i = 0; i < this.parameterConverters.length; i++) {
-      const converter = this.parameterConverters[i];
+    for (let i = 0; i < parameterConverters.length; i++) {
+      const converter = parameterConverters[i];
       const parameter = converter.inputToParameter(catalogFunction, input, {
         id: input.Identifier,
         name: input.Name,
         description: input.Abstract,
-        isRequired,
-        converter
+        isRequired
       });
       if (isDefined(parameter)) {
         return parameter;
@@ -298,8 +292,9 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
   }
 
   async convertParameterToInput(parameter: FunctionParameter) {
-    let converter = <ParameterConverter>parameter.converter;
-    const result = converter.parameterToInput(parameter);
+    let converter = parameterTypeToConverter(parameter);
+
+    const result = converter?.parameterToInput(parameter);
     if (!isDefined(result)) {
       return;
     }
@@ -507,15 +502,13 @@ const GeoJsonGeometryConverter = {
     const regionTypeParameter = new RegionTypeParameter(catalogFunction, {
       id: "regionType",
       name: "Region Type",
-      description: "The type of region to analyze.",
-      converter: undefined
+      description: "The type of region to analyze."
     });
 
     const regionParameter = new RegionParameter(catalogFunction, {
       id: "regionParameter",
       name: "Region Parameter",
-      regionProvider: regionTypeParameter,
-      converter: undefined
+      regionProvider: regionTypeParameter
     });
 
     return new GeoJsonParameter(catalogFunction, {
@@ -571,6 +564,41 @@ function simpleGeoJsonDataConverter(schemaType: string, klass: any) {
     }
   };
 }
+
+function parameterTypeToConverter(
+  parameter: FunctionParameter
+): ParameterConverter | undefined {
+  switch (parameter.type) {
+    case BooleanParameter.type:
+    case StringParameter.type:
+    case EnumerationParameter.type:
+      return LiteralDataConverter;
+    case DateTimeParameter.type:
+      return DateTimeConverter;
+    case PointParameter.type:
+      return PointConverter;
+    case LineParameter.type:
+      return LineConverter;
+    case PolygonParameter.type:
+      return PolygonConverter;
+    case RectangleParameter.type:
+      return RectangleConverter;
+    case GeoJsonParameter.type:
+      return GeoJsonGeometryConverter;
+    default:
+      break;
+  }
+}
+
+const parameterConverters: ParameterConverter[] = [
+  LiteralDataConverter,
+  DateTimeConverter,
+  PointConverter,
+  LineConverter,
+  PolygonConverter,
+  RectangleConverter,
+  GeoJsonGeometryConverter
+];
 
 function throwInvalidWpsServerError(
   wps: WebProcessingServiceCatalogFunction,
