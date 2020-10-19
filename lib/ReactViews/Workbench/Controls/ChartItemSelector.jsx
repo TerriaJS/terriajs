@@ -7,7 +7,7 @@ import ChartView from "../../../Charts/ChartView";
 import React from "react";
 import Chartable, { axesMatch } from "../../../Models/Chartable";
 
-const ChartItem = observer(({ item, chartItem }) => {
+export const ChartItem = observer(({ item, chartItem }) => {
   const lineColor = chartItem.isSelectedInWorkbench
     ? chartItem.getColor()
     : "#fff";
@@ -57,10 +57,11 @@ const ChartItemSelector = observer(function({ item }) {
     .filter(c => c.item === item)
     .filter(c => c.type !== "momentPoints" && c.type !== "momentLines")
     .sort((a, b) => (a.name >= b.name ? 1 : -1));
+
   return (
     <ul className={Styles.root}>
       <For each="chartItem" index="i" of={chartItems}>
-        <li key={i} className={Styles.item}>
+        <li key={`li-${chartItem.key}`} className={Styles.item}>
           <ChartItem chartItem={chartItem} />
         </li>
       </For>

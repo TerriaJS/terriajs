@@ -43,13 +43,10 @@ export default class PointOnMap extends React.Component<PropsType> {
         coordinates: [props.point.longitude, props.point.latitude]
       }
     });
-    pointItem.loadMapItems().then(
-      action(() => {
-        props.terria.addModel(pointItem);
-        props.terria.overlays.add(pointItem);
-        this.pointItem = pointItem;
-      })
-    );
+    props.terria.addModel(pointItem);
+    props.terria.overlays.add(pointItem);
+    pointItem.loadMapItems();
+    this.pointItem = pointItem;
   }
 
   @action
