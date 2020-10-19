@@ -639,6 +639,7 @@
       "esri-group": "Esri ArcGIS Server",
       "esri-mapServer": "Esri ArcGIS MapServer (single layer)",
       "esri-featureServer": "Esri ArcGIS FeatureServer (single layer)",
+      "3d-tiles": "3D Tiles",
       "open-street-map": "Open Street Map Server",
       "geojson": "GeoJSON",
       "geoRss": "GeoRSS",
