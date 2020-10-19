@@ -1,28 +1,23 @@
 import { configure, reaction, runInAction } from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import isDefined from "../../lib/Core/isDefined";
-import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
-import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
+import CommonStrata from "../../lib/Models/CommonStrata";
 import DateTimeParameter from "../../lib/Models/FunctionParameters/DateTimeParameter";
 import EnumerationParameter from "../../lib/Models/FunctionParameters/EnumerationParameter";
-import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
 import GeoJsonParameter from "../../lib/Models/FunctionParameters/GeoJsonParameter";
 import LineParameter from "../../lib/Models/FunctionParameters/LineParameter";
 import PointParameter from "../../lib/Models/FunctionParameters/PointParameter";
 import PolygonParameter from "../../lib/Models/FunctionParameters/PolygonParameter";
 import RectangleParameter from "../../lib/Models/FunctionParameters/RectangleParameter";
-import ResultPendingCatalogItem from "../../lib/Models/ResultPendingCatalogItem";
 import StringParameter from "../../lib/Models/FunctionParameters/StringParameter";
+import ResultPendingCatalogItem from "../../lib/Models/ResultPendingCatalogItem";
 import Terria from "../../lib/Models/Terria";
-import WebProcessingServiceCatalogFunction, {
-  PointConverter
-} from "../../lib/Models/WebProcessingServiceCatalogFunction";
+import WebProcessingServiceCatalogFunction from "../../lib/Models/WebProcessingServiceCatalogFunction";
 import WebProcessingServiceCatalogFunctionJob from "../../lib/Models/WebProcessingServiceCatalogFunctionJob";
 import Workbench from "../../lib/Models/Workbench";
 import xml2json from "../../lib/ThirdParty/xml2json";
 import "../SpecHelpers";
 import { xml } from "../SpecHelpers";
-import CommonStrata from "../../lib/Models/CommonStrata";
 
 configure({
   enforceActions: "observed",
@@ -118,7 +113,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
 
     it("makes a POST request to the Execute endpoint", async function() {
       const postXml = spyOn(wps, "postXml").and.returnValue(executeResponseXml);
-      await wps.invoke();
+      await wps.submitJob();
       expect(postXml.calls.argsFor(0)[0]).toBe(
         "http://example.com/wps?service=WPS&request=Execute&version=1.0.0"
       );
@@ -131,7 +126,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
     it("makes a GET request to the Execute endpoint when `executeWithHttpGet` is true", async function() {
       runInAction(() => wps.setTrait("definition", "executeWithHttpGet", true));
       getXml.and.returnValue(executeResponseXml);
-      await wps.invoke();
+      await wps.submitjob();
       const [url, params] = getXml.calls.argsFor(1);
       expect(url).toBe(
         "http://example.com/wps?service=WPS&request=Execute&version=1.0.0"
@@ -145,7 +140,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
     it("adds a ResultPendingCatalogItem to the workbench", async function() {
       spyOn(wps, "postXml").and.returnValue(executeResponseXml);
       spyOn(wps.terria.workbench, "add").and.callThrough();
-      await wps.invoke();
+      await wps.submitjob();
       expect(wps.terria.workbench.add).toHaveBeenCalledWith(
         jasmine.any(ResultPendingCatalogItem)
       );
@@ -160,7 +155,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
 
       it("adds a WebProcessingServiceCatalogFunctionJob to workbench", async function() {
         spyOn(workbench, "add").and.callThrough();
-        await wps.invoke();
+        await wps.submitjob();
         expect(workbench.add).toHaveBeenCalledWith(
           jasmine.any(WebProcessingServiceCatalogFunctionJob)
         );
@@ -168,7 +163,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
 
       it("removes the ResultPendingCatalogItem", async function() {
         spyOn(workbench, "remove").and.callThrough();
-        await wps.invoke();
+        await wps.submitjob();
         expect(workbench.remove).toHaveBeenCalledWith(
           jasmine.any(ResultPendingCatalogItem)
         );
@@ -182,7 +177,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
           wps.terria.workbench,
           "add"
         ).and.callThrough();
-        await wps.invoke();
+        await wps.submitjob();
         const pendingItem: ResultPendingCatalogItem = workbenchAdd.calls.argsFor(
           0
         )[0];
@@ -201,7 +196,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
       it("polls the statusLocation for the result", async function() {
         spyOn(wps, "postXml").and.returnValue(pendingExecuteResponseXml);
         getXml.and.returnValues(pendingExecuteResponseXml, executeResponseXml);
-        await wps.invoke();
+        await wps.submitjob();
         expect(getXml).toHaveBeenCalledTimes(3);
         expect(getXml.calls.argsFor(1)[0]).toBe(
           "http://example.com/ows?check_status/123"
@@ -218,7 +213,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
           null,
           [...Array(10)].map(() => pendingExecuteResponseXml)
         );
-        await wps.invoke();
+        await wps.submitjob();
         expect(getXml.calls.all.length).toBe(0);
       });
     });
@@ -250,7 +245,10 @@ describe("WebProcessingServiceCatalogFunction", function() {
       expect(parameter).toEqual(jasmine.any(EnumerationParameter));
       if (parameter) {
         const enumParameter = <EnumerationParameter>parameter;
-        expect(enumParameter.possibleValues).toEqual(["Point", "Polygon"]);
+        expect(enumParameter.options).toEqual([
+          { id: "Point" },
+          { id: "Polygon" }
+        ]);
       }
     });
 
@@ -262,7 +260,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
       expect(parameter).toEqual(jasmine.any(EnumerationParameter));
       if (parameter) {
         const enumParameter = <EnumerationParameter>parameter;
-        expect(enumParameter.possibleValues).toEqual(["Point"]);
+        expect(enumParameter.options).toEqual([{ id: "Point" }]);
       }
     });
 

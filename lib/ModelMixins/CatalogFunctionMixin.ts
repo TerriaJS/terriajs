@@ -40,7 +40,7 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
      * - sets job traits (`name`, `parameters`, ...)
      * - invokes job {@link CatalogFunctionJobMixin#invoke}
      * - adds to workbench/models (in user added data) if successfully submitted
-     * @returns true if successfully submitted
+     * @returns new job
      */
     async submitJob() {
       try {
@@ -76,7 +76,7 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
         this.terria.addModel(newJob);
         await addUserCatalogMember(this.terria, newJob, { enable: true });
 
-        return true;
+        return newJob;
       } catch (error) {
         // Try to get meaningful error message
         if (error instanceof TerriaError) {
