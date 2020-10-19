@@ -98,7 +98,7 @@ function CatalogFunctionJobMixin<
         () => this.jobStatus,
         async () => {
           // Download results when finished
-          if (this.jobStatus === "finished" && !this.downloadedResults) {
+          if (this.jobStatus === "finished" && !this._downloadedResults) {
             this._downloadedResults = true;
             this.results = (await this.downloadResults()) || [];
             this.results.forEach(result => {
@@ -133,6 +133,9 @@ function CatalogFunctionJobMixin<
 
     protected results: CatalogMemberMixin.CatalogMemberMixin[] = [];
 
+    /**
+     * Flag if results have been downloaded. This is used to recover results after sharing a Catalog Function - eg if `jobStatus = "finished"` and `_downloadedResults = false`, then we download results!
+     */
     @observable protected _downloadedResults = false;
 
     @computed
