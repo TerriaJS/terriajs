@@ -28,6 +28,7 @@ Change Log
 * Made possible to internationalize tour contend.
 * Chart expanded from feature info panel will now by default show only the first chart line.
 * Chart component attribtues `column-titles` and `column-units` will now accept a simpler syntax like: "Time,Speed" or "ms,kmph"
+* When expanding a chart from the feature info panel, we now place a colored dot on the map where the chart was generated from.
 * [The next improvement]
 
 #### 8.0.0-alpha.53
