@@ -5,11 +5,14 @@ Change Log
 
 #### next release (8.0.0-alpha.57)
 * Add support for time on `ArcGisMapServerCatalogItem`
+* Fix memoization of `traitsClassToModelClass`.
+* [The next improvement]
   
 #### 8.0.0-alpha.56
 * Add `itemProperties` trait to `WebMapMapCatalogGroup`.
 * Add support for `formats` traits within `featureInfoTemplate` traits.
 * Fix handling of `ArcGisPortalItemReference` for when a feature layer contains multiple sublayers.
+* Implemented new compass design.
 
 #### 8.0.0-alpha.55
 * Upgraded to patched terriajs-cesium v1.73.1 to avoid build error on node 12 & 14.
@@ -28,7 +31,6 @@ Change Log
 * Allow Magda backed maps to use an inline `terria-init` catalog without it getting overwritten by map-config before it can be parsed
 * Deprecated `proxyableDomainsUrl` configuration parameter in favour of `serverconfig` route
 * Ported a support for `GpxCatalogItem`.
-* Implemented new compass design.
 * Feature info is now shareable.
 * Add option `canUnsetFeaturePickingState` to `applyInitData` for unsetting feature picking state if it is missing from `initData`. Useful for showing/hiding feature info panel when switching through story slides.
 * Properly render for polygons with holes in Leaflet.
@@ -39,6 +41,9 @@ Change Log
 * Allow an `ArcGisPortalReferenceItem` to belong to multiple `CatalogGroup`'s.
 * Fix argis reference bug.
 * Made possible to internationalize tour contend.
+* Added TileErrorHandlerMixin for handling raster layer tile errors.
+* Fixed a bug that caused the feature info chart for SOS items to not load.
+* SOS & CSV charts are now shareable.
 
 #### 8.0.0-alpha.53
 * Ported an implementation of CatalogSearchProvider and set it as the default
@@ -79,8 +84,6 @@ Change Log
 * Updated leaflet attribution to match the style of cesium credits.
 * Remove `@computed` props from `WebFeatureServiceCapabilities`
 * Fixed bug causing the Related Maps dropdown to be clipped.
-* Added TileErrorHandlerMixin for handling raster layer tile errors.
-* [The next improvement]
 * Add SDMX-json support for groups and items (using SDMX-csv for data queries)
 * `TableMixin` now uses `ExportableMixin` and `AsyncMappableMixin`
 * Move region provider loading in `TableMixin` `forceLoadTableMixin` to `loadRegionProviderList`
@@ -95,9 +98,6 @@ Change Log
 * Replaces `ShadowSection` with `ShadowMixin` using `SelectableDimensions`
 * Fix Webpack Windows path issue
 * Updated icons for view and edit story in the hamburger menu.
-* Fixed a bug that caused the feature info chart for SOS items to not load.
-* SOS & CSV charts are now shareable.
-* [The next improvement]
 * Implemented new design for story panel.
 
 #### 8.0.0-alpha.48
