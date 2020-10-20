@@ -103,44 +103,7 @@ function CatalogFunctionJobMixin<
   abstract class CatalogFunctionJobMixin extends AutoRefreshingMixin(
     CatalogMemberMixin(Base)
   ) {
-    constructor(...args: any[]) {
-      super(...args);
-
-      // Add FunctionJobStratum to strata
-      runInAction(() => {
-        this.strata.set(FunctionJobStratum.name, new FunctionJobStratum(this));
-      });
-
-      // Handle changes in job status
-      reaction(() => this.jobStatus, this.onJobStatusChanged.bind(this));
-
-      // If this is showing in workbench, make sure result layers are also in workbench
-      reaction(
-        () => this.inWorkbench,
-        inWorkbench => {
-          if (inWorkbench) {
-            this.results.forEach(
-              result =>
-                this.terria.workbench.contains(result) ||
-                runInAction(() => this.terria.workbench.add(result))
-            );
-          }
-        }
-      );
-
-      // Propagate show to result layer's show
-      reaction(
-        () => this.show,
-        () => {
-          this.results.forEach(result => {
-            if (AsyncMappableMixin.isMixedInto(result)) {
-              result.setTrait(CommonStrata.user, "show", this.show);
-            }
-            this.terria.workbench.add(result);
-          });
-        }
-      );
-    }
+    private init = false;
 
     /**
      *
@@ -149,24 +112,44 @@ function CatalogFunctionJobMixin<
     protected abstract async _invoke(): Promise<boolean>;
 
     public async invoke() {
-      const finished = await this._invoke();
-      if (finished) {
-        this.setTrait(CommonStrata.user, "jobStatus", "finished");
-      } else {
-        this.setTrait(CommonStrata.user, "refreshEnabled", true);
+      this.setTrait(CommonStrata.user, "jobStatus", "running");
+      try {
+        const finished = await this._invoke();
+        if (finished) {
+          this.setTrait(CommonStrata.user, "jobStatus", "finished");
+        } else {
+          this.setTrait(CommonStrata.user, "refreshEnabled", true);
+        }
+      } catch (error) {
+        this.setTrait(CommonStrata.user, "jobStatus", "error");
+        throw error; // throw error to CatalogFunctionMixin
       }
     }
 
     private async onJobStatusChanged() {
       // Download results when finished
-      if (this.jobStatus === "finished" && !this._downloadedResults) {
-        this._downloadedResults = true;
-        this.results = (await this.downloadResults()) || [];
-        this.results.forEach(result => {
-          this.terria.workbench.add(result);
-          this.terria.catalog.userAddedDataGroup.add(CommonStrata.user, result);
-        });
+      if (
+        this.jobStatus === "finished" &&
+        !this._downloadedResults &&
+        !this.downloadingResults
+      ) {
+        this.downloadingResults = true;
+        try {
+          this.results = (await this.downloadResults()) || [];
+          this.results.forEach(result => {
+            this.terria.workbench.add(result);
+            this.terria.catalog.userAddedDataGroup.add(
+              CommonStrata.user,
+              result
+            );
+          });
+          runInAction(() => (this._downloadedResults = true));
 
+          this.downloadingResults = false;
+        } catch (error) {
+          this.downloadingResults = false;
+          throw error;
+        }
         // Poll for results when running
       } else if (this.jobStatus === "running" && !this.refreshEnabled) {
         runInAction(() =>
@@ -176,18 +159,14 @@ function CatalogFunctionJobMixin<
     }
 
     /**
-     * Called every refreshInterval
-     *
-     * @return true if job has finished, false otherwise
-     */
-    async pollForResults(): Promise<boolean> {
-      throw "pollForResults not implemented";
-    }
-
-    /**
      * Job result CatalogMembers - set from calling {@link CatalogFunctionJobMixin#downloadResults}
      */
-    protected results: CatalogMemberMixin.CatalogMemberMixin[] = [];
+    public results: CatalogMemberMixin.CatalogMemberMixin[] = [];
+
+    /**
+     * Flag to make sure results aren't downloaded multiple times
+     */
+    private downloadingResults = false;
 
     /**
      * Flag if results have been downloaded. This is used to recover results after sharing a Catalog Function - eg if `jobStatus = "finished"` and `_downloadedResults = false`, then we download results!
@@ -212,6 +191,15 @@ function CatalogFunctionJobMixin<
     }
 
     private pollingForResults = false;
+
+    /**
+     * Called every refreshInterval
+     *
+     * @return true if job has finished, false otherwise
+     */
+    async pollForResults(): Promise<boolean> {
+      throw "pollForResults not implemented";
+    }
 
     /**
      * This function adapts AutoRefreshMixin's refreshData with this Mixin's pollForResults - adding the boolean return value which triggers refresh disable
@@ -275,10 +263,52 @@ function CatalogFunctionJobMixin<
       return [];
     }
     protected async forceLoadMapItems() {
-      return;
+      return this.loadMetadata();
     }
 
     protected async forceLoadMetadata() {
+      if (!this.init) {
+        this.init = true;
+
+        // Add FunctionJobStratum to strata
+        runInAction(() => {
+          this.strata.set(
+            FunctionJobStratum.name,
+            new FunctionJobStratum(this)
+          );
+        });
+
+        // Handle changes in job status
+        await this.onJobStatusChanged();
+        reaction(() => this.jobStatus, this.onJobStatusChanged.bind(this));
+
+        // If this is showing in workbench, make sure result layers are also in workbench
+        reaction(
+          () => this.inWorkbench,
+          inWorkbench => {
+            if (inWorkbench) {
+              this.results.forEach(
+                result =>
+                  this.terria.workbench.contains(result) ||
+                  runInAction(() => this.terria.workbench.add(result))
+              );
+            }
+          }
+        );
+
+        // Propagate show to result layer's show
+        reaction(
+          () => this.show,
+          () => {
+            this.results.forEach(result => {
+              if (AsyncMappableMixin.isMixedInto(result)) {
+                result.setTrait(CommonStrata.user, "show", this.show);
+              }
+              this.terria.workbench.add(result);
+            });
+          }
+        );
+      }
       return;
     }
 

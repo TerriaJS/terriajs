@@ -17,7 +17,10 @@ import CatalogFunctionJobMixin from "../ModelMixins/CatalogFunctionJobMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import XmlRequestMixin from "../ModelMixins/XmlRequestMixin";
 import xml2json from "../ThirdParty/xml2json";
-import { ShortReportTraits } from "../Traits/CatalogMemberTraits";
+import {
+  ShortReportTraits,
+  InfoSectionTraits
+} from "../Traits/CatalogMemberTraits";
 import WebProcessingServiceCatalogFunctionJobTraits from "../Traits/WebProcessingServiceCatalogFunctionJobTraits";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import { ChartItem } from "./Chartable";
@@ -33,6 +36,8 @@ import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
 import updateModelFromJson from "./updateModelFromJson";
 import upsertModelFromJson from "./upsertModelFromJson";
+import { JsonObject } from "../Core/Json";
+import { FeatureInfoTemplateTraits } from "../Traits/FeatureInfoTraits";
 
 const executeWpsTemplate = require("./ExecuteWpsTemplate.xml");
 
@@ -43,13 +48,17 @@ class WpsLoadableStratum extends LoadableStratum(
 ) {
   static stratumName = "wpsLoadable";
 
-  constructor(readonly item: WebProcessingServiceCatalogFunctionJob) {
+  constructor(
+    readonly item: WebProcessingServiceCatalogFunctionJob,
+    private _wpsResponse?: JsonObject
+  ) {
     super();
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
     return new WpsLoadableStratum(
-      newModel as WebProcessingServiceCatalogFunctionJob
+      newModel as WebProcessingServiceCatalogFunctionJob,
+      this.wpsResponse
     ) as this;
   }
 
@@ -57,12 +66,14 @@ class WpsLoadableStratum extends LoadableStratum(
   static async load(item: WebProcessingServiceCatalogFunctionJob) {
     if (!isDefined(item.wpsResponse) && isDefined(item.wpsResponseUrl)) {
       const url = proxyCatalogItemUrl(item, item.wpsResponseUrl, "1d");
-      const wpsResponse = await item.getXml(url);
-      runInAction(() => {
-        item.setTrait(CommonStrata.user, "wpsResponse", wpsResponse);
-      });
+      const wpsResponse = xml2json(await item.getXml(url));
+      return new WpsLoadableStratum(item, wpsResponse);
     }
     return new WpsLoadableStratum(item);
+  }
+
+  get wpsResponse() {
+    return this._wpsResponse;
   }
 
   @computed get shortReportSections() {
@@ -80,6 +91,17 @@ class WpsLoadableStratum extends LoadableStratum(
       })
       .filter(isDefined);
     return reports;
+  }
+
+  @computed get featureInfoTemplate() {
+    const template = [
+      "#### Inputs\n\n" +
+        this.item.info.find(info => info.name === "Inputs")?.content,
+      "#### Outputs\n\n" + this.outputsSectionHtml
+    ].join("\n\n");
+    return createStratumInstance(FeatureInfoTemplateTraits, {
+      template
+    });
   }
 
   @computed get outputsSectionHtml() {
@@ -128,6 +150,10 @@ class WpsLoadableStratum extends LoadableStratum(
       "</table>";
     return outputsSection;
   }
+
+  @computed get rectangle() {
+    return this.item.geoJsonItem?.rectangle;
+  }
 }
 
 StratumOrder.addLoadStratum(WpsLoadableStratum.stratumName);
@@ -150,7 +176,15 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
   readonly proxyCacheDuration = "1d";
 
   @observable
-  private geoJsonItem?: GeoJsonCatalogItem;
+  public geoJsonItem?: GeoJsonCatalogItem;
+
+  private get executeUrlParameters() {
+    return {
+      service: "WPS",
+      request: "Execute",
+      version: "1.0.0"
+    };
+  }
 
   /**
    * Returns the proxied URL for the Execute endpoint.
@@ -160,11 +194,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
       return;
     }
 
-    const uri = new URI(this.url).query({
-      service: "WPS",
-      request: "Execute",
-      version: "1.0.0"
-    });
+    const uri = new URI(this.url).query(this.executeUrlParameters);
 
     return proxyCatalogItemUrl(this, uri.toString(), this.proxyCacheDuration);
   }
@@ -182,6 +212,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
     const executeUrl = this.executeUrl;
 
     const parameters = {
+      ...this.executeUrlParameters,
       Identifier: htmlEscapeText(identifier),
       DataInputs: toJS(this.wpsParameters),
       storeExecuteResponse: toJS(this.storeSupported),
@@ -214,6 +245,8 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
 
     // Check if finished
     if (this.checkStatus(json)) {
+      // set result
+      this.setTrait(CommonStrata.user, "wpsResponse", json);
       return true;
     }
 
@@ -256,7 +289,6 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
       throw status.ProcessFailed.ExceptionReport?.Exception?.ExceptionText ||
         JSON.stringify(status.ProcessFailed);
     } else if (isDefined(status.ProcessSucceeded)) {
-      this.setTrait(CommonStrata.user, "wpsResponse", json);
       return true;
     }
 
@@ -280,63 +312,63 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
     runInAction(() => {
       this.strata.set(WpsLoadableStratum.stratumName, stratum);
     });
-
     const reports: StratumFromTraits<ShortReportTraits>[] = [];
+
     const outputs = runInAction(() => this.outputs);
 
     const results: CatalogMemberMixin.CatalogMemberMixin[] = [];
 
-    const promises = outputs.map(async (output, i) => {
-      if (!output.Data.ComplexData) {
-        return;
-      }
-
-      let reportContent = output.Data.ComplexData;
-      if (output.Data.ComplexData.mimeType === "text/csv") {
-        reportContent =
-          '<collapsible title="' +
-          output.Title +
-          '" open="' +
-          (i === 0 ? "true" : "false") +
-          '">';
-        reportContent +=
-          '<chart can-download="true" hide-buttons="false" title="' +
-          output.Title +
-          "\" data='" +
-          output.Data.ComplexData.text +
-          '\' styling="histogram"></chart>';
-        reportContent += "</collapsible>";
-      } else if (
-        output.Data.ComplexData.mimeType ===
-        "application/vnd.terriajs.catalog-member+json"
-      ) {
-        // Create a catalog member from the embedded json
-        const json = JSON.parse(output.Data.ComplexData.text);
-        const catalogItem = this.createCatalogItemFromJson(json);
-        if (isDefined(catalogItem)) {
-          if (CatalogMemberMixin.isMixedInto(catalogItem)) {
-            results.push(catalogItem);
-            await catalogItem.loadMetadata();
-          }
-          if (AsyncMappableMixin.isMixedInto(catalogItem)) {
-            await catalogItem.loadMapItems();
-          }
-          if (AsyncChartableMixin.isMixedInto(catalogItem)) {
-            await catalogItem.loadChartItems();
-          }
-          reportContent = "Chart " + output.Title + " generated.";
+    await Promise.all(
+      outputs.map(async (output, i) => {
+        if (!output.Data.ComplexData) {
+          return;
         }
-      }
 
-      reports.push(
-        createStratumInstance(ShortReportTraits, {
-          name: output.Title,
-          content: reportContent
-        })
-      );
-    });
+        let reportContent = output.Data.ComplexData;
+        if (output.Data.ComplexData.mimeType === "text/csv") {
+          reportContent =
+            '<collapsible title="' +
+            output.Title +
+            '" open="' +
+            (i === 0 ? "true" : "false") +
+            '">';
+          reportContent +=
+            '<chart can-download="true" hide-buttons="false" title="' +
+            output.Title +
+            "\" data='" +
+            output.Data.ComplexData.text +
+            '\' styling="histogram"></chart>';
+          reportContent += "</collapsible>";
+        } else if (
+          output.Data.ComplexData.mimeType ===
+          "application/vnd.terriajs.catalog-member+json"
+        ) {
+          // Create a catalog member from the embedded json
+          const json = JSON.parse(output.Data.ComplexData.text);
+          const catalogItem = this.createCatalogItemFromJson(json);
+          if (isDefined(catalogItem)) {
+            if (CatalogMemberMixin.isMixedInto(catalogItem)) {
+              results.push(catalogItem);
+              await catalogItem.loadMetadata();
+            }
+            if (AsyncMappableMixin.isMixedInto(catalogItem)) {
+              await catalogItem.loadMapItems();
+            }
+            if (AsyncChartableMixin.isMixedInto(catalogItem)) {
+              await catalogItem.loadChartItems();
+            }
+            reportContent = "Chart " + output.Title + " generated.";
+          }
+        }
 
-    await Promise.all(promises);
+        reports.push(
+          createStratumInstance(ShortReportTraits, {
+            name: output.Title,
+            content: reportContent
+          })
+        );
+      })
+    );
 
     // Create geojson catalog item for input features
     if (isDefined(this.geojsonFeatures)) {
@@ -377,7 +409,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
   }
 
   protected async forceLoadMapItems(): Promise<void> {
-    await this.loadMetadata();
+    await super.forceLoadMapItems();
     if (isDefined(this.geoJsonItem)) {
       const geoJsonItem = this.geoJsonItem;
       await runInAction(() => geoJsonItem.loadMapItems());

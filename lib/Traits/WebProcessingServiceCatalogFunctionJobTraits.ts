@@ -1,4 +1,4 @@
-import { JsonObject } from "../Core/Json";
+import JsonValue, { JsonObject } from "../Core/Json";
 import anyTrait from "./anyTrait";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import MappableTraits from "./MappableTraits";
@@ -8,6 +8,7 @@ import objectArrayTrait from "./objectArrayTrait";
 import primitiveTrait from "./primitiveTrait";
 import CatalogFunctionJobTraits from "./CatalogFunctionJobTraits";
 import WebProcessingServiceCatalogFunctionTraits from "./WebProcessingServiceCatalogFunctionTraits";
+import { Feature } from "geojson";
 
 export class WPSParameterTraits extends ModelTraits {
   @primitiveTrait({
@@ -55,7 +56,7 @@ export default class WebProcessingServiceCatalogJobTraits extends mixTraits(
     name: "Geojson features",
     description: "Geojson feature collection of input features."
   })
-  geojsonFeatures?: JsonObject;
+  geojsonFeatures?: JsonValue[];
 
   @primitiveTrait({
     type: "string",

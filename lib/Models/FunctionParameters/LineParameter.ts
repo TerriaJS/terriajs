@@ -12,6 +12,13 @@ export default class LineParameter extends FunctionParameter<Line>
   static readonly type = "line";
   readonly type = "line";
 
+  static formatValueForUrl(value: Line) {
+    return JSON.stringify({
+      type: "FeatureCollection",
+      features: [LineParameter.getGeoJsonFeature(value)]
+    });
+  }
+
   /**
    * Process value so that it can be used in an URL.
    */

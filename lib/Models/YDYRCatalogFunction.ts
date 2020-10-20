@@ -184,6 +184,7 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
   }
 
   async forceLoadMetadata() {
+    return super.loadMetadata();
     // TODO: load capabilities from https://ydyr.info/api/v1/capability?format=json
   }
 
@@ -398,6 +399,7 @@ ${DATASETS.map(d => `\n- ${d.title}`)}`
     }
   }
 
+  // Disabled due to lack of get capabilities from YDYR server
   // @computed get sidedataParameters(): EnumerationParameter {
   //   const possibleValues = SIDE_DATA.map(data => data.title);
   //   let value = possibleValues[0]

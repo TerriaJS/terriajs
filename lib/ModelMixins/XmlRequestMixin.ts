@@ -1,3 +1,4 @@
+import URI from "urijs";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 
@@ -10,6 +11,7 @@ export default function XmlRequestMixin<T extends Constructor<any>>(Base: T) {
       if (isDefined(parameters)) {
         url = new URI(url).query(parameters).toString();
       }
+      console.log(`loading ${url}`);
       return loadXML(url);
     }
 

@@ -1,45 +1,54 @@
-import { runInAction, configure } from "mobx";
+import i18next from "i18next";
+import { configure, runInAction } from "mobx";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import isDefined from "../../lib/Core/isDefined";
-import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
-import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
 import Terria from "../../lib/Models/Terria";
 import WebProcessingServiceCatalogFunctionJob from "../../lib/Models/WebProcessingServiceCatalogFunctionJob";
-import { xml } from "../SpecHelpers";
-import i18next from "i18next";
+
+const regionMapping = JSON.stringify(
+  require("../../wwwroot/data/regionMapping.json")
+);
 
 configure({
   enforceActions: "observed",
   computedRequiresReaction: true
 });
 
-const executeResponseXml = xml(
-  require("raw-loader!../../wwwroot/test/WPS/ExecuteResponse.xml")
-);
+const executeResponseXml = require("raw-loader!../../wwwroot/test/WPS/ExecuteResponse.xml");
 
 describe("WebProcessingServiceCatalogFunctionJob", function() {
   let item: WebProcessingServiceCatalogFunctionJob;
 
   beforeEach(function() {
     const terria = initTerria();
-    terria.configParameters.regionMappingDefinitionsUrl =
-      "/data/regionMapping.json";
     item = new WebProcessingServiceCatalogFunctionJob("test", terria);
-    runInAction(() =>
+    runInAction(() => {
       item.setTrait(CommonStrata.user, "parameters", {
         name: "point",
-        value: "144.97228,-37.77138",
-        geoJsonFeature: {
+        value: "144.97228,-37.77138"
+      });
+      item.setTrait(CommonStrata.user, "geojsonFeatures", [
+        {
           type: "Feature",
           geometry: {
             type: "Point",
-            coordinates: [144.97228, -37.77138, null]
-          }
+            coordinates: [144.97228, -37.77138]
+          },
+          properties: {}
         }
-      })
-    );
+      ]);
+      item.setTrait(CommonStrata.user, "jobStatus", "finished");
+    });
+    jasmine.Ajax.install();
+    jasmine.Ajax.stubRequest(
+      "build/TerriaJS/data/regionMapping.json"
+    ).andReturn({ responseText: regionMapping });
+  });
+
+  afterEach(function() {
+    jasmine.Ajax.uninstall();
   });
 
   it("has a type & typeName", function() {
@@ -50,6 +59,10 @@ describe("WebProcessingServiceCatalogFunctionJob", function() {
   });
 
   it("loads metadata from `wpsResponseUrl` if it is set", async function() {
+    jasmine.Ajax.stubRequest("http://example.com/WPS/test").andReturn({
+      responseText: executeResponseXml
+    });
+
     runInAction(() => {
       item.setTrait(
         CommonStrata.user,
@@ -57,10 +70,10 @@ describe("WebProcessingServiceCatalogFunctionJob", function() {
         "http://example.com/WPS/test"
       );
     });
-    spyOn(item, "getXml").and.returnValue(executeResponseXml);
-    await item.loadMetadata();
-    expect(item.getXml).toHaveBeenCalledTimes(1);
-    expect(item.getXml).toHaveBeenCalledWith("http://example.com/WPS/test");
+
+    await item.loadMapItems();
+
+    expect(item.results.length).toBe(2);
   });
 
   describe("after loading metadata", function() {
@@ -162,6 +175,18 @@ describe("WebProcessingServiceCatalogFunctionJob", function() {
 
   describe("after loading mapItems", function() {
     it("returns mapItems", async function() {
+      jasmine.Ajax.stubRequest("http://example.com/WPS/test").andReturn({
+        responseText: executeResponseXml
+      });
+
+      runInAction(() => {
+        item.setTrait(
+          CommonStrata.user,
+          "wpsResponseUrl",
+          "http://example.com/WPS/test"
+        );
+      });
+
       await item.loadMapItems();
       expect(item.mapItems.length).toBe(1);
       expect(item.mapItems[0]).toEqual(jasmine.any(GeoJsonDataSource));
@@ -175,8 +200,7 @@ describe("WebProcessingServiceCatalogFunctionJob", function() {
 });
 
 function initTerria() {
-  const terria = new Terria();
-  terria.configParameters.regionMappingDefinitionsUrl =
-    "/data/regionMapping.json";
+  const terria = new Terria({ baseUrl: "./" });
+
   return terria;
 }
