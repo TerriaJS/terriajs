@@ -2,6 +2,7 @@ import { computed } from "mobx";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import CatalogFunctionMixin from "../ModelMixins/CatalogFunctionMixin";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../ModelMixins/TableMixin";
 import TableColumnType from "../Table/TableColumnType";
 import YDYRCatalogFunctionTraits from "../Traits/YDYRCatalogFunctionTraits";
@@ -12,7 +13,6 @@ import FunctionParameter from "./FunctionParameters/FunctionParameter";
 import InfoParameter from "./FunctionParameters/InfoParameter";
 import StringParameter from "./FunctionParameters/StringParameter";
 import YDYRCatalogFunctionJob from "./YDYRCatalogFunctionJob";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 
 export const DATASETS = [
   {

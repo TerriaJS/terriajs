@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, isObservableArray, runInAction, trace } from "mobx";
+import { action, computed, isObservableArray, runInAction } from "mobx";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import URI from "urijs";
 import isDefined from "../Core/isDefined";
@@ -11,6 +11,7 @@ import xml2json from "../ThirdParty/xml2json";
 import WebProcessingServiceCatalogFunctionTraits from "../Traits/WebProcessingServiceCatalogFunctionTraits";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
+import BooleanParameter from "./FunctionParameters/BooleanParameter";
 import DateTimeParameter from "./FunctionParameters/DateTimeParameter";
 import EnumerationParameter from "./FunctionParameters/EnumerationParameter";
 import FunctionParameter, {
@@ -32,7 +33,6 @@ import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumOrder from "./StratumOrder";
 import updateModelFromJson from "./updateModelFromJson";
 import WebProcessingServiceCatalogFunctionJob from "./WebProcessingServiceCatalogFunctionJob";
-import BooleanParameter from "./FunctionParameters/BooleanParameter";
 
 type AllowedValues = {
   Value?: string | string[];

@@ -1,14 +1,14 @@
-import { runInAction, toJS } from "mobx";
+import { toJS } from "mobx";
+import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import Constructor from "../Core/Constructor";
 import TerriaError from "../Core/TerriaError";
+import addUserCatalogMember from "../Models/addUserCatalogMember";
 import CommonStrata from "../Models/CommonStrata";
 import FunctionParameter from "../Models/FunctionParameters/FunctionParameter";
 import Model from "../Models/Model";
 import CatalogFunctionTraits from "../Traits/CatalogFunctionTraits";
 import CatalogFunctionJobMixin from "./CatalogFunctionJobMixin";
 import CatalogMemberMixin from "./CatalogMemberMixin";
-import addUserCatalogMember from "../Models/addUserCatalogMember";
-import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 const sprintf = require("terriajs-cesium/Source/ThirdParty/sprintf").default;
 
 type CatalogFunctionMixin = Model<CatalogFunctionTraits>;
@@ -21,7 +21,6 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
      * Function parameters are rendered as ParameterEditors, their values directly map to the `parameters` trait. When a FunctionParameter value is modified, it will automatically update `parameters` trait.
      *
      * When a job is created, the `parameters` are copied across automatically (see {@link CatalogFunctionMixin#submitJob})
-     *
      */
     abstract get functionParameters(): FunctionParameter[];
 

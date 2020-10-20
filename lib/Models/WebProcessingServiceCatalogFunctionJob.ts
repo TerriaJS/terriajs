@@ -10,6 +10,7 @@ import {
 import Mustache from "mustache";
 import URI from "urijs";
 import isDefined from "../Core/isDefined";
+import { JsonObject } from "../Core/Json";
 import TerriaError from "../Core/TerriaError";
 import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
@@ -17,10 +18,8 @@ import CatalogFunctionJobMixin from "../ModelMixins/CatalogFunctionJobMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import XmlRequestMixin from "../ModelMixins/XmlRequestMixin";
 import xml2json from "../ThirdParty/xml2json";
-import {
-  ShortReportTraits,
-  InfoSectionTraits
-} from "../Traits/CatalogMemberTraits";
+import { ShortReportTraits } from "../Traits/CatalogMemberTraits";
+import { FeatureInfoTemplateTraits } from "../Traits/FeatureInfoTraits";
 import WebProcessingServiceCatalogFunctionJobTraits from "../Traits/WebProcessingServiceCatalogFunctionJobTraits";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import { ChartItem } from "./Chartable";
@@ -29,15 +28,12 @@ import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import LoadableStratum from "./LoadableStratum";
-import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
 import updateModelFromJson from "./updateModelFromJson";
 import upsertModelFromJson from "./upsertModelFromJson";
-import { JsonObject } from "../Core/Json";
-import { FeatureInfoTemplateTraits } from "../Traits/FeatureInfoTraits";
 
 const executeWpsTemplate = require("./ExecuteWpsTemplate.xml");
 

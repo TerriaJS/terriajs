@@ -4,6 +4,7 @@ import isDefined from "../Core/isDefined";
 import CommonStrata from "../Models/CommonStrata";
 import createStratumInstance from "../Models/createStratumInstance";
 import LoadableStratum from "../Models/LoadableStratum";
+import { MapItem } from "../Models/Mappable";
 import Model, { BaseModel } from "../Models/Model";
 import StratumOrder from "../Models/StratumOrder";
 import CatalogFunctionJobTraits from "../Traits/CatalogFunctionJobTraits";
@@ -11,7 +12,6 @@ import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import AsyncMappableMixin from "./AsyncMappableMixin";
 import AutoRefreshingMixin from "./AutoRefreshingMixin";
 import CatalogMemberMixin from "./CatalogMemberMixin";
-import { MapItem } from "../Models/Mappable";
 
 class FunctionJobStratum extends LoadableStratum(CatalogFunctionJobTraits) {
   constructor(
