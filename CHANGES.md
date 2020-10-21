@@ -1,7 +1,11 @@
 Change Log
 ==========
 
-### Next version
+### Next Release
+
+### v7.11.15
+
+* Fixed a bug when clicking the expand button on a chart in feature info when the clicked feature was a polygon.
 
 ### v7.11.14
 
