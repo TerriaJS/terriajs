@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.57)
 * Fix memoization of `traitsClassToModelClass`.
+* Fix presentation of the WMS Dimension metadata.
 * [The next improvement]
   
 #### 8.0.0-alpha.56
