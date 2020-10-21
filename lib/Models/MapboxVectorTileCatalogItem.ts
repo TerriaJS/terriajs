@@ -1,25 +1,22 @@
-import { computed, runInAction, observable, action, autorun } from "mobx";
+import { VectorTileFeature } from "@mapbox/vector-tile";
+import i18next from "i18next";
+import { clone } from "lodash-es";
+import { action, autorun, computed, observable, runInAction } from "mobx";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import isDefined from "../Core/isDefined";
+import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
+import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
 import MapboxVectorTileCatalogItemTraits from "../Traits/MapboxVectorTileCatalogItemTraits";
 import CreateModel from "./CreateModel";
-
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import createStratumInstance from "./createStratumInstance";
 import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
 import StratumOrder from "./StratumOrder";
-import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
-import i18next from "i18next";
-import isDefined from "../Core/isDefined";
-import { VectorTileFeature } from "@mapbox/vector-tile";
-import { clone } from "lodash-es";
-import CommonStrata from "./CommonStrata";
-import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
-import createStratumInstance from "./createStratumInstance";
-import StratumFromTraits from "./StratumFromTraits";
 
 class MapboxVectorTileLoadableStratum extends LoadableStratum(
   MapboxVectorTileCatalogItemTraits
