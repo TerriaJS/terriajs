@@ -52,4 +52,8 @@ export function isTerrainProvider(
   return "hasVertexNormals" in mapItem;
 }
 
+export function isDataSource(object: MapItem): object is DataSource {
+  return "entities" in object;
+}
+
 export default Mappable;

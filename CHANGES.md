@@ -3,7 +3,21 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.54)
+#### next release (8.0.0-alpha.57)
+* Fix memoization of `traitsClassToModelClass`.
+* Fix presentation of the WMS Dimension metadata.
+* [The next improvement]
+  
+#### 8.0.0-alpha.56
+* Add `itemProperties` trait to `WebMapMapCatalogGroup`.
+* Add support for `formats` traits within `featureInfoTemplate` traits.
+* Fix handling of `ArcGisPortalItemReference` for when a feature layer contains multiple sublayers.
+* Implemented new compass design.
+
+#### 8.0.0-alpha.55
+* Upgraded to patched terriajs-cesium v1.73.1 to avoid build error on node 12 & 14.
+
+#### 8.0.0-alpha.54
 * Add a `infoAsObject` property to the `CatalogMemberMixin` for providing simpler access to `info` entries within templating
 * Add a `contentAsObject` trait to `InfoSectionTraits` where a json object is more suitable than a string.
 * Add `serviceDescription` and `dataDescription` to `WebMapServiceCatalogItem` info section.
@@ -17,15 +31,19 @@ Change Log
 * Allow Magda backed maps to use an inline `terria-init` catalog without it getting overwritten by map-config before it can be parsed
 * Deprecated `proxyableDomainsUrl` configuration parameter in favour of `serverconfig` route
 * Ported a support for `GpxCatalogItem`.
+* Feature info is now shareable.
+* Add option `canUnsetFeaturePickingState` to `applyInitData` for unsetting feature picking state if it is missing from `initData`. Useful for showing/hiding feature info panel when switching through story slides.
 * Properly render for polygons with holes in Leaflet.
 * Fixes a bug that showed the chart download button when there is no downloadable source.
 * Add `hideWelcomeMessage` url parameter to allow the Welcome Message to be disabled for iframe embeds or sharing scenarios.
 * Ensure the `chartDisclaimer` is passed from catalog items to derived chart items.
 * Don't calculate a `rectangle` on a `ArcGisPortalReferenceItem` as they appear to contain less precision than the services they point to.
 * Allow an `ArcGisPortalReferenceItem` to belong to multiple `CatalogGroup`'s.
+* Fix argis reference bug.
 * Made possible to internationalize tour contend.
-* Fix presentation of the WMS Dimension metadata.
-* [The next improvement]
+* Added TileErrorHandlerMixin for handling raster layer tile errors.
+* Fixed a bug that caused the feature info chart for SOS items to not load.
+* SOS & CSV charts are now shareable.
 
 #### 8.0.0-alpha.53
 * Ported an implementation of CatalogSearchProvider and set it as the default
@@ -66,8 +84,6 @@ Change Log
 * Updated leaflet attribution to match the style of cesium credits.
 * Remove `@computed` props from `WebFeatureServiceCapabilities`
 * Fixed bug causing the Related Maps dropdown to be clipped.
-* Added TileErrorHandlerMixin for handling raster layer tile errors.
-* [The next improvement]
 * Add SDMX-json support for groups and items (using SDMX-csv for data queries)
 * `TableMixin` now uses `ExportableMixin` and `AsyncMappableMixin`
 * Move region provider loading in `TableMixin` `forceLoadTableMixin` to `loadRegionProviderList`
