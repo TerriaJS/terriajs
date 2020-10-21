@@ -6,6 +6,7 @@ import MappableTraits from "./MappableTraits";
 import mixTraits from "./mixTraits";
 import objectArrayTrait from "./objectArrayTrait";
 import objectTrait from "./objectTrait";
+import primitiveArrayTrait from "./primitiveArrayTrait";
 import primitiveTrait from "./primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
 import SplitterTraits from "./SplitterTraits";
@@ -75,4 +76,20 @@ export default class TableTraits extends mixTraits(
     type: "boolean"
   })
   enableManualRegionMapping?: boolean;
+
+  @primitiveArrayTrait({
+    name: "Column titles",
+    description:
+      "An optional array of column titles that override the individual `TableColumnTraits.title` setting.",
+    type: "string"
+  })
+  columnTitles: string[] = [];
+
+  @primitiveArrayTrait({
+    name: "Column units",
+    description:
+      "An optional array of column units that override the inidividual `TableColumnTraits.unit` setting.",
+    type: "string"
+  })
+  columnUnits: string[] = [];
 }
