@@ -5,6 +5,7 @@ import mixTraits from "./mixTraits";
 import ModelTraits from "./ModelTraits";
 import primitiveArrayTrait from "./primitiveArrayTrait";
 import primitiveTrait from "./primitiveTrait";
+import GroupTraits from "./GroupTraits";
 
 export class FunctionParameterTraits extends ModelTraits {
   @primitiveTrait({
@@ -24,7 +25,8 @@ export class FunctionParameterTraits extends ModelTraits {
 export default class CatalogFunctionJobTraits extends mixTraits(
   CatalogFunctionTraits,
   AutoRefreshingTraits,
-  CatalogMemberTraits
+  CatalogMemberTraits,
+  GroupTraits
 ) {
   @primitiveArrayTrait({
     name: "Logs",
@@ -39,6 +41,13 @@ export default class CatalogFunctionJobTraits extends mixTraits(
     type: "string"
   })
   jobStatus: "inactive" | "running" | "error" | "finished" = "inactive";
+
+  @primitiveTrait({
+    name: "Downloaded results",
+    description: "Downloaded results.",
+    type: "boolean"
+  })
+  downloadedResults: boolean = false;
 
   @primitiveTrait({
     name: "Refresh enabled",

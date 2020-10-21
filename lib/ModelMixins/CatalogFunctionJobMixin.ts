@@ -1,17 +1,27 @@
-import { action, computed, observable, reaction, runInAction } from "mobx";
+import {
+  action,
+  computed,
+  observable,
+  reaction,
+  runInAction,
+  IReactionDisposer
+} from "mobx";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import CommonStrata from "../Models/CommonStrata";
 import createStratumInstance from "../Models/createStratumInstance";
 import LoadableStratum from "../Models/LoadableStratum";
-import { MapItem } from "../Models/Mappable";
+import Mappable, { MapItem } from "../Models/Mappable";
 import Model, { BaseModel } from "../Models/Model";
 import StratumOrder from "../Models/StratumOrder";
 import CatalogFunctionJobTraits from "../Traits/CatalogFunctionJobTraits";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
-import AsyncMappableMixin from "./AsyncMappableMixin";
 import AutoRefreshingMixin from "./AutoRefreshingMixin";
 import CatalogMemberMixin from "./CatalogMemberMixin";
+import GroupMixin from "./GroupMixin";
+import filterOutUndefined from "../Core/filterOutUndefined";
+import TerriaError from "../Core/TerriaError";
+import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 
 class FunctionJobStratum extends LoadableStratum(CatalogFunctionJobTraits) {
   constructor(
@@ -45,6 +55,11 @@ class FunctionJobStratum extends LoadableStratum(CatalogFunctionJobTraits) {
       content = "Job is inactive";
     } else if (this.catalogFunctionJob.jobStatus === "running") {
       content = "Job is running...";
+      // If job is running, but not polling - then warn user to not leave the page
+      if (!this.catalogFunctionJob.refreshEnabled) {
+        content +=
+          "\n\nPlease do not leave this page &mdash; or results may be lost";
+      }
     } else if (this.catalogFunctionJob.jobStatus === "finished") {
       if (this.catalogFunctionJob.downloadedResults) {
         content = "Job is finished";
@@ -59,12 +74,16 @@ class FunctionJobStratum extends LoadableStratum(CatalogFunctionJobTraits) {
 
   @computed
   get description() {
-    return `This is the result of invoking ${this.catalogFunctionJob.name} with the input parameters below.`;
+    if (this.catalogFunctionJob.jobStatus === "finished")
+      return `This is the result of invoking ${this.catalogFunctionJob.name} with the input parameters below.`;
   }
 
   @computed
   get info() {
-    if (isDefined(this.catalogFunctionJob.parameters)) {
+    if (
+      isDefined(this.catalogFunctionJob.parameters) &&
+      Object.values(this.catalogFunctionJob.parameters).length > 0
+    ) {
       const inputsSection =
         '<table class="cesium-infoBox-defaultTable">' +
         Object.keys(this.catalogFunctionJob.parameters).reduce(
@@ -100,10 +119,17 @@ type CatalogFunctionJobMixin = Model<CatalogFunctionJobTraits>;
 function CatalogFunctionJobMixin<
   T extends Constructor<CatalogFunctionJobMixin>
 >(Base: T) {
-  abstract class CatalogFunctionJobMixin extends AutoRefreshingMixin(
-    CatalogMemberMixin(Base)
+  abstract class CatalogFunctionJobMixin extends GroupMixin(
+    AutoRefreshingMixin(CatalogMemberMixin(Base))
   ) {
-    private init = false;
+    constructor(...args: any[]) {
+      super(...args);
+
+      // Add FunctionJobStratum to strata
+      runInAction(() => {
+        this.strata.set(FunctionJobStratum.name, new FunctionJobStratum(this));
+      });
+    }
 
     /**
      *
@@ -117,69 +143,60 @@ function CatalogFunctionJobMixin<
         const finished = await this._invoke();
         if (finished) {
           this.setTrait(CommonStrata.user, "jobStatus", "finished");
+          this.onJobFinish(true);
         } else {
           this.setTrait(CommonStrata.user, "refreshEnabled", true);
         }
       } catch (error) {
         this.setTrait(CommonStrata.user, "jobStatus", "error");
+        this.setOnError(error);
         throw error; // throw error to CatalogFunctionMixin
       }
     }
 
-    private async onJobStatusChanged() {
+    private downloadingResults = false;
+
+    /**
+     * This handles changes in jobStatus:
+     * - if finished -> download results
+     */
+    private async onJobFinish(addToWorkbench = this.inWorkbench) {
       // Download results when finished
       if (
         this.jobStatus === "finished" &&
-        !this._downloadedResults &&
+        !this.downloadedResults &&
         !this.downloadingResults
       ) {
         this.downloadingResults = true;
-        try {
-          this.results = (await this.downloadResults()) || [];
-          this.results.forEach(result => {
-            this.terria.workbench.add(result);
-            this.terria.catalog.userAddedDataGroup.add(
-              CommonStrata.user,
-              result
-            );
-          });
-          runInAction(() => (this._downloadedResults = true));
+        this.results = (await this.downloadResults()) || [];
+        this.results.forEach(result => {
+          if (Mappable.is(result))
+            result.setTrait(CommonStrata.user, "show", true);
+          if (addToWorkbench) this.terria.workbench.add(result);
 
-          this.downloadingResults = false;
-        } catch (error) {
-          this.downloadingResults = false;
-          throw error;
-        }
-        // Poll for results when running
-      } else if (this.jobStatus === "running" && !this.refreshEnabled) {
-        runInAction(() =>
-          this.setTrait(CommonStrata.user, "refreshEnabled", true)
-        );
+          this.terria.addModel(result);
+        });
+
+        runInAction(() => {
+          this.setTrait(
+            CommonStrata.user,
+            "members",
+            filterOutUndefined(this.results.map(result => result.uniqueId))
+          );
+          this.setTrait(CommonStrata.user, "downloadedResults", true);
+        });
+        this.downloadingResults = false;
       }
     }
 
     /**
      * Job result CatalogMembers - set from calling {@link CatalogFunctionJobMixin#downloadResults}
      */
+    @observable
     public results: CatalogMemberMixin.CatalogMemberMixin[] = [];
 
     /**
-     * Flag to make sure results aren't downloaded multiple times
-     */
-    private downloadingResults = false;
-
-    /**
-     * Flag if results have been downloaded. This is used to recover results after sharing a Catalog Function - eg if `jobStatus = "finished"` and `_downloadedResults = false`, then we download results!
-     */
-    @observable protected _downloadedResults = false;
-
-    @computed
-    get downloadedResults() {
-      return this._downloadedResults;
-    }
-
-    /**
-     * Called when `jobStatus` is `finished`, and `!_downloadedResults`
+     * Called when `jobStatus` is `finished`, and `!downloadedResults`
      * @returns catalog members to add to workbench
      */
     abstract async downloadResults(): Promise<
@@ -205,11 +222,6 @@ function CatalogFunctionJobMixin<
      * This function adapts AutoRefreshMixin's refreshData with this Mixin's pollForResults - adding the boolean return value which triggers refresh disable
      */
     refreshData() {
-      if (this.jobStatus !== "running") {
-        runInAction(() =>
-          this.setTrait(CommonStrata.user, "jobStatus", "running")
-        );
-      }
       if (this.pollingForResults) {
         return;
       }
@@ -223,6 +235,7 @@ function CatalogFunctionJobMixin<
               this.setTrait(CommonStrata.user, "jobStatus", "finished");
               this.setTrait(CommonStrata.user, "refreshEnabled", false);
             });
+            this.onJobFinish(true);
           }
           this.pollingForResults = false;
         })
@@ -237,9 +250,23 @@ function CatalogFunctionJobMixin<
     }
 
     @action
-    protected setOnError(errorMessage?: string) {
+    protected setOnError(error?: any) {
+      let errorMessage: string | undefined;
+      if (error instanceof TerriaError) {
+        errorMessage = error.message;
+      }
+
+      if (typeof error !== "string") {
+        if (
+          error instanceof RequestErrorEvent &&
+          typeof error.response?.detail === "string"
+        )
+          errorMessage = error.response.detail;
+      }
+
       isDefined(errorMessage) &&
         this.setTrait(CommonStrata.user, "logs", [...this.logs, errorMessage]);
+
       this.setTrait(
         CommonStrata.user,
         "shortReport",
@@ -249,68 +276,26 @@ function CatalogFunctionJobMixin<
       );
 
       const errorInfo = createStratumInstance(InfoSectionTraits, {
-        name: "Error Details",
-        content: errorMessage || "The reason for failure is unknown."
+        name: `${this.typeName || this.type} invocation failed.`,
+        content: errorMessage ?? "The reason for failure is unknown."
       });
 
       const info = this.getTrait(CommonStrata.user, "info");
       if (isDefined(info)) {
         info.push(errorInfo);
+      } else {
+        this.setTrait(CommonStrata.user, "info", [errorInfo]);
       }
     }
 
     get mapItems(): MapItem[] {
       return [];
     }
-    protected async forceLoadMapItems() {
-      return this.loadMetadata();
-    }
+    protected async forceLoadMapItems() {}
 
-    protected async forceLoadMetadata() {
-      if (!this.init) {
-        this.init = true;
+    protected async forceLoadMetadata() {}
 
-        // Add FunctionJobStratum to strata
-        runInAction(() => {
-          this.strata.set(
-            FunctionJobStratum.name,
-            new FunctionJobStratum(this)
-          );
-        });
-
-        // Handle changes in job status
-        await this.onJobStatusChanged();
-        reaction(() => this.jobStatus, this.onJobStatusChanged.bind(this));
-
-        // If this is showing in workbench, make sure result layers are also in workbench
-        reaction(
-          () => this.inWorkbench,
-          inWorkbench => {
-            if (inWorkbench) {
-              this.results.forEach(
-                result =>
-                  this.terria.workbench.contains(result) ||
-                  runInAction(() => this.terria.workbench.add(result))
-              );
-            }
-          }
-        );
-
-        // Propagate show to result layer's show
-        reaction(
-          () => this.show,
-          () => {
-            this.results.forEach(result => {
-              if (AsyncMappableMixin.isMixedInto(result)) {
-                result.setTrait(CommonStrata.user, "show", this.show);
-              }
-              this.terria.workbench.add(result);
-            });
-          }
-        );
-      }
-      return;
-    }
+    protected async forceLoadMembers() {}
 
     get hasCatalogFunctionJobMixin() {
       return true;

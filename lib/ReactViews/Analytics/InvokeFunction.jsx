@@ -67,25 +67,31 @@ const InvokeFunction = observer(
       }
     },
 
-    async submit() {
-      try {
-        const submitted = await this.props.previewed.submitJob();
-
-        if (submitted) {
+    submit() {
+      this.props.previewed.submitJob().catch(e => {
+        if (e instanceof TerriaError) {
           runInAction(() => {
-            // Close modal window
-            this.props.viewState.explorerPanelIsVisible = false;
-            // mobile switch to nowvewing
-            this.props.viewState.switchMobileView(
-              this.props.viewState.mobileViewOptions.preview
-            );
+            this.props.terria.notification.raiseEvent({
+              title: e.title,
+              message: e.message,
+              confirmText: "Ok",
+              confirmAction: () =>
+                runInAction(
+                  () => (this.props.viewState.explorerPanelIsVisible = true)
+                )
+            });
           });
         }
-      } catch (e) {
-        if (e instanceof TerriaError) {
-          this.props.previewed.terria.error.raiseEvent(e);
-        }
-      }
+      });
+
+      runInAction(() => {
+        // Close modal window
+        this.props.viewState.explorerPanelIsVisible = false;
+        // mobile switch to nowvewing
+        this.props.viewState.switchMobileView(
+          this.props.viewState.mobileViewOptions.preview
+        );
+      });
     },
 
     getParams() {

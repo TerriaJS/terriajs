@@ -242,7 +242,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
     // Check if finished
     if (this.checkStatus(json)) {
       // set result
-      this.setTrait(CommonStrata.user, "wpsResponse", json);
+      runInAction(() => this.setTrait(CommonStrata.user, "wpsResponse", json));
       return true;
     }
 
@@ -387,6 +387,9 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
       this.setTrait(CommonStrata.user, "shortReportSections", reports);
     });
 
+    console.log(this);
+    console.log(results);
+
     return results;
   }
 
@@ -442,7 +445,9 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
       {
         ...itemJson,
         id: createGuid()
-      }
+      },
+      false,
+      false
     );
     return catalogItem;
   }

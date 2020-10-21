@@ -9,6 +9,7 @@ import Model from "../Models/Model";
 import CatalogFunctionTraits from "../Traits/CatalogFunctionTraits";
 import CatalogFunctionJobMixin from "./CatalogFunctionJobMixin";
 import CatalogMemberMixin from "./CatalogMemberMixin";
+import addToWorkbench from "../Models/addToWorkbench";
 const sprintf = require("terriajs-cesium/Source/ThirdParty/sprintf").default;
 
 type CatalogFunctionMixin = Model<CatalogFunctionTraits>;
@@ -69,11 +70,11 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
 
         await newJob.loadMetadata();
 
-        await newJob.invoke();
-
-        // Only add model if successfully invokes (doesn't throw exception)
         this.terria.addModel(newJob);
-        await addUserCatalogMember(this.terria, newJob, { enable: true });
+        this.terria.catalog.userAddedDataGroup.add(CommonStrata.user, newJob);
+        addToWorkbench(this.terria.workbench, newJob);
+
+        await newJob.invoke();
 
         return newJob;
       } catch (error) {

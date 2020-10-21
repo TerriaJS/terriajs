@@ -15,7 +15,8 @@ export default function upsertModelFromJson(
   model: BaseModel | undefined,
   stratumName: string,
   json: any,
-  replaceStratum: boolean = false
+  replaceStratum: boolean = false,
+  addModelToTerria: boolean = true
 ): BaseModel {
   if (model === undefined) {
     let uniqueId = json.id;
@@ -64,7 +65,7 @@ export default function upsertModelFromJson(
         }
       }
 
-      if (model.type !== StubCatalogItem.type) {
+      if (model.type !== StubCatalogItem.type && addModelToTerria) {
         model.terria.addModel(model);
       }
     }
