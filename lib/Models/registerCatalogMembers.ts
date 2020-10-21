@@ -40,9 +40,11 @@ import WebMapTileServiceCatalogGroup from "./WebMapTileServiceCatalogGroup";
 import WebMapTileServiceCatalogItem from "./WebMapTileServiceCatalogItem";
 import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFunction";
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
+import RootCatalogGroup from "./RootCatalogGroup";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
+  CatalogMemberFactory.register(RootCatalogGroup.type, RootCatalogGroup);
   CatalogMemberFactory.register(StubCatalogItem.type, StubCatalogItem);
   CatalogMemberFactory.register(
     WebMapServiceCatalogItem.type,

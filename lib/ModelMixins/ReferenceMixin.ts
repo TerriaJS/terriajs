@@ -3,6 +3,7 @@ import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import Model, { BaseModel, ModelInterface } from "../Models/Model";
+import RootCatalogGroup from "../Models/RootCatalogGroup";
 import ModelTraits from "../Traits/ModelTraits";
 
 type RequiredTraits = ModelTraits;
@@ -30,6 +31,7 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
       return this.forceLoadReference(previousTarget).then(target => {
         if (
           target &&
+          target.type !== RootCatalogGroup.type &&
           (target.sourceReference !== this || target.uniqueId !== this.uniqueId)
         ) {
           throw new DeveloperError(

@@ -5,6 +5,7 @@ import CommonStrata from "../../lib/Models/CommonStrata";
 import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
 import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
 import MagdaReference from "../../lib/Models/MagdaReference";
+import RootCatalogGroup from "../../lib/Models/RootCatalogGroup";
 import Terria from "../../lib/Models/Terria";
 import StubCatalogItem from "../../lib/Models/StubCatalogItem";
 import { BaseModel } from "../../lib/Models/Model";
@@ -32,6 +33,45 @@ describe("MagdaReference", function() {
       }
     }
   };
+  const recordRootGroup = {
+    id: "test-group",
+    name: "Test Group",
+    aspects: {
+      group: recordGroupWithOneCsv.aspects.group,
+      "terria-init": {
+        corsDomains: ["a.b.c", "d.e.f"]
+      },
+      "terria-config": {
+        parameters: { mochi: "neko" }
+      }
+    }
+  };
+
+  it("dereferences to a root group if there are map-config related aspects", function(done) {
+    const terria = new Terria();
+    const originalIdFromMagda = "some-magda-defined-id";
+
+    const model = new MagdaReference(originalIdFromMagda, terria);
+    model.setTrait(CommonStrata.definition, "recordId", originalIdFromMagda);
+    model.setTrait(CommonStrata.definition, "magdaRecord", recordRootGroup);
+
+    model
+      .loadReference()
+      .then(() => {
+        expect(model.target instanceof RootCatalogGroup).toBe(true);
+        const group = model.target as RootCatalogGroup;
+        expect(group.isOpen).toBe(false);
+        expect(group.members.length).toEqual(1);
+
+        // target should be the rootgroupid
+        expect(group.uniqueId).toEqual(RootCatalogGroup.rootGroupId);
+        expect(group.uniqueId).not.toEqual(originalIdFromMagda);
+        // however we should still be able to look at the reference via the ID..
+        expect(model.uniqueId).toEqual(originalIdFromMagda);
+      })
+      .then(done)
+      .catch(done.fail);
+  });
 
   it("can dereference to a group", function(done) {
     const terria = new Terria();

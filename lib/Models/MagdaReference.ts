@@ -337,10 +337,17 @@ export default class MagdaReference extends AccessControlMixin(
     }
 
     const terriaAspect = aspects.terria;
-    const type =
+    const typeLookup =
       isJsonObject(terriaAspect) && isJsonString(terriaAspect.type)
         ? terriaAspect.type
         : "group";
+
+    // Check if it's a "map-config" group being created (i.e. root group)
+    // const shouldBeRootGroup =
+    //   isJsonObject(aspects["terria-init"]) ||
+    //   isJsonObject(aspects["terria-config"]);
+    // const type = shouldBeRootGroup ? "root-group" : typeLookup;
+    const type = typeLookup;
 
     const ModelClass = CatalogMemberFactory.find(type);
     if (ModelClass === undefined) {
