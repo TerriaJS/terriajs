@@ -255,7 +255,9 @@ class Chart extends React.Component {
         ]}
         onZoom={zoomedScale => this.setZoomedXScale(zoomedScale)}
       >
-        <Legends chartItems={this.chartItems} />
+        <Legends
+          chartItems={this.chartItems.length > 4 ? [] : this.chartItems}
+        />
         <div style={{ position: "relative" }}>
           <svg
             width="100%"
@@ -276,12 +278,6 @@ class Chart extends React.Component {
                 top={this.plotHeight + 1}
                 scale={this.xScale}
                 label={xAxis.units || (xAxis.scale === "time" && "Date")}
-                labelProps={{
-                  fill: labelColor,
-                  fontSize: 12,
-                  textAnchor: "middle",
-                  fontFamily: "Arial"
-                }}
               />
               <For each="y" index="i" of={this.yAxes}>
                 <YAxis
@@ -368,7 +364,7 @@ class Plot extends React.Component {
         case "momentPoints": {
           // Find a basis item to stick the points on, if we can't find one, we
           // vertically center the points
-          const basisItem = chartItems.find(
+          const basisItemIndex = chartItems.findIndex(
             item => item.type === "line" && item.xAxis.scale === "time"
           );
           return (
@@ -377,8 +373,9 @@ class Plot extends React.Component {
               ref={this.chartRefs[i]}
               id={sanitizeIdString(chartItem.key)}
               chartItem={chartItem}
-              basisItem={basisItem}
               scales={initialScales[i]}
+              basisItem={chartItems[basisItemIndex]}
+              basisItemScales={initialScales[basisItemIndex]}
             />
           );
         }
@@ -399,6 +396,12 @@ class Plot extends React.Component {
 }
 
 class XAxis extends React.PureComponent {
+  static propTypes = {
+    top: PropTypes.number.isRequired,
+    scale: PropTypes.func.isRequired,
+    label: PropTypes.bool.isRequired
+  };
+
   render() {
     return (
       <AxisBottom
@@ -410,6 +413,12 @@ class XAxis extends React.PureComponent {
           fontSize: 12,
           fontFamily: "Arial"
         })}
+        labelProps={{
+          fill: labelColor,
+          fontSize: 12,
+          textAnchor: "middle",
+          fontFamily: "Arial"
+        }}
         {...this.props}
       />
     );

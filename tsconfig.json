@@ -11,7 +11,9 @@
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
         "outDir": "ts-out",
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "typeRoots": ["./lib/ThirdParty"],
+        "types": ["terriajs-cesium"]
     },
     "include": [
         "./lib/**/*",

@@ -6,10 +6,9 @@ import createReactClass from "create-react-class";
 
 import PropTypes from "prop-types";
 
-import ObserveModelMixin from "../ObserveModelMixin";
 import PointParameterEditor from "./PointParameterEditor";
 import LineParameterEditor from "./LineParameterEditor";
-import RectangleParameterEditor from "./RectangleParameterEditor";
+// import RectangleParameterEditor from "./RectangleParameterEditor";
 import PolygonParameterEditor from "./PolygonParameterEditor";
 import RegionParameterEditor from "./RegionParameterEditor";
 import RegionTypeParameterEditor from "./RegionTypeParameterEditor";
@@ -26,7 +25,6 @@ import Styles from "./parameter-editors.scss";
 
 const ParameterEditor = createReactClass({
   displayName: "ParameterEditor",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     parameter: PropTypes.object,
@@ -118,27 +116,27 @@ ParameterEditor.parameterTypeConverters = [
       }
     }
   },
-  {
-    id: "rectangle",
-    parameterTypeToDiv: function RectangleParameterToDiv(
-      type,
-      parameterEditor
-    ) {
-      if (type === this.id) {
-        return (
-          <div>
-            {parameterEditor.renderLabel()}
-            <RectangleParameterEditor
-              previewed={parameterEditor.props.previewed}
-              viewState={parameterEditor.props.viewState}
-              parameter={parameterEditor.props.parameter}
-              parameterViewModel={parameterEditor.props.parameterViewModel}
-            />
-          </div>
-        );
-      }
-    }
-  },
+  // {
+  //   id: "rectangle",
+  //   parameterTypeToDiv: function RectangleParameterToDiv(
+  //     type,
+  //     parameterEditor
+  //   ) {
+  //     if (type === this.id) {
+  //       return (
+  //         <div>
+  //           {parameterEditor.renderLabel()}
+  //           <RectangleParameterEditor
+  //             previewed={parameterEditor.props.previewed}
+  //             viewState={parameterEditor.props.viewState}
+  //             parameter={parameterEditor.props.parameter}
+  //             parameterViewModel={parameterEditor.props.parameterViewModel}
+  //           />
+  //         </div>
+  //       );
+  //     }
+  //   }
+  // },
   {
     id: "polygon",
     parameterTypeToDiv: function PolygonParameterToDiv(type, parameterEditor) {

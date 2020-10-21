@@ -54,6 +54,9 @@ Option                      | Meaning
 `"useCesiumIonBingImagery"` | True to use Bing Maps from Cesium ion (Cesium World Imagery). By default, Ion will be used, unless the `bingMapsKey` property is specified, in which case that will be used instead. To disable the Bing Maps layers entirely, set this property to false and set `bingMapsKey` to null.
 `"cesiumIonAccessToken"`    | The access token to use with Cesium ion. If `"useCesiumIonTerrain"` is true and this property is not specified, the Cesium default Ion key will be used. It is a violation of the Ion terms of use to use the default key in a deployed application.
 `"cesiumTerrainUrl"`        | The URL to use for Cesium terrain in the 3D model. This property is ignored if `"useCesiumIonTerrain"` is set to true.
+`"rollbarAccessToken"`      | Your `post_client_item` from Rollbar - as of right now, TerriaMap also needs to be modified such that you construct `RollbarErrorProvider` in `index.js`
+`"helpContent"`             | The content to be displayed in the help panel
+
 
 ## Advanced options
 
@@ -64,5 +67,4 @@ Option                      | Meaning | Default
 `"conversionServiceBaseUrl"`    | URL of OGR2OGR conversion service (part of TerriaJS-Server). | `convert/`
 `"corsProxyBaseUrl"`            | URL of CORS proxy service (part of TerriaJS-Server)| `proxy/`
 `"proj4ServiceBaseUrl"`         | URL of Proj4 projection lookup service (part of TerriaJS-Server) | `proj4/`
-`"proxyableDomainsUrl"`         | URL of list of domains which the CORS proxy service will allow to be proxied. | `proxyabledomains/`
-`"regionMappingDefinitionsUrl"` | URL of the JSON file that defines region mapping for CSV files. | `data/regionMapping.json`
+`"regionMappingDefinitionsUrl"` | URL of the JSON file that defines region mapping for CSV files. | `build/TerriaJS/data/regionMapping.json`

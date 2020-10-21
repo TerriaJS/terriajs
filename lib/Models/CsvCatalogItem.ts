@@ -2,7 +2,6 @@ import i18next from "i18next";
 import { runInAction, computed } from "mobx";
 import TerriaError from "../Core/TerriaError";
 import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../ModelMixins/TableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -15,6 +14,8 @@ import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
 import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import isDefined from "../Core/isDefined";
+import { BaseModel } from "./Model";
+import ExportableMixin from "../ModelMixins/ExportableMixin";
 
 // Types of CSVs:
 // - Points - Latitude and longitude columns or address
@@ -27,11 +28,11 @@ import isDefined from "../Core/isDefined";
 // - points, no ID, time -> "blips" with a duration (perhaps provided by another column)
 //
 
-const automaticTableStylesStratumName = "automaticTableStyles";
+const automaticTableStylesStratumName = TableAutomaticStylesStratum.stratumName;
 
-export default class CsvCatalogItem extends TableMixin(
-  AsyncChartableMixin(
-    AsyncMappableMixin(
+export default class CsvCatalogItem extends AsyncChartableMixin(
+  TableMixin(
+    ExportableMixin(
       AutoRefreshingMixin(
         UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
       )
@@ -44,8 +45,12 @@ export default class CsvCatalogItem extends TableMixin(
 
   private _csvFile?: File;
 
-  constructor(id: string | undefined, terria: Terria) {
-    super(id, terria);
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference: BaseModel | undefined
+  ) {
+    super(id, terria, sourceReference);
     this.strata.set(
       automaticTableStylesStratumName,
       new TableAutomaticStylesStratum(this)
@@ -66,16 +71,46 @@ export default class CsvCatalogItem extends TableMixin(
   }
 
   @computed
+  get _canExportData() {
+    return (
+      isDefined(this._csvFile) ||
+      isDefined(this.csvString) ||
+      isDefined(this.url)
+    );
+  }
+
+  @computed
+  get cacheDuration() {
+    return super.cacheDuration || "1d";
+  }
+
+  protected async _exportData() {
+    if (isDefined(this._csvFile)) {
+      return {
+        name: (this.name || this.uniqueId)!,
+        file: this._csvFile
+      };
+    }
+    if (isDefined(this.csvString)) {
+      return {
+        name: (this.name || this.uniqueId)!,
+        file: new Blob([this.csvString])
+      };
+    }
+
+    if (isDefined(this.url)) {
+      return this.url;
+    }
+
+    throw new TerriaError({
+      sender: this,
+      message: "No data available to download."
+    });
+  }
+
+  @computed
   get canZoomTo() {
-    const s = this.strata.get(automaticTableStylesStratumName);
-    // Zooming to tables with lat/lon columns works
-    if (
-      isDefined(s) &&
-      isDefined(s.defaultStyle) &&
-      s.defaultStyle.latitudeColumn !== undefined
-    )
-      return true;
-    return false;
+    return this.activeTableStyle.latitudeColumn !== undefined;
   }
 
   /*
@@ -106,7 +141,7 @@ export default class CsvCatalogItem extends TableMixin(
       return;
     }
 
-    Csv.parseUrl(proxyCatalogItemUrl(this, this.refreshUrl, "1d"), true).then(
+    Csv.parseUrl(proxyCatalogItemUrl(this, this.refreshUrl), true).then(
       dataColumnMajor => {
         runInAction(() => {
           if (this.polling.shouldReplaceData) {
@@ -126,10 +161,10 @@ export default class CsvCatalogItem extends TableMixin(
   protected forceLoadTableData(): Promise<string[][]> {
     if (this.csvString !== undefined) {
       return Csv.parseString(this.csvString, true);
-    } else if (this.url !== undefined) {
-      return Csv.parseUrl(proxyCatalogItemUrl(this, this.url, "1d"), true);
     } else if (this._csvFile !== undefined) {
       return Csv.parseFile(this._csvFile, true);
+    } else if (this.url !== undefined) {
+      return Csv.parseUrl(proxyCatalogItemUrl(this, this.url), true);
     } else {
       return Promise.reject(
         new TerriaError({

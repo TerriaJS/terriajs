@@ -1,5 +1,6 @@
 import classNames from "classnames";
-import { runInAction } from "mobx";
+import { action, observable, runInAction } from "mobx";
+import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
@@ -9,10 +10,15 @@ import Dropdown from "../../Generic/Dropdown";
 import Styles from "./chart-expand-and-download-buttons.scss";
 import Icon from "../../Icon";
 import defined from "terriajs-cesium/Source/Core/defined";
+import filterOutUndefined from "../../../Core/filterOutUndefined";
 
+@observer
 class ChartExpandAndDownloadButtons extends React.Component {
+  @observable sourceItems = [];
+
   static propTypes = {
-    sourceItems: PropTypes.array.isRequired,
+    terria: PropTypes.object.isRequired,
+    sourceItems: PropTypes.array.isRequired, // Array of items or Promise returning item
     sourceNames: PropTypes.array,
     canDownload: PropTypes.bool,
     downloads: PropTypes.array,
@@ -21,25 +27,52 @@ class ChartExpandAndDownloadButtons extends React.Component {
     t: PropTypes.func.isRequired
   };
 
+  @action
   expandButton = () => {
-    expandItem(this.props, this.props.sourceItems.length - 1);
+    expandItem(
+      this.sourceItems,
+      this.sourceItems.length - 1,
+      this.props.terria
+    );
   };
 
+  @action
   expandDropdown = (selected, sourceIndex) => {
-    expandItem(this.props, sourceIndex);
+    expandItem(this.sourceItems, sourceIndex, this.props.terria);
   };
+
+  resolveSourceItems() {
+    Promise.all(
+      this.props.sourceItems.map(sourceItem => Promise.resolve(sourceItem))
+    ).then(
+      action(results => {
+        this.sourceItems = filterOutUndefined(results);
+      })
+    );
+  }
+
+  componentDidMount() {
+    this.resolveSourceItems();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.sourceItems !== prevProps.sourceItems) {
+      this.resolveSourceItems();
+    }
+  }
 
   render() {
-    if (this.props.sourceItems.length === 0) {
+    if (this.sourceItems.length === 0) {
       return null;
     }
 
     // The downloads and download names default to the sources and source names if not defined.
-    const downloads = runInAction(() => {
-      return (
-        this.props.downloads || this.props.sourceItems.map(item => item.url)
-      );
-    });
+    let downloads = filterOutUndefined(
+      runInAction(() => {
+        return this.props.downloads || this.sourceItems.map(item => item.url);
+      })
+    );
+    downloads = downloads.length > 0 ? downloads : undefined;
     const downloadNames = this.props.downloadNames || this.props.sourceNames;
     let downloadButton;
     const { t } = this.props;
@@ -130,13 +163,12 @@ class ChartExpandAndDownloadButtons extends React.Component {
  * We also remove any existing sourceItems from workbench so that only one
  * source is shown at any time.
  */
-function expandItem(props, sourceIndex) {
-  const terria = props.terria;
+function expandItem(sourceItems, sourceIndex, terria) {
   const workbench = terria.workbench;
-  const sourceItem = props.sourceItems[sourceIndex];
+  const sourceItem = sourceItems[sourceIndex];
 
   // remove any source item that is already in the workbench
-  props.sourceItems.forEach(sourceItem => {
+  sourceItems.forEach(sourceItem => {
     workbench.items.forEach(workbenchItem => {
       if (sourceItem.uniqueId === workbenchItem.uniqueId) {
         workbench.remove(workbenchItem);
@@ -144,6 +176,9 @@ function expandItem(props, sourceIndex) {
     });
   });
   workbench.add(sourceItem);
+  try {
+    terria.addModel(sourceItem);
+  } catch {}
   runInAction(() =>
     raiseErrorOnRejectedPromise(terria, sourceItem.loadChartItems())
   );

@@ -6,8 +6,12 @@ import UrlTraits from "../Traits/UrlTraits";
 
 type UrlModel = Model<UrlTraits>;
 
-export default function UrlMixin<T extends Constructor<UrlModel>>(Base: T) {
+function UrlMixin<T extends Constructor<UrlModel>>(Base: T) {
   class UrlMixin extends Base {
+    get hasUrlMixin() {
+      return true;
+    }
+
     @computed
     get uri(): uri.URI | undefined {
       if (this.url === undefined) {
@@ -19,3 +23,12 @@ export default function UrlMixin<T extends Constructor<UrlModel>>(Base: T) {
 
   return UrlMixin;
 }
+
+namespace UrlMixin {
+  export interface UrlMixin extends InstanceType<ReturnType<typeof UrlMixin>> {}
+  export function isMixedInto(model: any): model is UrlMixin {
+    return model && model.hasUrlMixin;
+  }
+}
+
+export default UrlMixin;

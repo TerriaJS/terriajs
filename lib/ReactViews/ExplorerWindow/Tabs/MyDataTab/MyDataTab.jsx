@@ -4,6 +4,7 @@ import { observer } from "mobx-react";
 import classNames from "classnames";
 import createReactClass from "create-react-class";
 import Icon from "../../../Icon.jsx";
+import Box from "../../../../Styled/Box.jsx";
 import PropTypes from "prop-types";
 
 import DataCatalog from "../../../DataCatalog/DataCatalog.jsx";
@@ -21,6 +22,9 @@ const MyDataTab = observer(
     propTypes: {
       terria: PropTypes.object,
       viewState: PropTypes.object,
+      localDataTypes: PropTypes.arrayOf(PropTypes.object),
+      remoteDataTypes: PropTypes.arrayOf(PropTypes.object),
+      onFileAddFinished: PropTypes.func.isRequired,
       t: PropTypes.func.isRequired
     },
 
@@ -69,6 +73,16 @@ const MyDataTab = observer(
                 className={classNames(Styles.tabListBtn, {
                   [Styles.isActive]: this.state.activeTab === tab.id
                 })}
+                css={`
+                  color: ${p => p.theme.colorPrimary};
+                  &:hover,
+                  &:focus {
+                    color: ${p => p.theme.grey};
+                  }
+                  svg {
+                    fill: ${p => p.theme.colorPrimary};
+                  }
+                `}
               >
                 <Icon glyph={Icon.GLYPHS[tab.id]} />
                 {tab.caption}
@@ -94,7 +108,7 @@ const MyDataTab = observer(
 
       return (
         <div className={Styles.dataTypeTab}>
-          <div>
+          <div className={Styles.dndBoxInfo}>
             <Trans i18nKey="addData.infoText">
               <div>Drag and drop a file here to view it locally on the map</div>
               <div>(it won’t be saved or uploaded to the internet)</div>
@@ -112,7 +126,7 @@ const MyDataTab = observer(
       const showTwoColumn = this.hasUserAddedData() & !this.state.activeTab;
       const { t } = this.props;
       return (
-        <div className={Styles.root}>
+        <Box className={Styles.root}>
           <div
             className={classNames({
               [Styles.leftCol]: showTwoColumn,
@@ -124,6 +138,16 @@ const MyDataTab = observer(
                 type="button"
                 onClick={this.resetTab}
                 className={Styles.btnBackToMyData}
+                css={`
+                  color: ${p => p.theme.colorPrimary};
+                  &:hover,
+                  &:focus {
+                    border: 1px solid ${p => p.theme.colorPrimary};
+                  }
+                  svg {
+                    fill: ${p => p.theme.colorPrimary};
+                  }
+                `}
               >
                 <Icon glyph={Icon.GLYPHS.left} />
                 {t("addData.back")}
@@ -133,10 +157,13 @@ const MyDataTab = observer(
                 viewState={this.props.viewState}
                 activeTab={this.state.activeTab}
                 resetTab={this.resetTab}
+                localDataTypes={this.props.localDataTypes}
+                remoteDataTypes={this.props.remoteDataTypes}
+                onFileAddFinished={this.props.onFileAddFinished}
               />
             </If>
             <If condition={showTwoColumn}>
-              <div className={Styles.addedData}>
+              <Box flexShrinkZero column>
                 <p className={Styles.explanation}>
                   <Trans i18nKey="addData.note">
                     <strong>Note: </strong>Data added in this way is not saved
@@ -155,18 +182,20 @@ const MyDataTab = observer(
                     terria={this.props.terria}
                   />
                 </ul>
-              </div>
+              </Box>
             </If>
             <If condition={!this.state.activeTab}>{this.renderPromptBox()}</If>
           </div>
           <If condition={showTwoColumn}>
-            <DataPreview
-              terria={this.props.terria}
-              viewState={this.props.viewState}
-              previewed={this.props.viewState.userDataPreviewedItem}
-            />
+            <Box styledWidth="60%" wordBreak="break-all">
+              <DataPreview
+                terria={this.props.terria}
+                viewState={this.props.viewState}
+                previewed={this.props.viewState.userDataPreviewedItem}
+              />
+            </Box>
           </If>
-        </div>
+        </Box>
       );
     }
   })

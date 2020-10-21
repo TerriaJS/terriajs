@@ -16,6 +16,8 @@ import ViewerMode from "../../../Models/ViewerMode";
 import ViewState from "../../../ReactViewModels/ViewState";
 import Icon from "../../Icon";
 import MenuPanel from "../../StandardUserInterface/customizable/MenuPanel";
+// import { provideRef } from "../../HOCs/provideRef";
+import withTerriaRef from "../../HOCs/withTerriaRef";
 import DropdownStyles from "./panel.scss";
 import Styles from "./setting-panel.scss";
 // The basemap and viewer setting panel
@@ -30,6 +32,7 @@ import Styles from "./setting-panel.scss";
 class SettingPanel extends React.Component {
   static propTypes = {
     terria: PropTypes.object.isRequired,
+    refFromHOC: PropTypes.object,
     // allBaseMaps: PropTypes.array,
     viewState: PropTypes.object.isRequired,
     t: PropTypes.func.isRequired
@@ -222,6 +225,7 @@ class SettingPanel extends React.Component {
     return (
       <MenuPanel
         theme={dropdownTheme}
+        btnRef={this.props.refFromHOC}
         btnTitle={t("settingPanel.btnTitle")}
         btnText={t("settingPanel.btnText")}
         viewState={this.props.viewState}
@@ -456,4 +460,9 @@ class SettingPanel extends React.Component {
   }
 }
 
-export default withTranslation()(SettingPanel);
+export const SETTING_PANEL_NAME = "MenuBarMapSettingsButton";
+export default withTranslation()(
+  withTerriaRef(SettingPanel, SETTING_PANEL_NAME)
+);
+// export default withTranslation()(SettingPanelWithRef);
+// export default withTranslation()(SettingPanelWithRef);

@@ -8,6 +8,20 @@ import { BaseModel } from "../Models/Model";
 export type ProviderCoords = { x: number; y: number; level: number };
 export type ProviderCoordsMap = { [url: string]: ProviderCoords };
 
+export function isProviderCoords(obj: any): obj is ProviderCoords {
+  if (obj) {
+    return (
+      Number.isFinite(obj.x) &&
+      Number.isFinite(obj.y) &&
+      Number.isFinite(obj.level)
+    );
+  } else return false;
+}
+
+export function isProviderCoordsMap(obj: any): obj is ProviderCoordsMap {
+  return Object.keys(obj).every(url => isProviderCoords(obj[url]));
+}
+
 /**
  * Holds the vector and raster features that the user picked by clicking the mouse on the map.
  */

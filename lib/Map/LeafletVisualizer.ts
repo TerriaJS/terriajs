@@ -10,11 +10,14 @@ import EntityCollection from "terriajs-cesium/Source/DataSources/EntityCollectio
 import EntityCluster from "terriajs-cesium/Source/DataSources/EntityCluster";
 import isDefined from "../Core/isDefined";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import L, { LatLngBounds } from "leaflet";
+import L, { LatLngBounds, PolylineOptions, LatLngBoundsLiteral } from "leaflet";
 import LeafletScene from "./LeafletScene";
 import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
 import PolylineGlowMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineGlowMaterialProperty";
+import PolylineDashMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineDashMaterialProperty";
 import Property from "terriajs-cesium/Source/DataSources/Property";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import { getLineStyleLeaflet } from "../Models/esriLineStyle";
 
 const destroyObject = require("terriajs-cesium/Source/Core/destroyObject")
   .default;
@@ -39,6 +42,14 @@ interface PolygonDetails {
   lastOutlineColor: Color;
 }
 
+interface RectangleDetails {
+  layer?: L.Rectangle;
+  lastFill?: boolean;
+  lastFillColor: Color;
+  lastOutline?: boolean;
+  lastOutlineColor: Color;
+}
+
 interface BillboardDetails {
   layer?: L.Marker;
 }
@@ -57,6 +68,7 @@ interface EntityDetails {
   billboard?: BillboardDetails;
   label?: LabelDetails;
   polyline?: PolylineDetails;
+  rectangle?: RectangleDetails;
 }
 
 interface EntityHash {
@@ -78,6 +90,16 @@ const tmpImage =
 // Ellipse primitive - no need identified
 // Ellipsoid primitive - 3d prim - no plans for this
 // Model primitive - 3d prim - no plans for this
+
+/**
+ * A variable to store what sort of bounds our leaflet map has been looking at
+ * 0 = a normal extent
+ * 1 = zoomed in close to the east/left of anti-meridian
+ * 2 = zoomed in close to the west/right of the anti-meridian
+ * When this value changes we'll need to recompute the location of our points
+ * to help them wrap around the anti-meridian
+ */
+let prevBoundsType = 0;
 
 /**
  * A {@link Visualizer} which maps {@link Entity#point} to Leaflet primitives.
@@ -126,7 +148,8 @@ class LeafletGeomVisualizer {
           isDefined(entity.label)) &&
           isDefined(entity.position)) ||
         isDefined(entity.polyline) ||
-        isDefined(entity.polygon)
+        isDefined(entity.polygon) ||
+        isDefined(entity.rectangle)
       ) {
         entities.set(entity.id, entity);
         entityHash[entity.id] = {};
@@ -141,7 +164,8 @@ class LeafletGeomVisualizer {
           isDefined(entity.label)) &&
           isDefined(entity.position)) ||
         isDefined(entity.polyline) ||
-        isDefined(entity.polygon)
+        isDefined(entity.polygon) ||
+        isDefined(entity.rectangle)
       ) {
         entities.set(entity.id, entity);
         entityHash[entity.id] = entityHash[entity.id] || {};
@@ -166,23 +190,40 @@ class LeafletGeomVisualizer {
   public update(time: JulianDate): boolean {
     const entities = this._entitiesToVisualize.values;
     const entityHash = this._entityHash;
-    let lastLeafletMarker: L.CircleMarker | undefined;
+
+    const bounds = this.leafletScene.map.getBounds();
+    let applyLocalisedAntiMeridianFix = false;
+    let currentBoundsType = 0;
+    if (_isCloseToEasternAntiMeridian(bounds)) {
+      applyLocalisedAntiMeridianFix = true;
+      currentBoundsType = 1;
+    } else if (_isCloseToWesternAntiMeridian(bounds)) {
+      applyLocalisedAntiMeridianFix = true;
+      currentBoundsType = 2;
+    }
 
     for (let i = 0, len = entities.length; i < len; i++) {
       const entity = entities[i];
       const entityDetails = entityHash[entity.id];
 
       if (isDefined(entity._point)) {
-        lastLeafletMarker = this._updatePoint(
+        this._updatePoint(
           entity,
           time,
           entityHash,
           entityDetails,
-          lastLeafletMarker
+          applyLocalisedAntiMeridianFix === true ? bounds : undefined,
+          prevBoundsType !== currentBoundsType
         );
       }
       if (isDefined(entity.billboard)) {
-        this._updateBillboard(entity, time, entityHash, entityDetails);
+        this._updateBillboard(
+          entity,
+          time,
+          entityHash,
+          entityDetails,
+          applyLocalisedAntiMeridianFix === true ? bounds : undefined
+        );
       }
       if (isDefined(entity.label)) {
         this._updateLabel(entity, time, entityHash, entityDetails);
@@ -193,8 +234,11 @@ class LeafletGeomVisualizer {
       if (isDefined(entity.polygon)) {
         this._updatePolygon(entity, time, entityHash, entityDetails);
       }
+      if (isDefined(entity.rectangle)) {
+        this._updateRectangle(entity, time, entityHash, entityDetails);
+      }
     }
-
+    prevBoundsType = currentBoundsType;
     return true;
   }
 
@@ -203,10 +247,11 @@ class LeafletGeomVisualizer {
     time: JulianDate,
     _entityHash: EntityHash,
     entityDetails: EntityDetails,
-    lastLeafletMarker?: L.CircleMarker
+    bounds: LatLngBounds | undefined,
+    boundsJustChanged: boolean
   ) {
     const featureGroup = this._featureGroup;
-    const pointGraphics = entity.point;
+    const pointGraphics = entity.point!;
 
     const show =
       entity.isAvailable(time) &&
@@ -264,7 +309,7 @@ class LeafletGeomVisualizer {
       };
 
       layer = details.layer = L.circleMarker(
-        positionToLatLng(position, lastLeafletMarker),
+        positionToLatLng(position, bounds),
         pointOptions
       );
       layer.on("click", featureClicked.bind(undefined, this, entity));
@@ -280,8 +325,11 @@ class LeafletGeomVisualizer {
       return layer;
     }
 
-    if (!Cartesian3.equals(position, details.lastPosition)) {
-      layer.setLatLng(positionToLatLng(position, lastLeafletMarker));
+    if (
+      !Cartesian3.equals(position, details.lastPosition) ||
+      boundsJustChanged
+    ) {
+      layer.setLatLng(positionToLatLng(position, bounds));
       Cartesian3.clone(position, details.lastPosition);
     }
 
@@ -322,9 +370,10 @@ class LeafletGeomVisualizer {
     entity: Entity,
     time: JulianDate,
     _entityHash: EntityHash,
-    entityDetails: EntityDetails
+    entityDetails: EntityDetails,
+    bounds: LatLngBounds | undefined
   ) {
-    const markerGraphics = entity.billboard;
+    const markerGraphics = entity.billboard!;
     const featureGroup = this._featureGroup;
     let position;
     let marker: L.Marker;
@@ -351,10 +400,7 @@ class LeafletGeomVisualizer {
     }
 
     const cart = Ellipsoid.WGS84.cartesianToCartographic(position);
-    const latlng = L.latLng(
-      CesiumMath.toDegrees(cart.latitude),
-      CesiumMath.toDegrees(cart.longitude)
-    );
+    const latlng = positionToLatLng(position, bounds);
     const image: any = getValue(markerGraphics.image, time);
     const height: number | undefined = getValue(markerGraphics.height, time);
     const width: number | undefined = getValue(markerGraphics.width, time);
@@ -462,7 +508,7 @@ class LeafletGeomVisualizer {
     _entityHash: EntityHash,
     entityDetails: EntityDetails
   ) {
-    const labelGraphics = entity.label;
+    const labelGraphics = entity.label!;
     const featureGroup = this._featureGroup;
     let position;
     let marker: L.Marker;
@@ -579,6 +625,156 @@ class LeafletGeomVisualizer {
     }
   }
 
+  private _updateRectangle(
+    entity: Entity,
+    time: JulianDate,
+    _entityHash: EntityHash,
+    entityDetails: EntityDetails
+  ) {
+    const featureGroup = this._featureGroup;
+    const rectangleGraphics = entity.rectangle;
+
+    if (!isDefined(rectangleGraphics)) {
+      return;
+    }
+
+    const show =
+      entity.isAvailable(time) &&
+      getValueOrDefault(rectangleGraphics.show, time, true);
+
+    const rectangleCoordinates = rectangleGraphics.coordinates?.getValue(
+      time
+    ) as Rectangle;
+
+    if (!show || !isDefined(rectangleCoordinates)) {
+      cleanRectangle(entity, featureGroup, entityDetails);
+      return;
+    }
+
+    const rectangleBounds: LatLngBoundsLiteral = [
+      [
+        CesiumMath.toDegrees(rectangleCoordinates.south),
+        CesiumMath.toDegrees(rectangleCoordinates.west)
+      ],
+      [
+        CesiumMath.toDegrees(rectangleCoordinates.north),
+        CesiumMath.toDegrees(rectangleCoordinates.east)
+      ]
+    ];
+
+    let details = entityDetails.rectangle;
+    if (!isDefined(details)) {
+      details = entityDetails.rectangle = {
+        layer: undefined,
+        lastFill: undefined,
+        lastFillColor: new Color(),
+        lastOutline: undefined,
+        lastOutlineColor: new Color()
+      };
+    }
+    const fill = getValueOrDefault(
+      (rectangleGraphics.fill as unknown) as Property,
+      time,
+      true
+    );
+    const outline = getValueOrDefault(rectangleGraphics.outline, time, true);
+    let dashArray;
+    if (rectangleGraphics.outline instanceof PolylineDashMaterialProperty) {
+      dashArray = getDashArray(rectangleGraphics.outline, time);
+    }
+
+    const outlineWidth = getValueOrDefault(
+      (rectangleGraphics.outlineWidth as unknown) as Property,
+      time,
+      defaultOutlineWidth
+    );
+
+    const outlineColor = getValueOrDefault(
+      (rectangleGraphics.outlineColor as unknown) as Property,
+      time,
+      defaultOutlineColor
+    );
+
+    const material = getValueOrUndefined(
+      (rectangleGraphics.material as unknown) as Property,
+      time
+    );
+    let fillColor;
+    if (isDefined(material) && isDefined(material.color)) {
+      fillColor = material.color;
+    } else {
+      fillColor = defaultColor;
+    }
+
+    let layer = details.layer;
+    if (!isDefined(layer)) {
+      const polygonOptions: PolylineOptions = {
+        fill: fill,
+        fillColor: fillColor.toCssColorString(),
+        fillOpacity: fillColor.alpha,
+        weight: outline ? outlineWidth : 0.0,
+        color: outlineColor.toCssColorString(),
+        opacity: outlineColor.alpha
+      };
+
+      if (outline && dashArray) {
+        polygonOptions.dashArray = dashArray
+          .map(x => x * outlineWidth)
+          .join(",");
+      }
+
+      layer = details.layer = L.rectangle(rectangleBounds, polygonOptions);
+
+      layer.on("click", featureClicked.bind(undefined, this, entity));
+      layer.on("mousedown", featureMousedown.bind(undefined, this, entity));
+      featureGroup.addLayer(layer);
+
+      details.lastFill = fill;
+      details.lastOutline = outline;
+      Color.clone(fillColor, details.lastFillColor);
+      Color.clone(outlineColor, details.lastOutlineColor);
+
+      return;
+    }
+
+    const options = layer.options;
+    let applyStyle = false;
+
+    if (fill !== details.lastFill) {
+      options.fill = fill;
+      details.lastFill = fill;
+      applyStyle = true;
+    }
+
+    if (outline !== details.lastOutline) {
+      options.weight = outline ? outlineWidth : 0.0;
+      details.lastOutline = outline;
+      applyStyle = true;
+    }
+
+    if (!Color.equals(fillColor, details.lastFillColor)) {
+      options.fillColor = fillColor.toCssColorString();
+      options.fillOpacity = fillColor.alpha;
+      Color.clone(fillColor, details.lastFillColor);
+      applyStyle = true;
+    }
+
+    if (!Color.equals(outlineColor, details.lastOutlineColor)) {
+      options.color = outlineColor.toCssColorString();
+      options.opacity = outlineColor.alpha;
+      Color.clone(outlineColor, details.lastOutlineColor);
+      applyStyle = true;
+    }
+
+    if (!layer.getBounds().equals(rectangleBounds)) {
+      layer.setBounds(rectangleBounds);
+    }
+
+    if (applyStyle) {
+      layer.setStyle(options);
+    }
+  }
+
   private _updatePolygon(
     entity: Entity,
     time: JulianDate,
@@ -586,7 +782,7 @@ class LeafletGeomVisualizer {
     entityDetails: EntityDetails
   ) {
     const featureGroup = this._featureGroup;
-    const polygonGraphics = entity.polygon;
+    const polygonGraphics = entity.polygon!;
 
     const show =
       entity.isAvailable(time) &&
@@ -620,6 +816,17 @@ class LeafletGeomVisualizer {
       true
     );
     const outline = getValueOrDefault(polygonGraphics.outline, time, true);
+    let dashArray;
+    if (polygonGraphics.outline instanceof PolylineDashMaterialProperty) {
+      dashArray = getDashArray(polygonGraphics.outline, time);
+    }
+
+    const outlineWidth = getValueOrDefault(
+      (polygonGraphics.outlineWidth as unknown) as Property,
+      time,
+      defaultOutlineWidth
+    );
+
     const outlineColor = getValueOrDefault(
       (polygonGraphics.outlineColor as unknown) as Property,
       time,
@@ -639,14 +846,20 @@ class LeafletGeomVisualizer {
 
     let layer = details.layer;
     if (!isDefined(layer)) {
-      const polygonOptions = {
+      const polygonOptions: PolylineOptions = {
         fill: fill,
         fillColor: fillColor.toCssColorString(),
         fillOpacity: fillColor.alpha,
-        weight: outline ? 1.0 : 0.0,
+        weight: outline ? outlineWidth : 0.0,
         color: outlineColor.toCssColorString(),
         opacity: outlineColor.alpha
       };
+
+      if (outline && dashArray) {
+        polygonOptions.dashArray = dashArray
+          .map(x => x * outlineWidth)
+          .join(",");
+      }
 
       layer = details.layer = L.polygon(
         hierarchyToLatLngs(hierarchy),
@@ -680,7 +893,7 @@ class LeafletGeomVisualizer {
     }
 
     if (outline !== details.lastOutline) {
-      options.weight = outline ? 1.0 : 0.0;
+      options.weight = outline ? outlineWidth : 0.0;
       details.lastOutline = outline;
       applyStyle = true;
     }
@@ -710,7 +923,7 @@ class LeafletGeomVisualizer {
     _entityHash: EntityHash,
     entityDetails: EntityDetails
   ) {
-    const polylineGraphics = entity.polyline;
+    const polylineGraphics = entity.polyline!;
     const featureGroup = this._featureGroup;
     let positions, polyline;
 
@@ -746,7 +959,9 @@ class LeafletGeomVisualizer {
       );
     }
 
-    let color, width;
+    let color;
+    let dashArray: number[] | undefined;
+    let width: number;
     if (polylineGraphics.material instanceof PolylineGlowMaterialProperty) {
       color = defaultColor;
       width = defaultWidth;
@@ -762,12 +977,19 @@ class LeafletGeomVisualizer {
         defaultWidth
       );
     }
+    if (polylineGraphics.material instanceof PolylineDashMaterialProperty) {
+      dashArray = getDashArray(polylineGraphics.material, time);
+    }
 
-    const polylineOptions = {
+    const polylineOptions: PolylineOptions = {
       color: color.toCssColorString(),
       weight: width,
       opacity: color.alpha
     };
+
+    if (dashArray) {
+      polylineOptions.dashArray = dashArray.map(x => x * width).join(",");
+    }
 
     if (!isDefined(geomLayer)) {
       if (latlngs.length > 0) {
@@ -870,6 +1092,19 @@ class LeafletGeomVisualizer {
   }
 }
 
+function getDashArray(
+  material: PolylineDashMaterialProperty,
+  time: JulianDate
+): number[] {
+  let dashArray;
+
+  const dashPattern = material.dashPattern
+    ? material.dashPattern.getValue(time)
+    : undefined;
+
+  return getLineStyleLeaflet(dashPattern);
+}
+
 function cleanEntity(
   entity: Entity,
   group: L.FeatureGroup,
@@ -941,26 +1176,66 @@ function cleanPolyline(
   }
 }
 
-function positionToLatLng(position: Cartesian3, prevMarker?: L.CircleMarker) {
-  const cartographic = Ellipsoid.WGS84.cartesianToCartographic(position);
+function cleanRectangle(
+  _entity: Entity,
+  group: L.FeatureGroup,
+  details: EntityDetails
+) {
+  if (isDefined(details.rectangle) && isDefined(details.rectangle.layer)) {
+    group.removeLayer(details.rectangle.layer);
+    details.rectangle = undefined;
+  }
+}
+
+function _isCloseToEasternAntiMeridian(bounds: LatLngBounds) {
+  const w = bounds.getWest();
+  const e = bounds.getEast();
+  if (w > 140 && (e < -140 || e > 180)) {
+    return true;
+  }
+  return false;
+}
+
+function _isCloseToWesternAntiMeridian(bounds: LatLngBounds) {
+  const w = bounds.getWest();
+  const e = bounds.getEast();
+  if ((w > 180 || w < -140) && e < -140) {
+    return true;
+  }
+  return false;
+}
+
+function positionToLatLng(
+  position: Cartesian3,
+  bounds: LatLngBounds | undefined
+) {
+  var cartographic = Ellipsoid.WGS84.cartesianToCartographic(position);
   let lon = CesiumMath.toDegrees(cartographic.longitude);
-  if (prevMarker) {
-    const prevLon = prevMarker.getLatLng().lng;
-    if (prevLon - lon > 180) {
-      lon = lon + 360;
-    } else if (prevLon - lon < -180) {
-      lon = lon - 360;
+  if (bounds !== undefined) {
+    if (_isCloseToEasternAntiMeridian(bounds)) {
+      if (lon < -140) {
+        lon = lon + 360;
+      }
+    } else if (_isCloseToWesternAntiMeridian(bounds)) {
+      if (lon > 140) {
+        lon = lon - 360;
+      }
     }
   }
-
   return L.latLng(CesiumMath.toDegrees(cartographic.latitude), lon);
 }
 
 function hierarchyToLatLngs(hierarchy: PolygonHierarchy) {
-  // This function currently does not handle polygons with holes.
-
+  let holes: L.LatLng[][] = [];
   const positions = Array.isArray(hierarchy) ? hierarchy : hierarchy.positions;
-  return convertEntityPositionsToLatLons(positions);
+  if (hierarchy.holes.length > 0) {
+    hierarchy.holes.forEach(hole => {
+      holes.push(convertEntityPositionsToLatLons(hole.positions));
+    });
+    return [convertEntityPositionsToLatLons(positions), ...holes];
+  } else {
+    return convertEntityPositionsToLatLons(positions);
+  }
 }
 
 //Recolor an image using 2d canvas
@@ -1038,9 +1313,9 @@ function getValueOrUndefined(property: Property | undefined, time: JulianDate) {
   }
 }
 
-function convertEntityPositionsToLatLons(positions: Cartesian3[]) {
+function convertEntityPositionsToLatLons(positions: Cartesian3[]): L.LatLng[] {
   var carts = Ellipsoid.WGS84.cartesianArrayToCartographicArray(positions);
-  var latlngs = [];
+  var latlngs: L.LatLng[] = [];
   let lastLongitude;
   for (var p = 0; p < carts.length; p++) {
     let lon = CesiumMath.toDegrees(carts[p].longitude);

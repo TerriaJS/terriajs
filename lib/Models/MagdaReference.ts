@@ -2,6 +2,7 @@ import i18next from "i18next";
 import { computed, toJS } from "mobx";
 import { createTransformer } from "mobx-utils";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import isDefined from "../Core/isDefined";
 import {
   isJsonObject,
   isJsonString,
@@ -10,10 +11,13 @@ import {
 } from "../Core/Json";
 import loadJson from "../Core/loadJson";
 import TerriaError from "../Core/TerriaError";
+import AccessControlMixin from "../ModelMixins/AccessControlMixin";
+import GroupMixin from "../ModelMixins/GroupMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import MagdaDistributionFormatTraits from "../Traits/MagdaDistributionFormatTraits";
 import MagdaReferenceTraits from "../Traits/MagdaReferenceTraits";
+import ModelTraits from "../Traits/ModelTraits";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
@@ -22,12 +26,9 @@ import { BaseModel } from "./Model";
 import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
+import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
 import updateModelFromJson from "./updateModelFromJson";
-import ModelTraits from "../Traits/ModelTraits";
-import StratumOrder from "./StratumOrder";
-import AccessControlMixin from "../ModelMixins/AccessControlMixin";
-import GroupMixin from "../ModelMixins/GroupMixin";
 
 const magdaRecordStratum = "magda-record";
 StratumOrder.addDefaultStratum(magdaRecordStratum);
@@ -501,6 +502,8 @@ export default class MagdaReference extends AccessControlMixin(
         console.error(
           `Could not create unknown model type ${terriaAspect.type}.`
         );
+        // don't create a stub here, as magda should rarely create unknown model types
+        // and we'll let the UI highlight that it's bad rather than bandaging an unknown type
         return undefined;
       }
       result = newMember;
@@ -514,7 +517,11 @@ export default class MagdaReference extends AccessControlMixin(
       if (stratum === "type" || stratum === "id") {
         return;
       }
-      updateModelFromJson(result, stratum, terriaAspect[stratum], true);
+      try {
+        updateModelFromJson(result, stratum, terriaAspect[stratum], true);
+      } catch (err) {
+        result.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
+      }
     });
 
     if (override) {
@@ -707,6 +714,13 @@ export default class MagdaReference extends AccessControlMixin(
     return undefined;
   }
 
+  @computed get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    }
+    return "0d";
+  }
+
   protected loadMagdaRecord(options: RecordOptions): Promise<JsonObject> {
     const recordUri = this.buildMagdaRecordUri(options);
     if (recordUri === undefined) {
@@ -718,7 +732,7 @@ export default class MagdaReference extends AccessControlMixin(
         })
       );
     }
-    const proxiedUrl = proxyCatalogItemUrl(this, recordUri.toString(), "0d");
+    const proxiedUrl = proxyCatalogItemUrl(this, recordUri.toString());
 
     return loadJson(proxiedUrl, options.magdaReferenceHeaders);
   }

@@ -1,8 +1,5 @@
-import ColorMap from "./ColorMap";
 import Color from "terriajs-cesium/Source/Core/Color";
-import StratumFromTraits from "../Models/StratumFromTraits";
-import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
-import createStratumInstance from "../Models/createStratumInstance";
+import ColorMap from "./ColorMap";
 
 export interface DiscreteBin {
   readonly includeMinimumInThisBin: boolean;

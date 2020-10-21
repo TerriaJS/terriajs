@@ -1,19 +1,30 @@
 /*global require*/
 /// <reference types="jasmine" />
 import "../lib/Core/prerequisites";
-require("terriajs-jasmine-ajax");
+import "jasmine-ajax";
 import { configure, spy } from "mobx";
+import i18next from "i18next";
+import registerCatalogMembers from "../lib/Models/registerCatalogMembers";
 
 configure({
   enforceActions: true,
   computedRequiresReaction: true
 });
 
+registerCatalogMembers();
+
 // Fail the test if a MobX computed property throws an exception.
 spy(event => {
   if (event.type === "error") {
     fail(event.message);
   }
+});
+
+beforeEach(function() {
+  i18next.init({
+    lng: "cimode",
+    debug: false
+  });
 });
 
 jasmine.getEnv().addReporter({
@@ -24,10 +35,3 @@ jasmine.getEnv().addReporter({
 });
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000;
-
-afterEach(function() {
-  const jasmineAny: any = jasmine;
-  if (jasmineAny.Ajax) {
-    jasmineAny.Ajax.uninstall();
-  }
-});

@@ -2,14 +2,11 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 
-import ObserveModelMixin from "../ObserveModelMixin";
-
 import Styles from "./experimental-features.scss";
 
 // The experimental features
 const ExperimentalFeatures = createReactClass({
   displayName: "ExperimentalFeatures",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     terria: PropTypes.object.isRequired,

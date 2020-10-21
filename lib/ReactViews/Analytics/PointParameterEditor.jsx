@@ -12,7 +12,6 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 
 import MapInteractionMode from "../../Models/MapInteractionMode";
-import ObserveModelMixin from "../ObserveModelMixin";
 
 import Styles from "./parameter-editors.scss";
 import { runInAction, autorun } from "mobx";
@@ -20,7 +19,6 @@ import { withTranslation } from "react-i18next";
 
 const PointParameterEditor = createReactClass({
   displayName: "PointParameterEditor",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     previewed: PropTypes.object,
@@ -47,7 +45,7 @@ const PointParameterEditor = createReactClass({
   },
 
   selectPointOnMap() {
-    PointParameterEditor.selectOnMap(
+    selectOnMap(
       this.props.previewed.terria,
       this.props.viewState,
       this.props.parameter,
@@ -62,7 +60,7 @@ const PointParameterEditor = createReactClass({
     }
 
     // Show the parameter's value if there is one.
-    return PointParameterEditor.getDisplayValue(this.props.parameter.value);
+    return getDisplayValue(this.props.parameter.value);
   },
 
   render() {

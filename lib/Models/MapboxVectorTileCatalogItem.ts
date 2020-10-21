@@ -16,6 +16,10 @@ import i18next from "i18next";
 import isDefined from "../Core/isDefined";
 import { VectorTileFeature } from "@mapbox/vector-tile";
 import { clone } from "lodash-es";
+import CommonStrata from "./CommonStrata";
+import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
+import createStratumInstance from "./createStratumInstance";
+import StratumFromTraits from "./StratumFromTraits";
 
 class MapboxVectorTileLoadableStratum extends LoadableStratum(
   MapboxVectorTileCatalogItemTraits
@@ -36,15 +40,19 @@ class MapboxVectorTileLoadableStratum extends LoadableStratum(
     return new MapboxVectorTileLoadableStratum(item);
   }
 
-  // @computed get legends() {
-  //   const item = createStratumInstance(LegendItemTraits);
-  //     runInAction(() => {
-  //       item.color= this.fillColor
-  //       item.lineColor= this.lineColor
-  //         item.title=this.name
-  //     });
-  //     return item;
-  // }
+  @computed get legends() {
+    return [
+      createStratumInstance(LegendTraits, {
+        items: [
+          createStratumInstance(LegendItemTraits, {
+            color: this.item.fillColor,
+            outlineColor: this.item.lineColor,
+            title: this.item.name
+          })
+        ]
+      })
+    ];
+  }
 }
 
 StratumOrder.addLoadStratum(MapboxVectorTileLoadableStratum.stratumName);
@@ -81,38 +89,35 @@ class MapboxVectorTileCatalogItem extends AsyncMappableMixin(
   }
 
   private updateImageryProvider() {
-    autorun(async () => {
-      runInAction(() => {
-        if (
-          !isDefined(this.url) ||
-          !isDefined(this.layer) ||
-          !isDefined(this.rectangle)
-        ) {
-          return;
-        }
+    autorun(() => {
+      if (
+        !isDefined(this.url) ||
+        !isDefined(this.layer) ||
+        !isDefined(this.rectangle)
+      ) {
+        return;
+      }
 
-        this.imageryProvider = new MapboxVectorTileImageryProvider({
-          url: this.url,
-          layerName: this.layer,
-          // This is a PROBLEM
-          styleFunc: () => ({
-            fillStyle: this.fillColor,
-            strokeStyle: this.lineColor,
-            lineJoin: "miter",
-            lineWidth: 1
-          }),
-          rectangle: Rectangle.fromDegrees(
-            this.rectangle.west,
-            this.rectangle.south,
-            this.rectangle.east,
-            this.rectangle.north
-          ),
-          minimumZoom: this.minimumZoom,
-          maximumNativeZoom: this.maximumNativeZoom,
-          maximumZoom: this.maximumZoom,
-          uniqueIdProp: this.idProperty,
-          featureInfoFunc: this.featureInfoFromFeature.bind(this)
-        });
+      this.imageryProvider = new MapboxVectorTileImageryProvider({
+        url: this.url,
+        layerName: this.layer,
+        styleFunc: action(() => ({
+          fillStyle: this.fillColor,
+          strokeStyle: this.lineColor,
+          lineJoin: "miter",
+          lineWidth: 1
+        })),
+        rectangle: Rectangle.fromDegrees(
+          this.rectangle.west,
+          this.rectangle.south,
+          this.rectangle.east,
+          this.rectangle.north
+        ),
+        minimumZoom: this.minimumZoom,
+        maximumNativeZoom: this.maximumNativeZoom,
+        maximumZoom: this.maximumZoom,
+        uniqueIdProp: this.idProperty,
+        featureInfoFunc: this.featureInfoFromFeature
       });
     });
   }
@@ -133,6 +138,7 @@ class MapboxVectorTileCatalogItem extends AsyncMappableMixin(
     ];
   }
 
+  @action.bound
   featureInfoFromFeature(feature: VectorTileFeature) {
     const featureInfo = new ImageryLayerFeatureInfo();
     if (isDefined(this.nameProperty)) {

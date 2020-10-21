@@ -7,6 +7,9 @@ import Mappable from "./Mappable";
 import Terria from "./Terria";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
+import LatLonHeight from "../Core/LatLonHeight";
+import { ProviderCoordsMap } from "../Map/PickedFeatures";
+import Feature from "./Feature";
 
 class NoViewer extends GlobeOrMap {
   readonly type = "none";
@@ -20,7 +23,7 @@ class NoViewer extends GlobeOrMap {
 
   destroy() {}
 
-  zoomTo(v: CameraView | Cesium.Rectangle | Mappable, t: any) {
+  zoomTo(v: CameraView | Rectangle | Mappable, t: any) {
     if (v instanceof CameraView) {
       this._currentView = v;
     } else if (v instanceof Rectangle) {
@@ -29,6 +32,23 @@ class NoViewer extends GlobeOrMap {
   }
 
   notifyRepaintRequired() {}
+
+  pickFromLocation(
+    latLngHeight: LatLonHeight,
+    providerCoords: ProviderCoordsMap,
+    existingFeatures: Feature[]
+  ) {}
+
+  /**
+   * Return features at a latitude, longitude and (optionally) height for the given imageryLayer
+   * @param latLngHeight The position on the earth to pick
+   * @param providerCoords A map of imagery provider urls to the tile coords used to get features for those imagery
+   * @returns A flat array of all the features for the given tiles that are currently on the map
+   */
+  getFeaturesAtLocation(
+    latLngHeight: LatLonHeight,
+    providerCoords: ProviderCoordsMap
+  ) {}
 
   getCurrentCameraView(): CameraView {
     return this._currentView;
@@ -42,7 +62,7 @@ class NoViewer extends GlobeOrMap {
   resumeMapInteraction() {}
   _addVectorTileHighlight(
     imageryProvider: MapboxVectorTileImageryProvider,
-    rectangle: Cesium.Rectangle
+    rectangle: Rectangle
   ) {
     return () => {};
   }

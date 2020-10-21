@@ -2,8 +2,10 @@ import CatalogMemberTraits from "./CatalogMemberTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
 import GroupTraits from "./GroupTraits";
 import mixTraits from "./mixTraits";
+import anyTrait from "./anyTrait";
 import primitiveTrait from "./primitiveTrait";
 import UrlTraits from "./UrlTraits";
+import { JsonObject } from "../Core/Json";
 
 export default class WebMapServiceCatalogGroupTraits extends mixTraits(
   GetCapabilitiesTraits,
@@ -18,4 +20,10 @@ export default class WebMapServiceCatalogGroupTraits extends mixTraits(
       "True to flatten the layers into a single list; false to use the layer hierarchy."
   })
   flatten?: boolean;
+
+  @anyTrait({
+    name: "Item Properties",
+    description: "Sets traits on child WebMapServiceCatalogItem's"
+  })
+  itemProperties?: JsonObject;
 }

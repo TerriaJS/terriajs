@@ -10,6 +10,7 @@ import Terria from "../Models/Terria";
 import SearchProviderResults from "../Models/SearchProviderResults";
 import SearchProvider from "../Models/SearchProvider";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import CatalogSearchProvider from "../Models/CatalogSearchProvider";
 
 interface SearchStateOptions {
   terria: Terria;
@@ -32,7 +33,7 @@ export default class SearchState {
   @observable unifiedSearchText: string = "";
   @observable isWaitingToStartUnifiedSearch: boolean = false;
 
-  @observable showLocationSearchResults: boolean = true;
+  @observable showLocationSearchResults: boolean = false;
   @observable showMobileLocationSearch: boolean = false;
   @observable showMobileCatalogSearch: boolean = false;
 
@@ -45,9 +46,9 @@ export default class SearchState {
   private _unifiedSearchDisposer: IReactionDisposer;
 
   constructor(options: SearchStateOptions) {
-    // this.catalogSearchProvider =
-    //   options.catalogSearchProvider ||
-    //   new CatalogItemNameSearchProviderViewModel({ terria: options.terria });
+    this.catalogSearchProvider =
+      options.catalogSearchProvider ||
+      new CatalogSearchProvider({ terria: options.terria });
     this.locationSearchProviders = options.locationSearchProviders || [];
 
     this._catalogSearchDisposer = reaction(
@@ -111,6 +112,11 @@ export default class SearchState {
         );
       }
     }
+  }
+
+  @action
+  setCatalogSearchText(newText: string) {
+    this.catalogSearchText = newText;
   }
 
   @action

@@ -1,27 +1,23 @@
 @import "~terriajs-variables";
 @import "../../../../Sass/common/mixins";
+@import url("https://fonts.googleapis.com/css?family=Nunito:600,800&display=swap");
 .help-panel {
   font-family: $font-base;
-  width: 290px;
+  width: 320px;
   height: 100%;
   color: #000;
   background-color: #fff;
   position: fixed;
-  right: 0px;
   z-index: 110;
   font-size: $font-size-mid-small;
   transition: all 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  .close-btn {
-    position: relative;
-    float: right;
-    top: $padding;
-    right: $padding;
-    svg {
-      height: 15px;
-      width: 15px;
-      opacity: 0.5;
-    }
+
+  &.isVisible {
+    right: 0px;
+  }
+  &.isHidden {
+    right: -320px;
   }
 }
 
@@ -37,12 +33,21 @@
   flex-basis: 400px;
   background-color: #f4f4f4;
   position: fixed;
-  right: 0px;
+  // right: 0px;
   top: 0px;
   z-index: 110;
   font-size: $font-size-mid-small;
   transition: all 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  &.isVisible {
+    right: 0;
+  }
+  &.shiftedToRight {
+    right: -490px;
+  }
+  &.isHidden {
+    visibility: hidden;
+  }
 }
 
 .panel-item,
@@ -57,21 +62,23 @@
 .panel-item:hover,
 .is-selected {
   background-color: #f4f4f4;
-  z-index: 110;
 }
 
 .tourBtn {
   composes: btn from "../../../../Sass/common/_buttons.scss";
-  color: $text-light;
+  // color: $text-light;
   font-size: $font-size-button;
   padding: $padding $padding * 2;
-  background-color: #519ac2;
+  // background-color: #519ac2;
   border-radius: $padding * 2;
 
+  min-width: 240px;
+  text-align: center;
+
   svg {
-    height: 20px;
-    width: 20px;
-    fill: $faint-bg;
+    height: 18px;
+    width: 18px;
+    // fill: $faint-bg;
     vertical-align: bottom;
     display: inline-block;
     margin-right: 5px;
@@ -137,6 +144,7 @@
 
 .videoGuideWrapperFullScreen {
   position: fixed;
+  z-index: 99999;
   top: 0;
   left: 0;
   right: 0;

@@ -77,7 +77,8 @@ export default class TableColumnTraits extends ModelTraits {
     description:
       "The formatting options to pass to `toLocaleString` when formatting the values " +
       "of this column for the legend and feature information panels. See:\n" +
-      "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toLocaleString"
+      "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toLocaleString\n" +
+      "and https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat"
   })
   format?: JsonObject;
 }

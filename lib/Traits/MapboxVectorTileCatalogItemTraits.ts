@@ -7,8 +7,12 @@ import RasterLayerTraits from "./RasterLayerTraits";
 import primitiveTrait from "./primitiveTrait";
 import LegendTraits from "./LegendTraits";
 import objectArrayTrait from "./objectArrayTrait";
+import DataCustodianTraits from "./DataCustodianTraits";
+import LayerOrderingTraits from "./LayerOrderingTraits";
 
 export default class MapboxVectorTileCatalogItemTraits extends mixTraits(
+  LayerOrderingTraits,
+  DataCustodianTraits,
   FeatureInfoTraits,
   UrlTraits,
   MappableTraits,
@@ -73,7 +77,7 @@ export default class MapboxVectorTileCatalogItemTraits extends mixTraits(
     name: "minimumZoom",
     description: "The minimum zoom level for which tile files exist."
   })
-  minimumZoom = 14;
+  minimumZoom = 0;
 
   @objectArrayTrait({
     name: "legends",

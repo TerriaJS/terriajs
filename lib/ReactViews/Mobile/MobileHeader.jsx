@@ -2,22 +2,23 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import SearchBox from "../Search/SearchBox";
-import ObserveModelMixin from "../ObserveModelMixin";
 import MobileModalWindow from "./MobileModalWindow";
 import Branding from "../SidePanel/Branding";
 import Styles from "./mobile-header.scss";
-import Icon from "../Icon";
+import Icon, { StyledIcon } from "../Icon";
 import MobileMenu from "./MobileMenu";
 import classNames from "classnames";
 import { removeMarker } from "../../Models/LocationMarkerUtils";
 import { withTranslation } from "react-i18next";
+import { withTheme } from "styled-components";
 import { observer } from "mobx-react";
-import { runInAction, action } from "mobx";
+import { runInAction } from "mobx";
+import Box from "../../Styled/Box";
+import { RawButton } from "../../Styled/Button";
 
 const MobileHeader = observer(
   createReactClass({
     displayName: "MobileHeader",
-    mixins: [ObserveModelMixin],
 
     propTypes: {
       terria: PropTypes.object,
@@ -26,6 +27,7 @@ const MobileHeader = observer(
       version: PropTypes.string,
       menuLeftItems: PropTypes.array,
       menuItems: PropTypes.array,
+      theme: PropTypes.object,
       t: PropTypes.func.isRequired
     },
 
@@ -138,6 +140,7 @@ const MobileHeader = observer(
 
     render() {
       const searchState = this.props.viewState.searchState;
+      const displayOne = this.props.terria.configParameters.displayOneBrand;
       const { t } = this.props;
       const nowViewingLength =
         this.props.terria.workbench.items !== undefined
@@ -146,7 +149,13 @@ const MobileHeader = observer(
 
       return (
         <div className={Styles.ui}>
-          <div className={Styles.mobileHeader}>
+          <Box
+            justifySpaceBetween
+            fullWidth
+            fullHeight
+            paddedRatio={1}
+            backgroundColor={this.props.theme.dark}
+          >
             <Choose>
               <When
                 condition={
@@ -154,22 +163,41 @@ const MobileHeader = observer(
                   !searchState.showMobileCatalogSearch
                 }
               >
-                <div className={Styles.groupLeft}>
-                  <button
+                <Box
+                  positionAbsolute
+                  css={`
+                    left: 5px;
+                  `}
+                >
+                  <RawButton
                     type="button"
-                    onClick={action(
-                      () => (this.props.viewState.mobileMenuVisible = true)
-                    )}
-                    className={Styles.btnMenu}
+                    onClick={() => this.props.viewState.toggleMobileMenu()}
                     title={t("mobile.toggleNavigation")}
+                    css={`
+                      border-radius: 2px;
+                      padding: 0 5px;
+                      margin-right: 3px;
+                      &:hover,
+                      &:focus,
+                      & {
+                        border: 1px solid
+                          ${this.props.theme.textLightTranslucent};
+                      }
+                    `}
                   >
-                    <Icon glyph={Icon.GLYPHS.menu} />
-                  </button>
+                    <StyledIcon
+                      light
+                      glyph={Icon.GLYPHS.menu}
+                      styledWidth={"37px"}
+                      styledHeight={"37px"}
+                    />
+                  </RawButton>
                   <Branding
                     terria={this.props.terria}
                     version={this.props.version}
+                    displayOne={displayOne}
                   />
-                </div>
+                </Box>
                 <div className={Styles.groupRight}>
                   <button
                     type="button"
@@ -232,7 +260,7 @@ const MobileHeader = observer(
                 </div>
               </Otherwise>
             </Choose>
-          </div>
+          </Box>
           <MobileMenu
             menuItems={this.props.menuItems}
             menuLeftItems={this.props.menuLeftItems}
@@ -250,4 +278,4 @@ const MobileHeader = observer(
     }
   })
 );
-module.exports = withTranslation()(MobileHeader);
+module.exports = withTranslation()(withTheme(MobileHeader));

@@ -1,21 +1,23 @@
 "use strict";
 
 import classNames from "classnames";
-import defined from "terriajs-cesium/Source/Core/defined";
-import ObserveModelMixin from "../ObserveModelMixin";
-import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
+import React from "react";
+import defined from "terriajs-cesium/Source/Core/defined";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import Styles from "./notification-window.scss";
 
 const NotificationWindow = createReactClass({
   displayName: "NotificationWindow",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
+    viewState: PropTypes.object,
     title: PropTypes.string.isRequired,
-    message: PropTypes.string.isRequired,
+    message: PropTypes.oneOfType([
+      PropTypes.string.isRequired,
+      PropTypes.func.isRequired
+    ]),
     confirmText: PropTypes.string,
     denyText: PropTypes.string,
     onConfirm: PropTypes.func.isRequired,
@@ -40,7 +42,7 @@ const NotificationWindow = createReactClass({
   },
 
   render() {
-    const title = this.props.title;
+    const title = this.props.title || "";
     const message = this.props.message;
     const confirmText = this.props.confirmText || "OK";
     const denyText = this.props.denyText;
@@ -50,10 +52,22 @@ const NotificationWindow = createReactClass({
       height: defined(this.props.height) ? this.props.height : "auto",
       width: defined(this.props.width) ? this.props.width : "500px"
     };
+    const isStory = type === "story";
 
     return (
       <div className={classNames(Styles.wrapper, `${type}`)}>
-        <div className={Styles.notification}>
+        <div
+          className={Styles.notification}
+          isStory={isStory}
+          css={`
+            background: ${p =>
+              p.isStory ? p.theme.colorPrimary : p.theme.dark};
+            a,
+            a:visited {
+              color: ${p => p.theme.primary};
+            }
+          `}
+        >
           <div className={Styles.inner} style={divStyle}>
             <h3 className="title">{title}</h3>
             {window.location.host === "localhost:3001" &&
@@ -63,7 +77,9 @@ const NotificationWindow = createReactClass({
                 </div>
               )}
             <div className={Styles.body}>
-              {parseCustomMarkdownToReact(message)}
+              {typeof message === "function"
+                ? message(this.props.viewState)
+                : parseCustomMarkdownToReact(message)}
             </div>
           </div>
           <div className={Styles.footer}>

@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import {
   action,
   computed,
@@ -38,7 +39,6 @@ import RegionTypeParameter from "./RegionTypeParameter";
 import ResultPendingCatalogItem from "./ResultPendingCatalogItem";
 import StringParameter from "./StringParameter";
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
-import i18next from "i18next";
 
 const sprintf = require("terriajs-cesium/Source/ThirdParty/sprintf").default;
 const executeWpsTemplate = require("./ExecuteWpsTemplate.xml");
@@ -96,8 +96,9 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
   CreateModel(WebProcessingServiceCatalogFunctionTraits)
 ) {
   static readonly type = "wps";
-  readonly typeName = "Web Processing Service (WPS)";
-  readonly proxyCacheDuration = "1d";
+  get typeName() {
+    return "Web Processing Service (WPS)";
+  }
 
   readonly parameterConverters: ParameterConverter[] = [
     LiteralDataConverter,
@@ -111,6 +112,13 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
 
   @observable
   private processDescription?: ProcessDescription;
+
+  @computed get cacheDuration(): string {
+    if (isDefined(super.cacheDuration)) {
+      return super.cacheDuration;
+    }
+    return "0d";
+  }
 
   /**
    * Returns the proxied URL for the DescribeProcess endpoint.
@@ -127,7 +135,7 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
       Identifier: this.identifier
     });
 
-    return proxyCatalogItemUrl(this, uri.toString(), this.proxyCacheDuration);
+    return proxyCatalogItemUrl(this, uri.toString());
   }
 
   /**
@@ -143,7 +151,7 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
       request: "Execute",
       version: "1.0.0"
     });
-    return proxyCatalogItemUrl(this, uri.toString(), this.proxyCacheDuration);
+    return proxyCatalogItemUrl(this, uri.toString());
   }
 
   async forceLoadMetadata() {
@@ -404,12 +412,11 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
     const parameterTraits = await Promise.all(
       this.parameters.map(async p => {
         const geoJsonFeature = await runInAction(() => p.geoJsonFeature);
-        const tmp = createStratumInstance(ParameterTraits, {
+        return createStratumInstance(ParameterTraits, {
           name: p.name,
           value: p.formatValueAsString(),
           geoJsonFeature: <any>geoJsonFeature
         });
-        return tmp;
       })
     );
     runInAction(() => {

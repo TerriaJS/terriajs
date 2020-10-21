@@ -13,13 +13,10 @@ interface CssExports {
   'catalog-share-inner': string;
   'catalogShare': string;
   'catalogShareInner': string;
-  'charcoalGrey': string;
   'clipboard-for-catalog-share': string;
+  'clipboard-for-story-share': string;
   'clipboardForCatalogShare': string;
-  'colorPrimary': string;
-  'colorSplitter': string;
-  'dark': string;
-  'darkWithOverlay': string;
+  'clipboardForStoryShare': string;
   'dropdown-inner': string;
   'dropdownInner': string;
   'explanation': string;
@@ -30,9 +27,7 @@ interface CssExports {
   'link': string;
   'link-wrapper': string;
   'linkWrapper': string;
-  'mapButtonColor': string;
   'mobileHeader': string;
-  'modalHighlight': string;
   'paragraph': string;
   'print-button': string;
   'print-view-loader': string;
@@ -43,8 +38,10 @@ interface CssExports {
   'shareUrlfield': string;
   'shorten-url': string;
   'shortenUrl': string;
-  'textDarker': string;
-  'textLight': string;
+  'story-share': string;
+  'story-share-inner': string;
+  'storyShare': string;
+  'storyShareInner': string;
   'warning': string;
   'warning-link': string;
   'warningLink': string;

@@ -1,12 +1,4 @@
-import {
-  computed,
-  IReactionDisposer,
-  observable,
-  onBecomeObserved,
-  onBecomeUnobserved,
-  reaction,
-  runInAction
-} from "mobx";
+import { computed, IReactionDisposer, observable, runInAction } from "mobx";
 import { createTransformer, ITransformer, now } from "mobx-utils";
 import Pbf from "pbf";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -22,12 +14,12 @@ import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ModelGraphics from "terriajs-cesium/Source/DataSources/ModelGraphics";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
 import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
-import Axis from "terriajs-cesium/Source/Scene/Axis";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import URI from "urijs";
 import loadArrayBuffer from "../Core/loadArrayBuffer";
 import TerriaError from "../Core/TerriaError";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import GtfsCatalogItemTraits from "../Traits/GtfsCatalogItemTraits";
@@ -48,6 +40,12 @@ import raiseErrorOnRejectedPromise from "./raiseErrorOnRejectedPromise";
 import Terria from "./Terria";
 import VehicleData from "./VehicleData";
 import { BaseModel } from "./Model";
+import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
+
+// We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
+// and import doesn't allows us to do that, so instead we use require + type casting to ensure
+// we still maintain the type checking, without TS screaming with errors
+const Axis: Axis = require("terriajs-cesium/Source/Scene/Axis").default;
 
 interface RectangleExtent {
   east: number;
@@ -84,7 +82,9 @@ StratumOrder.addLoadStratum(GtfsStratum.stratumName);
  * for the spec.
  */
 export default class GtfsCatalogItem extends AsyncMappableMixin(
-  UrlMixin(CatalogMemberMixin(CreateModel(GtfsCatalogItemTraits)))
+  UrlMixin(
+    AutoRefreshingMixin(CatalogMemberMixin(CreateModel(GtfsCatalogItemTraits)))
+  )
 ) {
   disposer: IReactionDisposer | undefined;
 
@@ -120,13 +120,6 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   @observable
   protected gtfsFeedEntities: FeedEntity[] = [];
-
-  @computed
-  protected get _pollingTimer(): number | undefined {
-    if (this.refreshInterval !== null && this.refreshInterval !== undefined) {
-      return now(this.refreshInterval * 1000);
-    }
-  }
 
   protected convertManyFeedEntitiesToBillboardData: ITransformer<
     FeedEntity[],
@@ -186,8 +179,12 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
         entity.orientation = new ConstantProperty(data.orientation);
       }
 
-      if (data.position !== undefined && entity.position !== data.position) {
-        entity.position = data.position;
+      if (
+        data.position !== undefined &&
+        (!entity.position ||
+          entity.position.getValue(new JulianDate()) !== data.position)
+      ) {
+        entity.position = new ConstantPositionProperty(data.position);
       }
 
       // If we're using a billboard
@@ -196,8 +193,14 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
           entity.billboard = data.billboard;
         }
 
-        data.billboard.color.getValue(new JulianDate()).alpha = this.opacity;
-        if (!entity.billboard.color.equals(data.billboard.color)) {
+        if (data.billboard.color) {
+          data.billboard.color.getValue(new JulianDate()).alpha = this.opacity;
+        }
+
+        if (
+          !entity.billboard.color ||
+          !entity.billboard.color.equals(data.billboard.color)
+        ) {
           entity.billboard.color = data.billboard.color;
         }
       }
@@ -208,8 +211,14 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
           entity.point = data.point;
         }
 
-        data.point.color.getValue(new JulianDate()).alpha = this.opacity;
-        if (!entity.point.color.equals(data.point.color)) {
+        if (data.point.color) {
+          data.point.color.getValue(new JulianDate()).alpha = this.opacity;
+        }
+
+        if (
+          !entity.point.color ||
+          !entity.point.color.equals(data.point.color)
+        ) {
           entity.point.color = data.point.color;
         }
       }
@@ -237,23 +246,8 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     return this._dataSource;
   }
 
-  @computed
-  get nextScheduledUpdateTime(): Date | undefined {
-    if (
-      this._pollingTimer !== null &&
-      this._pollingTimer !== undefined &&
-      this.refreshInterval !== undefined &&
-      this.refreshInterval !== null
-    ) {
-      return new Date(this._pollingTimer + this.refreshInterval * 1000);
-    } else {
-      return undefined;
-    }
-  }
-
-  @computed
-  get isPolling() {
-    return this._pollingTimer !== null && this._pollingTimer !== undefined;
+  refreshData() {
+    this.forceLoadMapItems();
   }
 
   @computed
@@ -285,10 +279,12 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     }
 
     const options = {
-      uri: this.model.url,
-      upAxis: this._cesiumUpAxis,
-      forwardAxis: this._cesiumForwardAxis,
-      scale: this.model.scale !== undefined ? this.model.scale : 1,
+      uri: new ConstantProperty(this.model.url),
+      upAxis: new ConstantProperty(this._cesiumUpAxis),
+      forwardAxis: new ConstantProperty(this._cesiumForwardAxis),
+      scale: new ConstantProperty(
+        this.model.scale !== undefined ? this.model.scale : 1
+      ),
       heightReference: new ConstantProperty(HeightReference.RELATIVE_TO_GROUND),
       distanceDisplayCondition: new ConstantProperty({
         near: 0.0,
@@ -299,30 +295,12 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     return new ModelGraphics(options);
   }
 
-  constructor(id: string | undefined, terria: Terria) {
-    super(id, terria);
-    // We should only poll when our map items have consumers
-    onBecomeObserved(this, "mapItems", () => {
-      this.disposer = reaction(
-        () => this._pollingTimer,
-        () => {
-          this._bbox = {
-            west: Infinity,
-            south: Infinity,
-            east: -Infinity,
-            north: -Infinity
-          };
-          console.log("ping");
-          raiseErrorOnRejectedPromise(this.forceLoadMapItems());
-          // console.log(getObserverTree(this, "mapItems"));
-        }
-      );
-    });
-    onBecomeUnobserved(this, "mapItems", () => {
-      if (this.disposer !== undefined && this.disposer !== null) {
-        this.disposer();
-      }
-    });
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel
+  ) {
+    super(id, terria, sourceReference);
   }
 
   protected forceLoadMetadata(): Promise<void> {
@@ -330,11 +308,13 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
   }
 
   protected forceLoadMapItems(): Promise<void> {
-    GtfsStratum.load(this).then(stratum => {
-      runInAction(() => {
-        this.strata.set(GtfsStratum.stratumName, stratum);
+    if (this.strata.get(GtfsStratum.stratumName) === undefined) {
+      GtfsStratum.load(this).then(stratum => {
+        runInAction(() => {
+          this.strata.set(GtfsStratum.stratumName, stratum);
+        });
       });
-    });
+    }
     const promise: Promise<void> = this.retrieveData()
       .then((data: FeedMessage) => {
         runInAction(() => {
@@ -426,31 +406,37 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
     if (this.image !== undefined && this.image !== null) {
       billboard = new BillboardGraphics({
-        image: new URI(this.image).absoluteTo(this.terria.baseUrl).toString(),
-        heightReference: HeightReference.RELATIVE_TO_GROUND,
+        image: new ConstantProperty(
+          new URI(this.image).absoluteTo(this.terria.baseUrl).toString()
+        ),
+        heightReference: new ConstantProperty(
+          HeightReference.RELATIVE_TO_GROUND
+        ),
         scaleByDistance:
           this.scaleImageByDistance.nearValue ===
           this.scaleImageByDistance.farValue
             ? undefined
-            : new NearFarScalar(
-                this.scaleImageByDistance.near,
-                this.scaleImageByDistance.nearValue,
-                this.scaleImageByDistance.far,
-                this.scaleImageByDistance.farValue
+            : new ConstantProperty(
+                new NearFarScalar(
+                  this.scaleImageByDistance.near,
+                  this.scaleImageByDistance.nearValue,
+                  this.scaleImageByDistance.far,
+                  this.scaleImageByDistance.farValue
+                )
               ),
         scale:
           this.scaleImageByDistance.nearValue ===
             this.scaleImageByDistance.farValue &&
           this.scaleImageByDistance.nearValue !== 1.0
-            ? this.scaleImageByDistance.nearValue
+            ? new ConstantProperty(this.scaleImageByDistance.nearValue)
             : undefined,
-        color: new Color(1.0, 1.0, 1.0, this.opacity)
+        color: new ConstantProperty(new Color(1.0, 1.0, 1.0, this.opacity))
       });
     } else {
       point = new PointGraphics({
-        color: Color.CYAN,
-        outlineWidth: 1,
-        outlineColor: Color.WHITE,
+        color: new ConstantProperty(Color.CYAN),
+        outlineWidth: new ConstantProperty(1),
+        outlineColor: new ConstantProperty(Color.WHITE),
         scaleByDistance:
           this.scaleImageByDistance.nearValue ===
           this.scaleImageByDistance.farValue
@@ -467,9 +453,11 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
           this.scaleImageByDistance.nearValue ===
             this.scaleImageByDistance.farValue &&
           this.scaleImageByDistance.nearValue !== 1.0
-            ? 32 * this.scaleImageByDistance.nearValue
-            : 32,
-        heightReference: HeightReference.RELATIVE_TO_GROUND
+            ? new ConstantProperty(32 * this.scaleImageByDistance.nearValue)
+            : new ConstantProperty(32),
+        heightReference: new ConstantProperty(
+          HeightReference.RELATIVE_TO_GROUND
+        )
       });
     }
 

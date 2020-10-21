@@ -1,17 +1,19 @@
 "use strict";
 
+// Ref now needs to be passed in via refForCaret as there is no longer a button
+// in CleanDropdownPanel
+
 // proptypes are in mixin
 /* eslint react/prop-types:0*/
 
 import React from "react";
 import createReactClass from "create-react-class";
-import classNames from "classnames";
 // import Icon from "../../Icon";
 import InnerPanel from "../Map/Panels/InnerPanel";
 import BaseOuterPanel from "../Map/Panels/BaseOuterPanel";
 
 // import Styles from "./panel.scss";
-import Styles from "../Map/Panels/panel.scss";
+import Box from "../../Styled/Box";
 
 // import defined from "terriajs-cesium/Source/Core/defined";
 
@@ -29,23 +31,25 @@ const CleanDropdownPanel = createReactClass({
 
   onInnerMounted(innerElement) {
     const centerInnerDropdown = this.props.showDropdownInCenter;
+    const refForCaret =
+      this.props.refForCaret && this.props.refForCaret.current;
     if (centerInnerDropdown) {
       this.setState({
         caretOffset: "50%",
         dropdownOffset: "50%"
       });
-    } else if (innerElement && this.buttonElement) {
+    } else if (innerElement && refForCaret) {
       // how much further right the panel is from the button
-      const offset = this.buttonElement.offsetLeft - innerElement.offsetLeft;
+      const offset = refForCaret.offsetLeft - innerElement.offsetLeft;
       // if the panel is left of the button leave its offset as is, otherwise move it right so it's level with the button.
       const dropdownOffset =
         offset < innerElement.offsetLeft ? offset : innerElement.offsetLeft;
       // offset the caret to line up with the middle of the button - note that the caret offset is relative to the panel, whereas
       // the offsets for the button/panel are relative to their container.
       const caretOffset = Math.max(
-        this.buttonElement.clientWidth / 2 -
+        refForCaret.clientWidth / 2 -
           10 -
-          (dropdownOffset - this.buttonElement.offsetLeft),
+          (dropdownOffset - refForCaret.offsetLeft),
         0
       );
 
@@ -70,12 +74,13 @@ const CleanDropdownPanel = createReactClass({
 
   render() {
     return (
-      <div
-        className={classNames(Styles.panel, this.props.theme.outer)}
+      <Box
+        styledWidth={"auto"}
+        className={this.props.theme.outer}
         css={`
           // unfortunately this is probably the quickest way to deal with the
           // mix of scss+styled-components atm
-          .tjs-InnerPannelCloseButton {
+          .tjs-sc-InnerPanelCloseButton {
             svg:not(:hover):not(:focus) {
               fill: ${p => p.theme.textLight};
             }
@@ -85,8 +90,8 @@ const CleanDropdownPanel = createReactClass({
             }
           }
           max-width: calc(100vw - 10px);
+          ${this.props.cleanDropdownPanelStyles}
         `}
-        ref={element => (this.buttonElement = element)}
       >
         <If condition={this.isOpen()}>
           <InnerPanel
@@ -103,7 +108,7 @@ const CleanDropdownPanel = createReactClass({
             {this.props.children}
           </InnerPanel>
         </If>
-      </div>
+      </Box>
     );
   }
 });

@@ -3,8 +3,11 @@ import CatalogGroup from "../../lib/Models/CatalogGroupNew";
 import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
+import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
 import MagdaReference from "../../lib/Models/MagdaReference";
 import Terria from "../../lib/Models/Terria";
+import StubCatalogItem from "../../lib/Models/StubCatalogItem";
+import { BaseModel } from "../../lib/Models/Model";
 
 describe("MagdaReference", function() {
   const recordGroupWithOneCsv = {
@@ -29,11 +32,6 @@ describe("MagdaReference", function() {
       }
     }
   };
-
-  beforeEach(function() {
-    CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
-    CatalogMemberFactory.register(CsvCatalogItem.type, CsvCatalogItem);
-  });
 
   it("can dereference to a group", function(done) {
     const terria = new Terria();
@@ -228,5 +226,93 @@ describe("MagdaReference", function() {
       })
       .then(done)
       .catch(done.fail);
+  });
+
+  it("loads valid items and ignores broken items", async function() {
+    const groupWithBrokenItem: any = {
+      aspects: {
+        group: {
+          members: [
+            {
+              aspects: {
+                terria: {
+                  definition: {
+                    name: "GeoJSON Another Test",
+                    url: "http://ci.terria.io/master/test/bike_racks.geojson"
+                  },
+                  id: "fa0e6775-e285-4f49-8d5a-abd58cbfdfad",
+                  type: "geojson"
+                }
+              },
+              id: "fa0e6775-e285-4f49-8d5a-abd58cbfdfad",
+              name: "GeoJSON Another Test"
+            },
+            {
+              aspects: {
+                terria: {
+                  definition: {
+                    name: "GeoJSON Another Test with broken url",
+                    url: null
+                  },
+                  id: "1057cfde-243b-4aa0-8bba-732f45327c96",
+                  type: "geojson"
+                }
+              },
+              id: "1057cfde-243b-4aa0-8bba-732f45327c96",
+              name: "GeoJSON Another Test with broken url"
+            },
+            {
+              aspects: {
+                terria: {
+                  definition: {}
+                },
+                id: "item-with-no-type-and-definition",
+                type: "unknown"
+              },
+              id: "item-with-no-type-and-definition",
+              name: "item with no type and definition"
+            }
+          ]
+        },
+        terria: {
+          definition: {
+            description: "New empty catalog group",
+            name: "Contains broken stuff"
+          },
+          id: "c0f03092-d7e8-4ff0-9edd-72393b256960",
+          type: "group"
+        }
+      },
+      id: "c0f03092-d7e8-4ff0-9edd-72393b256960",
+      name: "Contains broken stuff",
+      tenantId: 0
+    };
+
+    const terria = new Terria();
+    const model = new MagdaReference(undefined, terria);
+
+    model.setTrait(CommonStrata.definition, "recordId", "test-group");
+    model.setTrait(CommonStrata.definition, "magdaRecord", groupWithBrokenItem);
+
+    await model.loadReference();
+
+    const group = model.target as CatalogGroup;
+    expect(group.members.length).toBe(3);
+
+    const member0 = group.memberModels[0] as GeoJsonCatalogItem;
+    expect(member0.uniqueId).toBe("fa0e6775-e285-4f49-8d5a-abd58cbfdfad");
+    expect(member0.type).toBe(GeoJsonCatalogItem.type);
+    expect(member0.isExperiencingIssues).toBe(false);
+
+    const member1 = group.memberModels[1] as GeoJsonCatalogItem;
+    expect(member1.uniqueId).toBe("1057cfde-243b-4aa0-8bba-732f45327c96");
+    expect(member1.type).toBe(GeoJsonCatalogItem.type);
+    expect(member1.isExperiencingIssues).toBe(true);
+
+    const unknown = group.memberModels[2] as MagdaReference;
+    expect(unknown.uniqueId).toBe("item-with-no-type-and-definition");
+    expect(unknown.name).toBe("item with no type and definition");
+    expect(unknown.type).toBe("magda");
+    expect(unknown.target).toBeUndefined();
   });
 });

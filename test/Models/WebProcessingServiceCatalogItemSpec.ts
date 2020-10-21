@@ -8,6 +8,7 @@ import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
 import Terria from "../../lib/Models/Terria";
 import WebProcessingServiceCatalogItem from "../../lib/Models/WebProcessingServiceCatalogItem";
 import { xml } from "../SpecHelpers";
+import i18next from "i18next";
 
 configure({
   enforceActions: "observed",
@@ -44,7 +45,9 @@ describe("WebProcessingServiceCatalogItem", function() {
 
   it("has a type & typeName", function() {
     expect(WebProcessingServiceCatalogItem.type).toBe("wps-result");
-    expect(item.typeName).toBe("Web Processing Service Result");
+    expect(item.typeName).toBe(
+      i18next.t("models.webProcessingService.wpsResult")
+    );
   });
 
   it("loads metadata from `wpsResponseUrl` if it is set", async function() {
@@ -173,11 +176,6 @@ describe("WebProcessingServiceCatalogItem", function() {
 });
 
 function initTerria() {
-  CatalogMemberFactory.register(CsvCatalogItem.type, <any>CsvCatalogItem);
-  CatalogMemberFactory.register(
-    GeoJsonCatalogItem.type,
-    <any>GeoJsonCatalogItem
-  );
   const terria = new Terria();
   terria.configParameters.regionMappingDefinitionsUrl =
     "/data/regionMapping.json";

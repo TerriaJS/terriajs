@@ -8,14 +8,13 @@ import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
-import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import cesiumRequestAnimationFrame from "terriajs-cesium/Source/Core/requestAnimationFrame";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import when from "terriajs-cesium/Source/ThirdParty/when";
@@ -43,6 +42,18 @@ import Mappable, { ImageryParts, MapItem } from "./Mappable";
 import Terria from "./Terria";
 import MapboxVectorCanvasTileLayer from "../Map/MapboxVectorCanvasTileLayer";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
+import LatLonHeight from "../Core/LatLonHeight";
+import MapInteractionMode from "./MapInteractionMode";
+import i18next from "i18next";
+import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import RasterLayerTraits from "../Traits/RasterLayerTraits";
+import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
+
+// We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
+// and import doesn't allows us to do that, so instead we use require + type casting to ensure
+// we still maintain the type checking, without TS screaming with errors
+const FeatureDetection: FeatureDetection = require("terriajs-cesium/Source/Core/FeatureDetection")
+  .default;
 
 interface SplitterClips {
   left: string;
@@ -91,14 +102,30 @@ export default class Leaflet extends GlobeOrMap {
   private _disposeSplitterReaction: () => void;
 
   private _createImageryLayer: (
-    ip: Cesium.ImageryProvider
-  ) => GridLayer = createTransformer((ip: Cesium.ImageryProvider) => {
+    ip: ImageryProvider
+  ) => GridLayer = createTransformer((ip: ImageryProvider) => {
     if (ip instanceof MapboxVectorTileImageryProvider) {
       return new MapboxVectorCanvasTileLayer(ip, {});
     } else {
       return new CesiumTileLayer(ip);
     }
   });
+
+  private _makeImageryLayerFromParts(parts: ImageryParts, item: Mappable) {
+    if (TileErrorHandlerMixin.isMixedInto(item)) {
+      // because this code path can run multiple times, make sure we remove the
+      // handler if it is already registered
+      parts.imageryProvider.errorEvent.removeEventListener(
+        item.onTileLoadError,
+        item
+      );
+      parts.imageryProvider.errorEvent.addEventListener(
+        item.onTileLoadError,
+        item
+      );
+    }
+    return this._createImageryLayer(parts.imageryProvider);
+  }
 
   constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
     super();
@@ -107,7 +134,6 @@ export default class Leaflet extends GlobeOrMap {
     this.map = L.map(container, {
       zoomControl: false,
       attributionControl: false,
-      maxZoom: 14, //this.maximumLeafletZoomLevel,
       zoomSnap: 1, // Change to  0.2 for incremental zoom when Chrome fixes canvas scaling gaps
       preferCanvas: true,
       worldCopyJump: false
@@ -185,6 +211,15 @@ export default class Leaflet extends GlobeOrMap {
         this._featurePicked(entity, event);
       };
 
+      // Update mouse coords on mouse move
+      this.map.on("mousemove", (e: L.LeafletEvent) => {
+        const mouseEvent = <L.LeafletMouseEvent>e;
+        this.mouseCoords.updateCoordinatesFromLeaflet(
+          this.terria,
+          mouseEvent.originalEvent
+        );
+      });
+
       if (this.terriaViewer.disableInteraction) {
         interactions.forEach(handler => handler.disable());
         this.map.off("click", pickLocation);
@@ -201,6 +236,47 @@ export default class Leaflet extends GlobeOrMap {
         });
       }
     });
+
+    this._initProgressEvent();
+  }
+
+  /**
+   * sets up loading listeners
+   */
+  private _initProgressEvent() {
+    const onTileLoadChange = () => {
+      var tilesLoadingCount = 0;
+
+      this.map.eachLayer(function(layerOrGridlayer) {
+        // _tiles is protected but our knockout-loading-logic accesses it here anyway
+        const layer = layerOrGridlayer as any;
+        if (layer?._tiles) {
+          // Count all tiles not marked as loaded
+          tilesLoadingCount += Object.keys(layer._tiles).filter(
+            key => !layer._tiles[key].loaded
+          ).length;
+        }
+      });
+
+      this._updateTilesLoadingCount(tilesLoadingCount);
+    };
+
+    this.map.on(
+      "layeradd",
+      function(evt: any) {
+        // This check makes sure we only watch tile layers, and also protects us if this private variable gets changed.
+        if (typeof evt.layer._tiles !== "undefined") {
+          evt.layer.on("tileloadstart tileload load", onTileLoadChange);
+        }
+      }.bind(this)
+    );
+
+    this.map.on(
+      "layerremove",
+      function(evt: any) {
+        evt.layer.off("tileloadstart tileload load", onTileLoadChange);
+      }.bind(this)
+    );
   }
 
   /**
@@ -266,14 +342,29 @@ export default class Leaflet extends GlobeOrMap {
         this.terriaViewer.baseMap
       ];
       // Flatmap
-      const allMapItems = ([] as MapItem[]).concat(
-        ...catalogItems.filter(isDefined).map(item => item.mapItems)
+      const allImageryMapItems = ([] as {
+        item: Mappable;
+        parts: ImageryParts;
+      }[]).concat(
+        ...catalogItems
+          .filter(isDefined)
+          .map(item =>
+            item.mapItems
+              .filter(ImageryParts.is)
+              .map(parts => ({ item, parts }))
+          )
       );
 
-      const allImagery = allMapItems.filter(ImageryParts.is).map(parts => ({
-        parts: parts,
-        layer: this._createImageryLayer(parts.imageryProvider)
-      }));
+      const allImagery = allImageryMapItems.map(({ item, parts }) => {
+        if (hasTraits(item, RasterLayerTraits, "leafletUpdateInterval")) {
+          (parts.imageryProvider as any)._leafletUpdateInterval =
+            item.leafletUpdateInterval;
+        }
+        return {
+          parts: parts,
+          layer: this._makeImageryLayerFromParts(parts, item)
+        };
+      });
 
       // Delete imagery layers no longer in the model
       this.map.eachLayer(mapLayer => {
@@ -305,6 +396,9 @@ export default class Leaflet extends GlobeOrMap {
       });
 
       /* Handle datasources */
+      const allMapItems = ([] as MapItem[]).concat(
+        ...catalogItems.filter(isDefined).map(item => item.mapItems)
+      );
       const allDataSources = allMapItems.filter(isDataSource);
 
       // Remove deleted data sources
@@ -313,6 +407,7 @@ export default class Leaflet extends GlobeOrMap {
         const d = dataSources.get(i);
         if (allDataSources.indexOf(d) === -1) {
           dataSources.remove(d);
+          --i;
         }
       }
 
@@ -330,7 +425,7 @@ export default class Leaflet extends GlobeOrMap {
   }
 
   zoomTo(
-    target: CameraView | Cesium.Rectangle | Cesium.DataSource | Mappable | any,
+    target: CameraView | Rectangle | DataSource | Mappable | any,
     flightDurationSeconds: number
   ): void {
     if (!isDefined(target)) {
@@ -366,7 +461,8 @@ export default class Leaflet extends GlobeOrMap {
             ) {
               extent = Rectangle.fromDegrees(west, south, east, north);
             }
-          } else {
+          }
+          if (!isDefined(extent)) {
             // Zoom to the first item!
             return that.zoomTo(target.mapItems[0], flightDurationSeconds);
           }
@@ -405,6 +501,62 @@ export default class Leaflet extends GlobeOrMap {
 
   notifyRepaintRequired() {
     // No action necessary.
+  }
+
+  pickFromLocation(
+    latLngHeight: LatLonHeight,
+    providerCoords: ProviderCoordsMap,
+    existingFeatures: Feature[]
+  ) {
+    this._pickFeatures(
+      L.latLng({
+        lat: latLngHeight.latitude,
+        lng: latLngHeight.longitude,
+        alt: latLngHeight.height
+      }),
+      providerCoords,
+      existingFeatures
+    );
+  }
+
+  /**
+   * Return features at a latitude, longitude and (optionally) height for the given imageryLayer.
+   * @param latLngHeight The position on the earth to pick
+   * @param providerCoords A map of imagery provider urls to the tile coords used to get features for those imagery
+   * @returns A flat array of all the features for the given tiles that are currently on the map
+   */
+  @action
+  async getFeaturesAtLocation(
+    latLngHeight: LatLonHeight,
+    providerCoords: ProviderCoordsMap
+  ) {
+    const pickMode = new MapInteractionMode({
+      message: i18next.t("models.imageryLayer.resolvingAvailability"),
+      onCancel: () => {
+        this.terria.mapInteractionModeStack.pop();
+      }
+    });
+    this.terria.mapInteractionModeStack.push(pickMode);
+    this._pickFeatures(
+      L.latLng({
+        lat: latLngHeight.latitude,
+        lng: latLngHeight.longitude,
+        alt: latLngHeight.height
+      }),
+      providerCoords,
+      [],
+      true
+    );
+
+    if (pickMode.pickedFeatures) {
+      const pickedFeatures = pickMode.pickedFeatures;
+      await pickedFeatures.allFeaturesAvailablePromise;
+    }
+
+    return runInAction(() => {
+      this.terria.mapInteractionModeStack.pop();
+      return pickMode.pickedFeatures?.features;
+    });
   }
 
   /*
@@ -453,7 +605,8 @@ export default class Leaflet extends GlobeOrMap {
   private _pickFeatures(
     latlng: L.LatLng,
     tileCoordinates?: any,
-    existingFeatures?: Entity[]
+    existingFeatures?: Entity[],
+    ignoreSplitter: boolean = false
   ) {
     if (isDefined(this._pickedFeatures)) {
       // Picking is already in progress.
@@ -509,36 +662,38 @@ export default class Leaflet extends GlobeOrMap {
       pickedLocation
     );
 
-    // We want the all available promise to return after the cleanup one to make sure all vector click events have resolved.
+    // We want the all available promise to return after the cleanup one to
+    // make sure all vector click events have resolved.
     const promises = [cleanup].concat(
       imageryLayers.map(imageryLayer => {
         const imageryLayerUrl = (<any>imageryLayer.imageryProvider).url;
         const longRadians = CesiumMath.toRadians(latlng.lng);
         const latRadians = CesiumMath.toRadians(latlng.lat);
 
-        if (tileCoordinates[imageryLayerUrl]) {
-          return Promise.resolve(tileCoordinates[imageryLayerUrl]);
-        } else {
+        return Promise.resolve(
+          tileCoordinates[imageryLayerUrl] ||
+            imageryLayer.getFeaturePickingCoords(
+              this.map,
+              longRadians,
+              latRadians
+            )
+        ).then(coords => {
           return imageryLayer
-            .getFeaturePickingCoords(this.map, longRadians, latRadians)
-            .then(coords => {
-              return imageryLayer
-                .pickFeatures(
-                  coords.x,
-                  coords.y,
-                  coords.level,
-                  longRadians,
-                  latRadians
-                )
-                .then(features => {
-                  return {
-                    features: features,
-                    imageryLayer: imageryLayer,
-                    coords: coords
-                  };
-                });
+            .pickFeatures(
+              coords.x,
+              coords.y,
+              coords.level,
+              longRadians,
+              latRadians
+            )
+            .then(features => {
+              return {
+                features: features,
+                imageryLayer: imageryLayer,
+                coords: coords
+              };
             });
-        }
+        });
       })
     );
 
@@ -558,7 +713,6 @@ export default class Leaflet extends GlobeOrMap {
         });
 
         pickedFeatures.providerCoords = {};
-
         const filteredResults = promiseResult.filter(function(result) {
           return isDefined(result.features) && result.features.length > 0;
         });
@@ -576,6 +730,7 @@ export default class Leaflet extends GlobeOrMap {
         const features = filteredResults.reduce((allFeatures, result) => {
           if (
             this.terria.showSplitter &&
+            ignoreSplitter === false &&
             isDefined(pickedFeatures.pickPosition)
           ) {
             // Skip this feature, unless the imagery layer is on the picked side or
@@ -667,19 +822,14 @@ export default class Leaflet extends GlobeOrMap {
   }
 
   getImageryLayersForItem(item: Mappable): CesiumTileLayer[] {
-    const allImageryParts = item.mapItems.filter(ImageryParts.is);
-    const imageryLayers: CesiumTileLayer[] = [];
-    this.map.eachLayer(layer => {
-      if (isImageryLayer(layer)) {
-        const found = allImageryParts.find(
-          p => p.imageryProvider === layer.imageryProvider
-        );
-        if (found) {
-          imageryLayers.push(layer);
+    return filterOutUndefined(
+      item.mapItems.map(m => {
+        if (ImageryParts.is(m)) {
+          const layer = this._makeImageryLayerFromParts(m, item);
+          return layer instanceof CesiumTileLayer ? layer : undefined;
         }
-      }
-    });
-    return imageryLayers;
+      })
+    );
   }
 
   /**
@@ -855,7 +1005,7 @@ export default class Leaflet extends GlobeOrMap {
 
   _addVectorTileHighlight(
     imageryProvider: MapboxVectorTileImageryProvider,
-    rectangle: Cesium.Rectangle
+    rectangle: Rectangle
   ): () => void {
     const map = this.map;
     const options: any = {

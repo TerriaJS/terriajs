@@ -76,25 +76,27 @@ export const Timeline = observer(
       const jsDate = JulianDate.toDate(catalogItem.currentTimeAsJulianDate);
       const timelineStack = this.props.terria.timelineStack;
       let currentTime;
-      if (
-        defined(timelineStack.top) &&
-        defined(timelineStack.top.dateFormat) &&
-        defined(timelineStack.top.dateFormat.currentTime)
-      ) {
+      if (defined(timelineStack.top) && defined(timelineStack.top.dateFormat)) {
         currentTime = dateFormat(
           jsDate,
-          this.props.terria.timelineStack.top.dateFormat.currentTime
+          this.props.terria.timelineStack.top.dateFormat
         );
       } else {
         currentTime = formatDateTime(jsDate, this.props.locale);
       }
 
       const discreteTimes = catalogItem.discreteTimesAsSortedJulianDates;
+      const objectifiedDates = catalogItem.objectifiedDates;
       const currentDiscreteJulianDate = catalogItem.currentDiscreteJulianDate;
 
       return (
         <div className={Styles.timeline}>
-          <div className={Styles.textRow}>
+          <div
+            className={Styles.textRow}
+            css={`
+              background: ${p => p.theme.dark};
+            `}
+          >
             <div
               className={Styles.textCell}
               title={t("dateTime.timeline.textCell")}
@@ -120,7 +122,7 @@ export const Timeline = observer(
             >
               <DateTimePicker
                 currentDate={JulianDate.toDate(currentDiscreteJulianDate)}
-                dates={discreteTimes.map(time => JulianDate.toDate(time))}
+                dates={objectifiedDates}
                 onChange={this.changeDateTime}
                 openDirection="up"
                 isOpen={this.state.isPickerOpen}
