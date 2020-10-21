@@ -219,7 +219,7 @@ function expand(props, sourceIndex) {
     });
     const items = [newCatalogItem];
     let newGeoJsonAvailable = false;
-    if (defined(feature.position._value)) {
+    if (defined(feature.position) && defined(feature.position._value)) {
       newGeoJsonAvailable = true;
       const newGeoJsonItem = new GeoJsonCatalogItem(terria, null);
       newGeoJsonItem.isUserSupplied = true;
