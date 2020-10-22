@@ -48,11 +48,11 @@ export interface ChartCustomComponentAttributes {
   /** Defaults to 'feature-info'. Can also be 'histogram'. TODO: improve. */
   styling?: string;
 
-  /** Maps column names to titles. Eg. column-names="time:Time,height:Height,speed:Speed" */
-  columnTitles?: { name: string; title: string }[];
+  /** Maps column names to titles. Eg. column-titles="time:Time,height:Height,speed:Speed" OR column-titles="Time,Height,Speed" */
+  columnTitles?: ({ name: string; title: string } | string)[];
 
-  /** Maps column names to units. Eg. column-units="height:m,speed:km/h" */
-  columnUnits?: { name: string; units: string }[];
+  /** Maps column names to units. Eg. column-units="height:m,speed:km/h" OR column-units="m,km/h" */
+  columnUnits?: ({ name: string; units: string } | string)[];
 
   /** The x column name or number to show in the preview, if not the first appropriate column. NOT FULLY IMPLEMENTED YET. */
   xColumn?: string;
@@ -422,15 +422,25 @@ export default abstract class ChartCustomComponent<
 
     const columnTitles = filterOutUndefined(
       (nodeAttrs["column-titles"] || "").split(",").map(s => {
-        const [name, title] = rsplit2(s, ":");
-        return name ? { name, title } : undefined;
+        const [a, b] = rsplit2(s, ":");
+        if (a && b) {
+          return { name: a, title: b };
+        } else {
+          const title = a;
+          return title;
+        }
       })
     );
 
     const columnUnits = filterOutUndefined(
       (nodeAttrs["column-units"] || "").split(",").map(s => {
-        const [name, units] = rsplit2(s, ":");
-        return name ? { name, units } : undefined;
+        const [a, b] = rsplit2(s, ":");
+        if (a && b) {
+          return { name: a, units: b };
+        } else {
+          const units = a;
+          return units;
+        }
       })
     );
 
