@@ -214,7 +214,7 @@ function getRowDescription(
 ) {
   const rows = tableColumns
     .map(column => {
-      const title = column.traits.title || column.name;
+      const title = column.title;
       const value = column.values[index];
       return `<tr><td>${title}</td><td>${value}</td></tr>`;
     })
