@@ -5,6 +5,8 @@ Change Log
 
 #### next release (8.0.0-alpha.58)
 * Fix zooming bug for datasets with invalid bounding boxes.
+* Add `ThreddsCatalogGroup` model.
+* Port `supportsColorScaleRange`, `colorScaleMinimum` and `colorScaleMaximimum` from `master` to `WebMapServiceCatalogItem` model.
 * [The next improvement]
 
 #### 8.0.0-alpha.57
@@ -104,9 +106,6 @@ Change Log
 * Replaces `ShadowSection` with `ShadowMixin` using `SelectableDimensions`
 * Fix Webpack Windows path issue
 * Updated icons for view and edit story in the hamburger menu.
-* Add `ThreddsCatalogGroup` model.
-* Port `supportsColorScaleRange`, `colorScaleMinimum` and `colorScaleMaximimum` from `master` to `WebMapServiceCatalogItem` model.
-* [The next improvement]
 * Implemented new design for story panel.
 
 #### 8.0.0-alpha.48
