@@ -82,7 +82,7 @@ interface MeasurementTimeValuePair {
   value: Object | string;
 }
 
-const automaticTableStylesStratumName = "automaticTableStyles";
+const automaticTableStylesStratumName = TableAutomaticStylesStratum.stratumName;
 StratumOrder.addLoadStratum(automaticTableStylesStratumName);
 
 class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
