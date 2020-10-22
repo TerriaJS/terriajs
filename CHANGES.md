@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.58)
+* Add `FeatureInfoTraits` to `ArcGisMapServerCatalogItem`
 * [The next improvement]
 
 #### 8.0.0-alpha.57
