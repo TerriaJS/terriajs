@@ -1,9 +1,11 @@
 import { configure, reaction, runInAction } from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import isDefined from "../../lib/Core/isDefined";
 import TerriaError from "../../lib/Core/TerriaError";
 import AsyncMappableMixin from "../../lib/ModelMixins/AsyncMappableMixin";
 import CommonStrata from "../../lib/Models/CommonStrata";
+import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
 import DateTimeParameter from "../../lib/Models/FunctionParameters/DateTimeParameter";
 import EnumerationParameter from "../../lib/Models/FunctionParameters/EnumerationParameter";
 import GeoJsonParameter from "../../lib/Models/FunctionParameters/GeoJsonParameter";
@@ -163,6 +165,24 @@ describe("WebProcessingServiceCatalogFunction", function() {
           ((<unknown>job.results[1]) as AsyncMappableMixin.AsyncMappableMixin)
             .inWorkbench
         ).toBeTruthy();
+      });
+
+      it("adds a new catalog member for the output", async function() {
+        expect(job.results[0].type).toBe(CsvCatalogItem.type);
+      });
+
+      it("adds a short report", async function() {
+        expect(job.shortReportSections[0].content).toBe(
+          "Chart Vegetation Cover generated."
+        );
+      });
+      it("returns mapItems", async function() {
+        expect(job.mapItems.length).toBe(1);
+        expect(job.mapItems[0]).toEqual(jasmine.any(GeoJsonDataSource));
+      });
+
+      it("defines a rectangle", async function() {
+        expect(job.rectangle).toBeDefined();
       });
     });
 

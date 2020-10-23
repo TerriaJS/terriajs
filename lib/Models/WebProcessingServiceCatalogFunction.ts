@@ -159,6 +159,14 @@ class WpsLoadableStratum extends LoadableStratum(
         : [dataInputs.Input];
     return inputs;
   }
+
+  get storeSupported() {
+    return Boolean(this.processDescription.storeSupported);
+  }
+
+  get statusSupported() {
+    return Boolean(this.processDescription.statusSupported);
+  }
 }
 
 StratumOrder.addLoadStratum(WpsLoadableStratum.stratumName);
@@ -255,14 +263,8 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
         url: this.url,
         identifier: this.identifier,
         executeWithHttpGet: this.executeWithHttpGet,
-        statusSupported: isDefined(this.statusSupported)
-          ? this.statusSupported
-          : isDefined(this.processDescription) &&
-            this.processDescription.statusSupported === "true",
-        storeSupported: isDefined(this.storeSupported)
-          ? this.storeSupported
-          : isDefined(this.processDescription) &&
-            this.processDescription.storeSupported === "true",
+        statusSupported: this.statusSupported,
+        storeSupported: this.storeSupported,
         wpsParameters: dataInputs
       })
     );

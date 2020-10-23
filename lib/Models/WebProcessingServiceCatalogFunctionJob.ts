@@ -10,7 +10,6 @@ import {
 import Mustache from "mustache";
 import URI from "urijs";
 import isDefined from "../Core/isDefined";
-import { JsonObject } from "../Core/Json";
 import TerriaError from "../Core/TerriaError";
 import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
@@ -44,32 +43,19 @@ class WpsLoadableStratum extends LoadableStratum(
 ) {
   static stratumName = "wpsLoadable";
 
-  constructor(
-    readonly item: WebProcessingServiceCatalogFunctionJob,
-    private _wpsResponse?: JsonObject
-  ) {
+  constructor(readonly item: WebProcessingServiceCatalogFunctionJob) {
     super();
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
     return new WpsLoadableStratum(
-      newModel as WebProcessingServiceCatalogFunctionJob,
-      this.wpsResponse
+      newModel as WebProcessingServiceCatalogFunctionJob
     ) as this;
   }
 
   @action
   static async load(item: WebProcessingServiceCatalogFunctionJob) {
-    if (!isDefined(item.wpsResponse) && isDefined(item.wpsResponseUrl)) {
-      const url = proxyCatalogItemUrl(item, item.wpsResponseUrl, "1d");
-      const wpsResponse = xml2json(await item.getXml(url));
-      return new WpsLoadableStratum(item, wpsResponse);
-    }
     return new WpsLoadableStratum(item);
-  }
-
-  get wpsResponse() {
-    return this._wpsResponse;
   }
 
   @computed get shortReportSections() {
@@ -295,7 +281,9 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
     if (!isDefined(this.wpsResponseUrl)) {
       return true;
     }
-    const promise = this.getXml(this.wpsResponseUrl);
+    const promise = this.getXml(
+      proxyCatalogItemUrl(this, this.wpsResponseUrl, "0d")
+    );
     const xml = await promise;
 
     const json = xml2json(xml);
@@ -304,10 +292,16 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
   }
 
   async downloadResults() {
-    const stratum = await WpsLoadableStratum.load(this);
-    runInAction(() => {
-      this.strata.set(WpsLoadableStratum.stratumName, stratum);
-    });
+    if (isDefined(this.wpsResponseUrl) && !isDefined(this.wpsResponse)) {
+      const url = proxyCatalogItemUrl(this, this.wpsResponseUrl, "0d");
+      const wpsResponse = xml2json(await this.getXml(url));
+      runInAction(() => {
+        this.setTrait(CommonStrata.user, "wpsResponse", wpsResponse);
+      });
+    }
+
+    if (!isDefined(this.wpsResponse)) return;
+
     const reports: StratumFromTraits<ShortReportTraits>[] = [];
 
     const outputs = runInAction(() => this.outputs);
@@ -387,9 +381,6 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
       this.setTrait(CommonStrata.user, "shortReportSections", reports);
     });
 
-    console.log(this);
-    console.log(results);
-
     return results;
   }
 
@@ -405,6 +396,13 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
 
   get chartItems(): ChartItem[] {
     return [];
+  }
+
+  protected async forceLoadMetadata() {
+    const stratum = await WpsLoadableStratum.load(this);
+    runInAction(() => {
+      this.strata.set(WpsLoadableStratum.stratumName, stratum);
+    });
   }
 
   protected async forceLoadMapItems(): Promise<void> {

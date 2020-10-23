@@ -293,7 +293,11 @@ function CatalogFunctionJobMixin<
     }
     protected async forceLoadMapItems() {}
 
-    protected async forceLoadMetadata() {}
+    protected async forceLoadMetadata() {
+      if (this.jobStatus === "finished" && !this.downloadedResults) {
+        await this.onJobFinish();
+      }
+    }
 
     protected async forceLoadMembers() {}
 
