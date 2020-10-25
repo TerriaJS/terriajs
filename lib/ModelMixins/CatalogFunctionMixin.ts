@@ -9,6 +9,7 @@ import Model from "../Models/Model";
 import CatalogFunctionTraits from "../Traits/CatalogFunctionTraits";
 import CatalogFunctionJobMixin from "./CatalogFunctionJobMixin";
 import CatalogMemberMixin from "./CatalogMemberMixin";
+import isDefined from "../Core/isDefined";
 const sprintf = require("terriajs-cesium/Source/ThirdParty/sprintf").default;
 
 type CatalogFunctionMixin = Model<CatalogFunctionTraits>;
@@ -43,28 +44,22 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
      */
     async submitJob() {
       try {
-        const now = new Date();
-        const timestamp = sprintf(
-          "%04d-%02d-%02dT%02d:%02d:%02d",
-          now.getFullYear(),
-          now.getMonth() + 1,
-          now.getDate(),
-          now.getHours(),
-          now.getMinutes(),
-          now.getSeconds()
-        );
-
+        const timestamp = getTimestamp();
         const newJob = await this.createJob(`${this.uniqueId}-${timestamp}`);
 
         if (!CatalogFunctionJobMixin.isMixedInto(newJob)) {
           throw `Error creating job catalog item - ${newJob.type} is not a valid jobType`;
         }
 
-        newJob.setTrait(
-          CommonStrata.user,
-          "name",
-          `${newJob.typeName} ${timestamp}`
-        );
+        // Give default name if needed
+        if (!isDefined(newJob.name)) {
+          newJob.setTrait(
+            CommonStrata.user,
+            "name",
+            `${newJob.typeName} ${timestamp}`
+          );
+        }
+
         newJob.setTrait(CommonStrata.user, "parameters", toJS(this.parameters));
 
         await newJob.loadMetadata();
@@ -116,3 +111,16 @@ namespace CatalogFunctionMixin {
 }
 
 export default CatalogFunctionMixin;
+
+export function getTimestamp() {
+  const now = new Date();
+  return sprintf(
+    "%04d-%02d-%02dT%02d:%02d:%02d",
+    now.getFullYear(),
+    now.getMonth() + 1,
+    now.getDate(),
+    now.getHours(),
+    now.getMinutes(),
+    now.getSeconds()
+  );
+}

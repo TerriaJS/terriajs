@@ -5,7 +5,9 @@ import URI from "urijs";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
 import Reproject from "../Map/Reproject";
-import CatalogFunctionMixin from "../ModelMixins/CatalogFunctionMixin";
+import CatalogFunctionMixin, {
+  getTimestamp
+} from "../ModelMixins/CatalogFunctionMixin";
 import XmlRequestMixin from "../ModelMixins/XmlRequestMixin";
 import xml2json from "../ThirdParty/xml2json";
 import WebProcessingServiceCatalogFunctionTraits from "../Traits/WebProcessingServiceCatalogFunctionTraits";
@@ -255,6 +257,9 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
 
     runInAction(() =>
       updateModelFromJson(job, CommonStrata.user, {
+        name: `WPS: ${this.name ||
+          this.identifier ||
+          this.uniqueId} result ${getTimestamp()}`,
         geojsonFeatures: this.functionParameters
           .map(param =>
             isGeoJsonFunctionParameter(param) ? param.geoJsonFeature : undefined
