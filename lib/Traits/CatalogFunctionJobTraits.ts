@@ -1,26 +1,10 @@
 import AutoRefreshingTraits from "./AutoRefreshingTraits";
 import CatalogFunctionTraits from "./CatalogFunctionTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
+import GroupTraits from "./GroupTraits";
 import mixTraits from "./mixTraits";
-import ModelTraits from "./ModelTraits";
 import primitiveArrayTrait from "./primitiveArrayTrait";
 import primitiveTrait from "./primitiveTrait";
-import GroupTraits from "./GroupTraits";
-
-export class FunctionParameterTraits extends ModelTraits {
-  @primitiveTrait({
-    type: "string",
-    name: "id",
-    description: "Id."
-  })
-  "id"?: string;
-  @primitiveTrait({
-    type: "string",
-    name: "id",
-    description: "Id."
-  })
-  "value"?: string;
-}
 
 export default class CatalogFunctionJobTraits extends mixTraits(
   CatalogFunctionTraits,
@@ -60,7 +44,7 @@ export default class CatalogFunctionJobTraits extends mixTraits(
   @primitiveTrait({
     name: "Refresh interval",
     description:
-      "How often the data in this model is refreshed, in seconds. (This overrides Trait in AutoRefreshingTraits)",
+      "How often the job will poll for results, in seconds. (This overrides `AutoRefreshingTraits`)",
     type: "number"
   })
   refreshInterval = 1;

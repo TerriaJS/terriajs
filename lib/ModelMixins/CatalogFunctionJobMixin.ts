@@ -1,11 +1,4 @@
-import {
-  action,
-  computed,
-  observable,
-  reaction,
-  runInAction,
-  IReactionDisposer
-} from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import CommonStrata from "../Models/CommonStrata";
@@ -154,55 +147,6 @@ function CatalogFunctionJobMixin<
       }
     }
 
-    private downloadingResults = false;
-
-    /**
-     * This handles changes in jobStatus:
-     * - if finished -> download results
-     */
-    private async onJobFinish(addToWorkbench = this.inWorkbench) {
-      // Download results when finished
-      if (
-        this.jobStatus === "finished" &&
-        !this.downloadedResults &&
-        !this.downloadingResults
-      ) {
-        this.downloadingResults = true;
-        this.results = (await this.downloadResults()) || [];
-        this.results.forEach(result => {
-          if (Mappable.is(result))
-            result.setTrait(CommonStrata.user, "show", true);
-          if (addToWorkbench) this.terria.workbench.add(result);
-
-          this.terria.addModel(result);
-        });
-
-        runInAction(() => {
-          this.setTrait(
-            CommonStrata.user,
-            "members",
-            filterOutUndefined(this.results.map(result => result.uniqueId))
-          );
-          this.setTrait(CommonStrata.user, "downloadedResults", true);
-        });
-        this.downloadingResults = false;
-      }
-    }
-
-    /**
-     * Job result CatalogMembers - set from calling {@link CatalogFunctionJobMixin#downloadResults}
-     */
-    @observable
-    public results: CatalogMemberMixin.CatalogMemberMixin[] = [];
-
-    /**
-     * Called when `jobStatus` is `finished`, and `!downloadedResults`
-     * @returns catalog members to add to workbench
-     */
-    abstract async downloadResults(): Promise<
-      CatalogMemberMixin.CatalogMemberMixin[] | void
-    >;
-
     get refreshInterval() {
       return 2;
     }
@@ -248,6 +192,57 @@ function CatalogFunctionJobMixin<
           this.pollingForResults = false;
         });
     }
+
+    private downloadingResults = false;
+
+    /**
+     * This handles downloading job results, it can be triggered three ways:
+     * - `_invoke` returns true {@link CatalogFunctionJobMixin#invoke}
+     * - `pollForResults` returns true {@link CatalogFunctionJobMixin#refreshData}
+     * - on `loadMetadata` if `jobStatus` is "finished", and `!downloadedResults`  {@link CatalogFunctionJobMixin#forceLoadMetadata}
+     */
+    private async onJobFinish(addToWorkbench = this.inWorkbench) {
+      // Download results when finished
+      if (
+        this.jobStatus === "finished" &&
+        !this.downloadedResults &&
+        !this.downloadingResults
+      ) {
+        this.downloadingResults = true;
+        this.results = (await this.downloadResults()) || [];
+        this.results.forEach(result => {
+          if (Mappable.is(result))
+            result.setTrait(CommonStrata.user, "show", true);
+          if (addToWorkbench) this.terria.workbench.add(result);
+
+          this.terria.addModel(result);
+        });
+
+        runInAction(() => {
+          this.setTrait(
+            CommonStrata.user,
+            "members",
+            filterOutUndefined(this.results.map(result => result.uniqueId))
+          );
+          this.setTrait(CommonStrata.user, "downloadedResults", true);
+        });
+        this.downloadingResults = false;
+      }
+    }
+
+    /**
+     * Job result CatalogMembers - set from calling {@link CatalogFunctionJobMixin#downloadResults}
+     */
+    @observable
+    public results: CatalogMemberMixin.CatalogMemberMixin[] = [];
+
+    /**
+     * Called in {@link CatalogFunctionJobMixin#onJobFinish}
+     * @returns catalog members to add to workbench
+     */
+    abstract async downloadResults(): Promise<
+      CatalogMemberMixin.CatalogMemberMixin[] | void
+    >;
 
     @action
     protected setOnError(error?: any) {
