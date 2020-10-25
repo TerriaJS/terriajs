@@ -1,11 +1,11 @@
-import { configure, reaction, toJS } from "mobx";
-import addUserCatalogMember from "../../lib/Models/addUserCatalogMember";
+import { configure, reaction } from "mobx";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
 import Terria from "../../lib/Models/Terria";
-import YDYRCatalogFunction from "../../lib/Models/YDYRCatalogFunction";
 import YDYRCatalogFunctionJob from "../../lib/Models/YDYRCatalogFunctionJob";
 import "../SpecHelpers";
+
+// For more tests see - test\Models\YDYRCatalogFunctionSpec.ts
 
 const regionMapping = JSON.stringify(
   require("../../wwwroot/data/regionMapping.json")
@@ -15,18 +15,12 @@ configure({
   computedRequiresReaction: true
 });
 
-const lga11Csv = require("raw-loader!../../wwwroot/test/csv/lga_code_2011.csv");
-
-describe("YDYRCatalogFunction", function() {
+describe("YDYRCatalogFunctionJob", function() {
   let terria: Terria;
-  let csv: CsvCatalogItem;
-  let ydyr: YDYRCatalogFunction;
+  let job: YDYRCatalogFunctionJob;
 
   beforeEach(async function() {
     jasmine.Ajax.install();
-    jasmine.Ajax.stubRequest(
-      "http://example.com/api/v1/disaggregate.json"
-    ).andReturn({ responseText: `"someStatusId"` });
 
     jasmine.Ajax.stubRequest(
       "http://example.com/api/v1/download/someResultKey?format=csv"
@@ -58,14 +52,9 @@ describe("YDYRCatalogFunction", function() {
     ).andReturn({ responseText: regionMapping });
 
     terria = new Terria();
-    csv = new CsvCatalogItem("test", terria, undefined);
 
-    csv.setTrait(CommonStrata.user, "csvString", lga11Csv);
-    await csv.loadMapItems();
-    addUserCatalogMember(terria, csv, { enable: true });
-
-    ydyr = new YDYRCatalogFunction("testYdyr", terria);
-    ydyr.setTrait(CommonStrata.definition, "parameters", {
+    job = new YDYRCatalogFunctionJob("testYdyr", terria);
+    job.setTrait(CommonStrata.definition, "parameters", {
       apiUrl: "http://example.com/api/v1/",
       "Negative Binomial": true,
       "Population Weighted": false,
@@ -73,16 +62,9 @@ describe("YDYRCatalogFunction", function() {
       "Ridge Regressor": false,
       "Output Geography": "ABS - 2016 Statistical Areas Level 4"
     });
-
-    // A few reactions will happen, while setting default values for functionParameters
-    await new Promise((resolve, reject) => {
-      reaction(
-        () => ydyr.functionParameters,
-        () => {
-          if (ydyr.functionParameters.length === 9) resolve();
-        }
-      );
-    });
+    job.setTrait(CommonStrata.user, "jobStatus", "running");
+    job.setTrait(CommonStrata.user, "refreshEnabled", true);
+    job.setTrait(CommonStrata.definition, "jobId", "someStatusId");
   });
 
   afterEach(function() {
@@ -90,55 +72,17 @@ describe("YDYRCatalogFunction", function() {
   });
 
   it("has a type & typeName", function() {
-    expect(YDYRCatalogFunction.type).toBe("ydyr");
-    expect(ydyr.typeName).toBe("YourDataYourRegions");
+    expect(YDYRCatalogFunctionJob.type).toBe("ydyr-job");
+    expect(job.typeName).toBe("YourDataYourRegions Job");
   });
 
-  describe("when loading", async function() {
-    it("should correctly render functionParameters", function() {
-      expect(ydyr.functionParameters.map(({ type }) => type)).toEqual([
-        "string",
-        "enumeration",
-        "enumeration",
-        "enumeration",
-        "enumeration",
-        "info",
-        "boolean",
-        "boolean",
-        "info"
-      ]);
-    });
-
-    it("should set default values", () => {
-      expect(ydyr.functionParameters.map(p => p.value)).toEqual([
-        "http://example.com/api/v1/",
-        csv.uniqueId,
-        csv.activeTableStyle.regionColumn?.name,
-        csv.activeStyle,
-        "ABS - 2016 Statistical Areas Level 4",
-        "Predictive models used to convert data between the input and output geographies:",
-        true,
-        false,
-        "By submitting this form your tabular data will be sent to http://example.com/api/v1/ for processing."
-      ]);
-    });
-  });
-
-  describe("when submitted", async function() {
-    let job: YDYRCatalogFunctionJob;
-    beforeEach(async () => {
-      job = (await ydyr.submitJob()) as YDYRCatalogFunctionJob;
-    });
-    it("should correctly set parameters", async function() {
-      expect(toJS(job.parameters)).toEqual(toJS(ydyr.parameters));
+  describe("start polling after added to workbench", async function() {
+    beforeEach(() => {
+      terria.workbench.add(job);
     });
 
     it("should be in workbench", async function() {
       expect(job.inWorkbench).toBeTruthy();
-    });
-
-    it("calls YDYR api and sets status id", async function() {
-      expect(job.jobId).toEqual("someStatusId");
     });
 
     it("polls twice - and creates 2 log entries", async function() {

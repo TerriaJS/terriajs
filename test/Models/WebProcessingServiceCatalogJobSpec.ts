@@ -90,10 +90,6 @@ describe("WebProcessingServiceCatalogFunctionJob", function() {
       });
     });
   });
-
-  // Continue polls a running job
-
-  // Load results
 });
 
 function initTerria() {
