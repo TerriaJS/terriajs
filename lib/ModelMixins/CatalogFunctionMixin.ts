@@ -2,14 +2,13 @@ import { toJS } from "mobx";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import Constructor from "../Core/Constructor";
 import TerriaError from "../Core/TerriaError";
-import addUserCatalogMember from "../Models/addUserCatalogMember";
+import addToWorkbench from "../Models/addToWorkbench";
 import CommonStrata from "../Models/CommonStrata";
 import FunctionParameter from "../Models/FunctionParameters/FunctionParameter";
 import Model from "../Models/Model";
 import CatalogFunctionTraits from "../Traits/CatalogFunctionTraits";
 import CatalogFunctionJobMixin from "./CatalogFunctionJobMixin";
 import CatalogMemberMixin from "./CatalogMemberMixin";
-import addToWorkbench from "../Models/addToWorkbench";
 const sprintf = require("terriajs-cesium/Source/ThirdParty/sprintf").default;
 
 type CatalogFunctionMixin = Model<CatalogFunctionTraits>;
