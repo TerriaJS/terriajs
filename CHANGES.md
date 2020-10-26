@@ -7,6 +7,7 @@ Change Log
 * Add `FeatureInfoTraits` to `ArcGisMapServerCatalogItem`
 * Fix zooming bug for datasets with invalid bounding boxes.
 * Add new model for `ArcGisTerrainCatalogItem`.
+* Add 3D Tiles to 'Add web data' dropdown.
 * [The next improvement]
 
 #### 8.0.0-alpha.57
