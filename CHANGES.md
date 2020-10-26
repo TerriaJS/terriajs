@@ -3,12 +3,11 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.57)
-* Add 3D Tiles to 'Add web data' dropdown.
 #### next release (8.0.0-alpha.58)
 * Add `FeatureInfoTraits` to `ArcGisMapServerCatalogItem`
 * Fix zooming bug for datasets with invalid bounding boxes.
 * Add new model for `ArcGisTerrainCatalogItem`.
+* Add 3D Tiles to 'Add web data' dropdown.
 * [The next improvement]
 
 #### 8.0.0-alpha.57
