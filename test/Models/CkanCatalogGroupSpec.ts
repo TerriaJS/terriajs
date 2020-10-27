@@ -169,6 +169,27 @@ describe("CkanCatalogGroup", function() {
       });
     });
 
+    it("useDatasetNameAndFormatWhereMultipleResources (the default)", async function() {
+      await ckanCatalogGroup.loadMembers();
+      ckanServerStratum = <CkanServerStratum>(
+        ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
+      );
+
+      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      expect(
+        group1.memberModels && group1.memberModels.length === 6
+      ).toBeTruthy();
+      if (group1.memberModels && group1.memberModels.length === 6) {
+        const items = group1.memberModels as CkanItemReference[];
+        expect(items[0].name).toBe(
+          "Murray-Darling Basin Water Resource Plan Areas – Surface Water - KMZ"
+        );
+        expect(items[1].name).toBe(
+          "Murray-Darling Basin Water Resource Plan Areas – Surface Water - WMS"
+        );
+      }
+    });
+
     it("useCombinationNameWhereMultipleResources", async function() {
       runInAction(() => {
         ckanCatalogGroup.setTrait(
@@ -195,6 +216,30 @@ describe("CkanCatalogGroup", function() {
         );
         expect(items[1].name).toBe(
           "Murray-Darling Basin Water Resource Plan Areas – Surface Water - Murray-Darling Basin Water Resource Plan Areas – Surface Water - Preview this Dataset (WMS)"
+        );
+      }
+    });
+
+    it("useResourceName", async function() {
+      runInAction(() => {
+        ckanCatalogGroup.setTrait("definition", "useResourceName", true);
+      });
+      await ckanCatalogGroup.loadMembers();
+      ckanServerStratum = <CkanServerStratum>(
+        ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
+      );
+
+      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      expect(
+        group1.memberModels && group1.memberModels.length === 6
+      ).toBeTruthy();
+      if (group1.memberModels && group1.memberModels.length === 6) {
+        const items = group1.memberModels as CkanItemReference[];
+        expect(items[0].name).toBe(
+          "Murray-Darling Basin Water Resource Plan Areas – Surface Water for Google Earth"
+        );
+        expect(items[1].name).toBe(
+          "Murray-Darling Basin Water Resource Plan Areas – Surface Water - Preview this Dataset (WMS)"
         );
       }
     });
