@@ -1,3 +1,4 @@
+import CommonStrata from "../../lib/Models/CommonStrata";
 import Terria from "../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
 
@@ -27,5 +28,19 @@ describe("DiscretelyTimeVaryingMixin", () => {
     const months = years[years.indice[0]];
     expect(months.dates.length).toBe(1000);
     expect(months.indice[0]).toBe(3);
+  });
+
+  it("supports specifying a chartColor", async function() {
+    wmsItem = new WebMapServiceCatalogItem("mywms2", terria);
+    wmsItem.setTrait(
+      "definition",
+      "url",
+      "/test/WMS/period_datetimes_many_intervals.xml"
+    );
+    wmsItem.setTrait(CommonStrata.definition, "layers", "single_period");
+    wmsItem.setTrait(CommonStrata.user, "showInChartPanel", true);
+    wmsItem.setTrait(CommonStrata.user, "chartColor", "#efefef");
+    await wmsItem.loadChartItems();
+    expect(wmsItem.chartItems[0].getColor()).toBe("#efefef");
   });
 });

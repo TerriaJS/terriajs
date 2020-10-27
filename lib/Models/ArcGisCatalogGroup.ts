@@ -1,30 +1,28 @@
 import i18next from "i18next";
-import LoadableStratum from "./LoadableStratum";
-import ArcGisCatalogGroupTraits from "../Traits/ArcGisMapServerCatalogGroupTraits";
-import { computed, runInAction, action } from "mobx";
-import { BaseModel } from "./Model";
-import UrlMixin from "../ModelMixins/UrlMixin";
-import GroupMixin from "../ModelMixins/GroupMixin";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import CreateModel from "./CreateModel";
-import StratumOrder from "./StratumOrder";
+import { action, computed, runInAction } from "mobx";
 import URI from "urijs";
-import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import TerriaError from "../Core/TerriaError";
-import loadJson from "../Core/loadJson";
+import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
-import createStratumInstance from "./createStratumInstance";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
-import ArcGisMapServerCatalogGroup, {
-  MapServerStratum
-} from "./ArcGisMapServerCatalogGroup";
+import loadJson from "../Core/loadJson";
+import replaceUnderscores from "../Core/replaceUnderscores";
+import TerriaError from "../Core/TerriaError";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import GroupMixin from "../ModelMixins/GroupMixin";
+import UrlMixin from "../ModelMixins/UrlMixin";
+import ArcGisCatalogGroupTraits from "../Traits/ArcGisMapServerCatalogGroupTraits";
+import ModelReference from "../Traits/ModelReference";
 import ArcGisFeatureServerCatalogGroup, {
   FeatureServerStratum
 } from "./ArcGisFeatureServerCatalogGroup";
-import filterOutUndefined from "../Core/filterOutUndefined";
-import ModelReference from "../Traits/ModelReference";
+import ArcGisMapServerCatalogGroup, {
+  MapServerStratum
+} from "./ArcGisMapServerCatalogGroup";
 import CommonStrata from "./CommonStrata";
-import replaceUnderscores from "../Core/replaceUnderscores";
+import CreateModel from "./CreateModel";
+import LoadableStratum from "./LoadableStratum";
+import { BaseModel } from "./Model";
+import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
+import StratumOrder from "./StratumOrder";
 
 interface DocumentInfo {
   Title?: string;

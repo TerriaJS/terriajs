@@ -29,6 +29,9 @@ function DiscretelyTimeVaryingMixin<
 >(Base: T) {
   abstract class DiscretelyTimeVaryingMixin extends Base
     implements TimeVarying {
+    get hasDiscreteTimes() {
+      return true;
+    }
     abstract get discreteTimes(): DiscreteTimeAsJS[] | undefined;
 
     @computed
@@ -313,7 +316,9 @@ function DiscretelyTimeVaryingMixin<
             });
           },
           getColor: () => {
-            return getChartColorForId(colorId);
+            return this.chartColor
+              ? this.chartColor
+              : getChartColorForId(colorId);
           },
           onClick: (point: any) => {
             runInAction(() => {
@@ -327,19 +332,18 @@ function DiscretelyTimeVaryingMixin<
         }
       ];
     }
-
-    loadChartItems() {
-      return Promise.resolve();
-    }
   }
 
   return DiscretelyTimeVaryingMixin;
 }
 
 namespace DiscretelyTimeVaryingMixin {
-  export type Instance = InstanceType<
-    ReturnType<typeof DiscretelyTimeVaryingMixin>
-  >;
+  export interface DiscretelyTimeVaryingMixin
+    extends InstanceType<ReturnType<typeof DiscretelyTimeVaryingMixin>> {}
+
+  export function isMixedInto(model: any): model is DiscretelyTimeVaryingMixin {
+    return model && model.hasDiscreteTimes;
+  }
 }
 
 export default DiscretelyTimeVaryingMixin;

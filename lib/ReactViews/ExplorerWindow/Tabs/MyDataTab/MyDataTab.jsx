@@ -4,6 +4,7 @@ import { observer } from "mobx-react";
 import classNames from "classnames";
 import createReactClass from "create-react-class";
 import Icon from "../../../Icon.jsx";
+import Box from "../../../../Styled/Box.jsx";
 import PropTypes from "prop-types";
 
 import DataCatalog from "../../../DataCatalog/DataCatalog.jsx";
@@ -125,7 +126,7 @@ const MyDataTab = observer(
       const showTwoColumn = this.hasUserAddedData() & !this.state.activeTab;
       const { t } = this.props;
       return (
-        <div className={Styles.root}>
+        <Box className={Styles.root}>
           <div
             className={classNames({
               [Styles.leftCol]: showTwoColumn,
@@ -162,7 +163,7 @@ const MyDataTab = observer(
               />
             </If>
             <If condition={showTwoColumn}>
-              <div className={Styles.addedData}>
+              <Box flexShrinkZero column>
                 <p className={Styles.explanation}>
                   <Trans i18nKey="addData.note">
                     <strong>Note: </strong>Data added in this way is not saved
@@ -181,18 +182,20 @@ const MyDataTab = observer(
                     terria={this.props.terria}
                   />
                 </ul>
-              </div>
+              </Box>
             </If>
             <If condition={!this.state.activeTab}>{this.renderPromptBox()}</If>
           </div>
           <If condition={showTwoColumn}>
-            <DataPreview
-              terria={this.props.terria}
-              viewState={this.props.viewState}
-              previewed={this.props.viewState.userDataPreviewedItem}
-            />
+            <Box styledWidth="60%" wordBreak="break-all">
+              <DataPreview
+                terria={this.props.terria}
+                viewState={this.props.viewState}
+                previewed={this.props.viewState.userDataPreviewedItem}
+              />
+            </Box>
           </If>
-        </div>
+        </Box>
       );
     }
   })

@@ -34,35 +34,29 @@ import WebFeatureServiceCapabilities, {
 class GetCapabilitiesStratum extends LoadableStratum(
   WebFeatureServiceCatalogItemTraits
 ) {
-  static load(
-    catalogItem: WebFeatureServiceCatalogItem
+  static async load(
+    catalogItem: WebFeatureServiceCatalogItem,
+    capabilities?: WebFeatureServiceCapabilities
   ): Promise<GetCapabilitiesStratum> {
-    if (catalogItem.getCapabilitiesUrl === undefined) {
-      return Promise.reject(
-        new TerriaError({
-          sender: this,
-          title: i18next.t(
-            "models.webFeatureServiceCatalogItem.missingUrlTitle",
-            this
-          ),
-          message: i18next.t(
-            "models.webFeatureServiceCatalogItem.missingUrlMessage",
-            this
-          )
-        })
-      );
+    if (!isDefined(catalogItem.getCapabilitiesUrl)) {
+      throw new TerriaError({
+        title: i18next.t("models.webFeatureServiceCatalogItem.missingUrlTitle"),
+        message: i18next.t(
+          "models.webFeatureServiceCatalogItem.missingUrlMessage"
+        )
+      });
     }
 
-    const proxiedUrl = proxyCatalogItemUrl(
-      catalogItem,
-      catalogItem.getCapabilitiesUrl,
-      catalogItem.getCapabilitiesCacheDuration
-    );
-    return WebFeatureServiceCapabilities.fromUrl(proxiedUrl).then(
-      capabilities => {
-        return new GetCapabilitiesStratum(catalogItem, capabilities);
-      }
-    );
+    if (!isDefined(capabilities))
+      capabilities = await WebFeatureServiceCapabilities.fromUrl(
+        proxyCatalogItemUrl(
+          catalogItem,
+          catalogItem.getCapabilitiesUrl,
+          catalogItem.getCapabilitiesCacheDuration
+        )
+      );
+
+    return new GetCapabilitiesStratum(catalogItem, capabilities);
   }
 
   constructor(
@@ -92,21 +86,14 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
   @computed
   get info(): StratumFromTraits<InfoSectionTraits>[] {
-    const result: StratumFromTraits<InfoSectionTraits>[] = [];
-
-    function createInfoSection(name: string, content: string | undefined) {
-      const trait = createStratumInstance(InfoSectionTraits);
-      trait.name = name;
-      trait.content = content;
-      return trait;
-    }
-
-    result.push(
-      createInfoSection(
-        i18next.t("models.webFeatureServiceCatalogItem.getCapabilitiesUrl"),
-        this.catalogItem.getCapabilitiesUrl
-      )
-    );
+    const result: StratumFromTraits<InfoSectionTraits>[] = [
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t(
+          "models.webFeatureServiceCatalogItem.getCapabilitiesUrl"
+        ),
+        content: this.catalogItem.getCapabilitiesUrl
+      })
+    ];
 
     let firstDataDescription: string | undefined;
     for (const layer of this.capabilitiesFeatureTypes.values()) {
@@ -127,13 +114,18 @@ class GetCapabilitiesStratum extends LoadableStratum(
         "models.webFeatureServiceCatalogItem.abstract"
       )}${suffix}`;
 
-      result.push(createInfoSection(name, layer.Abstract));
+      result.push(
+        createStratumInstance(InfoSectionTraits, {
+          name,
+          content: layer.Abstract
+        })
+      );
 
       firstDataDescription = firstDataDescription || layer.Abstract;
     }
 
     // Show the service abstract if there is one and if it isn't the Geoserver default "A compliant implementation..."
-    const service = this.capabilities && this.capabilities.Service;
+    const service = this.capabilities && this.capabilities.service;
     if (service) {
       if (
         service &&
@@ -145,10 +137,10 @@ class GetCapabilitiesStratum extends LoadableStratum(
         service.Abstract !== firstDataDescription
       ) {
         result.push(
-          createInfoSection(
-            i18next.t("models.webFeatureServiceCatalogItem.abstract"),
-            service.Abstract
-          )
+          createStratumInstance(InfoSectionTraits, {
+            name: i18next.t("models.webFeatureServiceCatalogItem.abstract"),
+            content: service.Abstract
+          })
         );
       }
 
@@ -158,10 +150,12 @@ class GetCapabilitiesStratum extends LoadableStratum(
         !/^none$/i.test(service.AccessConstraints)
       ) {
         result.push(
-          createInfoSection(
-            i18next.t("models.webFeatureServiceCatalogItem.accessConstraints"),
-            service.AccessConstraints
-          )
+          createStratumInstance(InfoSectionTraits, {
+            name: i18next.t(
+              "models.webFeatureServiceCatalogItem.accessConstraints"
+            ),
+            content: service.AccessConstraints
+          })
         );
       }
     }
@@ -233,14 +227,14 @@ class GetCapabilitiesStratum extends LoadableStratum(
     }
 
     if (
-      !this.capabilities.Service ||
-      !this.capabilities.Service.KeywordList ||
-      !this.capabilities.Service.KeywordList.Keyword
+      !this.capabilities.service ||
+      !this.capabilities.service.KeywordList ||
+      !this.capabilities.service.KeywordList.Keyword
     ) {
       return false;
     }
 
-    const keyword = this.capabilities.Service.KeywordList.Keyword;
+    const keyword = this.capabilities.service.KeywordList.Keyword;
     if (isReadOnlyArray(keyword)) {
       return keyword.indexOf("GEOSERVER") >= 0;
     } else {
@@ -249,17 +243,15 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 }
 
-class WebFeatureServiceCatalogItem
-  extends ExportableMixin(
-    AsyncMappableMixin(
-      GetCapabilitiesMixin(
-        UrlMixin(
-          CatalogMemberMixin(CreateModel(WebFeatureServiceCatalogItemTraits))
-        )
+class WebFeatureServiceCatalogItem extends ExportableMixin(
+  AsyncMappableMixin(
+    GetCapabilitiesMixin(
+      UrlMixin(
+        CatalogMemberMixin(CreateModel(WebFeatureServiceCatalogItemTraits))
       )
     )
   )
-  implements Mappable {
+) {
   /**
    * The collection of strings that indicate an Abstract property should be ignored.  If these strings occur anywhere
    * in the Abstract, the Abstract will not be used.  This makes it easy to filter out placeholder data like
@@ -300,14 +292,24 @@ class WebFeatureServiceCatalogItem
     }
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return GetCapabilitiesStratum.load(this).then(stratum => {
-      runInAction(() => {
-        this.strata.set(
-          GetCapabilitiesMixin.getCapabilitiesStratumName,
-          stratum
-        );
-      });
+  async createGetCapabilitiesStratumFromParent(
+    capabilities: WebFeatureServiceCapabilities
+  ) {
+    const stratum = await GetCapabilitiesStratum.load(this, capabilities);
+    runInAction(() => {
+      this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
+    });
+  }
+
+  protected async forceLoadMetadata(): Promise<void> {
+    if (
+      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
+      undefined
+    )
+      return;
+    const stratum = await GetCapabilitiesStratum.load(this);
+    runInAction(() => {
+      this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
     });
   }
 
@@ -415,7 +417,8 @@ class WebFeatureServiceCatalogItem
     runInAction(() => {
       this.geojsonCatalogItem = new GeoJsonCatalogItem(
         createGuid(),
-        this.terria
+        this.terria,
+        this
       );
 
       this.geojsonCatalogItem.setTrait(

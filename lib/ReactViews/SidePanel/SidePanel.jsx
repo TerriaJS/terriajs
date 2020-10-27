@@ -21,6 +21,14 @@ import Button from "../../Styled/Button";
 
 const BoxHelpfulHints = styled(Box)``;
 
+const ResponsiveSpacing = styled(Box)`
+  height: 110px;
+  // Hardcoded px value, TODO: make it not hardcoded
+  @media (max-height: 700px) {
+    height: 3vh;
+  }
+`;
+
 function EmptyWorkbench(props) {
   const t = props.t;
   const HelpfulHintsIcon = () => {
@@ -36,13 +44,7 @@ function EmptyWorkbench(props) {
       />
     );
   };
-  const ResponsiveSpacing = styled(Box)`
-    height: 110px;
-    // Hardcoded px value, TODO: make it not hardcoded
-    @media (max-height: 700px) {
-      height: 3vh;
-    }
-  `;
+
   return (
     <Text large textLight nunito>
       {/* Hardcoded top to 150px for now for very very small screens
@@ -60,7 +62,7 @@ function EmptyWorkbench(props) {
           </Text>
           <ResponsiveSpacing />
         </Box>
-        <BoxHelpfulHints column paddedRatio={3} overflowY="auto">
+        <BoxHelpfulHints column paddedRatio={3} overflowY="auto" scroll>
           <Box left>
             <Text extraLarge bold>
               {t("emptyWorkbench.helpfulHints")}

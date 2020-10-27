@@ -148,7 +148,7 @@ const MapColumn = observer(
                 <div className={Styles.locationDistance}>
                   <LocationBar
                     terria={this.props.terria}
-                    mouseCoords={this.props.viewState.mouseCoords}
+                    mouseCoords={this.props.terria.currentViewer.mouseCoords}
                   />
                   <DistanceLegend terria={this.props.terria} />
                 </div>

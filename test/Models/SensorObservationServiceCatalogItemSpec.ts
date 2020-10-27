@@ -3,6 +3,7 @@ import CommonStrata from "../../lib/Models/CommonStrata";
 import SensorObservationServiceCatalogItem from "../../lib/Models/SensorObservationServiceCatalogItem";
 import Terria from "../../lib/Models/Terria";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
+import TableAutomaticStylesStratum from "../../lib/Table/TableAutomaticStylesStratum";
 
 const GetFeatureOfInterestResponse = require("raw-loader!../../wwwroot/test/sos/GetFeatureOfInterestResponse.xml");
 const EmptyGetFeatureOfInterestResponse = require("raw-loader!../../wwwroot/test/sos/GetFeatureOfInterestResponse_NoMembers.xml");
@@ -82,7 +83,9 @@ describe("SensorObservationServiceCatalogItem", function() {
         terria,
         sourceItem
       );
-      expect(sosItem.strata.get("automaticTableStyles")).toBeDefined();
+      expect(
+        sosItem.strata.get(TableAutomaticStylesStratum.stratumName)
+      ).toBeDefined();
     });
   });
 
@@ -212,8 +215,7 @@ describe("SensorObservationServiceCatalogItem", function() {
       });
 
       it("sets the style selectors correctly", function() {
-        expect(item.styleSelector).toBeUndefined();
-        expect(item.styleSelectors.map(s => s.name)).toEqual([
+        expect(item.selectableDimensions.map(s => s.name)).toEqual([
           "Frequency",
           "Observation Type"
         ]);

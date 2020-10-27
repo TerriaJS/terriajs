@@ -28,6 +28,8 @@ export default function createUrlReferenceFromUrl(
     return Promise.resolve(undefined);
   }
 
+  terria.catalog.userAddedDataGroup.add(CommonStrata.user, item);
+
   return item.loadReference().then(() => {
     if (item.target !== undefined) {
       return Promise.resolve(item);

@@ -14,6 +14,7 @@ import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
+import isDefined from "../../../Core/isDefined";
 import LatLonHeight from "../../../Core/LatLonHeight";
 import PickedFeatures from "../../../Map/PickedFeatures";
 import prettifyCoordinates from "../../../Map/prettifyCoordinates";
@@ -22,12 +23,11 @@ import CommonStrata from "../../../Models/CommonStrata";
 import Feature from "../../../Models/Feature";
 import hasTraits, { HasTrait } from "../../../Models/hasTraits";
 import {
-  getMarkerLocation,
-  isMarkerVisible,
-  removeMarker
+  removeMarker,
+  getMarkerLocation
 } from "../../../Models/LocationMarkerUtils";
 import Mappable, { ImageryParts } from "../../../Models/Mappable";
-import { AvailableStyle } from "../../../Models/SelectableStyle";
+import { DimensionOption } from "../../../Models/SelectableDimensions";
 import SplitItemReference from "../../../Models/SplitItemReference";
 import Terria from "../../../Models/Terria";
 import ViewState from "../../../ReactViewModels/ViewState";
@@ -240,7 +240,7 @@ class Main extends React.Component<MainPropsType> {
 
   @computed
   get previewStyle(): string | undefined {
-    return this.diffItem.styleSelector?.activeStyleId;
+    return this.diffItem.styleSelectableDimensions?.[0]?.selectedId;
   }
 
   @computed
@@ -249,14 +249,14 @@ class Main extends React.Component<MainPropsType> {
   }
 
   @computed
-  get availableDiffStyles(): AvailableStyle[] {
+  get availableDiffStyles(): DimensionOption[] {
     return filterOutUndefined(
       this.diffItem.availableDiffStyles.map(diffStyleId =>
-        this.diffItem.styleSelector?.availableStyles.find(
+        this.diffItem.styleSelectableDimensions?.[0]?.options?.find(
           style => style.id === diffStyleId
         )
       )
-    ) as AvailableStyle[];
+    );
   }
 
   @computed
@@ -315,11 +315,11 @@ class Main extends React.Component<MainPropsType> {
   @action.bound
   changePreviewStyle(e: React.ChangeEvent<HTMLSelectElement>) {
     const styleId = e.target.value;
-    this.props.leftItem.styleSelector?.chooseActiveStyle(
+    this.props.leftItem.styleSelectableDimensions?.[0]?.setDimensionValue(
       CommonStrata.user,
       styleId
     );
-    this.props.rightItem.styleSelector?.chooseActiveStyle(
+    this.props.rightItem.styleSelectableDimensions?.[0]?.setDimensionValue(
       CommonStrata.user,
       styleId
     );
@@ -601,11 +601,13 @@ class Main extends React.Component<MainPropsType> {
                   <option disabled value="">
                     {t("diffTool.choosePreview")}
                   </option>
-                  {this.diffItem.styleSelector?.availableStyles.map(style => (
-                    <option key={style.id} value={style.id}>
-                      {style.name}
-                    </option>
-                  ))}
+                  {this.diffItem.styleSelectableDimensions?.[0]?.options?.map(
+                    style => (
+                      <option key={style.id} value={style.id}>
+                        {style.name}
+                      </option>
+                    )
+                  )}
                 </Selector>
                 {this.previewLegendUrl && (
                   <>
@@ -972,11 +974,14 @@ async function createSplitItem(
     setDefaultDiffStyle(newItem);
 
     // Set the default style to true color style if it exists
-    const trueColor = newItem.styleSelector?.availableStyles.find(
-      style => style.name.search(/true/i) >= 0
+    const trueColor = newItem.styleSelectableDimensions?.[0]?.options?.find(
+      style => isDefined(style.name) && style.name.search(/true/i) >= 0
     );
-    if (trueColor) {
-      newItem.styleSelector?.chooseActiveStyle(CommonStrata.user, trueColor.id);
+    if (trueColor?.id) {
+      newItem.styleSelectableDimensions?.[0]?.setDimensionValue(
+        CommonStrata.user,
+        trueColor.id
+      );
     }
 
     terria.overlays.add(newItem);
@@ -994,7 +999,7 @@ function setDefaultDiffStyle(item: DiffableItem) {
 
   const availableStyles = filterOutUndefined(
     item.availableDiffStyles.map(diffStyleId =>
-      item.styleSelector?.availableStyles.find(
+      item.styleSelectableDimensions?.[0]?.options?.find(
         style => style.id === diffStyleId
       )
     )

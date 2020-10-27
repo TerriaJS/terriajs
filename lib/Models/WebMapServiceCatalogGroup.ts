@@ -15,8 +15,8 @@ import ModelReference from "../Traits/ModelReference";
 import WebMapServiceCatalogGroupTraits from "../Traits/WebMapServiceCatalogGroupTraits";
 import CatalogGroup from "./CatalogGroupNew";
 import CommonStrata from "./CommonStrata";
-import createInfoSection from "./createInfoSection";
 import CreateModel from "./CreateModel";
+import createStratumInstance from "./createStratumInstance";
 import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
@@ -29,28 +29,24 @@ import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
 class GetCapabilitiesStratum extends LoadableStratum(
   WebMapServiceCatalogGroupTraits
 ) {
-  static load(
+  static async load(
     catalogItem: WebMapServiceCatalogGroup
   ): Promise<GetCapabilitiesStratum> {
     if (catalogItem.getCapabilitiesUrl === undefined) {
-      return Promise.reject(
-        new TerriaError({
-          title: i18next.t("models.webMapServiceCatalogGroup.missingUrlTitle"),
-          message: i18next.t(
-            "models.webMapServiceCatalogGroup.missingUrlMessage"
-          )
-        })
-      );
+      throw new TerriaError({
+        title: i18next.t("models.webMapServiceCatalogGroup.missingUrlTitle"),
+        message: i18next.t("models.webMapServiceCatalogGroup.missingUrlMessage")
+      });
     }
 
-    const proxiedUrl = proxyCatalogItemUrl(
-      catalogItem,
-      catalogItem.getCapabilitiesUrl,
-      catalogItem.getCapabilitiesCacheDuration
+    const capabilities = await WebMapServiceCapabilities.fromUrl(
+      proxyCatalogItemUrl(
+        catalogItem,
+        catalogItem.getCapabilitiesUrl,
+        catalogItem.getCapabilitiesCacheDuration
+      )
     );
-    return WebMapServiceCapabilities.fromUrl(proxiedUrl).then(capabilities => {
-      return new GetCapabilitiesStratum(catalogItem, capabilities);
-    });
+    return new GetCapabilitiesStratum(catalogItem, capabilities);
   }
 
   constructor(
@@ -92,10 +88,10 @@ class GetCapabilitiesStratum extends LoadableStratum(
         )
       ) {
         result.push(
-          createInfoSection(
-            i18next.t("models.webMapServiceCatalogGroup.abstract"),
-            this.capabilities.Service.Abstract
-          )
+          createStratumInstance(InfoSectionTraits, {
+            name: i18next.t("models.webMapServiceCatalogGroup.abstract"),
+            content: this.capabilities.Service.Abstract
+          })
         );
       }
 
@@ -106,20 +102,22 @@ class GetCapabilitiesStratum extends LoadableStratum(
         !/^none$/i.test(service.AccessConstraints)
       ) {
         result.push(
-          createInfoSection(
-            i18next.t("models.webMapServiceCatalogGroup.accessConstraints"),
-            this.capabilities.Service.AccessConstraints
-          )
+          createStratumInstance(InfoSectionTraits, {
+            name: i18next.t(
+              "models.webMapServiceCatalogGroup.accessConstraints"
+            ),
+            content: this.capabilities.Service.AccessConstraints
+          })
         );
       }
 
       // Show the Fees if it isn't "none".
       if (service && service.Fees && !/^none$/i.test(service.Fees)) {
         result.push(
-          createInfoSection(
-            i18next.t("models.webMapServiceCatalogGroup.fees"),
-            this.capabilities.Service.Fees
-          )
+          createStratumInstance(InfoSectionTraits, {
+            name: i18next.t("models.webMapServiceCatalogGroup.fees"),
+            content: this.capabilities.Service.Fees
+          })
         );
       }
     }
@@ -214,10 +212,10 @@ class GetCapabilitiesStratum extends LoadableStratum(
         !containsAny(layer.Abstract, WebMapServiceCatalogItem.abstractsToIgnore)
       ) {
         model.setTrait(CommonStrata.underride, "info", [
-          createInfoSection(
-            i18next.t("models.webMapServiceCatalogGroup.abstract"),
-            layer.Abstract
-          )
+          createStratumInstance(InfoSectionTraits, {
+            name: i18next.t("models.webMapServiceCatalogGroup.abstract"),
+            content: layer.Abstract
+          })
         ]);
       }
 
@@ -233,6 +231,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     let model: WebMapServiceCatalogItem;
     if (existingModel === undefined) {
       model = new WebMapServiceCatalogItem(layerId, this.catalogGroup.terria);
+
       this.catalogGroup.terria.addModel(model);
     } else {
       model = existingModel;
@@ -274,6 +273,14 @@ class GetCapabilitiesStratum extends LoadableStratum(
       "hideLegendInWorkbench",
       this.catalogGroup.hideLegendInWorkbench
     );
+
+    if (this.catalogGroup.itemProperties !== undefined) {
+      Object.keys(this.catalogGroup.itemProperties).map((k: any) => {
+        if (this.catalogGroup.itemProperties !== undefined)
+          model.setTrait(stratum, k, this.catalogGroup.itemProperties[k]);
+      });
+    }
+    model.createGetCapabilitiesStratumFromParent(this.capabilities);
   }
 
   getLayerId(layer: CapabilitiesLayer) {
@@ -295,26 +302,26 @@ export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(
     return WebMapServiceCatalogGroup.type;
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return GetCapabilitiesStratum.load(this).then(stratum => {
-      runInAction(() => {
-        this.strata.set(
-          GetCapabilitiesMixin.getCapabilitiesStratumName,
-          stratum
-        );
-      });
+  protected async forceLoadMetadata(): Promise<void> {
+    if (
+      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
+      undefined
+    )
+      return;
+    const stratum = await GetCapabilitiesStratum.load(this);
+    runInAction(() => {
+      this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
     });
   }
 
-  protected forceLoadMembers(): Promise<void> {
-    return this.loadMetadata().then(() => {
-      const getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
-        this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
-      );
-      if (getCapabilitiesStratum) {
-        getCapabilitiesStratum.createMembersFromLayers();
-      }
-    });
+  protected async forceLoadMembers(): Promise<void> {
+    await this.loadMetadata();
+    const getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
+      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
+    );
+    if (getCapabilitiesStratum) {
+      getCapabilitiesStratum.createMembersFromLayers();
+    }
   }
 
   protected get defaultGetCapabilitiesUrl(): string | undefined {

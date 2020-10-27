@@ -14,7 +14,6 @@ import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
 import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import isDefined from "../Core/isDefined";
-import DiscretelyTimeVaryingMixin from "../ModelMixins/DiscretelyTimeVaryingMixin";
 import { BaseModel } from "./Model";
 import ExportableMixin from "../ModelMixins/ExportableMixin";
 
@@ -29,17 +28,13 @@ import ExportableMixin from "../ModelMixins/ExportableMixin";
 // - points, no ID, time -> "blips" with a duration (perhaps provided by another column)
 //
 
-const automaticTableStylesStratumName = "automaticTableStyles";
+const automaticTableStylesStratumName = TableAutomaticStylesStratum.stratumName;
 
 export default class CsvCatalogItem extends AsyncChartableMixin(
   TableMixin(
-    // Since both TableMixin & DiscretelyTimeVaryingMixin defines
-    // `chartItems`, the order of mixing in is important here
-    DiscretelyTimeVaryingMixin(
-      ExportableMixin(
-        AutoRefreshingMixin(
-          UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
-        )
+    ExportableMixin(
+      AutoRefreshingMixin(
+        UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
       )
     )
   )
@@ -132,16 +127,6 @@ export default class CsvCatalogItem extends AsyncChartableMixin(
     if (this.refreshUrl) {
       return this.polling.seconds;
     }
-  }
-
-  @computed
-  get discreteTimes() {
-    const automaticTableStylesStratum:
-      | TableAutomaticStylesStratum
-      | undefined = this.strata.get(
-      automaticTableStylesStratumName
-    ) as TableAutomaticStylesStratum;
-    return automaticTableStylesStratum?.discreteTimes;
   }
 
   /*

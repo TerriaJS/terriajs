@@ -2,7 +2,10 @@
 TerriaJS
 ============
 
-[![Join the chat at https://gitter.im/TerriaJS/terriajs](https://badges.gitter.im/TerriaJS/terriajs.svg)](https://gitter.im/TerriaJS/terriajs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Docs](https://img.shields.io/badge/docs-online-blue.svg)](https://docs.terria.io/)
+## v7.x.x deprecations going into 8.0.0
+[Things are deprecating! See here for migration guide & more details.](/doc/contributing/migration-guide.md)
+
+[![Build Status](https://travis-ci.org/TerriaJS/terriajs.svg?branch=next)](https://travis-ci.org/TerriaJS/terriajs) [![Join the chat at https://gitter.im/TerriaJS/terriajs](https://badges.gitter.im/TerriaJS/terriajs.svg)](https://gitter.im/TerriaJS/terriajs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Docs](https://img.shields.io/badge/docs-online-blue.svg)](https://docs.terria.io/)
 
 ![Terria logo](terria-logo.png "Terria logo")
 
@@ -73,7 +76,7 @@ Sites we're aware of that are using TerriaJS. These are not endorsements or test
 * **Note: Please use NodeJS v10 until [#4617](https://github.com/TerriaJS/terriajs/issues/4617) is resolved**
 * Built in ECMAScript 2015, compiled with Babel to ES5.
 * Supports IE9 and later. A few features require IE11+.
-* [TerriaJS Server component](https://github.com/TerriajS/TerriaJS-Server) runs in NodeJS and provides proxying for web services that don't support CORS or require authentication.
+* [TerriaJS Server component](https://github.com/TerriajS/TerriaJS-Server) runs in NodeJS and provides proxying for web services that don't support CORS or require authentication. Instead of using TerriaJS-Sever proxy service, an alternative proxying service URL can be specified. See [Specify an alternative proxy server URL](/doc/connecting-to-data/cross-origin-resource-sharing.md)
 * Dependencies are [managed in NPM](https://www.npmjs.com/~terria) and assembled using WebPack.
 
 ### Getting Started ###

@@ -24,6 +24,8 @@ import Feature from "./Feature";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import Mappable from "./Mappable";
 import Terria from "./Terria";
+import { observable } from "mobx";
+import MouseCoords from "../ReactViewModels/MouseCoords";
 
 require("./ImageryLayerFeatureInfo"); // overrides Cesium's prototype.configureDescriptionFromProperties
 
@@ -36,6 +38,12 @@ export default abstract class GlobeOrMap {
   private _highlightPromise: Promise<void> | undefined;
   private _tilesLoadingCountMax: number = 0;
   protected supportsPolylinesOnTerrain?: boolean;
+
+  // This is updated by Leaflet and Cesium objects.
+  // Avoid duplicate mousemove events.  Why would we get duplicate mousemove events?  I'm glad you asked:
+  // http://stackoverflow.com/questions/17818493/mousemove-event-repeating-every-second/17819113
+  // I (Kevin Ring) see this consistently on my laptop when Windows Media Player is running.
+  @observable mouseCoords: MouseCoords = new MouseCoords();
 
   abstract destroy(): void;
   abstract zoomTo(
@@ -52,6 +60,19 @@ export default abstract class GlobeOrMap {
   abstract resumeMapInteraction(): void;
 
   abstract notifyRepaintRequired(): void;
+
+  /**
+   * Picks features based off a latitude, longitude and (optionally) height.
+   * @param latLngHeight The position on the earth to pick.
+   * @param providerCoords A map of imagery provider urls to the coords used to get features for those imagery
+   *     providers - i.e. x, y, level
+   * @param existingFeatures An optional list of existing features to concatenate the ones found from asynchronous picking to.
+   */
+  abstract pickFromLocation(
+    latLngHeight: LatLonHeight,
+    providerCoords: ProviderCoordsMap,
+    existingFeatures: Feature[]
+  ): void;
 
   /**
    * Return features at a latitude, longitude and (optionally) height for the given imagery layers.

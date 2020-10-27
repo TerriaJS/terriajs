@@ -54,7 +54,6 @@ const LocationSearchResults = observer(
     getInitialState() {
       return {
         isOpen: true,
-        // isExpanded: false
         isExpanded: false
       };
     },
@@ -131,10 +130,6 @@ const LocationSearchResults = observer(
               }
             />
           </button> */}
-          <SearchHeader
-            searchResults={search}
-            isWaitingForSearchToStart={this.props.isWaitingForSearchToStart}
-          />
           <RawButtonAndHighlight
             type="button"
             fullWidth
@@ -157,6 +152,10 @@ const LocationSearchResults = observer(
             </BoxSpan>
           </RawButtonAndHighlight>
           <Text textDarker>
+            <SearchHeader
+              searchResults={search}
+              isWaitingForSearchToStart={this.props.isWaitingForSearchToStart}
+            />
             <ul className={Styles.items}>
               {results.map((result, i) => (
                 <SearchResult

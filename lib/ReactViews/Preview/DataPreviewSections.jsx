@@ -1,4 +1,5 @@
 import React from "react";
+import Mustache from "mustache";
 
 import createReactClass from "create-react-class";
 
@@ -9,9 +10,15 @@ import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import { observer } from "mobx-react";
 
 import Styles from "./data-preview.scss";
+import MetadataTable from "./MetadataTable";
 
 naturalSort.insensitive = true;
 import { withTranslation } from "react-i18next";
+import { item } from "../Custom/Chart/tooltip.scss";
+
+Mustache.escape = function(string) {
+  return string;
+};
 
 /**
  * CatalogItem-defined sections that sit within the preview description. These are ordered according to the catalog item's
@@ -54,14 +61,23 @@ const DataPreviewSections = observer(
       return (
         <div>
           <For each="item" index="i" of={this.sortInfoSections(items)}>
-            <If condition={item.content && item.content.length > 0}>
-              <div key={i}>
-                <h2 className={Styles.subHeading}>{item.name}</h2>
-                {parseCustomMarkdownToReact(item.content, {
-                  catalogItem: metadataItem
-                })}
-              </div>
-            </If>
+            <Choose>
+              <When condition={item.content !== undefined}>
+                <div key={i}>
+                  <h4 className={Styles.h4}>{item.name}</h4>
+                  {parseCustomMarkdownToReact(
+                    Mustache.render(item.content, metadataItem),
+                    {
+                      catalogItem: metadataItem
+                    }
+                  )}
+                </div>
+              </When>
+              <When condition={item.contentAsObject !== undefined}>
+                <h4 className={Styles.h4}>{item.name}</h4>
+                <MetadataTable metadataItem={item.contentAsObject} />
+              </When>
+            </Choose>
           </For>
         </div>
       );
