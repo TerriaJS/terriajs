@@ -49,13 +49,20 @@ class DataCatalogTab extends React.Component {
   render() {
     const terria = this.props.terria;
     const searchState = this.props.viewState.searchState;
-    const previewed = this.props.viewState.previewedItem;
     const showBreadcrumbs = this.props.viewState.breadcrumbsShown;
 
     const idToDecode =
       this.props.match.params && this.props.match.params.catalogMemberId;
     const cleanPath = URI.decode(idToDecode);
-    // const previewedItem = this.props.terria.catalog.shareKeyIndex?.[cleanPath];
+    // Below are two older methods of grabbing previewed item, we may want to
+    // tweak this later when we tackle the problem of nested IDs/routes const
+    // previewed = this.props.viewState.previewedItem; const previewedItem =
+    // this.props.terria.catalog.shareKeyIndex?.[cleanPath];
+    /**
+     * We do a lookup on the ID via the route, rather than
+     * `viewState.previewItem` as the URL is the source of truth for current
+     * previewed ID
+     */
     const previewedItem = this.props.terria.getModelById(BaseModel, cleanPath);
 
     return (
@@ -102,7 +109,7 @@ class DataCatalogTab extends React.Component {
             <Breadcrumbs
               terria={this.props.terria}
               viewState={this.props.viewState}
-              previewed={previewed}
+              previewed={previewedItem}
             />
           )}
         </Box>
