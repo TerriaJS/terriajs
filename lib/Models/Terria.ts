@@ -828,8 +828,6 @@ export default class Terria {
           this.previewedItemId = initData.previewedItemId;
         }
 
-        const promises: Promise<void>[] = [];
-
         // Set the new contents of the workbench.
         const newItems = filterOutUndefined(
           workbench.map(modelId => {
