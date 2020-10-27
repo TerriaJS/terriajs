@@ -125,6 +125,12 @@ export class CkanDatasetStratum extends LoadableStratum(
   @computed get name() {
     if (this.ckanResource === undefined) return this.ckanItemReference.name;
     if (this.ckanItemReference.useResourceName) return this.ckanResource.name;
+    // via @steve9164
+    /** Switched the order [check `useCombinationNameWhereMultipleResources`
+     * first ] that these are checked so the default is checked last. Otherwise
+     * setting useCombinationNameWhereMultipleResources without setting
+     * useDatasetNameAndFormatWhereMultipleResources to false doesn't do
+     * anything */
     if (this.ckanDataset) {
       if (
         this.ckanItemReference.useCombinationNameWhereMultipleResources &&
