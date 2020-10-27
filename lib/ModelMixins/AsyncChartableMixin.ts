@@ -1,4 +1,3 @@
-import ChartData from "../Charts/ChartData";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import Chartable, { ChartAxis, ChartItem } from "../Models/Chartable";
@@ -56,9 +55,6 @@ function AsyncChartableMixin<T extends Constructor<Model<MappableTraits>>>(
 namespace AsyncChartableMixin {
   export interface AsyncChartableMixin
     extends InstanceType<ReturnType<typeof AsyncChartableMixin>> {}
-  export function isMixedInto(model: any): model is AsyncChartableMixin {
-    return model && model.isChartable;
-  }
 }
 
 export default AsyncChartableMixin;

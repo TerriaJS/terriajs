@@ -1,4 +1,3 @@
-import { computed, observable, runInAction } from "mobx";
 import Constructor from "../Core/Constructor";
 import Mappable, { MapItem } from "../Models/Mappable";
 import Model from "../Models/Model";
@@ -53,9 +52,6 @@ function AsyncMappableMixin<T extends Constructor<Model<MappableTraits>>>(
 namespace AsyncMappableMixin {
   export interface AsyncMappableMixin
     extends InstanceType<ReturnType<typeof AsyncMappableMixin>> {}
-  export function isMixedInto(model: any): model is AsyncMappableMixin {
-    return model && model.isMappable;
-  }
 }
 
 export default AsyncMappableMixin;
