@@ -26,7 +26,7 @@ import JsonValue, {
   isJsonNumber,
   isJsonObject,
   isJsonString,
-  JsonObject
+  JsonObject,
 } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
 import loadJson5 from "../Core/loadJson5";
@@ -35,7 +35,7 @@ import TerriaError from "../Core/TerriaError";
 import { getUriWithoutPath } from "../Core/uriHelpers";
 import PickedFeatures, {
   featureBelongsToCatalogItem,
-  isProviderCoordsMap
+  isProviderCoordsMap,
 } from "../Map/PickedFeatures";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
@@ -58,7 +58,7 @@ import hasTraits from "./hasTraits";
 import InitSource, { isInitOptions, isInitUrl } from "./InitSource";
 import Internationalization, {
   I18nStartOptions,
-  LanguageConfiguration
+  LanguageConfiguration,
 } from "./Internationalization";
 import MagdaReference, { MagdaReferenceHeaders } from "./MagdaReference";
 import MapInteractionMode from "./MapInteractionMode";
@@ -171,9 +171,9 @@ export default class Terria {
     computed(() =>
       filterOutUndefined(
         this.overlays.items
-          .map(item => (Mappable.is(item) ? item : undefined))
+          .map((item) => (Mappable.is(item) ? item : undefined))
           .concat(
-            this.workbench.items.map(item =>
+            this.workbench.items.map((item) =>
               Mappable.is(item) ? item : undefined
             )
           )
@@ -237,13 +237,13 @@ export default class Terria {
       videoTitle: "Getting started with the map",
       videoUrl: "https://www.youtube.com/embed/FjSxaviSLhc",
       placeholderImage:
-        "https://img.youtube.com/vi/FjSxaviSLhc/maxresdefault.jpg"
+        "https://img.youtube.com/vi/FjSxaviSLhc/maxresdefault.jpg",
     },
     showInAppGuides: false,
     helpContent: [],
     helpContentTerms: defaultTerms,
     languageConfiguration: undefined,
-    displayOneBrand: 0 // index of which brandBarElements to show for mobile header
+    displayOneBrand: 0, // index of which brandBarElements to show for mobile header
   };
 
   @observable
@@ -410,7 +410,7 @@ export default class Terria {
 
   setupInitializationUrls(baseUri: uri.URI, config: any) {
     const initializationUrls: string[] = config.initializationUrls || [];
-    const initSources = initializationUrls.map(url =>
+    const initSources = initializationUrls.map((url) =>
       generateInitializationUrl(
         baseUri,
         this.configParameters.initFragmentPaths,
@@ -510,7 +510,7 @@ export default class Terria {
   loadPersistedBaseMap(): void {
     const persistedBaseMapId = this.getLocalProperty("basemap");
     const baseMapSearch = this.baseMaps.find(
-      baseMap => baseMap.mappable.uniqueId === persistedBaseMapId
+      (baseMap) => baseMap.mappable.uniqueId === persistedBaseMapId
     );
     if (baseMapSearch) {
       this.mainViewer.baseMap = baseMapSearch.mappable;
@@ -550,10 +550,7 @@ export default class Terria {
       this,
       hashProperties,
       this.userProperties,
-      new URI(newUrl)
-        .filename("")
-        .query("")
-        .hash("")
+      new URI(newUrl).filename("").query("").hash("")
     ).then(() => {
       return this.loadInitSources();
     });
@@ -575,18 +572,18 @@ export default class Terria {
   }
 
   protected forceLoadInitSources(): Promise<void> {
-    const initSourcePromises = this.initSources.map(initSource => {
-      return loadInitSource(initSource).catch(e => {
+    const initSourcePromises = this.initSources.map((initSource) => {
+      return loadInitSource(initSource).catch((e) => {
         this.error.raiseEvent(e);
         return undefined;
       });
     });
 
-    return Promise.all(initSourcePromises).then(initSources => {
+    return Promise.all(initSourcePromises).then((initSources) => {
       return runInAction(() => {
-        const promises = filterOutUndefined(initSources).map(initSource =>
+        const promises = filterOutUndefined(initSources).map((initSource) =>
           this.applyInitData({
-            initData: initSource
+            initData: initSource,
           })
         );
         return Promise.all(promises);
@@ -605,7 +602,7 @@ export default class Terria {
       throw new TerriaError({
         sender: this,
         title: "Invalid model traits",
-        message: "The traits of a model must be a JSON object."
+        message: "The traits of a model must be a JSON object.",
       });
     }
 
@@ -618,7 +615,7 @@ export default class Terria {
     const containerIds = thisModelStratumData.knownContainerUniqueIds;
     if (Array.isArray(containerIds)) {
       // Groups that contain this item must be loaded before this item.
-      const containerPromises = containerIds.map(containerId => {
+      const containerPromises = containerIds.map((containerId) => {
         if (typeof containerId !== "string") {
           return Promise.resolve(undefined);
         }
@@ -627,7 +624,7 @@ export default class Terria {
           stratumId,
           allModelStratumData,
           replaceStratum
-        ).then(container => {
+        ).then((container) => {
           const dereferenced = ReferenceMixin.is(container)
             ? container.target
             : container;
@@ -667,13 +664,13 @@ export default class Terria {
           stratumId,
           {
             ...cleanStratumData,
-            id: modelId
+            id: modelId,
           },
           replaceStratum
         );
 
         if (Array.isArray(containerIds)) {
-          containerIds.forEach(containerId => {
+          containerIds.forEach((containerId) => {
             if (
               typeof containerId === "string" &&
               loadedModel.knownContainerUniqueIds.indexOf(containerId) < 0
@@ -713,13 +710,13 @@ export default class Terria {
             sender: this,
             title: "Model cannot be dereferenced",
             message:
-              "The stratum has a `dereferenced` property, but the model cannot be dereferenced."
+              "The stratum has a `dereferenced` property, but the model cannot be dereferenced.",
           });
         }
 
         return loadedModel;
       })
-      .then(loadedModel => {
+      .then((loadedModel) => {
         const dereferenced = getDereferencedIfExists(loadedModel);
         if (GroupMixin.isMixedInto(dereferenced)) {
           return openGroup(dereferenced, dereferenced.isOpen).then(
@@ -735,7 +732,7 @@ export default class Terria {
   applyInitData({
     initData,
     replaceStratum = false,
-    canUnsetFeaturePickingState = false
+    canUnsetFeaturePickingState = false,
   }: ApplyInitDataOptions): Promise<void> {
     initData = toJS(initData);
 
@@ -805,13 +802,13 @@ export default class Terria {
     const models = initData.models;
     if (isJsonObject(models)) {
       promise = Promise.all(
-        Object.keys(models).map(modelId => {
+        Object.keys(models).map((modelId) => {
           return this.loadModelStratum(
             modelId,
             stratumId,
             models,
             replaceStratum
-          ).catch(e => {
+          ).catch((e) => {
             // TODO: deal with shared models that can't be loaded because, e.g. because they are private
             console.log(e);
             return Promise.resolve();
@@ -832,12 +829,12 @@ export default class Terria {
 
         // Set the new contents of the workbench.
         const newItems = filterOutUndefined(
-          workbench.map(modelId => {
+          workbench.map((modelId) => {
             if (typeof modelId !== "string") {
               throw new TerriaError({
                 sender: this,
                 title: "Invalid model ID in workbench",
-                message: "A model ID in the workbench list is not a string."
+                message: "A model ID in the workbench list is not a string.",
               });
             }
 
@@ -850,11 +847,11 @@ export default class Terria {
         // TODO: the timelineStack should be populated from the `timeline` property,
         // not from the workbench.
         this.timelineStack.items = this.workbench.items
-          .filter(item => {
+          .filter((item) => {
             return item.uniqueId && timeline.indexOf(item.uniqueId) >= 0;
             // && TODO: what is a good way to test if an item is of type TimeVarying.
           })
-          .map(item => <TimeVarying>item);
+          .map((item) => <TimeVarying>item);
 
         // Load the items on the workbench
         for (let model of newItems) {
@@ -894,10 +891,7 @@ export default class Terria {
   }
 
   async loadMagdaConfig(configUrl: string, config: any, baseUri: uri.URI) {
-    const magdaRoot = new URI(configUrl)
-      .path("")
-      .query("")
-      .toString();
+    const magdaRoot = new URI(configUrl).path("").query("").toString();
 
     const aspects = config.aspects;
     const configParams =
@@ -913,7 +907,7 @@ export default class Terria {
       /** Load the init data without the catalog yet, as we'll push the catalog
        * source up as an init source later */
       await this.applyInitData({
-        initData: initObjWithoutCatalog as any
+        initData: initObjWithoutCatalog as any,
       });
     }
 
@@ -949,8 +943,8 @@ export default class Terria {
           const { catalog, ...rest } = initObj;
           this.initSources.push({
             data: {
-              catalog: catalog
-            }
+              catalog: catalog,
+            },
           });
         }
       });
@@ -964,7 +958,7 @@ export default class Terria {
 
     if (Array.isArray(pickedFeatures.entities)) {
       // Build index of terria features by a hash of their properties.
-      const relevantItems: Mappable[] = this.workbench.items.filter(item => {
+      const relevantItems: Mappable[] = this.workbench.items.filter((item) => {
         return (
           hasTraits(item, ShowableTraits, "show") &&
           item.show &&
@@ -972,12 +966,12 @@ export default class Terria {
         );
       }) as Mappable[];
 
-      relevantItems.forEach(item => {
+      relevantItems.forEach((item) => {
         const entities: Entity[] = item.mapItems
           .filter(isDataSource)
           .reduce((arr: Entity[], ds) => arr.concat(ds.entities.values), []);
 
-        entities.forEach(entity => {
+        entities.forEach((entity) => {
           const hash = hashEntity(entity, this.timelineClock);
           const feature = Feature.fromEntityCollectionOrEntity(entity);
           featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
@@ -987,10 +981,10 @@ export default class Terria {
       // Go through the features we've got from terria match them up to the id/name info we got from the
       // share link, filtering out any without a match.
       vectorFeatures = filterOutUndefined(
-        pickedFeatures.entities.map(e => {
+        pickedFeatures.entities.map((e) => {
           if (isJsonObject(e) && typeof e.hash === "number") {
             const features = featureIndex[e.hash] || [];
-            const match = features.find(f => f.name === e.name);
+            const match = features.find((f) => f.name === e.name);
             return match;
           }
         })
@@ -1002,7 +996,7 @@ export default class Terria {
     const pickCoords = {
       latitude: maybeCoords?.lat,
       longitude: maybeCoords?.lng,
-      height: maybeCoords?.height
+      height: maybeCoords?.height,
     };
     if (
       isLatLonHeight(pickCoords) &&
@@ -1031,7 +1025,7 @@ export default class Terria {
           typeof current.name === "string"
         ) {
           const selectedFeature = (featureIndex[current.hash] || []).find(
-            feature => feature.name === current.name
+            (feature) => feature.name === current.name
           );
           if (selectedFeature) {
             this.selectedFeature = selectedFeature as Feature;
@@ -1095,17 +1089,17 @@ function generateInitializationUrl(
 ): InitSource {
   if (url.toLowerCase().substring(url.length - 5) !== ".json") {
     return {
-      options: initFragmentPaths.map(fragmentPath => {
+      options: initFragmentPaths.map((fragmentPath) => {
         return {
           initUrl: URI.joinPaths(fragmentPath, url + ".json")
             .absoluteTo(baseUri)
-            .toString()
+            .toString(),
         };
-      })
+      }),
     };
   }
   return {
-    initUrl: new URI(url).absoluteTo(baseUri).toString()
+    initUrl: new URI(url).absoluteTo(baseUri).toString(),
   };
 }
 
@@ -1118,13 +1112,13 @@ const loadInitSource = createTransformer(
     } else if (isInitOptions(initSource)) {
       promise = initSource.options.reduce((previousOptionPromise, option) => {
         return previousOptionPromise
-          .then(json => {
+          .then((json) => {
             if (json === undefined) {
               return loadInitSource(option);
             }
             return json;
           })
-          .catch(_ => {
+          .catch((_) => {
             return loadInitSource(option);
           });
       }, Promise.resolve<JsonObject | undefined>(undefined));
@@ -1132,7 +1126,7 @@ const loadInitSource = createTransformer(
       promise = Promise.resolve(initSource.data);
     }
 
-    return promise.then(jsonValue => {
+    return promise.then((jsonValue) => {
       if (isJsonObject(jsonValue)) {
         return jsonValue;
       }
@@ -1155,7 +1149,7 @@ function interpretHash(
 
   return promise.then((shareProps: any) => {
     runInAction(() => {
-      Object.keys(hashProperties).forEach(function(property) {
+      Object.keys(hashProperties).forEach(function (property) {
         const propertyValue = hashProperties[property];
         if (property === "clean") {
           terria.initSources.splice(0, terria.initSources.length);
@@ -1181,7 +1175,7 @@ function interpretHash(
         if (shareProps.converted) {
           terria.notification.raiseEvent({
             title: i18next.t("share.convertNotificationTitle"),
-            message: shareConvertNotification(shareProps)
+            message: shareConvertNotification(shareProps),
           } as Notification);
         }
         interpretStartData(terria, shareProps);
@@ -1194,13 +1188,15 @@ function interpretStartData(terria: Terria, startData: any) {
   // TODO: version check, filtering, etc.
 
   if (startData.initSources) {
-    terria.initSources.push(
-      ...startData.initSources.map((initSource: any) => {
-        return {
-          data: initSource
-        };
-      })
-    );
+    runInAction(() => {
+      terria.initSources.push(
+        ...startData.initSources.map((initSource: any) => {
+          return {
+            data: initSource,
+          };
+        })
+      );
+    });
   }
 
   // if (defined(startData.version) && startData.version !== latestStartVersion) {
