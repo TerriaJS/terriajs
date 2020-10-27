@@ -64,7 +64,7 @@ const DataPreviewSections = observer(
             <Choose>
               <When condition={item.content !== undefined}>
                 <div key={i}>
-                  <h4 className={Styles.h4}>{item.name}</h4>
+                  <h2 className={Styles.subHeading}>{item.name}</h2>
                   {parseCustomMarkdownToReact(
                     Mustache.render(item.content, metadataItem),
                     {
@@ -74,7 +74,7 @@ const DataPreviewSections = observer(
                 </div>
               </When>
               <When condition={item.contentAsObject !== undefined}>
-                <h4 className={Styles.h4}>{item.name}</h4>
+                <h2 className={Styles.subHeading}>{item.name}</h2>
                 <MetadataTable metadataItem={item.contentAsObject} />
               </When>
             </Choose>
