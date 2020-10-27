@@ -28,7 +28,7 @@ const ExplorerWindow = observer(
     onClose() {
       this.props.viewState.closeCatalog();
       this.props.viewState.switchMobileView("nowViewing");
-      this.props.viewState.history.push(ROOT_ROUTE);
+      this.props.viewState.history?.push(ROOT_ROUTE);
     },
 
     onStartAnimatingIn() {
