@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.59)
+* Add a short report section if trying to view a `3d-tiles` item in a 2d map.
 * [The next improvement]
 
 #### 8.0.0-alpha.58
