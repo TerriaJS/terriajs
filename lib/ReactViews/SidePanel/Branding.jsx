@@ -29,30 +29,31 @@ const Branding = observer(
 
       const version = this.props.version || "Unknown";
 
-    const displayOne = this.props.displayOne;
-    const displayContent =
-      // If the index exists, use that
-      (displayOne && brandingHtmlElements[displayOne]) ||
-      // If it doesn't exist, find the first item that isn't an empty string (for backward compatability of old terriamap defaults)
-      (displayOne && brandingHtmlElements.find(item => item?.length > 0)) ||
-      undefined;
+      const displayOne = this.props.displayOne;
+      const displayContent =
+        // If the index exists, use that
+        (displayOne && brandingHtmlElements[displayOne]) ||
+        // If it doesn't exist, find the first item that isn't an empty string (for backward compatability of old terriamap defaults)
+        (displayOne && brandingHtmlElements.find(item => item?.length > 0)) ||
+        undefined;
 
-    return (
-      <div className={Styles.branding}>
-        {displayContent &&
-          parseCustomHtmlToReact(
-            displayContent.replace(/\{\{\s*version\s*\}\}/g, version)
-          )}
-        {!displayContent && (
-          <For each="element" index="i" of={brandingHtmlElements}>
-            {parseCustomHtmlToReact(
-              element.replace(/\{\{\s*version\s*\}\}/g, version)
+      return (
+        <div className={Styles.branding}>
+          {displayContent &&
+            parseCustomHtmlToReact(
+              displayContent.replace(/\{\{\s*version\s*\}\}/g, version)
             )}
-          </For>
-        )}
-      </div>
-    );
-  }
-});
+          {!displayContent && (
+            <For each="element" index="i" of={brandingHtmlElements}>
+              {parseCustomHtmlToReact(
+                element.replace(/\{\{\s*version\s*\}\}/g, version)
+              )}
+            </For>
+          )}
+        </div>
+      );
+    }
+  })
+);
 
 module.exports = Branding;
