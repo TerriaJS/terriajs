@@ -322,7 +322,19 @@ class GetCapabilitiesStratum extends LoadableStratum(
         {},
         this.capabilitiesLayers.get(this.catalogItem.layersArray[0])
       ) as any;
+
       if (out !== undefined) {
+        // The Dimension object is really weird and has a bunch of stray text in there
+        if ("Dimension" in out) {
+          const goodDimension: any = {};
+          Object.keys(out.Dimension).forEach((k: any) => {
+            if (isNaN(k)) {
+              goodDimension[k] = out.Dimension[k];
+            }
+          });
+          out.Dimension = goodDimension;
+        }
+
         // remove a circular reference to the parent
         delete out._parent;
 

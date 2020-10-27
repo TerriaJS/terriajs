@@ -5,6 +5,7 @@ import ArcGisMapServerCatalogGroup from "./ArcGisMapServerCatalogGroup";
 import ArcGisMapServerCatalogItem from "./ArcGisMapServerCatalogItem";
 import ArcGisPortalCatalogGroup from "./ArcGisPortalCatalogGroup";
 import ArcGisPortalItemReference from "./ArcGisPortalItemReference";
+import ArcGisTerrainCatalogItem from "./ArcGisTerrainCatalogItem";
 import BingMapsCatalogItem from "./BingMapsCatalogItem";
 import CartoMapCatalogItem from "./CartoMapCatalogItem";
 import CatalogGroup from "./CatalogGroupNew";
@@ -98,6 +99,10 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(
     ArcGisPortalItemReference.type,
     ArcGisPortalItemReference
+  );
+  CatalogMemberFactory.register(
+    ArcGisTerrainCatalogItem.type,
+    ArcGisTerrainCatalogItem
   );
   CatalogMemberFactory.register(
     Cesium3DTilesCatalogItem.type,
