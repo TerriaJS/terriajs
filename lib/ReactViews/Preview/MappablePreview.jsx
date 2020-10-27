@@ -5,7 +5,6 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import getPath from "../../Core/getPath";
-import addToWorkbench from "../../Models/addToWorkbench";
 import Mappable from "../../Models/Mappable";
 import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
 // eslint-disable-next-line no-unused-vars
@@ -18,6 +17,7 @@ import DataPreviewMap from "./DataPreviewMap";
 // import DataPreviewMap from "./DataPreviewMap";
 import Description from "./Description";
 import Styles from "./mappable-preview.scss";
+import raiseErrorToUser from "../../Models/raiseErrorToUser";
 
 /**
  * @typedef {object} Props
@@ -43,7 +43,7 @@ class MappablePreview extends React.Component {
   };
 
   @action.bound
-  toggleOnMap(event) {
+  async toggleOnMap(event) {
     if (defined(this.props.viewState.storyShown)) {
       this.props.viewState.storyShown = false;
     }
@@ -51,17 +51,14 @@ class MappablePreview extends React.Component {
     const keepCatalogOpen = event.shiftKey || event.ctrlKey;
     const toAdd = !this.props.terria.workbench.contains(this.props.previewed);
 
-    if (toAdd) {
-      this.props.terria.timelineStack.addToTop(this.props.previewed);
-    } else {
-      this.props.terria.timelineStack.remove(this.props.previewed);
-    }
-
-    const addPromise = addToWorkbench(
-      this.props.terria.workbench,
-      this.props.previewed,
-      toAdd
-    ).then(() => {
+    try {
+      if (toAdd) {
+        this.props.terria.timelineStack.addToTop(this.props.previewed);
+        await this.props.terria.workbench.add(this.props.previewed);
+      } else {
+        this.props.terria.timelineStack.remove(this.props.previewed);
+        this.props.terria.workbench.remove(this.props.previewed);
+      }
       if (
         this.props.terria.workbench.contains(this.props.previewed) &&
         !keepCatalogOpen
@@ -73,9 +70,9 @@ class MappablePreview extends React.Component {
           getPath(this.props.previewed)
         );
       }
-    });
-
-    raiseErrorOnRejectedPromise(addPromise);
+    } catch (e) {
+      raiseErrorToUser(this.props.terria, e);
+    }
   }
 
   backToMap() {

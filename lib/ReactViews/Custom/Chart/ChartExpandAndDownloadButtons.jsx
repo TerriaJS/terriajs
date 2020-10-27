@@ -175,8 +175,9 @@ function expandItem(sourceItems, sourceIndex, terria) {
       }
     });
   });
-  workbench.add(sourceItem);
+
   try {
+    workbench.add(sourceItem);
     terria.addModel(sourceItem);
   } catch {}
   runInAction(() =>

@@ -7,10 +7,10 @@ import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import addedByUser from "../../Core/addedByUser";
 import getPath from "../../Core/getPath";
-import addToWorkbench from "../../Models/addToWorkbench";
 import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
 import removeUserAddedData from "../../Models/removeUserAddedData";
 import CatalogItem from "./CatalogItem";
+import raiseErrorToUser from "../../Models/raiseErrorToUser";
 
 // Individual dataset
 export const DataCatalogItem = observer(
@@ -54,21 +54,19 @@ export const DataCatalogItem = observer(
     },
 
     toggleEnable(event) {
-      runInAction(() => {
+      runInAction(async () => {
         const keepCatalogOpen = event.shiftKey || event.ctrlKey;
         const toAdd = !this.props.terria.workbench.contains(this.props.item);
 
-        if (toAdd) {
-          this.props.terria.timelineStack.addToTop(this.props.item);
-        } else {
-          this.props.terria.timelineStack.remove(this.props.item);
-        }
+        try {
+          if (toAdd) {
+            this.props.terria.timelineStack.addToTop(this.props.item);
+            await this.props.terria.workbench.add(this.props.item);
+          } else {
+            this.props.terria.timelineStack.remove(this.props.item);
+            await this.props.terria.workbench.remove(this.props.item);
+          }
 
-        const addPromise = addToWorkbench(
-          this.props.terria.workbench,
-          this.props.item,
-          toAdd
-        ).then(() => {
           if (
             this.props.terria.workbench.contains(this.props.item) &&
             !keepCatalogOpen
@@ -80,9 +78,9 @@ export const DataCatalogItem = observer(
               getPath(this.props.item)
             );
           }
-        });
-
-        raiseErrorOnRejectedPromise(this.props.terria, addPromise);
+        } catch (e) {
+          raiseErrorToUser(this.props.terria, e);
+        }
       });
     },
 
