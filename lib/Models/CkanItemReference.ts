@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { action, computed, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import URI from "urijs";
 import isDefined from "../Core/isDefined";
@@ -10,10 +10,13 @@ import UrlMixin from "../ModelMixins/UrlMixin";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import CkanItemReferenceTraits from "../Traits/CkanItemReferenceTraits";
 import CkanResourceFormatTraits from "../Traits/CkanResourceFormatTraits";
+import CkanSharedTraits from "../Traits/CkanSharedTraits";
 import { RectangleTraits } from "../Traits/MappableTraits";
 import ModelTraits from "../Traits/ModelTraits";
 import CatalogMemberFactory from "./CatalogMemberFactory";
-import CkanCatalogGroup from "./CkanCatalogGroup";
+import CkanCatalogGroup, {
+  createInheritedCkanSharedTraitsStratum
+} from "./CkanCatalogGroup";
 import {
   CkanDataset,
   CkanDatasetServerResponse,
@@ -124,16 +127,16 @@ export class CkanDatasetStratum extends LoadableStratum(
     if (this.ckanItemReference.useResourceName) return this.ckanResource.name;
     if (this.ckanDataset) {
       if (
-        this.ckanItemReference.useDatasetNameAndFormatWhereMultipleResources &&
-        this.ckanDataset.resources.length > 1
-      ) {
-        return this.ckanDataset.title + " - " + this.ckanResource.format;
-      }
-      if (
         this.ckanItemReference.useCombinationNameWhereMultipleResources &&
         this.ckanDataset.resources.length > 1
       ) {
         return this.ckanDataset.title + " - " + this.ckanResource.name;
+      }
+      if (
+        this.ckanItemReference.useDatasetNameAndFormatWhereMultipleResources &&
+        this.ckanDataset.resources.length > 1
+      ) {
+        return this.ckanDataset.title + " - " + this.ckanResource.format;
       }
       return this.ckanDataset.title;
     }
@@ -417,10 +420,16 @@ export default class CkanItemReference extends UrlMixin(
     });
   }
 
-  setItemProperties(model: BaseModel, itemProperties: any) {
-    runInAction(() => {
-      model.setTrait(CommonStrata.override, "itemProperties", itemProperties);
-    });
+  @action
+  setSharedStratum(
+    inheritedPropertiesStratum: Readonly<StratumFromTraits<CkanSharedTraits>>
+  ) {
+    // The values in this stratum should not be updated as the same object is used
+    //  in all CkanItemReferences
+    this.strata.set(
+      createInheritedCkanSharedTraitsStratum.stratumName,
+      inheritedPropertiesStratum
+    );
   }
 
   async forceLoadReference(
