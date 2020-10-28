@@ -6,6 +6,7 @@ Change Log
 #### next release (8.0.0-alpha.59)
 * Update magda error message
 * Add a short report section if trying to view a `3d-tiles` item in a 2d map.
+* Remove `isMixedInto` for `AsyncMappableMixin` and `AsyncChartableMixin`.
 * [The next improvement]
 
 #### 8.0.0-alpha.58
@@ -13,8 +14,6 @@ Change Log
 * Fix zooming bug for datasets with invalid bounding boxes.
 * Add new model for `ArcGisTerrainCatalogItem`.
 * Add 3D Tiles to 'Add web data' dropdown.
-* Remove `isMixedInto` for `AsyncMappableMixin` and `AsyncChartableMixin`.
-* [The next improvement]
 * Fix naming of item in a `CkanCatalogGroup` when using an item naming scheme other than the default.
 
 #### 8.0.0-alpha.57
