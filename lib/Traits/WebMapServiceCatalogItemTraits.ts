@@ -149,20 +149,6 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
 ) {
   @primitiveTrait({
     type: "string",
-    name: "Is GeoServer",
-    description: "True if this WMS is a GeoServer; otherwise, false."
-  })
-  isGeoServer: boolean = false;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Is Esri",
-    description: "True if this WMS is from Esri; otherwise, false."
-  })
-  isEsri: boolean = false;
-
-  @primitiveTrait({
-    type: "string",
     name: "Layer(s)",
     description: "The layer or layers to display (comma separated values)."
   })
@@ -266,6 +252,20 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
       "Gets or sets the coverage name for linked WCS for clip-and-ship."
   })
   linkedWcsCoverage?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Is GeoServer",
+    description: "True if this WMS is a GeoServer; otherwise, false."
+  })
+  isGeoServer: boolean = false;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Is Esri",
+    description: "True if this WMS is from Esri; otherwise, false."
+  })
+  isEsri: boolean = false;
 
   @primitiveTrait({
     type: "boolean",
