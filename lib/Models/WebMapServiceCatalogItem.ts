@@ -141,50 +141,41 @@ class GetCapabilitiesStratum extends LoadableStratum(
       const layer = layers[i];
       const style = i < styles.length ? styles[i] : undefined;
 
-      const layerAvailableStyles = availableStyles.find(
-        candidate => candidate.layerName === layer
-      );
-      if (
-        layerAvailableStyles !== undefined &&
-        Array.isArray(layerAvailableStyles.styles) &&
-        layerAvailableStyles.styles.length > 0
-      ) {
-        // Use the first style if none is explicitly specified.
-        // Note that the WMS 1.3.0 spec (section 7.3.3.4) explicitly says we can't assume this,
-        // but because the server has no other way of indicating the default style, let's hope that
-        // sanity prevails.
-        const layerStyle =
-          style === undefined
-            ? layerAvailableStyles.styles[0]
-            : layerAvailableStyles.styles.find(
-                candidate => candidate.name === style
-              );
+      let legendUrl: string | undefined;
+      let legendUrlMimeType: string | undefined;
 
-        if (layerStyle !== undefined && layerStyle.legend !== undefined) {
-          let url = this.catalogItem.supportsColorScaleRange
-            ? `${layerStyle.legend.url}&colorscalerange=${this.catalogItem.colorScaleRange}`
-            : layerStyle.legend.url;
-          result.push(
-            createStratumInstance(LegendTraits, {
-              url,
-              urlMimeType: layerStyle.legend.urlMimeType
-            })
+      // Attempt to find layer style based on AvailableStyleTraits
+      const layerStyle =
+        style === undefined
+          ? undefined
+          : availableStyles
+              .find(candidate => candidate.layerName === layer)
+              ?.styles?.find(candidate => candidate.name === style);
+      if (layerStyle?.legend) {
+        legendUrl = layerStyle.legend.url;
+        legendUrlMimeType = layerStyle.legend.urlMimeType;
+      }
+
+      // If no legends found - make one up!
+      if (!isDefined(legendUrl) && isDefined(this.catalogItem.url)) {
+        legendUrl = `${
+          this.catalogItem.url.split("?")[0]
+        }?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&transparent=True&layer=${layer}`;
+        legendUrlMimeType = "image/png";
+      }
+
+      if (isDefined(legendUrl)) {
+        const legendUri = URI(proxyCatalogItemUrl(this.catalogItem, legendUrl));
+        if (this.catalogItem.supportsColorScaleRange) {
+          legendUri.addQuery(
+            "colorscalerange",
+            this.catalogItem.colorScaleRange
           );
         }
-
-        // If no styles - make up legend
-      } else if (isDefined(this.catalogItem.url)) {
         result.push(
           createStratumInstance(LegendTraits, {
-            url: URI(
-              `${proxyCatalogItemUrl(
-                this.catalogItem,
-                this.catalogItem.url
-              )}?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&transparent=True`
-            )
-              .addQuery("layer", layer)
-              .toString(),
-            urlMimeType: "image/png"
+            url: legendUri.toString(),
+            urlMimeType: legendUrlMimeType
           })
         );
       }
@@ -1149,8 +1140,8 @@ class WebMapServiceCatalogItem
 
         // Set selectedId to value stored in `styles` trait for this `layerIndex` or the first available style value
         // The `styles` parameter is CSV, a style for each layer
-        selectedId:
-          this.styles?.split(",")?.[layerIndex] || layer.styles[0]?.name,
+        // Note: there is no way of finding out default style if no style has been selected :(
+        selectedId: this.styles?.split(",")?.[layerIndex],
 
         setDimensionValue: (stratumId: string, newStyle: string) => {
           runInAction(() => {
@@ -1161,6 +1152,10 @@ class WebMapServiceCatalogItem
             this.setTrait(stratumId, "styles", styles.join(","));
           });
         },
+        allowUndefined: true,
+        undefinedLabel: i18next.t(
+          "models.webMapServiceCatalogItem.defaultStyleLabel"
+        ),
         disable: this.isShowingDiff
       };
     });

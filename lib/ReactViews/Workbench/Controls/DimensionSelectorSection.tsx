@@ -71,7 +71,7 @@ export default class DimensionSelectorSection extends React.Component<{
               {(typeof dim.selectedId === "undefined" ||
                 dim.allowUndefined) && (
                 <option key="__undefined__" value="">
-                  Not specified
+                  {dim.undefinedLabel ?? "Not specified"}
                 </option>
               )}
               {dim.options!.map(option => (
