@@ -7,7 +7,6 @@ import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import addedByUser from "../../Core/addedByUser";
 import getPath from "../../Core/getPath";
-import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
 import removeUserAddedData from "../../Models/removeUserAddedData";
 import CatalogItem from "./CatalogItem";
 import raiseErrorToUser from "../../Models/raiseErrorToUser";
