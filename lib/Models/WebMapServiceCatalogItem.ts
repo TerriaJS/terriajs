@@ -523,6 +523,38 @@ class GetCapabilitiesStratum extends LoadableStratum(
     }
   }
 
+  // TODO - There is possibly a better way to do this
+  @computed
+  get isThredds(): boolean {
+    if (
+      this.catalogItem.url &&
+      (this.catalogItem.url.indexOf("thredds") > -1 ||
+        this.catalogItem.url.indexOf("tds") > -1)
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  // TODO - Geoserver also support NCWMS via a plugin, just need to work out how to detect that
+  @computed
+  get isNcWMS(): boolean {
+    if (this.catalogItem.isThredds) return true;
+    return false;
+  }
+
+  @computed
+  get isEsri(): boolean {
+    if (this.catalogItem.url !== undefined)
+      return this.catalogItem.url.indexOf("MapServer/WMSServer") > -1;
+    return false;
+  }
+
+  @computed
+  get supportsColorScaleRange(): boolean {
+    return this.catalogItem.isNcWMS;
+  }
+
   @computed
   get discreteTimes(): { time: string; tag: string | undefined }[] | undefined {
     const result = [];
@@ -679,37 +711,6 @@ class WebMapServiceCatalogItem
   // TODO
   get isMappable() {
     return true;
-  }
-
-  // TODO - There is possibly a better way to do this
-  @computed
-  get isThredds(): boolean {
-    if (
-      this.url &&
-      (this.url.indexOf("thredds") > -1 || this.url.indexOf("tds") > -1)
-    ) {
-      return true;
-    }
-    return false;
-  }
-
-  // TODO - Geoserver also support NCWMS via a plugin, just need to work out how to detect that
-  @computed
-  get isNcWMS(): boolean {
-    if (this.isThredds) return true;
-    return false;
-  }
-
-  @computed
-  get isEsri(): boolean {
-    if (this.url !== undefined)
-      return this.url.indexOf("MapServer/WMSServer") > -1;
-    return false;
-  }
-
-  @computed
-  get supportsColorScaleRange(): boolean {
-    return this.isNcWMS;
   }
 
   @computed
@@ -1010,6 +1011,8 @@ class WebMapServiceCatalogItem
         "height",
         "bbox",
         "layers",
+        // This is here as a temporary fix until Cesium implements this fix
+        // https://github.com/CesiumGS/cesium/issues/9021
         "version"
       ];
 
