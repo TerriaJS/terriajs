@@ -37,6 +37,9 @@ export default function proxyCatalogItemUrl(
   }
 }
 
+/**
+ * Similar to {@link proxyCatalogItemUrl}, but only returns proxy base url, not full URL (for example `proxy/`, instead of `proxy/some/other/resource`)
+ */
 export function proxyCatalogItemBaseUrl(
   catalogItem: BaseModel | UrlReference | undefined,
   url: string,
