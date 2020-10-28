@@ -40,13 +40,15 @@ interface MapboxVectorTileImageryProviderOptions {
   url: string;
   layerName: string;
   subdomains?: unknown[];
-  styleFunc: (feature: any) => SimpleStyle | undefined;
+  styleFunc: (feature: VectorTileFeature) => SimpleStyle | undefined;
   minimumZoom?: number;
   maximumZoom?: number;
   maximumNativeZoom?: number;
   rectangle?: Rectangle;
   uniqueIdProp: string;
-  featureInfoFunc?: (feature: any) => ImageryLayerFeatureInfo | undefined;
+  featureInfoFunc?: (
+    feature: VectorTileFeature
+  ) => ImageryLayerFeatureInfo | undefined;
 }
 
 export default class MapboxVectorTileImageryProvider
@@ -54,7 +56,9 @@ export default class MapboxVectorTileImageryProvider
   private readonly _uriTemplate: uri.URITemplate;
   private readonly _layerName: string;
   private readonly _subdomains: string[];
-  private readonly _styleFunc: (feature: any) => SimpleStyle | undefined;
+  private readonly _styleFunc: (
+    feature: VectorTileFeature
+  ) => SimpleStyle | undefined;
   private readonly _tilingScheme: WebMercatorTilingScheme;
   private readonly _tileWidth: number;
   private readonly _tileHeight: number;
@@ -64,7 +68,7 @@ export default class MapboxVectorTileImageryProvider
   private readonly _rectangle: Rectangle;
   private readonly _uniqueIdProp: string;
   private readonly _featureInfoFunc?: (
-    feature: any
+    feature: VectorTileFeature
   ) => ImageryLayerFeatureInfo | undefined;
   private readonly _errorEvent = new CesiumEvent();
   private readonly _ready = true;

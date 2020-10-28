@@ -37,6 +37,7 @@ import WebFeatureServiceCatalogGroup from "./WebFeatureServiceCatalogGroup";
 import WebFeatureServiceCatalogItem from "./WebFeatureServiceCatalogItem";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
+import MapboxVectorTileCatalogItem from "./MapboxVectorTileCatalogItem";
 import WebMapTileServiceCatalogGroup from "./WebMapTileServiceCatalogGroup";
 import WebMapTileServiceCatalogItem from "./WebMapTileServiceCatalogItem";
 import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFunction";
@@ -127,6 +128,10 @@ export default function registerCatalogMembers() {
   );
   CatalogMemberFactory.register(MagdaReference.type, MagdaReference);
   CatalogMemberFactory.register(KmlCatalogItem.type, KmlCatalogItem);
+  CatalogMemberFactory.register(
+    MapboxVectorTileCatalogItem.type,
+    MapboxVectorTileCatalogItem
+  );
   CatalogMemberFactory.register(CartoMapCatalogItem.type, CartoMapCatalogItem);
   CatalogMemberFactory.register(UrlReference.type, UrlReference);
   CatalogMemberFactory.register(SplitItemReference.type, SplitItemReference);
