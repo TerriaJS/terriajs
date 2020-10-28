@@ -9,6 +9,7 @@ Change Log
 * Add `ThreddsCatalogGroup` model.
 * Port `supportsColorScaleRange`, `colorScaleMinimum` and `colorScaleMaximimum` from `master` to `WebMapServiceCatalogItem` model.
 * Fix WMS legend for default styles.
+* Ported MapboxVectorTileCatalogItem ("mvt").
 * [The next improvement]
 
 #### 8.0.0-alpha.58
