@@ -1,10 +1,14 @@
 ## Adding a record to data catalogue from magda website
 
 A json data describing a magda record to be added to `TerriaMap` data catalogue should have the following properties:
-1. "name": "`<the name of magda record>`"
-2. "type": "magda"
-3. "recordId": "`<the ID of magda record>`"
-4. "url": "`<the url to magda website>`"
+
+- "name": "`<the name of magda record>`"
+
+- "type": "magda"
+
+- "recordId": "`<the ID of magda record>`"
+
+- "url": "`<the url to magda website>`"
 
 E.g. the [magda website](https://dev.magda.io/) can post the following message to a `TerriaMap` to visualise its record.
 ```
@@ -24,4 +28,4 @@ E.g. the [magda website](https://dev.magda.io/) can post the following message t
     ]
 }
 ```
-where the element in "workbench" array prepends "//" to the value of "name".
+where the element in `workbench` array is the value of record `name` prepended with "//".
