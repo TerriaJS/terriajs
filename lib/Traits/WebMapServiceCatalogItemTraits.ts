@@ -149,20 +149,6 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
 ) {
   @primitiveTrait({
     type: "string",
-    name: "Is GeoServer",
-    description: "True if this WMS is a GeoServer; otherwise, false."
-  })
-  isGeoServer: boolean = false;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Is Esri",
-    description: "True if this WMS is from Esri; otherwise, false."
-  })
-  isEsri: boolean = false;
-
-  @primitiveTrait({
-    type: "string",
     name: "Layer(s)",
     description: "The layer or layers to display (comma separated values)."
   })
@@ -267,27 +253,41 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   })
   linkedWcsCoverage?: string;
 
-  // @primitiveTrait({
-  //   type: "boolean",
-  //   name: "Is Thredds",
-  //   description: "True if this WMS is from a THREDDS server; otherwise, false."
-  // })
-  // isThredds: boolean = false;
+  @primitiveTrait({
+    type: "string",
+    name: "Is GeoServer",
+    description: "True if this WMS is a GeoServer; otherwise, false."
+  })
+  isGeoServer: boolean = false;
 
-  // @primitiveTrait({
-  //   type: "boolean",
-  //   name: "Is NcWMS",
-  //   description: "True if this WMS supports NcWMS."
-  // })
-  // isNcWMS: boolean = false;
+  @primitiveTrait({
+    type: "string",
+    name: "Is Esri",
+    description: "True if this WMS is from Esri; otherwise, false."
+  })
+  isEsri: boolean = false;
 
-  // @primitiveTrait({
-  //   type: "boolean",
-  //   name: "Supports color scale range",
-  //   description:
-  //     "Gets or sets whether this WMS server has been identified as supporting the COLORSCALERANGE parameter."
-  // })
-  // supportsColorScaleRange: boolean = false;
+  @primitiveTrait({
+    type: "boolean",
+    name: "Is Thredds",
+    description: "True if this WMS is from a THREDDS server; otherwise, false."
+  })
+  isThredds: boolean = false;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Is NcWMS",
+    description: "True if this WMS supports NcWMS."
+  })
+  isNcWMS: boolean = false;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Supports color scale range",
+    description:
+      "Gets or sets whether this WMS server has been identified as supporting the COLORSCALERANGE parameter."
+  })
+  supportsColorScaleRange: boolean = false;
 
   @primitiveTrait({
     type: "number",
