@@ -6,6 +6,7 @@ Change Log
 #### next release (8.0.0-alpha.59)
 * Update magda error message
 * Add a short report section if trying to view a `3d-tiles` item in a 2d map.
+* Ported MapboxVectorTileCatalogItem ("mvt").
 * [The next improvement]
 
 #### 8.0.0-alpha.58
