@@ -6,7 +6,7 @@ Change Log
 #### next release (8.0.0-alpha.60)
 * [The next improvement]
 
-#### next release (8.0.0-alpha.59)
+#### 8.0.0-alpha.59
 * Update magda error message
 
 #### 8.0.0-alpha.58
