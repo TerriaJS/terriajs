@@ -86,14 +86,16 @@ export class ThreddsStratum extends LoadableStratum(ThreddsCatalogGroupTraits) {
 
   @action
   createThreddsCatalog(catalog: ThreddsCatalog) {
-    const threddsGroup = new ThreddsCatalogGroup(
-      `${this._catalogGroup.uniqueId}/${catalog.id}`,
-      this._catalogGroup.terria
-    );
+    const id = `${this._catalogGroup.uniqueId}/${catalog.id}`;
 
-    threddsGroup.setTrait(CommonStrata.definition, "name", catalog.title);
-    threddsGroup.setTrait(CommonStrata.definition, "url", catalog.url);
-    threddsGroup.terria.addModel(threddsGroup);
+    let model = this._catalogGroup.terria.getModelById(ThreddsCatalogGroup, id);
+    if (!isDefined(model)) {
+      model = new ThreddsCatalogGroup(id, this._catalogGroup.terria);
+      this._catalogGroup.terria.addModel(model);
+    }
+
+    model.setTrait(CommonStrata.definition, "name", catalog.title);
+    model.setTrait(CommonStrata.definition, "url", catalog.url);
   }
 
   @action
@@ -129,13 +131,16 @@ export class ThreddsStratum extends LoadableStratum(ThreddsCatalogGroupTraits) {
         let parent: CatalogGroup | ThreddsCatalogGroup = this._catalogGroup;
 
         if (this.threddsCatalog.datasets.length > 1) {
-          const fakeThreddsGroup = new CatalogGroup(
-            `${this._catalogGroup.uniqueId}/${ds.id}`,
-            this._catalogGroup.terria
-          );
-          fakeThreddsGroup.terria.addModel(fakeThreddsGroup);
-          fakeThreddsGroup.setTrait(CommonStrata.definition, "name", ds.name);
-          parent = fakeThreddsGroup;
+          const id = `${this._catalogGroup.uniqueId}/${ds.id}`;
+
+          let model = this._catalogGroup.terria.getModelById(CatalogGroup, id);
+          if (!isDefined(model)) {
+            model = new CatalogGroup(id, this._catalogGroup.terria);
+            this._catalogGroup.terria.addModel(model);
+          }
+
+          model.setTrait(CommonStrata.definition, "name", ds.name);
+          parent = model;
         }
 
         ds.datasets.forEach(dataset => {
@@ -156,8 +161,7 @@ export class ThreddsStratum extends LoadableStratum(ThreddsCatalogGroupTraits) {
       return undefined;
     }
 
-    const id = this._catalogGroup.uniqueId;
-    const itemId = id + "/" + threddsDataset.id;
+    const itemId = this._catalogGroup.uniqueId + "/" + threddsDataset.id;
     let item = this._catalogGroup.terria.getModelById(
       ThreddsItemReference,
       itemId
