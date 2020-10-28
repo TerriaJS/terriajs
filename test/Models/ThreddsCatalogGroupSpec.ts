@@ -43,13 +43,13 @@ describe("ThreddsCatalogGroup", function() {
     expect(threddsCatalogGroup.members.length).toBe(3);
     let member0 = <CatalogGroup>threddsCatalogGroup.memberModels[0];
 
-    expect(member0.name).toBe("sub-catalog 1");
+    expect(member0.name).toBe("Some Catalog 1");
     expect(member0.type).toBe("thredds-group");
     await member0.loadMembers();
     expect(member0.members.length).toBe(1);
 
     let member1 = <CatalogGroup>threddsCatalogGroup.memberModels[1];
-    expect(member1.name).toBe("sub-catalog 2");
+    expect(member1.name).toBe("Some Catalog 2");
     expect(member1.type).toBe("thredds-group");
     await member1.loadMembers();
     expect(member1.members.length).toBe(2);
