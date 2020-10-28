@@ -8,6 +8,7 @@ Change Log
 * Add a short report section if trying to view a `3d-tiles` item in a 2d map.
 * Add `ThreddsCatalogGroup` model.
 * Port `supportsColorScaleRange`, `colorScaleMinimum` and `colorScaleMaximimum` from `master` to `WebMapServiceCatalogItem` model.
+* Ported MapboxVectorTileCatalogItem ("mvt").
 * [The next improvement]
 
 #### 8.0.0-alpha.58
