@@ -1,15 +1,13 @@
 "use strict";
 
-import classNames from "classnames";
 import createReactClass from "create-react-class";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Resource from "terriajs-cesium/Source/Core/Resource";
-import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
-import isDefined from "../../../Core/isDefined";
 import URI from "urijs";
+import isDefined from "../../../Core/isDefined";
 import proxyCatalogItemUrl from "../../../Models/proxyCatalogItemUrl";
 import Loader from "../../Loader";
 import Styles from "./legend.scss";
@@ -50,24 +48,6 @@ const Legend = createReactClass({
     };
   },
 
-  /* eslint-disable-next-line camelcase */
-  UNSAFE_componentWillMount() {
-    this.legendsWithError = {};
-  },
-
-  onImageError(legend) {
-    this.legendsWithError[legend.url] = true;
-  },
-
-  doesLegendHaveError(legend) {
-    const hasError = this.legendsWithError[legend.url];
-    if (!defined(hasError)) {
-      this.legendsWithError[legend.url] = false;
-      knockout.track(this.legendsWithError, [legend.url]);
-    }
-    return this.legendsWithError[legend.url];
-  },
-
   renderLegend(legend, i) {
     if (defined(legend.url)) {
       return this.renderImageLegend(legend, i);
@@ -99,28 +79,23 @@ const Legend = createReactClass({
         <When condition={isImage && insertDirectly}>
           <li
             key={i}
-            onError={this.onImageError.bind(this, legend)}
-            className={classNames(Styles.legendSvg, {
-              [Styles.legendImagehasError]: this.doesLegendHaveError(legend)
-            })}
+            className={Styles.legendSvg}
             dangerouslySetInnerHTML={safeSvgContent}
           />
         </When>
         <When condition={isImage}>
-          <li
-            key={proxiedUrl}
-            className={classNames({
-              [Styles.legendImagehasError]: this.doesLegendHaveError(legend)
-            })}
-          >
+          <li key={proxiedUrl}>
             <a
-              onError={this.onImageError.bind(this, legend)}
               href={proxiedUrl}
               className={Styles.imageAnchor}
               target="_blank"
               rel="noreferrer noopener"
             >
-              <img src={proxiedUrl} />
+              <object
+                data={proxiedUrl}
+                type={legend.urlMimeType}
+                style={{ "max-width": "100%" }}
+              />
             </a>
           </li>
         </When>
