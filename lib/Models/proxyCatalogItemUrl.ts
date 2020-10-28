@@ -36,3 +36,24 @@ export default function proxyCatalogItemUrl(
     return url;
   }
 }
+
+export function proxyCatalogItemBaseUrl(
+  catalogItem: BaseModel | UrlReference | undefined,
+  url: string,
+  cacheDuration?: string
+) {
+  const corsProxy = catalogItem?.terria?.corsProxy;
+
+  if (
+    isDefined(corsProxy) &&
+    (corsProxy.shouldUseProxy(url) ||
+      (UrlMixin.isMixedInto(catalogItem) && catalogItem.forceProxy))
+  ) {
+    return corsProxy.getProxyBaseURL(
+      defaultValue(
+        UrlMixin.isMixedInto(catalogItem) && catalogItem.cacheDuration,
+        cacheDuration
+      )
+    );
+  }
+}

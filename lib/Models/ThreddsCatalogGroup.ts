@@ -5,16 +5,18 @@ import isDefined from "../Core/isDefined";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import ThreddsCatalogGroupTraits from "../Traits/ThreddsCatalogGroupTraits";
 import ModelReference from "../Traits/ModelReference";
+import ThreddsCatalogGroupTraits from "../Traits/ThreddsCatalogGroupTraits";
 import CatalogGroup from "./CatalogGroupNew";
+import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
 import StratumOrder from "./StratumOrder";
 import ThreddsItemReference from "./ThreddsItemReference";
-import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
-import CommonStrata from "./CommonStrata";
+import proxyCatalogItemUrl, {
+  proxyCatalogItemBaseUrl
+} from "./proxyCatalogItemUrl";
 
 interface ThreddsCatalog {
   id: string;
@@ -96,7 +98,19 @@ export class ThreddsStratum extends LoadableStratum(ThreddsCatalogGroupTraits) {
 
   @action
   async createMembers() {
-    this.threddsCatalog = await threddsCrawler(this._catalogGroup.url);
+    if (!isDefined(this._catalogGroup.url)) return;
+    let proxy = proxyCatalogItemBaseUrl(
+      this._catalogGroup,
+      this._catalogGroup.url
+    );
+    this.threddsCatalog = await threddsCrawler(
+      this._catalogGroup.url,
+      proxy
+        ? {
+            proxy
+          }
+        : undefined
+    );
     if (this.threddsCatalog === undefined) return;
     // Create sub-groups for any nested catalogs
     for (let i = 0; i < this.threddsCatalog.catalogs.length; i++) {
