@@ -91,12 +91,12 @@ class MapboxVectorTileCatalogItem extends AsyncMappableMixin(
     return new MapboxVectorTileImageryProvider({
       url: this.url,
       layerName: this.layer,
-      styleFunc: action(() => ({
-        fillStyle: this.fillColor,
-        strokeStyle: this.lineColor,
-        lineJoin: "miter",
+      styleFunc: (opts => () => ({
+        ...opts,
+        lineJoin: "miter" as CanvasLineJoin,
         lineWidth: 1
-      })),
+      }))({ fillStyle: this.fillColor, strokeStyle: this.lineColor }),
+
       rectangle: Rectangle.fromDegrees(
         this.rectangle.west,
         this.rectangle.south,
