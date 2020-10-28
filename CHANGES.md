@@ -8,6 +8,7 @@ Change Log
 * Add a short report section if trying to view a `3d-tiles` item in a 2d map.
 * Fix async bug with loading `ReferenceMixin` and then `Mappable` items in `initSources`
 * Remove `addToWorkbench`, it has been replaced with `workbench.add`
+* Ported MapboxVectorTileCatalogItem ("mvt").
 * [The next improvement]
 
 #### 8.0.0-alpha.58
