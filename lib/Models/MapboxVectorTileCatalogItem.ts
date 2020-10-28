@@ -58,8 +58,6 @@ class MapboxVectorTileCatalogItem extends AsyncMappableMixin(
   UrlMixin(CatalogMemberMixin(CreateModel(MapboxVectorTileCatalogItemTraits)))
 ) {
   @observable
-  private imageryProvider: ImageryProvider | undefined;
-
   public readonly forceProxy = true;
 
   static readonly type = "mvt";
@@ -82,40 +80,34 @@ class MapboxVectorTileCatalogItem extends AsyncMappableMixin(
 
   protected async forceLoadMapItems(): Promise<void> {
     await this.loadMetadata();
-    this.updateImageryProvider();
   }
 
-  private updateImageryProvider() {
-    autorun(() => {
-      if (
-        !isDefined(this.url) ||
-        !isDefined(this.layer) ||
-        !isDefined(this.rectangle)
-      ) {
-        return;
-      }
+  @computed
+  get imageryProvider(): MapboxVectorTileImageryProvider | undefined {
+    if (this.url === undefined || this.layer === undefined) {
+      return;
+    }
 
-      this.imageryProvider = new MapboxVectorTileImageryProvider({
-        url: this.url,
-        layerName: this.layer,
-        styleFunc: action(() => ({
-          fillStyle: this.fillColor,
-          strokeStyle: this.lineColor,
-          lineJoin: "miter",
-          lineWidth: 1
-        })),
-        rectangle: Rectangle.fromDegrees(
-          this.rectangle.west,
-          this.rectangle.south,
-          this.rectangle.east,
-          this.rectangle.north
-        ),
-        minimumZoom: this.minimumZoom,
-        maximumNativeZoom: this.maximumNativeZoom,
-        maximumZoom: this.maximumZoom,
-        uniqueIdProp: this.idProperty,
-        featureInfoFunc: this.featureInfoFromFeature
-      });
+    return new MapboxVectorTileImageryProvider({
+      url: this.url,
+      layerName: this.layer,
+      styleFunc: action(() => ({
+        fillStyle: this.fillColor,
+        strokeStyle: this.lineColor,
+        lineJoin: "miter",
+        lineWidth: 1
+      })),
+      rectangle: Rectangle.fromDegrees(
+        this.rectangle.west,
+        this.rectangle.south,
+        this.rectangle.east,
+        this.rectangle.north
+      ),
+      minimumZoom: this.minimumZoom,
+      maximumNativeZoom: this.maximumNativeZoom,
+      maximumZoom: this.maximumZoom,
+      uniqueIdProp: this.idProperty,
+      featureInfoFunc: this.featureInfoFromFeature
     });
   }
 
