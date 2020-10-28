@@ -124,10 +124,13 @@ describe("CkanCatalogGroup", function() {
       expect(ckanCatalogGroup.members).toBeDefined();
       expect(ckanCatalogGroup.members.length).toBe(3);
       let member0 = <CatalogGroup>ckanCatalogGroup.memberModels[0];
+      expect(member0 instanceof CatalogGroup).toBeTruthy();
       expect(member0.name).toBe("Blah");
       let member1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      expect(member1 instanceof CatalogGroup).toBeTruthy();
       expect(member1.name).toBe("Environment");
       let member2 = <CatalogGroup>ckanCatalogGroup.memberModels[2];
+      expect(member2 instanceof CatalogGroup).toBeTruthy();
       expect(member2.name).toBe("Science");
     });
 
@@ -138,16 +141,107 @@ describe("CkanCatalogGroup", function() {
       }
     });
 
-    // it("itemProperties get added", async function(done) {
-    //   const m = terria.getModelById(CkanItemReference, ckanCatalogGroup.uniqueId + '/66e3efa7-fb5c-4bd7-9478-74adb6277955/1dae2cfe-345b-4320-bf0c-4da0de061dc5')
-    //   if (m) {
-    //     await m.loadReference()
-    //     const target = m.target as WebMapServiceCatalogItem
-    //     if (target) {
-    //       expect(target.layers).toBe('abc')
-    //     }
-    //   }
-    //   done()
-    // });
+    it("itemProperties get added", async function() {
+      const m = terria.getModelById(
+        CkanItemReference,
+        ckanCatalogGroup.uniqueId +
+          "/66e3efa7-fb5c-4bd7-9478-74adb6277955/1dae2cfe-345b-4320-bf0c-4da0de061dc5"
+      );
+      expect(m).toBeDefined();
+      if (m) {
+        await m.loadReference();
+        const target = m.target as WebMapServiceCatalogItem;
+        expect(target).toBeDefined();
+        if (target) {
+          expect(target.layers).toBe("abc");
+        }
+      }
+    });
+  });
+  describe("with item naming using", function() {
+    beforeEach(async function() {
+      runInAction(() => {
+        ckanCatalogGroup.setTrait(
+          "definition",
+          "url",
+          "test/CKAN/search-result.json"
+        );
+      });
+    });
+
+    it("useDatasetNameAndFormatWhereMultipleResources (the default)", async function() {
+      await ckanCatalogGroup.loadMembers();
+      ckanServerStratum = <CkanServerStratum>(
+        ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
+      );
+
+      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      expect(
+        group1.memberModels && group1.memberModels.length === 6
+      ).toBeTruthy();
+      if (group1.memberModels && group1.memberModels.length === 6) {
+        const items = group1.memberModels as CkanItemReference[];
+        expect(items[0].name).toBe(
+          "Murray-Darling Basin Water Resource Plan Areas – Surface Water - KMZ"
+        );
+        expect(items[1].name).toBe(
+          "Murray-Darling Basin Water Resource Plan Areas – Surface Water - WMS"
+        );
+      }
+    });
+
+    it("useCombinationNameWhereMultipleResources", async function() {
+      runInAction(() => {
+        ckanCatalogGroup.setTrait(
+          "definition",
+          "useCombinationNameWhereMultipleResources",
+          true
+        );
+      });
+      await ckanCatalogGroup.loadMembers();
+      ckanServerStratum = <CkanServerStratum>(
+        ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
+      );
+
+      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      expect(
+        group1.memberModels && group1.memberModels.length === 6
+      ).toBeTruthy();
+      if (group1.memberModels && group1.memberModels.length === 6) {
+        // These items include their Dataset name in their Resource name, so it's not the greatest demonstration
+        //  of useCombinationNameWhereMultipleResources, but it works for an automated test
+        const items = group1.memberModels as CkanItemReference[];
+        expect(items[0].name).toBe(
+          "Murray-Darling Basin Water Resource Plan Areas – Surface Water - Murray-Darling Basin Water Resource Plan Areas – Surface Water for Google Earth"
+        );
+        expect(items[1].name).toBe(
+          "Murray-Darling Basin Water Resource Plan Areas – Surface Water - Murray-Darling Basin Water Resource Plan Areas – Surface Water - Preview this Dataset (WMS)"
+        );
+      }
+    });
+
+    it("useResourceName", async function() {
+      runInAction(() => {
+        ckanCatalogGroup.setTrait("definition", "useResourceName", true);
+      });
+      await ckanCatalogGroup.loadMembers();
+      ckanServerStratum = <CkanServerStratum>(
+        ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
+      );
+
+      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+      expect(
+        group1.memberModels && group1.memberModels.length === 6
+      ).toBeTruthy();
+      if (group1.memberModels && group1.memberModels.length === 6) {
+        const items = group1.memberModels as CkanItemReference[];
+        expect(items[0].name).toBe(
+          "Murray-Darling Basin Water Resource Plan Areas – Surface Water for Google Earth"
+        );
+        expect(items[1].name).toBe(
+          "Murray-Darling Basin Water Resource Plan Areas – Surface Water - Preview this Dataset (WMS)"
+        );
+      }
+    });
   });
 });

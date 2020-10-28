@@ -7,7 +7,17 @@ Change Log
 * Fix zooming bug for datasets with invalid bounding boxes.
 * Add `ThreddsCatalogGroup` model.
 * Port `supportsColorScaleRange`, `colorScaleMinimum` and `colorScaleMaximimum` from `master` to `WebMapServiceCatalogItem` model.
+#### next release (8.0.0-alpha.59)
+* Update magda error message
+* Add a short report section if trying to view a `3d-tiles` item in a 2d map.
 * [The next improvement]
+
+#### 8.0.0-alpha.58
+* Add `FeatureInfoTraits` to `ArcGisMapServerCatalogItem`
+* Fix zooming bug for datasets with invalid bounding boxes.
+* Add new model for `ArcGisTerrainCatalogItem`.
+* Add 3D Tiles to 'Add web data' dropdown.
+* Fix naming of item in a `CkanCatalogGroup` when using an item naming scheme other than the default.
 
 #### 8.0.0-alpha.57
 * Fix memoization of `traitsClassToModelClass`.
