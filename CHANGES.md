@@ -11,6 +11,7 @@ Change Log
 * Add `ThreddsCatalogGroup` model.
 * Port `supportsColorScaleRange`, `colorScaleMinimum` and `colorScaleMaximimum` from `master` to `WebMapServiceCatalogItem` model.
 * Ported MapboxVectorTileCatalogItem ("mvt").
+* When expanding a chart from the feature info panel, we now place a colored dot on the map where the chart was generated from.
 * [The next improvement]
 
 #### 8.0.0-alpha.58
