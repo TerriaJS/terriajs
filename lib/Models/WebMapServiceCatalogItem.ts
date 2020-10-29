@@ -158,25 +158,49 @@ class GetCapabilitiesStratum extends LoadableStratum(
             : layerAvailableStyles.styles.find(
                 candidate => candidate.name === style
               );
-
         if (layerStyle !== undefined && layerStyle.legend !== undefined) {
-          result.push(
-            <StratumFromTraits<LegendTraits>>(<unknown>layerStyle.legend)
-          );
+          if (this.isGeoServer) {
+            const uri = URI(layerStyle.legend.url);
+            let legendOptions =
+              "fontSize:14;forceLabels:on;fontAntiAliasing:true";
+            legendOptions += ";fontColor:0xDDDDDD"; // enable if we can ensure a dark background
+            //legendOptions += ";dpi:182"; // enable if we can scale the image back down by 50%.
+            uri
+              .setQuery("transparent", "true")
+              .setQuery("LEGEND_OPTIONS", legendOptions);
+            result.push(
+              createStratumInstance(LegendTraits, {
+                url: uri.toString(),
+                urlMimeType: "image/png"
+              })
+            );
+          } else {
+            result.push(
+              <StratumFromTraits<LegendTraits>>(<unknown>layerStyle.legend)
+            );
+          }
         }
 
         // If no styles - make up legend
       } else if (isDefined(this.catalogItem.url)) {
+        const legendOptions =
+          "fontSize:14;forceLabels:on;fontAntiAliasing:true";
+        const legendUri = URI(
+          `${proxyCatalogItemUrl(
+            this.catalogItem,
+            this.catalogItem.url
+          )}?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png`
+        )
+          .addQuery("layer", layer)
+          .addQuery("transparent", true);
+
+        if (this.isGeoServer) {
+          legendUri.addQuery("LEGEND_OPTIONS", legendOptions);
+        }
+
         result.push(
           createStratumInstance(LegendTraits, {
-            url: URI(
-              `${proxyCatalogItemUrl(
-                this.catalogItem,
-                this.catalogItem.url
-              )}?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&transparent=True`
-            )
-              .addQuery("layer", layer)
-              .toString(),
+            url: legendUri.toString(),
             urlMimeType: "image/png"
           })
         );
