@@ -60,6 +60,7 @@ import WebMapServiceCapabilities, {
   CapabilitiesLayer,
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
+import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 
 const dateFormat = require("dateformat");
 
@@ -159,8 +160,12 @@ class GetCapabilitiesStratum extends LoadableStratum(
                 candidate => candidate.name === style
               );
         if (layerStyle !== undefined && layerStyle.legend !== undefined) {
+          let url = this.catalogItem.supportsColorScaleRange
+            ? `${layerStyle.legend.url}&colorscalerange=${this.catalogItem.colorScaleRange}`
+            : layerStyle.legend.url;
+
           if (this.isGeoServer) {
-            const uri = URI(layerStyle.legend.url);
+            const uri = URI(url);
             let legendOptions =
               "fontSize:14;forceLabels:on;fontAntiAliasing:true";
             legendOptions += ";fontColor:0xDDDDDD"; // enable if we can ensure a dark background
@@ -171,12 +176,15 @@ class GetCapabilitiesStratum extends LoadableStratum(
             result.push(
               createStratumInstance(LegendTraits, {
                 url: uri.toString(),
-                urlMimeType: "image/png"
+                urlMimeType: layerStyle.legend.urlMimeType
               })
             );
           } else {
             result.push(
-              <StratumFromTraits<LegendTraits>>(<unknown>layerStyle.legend)
+              createStratumInstance(LegendTraits, {
+                url,
+                urlMimeType: layerStyle.legend.urlMimeType
+              })
             );
           }
         }
@@ -540,6 +548,38 @@ class GetCapabilitiesStratum extends LoadableStratum(
     }
   }
 
+  // TODO - There is possibly a better way to do this
+  @computed
+  get isThredds(): boolean {
+    if (
+      this.catalogItem.url &&
+      (this.catalogItem.url.indexOf("thredds") > -1 ||
+        this.catalogItem.url.indexOf("tds") > -1)
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  // TODO - Geoserver also support NCWMS via a plugin, just need to work out how to detect that
+  @computed
+  get isNcWMS(): boolean {
+    if (this.catalogItem.isThredds) return true;
+    return false;
+  }
+
+  @computed
+  get isEsri(): boolean {
+    if (this.catalogItem.url !== undefined)
+      return this.catalogItem.url.indexOf("MapServer/WMSServer") > -1;
+    return false;
+  }
+
+  @computed
+  get supportsColorScaleRange(): boolean {
+    return this.catalogItem.isNcWMS;
+  }
+
   @computed
   get discreteTimes(): { time: string; tag: string | undefined }[] | undefined {
     const result = [];
@@ -675,6 +715,8 @@ class WebMapServiceCatalogItem
     i18next.t("models.webMapServiceCatalogItem.getCapabilitiesUrl")
   ];
 
+  _webMapServiceCatalogGroup: undefined | WebMapServiceCatalogGroup = undefined;
+
   static defaultParameters = {
     transparent: true,
     format: "image/png",
@@ -694,6 +736,14 @@ class WebMapServiceCatalogItem
   // TODO
   get isMappable() {
     return true;
+  }
+
+  @computed
+  get colorScaleRange(): string | undefined {
+    if (this.supportsColorScaleRange) {
+      return `${this.colorScaleMinimum},${this.colorScaleMaximum}`;
+    }
+    return undefined;
   }
 
   async createGetCapabilitiesStratumFromParent(
@@ -966,10 +1016,13 @@ class WebMapServiceCatalogItem
         ...dimensionParameters
       };
 
+      if (this.supportsColorScaleRange) {
+        parameters.COLORSCALERANGE = this.colorScaleRange;
+      }
+
       if (isDefined(this.styles)) {
         parameters.styles = this.styles;
       }
-
       Object.assign(parameters, diffModeParameters);
 
       const maximumLevel = scaleDenominatorToLevel(this.minScaleDenominator);
@@ -982,7 +1035,10 @@ class WebMapServiceCatalogItem
         "width",
         "height",
         "bbox",
-        "layers"
+        "layers",
+        // This is here as a temporary fix until Cesium implements this fix
+        // https://github.com/CesiumGS/cesium/issues/9021
+        "version"
       ];
 
       const baseUrl = queryParametersToRemove.reduce(
