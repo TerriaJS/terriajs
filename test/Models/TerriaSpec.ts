@@ -81,7 +81,33 @@ describe("Terria", function() {
     });
 
     describe("via loadMagdaConfig", function() {
+      it("should dereference uniqueId to `/`", function(done) {
+        expect(terria.catalog.group.uniqueId).toEqual("/");
+
+        jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
+          // terria's "Magda derived url"
+          responseText: mapConfigBasicString
+        });
+        // no init sources before starting
+        expect(terria.initSources.length).toEqual(0);
+
+        terria
+          .start({
+            configUrl: "test/Magda/map-config-basic.json"
+          })
+          .then(function() {
+            expect(terria.catalog.group.uniqueId).toEqual("/");
+            done();
+          })
+          .catch(error => {
+            done.fail(error);
+          });
+      });
       it("works with basic initializationUrls", function(done) {
+        jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
+          // terria's "Magda derived url"
+          responseText: mapConfigBasicString
+        });
         // no init sources before starting
         expect(terria.initSources.length).toEqual(0);
 
@@ -107,6 +133,10 @@ describe("Terria", function() {
           });
       });
       it("works with inline init", function(done) {
+        // inline init
+        jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
+          responseText: mapConfigInlineInitString
+        });
         // no init sources before starting
         expect(terria.initSources.length).toEqual(0);
         terria
@@ -140,6 +170,11 @@ describe("Terria", function() {
           });
       });
       it("parses dereferenced group aspect", function(done) {
+        expect(terria.catalog.group.uniqueId).toEqual("/");
+        // dereferenced res
+        jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
+          responseText: mapConfigDereferencedString
+        });
         terria
           .start({
             configUrl: "test/Magda/map-config-dereferenced.json"
@@ -147,6 +182,10 @@ describe("Terria", function() {
           .then(function() {
             const groupAspect = mapConfigDereferencedJson.aspects["group"];
             const ids = groupAspect.members.map((member: any) => member.id);
+            expect(terria.catalog.group.uniqueId).toEqual("/");
+            // ensure user added data co-exists with dereferenced magda members
+            expect(terria.catalog.group.members.length).toEqual(3);
+            expect(terria.catalog.userAddedDataGroup).toBeDefined();
             ids.forEach((id: string) => {
               const model = terria.getModelById(MagdaReference, id);
               if (!model) {

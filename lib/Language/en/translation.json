@@ -83,7 +83,9 @@
   },
   "compass": {
     "description": "Drag outer ring: rotate view.\nDrag inner gyroscope: free orbit.\nDouble-click: reset view.\nTIP: You can also free orbit by holding the CTRL key and dragging the map.",
-    "title": "Click and drag to rotate the camera"
+    "title": "Click and drag to rotate the camera",
+    "guidanceBtnTitle": "Gyroscope Guidance",
+    "guidanceBtnText": "View detailed instructions on how to use the compass"
   },
   "AR": {
     "title": "Experimental Feature: Augmented Reality",
@@ -637,6 +639,7 @@
       "esri-group": "Esri ArcGIS Server",
       "esri-mapServer": "Esri ArcGIS MapServer (single layer)",
       "esri-featureServer": "Esri ArcGIS FeatureServer (single layer)",
+      "3d-tiles": "3D Tiles",
       "open-street-map": "Open Street Map Server",
       "geojson": "GeoJSON",
       "geoRss": "GeoRSS",
@@ -841,7 +844,7 @@
       "name": "Cesium Terrain",
       "name3D": "Cesium 3D Tiles",
       "notSupportedErrorTitle": "Not supported in 2D",
-      "notSupportedErrorMessage": "\"{{name}}\" cannot be show in the 2D view.  Switch to 3D and try again.",
+      "notSupportedErrorMessage": "\"{{name}}\" cannot be show in the 2D view. Switch to 3D and try again.",
       "errorRenderingTitle": "Error rendering in 3D",
       "errorRenderingMessage": "<p>An error occurred while rendering in 3D.  This probably indicates a bug in {{appName}} or an incompatibility with your system or web browser.  We'll now switch you to 2D so that you can continue your work. We would appreciate it if you report this error by sending an email to {{email}} with the technical details below.  Thank you!</p>"
     },
@@ -1054,8 +1057,8 @@
       "dataSourceErrorMessage": "This data source does not have any details available.",
       "serviceErrorMessage": "This service does not have any details available.",
       "distributionDesc": "Distribution Description",
-      "idsNotSpecifiedTitle": "distributionId or datasetId must be specified",
-      "idsNotSpecifiedMessage": "MagdaCatalogItem requires that either distributionId or datasetId be specified.",
+      "idsNotSpecifiedTitle": "recordId must be specified",
+      "idsNotSpecifiedMessage": "MagdaCatalogItem requires that recordId be specified.",
       "retrieveErrorTitle": "Error retrieving MAGDA record",
       "retrieveErrorMessage": "No distribution or dataset ID provided",
       "notCompatibleTitle": "No compatible distributions found",
@@ -1227,7 +1230,7 @@
     },
     "terrainCatalog": {
       "notSupportedErrorTitle": "Not supported in 2D",
-      "notSupportedErrorMessage": "{{name}} cannot be show in the 2D view.  Switch to 3D and try again"
+      "notSupportedErrorMessage": "{{name}} cannot be shown in the 2D view. Switch to 3D and try again"
     },
     "terria": {
       "proxyableDomainsDeprecation": "`proxyableDomainsUrl` is no longer supported in v8",
@@ -1256,6 +1259,12 @@
       "loadingInitSourceError2Message": "An error occurred while loading initialization information from {{loadSource}}. This may indicate that you followed an invalid link or that there is a problem with your Internet connection.",
       "disclaimer": "Disclaimer",
       "buttonTitleConfirm": "I Agree"
+    },
+    "thredds": {
+      "nameGroup": "THREDDS Catalog Group"
+    },
+    "threddsItem": {
+      "name": "THREDDS Item Reference"
     },
     "urlTemplateMapServer": {
       "name": "URL Template Map Server"
@@ -1389,6 +1398,7 @@
       "groupNotAvailableMessage": "An error occurred while invoking GetFeature on the WFS server. <p>If you entered the link manually, please verify that the link is correct.</p><p>This error may also indicate that the server does not support <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  If this is your server, verify that CORS is enabled and enable it if it is not. If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' Map team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by '{{appName}}' itself.</p><p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>"
     },
     "commonModelErrors": {
+      "3dTypeIn2dMode": "**Note:** This dataset can not be displayed in the 2D viewer. Switch to one of the 3D map modes.",
       "datasetScaleErrorTitle": "Dataset will not be shown at this scale",
       "datasetScaleErrorMessage": "The {{name}} dataset will not be shown when zoomed in this close to the map because the data custodian has indicated that the data is not intended or suitable for display at this scale.  Click the dataset's Info button on the Now Viewing tab for more information about the dataset and the data custodian."
     }

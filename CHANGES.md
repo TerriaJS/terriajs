@@ -3,7 +3,41 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.54)
+
+#### next release (8.0.0-alpha.59)
+* Update magda error message
+* Add a short report section if trying to view a `3d-tiles` item in a 2d map.
+* Fix bug in `Terria.interpretStartData`.
+* Add `ThreddsCatalogGroup` model.
+* Port `supportsColorScaleRange`, `colorScaleMinimum` and `colorScaleMaximimum` from `master` to `WebMapServiceCatalogItem` model.
+* Ported MapboxVectorTileCatalogItem ("mvt").
+* When expanding a chart from the feature info panel, we now place a colored dot on the map where the chart was generated from.
+* [The next improvement]
+
+#### 8.0.0-alpha.58
+* Add `FeatureInfoTraits` to `ArcGisMapServerCatalogItem`
+* Fix zooming bug for datasets with invalid bounding boxes.
+* Add new model for `ArcGisTerrainCatalogItem`.
+* Add 3D Tiles to 'Add web data' dropdown.
+* Fix naming of item in a `CkanCatalogGroup` when using an item naming scheme other than the default.
+
+#### 8.0.0-alpha.57
+* Fix memoization of `traitsClassToModelClass`.
+* Chart expanded from feature info panel will now by default show only the first chart line.
+* Chart component attribtues `column-titles` and `column-units` will now accept a simpler syntax like: "Time,Speed" or "ms,kmph"
+* Fix presentation of the WMS Dimension metadata.
+* Magda based maps now mimic "root group uniqueId === '/'" behaviour, so that mix and matching map init approaches behave more consistently
+  
+#### 8.0.0-alpha.56
+* Add `itemProperties` trait to `WebMapMapCatalogGroup`.
+* Add support for `formats` traits within `featureInfoTemplate` traits.
+* Fix handling of `ArcGisPortalItemReference` for when a feature layer contains multiple sublayers.
+* Implemented new compass design.
+
+#### 8.0.0-alpha.55
+* Upgraded to patched terriajs-cesium v1.73.1 to avoid build error on node 12 & 14.
+
+#### 8.0.0-alpha.54
 * Add a `infoAsObject` property to the `CatalogMemberMixin` for providing simpler access to `info` entries within templating
 * Add a `contentAsObject` trait to `InfoSectionTraits` where a json object is more suitable than a string.
 * Add `serviceDescription` and `dataDescription` to `WebMapServiceCatalogItem` info section.
@@ -25,11 +59,11 @@ Change Log
 * Ensure the `chartDisclaimer` is passed from catalog items to derived chart items.
 * Don't calculate a `rectangle` on a `ArcGisPortalReferenceItem` as they appear to contain less precision than the services they point to.
 * Allow an `ArcGisPortalReferenceItem` to belong to multiple `CatalogGroup`'s.
+* Fix argis reference bug.
 * Made possible to internationalize tour contend.
-* Chart expanded from feature info panel will now by default show only the first chart line.
-* Chart component attribtues `column-titles` and `column-units` will now accept a simpler syntax like: "Time,Speed" or "ms,kmph"
-* When expanding a chart from the feature info panel, we now place a colored dot on the map where the chart was generated from.
-* [The next improvement]
+* Added TileErrorHandlerMixin for handling raster layer tile errors.
+* Fixed a bug that caused the feature info chart for SOS items to not load.
+* SOS & CSV charts are now shareable.
 
 #### 8.0.0-alpha.53
 * Ported an implementation of CatalogSearchProvider and set it as the default
@@ -70,8 +104,6 @@ Change Log
 * Updated leaflet attribution to match the style of cesium credits.
 * Remove `@computed` props from `WebFeatureServiceCapabilities`
 * Fixed bug causing the Related Maps dropdown to be clipped.
-* Added TileErrorHandlerMixin for handling raster layer tile errors.
-* [The next improvement]
 * Add SDMX-json support for groups and items (using SDMX-csv for data queries)
 * `TableMixin` now uses `ExportableMixin` and `AsyncMappableMixin`
 * Move region provider loading in `TableMixin` `forceLoadTableMixin` to `loadRegionProviderList`
@@ -86,9 +118,6 @@ Change Log
 * Replaces `ShadowSection` with `ShadowMixin` using `SelectableDimensions`
 * Fix Webpack Windows path issue
 * Updated icons for view and edit story in the hamburger menu.
-* Fixed a bug that caused the feature info chart for SOS items to not load.
-* SOS & CSV charts are now shareable.
-* [The next improvement]
 * Implemented new design for story panel.
 
 #### 8.0.0-alpha.48

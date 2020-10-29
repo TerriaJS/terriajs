@@ -918,7 +918,10 @@ export default class Terria {
     }
 
     if (aspects.group && aspects.group.members) {
-      const id = config.id;
+      // const id = config.id;
+      // force config id to be `/`, purely to emulate regular terria behaviour
+      const id = "/";
+      this.removeModelReferences(this.catalog.group);
 
       let existingReference = this.getModelById(MagdaReference, id);
       if (existingReference === undefined) {
@@ -929,7 +932,7 @@ export default class Terria {
       const reference = existingReference;
 
       reference.setTrait(CommonStrata.definition, "url", magdaRoot);
-      reference.setTrait(CommonStrata.definition, "recordId", config.id);
+      reference.setTrait(CommonStrata.definition, "recordId", id);
       reference.setTrait(CommonStrata.definition, "magdaRecord", config);
       await reference.loadReference().then(() => {
         if (reference.target instanceof CatalogGroup) {
@@ -1191,13 +1194,15 @@ function interpretStartData(terria: Terria, startData: any) {
   // TODO: version check, filtering, etc.
 
   if (startData.initSources) {
-    terria.initSources.push(
-      ...startData.initSources.map((initSource: any) => {
-        return {
-          data: initSource
-        };
-      })
-    );
+    runInAction(() => {
+      terria.initSources.push(
+        ...startData.initSources.map((initSource: any) => {
+          return {
+            data: initSource
+          };
+        })
+      );
+    });
   }
 
   // if (defined(startData.version) && startData.version !== latestStartVersion) {
