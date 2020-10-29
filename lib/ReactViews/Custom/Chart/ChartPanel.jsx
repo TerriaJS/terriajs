@@ -73,6 +73,7 @@ class ChartPanel extends React.Component {
 
       chart = (
         <Chart
+          terria={this.props.terria}
           chartItems={chartItems}
           xAxis={this.chartView.xAxis}
           height={height - 34}

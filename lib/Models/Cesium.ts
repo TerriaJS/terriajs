@@ -546,6 +546,9 @@ export default class Cesium extends GlobeOrMap {
         }
       });
 
+      // Ensure stacking order matches order in allDataSources - first item appears on top.
+      allDataSources.forEach(d => dataSources.raiseToTop(d));
+
       const allImageryParts = this._allMappables
         .map(m =>
           ImageryParts.is(m.mapItem)

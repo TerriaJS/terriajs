@@ -3,11 +3,15 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.58)
-* Add `FeatureInfoTraits` to `ArcGisMapServerCatalogItem`
-* Fix zooming bug for datasets with invalid bounding boxes.
-* Add new model for `ArcGisTerrainCatalogItem`.
-* Add 3D Tiles to 'Add web data' dropdown.
+
+#### next release (8.0.0-alpha.59)
+* Update magda error message
+* Add a short report section if trying to view a `3d-tiles` item in a 2d map.
+* Fix bug in `Terria.interpretStartData`.
+* Add `ThreddsCatalogGroup` model.
+* Port `supportsColorScaleRange`, `colorScaleMinimum` and `colorScaleMaximimum` from `master` to `WebMapServiceCatalogItem` model.
+* Ported MapboxVectorTileCatalogItem ("mvt").
+* When expanding a chart from the feature info panel, we now place a colored dot on the map where the chart was generated from.
 * Add basic routing support
 * Add better page titles when on various routes of the application
 * Add prerendering support on `/catalog/` routes (via `prerender-end` event &
@@ -15,6 +19,13 @@ Change Log
 * Update `WorkbenchButton` to allow for links rather than buttons, including
   changing About Data to a link
 * [The next improvement]
+
+#### 8.0.0-alpha.58
+* Add `FeatureInfoTraits` to `ArcGisMapServerCatalogItem`
+* Fix zooming bug for datasets with invalid bounding boxes.
+* Add new model for `ArcGisTerrainCatalogItem`.
+* Add 3D Tiles to 'Add web data' dropdown.
+* Fix naming of item in a `CkanCatalogGroup` when using an item naming scheme other than the default.
 
 #### 8.0.0-alpha.57
 * Fix memoization of `traitsClassToModelClass`.
