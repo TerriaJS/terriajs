@@ -57,6 +57,10 @@ export const Box = styled.div`
   ${props => props.centered && `align-items: center;`}
   ${props => props.centered && `justify-content: center;`}
 
+  // TODO: "centered" prop - can't automatically assume nor override margin,
+  // so we have a marginAuto prop here
+  ${props => props.marginAuto && `margin: auto;`}
+
   ${props =>
     props.justifyContentSpaceAround && `justify-content: space-around;`}
   ${props => props.justifySpaceBetween && `justify-content: space-between;`}

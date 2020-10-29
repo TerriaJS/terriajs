@@ -8,6 +8,11 @@ Change Log
 * Fix zooming bug for datasets with invalid bounding boxes.
 * Add new model for `ArcGisTerrainCatalogItem`.
 * Add 3D Tiles to 'Add web data' dropdown.
+* Add basic routing support
+* Add better page titles when on various routes of the application
+* Add prerendering support
+* Update `WorkbenchButton` to allow for links rather than buttons, including
+  changing About Data to a link
 * [The next improvement]
 
 #### 8.0.0-alpha.57

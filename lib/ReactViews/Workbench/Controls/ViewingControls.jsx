@@ -14,6 +14,7 @@ import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import when from "terriajs-cesium/Source/ThirdParty/when";
+import URI from "urijs";
 import getDereferencedIfExists from "../../../Core/getDereferencedIfExists";
 import getPath from "../../../Core/getPath";
 import TerriaError from "../../../Core/TerriaError";
@@ -23,6 +24,7 @@ import addUserCatalogMember from "../../../Models/addUserCatalogMember";
 import CommonStrata from "../../../Models/CommonStrata";
 import getAncestors from "../../../Models/getAncestors";
 import SplitItemReference from "../../../Models/SplitItemReference";
+import { CATALOG_ROUTE } from "../../../ReactViewModels/TerriaRouting";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
 import Icon, { StyledIcon } from "../../Icon";
@@ -376,7 +378,8 @@ const ViewingControls = observer(
             {/* </If> */}
             {/* <If condition={item.showsInfo}> */}
             <WorkbenchButton
-              // to={`${CATALOG_ROUTE}${URI.encode(item.uniqueId)}`}
+              renderAsLink
+              to={`${CATALOG_ROUTE}${URI.encode(item.uniqueId)}`}
               // type="button"
               onClick={this.previewItem}
               title={t("workbench.previewItemTitle")}

@@ -156,7 +156,7 @@ export const ButtonRaw = (props, ref) => {
       warning={warning}
       {...rest}
     >
-      <BoxSpan centered>
+      <BoxSpan centered marginAuto>
         {props.renderIcon && typeof props.renderIcon === "function" && (
           <Icon css={iconProps && iconProps.css} {...iconProps}>
             {props.renderIcon()}
