@@ -54,10 +54,13 @@ class DataCatalogTab extends React.Component {
     const idToDecode =
       this.props.match.params && this.props.match.params.catalogMemberId;
     const cleanPath = URI.decode(idToDecode);
+    // TODO
     // Below are two older methods of grabbing previewed item, we may want to
-    // tweak this later when we tackle the problem of nested IDs/routes const
-    // previewed = this.props.viewState.previewedItem; const previewedItem =
-    // this.props.terria.catalog.shareKeyIndex?.[cleanPath];
+    // tweak this later when we tackle the problem of nested IDs/routes
+
+    // const previewed = this.props.viewState.previewedItem;
+    // const previewedItem = this.props.terria.catalog.shareKeyIndex?.[cleanPath];
+
     /**
      * We do a lookup on the ID via the route, rather than
      * `viewState.previewItem` as the URL is the source of truth for current
@@ -99,7 +102,6 @@ class DataCatalogTab extends React.Component {
               <DataPreview
                 terria={terria}
                 viewState={this.props.viewState}
-                // previewed={this.props.viewState.previewedItem}
                 previewed={previewedItem}
               />
             </Box>
