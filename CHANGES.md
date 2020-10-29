@@ -3,10 +3,14 @@ Change Log
 
 ### MobX Development
 
+
 #### next release (8.0.0-alpha.59)
 * Update magda error message
 * Add a short report section if trying to view a `3d-tiles` item in a 2d map.
 * Remove `isMixedInto` for `AsyncMappableMixin` and `AsyncChartableMixin`.
+* Fix bug in `Terria.interpretStartData`.
+* Add `ThreddsCatalogGroup` model.
+* Port `supportsColorScaleRange`, `colorScaleMinimum` and `colorScaleMaximimum` from `master` to `WebMapServiceCatalogItem` model.
 * Ported MapboxVectorTileCatalogItem ("mvt").
 * [The next improvement]
 

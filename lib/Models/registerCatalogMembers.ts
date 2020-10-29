@@ -32,6 +32,7 @@ import SenapsLocationsCatalogItem from "./SenapsLocationsCatalogItem";
 import SensorObservationServiceCatalogItem from "./SensorObservationServiceCatalogItem";
 import SplitItemReference from "./SplitItemReference";
 import StubCatalogItem from "./StubCatalogItem";
+import ThreddsCatalogGroup from "./ThreddsCatalogGroup";
 import UrlReference, { UrlToCatalogMemberMapping } from "./UrlReference";
 import WebFeatureServiceCatalogGroup from "./WebFeatureServiceCatalogGroup";
 import WebFeatureServiceCatalogItem from "./WebFeatureServiceCatalogItem";
@@ -160,6 +161,7 @@ export default function registerCatalogMembers() {
   );
   CatalogMemberFactory.register(CkanCatalogGroup.type, CkanCatalogGroup);
   CatalogMemberFactory.register(CkanItemReference.type, CkanItemReference);
+  CatalogMemberFactory.register(ThreddsCatalogGroup.type, ThreddsCatalogGroup);
 
   UrlToCatalogMemberMapping.register(
     matchesExtension("csv"),
