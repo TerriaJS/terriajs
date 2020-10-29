@@ -1194,13 +1194,15 @@ function interpretStartData(terria: Terria, startData: any) {
   // TODO: version check, filtering, etc.
 
   if (startData.initSources) {
-    terria.initSources.push(
-      ...startData.initSources.map((initSource: any) => {
-        return {
-          data: initSource
-        };
-      })
-    );
+    runInAction(() => {
+      terria.initSources.push(
+        ...startData.initSources.map((initSource: any) => {
+          return {
+            data: initSource
+          };
+        })
+      );
+    });
   }
 
   // if (defined(startData.version) && startData.version !== latestStartVersion) {
