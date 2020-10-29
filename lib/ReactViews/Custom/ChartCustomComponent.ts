@@ -270,7 +270,7 @@ export default abstract class ChartCustomComponent<
           terria: context.terria,
           sourceItems: sourceItems,
           sourceNames: attrs.sourceNames,
-          canDownload: attrs.canDownload === true ? true : false,
+          canDownload: attrs.canDownload === true,
           downloads: attrs.downloads,
           downloadNames: attrs.downloadNames,
           raiseToTitle: !!getInsertedTitle(node)
