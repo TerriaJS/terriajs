@@ -12,11 +12,14 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import Styles from "./data-preview.scss";
 
-import { withTranslation, Trans } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import { observer } from "mobx-react";
 import { runInAction } from "mobx";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
 import Loader from "../Loader";
+import Box from "../../Styled/Box";
+import Button from "../../Styled/Button";
+import { ROOT_ROUTE } from "../../ReactViewModels/TerriaRouting";
 
 const prerenderEnd = () => {
   if (document && document.dispatchEvent) {
@@ -167,16 +170,13 @@ const DataPreview = observer(
             </When>
             <Otherwise>
               <div className={Styles.placeholder}>
-                <Trans i18nKey="preview.selectToPreview">
-                  <p>Select a dataset to see a preview</p>
-                  <p>- OR -</p>
-                  <button
-                    className={Styles.btnBackToMap}
-                    onClick={this.backToMap}
-                  >
-                    Go to the map
-                  </button>
-                </Trans>
+                <p>{t("preview.selectToPreview")}</p>
+                <p>{t("preview.or")}</p>
+                <Box centered>
+                  <Button secondary shortMinHeight renderAsLink to={ROOT_ROUTE}>
+                    {t("preview.goToTheMap")}
+                  </Button>
+                </Box>
               </div>
             </Otherwise>
           </Choose>

@@ -10,7 +10,8 @@ Change Log
 * Add 3D Tiles to 'Add web data' dropdown.
 * Add basic routing support
 * Add better page titles when on various routes of the application
-* Add prerendering support
+* Add prerendering support on `/catalog/` routes (via `prerender-end` event &
+  allowing TerriaMap to hit certain routes)
 * Update `WorkbenchButton` to allow for links rather than buttons, including
   changing About Data to a link
 * [The next improvement]
