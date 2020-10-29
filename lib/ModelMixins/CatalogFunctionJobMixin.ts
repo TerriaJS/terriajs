@@ -283,6 +283,7 @@ function CatalogFunctionJobMixin<
       }
     }
 
+    @computed
     get mapItems(): MapItem[] {
       return [];
     }

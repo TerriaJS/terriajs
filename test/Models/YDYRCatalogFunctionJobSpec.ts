@@ -77,8 +77,16 @@ describe("YDYRCatalogFunctionJob", function() {
   });
 
   describe("start polling after added to workbench", async function() {
+    let dispose: () => void;
     beforeEach(() => {
       terria.workbench.add(job);
+      dispose = reaction(
+        () => job.mapItems,
+        () => {}
+      );
+    });
+    afterEach(() => {
+      dispose();
     });
 
     it("should be in workbench", async function() {

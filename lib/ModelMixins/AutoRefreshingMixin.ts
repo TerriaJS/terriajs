@@ -1,10 +1,9 @@
 import {
-  autorun,
   computed,
   IReactionDisposer,
-  reaction,
   onBecomeObserved,
-  onBecomeUnobserved
+  onBecomeUnobserved,
+  reaction
 } from "mobx";
 import { now } from "mobx-utils";
 import Constructor from "../Core/Constructor";

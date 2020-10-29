@@ -85,6 +85,169 @@ describe("WebProcessingServiceCatalogFunction", function() {
 
   describe("when invoked", function() {
     let dispose: () => void;
+    let disposeMapItems: () => void;
+    let job: WebProcessingServiceCatalogFunctionJob;
+
+    beforeEach(async function() {
+      dispose = reaction(
+        () => wps.parameters,
+        () => {}
+      );
+      await wps.loadMetadata();
+      runInAction(() => {
+        const param = <GeoJsonParameter>(
+          wps.functionParameters.find(p => p.type === "geojson")
+        );
+        param.subtype = GeoJsonParameter.PointType;
+        param.setValue(CommonStrata.user, {
+          longitude: 2.5302435855103993,
+          latitude: -0.6592349301568685,
+          height: -1196.8235676901866
+        });
+      });
+      job = (await wps.submitJob()) as WebProcessingServiceCatalogFunctionJob;
+
+      disposeMapItems = reaction(
+        () => job.mapItems,
+        () => {}
+      );
+    });
+
+    afterEach(function() {
+      dispose();
+      disposeMapItems();
+    });
+
+    it("makes a POST request to the Execute endpoint", async function() {
+      expect(job.identifier).toBe("someId");
+      // expect(job.).toMatch(/geometry=/);
+      expect(job.jobStatus).toBe("finished");
+    });
+
+    it("makes a GET request to the Execute endpoint when `executeWithHttpGet` is true", async function() {
+      runInAction(() => wps.setTrait("definition", "executeWithHttpGet", true));
+
+      expect(job.identifier).toBe("someId");
+      // expect(job.).toMatch(/geometry=/);
+      expect(job.wpsResponse).toBeDefined();
+      expect(job.jobStatus).toBe("finished");
+    });
+
+    it("adds a ResultPendingCatalogItem to the workbench", async function() {
+      expect(job.inWorkbench).toBeTruthy();
+    });
+  });
+
+  describe("on success", function() {
+    let job: WebProcessingServiceCatalogFunctionJob;
+    beforeEach(async function() {
+      let dispose: any;
+      job = (await wps.submitJob()) as WebProcessingServiceCatalogFunctionJob;
+
+      await new Promise((resolve, reject) => {
+        dispose = reaction(
+          () => job.downloadedResults,
+          () => {
+            if (job.downloadedResults) resolve();
+          },
+          { fireImmediately: true }
+        );
+      });
+
+      dispose();
+    });
+
+    it("adds a WebProcessingServiceCatalogFunctionJob to workbench", async function() {
+      expect(job.inWorkbench).toBeTruthy();
+    });
+
+    it("adds result to workbench", async function() {
+      expect(job.results.length).toBe(2);
+      expect(AsyncMappableMixin.isMixedInto(job.results[0])).toBeTruthy();
+      expect(AsyncMappableMixin.isMixedInto(job.results[1])).toBeTruthy();
+      expect(
+        ((<unknown>job.results[0]) as AsyncMappableMixin.AsyncMappableMixin)
+          .inWorkbench
+      ).toBeTruthy();
+      expect(
+        ((<unknown>job.results[1]) as AsyncMappableMixin.AsyncMappableMixin)
+          .inWorkbench
+      ).toBeTruthy();
+    });
+
+    it("adds a new catalog member for the output", async function() {
+      expect(job.results[0].type).toBe(CsvCatalogItem.type);
+    });
+
+    it("adds a short report", async function() {
+      expect(job.shortReportSections[0].content).toBe(
+        "Chart Vegetation Cover generated."
+      );
+    });
+    it("returns mapItems", async function() {
+      expect(job.mapItems.length).toBe(1);
+      expect(job.mapItems[0]).toEqual(jasmine.any(GeoJsonDataSource));
+    });
+
+    it("defines a rectangle", async function() {
+      expect(job.rectangle).toBeDefined();
+    });
+  });
+
+  describe("otherwise if `statusLocation` is set", function() {
+    it("polls the statusLocation for the result", async function() {
+      jasmine.Ajax.stubRequest(
+        "http://example.com/wps?service=WPS&request=Execute&version=1.0.0"
+      ).andReturn({ responseText: pendingExecuteResponseXml });
+
+      jasmine.Ajax.stubRequest(
+        "http://example.com/ows?check_status/123"
+      ).andReturn({ responseText: executeResponseXml });
+
+      const job = await wps.submitJob();
+
+      const dispose1 = reaction(
+        () => job.mapItems,
+        () => {}
+      );
+
+      expect(job.jobStatus).toBe("running");
+
+      let dispose2: any;
+
+      // Wait for job to finish polling, then check if finished
+      await new Promise((resolve, reject) => {
+        dispose2 = reaction(
+          () => job.refreshEnabled,
+          () => {
+            if (!job.refreshEnabled) {
+              expect(job.jobStatus).toBe("finished");
+              resolve();
+            }
+          },
+          { fireImmediately: true }
+        );
+      });
+
+      dispose1();
+      dispose2();
+    });
+
+    it("stops polling if pendingItem is removed from the workbench", async function() {
+      spyOn(wps.terria.workbench, "add"); // do nothing
+      jasmine.Ajax.stubRequest(
+        "http://example.com/wps?service=WPS&request=Execute&version=1.0.0"
+      ).andReturn({ responseText: pendingExecuteResponseXml });
+
+      // Note: we don't stubRequest "http://example.com/ows?check_status/123" here - so an error will be thrown if the job polls for a result
+
+      const job = await wps.submitJob();
+      expect(job.jobStatus).toBe("running");
+    });
+  });
+
+  describe("on failure", function() {
+    let dispose: () => void;
 
     beforeEach(async function() {
       dispose = reaction(
@@ -109,196 +272,60 @@ describe("WebProcessingServiceCatalogFunction", function() {
       dispose();
     });
 
-    it("makes a POST request to the Execute endpoint", async function() {
-      const job = (await wps.submitJob()) as WebProcessingServiceCatalogFunctionJob;
+    it("marks the ResultPendingCatalogItem as failed - for polling results", async function() {
+      jasmine.Ajax.stubRequest(
+        "http://example.com/wps?service=WPS&request=Execute&version=1.0.0"
+      ).andReturn({ responseText: pendingExecuteResponseXml });
 
-      expect(job.identifier).toBe("someId");
-      // expect(job.).toMatch(/geometry=/);
-      expect(job.jobStatus).toBe("finished");
-    });
-
-    it("makes a GET request to the Execute endpoint when `executeWithHttpGet` is true", async function() {
-      runInAction(() => wps.setTrait("definition", "executeWithHttpGet", true));
+      jasmine.Ajax.stubRequest(
+        "http://example.com/ows?check_status/123"
+      ).andReturn({ responseText: failedExecuteResponseXml });
 
       const job = (await wps.submitJob()) as WebProcessingServiceCatalogFunctionJob;
 
-      expect(job.identifier).toBe("someId");
-      // expect(job.).toMatch(/geometry=/);
-      expect(job.wpsResponse).toBeDefined();
-      expect(job.jobStatus).toBe("finished");
-    });
+      const dispose1 = reaction(
+        () => job.mapItems,
+        () => {}
+      );
 
-    it("adds a ResultPendingCatalogItem to the workbench", async function() {
-      const job = (await wps.submitJob()) as WebProcessingServiceCatalogFunctionJob;
-      expect(job.inWorkbench).toBeTruthy();
-    });
+      let dispose2: any;
 
-    describe("on success", function() {
-      let job: WebProcessingServiceCatalogFunctionJob;
-      beforeEach(async function() {
-        job = (await wps.submitJob()) as WebProcessingServiceCatalogFunctionJob;
+      // Wait for job to finish polling, then check if failed
+      await new Promise((resolve, reject) => {
+        dispose2 = reaction(
+          () => job.refreshEnabled,
+          () => {
+            if (!job.refreshEnabled) {
+              expect(job.jobStatus).toBe("error");
+              expect(job.shortReport).toBeDefined();
+              expect(job.shortReport).toMatch(/invocation failed/i);
 
-        await new Promise((resolve, reject) => {
-          reaction(
-            () => job.downloadedResults,
-            () => {
-              if (job.downloadedResults) resolve();
-            },
-            { fireImmediately: true }
-          );
-        });
-      });
-
-      it("adds a WebProcessingServiceCatalogFunctionJob to workbench", async function() {
-        expect(job.inWorkbench).toBeTruthy();
-      });
-
-      it("adds result to workbench", async function() {
-        expect(job.results.length).toBe(2);
-        expect(AsyncMappableMixin.isMixedInto(job.results[0])).toBeTruthy();
-        expect(AsyncMappableMixin.isMixedInto(job.results[1])).toBeTruthy();
-        expect(
-          ((<unknown>job.results[0]) as AsyncMappableMixin.AsyncMappableMixin)
-            .inWorkbench
-        ).toBeTruthy();
-        expect(
-          ((<unknown>job.results[1]) as AsyncMappableMixin.AsyncMappableMixin)
-            .inWorkbench
-        ).toBeTruthy();
-      });
-
-      it("adds a new catalog member for the output", async function() {
-        expect(job.results[0].type).toBe(CsvCatalogItem.type);
-      });
-
-      it("adds a short report", async function() {
-        expect(job.shortReportSections[0].content).toBe(
-          "Chart Vegetation Cover generated."
+              resolve();
+            }
+          },
+          { fireImmediately: true }
         );
       });
-      it("returns mapItems", async function() {
-        expect(job.mapItems.length).toBe(1);
-        expect(job.mapItems[0]).toEqual(jasmine.any(GeoJsonDataSource));
-      });
 
-      it("defines a rectangle", async function() {
-        expect(job.rectangle).toBeDefined();
-      });
+      dispose1();
+      dispose2();
     });
 
-    describe("otherwise if `statusLocation` is set", function() {
-      it("polls the statusLocation for the result", async function() {
-        jasmine.Ajax.stubRequest(
-          "http://example.com/wps?service=WPS&request=Execute&version=1.0.0"
-        ).andReturn({ responseText: pendingExecuteResponseXml });
+    it("marks the ResultPendingCatalogItem as failed", async function() {
+      jasmine.Ajax.stubRequest(
+        "http://example.com/wps?service=WPS&request=Execute&version=1.0.0"
+      ).andReturn({ responseText: failedExecuteResponseXml });
 
-        jasmine.Ajax.stubRequest(
-          "http://example.com/ows?check_status/123"
-        ).andReturn({ responseText: executeResponseXml });
-
+      try {
         const job = await wps.submitJob();
-
-        expect(job.jobStatus).toBe("running");
-
-        // Wait for job to finish polling, then check if finished
-        await new Promise((resolve, reject) => {
-          reaction(
-            () => job.refreshEnabled,
-            () => {
-              if (!job.refreshEnabled) {
-                expect(job.jobStatus).toBe("finished");
-                resolve();
-              }
-            },
-            { fireImmediately: true }
-          );
-        });
-      });
-
-      it("stops polling if pendingItem is removed from the workbench", async function() {
-        spyOn(wps.terria.workbench, "add"); // do nothing
-        jasmine.Ajax.stubRequest(
-          "http://example.com/wps?service=WPS&request=Execute&version=1.0.0"
-        ).andReturn({ responseText: pendingExecuteResponseXml });
-
-        // Note: we don't stubRequest "http://example.com/ows?check_status/123" here - so an error will be thrown if the job polls for a result
-
-        const job = await wps.submitJob();
-        expect(job.jobStatus).toBe("running");
-      });
-    });
-
-    describe("on failure", function() {
-      let dispose: () => void;
-
-      beforeEach(async function() {
-        dispose = reaction(
-          () => wps.parameters,
-          () => {}
+        expect(job).toBeUndefined();
+      } catch (error) {
+        expect(error).toBeDefined();
+        expect(error instanceof TerriaError).toBeTruthy();
+        expect(error.message).toBe(
+          "One of the identifiers passed does not match with any of the processes offered by this server"
         );
-        await wps.loadMetadata();
-        runInAction(() => {
-          const param = <GeoJsonParameter>(
-            wps.functionParameters.find(p => p.type === "geojson")
-          );
-          param.subtype = GeoJsonParameter.PointType;
-          param.setValue(CommonStrata.user, {
-            longitude: 2.5302435855103993,
-            latitude: -0.6592349301568685,
-            height: -1196.8235676901866
-          });
-        });
-      });
-
-      afterEach(function() {
-        dispose();
-      });
-
-      it("marks the ResultPendingCatalogItem as failed - for polling results", async function() {
-        jasmine.Ajax.stubRequest(
-          "http://example.com/wps?service=WPS&request=Execute&version=1.0.0"
-        ).andReturn({ responseText: pendingExecuteResponseXml });
-
-        jasmine.Ajax.stubRequest(
-          "http://example.com/ows?check_status/123"
-        ).andReturn({ responseText: failedExecuteResponseXml });
-
-        const job = (await wps.submitJob()) as WebProcessingServiceCatalogFunctionJob;
-
-        // Wait for job to finish polling, then check if failed
-        await new Promise((resolve, reject) => {
-          reaction(
-            () => job.refreshEnabled,
-            () => {
-              if (!job.refreshEnabled) {
-                expect(job.jobStatus).toBe("error");
-                expect(job.shortReport).toBeDefined();
-                expect(job.shortReport).toMatch(/invocation failed/i);
-
-                resolve();
-              }
-            },
-            { fireImmediately: true }
-          );
-        });
-      });
-
-      it("marks the ResultPendingCatalogItem as failed", async function() {
-        jasmine.Ajax.stubRequest(
-          "http://example.com/wps?service=WPS&request=Execute&version=1.0.0"
-        ).andReturn({ responseText: failedExecuteResponseXml });
-
-        try {
-          const job = await wps.submitJob();
-          expect(job).toBeUndefined();
-        } catch (error) {
-          expect(error).toBeDefined();
-          expect(error instanceof TerriaError).toBeTruthy();
-          expect(error.message).toBe(
-            "One of the identifiers passed does not match with any of the processes offered by this server"
-          );
-        }
-      });
+      }
     });
   });
 

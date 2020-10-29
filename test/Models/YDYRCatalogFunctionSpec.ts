@@ -126,8 +126,16 @@ describe("YDYRCatalogFunction", function() {
 
   describe("when submitted", async function() {
     let job: YDYRCatalogFunctionJob;
+    let dispose: () => void;
     beforeEach(async () => {
       job = (await ydyr.submitJob()) as YDYRCatalogFunctionJob;
+      dispose = reaction(
+        () => job.mapItems,
+        () => {}
+      );
+    });
+    afterEach(() => {
+      dispose();
     });
     it("should correctly set parameters", async function() {
       expect(toJS(job.parameters)).toEqual(toJS(ydyr.parameters));
