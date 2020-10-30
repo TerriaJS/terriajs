@@ -421,6 +421,9 @@ export default class Leaflet extends GlobeOrMap {
           dataSources.remove(d);
         }
       });
+
+      // Ensure stacking order matches order in allDataSources - first item appears on top.
+      allDataSources.forEach(d => dataSources.raiseToTop(d));
     });
   }
 

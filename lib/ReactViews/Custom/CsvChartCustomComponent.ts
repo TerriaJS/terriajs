@@ -1,7 +1,6 @@
 import CommonStrata from "../../Models/CommonStrata";
 import CsvCatalogItem from "../../Models/CsvCatalogItem";
-import Model, { BaseModel } from "../../Models/Model";
-import CsvCatalogItemTraits from "../../Traits/CsvCatalogItemTraits";
+import { BaseModel } from "../../Models/Model";
 import ChartCustomComponent, {
   ChartCustomComponentAttributes,
   splitStringIfDefined
@@ -24,9 +23,8 @@ interface CsvChartCustomComponentAttributes
   chartDisclaimer?: string;
 }
 
-type CsvCatalogItemType = Model<CsvCatalogItemTraits>;
 export default class CsvChartCustomComponent extends ChartCustomComponent<
-  CsvCatalogItemType
+  CsvCatalogItem
 > {
   get name(): string {
     // For backward compatibility reasons, since the original ChartCustomComponent assumed your catalog item was a Csv, we use the name "chart" even though "csv-chart" would be more correct
@@ -46,12 +44,12 @@ export default class CsvChartCustomComponent extends ChartCustomComponent<
     id: string | undefined,
     context: ProcessNodeContext,
     sourceReference: BaseModel | undefined
-  ): CsvCatalogItemType {
+  ): CsvCatalogItem {
     return new CsvCatalogItem(id, context.terria, sourceReference);
   }
 
   protected setTraitsFromAttrs(
-    item: CsvCatalogItemType,
+    item: CsvCatalogItem,
     attrs: CsvChartCustomComponentAttributes,
     sourceIndex: number
   ) {
@@ -144,7 +142,7 @@ export default class CsvChartCustomComponent extends ChartCustomComponent<
     }
   }
 
-  setTraitsFromBody = (item: CsvCatalogItemType, csvString: string) => {
+  setTraitsFromBody = (item: CsvCatalogItem, csvString: string) => {
     item.setTrait(CommonStrata.user, "csvString", csvString);
   };
 
