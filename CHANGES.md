@@ -4,7 +4,10 @@ Change Log
 ### MobX Development
 
 
-#### next release (8.0.0-alpha.59)
+#### next release (8.0.0-alpha.60)
+* [The next improvement]
+
+#### 8.0.0-alpha.59
 * Update magda error message
 * Add a short report section if trying to view a `3d-tiles` item in a 2d map.
 * Fix bug in `Terria.interpretStartData`.
@@ -18,7 +21,6 @@ Change Log
   allowing TerriaMap to hit certain routes)
 * Update `WorkbenchButton` to allow for links rather than buttons, including
   changing About Data to a link
-* [The next improvement]
 
 #### 8.0.0-alpha.58
 * Add `FeatureInfoTraits` to `ArcGisMapServerCatalogItem`
