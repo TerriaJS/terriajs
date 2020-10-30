@@ -41,11 +41,6 @@ function AsyncMappableMixin<T extends Constructor<Model<MappableTraits>>>(
      */
     protected abstract forceLoadMapItems(): Promise<void>;
 
-    @computed
-    get inWorkbench() {
-      return this.terria.workbench.contains(this);
-    }
-
     dispose() {
       super.dispose();
       this._mapItemsLoader.dispose();

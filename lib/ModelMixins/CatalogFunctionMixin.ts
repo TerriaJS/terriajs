@@ -44,7 +44,7 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
      */
     async submitJob() {
       try {
-        const timestamp = getTimestamp();
+        const timestamp = new Date().toISOString();
         const newJob = await this.createJob(`${this.uniqueId}-${timestamp}`);
 
         if (!CatalogFunctionJobMixin.isMixedInto(newJob)) {
@@ -111,16 +111,3 @@ namespace CatalogFunctionMixin {
 }
 
 export default CatalogFunctionMixin;
-
-export function getTimestamp() {
-  const now = new Date();
-  return sprintf(
-    "%04d-%02d-%02dT%02d:%02d:%02d",
-    now.getFullYear(),
-    now.getMonth() + 1,
-    now.getDate(),
-    now.getHours(),
-    now.getMinutes(),
-    now.getSeconds()
-  );
-}

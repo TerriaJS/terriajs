@@ -14,7 +14,13 @@ import InfoParameter from "./FunctionParameters/InfoParameter";
 import StringParameter from "./FunctionParameters/StringParameter";
 import YDYRCatalogFunctionJob from "./YDYRCatalogFunctionJob";
 
-export const DATASETS = [
+export const DATASETS: {
+  title: string;
+  filename: string;
+  dataCol: string;
+  geographyName: string;
+  sideData: string;
+}[] = [
   {
     title: "ABS - 2011 Statistical Areas Level 1",
     filename: "SA1_2011_AUST",
@@ -186,6 +192,7 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
   async forceLoadMetadata() {
     return super.loadMetadata();
     // TODO: load capabilities from https://ydyr.info/api/v1/capability?format=json
+    // https://github.com/TerriaJS/terriajs/issues/4943
   }
 
   @computed

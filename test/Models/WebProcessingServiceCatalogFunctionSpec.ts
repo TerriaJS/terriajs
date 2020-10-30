@@ -165,14 +165,8 @@ describe("WebProcessingServiceCatalogFunction", function() {
       expect(job.results.length).toBe(2);
       expect(AsyncMappableMixin.isMixedInto(job.results[0])).toBeTruthy();
       expect(AsyncMappableMixin.isMixedInto(job.results[1])).toBeTruthy();
-      expect(
-        ((<unknown>job.results[0]) as AsyncMappableMixin.AsyncMappableMixin)
-          .inWorkbench
-      ).toBeTruthy();
-      expect(
-        ((<unknown>job.results[1]) as AsyncMappableMixin.AsyncMappableMixin)
-          .inWorkbench
-      ).toBeTruthy();
+      expect(job.results[0].inWorkbench).toBeTruthy();
+      expect(job.results[1].inWorkbench).toBeTruthy();
     });
 
     it("adds a new catalog member for the output", async function() {

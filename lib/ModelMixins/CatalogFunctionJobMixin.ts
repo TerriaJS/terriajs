@@ -15,6 +15,7 @@ import GroupMixin from "./GroupMixin";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import TerriaError from "../Core/TerriaError";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
+import addToWorkbench from "../Models/addToWorkbench";
 
 class FunctionJobStratum extends LoadableStratum(CatalogFunctionJobTraits) {
   constructor(
@@ -201,7 +202,7 @@ function CatalogFunctionJobMixin<
      * - `pollForResults` returns true {@link CatalogFunctionJobMixin#refreshData}
      * - on `loadMetadata` if `jobStatus` is "finished", and `!downloadedResults`  {@link CatalogFunctionJobMixin#forceLoadMetadata}
      */
-    private async onJobFinish(addToWorkbench = this.inWorkbench) {
+    private async onJobFinish(addResultsToWorkbench = this.inWorkbench) {
       // Download results when finished
       if (
         this.jobStatus === "finished" &&
@@ -213,7 +214,8 @@ function CatalogFunctionJobMixin<
         this.results.forEach(result => {
           if (Mappable.is(result))
             result.setTrait(CommonStrata.user, "show", true);
-          if (addToWorkbench) this.terria.workbench.add(result);
+          if (addResultsToWorkbench)
+            addToWorkbench(this.terria.workbench, result);
 
           this.terria.addModel(result);
         });
