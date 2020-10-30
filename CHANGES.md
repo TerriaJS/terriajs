@@ -5,6 +5,11 @@ Change Log
 
 
 #### next release (8.0.0-alpha.60)
+* New `CatalogFunctionMixin` and `CatalogFunctionJobMixin`
+* Tsified `FunctionParameters`
+* New `YourDataYourRegions` `CatalogFunctionMixin`
+* Added `inWorkbench` property
+* Added `addModelToTerria` flag to `upsertModelFromJson` function
 * [The next improvement]
 
 #### 8.0.0-alpha.59
@@ -14,12 +19,6 @@ Change Log
 * Add `ThreddsCatalogGroup` model.
 * Port `supportsColorScaleRange`, `colorScaleMinimum` and `colorScaleMaximimum` from `master` to `WebMapServiceCatalogItem` model.
 * Ported MapboxVectorTileCatalogItem ("mvt").
-* New `CatalogFunctionMixin` and `CatalogFunctionJobMixin`
-* Tsified `FunctionParameters`
-* New `YourDataYourRegions` `CatalogFunctionMixin`
-* Added `inWorkbench` property
-* Added `addModelToTerria` flag to `upsertModelFromJson` function
-* [The next improvement]
 * When expanding a chart from the feature info panel, we now place a colored dot on the map where the chart was generated from.
 * Add basic routing support
 * Add better page titles when on various routes of the application
