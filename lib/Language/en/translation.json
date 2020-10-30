@@ -495,7 +495,10 @@
     "expandAll": "Expand All",
     "toggleVisibility": "Data show/hide",
     "addItemErrorTitle": "Catalog item could not be added to workbench.",
-    "addItemErrorMessage": "An error occurred while loading the catalog item."
+    "addItemErrorMessage": "An error occurred while loading the catalog item.",
+    "dimensionsSelector": {
+      "undefinedLabel": "Not specified"
+    }
   },
   "dateTime": {
     "back": "Go back",
