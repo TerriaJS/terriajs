@@ -15,6 +15,7 @@ import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
+import { isLatLonHeight } from "../Core/LatLonHeight";
 import makeRealPromise from "../Core/makeRealPromise";
 import TerriaError from "../Core/TerriaError";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
@@ -287,7 +288,10 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
             },
             getColor: () => {
               return line.color || getChartColorForId(colorId);
-            }
+            },
+            pointOnMap: isLatLonHeight(this.chartPointOnMap)
+              ? this.chartPointOnMap
+              : undefined
           };
         })
       );

@@ -42,7 +42,7 @@ const GroupPreview = observer(
             className={Styles.titleAndShareWrapper}
             ref={component => (this.refToMeasure = component)}
           >
-            <h3>{this.props.previewed.name}</h3>
+            <h1 className={Styles.heading}>{this.props.previewed.name}</h1>
             <div className={Styles.shareLinkWrapper}>
               <SharePanel
                 catalogShare
@@ -62,7 +62,9 @@ const GroupPreview = observer(
                   }
                 >
                   <div>
-                    <h4 className={Styles.h4}>{t("description.name")}</h4>
+                    <h2 className={Styles.subHeading}>
+                      {t("description.name")}
+                    </h2>
                     {parseCustomMarkdownToReact(
                       this.props.previewed.description,
                       { catalogItem: this.props.previewed }
@@ -75,7 +77,9 @@ const GroupPreview = observer(
 
               <If condition={metadataItem.dataCustodian}>
                 <div>
-                  <h4 className={Styles.h4}>{t("preview.dataCustodian")}</h4>
+                  <h2 className={Styles.subHeading}>
+                    {t("preview.dataCustodian")}
+                  </h2>
                   {parseCustomMarkdownToReact(metadataItem.dataCustodian, {
                     catalogItem: metadataItem
                   })}
