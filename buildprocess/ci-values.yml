@@ -42,7 +42,7 @@ terriamap:
         - helm
         - terria
         parameters:
-            bingMapsKey: "AiGfmTpmtbNIRJER8VKGKZMFZ4mGISCy4XS-Bvzb64IE3D0ILZpYorFHShd2AX8U"
+            bingMapsKey: "AiKyh8RfSWfiQyzh1iaiL2EBSwKK0EoB1dFpvApJZs3KibbXtxclGaj5540y70Si"
             cesiumIonAccessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxZDY5MDE1YS0yNGFlLTQ1MzctYWNkNy0wNDQ1YWNiNTM5MDIiLCJpZCI6Mjk5Miwic2NvcGVzIjpbImFzciIsImdjIl0sImlhdCI6MTUzODAzMzgyNn0.a2uTotdiHUo8FiHsO4MVNZ1KT5pOF0rb7CFdwbRAsOo"
             googleAnalyticsKey:
             disclaimer:
