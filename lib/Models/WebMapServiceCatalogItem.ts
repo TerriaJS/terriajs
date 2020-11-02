@@ -141,7 +141,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       const layer = layers[i];
       const style = i < styles.length ? styles[i] : undefined;
 
-      let legendUrl: string | undefined;
+      let legendUri: uri.URI | undefined;
       let legendUrlMimeType: string | undefined;
 
       // Attempt to find layer style based on AvailableStyleTraits
@@ -151,23 +151,45 @@ class GetCapabilitiesStratum extends LoadableStratum(
           : availableStyles
               .find(candidate => candidate.layerName === layer)
               ?.styles?.find(candidate => candidate.name === style);
-      if (layerStyle?.legend) {
-        legendUrl = layerStyle.legend.url;
+      if (layerStyle?.legend?.url) {
+        legendUri = URI(
+          proxyCatalogItemUrl(this.catalogItem, layerStyle.legend.url)
+        );
+
         legendUrlMimeType = layerStyle.legend.urlMimeType;
       }
 
       // If no legends found - make one up!
-      if (!isDefined(legendUrl) && isDefined(this.catalogItem.url)) {
-        legendUrl = `${
-          this.catalogItem.url.split("?")[0]
-        }?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&transparent=True&layer=${layer}`;
-        legendUrlMimeType = "image/png";
+      if (!isDefined(legendUri) && isDefined(this.catalogItem.url)) {
+        legendUri = URI(
+          proxyCatalogItemUrl(
+            this.catalogItem,
+            this.catalogItem.url.split("?")[0]
+          )
+        );
+        legendUri
+          .setQuery("service", "WMS")
+          .setQuery("version", "1.3.0")
+          .setQuery("request", "GetLegendGraphic")
+          .setQuery("format", "image/png")
+          .setQuery("layer", layer);
       }
 
-      if (isDefined(legendUrl)) {
-        const legendUri = URI(proxyCatalogItemUrl(this.catalogItem, legendUrl));
-        if (this.catalogItem.supportsColorScaleRange) {
-          legendUri.addQuery(
+      if (isDefined(legendUri)) {
+        legendUri.setQuery("transparent", "true");
+
+        if (this.catalogItem.isGeoServer) {
+          let legendOptions =
+            "fontSize:14;forceLabels:on;fontAntiAliasing:true";
+          legendOptions += ";fontColor:0xDDDDDD"; // enable if we can ensure a dark background
+          //legendOptions += ";dpi:182"; // enable if we can scale the image back down by 50%.
+          legendUri.setQuery("LEGEND_OPTIONS", legendOptions);
+        }
+        if (
+          this.catalogItem.supportsColorScaleRange &&
+          this.catalogItem.colorScaleRange
+        ) {
+          legendUri.setQuery(
             "colorscalerange",
             this.catalogItem.colorScaleRange
           );
