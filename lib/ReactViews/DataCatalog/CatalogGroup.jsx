@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
@@ -16,11 +15,8 @@ import Styles from "./data-catalog-group.scss";
 import Box from "../../Styled/Box";
 import Text from "../../Styled/Text";
 
-// const CatalogGroupButton = styled.button`
-const CatalogGroupButton = styled(Link)`
+const CatalogGroupButton = styled.button`
   ${props => `
-    color: ${props.theme.textBlack};
-
     &:hover,
     &:focus {
       color: ${props.theme.textLight};
@@ -45,7 +41,6 @@ function CatalogGroup(props) {
     <li className={Styles.root}>
       <Text fullWidth primary={!props.selected && props.isPrivate}>
         <CatalogGroupButton
-          to={props.linkTo}
           type="button"
           className={classNames(
             Styles.btnCatalog,
@@ -127,7 +122,6 @@ CatalogGroup.propTypes = {
   text: PropTypes.string,
   isPrivate: PropTypes.bool,
   title: PropTypes.string,
-  linkTo: PropTypes.string,
   topLevel: PropTypes.bool,
   open: PropTypes.bool,
   loading: PropTypes.bool,

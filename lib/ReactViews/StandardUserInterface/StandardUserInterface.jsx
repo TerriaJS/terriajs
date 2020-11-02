@@ -4,14 +4,6 @@ import { ThemeProvider, createGlobalStyle } from "styled-components";
 import PropTypes from "prop-types";
 import combine from "terriajs-cesium/Source/Core/combine";
 
-import { BrowserRouter as Router, Route, withRouter } from "react-router-dom";
-import { Helmet } from "react-helmet";
-
-import {
-  CATALOG_ROUTE,
-  CATALOG_MEMBER_ROUTE
-} from "../../ReactViewModels/TerriaRouting";
-
 import { terriaTheme } from "./StandardTheme";
 import arrayContains from "../../Core/arrayContains";
 import Branding from "../SidePanel/Branding";
@@ -28,8 +20,6 @@ import MobileHeader from "../Mobile/MobileHeader";
 import Notification from "../Notification/Notification";
 import ProgressBar from "../Map/ProgressBar";
 import SidePanel from "../SidePanel/SidePanel";
-
-import RoutingListener from "./RoutingListener.jsx";
 import processCustomElements from "./processCustomElements";
 import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import StoryPanel from "./../Story/StoryPanel.jsx";
@@ -39,8 +29,6 @@ import withFallback from "../HOCs/withFallback";
 import TourPortal from "../Tour/TourPortal";
 import SatelliteHelpPrompt from "../HelpScreens/SatelliteHelpPrompt";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage";
-import withRoutingTracker from "./withRoutingTracker";
-// import SatelliteGuide from "../Guide/SatelliteGuide.jsx";
 
 import { Small, Medium } from "../Generic/Responsive";
 import classNames from "classnames";
@@ -131,7 +119,7 @@ const GlobalTerriaStyles = createGlobalStyle`
 `;
 const animationDuration = 250;
 /** blah */
-const StandardUserInterfaceRaw = observer(
+const StandardUserInterface = observer(
   createReactClass({
     displayName: "StandardUserInterface",
 
@@ -268,16 +256,10 @@ const StandardUserInterfaceRaw = observer(
             terria={terria}
             viewState={this.props.viewState}
           />
-          <Helmet>
-            <title>{this.props.terria.appName}</title>
-            <meta name="description" content="A web map built on Terria Map" />
-          </Helmet>
-          <RoutingListener viewState={this.props.viewState} />
           <div className={Styles.storyWrapper}>
             <If condition={!this.props.viewState.disclaimerVisible}>
               <WelcomeMessage viewState={this.props.viewState} />
             </If>
-
             <div
               className={classNames(Styles.uiRoot, {
                 [Styles.withStoryBuilder]: showStoryBuilder
@@ -370,14 +352,9 @@ const StandardUserInterfaceRaw = observer(
                       animationDuration={animationDuration}
                     />
                     <main>
-                      <Route
-                        path={[CATALOG_MEMBER_ROUTE, CATALOG_ROUTE, "*"]}
-                        render={() => (
-                          <ExplorerWindow
-                            terria={terria}
-                            viewState={this.props.viewState}
-                          />
-                        )}
+                      <ExplorerWindow
+                        terria={terria}
+                        viewState={this.props.viewState}
                       />
                       <If
                         condition={
@@ -482,14 +459,6 @@ const StandardUserInterfaceRaw = observer(
   })
 );
 
-const StandardUserInterfaceWithRouter = withRouter(
-  withRoutingTracker(withTranslation()(StandardUserInterfaceRaw))
-);
-
-export const StandardUserInterface = props => (
-  <Router>
-    <StandardUserInterfaceWithRouter {...props} />
-  </Router>
-);
+export const StandardUserInterfaceWithoutTranslation = StandardUserInterface;
 
 export default withFallback(withTranslation()(StandardUserInterface));

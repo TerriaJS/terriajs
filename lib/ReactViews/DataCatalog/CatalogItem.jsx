@@ -1,7 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import styled from "styled-components";
 import classNames from "classnames";
 import Icon from "../Icon";
 import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
@@ -12,22 +10,6 @@ import Styles from "./data-catalog-item.scss";
 
 import Box from "../../Styled/Box";
 import Text from "../../Styled/Text";
-
-const CatalogItemLink = styled(Link)`
-  ${props => `
-    color: ${props.theme.textBlack};
-
-    &:hover,
-    &:focus {
-      color: ${props.theme.colorPrimary};
-    }
-    ${props.active &&
-      `
-        color: ${props.theme.colorPrimary};
-        font-weight: 600;
-      `}
-    `}
-`;
 
 const STATE_TO_ICONS = {
   loading: <Icon glyph={Icon.GLYPHS.loader} />,
@@ -51,8 +33,7 @@ function CatalogItem(props) {
   return (
     <li className={classNames(Styles.root)}>
       <Text fullWidth primary={props.isPrivate}>
-        <CatalogItemLink
-          to={props.linkTo}
+        <button
           type="button"
           onClick={props.onTextClick}
           title={props.title}
@@ -60,10 +41,9 @@ function CatalogItem(props) {
             [Styles.btnCatalogItemIsPreviewed]: props.selected,
             [Styles.btnCatalogItemIsTrashable]: props.selected
           })}
-          active={props.selected}
         >
           {props.text}
-        </CatalogItemLink>
+        </button>
       </Text>
       <Box>
         {props.isPrivate && <PrivateIndicator />}
@@ -96,7 +76,6 @@ CatalogItem.propTypes = {
   selected: PropTypes.bool,
   text: PropTypes.string,
   title: PropTypes.string,
-  linkTo: PropTypes.string,
   trashable: PropTypes.bool,
   onTrashClick: PropTypes.func,
   onBtnClick: PropTypes.func,
