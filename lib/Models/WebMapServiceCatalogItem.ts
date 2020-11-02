@@ -160,6 +160,8 @@ class GetCapabilitiesStratum extends LoadableStratum(
       }
 
       // If no legends found - make one up!
+      // From OGC — about style property for GetLegendGraphic request:
+      // If not present, the default style is selected. The style may be any valid style available for a layer, including non-SLD internally-defined styles.
       if (!isDefined(legendUri) && isDefined(this.catalogItem.url)) {
         legendUri = URI(
           proxyCatalogItemUrl(
@@ -173,11 +175,14 @@ class GetCapabilitiesStratum extends LoadableStratum(
           .setQuery("request", "GetLegendGraphic")
           .setQuery("format", "image/png")
           .setQuery("layer", layer);
+
+        legendUrlMimeType = "image/png";
       }
 
       if (isDefined(legendUri)) {
         legendUri.setQuery("transparent", "true");
 
+        // Add geoserver related LEGEND_OPTIONS to match terria styling
         if (this.catalogItem.isGeoServer) {
           let legendOptions =
             "fontSize:14;forceLabels:on;fontAntiAliasing:true";
