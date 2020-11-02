@@ -5,6 +5,8 @@ Change Log
 
 
 #### next release (8.0.0-alpha.60)
+* Fix WMS legend for default styles.
+* Request transparent legend from GeoServer.
 * [The next improvement]
 
 #### 8.0.0-alpha.59
@@ -13,10 +15,7 @@ Change Log
 * Fix bug in `Terria.interpretStartData`.
 * Add `ThreddsCatalogGroup` model.
 * Port `supportsColorScaleRange`, `colorScaleMinimum` and `colorScaleMaximimum` from `master` to `WebMapServiceCatalogItem` model.
-* Fix WMS legend for default styles.
 * Ported MapboxVectorTileCatalogItem ("mvt").
-* Request transparent legend from GeoServer.
-* [The next improvement]
 * When expanding a chart from the feature info panel, we now place a colored dot on the map where the chart was generated from.
 * Add basic routing support
 * Add better page titles when on various routes of the application
