@@ -3,6 +3,8 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
+import { withRouter } from "react-router-dom";
+import URI from "urijs";
 import addedByUser from "../../Core/addedByUser";
 import getPath from "../../Core/getPath";
 import openGroup from "../../Models/openGroup";
@@ -17,6 +19,7 @@ const DataCatalogGroup = observer(
     propTypes: {
       group: PropTypes.object.isRequired,
       viewState: PropTypes.object.isRequired,
+      match: PropTypes.object.isRequired,
       /** Overrides whether to get the open state of the group from the group model or manage it internally */
       manageIsOpenLocally: PropTypes.bool,
       userData: PropTypes.bool,
@@ -70,9 +73,14 @@ const DataCatalogGroup = observer(
     },
 
     isSelected() {
-      return addedByUser(this.props.group)
-        ? this.props.viewState.userDataPreviewedItem === this.props.group
-        : this.props.viewState.previewedItem === this.props.group;
+      const match = this.props.match || {};
+      const { params } = match;
+      return (
+        (addedByUser(this.props.group)
+          ? this.props.viewState.userDataPreviewedItem === this.props.group
+          : this.props.viewState.previewedItem === this.props.group) ||
+        URI.decode(params.catalogMemberId) === this.props.group.uniqueId
+      );
     },
 
     getNameOrPrettyUrl() {
@@ -93,6 +101,7 @@ const DataCatalogGroup = observer(
       const { t } = this.props;
       return (
         <CatalogGroup
+          linkTo={URI.encode(group.uniqueId)}
           text={this.getNameOrPrettyUrl()}
           isPrivate={group.isPrivate}
           title={getPath(this.props.group, " → ")}
@@ -129,4 +138,4 @@ const DataCatalogGroup = observer(
   })
 );
 
-module.exports = withTranslation()(DataCatalogGroup);
+module.exports = withRouter(withTranslation()(DataCatalogGroup));
