@@ -23,7 +23,6 @@ Change Log
   allowing TerriaMap to hit certain routes)
 * Update `WorkbenchButton` to allow for links rather than buttons, including
   changing About Data to a link
-* [The next improvement]
 
 #### 8.0.0-alpha.58
 * Add `FeatureInfoTraits` to `ArcGisMapServerCatalogItem`
