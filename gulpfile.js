@@ -183,7 +183,7 @@ function generateCatalogMemberPages(schemaPath, outputPath) {
 
         var content = '!!! note\r\r' +
                       '    This page is automatically generated from the source code, and is a bit rough.  If you have\r' +
-                      '    trouble, check the [source code for this type](https://github.com/TerriaJS/terriajs/blob/master/lib/Models/' + path.basename(propertiesFile, '.json') + '.js) or post a message to the [forum](https://groups.google.com/forum/#!forum/terriajs).\r\r';
+                      '    trouble, check the [source code for this type](https://github.com/TerriaJS/terriajs/blob/master/lib/Models/' + path.basename(propertiesFile, '.json') + '.js) or post a message to the [forum](https://github.com/TerriaJS/terriajs/discussions).\r\r';
         content += json.description + '\r\r';
         content += '## [Initialization File](../../customizing/initialization-files.md) properties:\r\r';
         content += '`"type": "' + type + '"`\r\r';
