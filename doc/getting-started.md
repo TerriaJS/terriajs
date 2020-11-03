@@ -127,7 +127,7 @@ If you're merging a branch-that-has-already-followed-this-procedure into your br
 
 Use the commit hash of the commit that merged `pre-prettier` in place of `pre-prettier` above. Use the commit hash of the commit that merged `post-prettier` in place of `post-prettier` above.
 
-Having trouble? Drop by the TerriaJS [gitter](https://gitter.im/TerriaJS/terriajs) or [forum](https://groups.google.com/forum/#!forum/terriajs) and we'll be happy to help!
+Having trouble? Drop by the TerriaJS [forum](https://github.com/TerriaJS/terriajs/discussions) and we'll be happy to help!
 
 ### Next Steps
 
