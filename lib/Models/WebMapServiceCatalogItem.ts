@@ -49,7 +49,7 @@ import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import LoadableStratum from "./LoadableStratum";
-import Mappable, { ImageryParts } from "./Mappable";
+import { ImageryParts } from "./Mappable";
 import { BaseModel } from "./Model";
 import { CapabilitiesStyle } from "./OwsInterfaces";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
@@ -1154,19 +1154,21 @@ class WebMapServiceCatalogItem
           `Layer ${layerIndex + 1}`} styles`;
       }
 
+      const options = filterOutUndefined(
+        layer.styles.map(function(s) {
+          if (isDefined(s.name)) {
+            return {
+              name: s.title || s.name || "",
+              id: s.name as string
+            };
+          }
+        })
+      );
+
       return {
         name,
         id: `${this.uniqueId}-${layer.layerName}-styles`,
-        options: filterOutUndefined(
-          layer.styles.map(function(s) {
-            if (isDefined(s.name)) {
-              return {
-                name: s.title || s.name || "",
-                id: s.name as string
-              };
-            }
-          })
-        ),
+        options,
 
         // Set selectedId to value stored in `styles` trait for this `layerIndex` or the first available style value
         // The `styles` parameter is CSV, a style for each layer
@@ -1182,7 +1184,8 @@ class WebMapServiceCatalogItem
             this.setTrait(stratumId, "styles", styles.join(","));
           });
         },
-        allowUndefined: true,
+        // Only allow undefined if more then one style (if there is only one style then it is the default style!)
+        allowUndefined: options.length > 1,
         undefinedLabel: i18next.t(
           "models.webMapServiceCatalogItem.defaultStyleLabel"
         ),
