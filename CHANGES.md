@@ -13,6 +13,7 @@ Change Log
     * Add better page titles when on various routes of the application
     * Add prerendering support on `/catalog/` routes (via `prerender-end` event & 
       allowing TerriaMap to hit certain routes)
+* Add access control properties to items fetched from Esri Portal.
 
 #### 8.0.0-alpha.59
 * Update magda error message
@@ -21,8 +22,6 @@ Change Log
 * Add `ThreddsCatalogGroup` model.
 * Port `supportsColorScaleRange`, `colorScaleMinimum` and `colorScaleMaximimum` from `master` to `WebMapServiceCatalogItem` model.
 * Ported MapboxVectorTileCatalogItem ("mvt").
-* Add access control properties to items fetched from Esri Portal.
-* [The next improvement]
 * When expanding a chart from the feature info panel, we now place a colored dot on the map where the chart was generated from.
 * Add basic routing support
 * Add better page titles when on various routes of the application
