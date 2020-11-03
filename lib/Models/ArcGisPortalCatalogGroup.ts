@@ -446,6 +446,10 @@ function createGroupsByPortalGroups(arcgisPortal: ArcGisPortalStratum) {
           );
         }
       }
+
+      if (AccessControlMixin.isMixedInto(existingGroup) && group.access) {
+        existingGroup.setAccessType(group.access);
+      }
       out.push(existingGroup);
     }
   );
