@@ -447,7 +447,10 @@ function createGroupsByPortalGroups(arcgisPortal: ArcGisPortalStratum) {
         }
       }
 
-      if (AccessControlMixin.isMixedInto(existingGroup) && group.access) {
+      if (
+        AccessControlMixin.isMixedInto(existingGroup) &&
+        group.access !== undefined
+      ) {
         existingGroup.setAccessType(group.access);
       }
       out.push(existingGroup);
