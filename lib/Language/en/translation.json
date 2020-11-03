@@ -495,7 +495,10 @@
     "expandAll": "Expand All",
     "toggleVisibility": "Data show/hide",
     "addItemErrorTitle": "Catalog item could not be added to workbench.",
-    "addItemErrorMessage": "An error occurred while loading the catalog item."
+    "addItemErrorMessage": "An error occurred while loading the catalog item.",
+    "dimensionsSelector": {
+      "undefinedLabel": "Not specified"
+    }
   },
   "dateTime": {
     "back": "Go back",
@@ -1330,6 +1333,7 @@
       "accessConstraints": "Access Constraints",
       "serviceContact": "Service Contact",
       "getCapabilitiesUrl": "GetCapabilities URL",
+      "defaultStyleLabel": "Default style",
       "noLayerFoundTitle": "No layer found",
       "noLayerFoundMessage": "The WMS dataset '{{name}}' has no layers matching '{{layers}}'. {{suggested}} {{line}}{{line}}Either the catalog file has been set up incorrectly, or the WMS server has changed.{{line}}{{line}}Please report this error by sending an email to {{email}}.",
       "datasetScaleErrorTitle": "Dataset will not be shown at this scale",

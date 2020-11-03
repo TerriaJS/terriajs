@@ -1,23 +1,27 @@
 "use strict";
 
-import React from "react";
+import i18next from "i18next";
+import { action } from "mobx";
 import { observer } from "mobx-react";
+import React from "react";
+import { WithTranslation, withTranslation } from "react-i18next";
+import isDefined from "../../../Core/isDefined";
 import CommonStrata from "../../../Models/CommonStrata";
-import { runInAction, action } from "mobx";
 import SelectableDimensions, {
   SelectableDimension
 } from "../../../Models/SelectableDimensions";
-
 import Select from "../../../Styled/Select";
-import isDefined from "../../../Core/isDefined";
+
 const Text: any = require("../../../Styled/Text").default;
 const Box: any = require("../../../Styled/Box").default;
 const Spacing: any = require("../../../Styled/Spacing").default;
 
-@observer
-export default class DimensionSelectorSection extends React.Component<{
+interface PropsType extends WithTranslation {
   item: SelectableDimensions;
-}> {
+}
+
+@observer
+class DimensionSelectorSection extends React.Component<PropsType> {
   @action
   setDimensionValue(
     dimension: SelectableDimension,
@@ -71,7 +75,8 @@ export default class DimensionSelectorSection extends React.Component<{
               {(typeof dim.selectedId === "undefined" ||
                 dim.allowUndefined) && (
                 <option key="__undefined__" value="">
-                  Not specified
+                  {dim.undefinedLabel ??
+                    i18next.t("workbench.dimensionsSelector.undefinedLabel")}
                 </option>
               )}
               {dim.options!.map(option => (
@@ -87,3 +92,5 @@ export default class DimensionSelectorSection extends React.Component<{
     );
   }
 }
+
+export default withTranslation()(DimensionSelectorSection);
