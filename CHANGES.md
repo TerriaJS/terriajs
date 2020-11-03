@@ -11,6 +11,7 @@ Change Log
 * Add `ThreddsCatalogGroup` model.
 * Port `supportsColorScaleRange`, `colorScaleMinimum` and `colorScaleMaximimum` from `master` to `WebMapServiceCatalogItem` model.
 * Ported MapboxVectorTileCatalogItem ("mvt").
+* Add access control properties to items fetched from Esri Portal.
 * [The next improvement]
 
 #### 8.0.0-alpha.58
