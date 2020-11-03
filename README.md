@@ -104,6 +104,5 @@ Cross-browser Testing Platform and Open Source <3 Provided by [Sauce Labs](https
 
 Get in touch!
 
-* Chat in our [Gitter chat room](https://gitter.im/TerriaJS/terriajs)
-* Join the [TerriaJS Google Group](https://groups.google.com/forum/#!forum/terriajs)
-* Raise issues in the [Github issue tracker](https://github.com/TerriaJS/terriajs/issues/new)
+* Open a discussion to chat with us or ask a question in our [GitHub Discussions forum](https://github.com/TerriaJS/terriajs/discussions)
+* Raise issues in the [GitHub issue tracker](https://github.com/TerriaJS/terriajs/issues/new)
