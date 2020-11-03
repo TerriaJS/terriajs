@@ -4,6 +4,7 @@ import URI from "urijs";
 import isDefined from "../Core/isDefined";
 import loadJson from "../Core/loadJson";
 import TerriaError from "../Core/TerriaError";
+import AccessControlMixin from "../ModelMixins/AccessControlMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -336,6 +337,13 @@ export class ArcGisPortalStratum extends LoadableStratum(
       this._catalogGroup.groupBy === "portalCategories"
     ) {
       this.addCatalogItemByPortalGroupsToCatalogGroup(item, arcgisDataset);
+    }
+
+    if (
+      AccessControlMixin.isMixedInto(item) &&
+      arcgisDataset.access !== undefined
+    ) {
+      item.setAccessType(arcgisDataset.access);
     }
   }
 }
