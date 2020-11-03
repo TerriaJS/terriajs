@@ -10,6 +10,8 @@ Change Log
 * New `YourDataYourRegions` `CatalogFunctionMixin`
 * Added `inWorkbench` property
 * Added `addModelToTerria` flag to `upsertModelFromJson` function
+* Fix WMS legend for default styles.
+* Request transparent legend from GeoServer.
 * [The next improvement]
 
 #### 8.0.0-alpha.59

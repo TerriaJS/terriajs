@@ -18,7 +18,6 @@ import DataPreviewMap from "./DataPreviewMap";
 // import DataPreviewMap from "./DataPreviewMap";
 import Description from "./Description";
 import Styles from "./mappable-preview.scss";
-import ErrorBoundary from "../ErrorBoundary/ErrorBoundary.jsx";
 
 /**
  * @typedef {object} Props
@@ -88,27 +87,15 @@ class MappablePreview extends React.Component {
     const catalogItem = this.props.previewed;
     return (
       <div className={Styles.root}>
-        <If
-          condition={
-            Mappable.is(catalogItem) &&
-            !catalogItem.disablePreview &&
-            this.props.viewState.explorerPanelIsVisible
-          }
-        >
-          <ErrorBoundary terria={this.props.terria}>
-            <DataPreviewMap
-              key={[
-                catalogItem.uniqueId,
-                this.props.viewState.explorerPanelIsVisible
-              ]}
-              terria={this.props.terria}
-              previewed={catalogItem}
-              showMap={
-                !this.props.viewState.explorerPanelAnimating ||
-                this.props.viewState.useSmallScreenInterface
-              }
-            />
-          </ErrorBoundary>
+        <If condition={Mappable.is(catalogItem) && !catalogItem.disablePreview}>
+          <DataPreviewMap
+            terria={this.props.terria}
+            previewed={catalogItem}
+            showMap={
+              !this.props.viewState.explorerPanelAnimating ||
+              this.props.viewState.useSmallScreenInterface
+            }
+          />
         </If>
         <button
           type="button"
@@ -124,7 +111,7 @@ class MappablePreview extends React.Component {
             className={Styles.titleAndShareWrapper}
             ref={component => (this.refToMeasure = component)}
           >
-            <h1 className={Styles.heading}>{catalogItem.name}</h1>
+            <h3 className={Styles.h3}>{catalogItem.name}</h3>
             <If
               condition={
                 !catalogItem.hasLocalData &&

@@ -18,21 +18,6 @@ import { observer } from "mobx-react";
 import ExportData from "./ExportData";
 import WarningBox from "./WarningBox";
 
-// TODO: v8ify
-export const getMetaDescriptionSummary = catalogItem => {
-  const description =
-    (catalogItem.description && `${catalogItem.description} `) || "";
-  const custodian =
-    (catalogItem.dataCustodian && `- ${catalogItem.dataCustodian} `) || "";
-  const type =
-    (catalogItem.type && `- a ${catalogItem.type} catalog item `) || "";
-  const source =
-    (catalogItem.url && `sourced from "${catalogItem.url}" `) || "";
-  // Don't need local data info as it won't exist from the server for prerendering
-
-  return `${description}${custodian}${type}${source}`;
-};
-
 /**
  * CatalogItem description.
  */
