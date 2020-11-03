@@ -1,4 +1,5 @@
 import CatalogMemberTraits from "./CatalogMemberTraits";
+import ChartPointOnMapTraits from "./ChartPointOnMapTraits";
 import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import ExportableTraits from "./ExportableTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
@@ -20,7 +21,8 @@ export default class TableTraits extends mixTraits(
   LayerOrderingTraits,
   CatalogMemberTraits,
   MappableTraits,
-  RasterLayerTraits
+  RasterLayerTraits,
+  ChartPointOnMapTraits
 ) {
   @primitiveTrait({
     name: "Show Warning for Unmatched Regions",
