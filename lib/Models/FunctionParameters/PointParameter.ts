@@ -2,17 +2,25 @@ import { observable, computed } from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import FunctionParameter from "./FunctionParameter";
-import isDefined from "../Core/isDefined";
+import isDefined from "../../Core/isDefined";
+import { Feature, Point } from "geojson";
+import { GeoJsonFunctionParameter } from "./GeoJsonParameter";
 
-export default class PointParameter extends FunctionParameter {
+export type CartographicPoint = {
+  longitude: number;
+  latitude: number;
+  height: number;
+};
+
+export default class PointParameter extends FunctionParameter<CartographicPoint>
+  implements GeoJsonFunctionParameter {
+  static readonly type = "point";
   readonly type = "point";
-
-  @observable value?: Cartographic;
 
   /**
    * Get feature as geojson for display on map.
    */
-  static getGeoJsonFeature(value: Cartographic) {
+  static getGeoJsonFeature(value: CartographicPoint): Feature<Point> {
     var coordinates = [
       CesiumMath.toDegrees(value.longitude),
       CesiumMath.toDegrees(value.latitude),
@@ -24,7 +32,8 @@ export default class PointParameter extends FunctionParameter {
       geometry: {
         type: "Point",
         coordinates: coordinates
-      }
+      },
+      properties: {}
     };
   }
 

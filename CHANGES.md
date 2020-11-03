@@ -3,7 +3,12 @@ Change Log
 
 ### MobX Development
 
-#### next release
+#### next release (8.0.0-alpha.61)
+* New `CatalogFunctionMixin` and `CatalogFunctionJobMixin`
+* Tsified `FunctionParameters`
+* New `YourDataYourRegions` `CatalogFunctionMixin`
+* Added `inWorkbench` property
+* Added `addModelToTerria` flag to `upsertModelFromJson` function
 
 #### 8.0.0-alpha.60
 * Fix WMS legend for default styles.
