@@ -5,7 +5,6 @@ import Terria from "../../../lib/Models/Terria";
 import CatalogGroup from "../../../lib/Models/CatalogGroupNew";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import Breadcrumbs from "../../../lib/ReactViews/Search/Breadcrumbs";
-import { BrowserRouter as Router } from "react-router-dom";
 const DataCatalogTab: any = require("../../../lib/ReactViews/ExplorerWindow/Tabs/DataCatalogTab")
   .default;
 import Icon from "../../../lib/ReactViews/Icon";
@@ -42,9 +41,7 @@ describe("Breadcrumbs", function() {
       act(() => {
         testRenderer = create(
           <ThemeProvider theme={terriaTheme}>
-            <Router>
-              <DataCatalogTab terria={terria} viewState={viewState} />
-            </Router>
+            <DataCatalogTab terria={terria} viewState={viewState} />
           </ThemeProvider>
         );
       });
@@ -68,9 +65,7 @@ describe("Breadcrumbs", function() {
       act(() => {
         testRenderer = create(
           <ThemeProvider theme={terriaTheme}>
-            <Router>
-              <DataCatalogTab terria={terria} viewState={viewState} />
-            </Router>
+            <DataCatalogTab terria={terria} viewState={viewState} />
           </ThemeProvider>
         );
       });

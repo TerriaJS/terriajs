@@ -1,8 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
-
 import { BoxSpan } from "./Box";
 import { TextSpan } from "./Text";
 
@@ -10,15 +8,12 @@ const Icon = styled.span`
   margin-right: 8px;
 `;
 const StyledButton = styled.button`
-  display: grid;
-
   pointer-events: auto;
   cursor: pointer;
   min-height: 40px;
   ${props => props.shortMinHeight && `min-height: 34px;`}
   // min-width: 75px;
   padding: 0 16px;
-  box-sizing: border-box;
 
   border: 1px solid #e4e5e7;
   border-radius: 4px;
@@ -100,10 +95,6 @@ const StyledButton = styled.button`
   `}
 `;
 
-const StyledButtonAsLink = styled(StyledButton).attrs({ as: Link })`
-  text-decoration: none;
-`;
-
 /**
  * Use for things you need as clickable things & not necessary the design
  * language styled button
@@ -136,7 +127,7 @@ export const RawButton = styled.button`
 `;
 
 // Icon and props-children-mandatory-text-wrapping is a mess here so it's all very WIP
-export const ButtonRaw = (props, ref) => {
+export const Button = (props, ref) => {
   const {
     primary,
     secondary,
@@ -144,19 +135,17 @@ export const ButtonRaw = (props, ref) => {
     iconProps,
     textProps,
     buttonRef,
-    renderAsLink,
     ...rest
   } = props;
-  const ButtonComponent = renderAsLink ? StyledButtonAsLink : StyledButton;
   return (
-    <ButtonComponent
+    <StyledButton
       ref={buttonRef}
       primary={primary}
       secondary={secondary}
       warning={warning}
       {...rest}
     >
-      <BoxSpan centered marginAuto>
+      <BoxSpan centered>
         {props.renderIcon && typeof props.renderIcon === "function" && (
           <Icon css={iconProps && iconProps.css} {...iconProps}>
             {props.renderIcon()}
@@ -174,24 +163,21 @@ export const ButtonRaw = (props, ref) => {
           </TextSpan>
         )}
       </BoxSpan>
-    </ButtonComponent>
+    </StyledButton>
   );
 };
 
-ButtonRaw.propTypes = {
+Button.propTypes = {
   renderIcon: PropTypes.func,
   iconProps: PropTypes.object,
   textProps: PropTypes.object,
   primary: PropTypes.bool,
   secondary: PropTypes.bool,
   warning: PropTypes.bool,
-  renderAsLink: PropTypes.bool,
   children: PropTypes.node,
   buttonRef: PropTypes.object
 };
 
-const ButtonWithRef = (props, ref) => <ButtonRaw {...props} buttonRef={ref} />;
+const ButtonWithRef = (props, ref) => <Button {...props} buttonRef={ref} />;
 
-export const Button = React.forwardRef(ButtonWithRef);
-
-export default Button;
+export default React.forwardRef(ButtonWithRef);
