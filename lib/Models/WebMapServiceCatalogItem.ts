@@ -1231,6 +1231,10 @@ class WebMapServiceCatalogItem
 
   @computed
   get selectableDimensions() {
+    if (this.disableDimensionSelectors) {
+      return [];
+    }
+
     return filterOutUndefined([
       ...this.wmsDimensionSelectableDimensions,
       ...this.styleSelectableDimensions
