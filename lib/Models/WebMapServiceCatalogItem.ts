@@ -143,6 +143,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
       let legendUri: uri.URI | undefined;
       let legendUrlMimeType: string | undefined;
+      let legendScaling: number | undefined;
 
       // Attempt to find layer style based on AvailableStyleTraits
       const layerStyle =
@@ -186,8 +187,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
         if (this.catalogItem.isGeoServer) {
           let legendOptions =
             "fontSize:14;forceLabels:on;fontAntiAliasing:true";
-          legendOptions += ";fontColor:0xDDDDDD"; // enable if we can ensure a dark background
-          //legendOptions += ";dpi:182"; // enable if we can scale the image back down by 50%.
+          legendOptions += ";fontColor:0xffffff"; // enable if we can ensure a dark background
+          legendOptions += ";dpi:182"; // enable if we can scale the image back down by 50%.
+          legendScaling = 0.5;
           legendUri.setQuery("LEGEND_OPTIONS", legendOptions);
         }
         if (
@@ -202,7 +204,8 @@ class GetCapabilitiesStratum extends LoadableStratum(
         result.push(
           createStratumInstance(LegendTraits, {
             url: legendUri.toString(),
-            urlMimeType: legendUrlMimeType
+            urlMimeType: legendUrlMimeType,
+            scaling: legendScaling
           })
         );
       }

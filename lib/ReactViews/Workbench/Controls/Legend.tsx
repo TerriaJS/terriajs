@@ -9,8 +9,14 @@ import Resource from "terriajs-cesium/Source/Core/Resource";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import proxyCatalogItemUrl from "../../../Models/proxyCatalogItemUrl";
-import Loader from "../../Loader";
+import LegendTraits, { LegendItemTraits } from "../../../Traits/LegendTraits";
 import Styles from "./legend.scss";
+import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
+import Mappable from "../../../Models/Mappable";
+import AsyncMappableMixin from "../../../ModelMixins/AsyncMappableMixin";
+import Model from "../../../Models/Model";
+
+const Loader = require("../../Loader");
 
 /* A lookup map for displayable mime types */
 const DISPLAYABLE_MIME_TYPES = [
@@ -20,113 +26,119 @@ const DISPLAYABLE_MIME_TYPES = [
   "image/svg+xml",
   "image/bmp",
   "image/x-bmp"
-].reduce(function(acc, mimeType) {
+].reduce<{ [key: string]: boolean }>((acc, mimeType) => {
   acc[mimeType] = true;
   return acc;
 }, {});
 const IMAGE_URL_REGEX = /[.\/](png|jpg|jpeg|gif|svg)/i;
 
-function checkMimeType(legendUrl) {
-  if (legendUrl.urlMimeType) {
-    return !!DISPLAYABLE_MIME_TYPES[legendUrl.urlMimeType];
+function checkMimeType(legend: Model<LegendTraits>) {
+  if (legend.urlMimeType) {
+    return !!DISPLAYABLE_MIME_TYPES[legend.urlMimeType];
   }
 
-  return !!legendUrl.url.match(IMAGE_URL_REGEX);
+  return !!legend.url?.match(IMAGE_URL_REGEX);
 }
 
-const Legend = createReactClass({
-  displayName: "Legend",
+@observer
+export default class Legend extends React.Component<{
+  item: CatalogMemberMixin.CatalogMemberMixin;
+  forPrint?: boolean;
+}> {
+  static defaultProps = {
+    forPrint: false
+  };
 
-  propTypes: {
-    item: PropTypes.object,
-    forPrint: PropTypes.bool
-  },
-
-  getDefaultProps() {
-    return {
-      forPrint: false
-    };
-  },
-
-  renderLegend(legend, i) {
+  renderLegend(legend: Model<LegendTraits>, i: number) {
     if (defined(legend.url)) {
       return this.renderImageLegend(legend, i);
     } else if (defined(legend.items)) {
       return this.renderGeneratedLegend(legend, i);
-    } else {
-      return null;
     }
-  },
+    return null;
+  }
 
-  renderImageLegend(legend, i) {
+  renderImageLegend(legend: Model<LegendTraits>, i: number) {
     const isImage = checkMimeType(legend);
-    const insertDirectly = !!legend.safeSvgContent; // we only insert content we generated ourselves, not arbitrary SVG from init files.
+    // const insertDirectly = !!legend.safeSvgContent; // we only insert content we generated ourselves, not arbitrary SVG from init files.
 
-    const svg = legend.safeSvgContent;
-    // Safari xlink NS issue fix
-    const processedSvg = svg ? svg.replace(/NS\d+:href/gi, "xlink:href") : null;
-    const safeSvgContent = { __html: processedSvg };
+    // const svg = legend.safeSvgContent;
+    // // Safari xlink NS issue fix
+    // const processedSvg = svg ? svg.replace(/NS\d+:href/gi, "xlink:href") : null;
+    // const safeSvgContent = { __html: processedSvg };
 
-    // We proxy the legend so it's cached, and so that the Print/Export feature works with non-CORS servers.
-    // We make it absolute because the print view is opened on a different domain (about:blank) so relative
-    // URLs will not work.
-    const proxiedUrl = makeAbsolute(
-      proxyCatalogItemUrl(this.props.item, legend.url)
-    );
+    /* We proxy the legend so it's cached, and so that the Print/Export feature works with non-CORS servers.
+     * We make it absolute because the print view is opened on a different domain (about:blank) so relative
+     * URLs will not work.
+     */
+    const proxiedUrl = isDefined(legend.url)
+      ? makeAbsolute(proxyCatalogItemUrl(this.props.item, legend.url))
+      : undefined;
+
+    // padding-top: 8px;
+    // padding-bottom: 8px;
+
+    // if (isImage && insertDirectly) {
+    //   return (<li
+    //     key={i}
+    //     className={Styles.legendSvg}
+    //     dangerouslySetInnerHTML={safeSvgContent}
+    //   />)
+    // }
+
+    if (!isDefined(proxiedUrl)) return null;
+
+    if (isImage) {
+      return (
+        <li key={proxiedUrl}>
+          <a
+            href={proxiedUrl}
+            className={Styles.imageAnchor}
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            <object
+              data={proxiedUrl}
+              type={legend.urlMimeType}
+              style={{
+                maxWidth: "100%",
+                width: legend.scaling ? `${legend.scaling * 100}%` : undefined
+              }}
+            />
+          </a>
+        </li>
+      );
+    }
 
     return (
-      <Choose>
-        <When condition={isImage && insertDirectly}>
-          <li
-            key={i}
-            className={Styles.legendSvg}
-            dangerouslySetInnerHTML={safeSvgContent}
-          />
-        </When>
-        <When condition={isImage}>
-          <li key={proxiedUrl}>
-            <a
-              href={proxiedUrl}
-              className={Styles.imageAnchor}
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              <object
-                data={proxiedUrl}
-                type={legend.urlMimeType}
-                style={{ "max-width": "100%" }}
-              />
-            </a>
-          </li>
-        </When>
-        <Otherwise>
-          <li key={proxiedUrl}>
-            <a
-              href={proxiedUrl}
-              target="_blank"
-              rel="noreferrer noopener"
-              className={Styles.legendOpenExternally}
-            >
-              Open legend in a separate tab
-            </a>
-          </li>
-        </Otherwise>
-      </Choose>
-    );
-  },
-
-  renderGeneratedLegend(legend, i) {
-    return (
-      <li key={i} className={Styles.generatedLegend}>
-        <table>
-          <tbody>{legend.items.map(this.renderLegendItem)}</tbody>
-        </table>
+      <li key={proxiedUrl}>
+        <a
+          href={proxiedUrl}
+          target="_blank"
+          rel="noreferrer noopener"
+          className={Styles.legendOpenExternally}
+        >
+          Open legend in a separate tab
+        </a>
       </li>
     );
-  },
+  }
 
-  renderLegendItem(legendItem, i) {
-    let boxStyle = {
+  renderGeneratedLegend(legend: Model<LegendTraits>, i: number) {
+    if (isDefined(legend.items) && legend.items.length > 0) {
+      return (
+        <li key={i} className={Styles.generatedLegend}>
+          <table>
+            <tbody>{legend.items.map(this.renderLegendItem.bind(this))}</tbody>
+          </table>
+        </li>
+      );
+    }
+    return null;
+  }
+
+  renderLegendItem(legendItem: Model<LegendItemTraits>, i: number) {
+    let boxStyle: any = {
       border: legendItem.addSpacingAbove ? "1px solid black" : undefined
     };
     if (legendItem.outlineColor) {
@@ -213,36 +225,47 @@ const Legend = createReactClass({
         </tr>
       </React.Fragment>
     );
-  },
+  }
 
   render() {
     if (this.props.item.hideLegendInWorkbench) return null;
 
-    return (
-      <ul className={Styles.legend}>
-        <div className={Styles.legendInner}>
-          <Choose>
-            <When condition={this.props.item.isLoadingMapItems}>
-              <li className={Styles.loader}>
-                <Loader message={this.props.item.loadingMessage} />
-              </li>
-            </When>
-            <Otherwise>
-              <For each="legend" index="i" of={this.props.item.legends || []}>
-                <If condition={isDefined(legend.title)}>
-                  <h3 className={Styles.legendTitle}>{legend.title}</h3>
-                </If>
-                {this.renderLegend(legend, i)}
-              </For>
-            </Otherwise>
-          </Choose>
-        </div>
-      </ul>
-    );
-  }
-});
+    if (
+      AsyncMappableMixin.isMixedInto(this.props.item) &&
+      this.props.item.isLoadingMapItems
+    ) {
+      return (
+        <li className={Styles.loader}>
+          <Loader />
+        </li>
+      );
+    }
 
-function makeAbsolute(url) {
+    if (
+      isDefined(this.props.item.legends) &&
+      this.props.item.legends.length > 0
+    )
+      return (
+        <ul className={Styles.legend}>
+          <div className={Styles.legendInner}>
+            {this.props.item.legends.map((legend, i) => (
+              <React.Fragment key={i}>
+                {isDefined(legend.title) ? (
+                  <h3 className={Styles.legendTitle}>{legend.title}</h3>
+                ) : null}
+
+                {this.renderLegend.bind(this)(legend, i)}
+              </React.Fragment>
+            ))}
+          </div>
+        </ul>
+      );
+
+    return null;
+  }
+}
+
+function makeAbsolute(url: string | Resource) {
   if (url instanceof Resource) {
     url = url.url;
   }
@@ -258,5 +281,3 @@ function makeAbsolute(url) {
     return uri.absoluteTo(window.location.href).toString();
   }
 }
-
-export default observer(Legend);

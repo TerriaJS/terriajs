@@ -2,6 +2,7 @@ import { JsonObject } from "../Core/Json";
 import anyTrait from "./anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import DiffableTraits from "./DiffableTraits";
+import ExportableTraits from "./ExportableTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
@@ -11,13 +12,12 @@ import mixTraits from "./mixTraits";
 import ModelTraits from "./ModelTraits";
 import objectArrayTrait from "./objectArrayTrait";
 import objectTrait from "./objectTrait";
+import primitiveArrayTrait from "./primitiveArrayTrait";
 import primitiveTrait from "./primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
 import SplitterTraits from "./SplitterTraits";
 import TimeFilterTraits from "./TimeFilterTraits";
-import primitiveArrayTrait from "./primitiveArrayTrait";
 import UrlTraits from "./UrlTraits";
-import ExportableTraits from "./ExportableTraits";
 
 export class WebMapServiceAvailableStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -184,14 +184,6 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
     idProperty: "layerName"
   })
   availableDimensions?: WebMapServiceAvailableLayerDimensionsTraits[];
-
-  @objectArrayTrait({
-    name: "Legend URLs",
-    description: "The legends to display on the workbench.",
-    type: LegendTraits,
-    idProperty: "index"
-  })
-  legends?: LegendTraits[];
 
   @anyTrait({
     name: "Parameters",
