@@ -1,30 +1,24 @@
 "use strict";
+import createReactClass from "create-react-class";
+import { runInAction } from "mobx";
+import { observer } from "mobx-react";
+import PropTypes from "prop-types";
 import React from "react";
-import { withRouter } from "react-router-dom";
 import { Helmet } from "react-helmet";
-
+import { withTranslation } from "react-i18next";
+import { withRouter } from "react-router-dom";
+import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
+import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
+import { ROOT_ROUTE } from "../../ReactViewModels/TerriaRouting";
+import Box from "../../Styled/Box";
+import Button from "../../Styled/Button";
+import InvokeFunction from "../Analytics/InvokeFunction";
+import Loader from "../Loader";
+import Styles from "./data-preview.scss";
 // import Chart from "../Custom/Chart/Chart";
 import Description, { getMetaDescriptionSummary } from "./Description";
 import GroupPreview from "./GroupPreview";
-import InvokeFunction from "../Analytics/InvokeFunction";
 import MappablePreview from "./MappablePreview";
-import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
-import Styles from "./data-preview.scss";
-
-import { withTranslation } from "react-i18next";
-import { observer } from "mobx-react";
-import { runInAction } from "mobx";
-import PropTypes from "prop-types";
-import React from "react";
-import { Trans, withTranslation } from "react-i18next";
-import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
-import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
-import InvokeFunction from "../Analytics/InvokeFunction";
-import Loader from "../Loader";
-import Box from "../../Styled/Box";
-import Button from "../../Styled/Button";
-import { ROOT_ROUTE } from "../../ReactViewModels/TerriaRouting";
 
 const prerenderEnd = () => {
   if (document && document.dispatchEvent) {
