@@ -52,7 +52,7 @@ rm package-lock.json # because TerriaMap's package-lock.json won't reflect terri
 npm install
 npm install moment@2.24.0
 # add branch name, taking "baseHref": "/", and replacing with safe branch name
-sed -i '' "s|\"baseHref\": \"\/\"|\"baseHref\": \"\/$SAFE_BRANCH_NAME\/\"|g" devserverconfig.json
+sed -i "s|\"baseHref\": \"\/\"|\"baseHref\": \"\/$SAFE_BRANCH_NAME\/\"|g" devserverconfig.json
 npm run gulp build
 
 npm run "--terriajs-map:docker_name=terriajs-ci" docker-build-ci -- --tag "asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME"
