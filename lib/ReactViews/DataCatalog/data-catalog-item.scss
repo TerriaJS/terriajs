@@ -10,6 +10,8 @@
 }
 
 .btn-catalog-item {
+  display: block;
+  // color: $text-black;
   font-size: $font-size-small;
   composes: btn from "../../Sass/common/_buttons.scss";
   @extend %wrap;

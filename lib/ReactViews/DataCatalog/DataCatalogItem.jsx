@@ -5,10 +5,13 @@ import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
-import addedByUser from "../../Core/addedByUser";
+// import addedByUser from "../../Core/addedByUser";
 import getPath from "../../Core/getPath";
 import addToWorkbench from "../../Models/addToWorkbench";
 import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
+import { withRouter } from "react-router-dom";
+import URI from "urijs";
+// import addedByUser from "../../Core/addedByUser";
 import removeUserAddedData from "../../Models/removeUserAddedData";
 import CatalogItem from "./CatalogItem";
 
@@ -18,6 +21,7 @@ export const DataCatalogItem = observer(
     displayName: "DataCatalogItem",
 
     propTypes: {
+      match: PropTypes.object.isRequired,
       item: PropTypes.object.isRequired,
       viewState: PropTypes.object.isRequired,
       overrideState: PropTypes.string,
@@ -104,9 +108,13 @@ export const DataCatalogItem = observer(
     },
 
     isSelected() {
-      return addedByUser(this.props.item)
-        ? this.props.viewState.userDataPreviewedItem === this.props.item
-        : this.props.viewState.previewedItem === this.props.item;
+      return (
+        this.props.item.uniqueId ===
+        URI.decode(this.props.match.params.catalogMemberId)
+      );
+      // return addedByUser(this.props.item)
+      //   ? this.props.viewState.userDataPreviewedItem === this.props.item
+      //   : this.props.viewState.previewedItem === this.props.item;
     },
 
     render() {
@@ -120,6 +128,7 @@ export const DataCatalogItem = observer(
       };
       return (
         <CatalogItem
+          linkTo={URI.encode(item.uniqueId)}
           onTextClick={this.setPreviewedItem}
           selected={this.isSelected()}
           text={item.nameInCatalog}
@@ -160,4 +169,4 @@ export const DataCatalogItem = observer(
   })
 );
 
-export default withTranslation()(DataCatalogItem);
+export default withRouter(withTranslation()(DataCatalogItem));
