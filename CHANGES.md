@@ -9,6 +9,8 @@ Change Log
 * New `YourDataYourRegions` `CatalogFunctionMixin`
 * Added `inWorkbench` property
 * Added `addModelToTerria` flag to `upsertModelFromJson` function
+* Remove legend broken image icon
+* [The next improvement]
 
 #### 8.0.0-alpha.60
 * Fix WMS legend for default styles.
@@ -22,8 +24,6 @@ Change Log
 #### 8.0.0-alpha.59
 * Update magda error message
 * Add a short report section if trying to view a `3d-tiles` item in a 2d map.
-* Remove legend broken image icon
-* [The next improvement]
 * Fix bug in `Terria.interpretStartData`.
 * Add `ThreddsCatalogGroup` model.
 * Port `supportsColorScaleRange`, `colorScaleMinimum` and `colorScaleMaximimum` from `master` to `WebMapServiceCatalogItem` model.
