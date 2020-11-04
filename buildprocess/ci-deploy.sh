@@ -41,7 +41,7 @@ npm install request@^2.83.0
 
 # Clone and build TerriaMap, using this version of TerriaJS
 TERRIAJS_COMMIT_HASH=$(git rev-parse HEAD)
-git clone -b next https://github.com/TerriaJS/TerriaMap.git
+git clone -b 1757-mobx-tm-new-routing-ci https://github.com/TerriaJS/TerriaMap.git
 cd TerriaMap
 TERRIAMAP_COMMIT_HASH=$(git rev-parse HEAD)
 sed -i -e 's@"terriajs": ".*"@"terriajs": "'$TRAVIS_REPO_SLUG'#'$TRAVIS_BRANCH'"@g' package.json
@@ -51,11 +51,22 @@ git tag -a "TerriaMap-$TERRIAMAP_COMMIT_HASH--TerriaJS-$TERRIAJS_COMMIT_HASH" -m
 rm package-lock.json # because TerriaMap's package-lock.json won't reflect terriajs dependencies
 npm install
 npm install moment@2.24.0
+# add branch name, taking "baseHref": "/", and replacing with safe branch name
+sed -i '' "s|\"baseHref\": \"\/\"|\"baseHref\": \"\/$SAFE_BRANCH_NAME\/\"|g" devserverconfig.json
 npm run gulp build
 
 npm run "--terriajs-map:docker_name=terriajs-ci" docker-build-ci -- --tag "asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME"
 gcloud docker -- push "asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME"
-helm upgrade --install --recreate-pods -f ../buildprocess/ci-values.yml --set global.exposeNodePorts=true --set "terriamap.image.full=asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME" --set "terriamap.serverConfig.shareUrlPrefixes.s.accessKeyId=$SHARE_S3_ACCESS_KEY_ID" --set "terriamap.serverConfig.shareUrlPrefixes.s.secretAccessKey=$SHARE_S3_SECRET_ACCESS_KEY" --set "terriamap.serverConfig.feedback.accessToken=$FEEDBACK_GITHUB_TOKEN" "terriajs-$SAFE_BRANCH_NAME" deploy/helm/terria
+helm upgrade --install --recreate-pods -f ../buildprocess/ci-values.yml \
+  --set global.exposeNodePorts=true \
+  --set "terriamap.image.full=asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME" \
+  --set "terriamap.serverConfig.baseHref=/$SAFE_BRANCH_NAME/" \
+  --set "terriamap.serverConfig.shareUrlPrefixes.s.accessKeyId=$SHARE_S3_ACCESS_KEY_ID" \
+  --set "terriamap.serverConfig.shareUrlPrefixes.s.accessKeyId=$SHARE_S3_ACCESS_KEY_ID" \
+  --set "terriamap.serverConfig.shareUrlPrefixes.s.secretAccessKey=$SHARE_S3_SECRET_ACCESS_KEY" \
+  --set "terriamap.serverConfig.feedback.accessToken=$FEEDBACK_GITHUB_TOKEN" \
+  "terriajs-$SAFE_BRANCH_NAME" \
+  deploy/helm/terria
 
 cd ..
 node buildprocess/ci-cleanup.js
