@@ -133,7 +133,7 @@
     "style-loader": "^0.23.1",
     "styled-components": "^5.1.0",
     "svg-sprite-loader": "4.1.3",
-    "terriajs-cesium": "github:TerriaJS/cesium#1.74.1-outlines",
+    "terriajs-cesium": "1.73.1-outlines",
     "terriajs-html2canvas": "1.0.0-alpha.12-terriajs-1",
     "thredds-catalog-crawler": "0.0.5",
     "ts-loader": "^5.3.3",
