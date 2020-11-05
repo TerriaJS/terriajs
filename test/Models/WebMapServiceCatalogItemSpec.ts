@@ -243,9 +243,14 @@ describe("WebMapServiceCatalogItem", function() {
       .loadMetadata()
       .then(function() {
         expect(wmsItem.legends.length).toBe(1);
-        expect(wmsItem.legends[0].url).toBe(
-          "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&layer=A&transparent=true&LEGEND_OPTIONS=fontName%3ACourier%3BfontSize%3A12%3BforceLabels%3Aon%3BfontAntiAliasing%3Atrue%3BlabelMargin%3A5%3BfontColor%3A0xffffff%3Bdpi%3A182"
-        );
+
+        // Match for fontColour = 0xffffff || 0xfff
+        expect(
+          wmsItem.legends[0].url ===
+            "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&layer=A&transparent=true&LEGEND_OPTIONS=fontName%3ACourier%3BfontSize%3A12%3BforceLabels%3Aon%3BfontAntiAliasing%3Atrue%3BlabelMargin%3A5%3BfontColor%3A0xffffff%3Bdpi%3A182" ||
+            wmsItem.legends[0].url ===
+              "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&layer=A&transparent=true&LEGEND_OPTIONS=fontName%3ACourier%3BfontSize%3A12%3BforceLabels%3Aon%3BfontAntiAliasing%3Atrue%3BlabelMargin%3A5%3BfontColor%3A0xfff%3Bdpi%3A182"
+        ).toBeTruthy();
       })
       .then(done)
       .catch(done.fail);
