@@ -235,7 +235,7 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   @primitiveTrait({
     type: "boolean",
     name: "Disable dimension selectors",
-    description: "Disables the dimension selectors when true"
+    description: "When true, disables the dimension selectors in the workbench."
   })
   disableDimensionSelectors = false;
 
