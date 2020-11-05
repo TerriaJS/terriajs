@@ -10,6 +10,10 @@ Change Log
 * Added `inWorkbench` property
 * Added `addModelToTerria` flag to `upsertModelFromJson` function
 * Remove legend broken image icon
+* Added high-DPI legends for geoserver WMS (+ font size, label margin and a few other tweaks)
+* `LegendTraits` is now part of `CatalogMemberTraits`
+* Addd `imageScaling` to `LegendTraits`
+* WMS now `isGeoserver` if "geoserver` is in the URL
 * [The next improvement]
 
 #### 8.0.0-alpha.60
