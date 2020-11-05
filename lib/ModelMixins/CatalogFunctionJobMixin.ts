@@ -15,7 +15,6 @@ import GroupMixin from "./GroupMixin";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import TerriaError from "../Core/TerriaError";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
-import addToWorkbench from "../Models/addToWorkbench";
 
 class FunctionJobStratum extends LoadableStratum(CatalogFunctionJobTraits) {
   constructor(
@@ -214,8 +213,7 @@ function CatalogFunctionJobMixin<
         this.results.forEach(result => {
           if (Mappable.is(result))
             result.setTrait(CommonStrata.user, "show", true);
-          if (addResultsToWorkbench)
-            addToWorkbench(this.terria.workbench, result);
+          if (addResultsToWorkbench) this.terria.workbench.add(result);
 
           this.terria.addModel(result);
         });
