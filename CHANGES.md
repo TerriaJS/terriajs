@@ -9,6 +9,9 @@ Change Log
 * New `YourDataYourRegions` `CatalogFunctionMixin`
 * Added `inWorkbench` property
 * Added `addModelToTerria` flag to `upsertModelFromJson` function
+* Added `DataCustodianTraits` to `WebMapServiceCatalogItem`
+* Added `disableDimensionSelectors` trait to `WebMapServiceCatalogItem`. Acheives the same effect of `disableUserChanges` in v7.
+* Temporarily stopped using `papaparse` for fetching Csv urls till an upstream bug is fixed.
 
 #### 8.0.0-alpha.60
 * Fix WMS legend for default styles.
