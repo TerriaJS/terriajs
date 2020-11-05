@@ -216,7 +216,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
           createStratumInstance(LegendTraits, {
             url: legendUri.toString(),
             urlMimeType: legendUrlMimeType,
-            scaling: legendScaling
+            imageScaling: legendScaling
           })
         );
       }

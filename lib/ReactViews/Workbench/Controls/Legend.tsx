@@ -56,10 +56,10 @@ export default class Legend extends React.Component<{
     evt: SyntheticEvent<HTMLObjectElement>,
     legend: Model<LegendTraits>
   ) {
-    if (!isDefined(legend.scaling) || legend.scaling === 1) return;
+    if (!isDefined(legend.imageScaling) || legend.imageScaling === 1) return;
     const image = evt.target as HTMLObjectElement;
 
-    image.style.width = `${legend.scaling * image.offsetWidth}px`;
+    image.style.width = `${legend.imageScaling * image.offsetWidth}px`;
     // Must set maxWidth *after* setting width, as it may change offsetWidth
     image.style.maxWidth = "100%";
   }
