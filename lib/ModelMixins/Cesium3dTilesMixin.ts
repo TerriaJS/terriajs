@@ -304,14 +304,24 @@ export default function Cesium3dTilesMixin<
       }
     }
 
+  
     @computed get cesiumTileStyle() {
       if (
         !isDefined(this.style) &&
+        (!isDefined(this.opacity) || this.opacity === 1) &&
         !isDefined(this.showExpressionFromFilters)
       ) {
         return;
       }
-      const style = clone(toJS(this.style) || {});
+
+      let style = clone(toJS(this.style) || {});
+      let opacity = clone(toJS(this.opacity) || 1.0);
+
+      if (opacity <= 1) {
+        const _color = `color('${style.color || "#FFFFFF"}', ${this.opacity})`;
+        style = Object.assign(style, { color: _color });
+      }
+
       if (isDefined(this.showExpressionFromFilters)) {
         style.show = toJS(this.showExpressionFromFilters);
       }

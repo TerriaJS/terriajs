@@ -8,6 +8,7 @@ import React from "react";
 import CommonStrata from "../../../Models/CommonStrata";
 import hasTraits from "../../../Models/hasTraits";
 import RasterLayerTraits from "../../../Traits/RasterLayerTraits";
+import OpacityTrait from "../../../Traits/OpacityTrait";
 import Styles from "./opacity-section.scss";
 import { withTranslation } from "react-i18next";
 import { runInAction } from "mobx";
@@ -23,7 +24,7 @@ const OpacitySection = observer(
 
     changeOpacity(value) {
       const item = this.props.item;
-      if (hasTraits(item, RasterLayerTraits, "opacity")) {
+      if (hasTraits(item, RasterLayerTraits, "opacity") || hasTraits(item, OpacityTrait, "opacity"))  {
         runInAction(() => {
           item.setTrait(CommonStrata.user, "opacity", value / 100.0);
         });
@@ -34,8 +35,8 @@ const OpacitySection = observer(
       const item = this.props.item;
       const { t } = this.props;
       if (
-        !hasTraits(item, RasterLayerTraits, "opacity") ||
-        item.disableOpacityControl
+         (!hasTraits(item, RasterLayerTraits, "opacity") && !hasTraits(item, OpacityTrait, "opacity")) ||
+         item.disableOpacityControl
       ) {
         return null;
       }
