@@ -3,7 +3,7 @@
 import createReactClass from "create-react-class";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
-import React from "react";
+import React, { SyntheticEvent } from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import URI from "urijs";
@@ -48,6 +48,21 @@ export default class Legend extends React.Component<{
   static defaultProps = {
     forPrint: false
   };
+
+  // If we legends need scaling, this is the only way to do it :/
+  // See https://stackoverflow.com/questions/7699621/display-image-at-50-of-its-native-size
+  // or https://stackoverflow.com/questions/35711807/display-high-dpi-image-at-50-scaling-using-just-css
+  resizeLegendImage(
+    evt: SyntheticEvent<HTMLObjectElement>,
+    legend: Model<LegendTraits>
+  ) {
+    if (!isDefined(legend.scaling) || legend.scaling === 1) return;
+    const image = evt.target as HTMLObjectElement;
+
+    image.style.width = `${legend.scaling * image.offsetWidth}px`;
+    // Must set maxWidth *after* setting width, as it may change offsetWidth
+    image.style.maxWidth = "100%";
+  }
 
   renderLegend(legend: Model<LegendTraits>, i: number) {
     if (defined(legend.url)) {
@@ -100,10 +115,7 @@ export default class Legend extends React.Component<{
             <object
               data={proxiedUrl}
               type={legend.urlMimeType}
-              style={{
-                maxWidth: "100%",
-                width: legend.scaling ? `${legend.scaling * 100}%` : undefined
-              }}
+              onLoad={evt => this.resizeLegendImage.bind(this, evt, legend)()}
             />
           </a>
         </li>

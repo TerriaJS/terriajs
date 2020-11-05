@@ -244,7 +244,7 @@ describe("WebMapServiceCatalogItem", function() {
       .then(function() {
         expect(wmsItem.legends.length).toBe(1);
         expect(wmsItem.legends[0].url).toBe(
-          "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&layer=A&transparent=true&LEGEND_OPTIONS=fontSize%3A14%3BforceLabels%3Aon%3BfontAntiAliasing%3Atrue%3BfontColor%3A0xDDDDDD"
+          "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&layer=A&transparent=true&LEGEND_OPTIONS=fontName%3ACourier%3BfontSize%3A12%3BforceLabels%3Aon%3BfontAntiAliasing%3Atrue%3BlabelMargin%3A5%3BfontColor%3A0xffffff%3Bdpi%3A182"
         );
       })
       .then(done)

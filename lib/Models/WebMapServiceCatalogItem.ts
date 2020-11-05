@@ -61,6 +61,7 @@ import WebMapServiceCapabilities, {
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
+import { terriaTheme } from "../ReactViews/StandardUserInterface/StandardTheme";
 
 const dateFormat = require("dateformat");
 
@@ -184,10 +185,20 @@ class GetCapabilitiesStratum extends LoadableStratum(
         legendUri.setQuery("transparent", "true");
 
         // Add geoserver related LEGEND_OPTIONS to match terria styling
+        // TODO: pull these values from legend style vars
         if (this.catalogItem.isGeoServer) {
           let legendOptions =
-            "fontSize:14;forceLabels:on;fontAntiAliasing:true";
-          legendOptions += ";fontColor:0xffffff"; // enable if we can ensure a dark background
+            "fontName:Courier;fontSize:12;forceLabels:on;fontAntiAliasing:true;labelMargin:5";
+
+          // Geoserver fontColor must be a hex value
+          // enable if we can ensure a dark background
+          const fontColor = terriaTheme.textLight.split("#")?.[1];
+          if (isDefined(fontColor)) {
+            legendOptions += `;fontColor:0x${
+              terriaTheme.textLight.split("#")[1]
+            }`;
+          }
+
           legendOptions += ";dpi:182"; // enable if we can scale the image back down by 50%.
           legendScaling = 0.5;
           legendUri.setQuery("LEGEND_OPTIONS", legendOptions);
@@ -524,24 +535,12 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
   @computed
   get isGeoServer(): boolean | undefined {
-    if (!this.capabilities) {
-      return undefined;
-    }
-
-    if (
-      !this.capabilities.Service ||
-      !this.capabilities.Service.KeywordList ||
-      !this.capabilities.Service.KeywordList.Keyword
-    ) {
-      return false;
-    }
-
-    const keyword = this.capabilities.Service.KeywordList.Keyword;
-    if (isReadOnlyArray(keyword)) {
-      return keyword.indexOf("GEOSERVER") >= 0;
-    } else {
-      return keyword === "GEOSERVER";
-    }
+    const keyword = this.capabilities?.Service?.KeywordList?.Keyword;
+    return (
+      (isReadOnlyArray(keyword) && keyword.indexOf("GEOSERVER") >= 0) ||
+      keyword === "GEOSERVER" ||
+      this.catalogItem.url?.toLowerCase().includes("geoserver")
+    );
   }
 
   // TODO - There is possibly a better way to do this
