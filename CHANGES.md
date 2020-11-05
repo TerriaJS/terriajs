@@ -3,13 +3,41 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.59)
+#### next release (8.0.0-alpha.61)
+* New `CatalogFunctionMixin` and `CatalogFunctionJobMixin`
+* Tsified `FunctionParameters`
+* New `YourDataYourRegions` `CatalogFunctionMixin`
+* Added `inWorkbench` property
+* Added `addModelToTerria` flag to `upsertModelFromJson` function
+* Added `DataCustodianTraits` to `WebMapServiceCatalogItem`
+* Added `disableDimensionSelectors` trait to `WebMapServiceCatalogItem`. Acheives the same effect of `disableUserChanges` in v7.
+* Temporarily stopped using `papaparse` for fetching Csv urls till an upstream bug is fixed.
+
+#### 8.0.0-alpha.60
+* Fix WMS legend for default styles.
+* Request transparent legend from GeoServer.
+* Reverted the following due to various issues with datasets:
+    * Add basic routing support
+    * Add better page titles when on various routes of the application
+    * Add prerendering support on `/catalog/` routes (via `prerender-end` event & 
+      allowing TerriaMap to hit certain routes)
+
+#### 8.0.0-alpha.59
 * Update magda error message
 * Add a short report section if trying to view a `3d-tiles` item in a 2d map.
 * Fix async bug with loading `ReferenceMixin` and then `Mappable` items in `initSources`
 * Remove `addToWorkbench`, it has been replaced with `workbench.add`
+* Fix bug in `Terria.interpretStartData`.
+* Add `ThreddsCatalogGroup` model.
+* Port `supportsColorScaleRange`, `colorScaleMinimum` and `colorScaleMaximimum` from `master` to `WebMapServiceCatalogItem` model.
 * Ported MapboxVectorTileCatalogItem ("mvt").
-* [The next improvement]
+* When expanding a chart from the feature info panel, we now place a colored dot on the map where the chart was generated from.
+* Add basic routing support
+* Add better page titles when on various routes of the application
+* Add prerendering support on `/catalog/` routes (via `prerender-end` event &
+  allowing TerriaMap to hit certain routes)
+* Update `WorkbenchButton` to allow for links rather than buttons, including
+  changing About Data to a link
 
 #### 8.0.0-alpha.58
 * Add `FeatureInfoTraits` to `ArcGisMapServerCatalogItem`

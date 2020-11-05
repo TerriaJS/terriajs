@@ -20,8 +20,8 @@ import CzmlCatalogItem from "./CzmlCatalogItem";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import GeoRssCatalogItem from "./GeoRssCatalogItem";
 import GltfCatalogItem from "./GltfCatalogItem";
-import GtfsCatalogItem from "./GtfsCatalogItem";
 import GpxCatalogItem from "./GpxCatalogItem";
+import GtfsCatalogItem from "./GtfsCatalogItem";
 import IonImageryCatalogItem from "./IonImageryCatalogItem";
 import KmlCatalogItem from "./KmlCatalogItem";
 import MagdaReference from "./MagdaReference";
@@ -32,6 +32,7 @@ import SenapsLocationsCatalogItem from "./SenapsLocationsCatalogItem";
 import SensorObservationServiceCatalogItem from "./SensorObservationServiceCatalogItem";
 import SplitItemReference from "./SplitItemReference";
 import StubCatalogItem from "./StubCatalogItem";
+import ThreddsCatalogGroup from "./ThreddsCatalogGroup";
 import UrlReference, { UrlToCatalogMemberMapping } from "./UrlReference";
 import WebFeatureServiceCatalogGroup from "./WebFeatureServiceCatalogGroup";
 import WebFeatureServiceCatalogItem from "./WebFeatureServiceCatalogItem";
@@ -41,7 +42,9 @@ import MapboxVectorTileCatalogItem from "./MapboxVectorTileCatalogItem";
 import WebMapTileServiceCatalogGroup from "./WebMapTileServiceCatalogGroup";
 import WebMapTileServiceCatalogItem from "./WebMapTileServiceCatalogItem";
 import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFunction";
-import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
+import WebProcessingServiceCatalogFunctionJob from "./WebProcessingServiceCatalogFunctionJob";
+import YDYRCatalogFunction from "./YDYRCatalogFunction";
+import YDYRCatalogFunctionJob from "./YDYRCatalogFunctionJob";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
@@ -133,6 +136,11 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CartoMapCatalogItem.type, CartoMapCatalogItem);
   CatalogMemberFactory.register(UrlReference.type, UrlReference);
   CatalogMemberFactory.register(SplitItemReference.type, SplitItemReference);
+  CatalogMemberFactory.register(YDYRCatalogFunction.type, YDYRCatalogFunction);
+  CatalogMemberFactory.register(
+    YDYRCatalogFunctionJob.type,
+    YDYRCatalogFunctionJob
+  );
   CatalogMemberFactory.register(
     SdmxJsonCatalogGroup.type,
     SdmxJsonCatalogGroup
@@ -151,8 +159,8 @@ export default function registerCatalogMembers() {
     SensorObservationServiceCatalogItem
   );
   CatalogMemberFactory.register(
-    WebProcessingServiceCatalogItem.type,
-    WebProcessingServiceCatalogItem
+    WebProcessingServiceCatalogFunctionJob.type,
+    WebProcessingServiceCatalogFunctionJob
   );
   CatalogMemberFactory.register(
     CompositeCatalogItem.type,
@@ -160,6 +168,7 @@ export default function registerCatalogMembers() {
   );
   CatalogMemberFactory.register(CkanCatalogGroup.type, CkanCatalogGroup);
   CatalogMemberFactory.register(CkanItemReference.type, CkanItemReference);
+  CatalogMemberFactory.register(ThreddsCatalogGroup.type, ThreddsCatalogGroup);
 
   UrlToCatalogMemberMapping.register(
     matchesExtension("csv"),

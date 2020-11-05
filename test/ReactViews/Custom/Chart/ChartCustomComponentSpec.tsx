@@ -11,6 +11,9 @@ import { DomElement } from "domhandler";
 import Chart from "../../../../lib/ReactViews/Custom/Chart/FeatureInfoPanelChart";
 import React, { ReactChild } from "react";
 import ChartExpandAndDownloadButtons from "../../../../lib/ReactViews/Custom/Chart/ChartExpandAndDownloadButtons";
+import Chartable from "../../../../lib/Models/Chartable";
+import CreateModel from "../../../../lib/Models/CreateModel";
+import UrlTraits from "../../../../lib/Traits/UrlTraits";
 
 const isComponentOfType: any = require("react-shallow-testutils")
   .isComponentOfType;
@@ -82,9 +85,7 @@ describe("ChartCustomComponent", function() {
   });
 });
 
-class TestChartCustomComponent extends ChartCustomComponent<
-  Model<CatalogMemberTraits>
-> {
+class TestChartCustomComponent extends ChartCustomComponent<Chartable> {
   get name(): string {
     return "test";
   }
@@ -94,14 +95,21 @@ class TestChartCustomComponent extends ChartCustomComponent<
     sourceReference:
       | import("../../../../lib/Models/Model").BaseModel
       | undefined
-  ): Model<CatalogMemberTraits> {
-    return new StubCatalogItem(id, context.terria, undefined);
+  ): TestCatalogItem {
+    return new TestCatalogItem(id, context.terria, undefined);
   }
   protected setTraitsFromAttrs(
-    item: Model<CatalogMemberTraits>,
+    item: TestCatalogItem,
     attrs: ChartCustomComponentAttributes,
     sourceIndex: number
   ): void {
     return;
+  }
+}
+
+class TestCatalogItem extends CreateModel(UrlTraits) implements Chartable {
+  async loadChartItems() {}
+  get chartItems() {
+    return [];
   }
 }
