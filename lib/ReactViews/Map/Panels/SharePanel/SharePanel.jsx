@@ -35,6 +35,10 @@ const Paragraph = props => (
   </>
 );
 
+Paragraph.propTypes = {
+  children: PropTypes.node.isRequired
+};
+
 const SharePanel = observer(
   createReactClass({
     displayName: "SharePanel",
