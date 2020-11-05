@@ -192,4 +192,37 @@ describe("WebMapServiceCatalogItem", function() {
       .then(done)
       .catch(done.fail);
   });
+
+  it("`selectableDimensions` is empty if `disableDimensionSelectors` is true", function(done) {
+    const terria = new Terria();
+    const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
+    runInAction(() => {
+      wmsItem.setTrait(CommonStrata.definition, "url", "http://example.com");
+      wmsItem.setTrait(
+        CommonStrata.definition,
+        "getCapabilitiesUrl",
+        "test/WMS/styles_and_dimensions.xml"
+      );
+      wmsItem.setTrait(CommonStrata.definition, "layers", "A,B");
+      wmsItem.setTrait(CommonStrata.definition, "dimensions", {
+        styles: "contour/ferret,shadefill/alg2",
+        custom: "Another thing",
+        elevation: "-0.59375"
+      });
+      wmsItem.setTrait(
+        CommonStrata.definition,
+        "styles",
+        "contour/ferret,shadefill/alg2"
+      );
+      wmsItem.setTrait(CommonStrata.user, "disableDimensionSelectors", true);
+    });
+
+    wmsItem
+      .loadMetadata()
+      .then(function() {
+        expect(wmsItem.selectableDimensions.length).toBe(0);
+      })
+      .then(done)
+      .catch(done.fail);
+  });
 });
