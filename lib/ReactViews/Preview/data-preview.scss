@@ -59,8 +59,7 @@
   composes: field from "../../Sass/common/_form.scss";
 }
 
-.h4,
-.subHeading {
+.h4 {
   composes: h4 from "../../Sass/common/_base.scss";
 
   font-size: $font-size-mid-small;

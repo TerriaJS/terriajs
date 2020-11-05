@@ -81,13 +81,7 @@ class Disclaimer extends React.Component {
       .useSmallScreenInterface;
     return disclaimer ? (
       <FadeIn isVisible={this.props.viewState.disclaimerVisible}>
-        <TopElementBox
-          className="TJS-Disclaimer"
-          positionAbsolute
-          fullWidth
-          fullHeight
-          centered
-        >
+        <TopElementBox positionAbsolute fullWidth fullHeight centered>
           <BackgroundImage
             // // Make the image slightly larger to deal with
             // // image shrinking a tad bit when blurred

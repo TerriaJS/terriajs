@@ -194,11 +194,11 @@
     "btnCatalogShareTitle": "Share your catalogue with others",
     "btnStoryShareTitle": "Share your story with others",
     "btnMapShareTitle": "Share your map with others",
-    "convertNotificationTitle": "Warning: share link upgraded",
+    "convertNotificationTitle": "Notice: share link upgraded",
     "convertNotificationMessage": "This share link is based on an older version of TerriaJS - the software powering this web map. While best efforts are made to preserve the link, you might encounter issues with visualising the data.  \n\nIf you're a user of the share link, click OK to make the warning message disappear and continue with accessing the data.",
     "convertNotificationHelp": "If you have created the share link, check the Help menu to see tips on updating the share link.",
     "convertNotificationFeedback": "For questions or feedback, click here.",
-    "convertNotificationWarningsTitle": "Warnings"
+    "convertNotificationWarningsTitle": "Technical details"
   },
   "countDatasets": {
     "btnText": "Start",
@@ -419,9 +419,7 @@
   },
   "preview": {
     "doesNotContainGeospatialData": "This file does not contain geospatial data.",
-    "selectToPreview": "Select a dataset to see a preview",
-    "or": "- OR -",
-    "goToTheMap": "Go to the map",
+    "selectToPreview": "<0>Select a dataset to see a preview </0><1>- OR -</1><2>Go to the map</2>",
     "loading": "PREVIEW LOADING...",
     "preview": "{{appName}} preview",
     "noPreviewAvailable": "NO PREVIEW AVAILABLE",
@@ -497,7 +495,10 @@
     "expandAll": "Expand All",
     "toggleVisibility": "Data show/hide",
     "addItemErrorTitle": "Catalog item could not be added to workbench.",
-    "addItemErrorMessage": "An error occurred while loading the catalog item."
+    "addItemErrorMessage": "An error occurred while loading the catalog item.",
+    "dimensionsSelector": {
+      "undefinedLabel": "Not specified"
+    }
   },
   "dateTime": {
     "back": "Go back",
@@ -1332,6 +1333,7 @@
       "accessConstraints": "Access Constraints",
       "serviceContact": "Service Contact",
       "getCapabilitiesUrl": "GetCapabilities URL",
+      "defaultStyleLabel": "Default style",
       "noLayerFoundTitle": "No layer found",
       "noLayerFoundMessage": "The WMS dataset '{{name}}' has no layers matching '{{layers}}'. {{suggested}} {{line}}{{line}}Either the catalog file has been set up incorrectly, or the WMS server has changed.{{line}}{{line}}Please report this error by sending an email to {{email}}.",
       "datasetScaleErrorTitle": "Dataset will not be shown at this scale",

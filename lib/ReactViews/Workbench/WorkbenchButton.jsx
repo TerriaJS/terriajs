@@ -1,15 +1,10 @@
-/**
- * this workbench button needs a bit of refactoring, heavily nested spans right
- * now with the advent of our "button or link" situation for making terria more
- * route friendly
- */
 "use strict";
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
 import Box from "../../Styled/Box";
-import Button from "../../Styled/Button";
+import { RawButton } from "../../Styled/Button";
 import Text from "../../Styled/Text";
 
 // only spans are valid html for buttons (even though divs work)
@@ -21,9 +16,7 @@ const ButtonWrapper = styled(Box).attrs({
   align-items: center;
 `;
 // styles half ripped from nav.scss
-const StyledWorkbenchButton = styled(Button)`
-  border: none;
-
+const StyledWorkbenchButton = styled(RawButton)`
   border-radius: 3px;
   background: ${props => props.theme.dark};
   color: ${props => props.theme.textLight};
@@ -31,8 +24,7 @@ const StyledWorkbenchButton = styled(Button)`
   flex-grow: 1;
   margin-right: 10px;
 
-  // height: 32px;
-  min-height:32px;
+  height: 32px;
   min-width: 32px;
 
   box-shadow: none;
@@ -94,30 +86,11 @@ WorkbenchButton.propTypes = {
   title: PropTypes.string,
   iconElement: PropTypes.func.isRequired,
   onClick: PropTypes.func,
-  to: PropTypes.string,
-  renderAsLink: PropTypes.bool,
   handleClick: PropTypes.func
 };
 
 function WorkbenchButton(props) {
-  const {
-    children,
-    title,
-    primary,
-    inverted,
-    disabled,
-    iconOnly,
-    to,
-    renderAsLink
-  } = props;
-  const isLink = renderAsLink && to;
-  const buttonProps = !isLink && {
-    type: "button"
-  };
-  const linkProps = isLink && {
-    renderAsLink: true,
-    to: to
-  };
+  const { children, title, primary, inverted, disabled, iconOnly } = props;
 
   return (
     <StyledWorkbenchButton
@@ -126,10 +99,9 @@ function WorkbenchButton(props) {
       disabled={disabled}
       iconOnly={iconOnly}
       inverted={inverted}
+      type="button"
       title={title}
       onClick={props.onClick}
-      {...buttonProps}
-      {...linkProps}
     >
       <ButtonWrapper>
         {/* only spans are valid html for buttons (even though divs work) */}

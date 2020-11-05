@@ -3,9 +3,21 @@ Change Log
 
 ### MobX Development
 
+#### next release (8.0.0-alpha.61)
+* New `CatalogFunctionMixin` and `CatalogFunctionJobMixin`
+* Tsified `FunctionParameters`
+* New `YourDataYourRegions` `CatalogFunctionMixin`
+* Added `inWorkbench` property
+* Added `addModelToTerria` flag to `upsertModelFromJson` function
 
-#### next release (8.0.0-alpha.60)
-* [The next improvement]
+#### 8.0.0-alpha.60
+* Fix WMS legend for default styles.
+* Request transparent legend from GeoServer.
+* Reverted the following due to various issues with datasets:
+    * Add basic routing support
+    * Add better page titles when on various routes of the application
+    * Add prerendering support on `/catalog/` routes (via `prerender-end` event & 
+      allowing TerriaMap to hit certain routes)
 
 #### 8.0.0-alpha.59
 * Update magda error message
