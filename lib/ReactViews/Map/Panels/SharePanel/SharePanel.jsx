@@ -23,6 +23,17 @@ import {
 import PrintView from "./PrintView";
 import Styles from "./share-panel.scss";
 import StorySharePanel from "./StorySharePanel";
+import Spacing from "../../../../Styled/Spacing";
+import Box from "../../../../Styled/Box";
+import Text, { TextSpan } from "../../../../Styled/Text";
+
+const Paragraph = props => (
+  <>
+    <Spacing bottom={2} />
+    <Box displayBlock>{props.children}</Box>
+    <Spacing bottom={2} />
+  </>
+);
 
 const SharePanel = observer(
   createReactClass({
@@ -318,34 +329,49 @@ const SharePanel = observer(
 
       return (
         <If condition={unshareableItems.length > 0}>
-          <div className={Styles.warning}>
-            <Trans i18nKey="share.localDataNote">
-              <p className={Styles.paragraph}>
-                <strong>Note:</strong>
-              </p>
-              <p className={Styles.paragraph}>
-                The following data sources will NOT be shared because they
-                include data from this local system. To share these data
-                sources, publish their data on a web server and{" "}
-                <a
-                  className={Styles.warningLink}
-                  onClick={this.onAddWebDataClicked}
-                >
-                  add them using a url
-                </a>
-                .
-              </p>
-            </Trans>
-            <ul className={Styles.paragraph}>
-              {unshareableItems.map((item, i) => {
-                return (
-                  <li key={i}>
-                    <strong>{item.name}</strong>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+          <Spacing bottom={2} />
+          <Text large color={"#552800"}>
+            <Box
+              displayBlock
+              roundedSmall
+              backgroundColor={"#feb938"}
+              paddedRatio={2}
+            >
+              <Trans i18nKey="share.localDataNote">
+                <Paragraph>
+                  <strong>Note:</strong>
+                </Paragraph>
+                <Paragraph>
+                  The following data sources will NOT be shared because they
+                  include data from this local system. To share these data
+                  sources, publish their data on a web server and{" "}
+                  <TextSpan large isLink onClick={this.onAddWebDataClicked}>
+                    add them using a url
+                  </TextSpan>
+                  .
+                </Paragraph>
+              </Trans>
+              <Spacing bottom={2} />
+              <ul
+                css={`
+                  display: block;
+                  padding-top: 10px;
+                  padding-inline-start: 0;
+                  list-style: none;
+                `}
+              >
+                {unshareableItems.map((item, i) => {
+                  return (
+                    <li key={i}>
+                      <strong>{item.name}</strong>
+                    </li>
+                  );
+                })}
+              </ul>
+              <Spacing bottom={2} />
+            </Box>
+          </Text>
+          <Spacing bottom={2} />
         </If>
       );
     },
