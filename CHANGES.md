@@ -9,6 +9,9 @@ Change Log
 * New `YourDataYourRegions` `CatalogFunctionMixin`
 * Added `inWorkbench` property
 * Added `addModelToTerria` flag to `upsertModelFromJson` function
+* Added `DataCustodianTraits` to `WebMapServiceCatalogItem`
+* Added `disableDimensionSelectors` trait to `WebMapServiceCatalogItem`. Acheives the same effect of `disableUserChanges` in v7.
+* Temporarily stopped using `papaparse` for fetching Csv urls till an upstream bug is fixed.
 * Remove legend broken image icon
 * Added high-DPI legends for geoserver WMS (+ font size, label margin and a few other tweaks)
 * `LegendTraits` is now part of `CatalogMemberTraits`

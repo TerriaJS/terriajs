@@ -1,6 +1,7 @@
 import { JsonObject } from "../Core/Json";
 import anyTrait from "./anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
+import DataCustodianTraits from "./DataCustodianTraits";
 import DiffableTraits from "./DiffableTraits";
 import ExportableTraits from "./ExportableTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
@@ -135,6 +136,7 @@ export class WebMapServiceAvailableLayerDimensionsTraits extends ModelTraits {
 }
 
 export default class WebMapServiceCatalogItemTraits extends mixTraits(
+  DataCustodianTraits,
   ExportableTraits,
   DiffableTraits,
   FeatureInfoTraits,
@@ -224,10 +226,10 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
 
   @primitiveTrait({
     type: "boolean",
-    name: "Disable style selector",
-    description: "When true, disables the style selector in the workbench"
+    name: "Disable dimension selectors",
+    description: "When true, disables the dimension selectors in the workbench."
   })
-  disableStyleSelector = false;
+  disableDimensionSelectors = false;
 
   @primitiveTrait({
     type: "string",
