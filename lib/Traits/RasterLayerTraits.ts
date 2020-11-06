@@ -1,6 +1,7 @@
 import ModelTraits from "./ModelTraits";
 import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
+import OpacityTrait from "./OpacityTrait";
 
 export class TileErrorHandlingTraits extends ModelTraits {
   @primitiveTrait({
@@ -35,14 +36,7 @@ export class TileErrorHandlingTraits extends ModelTraits {
   ignoreUnknownTileErrors?: boolean;
 }
 
-export default class RasterLayerTraits extends ModelTraits {
-  @primitiveTrait({
-    type: "number",
-    name: "Opacity",
-    description: "The opacity of the map layers."
-  })
-  opacity: number = 0.8;
-
+export default class RasterLayerTraits extends OpacityTrait {
   @primitiveTrait({
     type: "number",
     name: "Leaflet update interval",
