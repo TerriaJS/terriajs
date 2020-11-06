@@ -1,7 +1,7 @@
 import ModelTraits from "./ModelTraits";
 import objectTrait from "./objectTrait";
-import primitiveTrait from "./primitiveTrait";
 import OpacityTrait from "./OpacityTrait";
+import primitiveTrait from "./primitiveTrait";
 
 export class TileErrorHandlingTraits extends ModelTraits {
   @primitiveTrait({

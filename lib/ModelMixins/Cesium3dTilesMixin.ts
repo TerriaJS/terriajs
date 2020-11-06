@@ -21,8 +21,10 @@ import runLater from "../Core/runLater";
 import CommonStrata from "../Models/CommonStrata";
 import createStratumInstance from "../Models/createStratumInstance";
 import Feature from "../Models/Feature";
-import Model from "../Models/Model";
+import LoadableStratum from "../Models/LoadableStratum";
+import Model, { BaseModel } from "../Models/Model";
 import proxyCatalogItemUrl from "../Models/proxyCatalogItemUrl";
+import StratumOrder from "../Models/StratumOrder";
 import Cesium3DTilesCatalogItemTraits from "../Traits/Cesium3DCatalogItemTraits";
 import Cesium3dTilesTraits, {
   OptionsTraits
@@ -30,6 +32,20 @@ import Cesium3dTilesTraits, {
 import AsyncMappableMixin from "./AsyncMappableMixin";
 import ShadowMixin from "./ShadowMixin";
 
+class Cesium3dTilesStratum extends LoadableStratum(Cesium3dTilesTraits) {
+  constructor() {
+    super();
+  }
+
+  duplicateLoadableStratum(model: BaseModel): this {
+    return new Cesium3dTilesStratum() as this;
+  }
+
+  @computed
+  get opacity() {
+    return 1.0;
+  }
+}
 interface Cesium3DTilesCatalogItemIface
   extends InstanceType<ReturnType<typeof Cesium3dTilesMixin>> {}
 
@@ -50,7 +66,7 @@ class ObservableCesium3DTileset extends Cesium3DTileset {
   }
 }
 
-export default function Cesium3dTilesMixin<
+function Cesium3dTilesMixin<
   T extends Constructor<Model<Cesium3dTilesTraits>>
 >(Base: T) {
   abstract class Cesium3dTilesMixin extends ShadowMixin(
@@ -380,6 +396,13 @@ export default function Cesium3dTilesMixin<
 
   return Cesium3dTilesMixin;
 }
+
+namespace Cesium3dTilesMixin {
+  StratumOrder.addLoadStratum(Cesium3dTilesStratum.name);
+  export interface Cesium3dTilesMixin extends Cesium3DTilesCatalogItemIface {}
+}
+
+export default Cesium3dTilesMixin;
 
 function normalizeShowExpression(
   show: any
