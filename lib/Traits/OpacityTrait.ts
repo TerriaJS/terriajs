@@ -7,5 +7,5 @@ export default class OpacityTrait extends ModelTraits {
     name: "Opacity",
     description: "The opacity of the item."
   })
-  opacity: number = 1.0;
+  opacity: number = 0.8;
 }
