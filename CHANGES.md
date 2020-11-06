@@ -3,6 +3,8 @@ Change Log
 
 ### Next Release
 
+* Fixed a bug where the timeline would not update properly when the timeline panel was resized.
+
 ### v7.11.15
 
 * Fixed a bug when clicking the expand button on a chart in feature info when the clicked feature was a polygon.
