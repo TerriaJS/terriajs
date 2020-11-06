@@ -1,6 +1,6 @@
 import ModelTraits from "./ModelTraits";
 import primitiveTrait from "./primitiveTrait";
- 
+
 export default class OpacityTrait extends ModelTraits {
   @primitiveTrait({
     type: "number",

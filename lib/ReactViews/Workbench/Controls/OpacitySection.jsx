@@ -24,7 +24,10 @@ const OpacitySection = observer(
 
     changeOpacity(value) {
       const item = this.props.item;
-      if (hasTraits(item, RasterLayerTraits, "opacity") || hasTraits(item, OpacityTrait, "opacity"))  {
+      if (
+        hasTraits(item, RasterLayerTraits, "opacity") ||
+        hasTraits(item, OpacityTrait, "opacity")
+      ) {
         runInAction(() => {
           item.setTrait(CommonStrata.user, "opacity", value / 100.0);
         });
@@ -35,8 +38,9 @@ const OpacitySection = observer(
       const item = this.props.item;
       const { t } = this.props;
       if (
-         (!hasTraits(item, RasterLayerTraits, "opacity") && !hasTraits(item, OpacityTrait, "opacity")) ||
-         item.disableOpacityControl
+        (!hasTraits(item, RasterLayerTraits, "opacity") &&
+          !hasTraits(item, OpacityTrait, "opacity")) ||
+        item.disableOpacityControl
       ) {
         return null;
       }

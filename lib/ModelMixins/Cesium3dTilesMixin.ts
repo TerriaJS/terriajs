@@ -66,9 +66,9 @@ class ObservableCesium3DTileset extends Cesium3DTileset {
   }
 }
 
-function Cesium3dTilesMixin<
-  T extends Constructor<Model<Cesium3dTilesTraits>>
->(Base: T) {
+function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
+  Base: T
+) {
   abstract class Cesium3dTilesMixin extends ShadowMixin(
     AsyncMappableMixin(Base)
   ) {
@@ -320,7 +320,6 @@ function Cesium3dTilesMixin<
       }
     }
 
-  
     @computed get cesiumTileStyle() {
       if (
         !isDefined(this.style) &&
