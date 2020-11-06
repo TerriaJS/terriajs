@@ -10,6 +10,7 @@ import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
+import Color from "terriajs-cesium/Source/Core/Color";
 import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
@@ -329,17 +330,29 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
         return;
       }
 
-      let style = clone(toJS(this.style) || {});
-      let opacity = clone(toJS(this.opacity) || 1.0);
+      const style = clone(toJS(this.style) || {});
+      const opacity = clone(toJS(this.opacity));
 
-      if (opacity <= 1) {
-        const _color = `color('${style.color || "#FFFFFF"}', ${this.opacity})`;
-        style = Object.assign(style, { color: _color });
+      if (!isDefined(style.defines)) {
+        style.defines = { opacity };
+      } else {
+        style.defines = Object.assign(style.defines, { opacity });
+      }
+
+      if (!isDefined(style.color)) {
+        style.color = "color('white', ${opacity})";
+      } else if (typeof style.color == "string") {
+        // Check if the color specified is just a css color
+        const cssColor = Color.fromCssColorString(style.color);
+        if (isDefined(cssColor)) {
+          style.color = `color('${style.color}', \${opacity})`;
+        }
       }
 
       if (isDefined(this.showExpressionFromFilters)) {
         style.show = toJS(this.showExpressionFromFilters);
       }
+
       return new Cesium3DTileStyle(style);
     }
 
