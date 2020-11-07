@@ -52,8 +52,15 @@ export default function upsertModelFromJson(
   }
 
   let model = terria.getModelById(BaseModel, uniqueId);
-  if (model === undefined && options.matchByShareKeys) {
-    model = terria.getModelByShareKeyMatch();
+  if (
+    model === undefined &&
+    options.matchByShareKeys &&
+    json.id !== undefined
+  ) {
+    uniqueId = terria.getModelIdByShareKey(json.id);
+    if (uniqueId !== undefined) {
+      model = terria.getModelById(BaseModel, uniqueId);
+    }
   }
   if (model === undefined) {
     model = factory.create(json.type, uniqueId, terria);
@@ -81,6 +88,11 @@ export default function upsertModelFromJson(
 
     if (model.type !== StubCatalogItem.type) {
       model.terria.addModel(model);
+      if (json.shareKeys?.length > 0) {
+        json.shareKeys.forEach((shareKey: string) => {
+          terria.addShareKey(shareKey, uniqueId);
+        });
+      }
     }
   }
 

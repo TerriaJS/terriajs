@@ -141,6 +141,8 @@ interface HomeCameraInit {
 
 export default class Terria {
   private models = observable.map<string, BaseModel>();
+  // Map from share key -> id
+  private shareKeysMap = observable.map<string, string>();
 
   readonly baseUrl: string = "build/TerriaJS/";
   readonly notification = new CesiumEvent();
@@ -392,6 +394,15 @@ export default class Terria {
     if (model.uniqueId) {
       this.models.delete(model.uniqueId);
     }
+  }
+
+  getModelIdByShareKey(shareKey: string): string | undefined {
+    return this.shareKeysMap.get(shareKey);
+  }
+
+  @action
+  addShareKey(shareKey: string, id: string) {
+    this.shareKeysMap.set(shareKey, id);
   }
 
   start(options: StartOptions) {
