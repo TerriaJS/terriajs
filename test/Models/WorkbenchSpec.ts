@@ -39,4 +39,12 @@ describe("Workbench", function() {
     expect(workbench.items).toEqual([item3, item1, item2]);
     expect(workbench.itemIds).toEqual(["C", "A", "B"]);
   });
+
+  // test add
+
+  // test add duplicate
+
+  // test resolve references
+
+  // I think there might be bug if you add an item twice that has a sourceReference, so a test for that would be good.
 });

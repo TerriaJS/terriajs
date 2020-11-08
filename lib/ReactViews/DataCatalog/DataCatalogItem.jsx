@@ -52,35 +52,33 @@ export const DataCatalogItem = observer(
       removeUserAddedData(this.props.terria, this.props.item);
     },
 
-    toggleEnable(event) {
-      runInAction(async () => {
-        const keepCatalogOpen = event.shiftKey || event.ctrlKey;
-        const toAdd = !this.props.terria.workbench.contains(this.props.item);
+    async toggleEnable(event) {
+      const keepCatalogOpen = event.shiftKey || event.ctrlKey;
+      const toAdd = !this.props.terria.workbench.contains(this.props.item);
 
-        try {
-          if (toAdd) {
-            this.props.terria.timelineStack.addToTop(this.props.item);
-            await this.props.terria.workbench.add(this.props.item);
-          } else {
-            this.props.terria.timelineStack.remove(this.props.item);
-            await this.props.terria.workbench.remove(this.props.item);
-          }
-
-          if (
-            this.props.terria.workbench.contains(this.props.item) &&
-            !keepCatalogOpen
-          ) {
-            this.props.viewState.closeCatalog();
-            this.props.terria.analytics?.logEvent(
-              "dataSource",
-              toAdd ? "addFromCatalogue" : "removeFromCatalogue",
-              getPath(this.props.item)
-            );
-          }
-        } catch (e) {
-          raiseErrorToUser(this.props.terria, e);
+      try {
+        if (toAdd) {
+          this.props.terria.timelineStack.addToTop(this.props.item);
+          await this.props.terria.workbench.add(this.props.item);
+        } else {
+          this.props.terria.timelineStack.remove(this.props.item);
+          await this.props.terria.workbench.remove(this.props.item);
         }
-      });
+
+        if (
+          this.props.terria.workbench.contains(this.props.item) &&
+          !keepCatalogOpen
+        ) {
+          this.props.viewState.closeCatalog();
+          this.props.terria.analytics?.logEvent(
+            "dataSource",
+            toAdd ? "addFromCatalogue" : "removeFromCatalogue",
+            getPath(this.props.item)
+          );
+        }
+      } catch (e) {
+        raiseErrorToUser(this.props.terria, e);
+      }
     },
 
     setPreviewedItem() {

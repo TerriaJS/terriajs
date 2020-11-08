@@ -166,9 +166,8 @@ export default class Workbench {
    */
   public async add(item: BaseModel | BaseModel[]): Promise<void> {
     if (Array.isArray(item)) {
-      return await Promise.all(item.map(i => this.add(i))).then(
-        () => undefined
-      );
+      await Promise.all(item.map(i => this.add(i)));
+      return;
     }
 
     this.insertItem(item);

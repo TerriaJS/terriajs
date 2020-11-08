@@ -1,4 +1,4 @@
-import { action } from "mobx";
+import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
@@ -6,17 +6,12 @@ import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import getPath from "../../Core/getPath";
 import Mappable from "../../Models/Mappable";
-// eslint-disable-next-line no-unused-vars
-import Terria from "../../Models/Terria";
-// eslint-disable-next-line no-unused-vars
-import ViewState from "../../ReactViewModels/ViewState";
-import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
+import raiseErrorToUser from "../../Models/raiseErrorToUser";
 import measureElement from "../HOCs/measureElement";
+import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
 import DataPreviewMap from "./DataPreviewMap";
-// import DataPreviewMap from "./DataPreviewMap";
 import Description from "./Description";
 import Styles from "./mappable-preview.scss";
-import raiseErrorToUser from "../../Models/raiseErrorToUser";
 
 /**
  * @typedef {object} Props
@@ -41,10 +36,9 @@ class MappablePreview extends React.Component {
     t: PropTypes.func.isRequired
   };
 
-  @action.bound
   async toggleOnMap(event) {
     if (defined(this.props.viewState.storyShown)) {
-      this.props.viewState.storyShown = false;
+      runInAction(() => (this.props.viewState.storyShown = false));
     }
 
     const keepCatalogOpen = event.shiftKey || event.ctrlKey;

@@ -71,8 +71,10 @@ const DataCatalogReference = observer(
       } else {
         try {
           if (!this.props.terria.workbench.contains(this.props.reference)) {
+            this.props.terria.timelineStack.addToTop(this.props.reference);
             await this.props.terria.workbench.add(this.props.reference);
           } else {
+            this.props.terria.timelineStack.remove(this.props.reference);
             await this.props.terria.workbench.remove(this.props.reference);
           }
 
