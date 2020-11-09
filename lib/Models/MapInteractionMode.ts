@@ -13,9 +13,9 @@ interface Options {
   messageAsNode?: React.ReactNode;
   customUi?: () => unknown;
   buttonText?: string;
-  // drawRectangle?: boolean;
   uiMode?: UIMode; // diff tool hack for now
   onEnable?: (viewState: ViewState) => void;
+  invisible?: boolean;
 }
 
 /**
@@ -25,8 +25,9 @@ export default class MapInteractionMode {
   readonly onCancel?: () => void;
 
   readonly buttonText: string;
-  // readonly drawRectangle: boolean;
   readonly uiMode: UIMode;
+
+  readonly invisible: boolean;
 
   @observable
   customUi: (() => any) | undefined;
@@ -90,7 +91,8 @@ export default class MapInteractionMode {
      * Determines whether a rectangle will be requested from the user rather than a set of pickedFeatures.
      */
     // this.drawRectangle = defaultValue(options.drawRectangle, false);
-
     this.onEnable = options.onEnable;
+
+    this.invisible = defaultValue(options.invisible, false);
   }
 }

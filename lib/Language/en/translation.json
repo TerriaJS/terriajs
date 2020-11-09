@@ -5,9 +5,10 @@
     "prev": "Prev",
     "next": "Next",
     "skip": "Skip",
+    "back": "Back",
     "delete": "Delete",
     "cancel": "Cancel",
-    "back": "Back"
+    "confirm": "Confirm"
   },
   "trainer": {
     "expandTrainer": "Show more step detail",
@@ -24,7 +25,28 @@
     },
     "end": "End tour",
     "finish": "Finish",
-    "previous": "Previous"
+    "previous": "Previous",
+    "locationSearchInput": {
+      "content": "## Location search\n\nEnter a locality or address to easily locate a point of interest on the map."
+    },
+    "exploreMapDataButton": {
+      "content": "## Explore map data\n\nBrowse the catalogue of available data and add it to the map here. You can add multiple datasets at any one time, and you’ll see them listed down below in the Workbench."
+    },
+    "sidePanelUploadButton": {
+      "content": "## Upload Data\n\nYou can upload your own data to the map to view it with other data sets. Upload a file or link to an existing online data set or data service. Supported data formats include CSV, GeoJSON, KML, GPX and CZML."
+    },
+    "menuBarMapSettingsButton": {
+      "content": "## Map Settings\n\nCustomise map options such as base maps, map image quality or remove the ground (terrain) to interrogate underground datasets."
+    },
+    "menuBarStoryButton": {
+      "content": "## Stories\n\nStories allow you to add contextual information to a dataset to bring a narrative to life. Create your own data story using the Story Editor, and share it via the ‘Share’ panel once you’re done."
+    },
+    "mapNavigationCompassOuterRing": {
+      "content": "## View controls\n\nHere you can change the view of the map. You can change the orientation of your view by using the outer ring, and you can tilt the camera angle using the inner ring. Double click to reset the view."
+    },
+    "mapNavigationSplitterIcon": {
+      "content": "## Compare\n\nA powerful feature of Terria is the ability to compare datasets using a split screen view. For datasets with a time-series/4D component, you can compare dates backwards and forwards in time using the date picker."
+    }
   },
   "measure": {
     "measureTool": "Measure Tool",
@@ -42,6 +64,7 @@
   "splitterTool": {
     "toggleSplitterToolTitle": "Compare",
     "toggleSplitterTool": "Enable side-by-side comparison between two different sets of data",
+    "toggleSplitterToolDisabled": "Please disable other side-by-side comparison features in order to enable standard compare",
     "title": "Drag left or right to adjust views",
     "workbench": {
       "goleftTitle": "Show on the left side",
@@ -60,7 +83,9 @@
   },
   "compass": {
     "description": "Drag outer ring: rotate view.\nDrag inner gyroscope: free orbit.\nDouble-click: reset view.\nTIP: You can also free orbit by holding the CTRL key and dragging the map.",
-    "title": "Click and drag to rotate the camera"
+    "title": "Click and drag to rotate the camera",
+    "guidanceBtnTitle": "Gyroscope Guidance",
+    "guidanceBtnText": "View detailed instructions on how to use the compass"
   },
   "AR": {
     "title": "Experimental Feature: Augmented Reality",
@@ -134,6 +159,7 @@
       }
     },
     "datePicker": {
+      "back": "Go back",
       "previousDateTitle": "Previous date",
       "nextDateTitle": "Next date",
       "dateButtonTitle": "Select a date",
@@ -167,7 +193,12 @@
     "btnMapShareText": "Share / Print",
     "btnCatalogShareTitle": "Share your catalogue with others",
     "btnStoryShareTitle": "Share your story with others",
-    "btnMapShareTitle": "Share your map with others"
+    "btnMapShareTitle": "Share your map with others",
+    "convertNotificationTitle": "Notice: share link upgraded",
+    "convertNotificationMessage": "This share link is based on an older version of TerriaJS - the software powering this web map. While best efforts are made to preserve the link, you might encounter issues with visualising the data.  \n\nIf you're a user of the share link, click OK to make the warning message disappear and continue with accessing the data.",
+    "convertNotificationHelp": "If you have created the share link, check the Help menu to see tips on updating the share link.",
+    "convertNotificationFeedback": "For questions or feedback, click here.",
+    "convertNotificationWarningsTitle": "Technical details"
   },
   "countDatasets": {
     "btnText": "Start",
@@ -231,7 +262,8 @@
     "menuPaneTitle": "We're here to help",
     "menuPaneBody": "Find useful tips on how to use TerriaJS by either checking the guides below or by contacting the team at [info@terria.io](mailto:info@terria.io)",
     "promptMessage": "Find the Tour, how-to videos & other help content here",
-    "dismissText": "Got it, thanks!"
+    "dismissText": "Got it, thanks!",
+    "takeTour": "Take the tour"
   },
   "helpMenu": {
     "btnText": "Help",
@@ -282,6 +314,13 @@
     "dismissText": "Close message and don't show me this again"
   },
   "story": {
+    "panelTitle": "Story editor",
+    "panelBody": "Create and share interactive stories directly from your map",
+    "gettingStarted": "Getting started",
+    "gettingStartedTitle": "Getting started",
+    "badgeBarLabel": "Scenes",
+    "share": "Share",
+    "shareTitle": "share stories",
     "viewStory": "view",
     "view": "View",
     "editStory": "edit",
@@ -294,12 +333,11 @@
     "doesNotExist": "Story does not exist",
     "message": "<2>This is your story editor</2><1>Create and share interactive stories directly from your map<1><0><0></0>Getting Started </0></1></1>",
     "removeAllStories": "Remove All",
-    "removeStoriesPanel": "Are you sure you wish to delete {{ count }} scene?",
-    "removeStoriesPanel_plural": "Are you sure you wish to delete {{ count }} scenes?",
-    "confirmRemove": "Delete",
-    "cancelRemove": "Cancel",
+    "removeAllStoriesDialog": "Are you sure you wish to delete {{ count }} scene?",
+    "removeAllStoriesDialog_plural": "Are you sure you wish to delete {{ count }} scenes?",
+    "removeStoryDialog": "Are you sure you wish to delete '<1>{{storyName}}</1>'?",
     "preview": "preview stories",
-    "play": "Play Story",
+    "play": "Play",
     "captureSceneTitle": "capture current scene",
     "captureScene": "Capture Scene",
     "editor": {
@@ -325,7 +363,7 @@
     "hideStoryPanel": "hide story builder"
   },
   "satelliteGuidance": {
-    "menuTitle": "You can access map guides at any time by looking in the <0>help menu</0>.",
+    "menuTitle": "You can access map guides at any time by looking in the <2>help menu</2>.",
     "dismissText": "Got it, thanks!",
     "titleI": "Satellite Imagery: How do I…?",
     "bodyI": "A super-quick guide to getting the most out of historical satellite imagery.",
@@ -404,7 +442,7 @@
     "modified": "Modified",
     "updateFrequency": "Update Frequency",
     "dataCustodian": "Data Custodian",
-    "mayBeExperiencingIssues": "<0>This dataset may currently be experiencing issues</0>"
+    "mayBeExperiencingIssues": "This dataset may currently be experiencing issues"
   },
   "description": {
     "name": "Description",
@@ -457,9 +495,13 @@
     "expandAll": "Expand All",
     "toggleVisibility": "Data show/hide",
     "addItemErrorTitle": "Catalog item could not be added to workbench.",
-    "addItemErrorMessage": "An error occurred while loading the catalog item."
+    "addItemErrorMessage": "An error occurred while loading the catalog item.",
+    "dimensionsSelector": {
+      "undefinedLabel": "Not specified"
+    }
   },
   "dateTime": {
+    "back": "Go back",
     "previous": "Previous time",
     "selectTime": "Select a time",
     "outOfRange": "Currently out of range.",
@@ -546,7 +588,7 @@
     "searchErrorOccurred": "An error occurred while searching.  Please check your internet connection or try again later.",
     "searchAddresses": "Addresses",
     "searchPlaceNames": "Official Place Names",
-    "searchNoPlaceNames": "Sorry, no official place names match your search query",
+    "searchNoPlaceNames": "Sorry, no official place names match your search query.",
     "searchLocations": "Locations",
     "searchCatalogueItem": "Catalogue Items",
     "searchNoCatalogueItem": "Sorry, no catalogue items match your search query.",
@@ -600,6 +642,7 @@
       "esri-group": "Esri ArcGIS Server",
       "esri-mapServer": "Esri ArcGIS MapServer (single layer)",
       "esri-featureServer": "Esri ArcGIS FeatureServer (single layer)",
+      "3d-tiles": "3D Tiles",
       "open-street-map": "Open Street Map Server",
       "geojson": "GeoJSON",
       "geoRss": "GeoRSS",
@@ -760,6 +803,7 @@
       "missingUrlMessage": "Could not load the ArcGis FeatureServer endpoint because the catalog item does not have a `url`.",
       "invalidServiceTitle": "Invalid ArcGIS Feature Service layer",
       "invalidServiceMessage": "An error occurred while invoking the ArcGIS Feature Service.  The server's response does not appear to be a valid Feature Service layer.",
+      "reachedMaxFeatureLimit": "Warning: This layer has reached the FeatureService feature limit.",
       "unusableMetadataTitle": "ArcGIS FeatureServer Error",
       "unusableMetadataDefaultMessage": "This dataset returned unusable metadata."
     },
@@ -803,7 +847,7 @@
       "name": "Cesium Terrain",
       "name3D": "Cesium 3D Tiles",
       "notSupportedErrorTitle": "Not supported in 2D",
-      "notSupportedErrorMessage": "\"{{name}}\" cannot be show in the 2D view.  Switch to 3D and try again.",
+      "notSupportedErrorMessage": "\"{{name}}\" cannot be show in the 2D view. Switch to 3D and try again.",
       "errorRenderingTitle": "Error rendering in 3D",
       "errorRenderingMessage": "<p>An error occurred while rendering in 3D.  This probably indicates a bug in {{appName}} or an incompatibility with your system or web browser.  We'll now switch you to 2D so that you can continue your work. We would appreciate it if you report this error by sending an email to {{email}} with the technical details below.  Thank you!</p>"
     },
@@ -1016,8 +1060,8 @@
       "dataSourceErrorMessage": "This data source does not have any details available.",
       "serviceErrorMessage": "This service does not have any details available.",
       "distributionDesc": "Distribution Description",
-      "idsNotSpecifiedTitle": "distributionId or datasetId must be specified",
-      "idsNotSpecifiedMessage": "MagdaCatalogItem requires that either distributionId or datasetId be specified.",
+      "idsNotSpecifiedTitle": "recordId must be specified",
+      "idsNotSpecifiedMessage": "MagdaCatalogItem requires that recordId be specified.",
       "retrieveErrorTitle": "Error retrieving MAGDA record",
       "retrieveErrorMessage": "No distribution or dataset ID provided",
       "notCompatibleTitle": "No compatible distributions found",
@@ -1040,7 +1084,8 @@
       "missingKeyErrorMessage": "A Senaps API Key should be added to the terriajs-server config using the appendParamToQueryString option",
       "locationHeadingFeatureInfo": "Location",
       "availableStreamsHeadingFeatureInfo": "Available Streams",
-      "noStreamsMessageFeatureInfo": "No streams at this location."
+      "noStreamsMessageFeatureInfo": "No streams at this location.",
+      "missingSenapsBaseUrl": "Senaps base url not provided. Have you logged in?"
     },
     "ogr": {
       "name": "Unknown / Converted to GeoJSON",
@@ -1118,6 +1163,29 @@
       "unknownFormat": "The server responded with an unknown feature format.",
       "noMatchingFeatures": "The Sensor Observation Service did not return any features matching your query."
     },
+    "sdmxServerStratum": {
+      "sdmxStructureLoadErrorTitle": "SDMX structure request failed",
+      "loadDataErrorTitle": "Failed to load SDMX group",
+      "loadDataErrorMessage": "The server has no dataflows"
+    },
+    "sdmxJsonDataflowStratum": {
+      "loadDataErrorTitle": "Could not load SDMX dataflow",
+      "loadDataErrorMessage": {
+        "invalidResponse": "Invalid JSON object",
+        "noDatastructure": "No data structures could be found for dataflow {{catalogItem.dataflowId}}",
+        "noDataflow": "Dataflow {{catalogItem.dataflowId}} is invalid"
+      }
+    },
+    "sdmxCatalogItem": {
+      "viewBy": {
+        "title": "View by",
+        "time": "Time-series",
+        "region": "Region"
+      },
+      "noData": "No data available",
+      "loadDataErrorTitle": "Could not load SDMX CSV",
+      "loadDataErrorMessage": "Invalid response from {{csvUrl}}"
+    },
     "time": {
       "invalidDate": "Invalid Date",
       "invalidInitialTimeSource": "Invalid initialTimeSource specified in config file: {{initialTimeSource}}"
@@ -1165,9 +1233,10 @@
     },
     "terrainCatalog": {
       "notSupportedErrorTitle": "Not supported in 2D",
-      "notSupportedErrorMessage": "{{name}} cannot be show in the 2D view.  Switch to 3D and try again"
+      "notSupportedErrorMessage": "{{name}} cannot be shown in the 2D view. Switch to 3D and try again"
     },
     "terria": {
+      "proxyableDomainsDeprecation": "`proxyableDomainsUrl` is no longer supported in v8",
       "initErrorTitle": "Failed to initialize services",
       "initErrorMessage": "A problem occurred with the Terria server. This may cause some layers or the conversion service to be unavailable.",
       "urlLoadErrorTitle": "Problem loading URL",
@@ -1194,6 +1263,12 @@
       "disclaimer": "Disclaimer",
       "buttonTitleConfirm": "I Agree"
     },
+    "thredds": {
+      "nameGroup": "THREDDS Catalog Group"
+    },
+    "threddsItem": {
+      "name": "THREDDS Item Reference"
+    },
     "urlTemplateMapServer": {
       "name": "URL Template Map Server"
     },
@@ -1216,10 +1291,27 @@
       "invalidWFSServerTitle": "Invalid WFS server",
       "invalidWFSServerMessage": "An error occurred while invoking GetCapabilities on the WFS server.  The server's response does not appear to be a valid GetCapabilities document. <p>If you entered the link manually, please verify that the link is correct.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection. Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
       "groupNotAvailableTitle": "Group is not available",
-      "groupNotAvailableMessage": "An error occurred while invoking GetCapabilities on the WFS server. <p>If you entered the link manually, please verify that the link is correct.</p> <p>This error may also indicate that the server does not support <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' Map team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by '{{appName}}' itself.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection. Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>"
+      "groupNotAvailableMessage": "An error occurred while invoking GetCapabilities on the WFS server. <p>If you entered the link manually, please verify that the link is correct.</p> <p>This error may also indicate that the server does not support <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' Map team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by '{{appName}}' itself.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection. Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "abstract": "Web Feature Service Description",
+      "accessConstraints": "Web Feature Service Access Constraints",
+      "fees": "Web Feature Service Fees"
     },
     "webFeatureServiceCatalogItem": {
-      "wfs": "Web Feature Service (WFS)"
+      "wfs": "Web Feature Service (WFS)",
+      "dataDescription": "Data Description",
+      "abstract": "Web Feature Service Description",
+      "serviceDescription": "Service Description",
+      "metadataUrls": "Metadata Links",
+      "accessConstraints": "Access Constraints",
+      "serviceContact": "Service Contact",
+      "getCapabilitiesUrl": "GetCapabilities URL",
+      "noLayerFoundTitle": "No layer found",
+      "noLayerFoundMessage": "The WFS dataset '{{name}}' has no layers matching '{{typeNames}}'. {{suggested}} {{line}}{{line}}Either the catalog file has been set up incorrectly, or the WFS server has changed.{{line}}{{line}}Please report this error by sending an email to {{email}}.",
+      "missingDataTitle": "Missing data",
+      "missingDataMessage": "The WFS dataset '{{name}}' did not return any data.{{line}}{{line}}Either the catalog file has been set up incorrectly, or the server address has changed.{{line}}{{line}}Please report this error by emailing {{email}}.",
+      "missingUrlTitle": "Unable to load GetCapabilities",
+      "missingUrlMessage": "Could not load the Web Feature Service (WFS) GetCapabilities document because the catalog item does not have a `url`.",
+      "reachedMaxFeatureLimit": "Warning: This layer has reached the WFS feature limit ({{maxFeatures}})"
     },
     "webMapServiceCatalogGroup": {
       "wmsServer": "Web Map Service (WMS) Server",
@@ -1241,6 +1333,7 @@
       "accessConstraints": "Access Constraints",
       "serviceContact": "Service Contact",
       "getCapabilitiesUrl": "GetCapabilities URL",
+      "defaultStyleLabel": "Default style",
       "noLayerFoundTitle": "No layer found",
       "noLayerFoundMessage": "The WMS dataset '{{name}}' has no layers matching '{{layers}}'. {{suggested}} {{line}}{{line}}Either the catalog file has been set up incorrectly, or the WMS server has changed.{{line}}{{line}}Please report this error by sending an email to {{email}}.",
       "datasetScaleErrorTitle": "Dataset will not be shown at this scale",
@@ -1255,15 +1348,27 @@
     "webMapTileServiceCatalogGroup": {
       "wmtsServer": "Web Map Tile Service (WMTS) Server",
       "invalidWMTSServerTitle": "Invalid WMTS server",
-      "invalidWMTSServerMessage": "An error occurred while invoking GetCapabilities on the WMS server. The server's response does not appear to be a valid GetCapabilities document. <p>If you entered the link manually, please verify that the link is correct.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "invalidWMTSServerMessage": "An error occurred while invoking GetCapabilities on the WMTS server. The server's response does not appear to be a valid GetCapabilities document. <p>If you entered the link manually, please verify that the link is correct.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
       "groupNotAvailableTitle": "Group is not available",
-      "groupNotAvailableMessage": "An error occurred while invoking GetCapabilities on the WMTS server. <p>If you entered the link manually, please verify that the link is correct.</p> <p>This error may also indicate that the server does not support <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' Map team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by '{{appName}}' itself.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection. Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>"
+      "groupNotAvailableMessage": "An error occurred while invoking GetCapabilities on the WMTS server. <p>If you entered the link manually, please verify that the link is correct.</p> <p>This error may also indicate that the server does not support <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' Map team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by '{{appName}}' itself.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection. Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "abstract": "Web Map Service Description",
+      "accessConstraints": "Web Map Service Access Constraints",
+      "fees": "Web Map Service Fees",
+      "invalidCapabilitiesTitle": "Invalid GetCapabilities",
+      "invalidCapabilitiesMessage": "The URL {{url}} was retrieved successfully but it does not appear to be a valid Web Map Tile Service (WMTS) GetCapabilities document. \n\nEither the catalog file has been set up incorrectly, or the server address has changed."
     },
     "webMapTileServiceCatalogItem": {
       "wmts": "Web Map Tile Service (WMTS)",
       "dataDescription": "Data Description",
       "serviceDescription": "Service Description",
-      "accessConstraints": "Access Constraints"
+      "accessConstraints": "Access Constraints",
+      "fees": "Web Map Tile Service Fees",
+      "serviceContact": "Service Contact",
+      "getCapabilitiesUrl": "GetCapabilities URL",
+      "missingUrlTitle": "Unable to load GetCapabilities",
+      "missingUrlMessage": "Could not load the Web Map Tile Service (WMTS) GetCapabilities document because the catalog item does not have a `url`.",
+      "noUsableTileMatrixTitle": "Warning",
+      "noUsableTileMatrixMessage": "This WMTS layer has no Web Mercator tile matrix set - it may not display correctly"
     },
     "webProcessingService": {
       "wps": "Web Processing Service (WPS)",
@@ -1297,6 +1402,7 @@
       "groupNotAvailableMessage": "An error occurred while invoking GetFeature on the WFS server. <p>If you entered the link manually, please verify that the link is correct.</p><p>This error may also indicate that the server does not support <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  If this is your server, verify that CORS is enabled and enable it if it is not. If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' Map team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by '{{appName}}' itself.</p><p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>"
     },
     "commonModelErrors": {
+      "3dTypeIn2dMode": "**Note:** This dataset can not be displayed in the 2D viewer. Switch to one of the 3D map modes.",
       "datasetScaleErrorTitle": "Dataset will not be shown at this scale",
       "datasetScaleErrorMessage": "The {{name}} dataset will not be shown when zoomed in this close to the map because the data custodian has indicated that the data is not intended or suitable for display at this scale.  Click the dataset's Info button on the Now Viewing tab for more information about the dataset and the data custodian."
     }
@@ -1322,5 +1428,8 @@
       "title": "Error loading Delta Tool",
       "message": "An error occurred while trying to load the delta tool from the server. Please try again."
     }
+  },
+  "term": {
+    "missingContent": "missing content"
   }
 }

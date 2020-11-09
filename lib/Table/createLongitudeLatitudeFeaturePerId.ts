@@ -12,6 +12,7 @@ import SampledProperty from "terriajs-cesium/Source/DataSources/SampledProperty"
 import TimeIntervalCollectionPositionProperty from "terriajs-cesium/Source/DataSources/TimeIntervalCollectionPositionProperty";
 import TimeIntervalCollectionProperty from "terriajs-cesium/Source/DataSources/TimeIntervalCollectionProperty";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
+import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
 import { JsonObject } from "../Core/Json";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
@@ -143,7 +144,7 @@ function createFeature(
     }),
     availability
   });
-  feature.properties = properties;
+  feature.properties = new PropertyBag(properties);
   feature.description = description;
   return feature;
 }
@@ -213,7 +214,7 @@ function getRowDescription(
 ) {
   const rows = tableColumns
     .map(column => {
-      const title = column.traits.title || column.name;
+      const title = column.title;
       const value = column.values[index];
       return `<tr><td>${title}</td><td>${value}</td></tr>`;
     })

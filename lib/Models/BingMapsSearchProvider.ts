@@ -1,5 +1,4 @@
 import { observable, runInAction } from "mobx";
-import BingMapsApi from "terriajs-cesium/Source/Core/BingMapsApi";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -25,7 +24,7 @@ interface BingMapsSearchProviderOptions {
 export default class BingMapsSearchProvider extends SearchProvider {
   readonly terria: Terria;
   @observable url: string;
-  @observable key: string;
+  @observable key: string | undefined;
   @observable flightDurationSeconds: number;
   @observable primaryCountry: string;
   @observable culture: string;
@@ -39,7 +38,7 @@ export default class BingMapsSearchProvider extends SearchProvider {
     if (this.url.length > 0 && this.url[this.url.length - 1] !== "/") {
       this.url += "/";
     }
-    this.key = BingMapsApi.getKey(options.key);
+    this.key = options.key;
     this.flightDurationSeconds = defaultValue(
       options.flightDurationSeconds,
       1.5

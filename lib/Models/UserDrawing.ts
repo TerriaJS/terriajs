@@ -33,6 +33,7 @@ interface Options {
   onPointClicked?: (dataSource: DataSource) => void;
   onPointMoved?: (dataSource: DataSource) => void;
   onCleanUp?: () => void;
+  invisible?: boolean;
 }
 
 class EmptyTraits extends ModelTraits {
@@ -46,6 +47,7 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
   private readonly buttonText?: string;
   private readonly onPointClicked?: (dataSource: CustomDataSource) => void;
   private readonly onCleanUp?: () => void;
+  private readonly invisible?: boolean;
   private readonly dragHelper: DragPoints;
 
   pointEntities: CustomDataSource;
@@ -115,6 +117,8 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
     this.closeLoop = false;
 
     this.drawRectangle = defaultValue(options.drawRectangle, false);
+
+    this.invisible = options.invisible;
 
     // helper for dragging points around
     this.dragHelper = new DragPoints(options.terria, customDataSource => {
@@ -191,20 +195,30 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
                 this.pointEntities.entities.values.length < 1
               )
                 return;
-              const point1 = this.pointEntities.entities.values[0].position.getValue(
-                time
-              ) as Cartesian3;
+              const point1 =
+                this.pointEntities.entities.values[0].position &&
+                (this.pointEntities.entities.values[0].position.getValue(
+                  time
+                ) as Cartesian3);
 
-              let point2 =
+              if (!point1) {
+                return;
+              }
+
+              const point2 =
                 (this.pointEntities.entities.values?.[1]?.position?.getValue(
                   time
                 ) as Cartesian3) ||
                 this.mousePointEntity?.position?.getValue(time);
 
-              return Rectangle.fromCartographicArray([
-                Cartographic.fromCartesian(point1),
-                Cartographic.fromCartesian(point2)
-              ]);
+              return (
+                point1 &&
+                point2 &&
+                Rectangle.fromCartographicArray([
+                  Cartographic.fromCartesian(point1),
+                  Cartographic.fromCartesian(point2)
+                ])
+              );
             }).bind(this),
             false
           ),
@@ -263,7 +277,7 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
   private addPointToPointEntities(name: string, position: Cartesian3) {
     var pointEntity = new Entity({
       name: name,
-      position: position,
+      position: new ConstantPositionProperty(position),
       billboard: <any>{
         image: this.svgPoint,
         eyeOffset: new Cartesian3(0.0, 0.0, -50.0)
@@ -297,7 +311,7 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
 
         if (this.drawRectangle) {
           this.mouseMoveDispose = reaction(
-            () => viewState.mouseCoords.cartographic,
+            () => this.terria.currentViewer.mouseCoords.cartographic,
             mouseCoordsCartographic => {
               if (!isDefined(mouseCoordsCartographic)) return;
 
@@ -311,7 +325,8 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
             }
           );
         }
-      }
+      },
+      invisible: this.invisible
     });
     runInAction(() => {
       this.terria.mapInteractionModeStack.push(pickPointMode);
@@ -353,9 +368,10 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
 
             // If drawing a rectangle -> limit to 2 points
             if (
-              !this.drawRectangle ||
-              (this.drawRectangle &&
-                this.pointEntities.entities.values.length < 2)
+              this.inDrawMode &&
+              (!this.drawRectangle ||
+                (this.drawRectangle &&
+                  this.pointEntities.entities.values.length < 2))
             ) {
               this.prepareToAddNewPoint();
             }

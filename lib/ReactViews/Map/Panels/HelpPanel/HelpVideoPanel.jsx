@@ -29,7 +29,8 @@ class HelpVideoPanel extends React.Component {
     videoUrl: PropTypes.string,
     placeholderImage: PropTypes.string,
     theme: PropTypes.object,
-    t: PropTypes.func.isRequired
+    t: PropTypes.func.isRequired,
+    i18n: PropTypes.object.isRequired
   };
 
   constructor(props) {
@@ -37,7 +38,6 @@ class HelpVideoPanel extends React.Component {
   }
 
   render() {
-    // const { t } = this.props;
     const helpItemType = this.props.paneMode || "videoAndContent"; // default is video panel
     const itemSelected =
       this.props.viewState.selectedHelpMenuItem === this.props.itemString;
@@ -72,6 +72,7 @@ class HelpVideoPanel extends React.Component {
             overflow-x: hidden;
             overflow-y: auto;
           `}
+          scroll
         >
           <If condition={helpItemType === "videoAndContent"}>
             {this.props.videoUrl && this.props.placeholderImage && (

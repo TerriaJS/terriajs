@@ -5,6 +5,8 @@ import Protobuf from "pbf";
 import BoundingRectangle from "terriajs-cesium/Source/Core/BoundingRectangle";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import Credit from "terriajs-cesium/Source/Core/Credit";
+import DefaultProxy from "terriajs-cesium/Source/Core/DefaultProxy";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
@@ -14,6 +16,7 @@ import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTili
 import WindingOrder from "terriajs-cesium/Source/Core/WindingOrder";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import TileDiscardPolicy from "terriajs-cesium/Source/Scene/TileDiscardPolicy";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import URITemplate from "urijs/src/URITemplate";
 import isDefined from "../Core/isDefined";
@@ -37,13 +40,15 @@ interface MapboxVectorTileImageryProviderOptions {
   url: string;
   layerName: string;
   subdomains?: unknown[];
-  styleFunc: (feature: any) => SimpleStyle | undefined;
+  styleFunc: (feature: VectorTileFeature) => SimpleStyle | undefined;
   minimumZoom?: number;
   maximumZoom?: number;
   maximumNativeZoom?: number;
   rectangle?: Rectangle;
   uniqueIdProp: string;
-  featureInfoFunc?: (feature: any) => ImageryLayerFeatureInfo | undefined;
+  featureInfoFunc?: (
+    feature: VectorTileFeature
+  ) => ImageryLayerFeatureInfo | undefined;
 }
 
 export default class MapboxVectorTileImageryProvider
@@ -51,7 +56,9 @@ export default class MapboxVectorTileImageryProvider
   private readonly _uriTemplate: uri.URITemplate;
   private readonly _layerName: string;
   private readonly _subdomains: string[];
-  private readonly _styleFunc: (feature: any) => SimpleStyle | undefined;
+  private readonly _styleFunc: (
+    feature: VectorTileFeature
+  ) => SimpleStyle | undefined;
   private readonly _tilingScheme: WebMercatorTilingScheme;
   private readonly _tileWidth: number;
   private readonly _tileHeight: number;
@@ -61,7 +68,7 @@ export default class MapboxVectorTileImageryProvider
   private readonly _rectangle: Rectangle;
   private readonly _uniqueIdProp: string;
   private readonly _featureInfoFunc?: (
-    feature: any
+    feature: VectorTileFeature
   ) => ImageryLayerFeatureInfo | undefined;
   private readonly _errorEvent = new CesiumEvent();
   private readonly _ready = true;
@@ -86,7 +93,10 @@ export default class MapboxVectorTileImageryProvider
     );
 
     this._rectangle = isDefined(options.rectangle)
-      ? Rectangle.intersection(options.rectangle, this._tilingScheme.rectangle)
+      ? Rectangle.intersection(
+          options.rectangle,
+          this._tilingScheme.rectangle
+        ) || this._tilingScheme.rectangle
       : this._tilingScheme.rectangle;
     this._uniqueIdProp = options.uniqueIdProp;
     this._featureInfoFunc = options.featureInfoFunc;
@@ -154,11 +164,19 @@ export default class MapboxVectorTileImageryProvider
     return this._ready;
   }
 
+  get defaultNightAlpha() {
+    return undefined;
+  }
+
+  get defaultDayAlpha() {
+    return undefined;
+  }
+
   get hasAlphaChannel() {
     return true;
   }
 
-  get credit(): Cesium.Credit {
+  get credit(): Credit {
     return <any>undefined;
   }
 
@@ -194,7 +212,7 @@ export default class MapboxVectorTileImageryProvider
     return undefined;
   }
 
-  get proxy(): Cesium.Proxy {
+  get proxy(): DefaultProxy {
     return <any>undefined;
   }
 
@@ -202,11 +220,11 @@ export default class MapboxVectorTileImageryProvider
     return when(true);
   }
 
-  get tileDiscardPolicy(): Cesium.TileDiscardPolicy {
+  get tileDiscardPolicy(): TileDiscardPolicy {
     return <any>undefined;
   }
 
-  getTileCredits(x: number, y: number, level: number): Cesium.Credit[] {
+  getTileCredits(x: number, y: number, level: number): Credit[] {
     return [];
   }
 

@@ -1,21 +1,28 @@
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import TableColumnTraits from "./TableColumnTraits";
-import TableStyleTraits from "./TableStyleTraits";
+import ChartPointOnMapTraits from "./ChartPointOnMapTraits";
+import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
+import ExportableTraits from "./ExportableTraits";
+import LayerOrderingTraits from "./LayerOrderingTraits";
 import MappableTraits from "./MappableTraits";
 import mixTraits from "./mixTraits";
 import objectArrayTrait from "./objectArrayTrait";
 import objectTrait from "./objectTrait";
+import primitiveArrayTrait from "./primitiveArrayTrait";
 import primitiveTrait from "./primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
-import TimeVaryingTraits from "./TimeVaryingTraits";
-import LayerOrderingTraits from "./LayerOrderingTraits";
+import SplitterTraits from "./SplitterTraits";
+import TableColumnTraits from "./TableColumnTraits";
+import TableStyleTraits from "./TableStyleTraits";
 
 export default class TableTraits extends mixTraits(
+  SplitterTraits,
+  DiscretelyTimeVaryingTraits,
+  ExportableTraits,
   LayerOrderingTraits,
   CatalogMemberTraits,
-  TimeVaryingTraits,
   MappableTraits,
-  RasterLayerTraits
+  RasterLayerTraits,
+  ChartPointOnMapTraits
 ) {
   @primitiveTrait({
     name: "Show Warning for Unmatched Regions",
@@ -63,4 +70,28 @@ export default class TableTraits extends mixTraits(
     type: "string"
   })
   activeStyle?: string;
+
+  @primitiveTrait({
+    name: "Enable manual region mapping",
+    description:
+      "If enabled, there will be controls to set region column and region type.",
+    type: "boolean"
+  })
+  enableManualRegionMapping?: boolean;
+
+  @primitiveArrayTrait({
+    name: "Column titles",
+    description:
+      "An optional array of column titles that override the individual `TableColumnTraits.title` setting.",
+    type: "string"
+  })
+  columnTitles: string[] = [];
+
+  @primitiveArrayTrait({
+    name: "Column units",
+    description:
+      "An optional array of column units that override the inidividual `TableColumnTraits.unit` setting.",
+    type: "string"
+  })
+  columnUnits: string[] = [];
 }

@@ -1,13 +1,13 @@
 "use strict";
 
-import defined from "terriajs-cesium/Source/Core/defined";
-import React from "react";
 import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
-import NotificationWindow from "./NotificationWindow";
-import triggerResize from "../../Core/triggerResize";
-import { observer } from "mobx-react";
 import { runInAction } from "mobx";
+import { observer } from "mobx-react";
+import PropTypes from "prop-types";
+import React from "react";
+import defined from "terriajs-cesium/Source/Core/defined";
+import triggerResize from "../../Core/triggerResize";
+import NotificationWindow from "./NotificationWindow";
 
 const Notification = observer(
   createReactClass({
@@ -55,6 +55,7 @@ const Notification = observer(
       return (
         notification && (
           <NotificationWindow
+            viewState={this.props.viewState}
             title={notification.title}
             message={notification.message}
             confirmText={notification.confirmText}

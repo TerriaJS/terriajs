@@ -15,7 +15,10 @@ import primitiveTrait from "./primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
 import SplitterTraits from "./SplitterTraits";
 import TimeFilterTraits from "./TimeFilterTraits";
+import primitiveArrayTrait from "./primitiveArrayTrait";
 import UrlTraits from "./UrlTraits";
+import ExportableTraits from "./ExportableTraits";
+import DataCustodianTraits from "./DataCustodianTraits";
 
 export class WebMapServiceAvailableStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -64,7 +67,77 @@ export class WebMapServiceAvailableLayerStylesTraits extends ModelTraits {
   styles?: WebMapServiceAvailableStyleTraits[];
 }
 
+export class WebMapServiceAvailableDimensionTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "string",
+    name: "Dimension Name",
+    description: "The name of the dimension."
+  })
+  name?: string;
+
+  @primitiveArrayTrait({
+    type: "string",
+    name: "Dimension values",
+    description: "Possible dimension values."
+  })
+  values?: string[];
+
+  @primitiveTrait({
+    type: "string",
+    name: "Units",
+    description: "The units of the dimension."
+  })
+  units?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Unit Symbol",
+    description: "The unitSymbol of the dimension."
+  })
+  unitSymbol?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Default",
+    description: "The default value for the dimension."
+  })
+  default?: string;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Multiple Values",
+    description: "Can the dimension support multiple values."
+  })
+  multipleValues?: boolean;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Nearest Value",
+    description: "The nearest value of the dimension."
+  })
+  nearestValue?: boolean;
+}
+
+export class WebMapServiceAvailableLayerDimensionsTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "string",
+    name: "Layer Name",
+    description: "The name of the layer for which dimensions are available."
+  })
+  layerName?: string;
+
+  @objectArrayTrait({
+    type: WebMapServiceAvailableDimensionTraits,
+    name: "Dimensions",
+    description: "The dimensions available for this layer.",
+    idProperty: "name"
+  })
+  dimensions?: WebMapServiceAvailableDimensionTraits[];
+}
+
 export default class WebMapServiceCatalogItemTraits extends mixTraits(
+  DataCustodianTraits,
+  ExportableTraits,
   DiffableTraits,
   FeatureInfoTraits,
   LayerOrderingTraits,
@@ -78,24 +151,25 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
 ) {
   @primitiveTrait({
     type: "string",
-    name: "Is GeoServer",
-    description: "True if this WMS is a GeoServer; otherwise, false."
-  })
-  isGeoServer: boolean = false;
-
-  @primitiveTrait({
-    type: "string",
     name: "Layer(s)",
-    description: "The layer or layers to display."
+    description: "The layer or layers to display (comma separated values)."
   })
   layers?: string;
 
   @primitiveTrait({
     type: "string",
     name: "Style(s)",
-    description: "The styles to use with each of the `Layer(s)`."
+    description:
+      "The styles to use with each of the `Layer(s)` (comma separated values). This maps one-to-one with `Layer(s)`"
   })
   styles?: string;
+
+  @anyTrait({
+    name: "Dimensions",
+    description:
+      "Dimension parameters used to request a particular layer along one or more dimensional axes (including elevation, excluding time). Do not include `_dim` prefx for parameter keys. These dimensions will be applied to all layers (if applicable)"
+  })
+  dimensions?: { [key: string]: string };
 
   @objectArrayTrait({
     type: WebMapServiceAvailableLayerStylesTraits,
@@ -104,6 +178,14 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
     idProperty: "layerName"
   })
   availableStyles?: WebMapServiceAvailableLayerStylesTraits[];
+
+  @objectArrayTrait({
+    type: WebMapServiceAvailableLayerDimensionsTraits,
+    name: "Available Dimensions",
+    description: "The available dimensions.",
+    idProperty: "layerName"
+  })
+  availableDimensions?: WebMapServiceAvailableLayerDimensionsTraits[];
 
   @objectArrayTrait({
     name: "Legend URLs",
@@ -116,7 +198,7 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   @anyTrait({
     name: "Parameters",
     description:
-      "Additional parameters to pass to the MapServer when requesting images."
+      "Additional parameters to pass to the MapServer when requesting images. Style parameters are stored as CSV in `styles`, dimension parameters are stored in `dimensions`."
   })
   parameters?: JsonObject;
 
@@ -152,10 +234,10 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
 
   @primitiveTrait({
     type: "boolean",
-    name: "Disable style selector",
-    description: "When true, disables the style selector in the workbench"
+    name: "Disable dimension selectors",
+    description: "When true, disables the dimension selectors in the workbench."
   })
-  disableStyleSelector = false;
+  disableDimensionSelectors = false;
 
   @primitiveTrait({
     type: "string",
@@ -172,4 +254,56 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
       "Gets or sets the coverage name for linked WCS for clip-and-ship."
   })
   linkedWcsCoverage?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Is GeoServer",
+    description: "True if this WMS is a GeoServer; otherwise, false."
+  })
+  isGeoServer: boolean = false;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Is Esri",
+    description: "True if this WMS is from Esri; otherwise, false."
+  })
+  isEsri: boolean = false;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Is Thredds",
+    description: "True if this WMS is from a THREDDS server; otherwise, false."
+  })
+  isThredds: boolean = false;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Is NcWMS",
+    description: "True if this WMS supports NcWMS."
+  })
+  isNcWMS: boolean = false;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Supports color scale range",
+    description:
+      "Gets or sets whether this WMS server has been identified as supporting the COLORSCALERANGE parameter."
+  })
+  supportsColorScaleRange: boolean = false;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Color scale minimum",
+    description:
+      "The minumum of the color scale range. Because COLORSCALERANGE is a non-standard property supported by ncWMS servers, this property is ignored unless WebMapServiceCatalogItem's supportsColorScaleRange is true. WebMapServiceCatalogItem's colorScaleMaximum must be set as well."
+  })
+  colorScaleMinimum: number = -50;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Color scale maximum",
+    description:
+      "The maximum of the color scale range. Because COLORSCALERANGE is a non-standard property supported by ncWMS servers, this property is ignored unless WebMapServiceCatalogItem's supportsColorScaleRange is true. WebMapServiceCatalogItem's colorScaleMinimum must be set as well."
+  })
+  colorScaleMaximum: number = 50;
 }

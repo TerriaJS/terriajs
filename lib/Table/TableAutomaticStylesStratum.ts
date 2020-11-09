@@ -1,6 +1,8 @@
 import { computed } from "mobx";
 import { createTransformer } from "mobx-utils";
+import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
+import { JsonObject } from "../Core/Json";
 import ConstantColorMap from "../Map/ConstantColorMap";
 import DiscreteColorMap from "../Map/DiscreteColorMap";
 import EnumColorMap from "../Map/EnumColorMap";
@@ -16,12 +18,10 @@ import TableChartStyleTraits, {
 import TableColorStyleTraits from "../Traits/TableColorStyleTraits";
 import TablePointSizeStyleTraits from "../Traits/TablePointSizeStyleTraits";
 import TableStyleTraits from "../Traits/TableStyleTraits";
+import TableTimeStyleTraits from "../Traits/TableTimeStyleTraits";
 import TableTraits from "../Traits/TableTraits";
 import TableColumnType from "./TableColumnType";
 import TableStyle from "./TableStyle";
-import DiscreteTimeTraits from "../Traits/DiscreteTimeTraits";
-import filterOutUndefined from "../Core/filterOutUndefined";
-import TableTimeStyleTraits from "../Traits/TableTimeStyleTraits";
 
 const DEFAULT_ID_COLUMN = "id";
 
@@ -31,6 +31,7 @@ interface TableCatalogItem
 export default class TableAutomaticStylesStratum extends LoadableStratum(
   TableTraits
 ) {
+  static stratumName = "automaticTableStyles";
   constructor(readonly catalogItem: TableCatalogItem) {
     super();
   }
@@ -101,9 +102,10 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
       return createStratumInstance(TableStyleTraits, {
         chart: createStratumInstance(TableChartStyleTraits, {
           xAxisColumn: scalarColumns[0].name,
-          lines: scalarColumns.slice(1).map(column =>
+          lines: scalarColumns.slice(1).map((column, i) =>
             createStratumInstance(TableChartLineStyleTraits, {
-              yAxisColumn: column.name
+              yAxisColumn: column.name,
+              isSelectedInWorkbench: i === 0 // activate only the first chart line by default
             })
           )
         })
@@ -114,13 +116,19 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
   @computed
   get styles(): StratumFromTraits<TableStyleTraits>[] {
     // Create a style to color by every scalar and enum.
-    const columns = this.catalogItem.tableColumns.filter(
+    let columns = this.catalogItem.tableColumns.filter(
       column =>
         column.type === TableColumnType.scalar ||
         column.type === TableColumnType.enum ||
-        column.type === TableColumnType.region ||
         column.type === TableColumnType.text
     );
+
+    // If no styles for scalar, enum or text, try to create a style using region columns
+    if (columns.length === 0) {
+      columns = this.catalogItem.tableColumns.filter(
+        column => column.type === TableColumnType.region
+      );
+    }
 
     return columns.map((column, i) =>
       createStratumInstance(TableStyleTraits, {
@@ -134,21 +142,6 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
         })
       })
     );
-  }
-
-  @computed
-  get discreteTimes(): { time: string; tag: string | undefined }[] | undefined {
-    const dates = this.catalogItem.activeTableStyle.timeColumn?.valuesAsDates
-      .values;
-    if (dates === undefined) {
-      return;
-    }
-    const times = filterOutUndefined(
-      dates.map(d =>
-        d ? { time: d.toISOString(), tag: undefined } : undefined
-      )
-    );
-    return times;
   }
 
   @computed
@@ -179,14 +172,6 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
   get items(): StratumFromTraits<LegendItemTraits>[] {
     const activeStyle = this.catalogItem.activeTableStyle;
     if (activeStyle === undefined) {
-      return [];
-    }
-
-    // Don't created a legend if we're using a region column
-    if (
-      isDefined(activeStyle.colorColumn) &&
-      activeStyle.colorColumn.type === TableColumnType.region
-    ) {
       return [];
     }
 
@@ -223,14 +208,19 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
             })
           ]
         : [];
-
+    let numberFormatOptions: JsonObject | undefined = undefined;
+    if (colorColumn !== undefined) {
+      numberFormatOptions = colorColumn.traits.format
+        ? colorColumn.traits.format
+        : undefined;
+    }
     return colorMap.maximums
       .map((maximum, i) => {
         const isBottom = i === 0;
         const formattedMin = isBottom
-          ? this._formatValue(minimum)
-          : this._formatValue(colorMap.maximums[i - 1]);
-        const formattedMax = this._formatValue(maximum);
+          ? this._formatValue(minimum, numberFormatOptions)
+          : this._formatValue(colorMap.maximums[i - 1], numberFormatOptions);
+        const formattedMax = this._formatValue(maximum, numberFormatOptions);
         return createStratumInstance(LegendItemTraits, {
           color: colorMap.colors[i].toCssColorString(),
           title: `${formattedMin} to ${formattedMax}`
@@ -258,13 +248,26 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
           ]
         : [];
 
-    return colorMap.values
-      .map((value, i) => {
-        return createStratumInstance(LegendItemTraits, {
-          title: value,
-          color: colorMap.colors[i].toCssColorString()
-        });
-      })
+    // Aggregate colours (don't show multiple legend items for the same colour)
+    const colorMapValues = colorMap.values.reduce<{
+      [color: string]: string[];
+    }>((prev, current, i) => {
+      const cssCol = colorMap.colors[i].toCssColorString();
+      if (isDefined(prev[cssCol])) {
+        prev[cssCol].push(current);
+      } else {
+        prev[cssCol] = [current];
+      }
+      return prev;
+    }, {});
+
+    return Object.entries(colorMapValues)
+      .map(([color, multipleTitles]) =>
+        createStratumInstance(LegendItemTraits, {
+          multipleTitles,
+          color
+        })
+      )
       .concat(nullBin);
   }
 
@@ -280,7 +283,7 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
     ];
   }
 
-  private _formatValue(value: number): string {
-    return Math.round(value).toString();
+  private _formatValue(value: number, format: JsonObject | undefined): string {
+    return Math.round(value).toLocaleString(undefined, format);
   }
 }
