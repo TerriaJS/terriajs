@@ -12,6 +12,7 @@ Change Log
 * Added `DataCustodianTraits` to `WebMapServiceCatalogItem`
 * Added `disableDimensionSelectors` trait to `WebMapServiceCatalogItem`. Acheives the same effect of `disableUserChanges` in v7.
 * Temporarily stopped using `papaparse` for fetching Csv urls till an upstream bug is fixed.
+* Improve handling of `ArcGisMapServerCatalogItem` when dealing with tiled layers.
 
 #### 8.0.0-alpha.60
 * Fix WMS legend for default styles.
@@ -230,7 +231,6 @@ Change Log
 * Add `header` option to `loadText`
 * Add `isMixtedInto` function for `AsyncMappableMixin` and `AsyncChartableMixin`
 * Added file upload support for `GltfCatalogItem`. The supported extension is glb.
-* Improve handling of `ArcGisMapServerCatalogItem` when dealing with tiled layers.
 * Improve runtime themeing via styled components across main UI components
 * Updated default welcome video defaults to a newer, slower video
 * Difftool will now pick any existing marked location (like from a search result) and filter imagery for that location.

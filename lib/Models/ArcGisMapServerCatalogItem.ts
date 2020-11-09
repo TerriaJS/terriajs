@@ -270,7 +270,7 @@ class MapServerStratum extends LoadableStratum(
 
     let items: StratumFromTraits<LegendItemTraits>[] = [];
 
-    (this._legends.layers || []).forEach(l => {
+    (this._legends?.layers || []).forEach(l => {
       if (noDataRegex.test(l.layerName) || labelsRegex.test(l.layerName)) {
         return;
       }
