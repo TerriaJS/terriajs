@@ -4,7 +4,12 @@ import { ThemeProvider, createGlobalStyle } from "styled-components";
 import PropTypes from "prop-types";
 import combine from "terriajs-cesium/Source/Core/combine";
 
-import { BrowserRouter as Router, Route, withRouter } from "react-router-dom";
+import {
+  BrowserRouter,
+  MemoryRouter,
+  Route,
+  withRouter
+} from "react-router-dom";
 import { Helmet } from "react-helmet";
 
 import {
@@ -55,6 +60,7 @@ import { action, runInAction } from "mobx";
 import HelpPanel from "../Map/Panels/HelpPanel/HelpPanel";
 import Tool from "../Tool";
 import Disclaimer from "../Disclaimer";
+import Terria from "../../Models/Terria";
 
 export const showStoryPrompt = (viewState, terria) => {
   terria.configParameters.showFeaturePrompts &&
@@ -486,10 +492,18 @@ const StandardUserInterfaceWithRouter = withRouter(
   withRoutingTracker(withTranslation()(StandardUserInterfaceRaw))
 );
 
-export const StandardUserInterface = props => (
-  <Router>
-    <StandardUserInterfaceWithRouter {...props} />
-  </Router>
-);
+export const StandardUserInterface = props => {
+  const experimental = props.terria.configParameters.experimentalFeatures;
+  const Router = experimental ? BrowserRouter : MemoryRouter;
+
+  return (
+    <Router>
+      <StandardUserInterfaceWithRouter {...props} />
+    </Router>
+  );
+};
+StandardUserInterface.propTypes = {
+  terria: PropTypes.object.isRequired
+};
 
 export default withFallback(withTranslation()(StandardUserInterface));
