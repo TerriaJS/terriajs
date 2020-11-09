@@ -30,7 +30,6 @@ import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
 
 const proj4 = require("proj4").default;
-const unionRectangleArray = require("../Map/unionRectangleArray");
 
 interface RectangleExtent {
   east: number;
@@ -49,7 +48,7 @@ interface MapServer {
   description?: string;
   copyrightText?: string;
   mapName?: string;
-  layers: LayerSummary[];
+  layers: Layer[];
   fullExtent: Extent;
 }
 
@@ -65,19 +64,15 @@ interface Extent {
   spatialReference?: SpatialReference;
 }
 
-interface LayerSummary {
-  id: number;
-  name: string;
-  maxScale: number;
-}
-
 interface Layer {
   id: number;
   name: string;
-  description: string;
-  copyrightText: string;
-  extent: Extent;
   maxScale: number;
+
+  // The following is pulled from <mapservice-url>/layers or <mapservice-url>/<layerOrTableId>
+  description?: string;
+  copyrightText?: string;
+  extent?: Extent;
 }
 
 interface Legend {
@@ -86,6 +81,10 @@ interface Legend {
   imageData: string;
   width: number;
   height: number;
+}
+
+interface Legends {
+  layers?: { layerId: number; layerName: string; legend: Legend[] }[];
 }
 
 class MapServerStratum extends LoadableStratum(
@@ -97,9 +96,7 @@ class MapServerStratum extends LoadableStratum(
     private readonly _item: ArcGisMapServerCatalogItem,
     private readonly _mapServer: MapServer,
     private readonly _allLayers: Layer[],
-    private readonly _legends: {
-      layers?: { layerId: number; layerName: string; legend: Legend[] }[];
-    },
+    private readonly _legends: Legends | undefined,
     readonly token: string | undefined
   ) {
     super();
@@ -153,6 +150,23 @@ class MapServerStratum extends LoadableStratum(
 
     // TODO: if tokenUrl, fetch and pass token as parameter
     const serviceMetadata = await getJson(item, serviceUri);
+
+    if (!isDefined(serviceMetadata)) {
+      throw new TerriaError({
+        title: i18next.t("models.arcGisService.invalidServerTitle"),
+        message: i18next.t("models.arcGisService.invalidServerMessage", {
+          cors: '<a href="http://enable-cors.org/" target="_blank">CORS</a>',
+          appName: item.terria.appName,
+          email:
+            '<a href="mailto:' +
+            item.terria.supportEmail +
+            '">' +
+            item.terria.supportEmail +
+            "</a>"
+        })
+      });
+    }
+
     let layersMetadata = await getJson(item, layersUri);
     const legendMetadata = await getJson(item, legendUri);
 
@@ -165,6 +179,18 @@ class MapServerStratum extends LoadableStratum(
       } else if (layersMetadata.id) {
         layersMetadata = [layersMetadata];
       }
+    }
+
+    if (!isDefined(layersMetadata) || layersMetadata.length === 0) {
+      throw new TerriaError({
+        title: i18next.t(
+          "models.arcGisMapServerCatalogItem.noLayersFoundMessage"
+        ),
+        message: i18next.t(
+          "models.arcGisMapServerCatalogItem.noLayersFoundMessage",
+          item
+        )
+      });
     }
 
     const stratum = new MapServerStratum(
@@ -587,7 +613,7 @@ function getRectangleFromLayer(extent: Extent, rectangle: RectangleExtent) {
 
 function getRectangleFromLayers(rectangle: RectangleExtent, layers: Layer[]) {
   layers.forEach(function(item) {
-    getRectangleFromLayer(item.extent, rectangle);
+    item.extent && getRectangleFromLayer(item.extent, rectangle);
   });
 }
 
