@@ -30,7 +30,6 @@ import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
 
 const proj4 = require("proj4").default;
-const unionRectangleArray = require("../Map/unionRectangleArray");
 
 interface RectangleExtent {
   east: number;
@@ -49,6 +48,8 @@ interface MapServer {
   description?: string;
   copyrightText?: string;
   mapName?: string;
+  layers: Layer[];
+  fullExtent: Extent;
 }
 
 interface SpatialReference {
@@ -65,11 +66,13 @@ interface Extent {
 
 interface Layer {
   id: number;
-  name?: string;
+  name: string;
+  maxScale: number;
+
+  // The following is pulled from <mapservice-url>/layers or <mapservice-url>/<layerOrTableId>
   description?: string;
   copyrightText?: string;
   extent?: Extent;
-  maxScale?: number;
 }
 
 interface Legend {
@@ -78,6 +81,10 @@ interface Legend {
   imageData: string;
   width: number;
   height: number;
+}
+
+interface Legends {
+  layers?: { layerId: number; layerName: string; legend: Legend[] }[];
 }
 
 class MapServerStratum extends LoadableStratum(
@@ -89,9 +96,7 @@ class MapServerStratum extends LoadableStratum(
     private readonly _item: ArcGisMapServerCatalogItem,
     private readonly _mapServer: MapServer,
     private readonly _allLayers: Layer[],
-    private readonly _legends: {
-      layers?: { layerId: number; layerName: string; legend: Legend[] }[];
-    },
+    private readonly _legends: Legends | undefined,
     readonly token: string | undefined
   ) {
     super();
@@ -144,43 +149,55 @@ class MapServerStratum extends LoadableStratum(
     }
 
     // TODO: if tokenUrl, fetch and pass token as parameter
-    const serviceMetadata = getJson(item, serviceUri);
-    const layersMetadata = getJson(item, layersUri);
-    const legendMetadata = getJson(item, legendUri);
+    const serviceMetadata = await getJson(item, serviceUri);
 
-    const results = await Promise.all([
-      serviceMetadata,
-      layersMetadata,
-      legendMetadata
-    ]);
+    if (!isDefined(serviceMetadata)) {
+      throw new TerriaError({
+        title: i18next.t("models.arcGisService.invalidServerTitle"),
+        message: i18next.t("models.arcGisService.invalidServerMessage", {
+          cors: '<a href="http://enable-cors.org/" target="_blank">CORS</a>',
+          appName: item.terria.appName,
+          email:
+            '<a href="mailto:' +
+            item.terria.supportEmail +
+            '">' +
+            item.terria.supportEmail +
+            "</a>"
+        })
+      });
+    }
 
-    const mapServer = results[0];
-    const legend = results[2];
+    let layersMetadata = await getJson(item, layersUri);
+    const legendMetadata = await getJson(item, legendUri);
 
-    let allLayers;
-    if (isDefined(results[1].layers)) {
-      allLayers = results[1].layers;
-    } else if (isDefined(results[1].id)) {
-      // single layer
-      allLayers = [results[1]];
+    // Use the slightly more basic layer metadata
+    if (layersMetadata === undefined) {
+      layersMetadata = serviceMetadata.layers;
     } else {
+      if (layersMetadata.layers !== undefined) {
+        layersMetadata = layersMetadata.layers;
+      } else if (layersMetadata.id) {
+        layersMetadata = [layersMetadata];
+      }
+    }
+
+    if (!isDefined(layersMetadata) || layersMetadata.length === 0) {
       throw new TerriaError({
         title: i18next.t(
-          "models.arcGisMapServerCatalogItem.unusableMetadataTitle"
+          "models.arcGisMapServerCatalogItem.noLayersFoundMessage"
         ),
-        message: isDefined(results[0].error)
-          ? results[0].error.message
-          : i18next.t(
-              "models.arcGisMapServerCatalogItem.unusableMetadataDefaultMessage"
-            )
+        message: i18next.t(
+          "models.arcGisMapServerCatalogItem.noLayersFoundMessage",
+          item
+        )
       });
     }
 
     const stratum = new MapServerStratum(
       item,
-      mapServer,
-      allLayers,
-      legend,
+      serviceMetadata,
+      layersMetadata,
+      legendMetadata,
       token
     );
     return stratum;
@@ -229,7 +246,19 @@ class MapServerStratum extends LoadableStratum(
   }
 
   @computed get rectangle() {
-    const rectangle = getRectangleFromLayers(this._allLayers);
+    const rectangle: RectangleExtent = {
+      west: Infinity,
+      south: Infinity,
+      east: -Infinity,
+      north: -Infinity
+    };
+    // If we only have the summary layer info
+    if (!("extent" in this._allLayers[0])) {
+      getRectangleFromLayer(this.mapServerData.fullExtent, rectangle);
+    } else {
+      getRectangleFromLayers(rectangle, this._allLayers);
+    }
+    if (rectangle.west === Infinity) return undefined;
     return createStratumInstance(RectangleTraits, rectangle);
   }
 
@@ -267,7 +296,7 @@ class MapServerStratum extends LoadableStratum(
 
     let items: StratumFromTraits<LegendItemTraits>[] = [];
 
-    (this._legends.layers || []).forEach(l => {
+    (this._legends?.layers || []).forEach(l => {
       if (noDataRegex.test(l.layerName) || labelsRegex.test(l.layerName)) {
         return;
       }
@@ -479,10 +508,16 @@ function getBaseURI(item: ArcGisMapServerCatalogItem) {
   return uri;
 }
 
-function getJson(item: ArcGisMapServerCatalogItem, uri: any) {
-  return loadJson(
-    proxyCatalogItemUrl(item, uri.addQuery("f", "json").toString())
-  );
+async function getJson(item: ArcGisMapServerCatalogItem, uri: any) {
+  try {
+    const response = await loadJson(
+      proxyCatalogItemUrl(item, uri.addQuery("f", "json").toString())
+    );
+    return response;
+  } catch (err) {
+    console.log(err);
+    return undefined;
+  }
 }
 
 /* Given a comma-separated string of layer names, returns the layer objects corresponding to them. */
@@ -541,11 +576,7 @@ function updateBbox(extent: Extent, rectangle: RectangleExtent) {
   if (extent.ymax > rectangle.north) rectangle.north = extent.ymax;
 }
 
-function getRectangleFromLayer(
-  thisLayerJson: Layer,
-  rectangle: RectangleExtent
-) {
-  const extent = thisLayerJson.extent;
+function getRectangleFromLayer(extent: Extent, rectangle: RectangleExtent) {
   if (
     isDefined(extent) &&
     extent.spatialReference &&
@@ -557,7 +588,7 @@ function getRectangleFromLayer(
     }
 
     if (!isDefined((proj4definitions as any)[wkid])) {
-      return undefined;
+      return;
     }
 
     const source = new proj4.Proj((proj4definitions as any)[wkid]);
@@ -578,34 +609,12 @@ function getRectangleFromLayer(
       rectangle
     );
   }
-
-  return undefined;
 }
 
-function getRectangleFromLayers(
-  layers: Layer[]
-): StratumFromTraits<RectangleTraits> | undefined {
-  const rectangle: RectangleExtent = {
-    west: Infinity,
-    south: Infinity,
-    east: -Infinity,
-    north: -Infinity
-  };
-  if (!Array.isArray(layers)) {
-    getRectangleFromLayer(layers, rectangle);
-  } else {
-    layers.forEach(function(item) {
-      getRectangleFromLayer(item, rectangle);
-    });
-  }
-  if (
-    rectangle.east === Infinity ||
-    rectangle.south === Infinity ||
-    rectangle.west === -Infinity ||
-    rectangle.north === -Infinity
-  )
-    return undefined;
-  return rectangle;
+function getRectangleFromLayers(rectangle: RectangleExtent, layers: Layer[]) {
+  layers.forEach(function(item) {
+    item.extent && getRectangleFromLayer(item.extent, rectangle);
+  });
 }
 
 function cleanAndProxyUrl(
