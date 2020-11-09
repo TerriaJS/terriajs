@@ -13,6 +13,7 @@ Change Log
 * Added `disableDimensionSelectors` trait to `WebMapServiceCatalogItem`. Acheives the same effect of `disableUserChanges` in v7.
 * Temporarily stopped using `papaparse` for fetching Csv urls till an upstream bug is fixed.
 * Improve handling of `ArcGisMapServerCatalogItem` when dealing with tiled layers.
+* Ensure there aren't more bins than unique values for a `TableStyle`
 
 #### 8.0.0-alpha.60
 * Fix WMS legend for default styles.
