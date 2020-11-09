@@ -5,6 +5,7 @@ import ArcGisMapServerCatalogGroup from "./ArcGisMapServerCatalogGroup";
 import ArcGisMapServerCatalogItem from "./ArcGisMapServerCatalogItem";
 import ArcGisPortalCatalogGroup from "./ArcGisPortalCatalogGroup";
 import ArcGisPortalItemReference from "./ArcGisPortalItemReference";
+import ArcGisTerrainCatalogItem from "./ArcGisTerrainCatalogItem";
 import BingMapsCatalogItem from "./BingMapsCatalogItem";
 import CartoMapCatalogItem from "./CartoMapCatalogItem";
 import CatalogGroup from "./CatalogGroupNew";
@@ -14,26 +15,36 @@ import CesiumTerrainCatalogItem from "./CesiumTerrainCatalogItem";
 import CkanCatalogGroup from "./CkanCatalogGroup";
 import CkanItemReference from "./CkanItemReference";
 import CompositeCatalogItem from "./CompositeCatalogItem";
-import createUrlReferenceFromUrl from "./createUrlReferenceFromUrl";
 import CsvCatalogItem from "./CsvCatalogItem";
 import CzmlCatalogItem from "./CzmlCatalogItem";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import GeoRssCatalogItem from "./GeoRssCatalogItem";
 import GltfCatalogItem from "./GltfCatalogItem";
+import GpxCatalogItem from "./GpxCatalogItem";
 import GtfsCatalogItem from "./GtfsCatalogItem";
 import IonImageryCatalogItem from "./IonImageryCatalogItem";
 import KmlCatalogItem from "./KmlCatalogItem";
 import MagdaReference from "./MagdaReference";
 import OpenStreetMapCatalogItem from "./OpenStreetMapCatalogItem";
+import SdmxJsonCatalogGroup from "./SdmxJson/SdmxJsonCatalogGroup";
+import SdmxJsonCatalogItem from "./SdmxJson/SdmxJsonCatalogItem";
 import SenapsLocationsCatalogItem from "./SenapsLocationsCatalogItem";
 import SensorObservationServiceCatalogItem from "./SensorObservationServiceCatalogItem";
 import SplitItemReference from "./SplitItemReference";
 import StubCatalogItem from "./StubCatalogItem";
+import ThreddsCatalogGroup from "./ThreddsCatalogGroup";
 import UrlReference, { UrlToCatalogMemberMapping } from "./UrlReference";
+import WebFeatureServiceCatalogGroup from "./WebFeatureServiceCatalogGroup";
+import WebFeatureServiceCatalogItem from "./WebFeatureServiceCatalogItem";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
+import MapboxVectorTileCatalogItem from "./MapboxVectorTileCatalogItem";
+import WebMapTileServiceCatalogGroup from "./WebMapTileServiceCatalogGroup";
+import WebMapTileServiceCatalogItem from "./WebMapTileServiceCatalogItem";
 import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFunction";
-import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
+import WebProcessingServiceCatalogFunctionJob from "./WebProcessingServiceCatalogFunctionJob";
+import YDYRCatalogFunction from "./YDYRCatalogFunction";
+import YDYRCatalogFunctionJob from "./YDYRCatalogFunctionJob";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
@@ -46,8 +57,25 @@ export default function registerCatalogMembers() {
     WebMapServiceCatalogGroup.type,
     WebMapServiceCatalogGroup
   );
+  CatalogMemberFactory.register(
+    WebFeatureServiceCatalogItem.type,
+    WebFeatureServiceCatalogItem
+  );
+  CatalogMemberFactory.register(
+    WebFeatureServiceCatalogGroup.type,
+    WebFeatureServiceCatalogGroup
+  );
+  CatalogMemberFactory.register(
+    WebMapTileServiceCatalogGroup.type,
+    WebMapTileServiceCatalogGroup
+  );
+  CatalogMemberFactory.register(
+    WebMapTileServiceCatalogItem.type,
+    WebMapTileServiceCatalogItem
+  );
   CatalogMemberFactory.register(GltfCatalogItem.type, GltfCatalogItem);
   CatalogMemberFactory.register(GeoJsonCatalogItem.type, GeoJsonCatalogItem);
+  CatalogMemberFactory.register(GpxCatalogItem.type, GpxCatalogItem);
   CatalogMemberFactory.register(GeoRssCatalogItem.type, GeoRssCatalogItem);
   CatalogMemberFactory.register(CsvCatalogItem.type, CsvCatalogItem);
   CatalogMemberFactory.register(CzmlCatalogItem.type, CzmlCatalogItem);
@@ -77,6 +105,10 @@ export default function registerCatalogMembers() {
     ArcGisPortalItemReference
   );
   CatalogMemberFactory.register(
+    ArcGisTerrainCatalogItem.type,
+    ArcGisTerrainCatalogItem
+  );
+  CatalogMemberFactory.register(
     Cesium3DTilesCatalogItem.type,
     Cesium3DTilesCatalogItem
   );
@@ -97,9 +129,23 @@ export default function registerCatalogMembers() {
   );
   CatalogMemberFactory.register(MagdaReference.type, MagdaReference);
   CatalogMemberFactory.register(KmlCatalogItem.type, KmlCatalogItem);
+  CatalogMemberFactory.register(
+    MapboxVectorTileCatalogItem.type,
+    MapboxVectorTileCatalogItem
+  );
   CatalogMemberFactory.register(CartoMapCatalogItem.type, CartoMapCatalogItem);
   CatalogMemberFactory.register(UrlReference.type, UrlReference);
   CatalogMemberFactory.register(SplitItemReference.type, SplitItemReference);
+  CatalogMemberFactory.register(YDYRCatalogFunction.type, YDYRCatalogFunction);
+  CatalogMemberFactory.register(
+    YDYRCatalogFunctionJob.type,
+    YDYRCatalogFunctionJob
+  );
+  CatalogMemberFactory.register(
+    SdmxJsonCatalogGroup.type,
+    SdmxJsonCatalogGroup
+  );
+  CatalogMemberFactory.register(SdmxJsonCatalogItem.type, SdmxJsonCatalogItem);
   CatalogMemberFactory.register(
     SenapsLocationsCatalogItem.type,
     SenapsLocationsCatalogItem
@@ -113,8 +159,8 @@ export default function registerCatalogMembers() {
     SensorObservationServiceCatalogItem
   );
   CatalogMemberFactory.register(
-    WebProcessingServiceCatalogItem.type,
-    WebProcessingServiceCatalogItem
+    WebProcessingServiceCatalogFunctionJob.type,
+    WebProcessingServiceCatalogFunctionJob
   );
   CatalogMemberFactory.register(
     CompositeCatalogItem.type,
@@ -122,6 +168,7 @@ export default function registerCatalogMembers() {
   );
   CatalogMemberFactory.register(CkanCatalogGroup.type, CkanCatalogGroup);
   CatalogMemberFactory.register(CkanItemReference.type, CkanItemReference);
+  CatalogMemberFactory.register(ThreddsCatalogGroup.type, ThreddsCatalogGroup);
 
   UrlToCatalogMemberMapping.register(
     matchesExtension("csv"),
@@ -148,6 +195,10 @@ export default function registerCatalogMembers() {
     KmlCatalogItem.type
   );
   UrlToCatalogMemberMapping.register(
+    matchesExtension("gpx"),
+    GpxCatalogItem.type
+  );
+  UrlToCatalogMemberMapping.register(
     matchesExtension("kmz"),
     KmlCatalogItem.type
   );
@@ -164,6 +215,16 @@ export default function registerCatalogMembers() {
   UrlToCatalogMemberMapping.register(
     matchesUrl(/\/wms|\=wms/i),
     WebMapServiceCatalogGroup.type,
+    true
+  );
+  UrlToCatalogMemberMapping.register(
+    matchesUrl(/\/wfs|\=wfs/i),
+    WebFeatureServiceCatalogGroup.type,
+    true
+  );
+  UrlToCatalogMemberMapping.register(
+    matchesUrl(/\/wmts|\=wmts/i),
+    WebMapTileServiceCatalogGroup.type,
     true
   );
   UrlToCatalogMemberMapping.register(
@@ -226,6 +287,11 @@ export default function registerCatalogMembers() {
   UrlToCatalogMemberMapping.register(
     s => true,
     WebMapServiceCatalogGroup.type,
+    true
+  );
+  UrlToCatalogMemberMapping.register(
+    s => true,
+    WebFeatureServiceCatalogGroup.type,
     true
   );
   UrlToCatalogMemberMapping.register(

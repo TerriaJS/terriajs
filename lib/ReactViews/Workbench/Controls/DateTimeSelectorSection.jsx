@@ -143,9 +143,6 @@ const DateTimeSelectorSection = observer(
         }
       }
 
-      const jsDates = discreteTimes.map(timeTrait =>
-        JulianDate.toDate(timeTrait.time)
-      );
       const attachedToTimeline = item.terria.timelineStack.contains(item);
 
       return (
@@ -186,11 +183,10 @@ const DateTimeSelectorSection = observer(
                     ? undefined
                     : JulianDate.toDate(item.currentDiscreteJulianDate)
                 }
-                dates={jsDates}
+                dates={item.objectifiedDates}
                 onChange={this.changeDateTime}
                 openDirection="down"
                 isOpen={this.state.isOpen}
-                showCalendarButton={false}
                 onOpen={this.onOpen}
                 onClose={this.onClose}
                 dateFormat={format}

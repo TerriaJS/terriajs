@@ -251,7 +251,7 @@ class LeafletGeomVisualizer {
     boundsJustChanged: boolean
   ) {
     const featureGroup = this._featureGroup;
-    const pointGraphics = entity.point;
+    const pointGraphics = entity.point!;
 
     const show =
       entity.isAvailable(time) &&
@@ -373,7 +373,7 @@ class LeafletGeomVisualizer {
     entityDetails: EntityDetails,
     bounds: LatLngBounds | undefined
   ) {
-    const markerGraphics = entity.billboard;
+    const markerGraphics = entity.billboard!;
     const featureGroup = this._featureGroup;
     let position;
     let marker: L.Marker;
@@ -508,7 +508,7 @@ class LeafletGeomVisualizer {
     _entityHash: EntityHash,
     entityDetails: EntityDetails
   ) {
-    const labelGraphics = entity.label;
+    const labelGraphics = entity.label!;
     const featureGroup = this._featureGroup;
     let position;
     let marker: L.Marker;
@@ -633,6 +633,10 @@ class LeafletGeomVisualizer {
   ) {
     const featureGroup = this._featureGroup;
     const rectangleGraphics = entity.rectangle;
+
+    if (!isDefined(rectangleGraphics)) {
+      return;
+    }
 
     const show =
       entity.isAvailable(time) &&
@@ -778,7 +782,7 @@ class LeafletGeomVisualizer {
     entityDetails: EntityDetails
   ) {
     const featureGroup = this._featureGroup;
-    const polygonGraphics = entity.polygon;
+    const polygonGraphics = entity.polygon!;
 
     const show =
       entity.isAvailable(time) &&
@@ -919,7 +923,7 @@ class LeafletGeomVisualizer {
     _entityHash: EntityHash,
     entityDetails: EntityDetails
   ) {
-    const polylineGraphics = entity.polyline;
+    const polylineGraphics = entity.polyline!;
     const featureGroup = this._featureGroup;
     let positions, polyline;
 
@@ -1222,10 +1226,16 @@ function positionToLatLng(
 }
 
 function hierarchyToLatLngs(hierarchy: PolygonHierarchy) {
-  // This function currently does not handle polygons with holes.
-
+  let holes: L.LatLng[][] = [];
   const positions = Array.isArray(hierarchy) ? hierarchy : hierarchy.positions;
-  return convertEntityPositionsToLatLons(positions);
+  if (hierarchy.holes.length > 0) {
+    hierarchy.holes.forEach(hole => {
+      holes.push(convertEntityPositionsToLatLons(hole.positions));
+    });
+    return [convertEntityPositionsToLatLons(positions), ...holes];
+  } else {
+    return convertEntityPositionsToLatLons(positions);
+  }
 }
 
 //Recolor an image using 2d canvas
@@ -1303,9 +1313,9 @@ function getValueOrUndefined(property: Property | undefined, time: JulianDate) {
   }
 }
 
-function convertEntityPositionsToLatLons(positions: Cartesian3[]) {
+function convertEntityPositionsToLatLons(positions: Cartesian3[]): L.LatLng[] {
   var carts = Ellipsoid.WGS84.cartesianArrayToCartographicArray(positions);
-  var latlngs = [];
+  var latlngs: L.LatLng[] = [];
   let lastLongitude;
   for (var p = 0; p < carts.length; p++) {
     let lon = CesiumMath.toDegrees(carts[p].longitude);

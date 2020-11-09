@@ -82,7 +82,9 @@ describe("ArcGisFeatureServerCatalogItem", function() {
 
   it("has a type and typeName", function() {
     expect(item.type).toBe("esri-featureServer");
-    expect(item.typeName).toBe("Esri ArcGIS FeatureServer");
+    expect(item.typeName).toBe(
+      i18next.t("models.arcGisFeatureServerCatalogItem.name")
+    );
   });
 
   it("supports zooming to extent", function() {
@@ -179,36 +181,48 @@ describe("ArcGisFeatureServerCatalogItem", function() {
       const aTime = new JulianDate();
       item.mapItems.map(mapItem => {
         mapItem.entities.values.map(entity => {
-          // Waiting on better Cesium typings
-          // entity.polygon.material.color returns a Property, but types
-          //  suggest it returns a Color. Type casts are neccessary due to this.
-          const actualPolygonOutlineWidth = (<ConstantProperty>(
-            entity.polygon.outlineWidth
-          )).getValue(aTime);
-          expect(actualPolygonOutlineWidth).toEqual(expectedOutlineWidth);
+          expect(entity.polygon).toBeDefined();
 
-          const acutualPolygonColor = (<ConstantProperty>(
-            (<unknown>(<ColorMaterialProperty>entity.polygon.material).color)
-          ))
-            .getValue(aTime)
-            .toRgba();
-          expect(acutualPolygonColor).toEqual(expectedPolygonFilledColor);
+          if (entity.polygon !== undefined) {
+            // Waiting on better Cesium typings
+            // entity.polygon.material.color returns a Property, but types
+            //  suggest it returns a Color. Type casts are neccessary due to this.
+            const actualPolygonOutlineWidth = (<ConstantProperty>(
+              entity.polygon.outlineWidth
+            )).getValue(aTime);
+            expect(actualPolygonOutlineWidth).toEqual(expectedOutlineWidth);
 
-          const actualPolygonOutlineColor = (<ConstantProperty>(
-            (<unknown>entity.polygon.outlineColor)
-          ))
-            .getValue(aTime)
-            .toRgba();
-          expect(actualPolygonOutlineColor).toEqual(
-            expectedPolygonOutlineColor
-          );
+            const acutualPolygonColor = (<ConstantProperty>(
+              (<unknown>(<ColorMaterialProperty>entity.polygon.material).color)
+            ))
+              .getValue(aTime)
+              .toRgba();
+            expect(acutualPolygonColor).toEqual(expectedPolygonFilledColor);
 
-          const acutalPolylineColor = (<ConstantProperty>(
-            (<unknown>(<ColorMaterialProperty>entity.polyline.material).color)
-          ))
-            .getValue(aTime)
-            .toRgba();
-          expect(acutalPolylineColor).toEqual(expectedPolylineColor);
+            const actualPolygonOutlineColor = (<ConstantProperty>(
+              (<unknown>(
+                (<ColorMaterialProperty>entity.polygon.outlineColor).color
+              ))
+            ))
+              .getValue(aTime)
+              .toRgba();
+            expect(actualPolygonOutlineColor).toEqual(
+              expectedPolygonOutlineColor
+            );
+          }
+
+          expect(entity.polyline).toBeDefined();
+
+          if (entity.polyline !== undefined) {
+            const acutalPolylineColor = (<ConstantProperty>(
+              (<unknown>(
+                (<ColorMaterialProperty>entity?.polyline?.material).color
+              ))
+            ))
+              .getValue(aTime)
+              .toRgba();
+            expect(acutalPolylineColor).toEqual(expectedPolylineColor);
+          }
         });
       });
     });
@@ -261,166 +275,167 @@ describe("ArcGisFeatureServerCatalogItem", function() {
 
       expect(entities[0].polyline).toBeDefined();
       expect(
-        entities[0].polyline.material instanceof ColorMaterialProperty
+        entities[0]?.polyline?.material instanceof ColorMaterialProperty
       ).toBeTruthy();
-      expect(entities[0].polyline.width.getValue(time)).toEqual(
+      expect(entities[0]?.polyline?.width?.getValue(time)).toEqual(
         convertEsriPointSizeToPixels(1.5)
       );
 
       expect(entities[1].polyline).toBeDefined();
       expect(
-        entities[1].polyline.material instanceof PolylineDashMaterialProperty
+        entities[1]?.polyline?.material instanceof PolylineDashMaterialProperty
       ).toBeTruthy();
       expect(
         (<PolylineDashMaterialProperty>(
-          entities[1].polyline.material
-        )).dashPattern.getValue(time)
+          entities[1]?.polyline?.material
+        )).dashPattern?.getValue(time)
       ).toEqual(getLineStyleCesium("esriSLSDot"));
       expect(
         (<ConstantProperty>(
           (<unknown>(
-            (<PolylineDashMaterialProperty>entities[1].polyline.material).color
+            (<PolylineDashMaterialProperty>entities[1]?.polyline?.material)
+              .color
           ))
         )).getValue(time)
       ).toEqual(convertEsriColorToCesiumColor([20, 158, 206, 255]));
-      expect(entities[1].polyline.width.getValue(time)).toEqual(
+      expect(entities[1]?.polyline?.width?.getValue(time)).toEqual(
         convertEsriPointSizeToPixels(1.5)
       );
 
       expect(entities[2].polyline).toBeDefined();
       expect(
-        entities[2].polyline.material instanceof PolylineDashMaterialProperty
+        entities[2]?.polyline?.material instanceof PolylineDashMaterialProperty
       ).toBeTruthy();
       expect(
-        (<PolylineDashMaterialProperty>entities[2].polyline.material)
+        (<PolylineDashMaterialProperty>entities[2]?.polyline?.material)
           .dashPattern
       ).toBeUndefined();
-      expect(entities[2].polyline.width.getValue(time)).toEqual(
+      expect(entities[2]?.polyline?.width?.getValue(time)).toEqual(
         convertEsriPointSizeToPixels(1.5)
       );
 
       expect(entities[3].polyline).toBeDefined();
       expect(
-        entities[3].polyline.material instanceof PolylineDashMaterialProperty
+        entities[3]?.polyline?.material instanceof PolylineDashMaterialProperty
       ).toBeTruthy();
       expect(
         (<PolylineDashMaterialProperty>(
-          entities[3].polyline.material
-        )).dashPattern.getValue(time)
+          entities[3]?.polyline?.material
+        )).dashPattern?.getValue(time)
       ).toEqual(getLineStyleCesium("esriSLSDashDot"));
-      expect(entities[3].polyline.width.getValue(time)).toEqual(
+      expect(entities[3]?.polyline?.width?.getValue(time)).toEqual(
         convertEsriPointSizeToPixels(1.5)
       );
 
       expect(entities[4].polyline).toBeDefined();
       expect(
-        entities[4].polyline.material instanceof PolylineDashMaterialProperty
+        entities[4]?.polyline?.material instanceof PolylineDashMaterialProperty
       ).toBeTruthy();
       expect(
         (<PolylineDashMaterialProperty>(
-          entities[4].polyline.material
-        )).dashPattern.getValue(time)
+          entities[4]?.polyline?.material
+        )).dashPattern?.getValue(time)
       ).toEqual(getLineStyleCesium("esriSLSDashDotDot"));
-      expect(entities[4].polyline.width.getValue(time)).toEqual(
+      expect(entities[4]?.polyline?.width?.getValue(time)).toEqual(
         convertEsriPointSizeToPixels(1.5)
       );
 
       expect(entities[5].polyline).toBeDefined();
       expect(
-        entities[5].polyline.material instanceof PolylineDashMaterialProperty
+        entities[5]?.polyline?.material instanceof PolylineDashMaterialProperty
       ).toBeTruthy();
       expect(
         (<PolylineDashMaterialProperty>(
-          entities[5].polyline.material
-        )).dashPattern.getValue(time)
+          entities[5]?.polyline?.material
+        )).dashPattern?.getValue(time)
       ).toEqual(getLineStyleCesium("esriSLSLongDash"));
-      expect(entities[5].polyline.width.getValue(time)).toEqual(
+      expect(entities[5]?.polyline?.width?.getValue(time)).toEqual(
         convertEsriPointSizeToPixels(1.5)
       );
 
       expect(entities[6].polyline).toBeDefined();
       expect(
-        entities[6].polyline.material instanceof PolylineDashMaterialProperty
+        entities[6]?.polyline?.material instanceof PolylineDashMaterialProperty
       ).toBeTruthy();
       expect(
         (<PolylineDashMaterialProperty>(
-          entities[6].polyline.material
-        )).dashPattern.getValue(time)
+          entities[6]?.polyline?.material
+        )).dashPattern?.getValue(time)
       ).toEqual(getLineStyleCesium("esriSLSLongDashDot"));
-      expect(entities[6].polyline.width.getValue(time)).toEqual(
+      expect(entities[6]?.polyline?.width?.getValue(time)).toEqual(
         convertEsriPointSizeToPixels(1.5)
       );
 
       expect(entities[7].polyline).toBeDefined();
       expect(
-        entities[7].polyline.material instanceof PolylineDashMaterialProperty
+        entities[7]?.polyline?.material instanceof PolylineDashMaterialProperty
       ).toBeTruthy();
       expect(
         (<PolylineDashMaterialProperty>(
-          entities[7].polyline.material
-        )).dashPattern.getValue(time)
+          entities[7]?.polyline?.material
+        )).dashPattern?.getValue(time)
       ).toEqual(getLineStyleCesium("esriSLSShortDash"));
-      expect(entities[7].polyline.width.getValue(time)).toEqual(
+      expect(entities[7]?.polyline?.width?.getValue(time)).toEqual(
         convertEsriPointSizeToPixels(1.5)
       );
 
       expect(entities[8].polyline).toBeDefined();
       expect(
-        entities[8].polyline.material instanceof PolylineDashMaterialProperty
+        entities[8]?.polyline?.material instanceof PolylineDashMaterialProperty
       ).toBeTruthy();
       expect(
         (<PolylineDashMaterialProperty>(
-          entities[8].polyline.material
-        )).dashPattern.getValue(time)
+          entities[8]?.polyline?.material
+        )).dashPattern?.getValue(time)
       ).toEqual(getLineStyleCesium("esriSLSShortDot"));
-      expect(entities[8].polyline.width.getValue(time)).toEqual(
+      expect(entities[8]?.polyline?.width?.getValue(time)).toEqual(
         convertEsriPointSizeToPixels(1.5)
       );
 
       expect(entities[9].polyline).toBeDefined();
       expect(
-        entities[9].polyline.material instanceof PolylineDashMaterialProperty
+        entities[9]?.polyline?.material instanceof PolylineDashMaterialProperty
       ).toBeTruthy();
       expect(
         (<PolylineDashMaterialProperty>(
-          entities[9].polyline.material
-        )).dashPattern.getValue(time)
+          entities[9]?.polyline?.material
+        )).dashPattern?.getValue(time)
       ).toEqual(getLineStyleCesium("esriSLSShortDashDot"));
-      expect(entities[9].polyline.width.getValue(time)).toEqual(
+      expect(entities[9]?.polyline?.width?.getValue(time)).toEqual(
         convertEsriPointSizeToPixels(1.5)
       );
 
       expect(entities[10].polyline).toBeDefined();
       expect(
-        entities[10].polyline.material instanceof PolylineDashMaterialProperty
+        entities[10]?.polyline?.material instanceof PolylineDashMaterialProperty
       ).toBeTruthy();
       expect(
         (<PolylineDashMaterialProperty>(
-          entities[10].polyline.material
-        )).dashPattern.getValue(time)
+          entities[10]?.polyline?.material
+        )).dashPattern?.getValue(time)
       ).toEqual(getLineStyleCesium("esriSLSShortDashDotDot"));
-      expect(entities[10].polyline.width.getValue(time)).toEqual(
+      expect(entities[10]?.polyline?.width?.getValue(time)).toEqual(
         convertEsriPointSizeToPixels(1.5)
       );
 
       expect(entities[11].polyline).toBeDefined();
       expect(
-        entities[11].polyline.material instanceof ColorMaterialProperty
+        entities[11]?.polyline?.material instanceof ColorMaterialProperty
       ).toBeTruthy();
-      expect(entities[11].polyline.show.getValue(time)).toBeFalsy();
-      expect(entities[11].polyline.width.getValue(time)).toEqual(
+      expect(entities[11]?.polyline?.show?.getValue(time)).toBeFalsy();
+      expect(entities[11]?.polyline?.width?.getValue(time)).toEqual(
         convertEsriPointSizeToPixels(1.5)
       );
 
       expect(entities[12].polyline).toBeDefined();
       expect(
-        entities[12].polyline.material instanceof PolylineDashMaterialProperty
+        entities[12]?.polyline?.material instanceof PolylineDashMaterialProperty
       ).toBeTruthy();
       expect(
-        (<PolylineDashMaterialProperty>entities[12].polyline.material)
+        (<PolylineDashMaterialProperty>entities[12]?.polyline?.material)
           .dashPattern
       ).toBeUndefined();
-      expect(entities[12].polyline.width.getValue(time)).toEqual(
+      expect(entities[12]?.polyline?.width?.getValue(time)).toEqual(
         convertEsriPointSizeToPixels(4.5)
       );
     });

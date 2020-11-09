@@ -5,24 +5,24 @@ import createReactClass from "create-react-class";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
+import { Trans, withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import printWindow from "../../../../Core/printWindow";
 import Clipboard from "../../../Clipboard";
 import Icon from "../../../Icon.jsx";
 import Loader from "../../../Loader";
 import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
-import StorySharePanel from "./StorySharePanel";
 import Input from "../../../Styled/Input/Input.jsx";
 import DropdownStyles from "../panel.scss";
 import {
-  isShareable,
   buildShareLink,
   buildShortShareLink,
-  canShorten
+  canShorten,
+  isShareable
 } from "./BuildShareLink";
-import { withTranslation, Trans } from "react-i18next";
 import PrintView from "./PrintView";
 import Styles from "./share-panel.scss";
+import StorySharePanel from "./StorySharePanel";
 
 const SharePanel = observer(
   createReactClass({
@@ -38,7 +38,7 @@ const SharePanel = observer(
       catalogShareWithoutText: PropTypes.bool,
       modalWidth: PropTypes.number,
       viewState: PropTypes.object.isRequired,
-      userOnClick: PropTypes.func,
+      onUserClick: PropTypes.func,
       btnDisabled: PropTypes.bool,
       t: PropTypes.func.isRequired
     },
@@ -280,6 +280,26 @@ const SharePanel = observer(
       );
     },
 
+    getShareUrlInputStory(theme) {
+      return (
+        <Input
+          className={Styles.shareUrlfield}
+          light={theme === "light"}
+          dark={theme === "dark"}
+          large
+          type="text"
+          value={this.state.shareUrl}
+          placeholder={this.state.placeholder}
+          readOnly
+          onClick={e => e.target.select()}
+          id="share-url"
+          css={`
+            border-radius: 32px 0 0 32px;
+          `}
+        />
+      );
+    },
+
     onAddWebDataClicked() {
       this.setState({
         isOpen: false
@@ -340,7 +360,7 @@ const SharePanel = observer(
       }
     },
 
-    renderContentForCatalogShare() {
+    renderContentForStoryShare() {
       const { t } = this.props;
       return (
         <Choose>
@@ -350,10 +370,11 @@ const SharePanel = observer(
           <Otherwise>
             <div className={Styles.clipboardForCatalogShare}>
               <Clipboard
-                theme="light"
+                theme="dark"
                 text={this.state.shareUrl}
-                source={this.getShareUrlInput("light")}
+                source={this.getShareUrlInputStory("light")}
                 id="share-url"
+                rounded
               />
               {this.renderWarning()}
             </div>
@@ -362,7 +383,7 @@ const SharePanel = observer(
       );
     },
 
-    renderContentForStoryShare() {
+    renderContentForCatalogShare() {
       const { t } = this.props;
       return (
         <Choose>
@@ -370,7 +391,7 @@ const SharePanel = observer(
             <Loader message={t("share.generatingUrl")} />
           </When>
           <Otherwise>
-            <div className={Styles.clipboardForStoryShare}>
+            <div className={Styles.clipboardForCatalogShare}>
               <Clipboard
                 theme="light"
                 text={this.state.shareUrl}
@@ -491,8 +512,8 @@ const SharePanel = observer(
     },
 
     openWithUserClick() {
-      if (this.props.userOnClick) {
-        this.props.userOnClick();
+      if (this.props.onUserClick) {
+        this.props.onUserClick();
       }
       this.changeOpenState();
       this.renderContentForStoryShare();
@@ -550,14 +571,13 @@ const SharePanel = observer(
               if (catalogShare)
                 this.props.viewState.shareModalIsVisible = false;
             }}
-            userOnClick={this.props.userOnClick}
+            onUserClick={this.props.onUserClick}
           >
             <If condition={this.state.isOpen}>{this.renderContent()}</If>
           </MenuPanel>
         </div>
       ) : (
         <StorySharePanel
-          theme={dropdownTheme}
           btnText={catalogShareWithoutText ? null : btnText}
           viewState={this.props.viewState}
           btnTitle={btnTitle}
@@ -570,7 +590,7 @@ const SharePanel = observer(
           onDismissed={() => {
             if (storyShare) this.props.viewState.shareModalIsVisible = false;
           }}
-          userOnClick={this.props.userOnClick}
+          onUserClick={this.props.onUserClick}
         >
           <If condition={this.state.isOpen}>{this.renderContent()}</If>
         </StorySharePanel>

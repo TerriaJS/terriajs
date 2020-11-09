@@ -1,31 +1,12 @@
 import { createTransformer } from "mobx-utils";
 import defined from "terriajs-cesium/Source/Core/defined";
-import xml2json from "../ThirdParty/xml2json";
+import isReadOnlyArray from "../Core/isReadOnlyArray";
 import loadXML from "../Core/loadXML";
 import TerriaError from "../Core/TerriaError";
-import isReadOnlyArray from "../Core/isReadOnlyArray";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import StratumFromTraits from "./StratumFromTraits";
+import xml2json from "../ThirdParty/xml2json";
 import { RectangleTraits } from "../Traits/MappableTraits";
-
-export interface OnlineResource {
-  "xlink:type": string;
-  "xlink:href": string;
-}
-
-export interface CapabilitiesLegend {
-  readonly OnlineResource?: OnlineResource;
-  readonly Format?: string;
-  readonly width?: number;
-  readonly height?: number;
-}
-
-export interface CapabilitiesStyle {
-  readonly Name: string;
-  readonly Title: string;
-  readonly Abstract?: string;
-  readonly LegendURL?: CapabilitiesLegend | ReadonlyArray<CapabilitiesLegend>;
-}
+import { CapabilitiesStyle, OwsKeywordList } from "./OwsInterfaces";
+import StratumFromTraits from "./StratumFromTraits";
 
 export interface CapabilitiesGeographicBoundingBox {
   readonly westBoundLongitude: number;
@@ -46,6 +27,7 @@ export type CapabilitiesDimension = string & {
   readonly units: string;
   readonly unitSymbol?: string;
   readonly default?: string;
+  readonly text?: string;
   readonly multipleValues?: boolean;
   readonly nearestValue?: boolean;
   readonly current?: boolean;
@@ -89,11 +71,7 @@ export interface CapabilitiesService {
   /** Access contraints for this service. */
   readonly AccessConstraints?: string;
   /** List of keywords or keyword phrases to help catalog searching. */
-  readonly KeywordList?: CapabilitiesKeywordList;
-}
-
-export interface CapabilitiesKeywordList {
-  readonly Keyword: string | string[];
+  readonly KeywordList?: OwsKeywordList;
 }
 
 /**

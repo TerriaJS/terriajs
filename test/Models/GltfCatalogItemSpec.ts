@@ -31,12 +31,16 @@ describe("GltfCatalogItem", function() {
       it("defaults to Quatenrion.IDENTITY", async function() {
         await gltf.loadMapItems();
         const entity = gltf.mapItems[0]?.entities.values[0];
-        const orientation = entity?.orientation.getValue(JulianDate.now());
-        expect(orientation).toBeDefined();
-        expect(orientation.x).toEqual(0);
-        expect(orientation.y).toEqual(0);
-        expect(orientation.z).toEqual(0);
-        expect(orientation.w).toEqual(1);
+        expect(entity.orientation).toBeDefined();
+
+        if (entity.orientation !== undefined) {
+          const orientation = entity?.orientation.getValue(JulianDate.now());
+          expect(orientation).toBeDefined();
+          expect(orientation.x).toEqual(0);
+          expect(orientation.y).toEqual(0);
+          expect(orientation.z).toEqual(0);
+          expect(orientation.w).toEqual(1);
+        }
       });
     });
 
@@ -53,11 +57,15 @@ describe("GltfCatalogItem", function() {
         );
         await gltf.loadMapItems();
         const entity = gltf.mapItems[0]?.entities.values[0];
-        const orientation = entity?.orientation.getValue(JulianDate.now());
-        expect(orientation.x.toFixed(2)).toEqual("0.50");
-        expect(orientation.y.toFixed(2)).toEqual("-0.07");
-        expect(orientation.z.toFixed(2)).toEqual("0.55");
-        expect(orientation.w.toFixed(2)).toEqual("0.67");
+        expect(entity.orientation).toBeDefined();
+
+        if (entity.orientation !== undefined) {
+          const orientation = entity?.orientation.getValue(JulianDate.now());
+          expect(orientation.x.toFixed(2)).toEqual("0.50");
+          expect(orientation.y.toFixed(2)).toEqual("-0.07");
+          expect(orientation.z.toFixed(2)).toEqual("0.55");
+          expect(orientation.w.toFixed(2)).toEqual("0.67");
+        }
       });
     });
   });

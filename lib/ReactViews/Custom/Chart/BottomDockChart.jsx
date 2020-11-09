@@ -19,6 +19,7 @@ import MomentPointsChart from "./MomentPointsChart";
 import Tooltip from "./Tooltip";
 import ZoomX from "./ZoomX";
 import Styles from "./bottom-dock-chart.scss";
+import PointOnMap from "./PointOnMap";
 
 const chartMinWidth = 110;
 const defaultGridColor = "#efefef";
@@ -28,6 +29,7 @@ const labelColor = "#efefef";
 @observer
 class BottomDockChart extends React.Component {
   static propTypes = {
+    terria: PropTypes.object.isRequired,
     parentWidth: PropTypes.number,
     width: PropTypes.number,
     height: PropTypes.number,
@@ -58,6 +60,7 @@ export default BottomDockChart;
 @observer
 class Chart extends React.Component {
   static propTypes = {
+    terria: PropTypes.object.isRequired,
     width: PropTypes.number,
     height: PropTypes.number,
     chartItems: PropTypes.array.isRequired,
@@ -240,7 +243,7 @@ class Chart extends React.Component {
   }
 
   render() {
-    const { height, xAxis } = this.props;
+    const { height, xAxis, terria } = this.props;
     if (this.chartItems.length === 0)
       return <div className={Styles.empty}>No data available</div>;
 
@@ -278,12 +281,6 @@ class Chart extends React.Component {
                 top={this.plotHeight + 1}
                 scale={this.xScale}
                 label={xAxis.units || (xAxis.scale === "time" && "Date")}
-                labelProps={{
-                  fill: labelColor,
-                  fontSize: 12,
-                  textAnchor: "middle",
-                  fontFamily: "Arial"
-                }}
               />
               <For each="y" index="i" of={this.yAxes}>
                 <YAxis
@@ -326,6 +323,7 @@ class Chart extends React.Component {
             </Group>
           </svg>
           <Tooltip {...this.tooltip} />
+          <PointsOnMap terria={terria} chartItems={this.chartItems} />
         </div>
       </ZoomX>
     );
@@ -402,6 +400,12 @@ class Plot extends React.Component {
 }
 
 class XAxis extends React.PureComponent {
+  static propTypes = {
+    top: PropTypes.number.isRequired,
+    scale: PropTypes.func.isRequired,
+    label: PropTypes.bool.isRequired
+  };
+
   render() {
     return (
       <AxisBottom
@@ -413,6 +417,12 @@ class XAxis extends React.PureComponent {
           fontSize: 12,
           fontFamily: "Arial"
         })}
+        labelProps={{
+          fill: labelColor,
+          fontSize: 12,
+          textAnchor: "middle",
+          fontFamily: "Arial"
+        }}
         {...this.props}
       />
     );
@@ -465,6 +475,20 @@ class Cursor extends React.PureComponent {
     const { x, ...rest } = this.props;
     return <Line from={{ x, y: 0 }} to={{ x, y: 1000 }} {...rest} />;
   }
+}
+
+function PointsOnMap({ chartItems, terria }) {
+  return chartItems.map(
+    chartItem =>
+      chartItem.pointOnMap && (
+        <PointOnMap
+          key={`point-on-map-${chartItem.key}`}
+          terria={terria}
+          color={chartItem.getColor()}
+          point={chartItem.pointOnMap}
+        />
+      )
+  );
 }
 
 /**

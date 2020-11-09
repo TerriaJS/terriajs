@@ -9,7 +9,7 @@ export default class ResultPendingCatalogItem extends CatalogMemberMixin(
   @observable showsInfo = false;
   @observable isMappable = false;
 
-  loadPromise = Promise.resolve();
+  loadPromise: Promise<any> = Promise.resolve();
 
   protected forceLoadMetadata() {
     return this.loadPromise;

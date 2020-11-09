@@ -113,14 +113,7 @@ describe("ArcGisCatalogGroup", function() {
       let member5 = <ArcGisMapServerCatalogGroup>group.memberModels[5];
       let member6 = <ArcGisFeatureServerCatalogGroup>group.memberModels[6];
       let member7 = <ArcGisMapServerCatalogGroup>group.memberModels[7];
-      console.log(member0);
-      console.log(member1);
-      console.log(member2);
-      console.log(member3);
-      console.log(member4);
-      console.log(member5);
-      console.log(member6);
-      console.log(member7);
+
       expect(member0 instanceof ArcGisCatalogGroup).toBeTruthy();
       expect(member0.name).toBe("AGP");
       expect(member0.uniqueId).toBe("test/AGP");

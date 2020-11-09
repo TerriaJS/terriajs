@@ -1,5 +1,6 @@
 import "../SpecMain";
 import { reaction, runInAction } from "mobx";
+import i18next from "i18next";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import IonResource from "terriajs-cesium/Source/Core/IonResource";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
@@ -37,7 +38,7 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
   it("should have a type and a typeName", function() {
     expect(Cesium3DTilesCatalogItem.type).toBe("3d-tiles");
     expect(item.type).toBe("3d-tiles");
-    expect(item.typeName).toBe("Cesium 3D Tiles");
+    expect(item.typeName).toBe(i18next.t("models.cesiumTerrain.name3D"));
   });
 
   it("supports zooming", function() {
@@ -137,9 +138,11 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
 
     xit("sets the extra options", async function() {
       runInAction(() => {
-        let options = createStratumInstance(OptionsTraits);
-        options.maximumScreenSpaceError = 3;
-        item.setTrait("definition", "options", options);
+        item.setTrait(
+          "definition",
+          "options",
+          createStratumInstance(OptionsTraits, { maximumScreenSpaceError: 3 })
+        );
       });
       try {
         await item.loadMapItems();
@@ -322,14 +325,13 @@ function createStratumLevelFilter(
   minimumValueShown: number,
   maximumValueShown: number
 ) {
-  let filter = createStratumInstance(FilterTraits);
-  runInAction(() => {
-    filter.name = "Stratum Level";
-    filter.property = "stratumlev";
-    filter.minimumValue = minimumValue;
-    filter.maximumValue = maximumValue;
-    filter.minimumShown = minimumValueShown;
-    filter.maximumShown = maximumValueShown;
+  let filter = createStratumInstance(FilterTraits, {
+    name: "Stratum Level",
+    property: "stratumlev",
+    minimumValue,
+    maximumValue,
+    minimumShown: minimumValueShown,
+    maximumShown: maximumValueShown
   });
   return filter;
 }

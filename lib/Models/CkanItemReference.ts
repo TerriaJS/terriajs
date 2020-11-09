@@ -1,46 +1,38 @@
 import i18next from "i18next";
-import { runInAction, computed } from "mobx";
+import { action, computed, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
-import filterOutUndefined from "../Core/filterOutUndefined";
 import URI from "urijs";
-import {
-  isJsonObject,
-  isJsonString,
-  JsonArray,
-  JsonObject
-} from "../Core/Json";
 import isDefined from "../Core/isDefined";
+import { JsonObject } from "../Core/Json";
 import loadJson from "../Core/loadJson";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import TerriaError from "../Core/TerriaError";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
+import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import CkanItemReferenceTraits from "../Traits/CkanItemReferenceTraits";
 import CkanResourceFormatTraits from "../Traits/CkanResourceFormatTraits";
+import CkanSharedTraits from "../Traits/CkanSharedTraits";
+import { RectangleTraits } from "../Traits/MappableTraits";
+import ModelTraits from "../Traits/ModelTraits";
 import CatalogMemberFactory from "./CatalogMemberFactory";
+import CkanCatalogGroup, {
+  createInheritedCkanSharedTraitsStratum
+} from "./CkanCatalogGroup";
+import {
+  CkanDataset,
+  CkanDatasetServerResponse,
+  CkanResource,
+  CkanResourceServerResponse
+} from "./CkanDefinitions";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
+import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
 import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
-import LoadableStratum from "./LoadableStratum";
-import Terria from "./Terria";
-import updateModelFromJson from "./updateModelFromJson";
-import ModelTraits from "../Traits/ModelTraits";
-import { RectangleTraits } from "../Traits/MappableTraits";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import StratumOrder from "./StratumOrder";
-import GroupMixin from "../ModelMixins/GroupMixin";
-import {
-  CkanDataset,
-  CkanOrganisation,
-  CkanResource,
-  CkanDatasetServerResponse,
-  CkanResourceServerResponse
-} from "./CkanDefinitions";
-import CkanCatalogGroup from "./CkanCatalogGroup";
+import Terria from "./Terria";
 
 export class CkanDatasetStratum extends LoadableStratum(
   CkanItemReferenceTraits
@@ -119,24 +111,38 @@ export class CkanDatasetStratum extends LoadableStratum(
 
   @computed get url() {
     if (this.ckanResource === undefined) return undefined;
+    if (this.ckanItemReference._supportedFormat !== undefined) {
+      if (
+        this.ckanItemReference._supportedFormat.definition.type === "wms" &&
+        this.ckanResource.wms_api_url
+      ) {
+        return this.ckanResource.wms_api_url;
+      }
+    }
     return this.ckanResource.url;
   }
 
   @computed get name() {
     if (this.ckanResource === undefined) return this.ckanItemReference.name;
     if (this.ckanItemReference.useResourceName) return this.ckanResource.name;
+    // via @steve9164
+    /** Switched the order [check `useCombinationNameWhereMultipleResources`
+     * first ] that these are checked so the default is checked last. Otherwise
+     * setting useCombinationNameWhereMultipleResources without setting
+     * useDatasetNameAndFormatWhereMultipleResources to false doesn't do
+     * anything */
     if (this.ckanDataset) {
-      if (
-        this.ckanItemReference.useDatasetNameAndFormatWhereMultipleResources &&
-        this.ckanDataset.resources.length > 1
-      ) {
-        return this.ckanDataset.title + " - " + this.ckanResource.format;
-      }
       if (
         this.ckanItemReference.useCombinationNameWhereMultipleResources &&
         this.ckanDataset.resources.length > 1
       ) {
         return this.ckanDataset.title + " - " + this.ckanResource.name;
+      }
+      if (
+        this.ckanItemReference.useDatasetNameAndFormatWhereMultipleResources &&
+        this.ckanDataset.resources.length > 1
+      ) {
+        return this.ckanDataset.title + " - " + this.ckanResource.format;
       }
       return this.ckanDataset.title;
     }
@@ -189,82 +195,70 @@ export class CkanDatasetStratum extends LoadableStratum(
   }
 
   @computed get info() {
-    function newInfo(name: string, content?: string) {
-      const traits = createStratumInstance(InfoSectionTraits);
-      runInAction(() => {
-        traits.name = name;
-        traits.content = content;
-      });
-      return traits;
-    }
-
     function prettifyDate(date: string) {
       if (date.match(/^\d\d\d\d-\d\d-\d\d.*/)) {
         return date.substr(0, 10);
       } else return date;
     }
 
-    const outArray: any = [];
+    const outArray: StratumFromTraits<InfoSectionTraits>[] = [];
     if (this.ckanDataset === undefined) return outArray;
     if (this.ckanDataset.license_url !== undefined) {
       outArray.push(
-        newInfo(
-          i18next.t("models.ckan.licence"),
-          `[${this.ckanDataset.license_title ||
+        createStratumInstance(InfoSectionTraits, {
+          name: i18next.t("models.ckan.licence"),
+          content: `[${this.ckanDataset.license_title ||
             this.ckanDataset.license_url}](${this.ckanDataset.license_url})`
-        )
+        })
       );
     } else if (this.ckanDataset.license_title !== undefined) {
-      outArray.push({
-        name: i18next.t("models.ckan.licence"),
-        content: this.ckanDataset.license_title
-      });
+      outArray.push(
+        createStratumInstance(InfoSectionTraits, {
+          name: i18next.t("models.ckan.licence"),
+          content: this.ckanDataset.license_title
+        })
+      );
     }
 
     outArray.push(
-      newInfo(
-        i18next.t("models.ckan.contact_point"),
-        this.ckanDataset.contact_point
-      )
-    );
-
-    outArray.push(
-      newInfo(
-        i18next.t("models.ckan.datasetDescription"),
-        this.ckanDataset.notes
-      )
-    );
-    outArray.push(
-      newInfo(i18next.t("models.ckan.author"), this.ckanDataset.author)
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t("models.ckan.contact_point"),
+        content: this.ckanDataset.contact_point
+      }),
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t("models.ckan.datasetDescription"),
+        content: this.ckanDataset.notes
+      }),
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t("models.ckan.author"),
+        content: this.ckanDataset.author
+      })
     );
 
     if (this.ckanDataset.organization) {
       outArray.push(
-        newInfo(
-          i18next.t("models.ckan.datasetCustodian"),
-          this.ckanDataset.organization.description ||
+        createStratumInstance(InfoSectionTraits, {
+          name: i18next.t("models.ckan.datasetCustodian"),
+          content:
+            this.ckanDataset.organization.description ||
             this.ckanDataset.organization.title
-        )
+        })
       );
     }
 
     outArray.push(
-      newInfo(
-        i18next.t("models.ckan.metadata_created"),
-        prettifyDate(this.ckanDataset.metadata_created)
-      )
-    );
-    outArray.push(
-      newInfo(
-        i18next.t("models.ckan.metadata_modified"),
-        prettifyDate(this.ckanDataset.metadata_modified)
-      )
-    );
-    outArray.push(
-      newInfo(
-        i18next.t("models.ckan.update_freq"),
-        this.ckanDataset.update_freq
-      )
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t("models.ckan.metadata_created"),
+        content: prettifyDate(this.ckanDataset.metadata_created)
+      }),
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t("models.ckan.metadata_modified"),
+        content: prettifyDate(this.ckanDataset.metadata_modified)
+      }),
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t("models.ckan.update_freq"),
+        content: this.ckanDataset.update_freq
+      })
     );
     return outArray;
   }
@@ -432,10 +426,16 @@ export default class CkanItemReference extends UrlMixin(
     });
   }
 
-  setItemProperties(model: BaseModel, itemProperties: any) {
-    runInAction(() => {
-      model.setTrait(CommonStrata.override, "itemProperties", itemProperties);
-    });
+  @action
+  setSharedStratum(
+    inheritedPropertiesStratum: Readonly<StratumFromTraits<CkanSharedTraits>>
+  ) {
+    // The values in this stratum should not be updated as the same object is used
+    //  in all CkanItemReferences
+    this.strata.set(
+      createInheritedCkanSharedTraitsStratum.stratumName,
+      inheritedPropertiesStratum
+    );
   }
 
   async forceLoadReference(
@@ -456,10 +456,10 @@ export default class CkanItemReference extends UrlMixin(
     previousTarget = model;
     await this.setCkanStrata(model);
 
-    const defintionStratum = this.strata.get("definition");
+    const defintionStratum = this.strata.get(CommonStrata.definition);
     if (defintionStratum) {
-      model.strata.set("definition", defintionStratum);
-      model.setTrait("definition", "url", undefined);
+      model.strata.set(CommonStrata.definition, defintionStratum);
+      model.setTrait(CommonStrata.definition, "url", undefined);
     }
 
     // Tried to make this sequence an updateModelFromJson but wouldn't work?

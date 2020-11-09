@@ -4,19 +4,18 @@ import CatalogMemberTraits from "./CatalogMemberTraits";
 import primitiveTrait from "./primitiveTrait";
 import MappableTraits from "./MappableTraits";
 import DataCustodianTraits from "./DataCustodianTraits";
-import objectArrayTrait from "./objectArrayTrait";
 import SplitterTraits from "./SplitterTraits";
-import anyTrait from "./anyTrait";
 import objectTrait from "./objectTrait";
-import { JsonObject } from "../Core/Json";
 import { StyleTraits } from "./GeoJsonCatalogItemTraits";
+import UrlTraits from "./UrlTraits";
 
 export default class SenapsLocationsCatalogItemTraits extends mixTraits(
   FeatureInfoTraits,
   SplitterTraits,
   DataCustodianTraits,
   MappableTraits,
-  CatalogMemberTraits
+  CatalogMemberTraits,
+  UrlTraits
 ) {
   @primitiveTrait({
     type: "string",
@@ -41,7 +40,8 @@ export default class SenapsLocationsCatalogItemTraits extends mixTraits(
   @objectTrait({
     type: StyleTraits,
     name: "Style",
-    description: "Styling rules that follow simplestyle-spec"
+    description:
+      "Styling rules that follow [simplestyle-spec](https://github.com/mapbox/simplestyle-spec)"
   })
   style?: StyleTraits;
 }
