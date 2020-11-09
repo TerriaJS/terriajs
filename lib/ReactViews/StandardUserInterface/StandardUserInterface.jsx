@@ -60,7 +60,6 @@ import { action, runInAction } from "mobx";
 import HelpPanel from "../Map/Panels/HelpPanel/HelpPanel";
 import Tool from "../Tool";
 import Disclaimer from "../Disclaimer";
-import Terria from "../../Models/Terria";
 
 export const showStoryPrompt = (viewState, terria) => {
   terria.configParameters.showFeaturePrompts &&
