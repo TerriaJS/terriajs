@@ -1,5 +1,6 @@
 import i18next from "i18next";
 import TerriaError from "../Core/TerriaError";
+import GroupMixin from "../ModelMixins/GroupMixin";
 import CommonStrata from "./CommonStrata";
 import createStubCatalogItem from "./createStubCatalogItem";
 import { BaseModel } from "./Model";
@@ -32,10 +33,16 @@ export default function upsertModelFromJson(
       let id = (parentId || "") + "/" + localId;
       let idIncrement = 1;
       uniqueId = id;
+      model = terria.getModelById(BaseModel, uniqueId);
 
-      while (terria.getModelById(BaseModel, uniqueId) !== undefined) {
-        uniqueId = id + "(" + idIncrement + ")";
-        idIncrement++;
+      // Duplicate catalogue items should be given a unique id by incrementing its id
+      // But if it's a group, leave it as is, so we can later merge all groups with the same id
+      if (!GroupMixin.isMixedInto(model)) {
+        while (model !== undefined) {
+          uniqueId = id + "(" + idIncrement + ")";
+          idIncrement++;
+          model = terria.getModelById(BaseModel, uniqueId);
+        }
       }
     }
 

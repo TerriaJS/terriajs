@@ -1,4 +1,4 @@
-import { runInAction } from "mobx";
+import { runInAction, isObservableArray } from "mobx";
 import TerriaError from "../Core/TerriaError";
 import createStratumInstance from "./createStratumInstance";
 import { BaseModel } from "./Model";
@@ -36,6 +36,13 @@ export default function updateModelFromJson(
       const jsonValue = json[propertyName];
       if (jsonValue === undefined) {
         model.setTrait(stratumName, propertyName, undefined);
+      } else if (propertyName === "members") {
+        createOrMergeNewMembers(
+          model,
+          stratumName,
+          propertyName,
+          trait.fromJson(model, stratumName, jsonValue)
+        );
       } else {
         model.setTrait(
           stratumName,
@@ -45,4 +52,19 @@ export default function updateModelFromJson(
       }
     });
   });
+}
+
+function createOrMergeNewMembers(
+  model: BaseModel,
+  stratumName: string,
+  propertyName: string,
+  newTrait: string[]
+) {
+  const existingTrait = model.getTrait(stratumName, propertyName);
+  if (existingTrait !== undefined && isObservableArray(existingTrait)) {
+    existingTrait.push(...newTrait);
+    model.setTrait(stratumName, propertyName, existingTrait);
+  } else {
+    model.setTrait(stratumName, propertyName, newTrait);
+  }
 }
