@@ -77,6 +77,13 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
 
     private tileset?: ObservableCesium3DTileset;
 
+    constructor(...args: any[]) {
+      super(...args);
+      runInAction(() => {
+        this.strata.set(Cesium3dTilesStratum.name, new Cesium3dTilesStratum());
+      });
+    }
+
     get isMappable() {
       return true;
     }
@@ -407,11 +414,6 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
   }
 
   return Cesium3dTilesMixin;
-}
-
-namespace Cesium3dTilesMixin {
-  StratumOrder.addLoadStratum(Cesium3dTilesStratum.name);
-  export interface Cesium3dTilesMixin extends Cesium3DTilesCatalogItemIface {}
 }
 
 export default Cesium3dTilesMixin;
