@@ -47,6 +47,10 @@ class Cesium3dTilesStratum extends LoadableStratum(Cesium3dTilesTraits) {
     return 1.0;
   }
 }
+
+// Register the Cesium3dTilesStratum
+StratumOrder.instance.addLoadStratum(Cesium3dTilesStratum.name);
+
 interface Cesium3DTilesCatalogItemIface
   extends InstanceType<ReturnType<typeof Cesium3dTilesMixin>> {}
 
