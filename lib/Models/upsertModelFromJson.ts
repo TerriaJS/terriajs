@@ -87,12 +87,7 @@ export default function upsertModelFromJson(
     }
 
     if (model.type !== StubCatalogItem.type) {
-      model.terria.addModel(model);
-      if (json.shareKeys?.length > 0) {
-        json.shareKeys.forEach((shareKey: string) => {
-          terria.addShareKey(shareKey, uniqueId);
-        });
-      }
+      model.terria.addModel(model, json.shareKeys);
     }
   }
 

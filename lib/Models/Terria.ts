@@ -364,7 +364,7 @@ export default class Terria {
   }
 
   @action
-  addModel(model: BaseModel) {
+  addModel(model: BaseModel, shareKeys?: string[]) {
     if (model.uniqueId === undefined) {
       throw new DeveloperError("A model without a `uniqueId` cannot be added.");
     }
@@ -374,6 +374,7 @@ export default class Terria {
     }
 
     this.models.set(model.uniqueId, model);
+    shareKeys?.forEach(shareKey => this.addShareKey(model.uniqueId!, shareKey));
   }
 
   /**
@@ -401,7 +402,7 @@ export default class Terria {
   }
 
   @action
-  addShareKey(shareKey: string, id: string) {
+  addShareKey(id: string, shareKey: string) {
     this.shareKeysMap.set(shareKey, id);
   }
 
