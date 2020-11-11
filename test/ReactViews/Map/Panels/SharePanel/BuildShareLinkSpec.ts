@@ -17,10 +17,14 @@ import loadBlob from "../../../../../lib/Core/loadBlob";
 import addUserCatalogMember from "../../../../../lib/Models/addUserCatalogMember";
 import { BaseModel } from "../../../../../lib/Models/Model";
 import CommonStrata from "../../../../../lib/Models/CommonStrata";
-import { runInAction } from "mobx";
+import { action, runInAction } from "mobx";
 import addToWorkbench from "../../../../../lib/Models/addToWorkbench";
 import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import CatalogMemberFactory from "../../../../../lib/Models/CatalogMemberFactory";
+import PickedFeatures from "../../../../../lib/Map/PickedFeatures";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import Feature from "../../../../../lib/Models/Feature";
 
 let terria: Terria;
 let viewState: ViewState;
@@ -52,6 +56,7 @@ interface FlattenedInitSources {
   previewedItemId: string | undefined;
   models: any;
   workbench: any;
+  pickedFeatures: any;
 }
 
 const flattenInitSources = (initSources: any[]): FlattenedInitSources =>
@@ -228,5 +233,99 @@ describe("BuildShareLink", function() {
         expect(initSources.previewedItemId).toBeUndefined();
       });
     });
+  });
+
+  describe("sharing picked features", function() {
+    it(
+      "captures the picked position",
+      action(function() {
+        terria.pickedFeatures = new PickedFeatures();
+        terria.pickedFeatures.pickPosition = new Cartesian3(
+          17832.12,
+          83234.52,
+          952313.73
+        );
+        terria.pickedFeatures.features.push(new Entity());
+        const shareLink = buildShareLink(terria, viewState);
+        const params = decodeAndParseStartHash(shareLink);
+        const initSources = flattenInitSources(params.initSources);
+        const pickCoords = initSources.pickedFeatures.pickCoords;
+        expect(pickCoords.lat.toFixed(2)).toEqual("84.93");
+        expect(pickCoords.lng.toFixed(2)).toEqual("77.91");
+        expect(pickCoords.height.toFixed(2)).toEqual("-5400810.41");
+      })
+    );
+
+    it(
+      "captures the tile coordinates of the picked imagery providers",
+      action(function() {
+        terria.pickedFeatures = new PickedFeatures();
+        terria.pickedFeatures.pickPosition = new Cartesian3(
+          17832.12,
+          83234.52,
+          952313.73
+        );
+        terria.pickedFeatures.providerCoords = {
+          "https://foo": { x: 123, y: 456, level: 7 },
+          "https://bar": { x: 42, y: 42, level: 4 }
+        };
+        terria.pickedFeatures.features.push(new Entity());
+        const shareLink = buildShareLink(terria, viewState);
+        const params = decodeAndParseStartHash(shareLink);
+        const initSources = flattenInitSources(params.initSources);
+        const providerCoords = initSources.pickedFeatures.providerCoords;
+        expect(providerCoords).toEqual({
+          "https://foo": { x: 123, y: 456, level: 7 },
+          "https://bar": { x: 42, y: 42, level: 4 }
+        });
+      })
+    );
+
+    it(
+      "captures the selected feature",
+      action(function() {
+        terria.pickedFeatures = new PickedFeatures();
+        terria.pickedFeatures.pickPosition = new Cartesian3(
+          17832.12,
+          83234.52,
+          952313.73
+        );
+        const feature = new Entity({ name: "testFeature" }) as Feature;
+        terria.pickedFeatures.features.push(feature);
+        terria.selectedFeature = feature;
+        const shareLink = buildShareLink(terria, viewState);
+        const params = decodeAndParseStartHash(shareLink);
+        const initSources = flattenInitSources(params.initSources);
+        const current = initSources.pickedFeatures.current;
+        expect(current.name).toEqual("testFeature");
+        expect(current.hash).toBeDefined();
+      })
+    );
+
+    it(
+      "captures all picked vector features",
+      action(function() {
+        terria.pickedFeatures = new PickedFeatures();
+        terria.pickedFeatures.pickPosition = new Cartesian3(
+          17832.12,
+          83234.52,
+          952313.73
+        );
+        terria.pickedFeatures.features.push(
+          new Entity({ name: "testFeature1" })
+        );
+        terria.pickedFeatures.features.push(
+          new Entity({ name: "testFeature2" })
+        );
+        const shareLink = buildShareLink(terria, viewState);
+        const params = decodeAndParseStartHash(shareLink);
+        const initSources = flattenInitSources(params.initSources);
+        const entities = initSources.pickedFeatures.entities;
+        expect(entities[0].name).toEqual("testFeature1");
+        expect(entities[0].hash).toBeDefined();
+        expect(entities[1].name).toEqual("testFeature2");
+        expect(entities[1].hash).toBeDefined();
+      })
+    );
   });
 });

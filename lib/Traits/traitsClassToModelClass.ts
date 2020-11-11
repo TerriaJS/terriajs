@@ -1,11 +1,16 @@
-import { createTransformer } from "mobx-utils";
+import memoize from "lodash-es/memoize";
 import CreateModel from "../Models/CreateModel";
 import ModelTraits from "./ModelTraits";
 import TraitsConstructor from "./TraitsConstructor";
 
-const traitsClassToModelClass = createTransformer(function<
-  T extends ModelTraits
->(traitsClass: TraitsConstructor<T>) {
+// Unlike other places, we use lodash-es/memoize instead of `createTransformer`
+// to memoize because this method is called during model class definition stage
+// (check objectTrait & objectArrayTrait) and it will always be run outside an
+// `autorun` or an `observer`. Therefore, thecall to `createTransformer` will
+// not memoize and logs a warning.
+const traitsClassToModelClass = memoize(function<T extends ModelTraits>(
+  traitsClass: TraitsConstructor<T>
+) {
   return CreateModel(traitsClass);
 });
 

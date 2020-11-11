@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { action, computed, observable, runInAction, toJS } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -216,6 +217,14 @@ export default function Cesium3dTilesMixin<
       );
 
       return [this.tileset];
+    }
+
+    @computed
+    get shortReport(): string | undefined {
+      if (this.terria.currentViewer.type === "Leaflet") {
+        return i18next.t("models.commonModelErrors.3dTypeIn2dMode", this);
+      }
+      return undefined;
     }
 
     @computed get optionsObj() {

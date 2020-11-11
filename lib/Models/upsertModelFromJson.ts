@@ -1,4 +1,5 @@
 import i18next from "i18next";
+import defaults from "lodash-es/defaults";
 import TerriaError from "../Core/TerriaError";
 import CommonStrata from "./CommonStrata";
 import createStubCatalogItem from "./createStubCatalogItem";
@@ -7,12 +8,18 @@ import ModelFactory from "./ModelFactory";
 import StubCatalogItem from "./StubCatalogItem";
 import Terria from "./Terria";
 import updateModelFromJson from "./updateModelFromJson";
-import { JsonObject } from "../Core/Json";
 
 export interface UpsertModelFromJsonOptions {
+  addModelToTerria?: boolean;
+  matchByShareKey?: boolean;
   replaceStratum?: boolean;
-  matchByShareKeys?: boolean;
 }
+
+const defaultOptions: UpsertModelFromJsonOptions = {
+  addModelToTerria: true,
+  matchByShareKey: false,
+  replaceStratum: undefined
+};
 
 /**
  * Update an existing model or create a new model
@@ -31,6 +38,8 @@ export default function upsertModelFromJson(
   json: any,
   options: UpsertModelFromJsonOptions
 ): BaseModel {
+  defaults(options, defaultOptions);
+
   let uniqueId = json.id;
   if (uniqueId === undefined) {
     const localId = json.localId || json.name;
@@ -52,11 +61,7 @@ export default function upsertModelFromJson(
   }
 
   let model = terria.getModelById(BaseModel, uniqueId);
-  if (
-    model === undefined &&
-    options.matchByShareKeys &&
-    json.id !== undefined
-  ) {
+  if (model === undefined && options.matchByShareKey && json.id !== undefined) {
     uniqueId = terria.getModelIdByShareKey(json.id);
     if (uniqueId !== undefined) {
       model = terria.getModelById(BaseModel, uniqueId);
@@ -93,7 +98,9 @@ export default function upsertModelFromJson(
 
   try {
     updateModelFromJson(model, stratumName, json, options.replaceStratum);
-  } catch {
+  } catch (error) {
+    console.log(`Error updating model from JSON`);
+    console.log(error);
     model.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
   }
   return model;

@@ -1,11 +1,14 @@
-import { action, computed, observable, runInAction, toJS } from "mobx";
+import i18next from "i18next";
+import { action, computed, observable, runInAction, toJS, when } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import URI from "urijs";
 import AsyncLoader from "../Core/AsyncLoader";
@@ -13,30 +16,37 @@ import Class from "../Core/Class";
 import ConsoleAnalytics from "../Core/ConsoleAnalytics";
 import CorsProxy from "../Core/CorsProxy";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import getDereferencedIfExists from "../Core/getDereferencedIfExists";
 import GoogleAnalytics from "../Core/GoogleAnalytics";
+import hashEntity from "../Core/hashEntity";
 import instanceOf from "../Core/instanceOf";
 import isDefined from "../Core/isDefined";
 import JsonValue, {
+  isJsonBoolean,
+  isJsonNumber,
   isJsonObject,
   isJsonString,
-  JsonObject,
-  isJsonBoolean,
-  isJsonNumber
+  JsonObject
 } from "../Core/Json";
+import { isLatLonHeight } from "../Core/LatLonHeight";
 import loadJson5 from "../Core/loadJson5";
 import ServerConfig from "../Core/ServerConfig";
 import TerriaError from "../Core/TerriaError";
 import { getUriWithoutPath } from "../Core/uriHelpers";
 import PickedFeatures, {
-  featureBelongsToCatalogItem
+  featureBelongsToCatalogItem,
+  isProviderCoordsMap
 } from "../Map/PickedFeatures";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
-import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
-import TerriaViewer from "../ViewModels/TerriaViewer";
 import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
 import { defaultTerms, Term } from "../ReactViewModels/defaultTerms";
+import { Notification } from "../ReactViewModels/ViewState";
+import { shareConvertNotification } from "../ReactViews/Notification/shareConvertNotification";
+import ShowableTraits from "../Traits/ShowableTraits";
+import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
+import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
 import CatalogGroup from "./CatalogGroupNew";
 import CatalogMemberFactory from "./CatalogMemberFactory";
@@ -44,26 +54,25 @@ import Catalog from "./CatalogNew";
 import CommonStrata from "./CommonStrata";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
+import hasTraits from "./hasTraits";
 import InitSource, { isInitOptions, isInitUrl } from "./InitSource";
+import Internationalization, {
+  I18nStartOptions,
+  LanguageConfiguration
+} from "./Internationalization";
 import MagdaReference, { MagdaReferenceHeaders } from "./MagdaReference";
 import MapInteractionMode from "./MapInteractionMode";
-import Mappable from "./Mappable";
+import Mappable, { isDataSource } from "./Mappable";
 import { BaseModel } from "./Model";
+import NoViewer from "./NoViewer";
+import openGroup from "./openGroup";
 import ShareDataService from "./ShareDataService";
+import SplitItemReference from "./SplitItemReference";
 import TimelineStack from "./TimelineStack";
 import updateModelFromJson from "./updateModelFromJson";
 import upsertModelFromJson from "./upsertModelFromJson";
 import ViewerMode from "./ViewerMode";
 import Workbench from "./Workbench";
-import openGroup from "./openGroup";
-import getDereferencedIfExists from "../Core/getDereferencedIfExists";
-import SplitItemReference from "./SplitItemReference";
-import Internationalization, {
-  I18nStartOptions,
-  LanguageConfiguration
-} from "./Internationalization";
-import { Notification } from "../ReactViewModels/ViewState";
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 // import overrides from "../Overrides/defaults.jsx";
 
 interface ConfigParameters {
@@ -102,6 +111,7 @@ interface ConfigParameters {
   helpContent?: HelpContentItem[];
   helpContentTerms?: Term[];
   languageConfiguration?: LanguageConfiguration;
+  displayOneBrand?: number;
 }
 
 interface StartOptions {
@@ -129,6 +139,9 @@ interface TerriaOptions {
 interface ApplyInitDataOptions {
   initData: JsonObject;
   replaceStratum?: boolean;
+  // When feature picking state is missing from the initData, unset the state only if this flag is true
+  // This is for eg, set to true when switching through story slides.
+  canUnsetFeaturePickingState?: boolean;
 }
 
 interface HomeCameraInit {
@@ -200,7 +213,7 @@ export default class Terria {
     conversionServiceBaseUrl: "convert/",
     proj4ServiceBaseUrl: "proj4/",
     corsProxyBaseUrl: "proxy/",
-    proxyableDomainsUrl: "proxyabledomains/",
+    proxyableDomainsUrl: "proxyabledomains/", // deprecated, will be determined from serverconfig
     serverConfigUrl: "serverconfig/",
     shareUrl: "share",
     feedbackUrl: undefined,
@@ -231,7 +244,8 @@ export default class Terria {
     showInAppGuides: false,
     helpContent: [],
     helpContentTerms: defaultTerms,
-    languageConfiguration: undefined
+    languageConfiguration: undefined,
+    displayOneBrand: 0 // index of which brandBarElements to show for mobile header
   };
 
   @observable
@@ -406,6 +420,18 @@ export default class Terria {
     this.shareKeysMap.set(shareKey, id);
   }
 
+  setupInitializationUrls(baseUri: uri.URI, config: any) {
+    const initializationUrls: string[] = config.initializationUrls || [];
+    const initSources = initializationUrls.map(url =>
+      generateInitializationUrl(
+        baseUri,
+        this.configParameters.initFragmentPaths,
+        url
+      )
+    );
+    this.initSources.push(...initSources);
+  }
+
   start(options: StartOptions) {
     this.shareDataService = options.shareDataService;
 
@@ -419,7 +445,11 @@ export default class Terria {
           // If it's a magda config, we only load magda config and parameters should never be a property on the direct
           // config aspect (it would be under the `terria-config` aspect)
           if (config.aspects) {
-            return this.loadMagdaConfig(options.configUrl, config).then(() => {
+            return this.loadMagdaConfig(
+              options.configUrl,
+              config,
+              baseUri
+            ).then(() => {
               Internationalization.initLanguage(
                 this.configParameters.languageConfiguration,
                 options.i18nOptions
@@ -436,16 +466,7 @@ export default class Terria {
             );
           }
 
-          const initializationUrls: string[] = config.initializationUrls || [];
-          const initSources = initializationUrls.map(url =>
-            generateInitializationUrl(
-              baseUri,
-              this.configParameters.initFragmentPaths,
-              url
-            )
-          );
-
-          this.initSources.push(...initSources);
+          this.setupInitializationUrls(baseUri, config);
         });
       })
       .then(() => {
@@ -661,7 +682,7 @@ export default class Terria {
           },
           {
             replaceStratum,
-            matchByShareKeys: true
+            matchByShareKey: true
           }
         );
 
@@ -727,9 +748,11 @@ export default class Terria {
   @action
   applyInitData({
     initData,
-    replaceStratum = false
+    replaceStratum = false,
+    canUnsetFeaturePickingState = false
   }: ApplyInitDataOptions): Promise<void> {
     initData = toJS(initData);
+
     const stratumId =
       typeof initData.stratum === "string"
         ? initData.stratum
@@ -813,7 +836,7 @@ export default class Terria {
       promise = Promise.resolve();
     }
 
-    return promise.then(() => {
+    promise = promise.then(() => {
       return runInAction(() => {
         if (isJsonString(initData.previewedItemId)) {
           this.previewedItemId = initData.previewedItemId;
@@ -862,6 +885,21 @@ export default class Terria {
         return Promise.all(promises).then(() => undefined);
       });
     });
+
+    if (isJsonObject(initData.pickedFeatures)) {
+      promise.then(() =>
+        when(() => !(this.currentViewer instanceof NoViewer)).then(() => {
+          if (isJsonObject(initData.pickedFeatures)) {
+            this.loadPickedFeatures(initData.pickedFeatures);
+          }
+        })
+      );
+    } else if (canUnsetFeaturePickingState) {
+      this.pickedFeatures = undefined;
+      this.selectedFeature = undefined;
+    }
+
+    return promise;
   }
 
   @action
@@ -869,7 +907,7 @@ export default class Terria {
     this.mainViewer.homeCamera = CameraView.fromJson(homeCameraInit);
   }
 
-  async loadMagdaConfig(configUrl: string, config: any) {
+  async loadMagdaConfig(configUrl: string, config: any, baseUri: uri.URI) {
     const magdaRoot = new URI(configUrl)
       .path("")
       .query("")
@@ -885,13 +923,19 @@ export default class Terria {
 
     const initObj = aspects["terria-init"];
     if (isJsonObject(initObj)) {
+      const { catalog, ...initObjWithoutCatalog } = initObj;
+      /** Load the init data without the catalog yet, as we'll push the catalog
+       * source up as an init source later */
       await this.applyInitData({
-        initData: initObj as any
+        initData: initObjWithoutCatalog as any
       });
     }
 
     if (aspects.group && aspects.group.members) {
-      const id = config.id;
+      // const id = config.id;
+      // force config id to be `/`, purely to emulate regular terria behaviour
+      const id = "/";
+      this.removeModelReferences(this.catalog.group);
 
       let existingReference = this.getModelById(MagdaReference, id);
       if (existingReference === undefined) {
@@ -902,7 +946,7 @@ export default class Terria {
       const reference = existingReference;
 
       reference.setTrait(CommonStrata.definition, "url", magdaRoot);
-      reference.setTrait(CommonStrata.definition, "recordId", config.id);
+      reference.setTrait(CommonStrata.definition, "recordId", id);
       reference.setTrait(CommonStrata.definition, "magdaRecord", config);
       await reference.loadReference().then(() => {
         if (reference.target instanceof CatalogGroup) {
@@ -910,37 +954,117 @@ export default class Terria {
             this.catalog.group = <CatalogGroup>reference.target;
           });
         }
+        this.setupInitializationUrls(
+          baseUri,
+          config.aspects?.["terria-config"]
+        );
+        /** Load up rest of terria catalog if one is inlined in terria-init */
+        if (config.aspects?.["terria-init"]) {
+          const { catalog, ...rest } = initObj;
+          this.initSources.push({
+            data: {
+              catalog: catalog
+            }
+          });
+        }
       });
     }
   }
 
-  initCorsProxy(config: any, serverConfig: any): Promise<void> {
-    // All the "proxyableDomains" bits here are due to a pre-serverConfig mechanism for whitelisting domains.
-    // We should deprecate it.s
+  @action
+  loadPickedFeatures(pickedFeatures: JsonObject): Promise<void> | undefined {
+    let vectorFeatures: Entity[] = [];
+    let featureIndex: Record<number, Entity[] | undefined> = {};
 
-    // If a URL was specified in the config parameters to get the proxyable domains from, get them from that
-    var pdu = this.configParameters.proxyableDomainsUrl;
-    const proxyableDomainsPromise: Promise<JsonValue | void> = pdu
-      ? loadJson5(pdu)
-      : Promise.resolve();
-    return proxyableDomainsPromise.then((proxyableDomains: any | void) => {
-      if (proxyableDomains) {
-        // format of proxyableDomains JSON file slightly differs from serverConfig format.
-        proxyableDomains.allowProxyFor =
-          proxyableDomains.allowProxyFor || proxyableDomains.proxyableDomains;
-      }
+    if (Array.isArray(pickedFeatures.entities)) {
+      // Build index of terria features by a hash of their properties.
+      const relevantItems: Mappable[] = this.workbench.items.filter(item => {
+        return (
+          hasTraits(item, ShowableTraits, "show") &&
+          item.show &&
+          Mappable.is(item)
+        );
+      }) as Mappable[];
 
-      // If there isn't anything there, check the server config
-      if (typeof serverConfig === "object") {
-        serverConfig = serverConfig.config; // if server config is unavailable, this remains undefined.
-      }
+      relevantItems.forEach(item => {
+        const entities: Entity[] = item.mapItems
+          .filter(isDataSource)
+          .reduce((arr: Entity[], ds) => arr.concat(ds.entities.values), []);
 
-      this.corsProxy.init(
-        proxyableDomains || serverConfig,
-        this.configParameters.corsProxyBaseUrl,
-        config.proxyDomains // fall back to local config
+        entities.forEach(entity => {
+          const hash = hashEntity(entity, this.timelineClock);
+          const feature = Feature.fromEntityCollectionOrEntity(entity);
+          featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
+        });
+      });
+
+      // Go through the features we've got from terria match them up to the id/name info we got from the
+      // share link, filtering out any without a match.
+      vectorFeatures = filterOutUndefined(
+        pickedFeatures.entities.map(e => {
+          if (isJsonObject(e) && typeof e.hash === "number") {
+            const features = featureIndex[e.hash] || [];
+            const match = features.find(f => f.name === e.name);
+            return match;
+          }
+        })
       );
-    });
+    }
+
+    // Set the current pick location, if we have a valid coord
+    const maybeCoords: any = pickedFeatures.pickCoords;
+    const pickCoords = {
+      latitude: maybeCoords?.lat,
+      longitude: maybeCoords?.lng,
+      height: maybeCoords?.height
+    };
+    if (
+      isLatLonHeight(pickCoords) &&
+      isProviderCoordsMap(pickedFeatures.providerCoords)
+    ) {
+      this.currentViewer.pickFromLocation(
+        pickCoords,
+        pickedFeatures.providerCoords,
+        vectorFeatures as Feature[]
+      );
+    }
+
+    // When feature picking is done, set the selected feature
+    return this.pickedFeatures?.allFeaturesAvailablePromise?.then(
+      action(() => {
+        this.pickedFeatures?.features.forEach((entity: Entity) => {
+          const hash = hashEntity(entity, this.timelineClock);
+          const feature = entity;
+          featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
+        });
+
+        const current = pickedFeatures.current;
+        if (
+          isJsonObject(current) &&
+          typeof current.hash === "number" &&
+          typeof current.name === "string"
+        ) {
+          const selectedFeature = (featureIndex[current.hash] || []).find(
+            feature => feature.name === current.name
+          );
+          if (selectedFeature) {
+            this.selectedFeature = selectedFeature as Feature;
+          }
+        }
+      })
+    );
+  }
+
+  initCorsProxy(config: ConfigParameters, serverConfig: any): Promise<void> {
+    if (config.proxyableDomainsUrl) {
+      console.warn(i18next.t("models.terria.proxyableDomainsDeprecation"));
+    }
+    this.corsProxy.init(
+      serverConfig,
+      this.configParameters.corsProxyBaseUrl,
+      []
+    );
+    return Promise.resolve();
   }
 
   getUserProperty(key: string) {
@@ -1049,6 +1173,8 @@ function interpretHash(
         const propertyValue = hashProperties[property];
         if (property === "clean") {
           terria.initSources.splice(0, terria.initSources.length);
+        } else if (property === "hideWelcomeMessage") {
+          terria.configParameters.showWelcomeMessage = false;
         } else if (property === "start") {
           // a share link that hasn't been shortened: JSON embedded in URL (only works for small quantities of JSON)
           const startData = JSON.parse(propertyValue);
@@ -1067,32 +1193,10 @@ function interpretHash(
 
       if (shareProps) {
         if (shareProps.converted) {
-          let message =
-            "This share link was made with an older version of Terria and has been converted to work in Terria version 8\n\n";
-          if (shareProps.messages?.length > 0) {
-            message += `### Warning${
-              shareProps.messages?.length > 1 ? "s" : ""
-            }\n\n`;
-          }
-          const messagesForPath: { [path: string]: string[] } = {};
-          shareProps.messages.forEach((message: any) => {
-            const pathString = message.path.join(".");
-            isDefined(messagesForPath[pathString])
-              ? messagesForPath[pathString].push(message.message)
-              : (messagesForPath[pathString] = [message.message]);
-          });
-
-          message += Object.entries(messagesForPath).reduce<string>(
-            (m, [path, messages]) =>
-              `${m}${path !== "" ? `#### ${path}\n\n` : ``}- ${messages.join(
-                "  \n- "
-              )}\n\n`,
-            ""
-          );
           terria.notification.raiseEvent({
-            title: "Warning: share link upgraded",
-            message
-          });
+            title: i18next.t("share.convertNotificationTitle"),
+            message: shareConvertNotification(shareProps)
+          } as Notification);
         }
         interpretStartData(terria, shareProps);
       }
@@ -1104,13 +1208,15 @@ function interpretStartData(terria: Terria, startData: any) {
   // TODO: version check, filtering, etc.
 
   if (startData.initSources) {
-    terria.initSources.push(
-      ...startData.initSources.map((initSource: any) => {
-        return {
-          data: initSource
-        };
-      })
-    );
+    runInAction(() => {
+      terria.initSources.push(
+        ...startData.initSources.map((initSource: any) => {
+          return {
+            data: initSource
+          };
+        })
+      );
+    });
   }
 
   // if (defined(startData.version) && startData.version !== latestStartVersion) {

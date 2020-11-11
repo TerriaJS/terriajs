@@ -111,20 +111,6 @@ export class ArcGisPortalItemStratum extends LoadableStratum(
     });
   }
 
-  @computed get rectangle() {
-    if (this.arcgisPortalItem === undefined) return undefined;
-
-    if (this.arcgisPortalItem.extent !== null) {
-      return createStratumInstance(RectangleTraits, {
-        west: this.arcgisPortalItem.extent[0][0],
-        south: this.arcgisPortalItem.extent[0][1],
-        east: this.arcgisPortalItem.extent[1][0],
-        north: this.arcgisPortalItem.extent[1][1]
-      });
-    }
-    return undefined;
-  }
-
   @computed get info() {
     const outArray: StratumFromTraits<InfoSectionTraits>[] = [];
     if (this.arcgisPortalItem === undefined) return outArray;
@@ -341,7 +327,7 @@ export default class ArcGisPortalItemReference extends UrlMixin(
       | undefined = await loadAdditionalPortalInfo(this);
     if (itemDataInfo !== undefined && this._arcgisItem !== undefined) {
       if (!itemDataInfo.error && itemDataInfo.layers) {
-        if (itemDataInfo.layers.length > 0) {
+        if (itemDataInfo.layers.length === 1) {
           this._arcgisItem.url = `${this._arcgisItem.url}/${itemDataInfo.layers[0].id}`;
         }
       }

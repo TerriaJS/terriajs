@@ -33,7 +33,8 @@ export function activateStory(story, terria) {
         story.shareData.initSources.map(initSource =>
           terria.applyInitData({
             initData: initSource,
-            replaceStratum: false
+            replaceStratum: false,
+            canUnsetFeaturePickingState: true
           })
         )
       );

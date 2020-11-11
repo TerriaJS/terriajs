@@ -97,6 +97,31 @@ describe("WebMapServiceCatalogItem", function() {
     }
   });
 
+  it("constructs correct ImageryProvider when layers trait provided Title", async function() {
+    let wms: WebMapServiceCatalogItem;
+    const terria = new Terria();
+    wms = new WebMapServiceCatalogItem("test", terria);
+    runInAction(() => {
+      wms.setTrait("definition", "url", "test/WMS/wms_nested_groups.xml");
+      wms.setTrait(
+        "definition",
+        "layers",
+        "Landsat 30+ Barest Earth 25m albers (Combined Landsat)"
+      );
+    });
+    let mapItems: ImageryParts[] = [];
+    const cleanup = autorun(() => {
+      mapItems = wms.mapItems.slice();
+    });
+    try {
+      await wms.loadMetadata();
+      //@ts-ignore
+      expect(mapItems[0].imageryProvider.layers).toBe("landsat_barest_earth");
+    } finally {
+      cleanup();
+    }
+  });
+
   it("dimensions and styles for a 'real' WMS layer", function(done) {
     const terria = new Terria();
     const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
@@ -109,7 +134,6 @@ describe("WebMapServiceCatalogItem", function() {
       );
       wmsItem.setTrait(CommonStrata.definition, "layers", "A,B");
       wmsItem.setTrait(CommonStrata.definition, "dimensions", {
-        styles: "contour/ferret,shadefill/alg2",
         custom: "Another thing",
         elevation: "-0.59375"
       });
@@ -163,6 +187,130 @@ describe("WebMapServiceCatalogItem", function() {
         expect(
           wmsItem.wmsDimensionSelectableDimensions[2].options!.length
         ).toBe(3);
+
+        expect(wmsItem.legends.length).toBe(2);
+        expect(wmsItem.legends[0].url).toBe(
+          "http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&LAYER=v&PALETTE=ferret&transparent=true"
+        );
+        expect(wmsItem.legends[1].url).toBe(
+          "http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&LAYER=wetdry_mask_u&PALETTE=alg2&transparent=true"
+        );
+      })
+      .then(done)
+      .catch(done.fail);
+  });
+
+  it("fetches default legend", function(done) {
+    const terria = new Terria();
+    const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
+    runInAction(() => {
+      wmsItem.setTrait(CommonStrata.definition, "url", "http://example.com");
+      wmsItem.setTrait(
+        CommonStrata.definition,
+        "getCapabilitiesUrl",
+        "test/WMS/styles_and_dimensions.xml"
+      );
+      wmsItem.setTrait(CommonStrata.definition, "layers", "A");
+    });
+
+    wmsItem
+      .loadMetadata()
+      .then(function() {
+        expect(wmsItem.legends.length).toBe(1);
+        expect(wmsItem.legends[0].url).toBe(
+          "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&layer=A&transparent=true"
+        );
+      })
+      .then(done)
+      .catch(done.fail);
+  });
+
+  it("fetches geoserver legend", function(done) {
+    const terria = new Terria();
+    const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
+    runInAction(() => {
+      wmsItem.setTrait(CommonStrata.definition, "url", "http://example.com");
+      wmsItem.setTrait(
+        CommonStrata.definition,
+        "getCapabilitiesUrl",
+        "test/WMS/styles_and_dimensions.xml"
+      );
+      wmsItem.setTrait(CommonStrata.definition, "layers", "A");
+      wmsItem.setTrait(CommonStrata.definition, "isGeoServer", true);
+    });
+
+    wmsItem
+      .loadMetadata()
+      .then(function() {
+        expect(wmsItem.legends.length).toBe(1);
+        expect(wmsItem.legends[0].url).toBe(
+          "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&layer=A&transparent=true&LEGEND_OPTIONS=fontSize%3A14%3BforceLabels%3Aon%3BfontAntiAliasing%3Atrue%3BfontColor%3A0xDDDDDD"
+        );
+      })
+      .then(done)
+      .catch(done.fail);
+  });
+
+  it("fetches legend with colourScaleRange", function(done) {
+    const terria = new Terria();
+    const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
+    runInAction(() => {
+      wmsItem.setTrait(CommonStrata.definition, "url", "http://example.com");
+      wmsItem.setTrait(
+        CommonStrata.definition,
+        "getCapabilitiesUrl",
+        "test/WMS/styles_and_dimensions.xml"
+      );
+      wmsItem.setTrait(CommonStrata.definition, "layers", "A");
+      wmsItem.setTrait(
+        CommonStrata.definition,
+        "supportsColorScaleRange",
+        true
+      );
+      wmsItem.setTrait(CommonStrata.definition, "colorScaleMinimum", 0);
+      wmsItem.setTrait(CommonStrata.definition, "colorScaleMaximum", 1);
+    });
+
+    wmsItem
+      .loadMetadata()
+      .then(function() {
+        expect(wmsItem.legends.length).toBe(1);
+        expect(wmsItem.legends[0].url).toBe(
+          "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&layer=A&transparent=true&colorscalerange=0%2C1"
+        );
+      })
+      .then(done)
+      .catch(done.fail);
+  });
+
+  it("`selectableDimensions` is empty if `disableDimensionSelectors` is true", function(done) {
+    const terria = new Terria();
+    const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
+    runInAction(() => {
+      wmsItem.setTrait(CommonStrata.definition, "url", "http://example.com");
+      wmsItem.setTrait(
+        CommonStrata.definition,
+        "getCapabilitiesUrl",
+        "test/WMS/styles_and_dimensions.xml"
+      );
+      wmsItem.setTrait(CommonStrata.definition, "layers", "A,B");
+      wmsItem.setTrait(CommonStrata.definition, "dimensions", {
+        styles: "contour/ferret,shadefill/alg2",
+        custom: "Another thing",
+        elevation: "-0.59375"
+      });
+      wmsItem.setTrait(
+        CommonStrata.definition,
+        "styles",
+        "contour/ferret,shadefill/alg2"
+      );
+      wmsItem.setTrait(CommonStrata.user, "disableDimensionSelectors", true);
+    });
+
+    wmsItem
+      .loadMetadata()
+      .then(function() {
+        expect(wmsItem.selectableDimensions.length).toBe(0);
       })
       .then(done)
       .catch(done.fail);

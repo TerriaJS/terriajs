@@ -3,12 +3,119 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.51)
+#### next release (8.0.0-alpha.61)
+* New `CatalogFunctionMixin` and `CatalogFunctionJobMixin`
+* Tsified `FunctionParameters`
+* New `YourDataYourRegions` `CatalogFunctionMixin`
+* Added `inWorkbench` property
+* Added `addModelToTerria` flag to `upsertModelFromJson` function
+* Added `DataCustodianTraits` to `WebMapServiceCatalogItem`
+* Added `disableDimensionSelectors` trait to `WebMapServiceCatalogItem`. Acheives the same effect of `disableUserChanges` in v7.
+* Temporarily stopped using `papaparse` for fetching Csv urls till an upstream bug is fixed.
+* Improve handling of `ArcGisMapServerCatalogItem` when dealing with tiled layers.
+* Ensure there aren't more bins than unique values for a `TableStyle`
+
+#### 8.0.0-alpha.60
+* Fix WMS legend for default styles.
+* Request transparent legend from GeoServer.
+* Reverted the following due to various issues with datasets:
+    * Add basic routing support
+    * Add better page titles when on various routes of the application
+    * Add prerendering support on `/catalog/` routes (via `prerender-end` event & 
+      allowing TerriaMap to hit certain routes)
+
+#### 8.0.0-alpha.59
+* Update magda error message
+* Add a short report section if trying to view a `3d-tiles` item in a 2d map.
+* Fix bug in `Terria.interpretStartData`.
+* Add `ThreddsCatalogGroup` model.
+* Port `supportsColorScaleRange`, `colorScaleMinimum` and `colorScaleMaximimum` from `master` to `WebMapServiceCatalogItem` model.
+* Ported MapboxVectorTileCatalogItem ("mvt").
+* When expanding a chart from the feature info panel, we now place a colored dot on the map where the chart was generated from.
+* Add basic routing support
+* Add better page titles when on various routes of the application
+* Add prerendering support on `/catalog/` routes (via `prerender-end` event &
+  allowing TerriaMap to hit certain routes)
+* Update `WorkbenchButton` to allow for links rather than buttons, including
+  changing About Data to a link
+
+#### 8.0.0-alpha.58
+* Add `FeatureInfoTraits` to `ArcGisMapServerCatalogItem`
+* Fix zooming bug for datasets with invalid bounding boxes.
+* Add new model for `ArcGisTerrainCatalogItem`.
+* Add 3D Tiles to 'Add web data' dropdown.
+* Fix naming of item in a `CkanCatalogGroup` when using an item naming scheme other than the default.
+
+#### 8.0.0-alpha.57
+* Fix memoization of `traitsClassToModelClass`.
+* Chart expanded from feature info panel will now by default show only the first chart line.
+* Chart component attribtues `column-titles` and `column-units` will now accept a simpler syntax like: "Time,Speed" or "ms,kmph"
+* Fix presentation of the WMS Dimension metadata.
+* Magda based maps now mimic "root group uniqueId === '/'" behaviour, so that mix and matching map init approaches behave more consistently
+  
+#### 8.0.0-alpha.56
+* Add `itemProperties` trait to `WebMapMapCatalogGroup`.
+* Add support for `formats` traits within `featureInfoTemplate` traits.
+* Fix handling of `ArcGisPortalItemReference` for when a feature layer contains multiple sublayers.
+* Implemented new compass design.
+
+#### 8.0.0-alpha.55
+* Upgraded to patched terriajs-cesium v1.73.1 to avoid build error on node 12 & 14.
+
+#### 8.0.0-alpha.54
+* Add a `infoAsObject` property to the `CatalogMemberMixin` for providing simpler access to `info` entries within templating
+* Add a `contentAsObject` trait to `InfoSectionTraits` where a json object is more suitable than a string.
+* Add `serviceDescription` and `dataDescription` to `WebMapServiceCatalogItem` info section.
+* Extend `DataPreviewSections.jsx` to support Mustache templates with context provided by the catalog item.
+* Add support for `initializationUrls` when loading configuration from Magda.
+* Add `:only-child` styling for `menu-bar.scss` to ensure correctly rounded corners on isolated buttons.
+* Improve Branding component for mobile header
+* Add support for `displayOne` configuration parameter to choose which brand element to show in mobile view
+* Update Carto basemaps URL and attribution.
+* Add `clipToRectangle` trait to `RasterLayerTraits` and implement on `WebMapServiceCatalogItem`, `ArcGisMapServiceCatalogItem`, `CartoMapCatalogItem`, `WebMapTileServiceCatalogItem`.
+* Allow Magda backed maps to use an inline `terria-init` catalog without it getting overwritten by map-config before it can be parsed
+* Deprecated `proxyableDomainsUrl` configuration parameter in favour of `serverconfig` route
+* Ported a support for `GpxCatalogItem`.
+* Feature info is now shareable.
+* Add option `canUnsetFeaturePickingState` to `applyInitData` for unsetting feature picking state if it is missing from `initData`. Useful for showing/hiding feature info panel when switching through story slides.
+* Properly render for polygons with holes in Leaflet.
+* Fixes a bug that showed the chart download button when there is no downloadable source.
+* Add `hideWelcomeMessage` url parameter to allow the Welcome Message to be disabled for iframe embeds or sharing scenarios.
+* Ensure the `chartDisclaimer` is passed from catalog items to derived chart items.
+* Don't calculate a `rectangle` on a `ArcGisPortalReferenceItem` as they appear to contain less precision than the services they point to.
+* Allow an `ArcGisPortalReferenceItem` to belong to multiple `CatalogGroup`'s.
+* Fix argis reference bug.
+* Made possible to internationalize tour contend.
+* Added TileErrorHandlerMixin for handling raster layer tile errors.
+* Fixed a bug that caused the feature info chart for SOS items to not load.
+* SOS & CSV charts are now shareable.
+
+#### 8.0.0-alpha.53
+* Ported an implementation of CatalogSearchProvider and set it as the default
+* Notification window & SatelliteImageryTimeFilterSection now uses theme colours
+* Improved look and feel of `StyledHtml` parsing
+* Fix `applyAriaId` on TooltipWrapper causing prop warnings
+* Make share conversion notification more pretty (moved from `Terria.ts` to `shareConvertNotification.tsx`)
+* Tsxify `Collapsible`
+* `ShortReportSections` now uses `Collapsible`
+* Add `onToggle`, `btnRight`, `btnStyle`, `titleTextProps` and `bodyBoxProps` props in `Collapsible`
+* Add `Notification.message` support for `(viewState: ViewState) => React.ReactNode`
+* Added splitting support to `WebMapTileServiceCatalogItem`.
+
+#### 8.0.0-alpha.52
+* Prevent duplicate loading of GetCapabilities
+* Update the `GtfsCatalogItem` to use the `AutoRefreshingMixin`.
+* Add a condition to the `AutoRefreshingMixin` to prevent unnecessary polling when an item is disabled in the workbench.
+* Upgraded to Cesium v1.73.
+* Removed any references to `BingMapsApi` (now deprecated).
+* Add support for resolving `layers` parameter from `Title` and not just `Name` in `WebMapServiceCatalogItem`.
+* Change TrainerBar to show all steps even if `markdownDescription` is not provided
+
+#### 8.0.0-alpha.51
 * Add WMTS group/item support
 * Create `OwsInterfaces` to reduce duplicate code across OWS servies
 * Fix story prompt being permanent/un-dismissable
 * Fixed a bug that caused the feature info chart for SOS items to not load.
-* [The next improvement]
 
 #### 8.0.0-alpha.50
 * Support for searching WFS features with WebFeatureServiceSearchProvider
@@ -380,7 +487,18 @@ Change Log
 
 
 ### Next Release
+### v7.11.13
 
+* Upgraded to Cesium v1.73.
+* Removed any references to `BingMapsApi` (now deprecated).
+
+### v7.11.12
+
+* Fixed a crash with GeoJsonCatalogItem when you set a `stroke-opacity` in `styles`.
+
+### v7.11.11
+
+* If `showIEMessage` is `true` in config.json, warn IE11 users that support is ending.
 
 ### v7.11.10
 

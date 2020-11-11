@@ -23,12 +23,14 @@ import createTransformerAllowUndefined from "../Core/createTransformerAllowUndef
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import isReadOnlyArray from "../Core/isReadOnlyArray";
+import { JsonObject } from "../Core/Json";
 import TerriaError from "../Core/TerriaError";
 import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import DiffableMixin from "../ModelMixins/DiffableMixin";
 import ExportableMixin from "../ModelMixins/ExportableMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
+import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
 import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import SelectableDimensions, {
@@ -47,8 +49,9 @@ import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import LoadableStratum from "./LoadableStratum";
-import Mappable, { ImageryParts } from "./Mappable";
+import { ImageryParts } from "./Mappable";
 import { BaseModel } from "./Model";
+import { CapabilitiesStyle } from "./OwsInterfaces";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
 import WebMapServiceCapabilities, {
@@ -57,35 +60,34 @@ import WebMapServiceCapabilities, {
   CapabilitiesLayer,
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
-import { CapabilitiesStyle } from "./OwsInterfaces";
+import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 
 const dateFormat = require("dateformat");
 
 class GetCapabilitiesStratum extends LoadableStratum(
   WebMapServiceCatalogItemTraits
 ) {
-  static load(
-    catalogItem: WebMapServiceCatalogItem
+  static async load(
+    catalogItem: WebMapServiceCatalogItem,
+    capabilities?: WebMapServiceCapabilities
   ): Promise<GetCapabilitiesStratum> {
-    if (catalogItem.getCapabilitiesUrl === undefined) {
-      return Promise.reject(
-        new TerriaError({
-          title: i18next.t("models.webMapServiceCatalogItem.missingUrlTitle"),
-          message: i18next.t(
-            "models.webMapServiceCatalogItem.missingUrlMessage"
-          )
-        })
-      );
+    if (!isDefined(catalogItem.getCapabilitiesUrl)) {
+      throw new TerriaError({
+        title: i18next.t("models.webMapServiceCatalogItem.missingUrlTitle"),
+        message: i18next.t("models.webMapServiceCatalogItem.missingUrlMessage")
+      });
     }
 
-    const proxiedUrl = proxyCatalogItemUrl(
-      catalogItem,
-      catalogItem.getCapabilitiesUrl,
-      catalogItem.getCapabilitiesCacheDuration
-    );
-    return WebMapServiceCapabilities.fromUrl(proxiedUrl).then(capabilities => {
-      return new GetCapabilitiesStratum(catalogItem, capabilities);
-    });
+    if (!isDefined(capabilities))
+      capabilities = await WebMapServiceCapabilities.fromUrl(
+        proxyCatalogItemUrl(
+          catalogItem,
+          catalogItem.getCapabilitiesUrl,
+          catalogItem.getCapabilitiesCacheDuration
+        )
+      );
+
+    return new GetCapabilitiesStratum(catalogItem, capabilities);
   }
 
   constructor(
@@ -139,44 +141,68 @@ class GetCapabilitiesStratum extends LoadableStratum(
       const layer = layers[i];
       const style = i < styles.length ? styles[i] : undefined;
 
-      const layerAvailableStyles = availableStyles.find(
-        candidate => candidate.layerName === layer
-      );
-      if (
-        layerAvailableStyles !== undefined &&
-        Array.isArray(layerAvailableStyles.styles) &&
-        layerAvailableStyles.styles.length > 0
-      ) {
-        // Use the first style if none is explicitly specified.
-        // Note that the WMS 1.3.0 spec (section 7.3.3.4) explicitly says we can't assume this,
-        // but because the server has no other way of indicating the default style, let's hope that
-        // sanity prevails.
-        const layerStyle =
-          style === undefined
-            ? layerAvailableStyles.styles[0]
-            : layerAvailableStyles.styles.find(
-                candidate => candidate.name === style
-              );
+      let legendUri: uri.URI | undefined;
+      let legendUrlMimeType: string | undefined;
 
-        if (layerStyle !== undefined && layerStyle.legend !== undefined) {
-          result.push(
-            <StratumFromTraits<LegendTraits>>(<unknown>layerStyle.legend)
+      // Attempt to find layer style based on AvailableStyleTraits
+      const layerStyle =
+        style === undefined
+          ? undefined
+          : availableStyles
+              .find(candidate => candidate.layerName === layer)
+              ?.styles?.find(candidate => candidate.name === style);
+      if (layerStyle?.legend?.url) {
+        legendUri = URI(
+          proxyCatalogItemUrl(this.catalogItem, layerStyle.legend.url)
+        );
+
+        legendUrlMimeType = layerStyle.legend.urlMimeType;
+      }
+
+      // If no legends found - make one up!
+      // From OGC — about style property for GetLegendGraphic request:
+      // If not present, the default style is selected. The style may be any valid style available for a layer, including non-SLD internally-defined styles.
+      if (!isDefined(legendUri) && isDefined(this.catalogItem.url)) {
+        legendUri = URI(
+          proxyCatalogItemUrl(
+            this.catalogItem,
+            this.catalogItem.url.split("?")[0]
+          )
+        );
+        legendUri
+          .setQuery("service", "WMS")
+          .setQuery("version", "1.3.0")
+          .setQuery("request", "GetLegendGraphic")
+          .setQuery("format", "image/png")
+          .setQuery("layer", layer);
+
+        legendUrlMimeType = "image/png";
+      }
+
+      if (isDefined(legendUri)) {
+        legendUri.setQuery("transparent", "true");
+
+        // Add geoserver related LEGEND_OPTIONS to match terria styling
+        if (this.catalogItem.isGeoServer) {
+          let legendOptions =
+            "fontSize:14;forceLabels:on;fontAntiAliasing:true";
+          legendOptions += ";fontColor:0xDDDDDD"; // enable if we can ensure a dark background
+          //legendOptions += ";dpi:182"; // enable if we can scale the image back down by 50%.
+          legendUri.setQuery("LEGEND_OPTIONS", legendOptions);
+        }
+        if (
+          this.catalogItem.supportsColorScaleRange &&
+          this.catalogItem.colorScaleRange
+        ) {
+          legendUri.setQuery(
+            "colorscalerange",
+            this.catalogItem.colorScaleRange
           );
         }
-
-        // If no styles - make up legend
-      } else if (isDefined(this.catalogItem.url)) {
         result.push(
           createStratumInstance(LegendTraits, {
-            url: URI(
-              `${proxyCatalogItemUrl(
-                this.catalogItem,
-                this.catalogItem.url
-              )}?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&transparent=True`
-            )
-              .addQuery("layer", layer)
-              .toString(),
-            urlMimeType: "image/png"
+            url: legendUri.toString(),
+            urlMimeType: legendUrlMimeType
           })
         );
       }
@@ -303,7 +329,49 @@ class GetCapabilitiesStratum extends LoadableStratum(
   @computed
   get info(): StratumFromTraits<InfoSectionTraits>[] {
     const result: StratumFromTraits<InfoSectionTraits>[] = [];
+
     let firstDataDescription: string | undefined;
+
+    result.push(
+      createStratumInstance(InfoSectionTraits, {
+        name: i18next.t("models.webMapServiceCatalogItem.serviceDescription"),
+        contentAsObject: this.capabilities.Service as JsonObject
+      })
+    );
+
+    const onlyHasSingleLayer = this.catalogItem.layersArray.length === 1;
+
+    if (onlyHasSingleLayer) {
+      // Clone the capabilitiesLayer as we'll modify it in a second
+      const out = Object.assign(
+        {},
+        this.capabilitiesLayers.get(this.catalogItem.layersArray[0])
+      ) as any;
+
+      if (out !== undefined) {
+        // The Dimension object is really weird and has a bunch of stray text in there
+        if ("Dimension" in out) {
+          const goodDimension: any = {};
+          Object.keys(out.Dimension).forEach((k: any) => {
+            if (isNaN(k)) {
+              goodDimension[k] = out.Dimension[k];
+            }
+          });
+          out.Dimension = goodDimension;
+        }
+
+        // remove a circular reference to the parent
+        delete out._parent;
+
+        result.push(
+          createStratumInstance(InfoSectionTraits, {
+            name: i18next.t("models.webMapServiceCatalogItem.dataDescription"),
+            contentAsObject: out as JsonObject
+          })
+        );
+      }
+    }
+
     for (const layer of this.capabilitiesLayers.values()) {
       if (
         !layer ||
@@ -473,6 +541,38 @@ class GetCapabilitiesStratum extends LoadableStratum(
     }
   }
 
+  // TODO - There is possibly a better way to do this
+  @computed
+  get isThredds(): boolean {
+    if (
+      this.catalogItem.url &&
+      (this.catalogItem.url.indexOf("thredds") > -1 ||
+        this.catalogItem.url.indexOf("tds") > -1)
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  // TODO - Geoserver also support NCWMS via a plugin, just need to work out how to detect that
+  @computed
+  get isNcWMS(): boolean {
+    if (this.catalogItem.isThredds) return true;
+    return false;
+  }
+
+  @computed
+  get isEsri(): boolean {
+    if (this.catalogItem.url !== undefined)
+      return this.catalogItem.url.indexOf("MapServer/WMSServer") > -1;
+    return false;
+  }
+
+  @computed
+  get supportsColorScaleRange(): boolean {
+    return this.catalogItem.isNcWMS;
+  }
+
   @computed
   get discreteTimes(): { time: string; tag: string | undefined }[] | undefined {
     const result = [];
@@ -580,20 +680,22 @@ class DiffStratum extends LoadableStratum(WebMapServiceCatalogItemTraits) {
 }
 
 class WebMapServiceCatalogItem
-  extends ExportableMixin(
-    DiffableMixin(
-      TimeFilterMixin(
-        AsyncChartableMixin(
-          GetCapabilitiesMixin(
-            UrlMixin(
-              CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
+  extends TileErrorHandlerMixin(
+    ExportableMixin(
+      DiffableMixin(
+        TimeFilterMixin(
+          AsyncChartableMixin(
+            GetCapabilitiesMixin(
+              UrlMixin(
+                CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
+              )
             )
           )
         )
       )
     )
   )
-  implements Mappable, SelectableDimensions {
+  implements SelectableDimensions {
   /**
    * The collection of strings that indicate an Abstract property should be ignored.  If these strings occur anywhere
    * in the Abstract, the Abstract will not be used.  This makes it easy to filter out placeholder data like
@@ -605,6 +707,8 @@ class WebMapServiceCatalogItem
   _sourceInfoItemNames = [
     i18next.t("models.webMapServiceCatalogItem.getCapabilitiesUrl")
   ];
+
+  _webMapServiceCatalogGroup: undefined | WebMapServiceCatalogGroup = undefined;
 
   static defaultParameters = {
     transparent: true,
@@ -627,17 +731,35 @@ class WebMapServiceCatalogItem
     return true;
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return GetCapabilitiesStratum.load(this).then(stratum => {
-      runInAction(() => {
-        this.strata.set(
-          GetCapabilitiesMixin.getCapabilitiesStratumName,
-          stratum
-        );
+  @computed
+  get colorScaleRange(): string | undefined {
+    if (this.supportsColorScaleRange) {
+      return `${this.colorScaleMinimum},${this.colorScaleMaximum}`;
+    }
+    return undefined;
+  }
 
-        const diffStratum = new DiffStratum(this);
-        this.strata.set(DiffableMixin.diffStratumName, diffStratum);
-      });
+  async createGetCapabilitiesStratumFromParent(
+    capabilities: WebMapServiceCapabilities
+  ) {
+    const stratum = await GetCapabilitiesStratum.load(this, capabilities);
+    runInAction(() => {
+      this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
+    });
+  }
+
+  protected async forceLoadMetadata(): Promise<void> {
+    if (
+      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
+      undefined
+    )
+      return;
+    const stratum = await GetCapabilitiesStratum.load(this);
+    runInAction(() => {
+      this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
+
+      const diffStratum = new DiffStratum(this);
+      this.strata.set(DiffableMixin.diffStratumName, diffStratum);
     });
   }
 
@@ -887,10 +1009,13 @@ class WebMapServiceCatalogItem
         ...dimensionParameters
       };
 
+      if (this.supportsColorScaleRange) {
+        parameters.COLORSCALERANGE = this.colorScaleRange;
+      }
+
       if (isDefined(this.styles)) {
         parameters.styles = this.styles;
       }
-
       Object.assign(parameters, diffModeParameters);
 
       const maximumLevel = scaleDenominatorToLevel(this.minScaleDenominator);
@@ -903,7 +1028,10 @@ class WebMapServiceCatalogItem
         "width",
         "height",
         "bbox",
-        "layers"
+        "layers",
+        // This is here as a temporary fix until Cesium implements this fix
+        // https://github.com/CesiumGS/cesium/issues/9021
+        "version"
       ];
 
       const baseUrl = queryParametersToRemove.reduce(
@@ -914,6 +1042,7 @@ class WebMapServiceCatalogItem
       let rectangle;
 
       if (
+        this.clipToRectangle &&
         this.rectangle !== undefined &&
         this.rectangle.east !== undefined &&
         this.rectangle.west !== undefined &&
@@ -930,9 +1059,21 @@ class WebMapServiceCatalogItem
         rectangle = undefined;
       }
 
+      const gcStratum: GetCapabilitiesStratum | undefined = this.strata.get(
+        GetCapabilitiesMixin.getCapabilitiesStratumName
+      ) as GetCapabilitiesStratum;
+
+      let lyrs: string[] = [];
+      if (this.layers && gcStratum !== undefined) {
+        this.layersArray.forEach(function(lyr) {
+          const gcLayer = gcStratum.capabilities.findLayer(lyr);
+          if (gcLayer !== undefined && gcLayer.Name) lyrs.push(gcLayer.Name);
+        });
+      }
+
       const imageryOptions = {
         url: proxyCatalogItemUrl(this, baseUrl.toString()),
-        layers: this.layers || "",
+        layers: lyrs.length > 0 ? lyrs.join(",") : "",
         parameters: parameters,
         getFeatureInfoParameters: {
           ...dimensionParameters,
@@ -1013,24 +1154,26 @@ class WebMapServiceCatalogItem
           `Layer ${layerIndex + 1}`} styles`;
       }
 
+      const options = filterOutUndefined(
+        layer.styles.map(function(s) {
+          if (isDefined(s.name)) {
+            return {
+              name: s.title || s.name || "",
+              id: s.name as string
+            };
+          }
+        })
+      );
+
       return {
         name,
         id: `${this.uniqueId}-${layer.layerName}-styles`,
-        options: filterOutUndefined(
-          layer.styles.map(function(s) {
-            if (isDefined(s.name)) {
-              return {
-                name: s.title || s.name || "",
-                id: s.name as string
-              };
-            }
-          })
-        ),
+        options,
 
         // Set selectedId to value stored in `styles` trait for this `layerIndex` or the first available style value
         // The `styles` parameter is CSV, a style for each layer
-        selectedId:
-          this.styles?.split(",")?.[layerIndex] || layer.styles[0]?.name,
+        // Note: there is no way of finding out default style if no style has been selected :(
+        selectedId: this.styles?.split(",")?.[layerIndex],
 
         setDimensionValue: (stratumId: string, newStyle: string) => {
           runInAction(() => {
@@ -1041,6 +1184,11 @@ class WebMapServiceCatalogItem
             this.setTrait(stratumId, "styles", styles.join(","));
           });
         },
+        // Only allow undefined if more then one style (if there is only one style then it is the default style!)
+        allowUndefined: options.length > 1,
+        undefinedLabel: i18next.t(
+          "models.webMapServiceCatalogItem.defaultStyleLabel"
+        ),
         disable: this.isShowingDiff
       };
     });
@@ -1108,6 +1256,10 @@ class WebMapServiceCatalogItem
 
   @computed
   get selectableDimensions() {
+    if (this.disableDimensionSelectors) {
+      return [];
+    }
+
     return filterOutUndefined([
       ...this.wmsDimensionSelectableDimensions,
       ...this.styleSelectableDimensions

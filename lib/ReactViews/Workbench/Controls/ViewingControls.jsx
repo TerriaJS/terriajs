@@ -111,7 +111,16 @@ const ViewingControls = observer(
 
     zoomTo() {
       const viewer = this.props.viewState.terria.currentViewer;
-      viewer.zoomTo(this.props.item);
+      const item = this.props.item;
+      let zoomToView = item;
+      if (
+        item.rectangle !== undefined &&
+        item.rectangle.east - item.rectangle.west >= 360
+      ) {
+        zoomToView = this.props.viewState.terria.mainViewer.homeCamera;
+        console.log("Extent is wider than world so using homeCamera.");
+      }
+      viewer.zoomTo(zoomToView);
     },
 
     openFeature() {
