@@ -62,36 +62,30 @@ export default function upsertModelFromJson(
 
   let model = terria.getModelById(BaseModel, uniqueId);
   if (model === undefined && options.matchByShareKey && json.id !== undefined) {
-    uniqueId = terria.getModelIdByShareKey(json.id);
-    if (uniqueId !== undefined) {
+    const potentialId = terria.getModelIdByShareKey(json.id);
+    if (potentialId !== undefined) {
+      uniqueId = potentialId;
       model = terria.getModelById(BaseModel, uniqueId);
     }
   }
   if (model === undefined) {
     model = factory.create(json.type, uniqueId, terria);
     if (model === undefined) {
-      new TerriaError({
-        title: i18next.t("models.catalog.unsupportedTypeTitle"),
-        message: i18next.t("models.catalog.unsupportedTypeMessage", {
-          type: json.type
-        })
-      });
-      model = createStubCatalogItem(terria, uniqueId);
-      if (model && model.type === StubCatalogItem.type) {
-        const stub = model;
-        stub.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
-        stub.setTrait(CommonStrata.override, "name", `${uniqueId} (Stub)`);
-      } else {
-        throw new TerriaError({
-          title: i18next.t("models.catalog.stubCreationFailure"),
-          message: i18next.t("models.catalog.stubCreationFailure", {
-            item: json
+      console.log(
+        new TerriaError({
+          title: i18next.t("models.catalog.unsupportedTypeTitle"),
+          message: i18next.t("models.catalog.unsupportedTypeMessage", {
+            type: json.type
           })
-        });
-      }
+        })
+      );
+      model = createStubCatalogItem(terria, uniqueId);
+      const stub = model;
+      stub.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
+      stub.setTrait(CommonStrata.override, "name", `${uniqueId} (Stub)`);
     }
 
-    if (model.type !== StubCatalogItem.type) {
+    if (model.type !== StubCatalogItem.type && options.addModelToTerria) {
       model.terria.addModel(model, json.shareKeys);
     }
   }

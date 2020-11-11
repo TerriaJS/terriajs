@@ -421,7 +421,7 @@ export default class Terria {
   }
 
   setupInitializationUrls(baseUri: uri.URI, config: any) {
-    const initializationUrls: string[] = config.initializationUrls || [];
+    const initializationUrls: string[] = config?.initializationUrls || [];
     const initSources = initializationUrls.map(url =>
       generateInitializationUrl(
         baseUri,
