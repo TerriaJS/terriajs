@@ -15,6 +15,7 @@ Change Log
 * Improve handling of `ArcGisMapServerCatalogItem` when dealing with tiled layers.
 * Ensure there aren't more bins than unique values for a `TableStyle`
 * Add access control properties to items fetched from Esri Portal.
+* Improves magda based root group mimic behaviour introdcued in 8.0.0-alpha.57 by adding `/` to `knownContainerUniqueIds` when `map-config*` is encountered
 
 #### 8.0.0-alpha.60
 * Fix WMS legend for default styles.
