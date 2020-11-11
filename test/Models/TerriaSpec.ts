@@ -427,6 +427,11 @@ describe("Terria", function() {
       beforeEach(function() {
         jasmine.Ajax.install();
         jasmine.Ajax.stubRequest(/.*/).andError({});
+        jasmine.Ajax.stubRequest(
+          /.*(serverconfig|proxyabledomains).*/
+        ).andReturn({
+          responseText: JSON.stringify({ foo: "bar" })
+        });
         jasmine.Ajax.stubRequest(/.*config-applicationUrlOverride.*/).andReturn(
           {
             responseText: mapConfigApplicationUrlString
