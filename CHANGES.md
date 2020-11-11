@@ -16,6 +16,7 @@ Change Log
 * Ensure there aren't more bins than unique values for a `TableStyle`
 * Add access control properties to items fetched from Esri Portal.
 * Improves magda based root group mimic behaviour introdcued in 8.0.0-alpha.57 by adding `/` to `knownContainerUniqueIds` when `map-config*` is encountered
+* Add `multiplierDefaultDeltaStep` Trait, which tries to calculate sensible multiplier for `DistrectelyTimeVarying` datasets. By default it is set to 2, which results in a new timestep being displayed every 2 seconds (on average) if timeline is playing.
 
 #### 8.0.0-alpha.60
 * Fix WMS legend for default styles.
