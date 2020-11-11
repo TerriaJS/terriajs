@@ -140,7 +140,7 @@ describe("upsertModelFromJson", function() {
       },
       {
         replaceStratum: false,
-        matchByShareKeys: true
+        matchByShareKey: true
       }
     );
     expect(model).toBe(model2, "Failed to match model by shareKey");
