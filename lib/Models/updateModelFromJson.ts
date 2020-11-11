@@ -36,25 +36,24 @@ export default function updateModelFromJson(
       const jsonValue = json[propertyName];
       if (jsonValue === undefined) {
         model.setTrait(stratumName, propertyName, undefined);
-      } else if (propertyName === "members") {
-        createOrMergeNewMembers(
-          model,
-          stratumName,
-          propertyName,
-          trait.fromJson(model, stratumName, jsonValue)
-        );
       } else {
-        model.setTrait(
-          stratumName,
-          propertyName,
-          trait.fromJson(model, stratumName, jsonValue)
-        );
+        let newTrait = trait.fromJson(model, stratumName, jsonValue);
+        // We want to merge members of groups with the same name/id
+        if (propertyName === "members") {
+          newTrait = mergeWithExistingMembers(
+            model,
+            stratumName,
+            propertyName,
+            newTrait
+          );
+        }
+        model.setTrait(stratumName, propertyName, newTrait);
       }
     });
   });
 }
 
-function createOrMergeNewMembers(
+function mergeWithExistingMembers(
   model: BaseModel,
   stratumName: string,
   propertyName: string,
@@ -63,8 +62,7 @@ function createOrMergeNewMembers(
   const existingTrait = model.getTrait(stratumName, propertyName);
   if (existingTrait !== undefined && isObservableArray(existingTrait)) {
     existingTrait.push(...newTrait);
-    model.setTrait(stratumName, propertyName, existingTrait);
-  } else {
-    model.setTrait(stratumName, propertyName, newTrait);
+    return existingTrait;
   }
+  return newTrait;
 }
