@@ -450,27 +450,37 @@ describe("Terria", function() {
       });
 
       it("showWelcomeMessage and showInAppGuides set in config.json", async () => {
-        await terria.start({
-          configUrl: "test/init/config-applicationUrlOverride.json",
-          applicationUrl: {
-            href: "localhost:3001"
-          } as any
-        });
-        expect(terria.configParameters.showWelcomeMessage).toBeTruthy();
-        expect(terria.configParameters.showInAppGuides).toBeTruthy();
+        try {
+          await terria.start({
+            configUrl: "test/init/config-applicationUrlOverride.json",
+            applicationUrl: {
+              href: "localhost:3001"
+            } as any
+          });
+          expect(terria.configParameters.showWelcomeMessage).toBeTruthy();
+          expect(terria.configParameters.showInAppGuides).toBeTruthy();
+        } catch (error) {
+          console.log(error);
+          throw error;
+        }
       });
 
       it("overrides configParameters with userProperties from hash properties", async () => {
-        await terria.start({
-          configUrl: "test/init/config-applicationUrlOverride.json",
-          applicationUrl: {
-            href:
-              "localhost:3001/#hideWelcomeMessage=1&hideInAppGuides=1&hideWorkbench=1"
-          } as any
-        });
-        expect(terria.configParameters.showWelcomeMessage).toBeFalsy();
-        expect(terria.configParameters.showInAppGuides).toBeFalsy();
-        expect(terria.userProperties.get("hideWorkbench")).toBe("1");
+        try {
+          await terria.start({
+            configUrl: "test/init/config-applicationUrlOverride.json",
+            applicationUrl: {
+              href:
+                "localhost:3001/#hideWelcomeMessage=1&hideInAppGuides=1&hideWorkbench=1"
+            } as any
+          });
+          expect(terria.configParameters.showWelcomeMessage).toBeFalsy();
+          expect(terria.configParameters.showInAppGuides).toBeFalsy();
+          expect(terria.userProperties.get("hideWorkbench")).toBe("1");
+        } catch (error) {
+          console.log(error);
+          throw error;
+        }
       });
 
       // TODO: try to figure out how to test mocking `window.self !== window.top` - See line 526 in `Terria.ts`
