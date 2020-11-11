@@ -31,6 +31,11 @@ const mapConfigInlineInitString = JSON.stringify(mapConfigInlineInitJson);
 const mapConfigDereferencedJson = require("../../wwwroot/test/Magda/map-config-dereferenced.json");
 const mapConfigDereferencedString = JSON.stringify(mapConfigDereferencedJson);
 
+const mapConfigApplicationUrlJson = require("../../wwwroot/test/init/config-applicationUrlOverride.json");
+const mapConfigApplicationUrlString = JSON.stringify(
+  mapConfigApplicationUrlJson
+);
+
 describe("Terria", function() {
   let terria: Terria;
 
@@ -250,6 +255,7 @@ describe("Terria", function() {
     let viewState: ViewState;
 
     beforeEach(function() {
+      // inline init
       newTerria = new Terria({ baseUrl: "./" });
       viewState = new ViewState({
         terria: terria,
@@ -414,42 +420,67 @@ describe("Terria", function() {
         });
     });
 
-    it("showWelcomeMessage and showInAppGuides set in config.json", async () => {
-      await terria.start({
-        configUrl: "test/init/config-applicationUrlOverride.json",
-        applicationUrl: {
-          href: "localhost:3001"
-        } as any
-      });
-      expect(terria.configParameters.showWelcomeMessage).toBeTruthy();
-      expect(terria.configParameters.showInAppGuides).toBeTruthy();
-    });
+    describe("setting configParameters", () => {
+      let newTerria: Terria;
+      let viewState: ViewState;
 
-    it("overrides configParameters with userProperties from hash properties", async () => {
-      await terria.start({
-        configUrl: "test/init/config-applicationUrlOverride.json",
-        applicationUrl: {
-          href:
-            "localhost:3001/#hideWelcomeMessage=1&hideInAppGuides=1&hideWorkbench=1"
-        } as any
+      beforeEach(function() {
+        jasmine.Ajax.install();
+        jasmine.Ajax.stubRequest(/.*/).andError({});
+        jasmine.Ajax.stubRequest(/.*config-applicationUrlOverride.*/).andReturn(
+          {
+            responseText: mapConfigApplicationUrlString
+          }
+        );
+        newTerria = new Terria({ baseUrl: "./" });
+        viewState = new ViewState({
+          terria: terria,
+          catalogSearchProvider: null,
+          locationSearchProviders: []
+        });
       });
-      expect(terria.configParameters.showWelcomeMessage).toBeFalsy();
-      expect(terria.configParameters.showInAppGuides).toBeFalsy();
-      expect(terria.userProperties.get("hideWorkbench")).toBe("1");
-    });
 
-    // TODO: try to figure out how to test mocking `window.self !== window.top` - See line 526 in `Terria.ts`
-    // it("embedded terria will hide messages/popups", async () => {
-    //   await terria.start({
-    //     configUrl: "test/init/config-applicationUrlOverride.json",
-    //     applicationUrl: {
-    //       href: "localhost:3001"
-    //     } as any
-    //   });
-    //   expect(terria.configParameters.showWelcomeMessage).toBeFalsy();
-    //   expect(terria.configParameters.showInAppGuides).toBeFalsy();
-    //   expect(terria.userProperties.get("hideWorkbench")).toBe("1");
-    // });
+      afterEach(function() {
+        jasmine.Ajax.uninstall();
+      });
+
+      it("showWelcomeMessage and showInAppGuides set in config.json", async () => {
+        await terria.start({
+          configUrl: "test/init/config-applicationUrlOverride.json",
+          applicationUrl: {
+            href: "localhost:3001"
+          } as any
+        });
+        expect(terria.configParameters.showWelcomeMessage).toBeTruthy();
+        expect(terria.configParameters.showInAppGuides).toBeTruthy();
+      });
+
+      it("overrides configParameters with userProperties from hash properties", async () => {
+        await terria.start({
+          configUrl: "test/init/config-applicationUrlOverride.json",
+          applicationUrl: {
+            href:
+              "localhost:3001/#hideWelcomeMessage=1&hideInAppGuides=1&hideWorkbench=1"
+          } as any
+        });
+        expect(terria.configParameters.showWelcomeMessage).toBeFalsy();
+        expect(terria.configParameters.showInAppGuides).toBeFalsy();
+        expect(terria.userProperties.get("hideWorkbench")).toBe("1");
+      });
+
+      // TODO: try to figure out how to test mocking `window.self !== window.top` - See line 526 in `Terria.ts`
+      // it("embedded terria will hide messages/popups", async () => {
+      //   await terria.start({
+      //     configUrl: "test/init/config-applicationUrlOverride.json",
+      //     applicationUrl: {
+      //       href: "localhost:3001"
+      //     } as any
+      //   });
+      //   expect(terria.configParameters.showWelcomeMessage).toBeFalsy();
+      //   expect(terria.configParameters.showInAppGuides).toBeFalsy();
+      //   expect(terria.userProperties.get("hideWorkbench")).toBe("1");
+      // });
+    });
   });
 
   describe("proxyConfiguration", function() {
