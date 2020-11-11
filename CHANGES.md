@@ -14,6 +14,7 @@ Change Log
 * Temporarily stopped using `papaparse` for fetching Csv urls till an upstream bug is fixed.
 * Improve handling of `ArcGisMapServerCatalogItem` when dealing with tiled layers.
 * Ensure there aren't more bins than unique values for a `TableStyle`
+* Changed behaviour of `updateModelFromJson` such that catalog groups with the same id/name from different json files will be merged into one single group. 
 
 #### 8.0.0-alpha.60
 * Fix WMS legend for default styles.
