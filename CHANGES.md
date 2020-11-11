@@ -14,6 +14,7 @@ Change Log
 * Temporarily stopped using `papaparse` for fetching Csv urls till an upstream bug is fixed.
 * Improve handling of `ArcGisMapServerCatalogItem` when dealing with tiled layers.
 * Ensure there aren't more bins than unique values for a `TableStyle`
+* Add access control properties to items fetched from Esri Portal.
 
 #### 8.0.0-alpha.60
 * Fix WMS legend for default styles.
@@ -23,7 +24,6 @@ Change Log
     * Add better page titles when on various routes of the application
     * Add prerendering support on `/catalog/` routes (via `prerender-end` event & 
       allowing TerriaMap to hit certain routes)
-* Add access control properties to items fetched from Esri Portal.
 
 #### 8.0.0-alpha.59
 * Update magda error message
