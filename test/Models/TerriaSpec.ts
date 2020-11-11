@@ -1,26 +1,26 @@
-import Terria from "../../lib/Models/Terria";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import ViewState from "../../lib/ReactViewModels/ViewState";
-import { buildShareLink } from "../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
-import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGroup";
-import openGroup from "../../lib/Models/openGroup";
-import { BaseModel } from "../../lib/Models/Model";
-import { action, runInAction } from "mobx";
+import { runInAction } from "mobx";
+import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import hashEntity from "../../lib/Core/hashEntity";
+import PickedFeatures from "../../lib/Map/PickedFeatures";
+import CameraView from "../../lib/Models/CameraView";
+import Cesium from "../../lib/Models/Cesium";
+import CommonStrata from "../../lib/Models/CommonStrata";
+import Feature from "../../lib/Models/Feature";
+import { isInitData, isInitUrl } from "../../lib/Models/InitSource";
+import MagdaReference from "../../lib/Models/MagdaReference";
+import { BaseModel } from "../../lib/Models/Model";
+import openGroup from "../../lib/Models/openGroup";
+import Terria from "../../lib/Models/Terria";
 import UrlReference, {
   UrlToCatalogMemberMapping
 } from "../../lib/Models/UrlReference";
+import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGroup";
+import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+import ViewState from "../../lib/ReactViewModels/ViewState";
+import { buildShareLink } from "../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
-import PickedFeatures from "../../lib/Map/PickedFeatures";
-import Feature from "../../lib/Models/Feature";
-import Cesium from "../../lib/Models/Cesium";
-import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import hashEntity from "../../lib/Core/hashEntity";
-import { isInitUrl, isInitData } from "../../lib/Models/InitSource";
-import CameraView from "../../lib/Models/CameraView";
-import MagdaReference from "../../lib/Models/MagdaReference";
 
 const mapConfigBasicJson = require("../../wwwroot/test/Magda/map-config-basic.json");
 const mapConfigBasicString = JSON.stringify(mapConfigBasicJson);
@@ -132,42 +132,34 @@ describe("Terria", function() {
             done.fail(error);
           });
       });
-      it("works with inline init", function(done) {
+      it("works with inline init", async function() {
         // inline init
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
           responseText: mapConfigInlineInitString
         });
         // no init sources before starting
         expect(terria.initSources.length).toEqual(0);
-        terria
-          .start({
-            configUrl: "test/Magda/map-config-inline-init.json"
-          })
-          .then(function() {
-            const inlineInit = mapConfigInlineInitJson.aspects["terria-init"];
-            /** Check cors domains */
-            expect(terria.corsProxy.corsDomains).toEqual(
-              inlineInit.corsDomains
-            );
-            /** Camera setting */
-            expect(terria.mainViewer.homeCamera).toEqual(
-              CameraView.fromJson(inlineInit.homeCamera)
-            );
+        await terria.start({
+          configUrl: "test/Magda/map-config-inline-init.json"
+        });
 
-            /** Ensure inlined data catalog from init sources */
-            expect(terria.initSources.length).toEqual(1);
-            if (isInitData(terria.initSources[0])) {
-              expect(terria.initSources[0].data.catalog).toEqual(
-                inlineInit.catalog
-              );
-            } else {
-              throw "not init source";
-            }
-            done();
-          })
-          .catch(error => {
-            done.fail(error);
-          });
+        const inlineInit = mapConfigInlineInitJson.aspects["terria-init"];
+        /** Check cors domains */
+        expect(terria.corsProxy.corsDomains).toEqual(inlineInit.corsDomains);
+        /** Camera setting */
+        expect(terria.mainViewer.homeCamera).toEqual(
+          CameraView.fromJson(inlineInit.homeCamera)
+        );
+
+        /** Ensure inlined data catalog from init sources */
+        expect(terria.initSources.length).toEqual(1);
+        if (isInitData(terria.initSources[0])) {
+          expect(terria.initSources[0].data.catalog).toEqual(
+            inlineInit.catalog
+          );
+        } else {
+          throw "not init source";
+        }
       });
       it("parses dereferenced group aspect", function(done) {
         expect(terria.catalog.group.uniqueId).toEqual("/");
@@ -245,7 +237,7 @@ describe("Terria", function() {
       ]);
     });
 
-    it("initializes user added data group with shared items", function(done) {
+    it("initializes user added data group with shared items", async function() {
       expect(newTerria.catalog.userAddedDataGroup.members).not.toContain(
         "itemABC"
       );
@@ -254,19 +246,14 @@ describe("Terria", function() {
       );
 
       const shareLink = buildShareLink(terria, viewState);
-      newTerria.updateApplicationUrl(shareLink).then(() => {
-        expect(newTerria.catalog.userAddedDataGroup.members).toContain(
-          "itemABC"
-        );
-        expect(newTerria.catalog.userAddedDataGroup.members).toContain(
-          "groupABC"
-        );
-
-        done();
-      });
+      await newTerria.updateApplicationUrl(shareLink);
+      expect(newTerria.catalog.userAddedDataGroup.members).toContain("itemABC");
+      expect(newTerria.catalog.userAddedDataGroup.members).toContain(
+        "groupABC"
+      );
     });
 
-    it("initializes user added data group with shared UrlReference items", function(done) {
+    it("initializes user added data group with shared UrlReference items", async function() {
       terria.catalog.userAddedDataGroup.addMembersFromJson(CommonStrata.user, [
         {
           id: "url_test",
@@ -277,26 +264,21 @@ describe("Terria", function() {
       ]);
 
       const shareLink = buildShareLink(terria, viewState);
-      newTerria.updateApplicationUrl(shareLink).then(() => {
-        expect(newTerria.catalog.userAddedDataGroup.members).toContain(
-          "url_test"
-        );
-        const urlRef = newTerria.getModelById(BaseModel, "url_test");
-        expect(urlRef).toBeDefined();
-        expect(urlRef instanceof UrlReference).toBe(true);
+      await newTerria.updateApplicationUrl(shareLink);
+      expect(newTerria.catalog.userAddedDataGroup.members).toContain(
+        "url_test"
+      );
+      const urlRef = newTerria.getModelById(BaseModel, "url_test");
+      expect(urlRef).toBeDefined();
+      expect(urlRef instanceof UrlReference).toBe(true);
 
-        if (urlRef instanceof UrlReference) {
-          return urlRef.loadReference().then(() => {
-            expect(urlRef.target).toBeDefined();
-            done();
-          });
-        } else {
-          done.fail();
-        }
-      });
+      if (urlRef instanceof UrlReference) {
+        await urlRef.loadReference();
+        expect(urlRef.target).toBeDefined();
+      }
     });
 
-    it("initializes workbench with shared workbench items", function(done) {
+    it("initializes workbench with shared workbench items", async function() {
       const model1 = <WebMapServiceCatalogItem>(
         terria.getModelById(BaseModel, "itemABC")
       );
@@ -310,13 +292,11 @@ describe("Terria", function() {
       expect(newTerria.workbench.itemIds).toEqual([]);
 
       const shareLink = buildShareLink(terria, viewState);
-      newTerria.updateApplicationUrl(shareLink).then(() => {
-        expect(newTerria.workbench.itemIds).toEqual(terria.workbench.itemIds);
-        done();
-      });
+      await newTerria.updateApplicationUrl(shareLink);
+      expect(newTerria.workbench.itemIds).toEqual(terria.workbench.itemIds);
     });
 
-    it("initializes splitter correctly", function(done) {
+    it("initializes splitter correctly", async function() {
       const model1 = <WebMapServiceCatalogItem>(
         terria.getModelById(BaseModel, "itemABC")
       );
@@ -333,42 +313,34 @@ describe("Terria", function() {
       });
 
       const shareLink = buildShareLink(terria, viewState);
-      newTerria.updateApplicationUrl(shareLink).then(() => {
-        expect(newTerria.showSplitter).toEqual(true);
-        expect(newTerria.splitPosition).toEqual(0.7);
-        expect(newTerria.workbench.itemIds).toEqual(["itemABC"]);
+      await newTerria.updateApplicationUrl(shareLink);
+      expect(newTerria.showSplitter).toEqual(true);
+      expect(newTerria.splitPosition).toEqual(0.7);
+      expect(newTerria.workbench.itemIds).toEqual(["itemABC"]);
 
-        const newModel1 = <WebMapServiceCatalogItem>(
-          newTerria.getModelById(BaseModel, "itemABC")
-        );
-        expect(newModel1).toBeDefined();
-        expect(newModel1.splitDirection).toEqual(
-          <any>ImagerySplitDirection.RIGHT
-        );
-
-        done();
-      });
+      const newModel1 = <WebMapServiceCatalogItem>(
+        newTerria.getModelById(BaseModel, "itemABC")
+      );
+      expect(newModel1).toBeDefined();
+      expect(newModel1.splitDirection).toEqual(
+        <any>ImagerySplitDirection.RIGHT
+      );
     });
 
-    it("opens and loads members of shared open groups", function(done) {
+    it("opens and loads members of shared open groups", async function() {
       const group = <WebMapServiceCatalogGroup>(
         terria.getModelById(BaseModel, "groupABC")
       );
-      openGroup(group)
-        .then(() => {
-          expect(group.isOpen).toBe(true);
-          expect(group.members.length).toBeGreaterThan(0);
-          return buildShareLink(terria, viewState);
-        })
-        .then(shareLink => newTerria.updateApplicationUrl(shareLink))
-        .then(() => {
-          const newGroup = <WebMapServiceCatalogGroup>(
-            newTerria.getModelById(BaseModel, "groupABC")
-          );
-          expect(newGroup.isOpen).toBe(true);
-          expect(newGroup.members).toEqual(group.members);
-          done();
-        });
+      await openGroup(group);
+      expect(group.isOpen).toBe(true);
+      expect(group.members.length).toBeGreaterThan(0);
+      const shareLink = await buildShareLink(terria, viewState);
+      await newTerria.updateApplicationUrl(shareLink);
+      const newGroup = <WebMapServiceCatalogGroup>(
+        newTerria.getModelById(BaseModel, "groupABC")
+      );
+      expect(newGroup.isOpen).toBe(true);
+      expect(newGroup.members).toEqual(group.members);
     });
   });
 
