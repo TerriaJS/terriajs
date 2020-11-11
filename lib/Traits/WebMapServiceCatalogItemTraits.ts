@@ -18,6 +18,7 @@ import TimeFilterTraits from "./TimeFilterTraits";
 import primitiveArrayTrait from "./primitiveArrayTrait";
 import UrlTraits from "./UrlTraits";
 import ExportableTraits from "./ExportableTraits";
+import DataCustodianTraits from "./DataCustodianTraits";
 
 export class WebMapServiceAvailableStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -135,6 +136,7 @@ export class WebMapServiceAvailableLayerDimensionsTraits extends ModelTraits {
 }
 
 export default class WebMapServiceCatalogItemTraits extends mixTraits(
+  DataCustodianTraits,
   ExportableTraits,
   DiffableTraits,
   FeatureInfoTraits,
@@ -232,10 +234,10 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
 
   @primitiveTrait({
     type: "boolean",
-    name: "Disable style selector",
-    description: "When true, disables the style selector in the workbench"
+    name: "Disable dimension selectors",
+    description: "When true, disables the dimension selectors in the workbench."
   })
-  disableStyleSelector = false;
+  disableDimensionSelectors = false;
 
   @primitiveTrait({
     type: "string",

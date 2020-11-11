@@ -1,4 +1,5 @@
 import papaparse from "papaparse";
+import loadWithXhr from "../Core/loadWithXhr";
 
 // We'd like to use `FeatureDetection.supportsWebWorkers()` here, but
 // PapaParse doesn't get along with our webpack configuration. It ends up
@@ -52,12 +53,21 @@ export default class Csv {
     url: string,
     columnMajor: boolean = false
   ): Promise<string[][]> {
-    return new Promise<string[][]>((resolve, reject) => {
-      papaparse.parse(url, {
-        ...getParseOptions(columnMajor, resolve, reject),
-        download: true
-      });
+    return loadWithXhr({ url }).then(csv => {
+      if (typeof csv === "string") {
+        return Csv.parseString(csv, columnMajor);
+      } else {
+        throw "Request failed";
+      }
     });
+    // There is currently a bug when using papaparse to fetch CSV URLs
+    // See: https://github.com/mholt/PapaParse/pull/832
+    // return new Promise<string[][]>((resolve, reject) => {
+    //   papaparse.parse(url, {
+    //     ...getParseOptions(columnMajor, resolve, reject),
+    //     download: true,
+    //   });
+    // });
   }
 }
 

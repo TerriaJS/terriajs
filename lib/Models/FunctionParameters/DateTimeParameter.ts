@@ -1,10 +1,8 @@
 import FunctionParameter from "./FunctionParameter";
-import { observable } from "mobx";
 
-export default class DateTimeParameter extends FunctionParameter {
+export default class DateTimeParameter extends FunctionParameter<string> {
+  static readonly type = "dateTime";
   readonly type = "dateTime";
-
-  @observable value?: string;
 
   /**
    * Process value so that it can be used in an URL.

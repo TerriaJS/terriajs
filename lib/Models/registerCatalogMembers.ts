@@ -20,8 +20,8 @@ import CzmlCatalogItem from "./CzmlCatalogItem";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import GeoRssCatalogItem from "./GeoRssCatalogItem";
 import GltfCatalogItem from "./GltfCatalogItem";
-import GtfsCatalogItem from "./GtfsCatalogItem";
 import GpxCatalogItem from "./GpxCatalogItem";
+import GtfsCatalogItem from "./GtfsCatalogItem";
 import IonImageryCatalogItem from "./IonImageryCatalogItem";
 import KmlCatalogItem from "./KmlCatalogItem";
 import MagdaReference from "./MagdaReference";
@@ -42,7 +42,9 @@ import MapboxVectorTileCatalogItem from "./MapboxVectorTileCatalogItem";
 import WebMapTileServiceCatalogGroup from "./WebMapTileServiceCatalogGroup";
 import WebMapTileServiceCatalogItem from "./WebMapTileServiceCatalogItem";
 import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFunction";
-import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
+import WebProcessingServiceCatalogFunctionJob from "./WebProcessingServiceCatalogFunctionJob";
+import YDYRCatalogFunction from "./YDYRCatalogFunction";
+import YDYRCatalogFunctionJob from "./YDYRCatalogFunctionJob";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
@@ -134,6 +136,11 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CartoMapCatalogItem.type, CartoMapCatalogItem);
   CatalogMemberFactory.register(UrlReference.type, UrlReference);
   CatalogMemberFactory.register(SplitItemReference.type, SplitItemReference);
+  CatalogMemberFactory.register(YDYRCatalogFunction.type, YDYRCatalogFunction);
+  CatalogMemberFactory.register(
+    YDYRCatalogFunctionJob.type,
+    YDYRCatalogFunctionJob
+  );
   CatalogMemberFactory.register(
     SdmxJsonCatalogGroup.type,
     SdmxJsonCatalogGroup
@@ -152,8 +159,8 @@ export default function registerCatalogMembers() {
     SensorObservationServiceCatalogItem
   );
   CatalogMemberFactory.register(
-    WebProcessingServiceCatalogItem.type,
-    WebProcessingServiceCatalogItem
+    WebProcessingServiceCatalogFunctionJob.type,
+    WebProcessingServiceCatalogFunctionJob
   );
   CatalogMemberFactory.register(
     CompositeCatalogItem.type,
