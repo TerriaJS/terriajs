@@ -421,7 +421,7 @@ export default class ViewState {
         if (
           this.terria.configParameters.showInAppGuides &&
           hasTimeWMS === true &&
-          // // only show it once
+          // only show it once
           !this.terria.getLocalProperty(`${SATELLITE_HELP_PROMPT_KEY}Prompted`)
         ) {
           this.setShowSatelliteGuidance(true);

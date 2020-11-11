@@ -12,16 +12,24 @@ For example: [http://nationalmap.gov.au#test&map=2d](http://nationalmap.gov.au#t
 Parameter      | Meaning
 ---------------|--------
 `clean`          | Don't load the default catalog files for this site.
-`map=2d`         | Use the 2D (Leaflet) map, instead of the default.
-`map=3d`         | Use the 3D (Cesium) map, instead of the default.
-`map=3dSmooth`   | Use the 3D (Cesium) map without terrain, instead of the default.
 `playStory=1`    | Automatically start playing the map's Story, if there is one.
 `hideWorkbench=1` | Collapse the workbench (left side) panel, useful for embedding. Also automatically plays a story, if there is one.
-`mode=preview`   | Operate in "preview mode", which mostly means not showing a warning if the screen is `small`  
 `share=`...      | Load a map view previously saved using the "Share" function with URL shortening.
 `start=`...      | Load a map view previously saved without URL shortening. The argument is a URL-encoded JSON structure defined using an internal format described below.
 `<initfile>`     | Load catalog file as described below.
-`hideWelcomeMessage` | Forces the welcome message not to be displayed.
+`hideWelcomeMessage=1` | Forces the welcome message not to be displayed.
+`hideInAppGuides=1` | Removes guide popups. For example, WMS satellite guide, help prompt or story introduction prompt.
+`disableEmbedDetection=1` | Disables embed detection. Embed detection is used to automatically reduce modals/pop-ups if Terria is embedded into a webpage (for example - in an iframe) - which is equivalent to setting `hideWelcomeMessage=1`, `hideInAppGuides=1` and `hideWorkbench=1`.
+
+#### Display parameters to port from v7
+
+Parameter      | Meaning
+---------------|--------
+`map=2d`         | Use the 2D (Leaflet) map, instead of the default.
+`map=3d`         | Use the 3D (Cesium) map, instead of the default.
+`map=3dSmooth`   | Use the 3D (Cesium) map without terrain, instead of the default.
+`mode=preview`   | Operate in "preview mode", which mostly means not showing a warning if the screen is `small`  
+`hideExplorerPanel`   | ...
 
 ### Catalog files (init files)
 

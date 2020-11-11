@@ -1,0 +1,7 @@
+{
+  "parameters": {
+    "appName": "TestTerriaMap",
+    "showWelcomeMessage": true,
+    "showInAppGuides": true
+  }
+}

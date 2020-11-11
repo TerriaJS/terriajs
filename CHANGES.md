@@ -15,6 +15,9 @@ Change Log
 * Improve handling of `ArcGisMapServerCatalogItem` when dealing with tiled layers.
 * Ensure there aren't more bins than unique values for a `TableStyle`
 * Improves magda based root group mimic behaviour introdcued in 8.0.0-alpha.57 by adding `/` to `knownContainerUniqueIds` when `map-config*` is encountered
+* Added embed detection - it is used to automatically reduce modals/pop-ups if Terria is embedded into a webpage (for example - in an iframe) - which is equivalent to setting `showWelcomeMessage=false` `showInAppGuides=false`, `showFeaturePrompts=false` and `#hideWorkbench=1`.
+* Added `ConfigParameters.disableEmbedDetection` and URL parameter `disableEmbedDetection`, which can disable feature previously outlined
+* Added the following missing params to `ConfigParameters`: `googleAnalyticsOptions`, `globalDisclaimer`, `printDisclaimer`, `disableSplitter`, `showFeaturePrompts`
 
 #### 8.0.0-alpha.60
 * Fix WMS legend for default styles.

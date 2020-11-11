@@ -188,8 +188,8 @@ class SettingPanel extends React.Component {
     const viewerModes = [];
 
     if (
-      this.props.terria.configParameters.useCesiumIonTerrain ||
-      this.props.terria.configParameters.cesiumTerrainUrl
+      this.props.terria.configParameters.useCesiumIonTerrain
+      // this.props.terria.configParameters.cesiumTerrainUrl
     ) {
       viewerModes.push("3d");
     }
