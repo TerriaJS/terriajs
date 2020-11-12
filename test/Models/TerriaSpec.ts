@@ -1,7 +1,4 @@
-import Terria, {
-  makeModelsMagdaCompatible,
-  isEmbedded
-} from "../../lib/Models/Terria";
+import Terria, { makeModelsMagdaCompatible } from "../../lib/Models/Terria";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import { buildShareLink } from "../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
@@ -24,6 +21,8 @@ import hashEntity from "../../lib/Core/hashEntity";
 import { isInitUrl, isInitData } from "../../lib/Models/InitSource";
 import CameraView from "../../lib/Models/CameraView";
 import MagdaReference from "../../lib/Models/MagdaReference";
+import loadJson5 from "../../lib/Core/loadJson5";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 
 const mapConfigBasicJson = require("../../wwwroot/test/Magda/map-config-basic.json");
 const mapConfigBasicString = JSON.stringify(mapConfigBasicJson);
@@ -488,6 +487,10 @@ describe("Terria", function() {
 
       it("embedded terria will hide messages/popups", async () => {
         spyOn(terria, "isEmbedded").and.returnValue(true);
+        spyOn(Resource, "fetchText").and.returnValue(
+          mapConfigApplicationUrlString
+        );
+
         await terria.start({
           configUrl: "test/init/config-applicationUrlOverride.json",
           applicationUrl: {
