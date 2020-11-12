@@ -463,6 +463,10 @@ export default class Terria {
     this.initSources.push(...initSources);
   }
 
+  isEmbedded() {
+    return window && window.self !== window.top;
+  }
+
   start(options: StartOptions) {
     this.shareDataService = options.shareDataService;
 
@@ -520,11 +524,7 @@ export default class Terria {
       })
       .then(() => {
         // Check if embedded in iframe (and disableEmbedDetection is not true), if so disable modals/popups and hideWorkbench
-        if (
-          !this.configParameters.disableEmbedDetection &&
-          window &&
-          window.self !== window.top
-        ) {
+        if (!this.configParameters.disableEmbedDetection && this.isEmbedded()) {
           this.configParameters.showWelcomeMessage = false;
           this.configParameters.showFeaturePrompts = false;
           this.configParameters.showInAppGuides = false;

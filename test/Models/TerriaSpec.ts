@@ -1,4 +1,7 @@
-import Terria, { makeModelsMagdaCompatible } from "../../lib/Models/Terria";
+import Terria, {
+  makeModelsMagdaCompatible,
+  isEmbedded
+} from "../../lib/Models/Terria";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import { buildShareLink } from "../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
@@ -483,18 +486,18 @@ describe("Terria", function() {
         }
       });
 
-      // TODO: try to figure out how to test mocking `window.self !== window.top` - See line 526 in `Terria.ts`
-      // it("embedded terria will hide messages/popups", async () => {
-      //   await terria.start({
-      //     configUrl: "test/init/config-applicationUrlOverride.json",
-      //     applicationUrl: {
-      //       href: "localhost:3001"
-      //     } as any
-      //   });
-      //   expect(terria.configParameters.showWelcomeMessage).toBeFalsy();
-      //   expect(terria.configParameters.showInAppGuides).toBeFalsy();
-      //   expect(terria.userProperties.get("hideWorkbench")).toBe("1");
-      // });
+      it("embedded terria will hide messages/popups", async () => {
+        spyOn(terria, "isEmbedded").and.returnValue(true);
+        await terria.start({
+          configUrl: "test/init/config-applicationUrlOverride.json",
+          applicationUrl: {
+            href: "localhost:3001"
+          } as any
+        });
+        expect(terria.configParameters.showWelcomeMessage).toBeFalsy();
+        expect(terria.configParameters.showInAppGuides).toBeFalsy();
+        expect(terria.userProperties.get("hideWorkbench")).toBe("1");
+      });
     });
   });
 
