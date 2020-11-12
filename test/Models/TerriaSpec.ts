@@ -1,27 +1,26 @@
-import { runInAction } from "mobx";
-import Resource from "terriajs-cesium/Source/Core/Resource";
-import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
-import hashEntity from "../../lib/Core/hashEntity";
-import PickedFeatures from "../../lib/Map/PickedFeatures";
-import CameraView from "../../lib/Models/CameraView";
-import Cesium from "../../lib/Models/Cesium";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import Feature from "../../lib/Models/Feature";
-import { isInitData, isInitUrl } from "../../lib/Models/InitSource";
-import MagdaReference from "../../lib/Models/MagdaReference";
-import { BaseModel } from "../../lib/Models/Model";
-import openGroup from "../../lib/Models/openGroup";
 import Terria, { makeModelsMagdaCompatible } from "../../lib/Models/Terria";
+import CommonStrata from "../../lib/Models/CommonStrata";
+import ViewState from "../../lib/ReactViewModels/ViewState";
+import { buildShareLink } from "../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
+import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGroup";
+import openGroup from "../../lib/Models/openGroup";
+import { BaseModel } from "../../lib/Models/Model";
+import { action, runInAction } from "mobx";
+import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import UrlReference, {
   UrlToCatalogMemberMapping
 } from "../../lib/Models/UrlReference";
-import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGroup";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
-import ViewState from "../../lib/ReactViewModels/ViewState";
-import { buildShareLink } from "../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
+import PickedFeatures from "../../lib/Map/PickedFeatures";
+import Feature from "../../lib/Models/Feature";
+import Cesium from "../../lib/Models/Cesium";
+import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import hashEntity from "../../lib/Core/hashEntity";
+import { isInitUrl, isInitData } from "../../lib/Models/InitSource";
+import CameraView from "../../lib/Models/CameraView";
+import MagdaReference from "../../lib/Models/MagdaReference";
 
 const mapConfigBasicJson = require("../../wwwroot/test/Magda/map-config-basic.json");
 const mapConfigBasicString = JSON.stringify(mapConfigBasicJson);
@@ -451,49 +450,45 @@ describe("Terria", function() {
       });
 
       it("showWelcomeMessage and showInAppGuides set in config.json", async () => {
-        try {
-          await terria.start({
-            configUrl: "test/init/config-applicationUrlOverride.json",
-            applicationUrl: {
-              href: "localhost:3001"
-            } as any
-          });
-          expect(terria.configParameters.showWelcomeMessage).toBeTruthy();
-          expect(terria.configParameters.showInAppGuides).toBeTruthy();
-        } catch (error) {
-          console.log(error);
-          throw error;
-        }
+        spyOn(terria, "fetchConfig").and.returnValue(
+          Promise.resolve(mapConfigApplicationUrlJson)
+        );
+        await terria.start({
+          configUrl: "test/init/config-applicationUrlOverride.json",
+          applicationUrl: {
+            href: "somehost"
+          } as any
+        });
+        expect(terria.configParameters.showWelcomeMessage).toBeTruthy();
+        expect(terria.configParameters.showInAppGuides).toBeTruthy();
       });
 
       it("overrides configParameters with userProperties from hash properties", async () => {
-        try {
-          await terria.start({
-            configUrl: "test/init/config-applicationUrlOverride.json",
-            applicationUrl: {
-              href:
-                "localhost:3001/#hideWelcomeMessage=1&hideInAppGuides=1&hideWorkbench=1"
-            } as any
-          });
-          expect(terria.configParameters.showWelcomeMessage).toBeFalsy();
-          expect(terria.configParameters.showInAppGuides).toBeFalsy();
-          expect(terria.userProperties.get("hideWorkbench")).toBe("1");
-        } catch (error) {
-          console.log(error);
-          throw error;
-        }
+        spyOn(terria, "fetchConfig").and.returnValue(
+          Promise.resolve(mapConfigApplicationUrlJson)
+        );
+        await terria.start({
+          configUrl: "test/init/config-applicationUrlOverride.json",
+          applicationUrl: {
+            href:
+              "somehost/#hideWelcomeMessage=1&hideInAppGuides=1&hideWorkbench=1"
+          } as any
+        });
+        expect(terria.configParameters.showWelcomeMessage).toBeFalsy();
+        expect(terria.configParameters.showInAppGuides).toBeFalsy();
+        expect(terria.userProperties.get("hideWorkbench")).toBe("1");
       });
 
       it("embedded terria will hide messages/popups", async () => {
         spyOn(terria, "isEmbedded").and.returnValue(true);
-        spyOn(Resource, "fetchText").and.returnValue(
-          mapConfigApplicationUrlString
+        spyOn(terria, "fetchConfig").and.returnValue(
+          Promise.resolve(mapConfigApplicationUrlJson)
         );
 
         await terria.start({
           configUrl: "test/init/config-applicationUrlOverride.json",
           applicationUrl: {
-            href: "localhost:3001"
+            href: "somehost"
           } as any
         });
         expect(terria.configParameters.showWelcomeMessage).toBeFalsy();
