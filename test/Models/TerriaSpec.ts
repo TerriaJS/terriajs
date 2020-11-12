@@ -6,14 +6,13 @@ import hashEntity from "../../lib/Core/hashEntity";
 import PickedFeatures from "../../lib/Map/PickedFeatures";
 import CameraView from "../../lib/Models/CameraView";
 import Cesium from "../../lib/Models/Cesium";
-import Terria, { makeModelsMagdaCompatible } from "../../lib/Models/Terria";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import Feature from "../../lib/Models/Feature";
 import { isInitData, isInitUrl } from "../../lib/Models/InitSource";
 import MagdaReference from "../../lib/Models/MagdaReference";
 import { BaseModel } from "../../lib/Models/Model";
 import openGroup from "../../lib/Models/openGroup";
-import Terria from "../../lib/Models/Terria";
+import Terria, { makeModelsMagdaCompatible } from "../../lib/Models/Terria";
 import UrlReference, {
   UrlToCatalogMemberMapping
 } from "../../lib/Models/UrlReference";
