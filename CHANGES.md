@@ -12,6 +12,8 @@ Change Log
 * Added `DataCustodianTraits` to `WebMapServiceCatalogItem`
 * Added `disableDimensionSelectors` trait to `WebMapServiceCatalogItem`. Acheives the same effect of `disableUserChanges` in v7.
 * Temporarily stopped using `papaparse` for fetching Csv urls till an upstream bug is fixed.
+* Fix async bug with loading `ReferenceMixin` and then `Mappable` items in `initSources`
+* Remove `addToWorkbench`, it has been replaced with `workbench.add`
 * Improve handling of `ArcGisMapServerCatalogItem` when dealing with tiled layers.
 * Ensure there aren't more bins than unique values for a `TableStyle`
 * Add access control properties to items fetched from Esri Portal.

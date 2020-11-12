@@ -867,8 +867,6 @@ export default class Terria {
           this.previewedItemId = initData.previewedItemId;
         }
 
-        const promises: Promise<void>[] = [];
-
         // Set the new contents of the workbench.
         const newItems = filterOutUndefined(
           workbench.map(modelId => {
@@ -896,18 +894,18 @@ export default class Terria {
           .map(item => <TimeVarying>item);
 
         // Load the items on the workbench
-        for (let model of newItems) {
-          if (ReferenceMixin.is(model)) {
-            promises.push(model.loadReference());
-            model = model.target || model;
-          }
+        return Promise.all(
+          newItems.map(async model => {
+            if (ReferenceMixin.is(model)) {
+              await model.loadReference();
+              model = model.target || model;
+            }
 
-          if (Mappable.is(model)) {
-            promises.push(model.loadMapItems());
-          }
-        }
-
-        return Promise.all(promises).then(() => undefined);
+            if (Mappable.is(model)) {
+              await model.loadMapItems();
+            }
+          })
+        ).then(() => undefined);
       });
     });
 
