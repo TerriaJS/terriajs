@@ -140,11 +140,16 @@ interface ConfigParameters {
   magdaReferenceHeaders?: MagdaReferenceHeaders;
   locationSearchBoundingBox?: number[];
   googleAnalyticsKey?: string;
+  googleAnalyticsOptions?: any; // TODO: please type me
   rollbarAccessToken?: string;
-  globalDisclaimer?: any;
+  globalDisclaimer?: any; // TODO: please type me
+  printDisclaimer?: any; // TODO: please type me
+  disableSplitter?: boolean;
   showWelcomeMessage?: boolean;
   welcomeMessageVideo?: any;
   showInAppGuides?: boolean;
+  showFeaturePrompts?: boolean;
+  disableEmbedDetection?: boolean;
   helpContent?: HelpContentItem[];
   helpContentTerms?: Term[];
   languageConfiguration?: LanguageConfiguration;
@@ -270,6 +275,7 @@ export default class Terria {
     rollbarAccessToken: undefined,
     globalDisclaimer: undefined,
     showWelcomeMessage: false,
+    disableEmbedDetection: false,
     welcomeMessageVideo: {
       videoTitle: "Getting started with the map",
       videoUrl: "https://www.youtube.com/embed/FjSxaviSLhc",
@@ -457,6 +463,10 @@ export default class Terria {
     this.initSources.push(...initSources);
   }
 
+  isEmbedded() {
+    return window && window.self !== window.top;
+  }
+
   start(options: StartOptions) {
     this.shareDataService = options.shareDataService;
 
@@ -510,6 +520,15 @@ export default class Terria {
         this.loadPersistedMapSettings();
         if (options.applicationUrl) {
           return this.updateApplicationUrl(options.applicationUrl.href);
+        }
+      })
+      .then(() => {
+        // Check if embedded in iframe (and disableEmbedDetection is not true), if so disable modals/popups and hideWorkbench
+        if (!this.configParameters.disableEmbedDetection && this.isEmbedded()) {
+          this.configParameters.showWelcomeMessage = false;
+          this.configParameters.showFeaturePrompts = false;
+          this.configParameters.showInAppGuides = false;
+          this.userProperties.set("hideWorkbench", "1");
         }
       });
   }
@@ -1198,6 +1217,10 @@ function interpretHash(
           terria.initSources.splice(0, terria.initSources.length);
         } else if (property === "hideWelcomeMessage") {
           terria.configParameters.showWelcomeMessage = false;
+        } else if (property === "hideInAppGuides") {
+          terria.configParameters.showInAppGuides = false;
+        } else if (property === "disableEmbedDetection") {
+          terria.configParameters.disableEmbedDetection = true;
         } else if (property === "start") {
           // a share link that hasn't been shortened: JSON embedded in URL (only works for small quantities of JSON)
           const startData = JSON.parse(propertyValue);

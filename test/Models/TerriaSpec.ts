@@ -1,26 +1,26 @@
-import { runInAction } from "mobx";
-import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
-import hashEntity from "../../lib/Core/hashEntity";
-import PickedFeatures from "../../lib/Map/PickedFeatures";
-import CameraView from "../../lib/Models/CameraView";
-import Cesium from "../../lib/Models/Cesium";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import Feature from "../../lib/Models/Feature";
-import { isInitData, isInitUrl } from "../../lib/Models/InitSource";
-import MagdaReference from "../../lib/Models/MagdaReference";
-import { BaseModel } from "../../lib/Models/Model";
-import openGroup from "../../lib/Models/openGroup";
 import Terria, { makeModelsMagdaCompatible } from "../../lib/Models/Terria";
+import CommonStrata from "../../lib/Models/CommonStrata";
+import ViewState from "../../lib/ReactViewModels/ViewState";
+import { buildShareLink } from "../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
+import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGroup";
+import openGroup from "../../lib/Models/openGroup";
+import { BaseModel } from "../../lib/Models/Model";
+import { action, runInAction } from "mobx";
+import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import UrlReference, {
   UrlToCatalogMemberMapping
 } from "../../lib/Models/UrlReference";
-import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGroup";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
-import ViewState from "../../lib/ReactViewModels/ViewState";
-import { buildShareLink } from "../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
+import PickedFeatures from "../../lib/Map/PickedFeatures";
+import Feature from "../../lib/Models/Feature";
+import Cesium from "../../lib/Models/Cesium";
+import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import hashEntity from "../../lib/Core/hashEntity";
+import { isInitUrl, isInitData } from "../../lib/Models/InitSource";
+import CameraView from "../../lib/Models/CameraView";
+import MagdaReference from "../../lib/Models/MagdaReference";
 
 const mapConfigBasicJson = require("../../wwwroot/test/Magda/map-config-basic.json");
 const mapConfigBasicString = JSON.stringify(mapConfigBasicJson);
@@ -30,6 +30,11 @@ const mapConfigInlineInitString = JSON.stringify(mapConfigInlineInitJson);
 
 const mapConfigDereferencedJson = require("../../wwwroot/test/Magda/map-config-dereferenced.json");
 const mapConfigDereferencedString = JSON.stringify(mapConfigDereferencedJson);
+
+const mapConfigApplicationUrlJson = require("../../wwwroot/test/init/config-applicationUrlOverride.json");
+const mapConfigApplicationUrlString = JSON.stringify(
+  mapConfigApplicationUrlJson
+);
 
 describe("Terria", function() {
   let terria: Terria;
@@ -250,6 +255,7 @@ describe("Terria", function() {
     let viewState: ViewState;
 
     beforeEach(function() {
+      // inline init
       newTerria = new Terria({ baseUrl: "./" });
       viewState = new ViewState({
         terria: terria,
@@ -413,6 +419,75 @@ describe("Terria", function() {
           done();
         });
     });
+
+    describe("setting configParameters", () => {
+      let newTerria: Terria;
+
+      beforeEach(function() {
+        jasmine.Ajax.install();
+        jasmine.Ajax.stubRequest(/.*/).andReturn({
+          responseText: JSON.stringify({ foo: "bar" })
+        });
+        jasmine.Ajax.stubRequest(/.*config-applicationUrlOverride.*/).andReturn(
+          {
+            responseText: mapConfigApplicationUrlString
+          }
+        );
+        newTerria = new Terria({ baseUrl: "./" });
+      });
+
+      afterEach(function() {
+        jasmine.Ajax.uninstall();
+      });
+
+      it("showWelcomeMessage and showInAppGuides set in config.json", async () => {
+        try {
+          await terria.start({
+            configUrl: "test/init/config-applicationUrlOverride.json",
+            applicationUrl: {
+              href: "somehost"
+            } as any
+          });
+          expect(terria.configParameters.showWelcomeMessage).toBeTruthy();
+          expect(terria.configParameters.showInAppGuides).toBeTruthy();
+        } catch (error) {
+          console.log(error);
+          throw error;
+        }
+      });
+
+      it("overrides configParameters with userProperties from hash properties", async () => {
+        try {
+          await terria.start({
+            configUrl: "test/init/config-applicationUrlOverride.json",
+            applicationUrl: {
+              href:
+                "somehost/#hideWelcomeMessage=1&hideInAppGuides=1&hideWorkbench=1"
+            } as any
+          });
+          expect(terria.configParameters.showWelcomeMessage).toBeFalsy();
+          expect(terria.configParameters.showInAppGuides).toBeFalsy();
+          expect(terria.userProperties.get("hideWorkbench")).toBe("1");
+        } catch (error) {
+          console.log(error);
+          throw error;
+        }
+      });
+
+      it("embedded terria will hide messages/popups", async () => {
+        spyOn(terria, "isEmbedded").and.returnValue(true);
+
+        await terria.start({
+          configUrl: "test/init/config-applicationUrlOverride.json",
+          applicationUrl: {
+            href: "somehost"
+          } as any
+        });
+        expect(terria.configParameters.showWelcomeMessage).toBeFalsy();
+        expect(terria.configParameters.showInAppGuides).toBeFalsy();
+        expect(terria.userProperties.get("hideWorkbench")).toBe("1");
+      });
+    });
   });
 
   describe("proxyConfiguration", function() {
@@ -572,7 +647,7 @@ describe("Terria", function() {
       const entity = new Entity({ name: "foo" });
       ds.entities.add(entity);
       testItem.mapItems = [ds];
-      await terria.workbench.add(testItem);
+      terria.workbench.add(testItem);
       // It is irrelevant what we pass as argument for `clock` param because
       // the current implementation of `hashEntity` is broken because as it
       // expects a `Clock` but actually uses it as a `JulianDate`
