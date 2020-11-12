@@ -1,16 +1,14 @@
 import { toJS } from "mobx";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import Constructor from "../Core/Constructor";
+import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
-import addToWorkbench from "../Models/addToWorkbench";
 import CommonStrata from "../Models/CommonStrata";
 import FunctionParameter from "../Models/FunctionParameters/FunctionParameter";
 import Model from "../Models/Model";
 import CatalogFunctionTraits from "../Traits/CatalogFunctionTraits";
 import CatalogFunctionJobMixin from "./CatalogFunctionJobMixin";
 import CatalogMemberMixin from "./CatalogMemberMixin";
-import isDefined from "../Core/isDefined";
-const sprintf = require("terriajs-cesium/Source/ThirdParty/sprintf").default;
 
 type CatalogFunctionMixin = Model<CatalogFunctionTraits>;
 
@@ -66,7 +64,7 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
 
         this.terria.addModel(newJob);
         this.terria.catalog.userAddedDataGroup.add(CommonStrata.user, newJob);
-        addToWorkbench(this.terria.workbench, newJob);
+        this.terria.workbench.add(newJob);
 
         await newJob.invoke();
 

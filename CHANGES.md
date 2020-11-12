@@ -12,8 +12,11 @@ Change Log
 * Added `DataCustodianTraits` to `WebMapServiceCatalogItem`
 * Added `disableDimensionSelectors` trait to `WebMapServiceCatalogItem`. Acheives the same effect of `disableUserChanges` in v7.
 * Temporarily stopped using `papaparse` for fetching Csv urls till an upstream bug is fixed.
+* Fix async bug with loading `ReferenceMixin` and then `Mappable` items in `initSources`
+* Remove `addToWorkbench`, it has been replaced with `workbench.add`
 * Improve handling of `ArcGisMapServerCatalogItem` when dealing with tiled layers.
 * Ensure there aren't more bins than unique values for a `TableStyle`
+* Add access control properties to items fetched from Esri Portal.
 * Improves magda based root group mimic behaviour introdcued in 8.0.0-alpha.57 by adding `/` to `knownContainerUniqueIds` when `map-config*` is encountered
 * Added embed detection - it is used to automatically reduce modals/pop-ups if Terria is embedded into a webpage (for example - in an iframe) - which is equivalent to setting `showWelcomeMessage=false` `showInAppGuides=false`, `showFeaturePrompts=false` and `#hideWorkbench=1`.
 * Added `ConfigParameters.disableEmbedDetection` and URL parameter `disableEmbedDetection`, which can disable feature previously outlined
