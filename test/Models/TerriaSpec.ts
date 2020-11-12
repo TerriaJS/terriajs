@@ -422,14 +422,10 @@ describe("Terria", function() {
 
     describe("setting configParameters", () => {
       let newTerria: Terria;
-      let viewState: ViewState;
 
       beforeEach(function() {
         jasmine.Ajax.install();
-        jasmine.Ajax.stubRequest(/.*/).andError({});
-        jasmine.Ajax.stubRequest(
-          /.*(serverconfig|proxyabledomains).*/
-        ).andReturn({
+        jasmine.Ajax.stubRequest(/.*/).andReturn({
           responseText: JSON.stringify({ foo: "bar" })
         });
         jasmine.Ajax.stubRequest(/.*config-applicationUrlOverride.*/).andReturn(
@@ -438,11 +434,6 @@ describe("Terria", function() {
           }
         );
         newTerria = new Terria({ baseUrl: "./" });
-        viewState = new ViewState({
-          terria: terria,
-          catalogSearchProvider: null,
-          locationSearchProviders: []
-        });
       });
 
       afterEach(function() {
@@ -450,40 +441,41 @@ describe("Terria", function() {
       });
 
       it("showWelcomeMessage and showInAppGuides set in config.json", async () => {
-        spyOn(terria, "fetchConfig").and.returnValue(
-          Promise.resolve(mapConfigApplicationUrlJson)
-        );
-        await terria.start({
-          configUrl: "test/init/config-applicationUrlOverride.json",
-          applicationUrl: {
-            href: "somehost"
-          } as any
-        });
-        expect(terria.configParameters.showWelcomeMessage).toBeTruthy();
-        expect(terria.configParameters.showInAppGuides).toBeTruthy();
+        try {
+          await terria.start({
+            configUrl: "test/init/config-applicationUrlOverride.json",
+            applicationUrl: {
+              href: "somehost"
+            } as any
+          });
+          expect(terria.configParameters.showWelcomeMessage).toBeTruthy();
+          expect(terria.configParameters.showInAppGuides).toBeTruthy();
+        } catch (error) {
+          console.log(error);
+          throw error;
+        }
       });
 
       it("overrides configParameters with userProperties from hash properties", async () => {
-        spyOn(terria, "fetchConfig").and.returnValue(
-          Promise.resolve(mapConfigApplicationUrlJson)
-        );
-        await terria.start({
-          configUrl: "test/init/config-applicationUrlOverride.json",
-          applicationUrl: {
-            href:
-              "somehost/#hideWelcomeMessage=1&hideInAppGuides=1&hideWorkbench=1"
-          } as any
-        });
-        expect(terria.configParameters.showWelcomeMessage).toBeFalsy();
-        expect(terria.configParameters.showInAppGuides).toBeFalsy();
-        expect(terria.userProperties.get("hideWorkbench")).toBe("1");
+        try {
+          await terria.start({
+            configUrl: "test/init/config-applicationUrlOverride.json",
+            applicationUrl: {
+              href:
+                "somehost/#hideWelcomeMessage=1&hideInAppGuides=1&hideWorkbench=1"
+            } as any
+          });
+          expect(terria.configParameters.showWelcomeMessage).toBeFalsy();
+          expect(terria.configParameters.showInAppGuides).toBeFalsy();
+          expect(terria.userProperties.get("hideWorkbench")).toBe("1");
+        } catch (error) {
+          console.log(error);
+          throw error;
+        }
       });
 
       it("embedded terria will hide messages/popups", async () => {
         spyOn(terria, "isEmbedded").and.returnValue(true);
-        spyOn(terria, "fetchConfig").and.returnValue(
-          Promise.resolve(mapConfigApplicationUrlJson)
-        );
 
         await terria.start({
           configUrl: "test/init/config-applicationUrlOverride.json",
@@ -655,7 +647,7 @@ describe("Terria", function() {
       const entity = new Entity({ name: "foo" });
       ds.entities.add(entity);
       testItem.mapItems = [ds];
-      await terria.workbench.add(testItem);
+      terria.workbench.add(testItem);
       // It is irrelevant what we pass as argument for `clock` param because
       // the current implementation of `hashEntity` is broken because as it
       // expects a `Clock` but actually uses it as a `JulianDate`

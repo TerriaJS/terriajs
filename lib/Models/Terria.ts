@@ -467,10 +467,6 @@ export default class Terria {
     return window && window.self !== window.top;
   }
 
-  fetchConfig(options: StartOptions) {
-    return loadJson5(options.configUrl, options.configUrlHeaders);
-  }
-
   start(options: StartOptions) {
     this.shareDataService = options.shareDataService;
 
@@ -478,7 +474,7 @@ export default class Terria {
 
     const launchUrlForAnalytics =
       options.applicationUrl?.href || getUriWithoutPath(baseUri);
-    return this.fetchConfig(options)
+    return loadJson5(options.configUrl, options.configUrlHeaders)
       .then((config: any) => {
         runInAction(() => {
           // If it's a magda config, we only load magda config and parameters should never be a property on the direct
