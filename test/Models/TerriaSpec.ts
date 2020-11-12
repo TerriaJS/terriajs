@@ -6,6 +6,7 @@ import hashEntity from "../../lib/Core/hashEntity";
 import PickedFeatures from "../../lib/Map/PickedFeatures";
 import CameraView from "../../lib/Models/CameraView";
 import Cesium from "../../lib/Models/Cesium";
+import Terria, { makeModelsMagdaCompatible } from "../../lib/Models/Terria";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import Feature from "../../lib/Models/Feature";
 import { isInitData, isInitUrl } from "../../lib/Models/InitSource";
@@ -37,6 +38,49 @@ describe("Terria", function() {
   beforeEach(function() {
     terria = new Terria({
       baseUrl: "./"
+    });
+  });
+
+  describe("makeModelsMagdaCompatible", function() {
+    it("should return models", function() {
+      const models = {
+        foo: {
+          knownContainerUniqueIds: ["mochi-is-fluffy"]
+        },
+        bar: {
+          knownContainerUniqueIds: ["neko-is-hungry"]
+        },
+        cat: {
+          knownContainerUniqueIds: [""]
+        }
+      };
+      expect(makeModelsMagdaCompatible(models)).toEqual(models);
+    });
+
+    it("should inject `/` to `knownContainerUniqueIds` if map-config exists", function() {
+      const models = {
+        foo: {
+          knownContainerUniqueIds: ["map-config"]
+        },
+        bar: {
+          knownContainerUniqueIds: ["map-config-another"]
+        },
+        cat: {
+          knownContainerUniqueIds: ["bar"]
+        }
+      };
+      const expected = {
+        foo: {
+          knownContainerUniqueIds: ["map-config", "/"]
+        },
+        bar: {
+          knownContainerUniqueIds: ["map-config-another", "/"]
+        },
+        cat: {
+          knownContainerUniqueIds: ["bar"]
+        }
+      };
+      expect(makeModelsMagdaCompatible(models)).toEqual(expected);
     });
   });
 
