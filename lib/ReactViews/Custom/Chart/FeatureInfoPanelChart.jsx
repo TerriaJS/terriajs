@@ -34,10 +34,7 @@ class FeatureInfoPanelChart extends React.Component {
   @computed
   get chartItem() {
     return this.props.item.chartItems.find(
-      chartItem =>
-        chartItem.type === "line" &&
-        chartItem.name.indexOf("lat") === -1 &&
-        chartItem.name.indexOf("lon") === -1
+      chartItem => chartItem.type === "line"
     );
   }
 

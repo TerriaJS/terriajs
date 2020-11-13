@@ -18,6 +18,9 @@ Change Log
 * Ensure there aren't more bins than unique values for a `TableStyle`
 * Add access control properties to items fetched from Esri Portal.
 * Improves magda based root group mimic behaviour introdcued in 8.0.0-alpha.57 by adding `/` to `knownContainerUniqueIds` when `map-config*` is encountered
+* Fixed broken chart disclaimers in shared views.
+* Fixed a bug where chart disclaimers were shown even for chart items disabled in the workbench.
+* Fixed a bug where charts with titles containing the text "lat" or "lon" were hidden from feature info panel.
 
 #### 8.0.0-alpha.60
 * Fix WMS legend for default styles.
