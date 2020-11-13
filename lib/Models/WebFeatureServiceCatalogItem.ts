@@ -1,5 +1,11 @@
 import i18next from "i18next";
-import { computed, isObservableArray, observable, runInAction } from "mobx";
+import {
+  action,
+  computed,
+  isObservableArray,
+  observable,
+  runInAction
+} from "mobx";
 import combine from "terriajs-cesium/Source/Core/combine";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import containsAny from "../Core/containsAny";
@@ -271,7 +277,7 @@ class WebFeatureServiceCatalogItem extends ExportableMixin(
   readonly canZoomTo = true;
 
   @observable
-  private geojsonCatalogItem: GeoJsonCatalogItem | undefined;
+  protected geojsonCatalogItem: GeoJsonCatalogItem | undefined;
 
   get type() {
     return WebFeatureServiceCatalogItem.type;
@@ -313,8 +319,29 @@ class WebFeatureServiceCatalogItem extends ExportableMixin(
     });
   }
 
-  async forceLoadMapItems(): Promise<void> {
-    await this.loadMetadata();
+  @action
+  createGeojsonCatalogItem(geojsonData: any) {
+    this.geojsonCatalogItem = new GeoJsonCatalogItem(
+      createGuid(),
+      this.terria,
+      this
+    );
+
+    this.geojsonCatalogItem.setTrait(
+      CommonStrata.definition,
+      "geoJsonData",
+      geojsonData
+    );
+
+    if (isDefined(this.style))
+      this.geojsonCatalogItem.setTrait(
+        CommonStrata.definition,
+        "style",
+        this.style
+      );
+  }
+
+  protected async loadDataAsGeojson() {
     const getCapabilitiesStratum:
       | GetCapabilitiesStratum
       | undefined = this.strata.get(
@@ -410,32 +437,19 @@ class WebFeatureServiceCatalogItem extends ExportableMixin(
       });
     }
 
-    let geojsonData = supportsGeojson
+    return supportsGeojson
       ? JSON.parse(getFeatureResponse)
       : gmlToGeoJson(getFeatureResponse);
+  }
 
-    runInAction(() => {
-      this.geojsonCatalogItem = new GeoJsonCatalogItem(
-        createGuid(),
-        this.terria,
-        this
-      );
+  async forceLoadMapItems(): Promise<void> {
+    await this.loadMetadata();
+    let geojsonData = await this.loadDataAsGeojson();
 
-      this.geojsonCatalogItem.setTrait(
-        CommonStrata.definition,
-        "geoJsonData",
-        geojsonData
-      );
-
-      if (isDefined(this.style))
-        this.geojsonCatalogItem.setTrait(
-          CommonStrata.definition,
-          "style",
-          this.style
-        );
-    });
-
-    await this.geojsonCatalogItem!.loadMapItems();
+    if (geojsonData !== undefined) {
+      this.createGeojsonCatalogItem(geojsonData);
+      await this.geojsonCatalogItem!.loadMapItems();
+    }
   }
 
   @computed
