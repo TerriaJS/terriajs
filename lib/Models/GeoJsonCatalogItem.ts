@@ -320,14 +320,16 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
             color: new ConstantProperty(
               getColor(
                 defaultValue(
-                  properties && properties["marker-color"],
+                  properties && properties["marker-color"]?.getValue(),
                   options.markerColor
                 )
               )
             ),
             pixelSize: new ConstantProperty(
               defaultValue(
-                properties && properties["marker-size"],
+                parseMarkerSize(
+                  properties && properties["marker-size"]?.getValue()
+                ),
                 options.markerSize / 2
               )
             ),
@@ -340,7 +342,7 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
             outlineColor: new ConstantProperty(
               getColor(
                 defaultValue(
-                  properties && properties.stroke,
+                  properties && properties.stroke?.getValue(),
                   options.polygonStroke
                 )
               )
