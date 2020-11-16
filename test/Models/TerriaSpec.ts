@@ -7,6 +7,7 @@ import PickedFeatures from "../../lib/Map/PickedFeatures";
 import CameraView from "../../lib/Models/CameraView";
 import Cesium from "../../lib/Models/Cesium";
 import CommonStrata from "../../lib/Models/CommonStrata";
+import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
 import Feature from "../../lib/Models/Feature";
 import { isInitData, isInitUrl } from "../../lib/Models/InitSource";
 import MagdaReference from "../../lib/Models/MagdaReference";
@@ -69,10 +70,6 @@ describe("Terria", function() {
       // inline init
       jasmine.Ajax.stubRequest(/.*map-config-dereferenced.*/).andReturn({
         responseText: mapConfigDereferencedString
-      });
-
-      terria = new Terria({
-        baseUrl: "./"
       });
     });
 
@@ -341,6 +338,108 @@ describe("Terria", function() {
       );
       expect(newGroup.isOpen).toBe(true);
       expect(newGroup.members).toEqual(group.members);
+    });
+  });
+
+  // Test share keys by serialising from one catalog and deserialising with a reorganised catalog
+  describe("shareKeys", function() {
+    let newTerria: Terria;
+    let viewState: ViewState;
+    beforeEach(async function() {
+      // Create a config.json in a URL to pass to Terria.start
+      const configUrl = `data:application/json;base64,${btoa(
+        JSON.stringify({
+          initializationUrls: [],
+          parameters: {
+            regionMappingDefinitionsUrl: "data/regionMapping.json"
+          }
+        })
+      )}`;
+      newTerria = new Terria({ baseUrl: "./" });
+      viewState = new ViewState({
+        terria: terria,
+        catalogSearchProvider: null,
+        locationSearchProviders: []
+      });
+
+      await Promise.all([terria, newTerria].map(t => t.start({ configUrl })));
+
+      terria.catalog.group.addMembersFromJson(CommonStrata.definition, [
+        {
+          name: "Old group",
+          type: "group",
+          members: [
+            {
+              name: "Random CSV",
+              type: "csv",
+              url:
+                "data:text/csv,lon%2Clat%2Cval%2Cdate%0A151%2C-31%2C15%2C2010%0A151%2C-31%2C15%2C2011"
+            }
+          ]
+        }
+      ]);
+
+      newTerria.catalog.group.addMembersFromJson(CommonStrata.definition, [
+        {
+          name: "New group",
+          type: "group",
+          members: [
+            {
+              name: "Extra group",
+              type: "group",
+              members: [
+                {
+                  name: "My random CSV",
+                  type: "csv",
+                  url:
+                    "data:text/csv,lon%2Clat%2Cval%2Cdate%0A151%2C-31%2C15%2C2010%0A151%2C-31%2C15%2C2011",
+                  shareKeys: ["//Old group/Random CSV"]
+                }
+              ]
+            }
+          ]
+        }
+      ]);
+    });
+
+    it("correctly applies user stratum changes to moved item", async function() {
+      const csv = terria.getModelById(CsvCatalogItem, "//Old group/Random CSV");
+      expect(csv).toBeDefined("Can't find csv item in source terria");
+      csv?.setTrait(CommonStrata.user, "opacity", 0.5);
+      const shareLink = buildShareLink(terria, viewState);
+      await newTerria.updateApplicationUrl(shareLink);
+
+      const newCsv = newTerria.getModelById(
+        CsvCatalogItem,
+        "//New group/Extra group/My random CSV"
+      );
+      expect(newCsv).toBeDefined(
+        "Can't find newCsv item in destination newTerria"
+      );
+      expect(newCsv?.opacity).toBe(0.5);
+    });
+
+    it("correctly adds moved item to workbench and timeline", async function() {
+      const csv = terria.getModelById(CsvCatalogItem, "//Old group/Random CSV");
+      expect(csv).toBeDefined("csv not found in source terria");
+      if (csv === undefined) return;
+      terria.workbench.add(csv);
+      terria.timelineStack.addToTop(csv);
+      const shareLink = buildShareLink(terria, viewState);
+      await newTerria.updateApplicationUrl(shareLink);
+
+      const newCsv = newTerria.getModelById(
+        CsvCatalogItem,
+        "//New group/Extra group/My random CSV"
+      );
+      expect(newCsv).toBeDefined("newCsv not found in destination newTerria");
+      if (newCsv === undefined) return;
+      expect(newTerria.workbench.contains(newCsv)).toBeTruthy(
+        "newCsv not found in destination newTerria workbench"
+      );
+      expect(newTerria.timelineStack.contains(newCsv)).toBeTruthy(
+        "newCsv not found in destination newTerria timeline"
+      );
     });
   });
 

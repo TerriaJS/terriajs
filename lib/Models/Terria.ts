@@ -415,6 +415,21 @@ export default class Terria {
     return this.shareKeysMap.get(shareKey);
   }
 
+  getModelByIdOrShareKey<T extends BaseModel>(
+    type: Class<T>,
+    id: string
+  ): T | undefined {
+    let model = this.getModelById(type, id);
+    if (model) {
+      return model;
+    } else {
+      const idFromShareKey = this.getModelIdByShareKey(id);
+      return idFromShareKey !== undefined
+        ? this.getModelById(type, idFromShareKey)
+        : undefined;
+    }
+  }
+
   @action
   addShareKey(id: string, shareKey: string) {
     this.shareKeysMap.set(shareKey, id);
@@ -854,18 +869,39 @@ export default class Terria {
                 message: "A model ID in the workbench list is not a string."
               });
             }
-
-            return this.getModelById(BaseModel, modelId);
+            return this.getModelByIdOrShareKey(BaseModel, modelId);
           })
         );
 
         this.workbench.items = newItems;
 
+        // For ids that don't correspond to models resolve an id by share keys
+        const timelineWithShareKeysResolved = new Set(
+          filterOutUndefined(
+            timeline.map(modelId => {
+              if (typeof modelId !== "string") {
+                throw new TerriaError({
+                  sender: this,
+                  title: "Invalid model ID in timeline",
+                  message: "A model ID in the timneline list is not a string."
+                });
+              }
+              if (this.getModelById(BaseModel, modelId) !== undefined) {
+                return modelId;
+              } else {
+                return this.getModelIdByShareKey(modelId);
+              }
+            })
+          )
+        );
+
         // TODO: the timelineStack should be populated from the `timeline` property,
         // not from the workbench.
         this.timelineStack.items = this.workbench.items
           .filter(item => {
-            return item.uniqueId && timeline.indexOf(item.uniqueId) >= 0;
+            return (
+              item.uniqueId && timelineWithShareKeysResolved.has(item.uniqueId)
+            );
             // && TODO: what is a good way to test if an item is of type TimeVarying.
           })
           .map(item => <TimeVarying>item);
@@ -914,8 +950,7 @@ export default class Terria {
       .toString();
 
     const aspects = config.aspects;
-    const configParams =
-      aspects["terria-config"] && aspects["terria-config"].parameters;
+    const configParams = aspects["terria-config"]?.parameters;
 
     if (configParams) {
       this.updateParameters(configParams);
