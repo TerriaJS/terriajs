@@ -977,16 +977,16 @@ export default class Terria {
           this.catalog.group = <CatalogGroup>reference.target;
         });
       }
-      this.setupInitializationUrls(baseUri, config.aspects?.["terria-config"]);
-      /** Load up rest of terria catalog if one is inlined in terria-init */
-      if (config.aspects?.["terria-init"]) {
-        const { catalog, ...rest } = initObj;
-        this.initSources.push({
-          data: {
-            catalog: catalog
-          }
-        });
-      }
+    }
+    this.setupInitializationUrls(baseUri, config.aspects?.["terria-config"]);
+    /** Load up rest of terria catalog if one is inlined in terria-init */
+    if (config.aspects?.["terria-init"]) {
+      const { catalog, ...rest } = initObj;
+      this.initSources.push({
+        data: {
+          catalog: catalog
+        }
+      });
     }
   }
 
