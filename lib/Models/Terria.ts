@@ -971,24 +971,20 @@ export default class Terria {
       reference.setTrait(CommonStrata.definition, "url", magdaRoot);
       reference.setTrait(CommonStrata.definition, "recordId", id);
       reference.setTrait(CommonStrata.definition, "magdaRecord", config);
-      await reference.loadReference().then(() => {
-        if (reference.target instanceof CatalogGroup) {
-          runInAction(() => {
-            this.catalog.group = <CatalogGroup>reference.target;
-          });
-        }
-        this.setupInitializationUrls(
-          baseUri,
-          config.aspects?.["terria-config"]
-        );
-        /** Load up rest of terria catalog if one is inlined in terria-init */
-        if (config.aspects?.["terria-init"]) {
-          const { catalog, ...rest } = initObj;
-          this.initSources.push({
-            data: {
-              catalog: catalog
-            }
-          });
+      await reference.loadReference();
+      if (reference.target instanceof CatalogGroup) {
+        runInAction(() => {
+          this.catalog.group = <CatalogGroup>reference.target;
+        });
+      }
+    }
+    this.setupInitializationUrls(baseUri, config.aspects?.["terria-config"]);
+    /** Load up rest of terria catalog if one is inlined in terria-init */
+    if (config.aspects?.["terria-init"]) {
+      const { catalog, ...rest } = initObj;
+      this.initSources.push({
+        data: {
+          catalog: catalog
         }
       });
     }
