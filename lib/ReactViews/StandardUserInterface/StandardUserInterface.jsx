@@ -16,6 +16,7 @@ import {
   CATALOG_ROUTE,
   CATALOG_MEMBER_ROUTE
 } from "../../ReactViewModels/TerriaRouting";
+import createBrowserHistory from "history/createBrowserHistory";
 
 import { terriaTheme } from "./StandardTheme";
 import arrayContains from "../../Core/arrayContains";
@@ -491,12 +492,26 @@ const StandardUserInterfaceWithRouter = withRouter(
   withRoutingTracker(withTranslation()(StandardUserInterfaceRaw))
 );
 
+// TODO: add actual basename implementation, by (possible) way of:
+// pulling out `serverConfig.baseHref` via `/serverconfig/`
+// ? somewhere else? duplicate it in client side config.json?
+const getHistory = baseName => {
+  const TODO_DYNAMIC_BASENAME = `/mobx-tjs-new-routing-v2/`;
+  const browserHistory = createBrowserHistory({
+    // note - history api wants `basename` lowercase `n`
+    // basename: baseName
+    basename: TODO_DYNAMIC_BASENAME
+  });
+
+  return browserHistory;
+};
+
 export const StandardUserInterface = props => {
   const experimental = props.terria.configParameters.experimentalFeatures;
   const Router = experimental ? BrowserRouter : MemoryRouter;
 
   return (
-    <Router>
+    <Router history={experimental && getHistory()}>
       <StandardUserInterfaceWithRouter {...props} />
     </Router>
   );
