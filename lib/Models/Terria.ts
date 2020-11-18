@@ -543,12 +543,12 @@ export default class Terria {
   updateBaseMaps(baseMaps: BaseMapViewModel[]): void {
     this.baseMaps.push(...baseMaps);
     if (!this.mainViewer.baseMap) {
-      this.loadPersistedBaseMap();
+      this.loadPersistedOrInitBaseMap();
     }
   }
 
   @action
-  loadPersistedBaseMap(): void {
+  loadPersistedOrInitBaseMap(): void {
     const persistedBaseMapId = this.getLocalProperty("basemap");
     const baseMapSearch = this.baseMaps.find(
       baseMap => baseMap.mappable.uniqueId === persistedBaseMapId
