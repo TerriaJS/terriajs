@@ -511,8 +511,8 @@ const StandardUserInterfaceWithRouter = withRouter(
 // TODO: add actual basename implementation, by (possible) way of:
 // pulling out `serverConfig.baseHref` via `/serverconfig/`
 // ? somewhere else? duplicate it in client side config.json?
+const TODO_DYNAMIC_BASENAME = `/mobx-branded-views/`;
 const getHistory = baseName => {
-  const TODO_DYNAMIC_BASENAME = `/mobx-branded-views/`;
   const browserHistory = createBrowserHistory({
     // note - history api wants `basename` lowercase `n`
     // basename: baseName
@@ -527,7 +527,7 @@ export const StandardUserInterface = observer(function(props) {
   const Router = experimental ? BrowserRouter : MemoryRouter;
 
   return (
-    <Router history={experimental && getHistory()}>
+    <Router basename={TODO_DYNAMIC_BASENAME} history={getHistory()}>
       <StandardUserInterfaceWithRouter
         key={props.terria.configParameters.brandBarElements}
         {...props}
