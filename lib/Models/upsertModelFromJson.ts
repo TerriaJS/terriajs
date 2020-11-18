@@ -15,7 +15,8 @@ export default function upsertModelFromJson(
   model: BaseModel | undefined,
   stratumName: string,
   json: any,
-  replaceStratum: boolean = false
+  replaceStratum: boolean = false,
+  addModelToTerria: boolean = true
 ): BaseModel {
   if (model === undefined) {
     let uniqueId = json.id;
@@ -41,6 +42,7 @@ export default function upsertModelFromJson(
     model = terria.getModelById(BaseModel, uniqueId);
     if (model === undefined) {
       model = factory.create(json.type, uniqueId, terria);
+
       if (model === undefined) {
         new TerriaError({
           title: i18next.t("models.catalog.unsupportedTypeTitle"),
@@ -63,7 +65,7 @@ export default function upsertModelFromJson(
         }
       }
 
-      if (model.type !== StubCatalogItem.type) {
+      if (model.type !== StubCatalogItem.type && addModelToTerria) {
         model.terria.addModel(model);
       }
     }
@@ -71,7 +73,9 @@ export default function upsertModelFromJson(
 
   try {
     updateModelFromJson(model, stratumName, json, replaceStratum);
-  } catch {
+  } catch (error) {
+    console.log(`Error updating model from JSON`);
+    console.log(error);
     model.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
   }
   return model;

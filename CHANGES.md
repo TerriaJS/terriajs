@@ -3,14 +3,53 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.59)
+#### next release (8.0.0-alpha.62)
+
+#### 8.0.0-alpha.61
+* New `CatalogFunctionMixin` and `CatalogFunctionJobMixin`
+* Tsified `FunctionParameters`
+* New `YourDataYourRegions` `CatalogFunctionMixin`
+* Added `inWorkbench` property
+* Added `addModelToTerria` flag to `upsertModelFromJson` function
+* Added `DataCustodianTraits` to `WebMapServiceCatalogItem`
+* Added `disableDimensionSelectors` trait to `WebMapServiceCatalogItem`. Acheives the same effect of `disableUserChanges` in v7.
+* Temporarily stopped using `papaparse` for fetching Csv urls till an upstream bug is fixed.
+* Fix async bug with loading `ReferenceMixin` and then `Mappable` items in `initSources`
+* Remove `addToWorkbench`, it has been replaced with `workbench.add`
+* Improve handling of `ArcGisMapServerCatalogItem` when dealing with tiled layers.
+* Ensure there aren't more bins than unique values for a `TableStyle`
+* Add access control properties to items fetched from Esri Portal.
+* Improves magda based root group mimic behaviour introdcued in 8.0.0-alpha.57 by adding `/` to `knownContainerUniqueIds` when `map-config*` is encountered
+* Fixed broken chart disclaimers in shared views.
+* Fixed a bug where chart disclaimers were shown even for chart items disabled in the workbench.
+* Fixed a bug where charts with titles containing the text "lat" or "lon" were hidden from feature info panel.
+* Fixed a bug that occurred when loading config from magda. `initializationUrls` are now applied even if `group` aspect is not set
+
+#### 8.0.0-alpha.60
+* Fix WMS legend for default styles.
+* Request transparent legend from GeoServer.
+* Reverted the following due to various issues with datasets:
+    * Add basic routing support
+    * Add better page titles when on various routes of the application
+    * Add prerendering support on `/catalog/` routes (via `prerender-end` event & 
+      allowing TerriaMap to hit certain routes)
+
+#### 8.0.0-alpha.59
 * Update magda error message
 * Add a short report section if trying to view a `3d-tiles` item in a 2d map.
+* Fix bug in `Terria.interpretStartData`.
 * Add `ThreddsCatalogGroup` model.
 * Port `supportsColorScaleRange`, `colorScaleMinimum` and `colorScaleMaximimum` from `master` to `WebMapServiceCatalogItem` model.
 * Ported MapboxVectorTileCatalogItem ("mvt").
 * Add doc on magda data type.
 * [The next improvement]
+* When expanding a chart from the feature info panel, we now place a colored dot on the map where the chart was generated from.
+* Add basic routing support
+* Add better page titles when on various routes of the application
+* Add prerendering support on `/catalog/` routes (via `prerender-end` event &
+  allowing TerriaMap to hit certain routes)
+* Update `WorkbenchButton` to allow for links rather than buttons, including
+  changing About Data to a link
 
 #### 8.0.0-alpha.58
 * Add `FeatureInfoTraits` to `ArcGisMapServerCatalogItem`

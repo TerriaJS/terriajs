@@ -19,6 +19,7 @@ import MomentPointsChart from "./MomentPointsChart";
 import Tooltip from "./Tooltip";
 import ZoomX from "./ZoomX";
 import Styles from "./bottom-dock-chart.scss";
+import PointOnMap from "./PointOnMap";
 
 const chartMinWidth = 110;
 const defaultGridColor = "#efefef";
@@ -28,6 +29,7 @@ const labelColor = "#efefef";
 @observer
 class BottomDockChart extends React.Component {
   static propTypes = {
+    terria: PropTypes.object.isRequired,
     parentWidth: PropTypes.number,
     width: PropTypes.number,
     height: PropTypes.number,
@@ -58,6 +60,7 @@ export default BottomDockChart;
 @observer
 class Chart extends React.Component {
   static propTypes = {
+    terria: PropTypes.object.isRequired,
     width: PropTypes.number,
     height: PropTypes.number,
     chartItems: PropTypes.array.isRequired,
@@ -240,7 +243,7 @@ class Chart extends React.Component {
   }
 
   render() {
-    const { height, xAxis } = this.props;
+    const { height, xAxis, terria } = this.props;
     if (this.chartItems.length === 0)
       return <div className={Styles.empty}>No data available</div>;
 
@@ -320,6 +323,7 @@ class Chart extends React.Component {
             </Group>
           </svg>
           <Tooltip {...this.tooltip} />
+          <PointsOnMap terria={terria} chartItems={this.chartItems} />
         </div>
       </ZoomX>
     );
@@ -471,6 +475,20 @@ class Cursor extends React.PureComponent {
     const { x, ...rest } = this.props;
     return <Line from={{ x, y: 0 }} to={{ x, y: 1000 }} {...rest} />;
   }
+}
+
+function PointsOnMap({ chartItems, terria }) {
+  return chartItems.map(
+    chartItem =>
+      chartItem.pointOnMap && (
+        <PointOnMap
+          key={`point-on-map-${chartItem.key}`}
+          terria={terria}
+          color={chartItem.getColor()}
+          point={chartItem.pointOnMap}
+        />
+      )
+  );
 }
 
 /**

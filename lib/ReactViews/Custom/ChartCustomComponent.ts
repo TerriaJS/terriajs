@@ -14,6 +14,16 @@ import hasTraits from "../../Models/hasTraits";
 import SplitItemReference from "../../Models/SplitItemReference";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import DiscretelyTimeVaryingTraits from "../../Traits/DiscretelyTimeVaryingTraits";
+import Chartable from "../../Models/Chartable";
+import LatLonHeight from "../../Core/LatLonHeight";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import Feature from "../../Models/Feature";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import ChartPointOnMapTraits from "../../Traits/ChartPointOnMapTraits";
+import LatLonHeightTraits from "../../Traits/LatLonHeightTraits";
+import createStratumInstance from "../../Models/createStratumInstance";
+import ModelTraits from "../../Traits/ModelTraits";
 
 export interface ChartCustomComponentAttributes {
   /**  The title of the chart.  If not supplied, defaults to the name of the context-supplied feature, if available, or else simply "Chart". */
@@ -105,9 +115,8 @@ export interface ChartCustomComponentAttributes {
  *                   or  `<chart>[["x","y","z"],[1,10,3],[2,15,9],[3,8,12],[5,25,4]]</chart>`.
  */
 
-type CatalogMemberType = Model<CatalogMemberTraits>;
 export default abstract class ChartCustomComponent<
-  CatalogItemType extends CatalogMemberType
+  CatalogItemType extends Chartable
 > extends CustomComponent {
   get attributes(): Array<string> {
     return [
@@ -203,7 +212,7 @@ export default abstract class ChartCustomComponent<
 
     checkAllPropertyKeys(node.attribs, this.attributes);
 
-    const chartDisclaimer = (context.catalogItem as any).chartDisclaimer;
+    const featurePosition = getFeaturePosition(context.feature);
 
     const attrs = this.parseNodeAttrs(node.attribs);
     const child = children[0];
@@ -214,11 +223,7 @@ export default abstract class ChartCustomComponent<
       // Build expand/download buttons
       const sourceItems = (attrs.downloads || attrs.sources || [""]).map(
         (source: string, i: number) => {
-          const id = [
-            context.catalogItem.uniqueId,
-            context.feature.id,
-            source
-          ].join(":");
+          const id = `${context.catalogItem.uniqueId}:${source}`;
 
           const itemOrPromise = this.constructShareableCatalogItem
             ? this.constructShareableCatalogItem(id, context, undefined)
@@ -226,20 +231,18 @@ export default abstract class ChartCustomComponent<
 
           return Promise.resolve(itemOrPromise).then(item => {
             if (item) {
+              this.setTraitsFromParent(item, context.catalogItem);
               this.setTraitsFromAttrs(item, attrs, i);
               body && this.setTraitsFromBody?.(item, body);
+
               if (
-                hasTraits(
-                  item,
-                  DiscretelyTimeVaryingTraits,
-                  "chartDisclaimer"
-                ) &&
-                chartDisclaimer !== undefined
+                featurePosition &&
+                hasTraits(item, ChartPointOnMapTraits, "chartPointOnMap")
               ) {
                 item.setTrait(
-                  CommonStrata.definition,
-                  "chartDisclaimer",
-                  chartDisclaimer
+                  CommonStrata.user,
+                  "chartPointOnMap",
+                  createStratumInstance(LatLonHeightTraits, featurePosition)
                 );
               }
             }
@@ -254,7 +257,7 @@ export default abstract class ChartCustomComponent<
           terria: context.terria,
           sourceItems: sourceItems,
           sourceNames: attrs.sourceNames,
-          canDownload: attrs.canDownload,
+          canDownload: attrs.canDownload === true,
           downloads: attrs.downloads,
           downloadNames: attrs.downloadNames,
           raiseToTitle: !!getInsertedTitle(node)
@@ -265,19 +268,9 @@ export default abstract class ChartCustomComponent<
     // Build chart item to show in the info panel
     const chartItem = this.constructCatalogItem(undefined, context, undefined);
     runInAction(() => {
+      this.setTraitsFromParent(chartItem, context.catalogItem);
       this.setTraitsFromAttrs(chartItem, attrs, 0);
       body && this.setTraitsFromBody?.(chartItem, body);
-
-      if (
-        hasTraits(chartItem, DiscretelyTimeVaryingTraits, "chartDisclaimer") &&
-        chartDisclaimer !== undefined
-      ) {
-        chartItem.setTrait(
-          CommonStrata.definition,
-          "chartDisclaimer",
-          chartDisclaimer
-        );
-      }
     });
 
     chartElements.push(
@@ -324,6 +317,23 @@ export default abstract class ChartCustomComponent<
    * @param sourceIndex
    */
   protected setTraitsFromBody?: (item: CatalogItemType, body: string) => void;
+
+  protected setTraitsFromParent(
+    chartItem: CatalogItemType,
+    parentItem: BaseModel
+  ) {
+    if (
+      hasTraits(chartItem, DiscretelyTimeVaryingTraits, "chartDisclaimer") &&
+      hasTraits(parentItem, DiscretelyTimeVaryingTraits, "chartDisclaimer") &&
+      parentItem.chartDisclaimer !== undefined
+    ) {
+      chartItem.setTrait(
+        CommonStrata.user,
+        "chartDisclaimer",
+        parentItem.chartDisclaimer
+      );
+    }
+  }
 
   /**
    * Is this node the first column of a two-column table where the second
@@ -526,5 +536,16 @@ function getInsertedTitle(node: DomElement) {
     node.parent.parent.children[0].children[0] !== undefined
   ) {
     return node.parent.parent.children[0].children[0].data;
+  }
+}
+
+function getFeaturePosition(feature: Feature): LatLonHeight | undefined {
+  const cartesian = feature.position?.getValue(JulianDate.now());
+  if (cartesian) {
+    const carto = Ellipsoid.WGS84.cartesianToCartographic(cartesian);
+    return {
+      longitude: CesiumMath.toDegrees(carto.longitude),
+      latitude: CesiumMath.toDegrees(carto.latitude)
+    };
   }
 }

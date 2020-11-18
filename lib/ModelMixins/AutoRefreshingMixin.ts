@@ -3,8 +3,7 @@ import {
   IReactionDisposer,
   onBecomeObserved,
   onBecomeUnobserved,
-  reaction,
-  autorun
+  reaction
 } from "mobx";
 import { now } from "mobx-utils";
 import Constructor from "../Core/Constructor";
@@ -37,13 +36,16 @@ export default function AutoRefreshingMixin<
     private startAutoRefresh() {
       if (!this.autorunRefreshEnableDisposer) {
         // Toggle autorefresh when `refreshEnabled` trait changes
-        this.autorunRefreshEnableDisposer = autorun(() => {
-          if (this.refreshEnabled) {
-            this.startAutoRefresh();
-          } else {
-            this.stopAutoRefresh();
+        this.autorunRefreshEnableDisposer = reaction(
+          () => this.refreshEnabled,
+          () => {
+            if (this.refreshEnabled) {
+              this.startAutoRefresh();
+            } else {
+              this.stopAutoRefresh();
+            }
           }
-        });
+        );
       }
       if (!this.autoRefreshDisposer && this.refreshEnabled) {
         this.autoRefreshDisposer = reaction(
