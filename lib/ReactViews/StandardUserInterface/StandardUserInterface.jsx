@@ -62,6 +62,8 @@ import HelpPanel from "../Map/Panels/HelpPanel/HelpPanel";
 import Tool from "../Tool";
 import Disclaimer from "../Disclaimer";
 
+import BrandPrototype from "./BrandPrototype";
+
 export const showStoryPrompt = (viewState, terria) => {
   terria.configParameters.showFeaturePrompts &&
     terria.configParameters.storyEnabled &&
@@ -242,7 +244,17 @@ const StandardUserInterfaceRaw = observer(
 
     render() {
       const { t } = this.props;
-      const mergedTheme = combine(this.props.themeOverrides, terriaTheme, true);
+      const mergedThemeBase = combine(
+        this.props.themeOverrides,
+        terriaTheme,
+        true
+      );
+      // TODO: properly merge theme on config parameters
+      const mergedTheme = combine(
+        this.props.terria.configParameters.theme,
+        mergedThemeBase,
+        true
+      );
       const theme = mergedTheme;
 
       const customElements = processCustomElements(
@@ -333,6 +345,10 @@ const StandardUserInterfaceRaw = observer(
                           this.props.viewState.triggerResizeEvent()
                         }
                       >
+                        <BrandPrototype
+                          terria={this.props.terria}
+                          viewState={this.props.viewState}
+                        />
                         <Branding
                           terria={terria}
                           version={this.props.version}
@@ -496,7 +512,7 @@ const StandardUserInterfaceWithRouter = withRouter(
 // pulling out `serverConfig.baseHref` via `/serverconfig/`
 // ? somewhere else? duplicate it in client side config.json?
 const getHistory = baseName => {
-  const TODO_DYNAMIC_BASENAME = `/mobx-tjs-new-routing-v2/`;
+  const TODO_DYNAMIC_BASENAME = `/mobx-branded-views/`;
   const browserHistory = createBrowserHistory({
     // note - history api wants `basename` lowercase `n`
     // basename: baseName
@@ -506,16 +522,19 @@ const getHistory = baseName => {
   return browserHistory;
 };
 
-export const StandardUserInterface = props => {
+export const StandardUserInterface = observer(function(props) {
   const experimental = props.terria.configParameters.experimentalFeatures;
   const Router = experimental ? BrowserRouter : MemoryRouter;
 
   return (
     <Router history={experimental && getHistory()}>
-      <StandardUserInterfaceWithRouter {...props} />
+      <StandardUserInterfaceWithRouter
+        key={props.terria.configParameters.brandBarElements}
+        {...props}
+      />
     </Router>
   );
-};
+});
 StandardUserInterface.propTypes = {
   terria: PropTypes.object.isRequired
 };

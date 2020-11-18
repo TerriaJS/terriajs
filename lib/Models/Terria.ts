@@ -149,6 +149,7 @@ interface ConfigParameters {
   helpContentTerms?: Term[];
   languageConfiguration?: LanguageConfiguration;
   displayOneBrand?: number;
+  theme?: any;
 }
 
 interface StartOptions {
