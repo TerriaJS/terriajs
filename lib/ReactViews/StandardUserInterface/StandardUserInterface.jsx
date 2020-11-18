@@ -527,7 +527,10 @@ export const StandardUserInterface = observer(function(props) {
   const Router = experimental ? BrowserRouter : MemoryRouter;
 
   return (
-    <Router basename={TODO_DYNAMIC_BASENAME} history={getHistory()}>
+    <Router
+      basename={TODO_DYNAMIC_BASENAME}
+      history={experimental && getHistory()}
+    >
       <StandardUserInterfaceWithRouter
         key={props.terria.configParameters.brandBarElements}
         {...props}
