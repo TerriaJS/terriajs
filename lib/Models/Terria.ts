@@ -456,7 +456,7 @@ export default class Terria {
       options.applicationUrl?.href || getUriWithoutPath(baseUri);
     return loadJson5(options.configUrl, options.configUrlHeaders)
       .then((config: any) => {
-        runInAction(() => {
+        return runInAction(() => {
           // If it's a magda config, we only load magda config and parameters should never be a property on the direct
           // config aspect (it would be under the `terria-config` aspect)
           if (config.aspects) {
