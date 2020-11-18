@@ -7,6 +7,8 @@ import Terria from "../../Models/Terria";
 import ViewState from "../../ReactViewModels/ViewState";
 
 import Button from "../../Styled/Button.jsx";
+const Box: any = require("../../Styled/Box").default;
+import Select from "../../Styled/Select";
 import brandMapping from "./brandMapping";
 
 interface BrandRouteProps {
@@ -59,6 +61,17 @@ const BrandPrototype = observer(function BrandPrototype(props: Props) {
           )}
         />
       </div>
+      <Box css={"min-height: 48px;"}>
+        <Select
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+            viewState.history?.push(e.target.value)
+          }
+          value={viewState.history?.location.pathname}
+        >
+          <option value={"/brand/de-aust"}>DE Australia Brand</option>
+          <option value={"/brand/de-africa"}>De Africa Brand</option>
+        </Select>
+      </Box>
       <Link to="/brand/de-aust">
         <Button>DE Australia Brand</Button>
       </Link>
