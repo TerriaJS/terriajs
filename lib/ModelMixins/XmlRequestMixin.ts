@@ -1,3 +1,4 @@
+import URI from "urijs";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 

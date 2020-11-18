@@ -5,15 +5,11 @@ import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
-// import addedByUser from "../../Core/addedByUser";
+import addedByUser from "../../Core/addedByUser";
 import getPath from "../../Core/getPath";
-import addToWorkbench from "../../Models/addToWorkbench";
-import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
-import { withRouter } from "react-router-dom";
-import URI from "urijs";
-// import addedByUser from "../../Core/addedByUser";
 import removeUserAddedData from "../../Models/removeUserAddedData";
 import CatalogItem from "./CatalogItem";
+import raiseErrorToUser from "../../Models/raiseErrorToUser";
 
 // Individual dataset
 export const DataCatalogItem = observer(
@@ -21,7 +17,6 @@ export const DataCatalogItem = observer(
     displayName: "DataCatalogItem",
 
     propTypes: {
-      match: PropTypes.object.isRequired,
       item: PropTypes.object.isRequired,
       viewState: PropTypes.object.isRequired,
       overrideState: PropTypes.string,
@@ -57,37 +52,33 @@ export const DataCatalogItem = observer(
       removeUserAddedData(this.props.terria, this.props.item);
     },
 
-    toggleEnable(event) {
-      runInAction(() => {
-        const keepCatalogOpen = event.shiftKey || event.ctrlKey;
-        const toAdd = !this.props.terria.workbench.contains(this.props.item);
+    async toggleEnable(event) {
+      const keepCatalogOpen = event.shiftKey || event.ctrlKey;
+      const toAdd = !this.props.terria.workbench.contains(this.props.item);
 
+      try {
         if (toAdd) {
           this.props.terria.timelineStack.addToTop(this.props.item);
+          await this.props.terria.workbench.add(this.props.item);
         } else {
           this.props.terria.timelineStack.remove(this.props.item);
+          await this.props.terria.workbench.remove(this.props.item);
         }
 
-        const addPromise = addToWorkbench(
-          this.props.terria.workbench,
-          this.props.item,
-          toAdd
-        ).then(() => {
-          if (
-            this.props.terria.workbench.contains(this.props.item) &&
-            !keepCatalogOpen
-          ) {
-            this.props.viewState.closeCatalog();
-            this.props.terria.analytics?.logEvent(
-              "dataSource",
-              toAdd ? "addFromCatalogue" : "removeFromCatalogue",
-              getPath(this.props.item)
-            );
-          }
-        });
-
-        raiseErrorOnRejectedPromise(this.props.terria, addPromise);
-      });
+        if (
+          this.props.terria.workbench.contains(this.props.item) &&
+          !keepCatalogOpen
+        ) {
+          this.props.viewState.closeCatalog();
+          this.props.terria.analytics?.logEvent(
+            "dataSource",
+            toAdd ? "addFromCatalogue" : "removeFromCatalogue",
+            getPath(this.props.item)
+          );
+        }
+      } catch (e) {
+        raiseErrorToUser(this.props.terria, e);
+      }
     },
 
     setPreviewedItem() {
@@ -108,13 +99,9 @@ export const DataCatalogItem = observer(
     },
 
     isSelected() {
-      return (
-        this.props.item.uniqueId ===
-        URI.decode(this.props.match.params.catalogMemberId)
-      );
-      // return addedByUser(this.props.item)
-      //   ? this.props.viewState.userDataPreviewedItem === this.props.item
-      //   : this.props.viewState.previewedItem === this.props.item;
+      return addedByUser(this.props.item)
+        ? this.props.viewState.userDataPreviewedItem === this.props.item
+        : this.props.viewState.previewedItem === this.props.item;
     },
 
     render() {
@@ -128,7 +115,6 @@ export const DataCatalogItem = observer(
       };
       return (
         <CatalogItem
-          linkTo={URI.encode(item.uniqueId)}
           onTextClick={this.setPreviewedItem}
           selected={this.isSelected()}
           text={item.nameInCatalog}
@@ -169,4 +155,4 @@ export const DataCatalogItem = observer(
   })
 );
 
-export default withRouter(withTranslation()(DataCatalogItem));
+export default withTranslation()(DataCatalogItem);

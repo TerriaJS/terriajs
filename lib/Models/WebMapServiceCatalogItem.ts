@@ -49,7 +49,7 @@ import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import LoadableStratum from "./LoadableStratum";
-import Mappable, { ImageryParts } from "./Mappable";
+import { ImageryParts } from "./Mappable";
 import { BaseModel } from "./Model";
 import { CapabilitiesStyle } from "./OwsInterfaces";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
@@ -141,50 +141,68 @@ class GetCapabilitiesStratum extends LoadableStratum(
       const layer = layers[i];
       const style = i < styles.length ? styles[i] : undefined;
 
-      const layerAvailableStyles = availableStyles.find(
-        candidate => candidate.layerName === layer
-      );
-      if (
-        layerAvailableStyles !== undefined &&
-        Array.isArray(layerAvailableStyles.styles) &&
-        layerAvailableStyles.styles.length > 0
-      ) {
-        // Use the first style if none is explicitly specified.
-        // Note that the WMS 1.3.0 spec (section 7.3.3.4) explicitly says we can't assume this,
-        // but because the server has no other way of indicating the default style, let's hope that
-        // sanity prevails.
-        const layerStyle =
-          style === undefined
-            ? layerAvailableStyles.styles[0]
-            : layerAvailableStyles.styles.find(
-                candidate => candidate.name === style
-              );
+      let legendUri: uri.URI | undefined;
+      let legendUrlMimeType: string | undefined;
 
-        if (layerStyle !== undefined && layerStyle.legend !== undefined) {
-          let url = this.catalogItem.supportsColorScaleRange
-            ? `${layerStyle.legend.url}&colorscalerange=${this.catalogItem.colorScaleRange}`
-            : layerStyle.legend.url;
-          result.push(
-            createStratumInstance(LegendTraits, {
-              url,
-              urlMimeType: layerStyle.legend.urlMimeType
-            })
+      // Attempt to find layer style based on AvailableStyleTraits
+      const layerStyle =
+        style === undefined
+          ? undefined
+          : availableStyles
+              .find(candidate => candidate.layerName === layer)
+              ?.styles?.find(candidate => candidate.name === style);
+      if (layerStyle?.legend?.url) {
+        legendUri = URI(
+          proxyCatalogItemUrl(this.catalogItem, layerStyle.legend.url)
+        );
+
+        legendUrlMimeType = layerStyle.legend.urlMimeType;
+      }
+
+      // If no legends found - make one up!
+      // From OGC — about style property for GetLegendGraphic request:
+      // If not present, the default style is selected. The style may be any valid style available for a layer, including non-SLD internally-defined styles.
+      if (!isDefined(legendUri) && isDefined(this.catalogItem.url)) {
+        legendUri = URI(
+          proxyCatalogItemUrl(
+            this.catalogItem,
+            this.catalogItem.url.split("?")[0]
+          )
+        );
+        legendUri
+          .setQuery("service", "WMS")
+          .setQuery("version", "1.3.0")
+          .setQuery("request", "GetLegendGraphic")
+          .setQuery("format", "image/png")
+          .setQuery("layer", layer);
+
+        legendUrlMimeType = "image/png";
+      }
+
+      if (isDefined(legendUri)) {
+        legendUri.setQuery("transparent", "true");
+
+        // Add geoserver related LEGEND_OPTIONS to match terria styling
+        if (this.catalogItem.isGeoServer) {
+          let legendOptions =
+            "fontSize:14;forceLabels:on;fontAntiAliasing:true";
+          legendOptions += ";fontColor:0xDDDDDD"; // enable if we can ensure a dark background
+          //legendOptions += ";dpi:182"; // enable if we can scale the image back down by 50%.
+          legendUri.setQuery("LEGEND_OPTIONS", legendOptions);
+        }
+        if (
+          this.catalogItem.supportsColorScaleRange &&
+          this.catalogItem.colorScaleRange
+        ) {
+          legendUri.setQuery(
+            "colorscalerange",
+            this.catalogItem.colorScaleRange
           );
         }
-
-        // If no styles - make up legend
-      } else if (isDefined(this.catalogItem.url)) {
         result.push(
           createStratumInstance(LegendTraits, {
-            url: URI(
-              `${proxyCatalogItemUrl(
-                this.catalogItem,
-                this.catalogItem.url
-              )}?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&transparent=True`
-            )
-              .addQuery("layer", layer)
-              .toString(),
-            urlMimeType: "image/png"
+            url: legendUri.toString(),
+            urlMimeType: legendUrlMimeType
           })
         );
       }
@@ -1136,24 +1154,26 @@ class WebMapServiceCatalogItem
           `Layer ${layerIndex + 1}`} styles`;
       }
 
+      const options = filterOutUndefined(
+        layer.styles.map(function(s) {
+          if (isDefined(s.name)) {
+            return {
+              name: s.title || s.name || "",
+              id: s.name as string
+            };
+          }
+        })
+      );
+
       return {
         name,
         id: `${this.uniqueId}-${layer.layerName}-styles`,
-        options: filterOutUndefined(
-          layer.styles.map(function(s) {
-            if (isDefined(s.name)) {
-              return {
-                name: s.title || s.name || "",
-                id: s.name as string
-              };
-            }
-          })
-        ),
+        options,
 
         // Set selectedId to value stored in `styles` trait for this `layerIndex` or the first available style value
         // The `styles` parameter is CSV, a style for each layer
-        selectedId:
-          this.styles?.split(",")?.[layerIndex] || layer.styles[0]?.name,
+        // Note: there is no way of finding out default style if no style has been selected :(
+        selectedId: this.styles?.split(",")?.[layerIndex],
 
         setDimensionValue: (stratumId: string, newStyle: string) => {
           runInAction(() => {
@@ -1164,6 +1184,11 @@ class WebMapServiceCatalogItem
             this.setTrait(stratumId, "styles", styles.join(","));
           });
         },
+        // Only allow undefined if more then one style (if there is only one style then it is the default style!)
+        allowUndefined: options.length > 1,
+        undefinedLabel: i18next.t(
+          "models.webMapServiceCatalogItem.defaultStyleLabel"
+        ),
         disable: this.isShowingDiff
       };
     });
@@ -1231,6 +1256,10 @@ class WebMapServiceCatalogItem
 
   @computed
   get selectableDimensions() {
+    if (this.disableDimensionSelectors) {
+      return [];
+    }
+
     return filterOutUndefined([
       ...this.wmsDimensionSelectableDimensions,
       ...this.styleSelectableDimensions

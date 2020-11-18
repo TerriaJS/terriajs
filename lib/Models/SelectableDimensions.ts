@@ -9,6 +9,7 @@ export interface Dimension {
   readonly options?: readonly DimensionOption[];
   readonly selectedId?: string;
   readonly allowUndefined?: boolean;
+  readonly undefinedLabel?: string;
 }
 
 export interface SelectableDimension extends Dimension {

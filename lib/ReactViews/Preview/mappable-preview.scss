@@ -56,16 +56,15 @@
   float: right;
 }
 
-.heading {
+.h3 {
   composes: h3 from "../../Sass/common/_base.scss";
-  margin: 0.5em 0;
+  margin-top: 0;
   padding-right: $padding-small;
   float: left;
   width: 80%;
   font-size: $font-size-mid-large;
 }
-.h4,
-.subHeading {
+.h4 {
   composes: h4 from "../../Sass/common/_base.scss";
 
   font-size: $font-size-mid-small;

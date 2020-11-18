@@ -1,24 +1,17 @@
-import { action } from "mobx";
+import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import getPath from "../../Core/getPath";
-import addToWorkbench from "../../Models/addToWorkbench";
 import Mappable from "../../Models/Mappable";
-import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
-// eslint-disable-next-line no-unused-vars
-import Terria from "../../Models/Terria";
-// eslint-disable-next-line no-unused-vars
-import ViewState from "../../ReactViewModels/ViewState";
-import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
+import raiseErrorToUser from "../../Models/raiseErrorToUser";
 import measureElement from "../HOCs/measureElement";
+import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
 import DataPreviewMap from "./DataPreviewMap";
-// import DataPreviewMap from "./DataPreviewMap";
 import Description from "./Description";
 import Styles from "./mappable-preview.scss";
-import ErrorBoundary from "../ErrorBoundary/ErrorBoundary.jsx";
 
 /**
  * @typedef {object} Props
@@ -43,26 +36,22 @@ class MappablePreview extends React.Component {
     t: PropTypes.func.isRequired
   };
 
-  @action.bound
-  toggleOnMap(event) {
+  async toggleOnMap(event) {
     if (defined(this.props.viewState.storyShown)) {
-      this.props.viewState.storyShown = false;
+      runInAction(() => (this.props.viewState.storyShown = false));
     }
 
     const keepCatalogOpen = event.shiftKey || event.ctrlKey;
     const toAdd = !this.props.terria.workbench.contains(this.props.previewed);
 
-    if (toAdd) {
-      this.props.terria.timelineStack.addToTop(this.props.previewed);
-    } else {
-      this.props.terria.timelineStack.remove(this.props.previewed);
-    }
-
-    const addPromise = addToWorkbench(
-      this.props.terria.workbench,
-      this.props.previewed,
-      toAdd
-    ).then(() => {
+    try {
+      if (toAdd) {
+        this.props.terria.timelineStack.addToTop(this.props.previewed);
+        await this.props.terria.workbench.add(this.props.previewed);
+      } else {
+        this.props.terria.timelineStack.remove(this.props.previewed);
+        this.props.terria.workbench.remove(this.props.previewed);
+      }
       if (
         this.props.terria.workbench.contains(this.props.previewed) &&
         !keepCatalogOpen
@@ -74,9 +63,9 @@ class MappablePreview extends React.Component {
           getPath(this.props.previewed)
         );
       }
-    });
-
-    raiseErrorOnRejectedPromise(addPromise);
+    } catch (e) {
+      raiseErrorToUser(this.props.terria, e);
+    }
   }
 
   backToMap() {
@@ -88,27 +77,15 @@ class MappablePreview extends React.Component {
     const catalogItem = this.props.previewed;
     return (
       <div className={Styles.root}>
-        <If
-          condition={
-            Mappable.is(catalogItem) &&
-            !catalogItem.disablePreview &&
-            this.props.viewState.explorerPanelIsVisible
-          }
-        >
-          <ErrorBoundary terria={this.props.terria}>
-            <DataPreviewMap
-              key={[
-                catalogItem.uniqueId,
-                this.props.viewState.explorerPanelIsVisible
-              ]}
-              terria={this.props.terria}
-              previewed={catalogItem}
-              showMap={
-                !this.props.viewState.explorerPanelAnimating ||
-                this.props.viewState.useSmallScreenInterface
-              }
-            />
-          </ErrorBoundary>
+        <If condition={Mappable.is(catalogItem) && !catalogItem.disablePreview}>
+          <DataPreviewMap
+            terria={this.props.terria}
+            previewed={catalogItem}
+            showMap={
+              !this.props.viewState.explorerPanelAnimating ||
+              this.props.viewState.useSmallScreenInterface
+            }
+          />
         </If>
         <button
           type="button"
@@ -124,7 +101,7 @@ class MappablePreview extends React.Component {
             className={Styles.titleAndShareWrapper}
             ref={component => (this.refToMeasure = component)}
           >
-            <h1 className={Styles.heading}>{catalogItem.name}</h1>
+            <h3 className={Styles.h3}>{catalogItem.name}</h3>
             <If
               condition={
                 !catalogItem.hasLocalData &&

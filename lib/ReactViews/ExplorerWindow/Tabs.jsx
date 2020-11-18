@@ -1,5 +1,4 @@
 import React from "react";
-import { Helmet } from "react-helmet";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import classNames from "classnames";
@@ -134,11 +133,6 @@ const Tabs = observer(
 
       return (
         <div className={Styles.tabs}>
-          <Helmet>
-            <title>
-              {currentTab.name} - {this.props.terria.appName}
-            </title>
-          </Helmet>
           <ul
             className={Styles.tabList}
             role="tablist"
