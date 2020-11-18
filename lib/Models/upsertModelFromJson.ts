@@ -64,8 +64,12 @@ export default function upsertModelFromJson(
   if (model === undefined && options.matchByShareKey && json.id !== undefined) {
     const potentialId = terria.getModelIdByShareKey(json.id);
     if (potentialId !== undefined) {
-      uniqueId = potentialId;
-      model = terria.getModelById(BaseModel, uniqueId);
+      model = terria.getModelById(BaseModel, potentialId);
+      if (model === undefined) {
+        console.error(
+          `Failed to get model "${potentialId}" found using share key "${json.id}"`
+        );
+      }
     }
   }
   if (model === undefined) {
