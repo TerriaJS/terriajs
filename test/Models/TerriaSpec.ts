@@ -343,103 +343,324 @@ describe("Terria", function() {
 
   // Test share keys by serialising from one catalog and deserialising with a reorganised catalog
   describe("shareKeys", function() {
-    let newTerria: Terria;
-    let viewState: ViewState;
-    beforeEach(async function() {
-      // Create a config.json in a URL to pass to Terria.start
-      const configUrl = `data:application/json;base64,${btoa(
-        JSON.stringify({
-          initializationUrls: [],
-          parameters: {
-            regionMappingDefinitionsUrl: "data/regionMapping.json"
+    describe("with a JSON catalog", function() {
+      let newTerria: Terria;
+      let viewState: ViewState;
+      beforeEach(async function() {
+        // Create a config.json in a URL to pass to Terria.start
+        const configUrl = `data:application/json;base64,${btoa(
+          JSON.stringify({
+            initializationUrls: [],
+            parameters: {
+              regionMappingDefinitionsUrl: "data/regionMapping.json"
+            }
+          })
+        )}`;
+        newTerria = new Terria({ baseUrl: "./" });
+        viewState = new ViewState({
+          terria: terria,
+          catalogSearchProvider: null,
+          locationSearchProviders: []
+        });
+
+        await Promise.all([terria, newTerria].map(t => t.start({ configUrl })));
+
+        terria.catalog.group.addMembersFromJson(CommonStrata.definition, [
+          {
+            name: "Old group",
+            type: "group",
+            members: [
+              {
+                name: "Random CSV",
+                type: "csv",
+                url:
+                  "data:text/csv,lon%2Clat%2Cval%2Cdate%0A151%2C-31%2C15%2C2010%0A151%2C-31%2C15%2C2011"
+              }
+            ]
           }
-        })
-      )}`;
-      newTerria = new Terria({ baseUrl: "./" });
-      viewState = new ViewState({
-        terria: terria,
-        catalogSearchProvider: null,
-        locationSearchProviders: []
+        ]);
+
+        newTerria.catalog.group.addMembersFromJson(CommonStrata.definition, [
+          {
+            name: "New group",
+            type: "group",
+            members: [
+              {
+                name: "Extra group",
+                type: "group",
+                members: [
+                  {
+                    name: "My random CSV",
+                    type: "csv",
+                    url:
+                      "data:text/csv,lon%2Clat%2Cval%2Cdate%0A151%2C-31%2C15%2C2010%0A151%2C-31%2C15%2C2011",
+                    shareKeys: ["//Old group/Random CSV"]
+                  }
+                ]
+              }
+            ]
+          }
+        ]);
       });
 
-      await Promise.all([terria, newTerria].map(t => t.start({ configUrl })));
+      it("correctly applies user stratum changes to moved item", async function() {
+        const csv = terria.getModelById(
+          CsvCatalogItem,
+          "//Old group/Random CSV"
+        );
+        expect(csv).toBeDefined("Can't find csv item in source terria");
+        csv?.setTrait(CommonStrata.user, "opacity", 0.5);
+        const shareLink = buildShareLink(terria, viewState);
+        await newTerria.updateApplicationUrl(shareLink);
 
-      terria.catalog.group.addMembersFromJson(CommonStrata.definition, [
-        {
-          name: "Old group",
-          type: "group",
-          members: [
-            {
-              name: "Random CSV",
-              type: "csv",
-              url:
-                "data:text/csv,lon%2Clat%2Cval%2Cdate%0A151%2C-31%2C15%2C2010%0A151%2C-31%2C15%2C2011"
-            }
-          ]
-        }
-      ]);
+        const newCsv = newTerria.getModelById(
+          CsvCatalogItem,
+          "//New group/Extra group/My random CSV"
+        );
+        expect(newCsv).toBeDefined(
+          "Can't find newCsv item in destination newTerria"
+        );
+        expect(newCsv?.opacity).toBe(0.5);
+      });
 
-      newTerria.catalog.group.addMembersFromJson(CommonStrata.definition, [
-        {
-          name: "New group",
-          type: "group",
-          members: [
-            {
-              name: "Extra group",
-              type: "group",
-              members: [
-                {
-                  name: "My random CSV",
-                  type: "csv",
-                  url:
-                    "data:text/csv,lon%2Clat%2Cval%2Cdate%0A151%2C-31%2C15%2C2010%0A151%2C-31%2C15%2C2011",
-                  shareKeys: ["//Old group/Random CSV"]
-                }
-              ]
-            }
-          ]
-        }
-      ]);
+      it("correctly adds moved item to workbench and timeline", async function() {
+        const csv = terria.getModelById(
+          CsvCatalogItem,
+          "//Old group/Random CSV"
+        );
+        expect(csv).toBeDefined("csv not found in source terria");
+        if (csv === undefined) return;
+        terria.workbench.add(csv);
+        terria.timelineStack.addToTop(csv);
+        const shareLink = buildShareLink(terria, viewState);
+        await newTerria.updateApplicationUrl(shareLink);
+
+        const newCsv = newTerria.getModelById(
+          CsvCatalogItem,
+          "//New group/Extra group/My random CSV"
+        );
+        expect(newCsv).toBeDefined("newCsv not found in destination newTerria");
+        if (newCsv === undefined) return;
+        expect(newTerria.workbench.contains(newCsv)).toBeTruthy(
+          "newCsv not found in destination newTerria workbench"
+        );
+        expect(newTerria.timelineStack.contains(newCsv)).toBeTruthy(
+          "newCsv not found in destination newTerria timeline"
+        );
+      });
     });
 
-    it("correctly applies user stratum changes to moved item", async function() {
-      const csv = terria.getModelById(CsvCatalogItem, "//Old group/Random CSV");
-      expect(csv).toBeDefined("Can't find csv item in source terria");
-      csv?.setTrait(CommonStrata.user, "opacity", 0.5);
-      const shareLink = buildShareLink(terria, viewState);
-      await newTerria.updateApplicationUrl(shareLink);
+    describe("with a Magda catalog", function() {
+      // Simulate same as above but with Magda catalogs
+      // This is really messy before a proper MagdaCatalogProvider is made
+      //  that can call a (currently not yet written) Magda API to find the location of
+      //  any id within a catalog
 
-      const newCsv = newTerria.getModelById(
-        CsvCatalogItem,
-        "//New group/Extra group/My random CSV"
-      );
-      expect(newCsv).toBeDefined(
-        "Can't find newCsv item in destination newTerria"
-      );
-      expect(newCsv?.opacity).toBe(0.5);
-    });
+      // Could at least simulate moving an item deeper (similar to JSON catalog) and try having
+      //  one of the knownContainerIds be shareKey linked to the new location?
+      //  (hopefully that would trigger loading of the new group)
 
-    it("correctly adds moved item to workbench and timeline", async function() {
-      const csv = terria.getModelById(CsvCatalogItem, "//Old group/Random CSV");
-      expect(csv).toBeDefined("csv not found in source terria");
-      if (csv === undefined) return;
-      terria.workbench.add(csv);
-      terria.timelineStack.addToTop(csv);
-      const shareLink = buildShareLink(terria, viewState);
-      await newTerria.updateApplicationUrl(shareLink);
+      let newTerria: Terria;
+      let viewState: ViewState;
+      beforeEach(async function() {
+        // Create a config.json in a URL to pass to Terria.start
+        const configUrl =
+          "https://magda.example.com/api/v0/registry/records/map-config-example?optionalAspect=terria-config&optionalAspect=terria-init&optionalAspect=group&dereference=true";
 
-      const newCsv = newTerria.getModelById(
-        CsvCatalogItem,
-        "//New group/Extra group/My random CSV"
-      );
-      expect(newCsv).toBeDefined("newCsv not found in destination newTerria");
-      if (newCsv === undefined) return;
-      expect(newTerria.workbench.contains(newCsv)).toBeTruthy(
-        "newCsv not found in destination newTerria workbench"
-      );
-      expect(newTerria.timelineStack.contains(newCsv)).toBeTruthy(
-        "newCsv not found in destination newTerria timeline"
-      );
+        viewState = new ViewState({
+          terria: terria,
+          catalogSearchProvider: null,
+          locationSearchProviders: []
+        });
+        newTerria = new Terria({ baseUrl: "./" });
+
+        // Simulate an update to catalog/config between terria and newTerria
+
+        jasmine.Ajax.install();
+        jasmine.Ajax.stubRequest(/.*/).andError({});
+        // .andCallFunction(request =>
+        //   console.error(`Request attempted: ${request.url}`)
+        // );
+
+        jasmine.Ajax.stubRequest("serverconfig/").andReturn({
+          responseText: "{}"
+        });
+
+        jasmine.Ajax.stubRequest(
+          "https://magda.example.com/api/v0/registry/records/6b24aa39-1aa7-48d1-b6a6-9e755aff4476?optionalAspect=terria&optionalAspect=group&optionalAspect=dcat-dataset-strings&optionalAspect=dcat-distribution-strings&optionalAspect=dataset-distributions&optionalAspect=dataset-format&dereference=true"
+        ).andReturn({
+          responseText: JSON.stringify(
+            require("../../wwwroot/test/Magda/shareKeys/6b24aa39-1aa7-48d1-b6a6-9e755aff4476.json")
+          )
+        });
+
+        jasmine.Ajax.stubRequest(
+          "https://magda.example.com/api/v0/registry/records/bfc69476-1c85-4208-9046-4f736bab9b8e?optionalAspect=terria&optionalAspect=group&optionalAspect=dcat-dataset-strings&optionalAspect=dcat-distribution-strings&optionalAspect=dataset-distributions&optionalAspect=dataset-format&dereference=true"
+        ).andReturn({
+          responseText: JSON.stringify(
+            require("../../wwwroot/test/Magda/shareKeys/bfc69476-1c85-4208-9046-4f736bab9b8e.json")
+          )
+        });
+
+        jasmine.Ajax.stubRequest(
+          "https://magda.example.com/api/v0/registry/records/12f26f07-f39e-4753-979d-2de01af54bd1?optionalAspect=terria&optionalAspect=group&optionalAspect=dcat-dataset-strings&optionalAspect=dcat-distribution-strings&optionalAspect=dataset-distributions&optionalAspect=dataset-format&dereference=true"
+        ).andReturn({
+          responseText: JSON.stringify(
+            require("../../wwwroot/test/Magda/shareKeys/12f26f07-f39e-4753-979d-2de01af54bd1.json")
+          )
+        });
+
+        jasmine.Ajax.stubRequest(configUrl).andReturn({
+          responseText: JSON.stringify(
+            require("../../wwwroot/test/Magda/shareKeys/map-config-example-old.json")
+          )
+        });
+
+        await terria.start({
+          configUrl
+        });
+        jasmine.Ajax.stubRequest(configUrl).andReturn({
+          responseText: JSON.stringify(
+            require("../../wwwroot/test/Magda/shareKeys/map-config-example-new.json")
+          )
+        });
+
+        await newTerria.start({
+          configUrl
+        });
+        // Don't allow more requests to configUrl once Terrias are set up
+        jasmine.Ajax.stubRequest(configUrl).andError({});
+      });
+
+      afterEach(function() {
+        jasmine.Ajax.uninstall();
+      });
+
+      it("correctly applies user stratum changes to moved item", async function() {
+        const oldGroupRef = terria.getModelById(
+          MagdaReference,
+          "6b24aa39-1aa7-48d1-b6a6-9e755aff4476"
+        );
+        expect(oldGroupRef).toBeDefined(
+          "Can't find Old group reference in source terria"
+        );
+        if (oldGroupRef === undefined) return;
+        await oldGroupRef.loadReference();
+        expect(oldGroupRef.target).toBeDefined(
+          "Can't dereference Old group in source terria"
+        );
+
+        const csv = terria.getModelById(
+          CsvCatalogItem,
+          "3432284e-a111-4844-97c8-26a1767f9986"
+        );
+        expect(csv).toBeDefined("Can't dereference csv in source terria");
+        if (csv === undefined) return;
+        csv.setTrait(CommonStrata.user, "opacity", 0.5);
+        const shareLink = buildShareLink(terria, viewState);
+
+        // Hack to make below test succeed. This needs to be there until we add a magda API that can locate any
+        //  item by ID or share key within a Terria catalog
+        // Loads "New group" (bfc69476-1c85-4208-9046-4f736bab9b8e) which registers shareKeys for
+        //  "Extra group" (12f26f07-f39e-4753-979d-2de01af54bd1). And "Extra group" has a share key
+        //  that matches the ancestor of the serialised Random CSV, so loading is triggered on "Extra group"
+        //  followed by 3432284e-a111-4844-97c8-26a1767f9986 which points to "My random CSV"
+        //  (decfc787-0425-4175-a98c-a40db064feb3)
+        const newGroupRef = newTerria.getModelById(
+          MagdaReference,
+          "bfc69476-1c85-4208-9046-4f736bab9b8e"
+        );
+        if (newGroupRef === undefined) return;
+        await newGroupRef.loadReference();
+
+        await newTerria.updateApplicationUrl(shareLink);
+
+        // Why does this return a CSV item (when above hack isn't added)? It returns a brand new csv item without data or URL
+        // Does serialisation save enough attributes that upsertModelFromJson thinks it can create a new model?
+        // upsertModelFromJson should really be replaced with update + insert functions
+        // But is it always easy to work out when share data should use update and when it should insert?
+        // E.g. user added models should be inserted when deserialised, not updated
+        const newCsv = newTerria.getModelByIdOrShareKey(
+          CsvCatalogItem,
+          "3432284e-a111-4844-97c8-26a1767f9986"
+        );
+        expect(newCsv).toBeDefined(
+          "Can't find newCsv item in destination newTerria"
+        );
+
+        expect(newCsv?.uniqueId).toBe(
+          "decfc787-0425-4175-a98c-a40db064feb3",
+          "Failed to map share key to correct model"
+        );
+        expect(newCsv?.opacity).toBe(0.5);
+      });
+
+      it("correctly adds moved item to workbench and timeline", async function() {
+        const oldGroupRef = terria.getModelById(
+          MagdaReference,
+          "6b24aa39-1aa7-48d1-b6a6-9e755aff4476"
+        );
+        expect(oldGroupRef).toBeDefined(
+          "Can't find Old group reference in source terria"
+        );
+        if (oldGroupRef === undefined) return;
+        await oldGroupRef.loadReference();
+        expect(oldGroupRef.target).toBeDefined(
+          "Can't dereference Old group in source terria"
+        );
+
+        const csv = terria.getModelById(
+          CsvCatalogItem,
+          "3432284e-a111-4844-97c8-26a1767f9986"
+        );
+        expect(csv).toBeDefined("Can't dereference csv in source terria");
+        if (csv === undefined) return;
+        terria.workbench.add(csv);
+        terria.timelineStack.addToTop(csv);
+
+        const shareLink = buildShareLink(terria, viewState);
+
+        // Hack to make below test succeed. Needs to be there until we add a magda API that can locate any
+        //  item by ID or share key within a Terria catalog
+        // Loads "New group" (bfc69476-1c85-4208-9046-4f736bab9b8e) which registers shareKeys for
+        //  "Extra group" (12f26f07-f39e-4753-979d-2de01af54bd1). And "Extra group" has a share key
+        //  that matches the ancestor of the serialised Random CSV, so loading is triggered on "Extra group"
+        //  followed by 3432284e-a111-4844-97c8-26a1767f9986 which points to "My random CSV"
+        //  (decfc787-0425-4175-a98c-a40db064feb3)
+        const newGroupRef = newTerria.getModelById(
+          MagdaReference,
+          "bfc69476-1c85-4208-9046-4f736bab9b8e"
+        );
+        if (newGroupRef === undefined) return;
+        await newGroupRef.loadReference();
+
+        await newTerria.updateApplicationUrl(shareLink);
+
+        // Why does this return a CSV item (when above hack isn't added)? It returns a brand new csv item without data or URL
+        // Does serialisation save enough attributes that upsertModelFromJson thinks it can create a new model?
+        // upsertModelFromJson should really be replaced with update + insert functions
+        // But is it always easy to work out when share data should use update and when it should insert?
+        // E.g. user added models should be inserted when deserialised, not updated
+        const newCsv = newTerria.getModelByIdOrShareKey(
+          CsvCatalogItem,
+          "3432284e-a111-4844-97c8-26a1767f9986"
+        );
+        expect(newCsv).toBeDefined(
+          "Can't find newCsv item in destination newTerria"
+        );
+        if (newCsv === undefined) return;
+
+        expect(newCsv.uniqueId).toBe(
+          "decfc787-0425-4175-a98c-a40db064feb3",
+          "Failed to map share key to correct model"
+        );
+        expect(newTerria.workbench.contains(newCsv)).toBeTruthy(
+          "newCsv not found in destination newTerria workbench"
+        );
+        expect(newTerria.timelineStack.contains(newCsv)).toBeTruthy(
+          "newCsv not found in destination newTerria timeline"
+        );
+      });
     });
   });
 
