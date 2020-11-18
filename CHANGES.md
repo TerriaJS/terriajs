@@ -4,6 +4,8 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.62)
+* Added config parameter `defaultBaseMapId` which is used as a fallback map if no persisted map is found.
+
 
 #### 8.0.0-alpha.61
 * New `CatalogFunctionMixin` and `CatalogFunctionJobMixin`
@@ -23,7 +25,6 @@ Change Log
 * Fixed broken chart disclaimers in shared views.
 * Fixed a bug where chart disclaimers were shown even for chart items disabled in the workbench.
 * Fixed a bug where charts with titles containing the text "lat" or "lon" were hidden from feature info panel.
-* Added config parameter `defaultBaseMapId` which is used as a fallback map if no persisted map is found.
 * Fixed a bug that occurred when loading config from magda. `initializationUrls` are now applied even if `group` aspect is not set
 
 #### 8.0.0-alpha.60
