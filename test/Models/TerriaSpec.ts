@@ -20,6 +20,7 @@ import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGrou
 import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import { buildShareLink } from "../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
+import { BaseMapViewModel } from "../../lib/ViewModels/BaseMapViewModel";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
 
 const mapConfigBasicJson = require("../../wwwroot/test/Magda/map-config-basic.json");
@@ -600,6 +601,36 @@ describe("Terria", function() {
       });
       expect(terria.selectedFeature).toBeDefined();
       expect(terria.selectedFeature?.name).toBe("foo");
+    });
+  });
+
+  describe("updateBaseMaps", function() {
+    let baseMaps: BaseMapViewModel[];
+    beforeEach(function() {
+      baseMaps = [
+        new BaseMapViewModel(new WebMapServiceCatalogItem("baseMap0", terria)),
+        new BaseMapViewModel(new WebMapServiceCatalogItem("baseMap1", terria))
+      ];
+    });
+
+    it("updates the basemaps list", function() {
+      terria.updateBaseMaps(baseMaps);
+      expect(terria.baseMaps).toEqual(baseMaps);
+    });
+
+    describe("automatically setting viewer basemap", function() {
+      it("sets it to the persisted base map if present", function() {
+        spyOn(terria, "getLocalProperty").and.returnValue("baseMap1");
+        terria.updateBaseMaps(baseMaps);
+        expect(terria.mainViewer.baseMap).toBe(baseMaps[1].mappable);
+      });
+
+      it("otherwise, sets it to the default basemap", function() {
+        spyOn(terria, "getLocalProperty").and.returnValue(undefined);
+        terria.configParameters.defaultBaseMapId = "baseMap1";
+        terria.updateBaseMaps(baseMaps);
+        expect(terria.mainViewer.baseMap).toBe(baseMaps[1].mappable);
+      });
     });
   });
 });

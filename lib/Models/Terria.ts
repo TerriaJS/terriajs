@@ -115,6 +115,7 @@ export function makeModelsMagdaCompatible(models: InitModels) {
 interface ConfigParameters {
   [key: string]: ConfigParameters[keyof ConfigParameters];
   appName?: string;
+  defaultBaseMapId?: string;
   supportEmail?: string;
   defaultMaximumShownFeatureInfos?: number;
   regionMappingDefinitionsUrl: string;
@@ -242,6 +243,7 @@ export default class Terria {
   @observable
   readonly configParameters: ConfigParameters = {
     appName: "TerriaJS App",
+    defaultBaseMapId: undefined,
     supportEmail: "info@terria.io",
     defaultMaximumShownFeatureInfos: 100,
     regionMappingDefinitionsUrl: "build/TerriaJS/data/regionMapping.json",
@@ -539,23 +541,41 @@ export default class Terria {
   updateBaseMaps(baseMaps: BaseMapViewModel[]): void {
     this.baseMaps.push(...baseMaps);
     if (!this.mainViewer.baseMap) {
-      this.loadPersistedBaseMap();
+      this.loadPersistedBaseMap() || this.loadDefaultBaseMap();
     }
   }
 
   @action
-  loadPersistedBaseMap(): void {
-    const persistedBaseMapId = this.getLocalProperty("basemap");
+  loadBaseMapById(id: string) {
     const baseMapSearch = this.baseMaps.find(
-      baseMap => baseMap.mappable.uniqueId === persistedBaseMapId
+      baseMap => baseMap.mappable.uniqueId === id
     );
     if (baseMapSearch) {
       this.mainViewer.baseMap = baseMapSearch.mappable;
-    } else {
+      return true;
+    }
+    return false;
+  }
+
+  @action
+  loadPersistedBaseMap(): boolean {
+    const persistedBaseMapId = this.getLocalProperty("basemap");
+    const loaded =
+      typeof persistedBaseMapId === "string" &&
+      this.loadBaseMapById(persistedBaseMapId);
+    if (!loaded) {
       console.error(
         `Couldn't find a basemap for unique id ${persistedBaseMapId}`
       );
     }
+    return loaded;
+  }
+
+  @action
+  loadDefaultBaseMap(): boolean {
+    return this.configParameters.defaultBaseMapId
+      ? this.loadBaseMapById(this.configParameters.defaultBaseMapId)
+      : false;
   }
 
   get isLoadingInitSources(): boolean {
