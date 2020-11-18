@@ -75,6 +75,43 @@ import ViewerMode from "./ViewerMode";
 import Workbench from "./Workbench";
 // import overrides from "../Overrides/defaults.jsx";
 
+interface InitModels {
+  [key: string]: {
+    [key: string]: JsonValue;
+    knownContainerUniqueIds: string[];
+  };
+}
+/**
+ * This is a short term gap to addresing the issue of old share links being
+ * generated with a record similar to `map-config` in its share data, but
+ * newer-Terria forcing the root record to an ID of `/` for a consistent
+ * approach to the root record
+ *
+ * The hardcode approach - it will check for any `knownContainerUniqueIds` for
+ * each model, and add an entry for `/` if it detects `map-config-*`
+ */
+export function makeModelsMagdaCompatible(models: InitModels) {
+  return Object.entries(models).reduce((acc: any, current) => {
+    const key = current[0];
+    const value = current[1];
+    const hasMapConfig =
+      value.knownContainerUniqueIds &&
+      value.knownContainerUniqueIds.find(
+        value => value.indexOf("map-config") !== -1
+      );
+    const improvedKnownContainerUniqueIds = hasMapConfig
+      ? [...value.knownContainerUniqueIds, "/"]
+      : value.knownContainerUniqueIds;
+
+    acc[key] = {
+      ...value,
+      knownContainerUniqueIds: improvedKnownContainerUniqueIds
+    };
+
+    return acc;
+  }, {});
+}
+
 interface ConfigParameters {
   [key: string]: ConfigParameters[keyof ConfigParameters];
   appName?: string;
@@ -804,8 +841,10 @@ export default class Terria {
 
     const models = initData.models;
     if (isJsonObject(models)) {
+      const modelsTyped = <InitModels>models;
+      const magdaCompatibleModels = makeModelsMagdaCompatible(modelsTyped);
       promise = Promise.all(
-        Object.keys(models).map(modelId => {
+        Object.keys(magdaCompatibleModels).map(modelId => {
           return this.loadModelStratum(
             modelId,
             stratumId,
@@ -827,8 +866,6 @@ export default class Terria {
         if (isJsonString(initData.previewedItemId)) {
           this.previewedItemId = initData.previewedItemId;
         }
-
-        const promises: Promise<void>[] = [];
 
         // Set the new contents of the workbench.
         const newItems = filterOutUndefined(
@@ -857,18 +894,18 @@ export default class Terria {
           .map(item => <TimeVarying>item);
 
         // Load the items on the workbench
-        for (let model of newItems) {
-          if (ReferenceMixin.is(model)) {
-            promises.push(model.loadReference());
-            model = model.target || model;
-          }
+        return Promise.all(
+          newItems.map(async model => {
+            if (ReferenceMixin.is(model)) {
+              await model.loadReference();
+              model = model.target || model;
+            }
 
-          if (Mappable.is(model)) {
-            promises.push(model.loadMapItems());
-          }
-        }
-
-        return Promise.all(promises).then(() => undefined);
+            if (Mappable.is(model)) {
+              await model.loadMapItems();
+            }
+          })
+        ).then(() => undefined);
       });
     });
 
@@ -934,24 +971,20 @@ export default class Terria {
       reference.setTrait(CommonStrata.definition, "url", magdaRoot);
       reference.setTrait(CommonStrata.definition, "recordId", id);
       reference.setTrait(CommonStrata.definition, "magdaRecord", config);
-      await reference.loadReference().then(() => {
-        if (reference.target instanceof CatalogGroup) {
-          runInAction(() => {
-            this.catalog.group = <CatalogGroup>reference.target;
-          });
-        }
-        this.setupInitializationUrls(
-          baseUri,
-          config.aspects?.["terria-config"]
-        );
-        /** Load up rest of terria catalog if one is inlined in terria-init */
-        if (config.aspects?.["terria-init"]) {
-          const { catalog, ...rest } = initObj;
-          this.initSources.push({
-            data: {
-              catalog: catalog
-            }
-          });
+      await reference.loadReference();
+      if (reference.target instanceof CatalogGroup) {
+        runInAction(() => {
+          this.catalog.group = <CatalogGroup>reference.target;
+        });
+      }
+    }
+    this.setupInitializationUrls(baseUri, config.aspects?.["terria-config"]);
+    /** Load up rest of terria catalog if one is inlined in terria-init */
+    if (config.aspects?.["terria-init"]) {
+      const { catalog, ...rest } = initObj;
+      this.initSources.push({
+        data: {
+          catalog: catalog
         }
       });
     }
