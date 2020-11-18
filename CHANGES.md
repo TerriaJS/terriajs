@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.62)
+* Update doc on magda data type.
 
 #### 8.0.0-alpha.61
 * New `CatalogFunctionMixin` and `CatalogFunctionJobMixin`
@@ -41,6 +42,8 @@ Change Log
 * Add `ThreddsCatalogGroup` model.
 * Port `supportsColorScaleRange`, `colorScaleMinimum` and `colorScaleMaximimum` from `master` to `WebMapServiceCatalogItem` model.
 * Ported MapboxVectorTileCatalogItem ("mvt").
+* Add doc on magda data type.
+* [The next improvement]
 * When expanding a chart from the feature info panel, we now place a colored dot on the map where the chart was generated from.
 * Add basic routing support
 * Add better page titles when on various routes of the application

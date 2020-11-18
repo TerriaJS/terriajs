@@ -50,7 +50,8 @@ Then, the parent window can send messages like this:
                                         }
                                     ]
                                 }
-                            ]
+                            ],
+                            workbench: ["//Foo"]
                         }
                     ]
                 }, 'http://nationalmap.gov.au');
@@ -61,4 +62,6 @@ Then, the parent window can send messages like this:
 </html>
 ```
 
-Notice that parent is creating a CSV catalog item with embedded data.  The CSV is only two lines in this case, but in a real application it could be large, much larger than could fit in a URL.
+Notice that parent is creating a CSV catalog item with embedded data.  The CSV is only two lines in this case, but in a real application it could be large, much larger than could fit in a URL. The element of `workbench` array is the value of catalog item `name` prepended with "//".
+
+Each element in the array of `catalog` must match its `type`. Check [documents](../connecting-to-data/catalog-type-details) for details. For example, if an item has the `type` of `magda`, the `initSources` will be quite different. See [here](../connecting-to-data/catalog-type-details/magda-distribution.md).
