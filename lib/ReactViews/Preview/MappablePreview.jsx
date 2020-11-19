@@ -37,6 +37,7 @@ class MappablePreview extends React.Component {
   };
 
   async toggleOnMap(event) {
+    console.log(this);
     if (defined(this.props.viewState.storyShown)) {
       runInAction(() => (this.props.viewState.storyShown = false));
     }
@@ -89,7 +90,7 @@ class MappablePreview extends React.Component {
         </If>
         <button
           type="button"
-          onClick={this.toggleOnMap}
+          onClick={this.toggleOnMap.bind(this)}
           className={Styles.btnAdd}
         >
           {this.props.terria.workbench.contains(catalogItem)
