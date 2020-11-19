@@ -21,7 +21,6 @@ const MetadataTable = createReactClass({
     const keys = Object.keys(metadataItem);
     const isArr = isArrayLike(metadataItem);
     if (keys.length === 0 && !isArr) return null;
-
     return (
       <div className={Styles.root}>
         <table>
@@ -33,7 +32,9 @@ const MetadataTable = createReactClass({
                     metadataItem.length > 0 && isJoinable(metadataItem)
                   }
                 >
-                  {metadataItem.join(", ")}
+                  <tr>
+                    <td>{metadataItem.join(", ")}</td>
+                  </tr>
                 </If>
               </When>
               <When condition={keys.length > 0 && !isArr}>
