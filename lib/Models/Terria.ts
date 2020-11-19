@@ -44,6 +44,7 @@ import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
 import { defaultTerms, Term } from "../ReactViewModels/defaultTerms";
 import { Notification } from "../ReactViewModels/ViewState";
 import { shareConvertNotification } from "../ReactViews/Notification/shareConvertNotification";
+import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
 import ShowableTraits from "../Traits/ShowableTraits";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
@@ -882,7 +883,13 @@ export default class Terria {
           })
         );
 
-        this.workbench.items = newItems;
+        // Items marked with `showInWorkbenchOnLoad` also need to be added to the workbench
+        const itemsToShowInWorkbenchOnLoad = [...this.models.values()].filter(
+          m =>
+            hasTraits(m, CatalogMemberTraits, "showInWorkbenchOnLoad") &&
+            m.showInWorkbenchOnLoad
+        );
+        this.workbench.items = newItems.concat(itemsToShowInWorkbenchOnLoad);
 
         // TODO: the timelineStack should be populated from the `timeline` property,
         // not from the workbench.
@@ -895,7 +902,7 @@ export default class Terria {
 
         // Load the items on the workbench
         return Promise.all(
-          newItems.map(async model => {
+          this.workbench.items.map(async model => {
             if (ReferenceMixin.is(model)) {
               await model.loadReference();
               model = model.target || model;

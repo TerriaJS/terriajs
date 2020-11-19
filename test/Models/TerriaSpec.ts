@@ -4,6 +4,7 @@ import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import hashEntity from "../../lib/Core/hashEntity";
 import PickedFeatures from "../../lib/Map/PickedFeatures";
+import CatalogMemberMixin from "../../lib/ModelMixins/CatalogMemberMixin";
 import CameraView from "../../lib/Models/CameraView";
 import Cesium from "../../lib/Models/Cesium";
 import CommonStrata from "../../lib/Models/CommonStrata";
@@ -530,6 +531,36 @@ describe("Terria", function() {
         });
         expect(terria.pickedFeatures).toBeDefined();
         expect(terria.selectedFeature).toBeDefined();
+      });
+    });
+
+    fdescribe("items marked `showInWorkbenchOnLoad`", function() {
+      it("adds them to the workbench", async function() {
+        try {
+          await terria.applyInitData({
+            initData: {
+              catalog: [
+                {
+                  type: "csv",
+                  name: "Shown in workbench",
+                  showInWorkbenchOnLoad: true,
+                  csvString: ""
+                },
+                {
+                  type: "csv",
+                  name: "Not shown in workbench",
+                  csvString: ""
+                }
+              ]
+            }
+          });
+        } catch {}
+        expect(terria.workbench.items.length).toBe(1);
+        const item = terria.workbench.items[0];
+        expect(CatalogMemberMixin.isMixedInto(item)).toBe(true);
+        if (CatalogMemberMixin.isMixedInto(item)) {
+          expect(item.name).toBe("Shown in workbench");
+        }
       });
     });
   });

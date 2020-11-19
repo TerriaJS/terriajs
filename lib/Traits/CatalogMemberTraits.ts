@@ -158,4 +158,12 @@ export default class CatalogMemberTraits extends ModelTraits {
       "Indicates that the source of this data should be hidden from the UI (obviously this isn't super-secure as you can just look at the network requests)."
   })
   hideSource: boolean = false;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Show in workbench on load",
+    description:
+      "If true, this item will be shown in the workbench when the init file is loaded"
+  })
+  showInWorkbenchOnLoad: boolean = false;
 }

@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.62)
+* Added trait `showInWorkbenchOnload` for all catalog members which adds the item to the workbench when the init file is loaded. This is equivalent to the property `isEnabled` in the v7.
 
 #### 8.0.0-alpha.61
 * New `CatalogFunctionMixin` and `CatalogFunctionJobMixin`
