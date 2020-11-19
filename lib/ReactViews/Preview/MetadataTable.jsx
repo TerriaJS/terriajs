@@ -21,6 +21,7 @@ const MetadataTable = createReactClass({
     const keys = Object.keys(metadataItem);
     const isArr = isArrayLike(metadataItem);
     if (keys.length === 0 && !isArr) return null;
+
     return (
       <div className={Styles.root}>
         <table>
