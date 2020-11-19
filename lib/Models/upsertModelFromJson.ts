@@ -32,10 +32,7 @@ export default function upsertModelFromJson(
       uniqueId = (parentId || "") + "/" + localId;
     }
 
-    if (uniqueId === "//Policy Analyst/State Electoral Divisions (2018)") {
-      var somevar = 1;
-    }
-
+    // To handle duplicate items, e.g. same item in different tabs
     uniqueId = incrementIfAlreadyExists(uniqueId, terria);
 
     model = terria.getModelById(BaseModel, uniqueId);
