@@ -534,7 +534,7 @@ describe("Terria", function() {
       });
     });
 
-    fdescribe("items marked `showInWorkbenchOnLoad`", function() {
+    describe("items marked `showInWorkbenchOnLoad`", function() {
       it("adds them to the workbench", async function() {
         try {
           await terria.applyInitData({
