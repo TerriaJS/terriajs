@@ -5,6 +5,9 @@ Change Log
 
 #### next release (8.0.0-alpha.62)
 * Fixed an issue with not loading the base map from init file and an issue with viewerMode from init files overriding the persisted viewerMode
+* Now uses `catalog-converter` to convert terriajs json in WPS response from v7 to v8.
+* Fixed a bug in `UserDrawing` which caused points to not be plotted on the map.
+* Fixed app crash when switching between different types of parameter in `GeoJsonParameterEditor`.
 * [The next improvement]
 
 #### 8.0.0-alpha.61
