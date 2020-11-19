@@ -29,15 +29,14 @@ export default function upsertModelFromJson(
         });
       }
 
-      let id = (parentId || "") + "/" + localId;
-      let idIncrement = 1;
-      uniqueId = id;
-
-      while (terria.getModelById(BaseModel, uniqueId) !== undefined) {
-        uniqueId = id + "(" + idIncrement + ")";
-        idIncrement++;
-      }
+      uniqueId = (parentId || "") + "/" + localId;
     }
+
+    if (uniqueId === "//Policy Analyst/State Electoral Divisions (2018)") {
+      var somevar = 1;
+    }
+
+    uniqueId = incrementIfAlreadyExists(uniqueId, terria);
 
     model = terria.getModelById(BaseModel, uniqueId);
     if (model === undefined) {
@@ -79,4 +78,20 @@ export default function upsertModelFromJson(
     model.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
   }
   return model;
+}
+
+function incrementIfAlreadyExists(baseId: string, terria: Terria) {
+  const model = terria.getModelById(BaseModel, baseId);
+  if (model === undefined) return baseId;
+
+  let resultingId;
+  let currentId = baseId;
+  let idIncrement = 1;
+
+  while (terria.getModelById(BaseModel, currentId) !== undefined) {
+    currentId = baseId + "(" + idIncrement + ")";
+    resultingId = currentId;
+    idIncrement++;
+  }
+  return resultingId;
 }
