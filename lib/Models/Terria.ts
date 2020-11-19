@@ -287,6 +287,8 @@ export default class Terria {
   @observable
   baseMaps: BaseMapViewModel[] = [];
 
+  initBaseMapId: string | undefined;
+
   @observable
   pickedFeatures: PickedFeatures | undefined;
 
@@ -508,10 +510,12 @@ export default class Terria {
         if (this.shareDataService && this.serverConfig.config) {
           this.shareDataService.init(this.serverConfig.config);
         }
-        this.loadPersistedMapSettings();
         if (options.applicationUrl) {
           return this.updateApplicationUrl(options.applicationUrl.href);
         }
+      })
+      .then(() => {
+        this.loadPersistedMapSettings();
       });
   }
 
@@ -540,12 +544,12 @@ export default class Terria {
   updateBaseMaps(baseMaps: BaseMapViewModel[]): void {
     this.baseMaps.push(...baseMaps);
     if (!this.mainViewer.baseMap) {
-      this.loadPersistedBaseMap();
+      this.loadPersistedOrInitBaseMap();
     }
   }
 
   @action
-  loadPersistedBaseMap(): void {
+  loadPersistedOrInitBaseMap(): void {
     const persistedBaseMapId = this.getLocalProperty("basemap");
     const baseMapSearch = this.baseMaps.find(
       baseMap => baseMap.mappable.uniqueId === persistedBaseMapId
@@ -554,8 +558,14 @@ export default class Terria {
       this.mainViewer.baseMap = baseMapSearch.mappable;
     } else {
       console.error(
-        `Couldn't find a basemap for unique id ${persistedBaseMapId}`
+        `Couldn't find a basemap for unique id ${persistedBaseMapId}. Trying to load init base map.`
       );
+      const baseMapSearch = this.baseMaps.find(
+        baseMap => baseMap.mappable.uniqueId === this.initBaseMapId
+      );
+      if (baseMapSearch) {
+        this.mainViewer.baseMap = baseMapSearch.mappable;
+      }
     }
   }
 
@@ -809,6 +819,10 @@ export default class Terria {
           this.mainViewer.viewerMode = ViewerMode.Leaflet;
           break;
       }
+    }
+
+    if (isJsonString(initData.baseMapId)) {
+      this.initBaseMapId = initData.baseMapId;
     }
 
     if (isJsonObject(initData.homeCamera)) {
