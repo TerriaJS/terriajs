@@ -11,8 +11,9 @@ import { withTranslation } from "react-i18next";
 
 import Styles from "./tabs.scss";
 import { observer } from "mobx-react";
-import { runInAction } from "mobx";
+import { runInAction, action } from "mobx";
 import Mappable from "../../Models/Mappable";
+import openGroup from "../../Models/openGroup.ts";
 
 const Tabs = observer(
   createReactClass({
@@ -66,7 +67,7 @@ const Tabs = observer(
               name: member.nameInCatalog,
               title: `data-catalog-${member.name}`,
               category: "data-catalog",
-              idInCategory: member.name,
+              idInCategory: member.uniqueId,
               panel: (
                 <DataCatalogTab
                   terria={this.props.terria}
@@ -105,14 +106,15 @@ const Tabs = observer(
           this.props.viewState.activeTabIdInCategory = idInCategory;
           if (category === "data-catalog") {
             const member = this.props.terria.catalog.group.memberModels.filter(
-              m => m.name === idInCategory
+              m => m.uniqueId === idInCategory
             )[0];
             // If member was found and member can be opened, open it (causes CkanCatalogGroups to fetch etc.)
             if (defined(member)) {
-              if (member.toggleOpen) {
-                member.isOpen = true;
-              }
-              this.props.viewState.previewedItem = member;
+              openGroup(member).finally(
+                action(() => {
+                  this.props.viewState.previewedItem = member;
+                })
+              );
             }
           }
         }

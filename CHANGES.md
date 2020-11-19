@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.62)
 * Fixed an issue with not loading the base map from init file and an issue with viewerMode from init files overriding the persisted viewerMode
+* Fixed erros when switching explorer tabs.
 * [The next improvement]
 
 #### 8.0.0-alpha.61
