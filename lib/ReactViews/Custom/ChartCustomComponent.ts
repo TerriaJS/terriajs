@@ -23,6 +23,7 @@ import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import ChartPointOnMapTraits from "../../Traits/ChartPointOnMapTraits";
 import LatLonHeightTraits from "../../Traits/LatLonHeightTraits";
 import createStratumInstance from "../../Models/createStratumInstance";
+import ModelTraits from "../../Traits/ModelTraits";
 
 export interface ChartCustomComponentAttributes {
   /**  The title of the chart.  If not supplied, defaults to the name of the context-supplied feature, if available, or else simply "Chart". */
@@ -211,7 +212,6 @@ export default abstract class ChartCustomComponent<
 
     checkAllPropertyKeys(node.attribs, this.attributes);
 
-    const chartDisclaimer = (context.catalogItem as any).chartDisclaimer;
     const featurePosition = getFeaturePosition(context.feature);
 
     const attrs = this.parseNodeAttrs(node.attribs);
@@ -231,22 +231,9 @@ export default abstract class ChartCustomComponent<
 
           return Promise.resolve(itemOrPromise).then(item => {
             if (item) {
+              this.setTraitsFromParent(item, context.catalogItem);
               this.setTraitsFromAttrs(item, attrs, i);
               body && this.setTraitsFromBody?.(item, body);
-              if (
-                hasTraits(
-                  item,
-                  DiscretelyTimeVaryingTraits,
-                  "chartDisclaimer"
-                ) &&
-                chartDisclaimer !== undefined
-              ) {
-                item.setTrait(
-                  CommonStrata.definition,
-                  "chartDisclaimer",
-                  chartDisclaimer
-                );
-              }
 
               if (
                 featurePosition &&
@@ -281,19 +268,9 @@ export default abstract class ChartCustomComponent<
     // Build chart item to show in the info panel
     const chartItem = this.constructCatalogItem(undefined, context, undefined);
     runInAction(() => {
+      this.setTraitsFromParent(chartItem, context.catalogItem);
       this.setTraitsFromAttrs(chartItem, attrs, 0);
       body && this.setTraitsFromBody?.(chartItem, body);
-
-      if (
-        hasTraits(chartItem, DiscretelyTimeVaryingTraits, "chartDisclaimer") &&
-        chartDisclaimer !== undefined
-      ) {
-        chartItem.setTrait(
-          CommonStrata.definition,
-          "chartDisclaimer",
-          chartDisclaimer
-        );
-      }
     });
 
     chartElements.push(
@@ -340,6 +317,23 @@ export default abstract class ChartCustomComponent<
    * @param sourceIndex
    */
   protected setTraitsFromBody?: (item: CatalogItemType, body: string) => void;
+
+  protected setTraitsFromParent(
+    chartItem: CatalogItemType,
+    parentItem: BaseModel
+  ) {
+    if (
+      hasTraits(chartItem, DiscretelyTimeVaryingTraits, "chartDisclaimer") &&
+      hasTraits(parentItem, DiscretelyTimeVaryingTraits, "chartDisclaimer") &&
+      parentItem.chartDisclaimer !== undefined
+    ) {
+      chartItem.setTrait(
+        CommonStrata.user,
+        "chartDisclaimer",
+        parentItem.chartDisclaimer
+      );
+    }
+  }
 
   /**
    * Is this node the first column of a two-column table where the second

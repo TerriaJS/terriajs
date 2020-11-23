@@ -1,26 +1,26 @@
-import Terria from "../../lib/Models/Terria";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import ViewState from "../../lib/ReactViewModels/ViewState";
-import { buildShareLink } from "../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
-import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGroup";
-import openGroup from "../../lib/Models/openGroup";
-import { BaseModel } from "../../lib/Models/Model";
-import { action, runInAction } from "mobx";
+import { runInAction } from "mobx";
+import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import hashEntity from "../../lib/Core/hashEntity";
+import PickedFeatures from "../../lib/Map/PickedFeatures";
+import CameraView from "../../lib/Models/CameraView";
+import Cesium from "../../lib/Models/Cesium";
+import CommonStrata from "../../lib/Models/CommonStrata";
+import Feature from "../../lib/Models/Feature";
+import { isInitData, isInitUrl } from "../../lib/Models/InitSource";
+import MagdaReference from "../../lib/Models/MagdaReference";
+import { BaseModel } from "../../lib/Models/Model";
+import openGroup from "../../lib/Models/openGroup";
+import Terria, { makeModelsMagdaCompatible } from "../../lib/Models/Terria";
 import UrlReference, {
   UrlToCatalogMemberMapping
 } from "../../lib/Models/UrlReference";
+import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGroup";
+import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+import ViewState from "../../lib/ReactViewModels/ViewState";
+import { buildShareLink } from "../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
-import PickedFeatures from "../../lib/Map/PickedFeatures";
-import Feature from "../../lib/Models/Feature";
-import Cesium from "../../lib/Models/Cesium";
-import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import hashEntity from "../../lib/Core/hashEntity";
-import { isInitUrl, isInitData } from "../../lib/Models/InitSource";
-import CameraView from "../../lib/Models/CameraView";
-import MagdaReference from "../../lib/Models/MagdaReference";
 
 const mapConfigBasicJson = require("../../wwwroot/test/Magda/map-config-basic.json");
 const mapConfigBasicString = JSON.stringify(mapConfigBasicJson);
@@ -37,6 +37,49 @@ describe("Terria", function() {
   beforeEach(function() {
     terria = new Terria({
       baseUrl: "./"
+    });
+  });
+
+  describe("makeModelsMagdaCompatible", function() {
+    it("should return models", function() {
+      const models = {
+        foo: {
+          knownContainerUniqueIds: ["mochi-is-fluffy"]
+        },
+        bar: {
+          knownContainerUniqueIds: ["neko-is-hungry"]
+        },
+        cat: {
+          knownContainerUniqueIds: [""]
+        }
+      };
+      expect(makeModelsMagdaCompatible(models)).toEqual(models);
+    });
+
+    it("should inject `/` to `knownContainerUniqueIds` if map-config exists", function() {
+      const models = {
+        foo: {
+          knownContainerUniqueIds: ["map-config"]
+        },
+        bar: {
+          knownContainerUniqueIds: ["map-config-another"]
+        },
+        cat: {
+          knownContainerUniqueIds: ["bar"]
+        }
+      };
+      const expected = {
+        foo: {
+          knownContainerUniqueIds: ["map-config", "/"]
+        },
+        bar: {
+          knownContainerUniqueIds: ["map-config-another", "/"]
+        },
+        cat: {
+          knownContainerUniqueIds: ["bar"]
+        }
+      };
+      expect(makeModelsMagdaCompatible(models)).toEqual(expected);
     });
   });
 
@@ -529,7 +572,7 @@ describe("Terria", function() {
       const entity = new Entity({ name: "foo" });
       ds.entities.add(entity);
       testItem.mapItems = [ds];
-      terria.workbench.add(testItem);
+      await terria.workbench.add(testItem);
       // It is irrelevant what we pass as argument for `clock` param because
       // the current implementation of `hashEntity` is broken because as it
       // expects a `Clock` but actually uses it as a `JulianDate`
