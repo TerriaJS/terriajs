@@ -143,9 +143,9 @@ const MobileHeader = createReactClass({
                 </button> */}
 
                 <RCMenuBar terria={terria} viewState={this.props.viewState} />
-                <If condition={!isHotspotsFiltered}>
+                {/* <If condition={!isHotspotsFiltered}>
                   <Branding terria={terria} version={version} />
-                </If>
+                </If> */}
               </div>
               {/*  <div className={Styles.groupRight}>
                   <button

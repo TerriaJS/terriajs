@@ -63,10 +63,12 @@ const HotspotSummary = createReactClass({
           >
             <div>
               <div className={Styles["microstory-title"]}>
-                {microstory["micro-story-title"]}
+                {" "}
+                {microstory["micro-story-title"]}{" "}
               </div>
               <div className={Styles["microstory-desc"]}>
-                {microstory["micro-story-desc"]}
+                {" "}
+                {microstory["micro-story-desc"]}{" "}
               </div>
             </div>
           </div>

@@ -4,9 +4,9 @@ import classNames from "classnames";
 import Icon from "../Icon.jsx";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 import PropTypes from "prop-types";
-
+import Branding from "../SidePanel/Branding";
 const RCMenuBar = props => {
-  const { viewState } = props;
+  const { viewState, terria } = props;
   const [showButton, setShowButton] = useState(false);
 
   useEffect(() => {
@@ -32,6 +32,9 @@ const RCMenuBar = props => {
       )}
     >
       <ul className={Styles.menu}>
+        <li className={Styles.menuItem}>
+          <Branding terria={terria} />
+        </li>
         <If condition={showButton}>
           <li className={Styles.menuItem}>
             <button

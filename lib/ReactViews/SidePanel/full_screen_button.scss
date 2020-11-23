@@ -5,9 +5,6 @@
   position: absolute;
   z-index: 79;
 }
-
-.toggleButton {
-}
 .toggleWorkbench {
   display: none;
 }
@@ -16,6 +13,9 @@
   // work bench width
   top: $map-button-top;
   right: $work-bench-width;
+  @media screen and (min-width: $xs + 1) and (max-width: $sm) {
+    right: $max-work-bench-width;
+  }
 }
 
 .btn {

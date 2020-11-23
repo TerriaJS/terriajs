@@ -2698,6 +2698,48 @@
                 159.10921900799997,
                 -9.142175976999999
             ]
-        }
+        },
+        "ARGENTINA_ADM2": {
+            "layerName": "ARGENTINA_ADM2",
+            "server": "https://tiles.climateimpactstories.eu/ARGENTINA_ADM2/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMinZoom": 0,
+            "serverMaxZoom": 28,
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-ARGENTINA_ADM2_ARGENTINA_ADM2.json",
+            "regionProp": "ADM2_PCODE",
+            "nameProp": "ADM2_REF",
+            "aliases": [
+              "ADM2_PCODE"
+            ],
+            "description": "Argentina ADM2 level",
+            "bbox": [
+              -77.4,
+              -57.6,
+              -51.4,
+              -19.4
+            ]
+          },
+          "EU_NUTS_ADM2": {
+            "layerName": "EU_NUTS_ADM2",
+            "server": "https://tiles.climateimpactstories.eu/EU_NUTS_ADM2/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMinZoom": 0,
+            "serverMaxZoom": 28,
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-EU_NUTS_ADM2_EU_NUTS_ADM2.json",
+            "regionProp": "NUTS_ID",
+            "nameProp": "NUTS_NAME",
+            "aliases": [
+              "eu_nuts_level_2"
+            ],
+            "description": "European Union ADM2 level",
+            "bbox": [
+              -26.4,
+              24.3,
+              49,
+              72.5
+            ]
+          }
     }
 }

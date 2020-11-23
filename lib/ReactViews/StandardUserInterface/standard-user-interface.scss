@@ -53,12 +53,14 @@
   background-image: $side-panel-background-image;
   // background: $dark-blue;
   width: $work-bench-width;
-  flex-basis: $work-bench-width;
-  max-width: $work-bench-width;
+  max-width: $max-work-bench-width;
   box-sizing: border-box;
   box-shadow: $box-shadow-bigger;
   h1 {
     margin: 0;
+  }
+  @media screen and (min-width: $xs + 1) and (max-width: $sm) {
+    width: $max-work-bench-width;
   }
 }
 .middleContainer {
@@ -71,8 +73,7 @@
 }
 .map {
   @include transition(left $animation-fast ease-in);
-  height: calc(35vh - 50px);
-
+  flex: 1;
   @media (min-width: $sm) {
     position: absolute;
     left: 0;
@@ -85,32 +86,31 @@
     height: 100%;
   }
 }
-.smallMap {
-  //height: 300px;
-}
 .storyPanelWrapper {
-  height: calc(100vh - 128px);
-
-  @media (max-width: $sm) {
+  @media (max-width: $sm) and (orientation: portrait) {
     background: $side-panel-background-image;
     box-shadow: $box-shadow-bigger;
     z-index: 10;
+    height: 60%;
   }
 
   @media (orientation: landscape) {
     flex: 1;
-    height: 100vh;
   }
 }
 .tabsContainer {
   background: $side-panel-background-image;
   box-shadow: $box-shadow-bigger;
   z-index: 10;
-  height: calc(60vh - 44px);
-
+  @media (max-width: $sm) and (orientation: portrait) {
+    height: 60%;
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+  }
   @media (orientation: landscape) {
     flex: 1;
-    height: calc(100vh - 125px);
+    height: 100vh;
   }
 }
 .feedback {
@@ -177,7 +177,6 @@
   visibility: visible;
   box-shadow: $box-shadow-bigger;
   z-index: 10;
-  padding: 16px;
 }
 
 .sidePanelHide {
@@ -214,8 +213,6 @@
 }
 
 @media (min-width: $sm) {
-  .ui {
-  }
   .uiInner {
     display: flex;
     overflow: hidden;
