@@ -258,6 +258,34 @@ function DiscretelyTimeVaryingMixin<
       return time;
     }
 
+    /**
+     * Try to calculate a multiplier which results in a new time step every {this.multiplierDefaultDeltaStep} seconds. For example, if {this.multiplierDefaultDeltaStep = 5} it would set the `multiplier` so that a new time step (of this dataset) would appear every five seconds (on average) if the timeline is playing.
+     */
+    @computed
+    get multiplier() {
+      if (super.multiplier) return super.multiplier;
+
+      if (
+        !isDefined(this.startTimeAsJulianDate) ||
+        !isDefined(this.stopTimeAsJulianDate) ||
+        !isDefined(this.multiplierDefaultDeltaStep)
+      )
+        return;
+
+      const dSeconds =
+        (this.stopTimeAsJulianDate.dayNumber -
+          this.startTimeAsJulianDate.dayNumber) *
+          24 *
+          60 *
+          60 +
+        this.stopTimeAsJulianDate.secondsOfDay -
+        this.startTimeAsJulianDate.secondsOfDay;
+      const meanDSeconds =
+        dSeconds / this.discreteTimesAsSortedJulianDates!.length;
+
+      return meanDSeconds / this.multiplierDefaultDeltaStep;
+    }
+
     @action
     moveToPreviousDiscreteTime(stratumId: string) {
       const index = this.previousDiscreteTimeIndex;

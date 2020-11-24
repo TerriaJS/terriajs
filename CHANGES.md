@@ -4,8 +4,11 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.62)
-* Fixed an issue with not loading the base map from init file and an issue with viewerMode from init files overriding the persisted viewerMode
 * Fixed errors when previewing an item in a group that is open by default (`isOpen: true` in init file).
+* Fixed mobx warnings when loading geojson catalog items.
+* Add `multiplierDefaultDeltaStep` Trait, which tries to calculate sensible multiplier for `DistrectelyTimeVarying` datasets. By default it is set to 2, which results in a new timestep being displayed every 2 seconds (on average) if timeline is playing.
+* Fixed an issue with not loading the base map from init file and an issue with viewerMode from init files overriding the persisted viewerMode.
+* Hide info sections with empty content in the explorer preview.
 * [The next improvement]
 
 #### 8.0.0-alpha.61
