@@ -34,7 +34,7 @@ export default abstract class GlobeOrMap {
   abstract readonly terria: Terria;
   protected static _featureHighlightName = "___$FeatureHighlight&__";
 
-  private _removeHighlightCallback?: () => void;
+  private _removeHighlightCallback?: () => Promise<void> | void;
   private _highlightPromise: Promise<void> | undefined;
   private _tilesLoadingCountMax: number = 0;
   protected supportsPolylinesOnTerrain?: boolean;
@@ -158,9 +158,9 @@ export default abstract class GlobeOrMap {
     rectangle: Rectangle
   ): () => void;
 
-  _highlightFeature(feature: Feature | undefined) {
+  async _highlightFeature(feature: Feature | undefined) {
     if (isDefined(this._removeHighlightCallback)) {
-      this._removeHighlightCallback();
+      await this._removeHighlightCallback();
       this._removeHighlightCallback = undefined;
       this._highlightPromise = undefined;
     }
@@ -331,12 +331,13 @@ export default abstract class GlobeOrMap {
               if (!isDefined(this._highlightPromise)) {
                 return;
               }
-              this._highlightPromise
+              return this._highlightPromise
                 .then(() => {
                   if (removeCallback !== this._removeHighlightCallback) {
                     return;
                   }
                   catalogItem.setTrait(CommonStrata.user, "show", false);
+                  this.terria.overlays.remove(catalogItem);
                 })
                 .catch(function() {});
             });
@@ -346,6 +347,7 @@ export default abstract class GlobeOrMap {
                 return;
               }
               catalogItem.setTrait(CommonStrata.user, "show", true);
+              this.terria.overlays.add(catalogItem);
             });
           }
         }

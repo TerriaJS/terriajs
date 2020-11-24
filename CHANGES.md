@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.62)
 * Fixed an issue with not loading the base map from init file and an issue with viewerMode from init files overriding the persisted viewerMode
+* Fixed broken feature highlighting for raster layers.
 * [The next improvement]
 
 #### 8.0.0-alpha.61
