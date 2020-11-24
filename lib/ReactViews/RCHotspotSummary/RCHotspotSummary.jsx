@@ -17,7 +17,7 @@ const HotspotSummary = createReactClass({
   openStory(paramsUrl) {
     const storyParams =
       (paramsUrl.story && paramsUrl) ||
-      this.props.viewState.selectedHotspot?.["_story-id"]?._value;
+      this.props.viewState.selectedHotspot?.["_rc-story"]?._value;
     if (storyParams) {
       launchStory(storyParams, this.props.terria).then(() => {
         this.props.viewState.storyBuilderShown = false;
@@ -59,7 +59,7 @@ const HotspotSummary = createReactClass({
             key={microstory["micro-story-title"]}
             className={Styles["microstory-card"]}
             style={imgStyle}
-            onClick={() => this.openStory(microstory["story-id"])}
+            onClick={() => this.openStory(microstory["rc-story"])}
           >
             <div>
               <div className={Styles["microstory-title"]}>
