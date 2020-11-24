@@ -286,6 +286,8 @@ export default class Terria {
   @observable
   baseMaps: BaseMapViewModel[] = [];
 
+  initBaseMapId: string | undefined;
+
   @observable
   pickedFeatures: PickedFeatures | undefined;
 
@@ -507,10 +509,12 @@ export default class Terria {
         if (this.shareDataService && this.serverConfig.config) {
           this.shareDataService.init(this.serverConfig.config);
         }
-        this.loadPersistedMapSettings();
         if (options.applicationUrl) {
           return this.updateApplicationUrl(options.applicationUrl.href);
         }
+      })
+      .then(() => {
+        this.loadPersistedMapSettings();
       });
   }
 
@@ -539,12 +543,12 @@ export default class Terria {
   updateBaseMaps(baseMaps: BaseMapViewModel[]): void {
     this.baseMaps.push(...baseMaps);
     if (!this.mainViewer.baseMap) {
-      this.loadPersistedBaseMap();
+      this.loadPersistedOrInitBaseMap();
     }
   }
 
   @action
-  loadPersistedBaseMap(): void {
+  loadPersistedOrInitBaseMap(): void {
     const persistedBaseMapId = this.getLocalProperty("basemap");
     const baseMapSearch = this.baseMaps.find(
       baseMap => baseMap.mappable.uniqueId === persistedBaseMapId
@@ -553,8 +557,14 @@ export default class Terria {
       this.mainViewer.baseMap = baseMapSearch.mappable;
     } else {
       console.error(
-        `Couldn't find a basemap for unique id ${persistedBaseMapId}`
+        `Couldn't find a basemap for unique id ${persistedBaseMapId}. Trying to load init base map.`
       );
+      const baseMapSearch = this.baseMaps.find(
+        baseMap => baseMap.mappable.uniqueId === this.initBaseMapId
+      );
+      if (baseMapSearch) {
+        this.mainViewer.baseMap = baseMapSearch.mappable;
+      }
     }
   }
 
@@ -810,6 +820,10 @@ export default class Terria {
       }
     }
 
+    if (isJsonString(initData.baseMapId)) {
+      this.initBaseMapId = initData.baseMapId;
+    }
+
     if (isJsonObject(initData.homeCamera)) {
       this.loadHomeCamera(initData.homeCamera);
     }
@@ -867,8 +881,6 @@ export default class Terria {
           this.previewedItemId = initData.previewedItemId;
         }
 
-        const promises: Promise<void>[] = [];
-
         // Set the new contents of the workbench.
         const newItems = filterOutUndefined(
           workbench.map(modelId => {
@@ -896,18 +908,18 @@ export default class Terria {
           .map(item => <TimeVarying>item);
 
         // Load the items on the workbench
-        for (let model of newItems) {
-          if (ReferenceMixin.is(model)) {
-            promises.push(model.loadReference());
-            model = model.target || model;
-          }
+        return Promise.all(
+          newItems.map(async model => {
+            if (ReferenceMixin.is(model)) {
+              await model.loadReference();
+              model = model.target || model;
+            }
 
-          if (Mappable.is(model)) {
-            promises.push(model.loadMapItems());
-          }
-        }
-
-        return Promise.all(promises).then(() => undefined);
+            if (Mappable.is(model)) {
+              await model.loadMapItems();
+            }
+          })
+        ).then(() => undefined);
       });
     });
 
@@ -973,24 +985,20 @@ export default class Terria {
       reference.setTrait(CommonStrata.definition, "url", magdaRoot);
       reference.setTrait(CommonStrata.definition, "recordId", id);
       reference.setTrait(CommonStrata.definition, "magdaRecord", config);
-      await reference.loadReference().then(() => {
-        if (reference.target instanceof CatalogGroup) {
-          runInAction(() => {
-            this.catalog.group = <CatalogGroup>reference.target;
-          });
-        }
-        this.setupInitializationUrls(
-          baseUri,
-          config.aspects?.["terria-config"]
-        );
-        /** Load up rest of terria catalog if one is inlined in terria-init */
-        if (config.aspects?.["terria-init"]) {
-          const { catalog, ...rest } = initObj;
-          this.initSources.push({
-            data: {
-              catalog: catalog
-            }
-          });
+      await reference.loadReference();
+      if (reference.target instanceof CatalogGroup) {
+        runInAction(() => {
+          this.catalog.group = <CatalogGroup>reference.target;
+        });
+      }
+    }
+    this.setupInitializationUrls(baseUri, config.aspects?.["terria-config"]);
+    /** Load up rest of terria catalog if one is inlined in terria-init */
+    if (config.aspects?.["terria-init"]) {
+      const { catalog, ...rest } = initObj;
+      this.initSources.push({
+        data: {
+          catalog: catalog
         }
       });
     }
