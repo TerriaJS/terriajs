@@ -4,7 +4,8 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.62)
-* Fixed an issue with not loading the base map from init file and an issue with viewerMode from init files overriding the persisted viewerMode
+* Fixed an issue with not loading the base map from init file and an issue with viewerMode from init files overriding the persisted viewerMode.
+* Hide info sections with empty content in the explorer preview.
 * [The next improvement]
 
 #### 8.0.0-alpha.61
