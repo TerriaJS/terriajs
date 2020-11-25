@@ -3,7 +3,15 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.61)
+#### next release (8.0.0-alpha.62)
+* Fixed errors when previewing an item in a group that is open by default (`isOpen: true` in init file).
+* Fixed mobx warnings when loading geojson catalog items.
+* Add `multiplierDefaultDeltaStep` Trait, which tries to calculate sensible multiplier for `DistrectelyTimeVarying` datasets. By default it is set to 2, which results in a new timestep being displayed every 2 seconds (on average) if timeline is playing.
+* Fixed an issue with not loading the base map from init file and an issue with viewerMode from init files overriding the persisted viewerMode.
+* Hide info sections with empty content in the explorer preview.
+* [The next improvement]
+
+#### 8.0.0-alpha.61
 * New `CatalogFunctionMixin` and `CatalogFunctionJobMixin`
 * Tsified `FunctionParameters`
 * New `YourDataYourRegions` `CatalogFunctionMixin`
@@ -12,8 +20,16 @@ Change Log
 * Added `DataCustodianTraits` to `WebMapServiceCatalogItem`
 * Added `disableDimensionSelectors` trait to `WebMapServiceCatalogItem`. Acheives the same effect of `disableUserChanges` in v7.
 * Temporarily stopped using `papaparse` for fetching Csv urls till an upstream bug is fixed.
+* Fix async bug with loading `ReferenceMixin` and then `Mappable` items in `initSources`
+* Remove `addToWorkbench`, it has been replaced with `workbench.add`
 * Improve handling of `ArcGisMapServerCatalogItem` when dealing with tiled layers.
 * Ensure there aren't more bins than unique values for a `TableStyle`
+* Add access control properties to items fetched from Esri Portal.
+* Improves magda based root group mimic behaviour introdcued in 8.0.0-alpha.57 by adding `/` to `knownContainerUniqueIds` when `map-config*` is encountered
+* Fixed broken chart disclaimers in shared views.
+* Fixed a bug where chart disclaimers were shown even for chart items disabled in the workbench.
+* Fixed a bug where charts with titles containing the text "lat" or "lon" were hidden from feature info panel.
+* Fixed a bug that occurred when loading config from magda. `initializationUrls` are now applied even if `group` aspect is not set
 
 #### 8.0.0-alpha.60
 * Fix WMS legend for default styles.

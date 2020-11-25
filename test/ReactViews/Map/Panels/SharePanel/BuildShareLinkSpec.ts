@@ -1,30 +1,24 @@
+import { action, runInAction } from "mobx";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import URI from "urijs";
+import { USER_ADDED_CATEGORY_ID } from "../../../../../lib/Core/addedByUser";
+import loadBlob from "../../../../../lib/Core/loadBlob";
+import PickedFeatures from "../../../../../lib/Map/PickedFeatures";
+import addUserCatalogMember from "../../../../../lib/Models/addUserCatalogMember";
+import CommonStrata from "../../../../../lib/Models/CommonStrata";
+import Feature from "../../../../../lib/Models/Feature";
+import GeoJsonCatalogItem from "../../../../../lib/Models/GeoJsonCatalogItem";
+import { BaseModel } from "../../../../../lib/Models/Model";
 import Terria from "../../../../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../../../../lib/Models/WebMapServiceCatalogItem";
-import GeoJsonCatalogItem from "../../../../../lib/Models/GeoJsonCatalogItem";
-import ViewState, {
-  DATA_CATALOG_NAME,
-  USER_DATA_NAME
-} from "../../../../../lib/ReactViewModels/ViewState";
-import { USER_ADDED_CATEGORY_ID } from "../../../../../lib/Core/addedByUser";
-
+import ViewState from "../../../../../lib/ReactViewModels/ViewState";
 import {
   buildShareLink,
-  SHARE_VERSION,
-  isShareable
+  isShareable,
+  SHARE_VERSION
 } from "../../../../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
-import URI from "urijs";
-import loadBlob from "../../../../../lib/Core/loadBlob";
-import addUserCatalogMember from "../../../../../lib/Models/addUserCatalogMember";
-import { BaseModel } from "../../../../../lib/Models/Model";
-import CommonStrata from "../../../../../lib/Models/CommonStrata";
-import { action, runInAction } from "mobx";
-import addToWorkbench from "../../../../../lib/Models/addToWorkbench";
-import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
-import CatalogMemberFactory from "../../../../../lib/Models/CatalogMemberFactory";
-import PickedFeatures from "../../../../../lib/Map/PickedFeatures";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import Feature from "../../../../../lib/Models/Feature";
 
 let terria: Terria;
 let viewState: ViewState;
@@ -116,7 +110,7 @@ describe("BuildShareLink", function() {
           return addUserCatalogMember(terria, model);
         })
         .then(() => {
-          return addToWorkbench(terria.workbench, model, true);
+          return terria.workbench.add(model);
         })
         .then(() => {
           const shareLink = buildShareLink(terria, viewState);
@@ -164,7 +158,7 @@ describe("BuildShareLink", function() {
     it("should be added to workbench in generated url", function(done) {
       addUserCatalogMember(terria, model)
         .then(() => {
-          return addToWorkbench(terria.workbench, model, true);
+          return terria.workbench.add(model);
         })
         .then(() => {
           const shareLink = buildShareLink(terria, viewState);
