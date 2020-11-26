@@ -130,11 +130,10 @@ function CatalogFunctionJobMixin<
      */
     protected abstract async _invoke(): Promise<boolean>;
 
-    @action
     public async invoke() {
       this.setTrait(CommonStrata.user, "jobStatus", "running");
       try {
-        const finished = await this._invoke();
+        const finished = await runInAction(() => this._invoke());
         if (finished) {
           this.setTrait(CommonStrata.user, "jobStatus", "finished");
           this.onJobFinish(true);
