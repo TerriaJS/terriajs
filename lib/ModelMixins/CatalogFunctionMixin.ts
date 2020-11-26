@@ -1,4 +1,4 @@
-import { toJS } from "mobx";
+import { runInAction, toJS } from "mobx";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
@@ -50,7 +50,7 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
         }
 
         // Give default name if needed
-        if (!isDefined(newJob.name)) {
+        if (!isDefined(runInAction(() => newJob.name))) {
           newJob.setTrait(
             CommonStrata.user,
             "name",

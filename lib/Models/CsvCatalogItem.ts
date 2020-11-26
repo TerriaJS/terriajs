@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { runInAction, computed } from "mobx";
+import { runInAction, computed, action } from "mobx";
 import TerriaError from "../Core/TerriaError";
 import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
@@ -158,6 +158,7 @@ export default class CsvCatalogItem extends AsyncChartableMixin(
     return Promise.resolve();
   }
 
+  @action
   protected forceLoadTableData(): Promise<string[][]> {
     if (this.csvString !== undefined) {
       return Csv.parseString(this.csvString, true);

@@ -10,6 +10,7 @@ import {
 import Mustache from "mustache";
 import URI from "urijs";
 import isDefined from "../Core/isDefined";
+import { JsonObject } from "../Core/Json";
 import TerriaError from "../Core/TerriaError";
 import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
@@ -335,7 +336,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
         ) {
           // Create a catalog member from the embedded json
           const json = JSON.parse(output.Data.ComplexData.text);
-          const catalogItem = this.createCatalogItemFromJson(json);
+          const catalogItem = await this.createCatalogItemFromJson(json);
           if (isDefined(catalogItem)) {
             if (CatalogMemberMixin.isMixedInto(catalogItem)) {
               results.push(catalogItem);
@@ -361,14 +362,15 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
     );
 
     // Create geojson catalog item for input features
-    if (isDefined(this.geojsonFeatures)) {
+    const geojsonFeatures = runInAction(() => this.geojsonFeatures);
+    if (isDefined(geojsonFeatures)) {
       runInAction(() => {
         this.geoJsonItem = new GeoJsonCatalogItem(createGuid(), this.terria);
         updateModelFromJson(this.geoJsonItem, CommonStrata.user, {
           name: `${this.name} Input Features`,
           geoJsonData: {
             type: "FeatureCollection",
-            features: this.geojsonFeatures!,
+            features: geojsonFeatures,
             totalFeatures: this.geojsonFeatures!.length
           }
         });
@@ -434,8 +436,11 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
     );
   }
 
-  private createCatalogItemFromJson(json: any) {
-    const itemJson = fixCatalogItemJson(json);
+  private async createCatalogItemFromJson(json: any) {
+    let itemJson = json;
+    try {
+      itemJson = await tryConvertV7ToV8Catalog(json);
+    } catch {}
     const catalogItem = upsertModelFromJson(
       CatalogMemberFactory,
       this.terria,
@@ -491,17 +496,21 @@ function formatOutputValue(title: string, value: string | undefined) {
   }, "");
 }
 
-/**
- * Transform old catalog definitions to match new schema.
- */
-function fixCatalogItemJson(json: any) {
-  const { isEnabled, ...fixedJson } = json;
-  if (json.type === "csv") {
-    const { data, tableStyle, ...fixedCsvJson } = fixedJson;
-    fixedCsvJson.csvString = fixedCsvJson.csvString || data;
-    return fixedCsvJson;
+async function tryConvertV7ToV8Catalog(
+  input: JsonObject
+): Promise<Record<string, unknown> | undefined> {
+  const { convertMember, convertCatalog } = await import("catalog-converter");
+  if (typeof input.type === "string") {
+    const { member, messages } = convertMember(input);
+    if (member === null || messages.length > 0)
+      throw new Error("Error converting v7 item to v8");
+    return member;
+  } else {
+    const { result, messages } = convertCatalog(input);
+    if (result === null || messages.length > 0)
+      throw new Error("Error converting v7 catalog to v8");
+    return result;
   }
-  return fixedJson;
 }
 
 function htmlEscapeText(text: string) {

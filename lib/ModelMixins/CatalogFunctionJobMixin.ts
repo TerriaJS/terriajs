@@ -133,7 +133,7 @@ function CatalogFunctionJobMixin<
     public async invoke() {
       this.setTrait(CommonStrata.user, "jobStatus", "running");
       try {
-        const finished = await this._invoke();
+        const finished = await runInAction(() => this._invoke());
         if (finished) {
           this.setTrait(CommonStrata.user, "jobStatus", "finished");
           this.onJobFinish(true);
@@ -165,6 +165,7 @@ function CatalogFunctionJobMixin<
     /**
      * This function adapts AutoRefreshMixin's refreshData with this Mixin's pollForResults - adding the boolean return value which triggers refresh disable
      */
+    @action
     refreshData() {
       if (this.pollingForResults) {
         return;
@@ -201,6 +202,7 @@ function CatalogFunctionJobMixin<
      * - `pollForResults` returns true {@link CatalogFunctionJobMixin#refreshData}
      * - on `loadMetadata` if `jobStatus` is "finished", and `!downloadedResults`  {@link CatalogFunctionJobMixin#forceLoadMetadata}
      */
+    @action
     private async onJobFinish(addResultsToWorkbench = this.inWorkbench) {
       // Download results when finished
       if (
@@ -289,6 +291,7 @@ function CatalogFunctionJobMixin<
     }
     protected async forceLoadMapItems() {}
 
+    @action
     protected async forceLoadMetadata() {
       if (this.jobStatus === "finished" && !this.downloadedResults) {
         await this.onJobFinish();
