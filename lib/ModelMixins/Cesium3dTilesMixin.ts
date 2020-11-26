@@ -60,10 +60,6 @@ export default function Cesium3dTilesMixin<
 
     private tileset?: ObservableCesium3DTileset;
 
-    get isMappable() {
-      return true;
-    }
-
     protected forceLoadMetadata() {
       return Promise.resolve();
     }

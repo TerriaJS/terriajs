@@ -6,15 +6,12 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import CesiumTerrainCatalogItemTraits from "../Traits/CesiumTerrainCatalogItemTraits";
 import CreateModel from "./CreateModel";
-import Mappable from "./Mappable";
 
-export default class CesiumTerrainCatalogItem
-  extends UrlMixin(
-    AsyncMappableMixin(
-      CatalogMemberMixin(CreateModel(CesiumTerrainCatalogItemTraits))
-    )
+export default class CesiumTerrainCatalogItem extends UrlMixin(
+  AsyncMappableMixin(
+    CatalogMemberMixin(CreateModel(CesiumTerrainCatalogItemTraits))
   )
-  implements Mappable {
+) {
   static type = "cesium-terrain";
 
   get type() {

@@ -22,7 +22,6 @@ import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import LoadableStratum from "./LoadableStratum";
-import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";

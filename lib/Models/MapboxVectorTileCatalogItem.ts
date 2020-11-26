@@ -1,10 +1,9 @@
 import { VectorTileFeature } from "@mapbox/vector-tile";
 import i18next from "i18next";
 import { clone } from "lodash-es";
-import { action, autorun, computed, observable, runInAction } from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import isDefined from "../Core/isDefined";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";

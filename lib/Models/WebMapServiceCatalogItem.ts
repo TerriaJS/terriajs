@@ -61,6 +61,7 @@ import WebMapServiceCapabilities, {
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
+import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 
 const dateFormat = require("dateformat");
 
@@ -684,10 +685,14 @@ class WebMapServiceCatalogItem
     ExportableMixin(
       DiffableMixin(
         TimeFilterMixin(
-          AsyncChartableMixin(
-            GetCapabilitiesMixin(
-              UrlMixin(
-                CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
+          AsyncMappableMixin(
+            AsyncChartableMixin(
+              GetCapabilitiesMixin(
+                UrlMixin(
+                  CatalogMemberMixin(
+                    CreateModel(WebMapServiceCatalogItemTraits)
+                  )
+                )
               )
             )
           )
@@ -726,11 +731,6 @@ class WebMapServiceCatalogItem
     return WebMapServiceCatalogItem.type;
   }
 
-  // TODO
-  get isMappable() {
-    return true;
-  }
-
   @computed
   get colorScaleRange(): string | undefined {
     if (this.supportsColorScaleRange) {
@@ -767,7 +767,7 @@ class WebMapServiceCatalogItem
     return this.forceLoadMetadata();
   }
 
-  loadMapItems(): Promise<void> {
+  forceLoadMapItems(): Promise<void> {
     return this.loadMetadata();
   }
 

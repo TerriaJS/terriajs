@@ -29,7 +29,6 @@ import createStratumInstance from "./createStratumInstance";
 import { getLineStyleCesium } from "./esriLineStyle";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import LoadableStratum from "./LoadableStratum";
-import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
@@ -375,13 +374,11 @@ class FeatureServerStratum extends LoadableStratum(
 
 StratumOrder.addLoadStratum(FeatureServerStratum.stratumName);
 
-export default class ArcGisFeatureServerCatalogItem
-  extends AsyncMappableMixin(
-    UrlMixin(
-      CatalogMemberMixin(CreateModel(ArcGisFeatureServerCatalogItemTraits))
-    )
+export default class ArcGisFeatureServerCatalogItem extends AsyncMappableMixin(
+  UrlMixin(
+    CatalogMemberMixin(CreateModel(ArcGisFeatureServerCatalogItemTraits))
   )
-  implements Mappable {
+) {
   static readonly type = "esri-featureServer";
 
   get type(): string {
@@ -390,10 +387,6 @@ export default class ArcGisFeatureServerCatalogItem
 
   get typeName(): string {
     return i18next.t("models.arcGisFeatureServerCatalogItem.name");
-  }
-
-  get isMappable(): boolean {
-    return true;
   }
 
   get canZoomTo(): boolean {

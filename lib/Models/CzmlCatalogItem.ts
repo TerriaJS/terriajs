@@ -10,13 +10,10 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import CzmlCatalogItemTraits from "../Traits/CzmlCatalogItemTraits";
 import CreateModel from "./CreateModel";
-import Mappable from "./Mappable";
 
-export default class CzmlCatalogItem
-  extends AsyncMappableMixin(
-    UrlMixin(CatalogMemberMixin(CreateModel(CzmlCatalogItemTraits)))
-  )
-  implements Mappable {
+export default class CzmlCatalogItem extends AsyncMappableMixin(
+  UrlMixin(CatalogMemberMixin(CreateModel(CzmlCatalogItemTraits)))
+) {
   static readonly type = "czml";
   get type() {
     return CzmlCatalogItem.type;

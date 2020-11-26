@@ -18,9 +18,10 @@ import PolylineGlowMaterialProperty from "terriajs-cesium/Source/DataSources/Pol
 import isDefined from "../Core/isDefined";
 import DragPoints from "../Map/DragPoints";
 import ViewState from "../ReactViewModels/ViewState";
-import ModelTraits from "../Traits/ModelTraits";
+import MappableTraits from "../Traits/MappableTraits";
 import CreateModel from "./CreateModel";
 import MapInteractionMode from "./MapInteractionMode";
+import Mappable from "./Mappable";
 import Terria from "./Terria";
 
 interface Options {
@@ -36,11 +37,10 @@ interface Options {
   invisible?: boolean;
 }
 
-class EmptyTraits extends ModelTraits {
-  static traits = {};
-}
+export default class UserDrawing extends CreateModel(MappableTraits)
+  implements Mappable {
+  readonly isMappable = true;
 
-export default class UserDrawing extends CreateModel(EmptyTraits) {
   private readonly messageHeader: string;
   private readonly allowPolygon: boolean;
   private readonly onMakeDialogMessage?: () => string;
@@ -125,6 +125,8 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
       this.prepareToAddNewPoint();
     });
   }
+
+  async loadMapItems() {}
 
   @computed get mapItems() {
     return [this.pointEntities, this.otherEntities];

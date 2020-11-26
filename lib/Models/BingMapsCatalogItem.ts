@@ -11,6 +11,8 @@ export default class BingMapsCatalogItem
   implements Mappable {
   static readonly type = "bing-maps";
 
+  readonly isMappable = true;
+
   get type() {
     return BingMapsCatalogItem.type;
   }

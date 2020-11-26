@@ -30,13 +30,14 @@ export namespace ImageryParts {
 }
 
 interface Mappable extends Model<MappableTraits> {
+  isMappable: boolean;
   readonly mapItems: ReadonlyArray<MapItem>;
   loadMapItems(): Promise<void>;
 }
 
 namespace Mappable {
   export function is(model: BaseModel | Mappable): model is Mappable {
-    return "mapItems" in model;
+    return "isMappable" in model && model.isMappable;
   }
 }
 

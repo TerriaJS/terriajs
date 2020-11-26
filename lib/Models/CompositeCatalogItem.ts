@@ -1,14 +1,14 @@
-import CompositeCatalogItemTraits from "../Traits/CompositeCatalogItemTraits";
-import CreateModel from "./CreateModel";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import { computed, action } from "mobx";
-import Mappable, { MapItem } from "./Mappable";
 import i18next from "i18next";
-import { BaseModel } from "./Model";
-import filterOutUndefined from "../Core/filterOutUndefined";
-import ModelReference from "../Traits/ModelReference";
-import isDefined from "../Core/isDefined";
+import { action, computed } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import filterOutUndefined from "../Core/filterOutUndefined";
+import isDefined from "../Core/isDefined";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import CompositeCatalogItemTraits from "../Traits/CompositeCatalogItemTraits";
+import ModelReference from "../Traits/ModelReference";
+import CreateModel from "./CreateModel";
+import Mappable, { MapItem } from "./Mappable";
+import { BaseModel } from "./Model";
 
 export default class CompositeCatalogItem
   extends CatalogMemberMixin(CreateModel(CompositeCatalogItemTraits))

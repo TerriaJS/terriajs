@@ -18,7 +18,6 @@ import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import LoadableStratum from "./LoadableStratum";
-import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumOrder from "./StratumOrder";
@@ -183,11 +182,9 @@ class GeoRssStratum extends LoadableStratum(GeoRssCatalogItemTraits) {
 
 StratumOrder.addLoadStratum(GeoRssStratum.stratumName);
 
-export default class GeoRssCatalogItem
-  extends AsyncMappableMixin(
-    UrlMixin(CatalogMemberMixin(CreateModel(GeoRssCatalogItemTraits)))
-  )
-  implements Mappable {
+export default class GeoRssCatalogItem extends AsyncMappableMixin(
+  UrlMixin(CatalogMemberMixin(CreateModel(GeoRssCatalogItemTraits)))
+) {
   static readonly type = "georss";
   get type() {
     return GeoRssCatalogItem.type;
@@ -195,10 +192,6 @@ export default class GeoRssCatalogItem
 
   get typeName() {
     return i18next.t("models.georss.name");
-  }
-
-  get isMappable(): boolean {
-    return true;
   }
 
   get canZoomTo(): boolean {

@@ -1,9 +1,8 @@
-import { computed, observable, runInAction } from "mobx";
+import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import Mappable, { MapItem } from "../Models/Mappable";
 import Model from "../Models/Model";
 import MappableTraits from "../Traits/MappableTraits";
-import AsyncLoader from "../Core/AsyncLoader";
 
 function AsyncMappableMixin<T extends Constructor<Model<MappableTraits>>>(
   Base: T

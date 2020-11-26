@@ -1,15 +1,16 @@
 import { computed } from "mobx";
 import IonImageryProvider from "terriajs-cesium/Source/Scene/IonImageryProvider";
+import isDefined from "../Core/isDefined";
 import IonImageryCatalogItemTraits from "../Traits/IonImageryCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import Mappable from "./Mappable";
-import isDefined from "../Core/isDefined";
-import { result } from "lodash-es";
 
 export default class IonImageryCatalogItem
   extends CreateModel(IonImageryCatalogItemTraits)
   implements Mappable {
   static readonly type = "ion-imagery";
+
+  readonly isMappable = true;
 
   loadMapItems() {
     return Promise.resolve();
