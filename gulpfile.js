@@ -134,23 +134,42 @@ gulp.task('code-attribution', function userAttribution(done) {
     }
     done();
 
-})
+});
 
-gulp.task('user-guide', gulp.series(gulp.parallel('make-schema', 'code-attribution'), function userGuide(done) {
+gulp.task('build-for-doc-generation', function buildForDocGeneration(done) {
+    var runWebpack = require('./buildprocess/runWebpack.js');
+    var webpack = require('webpack');
+    var webpackConfig = require('./buildprocess/webpack-docs.config.js')();
+
+    runWebpack(webpack, webpackConfig, done);
+});
+
+gulp.task('user-guide', gulp.series(gulp.parallel('make-schema', 'code-attribution', 'build-for-doc-generation'), function userGuide(done) {
     var fse = require('fs-extra');
     var PluginError = require('plugin-error');
     var spawnSync = require('child_process').spawnSync;
 
-    fse.copySync('mkdocs.yml', 'build/mkdocs.yml');
     fse.copySync('doc', 'build/doc');
 
-    var result = spawnSync('mkdocs', ['build', '--clean', '--config-file', 'mkdocs.yml'], {
+    fse.mkdirpSync('build/doc/connecting-to-data/catalog-type-details');
+
+    var result = spawnSync('node', ['generateDocs.js'], {
+      cwd: 'build',
+      stdio: 'inherit',
+      shell: false
+    });
+
+    if (result.status !== 0) {
+      throw new PluginError('user-doc', 'Generating catalog members pages exited with an error.', { showStack: false });
+    }
+
+    result = spawnSync('mkdocs', ['build', '--clean', '--config-file', 'mkdocs.yml'], {
         cwd: 'build',
         stdio: 'inherit',
         shell: false
     });
     if (result.status !== 0) {
-        throw new PluginError('user-doc', 'External module exited with an error.', { showStack: false });
+        throw new PluginError('user-doc', 'Mkdocs exited with an error.', { showStack: false });
     }
 
     done();

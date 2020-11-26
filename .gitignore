@@ -1,7 +1,4 @@
 docs/
-/doc/connecting-to-data/catalog-type-details/
-/doc/connecting-to-data/catalog-groups.md
-/doc/connecting-to-data/catalog-items.md
 node_modules/
 .idea/
 build/

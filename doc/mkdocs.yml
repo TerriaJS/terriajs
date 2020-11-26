@@ -3,7 +3,7 @@ theme:
   name: material
   logo: terria.png
 docs_dir: doc
-site_dir: ./wwwroot/doc/guide
+site_dir: ../wwwroot/doc/guide
 markdown_extensions:
   - markdown.extensions.admonition
 strict: false
