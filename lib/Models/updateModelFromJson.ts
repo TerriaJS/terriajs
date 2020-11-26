@@ -20,7 +20,8 @@ export default function updateModelFromJson(
       if (
         propertyName === "id" ||
         propertyName === "type" ||
-        propertyName === "localId"
+        propertyName === "localId" ||
+        propertyName === "shareKeys"
       ) {
         return;
       }

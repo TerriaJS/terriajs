@@ -107,9 +107,9 @@ export class ModelReferenceArrayTrait extends Trait {
             this.factory,
             model.terria,
             model.uniqueId === undefined ? "/" : model.uniqueId,
-            undefined,
             stratumName,
-            jsonElement
+            jsonElement,
+            {}
           );
           return nestedModel.uniqueId!;
         } catch {
