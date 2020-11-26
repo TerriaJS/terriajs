@@ -67,6 +67,14 @@ describe("TableMixin", function() {
         ]);
       });
     });
+
+    describe("when timeColumn is `null`", function() {
+      it("returns an empty `discreteTimes`", function() {
+        expect(item.discreteTimes?.length).toBe(6);
+        item.defaultStyle.time.setTrait(CommonStrata.user, "timeColumn", null);
+        expect(item.discreteTimes).toBe(undefined);
+      });
+    });
   });
 
   describe("when the table has lat/lon columns but no time & id columns", function() {
