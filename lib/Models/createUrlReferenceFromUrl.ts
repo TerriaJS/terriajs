@@ -13,7 +13,6 @@ export default function createUrlReferenceFromUrl(
     CatalogMemberFactory,
     terria,
     "",
-    undefined,
     CommonStrata.definition,
     {
       type: UrlReference.type,
@@ -21,7 +20,8 @@ export default function createUrlReferenceFromUrl(
       url: url,
       localId: url,
       allowLoad: allowLoad
-    }
+    },
+    {}
   );
 
   if (item === undefined || !(item instanceof UrlReference)) {

@@ -57,4 +57,12 @@ export default class DiscretelyTimeVaryingTraits extends mixTraits(
     description: "When true, disables the date time selector in the workbench"
   })
   disableDateTimeSelector = false;
+
+  @primitiveTrait({
+    name: "Time Multiplier",
+    description:
+      "The multiplierDefaultDeltaStep is used to set the default multiplier (see `TimeVaryingTraits.multiplier` trait) - it represents the average number of (real-time) seconds between (dataset) time steps. For example, a value of five would set the `multiplier` so that a new time step (of this dataset) would appear every five seconds (on average) if the timeline is playing. This trait will only take effect if `multiplier` is **not** explicitly set.",
+    type: "number"
+  })
+  multiplierDefaultDeltaStep?: number = 2;
 }

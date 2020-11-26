@@ -421,6 +421,9 @@ export default class Leaflet extends GlobeOrMap {
           dataSources.remove(d);
         }
       });
+
+      // Ensure stacking order matches order in allDataSources - first item appears on top.
+      allDataSources.forEach(d => dataSources.raiseToTop(d));
     });
   }
 
@@ -501,6 +504,22 @@ export default class Leaflet extends GlobeOrMap {
 
   notifyRepaintRequired() {
     // No action necessary.
+  }
+
+  pickFromLocation(
+    latLngHeight: LatLonHeight,
+    providerCoords: ProviderCoordsMap,
+    existingFeatures: Feature[]
+  ) {
+    this._pickFeatures(
+      L.latLng({
+        lat: latLngHeight.latitude,
+        lng: latLngHeight.longitude,
+        alt: latLngHeight.height
+      }),
+      providerCoords,
+      existingFeatures
+    );
   }
 
   /**

@@ -24,3 +24,9 @@
 !buildprocess/
 !buildprocess/webpack-docs.config.js
 !buildprocess/generateDocs.js
+
+!wwwroot
+!wwwroot/test
+!wwwroot/test/Magda
+!wwwroot/test/Magda/shareKeys/**/
+!wwwroot/test/Magda/shareKeys/**/*.json
