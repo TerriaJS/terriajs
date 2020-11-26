@@ -445,14 +445,14 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
       CatalogMemberFactory,
       this.terria,
       this.uniqueId || "",
-      undefined,
       CommonStrata.user,
       {
         ...itemJson,
         id: createGuid()
       },
-      false,
-      false
+      {
+        addModelToTerria: false
+      }
     );
     return catalogItem;
   }

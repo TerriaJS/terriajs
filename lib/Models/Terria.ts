@@ -191,6 +191,8 @@ interface HomeCameraInit {
 
 export default class Terria {
   private models = observable.map<string, BaseModel>();
+  // Map from share key -> id
+  private shareKeysMap = observable.map<string, string>();
 
   readonly baseUrl: string = "build/TerriaJS/";
   readonly notification = new CesiumEvent();
@@ -415,7 +417,7 @@ export default class Terria {
   }
 
   @action
-  addModel(model: BaseModel) {
+  addModel(model: BaseModel, shareKeys?: string[]) {
     if (model.uniqueId === undefined) {
       throw new DeveloperError("A model without a `uniqueId` cannot be added.");
     }
@@ -425,6 +427,7 @@ export default class Terria {
     }
 
     this.models.set(model.uniqueId, model);
+    shareKeys?.forEach(shareKey => this.addShareKey(model.uniqueId!, shareKey));
   }
 
   /**
@@ -447,8 +450,32 @@ export default class Terria {
     }
   }
 
+  getModelIdByShareKey(shareKey: string): string | undefined {
+    return this.shareKeysMap.get(shareKey);
+  }
+
+  getModelByIdOrShareKey<T extends BaseModel>(
+    type: Class<T>,
+    id: string
+  ): T | undefined {
+    let model = this.getModelById(type, id);
+    if (model) {
+      return model;
+    } else {
+      const idFromShareKey = this.getModelIdByShareKey(id);
+      return idFromShareKey !== undefined
+        ? this.getModelById(type, idFromShareKey)
+        : undefined;
+    }
+  }
+
+  @action
+  addShareKey(id: string, shareKey: string) {
+    this.shareKeysMap.set(shareKey, id);
+  }
+
   setupInitializationUrls(baseUri: uri.URI, config: any) {
-    const initializationUrls: string[] = config.initializationUrls || [];
+    const initializationUrls: string[] = config?.initializationUrls || [];
     const initSources = initializationUrls.map(url =>
       generateInitializationUrl(
         baseUri,
@@ -468,7 +495,7 @@ export default class Terria {
       options.applicationUrl?.href || getUriWithoutPath(baseUri);
     return loadJson5(options.configUrl, options.configUrlHeaders)
       .then((config: any) => {
-        runInAction(() => {
+        return runInAction(() => {
           // If it's a magda config, we only load magda config and parameters should never be a property on the direct
           // config aspect (it would be under the `terria-config` aspect)
           if (config.aspects) {
@@ -710,13 +737,15 @@ export default class Terria {
           CatalogMemberFactory,
           this,
           "/",
-          undefined,
           stratumId,
           {
             ...cleanStratumData,
             id: modelId
           },
-          replaceStratum
+          {
+            replaceStratum,
+            matchByShareKey: true
+          }
         );
 
         if (Array.isArray(containerIds)) {
@@ -891,18 +920,39 @@ export default class Terria {
                 message: "A model ID in the workbench list is not a string."
               });
             }
-
-            return this.getModelById(BaseModel, modelId);
+            return this.getModelByIdOrShareKey(BaseModel, modelId);
           })
         );
 
         this.workbench.items = newItems;
 
+        // For ids that don't correspond to models resolve an id by share keys
+        const timelineWithShareKeysResolved = new Set(
+          filterOutUndefined(
+            timeline.map(modelId => {
+              if (typeof modelId !== "string") {
+                throw new TerriaError({
+                  sender: this,
+                  title: "Invalid model ID in timeline",
+                  message: "A model ID in the timneline list is not a string."
+                });
+              }
+              if (this.getModelById(BaseModel, modelId) !== undefined) {
+                return modelId;
+              } else {
+                return this.getModelIdByShareKey(modelId);
+              }
+            })
+          )
+        );
+
         // TODO: the timelineStack should be populated from the `timeline` property,
         // not from the workbench.
         this.timelineStack.items = this.workbench.items
           .filter(item => {
-            return item.uniqueId && timeline.indexOf(item.uniqueId) >= 0;
+            return (
+              item.uniqueId && timelineWithShareKeysResolved.has(item.uniqueId)
+            );
             // && TODO: what is a good way to test if an item is of type TimeVarying.
           })
           .map(item => <TimeVarying>item);
@@ -951,8 +1001,7 @@ export default class Terria {
       .toString();
 
     const aspects = config.aspects;
-    const configParams =
-      aspects["terria-config"] && aspects["terria-config"].parameters;
+    const configParams = aspects["terria-config"]?.parameters;
 
     if (configParams) {
       this.updateParameters(configParams);
