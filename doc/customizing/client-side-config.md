@@ -25,6 +25,8 @@ If the string does not end with `.json`, such as `"foo"`, it refers to an init f
 
 ## parameters
 
+**The following table has not been updated for TerriaJS v8. Most should still work as they did in version 7 however we may have removed some and added new ones. The best reference for now is [`interface ConfigParameters`](https://github.com/TerriaJS/terriajs/blob/next/lib/Models/Terria.ts#L115) (you may have to search for `interface ConfigParameters` on that page to find it if future code changes change line numbers).** 
+
 Specifies various options for configuring TerriaJS:
 
 Option                      | Meaning
