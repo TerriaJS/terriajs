@@ -3,7 +3,11 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.62)
+#### next release (8.0.0-alpha.63)
+* [The next improvement]
+
+
+#### 8.0.0-alpha.62
 * Fixed an issue with not loading the base map from init file and an issue with viewerMode from init files overriding the persisted viewerMode
 * Fixed issues surrounding tabbed catalog mode
 * Now uses `catalog-converter` to convert terriajs json in WPS response from v7 to v8.
@@ -14,7 +18,6 @@ Change Log
 * Add `multiplierDefaultDeltaStep` Trait, which tries to calculate sensible multiplier for `DistrectelyTimeVarying` datasets. By default it is set to 2, which results in a new timestep being displayed every 2 seconds (on average) if timeline is playing.
 * Hide info sections with empty content in the explorer preview.
 * Port `shareKeys` from version 7
-* [The next improvement]
 
 #### 8.0.0-alpha.61
 * New `CatalogFunctionMixin` and `CatalogFunctionJobMixin`
