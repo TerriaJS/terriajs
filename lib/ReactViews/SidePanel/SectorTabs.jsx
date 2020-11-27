@@ -1,6 +1,5 @@
 import React from "react";
 import Icon from "../Icon";
-import Styles from "./sector_tabs.scss";
 import PropTypes from "prop-types";
 import Agriculture from "../../../wwwroot/images/receipt/sectors/agriculture.png";
 import CoastalInfra from "../../../wwwroot/images/receipt/sectors/coastal-Infra.png";
@@ -8,6 +7,7 @@ import Finance from "../../../wwwroot/images/receipt/sectors/finance.png";
 import Manufacturing from "../../../wwwroot/images/receipt/sectors/manufacturing.png";
 import InternationalCooperation from "../../../wwwroot/images/receipt/sectors/international-cooperation.png";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
+import Styles from "./SectorTabs.scss";
 class SectorTabs extends React.Component {
   constructor(props) {
     super(props);

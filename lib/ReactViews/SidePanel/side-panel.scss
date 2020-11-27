@@ -9,8 +9,8 @@
   font-size: $font-size-mid-small;
   padding: $padding;
   background: $dark-with-overlay;
-  border: dashed 1px rgba(255, 255, 255, 0.5);
   margin: $padding-small;
+  border: dashed 1px rgba(255, 255, 255, 0.5);
 
   svg {
     height: 25px;
@@ -23,10 +23,6 @@
 .header {
   padding: 0 $padding-small;
   background: $dark;
-}
-
-.body {
-  overflow: hidden;
 }
 
 .addData {

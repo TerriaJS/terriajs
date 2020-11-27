@@ -1,24 +1,28 @@
 @import "~terriajs-variables";
 @import "../../Sass/common/mixins";
 
-.full-panel {
-  position: absolute;
-  font-family: $font-pop;
+.story {
+  display: grid;
+  max-width: 100%;
   width: 100%;
-  padding-left: $padding * 2;
-  padding-right: $padding * 2;
-  bottom: 100px;
-  z-index: 9;
-  box-sizing: border-box;
-  pointer-events: none;
-  @include transition(padding, 0.2s);
-  @media (min-width: $md) {
-    padding-left: $work-bench-width;
-    bottom: 90px;
-    padding-right: 50px;
-  }
-  &.is-hidden {
-    display: none;
+  grid-template-rows: 1fr auto;
+}
+
+.storyHeader {
+  display: flex;
+  max-width: 100%;
+  overflow: hidden;
+  padding: $padding 0;
+  align-items: center;
+
+  h3 {
+    margin: $padding-small;
+    font-size: 1.2rem;
+    color: $dark;
+    flex: 2;
+    @media (max-width: $sm) {
+      flex-grow: 2;
+    }
   }
 }
 
@@ -38,27 +42,22 @@
     opacity: 1;
     @include transform(none);
   }
+
   @include transform(translateY(20%));
   opacity: 0;
   @include transition(all 0.3s);
   pointer-events: auto;
   display: flex;
   opacity: 0;
-  height: 100vh;
-  max-height: 100vh;
-  min-height: 100px;
-  max-width: 1200px;
   background-color: transparent;
   color: $text-dark;
   text-align: left;
   box-sizing: border-box;
   border-radius: 2px;
+  height: 100vh;
 
-  @media (max-width: $xs) and (orientation: portrait) {
+  @media (max-width: $xs) {
     height: 60vh;
-  }
-  @media (max-width: $sm) and (orientation: landscape) {
-    height: 100vh;
   }
 }
 .relative {
@@ -67,36 +66,6 @@
 .absoluteRight {
   position: absolute;
   right: 0;
-}
-.story {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 2;
-  max-width: 100%;
-  // height: calc(100vh - 98px);
-  // @media (max-width: $sm) {
-  //   height: calc(68vh - 50px);
-  // }
-  // @media (orientation: landscape) {
-  //   height: calc(94vh - 50px);
-  // }
-}
-
-.storyHeader {
-  display: flex;
-  max-width: 100%;
-  overflow: hidden;
-  padding: $padding 0;
-  align-items: center;
-  h3 {
-    margin: $padding-small;
-    font-size: 1.2rem;
-    color: $dark;
-    flex: 2;
-    @media (max-width: $sm) {
-      flex-grow: 2;
-    }
-  }
 }
 
 .body {
@@ -159,6 +128,7 @@
 
 .locationBtn {
   border-right: 1px solid $field-border;
+
   svg {
     width: 18px;
   }
@@ -169,23 +139,18 @@
   svg {
     height: 31px;
   }
-  &,
-  &:focus,
-  &:hover {
-    @media (min-width: $sm) {
-      border: 0px;
-      border-bottom: 1px solid $field-border;
-    }
-  }
 }
+
 .navs {
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
 }
+
 .navBtn {
   height: 30px;
+
   button {
     background: transparent;
     border: 0;
@@ -199,7 +164,6 @@
     height: 10px;
   }
 }
-
 .navBtnMobile {
   display: flex;
   width: 100%;
@@ -218,6 +182,7 @@
     color: #ffffff;
   }
 }
+
 :global {
   .story.tjs-notification-window__wrapper {
     @media (min-width: $md) {
@@ -228,8 +193,6 @@
       color: #ffffff;
       border: 1px solid rgba(#ffffff, 0.1);
       text-align: center;
-    }
-    h3 {
     }
     .tjs-notification-window__footer {
       display: flex;

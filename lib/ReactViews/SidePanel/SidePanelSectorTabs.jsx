@@ -1,18 +1,16 @@
 import React from "react";
 import SectorTabs from "./SectorTabs";
 import SectorInfo from "./SectorInfo";
-import { Small, Medium } from "../Generic/Responsive";
 import PropTypes from "prop-types";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
+import Styles from "./SidePanelSectorTabs.scss";
 
-class SidePanelContent extends React.Component {
+class SidePanelSectorTabs extends React.Component {
   state = {
     sector: null
   };
   showSectorInfo = sector => {
-    this.setState({
-      sector
-    });
+    this.setState({ sector });
     this.filterHotspots(sector.title);
   };
 
@@ -47,35 +45,26 @@ class SidePanelContent extends React.Component {
   };
   closeSectorInfo = () => {
     this.setState({ sector: null });
+    this.props.viewState.isHotspotsFiltered = false;
   };
 
   render() {
     const { sector } = this.state;
 
     return (
-      <>
-        <Medium>
-          <SectorTabs showSectorInfo={this.showSectorInfo} />
-        </Medium>
-        <Medium>
-          <SectorInfo sector={sector} close={this.closeSectorInfo} />
-        </Medium>
-        <Small>
-          <SectorInfo sector={sector} close={this.closeSectorInfo} />
-        </Small>
-        <Small>
-          <SectorTabs showSectorInfo={this.showSectorInfo} />
-        </Small>
-      </>
+      <div className={Styles.sidePanelSectorTabs}>
+        <SectorTabs showSectorInfo={this.showSectorInfo} />
+        <SectorInfo sector={sector} close={this.closeSectorInfo} />
+      </div>
     );
   }
 }
 
-SidePanelContent.propTypes = {
+SidePanelSectorTabs.propTypes = {
   /**
    * Terria instance
    */
   terria: PropTypes.object.isRequired,
   viewState: PropTypes.object
 };
-export default SidePanelContent;
+export default SidePanelSectorTabs;

@@ -2,14 +2,18 @@
 @import "../../Sass/common/mixins";
 
 .ui {
-  width: 100vw;
-  height: $mobile-header-height;
-  z-index: 102;
-  @media (min-width: $sm) {
-    left: -99999px;
-  }
-  box-shadow: $box-shadow-bigger;
-  background: $side-panel-background-image;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  //width: 100vw;
+  //height: $mobile-header-height;
+  //z-index: 102;
+  //@media (min-width: $sm) {
+  //  left: -99999px;
+  //}
+  //box-shadow: $box-shadow-bigger;
+  //background: $side-panel-background-image;
 }
 
 .mobile-header {

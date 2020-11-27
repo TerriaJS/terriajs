@@ -3,9 +3,9 @@ import MediaQuery from "react-responsive";
 import PropTypes from "prop-types";
 
 // This should come from some config some where
-const small = 768;
-const medium = 992;
-const large = 1300;
+const small = 480;
+const medium = 768;
+const large = 992;
 
 export function ExtraSmall(props) {
   return <MediaQuery maxWidth={small}>{props.children}</MediaQuery>;

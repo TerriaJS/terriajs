@@ -1,12 +1,6 @@
 @import "~terriajs-variables";
 
 .menu-area {
-  @media (min-width: $sm) {
-    position: absolute;
-    top: 20px;
-    left: 50px;
-    z-index: 108;
-  }
 }
 
 .menu {

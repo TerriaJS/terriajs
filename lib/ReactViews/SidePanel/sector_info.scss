@@ -3,16 +3,26 @@
 
 .panel {
   position: relative;
-  padding: 0 $padding;
+  padding: $padding;
+  overflow-y: auto;
+  order: 0;
+  @media (min-width: $xs) {
+    order: 1;
+  }
 }
 
+.panelBarTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
 .sectorTitle {
+  margin-top: 0;
   font-family: $font-base;
   color: $color-primary;
   line-height: 1;
 }
 .sectorInfo {
-  display: flex;
   background-color: $grey-lightest;
   font-size: $font-size-small;
   border-radius: $radius-small;
@@ -22,19 +32,6 @@
   background-repeat: no-repeat;
   @media (max-width: $sm) {
     border-radius: 0;
-  }
-}
-.infoContainer {
-  max-height: 85vh;
-  overflow-y: auto;
-  height: 85vh;
-  padding: 10px 0;
-  box-sizing: border-box;
-  @media (max-width: $xs) and (orientation: portrait) {
-    height: 50vh;
-  }
-  @media (max-width: $sm) and (orientation: landscape) {
-    height: 70vh;
   }
 }
 .imageContainer {
@@ -61,10 +58,7 @@
 }
 
 .exitBtn {
-  z-index: 999;
   composes: btn from "../../Sass/common/_buttons.scss";
-  position: absolute;
-  right: 20px;
 
   &:not([disabled]):hover {
     svg {

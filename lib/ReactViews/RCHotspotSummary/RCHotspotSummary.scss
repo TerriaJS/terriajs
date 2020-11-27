@@ -1,6 +1,14 @@
 @import "~terriajs-variables";
 @import "../../Sass/common/mixins";
 
+.RCHotspotSummary {
+  padding: 16px;
+  @media (max-width: $xs) {
+    height: 60vh;
+    overflow-y: auto;
+  }
+}
+
 .satelliteSuggestionBtn {
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn-primary from "../../Sass/common/_buttons.scss";

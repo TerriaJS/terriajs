@@ -6,12 +6,6 @@
 // reason - you can change pretty much other file to do another hot-reload and get your globe back, or just zoom
 // back in.
 
-.story-wrapper {
-  @media (min-width: $sm) {
-    display: flex;
-  }
-}
-
 :global {
   body {
     height: 100vh;
@@ -20,10 +14,25 @@
 
   .top-element {
     z-index: $notification-window-z-index - 10 !important;
+
     &:focus {
       outline: none;
     }
   }
+}
+
+.story-wrapper {
+  @media (min-width: $xs) {
+    display: flex;
+  }
+}
+
+.NavigationMap {
+  padding: $padding;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
 }
 
 .ui-root {
@@ -51,66 +60,58 @@
   font-family: $font-pop;
   background-color: $side-panel-background-color;
   background-image: $side-panel-background-image;
-  // background: $dark-blue;
-  width: $work-bench-width;
+  width: 100%;
+  overflow-y: auto;
   max-width: $max-work-bench-width;
   box-sizing: border-box;
   box-shadow: $box-shadow-bigger;
-  h1 {
-    margin: 0;
+  transition: all 0.25s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  visibility: visible;
+  z-index: 10;
+  @media (min-width: $sm + 1) {
+    width: $work-bench-width;
   }
-  @media screen and (min-width: $xs + 1) and (max-width: $sm) {
-    width: $max-work-bench-width;
-  }
+  //@media screen and (min-width: $xs + 1) and (max-width: $xs) {
+  //  width: $max-work-bench-width;
+  //}
 }
-.middleContainer {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  @media (orientation: landscape) {
-    flex-direction: row;
-  }
-}
+
 .map {
   @include transition(left $animation-fast ease-in);
   flex: 1;
-  @media (min-width: $sm) {
+  @media (min-width: $xs) {
     position: absolute;
     left: 0;
     right: 0;
     top: $mobile-header-height;
     bottom: 0;
   }
-  @media (orientation: landscape) {
-    flex: 1;
-    height: 100%;
-  }
 }
-.storyPanelWrapper {
-  @media (max-width: $sm) and (orientation: portrait) {
+
+@media (max-width: $xs) {
+  // mobile
+  .middleContainer {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+  }
+  .storyPanelWrapper {
     background: $side-panel-background-image;
     box-shadow: $box-shadow-bigger;
     z-index: 10;
-    height: 60%;
-  }
-
-  @media (orientation: landscape) {
-    flex: 1;
   }
 }
 .tabsContainer {
   background: $side-panel-background-image;
   box-shadow: $box-shadow-bigger;
   z-index: 10;
-  @media (max-width: $sm) and (orientation: portrait) {
+  @media (max-width: $xs) {
     height: 60%;
     flex: 2;
     display: flex;
     flex-direction: column;
-  }
-  @media (orientation: landscape) {
-    flex: 1;
-    height: 100vh;
   }
 }
 .feedback {
@@ -121,9 +122,9 @@
 .featureInfo {
   // On very large screens, the feature info may be up to 40% of the screen.
   // On small screens (mobile), it make be up to 90% of the screen.
-  // In between, it may be up to 90% of the largest mobile screen ($sm), minus a bit to leave room
+  // In between, it may be up to 90% of the largest mobile screen ($xs), minus a bit to leave room
   // for the map controls on the right.  This is computed in $feature-info-medium-max-size.
-  $feature-info-medium-max-size: $sm * 0.9 - $feature-info-right-margin * 0.5;
+  $feature-info-medium-max-size: $xs * 0.9 - $feature-info-right-margin * 0.5;
   $feature-info-forty-percent-size: $feature-info-medium-max-size * 100 / 40;
 
   z-index: $front-component-z-index - 20;
@@ -134,13 +135,11 @@
   pointer-events: none;
   left: 0;
 
-  @media (min-width: $md) {
+  @media (min-width: $xs) {
     right: $work-bench-width;
     top: 62px;
     left: 96px;
     bottom: 0;
-    // debugger
-    // background: rgba(#ffcc00, 0.5);
   }
 
   & > div {
@@ -154,7 +153,7 @@
     z-index: 99;
     font-family: $font-base;
 
-    @media (min-width: $sm) and (max-width: $feature-info-forty-percent-size) {
+    @media (min-width: $xs) and (max-width: $feature-info-forty-percent-size) {
       max-width: $feature-info-medium-max-size;
       top: 60px;
     }
@@ -168,16 +167,6 @@
 
 .featureInfoFullScreen {
   left: 0;
-}
-
-.sidePanel {
-  transition: all 0.25s;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  border-right: 1px solid rgba(255, 255, 255, 0.2);
-  visibility: visible;
-  box-shadow: $box-shadow-bigger;
-  z-index: 10;
-  padding: 10px;
 }
 
 .sidePanelHide {
@@ -201,10 +190,12 @@
   right: 16px;
   transform: translateX(0);
 }
+
 .showWorkbenchButtonisNotVisible {
   transition-delay: 0s;
 }
-@media (max-width: $sm) {
+
+@media (max-width: $xs) {
   .uiInner {
     display: flex;
     flex: 1;
@@ -213,11 +204,12 @@
   }
 }
 
-@media (min-width: $sm) {
+@media (min-width: $xs) {
   .uiInner {
     display: flex;
     overflow: hidden;
     flex-direction: row;
+    height: 100%;
   }
   .sidePanel {
     vertical-align: top;
@@ -233,8 +225,4 @@
     flex-grow: 1;
     //flex-basis: calc(100% - $work-bench-width);
   }
-}
-
-.mobilePadding {
-  padding: 12px;
 }
