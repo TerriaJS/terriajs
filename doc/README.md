@@ -1,9 +1,10 @@
 [TerriaJS](http://terria.io) is an open-source framework for web-based geospatial catalog explorers.
 
-Most of these docs were written for TerriaJS version <= 7. We're working on updating these docs, however it will take us some time. For the time being these parts are probably the most useful:
+**Most of these docs were written for TerriaJS version <= 7. We're working on updating these docs, however it will take us some time. For the time being these parts are probably the most useful:**
 
 * [v8 Catalog Items](connecting-to-data/catalog-items.md): Generated documentation on all version 8 Catalog Items.
 * [v8 Catalog Groups](connecting-to-data/catalog-groups.md): Generated documentation on all version 8 Catalog Groups.
+* [v8 Catalog Functions](connecting-to-data/catalog-functions.md): Generated documentation on all version 8 Catalog Function.
 * [Getting Started](getting-started.md): Quick start guide to building your first TerriaJS application. Updated for version 8.
 * [Deploying](deploying/README.md): Deploy a TerriaJS application in simple and advanced scenarios. Updated for version 8.
 * [Draft Migration Guide](contributing/migration-guide.md): A draft of a migration guide for map builders who maintain a version 7 map and wish to upgrade.

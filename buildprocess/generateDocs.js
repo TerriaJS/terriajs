@@ -158,26 +158,29 @@ ${example}
 }
 
 async function processArray(members) {
-  const items = [];
+  const typeDetailsNavItems = [];
   let catalogItemsContent = "";
   let catalogGroupsContent = "";
+  let catalogFunctionsContent = "";
   for (let i = 0; i < members.length; i++) {
     const sampleMember = members[i];
     const memberName = sampleMember.constructor.name;
 
     console.log(memberName, sampleMember.type);
+    const tableRow = `| [${memberName}](catalog-type-details/${sampleMember.type}.md) | \`${sampleMember.type}\` |\n`;
     if (memberName.indexOf("Item") > -1) {
-      catalogItemsContent += `| [${memberName}](catalog-type-details/${sampleMember.type}.md) | \`${sampleMember.type}\` |
-`;
+      catalogItemsContent += tableRow;
+    } else if (memberName.indexOf("Group") > -1) {
+      catalogGroupsContent += tableRow;
+    } else if (memberName.indexOf("Function") > -1) {
+      catalogFunctionsContent += tableRow;
     } else {
-      catalogGroupsContent += `| [${memberName}](catalog-type-details/${sampleMember.type}.md) | \`${sampleMember.type}\` |
-`;
+      console.error(`${memberName} is not an Item, Group or Function`);
     }
-    const out = {};
-    out[
-      memberName
-    ] = `connecting-to-data/catalog-type-details/${sampleMember.type}.md`;
-    items.push(out);
+
+    typeDetailsNavItems.push({
+      [memberName]: `connecting-to-data/catalog-type-details/${sampleMember.type}.md`
+    });
     const content = await processMember(sampleMember, memberName);
     fs.writeFileSync(
       `doc/connecting-to-data/catalog-type-details/${sampleMember.type}.md`,
@@ -186,9 +189,10 @@ async function processArray(members) {
   }
 
   return {
-    catalogGroupsContent,
     catalogItemsContent,
-    typeDetailsNavItems: items
+    catalogGroupsContent,
+    catalogFunctionsContent,
+    typeDetailsNavItems
   };
 }
 
@@ -223,7 +227,14 @@ export default async function generateDocs() {
   |------|------|
   `;
 
+  const catalogFunctionsContentHeader = `A Catalog Function is a parameterized service where the user supplies the parameters and gets back some result. The Type column in the table below indicates the \`"type"\` property to use in the [Initialization File](../customizing/initialization-files.md).
+
+  | Name | Type |
+  |------|------|
+  `;
+
   const {
+    catalogFunctionsContent,
     catalogGroupsContent,
     catalogItemsContent,
     typeDetailsNavItems
@@ -238,6 +249,10 @@ export default async function generateDocs() {
   fs.writeFileSync(
     "doc/connecting-to-data/catalog-items.md",
     catalogItemsContentHeader + catalogItemsContent
+  );
+  fs.writeFileSync(
+    "doc/connecting-to-data/catalog-functions.md",
+    catalogFunctionsContentHeader + catalogFunctionsContent
   );
   fs.writeFileSync(
     "doc/connecting-to-data/catalog-groups.md",
