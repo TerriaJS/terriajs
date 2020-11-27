@@ -1,3 +1,5 @@
+// @ts-check
+
 import documentation from "documentation";
 import fs from "fs";
 import YAML from "yaml";
@@ -7,27 +9,11 @@ import { ObjectArrayTrait } from "../lib/Traits/objectArrayTrait";
 import { ObjectTrait } from "../lib/Traits/objectTrait";
 import { PrimitiveArrayTrait } from "../lib/Traits/primitiveArrayTrait";
 import { PrimitiveTrait } from "../lib/Traits/primitiveTrait";
+import Terria from "../lib/Models/Terria";
 
 // Run with cwd = /build
 // Gets /build/doc/mkdocs.yml (which is a direct copy of /doc/mkdocs.yml)
 //  adds all of the auto-generated pages and writes out to /build/mkdocs.yml
-
-registerCatalogMembers();
-const catalogMembers = Array.from(CatalogMemberFactory.constructors);
-
-const members = catalogMembers
-  .map(member => {
-    const memberName = member[1];
-    return new memberName();
-  }, this)
-  .sort(function(a, b) {
-    if (a.constructor.name < b.constructor.name) return -1;
-    else if (a.constructor.name > b.constructor.name) return 1;
-    return 0;
-  });
-
-const mkDocsConfig = YAML.parse(fs.readFileSync("doc/mkdocs.yml", "utf8"));
-const items = [];
 
 function markdownFromTraitType(trait) {
   let base = "";
@@ -86,7 +72,7 @@ function markdownFromObjectTrait(objectTrait, traitKey, sampleMember) {
 }
 
 function getDescription(metadata) {
-  return concatTags(metadata, true);
+  return concatTags(metadata);
 }
 
 function concatTags(inNode) {
@@ -171,19 +157,10 @@ ${example}
   return [content, additionalContent].join("");
 }
 
-let catalogItemsContent = `A Catalog Item is a dataset or service that can be enabled for display on the map or in a chart.  The Type column in the table below indicates the \`"type"\` property to use in the [Initialization File](../customizing/initialization-files.md).
-
-| Name | Type |
-|------|------|
-`;
-
-let catalogGroupsContent = `A Catalog Group is a folder in the TerriaJS catalog that contains [Catalog Items](catalog-items.md), [Catalog Functions](catalog-functions.md), and other groups. The Type column in the table below indicates the \`"type"\` property to use in the [Initialization File](../customizing/initialization-files.md).
-
-| Name | Type |
-|------|------|
-`;
-
-async function processArray() {
+async function processArray(members) {
+  const items = [];
+  let catalogItemsContent = "";
+  let catalogGroupsContent = "";
   for (let i = 0; i < members.length; i++) {
     const sampleMember = members[i];
     const memberName = sampleMember.constructor.name;
@@ -207,16 +184,65 @@ async function processArray() {
       content
     );
   }
-  mkDocsConfig.nav[3]["Connecting to Data"][6]["Catalog Type Details"] = items;
+
+  return {
+    catalogGroupsContent,
+    catalogItemsContent,
+    typeDetailsNavItems: items
+  };
+}
+
+export default async function generateDocs() {
+  const terria = new Terria();
+
+  registerCatalogMembers();
+  const catalogMembers = Array.from(CatalogMemberFactory.constructors);
+
+  const members = catalogMembers
+    .map(member => {
+      const memberName = member[1];
+      return new memberName(undefined, terria);
+    }, this)
+    .sort(function(a, b) {
+      if (a.constructor.name < b.constructor.name) return -1;
+      else if (a.constructor.name > b.constructor.name) return 1;
+      return 0;
+    });
+
+  const mkDocsConfig = YAML.parse(fs.readFileSync("doc/mkdocs.yml", "utf8"));
+
+  const catalogItemsContentHeader = `A Catalog Item is a dataset or service that can be enabled for display on the map or in a chart.  The Type column in the table below indicates the \`"type"\` property to use in the [Initialization File](../customizing/initialization-files.md).
+
+  | Name | Type |
+  |------|------|
+  `;
+
+  const catalogGroupsContentHeader = `A Catalog Group is a folder in the TerriaJS catalog that contains [Catalog Items](catalog-items.md), [Catalog Functions](catalog-functions.md), and other groups. The Type column in the table below indicates the \`"type"\` property to use in the [Initialization File](../customizing/initialization-files.md).
+
+  | Name | Type |
+  |------|------|
+  `;
+
+  const {
+    catalogGroupsContent,
+    catalogItemsContent,
+    typeDetailsNavItems
+  } = await processArray(members);
+
+  mkDocsConfig.nav[3]["Connecting to Data"][6][
+    "Catalog Type Details"
+  ] = typeDetailsNavItems;
 
   fs.writeFileSync("mkdocs.yml", YAML.stringify(mkDocsConfig));
+
   fs.writeFileSync(
     "doc/connecting-to-data/catalog-items.md",
-    catalogItemsContent
+    catalogItemsContentHeader + catalogItemsContent
   );
   fs.writeFileSync(
     "doc/connecting-to-data/catalog-groups.md",
-    catalogGroupsContent
+    catalogGroupsContentHeader + catalogGroupsContent
   );
 }
-processArray();
+
+generateDocs();

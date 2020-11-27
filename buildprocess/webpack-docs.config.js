@@ -16,11 +16,18 @@ module.exports = function() {
     resolve: {
       alias: {},
       modules: ["node_modules"],
-      extensions: [".ts", ".js", ".json"]
+      extensions: [".ts", ".js", ".jsx", ".tsx", ".json"]
     },
     externals: {
       vue: "vue"
-    }
+    },
+    plugins: [
+      new MiniCssExtractPlugin({
+        filename: "TerriaJS.css",
+        disable: false,
+        ignoreOrder: true
+      })
+    ]
   };
   return configureWebpackForTerriaJS(
     path.dirname(require.resolve("../package.json")),
