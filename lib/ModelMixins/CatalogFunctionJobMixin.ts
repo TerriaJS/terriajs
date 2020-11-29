@@ -202,7 +202,6 @@ function CatalogFunctionJobMixin<
      * - `pollForResults` returns true {@link CatalogFunctionJobMixin#refreshData}
      * - on `loadMetadata` if `jobStatus` is "finished", and `!downloadedResults`  {@link CatalogFunctionJobMixin#forceLoadMetadata}
      */
-    @action
     private async onJobFinish(addResultsToWorkbench = this.inWorkbench) {
       // Download results when finished
       if (
@@ -291,7 +290,6 @@ function CatalogFunctionJobMixin<
     }
     protected async forceLoadMapItems() {}
 
-    @action
     protected async forceLoadMetadata() {
       if (this.jobStatus === "finished" && !this.downloadedResults) {
         await this.onJobFinish();
