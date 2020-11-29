@@ -15,6 +15,7 @@ Change Log
 * Hide info sections with empty content in the explorer preview.
 * Port `shareKeys` from version 7
 * Update/re-enable `GeoJsonCatalogItemSpec` for v8.
+* add `DataCustodianTraits` to `WebMapServiceCatalogGroupTraits`
 * [The next improvement]
 
 #### 8.0.0-alpha.61
