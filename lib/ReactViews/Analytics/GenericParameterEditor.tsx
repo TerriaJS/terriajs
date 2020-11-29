@@ -16,12 +16,13 @@ export default class GenericParameterEditor extends React.Component<{
   }
 
   render() {
+    const value = (this.props.parameter.value || "") as string;
     return (
       <input
         className={Styles.field}
         type="text"
         onChange={this.onChange.bind(this)}
-        value={this.props.parameter.value as string}
+        value={value}
       />
     );
   }
