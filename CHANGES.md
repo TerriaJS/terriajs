@@ -34,12 +34,6 @@ Change Log
 * Added `DataCustodianTraits` to `WebMapServiceCatalogItem`
 * Added `disableDimensionSelectors` trait to `WebMapServiceCatalogItem`. Acheives the same effect of `disableUserChanges` in v7.
 * Temporarily stopped using `papaparse` for fetching Csv urls till an upstream bug is fixed.
-* Remove legend broken image icon
-* Added high-DPI legends for geoserver WMS (+ font size, label margin and a few other tweaks)
-* `LegendTraits` is now part of `CatalogMemberTraits`
-* Addd `imageScaling` to `LegendTraits`
-* WMS now `isGeoserver` if "geoserver` is in the URL
-* [The next improvement]
 * Fix async bug with loading `ReferenceMixin` and then `Mappable` items in `initSources`
 * Remove `addToWorkbench`, it has been replaced with `workbench.add`
 * Improve handling of `ArcGisMapServerCatalogItem` when dealing with tiled layers.
