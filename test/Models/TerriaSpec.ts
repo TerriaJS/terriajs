@@ -121,33 +121,7 @@ describe("Terria", function() {
     });
 
     describe("via loadMagdaConfig", function() {
-      it("should dereference uniqueId to `/`", function(done) {
-        expect(terria.catalog.group.uniqueId).toEqual("/");
-
-        jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
-          // terria's "Magda derived url"
-          responseText: mapConfigBasicString
-        });
-        // no init sources before starting
-        expect(terria.initSources.length).toEqual(0);
-
-        terria
-          .start({
-            configUrl: "test/Magda/map-config-basic.json"
-          })
-          .then(function() {
-            expect(terria.catalog.group.uniqueId).toEqual("/");
-            done();
-          })
-          .catch(error => {
-            done.fail(error);
-          });
-      });
       it("works with basic initializationUrls", function(done) {
-        jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
-          // terria's "Magda derived url"
-          responseText: mapConfigBasicString
-        });
         // no init sources before starting
         expect(terria.initSources.length).toEqual(0);
 
@@ -173,10 +147,6 @@ describe("Terria", function() {
           });
       });
       it("works with inline init", async function() {
-        // inline init
-        jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
-          responseText: mapConfigInlineInitString
-        });
         // no init sources before starting
         expect(terria.initSources.length).toEqual(0);
         await terria.start({
@@ -202,11 +172,6 @@ describe("Terria", function() {
         }
       });
       it("parses dereferenced group aspect", function(done) {
-        expect(terria.catalog.group.uniqueId).toEqual("/");
-        // dereferenced res
-        jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
-          responseText: mapConfigDereferencedString
-        });
         terria
           .start({
             configUrl: "test/Magda/map-config-dereferenced.json"
