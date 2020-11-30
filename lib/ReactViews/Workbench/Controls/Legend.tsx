@@ -115,6 +115,13 @@ export default class Legend extends React.Component<{
             <object
               data={proxiedUrl}
               type={legend.urlMimeType}
+              // Set maxWidth to 100% if no scaling required (otherwise - see resizeLegendImage)
+              style={{
+                maxWidth:
+                  !isDefined(legend.imageScaling) || legend.imageScaling === 1
+                    ? "100%"
+                    : undefined
+              }}
               onLoad={evt => this.resizeLegendImage.bind(this, evt, legend)()}
             />
           </a>

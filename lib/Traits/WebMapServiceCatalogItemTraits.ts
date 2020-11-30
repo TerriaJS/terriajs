@@ -284,6 +284,14 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   supportsColorScaleRange: boolean = false;
 
   @primitiveTrait({
+    type: "boolean",
+    name: "Supports GetLegendGraphic requests",
+    description:
+      "Gets or sets whether this WMS server supports GetLegendGraphic requests."
+  })
+  supportsGetLegendGraphic: boolean = false;
+
+  @primitiveTrait({
     type: "number",
     name: "Color scale minimum",
     description:
