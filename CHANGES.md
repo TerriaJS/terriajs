@@ -16,6 +16,13 @@ Change Log
 * Port `shareKeys` from version 7
 * Update/re-enable `GeoJsonCatalogItemSpec` for v8.
 * add `DataCustodianTraits` to `WebMapServiceCatalogGroupTraits`
+* Remove legend broken image icon
+* Added high-DPI legends for geoserver WMS (+ font size, label margin and a few other tweaks)
+* `LegendTraits` is now part of `CatalogMemberTraits`
+* Add `imageScaling` to `LegendTraits`
+* WMS now `isGeoserver` if "geoserver` is in the URL
+* Add WMS `supportsGetLegendRequest` trait
+* Improved handling of WMS default styles
 * [The next improvement]
 
 #### 8.0.0-alpha.61
