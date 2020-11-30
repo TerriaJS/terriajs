@@ -153,12 +153,12 @@ describe("WebMapServiceCatalogItem", function() {
         expect(wmsItem.styleSelectableDimensions[0].selectedId).toBe(
           "contour/ferret"
         );
-        expect(wmsItem.styleSelectableDimensions[0].options!.length).toBe(40);
+        expect(wmsItem.styleSelectableDimensions[0].options!.length).toBe(41);
 
         expect(wmsItem.styleSelectableDimensions[1].selectedId).toBe(
           "shadefill/alg2"
         );
-        expect(wmsItem.styleSelectableDimensions[0].options!.length).toBe(40);
+        expect(wmsItem.styleSelectableDimensions[0].options!.length).toBe(41);
 
         expect(wmsItem.wmsDimensionSelectableDimensions[0].name).toBe(
           "elevation"
