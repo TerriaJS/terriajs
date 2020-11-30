@@ -126,6 +126,8 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
     });
   }
 
+  async loadMapItems() {}
+
   @computed get mapItems() {
     return [this.pointEntities, this.otherEntities];
   }
