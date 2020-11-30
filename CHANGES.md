@@ -74,8 +74,7 @@ Change Log
 * Chart expanded from feature info panel will now by default show only the first chart line.
 * Chart component attribtues `column-titles` and `column-units` will now accept a simpler syntax like: "Time,Speed" or "ms,kmph"
 * Fix presentation of the WMS Dimension metadata.
-* Magda based maps now mimic "root group uniqueId === '/'" behaviour, so that mix and matching map init approaches behave more consistently
-* [The next improvement]
+* Magda based maps now mimic "root group uniqueId === '/'" behaviour, so that mix and matching map init approaches behave more consistently (REVERTED in 8.0.0-alpha.62)
   
 #### 8.0.0-alpha.56
 * Add `itemProperties` trait to `WebMapMapCatalogGroup`.
