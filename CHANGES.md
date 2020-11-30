@@ -16,6 +16,9 @@ Change Log
 * Port `shareKeys` from version 7
 * Update/re-enable `GeoJsonCatalogItemSpec` for v8.
 * add `DataCustodianTraits` to `WebMapServiceCatalogGroupTraits`
+* Revert "Improve magda root group behaviour for sharing" - This reverts commit 7e860b24cd7b0cc8406327c507501cf9fc232b27.
+* Revert "Fix magda based maps when mix matching init styles" - This reverts commit 12eb658b3a64ecd17dc4527d26183c82873e71d9 and 69f045dc5f82efb3c91c2a8193a240f968177834.
+* Add `"/"` share key for magda root group so we have backward compatibility with JSON-based map share links
 * [The next improvement]
 
 #### 8.0.0-alpha.61
@@ -32,7 +35,7 @@ Change Log
 * Improve handling of `ArcGisMapServerCatalogItem` when dealing with tiled layers.
 * Ensure there aren't more bins than unique values for a `TableStyle`
 * Add access control properties to items fetched from Esri Portal.
-* Improves magda based root group mimic behaviour introdcued in 8.0.0-alpha.57 by adding `/` to `knownContainerUniqueIds` when `map-config*` is encountered
+* Improves magda based root group mimic behaviour introdcued in 8.0.0-alpha.57 by adding `/` to `knownContainerUniqueIds` when `map-config*` is encountered (REVERTED in 8.0.0-alpha.62)
 * Fixed broken chart disclaimers in shared views.
 * Fixed a bug where chart disclaimers were shown even for chart items disabled in the workbench.
 * Fixed a bug where charts with titles containing the text "lat" or "lon" were hidden from feature info panel.

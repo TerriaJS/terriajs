@@ -980,6 +980,8 @@ export default class Terria {
 
     if (aspects.group && aspects.group.members) {
       const id = config.id;
+      // Add share key for magda root group so we have backward compatibility with JSON-based map share links
+      this.addShareKey(id, "/");
 
       let existingReference = this.getModelById(MagdaReference, id);
       if (existingReference === undefined) {
