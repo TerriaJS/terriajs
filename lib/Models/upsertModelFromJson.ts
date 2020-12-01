@@ -8,6 +8,7 @@ import ModelFactory from "./ModelFactory";
 import StubCatalogItem from "./StubCatalogItem";
 import Terria from "./Terria";
 import updateModelFromJson from "./updateModelFromJson";
+import GroupMixin from "../ModelMixins/GroupMixin";
 
 export interface UpsertModelFromJsonOptions {
   addModelToTerria?: boolean;
@@ -41,6 +42,7 @@ export default function upsertModelFromJson(
   defaults(options, defaultOptions);
 
   let uniqueId = json.id;
+  let model = terria.getModelById(BaseModel, uniqueId);
   if (uniqueId === undefined) {
     const localId = json.localId || json.name;
     if (localId === undefined) {
@@ -53,14 +55,18 @@ export default function upsertModelFromJson(
     let id = (parentId || "") + "/" + localId;
     let idIncrement = 1;
     uniqueId = id;
-
-    while (terria.getModelById(BaseModel, uniqueId) !== undefined) {
-      uniqueId = id + "(" + idIncrement + ")";
-      idIncrement++;
+    model = terria.getModelById(BaseModel, uniqueId);
+    // Duplicate catalogue items should be given a unique id by incrementing its id
+    // But if it's a group, leave it as is, so we can later merge all groups with the same id
+    if (!GroupMixin.isMixedInto(model)) {
+      while (model !== undefined) {
+        uniqueId = id + "(" + idIncrement + ")";
+        idIncrement++;
+        model = terria.getModelById(BaseModel, uniqueId);
+      }
     }
   }
 
-  let model = terria.getModelById(BaseModel, uniqueId);
   if (model === undefined && options.matchByShareKey && json.id !== undefined) {
     const potentialId = terria.getModelIdByShareKey(json.id);
     if (potentialId !== undefined) {
