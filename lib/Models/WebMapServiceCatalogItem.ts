@@ -200,7 +200,10 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
       if (isDefined(legendUri)) {
         // Add geoserver related LEGEND_OPTIONS to match terria styling (if supported)
-        if (this.catalogItem.isGeoServer) {
+        if (
+          this.catalogItem.isGeoServer &&
+          legendUri.hasQuery("request", "GetLegendGraphic")
+        ) {
           // TODO: pull these values from legend style vars
           let legendOptions =
             "fontName:Courier;fontStyle:bold;fontSize:12;forceLabels:on;fontAntiAliasing:true;labelMargin:5";
