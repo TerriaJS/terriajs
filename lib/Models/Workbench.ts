@@ -1,9 +1,14 @@
+import i18next from "i18next";
 import { action, computed, observable } from "mobx";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import TerriaError from "../Core/TerriaError";
+import GroupMixin from "../ModelMixins/GroupMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
-import CommonStrata from "../Models/CommonStrata";
-import { BaseModel } from "./Model";
 import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
+import CommonStrata from "../Models/CommonStrata";
+import Chartable from "./Chartable";
+import Mappable from "./Mappable";
+import { BaseModel } from "./Model";
 
 interface WorkbenchItem extends BaseModel {
   supportsReordering?: boolean;
@@ -100,7 +105,7 @@ export default class Workbench {
    * @param item The model to add.
    */
   @action
-  add(item: WorkbenchItem, index: number = 0) {
+  private insertItem(item: WorkbenchItem, index: number = 0) {
     if (this.contains(item)) {
       return;
     }
@@ -148,6 +153,58 @@ export default class Workbench {
     // Make sure the reference, rather than the target, is added to the items list.
     const referenceItem = item.sourceReference ? item.sourceReference : item;
     this._items.splice(index, 0, referenceItem);
+  }
+
+  /**
+   * Adds or removes a model to/from the workbench. If the model is a reference,
+   * it will also be dereferenced. If, after dereferencing, the item turns out not to
+   * be {@link Mappable} or {@link Chartable} but it is a {@link GroupMixin}, it will
+   * be removed from the workbench. If it is mappable, `loadMapItems` will be called.
+   * If it is chartable, `loadChartItems` will be called.
+   *
+   * @param item The item to add to or remove from the workbench.
+   */
+  public async add(item: BaseModel | BaseModel[]): Promise<void> {
+    if (Array.isArray(item)) {
+      await Promise.all(item.map(i => this.add(i)));
+      return;
+    }
+
+    this.insertItem(item);
+
+    try {
+      if (ReferenceMixin.is(item)) {
+        await item.loadReference();
+
+        const target = item.target;
+        if (
+          target &&
+          GroupMixin.isMixedInto(target) &&
+          !Mappable.is(target) &&
+          !Chartable.is(target)
+        ) {
+          this.remove(item);
+        } else if (target) {
+          return this.add(target);
+        }
+      }
+
+      if (Mappable.is(item)) {
+        await item.loadMapItems();
+      }
+
+      if (Chartable.is(item)) {
+        await item.loadChartItems();
+      }
+    } catch (e) {
+      this.remove(item);
+      throw e instanceof TerriaError
+        ? e
+        : new TerriaError({
+            title: i18next.t("workbench.addItemErrorTitle"),
+            message: i18next.t("workbench.addItemErrorMessage")
+          });
+    }
   }
 
   /**

@@ -15,7 +15,6 @@ import GroupMixin from "./GroupMixin";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import TerriaError from "../Core/TerriaError";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
-import addToWorkbench from "../Models/addToWorkbench";
 
 class FunctionJobStratum extends LoadableStratum(CatalogFunctionJobTraits) {
   constructor(
@@ -134,7 +133,7 @@ function CatalogFunctionJobMixin<
     public async invoke() {
       this.setTrait(CommonStrata.user, "jobStatus", "running");
       try {
-        const finished = await this._invoke();
+        const finished = await runInAction(() => this._invoke());
         if (finished) {
           this.setTrait(CommonStrata.user, "jobStatus", "finished");
           this.onJobFinish(true);
@@ -166,6 +165,7 @@ function CatalogFunctionJobMixin<
     /**
      * This function adapts AutoRefreshMixin's refreshData with this Mixin's pollForResults - adding the boolean return value which triggers refresh disable
      */
+    @action
     refreshData() {
       if (this.pollingForResults) {
         return;
@@ -214,8 +214,7 @@ function CatalogFunctionJobMixin<
         this.results.forEach(result => {
           if (Mappable.is(result))
             result.setTrait(CommonStrata.user, "show", true);
-          if (addResultsToWorkbench)
-            addToWorkbench(this.terria.workbench, result);
+          if (addResultsToWorkbench) this.terria.workbench.add(result);
 
           this.terria.addModel(result);
         });
