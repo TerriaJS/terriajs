@@ -63,11 +63,9 @@ const HotspotSummary = createReactClass({
           >
             <div>
               <div className={Styles["microstory-title"]}>
-                {" "}
                 {microstory["micro-story-title"]}{" "}
               </div>
               <div className={Styles["microstory-desc"]}>
-                {" "}
                 {microstory["micro-story-desc"]}{" "}
               </div>
             </div>
@@ -76,7 +74,7 @@ const HotspotSummary = createReactClass({
       });
 
     return (
-      <div>
+      <div className={Styles.RCHotspotSummary}>
         <div className={Styles.flex}>
           <div className={Styles.flexGrow}>
             <Icon glyph={Icon.GLYPHS[sector]} className={Styles.icon} />

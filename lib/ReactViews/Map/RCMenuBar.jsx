@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Styles from "./rc-menu-bar.scss";
 import classNames from "classnames";
-import Icon from "../Icon.jsx";
+// import Icon from "../Icon.jsx";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 import PropTypes from "prop-types";
 import Branding from "../SidePanel/Branding";
+
 const RCMenuBar = props => {
   const { viewState, terria } = props;
   const [showButton, setShowButton] = useState(false);
@@ -24,6 +25,7 @@ const RCMenuBar = props => {
     viewState.isHotspotsFiltered = false;
     setShowButton(false);
   };
+
   return (
     <div
       className={classNames(
@@ -35,7 +37,8 @@ const RCMenuBar = props => {
         <li className={Styles.menuItem}>
           <Branding terria={terria} viewState={viewState} />
         </li>
-        <If condition={showButton}>
+        {/*
+          <If condition={showButton}>
           <li className={Styles.menuItem}>
             <button
               className={Styles.backToBtn}
@@ -47,13 +50,15 @@ const RCMenuBar = props => {
             </button>
           </li>
         </If>
+        */}
       </ul>
     </div>
   );
 };
 
 RCMenuBar.propTypes = {
-  viewState: PropTypes.object
+  viewState: PropTypes.object,
+  terria: PropTypes.object
 };
 
 export default RCMenuBar;

@@ -6,7 +6,13 @@
   justify-content: space-evenly;
   border-radius: $radius-small;
   background-color: $tabs-container-bg;
-  width: 100%;
+  order: 1;
+
+  @media (min-width: $xs) {
+    margin: 16px;
+    order: 0;
+  }
+
   svg {
     color: $color-primary;
     cursor: pointer;
@@ -16,18 +22,9 @@
     fill-opacity: 1;
     border-radius: 2px;
     transition: background-color 200ms ease;
+
     &:hover {
       background-color: $side-panel-button-hover;
-    }
-  }
-  @media (max-width: $sm) {
-    position: absolute;
-    bottom: 0;
-    @media screen and (min-width: $xs + 1) {
-      width: $max-work-bench-width;
-    }
-    @media (orientation: landscape) {
-      width: 50%;
     }
   }
 }

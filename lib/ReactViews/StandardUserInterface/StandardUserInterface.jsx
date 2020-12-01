@@ -15,7 +15,7 @@ import Notification from "./../Notification/Notification.jsx";
 import ObserveModelMixin from "./../ObserveModelMixin";
 import ProgressBar from "../Map/ProgressBar.jsx";
 import SidePanel from "./../SidePanel/SidePanel.jsx";
-import SidePanelContent from "./../SidePanel/SidePanelContent";
+import SidePanelContent from "./../SidePanel/SidePanelSectorTabs";
 import processCustomElements from "./processCustomElements";
 import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import RCStoryPanel from "./../Story/RCStoryPanel.jsx";
@@ -24,7 +24,7 @@ import ToolPanel from "./../ToolPanel.jsx";
 import SatelliteGuide from "../Guide/SatelliteGuide.jsx";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage.jsx";
 import { exitStory } from "../../Models/Receipt";
-import { Small, Medium } from "../Generic/Responsive";
+import { Medium, Small } from "../Generic/Responsive";
 import classNames from "classnames";
 import "inobounce";
 
@@ -184,7 +184,7 @@ const StandardUserInterface = createReactClass({
                   !this.props.viewState.showToolPanel()
                 }
               >
-                {/* <Small>
+                <Small>
                   <MobileHeader
                     terria={terria}
                     menuItems={customElements.menu}
@@ -192,7 +192,7 @@ const StandardUserInterface = createReactClass({
                     version={this.props.version}
                     allBaseMaps={allBaseMaps}
                   />
-                </Small> */}
+                </Small>
                 <Small>
                   <div className={Styles.middleContainer}>
                     <section
@@ -228,12 +228,7 @@ const StandardUserInterface = createReactClass({
                     )}
 
                     {showHotspotSummary && (
-                      <div className={Styles.mobilePadding}>
-                        <RCHotspotSummary
-                          terria={terria}
-                          viewState={viewState}
-                        />
-                      </div>
+                      <RCHotspotSummary terria={terria} viewState={viewState} />
                     )}
                   </div>
                 </Small>
@@ -246,8 +241,6 @@ const StandardUserInterface = createReactClass({
                       customFeedbacks={customElements.feedback}
                     />
                   </section>
-                </Medium>
-                <Medium>
                   <div
                     className={classNames(
                       Styles.sidePanel,
@@ -264,8 +257,6 @@ const StandardUserInterface = createReactClass({
                       this.props.viewState.topElement = "SidePanel";
                     }}
                   >
-                    {/* <Branding terria={terria} version={this.props.version} /> */}
-
                     {showHotspotSummary && (
                       <RCHotspotSummary terria={terria} viewState={viewState} />
                     )}
@@ -313,13 +304,14 @@ const StandardUserInterface = createReactClass({
           </div>
 
           <If condition={!this.props.viewState.hideMapUi()}>
-            <div
-              className={classNames({
-                [Styles.explorerPanelIsVisible]: this.props.viewState
-                  .explorerPanelIsVisible
-              })}
-            >
-              <Medium>
+            <Medium>
+              <div
+                className={classNames({
+                  [Styles.explorerPanelIsVisible]: this.props.viewState
+                    .explorerPanelIsVisible,
+                  [Styles.NavigationMap]: true
+                })}
+              >
                 {/* <MenuBar
                   terria={terria}
                   viewState={this.props.viewState}
@@ -328,15 +320,13 @@ const StandardUserInterface = createReactClass({
                   animationDuration={animationDuration}
                 /> */}
                 <RCMenuBar terria={terria} viewState={this.props.viewState} />
-              </Medium>
-              <Medium>
                 <MapNavigation
                   terria={terria}
                   viewState={this.props.viewState}
                   navItems={customElements.nav}
                 />
-              </Medium>
-            </div>
+              </div>
+            </Medium>
           </If>
 
           <Notification viewState={this.props.viewState} />

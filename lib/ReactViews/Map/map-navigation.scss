@@ -1,31 +1,13 @@
 @import "~terriajs-variables";
 
 .map-navigation {
-  position: absolute;
-  left: 65px;
-  z-index: 1;
-  bottom: 25px;
+}
 
-  @media (min-width: $sm) {
-    top: 10px;
-    bottom: auto;
-    left: 16px;
-  }
+.control {
 }
 
 .with-time-series-controls {
   bottom: 100px;
-}
-
-.control {
-  @media (min-width: $sm) {
-    margin: 7px 0;
-    height: auto;
-  }
-  margin: 4px 8px;
-  text-align: center;
-  //ie sizing fix
-  height: 40px;
 }
 
 .navs {

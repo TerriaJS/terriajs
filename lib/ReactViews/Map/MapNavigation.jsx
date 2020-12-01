@@ -32,43 +32,43 @@ const MapNavigation = createReactClass({
 
   render() {
     return (
-      <div
-        className={classNames(Styles.mapNavigation, {
-          [Styles.withTimeSeriesControls]: defined(
-            this.props.terria.timeSeriesStack.topLayer
-          )
-        })}
-      >
-        <Medium>
+      <Medium>
+        <div
+          className={classNames(Styles.mapNavigation, {
+            [Styles.withTimeSeriesControls]: defined(
+              this.props.terria.timeSeriesStack.topLayer
+            )
+          })}
+        >
           <div className={Styles.navs}>
+            <div className={Styles.control}>
+              <ZoomControl terria={this.props.terria} />
+            </div>
+          </div>
+          <div className={Styles.controls}>
+            <For each="item" of={this.props.navItems} index="i">
+              <div className={Styles.control} key={i}>
+                {item}
+              </div>
+            </For>
             {/* <If condition={this.props.terria.viewerMode !== ViewerMode.Leaflet}>
               <div className={Styles.control}>
                 <Compass terria={this.props.terria} />
               </div>
             </If>*/}
-            <div className={Styles.control}>
-              <ZoomControl terria={this.props.terria} />
-            </div>
-          </div>
-        </Medium>
-        <div className={Styles.controls}>
-          {/*       <If condition={!this.props.terria.configParameters.disableMyLocation}>
+            {/*       <If condition={!this.props.terria.configParameters.disableMyLocation}>
             <div className={Styles.control}>
               <MyLocation terria={this.props.terria} />
             </div>
           </If>*/}
-          {/* <If condition={!this.props.terria.configParameters.disableSplitter}>
+            {/* <If condition={!this.props.terria.configParameters.disableSplitter}>
             <div className={Styles.control}>
               <ToggleSplitterTool terria={this.props.viewState.terria} />
             </div>
           </If>*/}
-          <For each="item" of={this.props.navItems} index="i">
-            <div className={Styles.control} key={i}>
-              {item}
-            </div>
-          </For>
+          </div>
         </div>
-      </div>
+      </Medium>
     );
   }
 });
