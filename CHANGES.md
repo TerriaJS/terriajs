@@ -23,6 +23,7 @@ Change Log
 * WMS now `isGeoserver` if "geoserver` is in the URL
 * Add WMS `supportsGetLegendRequest` trait
 * Improved handling of WMS default styles
+* Changed behaviour of `updateModelFromJson` such that catalog groups with the same id/name from different json files will be merged into one single group. 
 * [The next improvement]
 
 #### 8.0.0-alpha.61
