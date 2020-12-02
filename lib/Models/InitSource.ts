@@ -11,11 +11,13 @@ interface InitData {
   data: JsonObject;
 }
 
+type InitDataPromise = Promise<InitData>;
+
 interface InitOptions {
   options: InitSource[];
 }
 
-type InitSource = InitUrl | InitData | InitOptions;
+type InitSource = InitUrl | InitData | InitOptions | InitDataPromise;
 
 export function isInitUrl(initSource: InitSource): initSource is InitUrl {
   return "initUrl" in initSource;
@@ -23,6 +25,15 @@ export function isInitUrl(initSource: InitSource): initSource is InitUrl {
 
 export function isInitData(initSource: InitSource): initSource is InitData {
   return "data" in initSource;
+}
+
+export function isInitDataPromise(
+  initSource: InitSource
+): initSource is InitDataPromise {
+  return (
+    initSource &&
+    Object.prototype.toString.call(initSource) === "[object Promise]"
+  );
 }
 
 export function isInitOptions(

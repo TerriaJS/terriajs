@@ -1,3 +1,4 @@
+import { convertCatalog } from "catalog-converter";
 import i18next from "i18next";
 import { action, computed, observable, runInAction, toJS, when } from "mobx";
 import { createTransformer } from "mobx-utils";
@@ -55,7 +56,12 @@ import CommonStrata from "./CommonStrata";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import hasTraits from "./hasTraits";
-import InitSource, { isInitOptions, isInitUrl } from "./InitSource";
+import InitSource, {
+  isInitData,
+  isInitDataPromise,
+  isInitOptions,
+  isInitUrl
+} from "./InitSource";
 import Internationalization, {
   I18nStartOptions,
   LanguageConfiguration
@@ -483,6 +489,25 @@ export default class Terria {
         url
       )
     );
+
+    // look for v7 catalogs -> push v7-v8 conversion to initSources
+    if (Array.isArray(config?.v7initializationUrls)) {
+      this.initSources.push(
+        ...config?.v7initializationUrls
+          .filter((v7initUrl: any) => isJsonString(v7initUrl))
+          .map(async (v7initUrl: string) => {
+            const catalog = await loadJson5(v7initUrl);
+            const convert = convertCatalog(catalog);
+            console.log(
+              `WARNING: ${v7initUrl} is a v7 catalog - it has been upgraded to v8\nMessages:\n`
+            );
+            convert.messages.forEach(message =>
+              console.log(`- ${message.path.join(".")}: ${message.message}`)
+            );
+            return { data: convert.result as JsonObject };
+          })
+      );
+    }
     this.initSources.push(...initSources);
   }
 
@@ -1206,34 +1231,32 @@ function generateInitializationUrl(
 }
 
 const loadInitSource = createTransformer(
-  (initSource: InitSource): Promise<JsonObject | undefined> => {
-    let promise: Promise<JsonValue | undefined>;
-
+  async (initSource: InitSource): Promise<JsonObject | undefined> => {
+    let jsonValue: JsonValue | undefined;
     if (isInitUrl(initSource)) {
-      promise = loadJson5(initSource.initUrl);
+      jsonValue = await loadJson5(initSource.initUrl);
     } else if (isInitOptions(initSource)) {
-      promise = initSource.options.reduce((previousOptionPromise, option) => {
-        return previousOptionPromise
-          .then(json => {
-            if (json === undefined) {
-              return loadInitSource(option);
-            }
-            return json;
-          })
-          .catch(_ => {
+      await initSource.options.reduce(async (previousOptionPromise, option) => {
+        try {
+          const json = await previousOptionPromise;
+          if (json === undefined) {
             return loadInitSource(option);
-          });
+          }
+          return json;
+        } catch (_) {
+          return loadInitSource(option);
+        }
       }, Promise.resolve<JsonObject | undefined>(undefined));
-    } else {
-      promise = Promise.resolve(initSource.data);
+    } else if (isInitData(initSource)) {
+      jsonValue = initSource.data;
+    } else if (isInitDataPromise(initSource)) {
+      jsonValue = (await initSource).data;
     }
 
-    return promise.then(jsonValue => {
-      if (isJsonObject(jsonValue)) {
-        return jsonValue;
-      }
-      return undefined;
-    });
+    if (jsonValue && isJsonObject(jsonValue)) {
+      return jsonValue;
+    }
+    return undefined;
   }
 );
 
