@@ -20,6 +20,13 @@ Change Log
 * Port `shareKeys` from version 7
 * Update/re-enable `GeoJsonCatalogItemSpec` for v8.
 * add `DataCustodianTraits` to `WebMapServiceCatalogGroupTraits`
+* Remove legend broken image icon
+* Added high-DPI legends for geoserver WMS (+ font size, label margin and a few other tweaks)
+* `LegendTraits` is now part of `CatalogMemberTraits`
+* Add `imageScaling` to `LegendTraits`
+* WMS now `isGeoserver` if "geoserver` is in the URL
+* Add WMS `supportsGetLegendRequest` trait
+* Improved handling of WMS default styles
 * Changed behaviour of `updateModelFromJson` such that catalog groups with the same id/name from different json files will be merged into one single group. 
 * Fixed error when selecting an existing polygon in WPS input form.
 * Upgraded `catalog-converter` to 0.0.2-alpha.3.

@@ -1,11 +1,9 @@
-import mixTraits from "./mixTraits";
-import UrlTraits from "./UrlTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import MappableTraits from "./MappableTraits";
-import primitiveTrait from "./primitiveTrait";
-import objectArrayTrait from "./objectArrayTrait";
-import LegendTraits from "./LegendTraits";
 import DataCustodianTraits from "./DataCustodianTraits";
+import MappableTraits from "./MappableTraits";
+import mixTraits from "./mixTraits";
+import primitiveTrait from "./primitiveTrait";
+import UrlTraits from "./UrlTraits";
 
 export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(
   UrlTraits,
@@ -36,12 +34,4 @@ export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(
       "The 'layerDef' string to pass to the server when requesting geometry."
   })
   layerDef: string = "1=1";
-
-  @objectArrayTrait({
-    name: "Legend URLs",
-    description: "The legends to display on the workbench.",
-    type: LegendTraits,
-    idProperty: "index"
-  })
-  legends?: LegendTraits[];
 }

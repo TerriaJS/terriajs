@@ -450,7 +450,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return times;
     }
 
-    get legends(): readonly ModelPropertiesFromTraits<LegendTraits>[] {
+    @computed
+    get legends() {
       if (this.mapItems.length > 0) {
         const colorLegend = this.activeTableStyle.colorTraits.legend;
         return filterOutUndefined([colorLegend]);
