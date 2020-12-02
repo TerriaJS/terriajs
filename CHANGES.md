@@ -20,6 +20,9 @@ Change Log
 * Port `shareKeys` from version 7
 * Update/re-enable `GeoJsonCatalogItemSpec` for v8.
 * add `DataCustodianTraits` to `WebMapServiceCatalogGroupTraits`
+* Changed behaviour of `updateModelFromJson` such that catalog groups with the same id/name from different json files will be merged into one single group. 
+* Fixed error when selecting an existing polygon in WPS input form.
+* Upgraded `catalog-converter` to 0.0.2-alpha.3.
 * [The next improvement]
 
 #### 8.0.0-alpha.61
