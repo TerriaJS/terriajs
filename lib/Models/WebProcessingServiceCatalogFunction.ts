@@ -34,6 +34,7 @@ import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumOrder from "./StratumOrder";
 import updateModelFromJson from "./updateModelFromJson";
 import WebProcessingServiceCatalogFunctionJob from "./WebProcessingServiceCatalogFunctionJob";
+import flatten from "lodash-es/flatten";
 
 type AllowedValues = {
   Value?: string | string[];
@@ -261,11 +262,15 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
         name: `WPS: ${this.name ||
           this.identifier ||
           this.uniqueId} result ${new Date().toISOString()}`,
-        geojsonFeatures: this.functionParameters
-          .map(param =>
-            isGeoJsonFunctionParameter(param) ? param.geoJsonFeature : undefined
-          )
-          .filter(isDefined),
+        geojsonFeatures: flatten(
+          this.functionParameters
+            .map(param =>
+              isGeoJsonFunctionParameter(param)
+                ? param.geoJsonFeature
+                : undefined
+            )
+            .filter(isDefined)
+        ),
         url: this.url,
         identifier: this.identifier,
         executeWithHttpGet: this.executeWithHttpGet,
