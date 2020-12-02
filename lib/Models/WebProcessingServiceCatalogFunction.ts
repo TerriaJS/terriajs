@@ -2,6 +2,7 @@ import i18next from "i18next";
 import { action, computed, isObservableArray, runInAction } from "mobx";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import URI from "urijs";
+import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
 import Reproject from "../Map/Reproject";
@@ -33,6 +34,7 @@ import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumOrder from "./StratumOrder";
 import updateModelFromJson from "./updateModelFromJson";
 import WebProcessingServiceCatalogFunctionJob from "./WebProcessingServiceCatalogFunctionJob";
+import flatten from "lodash-es/flatten";
 
 type AllowedValues = {
   Value?: string | string[];
@@ -247,10 +249,12 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
   protected async createJob(id: string) {
     const job = new WebProcessingServiceCatalogFunctionJob(id, this.terria);
 
-    let dataInputs = await Promise.all(
-      this.functionParameters
-        .filter(p => isDefined(p.value) && p.value !== null)
-        .map(p => this.convertParameterToInput(p))
+    let dataInputs = filterOutUndefined(
+      await Promise.all(
+        this.functionParameters
+          .filter(p => isDefined(p.value) && p.value !== null)
+          .map(p => this.convertParameterToInput(p))
+      )
     );
 
     runInAction(() =>
@@ -258,11 +262,15 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
         name: `WPS: ${this.name ||
           this.identifier ||
           this.uniqueId} result ${new Date().toISOString()}`,
-        geojsonFeatures: this.functionParameters
-          .map(param =>
-            isGeoJsonFunctionParameter(param) ? param.geoJsonFeature : undefined
-          )
-          .filter(isDefined),
+        geojsonFeatures: flatten(
+          this.functionParameters
+            .map(param =>
+              isGeoJsonFunctionParameter(param)
+                ? param.geoJsonFeature
+                : undefined
+            )
+            .filter(isDefined)
+        ),
         url: this.url,
         identifier: this.identifier,
         executeWithHttpGet: this.executeWithHttpGet,
