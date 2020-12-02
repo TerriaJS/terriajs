@@ -13,9 +13,24 @@ import Styles from "./story-panel.scss";
 import { withTranslation } from "react-i18next";
 import { exitStory as rcExitStory } from "../../Models/Receipt";
 
-export function activateStory(story, terria) {
+export function activateStory(story, terria, scenario) {
   if (story.shareData) {
-    const promises = story.shareData.initSources.map(initSource =>
+    let initSources;
+    if (Array.isArray(story.shareData.initSources)) {
+      initSources = story.shareData.initSources;
+    } else {
+      if (scenario === undefined) {
+        // TODO: specify/determine default scenario
+        initSources =
+          story.shareData.initSources[
+            Object.keys(story.shareData.initSources)[0]
+          ];
+      } else {
+        initSources = story.shareData.initSources[scenario];
+      }
+    }
+
+    const promises = initSources.map(initSource =>
       terria.addInitSource(initSource, true)
     );
     when.all(promises).then(() => {
@@ -114,6 +129,7 @@ const RCStoryPanel = createReactClass({
   },
 
   navigateStory(index) {
+    this.currentScenario = undefined;
     if (index < 0) {
       index = this.props.terria.stories.length - 1;
     } else if (index >= this.props.terria.stories.length) {
@@ -130,7 +146,11 @@ const RCStoryPanel = createReactClass({
   // This is in StoryPanel and StoryBuilder
   activateStory(_story) {
     const story = _story ? _story : this.props.terria.stories[0];
-    activateStory(story, this.props.terria);
+    activateStory(
+      story,
+      this.props.terria,
+      this.props.viewState.currentScenario
+    );
   },
 
   onCenterScene(story) {
@@ -153,7 +173,9 @@ const RCStoryPanel = createReactClass({
 
   scenarioChanged(e) {
     console.log(e.target.value);
-    this.props.viewState.currentScenario = e.target.value;
+    //TODO: use some kind of identifier for scenario
+    this.props.viewState.currentScenario = e.target.value.toString();
+    this.activateStory(this.props.viewState.currentStoryId);
     this.setState({ state: this.state });
   },
 
