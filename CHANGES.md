@@ -3,7 +3,11 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.62)
+#### next release (8.0.0-alpha.63)
+* [The next improvement]
+
+
+#### 8.0.0-alpha.62
 * Fixed an issue with not loading the base map from init file and an issue with viewerMode from init files overriding the persisted viewerMode
 * Fixed issues surrounding tabbed catalog mode
 * Now uses `catalog-converter` to convert terriajs json in WPS response from v7 to v8.
@@ -19,7 +23,6 @@ Change Log
 * Changed behaviour of `updateModelFromJson` such that catalog groups with the same id/name from different json files will be merged into one single group. 
 * Fixed error when selecting an existing polygon in WPS input form.
 * Upgraded `catalog-converter` to 0.0.2-alpha.3.
-* [The next improvement]
 
 #### 8.0.0-alpha.61
 * New `CatalogFunctionMixin` and `CatalogFunctionJobMixin`
