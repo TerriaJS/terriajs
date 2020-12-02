@@ -81,43 +81,6 @@ import ViewerMode from "./ViewerMode";
 import Workbench from "./Workbench";
 // import overrides from "../Overrides/defaults.jsx";
 
-interface InitModels {
-  [key: string]: {
-    [key: string]: JsonValue;
-    knownContainerUniqueIds: string[];
-  };
-}
-/**
- * This is a short term gap to addresing the issue of old share links being
- * generated with a record similar to `map-config` in its share data, but
- * newer-Terria forcing the root record to an ID of `/` for a consistent
- * approach to the root record
- *
- * The hardcode approach - it will check for any `knownContainerUniqueIds` for
- * each model, and add an entry for `/` if it detects `map-config-*`
- */
-export function makeModelsMagdaCompatible(models: InitModels) {
-  return Object.entries(models).reduce((acc: any, current) => {
-    const key = current[0];
-    const value = current[1];
-    const hasMapConfig =
-      value.knownContainerUniqueIds &&
-      value.knownContainerUniqueIds.find(
-        value => value.indexOf("map-config") !== -1
-      );
-    const improvedKnownContainerUniqueIds = hasMapConfig
-      ? [...value.knownContainerUniqueIds, "/"]
-      : value.knownContainerUniqueIds;
-
-    acc[key] = {
-      ...value,
-      knownContainerUniqueIds: improvedKnownContainerUniqueIds
-    };
-
-    return acc;
-  }, {});
-}
-
 interface ConfigParameters {
   [key: string]: ConfigParameters[keyof ConfigParameters];
   appName?: string;
@@ -909,10 +872,8 @@ export default class Terria {
 
     const models = initData.models;
     if (isJsonObject(models)) {
-      const modelsTyped = <InitModels>models;
-      const magdaCompatibleModels = makeModelsMagdaCompatible(modelsTyped);
       promise = Promise.all(
-        Object.keys(magdaCompatibleModels).map(modelId => {
+        Object.keys(models).map(modelId => {
           return this.loadModelStratum(
             modelId,
             stratumId,
@@ -1043,21 +1004,19 @@ export default class Terria {
     }
 
     if (aspects.group && aspects.group.members) {
-      // const id = config.id;
-      // force config id to be `/`, purely to emulate regular terria behaviour
-      const id = "/";
-      this.removeModelReferences(this.catalog.group);
+      const id = config.id;
 
       let existingReference = this.getModelById(MagdaReference, id);
       if (existingReference === undefined) {
         existingReference = new MagdaReference(id, this);
-        this.addModel(existingReference);
+        // Add terria aspects shareKeys
+        this.addModel(existingReference, aspects?.terria?.shareKeys);
       }
 
       const reference = existingReference;
 
       reference.setTrait(CommonStrata.definition, "url", magdaRoot);
-      reference.setTrait(CommonStrata.definition, "recordId", id);
+      reference.setTrait(CommonStrata.definition, "recordId", config.id);
       reference.setTrait(CommonStrata.definition, "magdaRecord", config);
       await reference.loadReference();
       if (reference.target instanceof CatalogGroup) {
