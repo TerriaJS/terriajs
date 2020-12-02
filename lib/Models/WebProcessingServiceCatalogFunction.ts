@@ -2,6 +2,7 @@ import i18next from "i18next";
 import { action, computed, isObservableArray, runInAction } from "mobx";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import URI from "urijs";
+import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
 import Reproject from "../Map/Reproject";
@@ -247,10 +248,12 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
   protected async createJob(id: string) {
     const job = new WebProcessingServiceCatalogFunctionJob(id, this.terria);
 
-    let dataInputs = await Promise.all(
-      this.functionParameters
-        .filter(p => isDefined(p.value) && p.value !== null)
-        .map(p => this.convertParameterToInput(p))
+    let dataInputs = filterOutUndefined(
+      await Promise.all(
+        this.functionParameters
+          .filter(p => isDefined(p.value) && p.value !== null)
+          .map(p => this.convertParameterToInput(p))
+      )
     );
 
     runInAction(() =>
