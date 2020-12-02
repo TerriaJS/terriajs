@@ -204,7 +204,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
           this.catalogItem.isGeoServer &&
           legendUri.hasQuery("request", "GetLegendGraphic")
         ) {
-          // TODO: pull these values from legend style vars
           let legendOptions =
             "fontName:Courier;fontStyle:bold;fontSize:12;forceLabels:on;fontAntiAliasing:true;labelMargin:5";
 
