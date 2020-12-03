@@ -10,6 +10,7 @@ import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
+import Color from "terriajs-cesium/Source/Core/Color";
 import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
@@ -21,14 +22,34 @@ import runLater from "../Core/runLater";
 import CommonStrata from "../Models/CommonStrata";
 import createStratumInstance from "../Models/createStratumInstance";
 import Feature from "../Models/Feature";
-import Model from "../Models/Model";
+import LoadableStratum from "../Models/LoadableStratum";
+import Model, { BaseModel } from "../Models/Model";
 import proxyCatalogItemUrl from "../Models/proxyCatalogItemUrl";
+import StratumOrder from "../Models/StratumOrder";
 import Cesium3DTilesCatalogItemTraits from "../Traits/Cesium3DCatalogItemTraits";
 import Cesium3dTilesTraits, {
   OptionsTraits
 } from "../Traits/Cesium3dTilesTraits";
 import AsyncMappableMixin from "./AsyncMappableMixin";
 import ShadowMixin from "./ShadowMixin";
+
+class Cesium3dTilesStratum extends LoadableStratum(Cesium3dTilesTraits) {
+  constructor() {
+    super();
+  }
+
+  duplicateLoadableStratum(model: BaseModel): this {
+    return new Cesium3dTilesStratum() as this;
+  }
+
+  @computed
+  get opacity() {
+    return 1.0;
+  }
+}
+
+// Register the Cesium3dTilesStratum
+StratumOrder.instance.addLoadStratum(Cesium3dTilesStratum.name);
 
 interface Cesium3DTilesCatalogItemIface
   extends InstanceType<ReturnType<typeof Cesium3dTilesMixin>> {}
@@ -50,15 +71,22 @@ class ObservableCesium3DTileset extends Cesium3DTileset {
   }
 }
 
-export default function Cesium3dTilesMixin<
-  T extends Constructor<Model<Cesium3dTilesTraits>>
->(Base: T) {
+function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
+  Base: T
+) {
   abstract class Cesium3dTilesMixin extends ShadowMixin(
     AsyncMappableMixin(Base)
   ) {
     readonly canZoomTo = true;
 
     private tileset?: ObservableCesium3DTileset;
+
+    constructor(...args: any[]) {
+      super(...args);
+      runInAction(() => {
+        this.strata.set(Cesium3dTilesStratum.name, new Cesium3dTilesStratum());
+      });
+    }
 
     get isMappable() {
       return true;
@@ -307,14 +335,35 @@ export default function Cesium3dTilesMixin<
     @computed get cesiumTileStyle() {
       if (
         !isDefined(this.style) &&
+        (!isDefined(this.opacity) || this.opacity === 1) &&
         !isDefined(this.showExpressionFromFilters)
       ) {
         return;
       }
+
       const style = clone(toJS(this.style) || {});
+      const opacity = clone(toJS(this.opacity));
+
+      if (!isDefined(style.defines)) {
+        style.defines = { opacity };
+      } else {
+        style.defines = Object.assign(style.defines, { opacity });
+      }
+
+      if (!isDefined(style.color)) {
+        style.color = "color('white', ${opacity})";
+      } else if (typeof style.color == "string") {
+        // Check if the color specified is just a css color
+        const cssColor = Color.fromCssColorString(style.color);
+        if (isDefined(cssColor)) {
+          style.color = `color('${style.color}', \${opacity})`;
+        }
+      }
+
       if (isDefined(this.showExpressionFromFilters)) {
         style.show = toJS(this.showExpressionFromFilters);
       }
+
       return new Cesium3DTileStyle(style);
     }
 
@@ -370,6 +419,8 @@ export default function Cesium3dTilesMixin<
 
   return Cesium3dTilesMixin;
 }
+
+export default Cesium3dTilesMixin;
 
 function normalizeShowExpression(
   show: any
