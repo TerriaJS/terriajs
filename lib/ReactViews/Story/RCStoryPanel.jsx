@@ -13,9 +13,24 @@ import Styles from "./story-panel.scss";
 import { withTranslation } from "react-i18next";
 import { exitStory as rcExitStory } from "../../Models/Receipt";
 
-export function activateStory(story, terria) {
+export function activateStory(story, terria, scenario) {
   if (story.shareData) {
-    const promises = story.shareData.initSources.map(initSource =>
+    let initSources;
+    if (Array.isArray(story.shareData.initSources)) {
+      initSources = story.shareData.initSources;
+    } else {
+      if (scenario === undefined) {
+        // TODO: specify/determine default scenario
+        initSources =
+          story.shareData.initSources[
+            Object.keys(story.shareData.initSources)[0]
+          ];
+      } else {
+        initSources = story.shareData.initSources[scenario];
+      }
+    }
+
+    const promises = initSources.map(initSource =>
       terria.addInitSource(initSource, true)
     );
     when.all(promises).then(() => {
@@ -114,6 +129,7 @@ const RCStoryPanel = createReactClass({
   },
 
   navigateStory(index) {
+    this.currentScenario = undefined;
     if (index < 0) {
       index = this.props.terria.stories.length - 1;
     } else if (index >= this.props.terria.stories.length) {
@@ -130,7 +146,11 @@ const RCStoryPanel = createReactClass({
   // This is in StoryPanel and StoryBuilder
   activateStory(_story) {
     const story = _story ? _story : this.props.terria.stories[0];
-    activateStory(story, this.props.terria);
+    activateStory(
+      story,
+      this.props.terria,
+      this.props.viewState.currentScenario
+    );
   },
 
   onCenterScene(story) {
@@ -151,10 +171,21 @@ const RCStoryPanel = createReactClass({
     rcExitStory(this.props.terria, this.props.viewState);
   },
 
+  scenarioChanged(e) {
+    console.log(e.target.value);
+    //TODO: use some kind of identifier for scenario
+    this.props.viewState.currentScenario = e.target.value.toString();
+    this.activateStory(this.props.viewState.currentStoryId);
+    this.setState({ state: this.state });
+  },
+
   render() {
     const { t } = this.props;
     const stories = this.props.terria.stories || [];
     const story = stories[this.props.viewState.currentStoryId];
+    const scenario = this.props.viewState.currentScenario || 0;
+
+    console.log("Current: ", this.props.viewState.currentStoryId, scenario);
 
     const exitBtn = (
       <button
@@ -166,18 +197,19 @@ const RCStoryPanel = createReactClass({
       </button>
     );
     return (
-      <Swipeable
-        onSwipedLeft={this.goToNextStory}
-        onSwipedRight={this.goToPrevStory}
-      >
-        <div
-          className={classNames(Styles.storyContainer, {
-            [Styles.isMounted]: this.state.inView
-          })}
-          key={story.id}
+      <React.Fragment>
+        <Swipeable
+          onSwipedLeft={this.goToNextStory}
+          onSwipedRight={this.goToPrevStory}
         >
-          <div className={classNames(Styles.story, Styles.relative)}>
-            {/* <div className={Styles.storyHeader}>
+          <div
+            className={classNames(Styles.storyContainer, {
+              [Styles.isMounted]: this.state.inView
+            })}
+            key={story.id}
+          >
+            <div className={classNames(Styles.story, Styles.relative)}>
+              {/* <div className={Styles.storyHeader}>
               {story.title && story.title.length > 0 ? (
                 <h3>{story.title}</h3>
               ) : (
@@ -185,63 +217,80 @@ const RCStoryPanel = createReactClass({
               )}
               
             </div> */}
-            {exitBtn}
-            {story.text && (
-              <div className={Styles.body}>
-                {parseCustomHtmlToReact(story.text)}
+              {exitBtn}
+              <div>
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  value={scenario}
+                  className="slider"
+                  id="scenarioSelector"
+                  onChange={e => {
+                    this.scenarioChanged(e);
+                  }}
+                />
               </div>
-            )}
-            <div className={Styles.navs}>
-              <Medium>
-                <div className={Styles.left}>
-                  <button
-                    className={Styles.previousBtn}
-                    disabled={this.props.terria.stories.length <= 1}
-                    title={t("story.previousBtn")}
-                    onClick={this.goToPrevStory}
-                  >
-                    <Icon glyph={Icon.GLYPHS.left} />
-                  </button>
+              {story.text && (
+                <div className={Styles.body}>
+                  {typeof story.text === "string" &&
+                    parseCustomHtmlToReact(story.text)}
+                  {typeof story.text === "object" &&
+                    parseCustomHtmlToReact(story.text[scenario])}
                 </div>
-              </Medium>
-              <If condition={this.props.terria.stories.length >= 2}>
-                <div className={Styles.navBtn}>
-                  {" "}
-                  {stories.map((story, i) => (
+              )}
+              <div className={Styles.navs}>
+                <Medium>
+                  <div className={Styles.left}>
                     <button
-                      title={t("story.navBtn", { title: story.title })}
-                      type="button"
-                      key={story.id}
-                      onClick={() => this.navigateStory(i)}
+                      className={Styles.previousBtn}
+                      disabled={this.props.terria.stories.length <= 1}
+                      title={t("story.previousBtn")}
+                      onClick={this.goToPrevStory}
                     >
-                      {" "}
-                      <Icon
-                        glyph={
-                          i === this.props.viewState.currentStoryId
-                            ? Icon.GLYPHS.circleFull
-                            : Icon.GLYPHS.circleEmpty
-                        }
-                      />
+                      <Icon glyph={Icon.GLYPHS.left} />
                     </button>
-                  ))}
-                </div>
-              </If>
-              <Medium>
-                <div className={Styles.right}>
-                  <button
-                    disabled={this.props.terria.stories.length <= 1}
-                    className={Styles.nextBtn}
-                    title={t("story.nextBtn")}
-                    onClick={this.goToNextStory}
-                  >
-                    <Icon glyph={Icon.GLYPHS.right} />
-                  </button>
-                </div>
-              </Medium>
+                  </div>
+                </Medium>
+                <If condition={this.props.terria.stories.length >= 2}>
+                  <div className={Styles.navBtn}>
+                    {" "}
+                    {stories.map((story, i) => (
+                      <button
+                        title={t("story.navBtn", { title: story.title })}
+                        type="button"
+                        key={story.id}
+                        onClick={() => this.navigateStory(i)}
+                      >
+                        {" "}
+                        <Icon
+                          glyph={
+                            i === this.props.viewState.currentStoryId
+                              ? Icon.GLYPHS.circleFull
+                              : Icon.GLYPHS.circleEmpty
+                          }
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </If>
+                <Medium>
+                  <div className={Styles.right}>
+                    <button
+                      disabled={this.props.terria.stories.length <= 1}
+                      className={Styles.nextBtn}
+                      title={t("story.nextBtn")}
+                      onClick={this.goToNextStory}
+                    >
+                      <Icon glyph={Icon.GLYPHS.right} />
+                    </button>
+                  </div>
+                </Medium>
+              </div>
             </div>
           </div>
-        </div>
-      </Swipeable>
+        </Swipeable>
+      </React.Fragment>
     );
   }
 });
