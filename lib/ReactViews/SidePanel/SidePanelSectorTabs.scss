@@ -4,6 +4,13 @@
   display: grid;
   height: 100%;
   grid-template-rows: 1fr auto;
+
+  background: {
+    image: url("../../../wwwroot/images/receipt/receipt-logo-bg.svg");
+    repeat: no-repeat;
+    position-y: bottom;
+  }
+
   order: 0;
   @media (min-width: $xs) {
     grid-template-rows: auto 1fr;

@@ -59,7 +59,6 @@
 .sidePanel {
   font-family: $font-pop;
   background-color: $side-panel-background-color;
-  background-image: $side-panel-background-image;
   width: 100%;
   overflow-y: auto;
   max-width: $max-work-bench-width;
@@ -98,13 +97,11 @@
     flex-direction: column;
   }
   .storyPanelWrapper {
-    background: $side-panel-background-image;
     box-shadow: $box-shadow-bigger;
     z-index: 10;
   }
 }
 .tabsContainer {
-  background: $side-panel-background-image;
   box-shadow: $box-shadow-bigger;
   z-index: 10;
   @media (max-width: $xs) {

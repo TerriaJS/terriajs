@@ -1,0 +1,107 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
+
+:root {
+  /* System fonts */
+  --font-family-headlines: "Montserrat";
+  --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  --text-color: #202124;
+  --text-color-headlines: #00194c;
+}
+
+/* Setup */
+html {
+  /* Change default typefaces here */
+  font-family: var(--font-family-base);
+  font-size: 100%;
+  color: var(--text-color);
+}
+/* Copy & Lists */
+p {
+  font-size: 1rem;
+  line-height: 1.2rem;
+  margin: 1.5rem 0;
+}
+ul,
+ol {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+ul li,
+ol li {
+  line-height: 1.5rem;
+}
+ul ul,
+ol ul,
+ul ol,
+ol ol {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+blockquote {
+  line-height: 1.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+/* Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  /* Change heading typefaces here */
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.5rem;
+  font-family: var(--font-family-headlines);
+  color: var(--text-color-headlines);
+  font-weight: 600;
+}
+h1 {
+  font-size: 2rem;
+  line-height: 2.625rem;
+}
+h2 {
+  font-size: 1.75rem;
+  line-height: 2.25rem;
+}
+h3 {
+  font-size: 1.375rem;
+  line-height: 1.875rem;
+}
+h4 {
+  font-size: 1.225rem;
+  line-height: 1.75rem;
+}
+h5 {
+  font-size: 1.125rem;
+  line-height: 1.625rem;
+}
+h6 {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+/* Tables */
+table {
+  margin-top: 1.5rem;
+  border-spacing: 0px;
+  border-collapse: collapse;
+}
+table td,
+table th {
+  padding: 0;
+  line-height: 33px;
+}
+/* Code blocks */
+code {
+  vertical-align: bottom;
+}
+/* Leading paragraph text */
+.lead {
+  font-size: 1.414rem;
+}
+/* Hug the block above you */
+.hug {
+  margin-top: 0;
+}
