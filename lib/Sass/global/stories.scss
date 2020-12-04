@@ -18,7 +18,17 @@
     background: #ffffff;
     box-shadow: 0px -8px 40px rgba(17, 8, 114, 0.0869565);
     border-radius: 8px;
-    padding: 16px;
+
+    .rc-card-text {
+      padding: 16px;
+    }
+
+    img {
+      width: 100%;
+      border-radius: 8px 8px 0 0;
+      height: 20vh;
+      object-fit: cover;
+    }
   }
   .bold {
     font-weight: 600;
