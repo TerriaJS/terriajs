@@ -444,6 +444,7 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
 
   static readonly type = "wmts";
   readonly canZoomTo = true;
+  readonly supportsSplitting = true;
 
   get type() {
     return WebMapTileServiceCatalogItem.type;
@@ -545,6 +546,7 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
     let rectangle;
 
     if (
+      this.clipToRectangle &&
       this.rectangle !== undefined &&
       this.rectangle.east !== undefined &&
       this.rectangle.west !== undefined &&

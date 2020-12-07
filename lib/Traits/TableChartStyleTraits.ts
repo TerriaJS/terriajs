@@ -13,14 +13,14 @@ export class TableChartLineStyleTraits extends ModelTraits {
   @primitiveTrait({
     name: "Y Axis Minimum",
     description: "The minimum value to show on the Y axis of the chart.",
-    type: "string"
+    type: "number"
   })
   yAxisMinimum?: number;
 
   @primitiveTrait({
     name: "Y Axis Maximum",
     description: "The maximum value to show on the Y axis of the chart.",
-    type: "string"
+    type: "number"
   })
   yAxisMaximum?: number;
 

@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, observable, runInAction, toJS } from "mobx";
+import { action, computed, observable, runInAction, toJS } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";

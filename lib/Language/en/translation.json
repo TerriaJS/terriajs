@@ -25,7 +25,28 @@
     },
     "end": "End tour",
     "finish": "Finish",
-    "previous": "Previous"
+    "previous": "Previous",
+    "locationSearchInput": {
+      "content": "## Location search\n\nEnter a locality or address to easily locate a point of interest on the map."
+    },
+    "exploreMapDataButton": {
+      "content": "## Explore map data\n\nBrowse the catalogue of available data and add it to the map here. You can add multiple datasets at any one time, and you’ll see them listed down below in the Workbench."
+    },
+    "sidePanelUploadButton": {
+      "content": "## Upload Data\n\nYou can upload your own data to the map to view it with other data sets. Upload a file or link to an existing online data set or data service. Supported data formats include CSV, GeoJSON, KML, GPX and CZML."
+    },
+    "menuBarMapSettingsButton": {
+      "content": "## Map Settings\n\nCustomise map options such as base maps, map image quality or remove the ground (terrain) to interrogate underground datasets."
+    },
+    "menuBarStoryButton": {
+      "content": "## Stories\n\nStories allow you to add contextual information to a dataset to bring a narrative to life. Create your own data story using the Story Editor, and share it via the ‘Share’ panel once you’re done."
+    },
+    "mapNavigationCompassOuterRing": {
+      "content": "## View controls\n\nHere you can change the view of the map. You can change the orientation of your view by using the outer ring, and you can tilt the camera angle using the inner ring. Double click to reset the view."
+    },
+    "mapNavigationSplitterIcon": {
+      "content": "## Compare\n\nA powerful feature of Terria is the ability to compare datasets using a split screen view. For datasets with a time-series/4D component, you can compare dates backwards and forwards in time using the date picker."
+    }
   },
   "measure": {
     "measureTool": "Measure Tool",
@@ -62,7 +83,9 @@
   },
   "compass": {
     "description": "Drag outer ring: rotate view.\nDrag inner gyroscope: free orbit.\nDouble-click: reset view.\nTIP: You can also free orbit by holding the CTRL key and dragging the map.",
-    "title": "Click and drag to rotate the camera"
+    "title": "Click and drag to rotate the camera",
+    "guidanceBtnTitle": "Gyroscope Guidance",
+    "guidanceBtnText": "View detailed instructions on how to use the compass"
   },
   "AR": {
     "title": "Experimental Feature: Augmented Reality",
@@ -171,11 +194,11 @@
     "btnCatalogShareTitle": "Share your catalogue with others",
     "btnStoryShareTitle": "Share your story with others",
     "btnMapShareTitle": "Share your map with others",
-    "convertNotificationTitle": "Warning: share link upgraded",
+    "convertNotificationTitle": "Notice: share link upgraded",
     "convertNotificationMessage": "This share link is based on an older version of TerriaJS - the software powering this web map. While best efforts are made to preserve the link, you might encounter issues with visualising the data.  \n\nIf you're a user of the share link, click OK to make the warning message disappear and continue with accessing the data.",
     "convertNotificationHelp": "If you have created the share link, check the Help menu to see tips on updating the share link.",
     "convertNotificationFeedback": "For questions or feedback, click here.",
-    "convertNotificationWarningsTitle": "Warnings"
+    "convertNotificationWarningsTitle": "Technical details"
   },
   "countDatasets": {
     "btnText": "Start",
@@ -477,7 +500,10 @@
     "expandAll": "Expand All",
     "toggleVisibility": "Data show/hide",
     "addItemErrorTitle": "Catalog item could not be added to workbench.",
-    "addItemErrorMessage": "An error occurred while loading the catalog item."
+    "addItemErrorMessage": "An error occurred while loading the catalog item.",
+    "dimensionsSelector": {
+      "undefinedLabel": "Not specified"
+    }
   },
   "dateTime": {
     "back": "Go back",
@@ -621,6 +647,7 @@
       "esri-group": "Esri ArcGIS Server",
       "esri-mapServer": "Esri ArcGIS MapServer (single layer)",
       "esri-featureServer": "Esri ArcGIS FeatureServer (single layer)",
+      "3d-tiles": "3D Tiles",
       "open-street-map": "Open Street Map Server",
       "geojson": "GeoJSON",
       "geoRss": "GeoRSS",
@@ -759,7 +786,7 @@
       "invalidServiceTitle": "Invalid ArcGIS Feature Service",
       "invalidServiceMessage": "An error occurred while invoking the ArcGIS Feature Service.  The server's response does not appear to be a valid Feature Service document. <p>If you entered the link manually, please verify that the link is correct.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
       "groupNotAvailableTitle": "Group is not available",
-      "groupNotAvailableMessage": "An error occurred while invoking the ArcGIS Feature Service. <p>If you entered the link manually, please verify that the link is correct.</p> <p>This error may also indicate that the server does not support {{cors}}.  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the {{appName}} team by emailing {email} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by {{appName}} itself. <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>"
+      "groupNotAvailableMessage": "An error occurred while invoking the ArcGIS Feature Service. <p>If you entered the link manually, please verify that the link is correct.</p> <p>This error may also indicate that the server does not support {{cors}}.  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the {{appName}} team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by {{appName}} itself. <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>"
     },
     "arcGisFeatureServerCatalogGroup": {
       "name": "ArcGIS Feature Server Group",
@@ -804,7 +831,9 @@
       "invalidUrlTitle": "Unable to load MapServer",
       "invalidUrlMessage": "Could not load the ArcGis MapServer endpoint because the catalog item does not have a `url`.",
       "unusableMetadataTitle": "ArcGIS Mapserver Error",
-      "unusableMetadataDefaultMessage": "This dataset returned unusable metadata."
+      "unusableMetadataDefaultMessage": "This dataset returned unusable metadata.",
+      "noLayersFoundTitle": "Could not load ArcGIS MapServer.",
+      "noLayersFoundMessage": "The Esri ArcGIS MapServer '{{name}}' has no layers to show."
     },
     "bing": {
       "name": "Bing Maps"
@@ -825,7 +854,7 @@
       "name": "Cesium Terrain",
       "name3D": "Cesium 3D Tiles",
       "notSupportedErrorTitle": "Not supported in 2D",
-      "notSupportedErrorMessage": "\"{{name}}\" cannot be show in the 2D view.  Switch to 3D and try again.",
+      "notSupportedErrorMessage": "\"{{name}}\" cannot be show in the 2D view. Switch to 3D and try again.",
       "errorRenderingTitle": "Error rendering in 3D",
       "errorRenderingMessage": "<p>An error occurred while rendering in 3D.  This probably indicates a bug in {{appName}} or an incompatibility with your system or web browser.  We'll now switch you to 2D so that you can continue your work. We would appreciate it if you report this error by sending an email to {{email}} with the technical details below.  Thank you!</p>"
     },
@@ -1038,8 +1067,8 @@
       "dataSourceErrorMessage": "This data source does not have any details available.",
       "serviceErrorMessage": "This service does not have any details available.",
       "distributionDesc": "Distribution Description",
-      "idsNotSpecifiedTitle": "distributionId or datasetId must be specified",
-      "idsNotSpecifiedMessage": "MagdaCatalogItem requires that either distributionId or datasetId be specified.",
+      "idsNotSpecifiedTitle": "recordId must be specified",
+      "idsNotSpecifiedMessage": "MagdaCatalogItem requires that recordId be specified.",
       "retrieveErrorTitle": "Error retrieving MAGDA record",
       "retrieveErrorMessage": "No distribution or dataset ID provided",
       "notCompatibleTitle": "No compatible distributions found",
@@ -1211,9 +1240,10 @@
     },
     "terrainCatalog": {
       "notSupportedErrorTitle": "Not supported in 2D",
-      "notSupportedErrorMessage": "{{name}} cannot be show in the 2D view.  Switch to 3D and try again"
+      "notSupportedErrorMessage": "{{name}} cannot be shown in the 2D view. Switch to 3D and try again"
     },
     "terria": {
+      "proxyableDomainsDeprecation": "`proxyableDomainsUrl` is no longer supported in v8",
       "initErrorTitle": "Failed to initialize services",
       "initErrorMessage": "A problem occurred with the Terria server. This may cause some layers or the conversion service to be unavailable.",
       "urlLoadErrorTitle": "Problem loading URL",
@@ -1239,6 +1269,12 @@
       "loadingInitSourceError2Message": "An error occurred while loading initialization information from {{loadSource}}. This may indicate that you followed an invalid link or that there is a problem with your Internet connection.",
       "disclaimer": "Disclaimer",
       "buttonTitleConfirm": "I Agree"
+    },
+    "thredds": {
+      "nameGroup": "THREDDS Catalog Group"
+    },
+    "threddsItem": {
+      "name": "THREDDS Item Reference"
     },
     "urlTemplateMapServer": {
       "name": "URL Template Map Server"
@@ -1304,6 +1340,7 @@
       "accessConstraints": "Access Constraints",
       "serviceContact": "Service Contact",
       "getCapabilitiesUrl": "GetCapabilities URL",
+      "defaultStyleLabel": "Default style",
       "noLayerFoundTitle": "No layer found",
       "noLayerFoundMessage": "The WMS dataset '{{name}}' has no layers matching '{{layers}}'. {{suggested}} {{line}}{{line}}Either the catalog file has been set up incorrectly, or the WMS server has changed.{{line}}{{line}}Please report this error by sending an email to {{email}}.",
       "datasetScaleErrorTitle": "Dataset will not be shown at this scale",
@@ -1372,6 +1409,7 @@
       "groupNotAvailableMessage": "An error occurred while invoking GetFeature on the WFS server. <p>If you entered the link manually, please verify that the link is correct.</p><p>This error may also indicate that the server does not support <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  If this is your server, verify that CORS is enabled and enable it if it is not. If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' Map team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by '{{appName}}' itself.</p><p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>"
     },
     "commonModelErrors": {
+      "3dTypeIn2dMode": "**Note:** This dataset can not be displayed in the 2D viewer. Switch to one of the 3D map modes.",
       "datasetScaleErrorTitle": "Dataset will not be shown at this scale",
       "datasetScaleErrorMessage": "The {{name}} dataset will not be shown when zoomed in this close to the map because the data custodian has indicated that the data is not intended or suitable for display at this scale.  Click the dataset's Info button on the Now Viewing tab for more information about the dataset and the data custodian."
     }

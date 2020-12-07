@@ -135,7 +135,10 @@ export function selectOnMap(terria, viewState, parameter) {
         })
         .then(function(catalogItems) {
           runInAction(() => {
-            parameter.value = catalogItems.map(item => item.readyData);
+            parameter.setValue(
+              CommonStrata.user,
+              catalogItems.map(item => item.readyData)
+            );
             terria.mapInteractionModeStack.pop();
             viewState.openAddData();
           });

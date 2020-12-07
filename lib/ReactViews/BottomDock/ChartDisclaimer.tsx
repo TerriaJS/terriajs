@@ -22,14 +22,20 @@ const ChartDisclaimer: React.FC<ChartDisclaimerProps> = ({ terria }) => {
   const uniqueChartDisclaimers: string[] = [
     ...new Set(
       filterOutUndefined(
-        chartView.chartableItems.map(item =>
-          hasTraits(item, DiscretelyTimeVaryingTraits, "chartDisclaimer")
-            ? item.chartDisclaimer
+        chartView.chartItems.map(chartItem =>
+          chartItem.showInChartPanel &&
+          hasTraits(
+            chartItem.item,
+            DiscretelyTimeVaryingTraits,
+            "chartDisclaimer"
+          )
+            ? chartItem.item.chartDisclaimer
             : undefined
         )
       )
     )
   ];
+
   if (uniqueChartDisclaimers.length === 0) return null;
 
   return (

@@ -1,4 +1,5 @@
 import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGroup";
+import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
 import { runInAction } from "mobx";
 import Terria from "../../lib/Models/Terria";
 import i18next from "i18next";
@@ -75,6 +76,11 @@ describe("WebMapServiceCatalogGroup", function() {
     beforeEach(async function() {
       runInAction(() => {
         wms.setTrait("definition", "url", "test/WMS/single_metadata_url.xml");
+        wms.setTrait("definition", "itemProperties", {
+          parameters: {
+            foo: "baa"
+          }
+        });
       });
       await wms.loadMembers();
     });
@@ -82,6 +88,11 @@ describe("WebMapServiceCatalogGroup", function() {
     it("loads", async function() {
       expect(wms.members.length).toEqual(1);
       expect(wms.memberModels.length).toEqual(1);
+    });
+
+    it("item properties are passed down", async function() {
+      const member: any = wms.memberModels[0];
+      expect(member.parameters.foo).toEqual("baa");
     });
   });
 

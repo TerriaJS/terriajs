@@ -1,0 +1,7 @@
+{
+    "allowProxyFor": [
+        "example.com",
+        "csiro.au"
+    ],
+    "proxyAllDomains": false
+}
