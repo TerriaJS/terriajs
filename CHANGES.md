@@ -3,7 +3,102 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.54)
+#### next release (8.0.0-alpha.63)
+* [The next improvement]
+
+
+#### 8.0.0-alpha.62
+* Fixed an issue with not loading the base map from init file and an issue with viewerMode from init files overriding the persisted viewerMode
+* Fixed issues surrounding tabbed catalog mode
+* Now uses `catalog-converter` to convert terriajs json in WPS response from v7 to v8.
+* Fixed a bug in `UserDrawing` which caused points to not be plotted on the map.
+* Fixed app crash when switching between different types of parameter in `GeoJsonParameterEditor`.
+* Fixed errors when previewing an item in a group that is open by default (`isOpen: true` in init file).
+* Fixed mobx warnings when loading geojson catalog items.
+* Add `multiplierDefaultDeltaStep` Trait, which tries to calculate sensible multiplier for `DistrectelyTimeVarying` datasets. By default it is set to 2, which results in a new timestep being displayed every 2 seconds (on average) if timeline is playing.
+* Hide info sections with empty content in the explorer preview.
+* Port `shareKeys` from version 7
+* Update/re-enable `GeoJsonCatalogItemSpec` for v8.
+* add `DataCustodianTraits` to `WebMapServiceCatalogGroupTraits`
+* Remove legend broken image icon
+* Added high-DPI legends for geoserver WMS (+ font size, label margin and a few other tweaks)
+* `LegendTraits` is now part of `CatalogMemberTraits`
+* Add `imageScaling` to `LegendTraits`
+* WMS now `isGeoserver` if "geoserver` is in the URL
+* Add WMS `supportsGetLegendRequest` trait
+* Improved handling of WMS default styles
+* Changed behaviour of `updateModelFromJson` such that catalog groups with the same id/name from different json files will be merged into one single group. 
+* Fixed error when selecting an existing polygon in WPS input form.
+* Upgraded `catalog-converter` to 0.0.2-alpha.3.
+
+#### 8.0.0-alpha.61
+* New `CatalogFunctionMixin` and `CatalogFunctionJobMixin`
+* Tsified `FunctionParameters`
+* New `YourDataYourRegions` `CatalogFunctionMixin`
+* Added `inWorkbench` property
+* Added `addModelToTerria` flag to `upsertModelFromJson` function
+* Added `DataCustodianTraits` to `WebMapServiceCatalogItem`
+* Added `disableDimensionSelectors` trait to `WebMapServiceCatalogItem`. Acheives the same effect of `disableUserChanges` in v7.
+* Temporarily stopped using `papaparse` for fetching Csv urls till an upstream bug is fixed.
+* Fix async bug with loading `ReferenceMixin` and then `Mappable` items in `initSources`
+* Remove `addToWorkbench`, it has been replaced with `workbench.add`
+* Improve handling of `ArcGisMapServerCatalogItem` when dealing with tiled layers.
+* Ensure there aren't more bins than unique values for a `TableStyle`
+* Add access control properties to items fetched from Esri Portal.
+* Improves magda based root group mimic behaviour introdcued in 8.0.0-alpha.57 by adding `/` to `knownContainerUniqueIds` when `map-config*` is encountered
+* Fixed broken chart disclaimers in shared views.
+* Fixed a bug where chart disclaimers were shown even for chart items disabled in the workbench.
+* Fixed a bug where charts with titles containing the text "lat" or "lon" were hidden from feature info panel.
+* Fixed a bug that occurred when loading config from magda. `initializationUrls` are now applied even if `group` aspect is not set
+
+#### 8.0.0-alpha.60
+* Fix WMS legend for default styles.
+* Request transparent legend from GeoServer.
+* Reverted the following due to various issues with datasets:
+    * Add basic routing support
+    * Add better page titles when on various routes of the application
+    * Add prerendering support on `/catalog/` routes (via `prerender-end` event & 
+      allowing TerriaMap to hit certain routes)
+
+#### 8.0.0-alpha.59
+* Update magda error message
+* Add a short report section if trying to view a `3d-tiles` item in a 2d map.
+* Fix bug in `Terria.interpretStartData`.
+* Add `ThreddsCatalogGroup` model.
+* Port `supportsColorScaleRange`, `colorScaleMinimum` and `colorScaleMaximimum` from `master` to `WebMapServiceCatalogItem` model.
+* Ported MapboxVectorTileCatalogItem ("mvt").
+* When expanding a chart from the feature info panel, we now place a colored dot on the map where the chart was generated from.
+* Add basic routing support
+* Add better page titles when on various routes of the application
+* Add prerendering support on `/catalog/` routes (via `prerender-end` event &
+  allowing TerriaMap to hit certain routes)
+* Update `WorkbenchButton` to allow for links rather than buttons, including
+  changing About Data to a link
+
+#### 8.0.0-alpha.58
+* Add `FeatureInfoTraits` to `ArcGisMapServerCatalogItem`
+* Fix zooming bug for datasets with invalid bounding boxes.
+* Add new model for `ArcGisTerrainCatalogItem`.
+* Add 3D Tiles to 'Add web data' dropdown.
+* Fix naming of item in a `CkanCatalogGroup` when using an item naming scheme other than the default.
+
+#### 8.0.0-alpha.57
+* Fix memoization of `traitsClassToModelClass`.
+* Chart expanded from feature info panel will now by default show only the first chart line.
+* Chart component attribtues `column-titles` and `column-units` will now accept a simpler syntax like: "Time,Speed" or "ms,kmph"
+* Fix presentation of the WMS Dimension metadata.
+* Magda based maps now mimic "root group uniqueId === '/'" behaviour, so that mix and matching map init approaches behave more consistently
+  
+#### 8.0.0-alpha.56
+* Add `itemProperties` trait to `WebMapMapCatalogGroup`.
+* Add support for `formats` traits within `featureInfoTemplate` traits.
+* Fix handling of `ArcGisPortalItemReference` for when a feature layer contains multiple sublayers.
+* Implemented new compass design.
+
+#### 8.0.0-alpha.55
+* Upgraded to patched terriajs-cesium v1.73.1 to avoid build error on node 12 & 14.
+
+#### 8.0.0-alpha.54
 * Add a `infoAsObject` property to the `CatalogMemberMixin` for providing simpler access to `info` entries within templating
 * Add a `contentAsObject` trait to `InfoSectionTraits` where a json object is more suitable than a string.
 * Add `serviceDescription` and `dataDescription` to `WebMapServiceCatalogItem` info section.
@@ -17,10 +112,19 @@ Change Log
 * Allow Magda backed maps to use an inline `terria-init` catalog without it getting overwritten by map-config before it can be parsed
 * Deprecated `proxyableDomainsUrl` configuration parameter in favour of `serverconfig` route
 * Ported a support for `GpxCatalogItem`.
+* Feature info is now shareable.
+* Add option `canUnsetFeaturePickingState` to `applyInitData` for unsetting feature picking state if it is missing from `initData`. Useful for showing/hiding feature info panel when switching through story slides.
 * Properly render for polygons with holes in Leaflet.
 * Fixes a bug that showed the chart download button when there is no downloadable source.
+* Add `hideWelcomeMessage` url parameter to allow the Welcome Message to be disabled for iframe embeds or sharing scenarios.
 * Ensure the `chartDisclaimer` is passed from catalog items to derived chart items.
-* [The next improvement]
+* Don't calculate a `rectangle` on a `ArcGisPortalReferenceItem` as they appear to contain less precision than the services they point to.
+* Allow an `ArcGisPortalReferenceItem` to belong to multiple `CatalogGroup`'s.
+* Fix argis reference bug.
+* Made possible to internationalize tour contend.
+* Added TileErrorHandlerMixin for handling raster layer tile errors.
+* Fixed a bug that caused the feature info chart for SOS items to not load.
+* SOS & CSV charts are now shareable.
 
 #### 8.0.0-alpha.53
 * Ported an implementation of CatalogSearchProvider and set it as the default
@@ -61,8 +165,6 @@ Change Log
 * Updated leaflet attribution to match the style of cesium credits.
 * Remove `@computed` props from `WebFeatureServiceCapabilities`
 * Fixed bug causing the Related Maps dropdown to be clipped.
-* Added TileErrorHandlerMixin for handling raster layer tile errors.
-* [The next improvement]
 * Add SDMX-json support for groups and items (using SDMX-csv for data queries)
 * `TableMixin` now uses `ExportableMixin` and `AsyncMappableMixin`
 * Move region provider loading in `TableMixin` `forceLoadTableMixin` to `loadRegionProviderList`

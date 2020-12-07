@@ -1,0 +1,35 @@
+{
+  "aspects": {
+    "group": {
+      "members": [
+        {
+          "aspects": {
+            "group": {
+              "members": ["12f26f07-f39e-4753-979d-2de01af54bd1"]
+            },
+            "terria": {
+              "definition": {
+                "members": ["12f26f07-f39e-4753-979d-2de01af54bd1"],
+                "name": "New group"
+              },
+              "id": "bfc69476-1c85-4208-9046-4f736bab9b8e",
+              "type": "group"
+            }
+          },
+          "id": "bfc69476-1c85-4208-9046-4f736bab9b8e",
+          "name": "New group"
+        }
+      ]
+    },
+    "terria-init": {},
+    "terria-config": {
+      "initializationRecord": {},
+      "parameters": {
+        "regionMappingDefinitionsUrl": "data:,{\"regionWmsMap\":{}}"
+      }
+    }
+  },
+  "id": "map-config-example",
+  "name": "Terria Configuration",
+  "tenantId": 0
+}

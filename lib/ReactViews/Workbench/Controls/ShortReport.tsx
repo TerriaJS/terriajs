@@ -10,12 +10,9 @@ import Collapsible from "../../Custom/Collapsible/Collapsible";
 import parseCustomMarkdownToReact from "../../Custom/parseCustomMarkdownToReact";
 
 // :(
-const RawButton: any = require("../../../Styled/Button").RawButton;
 const Text: any = require("../../../Styled/Text").default;
-const TextSpan: any = require("../../../Styled/Text").TextSpan;
 const Box: any = require("../../../Styled/Box").default;
 const Spacing: any = require("../../../Styled/Spacing").default;
-const SpacingSpan: any = require("../../../Styled/Spacing").SpacingSpan;
 
 @observer
 export default class ShortReport extends React.Component<{

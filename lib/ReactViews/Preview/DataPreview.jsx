@@ -1,19 +1,19 @@
 "use strict";
-
 // import Chart from "../Custom/Chart/Chart";
+import createReactClass from "create-react-class";
+import { runInAction } from "mobx";
+import { observer } from "mobx-react";
+import PropTypes from "prop-types";
+import React from "react";
+import { Trans, withTranslation } from "react-i18next";
+import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
+import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
+import InvokeFunction from "../Analytics/InvokeFunction";
+import Loader from "../Loader";
+import Styles from "./data-preview.scss";
 import Description from "./Description";
 import GroupPreview from "./GroupPreview";
-import InvokeFunction from "../Analytics/InvokeFunction";
 import MappablePreview from "./MappablePreview";
-import React from "react";
-import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
-import Styles from "./data-preview.scss";
-import { withTranslation, Trans } from "react-i18next";
-import { observer } from "mobx-react";
-import { runInAction } from "mobx";
-import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
-import Loader from "../Loader";
 
 /**
  * Data preview section, for the preview map see DataPreviewMap
@@ -80,7 +80,9 @@ const DataPreview = observer(
               </div>
             </When>
             <When
-              condition={previewed && typeof previewed.invoke !== "undefined"}
+              condition={
+                previewed && CatalogFunctionMixin.isMixedInto(previewed)
+              }
             >
               <InvokeFunction
                 previewed={previewed}

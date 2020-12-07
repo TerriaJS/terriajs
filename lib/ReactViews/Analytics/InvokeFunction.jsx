@@ -1,16 +1,15 @@
 import createReactClass from "create-react-class";
+import { observable, runInAction } from "mobx";
+import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
+import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
-import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 import TerriaError from "../../Core/TerriaError";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import Loader from "../Loader";
-import ParameterEditor from "./ParameterEditor";
 import Styles from "./invoke-function.scss";
-import { withTranslation } from "react-i18next";
-import { observer } from "mobx-react";
-import { runInAction } from "mobx";
+import ParameterEditor from "./ParameterEditor";
 
 class FunctionViewModel {
   constructor(catalogFunction) {
@@ -30,16 +29,17 @@ class FunctionViewModel {
 }
 
 class ParameterViewModel {
+  parameter;
+
+  @observable
+  userValue = undefined;
+  @observable
+  isValueValid = true;
+  @observable
+  wasEverBlurredWhileInvalid = false;
+
   constructor(parameter) {
     this.parameter = parameter;
-    this.userValue = undefined;
-    this.isValueValid = true;
-    this.wasEverBlurredWhileInvalid = false;
-    knockout.track(this, [
-      "userValue",
-      "isValueValid",
-      "wasEverBlurredWhileInvalid"
-    ]);
   }
 }
 
@@ -68,36 +68,37 @@ const InvokeFunction = observer(
     },
 
     submit() {
-      try {
-        const promise = this.props.previewed.invoke().catch(terriaError => {
-          if (terriaError instanceof TerriaError) {
-            this.props.previewed.terria.error.raiseEvent(terriaError);
-          }
-        });
-
-        runInAction(() => {
-          // Close modal window
-          this.props.viewState.explorerPanelIsVisible = false;
-          // mobile switch to nowvewing
-          this.props.viewState.switchMobileView(
-            this.props.viewState.mobileViewOptions.preview
-          );
-        });
-
-        return promise;
-      } catch (e) {
+      this.props.previewed.submitJob().catch(e => {
         if (e instanceof TerriaError) {
-          this.props.previewed.terria.error.raiseEvent(e);
+          runInAction(() => {
+            this.props.terria.notification.raiseEvent({
+              title: e.title,
+              message: e.message,
+              confirmText: "Ok",
+              confirmAction: () =>
+                runInAction(
+                  () => (this.props.viewState.explorerPanelIsVisible = true)
+                )
+            });
+          });
         }
-        return undefined;
-      }
+      });
+
+      runInAction(() => {
+        // Close modal window
+        this.props.viewState.explorerPanelIsVisible = false;
+        // mobile switch to nowvewing
+        this.props.viewState.switchMobileView(
+          this.props.viewState.mobileViewOptions.preview
+        );
+      });
     },
 
     getParams() {
       // Key should include the previewed item identifier so that
       // components are refreshed when different previewed items are
       // displayed
-      return this.props.previewed.parameters.map((param, i) => (
+      return this.props.previewed.functionParameters.map((param, i) => (
         <ParameterEditor
           key={param.id + this.props.previewed.uniqueId}
           parameter={param}
@@ -109,7 +110,10 @@ const InvokeFunction = observer(
     },
 
     validateParameter(parameter) {
-      if (!this.parametersViewModel.getParameter(parameter).isValueValid) {
+      if (
+        !parameter.isValid ||
+        !this.parametersViewModel.getParameter(parameter).isValueValid
+      ) {
         // Editor says it's not valid, so it's not valid.
         return false;
       }
@@ -129,7 +133,7 @@ const InvokeFunction = observer(
 
       let invalidParameters = false;
       if (defined(this.props.previewed.parameters)) {
-        invalidParameters = !this.props.previewed.parameters.every(
+        invalidParameters = !this.props.previewed.functionParameters.every(
           this.validateParameter
         );
       }
