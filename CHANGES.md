@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.63)
+* Implement support for the Here maps geocoding service
 * [The next improvement]
 
 
