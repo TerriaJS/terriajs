@@ -209,6 +209,22 @@ Leaving `"/"` is very convenient - it means we don't need `shareKeys` with our c
 
 To fix sharelinks which used `$magda-config-record-id` - we need to add `shareKeys=["$magda-config-record-id"]` in the `terria` aspect of the magda map config record (similar to above).
 
+## Decisions: Catalog converter ID handling
+
+### Sharekeys
+
+Regardless of previous decision, should we still write v7 autoID into `shareKeys`?
+
+This would ensure old v7 share-links continue to work if catalog structure changes.
+
+### Random ID generation default
+
+Should we default to writing random IDs to encourage ID usage in catalogs?
+
+If we do, we must also add `shareKeys` for v7 autoIDs.
+
+The whole automatic ID generation thing is painful.
+
 ## Consequences
 
 Dragging `shareKeys` around forever :(
