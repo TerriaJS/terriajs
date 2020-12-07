@@ -43,6 +43,7 @@ import TimeVarying from "../ModelMixins/TimeVarying";
 import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
 import { defaultTerms, Term } from "../ReactViewModels/defaultTerms";
 import { Notification } from "../ReactViewModels/ViewState";
+import MapNavigationModel from "../ReactViews/Map/Navigation/MapNavigationModel";
 import { shareConvertNotification } from "../ReactViews/Notification/shareConvertNotification";
 import ShowableTraits from "../Traits/ShowableTraits";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
@@ -344,6 +345,11 @@ export default class Terria {
    * @type {number}
    */
   @observable baseMaximumScreenSpaceError = 2;
+
+  /**
+   * Model to use for map navigation
+   */
+  @observable mapNavigationModel: MapNavigationModel = new MapNavigationModel();
 
   /**
    * Gets or sets whether to use the device's native resolution (sets cesium.viewer.resolutionScale to a ratio of devicePixelRatio)

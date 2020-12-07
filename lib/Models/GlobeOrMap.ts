@@ -32,6 +32,7 @@ require("./ImageryLayerFeatureInfo"); // overrides Cesium's prototype.configureD
 export default abstract class GlobeOrMap {
   abstract readonly type: string;
   abstract readonly terria: Terria;
+  abstract readonly canShowSplitter: boolean;
   protected static _featureHighlightName = "___$FeatureHighlight&__";
 
   private _removeHighlightCallback?: () => void;
@@ -48,7 +49,7 @@ export default abstract class GlobeOrMap {
   abstract destroy(): void;
   abstract zoomTo(
     viewOrExtent: CameraView | Rectangle | Mappable,
-    flightDurationSeconds: number
+    flightDurationSeconds?: number
   ): void;
   abstract getCurrentCameraView(): CameraView;
 

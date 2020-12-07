@@ -429,12 +429,13 @@ export default class Leaflet extends GlobeOrMap {
 
   zoomTo(
     target: CameraView | Rectangle | DataSource | Mappable | any,
-    flightDurationSeconds: number
+    flightDurationSeconds?: number
   ): void {
     if (!isDefined(target)) {
       return;
       //throw new DeveloperError("target is required.");
     }
+    flightDurationSeconds = defaultValue(flightDurationSeconds, 3.0);
 
     const that = this;
 
@@ -483,7 +484,7 @@ export default class Leaflet extends GlobeOrMap {
 
       if (isDefined(bounds)) {
         that.map.flyToBounds(bounds, {
-          animate: flightDurationSeconds > 0.0,
+          animate: flightDurationSeconds! > 0.0,
           duration: flightDurationSeconds
         });
       }

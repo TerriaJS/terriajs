@@ -14,6 +14,7 @@ import Feature from "./Feature";
 class NoViewer extends GlobeOrMap {
   readonly type = "none";
   readonly terria: Terria;
+  readonly canShowSplitter = false;
   private _currentView: CameraView = new CameraView(Rectangle.MAX_VALUE);
 
   constructor(terriaViewer: TerriaViewer) {

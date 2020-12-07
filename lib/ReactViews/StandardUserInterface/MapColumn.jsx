@@ -7,7 +7,7 @@ import TerriaViewerWrapper from "../Map/TerriaViewerWrapper";
 import DistanceLegend from "../Map/Legend/DistanceLegend";
 // import FeedbackButton from "../Feedback/FeedbackButton";
 import LocationBar from "../Map/Legend/LocationBar";
-import MapNavigation from "../Map/MapNavigation";
+import MapNavigation from "../Map/Navigation/MapNavigation";
 import MenuBar from "../Map/MenuBar";
 import MapDataCount from "../BottomDock/MapDataCount";
 // import defined from "terriajs-cesium/Source/Core/defined";

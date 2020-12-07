@@ -43,6 +43,7 @@ import { action, runInAction } from "mobx";
 import HelpPanel from "../Map/Panels/HelpPanel/HelpPanel";
 import Tool from "../Tool";
 import Disclaimer from "../Disclaimer";
+import CollapsedNavigation from "../Map/Navigation/CollapsedNavigation";
 
 export const showStoryPrompt = (viewState, terria) => {
   terria.configParameters.showFeaturePrompts &&
@@ -252,6 +253,10 @@ const StandardUserInterface = observer(
             }
           />
           <TourPortal terria={terria} viewState={this.props.viewState} />
+          <CollapsedNavigation
+            terria={terria}
+            viewState={this.props.viewState}
+          />
           <SatelliteHelpPrompt
             terria={terria}
             viewState={this.props.viewState}
@@ -392,6 +397,10 @@ const StandardUserInterface = observer(
                   />
                 </If>
               </Medium>
+
+              <If condition={this.props.viewState.panel}>
+                {this.props.viewState.panel}
+              </If>
 
               <Notification viewState={this.props.viewState} />
               <MapInteractionWindow

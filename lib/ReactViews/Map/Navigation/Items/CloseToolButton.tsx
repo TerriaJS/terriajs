@@ -1,7 +1,7 @@
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
-import ViewState from "../../../ReactViewModels/ViewState";
-import Icon from "../../Icon";
+import ViewState from "../../../../ReactViewModels/ViewState";
+import Icon from "../../../Icon";
 
 const MapIconButton: any = require("../../MapIconButton/MapIconButton").default;
 

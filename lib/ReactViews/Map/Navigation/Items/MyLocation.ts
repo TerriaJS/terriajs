@@ -1,45 +1,44 @@
-"use strict";
-
+import i18next, { TFunction } from "i18next";
+import { action, observable, runInAction } from "mobx";
 import React from "react";
-import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
-import URI from "urijs";
-
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-
-import GeoJsonCatalogItem from "../../../Models/GeoJsonCatalogItem";
-// import Styles from "./tool_button.scss";
-import TerriaError from "../../../Core/TerriaError";
-import CesiumCartographic from "terriajs-cesium/Source/Core/Cartographic.js";
-import Icon from "../../Icon";
-import defined from "terriajs-cesium/Source/Core/defined";
-import { withTranslation } from "react-i18next";
-import { runInAction } from "mobx";
-import CommonStrata from "../../../Models/CommonStrata";
+import { withTranslation, WithTranslation } from "react-i18next";
+import { DefaultTheme, withTheme } from "styled-components";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
-import MapIconButton from "../../MapIconButton/MapIconButton";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import isDefined from "../../../../Core/isDefined";
+import TerriaError from "../../../../Core/TerriaError";
+import CommonStrata from "../../../../Models/CommonStrata";
+import Icon from "../../../Icon";
+import MapIconButton from "../../../MapIconButton/MapIconButton";
+import GeoJsonCatalogItem from "../../../../Models/GeoJsonCatalogItem";
+import Terria from "../../../../Models/Terria";
+const Tween = require("terriajs-cesium/Source/ThirdParty/Tween").default;
+const Box = require("../../../../Styled/Box").default;
 
-const MyLocation = createReactClass({
-  displayName: "MyLocation",
+interface PropTypes {
+  terria: Terria;
+}
 
-  propTypes: {
-    terria: PropTypes.object.isRequired,
-    t: PropTypes.func.isRequired
-  },
+class MyLocation {
+  static displayName = "MyLocation";
+  private _marker: GeoJsonCatalogItem;
+  @observable private watchId: number | undefined;
+  @observable private flown: boolean | undefined;
+  readonly terria: Terria;
+  constructor(props: PropTypes) {
+    this.terria = props.terria;
+    this._marker = new GeoJsonCatalogItem(createGuid(), props.terria);
+    this.zoomToMyLocation = this.zoomToMyLocation.bind(this);
+    this.handleLocationError = this.handleLocationError.bind(this);
+    this.augmentedVirtualityEnabled = this.augmentedVirtualityEnabled.bind(
+      this
+    );
+    this.followMeEnabled = this.followMeEnabled.bind(this);
+  }
 
-  _marker: undefined,
-
-  /* eslint-disable-next-line camelcase */
-  UNSAFE_componentWillMount() {
-    this._marker = new GeoJsonCatalogItem(createGuid(), this.props.terria);
-  },
-
-  getInitialState() {
-    return {};
-  },
-
+  @action.bound
   getLocation() {
-    const { t } = this.props;
+    const t = i18next.t.bind(i18next);
     if (navigator.geolocation) {
       const options = {
         enableHighAccuracy: true,
@@ -61,10 +60,10 @@ const MyLocation = createReactClass({
           options
         );
 
-        this.setState({ watchId: watchId });
+        this.watchId = watchId;
       }
     } else {
-      this.props.terria.error.raiseEvent(
+      this.terria.error.raiseEvent(
         new TerriaError({
           sender: this,
           title: t("location.errorGettingLocation"),
@@ -72,10 +71,10 @@ const MyLocation = createReactClass({
         })
       );
     }
-  },
+  }
 
-  zoomToMyLocation(position) {
-    const { t } = this.props;
+  zoomToMyLocation(position: Position) {
+    const t = i18next.t.bind(i18next);
     const longitude = position.coords.longitude;
     const latitude = position.coords.latitude;
 
@@ -85,12 +84,12 @@ const MyLocation = createReactClass({
       // We use the flag variable flown so that the user is flown to the current location when this function is
       // first fired, but subsuquently the updates are jump location moves, since we assume that the movements are
       // small and flyTo performs badly when the increments are small (slow and unresponsive).
-      this.props.terria.augmentedVirtuality.moveTo(
+      /* this.props.terria.augmentedVirtuality.moveTo(
         CesiumCartographic.fromDegrees(longitude, latitude),
         27500,
-        !defined(this.state.flown)
+        !isDefined(this.flown)
       );
-      this.setState({ flown: true });
+      this.flown = true; */
     } else {
       // west, south, east, north, result
       const rectangle = Rectangle.fromDegrees(
@@ -99,15 +98,12 @@ const MyLocation = createReactClass({
         longitude + 0.1,
         latitude + 0.1
       );
-      this.props.terria.currentViewer.zoomTo(rectangle);
+      this.terria.currentViewer.zoomTo(rectangle);
     }
 
     runInAction(() => {
-      this._marker.setTrait(
-        CommonStrata.user,
-        "name",
-        t("location.myLocation")
-      );
+      const name = t("location.myLocation");
+      this._marker.setTrait(CommonStrata.user, "name", name);
       this._marker.setTrait(CommonStrata.user, "geoJsonData", {
         type: "Feature",
         geometry: {
@@ -121,19 +117,25 @@ const MyLocation = createReactClass({
         }
       });
       this._marker.setTrait(CommonStrata.user, "style", {
-        "marker-size": 25,
+        "marker-size": "25",
         "marker-color": "#08ABD5",
+        "marker-symbol": undefined,
+        "marker-opacity": undefined,
+        "marker-url": undefined,
         stroke: "#ffffff",
-        "stroke-width": 3
+        "stroke-opacity": undefined,
+        "stroke-width": 3,
+        fill: undefined,
+        "fill-opacity": undefined
       });
 
       this._marker.loadMapItems();
-      this.props.terria.workbench.add(this._marker);
+      this.terria.workbench.add(this._marker);
     });
-  },
+  }
 
-  handleLocationError(err) {
-    const { t } = this.props;
+  handleLocationError(err: any) {
+    const t = i18next.t.bind(i18next);
     let message = err.message;
     if (message && message.indexOf("Only secure origins are allowed") === 0) {
       // This is actually the recommended way to check for this error.
@@ -142,37 +144,39 @@ const MyLocation = createReactClass({
       const secureUrl = uri.protocol("https").toString();
       message = t("location.originError", { secureUrl: secureUrl });
     }
-    this.props.terria.error.raiseEvent(
+    this.terria.error.raiseEvent(
       new TerriaError({
         sender: this,
         title: t("location.errorGettingLocation"),
         message: message
       })
     );
-  },
+  }
 
   augmentedVirtualityEnabled() {
-    return (
-      defined(this.props.terria.augmentedVirtuality) &&
+    /* return (
+      isDefined(this.props.terria.augmentedVirtuality) &&
       this.props.terria.augmentedVirtuality.enabled
-    );
-  },
+    ); */
+    return false;
+  }
 
   followMeEnabled() {
-    if (defined(this.state.watchId)) {
+    if (isDefined(this.watchId)) {
       return true;
     }
 
     return false;
-  },
+  }
 
+  @action.bound
   disableFollowMe() {
-    if (defined(this.state.watchId)) {
-      navigator.geolocation.clearWatch(this.state.watchId);
-      this.setState({ watchId: undefined });
-      this.setState({ flown: undefined });
+    if (isDefined(this.watchId)) {
+      navigator.geolocation.clearWatch(this.watchId);
+      this.watchId = undefined;
+      this.flown = undefined;
     }
-  },
+  }
 
   handleClick() {
     if (this.followMeEnabled()) {
@@ -180,22 +184,7 @@ const MyLocation = createReactClass({
     } else {
       this.getLocation();
     }
-  },
-
-  render() {
-    const { t } = this.props;
-    return (
-      <MapIconButton
-        primary={this.followMeEnabled()}
-        expandInPlace
-        onClick={this.handleClick}
-        title={t("location.centreMap")}
-        iconElement={() => <Icon glyph={Icon.GLYPHS.geolocationThick} />}
-      >
-        {t("location.location")}
-      </MapIconButton>
-    );
   }
-});
+}
 
-export default withTranslation()(MyLocation);
+export default MyLocation;

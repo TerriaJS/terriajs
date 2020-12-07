@@ -93,7 +93,9 @@ MapIconButton.propTypes = {
   iconElement: PropTypes.func.isRequired,
   onClick: PropTypes.func,
   handleClick: PropTypes.func,
-  children: PropTypes.node
+  children: PropTypes.node,
+  disabled: PropTypes.bool,
+  buttonRef: PropTypes.any
 };
 
 function MapIconButton(props) {
@@ -154,8 +156,8 @@ function MapIconButton(props) {
             medium
             css={`
               display: block;
-              transition: max-width 0.3s ease, margin-right 0.3s ease,
-                opacity 0.3s ease;
+              transition: visibility 0.3s ease, max-width 0.3s ease,
+                margin-right 0.3s ease, opacity 0.3s ease;
               max-width: ${expanded ? `150px` : `0px`};
               margin-right: ${expanded ? `10px` : `0px`};
               opacity: ${expanded ? `1.0` : `0`};

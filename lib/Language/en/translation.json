@@ -415,7 +415,8 @@
     "searchCatalogue": "Search the catalogue"
   },
   "mobile": {
-    "toggleNavigation": "toggle navigation"
+    "toggleNavigation": "toggle navigation",
+    "header": "Data"
   },
   "preview": {
     "doesNotContainGeospatialData": "This file does not contain geospatial data.",
@@ -1433,5 +1434,9 @@
   },
   "term": {
     "missingContent": "missing content"
+  },
+  "mapNavigation": {
+    "additionalTools": "Additional tools",
+    "additionalToolsTitle": "Open additional tools"
   }
 }

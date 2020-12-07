@@ -55,7 +55,7 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
   polygon?: Entity;
 
   private inDrawMode: boolean;
-  private closeLoop: boolean;
+  closeLoop: boolean;
   private disposePickedFeatureSubscription?: () => void;
   private drawRectangle: boolean;
 

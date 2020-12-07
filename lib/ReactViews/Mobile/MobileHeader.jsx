@@ -69,10 +69,12 @@ const MobileHeader = observer(
     },
 
     onMobileDataCatalogClicked() {
+      this.props.viewState.setTopElement("DataCatalog");
       this.toggleView(this.props.viewState.mobileViewOptions.data);
     },
 
     onMobileNowViewingClicked() {
+      this.props.viewState.setTopElement("NowViewing");
       this.toggleView(this.props.viewState.mobileViewOptions.nowViewing);
     },
 
@@ -204,7 +206,7 @@ const MobileHeader = observer(
                     className={Styles.btnAdd}
                     onClick={this.onMobileDataCatalogClicked}
                   >
-                    Data
+                    {t("mobile.header")}
                     <Icon glyph={Icon.GLYPHS.increase} />
                   </button>
                   <If condition={nowViewingLength > 0}>
