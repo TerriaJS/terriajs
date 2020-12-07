@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.63)
+* Implement the ESRI World Geocoding service - Locate an address support. Details about geocoder are available on [Geocoding with ArcGIS](https://developers.arcgis.com/features/geocoding/).
 * [The next improvement]
 
 
