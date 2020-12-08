@@ -1,7 +1,7 @@
 # 5. Root group IDs, `shareKeys` and share link compatibility
 
 Date: 2020-12-03  
-Version: 2
+Version: 3
 
 ## Status
 
@@ -175,8 +175,6 @@ We have two options:
 
 ### Reverting Magda forced group ID
 
-This is incompatible with the "v7 JSON catalog -> Magda v7-v8 converted JSON-based catalog" transformation
-
 #### Sharekeys for catalog members
 
 `shareKeys` will need to be added for the following transformations:
@@ -276,8 +274,10 @@ The whole automatic ID generation thing is painful.
 
 | option | pros | cons |
 |-------|------|------|
-|Revert to `$magda-map-config-id` | Can identify map-config from sharelinks.<br/> Support multiple root groups?  | Need to add `shareKeys` for Magda autoIDs (with `$magda-map-config-id` root group ID).<br/> Have to deal with magda map config IDs changing<br/> Have to hack "Magda v7-v8 converted JSON-based catalog" to work | 
+|Revert to `$magda-map-config-id` | Can identify map-config from sharelinks.<br/> Support multiple root groups?  | Need to add `shareKeys` for Magda autoIDs (with `$magda-map-config-id` root group ID).<br/> Have to deal with magda map config IDs changing | 
 | Leave as `/` | All JSON based catalogs are treated the same.<br/>Don't need to add `shareKeys` until we move into Magda catalog | Reliance on converting v7 autoIDs to v8 is a little opaque (this can be overcome by adding random `id` when converting catalog) | 
+
+Option 2 is a go!
 
 ### Decision 2: Catalog converter ID handling
 
@@ -285,6 +285,10 @@ The whole automatic ID generation thing is painful.
 |-------|------|------|
 | Write v7 autoID `shareKeys` | Can change catalog structure and preserve old v7 share links.<br/>Can remove opaque autoID conversion in share link conversion | Makes catalog JSON less readable, may be confusing to some users. | 
 | Create random IDs by default for all catalog members | Encourages usage of proper IDs. <br/>Can remove autoID conversion.<br/>Prevents changing IDs with `$magda-map-config-id` root group ID. | Makes catalog JSON less readable.<br/>Requires v7 autoID `shareKeys` | 
+
+Option 1: yes + yes for default
+
+Option 2: yes + give warning to users to not change IDs
 
 ## Consequences
 
