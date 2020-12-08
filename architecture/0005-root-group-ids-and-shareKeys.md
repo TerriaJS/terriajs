@@ -128,7 +128,7 @@ Approaches:
 
 This deployment uses a v7 JSON catalog, but converts it to v8 on-the-fly (in `terria-js`).
 
-The approach is similar to "v7 JSON catalog -> v8 JSON catalog", but can only use option 1 and requires Magda Reference root group ID to be `/`.
+The approach is similar to "v7 JSON catalog -> v8 JSON catalog".
 
 #### v8 JSON catalog -> Magda v8 JSON-based catalog
 
