@@ -134,6 +134,7 @@ interface ConfigParameters {
   hideTerriaLogo?: boolean;
   useCesiumIonBingImagery?: boolean;
   bingMapsKey?: string;
+  hereMapsKey?: string;
   brandBarElements?: string[];
   disableMyLocation?: boolean;
   experimentalFeatures?: boolean;
@@ -263,6 +264,7 @@ export default class Terria {
     hideTerriaLogo: false,
     useCesiumIonBingImagery: undefined,
     bingMapsKey: undefined,
+    hereMapsKey: undefined,
     brandBarElements: undefined,
     disableMyLocation: undefined,
     experimentalFeatures: undefined,
