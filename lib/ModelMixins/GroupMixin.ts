@@ -1,14 +1,15 @@
-import { action, computed, observable, runInAction } from "mobx";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import { action, computed } from "mobx";
 import clone from "terriajs-cesium/Source/Core/clone";
+import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
+import Group from "../Models/Group";
 import Model, { BaseModel } from "../Models/Model";
 import GroupTraits from "../Traits/GroupTraits";
 import ModelReference from "../Traits/ModelReference";
-import AsyncLoader from "../Core/AsyncLoader";
-import Group from "../Models/Group";
+import CatalogMemberMixin from "./CatalogMemberMixin";
 
 function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
   abstract class GroupMixin extends Base implements Group {
@@ -65,9 +66,8 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
      */
     loadMembers(): Promise<void> {
       return this._memberLoader.load().finally(() => {
-        if (this.uniqueId) {
-          this.refreshKnownContainerUniqueIds(this.uniqueId);
-        }
+        this.refreshKnownContainerUniqueIds(this.uniqueId);
+        this.addShareKeysToMembers();
       });
     }
 
@@ -78,6 +78,33 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
         if (model.knownContainerUniqueIds.indexOf(uniqueId) < 0) {
           model.knownContainerUniqueIds.push(uniqueId);
         }
+      });
+    }
+
+    @action
+    addShareKeysToMembers(): void {
+      if (!this.uniqueId) return;
+
+      // Get shareKeys for this Group
+      const shareKeys = Array.from(this.terria.shareKeysMap.entries()).filter(
+        ([shareKey, modelId]) => modelId === this.uniqueId
+      );
+      if (shareKeys.length === 0) return;
+
+      // Set shareKeys for each member model to have `${groupShareKey}/${memberModel.name}` to mimic dynamic groups autoIDs
+      this.memberModels.forEach((model: BaseModel) => {
+        shareKeys.forEach(
+          ([groupShareKey, modelId]) =>
+            model.uniqueId &&
+            this.terria.addShareKey(
+              model.uniqueId,
+              `${groupShareKey}/${
+                CatalogMemberMixin.isMixedInto(model)
+                  ? model.name
+                  : model.uniqueId
+              }`
+            )
+        );
       });
     }
 
