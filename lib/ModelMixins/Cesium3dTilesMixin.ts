@@ -14,6 +14,9 @@ import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTil
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
+import Color from "terriajs-cesium/Source/Core/Color";
+import ClippingPlaneCollection from "terriajs-cesium/Source/Scene/ClippingPlaneCollection";
+import ClippingPlane from "terriajs-cesium/Source/Scene/ClippingPlane";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import makeRealPromise from "../Core/makeRealPromise";
@@ -181,6 +184,12 @@ export default function Cesium3dTilesMixin<
       this.tileset.shadows = this.cesiumShadows;
       this.tileset.show = this.show;
 
+      if (isDefined(this.cesiumTileClippingPlaneCollection)) {
+        this.tileset.clippingPlanes = toJS(
+          this.cesiumTileClippingPlaneCollection
+        );
+      }
+
       const key = this
         .colorBlendMode as keyof typeof Cesium3DTileColorBlendMode;
       const colorBlendMode = Cesium3DTileColorBlendMode[key];
@@ -302,6 +311,56 @@ export default function Cesium3dTilesMixin<
       if (showExpression.length > 0) {
         return showExpression;
       }
+    }
+
+    @computed get cesiumTileClippingPlaneCollection() {
+      if (!isDefined(this.clippingPlanes)) {
+        return;
+      }
+
+      if (this.clippingPlanes.planes.length == 0) {
+        return;
+      }
+
+      const {
+        planes,
+        enabled = true,
+        unionClippingRegions = false,
+        edgeColor,
+        edgeWidth,
+        modelMatrix
+      } = this.clippingPlanes;
+
+      const planesMapped = planes.map((plane: any) => {
+        return new ClippingPlane(
+          Cartesian3.fromArray(plane.normal || []),
+          plane.distance
+        );
+      });
+
+      let options = {
+        planes: planesMapped,
+        enabled,
+        unionClippingRegions
+      };
+
+      if (edgeColor && edgeColor.length > 0) {
+        options = Object.assign(options, {
+          edgeColor: Color.fromCssColorString(edgeColor) || Color.WHITE
+        });
+      }
+
+      if (edgeWidth && edgeWidth > 0) {
+        options = Object.assign(options, { edgeWidth: edgeWidth });
+      }
+
+      if (modelMatrix && modelMatrix.length > 0) {
+        const array = clone(toJS(modelMatrix));
+        options = Object.assign(options, {
+          modelMatrix: Matrix4.fromArray(array) || Matrix4.IDENTITY
+        });
+      }
+      return new ClippingPlaneCollection(options);
     }
 
     @computed get cesiumTileStyle() {
