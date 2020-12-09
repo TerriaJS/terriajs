@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.63)
+* Fixed the layout of items in mobile navigation
 * [The next improvement]
 
 
