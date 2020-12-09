@@ -6,7 +6,7 @@ import objectArrayTrait from "./objectArrayTrait";
 import objectTrait from "./objectTrait";
 import { JsonObject } from "../Core/Json";
 
-export class ClippingPlaneTrait extends ModelTraits {
+export class ClippingPlaneDefinitionTraits extends ModelTraits {
   @primitiveTrait({
     name: "Distance",
     type: "number",
@@ -23,7 +23,7 @@ export class ClippingPlaneTrait extends ModelTraits {
   normal: number[] = [];
 }
 
-export class ClippingPlaneCollectionTrait extends ModelTraits {
+export class ClippingPlaneCollectionTraits extends ModelTraits {
   @primitiveTrait({
     type: "boolean",
     name: "Enabled Clipping Plane",
@@ -56,13 +56,13 @@ export class ClippingPlaneCollectionTrait extends ModelTraits {
   edgeColor?: string;
 
   @objectArrayTrait({
-    type: ClippingPlaneTrait,
+    type: ClippingPlaneDefinitionTraits,
     name: "Clipping Plane Array",
     description:
       "An array of ClippingPlane objects used to selectively disable rendering on the outside of each plane.",
     idProperty: "index"
   })
-  planes?: ClippingPlaneTrait[];
+  planes?: ClippingPlaneDefinitionTraits[];
 
   @primitiveArrayTrait({
     name: "Model Matrix",
@@ -73,12 +73,12 @@ export class ClippingPlaneCollectionTrait extends ModelTraits {
   modelMatrix?: number[];
 }
 
-export default class ClippingPlanesTrait extends ModelTraits {
+export default class ClippingPlanesTraits extends ModelTraits {
   @objectTrait({
-    type: ClippingPlaneCollectionTrait,
+    type: ClippingPlaneCollectionTraits,
     name: "ClippingPlanes",
     description:
       "The ClippingPlaneCollection used to selectively disable rendering the tileset."
   })
-  clippingPlanes?: ClippingPlaneCollectionTrait;
+  clippingPlanes?: ClippingPlaneCollectionTraits;
 }

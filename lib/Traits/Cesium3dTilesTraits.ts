@@ -13,7 +13,7 @@ import UrlTraits from "./UrlTraits";
 import TransformationTraits from "./TransformationTraits";
 import PlaceEditorTraits from "./PlaceEditorTraits";
 import primitiveArrayTrait from "./primitiveArrayTrait";
-import ClippingPlanesTrait from "./ClippingPlanesTrait";
+import ClippingPlanesTraits from "./ClippingPlanesTraits";
 
 export class FilterTraits extends ModelTraits {
   @primitiveTrait({
@@ -107,7 +107,7 @@ export default class Cesium3DTilesTraits extends mixTraits(
   UrlTraits,
   CatalogMemberTraits,
   ShadowTraits,
-  ClippingPlanesTrait
+  ClippingPlanesTraits
 ) {
   @primitiveTrait({
     type: "number",
