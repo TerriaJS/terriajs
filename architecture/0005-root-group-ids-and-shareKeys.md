@@ -292,4 +292,10 @@ Option 2: yes + give warning to users to not change IDs
 
 ## Consequences
 
-Dragging `shareKeys` around forever :(
+- We will have to add a `shareKey` for the root group of Magda catalog maps - to translate `$magda-map-config-id` to `/`.
+- No longer able to identify maps from `$magda-map-config-id` root group ID.
+- Users may misunderstand importance of keeping IDs stable when converting catalog
+- `shareKeys` (and `ids`) may clutter JSON catalog
+- v7-v8 share link conversion will only work if v8 catalog has `shareKeys`
+  - The v7-v8 sharelink autoID conversion is going to be removed
+- There will be more unseen consequences to come...
