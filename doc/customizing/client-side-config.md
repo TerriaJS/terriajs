@@ -32,6 +32,7 @@ Option                      | Meaning
 `"appName"`                 | TerriaJS uses this name whenever it needs to display the name of the application.
 `"autoPlay"` | true to start playing time-dynamic datasets on load, or false to start them paused.
 `"bingMapsKey"`             | A [Bing Maps API key](https://msdn.microsoft.com/en-us/library/ff428642.aspx) used for requesting Bing Maps base maps and using the Bing Maps geocoder for searching. It is your responsibility to request a key and comply with all terms and conditions.
+`"esriGeocoderKey"`         | A [ESRI World Geocoder API key](https://developers.arcgis.com/features/geocoding/) used for geocoding location using the Esri World Geocoder. It is your responsibility to request a key and comply with all terms and conditions.
 `"brandBarElements": [ ]`   | An array of strings of HTML that fill up the top left logo space.
 `"defaultMaximumShownFeatureInfos"` | The maximum number of "feature info" boxes that can be displayed when clicking a point. (Default: 100)
 `"disclaimer": {`<span><br/>&nbsp;&nbsp;`"text": "",`<br/>&nbsp;&nbsp;`"url": ""`<br/>`}`</span> | This text will be displayed prominently at the bottom of the map, with a clickable link to the URL.
