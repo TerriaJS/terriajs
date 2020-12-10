@@ -92,8 +92,8 @@ How do we add `shareKeys` to items created by dynamic groups?
 
 ### Add `shareKeys` to group items on load
 
-- Go through each `shareKey` and create new shareKeys for members
-  - Look current `member.uniqueId`
+- Go through each share key in `group.shareKeys` and create new `member.shareKeys`:
+  - Look at current `member.uniqueId`
   - Replace instances of `group.uniqueID` in `member.uniqueId` with `shareKey`
 - For example:
   - `group.uniqueId = "some-group-id"`
