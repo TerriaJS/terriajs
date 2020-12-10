@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, observable, runInAction, toJS } from "mobx";
+import { action, computed, observable, runInAction, toJS } from "mobx";
 import * as shp from "shpjs";
 import * as geoJsonMerge from "@mapbox/geojson-merge";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";

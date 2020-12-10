@@ -114,6 +114,14 @@ export default class LegendTraits extends ModelTraits {
   url?: string;
 
   @primitiveTrait({
+    type: "number",
+    name: "Scaling",
+    description:
+      "Scaling of the legend. For example, a high DPI legend may have scaling = `0.5`, so it will be scaled doown 50%"
+  })
+  imageScaling?: number = 1;
+
+  @primitiveTrait({
     type: "string",
     name: "URL MIME Type",
     description: "The MIME type of the `URL` legend image."

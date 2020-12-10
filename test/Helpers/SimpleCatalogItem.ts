@@ -8,4 +8,6 @@ export default class SimpleCatalogItem extends CreateModel(
   mixTraits(UrlTraits, ShowableTraits)
 ) {
   mapItems: MapItem[] = [];
+
+  loadMapItems() {}
 }

@@ -45,6 +45,11 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       return true;
     }
 
+    @computed
+    get inWorkbench() {
+      return this.terria.workbench.contains(this);
+    }
+
     /**
      * Default value for showsInfo (About Data button)
      */
