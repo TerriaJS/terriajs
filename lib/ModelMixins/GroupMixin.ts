@@ -91,7 +91,7 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
       );
       if (shareKeys.length === 0) return;
 
-      // Set shareKeys for each member model to have `${groupShareKey}/${memberModel.name}` to mimic dynamic groups autoIDs
+      // Set shareKeys for each member model to have `${groupShareKey}/${memberModel.name}` to mimic dynamic groups v7 autoIDs
       this.memberModels.forEach((model: BaseModel) => {
         shareKeys.forEach(
           ([groupShareKey, modelId]) =>

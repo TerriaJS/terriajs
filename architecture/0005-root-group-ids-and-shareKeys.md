@@ -5,7 +5,7 @@ Version: 3
 
 ## Status
 
-In discussion
+Accepted
 
 ## Context
 
