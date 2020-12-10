@@ -981,6 +981,9 @@
       "chrome": "Google Chrome",
       "firefox": "Mozilla Firefox"
     },
+    "shapefile": {
+      "name": "Shapefile"
+    },
     "getToken": {
       "errorTitle": "Token Error",
       "invalidToken": "<p>The token server responded with an invalid token.</p><p>Please report it by sending an email to {{email}}</p>",
