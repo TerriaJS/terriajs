@@ -83,27 +83,32 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
 
     @action
     addShareKeysToMembers(): void {
-      if (!this.uniqueId) return;
+      const groupId = this.uniqueId;
+      if (!groupId) return;
 
       // Get shareKeys for this Group
-      const shareKeys = Array.from(this.terria.shareKeysMap.entries()).filter(
-        ([shareKey, modelId]) => modelId === this.uniqueId
-      );
-      if (shareKeys.length === 0) return;
+      const shareKeys = this.terria.modelIdShareKeysMap.get(groupId);
+      if (!shareKeys || shareKeys.length === 0) return;
 
-      // Set shareKeys for each member model to have `${groupShareKey}/${memberModel.name}` to mimic dynamic groups v7 autoIDs
+      /**
+       * Go through each shareKey and create new shareKeys for members
+       * - Look at current member.uniqueId
+       * - Replace instances of group.uniqueID in member.uniqueId with shareKey
+       * For example:
+       * - group.uniqueId = 'some-group-id'
+       * - member.uniqueId = 'some-group-id/some-member-id'
+       * - group.shareKeys = 'old-group-id'
+       * - So we want to create member.shareKeys = ["old-group-id/some-member-id"]
+       */
+
       this.memberModels.forEach((model: BaseModel) => {
-        shareKeys.forEach(
-          ([groupShareKey, modelId]) =>
-            model.uniqueId &&
-            this.terria.addShareKey(
-              model.uniqueId,
-              `${groupShareKey}/${
-                CatalogMemberMixin.isMixedInto(model)
-                  ? model.name
-                  : model.uniqueId
-              }`
-            )
+        // Only add shareKey if model.uniqueId is an autoID (i.e. contains groupId)
+        if (!model.uniqueId || !model.uniqueId.includes(groupId)) return;
+        shareKeys.forEach(groupShareKey =>
+          this.terria.addShareKey(
+            model.uniqueId!,
+            model.uniqueId!.replace(groupId, groupShareKey)
+          )
         );
       });
     }

@@ -5,7 +5,7 @@ Version: 1
 
 ## Status
 
-In discussion
+Accepted
 
 ## Context
 
@@ -103,9 +103,17 @@ How do we add `shareKeys` to items created by dynamic groups?
 
 To do this, we need a reverse map of `id` -> `shareKeys`.
 
+### Revert v8 WMS-group member ids to match v7
+
+This means we don't need to add manual `shareKeys` to WMS-groups.
+
 ## Consequences
 
 This does not solve for the different methods of generating autoIDs across v7 and v8.
+
+### Known incompatible groups
+
+- CKAN Group
 
 If we have compatibility issues with certain `CatalogGroup`s, we can either:
 
