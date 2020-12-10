@@ -63,6 +63,8 @@ This is also relevant if moving from v8 JSON to v8 Magda catalog - or any other 
 
 Different dynamic `CatalogGroups` may generate member autoIDs differently.  
 
+#### WMS-Group
+
 For example - `wms-group` autoIDs for `wms` items are generated from the item `name`:
 
 - in v8: `${layer.Name || layer.Title}`
@@ -78,6 +80,10 @@ if (wmsGroup.titleField === "name") {
 }
 ```
 
+#### CKAN Resource
+
+- in v8: `parentId + "/" + ckanDataset.id + "/" + ckanResource.id`
+
 ### Summary
 
 How do we add `shareKeys` to items created by dynamic groups?
@@ -86,6 +92,22 @@ How do we add `shareKeys` to items created by dynamic groups?
 
 ### Add `shareKeys` to group items on load
 
+- Go through each `shareKey` and create new shareKeys for members
+  - Look current `member.uniqueId`
+  - Replace instances of `group.uniqueID` in `member.uniqueId` with `shareKey`
+- For example:
+  - `group.uniqueId = "some-group-id"`
+  - `member.uniqueId = "some-group-id/some-member-id"`
+  - `group.shareKeys = ["old-group-id"]`
+  - So we want to create `member.shareKeys = ["old-group-id/some-member-id"]`
+
+To do this, we need a reverse map of `id` -> `shareKeys`.
 
 ## Consequences
 
+This does not solve for the different methods of generating autoIDs across v7 and v8.
+
+If we have compatibility issues with certain `CatalogGroup`s, we can either:
+
+- Change id generation in v8 to match v7
+- Add manual `shareKey` generation to each `CatalogGroup`
