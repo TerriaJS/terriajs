@@ -17,7 +17,7 @@ describe("ShapefileCatalogItem", function() {
     shapefile.setTrait(
       CommonStrata.user,
       "url",
-      "test/shapefile/bike_racks.zip"
+      "test/Shapefile/bike_racks.zip"
     );
     await shapefile.loadMapItems();
     expect(shapefile.mapItems.length).toEqual(1);
@@ -29,7 +29,7 @@ describe("ShapefileCatalogItem", function() {
     shapefile.setTrait(
       CommonStrata.user,
       "url",
-      "test/shapefile/cemeteries.zip"
+      "test/Shapefile/cemeteries.zip"
     );
     await shapefile.loadMapItems();
     expect(shapefile.mapItems.length).toEqual(1);
