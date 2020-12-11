@@ -111,6 +111,8 @@ This means we don't need to add manual `shareKeys` to WMS-groups.
 
 This does not solve for the different methods of generating autoIDs across v7 and v8.
 
+Changing `wms-group` IDs will break sharekeys for existing v8 maps.
+
 ### Known incompatible groups
 
 - CKAN Group
