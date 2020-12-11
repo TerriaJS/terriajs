@@ -5,13 +5,13 @@ Change Log
 
 #### next release (8.0.0-alpha.63)
 * Add `v7initializationUrls` to terria config. It will convert catalogs to v8 and print warning messages to console.
-* Add `shareKeys` support for Madga map-config maps (through `terria` aspect)
+* Add `shareKeys` support for Madga map-config maps (through `terria` aspectp)
 * Revert WMS-group item ID generation to match v7
 * Add `addShareKeysToMembers` to `GroupMixin` to generate `shareKeys` for dynamic groups (eg `wms-group)
 * Added `InitDataPromise` to `InitSources`
 * Add reverse `modelIdShareKeysMap` map - `model.id` -> `shareKeys`
+* Upgraded `catalog-converter` to 0.0.2-alpha.4
 * [The next improvement]
-
 
 #### 8.0.0-alpha.62
 * Fixed an issue with not loading the base map from init file and an issue with viewerMode from init files overriding the persisted viewerMode
