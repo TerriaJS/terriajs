@@ -14,6 +14,7 @@ Change Log
 * Reverted Legend use of `object` instead of `img` - sometimes it was showing html error responses
 * Legend will now hide if an error is thrown
 * Update youtube urls to nocookie version
+* Share link conversion (through `catalog-converter`) is now done client-side
 * [The next improvement]
 
 #### 8.0.0-alpha.62

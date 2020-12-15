@@ -11,11 +11,11 @@ const Spacing: any = require("../../Styled/Spacing").Spacing;
 const RawButton: any = require("../../Styled/Button").RawButton;
 const TextSpan: any = require("../../Styled/Text").TextSpan;
 
-export const shareConvertNotification = (shareProps: any) => (
+export const shareConvertNotification = (messages: any) => (
   viewState: ViewState
 ) => {
   const messagesForPath: { [path: string]: string[] } = {};
-  shareProps.messages?.forEach((message: any) => {
+  messages.forEach((message: any) => {
     let pathString = message.path?.join(": ");
     if (!pathString || pathString === null || pathString === "")
       pathString = "root";

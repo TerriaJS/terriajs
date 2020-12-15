@@ -1,4 +1,4 @@
-import { convertCatalog } from "catalog-converter";
+import { convertCatalog, convertShare } from "catalog-converter";
 import i18next from "i18next";
 import { action, computed, observable, runInAction, toJS, when } from "mobx";
 import { createTransformer } from "mobx-utils";
@@ -1301,14 +1301,21 @@ function interpretHash(
         }
       });
 
-      if (shareProps) {
-        if (shareProps.converted) {
+      if (isDefined(shareProps) && shareProps !== {}) {
+        // Convert shareProps to v8 if neccessary
+        const result = convertShare(shareProps);
+
+        // Show warning messages if converted
+        if (result.converted) {
           terria.notification.raiseEvent({
             title: i18next.t("share.convertNotificationTitle"),
-            message: shareConvertNotification(shareProps)
+            message: shareConvertNotification(result.messages)
           } as Notification);
         }
-        interpretStartData(terria, shareProps);
+
+        if (result.result !== null) {
+          interpretStartData(terria, result.result);
+        }
       }
     });
   });
