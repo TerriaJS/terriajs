@@ -1048,8 +1048,7 @@ export default class Terria {
     }
 
     if (aspects.group && aspects.group.members) {
-      // const id = config.id;
-      // force config id to be `/`, purely to emulate regular terria behaviour
+      // force config (root group) id to be `/`
       const id = "/";
       this.removeModelReferences(this.catalog.group);
 
