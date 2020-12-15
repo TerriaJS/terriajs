@@ -282,7 +282,7 @@ export default class Terria {
     showWelcomeMessage: false,
     welcomeMessageVideo: {
       videoTitle: "Getting started with the map",
-      videoUrl: "https://www.youtube.com/embed/FjSxaviSLhc",
+      videoUrl: "https://www.youtube-nocookie.com/embed/FjSxaviSLhc",
       placeholderImage:
         "https://img.youtube.com/vi/FjSxaviSLhc/maxresdefault.jpg"
     },

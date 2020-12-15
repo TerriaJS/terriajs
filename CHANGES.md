@@ -11,6 +11,7 @@ Change Log
 * Added `InitDataPromise` to `InitSources`
 * Add reverse `modelIdShareKeysMap` map - `model.id` -> `shareKeys`
 * Upgraded `catalog-converter` to 0.0.2-alpha.4
+* Update youtube urls to nocookie version
 * [The next improvement]
 
 #### 8.0.0-alpha.62
