@@ -5,13 +5,13 @@ Change Log
 
 #### next release (8.0.0-alpha.63)
 * Add `v7initializationUrls` to terria config. It will convert catalogs to v8 and print warning messages to console.
-* Add `shareKeys` support for Madga map-config maps (through `terria` aspectp)
+* Add `shareKeys` support for Madga map-config maps (through `terria` aspect)
 * Revert WMS-group item ID generation to match v7
 * Add `addShareKeysToMembers` to `GroupMixin` to generate `shareKeys` for dynamic groups (eg `wms-group)
 * Added `InitDataPromise` to `InitSources`
 * Add reverse `modelIdShareKeysMap` map - `model.id` -> `shareKeys`
 * Upgraded `catalog-converter` to 0.0.2-alpha.4
-* Reverted Legend use of object instead of img - sometimes it was showing html error responses
+* Reverted Legend use of `object` instead of `img` - sometimes it was showing html error responses
 * Legend will now hide if an error is thrown
 * Update youtube urls to nocookie version
 * [The next improvement]
