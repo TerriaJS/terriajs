@@ -11,6 +11,8 @@ Change Log
 * Added `InitDataPromise` to `InitSources`
 * Add reverse `modelIdShareKeysMap` map - `model.id` -> `shareKeys`
 * Upgraded `catalog-converter` to 0.0.2-alpha.4
+* Reverted Legend use of object instead of img - sometimes it was showing html error responses
+* Legend will now hide if an error is thrown
 * Update youtube urls to nocookie version
 * [The next improvement]
 
