@@ -9,11 +9,15 @@ import Cesium from "../../lib/Models/Cesium";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
 import Feature from "../../lib/Models/Feature";
-import { isInitData, isInitUrl } from "../../lib/Models/InitSource";
+import {
+  isInitData,
+  isInitDataPromise,
+  isInitUrl
+} from "../../lib/Models/InitSource";
 import MagdaReference from "../../lib/Models/MagdaReference";
 import { BaseModel } from "../../lib/Models/Model";
 import openGroup from "../../lib/Models/openGroup";
-import Terria, { makeModelsMagdaCompatible } from "../../lib/Models/Terria";
+import Terria from "../../lib/Models/Terria";
 import UrlReference, {
   UrlToCatalogMemberMapping
 } from "../../lib/Models/UrlReference";
@@ -25,6 +29,9 @@ import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
 
 const mapConfigBasicJson = require("../../wwwroot/test/Magda/map-config-basic.json");
 const mapConfigBasicString = JSON.stringify(mapConfigBasicJson);
+
+const mapConfigV7Json = require("../../wwwroot/test/Magda/map-config-v7.json");
+const mapConfigV7String = JSON.stringify(mapConfigV7Json);
 
 const mapConfigInlineInitJson = require("../../wwwroot/test/Magda/map-config-inline-init.json");
 const mapConfigInlineInitString = JSON.stringify(mapConfigInlineInitJson);
@@ -38,49 +45,6 @@ describe("Terria", function() {
   beforeEach(function() {
     terria = new Terria({
       baseUrl: "./"
-    });
-  });
-
-  describe("makeModelsMagdaCompatible", function() {
-    it("should return models", function() {
-      const models = {
-        foo: {
-          knownContainerUniqueIds: ["mochi-is-fluffy"]
-        },
-        bar: {
-          knownContainerUniqueIds: ["neko-is-hungry"]
-        },
-        cat: {
-          knownContainerUniqueIds: [""]
-        }
-      };
-      expect(makeModelsMagdaCompatible(models)).toEqual(models);
-    });
-
-    it("should inject `/` to `knownContainerUniqueIds` if map-config exists", function() {
-      const models = {
-        foo: {
-          knownContainerUniqueIds: ["map-config"]
-        },
-        bar: {
-          knownContainerUniqueIds: ["map-config-another"]
-        },
-        cat: {
-          knownContainerUniqueIds: ["bar"]
-        }
-      };
-      const expected = {
-        foo: {
-          knownContainerUniqueIds: ["map-config", "/"]
-        },
-        bar: {
-          knownContainerUniqueIds: ["map-config-another", "/"]
-        },
-        cat: {
-          knownContainerUniqueIds: ["bar"]
-        }
-      };
-      expect(makeModelsMagdaCompatible(models)).toEqual(expected);
     });
   });
 
@@ -99,6 +63,10 @@ describe("Terria", function() {
       // from `terria.start()`
       jasmine.Ajax.stubRequest("test/Magda/map-config-basic.json").andReturn({
         responseText: mapConfigBasicString
+      });
+
+      jasmine.Ajax.stubRequest("test/Magda/map-config-v7.json").andReturn({
+        responseText: mapConfigV7String
       });
 
       // terria's "Magda derived url"
@@ -166,6 +134,30 @@ describe("Terria", function() {
             } else {
               throw "not init source";
             }
+            done();
+          })
+          .catch(error => {
+            done.fail(error);
+          });
+      });
+      it("works with v7initializationUrls", function(done) {
+        jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
+          // terria's "Magda derived url"
+          responseText: mapConfigBasicString
+        });
+        // no init sources before starting
+        expect(terria.initSources.length).toEqual(0);
+
+        terria
+          .start({
+            configUrl: "test/Magda/map-config-v7.json"
+          })
+          .then(function() {
+            console.log(terria);
+            console.log(mapConfigV7Json);
+            expect(terria.initSources.length).toEqual(1);
+            expect(isInitDataPromise(terria.initSources[0])).toEqual(true);
+
             done();
           })
           .catch(error => {

@@ -37,7 +37,7 @@ describe("Legend", function() {
           // @ts-ignore
           const legendSection = <Legend item={wmsItem} />;
           const result = getShallowRenderedOutput(legendSection);
-          const memberComponents = findAllWithType(result, "object");
+          const memberComponents = findAllWithType(result, "img");
           expect(memberComponents.length).toEqual(1);
         })
         .then(done);
