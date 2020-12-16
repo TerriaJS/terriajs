@@ -15,6 +15,7 @@ Change Log
 * Legend will now hide if an error is thrown
 * Update youtube urls to nocookie version
 * Share link conversion (through `catalog-converter`) is now done client-side
+* Fix Geoserver legend font colour bug
 * [The next improvement]
 
 #### 8.0.0-alpha.62
