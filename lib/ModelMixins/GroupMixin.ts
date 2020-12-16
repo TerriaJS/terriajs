@@ -103,13 +103,14 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
 
       this.memberModels.forEach((model: BaseModel) => {
         // Only add shareKey if model.uniqueId is an autoID (i.e. contains groupId)
-        if (!model.uniqueId || !model.uniqueId.includes(groupId)) return;
-        shareKeys.forEach(groupShareKey =>
-          this.terria.addShareKey(
-            model.uniqueId!,
-            model.uniqueId!.replace(groupId, groupShareKey)
-          )
-        );
+        if (isDefined(model.uniqueId) && model.uniqueId.includes(groupId)) {
+          shareKeys.forEach(groupShareKey =>
+            this.terria.addShareKey(
+              model.uniqueId!,
+              model.uniqueId!.replace(groupId, groupShareKey)
+            )
+          );
+        }
       });
     }
 
