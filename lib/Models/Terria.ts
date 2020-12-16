@@ -1202,17 +1202,16 @@ const loadInitSource = createTransformer(
     if (isInitUrl(initSource)) {
       jsonValue = await loadJson5(initSource.initUrl);
     } else if (isInitOptions(initSource)) {
-      await initSource.options.reduce(async (previousOptionPromise, option) => {
+      let error: any;
+      for (const option of initSource.options) {
         try {
-          const json = await previousOptionPromise;
-          if (json === undefined) {
-            return loadInitSource(option);
-          }
-          return json;
-        } catch (_) {
-          return loadInitSource(option);
+          jsonValue = await loadInitSource(option);
+          if (jsonValue !== undefined) break;
+        } catch (err) {
+          error = err;
         }
-      }, Promise.resolve<JsonObject | undefined>(undefined));
+      }
+      if (jsonValue === undefined && error !== undefined) throw error;
     } else if (isInitData(initSource)) {
       jsonValue = initSource.data;
     } else if (isInitDataPromise(initSource)) {
