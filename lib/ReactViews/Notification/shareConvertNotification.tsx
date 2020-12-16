@@ -12,12 +12,10 @@ const RawButton: any = require("../../Styled/Button").RawButton;
 const TextSpan: any = require("../../Styled/Text").TextSpan;
 
 export const shareConvertNotification = (
-  messages: NotUndefined<import("catalog-converter").ShareResult["messages"]>
+  messages: import("catalog-converter").ShareResult["messages"]
 ) => (viewState: ViewState) => {
-  viewState: ViewState
-) => {
   const messagesForPath: { [path: string]: string[] } = {};
-  messages.forEach((message: any) => {
+  messages?.forEach((message: any) => {
     let pathString = message.path?.join(": ");
     if (!pathString || pathString === null || pathString === "")
       pathString = "root";
