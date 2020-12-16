@@ -11,7 +11,9 @@ const Spacing: any = require("../../Styled/Spacing").Spacing;
 const RawButton: any = require("../../Styled/Button").RawButton;
 const TextSpan: any = require("../../Styled/Text").TextSpan;
 
-export const shareConvertNotification = (messages: any) => (
+export const shareConvertNotification = (
+  messages: NotUndefined<import("catalog-converter").ShareResult["messages"]>
+) => (viewState: ViewState) => {
   viewState: ViewState
 ) => {
   const messagesForPath: { [path: string]: string[] } = {};
