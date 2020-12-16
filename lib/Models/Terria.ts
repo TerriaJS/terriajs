@@ -461,7 +461,7 @@ export default class Terria {
     // look for v7 catalogs -> push v7-v8 conversion to initSources
     if (Array.isArray(config?.v7initializationUrls)) {
       this.initSources.push(
-        ...config?.v7initializationUrls
+        ...config.v7initializationUrls
           .filter((v7initUrl: any) => isJsonString(v7initUrl))
           .map(async (v7initUrl: string) => {
             const catalog = await loadJson5(v7initUrl);
