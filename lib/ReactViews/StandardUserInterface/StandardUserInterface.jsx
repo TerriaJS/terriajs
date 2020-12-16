@@ -509,7 +509,7 @@ const getHistory = basename => {
 export const StandardUserInterface = props => {
   const experimental = props.terria.configParameters.experimentalFeatures;
   const Router = experimental ? BrowserRouter : MemoryRouter;
-  const basename = props.terria.serverConfig.config.baseHref ?? "/";
+  const basename = props.terria.serverConfig?.config?.baseHref ?? "/";
 
   return (
     <Router basename={basename} history={experimental && getHistory(basename)}>
