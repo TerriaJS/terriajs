@@ -569,8 +569,11 @@ export default class ViewState {
       this.previewedItem = catalogMember;
       this.openAddData();
       if (this.terria.configParameters.tabbedCatalog) {
-        // Go to specific tab
-        this.activeTabIdInCategory = getAncestors(catalogMember)[0].uniqueId;
+        const parentGroups = getAncestors(catalogMember);
+        if (parentGroups.length > 0) {
+          // Go to specific tab
+          this.activeTabIdInCategory = parentGroups[0].uniqueId;
+        }
       }
     }
   }

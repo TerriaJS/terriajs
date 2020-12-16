@@ -62,7 +62,7 @@ const DataPreviewSections = observer(
         <div>
           <For each="item" index="i" of={this.sortInfoSections(items)}>
             <Choose>
-              <When condition={item.content !== undefined}>
+              <When condition={item.content?.length > 0}>
                 <div key={i}>
                   <h2 className={Styles.subHeading}>{item.name}</h2>
                   {parseCustomMarkdownToReact(

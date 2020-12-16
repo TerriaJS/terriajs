@@ -96,6 +96,18 @@ const DataCatalogGroup = observer(
       return url.replace(/^https?:\/\//, "");
     },
 
+    componentDidMount() {
+      if (this.props.group.isOpen) {
+        this.props.group.loadMembers();
+      }
+    },
+
+    componentDidUpdate() {
+      if (this.props.group.isOpen) {
+        this.props.group.loadMembers();
+      }
+    },
+
     render() {
       const group = this.props.group;
       const { t } = this.props;

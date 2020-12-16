@@ -72,9 +72,9 @@ function createCatalogMember(
     CatalogMemberFactory,
     terria,
     "",
-    undefined,
     CommonStrata.definition,
-    json
+    json,
+    {}
   );
 }
 
