@@ -2,7 +2,7 @@ name: npm-publish
 on:
   push:
     branches:
-      - next
+      - mobx-tjs-new-routing-v2
 
 jobs:
   publish:
@@ -46,7 +46,7 @@ jobs:
 
       - name: Publish package to NPM
         if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
-        run: npm publish --tag next
+        run: npm publish --tag prerender
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
