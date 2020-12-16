@@ -208,15 +208,13 @@ class GetCapabilitiesStratum extends LoadableStratum(
             "fontName:Courier;fontStyle:bold;fontSize:12;forceLabels:on;fontAntiAliasing:true;labelMargin:5";
 
           // Geoserver fontColor must be a hex value - use `textLight` theme colour
-          const fontColor = terriaTheme.textLight.split("#")?.[1];
+          let fontColor = terriaTheme.textLight.split("#")?.[1];
           if (isDefined(fontColor)) {
-            let terriaTextLight = terriaTheme.textLight.split("#")[1];
-
-            // If terriaTextLight is a 3-character hex -> turn into 6
-            if (terriaTextLight.length === 3) {
-              terriaTextLight = `${terriaTextLight[0]}${terriaTextLight[0]}${terriaTextLight[1]}${terriaTextLight[1]}${terriaTextLight[2]}${terriaTextLight[2]}`;
+            // If fontColor is a 3-character hex -> turn into 6
+            if (fontColor.length === 3) {
+              fontColor = `${fontColor[0]}${fontColor[0]}${fontColor[1]}${fontColor[1]}${fontColor[2]}${fontColor[2]}`;
             }
-            legendOptions += `;fontColor:0x${terriaTextLight}`;
+            legendOptions += `;fontColor:0x${fontColor}`;
           }
 
           legendOptions += ";dpi:182"; // enable if we can scale the image back down by 50%.
