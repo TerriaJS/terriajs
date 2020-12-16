@@ -495,7 +495,7 @@ const StandardUserInterfaceWithRouter = withRouter(
 // TODO: add actual basename implementation, by (possible) way of:
 // pulling out `serverConfig.baseHref` via `/serverconfig/`
 // ? somewhere else? duplicate it in client side config.json?
-const TODO_DYNAMIC_BASENAME = `/test-terria/`;
+// const TODO_DYNAMIC_BASENAME = `/test-terria/`;
 const getHistory = basename => {
   const browserHistory = createBrowserHistory({
     // note - history api wants `basename` lowercase `n`
