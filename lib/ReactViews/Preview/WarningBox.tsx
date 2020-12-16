@@ -1,10 +1,26 @@
 import React from "react";
+import styled from "styled-components";
 
 const Box: any = require("../../Styled/Box").default;
 const Spacing: any = require("../../Styled/Spacing").default;
 
 // Hard code colour for now
 const warningColor = "#f69900";
+
+const Triangle = styled.p`
+  width: 0px;
+  height: 0px;
+  text-indent: -2px;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 20px solid white;
+  font-weight: bold;
+  line-height: 25px;
+  user-select: none;
+`;
+
+// Equilateral triangle
+const WarningIcon = () => <Triangle>!</Triangle>;
 
 const WarningBox: React.FC = ({ children }) => (
   <Box backgroundColor={warningColor} rounded padded>
@@ -15,25 +31,6 @@ const WarningBox: React.FC = ({ children }) => (
       {children}
     </Box>
   </Box>
-);
-
-// Equilateral triangle
-const WarningIcon = () => (
-  <p
-    css={`
-      width: 0px;
-      height: 0px;
-      text-indent: -2px;
-      border-left: 12px solid transparent;
-      border-right: 12px solid transparent;
-      border-bottom: 20px solid white;
-      font-weight: bold;
-      line-height: 25px;
-      user-select: none;
-    `}
-  >
-    !
-  </p>
 );
 
 export default WarningBox;
