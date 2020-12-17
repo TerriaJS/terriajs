@@ -3,6 +3,9 @@ Change Log
 
 ### Next Release
 
+
+### v7.11.16
+
 * Fixed a bug where the timeline would not update properly when the timeline panel was resized.
 
 ### v7.11.15
