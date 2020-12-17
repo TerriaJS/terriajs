@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.64)
+* Fix WMS style selector bug
 * [The next improvement]
 
 #### 8.0.0-alpha.63
