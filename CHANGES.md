@@ -4,8 +4,10 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.64)
-* Fix WMS style selector bug
 * [The next improvement]
+
+#### 8.0.0-alpha.64
+* Fix WMS style selector bug
 
 #### 8.0.0-alpha.63
 * Add `v7initializationUrls` to terria config. It will convert catalogs to v8 and print warning messages to console.
