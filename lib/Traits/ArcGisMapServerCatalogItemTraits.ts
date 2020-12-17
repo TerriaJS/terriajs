@@ -22,7 +22,8 @@ export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
   @primitiveTrait({
     type: "string",
     name: "Layer(s)",
-    description: "The layer or layers to display."
+    description:
+      "The layer or layers to display. This can be a comma seperated string of layer IDs or names."
   })
   layers?: string;
 
