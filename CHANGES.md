@@ -3,11 +3,12 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.64)
+#### next release (8.0.0-alpha.65)
 * [The next improvement]
 
 #### 8.0.0-alpha.64
-* Fix WMS style selector bug
+* Fixed WMS style selector bug.
+* `layers` trait for `ArcGisMapServerCatalogItem` can now be a comma separated string of layer IDs or names. Names will be auto-converted to IDs when making the request.
 
 #### 8.0.0-alpha.63
 * Add `v7initializationUrls` to terria config. It will convert catalogs to v8 and print warning messages to console.
@@ -46,7 +47,6 @@ Change Log
 * Changed behaviour of `updateModelFromJson` such that catalog groups with the same id/name from different json files will be merged into one single group. 
 * Fixed error when selecting an existing polygon in WPS input form.
 * Upgraded `catalog-converter` to 0.0.2-alpha.3.
-* `layers` trait for `ArcGisMapServerCatalogItem` can now be a comma separated string of layer IDs or names. Names will be auto-converted to IDs when making the request.
 
 #### 8.0.0-alpha.61
 * New `CatalogFunctionMixin` and `CatalogFunctionJobMixin`
