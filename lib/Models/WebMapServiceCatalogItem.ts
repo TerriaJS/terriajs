@@ -1206,7 +1206,11 @@ class WebMapServiceCatalogItem
 
       // There is no way of finding out default style if no style has been selected :(
       // If !supportsGetLegendGraphic - we have to just use the first available style
-      if (!isDefined(selectedId) && !this.supportsGetLegendGraphic) {
+      if (
+        !isDefined(selectedId) &&
+        options.length > 0 &&
+        !this.supportsGetLegendGraphic
+      ) {
         selectedId = options[0].id;
       }
 
