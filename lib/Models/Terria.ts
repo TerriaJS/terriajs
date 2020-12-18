@@ -1023,7 +1023,6 @@ export default class Terria {
       const reference = existingReference;
 
       reference.setTrait(CommonStrata.definition, "url", magdaRoot);
-      reference.setTrait(CommonStrata.definition, "recordId", id);
       reference.setTrait(CommonStrata.definition, "magdaRecord", config);
       await reference.loadReference();
       if (reference.target instanceof CatalogGroup) {
