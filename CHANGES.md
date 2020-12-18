@@ -3,10 +3,12 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.65)
+#### next release (8.0.0-alpha.66)
+* [The next improvement]
+
+#### 8.0.0-alpha.65
 * Fixed SDMX-group nested categories
 * SDMX-group will now remove top-level groups with only 1 child
-* [The next improvement]
 
 #### 8.0.0-alpha.64
 * Fixed WMS style selector bug.
