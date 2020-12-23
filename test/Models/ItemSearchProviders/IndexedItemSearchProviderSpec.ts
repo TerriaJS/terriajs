@@ -1,0 +1,205 @@
+import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import JsonValue from "../../../lib/Core/Json";
+import IndexedItemSearchProvider from "../../../lib/Models/ItemSearchProviders/IndexedItemSearchProvider";
+import Csv from "../../../lib/Table/Csv";
+
+const dataCsv = require("raw-loader!../../../wwwroot/test/IndexedItemSearchProvider/data.csv");
+const heightCsv = require("raw-loader!../../../wwwroot/test/IndexedItemSearchProvider/0.csv");
+const areaCsv = require("raw-loader!../../../wwwroot/test/IndexedItemSearchProvider/1.csv");
+
+const validIndexRoot = {
+  dataUrl: "data.csv",
+  idProperty: "building_id",
+  indexes: {
+    height: {
+      type: "numeric",
+      name: "Building height",
+      url: "0.csv",
+      range: { min: 1, max: 180 }
+    },
+    area: {
+      type: "numeric",
+      url: "1.csv",
+      range: { min: 100, max: 20000 }
+    },
+    street_address: {
+      type: "text",
+      name: "Street address",
+      url: "2.json"
+    },
+    roof_type: {
+      type: "enum",
+      name: "Roof type",
+      values: {
+        Flat: {
+          count: 50,
+          url: "3-0.csv"
+        },
+        Slope: {
+          count: 100,
+          url: "3-1.csv"
+        }
+      }
+    }
+  }
+};
+
+describe("IndexedItemSearchProvider", function() {
+  beforeEach(function() {
+    jasmine.Ajax.install();
+  });
+
+  afterEach(function() {
+    jasmine.Ajax.uninstall();
+  });
+
+  describe("construction", function() {
+    it("can be constructed", function() {
+      new IndexedItemSearchProvider({ indexRootUrl: "indexRoot.json" });
+    });
+  });
+
+  describe("load", function() {
+    it("can be loaded", async function() {
+      const provider = new IndexedItemSearchProvider({
+        indexRootUrl: "indexRoot.json"
+      });
+      stubRequest("indexRoot.json", validIndexRoot);
+      let error;
+      try {
+        await provider.load();
+      } catch (e) {
+        error = e;
+      }
+      expect(error).toBeUndefined();
+    });
+
+    it("throws an error if the indexRoot file cannot be parsed", async function() {
+      const provider = new IndexedItemSearchProvider({
+        indexRootUrl: "indexRoot.json"
+      });
+      stubRequest("indexRoot.json", {});
+      let error;
+      try {
+        await provider.load();
+      } catch (e) {
+        error = e;
+      }
+      expect(error?.message).toContain(
+        "indexedItemSearchProvider.errorParsingIndexRoot"
+      );
+    });
+  });
+
+  describe("describeParameters", function() {
+    it("returns the parameters", async function() {
+      const provider = new IndexedItemSearchProvider({
+        indexRootUrl: "indexRoot.json"
+      });
+      stubRequest("indexRoot.json", validIndexRoot);
+      await provider.load();
+      const parameters = await provider.describeParameters();
+      expect(parameters).toEqual([
+        {
+          type: "numeric",
+          id: "height",
+          name: "Building height",
+          range: { min: 1, max: 180 }
+        },
+        {
+          type: "numeric",
+          id: "area",
+          name: "area",
+          range: { min: 100, max: 20000 }
+        },
+        { type: "text", id: "street_address", name: "Street address" },
+        {
+          type: "enum",
+          id: "roof_type",
+          name: "Roof type",
+          values: [
+            { id: "Flat", count: 50 },
+            { id: "Slope", count: 100 }
+          ]
+        }
+      ]);
+    });
+  });
+
+  describe("search", function() {
+    let provider: IndexedItemSearchProvider;
+    let parameterValues: Map<string, any>;
+
+    beforeEach(async function() {
+      provider = new IndexedItemSearchProvider({
+        indexRootUrl: "indexRoot.json"
+      });
+      stubRequest("indexRoot.json", validIndexRoot);
+      stubRequest("data.csv", dataCsv);
+      stubRequest("0.csv", heightCsv);
+      stubRequest("1.csv", areaCsv);
+      const heightRows = await Csv.parseString(heightCsv);
+      const areaRows = await Csv.parseString(areaCsv);
+      parameterValues = new Map([
+        ["height", { start: heightRows[3][1], end: heightRows[9][1] }],
+        ["area", { start: areaRows[5][1], end: areaRows[7][1] }]
+      ]);
+      await provider.load();
+    });
+
+    it("returns matching results", async function() {
+      const results = await provider.search(parameterValues);
+      expect(results).toEqual([
+        {
+          id: "632",
+          zoomToTarget: {
+            boundingSphere: createBoundingSphere({
+              latitude: 19.12575420288384,
+              longitude: 11.870779042051964,
+              radius: 3.6875988497925927
+            })
+          },
+          properties: { building_id: "632" }
+        },
+        {
+          id: "410",
+          zoomToTarget: {
+            boundingSphere: createBoundingSphere({
+              latitude: 46.567720640307755,
+              longitude: 16.64851364383736,
+              radius: 17.23546017384181
+            })
+          },
+          properties: { building_id: "410" }
+        }
+      ]);
+    });
+
+    it("should load the index and data files only once", async function() {
+      await provider.search(parameterValues);
+      const finalCount = jasmine.Ajax.requests.count();
+      expect(finalCount).toEqual(4);
+      await provider.search(parameterValues);
+      expect(jasmine.Ajax.requests.count()).toEqual(finalCount);
+    });
+  });
+});
+
+function stubRequest(url: string, response: JsonValue) {
+  jasmine.Ajax.stubRequest(url).andReturn({
+    responseText:
+      typeof response === "string" ? response : JSON.stringify(response)
+  });
+}
+
+function createBoundingSphere(props: {
+  latitude: number;
+  longitude: number;
+  radius: number;
+}): BoundingSphere {
+  const { longitude, latitude, radius } = props;
+  const center = Cartesian3.fromDegrees(longitude, latitude);
+  const boundingSphere = new BoundingSphere(center, radius);
+  return boundingSphere;
+}
