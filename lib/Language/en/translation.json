@@ -653,6 +653,7 @@
       "json": "JSON",
       "carto": "Carto",
       "gltf": "GLTF",
+      "shp": "Shapefile (zip)",
       "other": "Other (use conversion service)"
     },
     "printWindow": {
