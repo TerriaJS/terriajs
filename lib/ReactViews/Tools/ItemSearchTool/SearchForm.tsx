@@ -37,7 +37,7 @@ type State =
   | { is: "initial" }
   | { is: "searching" }
   | { is: "error"; error: Error }
-  | { is: "ok"; results: ItemSearchResult[] };
+  | { is: "results"; results: ItemSearchResult[] };
 
 const SearchForm: React.FC<SearchFormProps> = props => {
   const { parameters, itemSearchProvider } = props;
@@ -57,7 +57,7 @@ const SearchForm: React.FC<SearchFormProps> = props => {
     itemSearchProvider
       .search(new Map(Object.entries(values)))
       .then(results => {
-        setState({ is: "ok", results });
+        setState({ is: "results", results });
         props.onResults(values, results);
       })
       .catch(error => {

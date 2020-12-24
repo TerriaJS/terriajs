@@ -26,7 +26,7 @@ export interface PropsType extends WithTranslation {
 }
 
 type State =
-  | { is: "loading" }
+  | { is: "loadingParameters" }
   | { is: "error"; error: Error }
   | { is: "search" }
   | { is: "results"; results: ItemSearchResults };
@@ -38,7 +38,7 @@ const ItemSearchTool: React.FC<PropsType> = observer(props => {
   const { viewState, item, itemSearchProvider, t } = props;
   const itemName = CatalogMemberMixin.isMixedInto(item) ? item.name : "Item";
 
-  const [state, setState] = useState<State>({ is: "loading" });
+  const [state, setState] = useState<State>({ is: "loadingParameters" });
   const [parameters, setParameters] = useState<ItemSearchParameter[]>([]);
   const [parameterValues, setParameterValues] = useState<ParameterValues>({});
   const [selectedResult, setSelectedResult] = useState<
@@ -93,7 +93,7 @@ const ItemSearchTool: React.FC<PropsType> = observer(props => {
               text-align: center;
             `}
           >
-            {state.is === "loading" && (
+            {state.is === "loadingParameters" && (
               <Loading>{t("itemSearchTool.loading")}</Loading>
             )}
             {state.is === "error" && (
