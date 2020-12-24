@@ -62,11 +62,9 @@ describe("SdmxCatalogGroup", function() {
 
     it("loadsNestedMembers", async function() {
       await sdmxGroup.loadMembers();
-      const agencies = sdmxGroup.memberModels;
-      expect(agencies.length).toEqual(1);
-      const agency = agencies[0] as CatalogGroup;
-      expect(agency.memberModels.length).toEqual(2);
-      const categoryScheme = agency.memberModels[0] as CatalogGroup;
+      const agency = sdmxGroup.memberModels;
+      expect(agency.length).toEqual(2);
+      const categoryScheme = agency[0] as CatalogGroup;
       expect(categoryScheme.memberModels.length).toEqual(3);
       const category = categoryScheme.memberModels[0] as CatalogGroup;
       expect(category.memberModels.length).toEqual(6);
@@ -82,9 +80,8 @@ describe("SdmxCatalogGroup", function() {
 
     it("loadsDataflow-timeseries", async function() {
       await sdmxGroup.loadMembers();
-      const agencies = sdmxGroup.memberModels;
-      const agency = agencies[0] as CatalogGroup;
-      const categoryScheme = agency.memberModels[0] as CatalogGroup;
+      const agency = sdmxGroup.memberModels;
+      const categoryScheme = agency[0] as CatalogGroup;
       const category = categoryScheme.memberModels[0] as CatalogGroup;
 
       const dataflowNoRegion = category.memberModels[0] as SdmxJsonCatalogItem;
@@ -111,9 +108,8 @@ describe("SdmxCatalogGroup", function() {
 
     it("loadsDataflow-region", async function() {
       await sdmxGroup.loadMembers();
-      const agencies = sdmxGroup.memberModels;
-      const agency = agencies[0] as CatalogGroup;
-      const categoryScheme = agency.memberModels[0] as CatalogGroup;
+      const agency = sdmxGroup.memberModels;
+      const categoryScheme = agency[0] as CatalogGroup;
       const category = categoryScheme.memberModels[0] as CatalogGroup;
 
       const dataflowRegion = category.memberModels[1] as SdmxJsonCatalogItem;

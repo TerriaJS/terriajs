@@ -45,8 +45,7 @@ describe("upsertModelFromJson", function() {
       members: [
         {
           type: "wms",
-          localId:
-            "mobile-black-spot-programme:funded-base-stations-round4-group",
+          localId: "Funded Base Stations with Ineligible Areas",
           name: "Override"
         }
       ]
@@ -69,7 +68,7 @@ describe("upsertModelFromJson", function() {
     const group = <WebMapServiceCatalogGroup>model;
     const item = terria.getModelById(
       WebMapServiceCatalogItem,
-      "/Test/mobile-black-spot-programme:funded-base-stations-round4-group"
+      "/Test/Funded Base Stations with Ineligible Areas"
     );
     expect(item).toBeDefined();
     if (!item) {
