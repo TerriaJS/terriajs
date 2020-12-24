@@ -165,7 +165,7 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
           const enumValueIndex = index.values.get(enumValueId);
           if (!enumValueIndex)
             throw new Error(`Invalid enum value id ${enumValueId}`);
-          if (!enumValueId.ids) {
+          if (!enumValueIndex.ids) {
             const enumValueIndexUrl = this.toAbsoluteUrl(enumValueIndex.url);
             enumValueIndex.ids = loadCsv(enumValueIndexUrl, {
               dynamicTyping: true
