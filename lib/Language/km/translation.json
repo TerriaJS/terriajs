@@ -1,1 +1,20 @@
-{}
+{
+    "location": {
+        "myLocation": "ទីតាំងខ្ញុំ",
+        "browserCannotProvide": "កម្មវិធីរុករករបស់អ្នកមិនអាចផ្តល់ទីតាំងរបស់អ្នកបានទេ។",
+        "errorGettingLocation": "កំហុសក្នុងការទទួលបានទីតាំង"
+    },
+    "measure": {
+        "measureDistance": "វាស់ចម្ងាយរវាងទីតាំង",
+        "measureTool": "ឧបករណ៍វាស់វែង"
+    },
+    "general": {
+        "cancel": "បោះបង់",
+        "delete": "លុប",
+        "skip": "រំលង",
+        "next": "បន្ទាប់",
+        "prev": "មុន",
+        "open": "បើក",
+        "close": "បិទ"
+    }
+}
