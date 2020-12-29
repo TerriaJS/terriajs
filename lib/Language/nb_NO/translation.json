@@ -1,1 +1,284 @@
-{}
+{
+    "core": {
+        "dataType": {
+            "json": "JSON",
+            "gpx": "GPX",
+            "kml": "KML eller KMZ",
+            "csv": "CSV",
+            "geojson": "GeoJSON"
+        }
+    },
+    "analytics": {
+        "clickToDrawLine": "Klikk for å tegne linje",
+        "selectLocation": "Velg posisjon"
+    },
+    "terriaViewer": {
+        "webGLNotSupportedOrSlowTitle": "WebGL ikke støttet eller for tregt",
+        "webGLNotSupportedTitle": "WebGL ikke støttet",
+        "safari": "Apple Safari",
+        "firefox": "Mozilla Firefox",
+        "chrome": "Google Chrome"
+    },
+    "viewModels": {
+        "searchPlaceNames": "Offisielle stedsnavn",
+        "searchAddresses": "Adresser"
+    },
+    "chart": {
+        "download": "Last ned",
+        "expand": "Utvid"
+    },
+    "catalogItem": {
+        "removeFromMap": "Fjern fra kart",
+        "trash": "Fjern fra katalog",
+        "add": "Legg til",
+        "remove": "Fjern"
+    },
+    "clipboard": {
+        "shareExplanation": "Alle som har denne nettadressen vil ha tilgang til dette kartet.",
+        "shareURL": "Del nettadresse"
+    },
+    "concept": {
+        "inactive": {
+            "cancel": "Avbryt"
+        }
+    },
+    "satellite": {
+        "newLocation": "Ny posisjon",
+        "pickPoint": "Velg et punkt ved å klikke på kartet."
+    },
+    "dateTime": {
+        "timeline": {
+            "playFaster": "Spill av hurtigere",
+            "playSlower": "Spill av saktere",
+            "togglePlay": "Spill",
+            "gotoStart": "Gå til begynnelsen"
+        },
+        "useTimeline": "Bruk tidslinje"
+    },
+    "workbench": {
+        "toggleVisibility": "Vis/skjul data",
+        "removeAll": "Fjern alle",
+        "label": "Datasett",
+        "removeFromMap": "Fjern",
+        "removeFromMapTitle": "Fjern denne dataen",
+        "exportData": "Eksporter",
+        "exportDataTitle": "Eksporter kartdata",
+        "previewItem": "Om denne dataen",
+        "previewItemTitle": "info"
+    },
+    "description": {
+        "dataServiceDetails": "Detatjeneste-detaljer",
+        "dataSourceDetails": "Datakilde-detaljer",
+        "dataUrl": "Data-nettadresse",
+        "metadataUrl": "Metadata-nettadresse",
+        "typeName": "Type-navn",
+        "layerName": "Lagnavn",
+        "name": "Beskrivelse"
+    },
+    "preview": {
+        "updateFrequency": "Oppdateringsfrekvens",
+        "modified": "Endret",
+        "created": "Opprettet",
+        "contact": "Kontakt",
+        "author": "Utvikler",
+        "accessConstraints": "Tilgangsbegrensninger",
+        "licence": "Lisens",
+        "resourceDescription": "Ressurs-beskrivelse",
+        "serviceDescription": "Tjeneste-beskrivelse",
+        "datasetDescription": "Datasett-beskrivelse",
+        "dataDescription": "Databeskrivelse",
+        "disclaimer": "Ansvarsfraskrivelse",
+        "addToMap": "Legg til på kartet"
+    },
+    "search": {
+        "searchCatalogue": "Søk i katalogen",
+        "placeholder": "Søk etter plasseringer",
+        "viewMore": "Vis mer enn {{name}} resultater",
+        "viewLess": "Vis mindre enn {{name}} resultater",
+        "search": "Søk etter «{{searchText}}» i datakatalogen",
+        "data": "Data",
+        "done": "Ferdig",
+        "resultsLabel": "Søkeresultater"
+    },
+    "addData": {
+        "back": "Tilbake",
+        "dragDrop": "Dra og slipp",
+        "webTitle": "Legg til vev-data",
+        "localTitle": "Legg til lokal data",
+        "urlInputBtn": "Legg til",
+        "dataCatalogue": "Datakatalog",
+        "myData": "Min data",
+        "done": "Ferdig",
+        "closeDataPanel": "Lukk datapanel",
+        "btnHide": "Skjul",
+        "addDataBtnText": "Legg til data"
+    },
+    "satelliteGuidance": {
+        "dismissText": "Skjønner, takk."
+    },
+    "story": {
+        "mobileViewStory": "Vis historier",
+        "dismissText": "Skjønner, takk.",
+        "story": "Historie",
+        "navBtnMobile": "gå til historie {{title}}",
+        "navBtn": "gå til historie {{title}}",
+        "nextBtn": "gå til neste scene",
+        "untitled": "scene uten tittel",
+        "previousBtn": "gå til forrige scene",
+        "exitBtn": "avslutt historie",
+        "editor": {
+            "saveStory": "Lagre",
+            "saveBtn": "lagre",
+            "cancelEditing": "Avbryt",
+            "cancelBtn": "avbryt"
+        },
+        "play": "Spill historie",
+        "preview": "forhåndsvis historier",
+        "cancelRemove": "Avbrytt",
+        "confirmRemove": "Slett",
+        "doesNotExist": "Historien finnes ikke",
+        "untitledScene": "scene uten tittel",
+        "delete": "Slett",
+        "deleteStory": "slett",
+        "edit": "Rediger",
+        "editStory": "rediger"
+    },
+    "welcomeMessage": {
+        "WelcomeMessagePrimaryBtn": "Utforsk data"
+    },
+    "featureInfo": {
+        "noInfoAvailable": "Ingen info tilgjengelig",
+        "btnCloseFeature": "Lukk datapanel",
+        "panelHeading": "Funksjoninfo",
+        "clickMap": "Klikk på kartet for å lære mer om en posisjon",
+        "pickLocation": "Velg posisjon",
+        "download": "Lasdt ned denne tabellen",
+        "catalogItem": {
+            "featureInfoShown": "De første {{maximum}} vises nedenfor.",
+            "featuresFound": "{{featCount}} {catalogItemName} funksjoner ble funnet.",
+            "moreThanMax": "Fant mer enn {{maximum}} {{catalogItemName}} funksjoner."
+        }
+    },
+    "sui": {
+        "hideWorkbench": "Skjul arbeidsbenk",
+        "showWorkbench": "Vis arbeidsbenk",
+        "notifications": {
+            "denyText": "Kanskje senere",
+            "confirmText": "Ja",
+            "message": "Ønsker du å vise den nå?",
+            "title": "Dette kartet har en historie"
+        }
+    },
+    "helpMenu": {
+        "next": "Neste",
+        "done": "Ferdig",
+        "helpMenuMoreHelpTitle": "Mer hjelp",
+        "helpMenuSatelliteGuideTitle": "Vis satelittbildeguide",
+        "helpMenuOpenWelcome": "Vis velkomstmelding",
+        "helpMenuHeader": "Hva vil du gjøre?",
+        "btnTitle": "få hjelp",
+        "btnText": "Hjelp"
+    },
+    "feedback": {
+        "feedbackBtnText": "Gi tilbakemelding",
+        "send": "Send",
+        "sending": "Sender …",
+        "cancel": "Avbryt",
+        "commentQuestion": "Kommentar eller spørsmål",
+        "yourName": "Ditt navn (valgfritt)",
+        "close": "lukk tilbakemelding",
+        "title": "Tilbakemeldinger",
+        "feedbackPreamble": "Setter pris på tilbakemeldinger fra deg."
+    },
+    "settingPanel": {
+        "performanceLabel": "Ytelse",
+        "qualityLabel": "Kvalitet",
+        "nativeResolutionHeader": "Bruk enhetens oppløsning",
+        "imageOptimisation": "Bildeoptimalisering",
+        "baseMap": "Grunnkart",
+        "mapView": "Kartvisning",
+        "btnText": "Kart",
+        "btnTitle": "Endre visning",
+        "screen": "skjerm",
+        "nativeResolutionLabel": "Trykk for å slutte å bruke {{resolution1-oppløsning, og start bruk av {{resolution2}}-oppløsning",
+        "qualityLabels": {
+            "lowerPerformance": "Maksimal kvalitet, lavere ytelse",
+            "balancedPerformance": "Balansert ytelse og kvalitet",
+            "maximumPerformance": "Maksimal ytelse, lavere kvalitet"
+        },
+        "viewerModeLabels": {
+            "CesiumEllipsoid": "3D-utjevning",
+            "Leaflet": "2D",
+            "CesiumTerrain": "3D-terreng"
+        },
+        "none": "(Ingen)"
+    },
+    "toolsPanel": {
+        "btnTitle": "Avansert verktøyskiste",
+        "btnText": "Verktøy"
+    },
+    "countDatasets": {
+        "btnCount": "Tell datasett",
+        "title": "Tell datasett",
+        "recount": "Tell igjen",
+        "subTotals": "<div> {{name}}: {{items}} elementer / {{groups}} grupper</div>",
+        "countingMessage": "Teller, vent …",
+        "btnText": "Start"
+    },
+    "share": {
+        "btnMapShareTitle": "Del kartet ditt med andre",
+        "btnStoryShareTitle": "Del din historie med andre",
+        "btnCatalogShareTitle": "Del din katalog med andre",
+        "btnMapShareText": "Del / skriv ut",
+        "btnStoryShareText": "Del",
+        "btnCatalogShareText": "Del",
+        "btnAdvanced": "Avanserte innstillinger",
+        "creatingPrintView": "Oppretter forhåndsvisning …",
+        "printViewButton": "Forhåndsvis utskrift",
+        "printButton": "Skriv ut",
+        "printExplanation": "Åpne en utskrivbar versjon av dette kartet.",
+        "printTitle": "Utskriftskart"
+    },
+    "AR": {
+        "manualAlignmentTitle": "Manuell justering",
+        "confirmText": "Skjønner"
+    },
+    "compass": {
+        "title": "Klikk og dra for å rotere kameraet"
+    },
+    "zoomCotrol": {
+        "zoomOut": "Forminsk",
+        "zoomReset": "Tilbakestill forstørring",
+        "zoomIn": "Forstørr"
+    },
+    "splitterTool": {
+        "workbench": {
+            "copyName": "{{name}} (kopi)",
+            "goright": "Høyre",
+            "gorightTitle": "Vis på høyre side",
+            "both": "Begge",
+            "bothTitle": "Vis på begge sider",
+            "goleft": "Venstre",
+            "goleftTitle": "Vis på venstre side"
+        }
+    },
+    "location": {
+        "location": "Posisjon",
+        "myLocation": "Min posisjon",
+        "browserCannotProvide": "Nettleseren din kan ikke oppgi posisjonen din.",
+        "errorGettingLocation": "Klarte ikke å hente posisjon"
+    },
+    "measure": {
+        "measureDistance": "Mål avstanden mellom steder",
+        "measureTool": "Målingsverktøy"
+    },
+    "general": {
+        "cancel": "Avbryt",
+        "delete": "Slett",
+        "skip": "Hopp over",
+        "next": "Neste",
+        "prev": "Forrige",
+        "open": "Åpne",
+        "close": "Lukk"
+    }
+}
