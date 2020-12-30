@@ -65,10 +65,10 @@
     },
     "share": {
         "browserPrint": "For better printed results, please use {{appName}}'s Print button instead of your web browser's print feature.",
-        "shortLinkShortening": "Shortening...",
+        "shortLinkShortening": "Shortening…",
         "shortLinkError": "An error occurred while attempting to shorten the URL.  Please check your internet connection and try again.",
         "localDataNote": "<0><0>Note:</0></0><1>The following data sources will NOT be shared because they include data from this local system. To share these data sources, publish their data on a web server and <2>add them using a url</2>.</1>",
-        "generatingUrl": "Generating share URL...",
+        "generatingUrl": "Generating share URL…",
         "printTitle": "Print Map",
         "printExplanation": "Open a printable version of this map.",
         "printButton": "Print",
@@ -284,7 +284,7 @@
     "preview": {
         "doesNotContainGeospatialData": "This file does not contain geospatial data.",
         "selectToPreview": "<0>Select a dataset to see a preview </0><1>- OR -</1><2>Go to the map</2>",
-        "loading": "PREVIEW LOADING...",
+        "loading": "PREVIEW LOADING…",
         "preview": "{{appName}} preview",
         "noPreviewAvailable": "NO PREVIEW AVAILABLE",
         "dataPreviewLoading": "DATA PREVIEW LOADING...",
@@ -369,7 +369,7 @@
     },
     "satellite": {
         "pickPoint": "Select a point by clicking on the map.",
-        "querying": "Querying position...",
+        "querying": "Querying position…",
         "filterByLocation": "Filter by location",
         "infoGroup": "Only showing available capture times for:",
         "removeFilter": "Remove filter",
@@ -396,7 +396,7 @@
     },
     "clipboard": {
         "success": "Copied to clipboard",
-        "unsuccessful": "Copy unsuccessful...",
+        "unsuccessful": "Copy unsuccessful…",
         "shareURL": "Share URL",
         "shareExplanation": "Anyone with this URL will be able to access this map.",
         "copy": "Copy"
@@ -414,7 +414,7 @@
         "groupEmpty": "This group is empty"
     },
     "catalogItem": {
-        "loading": "Loading...",
+        "loading": "Loading…",
         "remove": "Remove",
         "add": "Add",
         "trash": "Remove from catalogue",
@@ -455,13 +455,13 @@
         "point": "Point (lat/lon)",
         "polygon": "Polygon",
         "existingPolygon": "Existing Polygon",
-        "nothingSelected": "Nothing has been selected, please use the buttons above to make a selection.",
+        "nothingSelected": "Nothing has been selected. Please use the buttons above to make a selection.",
         "runAnalysis": "Run Analysis",
         "clickToDrawLine": "Click to draw line",
         "enterValidCoords": "Please enter valid coordinates (e.g. 131.0361, -25.3450).",
         "selectPoint": "Select a point by clicking on the map.",
         "clickToDrawPolygon": "Click to draw polygon",
-        "shiftToDrawRectangle": "Press the SHIFT key and hold down the left mouse button to draw a rectangle",
+        "shiftToDrawRectangle": "Press the Shift key and hold down the left mouse button to draw a rectangle",
         "clickToDrawRectangle": "Click to draw rectangle",
         "selectedPolygon": "Selected Polygon",
         "regionName": "Region name",
@@ -487,7 +487,7 @@
             "esri-group": "Esri ArcGIS Server",
             "esri-mapServer": "Esri ArcGIS MapServer (single layer)",
             "esri-featureServer": "Esri ArcGIS FeatureServer (single layer)",
-            "open-street-map": "Open Street Map Server",
+            "open-street-map": "OpenStreetMap Server",
             "geojson": "GeoJSON",
             "geoRss": "GeoRSS",
             "kml": "KML or KMZ",
@@ -578,7 +578,7 @@
             "requireLayerName": "MapboxVectorTileImageryProvider requires a layer name passed as options.layerName",
             "requireStyles": "MapboxVectorTileImageryProvider requires a styling function passed as options.styleFunc",
             "moreThanFourTiles": "The imagery provider's rectangle and minimumLevel indicate that there are {{tileCount}} tiles at the minimum level. Imagery providers with more than four tiles at the minimum level are not supported.",
-            "maxLevelError": "Maximum level too high for data set"
+            "maxLevelError": "Maximum level too high for dataset"
         },
         "regionProvider": {
             "csvRegionMappingTitle": "CSV region mapping",
@@ -661,7 +661,7 @@
             "errorRenderingMessage": "<p>An error occurred while rendering in 3D.  This probably indicates a bug in {{appName}} or an incompatibility with your system or web browser.  We'll now switch you to 2D so that you can continue your work. We would appreciate it if you report this error by sending an email to {{email}} with the technical details below.  Thank you!</p>"
         },
         "ckan": {
-            "nameServer": "ckanServer",
+            "nameServer": "CKAN Server",
             "errorLoadingTitle": "Error loading CKAN catalogue",
             "errorLoadingMessage": "The definition for this CKAN catalogue does not have a valid filter query.",
             "corsErrorMessage": "Couldn't retrieve packages from this CKAN server.<br/><br/>If you entered the URL manually, please double-check it.<br/><br/>If it's your server, make sure {{corsLink}} is enabled.<br/><br/> Otherwise, if reloading doesn't fix it, please report the problem by sending an email to {{email}} with the technical details below.  Thank you!<br/><br/>",
@@ -690,10 +690,10 @@
         "catalog": {
             "name": "Unnamed Item",
             "group": "Group",
-            "idForMatchingError": "A catalog member must have a name or a id for matching.",
+            "idForMatchingError": "A catalog member must have a name or an ID for matching.",
             "catalogMemberMustHaveName": "A newly created catalog member must have a name.",
             "catalogMemberMustHaveType": "A catalog member must have a type.",
-            "userAddedDataGroup": "The group for data that was added by the user via the Add Data panel.",
+            "userAddedDataGroup": "The group for data added by the user via the \"Add Data\" panel.",
             "chartDataGroup": "A group for chart data.",
             "dataSourceErrorMessage": "This data source does not have any details available.",
             "serviceErrorMessage": "This service does not have any details available.",
@@ -723,7 +723,7 @@
             "unableToLoadTitle": "Unable to load CSV file",
             "unableToLoadMessage": "See the <a href=\"https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au\">csv-geo-au</a> specification for supported CSV formats.\n\n {{message}}",
             "unableToLoadItemTitle": "Unable to load CSV Catalog Item",
-            "unableToLoadItemMessage": "CSV did not have data or url to load from."
+            "unableToLoadItemMessage": "CSV did not have any data or URL to load from."
         },
         "csw": {
             "name": "Catalogue Service (CSW)",
@@ -748,7 +748,7 @@
         },
         "function": {
             "unknownFormaterTitle": "Unknown formatter",
-            "unknownFormaterMessage": "The function parameter formatter {{formatter}} is unknown.\n\nValid formatters are:\n\n"
+            "unknownFormaterMessage": "The function parameter formatter \"{{formatter}}\" is unknown.\n\nValid formatters are:\n\n"
         },
         "geoJson": {
             "name": "GeoJSON",
@@ -780,7 +780,7 @@
             "unableToRetrieve": "Unable to retrieve feature details from:\n\n{{url}}"
         },
         "googleUrlShortener": {
-            "unexpectedResult": "Unexpected url shortening result",
+            "unexpectedResult": "Unexpected URL shortening result",
             "urlNotLocatedTitle": "Shortened start URL was not located",
             "urlNotLocatedMessage": "The shortened share URL used to launch {{appName}} was not located. This may indicate an error in the link or that the shortening service is unavailable at this time. If you believe it is a bug in {{appName}} , please report it by emailing {{email}}"
         },
@@ -794,14 +794,14 @@
         "imageryLayer": {
             "intervalSupportErrorTitle": "Intervals not supported",
             "intervalSupportErrorMessage": "Sorry, {{typeName}} ({{type}}) catalog items cannot currently be made time-varying by specifying the \"intervals\" property.",
-            "resolvingAvailability": "Resolving availability at a location...",
+            "resolvingAvailability": "Resolving availability at a location…",
             "accessingBaseMapErrorTitle": "Error accessing base map",
             "accessingBaseMapErrorMessage": "An error occurred while attempting to download tiles for base map:<p><center>{{name}} </center></p> This may indicate that there is a problem with your internet connection, that the base map is temporarily unavailable, or that the base map is invalid.  Please select a different base map using the Map button in the top-right corner.  Further technical details may be found below.<br/><br/>",
             "accessingCatalogItemErrorTitle": "Error accessing catalogue item",
             "accessingCatalogItemErrorMessage": "An error occurred while attempting to download tiles for catalogue item:<p><center>{{name}}</center></p> This may indicate that there is a problem with your internet connection, that the catalogue item is temporarily unavailable, or that the catalogue item is invalid.  The catalogue item has been hidden from the map.  You may re-show it in the Now Viewing panel to try again.  Further technical details may be found below.<br/><br/>",
             "tileErrorTitle": "Tile Error",
             "tileErrorMessage": "The tile with the URL:\n{{url}}\n succeeded when loaded with XMLHttpRequest but failed multiple times when loaded directly by Cesium or Leaflet.\n This may indicate that the server is very sensitive to the request headers provided or is simply unreliable.",
-            "tileErrorMessageII": "Got a 200 (OK) response from URL:\n{{url}}\nbut it could not be loaded as an image.",
+            "tileErrorMessageII": "Got a 200 (OK) response from URL:\n{{url}}\n, but it could not be loaded as an image.",
             "unknownTileErrorTitle": "Unknown Tile Error",
             "unknownTileErrorMessage": "While accessing URL:\n{{url}}\nThis probably indicates one of the following:\n* The server hostname could not be resolved,\n* The server did not respond to the request, or\n* The server denied Cross-Origin Resource Sharing (CORS) access to this URL (See https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/).",
             "unableToDisplayTitle": "Unable to display dataset",
@@ -830,7 +830,7 @@
             "dataSourceErrorMessage": "This data source does not have any details available.",
             "serviceErrorMessage": "This service does not have any details available.",
             "distributionDesc": "Distribution Description",
-            "idsNotSpecifiedTitle": "distributionId or datasetId must be specified",
+            "idsNotSpecifiedTitle": "\"distributionId\" or \"datasetId\" must be specified",
             "idsNotSpecifiedMessage": "MagdaCatalogItem requires that either distributionId or datasetId be specified.",
             "retrieveErrorTitle": "Error retrieving MAGDA record",
             "retrieveErrorMessage": "No distribution or dataset ID provided",
@@ -860,12 +860,12 @@
             "unsupportedFileTzpe": "Unsupported file type",
             "loadError": "The file size is greater than the {{maxConversionSizeMB}} MB limit of the {{appName}} conversion service",
             "invalidFile": "This may indicate that the file is invalid or that it is not supported by the {{appName}} conversion service.",
-            "errorConvertingToGeoJsonTitle": "Error converting file to GeoJson",
-            "errorConvertingToGeoJsonMessage": "An error occurred while attempting to convert this file to GeoJson. ",
+            "errorConvertingToGeoJsonTitle": "Error converting file to GeoJSON",
+            "errorConvertingToGeoJsonMessage": "An error occurred while attempting to convert this file to GeoJSON. ",
             "emailUs": "If you would like assistance or further information, please email us at {{email}}"
         },
         "openStreetMap": {
-            "name": "Open Street Map"
+            "name": "OpenStreetMap"
         },
         "placesLikeMe": {
             "regionsLikeThisName": "Regions like this",
@@ -930,7 +930,7 @@
         "shareData": {
             "generateErrorTitle": "Couldn't generate short URL.",
             "generateErrorMessage": "Something went wrong when trying to use the share data service to generate a short URL. If you believe it is a bug in {{appName}}, please report it by emailing {{email}}.",
-            "expandErrorTitle": "Couldn't expand URL",
+            "expandErrorTitle": "Couldn't expand URL.",
             "expandErrorMessage": "The share data service used to launch {{appName}} was not located. This may indicate an error in the link or that the service is unavailable at this time. If you believe it is a bug in {{appName}}, please report it by emailing {{email}}"
         },
         "socrataServer": {
@@ -1110,7 +1110,7 @@
             "pickError": "Error when trying to resolve imagery at location! Please select a point again by clicking on the map."
         },
         "catalogItem": {
-            "description": "This layer visualizes the difference between imagery captured at two discrete points in time"
+            "description": "This layer visualizes the difference between imagery captured at two discrete points in time."
         },
         "loadingError": {
             "title": "Error loading Delta Tool",
