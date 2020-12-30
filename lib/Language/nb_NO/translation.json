@@ -5,46 +5,107 @@
             "gpx": "GPX",
             "kml": "KML eller KMZ",
             "csv": "CSV",
-            "geojson": "GeoJSON"
+            "geojson": "GeoJSON",
+            "open-street-map": "OpenStreetMap-tjener",
+            "other": "Annet (bruk konverteringstjeneste)",
+            "geoRss": "GeoRSS",
+            "czml": "CZML",
+            "esri-featureServer": "Esri ArcGIS-funksjonstjener (ett lag)",
+            "esri-mapServer": "Esri ArcGIS-karttjener (ett lag)",
+            "esri-group": "Esri ArcGIS-tjener"
+        },
+        "readXml": {
+            "xmlError": "Filen inneholder ikke gyldig XML."
+        },
+        "googleAnalytics": {
+            "log": "Google Analytics-overvåkning er avslått fordi terria.configParameters.googleAnalyticsKey ikke er angitt"
+        },
+        "printWindow": {
+            "onafterprint": "påslåttetterutskrift",
+            "onbeforeprint": "påslåttførutskrift",
+            "printMediaEnd": "utskriftsmedia-slutt",
+            "printMediaStart": "utskriftsmedia-start",
+            "errorMessage": "Utskrift startet ikke innen 10 sekunder. Kanskje nettleseren din ikke støtter utskrift?",
+            "errorTitle": "Klarte ikke å skrive ut"
+        },
+        "userAddedData": "Brukertillagt data",
+        "terriaError": {
+            "defaultValue": "En feil inntraff"
         }
     },
     "analytics": {
         "clickToDrawLine": "Klikk for å tegne linje",
-        "selectLocation": "Velg posisjon"
+        "selectLocation": "Velg posisjon",
+        "selectExistingPolygon": "Velg eksisterende mangekant",
+        "selectedPolygon": "Valgt mangekant",
+        "clickToDrawPolygon": "Klikk for å tegne mangekant",
+        "selectPoint": "Velg et punkt ved å klikke på kartet.",
+        "nothingSelected": "Ingenting har blitt valgt. Bruk knappene ovenfor for å laget et utvalg.",
+        "existingPolygon": "Eksisterende mangekant",
+        "polygon": "Mangekant",
+        "point": "Punkt (bre/len)",
+        "enterValidCoords": "Skriv inn gyldige koordinater (f.eks. 131.0361, -25.4450).",
+        "runAnalysis": "Kjør analyse",
+        "clickToDrawRectangle": "Klikk for å tegne rektangel"
     },
     "terriaViewer": {
         "webGLNotSupportedOrSlowTitle": "WebGL ikke støttet eller for tregt",
         "webGLNotSupportedTitle": "WebGL ikke støttet",
         "safari": "Apple Safari",
         "firefox": "Mozilla Firefox",
-        "chrome": "Google Chrome"
+        "chrome": "Google Chrome",
+        "internetExplorer": "Internet Explorer 11",
+        "slowWebGLAvailableTitle": "Dårlig WebGL-ytelse"
     },
     "viewModels": {
         "searchPlaceNames": "Offisielle stedsnavn",
-        "searchAddresses": "Adresser"
+        "searchAddresses": "Adresser",
+        "inMultipleLocations": "På flere steder, inkludert: ",
+        "searchLocations": "Steder",
+        "searchNoLocations": "Ingen steder stemmer overens med søket ditt.",
+        "searchNoCatalogueItem": "Ingen katalogelementer stemmer overens med søket ditt.",
+        "searchNoPlaceNames": "Ingen offisielle stedsnavn stemmer overens med søket ditt",
+        "searchErrorOccurred": "En feil inntraff under søk. Sjekk din internett-tilkobling og prøv igjen senere.",
+        "inDataCatalogue": "I datakatalog",
+        "searchCatalogueItem": "Katalogelementer"
     },
     "chart": {
         "download": "Last ned",
-        "expand": "Utvid"
+        "expand": "Utvid",
+        "closePanel": "Lukk panel"
     },
     "catalogItem": {
         "removeFromMap": "Fjern fra kart",
         "trash": "Fjern fra katalog",
         "add": "Legg til",
-        "remove": "Fjern"
+        "remove": "Fjern",
+        "loading": "Laster inn …"
     },
     "clipboard": {
         "shareExplanation": "Alle som har denne nettadressen vil ha tilgang til dette kartet.",
-        "shareURL": "Del nettadresse"
+        "shareURL": "Del nettadresse",
+        "unsuccessful": "Klarte ikke å kopiere …",
+        "success": "Kopiert til utklippstavle",
+        "copy": "Kopier"
     },
     "concept": {
         "inactive": {
-            "cancel": "Avbryt"
+            "cancel": "Avbryt",
+            "newText": "Nytt vilkår"
+        },
+        "active": {
+            "remove": "Fjern vilkår",
+            "edit": "Rediger vilkår"
+        },
+        "summary": {
+            "addFirstText": "Legg til nytt vilkår",
+            "addMoreText": "Legg til et vilkår"
         }
     },
     "satellite": {
         "newLocation": "Ny posisjon",
-        "pickPoint": "Velg et punkt ved å klikke på kartet."
+        "pickPoint": "Velg et punkt ved å klikke på kartet.",
+        "removeFilter": "Fjern filter"
     },
     "dateTime": {
         "timeline": {
@@ -64,7 +125,8 @@
         "exportData": "Eksporter",
         "exportDataTitle": "Eksporter kartdata",
         "previewItem": "Om denne dataen",
-        "previewItemTitle": "info"
+        "previewItemTitle": "info",
+        "opacity": "Dekkevne: {{opacity}} %"
     },
     "description": {
         "dataServiceDetails": "Detatjeneste-detaljer",
@@ -73,7 +135,11 @@
         "metadataUrl": "Metadata-nettadresse",
         "typeName": "Type-navn",
         "layerName": "Lagnavn",
-        "name": "Beskrivelse"
+        "name": "Beskrivelse",
+        "dataLocal": "Filen finnes kun i din nettleser. For å dele den må du laste den opp til en offentlig vevtjener.",
+        "dataCustodian": "Dataansvarlig",
+        "useTheLinkToDownload": "Bruk lenken nedenfor for å laste ned data direkte.",
+        "downloadData": "Last ned data"
     },
     "preview": {
         "updateFrequency": "Oppdateringsfrekvens",
@@ -88,7 +154,16 @@
         "datasetDescription": "Datasett-beskrivelse",
         "dataDescription": "Databeskrivelse",
         "disclaimer": "Ansvarsfraskrivelse",
-        "addToMap": "Legg til på kartet"
+        "addToMap": "Legg til på kartet",
+        "dataPreviewError": "Dataforhåndsvisningsfeil",
+        "dataPreview": "Dataforhåndsvisning",
+        "dataPreviewLoading": "Laster inn dataforhåndsvisning …",
+        "noPreviewAvailable": "Ingen forhåndsvisning tilgjengelig",
+        "dataCustodian": "Dataansvarlig",
+        "preview": "{{appName}}-forhåndsvisning",
+        "loading": "Laster inn forhåndsvning …",
+        "selectToPreview": "<0>Velg et datasett for å se en forhåndsvisning</0><1>- eller -</1><2>Gå til kartet</2>",
+        "removeFromMap": "Fjern fra kartet"
     },
     "search": {
         "searchCatalogue": "Søk i katalogen",
@@ -111,10 +186,29 @@
         "done": "Ferdig",
         "closeDataPanel": "Lukk datapanel",
         "btnHide": "Skjul",
-        "addDataBtnText": "Legg til data"
+        "addDataBtnText": "Legg til data",
+        "webFile": "<0>Steg 2:</0>Skriv inn nettadresse for datafilen eller vevtjenesten",
+        "webFileType": "<0>Steg 1:</0> Velg filtype (valgfritt)",
+        "localFileType": "<0>Steg 1:</0> Velg filtype (valgfritt)",
+        "browse": "Utforsk …",
+        "webAdd": "Legg til vev-data",
+        "localFile": "<0>Steg 2:</0> Velg fil",
+        "localAdd": "Legg til lokal fil",
+        "load": "Last inn lokal/vev-data",
+        "searchPlaceholderWhole": "Søk i hele katalogen",
+        "searchPlaceholder": "Søk i katalogen"
     },
     "satelliteGuidance": {
-        "dismissText": "Skjønner, takk."
+        "dismissText": "Skjønner, takk.",
+        "titleIV": "Filtrerer bilder etter posisjon",
+        "bodyIII": "Fra din dataarbeidsbenk, klikk på opptaksdato-rullegardinen og velg fra de tilgjengelige tidene for å laste inn historisk bildedata.",
+        "titleII": "Hvor er satellittbildene mine?",
+        "nextI": "Vis veiledning",
+        "bodyI": "En superrask veiledning for å få mest mulig ut av historiske satellittbilder.",
+        "titleI": "Satellittbilder: Hvordan …?",
+        "titleIII": "Laster inn historisk bildedata",
+        "bodyII": "Det kan hende du må justere forstørrelsesnivået før satellittdata blir tilgjengelig på kartet.",
+        "prevI": "Nei takk"
     },
     "story": {
         "mobileViewStory": "Vis historier",
@@ -130,7 +224,8 @@
             "saveStory": "Lagre",
             "saveBtn": "lagre",
             "cancelEditing": "Avbryt",
-            "cancelBtn": "avbryt"
+            "cancelBtn": "avbryt",
+            "placeholder": "Skriv inn en tittel her"
         },
         "play": "Spill historie",
         "preview": "forhåndsvis historier",
@@ -141,10 +236,19 @@
         "delete": "Slett",
         "deleteStory": "slett",
         "edit": "Rediger",
-        "editStory": "rediger"
+        "editStory": "rediger",
+        "storyEditor": "Historie-bygger",
+        "hideStoryPanel": "skjul historie-bygger",
+        "removeAllStories": "Fjern alle",
+        "removeStoriesPanel": "Ønsker du å seltte {{ count }} scene?",
+        "removeStoriesPanel_plural": "Ønsker du å slette {{ count }} scener?",
+        "view": "Vis",
+        "viewStory": "vis"
     },
     "welcomeMessage": {
-        "WelcomeMessagePrimaryBtn": "Utforsk data"
+        "WelcomeMessagePrimaryBtn": "Utforsk data",
+        "WelcomeMessageSecondaryBtn": "Start veiledning",
+        "WelcomeMessageDissmissText": "Ikke vis meg dette igjen"
     },
     "featureInfo": {
         "noInfoAvailable": "Ingen info tilgjengelig",
@@ -157,7 +261,14 @@
             "featureInfoShown": "De første {{maximum}} vises nedenfor.",
             "featuresFound": "{{featCount}} {catalogItemName} funksjoner ble funnet.",
             "moreThanMax": "Fant mer enn {{maximum}} {{catalogItemName}} funksjoner."
-        }
+        },
+        "userSelection": "Brukervalg",
+        "latLon": "Bre / len ",
+        "locationMarker": "Stedsmarkør",
+        "satelliteSuggestionBtn": "Vis {{catalogItemName}} på dette stedet",
+        "clickToAddData": "Klikk «$t(addData.addDataBtnText)» for å legge til data på kartet.",
+        "noDataAvailable": "Ingen data tilgjengelig her, prøv et annet sted.",
+        "siteData": "Nettsidedata"
     },
     "sui": {
         "hideWorkbench": "Skjul arbeidsbenk",
@@ -188,7 +299,10 @@
         "yourName": "Ditt navn (valgfritt)",
         "close": "lukk tilbakemelding",
         "title": "Tilbakemeldinger",
-        "feedbackPreamble": "Setter pris på tilbakemeldinger fra deg."
+        "feedbackPreamble": "Setter pris på tilbakemeldinger fra deg.",
+        "captionText": "Dette hjelper oss å feilsøke fordi vi da kan se hva du ser",
+        "shareWithDevelopers": "Del mitt kart med {{appName}}-utviklerne",
+        "email": "E-postadresse (valgfritt)<br/><2>Du vil ikke kunne få svar uten!</2>"
     },
     "settingPanel": {
         "performanceLabel": "Ytelse",
@@ -211,7 +325,9 @@
             "Leaflet": "2D",
             "CesiumTerrain": "3D-terreng"
         },
-        "none": "(Ingen)"
+        "none": "(Ingen)",
+        "native": "innebygd",
+        "mapQuality": "Rasterkart-kvalitet:"
     },
     "toolsPanel": {
         "btnTitle": "Avansert verktøyskiste",
@@ -223,7 +339,9 @@
         "recount": "Tell igjen",
         "subTotals": "<div> {{name}}: {{items}} elementer / {{groups}} grupper</div>",
         "countingMessage": "Teller, vent …",
-        "btnText": "Start"
+        "btnText": "Start",
+        "loadError": "kunne ikke innlastes.",
+        "totals": "<div>Katalogen inneholder {{items}} elementer i {{groups}} grupper.</div>"
     },
     "share": {
         "btnMapShareTitle": "Del kartet ditt med andre",
@@ -237,11 +355,20 @@
         "printViewButton": "Forhåndsvis utskrift",
         "printButton": "Skriv ut",
         "printExplanation": "Åpne en utskrivbar versjon av dette kartet.",
-        "printTitle": "Utskriftskart"
+        "printTitle": "Utskriftskart",
+        "shortenUsingService": "Forkort delingsnettadressen ved bruk av en vev-tjeneste",
+        "generatingUrl": "Genererer delingsnettadresse …",
+        "shortLinkShortening": "Forkorter …"
     },
     "AR": {
         "manualAlignmentTitle": "Manuell justering",
-        "confirmText": "Skjønner"
+        "confirmText": "Skjønner",
+        "btnResetRealign": "tilbakestill kompassjustering",
+        "btnRealign": "veksle manuell justering",
+        "btnHover": "veksle svevehøyde",
+        "arTool": "verktøy for utvidet virkelighet",
+        "title": "Eksperimentell funksjon: Utvidet virkelighet",
+        "resetAlignmentTitle": "Tilbakestill justering"
     },
     "compass": {
         "title": "Klikk og dra for å rotere kameraet"
@@ -260,13 +387,17 @@
             "bothTitle": "Vis på begge sider",
             "goleft": "Venstre",
             "goleftTitle": "Vis på venstre side"
-        }
+        },
+        "title": "Dra til venstre eller høyre for å justere visninger",
+        "toggleSplitterTool": "Skru på side-ved-side -sammenligning av to forskjellige datasett."
     },
     "location": {
         "location": "Posisjon",
         "myLocation": "Min posisjon",
         "browserCannotProvide": "Nettleseren din kan ikke oppgi posisjonen din.",
-        "errorGettingLocation": "Klarte ikke å hente posisjon"
+        "errorGettingLocation": "Klarte ikke å hente posisjon",
+        "originError": "Din nettleser kan kun oppgi posisjonen din når du bruker HTTPS. Det kan hende du vil kunne bruke {{secureUrl}} istedenfor.",
+        "centreMap": "Sentrer kart på din nåværende posisjon"
     },
     "measure": {
         "measureDistance": "Mål avstanden mellom steder",
@@ -280,5 +411,410 @@
         "prev": "Forrige",
         "open": "Åpne",
         "close": "Lukk"
+    },
+    "models": {
+        "sensorObservationService": {
+            "exceptionMessage": "Tjeneren rapporterte en feil:\n\n {{exceptionText}}",
+            "noFeatures": "Ingen funksjoner samsvarer med ditt søk.",
+            "unknownFormat": "Tjeneren svarte med et ukjent funksjonsformat.",
+            "missingBody": "Tjeneren svarte med manglende kropp.",
+            "unknownError": "Tjeneren rapporterte ukjent feil.",
+            "alreadyLoadingTitle": "Data lastes allerede inn",
+            "property": "Egenskap"
+        },
+        "time": {
+            "invalidInitialTimeSource": "Ugyldig initialTimeSource angitt i oppsettsfil: {{initialTimeSource}}",
+            "invalidDate": "Ugyldig dato"
+        },
+        "wfsFeatures": {
+            "groupNotAvailableTitle": "Gruppe ikke tilgjengelig",
+            "queryErrorTitle": "Klarte ikke å utføre spørring av WFS-tjener",
+            "featuresGroup": "Gruppe av funksjoner i en vevfunksjonstjeneste (WFS)-tjener"
+        },
+        "webProcessingService": {
+            "wpsResult": "Vevbehandlingstjeneste-resultat",
+            "wpsServer": "Vevbehandlingstjeneste (WPS)-tjener",
+            "regionParameterName": "Områdeparameter",
+            "regionTypeName": "Områdetype",
+            "invalidResponseError2Title": "Ugyldig svar fra WPS-tjener",
+            "invalidResponseErrorTitle": "Ugyldig WPS-tjenersvar",
+            "invalidWPSServerTitle": "Ugyldig WPS-tjener",
+            "wps": "Vevbehandlingstjeneste (WPS)",
+            "errorDetails": "Feildetaljer"
+        },
+        "webMapTileServiceCatalogItem": {
+            "accessConstraints": "Tilgangsbegrensninger",
+            "serviceDescription": "Tjenestebeskrivelse",
+            "dataDescription": "Databeskrivelse"
+        },
+        "webMapServiceCatalogItem": {
+            "missingDataTitle": "Manglende data",
+            "badlyFormatedTitle": "Feilformatert perioditet",
+            "noLayerFoundTitle": "Fant ikke noe lag",
+            "getCapabilitiesUrl": "GetCapabilities-nettadresse",
+            "serviceContact": "Tjenestekontrakt",
+            "accessConstraints": "Tilgangsbegrensninger",
+            "wms": "Vevkarttjeneste (WMS)",
+            "datasetScaleErrorMessage": "{{name}}-datasettet vil ikke bli vist når forstørrelse på så små deler av kartet er i bruk fordi dataansvarlig har indikert at den dataen ikke er ment eller passer for visning i denne skalaen. Klikk på datasettets info-knapp i «Vises nå»-fanen for mer info om datasettet og den dataansvarlige.",
+            "badlyFormatedMessage": "«{{name}}»-datasettet har feilformatert perioditet, «{{isoSegments}}». Klikk på datasettets info-knapp i «Vises nå»-fanen for mer info om datasettet og den dataansvarlige.",
+            "metadataUrls": "Metadatalenker",
+            "serviceDescription": "Tjenestebeskrivelse",
+            "dataDescription": "Databeskrivelse"
+        },
+        "webMapServiceCatalogGroup": {
+            "invalidWMSServerTitle": "Ugyldig WMS-tjener",
+            "groupNotAvailableTitle": "Gruppe ikke tilgjengelig"
+        },
+        "webFeatureServiceCatalogGroup": {
+            "groupNotAvailableTitle": "Gruppe ikke tilgjengelig",
+            "invalidWFSServerTitle": "Ugyldig WFS-tjener"
+        },
+        "userDrawing": {
+            "otherEntities": "Linjer og mangekanter",
+            "messageHeader": "Tegn på kart",
+            "anotherPoint": "Enda et punkt",
+            "clickToAddAnotherPoint": "Klikk for å legge til enda et punkt",
+            "clickToAddFirstPoint": "Klikk for å legge til et punkt",
+            "btnDone": "Ferdig",
+            "btnCancel": "Avbryt",
+            "firstPoint": "Første punkt",
+            "line": "Linje",
+            "pointEntities": "Punkter"
+        },
+        "terriaJSONcatalog": {
+            "requestFailedTitle": "Forespørsel mislyktes",
+            "misconfiguredErrorMessage": "Tjeneste ikke oppsatt for TerriaJsonCatalogFunction HTTP 202.",
+            "misconfiguredErrorTitle": "Feiloppsatt init-fil",
+            "name": "Terria-JSON-katalogfunksjon",
+            "buttonTitleConfirm": "Jeg samtykker",
+            "disclaimer": "Ansvarsfraskrivelse"
+        },
+        "terrainCatalog": {
+            "notSupportedErrorMessage": "{{name}} kan ikke vises i 2D. Bytt til 3D og prøv igjen.",
+            "notSupportedErrorTitle": "Ikke støttet i 2D"
+        },
+        "socrataServer": {
+            "name": "Socrata-tjener",
+            "tags": "Etiketter",
+            "licence": "Lisens",
+            "description": "Beskrivelse"
+        },
+        "shareData": {
+            "expandErrorTitle": "Kunne ikke utvide nettadresse.",
+            "generateErrorTitle": "Kunne ikke generere kort nettadresse."
+        },
+        "feedback": {
+            "thanksMessage": "Din tilbakemalding forbedrer {{appName}}",
+            "thanksTitle": "Takk for din tilbakemelding.",
+            "unableToSendTitle": "Klarte ikke å sende tilbakemelding"
+        },
+        "regionMapping": {
+            "issuesLoadingTitle": "Problemer ved innlasting av",
+            "noDataForRegion": "Ingen data for valgt område.",
+            "noDataForDate": "Ingen data for valgt dato.",
+            "moreThanOneValueText": "mer enn én verdi",
+            "notRecognisedText": "ikke gjenkjent",
+            "outdatedBrowserTitle": "Utdatert nettleser"
+        },
+        "placesLikeMe": {
+            "regioNotSelectedDescription": "Du må velge et område.",
+            "regionName": "Område",
+            "regionTypeDescription": "Områdetype å analysere.",
+            "regionTypeName": "Områdetype",
+            "regionsLikeThisName": "Områder som dette",
+            "placesLike": "Steder som"
+        },
+        "openStreetMap": {
+            "name": "OpenStreetMap"
+        },
+        "ogr": {
+            "errorConvertingToGeoJsonTitle": "Klarte ikke å konvertere fil til GeoJSON",
+            "serviceErrorMessage": "Denne tjenesten har ingen tilgjengelige detaljer.",
+            "dataSourceErrorMessage": "Denne datakilden har ingen tilgjengelige detaljer.",
+            "name": "Ukjent / konvertert til GeoJSON",
+            "unsupportedFileTzpe": "Ustøttet filtype",
+            "safari": "Apple Safari",
+            "firefox": "Mozilla Firefox",
+            "chrome": "Google Chrome",
+            "internetExplorer": "Internet Explorer 11"
+        },
+        "kml": {
+            "errorLoadingTitle": "Klarte ikke å laste inn KML eller KMZ",
+            "serviceErrorMessage": "Denne tjenesten har ingen tilgjengelige detaljer.",
+            "dataSourceErrorMessage": "Denne datakilden har ingen tilgjengelige detaljer.",
+            "unexpectedTypeTitle": "Uventet type KML-data",
+            "name": "KML eller KMZ"
+        },
+        "invokeAnalyticsService": {
+            "invocationFailedMessage": "En feil oppstod på tjeneren under utregning av {{invocationName}}."
+        },
+        "imageryLayer": {
+            "accessingCatalogItemErrorTitle": "Fikk ikke tilgang til katalogelement",
+            "accessingBaseMapErrorTitle": "Fikk ikke tilgang til grunnkart",
+            "unableToShowLocTitle": "Kan ikke vise på dette stedet",
+            "unableToDisplayTitle": "Kunne ikke vise datasett",
+            "tileErrorMessageII": "Fikk et 200 (OK)-svar fra nettadresse:\n{{url}}\n, men den kunne ikke lastes inn som et bilde.",
+            "intervalSupportErrorTitle": "Intervaller støttes ikke",
+            "unknownTileErrorTitle": "Ukjent flisfeil",
+            "tileErrorTitle": "Flisfeil"
+        },
+        "abs": {
+            "itemNotAvailableTitle": "Utilgjengelig element",
+            "nameGroup": "ABS.Stat-datasettliste",
+            "name": "ABS.Stat",
+            "groupNotAvailableTitle": "Gruppe er ikke tilgjengelig",
+            "dataMergeErrorTitle": "Kan ikke flette data",
+            "unexpectedFormatTitle": "Uventet dataformat"
+        },
+        "gltf": {
+            "unableToRetrieve": "Kunne ikke hente funksjonsdetaljer fra:\n\n{{url}}",
+            "notSupportedErrorMessage": "«{{name}}» kan ikke vises i 2D. Bytt til 3D og prøv igjen.",
+            "serviceErrorMessage": "Denne tjenesten har ingen tilgjengelige detaljer.",
+            "dataSourceErrorMessage": "Denne datakilden har ingen tilgjengelige detaljer.",
+            "name": "GL-overføringsformat (glTF)",
+            "error": "Feil",
+            "notSupportedErrorTitle": "Ikke støttet i 2D"
+        },
+        "mapboxVectorTile": {
+            "name": "Mapbox-vektorflis"
+        },
+        "magda": {
+            "retrieveErrorTitle": "Klarte ikke å hente MAGDA-oppføring",
+            "idsNotSpecifiedTitle": "distributionId eller datasetId må angis",
+            "distributionDesc": "Distribusjonsbeskrivelse",
+            "serviceErrorMessage": "Denne tjenesten har ingen tilgjengelige detaljer.",
+            "dataSourceErrorMessage": "Denne datakilden har ingen tilgjengelige detaljer.",
+            "name": "MAGDA-distribusjon"
+        },
+        "gpx": {
+            "serviceErrorMessage": "Denne tjenesten har ingen tilgjengelige detaljer.",
+            "dataSourceErrorMessage": "Denne datakilden har ingen tilgjengelige detaljer.",
+            "errorLoadingTitle": "Klarte ikke å laste inn GPX",
+            "name": "GPX"
+        },
+        "geoJson": {
+            "errorLoadingTitle": "Klarte ikke å laste inn GeoJSON",
+            "serviceErrorMessage": "Denne tjenesten har ingen tilgjengelige detaljer.",
+            "dataSourceErrorMessage": "Denne datakilden har ingen tilgjengelige detaljer.",
+            "firefox": "Mozilla Firefox",
+            "chrome": "Google Chrome",
+            "internetExplorer": "Internet Explorer 11",
+            "unsupportedBrowserTitle": "Ustøttet nettleser",
+            "couldNotLoadTitle": "Kunne ikke laste inn JSON",
+            "name": "GeoJSON"
+        },
+        "function": {
+            "unknownFormaterMessage": "Funksjonsparameter-formatereren «{{formatter}}» er ukjent.\n\nGyldige formaterere er:\n\n",
+            "unknownFormaterTitle": "Ukjent formaterer"
+        },
+        "czml": {
+            "errorLoadingTitle": "Klarte ikke å laste inn CZML",
+            "serviceErrorMessage": "Denne tjenesten har ingen tilgjengelige detaljer.",
+            "dataSourceErrorMessage": "Denne datakilden har ingen tilgjengelige detaljer.",
+            "name": "Cesium-språk (CZML)"
+        },
+        "csw": {
+            "cors": "CORS",
+            "dataResponsibility": "Dataansvar",
+            "links": "Lenke",
+            "exceptionMessage": "CSW-tjeneren rapporterte en ukjent feil.\n\n {{exceptionText}}",
+            "unknownError": "CSW-tjeneren rapporterte en ukjent feil.",
+            "name": "Katalogtjeneste (CSW)"
+        },
+        "csv": {
+            "unableToLoadTitle": "Klarte ikke å laste inn CSV-fil",
+            "unexpectedTypeTitle": "Uventet type CSV-data",
+            "serviceErrorMessage": "Denne tjenesten har ingen tilgjengelige detaljer.",
+            "dataSourceErrorMessage": "Denne datakilden har ingen tilgjengelige detaljer.",
+            "name": "Kommainndelte verdier (CSV)"
+        },
+        "createParameter": {
+            "unsupportedErrorMessage": "Ukjent funksjonsparametertype: {{type}}."
+        },
+        "catalog": {
+            "useConversion": "Bruk konverteringstjeneste?",
+            "unsupportedFileTypeTitle": "Ustøttet filtype",
+            "serviceErrorMessage": "Denne tjenesten har ingen tilgjengelige detaljer.",
+            "unsupportedTypeTitle": "Ustøttet katalogelementstype.",
+            "catalogMemberMustHaveType": "Et katalogmedlem må ha en type.",
+            "catalogMemberMustHaveName": "Nylig opprettet katalogmedlem må ha et navn.",
+            "mustHaveType": "Hvert element må ha en type.",
+            "cancel": "Avbryt",
+            "upload": "Last opp",
+            "group": "Gruppe",
+            "name": "Element uten navn"
+        },
+        "ckan": {
+            "notCompatibleMessageII": "CKAN-datasettet har ikke noen ressurser i et støttet format.",
+            "notCompatibleMessageI": "CKAN-datasettet har ikke en ressurs med ID-en «{{resourceId}}», eller så er den ikke i et støttet format.",
+            "notCompatibleTitle": "Fant ingen kompatible ressurser",
+            "errorRetrievingUrlMessage": "Kunne ikke motta nettadresse som JSON: {{url}}.",
+            "errorRetrievingUrlTitle": "Klarte ikke å hente CKAN-nettadresse",
+            "name": "CKAN-ressurs",
+            "errorLoadingTitle": "Klarte ikke å laste inn CKAN-katalog",
+            "update_freq": "Oppdateringsfrekvens",
+            "metadata_modified": "Endret",
+            "metadata_created": "Opprettet",
+            "contact_point": "Kontakt",
+            "author": "Utvikler",
+            "licence": "Lisens",
+            "resourceDescription": "Ressursbeskrivelse",
+            "dataDescription": "Databeskrivelse"
+        },
+        "cesiumTerrain": {
+            "errorRenderingTitle": "Klarte ikke å tegne i 3D",
+            "notSupportedErrorMessage": "«{{name}}» kan ikke vises i 2D. Bytt til 3D og prøv igjen.",
+            "notSupportedErrorTitle": "Ikke støttet i 2D"
+        },
+        "cartoMap": {
+            "name": "Carto-kart",
+            "noUrlTitle": "Ingen nettadresse"
+        },
+        "bing": {
+            "name": "Bing-kart"
+        },
+        "arcGisMapServerCatalogItem": {
+            "copyrightText": "Opphavsrettstekst",
+            "name": "Esri ArcGIS-karttjener",
+            "serviceDescription": "Tjenestebeskrivelse",
+            "dataDescription": "Databeskrivelse"
+        },
+        "arcGisMapServerCatalogGroup": {
+            "cors": "CORS",
+            "groupNotAvailableTitle": "Gruppe ikke tilgjengelig",
+            "invalidServiceTitle": "Ugyldig ArcGIS-karttjeneste",
+            "name": "ArcGIS-karttjenergruppe"
+        },
+        "arcGisFeatureServer": {
+            "groupNotAvailableTitle": "Gruppe ikke tilgjengelig",
+            "invalidServiceTitle": "Ugyldig ArcGIS-funksjonstjeneste",
+            "nameGroup": "ArcGIS-funksjonstjenergruppe",
+            "name": "ArcGIS-funksjonstjener"
+        },
+        "arcGisService": {
+            "groupNotAvailableTitle": "Gruppe ikke tilgjengelig",
+            "invalidServerTitle": "Ugyldig ArcGIS-tjener"
+        },
+        "userData": {
+            "fileApiNotSupportedTitle": "Fil-API støttes ikke",
+            "firefox": "Mozilla Firefox",
+            "chrome": "Google Chrome",
+            "internetExplorer": "Internet Explorer 11",
+            "addingDataErrorMessage": "Angitt data kunne ikke legges til fordi den er ugyldig, eller fordi den ikke er i forventet format.",
+            "addingDataErrorTitle": "Kunne ikke legge til data"
+        },
+        "webMapTileServiceCatalogGroup": {
+            "groupNotAvailableTitle": "Gruppe ikke tilgjengelig",
+            "invalidWMTSServerTitle": "Ugyldig WMTS-tjener"
+        },
+        "terria": {
+            "buttonTitleConfirm": "Jeg samtykker",
+            "disclaimer": "Ansvarsfraskrivelse",
+            "urlLoadErrorTitle": "Problem ved innlasting av nettadresse"
+        },
+        "mapboxStyle": {
+            "name": "Mapbox-stil"
+        },
+        "mapboxMap": {
+            "name": "Mapbox-kart"
+        },
+        "googleUrlShortener": {
+            "unexpectedResult": "Uventet resultat fra nettadresseforkorter"
+        },
+        "getToken": {
+            "errorTitle": "Symbolfeil"
+        },
+        "wcs": {
+            "exportFailedTitle": "Dataeksport mislyktes"
+        }
+    },
+    "deltaTool": {
+        "catalogItem": {
+            "description": "Dette verktøyet visualiserer forskjellene mellom bildedata tatt opp på to forskjellige tidspunkt."
+        },
+        "pickerMessage": {
+            "pickError": "Klarte ikke å utlede bildedata der. Velg et annet punkt ved å klikke på kartet.",
+            "pickAnother": "Klikk på et annet punkt for å endre utvalget",
+            "pickFirst": "Velg et punkt ved å klikke på kartet"
+        },
+        "secondaryImage": "Sekundærbilde",
+        "primaryImage": "Hovedbilde",
+        "selectedLocation": "Valgt sted",
+        "generateDeltaBtn": "Generer forskjellskart",
+        "cancelBtn": "Avbryt",
+        "description": "Dette verktøyet visualiserer forskjellene mellom bildedata tatt opp på to forskjellige tidspunkt.",
+        "titlePrefix": "Endre oppdagelse",
+        "loadingError": {
+            "message": "Klarte ikke å laste inn delta-verktøy fra tjeneren. Prøv igjen.",
+            "title": "Klarte ikke å laste inn delta-verktøy"
+        }
+    },
+    "map": {
+        "regionProvider": {
+            "csvRegionMappingTitle": "CSV-områdekartlegging"
+        },
+        "mapboxVectorTileImageryProvider": {
+            "requireStyles": "MapboxVectorTileImageryProvider krever en stilfunksjon sendt som options.styleFunc",
+            "requireLayerName": "MapboxVectorTileImageryProvider krever et lagnavn sendt som options.layerName"
+        },
+        "gnafAddressGeocoder": {
+            "noAddresses2": "Selv om tableStructure rapporterer at det har en adresse-kolonne, har den ingen adresser.",
+            "lat": "Bre",
+            "lon": "Len",
+            "postOfficeBox": "postboks",
+            "poBox": "postboks",
+            "score": "Poengsum",
+            "suburb": "Forstad",
+            "state": "Fylke",
+            "matchedAddresses": "Samsvarende adresse",
+            "postcode": "Postnummer"
+        },
+        "leafletVisualizer": {
+            "devError3": "tid kreves.",
+            "devError2": "entityCollection kreves.",
+            "devError1": "leafletScene kreves."
+        },
+        "imageryProviderHooks": {
+            "devError": "Ingen bindeleddsinfo for omfarging av bilde"
+        },
+        "w3cToGeoJson": {
+            "containsUnsupportedFeatureType": "GeoRSS med W3C-geometri inneholder ustøttet funksjonstype: {{type}}"
+        },
+        "cesium": {
+            "failedToObtain": "Klarte ikke å hente bildetittel X: {{x}} Y: {{y}} Nivå: {{level}}."
+        },
+        "geoRssToGeoJson": {
+            "containsUnsupportedFeatureType": "GeoRSS inneholder ustøttet funksjonstype: {{type}}"
+        },
+        "gmlToGeoJson": {
+            "containsUnsupportedFeatureType": "GML inneholder ustøttet funksjonstype: {{type}}"
+        },
+        "computeRingWindingOrder": {
+            "devError": "Forventet punkter av type {x:nummer, y:nummer}"
+        }
+    },
+    "timer": {
+        "nextScheduledUpdateCountdown": "Neste dataoppdatering om",
+        "nextScheduledUpdateTime": "Neste dataoppdatering skjer"
+    },
+    "legend": {
+        "elev": "Høyd",
+        "zone": "Sone",
+        "lon": "Len",
+        "lat": "Bre"
+    },
+    "dragDrop": {
+        "text": "<0>Dra og slipp</0><1>din data hvor som helst for å vise den på kartet<1>",
+        "not": "<0>bbbb</0>"
+    },
+    "mobile": {
+        "toggleNavigation": "veksle navigasjon"
+    },
+    "dataCatalog": {
+        "groupEmpty": "Denne gruppen er tom",
+        "groupRemove": "fjern denne gruppen"
+    },
+    "loader": {
+        "loadingMessage": "Laster inn"
     }
 }
