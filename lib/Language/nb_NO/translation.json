@@ -12,7 +12,10 @@
             "czml": "CZML",
             "esri-featureServer": "Esri ArcGIS-funksjonstjener (ett lag)",
             "esri-mapServer": "Esri ArcGIS-karttjener (ett lag)",
-            "esri-group": "Esri ArcGIS-tjener"
+            "esri-group": "Esri ArcGIS-tjener",
+            "wms-getCapabilities": "Vevkarttjeneste (WMS)-tjener",
+            "wfs-getCapabilities": "Vevfunksjonstjeneste (WFS)-tjener",
+            "wmts-getCapabilities": "Vevkartflis-tjeneste (WMTS)-tjener"
         },
         "readXml": {
             "xmlError": "Filen inneholder ikke gyldig XML."
@@ -31,6 +34,13 @@
         "userAddedData": "Brukertillagt data",
         "terriaError": {
             "defaultValue": "En feil inntraff"
+        },
+        "dataUri": {
+            "errorMessage": "Beklageligvis støtter ikke Microsoft-nettlesere (inkludert alle versjoner av Internet Explorer og Edge) data-URI-funksjonaliteten som trengs for å laste ned data som en fil. Kopier følgende URI inn i en annen nettleser som Chromium eller Firefox: {{href}}",
+            "errorTitle": "Nettleseren støtter ikke datanedlasting"
+        },
+        "serverConfig": {
+            "failedToGet": "Klarte ikke å hente tjeneroppsett fra {{serverConfigUrl}}. Dette kan betyr at tjenester som mellomtjener, konvertering og nettadresseforkorting ikke fungerer."
         }
     },
     "analytics": {
@@ -46,7 +56,9 @@
         "point": "Punkt (bre/len)",
         "enterValidCoords": "Skriv inn gyldige koordinater (f.eks. 131.0361, -25.4450).",
         "runAnalysis": "Kjør analyse",
-        "clickToDrawRectangle": "Klikk for å tegne rektangel"
+        "clickToDrawRectangle": "Klikk for å tegne rektangel",
+        "shiftToDrawRectangle": "Trykk på Shift-tasten og hold nede venstre museknapp for å tegne et rektangel",
+        "regionName": "Områdenavn"
     },
     "terriaViewer": {
         "webGLNotSupportedOrSlowTitle": "WebGL ikke støttet eller for tregt",
@@ -55,7 +67,8 @@
         "firefox": "Mozilla Firefox",
         "chrome": "Google Chrome",
         "internetExplorer": "Internet Explorer 11",
-        "slowWebGLAvailableTitle": "Dårlig WebGL-ytelse"
+        "slowWebGLAvailableTitle": "Dårlig WebGL-ytelse",
+        "slowWebGLAvailableMessage": "Nettleseren melder at den har ytelsesproblemer med å vise {{appName}} i 3D, så du vil få en begrenset 2D-visning. For den fulle 3D-opplevelsen kan du prøve en annen nettleser, oppgradere videodriverne dine, eller oppgradere operativsystemet ditt."
     },
     "viewModels": {
         "searchPlaceNames": "Offisielle stedsnavn",
@@ -114,7 +127,10 @@
             "togglePlay": "Spill",
             "gotoStart": "Gå til begynnelsen"
         },
-        "useTimeline": "Bruk tidslinje"
+        "useTimeline": "Bruk tidslinje",
+        "next": "Neste tidspunkt",
+        "selectTime": "Velt tidspunkt",
+        "previous": "Forrige tidspunkt"
     },
     "workbench": {
         "toggleVisibility": "Vis/skjul data",
@@ -126,7 +142,11 @@
         "exportDataTitle": "Eksporter kartdata",
         "previewItem": "Om denne dataen",
         "previewItemTitle": "info",
-        "opacity": "Dekkevne: {{opacity}} %"
+        "opacity": "Dekkevne: {{opacity}} %",
+        "rangeMin": "Minimum:",
+        "rangeMax": "Maksimalt:",
+        "colorScaleRangeMax": "Maksimumsverdien må være et tall.",
+        "colorScaleRangeMin": "Minimumsverdien må være et tall."
     },
     "description": {
         "dataServiceDetails": "Detatjeneste-detaljer",
@@ -139,7 +159,12 @@
         "dataLocal": "Filen finnes kun i din nettleser. For å dele den må du laste den opp til en offentlig vevtjener.",
         "dataCustodian": "Dataansvarlig",
         "useTheLinkToDownload": "Bruk lenken nedenfor for å laste ned data direkte.",
-        "downloadData": "Last ned data"
+        "downloadData": "Last ned data",
+        "downloadNotSupported": "Din nettleser støtter ikke nedlasting av denne dataen som en fil. Bruk Chromium eller Firefox for å laste ned denne dataen.",
+        "downloadInFormat": "Last ned valgt data i {{format}}-format",
+        "useLinkBelow": "Bruk lenken nedenfor for å laste ned dataen. Sjekk {{link}} for mer info om tilpassing av nettadresse-spørringsparameter.",
+        "wfs": "Dette er en <1>WFS-tjeneste</1>, som overfører rå jordoverflatedata på forespørsel. Den kan brukes i GIS-programvare med denne nettadressen:",
+        "wms": "Dette er en <1>WMS-tjeneste</1>, som genererer kartbilder på forespørsel. Den kan brukes i GIS-programvare med denne nettadressen:"
     },
     "preview": {
         "updateFrequency": "Oppdateringsfrekvens",
@@ -163,7 +188,8 @@
         "preview": "{{appName}}-forhåndsvisning",
         "loading": "Laster inn forhåndsvning …",
         "selectToPreview": "<0>Velg et datasett for å se en forhåndsvisning</0><1>- eller -</1><2>Gå til kartet</2>",
-        "removeFromMap": "Fjern fra kartet"
+        "removeFromMap": "Fjern fra kartet",
+        "doesNotContainGeospatialData": "Denne filen inneholder ikke jordoverflatedata."
     },
     "search": {
         "searchCatalogue": "Søk i katalogen",
@@ -196,7 +222,8 @@
         "localAdd": "Legg til lokal fil",
         "load": "Last inn lokal/vev-data",
         "searchPlaceholderWhole": "Søk i hele katalogen",
-        "searchPlaceholder": "Søk i katalogen"
+        "searchPlaceholder": "Søk i katalogen",
+        "note": "<0>Merk: </0>Data lagt til på denne måten hverken lagres eller er synlig for andre."
     },
     "satelliteGuidance": {
         "dismissText": "Skjønner, takk.",
@@ -243,12 +270,15 @@
         "removeStoriesPanel": "Ønsker du å seltte {{ count }} scene?",
         "removeStoriesPanel_plural": "Ønsker du å slette {{ count }} scener?",
         "view": "Vis",
-        "viewStory": "vis"
+        "viewStory": "vis",
+        "promptHtml1": "<0>Du kan vise og lage historier når som helst ved å klikke her.</0>"
     },
     "welcomeMessage": {
         "WelcomeMessagePrimaryBtn": "Utforsk data",
         "WelcomeMessageSecondaryBtn": "Start veiledning",
-        "WelcomeMessageDissmissText": "Ikke vis meg dette igjen"
+        "WelcomeMessageDissmissText": "Ikke vis meg dette igjen",
+        "WelcomeMessage": "Få tilgang til rikholdig jordoverflatedata fra flerfoldige datakilder, alt på ett sted.",
+        "title": "Jordoverflatedata gjort <2>enkelt.</2>"
     },
     "featureInfo": {
         "noInfoAvailable": "Ingen info tilgjengelig",
@@ -358,7 +388,11 @@
         "printTitle": "Utskriftskart",
         "shortenUsingService": "Forkort delingsnettadressen ved bruk av en vev-tjeneste",
         "generatingUrl": "Genererer delingsnettadresse …",
-        "shortLinkShortening": "Forkorter …"
+        "shortLinkShortening": "Forkorter …",
+        "embedTitle": "For å innebygge, kopier denne koden for å bygge inn dette kartet i en HTML-side:",
+        "localDataNote": "<0><0>Note:</0></0><1>Følgende datakilder vil IKKE bli delt fordi de inkluderer data fra dette lokale systemet. For å dele disse datakildene, offentliggjør deres data på en vevtjener og <2>legg dem til ved bruk av en nettadresse</2>.</1>",
+        "shortLinkError": "Klarte ikke å forkorte nettadressen. Sjekk din internettilknytning og prøv igjen.",
+        "browserPrint": "For bedre utskriftsresultat, bruk {{appName}} sin utskriftsknapp istedenfor din nettlesers utskriftsfunksjon."
     },
     "AR": {
         "manualAlignmentTitle": "Manuell justering",
@@ -420,7 +454,9 @@
             "missingBody": "Tjeneren svarte med manglende kropp.",
             "unknownError": "Tjeneren rapporterte ukjent feil.",
             "alreadyLoadingTitle": "Data lastes allerede inn",
-            "property": "Egenskap"
+            "property": "Egenskap",
+            "sos": "Nødsignal",
+            "procedure": "Prosedyre"
         },
         "time": {
             "invalidInitialTimeSource": "Ugyldig initialTimeSource angitt i oppsettsfil: {{initialTimeSource}}",
@@ -440,12 +476,20 @@
             "invalidResponseErrorTitle": "Ugyldig WPS-tjenersvar",
             "invalidWPSServerTitle": "Ugyldig WPS-tjener",
             "wps": "Vevbehandlingstjeneste (WPS)",
-            "errorDetails": "Feildetaljer"
+            "errorDetails": "Feildetaljer",
+            "processDescriptionErrorTitle": "Prosessen har ingen prosessbeskrivelse",
+            "processInputErrorMessage": "Denne WPS-prosessen spesifiserer ingen innganger.",
+            "unsupportedParameterErrorMessage": "Parameteret {{identifier}} er ikke en støttet parametertype.",
+            "invalidResponseError2Message": "Responsen fra WPS-tjeneren har ikke noe Status-element.",
+            "regionTypeDescription": "Typen område å analysere.",
+            "failureReasonUnknowError": "Grunnen til feilen er ukjent.",
+            "unsupportedParameterErrorTitle": "Ustøttet parametertype"
         },
         "webMapTileServiceCatalogItem": {
             "accessConstraints": "Tilgangsbegrensninger",
             "serviceDescription": "Tjenestebeskrivelse",
-            "dataDescription": "Databeskrivelse"
+            "dataDescription": "Databeskrivelse",
+            "wmts": "Vevkartflistjeneste (WMTS)"
         },
         "webMapServiceCatalogItem": {
             "missingDataTitle": "Manglende data",
@@ -459,15 +503,18 @@
             "badlyFormatedMessage": "«{{name}}»-datasettet har feilformatert perioditet, «{{isoSegments}}». Klikk på datasettets info-knapp i «Vises nå»-fanen for mer info om datasettet og den dataansvarlige.",
             "metadataUrls": "Metadatalenker",
             "serviceDescription": "Tjenestebeskrivelse",
-            "dataDescription": "Databeskrivelse"
+            "dataDescription": "Databeskrivelse",
+            "missingDataMessage": "WMS-datasettet «{{name}}» returnerte ikke noe data.{{line}}{{line}}Enten har katalogfilen blitt satt opp feil, eller så har tjeneradressen endret seg.{{line}}{{line}}Innrapporter denne feilen ved å sende en e-post til {{email}}."
         },
         "webMapServiceCatalogGroup": {
             "invalidWMSServerTitle": "Ugyldig WMS-tjener",
-            "groupNotAvailableTitle": "Gruppe ikke tilgjengelig"
+            "groupNotAvailableTitle": "Gruppe ikke tilgjengelig",
+            "wmsServer": "Vevkarttjeneste (WMS)-tjener"
         },
         "webFeatureServiceCatalogGroup": {
             "groupNotAvailableTitle": "Gruppe ikke tilgjengelig",
-            "invalidWFSServerTitle": "Ugyldig WFS-tjener"
+            "invalidWFSServerTitle": "Ugyldig WFS-tjener",
+            "wfsServer": "Vevfunksjonstjeneste (WFS)-tjener"
         },
         "userDrawing": {
             "otherEntities": "Linjer og mangekanter",
@@ -479,7 +526,9 @@
             "btnCancel": "Avbryt",
             "firstPoint": "Første punkt",
             "line": "Linje",
-            "pointEntities": "Punkter"
+            "pointEntities": "Punkter",
+            "userPolygon": "Bruker-mangekant",
+            "devError": "Terria-instans kreves."
         },
         "terriaJSONcatalog": {
             "requestFailedTitle": "Forespørsel mislyktes",
@@ -487,7 +536,11 @@
             "misconfiguredErrorTitle": "Feiloppsatt init-fil",
             "name": "Terria-JSON-katalogfunksjon",
             "buttonTitleConfirm": "Jeg samtykker",
-            "disclaimer": "Ansvarsfraskrivelse"
+            "disclaimer": "Ansvarsfraskrivelse",
+            "loadingInitSourceErrorTitle": "Klarte ikke å igangsette kilde",
+            "requestFailedMessage": "Forespørsel mislyktes med statuskode {{status}}.",
+            "serviceResponseErrorMessage": "TerriaJsonCatalogFunction skulle ha mottatt en JSON-streng, mottok {{xhr}}",
+            "serviceResponseErrorTitle": "Tjenestesvaret er ikke en JSON-streng"
         },
         "terrainCatalog": {
             "notSupportedErrorMessage": "{{name}} kan ikke vises i 2D. Bytt til 3D og prøv igjen.",
@@ -514,7 +567,11 @@
             "noDataForDate": "Ingen data for valgt dato.",
             "moreThanOneValueText": "mer enn én verdi",
             "notRecognisedText": "ikke gjenkjent",
-            "outdatedBrowserTitle": "Utdatert nettleser"
+            "outdatedBrowserTitle": "Utdatert nettleser",
+            "msg": "Sjekk {{link}} for info om hvordan filen skal formateres.",
+            "moreThanOneValue": "Disse områdene hadde",
+            "notRecognised": "Disse områdenavnene var ",
+            "csvSpecification": "CSV-geo-au -spesifikasjon"
         },
         "placesLikeMe": {
             "regioNotSelectedDescription": "Du må velge et område.",
@@ -522,7 +579,10 @@
             "regionTypeDescription": "Områdetype å analysere.",
             "regionTypeName": "Områdetype",
             "regionsLikeThisName": "Områder som dette",
-            "placesLike": "Steder som"
+            "placesLike": "Steder som",
+            "characteristicsDescription": "Områdekarakteristikk å inkludere i analysen.",
+            "characteristics": "Karakteristikk",
+            "regioNotSelectedName": "Område ikke valgt"
         },
         "openStreetMap": {
             "name": "OpenStreetMap"
@@ -536,7 +596,9 @@
             "safari": "Apple Safari",
             "firefox": "Mozilla Firefox",
             "chrome": "Google Chrome",
-            "internetExplorer": "Internet Explorer 11"
+            "internetExplorer": "Internet Explorer 11",
+            "emailUs": "Hvis du vil ha hjelp eller mer info, send en e-post til {{email}}",
+            "errorConvertingToGeoJsonMessage": "Kunne ikke konvertere denne filen til GeoJSON. "
         },
         "kml": {
             "errorLoadingTitle": "Klarte ikke å laste inn KML eller KMZ",
@@ -584,7 +646,10 @@
             "distributionDesc": "Distribusjonsbeskrivelse",
             "serviceErrorMessage": "Denne tjenesten har ingen tilgjengelige detaljer.",
             "dataSourceErrorMessage": "Denne datakilden har ingen tilgjengelige detaljer.",
-            "name": "MAGDA-distribusjon"
+            "name": "MAGDA-distribusjon",
+            "retrieveErrorMessage": "Ingen distribusjon eller datasett-ID angitt",
+            "idsNotSpecifiedMessage": "MagdaCatalogItem krever at enten distributionId eller datasetId angis.",
+            "notCompatibleTitle": "Fant ingen kompatible distribusjoner"
         },
         "gpx": {
             "serviceErrorMessage": "Denne tjenesten har ingen tilgjengelige detaljer.",
@@ -619,17 +684,20 @@
             "links": "Lenke",
             "exceptionMessage": "CSW-tjeneren rapporterte en ukjent feil.\n\n {{exceptionText}}",
             "unknownError": "CSW-tjeneren rapporterte en ukjent feil.",
-            "name": "Katalogtjeneste (CSW)"
+            "name": "Katalogtjeneste (CSW)",
+            "metadataURL": "Metadataoppførings-nettadresse"
         },
         "csv": {
             "unableToLoadTitle": "Klarte ikke å laste inn CSV-fil",
             "unexpectedTypeTitle": "Uventet type CSV-data",
             "serviceErrorMessage": "Denne tjenesten har ingen tilgjengelige detaljer.",
             "dataSourceErrorMessage": "Denne datakilden har ingen tilgjengelige detaljer.",
-            "name": "Kommainndelte verdier (CSV)"
+            "name": "Kommainndelte verdier (CSV)",
+            "unableToLoadItemTitle": "Kunne ikke laste inn CSV-katalogelement"
         },
         "createParameter": {
-            "unsupportedErrorMessage": "Ukjent funksjonsparametertype: {{type}}."
+            "unsupportedErrorMessage": "Ukjent funksjonsparametertype: {{type}}.",
+            "unsupportedErrorTitle": "Ustøttet funksjonsparametertype"
         },
         "catalog": {
             "useConversion": "Bruk konverteringstjeneste?",
@@ -642,7 +710,8 @@
             "cancel": "Avbryt",
             "upload": "Last opp",
             "group": "Gruppe",
-            "name": "Element uten navn"
+            "name": "Element uten navn",
+            "dataSourceErrorMessage": "Denne datakilden har ingen tilgjengelige detaljer."
         },
         "ckan": {
             "notCompatibleMessageII": "CKAN-datasettet har ikke noen ressurser i et støttet format.",
@@ -659,12 +728,18 @@
             "author": "Utvikler",
             "licence": "Lisens",
             "resourceDescription": "Ressursbeskrivelse",
-            "dataDescription": "Databeskrivelse"
+            "dataDescription": "Databeskrivelse",
+            "idsNotSpecifiedTitle": "resourceId eller datasetId må angis",
+            "datasetDescription": "Datasett-beskrivelse",
+            "serviceErrorMessage": "Denne tjenesten har ingen tilgjengelige detaljer.",
+            "dataSourceErrorMessage": "Denne datakilden har ingen tilgjengelige detaljer.",
+            "nameServer": "CKAN-tjener"
         },
         "cesiumTerrain": {
             "errorRenderingTitle": "Klarte ikke å tegne i 3D",
             "notSupportedErrorMessage": "«{{name}}» kan ikke vises i 2D. Bytt til 3D og prøv igjen.",
-            "notSupportedErrorTitle": "Ikke støttet i 2D"
+            "notSupportedErrorTitle": "Ikke støttet i 2D",
+            "name3D": "Cesium-3D-flis"
         },
         "cartoMap": {
             "name": "Carto-kart",
@@ -693,7 +768,8 @@
         },
         "arcGisService": {
             "groupNotAvailableTitle": "Gruppe ikke tilgjengelig",
-            "invalidServerTitle": "Ugyldig ArcGIS-tjener"
+            "invalidServerTitle": "Ugyldig ArcGIS-tjener",
+            "name": "ArcGIS-tjenestegruppe"
         },
         "userData": {
             "fileApiNotSupportedTitle": "Fil-API støttes ikke",
@@ -705,12 +781,18 @@
         },
         "webMapTileServiceCatalogGroup": {
             "groupNotAvailableTitle": "Gruppe ikke tilgjengelig",
-            "invalidWMTSServerTitle": "Ugyldig WMTS-tjener"
+            "invalidWMTSServerTitle": "Ugyldig WMTS-tjener",
+            "wmtsServer": "Vevkartflistjeneste (WMTS)-tjener"
         },
         "terria": {
             "buttonTitleConfirm": "Jeg samtykker",
             "disclaimer": "Ansvarsfraskrivelse",
-            "urlLoadErrorTitle": "Problem ved innlasting av nettadresse"
+            "urlLoadErrorTitle": "Problem ved innlasting av nettadresse",
+            "loadingInitSourceErrorMessage": "Kunne ikke laste inn igangsettingsinfo fra {{fragment}} fordi ingen initFragmentPaths er definert.",
+            "loadingInitSourceErrorTitle": "Klarte ikke å laste inn igangsettingskilde",
+            "initErrorTitle": "Klarte ikke å igangsette tjenester",
+            "urlLoadErrorMessage": "Et problem oppstod ved igangsetting av Terria med nettadresse-parameter.",
+            "initErrorMessage": "Problem med Terria-tjeneren. Noen lag eller konverteringstgjenesten kan være utilgjengelig."
         },
         "mapboxStyle": {
             "name": "Mapbox-stil"
@@ -722,10 +804,17 @@
             "unexpectedResult": "Uventet resultat fra nettadresseforkorter"
         },
         "getToken": {
-            "errorTitle": "Symbolfeil"
+            "errorTitle": "Symbolfeil",
+            "unableToRequest": "<p>Kunne ikke forespørre symbol fra symboltjeneren.</p><p>Innrapporter det ved å sende en e-post til {{email}}</p>"
         },
         "wcs": {
             "exportFailedTitle": "Dataeksport mislyktes"
+        },
+        "webFeatureServiceCatalogItem": {
+            "wfs": "Vevfunksjonstjeneste (WFS)"
+        },
+        "raiseError": {
+            "errorTitle": "En feil inntraff"
         }
     },
     "deltaTool": {
@@ -747,7 +836,8 @@
         "loadingError": {
             "message": "Klarte ikke å laste inn delta-verktøy fra tjeneren. Prøv igjen.",
             "title": "Klarte ikke å laste inn delta-verktøy"
-        }
+        },
+        "pickLocation": "For å vise tilgjengelig bildedata, velg interessepunktet på kartet motstående."
     },
     "map": {
         "regionProvider": {
@@ -755,7 +845,8 @@
         },
         "mapboxVectorTileImageryProvider": {
             "requireStyles": "MapboxVectorTileImageryProvider krever en stilfunksjon sendt som options.styleFunc",
-            "requireLayerName": "MapboxVectorTileImageryProvider krever et lagnavn sendt som options.layerName"
+            "requireLayerName": "MapboxVectorTileImageryProvider krever et lagnavn sendt som options.layerName",
+            "maxLevelError": "Maksimumsnivå for høyt for datasett"
         },
         "gnafAddressGeocoder": {
             "noAddresses2": "Selv om tableStructure rapporterer at det har en adresse-kolonne, har den ingen adresser.",
@@ -767,7 +858,8 @@
             "suburb": "Forstad",
             "state": "Fylke",
             "matchedAddresses": "Samsvarende adresse",
-            "postcode": "Postnummer"
+            "postcode": "Postnummer",
+            "noAddresses": "Denne tableStructure mangler adresser!"
         },
         "leafletVisualizer": {
             "devError3": "tid kreves.",
@@ -816,5 +908,6 @@
     },
     "loader": {
         "loadingMessage": "Laster inn"
-    }
+    },
+    "emptyWorkbenchMessage": "<0><0>Din arbeidsbenk er tom</0><1><strong>Klikk «$t(addData.addDataBtnText)» ovenfor for å </strong></1><2><0>Utforske datakatalogen</0><1>Last inn din egen data på kartet</1></2><3><0></0><strong>Tips:</strong><2>Alle dine aktive datasett vil bli listet opp her</2></3></0>"
 }
