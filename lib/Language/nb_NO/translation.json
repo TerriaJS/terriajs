@@ -738,7 +738,10 @@
             "name": "Element uten navn",
             "dataSourceErrorMessage": "Denne datakilden har ingen tilgjengelige detaljer.",
             "unsupportedFileTypeMessage": "Dette filformatet er ikke støttet av {{appName}}. Støttede filformater inkluderer: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (i {{link}})</li></ul>",
-            "readyToUpload": "Klar til å laste opp filen din til {{appName}}-konverteringstjenesten?"
+            "readyToUpload": "Klar til å laste opp filen din til {{appName}}-konverteringstjenesten?",
+            "getConfirmationMessage": "Denne filen støttes ikke direkte av {{appName}}.\n\nØnsker du å laste den opp til {{appName}}-konverteringstjenesten? Dette kan fungere for små, sammenpakkede Esri Shapefiles eller MapInfo Tab-filer.",
+            "userAddedDataGroup": "Gruppen for data lagt til av bruker via «Legg til data»-panelet.",
+            "idForMatchingError": "Et katalogmedlem må ha et navn eller en ID for jamføring."
         },
         "ckan": {
             "notCompatibleMessageII": "CKAN-datasettet har ikke noen ressurser i et støttet format.",
@@ -760,7 +763,9 @@
             "datasetDescription": "Datasett-beskrivelse",
             "serviceErrorMessage": "Denne tjenesten har ingen tilgjengelige detaljer.",
             "dataSourceErrorMessage": "Denne datakilden har ingen tilgjengelige detaljer.",
-            "nameServer": "CKAN-tjener"
+            "nameServer": "CKAN-tjener",
+            "invalidCkanMessage": "Ressursen returnert fra CKAN-tjeneren ser ikke ut til å ha en package_id.",
+            "idsNotSpecifiedMessage": "CkanCatalogItem krever at enten «resourceId» eller «datasetId» angis."
         },
         "cesiumTerrain": {
             "errorRenderingTitle": "Klarte ikke å tegne i 3D",
@@ -841,7 +846,8 @@
         "wcs": {
             "exportFailedTitle": "Dataeksport mislyktes",
             "exportFailedMessageII": "Vevdekningstjenesten mislyktes:",
-            "exportFailedMessage": "Vevdekningstjenesten mislyktes"
+            "exportFailedMessage": "Vevdekningstjenesten mislyktes",
+            "asyncResultDescription": "Dette er resultatet av eksport av data fra {{name}}-tjenesten klokken {{timestamp}} med inndataparamterne nedenfor."
         },
         "webFeatureServiceCatalogItem": {
             "wfs": "Vevfunksjonstjeneste (WFS)"
