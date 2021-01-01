@@ -604,7 +604,7 @@
             "addingDataErrorTitle": "Data could not be added",
             "addingDataErrorMessage": "The specified data could not be added because it is invalid or does not have the expected format.",
             "fileApiNotSupportedTitle": "File API not supported",
-            "fileApiNotSupportedMessage": "Sorry, your web browser does not support the File API {{appName}} requires to add data from a file on your system.  Please upgrade your web browser to  {{chrome}}, {{firefox}} or {{internetExplorer}}.",
+            "fileApiNotSupportedMessage": "Sorry, your web browser does not support the File API {{appName}} required to add data from a file on your system. Please upgrade your web browser to the latest  {{chrome}}, {{firefox}} or {{internetExplorer}}.",
             "internetExplorer": "Internet Explorer 11",
             "chrome": "Google Chrome",
             "firefox": "Mozilla Firefox"
