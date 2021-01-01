@@ -812,7 +812,7 @@
             "internetExplorer": "Internet Explorer 11",
             "addingDataErrorMessage": "Angitt data kunne ikke legges til fordi den er ugyldig, eller fordi den ikke er i forventet format.",
             "addingDataErrorTitle": "Kunne ikke legge til data",
-            "fileApiNotSupportedMessage": "Din nettleser støtter ikke fil-API-et, som {{appName}} krever for å legge til data i en fil på systemet ditt. Oppgrader din nettlser. {{firefox}} anbefales."
+            "fileApiNotSupportedMessage": "Din nettleser støtter ikke fil-API-et, som {{appName}} krever for å legge til data fra en fil på systemet ditt. Oppgrader din nettlser. {{firefox}} anbefales."
         },
         "webMapTileServiceCatalogGroup": {
             "groupNotAvailableTitle": "Gruppe ikke tilgjengelig",
