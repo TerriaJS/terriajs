@@ -81,9 +81,14 @@ const GLYPHS = {
   // Receipt
   agriculture: require("../../wwwroot/images/icons/receipt/sector-icons/agriculture.svg"),
   manufacturing: require("../../wwwroot/images/icons/receipt/sector-icons/manufacturing.svg"),
+  agricultureHover: require("../../wwwroot/images/icons/receipt/sector-icons/agriculture_hover.svg"),
+  manufacturingHover: require("../../wwwroot/images/icons/receipt/sector-icons/manufacturing_hover.svg"),
   internationalCooperationAndDevelopment: require("../../wwwroot/images/icons/receipt/sector-icons/international_cooperation_and_development.svg"),
+  internationalCooperationAndDevelopmentHover: require("../../wwwroot/images/icons/receipt/sector-icons/international_cooperation_and_development_hover.svg"),
   coastalInfrastructure: require("../../wwwroot/images/icons/receipt/sector-icons/coastal_infrastructure.svg"),
+  coastalInfrastructureHover: require("../../wwwroot/images/icons/receipt/sector-icons/coastal_infrastructure_hover.svg"),
   finance: require("../../wwwroot/images/icons/receipt/sector-icons/finance.svg"),
+  financeHover: require("../../wwwroot/images/icons/receipt/sector-icons/finance_hover.svg"),
 
   back: require("../../wwwroot/images/icons/receipt/backTo.svg")
 };

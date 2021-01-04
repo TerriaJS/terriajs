@@ -43,7 +43,7 @@
 .exitBtn {
   composes: btn from "../../Sass/common/_buttons.scss";
   margin-right: 10px;
-  margin-top: 10px;
+  margin-top: 7px;
 
   &:not([disabled]):hover {
     svg {
@@ -53,6 +53,6 @@
 
   svg {
     fill: #888888;
-    width: 25px;
+    width: 16px;
   }
 }

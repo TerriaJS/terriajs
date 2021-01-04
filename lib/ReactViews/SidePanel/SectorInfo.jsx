@@ -13,7 +13,7 @@ class SectorInfo extends React.Component {
       return (
         <div className={Styles.panel}>
           <div className={Styles.panelBarTitle}>
-            <h2 style={{ marginTop: 0 }}>{sector.title}</h2>
+            <h3 style={{ marginTop: 0 }}>{sector.title}</h3>
             <button className={Styles.exitBtn} onClick={this.props.close}>
               <svg
                 width="20"
