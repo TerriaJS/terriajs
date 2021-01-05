@@ -15,18 +15,7 @@ class SectorInfo extends React.Component {
           <div className={Styles.panelBarTitle}>
             <h3 style={{ marginTop: 0 }}>{sector.title}</h3>
             <button className={Styles.exitBtn} onClick={this.props.close}>
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M1.16732 0L0 1.17188L8.81971 10L0 18.8281L1.16732 20L10.013 11.1719L18.8327 20L20 18.8281L11.1803 10L20 1.17188L18.8327 0L10.013 8.82812L1.16732 0Z"
-                  fill="#00194C"
-                />
-              </svg>
+              <Icon glyph={Icon.GLYPHS.close} />
             </button>
           </div>
 

@@ -43,11 +43,14 @@ const HotspotSummary = createReactClass({
     const sector = hotspot["_rc-sector"]?._value;
     const title = hotspot["_rc-title"]?._value;
     const description = hotspot["_rc-description"]?._value;
+    const storyImage =
+      hotspot["_rc-story-img"]?._value || "/images/receipt/placeholder.jpg";
     const microstories = hotspot["_rc-microstories"]?._value;
 
     const listMicrostories =
       Array.isArray(microstories) &&
       microstories.map(microstory => {
+        // Text protection image for the microstories selector
         const imgStyle = {
           backgroundImage:
             "linear-gradient(rgba(0, 0, 0, 0.1),rgba(0, 0, 0, 0.6)), url(" +
@@ -63,7 +66,7 @@ const HotspotSummary = createReactClass({
           >
             <div>
               <div className={Styles["microstory-title"]}>
-                {microstory["micro-story-title"]}{" "}
+                {microstory["micro-story-title"]}
               </div>
               <div className={Styles["microstory-desc"]}>
                 {microstory["micro-story-desc"]}{" "}
@@ -75,36 +78,41 @@ const HotspotSummary = createReactClass({
 
     return (
       <div className={Styles.RCHotspotSummary}>
-        <div className={Styles.flex}>
-          <div className={Styles.flexGrow}>
-            <Icon glyph={Icon.GLYPHS[sector]} className={Styles.icon} />
+        <div className={Styles.RCSummaryCard}>
+          <div className={Styles.titleGroup}>
+            <Icon
+              glyph={Icon.GLYPHS[sector + "Simple"]}
+              className={Styles.icon}
+            />
+            <h3>{title || "No title provided"}</h3>
+            <button
+              type="button"
+              onClick={this.close}
+              className={Styles.btnCloseFeature}
+              title="Close"
+            >
+              <Icon glyph={Icon.GLYPHS.close} className={Styles.iconCLose} />
+            </button>
           </div>
+          <img src={storyImage} className={Styles.imgStory} />
+          <p>{description || "No description provided"}</p>
+          <br />
           <button
             type="button"
-            onClick={this.close}
-            className={Styles.btnCloseFeature}
-            title="Close"
+            className={Styles.receiptButton}
+            onClick={this.openStory}
           >
-            <Icon glyph={Icon.GLYPHS.close} />
+            <Icon className={Styles.iconPlay} glyph={Icon.GLYPHS.roundedPlay} />
+            Play story
           </button>
-        </div>
-        <h1>{title || "No title provided"}</h1>
-        <p>{description || "No description provided"}</p>
-        <br />
-        <button
-          type="button"
-          className={Styles.satelliteSuggestionBtn}
-          onClick={this.openStory}
-        >
-          Play story
-        </button>
 
-        {listMicrostories.length > 0 ? (
-          <div className={Styles.microstoriesWrapper}>
-            <h3>Microstories</h3>
-            <div className={Styles.microstories}>{listMicrostories}</div>
-          </div>
-        ) : null}
+          {listMicrostories.length > 0 ? (
+            <div className={Styles.microstoriesWrapper}>
+              <h3>Microstories</h3>
+              <div className={Styles.microstories}>{listMicrostories}</div>
+            </div>
+          ) : null}
+        </div>
       </div>
     );
   }
