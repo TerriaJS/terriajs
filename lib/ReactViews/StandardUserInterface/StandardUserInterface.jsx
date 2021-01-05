@@ -241,6 +241,8 @@ const StandardUserInterface = createReactClass({
                       customFeedbacks={customElements.feedback}
                     />
                   </section>
+                </Medium>
+                <Medium>
                   <div
                     className={classNames(
                       Styles.sidePanel,
