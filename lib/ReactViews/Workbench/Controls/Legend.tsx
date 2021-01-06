@@ -49,17 +49,25 @@ export default class Legend extends React.Component<{
     forPrint: false
   };
 
-  // If we legends need scaling, this is the only way to do it :/
-  // See https://stackoverflow.com/questions/7699621/display-image-at-50-of-its-native-size
-  // or https://stackoverflow.com/questions/35711807/display-high-dpi-image-at-50-scaling-using-just-css
-  resizeLegendImage(
-    evt: SyntheticEvent<HTMLObjectElement>,
+  onImageLoad(
+    evt: SyntheticEvent<HTMLImageElement>,
     legend: Model<LegendTraits>
   ) {
-    if (!isDefined(legend.imageScaling) || legend.imageScaling === 1) return;
     const image = evt.target as HTMLObjectElement;
+    image.style.display = "none";
+    image.style.maxWidth = "none";
 
-    image.style.width = `${legend.imageScaling * image.offsetWidth}px`;
+    if (evt.type === "error") {
+      return;
+    }
+
+    image.style.display = "initial";
+
+    // If legend need scaling, this is the only way to do it :/
+    // See https://stackoverflow.com/questions/7699621/display-image-at-50-of-its-native-size
+    // or https://stackoverflow.com/questions/35711807/display-high-dpi-image-at-50-scaling-using-just-css
+
+    image.style.width = `${(legend.imageScaling ?? 1) * image.offsetWidth}px`;
     // Must set maxWidth *after* setting width, as it may change offsetWidth
     image.style.maxWidth = "100%";
   }
@@ -112,17 +120,17 @@ export default class Legend extends React.Component<{
             target="_blank"
             rel="noreferrer noopener"
           >
-            <object
-              data={proxiedUrl}
-              type={legend.urlMimeType}
-              // Set maxWidth to 100% if no scaling required (otherwise - see resizeLegendImage)
+            <img
+              src={proxiedUrl}
+              // Set maxWidth to 100% if no scaling required (otherwise - see onImageLoad)
               style={{
                 maxWidth:
                   !isDefined(legend.imageScaling) || legend.imageScaling === 1
                     ? "100%"
                     : undefined
               }}
-              onLoad={evt => this.resizeLegendImage.bind(this, evt, legend)()}
+              onError={evt => this.onImageLoad.bind(this, evt, legend)()}
+              onLoad={evt => this.onImageLoad.bind(this, evt, legend)()}
             />
           </a>
         </li>

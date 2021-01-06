@@ -191,6 +191,12 @@ describe("ArcGisMapServerCatalogItem", function() {
           expect(imageryProvider.layers).toBe("31");
         });
 
+        it("converts layer names to layer ids when constructing imagery provider", function() {
+          item.setTrait("definition", "layers", "Offshore_Rocks_And_Wrecks");
+          const imageryProvider = item.mapItems[0].imageryProvider;
+          expect(imageryProvider.layers).toBe("31");
+        });
+
         it("tilingScheme should be a WebMercatorTilingScheme", function() {
           expect(
             imageryProvider.tilingScheme instanceof WebMercatorTilingScheme

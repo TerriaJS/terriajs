@@ -359,6 +359,13 @@ export default class ArcGisMapServerCatalogItem
     });
   }
 
+  @computed
+  get mapServerStratum(): MapServerStratum | undefined {
+    return this.strata.get(MapServerStratum.stratumName) as
+      | MapServerStratum
+      | undefined;
+  }
+
   loadMapItems() {
     return this.loadMetadata();
   }
@@ -371,10 +378,7 @@ export default class ArcGisMapServerCatalogItem
   }
 
   @computed get imageryProvider() {
-    const stratum = <MapServerStratum>(
-      this.strata.get(MapServerStratum.stratumName)
-    );
-
+    const stratum = this.mapServerStratum;
     if (!isDefined(this.url) || !isDefined(stratum)) {
       return;
     }
@@ -401,9 +405,10 @@ export default class ArcGisMapServerCatalogItem
 
     const maximumLevel = maximumScaleToLevel(this.maximumScale);
     const dynamicRequired = this.layers && this.layers.length > 0;
+    const layers = this.layerIds || this.layers;
     const imageryProvider = new ArcGisMapServerImageryProvider({
       url: cleanAndProxyUrl(this, getBaseURI(this).toString()),
-      layers: this.layers,
+      layers,
       tilingScheme: new WebMercatorTilingScheme(),
       maximumLevel: maximumLevel,
       parameters: this.parameters,
@@ -477,6 +482,13 @@ export default class ArcGisMapServerCatalogItem
         return lastSegment;
       }
     }
+  }
+
+  @computed
+  get layerIds(): string | undefined {
+    const stratum = this.mapServerStratum;
+    const ids = stratum ? stratum.allLayers.map(l => l.id) : [];
+    return ids.length === 0 ? undefined : ids.join(",");
   }
 
   @computed get allSelectedLayers() {

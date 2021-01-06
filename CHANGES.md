@@ -3,9 +3,37 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.63)
+#### next release (8.0.0-alpha.66)
 * [The next improvement]
 
+#### 8.0.0-alpha.65
+* Fixed SDMX-group nested categories
+* SDMX-group will now remove top-level groups with only 1 child
+
+#### 8.0.0-alpha.64
+* Fixed WMS style selector bug.
+* `layers` trait for `ArcGisMapServerCatalogItem` can now be a comma separated string of layer IDs or names. Names will be auto-converted to IDs when making the request.
+
+#### 8.0.0-alpha.63
+* Add `v7initializationUrls` to terria config. It will convert catalogs to v8 and print warning messages to console.
+* Add `shareKeys` support for Madga map-config maps (through `terria` aspect)
+* Revert WMS-group item ID generation to match v7
+* Add `addShareKeysToMembers` to `GroupMixin` to generate `shareKeys` for dynamic groups (eg `wms-group)
+* Added `InitDataPromise` to `InitSources`
+* Add reverse `modelIdShareKeysMap` map - `model.id` -> `shareKeys`
+* Upgraded `catalog-converter` to 0.0.2-alpha.4
+* Reverted Legend use of `object` instead of `img` - sometimes it was showing html error responses
+* Legend will now hide if an error is thrown
+* Update youtube urls to nocookie version
+* Share link conversion (through `catalog-converter`) is now done client-side
+* Fix Geoserver legend font colour bug
+* Remove legend broken image icon
+* Added high-DPI legends for geoserver WMS (+ font size, label margin and a few other tweaks)
+* `LegendTraits` is now part of `CatalogMemberTraits`
+* Add `imageScaling` to `LegendTraits`
+* WMS now `isGeoserver` if "geoserver` is in the URL
+* Add WMS `supportsGetLegendRequest` trait
+* Improved handling of WMS default styles
 
 #### 8.0.0-alpha.62
 * Fixed an issue with not loading the base map from init file and an issue with viewerMode from init files overriding the persisted viewerMode
@@ -20,13 +48,6 @@ Change Log
 * Port `shareKeys` from version 7
 * Update/re-enable `GeoJsonCatalogItemSpec` for v8.
 * add `DataCustodianTraits` to `WebMapServiceCatalogGroupTraits`
-* Remove legend broken image icon
-* Added high-DPI legends for geoserver WMS (+ font size, label margin and a few other tweaks)
-* `LegendTraits` is now part of `CatalogMemberTraits`
-* Add `imageScaling` to `LegendTraits`
-* WMS now `isGeoserver` if "geoserver` is in the URL
-* Add WMS `supportsGetLegendRequest` trait
-* Improved handling of WMS default styles
 * Changed behaviour of `updateModelFromJson` such that catalog groups with the same id/name from different json files will be merged into one single group. 
 * Fixed error when selecting an existing polygon in WPS input form.
 * Upgraded `catalog-converter` to 0.0.2-alpha.3.

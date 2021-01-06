@@ -1,3 +1,4 @@
+import { convertCatalog, convertShare } from "catalog-converter";
 import i18next from "i18next";
 import { action, computed, observable, runInAction, toJS, when } from "mobx";
 import { createTransformer } from "mobx-utils";
@@ -55,7 +56,12 @@ import CommonStrata from "./CommonStrata";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import hasTraits from "./hasTraits";
-import InitSource, { isInitOptions, isInitUrl } from "./InitSource";
+import InitSource, {
+  isInitData,
+  isInitDataPromise,
+  isInitOptions,
+  isInitUrl
+} from "./InitSource";
 import Internationalization, {
   I18nStartOptions,
   LanguageConfiguration
@@ -74,43 +80,6 @@ import upsertModelFromJson from "./upsertModelFromJson";
 import ViewerMode from "./ViewerMode";
 import Workbench from "./Workbench";
 // import overrides from "../Overrides/defaults.jsx";
-
-interface InitModels {
-  [key: string]: {
-    [key: string]: JsonValue;
-    knownContainerUniqueIds: string[];
-  };
-}
-/**
- * This is a short term gap to addresing the issue of old share links being
- * generated with a record similar to `map-config` in its share data, but
- * newer-Terria forcing the root record to an ID of `/` for a consistent
- * approach to the root record
- *
- * The hardcode approach - it will check for any `knownContainerUniqueIds` for
- * each model, and add an entry for `/` if it detects `map-config-*`
- */
-export function makeModelsMagdaCompatible(models: InitModels) {
-  return Object.entries(models).reduce((acc: any, current) => {
-    const key = current[0];
-    const value = current[1];
-    const hasMapConfig =
-      value.knownContainerUniqueIds &&
-      value.knownContainerUniqueIds.find(
-        value => value.indexOf("map-config") !== -1
-      );
-    const improvedKnownContainerUniqueIds = hasMapConfig
-      ? [...value.knownContainerUniqueIds, "/"]
-      : value.knownContainerUniqueIds;
-
-    acc[key] = {
-      ...value,
-      knownContainerUniqueIds: improvedKnownContainerUniqueIds
-    };
-
-    return acc;
-  }, {});
-}
 
 interface ConfigParameters {
   [key: string]: ConfigParameters[keyof ConfigParameters];
@@ -191,8 +160,10 @@ interface HomeCameraInit {
 
 export default class Terria {
   private models = observable.map<string, BaseModel>();
-  // Map from share key -> id
-  private shareKeysMap = observable.map<string, string>();
+  /** Map from share key -> id */
+  readonly shareKeysMap = observable.map<string, string>();
+  /** Map from id -> share keys */
+  readonly modelIdShareKeysMap = observable.map<string, string[]>();
 
   readonly baseUrl: string = "build/TerriaJS/";
   readonly notification = new CesiumEvent();
@@ -274,7 +245,7 @@ export default class Terria {
     showWelcomeMessage: false,
     welcomeMessageVideo: {
       videoTitle: "Getting started with the map",
-      videoUrl: "https://www.youtube.com/embed/FjSxaviSLhc",
+      videoUrl: "https://www.youtube-nocookie.com/embed/FjSxaviSLhc",
       placeholderImage:
         "https://img.youtube.com/vi/FjSxaviSLhc/maxresdefault.jpg"
     },
@@ -471,7 +442,10 @@ export default class Terria {
 
   @action
   addShareKey(id: string, shareKey: string) {
+    if (id === shareKey || this.shareKeysMap.has(shareKey)) return;
     this.shareKeysMap.set(shareKey, id);
+    this.modelIdShareKeysMap.get(id)?.push(shareKey) ??
+      this.modelIdShareKeysMap.set(id, [shareKey]);
   }
 
   setupInitializationUrls(baseUri: uri.URI, config: any) {
@@ -483,6 +457,25 @@ export default class Terria {
         url
       )
     );
+
+    // look for v7 catalogs -> push v7-v8 conversion to initSources
+    if (Array.isArray(config?.v7initializationUrls)) {
+      this.initSources.push(
+        ...config.v7initializationUrls
+          .filter((v7initUrl: any) => isJsonString(v7initUrl))
+          .map(async (v7initUrl: string) => {
+            const catalog = await loadJson5(v7initUrl);
+            const convert = convertCatalog(catalog);
+            console.log(
+              `WARNING: ${v7initUrl} is a v7 catalog - it has been upgraded to v8\nMessages:\n`
+            );
+            convert.messages.forEach(message =>
+              console.log(`- ${message.path.join(".")}: ${message.message}`)
+            );
+            return { data: convert.result as JsonObject };
+          })
+      );
+    }
     this.initSources.push(...initSources);
   }
 
@@ -884,10 +877,8 @@ export default class Terria {
 
     const models = initData.models;
     if (isJsonObject(models)) {
-      const modelsTyped = <InitModels>models;
-      const magdaCompatibleModels = makeModelsMagdaCompatible(modelsTyped);
       promise = Promise.all(
-        Object.keys(magdaCompatibleModels).map(modelId => {
+        Object.keys(models).map(modelId => {
           return this.loadModelStratum(
             modelId,
             stratumId,
@@ -1018,15 +1009,15 @@ export default class Terria {
     }
 
     if (aspects.group && aspects.group.members) {
-      // const id = config.id;
-      // force config id to be `/`, purely to emulate regular terria behaviour
+      // force config (root group) id to be `/`
       const id = "/";
       this.removeModelReferences(this.catalog.group);
 
       let existingReference = this.getModelById(MagdaReference, id);
       if (existingReference === undefined) {
         existingReference = new MagdaReference(id, this);
-        this.addModel(existingReference);
+        // Add model with terria aspects shareKeys
+        this.addModel(existingReference, aspects?.terria?.shareKeys);
       }
 
       const reference = existingReference;
@@ -1206,34 +1197,31 @@ function generateInitializationUrl(
 }
 
 const loadInitSource = createTransformer(
-  (initSource: InitSource): Promise<JsonObject | undefined> => {
-    let promise: Promise<JsonValue | undefined>;
-
+  async (initSource: InitSource): Promise<JsonObject | undefined> => {
+    let jsonValue: JsonValue | undefined;
     if (isInitUrl(initSource)) {
-      promise = loadJson5(initSource.initUrl);
+      jsonValue = await loadJson5(initSource.initUrl);
     } else if (isInitOptions(initSource)) {
-      promise = initSource.options.reduce((previousOptionPromise, option) => {
-        return previousOptionPromise
-          .then(json => {
-            if (json === undefined) {
-              return loadInitSource(option);
-            }
-            return json;
-          })
-          .catch(_ => {
-            return loadInitSource(option);
-          });
-      }, Promise.resolve<JsonObject | undefined>(undefined));
-    } else {
-      promise = Promise.resolve(initSource.data);
+      let error: any;
+      for (const option of initSource.options) {
+        try {
+          jsonValue = await loadInitSource(option);
+          if (jsonValue !== undefined) break;
+        } catch (err) {
+          error = err;
+        }
+      }
+      if (jsonValue === undefined && error !== undefined) throw error;
+    } else if (isInitData(initSource)) {
+      jsonValue = initSource.data;
+    } else if (isInitDataPromise(initSource)) {
+      jsonValue = (await initSource).data;
     }
 
-    return promise.then(jsonValue => {
-      if (isJsonObject(jsonValue)) {
-        return jsonValue;
-      }
-      return undefined;
-    });
+    if (jsonValue && isJsonObject(jsonValue)) {
+      return jsonValue;
+    }
+    return undefined;
   }
 );
 
@@ -1273,14 +1261,21 @@ function interpretHash(
         }
       });
 
-      if (shareProps) {
-        if (shareProps.converted) {
+      if (isDefined(shareProps) && shareProps !== {}) {
+        // Convert shareProps to v8 if neccessary
+        const result = convertShare(shareProps);
+
+        // Show warning messages if converted
+        if (result.converted) {
           terria.notification.raiseEvent({
             title: i18next.t("share.convertNotificationTitle"),
-            message: shareConvertNotification(shareProps)
+            message: shareConvertNotification(result.messages)
           } as Notification);
         }
-        interpretStartData(terria, shareProps);
+
+        if (result.result !== null) {
+          interpretStartData(terria, result.result);
+        }
       }
     });
   });

@@ -29,7 +29,8 @@ import {
   CategorySchemes,
   Dataflow,
   Dataflows,
-  SdmxJsonStructureMessage
+  SdmxJsonStructureMessage,
+  Categories
 } from "./SdmxJsonStructureMessage";
 
 export interface SdmxServer {
@@ -160,7 +161,20 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
         categoryIds.forEach(categoryId => {
           // Create category node if it doesn't exist
           if (!isDefined(categoryParentNode.members![categoryId])) {
-            const category = this.getCategory(categorySchemeId, categoryId);
+            let category: Category | undefined;
+
+            // Find current categoryId in parent categoryScheme or parent category
+            if (categoryParentNode.type === "categoryScheme") {
+              category = this.getCategoryFromCatagoryScheme(
+                categorySchemeId,
+                categoryId
+              );
+            } else if (categoryParentNode.type === "category") {
+              category = this.getCategoryFromCategories(
+                categoryParentNode.item?.categories,
+                categoryId
+              );
+            }
             if (!isDefined(category)) return;
             categoryParentNode.members![categoryId] = {
               type: "category",
@@ -196,7 +210,28 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
 
   @computed
   get members(): ModelReference[] {
-    return Object.values(this.dataflowTree).map(node => this.getMemberId(node));
+    // Find first node in tree which has more than 1 child
+    const findRootGroup = (node: DataflowTreeNode): DataflowTreeNode => {
+      const children: DataflowTreeNode[] | undefined = isDefined(node?.members)
+        ? Object.values(node!.members)
+        : undefined;
+
+      // If only 1 child -> keep searching
+      return isDefined(children) && children.length === 1
+        ? findRootGroup(children[0])
+        : node;
+    };
+
+    let rootTreeNodes = Object.values(this.dataflowTree);
+
+    // If only a single group -> try to find next nested group with more than 1 child
+    if (rootTreeNodes.length === 1 && isDefined(rootTreeNodes[0])) {
+      rootTreeNodes = Object.values(
+        findRootGroup(rootTreeNodes[0]).members ?? this.dataflowTree
+      );
+    }
+
+    return rootTreeNodes.map(node => this.getMemberId(node));
   }
 
   createMembers() {
@@ -318,7 +353,7 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
     return this.sdmxServer.categorySchemes?.find(d => d.id === id);
   }
 
-  getCategory(
+  getCategoryFromCatagoryScheme(
     categoryScheme: CategoryScheme | string | undefined,
     id?: string
   ) {
@@ -328,7 +363,14 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
         ? this.getCategoryScheme(categoryScheme)
         : categoryScheme;
 
-    return resolvedCategoryScheme?.categories?.find(d => d.id === id);
+    return this.getCategoryFromCategories(
+      resolvedCategoryScheme?.categories,
+      id
+    );
+  }
+
+  getCategoryFromCategories(categories: Categories | undefined, id?: string) {
+    return isDefined(id) ? categories?.find(c => c.id === id) : undefined;
   }
 
   getAgency(id?: string) {
