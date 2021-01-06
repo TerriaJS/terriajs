@@ -7,8 +7,28 @@ class SectorInfo extends React.Component {
   constructor(props) {
     super(props);
   }
+
+  openStorySummary(viewState, terria, close) {
+    console.log("🎹", viewState);
+
+    // TODO: SELECT FEATURE HERE
+
+    // close possible opened stories
+    // viewState.storyShown = false;
+    // terria.currentViewer.notifyRepaintRequired();
+    //
+    // Close preview summary (important to force rerender)
+    // viewState.hotspotSummaryEnabled = false;
+    // viewState.selectedHotspot = terria.selectedFeature.properties;
+    // viewState.hotspotSummaryEnabled = true;
+
+    // Close current panel
+    close();
+  }
+
   render() {
-    const { sector } = this.props;
+    const { sector, hotspots, viewState, terria, close } = this.props;
+
     if (sector !== null) {
       return (
         <div className={Styles.panel}>
@@ -23,6 +43,39 @@ class SectorInfo extends React.Component {
             <img src={sector.image} alt="" />
             <div className="rc-card-text">{sector.info}</div>
           </div>
+
+          {/* Story list in sector*/}
+
+          {hotspots && hotspots.length > 0 && (
+            <div>
+              <h4>Stories</h4>
+              <div className="rc-list">
+                {hotspots &&
+                  hotspots.map((hotspot, i) => (
+                    <div key={i} className="rc-list-row">
+                      <img
+                        src={
+                          hotspot.properties["rc-story-img"]?._value ||
+                          sector.image
+                        }
+                        alt=""
+                      />
+                      <div className="rc-list-text">
+                        {hotspot.properties["rc-title"]?._value}
+                      </div>
+                      <button
+                        onClick={() =>
+                          this.openStorySummary(viewState, terria, close)
+                        }
+                        className="rc-button"
+                      >
+                        View
+                      </button>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
         </div>
       );
     }
@@ -57,7 +110,10 @@ class SectorInfo extends React.Component {
 
 SectorInfo.propTypes = {
   sector: PropTypes.object,
-  close: PropTypes.func
+  hotspots: PropTypes.array,
+  close: PropTypes.func,
+  viewState: PropTypes.object,
+  terria: PropTypes.object
 };
 
 export default SectorInfo;
