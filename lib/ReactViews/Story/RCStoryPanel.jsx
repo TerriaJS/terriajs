@@ -195,7 +195,7 @@ const RCStoryPanel = createReactClass({
             <div className={Styles.titleGroup}>
               {story.sector ? (
                 <Icon
-                  glyph={Icon.GLYPHS[story.sector + "Simple"]} // todo: get sector title
+                  glyph={Icon.GLYPHS[story.sector + "Simple"]}
                   className={Styles.icon}
                 />
               ) : (
