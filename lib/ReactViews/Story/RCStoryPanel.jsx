@@ -215,10 +215,19 @@ const RCStoryPanel = createReactClass({
               ) : (
                 <h3> {t("story.untitled")} </h3>
               )}
-              
+
             </div> */}
               {exitBtn}
-              <div>
+              {story.text && (
+                <div className={Styles.body}>
+                  {typeof story.text === "string" &&
+                    parseCustomHtmlToReact(story.text)}
+                  {typeof story.text === "object" &&
+                    parseCustomHtmlToReact(story.text[scenario])}
+                </div>
+              )}
+
+              <div className={Styles.storyBottomNavigationItems}>
                 <input
                   type="range"
                   min="0"
@@ -230,62 +239,54 @@ const RCStoryPanel = createReactClass({
                     this.scenarioChanged(e);
                   }}
                 />
-              </div>
-              {story.text && (
-                <div className={Styles.body}>
-                  {typeof story.text === "string" &&
-                    parseCustomHtmlToReact(story.text)}
-                  {typeof story.text === "object" &&
-                    parseCustomHtmlToReact(story.text[scenario])}
-                </div>
-              )}
-              <div className={Styles.navs}>
-                <Medium>
-                  <div className={Styles.left}>
-                    <button
-                      className={Styles.previousBtn}
-                      disabled={this.props.terria.stories.length <= 1}
-                      title={t("story.previousBtn")}
-                      onClick={this.goToPrevStory}
-                    >
-                      <Icon glyph={Icon.GLYPHS.left} />
-                    </button>
-                  </div>
-                </Medium>
-                <If condition={this.props.terria.stories.length >= 2}>
-                  <div className={Styles.navBtn}>
-                    {" "}
-                    {stories.map((story, i) => (
+                <div className={Styles.navs}>
+                  <Medium>
+                    <div className={Styles.left}>
                       <button
-                        title={t("story.navBtn", { title: story.title })}
-                        type="button"
-                        key={story.id}
-                        onClick={() => this.navigateStory(i)}
+                        className={Styles.previousBtn}
+                        disabled={this.props.terria.stories.length <= 1}
+                        title={t("story.previousBtn")}
+                        onClick={this.goToPrevStory}
                       >
-                        {" "}
-                        <Icon
-                          glyph={
-                            i === this.props.viewState.currentStoryId
-                              ? Icon.GLYPHS.circleFull
-                              : Icon.GLYPHS.circleEmpty
-                          }
-                        />
+                        <Icon glyph={Icon.GLYPHS.left} />
                       </button>
-                    ))}
-                  </div>
-                </If>
-                <Medium>
-                  <div className={Styles.right}>
-                    <button
-                      disabled={this.props.terria.stories.length <= 1}
-                      className={Styles.nextBtn}
-                      title={t("story.nextBtn")}
-                      onClick={this.goToNextStory}
-                    >
-                      <Icon glyph={Icon.GLYPHS.right} />
-                    </button>
-                  </div>
-                </Medium>
+                    </div>
+                  </Medium>
+                  <If condition={this.props.terria.stories.length >= 2}>
+                    <div className={Styles.navBtn}>
+                      {" "}
+                      {stories.map((story, i) => (
+                        <button
+                          title={t("story.navBtn", { title: story.title })}
+                          type="button"
+                          key={story.id}
+                          onClick={() => this.navigateStory(i)}
+                        >
+                          {" "}
+                          <Icon
+                            glyph={
+                              i === this.props.viewState.currentStoryId
+                                ? Icon.GLYPHS.circleFull
+                                : Icon.GLYPHS.circleEmpty
+                            }
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  </If>
+                  <Medium>
+                    <div className={Styles.right}>
+                      <button
+                        disabled={this.props.terria.stories.length <= 1}
+                        className={Styles.nextBtn}
+                        title={t("story.nextBtn")}
+                        onClick={this.goToNextStory}
+                      >
+                        <Icon glyph={Icon.GLYPHS.right} />
+                      </button>
+                    </div>
+                  </Medium>
+                </div>
               </div>
             </div>
           </div>
