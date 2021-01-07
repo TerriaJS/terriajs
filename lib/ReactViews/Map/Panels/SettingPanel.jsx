@@ -28,6 +28,13 @@ import Styles from "./setting-panel.scss";
  *
  * @extends {React.Component<Props>}
  */
+
+const sides = {
+  left: "settingPanel.terrain.left",
+  both: "settingPanel.terrain.both",
+  right: "settingPanel.terrain.right"
+};
+
 @observer
 class SettingPanel extends React.Component {
   static propTypes = {
@@ -107,15 +114,15 @@ class SettingPanel extends React.Component {
     event.stopPropagation();
 
     switch (side) {
-      case "Left":
+      case sides.left:
         this.props.terria.terrainSplitDirection = ImagerySplitDirection.LEFT;
         this.props.terria.showSplitter = true;
         break;
-      case "Right":
+      case sides.right:
         this.props.terria.terrainSplitDirection = ImagerySplitDirection.RIGHT;
         this.props.terria.showSplitter = true;
         break;
-      case "Both":
+      case sides.both:
         this.props.terria.terrainSplitDirection = ImagerySplitDirection.NONE;
         break;
     }
@@ -197,16 +204,15 @@ class SettingPanel extends React.Component {
     viewerModes.push("3dsmooth", "2d");
 
     const supportsSide = isCesiumWithTerrain;
-    const sides = ["Left", "Both", "Right"];
 
-    let currentSide = "Both";
+    let currentSide = sides.both;
     if (supportsSide) {
       switch (this.props.terria.terrainSplitDirection) {
         case ImagerySplitDirection.LEFT:
-          currentSide = "Left";
+          currentSide = sides.left;
           break;
         case ImagerySplitDirection.RIGHT:
-          currentSide = "Right";
+          currentSide = sides.right;
           break;
       }
     }
@@ -257,7 +263,7 @@ class SettingPanel extends React.Component {
               {t("settingPanel.terrain.sideLabel")}
             </label>
             <ul className={Styles.viewerSelector}>
-              <For each="side" of={sides}>
+              {Object.values(sides).map(side => (
                 <li key={side} className={Styles.listItemThreeCols}>
                   <button
                     onClick={this.showTerrainOnSide.bind(this, side)}
@@ -265,10 +271,10 @@ class SettingPanel extends React.Component {
                       [Styles.isActive]: side === currentSide
                     })}
                   >
-                    {side}
+                    {t(side)}
                   </button>
                 </li>
-              </For>
+              ))}
             </ul>
           </div>
         </If>

@@ -252,7 +252,10 @@
       "hideUnderground": "Terrain hides underground features",
       "showUndergroundFeatures": "Press to start showing features that are underneath the terrain surface",
       "hideUndergroundFeatures": "Press to start hiding features that are underneath the terrain surface",
-      "sideLabel": "Show Terrain on the"
+      "sideLabel": "Show Terrain on the",
+      "left": "Left",
+      "both": "Both",
+      "right": "Right"
     }
   },
   "feedback": {
