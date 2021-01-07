@@ -185,108 +185,115 @@ const RCStoryPanel = createReactClass({
     const story = stories[this.props.viewState.currentStoryId];
     const scenario = this.props.viewState.currentScenario || 0;
 
-    console.log("Current: ", this.props.viewState.currentStoryId, scenario);
-
-    const exitBtn = (
-      <button
-        className={classNames(Styles.exitBtn, Styles.absoluteRight)}
-        title={t("story.exitBtn")}
-        onClick={this.slideOut}
-      >
-        <Icon glyph={Icon.GLYPHS.close} />
-      </button>
-    );
     return (
       <React.Fragment>
         <Swipeable
           onSwipedLeft={this.goToNextStory}
           onSwipedRight={this.goToPrevStory}
         >
-          <div
-            className={classNames(Styles.storyContainer, {
-              [Styles.isMounted]: this.state.inView
-            })}
-            key={story.id}
-          >
-            <div className={classNames(Styles.story, Styles.relative)}>
-              {/* <div className={Styles.storyHeader}>
-              {story.title && story.title.length > 0 ? (
-                <h3>{story.title}</h3>
-              ) : (
-                <h3> {t("story.untitled")} </h3>
-              )}
-
-            </div> */}
-              {exitBtn}
-              {story.text && (
-                <div className={Styles.body}>
-                  {typeof story.text === "string" &&
-                    parseCustomHtmlToReact(story.text)}
-                  {typeof story.text === "object" &&
-                    parseCustomHtmlToReact(story.text[scenario])}
-                </div>
-              )}
-
-              <div className={Styles.storyBottomNavigationItems}>
-                <input
-                  type="range"
-                  min="0"
-                  max="1"
-                  value={scenario}
-                  className="slider"
-                  id="scenarioSelector"
-                  onChange={e => {
-                    this.scenarioChanged(e);
-                  }}
+          <div className={Styles.RCHotspotSummary}>
+            <div className={Styles.titleGroup}>
+              {story.sector ? (
+                <Icon
+                  glyph={Icon.GLYPHS[story.sector + "Simple"]}
+                  className={Styles.icon}
                 />
-                <div className={Styles.navs}>
-                  <Medium>
-                    <div className={Styles.left}>
+              ) : (
+                <div />
+              )}
+
+              <h3>
+                {story.title && story.title.length > 0
+                  ? story.title
+                  : t("story.untitled")}
+              </h3>
+
+              <button
+                className="buttonClose"
+                title={t("story.exitBtn")}
+                onClick={this.slideOut}
+              >
+                <Icon width={20} glyph={Icon.GLYPHS.close} />
+              </button>
+            </div>
+
+            <div className={Styles.RCSummaryCard}>
+              <div
+                className={classNames(Styles.storyContainer, {
+                  [Styles.isMounted]: this.state.inView
+                })}
+              >
+                {story.text && (
+                  <div className={Styles.body}>
+                    {typeof story?.text === "string" &&
+                      parseCustomHtmlToReact(story.text)}
+                    {typeof story?.text === "object" &&
+                      parseCustomHtmlToReact(story.text[scenario])}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className={Styles.storyBottomNavigationItems}>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                value={scenario}
+                className="slider"
+                id="scenarioSelector"
+                onChange={e => {
+                  this.scenarioChanged(e);
+                }}
+              />
+              <div className={Styles.navs}>
+                <Medium>
+                  <div className={Styles.left}>
+                    <button
+                      className={Styles.previousBtn}
+                      disabled={this.props.terria.stories.length <= 1}
+                      title={t("story.previousBtn")}
+                      onClick={this.goToPrevStory}
+                    >
+                      <Icon glyph={Icon.GLYPHS.left} />
+                    </button>
+                  </div>
+                </Medium>
+                <If condition={this.props.terria.stories.length >= 2}>
+                  <div className={Styles.navBtn}>
+                    {" "}
+                    {stories.map((story, i) => (
                       <button
-                        className={Styles.previousBtn}
-                        disabled={this.props.terria.stories.length <= 1}
-                        title={t("story.previousBtn")}
-                        onClick={this.goToPrevStory}
+                        title={t("story.navBtn", { title: story.title })}
+                        type="button"
+                        key={story.id}
+                        onClick={() => this.navigateStory(i)}
                       >
-                        <Icon glyph={Icon.GLYPHS.left} />
+                        {" "}
+                        <Icon
+                          glyph={
+                            i === this.props.viewState.currentStoryId
+                              ? Icon.GLYPHS.circleFull
+                              : Icon.GLYPHS.circleEmpty
+                          }
+                        />
                       </button>
-                    </div>
-                  </Medium>
-                  <If condition={this.props.terria.stories.length >= 2}>
-                    <div className={Styles.navBtn}>
-                      {" "}
-                      {stories.map((story, i) => (
-                        <button
-                          title={t("story.navBtn", { title: story.title })}
-                          type="button"
-                          key={story.id}
-                          onClick={() => this.navigateStory(i)}
-                        >
-                          {" "}
-                          <Icon
-                            glyph={
-                              i === this.props.viewState.currentStoryId
-                                ? Icon.GLYPHS.circleFull
-                                : Icon.GLYPHS.circleEmpty
-                            }
-                          />
-                        </button>
-                      ))}
-                    </div>
-                  </If>
-                  <Medium>
-                    <div className={Styles.right}>
-                      <button
-                        disabled={this.props.terria.stories.length <= 1}
-                        className={Styles.nextBtn}
-                        title={t("story.nextBtn")}
-                        onClick={this.goToNextStory}
-                      >
-                        <Icon glyph={Icon.GLYPHS.right} />
-                      </button>
-                    </div>
-                  </Medium>
-                </div>
+                    ))}
+                  </div>
+                </If>
+                <Medium>
+                  <div className={Styles.right}>
+                    <button
+                      disabled={this.props.terria.stories.length <= 1}
+                      className={Styles.nextBtn}
+                      title={t("story.nextBtn")}
+                      onClick={this.goToNextStory}
+                    >
+                      <Icon glyph={Icon.GLYPHS.right} />
+                    </button>
+                  </div>
+                </Medium>
               </div>
             </div>
           </div>

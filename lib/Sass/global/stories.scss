@@ -9,7 +9,7 @@
     border: 0;
     height: 100%;
     left: 0;
-    position: absolute;
+    //position: absolute;
     top: 0;
     width: 100%;
   }
@@ -76,6 +76,18 @@
 
     &:focus {
       outline: none;
+    }
+  }
+
+  .buttonClose {
+    background: transparent;
+    border: none;
+    outline: none;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    svg {
+      width: 100%;
     }
   }
 }
