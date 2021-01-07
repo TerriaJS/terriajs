@@ -8,19 +8,15 @@ class SectorInfo extends React.Component {
     super(props);
   }
 
-  openStorySummary(viewState, terria, close) {
-    console.log("🎹", viewState);
-
-    // TODO: SELECT FEATURE HERE
-
+  openStorySummary(hotspot, viewState, terria, close) {
     // close possible opened stories
-    // viewState.storyShown = false;
-    // terria.currentViewer.notifyRepaintRequired();
-    //
+    viewState.storyShown = false;
+    terria.currentViewer.notifyRepaintRequired();
+
     // Close preview summary (important to force rerender)
-    // viewState.hotspotSummaryEnabled = false;
-    // viewState.selectedHotspot = terria.selectedFeature.properties;
-    // viewState.hotspotSummaryEnabled = true;
+    viewState.hotspotSummaryEnabled = false;
+    viewState.selectedHotspot = hotspot;
+    viewState.hotspotSummaryEnabled = true;
 
     // Close current panel
     close();
@@ -65,7 +61,12 @@ class SectorInfo extends React.Component {
                       </div>
                       <button
                         onClick={() =>
-                          this.openStorySummary(viewState, terria, close)
+                          this.openStorySummary(
+                            hotspot.properties,
+                            viewState,
+                            terria,
+                            close
+                          )
                         }
                         className="rc-button"
                       >
