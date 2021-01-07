@@ -16,33 +16,16 @@
   justify-content: space-between;
   align-items: flex-start;
 }
-.sectorTitle {
-  margin-top: 0;
-  font-family: $font-base;
-  color: $color-primary;
-  line-height: 1;
-}
+
 .sectorInfo {
   background-color: $grey-lightest;
   font-size: $font-size-small;
   border-radius: $radius-small;
-  background-image: url("../../../wwwroot/images/receipt/sectors/agriculture.png");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
   @media (max-width: $sm) {
     border-radius: 0;
-  }
-}
-.imageContainer {
-  background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(0, 0, 0, 0.6)),
-    url("../../../wwwroot/images/receipt/sectors/agriculture.png");
-  background-size: cover;
-  height: 200px;
-  margin: 5px 0;
-  position: relative;
-  @media (max-width: $sm) {
-    margin: 0;
   }
 }
 .lr p {
@@ -59,14 +42,17 @@
 
 .exitBtn {
   composes: btn from "../../Sass/common/_buttons.scss";
+  margin-right: 10px;
+  margin-top: 7px;
 
   &:not([disabled]):hover {
     svg {
       fill: $color-primary;
     }
   }
+
   svg {
     fill: #888888;
-    width: 15px;
+    width: 16px;
   }
 }

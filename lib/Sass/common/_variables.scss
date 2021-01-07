@@ -4,19 +4,21 @@ $sm: 768px;
 $md: 992px;
 $lg: 1300px;
 
-$font-pop: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
-  Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+$font-pop: "Montserrat";
 $font-base: $font-pop;
 $font-mono: monospace, sans-serif;
 $font-feature-info: $font-mono;
 $font: $font-base;
 
-$light: #dededf;
+// Receipt Stories UI
+$side-panel-background: #f5f5f5;
+
+$light: #f5f5f5;
 $lighter: #c8d7ea;
 $lightest: #f5f7fa;
 
-$tabs-container-bg: #d9e2ec;
-$selected-tab-background-color: #f5f7fa;
+$tabs-container-bg: white;
+$selected-tab-background-color: white;
 
 // FloatingButtons
 $floating-buttons-bg: rgba(255, 255, 255, 0.7);
@@ -28,7 +30,6 @@ $close-icon-info-panel-button: rgba(0, 0, 0, 0.4);
 
 // SidePanel
 $side-panel-background-color: $light;
-$side-panel-background-image: linear-gradient(315deg, #b8c6db 0%, #f5f7fa 74%);
 $side-panel-button-hover: #e8edf4;
 
 $color-primary: #0a478c;

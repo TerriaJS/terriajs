@@ -4,6 +4,7 @@
   display: grid;
   height: 100%;
   grid-template-rows: 1fr auto;
+
   order: 0;
   @media (min-width: $xs) {
     grid-template-rows: auto 1fr;

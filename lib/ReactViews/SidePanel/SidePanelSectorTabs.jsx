@@ -7,10 +7,17 @@ import Styles from "./SidePanelSectorTabs.scss";
 
 class SidePanelSectorTabs extends React.Component {
   state = {
-    sector: null
+    sector: null,
+    selectedHotspotsList: null
   };
   showSectorInfo = sector => {
     this.setState({ sector });
+    this.setState({
+      selectedHotspotsList:
+        this.props.terria.nowViewing.items.find(
+          item => item.name === sector.title
+        )?._dataSource.entities.values || []
+    });
     this.filterHotspots(sector.title);
   };
 
@@ -49,12 +56,18 @@ class SidePanelSectorTabs extends React.Component {
   };
 
   render() {
-    const { sector } = this.state;
-
+    const { terria, viewState } = this.props;
+    const { sector, selectedHotspotsList } = this.state;
     return (
       <div className={Styles.sidePanelSectorTabs}>
         <SectorTabs showSectorInfo={this.showSectorInfo} />
-        <SectorInfo sector={sector} close={this.closeSectorInfo} />
+        <SectorInfo
+          terria={terria}
+          viewState={viewState}
+          sector={sector}
+          hotspots={selectedHotspotsList}
+          close={this.closeSectorInfo}
+        />
       </div>
     );
   }

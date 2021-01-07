@@ -233,56 +233,50 @@ const StandardUserInterface = createReactClass({
                   </div>
                 </Small>
                 <Medium>
-                  <React.Fragment>
-                    <section className={Styles.map}>
-                      <ProgressBar terria={terria} />
-                      <MapColumn
-                        terria={terria}
-                        viewState={this.props.viewState}
-                        customFeedbacks={customElements.feedback}
-                      />
-                    </section>
-                    <div
-                      className={classNames(
-                        Styles.sidePanel,
-                        this.props.viewState.topElement === "SidePanel"
-                          ? "top-element"
-                          : "",
-                        {
-                          [Styles.sidePanelHide]: this.props.viewState
-                            .isMapFullScreen
-                        }
-                      )}
-                      tabIndex={0}
-                      onClick={() => {
-                        this.props.viewState.topElement = "SidePanel";
-                      }}
-                    >
-                      {showHotspotSummary && (
-                        <RCHotspotSummary
-                          terria={terria}
-                          viewState={viewState}
-                        />
-                      )}
+                  <section className={Styles.map}>
+                    <ProgressBar terria={terria} />
+                    <MapColumn
+                      terria={terria}
+                      viewState={this.props.viewState}
+                      customFeedbacks={customElements.feedback}
+                    />
+                  </section>
+                </Medium>
+                <Medium>
+                  <div
+                    className={classNames(
+                      Styles.sidePanel,
+                      this.props.viewState.topElement === "SidePanel"
+                        ? "top-element"
+                        : "",
+                      {
+                        [Styles.sidePanelHide]: this.props.viewState
+                          .isMapFullScreen
+                      }
+                    )}
+                    tabIndex={0}
+                    onClick={() => {
+                      this.props.viewState.topElement = "SidePanel";
+                    }}
+                  >
+                    {showHotspotSummary && (
+                      <RCHotspotSummary terria={terria} viewState={viewState} />
+                    )}
 
-                      {!(showStoryPanel || showHotspotSummary) && (
-                        <SidePanelContent
-                          terria={terria}
-                          viewState={viewState}
-                        />
-                      )}
-                      {showStoryPanel ? (
-                        <RCStoryPanel
-                          terria={terria}
-                          viewState={this.props.viewState}
-                        />
-                      ) : null}
-                      <SidePanel
+                    {!(showStoryPanel || showHotspotSummary) && (
+                      <SidePanelContent terria={terria} viewState={viewState} />
+                    )}
+                    {showStoryPanel ? (
+                      <RCStoryPanel
                         terria={terria}
                         viewState={this.props.viewState}
                       />
-                    </div>
-                  </React.Fragment>
+                    ) : null}
+                    <SidePanel
+                      terria={terria}
+                      viewState={this.props.viewState}
+                    />
+                  </div>
                 </Medium>
               </If>
 

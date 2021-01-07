@@ -84,8 +84,19 @@ const GLYPHS = {
   internationalCooperationAndDevelopment: require("../../wwwroot/images/icons/receipt/sector-icons/international_cooperation_and_development.svg"),
   coastalInfrastructure: require("../../wwwroot/images/icons/receipt/sector-icons/coastal_infrastructure.svg"),
   finance: require("../../wwwroot/images/icons/receipt/sector-icons/finance.svg"),
+  agricultureSimple: require("../../wwwroot/images/icons/receipt/sector-icons/agriculture_simple.svg"),
+  manufacturingSimple: require("../../wwwroot/images/icons/receipt/sector-icons/manufacturing_simple.svg"),
+  internationalCooperationAndDevelopmentSimple: require("../../wwwroot/images/icons/receipt/sector-icons/international_cooperation_and_development_simple.svg"),
+  coastalInfrastructureSimple: require("../../wwwroot/images/icons/receipt/sector-icons/coastal_infrastructure_simple.svg"),
+  financeSimple: require("../../wwwroot/images/icons/receipt/sector-icons/finance_simple.svg"),
+  agricultureHover: require("../../wwwroot/images/icons/receipt/sector-icons/agriculture_hover.svg"),
+  manufacturingHover: require("../../wwwroot/images/icons/receipt/sector-icons/manufacturing_hover.svg"),
+  internationalCooperationAndDevelopmentHover: require("../../wwwroot/images/icons/receipt/sector-icons/international_cooperation_and_development_hover.svg"),
+  coastalInfrastructureHover: require("../../wwwroot/images/icons/receipt/sector-icons/coastal_infrastructure_hover.svg"),
+  financeHover: require("../../wwwroot/images/icons/receipt/sector-icons/finance_hover.svg"),
 
-  back: require("../../wwwroot/images/icons/receipt/backTo.svg")
+  back: require("../../wwwroot/images/icons/receipt/backTo.svg"),
+  roundedPlay: require("../../wwwroot/images/icons/receipt/rounded-play.svg")
 };
 
 const Icon = createReactClass({

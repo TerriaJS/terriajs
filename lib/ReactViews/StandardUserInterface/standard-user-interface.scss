@@ -58,8 +58,6 @@
 
 .sidePanel {
   font-family: $font-pop;
-  background-color: $side-panel-background-color;
-  background-image: $side-panel-background-image;
   width: 100%;
   overflow-y: auto;
   max-width: $max-work-bench-width;
@@ -72,6 +70,12 @@
   z-index: 10;
   @media (min-width: $sm + 1) {
     width: $work-bench-width;
+  }
+  background: {
+    color: $side-panel-background-color;
+    image: url("../../../wwwroot/images/receipt/receipt-logo-bg.svg");
+    repeat: no-repeat;
+    position-y: bottom;
   }
   //@media screen and (min-width: $xs + 1) and (max-width: $xs) {
   //  width: $max-work-bench-width;
@@ -98,13 +102,11 @@
     flex-direction: column;
   }
   .storyPanelWrapper {
-    background: $side-panel-background-image;
     box-shadow: $box-shadow-bigger;
     z-index: 10;
   }
 }
 .tabsContainer {
-  background: $side-panel-background-image;
   box-shadow: $box-shadow-bigger;
   z-index: 10;
   @media (max-width: $xs) {
