@@ -8,6 +8,61 @@
   grid-template-rows: 1fr auto;
 }
 
+.RCHotspotSummary {
+  padding: 16px 16px 0px 16px;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100vh;
+  box-sizing: border-box;
+  @media (max-width: $xs) {
+    height: 60vh;
+    overflow-y: auto;
+  }
+
+  h3 {
+    margin-top: 0px;
+    font-size: 1rem;
+    line-height: 1.2rem;
+  }
+}
+
+.RCSummaryCard {
+  background: #ffffff;
+  box-shadow: 0px -8px 40px rgba(17, 8, 114, 0.0869565);
+  border-radius: 8px;
+  padding: 6px;
+  position: relative;
+}
+
+.titleGroup {
+  display: grid;
+  align-items: flex-start;
+  grid-template-columns: 40px 1fr 30px;
+}
+
+.icon {
+  width: 50px;
+  height: auto;
+  margin: -10px 0px 0px -8px;
+}
+
+.exitBtn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  margin-right: 10px;
+  margin-top: 7px;
+
+  &:not([disabled]):hover {
+    svg {
+      fill: $color-primary;
+    }
+  }
+
+  svg {
+    fill: #888888;
+    width: 16px;
+  }
+}
+
 .storyHeader {
   display: flex;
   max-width: 100%;
@@ -34,14 +89,20 @@
 }
 
 .story-container {
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+
   &.is-mounted {
     opacity: 1;
     @include transform(none);
   }
 
   @include transform(translateY(20%));
-  opacity: 0;
   @include transition(all 0.3s);
+  opacity: 0;
   pointer-events: auto;
   display: flex;
   opacity: 0;
@@ -50,16 +111,13 @@
   text-align: left;
   box-sizing: border-box;
   border-radius: 2px;
-  height: 100vh;
-
-  @media (max-width: $xs) {
-    height: 60vh;
-  }
 }
 
 .storyBottomNavigationItems {
   display: grid;
   grid-template-columns: 80px 1fr;
+  align-items: center;
+  padding: 4px 0;
 }
 
 .isPushedUp {
@@ -75,6 +133,11 @@
 }
 
 .body {
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
   color: $dark;
   font-size: 14px;
   line-height: 1.5;
