@@ -181,9 +181,9 @@ class SettingPanel extends React.Component {
       supportsDepthTestAgainstTerrain &&
       this.props.terria.depthTestAgainstTerrainEnabled;
 
-    const depthTestAgainstTerrainLabel = `Press to start ${
-      depthTestAgainstTerrainEnabled ? "showing" : "hiding"
-    } features that are underneath the terrain surface`;
+    const depthTestAgainstTerrainLabel = depthTestAgainstTerrainEnabled
+      ? t("settingPanel.terrain.showUndergroundFeatures")
+      : t("settingPanel.terrain.hideUndergroundFeatures");
 
     const viewerModes = [];
 
@@ -219,8 +219,8 @@ class SettingPanel extends React.Component {
       timelineStack.defaultTimeVarying.currentTimeAsJulianDate !== undefined;
 
     const alwaysShowTimelineLabel = alwaysShowTimeline
-      ? "Press to start only showing the timeline when there are time-varying datasets on the workbench"
-      : "Press to start always showing the timeline, even when no time-varying datasets are on the workbench";
+      ? t("settingPanel.timeline.alwaysShowLabel")
+      : t("settingPanel.timeline.hideLabel");
 
     return (
       <MenuPanel
@@ -254,7 +254,7 @@ class SettingPanel extends React.Component {
         <If condition={supportsSide}>
           <div className={classNames(Styles.viewer, DropdownStyles.section)}>
             <label className={DropdownStyles.heading}>
-              Show Terrain on the
+              {t("settingPanel.terrain.sideLabel")}
             </label>
             <ul className={Styles.viewerSelector}>
               <For each="side" of={sides}>
@@ -299,7 +299,7 @@ class SettingPanel extends React.Component {
                   Styles.nativeResolutionHeader
                 )}
               >
-                Terrain hides underground features
+                {t("settingPanel.terrain.hideUnderground")}
               </label>
             </section>
           </div>
@@ -369,7 +369,7 @@ class SettingPanel extends React.Component {
                 Styles.nativeResolutionHeader
               )}
             >
-              Always show
+              {t("settingPanel.timeline.alwaysShow")}
             </label>
           </section>
         </div>

@@ -99,6 +99,7 @@ interface ConfigParameters {
   interceptBrowserPrint?: boolean;
   tabbedCatalog?: boolean;
   useCesiumIonTerrain?: boolean;
+  cesiumTerrainUrl?: string;
   cesiumIonAccessToken?: string;
   hideTerriaLogo?: boolean;
   useCesiumIonBingImagery?: boolean;
@@ -230,6 +231,7 @@ export default class Terria {
     interceptBrowserPrint: true,
     tabbedCatalog: false,
     useCesiumIonTerrain: true,
+    cesiumTerrainUrl: undefined,
     cesiumIonAccessToken: undefined,
     hideTerriaLogo: false,
     useCesiumIonBingImagery: undefined,
