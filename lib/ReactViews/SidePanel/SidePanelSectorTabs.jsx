@@ -40,11 +40,8 @@ class SidePanelSectorTabs extends React.Component {
 
   filterHotspots = sector => {
     const { terria, viewState } = this.props;
-
     terria.nowViewing.items.map(item => {
-      item.name === sector && console.log("🎹", item.dataUrl);
       if (item.type === "geojson") {
-        // item.name === sector && console.log('🎹', item);
         item.isShown = item.name === sector;
       }
     });
