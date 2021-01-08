@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.66)
+* Fixed `pickedFeatures` not setting `_catalogItem` property correctly
 * [The next improvement]
 
 #### 8.0.0-alpha.65
