@@ -1,6 +1,4 @@
 import i18next from "i18next";
-import fromPairs from "lodash-es/fromPairs";
-import zip from "lodash-es/zip";
 import MiniSearch, { Options as MiniSearchOptions } from "minisearch";
 import Papa from "papaparse";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
@@ -14,15 +12,12 @@ import ItemSearchProvider, {
   ItemSearchParameter,
   ItemSearchResult
 } from "../ItemSearchProvider";
+import { Index, IndexRoot, parseIndexRoot, SearchFn } from "./Index";
 import {
   enumIndexSearchFunction,
-  Index,
-  IndexRoot,
   numericIndexSearchFunction,
-  parseIndexRoot,
-  SearchFn,
   textIndexSearchFunction
-} from "./Index";
+} from "./IndexSearch";
 
 const t = i18next.t.bind(i18next);
 
@@ -31,7 +26,7 @@ type Parameter = ItemSearchParameter & { index: Index };
 export default class IndexedItemSearchProvider extends ItemSearchProvider {
   indexRootUrl: string;
   indexRoot?: IndexRoot;
-  data?: { header: string[]; rows: string[][] };
+  data?: Record<string, string>[];
 
   constructor(options: any) {
     super(options);
@@ -45,7 +40,7 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
     const indexes = this.indexRoot?.indexes;
     if (!indexes) return new Map();
     return new Map(
-      [...indexes.entries()].map(([propertyId, index]) => [
+      Object.entries(indexes).map(([propertyId, index]) => [
         propertyId,
         { ...this.buildParameterForIndex(propertyId, index), index }
       ])
@@ -68,15 +63,15 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
         return {
           type: "numeric",
           id: propertyId,
-          name: index.name || propertyId,
+          name: propertyId,
           range: index.range
         };
       case "enum":
         return {
           type: "enum",
           id: propertyId,
-          name: index.name || propertyId,
-          values: [...index.values.entries()].map(([id, { count }]) => ({
+          name: propertyId,
+          values: Object.entries(index.values).map(([id, { count }]) => ({
             id,
             count
           }))
@@ -85,7 +80,7 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
         return {
           type: "text",
           id: propertyId,
-          name: index.name || propertyId
+          name: propertyId
         };
     }
   }
@@ -143,10 +138,11 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
       throw new Error(`indexRoot is not loaded`);
     }
     const dataUrl = this.toAbsoluteUrl(this.indexRoot.dataUrl);
-    const [header, ...rows] = await loadCsv(dataUrl, {
-      dynamicTyping: true
+    const rows = await loadCsv(dataUrl, {
+      dynamicTyping: true,
+      header: true
     });
-    this.data = { header, rows };
+    this.data = rows;
     return this.data;
   }
 
@@ -155,23 +151,27 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
       case "numeric":
         if (!index.idValuePairs) {
           const indexUrl = this.toAbsoluteUrl(index.url);
-          index.idValuePairs = loadCsv(indexUrl, { dynamicTyping: true });
+          index.idValuePairs = loadCsv(indexUrl, {
+            dynamicTyping: true,
+            header: true
+          });
         }
         return numericIndexSearchFunction(index);
       case "enum":
         assertArray(valueHint);
         const enumValueIds = valueHint;
         enumValueIds.forEach(enumValueId => {
-          const enumValueIndex = index.values.get(enumValueId);
+          const enumValueIndex = index.values[enumValueId];
           if (!enumValueIndex)
             throw new Error(`Invalid enum value id ${enumValueId}`);
           if (!enumValueIndex.ids) {
             const enumValueIndexUrl = this.toAbsoluteUrl(enumValueIndex.url);
             enumValueIndex.ids = loadCsv(enumValueIndexUrl, {
-              dynamicTyping: true
+              dynamicTyping: true,
+              header: true
             }).then(rows =>
               // unwrap the row and get the single id column
-              rows.map((row: number[]) => row[0])
+              rows.map(({ dataRowIndex }) => dataRowIndex)
             );
           }
         });
@@ -194,12 +194,12 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
   }
 
   lookupDataForId(
-    { header, rows }: { header: string[]; rows: string[][] },
+    rows: Record<string, string>[],
     id: number
   ): Record<string, string> {
     const row = rows[id];
     if (!row) throw new Error(`No data record found for item id: ${id}`);
-    return fromPairs(zip(header, row));
+    return row;
   }
 
   buildResult(
@@ -213,9 +213,12 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
         `ID property not defined for data record at index ${dataIdx}`
       );
     }
-    let { latitude, longitude, radius, ...properties } = record;
+    let { latitude, longitude, height, radius, ...properties } = record;
     const _latitude = parseFloat(latitude);
     const _longitude = parseFloat(longitude);
+    // TODO: when height of the model is known, zoom to (lat,lon,height*2)
+    // instead of the bounding sphere.
+    const _height = parseFloat(height);
     const _radius = parseFloat(radius);
     if (isNaN(_latitude) || isNaN(_longitude) || isNaN(_radius)) {
       throw new Error(

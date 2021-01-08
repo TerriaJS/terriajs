@@ -142,7 +142,6 @@
     "svg-sprite-loader": "4.1.3",
     "terriajs-cesium": "1.73.1",
     "terriajs-html2canvas": "1.0.0-alpha.12-terriajs-1",
-    "terriajs-indexer": "./packages/terriajs-indexer",
     "thredds-catalog-crawler": "0.0.5",
     "ts-loader": "^5.3.3",
     "ts-node": "^5.0.1",

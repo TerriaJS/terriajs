@@ -1,6 +1,4 @@
-import flatten from "lodash-es/flatten";
 import MiniSearch from "minisearch";
-import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
 import JsonValue, {
   assertNumber,
   assertObject,
@@ -10,7 +8,7 @@ import JsonValue, {
 export type IndexRoot = {
   dataUrl: string;
   idProperty: string;
-  indexes: Map<string, Index>;
+  indexes: Record<string, Index>;
 };
 
 export type Index = NumericIndex | EnumIndex | TextIndex;
@@ -21,29 +19,26 @@ export type ID = number;
 
 export type SearchFn = (value: any) => Set<ID>;
 
-type NumericIndex = {
+export type NumericIndex = {
   type: "numeric";
-  name?: string;
   url: string;
   range: Range;
-  idValuePairs?: Promise<[ID, number][]>;
+  idValuePairs?: Promise<{ dataRowIndex: number; value: number }[]>;
 };
 
-type EnumIndex = {
+export type EnumIndex = {
   type: "enum";
-  name?: string;
-  values: Map<string, EnumValue>;
+  values: Record<string, EnumValue>;
 };
 
-type EnumValue = {
+export type EnumValue = {
   count: number;
   url: string;
   ids?: Promise<ID[]>;
 };
 
-type TextIndex = {
+export type TextIndex = {
   type: "text";
-  name?: string;
   url: string;
   miniSearchIndex?: Promise<MiniSearch>;
 };
@@ -63,17 +58,26 @@ export function parseIndexRoot(json: JsonValue): IndexRoot {
   assertString(json.dataUrl, "dataUrl");
   assertString(json.idProperty, "idProperty");
   assertObject(json.indexes, "indexes");
-  const indexes = new Map(
-    Object.entries(json.indexes).map(([property, index]) => [
-      property,
-      parseIndex(index)
-    ])
+  const indexes: Record<string, Index> = Object.entries(json.indexes).reduce(
+    (indexes: Record<string, Index>, [property, index]) => {
+      indexes[property] = parseIndex(index);
+      return indexes;
+    },
+    {}
   );
   return {
     dataUrl: json.dataUrl,
     idProperty: json.idProperty,
     indexes
   };
+}
+
+export function parseIndexType(json: JsonValue): IndexType {
+  assertString(json, "IndexType");
+  if (indexTypes.includes(json)) return json as IndexType;
+  throw new Error(
+    `Expected index type to be ${indexTypes.join("|")}, got ${json}`
+  );
 }
 
 function parseIndex(json: JsonValue): Index {
@@ -86,20 +90,16 @@ function parseIndex(json: JsonValue): Index {
   );
 }
 
-function parseBaseIndex<T extends Index>(
-  json: JsonValue
-): { type: T["type"]; name?: string } {
+function parseBaseIndex<T extends Index>(json: JsonValue): { type: T["type"] } {
   assertObject(json, "Index");
   if (!indexTypes.includes(json.type as any)) {
     throw new Error(
       `Expected type to be ${indexTypes.join("|")}, got ${json.type}`
     );
   }
-  if (json.name !== undefined) assertString(json.name, "name");
   const type = json.type as IndexType;
   return {
-    type,
-    name: json.name
+    type
   };
 }
 
@@ -121,11 +121,12 @@ function parseEnumIndex(json: JsonValue): EnumIndex {
   assertObject(json, "EnumIndex");
   const base = parseBaseIndex<EnumIndex>(json);
   assertObject(json.values);
-  const values = new Map(
-    Object.entries(json.values).map(([id, value]) => [
-      id,
-      parseEnumValue(value)
-    ])
+  const values: Record<string, EnumValue> = Object.entries(json.values).reduce(
+    (values: Record<string, EnumValue>, [id, value]) => {
+      values[id] = parseEnumValue(value);
+      return values;
+    },
+    {}
   );
   return {
     ...base,
@@ -151,63 +152,4 @@ function parseTextIndex(json: JsonValue): TextIndex {
     ...base,
     url: json.url
   };
-}
-
-export function numericIndexSearchFunction(
-  index: NumericIndex
-): Promise<SearchFn> {
-  if (!index.idValuePairs) throw new Error(`Index not loaded`);
-  return index.idValuePairs.then(
-    idValuePairs => (value: { start?: number; end?: number }) => {
-      const startValue =
-        value.start === undefined ? index.range.min : value.start;
-      const endValue = value.end === undefined ? index.range.max : value.end;
-      const i = binarySearch(
-        idValuePairs,
-        [null, startValue],
-        (a, b) => a[1] - b[1]
-      );
-      const j = binarySearch(
-        idValuePairs,
-        [null, endValue],
-        (a, b) => a[1] - b[1]
-      );
-      const startIndex = i < 0 ? ~i : i;
-      const endIndex = j < 0 ? ~j : j;
-      const matchingIds = idValuePairs
-        .slice(startIndex, endIndex + 1)
-        .map(([id, _]) => id);
-      return new Set(matchingIds);
-    }
-  );
-}
-
-export async function enumIndexSearchFunction(
-  index: EnumIndex,
-  enumValuesIds: string[]
-): Promise<SearchFn> {
-  const idSets = await Promise.all(
-    enumValuesIds.map(async enumValue => {
-      const enumIndex = index.values.get(enumValue);
-      if (!enumIndex) throw new Error(`Not an enum value: ${enumValue}`);
-      if (!enumIndex.ids)
-        throw new Error(`Index for enum value ${enumValue} is not loaded`);
-      const ids = await enumIndex.ids;
-      return ids;
-    })
-  );
-  // Union of all given value ids
-  const ids = new Set(flatten(idSets));
-  return () => ids;
-}
-
-export async function textIndexSearchFunction(
-  index: TextIndex
-): Promise<SearchFn> {
-  if (!index.miniSearchIndex) throw new Error(`Index not loaded`);
-  return index.miniSearchIndex.then(miniSearchIndex => (value: string) => {
-    const results = miniSearchIndex.search(value);
-    const ids = new Set(results.map(r => r.id));
-    return ids;
-  });
 }
