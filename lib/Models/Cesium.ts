@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { autorun, computed, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
@@ -16,12 +17,14 @@ import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import HeadingPitchRange from "terriajs-cesium/Source/Core/HeadingPitchRange";
 import Ion from "terriajs-cesium/Source/Core/Ion";
+import KeyboardEventModifier from "terriajs-cesium/Source/Core/KeyboardEventModifier";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import PerspectiveFrustum from "terriajs-cesium/Source/Core/PerspectiveFrustum";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import sampleTerrain from "terriajs-cesium/Source/Core/sampleTerrain";
 import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventType";
+import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
 import BoundingSphereState from "terriajs-cesium/Source/DataSources/BoundingSphereState";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
@@ -37,14 +40,19 @@ import SceneTransforms from "terriajs-cesium/Source/Scene/SceneTransforms";
 import SingleTileImageryProvider from "terriajs-cesium/Source/Scene/SingleTileImageryProvider";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget";
+import getElement from "terriajs-cesium/Source/Widgets/getElement";
+import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
+import LatLonHeight from "../Core/LatLonHeight";
 import pollToPromise from "../Core/pollToPromise";
 import CesiumRenderLoopPauser from "../Map/CesiumRenderLoopPauser";
 import CesiumSelectionIndicator from "../Map/CesiumSelectionIndicator";
+import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import PickedFeatures, {
-  ProviderCoordsMap,
-  featureBelongsToCatalogItem
+  featureBelongsToCatalogItem,
+  ProviderCoordsMap
 } from "../Map/PickedFeatures";
+import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
 import SplitterTraits from "../Traits/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
@@ -59,16 +67,7 @@ import Mappable, {
   MapItem
 } from "./Mappable";
 import Terria from "./Terria";
-import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
-import getElement from "terriajs-cesium/Source/Widgets/getElement";
-import LatLonHeight from "../Core/LatLonHeight";
-import filterOutUndefined from "../Core/filterOutUndefined";
-import KeyboardEventModifier from "terriajs-cesium/Source/Core/KeyboardEventModifier";
 import UserDrawing from "./UserDrawing";
-import i18next from "i18next";
-import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
-import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
-import { Primitive } from "terriajs-cesium";
 
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 

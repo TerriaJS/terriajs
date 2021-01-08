@@ -1,5 +1,6 @@
+import i18next from "i18next";
 import L, { GridLayer } from "leaflet";
-import { autorun, action, runInAction } from "mobx";
+import { action, autorun, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
@@ -8,47 +9,46 @@ import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import cesiumRequestAnimationFrame from "terriajs-cesium/Source/Core/requestAnimationFrame";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import html2canvas from "terriajs-html2canvas";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
+import LatLonHeight from "../Core/LatLonHeight";
 import runLater from "../Core/runLater";
 import CesiumTileLayer from "../Map/CesiumTileLayer";
 import LeafletDataSourceDisplay from "../Map/LeafletDataSourceDisplay";
 import LeafletScene from "../Map/LeafletScene";
 import LeafletSelectionIndicator from "../Map/LeafletSelectionIndicator";
 import LeafletVisualizer from "../Map/LeafletVisualizer";
+import MapboxVectorCanvasTileLayer from "../Map/MapboxVectorCanvasTileLayer";
+import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import PickedFeatures, {
+  featureBelongsToCatalogItem,
   ProviderCoords,
-  ProviderCoordsMap,
-  featureBelongsToCatalogItem
+  ProviderCoordsMap
 } from "../Map/PickedFeatures";
 import rectangleToLatLngBounds from "../Map/rectangleToLatLngBounds";
+import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
+import RasterLayerTraits from "../Traits/RasterLayerTraits";
 import SplitterTraits from "../Traits/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import hasTraits from "./hasTraits";
+import MapInteractionMode from "./MapInteractionMode";
 import Mappable, { ImageryParts, MapItem } from "./Mappable";
 import Terria from "./Terria";
-import MapboxVectorCanvasTileLayer from "../Map/MapboxVectorCanvasTileLayer";
-import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
-import LatLonHeight from "../Core/LatLonHeight";
-import MapInteractionMode from "./MapInteractionMode";
-import i18next from "i18next";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-import RasterLayerTraits from "../Traits/RasterLayerTraits";
-import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
