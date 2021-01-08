@@ -1067,6 +1067,7 @@ export default class Terria {
         entities.forEach(entity => {
           const hash = hashEntity(entity, this.timelineClock);
           const feature = Feature.fromEntityCollectionOrEntity(entity);
+          feature._catalogItem = item;
           featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
         });
       });

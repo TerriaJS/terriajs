@@ -46,7 +46,7 @@ export default class PickedFeatures {
    * Gets or sets the array of picked features.  The array is observable and may be updated up until the point that
    * {@see PickedFeatures#allFeaturesAvailablePromise} resolves.
    */
-  @observable features: Entity[] = [];
+  @observable features: Feature[] = [];
 
   /**
    * Gets or sets a message describing an error that occurred while picking features.

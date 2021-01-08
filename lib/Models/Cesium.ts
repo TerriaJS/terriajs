@@ -41,7 +41,10 @@ import isDefined from "../Core/isDefined";
 import pollToPromise from "../Core/pollToPromise";
 import CesiumRenderLoopPauser from "../Map/CesiumRenderLoopPauser";
 import CesiumSelectionIndicator from "../Map/CesiumSelectionIndicator";
-import PickedFeatures, { ProviderCoordsMap } from "../Map/PickedFeatures";
+import PickedFeatures, {
+  ProviderCoordsMap,
+  featureBelongsToCatalogItem
+} from "../Map/PickedFeatures";
 import SplitterTraits from "../Traits/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
@@ -65,6 +68,7 @@ import UserDrawing from "./UserDrawing";
 import i18next from "i18next";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
+import { Primitive } from "terriajs-cesium";
 
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
@@ -1132,7 +1136,7 @@ export default class Cesium extends GlobeOrMap {
    */
   pickVectorFeatures(screenPosition: Cartesian2) {
     // Pick vector features
-    const vectorFeatures = [];
+    const vectorFeatures: Feature[] = [];
     const pickedList = this.scene.drillPick(screenPosition);
     for (let i = 0; i < pickedList.length; ++i) {
       const picked = pickedList[i];
@@ -1151,22 +1155,33 @@ export default class Cesium extends GlobeOrMap {
         id = picked.primitive.id;
       }
 
-      if (id instanceof Entity && vectorFeatures.indexOf(id) === -1) {
+      if (
+        id instanceof Entity &&
+        !isDefined(vectorFeatures.find(f => f.id === (id as Entity).id))
+      ) {
         const feature = Feature.fromEntityCollectionOrEntity(id);
         if (picked.primitive) {
           feature.cesiumPrimitive = picked.primitive;
         }
+        feature._catalogItem =
+          feature._catalogItem ??
+          this.terria.workbench.items.find(item =>
+            featureBelongsToCatalogItem(feature, item)
+          );
         vectorFeatures.push(feature);
       } else if (
         picked.primitive &&
         picked.primitive._catalogItem &&
         picked.primitive._catalogItem.getFeaturesFromPickResult
       ) {
-        const result = picked.primitive._catalogItem.getFeaturesFromPickResult(
+        const result: Feature = picked.primitive._catalogItem.getFeaturesFromPickResult(
           screenPosition,
           picked
         );
+
         if (result) {
+          result._catalogItem =
+            result._catalogItem ?? picked.primitive._catalogItem;
           if (Array.isArray(result)) {
             vectorFeatures.push(...result);
           } else {
@@ -1257,7 +1272,7 @@ export default class Cesium extends GlobeOrMap {
   private _buildPickedFeatures(
     providerCoords: ProviderCoordsMap,
     pickPosition: Cartesian3 | undefined,
-    existingFeatures: Entity[],
+    existingFeatures: Feature[],
     featurePromises: Promise<ImageryLayerFeatureInfo[]>[],
     imageryLayers: ImageryLayer[] | undefined,
     defaultHeight: number,
@@ -1324,6 +1339,15 @@ export default class Cesium extends GlobeOrMap {
                   );
                 });
               }
+
+              // Set _catalogItem for each feature if necessary
+              features.forEach(feature => {
+                feature._catalogItem =
+                  feature._catalogItem ??
+                  this.terria.workbench.items.find(item =>
+                    featureBelongsToCatalogItem(feature, item)
+                  );
+              });
 
               return resultFeaturesSoFar.concat(features);
             },

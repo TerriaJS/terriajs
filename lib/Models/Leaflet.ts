@@ -29,7 +29,8 @@ import LeafletSelectionIndicator from "../Map/LeafletSelectionIndicator";
 import LeafletVisualizer from "../Map/LeafletVisualizer";
 import PickedFeatures, {
   ProviderCoords,
-  ProviderCoordsMap
+  ProviderCoordsMap,
+  featureBelongsToCatalogItem
 } from "../Map/PickedFeatures";
 import rectangleToLatLngBounds from "../Map/rectangleToLatLngBounds";
 import SplitterTraits from "../Traits/SplitterTraits";
@@ -596,6 +597,12 @@ export default class Leaflet extends GlobeOrMap {
     }
 
     const feature = Feature.fromEntityCollectionOrEntity(entity);
+    // Set _catalogItem for feature if necessary
+    feature._catalogItem =
+      feature._catalogItem ??
+      this.terria.workbench.items.find(item =>
+        featureBelongsToCatalogItem(feature, item)
+      );
     if (isDefined(this._pickedFeatures)) {
       this._pickedFeatures.features.push(feature);
 
@@ -608,7 +615,7 @@ export default class Leaflet extends GlobeOrMap {
   private _pickFeatures(
     latlng: L.LatLng,
     tileCoordinates?: any,
-    existingFeatures?: Entity[],
+    existingFeatures?: Feature[],
     ignoreSplitter: boolean = false
   ) {
     if (isDefined(this._pickedFeatures)) {
@@ -769,6 +776,15 @@ export default class Leaflet extends GlobeOrMap {
             })
           );
         }, pickedFeatures.features);
+
+        // Set _catalogItem for each feature if necessary
+        features.forEach(feature => {
+          feature._catalogItem =
+            feature._catalogItem ??
+            this.terria.workbench.items.find(item =>
+              featureBelongsToCatalogItem(feature, item)
+            );
+        });
         runInAction(() => {
           pickedFeatures.features = features;
         });
