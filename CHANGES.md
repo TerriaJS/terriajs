@@ -4,6 +4,8 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.66)
+* Restore `customTerrainUrl` config parameter.
+* I18n-ify strings in settings panel.
 * [The next improvement]
 
 #### 8.0.0-alpha.65
