@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.66)
+* Fix failing tests due to `react/jsx-no-target-blank` error.
 * [The next improvement]
 
 #### 8.0.0-alpha.65
