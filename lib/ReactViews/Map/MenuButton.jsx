@@ -10,14 +10,23 @@ import Styles from "./menu-button.scss";
  * @constructor
  */
 function MenuButton(props) {
+  const hrefAtt =
+    props.href !== "#"
+      ? {
+          target: "_blank",
+          rel: "noreferrer"
+        }
+      : {
+          target: undefined
+        };
   return (
     <a
       className={classNames(Styles.btnAboutLink, {
         [Styles.aboutTweak]: props.href === "about.html"
       })}
       href={props.href}
-      target={props.href !== "#" ? "_blank" : undefined}
       title={props.caption}
+      {...hrefAtt}
     >
       {props.href !== "#" && <Icon glyph={Icon.GLYPHS.externalLink} />}
       <span>{props.caption}</span>
