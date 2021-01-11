@@ -1,9 +1,14 @@
-import MiniSearch from "minisearch";
 import JsonValue, {
   assertNumber,
   assertObject,
   assertString
 } from "../../Core/Json";
+import EnumIndex, { EnumValue } from "./EnumIndex";
+import NumericIndex from "./NumericIndex";
+import TextIndex from "./TextIndex";
+
+export { default as EnumIndex } from "./EnumIndex";
+export { default as NumericIndex } from "./NumericIndex";
 
 export type IndexRoot = {
   dataUrl: string;
@@ -18,32 +23,6 @@ export type IndexType = Index["type"];
 export type ID = number;
 
 export type SearchFn = (value: any) => Set<ID>;
-
-export type NumericIndex = {
-  type: "numeric";
-  url: string;
-  range: Range;
-  idValuePairs?: Promise<{ dataRowIndex: number; value: number }[]>;
-};
-
-export type EnumIndex = {
-  type: "enum";
-  values: Record<string, EnumValue>;
-};
-
-export type EnumValue = {
-  count: number;
-  url: string;
-  ids?: Promise<ID[]>;
-};
-
-export type TextIndex = {
-  type: "text";
-  url: string;
-  miniSearchIndex?: Promise<MiniSearch>;
-};
-
-export type Range = { min: number; max: number };
 
 const indexParsers: Record<IndexType, (json: any) => Index> = {
   numeric: parseNumericIndex,
@@ -105,21 +84,18 @@ function parseBaseIndex<T extends Index>(json: JsonValue): { type: T["type"] } {
 
 function parseNumericIndex(json: JsonValue): NumericIndex {
   assertObject(json, "NumericIndex");
-  const base = parseBaseIndex<NumericIndex>(json);
   assertObject(json.range, "range");
   assertNumber(json.range.max, "range.max");
   assertNumber(json.range.min, "range.min");
   assertString(json.url, "url");
-  return {
-    ...base,
-    range: { min: json.range.min, max: json.range.max },
-    url: json.url
-  };
+  return new NumericIndex(json.url, {
+    min: json.range.min,
+    max: json.range.max
+  });
 }
 
 function parseEnumIndex(json: JsonValue): EnumIndex {
   assertObject(json, "EnumIndex");
-  const base = parseBaseIndex<EnumIndex>(json);
   assertObject(json.values);
   const values: Record<string, EnumValue> = Object.entries(json.values).reduce(
     (values: Record<string, EnumValue>, [id, value]) => {
@@ -128,10 +104,7 @@ function parseEnumIndex(json: JsonValue): EnumIndex {
     },
     {}
   );
-  return {
-    ...base,
-    values
-  };
+  return new EnumIndex(values);
 }
 
 function parseEnumValue(json: JsonValue): EnumValue {
@@ -146,10 +119,6 @@ function parseEnumValue(json: JsonValue): EnumValue {
 
 function parseTextIndex(json: JsonValue): TextIndex {
   assertObject(json, "EnumIndex");
-  const base = parseBaseIndex<TextIndex>(json);
   assertString(json.url);
-  return {
-    ...base,
-    url: json.url
-  };
+  return new TextIndex(json.url);
 }

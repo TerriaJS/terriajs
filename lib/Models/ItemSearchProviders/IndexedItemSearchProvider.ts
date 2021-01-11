@@ -1,10 +1,8 @@
 import i18next from "i18next";
-import MiniSearch, { Options as MiniSearchOptions } from "minisearch";
 import Papa from "papaparse";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import URI from "urijs";
-import { assertArray } from "../../Core/Json";
 import loadJson5 from "../../Core/loadJson5";
 import loadText from "../../Core/loadText";
 import makeRealPromise from "../../Core/makeRealPromise";
@@ -12,12 +10,7 @@ import ItemSearchProvider, {
   ItemSearchParameter,
   ItemSearchResult
 } from "../ItemSearchProvider";
-import { Index, IndexRoot, parseIndexRoot, SearchFn } from "./Index";
-import {
-  enumIndexSearchFunction,
-  numericIndexSearchFunction,
-  textIndexSearchFunction
-} from "./IndexSearch";
+import { Index, IndexRoot, parseIndexRoot } from "./Index";
 
 const t = i18next.t.bind(i18next);
 
@@ -127,9 +120,8 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
   }
 
   searchParameter(parameter: Parameter, value: any): Promise<Set<number>> {
-    return this.loadIndex(parameter.index, value).then(searchFn =>
-      searchFn(value)
-    );
+    const index = parameter.index;
+    return index.load(this.indexRootUrl, value).then(() => index.search(value));
   }
 
   async getOrLoadData() {
@@ -144,53 +136,6 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
     });
     this.data = rows;
     return this.data;
-  }
-
-  async loadIndex(index: Index, valueHint: any): Promise<SearchFn> {
-    switch (index.type) {
-      case "numeric":
-        if (!index.idValuePairs) {
-          const indexUrl = this.toAbsoluteUrl(index.url);
-          index.idValuePairs = loadCsv(indexUrl, {
-            dynamicTyping: true,
-            header: true
-          });
-        }
-        return numericIndexSearchFunction(index);
-      case "enum":
-        assertArray(valueHint);
-        const enumValueIds = valueHint;
-        enumValueIds.forEach(enumValueId => {
-          const enumValueIndex = index.values[enumValueId];
-          if (!enumValueIndex)
-            throw new Error(`Invalid enum value id ${enumValueId}`);
-          if (!enumValueIndex.ids) {
-            const enumValueIndexUrl = this.toAbsoluteUrl(enumValueIndex.url);
-            enumValueIndex.ids = loadCsv(enumValueIndexUrl, {
-              dynamicTyping: true,
-              header: true
-            }).then(rows =>
-              // unwrap the row and get the single id column
-              rows.map(({ dataRowIndex }) => dataRowIndex)
-            );
-          }
-        });
-        return enumIndexSearchFunction(index, enumValueIds);
-      case "text":
-        if (!index.miniSearchIndex) {
-          // Consider using webworker for JSON parsing if it becomes a bottleneck.
-          const indexUrl = this.toAbsoluteUrl(index.url);
-          index.miniSearchIndex = loadText(indexUrl)
-            .then((text: string) => JSON.parse(text))
-            .then((json: any) =>
-              MiniSearch.loadJS(
-                json.index as any,
-                (json.options as any) as MiniSearchOptions
-              )
-            );
-        }
-        return textIndexSearchFunction(index);
-    }
   }
 
   lookupDataForId(
