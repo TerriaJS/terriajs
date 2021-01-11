@@ -10,10 +10,11 @@ import TextIndex from "./TextIndex";
 export { default as EnumIndex } from "./EnumIndex";
 export { default as NumericIndex } from "./NumericIndex";
 
+// IndexRoot holds the indexes for each property and top level options
 export type IndexRoot = {
-  dataUrl: string;
-  idProperty: string;
-  indexes: Record<string, Index>;
+  dataUrl: string; // Url of the CSV data file.
+  idProperty: string; // Name of the property to be used as ID
+  indexes: Record<string, Index>; // A map from property ID to its searchable Index.
 };
 
 export type Index = NumericIndex | EnumIndex | TextIndex;
@@ -21,8 +22,6 @@ export type Index = NumericIndex | EnumIndex | TextIndex;
 export type IndexType = Index["type"];
 
 export type ID = number;
-
-export type SearchFn = (value: any) => Set<ID>;
 
 const indexParsers: Record<IndexType, (json: any) => Index> = {
   numeric: parseNumericIndex,
@@ -67,19 +66,6 @@ function parseIndex(json: JsonValue): Index {
   throw new Error(
     `Expected index type to be ${indexTypes.join("|")}, got ${json.type}`
   );
-}
-
-function parseBaseIndex<T extends Index>(json: JsonValue): { type: T["type"] } {
-  assertObject(json, "Index");
-  if (!indexTypes.includes(json.type as any)) {
-    throw new Error(
-      `Expected type to be ${indexTypes.join("|")}, got ${json.type}`
-    );
-  }
-  const type = json.type as IndexType;
-  return {
-    type
-  };
 }
 
 function parseNumericIndex(json: JsonValue): NumericIndex {
