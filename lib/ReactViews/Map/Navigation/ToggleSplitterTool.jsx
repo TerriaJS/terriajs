@@ -8,6 +8,7 @@ import Styles from "./toggle_splitter_tool.scss";
 import { withTranslation } from "react-i18next";
 import { runInAction } from "mobx";
 import MapIconButton from "../../MapIconButton/MapIconButton";
+import visibilitySwitch from "../../StandardUserInterface/customizable/VisibilitySwitch.jsx";
 
 import { useRefForTerria } from "../../Hooks/useRefForTerria";
 
@@ -63,4 +64,4 @@ const ToggleSplitterToolWrapper = observer(function(props) {
   }
 });
 
-export default withTranslation()(ToggleSplitterToolWrapper);
+export default withTranslation()(visibilitySwitch(ToggleSplitterToolWrapper));

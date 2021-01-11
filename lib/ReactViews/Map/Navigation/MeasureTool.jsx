@@ -18,6 +18,7 @@ import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import VertexFormat from "terriajs-cesium/Source/Core/VertexFormat";
 
 import MapIconButton from "../../MapIconButton/MapIconButton";
+import visibilitySwitch from "../../StandardUserInterface/customizable/VisibilitySwitch.jsx";
 
 @observer
 class MeasureTool extends React.Component {
@@ -251,4 +252,4 @@ class MeasureTool extends React.Component {
     );
   }
 }
-export default withTranslation()(MeasureTool);
+export default withTranslation()(visibilitySwitch(MeasureTool));

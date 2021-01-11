@@ -30,7 +30,7 @@ import { runInAction, computed, when } from "mobx";
 import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
 import { withTerriaRef } from "../../HOCs/withTerriaRef";
-
+import visibilitySwitch from "../../StandardUserInterface/customizable/VisibilitySwitch.jsx";
 import Box from "../../../Styled/Box";
 
 import FadeIn from "../../Transitions/FadeIn/FadeIn";
@@ -712,5 +712,5 @@ function viewerChange(viewModel) {
 
 export const COMPASS_NAME = "MapNavigationCompassOuterRing";
 export default withTranslation()(
-  withTheme(withTerriaRef(Compass, COMPASS_NAME))
+  visibilitySwitch(withTheme(withTerriaRef(Compass, COMPASS_NAME)))
 );

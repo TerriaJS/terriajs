@@ -337,6 +337,9 @@ const StandardUserInterface = observer(
                         minified={false}
                         btnText={t("sui.showWorkbench")}
                         animationDuration={animationDuration}
+                        elementConfig={
+                          this.props.terria.elements["show-workbench"]
+                        }
                       />
                     </div>
                   </Medium>

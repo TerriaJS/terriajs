@@ -16,6 +16,8 @@ import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import Text from "../../Styled/Text";
 
+import visibilitySwitch from "../StandardUserInterface/customizable/VisibilitySwitch.jsx";
+
 import { useRefForTerria } from "../Hooks/useRefForTerria";
 
 const StyledMenuBar = styled.div`
@@ -203,4 +205,4 @@ MenuBar.propTypes = {
   t: PropTypes.func.isRequired
 };
 
-export default withTranslation()(MenuBar);
+export default withTranslation()(visibilitySwitch(MenuBar));

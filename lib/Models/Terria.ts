@@ -79,6 +79,7 @@ import updateModelFromJson from "./updateModelFromJson";
 import upsertModelFromJson from "./upsertModelFromJson";
 import ViewerMode from "./ViewerMode";
 import Workbench from "./Workbench";
+import ElementsConfig from "./ElementsConfig";
 // import overrides from "../Overrides/defaults.jsx";
 
 interface ConfigParameters {
@@ -174,6 +175,9 @@ export default class Terria {
   readonly catalog = new Catalog(this);
   readonly timelineClock = new Clock({ shouldAnimate: false });
   // readonly overrides: any = overrides; // TODO: add options.functionOverrides like in master
+
+  @observable
+  readonly elements = new ElementsConfig();
 
   @observable
   readonly mainViewer = new TerriaViewer(
@@ -820,6 +824,10 @@ export default class Terria {
 
     if (initData.catalog !== undefined) {
       this.catalog.group.addMembersFromJson(stratumId, initData.catalog);
+    }
+
+    if (isJsonObject(initData.elements)) {
+      Object.assign(this.elements, initData.elements);
     }
 
     if (Array.isArray(initData.stories)) {
