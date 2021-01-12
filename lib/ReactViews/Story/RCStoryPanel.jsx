@@ -12,6 +12,7 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import Styles from "./story-panel.scss";
 import { withTranslation } from "react-i18next";
 import { exitStory as rcExitStory } from "../../Models/Receipt";
+import Tooltip from "../RCTooltip/RCTooltip";
 
 export function activateStory(story, terria, scenario) {
   if (story.shareData) {
@@ -203,8 +204,8 @@ const RCStoryPanel = createReactClass({
               )}
 
               <h3>
-                {story.title && story.title.length > 0
-                  ? story.title
+                {story.storyTitle && story.storyTitle.length > 0
+                  ? story.storyTitle
                   : t("story.untitled")}
               </h3>
 
@@ -262,23 +263,27 @@ const RCStoryPanel = createReactClass({
                 </Medium>
                 <If condition={this.props.terria.stories.length >= 2}>
                   <div className={Styles.navBtn}>
-                    {" "}
                     {stories.map((story, i) => (
-                      <button
-                        title={t("story.navBtn", { title: story.title })}
-                        type="button"
+                      <Tooltip
+                        content={story.pageTitle}
+                        direction="top"
+                        delay="100"
                         key={story.id}
-                        onClick={() => this.navigateStory(i)}
                       >
-                        {" "}
-                        <Icon
-                          glyph={
-                            i === this.props.viewState.currentStoryId
-                              ? Icon.GLYPHS.circleFull
-                              : Icon.GLYPHS.circleEmpty
-                          }
-                        />
-                      </button>
+                        <button
+                          title={t("story.navBtn", { title: story.pageTitle })}
+                          type="button"
+                          onClick={() => this.navigateStory(i)}
+                        >
+                          <Icon
+                            glyph={
+                              i === this.props.viewState.currentStoryId
+                                ? Icon.GLYPHS.circleFull
+                                : Icon.GLYPHS.circleEmpty
+                            }
+                          />
+                        </button>
+                      </Tooltip>
                     ))}
                   </div>
                 </If>
