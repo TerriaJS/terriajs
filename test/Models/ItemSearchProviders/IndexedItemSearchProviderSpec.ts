@@ -1,3 +1,4 @@
+import "jasmine-ajax";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import JsonValue from "../../../lib/Core/Json";
@@ -68,7 +69,7 @@ describe("IndexedItemSearchProvider", function() {
       stubRequest("indexRoot.json", validIndexRoot);
       let error;
       try {
-        await provider.load();
+        await provider.initialize();
       } catch (e) {
         error = e;
       }
@@ -82,7 +83,7 @@ describe("IndexedItemSearchProvider", function() {
       stubRequest("indexRoot.json", {});
       let error;
       try {
-        await provider.load();
+        await provider.initialize();
       } catch (e) {
         error = e;
       }
@@ -98,13 +99,13 @@ describe("IndexedItemSearchProvider", function() {
         indexRootUrl: "indexRoot.json"
       });
       stubRequest("indexRoot.json", validIndexRoot);
-      await provider.load();
+      await provider.initialize();
       const parameters = await provider.describeParameters();
       expect(parameters).toEqual([
         {
           type: "numeric",
           id: "height",
-          name: "Building height",
+          name: "height",
           range: { min: 1, max: 180 }
         },
         {
@@ -113,11 +114,11 @@ describe("IndexedItemSearchProvider", function() {
           name: "area",
           range: { min: 100, max: 20000 }
         },
-        { type: "text", id: "street_address", name: "Street address" },
+        { type: "text", id: "street_address", name: "street_address" },
         {
           type: "enum",
           id: "roof_type",
-          name: "Roof type",
+          name: "roof_type",
           values: [
             { id: "Flat", count: 50 },
             { id: "Slope", count: 100 }
@@ -142,17 +143,18 @@ describe("IndexedItemSearchProvider", function() {
       const heightRows = await Csv.parseString(heightCsv);
       const areaRows = await Csv.parseString(areaCsv);
       parameterValues = new Map([
-        ["height", { start: heightRows[3][1], end: heightRows[9][1] }],
-        ["area", { start: areaRows[5][1], end: areaRows[7][1] }]
+        ["height", { start: heightRows[4][1], end: heightRows[10][1] }],
+        ["area", { start: areaRows[6][1], end: areaRows[8][1] }]
       ]);
-      await provider.load();
+      await provider.initialize();
     });
 
     it("returns matching results", async function() {
       const results = await provider.search(parameterValues);
       expect(results).toEqual([
         {
-          id: "632",
+          id: 632,
+          idPropertyName: "building_id",
           zoomToTarget: {
             boundingSphere: createBoundingSphere({
               latitude: 19.12575420288384,
@@ -160,10 +162,11 @@ describe("IndexedItemSearchProvider", function() {
               radius: 3.6875988497925927
             })
           },
-          properties: { building_id: "632" }
+          properties: { building_id: 632 }
         },
         {
-          id: "410",
+          id: 410,
+          idPropertyName: "building_id",
           zoomToTarget: {
             boundingSphere: createBoundingSphere({
               latitude: 46.567720640307755,
@@ -171,7 +174,7 @@ describe("IndexedItemSearchProvider", function() {
               radius: 17.23546017384181
             })
           },
-          properties: { building_id: "410" }
+          properties: { building_id: 410 }
         }
       ]);
     });

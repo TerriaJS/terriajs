@@ -31,7 +31,7 @@ export interface TextItemSearchParameter {
 }
 
 export type ItemSearchResult = {
-  id: string;
+  id: string | number;
   idPropertyName: string;
   zoomToTarget:
     | CameraView
