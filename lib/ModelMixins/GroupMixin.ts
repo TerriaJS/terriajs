@@ -1,14 +1,15 @@
-import { action, computed, observable, runInAction } from "mobx";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import { action, computed } from "mobx";
 import clone from "terriajs-cesium/Source/Core/clone";
+import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
+import Group from "../Models/Group";
 import Model, { BaseModel } from "../Models/Model";
 import GroupTraits from "../Traits/GroupTraits";
 import ModelReference from "../Traits/ModelReference";
-import AsyncLoader from "../Core/AsyncLoader";
-import Group from "../Models/Group";
+import CatalogMemberMixin from "./CatalogMemberMixin";
 
 function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
   abstract class GroupMixin extends Base implements Group {
@@ -65,9 +66,8 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
      */
     loadMembers(): Promise<void> {
       return this._memberLoader.load().finally(() => {
-        if (this.uniqueId) {
-          this.refreshKnownContainerUniqueIds(this.uniqueId);
-        }
+        this.refreshKnownContainerUniqueIds(this.uniqueId);
+        this.addShareKeysToMembers();
       });
     }
 
@@ -77,6 +77,39 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
       this.memberModels.forEach((model: BaseModel) => {
         if (model.knownContainerUniqueIds.indexOf(uniqueId) < 0) {
           model.knownContainerUniqueIds.push(uniqueId);
+        }
+      });
+    }
+
+    @action
+    addShareKeysToMembers(): void {
+      const groupId = this.uniqueId;
+      if (!groupId) return;
+
+      // Get shareKeys for this Group
+      const shareKeys = this.terria.modelIdShareKeysMap.get(groupId);
+      if (!shareKeys || shareKeys.length === 0) return;
+
+      /**
+       * Go through each shareKey and create new shareKeys for members
+       * - Look at current member.uniqueId
+       * - Replace instances of group.uniqueID in member.uniqueId with shareKey
+       * For example:
+       * - group.uniqueId = 'some-group-id'
+       * - member.uniqueId = 'some-group-id/some-member-id'
+       * - group.shareKeys = 'old-group-id'
+       * - So we want to create member.shareKeys = ["old-group-id/some-member-id"]
+       */
+
+      this.memberModels.forEach((model: BaseModel) => {
+        // Only add shareKey if model.uniqueId is an autoID (i.e. contains groupId)
+        if (isDefined(model.uniqueId) && model.uniqueId.includes(groupId)) {
+          shareKeys.forEach(groupShareKey =>
+            this.terria.addShareKey(
+              model.uniqueId!,
+              model.uniqueId!.replace(groupId, groupShareKey)
+            )
+          );
         }
       });
     }

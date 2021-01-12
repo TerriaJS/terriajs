@@ -89,7 +89,7 @@ class MappablePreview extends React.Component {
         </If>
         <button
           type="button"
-          onClick={this.toggleOnMap}
+          onClick={this.toggleOnMap.bind(this)}
           className={Styles.btnAdd}
         >
           {this.props.terria.workbench.contains(catalogItem)

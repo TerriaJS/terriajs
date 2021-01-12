@@ -96,6 +96,28 @@ describe("WebMapServiceCatalogGroup", function() {
     });
   });
 
+  describe("loadMembersWithSharekeys", function() {
+    beforeEach(async function() {
+      runInAction(() => {
+        terria.addShareKey(wms.uniqueId!, "some-share-key");
+        wms.setTrait("definition", "url", "test/WMS/single_metadata_url.xml");
+      });
+      await wms.loadMembers();
+    });
+
+    it("addsShareKeys", async function() {
+      expect(wms.members.length).toEqual(1);
+      expect(wms.memberModels.length).toEqual(1);
+      const wmsItem = wms.memberModels[0] as WebMapServiceCatalogItem;
+      expect(wmsItem.uniqueId).toBeDefined();
+      expect(terria.modelIdShareKeysMap.has(wmsItem.uniqueId!)).toBeTruthy();
+      expect(terria.modelIdShareKeysMap.get(wmsItem.uniqueId!)![0]).toEqual(
+        `some-share-key/${wmsItem.name}`
+      );
+      console.log(wmsItem);
+    });
+  });
+
   describe("loadNestedMembers", function() {
     beforeEach(async function() {
       runInAction(() => {
