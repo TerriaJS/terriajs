@@ -8,7 +8,8 @@ import loadText from "../../Core/loadText";
 import makeRealPromise from "../../Core/makeRealPromise";
 import ItemSearchProvider, {
   ItemSearchParameter,
-  ItemSearchResult
+  ItemSearchResult,
+  registerItemSearchProvider
 } from "../ItemSearchProvider";
 import { Index, IndexRoot, parseIndexRoot } from "./Index";
 
@@ -16,6 +17,10 @@ const t = i18next.t.bind(i18next);
 
 type Parameter = ItemSearchParameter & { index: Index };
 
+/**
+ * An ItemSearchProvider for searching an item using a pre-generated static index set.
+ *
+ */
 export default class IndexedItemSearchProvider extends ItemSearchProvider {
   indexRootUrl: string;
   indexRoot?: IndexRoot;
@@ -78,7 +83,7 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
     }
   }
 
-  async load() {
+  async initialize() {
     const indexRootUrl = this.indexRootUrl;
     const json = await loadJson5(indexRootUrl);
     try {
@@ -183,6 +188,8 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
     };
   }
 }
+
+registerItemSearchProvider("indexed", IndexedItemSearchProvider);
 
 function loadCsv(url: string, options?: Papa.ParseConfig): Promise<any[]> {
   return makeRealPromise<string>(loadText(url)).then(

@@ -48,7 +48,7 @@ const ItemSearchTool: React.FC<PropsType> = observer(props => {
   useEffect(
     function loadParameters() {
       itemSearchProvider
-        .load()
+        .initialize()
         .then(() =>
           itemSearchProvider.describeParameters().then(parameters => {
             setState({ is: "search" });
