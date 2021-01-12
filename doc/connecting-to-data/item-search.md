@@ -6,7 +6,7 @@ TerriaJS provides an `ItemSearchProvider` API for defining custom search provide
 
 ## Available search providers
 
-- [Indexed item search provider](item-search/indexed-item-search-provider.md)
+- [Indexed item search provider](item-search/indexed-item-search.md)
 
 ## Configuring the catalog item for searching
 
