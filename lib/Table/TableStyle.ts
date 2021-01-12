@@ -158,7 +158,7 @@ export default class TableStyle {
    */
   @computed
   get timeColumn(): TableColumn | undefined {
-    return this.resolveColumn(this.timeTraits.timeColumn);
+    return this.resolveColumn(this.timeTraits.timeColumn ?? undefined);
   }
 
   /**
