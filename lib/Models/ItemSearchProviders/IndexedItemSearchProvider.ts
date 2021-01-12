@@ -8,8 +8,7 @@ import loadText from "../../Core/loadText";
 import makeRealPromise from "../../Core/makeRealPromise";
 import ItemSearchProvider, {
   ItemSearchParameter,
-  ItemSearchResult,
-  registerItemSearchProvider
+  ItemSearchResult
 } from "../ItemSearchProvider";
 import { Index, IndexRoot, parseIndexRoot } from "./Index";
 
@@ -188,8 +187,6 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
     };
   }
 }
-
-registerItemSearchProvider("indexed", IndexedItemSearchProvider);
 
 function loadCsv(url: string, options?: Papa.ParseConfig): Promise<any[]> {
   return makeRealPromise<string>(loadText(url)).then(

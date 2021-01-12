@@ -3,6 +3,7 @@ import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Constructor from "../Core/Constructor";
 import CameraView from "./CameraView";
+import IndexedItemSearchProvider from "./ItemSearchProviders/IndexedItemSearchProvider";
 
 export type ItemSearchParameter =
   | NumericItemSearchParameter
@@ -70,16 +71,4 @@ export default abstract class ItemSearchProvider {
   abstract search(
     parameterValues: Map<string, any>
   ): Promise<ItemSearchResult[]>;
-}
-
-export const ItemSearchProviders: Map<
-  string,
-  Constructor<ItemSearchProvider>
-> = new Map();
-
-export function registerItemSearchProvider(
-  type: string,
-  providerClass: Constructor<ItemSearchProvider>
-) {
-  ItemSearchProviders.set(type, providerClass);
 }
