@@ -4,29 +4,15 @@ import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import { ItemSearchResult } from "../../../../lib/Models/ItemSearchProvider";
 import SearchResults, {
-  List,
   ResultsCount,
   SearchResultsProps
 } from "../../../../lib/ReactViews/Tools/ItemSearchTool/SearchResults";
 
 describe("SearchResults", function() {
-  it("it shows a list results", async function() {
-    const { root } = await render({
-      results: randomResults(7),
-      onClickResult: () => {}
-    });
-    const list = root.findByType(List);
-    expect(list.props).toEqual(
-      jasmine.objectContaining({
-        itemCount: 7
-      })
-    );
-  });
-
   it("shows the results count", async function() {
     const { root } = await render({
       results: randomResults(20),
-      onClickResult: () => {}
+      onSelectResult: () => {}
     });
     const resultsCount = root.findByType(ResultsCount);
     expect(resultsCount.props).toEqual(
@@ -54,14 +40,14 @@ function randomResults(count: number): ItemSearchResult[] {
     randomRange(-90, 90)
   );
   const radius = randomRange(400, 2000);
-  return [...Array(count)].map(() => ({
+  return [...Array(count)].map(i => ({
     id: `building-${Math.random()}`,
+    idPropertyName: "building-id",
     zoomToTarget: {
       boundingSphere: new BoundingSphere(center, radius)
     },
     properties: {
-      name: `bldg-${randomColor()}-${Math.random()}`,
-      address: `${Math.random()}/${Math.random()} ${randomColor()} Street`
+      name: `bldg-${i}`
     }
   }));
 }
@@ -69,10 +55,3 @@ function randomResults(count: number): ItemSearchResult[] {
 function randomRange(min: number, max: number) {
   return Math.random() * (max - min) + min;
 }
-
-const colors = ["red", "blue", "green", "yellow", "orange", "grey"];
-
-const randomColor = () => {
-  const idx = Math.floor(Math.random() * colors.length);
-  return colors[idx];
-};
