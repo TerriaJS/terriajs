@@ -4,7 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.66)
-* [The next improvement]
+* Added tool for searching inside catalog items. Initial implementation works for indexed 3d tilesets.
 
 #### 8.0.0-alpha.65
 * Fixed SDMX-group nested categories
