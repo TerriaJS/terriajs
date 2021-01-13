@@ -165,8 +165,6 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
     let { latitude, longitude, height, radius, ...properties } = record;
     const _latitude = parseFloat(latitude);
     const _longitude = parseFloat(longitude);
-    // TODO: when height of the model is known, zoom to (lat,lon,height*2)
-    // instead of the bounding sphere.
     const _height = parseFloat(height);
     const _radius = parseFloat(radius);
     if (isNaN(_latitude) || isNaN(_longitude) || isNaN(_radius)) {
@@ -174,9 +172,13 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
         `No valid zoom point defined for data record at index ${dataIdx}`
       );
     }
-
     const center = Cartesian3.fromDegrees(_longitude, _latitude);
-    const boundingSphere = new BoundingSphere(center, _radius);
+    const boundingSphere = new BoundingSphere(
+      center,
+      // If height is provided zoom to it with a threshold so that we don't get
+      // too close. This might need more fine tuning.
+      isNaN(_height) ? _radius : Math.max(_height * 2, 50)
+    );
     return {
       id,
       idPropertyName: this.indexRoot.idProperty,
