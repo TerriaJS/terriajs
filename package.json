@@ -42,6 +42,7 @@
     "@types/pbf": "^3.0.1",
     "@types/react": "^16.8.18",
     "@types/react-dom": "^16.9.1",
+    "@types/react-select": "^3.1.2",
     "@types/react-test-renderer": "^16.9.2",
     "@types/react-virtualized-auto-sizer": "^1.0.0",
     "@types/react-window": "^1.8.2",
@@ -153,8 +154,6 @@
   },
   "devDependencies": {
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
-    "@types/react-select": "^3.0.28",
-    "@types/react-virtualized-auto-sizer": "^1.0.0",
     "babel-eslint": "^10.0.1",
     "babel-plugin-styled-components": "^1.10.7",
     "eslint": "^5.14.1",
