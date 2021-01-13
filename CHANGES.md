@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.66)
+* `TableMixin` styles ("Display variables") will now look for column title if style title is undefined
 * [The next improvement]
 
 #### 8.0.0-alpha.65
