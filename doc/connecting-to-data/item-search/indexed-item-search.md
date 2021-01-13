@@ -32,3 +32,4 @@ You can host the generated index anywhere, the above configuration assumes that 
 
 The `resultTemplate` defines a template for the search results using the [Mustache](https://mustache.github.io/) format. Any properties in `data.csv` are made available as mustache variables.
 
+Read more about the [IndexedItemSearchProvider design](./indexed-item-search-provider-design-notes.md).
