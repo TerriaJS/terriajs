@@ -106,7 +106,11 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
     return [...this.parameters.values()].map(({ index, ...rest }) => rest);
   }
 
-  premptivelyLoadIndexForParameter = (parameterId: string, valueHint: any) => {
+  /**
+   * Pre-emptively load the index while the user is entering input for the
+   * parameter.
+   */
+  loadParameterHint = (parameterId: string, valueHint: any) => {
     const parameter = this.parameters.get(parameterId);
     if (parameter) {
       parameter.index.load(this.indexRootUrl, valueHint);

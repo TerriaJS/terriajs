@@ -81,7 +81,7 @@ const ItemSearchTool: React.FC<PropsType> = observer(props => {
     setSelectedResult(undefined);
   };
 
-  const loadIndexForParameter = itemSearchProvider.premptivelyLoadIndexForParameter?.bind(
+  const loadIndexForParameter = itemSearchProvider.loadParameterHint?.bind(
     itemSearchProvider
   );
 
