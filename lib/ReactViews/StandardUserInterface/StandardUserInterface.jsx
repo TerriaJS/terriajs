@@ -139,7 +139,10 @@ const StandardUserInterface = createReactClass({
   },
 
   onExitStory() {
-    exitStory(this.props.terria, this.props.viewState);
+    window.history.pushState(null, null, "/?section=finance");
+    window.dispatchEvent(new Event("popstate"));
+    // TODO
+    // exitStory(this.props.terria, this.props.viewState);
   },
 
   render() {
