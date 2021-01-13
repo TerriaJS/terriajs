@@ -14,7 +14,7 @@ export { default as NumericIndex } from "./NumericIndex";
 export type IndexRoot = {
   dataUrl: string; // Url of the CSV data file.
   idProperty: string; // Name of the property to be used as ID
-  indexes: Record<string, Index>; // A map from property ID to its searchable Index.
+  indexes: Record<string, Index>; // A map from property name to its `Index` definition.
 };
 
 export type Index = NumericIndex | EnumIndex | TextIndex;
