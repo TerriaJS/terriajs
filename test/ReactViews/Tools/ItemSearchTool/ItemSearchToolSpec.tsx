@@ -1,9 +1,9 @@
 import React from "react";
 import {
-  create,
   act,
-  ReactTestRenderer,
-  ReactTestInstance
+  create,
+  ReactTestInstance,
+  ReactTestRenderer
 } from "react-test-renderer";
 import { assertObject } from "../../../../lib/Core/Json";
 import SearchableItemMixin from "../../../../lib/ModelMixins/SearchableItemMixin";
@@ -13,41 +13,44 @@ import ItemSearchProvider, {
   ItemSearchParameter,
   ItemSearchResult
 } from "../../../../lib/Models/ItemSearchProvider";
-import ItemSearchProviders from "../../../../lib/Models/ItemSearchProviders";
+import { registerItemSearchProvider } from "../../../../lib/Models/ItemSearchProviders";
 import Terria from "../../../../lib/Models/Terria";
 import ViewState from "../../../../lib/ReactViewModels/ViewState";
+import ErrorComponent from "../../../../lib/ReactViews/Tools/ItemSearchTool/ErrorComponent";
 import ItemSearchTool, {
-  ErrorComponent,
   PropsType
 } from "../../../../lib/ReactViews/Tools/ItemSearchTool/ItemSearchTool";
+import Loading from "../../../../lib/ReactViews/Tools/ItemSearchTool/Loading";
 import SearchForm from "../../../../lib/ReactViews/Tools/ItemSearchTool/SearchForm";
 import SearchResults from "../../../../lib/ReactViews/Tools/ItemSearchTool/SearchResults";
-import { ProgressText } from "../../../../lib/ReactViews/Tools/ToolModal";
 import SearchableItemTraits from "../../../../lib/Traits/SearchableItemTraits";
 import { withThemeContext } from "../../withThemeContext";
 
 class TestSearchableItem extends SearchableItemMixin(
   CreateModel(SearchableItemTraits)
 ) {
-  selectItemSearchResult(idPropertyName: string, idPropertyValue: string) {}
-  unselectItemSearchResult(idPropertyName: string, idPropertyValue: string) {}
+  selectItemSearchResult(result: ItemSearchResult) {}
+  unselectItemSearchResult(result: ItemSearchResult) {}
 }
 
 class TestItemSearchProvider extends ItemSearchProvider {
-  async load(): Promise<void> {
+  async initialize(): Promise<void> {
     return;
   }
 
   async describeParameters(): Promise<ItemSearchParameter[]> {
-    return [];
+    return [
+      {
+        type: "numeric",
+        id: "height",
+        name: "Height",
+        range: { min: 1, max: 200 }
+      }
+    ];
   }
 
   async search(): Promise<ItemSearchResult[]> {
     return [];
-  }
-
-  getIdPropertyName() {
-    return "testId";
   }
 }
 
@@ -58,7 +61,7 @@ describe("ItemSearchTool", function() {
   let rendered: ReactTestRenderer;
 
   beforeEach(function() {
-    ItemSearchProviders.set("testProvider", TestItemSearchProvider);
+    registerItemSearchProvider("testProvider", TestItemSearchProvider);
     const terria: Terria = new Terria();
     viewState = new ViewState({
       terria,
@@ -85,8 +88,8 @@ describe("ItemSearchTool", function() {
     expect(component).toBeDefined();
   });
 
-  it("loads an describes the parameters when mounted", async function() {
-    spyOn(itemSearchProvider, "load").and.callThrough();
+  it("initializes an describes the parameters when mounted", async function() {
+    spyOn(itemSearchProvider, "initialize").and.callThrough();
     spyOn(itemSearchProvider, "describeParameters").and.callThrough();
     await act(() => {
       rendered = render({
@@ -95,12 +98,12 @@ describe("ItemSearchTool", function() {
         viewState
       });
     });
-    expect(itemSearchProvider.load).toHaveBeenCalledTimes(1);
+    expect(itemSearchProvider.initialize).toHaveBeenCalledTimes(1);
     expect(itemSearchProvider.describeParameters).toHaveBeenCalledTimes(1);
   });
 
   describe("loading", function() {
-    it("shows a progress text while loading", function() {
+    it("shows a Loading component while loading", function() {
       act(() => {
         rendered = render({
           item,
@@ -108,7 +111,7 @@ describe("ItemSearchTool", function() {
           viewState
         });
       });
-      const progressText = rendered.root.findByType(ProgressText);
+      const progressText = rendered.root.findByType(Loading);
       expect(progressText).toBeDefined();
       expect(progressText.props.children).toEqual("itemSearchTool.loading");
     });
@@ -126,12 +129,19 @@ describe("ItemSearchTool", function() {
 
       const error = rendered.root.findByType(ErrorComponent);
       expect(error).toBeDefined();
-      expect(error.props.children).toEqual("Something happened");
+      expect(error.props.children).toEqual("itemSearchTool.loadError");
     });
 
     it("shows a search from on successful load", async function() {
       spyOn(itemSearchProvider, "describeParameters").and.callFake(() =>
-        Promise.resolve([])
+        Promise.resolve([
+          {
+            type: "numeric",
+            id: "height",
+            name: "Height",
+            range: { min: 1, max: 180 }
+          }
+        ])
       );
       rendered = await renderAndLoad({
         item,
@@ -142,84 +152,19 @@ describe("ItemSearchTool", function() {
       expect(searchForm).toBeDefined();
     });
 
-    describe("search form", function() {
-      it("triggers search when submitted", async function() {
-        const searchSpy = spyOn(itemSearchProvider, "search").and.callThrough();
-        rendered = await renderAndLoad({
-          item,
-          itemSearchProvider,
-          viewState
-        });
-        const searchForm = rendered.root.findByType(SearchForm);
-        searchForm.props.onSubmit({ foo: "bar" });
-        expect(itemSearchProvider.search).toHaveBeenCalledTimes(1);
-        const parameterValues: Map<string, any> = searchSpy.calls.mostRecent()
-          .args[0];
-        expect(parameterValues).toBeDefined();
-        expect([...parameterValues.entries()]).toEqual([["foo", "bar"]]);
-      });
-    });
+    it("it shows the search results", async function() {
+      spyOn(itemSearchProvider, "search").and.callFake(() =>
+        Promise.resolve([])
+      );
 
-    describe("when searching", function() {
-      it("shows progress text", async function() {
-        spyOn(itemSearchProvider, "search").and.callFake(
-          // Pass an unresolving promise so that we can test the intermediate state
-          () => new Promise(() => {})
-        );
-        const { root } = await renderAndLoad({
-          item,
-          itemSearchProvider,
-          viewState
-        });
-        await submitForm(root, { foo: "bar" });
-        const searchProgress = root.findByType(ProgressText);
-        expect(searchProgress.props.children).toEqual(
-          "itemSearchTool.searching"
-        );
+      const { root } = await renderAndLoad({
+        item,
+        itemSearchProvider,
+        viewState
       });
-
-      it("disables the search form", async function() {
-        spyOn(itemSearchProvider, "search").and.callFake(
-          // Pass an unresolving promise so that we can test the intermediate state
-          () => new Promise(() => {})
-        );
-        const { root } = await renderAndLoad({
-          item,
-          itemSearchProvider,
-          viewState
-        });
-        const searchForm = await submitForm(root, { foo: "bar" });
-        expect(searchForm.props.disabled).toEqual(true);
-      });
-
-      it("on error, shows the error", async function() {
-        spyOn(itemSearchProvider, "search").and.callFake(() =>
-          Promise.reject(Error(`Something is wrong`))
-        );
-        const { root } = await renderAndLoad({
-          item,
-          itemSearchProvider,
-          viewState
-        });
-        await submitForm(root, { foo: "bar" });
-        const error = root.findByType(ErrorComponent);
-        expect(error.props.title).toBe("itemSearchTool.searchError");
-      });
-
-      it("on success, it shows the search results", async function() {
-        spyOn(itemSearchProvider, "search").and.callFake(() =>
-          Promise.resolve([])
-        );
-
-        const { root } = await renderAndLoad({
-          item,
-          itemSearchProvider,
-          viewState
-        });
-        await submitForm(root, { foo: "bar" });
-        const searchResults = root.findByType(SearchResults);
-        expect(searchResults).toBeDefined();
-      });
+      await submitForm(root);
+      const searchResults = root.findByType(SearchResults);
+      expect(searchResults).toBeDefined();
     });
   });
 });
@@ -241,12 +186,9 @@ function renderAndLoad(
   });
 }
 
-async function submitForm(
-  root: ReactTestInstance,
-  parameterValues: Record<string, any>
-): Promise<ReactTestInstance> {
-  const searchForm = root.findByType(SearchForm);
+async function submitForm(root: ReactTestInstance): Promise<ReactTestInstance> {
+  const searchForm = root.findByType("form");
   expect(searchForm).toBeDefined();
-  await act(() => searchForm.props.onSubmit(parameterValues));
+  await act(() => searchForm.props.onSubmit({ preventDefault: () => {} }));
   return searchForm;
 }

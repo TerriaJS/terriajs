@@ -1,9 +1,7 @@
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
-import Constructor from "../Core/Constructor";
 import CameraView from "./CameraView";
-import IndexedItemSearchProvider from "./ItemSearchProviders/IndexedItemSearchProvider";
 
 export type ItemSearchParameter =
   | NumericItemSearchParameter
