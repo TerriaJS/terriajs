@@ -1,6 +1,6 @@
 import { action, computed } from "mobx";
 import Constructor from "../Core/Constructor";
-import { ItemSearchProviders } from "../Models/IndexedItemSearchProviders";
+import { ItemSearchProviders } from "../Models/ItemSearchProviders";
 import ItemSearchProvider, {
   ItemSearchResult
 } from "../Models/ItemSearchProvider";
