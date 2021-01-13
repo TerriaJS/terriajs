@@ -81,6 +81,10 @@ const ItemSearchTool: React.FC<PropsType> = observer(props => {
     setSelectedResult(undefined);
   };
 
+  const loadIndexForParameter = itemSearchProvider.premptivelyLoadIndexForParameter?.bind(
+    itemSearchProvider
+  );
+
   return (
     <>
       <Frame
@@ -112,6 +116,7 @@ const ItemSearchTool: React.FC<PropsType> = observer(props => {
               parameters={parameters}
               values={parameterValues}
               onResults={setResults}
+              onValueChange={loadIndexForParameter}
             />
           )}
           {state.is === "results" && (

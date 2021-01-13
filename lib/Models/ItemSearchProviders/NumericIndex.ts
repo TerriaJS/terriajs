@@ -20,7 +20,7 @@ type NumericSearchQuery = {
 export default class NumericIndex {
   readonly type = "numeric";
 
-  private idValuePairs?: { dataRowId: number; value: number }[];
+  private idValuePairs?: Promise<{ dataRowId: number; value: number }[]>;
 
   /**
    * Constructs a NumericIndex.
@@ -42,10 +42,12 @@ export default class NumericIndex {
   ): Promise<void> {
     if (this.idValuePairs) return;
     const indexUrl = joinUrl(indexRootUrl, this.url);
-    this.idValuePairs = await loadCsv(indexUrl, {
+    const promise = loadCsv(indexUrl, {
       dynamicTyping: true,
       header: true
     });
+    this.idValuePairs = promise;
+    return promise.then(() => {});
   }
 
   /**
@@ -54,10 +56,10 @@ export default class NumericIndex {
    * @param value The start and end value to be searched.
    * @return Set of IDs that matches the search value.
    */
-  search(value: NumericSearchQuery): Set<number> {
+  async search(value: NumericSearchQuery): Promise<Set<number>> {
     if (!this.idValuePairs) throw new Error(`Index not loaded`);
     const range = this.range;
-    const idValuePairs = this.idValuePairs;
+    const idValuePairs = await this.idValuePairs;
     const startValue = value.start === undefined ? range.min : value.start;
     const endValue = value.end === undefined ? range.max : value.end;
     const i = binarySearch(

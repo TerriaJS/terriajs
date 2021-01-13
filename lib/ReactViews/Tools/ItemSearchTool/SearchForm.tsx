@@ -30,6 +30,7 @@ export interface SearchFormProps extends WithTranslation {
     results: ItemSearchResult[]
   ) => void;
   values: Record<string, any>;
+  onValueChange?: (parameterId: string, value: any) => void;
   afterLoad?: () => void;
 }
 
@@ -57,6 +58,7 @@ const SearchForm: React.FC<SearchFormProps> = props => {
     // Delete the value so that we don't trigger search for it
     if (newValues[id] === undefined) delete newValues[id];
     setValues(newValues);
+    if (value !== undefined) props.onValueChange?.(id, value);
   };
 
   function search() {

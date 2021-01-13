@@ -8,7 +8,7 @@ type EnumSearchQuery = string[];
 export type EnumValue = {
   count: number; // Number of objects this enum value has
   url: string; // Url of the CSV file containing the enum index
-  dataRowIds?: number[]; // Array of IDs
+  dataRowIds?: Promise<number[]>; // Array of IDs
 };
 
 /**
@@ -39,10 +39,12 @@ export default class EnumIndex {
     const promises = enumValueIds.map(async valueId => {
       const value = this.values[valueId];
       if (value.dataRowIds) return Promise.resolve();
-      value.dataRowIds = await loadCsv(joinUrl(indexRootUrl, value.url), {
+      const promise = loadCsv(joinUrl(indexRootUrl, value.url), {
         dynamicTyping: true,
         header: true
       }).then(rows => rows.map(({ dataRowId }) => dataRowId));
+      value.dataRowIds = promise;
+      return promise;
     });
     await Promise.all(promises);
   }
@@ -53,16 +55,17 @@ export default class EnumIndex {
    * @param  enumValueIds The enum values to be searched
    * @return Set of IDs for all matching enum values.
    */
-  search(enumValueIds: EnumSearchQuery): Set<number> {
-    const ids = flatten(
-      enumValueIds.map(valueId => {
+  async search(enumValueIds: EnumSearchQuery): Promise<Set<number>> {
+    const idSets = await Promise.all(
+      enumValueIds.map(async valueId => {
         const value = this.values[valueId];
         if (!value) throw new Error(`Not an enum value: ${valueId}`);
         if (!value.dataRowIds)
           throw new Error(`Index for enum value ${valueId} is not loaded`);
-        return value.dataRowIds;
+        return await value.dataRowIds;
       })
     );
+    const ids = flatten(idSets);
     return new Set(ids);
   }
 }

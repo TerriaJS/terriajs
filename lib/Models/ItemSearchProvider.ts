@@ -69,4 +69,18 @@ export default abstract class ItemSearchProvider {
   abstract search(
     parameterValues: Map<string, any>
   ): Promise<ItemSearchResult[]>;
+
+  /**
+   * An optional hook for pre-emptively loading a parameter index.
+   *
+   * If indexes takes too long to load, implementing this method can
+   * improve search time by pre-emptively loading the index. This hook is called
+   * while the user is inputing value for the parameter. It can be called
+   * multiple times, so the implementation must take care not to make
+   * duplicate requests.
+   */
+  premptivelyLoadIndexForParameter?: (
+    parameterId: string,
+    valueHint: any
+  ) => void;
 }

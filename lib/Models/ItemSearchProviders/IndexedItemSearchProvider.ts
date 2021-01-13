@@ -23,7 +23,7 @@ type Parameter = ItemSearchParameter & { index: Index };
 export default class IndexedItemSearchProvider extends ItemSearchProvider {
   indexRootUrl: string;
   indexRoot?: IndexRoot;
-  data?: Record<string, string>[];
+  data?: Promise<Record<string, string>[]>;
 
   constructor(options: any) {
     super(options);
@@ -87,6 +87,7 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
     const json = await loadJson5(indexRootUrl);
     try {
       this.indexRoot = parseIndexRoot(json);
+      this.getOrLoadData();
     } catch (parseError) {
       console.warn(parseError);
       throw new Error(
@@ -105,6 +106,13 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
     return [...this.parameters.values()].map(({ index, ...rest }) => rest);
   }
 
+  premptivelyLoadIndexForParameter = (parameterId: string, valueHint: any) => {
+    const parameter = this.parameters.get(parameterId);
+    if (parameter) {
+      parameter.index.load(this.indexRootUrl, valueHint);
+    }
+  };
+
   async search(parameterValues: Map<string, any>): Promise<ItemSearchResult[]> {
     const searchParameters = Promise.all(
       Array.from(parameterValues).map(async ([parameterId, value]) => {
@@ -116,6 +124,7 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
     );
     const data = await this.getOrLoadData();
     const idSets = await searchParameters;
+    await this.getOrLoadData();
     const matchingIds = intersectSets(idSets);
     const results = [...matchingIds].map(id =>
       this.buildResult(this.lookupDataForId(data, id), id)
@@ -129,17 +138,19 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
   }
 
   async getOrLoadData() {
-    if (this.data) return this.data;
+    if (this.data) {
+      return this.data;
+    }
     if (!this.indexRoot?.dataUrl) {
       throw new Error(`indexRoot is not loaded`);
     }
     const dataUrl = this.toAbsoluteUrl(this.indexRoot.dataUrl);
-    const rows = await loadCsv(dataUrl, {
+    const promise = loadCsv(dataUrl, {
       dynamicTyping: true,
       header: true
     });
-    this.data = rows;
-    return this.data;
+    this.data = promise;
+    return promise;
   }
 
   lookupDataForId(

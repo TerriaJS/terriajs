@@ -16,7 +16,7 @@ type TextSearchQuery = string;
 export default class TextIndex {
   readonly type = "text";
 
-  private miniSearchIndex?: MiniSearch;
+  private miniSearchIndex?: Promise<MiniSearch>;
 
   /**
    * Construct the search index.
@@ -33,7 +33,7 @@ export default class TextIndex {
    */
   async load(indexRootUrl: string, _valueHint: TextSearchQuery): Promise<void> {
     if (this.miniSearchIndex) return;
-    this.miniSearchIndex = await loadText(joinUrl(indexRootUrl, this.url))
+    const promise = loadText(joinUrl(indexRootUrl, this.url))
       .then((text: string) => JSON.parse(text))
       .then((json: any) =>
         MiniSearch.loadJS(
@@ -41,6 +41,8 @@ export default class TextIndex {
           (json.options as any) as MiniSearchOptions
         )
       );
+    this.miniSearchIndex = promise;
+    return promise.then(() => {});
   }
 
   /**
@@ -49,9 +51,10 @@ export default class TextIndex {
    * @param value The value to be searched.
    * @param return The IDs of objects matching the search text.
    */
-  search(value: TextSearchQuery): Set<number> {
+  async search(value: TextSearchQuery): Promise<Set<number>> {
     if (!this.miniSearchIndex) throw new Error(`Text index not loaded`);
-    const results = this.miniSearchIndex.search(value);
+    const miniSearchIndex = await this.miniSearchIndex;
+    const results = miniSearchIndex.search(value);
     const ids = new Set(results.map(r => r.id));
     return ids;
   }
