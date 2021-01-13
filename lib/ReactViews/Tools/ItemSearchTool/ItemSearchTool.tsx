@@ -53,6 +53,7 @@ const ItemSearchTool: React.FC<PropsType> = observer(props => {
           itemSearchProvider.describeParameters().then(parameters => {
             setState({ is: "search" });
             setParameters(parameters);
+            setParameterValues({});
           })
         )
         .catch((error: Error) => {

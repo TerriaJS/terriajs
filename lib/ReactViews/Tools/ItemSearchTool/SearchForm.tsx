@@ -1,6 +1,6 @@
 import { WithT } from "i18next";
 import isEmpty from "lodash-es/isEmpty";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   useTranslation,
   WithTranslation,
@@ -43,7 +43,14 @@ const SearchForm: React.FC<SearchFormProps> = props => {
   const { parameters, itemSearchProvider } = props;
   const [t] = useTranslation();
   const [state, setState] = useState<State>({ is: "initial" });
-  const [values, setValues] = useState<Record<string, any>>(props.values || {});
+  const [values, setValues] = useState<Record<string, any>>(props.values);
+
+  useEffect(
+    function setValuesFromProps() {
+      setValues(props.values);
+    },
+    [props.values]
+  );
 
   const setValue = (id: string) => (value: any) => {
     const newValues = { ...values, [id]: value };
