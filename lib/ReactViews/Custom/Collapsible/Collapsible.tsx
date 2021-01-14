@@ -22,6 +22,11 @@ interface CollapsibleProps {
   btnStyle?: "plus" | "caret";
   titleTextProps?: any;
   bodyBoxProps?: any;
+  bodyTextProps?: any;
+  /**
+   * caret is light coloured (default is true)
+   */
+  light?: boolean;
 }
 
 @observer
@@ -44,7 +49,7 @@ export default class Collapsible extends React.Component<
       <StyledIcon
         displayInline
         styledWidth={"8px"}
-        light
+        light={this.props.light ?? true}
         glyph={
           this.props.btnStyle === "plus"
             ? this.state.isOpen
@@ -70,7 +75,12 @@ export default class Collapsible extends React.Component<
         >
           {!this.props.btnRight && CollapseIcon}
           {!this.props.btnRight && <SpacingSpan right={2} />}
-          <TextSpan textLight bold medium {...this.props.titleTextProps}>
+          <TextSpan
+            textLight={this.props.light ?? true}
+            bold
+            medium
+            {...this.props.titleTextProps}
+          >
             {this.props.title}
           </TextSpan>
           {this.props.btnRight && <SpacingSpan right={2} />}
@@ -78,7 +88,12 @@ export default class Collapsible extends React.Component<
         </RawButton>
         <Box {...this.props.bodyBoxProps}>
           {this.state.isOpen && (
-            <Text textLight small id={`${this.props.title}`}>
+            <Text
+              textLight={this.props.light ?? true}
+              small
+              id={`${this.props.title}`}
+              {...this.props.bodyTextProps}
+            >
               {this.props.children}
             </Text>
           )}

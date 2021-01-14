@@ -31,6 +31,13 @@ export class InfoSectionTraits extends ModelTraits {
   })
   contentAsObject?: JsonObject;
 
+  @primitiveTrait({
+    type: "boolean",
+    name: "Show",
+    description: "Indicates if this info section showing (collapsed)."
+  })
+  show? = true;
+
   static isRemoval(infoSection: InfoSectionTraits) {
     return infoSection.content === null;
   }
