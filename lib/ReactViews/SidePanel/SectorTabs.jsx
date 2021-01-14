@@ -1,22 +1,35 @@
 import React from "react";
 import Icon from "../Icon";
 import PropTypes from "prop-types";
-import Agriculture from "../../../wwwroot/images/receipt/sectors/agriculture.jpg";
-import CoastalInfra from "../../../wwwroot/images/receipt/sectors/coastal-Infra.png";
-import Finance from "../../../wwwroot/images/receipt/sectors/finance.png";
-import Manufacturing from "../../../wwwroot/images/receipt/sectors/manufacturing.png";
-import InternationalCooperation from "../../../wwwroot/images/receipt/sectors/international-cooperation.png";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 import Styles from "./SectorTabs.scss";
 import Tooltip from "../RCTooltip/RCTooltip";
+import { RCChangeUrlParams } from "../../Models/Receipt";
+
 class SectorTabs extends React.Component {
   constructor(props) {
     super(props);
   }
+
   state = {
     selectedId: -1
   };
+
   componentDidMount() {
+    this._viewStateSelectedSector = knockout
+      // eslint-disable-next-line jsx-control-statements/jsx-jcs-no-undef
+      .getObservable(viewState, "RCSelectedSector")
+      .subscribe(RCSelectedSector => {
+        if (RCSelectedSector) {
+          const sectorIndex = this.props.sectors.findIndex(
+            sector => sector.title === RCSelectedSector
+          );
+          this.setState({
+            selectedId: sectorIndex
+          });
+        }
+      });
+
     this._viewStateChangeHandler = knockout
       // eslint-disable-next-line jsx-control-statements/jsx-jcs-no-undef
       .getObservable(viewState, "isHotspotsFiltered")
@@ -32,50 +45,7 @@ class SectorTabs extends React.Component {
     this._viewStateChangeHandler.dispose();
   }
   render() {
-    const sectors = [
-      {
-        title: "Agriculture",
-        icon: Icon.GLYPHS.agriculture,
-        iconHover: Icon.GLYPHS.agricultureHover,
-        info: `European food security and agri-food based economy are vulnerable to anomalous weather features, for example concerning water scarcity and drought affecting soybean, rice, cocoa and coffee production outside Europe.
-               This may impact raw material supply chains, food security or price volatility. `,
-        image: Agriculture
-      },
-      {
-        title: "Manufacturing",
-        icon: Icon.GLYPHS.manufacturing,
-        iconHover: Icon.GLYPHS.manufacturingHover,
-        info: `Supply of raw or processed input materials for European industries can be disrupted temporarily in case of heatwaves,
-               floods or storms in source areas `,
-        image: Manufacturing
-      },
-      {
-        title: "International Cooperation And Development",
-        icon: Icon.GLYPHS.internationalCooperationAndDevelopment,
-        iconHover: Icon.GLYPHS.internationalCooperationAndDevelopmentHover,
-        info: `Europe’s foreign and development policy involving concerns for migration, food security, political crises,
-               development aid and disaster risk reduction is highly affected by climatic risks and extremes,
-               and the forced displacement and migration patterns in response to these.`,
-        image: InternationalCooperation
-      },
-      {
-        title: "Coastal Infrastructure",
-        icon: Icon.GLYPHS.coastalInfrastructure,
-        iconHover: Icon.GLYPHS.coastalInfrastructureHover,
-        info: `Civil protection and industrial production are heavily affected when storms or floods,
-               aggravated by remote ice-sheet melting and sea level rise,
-               lead to large damage to cities, ports or industrial plants in connected areas.`,
-        image: CoastalInfra
-      },
-      {
-        title: "Finance",
-        icon: Icon.GLYPHS.finance,
-        iconHover: Icon.GLYPHS.financeHover,
-        info: `Strong or multiple tropical cyclones may affect the solvency of (re)insurance companies, investors and EU public finance.
-              The finance sector and business are exposed via their portfolio and foreign direct investments`,
-        image: Finance
-      }
-    ];
+    const { sectors } = this.props;
     const { selectedId } = this.state;
     return (
       <div className={Styles.tabsContainer}>
@@ -84,8 +54,7 @@ class SectorTabs extends React.Component {
             <div
               key={id}
               onClick={() => {
-                this.setState({ selectedId: id });
-                this.props.showSectorInfo(sector);
+                RCChangeUrlParams({ sector: sector.title }, viewState);
               }}
             >
               <Tooltip content={sector.title} direction="bottom" delay="100">
@@ -102,7 +71,7 @@ class SectorTabs extends React.Component {
   }
 }
 SectorTabs.propTypes = {
-  showSectorInfo: PropTypes.func.isRequired,
-  viewState: PropTypes.func || PropTypes.object
+  viewState: PropTypes.func || PropTypes.object,
+  sectors: PropTypes.array
 };
 export default SectorTabs;

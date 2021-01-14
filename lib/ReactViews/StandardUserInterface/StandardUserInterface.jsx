@@ -15,7 +15,7 @@ import Notification from "./../Notification/Notification.jsx";
 import ObserveModelMixin from "./../ObserveModelMixin";
 import ProgressBar from "../Map/ProgressBar.jsx";
 import SidePanel from "./../SidePanel/SidePanel.jsx";
-import SidePanelContent from "./../SidePanel/SidePanelSectorTabs";
+import SidePanelSectorTabs from "./../SidePanel/SidePanelSectorTabs";
 import processCustomElements from "./processCustomElements";
 import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import RCStoryPanel from "./../Story/RCStoryPanel.jsx";
@@ -23,7 +23,7 @@ import StoryBuilder from "./../Story/StoryBuilder.jsx";
 import ToolPanel from "./../ToolPanel.jsx";
 import SatelliteGuide from "../Guide/SatelliteGuide.jsx";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage.jsx";
-import { exitStory } from "../../Models/Receipt";
+import { exitStory, RCChangeUrlParams } from "../../Models/Receipt";
 import { Medium, Small } from "../Generic/Responsive";
 import classNames from "classnames";
 import "inobounce";
@@ -116,6 +116,9 @@ const StandardUserInterface = createReactClass({
   },
 
   componentDidMount() {
+    // First web enters, read the params
+    RCChangeUrlParams(undefined, this.props.viewState);
+
     this.props.viewState.isHotspotsFiltered = false;
     this._wrapper.addEventListener("dragover", this.dragOverListener, false);
     showStoryPrompt(this.props.viewState, this.props.terria);
@@ -223,7 +226,7 @@ const StandardUserInterface = createReactClass({
 
                     {!(showStoryPanel || showHotspotSummary) && (
                       <div className={Styles.tabsContainer}>
-                        <SidePanelContent
+                        <SidePanelSectorTabs
                           terria={terria}
                           viewState={this.props.viewState}
                         />
@@ -267,7 +270,10 @@ const StandardUserInterface = createReactClass({
                     )}
 
                     {!(showStoryPanel || showHotspotSummary) && (
-                      <SidePanelContent terria={terria} viewState={viewState} />
+                      <SidePanelSectorTabs
+                        terria={terria}
+                        viewState={viewState}
+                      />
                     )}
                     {showStoryPanel ? (
                       <RCStoryPanel
