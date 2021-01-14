@@ -7,31 +7,50 @@ import Mappable from "../Mappable";
 import { BaseModel } from "../Model";
 import Terria from "../Terria";
 import upsertModelFromJson from "../upsertModelFromJson";
+import BingMapsCatalogItemTraits from "./../../Traits/BingMapsCatalogItemTraits";
 
 export interface BaseMapModel {
   image: string;
   item: BaseModel;
 }
 
-export function processBaseMaps(baseMaps: BaseMapModel[], terria: Terria) {
-  baseMaps.forEach(baseMap => {
-    const item = baseMap.item;
-    if (item.type === BingMapsCatalogItem.type && !(<any>item).key) {
-      (<any>item).key = terria.configParameters.bingMapsKey;
+export function processBaseMaps(newBaseMaps: BaseMapModel[], terria: Terria) {
+  newBaseMaps.forEach(newBaseMap => {
+    const item = newBaseMap.item;
+    if (!item) {
+      console.log("basemap is missing the item property.");
+      return;
+    }
+    if (
+      terria.baseMaps.some(
+        baseMap => baseMap.mappable.uniqueId === (<any>newBaseMap.item).id
+      )
+    ) {
+      return;
+    }
+
+    if (item.type === BingMapsCatalogItem.type) {
+      addBingMapsKey(item, terria);
     }
     const model = upsertModelFromJson(
       CatalogMemberFactory,
       terria,
       "/basemap/",
       CommonStrata.definition,
-      baseMap.item,
+      newBaseMap.item,
       {
         addModelToTerria: true
       }
     );
     if (Mappable.is(model)) {
       if (CatalogMemberMixin.isMixedInto(model)) model.loadMetadata();
-      terria.baseMaps.push(new BaseMapViewModel(model, baseMap.image));
+      terria.baseMaps.push(new BaseMapViewModel(model, newBaseMap.image));
     }
   });
+}
+
+function addBingMapsKey(item: any, terria: Terria) {
+  if (!item.key) {
+    item.key = terria.configParameters.bingMapsKey;
+  }
 }
