@@ -101,6 +101,11 @@
     "btnResetRealign": "reset compass alignment"
   },
   "tool": {
+    "closeButtonTitle": "Close {{toolName}} Tool",
+    "loadingError": {
+      "title": "Error Loading {{toolName}} Tool",
+      "message": "An error occurred while trying to load the this tool from the server. Please try again."
+    },
     "exitBtnTitle": "Exit"
   },
   "diffTool": {
