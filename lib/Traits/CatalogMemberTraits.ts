@@ -7,6 +7,22 @@ import objectArrayTrait from "./objectArrayTrait";
 import primitiveArrayTrait from "./primitiveArrayTrait";
 import primitiveTrait from "./primitiveTrait";
 
+export class MetadataUrlTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "string",
+    name: "URL",
+    description: "The metadata URL of the file or service."
+  })
+  url?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Title",
+    description: "Title used for metadata URL button."
+  })
+  title?: string;
+}
+
 export class InfoSectionTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
