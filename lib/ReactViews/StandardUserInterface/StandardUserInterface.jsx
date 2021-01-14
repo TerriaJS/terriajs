@@ -119,7 +119,7 @@ const StandardUserInterface = createReactClass({
     // First web enters, read the params
     RCChangeUrlParams(undefined, this.props.viewState);
 
-    this.props.viewState.isHotspotsFiltered = false;
+    // this.props.viewState.isHotspotsFiltered = false;
     this._wrapper.addEventListener("dragover", this.dragOverListener, false);
     showStoryPrompt(this.props.viewState, this.props.terria);
   },

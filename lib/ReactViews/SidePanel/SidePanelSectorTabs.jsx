@@ -66,21 +66,13 @@ class SidePanelSectorTabs extends React.Component {
       // eslint-disable-next-line jsx-control-statements/jsx-jcs-no-undef
       .getObservable(viewState, "RCSelectedSector")
       .subscribe(RCSelectedSector => {
-        const sector = this.sectors.find(
+        const selectedSector = this.sectors.find(
           sector => sector.title === RCSelectedSector
         );
-        this.setState({ sector: sector });
-        // Show list sotries in a sector and activate panel
-        this.setState({
-          selectedHotspotsList:
-            this.props.terria.nowViewing.items.find(
-              item => item.name === sector.title
-            )?._dataSource.entities.values || []
-        });
-
-        // TODO THE FILTERS ARE NOT WORKING 👧🏽
-        // Filter hostpots
-        // this.filterHotspots(sector.title);
+        if (selectedSector) {
+          this.showSectorInfo(selectedSector);
+          this.filterHotspots(selectedSector.title);
+        }
       });
 
     this._viewStateChangeHandler = knockout
@@ -99,7 +91,16 @@ class SidePanelSectorTabs extends React.Component {
     this._viewStateChangeHandler.dispose();
     this._viewStateSelectedSector.dispose();
   }
-
+  showSectorInfo = selectedSector => {
+    this.setState({ sector: selectedSector });
+    // Show list sotries in a sector and activate panel
+    this.setState({
+      selectedHotspotsList:
+        this.props.terria.nowViewing.items.find(
+          item => item.name === selectedSector.title
+        )?._dataSource.entities.values || []
+    });
+  };
   filterHotspots = sector => {
     const { terria, viewState } = this.props;
     terria.nowViewing.items.map(item => {
@@ -123,10 +124,7 @@ class SidePanelSectorTabs extends React.Component {
     const { sector, selectedHotspotsList } = this.state;
     return (
       <div className={Styles.sidePanelSectorTabs}>
-        <SectorTabs
-          // showSectorInfo={this.showSectorInfo}
-          sectors={this.sectors}
-        />
+        <SectorTabs sectors={this.sectors} />
         <SectorInfo
           terria={terria}
           viewState={viewState}
