@@ -27,6 +27,7 @@ nav:
           - Tabular Data: connecting-to-data/customizing-data-appearance/tabular-data.md
           - Feature Information Template: connecting-to-data/customizing-data-appearance/feature-info-template.md
       - Catalog Functions: connecting-to-data/catalog-functions.md
+      - Catalog References: connecting-to-data/catalog-references.md
       - Catalog Type Details:
   - Deploying:
       - Overview: deploying/README.md

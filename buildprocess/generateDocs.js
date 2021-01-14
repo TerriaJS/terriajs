@@ -89,11 +89,13 @@ function concatTags(inNode) {
 async function getJsDoc(memberName) {
   return new Promise(function(resolve) {
     documentation
-      .build([`./lib/Traits/${memberName}Traits.ts`], {
-        shallow: true
+      .build([`../lib/Traits/${memberName}Traits.ts`], {
+        shallow: true,
+        external: []
       })
       .then(documentation.formats.json)
       .then(output => {
+        console.log(`../lib/Traits/${memberName}Traits.ts:\n${output}`);
         resolve(JSON.parse(output));
       })
       .catch(err => {
@@ -136,8 +138,7 @@ ${example}
 | ------ | ------ | ------ | ------ |
 `;
 
-  let additionalContent = `
-`;
+  let additionalContent = "\n";
   Object.entries(sampleMember.traits).forEach(([k, trait]) => {
     const traitType = markdownFromTraitType(trait);
     if (trait instanceof ObjectTrait || trait instanceof ObjectArrayTrait) {
@@ -154,7 +155,7 @@ ${example}
     }
   });
 
-  return [content, additionalContent].join("");
+  return content + additionalContent;
 }
 
 async function processArray(members) {
@@ -162,18 +163,21 @@ async function processArray(members) {
   let catalogItemsContent = "";
   let catalogGroupsContent = "";
   let catalogFunctionsContent = "";
+  let catalogReferencesContent = "";
   for (let i = 0; i < members.length; i++) {
     const sampleMember = members[i];
     const memberName = sampleMember.constructor.name;
 
     console.log(memberName, sampleMember.type);
     const tableRow = `| [${memberName}](catalog-type-details/${sampleMember.type}.md) | \`${sampleMember.type}\` |\n`;
-    if (memberName.indexOf("Item") > -1) {
+    if (memberName.endsWith("Item")) {
       catalogItemsContent += tableRow;
-    } else if (memberName.indexOf("Group") > -1) {
+    } else if (memberName.endsWith("Group")) {
       catalogGroupsContent += tableRow;
-    } else if (memberName.indexOf("Function") > -1) {
+    } else if (memberName.endsWith("Function")) {
       catalogFunctionsContent += tableRow;
+    } else if (memberName.endsWith("Reference")) {
+      catalogReferencesContent += tableRow;
     } else {
       console.error(`${memberName} is not an Item, Group or Function`);
     }
@@ -192,6 +196,7 @@ async function processArray(members) {
     catalogItemsContent,
     catalogGroupsContent,
     catalogFunctionsContent,
+    catalogReferencesContent,
     typeDetailsNavItems
   };
 }
@@ -215,49 +220,73 @@ export default async function generateDocs() {
 
   const mkDocsConfig = YAML.parse(fs.readFileSync("doc/mkdocs.yml", "utf8"));
 
-  const catalogItemsContentHeader = `A Catalog Item is a dataset or service that can be enabled for display on the map or in a chart.  The Type column in the table below indicates the \`"type"\` property to use in the [Initialization File](../customizing/initialization-files.md).
+  const commonContentHeader = `The Type column in the table below indicates the \`"type"\` property to use in the [Initialization File](../customizing/initialization-files.md).
 
   | Name | Type |
   |------|------|
   `;
 
-  const catalogGroupsContentHeader = `A Catalog Group is a folder in the TerriaJS catalog that contains [Catalog Items](catalog-items.md), [Catalog Functions](catalog-functions.md), and other groups. The Type column in the table below indicates the \`"type"\` property to use in the [Initialization File](../customizing/initialization-files.md).
+  const catalogItemsContentHeader =
+    "A Catalog Item is a dataset or service that can be enabled for display on the map or in a chart. ";
 
-  | Name | Type |
-  |------|------|
-  `;
+  const catalogGroupsContentHeader =
+    "A Catalog Group is a folder in the TerriaJS catalog that contains [Catalog Items](catalog-items.md), [Catalog Functions](catalog-functions.md), and other groups. ";
 
-  const catalogFunctionsContentHeader = `A Catalog Function is a parameterized service where the user supplies the parameters and gets back some result. The Type column in the table below indicates the \`"type"\` property to use in the [Initialization File](../customizing/initialization-files.md).
+  const catalogFunctionsContentHeader =
+    "A Catalog Function is a parameterized service where the user supplies the parameters and gets back some result. ";
 
-  | Name | Type |
-  |------|------|
-  `;
+  const catalogReferencesContentHeader =
+    "A Catalog Reference can resolve to a Catalog Item, Group or Function. It's mostly used to connect to services that could return a single dataset or a group of datasets. ";
 
   const {
     catalogFunctionsContent,
     catalogGroupsContent,
     catalogItemsContent,
+    catalogReferencesContent,
     typeDetailsNavItems
   } = await processArray(members);
 
-  mkDocsConfig.nav[3]["Connecting to Data"][6][
-    "Catalog Type Details"
-  ] = typeDetailsNavItems;
+  // Add entries for all the catalog item/group/function/reference types to type details subsection in mkdocs.yml
+  const connectingToDataSection = mkDocsConfig.nav
+    .map(section => section["Connecting to Data"])
+    .filter(x => x !== undefined)[0];
+  const typeDetailsSubSection =
+    connectingToDataSection &&
+    connectingToDataSection.find(
+      subSection => "Catalog Type Details" in subSection
+    );
+  if (typeDetailsSubSection === undefined) {
+    throw new Error(
+      `Couldn't find "Connecting to Data" → "Catalog Type Details" in mkdocs.yml`
+    );
+  }
+  typeDetailsSubSection["Catalog Type Details"] = typeDetailsNavItems;
 
   fs.writeFileSync("mkdocs.yml", YAML.stringify(mkDocsConfig));
 
   fs.writeFileSync(
     "doc/connecting-to-data/catalog-items.md",
-    catalogItemsContentHeader + catalogItemsContent
+    catalogItemsContentHeader + commonContentHeader + catalogItemsContent
   );
   fs.writeFileSync(
     "doc/connecting-to-data/catalog-functions.md",
-    catalogFunctionsContentHeader + catalogFunctionsContent
+    catalogFunctionsContentHeader +
+      commonContentHeader +
+      catalogFunctionsContent
   );
   fs.writeFileSync(
     "doc/connecting-to-data/catalog-groups.md",
-    catalogGroupsContentHeader + catalogGroupsContent
+    catalogGroupsContentHeader + commonContentHeader + catalogGroupsContent
+  );
+  fs.writeFileSync(
+    "doc/connecting-to-data/catalog-references.md",
+    catalogReferencesContentHeader +
+      commonContentHeader +
+      catalogReferencesContent
   );
 }
 
-generateDocs();
+generateDocs().catch(err => {
+  console.error(err);
+  process.exitCode = 1;
+});
