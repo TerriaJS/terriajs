@@ -1,13 +1,12 @@
 import { observer } from "mobx-react";
 import Mustache from "mustache";
-import React, { memo } from "react";
+import React from "react";
 import {
   useTranslation,
   WithTranslation,
   withTranslation
 } from "react-i18next";
-import AutoSizer from "react-virtualized-auto-sizer";
-import { FixedSizeList as List } from "react-window";
+import { useVirtual } from "react-virtual";
 import styled from "styled-components";
 import { ItemSearchResult } from "../../../Models/ItemSearchProvider";
 import parseCustomMarkdownToReact from "../../Custom/parseCustomMarkdownToReact";
@@ -23,76 +22,54 @@ export interface SearchResultsProps extends WithTranslation {
 
 type ResultClickHandler = (result: ItemSearchResult) => void;
 
-export { FixedSizeList as List } from "react-window";
-
 const SearchResults: React.FC<SearchResultsProps> = props => {
-  const { results } = props;
+  const { results, selectedResult } = props;
+  const parentRef = React.createRef<HTMLDivElement>();
+  const list = useVirtual({
+    size: results.length,
+    parentRef,
+    estimateSize: React.useCallback(() => 50, [])
+  });
+
   return (
     <Wrapper>
       <ResultsCount count={results.length} />
-      {results.length > 0 && (
-        <AutoSizer>
-          {size => (
-            <List
-              width={size.width}
-              height={size.height - 20}
-              itemSize={50}
-              itemCount={results.length}
-              itemData={{
-                onClick: props.onSelectResult,
-                results,
-                selectedResult: props.selectedResult,
-                template: props.template
+      <List ref={parentRef} height={`250px`}>
+        <ListInner height={`${list.totalSize}px`}>
+          {list.virtualItems.map(({ index, ...row }) => (
+            <Result
+              result={results[index]}
+              isSelected={results[index].id === selectedResult?.id}
+              isEven={index % 2 === 0}
+              onClick={props.onSelectResult}
+              template={props.template}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: `${row.size}px`,
+                transform: `translateY(${row.start}px)`
               }}
-            >
-              {ResultItem}
-            </List>
-          )}
-        </AutoSizer>
-      )}
+            />
+          ))}
+        </ListInner>
+      </List>
     </Wrapper>
   );
 };
 
-type ResultItemProps = {
-  index: number;
-  data: {
-    onClick: ResultClickHandler;
-    results: ItemSearchResult[];
-    selectedResult?: ItemSearchResult;
-    template?: string;
-  };
-  style: any;
-};
-
-const ResultItem: React.FC<ResultItemProps> = memo(props => {
-  const { index, data, ...restProps } = props;
-  const { results, selectedResult, template, onClick } = data;
-  const result = results[index];
-  const isSelected = selectedResult ? result.id === selectedResult.id : false;
-  return (
-    <Result
-      result={result}
-      isSelected={isSelected}
-      template={template}
-      isEven={index % 2 === 0}
-      onClick={onClick}
-      {...restProps}
-    />
-  );
-});
-
 type ResultProps = {
   result: ItemSearchResult;
   isSelected: boolean;
-  template?: string;
-  style: any;
   isEven: boolean;
   onClick: ResultClickHandler;
+  template?: string;
+  style: any;
 };
 
 export const Result: React.FC<ResultProps> = observer(props => {
-  const { result, template, style, isEven, isSelected } = props;
+  const { result, template, isEven, isSelected, style } = props;
   const content = template
     ? parseCustomMarkdownToReact(Mustache.render(template, result.properties))
     : result.id;
@@ -106,10 +83,10 @@ export const Result: React.FC<ResultProps> = observer(props => {
   return (
     <ClickableItem
       role="button"
-      style={style}
       isEven={isEven}
       isSelected={isSelected}
       onClick={onClick}
+      style={style}
     >
       {content}
     </ClickableItem>
@@ -129,6 +106,18 @@ const ClickableItem = styled.a<{ isEven: boolean; isSelected: boolean }>`
         ? p.theme.dark
         : p.theme.darkLighter
     };`}
+`;
+
+const List = styled.div<{ height: string }>`
+  ${p => `height: ${p.height}`};
+  width: 100%;
+  overflow: auto;
+`;
+
+const ListInner = styled.div<{ height: string }>`
+  ${p => `height: ${p.height}`};
+  width: 100%;
+  position: relative;
 `;
 
 const Wrapper = styled(Box).attrs({ column: true, flex: 1 })`
