@@ -288,7 +288,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     if (!isDefined(this.catalogGroup.uniqueId)) {
       return;
     }
-    return `${this.catalogGroup.uniqueId}/${layer.Name || layer.Title}`;
+    return `${this.catalogGroup.uniqueId}/${layer.Title}`;
   }
 }
 

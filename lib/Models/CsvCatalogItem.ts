@@ -1,21 +1,21 @@
 import i18next from "i18next";
-import { runInAction, computed, action } from "mobx";
+import { computed, runInAction } from "mobx";
+import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
 import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
+import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import ExportableMixin from "../ModelMixins/ExportableMixin";
 import TableMixin from "../ModelMixins/TableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import Csv from "../Table/Csv";
 import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 import CsvCatalogItemTraits from "../Traits/CsvCatalogItemTraits";
 import CreateModel from "./CreateModel";
+import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
-import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
-import isDefined from "../Core/isDefined";
-import { BaseModel } from "./Model";
-import ExportableMixin from "../ModelMixins/ExportableMixin";
 
 // Types of CSVs:
 // - Points - Latitude and longitude columns or address
@@ -158,7 +158,6 @@ export default class CsvCatalogItem extends AsyncChartableMixin(
     return Promise.resolve();
   }
 
-  @action
   protected forceLoadTableData(): Promise<string[][]> {
     if (this.csvString !== undefined) {
       return Csv.parseString(this.csvString, true);

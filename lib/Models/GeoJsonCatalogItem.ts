@@ -119,50 +119,48 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
         })
       });
 
-    return new Promise<JsonValue | undefined>(
-      action((resolve, reject) => {
-        if (isDefined(this.geoJsonData)) {
-          resolve(toJS(this.geoJsonData));
-        } else if (isDefined(this.geoJsonString)) {
-          resolve(<JsonValue>JSON.parse(this.geoJsonString));
-        } else if (isDefined(this._geoJsonFile)) {
-          resolve(readJson(this._geoJsonFile));
-        } else if (isDefined(this.url)) {
-          // try loading from a zip file url or a regular url
-          if (zipFileRegex.test(this.url)) {
-            if (typeof FileReader === "undefined") {
-              throw new TerriaError({
-                title: i18next.t("models.userData.fileApiNotSupportedTitle"),
-                message: i18next.t("models.userData.fileApiNotSupportedTitle", {
-                  appName: this.terria.appName,
-                  internetExplorer:
-                    '<a href="http://www.microsoft.com/ie" target="_blank">' +
-                    i18next.t("models.userData.internetExplorer") +
-                    "</a>",
-                  chrome:
-                    '<a href="http://www.google.com/chrome" target="_blank">' +
-                    i18next.t("models.userData.chrome") +
-                    "</a>",
-                  firefox:
-                    '<a href="http://www.mozilla.org/firefox" target="_blank">' +
-                    i18next.t("models.userData.firefox") +
-                    "</a>"
-                })
-              });
-            }
-            resolve(loadZipFile(proxyCatalogItemUrl(this, this.url)));
-          } else {
-            resolve(loadJson(proxyCatalogItemUrl(this, this.url)));
+    return new Promise<JsonValue | undefined>((resolve, reject) => {
+      if (isDefined(this.geoJsonData)) {
+        resolve(toJS(this.geoJsonData));
+      } else if (isDefined(this.geoJsonString)) {
+        resolve(<JsonValue>JSON.parse(this.geoJsonString));
+      } else if (isDefined(this._geoJsonFile)) {
+        resolve(readJson(this._geoJsonFile));
+      } else if (isDefined(this.url)) {
+        // try loading from a zip file url or a regular url
+        if (zipFileRegex.test(this.url)) {
+          if (typeof FileReader === "undefined") {
+            throw new TerriaError({
+              title: i18next.t("models.userData.fileApiNotSupportedTitle"),
+              message: i18next.t("models.userData.fileApiNotSupportedTitle", {
+                appName: this.terria.appName,
+                internetExplorer:
+                  '<a href="http://www.microsoft.com/ie" target="_blank">' +
+                  i18next.t("models.userData.internetExplorer") +
+                  "</a>",
+                chrome:
+                  '<a href="http://www.google.com/chrome" target="_blank">' +
+                  i18next.t("models.userData.chrome") +
+                  "</a>",
+                firefox:
+                  '<a href="http://www.mozilla.org/firefox" target="_blank">' +
+                  i18next.t("models.userData.firefox") +
+                  "</a>"
+              })
+            });
           }
+          resolve(loadZipFile(proxyCatalogItemUrl(this, this.url)));
         } else {
-          throw new TerriaError({
-            sender: this,
-            title: i18next.t("models.geoJson.unableToLoadItemTitle"),
-            message: i18next.t("models.geoJson.unableToLoadItemMessage")
-          });
+          resolve(loadJson(proxyCatalogItemUrl(this, this.url)));
         }
-      })
-    )
+      } else {
+        throw new TerriaError({
+          sender: this,
+          title: i18next.t("models.geoJson.unableToLoadItemTitle"),
+          message: i18next.t("models.geoJson.unableToLoadItemMessage")
+        });
+      }
+    })
       .then((geoJson: JsonValue | undefined) => {
         if (!isJsonObject(geoJson)) {
           throw createLoadError();
@@ -203,7 +201,6 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
     return Promise.resolve();
   }
 
-  @action
   private loadDataSource(geoJson: JsonObject): Promise<GeoJsonDataSource> {
     /* Style information is applied as follows, in decreasing priority:
            - simple-style properties set directly on individual features in the GeoJSON file

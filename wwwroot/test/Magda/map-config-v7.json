@@ -1,8 +1,8 @@
 {
   "aspects": {
     "terria-config": {
-      "initializationUrls": [
-        "https://example.foo.bar/init.json"
+      "v7initializationUrls": [
+        "https://example.foo.bar/initv7.json"
       ],
       "parameters": {
         "appName": "TestTerriaMap"

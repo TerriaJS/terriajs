@@ -257,7 +257,7 @@ const StoryBuilder = observer(
             /*
           // @ts-ignore */
             viewState={this.props.viewState}
-            videoLink={"https://www.youtube.com/embed/fbiQawV8IYY"}
+            videoLink={"https://www.youtube-nocookie.com/embed/fbiQawV8IYY"}
             background={dataStoriesImg}
             videoName={STORY_VIDEO}
           />

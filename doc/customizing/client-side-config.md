@@ -23,6 +23,10 @@ If a string ends with `.json`, it is assumed to be a complete relative or absolu
 
 If the string does not end with `.json`, such as `"foo"`, it refers to an init file on the same web server at `init/foo.json`.  In a TerriaMap directory on your computer, it can be found at `wwwroot/init/foo.json`.
 
+### v7intializationUrls
+
+It is also possible to add version 7 init files &mdash; these will be converted on-the-fly in `terriajs` when a map is loaded. See [`catalog-converter`](https://github.com/TerriaJS/catalog-converter) repo for more information.
+
 ## parameters
 
 **The following table has not been updated for TerriaJS v8. Most should still work as they did in version 7 however we may have removed some and added new ones. The best reference for now is [`interface ConfigParameters`](https://github.com/TerriaJS/terriajs/blob/next/lib/Models/Terria.ts#L115) (you may have to search for `interface ConfigParameters` on that page to find it if future code changes change line numbers).** 
