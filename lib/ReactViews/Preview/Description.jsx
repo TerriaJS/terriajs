@@ -203,7 +203,7 @@ const Description = observer(
                     <If condition={metadataUrl.title}>
                       <Button primary={true}>{metadataUrl.title}</Button>
                     </If>
-                    <If condition={!metadataUrl.title}>metadataUrl.url</If>
+                    <If condition={!metadataUrl.title}>{metadataUrl.url}</If>
                   </a>
                 </Box>
               </For>
