@@ -1446,11 +1446,8 @@
     "searchBtnText": "Search",
     "resetBtnText": "Clear input",
     "backBtnText": "Search again",
-    "resultsCount": {
-      "zero": "No match found",
-      "one": "Showing 1 match",
-      "many": "Showing {{count}} matches"
-    }
+    "resultsCount": "{{count}} match found",
+    "resultsCount_plural": "{{count}} matches found"
   },
   "indexedItemSearchProvider": {
     "missingOptionIndexRootUrl": "Option `indexRootUrl` is missing in the item's search configuration.",

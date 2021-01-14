@@ -130,14 +130,14 @@ const Wrapper = styled(Box).attrs({ column: true, flex: 1 })`
 
 export const ResultsCount: React.FC<{ count: number }> = ({ count }) => {
   const [t] = useTranslation();
-  const inflection = count === 0 ? "zero" : count === 1 ? "one" : "many";
   return (
     <Box
       css={`
         margin-bottom: 1em;
+        ${count === 0 ? "align-self: center;" : ""}
       `}
     >
-      {t(`itemSearchTool.resultsCount.${inflection}`, { count })}
+      {t(`itemSearchTool.resultsCount`, { count })}
     </Box>
   );
 };
