@@ -263,7 +263,7 @@ export default class Terria {
 
   initBaseMapId: string | undefined;
 
-  previewBaseMapId: string | undefined;
+  previewBaseMapId: string = "basemap-positron";
 
   @observable
   pickedFeatures: PickedFeatures | undefined;
