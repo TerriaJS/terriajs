@@ -564,8 +564,6 @@ export default class Terria {
   }
 
   setBaseMaps(baseMaps: BaseMapModel[]): void {
-    // clear the default list of basemaps and set the new one
-    this.baseMaps = [];
     processBaseMaps(baseMaps, this);
     if (!this.mainViewer.baseMap) {
       this.loadPersistedOrInitBaseMap();
@@ -662,7 +660,13 @@ export default class Terria {
           })
         );
         return Promise.all(promises);
-      }).then(() => undefined);
+      })
+        .then(() => {
+          if (this.baseMaps.length === 0) {
+            this.baseMaps = defaultBaseMaps(this);
+          }
+        })
+        .then(() => undefined);
     });
   }
 
@@ -861,8 +865,6 @@ export default class Terria {
       initData.baseMaps.length > 0
     ) {
       this.setBaseMaps(<BaseMapModel[]>(<unknown>initData.baseMaps));
-    } else {
-      this.setBaseMaps(defaultBaseMaps(this));
     }
 
     if (isJsonObject(initData.homeCamera)) {
