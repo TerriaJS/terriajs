@@ -48,6 +48,8 @@ import { shareConvertNotification } from "../ReactViews/Notification/shareConver
 import ShowableTraits from "../Traits/ShowableTraits";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
+import { BaseMapModel, processBaseMaps } from "./BaseMaps/BaseMapModel";
+import { defaultBaseMaps } from "./BaseMaps/defaultBaseMaps";
 import CameraView from "./CameraView";
 import CatalogGroup from "./CatalogGroupNew";
 import CatalogMemberFactory from "./CatalogMemberFactory";
@@ -260,6 +262,8 @@ export default class Terria {
   baseMaps: BaseMapViewModel[] = [];
 
   initBaseMapId: string | undefined;
+
+  previewBaseMapId: string | undefined;
 
   @observable
   pickedFeatures: PickedFeatures | undefined;
@@ -559,9 +563,10 @@ export default class Terria {
     }
   }
 
-  @action
-  updateBaseMaps(baseMaps: BaseMapViewModel[]): void {
-    this.baseMaps.push(...baseMaps);
+  setBaseMaps(baseMaps: BaseMapModel[]): void {
+    // clear the default list of basemaps and set the new one
+    this.baseMaps = [];
+    processBaseMaps(baseMaps, this);
     if (!this.mainViewer.baseMap) {
       this.loadPersistedOrInitBaseMap();
     }
@@ -844,6 +849,20 @@ export default class Terria {
 
     if (isJsonString(initData.baseMapId)) {
       this.initBaseMapId = initData.baseMapId;
+    }
+
+    if (isJsonString(initData.previewBaseMapId)) {
+      this.previewBaseMapId = initData.previewBaseMapId;
+    }
+
+    if (
+      initData.baseMaps &&
+      Array.isArray(initData.baseMaps) &&
+      initData.baseMaps.length > 0
+    ) {
+      this.setBaseMaps(<BaseMapModel[]>(<unknown>initData.baseMaps));
+    } else {
+      this.setBaseMaps(defaultBaseMaps(this));
     }
 
     if (isJsonObject(initData.homeCamera)) {

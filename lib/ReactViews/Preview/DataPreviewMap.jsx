@@ -15,7 +15,6 @@ import Mappable, { ImageryParts } from "../../Models/Mappable";
 // eslint-disable-next-line no-unused-vars
 import Terria from "../../Models/Terria";
 import TerriaViewer from "../../ViewModels/TerriaViewer";
-import { POSITRON_BASE_MAP_ID } from "../../ViewModels/createGlobalBaseMapOptions";
 import ViewerMode from "../../Models/ViewerMode";
 import Styles from "./data-preview-map.scss";
 
@@ -139,11 +138,12 @@ class DataPreviewMap extends React.Component {
     this.isZoomedToExtent = false;
 
     // Choose positron if it's available
-    const positronBaseMap = this.props.terria.baseMaps.find(
-      baseMap => baseMap.mappable.uniqueId === POSITRON_BASE_MAP_ID
+    const initPreviewBaseMap = this.props.terria.baseMaps.find(
+      baseMap =>
+        baseMap.mappable.uniqueId === this.props.terria.previewBaseMapId
     );
-    if (positronBaseMap !== undefined) {
-      this.previewViewer.baseMap = positronBaseMap.mappable;
+    if (initPreviewBaseMap !== undefined) {
+      this.previewViewer.baseMap = initPreviewBaseMap.mappable;
     } else {
       this.previewViewer.baseMap =
         this.props.terria.baseMaps.length > 0
