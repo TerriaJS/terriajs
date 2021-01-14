@@ -7,7 +7,6 @@ import Mappable from "../Mappable";
 import { BaseModel } from "../Model";
 import Terria from "../Terria";
 import upsertModelFromJson from "../upsertModelFromJson";
-import IonImageryCatalogItem from "./../../../dist/Models/IonImageryCatalogItem";
 
 export interface BaseMapModel {
   image: string;
@@ -18,8 +17,6 @@ export function processBaseMaps(baseMaps: BaseMapModel[], terria: Terria) {
   baseMaps.forEach(baseMap => {
     const item = baseMap.item;
     if (item.type === BingMapsCatalogItem.type && !(<any>item).key) {
-      (<any>item).key = terria.configParameters.bingMapsKey;
-    } else if (item.type === IonImageryCatalogItem.type) {
       (<any>item).key = terria.configParameters.bingMapsKey;
     }
     const model = upsertModelFromJson(
