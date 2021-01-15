@@ -1,7 +1,7 @@
 import * as geoJsonMerge from "@mapbox/geojson-merge";
 import i18next from "i18next";
 import * as shp from "shpjs";
-import JsonValue, { isJsonArray } from "../Core/Json";
+import JsonValue, { isJsonObject, JsonArray } from "../Core/Json";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GeoJsonMixin from "../ModelMixins/GeojsonMixin";
 import ShapefileCatalogItemTraits from "../Traits/ShapefileCatalogItemTraits";
@@ -12,6 +12,19 @@ import readJson from "../Core/readJson";
 import TerriaError from "../Core/TerriaError";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import loadBlob from "../Core/loadBlob";
+
+export function isJsonArrayOrDeepArrayOfObjects(
+  value: JsonValue | undefined
+): value is JsonArray {
+  return (
+    value !== undefined &&
+    value !== null &&
+    Array.isArray(value) &&
+    value.every(
+      child => isJsonObject(child) || isJsonArrayOrDeepArrayOfObjects(child)
+    )
+  );
+}
 
 class ShapefileCatalogItem extends GeoJsonMixin(
   CatalogMemberMixin(CreateModel(ShapefileCatalogItemTraits))
@@ -71,7 +84,7 @@ async function parseShapefile(blob: Blob) {
   let json: any;
   const asAb = await blob.arrayBuffer();
   json = await shp.parseZip(asAb);
-  if (isJsonArray(json)) {
+  if (isJsonArrayOrDeepArrayOfObjects(json)) {
     // There were multiple shapefiles in this zip file. Merge them.
     json = geoJsonMerge.merge(json);
   }
