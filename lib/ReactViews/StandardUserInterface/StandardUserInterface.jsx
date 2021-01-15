@@ -23,7 +23,7 @@ import StoryBuilder from "./../Story/StoryBuilder.jsx";
 import ToolPanel from "./../ToolPanel.jsx";
 import SatelliteGuide from "../Guide/SatelliteGuide.jsx";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage.jsx";
-import { exitStory, RCChangeUrlParams } from "../../Models/Receipt";
+import { RCChangeUrlParams } from "../../Models/Receipt";
 import { Medium, Small } from "../Generic/Responsive";
 import classNames from "classnames";
 import "inobounce";
@@ -116,12 +116,19 @@ const StandardUserInterface = createReactClass({
   },
 
   componentDidMount() {
-    // First web enters, read the params
-    RCChangeUrlParams(undefined, this.props.viewState);
-
     // this.props.viewState.isHotspotsFiltered = false;
     this._wrapper.addEventListener("dragover", this.dragOverListener, false);
     showStoryPrompt(this.props.viewState, this.props.terria);
+    //
+    // First web enters, read the params
+    //
+    RCChangeUrlParams(undefined, this.props.viewState);
+
+    // It need to call again the params in order to hide the filter hotspots when refreshing the window
+    setTimeout(() => {
+      // TODO RECEIPT => Filtering hotspots are being replaced by the catalog item
+      RCChangeUrlParams(undefined, this.props.viewState);
+    }, 2000);
   },
 
   componentWillUnmount() {

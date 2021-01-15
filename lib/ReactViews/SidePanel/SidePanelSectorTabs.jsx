@@ -10,6 +10,7 @@ import Manufacturing from "../../../wwwroot/images/receipt/sectors/manufacturing
 import InternationalCooperation from "../../../wwwroot/images/receipt/sectors/international-cooperation.png";
 import CoastalInfra from "../../../wwwroot/images/receipt/sectors/coastal-Infra.png";
 import Finance from "../../../wwwroot/images/receipt/sectors/finance.png";
+import { RCChangeUrlParams } from "../../Models/Receipt";
 
 class SidePanelSectorTabs extends React.Component {
   state = {
@@ -69,9 +70,14 @@ class SidePanelSectorTabs extends React.Component {
         const selectedSector = this.sectors.find(
           sector => sector.title === RCSelectedSector
         );
+        // Open panel
         if (selectedSector) {
           this.showSectorInfo(selectedSector);
-          this.filterHotspots(selectedSector.title);
+          // this.filterHotspots(selectedSector.title);
+        }
+        // Close the panel
+        else {
+          this.setState({ sector: null });
         }
       });
 
@@ -101,22 +107,24 @@ class SidePanelSectorTabs extends React.Component {
         )?._dataSource.entities.values || []
     });
   };
-  filterHotspots = sector => {
-    const { terria, viewState } = this.props;
-    terria.nowViewing.items.map(item => {
-      if (item.type === "geojson") {
-        item.isShown = item.name === sector;
-      }
-    });
-    // set isHotspots filtered to true to make back to all hotspots button visible
-    if (viewState) {
-      viewState.isHotspotsFiltered = true;
-    }
-  };
+
+  // filterHotspots = sector => {
+  //   const { terria, viewState } = this.props;
+  //   terria.nowViewing.items.map(item => {
+  //     if (item.type === "geojson") {
+  //       item.isShown = item.name === sector;
+  //     }
+  //   });
+  // set isHotspots filtered to true to make back to all hotspots button visible
+  // if (viewState) {
+  //   viewState.isHotspotsFiltered = true;
+  // }
+  // };
 
   closeSectorInfo = () => {
-    this.setState({ sector: null });
-    this.props.viewState.isHotspotsFiltered = false;
+    // this.setState({ sector: null });
+    // this.props.viewState.isHotspotsFiltered = false;
+    RCChangeUrlParams("", viewState);
   };
 
   render() {

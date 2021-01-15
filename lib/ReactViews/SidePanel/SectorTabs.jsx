@@ -28,6 +28,10 @@ class SectorTabs extends React.Component {
             selectedId: sectorIndex
           });
         }
+        // unselect the id
+        else {
+          this.setState({ selectedId: null });
+        }
       });
 
     this._viewStateChangeHandler = knockout
