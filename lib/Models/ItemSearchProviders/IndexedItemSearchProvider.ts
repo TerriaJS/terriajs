@@ -1,16 +1,14 @@
 import i18next from "i18next";
-import Papa from "papaparse";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import URI from "urijs";
 import loadJson5 from "../../Core/loadJson5";
-import loadText from "../../Core/loadText";
-import makeRealPromise from "../../Core/makeRealPromise";
 import ItemSearchProvider, {
   ItemSearchParameter,
   ItemSearchResult
 } from "../ItemSearchProvider";
 import { Index, IndexRoot, parseIndexRoot } from "./Index";
+import loadCsv from "./loadCsv";
 
 const t = i18next.t.bind(i18next);
 
@@ -203,20 +201,6 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
       properties
     };
   }
-}
-
-function loadCsv(url: string, options?: Papa.ParseConfig): Promise<any[]> {
-  return makeRealPromise<string>(loadText(url)).then(
-    (text: string) =>
-      new Promise((resolve, reject) =>
-        Papa.parse(text, {
-          worker: true,
-          complete: result => resolve(result.data),
-          error: error => reject(error),
-          ...options
-        })
-      )
-  );
 }
 
 export function intersectSets<T>(sets: Set<T>[]): Set<T> {
