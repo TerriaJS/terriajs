@@ -8,24 +8,23 @@ export type ItemSearchParameter =
   | EnumItemSearchParameter
   | TextItemSearchParameter;
 
-export interface NumericItemSearchParameter {
-  type: "numeric";
+export type BaseParameter = {
   id: string;
   name: string;
+};
+
+export interface NumericItemSearchParameter extends BaseParameter {
+  type: "numeric";
   range: { min: number; max: number };
 }
 
-export interface EnumItemSearchParameter {
+export interface EnumItemSearchParameter extends BaseParameter {
   type: "enum";
-  id: string;
-  name: string;
   values: { id: string; count: number }[];
 }
 
-export interface TextItemSearchParameter {
+export interface TextItemSearchParameter extends BaseParameter {
   type: "text";
-  id: string;
-  name: string;
 }
 
 export type ItemSearchResult = {
