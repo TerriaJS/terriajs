@@ -7,7 +7,6 @@ import Mappable from "../Mappable";
 import { BaseModel } from "../Model";
 import Terria from "../Terria";
 import upsertModelFromJson from "../upsertModelFromJson";
-import BingMapsCatalogItemTraits from "./../../Traits/BingMapsCatalogItemTraits";
 
 export interface BaseMapModel {
   image: string;
