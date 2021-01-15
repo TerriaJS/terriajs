@@ -58,10 +58,6 @@ class GeoJsonCatalogItem extends GeoJsonMixin(
           title: i18next.t("models.userData.fileApiNotSupportedTitle"),
           message: i18next.t("models.userData.fileApiNotSupportedTitle", {
             appName: this.terria.appName,
-            internetExplorer:
-              '<a href="http://www.microsoft.com/ie" target="_blank">' +
-              i18next.t("models.userData.internetExplorer") +
-              "</a>",
             chrome:
               '<a href="http://www.google.com/chrome" target="_blank">' +
               i18next.t("models.userData.chrome") +
@@ -69,6 +65,10 @@ class GeoJsonCatalogItem extends GeoJsonMixin(
             firefox:
               '<a href="http://www.mozilla.org/firefox" target="_blank">' +
               i18next.t("models.userData.firefox") +
+              "</a>",
+            edge:
+              '<a href="http://www.microsoft.com/edge" target="_blank">' +
+              i18next.t("models.userData.edge") +
               "</a>"
           })
         });
