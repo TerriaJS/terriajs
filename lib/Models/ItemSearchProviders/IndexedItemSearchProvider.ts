@@ -8,7 +8,7 @@ import ItemSearchProvider, {
 } from "../ItemSearchProvider";
 import { Index, IndexRoot, parseIndexRoot } from "./Index";
 import joinUrl from "./joinUrl";
-import loadCsv from "./loadCsv";
+import loadCsv from "../../Core/loadCsv";
 
 const t = i18next.t.bind(i18next);
 

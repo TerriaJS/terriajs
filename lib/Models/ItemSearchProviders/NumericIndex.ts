@@ -1,5 +1,5 @@
 import joinUrl from "./joinUrl";
-import loadCsv from "./loadCsv";
+import loadCsv from "../../Core/loadCsv";
 import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
 
 // Minimum and maxiumum values in a numeric range

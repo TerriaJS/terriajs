@@ -1,5 +1,5 @@
 import joinUrl from "./joinUrl";
-import loadCsv from "./loadCsv";
+import loadCsv from "../../Core/loadCsv";
 
 // IDs of enum to search
 type EnumSearchQuery = string[];
