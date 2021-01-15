@@ -11,7 +11,7 @@ import SearchResults, {
 describe("SearchResults", function() {
   it("shows the results count", async function() {
     const { root } = await render({
-      results: randomResults(20),
+      results: sampleResults(20),
       onSelectResult: () => {}
     });
     const resultsCount = root.findByType(ResultsCount);
@@ -34,14 +34,11 @@ async function render(
   return rendered;
 }
 
-function randomResults(count: number): ItemSearchResult[] {
-  const center = Cartesian3.fromDegrees(
-    randomRange(-180, 180),
-    randomRange(-90, 90)
-  );
-  const radius = randomRange(400, 2000);
+function sampleResults(count: number): ItemSearchResult[] {
+  const center = Cartesian3.fromDegrees(100, 45);
+  const radius = 200;
   return [...Array(count)].map(i => ({
-    id: `building-${Math.random()}`,
+    id: `building-${i}`,
     idPropertyName: "building-id",
     zoomToTarget: {
       boundingSphere: new BoundingSphere(center, radius)
@@ -50,8 +47,4 @@ function randomResults(count: number): ItemSearchResult[] {
       name: `bldg-${i}`
     }
   }));
-}
-
-function randomRange(min: number, max: number) {
-  return Math.random() * (max - min) + min;
 }
