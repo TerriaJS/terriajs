@@ -75,7 +75,6 @@ const Wrapper = styled(Box).attrs({
   // background: ${p => p.theme.dark};
   margin-left: ${props =>
     props.isMapFullScreen ? 16 : parseInt(props.theme.workbenchWidth) + 40}px;
-  // TODO: Transitioning on margin-left incurs an expensive layout re-calculation, consider disabling
   transition: margin-left 0.25s;
 `;
 
