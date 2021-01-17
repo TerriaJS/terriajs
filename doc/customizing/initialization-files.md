@@ -212,12 +212,19 @@ map, and overrides Options 1, 2, and 3.
 ``` 
 
 ### Story
-Definition of the story.
+Definition of the story. This can be pretty complex do define for standard user, the easiest way is to generate share url without url sho
 |Name|Required|Type|Default|Description|
 |----|--------|----|-------|-----------|
 |id|yes|**string**||Id of the story.|
 |title|yes|**string**||Title of the story.|
-|text|no|**string**||Text of the story.|
+|text|yes|**string**||Text of the story.|
+|shareData|yes|[**ShareData**](#sharedata)|||
+
+#### ShareData
+|Name|Required|Type|Default|Description|
+|----|--------|----|-------|-----------|
+|version|yes|string|"8.0.0"|The version of share data.|
+|initSources|yes|[**CatalogFileProperties**](#catalog-file-properties)
 
 ### `baseMaps`
 Definition of the baseMap model.
