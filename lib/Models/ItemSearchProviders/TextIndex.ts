@@ -52,7 +52,8 @@ export default class TextIndex {
    * @param return The IDs of objects matching the search text.
    */
   async search(value: TextSearchQuery): Promise<Set<number>> {
-    if (!this.miniSearchIndex) throw new Error(`Text index not loaded`);
+    if (this.miniSearchIndex === undefined)
+      throw new Error(`Text index not loaded`);
     const miniSearchIndex = await this.miniSearchIndex;
     const results = miniSearchIndex.search(value);
     const ids = new Set(results.map(r => r.id));
