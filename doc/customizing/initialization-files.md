@@ -1,4 +1,4 @@
-A catalog in TerriaJS is defined in one or more "initialization files" (or init files).  In a default TerriaMap installation, the main init file is found in `wwwroot/init/terria.json`.
+A catalog in TerriaJS is defined in one or more "initialization files" (or init files).  In a default TerriaMap installation, the main init file is found in `wwwroot/simple.json`.
 
 An init file is a [JSON file](https://en.wikipedia.org/wiki/JSON) with this basic structure:
 
@@ -89,6 +89,7 @@ This is the only mode supported in 2D mode (Leaflet). Therefore, you should alwa
 |east|yes|**number**|||
 |south|yes|**number**|||
 |west|yes|**number**|||
+
 **Example**
 ```json
 "homeCamera": {
