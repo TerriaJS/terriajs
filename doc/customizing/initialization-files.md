@@ -2,7 +2,7 @@ A catalog in TerriaJS is defined in one or more "initialization files" (or init 
 
 An init file is a [JSON file](https://en.wikipedia.org/wiki/JSON) with this basic structure:
 
-```
+```json
 {
     "catalog": [
         {
@@ -21,7 +21,20 @@ An init file is a [JSON file](https://en.wikipedia.org/wiki/JSON) with this basi
         "west": 109
     },
     "initialCamera": { ... },
-    "corsDomains": [ "myserver.gov.au" ]
+    "corsDomains": [ "myserver.gov.au" ],
+    "baseMapId": "basemap-dark-matter",
+    "previewBaseMapId": "basemap-dark-matter",
+    "baseMaps": [
+      {
+        "item": {
+          "id": "basemap-darkmatter",
+          "name": "Dark Matter",
+          ...
+        },
+        "image": "/images/dark-matter.png"
+      },
+      ...
+    ]
 }
 ```
 
@@ -56,29 +69,28 @@ Catalog files can be edited three ways:
 3. Using the TerriaJS Catalog Editor, currently available in a preview version at [http://terria.io/DataSourceEditor/](http://terria.io/DataSourceEditor/). This editor is not yet considered reliable, and may cause data corruption.
 
 ## Catalog file properties
-
-### `corsDomains`
-
-By default, TerriaJS proxies all requests within the proxy whitelist specified in the [Server-side Config](server-side-config.md), making the assumption that the servers do not support CORS. You can add hosts that are known to support CORS to this property to avoid proxying them.
-
-`"corsDomains": [ "myserver.gov.au" ]`
-
-See [Cross-Origin Resource Sharing](../connecting-to-data/cross-origin-resource-sharing.md) for more information.
-
-### `homeCamera` and `initialCamera`
-
-Maps have two camera positions, `homeCamera` and `initialCamera`. They are specified identically. All the examples here use `homeCamera`, but apply equally to both.
-
-* `initialCamera`: the location when the map first displays
-* `homeCamera`: where the camera goes when you click the "home" button between the zoom-in and zoom-out buttons.
+|Name|Required|Type|Default|Description|
+|----|--------|----|-------|-----------|
+|corsDomains|no|**string[]**||By default, TerriaJS proxies all requests within the proxy whitelist specified in the [Server-side Config](server-side-config.md), making the assumption that the servers do not support CORS. You can add hosts that are known to support CORS to this property to avoid proxying them. You can add hosts that are known to support CORS to this property to avoid proxying them.|
+|initialCamera|no|[**CameraPosition**](#CameraPosition)||The location when the map first displays.|
+|homeCamera|yes|[**CameraPosition**](#CameraPosition)||Where the camera goes when you click the "home" button between the zoom-in and zoom-out buttons.|
+|<a id="base-maps"></a>baseMaps|no|[**`baseMaps`**](#baseMaps)|*default list of basemaps*|The array of the base maps to be shown to the user.|
+|<a id="base-map-id"></a>baseMapId|no|**string**||The id of the baseMap user will see on the first mapLoad. The value must be an id of the catalog item from the [`baseMaps`](#base-maps) array|
+|previewBaseMapId|no|**string**|[`baseMapId`](#base-map-id)|The id of the baseMap to be used as the base map in data preview. The value must be an id of the catalog item from the [`baseMaps`](#base-maps) array.|
+### CameraPosition
 
 #### Option 1: `north`, `south`, `east`, `west`
-
 The bounding box method uses `north`, `east `,`south`, and `west`, in lat/lng decimal degrees.  The camera will be positioned in the center point of those bounds, looking toward the Earth's center, zoomed back enough to see to the edges of the bounds.
 
 This is the only mode supported in 2D mode (Leaflet). Therefore, you should always include a bounding box, even if you also use another mode.
-
-```
+|Name|Required|Type|Default|Description|
+|----|--------|----|-------|-----------|
+|north|yes|**number**|||
+|east|yes|**number**|||
+|south|yes|**number**|||
+|west|yes|**number**|||
+**Example**
+```json
 "homeCamera": {
     "north": -8,
     "east": 158,
@@ -101,15 +113,18 @@ the north pole, positive X points toward
 equator intersects with 0 degrees longitude, and positive Y points at
 (0, 90E) -- which is in the Indian Ocean south of the Bay of Bengal.
 
-* `position`: where the camera is
-* `direction`: where the camera is looking
-* `up`: which way is "up", which determines how the camera is rotated
+|Name|Required|Type|Default|Description|
+|----|--------|----|-------|-----------|
+|position|yes|[**Cartesian 3**](#cartesian-3)|| location of the camera.|
+|direction|yes|[**Cartesian 3**](#cartesian-3)||The location camera is looking at.|
+|up|yes|[**Cartesian 3**](#cartesian-3)||Which way is "up", which determines how the camera is rotated.|
 
 For most purposes positioning this way is difficult for normal
 humans. To see an example, move the camera to some location, click the "share" button (and choose to not use the
 URL shortner), then URL-decode the URL you get.
 
-```
+**Example**
+```json
 "homeCamera": {
     "west": 105.51019777628066,
     "south": -39.61110094535454,
@@ -135,19 +150,19 @@ URL shortner), then URL-decode the URL you get.
 
 #### Option 3: `positionHeading` (like an aircraft)
 
-Setting `positionHeading` is useful for when you're showing a view from an aircraft or
-satellite, and overrides Options 1 and 2.
+Setting `positionHeading` is useful for when you're showing a view from an aircraft or satellite, and overrides Options 1 and 2.
 
-It has the following attributes:
+|Name|Required|Type|Default|Description|
+|----|--------|----|-------|-----------|
+|cameraLongitude|yes|**number**||Longitude of camera|
+|cameraLatitude|yes|**number**||Latitude of camera|
+|cameraHeight|yes|**number**||Height of camera above earth's surface, probably in metres|
+|heading|yes|**number**||In degrees clockwise from north (90 is east)|
+|pitch|yes|**number**||How much the camera is tilted, in degrees down from horizontal (-90 is straight down).|
+|roll|yes|**number**||How much the camera is rotated left or right, in degrees.|
 
- - `cameraLongitude`: longitude of camera
- - `cameraLatitude`: latitude of camera
- - `cameraHeight`: height of camera above earth's surface, probably in metres
- - `heading`: in degrees clockwise from north (90 is east)
- - `pitch`: how much the camera is tilted, in degrees down from horizontal (-90 is straight down)
- - `roll`: how much the camera is rotated left or right, in degrees
-
-```
+**Example**
+```json
 "homeCamera": {
     "positionHeading": {
         "cameraLongitude": 145,
@@ -155,7 +170,7 @@ It has the following attributes:
         "cameraHeight": 1000,
         "heading": 0,
         "pitch": -70,
-        "roll": 0,
+        "roll": 0
     }
 }
 ```
@@ -165,16 +180,17 @@ It has the following attributes:
 `lookAt` is probably the most useful one for showing a feature on the
 map, and overrides Options 1, 2, and 3.
 
-It has these attributes:
+|Name|Required|Type|Default|Description|
+|----|--------|----|-------|-----------|
+|targetLongitude|yes|**number**||The longitude to look at.|
+|targetLatitude|yes|**number**||The latitude to look at.|
+|targetHeight|yes|**number**||In meters above the WGS84 ellipsoid (positive is up).|
+|heading|yes|**number**||In degrees clockwise from north.|
+|pitch|yes|**number**||How much the camera is tilted, in degrees down from horizontal (so negative values mean you're looking at the sky).|
+|range|yes|**number**||In meters from the thing you're looking at.|
 
- - `targetLongitude`: The longitude to look at
- - `targetLatitude`: The latitude to look at
- - `targetHeight`: in meters above the WGS84 ellipsoid (positive is up)
- - `heading`: in degrees clockwise from north
- - `pitch`: in degrees down from horizontal (so negative values mean you're looking at the sky)
- - `range`: in meters from the thing you're looking at
-
-```
+**Example**
+```json
 "homeCamera": {
     "lookAt": {
         "targetLongitude": 145,
@@ -182,7 +198,21 @@ It has these attributes:
         "targetHeight": 0,
         "heading": 0,
         "pitch": -90,
-        "range": 1000,
+        "range": 1000
     }
 }
 ``` 
+
+### `baseMaps`
+The array of the base maps to be shown to the user.
+|Name|Required|Type|Default|Description|
+|----|--------|----|-------|-----------|
+|item|yes|[**Catalog Item**](../connecting-to-data/catalog-items.md)||Catalog item defition to be used for the base map|
+|image|yes|**string**||Path to an image file of the baseMap image to be shown in Map Settings|
+
+### Cartesian 3
+|Name|Required|Type|Default|Description|
+|----|--------|----|-------|-----------|
+|x|yes|**number**||The X component.|
+|y|yes|**number**||The Y component.|
+|z|yes|**number**||The Z component.|
