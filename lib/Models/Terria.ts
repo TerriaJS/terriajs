@@ -857,6 +857,8 @@ export default class Terria {
 
     if (isJsonString(initData.previewBaseMapId)) {
       this.previewBaseMapId = initData.previewBaseMapId;
+    } else if (this.initBaseMapId) {
+      this.previewBaseMapId = this.initBaseMapId;
     }
 
     if (
