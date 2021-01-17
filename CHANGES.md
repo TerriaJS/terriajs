@@ -7,7 +7,7 @@ Change Log
 * Added support for shapefile with `ShapefileCatalogItem`
 * Added `GeoJsonMixin` for handling the loading of geojson data.
 * Extended the `GeoJsonCatalogItem` to support loading of zip files.
-* Make base maps configurable from init files and update documentation for init files #5140.
+* Make base maps configurable from init files and update documentation for init files [#5140](https://github.com/TerriaJS/terriajs/pull/5140).
 * [The next improvement]
 
 #### 8.0.0-alpha.65
