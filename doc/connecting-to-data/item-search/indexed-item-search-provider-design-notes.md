@@ -10,6 +10,8 @@ In the remaining section we describe the structure of the index.
 
 ## indexRoot.json
 
+`indexRoot` captures the overall structure of the index. It has the following fields:
+
 - `idProperty`
   - Required
   - Name of the feature property that is used as ID for indexing. This is also
