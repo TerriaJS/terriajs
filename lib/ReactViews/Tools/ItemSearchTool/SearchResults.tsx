@@ -38,6 +38,7 @@ const SearchResults: React.FC<SearchResultsProps> = props => {
         <ListInner height={`${list.totalSize}px`}>
           {list.virtualItems.map(({ index, ...row }) => (
             <Result
+              key={results[index].id}
               result={results[index]}
               isSelected={results[index].id === selectedResult?.id}
               isEven={index % 2 === 0}
