@@ -1,5 +1,6 @@
 import MiniSearch, { Options as MiniSearchOptions } from "minisearch";
 import joinUrl from "./joinUrl";
+import { IndexBase, IndexType } from "./Types";
 
 const loadText = require("../../Core/loadText");
 
@@ -13,8 +14,8 @@ type TextSearchQuery = string;
  * index files contains a serialized JSON representation of the Minisearch
  * instance and the options used to construct the Minisearch instance.
  */
-export default class TextIndex {
-  readonly type = "text";
+export default class TextIndex implements IndexBase<TextSearchQuery> {
+  readonly type = IndexType.text;
 
   private miniSearchIndex?: Promise<MiniSearch>;
 

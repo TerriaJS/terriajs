@@ -1,5 +1,6 @@
 import joinUrl from "./joinUrl";
 import loadCsv from "../../Core/loadCsv";
+import { IndexBase, IndexType } from "./Types";
 
 // IDs of enum to search
 type EnumSearchQuery = string[];
@@ -18,8 +19,8 @@ export type EnumValue = {
  * The sub-index is simply an array of IDs that has the enum value.
  * Searching for an enum value simply returns the IDs array for that value.
  */
-export default class EnumIndex {
-  readonly type = "enum";
+export default class EnumIndex implements IndexBase<EnumSearchQuery> {
+  readonly type = IndexType.enum;
 
   /**
    * Constructs an EnumIndex.

@@ -6,7 +6,7 @@ import ItemSearchProvider, {
   ItemSearchParameter,
   ItemSearchResult
 } from "../ItemSearchProvider";
-import { Index, IndexRoot, parseIndexRoot } from "./Index";
+import { Index, IndexRoot, IndexType, parseIndexRoot } from "./Index";
 import joinUrl from "./joinUrl";
 import loadCsv from "../../Core/loadCsv";
 
@@ -64,14 +64,14 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
     index: Index
   ): ItemSearchParameter {
     switch (index.type) {
-      case "numeric":
+      case IndexType.numeric:
         return {
           type: "numeric",
           id: propertyId,
           name: propertyId,
           range: index.range
         };
-      case "enum":
+      case IndexType.enum:
         return {
           type: "enum",
           id: propertyId,
@@ -81,7 +81,7 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
             count
           }))
         };
-      case "text":
+      case IndexType.text:
         return {
           type: "text",
           id: propertyId,

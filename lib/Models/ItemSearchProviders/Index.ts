@@ -6,7 +6,9 @@ import JsonValue, {
 import EnumIndex, { EnumValue } from "./EnumIndex";
 import NumericIndex from "./NumericIndex";
 import TextIndex from "./TextIndex";
+import { IndexType, indexTypes } from "./Types";
 
+export { IndexType, indexTypes } from "./Types";
 export { default as EnumIndex } from "./EnumIndex";
 export { default as NumericIndex } from "./NumericIndex";
 
@@ -19,8 +21,6 @@ export type IndexRoot = {
 
 export type Index = NumericIndex | EnumIndex | TextIndex;
 
-export type IndexType = Index["type"];
-
 export type ID = number;
 
 const indexParsers: Record<IndexType, (json: any) => Index> = {
@@ -28,8 +28,6 @@ const indexParsers: Record<IndexType, (json: any) => Index> = {
   enum: parseEnumIndex,
   text: parseTextIndex
 };
-
-const indexTypes = Object.keys(indexParsers);
 
 export function parseIndexRoot(json: JsonValue): IndexRoot {
   assertObject(json, "IndexRoot");

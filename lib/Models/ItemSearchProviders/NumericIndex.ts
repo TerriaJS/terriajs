@@ -1,6 +1,7 @@
 import joinUrl from "./joinUrl";
 import loadCsv from "../../Core/loadCsv";
 import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
+import { IndexBase, IndexType } from "./Types";
 
 // Minimum and maxiumum values in a numeric range
 export type NumericRange = { min: number; max: number };
@@ -17,8 +18,8 @@ type NumericSearchQuery = {
  * It is represented as an array of [id, value] pairs sorted by the value.
  * Searching is done by performing a binary search on the array.
  */
-export default class NumericIndex {
-  readonly type = "numeric";
+export default class NumericIndex implements IndexBase<NumericSearchQuery> {
+  readonly type = IndexType.numeric;
 
   private idValuePairs?: Promise<{ dataRowId: number; value: number }[]>;
 
