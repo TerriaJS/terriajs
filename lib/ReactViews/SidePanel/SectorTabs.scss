@@ -15,24 +15,28 @@
     order: 0;
   }
 }
-svg {
-  color: #106fa8;
-  height: auto;
-  width: 40px;
 
-  &:hover {
-    cursor: pointer;
-  }
-  &:hover path {
-    color: white;
-  }
+.tabsContainer {
+  svg {
+    color: #106fa8;
+    height: auto;
+    width: 40px;
 
-  &:hover .fill {
-    fill: #106fa8;
-  }
+    &:hover {
+      cursor: pointer;
+    }
 
-  &:hover .icon {
-    fill: white;
+    &:hover path {
+      color: white;
+    }
+
+    &:hover .fill {
+      fill: #106fa8;
+    }
+
+    &:hover .icon {
+      fill: white;
+    }
   }
 }
 
