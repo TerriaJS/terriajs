@@ -6,7 +6,7 @@ import MappableTraits from "./MappableTraits";
 import DataCustodianTraits from "./DataCustodianTraits";
 import SplitterTraits from "./SplitterTraits";
 import objectTrait from "./objectTrait";
-import { StyleTraits } from "./GeoJsonCatalogItemTraits";
+import StyleTraits from "./StyleTraits";
 import UrlTraits from "./UrlTraits";
 
 export default class SenapsLocationsCatalogItemTraits extends mixTraits(
