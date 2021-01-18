@@ -14,7 +14,7 @@ export { default as NumericIndex } from "./NumericIndex";
 
 // IndexRoot holds the indexes for each property and top level options
 export type IndexRoot = {
-  dataUrl: string; // Url of the CSV data file.
+  resultsDataUrl: string; // Url of the CSV data file.
   idProperty: string; // Name of the property to be used as ID
   indexes: Record<string, Index>; // A map from property name to its `Index` definition.
 };
@@ -31,7 +31,7 @@ const indexParsers: Record<IndexType, (json: any) => Index> = {
 
 export function parseIndexRoot(json: JsonValue): IndexRoot {
   assertObject(json, "IndexRoot");
-  assertString(json.dataUrl, "dataUrl");
+  assertString(json.resultsDataUrl, "resultsDataUrl");
   assertString(json.idProperty, "idProperty");
   assertObject(json.indexes, "indexes");
   const indexes: Record<string, Index> = Object.entries(json.indexes).reduce(
@@ -42,7 +42,7 @@ export function parseIndexRoot(json: JsonValue): IndexRoot {
     {}
   );
   return {
-    dataUrl: json.dataUrl,
+    resultsDataUrl: json.resultsDataUrl,
     idProperty: json.idProperty,
     indexes
   };

@@ -5,17 +5,16 @@ import JsonValue from "../../../lib/Core/Json";
 import IndexedItemSearchProvider from "../../../lib/Models/ItemSearchProviders/IndexedItemSearchProvider";
 import Csv from "../../../lib/Table/Csv";
 
-const dataCsv = require("raw-loader!../../../wwwroot/test/IndexedItemSearchProvider/data.csv");
+const resultsDataCsv = require("raw-loader!../../../wwwroot/test/IndexedItemSearchProvider/resultsData.csv");
 const heightCsv = require("raw-loader!../../../wwwroot/test/IndexedItemSearchProvider/0.csv");
 const areaCsv = require("raw-loader!../../../wwwroot/test/IndexedItemSearchProvider/1.csv");
 
 const validIndexRoot = {
-  dataUrl: "data.csv",
+  resultsDataUrl: "resultsData.csv",
   idProperty: "building_id",
   indexes: {
     height: {
       type: "numeric",
-      name: "Building height",
       url: "0.csv",
       range: { min: 1, max: 180 }
     },
@@ -26,12 +25,10 @@ const validIndexRoot = {
     },
     street_address: {
       type: "text",
-      name: "Street address",
       url: "2.json"
     },
     roof_type: {
       type: "enum",
-      name: "Roof type",
       values: {
         Flat: {
           count: 50,
@@ -137,7 +134,7 @@ describe("IndexedItemSearchProvider", function() {
         indexRootUrl: "indexRoot.json"
       });
       stubRequest("indexRoot.json", validIndexRoot);
-      stubRequest("data.csv", dataCsv);
+      stubRequest("resultsData.csv", resultsDataCsv);
       stubRequest("0.csv", heightCsv);
       stubRequest("1.csv", areaCsv);
       const heightRows = await Csv.parseString(heightCsv);

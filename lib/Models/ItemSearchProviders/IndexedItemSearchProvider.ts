@@ -21,7 +21,7 @@ type Parameter = ItemSearchParameter & { index: Index };
 export default class IndexedItemSearchProvider extends ItemSearchProvider {
   indexRootUrl: string;
   indexRoot?: IndexRoot;
-  data?: Promise<Record<string, string>[]>;
+  resultsData?: Promise<Record<string, string>[]>;
 
   /**
    * Construct a IndexedItemSearchProvider.
@@ -99,7 +99,7 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
     const json = await loadJson5(indexRootUrl);
     try {
       this.indexRoot = parseIndexRoot(json);
-      this.getOrLoadData();
+      this.getOrLoadResultsData();
     } catch (parseError) {
       console.warn(parseError);
       throw new Error(
@@ -142,7 +142,7 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
     // This is roughly what happens in this function
     // 1) For each parameter search the corresponding index
     // 2) This gives a set of matching IDs
-    // 3) Lookup the data corresponding to each matching ID from data.csv
+    // 3) Lookup the data corresponding to each matching ID from resultsData
     // 4) Use the data to build the search results.
 
     // Iterate each parameter and search its index.
@@ -155,8 +155,8 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
       })
     );
 
-    // Meanwhile, load data.csv
-    const data = await this.getOrLoadData();
+    // Meanwhile, load resultsData
+    const data = await this.getOrLoadResultsData();
 
     // Merge the IDs from the search into a single set
     const idSets = await search;
@@ -175,25 +175,28 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
   }
 
   /**
-   * Load data.csv and return it.
+   * Fetch resultsData URL and return it.
    *
    * Caches the data so that subsequent calls do not result in a network request & parsing.
    *
-   * @return A promise that resolves to the data from data.csv
+   * @return A promise that resolves to resultsData
    */
-  async getOrLoadData() {
-    if (this.data) {
-      return this.data;
+  async getOrLoadResultsData() {
+    if (this.resultsData) {
+      return this.resultsData;
     }
-    if (!this.indexRoot?.dataUrl) {
+    if (!this.indexRoot?.resultsDataUrl) {
       throw new Error(`indexRoot is not loaded`);
     }
-    const dataUrl = joinUrl(this.indexRootUrl, this.indexRoot.dataUrl);
-    const promise = loadCsv(dataUrl, {
+    const resultsDataUrl = joinUrl(
+      this.indexRootUrl,
+      this.indexRoot.resultsDataUrl
+    );
+    const promise = loadCsv(resultsDataUrl, {
       dynamicTyping: true,
       header: true
     });
-    this.data = promise;
+    this.resultsData = promise;
     return promise;
   }
 
@@ -209,8 +212,8 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
   /**
    * Build search result from raw data.
    *
-   * @param record The raw data for the result read from data.csv
-   * @param dataIdx The index of the record in data.csv
+   * @param record The resultData for the result item
+   * @param dataIdx The index of the record in resultsData
    */
   buildResult(
     record: Record<string, string>,

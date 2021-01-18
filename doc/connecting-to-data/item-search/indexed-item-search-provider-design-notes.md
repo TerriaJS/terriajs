@@ -18,19 +18,19 @@ In the remaining section we describe the structure of the index.
     sometimes used by the catalog item to uniquely identify & highlight the
     selected feature.
     
-- `dataUrl: string`
+- `resultsDataUrl: string`
   - Required
-  - URL of the CSV [data file](#data-file) mapping a feature by its ID to result data associated
-    with the feature.
+  - URL of the CSV [results data file](#results-data-file) mapping a feature by
+    its ID to result data associated with the feature.
     
 - `indexes: Record<string, Index>`
   - Required
   - An object whose keys are the property names and values are the
     corresponding [Index](#index-types) definition.
 
-## Data file
+## Results data file
 
-Data file is a CSV file mapping an indexed feature to result data using its ID. 
+A CSV file mapping an indexed feature to result data using its ID. 
 
 eg:
 ```
