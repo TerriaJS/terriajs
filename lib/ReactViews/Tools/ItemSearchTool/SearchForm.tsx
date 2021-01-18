@@ -104,6 +104,7 @@ const SearchForm: React.FC<SearchFormProps> = props => {
               parameter={p}
               onChange={setValue(p.id)}
               value={values[p.id]}
+              disabled={disabled}
               t={t}
             />
           </Field>
@@ -123,6 +124,7 @@ interface ParameterProps extends WithT {
   parameter: ItemSearchParameter;
   onChange: (value: any) => void;
   value?: any;
+  disabled: boolean;
 }
 
 const Parameter: React.FC<ParameterProps> = props => {
@@ -204,6 +206,7 @@ interface EnumParameterProps {
   parameter: EnumItemSearchParameter;
   value?: string[];
   onChange: (value: string[] | undefined) => void;
+  disabled: boolean;
 }
 
 type SelectOnChangeHandler<OptionType, IsMulti extends boolean> = (
@@ -212,7 +215,7 @@ type SelectOnChangeHandler<OptionType, IsMulti extends boolean> = (
 ) => void;
 
 const EnumParameter: React.FC<EnumParameterProps> = props => {
-  const { parameter } = props;
+  const { parameter, disabled } = props;
   const options = parameter.values.map(({ id }) => ({
     value: id,
     label: id || "<empty>"
@@ -239,6 +242,7 @@ const EnumParameter: React.FC<EnumParameterProps> = props => {
           value={value}
           menuPosition="fixed"
           onChange={onChange}
+          isDisabled={disabled}
         />
       </Label>
     </Box>
