@@ -39,17 +39,17 @@ eg:
 It should contain a header for each column. It should also have a column for the `idProperty` specified in the `indexRoot.json` file. Terria also recongnizes a few special columns which it uses to construct a target to zoom to when the user selects the result. 
 
  - `latitude`
-  - Required 
-  - The latitude of the feature
+   - Required 
+   - The latitude of the feature
  - `longitude` 
-  - Required
-  - The longitude of the feature
+   - Required
+   - The longitude of the feature
  - `height`
-  - Optional
-  - The height of the feature
+   - Optional
+   - The height of the feature
  - `radius`
-  - Optional
-  - The radius of the bounding sphere containing the feature
+   - Optional
+   - The radius of the bounding sphere containing the feature
   
 A zoom target is constructed using the `latitude`, `longitude` and `height` or the `radius` whichever is known. `height` is the height of the feature and `radius` is a radius of the bounding sphere to zoom to.
 
@@ -170,11 +170,11 @@ eg:
 Text index file is a JSON file with the following structure:
 
 - `index: MiniSearch`
- - Required
- - The searialized [Minisearch](https://github.com/lucaong/minisearch) index instance
+  - Required
+  - The searialized [Minisearch](https://github.com/lucaong/minisearch) index instance
 - `options: MiniSearchOptions`
- - Required
- - The options used to create the MiniSearch instance.
+  - Required
+  - The options used to create the MiniSearch instance.
 
       
 ### Why CSV and not JSON?
