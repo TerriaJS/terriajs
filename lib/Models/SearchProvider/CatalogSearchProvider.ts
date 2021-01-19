@@ -1,14 +1,12 @@
 import { autorun, observable, runInAction } from "mobx";
-import SearchProvider from "./SearchProvider";
-import SearchResult from "./SearchResult";
-import Terria from "./Terria";
+import GroupMixin from "../../ModelMixins/GroupMixin";
+import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
+import CatalogSearchProviderTraits from "../../Traits/SearchProvider/CatalogSearchProviderTraits";
+import CreateModel from "../CreateModel";
+import Terria from "../Terria";
+import SearchProviderMixin from "./../../ModelMixins/SearchProviderMixin";
 import SearchProviderResults from "./SearchProviderResults";
-import GroupMixin from "../ModelMixins/GroupMixin";
-import ReferenceMixin from "../ModelMixins/ReferenceMixin";
-
-interface CatalogSearchProviderOptions {
-  terria: Terria;
-}
+import SearchResult from "./SearchResult";
 
 type UniqueIdString = string;
 type ResultMap = Map<UniqueIdString, boolean>;
@@ -95,17 +93,17 @@ export function loadAndSearchCatalogRecursively(
   });
 }
 
-export default class CatalogSearchProvider extends SearchProvider {
-  readonly terria: Terria;
+export default class CatalogSearchProvider extends SearchProviderMixin(
+  CreateModel(CatalogSearchProviderTraits)
+) {
+  static readonly type = "catalog-search-provider";
+
+  get type() {
+    return CatalogSearchProvider.type;
+  }
+
   @observable isSearching: boolean = false;
   @observable debounceDurationOnceLoaded: number = 300;
-
-  constructor(options: CatalogSearchProviderOptions) {
-    super();
-
-    this.terria = options.terria;
-    this.name = "Catalog Items";
-  }
 
   protected doSearch(
     searchText: string,

@@ -1,16 +1,15 @@
-// import CatalogItemNameSearchProviderViewModel from "../ViewModels/CatalogItemNameSearchProviderViewModel";
 import {
-  observable,
-  reaction,
-  IReactionDisposer,
+  action,
   computed,
-  action
+  IReactionDisposer,
+  observable,
+  reaction
 } from "mobx";
-import Terria from "../Models/Terria";
-import SearchProviderResults from "../Models/SearchProviderResults";
-import SearchProvider from "../Models/SearchProvider";
 import filterOutUndefined from "../Core/filterOutUndefined";
-import CatalogSearchProvider from "../Models/CatalogSearchProvider";
+import CatalogSearchProvider from "../Models/SearchProvider/CatalogSearchProvider";
+import SearchProviderResults from "../Models/SearchProvider/SearchProviderResults";
+import Terria from "../Models/Terria";
+import SearchProviderMixin from "./../ModelMixins/SearchProviderMixin";
 
 interface SearchStateOptions {
   terria: Terria;
@@ -20,9 +19,10 @@ interface SearchStateOptions {
 
 export default class SearchState {
   @observable
-  catalogSearchProvider: SearchProvider | undefined;
+  catalogSearchProvider: SearchProviderMixin.SearchProviderMixin | undefined;
 
-  @observable locationSearchProviders: SearchProvider[];
+  @observable
+  locationSearchProviders: SearchProviderMixin.SearchProviderMixin[];
 
   @observable catalogSearchText: string = "";
   @observable isWaitingToStartCatalogSearch: boolean = false;
@@ -48,7 +48,7 @@ export default class SearchState {
   constructor(options: SearchStateOptions) {
     this.catalogSearchProvider =
       options.catalogSearchProvider ||
-      new CatalogSearchProvider({ terria: options.terria });
+      new CatalogSearchProvider("catalog-search-provider", options.terria);
     this.locationSearchProviders = options.locationSearchProviders || [];
 
     this._catalogSearchDisposer = reaction(

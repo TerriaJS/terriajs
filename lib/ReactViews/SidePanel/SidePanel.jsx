@@ -4,12 +4,12 @@ import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import styled, { withTheme } from "styled-components";
+import { useTranslationIfExists } from "../../Language/languageHelpers";
+import { useRefForTerria } from "../Hooks/useRefForTerria";
 import Icon, { StyledIcon } from "../Icon";
 import SearchBoxAndResults from "../Search/SearchBoxAndResults";
 import Workbench from "../Workbench/Workbench";
 import FullScreenButton from "./FullScreenButton";
-
-import { useRefForTerria } from "../Hooks/useRefForTerria";
 
 import Box from "../../Styled/Box";
 import Spacing from "../../Styled/Spacing";
@@ -171,7 +171,9 @@ const SidePanel = observer(
             <SearchBoxAndResults
               viewState={this.props.viewState}
               terria={this.props.terria}
-              placeholder={t("search.placeholder")}
+              placeholder={useTranslationIfExists(
+                this.props.terria.configParameters.searchBar.placeholder
+              )}
             />
             <Spacing bottom={2} />
             <Box justifySpaceBetween>

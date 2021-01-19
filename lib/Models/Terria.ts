@@ -1,6 +1,14 @@
 import { convertCatalog, convertShare } from "catalog-converter";
 import i18next from "i18next";
-import { action, computed, observable, runInAction, toJS, when } from "mobx";
+import {
+  action,
+  computed,
+  isObservableArray,
+  observable,
+  runInAction,
+  toJS,
+  when
+} from "mobx";
 import { createTransformer } from "mobx-utils";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
@@ -72,6 +80,8 @@ import Mappable, { isDataSource } from "./Mappable";
 import { BaseModel } from "./Model";
 import NoViewer from "./NoViewer";
 import openGroup from "./openGroup";
+import SearchProviderFactory from "./SearchProvider/SearchProviderFactory";
+import upsertSearchProviderFromJson from "./SearchProvider/upsertSearchProviderFromJson";
 import ShareDataService from "./ShareDataService";
 import SplitItemReference from "./SplitItemReference";
 import TimelineStack from "./TimelineStack";
@@ -117,7 +127,50 @@ interface ConfigParameters {
   helpContent?: HelpContentItem[];
   helpContentTerms?: Term[];
   languageConfiguration?: LanguageConfiguration;
+  /**
+   * Index of which brandBarElements to show for mobile header
+   */
   displayOneBrand?: number;
+  /**
+   * The search bar allows requesting information from various search services at once.
+   */
+  searchBar: SearchBar;
+}
+
+interface SearchBar {
+  /**
+   * Input text field placeholder shown when no input has been given yet. The string is translateable.
+   * @default "search.placeholder"
+   */
+  placeholder: string;
+  /**
+   * Maximum amount of entries in the suggestion list.
+   * @default 5
+   */
+  recommendedListLength: number;
+  /**
+   * Defines whether search results are to be sorted alphanumerically.
+   * @default true
+   */
+  sortByName: boolean;
+  /**
+   * The duration of the camera flight to an entered location, in seconds.
+   * @default 1.5
+   */
+  flightDurationSeconds: number;
+  /**
+   * True if the geocoder should query as the user types to autocomplete.
+   * @default true
+   */
+  autocomplete: boolean;
+  /**
+   * Minimum number of characters to start search.
+   */
+  minCharacters: number;
+  /**
+   * Array of search providers to be used.
+   */
+  searchProviders: any[];
 }
 
 interface StartOptions {
@@ -160,6 +213,7 @@ interface HomeCameraInit {
 
 export default class Terria {
   private models = observable.map<string, BaseModel>();
+  private locationSearchProviders = observable.map<string, BaseModel>();
   /** Map from share key -> id */
   readonly shareKeysMap = observable.map<string, string>();
   /** Map from id -> share keys */
@@ -253,7 +307,35 @@ export default class Terria {
     helpContent: [],
     helpContentTerms: defaultTerms,
     languageConfiguration: undefined,
-    displayOneBrand: 0 // index of which brandBarElements to show for mobile header
+    displayOneBrand: 0,
+    searchBar: {
+      placeholder: "search.placeholder",
+      recommendedListLength: 5,
+      sortByName: true,
+      flightDurationSeconds: 1.5,
+      autocomplete: true,
+      minCharacters: 3,
+      searchProviders: [
+        {
+          id: "search-provider/bing-maps",
+          type: "bing-maps-search-provider",
+          name: "search.bingMaps",
+          url: "https://dev.virtualearth.net/",
+          flightDurationSeconds: 1.5
+        },
+        {
+          id: "search-provider/australian-gazetteer",
+          type: "australian-gazetteer-search-provider",
+          name: "viewModels.searchPlaceNames",
+          url:
+            "http://services.ga.gov.au/gis/services/Australian_Gazetteer/MapServer/WFSServer",
+          searchPropertyName: "Australian_Gazetteer:NameU",
+          searchPropertyTypeName: "Australian_Gazetteer:Gazetteer_of_Australia",
+          flightDurationSeconds: 1.5,
+          minCharacters: 3
+        }
+      ]
+    }
   };
 
   @observable
@@ -402,6 +484,32 @@ export default class Terria {
   }
 
   /**
+   * Add new SearchProvider to the list of SearchProviders.
+   */
+  @action
+  addSearchProvider(model: BaseModel) {
+    if (model.uniqueId === undefined) {
+      throw new DeveloperError(
+        "A SearchProvider without a `uniqueId` cannot be added."
+      );
+    }
+
+    if (this.locationSearchProviders.has(model.uniqueId)) {
+      throw new RuntimeError(
+        "A SearchProvider with the specified ID already exists."
+      );
+    }
+
+    this.locationSearchProviders.set(model.uniqueId, model);
+  }
+
+  get locationSearchProvidersArray() {
+    return [...this.locationSearchProviders.entries()].map(function(entry) {
+      return entry[1];
+    });
+  }
+
+  /**
    * Remove references to a model from Terria.
    */
   @action
@@ -532,6 +640,23 @@ export default class Terria {
         if (options.applicationUrl) {
           return this.updateApplicationUrl(options.applicationUrl.href);
         }
+      })
+      .then(() => {
+        let searchProviders = this.configParameters.searchBar.searchProviders;
+        if (!isObservableArray(searchProviders))
+          throw new TerriaError({
+            sender: SearchProviderFactory,
+            title: "SearchProviders",
+            message: ""
+          });
+        searchProviders.forEach(searchProvider => {
+          upsertSearchProviderFromJson(
+            SearchProviderFactory,
+            this,
+            CommonStrata.definition,
+            searchProvider
+          );
+        });
       })
       .then(() => {
         this.loadPersistedMapSettings();

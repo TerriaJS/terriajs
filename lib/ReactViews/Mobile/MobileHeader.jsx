@@ -1,20 +1,21 @@
-import React from "react";
-import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
-import SearchBox from "../Search/SearchBox";
-import MobileModalWindow from "./MobileModalWindow";
-import Branding from "../SidePanel/Branding";
-import Styles from "./mobile-header.scss";
-import Icon, { StyledIcon } from "../Icon";
-import MobileMenu from "./MobileMenu";
 import classNames from "classnames";
-import { removeMarker } from "../../Models/LocationMarkerUtils";
+import createReactClass from "create-react-class";
+import { runInAction } from "mobx";
+import { observer } from "mobx-react";
+import PropTypes from "prop-types";
+import React from "react";
 import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
-import { observer } from "mobx-react";
-import { runInAction } from "mobx";
+import { useTranslationIfExists } from "../../Language/languageHelpers";
+import { removeMarker } from "../../Models/LocationMarkerUtils";
 import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
+import Icon, { StyledIcon } from "../Icon";
+import SearchBox from "../Search/SearchBox";
+import Branding from "../SidePanel/Branding";
+import Styles from "./mobile-header.scss";
+import MobileMenu from "./MobileMenu";
+import MobileModalWindow from "./MobileModalWindow";
 
 const MobileHeader = observer(
   createReactClass({
@@ -141,10 +142,10 @@ const MobileHeader = observer(
     render() {
       const searchState = this.props.viewState.searchState;
       const displayOne = this.props.terria.configParameters.displayOneBrand;
-      const { t } = this.props;
+      const { t, terria } = this.props;
       const nowViewingLength =
-        this.props.terria.workbench.items !== undefined
-          ? this.props.terria.workbench.items.length
+        terria.workbench.items !== undefined
+          ? terria.workbench.items.length
           : 0;
 
       return (
@@ -193,7 +194,7 @@ const MobileHeader = observer(
                     />
                   </RawButton>
                   <Branding
-                    terria={this.props.terria}
+                    terria={terria}
                     version={this.props.version}
                     displayOne={displayOne}
                   />
@@ -240,7 +241,9 @@ const MobileHeader = observer(
                         searchText={searchState.locationSearchText}
                         onSearchTextChanged={this.changeLocationSearchText}
                         onDoSearch={this.searchLocations}
-                        placeholder={t("search.placeholder")}
+                        placeholder={useTranslationIfExists(
+                          terria.configParameters.searchBar.placeholder
+                        )}
                         alwaysShowClear={true}
                         onClear={this.closeLocationSearch}
                         autoFocus={true}
@@ -266,13 +269,10 @@ const MobileHeader = observer(
             menuLeftItems={this.props.menuLeftItems}
             viewState={this.props.viewState}
             allBaseMaps={this.props.allBaseMaps}
-            terria={this.props.terria}
-            showFeedback={!!this.props.terria.configParameters.feedbackUrl}
+            terria={terria}
+            showFeedback={!!terria.configParameters.feedbackUrl}
           />
-          <MobileModalWindow
-            terria={this.props.terria}
-            viewState={this.props.viewState}
-          />
+          <MobileModalWindow terria={terria} viewState={this.props.viewState} />
         </div>
       );
     }
