@@ -9,7 +9,7 @@ You can use the [terriajs-indexer](https://github.com/terriajs/terriajs-indexer)
 
 ## Enabling the index in Terria.
 
-After you have generated the index for your tileset, you can enable it in Terria by configuring the catalog item search provider.
+After generating the index, enable it in Terria by configuring a search provider for the catalog item.
 
 Below is sample catalog item configuration:
 
