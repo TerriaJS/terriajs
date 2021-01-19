@@ -155,7 +155,8 @@ export default class CatalogMemberTraits extends ModelTraits {
     name: "Legend URLs",
     description: "The legends to display on the workbench.",
     type: LegendTraits,
-    idProperty: "index"
+    idProperty: "index",
+    merge: false
   })
   legends?: LegendTraits[];
 
