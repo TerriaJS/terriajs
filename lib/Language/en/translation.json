@@ -105,7 +105,8 @@
     "loadingError": {
       "title": "Error Loading {{toolName}} Tool",
       "message": "An error occurred while trying to load the this tool from the server. Please try again."
-    }
+    },
+    "exitBtnTitle": "Exit"
   },
   "diffTool": {
     "title": "Difference",
@@ -498,7 +499,9 @@
     "addItemErrorMessage": "An error occurred while loading the catalog item.",
     "dimensionsSelector": {
       "undefinedLabel": "Not specified"
-    }
+    },
+    "searchItem": "Search",
+    "searchItemTitle": "Search"
   },
   "dateTime": {
     "back": "Go back",
@@ -1438,5 +1441,26 @@
   },
   "term": {
     "missingContent": "missing content"
+  },
+  "itemSearchTool": {
+    "title": "Search {{itemName}}",
+    "loading": "Loading search parameters",
+    "loadError": "Error loading search parameters. Check console for detailed errors.",
+    "noParameters": "No searchable parameters found",
+    "searching": "Searching",
+    "searchError": "Search failed. Check console for detailed errors.",
+    "numericParameter": {
+      "minimum": "Minimum",
+      "maximum": "Maximum"
+    },
+    "searchBtnText": "Search",
+    "resetBtnText": "Clear input",
+    "backBtnText": "Search again",
+    "resultsCount": "{{count}} match found",
+    "resultsCount_plural": "{{count}} matches found"
+  },
+  "indexedItemSearchProvider": {
+    "missingOptionIndexRootUrl": "Option `indexRootUrl` is missing in the item's search configuration.",
+    "errorParsingIndexRoot": "Error parsing indexRoot file: {{indexRootUrl}}."
   }
 }
