@@ -152,7 +152,7 @@ eg:
 
 #### Text Index
 
-Text index is used for searching arbitrary text properties, for eg: street address. We use a library called [Minisearch](https://github.com/lucaong/minisearch) for generating and searching text index.
+Text index is used for searching arbitrary text properties, for eg: street address. We use [Minisearch](https://github.com/lucaong/minisearch) for generating and searching text index.
 
 ##### Definition
 
