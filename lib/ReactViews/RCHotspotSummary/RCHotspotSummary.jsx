@@ -14,7 +14,7 @@ const HotspotSummary = createReactClass({
 
   close() {
     RCChangeUrlParams(
-      { sector: this.props.viewState.selectedHotspot["rc-sector"] },
+      { sector: this.props.viewState.selectedHotspot["rc-sector"]._value },
       this.props.viewState
     );
   },
