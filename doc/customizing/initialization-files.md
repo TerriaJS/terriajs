@@ -80,9 +80,10 @@ Catalog files can be edited three ways:
 |<a id="base-maps"></a>baseMaps|no|[**`baseMaps`**](#baseMaps)|*default list of basemaps*|The array of the base maps to be shown to the user.|
 |<a id="base-map-id"></a>baseMapId|no|**string**||The id of the baseMap user will see on the first mapLoad. The value must be an id of the catalog item from the [`baseMaps`](#base-maps) array|
 |previewBaseMapId|no|**string**|[`baseMapId`](#base-map-id)|The id of the baseMap to be used as the base map in data preview. The value must be an id of the catalog item from the [`baseMaps`](#base-maps) array.|
-|showSplitter|no|**boolean**|false|Show splitter initally|
-|splitPosition|no|**number**|0.5|The position of splitter|
-|workbench|no|**string[]**||List of items ids to initially add to workbench|
+|showSplitter|no|**boolean**|false|Show splitter initally.|
+|splitPosition|no|**number**|0.5|The position of splitter.|
+|workbench|no|**string[]**||List of items ids to initially add to workbench.|
+|previewedItemId|no|string||ID of the catalog member that is currently being previewed.|
 
 ### CameraPosition
 
