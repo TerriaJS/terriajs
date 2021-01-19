@@ -2,6 +2,7 @@
 
 The [IndexedItemSearchProvider](../../lib/Models/ItemSearchProviders/IndexedItemSearchProvider.ts) provides the ability to search a large dataset using a statically generated index. This is for example useful for searching buildings in a [cesium 3D tileset](../catalog-type-details/3d-tiles.md). We currently have an implementation for indexing and searching 3d-tiles using `IndexedItemSearchProvider`.
 
+Read more about the [IndexedItemSearchProvider design](./indexed-item-search-provider-design-notes.md).
 
 ## Generating an index for your 3d tileset.
 
@@ -30,6 +31,21 @@ Below is sample catalog item configuration:
 
 You can host the generated index anywhere, the above configuration assumes that you have added it to `terriamap/wwwroot`. 
 
-The `resultTemplate` defines a template for the search results using the [Mustache](https://mustache.github.io/) format. Any properties in `data.csv` are made available as mustache variables.
+Search provider configuration:
 
-Read more about the [IndexedItemSearchProvider design](./indexed-item-search-provider-design-notes.md).
+`search: SearchableItemTraits`
+  - `providerType: "indexed"`
+    - Required
+    - A string identifying the search provider in the [ItemSearchProviders](../../../lib/Models/ItemSearchProviders.ts) registry. This should be `"indexed"` for `IndexedItemSearchProvider`.
+  - `options: any`
+    - Required
+    - Options for the indexed item search provider
+      - `indexRootUrl: string`
+        - Required
+        - The URL of `indexRoot.json` file that was generted using `terriajs-indexer`.
+  - `resultTemplate: string`
+    - Optional
+    - A [Mustache](https://mustache.github.io/) formatted template string used to generate a title text for each result in the search results listing. The columns in `resultsData.csv` can be used as variables in the template string. If not provided, the text defaults to the ID of the feature.
+   
+
+
