@@ -1,24 +1,28 @@
 import React from "react";
-import SectorTabs from "./SectorTabs";
 import SectorInfo from "./SectorInfo";
 import PropTypes from "prop-types";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
-import Styles from "./SidePanelSectorTabs.scss";
+import { RCChangeUrlParams } from "../../Models/Receipt";
+import Tooltip from "../RCTooltip/RCTooltip";
 import Icon from "../Icon";
+import Styles from "./SidePanelSectorTabs.scss";
+
+// Sector images
 import Agriculture from "../../../wwwroot/images/receipt/sectors/agriculture.jpg";
 import Manufacturing from "../../../wwwroot/images/receipt/sectors/manufacturing.png";
 import InternationalCooperation from "../../../wwwroot/images/receipt/sectors/international-cooperation.png";
 import CoastalInfra from "../../../wwwroot/images/receipt/sectors/coastal-Infra.png";
 import Finance from "../../../wwwroot/images/receipt/sectors/finance.png";
-import { RCChangeUrlParams } from "../../Models/Receipt";
 
 class SidePanelSectorTabs extends React.Component {
   state = {
     sector: null,
-    selectedHotspotsList: null
+    selectedHotspotsList: null,
+    selectedId: -1
   };
   sectors = [
     {
+      id: "agriculture",
       title: "Agriculture",
       icon: Icon.GLYPHS.agriculture,
       iconHover: Icon.GLYPHS.agricultureHover,
@@ -27,6 +31,7 @@ class SidePanelSectorTabs extends React.Component {
       image: Agriculture
     },
     {
+      id: "manufacturing",
       title: "Manufacturing",
       icon: Icon.GLYPHS.manufacturing,
       iconHover: Icon.GLYPHS.manufacturingHover,
@@ -35,6 +40,7 @@ class SidePanelSectorTabs extends React.Component {
       image: Manufacturing
     },
     {
+      id: "cooperation",
       title: "International Cooperation And Development",
       icon: Icon.GLYPHS.internationalCooperationAndDevelopment,
       iconHover: Icon.GLYPHS.internationalCooperationAndDevelopmentHover,
@@ -44,6 +50,7 @@ class SidePanelSectorTabs extends React.Component {
       image: InternationalCooperation
     },
     {
+      id: "coastalInfrastructure",
       title: "Coastal Infrastructure",
       icon: Icon.GLYPHS.coastalInfrastructure,
       iconHover: Icon.GLYPHS.coastalInfrastructureHover,
@@ -53,6 +60,7 @@ class SidePanelSectorTabs extends React.Component {
       image: CoastalInfra
     },
     {
+      id: "finance",
       title: "Finance",
       icon: Icon.GLYPHS.finance,
       iconHover: Icon.GLYPHS.financeHover,
@@ -67,26 +75,32 @@ class SidePanelSectorTabs extends React.Component {
       // eslint-disable-next-line jsx-control-statements/jsx-jcs-no-undef
       .getObservable(viewState, "RCSelectedSector")
       .subscribe(RCSelectedSector => {
-        const selectedSector = this.sectors.find(
-          sector => sector.title === RCSelectedSector
-        );
-        // Open panel
-        if (selectedSector) {
+        if (RCSelectedSector) {
+          const selectedSector = this.sectors.find(
+            sector => sector.id === RCSelectedSector
+          );
+          const sectorIndex = this.sectors.findIndex(
+            sector => sector.id === RCSelectedSector
+          );
+
+          this.setState({ selectedId: sectorIndex });
+
+          // Open panel sector panel
           this.showSectorInfo(selectedSector);
-          // this.filterHotspots(selectedSector.title);
-        }
-        // Close the panel
-        else {
+        } else {
+          // unselect the id
+          this.setState({ selectedId: null });
+          // Close the panel
           this.setState({ sector: null });
         }
       });
 
     this._viewStateChangeHandler = knockout
-      // eslint-disable-next-line jsx-control-statements/jsx-jcs-no-undef
       .getObservable(viewState, "isHotspotsFiltered")
       .subscribe(isHotspotsFiltered => {
         if (!isHotspotsFiltered) {
           this.setState({
+            selectedId: -1,
             sector: null
           });
         }
@@ -96,6 +110,7 @@ class SidePanelSectorTabs extends React.Component {
   componentWillUnmount() {
     this._viewStateChangeHandler.dispose();
     this._viewStateSelectedSector.dispose();
+    this._viewStateChangeHandler.dispose();
   }
   showSectorInfo = selectedSector => {
     this.setState({ sector: selectedSector });
@@ -103,42 +118,40 @@ class SidePanelSectorTabs extends React.Component {
     this.setState({
       selectedHotspotsList:
         this.props.terria.nowViewing.items.find(
-          item => item.name === selectedSector.title
+          item => item.name === selectedSector.id
         )?._dataSource.entities.values || []
     });
   };
 
-  // filterHotspots = sector => {
-  //   const { terria, viewState } = this.props;
-  //   terria.nowViewing.items.map(item => {
-  //     if (item.type === "geojson") {
-  //       item.isShown = item.name === sector;
-  //     }
-  //   });
-  // set isHotspots filtered to true to make back to all hotspots button visible
-  // if (viewState) {
-  //   viewState.isHotspotsFiltered = true;
-  // }
-  // };
-
-  closeSectorInfo = () => {
-    // this.setState({ sector: null });
-    // this.props.viewState.isHotspotsFiltered = false;
-    RCChangeUrlParams("", viewState);
-  };
-
   render() {
-    const { terria, viewState } = this.props;
-    const { sector, selectedHotspotsList } = this.state;
+    const { viewState } = this.props;
+    const { sector, selectedId, selectedHotspotsList } = this.state;
     return (
       <div className={Styles.sidePanelSectorTabs}>
-        <SectorTabs sectors={this.sectors} />
+        <div className={Styles.tabsContainer}>
+          {this.sectors.map((sector, id) => {
+            return (
+              <div
+                key={id}
+                onClick={() => {
+                  RCChangeUrlParams({ sector: sector.id }, viewState);
+                }}
+              >
+                <Tooltip content={sector.title} direction="bottom" delay="100">
+                  <Icon
+                    glyph={selectedId === id ? sector.iconHover : sector.icon}
+                    className={selectedId === id ? Styles.selectedTab : ""}
+                  />
+                </Tooltip>
+              </div>
+            );
+          })}
+        </div>
+
         <SectorInfo
-          terria={terria}
           viewState={viewState}
           sector={sector}
           hotspots={selectedHotspotsList}
-          close={this.closeSectorInfo}
         />
       </div>
     );

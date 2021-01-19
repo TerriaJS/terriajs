@@ -174,7 +174,7 @@ const RCStoryPanel = createReactClass({
 
   scenarioChanged(e) {
     console.log(e.target.value);
-    //TODO: use some kind of identifier for scenario
+    //TODO RECEIPT: use some kind of identifier for scenario
     this.props.viewState.currentScenario = e.target.value.toString();
     this.activateStory(this.props.viewState.currentStoryId);
     this.setState({ state: this.state });

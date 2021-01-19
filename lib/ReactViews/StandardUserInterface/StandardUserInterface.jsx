@@ -15,7 +15,7 @@ import Notification from "./../Notification/Notification.jsx";
 import ObserveModelMixin from "./../ObserveModelMixin";
 import ProgressBar from "../Map/ProgressBar.jsx";
 import SidePanel from "./../SidePanel/SidePanel.jsx";
-import SidePanelSectorTabs from "./../SidePanel/SidePanelSectorTabs";
+import SidePanelSectorTabs from "../RCSectorPanel/SidePanelSectorTabs";
 import processCustomElements from "./processCustomElements";
 import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import RCStoryPanel from "./../Story/RCStoryPanel.jsx";
@@ -27,10 +27,9 @@ import { RCChangeUrlParams } from "../../Models/Receipt";
 import { Medium, Small } from "../Generic/Responsive";
 import classNames from "classnames";
 import "inobounce";
-
 import { withTranslation } from "react-i18next";
-
-import Styles from "./standard-user-interface.scss";
+import Styles from "./StandardUserInterface.scss";
+var Receipt = require("../../Models/Receipt");
 
 export const showStoryPrompt = (viewState, terria) => {
   terria.configParameters.showFeaturePrompts &&
@@ -125,10 +124,12 @@ const StandardUserInterface = createReactClass({
     RCChangeUrlParams(undefined, this.props.viewState);
 
     // It need to call again the params in order to hide the filter hotspots when refreshing the window
-    setTimeout(() => {
-      // TODO RECEIPT => Filtering hotspots are being replaced by the catalog item
-      RCChangeUrlParams(undefined, this.props.viewState);
-    }, 2000);
+    // if (Receipt.getUrlParams().sector) {
+    //   setTimeout(() => {
+    //     // TODO RECEIPT => Filtering hotspots are being replaced by the catalog item
+    //     RCChangeUrlParams(undefined, this.props.viewState);
+    //   }, 1000);
+    // }
   },
 
   componentWillUnmount() {
@@ -146,13 +147,6 @@ const StandardUserInterface = createReactClass({
 
   shouldUseMobileInterface() {
     return document.body.clientWidth < this.props.minimumLargeScreenWidth;
-  },
-
-  onExitStory() {
-    window.history.pushState(null, null, "/?section=finance");
-    window.dispatchEvent(new Event("popstate"));
-    // TODO
-    // exitStory(this.props.terria, this.props.viewState);
   },
 
   render() {

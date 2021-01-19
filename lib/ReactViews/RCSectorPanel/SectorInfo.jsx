@@ -1,36 +1,25 @@
 import React from "react";
-import Styles from "./sector_info.scss";
+import Styles from "./SectorInfo.scss";
 import PropTypes from "prop-types";
 import Icon from "../Icon.jsx";
+import { RCChangeUrlParams } from "../../Models/Receipt";
 
 class SectorInfo extends React.Component {
   constructor(props) {
     super(props);
   }
 
-  openStorySummary(hotspot, viewState, terria, close) {
-    // close possible opened stories
-    viewState.storyShown = false;
-    terria.currentViewer.notifyRepaintRequired();
-
-    // Close preview summary (important to force rerender)
-    viewState.hotspotSummaryEnabled = false;
-    viewState.selectedHotspot = hotspot;
-    viewState.hotspotSummaryEnabled = true;
-
-    // Close current panel
-    close();
-  }
-
   render() {
-    const { sector, hotspots, viewState, terria, close } = this.props;
-
+    const { sector, hotspots, viewState } = this.props;
     if (sector !== null) {
       return (
         <div className={Styles.panel}>
           <div className={Styles.panelBarTitle}>
             <h3 style={{ marginTop: 0 }}>{sector.title}</h3>
-            <button className={Styles.exitBtn} onClick={this.props.close}>
+            <button
+              className={Styles.exitBtn}
+              onClick={() => RCChangeUrlParams("", viewState)}
+            >
               <Icon glyph={Icon.GLYPHS.close} />
             </button>
           </div>
@@ -54,18 +43,19 @@ class SectorInfo extends React.Component {
                           hotspot.properties["rc-story-img"]?._value ||
                           sector.image
                         }
-                        alt=""
+                        alt={hotspot.properties["rc-title"]?._value}
                       />
                       <div className="rc-list-text">
                         {hotspot.properties["rc-title"]?._value}
                       </div>
                       <button
                         onClick={() =>
-                          this.openStorySummary(
-                            hotspot.properties,
-                            viewState,
-                            terria,
-                            close
+                          RCChangeUrlParams(
+                            {
+                              sector: sector.id,
+                              story: hotspot.properties["rc-story-id"]._value
+                            },
+                            viewState
                           )
                         }
                         className="rc-button"
@@ -112,9 +102,7 @@ class SectorInfo extends React.Component {
 SectorInfo.propTypes = {
   sector: PropTypes.object,
   hotspots: PropTypes.array,
-  close: PropTypes.func,
-  viewState: PropTypes.object,
-  terria: PropTypes.object
+  viewState: PropTypes.object
 };
 
 export default SectorInfo;

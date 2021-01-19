@@ -13,7 +13,7 @@ import ObserveModelMixin from "../ObserveModelMixin";
 import FullScreenButton from "./FullScreenButton.jsx";
 import { removeMarker } from "../../Models/LocationMarkerUtils";
 import { withTranslation } from "react-i18next";
-import Styles from "./side-panel.scss";
+import Styles from "./SidePanel.scss";
 
 const SidePanel = createReactClass({
   displayName: "SidePanel",

@@ -1,5 +1,16 @@
-@import "../../Sass/common/mixins";
 @import "~terriajs-variables";
+
+.sidePanelSectorTabs {
+  display: grid;
+  height: 100%;
+  grid-template-rows: 1fr auto;
+
+  order: 0;
+  @media (min-width: $xs) {
+    grid-template-rows: auto 1fr;
+    order: 1;
+  }
+}
 
 .tabsContainer {
   display: flex;
@@ -14,9 +25,7 @@
     margin: 16px;
     order: 0;
   }
-}
 
-.tabsContainer {
   svg {
     color: #106fa8;
     height: auto;
