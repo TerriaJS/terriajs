@@ -49,6 +49,7 @@
   textBlack: $text-black;
   dark: $dark;
   darkWithOverlay: $dark-with-overlay;
+  darkLighter: $dark-lighter;
   grey: $grey;
   greyLighter: $grey-lighter;
   greyLighter2: $grey-lighter2;
@@ -66,4 +67,6 @@
 
   trainerHeight: 64;
   workbenchWidth: 350;
+
+  toolPrimaryColor: $tool-primary-color;
 }
