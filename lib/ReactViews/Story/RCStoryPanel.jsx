@@ -13,7 +13,7 @@ import Styles from "./story-panel.scss";
 import { withTranslation } from "react-i18next";
 import { exitStory as rcExitStory } from "../../Models/Receipt";
 import Tooltip from "../RCTooltip/RCTooltip";
-
+import RCScenarioTabs from "../Story/RCScenarioTabs";
 export function activateStory(story, terria, scenario) {
   if (story.shareData) {
     let initSources;
@@ -172,10 +172,10 @@ const RCStoryPanel = createReactClass({
     rcExitStory(this.props.terria, this.props.viewState);
   },
 
-  scenarioChanged(e) {
-    console.log(e.target.value);
+  scenarioChanged(scenarioId) {
+    console.log(scenarioId);
     //TODO: use some kind of identifier for scenario
-    this.props.viewState.currentScenario = e.target.value.toString();
+    this.props.viewState.currentScenario = scenarioId.toString();
     this.activateStory(this.props.viewState.currentStoryId);
     this.setState({ state: this.state });
   },
@@ -217,7 +217,12 @@ const RCStoryPanel = createReactClass({
                 <Icon width={20} glyph={Icon.GLYPHS.close} />
               </button>
             </div>
-
+            {story.text && (
+              <RCScenarioTabs
+                story={story}
+                onScenarioChange={this.scenarioChanged}
+              />
+            )}
             <div className={Styles.RCSummaryCard}>
               <div
                 className={classNames(Styles.storyContainer, {
@@ -240,7 +245,7 @@ const RCStoryPanel = createReactClass({
               <input
                 type="range"
                 min="0"
-                max="1"
+                max="4"
                 value={scenario}
                 className="slider"
                 id="scenarioSelector"
