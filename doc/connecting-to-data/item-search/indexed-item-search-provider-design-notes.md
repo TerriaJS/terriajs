@@ -85,7 +85,7 @@ eg:
 
 #### Numeric index file
 
-A numeric index file is a CSV file sorted by its value. The file must have two named columns `dataRowId` and `value`. The `dataRowId` is the index of the corresponding feature in the [data file](#data-file).
+A numeric index file is a CSV file sorted by its value. The file must have two named columns `dataRowId` and `value`. The `dataRowId` is the index of the corresponding feature in the [results data file](#results-data-file).
 
 
 ```
@@ -138,7 +138,7 @@ Defines the index for a single enum member.
   
 ##### Enum value index file
 
-The enum value index file is a CSV file with a single column named `dataRowId` which is the index of the corresponding feature in the [data file](#data-file).
+The enum value index file is a CSV file with a single column named `dataRowId` which is the index of the corresponding feature in the [results data file](#results-data-file).
 
 eg:
 
