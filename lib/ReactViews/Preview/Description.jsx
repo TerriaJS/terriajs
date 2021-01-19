@@ -195,7 +195,7 @@ const Description = observer(
                     href={metadataUrl.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={Styles.link}
+                    className={`${Styles.link} description-metadataUrls`}
                     css={`
                       color: ${p => p.theme.colorPrimary};
                     `}

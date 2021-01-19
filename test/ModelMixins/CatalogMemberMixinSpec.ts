@@ -2,7 +2,6 @@ import { runInAction } from "mobx";
 import Terria from "../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
 import updateModelFromJson from "../../lib/Models/updateModelFromJson";
-import CommonStrata from "../../lib/Models/CommonStrata";
 
 describe("CatalogMemberMixin", function() {
   describe(" - infoWithoutSources", function() {
