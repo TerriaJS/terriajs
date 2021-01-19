@@ -1,11 +1,12 @@
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import loadJson from "../../lib/Core/loadJson";
+import loadText from "../../lib/Core/loadText";
+import TerriaError from "../../lib/Core/TerriaError";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
 import Terria from "../../lib/Models/Terria";
-
-// var loadBlob = require("../../lib/Core/loadBlob");
-// var loadText = require("../../lib/Core/loadText");
+import { JsonObject } from "./../../lib/Core/Json";
 
 describe("GeoJsonCatalogItem", function() {
   let terria: Terria;
@@ -52,249 +53,260 @@ describe("GeoJsonCatalogItem", function() {
     });
   });
 
-  // describe("loading in EPSG:28356", function() {
-  //   it("works by URL", function(done) {
-  //     geojson.url = "test/GeoJSON/bike_racks.geojson";
-  //     geojson.load().then(function() {
-  //       expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
-  //       done();
-  //     });
-  //   });
+  describe("loading in EPSG:28356", function() {
+    it("works by URL", async function() {
+      geojson.setTrait(
+        CommonStrata.user,
+        "url",
+        "test/GeoJSON/bike_racks.geojson"
+      );
+      await geojson.loadMapItems();
+      expect(geojson.mapItems.length).toEqual(1);
+      expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
+      expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
+    });
 
-  //   it("have default dataUrl and dataUrlType", function() {
-  //     geojson.updateFromJson({
-  //       url: "test/GeoJSON/bike_racks.geojson"
-  //     });
-  //     expect(geojson.dataUrl).toBe("test/GeoJSON/bike_racks.geojson");
-  //     expect(geojson.dataUrlType).toBe("direct");
-  //   });
+    it("works by string", async function() {
+      const geojsonString = await loadText("test/GeoJSON/bike_racks.geojson");
+      geojson.setTrait(CommonStrata.user, "geoJsonString", geojsonString);
+      await geojson.loadMapItems();
+      expect(geojson.mapItems.length).toEqual(1);
+      expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
+      expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
+    });
 
-  //   it("use provided dataUrl", function(done) {
-  //     geojson.url = "test/GeoJSON/bike_racks.geojson";
-  //     geojson.dataUrl = "test/test.html";
-  //     geojson.dataUrlType = "fake type";
-  //     geojson.load().then(function() {
-  //       expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
-  //       expect(geojson.dataUrl).toBe("test/test.html");
-  //       expect(geojson.dataUrlType).toBe("fake type");
-  //       done();
-  //     });
-  //   });
+    it("works by data object", async function() {
+      const geojsonObject = await loadJson("test/GeoJSON/bike_racks.geojson");
+      geojson.setTrait(CommonStrata.user, "geoJsonData", geojsonObject);
+      await geojson.loadMapItems();
+      expect(geojson.mapItems.length).toEqual(1);
+      expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
+      expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
+    });
 
-  //   it("works by string", function(done) {
-  //     loadText("test/GeoJSON/bike_racks.geojson").then(function(s) {
-  //       geojson.data = s;
-  //       geojson.dataSourceUrl = "anything.geojson";
-  //       geojson.load().then(function() {
-  //         expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
-  //         done();
-  //       });
-  //     });
-  //   });
+    it("works with zip", async function() {
+      geojson.setTrait(CommonStrata.user, "url", "test/GeoJSON/bike_racks.zip");
+      await geojson.loadMapItems();
+      expect(geojson.mapItems.length).toEqual(1);
+      expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
+      expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
+    });
+    /* it("have default dataUrl and dataUrlType", function() {
+       geojson.updateFromJson({
+         url: "test/GeoJSON/bike_racks.geojson"
+       });
+       expect(geojson.dataUrl).toBe("test/GeoJSON/bike_racks.geojson");
+       expect(geojson.dataUrlType).toBe("direct");
+     })
+     it("use provided dataUrl", function(done) {
+       geojson.url = "test/GeoJSON/bike_racks.geojson";
+       geojson.dataUrl = "test/test.html";
+       geojson.dataUrlType = "fake type";
+       geojson.load().then(function() {
+         expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
+         expect(geojson.dataUrl).toBe("test/test.html");
+         expect(geojson.dataUrlType).toBe("fake type");
+         done();
+       });
+     })
+     
+     it("works by blob", function(done) {
+       loadBlob("test/GeoJSON/bike_racks.geojson").then(function(blob) {
+         geojson.data = blob;
+         geojson.dataSourceUrl = "anything.geojson";
+         geojson.load().then(function() {
+           expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
+           done();
+         });
+       });
+     }); */
+  });
 
-  //   it("works by blob", function(done) {
-  //     loadBlob("test/GeoJSON/bike_racks.geojson").then(function(blob) {
-  //       geojson.data = blob;
-  //       geojson.dataSourceUrl = "anything.geojson";
-  //       geojson.load().then(function() {
-  //         expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
-  //         done();
-  //       });
-  //     });
-  //   });
-  // });
+  describe("loading in CRS:84", function() {
+    it("works by URL", async function() {
+      geojson.setTrait(
+        CommonStrata.user,
+        "url",
+        "test/GeoJSON/cemeteries.geojson"
+      );
+      await geojson.loadMapItems();
+      expect(geojson.mapItems.length).toEqual(1);
+      expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
+      expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
+    });
 
-  // describe("loading in CRS:84", function() {
-  //   it("works by URL", function(done) {
-  //     geojson.url = "test/GeoJSON/cemeteries.geojson";
-  //     geojson.load().then(function() {
-  //       expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
-  //       done();
-  //     });
-  //   });
+    it("works by string", async function() {
+      const geojsonString = await loadText("test/GeoJSON/cemeteries.geojson");
+      geojson.setTrait(CommonStrata.user, "geoJsonString", geojsonString);
+      await geojson.loadMapItems();
+      expect(geojson.mapItems.length).toEqual(1);
+      expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
+      expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
+    });
 
-  //   it("works by string", function(done) {
-  //     loadText("test/GeoJSON/cemeteries.geojson").then(function(s) {
-  //       geojson.data = s;
-  //       geojson.dataSourceUrl = "anything.geojson";
-  //       geojson.load().then(function() {
-  //         expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
-  //         done();
-  //       });
-  //     });
-  //   });
+    it("works by blob", async function() {
+      const blob = await loadJson("test/GeoJSON/cemeteries.geojson");
+      geojson.setTrait(CommonStrata.user, "geoJsonData", <JsonObject>blob);
+      await geojson.loadMapItems();
+      expect(geojson.mapItems.length).toEqual(1);
+      expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
+      expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
+    });
 
-  //   it("works by blob", function(done) {
-  //     loadBlob("test/GeoJSON/cemeteries.geojson").then(function(blob) {
-  //       geojson.data = blob;
-  //       geojson.dataSourceUrl = "anything.geojson";
-  //       geojson.load().then(function() {
-  //         expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
-  //         done();
-  //       });
-  //     });
-  //   });
-  // });
+    it("works with zip", async function() {
+      geojson.setTrait(CommonStrata.user, "url", "test/GeoJSON/cemeteries.zip");
+      await geojson.loadMapItems();
+      expect(geojson.mapItems.length).toEqual(1);
+      expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
+      expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
+    });
+  });
 
-  // describe("loading without specified CRS (assumes EPSG:4326)", function() {
-  //   it("works by URL", function(done) {
-  //     geojson.url = "test/GeoJSON/gme.geojson";
-  //     geojson.load().then(function() {
-  //       expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
-  //       done();
-  //     });
-  //   });
+  describe("loading without specified CRS (assumes EPSG:4326)", function() {
+    it("works by URL", async function() {
+      geojson.setTrait(CommonStrata.user, "url", "test/GeoJSON/gme.geojson");
+      await geojson.loadMapItems();
+      expect(geojson.mapItems.length).toEqual(1);
+      expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
+      expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
+    });
 
-  //   it("works by string", function(done) {
-  //     loadText("test/GeoJSON/gme.geojson").then(function(s) {
-  //       geojson.data = s;
-  //       geojson.dataSourceUrl = "anything.geojson";
-  //       geojson.load().then(function() {
-  //         expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
-  //         done();
-  //       });
-  //     });
-  //   });
+    it("works by string", async function() {
+      const geojsonString = await loadText("test/GeoJSON/gme.geojson");
+      geojson.setTrait(CommonStrata.user, "geoJsonString", geojsonString);
+      await geojson.loadMapItems();
+      expect(geojson.mapItems.length).toEqual(1);
+      expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
+      expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
+    });
 
-  //   it("works by blob", function(done) {
-  //     loadBlob("test/GeoJSON/gme.geojson").then(function(blob) {
-  //       geojson.data = blob;
-  //       geojson.dataSourceUrl = "anything.geojson";
-  //       geojson.load().then(function() {
-  //         expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
-  //         done();
-  //       });
-  //     });
-  //   });
-  // });
+    it("works by blob", async function() {
+      const blob = await loadJson("test/GeoJSON/gme.geojson");
+      geojson.setTrait(CommonStrata.user, "geoJsonData", <JsonObject>blob);
+      await geojson.loadMapItems();
+      expect(geojson.mapItems.length).toEqual(1);
+      expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
+      expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
+    });
+
+    it("works with zip", async function() {
+      geojson.setTrait(CommonStrata.user, "url", "test/GeoJSON/cemeteries.zip");
+      await geojson.loadMapItems();
+      expect(geojson.mapItems.length).toEqual(1);
+      expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
+      expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
+    });
+  });
 
   // describe('loading Esri-style GeoJSON with an "envelope"', function() {
-  //   it("works by URL", function(done) {
-  //     geojson.url = "test/GeoJSON/EsriEnvelope.geojson";
-  //     geojson.load().then(function() {
-  //       expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
-  //       done();
-  //     });
+  //   it("works by URL", async function() {
+  //     geojson.setTrait(
+  //       CommonStrata.user,
+  //       "url",
+  //       "test/GeoJSON/EsriEnvelope.geojson"
+  //     );
+  //     await geojson.loadMapItems();
+  //     expect(geojson.mapItems.length).toEqual(1);
+  //     expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
+  //     expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
   //   });
-
-  //   it("works by string", function(done) {
-  //     loadText("test/GeoJSON/EsriEnvelope.geojson").then(function(s) {
-  //       geojson.data = s;
-  //       geojson.dataSourceUrl = "anything.geojson";
-  //       geojson.load().then(function() {
-  //         expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
-  //         done();
-  //       });
-  //     });
+  //
+  //   it("works by string", async function() {
+  //     const geojsonString = await loadText("test/GeoJSON/EsriEnvelope.geojson");
+  //     geojson.setTrait(CommonStrata.user, "geoJsonString", geojsonString);
+  //     await geojson.loadMapItems();
+  //     expect(geojson.mapItems.length).toEqual(1);
+  //     expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
+  //     expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
   //   });
-
-  //   it("works by blob", function(done) {
-  //     loadBlob("test/GeoJSON/EsriEnvelope.geojson").then(function(blob) {
-  //       geojson.data = blob;
-  //       geojson.dataSourceUrl = "anything.geojson";
-  //       geojson.load().then(function() {
-  //         expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
-  //         done();
-  //       });
-  //     });
-  //   });
-  // });
-
-  // describe("error handling", function() {
-  //   it("fails gracefully when the data at a URL is not JSON", function(done) {
-  //     geojson.url = "test/KML/vic_police.kml";
-  //     geojson
-  //       .load()
-  //       .then(function() {
-  //         done.fail("Load should not succeed.");
-  //       })
-  //       .otherwise(function(e) {
-  //         expect(e instanceof TerriaError).toBe(true);
-  //         done();
-  //       });
-  //   });
-
-  //   it("fails gracefully when the provided string is not JSON", function(done) {
-  //     loadText("test/KML/vic_police.kml").then(function(s) {
-  //       geojson.data = s;
-  //       geojson.dataSourceUrl = "anything.czml";
-
-  //       geojson
-  //         .load()
-  //         .then(function() {
-  //           done.fail("Load should not succeed.");
-  //         })
-  //         .otherwise(function(e) {
-  //           expect(e instanceof TerriaError).toBe(true);
-  //           done();
-  //         });
-  //     });
-  //   });
-
-  //   it("fails gracefully when the provided blob is not JSON", function(done) {
-  //     loadBlob("test/KML/vic_police.kml").then(function(blob) {
-  //       geojson.data = blob;
-  //       geojson.dataSourceUrl = "anything.czml";
-
-  //       geojson
-  //         .load()
-  //         .then(function() {
-  //           done.fail("Load should not succeed.");
-  //         })
-  //         .otherwise(function(e) {
-  //           expect(e instanceof TerriaError).toBe(true);
-  //           done();
-  //         });
-  //     });
-  //   });
-
-  //   it("fails gracefully when the data at a URL is JSON but not GeoJSON", function(done) {
-  //     geojson.url = "test/CZML/verysimple.czml";
-  //     geojson
-  //       .load()
-  //       .then(function() {
-  //         done.fail("Load should not succeed.");
-  //       })
-  //       .otherwise(function(e) {
-  //         expect(e instanceof TerriaError).toBe(true);
-  //         done();
-  //       });
-  //   });
-
-  //   it("fails gracefully when the provided string is JSON but not GeoJSON", function(done) {
-  //     loadText("test/CZML/verysimple.czml").then(function(s) {
-  //       geojson.data = s;
-  //       geojson.dataSourceUrl = "anything.czml";
-
-  //       geojson
-  //         .load()
-  //         .then(function() {
-  //           done.fail("Load should not succeed.");
-  //         })
-  //         .otherwise(function(e) {
-  //           expect(e instanceof TerriaError).toBe(true);
-  //           done();
-  //         });
-  //     });
-  //   });
-
-  //   it("fails gracefully when the provided blob is JSON but not GeoJSON", function(done) {
-  //     loadBlob("test/CZML/verysimple.czml").then(function(blob) {
-  //       geojson.data = blob;
-  //       geojson.dataSourceUrl = "anything.czml";
-
-  //       geojson
-  //         .load()
-  //         .then(function() {
-  //           done.fail("Load should not succeed.");
-  //         })
-  //         .otherwise(function(e) {
-  //           expect(e instanceof TerriaError).toBe(true);
-  //           done();
-  //         });
-  //     });
+  //
+  //   it("works by blob", async function() {
+  //     const blob = await loadJson("test/GeoJSON/EsriEnvelope.geojson");
+  //     geojson.setTrait(CommonStrata.user, "geoJsonData", <JsonObject>blob);
+  //     await geojson.loadMapItems();
+  //     expect(geojson.mapItems.length).toEqual(1);
+  //     expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
+  //     expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
   //   });
   // });
+
+  describe("error handling", function() {
+    it("fails gracefully when the data at a URL is not JSON", function(done) {
+      geojson.setTrait(CommonStrata.user, "url", "test/KML/vic_police.kml");
+
+      geojson
+        .loadMapItems()
+        .then(function() {
+          done.fail("Load should not succeed.");
+        })
+        .catch(function(e: any) {
+          expect(e instanceof TerriaError).toBe(true);
+          done();
+        });
+    });
+
+    it("fails gracefully when the provided string is not JSON", async function(done) {
+      loadText("test/KML/vic_police.kml").then(function(s: string) {
+        geojson.setTrait(CommonStrata.user, "geoJsonString", s);
+
+        geojson
+          .loadMapItems()
+          .then(function() {
+            done.fail("Load should not succeed.");
+          })
+          .catch(function(e: any) {
+            expect(e instanceof TerriaError).toBe(true);
+            done();
+          });
+      });
+    });
+
+    it("fails gracefully when the data at a URL is JSON but not GeoJSON", function(done) {
+      geojson.setTrait(CommonStrata.user, "url", "test/CZML/verysimple.czml");
+
+      geojson
+        .loadMapItems()
+        .then(function() {
+          done.fail("Load should not succeed.");
+        })
+        .catch(function(e: any) {
+          expect(e instanceof TerriaError).toBe(true);
+          done();
+        });
+    });
+
+    it("fails gracefully when the provided string is JSON but not GeoJSON", async function(done) {
+      loadText("test/CZML/verysimple.czml").then(function(s: string) {
+        geojson.setTrait(CommonStrata.user, "geoJsonString", s);
+
+        geojson
+          .loadMapItems()
+          .then(function() {
+            done.fail("Load should not succeed.");
+          })
+          .catch(function(e: any) {
+            expect(e instanceof TerriaError).toBe(true);
+            done();
+          });
+      });
+    });
+    /* 
+    it("fails gracefully when the provided blob is JSON but not GeoJSON", function(done) {
+      loadBlob("test/CZML/verysimple.czml").then(function(blob) {
+        geojson.data = blob;
+        geojson.dataSourceUrl = "anything.czml";
+        geojson
+          .load()
+          .then(function() {
+            done.fail("Load should not succeed.");
+          })
+          .otherwise(function(e) {
+            expect(e instanceof TerriaError).toBe(true);
+            done();
+          });
+      });
+    }); */
+  });
 
   // describe("Adding and removing attribution", function() {
   //   var currentViewer;
