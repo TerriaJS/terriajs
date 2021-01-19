@@ -235,7 +235,7 @@ const StandardUserInterface = createReactClass({
                     )}
 
                     {showHotspotSummary && (
-                      <RCHotspotSummary terria={terria} viewState={viewState} />
+                      <RCHotspotSummary viewState={viewState} />
                     )}
                   </div>
                 </Small>
@@ -267,7 +267,7 @@ const StandardUserInterface = createReactClass({
                     }}
                   >
                     {showHotspotSummary && (
-                      <RCHotspotSummary terria={terria} viewState={viewState} />
+                      <RCHotspotSummary viewState={viewState} />
                     )}
 
                     {!(showStoryPanel || showHotspotSummary) && (

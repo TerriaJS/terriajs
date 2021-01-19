@@ -3,43 +3,24 @@ import React from "react";
 import PropTypes from "prop-types";
 import createReactClass from "create-react-class";
 import Styles from "./RCHotspotSummary.scss";
-import { launchStory } from "../../Models/Receipt";
-import triggerResize from "../../Core/triggerResize";
+import { RCChangeUrlParams } from "../../Models/Receipt";
 import Icon from "../Icon";
 
 const HotspotSummary = createReactClass({
   propTypes: {
-    terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
     onClick: PropTypes.func
   },
 
-  openStory(paramsUrl) {
-    const storyParams =
-      (paramsUrl.story && paramsUrl) ||
-      this.props.viewState.selectedHotspot?.["_rc-story"]?._value;
-    if (storyParams) {
-      launchStory(storyParams, this.props.terria).then(() => {
-        this.props.viewState.storyBuilderShown = false;
-        this.props.viewState.storyShown = true;
-        setTimeout(function() {
-          triggerResize();
-        }, 1);
-        this.props.terria.currentViewer.notifyRepaintRequired();
-        this.props.viewState.hotspotSummaryEnabled = false;
-      });
-    } else {
-      console.error("Story id not provided");
-    }
-  },
-
   close() {
-    this.props.viewState.hotspotSummaryEnabled = false;
+    RCChangeUrlParams(
+      { sector: this.props.viewState.selectedHotspot["rc-sector"] },
+      this.props.viewState
+    );
   },
 
   render() {
     const hotspot = this.props.viewState.selectedHotspot;
-    // const type = hotspot["_rc-type"]?._value;
     const sector = hotspot["_rc-sector"]?._value;
     const title = hotspot["_rc-title"]?._value;
     const description = hotspot["_rc-description"]?._value;
@@ -62,7 +43,17 @@ const HotspotSummary = createReactClass({
             key={microstory["micro-story-title"]}
             className={Styles["microstory-card"]}
             style={imgStyle}
-            onClick={() => this.openStory(microstory["rc-story"])}
+            onClick={() =>
+              RCChangeUrlParams(
+                {
+                  sector,
+                  story: hotspot["rc-story-id"],
+                  microstory: microstory["micro-story-id"],
+                  page: 1
+                },
+                this.props.viewState
+              )
+            }
           >
             <div>
               <div className={Styles["microstory-title"]}>
@@ -100,7 +91,16 @@ const HotspotSummary = createReactClass({
           <button
             type="button"
             className={Styles.receiptButton}
-            onClick={this.openStory}
+            onClick={() =>
+              RCChangeUrlParams(
+                {
+                  sector,
+                  story: hotspot["rc-story-id"],
+                  page: 1
+                },
+                this.props.viewState
+              )
+            }
           >
             <Icon className={Styles.iconPlay} glyph={Icon.GLYPHS.roundedPlay} />
             Play story
