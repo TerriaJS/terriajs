@@ -25,10 +25,7 @@ export default class BingMapsSearchProvider extends SearchProviderMixin(
 
   constructor(uniqueId: string | undefined, terria: Terria) {
     super(uniqueId, terria);
-    if (
-      (!this.key || this.key === "") &&
-      this.terria.configParameters.bingMapsKey
-    ) {
+    if (!this.key && this.terria.configParameters.bingMapsKey) {
       this.setTrait(
         CommonStrata.defaults,
         "key",
@@ -52,7 +49,6 @@ export default class BingMapsSearchProvider extends SearchProviderMixin(
     searchText: string,
     searchResults: SearchProviderResults
   ): Promise<void> {
-    console.log(this.key);
     searchResults.results.length = 0;
     searchResults.message = undefined;
 
@@ -179,11 +175,7 @@ function createZoomToFunction(model: BingMapsSearchProvider, resource: any) {
   const rectangle = Rectangle.fromDegrees(west, south, east, north);
 
   return function() {
-    const flightDurationSeconds: number =
-      model.flightDurationSeconds ||
-      model.terria.configParameters.searchBar.flightDurationSeconds;
-
     const terria = model.terria;
-    terria.currentViewer.zoomTo(rectangle, flightDurationSeconds);
+    terria.currentViewer.zoomTo(rectangle, model.flightDurationSeconds!);
   };
 }

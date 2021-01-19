@@ -47,6 +47,8 @@ export default function upsertSearchProviderFromJson(
     model?.terria.addSearchProvider(model);
   }
 
+  addDefaultTraits(model);
+
   try {
     updateModelFromJson(model, stratumName, json);
   } catch (error) {
@@ -54,4 +56,26 @@ export default function upsertSearchProviderFromJson(
     console.log(error);
     model?.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
   }
+}
+
+function addDefaultTraits(model: BaseModel) {
+  const terria = model.terria;
+
+  model.setTrait(
+    CommonStrata.defaults,
+    "flightDurationSeconds",
+    terria.configParameters.searchBar.flightDurationSeconds
+  );
+
+  model.setTrait(
+    CommonStrata.defaults,
+    "minCharacters",
+    terria.configParameters.searchBar.minCharacters
+  );
+
+  model.setTrait(
+    CommonStrata.defaults,
+    "recommendedListLength",
+    terria.configParameters.searchBar.recommendedListLength
+  );
 }

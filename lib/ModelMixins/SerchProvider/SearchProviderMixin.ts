@@ -4,9 +4,11 @@ import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Constructor from "../../Core/Constructor";
-import Model from "../../Models/Model";
+import Model, { BaseModel } from "../../Models/Model";
 import SearchProviderResults from "../../Models/SearchProvider/SearchProviderResults";
+import StratumFromTraits from "../../Models/StratumFromTraits";
 import Terria from "../../Models/Terria";
+import ModelTraits from "../../Traits/ModelTraits";
 import SearchProviderTraits from "../../Traits/SearchProvider/SearchProviderTraits";
 
 type SearchProvider = Model<SearchProviderTraits>;
