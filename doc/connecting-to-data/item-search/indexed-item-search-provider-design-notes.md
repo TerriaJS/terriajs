@@ -78,7 +78,8 @@ eg:
 ```
 {
   type: "numeric",
-  range: {min: 7.58, max: 92901.63}
+  range: {min: 7.58, max: 92901.63},
+  url: "1.csv"
 }
 ```
 
