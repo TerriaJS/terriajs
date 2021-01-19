@@ -133,7 +133,7 @@ function CatalogFunctionJobMixin<
     public async invoke() {
       this.setTrait(CommonStrata.user, "jobStatus", "running");
       try {
-        const finished = await this._invoke();
+        const finished = await runInAction(() => this._invoke());
         if (finished) {
           this.setTrait(CommonStrata.user, "jobStatus", "finished");
           this.onJobFinish(true);
@@ -165,6 +165,7 @@ function CatalogFunctionJobMixin<
     /**
      * This function adapts AutoRefreshMixin's refreshData with this Mixin's pollForResults - adding the boolean return value which triggers refresh disable
      */
+    @action
     refreshData() {
       if (this.pollingForResults) {
         return;

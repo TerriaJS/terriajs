@@ -1,11 +1,11 @@
-import ModelTraits from "./ModelTraits";
-import objectArrayTrait from "./objectArrayTrait";
-import objectTrait from "./objectTrait";
-import primitiveTrait from "./primitiveTrait";
-import primitiveArrayTrait from "./primitiveArrayTrait";
-import anyTrait from "./anyTrait";
 import i18next from "i18next";
 import { JsonObject } from "../Core/Json";
+import anyTrait from "./anyTrait";
+import LegendTraits from "./LegendTraits";
+import ModelTraits from "./ModelTraits";
+import objectArrayTrait from "./objectArrayTrait";
+import primitiveArrayTrait from "./primitiveArrayTrait";
+import primitiveTrait from "./primitiveTrait";
 
 export class InfoSectionTraits extends ModelTraits {
   @primitiveTrait({
@@ -150,6 +150,14 @@ export default class CatalogMemberTraits extends ModelTraits {
       "Whether the legend is hidden in the workbench for this catalog member."
   })
   hideLegendInWorkbench: boolean = false;
+
+  @objectArrayTrait({
+    name: "Legend URLs",
+    description: "The legends to display on the workbench.",
+    type: LegendTraits,
+    idProperty: "index"
+  })
+  legends?: LegendTraits[];
 
   @primitiveTrait({
     type: "boolean",
