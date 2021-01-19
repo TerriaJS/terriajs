@@ -1,6 +1,6 @@
 import WebFeatureServiceSearchProviderTraits from "../../Traits/SearchProvider/WebFeatureServiceSearchProviderTraits";
 import CreateModel from "../CreateModel";
-import WebFeatureServiceSearchProviderMixin from "./../../ModelMixins/WebFeatureServiceSearchProviderMixin";
+import WebFeatureServiceSearchProviderMixin from "../../ModelMixins/SerchProvider/WebFeatureServiceSearchProviderMixin";
 import SearchResult from "./SearchResult";
 
 const featureCodesToNamesMap = new Map([
@@ -224,8 +224,8 @@ export default class AustralianGazetteerSearchProvider extends WebFeatureService
   CreateModel(WebFeatureServiceSearchProviderTraits)
 ) {
   static readonly type = "australian-gazetteer-search-provider";
-  
-  get type(){
+
+  get type() {
     return AustralianGazetteerSearchProvider.type;
   }
 

@@ -9,7 +9,7 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import CatalogSearchProvider from "../Models/SearchProvider/CatalogSearchProvider";
 import SearchProviderResults from "../Models/SearchProvider/SearchProviderResults";
 import Terria from "../Models/Terria";
-import SearchProviderMixin from "./../ModelMixins/SearchProviderMixin";
+import SearchProviderMixin from "../ModelMixins/SerchProvider/SearchProviderMixin";
 
 interface SearchStateOptions {
   terria: Terria;

@@ -2,15 +2,14 @@ import i18next from "i18next";
 import { runInAction } from "mobx";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import URI from "urijs";
-import Constructor from "../Core/Constructor";
-import makeRealPromise from "../Core/makeRealPromise";
-import zoomRectangleFromPoint from "../Map/zoomRectangleFromPoint";
-import Model from "../Models/Model";
-import SearchProviderResults from "../Models/SearchProvider/SearchProviderResults";
-import SearchResult from "../Models/SearchProvider/SearchResult";
-import Terria from "../Models/Terria";
-import xml2json from "../ThirdParty/xml2json";
-import WebFeatureServiceSearchProviderTraits from "../Traits/SearchProvider/WebFeatureServiceSearchProviderTraits";
+import Constructor from "../../Core/Constructor";
+import makeRealPromise from "../../Core/makeRealPromise";
+import zoomRectangleFromPoint from "../../Map/zoomRectangleFromPoint";
+import Model from "../../Models/Model";
+import SearchProviderResults from "../../Models/SearchProvider/SearchProviderResults";
+import SearchResult from "../../Models/SearchProvider/SearchResult";
+import xml2json from "../../ThirdParty/xml2json";
+import WebFeatureServiceSearchProviderTraits from "../../Traits/SearchProvider/WebFeatureServiceSearchProviderTraits";
 import SearchProviderMixin from "./SearchProviderMixin";
 
 function WebFeatureServiceSearchProviderMixin<

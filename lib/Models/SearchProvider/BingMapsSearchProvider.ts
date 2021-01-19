@@ -6,7 +6,7 @@ import Resource from "terriajs-cesium/Source/Core/Resource";
 import loadJsonp from "../../Core/loadJsonp";
 import SearchProviderMixin, {
   getMapCenter
-} from "../../ModelMixins/SearchProviderMixin";
+} from "../../ModelMixins/SerchProvider/SearchProviderMixin";
 import BingMapsSearchProviderTraits from "../../Traits/SearchProvider/BingMapsSearchProviderTraits";
 import CreateModel from "../CreateModel";
 import SearchProviderResults from "./SearchProviderResults";
