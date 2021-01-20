@@ -246,15 +246,21 @@ export const FeatureInfoPanel = createReactClass({
     if (!featureProperties) {
       return;
     }
-
-    RCChangeUrlParams(
-      {
-        sector: featureProperties["_rc-sector"]._value,
-        story: featureProperties["_rc-story-id"]._value
-      },
-      this.props.viewState
-    );
-    this.close();
+    if (
+      featureProperties["_rc-sector"]?._value &&
+      featureProperties["_rc-story-id"]?._value
+    ) {
+      RCChangeUrlParams(
+        {
+          sector: featureProperties["_rc-sector"]._value,
+          story: featureProperties["_rc-story-id"]._value
+        },
+        this.props.viewState
+      );
+      this.close();
+    } else {
+      console.log("🚨 Sector or storyId not defined");
+    }
   },
 
   render() {

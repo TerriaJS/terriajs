@@ -167,7 +167,7 @@ class SidePanelSectorTabs extends React.Component {
                           RCChangeUrlParams(
                             {
                               sector: sector.id,
-                              story: hotspot.properties["rc-story-id"]._value
+                              story: hotspot.properties["rc-story-id"]?._value
                             },
                             viewState
                           )
