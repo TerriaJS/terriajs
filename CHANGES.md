@@ -7,6 +7,8 @@ Change Log
 * Added support for shapefile with `ShapefileCatalogItem`
 * Added `GeoJsonMixin` for handling the loading of geojson data.
 * Extended the `GeoJsonCatalogItem` to support loading of zip files.
+* Added a new `lineAndPoint` chart type
+* CustomChartComponent now has a "chart-type" attribute
 * [The next improvement]
 
 #### 8.0.0-alpha.65
