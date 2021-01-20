@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.66)
+* Wrote translation documentation [#5158](https://github.com/TerriaJS/terriajs/pull/5158)
 * [The next improvement]
 
 #### 8.0.0-alpha.65
