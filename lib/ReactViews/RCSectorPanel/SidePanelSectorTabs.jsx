@@ -107,7 +107,10 @@ class SidePanelSectorTabs extends React.Component {
               <div
                 key={id}
                 onClick={() => {
-                  RCChangeUrlParams({ sector: sector.id }, viewState);
+                  RCChangeUrlParams(
+                    selectedId === id ? "" : { sector: sector.id },
+                    viewState
+                  );
                 }}
               >
                 <Tooltip content={sector.title} direction="bottom" delay="100">
