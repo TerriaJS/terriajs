@@ -52,3 +52,59 @@
 .selectedTab {
   background-color: $selected-tab-background-color;
 }
+
+.panel {
+  position: relative;
+  padding: $padding;
+  overflow-y: auto;
+  order: 0;
+  @media (min-width: $xs) {
+    order: 1;
+  }
+}
+
+.panelBarTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.sectorInfo {
+  background-color: $grey-lightest;
+  font-size: $font-size-small;
+  border-radius: $radius-small;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  @media (max-width: $sm) {
+    border-radius: 0;
+  }
+}
+.lr p {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: white;
+  margin: 0;
+  font-family: $font-base;
+  font-size: $font-size-small;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.exitBtn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  margin-right: 10px;
+  margin-top: 7px;
+
+  &:not([disabled]):hover {
+    svg {
+      fill: $color-primary;
+    }
+  }
+
+  svg {
+    fill: #888888;
+    width: 16px;
+  }
+}

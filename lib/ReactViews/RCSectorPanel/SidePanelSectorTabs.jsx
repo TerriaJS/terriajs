@@ -1,5 +1,4 @@
 import React from "react";
-import SectorInfo from "./SectorInfo";
 import PropTypes from "prop-types";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 import { RCChangeUrlParams } from "../../Models/Receipt";
@@ -72,62 +71,36 @@ class SidePanelSectorTabs extends React.Component {
 
   componentDidMount() {
     this._viewStateSelectedSector = knockout
-      // eslint-disable-next-line jsx-control-statements/jsx-jcs-no-undef
       .getObservable(viewState, "RCSelectedSector")
-      .subscribe(RCSelectedSector => {
-        if (RCSelectedSector) {
-          const selectedSector = this.sectors.find(
-            sector => sector.id === RCSelectedSector
-          );
-          const sectorIndex = this.sectors.findIndex(
-            sector => sector.id === RCSelectedSector
-          );
-
-          this.setState({ selectedId: sectorIndex });
-
-          // Open panel sector panel
-          this.showSectorInfo(selectedSector);
-        } else {
-          // unselect the id
-          this.setState({ selectedId: null });
-          // Close the panel
-          this.setState({ sector: null });
-        }
-      });
-
-    this._viewStateChangeHandler = knockout
-      .getObservable(viewState, "isHotspotsFiltered")
-      .subscribe(isHotspotsFiltered => {
-        if (!isHotspotsFiltered) {
-          this.setState({
-            selectedId: -1,
-            sector: null
-          });
-        }
+      .subscribe(() => {
+        // Re render the panel rather than delegate on React state
+        this.forceUpdate();
       });
   }
-
   componentWillUnmount() {
-    this._viewStateChangeHandler.dispose();
     this._viewStateSelectedSector.dispose();
-    this._viewStateChangeHandler.dispose();
   }
-  showSectorInfo = selectedSector => {
-    this.setState({ sector: selectedSector });
-    // Show list sotries in a sector and activate panel
-    this.setState({
-      selectedHotspotsList:
-        this.props.terria.nowViewing.items.find(
-          item => item.name === selectedSector.id
-        )?._dataSource.entities.values || []
-    });
-  };
 
   render() {
     const { viewState } = this.props;
-    const { sector, selectedId, selectedHotspotsList } = this.state;
+
+    const selectedId = this.sectors.findIndex(
+      sector => sector.id === viewState.RCSelectedSector
+    );
+    const sector = this.sectors.find(
+      sector => sector.id === viewState.RCSelectedSector
+    );
+    const selectedHotspotsList =
+      this.props.terria.nowViewing.items.find(item => item.name === sector?.id)
+        ?._dataSource.entities.values || [];
+
     return (
       <div className={Styles.sidePanelSectorTabs}>
+        {
+          //
+          //  Sector Selector
+          //
+        }
         <div className={Styles.tabsContainer}>
           {this.sectors.map((sector, id) => {
             return (
@@ -147,12 +120,101 @@ class SidePanelSectorTabs extends React.Component {
             );
           })}
         </div>
+        {
+          //
+          // Sector info tab
+          //
+        }
+        {!!sector && (
+          <div className={Styles.panel}>
+            <div className={Styles.panelBarTitle}>
+              <h3 style={{ marginTop: 0 }}>{sector.title}</h3>
+              <button
+                className={Styles.exitBtn}
+                onClick={() => RCChangeUrlParams("", viewState)}
+              >
+                <Icon glyph={Icon.GLYPHS.close} />
+              </button>
+            </div>
 
-        <SectorInfo
-          viewState={viewState}
-          sector={sector}
-          hotspots={selectedHotspotsList}
-        />
+            <div className="rc-card">
+              <img src={sector.image} alt="" />
+              <div className="rc-card-text">{sector.info}</div>
+            </div>
+
+            {/* Story list in sector*/}
+            {selectedHotspotsList && selectedHotspotsList.length > 0 && (
+              <div>
+                <h4>Stories</h4>
+                <div className="rc-list">
+                  {selectedHotspotsList.map((hotspot, i) => (
+                    <div key={i} className="rc-list-row">
+                      <img
+                        src={
+                          hotspot.properties["rc-story-img"]?._value ||
+                          sector.image
+                        }
+                        alt={hotspot.properties["rc-title"]?._value}
+                      />
+                      <div className="rc-list-text">
+                        {hotspot.properties["rc-title"]?._value}
+                      </div>
+                      <button
+                        onClick={() =>
+                          RCChangeUrlParams(
+                            {
+                              sector: sector.id,
+                              story: hotspot.properties["rc-story-id"]._value
+                            },
+                            viewState
+                          )
+                        }
+                        className="rc-button"
+                      >
+                        View
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {
+          //
+          // Welcome tab
+          //
+        }
+        {!sector && (
+          <div className={Styles.panel}>
+            <h2 style={{ marginTop: 0 }}>Welcome</h2>
+            <div className="rc-card">
+              <div className="rc-card-text">
+                <p className="bold">
+                  The RECEIPT climate story explorer allows you to explore
+                  storylines that show indirect impact of climate change on EU.
+                </p>
+                <p>
+                  As much of the wealth and many of the products that are eaten
+                  or used in the EU are produced or sourced in the rest of the
+                  world, climate change impacts the EU not only directly, but
+                  also through impact on remote regions. With this application,
+                  we can build and show stories to highlight several of these
+                  climate impact hotspots.
+                </p>
+                <p>
+                  More information on the RECEIPT Horizon 2020 project can be
+                  found on
+                  <a href="https://climatestorylines.eu/">
+                    {" "}
+                    climatestorylines.eu
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
