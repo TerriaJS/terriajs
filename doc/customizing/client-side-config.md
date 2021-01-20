@@ -60,6 +60,42 @@ Option                      | Meaning
 `"cesiumTerrainUrl"`        | The URL to use for Cesium terrain in the 3D model. This property is ignored if `"useCesiumIonTerrain"` is set to true.
 `"rollbarAccessToken"`      | Your `post_client_item` from Rollbar - as of right now, TerriaMap also needs to be modified such that you construct `RollbarErrorProvider` in `index.js`
 `"helpContent"`             | The content to be displayed in the help panel
+`languageConfiguration`     |Language configuration for TerriaJS.
+
+
+### LanguageConfiguration
+
+|Name|Required|Type|Default|Description|
+|----|--------|----|-------|-----------|
+|enabled|yes|**boolean**|`false`|Controls whether a button to switch the portal's language is provided.|
+|debug|yes|**boolean**|`false`|Controls whether debug information regarding translations is logged to the console.|
+|react|yes|**ReactOptions**||
+|languages|yes|**Object**|`{en: "english"}`|Language abbreviations. Please mind that matching locale files must exist.|
+|fallbackLanguage|yes|**string**|`"en"`|Fallback language used if contents are not available in the currently selected language.|
+|changeLanguageOnStartWhen|yes|**string[]**|`["querystring", "localStorage", "navigator", "htmlTag"]`|Order of user language detection. See [i18next browser language detection documentation](https://github.com/i18next/i18next-browser-languageDetector) for details.|
+
+**Example**
+
+```json
+{
+  "enabled": true,
+  "debug": false,
+  "react": {
+    "useSuspense": false
+  },
+  "languages": {
+    "en": "english",
+    "de": "deutsch"
+  },
+  "fallbackLanguage": "en",
+  "changeLanguageOnStartWhen": [
+    "querystring",
+    "localStorage",
+    "navigator",
+    "htmlTag"
+  ]
+}
+```
 
 
 ## Advanced options
