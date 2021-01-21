@@ -2,8 +2,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import createReactClass from "create-react-class";
-import Styles from "./branding.scss";
-import { exitStory } from "../../Models/Receipt";
+import Styles from "./Branding.scss";
+import { RCChangeUrlParams } from "../../Models/Receipt";
 
 const Branding = createReactClass({
   propTypes: {
@@ -12,7 +12,7 @@ const Branding = createReactClass({
   },
   render() {
     const goHome = () => {
-      exitStory(this.props.terria, this.props.viewState);
+      RCChangeUrlParams("", this.props.viewState);
     };
     return (
       <div className={Styles.branding}>

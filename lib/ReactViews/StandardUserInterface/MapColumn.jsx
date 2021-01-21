@@ -14,7 +14,7 @@ import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import classNames from "classnames";
 import { withTranslation } from "react-i18next";
 
-import Styles from "./map-column.scss";
+import Styles from "./MapColumn.scss";
 
 const isIE = FeatureDetection.isInternetExplorer();
 const chromeVersion = FeatureDetection.chromeVersion();
