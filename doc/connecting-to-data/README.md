@@ -8,3 +8,4 @@ TerriaJS can interface with three broad types if data:
 * [Catalog Item](../connecting-to-data/catalog-items.md): Actual geospatial or chart data from a file or service, in various formats.  TerriaJS supports WMS, KML, GeoJSON, ArcGIS MapServer, and many more files and services as catalog items.
 * [Catalog Function](../connecting-to-data/catalog-functions.md): A parameterized service, such as a Web Processing Service (WPS).  The user supplies the parameters and gets back some result.
 * [Catalog Reference](../connecting-to-data/catalog-references.md): Resolves to a Catalog Group, Item or Function.
+* [Catalog item search](item-search.md): A mechanism for searching inside catalog items.

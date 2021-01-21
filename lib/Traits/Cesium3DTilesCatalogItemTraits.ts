@@ -7,6 +7,7 @@ import UrlTraits from "./UrlTraits";
 import TransformationTraits from "./TransformationTraits";
 import PlaceEditorTraits from "./PlaceEditorTraits";
 import Cesium3DTilesTraits from "./Cesium3dTilesTraits";
+import SearchableItemTraits from "./SearchableItemTraits";
 
 /**
  * This is a description of the 3D Tiles Catalog Item
@@ -18,6 +19,7 @@ import Cesium3DTilesTraits from "./Cesium3dTilesTraits";
  * }
  */
 export default class Cesium3DTilesCatalogItemTraits extends mixTraits(
+  SearchableItemTraits,
   PlaceEditorTraits,
   TransformationTraits,
   FeatureInfoTraits,
