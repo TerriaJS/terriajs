@@ -18,9 +18,6 @@ module.exports = function() {
       modules: ["node_modules"],
       extensions: [".ts", ".js", ".jsx", ".tsx", ".json"]
     },
-    externals: {
-      vue: "vue"
-    },
     plugins: [
       new MiniCssExtractPlugin({
         filename: "TerriaJS.css",
