@@ -13,6 +13,8 @@ export function useTranslationIfExists(keyOrString: string) {
     console.warn(
       "using translation key within config won't work in future unless you prefix it with `translate#`"
     );
-    return keyOrString;
+    // after the depreaction
+    // return keyOrString;
+    return i18next.exists(keyOrString) ? i18next.t(keyOrString) : keyOrString;
   }
 }
