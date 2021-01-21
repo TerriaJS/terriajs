@@ -4,6 +4,11 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.66)
+* Allow nullable `timeColumn` in table styles. Useful for turning off auto-detection of time columns.
+* Added tool for searching inside catalog items. Initial implementation works for indexed 3d tilesets.
+* Added support for shapefile with `ShapefileCatalogItem`
+* Added `GeoJsonMixin` for handling the loading of geojson data.
+* Extended the `GeoJsonCatalogItem` to support loading of zip files.
 * [The next improvement]
 
 #### 8.0.0-alpha.65
