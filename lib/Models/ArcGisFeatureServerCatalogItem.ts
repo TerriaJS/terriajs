@@ -213,6 +213,11 @@ class FeatureServerStratum extends LoadableStratum(
       "clampToGround",
       item.clampToGround
     );
+    geoJsonItem.setTrait(
+      CommonStrata.definition,
+      "attribution",
+      item.attribution
+    );
     let tempEsriJson: any = null;
     return Promise.resolve()
       .then(() => loadGeoJson(item))
