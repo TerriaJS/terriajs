@@ -309,7 +309,7 @@ export default class Terria {
     languageConfiguration: undefined,
     displayOneBrand: 0,
     searchBar: {
-      placeholder: "search.placeholder",
+      placeholder: "translate#search.placeholder",
       recommendedListLength: 5,
       sortByName: true,
       flightDurationSeconds: 1.5,
@@ -319,14 +319,14 @@ export default class Terria {
         {
           id: "search-provider/bing-maps",
           type: "bing-maps-search-provider",
-          name: "search.bingMaps",
+          name: "translate#viewModels.searchLocations",
           url: "https://dev.virtualearth.net/",
           flightDurationSeconds: 1.5
         },
         {
           id: "search-provider/australian-gazetteer",
           type: "australian-gazetteer-search-provider",
-          name: "viewModels.searchPlaceNames",
+          name: "translate#viewModels.searchPlaceNames",
           url:
             "http://services.ga.gov.au/gis/services/Australian_Gazetteer/MapServer/WFSServer",
           searchPropertyName: "Australian_Gazetteer:NameU",

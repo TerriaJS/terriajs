@@ -198,12 +198,9 @@ export class SearchBoxAndResultsRaw extends React.Component {
                   overflow-y: auto;
                 `}
               >
-                <For
-                  each="search"
-                  of={this.props.viewState.searchState.locationSearchResults}
-                >
+                {searchState.locationSearchResults.map(search => (
                   <LocationSearchResults
-                    key={search.searchProvider.name}
+                    key={search.searchProvider.uniqueId}
                     terria={this.props.terria}
                     viewState={this.props.viewState}
                     search={search}
@@ -219,7 +216,7 @@ export class SearchBoxAndResultsRaw extends React.Component {
                       searchState.isWaitingToStartLocationSearch
                     }
                   />
-                </For>
+                ))}
               </Box>
             </Box>
           </If>

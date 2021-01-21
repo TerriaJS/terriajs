@@ -11,12 +11,13 @@ import Terria from "../../Models/Terria";
 import ModelTraits from "../../Traits/ModelTraits";
 import SearchProviderTraits from "../../Traits/SearchProvider/SearchProviderTraits";
 
-type SearchProvider = Model<SearchProviderTraits>;
+type SearchProviderMixin = Model<SearchProviderTraits>;
 
-function SearchProviderMixin<T extends Constructor<SearchProvider>>(Base: T) {
+function SearchProviderMixin<T extends Constructor<SearchProviderMixin>>(
+  Base: T
+) {
   abstract class SearchProviderMixin extends Base {
     abstract get type(): string;
-    @observable name = "Unknown";
     @observable isOpen = this.openByDefault;
 
     @action
@@ -26,7 +27,7 @@ function SearchProviderMixin<T extends Constructor<SearchProvider>>(Base: T) {
 
     @action
     search(searchText: string): SearchProviderResults {
-      const result = new SearchProviderResults(<any>Base);
+      const result = new SearchProviderResults(this);
       result.resultsCompletePromise = fromPromise(
         this.doSearch(searchText, result)
       );

@@ -14,14 +14,16 @@ export default class LocationSearchProviderTraits extends SearchProviderTraits {
     type: "boolean",
     name: "Open by default",
     description:
-      "True if the geocoder should query as the user types to autocomplete."
+      "True if the geocoder should query as the user types to autocomplete.",
+    isNullable: true
   })
   autocomplete?: boolean;
 
   @primitiveTrait({
     type: "number",
     name: "URL",
-    description: "Time to move to the result location."
+    description: "Time to move to the result location.",
+    isNullable: true
   })
   flightDurationSeconds?: number;
 }

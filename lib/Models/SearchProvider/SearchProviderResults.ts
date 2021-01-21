@@ -11,9 +11,8 @@ export default class SearchProviderResults {
     Promise.resolve()
   );
 
-  constructor(
-    readonly searchProvider: SearchProviderMixin.SearchProviderMixin
-  ) {}
+  constructor(readonly searchProvider: SearchProviderMixin) {
+  }
 
   get isSearching() {
     return this.resultsCompletePromise.state === "pending";
