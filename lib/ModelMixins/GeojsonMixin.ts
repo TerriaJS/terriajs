@@ -229,7 +229,8 @@ export default function GeoJsonMixin<
         clampToGround: this.clampToGround,
         markerUrl: style["marker-url"] // not in SimpleStyle spec but gives an alternate to maki marker symbols
           ? proxyCatalogItemUrl(this, style["marker-url"])
-          : undefined
+          : undefined,
+        credit: this.attribution
       };
 
       if (isDefined(style["stroke-opacity"])) {

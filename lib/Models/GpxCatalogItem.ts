@@ -80,6 +80,11 @@ class GpxCatalogItem extends AsyncMappableMixin(
           "geoJsonData",
           geoJsonData
         );
+        this._geoJsonItem.setTrait(
+          CommonStrata.definition,
+          "attribution",
+          this.attribution
+        );
         return this._geoJsonItem.loadMapItems();
       });
   }
