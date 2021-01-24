@@ -242,17 +242,6 @@ const RCStoryPanel = createReactClass({
 
             {/* Footer */}
             <div className={Styles.storyBottomNavigationItems}>
-              <input
-                type="range"
-                min="0"
-                max="4"
-                value={scenario}
-                className="slider"
-                id="scenarioSelector"
-                onChange={e => {
-                  this.scenarioChanged(e);
-                }}
-              />
               <div className={Styles.navs}>
                 <Medium>
                   <div className={Styles.left}>
