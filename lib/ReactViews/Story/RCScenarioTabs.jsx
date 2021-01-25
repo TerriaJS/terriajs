@@ -39,13 +39,14 @@ class RCScenarioTabs extends React.Component {
             );
           })}
         </div>
-        <Icon
-          glyph={Icon.GLYPHS.info}
+        <div
           className={Styles.infoIcon}
           onClick={() => {
             this.setState({ showModal: true });
           }}
-        />
+        >
+          <Icon glyph={Icon.GLYPHS.info} />
+        </div>
         <RCScenariosPanel
           showDropdownAsModal={this.state.showModal}
           onModalDismiss={this.onModalDismiss}

@@ -115,7 +115,11 @@
   grid-template-columns: 1fr auto;
   position: relative;
 }
-
+svg {
+  color: #106fa8;
+  height: auto;
+  width: 40px;
+}
 .tabsContainer {
   display: flex;
   justify-content: space-evenly;
