@@ -4,7 +4,7 @@ const createReactClass = require("create-react-class");
 const PropTypes = require("prop-types");
 import ObserveModelMixin from "../ObserveModelMixin";
 import triggerResize from "../../Core/triggerResize";
-import Styles from "./full_screen_button.scss";
+import Styles from "./FullScreenButton.scss";
 import classNames from "classnames";
 import Icon from "../Icon.jsx";
 import { withTranslation } from "react-i18next";

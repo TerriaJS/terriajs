@@ -4,7 +4,7 @@ import classNames from "classnames";
 // import Icon from "../Icon.jsx";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 import PropTypes from "prop-types";
-import Branding from "../SidePanel/Branding";
+import Branding from "../StandardUserInterface/Branding";
 
 const RCMenuBar = props => {
   const { viewState, terria } = props;

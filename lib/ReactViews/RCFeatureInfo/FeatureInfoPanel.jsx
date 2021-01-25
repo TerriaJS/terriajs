@@ -14,15 +14,16 @@ import i18next from "i18next";
 import { withTranslation } from "react-i18next";
 import Icon from "../Icon.jsx";
 import {
-  LOCATION_MARKER_DATA_SOURCE_NAME,
   addMarker,
-  removeMarker,
-  markerVisible
+  LOCATION_MARKER_DATA_SOURCE_NAME,
+  markerVisible,
+  removeMarker
 } from "../../Models/LocationMarkerUtils";
 import prettifyCoordinates from "../../Map/prettifyCoordinates";
 import raiseErrorToUser from "../../Models/raiseErrorToUser";
 
 import Styles from "./feature-info-panel.scss";
+import { RCChangeUrlParams } from "../../Models/Receipt";
 
 export const FeatureInfoPanel = createReactClass({
   displayName: "FeatureInfoPanel",
@@ -245,15 +246,21 @@ export const FeatureInfoPanel = createReactClass({
     if (!featureProperties) {
       return;
     }
-    // close possible opened stories
-    this.props.viewState.storyShown = false;
-    this.props.terria.currentViewer.notifyRepaintRequired();
-
-    // Close preview summary (important to force rerender)
-    this.props.viewState.hotspotSummaryEnabled = false;
-    this.props.viewState.selectedHotspot = featureProperties;
-    this.props.viewState.hotspotSummaryEnabled = true;
-    this.close();
+    if (
+      featureProperties["_rc-sector"]?._value &&
+      featureProperties["_rc-story-id"]?._value
+    ) {
+      RCChangeUrlParams(
+        {
+          sector: featureProperties["_rc-sector"]._value,
+          story: featureProperties["_rc-story-id"]._value
+        },
+        this.props.viewState
+      );
+      this.close();
+    } else {
+      console.log("🚨 Sector or storyId not defined");
+    }
   },
 
   render() {

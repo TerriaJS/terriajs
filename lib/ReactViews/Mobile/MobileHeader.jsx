@@ -3,7 +3,7 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import ObserveModelMixin from "../ObserveModelMixin";
 import RCMenuBar from "../Map/RCMenuBar.jsx";
-import Branding from "../SidePanel/Branding.jsx";
+import Branding from "../StandardUserInterface/Branding.jsx";
 import Styles from "./mobile-header.scss";
 
 import { removeMarker } from "../../Models/LocationMarkerUtils";

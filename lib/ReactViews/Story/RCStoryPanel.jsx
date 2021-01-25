@@ -11,7 +11,7 @@ import when from "terriajs-cesium/Source/ThirdParty/when";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Styles from "./story-panel.scss";
 import { withTranslation } from "react-i18next";
-import { exitStory as rcExitStory } from "../../Models/Receipt";
+import { RCChangeUrlParams } from "../../Models/Receipt";
 import Tooltip from "../RCTooltip/RCTooltip";
 import RCScenarioTabs from "../Story/RCScenarioTabs";
 export function activateStory(story, terria, scenario) {
@@ -169,7 +169,16 @@ const RCStoryPanel = createReactClass({
   },
 
   exitStory() {
-    rcExitStory(this.props.terria, this.props.viewState);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    // Open story summary page
+    RCChangeUrlParams(
+      {
+        sector: urlParams.get("sector"),
+        story: urlParams.get("story")
+      },
+      this.props.viewState
+    );
   },
 
   scenarioChanged(scenarioId) {
