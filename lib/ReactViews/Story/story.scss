@@ -108,3 +108,43 @@
   font-size: 0.9rem;
   cursor: move;
 }
+
+// Scenario Tabs
+.scenarios {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  position: relative;
+}
+
+.tabsContainer {
+  display: flex;
+  justify-content: space-evenly;
+  background-color: $tabs-container-bg;
+  box-shadow: 0px -8px 40px rgba(17, 8, 114, 0.0869565);
+  border-radius: 8px;
+  margin: 10px 0;
+}
+.tab {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  padding: 10px 0;
+  cursor: pointer;
+}
+.selectedTab {
+  background-color: #0c70a7;
+  color: #fff;
+  border-radius: 8px;
+}
+.infoIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: -5px;
+  top: -10px;
+  width: 20px;
+  height: 20px;
+  border-radius: 15px;
+  border: 1px solid #0c70a7;
+}
