@@ -9,12 +9,14 @@ import primitiveTrait from "./primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
 import SplitterTraits from "./SplitterTraits";
 import UrlTraits from "./UrlTraits";
+import LayerOrderingTraits from "./LayerOrderingTraits";
 
 export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
   FeatureInfoTraits,
   SplitterTraits,
   DataCustodianTraits,
   RasterLayerTraits,
+  LayerOrderingTraits,
   MappableTraits,
   UrlTraits,
   CatalogMemberTraits
