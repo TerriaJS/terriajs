@@ -52,10 +52,6 @@
 .inner-close-btn {
   composes: btn from "../../../../Sass/common/_buttons.scss";
   position: absolute;
-  z-index: 10;
-  top: $padding-small;
-  right: $padding-small;
-
   &:hover,
   &:focus {
     svg {
@@ -70,8 +66,8 @@
   }
 }
 .inner-close-btn--for-modal {
-  top: 15px;
-  right: 15px;
+  top: 10px;
+  right: 0px;
 }
 
 .caret {
