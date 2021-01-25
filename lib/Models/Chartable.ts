@@ -32,7 +32,11 @@ export function axesMatch(a1: ChartAxis, a2: ChartAxis) {
   else return a1.scale === a2.scale && a1.units === a2.units;
 }
 
-export type ChartItemType = "line" | "momentLines" | "momentPoints";
+export type ChartItemType =
+  | "line"
+  | "momentLines"
+  | "momentPoints"
+  | "lineAndPoint";
 
 export interface ChartPoint {
   x: number | Date;
