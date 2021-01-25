@@ -11,7 +11,7 @@ import when from "terriajs-cesium/Source/ThirdParty/when";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Styles from "./story-panel.scss";
 import { withTranslation } from "react-i18next";
-import { RCChangeUrlParams } from "../../Models/Receipt";
+import { objectParamsToURL, RCChangeUrlParams } from "../../Models/Receipt";
 import Tooltip from "../RCTooltip/RCTooltip";
 
 export function activateStory(story, terria, scenario) {
@@ -84,7 +84,15 @@ const RCStoryPanel = createReactClass({
     this.activateStory(stories[this.props.viewState.currentStoryId]);
   },
   componentDidMount() {
-    const { terria } = this.props;
+    //
+    // Navigate to the story page coming from the url params
+    //
+    const urlParams = new URLSearchParams(window.location.search);
+    const page = parseInt(urlParams.get("page"));
+    if (page && this.props.viewState.currentStoryId !== page) {
+      this.navigateStory(this.props.viewState.currentStoryId + page - 1);
+    }
+
     this.slideIn();
     this.escKeyListener = e => {
       if (e.keyCode === 27) {
@@ -142,6 +150,7 @@ const RCStoryPanel = createReactClass({
         this.activateStory(this.props.terria.stories[index]);
       }
     }
+    this.changeUrlPageParameter(index);
   },
 
   // This is in StoryPanel and StoryBuilder
@@ -160,17 +169,30 @@ const RCStoryPanel = createReactClass({
     }
   },
 
+  changeUrlPageParameter(page) {
+    const urlParams = new URLSearchParams(window.location.search);
+    window.history.pushState(
+      null,
+      null,
+      objectParamsToURL({
+        sector: urlParams.get("sector"),
+        story: urlParams.get("story"),
+        page: page + 1 // +1 because the page number starts with 0
+      })
+    );
+  },
   goToPrevStory() {
     this.navigateStory(this.props.viewState.currentStoryId - 1);
+    this.changeUrlPageParameter(this.props.viewState.currentStoryId);
   },
 
   goToNextStory() {
     this.navigateStory(this.props.viewState.currentStoryId + 1);
+    this.changeUrlPageParameter(this.props.viewState.currentStoryId);
   },
 
   exitStory() {
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
+    const urlParams = new URLSearchParams(window.location.search);
     // Open story summary page
     RCChangeUrlParams(
       {
