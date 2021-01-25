@@ -183,13 +183,13 @@ export default function GeoJsonMixin<
           color.alpha = 1;
           return color;
         } else {
-          return Color.fromCssColorString(colorString);
+          return Color.fromCssColorString(colorString) ?? Color.GRAY;
         }
       }
 
       function getColor(color: String | string | Color): Color {
         if (typeof color === "string" || color instanceof String) {
-          return Color.fromCssColorString(color.toString());
+          return Color.fromCssColorString(color.toString()) ?? Color.GRAY;
         } else {
           return color;
         }
