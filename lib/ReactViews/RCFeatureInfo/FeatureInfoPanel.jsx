@@ -292,7 +292,7 @@ export const FeatureInfoPanel = createReactClass({
 
       // If position is invalid then don't use it.
       // This seems to be fixing the symptom rather then the cause, but don't know what is the true cause this ATM.
-      if (isNaN(position.x) || isNaN(position.y) || isNaN(position.z)) {
+      if (isNaN(position?.x) || isNaN(position?.y) || isNaN(position?.z)) {
         position = undefined;
       }
     }
