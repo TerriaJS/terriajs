@@ -204,7 +204,6 @@ const RCStoryPanel = createReactClass({
   },
 
   scenarioChanged(scenarioId) {
-    console.log(scenarioId);
     //TODO: use some kind of identifier for scenario
     this.props.viewState.currentScenario = scenarioId.toString();
     this.activateStory(this.props.viewState.currentStoryId);
@@ -248,12 +247,14 @@ const RCStoryPanel = createReactClass({
                 <Icon width={20} glyph={Icon.GLYPHS.close} />
               </button>
             </div>
-            {story.text && (
-              <RCScenarioTabs
-                story={story}
-                onScenarioChange={this.scenarioChanged}
-              />
-            )}
+            <div>
+              {typeof story.text === "object" && (
+                <RCScenarioTabs
+                  story={story}
+                  onScenarioChange={this.scenarioChanged}
+                />
+              )}
+            </div>
             <div className={Styles.RCSummaryCard}>
               <div
                 className={classNames(Styles.storyContainer, {
