@@ -270,7 +270,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
             name: yColumn.title,
             categoryName: this.name,
             key: `key${this.uniqueId}-${this.name}-${yColumn.name}`,
-            type: this.chartType,
+            type: this.chartType ?? "line",
             xAxis,
             points,
             domain: calculateDomain(points),
