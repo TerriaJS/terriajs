@@ -34,7 +34,7 @@ class RCScenarioTabs extends React.Component {
                   selectedScenario === id && Styles.selectedTab
                 )}
               >
-                <span>SSP {storyText}</span>
+                <span>SSP {id + 1}</span>
               </div>
             );
           })}
