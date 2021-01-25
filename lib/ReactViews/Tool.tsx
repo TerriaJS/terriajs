@@ -56,10 +56,7 @@ export class ToolButton extends React.Component<ToolButtonProps> {
   @computed
   get isThisToolOpen() {
     const currentTool = this.props.viewState.currentTool;
-    return (
-      currentTool &&
-      currentTool.getToolComponent === this.props.getToolComponent
-    );
+    return currentTool && currentTool.toolName === this.props.toolName;
   }
 
   toggleOpen() {
@@ -86,6 +83,7 @@ export class ToolButton extends React.Component<ToolButtonProps> {
           title={toolName}
           onClick={() => this.toggleOpen()}
           iconElement={() => <Icon glyph={icon} />}
+          closeIconElement={() => <Icon glyph={Icon.GLYPHS.closeTool} />}
         >
           {toolName}
         </MapIconButton>
