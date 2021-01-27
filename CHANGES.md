@@ -9,6 +9,7 @@ Change Log
 * Added support for shapefile with `ShapefileCatalogItem`
 * Added `GeoJsonMixin` for handling the loading of geojson data.
 * Extended the `GeoJsonCatalogItem` to support loading of zip files.
+* Fix `TableTimeStyleTraits.idColumns` trait type.
 * Added a new `lineAndPoint` chart type
 * CustomChartComponent now has a "chart-type" attribute
 * Added `AttributionTraits` to mappable and send it as property when creating Cesium's data sources and imagery providers. [#5167](https://github.com/TerriaJS/terriajs/pull/5167) 
