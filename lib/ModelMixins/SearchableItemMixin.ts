@@ -55,7 +55,7 @@ function SearchableItemMixin<T extends Constructor<MixinModel>>(Base: T) {
         this.search.providerType &&
         ItemSearchProviders.get(this.search.providerType);
       if (!klass) return;
-      return new klass(this.search.options);
+      return new klass(this.search.options, this.search.parameters);
     }
   }
   return Klass;

@@ -54,9 +54,13 @@ export default class EnumIndex implements IndexBase<EnumSearchQuery> {
    * Search the enum index.
    *
    * @param  enumValueIds The enum values to be searched
+   * @param  _queryOptions Ignored for enum index
    * @return Set of IDs for all matching enum values.
    */
-  async search(enumValueIds: EnumSearchQuery): Promise<Set<number>> {
+  async search(
+    enumValueIds: EnumSearchQuery,
+    _queryOptions: any
+  ): Promise<Set<number>> {
     const idSets = await Promise.all(
       enumValueIds.map(async valueId => {
         const value = this.values[valueId];
