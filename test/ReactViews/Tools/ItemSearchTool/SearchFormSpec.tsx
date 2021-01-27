@@ -17,7 +17,7 @@ class TestItemSearchProvider extends ItemSearchProvider {
       {
         id: "1",
         idPropertyName: "building-id",
-        zoomToTarget: { boundingSphere: new BoundingSphere() },
+        zoomToTarget: new BoundingSphere(),
         properties: { foo: "bar" }
       }
     ];

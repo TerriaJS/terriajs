@@ -11,6 +11,7 @@ Change Log
 * Added support for shapefile with `ShapefileCatalogItem`
 * Added `GeoJsonMixin` for handling the loading of geojson data.
 * Extended the `GeoJsonCatalogItem` to support loading of zip files.
+* Show a top angle view when zooming to a small feature/building from the item search result.
 * Fix `TableTimeStyleTraits.idColumns` trait type.
 * Added a new `lineAndPoint` chart type
 * CustomChartComponent now has a "chart-type" attribute
