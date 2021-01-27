@@ -575,7 +575,8 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
       tileHeight: tileMatrixSet.tileHeight,
       tilingScheme: new WebMercatorTilingScheme(),
       format,
-      rectangle
+      rectangle,
+      credit: this.attribution
     });
     return imageryProvider;
   }

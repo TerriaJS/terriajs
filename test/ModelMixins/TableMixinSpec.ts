@@ -69,6 +69,24 @@ describe("TableMixin", function() {
         ]);
       });
     });
+
+    describe("when timeColumn is `null`", function() {
+      it("returns an empty `discreteTimes`", async function() {
+        expect(item.discreteTimes?.length).toBe(6);
+        item.defaultStyle.time.setTrait(CommonStrata.user, "timeColumn", null);
+        expect(item.discreteTimes).toBe(undefined);
+      });
+
+      it("creates entities for all times", async function() {
+        item.defaultStyle.time.setTrait(CommonStrata.user, "timeColumn", null);
+        await item.loadMapItems();
+        const mapItem = item.mapItems[0];
+        expect(mapItem instanceof CustomDataSource).toBe(true);
+        if (mapItem instanceof CustomDataSource) {
+          expect(mapItem.entities.values.length).toBe(13);
+        }
+      });
+    });
   });
 
   describe("when the table has lat/lon columns but no time & id columns", function() {

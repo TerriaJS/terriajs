@@ -6,9 +6,10 @@ export default class TableTimeStyleTraits extends ModelTraits {
     name: "Time Column",
     description:
       "The column that indicates the time of a sample or the start time of an interval.",
-    type: "string"
+    type: "string",
+    isNullable: true
   })
-  timeColumn?: string;
+  timeColumn?: string | null;
 
   @primitiveTrait({
     name: "End Time Column",
