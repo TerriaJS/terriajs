@@ -1,13 +1,14 @@
 import countBy from "lodash-es/countBy";
 import { computed } from "mobx";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import JSRegionProvider from "../Map/RegionProvider";
 import JSRegionProviderList from "../Map/RegionProviderList";
+import { applyReplacements } from "../Map/RegionProviderTs";
 import createCombinedModel from "../Models/createCombinedModel";
 import Model from "../Models/Model";
 import TableColumnTraits from "../Traits/TableColumnTraits";
 import TableTraits from "../Traits/TableTraits";
 import TableColumnType, { stringToTableColumnType } from "./TableColumnType";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
 //   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
@@ -313,7 +314,10 @@ export default class TableColumn {
   ): string | null {
     // TODO: validate that the rowValue is actually a valid region, if possible.
     // TODO: implement replacements
-    return rowValue.length > 0 ? rowValue.toLowerCase() : null;
+
+    return rowValue.length > 0
+      ? applyReplacements(regionType, rowValue) ?? null
+      : null;
   }
 
   /**
