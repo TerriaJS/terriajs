@@ -1,8 +1,4 @@
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
-import LatLonHeight from "../Core/LatLonHeight";
-import CameraView from "./CameraView";
 
 export type ItemSearchParameter =
   | NumericItemSearchParameter
