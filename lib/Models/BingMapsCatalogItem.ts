@@ -45,10 +45,14 @@ export default class BingMapsCatalogItem
       key: this.key!
     });
 
-    // open in a new window
-    (<any>result)._credit = new Credit(
-      '<a href="http://www.bing.com" target="_blank">Bing</a>'
-    );
+    if (this.attribution) {
+      (<any>result)._credit = this.attribution;
+    } else {
+      // open in a new window
+      (<any>result)._credit = new Credit(
+        '<a href="http://www.bing.com" target="_blank">Bing</a>'
+      );
+    }
     result.defaultGamma = 1.0;
 
     return result;

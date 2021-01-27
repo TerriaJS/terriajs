@@ -1,5 +1,6 @@
 import ModelTraits from "./ModelTraits";
 import primitiveTrait from "./primitiveTrait";
+import primitiveArrayTrait from "./primitiveArrayTrait";
 
 export default class TableTimeStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -18,7 +19,7 @@ export default class TableTimeStyleTraits extends ModelTraits {
   })
   endTimeColumn?: string;
 
-  @primitiveTrait({
+  @primitiveArrayTrait({
     name: "ID Columns",
     description: "The columns that identify an entity as it changes over time.",
     type: "string"
