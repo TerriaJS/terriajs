@@ -1,6 +1,6 @@
 import { computed } from "mobx";
 import ArcGISTiledElevationTerrainProvider from "terriajs-cesium/Source/Core/ArcGISTiledElevationTerrainProvider";
-import IonResource from "terriajs-cesium/Source/Core/IonResource";
+import Credit from "terriajs-cesium/Source/Core/Credit";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -32,10 +32,10 @@ export default class ArcGisTerrainCatalogItem
   @computed
   get mapItems() {
     if (this.url === undefined) return [];
-    return [
-      new ArcGISTiledElevationTerrainProvider({
-        url: this.url
-      })
-    ];
+    const item = new ArcGISTiledElevationTerrainProvider({
+      url: this.url
+    });
+    if (this.attribution) item.credit = new Credit(this.attribution);
+    return [];
   }
 }

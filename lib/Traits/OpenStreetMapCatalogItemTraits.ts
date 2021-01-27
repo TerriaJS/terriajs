@@ -1,10 +1,10 @@
-import mixTraits from "./mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import UrlTraits from "./UrlTraits";
 import MappableTraits from "./MappableTraits";
-import RasterLayerTraits from "./RasterLayerTraits";
-import primitiveTrait from "./primitiveTrait";
+import mixTraits from "./mixTraits";
 import primitiveArrayTrait from "./primitiveArrayTrait";
+import primitiveTrait from "./primitiveTrait";
+import RasterLayerTraits from "./RasterLayerTraits";
+import UrlTraits from "./UrlTraits";
 
 export default class OpenStreetMapCatalogItemTraits extends mixTraits(
   RasterLayerTraits,
@@ -26,13 +26,6 @@ export default class OpenStreetMapCatalogItemTraits extends mixTraits(
     type: "string"
   })
   subdomains: string[] = [];
-
-  @primitiveTrait({
-    name: "Attribution",
-    description: "The attribution to display with the data.",
-    type: "string"
-  })
-  attribution?: string;
 
   @primitiveTrait({
     name: "Maximum Level",
