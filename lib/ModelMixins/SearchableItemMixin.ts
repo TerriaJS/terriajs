@@ -37,6 +37,13 @@ function SearchableItemMixin<T extends Constructor<MixinModel>>(Base: T) {
     abstract unselectItemSearchResult(result: ItemSearchResult): void;
 
     /**
+     * An optional implementation for zooming in to results.
+     *
+     * @param result The search result to zoom to.
+     */
+    zoomToItemSearchResult?: (result: ItemSearchResult) => void;
+
+    /**
      * Returns true if this item is searchable and has a valid item search provider defined.
      */
     @computed

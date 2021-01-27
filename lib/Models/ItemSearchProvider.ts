@@ -1,8 +1,5 @@
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import { SearchParameterTraits } from "../Traits/SearchableItemTraits";
-import CameraView from "./CameraView";
 
 export type ItemSearchParameter =
   | NumericItemSearchParameter
@@ -33,10 +30,8 @@ export type ItemSearchResult = {
   id: string | number;
   idPropertyName: string;
   zoomToTarget:
-    | CameraView
-    | Rectangle
-    | DataSource
-    | { boundingSphere: BoundingSphere };
+    | BoundingSphere
+    | { latitude: number; longitude: number; featureHeight: number };
   properties: Record<string, string | number>;
 };
 

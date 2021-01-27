@@ -249,20 +249,29 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
         `No valid zoom point defined for data record at index ${dataIdx}`
       );
     }
-    const center = Cartesian3.fromDegrees(_longitude, _latitude);
-    const boundingSphere = new BoundingSphere(
-      center,
-      // Prefer the user specified feature height over the tile radius which is
-      // automatically calculated by the indexer.
-      // We also don't want to zoom close to small objects, so threshold the zoom radius to 50.
-      isNaN(_featureHeight) ? _tileRadius : Math.max(_featureHeight * 2, 50)
-    );
+
+    let zoomToTarget;
+    if (_featureHeight) {
+      zoomToTarget = {
+        latitude: _latitude,
+        longitude: _longitude,
+        featureHeight: _featureHeight
+      };
+    } else {
+      const center = Cartesian3.fromDegrees(_longitude, _latitude);
+      const boundingSphere = new BoundingSphere(
+        center,
+        // Prefer the user specified feature height over the tile radius which is
+        // automatically calculated by the indexer.
+        // We also don't want to zoom too close to small objects, so threshold the zoom radius.
+        _tileRadius
+      );
+      zoomToTarget = boundingSphere;
+    }
     return {
       id,
       idPropertyName: this.indexRoot.idProperty,
-      zoomToTarget: {
-        boundingSphere
-      },
+      zoomToTarget,
       properties
     };
   }

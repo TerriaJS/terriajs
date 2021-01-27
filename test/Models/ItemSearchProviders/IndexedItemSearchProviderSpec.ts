@@ -169,25 +169,21 @@ describe("IndexedItemSearchProvider", function() {
         {
           id: 632,
           idPropertyName: "building_id",
-          zoomToTarget: {
-            boundingSphere: createBoundingSphere({
-              latitude: 19.12575420288384,
-              longitude: 11.870779042051964,
-              radius: 3.6875988497925927
-            })
-          },
+          zoomToTarget: createBoundingSphere({
+            latitude: 19.12575420288384,
+            longitude: 11.870779042051964,
+            radius: 3.6875988497925927
+          }),
           properties: { building_id: 632 }
         },
         {
           id: 410,
           idPropertyName: "building_id",
-          zoomToTarget: {
-            boundingSphere: createBoundingSphere({
-              latitude: 46.567720640307755,
-              longitude: 16.64851364383736,
-              radius: 17.23546017384181
-            })
-          },
+          zoomToTarget: createBoundingSphere({
+            latitude: 46.567720640307755,
+            longitude: 16.64851364383736,
+            radius: 17.23546017384181
+          }),
           properties: { building_id: 410 }
         }
       ]);
