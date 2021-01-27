@@ -5,11 +5,13 @@ Change Log
 
 #### next release (8.0.0-alpha.66)
 * `TableMixin` styles ("Display variables") will now look for column title if style title is undefined
+* Add fallback colours when Color.fromCssColorString is used.
 * Allow nullable `timeColumn` in table styles. Useful for turning off auto-detection of time columns.
 * Added tool for searching inside catalog items. Initial implementation works for indexed 3d tilesets.
 * Added support for shapefile with `ShapefileCatalogItem`
 * Added `GeoJsonMixin` for handling the loading of geojson data.
 * Extended the `GeoJsonCatalogItem` to support loading of zip files.
+* Fix `TableTimeStyleTraits.idColumns` trait type.
 * Added a new `lineAndPoint` chart type
 * CustomChartComponent now has a "chart-type" attribute
 * Added `AttributionTraits` to mappable and send it as property when creating Cesium's data sources and imagery providers. [#5167](https://github.com/TerriaJS/terriajs/pull/5167) 
