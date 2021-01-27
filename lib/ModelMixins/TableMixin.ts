@@ -321,7 +321,10 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         options: this.tableStyles.map(style => {
           return {
             id: style.id,
-            name: style.styleTraits.title || style.id
+            name:
+              style.styleTraits.title ??
+              this.tableColumns.find(col => col.name === style.id)?.title ??
+              style.id
           };
         }),
         selectedId: this.activeStyle,
