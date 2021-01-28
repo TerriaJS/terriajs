@@ -72,104 +72,20 @@ const MapContainer = styled.div`
   }
 `;
 
-const cartesian3Scratch = new Cartesian3();
-const enuToFixedScratch = new Matrix4();
-const southwestScratch = new Cartesian3();
-const southeastScratch = new Cartesian3();
-const northeastScratch = new Cartesian3();
-const northwestScratch = new Cartesian3();
-const southwestCartographicScratch = new Cartographic();
-const southeastCartographicScratch = new Cartographic();
-const northeastCartographicScratch = new Cartographic();
-const northwestCartographicScratch = new Cartographic();
-
+/**
+ * Convert the camera position to a zoomable rectangle and point
+ */
 export function getViewFromScene(scene: Scene): MiniMapView {
   const camera = scene.camera;
-  const ellipsoid = scene.globe.ellipsoid;
-
-  const frustrum = scene.camera.frustum as PerspectiveFrustum;
-
-  const fovy = frustrum.fovy * 0.5;
-  const fovx = Math.atan(Math.tan(fovy) * frustrum.aspectRatio);
-
-  const center = camera.positionWC.clone();
-  const cameraOffset = Cartesian3.subtract(
-    camera.positionWC,
-    center,
-    cartesian3Scratch
-  );
-  const cameraHeight = Cartesian3.magnitude(cameraOffset);
-  const xDistance = cameraHeight * Math.tan(fovx);
-  const yDistance = cameraHeight * Math.tan(fovy);
-
-  const southwestEnu = new Cartesian3(-xDistance, -yDistance, 0.0);
-  const southeastEnu = new Cartesian3(xDistance, -yDistance, 0.0);
-  const northeastEnu = new Cartesian3(xDistance, yDistance, 0.0);
-  const northwestEnu = new Cartesian3(-xDistance, yDistance, 0.0);
-
-  const enuToFixed = Transforms.eastNorthUpToFixedFrame(
-    center,
-    ellipsoid,
-    enuToFixedScratch
-  );
-  const southwest = Matrix4.multiplyByPoint(
-    enuToFixed,
-    southwestEnu,
-    southwestScratch
-  );
-  const southeast = Matrix4.multiplyByPoint(
-    enuToFixed,
-    southeastEnu,
-    southeastScratch
-  );
-  const northeast = Matrix4.multiplyByPoint(
-    enuToFixed,
-    northeastEnu,
-    northeastScratch
-  );
-  const northwest = Matrix4.multiplyByPoint(
-    enuToFixed,
-    northwestEnu,
-    northwestScratch
-  );
-  const southwestCartographic = ellipsoid.cartesianToCartographic(
-    southwest,
-    southwestCartographicScratch
-  );
-  const southeastCartographic = ellipsoid.cartesianToCartographic(
-    southeast,
-    southeastCartographicScratch
-  );
-  const northeastCartographic = ellipsoid.cartesianToCartographic(
-    northeast,
-    northeastCartographicScratch
-  );
-  const northwestCartographic = ellipsoid.cartesianToCartographic(
-    northwest,
-    northwestCartographicScratch
-  );
-
-  // Account for date-line wrapping
-  if (southeastCartographic.longitude < southwestCartographic.longitude) {
-    southeastCartographic.longitude += CesiumMath.TWO_PI;
-  }
-  if (northeastCartographic.longitude < northwestCartographic.longitude) {
-    northeastCartographic.longitude += CesiumMath.TWO_PI;
-  }
-
+  // This seem to work for now as a zoom rectangle for leaflet. Consider
+  // adapting Cesium.getCurrentCameraView() for a more sophisticated
+  // implementation.
   const rectangle = new Rectangle(
-    CesiumMath.convertLongitudeRange(
-      Math.min(southwestCartographic.longitude, northwestCartographic.longitude)
-    ),
-    Math.min(southwestCartographic.latitude, southeastCartographic.latitude),
-    CesiumMath.convertLongitudeRange(
-      Math.max(northeastCartographic.longitude, southeastCartographic.longitude)
-    ),
-    Math.max(northeastCartographic.latitude, northwestCartographic.latitude)
+    camera.positionCartographic.longitude,
+    camera.positionCartographic.latitude,
+    camera.positionCartographic.longitude,
+    camera.positionCartographic.latitude
   );
-
-  // center isn't a member variable and doesn't seem to be used anywhere else in Terria
-  // rect.center = center;
   return {
     rectangle,
     position: camera.position
