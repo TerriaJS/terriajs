@@ -71,7 +71,9 @@ function getRowValues(
   const result: JsonObject = {};
 
   tableColumns.forEach(column => {
-    result[column.title] = column.values[index];
+    result[column.name] = column.values[index];
+    if (column.title !== column.name)
+      result[column.title] = column.values[index];
   });
 
   return result;
