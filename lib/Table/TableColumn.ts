@@ -313,10 +313,10 @@ export default class TableColumn {
     rowValue: string
   ): string | null {
     // TODO: validate that the rowValue is actually a valid region, if possible.
-    // TODO: implement replacements
+    // TODO: implement serverReplacements and disambigDataReplacements replacements
 
     return rowValue.length > 0
-      ? applyReplacements(regionType, rowValue) ?? null
+      ? applyReplacements(regionType, rowValue, "dataReplacements") ?? null
       : null;
   }
 

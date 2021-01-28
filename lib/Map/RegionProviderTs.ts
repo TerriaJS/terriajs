@@ -8,21 +8,25 @@ import isDefined from "../Core/isDefined";
  * @param {String} s The string.
  * @param {String} replacementsProp Name of a property containing [ [ regex, replacement], ... ], where replacement is a string which can contain '$1' etc.
  */
+
 export function applyReplacements(
   regionProvider: RegionProvider,
   s: string | number,
-  replacementsProp: "dataReplacements" = "dataReplacements"
+  replacementsProp:
+    | "dataReplacements"
+    | "serverReplacements"
+    | "disambigDataReplacements"
 ): string | undefined {
   if (!isDefined(s)) {
     return undefined;
   }
-  var r: string;
+  let r: string;
   if (typeof s === "number") {
     r = String(s);
   } else {
     r = s.toLowerCase().trim();
   }
-  var replacements = regionProvider[replacementsProp];
+  let replacements = regionProvider[replacementsProp];
   if (replacements === undefined || replacements.length === 0) {
     return r;
   }
@@ -34,7 +38,7 @@ export function applyReplacements(
     return (regionProvider._appliedReplacements as any)[replacementsProp][r];
   }
 
-  replacements.forEach(function(rep) {
+  replacements.forEach(function(rep: any) {
     r = r.replace(rep[2], rep[1]);
   });
   (regionProvider._appliedReplacements as any)[replacementsProp][s] = r;
