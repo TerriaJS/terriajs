@@ -705,7 +705,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
                 const regionId = filterRows(
                   regionColumn.valuesAsRegions.regionIdToRowNumbersMap.get(
-                    feature.properties[regionType.regionProp]
+                    feature.properties[regionType.regionProp].toLowerCase()
                   )
                 );
 
@@ -741,7 +741,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       }
 
       data.id = regionId;
-      featureInfo.data = data;
+      featureInfo.properties = data;
 
       featureInfo.configureDescriptionFromProperties(data);
       featureInfo.configureNameFromProperties(data);
