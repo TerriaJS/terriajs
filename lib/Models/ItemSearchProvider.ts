@@ -1,7 +1,5 @@
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
-import CameraView from "./CameraView";
+import { SearchParameterTraits } from "../Traits/SearchableItemTraits";
 
 export type ItemSearchParameter =
   | NumericItemSearchParameter
@@ -11,6 +9,7 @@ export type ItemSearchParameter =
 export type BaseParameter = {
   id: string;
   name: string;
+  queryOptions?: any;
 };
 
 export interface NumericItemSearchParameter extends BaseParameter {
@@ -31,10 +30,8 @@ export type ItemSearchResult = {
   id: string | number;
   idPropertyName: string;
   zoomToTarget:
-    | CameraView
-    | Rectangle
-    | DataSource
-    | { boundingSphere: BoundingSphere };
+    | BoundingSphere
+    | { latitude: number; longitude: number; featureHeight: number };
   properties: Record<string, string | number>;
 };
 
@@ -43,7 +40,10 @@ export type ItemSearchResult = {
  *
  */
 export default abstract class ItemSearchProvider {
-  constructor(options: any) {}
+  constructor(
+    readonly options: any,
+    readonly parameterOptions: SearchParameterTraits[]
+  ) {}
 
   /**
    * Called once on start to initialize the item search provider.
