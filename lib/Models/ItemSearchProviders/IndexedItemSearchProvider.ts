@@ -9,6 +9,8 @@ import ItemSearchProvider, {
 import { Index, IndexRoot, IndexType, parseIndexRoot } from "./Index";
 import joinUrl from "./joinUrl";
 import loadCsv from "../../Core/loadCsv";
+import { SearchParameterTraits } from "../../Traits/SearchableItemTraits";
+import { action } from "mobx";
 
 const t = i18next.t.bind(i18next);
 
@@ -30,8 +32,8 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
    *
    * @param options An object containing {indexRootUrl: string}
    */
-  constructor(options: any) {
-    super(options);
+  constructor(options: any, parameterOptions: SearchParameterTraits[]) {
+    super(options, parameterOptions);
     const indexRootUrl = options?.indexRootUrl;
     if (typeof indexRootUrl !== "string")
       throw new Error(t("indexedItemSearchProvider.missingOptionIndexRootUrl"));
@@ -59,23 +61,27 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
    * @param index The index definition of the property
    * @return The parameter object
    */
+  @action
   private buildParameterForIndex(
     propertyId: string,
     index: Index
   ): ItemSearchParameter {
+    const parameterOptions = this.parameterOptions.find(
+      ({ id }) => id === propertyId
+    );
     switch (index.type) {
       case IndexType.numeric:
         return {
           type: "numeric",
           id: propertyId,
-          name: propertyId,
+          name: parameterOptions?.name ?? propertyId,
           range: index.range
         };
       case IndexType.enum:
         return {
           type: "enum",
           id: propertyId,
-          name: propertyId,
+          name: parameterOptions?.name ?? propertyId,
           values: Object.entries(index.values).map(([id, { count }]) => ({
             id,
             count
@@ -85,7 +91,8 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
         return {
           type: "text",
           id: propertyId,
-          name: propertyId
+          name: parameterOptions?.name ?? propertyId,
+          queryOptions: parameterOptions?.queryOptions
         };
     }
   }
@@ -171,7 +178,9 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
 
   searchParameter(parameter: Parameter, value: any): Promise<Set<number>> {
     const index = parameter.index;
-    return index.load(this.indexRootUrl, value).then(() => index.search(value));
+    return index
+      .load(this.indexRootUrl, value)
+      .then(() => index.search(value, parameter.queryOptions));
   }
 
   /**
