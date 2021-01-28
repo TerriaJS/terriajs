@@ -25,6 +25,7 @@ Change Log
 * Fix `TableMixin` region mapping feature props and make Long/Lat features use column titles (if it exists) to match v7 behaviour.
 * Add support for `CkanItemReference` `wms_layer` property
 * Add support for `ArcGisMapServerCatalogGroup` to use `sublayerIds`.
+* Clean up `LayerOrderingTraits`, remove `WorkbenchItem` interface, fix `keepOnTop` layer insert/re-ordering.
 * [The next improvement]
 
 #### 8.0.0-alpha.65
