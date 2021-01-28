@@ -1,7 +1,6 @@
 import { JsonObject } from "../Core/Json";
 import anyTrait from "./anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import DataCustodianTraits from "./DataCustodianTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import MappableTraits from "./MappableTraits";
 import mixTraits from "./mixTraits";
@@ -14,7 +13,6 @@ import LayerOrderingTraits from "./LayerOrderingTraits";
 export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
   FeatureInfoTraits,
   SplitterTraits,
-  DataCustodianTraits,
   RasterLayerTraits,
   LayerOrderingTraits,
   MappableTraits,

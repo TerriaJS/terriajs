@@ -73,7 +73,8 @@ describe("ItemSearchTool", function() {
       providerType: "testProvider",
       options: {},
       resultTemplate: undefined,
-      highlightColor: undefined
+      highlightColor: undefined,
+      parameters: []
     });
     const provider = item.createItemSearchProvider();
     assertObject(provider);
