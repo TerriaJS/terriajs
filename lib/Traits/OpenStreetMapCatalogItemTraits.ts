@@ -1,4 +1,5 @@
 import CatalogMemberTraits from "./CatalogMemberTraits";
+import LayerOrderingTraits from "./LayerOrderingTraits";
 import MappableTraits from "./MappableTraits";
 import mixTraits from "./mixTraits";
 import primitiveArrayTrait from "./primitiveArrayTrait";
@@ -8,6 +9,7 @@ import UrlTraits from "./UrlTraits";
 
 export default class OpenStreetMapCatalogItemTraits extends mixTraits(
   RasterLayerTraits,
+  LayerOrderingTraits,
   UrlTraits,
   MappableTraits,
   CatalogMemberTraits
