@@ -127,6 +127,7 @@ class MapNavigation extends React.Component {
                     icon={Icon.GLYPHS.pedestrian}
                     getToolComponent={() => Promise.resolve(PedestrianMode)}
                     params={{ cesium: this.props.terria.currentViewer }}
+                    t={t}
                   />
                 </div>
               </If>

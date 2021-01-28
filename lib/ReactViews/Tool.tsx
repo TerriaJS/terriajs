@@ -75,6 +75,13 @@ export class ToolButton extends React.Component<ToolButtonProps> {
 
   render() {
     const { toolName, icon } = this.props;
+    const buttonState = this.isThisToolOpen ? "open" : "closed";
+    const buttonTitle = this.props.t // We need this check because some jsx files do not pass `t` prop
+      ? this.props.t(`tool.button.${buttonState}`, {
+          toolName,
+          toolNameLowerCase: toolName.toLowerCase()
+        })
+      : toolName;
     return (
       <div className={Styles.toolButton}>
         <MapIconButton
@@ -85,7 +92,7 @@ export class ToolButton extends React.Component<ToolButtonProps> {
           iconElement={() => <Icon glyph={icon} />}
           closeIconElement={() => <Icon glyph={Icon.GLYPHS.closeTool} />}
         >
-          {toolName}
+          {buttonTitle}
         </MapIconButton>
       </div>
     );
