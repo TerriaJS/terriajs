@@ -55,7 +55,7 @@ export default class CzmlCatalogItem
       }
     })
       .then(czmlLoadInput => {
-        return CzmlDataSource.load(czmlLoadInput);
+        return CzmlDataSource.load(czmlLoadInput, { credit: this.attribution });
       })
       .then(czml => {
         this._dataSource = czml;

@@ -416,7 +416,8 @@ export default class ArcGisMapServerCatalogItem
       enablePickFeatures: this.allowFeaturePicking,
       usePreCachedTilesIfAvailable: !dynamicRequired,
       mapServerData: stratum.mapServerData,
-      token: stratum.token
+      token: stratum.token,
+      credit: this.attribution
     });
 
     const maximumLevelBeforeMessage = maximumScaleToLevel(

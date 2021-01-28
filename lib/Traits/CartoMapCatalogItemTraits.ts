@@ -41,11 +41,4 @@ export default class CartoMapCatalogItemTraits extends mixTraits(
     type: "number"
   })
   maximumLevel = 25;
-
-  @primitiveTrait({
-    name: "Attribution",
-    description: "The attribution to display with the data.",
-    type: "string"
-  })
-  attribution?: string;
 }

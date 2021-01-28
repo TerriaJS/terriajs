@@ -34,7 +34,8 @@ class FeatureInfoPanelChart extends React.Component {
   @computed
   get chartItem() {
     return this.props.item.chartItems.find(
-      chartItem => chartItem.type === "line"
+      chartItem =>
+        chartItem.type === "line" || chartItem.type === "lineAndPoint"
     );
   }
 

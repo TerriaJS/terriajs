@@ -87,6 +87,11 @@ class GeoRssStratum extends LoadableStratum(GeoRssCatalogItemTraits) {
       "clampToGround",
       item.clampToGround
     );
+    geoJsonItem.setTrait(
+      CommonStrata.definition,
+      "attribution",
+      item.attribution
+    );
     const feed: any = {};
     return Promise.resolve()
       .then(() => loadGeoRss(item))
