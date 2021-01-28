@@ -49,14 +49,18 @@ export default class TextIndex implements IndexBase<TextSearchQuery> {
   /**
    * Search the text index for the given value.
    *
-   * @param value The value to be searched.
+   * @param value         The value to be searched.
+   * @param queryOptions  MiniSearch.SearchOptions
    * @param return The IDs of objects matching the search text.
    */
-  async search(value: TextSearchQuery): Promise<Set<number>> {
+  async search(
+    value: TextSearchQuery,
+    queryOptions: MiniSearchOptions
+  ): Promise<Set<number>> {
     if (this.miniSearchIndex === undefined)
       throw new Error(`Text index not loaded`);
     const miniSearchIndex = await this.miniSearchIndex;
-    const results = miniSearchIndex.search(value);
+    const results = miniSearchIndex.search(value, queryOptions);
     const ids = new Set(results.map(r => r.id));
     return ids;
   }

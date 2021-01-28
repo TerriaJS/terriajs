@@ -11,11 +11,15 @@ Change Log
 * Added support for shapefile with `ShapefileCatalogItem`
 * Added `GeoJsonMixin` for handling the loading of geojson data.
 * Extended the `GeoJsonCatalogItem` to support loading of zip files.
+* Show a top angle view when zooming to a small feature/building from the item search result.
 * Fix `TableTimeStyleTraits.idColumns` trait type.
 * Added a new `lineAndPoint` chart type
 * CustomChartComponent now has a "chart-type" attribute
 * Added `AttributionTraits` to mappable and send it as property when creating Cesium's data sources and imagery providers. [#5167](https://github.com/TerriaJS/terriajs/pull/5167) 
 * Re-add region mapping `applyReplacements`.
+* Added `SearchParameterTraits` to item search for setting a human readable `name` or passing index specific `queryOptions` for each parameter through the catalog.
+* Added `AttributionTraits` to mappable and send it as property when creating Cesium's data sources and imagery providers. [#5167](https://github.com/TerriaJS/terriajs/pull/5167)
+* Fixed an issue where a TerriaMap sometimes doesn't build because of typing issues with styled-components.
 * [The next improvement]
 
 #### 8.0.0-alpha.65
