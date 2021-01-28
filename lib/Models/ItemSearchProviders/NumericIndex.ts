@@ -55,13 +55,9 @@ export default class NumericIndex implements IndexBase<NumericSearchQuery> {
    * Search the numeric index for values between the start and end value in NumericSearchQuery.
    *
    * @param value The start and end value to be searched.
-   * @param  _queryOptions Ignored for numeric index
    * @return Set of IDs that matches the search value.
    */
-  async search(
-    value: NumericSearchQuery,
-    _queryOptions: any
-  ): Promise<Set<number>> {
+  async search(value: NumericSearchQuery): Promise<Set<number>> {
     if (!this.idValuePairs) throw new Error(`Index not loaded`);
     const range = this.range;
     const idValuePairs = await this.idValuePairs;

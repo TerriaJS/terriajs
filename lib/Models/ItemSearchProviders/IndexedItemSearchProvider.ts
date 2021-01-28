@@ -74,14 +74,14 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
         return {
           type: "numeric",
           id: propertyId,
-          name: parameterOptions?.name || propertyId,
+          name: parameterOptions?.name ?? propertyId,
           range: index.range
         };
       case IndexType.enum:
         return {
           type: "enum",
           id: propertyId,
-          name: parameterOptions?.name || propertyId,
+          name: parameterOptions?.name ?? propertyId,
           values: Object.entries(index.values).map(([id, { count }]) => ({
             id,
             count
@@ -91,7 +91,7 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
         return {
           type: "text",
           id: propertyId,
-          name: parameterOptions?.name || propertyId,
+          name: parameterOptions?.name ?? propertyId,
           queryOptions: parameterOptions?.queryOptions
         };
     }

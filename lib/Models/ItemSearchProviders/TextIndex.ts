@@ -55,7 +55,7 @@ export default class TextIndex implements IndexBase<TextSearchQuery> {
    */
   async search(
     value: TextSearchQuery,
-    queryOptions: any
+    queryOptions: MiniSearchOptions
   ): Promise<Set<number>> {
     if (this.miniSearchIndex === undefined)
       throw new Error(`Text index not loaded`);

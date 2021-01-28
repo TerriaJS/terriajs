@@ -1,7 +1,7 @@
 export type IndexBase<QueryType> = {
   type: IndexType;
   load(indexRootUrl: string, valueHint: QueryType): Promise<void>;
-  search(query: QueryType, queryOptions: any): Promise<Set<number>>;
+  search(query: QueryType, queryOptions?: any): Promise<Set<number>>;
 };
 
 export enum IndexType {
