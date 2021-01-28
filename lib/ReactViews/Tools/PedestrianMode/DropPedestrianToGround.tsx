@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -23,6 +23,7 @@ const DropPedestrianToGround: React.FC<DropPedestrianToGroundProps> = props => {
   const scene = cesium.scene;
   const eventHandler = new ScreenSpaceEventHandler(scene.canvas);
   const [t] = useTranslation();
+  const [showMouseTooltip, setShowMouseTooltip] = useState<boolean>(true);
 
   useEffect(function setupEventHandlers() {
     // Pause feature picking while we select a drop point on the map.
@@ -38,6 +39,7 @@ const DropPedestrianToGround: React.FC<DropPedestrianToGroundProps> = props => {
       const pickPosition = scene.globe.pick(pickRay, scene);
       if (!pickPosition) return;
 
+      setShowMouseTooltip(false);
       // Get the precise position and fly to it.
       getPrecisePosition(scene, pickPosition).then(position => {
         position.z -= props.minHeightFromGround;
@@ -72,10 +74,14 @@ const DropPedestrianToGround: React.FC<DropPedestrianToGroundProps> = props => {
   });
 
   return (
-    <MouseTooltip
-      scene={scene}
-      text={t("pedestrianMode.dropPedestrianTooltipMessage")}
-    />
+    <>
+      {showMouseTooltip && (
+        <MouseTooltip
+          scene={scene}
+          text={t("pedestrianMode.dropPedestrianTooltipMessage")}
+        />
+      )}
+    </>
   );
 };
 
