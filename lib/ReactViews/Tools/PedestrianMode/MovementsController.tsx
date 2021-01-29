@@ -1,6 +1,8 @@
+import { runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import KeyboardEventModifier from "terriajs-cesium/Source/Core/KeyboardEventModifier";
 import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEventHandler";
 import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventType";
@@ -221,19 +223,42 @@ export default class MovementsController {
   setupMouseMap() {
     const eventHandler = new ScreenSpaceEventHandler(this.scene.canvas);
 
-    eventHandler.setInputAction(click => {
+    const startLook = (click: { position: Cartesian2 }) => {
       this.currentMousePosition = this.startMousePosition = click.position.clone();
       this.activeMovements.add("look");
-    }, ScreenSpaceEventType.LEFT_DOWN);
+    };
 
-    eventHandler.setInputAction(movement => {
+    const look = (movement: { endPosition: Cartesian2 }) => {
       this.currentMousePosition = movement.endPosition.clone();
-    }, ScreenSpaceEventType.MOUSE_MOVE);
+    };
 
-    eventHandler.setInputAction(() => {
+    const stopLook = () => {
       this.activeMovements.delete("look");
       this.currentMousePosition = this.startMousePosition = undefined;
-    }, ScreenSpaceEventType.LEFT_UP);
+    };
+
+    // User might try to turn while moving down (by pressing SHIFT)
+    // so trigger look event even when SHIFT is pressed.
+    eventHandler.setInputAction(startLook, ScreenSpaceEventType.LEFT_DOWN);
+    eventHandler.setInputAction(
+      startLook,
+      ScreenSpaceEventType.LEFT_DOWN,
+      KeyboardEventModifier.SHIFT
+    );
+
+    eventHandler.setInputAction(look, ScreenSpaceEventType.MOUSE_MOVE);
+    eventHandler.setInputAction(
+      look,
+      ScreenSpaceEventType.MOUSE_MOVE,
+      KeyboardEventModifier.SHIFT
+    );
+
+    eventHandler.setInputAction(stopLook, ScreenSpaceEventType.LEFT_UP);
+    eventHandler.setInputAction(
+      stopLook,
+      ScreenSpaceEventType.LEFT_UP,
+      KeyboardEventModifier.SHIFT
+    );
 
     const mouseMapDestroyer = () => eventHandler.destroy();
     return mouseMapDestroyer;
@@ -246,6 +271,10 @@ export default class MovementsController {
     this.scene.screenSpaceCameraController.enableLook = false;
     this.scene.screenSpaceCameraController.enableTilt = false;
     this.scene.screenSpaceCameraController.enableZoom = false;
+
+    runInAction(() => {
+      this.cesium.isFeaturePickingPaused = true;
+    });
 
     const destroyKeyMap = this.setupKeyMap();
     const destroyMouseMap = this.setupMouseMap();
@@ -271,6 +300,10 @@ export default class MovementsController {
       screenSpaceCameraController.enableTilt = true;
       screenSpaceCameraController.enableZoom = true;
     }
+
+    runInAction(() => {
+      this.cesium.isFeaturePickingPaused = false;
+    });
   }
 }
 
