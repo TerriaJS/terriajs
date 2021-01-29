@@ -56,10 +56,7 @@ export class ToolButton extends React.Component<ToolButtonProps> {
   @computed
   get isThisToolOpen() {
     const currentTool = this.props.viewState.currentTool;
-    return (
-      currentTool &&
-      currentTool.getToolComponent === this.props.getToolComponent
-    );
+    return currentTool && currentTool.toolName === this.props.toolName;
   }
 
   toggleOpen() {
@@ -76,8 +73,20 @@ export class ToolButton extends React.Component<ToolButtonProps> {
     }
   }
 
+  componentWillUnmount() {
+    // Close tool when if tool button unmounts
+    if (this.isThisToolOpen) this.props.viewState.closeTool();
+  }
+
   render() {
     const { toolName, icon } = this.props;
+    const buttonState = this.isThisToolOpen ? "open" : "closed";
+    const buttonTitle = this.props.t // We need this check because some jsx files do not pass `t` prop
+      ? this.props.t(`tool.button.${buttonState}`, {
+          toolName,
+          toolNameLowerCase: toolName.toLowerCase()
+        })
+      : toolName;
     return (
       <div className={Styles.toolButton}>
         <MapIconButton
@@ -86,8 +95,9 @@ export class ToolButton extends React.Component<ToolButtonProps> {
           title={toolName}
           onClick={() => this.toggleOpen()}
           iconElement={() => <Icon glyph={icon} />}
+          closeIconElement={() => <Icon glyph={Icon.GLYPHS.closeTool} />}
         >
-          {toolName}
+          {buttonTitle}
         </MapIconButton>
       </div>
     );
