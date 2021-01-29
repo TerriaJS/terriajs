@@ -65,7 +65,6 @@ const MiniMapContainer = styled(PositionRightOfWorkbench)`
   left: 0px;
   bottom: 100px;
   border: 1px solid white;
-  box-shadow: 1px 1px black;
 `;
 
 export default PedestrianMode;
