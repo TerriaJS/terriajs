@@ -26,6 +26,7 @@ Change Log
 * Add support for `CkanItemReference` `wms_layer` property
 * Add support for `ArcGisMapServerCatalogGroup` to use `sublayerIds`.
 * Clean up `LayerOrderingTraits`, remove `WorkbenchItem` interface, fix `keepOnTop` layer insert/re-ordering.
+* Remove `wordBreak="break-all"` from Box surrounding DataPreview
 * [The next improvement]
 
 #### 8.0.0-alpha.65
