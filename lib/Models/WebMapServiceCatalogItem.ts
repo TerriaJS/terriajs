@@ -107,11 +107,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get supportsReordering() {
-    return !this.keepOnTop;
-  }
-
-  @computed
   get layers(): string | undefined {
     let layers: string | undefined;
 
