@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { observer } from "mobx-react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Cesium from "../../../Models/Cesium";
 import ViewState from "../../../ReactViewModels/ViewState";
@@ -7,8 +8,6 @@ import DropPedestrianToGround from "./DropPedestrianToGround";
 import MiniMap, { getViewFromScene, MiniMapView } from "./MiniMap";
 import MovementControls from "./MovementControls";
 
-const Spacing = require("../../../Styled/Spacing").default;
-
 const PEDESTRIAN_HEIGHT_IN_METRES = 1.5;
 
 type PedestrianModeProps = {
@@ -16,7 +15,7 @@ type PedestrianModeProps = {
   cesium: Cesium;
 };
 
-const PedestrianMode: React.FC<PedestrianModeProps> = props => {
+const PedestrianMode: React.FC<PedestrianModeProps> = observer(props => {
   const { viewState, cesium } = props;
   const [isDropped, setIsDropped] = useState<boolean>(false);
   const [view, setView] = useState<MiniMapView | undefined>();
@@ -42,6 +41,7 @@ const PedestrianMode: React.FC<PedestrianModeProps> = props => {
           <MiniMapContainer viewState={viewState}>
             <MiniMap
               terria={viewState.terria}
+              baseMap={viewState.terria.mainViewer.baseMap!}
               view={view || getViewFromScene(cesium.scene)}
             />
           </MiniMapContainer>
@@ -49,7 +49,7 @@ const PedestrianMode: React.FC<PedestrianModeProps> = props => {
       )}
     </>
   );
-};
+});
 
 const ControlsContainer = styled(PositionRightOfWorkbench)`
   width: 140px;
