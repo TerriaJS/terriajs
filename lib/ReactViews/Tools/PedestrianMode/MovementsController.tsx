@@ -252,11 +252,15 @@ export default class MovementsController {
 
   detach() {
     this.destroyEventHandlers?.();
-    this.scene.screenSpaceCameraController.enableTranslate = true;
-    this.scene.screenSpaceCameraController.enableRotate = true;
-    this.scene.screenSpaceCameraController.enableLook = true;
-    this.scene.screenSpaceCameraController.enableTilt = true;
-    this.scene.screenSpaceCameraController.enableZoom = true;
+    const screenSpaceCameraController = this.scene.screenSpaceCameraController;
+    // screenSpaceCameraController will be undefined if the cesium map is already destroyed
+    if (screenSpaceCameraController !== undefined) {
+      screenSpaceCameraController.enableTranslate = true;
+      screenSpaceCameraController.enableRotate = true;
+      screenSpaceCameraController.enableLook = true;
+      screenSpaceCameraController.enableTilt = true;
+      screenSpaceCameraController.enableZoom = true;
+    }
   }
 }
 
