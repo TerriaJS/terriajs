@@ -40,7 +40,7 @@ export default class MovementsController {
 
   get moveRate() {
     const height = this.scene.camera.positionCartographic.height;
-    const moveRate = Math.max(0.1, height / 30);
+    const moveRate = Math.max(0.05, height / 100);
     return moveRate;
   }
 
