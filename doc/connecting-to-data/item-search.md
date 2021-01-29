@@ -19,10 +19,23 @@ Sample configuration:
     "url": "Buildings3D/tileset.json",
     "search": {
       "providerType": "indexed",
-      "options": {
+      "providerOptions": {
         "indexRootUrl": "/Buildings3D-index/indexRoot.json"
       },
-      "resultTemplate": "Building #{{OBJECTID}}"
+      "resultTemplate": "Building #{{OBJECTID}}",
+      "parameters": [
+         {
+           id: "GEOSCAPE_ROOF_SLOPE",
+           name: "Roof Slope"
+         },
+         {
+           id: "GEOSCAPE_STREET_ADDRESS",
+           queryOptions: {
+             prefix: true,
+             fuzzy: 2
+           }
+         }
+      ]
     }
   }
 ```

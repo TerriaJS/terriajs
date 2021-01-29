@@ -21,6 +21,7 @@ Change Log
 * Added `SearchParameterTraits` to item search for setting a human readable `name` or passing index specific `queryOptions` for each parameter through the catalog.
 * Added `AttributionTraits` to mappable and send it as property when creating Cesium's data sources and imagery providers. [#5167](https://github.com/TerriaJS/terriajs/pull/5167)
 * Fixed an issue where a TerriaMap sometimes doesn't build because of typing issues with styled-components.
+* Renamed `options` to `providerOptions` in `SearchableItemTraits`.
 * [The next improvement]
 
 #### 8.0.0-alpha.65
