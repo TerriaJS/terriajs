@@ -1470,6 +1470,8 @@
   "pedestrianMode": {
     "toolButtonTitle": "Pedestrian Mode",
     "dropPedestrianTooltipMessage": "<b>Left click</b> to select drop location<br /><b>Right click / Esc</b> to cancel",
-    "controls": { "title": "Controls" }
+    "controls": {
+      "title": "Controls"
+    }
   }
 }
