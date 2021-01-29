@@ -86,12 +86,22 @@ export default class MovementsController {
 
   moveUp() {
     const camera = this.scene.camera;
-    camera.moveUp(this.moveRate);
+    const ellipsoid = this.scene.globe.ellipsoid;
+    const surfaceNormal = ellipsoid.geodeticSurfaceNormal(
+      camera.position,
+      new Cartesian3()
+    );
+    camera.move(surfaceNormal, this.moveRate);
   }
 
   moveDown() {
     const camera = this.scene.camera;
-    camera.moveDown(this.moveRate);
+    const ellipsoid = this.scene.globe.ellipsoid;
+    const surfaceNormal = ellipsoid.geodeticSurfaceNormal(
+      camera.position,
+      new Cartesian3()
+    );
+    camera.move(surfaceNormal, -this.moveRate);
   }
 
   look() {
