@@ -25,6 +25,7 @@ Change Log
 * Fix `TableMixin` region mapping feature props and make Long/Lat features use column titles (if it exists) to match v7 behaviour.
 * Add support for `CkanItemReference` `wms_layer` property
 * Add support for `ArcGisMapServerCatalogGroup` to use `sublayerIds`.
+* Added Pedestrian mode for easily navigating the map at street level.
 * Clean up `LayerOrderingTraits`, remove `WorkbenchItem` interface, fix `keepOnTop` layer insert/re-ordering.
 * Remove `wordBreak="break-all"` from Box surrounding DataPreview
 * [The next improvement]
