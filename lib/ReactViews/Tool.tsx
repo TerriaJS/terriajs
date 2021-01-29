@@ -73,6 +73,11 @@ export class ToolButton extends React.Component<ToolButtonProps> {
     }
   }
 
+  componentWillUnmount() {
+    // Close tool when if tool button unmounts
+    if (this.isThisToolOpen) this.props.viewState.closeTool();
+  }
+
   render() {
     const { toolName, icon } = this.props;
     const buttonState = this.isThisToolOpen ? "open" : "closed";
