@@ -15,10 +15,6 @@ export default class BingMapsCatalogItem
     return BingMapsCatalogItem.type;
   }
 
-  @computed get supportsReordering() {
-    return !this.keepOnTop;
-  }
-
   @computed get mapItems() {
     const imageryProvider = this._createImageryProvider();
     return [
