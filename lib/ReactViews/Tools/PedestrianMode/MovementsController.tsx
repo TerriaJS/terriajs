@@ -71,7 +71,7 @@ export default class MovementsController {
       camera.position,
       this.scene.globe.ellipsoid
     );
-    camera.move(direction, -this.moveRate);
+    camera.move(direction, -this.moveRate / 2);
   }
 
   moveRight() {
@@ -81,7 +81,7 @@ export default class MovementsController {
       camera.position,
       this.scene.globe.ellipsoid
     );
-    camera.move(direction, this.moveRate);
+    camera.move(direction, this.moveRate / 2);
   }
 
   moveUp() {
