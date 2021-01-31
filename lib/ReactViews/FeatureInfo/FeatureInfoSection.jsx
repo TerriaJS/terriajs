@@ -85,52 +85,54 @@ export const FeatureInfoSection = observer(
     },
 
     getTemplateData() {
-      const propertyData = this.getPropertyValues();
-      if (defined(propertyData)) {
-        // Alises is a map from `key` (which exists in propertyData.properties) to some `aliasKey` which needs to resolve to `key`
-        // and Yes, this is awful, but not that much worse than what was done in V7
-        let aliases = [];
-        if (TableMixin.isMixedInto(this.props.catalogItem)) {
-          aliases = this.props.catalogItem.columns
-            .filter(col => col.name && col.title && col.name !== col.title)
-            .map(col => [col.name, col.title]);
-        }
-        aliases.forEach(aliasMap => {
-          propertyData[aliasMap[0]] = propertyData[aliasMap[1]];
-        });
+      const propertyData = Object.assign({}, this.getPropertyValues());
 
-        // Properties accessible as {name, value} array; useful when you want
-        // to iterate anonymous property values in the mustache template.
-        propertyData.properties = Object.entries(propertyData).map(
-          ([name, value]) => ({
-            name,
-            value
-          })
-        );
-        propertyData.terria = {
-          formatNumber: mustacheFormatNumberFunction,
-          formatDateTime: mustacheFormatDateTime,
-          urlEncodeComponent: mustacheURLEncodeTextComponent,
-          urlEncode: mustacheURLEncodeText
-        };
-        if (this.props.position) {
-          const latLngInRadians = Ellipsoid.WGS84.cartesianToCartographic(
-            this.props.position
-          );
-          propertyData.terria.coords = {
-            latitude: CesiumMath.toDegrees(latLngInRadians.latitude),
-            longitude: CesiumMath.toDegrees(latLngInRadians.longitude)
-          };
-        }
-        if (this.props.catalogItem) {
-          propertyData.terria.currentTime = this.props.catalogItem.discreteTime;
-        }
-        propertyData.terria.timeSeries = getTimeSeriesChartContext(
-          this.props.catalogItem,
-          this.props.feature,
-          propertyData._terria_getChartDetails
-        );
+      // Alises is a map from `key` (which exists in propertyData.properties) to some `aliasKey` which needs to resolve to `key`
+      // and Yes, this is awful, but not that much worse than what was done in V7
+      let aliases = [];
+      if (TableMixin.isMixedInto(this.props.catalogItem)) {
+        aliases = this.props.catalogItem.columns
+          .filter(col => col.name && col.title && col.name !== col.title)
+          .map(col => [col.name, col.title]);
       }
+      // Only assign alias if it is undefined
+      aliases.forEach(aliasMap => {
+        propertyData[aliasMap[0]] =
+          propertyData[aliasMap[0]] ?? propertyData[aliasMap[1]];
+      });
+
+      // Properties accessible as {name, value} array; useful when you want
+      // to iterate anonymous property values in the mustache template.
+      propertyData.properties = Object.entries(propertyData).map(
+        ([name, value]) => ({
+          name,
+          value
+        })
+      );
+      propertyData.terria = {
+        formatNumber: mustacheFormatNumberFunction,
+        formatDateTime: mustacheFormatDateTime,
+        urlEncodeComponent: mustacheURLEncodeTextComponent,
+        urlEncode: mustacheURLEncodeText
+      };
+      if (this.props.position) {
+        const latLngInRadians = Ellipsoid.WGS84.cartesianToCartographic(
+          this.props.position
+        );
+        propertyData.terria.coords = {
+          latitude: CesiumMath.toDegrees(latLngInRadians.latitude),
+          longitude: CesiumMath.toDegrees(latLngInRadians.longitude)
+        };
+      }
+      if (this.props.catalogItem) {
+        propertyData.terria.currentTime = this.props.catalogItem.discreteTime;
+      }
+      propertyData.terria.timeSeries = getTimeSeriesChartContext(
+        this.props.catalogItem,
+        this.props.feature,
+        propertyData._terria_getChartDetails
+      );
+
       return propertyData;
     },
 
