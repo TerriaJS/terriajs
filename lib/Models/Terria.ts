@@ -79,8 +79,10 @@ import updateModelFromJson from "./updateModelFromJson";
 import upsertModelFromJson from "./upsertModelFromJson";
 import ViewerMode from "./ViewerMode";
 import Workbench from "./Workbench";
+import { DefaultTheme } from "styled-components";
 // import overrides from "../Overrides/defaults.jsx";
 
+const SERVER_CONFIG_DEFAULT_PATH = "serverconfig/";
 interface ConfigParameters {
   [key: string]: ConfigParameters[keyof ConfigParameters];
   /**
@@ -200,6 +202,8 @@ interface ConfigParameters {
    *
    */
   languageConfiguration?: LanguageConfiguration;
+
+  theme?: DefaultTheme;
 }
 
 interface StartOptions {
@@ -304,7 +308,7 @@ export default class Terria {
     proj4ServiceBaseUrl: "proj4/",
     corsProxyBaseUrl: "proxy/",
     proxyableDomainsUrl: "proxyabledomains/", // deprecated, will be determined from serverconfig
-    serverConfigUrl: "serverconfig/",
+    serverConfigUrl: SERVER_CONFIG_DEFAULT_PATH,
     shareUrl: "share",
     feedbackUrl: undefined,
     initFragmentPaths: ["init/"],
@@ -336,7 +340,8 @@ export default class Terria {
     showInAppGuides: false,
     helpContent: [],
     helpContentTerms: defaultTerms,
-    languageConfiguration: undefined
+    languageConfiguration: undefined,
+    theme: undefined
   };
 
   @observable
@@ -562,63 +567,95 @@ export default class Terria {
     this.initSources.push(...initSources);
   }
 
-  start(options: StartOptions) {
+  async start(options: StartOptions) {
     this.shareDataService = options.shareDataService;
 
     const baseUri = new URI(options.configUrl).filename("");
 
     const launchUrlForAnalytics =
       options.applicationUrl?.href || getUriWithoutPath(baseUri);
-    return loadJson5(options.configUrl, options.configUrlHeaders)
-      .then((config: any) => {
-        return runInAction(() => {
-          // If it's a magda config, we only load magda config and parameters should never be a property on the direct
-          // config aspect (it would be under the `terria-config` aspect)
-          if (config.aspects) {
-            return this.loadMagdaConfig(
-              options.configUrl,
-              config,
-              baseUri
-            ).then(() => {
-              Internationalization.initLanguage(
-                this.configParameters.languageConfiguration,
-                options.i18nOptions
-              );
-            });
-          }
 
-          // If it's a regular config.json, continue on with parsing remaining init sources
-          if (config.parameters) {
-            this.updateParameters(config.parameters);
-            Internationalization.initLanguage(
-              config.parameters.languageConfiguration,
-              options.i18nOptions
-            );
-          }
+    this.serverConfig = new ServerConfig();
+    let serverInit = false;
 
-          this.setupInitializationUrls(baseUri, config);
-        });
-      })
-      .then(() => {
-        this.analytics?.start(this.configParameters);
-        this.analytics?.logEvent("launch", "url", launchUrlForAnalytics);
-        this.serverConfig = new ServerConfig();
-        return this.serverConfig.init(this.configParameters.serverConfigUrl);
-      })
-      .then((serverConfig: any) => {
-        return this.initCorsProxy(this.configParameters, serverConfig);
-      })
-      .then(() => {
-        if (this.shareDataService && this.serverConfig.config) {
-          this.shareDataService.init(this.serverConfig.config);
-        }
-        if (options.applicationUrl) {
-          return this.updateApplicationUrl(options.applicationUrl.href);
-        }
-      })
-      .then(() => {
-        this.loadPersistedMapSettings();
+    // Try to load serverConfig before clientConfig using SERVER_CONFIG_DEFAULT_PATH
+    // This is so we can set `options.configUrl` from the server if it is defined
+    try {
+      await this.serverConfig.init(SERVER_CONFIG_DEFAULT_PATH);
+      serverInit = true;
+    } catch (error) {
+      console.log(
+        `Could not load server config from default path "${SERVER_CONFIG_DEFAULT_PATH}":`
+      );
+      console.log(error);
+      console.log(
+        `Will load client config from "${options.configUrl}" and attempt to load server config again with "serverConfigUrl" provided`
+      );
+    }
+
+    if (
+      typeof this.serverConfig.config.clientConfigUrl === "string" &&
+      this.serverConfig.config.clientConfigUrl !== ""
+    ) {
+      options.configUrl = this.serverConfig.config.clientConfigUrl;
+      console.log(
+        `Overriding options.configUrl to "${this.serverConfig.config.clientConfigUrl}"`
+      );
+    }
+
+    const clientConfig = await loadJson5(
+      options.configUrl,
+      options.configUrlHeaders
+    );
+    if (!isJsonObject(clientConfig)) {
+      throw new TerriaError({
+        sender: this,
+        title: "Invalid client configuration JSON",
+        message: `Client configuration loaded from ${options.configUrl} is invalid.`
       });
+    }
+    // If it's a magda config, we only load magda config and parameters should never be a property on the direct
+    // config aspect (it would be under the `terria-config` aspect)
+    if (clientConfig.aspects) {
+      await this.loadMagdaConfig(options.configUrl, clientConfig, baseUri);
+
+      Internationalization.initLanguage(
+        this.configParameters.languageConfiguration,
+        options.i18nOptions
+      );
+    }
+
+    // If it's a regular config.json, continue on with parsing remaining init sources
+    if (isJsonObject(clientConfig.parameters)) {
+      this.updateParameters(clientConfig.parameters);
+      if (isJsonObject(clientConfig.parameters.languageConfiguration)) {
+        Internationalization.initLanguage(
+          clientConfig.parameters.languageConfiguration,
+          options.i18nOptions
+        );
+      }
+    }
+
+    this.setupInitializationUrls(baseUri, clientConfig);
+
+    this.analytics?.start(this.configParameters);
+    this.analytics?.logEvent("launch", "url", launchUrlForAnalytics);
+
+    if (!serverInit) {
+      await this.serverConfig.init(this.configParameters.serverConfigUrl);
+      serverInit = true;
+    }
+
+    await this.initCorsProxy(this.configParameters, this.serverConfig.config);
+    if (this.shareDataService && this.serverConfig.config) {
+      this.shareDataService.init(this.serverConfig.config);
+    }
+
+    if (options.applicationUrl) {
+      await this.updateApplicationUrl(options.applicationUrl.href);
+    }
+
+    this.loadPersistedMapSettings();
   }
 
   loadPersistedMapSettings(): void {
@@ -710,7 +747,7 @@ export default class Terria {
   }
 
   @action
-  updateParameters(parameters: ConfigParameters): void {
+  updateParameters(parameters: JsonObject | ConfigParameters): void {
     Object.keys(parameters).forEach((key: string) => {
       if (this.configParameters.hasOwnProperty(key)) {
         this.configParameters[key] = parameters[key];
