@@ -107,7 +107,8 @@ class MapboxVectorTileCatalogItem extends AsyncMappableMixin(
       maximumNativeZoom: this.maximumNativeZoom,
       maximumZoom: this.maximumZoom,
       uniqueIdProp: this.idProperty,
-      featureInfoFunc: this.featureInfoFromFeature
+      featureInfoFunc: this.featureInfoFromFeature,
+      credit: this.attribution
     });
   }
 
