@@ -101,8 +101,9 @@ const ViewingControls = observer(
     },
 
     removeFromMap() {
-      const workbench = this.props.viewState.terria.workbench;
-      workbench.remove(this.props.item);
+      const terria = this.props.viewState.terria;
+      terria.workbench.remove(this.props.item);
+      terria.removeSelectedFeaturesForModel(this.props.item);
       this.props.viewState.terria.timelineStack.remove(this.props.item);
       this.props.viewState.terria.analytics?.logEvent(
         "dataSource",
