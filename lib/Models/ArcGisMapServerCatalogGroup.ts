@@ -34,6 +34,7 @@ interface Layer {
   description?: string;
   copyrightText?: string;
   type?: string;
+  subLayerIds?: number[] | null;
 }
 
 export interface MapServer {
@@ -213,7 +214,12 @@ export class MapServerStratum extends LoadableStratum(
       (layer.parentLayerId !== -1 ? layer.parentLayerId + "/" : "") +
       layer.id;
     let model: ArcGisMapServerCatalogItem | ArcGisMapServerCatalogGroup;
-    if (layer.type === "Group Layer") {
+
+    // Treat layer as a group if it has type "Group Layer" - or has subLayers
+    if (
+      layer.type === "Group Layer" ||
+      (Array.isArray(layer.subLayerIds) && layer.subLayerIds.length > 0)
+    ) {
       const existingModel = this._catalogGroup.terria.getModelById(
         ArcGisMapServerCatalogGroup,
         layerId

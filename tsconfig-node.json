@@ -23,6 +23,7 @@
       ],
       "types": [
           "terriajs-cesium",
+          "mapbox__geojson-merge",
           "mapbox__point-geometry",
           "mapbox__vector-tile",
           "terriajs-html2canvas",

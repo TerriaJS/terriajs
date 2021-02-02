@@ -1,6 +1,7 @@
 import { JsonObject } from "../Core/Json";
 import anyTrait from "./anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
+import LayerOrderingTraits from "./LayerOrderingTraits";
 import MappableTraits from "./MappableTraits";
 import mixTraits from "./mixTraits";
 import primitiveTrait from "./primitiveTrait";
@@ -11,6 +12,7 @@ import UrlTraits from "./UrlTraits";
 export default class CartoMapCatalogItemTraits extends mixTraits(
   SplitterTraits,
   RasterLayerTraits,
+  LayerOrderingTraits,
   UrlTraits,
   MappableTraits,
   CatalogMemberTraits
@@ -41,11 +43,4 @@ export default class CartoMapCatalogItemTraits extends mixTraits(
     type: "number"
   })
   maximumLevel = 25;
-
-  @primitiveTrait({
-    name: "Attribution",
-    description: "The attribution to display with the data.",
-    type: "string"
-  })
-  attribution?: string;
 }

@@ -107,11 +107,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get supportsReordering() {
-    return !this.keepOnTop;
-  }
-
-  @computed
   get layers(): string | undefined {
     let layers: string | undefined;
 
@@ -1116,7 +1111,8 @@ class WebMapServiceCatalogItem
         },
         tilingScheme: /*defined(this.tilingScheme) ? this.tilingScheme :*/ new WebMercatorTilingScheme(),
         maximumLevel: maximumLevel,
-        rectangle: rectangle
+        rectangle: rectangle,
+        credit: this.attribution
       };
 
       if (

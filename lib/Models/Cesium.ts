@@ -699,7 +699,7 @@ export default class Cesium extends GlobeOrMap {
             }
           });
         } else if (defined(target.boundingSphere)) {
-          return zoomToBoundingSphere(that, target);
+          return zoomToBoundingSphere(that, target, flightDurationSeconds);
         } else if (target.position !== undefined) {
           that.scene.camera.flyTo({
             duration: flightDurationSeconds,

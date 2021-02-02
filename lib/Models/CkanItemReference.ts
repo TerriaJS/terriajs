@@ -33,6 +33,7 @@ import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
+import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
 
 export class CkanDatasetStratum extends LoadableStratum(
   CkanItemReferenceTraits
@@ -180,7 +181,10 @@ export class CkanDatasetStratum extends LoadableStratum(
         });
       }
     }
-    if (this.ckanDataset.spatial !== undefined) {
+    if (
+      isDefined(this.ckanDataset.spatial) &&
+      this.ckanDataset.spatial !== ""
+    ) {
       var gj = JSON.parse(this.ckanDataset.spatial);
       if (gj.type === "Polygon" && gj.coordinates[0].length === 5) {
         return createStratumInstance(RectangleTraits, {
@@ -460,6 +464,18 @@ export default class CkanItemReference extends UrlMixin(
     if (defintionStratum) {
       model.strata.set(CommonStrata.definition, defintionStratum);
       model.setTrait(CommonStrata.definition, "url", undefined);
+    }
+
+    // Overrides for specific catalog types
+    if (
+      model instanceof WebMapServiceCatalogItem &&
+      this._ckanResource?.wms_layer
+    ) {
+      model.setTrait(
+        CommonStrata.definition,
+        "layers",
+        this._ckanResource.wms_layer
+      );
     }
 
     // Tried to make this sequence an updateModelFromJson but wouldn't work?
