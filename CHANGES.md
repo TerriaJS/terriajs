@@ -29,6 +29,7 @@ Change Log
 * Added Pedestrian mode for easily navigating the map at street level.
 * Clean up `LayerOrderingTraits`, remove `WorkbenchItem` interface, fix `keepOnTop` layer insert/re-ordering.
 * Remove `wordBreak="break-all"` from Box surrounding DataPreview
+* TSify `Loader` function.
 * [The next improvement]
 
 #### 8.0.0-alpha.65
