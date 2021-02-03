@@ -30,6 +30,7 @@ Change Log
 * Added Pedestrian mode for easily navigating the map at street level.
 * Clean up `LayerOrderingTraits`, remove `WorkbenchItem` interface, fix `keepOnTop` layer insert/re-ordering.
 * Remove `wordBreak="break-all"` from Box surrounding DataPreview
+* Fixes a bug in pedestrian mode where dropping the pedestrian in northern hemisphere will position the camera underground.
 * [The next improvement]
 
 #### 8.0.0-alpha.65
