@@ -1,4 +1,4 @@
-import { runInAction } from "mobx";
+import { action, runInAction } from "mobx";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
@@ -750,14 +750,19 @@ describe("Terria", function() {
       expect(terria.workbench).not.toContain(model);
     });
 
-    it("it removes picked features that contain the model", function() {
-      terria.pickedFeatures = new PickedFeatures();
-      const feature = new Feature({});
-      feature._catalogItem = model;
-      terria.pickedFeatures.features.push(feature);
-      terria.removeModelReferences(model);
-      expect(terria.pickedFeatures.features.length).toBe(0);
-    });
+    it(
+      "it removes picked features & selected feature for the model",
+      action(function() {
+        terria.pickedFeatures = new PickedFeatures();
+        const feature = new Feature({});
+        terria.selectedFeature = feature;
+        feature._catalogItem = model;
+        terria.pickedFeatures.features.push(feature);
+        terria.removeModelReferences(model);
+        expect(terria.pickedFeatures.features.length).toBe(0);
+        expect(terria.selectedFeature).toBeUndefined();
+      })
+    );
 
     it("unregisters the model from Terria", function() {
       terria.removeModelReferences(model);
