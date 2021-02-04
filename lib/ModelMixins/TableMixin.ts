@@ -717,7 +717,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
                 return this.featureInfoFromFeature(
                   regionType,
-                  d,
+                  // Preserve values from d and insert feature properties after entries from d
+                  Object.assign({}, d, feature.properties, d),
                   feature.properties[regionType.uniqueIdProp]
                 );
               }
