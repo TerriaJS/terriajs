@@ -30,6 +30,7 @@ Change Log
 * Clean up `LayerOrderingTraits`, remove `WorkbenchItem` interface, fix `keepOnTop` layer insert/re-ordering.
 * Remove `wordBreak="break-all"` from Box surrounding DataPreview
 * Re-added merging of csv row properties and vector tile feature properties for feature info (to match v7 behaviour).
+* Fixes a bug in pedestrian mode where dropping the pedestrian in northern hemisphere will position the camera underground.
 * [The next improvement]
 
 #### 8.0.0-alpha.65
