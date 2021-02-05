@@ -3,7 +3,7 @@
         "myLocation": "ទីតាំងខ្ញុំ",
         "browserCannotProvide": "កម្មវិធីរុករករបស់អ្នកមិនអាចផ្តល់ទីតាំងរបស់អ្នកបានទេ។",
         "errorGettingLocation": "កំហុសក្នុងការទទួលបានទីតាំង",
-        "originError": "",
+        "originError": "កម្មវិធីរុករករបស់អ្នកអាចផ្តល់ជូនទីតាំងរបស់អ្នកតែនៅពេលប្រើ HTTPS ។ អ្នកប្រហែលជាអាចប្រើ {{secureUrl}}ជំនួសវិញ។",
         "location": "ទីតាំង",
         "centreMap": "បង្ហាញទីតាំងបច្ចុប្បន្នរបស់អ្នកទៅកាន់ពាក់កណ្តាលផែនទី"
     },
@@ -40,5 +40,474 @@
         },
         "title": "អូសទៅឆ្វេងឬស្តាំដើម្បីកែតម្រូវផ្ទាំងបង្ហាញ",
         "toggleSplitterTool": "បើកការប្រៀបធៀបបែបមួយចំហៀង ៗ រវាងទិន្នន័យពីរផ្សេងគ្នា"
+    },
+    "map": {
+        "drawExtentHelper": {
+            "extent": "វិសាលភាព",
+            "drawExtent": "គូរវិសាលភាព"
+        },
+        "displayVariablesConcept": {
+            "defaultName": "បង្ហាញអថេរ"
+        },
+        "computeRingWindingOrder": {
+            "devError": "ការរំពឹងទុកប្រភេទនៃចំនុច {អ៊ិច៖ លេខ, វ៉ាយ: លេខ}"
+        },
+        "cesium": {
+            "notWebMercatorTilingScheme": "សំណុំទិន្នន័យនេះមិនអាចត្រូវបានបង្ហាញនៅលើផែនទី 2D ទេពីព្រោះវាមិនគាំទ្រដល់ការព្យាករណ៍ គេហទំព័រមេកាទ័រ (អ៊ីភីអេសជី៖3857) ។",
+            "failedToObtain": "បានបរាជ័យក្នុងការទទួលបានក្រឡាក្បឿងរូបភាព អ៊ិច៖ {{x}} វ៉ាយ៖{{y}} កម្រិត៖{{level}} ។",
+            "devError": "សេស្យូមត្រូវបានទាមទារ។"
+        },
+        "addressGeocoder": {
+            "devError": "bulkConvertAddresses ត្រូវតែត្រូវបានអនុវត្តនៅក្នុងថ្នាក់ដែលចេញមក។"
+        }
+    },
+    "core": {
+        "terriaError": {
+            "defaultValue": "កំហុស​មួយ​បាន​កើត​ឡើង"
+        },
+        "serverConfig": {
+            "failedToGet": "មិនអាចទទួលបានកំណត់​រចនាសម្ព័នពី {{serverConfigUrl}} ទេ។ សេវាកម្មដូចជាប្រូកស៊ី ការបំលែងនិងការបង្រួម URL មិនអាចដំណើរការទេ។"
+        },
+        "readXml": {
+            "xmlError": "ឯកសារមិនមាន XML ត្រឹមត្រូវទេ។"
+        },
+        "readText": {
+            "fileRequired": "ត្រូវការឯកសារ"
+        },
+        "googleAnalytics": {
+            "log": "ការតាមដាន Google Analytics ត្រូវបានបិទពីព្រោះ terria.configParameters.googleAnalyticsKey មិនត្រូវបានកំណត់ទេ"
+        },
+        "printWindow": {
+            "printMediaEnd": "បោះពុម្ពមេឌៀបញ្ចប់",
+            "printMediaStart": "មេឌៀបោះពុម្ពចាប់ផ្តើម",
+            "errorMessage": "ការបោះពុម្ពមិនបានចាប់ផ្តើមក្នុងរយៈពេល ១០ វិនាទីទេ។ ប្រហែលជាកម្មវិធីរុករកគេហទំព័រនេះមិនគាំទ្រការបោះពុម្ពទេ?",
+            "errorTitle": "មានបញ្ហាក្នុងការបោះពុម្ព"
+        },
+        "dataType": {
+            "json": "ជេសាន់",
+            "gpx": "អីភីអិច",
+            "czml": "ស៊ីហ្សីអឹមអិល",
+            "csv": "ស៊ីអេសវី",
+            "esri-featureServer": "សេវាកម្មធាតុផែនទី Esri ArcGIS (មួយស្រទាប់)",
+            "other": "ផ្សេងៗ (ប្រើសេវាកម្មបំលែង)",
+            "kml": "KML ឬ KMZ",
+            "geoRss": "GeoRSS",
+            "geojson": "GeoJSON",
+            "open-street-map": "សេវាកម្មផែនទី​ OpenStreetMap",
+            "esri-mapServer": "សេវាកម្មផែនទី Esri ArcGIS (មួយស្រទាប់)",
+            "esri-group": "សេវាកម្មផែនទី Esri ArcGIS",
+            "wfs-getCapabilities": "សេវាកម្មផែនទី(WFS)",
+            "wmts-getCapabilities": "សេវាកម្មផែនទី(WMTS)",
+            "wms-getCapabilities": "សេវាកម្មផែនទី(WMS)",
+            "auto": "រកឃើញដោយស្វ័យប្រវត្តិ (បានណែនាំ)"
+        },
+        "findIndex": {
+            "function": "findIndex predicate ត្រូវតែជាមុខងារ",
+            "array": "findIndex ដំណើរការតែលើអារេ",
+            "nullUndefined": "findIndex ត្រូវបានគេហៅថាគ្មានឬគ្មានកំណត់"
+        },
+        "dataUri": {
+            "errorTitle": "កម្មវិធីរុករកអ៊ីនធឺណិតមិនគាំទ្រក្នុងការការទាញយកទិន្នន័យទេ"
+        },
+        "chartData": "ទិន្នន័យក្រាប",
+        "userAddedData": "ទិន្នន័យបន្ថែមដោយអ្នកប្រើប្រាស់"
+    },
+    "analytics": {
+        "shiftToDrawRectangle": "ចុចគ្រាប់ចុចប្ដូរ (Shift) ហើយ​សង្កត់ប៊ូតុងលើ​កណ្តុរឆ្វេងដើម្បីគូរចតុកោណ",
+        "selectExistingPolygon": "ជ្រើសរើសពហុកោណដែលមានស្រាប់",
+        "regionName": "ឈ្មោះតំបន់",
+        "selectedPolygon": "ពហុកោណដែលបានជ្រើសរើស",
+        "clickToDrawRectangle": "ចុចដើម្បីគូរចតុកោណ",
+        "clickToDrawPolygon": "ចុចដើម្បីគូរពហុកោណ",
+        "selectPoint": "ជ្រើសរើសចំណុចដោយចុចលើផែនទី។",
+        "enterValidCoords": "សូមបញ្ចូលកូអរដោនេដែលត្រឹមត្រូវ (ឧ។ ១៣១.០៣៦១, -២៥.៣៤៥០) ។",
+        "clickToDrawLine": "ចុចដើម្បីគូរបន្ទាត់",
+        "runAnalysis": "ដំណើរការវិភាគ",
+        "nothingSelected": "គ្មានអ្វីត្រូវបានជ្រើសរើសទេ។ សូមប្រើប៊ូតុងខាងលើដើម្បីធ្វើការជ្រើសរើស។",
+        "existingPolygon": "ពហុកោណដែលមានស្រាប់",
+        "polygon": "ពហុកោណ",
+        "point": "ចំណុច (រយៈទទឹង / រយៈបណ្តោយ)",
+        "selectLocation": "ជ្រើសរើសទីតាំង"
+    },
+    "terriaViewer": {
+        "webGLNotSupportedOrSlowTitle": "WebGL មិនត្រូវបានគាំទ្រឬយឺតពេក",
+        "webGLNotSupportedTitle": "WebGL មិនត្រូវបានគាំទ្រ",
+        "safari": "អាផល សាហ្វារី",
+        "firefox": "ម៉ូស៊ីឡា ហ្វៃអឺហ្វុក",
+        "chrome": "ហ្គូហ្គលក្រូម",
+        "internetExplorer": "អ៊ិនធឺណិតអេចផ្ល័ររឺ ១១",
+        "slowWebGLAvailableTitle": "ការដំណើរការ WebGL ខ្សោយ"
+    },
+    "catalogItem": {
+        "loading": "កំពុងផ្ទុក…",
+        "removeFromMap": "យកចេញពីផែនទី",
+        "trash": "យកចេញពីកាតាឡុក",
+        "add": "បន្ថែម",
+        "remove": "យកចេញ"
+    },
+    "clipboard": {
+        "success": "បានចម្លងទៅកាន់ឃ្លីបបត",
+        "copy": "ចម្លង",
+        "shareExplanation": "អ្នកដែលមាន URL នេះនឹងអាចចូលប្រើផែនទីនេះបាន។",
+        "shareURL": "ចែករំលែក URL",
+        "unsuccessful": "ចម្លងមិនជោគជ័យ …"
+    },
+    "satellite": {
+        "infoGroup": "បង្ហាញតែពេលវេលាដែលអាចចាប់យកបានសម្រាប់៖",
+        "filterByLocation": "ច្រោះតាមទីតាំង",
+        "querying": "កំពុងសួរទីតាំង…",
+        "newLocation": "ទីតាំងថ្មី",
+        "zoomTo": "ពង្រីកទៅកាន់",
+        "removeFilter": "លុបការច្រោះ",
+        "pickPoint": "ជ្រើសរើសចំណុចដោយចុចលើផែនទី។"
+    },
+    "dateTime": {
+        "useTimeline": "ប្រើបន្ទាត់ពេលវេលា",
+        "timeline": {
+            "playFaster": "លេងលឿនៗ",
+            "playSlower": "លេងយឺតៗ",
+            "togglePlay": "លេង",
+            "gotoStart": "ទៅកាន់ពេលចាប់ផ្តើម",
+            "textCell": "ឈ្មោះនៃសំណុំទិន្នន័យដែលមាននៅក្នុងពេលវេលាត្រូវបានបង្ហាញ"
+        },
+        "availableTimeChart": "បង្ហាញពេលវេលាដែលមាននៅលើក្រាប",
+        "next": "ពេលក្រោយ",
+        "selectTime": "ជ្រើសរើសពេលវេលា",
+        "previous": "ពេលវេលាមុន"
+    },
+    "workbench": {
+        "colorScaleRange": "ជួរមាត្រដ្ឋានពណ៌",
+        "colorScaleRangeTitle": "ជួរមាត្រដ្ឋានពណ៌មិនត្រឹមត្រូវ",
+        "toggleVisibility": "បង្ហាញ / លាក់ទិន្នន័យ",
+        "removeAll": "យកចេញទាំងអស់",
+        "label": "សំណុំទិន្នន័យ",
+        "removeFromMap": "យកចេញ",
+        "removeFromMapTitle": "យកទិន្នន័យនេះចេញ",
+        "exportData": "នាំចេញ",
+        "exportDataTitle": "នាំចេញទិន្នន័យផែនទី",
+        "splitItem": "ញែក",
+        "splitItemTitle": "ស្ទួននិងបង្ហាញឧបករណ៍ញែក",
+        "previewItem": "អំពីទិន្នន័យនេះ",
+        "previewItemTitle": "ព័ត៌មាន",
+        "openFeature": "ពង្រីក",
+        "openFeatureTitle": "ពង្រីកទៅកាន់ទិន្នន័យ",
+        "zoomTo": "ពង្រីកទៅកាន់វិសាលភាព",
+        "zoomToTitle": "ពង្រីកទៅកាន់វិសាលភាព",
+        "opacity": "ភាពឆ្លុះ៖{{opacity}}%",
+        "displayPercent": "បង្ហាញជាភាគរយនៃចំនួនសរុបក្នុងតំបន់",
+        "colorScaleUpdateRange": "ជួរធ្វើបច្ចុប្បន្នភាព",
+        "rangeMin": "អប្បបរមា៖",
+        "rangeMax": "អតិបរមា៖",
+        "colorScaleRangeMax": "តម្លៃអតិបរមាត្រូវតែជាលេខ។",
+        "colorScaleRangeMin": "តម្លៃអប្បបរមាត្រូវតែជាលេខ។"
+    },
+    "description": {
+        "downloadNotSupported": "ជាអកុសលកម្មវិធីរុករកគេហទំព័ររបស់អ្នកមិនបានគាំទ្រមុខងារដែលត្រូវការដើម្បីទាញយកទិន្នន័យនេះជាឯកសារទេ។ សូមប្រើ Chromium, Firefox ឬ Safari ដើម្បីទាញយកទិន្នន័យនេះ។",
+        "useLinkBelow": "ប្រើតំណខាងក្រោមដើម្បីទាញយកទិន្នន័យ។ សូមមើល {{link}}សម្រាប់ព័ត៌មានបន្ថែមអំពីការកំណត់ប៉ារ៉ាម៉ែត្រសំណួរ URL ។",
+        "wfs": "នេះគឺជា &lt;1&gt; សេវាកម្ម WFS &lt;/1&gt; ដែលផ្ទេរទិន្នន័យភូមិសាស្ត្រតាមការស្នើសុំ។ វាអាចត្រូវបានប្រើនៅក្នុងកម្មវិធីជីអេសអាយជាមួយនិងURLនេះ៖",
+        "wms": "នេះគឺជា &lt;1&gt; សេវាកម្ម WMS &lt;/1&gt; ដែលបង្កើតរូបភាពផែនទីតាមការស្នើសុំ។ វាអាចត្រូវបានប្រើនៅក្នុងកម្មវិធីជីអេសអាយជាមួយនិងURLនេះ៖",
+        "dataLocal": "ឯកសារនេះមានតែនៅក្នុងកម្មវិធីរុករករបស់អ្នកទេ។ ដើម្បីចែករំលែកវាអ្នកត្រូវផ្ទុកវាលើម៉ាស៊ីនមេគេហទំព័រសាធារណៈ។",
+        "dataCustodian": "អ្នកថែរក្សាទិន្នន័យ",
+        "dataServiceDetails": "ព័ត៌មានលម្អិតអំពីសេវាកម្មទិន្នន័យ",
+        "dataSourceDetails": "ព័ត៌មានលម្អិតពីប្រភពព័ត៌មានលម្អិត",
+        "downloadData": "ទាញយកទិន្នន័យ",
+        "useTheLinkToDownload": "ប្រើតំណខាងក្រោមដើម្បីទាញយកទិន្នន័យដោយផ្ទាល់។",
+        "downloadInFormat": "ទាញយកទិន្នន័យដែលបានជ្រើសរើសបច្ចុប្បន្នជាទម្រង់{{format}}",
+        "dataUrl": "URL ទិន្នន័យ",
+        "metadataUrl": "URL ទិន្នន័យដើម",
+        "typeName": "ឈ្មោះប្រភេទ",
+        "layerName": "ឈ្មោះស្រទាប់ទិន្នន័យ",
+        "dataNotLocal": "សូមទាក់ទងអ្នកផ្តល់ទិន្នន័យនេះសម្រាប់ព័ត៌មានបន្ថែមរួមទាំងព័ត៌មានអំពីសិទ្ធិប្រើប្រាស់និងកំហិតផ្សេងៗ។",
+        "name": "ការពិពណ៌នា"
+    },
+    "preview": {
+        "disclaimer": "ការបដិសេធន៍ទទួលខុសត្រូវ",
+        "dataCustodian": "អ្នកថែរក្សាទិន្នន័យ",
+        "updateFrequency": "ភាពញឹកញាប់នៃការធ្វើបច្ចុប្បន្នភាព",
+        "modified": "បានកែប្រែ",
+        "created": "បានបង្កើត",
+        "contact": "ទំនាក់ទំនង",
+        "author": "អ្នកនិពន្ធ",
+        "accessConstraints": "កំហិតនៃការចូល",
+        "licence": "អាជ្ញាប័ណ្ណ",
+        "resourceDescription": "ការពិពណ៌នាធនធាន",
+        "serviceDescription": "ការពិពណ៌នាសេវាកម្ម",
+        "datasetDescription": "ការពិពណ៌នាទិន្នន័យ",
+        "dataDescription": "ការពិពណ៌នាទិន្នន័យ",
+        "addToMap": "បញ្ចូលទៅកាន់ផែនទី",
+        "removeFromMap": "យកចេញពីផែនទី",
+        "dataPreview": "បង្ហាញទិន្នន័យជាមុន",
+        "noPreviewAvailable": "គ្មានការបង្ហាញជាមុនអាចប្រើបាន",
+        "preview": "{{appName}}បង្ហាញជាមុន",
+        "selectToPreview": "&lt;0&gt;ជ្រើសសំណុំទិន្នន័យដើម្បីមើលការមើលជាមុន &lt;/0&gt;&lt;1&gt;- OR -&lt;/1&gt;&lt;2&gt;ទៅកាន់ផែនទី&lt;/2&gt;",
+        "doesNotContainGeospatialData": "ឯកសារនេះមិនមានទិន្នន័យភូមិសាស្ត្រទេ។"
+    },
+    "AR": {
+        "title": "ឧបករណ៍សាកល្បង៖អេអរ",
+        "btnResetRealign": "កំណត់ការតម្រឹមត្រីវិស័យឡើងវិញ",
+        "arTool": "ឧបករណ៍អេអរ",
+        "resetAlignmentTitle": "កំណត់ការតម្រឹមឡើងវិញ",
+        "manualAlignmentTitle": "តម្រឹមដោយដៃ",
+        "confirmText": "ទទួលបាន"
+    },
+    "viewModels": {
+        "inDataCatalogue": "នៅក្នុងកាតាឡុកទិន្នន័យ",
+        "inMultipleLocations": "នៅក្នុងទីតាំងជាច្រើនរួមមាន៖ ",
+        "searchNoCatalogueItem": "សូមទោសមិនមានធាតុកាតាឡុកដែលត្រូវនឹងសំណួរស្វែងរករបស់អ្នកទេ។",
+        "searchCatalogueItem": "ធាតុកាតាឡុក",
+        "searchLocations": "ទីតាំង",
+        "searchNoPlaceNames": "សូមទោសគ្មានឈ្មោះទីកន្លែងផ្លូវការត្រូវនឹងសំណួរស្វែងរករបស់អ្នកទេ",
+        "searchPlaceNames": "ឈ្មោះទីកន្លែងផ្លូវការ",
+        "searchAddresses": "អាសយដ្ឋាន",
+        "searchErrorOccurred": "កំហុសមួយបានកើតឡើងខណៈពេលកំពុងស្វែងរក។ សូមពិនិត្យការភ្ជាប់អ៊ីនធឺណិតរបស់អ្នកឬព្យាយាមម្តងទៀតពេលក្រោយ។",
+        "searchNoLocations": "សូមទោសគ្មានទីតាំងណាត្រូវនឹងសំណួរស្វែងរករបស់អ្នកទេ។"
+    },
+    "chart": {
+        "download": "ទាញយក",
+        "expand": "ធ្វើអោយធំ",
+        "closePanel": "បិទផ្ទាំង",
+        "sectionLabel": "ក្រាប"
+    },
+    "dataCatalog": {
+        "groupEmpty": "ក្រុមនេះទទេ",
+        "groupRemove": "យកក្រុមនេះចេញ"
+    },
+    "loader": {
+        "loadingMessage": "កំពុង..."
+    },
+    "dragDrop": {
+        "text": "&lt;0&gt;អូសនិងទម្លាក់&lt;/0&gt;&lt;1&gt;ទិន្នន័យរបស់អ្នកគ្រប់ទីកន្លែងដើម្បីបង្ហាញនៅលើផែនទី&lt;1&gt;"
+    },
+    "concept": {
+        "summary": {
+            "addFirstText": "បន្ថែមលក្ខខណ្ឌថ្មី",
+            "addMoreText": "បន្ថែមលក្ខខណ្ឌ"
+        },
+        "inactive": {
+            "newText": "លក្ខខណ្ឌថ្មី",
+            "cancel": "បោះបង់"
+        },
+        "active": {
+            "remove": "យកចេញលក្ខខណ្ឌ",
+            "edit": "កែសម្រួលលក្ខខណ្ឌ"
+        }
+    },
+    "timer": {
+        "nextScheduledUpdateCountdown": "ការធ្វើបច្ចុប្បន្នភាពទិន្នន័យបន្ទាប់នៅក្នុងរយៈពេល{{timeCountdown}}",
+        "nextScheduledUpdateTime": "ការធ្វើបច្ចុប្បន្នភាពទិន្នន័យបន្ទាប់នៅពេល{{scheduledUpdateTime}}"
+    },
+    "search": {
+        "searchCatalogue": "ស្វែងរកកាតាឡុក",
+        "placeholder": "ស្វែងរកទីតាំង",
+        "viewMore": "បង្ហាញលទ្ធផល{{name}}ច្រើនជាងមុន",
+        "viewLess": "បង្ហាញលទ្ធផល{{name}}តិចជាងមុន",
+        "search": "ស្វែងរក{{searchText}}ក្នុងកាតាឡុកទិន្នន័យ",
+        "data": "ទិន្នន័យ",
+        "done": "រួចរាល់",
+        "resultsLabel": "លទ្ធផលពីការស្វែងរក"
+    },
+    "addData": {
+        "note": "&lt;0&gt;សម្គាល់៖&lt;/0&gt;ទិន្នន័យដែលបានបន្ថែមតាមមធ្យោបាយនេះមិនត្រូវបានរក្សាទុកឬមិនធ្វើឱ្យអ្នកផ្សេងមើលឃើញទេ។.",
+        "back": "ក្រោយ",
+        "dragDrop": "ទាញនិងទម្លាក់",
+        "webTitle": "បន្ថែមទិន្នន័យគេហទំព័រ",
+        "browse": "រុករក…",
+        "urlInputBtn": "បន្ថែម",
+        "webFile": "&lt;0&gt;ជំហានទី ២៖/0&gt; អាសយដ្ឋាន URL នៃឯកសារទិន្នន័យឬសេវាកម្មគេហទំព័រ",
+        "webFileType": "&lt;0&gt;ជំហានទី ១៖&lt;/0&gt; ជ្រើសរើសប្រភេទឯកសារ (ជាជម្រើស)",
+        "webAdd": "បន្ថែមទិន្នន័យពីគេហទំព័រ",
+        "localFile": "&lt;0&gt;ជំហានទី ២៖&lt;/0&gt; ជ្រើសរើសឯកសារ",
+        "localFileType": "&lt;0&gt;ជំហានទី ១៖&lt;/0&gt; ជ្រើសរើសប្រភេទឯកសារ (ជាជម្រើស)",
+        "searchPlaceholder": "ស្វែងរកកាតាឡុក",
+        "searchPlaceholderWhole": "ស្វែងរកក្នុងកាតាឡុកទាំងមូល",
+        "dataCatalogue": "កាតាឡុកទិន្នន័យ",
+        "myData": "ទិន្នន័យរបស់ខ្ញុំ",
+        "done": "រួចរាល់",
+        "closeDataPanel": "បិទផ្ទាំងទិន្នន័យ",
+        "btnHide": "លាក់",
+        "addDataBtnText": "បញ្ចូលទិន្នន័យ"
+    },
+    "satelliteGuidance": {
+        "titleV": "តើខ្ញុំមើលរូបភាពព័ណ៌មិនពិតដោយរបៀបណា?",
+        "bodyIV": "រូបភាពផ្កាយរណបប្រហែលជាមិនមានសម្រាប់ពេលវេលានិងទីតាំងដែលអ្នកចង់បាន។ ប្រសិនបើអ្នកចង់បានទីតាំងជាក់លាក់ចុច“ ច្រោះរូបភាពតាមទីតាំង” នៅក្នុងប្រអប់ទិន្នន័យរបស់អ្នក។",
+        "titleIV": "ច្រោះរូបភាពតាមទីតាំង",
+        "titleIII": "កំពុងបង្ហាញរូបភាពមុនៗ",
+        "bodyII": "អ្នកប្រហែលជាត្រូវកែសម្រួលកម្រិតពង្រីករបស់អ្នកដើម្បីធ្វើឱ្យរូបភាពផ្កាយរណបអាចមើលឃើញនៅលើផែនទី។",
+        "titleII": "តើរូបភាពផ្កាយរណបរបស់ខ្ញុំនៅឯណា?",
+        "nextI": "បង្ហាញការណែនាំ",
+        "prevI": "អត់ទេ​ អរគុណ​ហើយ",
+        "bodyI": "ការណែនាំដ៏លឿនរហ័សដើម្បីទទួលបានអត្ថប្រយោជន៍ច្រើនបំផុតពីរូបភាពផ្កាយរណបមុនៗ។",
+        "titleI": "រូបភាពផ្កាយរណប៖ តើខ្ញុំអាច...?",
+        "dismissText": "យល់ហើយ អរគុណ!",
+        "menuTitle": "អ្នកអាចចូលទៅកាន់ការណែនាំផែនទីនៅពេលណាក៏បានដោយមើលនៅក្នុង&lt;2&gt;ម៉ឺនុយជំនួយ&lt;/2&gt;។"
+    },
+    "story": {
+        "hideStoryPanel": "លាក់ឧបករណ៍បង្កើតរឿង",
+        "storyEditor": "ឧបករណ៍និពន្ធរឿង",
+        "mobileViewStory": "មើលរឿង{{storiesLength}}",
+        "dismissText": "យល់ហើយ សូមអរគុណ!",
+        "story": "រឿងរ៉ាវ",
+        "promptHtml2": "&lt;0&gt;&lt;0&gt;INTRODUCING&lt;/0&gt;&lt;1&gt;រឿងរ៉ាវទិន្នន័យ&lt;/1&gt;&lt;2&gt;បង្កើតនិងចែករំលែករឿងបែបរ៉ាវអន្តរកម្មដោយផ្ទាល់ពីផែនទីរបស់អ្នក។&lt;/2&gt;&lt;/0&gt;",
+        "promptHtml1": "&lt;0&gt;អ្នកអាចមើលនិងបង្កើតរឿងរ៉ាវបានគ្រប់ពេលដោយចុចត្រង់នេះ។&lt;/0&gt;",
+        "navBtnMobile": "ទៅកាន់រឿង{{title}}",
+        "nextBtn": "ទៅឈុតបន្ទាប់",
+        "navBtn": "ទៅកាន់រឿង{{title}}",
+        "untitled": "ឈុតគ្មានចំណងជើង",
+        "previousBtn": "ទៅកាន់ឈុតមុនៗ",
+        "exitBtn": "ចាកចេញពីរឿង",
+        "locationBtn": "ឈុតឆាកកណ្តាល",
+        "editor": {
+            "saveStory": "រក្សាទុក",
+            "saveBtn": "រក្សាទុក",
+            "cancelEditing": "បោះបង់",
+            "cancelBtn": "បោះបង់",
+            "placeholder": "បញ្ចូលចំណងជើងនៅទីនេះ"
+        },
+        "captureScene": "ចាប់យកឈុត",
+        "captureSceneTitle": "ចាប់យកឈុតបច្ចុប្បន្ន",
+        "play": "លេងរឿង",
+        "preview": "បង្ហាញជាមុនពីរឿង",
+        "cancelRemove": "បោះបង់",
+        "confirmRemove": "លុប",
+        "removeStoriesPanel": "តើអ្នកប្រាកដជាចង់លុប{{ count }}ឈុត?",
+        "removeAllStories": "លុបទាំងអស់",
+        "message": "&lt;2&gt;នេះជាឧបករណ៍កែសម្រួលរឿងរបស់អ្នក&lt;/2&gt;&lt;1&gt;បង្កើតនិងចែករំលែករឿងរ៉ាវបែបអន្តរកម្មដោយផ្ទាល់ពីផែនទីរបស់អ្នក&lt;1&gt;&lt;0&gt;&lt;0&gt;&lt;/0&gt;ធ្វើការចាប់ផ្តើម&lt;/0&gt;&lt;/1&gt;&lt;/1&gt;",
+        "doesNotExist": "មិនមានរឿងទេ",
+        "untitledScene": "ឈុតគ្មានចំណងជើង",
+        "delete": "លុប",
+        "deleteStory": "លុប",
+        "recapture": "ចាប់យកឡើងវិញ",
+        "recaptureStory": "ចាប់យកឡើងវិញ",
+        "edit": "កែ",
+        "editStory": "កែ",
+        "view": "បង្ហាញ",
+        "viewStory": "បង្ហាញ"
+    },
+    "welcomeMessage": {
+        "WelcomeMessageDissmissText": "កុំបង្ហាញខ្ញុំម្តងទៀត",
+        "WelcomeMessageSecondaryBtn": "ជ្រើសយកការណែនាំ",
+        "WelcomeMessagePrimaryBtn": "ស្វែងរកទិន្នន័យ",
+        "WelcomeMessage": "ការដែលអាចអាចប្រើទិន្នន័យភូមិសាស្ត្រ ពីប្រភពទិន្នន័យជាច្រើន​ ទាំងអស់ពីទីតាំងងាយស្រួលមួយ។",
+        "title": "ទិន្នន័យភូមិសាស្ត្របានបង្កើត&lt;2&gt;ភាពងាយស្រួល។&lt;/2&gt;"
+    },
+    "featureInfo": {
+        "latLon": "រយៈទទឹង/រយៈបណ្តោយ ",
+        "siteData": "ទិន្នន័យគេហទំព័រ",
+        "noInfoAvailable": "មិនមានព័ត៌មាន",
+        "locationMarker": "សញ្ញាសម្គាល់ទីតាំង",
+        "satelliteSuggestionBtn": "បង្ហាញ{{catalogItemName}}នៅទីតាំងនេះ",
+        "btnCloseFeature": "បិទផ្ទាំងទិន្នន័យ",
+        "panelHeading": "ព័ត៌មានពីធាតុ",
+        "userSelection": "ការជ្រើសរើសអ្នកប្រើ",
+        "clickToAddData": "ចុច'$t(addData.addDataBtnText)'ដើម្បីបន្ថែមទិន្នន័យទៅកាន់ផែនទី។",
+        "noDataAvailable": "មិនមានទិន្នន័យនៅទីនេះទេ សាកល្បងទីតាំងផ្សេងទៀត។",
+        "clickMap": "ចុចលើផែនទីដើម្បីស្វែងយល់បន្ថែមអំពីទីតាំង",
+        "pickLocation": "រើសទីតាំង",
+        "download": "ទាញយកតារាងនេះ",
+        "catalogItem": {
+            "featureInfoShown": "ដំបូង{{maximum}}ត្រូវបានបង្ហាញខាងក្រោម។",
+            "featuresFound": "{{featCount}}{catalogItemName} ធាតុត្រូវបានរកឃើញ។",
+            "moreThanMax": "ច្រើនជាង{{maximum}}{{catalogItemName}}ធាតុត្រូវបានរកឃើញ។"
+        }
+    },
+    "sui": {
+        "notifications": {
+            "denyText": "ប្រហែលជា​ពេលក្រោយ",
+            "confirmText": "បាទ/ចាស់",
+            "message": "តើអ្នកចង់មើលវាឥឡូវនេះទេ?",
+            "title": "ផែនទីនេះមានរឿងមួយ"
+        }
+    },
+    "helpMenu": {
+        "next": "បន្ទាប់",
+        "done": "រួចរាល់",
+        "helpMenuMoreHelpTitle": "ជំនួយបន្ថែម",
+        "helpMenuSatelliteGuideTitle": "បង្ហាញការណែនាំពីរូបភាពផ្កាយរណប",
+        "helpMenuOpenWelcome": "បង្ហាញសារស្វាគមន៍",
+        "helpMenuHeader": "តើ​អ្នក​ចង់​ធ្វើអ្វី?",
+        "btnTitle": "ទទួលជំនួយ",
+        "btnText": "ជំនួយ"
+    },
+    "feedback": {
+        "feedbackBtnText": "ផ្ដល់​មតិ​យោបល់",
+        "send": "ផ្ញើ",
+        "sending": "កំពុងផ្ញើ …",
+        "cancel": "បោះបង់",
+        "captionText": "នេះជួយយើងដោះស្រាយបញ្ហាដោយអនុញ្ញាតឱ្យយើងមើលអ្វីដែលអ្នកកំពុងមើលឃើញ",
+        "title": "មតិ",
+        "shareWithDevelopers": "ចែករំលែកផ្ទាំងបង្ហាញផែនទីរបស់ខ្ញុំជាមួយ{{appName}}អ្នកអភិវឌ្ឍន៍",
+        "commentQuestion": "យោបល់ឬសំណួរ",
+        "email": "អាសយដ្ឋានអ៊ីមែល (ជាជម្រើស)<br>&lt;2&gt;យើងមិនអាចទាក់ទងដោយគ្មានវាបានទេ! &lt;/2&gt;",
+        "yourName": "ឈ្មោះរបស់អ្នក (ជាជម្រើស)",
+        "close": "បិទមតិ",
+        "feedbackPreamble": "យើងចង់ដឹងពីអ្នក!"
+    },
+    "settingPanel": {
+        "performanceLabel": "កម្រិតដំណើរការ",
+        "qualityLabel": "គុណភាព",
+        "mapQuality": "គុណភាពផែនទីរ៉ាស្ទ័រ៖",
+        "nativeResolutionHeader": "ប្រើរេសូលូសិនពីឧបករណ៍ដើម",
+        "imageOptimisation": "ការបង្កើនបង្កើនគុណភាពរូបភាព",
+        "baseMap": "ផែនទីគោល",
+        "mapView": "ការបង្ហាញផែនទី",
+        "btnText": "ផែនទី",
+        "btnTitle": "ផ្លាស់ប្តូរការបង្ហាញ",
+        "screen": "ស្គ្រីន",
+        "native": "ដើម",
+        "nativeResolutionLabel": "ចុចដើម្បីបញ្ឈប់ការប្រើប្រាស់{{resolution1}}កម្រិតរេសូលូសិននិងចាប់ផ្តើមប្រើប្រាស់{{resolution2}}រេសូលូសិន",
+        "qualityLabels": {
+            "lowerPerformance": "គុណភាពអតិផរមា ការដំណើរការទាប",
+            "balancedPerformance": "តុល្យភាពកម្រិតដំណើរការនិងគុណភាព",
+            "maximumPerformance": "កម្រិតដំណើរការអតិបរមា គុណភាពទាប"
+        },
+        "viewerModeLabels": {
+            "Leaflet": "2D",
+            "CesiumEllipsoid": "រលោង 3D",
+            "CesiumTerrain": "ភូមិសាស្ត្រ 3D"
+        },
+        "none": "(គ្មាន)"
+    },
+    "toolsPanel": {
+        "btnTitle": "ឧបករណ៍កម្រិតខ្ពស់",
+        "btnText": "ឧបករណ៍"
+    },
+    "countDatasets": {
+        "btnCount": "រាប់ចំនួនសំណុំទិន្នន័យ",
+        "title": "រាប់ចំនួនសំណុំទិន្នន័យ",
+        "recount": "រាប់ឡើងវិញ",
+        "subTotals": "<div> {{name}}: {{items}} ធាតុ / {{groups}} ក្រុម</div>",
+        "totals": "<div>កាតាឡុកមាន{{items}}ធាតុនៅក្នុង{{groups}}ក្រុម</div>",
+        "countingMessage": "កំពុងរាប់ សូមរង់ចាំ …",
+        "loadError": "មានបញ្ហាក្នុងការផ្ទុក។",
+        "btnText": "ចាប់ផ្តើម"
+    },
+    "share": {
+        "btnMapShareTitle": "ចែករំលែកផែនទីរបស់អ្នកជាមួយអ្នកដទៃ",
+        "btnStoryShareTitle": "ចែករំលែករឿងរ៉ាវរបស់អ្នកជាមួយអ្នកដទៃ",
+        "btnCatalogShareTitle": "ចែករំលែកកាតាឡុករបស់អ្នកជាមួយអ្នកដទៃ",
+        "btnMapShareText": "ចែករំលែក/បោះពុម្ព",
+        "btnStoryShareText": "ចែករំលែក",
+        "btnCatalogShareText": "ចែករំលែក",
+        "shortenUsingService": "បង្រួម URL ចែករំលែកដោយប្រើសេវាកម្មគេហទំព័រ",
+        "embedTitle": "ដើម្បីបង្កប់ក្នុងគេហទំព័រ សូមចម្លងកូដនេះដើម្បីបង្កប់ផែនទីនេះទៅក្នុងទំព័រ HTML៖",
+        "btnAdvanced": "ជម្រើសកម្រិតខ្ពស់",
+        "creatingPrintView": "កំពុងបង្កើតទិដ្ឋភាពបោះពុម្ព…",
+        "printViewButton": "បង្ហាញទិដ្ឋភាពបោះពុម្ព",
+        "printButton": "បោះពុម្ព",
+        "printExplanation": "បើកប្រភេទដែលអាចបោះពុម្ពបានពីផែនទីនេះ។",
+        "printTitle": "បោះពុម្ពផែនទី",
+        "generatingUrl": "កំពុងបង្កើត URL ចែករំលែក…",
+        "localDataNote": "&lt;0&gt;&lt;0&gt;សម្គាល៖&lt;/0&gt;&lt;/0&gt;&lt;1&gt;ប្រភពទិន្នន័យខាងក្រោមនឹងមិនត្រូវបានចែករំលែកទេពីព្រោះវារួមបញ្ចូលទិន្នន័យពីប្រព័ន្ធមូលដ្ឋានមួយនេះ។ ដើម្បីចែករំលែកប្រភពទិន្នន័យទាំងនេះ សូមបោះផ្សាយទិន្នន័យរបស់ពួកគេនៅលើគេហទំព័រនិង&lt;2&gt;បន្ថែមពួកវាដោយប្រើ URL&lt;/2&gt;.&lt;/1&gt;",
+        "shortLinkError": "កំហុសមួយបានកើតឡើងខណៈពេលព្យាយាមបង្រួម URL។​ សូមពិនិត្យការភ្ជាប់អ៊ីនធឺណិតរបស់អ្នកហើយព្យាយាមម្តងទៀត។",
+        "shortLinkShortening": "កំពុងធ្វើអោយខ្លី…",
+        "browserPrint": "ដើម្បីទទួលបានលទ្ធផលព្រីនអោយកាន់តែប្រសើរ សូមប្រើ{{appName}}ប៊ូតុងព្រីនជាជាងការប្រើឧបករណ៍ព្រីនក្នុងកម្មវិធីរុករករបស់អ្នក។"
+    },
+    "legend": {
+        "elev": "រយៈកម្ពស់",
+        "n": "ខាងជើង",
+        "e": "ខាងកើត",
+        "zone": "ហ្សូន",
+        "lon": "រយៈបណ្តោយ",
+        "lat": "រយៈទទឹង"
     }
 }
