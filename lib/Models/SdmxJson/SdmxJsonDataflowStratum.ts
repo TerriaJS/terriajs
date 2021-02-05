@@ -47,7 +47,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     let dataflowStructure: SdmxJsonStructureMessage = await loadSdmxJsonStructure(
       proxyCatalogItemUrl(
         catalogItem,
-        `${catalogItem.url}/dataflow/${catalogItem.agencyId}/${catalogItem.dataflowId}?references=all`
+        `${catalogItem.baseUrl}/dataflow/${catalogItem.agencyId}/${catalogItem.dataflowId}?references=all`
       ),
       false
     );

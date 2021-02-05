@@ -34,6 +34,7 @@ export default class SdmxJsonCatalogItem
   }
 
   private _currentCsvUrl: string | undefined;
+  private _currentCsvString: string | undefined;
 
   constructor(
     id: string | undefined,
@@ -170,13 +171,26 @@ export default class SdmxJsonCatalogItem
     );
   }
 
+  /**
+   * Returns base URL (from traits), as SdmxJsonCatalogItem will override `url` property with SDMX Data request
+   */
   @computed
-  get csvUrl(): string {
+  get baseUrl(): string | undefined {
+    return super.url;
+  }
+
+  /**
+   * SdmxJsonCatalogItem data request URL, this overrides `traits.url` (if you need `baseUrl` - use `SdmxJsonCatalogItem.baseUrl`)
+   */
+  @computed
+  get url(): string | undefined {
     if (this.viewBy === "time") {
       // do something with time?
       // Currently all time slices are returned at once - which is probably fine for the moment
     }
-    return `${this.url}/data/${this.dataflowId}/${this.dataKey}`;
+    return isDefined(super.url)
+      ? `${super.url}/data/${this.dataflowId}/${this.dataKey}`
+      : undefined;
   }
 
   @computed
@@ -193,24 +207,33 @@ export default class SdmxJsonCatalogItem
       : undefined;
   }
 
+  async _exportData() {
+    if (this._currentCsvString) {
+      return {
+        name: `${this.name || this.uniqueId}.csv`,
+        file: new Blob([this._currentCsvString])
+      };
+    } else {
+      return this.url;
+    }
+  }
+
   /**
    * Even though this is Sdmx**Json**CatalogItem, we download sdmx-csv.
    */
   private async downloadData(): Promise<string[][] | undefined> {
+    if (!this.url) return;
     // FIXME: This is a bad way of handling re-loading the same data
-    if (
-      !isDefined(this.regionProviderList) ||
-      this._currentCsvUrl === this.csvUrl
-    )
+    if (!isDefined(this.regionProviderList) || this._currentCsvUrl === this.url)
       return this.dataColumnMajor;
 
-    this._currentCsvUrl = this.csvUrl;
+    this._currentCsvUrl = this.url;
 
     let columns: string[][] = [];
 
     try {
       const csvString = await new Resource({
-        url: proxyCatalogItemUrl(this, this.csvUrl),
+        url: proxyCatalogItemUrl(this, this.url),
         headers: {
           Accept: "application/vnd.sdmx.data+csv; version=1.0.0"
         }
@@ -222,6 +245,8 @@ export default class SdmxJsonCatalogItem
           message: i18next.t("models.sdmxCatalogItem.loadDataErrorTitle", this)
         });
       }
+
+      this._currentCsvString = csvString;
 
       columns = await Csv.parseString(csvString, true);
     } catch (error) {
