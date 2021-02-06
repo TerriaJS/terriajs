@@ -61,13 +61,6 @@ export default class MagdaReference extends AccessControlMixin(
       }
     }),
     createStratumInstance(MagdaDistributionFormatTraits, {
-      id: "CSV",
-      formatRegex: "^csv(-geo-)?",
-      definition: {
-        type: "csv"
-      }
-    }),
-    createStratumInstance(MagdaDistributionFormatTraits, {
       id: "CZML",
       formatRegex: "^czml$",
       definition: {
@@ -109,6 +102,13 @@ export default class MagdaReference extends AccessControlMixin(
       urlRegex: "FeatureServer/d",
       definition: {
         type: "esri-featureServer"
+      }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+      id: "CSV",
+      formatRegex: "^csv(-geo-)?",
+      definition: {
+        type: "csv"
       }
     })
   ];
