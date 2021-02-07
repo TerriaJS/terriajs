@@ -37,10 +37,10 @@ export class ItemSearchTraits extends ModelTraits {
   providerType?: string;
 
   @anyTrait({
-    name: "options",
+    name: "providerOptions",
     description: "Options for the search provider."
   })
-  options?: JsonObject;
+  providerOptions?: JsonObject;
 
   @primitiveTrait({
     type: "string",
