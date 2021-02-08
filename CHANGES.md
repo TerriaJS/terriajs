@@ -4,6 +4,8 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.66)
+* Restore `cesiumTerrainUrl` config parameter. [#5124](https://github.com/TerriaJS/terriajs/pull/5124)
+* I18n-ify strings in settings panel. [#5124](https://github.com/TerriaJS/terriajs/pull/5124)
 * Moved `DataCustodianTraits` into `CatalogMemberTraits` and `CatalogMemberReferenceTraits`.
 * `TableMixin` styles ("Display variables") will now look for column title if style title is undefined
 * Add fallback colours when Color.fromCssColorString is used.
@@ -33,6 +35,7 @@ Change Log
 * Re-added merging of csv row properties and vector tile feature properties for feature info (to match v7 behaviour).
 * Fixes a bug in pedestrian mode where dropping the pedestrian in northern hemisphere will position the camera underground.
 * Fix Leaflet `ImageryLayer` feature info sorting
+* Fix hard-coded colour value in Story
 * [The next improvement]
 
 #### 8.0.0-alpha.65
