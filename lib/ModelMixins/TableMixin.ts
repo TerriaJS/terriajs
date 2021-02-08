@@ -321,10 +321,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         options: this.tableStyles.map(style => {
           return {
             id: style.id,
-            name:
-              style.styleTraits.title ??
-              this.tableColumns.find(col => col.name === style.id)?.title ??
-              style.id
+            name: style.title
           };
         }),
         selectedId: this.activeStyle,
@@ -657,6 +654,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
                 featureRegion !== undefined && featureRegion !== null
                   ? featureRegion.toString()
                   : "";
+
               let rowNumber = filterRows(
                 valuesAsRegions.regionIdToRowNumbersMap.get(
                   regionIdString.toLowerCase()
@@ -703,22 +701,49 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
                 if (!isDefined(regionType)) return undefined;
 
-                const regionId = filterRows(
+                const regionIds =
                   regionColumn.valuesAsRegions.regionIdToRowNumbersMap.get(
                     feature.properties[regionType.regionProp].toLowerCase()
-                  )
-                );
+                  ) ?? [];
 
-                let d: JsonObject | null = isDefined(regionId)
-                  ? this.getRowValues(regionId)
+                const filteredRegionId = filterRows(regionIds);
+
+                let d: JsonObject | null = isDefined(filteredRegionId)
+                  ? this.getRowValues(filteredRegionId)
                   : null;
 
                 if (d === null) return;
 
+                // Preserve values from d and insert feature properties after entries from d
+                const featureData = Object.assign({}, d, feature.properties, d);
+
+                if (
+                  !isDefined(featureData._terria_getChartDetails) &&
+                  this.activeTableStyle.regionColumn &&
+                  (this.discreteTimes?.length ?? 0) > 0 &&
+                  this.activeTableStyle.timeColumn &&
+                  this.activeTableStyle.colorColumn &&
+                  Array.isArray(regionIds) &&
+                  regionIds.length > 1
+                ) {
+                  const chartColumns = [
+                    this.activeTableStyle.timeColumn,
+                    this.activeTableStyle.colorColumn
+                  ];
+                  featureData._terria_getChartDetails = () => ({
+                    title: this.activeTableStyle.colorColumn?.title,
+                    csvData: [
+                      chartColumns.map(col => col!.name).join(","),
+                      ...regionIds.map(i =>
+                        chartColumns.map(col => col.values[i]).join(",")
+                      )
+                    ].join("\n")
+                  });
+                }
+
                 return this.featureInfoFromFeature(
                   regionType,
-                  // Preserve values from d and insert feature properties after entries from d
-                  Object.assign({}, d, feature.properties, d),
+                  featureData,
                   feature.properties[regionType.uniqueIdProp]
                 );
               }
