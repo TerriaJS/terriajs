@@ -6,6 +6,7 @@ interface CssExports {
   'colorSplitter': string;
   'compassWidth': string;
   'dark': string;
+  'darkLighter': string;
   'darkWithOverlay': string;
   'frontComponentZIndex': string;
   'grey': string;
@@ -35,6 +36,7 @@ interface CssExports {
   'textLight': string;
   'textLightDimmed': string;
   'textLightTranslucent': string;
+  'toolPrimaryColor': string;
   'trainerHeight': string;
   'workbenchWidth': string;
 }
