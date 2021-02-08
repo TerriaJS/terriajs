@@ -31,7 +31,9 @@ export default class IonImageryCatalogItem
     if (isDefined(this.ionAssetId)) {
       const provider = new IonImageryProvider({
         assetId: this.ionAssetId,
-        accessToken: this.ionAccessToken,
+        accessToken:
+          this.ionAccessToken ||
+          this.terria.configParameters.cesiumIonAccessToken,
         server: this.ionServer
       });
       if (this.attribution) {
