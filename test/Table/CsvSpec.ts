@@ -17,6 +17,6 @@ describe("Csv", function() {
   it("can read from csv string that includes comments", function() {
     const csvString =
       "x,y\r\n1,5\r\n3,8\r\n4,-3\r\n# this is a comment\n// and this\n";
-    return Csv.parseString(csvString, true).then(checkCsvParse);
+    return Csv.parseString(csvString, true, true).then(checkCsvParse);
   });
 });
