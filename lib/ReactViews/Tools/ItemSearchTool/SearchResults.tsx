@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import Mustache from "mustache";
-import React from "react";
+import React, { useState } from "react";
 import {
   useTranslation,
   WithTranslation,
@@ -8,32 +8,69 @@ import {
 } from "react-i18next";
 import { useVirtual } from "react-virtual";
 import styled from "styled-components";
+import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
 import { ItemSearchResult } from "../../../Models/ItemSearchProvider";
 import parseCustomMarkdownToReact from "../../Custom/parseCustomMarkdownToReact";
+import { HideAllResults, HighlightResults } from "./Actions";
 
 const Box: any = require("../../../Styled/Box").default;
+const Button = require("../../../Styled/Button").default;
+
+type Selection =
+  | { is: "none" }
+  | { is: "highlightAll" }
+  | { is: "hideAll" }
+  | { is: "singleResult"; result: ItemSearchResult };
 
 export interface SearchResultsProps extends WithTranslation {
+  item: SearchableItemMixin.Instance;
   results: ItemSearchResult[];
-  selectedResult?: ItemSearchResult;
   template?: string;
-  onSelectResult: ResultClickHandler;
 }
 
 type ResultClickHandler = (result: ItemSearchResult) => void;
 
 const SearchResults: React.FC<SearchResultsProps> = props => {
-  const { results, selectedResult } = props;
+  const { item, results } = props;
+  const [currentSelection, setCurrentSelection] = useState<Selection>({
+    is: "none"
+  });
+  const selectedResult =
+    currentSelection.is === "singleResult"
+      ? currentSelection.result
+      : undefined;
   const parentRef = React.createRef<HTMLDivElement>();
   const list = useVirtual({
     size: results.length,
     parentRef,
     estimateSize: React.useCallback(() => 50, [])
   });
+  const [t] = useTranslation();
+
+  const toggleSelection = (newSelection: Selection) => {
+    currentSelection.is === newSelection.is &&
+    (currentSelection as any).result === (newSelection as any).result
+      ? setCurrentSelection({ is: "none" })
+      : setCurrentSelection(newSelection);
+  };
 
   return (
     <Wrapper>
       <ResultsCount count={results.length} />
+      <ActionMenu>
+        <ActionButton
+          selected={currentSelection.is === "highlightAll"}
+          onClick={() => toggleSelection({ is: "highlightAll" })}
+        >
+          {t("itemSearchTool.actions.highlightAll")}
+        </ActionButton>
+        <ActionButton
+          selected={currentSelection.is === "hideAll"}
+          onClick={() => toggleSelection({ is: "hideAll" })}
+        >
+          {t("itemSearchTool.actions.hideAll")}
+        </ActionButton>
+      </ActionMenu>
       <List ref={parentRef} height={`250px`}>
         <ListInner height={`${list.totalSize}px`}>
           {list.virtualItems.map(({ index, ...row }) => (
@@ -42,7 +79,9 @@ const SearchResults: React.FC<SearchResultsProps> = props => {
               result={results[index]}
               isSelected={results[index].id === selectedResult?.id}
               isEven={index % 2 === 0}
-              onClick={props.onSelectResult}
+              onClick={() =>
+                toggleSelection({ is: "singleResult", result: results[index] })
+              }
               template={props.template}
               style={{
                 position: "absolute",
@@ -56,6 +95,15 @@ const SearchResults: React.FC<SearchResultsProps> = props => {
           ))}
         </ListInner>
       </List>
+      {currentSelection.is === "highlightAll" && (
+        <HighlightResults item={item} results={results} />
+      )}
+      {currentSelection.is === "singleResult" && (
+        <HighlightResults item={item} results={[currentSelection.result]} />
+      )}
+      {currentSelection.is === "hideAll" && (
+        <HideAllResults item={item} results={results} />
+      )}
     </Wrapper>
   );
 };
@@ -142,5 +190,30 @@ export const ResultsCount: React.FC<{ count: number }> = ({ count }) => {
     </Box>
   );
 };
+
+const ActionButton = styled(Button).attrs(props => ({
+  primary: props.selected,
+  secondary: !props.selected
+}))`
+  min-height: 20px;
+  padding: 1em;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  border-radius: 5px;
+`;
+
+const ActionMenu = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.5em;
+  background-color: ${p => p.theme.charcoalGrey};
+
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+
+  > ${ActionButton}:first-child {
+    margin-right: 1em;
+  }
+`;
 
 export default withTranslation()(SearchResults);

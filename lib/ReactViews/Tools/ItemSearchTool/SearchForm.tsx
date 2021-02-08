@@ -11,11 +11,13 @@ import styled from "styled-components";
 import ItemSearchProvider, {
   EnumItemSearchParameter,
   ItemSearchParameter,
+  ItemSearchParameterType,
   ItemSearchResult,
   NumericItemSearchParameter,
   TextItemSearchParameter
 } from "../../../Models/ItemSearchProvider";
 import ErrorComponent from "./ErrorComponent";
+import { ItemSearchQuery } from "./ItemSearchTool";
 import Loading from "./Loading";
 
 const Box: any = require("../../../Styled/Box").default;
@@ -25,11 +27,8 @@ const Text: any = require("../../../Styled/Text").default;
 export interface SearchFormProps extends WithTranslation {
   itemSearchProvider: ItemSearchProvider;
   parameters: ItemSearchParameter[];
-  onResults: (
-    parameterValues: Record<string, any>,
-    results: ItemSearchResult[]
-  ) => void;
-  values: Record<string, any>;
+  query: ItemSearchQuery;
+  onResults: (query: ItemSearchQuery, results: ItemSearchResult[]) => void;
   onValueChange?: (parameterId: string, value: any) => void;
   afterLoad?: () => void;
 }
@@ -44,30 +43,38 @@ const SearchForm: React.FC<SearchFormProps> = props => {
   const { parameters, itemSearchProvider } = props;
   const [t] = useTranslation();
   const [state, setState] = useState<State>({ is: "initial" });
-  const [values, setValues] = useState<Record<string, any>>(props.values);
+  const [query, setQuery] = useState<ItemSearchQuery>(props.query);
 
   useEffect(
     function setValuesFromProps() {
-      setValues(props.values);
+      setQuery(props.query);
     },
-    [props.values]
+    [props.query]
   );
 
-  const setValue = (id: string) => (value: any) => {
-    const newValues = { ...values, [id]: value };
+  const setParameterValue = (id: string, type: ItemSearchParameterType) => (
+    value: any
+  ) => {
+    const newQuery: ItemSearchQuery = {
+      ...query,
+      [id]: { type, value }
+    };
     // Delete the value so that we don't trigger search for it
-    if (newValues[id] === undefined) delete newValues[id];
-    setValues(newValues);
+    if (newQuery[id] === undefined) delete newQuery[id];
+    setQuery(newQuery);
     if (value !== undefined) props.onValueChange?.(id, value);
   };
 
   function search() {
+    const parameterValues: Map<string, any> = new Map(
+      Object.entries(query).map(([id, { value }]) => [id, value])
+    );
     setState({ is: "searching" });
     itemSearchProvider
-      .search(new Map(Object.entries(values)))
+      .search(parameterValues)
       .then(results => {
         setState({ is: "results", results });
-        props.onResults(values, results);
+        props.onResults(query, results);
       })
       .catch(error => {
         console.warn(error);
@@ -83,7 +90,7 @@ const SearchForm: React.FC<SearchFormProps> = props => {
     }
   };
 
-  const clearForm = () => setValues({});
+  const clearForm = () => setQuery({});
 
   const disabled = state.is === "searching";
 
@@ -102,8 +109,8 @@ const SearchForm: React.FC<SearchFormProps> = props => {
           <Field key={p.id}>
             <Parameter
               parameter={p}
-              onChange={setValue(p.id)}
-              value={values[p.id]}
+              onChange={setParameterValue(p.id, p.type)}
+              value={query[p.id]?.value}
               disabled={disabled}
               t={t}
             />

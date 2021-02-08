@@ -73,7 +73,7 @@ export default function Cesium3dTilesMixin<
   ) {
     readonly canZoomTo = true;
 
-    private tileset?: ObservableCesium3DTileset;
+    protected tileset?: ObservableCesium3DTileset;
 
     get isMappable() {
       return true;
@@ -472,10 +472,36 @@ export default function Cesium3dTilesMixin<
     }
 
     @action
-    addColorExpression(newColorExpr: [string, string]) {
+    applyShowExpression(newShowExpr: { condition: string; show: boolean }) {
+      const style = this.style || {};
+      const show = normalizeShowExpression(style?.show);
+      show.conditions.unshift([newShowExpr.condition, newShowExpr.show]);
+      this.setTrait(CommonStrata.user, "style", { ...style, show });
+    }
+
+    @action
+    removeShowExpression(condition: string) {
+      const show = this.style?.show;
+      if (!isJsonObject(show)) return;
+      if (!isObservableArray(show.conditions)) return;
+      const conditions = show.conditions.slice();
+      const idx = conditions.findIndex(e => e[0] === condition);
+      if (idx < 0) return;
+      conditions.splice(idx, 1);
+      this.setTrait(CommonStrata.user, "style", {
+        ...this.style,
+        show: {
+          ...show,
+          conditions
+        }
+      });
+    }
+
+    @action
+    applyColorExpression(newColorExpr: { condition: string; value: string }) {
       const style = this.style || {};
       const color = normalizeColorExpression(style?.color);
-      color.conditions.unshift(newColorExpr);
+      color.conditions.unshift([newColorExpr.condition, newColorExpr.value]);
       if (!color.conditions.find(c => c[0] === "true")) {
         color.conditions.push(["true", "color('#ffffff')"]); // ensure there is a default color
       }
@@ -486,12 +512,12 @@ export default function Cesium3dTilesMixin<
     }
 
     @action
-    removeColorExpression(exprHead: string) {
+    removeColorExpression(condition: string) {
       const color = this.style?.color;
       if (!isJsonObject(color)) return;
       if (!isObservableArray(color.conditions)) return;
       const conditions = color.conditions.slice();
-      const idx = conditions.findIndex(e => e[0] === exprHead);
+      const idx = conditions.findIndex(e => e[0] === condition);
       if (idx < 0) return;
       conditions.splice(idx, 1);
       this.setTrait(CommonStrata.user, "style", {
