@@ -1,6 +1,10 @@
 import i18next from "i18next";
 import { action } from "mobx";
+import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 import timeout from "../Core/timeout";
 import PickedFeatures from "../Map/PickedFeatures";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
@@ -8,6 +12,7 @@ import Cesium3dTilesMixin from "../ModelMixins/Cesium3dTilesMixin";
 import FeatureInfoMixin from "../ModelMixins/FeatureInfoMixin";
 import SearchableItemMixin from "../ModelMixins/SearchableItemMixin";
 import Cesium3DTilesCatalogItemTraits from "../Traits/Cesium3DCatalogItemTraits";
+import Cesium from "./Cesium";
 import CreateModel from "./CreateModel";
 import { ItemSearchResult } from "./ItemSearchProvider";
 import Mappable from "./Mappable";
@@ -77,4 +82,39 @@ export default class Cesium3DTilesCatalogItem
   unselectItemSearchResult({ id, idPropertyName }: ItemSearchResult) {
     this.removeColorExpression(`\${${idPropertyName}} === ${id}`);
   }
+
+  /**
+   * Zoom to an item search result.
+   */
+  zoomToItemSearchResult = action((result: ItemSearchResult) => {
+    if (this.terria.cesium === undefined) return;
+
+    const scene = this.terria.cesium.scene;
+    const camera = scene.camera;
+    const zoomTarget = result.zoomToTarget;
+    if (zoomTarget instanceof BoundingSphere) {
+      camera.flyToBoundingSphere(zoomTarget);
+    } else {
+      const { latitude, longitude, featureHeight } = zoomTarget;
+      if (featureHeight < 20) {
+        // If feature height is small, we try to zoom to a view from a top
+        // angle. We also try to be a bit more precise so that the camera does
+        // not go underground.
+        sampleTerrainMostDetailed(scene.terrainProvider, [
+          Cartographic.fromDegrees(longitude, latitude)
+        ]).then(([terrainCartographic]) => {
+          terrainCartographic.height += featureHeight + 10;
+          const destination = Ellipsoid.WGS84.cartographicToCartesian(
+            terrainCartographic
+          );
+          camera.flyTo({ destination });
+        });
+      } else {
+        const cartographic = Cartographic.fromDegrees(longitude, latitude);
+        const center = Ellipsoid.WGS84.cartographicToCartesian(cartographic);
+        const boundingSphere = new BoundingSphere(center, featureHeight * 2);
+        camera.flyToBoundingSphere(boundingSphere);
+      }
+    }
+  });
 }

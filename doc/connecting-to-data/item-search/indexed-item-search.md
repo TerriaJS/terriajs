@@ -21,10 +21,23 @@ Below is sample catalog item configuration:
       "url": "/Buildings3D/tileset.json",
       "search": {
         "providerType": "indexed",
-        "options": {
+        "providerOptions": {
           "indexRootUrl": "/Buildings3D-index/indexRoot.json"
         },
         "resultTemplate": "Building #{{OBJECTID}}"
+        "parameters": [
+           {
+             id: "GEOSCAPE_ROOF_SLOPE",
+             name: "Roof Slope"
+           },
+           {
+             id: "GEOSCAPE_STREET_ADDRESS",
+             queryOptions: {
+               prefix: true,
+               fuzzy: 2
+             }
+           }
+        ]
       }
 }
 ```
@@ -37,7 +50,7 @@ Search provider configuration:
   - `providerType: "indexed"`
     - Required
     - A string identifying the search provider in the [ItemSearchProviders](../../../lib/Models/ItemSearchProviders.ts) registry. This should be `"indexed"` for `IndexedItemSearchProvider`.
-  - `options: any`
+  - `providerOptions: any`
     - Required
     - Options for the indexed item search provider
       - `indexRootUrl: string`
@@ -47,5 +60,15 @@ Search provider configuration:
     - Optional
     - A [Mustache](https://mustache.github.io/) formatted template string used to generate a title text for each result in the search results listing. The columns in `resultsData.csv` can be used as variables in the template string. If not provided, the text defaults to the ID of the feature.
    
-
-
+  - `parameters: SearchParameterTraits[]`
+    - Optional
+    - Additional configuration for each search parameter. This is given as an array of `SearchParameterTraits` indexed by the parameter ID.
+    - `id: string`
+      - Required
+      - ID of the parameter
+    - `name?: string`
+      - Optional
+      - A human readable name to assign to the parameter which will be shown to the user in the search form instead of the ID.
+    - `queryOptions?: any`
+      - Query options to be passed to the index when searching. Currently only `text` parameters accept `queryOptions`. For `text` parameter `queryOptions` is expected to be a valid [Minisearch Search Options](https://lucaong.github.io/minisearch/modules/_minisearch_.html#searchoptions-1) object.
+      

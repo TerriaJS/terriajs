@@ -489,18 +489,25 @@ export default class Terria {
    */
   @action
   removeModelReferences(model: BaseModel) {
+    this.removeSelectedFeaturesForModel(model);
+    this.workbench.remove(model);
+    if (model.uniqueId) {
+      this.models.delete(model.uniqueId);
+    }
+  }
+
+  @action
+  removeSelectedFeaturesForModel(model: BaseModel) {
     const pickedFeatures = this.pickedFeatures;
     if (pickedFeatures) {
       // Remove picked features that belong to the catalog item
       pickedFeatures.features.forEach((feature, i) => {
         if (featureBelongsToCatalogItem(<Feature>feature, model)) {
           pickedFeatures?.features.splice(i, 1);
+          if (this.selectedFeature === feature)
+            this.selectedFeature = undefined;
         }
       });
-    }
-    this.workbench.remove(model);
-    if (model.uniqueId) {
-      this.models.delete(model.uniqueId);
     }
   }
 

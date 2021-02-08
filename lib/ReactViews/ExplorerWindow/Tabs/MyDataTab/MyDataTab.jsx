@@ -187,7 +187,7 @@ const MyDataTab = observer(
             <If condition={!this.state.activeTab}>{this.renderPromptBox()}</If>
           </div>
           <If condition={showTwoColumn}>
-            <Box styledWidth="60%" wordBreak="break-all">
+            <Box styledWidth="60%">
               <DataPreview
                 terria={this.props.terria}
                 viewState={this.props.viewState}

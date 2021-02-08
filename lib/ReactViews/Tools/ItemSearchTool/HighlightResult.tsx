@@ -1,11 +1,6 @@
 import React, { useEffect } from "react";
-import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
-import HeadingPitchRange from "terriajs-cesium/Source/Core/HeadingPitchRange";
 import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
-import Cesium from "../../../Models/Cesium";
-import ItemSearchProvider, {
-  ItemSearchResult
-} from "../../../Models/ItemSearchProvider";
+import { ItemSearchResult } from "../../../Models/ItemSearchProvider";
 import usePrevious from "../../Hooks/usePrevious";
 
 export type HighlightResultProps = {
@@ -35,8 +30,14 @@ function zoomToResult(
   item: SearchableItemMixin.Instance,
   result: ItemSearchResult
 ): void {
-  const terria = item.terria;
-  terria.currentViewer.zoomTo(result.zoomToTarget as any, undefined as any);
+  if (item.zoomToItemSearchResult) {
+    item.zoomToItemSearchResult(result);
+  } else {
+    item.terria.currentViewer.zoomTo(
+      result.zoomToTarget as any,
+      undefined as any
+    );
+  }
 }
 
 function highlightResult(
