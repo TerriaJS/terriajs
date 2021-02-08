@@ -2,6 +2,7 @@ import i18next from "i18next";
 import { computed } from "mobx";
 import isDefined from "../../Core/isDefined";
 import TerriaError from "../../Core/TerriaError";
+import { FeatureInfoTemplateTraits } from "../../Traits/FeatureInfoTraits";
 import SdmxCatalogItemTraits from "../../Traits/SdmxCatalogItemTraits";
 import TableColumnTraits from "../../Traits/TableColumnTraits";
 import createStratumInstance from "../createStratumInstance";
@@ -229,6 +230,63 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     return [this.primaryMeasureColumn, ...this.dimensionColumns];
   }
 
+  @computed
+  get featureInfoTemplate() {
+    console.log(super.featureInfoTemplate);
+    let template = '<table class="cesium-infoBox-defaultTable">';
+
+    const row = (title: string, value: string) =>
+      `<tr><td style="vertical-align: middle">${title}</td><td>${value}</td></tr>`;
+
+    // Get time dimension values
+    template += this.timeDimensions
+      ?.map(timeDimension => {
+        const conceptUrn = parseSdmxUrn(timeDimension.conceptIdentity);
+        const concept = this.getConcept(
+          conceptUrn?.resourceId,
+          conceptUrn?.descendantIds?.[0]
+        );
+
+        return row(
+          concept?.name ?? timeDimension.id ?? "Time",
+          `{{${timeDimension.id}}}`
+        );
+      })
+      .join("");
+
+    // Get region dimension values
+    if (this.catalogItem.viewBy === "region") {
+      const regionType = this.catalogItem.activeTableStyle.regionColumn
+        ?.regionType;
+      if (regionType) {
+        template += row(regionType?.description, `{{${regionType?.nameProp}}}`);
+      }
+    }
+
+    // Get other dimension values
+    template += this.catalogItem.dimensions
+      ?.filter(d => (d.name || d.id) && d.selectedId)
+      .map(d => {
+        const selectedOption = d.options.find(o => o.id === d.selectedId);
+        return row((d.name || d.id)!, selectedOption?.name ?? d.selectedId!);
+      })
+      .join("");
+
+    const primaryMeasureName =
+      this.primaryMeasureColumn.title ||
+      this.primaryMeasureColumn.name ||
+      "Value";
+
+    template +=
+      row("", "") +
+      row(primaryMeasureName, `{{${this.primaryMeasureColumn.name}}}`);
+
+    // Add timeSeries chart
+    template += `</table>{{terria.timeSeries.chart}}`;
+
+    return createStratumInstance(FeatureInfoTemplateTraits, { template });
+  }
+
   /**
    * Try to resolve `regionType` to a region provider (this will also match against region provider aliases)
    */
@@ -245,14 +303,6 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   }
 
   @computed
-  get primaryMeasureConceptId() {
-    return parseSdmxUrn(
-      this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.measureList
-        .primaryMeasure?.conceptIdentity
-    )?.resourceId;
-  }
-
-  @computed
   get primaryMeasureDimensionId() {
     return this.sdmxJsonDataflow.dataStructure.dataStructureComponents
       ?.measureList.primaryMeasure?.id;
@@ -266,9 +316,14 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
       .filter(isDefined);
   }
 
+  private get timeDimensions() {
+    return this.sdmxJsonDataflow.dataStructure.dataStructureComponents
+      ?.dimensionList.timeDimensions;
+  }
+
   @computed
   get timeDimensionIds() {
-    return this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.dimensionList.timeDimensions
+    return this.timeDimensions
       ?.filter(dim => dim.id)
       .map(dim => dim.id) as string[];
   }

@@ -717,6 +717,17 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
                 // Preserve values from d and insert feature properties after entries from d
                 const featureData = Object.assign({}, d, feature.properties, d);
 
+                const featureInfo = new ImageryLayerFeatureInfo();
+                if (isDefined(regionType.nameProp)) {
+                  featureInfo.name = featureData[regionType.nameProp] as string;
+                }
+
+                featureData.id = feature.properties[regionType.uniqueIdProp];
+                featureInfo.properties = featureData;
+
+                featureInfo.configureDescriptionFromProperties(featureData);
+                featureInfo.configureNameFromProperties(featureData);
+
                 if (
                   !isDefined(featureData._terria_getChartDetails) &&
                   this.activeTableStyle.regionColumn &&
@@ -730,7 +741,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
                     this.activeTableStyle.timeColumn,
                     this.activeTableStyle.colorColumn
                   ];
-                  featureData._terria_getChartDetails = () => ({
+                  featureInfo.properties._terria_getChartDetails = () => ({
                     title: this.activeTableStyle.colorColumn?.title,
                     csvData: [
                       chartColumns.map(col => col!.name).join(","),
@@ -741,11 +752,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
                   });
                 }
 
-                return this.featureInfoFromFeature(
-                  regionType,
-                  featureData,
-                  feature.properties[regionType.uniqueIdProp]
-                );
+                return featureInfo;
               }
 
               return undefined;
@@ -755,24 +762,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         };
       }
     );
-
-    private featureInfoFromFeature(
-      region: RegionProvider,
-      data: JsonObject,
-      regionId: any
-    ) {
-      const featureInfo = new ImageryLayerFeatureInfo();
-      if (isDefined(region.nameProp)) {
-        featureInfo.name = data[region.nameProp] as string;
-      }
-
-      data.id = regionId;
-      featureInfo.properties = data;
-
-      featureInfo.configureDescriptionFromProperties(data);
-      featureInfo.configureNameFromProperties(data);
-      return featureInfo;
-    }
 
     private getRowValues(index: number): JsonObject {
       const result: JsonObject = {};
