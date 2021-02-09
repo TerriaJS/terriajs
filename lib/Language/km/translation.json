@@ -687,11 +687,70 @@
             "catalogMemberMustHaveName": "សមាជិកកាតាឡុកដែលទើបបង្កើតថ្មីត្រូវតែមានឈ្មោះ។",
             "idForMatchingError": "សមាជិកកាតាឡុកត្រូវតែមានឈ្មោះឬលេខសម្គាល់សម្រាប់ការគូសផ្គង។",
             "group": "ក្រុម",
-            "name": "ធាតុគ្មានឈ្មោះ"
+            "name": "ធាតុគ្មានឈ្មោះ",
+            "cancel": "បោះបង់"
+        },
+        "webProcessingService": {
+            "invalidResponseErrorMessage": "កំហុសឆ្គងមួយបានកើតឡើងខណៈពេលចូលទៅកាន់ទីតាំងស្ថានភាពនៅលើ WPS server សម្រាប់ឈ្មោះដំណើរការ {{name}}. ការឆ្លើយតបរបស់ Server មិនបានបង្ហាញនូវវត្តមាន ExecuteResponse document.<p>កំហុសឆ្គងនេះក៏អាចបង្ហាញផងដែរថាដំណើរការ server ដែលអ្នកបានបញ្ជាក់មិនអាចប្រើបានជាបណ្តោះអាសន្នឬមានបញ្ហាជាមួយនឹងការភ្ជាប់អ៊ីនធឺណិតរបស់អ្នក។ ប្រសិនបើបញ្ហានៅតែកើតមានសូមរាយការណ៍ ដោយផ្ញើអ៊ីមែលទៅ {{email}}.</p>",
+            "invalidWPSServerMessage": "កំហុសឆ្គងមួយបានកើតឡើងខណៈពេលកំពុងហៅ DescribeProcess នៅលើ WPS server សម្រាប់ឈ្មោះដំណើរការ {{name}}. ការឆ្លើយតបរបស់ server បានបង្ហាញថាមិនមានវត្តមាន DescribeProcess document.<p>កំហុសឆ្គងនេះក៏អាចបង្ហាញផងដែរថា​ដំណើរការ server ដែលអ្នកបានបញ្ជាក់មិនអាចប្រើបានជាបណ្តោះអាសន្ន ឬមានបញ្ហាជាមួយនឹងការភ្ជាប់អ៊ីនធឺណិតរបស់អ្នក។ សូមព្យាយាមបើកដំណើរការ Server ម្តងទៀតហើយប្រសិនបើបញ្ហានៅតែកើតមានសូមរាយការណ៍ដោយផ្ញើអ៊ីមែលទៅ {{email}}.</p>",
+            "regionTypeDescription": "ប្រភេទនៃតំបន់ដែលត្រូវវិភាគ។",
+            "failureReasonUnknowError": "មូលហេតុនៃការបរាជ័យគឺមិនទាន់ដឹងនៅឡើយទេ។",
+            "regionParameterName": "ប៉ារ៉ាម៉ែត្រតំបន់",
+            "regionTypeName": "ប្រភេទតំបន់",
+            "errorDetails": "ព័ត៌មានលម្អិតអំពីកំហុសឆ្គង",
+            "processInputErrorTitle": "ដំណើរការមិនមានធាតុចូលទេ"
+        },
+        "wfsFeatures": {
+            "groupNotAvailableTitle": "មិនមានចំណាត់ក្រុម"
+        },
+        "webMapTileServiceCatalogItem": {
+            "accessConstraints": "កំហិតនៃការចូល",
+            "dataDescription": "ការពិពណ៌នាអំពីទិន្នន័យ"
+        },
+        "webMapServiceCatalogItem": {
+            "missingDataTitle": "បាត់ទិន្នន័យ",
+            "dataDescription": "ការពិពណ៌នាអំពីទិន្នន័យ",
+            "serviceContact": "ទំនាក់ទំនងសេវាកម្ម",
+            "noLayerFoundTitle": "រកមិនឃើញស្រទាប់ទិន្នន័យ"
+        },
+        "webFeatureServiceCatalogGroup": {
+            "groupNotAvailableTitle": "មិនមានការចាត់ក្រុម"
+        },
+        "userDrawing": {
+            "otherEntities": "បន្ទាត់ និងពហុកោណ",
+            "messageHeader": "គូរលើផែនទី",
+            "btnCancel": "បោះបង់",
+            "firstPoint": "ចំណុចដំបូង",
+            "line": "បន្ទាត់",
+            "pointEntities": "ចំណុច",
+            "userPolygon": "ពហុកោណអ្នកប្រើប្រាស់",
+            "anotherPoint": "ចំណុចមួយទៀត",
+            "clickToAddAnotherPoint": "ចុចដើម្បីបន្ថែមចំណុចផ្សេងទៀត",
+            "clickToAddFirstPoint": "ចុចដើម្បីបន្ថែមចំណុច",
+            "btnDone": "រួចរាល់"
+        },
+        "terriaJSONcatalog": {
+            "buttonTitleConfirm": "ខ្ញុំយល់ព្រម",
+            "requestFailedTitle": "សំណើបានបរាជ័យ"
+        },
+        "terria": {
+            "buttonTitleConfirm": "ខ្ញុំយល់ព្រម"
         }
     },
     "emptyWorkbenchMessage": "&lt;0&gt;&lt;0&gt;ប្រអប់ការងាររបស់អ្នកគឺទទេ&lt;/0&gt;&lt;1&gt;<strong>ចុច '$t(addData.addDataBtnText)' ខាងលើនេះដើម្បី </strong>&lt;/1&gt;&lt;2&gt;&lt;0&gt;រកតាមកាតាឡុកទិន្នន័យ&lt;/0&gt;&lt;1&gt;ផ្ទុកទិន្នន័យរបស់អ្នកទៅក្នុងផែនទី&lt;/1&gt;&lt;/2&gt;&lt;3&gt;&lt;0&gt;&lt;/0&gt;<strong>ជំនួយ៖ </strong>&lt;2&gt;សំណុំទិន្នន័យសកម្មរបស់អ្នកទាំងអស់នឹងត្រូវបានរាយបង្ហាញនៅទីនេះ&lt;/2&gt;&lt;/3&gt;&lt;/0&gt;",
     "mobile": {
         "toggleNavigation": "បិទ / បើកការរុករក"
+    },
+    "deltaTool": {
+        "titlePrefix": "រកឃើញការផ្លាស់ប្តូរ",
+        "generateDeltaBtn": "បង្កើតផែនទីផ្សេងទៀត",
+        "selectedLocation": "ទីតាំងដែលបានជ្រើសរើស",
+        "pickerMessage": {
+            "pickAnother": "ចុចលើចំណុចផ្សេងទៀតដើម្បីផ្លាស់ប្តូរជម្រើស",
+            "pickFirst": "ជ្រើសរើសចំណុចដោយចុចលើផែនទី"
+        },
+        "secondaryImage": "រូបភាពបន្ទាប់បន្សំ",
+        "primaryImage": "រូបភាពបឋម",
+        "cancelBtn": "បោះបង់"
     }
 }
