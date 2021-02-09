@@ -232,7 +232,10 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
 
   @computed
   get featureInfoTemplate() {
-    console.log(super.featureInfoTemplate);
+    const regionType = this.catalogItem.activeTableStyle.regionColumn
+      ?.regionType;
+    if (this.catalogItem.viewBy !== "region" || !regionType) return;
+
     let template = '<table class="cesium-infoBox-defaultTable">';
 
     const row = (title: string, value: string) =>
@@ -255,19 +258,14 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
       .join("");
 
     // Get region dimension values
-    if (this.catalogItem.viewBy === "region") {
-      const regionType = this.catalogItem.activeTableStyle.regionColumn
-        ?.regionType;
-      if (regionType) {
-        template += row(regionType?.description, `{{${regionType?.nameProp}}}`);
-      }
-    }
+
+    template += row(regionType?.description, `{{${regionType?.nameProp}}}`);
 
     // Get other dimension values
-    template += this.catalogItem.dimensions
-      ?.filter(d => (d.name || d.id) && d.selectedId)
+    template += this.catalogItem.sdmxSelectableDimensions
+      ?.filter(d => (d.name || d.id) && !d.disable && d.selectedId)
       .map(d => {
-        const selectedOption = d.options.find(o => o.id === d.selectedId);
+        const selectedOption = d.options?.find(o => o.id === d.selectedId);
         return row((d.name || d.id)!, selectedOption?.name ?? d.selectedId!);
       })
       .join("");
@@ -281,8 +279,13 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
       row("", "") +
       row(primaryMeasureName, `{{${this.primaryMeasureColumn.name}}}`);
 
-    // Add timeSeries chart
-    template += `</table>{{terria.timeSeries.chart}}`;
+    // Add timeSeries chart if more than one time observation
+    if (
+      this.catalogItem.discreteTimes &&
+      this.catalogItem.discreteTimes.length > 1
+    ) {
+      template += `</table><chart id="${this.catalogItem.uniqueId}" title="${this.catalogItem.name}: {{${regionType.nameProp}}}">{{terria.timeSeries.data}}</chart>`;
+    }
 
     return createStratumInstance(FeatureInfoTemplateTraits, { template });
   }

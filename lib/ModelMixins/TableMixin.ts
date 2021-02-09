@@ -221,7 +221,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      *
      */
     @computed
-    get chartItems(): ChartItem[] {
+    private get tableChartItems(): ChartItem[] {
       const style = this.activeTableStyle;
       if (style === undefined || !style.isChart()) {
         return [];
@@ -295,6 +295,17 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           };
         })
       );
+    }
+
+    @computed
+    get chartItems() {
+      return filterOutUndefined([
+        // If time-series region mapping - show time points chart
+        this.activeTableStyle.isRegions() && this.discreteTimes?.length
+          ? this.momentChart
+          : undefined,
+        ...this.tableChartItems
+      ]);
     }
 
     @computed
@@ -728,12 +739,14 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
                 featureInfo.configureDescriptionFromProperties(featureData);
                 featureInfo.configureNameFromProperties(featureData);
 
+                // If time-series region-mapping - show timeseries chart
                 if (
                   !isDefined(featureData._terria_getChartDetails) &&
-                  this.activeTableStyle.regionColumn &&
-                  (this.discreteTimes?.length ?? 0) > 0 &&
+                  this.discreteTimes &&
+                  this.discreteTimes.length > 1 &&
                   this.activeTableStyle.timeColumn &&
-                  this.activeTableStyle.colorColumn &&
+                  this.activeTableStyle.colorColumn?.type ===
+                    TableColumnType.scalar &&
                   Array.isArray(regionIds) &&
                   regionIds.length > 1
                 ) {
@@ -744,7 +757,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
                   featureInfo.properties._terria_getChartDetails = () => ({
                     title: this.activeTableStyle.colorColumn?.title,
                     csvData: [
-                      chartColumns.map(col => col!.name).join(","),
+                      chartColumns.map(col => col!.title).join(","),
                       ...regionIds.map(i =>
                         chartColumns.map(col => col.values[i]).join(",")
                       )
@@ -767,7 +780,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       const result: JsonObject = {};
 
       this.tableColumns.forEach(column => {
-        result[column.name] = column.values[index];
+        result[column.title] = column.values[index];
       });
 
       return result;
