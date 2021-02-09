@@ -37,6 +37,7 @@ Change Log
 * Fix Leaflet `ImageryLayer` feature info sorting
 * Fix hard-coded colour value in Story
 * Use `configParameters.cesiumIonAccessToken` in `IonImageryCatalogItem`
+* Added support for skipping comments in CSV files
 * [The next improvement]
 
 #### 8.0.0-alpha.65
