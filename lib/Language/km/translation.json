@@ -688,7 +688,9 @@
             "idForMatchingError": "សមាជិកកាតាឡុកត្រូវតែមានឈ្មោះឬលេខសម្គាល់សម្រាប់ការគូសផ្គង។",
             "group": "ក្រុម",
             "name": "ធាតុគ្មានឈ្មោះ",
-            "cancel": "បោះបង់"
+            "cancel": "បោះបង់",
+            "mustHaveType": "ធាតុនីមួយៗត្រូវតែមានប្រភេទ។",
+            "useConversion": "ប្រើសេវាកម្មបម្លែង?"
         },
         "webProcessingService": {
             "invalidResponseErrorMessage": "កំហុសឆ្គងមួយបានកើតឡើងខណៈពេលចូលទៅកាន់ទីតាំងស្ថានភាពនៅលើ WPS server សម្រាប់ឈ្មោះដំណើរការ {{name}}. ការឆ្លើយតបរបស់ Server មិនបានបង្ហាញនូវវត្តមាន ExecuteResponse document.<p>កំហុសឆ្គងនេះក៏អាចបង្ហាញផងដែរថាដំណើរការ server ដែលអ្នកបានបញ្ជាក់មិនអាចប្រើបានជាបណ្តោះអាសន្នឬមានបញ្ហាជាមួយនឹងការភ្ជាប់អ៊ីនធឺណិតរបស់អ្នក។ ប្រសិនបើបញ្ហានៅតែកើតមានសូមរាយការណ៍ ដោយផ្ញើអ៊ីមែលទៅ {{email}}.</p>",
@@ -755,6 +757,172 @@
             "invalidWMSServerTitle": "មិនមាន WMS server",
             "groupNotAvailableTitle": "មិនមានចំណាត់ក្រុម",
             "invalidWMSServerMessage": "កំហុសឆ្គងមួយបានកើតឡើងខណៈពេលកំពុងហៅ GetCapabilities នៅលើ WMS server ។ ការឆ្លើយតបរបស់ server មិនបានបង្ហាញថាមានវត្តមាន GetCapabilities document។<p>ប្រសិនបើអ្នកបានបញ្ចូលតំណភ្ជាប់ដោយដៃសូមបញ្ជាក់ថាតំណភ្ជាប់ត្រឹមត្រូវ។</p>.<p>ប្រសិនបើអ្នកមិនបានបញ្ចូលតំណនេះដោយដៃទេកំហុសនេះអាចបង្ហាញថាក្រុមដែលអ្នកបានបើកដំណើរការមិនអាចប្រើបានជាបណ្តោះអាសន្នឬមាន បញ្ហាជាមួយការតភ្ជាប់អ៊ីនធឺណិតរបស់អ្នក។ ព្យាយាមបើកក្រុមម្តងទៀតហើយប្រសិនបើបញ្ហានៅតែកើតមានសូមរាយការណ៍វាដោយផ្ញើអ៊ីមែលទៅ {{email}}។</p>"
+        },
+        "sensorObservationService": {
+            "noFeatures": "មិនមានធាតុត្រូវនឹងសំណួររបស់អ្នកទេ។",
+            "missingBody": "ម៉ាស៊ីនមេបានឆ្លើយតបជាមួយនឹងបាត់បង់រាងកាយ។",
+            "exceptionMessage": "ម៉ាស៊ីនមេបានរាយការណ៍កំហុសមួយ៖\n\n {{exceptionText}}",
+            "unknownError": "ម៉ាស៊ីនមេបានរាយការណ៍ពីកំហុសមិនស្គាល់។",
+            "alreadyLoadingMessage": "ទិន្នន័យរបស់អ្នកកំពុងផ្ទុក។ អ្នកនឹងអាចផ្លាស់ប្តូរការបង្ហាញនៅពេលដែលវាបានផ្ទុករួចរាល់",
+            "alreadyLoadingTitle": "កំពុងផ្ទុកទិន្នន័យរួចរាល់",
+            "sos": "SOS",
+            "property": "លក្ខណៈសម្បត្តិ",
+            "procedure": "នីតិវិធី"
+        },
+        "feedback": {
+            "unableToSendTitle": "មិនអាចផ្ញើមតិបានទេ",
+            "thanksMessage": "មតិរបស់អ្នកជួយធ្វើឱ្យ {{appName}} ប្រសើរឡើង",
+            "thanksTitle": "សូមអរគុណចំពោះមតិរបស់អ្នក!"
+        },
+        "regionMapping": {
+            "issuesLoadingTitle": "បញ្ហាក្នុងការផ្ទុក {{name}}",
+            "csvSpecification": "ការបញ្ជាក់ CSV-geo-au",
+            "moreThanOneValueText": "មានតម្លៃច្រើនជាងមួយ",
+            "moreThanOneValue": "តំបន់ទាំងនេះមាន {{moreThanOneValueText}}",
+            "notRecognisedText": "មិនស្គាល់",
+            "notRecognised": "ឈ្មោះតំបន់ទាំងនេះគឺ {{notRecognisedText}} ",
+            "invalidServerTypeTitle": "serverType {{serverType}} មិនត្រឹមត្រូវក្នុង regionMapping.json",
+            "outdatedBrowserTitle": "កម្មវិធីរុករកគេហទំព័រហួសសម័យ",
+            "noDataForRegion": "មិនមានទិន្នន័យសម្រាប់កាលតំបន់ដែលបានជ្រើសរើសទេ។",
+            "noDataForDate": "មិនមានទិន្នន័យសម្រាប់កាលបរិច្ឆេទដែលបានជ្រើសរើសទេ។"
+        },
+        "raiseError": {
+            "errorTitle": "កំហុស​មួយ​បាន​កើត​ឡើង"
+        },
+        "placesLikeMe": {
+            "placesLike": "កន្លែងដូចជា {{regionName}}",
+            "regioNotSelectedDescription": "អ្នកត្រូវតែជ្រើសរើសតំបន់។",
+            "regioNotSelectedName": "តំបន់មិនត្រូវបានជ្រើសរើស",
+            "name": "កន្លែងដូចខ្ញុំ",
+            "characteristicsDescription": "លក្ខណៈតំបន់ដែលត្រូវរាប់បញ្ចូលក្នុងការវិភាគ។",
+            "characteristics": "ច​រិ​ក​លក្ខណៈ",
+            "regionName": "តំបន់",
+            "regionTypeDescription": "ប្រភេទនៃតំបន់ដែលត្រូវវិភាគ។",
+            "regionTypeName": "ប្រភេទតំបន់",
+            "regionsLikeThisName": "តំបន់ដូចនេះ"
+        },
+        "openStreetMap": {
+            "name": "OpenStreetMap"
+        },
+        "ogr": {
+            "emailUs": "ប្រសិនបើអ្នកត្រូវការជំនួយឬព័ត៌មានបន្ថែម សូមផ្ញើរអ៊ីមែលមកកាន់យើងតាមរយៈ {{email}}",
+            "errorConvertingToGeoJsonTitle": "កំហុសក្នុងការបំលែងឯកសារទៅជា GeoJSON",
+            "unsupportedFileTzpe": "ប្រភេទឯកសារដែលមិនបានគាំទ្រ",
+            "safari": "Apple Safari",
+            "firefox": "Mozilla Firefox",
+            "chrome": "Google Chrome",
+            "internetExplorer": "Internet Explorer 11",
+            "legacyBrowserTitle": "កម្មវិធីរុករកចាស់ៗមិនត្រូវបានគាំទ្រ",
+            "serviceErrorMessage": "សេវាកម្មនេះមិនមានព័ត៌មានលម្អិតទេ។",
+            "dataSourceErrorMessage": "ប្រភពទិន្នន័យនេះមិនមានព័ត៌មានលម្អិតទេ។",
+            "name": "មិនស្គាល់ / បានបម្លែងជា GeoJSON"
+        },
+        "mapboxStyle": {
+            "name": "ស្តាយ Mapbox"
+        },
+        "mapboxVectorTile": {
+            "name": "Mapbox Vector Tile"
+        },
+        "mapboxMap": {
+            "name": "ផែនទី Mapbox"
+        },
+        "magda": {
+            "notCompatibleMessageII": "សំណុំទិន្នន័យ MAGDA មិនមានការចែកចាយណាមួយដែលមានទ្រង់ទ្រាយគាំទ្រទេ។",
+            "notCompatibleMessageI": "សំណុំទិន្នន័យ MAGDA មិនមានការចែកចាយជាមួយលេខសម្គាល់ \"{{distributionId}}\" ទេ ឬវាមិនមានទ្រង់ទ្រាយគាំទ្រទេ។",
+            "notCompatibleTitle": "រកមិនឃើញការចែកចាយដែលត្រូវគ្នាទេ",
+            "retrieveErrorMessage": "គ្មានការចែកចាយឬលេខសម្គាល់នៃសំណុំទិន្នន័យត្រូវបានផ្តល់ទេ",
+            "retrieveErrorTitle": "កំហុសក្នុងការទាញយកកំណត់ត្រា MAGDA",
+            "idsNotSpecifiedMessage": "MagdaCatalogItem ទាមទារអោយមានការបញ្ជាក់ពី distributionId ឬ datasetId ។",
+            "idsNotSpecifiedTitle": "\"distributionId\" ឬ \"datasetId\" ត្រូវតែបានកំណត់",
+            "distributionDesc": "ការពិពណ៌នាអំពីការចែកចាយ",
+            "serviceErrorMessage": "សេវាកម្មនេះមិនមានព័ត៌មានលម្អិតទេ។",
+            "dataSourceErrorMessage": "ប្រភពទិន្នន័យនេះមិនមានព័ត៌មានលម្អិតទេ។",
+            "name": "ការចែកចាយ MAGDA"
+        },
+        "kml": {
+            "errorLoadingTitle": "កំហុសក្នុងការផ្ទុក KML ឬ KMZ",
+            "unexpectedTypeTitle": "ប្រភេទទិន្នន័យ KML ដែលមិនបានរំពឹងទុក",
+            "serviceErrorMessage": "សេវាកម្មនេះមិនមានព័ត៌មានលម្អិតទេ។",
+            "dataSourceErrorMessage": "ប្រភពទិន្នន័យនេះមិនមានព័ត៌មានលម្អិតទេ។",
+            "name": "KML ឬ KMZ"
+        },
+        "ionImagery": {
+            "name": "រូបភាព Cesium Ion"
+        },
+        "invokeAnalyticsService": {
+            "invocationFailedMessage": "កំហុសមួយបានកើតឡើងនៅលើម៉ាស៊ីនមេខណៈពេលកំពុងគណនា {{invocationName}} ។",
+            "invocationFailedTitle": "ការហៅចូលសេវាកម្មបានបរាជ័យ"
+        },
+        "imageryLayer": {
+            "unableToShowLocTitle": "មិនអាចបង្ហាញនៅទីតាំងនេះទេ",
+            "unableToDisplayMessage": "{{name}} មិនអាចត្រូវបានបង្ហាញជា 2D ទេពីព្រោះវាមិនគាំទ្រដល់ដំណោលស្តង់ដារ  Web Mercator (EPSG: 3857) ។ សូមប្តូរទៅជា 3D ប្រសិនបើវាត្រូវបានគាំទ្រនៅលើប្រព័ន្ធរបស់អ្នក ធ្វើបច្ចុប្បន្នភាពសំណុំទិន្នន័យដើម្បីគាំទ្រដំណោល ឬប្រើសំណុំទិន្នន័យផ្សេង។",
+            "unableToDisplayTitle": "មិនអាចបង្ហាញសំណុំទិន្នន័យបានទេ",
+            "unknownTileErrorTitle": "កំហុសក្រឡាក្បឿងដែលមិនស្គាល់",
+            "tileErrorMessageII": "ទទួលបានការឆ្លើយតប ២០០ (អូខេ) ពី URL៖\n{{url}}\nប៉ុន្តែវាមិនអាចផ្ទុកជារូបភាពបានទេ។",
+            "tileErrorTitle": "កំហុសក្រឡាក្បឿង",
+            "accessingCatalogItemErrorTitle": "កំហុសក្នុងការចូលប្រើធាតុកាតាឡុក",
+            "accessingBaseMapErrorTitle": "កំហុសក្នុងការចូលប្រើផែនទីគោល"
+        },
+        "gpx": {
+            "errorLoadingTitle": "កំហុសក្នុងការផ្ទុក GPX",
+            "serviceErrorMessage": "សេវាកម្មនេះមិនមានព័ត៌មានលម្អិតទេ។",
+            "dataSourceErrorMessage": "ប្រភពទិន្នន័យនេះមិនមានព័ត៌មានលម្អិតទេ។",
+            "name": "GPX"
+        },
+        "googleUrlShortener": {
+            "urlNotLocatedTitle": "URL ដែលបានចាប់ផ្តើមបង្រួមមិនមានទីតាំងទេ",
+            "unexpectedResult": "លទ្ធផលបង្រួម URL ដែលមិនបានរំពឹងទុក"
+        },
+        "gltf": {
+            "unableToRetrieve": "មិនអាចទាញយកព័ត៌មានលំអិតរបស់ធាតុពី៖\n\n{{url}}",
+            "error": "កំហុស",
+            "notSupportedErrorMessage": "៉{{name}}​ ៉មិនអាចត្រូវបានបង្ហាញនៅក្នុងទិដ្ឋភាព 2D។  ប្តូរទៅ 3D និងព្យាយាមម្តងទៀត។",
+            "notSupportedErrorTitle": "មិនបានគាំទ្រក្នុង 2D",
+            "serviceErrorMessage": "សេវាកម្មនេះមិនមានព័ត៌មានលម្អិតទេ។",
+            "dataSourceErrorMessage": "ប្រភពទិន្នន័យនេះមិនមានព័ត៌មានលម្អិតទេ។",
+            "name": "ទម្រង់ការបញ្ជូន GL (glTF)"
+        },
+        "getToken": {
+            "errorTitle": "កំហុសនិមិត្តសញ្ញា"
+        },
+        "geoJson": {
+            "firefox": "Mozilla Firefox",
+            "chrome": "Google Chrome",
+            "internetExplorer": "Internet Explorer 11",
+            "unsupportedBrowserTitle": "កម្មវិធីរុករកគេហទំព័រដែលមិនបានគាំទ្រ",
+            "couldNotLoadTitle": "មិនអាចផ្ទុក JSON បានទេ",
+            "errorLoadingTitle": "កំហុសក្នុងការផ្ទុក GeoJSON",
+            "serviceErrorMessage": "សេវាកម្មនេះមិនមានព័ត៌មានលម្អិតទេ។",
+            "dataSourceErrorMessage": "ប្រភពទិន្នន័យនេះមិនមានព័ត៌មានលម្អិតទេ។",
+            "name": "GeoJSON"
+        },
+        "czml": {
+            "errorLoadingTitle": "កំហុសក្នុងការផ្ទុក CZML",
+            "serviceErrorMessage": "សេវាកម្មនេះមិនមានព័ត៌មានលម្អិតទេ។",
+            "dataSourceErrorMessage": "ប្រភពទិន្នន័យនេះមិនមានព័ត៌មានលម្អិតទេ។",
+            "name": "ភាសាសេស្យូម (CZML)"
+        },
+        "csw": {
+            "cors": "CORS",
+            "links": "តំណភ្ជាប់",
+            "dataResponsibility": "ទំនួលខុសត្រូវទិន្នន័យ",
+            "notUseableTitle": "សេវាកម្មកាតាឡុកមិនអាចប្រើបានទេ",
+            "exceptionMessage": "ម៉ាស៊ីនមេ CSW បានរាយការណ៍កំហុសមួយ៖\n\n {{exceptionText}}",
+            "unknownError": "ម៉ាស៊ីនមេ CSW បានរាយការណ៍អំពីកំហុសដែលមិនស្គាល់។",
+            "name": "សេវាកម្មកាតាឡុក (CSW)"
+        },
+        "csv": {
+            "unableToLoadItemMessage": "CSV មិនមានទិន្នន័យឬ URL ដើម្បីផ្ទុកទេ។",
+            "unableToLoadItemTitle": "មិនអាចផ្ទុកធាតុកាតាឡុក CSV បានទេ",
+            "unableToLoadTitle": "មិនអាចផ្ទុកឯកសារ CSV បានទេ",
+            "unexpectedTypeTitle": "ប្រភេទទិន្នន័យ CSV ដែលមិនបានរំពឹងទុក",
+            "serviceErrorMessage": "សេវាកម្មនេះមិនមានព័ត៌មានលម្អិតទេ។",
+            "dataSourceErrorMessage": "ប្រភពទិន្នន័យនេះមិនមានព័ត៌មានលម្អិតទេ។",
+            "name": "Comma-Separated Values (CSV)"
+        },
+        "createParameter": {
+            "unsupportedErrorMessage": "ប្រភេទប៉ារ៉ាម៉ែត្រមុខងារដែលមិនស្គាល់: {{type}} ។",
+            "unsupportedErrorTitle": "ប្រភេទប៉ារ៉ាម៉ែត្រមុខងារដែលមិនបានគាំទ្រ"
         }
     },
     "emptyWorkbenchMessage": "&lt;0&gt;&lt;0&gt;ប្រអប់ការងាររបស់អ្នកគឺទទេ&lt;/0&gt;&lt;1&gt;<strong>ចុច '$t(addData.addDataBtnText)' ខាងលើនេះដើម្បី </strong>&lt;/1&gt;&lt;2&gt;&lt;0&gt;រកតាមកាតាឡុកទិន្នន័យ&lt;/0&gt;&lt;1&gt;ផ្ទុកទិន្នន័យរបស់អ្នកទៅក្នុងផែនទី&lt;/1&gt;&lt;/2&gt;&lt;3&gt;&lt;0&gt;&lt;/0&gt;<strong>ជំនួយ៖ </strong>&lt;2&gt;សំណុំទិន្នន័យសកម្មរបស់អ្នកទាំងអស់នឹងត្រូវបានរាយបង្ហាញនៅទីនេះ&lt;/2&gt;&lt;/3&gt;&lt;/0&gt;",
