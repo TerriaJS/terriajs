@@ -604,7 +604,9 @@
             "name": "ធនធាន CKAN",
             "errorLoadingMessage": "និយមន័យសម្រាប់កាតាឡុក CKAN នេះ មិនមានសំណួរសម្រាប់ច្រោះត្រឹមត្រូវនោះទេ។",
             "errorLoadingTitle": "កំហុសក្នុងការផ្ទុកកាតាឡុក CKAN",
-            "nameServer": "ម៉ាស៊ីនមេ CKAN"
+            "nameServer": "ម៉ាស៊ីនមេ CKAN",
+            "notCompatibleMessageI": "សំណុំទិន្នន័យ CKAN មិនមានធនធានដែលមានលេខសម្គាល់ {{resourceId}} ឬវាមិនមានទ្រង់ទ្រាយគាំទ្រ។",
+            "notCompatibleMessageII": "សំណុំទិន្នន័យ CKAN មិនមានធនធានណាមួយដែលមានទ្រង់ទ្រាយគាំទ្រទេ។"
         },
         "cesiumTerrain": {
             "errorRenderingTitle": "កំហុសក្នុងការបង្ហាញជា 3D",
@@ -671,6 +673,21 @@
             "fileApiNotSupportedTitle": "មិនគាំទ្រឯកសារ API ទេ",
             "addingDataErrorMessage": "ទិន្នន័យដែលបានកំណត់មិនអាចបញ្ចូលបានទេ ពីព្រោះវាមិនមែនជាទ្រង់ទ្រាយត្រឹមត្រូវ ឬមិនមានទ្រង់ទ្រាយដែលបានដែលរំពឹងទុកទេ។",
             "addingDataErrorTitle": "ទិន្នន័យមិនអាចត្រូវបានបញ្ចូលទេ"
+        },
+        "catalog": {
+            "upload": "ផ្ទុកឡើង",
+            "readyToUpload": "រួចរាល់ក្នុងការផ្ទុកឯកសាររបស់អ្នកទៅសេវាកម្មបម្លែង {{appName}}?",
+            "unsupportedFileTypeTitle": "ប្រភេទឯកសារដែលមិនបានគាំទ្រ",
+            "unsupportedTypeTitle": "ប្រភេទធាតុកាតាឡុកដែលមិនបានគាំទ្រ",
+            "serviceErrorMessage": "សេវាកម្មនេះមិនមានព័ត៌មានលម្អិតទេ។",
+            "dataSourceErrorMessage": "ប្រភពទិន្នន័យនេះមិនមានព័ត៌មានលម្អិតទេ។",
+            "chartDataGroup": "ក្រុមសម្រាប់ទិន្នន័យក្រាប។",
+            "userAddedDataGroup": "ក្រុមសម្រាប់ទិន្នន័យដែលបានបញ្ចូលដោយអ្នកប្រើប្រាស់តាមរយៈផ្ទាំង \"បញ្ចូលទិន្នន័យ\" ។",
+            "catalogMemberMustHaveType": "សមាជិកកាតាឡុកត្រូវតែមានប្រភេទ។",
+            "catalogMemberMustHaveName": "សមាជិកកាតាឡុកដែលទើបបង្កើតថ្មីត្រូវតែមានឈ្មោះ។",
+            "idForMatchingError": "សមាជិកកាតាឡុកត្រូវតែមានឈ្មោះឬលេខសម្គាល់សម្រាប់ការគូសផ្គង។",
+            "group": "ក្រុម",
+            "name": "ធាតុគ្មានឈ្មោះ"
         }
     },
     "emptyWorkbenchMessage": "&lt;0&gt;&lt;0&gt;ប្រអប់ការងាររបស់អ្នកគឺទទេ&lt;/0&gt;&lt;1&gt;<strong>ចុច '$t(addData.addDataBtnText)' ខាងលើនេះដើម្បី </strong>&lt;/1&gt;&lt;2&gt;&lt;0&gt;រកតាមកាតាឡុកទិន្នន័យ&lt;/0&gt;&lt;1&gt;ផ្ទុកទិន្នន័យរបស់អ្នកទៅក្នុងផែនទី&lt;/1&gt;&lt;/2&gt;&lt;3&gt;&lt;0&gt;&lt;/0&gt;<strong>ជំនួយ៖ </strong>&lt;2&gt;សំណុំទិន្នន័យសកម្មរបស់អ្នកទាំងអស់នឹងត្រូវបានរាយបង្ហាញនៅទីនេះ&lt;/2&gt;&lt;/3&gt;&lt;/0&gt;",
