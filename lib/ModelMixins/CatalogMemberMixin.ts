@@ -31,6 +31,11 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       return this._metadataLoader.isLoading;
     }
 
+    /**
+     * isLoading can be override to provide custom loading functionality
+     */
+    readonly isLoading: boolean = false;
+
     loadMetadata(): Promise<void> {
       return this._metadataLoader.load();
     }

@@ -12,6 +12,7 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import getPath from "../../Core/getPath";
 import AsyncChartableMixin from "../../ModelMixins/AsyncChartableMixin";
 import AsyncMappableMixin from "../../ModelMixins/AsyncMappableMixin";
+import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
 import CommonStrata from "../../Models/CommonStrata";
 import Box from "../../Styled/Box";
 import Icon from "../Icon";
@@ -209,7 +210,9 @@ export const WorkbenchItemRaw = observer(
               >
                 <ConceptViewer item={workbenchItem} />
               </If>
-              {(AsyncMappableMixin.isMixedInto(this.props.item) &&
+              {(CatalogMemberMixin.isMixedInto(this.props.item) &&
+                this.props.item.isLoading) ||
+              (AsyncMappableMixin.isMixedInto(this.props.item) &&
                 this.props.item.isLoadingMapItems) ||
               (AsyncChartableMixin.isMixedInto(this.props.item) &&
                 this.props.item.isLoadingChartItems) ? (

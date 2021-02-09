@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { computed, observable, runInAction } from "mobx";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
@@ -35,6 +35,13 @@ export default class SdmxJsonCatalogItem
 
   private _currentCsvUrl: string | undefined;
   private _currentCsvString: string | undefined;
+
+  @observable private _isLoading = false;
+
+  @computed
+  get isLoading() {
+    return this._isLoading;
+  }
 
   constructor(
     id: string | undefined,
@@ -106,8 +113,7 @@ export default class SdmxJsonCatalogItem
         this.regionMappedDimensionIds.length === 0,
       setDimensionValue: (stratumId: string, value: "time" | "region") => {
         this.setTrait(stratumId, "viewBy", value);
-        this.forceLoadMapItems(true);
-        this.forceLoadChartItems(true);
+        this.forceLoadMapItems(true).then(() => this.forceLoadChartItems());
       }
     };
   }
@@ -134,8 +140,7 @@ export default class SdmxJsonCatalogItem
           }
 
           dimensionTraits.setTrait(stratumId, "selectedId", value);
-          this.forceLoadMapItems(true);
-          this.forceLoadChartItems(true);
+          this.forceLoadMapItems(true).then(() => this.forceLoadChartItems());
         }
       };
     });
@@ -288,7 +293,13 @@ export default class SdmxJsonCatalogItem
   protected async forceLoadTableData(): Promise<string[][]> {
     await this.loadMetadata();
 
-    return (await this.downloadData()) || [];
+    runInAction(() => (this._isLoading = true));
+
+    const results = await this.downloadData();
+
+    runInAction(() => (this._isLoading = false));
+
+    return results || [];
   }
 }
 
