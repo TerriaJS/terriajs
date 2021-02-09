@@ -10,9 +10,12 @@ import { sortable } from "react-anything-sortable";
 import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import getPath from "../../Core/getPath";
+import AsyncChartableMixin from "../../ModelMixins/AsyncChartableMixin";
+import AsyncMappableMixin from "../../ModelMixins/AsyncMappableMixin";
 import CommonStrata from "../../Models/CommonStrata";
 import Box from "../../Styled/Box";
 import Icon from "../Icon";
+import Loader from "../Loader";
 import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
 import ChartItemSelector from "./Controls/ChartItemSelector";
 import ColorScaleRangeSection from "./Controls/ColorScaleRangeSection";
@@ -206,6 +209,14 @@ export const WorkbenchItemRaw = observer(
               >
                 <ConceptViewer item={workbenchItem} />
               </If>
+              {(AsyncMappableMixin.isMixedInto(this.props.item) &&
+                this.props.item.isLoadingMapItems) ||
+              (AsyncChartableMixin.isMixedInto(this.props.item) &&
+                this.props.item.isLoadingChartItems) ? (
+                <Box paddedVertically>
+                  <Loader light />
+                </Box>
+              ) : null}
             </div>
           </If>
         </li>

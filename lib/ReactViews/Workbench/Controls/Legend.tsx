@@ -1,22 +1,16 @@
 "use strict";
 
-import createReactClass from "create-react-class";
 import { observer } from "mobx-react";
-import PropTypes from "prop-types";
 import React, { SyntheticEvent } from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
+import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
+import Model from "../../../Models/Model";
 import proxyCatalogItemUrl from "../../../Models/proxyCatalogItemUrl";
 import LegendTraits, { LegendItemTraits } from "../../../Traits/LegendTraits";
 import Styles from "./legend.scss";
-import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
-import Mappable from "../../../Models/Mappable";
-import AsyncMappableMixin from "../../../ModelMixins/AsyncMappableMixin";
-import Model from "../../../Models/Model";
-
-const Loader = require("../../Loader");
 
 /* A lookup map for displayable mime types */
 const DISPLAYABLE_MIME_TYPES = [
@@ -256,17 +250,6 @@ export default class Legend extends React.Component<{
 
   render() {
     if (this.props.item.hideLegendInWorkbench) return null;
-
-    if (
-      AsyncMappableMixin.isMixedInto(this.props.item) &&
-      this.props.item.isLoadingMapItems
-    ) {
-      return (
-        <li className={Styles.loader}>
-          <Loader />
-        </li>
-      );
-    }
 
     if (
       isDefined(this.props.item.legends) &&
