@@ -1,17 +1,18 @@
-import React from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
-import ViewState from "../ReactViewModels/ViewState";
-import SplitPoint from "./SplitPoint";
-import { observer } from "mobx-react";
+import { WithT } from "i18next";
 import { computed } from "mobx";
+import { observer } from "mobx-react";
+import React, { Suspense, useEffect, useState } from "react";
+import { useTranslation, WithTranslation } from "react-i18next";
+import Terria from "../Models/Terria";
+import ViewState from "../ReactViewModels/ViewState";
+import Icon from "./Icon";
 import Styles from "./Map/Navigation/tool_button.scss";
 import MapIconButton from "./MapIconButton/MapIconButton";
-import Icon from "./Icon";
 
-interface ToolProps extends WithTranslation {
+interface ToolProps {
   viewState: ViewState;
   toolName: string;
-  getToolComponent: () => React.Component | Promise<React.Component>;
+  getToolComponent: () => React.ComponentType | Promise<React.ComponentType>;
   params?: any;
 }
 
@@ -23,31 +24,38 @@ interface ToolProps extends WithTranslation {
  * module that exports a default React Component. The promise is useful for
  * lazy-loading the tool.
  */
-class Tool extends React.Component<ToolProps> {
-  render() {
-    const { viewState, getToolComponent, params, toolName, t } = this.props;
-    const terria = viewState.terria;
-    const loadComponent = (onLoad: any) => {
-      Promise.resolve(getToolComponent())
-        .then(component => onLoad(component))
-        .catch(() =>
-          terria.error.raiseEvent({
-            title: t("tool.loadingError.title", { toolName }),
-            message: t("tool.loadingError.message")
-          })
-        );
-    };
-    return (
-      <SplitPoint
-        loadComponent={loadComponent}
-        viewState={viewState}
-        {...params}
-      />
-    );
-  }
-}
+const Tool: React.FC<ToolProps> = props => {
+  const { viewState, getToolComponent, params, toolName } = props;
+  const [t] = useTranslation();
 
-interface ToolButtonProps extends ToolProps {
+  const [tool, setTool] = useState<any>(undefined);
+  useEffect(() => {
+    setTool([
+      React.lazy(() =>
+        Promise.resolve(getToolComponent()).then(c => ({ default: c }))
+      ),
+      params
+    ]);
+  }, [getToolComponent]);
+
+  // If the user tries to reload the tool after an error we want to re-render
+  // whole ToolErrorBoundary and its children so increment the key when
+  // getToolComponent changes.
+  let ToolComponent;
+  let toolProps;
+  if (tool !== undefined) [ToolComponent, toolProps] = tool;
+  return (
+    <ToolErrorBoundary t={t} toolName={toolName} terria={viewState.terria}>
+      <Suspense fallback={<div>Loading...</div>}>
+        {ToolComponent !== undefined ? (
+          <ToolComponent {...toolProps} viewState={viewState} />
+        ) : null}
+      </Suspense>
+    </ToolErrorBoundary>
+  );
+};
+
+interface ToolButtonProps extends ToolProps, WithTranslation {
   icon: { id: string };
 }
 
@@ -104,4 +112,34 @@ export class ToolButton extends React.Component<ToolButtonProps> {
   }
 }
 
-export default withTranslation()(Tool);
+interface ToolErrorBoundaryProps extends WithT {
+  terria: Terria;
+  toolName: string;
+  children: any;
+}
+
+class ToolErrorBoundary extends React.Component<
+  ToolErrorBoundaryProps,
+  { hasError: boolean }
+> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch() {
+    const { terria, toolName, t } = this.props;
+    terria.error.raiseEvent({
+      title: t("tool.loadingError.title", { toolName }),
+      message: t("tool.loadingError.message")
+    });
+    this.setState({ hasError: true });
+  }
+
+  render() {
+    return this.state.hasError === true ? null : this.props.children;
+  }
+}
+
+export default Tool;
