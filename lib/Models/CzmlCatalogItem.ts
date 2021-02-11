@@ -52,7 +52,7 @@ export default class CzmlCatalogItem extends AsyncMappableMixin(
       }
     })
       .then(czmlLoadInput => {
-        return CzmlDataSource.load(czmlLoadInput);
+        return CzmlDataSource.load(czmlLoadInput, { credit: this.attribution });
       })
       .then(czml => {
         this._dataSource = czml;

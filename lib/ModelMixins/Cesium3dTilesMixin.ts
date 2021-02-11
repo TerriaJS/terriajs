@@ -1,5 +1,12 @@
 import i18next from "i18next";
-import { action, computed, observable, runInAction, toJS } from "mobx";
+import {
+  action,
+  computed,
+  isObservableArray,
+  observable,
+  runInAction,
+  toJS
+} from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import clone from "terriajs-cesium/Source/Core/clone";
@@ -14,6 +21,9 @@ import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTil
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
+import Color from "terriajs-cesium/Source/Core/Color";
+import ClippingPlaneCollection from "terriajs-cesium/Source/Scene/ClippingPlaneCollection";
+import ClippingPlane from "terriajs-cesium/Source/Scene/ClippingPlane";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import makeRealPromise from "../Core/makeRealPromise";
@@ -29,6 +39,11 @@ import Cesium3dTilesTraits, {
 } from "../Traits/Cesium3dTilesTraits";
 import AsyncMappableMixin from "./AsyncMappableMixin";
 import ShadowMixin from "./ShadowMixin";
+import { isJsonObject, JsonObject } from "../Core/Json";
+import Cesium3DTile from "terriajs-cesium/Source/Scene/Cesium3DTile";
+import { Cesium3DTileContent } from "terriajs-cesium";
+
+const DEFAULT_HIGHLIGHT_COLOR = "#ff3f00";
 
 interface Cesium3DTilesCatalogItemIface
   extends InstanceType<ReturnType<typeof Cesium3dTilesMixin>> {}
@@ -177,6 +192,12 @@ export default function Cesium3dTilesMixin<
       this.tileset.shadows = this.cesiumShadows;
       this.tileset.show = this.show;
 
+      if (isDefined(this.cesiumTileClippingPlaneCollection)) {
+        this.tileset.clippingPlanes = toJS(
+          this.cesiumTileClippingPlaneCollection
+        );
+      }
+
       const key = this
         .colorBlendMode as keyof typeof Cesium3DTileColorBlendMode;
       const colorBlendMode = Cesium3DTileColorBlendMode[key];
@@ -300,6 +321,56 @@ export default function Cesium3dTilesMixin<
       }
     }
 
+    @computed get cesiumTileClippingPlaneCollection() {
+      if (!isDefined(this.clippingPlanes)) {
+        return;
+      }
+
+      if (this.clippingPlanes.planes.length == 0) {
+        return;
+      }
+
+      const {
+        planes,
+        enabled = true,
+        unionClippingRegions = false,
+        edgeColor,
+        edgeWidth,
+        modelMatrix
+      } = this.clippingPlanes;
+
+      const planesMapped = planes.map((plane: any) => {
+        return new ClippingPlane(
+          Cartesian3.fromArray(plane.normal || []),
+          plane.distance
+        );
+      });
+
+      let options = {
+        planes: planesMapped,
+        enabled,
+        unionClippingRegions
+      };
+
+      if (edgeColor && edgeColor.length > 0) {
+        options = Object.assign(options, {
+          edgeColor: Color.fromCssColorString(edgeColor) || Color.WHITE
+        });
+      }
+
+      if (edgeWidth && edgeWidth > 0) {
+        options = Object.assign(options, { edgeWidth: edgeWidth });
+      }
+
+      if (modelMatrix && modelMatrix.length > 0) {
+        const array = clone(toJS(modelMatrix));
+        options = Object.assign(options, {
+          modelMatrix: Matrix4.fromArray(array) || Matrix4.IDENTITY
+        });
+      }
+      return new ClippingPlaneCollection(options);
+    }
+
     @computed get cesiumTileStyle() {
       if (
         !isDefined(this.style) &&
@@ -314,7 +385,10 @@ export default function Cesium3dTilesMixin<
       return new Cesium3DTileStyle(style);
     }
 
-    buildFeatureFromPickResult(_screenPosition: Cartesian2, pickResult: any) {
+    buildFeatureFromPickResult(
+      _screenPosition: Cartesian2 | undefined,
+      pickResult: any
+    ) {
       if (pickResult instanceof Cesium3DTileFeature) {
         const properties: { [name: string]: unknown } = {};
         pickResult.getPropertyNames().forEach(name => {
@@ -362,6 +436,73 @@ export default function Cesium3dTilesMixin<
         this.setTrait(CommonStrata.user, "style", { ...style, show });
       }
     }
+
+    /**
+     * Returns a promise that resolves to a {@Cesium3DTileFeature} with
+     * matching property.
+     */
+    @action
+    async watchForFeatureWithProperties(
+      properties: Record<string, any>
+    ): Promise<Cesium3DTileFeature> {
+      if (!this.tileset) Promise.reject(new Error("Tileset not loaded"));
+      const tileset = this.tileset!;
+
+      return new Promise(resolve => {
+        const watch = (tile: Cesium3DTile) => {
+          const content = tile.content;
+          for (let i = 0; i < content.featuresLength; i++) {
+            const feature = content.getFeature(i);
+            const hasAllProperties = Object.entries(properties).every(
+              ([name, value]) => feature.getProperty(name) === value
+            );
+            if (hasAllProperties) {
+              tileset.tileVisible.removeEventListener(watch);
+              resolve(feature);
+              return;
+            }
+          }
+        };
+        tileset.tileVisible.addEventListener(watch);
+      });
+    }
+
+    @action
+    addColorExpression(newColorExpr: [string, string]) {
+      const style = this.style || {};
+      const color = normalizeColorExpression(style?.color);
+      color.conditions.unshift(newColorExpr);
+      if (!color.conditions.find(c => c[0] === "true")) {
+        color.conditions.push(["true", "color('#ffffff')"]); // ensure there is a default color
+      }
+      this.setTrait(CommonStrata.user, "style", {
+        ...style,
+        color
+      } as JsonObject);
+    }
+
+    @action
+    removeColorExpression(exprHead: string) {
+      const color = this.style?.color;
+      if (!isJsonObject(color)) return;
+      if (!isObservableArray(color.conditions)) return;
+      const conditions = color.conditions.slice();
+      const idx = conditions.findIndex(e => e[0] === exprHead);
+      if (idx < 0) return;
+      conditions.splice(idx, 1);
+      this.setTrait(CommonStrata.user, "style", {
+        ...this.style,
+        color: {
+          ...color,
+          conditions
+        }
+      });
+    }
+
+    @computed
+    get highlightColor(): string {
+      return super.highlightColor || DEFAULT_HIGHLIGHT_COLOR;
+    }
   }
 
   return Cesium3dTilesMixin;
@@ -379,4 +520,15 @@ function normalizeShowExpression(
     conditions = [["true", true]];
   }
   return { ...show, conditions };
+}
+
+function normalizeColorExpression(
+  expr: any
+): { expression?: string; conditions: [string, string][] } {
+  const normalized: { expression?: string; conditions: [string, string][] } = {
+    conditions: []
+  };
+  if (typeof expr === "string") normalized.expression = expr;
+  if (isJsonObject(expr)) Object.assign(normalized, expr);
+  return normalized;
 }

@@ -41,7 +41,8 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
 
     return [
       new CesiumTerrainProvider({
-        url: resource
+        url: resource,
+        credit: this.attribution
       })
     ];
   }

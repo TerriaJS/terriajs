@@ -1,22 +1,20 @@
-import mixTraits from "./mixTraits";
+import { JsonObject } from "../Core/Json";
+import anyTrait from "./anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import UrlTraits from "./UrlTraits";
+import FeatureInfoTraits from "./FeatureInfoTraits";
+import MappableTraits from "./MappableTraits";
+import mixTraits from "./mixTraits";
 import primitiveTrait from "./primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
-import MappableTraits from "./MappableTraits";
-import DataCustodianTraits from "./DataCustodianTraits";
-import LegendTraits from "./LegendTraits";
-import objectArrayTrait from "./objectArrayTrait";
 import SplitterTraits from "./SplitterTraits";
-import anyTrait from "./anyTrait";
-import { JsonObject } from "../Core/Json";
-import FeatureInfoTraits from "./FeatureInfoTraits";
+import UrlTraits from "./UrlTraits";
+import LayerOrderingTraits from "./LayerOrderingTraits";
 
 export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
   FeatureInfoTraits,
   SplitterTraits,
-  DataCustodianTraits,
   RasterLayerTraits,
+  LayerOrderingTraits,
   MappableTraits,
   UrlTraits,
   CatalogMemberTraits
@@ -24,7 +22,8 @@ export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
   @primitiveTrait({
     type: "string",
     name: "Layer(s)",
-    description: "The layer or layers to display."
+    description:
+      "The layer or layers to display. This can be a comma seperated string of layer IDs or names."
   })
   layers?: string;
 
@@ -35,14 +34,6 @@ export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
       "Gets or sets the denominator of the largest scale (smallest denominator) for which tiles should be requested.  For example, if this value is 1000, then tiles representing a scale larger than 1:1000 (i.e. numerically smaller denominator, when zooming in closer) will not be requested.  Instead, tiles of the largest-available scale, as specified by this property, will be used and will simply get blurier as the user zooms in closer."
   })
   maximumScale?: number;
-
-  @objectArrayTrait({
-    name: "Legend URLs",
-    description: "The legends to display on the workbench.",
-    type: LegendTraits,
-    idProperty: "index"
-  })
-  legends?: LegendTraits[];
 
   @anyTrait({
     name: "Parameters",

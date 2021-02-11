@@ -105,6 +105,11 @@
     "loadingError": {
       "title": "Error Loading {{toolName}} Tool",
       "message": "An error occurred while trying to load the this tool from the server. Please try again."
+    },
+    "exitBtnTitle": "Exit",
+    "button": {
+      "open": "Exit {{toolNameLowerCase}}",
+      "closed": "{{toolName}}"
     }
   },
   "diffTool": {
@@ -242,7 +247,21 @@
     "nativeResolutionHeader": "Use native device resolution",
     "mapQuality": "Raster Map Quality:",
     "qualityLabel": "Quality",
-    "performanceLabel": "Performance"
+    "performanceLabel": "Performance",
+    "timeline": {
+      "alwaysShowLabel": "Press to start only showing the timeline when there are time-varying datasets on the workbench",
+      "hideLabel": "Press to start always showing the timeline, even when no time-varying datasets are on the workbench",
+      "alwaysShow": "Always show"
+    },
+    "terrain": {
+      "hideUnderground": "Terrain hides underground features",
+      "showUndergroundFeatures": "Press to start showing features that are underneath the terrain surface",
+      "hideUndergroundFeatures": "Press to start hiding features that are underneath the terrain surface",
+      "sideLabel": "Show Terrain on the",
+      "left": "Left",
+      "both": "Both",
+      "right": "Right"
+    }
   },
   "feedback": {
     "feedbackPreamble": "We would love to hear from you!",
@@ -498,7 +517,9 @@
     "addItemErrorMessage": "An error occurred while loading the catalog item.",
     "dimensionsSelector": {
       "undefinedLabel": "Not specified"
-    }
+    },
+    "searchItem": "Search",
+    "searchItemTitle": "Search"
   },
   "dateTime": {
     "back": "Go back",
@@ -653,6 +674,7 @@
       "json": "JSON",
       "carto": "Carto",
       "gltf": "GLTF",
+      "shp": "Shapefile (zip)",
       "other": "Other (use conversion service)"
     },
     "printWindow": {
@@ -763,8 +785,9 @@
       "addingDataErrorTitle": "Data could not be added",
       "addingDataErrorMessage": "The specified data could not be added because it is invalid or does not have the expected format.",
       "fileApiNotSupportedTitle": "File API not supported",
-      "fileApiNotSupportedMessage": "Sorry, your web browser does not support the File API, which {{appName}} requires in order to add data from a file on your system.  Please upgrade your web browser.  For the best experience, we recommend {{internetExplorer}} or the latest version of {{chrome}} or {{firefox}}.",
+      "fileApiNotSupportedMessage": "Sorry, your web browser does not support the File API, which {{appName}} requires in order to add data from a file on your system.  Please upgrade your web browser.  For the best experience, we recommend the latest version of {{chrome}}, {{firefox}} or {{edge}}.",
       "internetExplorer": "Internet Explorer 11",
+      "edge": "Microsoft Edge",
       "chrome": "Google Chrome",
       "firefox": "Mozilla Firefox"
     },
@@ -980,6 +1003,9 @@
       "internetExplorer": "Internet Explorer 11",
       "chrome": "Google Chrome",
       "firefox": "Mozilla Firefox"
+    },
+    "shapefile": {
+      "name": "Shapefile"
     },
     "getToken": {
       "errorTitle": "Token Error",
@@ -1433,5 +1459,33 @@
   },
   "term": {
     "missingContent": "missing content"
+  },
+  "itemSearchTool": {
+    "title": "Search {{itemName}}",
+    "loading": "Loading search parameters",
+    "loadError": "Error loading search parameters. Check console for detailed errors.",
+    "noParameters": "No searchable parameters found",
+    "searching": "Searching",
+    "searchError": "Search failed. Check console for detailed errors.",
+    "numericParameter": {
+      "minimum": "Minimum",
+      "maximum": "Maximum"
+    },
+    "searchBtnText": "Search",
+    "resetBtnText": "Clear input",
+    "backBtnText": "Search again",
+    "resultsCount": "{{count}} match found",
+    "resultsCount_plural": "{{count}} matches found"
+  },
+  "indexedItemSearchProvider": {
+    "missingOptionIndexRootUrl": "Option `indexRootUrl` is missing in the item's search configuration.",
+    "errorParsingIndexRoot": "Error parsing indexRoot file: {{indexRootUrl}}."
+  },
+  "pedestrianMode": {
+    "toolButtonTitle": "Pedestrian Mode",
+    "dropPedestrianTooltipMessage": "<b>Left click</b> to select drop location<br /><b>Right click / Esc</b> to cancel",
+    "controls": {
+      "title": "Controls"
+    }
   }
 }

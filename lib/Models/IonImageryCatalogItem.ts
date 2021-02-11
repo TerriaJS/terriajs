@@ -31,11 +31,17 @@ export default class IonImageryCatalogItem
 
   @computed get imageryProvider() {
     if (isDefined(this.ionAssetId)) {
-      return new IonImageryProvider({
+      const provider = new IonImageryProvider({
         assetId: this.ionAssetId,
-        accessToken: this.ionAccessToken,
+        accessToken:
+          this.ionAccessToken ||
+          this.terria.configParameters.cesiumIonAccessToken,
         server: this.ionServer
       });
+      if (this.attribution) {
+        (<any>provider)._credit = this.attribution;
+      }
+      return provider;
     }
   }
 }
