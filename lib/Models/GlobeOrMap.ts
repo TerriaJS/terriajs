@@ -257,13 +257,18 @@ export default abstract class GlobeOrMap {
       }
 
       if (!hasGeometry) {
+        const featureId =
+          typeof feature.properties?.id?.getValue === "function"
+            ? feature.properties?.id?.getValue()
+            : undefined;
         if (
           feature.imageryLayer &&
           feature.imageryLayer.imageryProvider instanceof
-            MapboxVectorTileImageryProvider
+            MapboxVectorTileImageryProvider &&
+          isDefined(featureId)
         ) {
           const highlightImageryProvider = feature.imageryLayer.imageryProvider.createHighlightImageryProvider(
-            feature.data.id
+            featureId
           );
           this._removeHighlightCallback = this.terria.currentViewer._addVectorTileHighlight(
             highlightImageryProvider,
