@@ -28,9 +28,11 @@ const Tool: React.FC<ToolProps> = props => {
   const { viewState, getToolComponent, params, toolName } = props;
   const [t] = useTranslation();
 
-  const [tool, setTool] = useState<any>(undefined);
+  // Track the tool component & props together so that we always
+  // pass the right props to the right tool.
+  const [toolAndProps, setToolAndProps] = useState<any>(undefined);
   useEffect(() => {
-    setTool([
+    setToolAndProps([
       React.lazy(() =>
         Promise.resolve(getToolComponent()).then(c => ({ default: c }))
       ),
@@ -38,12 +40,9 @@ const Tool: React.FC<ToolProps> = props => {
     ]);
   }, [getToolComponent]);
 
-  // If the user tries to reload the tool after an error we want to re-render
-  // whole ToolErrorBoundary and its children so increment the key when
-  // getToolComponent changes.
   let ToolComponent;
   let toolProps;
-  if (tool !== undefined) [ToolComponent, toolProps] = tool;
+  if (toolAndProps !== undefined) [ToolComponent, toolProps] = toolAndProps;
   return (
     <ToolErrorBoundary t={t} toolName={toolName} terria={viewState.terria}>
       <Suspense fallback={<div>Loading...</div>}>
