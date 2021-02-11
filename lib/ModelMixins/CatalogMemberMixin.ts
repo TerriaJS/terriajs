@@ -5,6 +5,10 @@ import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
 import AsyncLoader from "../Core/AsyncLoader";
 import AccessControlMixin from "./AccessControlMixin";
 import isDefined from "../Core/isDefined";
+import AsyncMappableMixin from "./AsyncMappableMixin";
+import AsyncChartableMixin from "./AsyncChartableMixin";
+import ReferenceMixin from "./ReferenceMixin";
+import GroupMixin from "./GroupMixin";
 
 type CatalogMember = Model<CatalogMemberTraits>;
 
@@ -31,13 +35,18 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       return this._metadataLoader.isLoading;
     }
 
-    /**
-     * isLoading can be override to provide custom loading functionality
-     */
-    readonly isLoading: boolean = false;
+    get isLoading() {
+      return (
+        this.isLoadingMetadata ||
+        (AsyncMappableMixin.isMixedInto(this) && this.isLoadingMapItems) ||
+        (AsyncChartableMixin.isMixedInto(this) && this.isLoadingChartItems) ||
+        (ReferenceMixin.is(this) && this.isLoadingReference) ||
+        (GroupMixin.isMixedInto(this) && this.isLoadingMembers)
+      );
+    }
 
-    loadMetadata(): Promise<void> {
-      return this._metadataLoader.load();
+    loadMetadata(force = false): Promise<void> {
+      return this._metadataLoader.load(force);
     }
 
     /**
@@ -121,11 +130,6 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
           return sourceInfoItemNames.indexOf(infoItem.name) === -1;
         });
       }
-    }
-
-    dispose() {
-      super.dispose();
-      this._metadataLoader.dispose();
     }
   }
 

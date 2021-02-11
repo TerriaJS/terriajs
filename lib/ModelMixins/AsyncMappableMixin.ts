@@ -29,8 +29,8 @@ function AsyncMappableMixin<T extends Constructor<Model<MappableTraits>>>(
      * If the map items are already loaded or already loading, it will
      * return the existing promise.
      */
-    loadMapItems(): Promise<void> {
-      return this._mapItemsLoader.load();
+    loadMapItems(force = false): Promise<void> {
+      return this._mapItemsLoader.load(force);
     }
 
     abstract get mapItems(): MapItem[];
@@ -40,11 +40,6 @@ function AsyncMappableMixin<T extends Constructor<Model<MappableTraits>>>(
      * whether the map items are already loaded.
      */
     protected abstract forceLoadMapItems(): Promise<void>;
-
-    dispose() {
-      super.dispose();
-      this._mapItemsLoader.dispose();
-    }
   }
 
   return AsyncMappableMixin;

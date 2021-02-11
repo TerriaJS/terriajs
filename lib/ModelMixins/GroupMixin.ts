@@ -64,8 +64,8 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
      * should be complete, but the individual members will not necessarily be
      * loaded themselves.
      */
-    loadMembers(): Promise<void> {
-      return this._memberLoader.load().finally(() => {
+    loadMembers(force = false): Promise<void> {
+      return this._memberLoader.load(force).finally(() => {
         this.refreshKnownContainerUniqueIds(this.uniqueId);
         this.addShareKeysToMembers();
       });
@@ -200,11 +200,6 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
           members.splice(index, 1);
         }
       }
-    }
-
-    dispose() {
-      super.dispose();
-      this._memberLoader.dispose();
     }
   }
 

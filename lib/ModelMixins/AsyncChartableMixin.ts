@@ -29,8 +29,8 @@ function AsyncChartableMixin<T extends Constructor<Model<MappableTraits>>>(
      * If the chart items are already loaded or already loading, it will
      * return the existing promise.
      */
-    loadChartItems(): Promise<void> {
-      return this._chartItemsLoader.load();
+    loadChartItems(force = false): Promise<void> {
+      return this._chartItemsLoader.load(force);
     }
 
     /**
@@ -43,11 +43,6 @@ function AsyncChartableMixin<T extends Constructor<Model<MappableTraits>>>(
      * whether the chart items are already loaded.
      */
     protected abstract forceLoadChartItems(): Promise<void>;
-
-    dispose() {
-      super.dispose();
-      this._chartItemsLoader.dispose();
-    }
   }
 
   return AsyncChartableMixin;

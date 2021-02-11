@@ -210,12 +210,8 @@ export const WorkbenchItemRaw = observer(
               >
                 <ConceptViewer item={workbenchItem} />
               </If>
-              {(CatalogMemberMixin.isMixedInto(this.props.item) &&
-                this.props.item.isLoading) ||
-              (AsyncMappableMixin.isMixedInto(this.props.item) &&
-                this.props.item.isLoadingMapItems) ||
-              (AsyncChartableMixin.isMixedInto(this.props.item) &&
-                this.props.item.isLoadingChartItems) ? (
+              {CatalogMemberMixin.isMixedInto(this.props.item) &&
+              this.props.item.isLoading ? (
                 <Box paddedVertically>
                   <Loader light />
                 </Box>

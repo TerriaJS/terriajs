@@ -36,13 +36,6 @@ export default class SdmxJsonCatalogItem
   private _currentCsvUrl: string | undefined;
   private _currentCsvString: string | undefined;
 
-  @observable private _isLoading = false;
-
-  @computed
-  get isLoading() {
-    return this._isLoading;
-  }
-
   constructor(
     id: string | undefined,
     terria: Terria,
@@ -113,7 +106,7 @@ export default class SdmxJsonCatalogItem
         this.regionMappedDimensionIds.length === 0,
       setDimensionValue: (stratumId: string, value: "time" | "region") => {
         this.setTrait(stratumId, "viewBy", value);
-        this.forceLoadMapItems(true).then(() => this.forceLoadChartItems());
+        this.loadMapItems(true).then(() => this.loadChartItems());
       }
     };
   }
@@ -140,7 +133,7 @@ export default class SdmxJsonCatalogItem
           }
 
           dimensionTraits.setTrait(stratumId, "selectedId", value);
-          this.forceLoadMapItems(true).then(() => this.forceLoadChartItems());
+          this.loadMapItems(true).then(() => this.loadChartItems());
         }
       };
     });
@@ -293,13 +286,7 @@ export default class SdmxJsonCatalogItem
   protected async forceLoadTableData(): Promise<string[][]> {
     await this.loadMetadata();
 
-    runInAction(() => (this._isLoading = true));
-
-    const results = await this.downloadData();
-
-    runInAction(() => (this._isLoading = false));
-
-    return results || [];
+    return (await this.downloadData()) || [];
   }
 }
 

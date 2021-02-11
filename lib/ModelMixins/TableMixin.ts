@@ -504,17 +504,14 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       });
     }
 
-    protected forceLoadChartItems(force?: boolean) {
-      return this._dataLoader.load(force);
+    protected async forceLoadChartItems() {
+      // return Promise.resolve();
+      await this._dataLoader.load(true);
     }
 
-    protected forceLoadMapItems(force?: boolean) {
-      return this._dataLoader.load(force);
-    }
-
-    dispose() {
-      super.dispose();
-      this._dataLoader.dispose();
+    protected forceLoadMapItems() {
+      // return Promise.resolve();
+      return this._dataLoader.load(true);
     }
 
     /*
