@@ -210,12 +210,13 @@ export const WorkbenchItemRaw = observer(
               >
                 <ConceptViewer item={workbenchItem} />
               </If>
-              {(CatalogMemberMixin.isMixedInto(this.props.item) &&
-                this.props.item.isLoading) ||
-              (AsyncMappableMixin.isMixedInto(this.props.item) &&
-                this.props.item.isLoadingMapItems) ||
-              (AsyncChartableMixin.isMixedInto(this.props.item) &&
-                this.props.item.isLoadingChartItems) ? (
+              {CatalogMemberMixin.isMixedInto(this.props.item) &&
+              this.props.item.isLoading ? (
+                // These are disabled until AsyncLoader.isLoading is fixed https://github.com/TerriaJS/terriajs/issues/5233
+                //   || (AsyncMappableMixin.isMixedInto(this.props.item) &&
+                //   this.props.item.isLoadingMapItems) ||
+                // (AsyncChartableMixin.isMixedInto(this.props.item) &&
+                //   this.props.item.isLoadingChartItems)
                 <Box paddedVertically>
                   <Loader light />
                 </Box>

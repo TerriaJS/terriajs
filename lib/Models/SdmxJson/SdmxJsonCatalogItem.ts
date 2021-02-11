@@ -38,6 +38,7 @@ export default class SdmxJsonCatalogItem
 
   @observable private _isLoading = false;
 
+  // This is overriding CatalogMemberMixin until AsyncLoader.isloading is fixed (https://github.com/TerriaJS/terriajs/issues/5233)
   @computed
   get isLoading() {
     return this._isLoading;
