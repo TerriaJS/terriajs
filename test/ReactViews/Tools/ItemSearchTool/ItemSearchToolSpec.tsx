@@ -6,9 +6,7 @@ import {
   ReactTestRenderer
 } from "react-test-renderer";
 import { assertObject } from "../../../../lib/Core/Json";
-import SearchableItemMixin from "../../../../lib/ModelMixins/SearchableItemMixin";
 import CommonStrata from "../../../../lib/Models/CommonStrata";
-import CreateModel from "../../../../lib/Models/CreateModel";
 import ItemSearchProvider, {
   ItemSearchParameter,
   ItemSearchResult
@@ -23,15 +21,8 @@ import ItemSearchTool, {
 import Loading from "../../../../lib/ReactViews/Tools/ItemSearchTool/Loading";
 import SearchForm from "../../../../lib/ReactViews/Tools/ItemSearchTool/SearchForm";
 import SearchResults from "../../../../lib/ReactViews/Tools/ItemSearchTool/SearchResults";
-import SearchableItemTraits from "../../../../lib/Traits/SearchableItemTraits";
 import { withThemeContext } from "../../withThemeContext";
-
-class TestSearchableItem extends SearchableItemMixin(
-  CreateModel(SearchableItemTraits)
-) {
-  selectItemSearchResult(result: ItemSearchResult) {}
-  unselectItemSearchResult(result: ItemSearchResult) {}
-}
+import MockSearchableItem from "./MockSearchableItem";
 
 class TestItemSearchProvider extends ItemSearchProvider {
   async initialize(): Promise<void> {
@@ -56,7 +47,7 @@ class TestItemSearchProvider extends ItemSearchProvider {
 
 describe("ItemSearchTool", function() {
   let viewState: ViewState;
-  let item: TestSearchableItem;
+  let item: MockSearchableItem;
   let itemSearchProvider: ItemSearchProvider;
   let rendered: ReactTestRenderer;
 
@@ -68,7 +59,7 @@ describe("ItemSearchTool", function() {
       catalogSearchProvider: null,
       locationSearchProviders: []
     });
-    item = new TestSearchableItem("test", terria);
+    item = new MockSearchableItem("test", terria);
     item.setTrait(CommonStrata.user, "search", {
       providerType: "testProvider",
       providerOptions: {},
