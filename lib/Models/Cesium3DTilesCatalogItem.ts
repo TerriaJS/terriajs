@@ -61,8 +61,9 @@ export default class Cesium3DTilesCatalogItem
     const highlightColor = `color('${this.highlightColor}')`;
     const colorExpression = `\${${SEARCH_RESULT_TAG}} === true`;
 
+    let pickedFeatures: PickedFeatures | undefined = undefined;
     if (results.length === 1)
-      this.popupInfoPanelForFeature(
+      pickedFeatures = this.popupInfoPanelForFeature(
         { [idPropertyName]: results[0].id },
         SEARCH_RESULT_TAG,
         60000
@@ -86,13 +87,15 @@ export default class Cesium3DTilesCatalogItem
       value: highlightColor
     });
 
-    const highlightDisposer = () => {
+    const highlightDisposer = action(() => {
+      if (this.terria.pickedFeatures === pickedFeatures)
+        this.terria.pickedFeatures = undefined;
       tileset.tileVisible.removeEventListener(watch);
       highligtedFeatures.forEach(feature =>
         feature.setProperty(SEARCH_RESULT_TAG, undefined)
       );
       this.removeColorExpression(colorExpression);
-    };
+    });
 
     return highlightDisposer;
   }
@@ -112,13 +115,6 @@ export default class Cesium3DTilesCatalogItem
     const idPropertyName = results[0].idPropertyName;
     const hiddenFeatures: Set<Cesium3DTileFeature> = new Set();
     const showExpression = `\${${SEARCH_RESULT_TAG}} === true`;
-
-    if (results.length === 1)
-      this.popupInfoPanelForFeature(
-        { [idPropertyName]: results[0].id },
-        SEARCH_RESULT_TAG,
-        60000
-      );
 
     const watch = (tile: Cesium3DTile) => {
       const content = tile.content;
@@ -156,9 +152,8 @@ export default class Cesium3DTilesCatalogItem
     featureProperties: Record<string, string | number>,
     excludePropertyFromPanel: string,
     timeoutMsecs: number
-  ): Promise<void> {
+  ): PickedFeatures {
     const pickedFeatures = new PickedFeatures();
-    this.terria.pickedFeatures;
 
     // There is a small chance that we might miss the tileVisible event for the
     // feature, so timeout after 60 secs
@@ -180,7 +175,7 @@ export default class Cesium3DTilesCatalogItem
       })
     );
     this.terria.pickedFeatures = pickedFeatures;
-    return pickedFeatures.allFeaturesAvailablePromise;
+    return pickedFeatures;
   }
 
   /**
