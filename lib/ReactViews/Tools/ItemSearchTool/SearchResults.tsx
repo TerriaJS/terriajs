@@ -99,7 +99,7 @@ const SearchResults: React.FC<SearchResultsProps> = props => {
         <HighlightResults item={item} results={results} />
       )}
       {currentSelection.is === "singleResult" && (
-        <HighlightResults item={item} results={[currentSelection.result]} />
+        <HighlightResults item={item} results={currentSelection.result} />
       )}
       {currentSelection.is === "hideAll" && (
         <HideAllResults item={item} results={results} />
