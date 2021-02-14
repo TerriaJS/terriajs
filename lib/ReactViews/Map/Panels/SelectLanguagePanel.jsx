@@ -9,6 +9,7 @@ import Styles from "./panel.scss";
 const SelectLanguagePanel = createReactClass({
   displayName: "SelectLanguagePanel",
   mixins: [ObserveModelMixin],
+  selectedLng: localStorage.getItem("i18nextLng"),
 
   handleLngChange(e) {
     this.selectedLng = e.target.value;
