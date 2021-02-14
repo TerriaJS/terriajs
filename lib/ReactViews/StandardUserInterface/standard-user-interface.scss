@@ -98,6 +98,13 @@
     // background: rgba(#ffcc00, 0.5);
   }
 
+  @media (min-width: $md) {
+    [dir="rtl"] & {
+      right: $work-bench-width + 22px;
+      left: 96px;
+    }
+  }
+
   & > div {
     pointer-events: auto;
     position: absolute;
@@ -152,6 +159,14 @@
 .showWorkbenchButtonisVisible {
   left: 16px;
 }
+
+.showWorkbenchButtonisVisible {
+  [dir="rtl"] & {
+    left: 0;
+    right: 16px;
+  }
+}
+
 .showWorkbenchButtonisNotVisible {
   transition-delay: 0s;
 }

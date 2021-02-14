@@ -98,6 +98,11 @@
   > * {
     display: inline-block;
   }
+
+  [dir="rtl"] & {
+    left: unset;
+    right: 5px;
+  }
 }
 
 .group-right {
@@ -106,6 +111,10 @@
 
   > * {
     display: inline-block;
+  }
+  [dir="rtl"] & {
+    right: unset;
+    left: 5px;
   }
 }
 
@@ -127,6 +136,10 @@
     height: 37px;
     width: 37px;
     fill: #fff;
+  }
+  [dir="rtl"] & {
+    margin-right: unset;
+    margin-left: 3px;
   }
 }
 

@@ -45,6 +45,10 @@
   svg {
     fill: $text-light;
   }
+  [dir="rtl"] & {
+    margin-left: 0px;
+    margin-right: 5px;
+  }
 }
 
 .button {
@@ -63,5 +67,11 @@
     margin: $input-glyph-margin;
     display: block;
     fill: #ffffff;
+  }
+
+  svg {
+    [dir="rtl"] & {
+      left: auto;
+    }
   }
 }

@@ -33,6 +33,15 @@
   }
 }
 
+@media (min-width: 768px) {
+  .form {
+    [dir="rtl"] & {
+      left: 20px;
+      right: unset;
+    }
+  }
+}
+
 .header {
   position: relative;
   background: $dark-lighter;
@@ -60,6 +69,10 @@
   &:hover,
   &--hover {
     background: get-hover-color($color-primary);
+  }
+  [dir="rtl"] & {
+    margin-left: auto;
+    margin-right: 10px;
   }
 }
 

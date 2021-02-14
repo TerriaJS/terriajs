@@ -20,6 +20,11 @@
   &.is-hidden {
     display: none;
   }
+  [dir="rtl"] & {
+    padding-right: 380px;
+    bottom: 90px;
+    padding-left: 50px;
+  }
 }
 
 .isPushedUp {
@@ -57,9 +62,17 @@
 
   .left {
     border-right: 1px solid $field-border;
+    [dir="rtl"] & {
+      border-right: 0;
+      border-left: 1px solid #ddd;
+    }
   }
   .right {
     border-left: 1px solid $field-border;
+    [dir="rtl"] & {
+      border-left: 0;
+      border-right: 1px solid #ddd;
+    }
   }
 }
 
@@ -115,6 +128,9 @@
     -webkit-hyphens: auto;
     hyphens: auto;
   }
+  [dir="rtl"] & {
+    float: right;
+  }
 }
 
 .locationBtn,
@@ -141,6 +157,9 @@
   svg {
     width: 15px;
     height: 15px;
+    [dir="rtl"] & {
+      transform: rotate(180deg);
+    }
   }
 }
 .exitBtn {

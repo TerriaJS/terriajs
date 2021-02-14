@@ -42,6 +42,9 @@
     padding-bottom: 10px;
     border-bottom: 1px solid $grey-lighter;
   }
+  [dir="rtl"] & {
+    text-align: right;
+  }
 }
 
 .btn-action {
@@ -84,6 +87,10 @@
     &:before {
       position: absolute;
     }
+  }
+  [dir="rtl"] & {
+    right: unset;
+    left: 0;
   }
 }
 

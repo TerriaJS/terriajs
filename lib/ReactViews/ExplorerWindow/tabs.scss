@@ -9,11 +9,17 @@
   padding-right: 100px;
   background: $color-primary;
   border-radius: 3px 3px 0 0;
+  [dir="rtl"] & {
+    padding-right: 0px;
+  }
 }
 
 .tab-list__item {
   display: inline-block;
   float: left;
+  [dir="rtl"] & {
+    float: right;
+  }
 }
 
 .tab-panel {
@@ -47,6 +53,14 @@
     flex-direction: column;
     form {
       margin: $padding 0;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .tab-left-col {
+    [dir="rtl"] & {
+      float: right;
     }
   }
 }

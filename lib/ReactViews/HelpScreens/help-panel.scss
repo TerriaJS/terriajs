@@ -8,6 +8,17 @@
 .dropdown-inner {
   width: $share-panel-width;
   @include transform-origin(50%, top);
+  [dir="rtl"] & {
+    right: -377px;
+  }
+}
+
+@media (max-width: 420px) {
+  .dropdown-inner {
+    [dir="rtl"] & {
+      right: 0px;
+    }
+  }
 }
 
 .heading-label {

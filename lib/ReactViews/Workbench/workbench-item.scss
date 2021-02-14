@@ -37,6 +37,9 @@ $workbench-margin: $padding-small;
 .header {
   composes: list-reset from "../../Sass/common/_base.scss";
   width: 100%;
+  [dir="rtl"] & {
+    padding: 0;
+  }
 }
 
 .header-clearfix {
