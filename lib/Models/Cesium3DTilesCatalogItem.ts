@@ -1,12 +1,15 @@
 import i18next from "i18next";
-import { action } from "mobx";
-import { Cesium3DTileFeature } from "terriajs-cesium";
+import { action, toJS } from "mobx";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
 import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 import Cesium3DTile from "terriajs-cesium/Source/Scene/Cesium3DTile";
+import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
+import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
+import makeRealPromise from "../Core/makeRealPromise";
 import timeout from "../Core/timeout";
 import PickedFeatures from "../Map/PickedFeatures";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
@@ -20,8 +23,8 @@ import CreateModel from "./CreateModel";
 import { ItemSearchResult } from "./ItemSearchProvider";
 import Mappable from "./Mappable";
 
-// A property name used for marking a search result feature for highlighting/hiding.
-const SEARCH_RESULT_TAG = "search_result";
+// A property name used for tagging a search result feature for highlighting/hiding.
+const SEARCH_RESULT_TAG = "terriajs_search_result";
 
 export default class Cesium3DTilesCatalogItem
   extends SearchableItemMixin(
@@ -39,62 +42,65 @@ export default class Cesium3DTilesCatalogItem
   }
 
   /**
-   * Highlights all item search results. See {@SearchableItemMixin}.
+   * Highlights all item-search results. See {@SearchableItemMixin}.
    *
-   * We listen to the `tileVisible  event for the tileset and set
-   * and mark all the features with matching IDs using the marker tag SEARCH_RESULT_TAG.
-   * We then apply the styling to higlight all features with SEARCH_RESULT_TAG set to `true`.
-   * In the disposer function we remove the marker tag and the styling rules.
+   * Watches for newly visible features with an id property matching `results`
+   * and tags them by setting {@SEARCH_RESULT_TAG} property. A color style is
+   * then applied to the tagged features to acheive the highlighting.
    */
   @action
   highlightItemSearchResults(
     results: ItemSearchResult[]
   ): ItemSelectionDisposer {
     const tileset = this.tileset;
-    if (tileset === undefined || results.length == 0) {
+    if (tileset === undefined || results.length === 0) {
       return () => {}; // empty disposer
     }
 
     const resultIds = new Set(results.map(r => r.id));
     const idPropertyName = results[0].idPropertyName;
     const highligtedFeatures: Set<Cesium3DTileFeature> = new Set();
-    const highlightColor = `color('${this.highlightColor}')`;
-    const colorExpression = `\${${SEARCH_RESULT_TAG}} === true`;
 
-    let pickedFeatures: PickedFeatures | undefined = undefined;
-    if (results.length === 1)
-      pickedFeatures = this.popupInfoPanelForFeature(
-        { [idPropertyName]: results[0].id },
-        SEARCH_RESULT_TAG,
-        60000
+    // If we have only 1 result, try to popup a feature info panel for it
+    let disposeFeatureInfoPanel = () => {};
+    if (results.length === 1) {
+      disposeFeatureInfoPanel = this.popupInfoPanelForFeature(
+        { [idPropertyName]: results[0].id }, // select feature with a matching id property
+        SEARCH_RESULT_TAG, // Exclude the SEARCH_RESULT_TAG from the info panel
+        60000 // timeout after 60secs
       );
+    }
 
-    const watch = (tile: Cesium3DTile) => {
-      const content = tile.content;
-      for (let i = 0; i < content.featuresLength; i++) {
-        const feature = content.getFeature(i);
+    // Tag newly visible features with SEARCH_RESULT_TAG
+    const disposeWatch = this._watchForNewTileFeatures(
+      tileset,
+      (feature: Cesium3DTileFeature) => {
         const featureId = feature.getProperty(idPropertyName);
         if (resultIds.has(featureId)) {
           feature.setProperty(SEARCH_RESULT_TAG, true);
           highligtedFeatures.add(feature);
         }
       }
-    };
-    tileset.tileVisible.addEventListener(watch);
+    );
 
+    // Instead of directly setting `feature.color` to highlight the feature, we
+    // apply a style rule for the tagged features.  This lets us remove the
+    // highlight by simply removing the style and don't have to store the
+    // previous color of each matched feature.
+    const highlightColor = `color('${this.highlightColor}')`;
+    const colorExpression = `\${${SEARCH_RESULT_TAG}} === true`;
     this.applyColorExpression({
       condition: colorExpression,
       value: highlightColor
     });
 
     const highlightDisposer = action(() => {
-      if (this.terria.pickedFeatures === pickedFeatures)
-        this.terria.pickedFeatures = undefined;
-      tileset.tileVisible.removeEventListener(watch);
+      disposeWatch();
+      disposeFeatureInfoPanel();
+      this.removeColorExpression(colorExpression);
       highligtedFeatures.forEach(feature =>
         feature.setProperty(SEARCH_RESULT_TAG, undefined)
       );
-      this.removeColorExpression(colorExpression);
     });
 
     return highlightDisposer;
@@ -105,7 +111,9 @@ export default class Cesium3DTilesCatalogItem
    *
    * Works similar to {@highlightItemSearchResults}
    */
-  @action hideItemSearchResults(results: ItemSearchResult[]) {
+  @action hideItemSearchResults(
+    results: ItemSearchResult[]
+  ): ItemSelectionDisposer {
     const tileset = this.tileset;
     if (tileset === undefined || results.length == 0) {
       return () => {}; // empty disposer
@@ -114,34 +122,72 @@ export default class Cesium3DTilesCatalogItem
     const resultIds = new Set(results.map(r => r.id));
     const idPropertyName = results[0].idPropertyName;
     const hiddenFeatures: Set<Cesium3DTileFeature> = new Set();
-    const showExpression = `\${${SEARCH_RESULT_TAG}} === true`;
 
-    const watch = (tile: Cesium3DTile) => {
-      const content = tile.content;
-      for (let i = 0; i < content.featuresLength; i++) {
-        const feature = content.getFeature(i);
+    // Tag newly visible features with SEARCH_RESULT_TAG
+    const disposeWatch = this._watchForNewTileFeatures(
+      tileset,
+      (feature: Cesium3DTileFeature) => {
         const featureId = feature.getProperty(idPropertyName);
         if (resultIds.has(featureId)) {
           feature.setProperty(SEARCH_RESULT_TAG, true);
           hiddenFeatures.add(feature);
         }
       }
-    };
-    tileset.tileVisible.addEventListener(watch);
+    );
 
+    const showExpression = `\${${SEARCH_RESULT_TAG}} === true`;
     this.applyShowExpression({
       condition: showExpression,
       show: false
     });
 
-    const disposer = () => {
-      tileset.tileVisible.removeEventListener(watch);
+    const disposer = action(() => {
+      disposeWatch();
+      this.removeShowExpression(showExpression);
       hiddenFeatures.forEach(feature =>
         feature.setProperty(SEARCH_RESULT_TAG, undefined)
       );
-      this.removeShowExpression(showExpression);
-    };
+    });
 
+    return disposer;
+  }
+
+  /**
+   * Callback the given function once for each visible feature.
+   *
+   * @param tileset The cesium 3d tileset
+   * @param callback The function to callback receiving the feature as its parameter
+   * @return A disposer function cancelling the watch
+   */
+  private _watchForNewTileFeatures(
+    tileset: Cesium3DTileset,
+    callback: (feature: Cesium3DTileFeature) => void
+  ): () => void {
+    const watchedTiles: Set<Cesium3DTile> = new Set();
+    const watch = (tile: Cesium3DTile) => {
+      if (watchedTiles.has(tile)) return;
+      const content = tile.content;
+      for (let i = 0; i < content.featuresLength; i++) {
+        const feature = content.getFeature(i);
+        callback(feature);
+      }
+      watchedTiles.add(tile);
+    };
+    const removeWatchedTile = (tile: Cesium3DTile) => watchedTiles.delete(tile);
+    // Why listen on both tileLoad & tileVisible?
+    // tileLoad is best for applying styles as the style takes effect
+    // from the first render but in our case the tileset is already
+    // loaded so we must also listen to tileVisible to style the existing tiles.
+    // This is alright because we use the `watchedTiles` filter to avoid
+    // processing a tile multiple times.
+    tileset.tileLoad.addEventListener(watch);
+    tileset.tileVisible.addEventListener(watch);
+    tileset.tileUnload.addEventListener(removeWatchedTile);
+    const disposer = () => {
+      tileset.tileLoad.removeEventListener(watch);
+      tileset.tileVisible.removeEventListener(watch);
+      tileset.tileUnload.removeEventListener(removeWatchedTile);
+    };
     return disposer;
   }
 
@@ -152,7 +198,7 @@ export default class Cesium3DTilesCatalogItem
     featureProperties: Record<string, string | number>,
     excludePropertyFromPanel: string,
     timeoutMsecs: number
-  ): PickedFeatures {
+  ): () => void {
     const pickedFeatures = new PickedFeatures();
 
     // There is a small chance that we might miss the tileVisible event for the
@@ -164,7 +210,8 @@ export default class Cesium3DTilesCatalogItem
       action(cesium3DTileFeature => {
         if (cesium3DTileFeature) {
           const feature = this.getFeaturesFromPickResult(
-            // The screenPosition param is not used by 3dtiles catalog item, so just pass a fake value
+            // The screenPosition param is not used by 3dtiles catalog item,
+            // so just pass a fake value
             new Cartesian2(),
             cesium3DTileFeature
           );
@@ -175,7 +222,14 @@ export default class Cesium3DTilesCatalogItem
       })
     );
     this.terria.pickedFeatures = pickedFeatures;
-    return pickedFeatures;
+
+    const disposer = () => {
+      // Closes the feature info panel if it is still displaying the
+      // feature we selected
+      if (this.terria.pickedFeatures === pickedFeatures)
+        this.terria.pickedFeatures = undefined;
+    };
+    return disposer;
   }
 
   /**
@@ -195,9 +249,11 @@ export default class Cesium3DTilesCatalogItem
         // If feature height is small, we try to zoom to a view from a top
         // angle. We also try to be a bit more precise so that the camera does
         // not go underground.
-        sampleTerrainMostDetailed(scene.terrainProvider, [
-          Cartographic.fromDegrees(longitude, latitude)
-        ]).then(([terrainCartographic]) => {
+        const cartographic = Cartographic.fromDegrees(longitude, latitude);
+        const promise = makeRealPromise<Cartographic[]>(
+          sampleTerrainMostDetailed(scene.terrainProvider, [cartographic])
+        ).catch(() => [cartographic]);
+        promise.then(([terrainCartographic]) => {
           terrainCartographic.height += featureHeight + 10;
           const destination = Ellipsoid.WGS84.cartographicToCartesian(
             terrainCartographic
