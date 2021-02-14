@@ -1,9 +1,6 @@
 import React, { useEffect } from "react";
 import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
-import {
-  ItemSearchParameterType,
-  ItemSearchResult
-} from "../../../Models/ItemSearchProvider";
+import { ItemSearchResult } from "../../../Models/ItemSearchProvider";
 
 export type HideAllResultsProps = {
   item: SearchableItemMixin.Instance;
@@ -21,16 +18,19 @@ export const HideAllResults: React.FC<HideAllResultsProps> = props => {
 
 export type HighlightResultsProps = {
   item: SearchableItemMixin.Instance;
-  results: ItemSearchResult[];
+  results: ItemSearchResult | ItemSearchResult[];
 };
 
 export const HighlightResults: React.FC<HighlightResultsProps> = props => {
-  const { item, results } = props;
   useEffect(() => {
+    const item = props.item;
+    const results = Array.isArray(props.results)
+      ? props.results
+      : [props.results];
     if (results.length === 1) zoomToResult(item, results[0]);
     const disposer = item.highlightItemSearchResults(results);
     return disposer;
-  }, [item, results]);
+  }, [props.item, props.results]);
 
   return null;
 };

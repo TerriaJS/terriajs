@@ -10,6 +10,7 @@ import {
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import clone from "terriajs-cesium/Source/Core/clone";
+import Color from "terriajs-cesium/Source/Core/Color";
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import IonResource from "terriajs-cesium/Source/Core/IonResource";
 import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
@@ -17,15 +18,16 @@ import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
+import Cesium3DTile from "terriajs-cesium/Source/Scene/Cesium3DTile";
 import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
-import Color from "terriajs-cesium/Source/Core/Color";
-import ClippingPlaneCollection from "terriajs-cesium/Source/Scene/ClippingPlaneCollection";
 import ClippingPlane from "terriajs-cesium/Source/Scene/ClippingPlane";
+import ClippingPlaneCollection from "terriajs-cesium/Source/Scene/ClippingPlaneCollection";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
+import { isJsonObject, JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
 import runLater from "../Core/runLater";
 import CommonStrata from "../Models/CommonStrata";
@@ -39,9 +41,6 @@ import Cesium3dTilesTraits, {
 } from "../Traits/Cesium3dTilesTraits";
 import AsyncMappableMixin from "./AsyncMappableMixin";
 import ShadowMixin from "./ShadowMixin";
-import { isJsonObject, JsonObject } from "../Core/Json";
-import Cesium3DTile from "terriajs-cesium/Source/Scene/Cesium3DTile";
-import { Cesium3DTileContent } from "terriajs-cesium";
 
 const DEFAULT_HIGHLIGHT_COLOR = "#ff3f00";
 
@@ -484,10 +483,9 @@ export default function Cesium3dTilesMixin<
       const show = this.style?.show;
       if (!isJsonObject(show)) return;
       if (!isObservableArray(show.conditions)) return;
-      const conditions = show.conditions.slice();
-      const idx = conditions.findIndex(e => e[0] === condition);
-      if (idx < 0) return;
-      conditions.splice(idx, 1);
+      const conditions = show.conditions
+        .slice()
+        .filter(e => e[0] !== condition);
       this.setTrait(CommonStrata.user, "style", {
         ...this.style,
         show: {
@@ -516,10 +514,9 @@ export default function Cesium3dTilesMixin<
       const color = this.style?.color;
       if (!isJsonObject(color)) return;
       if (!isObservableArray(color.conditions)) return;
-      const conditions = color.conditions.slice();
-      const idx = conditions.findIndex(e => e[0] === condition);
-      if (idx < 0) return;
-      conditions.splice(idx, 1);
+      const conditions = color.conditions
+        .slice()
+        .filter(e => e[0] !== condition);
       this.setTrait(CommonStrata.user, "style", {
         ...this.style,
         color: {
