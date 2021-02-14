@@ -145,6 +145,13 @@
   }
 }
 
+.selectLanguage {
+  &:hover,
+  &:focus {
+    background-color: #58606a;
+  }
+}
+
 .overlay {
   position: fixed;
   left: 0;

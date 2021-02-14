@@ -9,6 +9,7 @@ import HelpMenuPanelBasic from "../HelpScreens/HelpMenuPanelBasic.jsx";
 import SettingPanel from "./Panels/SettingPanel.jsx";
 import SharePanel from "./Panels/SharePanel/SharePanel.jsx";
 import ToolsPanel from "./Panels/ToolsPanel/ToolsPanel.jsx";
+import SelectLanguagePanel from "./Panels/SelectLanguagePanel.jsx";
 import Icon from "../Icon.jsx";
 import ObserveModelMixin from "../ObserveModelMixin";
 import Prompt from "../Generic/Prompt";
@@ -169,6 +170,9 @@ const MenuBar = createReactClass({
               </li>
             </For>
           </If>
+          <li className={Styles.menuItem}>
+            <SelectLanguagePanel />
+          </li>
         </ul>
       </div>
     );
