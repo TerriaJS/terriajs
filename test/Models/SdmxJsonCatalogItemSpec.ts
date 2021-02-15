@@ -1,8 +1,8 @@
 import { runInAction } from "mobx";
-import Terria from "../../lib/Models/Terria";
-import SdmxJsonCatalogItem from "../../lib/Models/SdmxJson/SdmxJsonCatalogItem";
-import { ConceptTraits } from "../../lib/Traits/SdmxCommonTraits";
 import createStratumInstance from "../../lib/Models/createStratumInstance";
+import SdmxJsonCatalogItem from "../../lib/Models/SdmxJson/SdmxJsonCatalogItem";
+import Terria from "../../lib/Models/Terria";
+import { ModelOverrideTraits } from "../../lib/Traits/SdmxCommonTraits";
 
 const regionMapping = JSON.stringify(
   require("../../wwwroot/data/regionMapping.json")
@@ -92,8 +92,8 @@ describe("SdmxJsonCatalogItem", function() {
   it("loadsDataflow-region-conceptoverride", async function() {
     runInAction(() => {
       sdmxItem.setTrait("definition", "dataflowId", "DF_CPI");
-      sdmxItem.setTrait("definition", "conceptOverrides", [
-        createStratumInstance(ConceptTraits, {
+      sdmxItem.setTrait("definition", "modelOverrides", [
+        createStratumInstance(ModelOverrideTraits, {
           id:
             "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).GEO_PICT",
           type: "region",

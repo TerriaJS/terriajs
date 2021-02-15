@@ -1,13 +1,13 @@
+import CatalogMemberTraits from "./CatalogMemberTraits";
 import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import mixTraits from "./mixTraits";
 import objectArrayTrait from "./objectArrayTrait";
 import primitiveArrayTrait from "./primitiveArrayTrait";
 import primitiveTrait from "./primitiveTrait";
+import SdmxCommonTraits, { DimensionTraits } from "./SdmxCommonTraits";
 import TableTraits from "./TableTraits";
 import UrlTraits from "./UrlTraits";
-import CatalogMemberTraits from "./CatalogMemberTraits";
-import { DimensionTraits, ConceptTraits } from "./SdmxCommonTraits";
 
 export class SdmxDimensionTraits extends DimensionTraits {
   @primitiveTrait({
@@ -19,21 +19,14 @@ export class SdmxDimensionTraits extends DimensionTraits {
   position?: number;
 }
 export default class SdmxCatalogItemTraits extends mixTraits(
+  SdmxCommonTraits,
+
   UrlTraits,
   DiscretelyTimeVaryingTraits,
   FeatureInfoTraits,
   TableTraits,
   CatalogMemberTraits
 ) {
-  @objectArrayTrait({
-    type: ConceptTraits,
-    idProperty: "id",
-    name: "Concept overrides",
-    description:
-      "This provides ability to override Dataflow dimensions by concept id. For example, setting a default value for a given concept."
-  })
-  conceptOverrides?: ConceptTraits[];
-
   @primitiveTrait({
     type: "string",
     name: "Dataflow ID",

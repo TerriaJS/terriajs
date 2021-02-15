@@ -23,14 +23,14 @@ import {
   Agency,
   AgencyScheme,
   AgencySchemes,
+  Categories,
   Categorisations,
   Category,
   CategoryScheme,
   CategorySchemes,
   Dataflow,
   Dataflows,
-  SdmxJsonStructureMessage,
-  Categories
+  SdmxJsonStructureMessage
 } from "./SdmxJsonStructureMessage";
 
 export interface SdmxServer {
@@ -332,9 +332,9 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
 
     itemModel.setTrait(
       stratum,
-      "conceptOverrides",
-      this.catalogGroup.traits.conceptOverrides.toJson(
-        this.catalogGroup.conceptOverrides
+      "modelOverrides",
+      this.catalogGroup.traits.modelOverrides.toJson(
+        this.catalogGroup.modelOverrides
       )
     );
   }

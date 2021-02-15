@@ -109,34 +109,61 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   }
 
   /**
-   * Find conceptOverrides with type 'region-type' to try to extract regionType from another dimension
-   * For example, ABS have a regionType column which may have values (SA1, SA2, ...), which could be used to determine regionType
+   * Find modelOverrides with type 'region-type' to try to extract regionType from another dimension
+   * For example, ABS have a regionType dimension which may have values (SA1, SA2, ...), which could be used to determine regionType
    */
   @computed
   get regionTypeFromDimension() {
     let regionTypeFromDimension: string | undefined;
+    // Find modelOverrides with type 'region-type'
+    this.catalogItem.modelOverrides
+      ?.filter(override => override.type === "region-type")
+      .forEach(override => {
+        // Find dimension id with concept or codelist
+        const dimId = this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.dimensionList?.dimensions?.find(
+          dim =>
+            dim.conceptIdentity === override.id ||
+            dim.localRepresentation?.enumeration === override.id
+        )?.id;
 
-    if (
-      isDefined(this.catalogItem.conceptOverrides) &&
-      this.catalogItem.conceptOverrides.length > 0
-    ) {
-      // Find conceptOverrides with type 'region-type'
-      this.catalogItem.conceptOverrides
-        .filter(concept => concept.type === "region-type")
-        .forEach(concept => {
-          // Find dimension id with concept
-          const dimId = this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.dimensionList?.dimensions?.find(
-            dim => dim.conceptIdentity === concept.id
-          )?.id;
+        const dim = this.catalogItem.dimensions?.find(d => d.id === dimId);
 
-          const dim = this.catalogItem.dimensions?.find(d => d.id === dimId);
-
-          // Set region type to dimension's selected id
-          regionTypeFromDimension = dim?.selectedId;
-        });
-    }
+        // Set region type to dimension's selected id
+        if (dim?.selectedId) regionTypeFromDimension = dim?.selectedId;
+      });
 
     return regionTypeFromDimension;
+  }
+
+  /**
+   * This is used to replace Primary measure column title with a specific dimension's selected value (and titles for time-series charts)
+   * It uses modelOverrides (with type "primary-measure-descriptor") to find a dimension.
+   */
+  @computed
+  get primaryMeasureDescriptor() {
+    let primaryMeasureDescriptor: string | undefined;
+    // Find modelOverrides with type 'region-type'
+    this.catalogItem.modelOverrides
+      ?.filter(override => override.type === "primary-measure-descriptor")
+      .forEach(override => {
+        // Find dimension id with concept or codelist
+        const dimId = this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.dimensionList?.dimensions?.find(
+          dim =>
+            dim.conceptIdentity === override.id ||
+            dim.localRepresentation?.enumeration === override.id
+        )?.id;
+
+        // Find dimension
+        const dim = this.catalogItem.dimensions?.find(d => d.id === dimId);
+
+        // Set primary measure to dimension's selected id
+        primaryMeasureDescriptor =
+          dim?.options.find(option => option.id === dim?.selectedId)?.name ??
+          dim?.selectedId ??
+          primaryMeasureDescriptor;
+      });
+
+    return primaryMeasureDescriptor;
   }
 
   @computed
@@ -151,9 +178,10 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
       primaryMeasureConceptUrn?.resourceId,
       primaryMeasureConceptUrn?.descendantIds?.[0]
     );
+
     return createStratumInstance(TableColumnTraits, {
       name: primaryMeasure?.id,
-      title: primaryMeasureConcept?.name
+      title: this.primaryMeasureDescriptor ?? primaryMeasureConcept?.name
     });
   }
 
@@ -177,42 +205,67 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
             !this.dimensions?.find(d => d.id === dim.id)?.disable
         )
         .map(dim => {
-          // Get concept information for the current dimension
-          const conceptUrn = parseSdmxUrn(dim.conceptIdentity);
+          // Get concept for the current dimension
+          const conceptId = dim.conceptIdentity;
+          const conceptUrn = parseSdmxUrn(conceptId);
           const concept = this.getConcept(
             conceptUrn?.resourceId,
             conceptUrn?.descendantIds?.[0]
           );
-          const conceptOverride = this.catalogItem.conceptOverrides.find(
-            concept => concept.id === dim.conceptIdentity
+          // Get codelist for current dimension
+          const codelistId = dim.localRepresentation?.enumeration;
+          const codelistUrn = parseSdmxUrn(codelistId);
+          const codelist = this.getCodelist(codelistUrn?.resourceId);
+
+          const conceptOverride = this.catalogItem.modelOverrides.find(
+            concept => concept.id === conceptId
+          );
+          const codelistOverride = this.catalogItem.modelOverrides.find(
+            codelist => codelist.id === codelistId
           );
 
           // Try to find region type
           let regionType: string | undefined;
 
-          if (dim.id) {
-            // Are any regionTypes present in conceptOverrides for the current concept
-            regionType = this.matchRegionType(conceptOverride?.regionType);
+          // Are any regionTypes present in modelOverrides for the current concept/codelist override
+          regionType =
+            this.matchRegionType(codelistOverride?.regionType) ??
+            this.matchRegionType(conceptOverride?.regionType);
 
-            // Next try regionTypeFromDimension (only if this concept has override type 'region')
-            if (
-              !isDefined(regionType) &&
-              conceptOverride &&
-              conceptOverride.type === "region"
-            )
-              regionType = this.matchRegionType(this.regionTypeFromDimension);
+          // Next try regionTypeFromDimension (only if this concept has override type 'region')
+          if (
+            !isDefined(regionType) &&
+            (conceptOverride?.type ?? codelistOverride?.type) === "region"
+          )
+            regionType = this.matchRegionType(this.regionTypeFromDimension);
 
-            // Then check if dimension name (column name) is valid regionType
-            if (!isDefined(regionType))
-              regionType = this.matchRegionType(dim.id);
+          // Try to find valid region type from:
+          // - dimension ID
+          // - codelist name
+          // - codelist ID
+          // - concept name?
+          // - concept id (the string, not the full URN)
 
-            // Try concept name?
-            if (!isDefined(regionType))
-              regionType = this.matchRegionType(concept?.name);
+          if (!isDefined(regionType))
+            regionType =
+              this.matchRegionType(dim.id) ??
+              this.matchRegionType(codelist?.name) ??
+              this.matchRegionType(codelist?.id) ??
+              this.matchRegionType(concept?.name) ??
+              this.matchRegionType(concept?.id);
 
-            // Finally, try concept id (the string, not the full URN)
-            if (!isDefined(regionType))
-              regionType = this.matchRegionType(concept?.id);
+          // Apply regionTypeReplacements (which can replace regionType with a different regionType - using [{find:string, replace:string}] pattern)
+          if (
+            conceptOverride?.type === "region" ||
+            codelistOverride?.type === "region"
+          ) {
+            const replacement = [
+              ...(codelistOverride?.regionTypeReplacements ?? []),
+              ...(conceptOverride?.regionTypeReplacements ?? [])
+            ].find(r => r.find === regionType)?.replace;
+            if (isDefined(replacement)) {
+              regionType = replacement;
+            }
           }
 
           return createStratumInstance(TableColumnTraits, {
@@ -226,8 +279,30 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   }
 
   @computed
+  get timeColumns() {
+    return (
+      this.timeDimensions?.map(dim => {
+        const conceptUrn = parseSdmxUrn(dim.conceptIdentity);
+        const concept = this.getConcept(
+          conceptUrn?.resourceId,
+          conceptUrn?.descendantIds?.[0]
+        );
+        return createStratumInstance(TableColumnTraits, {
+          name: dim.id,
+          title: concept?.name ?? dim.id,
+          type: "time"
+        });
+      }) ?? []
+    );
+  }
+
+  @computed
   get columns() {
-    return [this.primaryMeasureColumn, ...this.dimensionColumns];
+    return [
+      this.primaryMeasureColumn,
+      ...this.dimensionColumns,
+      ...this.timeColumns
+    ];
   }
 
   @computed
@@ -242,20 +317,9 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
       `<tr><td style="vertical-align: middle">${title}</td><td>${value}</td></tr>`;
 
     // Get time dimension values
-    template += this.timeDimensions
-      ?.map(timeDimension => {
-        const conceptUrn = parseSdmxUrn(timeDimension.conceptIdentity);
-        const concept = this.getConcept(
-          conceptUrn?.resourceId,
-          conceptUrn?.descendantIds?.[0]
-        );
-
-        return row(
-          concept?.name ?? timeDimension.id ?? "Time",
-          `{{${timeDimension.id}}}`
-        );
-      })
-      .join("");
+    template += this.timeColumns
+      ?.map(col => row(col.title ?? "Time", `{{${col.name}}}`))
+      .join(", ");
 
     // Get region dimension values
 
@@ -376,8 +440,12 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
             dim.localRepresentation?.enumeration
         )
         .map(dim => {
-          const conceptOverride = this.catalogItem.conceptOverrides?.find(
-            concept => concept.id === dim.conceptIdentity
+          const conceptOverride = this.catalogItem.modelOverrides?.find(
+            override => override.id === dim.conceptIdentity
+          );
+
+          const codelistOverride = this.catalogItem.modelOverrides?.find(
+            override => override.id === dim.localRepresentation?.enumeration
           );
 
           // Concept maps dimension's ID to a human-readable name
@@ -425,10 +493,11 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
                 codelist?.codes;
 
           // Create options object - use conceptOverride or options generated from codeslist
+          const optionsOverride =
+            codelistOverride?.options ?? conceptOverride?.options;
           const options =
-            isDefined(conceptOverride?.options) &&
-            conceptOverride!.options.length > 0
-              ? conceptOverride?.options.map(option => {
+            isDefined(optionsOverride) && optionsOverride.length > 0
+              ? optionsOverride.map(option => {
                   return { id: option.id, name: option.name };
                 })
               : codes?.map(code => {
@@ -437,25 +506,35 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
 
           if (isDefined(options)) {
             // Use first option as default if no other default is provided
-            let selectedId: string | undefined = conceptOverride?.allowUndefined
-              ? undefined
-              : options[0].id;
+            let selectedId: string | undefined =
+              codelistOverride?.allowUndefined ??
+              conceptOverride?.allowUndefined
+                ? undefined
+                : options[0].id;
 
             // Override selectedId if it a valid option
+            const selectedIdOverride =
+              codelistOverride?.selectedId ?? conceptOverride?.selectedId;
+
             if (
-              isDefined(conceptOverride?.selectedId) &&
-              options.find(option => option.id === conceptOverride?.selectedId)
+              isDefined(selectedIdOverride) &&
+              options.find(option => option.id === selectedIdOverride)
             ) {
-              selectedId = conceptOverride?.selectedId;
+              selectedId = selectedIdOverride;
             }
 
             return {
               id: dim.id!,
-              name: conceptOverride?.name || concept?.name,
+              name:
+                codelistOverride?.name ??
+                conceptOverride?.name ??
+                concept?.name,
               options: options,
               position: dim.position,
-              disable: conceptOverride?.disable,
-              allowUndefined: conceptOverride?.allowUndefined,
+              disable: codelistOverride?.disable ?? conceptOverride?.disable,
+              allowUndefined:
+                codelistOverride?.allowUndefined ??
+                conceptOverride?.allowUndefined,
               selectedId: selectedId
             };
           }
