@@ -1,5 +1,6 @@
 import i18next from "i18next";
 import { computed, observable, runInAction } from "mobx";
+import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
@@ -259,15 +260,15 @@ export default class SdmxJsonCatalogItem
       columns = await Csv.parseString(csvString, true);
     } catch (error) {
       if (
-        sdmxErrorString.has(error.statusCode) &&
+        error instanceof RequestErrorEvent &&
         typeof error.response === "string"
       ) {
         raiseErrorToUser(
           this.terria,
           new TerriaError({
-            message: `${sdmxErrorString.get(error.statusCode)}: ${
-              error.response
-            }`,
+            message: sdmxErrorString.has(error.statusCode)
+              ? `${sdmxErrorString.get(error.statusCode)}: ${error.response}`
+              : `${error.response}`,
             title: `Failed to load SDMX data for "${this.name ??
               this.uniqueId}"`
           })

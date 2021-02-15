@@ -443,7 +443,9 @@ export async function loadSdmxJsonStructure(
           title: i18next.t(
             "models.sdmxServerStratum.sdmxStructureLoadErrorTitle"
           ),
-          message: `${error.response}`
+          message: sdmxErrorString.has(error.statusCode)
+            ? `${sdmxErrorString.get(error.statusCode)}: ${error.response}`
+            : `${error.response}`
         });
       }
       // Not sure what happened (maybe CORS)
