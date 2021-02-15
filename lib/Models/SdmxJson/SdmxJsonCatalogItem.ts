@@ -14,6 +14,7 @@ import SdmxCatalogItemTraits from "../../Traits/SdmxCatalogItemTraits";
 import CreateModel from "../CreateModel";
 import { BaseModel } from "../Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import raiseErrorToUser from "../raiseErrorToUser";
 import SelectableDimensions, {
   Dimension,
   SelectableDimension
@@ -21,6 +22,7 @@ import SelectableDimensions, {
 import StratumOrder from "../StratumOrder";
 import Terria from "../Terria";
 import { SdmxJsonDataflowStratum } from "./SdmxJsonDataflowStratum";
+import { sdmxErrorString } from "./SdmxJsonServerStratum";
 
 const automaticTableStylesStratumName = TableAutomaticStylesStratum.stratumName;
 
@@ -256,8 +258,29 @@ export default class SdmxJsonCatalogItem
 
       columns = await Csv.parseString(csvString, true);
     } catch (error) {
-      console.log(`Could not load sdmx-csv:`);
-      console.log(error);
+      if (
+        sdmxErrorString.has(error.statusCode) &&
+        typeof error.response === "string"
+      ) {
+        raiseErrorToUser(
+          this.terria,
+          new TerriaError({
+            message: `${sdmxErrorString.get(error.statusCode)}: ${
+              error.response
+            }`,
+            title: `Failed to load SDMX data for "${this.name ??
+              this.uniqueId}"`
+          })
+        );
+      } else {
+        raiseErrorToUser(
+          this.terria,
+          new TerriaError({
+            message: `Failed to load SDMX data for "${this.name ??
+              this.uniqueId}"`
+          })
+        );
+      }
     }
 
     // Filter colums to only include primary measure, region mapped and time dimensions
