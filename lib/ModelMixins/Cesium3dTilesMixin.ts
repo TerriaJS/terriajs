@@ -74,6 +74,10 @@ export default function Cesium3dTilesMixin<
 
     protected tileset?: ObservableCesium3DTileset;
 
+    // Just a variable to save the original tileset.root.transform if it exists
+    @observable
+    private originalRootTransform: Matrix4 = Matrix4.IDENTITY.clone();
+
     get isMappable() {
       return true;
     }
@@ -138,10 +142,24 @@ export default function Cesium3dTilesMixin<
       if (!tileset.destroyed) {
         this.tileset = tileset;
       }
+
+      // Save the original root tile transform and set its value to an identity
+      // matrix This lets us control the whole model transformation using just
+      // tileset.modelMatrix We later derive a tilset.modelMatrix by combining
+      // the root transform and transformation traits in mapItems.
+      makeRealPromise(tileset.readyPromise).then(
+        action(() => {
+          if (tileset.root !== undefined) {
+            this.originalRootTransform = tileset.root.transform.clone();
+            tileset.root.transform = Matrix4.IDENTITY.clone();
+          }
+        })
+      );
     }
 
     /**
-     * Computes a modelMatrix from the origin, rotation & scale traits
+     * Computes a new modelMatrix by combining the given matrix with the
+     * origin, rotation & scale traits
      */
     private computeModelMatrixFromTransformationTraits(modelMatrix: Matrix4) {
       let scale = Matrix4.getScale(modelMatrix, new Cartesian3());
@@ -179,6 +197,18 @@ export default function Cesium3dTilesMixin<
         orientation,
         scale
       );
+    }
+
+    /**
+     * A computed that returns a modelMatrix by combining the transformation
+     * traits and the original tileset root transform.
+     */
+    @computed
+    get modelMatrix(): Matrix4 {
+      const modelMatrixFromTraits = this.computeModelMatrixFromTransformationTraits(
+        this.originalRootTransform
+      );
+      return modelMatrixFromTraits;
     }
 
     @computed
@@ -219,23 +249,7 @@ export default function Cesium3dTilesMixin<
       this.tileset.maximumScreenSpaceError =
         tilesetBaseSse * this.terria.baseMaximumScreenSpaceError;
 
-      // To make it easier to perform transformation operations on the tileset we
-      // set the root transform to IDENTIY (if it is already not) and instead control all
-      // transformations using modelMatrix
-      let modelMatrix: Matrix4;
-      if (
-        this.tileset.root &&
-        !Matrix4.equals(this.tileset.root.transform, Matrix4.IDENTITY)
-      ) {
-        modelMatrix = this.tileset.root.transform.clone();
-        this.tileset.root.transform = Matrix4.IDENTITY.clone();
-      } else {
-        modelMatrix = this.tileset.modelMatrix;
-      }
-      this.tileset.modelMatrix = this.computeModelMatrixFromTransformationTraits(
-        modelMatrix
-      );
-
+      this.tileset.modelMatrix = this.modelMatrix;
       return [this.tileset];
     }
 
