@@ -85,11 +85,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed
-  get supportsReordering() {
-    return !this.keepOnTop;
-  }
-
-  @computed
   get layer(): string | undefined {
     let layer: string | undefined;
 
@@ -575,7 +570,8 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
       tileHeight: tileMatrixSet.tileHeight,
       tilingScheme: new WebMercatorTilingScheme(),
       format,
-      rectangle
+      rectangle,
+      credit: this.attribution
     });
     return imageryProvider;
   }
