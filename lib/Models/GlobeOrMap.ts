@@ -260,16 +260,19 @@ export default abstract class GlobeOrMap {
         if (
           feature.imageryLayer &&
           feature.imageryLayer.imageryProvider instanceof
-            MapboxVectorTileImageryProvider &&
-          feature.properties?.id?.getValue === "function"
+            MapboxVectorTileImageryProvider
         ) {
-          const highlightImageryProvider = feature.imageryLayer.imageryProvider.createHighlightImageryProvider(
-            feature.properties?.id?.getValue()
-          );
-          this._removeHighlightCallback = this.terria.currentViewer._addVectorTileHighlight(
-            highlightImageryProvider,
-            feature.imageryLayer.imageryProvider.rectangle
-          );
+          const featureId =
+            feature.data?.id ?? feature.properties?.id?.getValue?.();
+          if (isDefined(featureId)) {
+            const highlightImageryProvider = feature.imageryLayer.imageryProvider.createHighlightImageryProvider(
+              featureId
+            );
+            this._removeHighlightCallback = this.terria.currentViewer._addVectorTileHighlight(
+              highlightImageryProvider,
+              feature.imageryLayer.imageryProvider.rectangle
+            );
+          }
         } else if (
           !isDefined(this.supportsPolylinesOnTerrain) ||
           this.supportsPolylinesOnTerrain
