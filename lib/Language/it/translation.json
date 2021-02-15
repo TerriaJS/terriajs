@@ -1,1 +1,15 @@
-{}
+{
+    "measure": {
+        "measureDistance": "Misura la distanza fra punti",
+        "measureTool": "Strumento di misura"
+    },
+    "general": {
+        "cancel": "Cancella",
+        "delete": "Elimina",
+        "skip": "Salta",
+        "next": "Prossimo",
+        "prev": "Precedente",
+        "open": "Apri",
+        "close": "Chiudi"
+    }
+}
