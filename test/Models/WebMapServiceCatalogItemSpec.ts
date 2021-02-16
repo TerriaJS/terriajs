@@ -279,9 +279,6 @@ describe("WebMapServiceCatalogItem", function() {
       .loadMetadata()
       .then(function() {
         expect(wmsItem.legends.length).toBe(1);
-
-        // Match for fontColour = 0xffffff || 0xfff
-        console.log(wmsItem.legends[0].url);
         expect(wmsItem.legends[0].url).toBe(
           "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&layer=A&style=no-legend"
         );
