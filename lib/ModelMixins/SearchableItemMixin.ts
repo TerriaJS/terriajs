@@ -6,8 +6,9 @@ import ItemSearchProvider, {
 import { ItemSearchProviders } from "../Models/ItemSearchProviders";
 import Model from "../Models/Model";
 import SearchableItemTraits from "../Traits/SearchableItemTraits";
+import ShowableTraits from "../Traits/ShowableTraits";
 
-type MixinModel = Model<SearchableItemTraits>;
+type MixinModel = Model<SearchableItemTraits & ShowableTraits>;
 
 export type ItemSelectionDisposer = () => void;
 
