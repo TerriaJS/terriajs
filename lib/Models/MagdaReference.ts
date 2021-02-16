@@ -46,10 +46,10 @@ export default class MagdaReference extends AccessControlMixin(
     MagdaDistributionFormatTraits
   >[] = [
     createStratumInstance(MagdaDistributionFormatTraits, {
-      id: "WMS",
-      formatRegex: "^wms$",
+      id: "GeoJSON",
+      formatRegex: "^geojson$",
       definition: {
-        type: "wms"
+        type: "geojson"
       }
     }),
     createStratumInstance(MagdaDistributionFormatTraits, {
@@ -61,31 +61,10 @@ export default class MagdaReference extends AccessControlMixin(
       }
     }),
     createStratumInstance(MagdaDistributionFormatTraits, {
-      id: "CZML",
-      formatRegex: "^czml$",
+      id: "WMS",
+      formatRegex: "^wms$",
       definition: {
-        type: "czml"
-      }
-    }),
-    createStratumInstance(MagdaDistributionFormatTraits, {
-      id: "KML",
-      formatRegex: "^km[lz]$",
-      definition: {
-        type: "kml"
-      }
-    }),
-    createStratumInstance(MagdaDistributionFormatTraits, {
-      id: "GeoJSON",
-      formatRegex: "^geojson$",
-      definition: {
-        type: "geojson"
-      }
-    }),
-    createStratumInstance(MagdaDistributionFormatTraits, {
-      id: "WFS",
-      formatRegex: "^wfs$",
-      definition: {
-        type: "wfs"
+        type: "wms"
       }
     }),
     createStratumInstance(MagdaDistributionFormatTraits, {
@@ -102,6 +81,27 @@ export default class MagdaReference extends AccessControlMixin(
       urlRegex: "FeatureServer/d",
       definition: {
         type: "esri-featureServer"
+      }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+      id: "WFS",
+      formatRegex: "^wfs$",
+      definition: {
+        type: "wfs"
+      }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+      id: "CZML",
+      formatRegex: "^czml$",
+      definition: {
+        type: "czml"
+      }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+      id: "KML",
+      formatRegex: "^km[lz]$",
+      definition: {
+        type: "kml"
       }
     }),
     createStratumInstance(MagdaDistributionFormatTraits, {
