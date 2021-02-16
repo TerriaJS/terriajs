@@ -152,6 +152,10 @@ interface ConfigParameters {
    */
   useCesiumIonTerrain?: boolean;
   /**
+   * The URL to use for Cesium terrain in the 3D Terrain viewer, in quantized mesh format. This property is ignored if "useCesiumIonTerrain" is set to true.
+   */
+  cesiumTerrainUrl?: string;
+  /**
    * The access token to use with Cesium ion. If `"useCesiumIonTerrain"` is true and this property is not specified, the Cesium default Ion key will be used. It is a violation of the Ion terms of use to use the default key in a deployed application.
    */
   cesiumIonAccessToken?: string;
@@ -367,6 +371,7 @@ export default class Terria {
     interceptBrowserPrint: true,
     tabbedCatalog: false,
     useCesiumIonTerrain: true,
+    cesiumTerrainUrl: undefined,
     cesiumIonAccessToken: undefined,
     useCesiumIonBingImagery: undefined,
     bingMapsKey: undefined,
