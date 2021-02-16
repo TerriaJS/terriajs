@@ -1,4 +1,4 @@
-import { trace } from "mobx";
+import { autorun } from "mobx";
 import { observer } from "mobx-react";
 import React, { useEffect, useState } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
@@ -70,6 +70,18 @@ const ItemSearchTool: React.FC<PropsType> = observer(props => {
     [itemSearchProvider]
   );
 
+  useEffect(
+    function closeSearchTool() {
+      // Close item search tool if the parent item is disabled or removed from
+      // the workbench
+      const disposeListener = onItemDisabledOrRemovedFromWorkbench(item, () =>
+        viewState.closeTool()
+      );
+      return disposeListener;
+    },
+    [item]
+  );
+
   const setResults = (query: ItemSearchQuery, results: ItemSearchResults) => {
     setQuery(query);
     setState({ is: "results", results });
@@ -127,5 +139,23 @@ const ItemSearchTool: React.FC<PropsType> = observer(props => {
     </Frame>
   );
 });
+
+/**
+ * Callback when the given item is disabled or removed from the workbench.
+ *
+ * @param item The item to watch
+ * @param callback The function to call when the event happens
+ * @return A function to dispose the listener
+ */
+function onItemDisabledOrRemovedFromWorkbench(
+  item: SearchableItemMixin.Instance,
+  callback: () => void
+): () => void {
+  const disposer = autorun(() => {
+    if (item.show === false || item.terria.workbench.contains(item) === false)
+      callback();
+  });
+  return disposer;
+}
 
 export default withTranslation()(ItemSearchTool);

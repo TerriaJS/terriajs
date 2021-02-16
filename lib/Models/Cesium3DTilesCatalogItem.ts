@@ -1,10 +1,9 @@
 import i18next from "i18next";
-import { action, toJS } from "mobx";
+import { action } from "mobx";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
 import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 import Cesium3DTile from "terriajs-cesium/Source/Scene/Cesium3DTile";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
@@ -98,9 +97,14 @@ export default class Cesium3DTilesCatalogItem
       disposeWatch();
       disposeFeatureInfoPanel();
       this.removeColorExpression(colorExpression);
-      highligtedFeatures.forEach(feature =>
-        feature.setProperty(SEARCH_RESULT_TAG, undefined)
-      );
+      highligtedFeatures.forEach(feature => {
+        try {
+          feature.setProperty(SEARCH_RESULT_TAG, undefined);
+        } catch {
+          // An error is thrown if the feature content is already destroyed,
+          // ignore it
+        }
+      });
     });
 
     return highlightDisposer;
@@ -144,9 +148,14 @@ export default class Cesium3DTilesCatalogItem
     const disposer = action(() => {
       disposeWatch();
       this.removeShowExpression(showExpression);
-      hiddenFeatures.forEach(feature =>
-        feature.setProperty(SEARCH_RESULT_TAG, undefined)
-      );
+      hiddenFeatures.forEach(feature => {
+        try {
+          feature.setProperty(SEARCH_RESULT_TAG, undefined);
+        } catch {
+          // An error is thrown if the feature content is already destroyed,
+          // ignore it
+        }
+      });
     });
 
     return disposer;
