@@ -2,6 +2,37 @@ import React, { useEffect } from "react";
 import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
 import { ItemSearchResult } from "../../../Models/ItemSearchProvider";
 
+export type MapEffect =
+  | { is: "none" }
+  | { is: "highlightAll" }
+  | { is: "hideAll" }
+  | { is: "highlightSingleResult"; result: ItemSearchResult };
+
+export type MapEffectsProps = {
+  effect: MapEffect;
+  item: SearchableItemMixin.Instance;
+  results: ItemSearchResult[];
+};
+
+/**
+ * A component that applies some effect on the map.
+ *
+ */
+const MapEffects: React.FC<MapEffectsProps> = ({ item, results, effect }) => {
+  switch (effect.is) {
+    case "highlightAll":
+      return <HighlightResults item={item} results={results} />;
+    case "highlightSingleResult":
+      return <HighlightResults item={item} results={effect.result} />;
+    case "hideAll":
+      return <HideAllResults item={item} results={results} />;
+    case "none":
+      return null;
+  }
+};
+
+export default MapEffects;
+
 export type HideAllResultsProps = {
   item: SearchableItemMixin.Instance;
   results: ItemSearchResult[];

@@ -7,16 +7,14 @@ import styled from "styled-components";
 import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
 import { ItemSearchResult } from "../../../Models/ItemSearchProvider";
 import parseCustomMarkdownToReact from "../../Custom/parseCustomMarkdownToReact";
-import { HideAllResults, HighlightResults } from "./Actions";
+import MapEffects, {
+  HideAllResults,
+  HighlightResults,
+  MapEffect
+} from "./MapEffects";
 
 const Box: any = require("../../../Styled/Box").default;
 const Button = require("../../../Styled/Button").default;
-
-type Selection =
-  | { is: "none" }
-  | { is: "highlightAll" }
-  | { is: "hideAll" }
-  | { is: "singleResult"; result: ItemSearchResult };
 
 export interface SearchResultsProps {
   item: SearchableItemMixin.Instance;
@@ -28,12 +26,12 @@ type ResultClickHandler = (result: ItemSearchResult) => void;
 
 const SearchResults: React.FC<SearchResultsProps> = props => {
   const { item, results } = props;
-  const [currentSelection, setCurrentSelection] = useState<Selection>({
+  const [currentMapEffect, setCurrentMapEffect] = useState<MapEffect>({
     is: "highlightAll"
   });
   const selectedResult =
-    currentSelection.is === "singleResult"
-      ? currentSelection.result
+    currentMapEffect.is === "highlightSingleResult"
+      ? currentMapEffect.result
       : undefined;
   const parentRef = React.createRef<HTMLDivElement>();
   const list = useVirtual({
@@ -43,11 +41,11 @@ const SearchResults: React.FC<SearchResultsProps> = props => {
   });
   const [t] = useTranslation();
 
-  const toggleSelection = (newSelection: Selection) => {
-    currentSelection.is === newSelection.is &&
-    (currentSelection as any).result === (newSelection as any).result
-      ? setCurrentSelection({ is: "none" })
-      : setCurrentSelection(newSelection);
+  const toggleSelection = (newSelection: MapEffect) => {
+    currentMapEffect.is === newSelection.is &&
+    (currentMapEffect as any).result === (newSelection as any).result
+      ? setCurrentMapEffect({ is: "none" })
+      : setCurrentMapEffect(newSelection);
   };
 
   return (
@@ -55,13 +53,13 @@ const SearchResults: React.FC<SearchResultsProps> = props => {
       <ResultsCount count={results.length} />
       <ActionMenu>
         <ActionButton
-          selected={currentSelection.is === "highlightAll"}
+          selected={currentMapEffect.is === "highlightAll"}
           onClick={() => toggleSelection({ is: "highlightAll" })}
         >
           {t("itemSearchTool.actions.highlightAll")}
         </ActionButton>
         <ActionButton
-          selected={currentSelection.is === "hideAll"}
+          selected={currentMapEffect.is === "hideAll"}
           onClick={() => toggleSelection({ is: "hideAll" })}
         >
           {t("itemSearchTool.actions.hideAll")}
@@ -91,15 +89,7 @@ const SearchResults: React.FC<SearchResultsProps> = props => {
           ))}
         </ListInner>
       </List>
-      {currentSelection.is === "highlightAll" && (
-        <HighlightResults item={item} results={results} />
-      )}
-      {currentSelection.is === "singleResult" && (
-        <HighlightResults item={item} results={currentSelection.result} />
-      )}
-      {currentSelection.is === "hideAll" && (
-        <HideAllResults item={item} results={results} />
-      )}
+      <MapEffects effect={currentMapEffect} item={item} results={results} />
     </Wrapper>
   );
 };
