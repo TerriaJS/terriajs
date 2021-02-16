@@ -1,11 +1,7 @@
 import { observer } from "mobx-react";
 import Mustache from "mustache";
 import React, { useState } from "react";
-import {
-  useTranslation,
-  WithTranslation,
-  withTranslation
-} from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { useVirtual } from "react-virtual";
 import styled from "styled-components";
 import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
@@ -22,7 +18,7 @@ type Selection =
   | { is: "hideAll" }
   | { is: "singleResult"; result: ItemSearchResult };
 
-export interface SearchResultsProps extends WithTranslation {
+export interface SearchResultsProps {
   item: SearchableItemMixin.Instance;
   results: ItemSearchResult[];
   template?: string;
@@ -33,7 +29,7 @@ type ResultClickHandler = (result: ItemSearchResult) => void;
 const SearchResults: React.FC<SearchResultsProps> = props => {
   const { item, results } = props;
   const [currentSelection, setCurrentSelection] = useState<Selection>({
-    is: "none"
+    is: "highlightAll"
   });
   const selectedResult =
     currentSelection.is === "singleResult"
@@ -216,4 +212,4 @@ const ActionMenu = styled.div`
   }
 `;
 
-export default withTranslation()(SearchResults);
+export default SearchResults;
