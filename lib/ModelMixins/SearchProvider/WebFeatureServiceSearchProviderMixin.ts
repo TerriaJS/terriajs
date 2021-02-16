@@ -10,12 +10,12 @@ import SearchProviderResults from "../../Models/SearchProvider/SearchProviderRes
 import SearchResult from "../../Models/SearchProvider/SearchResult";
 import xml2json from "../../ThirdParty/xml2json";
 import WebFeatureServiceSearchProviderTraits from "../../Traits/SearchProvider/WebFeatureServiceSearchProviderTraits";
-import SearchProviderMixin from "./SearchProviderMixin";
+import LocationSearchProviderMixin from "./LocationSearchProviderMixin";
 
 function WebFeatureServiceSearchProviderMixin<
   T extends Constructor<Model<WebFeatureServiceSearchProviderTraits>>
 >(Base: T) {
-  abstract class WebFeatureServiceSearchProviderMixin extends SearchProviderMixin(
+  abstract class WebFeatureServiceSearchProviderMixin extends LocationSearchProviderMixin(
     Base
   ) {
     protected abstract featureToSearchResultFunction: (

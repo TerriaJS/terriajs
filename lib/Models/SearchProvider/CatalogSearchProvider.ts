@@ -4,7 +4,7 @@ import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
 import CatalogSearchProviderTraits from "../../Traits/SearchProvider/CatalogSearchProviderTraits";
 import CreateModel from "../CreateModel";
 import Terria from "../Terria";
-import SearchProviderMixin from "../../ModelMixins/SerchProvider/SearchProviderMixin";
+import SearchProviderMixin from "../../ModelMixins/SearchProvider/SearchProviderMixin";
 import SearchProviderResults from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
 

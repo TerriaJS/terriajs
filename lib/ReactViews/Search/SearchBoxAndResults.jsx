@@ -1,23 +1,19 @@
-import React from "react";
-import { removeMarker } from "../../Models/LocationMarkerUtils";
 import { reaction, runInAction } from "mobx";
-import { Trans } from "react-i18next";
-import PropTypes from "prop-types";
 import { observer } from "mobx-react";
+import PropTypes from "prop-types";
+import React from "react";
+import { Trans } from "react-i18next";
 import styled from "styled-components";
-// import { ThemeContext } from "styled-components";
-
-import SearchBox from "../Search/SearchBox";
-// import SidebarSearch from "../Search/SidebarSearch";
-import LocationSearchResults from "../Search/LocationSearchResults";
-import Icon, { StyledIcon } from "../Icon";
-
+import { addMarker, removeMarker } from "../../Models/LocationMarkerUtils";
 import Box from "../../Styled/Box";
-import Text from "../../Styled/Text";
-import Spacing from "../../Styled/Spacing";
 import { RawButton } from "../../Styled/Button";
-
-import { addMarker } from "../../Models/LocationMarkerUtils";
+import Spacing from "../../Styled/Spacing";
+import Text from "../../Styled/Text";
+import Icon, { StyledIcon } from "../Icon";
+// import SidebarSearch from "../Search/SidebarSearch";
+import LocationSearchResults from "./LocationSearchResults";
+// import { ThemeContext } from "styled-components";
+import SearchBox from "./SearchBox";
 
 export function SearchInDataCatalog({ viewState, handleClick }) {
   const locationSearchText = viewState.searchState.locationSearchText;

@@ -47,7 +47,7 @@ export default function upsertSearchProviderFromJson(
     model?.terria.addSearchProvider(model);
   }
 
-  addDefaultTraits(model);
+  setDefaultTraits(model);
 
   try {
     updateModelFromJson(model, stratumName, json);
@@ -58,7 +58,7 @@ export default function upsertSearchProviderFromJson(
   }
 }
 
-function addDefaultTraits(model: BaseModel) {
+function setDefaultTraits(model: BaseModel) {
   const terria = model.terria;
 
   model.setTrait(

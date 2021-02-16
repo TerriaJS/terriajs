@@ -6,10 +6,11 @@ import {
   reaction
 } from "mobx";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import LocationSearchProviderMixin from "../ModelMixins/SearchProvider/LocationSearchProviderMixin";
+import SearchProviderMixin from "../ModelMixins/SearchProvider/SearchProviderMixin";
 import CatalogSearchProvider from "../Models/SearchProvider/CatalogSearchProvider";
 import SearchProviderResults from "../Models/SearchProvider/SearchProviderResults";
 import Terria from "../Models/Terria";
-import SearchProviderMixin from "../ModelMixins/SerchProvider/SearchProviderMixin";
 
 interface SearchStateOptions {
   terria: Terria;
@@ -22,7 +23,7 @@ export default class SearchState {
   catalogSearchProvider: SearchProviderMixin.SearchProviderMixin | undefined;
 
   @observable
-  locationSearchProviders: SearchProviderMixin.SearchProviderMixin[];
+  locationSearchProviders: LocationSearchProviderMixin.LocationSearchProviderMixin[];
 
   @observable catalogSearchText: string = "";
   @observable isWaitingToStartCatalogSearch: boolean = false;

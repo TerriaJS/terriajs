@@ -1,6 +1,6 @@
 import WebFeatureServiceSearchProviderTraits from "../../Traits/SearchProvider/WebFeatureServiceSearchProviderTraits";
 import CreateModel from "../CreateModel";
-import WebFeatureServiceSearchProviderMixin from "../../ModelMixins/SerchProvider/WebFeatureServiceSearchProviderMixin";
+import WebFeatureServiceSearchProviderMixin from "../../ModelMixins/SearchProvider/WebFeatureServiceSearchProviderMixin";
 import SearchResult from "./SearchResult";
 
 const featureCodesToNamesMap = new Map([

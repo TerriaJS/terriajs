@@ -247,6 +247,10 @@ interface SearchBar {
    */
   minCharacters: number;
   /**
+   * Bounding box limits for the search results.
+   */
+  boundingBoxLimit?: number[];
+  /**
    * Array of search providers to be used.
    */
   searchProviders: any[];
@@ -401,18 +405,8 @@ export default class Terria {
           type: "bing-maps-search-provider",
           name: "translate#viewModels.searchLocations",
           url: "https://dev.virtualearth.net/",
-          flightDurationSeconds: 1.5
-        },
-        {
-          id: "search-provider/australian-gazetteer",
-          type: "australian-gazetteer-search-provider",
-          name: "translate#viewModels.searchPlaceNames",
-          url:
-            "http://services.ga.gov.au/gis/services/Australian_Gazetteer/MapServer/WFSServer",
-          searchPropertyName: "Australian_Gazetteer:NameU",
-          searchPropertyTypeName: "Australian_Gazetteer:Gazetteer_of_Australia",
           flightDurationSeconds: 1.5,
-          minCharacters: 3
+          isOpen: true
         }
       ]
     }

@@ -1,12 +1,12 @@
-import React from "react";
-import PropTypes from "prop-types";
 import createReactClass from "create-react-class";
 import debounce from "lodash-es/debounce";
-import Icon, { StyledIcon } from "../Icon";
+import PropTypes from "prop-types";
+import React from "react";
 import styled, { withTheme } from "styled-components";
 import Box, { BoxSpan } from "../../Styled/Box";
-import Text from "../../Styled/Text";
 import { RawButton } from "../../Styled/Button";
+import Text from "../../Styled/Text";
+import Icon, { StyledIcon } from "../Icon";
 
 const SearchInput = styled.input`
   box-sizing: border-box;

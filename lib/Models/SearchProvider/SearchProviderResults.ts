@@ -1,7 +1,7 @@
 import { observable } from "mobx";
 import SearchResult from "./SearchResult";
 import { IPromiseBasedObservable, fromPromise } from "mobx-utils";
-import SearchProviderMixin from "../../ModelMixins/SerchProvider/SearchProviderMixin";
+import SearchProviderMixin from "../../ModelMixins/SearchProvider/SearchProviderMixin";
 
 export default class SearchProviderResults {
   @observable results: SearchResult[] = [];
@@ -11,8 +11,9 @@ export default class SearchProviderResults {
     Promise.resolve()
   );
 
-  constructor(readonly searchProvider: SearchProviderMixin) {
-  }
+  constructor(
+    readonly searchProvider: SearchProviderMixin.SearchProviderMixin
+  ) {}
 
   get isSearching() {
     return this.resultsCompletePromise.state === "pending";

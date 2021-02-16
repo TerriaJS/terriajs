@@ -10,11 +10,19 @@ interface PropsType extends WithTranslation {
   message?: string;
   boxProps?: any;
   textProps?: any;
+  hideMessage?: boolean;
   t: TFunction;
   [spread: string]: any;
 }
 const Loader: React.FC<PropsType> = (props: PropsType) => {
-  const { message, t, boxProps, textProps, ...rest }: PropsType = props;
+  const {
+    message,
+    t,
+    boxProps,
+    textProps,
+    hideMessage,
+    ...rest
+  }: PropsType = props;
   return (
     <Box fullWidth centered {...boxProps}>
       <AnimatedIcon
@@ -24,7 +32,7 @@ const Loader: React.FC<PropsType> = (props: PropsType) => {
         {...rest}
       />
       <TextSpan {...textProps}>
-        {message || t("loader.loadingMessage")}
+        {!hideMessage && (message || t("loader.loadingMessage"))}
       </TextSpan>
     </Box>
   );
