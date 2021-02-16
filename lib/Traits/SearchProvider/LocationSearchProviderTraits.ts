@@ -11,15 +11,6 @@ export default class LocationSearchProviderTraits extends SearchProviderTraits {
   url: string = "";
 
   @primitiveTrait({
-    type: "boolean",
-    name: "Open by default",
-    description:
-      "True if the geocoder should query as the user types to autocomplete.",
-    isNullable: true
-  })
-  autocomplete?: boolean = true;
-
-  @primitiveTrait({
     type: "number",
     name: "recommendedListLength",
     description: "Maximum amount of entries in the suggestion list."

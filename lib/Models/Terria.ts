@@ -223,7 +223,7 @@ interface ConfigParameters {
 interface SearchBar {
   /**
    * Input text field placeholder shown when no input has been given yet. The string is translateable.
-   * @default "search.placeholder"
+   * @default "translate#search.placeholder"
    */
   placeholder: string;
   /**
@@ -232,20 +232,10 @@ interface SearchBar {
    */
   recommendedListLength: number;
   /**
-   * Defines whether search results are to be sorted alphanumerically.
-   * @default true
-   */
-  sortByName: boolean;
-  /**
    * The duration of the camera flight to an entered location, in seconds.
    * @default 1.5
    */
   flightDurationSeconds: number;
-  /**
-   * True if the geocoder should query as the user types to autocomplete.
-   * @default true
-   */
-  autocomplete: boolean;
   /**
    * Minimum number of characters to start search.
    */
@@ -400,9 +390,7 @@ export default class Terria {
     searchBar: {
       placeholder: "translate#search.placeholder",
       recommendedListLength: 5,
-      sortByName: true,
       flightDurationSeconds: 1.5,
-      autocomplete: true,
       minCharacters: 3,
       searchProviders: [
         {
@@ -411,6 +399,7 @@ export default class Terria {
           name: "translate#viewModels.searchLocations",
           url: "https://dev.virtualearth.net/",
           flightDurationSeconds: 1.5,
+          minCharacters: 5,
           isOpen: true
         },
         {
