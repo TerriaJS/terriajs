@@ -44,7 +44,8 @@ export default class CesiumTerrainCatalogItem
 
     return [
       new CesiumTerrainProvider({
-        url: resource
+        url: resource,
+        credit: this.attribution
       })
     ];
   }

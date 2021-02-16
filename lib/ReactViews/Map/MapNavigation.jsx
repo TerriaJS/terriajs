@@ -15,6 +15,8 @@ import { observer } from "mobx-react";
 // import HelpTool from "./Navigation/HelpTool";
 // import StylesToolButton from "./Navigation/tool_button.scss";
 import Icon from "../Icon";
+import { ToolButton } from "../Tool.tsx";
+import PedestrianMode from "../Tools/PedestrianMode/PedestrianMode";
 
 // import Icon from "../Icon";
 import Box from "../../Styled/Box";
@@ -25,6 +27,7 @@ import CloseToolButton from "./Navigation/CloseToolButton";
 import Prompt from "../Generic/Prompt";
 import { runInAction } from "mobx";
 import { withTranslation } from "react-i18next";
+import Cesium from "../../Models/Cesium";
 
 /**
  * TODO: fix this so that we don't need to override pointer events like this.
@@ -108,6 +111,23 @@ class MapNavigation extends React.Component {
                   <ToggleSplitterTool
                     terria={this.props.terria}
                     viewState={this.props.viewState}
+                  />
+                </div>
+              </If>
+              <If
+                condition={
+                  !this.props.terria.configParameters.disablePedestrianMode &&
+                  this.props.terria.currentViewer instanceof Cesium
+                }
+              >
+                <div className={Styles.control}>
+                  <ToolButton
+                    viewState={this.props.viewState}
+                    toolName={t("pedestrianMode.toolButtonTitle")}
+                    icon={Icon.GLYPHS.pedestrian}
+                    getToolComponent={() => Promise.resolve(PedestrianMode)}
+                    params={{ cesium: this.props.terria.currentViewer }}
+                    t={t}
                   />
                 </div>
               </If>

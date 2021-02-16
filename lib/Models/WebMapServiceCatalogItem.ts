@@ -110,11 +110,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
     ) as this;
   }
 
-  @computed
-  get supportsReordering() {
-    return !this.keepOnTop;
-  }
-
   @computed get metadataUrls() {
     const metadataUrls: MetadataURL[] = [];
 
@@ -978,6 +973,9 @@ class WebMapServiceCatalogItem
     if (imageryProvider === undefined) {
       return undefined;
     }
+
+    imageryProvider.enablePickFeatures = true;
+
     return {
       imageryProvider,
       alpha: this.opacity,
@@ -994,6 +992,9 @@ class WebMapServiceCatalogItem
       if (imageryProvider === undefined) {
         return undefined;
       }
+
+      imageryProvider.enablePickFeatures = false;
+
       return {
         imageryProvider,
         alpha: 0.0,
@@ -1139,7 +1140,8 @@ class WebMapServiceCatalogItem
         },
         tilingScheme: /*defined(this.tilingScheme) ? this.tilingScheme :*/ new WebMercatorTilingScheme(),
         maximumLevel: maximumLevel,
-        rectangle: rectangle
+        rectangle: rectangle,
+        credit: this.attribution
       };
 
       if (

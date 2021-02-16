@@ -71,9 +71,10 @@ describe("ItemSearchTool", function() {
     item = new TestSearchableItem("test", terria);
     item.setTrait(CommonStrata.user, "search", {
       providerType: "testProvider",
-      options: {},
+      providerOptions: {},
       resultTemplate: undefined,
-      highlightColor: undefined
+      highlightColor: undefined,
+      parameters: []
     });
     const provider = item.createItemSearchProvider();
     assertObject(provider);

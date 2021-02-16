@@ -1,8 +1,32 @@
 import { JsonObject } from "../Core/Json";
 import anyTrait from "./anyTrait";
 import ModelTraits from "./ModelTraits";
+import objectArrayTrait from "./objectArrayTrait";
 import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
+
+export class SearchParameterTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "string",
+    name: "id",
+    description: "ID of the search parameter"
+  })
+  id?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Name",
+    description: "A human readable name for the search parameter"
+  })
+  name?: string;
+
+  @anyTrait({
+    name: "queryOptions",
+    description:
+      "Options used when querying the parameter, these options will be passed to the index used for querying the parameter."
+  })
+  queryOptions?: any;
+}
 
 export class ItemSearchTraits extends ModelTraits {
   @primitiveTrait({
@@ -13,10 +37,10 @@ export class ItemSearchTraits extends ModelTraits {
   providerType?: string;
 
   @anyTrait({
-    name: "options",
+    name: "providerOptions",
     description: "Options for the search provider."
   })
-  options?: JsonObject;
+  providerOptions?: JsonObject;
 
   @primitiveTrait({
     type: "string",
@@ -33,6 +57,14 @@ export class ItemSearchTraits extends ModelTraits {
       "A color to use for highlighting the selected result. Defaults to {@HighlightColorTraits.highlightColor} or {@Terria.baseMapContrastColor}"
   })
   highlightColor?: string;
+
+  @objectArrayTrait({
+    type: SearchParameterTraits,
+    name: "Search parameters",
+    description: "Search parameter configurations",
+    idProperty: "id"
+  })
+  parameters?: SearchParameterTraits[];
 }
 
 export default class SearchableItemTraits extends ModelTraits {

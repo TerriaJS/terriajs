@@ -19,6 +19,7 @@ import MomentPointsChart from "./MomentPointsChart";
 import Tooltip from "./Tooltip";
 import ZoomX from "./ZoomX";
 import Styles from "./bottom-dock-chart.scss";
+import LineAndPointChart from "./LineAndPointChart";
 import PointOnMap from "./PointOnMap";
 
 const chartMinWidth = 110;
@@ -386,6 +387,17 @@ class Plot extends React.Component {
         case "momentLines": {
           return (
             <MomentLinesChart
+              key={chartItem.key}
+              ref={this.chartRefs[i]}
+              id={sanitizeIdString(chartItem.key)}
+              chartItem={chartItem}
+              scales={initialScales[i]}
+            />
+          );
+        }
+        case "lineAndPoint": {
+          return (
+            <LineAndPointChart
               key={chartItem.key}
               ref={this.chartRefs[i]}
               id={sanitizeIdString(chartItem.key)}

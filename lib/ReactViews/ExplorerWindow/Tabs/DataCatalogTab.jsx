@@ -76,7 +76,7 @@ class DataCatalogTab extends React.Component {
                 items={this.props.items}
               />
             </Box>
-            <Box styledWidth="60%" wordBreak="break-all">
+            <Box styledWidth="60%">
               <DataPreview
                 terria={terria}
                 viewState={this.props.viewState}

@@ -54,15 +54,18 @@ describe("IndexedItemSearchProvider", function() {
 
   describe("construction", function() {
     it("can be constructed", function() {
-      new IndexedItemSearchProvider({ indexRootUrl: "indexRoot.json" });
+      new IndexedItemSearchProvider({ indexRootUrl: "indexRoot.json" }, []);
     });
   });
 
   describe("load", function() {
     it("can be loaded", async function() {
-      const provider = new IndexedItemSearchProvider({
-        indexRootUrl: "indexRoot.json"
-      });
+      const provider = new IndexedItemSearchProvider(
+        {
+          indexRootUrl: "indexRoot.json"
+        },
+        []
+      );
       stubRequest("indexRoot.json", validIndexRoot);
       let error;
       try {
@@ -74,9 +77,12 @@ describe("IndexedItemSearchProvider", function() {
     });
 
     it("throws an error if the indexRoot file cannot be parsed", async function() {
-      const provider = new IndexedItemSearchProvider({
-        indexRootUrl: "indexRoot.json"
-      });
+      const provider = new IndexedItemSearchProvider(
+        {
+          indexRootUrl: "indexRoot.json"
+        },
+        []
+      );
       stubRequest("indexRoot.json", {});
       let error;
       try {
@@ -92,9 +98,12 @@ describe("IndexedItemSearchProvider", function() {
 
   describe("describeParameters", function() {
     it("returns the parameters", async function() {
-      const provider = new IndexedItemSearchProvider({
-        indexRootUrl: "indexRoot.json"
-      });
+      const provider = new IndexedItemSearchProvider(
+        {
+          indexRootUrl: "indexRoot.json"
+        },
+        [{ id: "street_address", queryOptions: { prefix: "true" } }]
+      );
       stubRequest("indexRoot.json", validIndexRoot);
       await provider.initialize();
       const parameters = await provider.describeParameters();
@@ -111,7 +120,12 @@ describe("IndexedItemSearchProvider", function() {
           name: "area",
           range: { min: 100, max: 20000 }
         },
-        { type: "text", id: "street_address", name: "street_address" },
+        {
+          type: "text",
+          id: "street_address",
+          name: "street_address",
+          queryOptions: { prefix: "true" }
+        },
         {
           type: "enum",
           id: "roof_type",
@@ -130,9 +144,12 @@ describe("IndexedItemSearchProvider", function() {
     let parameterValues: Map<string, any>;
 
     beforeEach(async function() {
-      provider = new IndexedItemSearchProvider({
-        indexRootUrl: "indexRoot.json"
-      });
+      provider = new IndexedItemSearchProvider(
+        {
+          indexRootUrl: "indexRoot.json"
+        },
+        []
+      );
       stubRequest("indexRoot.json", validIndexRoot);
       stubRequest("resultsData.csv", resultsDataCsv);
       stubRequest("0.csv", heightCsv);
@@ -152,25 +169,21 @@ describe("IndexedItemSearchProvider", function() {
         {
           id: 632,
           idPropertyName: "building_id",
-          zoomToTarget: {
-            boundingSphere: createBoundingSphere({
-              latitude: 19.12575420288384,
-              longitude: 11.870779042051964,
-              radius: 3.6875988497925927
-            })
-          },
+          zoomToTarget: createBoundingSphere({
+            latitude: 19.12575420288384,
+            longitude: 11.870779042051964,
+            radius: 3.6875988497925927
+          }),
           properties: { building_id: 632 }
         },
         {
           id: 410,
           idPropertyName: "building_id",
-          zoomToTarget: {
-            boundingSphere: createBoundingSphere({
-              latitude: 46.567720640307755,
-              longitude: 16.64851364383736,
-              radius: 17.23546017384181
-            })
-          },
+          zoomToTarget: createBoundingSphere({
+            latitude: 46.567720640307755,
+            longitude: 16.64851364383736,
+            radius: 17.23546017384181
+          }),
           properties: { building_id: 410 }
         }
       ]);
