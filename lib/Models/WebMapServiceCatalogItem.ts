@@ -127,12 +127,12 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   /**
-   * How we determine legends:
-   * 1. Defined manually in catalog JSON
-   * 2. If a style is selected, and it has a legendUrl -> use it!
-   * 3. If server doesn't support GetLegendGraphic, we must select first style as default - as there is no way to know what the default style is, and to request a legend for it
-   * 4. If server supports GetLegendGraphic, we don't need to know what the default style is - as we can just request for the default legend.
-   */
+ * **How we determine WMS legends (in order)**
+  1. Defined manually in catalog JSON
+  2. If `style` is undefined, and server doesn't support `GetLegendGraphic`, we must select first style as default - as there is no way to know what the default style is, and to request a legend for it
+  3. If `style` is is set and it has a `legendUrl` -> use it!
+  4. If server supports `GetLegendGraphic`, we can request a legend (with or without `style` parameter)
+ */
   @computed
   get legends(): StratumFromTraits<LegendTraits>[] | undefined {
     const availableStyles = this.catalogItem.availableStyles || [];
