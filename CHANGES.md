@@ -39,6 +39,7 @@ Change Log
 * Fix hard-coded colour value in Story
 * Use `configParameters.cesiumIonAccessToken` in `IonImageryCatalogItem`
 * Added support for skipping comments in CSV files
+* Fix WMS GetLegendGraphics request `style` parameter
 * [The next improvement]
 
 #### 8.0.0-alpha.65

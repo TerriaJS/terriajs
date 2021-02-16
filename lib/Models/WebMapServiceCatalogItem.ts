@@ -126,6 +126,12 @@ class GetCapabilitiesStratum extends LoadableStratum(
     return layers;
   }
 
+  /**
+   * How we determine legends
+   * 1. Defined manually in catalog JSON
+   * 2. If a style is selected, and it has a legendUrl -> use it!
+   * 3. If server supports GetLegendGraphic, generate request for legend.
+   */
   @computed
   get legends(): StratumFromTraits<LegendTraits>[] | undefined {
     const availableStyles = this.catalogItem.availableStyles || [];
@@ -170,8 +176,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
       }
 
       // If no legends found and WMS supports GetLegendGraphics - make one up!
-      // From OGC — about style property for GetLegendGraphic request:
-      // If not present, the default style is selected. The style may be any valid style available for a layer, including non-SLD internally-defined styles.
       if (
         !isDefined(legendUri) &&
         isDefined(this.catalogItem.url) &&
@@ -190,6 +194,11 @@ class GetCapabilitiesStratum extends LoadableStratum(
           .setQuery("format", "image/png")
           .setQuery("layer", layer);
 
+        // From OGC — about style property for GetLegendGraphic request:
+        // If not present, the default style is selected. The style may be any valid style available for a layer, including non-SLD internally-defined styles.
+        if (style) {
+          legendUri.setQuery("style", style);
+        }
         legendUrlMimeType = "image/png";
       }
 

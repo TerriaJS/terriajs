@@ -153,7 +153,7 @@ describe("WebMapServiceCatalogItem", function() {
         expect(wmsItem.styleSelectableDimensions[0].selectedId).toBe(
           "contour/ferret"
         );
-        expect(wmsItem.styleSelectableDimensions[0].options!.length).toBe(40);
+        expect(wmsItem.styleSelectableDimensions[0].options!.length).toBe(41);
 
         expect(wmsItem.styleSelectableDimensions[1].selectedId).toBe(
           "shadefill/alg2"
@@ -251,6 +251,40 @@ describe("WebMapServiceCatalogItem", function() {
             wmsItem.legends[0].url ===
               "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&layer=A&LEGEND_OPTIONS=fontName%3ACourier%3BfontStyle%3Abold%3BfontSize%3A12%3BforceLabels%3Aon%3BfontAntiAliasing%3Atrue%3BlabelMargin%3A5%3BfontColor%3A0xfff%3Bdpi%3A182&transparent=true"
         ).toBeTruthy();
+      })
+      .then(done)
+      .catch(done.fail);
+  });
+
+  it("fetches GetLegendGraphic", function(done) {
+    const terria = new Terria();
+    const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
+    runInAction(() => {
+      wmsItem.setTrait(CommonStrata.definition, "url", "http://example.com");
+      wmsItem.setTrait(
+        CommonStrata.definition,
+        "getCapabilitiesUrl",
+        "test/WMS/styles_and_dimensions.xml"
+      );
+      wmsItem.setTrait(CommonStrata.definition, "layers", "A");
+      wmsItem.setTrait(CommonStrata.definition, "styles", "no-legend");
+      wmsItem.setTrait(
+        CommonStrata.definition,
+        "supportsGetLegendGraphic",
+        true
+      );
+    });
+
+    wmsItem
+      .loadMetadata()
+      .then(function() {
+        expect(wmsItem.legends.length).toBe(1);
+
+        // Match for fontColour = 0xffffff || 0xfff
+        console.log(wmsItem.legends[0].url);
+        expect(wmsItem.legends[0].url).toBe(
+          "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&layer=A&style=no-legend"
+        );
       })
       .then(done)
       .catch(done.fail);
