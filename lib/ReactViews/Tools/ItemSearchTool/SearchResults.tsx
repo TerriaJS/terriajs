@@ -189,7 +189,8 @@ export const ResultsCount: React.FC<{ count: number }> = ({ count }) => {
 
 const ActionButton = styled(Button).attrs(props => ({
   primary: props.selected,
-  secondary: !props.selected
+  secondary: !props.selected,
+  textProps: { medium: true }
 }))`
   min-height: 20px;
   padding: 1em;
