@@ -407,6 +407,19 @@ export default class Terria {
           url: "https://dev.virtualearth.net/",
           flightDurationSeconds: 1.5,
           isOpen: true
+        },
+        {
+          id: "search-provider/australian-gazetteer",
+          type: "australian-gazetteer-search-provider",
+          name: "translate#viewModels.searchPlaceNames",
+          url:
+            "http://services.ga.gov.au/gis/services/Australian_Gazetteer/MapServer/WFSServer",
+          searchPropertyName: "Australian_Gazetteer:NameU",
+          searchPropertyTypeName: "Australian_Gazetteer:Gazetteer_of_Australia",
+          flightDurationSeconds: 1.5,
+          minCharacters: 3,
+          recommendedListLength: 3,
+          isOpen: false
         }
       ]
     }
