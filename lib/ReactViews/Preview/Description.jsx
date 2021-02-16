@@ -190,7 +190,7 @@ const Description = observer(
             >
               <h4 className={Styles.h4}>{t("description.metadataUrls")}</h4>
               <For each="metadataUrl" index="i" of={catalogItem.metadataUrls}>
-                <Box paddedVertically>
+                <Box paddedVertically key={metadataUrl.url}>
                   <a
                     href={metadataUrl.url}
                     target="_blank"
