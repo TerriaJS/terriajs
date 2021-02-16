@@ -950,6 +950,9 @@ class WebMapServiceCatalogItem
     if (imageryProvider === undefined) {
       return undefined;
     }
+
+    imageryProvider.enablePickFeatures = true;
+
     return {
       imageryProvider,
       alpha: this.opacity,
@@ -966,6 +969,9 @@ class WebMapServiceCatalogItem
       if (imageryProvider === undefined) {
         return undefined;
       }
+
+      imageryProvider.enablePickFeatures = false;
+
       return {
         imageryProvider,
         alpha: 0.0,
