@@ -607,6 +607,8 @@
   "viewModels": {
     "searchNoLocations": "Sorry, no locations match your search query.",
     "searchErrorOccurred": "An error occurred while searching.  Please check your internet connection or try again later.",
+    "seachMinCharacters": "You need to enter minimum {{count}} character",
+    "seachMinCharacters_plural": "You need to enter minimum {{count}} characters",
     "searchAddresses": "Addresses",
     "searchPlaceNames": "Official Place Names",
     "searchNoPlaceNames": "Sorry, no official place names match your search query.",

@@ -52,10 +52,6 @@ export default class BingMapsSearchProvider extends LocationSearchProviderMixin(
     searchResults.results.length = 0;
     searchResults.message = undefined;
 
-    if (this.shouldRunSearch(searchText)) {
-      return Promise.resolve();
-    }
-
     this.terria.analytics.logEvent("search", "bing", searchText);
 
     const searchQuery = new Resource({

@@ -4,6 +4,7 @@ import Constructor from "../../Core/Constructor";
 import Model from "../../Models/Model";
 import SearchProviderResults from "../../Models/SearchProvider/SearchProviderResults";
 import SearchProviderTraits from "../../Traits/SearchProvider/SearchProviderTraits";
+import i18next from "i18next";
 
 type SearchProviderModel = Model<SearchProviderTraits>;
 
@@ -16,6 +17,13 @@ function SearchProviderMixin<T extends Constructor<SearchProviderModel>>(
     @action
     search(searchText: string): SearchProviderResults {
       const result = new SearchProviderResults(this);
+      if (!this.shouldRunSearch(searchText)) {
+        result.resultsCompletePromise = fromPromise(Promise.resolve());
+        result.message = i18next.t("viewModels.seachMinCharacters", {
+          count: this.minCharacters
+        });
+        return result;
+      }
       result.resultsCompletePromise = fromPromise(
         this.doSearch(searchText, result)
       );
@@ -27,7 +35,7 @@ function SearchProviderMixin<T extends Constructor<SearchProviderModel>>(
       results: SearchProviderResults
     ): Promise<void>;
 
-    shouldRunSearch(searchText: string) {
+    private shouldRunSearch(searchText: string) {
       if (
         searchText === undefined ||
         /^\s*$/.test(searchText) ||
