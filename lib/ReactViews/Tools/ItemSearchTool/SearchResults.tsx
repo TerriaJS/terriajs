@@ -7,11 +7,7 @@ import styled from "styled-components";
 import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
 import { ItemSearchResult } from "../../../Models/ItemSearchProvider";
 import parseCustomMarkdownToReact from "../../Custom/parseCustomMarkdownToReact";
-import MapEffects, {
-  HideAllResults,
-  HighlightResults,
-  MapEffect
-} from "./MapEffects";
+import MapEffects, { MapEffect } from "./MapEffects";
 
 const Box: any = require("../../../Styled/Box").default;
 const Button = require("../../../Styled/Button").default;
@@ -74,7 +70,10 @@ const SearchResults: React.FC<SearchResultsProps> = props => {
               isSelected={results[index].id === selectedResult?.id}
               isEven={index % 2 === 0}
               onClick={() =>
-                toggleSelection({ is: "singleResult", result: results[index] })
+                toggleSelection({
+                  is: "highlightSingleResult",
+                  result: results[index]
+                })
               }
               template={props.template}
               style={{
