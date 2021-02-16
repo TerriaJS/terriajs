@@ -127,10 +127,11 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   /**
-   * How we determine legends
+   * How we determine legends:
    * 1. Defined manually in catalog JSON
    * 2. If a style is selected, and it has a legendUrl -> use it!
-   * 3. If server supports GetLegendGraphic, generate request for legend.
+   * 3. If server doesn't support GetLegendGraphic, we must select first style as default - as there is no way to know what the default style is, and to request a legend for it
+   * 4. If server supports GetLegendGraphic, we don't need to know what the default style is - as we can just request for the default legend.
    */
   @computed
   get legends(): StratumFromTraits<LegendTraits>[] | undefined {
