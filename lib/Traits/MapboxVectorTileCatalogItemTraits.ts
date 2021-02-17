@@ -1,5 +1,4 @@
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import DataCustodianTraits from "./DataCustodianTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
 import MappableTraits from "./MappableTraits";
@@ -10,7 +9,6 @@ import UrlTraits from "./UrlTraits";
 
 export default class MapboxVectorTileCatalogItemTraits extends mixTraits(
   LayerOrderingTraits,
-  DataCustodianTraits,
   FeatureInfoTraits,
   UrlTraits,
   MappableTraits,

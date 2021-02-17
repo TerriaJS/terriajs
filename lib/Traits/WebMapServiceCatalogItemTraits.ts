@@ -1,7 +1,6 @@
 import { JsonObject } from "../Core/Json";
 import anyTrait from "./anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import DataCustodianTraits from "./DataCustodianTraits";
 import DiffableTraits from "./DiffableTraits";
 import ExportableTraits from "./ExportableTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
@@ -136,7 +135,6 @@ export class WebMapServiceAvailableLayerDimensionsTraits extends ModelTraits {
 }
 
 export default class WebMapServiceCatalogItemTraits extends mixTraits(
-  DataCustodianTraits,
   ExportableTraits,
   DiffableTraits,
   FeatureInfoTraits,
