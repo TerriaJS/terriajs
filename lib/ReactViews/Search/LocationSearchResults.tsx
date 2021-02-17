@@ -62,8 +62,8 @@ class LocationSearchResults extends React.Component<PropsType> {
   @computed
   get validResults() {
     const { search, terria } = this.props;
-    const locationSearchBoundingBox = terria.configParameters.searchBar!
-      .boundingBoxLimit;
+    const locationSearchBoundingBox =
+      terria.configParameters.searchBar?.boundingBoxLimit;
     const validResults = isDefined(locationSearchBoundingBox)
       ? search.results.filter(function(r: any) {
           return (

@@ -392,30 +392,7 @@ export default class Terria {
       recommendedListLength: 5,
       flightDurationSeconds: 1.5,
       minCharacters: 3,
-      searchProviders: [
-        {
-          id: "search-provider/bing-maps",
-          type: "bing-maps-search-provider",
-          name: "translate#viewModels.searchLocations",
-          url: "https://dev.virtualearth.net/",
-          flightDurationSeconds: 1.5,
-          minCharacters: 5,
-          isOpen: true
-        },
-        {
-          id: "search-provider/australian-gazetteer",
-          type: "australian-gazetteer-search-provider",
-          name: "translate#viewModels.searchPlaceNames",
-          url:
-            "http://services.ga.gov.au/gis/services/Australian_Gazetteer/MapServer/WFSServer",
-          searchPropertyName: "Australian_Gazetteer:NameU",
-          searchPropertyTypeName: "Australian_Gazetteer:Gazetteer_of_Australia",
-          flightDurationSeconds: 1.5,
-          minCharacters: 3,
-          recommendedListLength: 3,
-          isOpen: false
-        }
-      ]
+      searchProviders: []
     }
   };
 
@@ -576,8 +553,10 @@ export default class Terria {
     }
 
     if (this.locationSearchProviders.has(model.uniqueId)) {
-      throw new RuntimeError(
-        "A SearchProvider with the specified ID already exists."
+      console.log(
+        new DeveloperError(
+          "A SearchProvider with the specified ID already exists."
+        )
       );
     }
 
@@ -730,7 +709,7 @@ export default class Terria {
         }
       })
       .then(() => {
-        let searchProviders = this.configParameters.searchBar!.searchProviders;
+        let searchProviders = this.configParameters.searchBar?.searchProviders;
         if (!isObservableArray(searchProviders))
           throw new TerriaError({
             sender: SearchProviderFactory,
@@ -843,7 +822,16 @@ export default class Terria {
   updateParameters(parameters: ConfigParameters): void {
     Object.keys(parameters).forEach((key: string) => {
       if (this.configParameters.hasOwnProperty(key)) {
-        this.configParameters[key] = parameters[key];
+        if (key === "searchBar") {
+          // merge default and new
+          //@ts-ignore
+          this.configParameters[key] = {
+            ...this.configParameters[key],
+            ...parameters[key]
+          };
+        } else {
+          this.configParameters[key] = parameters[key];
+        }
       }
     });
 
