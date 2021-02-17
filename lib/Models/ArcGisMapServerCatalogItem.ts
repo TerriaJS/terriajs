@@ -167,21 +167,29 @@ class MapServerStratum extends LoadableStratum(
       });
     }
 
-    let layersMetadata = await getJson(item, layersUri);
+    let layersMetadataResponse = await getJson(item, layersUri);
     const legendMetadata = await getJson(item, legendUri);
 
+    // TODO: some error handling on these requests would be nice
+
+    let layers: Layer[] | undefined;
+
     // Use the slightly more basic layer metadata
-    if (layersMetadata === undefined) {
-      layersMetadata = serviceMetadata.layers;
+    if (
+      isDefined(layersMetadataResponse) &&
+      isDefined(serviceMetadata.layers)
+    ) {
+      layers = serviceMetadata.layers;
     } else {
-      if (layersMetadata.layers !== undefined) {
-        layersMetadata = layersMetadata.layers;
-      } else if (layersMetadata.id) {
-        layersMetadata = [layersMetadata];
+      if (isDefined(layersMetadataResponse.layers)) {
+        layers = layersMetadataResponse.layers;
+        // If layersMetadata is only a single layer -> shove into an array
+      } else if (isDefined(layersMetadataResponse.id)) {
+        layers = [layersMetadataResponse];
       }
     }
 
-    if (!isDefined(layersMetadata) || layersMetadata.length === 0) {
+    if (!isDefined(layers) || layers.length === 0) {
       throw new TerriaError({
         title: i18next.t(
           "models.arcGisMapServerCatalogItem.noLayersFoundMessage"
@@ -196,7 +204,7 @@ class MapServerStratum extends LoadableStratum(
     const stratum = new MapServerStratum(
       item,
       serviceMetadata,
-      layersMetadata,
+      layers,
       legendMetadata,
       token
     );
@@ -303,7 +311,7 @@ class MapServerStratum extends LoadableStratum(
       if (
         layers.length > 0 &&
         layers.indexOf(l.layerId.toString()) < 0 &&
-        layers.indexOf(l.layerName.toLowerCase()) < 0
+        layers.indexOf(l.layerName) < 0
       ) {
         // layer not selected
         return;
@@ -416,7 +424,8 @@ export default class ArcGisMapServerCatalogItem
       enablePickFeatures: this.allowFeaturePicking,
       usePreCachedTilesIfAvailable: !dynamicRequired,
       mapServerData: stratum.mapServerData,
-      token: stratum.token
+      token: stratum.token,
+      credit: this.attribution
     });
 
     const maximumLevelBeforeMessage = maximumScaleToLevel(

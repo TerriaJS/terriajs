@@ -167,4 +167,12 @@ export default class CatalogMemberTraits extends ModelTraits {
       "Indicates that the source of this data should be hidden from the UI (obviously this isn't super-secure as you can just look at the network requests)."
   })
   hideSource: boolean = false;
+
+  @primitiveTrait({
+    name: "Data Custodian",
+    type: "string",
+    description:
+      "Gets or sets a description of the custodian of this data item."
+  })
+  dataCustodian?: string;
 }

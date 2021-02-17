@@ -40,9 +40,7 @@ function sampleResults(count: number): ItemSearchResult[] {
   return [...Array(count)].map(i => ({
     id: `building-${i}`,
     idPropertyName: "building-id",
-    zoomToTarget: {
-      boundingSphere: new BoundingSphere(center, radius)
-    },
+    zoomToTarget: new BoundingSphere(center, radius),
     properties: {
       name: `bldg-${i}`
     }

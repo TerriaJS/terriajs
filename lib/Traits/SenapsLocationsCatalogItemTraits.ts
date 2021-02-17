@@ -3,7 +3,6 @@ import FeatureInfoTraits from "./FeatureInfoTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import primitiveTrait from "./primitiveTrait";
 import MappableTraits from "./MappableTraits";
-import DataCustodianTraits from "./DataCustodianTraits";
 import SplitterTraits from "./SplitterTraits";
 import objectTrait from "./objectTrait";
 import StyleTraits from "./StyleTraits";
@@ -12,7 +11,6 @@ import UrlTraits from "./UrlTraits";
 export default class SenapsLocationsCatalogItemTraits extends mixTraits(
   FeatureInfoTraits,
   SplitterTraits,
-  DataCustodianTraits,
   MappableTraits,
   CatalogMemberTraits,
   UrlTraits
