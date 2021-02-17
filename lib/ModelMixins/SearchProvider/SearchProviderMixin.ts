@@ -19,7 +19,7 @@ function SearchProviderMixin<T extends Constructor<SearchProviderModel>>(
       const result = new SearchProviderResults(this);
       if (!this.shouldRunSearch(searchText)) {
         result.resultsCompletePromise = fromPromise(Promise.resolve());
-        result.message = i18next.t("viewModels.seachMinCharacters", {
+        result.message = i18next.t("viewModels.searchMinCharacters", {
           count: this.minCharacters
         });
         return result;
