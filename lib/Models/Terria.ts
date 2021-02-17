@@ -730,7 +730,7 @@ export default class Terria {
         }
       })
       .then(() => {
-        let searchProviders = this.configParameters.searchBar.searchProviders;
+        let searchProviders = this.configParameters.searchBar!.searchProviders;
         if (!isObservableArray(searchProviders))
           throw new TerriaError({
             sender: SearchProviderFactory,

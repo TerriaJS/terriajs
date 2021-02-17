@@ -42,7 +42,7 @@ function SearchProviderMixin<T extends Constructor<SearchProviderModel>>(
         (this.minCharacters && searchText.length < this.minCharacters) ||
         (this.minCharacters === undefined &&
           searchText.length <
-            this.terria.configParameters.searchBar.minCharacters)
+            this.terria.configParameters.searchBar!.minCharacters)
       ) {
         return false;
       }
