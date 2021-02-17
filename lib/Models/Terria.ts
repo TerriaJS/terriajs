@@ -217,7 +217,7 @@ interface ConfigParameters {
   /**
    * The search bar allows requesting information from various search services at once.
    */
-  searchBar: SearchBar;
+  searchBar?: SearchBar;
 }
 
 interface SearchBar {
