@@ -18,8 +18,8 @@ export default function upsertSearchProviderFromJson(
     const id = json.localId || json.name;
     if (id === undefined) {
       throw new TerriaError({
-        title: i18next.t("models.catalog.idForMatchingErrorTitle"),
-        message: i18next.t("models.catalog.idForMatchingErrorMessage")
+        title: i18next.t("searchProvider.models.idForMatchingErrorTitle"),
+        message: i18next.t("searchProvider.models.idForMatchingErrorMessage")
       });
     }
     uniqueId = id;
@@ -32,8 +32,8 @@ export default function upsertSearchProviderFromJson(
     if (model === undefined) {
       console.log(
         new TerriaError({
-          title: i18next.t("models.catalog.unsupportedTypeTitle"),
-          message: i18next.t("models.catalog.unsupportedTypeMessage", {
+          title: i18next.t("searchProvider.models.unsupportedTypeTitle"),
+          message: i18next.t("searchProvider.models.unsupportedTypeMessage", {
             type: json.type
           })
         })

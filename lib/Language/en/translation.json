@@ -1437,6 +1437,14 @@
       "datasetScaleErrorMessage": "The {{name}} dataset will not be shown when zoomed in this close to the map because the data custodian has indicated that the data is not intended or suitable for display at this scale.  Click the dataset's Info button on the Now Viewing tab for more information about the dataset and the data custodian."
     }
   },
+  "searchProvider": {
+    "models": {
+      "unsupportedTypeTitle": "Unknown type",
+      "unsupportedTypeMessage": "Could not create unknown model type {{type}}.",
+      "idForMatchingErrorTitle": "Missing property",
+      "idForMatchingErrorMessage": "Model objects must have an `id`, `localId`, or `name` property."
+    }
+  },
   "deltaTool": {
     "titlePrefix": "Change Detection",
     "description": "This tool visualizes the difference between imagery captured at two discrete points in time.",
