@@ -1,6 +1,17 @@
 {
-  "parser": "babel-eslint",
-
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "requireConfigFile": false,
+    "ecmaVersion": 2018,
+    "ecmaFeatures": {
+      "jsx": true,
+      "modules": true,
+      "legacyDecorators": true
+    },
+    "babelOptions": {
+      "configFile": "terriajs/.babelrc"
+    }
+  },
   "env": {
     "browser": true,
     "commonjs": true

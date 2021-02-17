@@ -1,7 +1,5 @@
 "use strict";
 
-/*global require,describe,it,expect,beforeEach*/
-
 var Terria = require("../../lib/Models/Terria");
 var Legend = require("../../lib/Map/Legend");
 var loadWithXhr = require("../../lib/Core/loadWithXhr");

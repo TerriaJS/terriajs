@@ -1,6 +1,5 @@
 "use strict";
 
-/*global require,describe,it,expect,beforeEach*/
 var CzmlCatalogItem = require("../../lib/Models/CzmlCatalogItem");
 var TerriaError = require("../../lib/Core/TerriaError");
 var Terria = require("../../lib/Models/Terria");
