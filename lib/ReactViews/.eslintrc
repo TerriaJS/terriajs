@@ -7,9 +7,6 @@
       "jsx": true,
       "modules": true,
       "legacyDecorators": true
-    },
-    "babelOptions": {
-      "configFile": "terriajs/.babelrc"
     }
   },
   "env": {
