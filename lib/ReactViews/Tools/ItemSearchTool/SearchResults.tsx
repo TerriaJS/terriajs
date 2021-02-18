@@ -185,6 +185,7 @@ const ActionButton = styled(Button).attrs(props => ({
   padding: 1em;
   padding-top: 2px;
   padding-bottom: 2px;
+  border: 0px;
   border-radius: 5px;
 `;
 
