@@ -23,8 +23,8 @@ import CommonStrata from "../../../Models/CommonStrata";
 import Feature from "../../../Models/Feature";
 import hasTraits, { HasTrait } from "../../../Models/hasTraits";
 import {
-  removeMarker,
-  getMarkerLocation
+  getMarkerLocation,
+  removeMarker
 } from "../../../Models/LocationMarkerUtils";
 import Mappable, { ImageryParts } from "../../../Models/Mappable";
 import { DimensionOption } from "../../../Models/SelectableDimensions";
@@ -33,11 +33,11 @@ import Terria from "../../../Models/Terria";
 import ViewState from "../../../ReactViewModels/ViewState";
 import Select from "../../../Styled/Select";
 import RasterLayerTraits from "../../../Traits/RasterLayerTraits";
-import { GLYPHS, StyledIcon } from "../../Icon";
-import DatePicker from "./DatePicker";
-import Styles from "./diff-tool.scss";
-import LocationPicker from "./LocationPicker";
 import { parseCustomMarkdownToReactWithOptions } from "../../Custom/parseCustomMarkdownToReact";
+import { GLYPHS, StyledIcon } from "../../Icon";
+import Loader from "../../Loader";
+import DatePicker from "./DatePicker";
+import LocationPicker from "./LocationPicker";
 
 const Box: any = require("../../../Styled/Box").default;
 const BoxSpan: any = require("../../../Styled/Box").BoxSpan;
@@ -47,7 +47,6 @@ const Text: any = require("../../../Styled/Text").default;
 const Spacing: any = require("../../../Styled/Spacing").default;
 const TextSpan: any = require("../../../Styled/Text").TextSpan;
 const dateFormat = require("dateformat");
-const Loader = require("../../Loader");
 
 type DiffableItem = DiffableMixin.Instance;
 
