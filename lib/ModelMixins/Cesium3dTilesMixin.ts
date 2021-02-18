@@ -158,8 +158,8 @@ export default function Cesium3dTilesMixin<
     }
 
     /**
-     * Computes a new modelMatrix by combining the given matrix with the
-     * origin, rotation & scale traits
+     * Computes a new model matrix by combining the given matrix with the
+     * origin, rotation & scale trait values
      */
     private computeModelMatrixFromTransformationTraits(modelMatrix: Matrix4) {
       let scale = Matrix4.getScale(modelMatrix, new Cartesian3());
@@ -200,8 +200,9 @@ export default function Cesium3dTilesMixin<
     }
 
     /**
-     * A computed that returns a modelMatrix by combining the transformation
-     * traits and the original tileset root transform.
+     * A computed that returns the result of transforming the original tileset
+     * root transform with the origin, rotation & scale traits for this catalog
+     * item
      */
     @computed
     get modelMatrix(): Matrix4 {
@@ -421,6 +422,12 @@ export default function Cesium3dTilesMixin<
       }
     }
 
+    /**
+     * Returns the name of properties to be used as an ID for this catalog item.
+     *
+     * This returns an array of strings as the Id value could be formed by combining
+     * multiple properties. eg: ["latitudeprop", "longitudeprop"]
+     */
     getIdPropertiesForFeature(feature: Cesium3DTileFeature): string[] {
       // If `featureIdProperties` is set return it, otherwise if the feature has
       // a property named `id` return it.
@@ -455,8 +462,7 @@ export default function Cesium3dTilesMixin<
     }
 
     /**
-     * Returns a promise that resolves to a {@Cesium3DTileFeature} with
-     * matching property.
+     * Returns a promise that resolves to a {@Cesium3DTileFeature} with matching property.
      */
     @action
     async watchForFeatureWithProperties(
@@ -484,6 +490,16 @@ export default function Cesium3dTilesMixin<
       });
     }
 
+    /**
+     * Adds a new show expression to the styles trait.
+     *
+     * To ensure that we can add multiple show expressions, we first normalize
+     * the show expressions to a `show.conditions` array and then add the new
+     * expression. The new expression is added to the beginning of
+     * `show.conditions` so it will have the highest priority.
+     *
+     * @param newShowExpr The new show expression to add to the styles trait
+     */
     @action
     applyShowExpression(newShowExpr: { condition: string; show: boolean }) {
       const style = this.style || {};
@@ -492,6 +508,11 @@ export default function Cesium3dTilesMixin<
       this.setTrait(CommonStrata.user, "style", { ...style, show });
     }
 
+    /**
+     * Remove all show expressions that match the given condition.
+     *
+     * @param condition The condition string used to match the show expression.
+     */
     @action
     removeShowExpression(condition: string) {
       const show = this.style?.show;
@@ -509,6 +530,15 @@ export default function Cesium3dTilesMixin<
       });
     }
 
+    /**
+     * Adds a new color expression to the style traits.
+     *
+     * To ensure that we can add multiple color expressions, we first normalize the
+     * color expression to a `color.conditions` array. Then add the new expression to the
+     * beginning of the array. This gives the highest priority for the new color expression.
+     *
+     * @param newColorExpr The new color expression to add
+     */
     @action
     applyColorExpression(newColorExpr: { condition: string; value: string }) {
       const style = this.style || {};
@@ -523,6 +553,9 @@ export default function Cesium3dTilesMixin<
       } as JsonObject);
     }
 
+    /**
+     * Removes all color expressions with the given condition from the style traits.
+     */
     @action
     removeColorExpression(condition: string) {
       const color = this.style?.color;
@@ -540,6 +573,10 @@ export default function Cesium3dTilesMixin<
       });
     }
 
+    /**
+     * The color to use for highlighting features in this catalog item.
+     *
+     */
     @computed
     get highlightColor(): string {
       return super.highlightColor || DEFAULT_HIGHLIGHT_COLOR;
