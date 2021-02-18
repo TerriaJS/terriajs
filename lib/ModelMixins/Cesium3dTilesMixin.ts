@@ -18,7 +18,6 @@ import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
-import Cesium3DTile from "terriajs-cesium/Source/Scene/Cesium3DTile";
 import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
@@ -459,35 +458,6 @@ export default function Cesium3dTilesMixin<
         show.conditions.unshift([showExpr, visibiltiy]);
         this.setTrait(CommonStrata.user, "style", { ...style, show });
       }
-    }
-
-    /**
-     * Returns a promise that resolves to a {@Cesium3DTileFeature} with matching property.
-     */
-    @action
-    async watchForFeatureWithProperties(
-      properties: Record<string, any>
-    ): Promise<Cesium3DTileFeature> {
-      if (!this.tileset) Promise.reject(new Error("Tileset not loaded"));
-      const tileset = this.tileset!;
-
-      return new Promise(resolve => {
-        const watch = (tile: Cesium3DTile) => {
-          const content = tile.content;
-          for (let i = 0; i < content.featuresLength; i++) {
-            const feature = content.getFeature(i);
-            const hasAllProperties = Object.entries(properties).every(
-              ([name, value]) => feature.getProperty(name) === value
-            );
-            if (hasAllProperties) {
-              tileset.tileVisible.removeEventListener(watch);
-              resolve(feature);
-              return;
-            }
-          }
-        };
-        tileset.tileVisible.addEventListener(watch);
-      });
     }
 
     /**
