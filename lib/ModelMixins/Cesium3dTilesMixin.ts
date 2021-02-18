@@ -424,8 +424,8 @@ export default function Cesium3dTilesMixin<
     /**
      * Returns the name of properties to be used as an ID for this catalog item.
      *
-     * This returns an array of strings as the Id value could be formed by combining
-     * multiple properties. eg: ["latitudeprop", "longitudeprop"]
+     * The return value is an array of strings as the Id value could be formed
+     * by combining multiple properties. eg: ["latitudeprop", "longitudeprop"]
      */
     getIdPropertiesForFeature(feature: Cesium3DTileFeature): string[] {
       // If `featureIdProperties` is set return it, otherwise if the feature has
