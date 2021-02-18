@@ -141,17 +141,19 @@ export default class CsvCatalogItem extends AsyncChartableMixin(
       return;
     }
 
-    Csv.parseUrl(proxyCatalogItemUrl(this, this.refreshUrl), true).then(
-      dataColumnMajor => {
-        runInAction(() => {
-          if (this.polling.shouldReplaceData) {
-            this.dataColumnMajor = dataColumnMajor;
-          } else {
-            this.append(dataColumnMajor);
-          }
-        });
-      }
-    );
+    Csv.parseUrl(
+      proxyCatalogItemUrl(this, this.refreshUrl),
+      true,
+      this.ignoreRowsStartingWithComment
+    ).then(dataColumnMajor => {
+      runInAction(() => {
+        if (this.polling.shouldReplaceData) {
+          this.dataColumnMajor = dataColumnMajor;
+        } else {
+          this.append(dataColumnMajor);
+        }
+      });
+    });
   }
 
   protected forceLoadMetadata(): Promise<void> {
@@ -160,11 +162,23 @@ export default class CsvCatalogItem extends AsyncChartableMixin(
 
   protected forceLoadTableData(): Promise<string[][]> {
     if (this.csvString !== undefined) {
-      return Csv.parseString(this.csvString, true);
+      return Csv.parseString(
+        this.csvString,
+        true,
+        this.ignoreRowsStartingWithComment
+      );
     } else if (this._csvFile !== undefined) {
-      return Csv.parseFile(this._csvFile, true);
+      return Csv.parseFile(
+        this._csvFile,
+        true,
+        this.ignoreRowsStartingWithComment
+      );
     } else if (this.url !== undefined) {
-      return Csv.parseUrl(proxyCatalogItemUrl(this, this.url), true);
+      return Csv.parseUrl(
+        proxyCatalogItemUrl(this, this.url),
+        true,
+        this.ignoreRowsStartingWithComment
+      );
     } else {
       return Promise.reject(
         new TerriaError({
