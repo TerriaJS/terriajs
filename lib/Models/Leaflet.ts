@@ -658,6 +658,21 @@ export default class Leaflet extends GlobeOrMap {
         }
       });
     }
+
+    // we need items sorted in reverse order by their zIndex to get correct ordering of feature info
+    imageryLayers.sort((a: CesiumTileLayer, b: CesiumTileLayer) => {
+      if (!isDefined(a.options.zIndex) || !isDefined(b.options.zIndex)) {
+        return 0;
+      }
+      if (a.options.zIndex < b.options.zIndex) {
+        return 1;
+      }
+      if (a.options.zIndex > b.options.zIndex) {
+        return -1;
+      }
+      return 0;
+    });
+
     tileCoordinates = defaultValue(tileCoordinates, {});
 
     const pickedLocation = Cartographic.fromDegrees(latlng.lng, latlng.lat);
