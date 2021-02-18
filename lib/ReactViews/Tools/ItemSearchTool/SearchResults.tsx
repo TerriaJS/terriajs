@@ -55,10 +55,10 @@ const SearchResults: React.FC<SearchResultsProps> = props => {
           {t("itemSearchTool.actions.highlightAll")}
         </ActionButton>
         <ActionButton
-          selected={currentMapEffect.is === "hideAll"}
-          onClick={() => toggleSelection({ is: "hideAll" })}
+          selected={currentMapEffect.is === "showMatchingOnly"}
+          onClick={() => toggleSelection({ is: "showMatchingOnly" })}
         >
-          {t("itemSearchTool.actions.hideAll")}
+          {t("itemSearchTool.actions.showMatchingOnly")}
         </ActionButton>
       </ActionMenu>
       <List ref={parentRef} height={`250px`}>
@@ -185,6 +185,7 @@ const ActionButton = styled(Button).attrs(props => ({
   padding: 1em;
   padding-top: 2px;
   padding-bottom: 2px;
+  border: 0px;
   border-radius: 5px;
 `;
 

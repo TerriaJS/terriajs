@@ -41,14 +41,16 @@ export default class Cesium3DTilesCatalogItem
   }
 
   /**
-   * Highlights all item-search results. See {@SearchableItemMixin}.
+   * Highlights all features in the item search results.
+   * Required by {@SearchableItemMixin}.
    *
-   * Watches for newly visible features with an id property matching `results`
-   * and tags them by setting {@SEARCH_RESULT_TAG} property. A color style is
-   * then applied to the tagged features to acheive the highlighting.
+   * 1) Watch for newly visible features with an id property matching some entry in `results`
+   * 2) Tag them feature by setting {@SEARCH_RESULT_TAG} property.
+   * 3) Apply color style to the tagged features to acheive the highlighting
+   * 4) If there is only 1 result, popup the feature info panel for the matching feature
    */
   @action
-  highlightItemSearchResults(
+  highlightFeaturesFromItemSearchResults(
     results: ItemSearchResult[]
   ): ItemSelectionDisposer {
     const tileset = this.tileset;
@@ -111,11 +113,12 @@ export default class Cesium3DTilesCatalogItem
   }
 
   /**
-   * Hide all item search results. See {@SearchableItemMixin}.
+   * Hides all features NO matching entry in `results`.
+   * Required by {@SearchableItemMixin}.
    *
    * Works similar to {@highlightItemSearchResults}
    */
-  @action hideItemSearchResults(
+  @action hideFeaturesNotInItemSearchResults(
     results: ItemSearchResult[]
   ): ItemSelectionDisposer {
     const tileset = this.tileset;
@@ -132,7 +135,7 @@ export default class Cesium3DTilesCatalogItem
       tileset,
       (feature: Cesium3DTileFeature) => {
         const featureId = feature.getProperty(idPropertyName);
-        if (resultIds.has(featureId)) {
+        if (resultIds.has(featureId) === false) {
           feature.setProperty(SEARCH_RESULT_TAG, true);
           hiddenFeatures.add(feature);
         }

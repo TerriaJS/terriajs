@@ -60,7 +60,7 @@ const SearchForm: React.FC<SearchFormProps> = props => {
       [id]: { type, value }
     };
     // Delete the value so that we don't trigger search for it
-    if (newQuery[id] === undefined) delete newQuery[id];
+    if (newQuery[id].value === undefined) delete newQuery[id];
     setQuery(newQuery);
     if (value !== undefined) props.onValueChange?.(id, value);
   };
@@ -180,7 +180,7 @@ export const NumericParameter: React.FC<NumericParameterProps> = props => {
             <Input
               type="number"
               name={`${parameter.id}-min`}
-              value={value?.start || ""}
+              value={value?.start ?? ""}
               min={min}
               max={max}
               step="any"
@@ -195,7 +195,7 @@ export const NumericParameter: React.FC<NumericParameterProps> = props => {
             <Input
               type="number"
               name={`${parameter.id}-max`}
-              value={value?.end || ""}
+              value={value?.end ?? ""}
               min={min}
               max={max}
               step="any"

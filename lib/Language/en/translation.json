@@ -1478,7 +1478,7 @@
     "resultsCount_plural": "{{count}} matches found",
     "actions": {
       "highlightAll": "Highlight all",
-      "hideAll": "Hide all"
+      "showMatchingOnly": "Show matching only"
     }
   },
   "indexedItemSearchProvider": {

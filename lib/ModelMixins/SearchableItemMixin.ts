@@ -21,24 +21,20 @@ function SearchableItemMixin<T extends Constructor<MixinModel>>(Base: T) {
     readonly hasSearchableItemMixin = true;
 
     /**
-     * A hook for highlighting search results selected by the user.
-     *
-     * The implementation can decide how to highlight the search result.
+     * A hook for highlighting features in item search results.
      *
      * @param results The search results to be highlighted.
      */
-    abstract highlightItemSearchResults(
+    abstract highlightFeaturesFromItemSearchResults(
       results: ItemSearchResult[]
     ): ItemSelectionDisposer;
 
     /**
-     * A hook for hiding search results selected by the user.
-     *
-     * The implementation can decide how to highlight the search result.
+     * A hook for hiding features not in item search results.
      *
      * @param results The search results to be hidden.
      */
-    abstract hideItemSearchResults(
+    abstract hideFeaturesNotInItemSearchResults(
       results: ItemSearchResult[]
     ): ItemSelectionDisposer;
 
