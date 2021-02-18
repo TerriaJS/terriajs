@@ -50,6 +50,10 @@ const Description = observer(
           }
         }
       }
+
+      // Make sure all metadataUrls have `url` set
+      const metadataUrls = catalogItem.metadataUrls?.filter(m => m.url);
+
       return (
         <div
           className={Styles.description}
@@ -183,14 +187,10 @@ const Description = observer(
               </Choose>
             </If>
 
-            <If
-              condition={
-                catalogItem.metadataUrls && catalogItem.metadataUrls.length > 0
-              }
-            >
+            <If condition={metadataUrls && metadataUrls.length > 0}>
               <h4 className={Styles.h4}>{t("description.metadataUrls")}</h4>
-              <For each="metadataUrl" index="i" of={catalogItem.metadataUrls}>
-                <Box paddedVertically key={metadataUrl.url}>
+              <For each="metadataUrl" index="i" of={metadataUrls}>
+                <Box displayInlineBlock padded key={metadataUrl.url}>
                   <a
                     href={metadataUrl.url}
                     target="_blank"
