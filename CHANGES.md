@@ -40,6 +40,7 @@ Change Log
 * Use `configParameters.cesiumIonAccessToken` in `IonImageryCatalogItem`
 * Added support for skipping comments in CSV files
 * Fix WMS GetLegendGraphics request `style` parameter
+* Loosen Legend `mimeType` check - so now it will treat the Legend URL as an image if the `mimeType` matches **OR** the file extension matches (previously, if `mimeType` was defined, then it wouldn't look at filetype extension)
 * [The next improvement]
 
 #### 8.0.0-alpha.65
