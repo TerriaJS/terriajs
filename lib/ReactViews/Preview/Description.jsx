@@ -190,7 +190,7 @@ const Description = observer(
             <If condition={metadataUrls && metadataUrls.length > 0}>
               <h4 className={Styles.h4}>{t("description.metadataUrls")}</h4>
               <For each="metadataUrl" index="i" of={metadataUrls}>
-                <Box displayInlineBlock padded key={metadataUrl.url}>
+                <Box paddedVertically key={metadataUrl.url}>
                   <a
                     href={metadataUrl.url}
                     target="_blank"
