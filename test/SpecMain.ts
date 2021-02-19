@@ -21,10 +21,11 @@ spy(event => {
 });
 
 beforeEach(function() {
-  i18next.init({
-    lng: "cimode",
-    debug: false
-  });
+  i18next.changeLanguage("cimode");
+  // i18next.init({
+  //   lng: "cimode",
+  //   debug: false
+  // });
 });
 
 jasmine.getEnv().addReporter({
