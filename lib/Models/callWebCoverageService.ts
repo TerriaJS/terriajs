@@ -17,9 +17,7 @@ import createStratumInstance from "./createStratumInstance";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import ResultPendingCatalogItem from "./ResultPendingCatalogItem";
 import UserDrawing from "./UserDrawing";
-import WebMapServiceCatalogItem, {
-  formatDimensionsForOws
-} from "./WebMapServiceCatalogItem";
+import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
 import isDefined from "../Core/isDefined";
 import makeRealPromise from "../Core/makeRealPromise";
 import TerriaError from "../Core/TerriaError";
@@ -83,7 +81,7 @@ async function launch(
     height: Math.round((1024 * bbox.height) / bbox.width),
     coverage: wmsCatalogItem.linkedWcsCoverage,
     bbox: `${bbox.west},${bbox.south},${bbox.east},${bbox.north}`,
-    ...formatDimensionsForOws(wmsCatalogItem.dimensions),
+    ...wmsCatalogItem.dimensions,
     time: wmsCatalogItem.currentDiscreteTimeTag,
     styles: wmsCatalogItem.styles
   };

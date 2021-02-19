@@ -12,6 +12,7 @@ import { computed, runInAction } from "mobx";
 import moment from "moment";
 import combine from "terriajs-cesium/Source/Core/combine";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
@@ -24,6 +25,7 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import isReadOnlyArray from "../Core/isReadOnlyArray";
 import { JsonObject } from "../Core/Json";
+import loadJson from "../Core/loadJson";
 import TerriaError from "../Core/TerriaError";
 import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
@@ -45,6 +47,9 @@ import DiscreteTimeTraits from "../Traits/DiscreteTimeTraits";
 import LegendTraits from "../Traits/LegendTraits";
 import { RectangleTraits } from "../Traits/MappableTraits";
 import WebMapServiceCatalogItemTraits, {
+  SUPPORTED_CRS_3857,
+  SUPPORTED_CRS_4326,
+  WebMapServiceAvailableDimensionTraits,
   WebMapServiceAvailableLayerDimensionsTraits,
   WebMapServiceAvailableLayerStylesTraits,
   WebMapServiceAvailableStyleTraits
@@ -59,6 +64,7 @@ import Model, { BaseModel } from "./Model";
 import { CapabilitiesStyle } from "./OwsInterfaces";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
+import StratumOrder from "./StratumOrder";
 import WebMapServiceCapabilities, {
   CapabilitiesContactInformation,
   CapabilitiesDimension,
@@ -69,7 +75,6 @@ import WebMapServiceCapabilities, {
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 
 const dateFormat = require("dateformat");
-
 class GetCapabilitiesStratum extends LoadableStratum(
   WebMapServiceCatalogItemTraits
 ) {
@@ -275,6 +280,30 @@ class GetCapabilitiesStratum extends LoadableStratum(
     return new Map(this.catalogItem.layersArray.map(lookup));
   }
 
+  @computed get crs() {
+    const layerCrs = new Set<string>();
+    this.capabilitiesLayers.forEach(layer => {
+      if (layer) {
+        const srs = this.capabilities.getInheritedValues(layer, "SRS");
+        const crs = this.capabilities.getInheritedValues(layer, "CRS");
+        [
+          ...(Array.isArray(srs) ? srs : [srs]),
+          ...(Array.isArray(crs) ? crs : [crs])
+        ].forEach(c => layerCrs.add(c));
+      }
+    });
+
+    const supportedCrs = [
+      "EPSG:3857",
+      "EPSG:900913",
+      "EPSG:4326",
+      "CRS:84",
+      "EPSG:4283"
+    ];
+
+    return supportedCrs.find(crs => layerCrs.has(crs)) ?? "EPSG:3857";
+  }
+
   @computed
   get availableDimensions(): StratumFromTraits<
     WebMapServiceAvailableLayerDimensionsTraits
@@ -301,18 +330,17 @@ class GetCapabilitiesStratum extends LoadableStratum(
         layerName: layerName,
         dimensions: dimensions
           .filter(dim => dim.name !== "time")
-          .map(dim => {
-            return {
+          .map(dim =>
+            createStratumInstance(WebMapServiceAvailableDimensionTraits, {
               name: dim.name,
               units: dim.units,
               unitSymbol: dim.unitSymbol,
               default: dim.default,
               multipleValues: dim.multipleValues,
-              current: dim.current,
               nearestValue: dim.nearestValue,
               values: dim.text?.split(",")
-            };
-          })
+            })
+          )
       });
     }
 
@@ -732,6 +760,104 @@ class DiffStratum extends LoadableStratum(WebMapServiceCatalogItemTraits) {
   }
 }
 
+interface MetEyeMetadata {
+  metadata: { idcode: string; basetime: string; issuetime: string }[];
+}
+
+class MetEyeStratum extends LoadableStratum(WebMapServiceCatalogItemTraits) {
+  static async load(
+    catalogItem: WebMapServiceCatalogItem
+  ): Promise<MetEyeStratum> {
+    if (!isDefined(catalogItem.getCapabilitiesUrl)) {
+      throw new TerriaError({
+        title: i18next.t("models.webMapServiceCatalogItem.missingUrlTitle"),
+        message: i18next.t("models.webMapServiceCatalogItem.missingUrlMessage")
+      });
+    }
+
+    const metadata = (await loadJson(
+      proxyCatalogItemUrl(
+        catalogItem,
+        "http://www.bom.gov.au/products/grid-metadata/meteye-all.json"
+      )
+    )) as MetEyeMetadata;
+
+    return new MetEyeStratum(catalogItem, metadata);
+  }
+
+  constructor(
+    readonly catalogItem: WebMapServiceCatalogItem,
+    readonly metadata: MetEyeMetadata
+  ) {
+    super();
+  }
+
+  duplicateLoadableStratum(model: BaseModel): this {
+    return new MetEyeStratum(
+      model as WebMapServiceCatalogItem,
+      this.metadata
+    ) as this;
+  }
+
+  @computed get availableDimensions() {
+    return [
+      createStratumInstance(WebMapServiceAvailableLayerDimensionsTraits, {
+        layerName: "IDZ73089",
+        dimensions: [
+          createStratumInstance(WebMapServiceAvailableDimensionTraits, {
+            name: "ISSUETIME",
+            disable: true
+          }),
+          createStratumInstance(WebMapServiceAvailableDimensionTraits, {
+            name: "TIMESTEP",
+            disable: true
+          })
+        ]
+      })
+    ];
+  }
+
+  @computed get discreteTimes() {
+    const layerMetadata = this.metadata.metadata.find(
+      m => m.idcode === this.catalogItem.layersArray[0]
+    );
+    if (layerMetadata) {
+      const basetime = new Date(
+        `${layerMetadata.basetime.substring(
+          0,
+          4
+        )}-${layerMetadata.basetime.substring(
+          4,
+          6
+        )}-${layerMetadata.basetime.substring(
+          6,
+          8
+        )} ${layerMetadata.basetime.substring(
+          8,
+          10
+        )}:${layerMetadata.basetime.substring(10, 12)}:00.000Z`
+      );
+
+      return new Array(162 / 3 + 1)
+        .fill(0)
+        .map((n, i) =>
+          new Date(basetime.getTime() + i * 3 * 60 * 60 * 1000).toISOString()
+        )
+        .map((time, i) => ({
+          time,
+          tag: (i * 3).toString()
+        }));
+    }
+
+    return [];
+  }
+
+  customTimeDimension = "TIMESTEP";
+}
+
+export const metEyeStratumName = "metEye";
+StratumOrder.addLoadStratum(metEyeStratumName);
+
 class WebMapServiceCatalogItem
   extends TileErrorHandlerMixin(
     ExportableMixin(
@@ -808,8 +934,10 @@ class WebMapServiceCatalogItem
     )
       return;
     const stratum = await GetCapabilitiesStratum.load(this);
+    const metEyeStratum = await MetEyeStratum.load(this);
     runInAction(() => {
       this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
+      this.strata.set(metEyeStratumName, metEyeStratum);
 
       const diffStratum = new DiffStratum(this);
       this.strata.set(DiffableMixin.diffStratumName, diffStratum);
@@ -869,7 +997,13 @@ class WebMapServiceCatalogItem
       | undefined = this.strata.get(
       GetCapabilitiesMixin.getCapabilitiesStratumName
     ) as GetCapabilitiesStratum;
-    return getCapabilitiesStratum?.discreteTimes;
+
+    const metEyeStratum: MetEyeStratum | undefined = this.strata.get(
+      metEyeStratumName
+    ) as MetEyeStratum;
+    return (
+      metEyeStratum?.discreteTimes ?? getCapabilitiesStratum?.discreteTimes
+    );
   }
 
   protected get defaultGetCapabilitiesUrl(): string | undefined {
@@ -966,6 +1100,18 @@ class WebMapServiceCatalogItem
   }
 
   @computed
+  get tilingScheme() {
+    if (this.crs) {
+      if (SUPPORTED_CRS_3857.includes(this.crs))
+        return new WebMercatorTilingScheme();
+      if (SUPPORTED_CRS_4326.includes(this.crs))
+        return new GeographicTilingScheme();
+    }
+
+    return new WebMercatorTilingScheme();
+  }
+
+  @computed
   private get _currentImageryParts(): ImageryParts | undefined {
     const imageryProvider = this._createImageryProvider(
       this.currentDiscreteTimeTag
@@ -974,7 +1120,7 @@ class WebMapServiceCatalogItem
       return undefined;
     }
 
-    imageryProvider.enablePickFeatures = true;
+    imageryProvider.enablePickFeatures = this.allowFeaturePicking;
 
     return {
       imageryProvider,
@@ -1051,13 +1197,6 @@ class WebMapServiceCatalogItem
 
       console.log(`Creating new ImageryProvider for time ${time}`);
 
-      // Set dimensionParameters
-      const dimensionParameters = formatDimensionsForOws(this.dimensions);
-
-      if (time !== undefined) {
-        dimensionParameters.time = time;
-      }
-
       const diffModeParameters = this.isShowingDiff
         ? this.diffModeParameters
         : {};
@@ -1065,8 +1204,16 @@ class WebMapServiceCatalogItem
       const parameters: { [key: string]: any } = {
         ...WebMapServiceCatalogItem.defaultParameters,
         ...this.parameters,
-        ...dimensionParameters
+        ...this.dimensions
       };
+
+      if (time !== undefined) {
+        parameters[this.customTimeDimension ?? "time"] = time;
+      }
+
+      if (this.crs) {
+        parameters.srs = this.crs;
+      }
 
       if (this.supportsColorScaleRange) {
         parameters.COLORSCALERANGE = this.colorScaleRange;
@@ -1130,18 +1277,19 @@ class WebMapServiceCatalogItem
         });
       }
 
-      const imageryOptions = {
+      const imageryOptions: WebMapServiceImageryProvider.ConstructorOptions = {
         url: proxyCatalogItemUrl(this, baseUrl.toString()),
         layers: lyrs.length > 0 ? lyrs.join(",") : "",
         parameters: parameters,
         getFeatureInfoParameters: {
-          ...dimensionParameters,
+          ...this.dimensions,
           styles: this.styles === undefined ? "" : this.styles
         },
-        tilingScheme: /*defined(this.tilingScheme) ? this.tilingScheme :*/ new WebMercatorTilingScheme(),
+        tilingScheme: this.tilingScheme,
         maximumLevel: maximumLevel,
         rectangle: rectangle,
-        credit: this.attribution
+        credit: this.attribution,
+        enablePickFeatures: this.allowFeaturePicking
       };
 
       if (
@@ -1279,9 +1427,14 @@ class WebMapServiceCatalogItem
           return;
         }
 
+        const dimKey = dim.disableDimPrefix
+          ? dim.name
+          : addDimensionPrefix(dim.name);
+
         dimensions.push({
-          name: dim.name,
+          name: dim.title ?? dim.name,
           id: `${this.uniqueId}-${dim.name}`,
+          disable: dim.disable,
           options: dim.values.map(value => {
             let name = value;
             // Add units and unitSybol if defined
@@ -1300,14 +1453,14 @@ class WebMapServiceCatalogItem
 
           // Set selectedId to value stored in `dimensions` trait, the default value, or the first available value
           selectedId:
-            this.dimensions?.[dim.name]?.toString() ||
+            this.dimensions?.[dimKey]?.toString() ||
             dim.default ||
             dim.values[0],
 
           setDimensionValue: (stratumId: string, newDimension: string) => {
             let newDimensions: any = {};
 
-            newDimensions[dim.name!] = newDimension;
+            newDimensions[dimKey] = newDimension;
 
             if (isDefined(this.dimensions)) {
               newDimensions = combine(newDimensions, this.dimensions);
@@ -1477,28 +1630,14 @@ function formatMomentForWms(m: moment.Moment, duration: moment.Duration) {
 
 /**
  * Add `_dim` prefix to dimensions for OWS (WMS, WCS...) excluding time, styles and elevation
+ *  - elevation is specified as simply "elevation", styles is specified as "styles"
+ *  - Other (custom) dimensions are prefixed with 'dim_'.
+ *  =See WMS 1.3.0 spec section C.3.2 and C.3.3.
  */
-export function formatDimensionsForOws(
-  dimensions: { [key: string]: string } | undefined
-) {
-  if (!isDefined(dimensions)) {
-    return {};
-  }
-  return Object.entries(dimensions).reduce<{ [key: string]: string }>(
-    (formattedDimensions, [key, value]) =>
-      // elevation is specified as simply "elevation", styles is specified as "styles"
-      // Other (custom) dimensions are prefixed with 'dim_'.
-      // See WMS 1.3.0 spec section C.3.2 and C.3.3.
-      {
-        formattedDimensions[
-          ["time", "styles", "elevation"].includes(key?.toLowerCase())
-            ? key
-            : `dim_${key}`
-        ] = value;
-        return formattedDimensions;
-      },
-    {}
-  );
+export function addDimensionPrefix(key: string) {
+  return ["time", "styles", "elevation"].includes(key?.toLowerCase())
+    ? key
+    : `dim_${key}`;
 }
 
 function getServiceContactInformation(

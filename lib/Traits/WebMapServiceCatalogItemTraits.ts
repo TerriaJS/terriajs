@@ -19,6 +19,9 @@ import SplitterTraits from "./SplitterTraits";
 import TimeFilterTraits from "./TimeFilterTraits";
 import UrlTraits from "./UrlTraits";
 
+export const SUPPORTED_CRS_3857 = ["EPSG:3857", "EPSG:900913"];
+export const SUPPORTED_CRS_4326 = ["EPSG:4326", "CRS:84", "EPSG:4283"];
+
 export class WebMapServiceAvailableStyleTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
@@ -74,6 +77,14 @@ export class WebMapServiceAvailableDimensionTraits extends ModelTraits {
   })
   name?: string;
 
+  @primitiveTrait({
+    type: "string",
+    name: "Dimension title",
+    description:
+      "The title of the dimension. This is the label used for the dimension selector/"
+  })
+  title?: string;
+
   @primitiveArrayTrait({
     type: "string",
     name: "Dimension values",
@@ -115,6 +126,21 @@ export class WebMapServiceAvailableDimensionTraits extends ModelTraits {
     description: "The nearest value of the dimension."
   })
   nearestValue?: boolean;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Disable",
+    description: "Flag to disable dimension."
+  })
+  disable?: boolean;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Disable _dim prefix for dimension",
+    description:
+      "OWS will add a `_dim` prefix to dimensions excluding time, styles and elevation. (for example: 'parameter' will become 'dim_parameter'). This flag will disable Terria adding `_dim` prefix"
+  })
+  disableDimPrefix?: boolean;
 }
 
 export class WebMapServiceAvailableLayerDimensionsTraits extends ModelTraits {
@@ -161,6 +187,15 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
       "The styles to use with each of the `Layer(s)` (comma separated values). This maps one-to-one with `Layer(s)`"
   })
   styles?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Style(s)",
+    description: `CRS to use with WMS layers. We support Web Mercator (${SUPPORTED_CRS_3857.join(
+      ", "
+    )}) and WGS 84 (${SUPPORTED_CRS_4326.join(", ")})`
+  })
+  crs?: string;
 
   @anyTrait({
     name: "Dimensions",
@@ -274,6 +309,14 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   isNcWMS: boolean = false;
 
   @primitiveTrait({
+    name: "Allow feature picking",
+    type: "boolean",
+    description:
+      "Indicates whether features in this catalog item can be selected by clicking them on the map."
+  })
+  allowFeaturePicking = true;
+
+  @primitiveTrait({
     type: "boolean",
     name: "Supports color scale range",
     description:
@@ -304,4 +347,12 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
       "The maximum of the color scale range. Because COLORSCALERANGE is a non-standard property supported by ncWMS servers, this property is ignored unless WebMapServiceCatalogItem's supportsColorScaleRange is true. WebMapServiceCatalogItem's colorScaleMinimum must be set as well."
   })
   colorScaleMaximum: number = 50;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Custom time dimension name",
+    description:
+      "The name of the dimension to use when requesting time values. The default value for WMS is `time`. So when you request a time value it will add `...&time=$date` the request URL"
+  })
+  customTimeDimension?: string;
 }
