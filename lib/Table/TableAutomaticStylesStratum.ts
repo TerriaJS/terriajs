@@ -208,11 +208,12 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
             })
           ]
         : [];
-    let numberFormatOptions: JsonObject | undefined = undefined;
-    if (colorColumn !== undefined) {
-      numberFormatOptions = colorColumn.traits.format
-        ? colorColumn.traits.format
-        : undefined;
+    const numberFormatOptions:
+      | Intl.NumberFormatOptions
+      | JsonObject
+      | undefined = { useGrouping: true };
+    if (colorColumn?.traits?.format !== undefined) {
+      Object.assign(numberFormatOptions, colorColumn.traits.format);
     }
     return colorMap.maximums
       .map((maximum, i) => {
@@ -283,7 +284,10 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
     ];
   }
 
-  private _formatValue(value: number, format: JsonObject | undefined): string {
+  private _formatValue(
+    value: number,
+    format: Intl.NumberFormatOptions | JsonObject | undefined
+  ): string {
     return Math.round(value).toLocaleString(undefined, format);
   }
 }
