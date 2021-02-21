@@ -9,7 +9,6 @@ import Cesium3DTile from "terriajs-cesium/Source/Scene/Cesium3DTile";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import makeRealPromise from "../Core/makeRealPromise";
-import timeout from "../Core/timeout";
 import PickedFeatures from "../Map/PickedFeatures";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import Cesium3dTilesMixin from "../ModelMixins/Cesium3dTilesMixin";
@@ -61,16 +60,7 @@ export default class Cesium3DTilesCatalogItem
     const resultIds = new Set(results.map(r => r.id));
     const idPropertyName = results[0].idPropertyName;
     const highligtedFeatures: Set<Cesium3DTileFeature> = new Set();
-
-    // If we have only 1 result, try to popup a feature info panel for it
-    let disposeFeatureInfoPanel = () => {};
-    if (results.length === 1) {
-      disposeFeatureInfoPanel = this.popupInfoPanelForFeature(
-        { [idPropertyName]: results[0].id }, // select feature with a matching id property
-        SEARCH_RESULT_TAG, // Exclude the SEARCH_RESULT_TAG from the info panel
-        60000 // timeout after 60secs
-      );
-    }
+    let disposeFeatureInfoPanel: (() => void) | undefined;
 
     // Tag newly visible features with SEARCH_RESULT_TAG
     const disposeWatch = this._watchForNewTileFeatures(
@@ -80,6 +70,15 @@ export default class Cesium3DTilesCatalogItem
         if (resultIds.has(featureId)) {
           feature.setProperty(SEARCH_RESULT_TAG, true);
           highligtedFeatures.add(feature);
+
+          // If we only have a single result, show the feature info panel for it
+          if (results.length === 1) {
+            disposeFeatureInfoPanel = openInfoPanelForFeature(
+              this,
+              feature,
+              SEARCH_RESULT_TAG
+            );
+          }
         }
       }
     );
@@ -97,7 +96,7 @@ export default class Cesium3DTilesCatalogItem
 
     const highlightDisposer = action(() => {
       disposeWatch();
-      disposeFeatureInfoPanel();
+      disposeFeatureInfoPanel?.();
       this.removeColorExpression(colorExpression);
       highligtedFeatures.forEach(feature => {
         try {
@@ -204,47 +203,6 @@ export default class Cesium3DTilesCatalogItem
   }
 
   /**
-   * Popup feature info panel for the feature with the given properties
-   */
-  popupInfoPanelForFeature(
-    featureProperties: Record<string, string | number>,
-    excludePropertyFromPanel: string,
-    timeoutMsecs: number
-  ): () => void {
-    const pickedFeatures = new PickedFeatures();
-
-    // There is a small chance that we might miss the tileVisible event for the
-    // feature, so timeout after 60 secs
-    pickedFeatures.allFeaturesAvailablePromise = Promise.race([
-      timeout(timeoutMsecs),
-      this.watchForFeatureWithProperties(featureProperties)
-    ]).then(
-      action(cesium3DTileFeature => {
-        if (cesium3DTileFeature) {
-          const feature = this.getFeaturesFromPickResult(
-            // The screenPosition param is not used by 3dtiles catalog item,
-            // so just pass a fake value
-            new Cartesian2(),
-            cesium3DTileFeature
-          );
-          feature?.properties?.removeProperty(excludePropertyFromPanel);
-          if (feature) pickedFeatures.features.push(feature);
-        }
-        pickedFeatures.isLoading = false;
-      })
-    );
-    this.terria.pickedFeatures = pickedFeatures;
-
-    const disposer = () => {
-      // Closes the feature info panel if it is still displaying the
-      // feature we selected
-      if (this.terria.pickedFeatures === pickedFeatures)
-        this.terria.pickedFeatures = undefined;
-    };
-    return disposer;
-  }
-
-  /**
    * Zoom to an item search result.
    */
   zoomToItemSearchResult = action((result: ItemSearchResult) => {
@@ -281,3 +239,41 @@ export default class Cesium3DTilesCatalogItem
     }
   });
 }
+
+/**
+ * Open info panel for the given feature.
+ *
+ * @param item The catalog item instance
+ * @param cesium3dtilefeature The feature for which we should open the panel
+ * @param excludePropertyFromPanel A property to exclude when showing in the feature panel
+ * @returns A disposer to close the feature panel
+ */
+const openInfoPanelForFeature = action(
+  (
+    item: Cesium3DTilesCatalogItem,
+    cesium3DTileFeature: Cesium3DTileFeature,
+    excludePropertyFromPanel: string
+  ) => {
+    const pickedFeatures = new PickedFeatures();
+    const feature = item.getFeaturesFromPickResult(
+      // The screenPosition param is not used by 3dtiles catalog item,
+      // so just pass a fake value
+      new Cartesian2(),
+      cesium3DTileFeature
+    );
+    if (feature === undefined) return () => {}; // empty disposer
+
+    const terria = item.terria;
+    feature.properties?.removeProperty(excludePropertyFromPanel);
+    pickedFeatures.features.push(feature);
+    pickedFeatures.isLoading = false;
+    pickedFeatures.allFeaturesAvailablePromise = Promise.resolve();
+    terria.pickedFeatures = pickedFeatures;
+
+    const disposer = () => {
+      if (terria.pickedFeatures === pickedFeatures)
+        terria.pickedFeatures = undefined;
+    };
+    return disposer;
+  }
+);

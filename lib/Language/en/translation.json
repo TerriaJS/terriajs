@@ -471,7 +471,7 @@
     "wfs": "This is a <1>WFS service</1>, which transfers raw spatial data on request. It can be used in GIS software with this URL:",
     "layerName": "Layer name",
     "typeName": "Type name",
-    "metadataUrl": "Metadata URL",
+    "metadataUrls": "Metadata Links",
     "dataUrl": "Data URL",
     "useLinkBelow": "Use the link below to download the data. See the {{link}} for more information on customising URL query parameters.",
     "downloadInFormat": "Download the currently selected data in {{format}} format",
