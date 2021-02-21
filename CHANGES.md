@@ -35,6 +35,7 @@ Change Log
 * Remove `wordBreak="break-all"` from Box surrounding DataPreview
 * Re-added merging of csv row properties and vector tile feature properties for feature info (to match v7 behaviour).
 * Fixes a bug in pedestrian mode where dropping the pedestrian in northern hemisphere will position the camera underground.
+* Implement highlight/hide all actions for results of item search.
 * Disable pickFeatures for WMS `_nextImageryParts`.
 * Fix Leaflet `ImageryLayer` feature info sorting
 * Fix hard-coded colour value in Story
