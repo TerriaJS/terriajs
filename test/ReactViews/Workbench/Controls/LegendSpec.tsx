@@ -72,6 +72,8 @@ describe("Legend", function() {
     });
 
     it(" - can be generated", function() {
+      // avoid implementation specific definition of locale
+      csvItem.defaultColumn.setTrait("definition", "locale", "en");
       // @ts-ignore
       const legendSection = <Legend item={csvItem} />;
       const result = getShallowRenderedOutput(legendSection);
@@ -86,6 +88,7 @@ describe("Legend", function() {
     });
 
     it(" - can be formatted using toLocaleString", function() {
+      csvItem.defaultColumn.setTrait("definition", "locale", "en");
       csvItem.defaultColumn.setTrait("definition", "format", {
         style: "currency",
         currency: "AUD",

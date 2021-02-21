@@ -81,4 +81,12 @@ export default class TableColumnTraits extends ModelTraits {
       "and https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat"
   })
   format?: JsonObject;
+
+  @primitiveTrait({
+    name: "Locale",
+    description:
+      "The language whose formatting conventions should be used when formating the value (ie. `en`, `en-AU`)",
+    type: "string"
+  })
+  locale?: string = "en-AU";
 }

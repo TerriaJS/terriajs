@@ -208,20 +208,29 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
             })
           ]
         : [];
-    const numberFormatOptions:
-      | Intl.NumberFormatOptions
-      | JsonObject
-      | undefined = { useGrouping: true };
-    if (colorColumn?.traits?.format !== undefined) {
-      Object.assign(numberFormatOptions, colorColumn.traits.format);
+    let numberFormatOptions: JsonObject | undefined = undefined;
+    let locale: string | undefined = undefined;
+    if (colorColumn !== undefined) {
+      numberFormatOptions = colorColumn.traits.format
+        ? colorColumn.traits.format
+        : undefined;
+      locale = colorColumn.traits.locale;
     }
     return colorMap.maximums
       .map((maximum, i) => {
         const isBottom = i === 0;
         const formattedMin = isBottom
-          ? this._formatValue(minimum, numberFormatOptions)
-          : this._formatValue(colorMap.maximums[i - 1], numberFormatOptions);
-        const formattedMax = this._formatValue(maximum, numberFormatOptions);
+          ? this._formatValue(minimum, numberFormatOptions, locale)
+          : this._formatValue(
+              colorMap.maximums[i - 1],
+              numberFormatOptions,
+              locale
+            );
+        const formattedMax = this._formatValue(
+          maximum,
+          numberFormatOptions,
+          locale
+        );
         return createStratumInstance(LegendItemTraits, {
           color: colorMap.colors[i].toCssColorString(),
           title: `${formattedMin} to ${formattedMax}`
@@ -286,8 +295,9 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
 
   private _formatValue(
     value: number,
-    format: Intl.NumberFormatOptions | JsonObject | undefined
+    format: JsonObject | undefined,
+    locale: string | undefined
   ): string {
-    return Math.round(value).toLocaleString(undefined, format);
+    return Math.round(value).toLocaleString(locale, format);
   }
 }
