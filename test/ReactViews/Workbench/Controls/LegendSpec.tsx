@@ -58,7 +58,7 @@ describe("Legend", function() {
     });
   });
 
-  xdescribe(" - from Table", function() {
+  describe(" - from Table", function() {
     let csvItem: CsvCatalogItem;
     beforeEach(async function() {
       csvItem = new CsvCatalogItem("mycsv", terria, undefined);
