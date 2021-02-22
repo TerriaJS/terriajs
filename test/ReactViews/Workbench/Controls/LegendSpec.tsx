@@ -87,7 +87,7 @@ describe("Legend", function() {
       );
     });
 
-    it(" - can be formatted using toLocaleString", function() {
+    it(" - can be formatted using toLocaleString, locale en", function() {
       csvItem.defaultColumn.setTrait("definition", "locale", "en");
       csvItem.defaultColumn.setTrait("definition", "format", {
         style: "currency",
@@ -104,11 +104,31 @@ describe("Legend", function() {
       );
       expect(memberComponents.length).toEqual(2);
       // toLocaleString can return $1,500 when using locale en-AU and A$1,500 when using en
-      expect(
-        ["$1,500 to $2,000", "A$1,500 to A$2,000"].includes(
-          memberComponents[0].props.children[1].props.children
-        )
-      ).toBeTruthy();
+      expect(memberComponents[0].props.children[1].props.children).toEqual(
+        "$1,500 to $2,000"
+      );
+    });
+
+    it(" - can be formatted using toLocaleString, locale en-AU", function() {
+      csvItem.defaultColumn.setTrait("definition", "locale", "en-AU");
+      csvItem.defaultColumn.setTrait("definition", "format", {
+        style: "currency",
+        currency: "AUD",
+        minimumFractionDigits: 0
+      });
+
+      // @ts-ignore
+      const legendSection = <Legend item={csvItem} />;
+      const result = getShallowRenderedOutput(legendSection);
+      const memberComponents = findAllWithClass(
+        result,
+        "tjs-legend__legendTitles"
+      );
+      expect(memberComponents.length).toEqual(2);
+      // toLocaleString can return $1,500 when using locale en-AU and A$1,500 when using en
+      expect(memberComponents[0].props.children[1].props.children).toEqual(
+        "A$1,500 to A$2,000"
+      );
     });
   });
 });
