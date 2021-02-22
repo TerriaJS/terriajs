@@ -58,7 +58,9 @@ describe("UserDrawing", function() {
     expect(userDrawing.getDialogMessage()).toEqual(
       `<div><strong>${i18next.t(
         "models.userDrawing.messageHeader"
-      )}</strong></br><i>models.userDrawing.clickToAddFirstPoint</i></div>`
+      )}</strong></br><i>${i18next.t(
+        "models.userDrawing.clickToAddFirstPoint"
+      )}</i></div>`
     );
   });
 
@@ -74,7 +76,9 @@ describe("UserDrawing", function() {
     expect(userDrawing.getDialogMessage()).toEqual(
       `<div><strong>${i18next.t(
         "models.userDrawing.messageHeader"
-      )}</strong></br>HELLO</br><i>models.userDrawing.clickToAddFirstPoint</i></div>`
+      )}</strong></br>HELLO</br><i>${i18next.t(
+        "models.userDrawing.clickToAddFirstPoint"
+      )}</i></div>`
     );
   });
 
