@@ -756,6 +756,9 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
                   ];
                   featureInfo.properties._terria_getChartDetails = () => ({
                     title: this.activeTableStyle.colorColumn?.title,
+                    xName: this.activeTableStyle.timeColumn?.title,
+                    yName: this.activeTableStyle.colorColumn?.title,
+                    units: chartColumns.map(column => column.units || ""),
                     csvData: [
                       chartColumns.map(col => col!.title).join(","),
                       ...regionIds.map(i =>
