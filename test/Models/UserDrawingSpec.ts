@@ -56,7 +56,11 @@ describe("UserDrawing", function() {
     var userDrawing = new UserDrawing(options);
 
     expect(userDrawing.getDialogMessage()).toEqual(
-      "<div><strong>models.userDrawing.messageHeader</strong></br><i>models.userDrawing.clickToAddFirstPoint</i></div>"
+      `<div><strong>${i18next.t(
+        "models.userDrawing.messageHeader"
+      )}</strong></br><i>${i18next.t(
+        "models.userDrawing.clickToAddFirstPoint"
+      )}</i></div>`
     );
   });
 
@@ -70,7 +74,11 @@ describe("UserDrawing", function() {
     var userDrawing = new UserDrawing(options);
 
     expect(userDrawing.getDialogMessage()).toEqual(
-      "<div><strong>models.userDrawing.messageHeader</strong></br>HELLO</br><i>models.userDrawing.clickToAddFirstPoint</i></div>"
+      `<div><strong>${i18next.t(
+        "models.userDrawing.messageHeader"
+      )}</strong></br>HELLO</br><i>${i18next.t(
+        "models.userDrawing.clickToAddFirstPoint"
+      )}</i></div>`
     );
   });
 

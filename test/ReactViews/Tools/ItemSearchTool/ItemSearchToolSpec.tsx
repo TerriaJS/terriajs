@@ -1,3 +1,4 @@
+import "../../../SpecMain";
 import React from "react";
 import {
   act,
@@ -23,6 +24,7 @@ import SearchForm from "../../../../lib/ReactViews/Tools/ItemSearchTool/SearchFo
 import SearchResults from "../../../../lib/ReactViews/Tools/ItemSearchTool/SearchResults";
 import { withThemeContext } from "../../withThemeContext";
 import MockSearchableItem from "./MockSearchableItem";
+import i18next from "i18next";
 
 class TestItemSearchProvider extends ItemSearchProvider {
   async initialize(): Promise<void> {
@@ -105,7 +107,9 @@ describe("ItemSearchTool", function() {
       });
       const progressText = rendered.root.findByType(Loading);
       expect(progressText).toBeDefined();
-      expect(progressText.props.children).toEqual("itemSearchTool.loading");
+      expect(progressText.props.children).toEqual(
+        i18next.t("itemSearchTool.loading")
+      );
     });
 
     it("shows an error message on load error", async function() {
@@ -121,7 +125,9 @@ describe("ItemSearchTool", function() {
 
       const error = rendered.root.findByType(ErrorComponent);
       expect(error).toBeDefined();
-      expect(error.props.children).toEqual("itemSearchTool.loadError");
+      expect(error.props.children).toEqual(
+        i18next.t("itemSearchTool.loadError")
+      );
     });
 
     it("shows a search from on successful load", async function() {

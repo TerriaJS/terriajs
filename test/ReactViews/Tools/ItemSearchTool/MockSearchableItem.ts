@@ -8,10 +8,10 @@ import ShowableTraits from "../../../../lib/Traits/ShowableTraits";
 export default class MockSearchableItem extends SearchableItemMixin(
   CreateModel(mixTraits(SearchableItemTraits, ShowableTraits))
 ) {
-  highlightItemSearchResults(results: ItemSearchResult[]) {
+  highlightFeaturesFromItemSearchResults(results: ItemSearchResult[]) {
     return () => {};
   }
-  hideItemSearchResults(results: ItemSearchResult[]) {
+  hideFeaturesNotInItemSearchResults(results: ItemSearchResult[]) {
     return () => {};
   }
 }
