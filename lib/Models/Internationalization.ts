@@ -3,6 +3,7 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
 import HttpApi from "i18next-http-backend";
 import translationEN from "../Language/en/translation.json";
+import { JsonObject } from "../Core/Json";
 
 export interface I18nBackendOptions {
   /**
@@ -54,7 +55,7 @@ const defaultLanguageConfiguration = {
 
 class Internationalization {
   static initLanguage(
-    languageConfiguration: LanguageConfiguration | undefined,
+    languageConfiguration: LanguageConfiguration | JsonObject | undefined,
     /**
      * i18nOptions is explicitly a separate option from `languageConfiguration`,
      * as `languageConfiguration` can be serialised, but `i18nOptions` may have
