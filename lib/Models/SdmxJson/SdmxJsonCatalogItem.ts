@@ -84,45 +84,6 @@ export default class SdmxJsonCatalogItem
   }
 
   /**
-   * Disable dimension if viewing time-series and this dimenion is a time dimension OR viewing region-mapping and this dimension is for region-mapping
-   */
-  isDimDisabled(dim: Dimension) {
-    const disable =
-      (this.viewBy === "time" && this.timeDimensionIds.includes(dim.id!)) ||
-      (this.viewBy === "region" &&
-        this.regionMappedDimensionIds.includes(dim.id!));
-    return disable;
-  }
-
-  /**
-   * View by Selectable dimension allows user to select viewby region or time-series.
-   */
-  @computed get sdmxViewModeDimension(): SelectableDimension {
-    return {
-      id: `viewMode`,
-      name: i18next.t("models.sdmxCatalogItem.viewBy.title"),
-      options: [
-        {
-          id: "region",
-          name: i18next.t("models.sdmxCatalogItem.viewBy.region")
-        },
-        { id: "time", name: i18next.t("models.sdmxCatalogItem.viewBy.time") }
-      ],
-      selectedId: this.viewBy,
-      // Disable if there aren't time dimensions and region-mapped dimensions
-      disable:
-        !Array.isArray(this.timeDimensionIds) ||
-        this.timeDimensionIds.length === 0 ||
-        !Array.isArray(this.regionMappedDimensionIds) ||
-        this.regionMappedDimensionIds.length === 0,
-      setDimensionValue: (stratumId: string, value: "time" | "region") => {
-        this.setTrait(stratumId, "viewBy", value);
-        this.forceLoadMapItems(true).then(() => this.forceLoadChartItems());
-      }
-    };
-  }
-
-  /**
    * Map SdmxDataflowStratum.dimensions to selectable dimensions
    */
   @computed
@@ -134,7 +95,9 @@ export default class SdmxJsonCatalogItem
         options: dim.options,
         selectedId: dim.selectedId,
         allowUndefined: dim.allowUndefined,
-        disable: this.isDimDisabled(dim) || dim.disable,
+        disable:
+          dim.disable ||
+          this.columns.find(col => col.name === dim.id)?.type === "region",
         setDimensionValue: (stratumId: string, value: string) => {
           let dimensionTraits = this.dimensions?.find(
             sdmxDim => sdmxDim.id === dim.id
@@ -153,7 +116,6 @@ export default class SdmxJsonCatalogItem
   @computed
   get selectableDimensions(): SelectableDimension[] {
     return filterOutUndefined([
-      this.sdmxViewModeDimension,
       ...this.sdmxSelectableDimensions,
       this.regionColumnDimensions,
       this.regionProviderDimensions
@@ -175,7 +137,12 @@ export default class SdmxJsonCatalogItem
             (isDefined(b.position) ? b.position : max)
         )
         // If a dimension is disabled, use empty string (which is wildcard)
-        .map(dim => (!this.isDimDisabled(dim) ? dim.selectedId : ""))
+        .map(dim =>
+          !dim.disable &&
+          this.columns.find(col => col.name === dim.id)?.type !== "region"
+            ? dim.selectedId
+            : ""
+        )
         .join(".")
     );
   }
@@ -193,10 +160,6 @@ export default class SdmxJsonCatalogItem
    */
   @computed
   get url(): string | undefined {
-    if (this.viewBy === "time") {
-      // do something with time?
-      // Currently all time slices are returned at once - which is probably fine for the moment
-    }
     return isDefined(super.url)
       ? `${super.url}/data/${this.dataflowId}/${this.dataKey}`
       : undefined;
@@ -284,37 +247,9 @@ export default class SdmxJsonCatalogItem
       }
     }
 
-    // Filter colums to only include primary measure, region mapped and time dimensions
-    if (isDefined(this.primaryMeasureDimensionId)) {
-      let colNames = [this.primaryMeasureDimensionId];
-
-      // If viewing region-mapping, add region-map dimension columns
-      if (
-        this.viewBy === "region" &&
-        this.regionMappedDimensionIds.length > 0
-      ) {
-        colNames.push(...this.regionMappedDimensionIds);
-        colNames.push(...this.timeDimensionIds);
-
-        // If viewing time-series, add time dimension column
-      } else if (this.viewBy === "time" && this.timeDimensionIds.length > 0) {
-        colNames.push(...this.timeDimensionIds);
-        // If no filter available - just use all columns and hope for the best
-      } else {
-        console.log(
-          `WARNING: no time or region dimensions are found for ${this.name}, therefore styling may be unpredictable!`
-        );
-        return columns;
-      }
-
-      return columns.filter(col => colNames.includes(col[0]));
-    } else {
-      console.log(
-        `WARNING: no primary measure dimension was defined for ${this.name}, therefore styling may be unpredictable!`
-      );
-      return columns;
-    }
+    return columns;
   }
+
   protected async forceLoadTableData(): Promise<string[][]> {
     await this.loadMetadata();
 

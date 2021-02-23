@@ -3,7 +3,6 @@ import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import mixTraits from "./mixTraits";
 import objectArrayTrait from "./objectArrayTrait";
-import primitiveArrayTrait from "./primitiveArrayTrait";
 import primitiveTrait from "./primitiveTrait";
 import SdmxCommonTraits, { DimensionTraits } from "./SdmxCommonTraits";
 import TableTraits from "./TableTraits";
@@ -48,36 +47,4 @@ export default class SdmxCatalogItemTraits extends mixTraits(
     idProperty: "id"
   })
   dimensions?: SdmxDimensionTraits[];
-
-  @primitiveTrait({
-    type: "string",
-    name: "View mode",
-    description:
-      "Data view mode: `region` will show region-mapped data for a single time value or `time` will show time-series for a specific region"
-  })
-  viewBy?: "region" | "time" | undefined;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Primary measure dimension ID",
-    description:
-      "ID of primary measure dimension. This is used to find the actual values!"
-  })
-  primaryMeasureDimensionId?: string;
-
-  @primitiveArrayTrait({
-    type: "string",
-    name: "Time measure dimenion ID",
-    description:
-      "ID of time dimenions. This is used to find show values by time-series or to filter a specific time-slice."
-  })
-  timeDimensionIds?: string[];
-
-  @primitiveArrayTrait({
-    type: "string",
-    name: "Region mapped dimension IDs",
-    description:
-      "Dimension IDs which are treated as region-mapped columns or to filter by a specific region"
-  })
-  regionMappedDimensionIds?: string[];
 }

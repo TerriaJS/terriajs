@@ -113,9 +113,9 @@ export class ModelOverrideTraits extends DimensionTraits {
     description: `Override concept/dimension type - Possible values are:
       - 'region': values contain region codes used for region mapping - eg Country code)
       - 'region-type': values contains region types - eg 'CNT2' which is 2-letter country codes)
-      - 'primary-measure-descriptor': values should be used to describe primary-measure (eg in chart title)`
+      - 'unit-measure': values should be used to describe primary-measure (eg in chart title)`
   })
-  type?: "region" | "region-type" | "primary-measure-descriptor";
+  type?: "region" | "region-type" | "unit-measure";
 
   @primitiveTrait({
     type: "string",
