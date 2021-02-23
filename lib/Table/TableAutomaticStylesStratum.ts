@@ -208,12 +208,9 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
             })
           ]
         : [];
-    const numberFormatOptions:
-      | Intl.NumberFormatOptions
-      | JsonObject
-      | undefined = { useGrouping: true };
+    let numberFormatOptions: Intl.NumberFormatOptions | JsonObject | undefined;
     if (colorColumn?.traits?.format !== undefined) {
-      Object.assign(numberFormatOptions, colorColumn.traits.format);
+      numberFormatOptions = colorColumn.traits.format;
     }
     return colorMap.maximums
       .map((maximum, i) => {
