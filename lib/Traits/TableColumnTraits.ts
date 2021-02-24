@@ -4,6 +4,24 @@ import primitiveArrayTrait from "./primitiveArrayTrait";
 import anyTrait from "./anyTrait";
 import { JsonObject } from "../Core/Json";
 import TableColumnType from "../Table/TableColumnType";
+import objectTrait from "./objectTrait";
+
+export class ColumnTransformationTraits extends ModelTraits {
+  @primitiveTrait({
+    name: "Expression",
+    description:
+      "Transformation expression used to change column values (row-by-row). This uses http://bugwheels94.github.io/math-expression-evaluator . For example `x*3` will multiply all column values by 3, `x*columnA` will multiple this column with columnA.",
+    type: "string"
+  })
+  expression?: string;
+
+  @primitiveArrayTrait({
+    name: "Dependencies",
+    description: ".....",
+    type: "string"
+  })
+  dependencies?: string[];
+}
 
 export default class TableColumnTraits extends ModelTraits {
   @primitiveTrait({
@@ -26,6 +44,13 @@ export default class TableColumnTraits extends ModelTraits {
     type: "string"
   })
   units?: string;
+
+  @objectTrait({
+    name: "Transformation",
+    type: ColumnTransformationTraits,
+    description: "Transformation to apply to this column"
+  })
+  transformation?: ColumnTransformationTraits;
 
   @primitiveTrait({
     name: "Type",

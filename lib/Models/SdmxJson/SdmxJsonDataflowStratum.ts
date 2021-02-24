@@ -8,8 +8,11 @@ import LegendTraits from "../../Traits/LegendTraits";
 import SdmxCatalogItemTraits, {
   SdmxDimensionTraits
 } from "../../Traits/SdmxCatalogItemTraits";
+import { ModelOverrideTraits } from "../../Traits/SdmxCommonTraits";
 import TableColorStyleTraits from "../../Traits/TableColorStyleTraits";
-import TableColumnTraits from "../../Traits/TableColumnTraits";
+import TableColumnTraits, {
+  ColumnTransformationTraits
+} from "../../Traits/TableColumnTraits";
 import TableStyleTraits from "../../Traits/TableStyleTraits";
 import createStratumInstance from "../createStratumInstance";
 import LoadableStratum from "../LoadableStratum";
@@ -171,6 +174,26 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     )[0];
   }
 
+  /**
+   * ... wirte something about this :?
+   */
+  @computed
+  get unitMultiplierColumnName(): string | undefined {
+    // Find first tableColumn which has corresponding modelOverride with type `unit-measure`
+    return filterOutUndefined(
+      this.catalogItem.modelOverrides
+        ?.filter(override => override.type === "unit-multiplier" && override.id)
+        .map(override => {
+          // Find dimension/attribute id with concept or codelist
+          let dimOrAttr =
+            this.getAttributionWithConceptOrCodelist(override.id!) ??
+            this.getDimensionWithConceptOrCodelist(override.id!);
+
+          return dimOrAttr?.id;
+        })
+    )[0];
+  }
+
   @computed
   get primaryMeasureColumn(): StratumFromTraits<TableColumnTraits> {
     // Get primary measure column
@@ -186,7 +209,13 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
 
     return createStratumInstance(TableColumnTraits, {
       name: primaryMeasure?.id,
-      title: primaryMeasureConcept?.name
+      title: primaryMeasureConcept?.name,
+      transformation: this.unitMultiplierColumnName
+        ? createStratumInstance(ColumnTransformationTraits, {
+            expression: `x*(10^${this.unitMultiplierColumnName})`,
+            dependencies: [this.unitMultiplierColumnName]
+          })
+        : undefined
     });
   }
 
@@ -203,13 +232,16 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     // Get columns for all dimensions (excluding time dimensions)
     return (
       dimensionsList?.dimensions
-        // Filter out disabled dimensions
-        ?.filter(
-          dim =>
-            isDefined(dim.id) &&
-            !this.dimensions?.find(d => d.id === dim.id)?.disable
-        )
+
+        ?.filter(dim => isDefined(dim.id))
         .map(dim => {
+          // Hide dimension columns if they are disabled
+          if (this.dimensions?.find(d => d.id === dim.id)?.disable) {
+            return createStratumInstance(TableColumnTraits, {
+              name: dim.id,
+              type: "hidden"
+            });
+          }
           // Get concept for the current dimension
           const conceptId = dim.conceptIdentity;
           const conceptUrn = parseSdmxUrn(conceptId);
@@ -342,6 +374,33 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   }
 
   @computed
+  get modelOverrides() {
+    return filterOutUndefined(
+      [
+        ...(this.sdmxJsonDataflow.dataStructure.dataStructureComponents
+          ?.dimensionList.dimensions ?? []),
+        ...(this.sdmxJsonDataflow.dataStructure.dataStructureComponents
+          ?.attributeList?.attributes ?? [])
+      ].map(dimAttr => {
+        const conceptUrn = parseSdmxUrn(dimAttr.conceptIdentity);
+        // Add UNIT_MEASURE common concept override for unit-measure
+        if (conceptUrn?.descendantIds?.[0] === "UNIT_MEASURE") {
+          return createStratumInstance(ModelOverrideTraits, {
+            id: dimAttr.conceptIdentity,
+            type: "unit-measure"
+          });
+          // Add UNIT_MULT common concept override for unit-multiplier
+        } else if (conceptUrn?.descendantIds?.[0] === "UNIT_MULT") {
+          return createStratumInstance(ModelOverrideTraits, {
+            id: dimAttr.conceptIdentity,
+            type: "unit-multiplier"
+          });
+        }
+      })
+    );
+  }
+
+  @computed
   get activeStyle() {
     return this.primaryMeasureColumn.name;
   }
@@ -383,7 +442,10 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
 
     template +=
       row("", "") +
-      row(primaryMeasureName, `{{${this.primaryMeasureColumn.name}}}`);
+      row(
+        primaryMeasureName,
+        `{{#terria.formatNumber}}{useGrouping: true}{{${this.primaryMeasureColumn.name}}}{{/terria.formatNumber}}`
+      );
 
     // Add timeSeries chart if more than one time observation
     if (

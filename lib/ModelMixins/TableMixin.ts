@@ -19,13 +19,11 @@ import { isLatLonHeight } from "../Core/LatLonHeight";
 import makeRealPromise from "../Core/makeRealPromise";
 import TerriaError from "../Core/TerriaError";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
-import RegionProvider from "../Map/RegionProvider";
 import JSRegionProviderList from "../Map/RegionProviderList";
 import { calculateDomain, ChartAxis, ChartItem } from "../Models/Chartable";
 import CommonStrata from "../Models/CommonStrata";
 import { ImageryParts } from "../Models/Mappable";
 import Model from "../Models/Model";
-import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import SelectableDimensions, {
   SelectableDimension
 } from "../Models/SelectableDimensions";
@@ -34,7 +32,6 @@ import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitu
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
-import LegendTraits from "../Traits/LegendTraits";
 import TableTraits from "../Traits/TableTraits";
 import AsyncMappableMixin from "./AsyncMappableMixin";
 import DiscretelyTimeVaryingMixin, {
@@ -762,7 +759,9 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
                     csvData: [
                       chartColumns.map(col => col!.title).join(","),
                       ...regionIds.map(i =>
-                        chartColumns.map(col => col.values[i]).join(",")
+                        chartColumns
+                          .map(col => col.valueFunctionForType(i))
+                          .join(",")
                       )
                     ].join("\n")
                   });
@@ -783,7 +782,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       const result: JsonObject = {};
 
       this.tableColumns.forEach(column => {
-        result[column.title] = column.values[index];
+        result[column.title] = column.valueFunctionForType(index);
       });
 
       return result;
