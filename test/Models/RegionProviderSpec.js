@@ -1,7 +1,5 @@
 "use strict";
 
-/*global require,describe,it,expect,beforeEach,fail*/
-
 var RegionProvider = require("../../lib/Map/RegionProvider");
 var CorsProxy = require("../../lib/Core/CorsProxy");
 

@@ -1,6 +1,5 @@
 "use strict";
 
-/*global require*/
 import WebMapServiceCatalogItem from "../Models/WebMapServiceCatalogItem";
 import CommonStrata from "../Models/CommonStrata";
 import Terria from "../Models/Terria";

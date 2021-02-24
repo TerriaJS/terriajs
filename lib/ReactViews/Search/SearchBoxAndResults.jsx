@@ -38,8 +38,7 @@ export function SearchInDataCatalog({ viewState, handleClick }) {
             i18nKey="search.searchInDataCatalog"
             locationSearchText={locationSearchText}
           >
-            Search <strong>{{ locationSearchText }}</strong> in the Data
-            Catalogue
+            Search <strong>{locationSearchText}</strong> in the Data Catalogue
           </Trans>
         </Text>
         <StyledIcon glyph={Icon.GLYPHS.right2} styledWidth={"14px"} light />
