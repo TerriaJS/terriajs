@@ -1,6 +1,15 @@
 {
     "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:jsx-control-statements/recommended"],
-    "parser": "babel-eslint",
+    "parser": "@babel/eslint-parser",
+    "parserOptions": {
+      "requireConfigFile": false,
+      "ecmaVersion": 2018,
+      "ecmaFeatures": {
+        "jsx": true,
+        "modules": true,
+        "legacyDecorators": true
+      }
+    },
     "env": {
         "browser": true,
         "commonjs": true,

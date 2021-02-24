@@ -1,6 +1,5 @@
 "use strict";
 
-/*global require*/
 var CkanCatalogItem = require("../../lib/Models/CkanCatalogItem");
 var loadText = require("../../lib/Core/loadText");
 var Terria = require("../../lib/Models/Terria");
