@@ -47,6 +47,7 @@ Change Log
 * Added support for skipping comments in CSV files
 * Fix app crash when switching different tools.
 * Create `merge` `TraitsOption` for `objectArrayTrait`
+* Lock the version of i18next to 19.8.9 till new version of i18next-http-backend is available.
 * [The next improvement]
 
 #### 8.0.0-alpha.65

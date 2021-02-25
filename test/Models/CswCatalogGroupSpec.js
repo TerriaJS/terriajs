@@ -1,6 +1,5 @@
 "use strict";
 
-/*global require,describe,it,expect*/
 var CswCatalogGroup = require("../../lib/Models/CswCatalogGroup");
 var loadText = require("../../lib/Core/loadText");
 var Terria = require("../../lib/Models/Terria");

@@ -1,7 +1,5 @@
 "use strict";
 
-/*global require,describe,it,expect,beforeEach,fail*/
-
 var JulianDate = require("terriajs-cesium/Source/Core/JulianDate").default;
 var Rectangle = require("terriajs-cesium/Source/Core/Rectangle").default;
 var TimeInterval = require("terriajs-cesium/Source/Core/TimeInterval").default;
