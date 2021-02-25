@@ -3,17 +3,25 @@ import { computed } from "mobx";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
 import TerriaError from "../../Core/TerriaError";
+import { ShortReportTraits } from "../../Traits/CatalogMemberTraits";
 import { FeatureInfoTemplateTraits } from "../../Traits/FeatureInfoTraits";
 import LegendTraits from "../../Traits/LegendTraits";
 import SdmxCatalogItemTraits, {
   SdmxDimensionTraits
 } from "../../Traits/SdmxCatalogItemTraits";
-import { ModelOverrideTraits } from "../../Traits/SdmxCommonTraits";
+import {
+  ModelOverrideTraits,
+  ModelOverrideType
+} from "../../Traits/SdmxCommonTraits";
+import TableChartStyleTraits, {
+  TableChartLineStyleTraits
+} from "../../Traits/TableChartStyleTraits";
 import TableColorStyleTraits from "../../Traits/TableColorStyleTraits";
 import TableColumnTraits, {
   ColumnTransformationTraits
 } from "../../Traits/TableColumnTraits";
 import TableStyleTraits from "../../Traits/TableStyleTraits";
+import TableTimeStyleTraits from "../../Traits/TableTimeStyleTraits";
 import createStratumInstance from "../createStratumInstance";
 import LoadableStratum from "../LoadableStratum";
 import { BaseModel } from "../Model";
@@ -24,7 +32,6 @@ import SdmxJsonCatalogItem from "./SdmxJsonCatalogItem";
 import { loadSdmxJsonStructure, parseSdmxUrn } from "./SdmxJsonServerStratum";
 import {
   CodeLists,
-  ConceptScheme,
   ConceptSchemes,
   ContentConstraints,
   Dataflow,
@@ -51,6 +58,13 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     ) as this;
   }
 
+  /**
+   * Load SDMX-JSON dataflow structure - will also load references:
+   * - data structure: dimensions (including time), attributes, primary measure
+   * - concept schemes: used to describe dimensions and attributes
+   * - codelists: used to describe dimension/attribute values (usually to make them human-readable)
+   * - contentConstraints: describe allowed values for enumeratted dimensions/attributes
+   */
   static async load(
     catalogItem: SdmxJsonCatalogItem
   ): Promise<SdmxJsonDataflowStratum> {
@@ -119,360 +133,42 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   }
 
   /**
-   * Find modelOverrides with type 'region-type' to try to extract regionType from another dimension
-   * For example, ABS have a regionType dimension which may have values (SA1, SA2, ...), which could be used to determine regionType
+   * If we get a dataflow with a single value (and not region-mapped), show the exact value in a short report
    */
   @computed
-  get regionTypeFromDimension() {
-    let regionTypeFromDimension: string | undefined;
-    // Find modelOverrides with type 'region-type'
-    this.catalogItem.modelOverrides
-      ?.filter(override => override.type === "region-type" && override.id)
-      .forEach(override => {
-        // Find dimension id with concept or codelist
-        const dimId = this.getDimensionWithConceptOrCodelist(override.id!)?.id;
+  get shortReportSections() {
+    if (this.catalogItem.mapItems.length !== 0 || this.catalogItem.isLoading)
+      return;
 
-        const dim = this.catalogItem.dimensions?.find(d => d.id === dimId);
-
-        // Set region type to dimension's selected id
-        if (dim?.selectedId) regionTypeFromDimension = dim?.selectedId;
-      });
-
-    return regionTypeFromDimension;
-  }
-
-  /**
-   * ... wirte something about this :?
-   */
-  @computed
-  get unitMeasure(): string | undefined {
-    // Find first tableColumn which has corresponding modelOverride with type `unit-measure`
-    return filterOutUndefined(
-      this.catalogItem.modelOverrides
-        ?.filter(override => override.type === "unit-measure" && override.id)
-        .map(override => {
-          // Find dimension/attribute id with concept or codelist
-          let dimOrAttr =
-            this.getAttributionWithConceptOrCodelist(override.id!) ??
-            this.getDimensionWithConceptOrCodelist(override.id!);
-
-          const column = dimOrAttr?.id
-            ? this.catalogItem.findColumnByName(dimOrAttr.id)
-            : undefined;
-
-          if (column?.uniqueValues.values.length === 1) {
-            const codelist = this.getCodelist(
-              parseSdmxUrn(dimOrAttr?.localRepresentation?.enumeration)
-                ?.resourceId
-            );
-
-            const value = column?.uniqueValues.values[0];
-
-            return codelist?.codes?.find(c => c.id === value)?.name ?? value;
-          }
-        })
-    )[0];
-  }
-
-  /**
-   * ... wirte something about this :?
-   */
-  @computed
-  get unitMultiplierColumnName(): string | undefined {
-    // Find first tableColumn which has corresponding modelOverride with type `unit-measure`
-    return filterOutUndefined(
-      this.catalogItem.modelOverrides
-        ?.filter(override => override.type === "unit-multiplier" && override.id)
-        .map(override => {
-          // Find dimension/attribute id with concept or codelist
-          let dimOrAttr =
-            this.getAttributionWithConceptOrCodelist(override.id!) ??
-            this.getDimensionWithConceptOrCodelist(override.id!);
-
-          return dimOrAttr?.id;
-        })
-    )[0];
-  }
-
-  @computed
-  get primaryMeasureColumn(): StratumFromTraits<TableColumnTraits> {
-    // Get primary measure column
-    const primaryMeasure = this.sdmxJsonDataflow.dataStructure
-      .dataStructureComponents?.measureList.primaryMeasure;
-    const primaryMeasureConceptUrn = parseSdmxUrn(
-      primaryMeasure?.conceptIdentity
+    const primaryCol = this.catalogItem.tableColumns.find(
+      col => col.name === this.primaryMeasureColumn.name
     );
-    const primaryMeasureConcept = this.getConcept(
-      primaryMeasureConceptUrn?.resourceId,
-      primaryMeasureConceptUrn?.descendantIds?.[0]
-    );
-
-    return createStratumInstance(TableColumnTraits, {
-      name: primaryMeasure?.id,
-      title: primaryMeasureConcept?.name,
-      transformation: this.unitMultiplierColumnName
-        ? createStratumInstance(ColumnTransformationTraits, {
-            expression: `x*(10^${this.unitMultiplierColumnName})`,
-            dependencies: [this.unitMultiplierColumnName]
-          })
-        : undefined
-    });
-  }
-
-  /**
-   * Gets column traits based on dimension/concept information
-   * The main purpose of this is to try to find the region type for columns
-   */
-
-  @computed
-  get dimensionColumns(): StratumFromTraits<TableColumnTraits>[] {
-    const dimensionsList = this.sdmxJsonDataflow.dataStructure
-      .dataStructureComponents?.dimensionList;
-
-    // Get columns for all dimensions (excluding time dimensions)
-    return (
-      dimensionsList?.dimensions
-
-        ?.filter(dim => isDefined(dim.id))
-        .map(dim => {
-          // Hide dimension columns if they are disabled
-          if (this.dimensions?.find(d => d.id === dim.id)?.disable) {
-            return createStratumInstance(TableColumnTraits, {
-              name: dim.id,
-              type: "hidden"
-            });
-          }
-          // Get concept for the current dimension
-          const conceptId = dim.conceptIdentity;
-          const conceptUrn = parseSdmxUrn(conceptId);
-          const concept = this.getConcept(
-            conceptUrn?.resourceId,
-            conceptUrn?.descendantIds?.[0]
-          );
-          // Get codelist for current dimension
-          const codelistId = dim.localRepresentation?.enumeration;
-          const codelistUrn = parseSdmxUrn(codelistId);
-          const codelist = this.getCodelist(codelistUrn?.resourceId);
-
-          const conceptOverride = this.catalogItem.modelOverrides.find(
-            concept => concept.id === conceptId
-          );
-          const codelistOverride = this.catalogItem.modelOverrides.find(
-            codelist => codelist.id === codelistId
-          );
-
-          // Try to find region type
-          let regionType: string | undefined;
-
-          // Are any regionTypes present in modelOverrides for the current concept/codelist override
-          regionType =
-            this.matchRegionType(codelistOverride?.regionType) ??
-            this.matchRegionType(conceptOverride?.regionType);
-
-          // Next try regionTypeFromDimension (only if this concept has override type 'region')
-          if (
-            !isDefined(regionType) &&
-            (conceptOverride?.type ?? codelistOverride?.type) === "region"
-          )
-            regionType = this.matchRegionType(this.regionTypeFromDimension);
-
-          // Try to find valid region type from:
-          // - dimension ID
-          // - codelist name
-          // - codelist ID
-          // - concept name?
-          // - concept id (the string, not the full URN)
-
-          if (!isDefined(regionType))
-            regionType =
-              this.matchRegionType(dim.id) ??
-              this.matchRegionType(codelist?.name) ??
-              this.matchRegionType(codelist?.id) ??
-              this.matchRegionType(concept?.name) ??
-              this.matchRegionType(concept?.id);
-
-          // Apply regionTypeReplacements (which can replace regionType with a different regionType - using [{find:string, replace:string}] pattern)
-          if (
-            conceptOverride?.type === "region" ||
-            codelistOverride?.type === "region"
-          ) {
-            const replacement = [
-              ...(codelistOverride?.regionTypeReplacements ?? []),
-              ...(conceptOverride?.regionTypeReplacements ?? [])
-            ].find(r => r.find === regionType)?.replace;
-            if (isDefined(replacement)) {
-              regionType = replacement;
-            }
-          }
-
-          return createStratumInstance(TableColumnTraits, {
-            name: dim.id,
-            title: concept?.name,
-            type: isDefined(regionType) ? "region" : undefined,
-            regionType
-          });
-        }) || []
-    );
-  }
-
-  @computed
-  get timeColumns(): StratumFromTraits<TableColumnTraits>[] {
-    return (
-      this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.dimensionList.timeDimensions?.map(
-        dim => {
-          const conceptUrn = parseSdmxUrn(dim.conceptIdentity);
-          const concept = this.getConcept(
-            conceptUrn?.resourceId,
-            conceptUrn?.descendantIds?.[0]
-          );
-          return createStratumInstance(TableColumnTraits, {
-            name: dim.id,
-            title: concept?.name ?? dim.id,
-            type: "time"
-          });
-        }
-      ) ?? []
-    );
-  }
-
-  @computed
-  get attributeColumns(): StratumFromTraits<TableColumnTraits>[] {
-    return (
-      this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.attributeList?.attributes?.map(
-        attr => {
-          return createStratumInstance(TableColumnTraits, {
-            name: attr.id,
-            type: "hidden"
-          });
-        }
-      ) ?? []
-    );
-  }
-
-  @computed
-  get columns() {
-    return [
-      this.primaryMeasureColumn,
-      ...this.dimensionColumns,
-      ...this.timeColumns,
-      ...this.attributeColumns
-    ];
-  }
-
-  /**
-   * If the unitMeasure column only has a single unique value (all values are the same) is it as a legend title
-   */
-  @computed
-  get defaultStyle() {
-    return createStratumInstance(TableStyleTraits, {
-      color: createStratumInstance(TableColorStyleTraits, {
-        legend: createStratumInstance(LegendTraits, {
-          title: this.unitMeasure
-        })
-      })
-    });
-  }
-
-  @computed
-  get modelOverrides() {
-    return filterOutUndefined(
-      [
-        ...(this.sdmxJsonDataflow.dataStructure.dataStructureComponents
-          ?.dimensionList.dimensions ?? []),
-        ...(this.sdmxJsonDataflow.dataStructure.dataStructureComponents
-          ?.attributeList?.attributes ?? [])
-      ].map(dimAttr => {
-        const conceptUrn = parseSdmxUrn(dimAttr.conceptIdentity);
-        // Add UNIT_MEASURE common concept override for unit-measure
-        if (conceptUrn?.descendantIds?.[0] === "UNIT_MEASURE") {
-          return createStratumInstance(ModelOverrideTraits, {
-            id: dimAttr.conceptIdentity,
-            type: "unit-measure"
-          });
-          // Add UNIT_MULT common concept override for unit-multiplier
-        } else if (conceptUrn?.descendantIds?.[0] === "UNIT_MULT") {
-          return createStratumInstance(ModelOverrideTraits, {
-            id: dimAttr.conceptIdentity,
-            type: "unit-multiplier"
-          });
-        }
-      })
-    );
-  }
-
-  @computed
-  get activeStyle() {
-    return this.primaryMeasureColumn.name;
-  }
-
-  @computed
-  get featureInfoTemplate() {
-    const regionType = this.catalogItem.activeTableStyle.regionColumn
-      ?.regionType;
-    if (!regionType) return;
-
-    let template = '<table class="cesium-infoBox-defaultTable">';
-
-    const row = (title: string, value: string) =>
-      `<tr><td style="vertical-align: middle">${title}</td><td>${value}</td></tr>`;
-
-    // Get time dimension values
-    template += this.timeColumns
-      ?.map(col => row(col.title ?? "Time", `{{${col.name}}}`))
-      .join(", ");
-
-    // Get region dimension values
-
-    template += row(regionType?.description, `{{${regionType?.nameProp}}}`);
-
-    // Get other dimension values
-    template += this.catalogItem.sdmxSelectableDimensions
-      ?.filter(d => (d.name || d.id) && !d.disable && d.selectedId)
-      .map(d => {
-        const selectedOption = d.options?.find(o => o.id === d.selectedId);
-        return row((d.name || d.id)!, selectedOption?.name ?? d.selectedId!);
-      })
-      .join("");
-
-    const primaryMeasureName =
-      this.unitMeasure ??
-      this.primaryMeasureColumn.title ??
-      this.primaryMeasureColumn.name ??
-      "Value";
-
-    template +=
-      row("", "") +
-      row(
-        primaryMeasureName,
-        `{{#terria.formatNumber}}{useGrouping: true}{{${this.primaryMeasureColumn.name}}}{{/terria.formatNumber}}`
-      );
-
-    // Add timeSeries chart if more than one time observation
     if (
-      this.catalogItem.discreteTimes &&
-      this.catalogItem.discreteTimes.length > 1
+      primaryCol?.valuesAsNumbers.values.length === 1 &&
+      typeof primaryCol?.valuesAsNumbers.values[0] === "number"
     ) {
-      template += `</table><chart id="${this.catalogItem.uniqueId}" title="${this.catalogItem.name}: {{${regionType.nameProp}}}">{{terria.timeSeries.data}}</chart>`;
+      return [
+        createStratumInstance(ShortReportTraits, {
+          name: this.unitMeasure,
+          content: primaryCol?.valuesAsNumbers.values[0].toLocaleString(
+            undefined,
+            primaryCol.traits.format
+          )
+        })
+      ];
     }
-
-    return createStratumInstance(FeatureInfoTemplateTraits, { template });
   }
+
+  // ------------- START SDMX TRAITS STRATUM -------------
 
   /**
-   * Try to resolve `regionType` to a region provider (this will also match against region provider aliases)
+   * This essentially maps SDMX-JSON dataflow structure to SdmxDimensionTraits - it uses:
+   * - Data structure's dimensions (filtered to only include enumerated dimensions)
+   * - Content constraints to find dimension options
+   * - Codelists to add human readable labels to dimension options
+   *
+   * It will also apply ModelOverrides - which are used to override dimension values based on concept/codelist ID.
    */
-  matchRegionType(regionType?: string): string | undefined {
-    if (!isDefined(regionType)) return;
-    const matchingRegionProviders = this.catalogItem.regionProviderList?.getRegionDetails(
-      [regionType],
-      undefined,
-      undefined
-    );
-    if (matchingRegionProviders && matchingRegionProviders.length > 0) {
-      return matchingRegionProviders[0].regionProvider.regionType;
-    }
-  }
-
   @computed
   get dimensions(): StratumFromTraits<SdmxDimensionTraits>[] | undefined {
     const dimensionList = this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.dimensionList.dimensions?.filter(
@@ -496,26 +192,22 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
             dim.localRepresentation?.enumeration
         )
         .map(dim => {
-          const conceptOverride = this.catalogItem.modelOverrides?.find(
-            override => override.id === dim.conceptIdentity
+          // Get codelistOverride and conceptOverride
+          // Note: order matters, we use codelistOverride values over conceptOverride values
+          const conceptOverride = this.catalogItem.modelOverrides.find(
+            concept => concept.id === dim.conceptIdentity
           );
-
-          const codelistOverride = this.catalogItem.modelOverrides?.find(
-            override => override.id === dim.localRepresentation?.enumeration
+          const codelistOverride = this.catalogItem.modelOverrides.find(
+            codelist => codelist.id === dim.localRepresentation?.enumeration
           );
 
           // Concept maps dimension's ID to a human-readable name
-          const conceptUrn = parseSdmxUrn(dim.conceptIdentity);
-          const concept = this.getConcept(
-            conceptUrn?.resourceId,
-            conceptUrn?.descendantIds?.[0]
-          );
+          const concept = this.getConceptByUrn(dim.conceptIdentity);
 
           // Codelist maps dimension enum values to human-readable name
-          const codelistUrn = parseSdmxUrn(
+          const codelist = this.getCodelistByUrn(
             dim.localRepresentation?.enumeration
           );
-          const codelist = this.getCodelist(codelistUrn?.resourceId);
 
           // Get allowed options from contraints.cubeRegions (there may be multiple - take union of all values - which is probably wrong)
           const allowedOptionIdsSet = Array.isArray(contraints)
@@ -546,12 +238,12 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
               : // If no allowedOptions were found -> return all codes
                 codelist?.codes;
 
-          // Create options object - use conceptOverride or options generated from codeslist
-          const optionsOverride =
+          // Create options object - use modelOverride or options generated from codeslist
+          const overrideOptions =
             codelistOverride?.options ?? conceptOverride?.options;
           const options =
-            isDefined(optionsOverride) && optionsOverride.length > 0
-              ? optionsOverride.map(option => {
+            isDefined(overrideOptions) && overrideOptions.length > 0
+              ? overrideOptions.map(option => {
                   return { id: option.id, name: option.name };
                 })
               : codes?.map(code => {
@@ -597,27 +289,463 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     );
   }
 
+  /**
+   * Adds SDMX Common concepts as model overrides:
+   * - `UNIT_MEASURE` (see `this.unitMeasure`)
+   * - `UNIT_MULT` (see `this.primaryMeasureColumn`)
+   * - `FREQ` (see `this.unitMeasure`)
+   */
+  @computed
+  get modelOverrides() {
+    return filterOutUndefined(
+      [
+        ...(this.sdmxJsonDataflow.dataStructure.dataStructureComponents
+          ?.dimensionList.dimensions ?? []),
+        ...(this.sdmxJsonDataflow.dataStructure.dataStructureComponents
+          ?.attributeList?.attributes ?? [])
+      ].map(dimAttr => {
+        const conceptUrn = parseSdmxUrn(dimAttr.conceptIdentity);
+        // Add UNIT_MEASURE common concept override for unit-measure
+        if (conceptUrn?.descendantIds?.[0] === "UNIT_MEASURE") {
+          return createStratumInstance(ModelOverrideTraits, {
+            id: dimAttr.conceptIdentity,
+            type: "unit-measure"
+          });
+          // Add UNIT_MULT common concept override for unit-multiplier
+        } else if (conceptUrn?.descendantIds?.[0] === "UNIT_MULT") {
+          return createStratumInstance(ModelOverrideTraits, {
+            id: dimAttr.conceptIdentity,
+            type: "unit-multiplier"
+          });
+          // Add FREQUENCY common concept override for frequency
+        } else if (conceptUrn?.descendantIds?.[0] === "FREQ") {
+          return createStratumInstance(ModelOverrideTraits, {
+            id: dimAttr.conceptIdentity,
+            type: "frequency"
+          });
+        }
+      })
+    );
+  }
+
+  /**
+   * Get unitMeasure string using modelOverrides.
+   * - Search for columns linked to dimensions/attributes which have modelOverrides of type "unit-measure"
+   * - We will only use a column if it has a single unique value - as this unitMeasure it used effectively as "units" for the dataset
+   * - Also search for dimensions which have modelOverrides of type "frequency".
+   * - These will be used to add the frequency to the end of the unitMeasure string
+   * For example: "Value (Yearly)" or "AUD (Quaterly)"
+   *
+   */
+  @computed
+  get unitMeasure(): string | undefined {
+    // Find tableColumns which have corresponding modelOverride with type `unit-measure`
+    // We will only use columns if they have a single unique value
+    const unitMeasure = filterOutUndefined(
+      this.catalogItem.modelOverrides
+        ?.filter(override => override.type === "unit-measure" && override.id)
+        .map(override => {
+          // Find dimension/attribute id with concept or codelist override
+          let dimOrAttr =
+            this.getAttributionWithConceptOrCodelist(override.id!) ??
+            this.getDimensionWithConceptOrCodelist(override.id!);
+
+          const column = dimOrAttr?.id
+            ? this.catalogItem.findColumnByName(dimOrAttr.id)
+            : undefined;
+
+          if (column?.uniqueValues.values.length === 1) {
+            // If this column has a codelist, use it to format the value
+            const codelist = this.getCodelistByUrn(
+              dimOrAttr?.localRepresentation?.enumeration
+            );
+
+            const value = column?.uniqueValues.values[0];
+
+            return codelist?.codes?.find(c => c.id === value)?.name ?? value;
+          }
+        })
+    ).join(", ");
+
+    // Find frequency from dimensions with modelOverrides of type "frequency".
+    const frequencyDim = this.getDimensionsWithOverrideType(
+      "frequency"
+    ).find(dim => isDefined(dim.selectedId));
+
+    // Try to get option label if it exists
+    let frequency =
+      frequencyDim?.options.find(o => o.id === frequencyDim.selectedId)?.name ??
+      frequencyDim?.id;
+
+    return `${unitMeasure}${frequency ? ` (${frequency})` : ""}`;
+  }
+
+  // ------------- START TABLE TRAITS STRATUM -------------
+
+  /**
+   * Add TableColumnTraits for primary measure column - this column contains observational values to be visualised on chart or map:
+   * - `name` to dimension id
+   * - `title` to concept name
+   * - `transformation` if unit multiplier attribute has been found (which will apply `x*(10^unitMultiplier)` to all observation vlues)
+   */
+  @computed
+  get primaryMeasureColumn(): StratumFromTraits<TableColumnTraits> {
+    // Get primary measure column
+    const primaryMeasure = this.sdmxJsonDataflow.dataStructure
+      .dataStructureComponents?.measureList.primaryMeasure;
+    const primaryMeasureConcept = this.getConceptByUrn(
+      primaryMeasure?.conceptIdentity
+    );
+
+    // Find unit multipler columns by searching for attributes/dimensions which have modelOverrides of type "unit-multiplier".
+    // Use the first column found
+    const unitMultiplier = filterOutUndefined(
+      this.catalogItem.modelOverrides
+        ?.filter(override => override.type === "unit-multiplier" && override.id)
+        .map(override => {
+          // Find dimension/attribute id with concept or codelist
+          let dimOrAttr =
+            this.getAttributionWithConceptOrCodelist(override.id!) ??
+            this.getDimensionWithConceptOrCodelist(override.id!);
+
+          return dimOrAttr?.id;
+        })
+    )[0];
+
+    return createStratumInstance(TableColumnTraits, {
+      name: primaryMeasure?.id,
+      title: primaryMeasureConcept?.name,
+      // If a unitMultiplier was found, we add `x*(10^unitMultiplier)` transformation
+      transformation: unitMultiplier
+        ? createStratumInstance(ColumnTransformationTraits, {
+            expression: `x*(10^${unitMultiplier})`,
+            dependencies: [unitMultiplier]
+          })
+        : undefined
+    });
+  }
+
+  /**
+   * Add TableColumnTraits for dimensions
+   * The main purpose of this is to try to find the region type for columns.
+   * It also adds:
+   * - `name` as dimension id
+   * - `title` as concept name (more human-readable than dimension id)
+   * - `type` to `region` if a valid region-type is found, or `hidden` if the dimension is disabled
+   */
+
+  @computed
+  get dimensionColumns(): StratumFromTraits<TableColumnTraits>[] {
+    const dimensionsList = this.sdmxJsonDataflow.dataStructure
+      .dataStructureComponents?.dimensionList;
+
+    // Get columns for all dimensions (excluding time dimensions)
+    return (
+      dimensionsList?.dimensions
+
+        ?.filter(dim => isDefined(dim.id))
+        .map(dim => {
+          // Hide dimension columns if they are disabled
+          if (this.dimensions?.find(d => d.id === dim.id)?.disable) {
+            return createStratumInstance(TableColumnTraits, {
+              name: dim.id,
+              type: "hidden"
+            });
+          }
+
+          // Get concept for the current dimension
+          const concept = this.getConceptByUrn(dim.conceptIdentity);
+          // Get codelist for current dimension
+          const codelist = this.getCodelistByUrn(
+            dim.localRepresentation?.enumeration
+          );
+
+          // Get codelistOverride and conceptOverride
+          // Note: order matters, we use codelistOverride values over conceptOverride values
+          const conceptOverride = this.catalogItem.modelOverrides.find(
+            concept => concept.id === dim.conceptIdentity
+          );
+          const codelistOverride = this.catalogItem.modelOverrides.find(
+            codelist => codelist.id === dim.localRepresentation?.enumeration
+          );
+
+          // Try to find region type
+          let regionType: string | undefined;
+
+          // Are any regionTypes present in modelOverrides
+          regionType =
+            this.matchRegionType(codelistOverride?.regionType) ??
+            this.matchRegionType(conceptOverride?.regionType);
+
+          // Next try fetching reigon type from another dimension (only if this modelOverride type 'region')
+          // It will look through dimensions which have modelOverrides of type `region-type` and have a selectedId, if one is found - it will be used as the regionType of this column
+          if (
+            !isDefined(regionType) &&
+            (codelistOverride?.type === "region" ||
+              conceptOverride?.type === "region")
+          ) {
+            // Use selectedId of first dimension with one
+            regionType = this.matchRegionType(
+              this.getDimensionsWithOverrideType("region-type").find(d =>
+                isDefined(d.selectedId)
+              )?.selectedId
+            );
+          }
+
+          // Try to find valid region type from:
+          // - dimension ID
+          // - codelist name
+          // - codelist ID
+          // - concept name?
+          // - concept id (the string, not the full URN)
+
+          if (!isDefined(regionType))
+            regionType =
+              this.matchRegionType(dim.id) ??
+              this.matchRegionType(codelist?.name) ??
+              this.matchRegionType(codelist?.id) ??
+              this.matchRegionType(concept?.name) ??
+              this.matchRegionType(concept?.id);
+
+          // Apply regionTypeReplacements (which can replace regionType with a different regionType - using [{find:string, replace:string}] pattern)
+          if (
+            codelistOverride?.type === "region" ||
+            conceptOverride?.type === "region"
+          ) {
+            const replacement = (
+              codelistOverride?.regionTypeReplacements ??
+              conceptOverride?.regionTypeReplacements
+            )?.find(r => r.find === regionType)?.replace;
+            if (isDefined(replacement)) {
+              regionType = replacement;
+            }
+          }
+
+          return createStratumInstance(TableColumnTraits, {
+            name: dim.id,
+            title: concept?.name,
+            type: isDefined(regionType) ? "region" : "hidden",
+            regionType
+          });
+        }) || []
+    );
+  }
+
+  /**
+   * Add traits for time columns:
+   * - `name` to dimension id
+   * - `type = time`
+   * - `title` to concept name (if it exists)
+   */
+  @computed
+  get timeColumns(): StratumFromTraits<TableColumnTraits>[] {
+    return (
+      this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.dimensionList.timeDimensions?.map(
+        dim => {
+          const concept = this.getConceptByUrn(dim.conceptIdentity);
+          return createStratumInstance(TableColumnTraits, {
+            name: dim.id,
+            title: concept?.name ?? dim.id,
+            type: "time"
+          });
+        }
+      ) ?? []
+    );
+  }
+
+  /**
+   * Add traits for attribute columns - all attribute columns are hidden, they are used to describe the primary measure (in feature info, unit measure, unit multiplier...):
+   * - `name` to attribute id
+   * - `type = hidden`
+   */
+  @computed
+  get attributeColumns(): StratumFromTraits<TableColumnTraits>[] {
+    return (
+      this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.attributeList?.attributes?.map(
+        attr => {
+          return createStratumInstance(TableColumnTraits, {
+            name: attr.id,
+            type: "hidden"
+          });
+        }
+      ) ?? []
+    );
+  }
+
+  /**
+   * Munge all columns together
+   */
+  @computed
+  get columns() {
+    return [
+      this.primaryMeasureColumn,
+      ...this.dimensionColumns,
+      ...this.timeColumns,
+      ...this.attributeColumns
+    ];
+  }
+
+  /**
+   * Set TableStyleTraits for primary measure column:
+   * - Legend title is set to `unitMeasure` to add context - eg "AUD (Quaterly)"
+   * - Chart traits are set if this dataflow is time-series with no region-mapping:
+   *   - `xAxisColumn` to time column name
+   *   - `lines.name` set to `unitMeasure`
+   *   - `lines.yAxisColumn` set to primary measure column
+   * - `regionColumn` set to region dimension name (if one exists)
+   */
+  @computed
+  get styles() {
+    if (this.primaryMeasureColumn) {
+      return [
+        createStratumInstance(TableStyleTraits, {
+          id: this.primaryMeasureColumn.name,
+
+          color: createStratumInstance(TableColorStyleTraits, {
+            legend: createStratumInstance(LegendTraits, {
+              title: this.unitMeasure
+            })
+          }),
+          time: createStratumInstance(TableTimeStyleTraits, {
+            timeColumn: this.timeColumns[0].name
+          }),
+          // Add chart if there is a time column but no region column
+          chart:
+            this.timeColumns.length > 0 &&
+            !this.dimensionColumns.find(col => col.type === "region")
+              ? createStratumInstance(TableChartStyleTraits, {
+                  xAxisColumn: this.timeColumns[0].name,
+                  lines: [
+                    createStratumInstance(TableChartLineStyleTraits, {
+                      name: this.unitMeasure,
+                      yAxisColumn: this.primaryMeasureColumn.name
+                    })
+                  ]
+                })
+              : undefined,
+          regionColumn: this.dimensionColumns.find(col => col.type === "region")
+            ?.name
+        })
+      ];
+    }
+    return [];
+  }
+
+  /**
+   * Set active table style to primary measure column
+   */
+  @computed
+  get activeStyle() {
+    return this.primaryMeasureColumn.name;
+  }
+
+  /**
+   * Formats feature info table to add:
+   * - Current time (if time-series)
+   * - Selected region (if region-mapped)
+   * - All dimension values
+   * - Formatted primary measure (the actual value)
+   * - Time-series chart
+   */
+  @computed
+  get featureInfoTemplate() {
+    const regionType = this.catalogItem.activeTableStyle.regionColumn
+      ?.regionType;
+    if (!regionType) return;
+
+    let template = '<table class="cesium-infoBox-defaultTable">';
+
+    // Function to format row with title and value
+    const row = (title: string, value: string) =>
+      `<tr><td style="vertical-align: middle">${title}</td><td>${value}</td></tr>`;
+
+    // Get time dimension values
+    template += this.timeColumns
+      ?.map(col => row(col.title ?? "Time", `{{${col.name}}}`))
+      .join(", ");
+
+    // Get region dimension values
+
+    template += row(regionType?.description, `{{${regionType?.nameProp}}}`);
+
+    // Get other dimension values
+    template += this.catalogItem.sdmxSelectableDimensions
+      ?.filter(d => (d.name || d.id) && !d.disable && d.selectedId)
+      .map(d => {
+        const selectedOption = d.options?.find(o => o.id === d.selectedId);
+        return row((d.name || d.id)!, selectedOption?.name ?? d.selectedId!);
+      })
+      .join("");
+
+    const primaryMeasureName =
+      this.unitMeasure ??
+      this.primaryMeasureColumn.title ??
+      this.primaryMeasureColumn.name ??
+      "Value";
+
+    template +=
+      row("", "") +
+      row(
+        primaryMeasureName,
+        `{{#terria.formatNumber}}{useGrouping: true}{{${this.primaryMeasureColumn.name}}}{{/terria.formatNumber}}`
+      );
+
+    // Add timeSeries chart if more than one time observation
+    if (
+      this.catalogItem.discreteTimes &&
+      this.catalogItem.discreteTimes.length > 1
+    ) {
+      template += `</table><chart id="${this.catalogItem.uniqueId}" title="${this.catalogItem.name}: {{${regionType.nameProp}}}" x-column="{{terria.timeSeries.xName}}" y-column="${this.unitMeasure}" >{{terria.timeSeries.data}}</chart>`;
+    }
+
+    return createStratumInstance(FeatureInfoTemplateTraits, { template });
+  }
+
+  // ------------- START SDMX STRUCTURE HELPER FUNCTIONS -------------
   getConceptScheme(id: string) {
     if (!isDefined(id)) return;
     return this.sdmxJsonDataflow.conceptSchemes?.find(c => c.id === id);
   }
 
-  getConcept(
-    conceptScheme: ConceptScheme | string | undefined,
-    conceptId?: string
-  ) {
+  getConceptByUrn(urn?: string) {
+    if (!urn) return;
+    const conceptUrn = parseSdmxUrn(urn);
+    const conceptSchemeId = conceptUrn?.resourceId;
+    const conceptId = conceptUrn?.descendantIds?.[0];
+
     if (!isDefined(conceptId)) return;
     let resolvedConceptScheme =
-      typeof conceptScheme === "string"
-        ? this.getConceptScheme(conceptScheme)
-        : conceptScheme;
+      typeof conceptSchemeId === "string"
+        ? this.getConceptScheme(conceptSchemeId)
+        : conceptSchemeId;
 
     return resolvedConceptScheme?.concepts?.find(d => d.id === conceptId);
   }
 
-  getCodelist(id?: string) {
+  getCodelistByUrn(urn?: string) {
+    if (!urn) return;
+    const codelistUrn = parseSdmxUrn(urn);
+    const id = codelistUrn?.resourceId;
     if (!isDefined(id)) return;
     return this.sdmxJsonDataflow.codelists?.find(c => c.id === id);
+  }
+
+  /**
+   * Find modelOverrides with type 'region-type' to try to extract regionType from another dimension
+   * For example, ABS have a regionType dimension which may have values (SA1, SA2, ...), which could be used to determine regionType
+   */
+  getDimensionsWithOverrideType(type: ModelOverrideType) {
+    return filterOutUndefined(
+      this.catalogItem.modelOverrides
+        ?.filter(override => override.type === type && override.id)
+        .map(override => {
+          // Find dimension id with concept or codelist
+          return this.catalogItem.dimensions?.find(
+            d =>
+              d.id === this.getDimensionWithConceptOrCodelist(override.id!)?.id
+          );
+        })
+    );
   }
 
   getDimensionWithConceptOrCodelist(id: string) {
@@ -634,6 +762,21 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
         attr.conceptIdentity === id ||
         attr.localRepresentation?.enumeration === id
     );
+  }
+
+  /**
+   * Try to resolve `regionType` to a region provider (this will also match against region provider aliases)
+   */
+  matchRegionType(regionType?: string): string | undefined {
+    if (!isDefined(regionType)) return;
+    const matchingRegionProviders = this.catalogItem.regionProviderList?.getRegionDetails(
+      [regionType],
+      undefined,
+      undefined
+    );
+    if (matchingRegionProviders && matchingRegionProviders.length > 0) {
+      return matchingRegionProviders[0].regionProvider.regionType;
+    }
   }
 }
 
