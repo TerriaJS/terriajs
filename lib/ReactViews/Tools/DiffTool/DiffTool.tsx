@@ -715,7 +715,7 @@ class Main extends React.Component<MainPropsType> {
                 isPickingNewLocation={this._isPickingNewLocation}
               />
               <DatePicker
-                heading={t("diffTool.labels.dateComparisonA")}
+                heading={t("diffTool.labels.dateComparisonB")}
                 item={this.props.rightItem}
                 externalOpenButton={this.openRightDatePickerButton}
                 onDateSet={() => this.showItem(this.props.rightItem)}

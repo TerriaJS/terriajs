@@ -41,6 +41,7 @@ Change Log
 * Fix hard-coded colour value in Story
 * Use `configParameters.cesiumIonAccessToken` in `IonImageryCatalogItem`
 * Added support for skipping comments in CSV files
+* Fix `DiffTool` date-picker label `dateComparisonB`
 * Fix app crash when switching different tools.
 * Lock the version of i18next to 19.8.9 till new version of i18next-http-backend is available.
 * [The next improvement]
