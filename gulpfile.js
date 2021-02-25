@@ -3,7 +3,6 @@
 
 'use strict';
 
-/*global require*/
 
 // Every module required-in here must be a `dependency` in package.json, not just a `devDependency`,
 // so that our postinstall script (which runs `gulp post-npm-install`) is able to run without

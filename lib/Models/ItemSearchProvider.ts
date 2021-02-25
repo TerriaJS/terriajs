@@ -6,6 +6,8 @@ export type ItemSearchParameter =
   | EnumItemSearchParameter
   | TextItemSearchParameter;
 
+export type ItemSearchParameterType = ItemSearchParameter["type"];
+
 export type BaseParameter = {
   id: string;
   name: string;
