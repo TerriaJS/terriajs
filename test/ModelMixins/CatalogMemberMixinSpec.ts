@@ -1,6 +1,7 @@
 import { runInAction } from "mobx";
 import Terria from "../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+import updateModelFromJson from "../../lib/Models/updateModelFromJson";
 
 describe("CatalogMemberMixin", function() {
   describe(" - infoWithoutSources", function() {
@@ -50,6 +51,24 @@ describe("CatalogMemberMixin", function() {
         expect(wmsItem._sourceInfoItemNames.length).toBe(1);
       }
       expect(wmsItem.infoWithoutSources.length).toBe(5);
+    });
+
+    it(" - has metadataUrls", function() {
+      expect(wmsItem.metadataUrls.length).toBe(1);
+      expect(wmsItem.metadataUrls[0].url).toBe("http://examplemetadata.com");
+      expect(wmsItem.metadataUrls[0].title).toBeUndefined();
+    });
+
+    it(" - can add metadataUrls title", function() {
+      runInAction(() => {
+        updateModelFromJson(wmsItem, "definition", {
+          metadataUrls: [{ title: "Some Title" }]
+        });
+      });
+
+      expect(wmsItem.metadataUrls.length).toBe(1);
+      expect(wmsItem.metadataUrls[0].url).toBe("http://examplemetadata.com");
+      expect(wmsItem.metadataUrls[0].title).toBe("Some Title");
     });
   });
 });

@@ -183,13 +183,13 @@ export default function GeoJsonMixin<
           color.alpha = 1;
           return color;
         } else {
-          return Color.fromCssColorString(colorString);
+          return Color.fromCssColorString(colorString) ?? Color.GRAY;
         }
       }
 
       function getColor(color: String | string | Color): Color {
         if (typeof color === "string" || color instanceof String) {
-          return Color.fromCssColorString(color.toString());
+          return Color.fromCssColorString(color.toString()) ?? Color.GRAY;
         } else {
           return color;
         }
@@ -229,7 +229,8 @@ export default function GeoJsonMixin<
         clampToGround: this.clampToGround,
         markerUrl: style["marker-url"] // not in SimpleStyle spec but gives an alternate to maki marker symbols
           ? proxyCatalogItemUrl(this, style["marker-url"])
-          : undefined
+          : undefined,
+        credit: this.attribution
       };
 
       if (isDefined(style["stroke-opacity"])) {

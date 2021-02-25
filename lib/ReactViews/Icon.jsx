@@ -122,7 +122,11 @@ export const GLYPHS = {
   editor: require("../../wwwroot/images/icons/editor.svg"),
   viewStory: require("../../wwwroot/images/icons/view-story.svg"),
   editStory: require("../../wwwroot/images/icons/edit-story.svg"),
-  questionMark: require("../../wwwroot/images/icons/questionmark.svg")
+  questionMark: require("../../wwwroot/images/icons/questionmark.svg"),
+  pedestrian: require("../../wwwroot/images/icons/pedestrian.svg"),
+  minimize: require("../../wwwroot/images/icons/minimize.svg"),
+  maximize: require("../../wwwroot/images/icons/maximize.svg"),
+  closeTool: require("../../wwwroot/images/icons/close-tool.svg")
 };
 
 export const Icon = createReactClass({

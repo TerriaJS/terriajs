@@ -105,6 +105,11 @@
     "loadingError": {
       "title": "Error Loading {{toolName}} Tool",
       "message": "An error occurred while trying to load the this tool from the server. Please try again."
+    },
+    "exitBtnTitle": "Exit",
+    "button": {
+      "open": "Exit {{toolNameLowerCase}}",
+      "closed": "{{toolName}}"
     }
   },
   "diffTool": {
@@ -242,7 +247,21 @@
     "nativeResolutionHeader": "Use native device resolution",
     "mapQuality": "Raster Map Quality:",
     "qualityLabel": "Quality",
-    "performanceLabel": "Performance"
+    "performanceLabel": "Performance",
+    "timeline": {
+      "alwaysShowLabel": "Press to start only showing the timeline when there are time-varying datasets on the workbench",
+      "hideLabel": "Press to start always showing the timeline, even when no time-varying datasets are on the workbench",
+      "alwaysShow": "Always show"
+    },
+    "terrain": {
+      "hideUnderground": "Terrain hides underground features",
+      "showUndergroundFeatures": "Press to start showing features that are underneath the terrain surface",
+      "hideUndergroundFeatures": "Press to start hiding features that are underneath the terrain surface",
+      "sideLabel": "Show Terrain on the",
+      "left": "Left",
+      "both": "Both",
+      "right": "Right"
+    }
   },
   "feedback": {
     "feedbackPreamble": "We would love to hear from you!",
@@ -452,7 +471,7 @@
     "wfs": "This is a <1>WFS service</1>, which transfers raw spatial data on request. It can be used in GIS software with this URL:",
     "layerName": "Layer name",
     "typeName": "Type name",
-    "metadataUrl": "Metadata URL",
+    "metadataUrls": "Metadata Links",
     "dataUrl": "Data URL",
     "useLinkBelow": "Use the link below to download the data. See the {{link}} for more information on customising URL query parameters.",
     "downloadInFormat": "Download the currently selected data in {{format}} format",
@@ -498,7 +517,9 @@
     "addItemErrorMessage": "An error occurred while loading the catalog item.",
     "dimensionsSelector": {
       "undefinedLabel": "Not specified"
-    }
+    },
+    "searchItem": "Search",
+    "searchItemTitle": "Search"
   },
   "dateTime": {
     "back": "Go back",
@@ -1438,5 +1459,37 @@
   },
   "term": {
     "missingContent": "missing content"
+  },
+  "itemSearchTool": {
+    "title": "Search {{itemName}}",
+    "loading": "Loading search parameters",
+    "loadError": "Error loading search parameters. Check console for detailed errors.",
+    "noParameters": "No searchable parameters found",
+    "searching": "Searching",
+    "searchError": "Search failed. Check console for detailed errors.",
+    "numericParameter": {
+      "minimum": "Minimum",
+      "maximum": "Maximum"
+    },
+    "searchBtnText": "Search",
+    "resetBtnText": "Clear input",
+    "backBtnText": "Search again",
+    "resultsCount": "{{count}} match found",
+    "resultsCount_plural": "{{count}} matches found",
+    "actions": {
+      "highlightAll": "Highlight all",
+      "showMatchingOnly": "Show matching only"
+    }
+  },
+  "indexedItemSearchProvider": {
+    "missingOptionIndexRootUrl": "Option `indexRootUrl` is missing in the item's search configuration.",
+    "errorParsingIndexRoot": "Error parsing indexRoot file: {{indexRootUrl}}."
+  },
+  "pedestrianMode": {
+    "toolButtonTitle": "Pedestrian Mode",
+    "dropPedestrianTooltipMessage": "<b>Left click</b> to select drop location<br /><b>Right click / Esc</b> to cancel",
+    "controls": {
+      "title": "Controls"
+    }
   }
 }

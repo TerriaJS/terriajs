@@ -37,7 +37,10 @@ import SelectableDimensions, {
   SelectableDimension
 } from "../Models/SelectableDimensions";
 import { terriaTheme } from "../ReactViews/StandardUserInterface/StandardTheme";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
+import {
+  InfoSectionTraits,
+  MetadataUrlTraits
+} from "../Traits/CatalogMemberTraits";
 import DiscreteTimeTraits from "../Traits/DiscreteTimeTraits";
 import LegendTraits from "../Traits/LegendTraits";
 import { RectangleTraits } from "../Traits/MappableTraits";
@@ -60,7 +63,8 @@ import WebMapServiceCapabilities, {
   CapabilitiesContactInformation,
   CapabilitiesDimension,
   CapabilitiesLayer,
-  getRectangleFromLayer
+  getRectangleFromLayer,
+  MetadataURL
 } from "./WebMapServiceCapabilities";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 
@@ -106,9 +110,23 @@ class GetCapabilitiesStratum extends LoadableStratum(
     ) as this;
   }
 
-  @computed
-  get supportsReordering() {
-    return !this.keepOnTop;
+  @computed get metadataUrls() {
+    const metadataUrls: MetadataURL[] = [];
+
+    Array.from(this.capabilitiesLayers.values()).forEach(layer => {
+      if (!layer?.MetadataURL) return;
+      Array.isArray(layer?.MetadataURL)
+        ? metadataUrls.push(...layer?.MetadataURL)
+        : metadataUrls.push(layer?.MetadataURL as MetadataURL);
+    });
+
+    return metadataUrls
+      .filter(m => m.OnlineResource?.["xlink:href"])
+      .map(m =>
+        createStratumInstance(MetadataUrlTraits, {
+          url: m.OnlineResource!["xlink:href"]
+        })
+      );
   }
 
   @computed
@@ -955,6 +973,9 @@ class WebMapServiceCatalogItem
     if (imageryProvider === undefined) {
       return undefined;
     }
+
+    imageryProvider.enablePickFeatures = true;
+
     return {
       imageryProvider,
       alpha: this.opacity,
@@ -971,6 +992,9 @@ class WebMapServiceCatalogItem
       if (imageryProvider === undefined) {
         return undefined;
       }
+
+      imageryProvider.enablePickFeatures = false;
+
       return {
         imageryProvider,
         alpha: 0.0,
@@ -1116,7 +1140,8 @@ class WebMapServiceCatalogItem
         },
         tilingScheme: /*defined(this.tilingScheme) ? this.tilingScheme :*/ new WebMercatorTilingScheme(),
         maximumLevel: maximumLevel,
-        rectangle: rectangle
+        rectangle: rectangle,
+        credit: this.attribution
       };
 
       if (
