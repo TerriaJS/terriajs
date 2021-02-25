@@ -138,20 +138,21 @@ export default class TableColumn {
    * The function returns key-value pairs which map tokens to values.
    * Each token (see `this.mexpColumnTokens`) represents another column in the table, each value represents corresponding cell for row i.
    * Note: this does not add pair for token `x` (which corresponds to values in this column), this is in `valuesAsNumbers` immediately before expression is evaluated
+   *
+   * @param i row number
+   * @param x value to transform
    */
-  @computed
-  get mexpColumnPairs() {
-    return (i: number) =>
-      this.mexpColumnTokens.reduce<{ [key: string]: number | null }>(
-        (pairs, token) => {
-          const value =
+  mexpColumnPairs(i: number, x: number) {
+    return this.mexpColumnTokens.reduce<{ [key: string]: number | null }>(
+      (pairs, token) => {
+        if (token.token !== "x")
+          pairs[token.value] =
             this.tableModel.tableColumns.find(col => col.name === token.token)
-              ?.valuesAsNumbers.values[i] ?? undefined;
-          pairs[token.value] = value ?? null;
-          return pairs;
-        },
-        {}
-      );
+              ?.valuesAsNumbers.values[i] ?? null;
+        return pairs;
+      },
+      { x } // Add column pair for this value (token "x")
+    );
   }
 
   /**
@@ -220,14 +221,11 @@ export default class TableColumn {
       if (n !== null) {
         // If we have a `math-expression-evaluator` - use it to transform value
         if (this.mexpPostfix) {
-          const columnPairs = this.mexpColumnPairs(i);
+          const columnPairs = this.mexpColumnPairs(i, n);
+
           // Only transform value if all columnPairs have been set
-          console.log(!Object.values(columnPairs).includes(null));
           if (!Object.values(columnPairs).includes(null)) {
-            const result = this.mexpPostfix.postfixEval({
-              ...this.mexpColumnPairs(i),
-              x: n // Add column pair for this value (token "x")
-            });
+            const result = this.mexpPostfix.postfixEval(columnPairs);
             n = typeof result === "string" ? toNumber(result) : result;
           }
         }
