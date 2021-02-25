@@ -1,4 +1,3 @@
-/*global require*/
 /// <reference types="jasmine" />
 import "../lib/Core/prerequisites";
 import "jasmine-ajax";
@@ -20,8 +19,8 @@ spy(event => {
   }
 });
 
-beforeEach(function() {
-  i18next.init({
+beforeAll(async function() {
+  await i18next.init({
     lng: "cimode",
     debug: false
   });

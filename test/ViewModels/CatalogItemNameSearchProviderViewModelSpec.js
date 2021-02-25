@@ -1,6 +1,5 @@
 "use strict";
 
-/*global require,describe,it,expect,beforeEach*/
 var CatalogGroup = require("../../lib/Models/CatalogGroup");
 var CatalogItem = require("../../lib/Models/CatalogItem");
 var WebMapServiceCatalogItem = require("../../lib/Models/WebMapServiceCatalogItem");

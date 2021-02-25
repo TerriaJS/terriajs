@@ -1,6 +1,5 @@
 "use strict";
 
-/*global require,describe,it,expect,beforeEach*/
 var KmlCatalogItem = require("../../lib/Models/KmlCatalogItem");
 var TerriaError = require("../../lib/Core/TerriaError");
 var Terria = require("../../lib/Models/Terria");

@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.66)
+* Add `MetadataUrlTraits` to `CatalogMemberTraits.metadataUrls`. It contains an array of metadata URLS (with optional `title` which will render a button)
 * Restore `cesiumTerrainUrl` config parameter. [#5124](https://github.com/TerriaJS/terriajs/pull/5124)
 * I18n-ify strings in settings panel. [#5124](https://github.com/TerriaJS/terriajs/pull/5124)
 * Moved `DataCustodianTraits` into `CatalogMemberTraits` and `CatalogMemberReferenceTraits`.
@@ -34,12 +35,15 @@ Change Log
 * Remove `wordBreak="break-all"` from Box surrounding DataPreview
 * Re-added merging of csv row properties and vector tile feature properties for feature info (to match v7 behaviour).
 * Fixes a bug in pedestrian mode where dropping the pedestrian in northern hemisphere will position the camera underground.
+* Implement highlight/hide all actions for results of item search.
 * Disable pickFeatures for WMS `_nextImageryParts`.
 * Fix Leaflet `ImageryLayer` feature info sorting
 * Fix hard-coded colour value in Story
 * Use `configParameters.cesiumIonAccessToken` in `IonImageryCatalogItem`
 * Added support for skipping comments in CSV files
 * Fix `DiffTool` date-picker label `dateComparisonB`
+* Fix app crash when switching different tools.
+* Lock the version of i18next to 19.8.9 till new version of i18next-http-backend is available.
 * [The next improvement]
 
 #### 8.0.0-alpha.65
