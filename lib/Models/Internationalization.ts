@@ -24,6 +24,7 @@ export interface I18nBackendOptions {
 
 export interface I18nStartOptions {
   backend?: I18nBackendOptions;
+  skipInit?: boolean; // skip initialising i18next. Used in CI
 }
 
 export interface LanguageConfiguration {
