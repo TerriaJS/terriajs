@@ -34,6 +34,7 @@ import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
 import TableTraits from "../Traits/TableTraits";
 import AsyncMappableMixin from "./AsyncMappableMixin";
+import CatalogMemberMixin from "./CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin, {
   DiscreteTimeAsJS
 } from "./DiscretelyTimeVaryingMixin";
@@ -260,11 +261,13 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
             points.push({ x, y });
           }
 
+          if (points.length <= 1) return;
+
           const colorId = `color-${this.uniqueId}-${this.name}-${yColumn.name}`;
 
           return {
             item: this,
-            name: yColumn.title,
+            name: line.name ?? yColumn.title,
             categoryName: this.name,
             key: `key${this.uniqueId}-${this.name}-${yColumn.name}`,
             type: this.chartType ?? "line",
@@ -303,6 +306,19 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           : undefined,
         ...this.tableChartItems
       ]);
+    }
+
+    @computed
+    get shortReport(): string | undefined {
+      if (
+        this.dataColumnMajor &&
+        !(CatalogMemberMixin.isMixedInto(this) && this.isLoading) &&
+        this.chartItems.length === 0 &&
+        this.mapItems.length === 0
+      ) {
+        return "No chart or map data available to show";
+      }
+      return super.shortReport;
     }
 
     @computed
