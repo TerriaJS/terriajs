@@ -46,13 +46,6 @@ export default class MagdaReference extends AccessControlMixin(
     MagdaDistributionFormatTraits
   >[] = [
     createStratumInstance(MagdaDistributionFormatTraits, {
-      id: "GeoJSON",
-      formatRegex: "^geojson$",
-      definition: {
-        type: "geojson"
-      }
-    }),
-    createStratumInstance(MagdaDistributionFormatTraits, {
       id: "EsriMapServer",
       formatRegex: "^esri (mapserver|map server|rest|tiled map service)$",
       urlRegex: "MapServer",
@@ -65,6 +58,20 @@ export default class MagdaReference extends AccessControlMixin(
       formatRegex: "^wms$",
       definition: {
         type: "wms"
+      }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+      id: "CZML",
+      formatRegex: "^czml$",
+      definition: {
+        type: "czml"
+      }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+      id: "GeoJSON",
+      formatRegex: "^geojson$",
+      definition: {
+        type: "geojson"
       }
     }),
     createStratumInstance(MagdaDistributionFormatTraits, {
@@ -88,13 +95,6 @@ export default class MagdaReference extends AccessControlMixin(
       formatRegex: "^wfs$",
       definition: {
         type: "wfs"
-      }
-    }),
-    createStratumInstance(MagdaDistributionFormatTraits, {
-      id: "CZML",
-      formatRegex: "^czml$",
-      definition: {
-        type: "czml"
       }
     }),
     createStratumInstance(MagdaDistributionFormatTraits, {
