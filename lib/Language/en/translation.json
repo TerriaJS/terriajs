@@ -1210,7 +1210,6 @@
         "time": "Time-series",
         "region": "Region"
       },
-      "noData": "No data available",
       "loadDataErrorTitle": "Could not load SDMX CSV",
       "loadDataErrorMessage": "Invalid response from {{csvUrl}}"
     },

@@ -165,20 +165,6 @@ export default class SdmxJsonCatalogItem
       : undefined;
   }
 
-  @computed
-  get shortReport() {
-    if (
-      !isDefined(this.dataColumnMajor) ||
-      this.isLoadingMapItems ||
-      this.isLoadingChartItems
-    )
-      return;
-
-    return this.dataColumnMajor.length === 0
-      ? i18next.t("models.sdmxCatalogItem.noData")
-      : undefined;
-  }
-
   async _exportData() {
     if (this._currentCsvString) {
       return {
