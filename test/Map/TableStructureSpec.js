@@ -1,6 +1,5 @@
 "use strict";
 
-/*global require,describe,it,expect*/
 var JulianDate = require("terriajs-cesium/Source/Core/JulianDate").default;
 var TableStructure = require("../../lib/Map/TableStructure");
 var TimeInterval = require("terriajs-cesium/Source/Core/TimeInterval").default;

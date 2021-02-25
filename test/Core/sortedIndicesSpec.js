@@ -1,6 +1,5 @@
 "use strict";
 
-/*global require,describe,it,expect*/
 var sortedIndices = require("../../lib/Core/sortedIndices");
 
 describe("sortedIndices", function() {
