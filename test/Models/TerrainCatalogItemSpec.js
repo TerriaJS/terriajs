@@ -1,6 +1,5 @@
 "use strict";
 
-/*global require*/
 var CompositeCatalogItem = require("../../lib/Models/CompositeCatalogItem");
 var TerrainCatalogItem = require("../../lib/Models/TerrainCatalogItem");
 var Terria = require("../../lib/Models/Terria");
