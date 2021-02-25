@@ -44,6 +44,8 @@ Change Log
 * Re-order the preference of formats in MagdaReference.
 * Fix app crash when switching different tools.
 * Lock the version of i18next to 19.8.9 till new version of i18next-http-backend is available.
+* Rearrange the order of MagdaReference format preference.
+* Limit the number of layers in WebMapServiceCatalogItem model if data service provider provides layer limit.
 * [The next improvement]
 
 #### 8.0.0-alpha.65
