@@ -40,6 +40,14 @@ export default class SdmxCatalogItemTraits extends mixTraits(
   })
   agencyId?: string;
 
+  @primitiveTrait({
+    type: "string",
+    name: "Unit Measure",
+    description:
+      "This string is essentially 'units' for the dataset. If a UNIT_MEASURE SDMX attribute exists in this dataflow, the default `unitMeasure` will be determined from it."
+  })
+  unitMeasure?: string;
+
   @objectArrayTrait({
     type: SdmxDimensionTraits,
     name: "Dimensions",

@@ -85,6 +85,13 @@ export class DimensionTraits extends ModelTraits implements Dimension {
   disable?: boolean;
 }
 
+export type ModelOverrideType =
+  | "region"
+  | "region-type"
+  | "unit-measure"
+  | "unit-multiplier"
+  | "frequency";
+
 /**
  * Notes on region mapping:
  * RegionType is determined by sdmxJsonDataflowStratum.column in this order:
@@ -114,9 +121,10 @@ export class ModelOverrideTraits extends DimensionTraits {
       - 'region': values contain region codes used for region mapping - eg Country code)
       - 'region-type': values contains region types - eg 'CNT2' which is 2-letter country codes)
       - 'unit-measure': values should be used to describe primary-measure (eg in chart title)
-      - 'unit-multiplier': multiply primary-measure value by atrtibute values`
+      - 'unit-multiplier': multiply primary-measure value by atrtibute values
+      - 'frequency': value used to determine time period frequency (ie. yearly, monthly...)`
   })
-  type?: "region" | "region-type" | "unit-measure" | "unit-multiplier";
+  type?: ModelOverrideType;
 
   @primitiveTrait({
     type: "string",
