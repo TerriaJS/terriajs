@@ -1,6 +1,5 @@
 "use strict";
 
-/*global require*/
 var CorsProxy = require("../../lib/Core/CorsProxy");
 var when = require("when");
 

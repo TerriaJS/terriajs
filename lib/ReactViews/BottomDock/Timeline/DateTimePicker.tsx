@@ -236,7 +236,7 @@ class DateTimePicker extends React.Component<PropsType> {
       granularity: defaultGranularity
     };
 
-    window.addEventListener("click", this.closePickerEventHandler.bind(this));
+    window.addEventListener("click", this.closePickerEventHandler);
 
     // Update currentDateIndice when currentDate changes
     this.currentDateAutorunDisposer = reaction(
@@ -268,11 +268,10 @@ class DateTimePicker extends React.Component<PropsType> {
 
   componentWillUnmount() {
     this.currentDateAutorunDisposer && this.currentDateAutorunDisposer();
-    window.removeEventListener("click", () =>
-      this.closePickerEventHandler.bind(this)
-    );
+    window.removeEventListener("click", this.closePickerEventHandler);
   }
 
+  @action.bound
   closePickerEventHandler() {
     this.closePicker();
   }

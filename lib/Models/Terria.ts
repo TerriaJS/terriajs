@@ -582,28 +582,24 @@ export default class Terria {
     const launchUrlForAnalytics =
       options.applicationUrl?.href || getUriWithoutPath(baseUri);
     return loadJson5(options.configUrl, options.configUrlHeaders)
-      .then((config: any) => {
-        return runInAction(() => {
-          // If it's a magda config, we only load magda config and parameters should never be a property on the direct
-          // config aspect (it would be under the `terria-config` aspect)
-          if (config.aspects) {
-            return this.loadMagdaConfig(
-              options.configUrl,
-              config,
-              baseUri
-            ).then(() => {
-              Internationalization.initLanguage(
-                this.configParameters.languageConfiguration,
-                options.i18nOptions
-              );
-            });
-          }
-
+      .then(async (config: any) => {
+        // If it's a magda config, we only load magda config and parameters should never be a property on the direct
+        // config aspect (it would be under the `terria-config` aspect)
+        let languageConfiguration: LanguageConfiguration | undefined;
+        if (config.aspects) {
+          await this.loadMagdaConfig(options.configUrl, config, baseUri);
+          languageConfiguration = this.configParameters.languageConfiguration;
+        }
+        runInAction(() => {
           // If it's a regular config.json, continue on with parsing remaining init sources
           if (config.parameters) {
             this.updateParameters(config.parameters);
+            languageConfiguration = config.parameters.languageConfiguration;
+          }
+
+          if (!options.i18nOptions?.skipInit) {
             Internationalization.initLanguage(
-              config.parameters.languageConfiguration,
+              languageConfiguration,
               options.i18nOptions
             );
           }

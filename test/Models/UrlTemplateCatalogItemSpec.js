@@ -1,7 +1,5 @@
 "use strict";
 
-/*global require,describe,it,expect,beforeEach*/
-
 var Terria = require("../../lib/Models/Terria");
 var ImageryLayerCatalogItem = require("../../lib/Models/ImageryLayerCatalogItem");
 var NeverTileDiscardPolicy = require("terriajs-cesium/Source/Scene/NeverTileDiscardPolicy")

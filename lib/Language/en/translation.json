@@ -473,7 +473,7 @@
     "wfs": "This is a <1>WFS service</1>, which transfers raw spatial data on request. It can be used in GIS software with this URL:",
     "layerName": "Layer name",
     "typeName": "Type name",
-    "metadataUrl": "Metadata URL",
+    "metadataUrls": "Metadata Links",
     "dataUrl": "Data URL",
     "useLinkBelow": "Use the link below to download the data. See the {{link}} for more information on customising URL query parameters.",
     "downloadInFormat": "Download the currently selected data in {{format}} format",
@@ -1477,7 +1477,11 @@
     "resetBtnText": "Clear input",
     "backBtnText": "Search again",
     "resultsCount": "{{count}} match found",
-    "resultsCount_plural": "{{count}} matches found"
+    "resultsCount_plural": "{{count}} matches found",
+    "actions": {
+      "highlightAll": "Highlight all",
+      "showMatchingOnly": "Show matching only"
+    }
   },
   "indexedItemSearchProvider": {
     "missingOptionIndexRootUrl": "Option `indexRootUrl` is missing in the item's search configuration.",

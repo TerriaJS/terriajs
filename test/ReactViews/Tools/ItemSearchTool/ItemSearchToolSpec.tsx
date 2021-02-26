@@ -1,3 +1,4 @@
+import "../../../SpecMain";
 import React from "react";
 import {
   act,
@@ -6,9 +7,7 @@ import {
   ReactTestRenderer
 } from "react-test-renderer";
 import { assertObject } from "../../../../lib/Core/Json";
-import SearchableItemMixin from "../../../../lib/ModelMixins/SearchableItemMixin";
 import CommonStrata from "../../../../lib/Models/CommonStrata";
-import CreateModel from "../../../../lib/Models/CreateModel";
 import ItemSearchProvider, {
   ItemSearchParameter,
   ItemSearchResult
@@ -23,15 +22,9 @@ import ItemSearchTool, {
 import Loading from "../../../../lib/ReactViews/Tools/ItemSearchTool/Loading";
 import SearchForm from "../../../../lib/ReactViews/Tools/ItemSearchTool/SearchForm";
 import SearchResults from "../../../../lib/ReactViews/Tools/ItemSearchTool/SearchResults";
-import SearchableItemTraits from "../../../../lib/Traits/SearchableItemTraits";
 import { withThemeContext } from "../../withThemeContext";
-
-class TestSearchableItem extends SearchableItemMixin(
-  CreateModel(SearchableItemTraits)
-) {
-  selectItemSearchResult(result: ItemSearchResult) {}
-  unselectItemSearchResult(result: ItemSearchResult) {}
-}
+import MockSearchableItem from "./MockSearchableItem";
+import i18next from "i18next";
 
 class TestItemSearchProvider extends ItemSearchProvider {
   async initialize(): Promise<void> {
@@ -56,7 +49,7 @@ class TestItemSearchProvider extends ItemSearchProvider {
 
 describe("ItemSearchTool", function() {
   let viewState: ViewState;
-  let item: TestSearchableItem;
+  let item: MockSearchableItem;
   let itemSearchProvider: ItemSearchProvider;
   let rendered: ReactTestRenderer;
 
@@ -68,7 +61,7 @@ describe("ItemSearchTool", function() {
       catalogSearchProvider: null,
       locationSearchProviders: []
     });
-    item = new TestSearchableItem("test", terria);
+    item = new MockSearchableItem("test", terria);
     item.setTrait(CommonStrata.user, "search", {
       providerType: "testProvider",
       providerOptions: {},
@@ -114,7 +107,9 @@ describe("ItemSearchTool", function() {
       });
       const progressText = rendered.root.findByType(Loading);
       expect(progressText).toBeDefined();
-      expect(progressText.props.children).toEqual("itemSearchTool.loading");
+      expect(progressText.props.children).toEqual(
+        i18next.t("itemSearchTool.loading")
+      );
     });
 
     it("shows an error message on load error", async function() {
@@ -130,7 +125,9 @@ describe("ItemSearchTool", function() {
 
       const error = rendered.root.findByType(ErrorComponent);
       expect(error).toBeDefined();
-      expect(error.props.children).toEqual("itemSearchTool.loadError");
+      expect(error.props.children).toEqual(
+        i18next.t("itemSearchTool.loadError")
+      );
     });
 
     it("shows a search from on successful load", async function() {

@@ -1,6 +1,5 @@
 "use strict";
 
-/*global require,describe,it,expect*/
 const featureDataToGeoJson = require("../../lib/Map/featureDataToGeoJson");
 
 describe("featureDataToGeoJson", function() {

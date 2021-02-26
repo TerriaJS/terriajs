@@ -39,7 +39,7 @@ describe("SearchForm", function() {
           range: { min: 10, max: 200 }
         }
       ],
-      values: {}
+      query: {}
     });
     const form = root.findByType("form");
     form.props.onSubmit({ preventDefault: () => {} });
