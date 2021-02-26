@@ -52,6 +52,8 @@ Change Log
 * Create `merge` `TraitsOption` for `objectArrayTrait`
 * Lock the version of i18next to 19.8.9 till new version of i18next-http-backend is available.
 * Move `Description` `metadataUrls` above `infoSections`.
+* Upgraded i18next and i18next-http-backend to fix incompatibility.
+* Added support for dd/mm/yyyy, dd-mm-yyyy and mm-dd-yyyy date formats.
 * [The next improvement]
 
 #### 8.0.0-alpha.65
