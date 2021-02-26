@@ -37,7 +37,10 @@ import SelectableDimensions, {
   SelectableDimension
 } from "../Models/SelectableDimensions";
 import { terriaTheme } from "../ReactViews/StandardUserInterface/StandardTheme";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
+import {
+  InfoSectionTraits,
+  MetadataUrlTraits
+} from "../Traits/CatalogMemberTraits";
 import DiscreteTimeTraits from "../Traits/DiscreteTimeTraits";
 import LegendTraits from "../Traits/LegendTraits";
 import { RectangleTraits } from "../Traits/MappableTraits";
@@ -60,7 +63,8 @@ import WebMapServiceCapabilities, {
   CapabilitiesContactInformation,
   CapabilitiesDimension,
   CapabilitiesLayer,
-  getRectangleFromLayer
+  getRectangleFromLayer,
+  MetadataURL
 } from "./WebMapServiceCapabilities";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 
@@ -106,6 +110,25 @@ class GetCapabilitiesStratum extends LoadableStratum(
     ) as this;
   }
 
+  @computed get metadataUrls() {
+    const metadataUrls: MetadataURL[] = [];
+
+    Array.from(this.capabilitiesLayers.values()).forEach(layer => {
+      if (!layer?.MetadataURL) return;
+      Array.isArray(layer?.MetadataURL)
+        ? metadataUrls.push(...layer?.MetadataURL)
+        : metadataUrls.push(layer?.MetadataURL as MetadataURL);
+    });
+
+    return metadataUrls
+      .filter(m => m.OnlineResource?.["xlink:href"])
+      .map(m =>
+        createStratumInstance(MetadataUrlTraits, {
+          url: m.OnlineResource!["xlink:href"]
+        })
+      );
+  }
+
   @computed
   get layers(): string | undefined {
     let layers: string | undefined;
@@ -126,6 +149,13 @@ class GetCapabilitiesStratum extends LoadableStratum(
     return layers;
   }
 
+  /**
+ * **How we determine WMS legends (in order)**
+  1. Defined manually in catalog JSON
+  2. If `style` is undefined, and server doesn't support `GetLegendGraphic`, we must select first style as default - as there is no way to know what the default style is, and to request a legend for it
+  3. If `style` is is set and it has a `legendUrl` -> use it!
+  4. If server supports `GetLegendGraphic`, we can request a legend (with or without `style` parameter)
+ */
   @computed
   get legends(): StratumFromTraits<LegendTraits>[] | undefined {
     const availableStyles = this.catalogItem.availableStyles || [];
@@ -170,8 +200,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
       }
 
       // If no legends found and WMS supports GetLegendGraphics - make one up!
-      // From OGC — about style property for GetLegendGraphic request:
-      // If not present, the default style is selected. The style may be any valid style available for a layer, including non-SLD internally-defined styles.
       if (
         !isDefined(legendUri) &&
         isDefined(this.catalogItem.url) &&
@@ -190,6 +218,11 @@ class GetCapabilitiesStratum extends LoadableStratum(
           .setQuery("format", "image/png")
           .setQuery("layer", layer);
 
+        // From OGC — about style property for GetLegendGraphic request:
+        // If not present, the default style is selected. The style may be any valid style available for a layer, including non-SLD internally-defined styles.
+        if (style) {
+          legendUri.setQuery("style", style);
+        }
         legendUrlMimeType = "image/png";
       }
 

@@ -1,6 +1,5 @@
 "use strict";
 
-/*global require,expect*/
 import React from "react";
 import { findWithClass } from "react-shallow-testutils";
 import { getShallowRenderedOutput } from "./MoreShallowTools";

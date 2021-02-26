@@ -148,7 +148,11 @@ const Panel = styled.div`
   height: 30px;
 `;
 
-const InnerPanel = styled.div`
+interface InnerPanelProps {
+  openDirection?: string;
+}
+
+const InnerPanel = styled.div<InnerPanelProps>`
   background: ${p => p.theme.dark};
   width: 260px;
   height: 300px;
@@ -159,6 +163,12 @@ const InnerPanel = styled.div`
   top: -170px;
   left: 0;
   z-index: 100;
+  ${p =>
+    p.openDirection === "down" &&
+    `
+    top: 40px;
+    left: -190px;
+    `}
 `;
 
 interface PropsType extends WithTranslation {
@@ -236,7 +246,7 @@ class DateTimePicker extends React.Component<PropsType> {
       granularity: defaultGranularity
     };
 
-    window.addEventListener("click", this.closePickerEventHandler.bind(this));
+    window.addEventListener("click", this.closePickerEventHandler);
 
     // Update currentDateIndice when currentDate changes
     this.currentDateAutorunDisposer = reaction(
@@ -268,11 +278,10 @@ class DateTimePicker extends React.Component<PropsType> {
 
   componentWillUnmount() {
     this.currentDateAutorunDisposer && this.currentDateAutorunDisposer();
-    window.removeEventListener("click", () =>
-      this.closePickerEventHandler.bind(this)
-    );
+    window.removeEventListener("click", this.closePickerEventHandler);
   }
 
+  @action.bound
   closePickerEventHandler() {
     this.closePicker();
   }
@@ -663,7 +672,10 @@ class DateTimePicker extends React.Component<PropsType> {
           }}
         >
           {this.props.isOpen && (
-            <InnerPanel className={"scrollbars"}>
+            <InnerPanel
+              className={"scrollbars"}
+              openDirection={this.props.openDirection}
+            >
               <BackButton
                 title={this.props.t("dateTime.back")}
                 css={`
