@@ -52,6 +52,7 @@ Change Log
 * Lock the version of i18next to 19.8.9 till new version of i18next-http-backend is available.
 * Rearrange the order of MagdaReference format preference.
 * Limit the number of layers in WebMapServiceCatalogItem model if data service provider provides layer limit.
+* For wms format data, MagdaReference treat it as wms-group type and its layers as group members.
 * [The next improvement]
 
 #### 8.0.0-alpha.65

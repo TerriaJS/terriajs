@@ -57,7 +57,13 @@ export default class MagdaReference extends AccessControlMixin(
       id: "WMS",
       formatRegex: "^wms$",
       definition: {
-        type: "wms"
+        // Treat it as wms-group instead of wms because of the following advantages:
+        // 1. Users are able to select which layers to add to map.
+        // 2. Always query for one layer per request as some data service providers may
+        //    restrict layer limit per request.
+        // 3. If there are many layers and query all layers in one request, the query string
+        //    may exceed max length. This approach will unlikely cause this problem.
+        type: "wms-group"
       }
     }),
     createStratumInstance(MagdaDistributionFormatTraits, {
