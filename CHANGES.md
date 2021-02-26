@@ -3,9 +3,12 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.66)
+#### next release (8.0.0-alpha.67)
+* [The next improvement]
 
-- **Potentially Breaking changes**: 
+#### 8.0.0-alpha.66
+
+- **Breaking changes**: 
   - Changed merging behaviour of Trait legends (of type `LegendTraits`) in `CatalogMemberTraits`. This affects legends on all `CatalogMember` models. Legend objects in higher strata now replace values in lower strata that match by index, rather than merging properties with them.
 
 * Add `MetadataUrlTraits` to `CatalogMemberTraits.metadataUrls`. It contains an array of metadata URLS (with optional `title` which will render a button)
@@ -53,7 +56,6 @@ Change Log
 * Move `Description` `metadataUrls` above `infoSections`.
 * Upgraded i18next and i18next-http-backend to fix incompatibility.
 * Added support for dd/mm/yyyy, dd-mm-yyyy and mm-dd-yyyy date formats.
-* [The next improvement]
 
 #### 8.0.0-alpha.65
 * Fixed SDMX-group nested categories
