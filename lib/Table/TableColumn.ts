@@ -246,7 +246,6 @@ export default class TableColumn {
           return null;
         }
         return new Date(centuryFix(y), m - 1, d);
-        return new Date(`${centuryFix(y)}/${m}/${d}`);
       } else {
         parsingFailed = true;
         return null;
