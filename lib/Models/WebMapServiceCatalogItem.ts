@@ -149,13 +149,13 @@ class GetCapabilitiesStratum extends LoadableStratum(
     // Some data providers may restrict the number of layers per request.
     // If the number of available layers exceeds the limit, only the first
     // few layers within the limit are selected.
-    const layerLimit = this.capabilities.Service.LayerLimit;
-    if (layerLimit && layerLimit >= 1) {
-      layers = layers
-        .split(",")
-        .slice(0, layerLimit)
-        .join(",");
-    }
+    // const layerLimit = this.capabilities.Service.LayerLimit;
+    // if (layerLimit && layerLimit >= 1) {
+    //   layers = layers
+    //     .split(",")
+    //     .slice(0, layerLimit)
+    //     .join(",");
+    // }
 
     return layers;
   }
@@ -961,63 +961,72 @@ class WebMapServiceCatalogItem
       return this._diffImageryParts ? [this._diffImageryParts] : [];
     }
 
-    const result = [];
+    const results: ImageryParts[] = [];
 
     const current = this._currentImageryParts;
     if (current) {
-      result.push(current);
+      current.forEach(c => results.push(c));
     }
 
     const next = this._nextImageryParts;
     if (next) {
-      result.push(next);
+      next.forEach(n => results.push(n));
     }
+
+    const result: any[] = [];
+    results.forEach(r => result.push(r));
+    return result;
+  }
+
+  @computed
+  private get _currentImageryParts(): ImageryParts[] | undefined {
+    const imageryProviders = this._createImageryProvider(
+      this.currentDiscreteTimeTag
+    );
+    if (imageryProviders === undefined) {
+      return undefined;
+    }
+
+    const result = imageryProviders.map(imageryProvider => {
+      imageryProvider.enablePickFeatures = true;
+
+      return {
+        imageryProvider: imageryProvider,
+        alpha: this.opacity,
+        show: this.show !== undefined ? this.show : true
+      };
+    });
 
     return result;
   }
 
   @computed
-  private get _currentImageryParts(): ImageryParts | undefined {
-    const imageryProvider = this._createImageryProvider(
-      this.currentDiscreteTimeTag
-    );
-    if (imageryProvider === undefined) {
-      return undefined;
-    }
-
-    imageryProvider.enablePickFeatures = true;
-
-    return {
-      imageryProvider,
-      alpha: this.opacity,
-      show: this.show !== undefined ? this.show : true
-    };
-  }
-
-  @computed
-  private get _nextImageryParts(): ImageryParts | undefined {
+  private get _nextImageryParts(): ImageryParts[] | undefined {
     if (this.nextDiscreteTimeTag) {
-      const imageryProvider = this._createImageryProvider(
+      const imageryProviders = this._createImageryProvider(
         this.nextDiscreteTimeTag
       );
-      if (imageryProvider === undefined) {
+      if (imageryProviders === undefined) {
         return undefined;
       }
 
-      imageryProvider.enablePickFeatures = false;
+      const result = imageryProviders.map(imageryProvider => {
+        imageryProvider.enablePickFeatures = false;
+        return {
+          imageryProvider,
+          alpha: 0.0,
+          show: true
+        };
+      });
 
-      return {
-        imageryProvider,
-        alpha: 0.0,
-        show: true
-      };
+      return result;
     } else {
       return undefined;
     }
   }
 
   @computed
-  private get _diffImageryParts(): ImageryParts | undefined {
+  private get _diffImageryParts(): ImageryParts[] | undefined {
     const diffStyleId = this.diffStyleId;
     if (
       this.firstDiffDate === undefined ||
@@ -1027,13 +1036,18 @@ class WebMapServiceCatalogItem
       return;
     }
     const time = `${this.firstDiffDate},${this.secondDiffDate}`;
-    const imageryProvider = this._createImageryProvider(time);
-    if (imageryProvider) {
-      return {
-        imageryProvider,
-        alpha: this.opacity,
-        show: this.show !== undefined ? this.show : true
-      };
+    const imageryProviders = this._createImageryProvider(time);
+
+    if (imageryProviders) {
+      const result = imageryProviders.map(imageryProvider => {
+        return {
+          imageryProvider,
+          alpha: this.opacity,
+          show: this.show !== undefined ? this.show : true
+        };
+      });
+
+      return result;
     }
     return undefined;
   }
@@ -1051,7 +1065,7 @@ class WebMapServiceCatalogItem
   }
 
   private _createImageryProvider = createTransformerAllowUndefined(
-    (time: string | undefined): WebMapServiceImageryProvider | undefined => {
+    (time: string | undefined): WebMapServiceImageryProvider[] | undefined => {
       // Don't show anything on the map until GetCapabilities finishes loading.
       if (this.isLoadingMetadata) {
         return undefined;
@@ -1109,7 +1123,7 @@ class WebMapServiceCatalogItem
         new URI(this.url)
       );
 
-      let rectangle;
+      let rectangle: Rectangle | undefined;
 
       if (
         this.clipToRectangle &&
@@ -1141,67 +1155,75 @@ class WebMapServiceCatalogItem
         });
       }
 
-      const imageryOptions = {
-        url: proxyCatalogItemUrl(this, baseUrl.toString()),
-        layers: lyrs.length > 0 ? lyrs.join(",") : "",
-        parameters: parameters,
-        getFeatureInfoParameters: {
-          ...dimensionParameters,
-          styles: this.styles === undefined ? "" : this.styles
-        },
-        tilingScheme: /*defined(this.tilingScheme) ? this.tilingScheme :*/ new WebMercatorTilingScheme(),
-        maximumLevel: maximumLevel,
-        rectangle: rectangle,
-        credit: this.attribution
-      };
+      const layers = lyrs.length > 0 ? lyrs : [""];
 
-      if (
-        imageryOptions.maximumLevel !== undefined &&
-        this.hideLayerAfterMinScaleDenominator
-      ) {
-        // Make Cesium request one extra level so we can tell the user what's happening and return a blank image.
-        ++imageryOptions.maximumLevel;
-      }
-
-      const imageryProvider = new WebMapServiceImageryProvider(imageryOptions);
-      if (
-        maximumLevel !== undefined &&
-        this.hideLayerAfterMinScaleDenominator
-      ) {
-        const realRequestImage = imageryProvider.requestImage;
-        let messageDisplayed = false;
-
-        imageryProvider.requestImage = (
-          x: number,
-          y: number,
-          level: number
-        ) => {
-          if (level > maximumLevel) {
-            if (!messageDisplayed) {
-              this.terria.error.raiseEvent(
-                new TerriaError({
-                  title: i18next.t(
-                    "models.webMapServiceCatalogItem.datasetScaleErrorTitle"
-                  ),
-                  message: i18next.t(
-                    "models.webMapServiceCatalogItem.datasetScaleErrorMessage",
-                    { name: this.name }
-                  )
-                })
-              );
-              messageDisplayed = true;
-            }
-            // cast to any because @types/cesium currently has the wrong signature for this function.
-            return (<any>ImageryProvider).loadImage(
-              imageryProvider,
-              this.terria.baseUrl + "images/blank.png"
-            );
-          }
-          return realRequestImage.call(imageryProvider, x, y, level);
+      const imageryProviders = layers.map(layer => {
+        const imageryOptions = {
+          url: proxyCatalogItemUrl(this, baseUrl.toString()),
+          layers: layer,
+          parameters: parameters,
+          getFeatureInfoParameters: {
+            ...dimensionParameters,
+            styles: this.styles === undefined ? "" : this.styles
+          },
+          tilingScheme: /*defined(this.tilingScheme) ? this.tilingScheme :*/ new WebMercatorTilingScheme(),
+          maximumLevel: maximumLevel,
+          rectangle: rectangle,
+          credit: this.attribution
         };
-      }
 
-      return imageryProvider;
+        if (
+          imageryOptions.maximumLevel !== undefined &&
+          this.hideLayerAfterMinScaleDenominator
+        ) {
+          // Make Cesium request one extra level so we can tell the user what's happening and return a blank image.
+          ++imageryOptions.maximumLevel;
+        }
+
+        const imageryProvider = new WebMapServiceImageryProvider(
+          imageryOptions
+        );
+        if (
+          maximumLevel !== undefined &&
+          this.hideLayerAfterMinScaleDenominator
+        ) {
+          const realRequestImage = imageryProvider.requestImage;
+          let messageDisplayed = false;
+
+          imageryProvider.requestImage = (
+            x: number,
+            y: number,
+            level: number
+          ) => {
+            if (level > maximumLevel) {
+              if (!messageDisplayed) {
+                this.terria.error.raiseEvent(
+                  new TerriaError({
+                    title: i18next.t(
+                      "models.webMapServiceCatalogItem.datasetScaleErrorTitle"
+                    ),
+                    message: i18next.t(
+                      "models.webMapServiceCatalogItem.datasetScaleErrorMessage",
+                      { name: this.name }
+                    )
+                  })
+                );
+                messageDisplayed = true;
+              }
+              // cast to any because @types/cesium currently has the wrong signature for this function.
+              return (<any>ImageryProvider).loadImage(
+                imageryProvider,
+                this.terria.baseUrl + "images/blank.png"
+              );
+            }
+            return realRequestImage.call(imageryProvider, x, y, level);
+          };
+        }
+
+        return imageryProvider;
+      });
+
+      return imageryProviders;
     }
   );
 

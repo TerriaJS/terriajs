@@ -82,7 +82,7 @@ export interface CapabilitiesService {
   readonly AccessConstraints?: string;
   /** List of keywords or keyword phrases to help catalog searching. */
   readonly KeywordList?: OwsKeywordList;
-  /** Number of layers can be request each time */
+  /** Max number of layers allowed per request. */
   readonly LayerLimit?: number;
 }
 
