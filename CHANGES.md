@@ -50,6 +50,7 @@ Change Log
 * Fix `DiffTool` date-picker label `dateComparisonB`
 * Fix app crash when switching different tools.
 * Create `merge` `TraitsOption` for `objectArrayTrait`
+* Move `Description` `metadataUrls` above `infoSections`.
 * Upgraded i18next and i18next-http-backend to fix incompatibility.
 * Added support for dd/mm/yyyy, dd-mm-yyyy and mm-dd-yyyy date formats.
 * [The next improvement]
