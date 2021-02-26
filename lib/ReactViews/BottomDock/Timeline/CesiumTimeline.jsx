@@ -61,6 +61,10 @@ const CesiumTimeline = createReactClass({
       false
     );
 
+    this.resizeListener = () =>
+      this.cesiumTimeline && this.cesiumTimeline.resize();
+    window.addEventListener("resize", this.resizeListener, false);
+
     this.topLayerSubscription = knockout
       .getObservable(this.props.terria.timeSeriesStack, "topLayer")
       .subscribe(() => this.zoom());
@@ -76,6 +80,7 @@ const CesiumTimeline = createReactClass({
 
   componentWillUnmount() {
     this.topLayerSubscription.dispose();
+    window.removeEventListener("resize", this.resizeListener);
   },
 
   shouldComponentUpdate() {

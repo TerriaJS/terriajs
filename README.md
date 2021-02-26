@@ -67,6 +67,7 @@ Sites we're aware of that are using TerriaJS. These are not endorsements or test
 * [USGS The National Map Advanced Viewer](https://viewer.nationalmap.gov/advanced/terriajs-usgs/)
 * [Portale del suolo](http://www.sardegnaportalesuolo.it/webgis/)
 * [Find & Connect Map of Children's Homes](https://map.findandconnect.gov.au/)
+* [EWMI-ODI Open Development Mekong](https://data.opendevelopmentmekong.net/en/map-explorer)
 
 ### Technical
 
@@ -98,12 +99,15 @@ See [Getting Started](http://terria.io/Documentation/guide/getting-started/) in 
 
 ### Big Thanks
 
-Cross-browser Testing Platform and Open Source <3 Provided by [Sauce Labs](https://saucelabs.com)
+Hosting and contribution framework for community translations of TerriaJS provided by [Weblate](https://weblate.org/en/) under the Libre plan for open source software. See our translation progress for different languages:
+
+<a href="https://hosted.weblate.org/engage/terriajs/">
+<img src="https://hosted.weblate.org/widgets/terriajs/-/terriajs/multi-auto.svg" alt="Translation status" />
+</a>
 
 ### Join the community
 
 Get in touch!
 
-* Chat in our [Gitter chat room](https://gitter.im/TerriaJS/terriajs)
-* Join the [TerriaJS Google Group](https://groups.google.com/forum/#!forum/terriajs)
-* Raise issues in the [Github issue tracker](https://github.com/TerriaJS/terriajs/issues/new)
+* Open a discussion to chat with us or ask a question in our [GitHub Discussions forum](https://github.com/TerriaJS/terriajs/discussions)
+* Raise issues in the [GitHub issue tracker](https://github.com/TerriaJS/terriajs/issues/new)
