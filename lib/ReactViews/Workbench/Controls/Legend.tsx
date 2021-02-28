@@ -29,11 +29,10 @@ const DISPLAYABLE_MIME_TYPES = [
 const IMAGE_URL_REGEX = /[.\/](png|jpg|jpeg|gif|svg)/i;
 
 function checkMimeType(legend: Model<LegendTraits>) {
-  if (legend.urlMimeType) {
-    return !!DISPLAYABLE_MIME_TYPES[legend.urlMimeType];
-  }
-
-  return !!legend.url?.match(IMAGE_URL_REGEX);
+  return (
+    (legend.urlMimeType && !!DISPLAYABLE_MIME_TYPES[legend.urlMimeType]) ||
+    !!legend.url?.match(IMAGE_URL_REGEX)
+  );
 }
 
 @observer

@@ -3,9 +3,13 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.66)
+#### next release (8.0.0-alpha.67)
+* TSify `Loader` function.
+* [The next improvement]
 
-- **Potentially Breaking changes**: 
+#### 8.0.0-alpha.66
+
+- **Breaking changes**: 
   - Changed merging behaviour of Trait legends (of type `LegendTraits`) in `CatalogMemberTraits`. This affects legends on all `CatalogMember` models. Legend objects in higher strata now replace values in lower strata that match by index, rather than merging properties with them.
 
 * Add `MetadataUrlTraits` to `CatalogMemberTraits.metadataUrls`. It contains an array of metadata URLS (with optional `title` which will render a button)
@@ -45,12 +49,14 @@ Change Log
 * Fix hard-coded colour value in Story
 * Use `configParameters.cesiumIonAccessToken` in `IonImageryCatalogItem`
 * Added support for skipping comments in CSV files
-* TSify `Loader` function.
+* Fix WMS GetLegendGraphics request `style` parameter
+* Loosen Legend `mimeType` check - so now it will treat the Legend URL as an image if the `mimeType` matches **OR** the file extension matches (previously, if `mimeType` was defined, then it wouldn't look at filetype extension)
 * Fix `DiffTool` date-picker label `dateComparisonB`
 * Fix app crash when switching different tools.
 * Create `merge` `TraitsOption` for `objectArrayTrait`
-* Lock the version of i18next to 19.8.9 till new version of i18next-http-backend is available.
-* [The next improvement]
+* Move `Description` `metadataUrls` above `infoSections`.
+* Upgraded i18next and i18next-http-backend to fix incompatibility.
+* Added support for dd/mm/yyyy, dd-mm-yyyy and mm-dd-yyyy date formats.
 
 #### 8.0.0-alpha.65
 * Fixed SDMX-group nested categories
