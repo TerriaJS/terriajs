@@ -256,6 +256,9 @@ export default class MovementsController {
     }
   }
 
+  /**
+   * Animate pedestrian height to match the change in surface height
+   */
   animateSurfaceHeightChange() {
     // round to 3 decimal places so that we converge to a stable height sooner
     const heightFromSurface =
@@ -272,7 +275,7 @@ export default class MovementsController {
     }
 
     const gapHeight = PEDESTRIAN_HEIGHT - heightFromSurface;
-    // If climbRate is atleast as equal to moveAmount
+    // If climbRate is atleast equal to moveAmount
     // we can ensure that going up an inclined slope of 45deg will
     // not result in the camera going underground.
     // When getting close to a building edge, we want the user
