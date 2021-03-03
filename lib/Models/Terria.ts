@@ -171,6 +171,9 @@ interface ConfigParameters {
    */
   disableMyLocation?: boolean;
   disableSplitter?: boolean;
+
+  disablePedestrianMode?: boolean;
+
   experimentalFeatures?: boolean;
   magdaReferenceHeaders?: MagdaReferenceHeaders;
   locationSearchBoundingBox?: number[];
@@ -325,6 +328,7 @@ export default class Terria {
     displayOneBrand: 0, // index of which brandBarElements to show for mobile header
     disableMyLocation: undefined,
     disableSplitter: undefined,
+    disablePedestrianMode: false,
     experimentalFeatures: undefined,
     magdaReferenceHeaders: undefined,
     locationSearchBoundingBox: undefined,
