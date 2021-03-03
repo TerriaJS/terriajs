@@ -1,4 +1,3 @@
-import { convertCatalog, convertShare } from "catalog-converter";
 import i18next from "i18next";
 import { action, computed, observable, runInAction, toJS, when } from "mobx";
 import { createTransformer } from "mobx-utils";
@@ -564,6 +563,7 @@ export default class Terria {
           .filter((v7initUrl: any) => isJsonString(v7initUrl))
           .map(async (v7initUrl: string) => {
             const catalog = await loadJson5(v7initUrl);
+            const { convertCatalog } = await import("catalog-converter");
             const convert = convertCatalog(catalog, { generateIds: false });
             console.log(
               `WARNING: ${v7initUrl} is a v7 catalog - it has been upgraded to v8\nMessages:\n`
@@ -1358,19 +1358,22 @@ function interpretHash(
 
       if (isDefined(shareProps) && shareProps !== {}) {
         // Convert shareProps to v8 if neccessary
-        const result = convertShare(shareProps);
+        return import("catalog-converter").then(
+          action(({ convertShare }) => {
+            const result = convertShare(shareProps);
+            // Show warning messages if converted
+            if (result.converted) {
+              terria.notification.raiseEvent({
+                title: i18next.t("share.convertNotificationTitle"),
+                message: shareConvertNotification(result.messages)
+              } as Notification);
+            }
 
-        // Show warning messages if converted
-        if (result.converted) {
-          terria.notification.raiseEvent({
-            title: i18next.t("share.convertNotificationTitle"),
-            message: shareConvertNotification(result.messages)
-          } as Notification);
-        }
-
-        if (result.result !== null) {
-          interpretStartData(terria, result.result);
-        }
+            if (result.result !== null) {
+              interpretStartData(terria, result.result);
+            }
+          })
+        );
       }
     });
   });

@@ -148,30 +148,43 @@ describe("Terria", function() {
             done.fail(error);
           });
       });
-      it("works with v7initializationUrls", function(done) {
+      it("works with v7initializationUrls", async function() {
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
           // terria's "Magda derived url"
           responseText: mapConfigBasicString
         });
+        const groupName = "Simple converter test";
+        jasmine.Ajax.stubRequest(
+          "https://example.foo.bar/initv7.json"
+        ).andReturn({
+          // terria's "Magda derived url"
+          responseText: JSON.stringify({
+            catalog: [{ name: groupName, type: "group", items: [] }]
+          })
+        });
         // no init sources before starting
-        expect(terria.initSources.length).toEqual(0);
+        expect(terria.initSources.length).toBe(0);
 
-        terria
-          .start({
-            configUrl: "test/Magda/map-config-v7.json",
-            i18nOptions
-          })
-          .then(function() {
-            console.log(terria);
-            console.log(mapConfigV7Json);
-            expect(terria.initSources.length).toEqual(1);
-            expect(isInitDataPromise(terria.initSources[0])).toEqual(true);
+        await terria.start({
+          configUrl: "test/Magda/map-config-v7.json",
+          i18nOptions
+        });
 
-            done();
-          })
-          .catch(error => {
-            done.fail(error);
-          });
+        expect(terria.initSources.length).toBe(1);
+        expect(isInitDataPromise(terria.initSources[0])).toBeTruthy(
+          "Expected initSources[0] to be an InitDataPromise"
+        );
+        if (isInitDataPromise(terria.initSources[0])) {
+          const data = await terria.initSources[0];
+          expect(data.data.catalog).toEqual([
+            {
+              name: groupName,
+              type: "group",
+              members: [],
+              shareKeys: [`Root Group/${groupName}`]
+            }
+          ]);
+        }
       });
       it("works with inline init", async function() {
         // inline init
