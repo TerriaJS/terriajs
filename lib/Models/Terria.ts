@@ -564,7 +564,7 @@ export default class Terria {
           .filter((v7initUrl: any) => isJsonString(v7initUrl))
           .map(async (v7initUrl: string) => {
             const catalog = await loadJson5(v7initUrl);
-            const convert = convertCatalog(catalog);
+            const convert = convertCatalog(catalog, { generateIds: false });
             console.log(
               `WARNING: ${v7initUrl} is a v7 catalog - it has been upgraded to v8\nMessages:\n`
             );
