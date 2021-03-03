@@ -1357,32 +1357,28 @@ function interpretHash(
       });
 
       if (isDefined(shareProps) && shareProps !== {}) {
-        // Convert shareProps to v8 if neccessary
-        const result = convertShare(shareProps);
-
-        // Show warning messages if converted
-        if (result.converted) {
-          terria.notification.raiseEvent({
-            title: i18next.t("share.convertNotificationTitle"),
-            message: shareConvertNotification(result.messages)
-          } as Notification);
-        }
-
-        if (result.result !== null) {
-          interpretStartData(terria, result.result);
-        }
+        interpretStartData(terria, shareProps);
       }
     });
   });
 }
 
-function interpretStartData(terria: Terria, startData: any) {
-  // TODO: version check, filtering, etc.
+function interpretStartData(terria: Terria, startData: unknown) {
+  // Convert startData to v8 if neccessary
+  const result = convertShare(startData);
 
-  if (startData.initSources) {
+  // Show warning messages if converted
+  if (result.converted) {
+    terria.notification.raiseEvent({
+      title: i18next.t("share.convertNotificationTitle"),
+      message: shareConvertNotification(result.messages)
+    } as Notification);
+  }
+
+  if (result.result?.initSources) {
     runInAction(() => {
       terria.initSources.push(
-        ...startData.initSources.map((initSource: any) => {
+        ...result.result!.initSources.map((initSource: any) => {
           return {
             data: initSource
           };
@@ -1390,6 +1386,8 @@ function interpretStartData(terria: Terria, startData: any) {
       );
     });
   }
+
+  // TODO: version check, filtering, etc.
 
   // if (defined(startData.version) && startData.version !== latestStartVersion) {
   //   adjustForBackwardCompatibility(startData);
