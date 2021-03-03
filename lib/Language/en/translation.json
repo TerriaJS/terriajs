@@ -966,6 +966,8 @@
       "exceptionMessage": "The CSW server reported an error:\n\n {{exceptionText}}",
       "notUseableTitle": "Catalogue service is not useable",
       "notUseableMessage": "Invalid response obtained when invoking GetDomain on the CSW server. <p>This error may indicate that the catalogue server you specified is temporarily unavailable or there is a problem with your internet connection.  Try opening the processing server again, and if the problem persists, please report it by sending an email to ",
+      "errorLoadingRecordsTitle": "Failed to load CSW records.",
+      "errorLoadingRecordsMessage": "Invalid response obtained when invoking GetRecords on the CSW server. <p>This error may indicate that the catalogue server you specified is temporarily unavailable or there is a problem with your internet connection.  Try opening the processing server again, and if the problem persists, please report it by sending an email to ",
       "checkCORSDomain": "Couldn't execute GetDomain on this CSW server.<br/><br/> If you entered the URL manually, please double-check it.<br/><br/> If it's your server, make sure <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a> is enabled.<br/><br/> Otherwise, if reloading doesn't fix it, please report the problem by sending an email to {{email}} with the technical details below.  Thank you!",
       "checkCORSRecords": "Couldn't execute GetRecords on this CSW server.<br/><br/> If it's your server, make sure <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a> is enabled.<br/><br/> Otherwise, if reloading doesn't fix it, please report the problem by sending an email to {{email}} with the technical details below.  Thank you!",
       "dataResponsibility": "Data Responsibility",
