@@ -1,7 +1,11 @@
-import { computed } from "mobx";
-import Terria from "../../lib/Models/Terria";
-import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
+import { computed, configure } from "mobx";
+import { CustomDataSource } from "terriajs-cesium";
+import TimeVarying from "../../lib/ModelMixins/TimeVarying";
 import Cesium from "../../lib/Models/Cesium";
+import Terria from "../../lib/Models/Terria";
+import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
+import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
 
 const supportsWebGL = require("../../lib/Core/supportsWebGL");
 
@@ -15,6 +19,7 @@ describeIfSupported("Cesium Model", function() {
   let terriaProgressEvt: jasmine.Spy;
 
   beforeEach(function() {
+    configure({ computedConfigurable: true }); // so that we can spy on computed items
     terria = new Terria({
       baseUrl: "./"
     });
@@ -62,5 +67,21 @@ describeIfSupported("Cesium Model", function() {
     cesium.scene.globe.tileLoadProgressEvent.raiseEvent(2);
 
     expect(terriaProgressEvt.calls.mostRecent().args).toEqual([2, 2]);
+  });
+
+  describe("zoomTo", function() {
+    describe("if the target is a TimeVarying item", function() {
+      it("sets the target item as the timeline source", function() {
+        const targetItem = new WebMapServiceCatalogItem("test", terria);
+        spyOnProperty(targetItem, "mapItems", "get").and.returnValue([
+          new CustomDataSource("test")
+        ]);
+        spyOn(terria.timelineStack, "promoteToTop");
+        cesium.zoomTo(targetItem, 0);
+        expect(terria.timelineStack.promoteToTop).toHaveBeenCalledWith(
+          targetItem
+        );
+      });
+    });
   });
 });

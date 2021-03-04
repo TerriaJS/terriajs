@@ -48,6 +48,7 @@ import i18next from "i18next";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import RasterLayerTraits from "../Traits/RasterLayerTraits";
 import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
+import TimeVarying from "../ModelMixins/TimeVarying";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
@@ -463,10 +464,12 @@ export default class Leaflet extends GlobeOrMap {
               isDefined(north)
             ) {
               extent = Rectangle.fromDegrees(west, south, east, north);
+              if (TimeVarying.is(target)) that.setAsTimelineClockSource(target);
             }
           }
           if (!isDefined(extent)) {
-            // Zoom to the first item!
+            // Zoom to the first item after setting the timeline to use the target.
+            if (TimeVarying.is(target)) that.setAsTimelineClockSource(target);
             return that.zoomTo(target.mapItems[0], flightDurationSeconds);
           }
         } else {

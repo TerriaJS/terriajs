@@ -26,6 +26,7 @@ import Mappable from "./Mappable";
 import Terria from "./Terria";
 import { observable, runInAction } from "mobx";
 import MouseCoords from "../ReactViewModels/MouseCoords";
+import TimeVarying from "../ModelMixins/TimeVarying";
 
 require("./ImageryLayerFeatureInfo"); // overrides Cesium's prototype.configureDescriptionFromProperties
 
@@ -366,5 +367,13 @@ export default abstract class GlobeOrMap {
     throw new DeveloperError(
       "captureScreenshot must be implemented in the derived class."
     );
+  }
+
+  /**
+   * If item is a time varying, then set the timeline clock to match the items
+   * time line.
+   */
+  protected setAsTimelineClockSource(item: TimeVarying) {
+    this.terria.timelineStack.promoteToTop(item);
   }
 }

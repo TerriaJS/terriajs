@@ -268,7 +268,8 @@ function DiscretelyTimeVaryingMixin<
       if (
         !isDefined(this.startTimeAsJulianDate) ||
         !isDefined(this.stopTimeAsJulianDate) ||
-        !isDefined(this.multiplierDefaultDeltaStep)
+        !isDefined(this.multiplierDefaultDeltaStep) ||
+        !isDefined(this.discreteTimesAsSortedJulianDates)
       )
         return;
 
@@ -281,7 +282,7 @@ function DiscretelyTimeVaryingMixin<
         this.stopTimeAsJulianDate.secondsOfDay -
         this.startTimeAsJulianDate.secondsOfDay;
       const meanDSeconds =
-        dSeconds / this.discreteTimesAsSortedJulianDates!.length;
+        dSeconds / this.discreteTimesAsSortedJulianDates.length;
 
       return meanDSeconds / this.multiplierDefaultDeltaStep;
     }

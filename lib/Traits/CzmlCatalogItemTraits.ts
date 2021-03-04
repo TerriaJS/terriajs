@@ -1,6 +1,7 @@
 import { JsonObject } from "../Core/Json";
 import anyTrait from "./anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
+import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import MappableTraits from "./MappableTraits";
 import mixTraits from "./mixTraits";
@@ -8,6 +9,7 @@ import primitiveTrait from "./primitiveTrait";
 import UrlTraits from "./UrlTraits";
 
 export default class CzmlCatalogItemTraits extends mixTraits(
+  DiscretelyTimeVaryingTraits,
   FeatureInfoTraits,
   UrlTraits,
   CatalogMemberTraits,

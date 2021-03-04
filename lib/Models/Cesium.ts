@@ -51,6 +51,7 @@ import CesiumSelectionIndicator from "../Map/CesiumSelectionIndicator";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import PickedFeatures, { ProviderCoordsMap } from "../Map/PickedFeatures";
 import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
+import TimeVarying from "../ModelMixins/TimeVarying";
 import SplitterTraits from "../Traits/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
@@ -718,6 +719,7 @@ export default class Cesium extends GlobeOrMap {
               isDefined(east) &&
               isDefined(north)
             ) {
+              if (TimeVarying.is(target)) that.setAsTimelineClockSource(target);
               return that.scene.camera.flyTo({
                 duration: flightDurationSeconds,
                 destination: Rectangle.fromDegrees(west, south, east, north)
@@ -726,7 +728,8 @@ export default class Cesium extends GlobeOrMap {
           }
 
           if (target.mapItems.length > 0) {
-            // Zoom to the first item!
+            // Zoom to the first item after setting the timeline to use the target.
+            if (TimeVarying.is(target)) that.setAsTimelineClockSource(target);
             return that.zoomTo(target.mapItems[0], flightDurationSeconds);
           }
         } else if (defined(target.rectangle)) {

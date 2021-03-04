@@ -1,5 +1,7 @@
 import i18next from "i18next";
-import { computed, toJS } from "mobx";
+import { action, computed, observable, toJS } from "mobx";
+import Clock from "terriajs-cesium/Source/Core/Clock";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CzmlDataSource from "terriajs-cesium/Source/DataSources/CzmlDataSource";
 import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
@@ -7,14 +9,67 @@ import readJson from "../Core/readJson";
 import TerriaError from "../Core/TerriaError";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import DiscretelyTimeVaryingMixin from "../ModelMixins/DiscretelyTimeVaryingMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import CzmlCatalogItemTraits from "../Traits/CzmlCatalogItemTraits";
 import CreateModel from "./CreateModel";
+import LoadableStratum from "./LoadableStratum";
 import Mappable from "./Mappable";
+import { BaseModel } from "./Model";
+import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
+import StratumOrder from "./StratumOrder";
+
+/**
+ * A loadable stratum for CzmlCatalogItemTraits that derives TimeVaryingTraits
+ * from the CzmlDataSource
+ */
+class CzmlTimeVaryingStratum extends LoadableStratum(CzmlCatalogItemTraits) {
+  static stratumName = "czmlLoadableStratum";
+
+  constructor(readonly catalogItem: CzmlCatalogItem) {
+    super();
+  }
+
+  duplicateLoadableStratum(model: BaseModel): this {
+    return new CzmlTimeVaryingStratum(model as CzmlCatalogItem) as this;
+  }
+
+  @computed
+  private get clock(): Clock | undefined {
+    return (this.catalogItem as any)._dataSource?.clock;
+  }
+
+  @computed
+  get currentTime(): string | undefined {
+    const currentTime = this.clock?.currentTime;
+    return currentTime ? JulianDate.toIso8601(currentTime) : undefined;
+  }
+
+  @computed
+  get startTime(): string | undefined {
+    const startTime = this.clock?.startTime;
+    return startTime ? JulianDate.toIso8601(startTime) : undefined;
+  }
+
+  @computed
+  get stopTime() {
+    const stopTime = this.clock?.stopTime;
+    return stopTime ? JulianDate.toIso8601(stopTime) : undefined;
+  }
+
+  @computed
+  get multiplier(): number | undefined {
+    return this.clock?.multiplier;
+  }
+}
+
+StratumOrder.addLoadStratum(CzmlTimeVaryingStratum.stratumName);
 
 export default class CzmlCatalogItem
   extends AsyncMappableMixin(
-    UrlMixin(CatalogMemberMixin(CreateModel(CzmlCatalogItemTraits)))
+    DiscretelyTimeVaryingMixin(
+      UrlMixin(CatalogMemberMixin(CreateModel(CzmlCatalogItemTraits)))
+    )
   )
   implements Mappable {
   static readonly type = "czml";
@@ -24,7 +79,7 @@ export default class CzmlCatalogItem
 
   readonly canZoomTo = true;
 
-  private _dataSource: CzmlDataSource | undefined;
+  @observable private _dataSource: CzmlDataSource | undefined;
   private _czmlFile?: File;
 
   setFileInput(file: File) {
@@ -45,7 +100,7 @@ export default class CzmlCatalogItem
       } else if (isDefined(this._czmlFile)) {
         resolve(readJson(this._czmlFile));
       } else if (isDefined(this.url)) {
-        resolve(this.url);
+        resolve(proxyCatalogItemUrl(this, this.url));
       } else {
         throw new TerriaError({
           sender: this,
@@ -54,12 +109,22 @@ export default class CzmlCatalogItem
         });
       }
     })
-      .then(czmlLoadInput => {
-        return CzmlDataSource.load(czmlLoadInput, { credit: this.attribution });
-      })
-      .then(czml => {
-        this._dataSource = czml;
-      })
+      .then(
+        action(czmlLoadInput => {
+          return CzmlDataSource.load(czmlLoadInput, {
+            credit: this.attribution
+          });
+        })
+      )
+      .then(
+        action(czml => {
+          this._dataSource = czml;
+          this.strata.set(
+            CzmlTimeVaryingStratum.stratumName,
+            new CzmlTimeVaryingStratum(this)
+          );
+        })
+      )
       .catch(e => {
         if (e instanceof TerriaError) {
           throw e;
@@ -93,5 +158,12 @@ export default class CzmlCatalogItem
     }
     this._dataSource.show = this.show;
     return [this._dataSource];
+  }
+
+  /**
+   * Required by DiscretelyTimeVaryingMixin
+   */
+  get discreteTimes() {
+    return undefined;
   }
 }
