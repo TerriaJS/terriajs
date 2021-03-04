@@ -10,8 +10,8 @@ Change Log
 * TSify `Loader` function.
 * Added walking mode to pedestrian mode which clamps the pedestrain to a fixed height above the surface.
 * Fixes CZML catalog item so that it appears on the timeline.
-* [The next improvement]
 * Upgraded catalog-converter to fix dependency version problem and ensure that all imports are async to reduce main bundle size.
+* [The next improvement]
 
 #### 8.0.0-alpha.66
 
