@@ -26,6 +26,7 @@ import JsonValue, {
   isJsonNumber,
   isJsonObject,
   isJsonString,
+  JsonArray,
   JsonObject
 } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
@@ -559,11 +560,13 @@ export default class Terria {
     // look for v7 catalogs -> push v7-v8 conversion to initSources
     if (Array.isArray(config?.v7initializationUrls)) {
       this.initSources.push(
-        ...config.v7initializationUrls
-          .filter((v7initUrl: any) => isJsonString(v7initUrl))
+        ...(config.v7initializationUrls as JsonArray)
+          .filter(isJsonString)
           .map(async (v7initUrl: string) => {
-            const catalog = await loadJson5(v7initUrl);
-            const { convertCatalog } = await import("catalog-converter");
+            const [{ convertCatalog }, catalog] = await Promise.all([
+              import("catalog-converter"),
+              loadJson5(v7initUrl)
+            ]);
             const convert = convertCatalog(catalog, { generateIds: false });
             console.log(
               `WARNING: ${v7initUrl} is a v7 catalog - it has been upgraded to v8\nMessages:\n`
@@ -571,7 +574,7 @@ export default class Terria {
             convert.messages.forEach(message =>
               console.log(`- ${message.path.join(".")}: ${message.message}`)
             );
-            return { data: convert.result as JsonObject };
+            return { data: (convert.result as JsonObject | null) || {} };
           })
       );
     }
