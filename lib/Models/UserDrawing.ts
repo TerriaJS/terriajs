@@ -129,7 +129,10 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
   async loadMapItems() {}
 
   @computed get mapItems() {
-    return [this.pointEntities, this.otherEntities];
+    // Don't show points if drawing rectangle
+    return this.drawRectangle
+      ? [this.otherEntities]
+      : [this.pointEntities, this.otherEntities];
   }
 
   @computed get svgPoint() {

@@ -9,13 +9,11 @@ import PickedFeatures from "../../../Map/PickedFeatures";
 import { addMarker, removeMarker } from "../../../Models/LocationMarkerUtils";
 import MapInteractionMode, { UIMode } from "../../../Models/MapInteractionMode";
 import Terria from "../../../Models/Terria";
-import { GLYPHS, StyledIcon } from "../../Icon";
+import Loader from "../../Loader";
 
 const Box: any = require("../../../Styled/Box").default;
 const Text: any = require("../../../Styled/Text").default;
 const Spacing: any = require("../../../Styled/Spacing").default;
-
-const Loader = require("../../Loader");
 
 interface PropsType {
   terria: Terria;

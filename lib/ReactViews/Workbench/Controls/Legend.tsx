@@ -11,9 +11,8 @@ import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import Model from "../../../Models/Model";
 import proxyCatalogItemUrl from "../../../Models/proxyCatalogItemUrl";
 import LegendTraits, { LegendItemTraits } from "../../../Traits/LegendTraits";
+import Loader from "../../Loader";
 import Styles from "./legend.scss";
-
-const Loader = require("../../Loader");
 
 /* A lookup map for displayable mime types */
 const DISPLAYABLE_MIME_TYPES = [

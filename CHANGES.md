@@ -3,8 +3,14 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.67)
+#### next release (8.0.0-alpha.68)
+* Remove points from rectangle `UserDrawing`
 * [The next improvement]
+
+#### 8.0.0-alpha.67
+* TSify `Loader` function.
+* Added walking mode to pedestrian mode which clamps the pedestrain to a fixed height above the surface.
+* Upgraded catalog-converter to fix dependency version problem and ensure that all imports are async to reduce main bundle size.
 
 #### 8.0.0-alpha.66
 
