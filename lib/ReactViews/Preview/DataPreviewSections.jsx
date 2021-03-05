@@ -58,6 +58,18 @@ const DataPreviewSections = observer(
         ? metadataItem.infoWithoutSources
         : metadataItem.info.slice();
 
+      const renderSection = content => {
+        try {
+          (content = Mustache.render(content, metadataItem)),
+            {
+              catalogItem: metadataItem
+            };
+        } catch (error) {
+          console.log(error);
+        }
+        return parseCustomMarkdownToReact(content);
+      };
+
       return (
         <div>
           <For each="item" index="i" of={this.sortInfoSections(items)}>
@@ -65,12 +77,7 @@ const DataPreviewSections = observer(
               <When condition={item.content?.length > 0}>
                 <div key={i}>
                   <h4 className={Styles.h4}>{item.name}</h4>
-                  {parseCustomMarkdownToReact(
-                    Mustache.render(item.content, metadataItem),
-                    {
-                      catalogItem: metadataItem
-                    }
-                  )}
+                  {renderSection(item.content)}
                 </div>
               </When>
               <When condition={item.contentAsObject !== undefined}>

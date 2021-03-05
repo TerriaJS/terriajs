@@ -1,23 +1,33 @@
 import i18next from "i18next";
 import { flatten } from "lodash-es";
-import { computed, runInAction, action } from "mobx";
+import { action, computed, runInAction } from "mobx";
 import URI from "urijs";
+import filterOutUndefined from "../Core/filterOutUndefined";
+import isDefined from "../Core/isDefined";
+import loadWithXhr from "../Core/loadWithXhr";
 import loadXML from "../Core/loadXML";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import xml2json from "../ThirdParty/xml2json";
-import CswCatalogGroupTraits from "../Traits/CswCatalogGroupTraits";
+import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
+import CswCatalogGroupTraits, {
+  QueryPropertyName
+} from "../Traits/CswCatalogGroupTraits";
 import ModelReference from "../Traits/ModelReference";
+import ArcGisMapServerCatalogItem from "./ArcGisMapServerCatalogItem";
+import CatalogGroup from "./CatalogGroupNew";
+import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
+import CsvCatalogItem from "./CsvCatalogItem";
+import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
+import KmlCatalogItem from "./KmlCatalogItem";
 import LoadableStratum from "./LoadableStratum";
-import { BaseModel } from "./Model";
+import { BaseModel, ModelConstructor } from "./Model";
 import { BoundingBox } from "./OwsInterfaces";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumOrder from "./StratumOrder";
-import loadWithXhr from "../Core/loadWithXhr";
-import isDefined from "../Core/isDefined";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
 
 const defaultGetRecordsTemplate = require("./CswGetRecordsTemplate.xml");
@@ -28,9 +38,9 @@ const wpsGetRecordsTemplate = require("./CswGetRecordsWPSTemplate.xml");
 // http://schemas.opengis.net/csw/2.0.2/CSW-publication.xsd
 // http://schemas.opengis.net/csw/2.0.2/csw.xsd
 // http://schemas.opengis.net/csw/2.0.2/record.xsd
-export type Record = SummaryRecord | FullRecord;
+export type Record = BriefRecord & Partial<FullRecord>;
 
-export type Records = SummaryRecord[] | FullRecord[];
+export type Records = Record[];
 
 type ArrayOrPrimitive<T> = T | T[];
 function toArray<T>(val: ArrayOrPrimitive<T>): T[] | undefined {
@@ -40,30 +50,27 @@ function toArray<T>(val: ArrayOrPrimitive<T>): T[] | undefined {
 
 export interface BriefRecord {
   BoundingBox?: BoundingBox[];
-  identifier: string[];
-  title: string[];
+  identifier: ArrayOrPrimitive<string>;
+  title: ArrayOrPrimitive<string>;
   type?: string;
 }
 
+export type CswURI = String & {
+  scheme?: string;
+  protocol?: string;
+  description?: string;
+  name?: string;
+};
+
 export interface SummaryRecord extends BriefRecord {
-  abstract?: string[];
-  format?: string[];
-  modified?: string[];
-  relation?: string[];
-  spatial?: string[];
-  subject?: string[];
-  references?: (String & {
-    scheme?: string;
-    protocol?: string;
-    description?: string;
-    name?: string;
-  })[];
-  URI?: (String & {
-    scheme?: string;
-    protocol?: string;
-    description?: string;
-    name?: string;
-  })[];
+  abstract?: ArrayOrPrimitive<string>;
+  format?: ArrayOrPrimitive<string>;
+  modified?: ArrayOrPrimitive<string>;
+  relation?: ArrayOrPrimitive<string>;
+  spatial?: ArrayOrPrimitive<string>;
+  subject?: ArrayOrPrimitive<string>;
+  references?: ArrayOrPrimitive<CswURI>;
+  URI?: ArrayOrPrimitive<CswURI>;
 }
 export interface FullRecord extends SummaryRecord {
   contributor?: string;
@@ -71,6 +78,7 @@ export interface FullRecord extends SummaryRecord {
   language?: string;
   publisher?: string;
   source?: string;
+  description?: ArrayOrPrimitive<string>;
 }
 
 export interface DomainValuesType {
@@ -126,11 +134,12 @@ export interface GetRecordByIdResponse {
   Record?: Record;
 }
 export interface MetadataGroup {
-  field: string | undefined;
+  field: QueryPropertyName | undefined;
   value: string;
   regex: boolean;
-  group: string;
+  groupName: string;
   children: MetadataGroup[];
+  records: Records;
 }
 class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
   static stratumName = "CswStratum";
@@ -307,6 +316,10 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
       }
     }
 
+    records.forEach(record => {
+      findGroup(metadataGroups, record)?.records.push(record);
+    });
+
     return new CswStratum(
       catalogGroup,
       domainResponse,
@@ -335,125 +348,312 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
 
   @computed
   get members(): ModelReference[] {
-    return [];
-    // return filterOutUnisDefined(
-    //   this.topLevelLayers.map(layer => this.getLayerId(layer))
-    // );
+    return this.metadataGroups.map(
+      g => `${this.catalogGroup.uniqueId}/${g.groupName}`
+    );
   }
+
+  getLayerId(layer: MetadataGroup | Record) {}
 
   @action
   createMembersFromLayers() {
-    //     this.records.forEach(record => {
-    //   var uris = toArray(record.URI ?? record.references)
-    //   if (!isDefined(uris)) {
-    //     return;
-    //   }
-    //   // maybe more than one url that results in a data layer here - so check for
-    //   // the acceptable ones, store the others as downloadUrls that can be
-    //   // displayed in the metadata summary for the layer
-    // const downloadUrls: {url:string, description?:string}[] = [];
-    // const acceptableUrls: string[]  = [];
-    // let legendUrl: string | undefined = undefined;
-    //   for (var m = 0; m < uris.length; m++) {
-    //     var url = uris[m];
-    //     if (!url) return
-    //     var excludedProtocol = false;
-    //     for (var l = 0; l < resourceFormats.length; l++) {
-    //       var f = resourceFormats[l];
-    //       var protocolOrScheme = url.protocol ?? url.scheme;
-    //       if (protocolOrScheme && protocolOrScheme.match(that[f[0]])) {
-    //         excludedProtocol = true;
-    //         acceptableUrls.push(url.toString());
-    //       }
-    //     }
-    //     if (!excludedProtocol) {
-    //       if (url?.description === "LegendUrl") {
-    //         legendUrl = url.toString();
-    //       }
-    //       downloadUrls.push({
-    //         url: url.toString(),
-    //         description: url.description ? url.description : url.name
-    //       });
-    //     }
-    //   }
-    //   // Now process the list of acceptable urls and hand the metadata
-    //   // record and the downloadUrls to each data layer item we create
-    //   for (var j = 0; j < acceptableUrls.length; ++j) {
-    //     var uri = acceptableUrls[j];
-    //     var group = that;
-    //     if (this.metadataGroups.length > 0) {
-    //       group = findGroup(that, that.metadataGroups, record);
-    //     }
-    //     if (defined(group)) {
-    //       var catalogItem = createItemForUri(
-    //         that,
-    //         record,
-    //         uri,
-    //         downloadUrls,
-    //         legendUrl
-    //       );
-    //       if (defined(catalogItem)) {
-    //         group.items.push(catalogItem);
-    //       }
-    //     } else {
-    //       //console.log("Failed to find a group match for "+JSON.stringify(record));
-    //     }
-    //     }
-    //   }
-    // @action
-    // createMemberFromLayer(layer: CapabilitiesLayer) {
-    //   const layerId = this.getLayerId(layer);
-    //   if (!layerId) {
-    //     return;
-    //   }
-    //   // If has nested layers -> create model for CatalogGroup
-    //   if (layer.Layer) {
-    //     // Create nested layers
-    //     let members: CapabilitiesLayer[] = [];
-    //     if (Array.isArray(layer.Layer)) {
-    //       members = layer.Layer;
-    //     } else {
-    //       members = [layer.Layer as CapabilitiesLayer];
-    //     }
-    //     members.forEach(member => this.createMemberFromLayer(member));
-    //     // Create group
-    //     const existingModel = this.catalogGroup.terria.getModelById(
-    //       CatalogGroup,
-    //       layerId
-    //     );
-    //     let model: CatalogGroup;
-    //     if (existingModel === undefined) {
-    //       model = new CatalogGroup(layerId, this.catalogGroup.terria);
-    //       this.catalogGroup.terria.addModel(model);
-    //     } else {
-    //       model = existingModel;
-    //     }
-    //     // Replace the stratum inherited from the parent group.
-    //     const stratum = CommonStrata.underride;
-    //     model.strata.delete(stratum);
-    //     model.setTrait(CommonStrata.underride, "name", layer.Title);
-    //     return;
-    //   }
-    //   // No nested layers -> create model for CswCatalogItem
-    //   const existingModel = this.catalogGroup.terria.getModelById(
-    //     CswCatalogItem,
-    //     layerId
-    //   );
-    //   let model: CswCatalogItem;
-    //   if (existingModel === undefined) {
-    //     model = new CswCatalogItem(layerId, this.catalogGroup.terria);
-    //     this.catalogGroup.terria.addModel(model);
-    //   } else {
-    //     model = existingModel;
-    //   }
-    //   // Replace the stratum inherited from the parent group.
-    //   const stratum = CommonStrata.underride;
-    //   model.strata.delete(stratum);
-    //   model.setTrait(stratum, "name", layer.Title);
-    //   model.setTrait(stratum, "url", this.catalogGroup.url);
-    // }
+    this.metadataGroups.forEach(metadataGroup =>
+      this.createMetadataGroup(this.catalogGroup.uniqueId, metadataGroup)
+    );
+  }
+
+  @action
+  createMetadataGroup(
+    parentId: string | undefined,
+    metadataGroup: MetadataGroup
+  ): CatalogGroup {
+    const layerId = `${parentId}/${metadataGroup.groupName}`;
+    const existingModel = this.catalogGroup.terria.getModelById(
+      CatalogGroup,
+      layerId
+    );
+    let model: CatalogGroup;
+    if (existingModel === undefined) {
+      model = new CatalogGroup(layerId, this.catalogGroup.terria);
+      this.catalogGroup.terria.addModel(model);
+    } else {
+      model = existingModel;
+    }
+    // Replace the stratum inherited from the parent group.
+    const stratum = CommonStrata.underride;
+    model.strata.delete(stratum);
+    model.setTrait(CommonStrata.underride, "name", metadataGroup.groupName);
+    model.setTrait(
+      CommonStrata.underride,
+      "members",
+      filterOutUndefined([
+        ...metadataGroup.children.map(
+          childMetadataGroup =>
+            this.createMetadataGroup(layerId, childMetadataGroup).uniqueId
+        ),
+        ...metadataGroup.records.map(
+          record => this.createRecord(layerId, record)?.uniqueId
+        )
+      ])
+    );
+
+    return model;
+  }
+
+  @action
+  createRecord(
+    parentId: string | undefined,
+    record: Record
+  ): BaseModel | undefined {
+    const resourceFormats: [boolean, RegExp, ModelConstructor<BaseModel>][] = [
+      [
+        this.catalogGroup.includeWms,
+        new RegExp(this.catalogGroup.wmsResourceFormat, "i"),
+        WebMapServiceCatalogItem
+      ],
+      [
+        this.catalogGroup.includeEsriMapServer,
+        new RegExp(this.catalogGroup.esriMapServerResourceFormat, "i"),
+        ArcGisMapServerCatalogItem
+      ],
+      [
+        this.catalogGroup.includeKml,
+        new RegExp(this.catalogGroup.kmlResourceFormat, "i"),
+        KmlCatalogItem
+      ],
+      [
+        this.catalogGroup.includeGeoJson,
+        new RegExp(this.catalogGroup.geoJsonResourceFormat, "i"),
+        GeoJsonCatalogItem
+      ],
+      [
+        this.catalogGroup.includeCsv,
+        new RegExp(this.catalogGroup.csvResourceFormat, "i"),
+        CsvCatalogItem
+      ]
+    ];
+
+    const uris = toArray(record.URI ?? record.references);
+    if (!isDefined(uris)) {
+      return;
+    }
+    // maybe more than one url that results in a data layer here - so check for
+    // the acceptable ones, store the others as downloadUrls that can be
+    // displayed in the metadata summary for the layer
+    const downloadUrls: { url: string; description?: string }[] = [];
+    /**
+     * Array of acceptable URLS for catalog item. It indecies map to resourceFormats index.
+     * For example - if `acceptableUrls[1]` is defined, it maps to `resourceFormats[1]`
+     */
+    const acceptableUris: CswURI[] = [];
+
+    const filteredResourceFormats = resourceFormats.filter(f => f[0]);
+
+    let legendUri: CswURI | undefined = undefined;
+    for (var m = 0; m < uris.length; m++) {
+      var uri = uris[m];
+      if (!uri) return;
+      const resourceIndex = filteredResourceFormats.findIndex(f =>
+        (uri!.protocol ?? uri!.scheme)?.match(f[1])
+      );
+
+      // If matching resource is found, and an acceptable URL hasn't been set for it -> add it
+      if (resourceIndex !== -1 && !acceptableUris[resourceIndex]) {
+        acceptableUris[resourceIndex] = uri;
+      } else {
+        if (uri?.description === "LegendUrl") {
+          legendUri = uri;
+        }
+        downloadUrls.push({
+          url: uri.toString(),
+          description: uri.description ? uri.description : uri.name
+        });
+      }
+    }
+
+    const layerId = `${parentId}/${record.identifier}`;
+    const urlIndex = acceptableUris.findIndex(url => isDefined(url));
+
+    if (urlIndex !== -1) {
+      const modelConstructor = resourceFormats[urlIndex][2];
+      const existingModel = this.catalogGroup.terria.getModelById(
+        modelConstructor,
+        layerId
+      );
+      let model: BaseModel;
+      if (existingModel === undefined) {
+        model = new modelConstructor(layerId, this.catalogGroup.terria);
+        this.catalogGroup.terria.addModel(model);
+      } else {
+        model = existingModel;
+      }
+      // Replace the stratum inherited from the parent group.
+      const stratum = CommonStrata.underride;
+      model.strata.delete(stratum);
+      model.setTrait(stratum, "name", record.title ?? record.identifier);
+      const uri = acceptableUris[urlIndex];
+      model.setTrait(stratum, "url", uri.toString());
+
+      if (record.abstract) {
+        model.setTrait(
+          stratum,
+          "description",
+          toArray(record.abstract)?.join("\n\n")
+        );
+      } else if (record.description) {
+        model.setTrait(
+          stratum,
+          "description",
+          toArray(record.description)?.join("\n\n")
+        );
+      }
+
+      const infoSections: InfoSectionTraits[] = [];
+
+      if (record.contributor) {
+        infoSections.push({
+          name: i18next.t("models.csw.dataResponsibility"),
+          content: record.contributor
+        });
+      }
+
+      model.setTrait(stratum, "info", infoSections);
+
+      model.setTrait(stratum, "metadataUrls", [
+        {
+          title: i18next.t("models.csw.metadataURL"),
+          url: new URI(
+            proxyCatalogItemUrl(this.catalogGroup, this.catalogGroup.url!)
+          )
+            .query({
+              service: "CSW",
+              version: "2.0.2",
+              request: "GetRecordById",
+              outputSchema: "http://www.opengis.net/cat/csw/2.0.2",
+              ElementSetName: "full",
+              id: record.identifier
+            })
+            .toString()
+        }
+      ]);
+
+      if (legendUri) {
+        model.setTrait(stratum, "legends", [{ url: legendUri.toString() }]);
+      }
+
+      // catalogItem.info.push({
+      //   name: i18next.t("models.csw.links"),
+      //   content: downloadUrls.reduce(function(previousValue, downloadUrl) {
+      //     return (
+      //       previousValue +
+      //       "[" +
+      //       downloadUrl.description +
+      //       "](" +
+      //       downloadUrl.url +
+      //       ")\n\n"
+      //     );
+      //   }, "")
+      // });
+
+      // If this is a WMS item, we MUST set `layers` trait to `uri.name`
+      if (model instanceof WebMapServiceCatalogItem) {
+        if (!uri.name) {
+          return;
+        }
+        model.setTrait(stratum, "layers", uri.name);
+      }
+
+      // Same with ArgGis MapServer
+      if (model instanceof ArcGisMapServerCatalogItem) {
+        if (!uri.name) {
+          return;
+        }
+        model.setTrait(stratum, "layers", uri.name);
+      }
+
+      return model;
+    }
   }
 }
+
+function addMetadataGroups(
+  keys: string[],
+  index: number,
+  group: MetadataGroup[],
+  separator: string,
+  queryField: QueryPropertyName
+) {
+  if (index > keys.length - 1) return;
+
+  let groupIndex = group.findIndex(g => g.groupName === keys[index]);
+
+  if (groupIndex === -1) {
+    // not found so add it
+    let value: string;
+    let regex = true;
+    // if we aren't at the last key, use a regex and tack on another separator to avoid mismatches
+    if (index + 1 !== keys.length) {
+      const sepRegex = separator.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+      value = "^" + keys.slice(0, index + 1).join(sepRegex) + sepRegex;
+    } else {
+      value = keys.slice(0, index + 1).join(separator);
+      regex = false;
+    }
+
+    group.push({
+      field: queryField,
+      value: value,
+      regex: regex,
+      groupName: keys[index],
+      children: [],
+      records: []
+    });
+    groupIndex = group.length - 1;
+  }
+  addMetadataGroups(
+    keys,
+    index + 1,
+    group[groupIndex].children,
+    separator,
+    queryField
+  );
+}
+
+// find groups that the record belongs to
+function findGroup(
+  metadataGroups: MetadataGroup[],
+  record: Record
+): MetadataGroup | undefined {
+  for (var i = 0; i < metadataGroups.length; i++) {
+    const group = metadataGroups[i];
+    if (group.field) {
+      const fields = filterOutUndefined(toArray(record[group.field]) ?? []);
+      if (fields.find(f => matchValue(group.value, f, group.regex))) {
+        if (group.children) {
+          // recurse to see if it fits into any of the children
+          const childGroup = findGroup(group.children, record);
+          if (isDefined(childGroup)) {
+            return childGroup;
+          }
+        }
+
+        return group;
+      }
+    }
+  }
+}
+
+function matchValue(value: string, recordValue: string, regex?: boolean) {
+  if (isDefined(regex) && regex) {
+    // regular expression so parse it and check string against it
+    var regExp = new RegExp(value);
+    return regExp.test(recordValue);
+  } else {
+    return value === recordValue;
+  }
+}
+
+StratumOrder.addLoadStratum(CswStratum.stratumName);
 
 export default class CswCatalogGroup extends UrlMixin(
   GroupMixin(CatalogMemberMixin(CreateModel(CswCatalogGroupTraits)))
@@ -476,109 +676,7 @@ export default class CswCatalogGroup extends UrlMixin(
     await this.loadMetadata();
     const cswStratum = <CswStratum | undefined>this.strata.get(CswStratum.name);
     if (cswStratum) {
-      // cswStratum.createMembersFromLayers();
+      cswStratum.createMembersFromLayers();
     }
   }
 }
-
-function addMetadataGroups(
-  keys: string[],
-  index: number,
-  group: MetadataGroup[],
-  separator: string,
-  queryField: string | undefined
-) {
-  if (index > keys.length - 1) return;
-
-  let groupIndex = group.findIndex(g => g.group === keys[index]);
-
-  if (groupIndex === -1) {
-    // not found so add it
-    let value: string;
-    let regex = true;
-    // if we aren't at the last key, use a regex and tack on another separator to avoid mismatches
-    if (index + 1 !== keys.length) {
-      const sepRegex = separator.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-      value = "^" + keys.slice(0, index + 1).join(sepRegex) + sepRegex;
-    } else {
-      value = keys.slice(0, index + 1).join(separator);
-      regex = false;
-    }
-
-    group.push({
-      field: queryField,
-      value: value,
-      regex: regex,
-      group: keys[index],
-      children: []
-    });
-    groupIndex = group.length - 1;
-  }
-  addMetadataGroups(
-    keys,
-    index + 1,
-    group[groupIndex].children,
-    separator,
-    queryField
-  );
-}
-
-StratumOrder.addLoadStratum(CswStratum.stratumName);
-
-// // find groups that the record belongs to and create any that don't exist already
-// function findGroup(catalogGroup, keywordsGroups, record: Record) {
-//   for (var i = 0; i < keywordsGroups.length; i++) {
-//     var kg = keywordsGroups[i];
-//     var fields = record[kg.field];
-//     var matched = false;
-//     if (isDefined(fields)) {
-//       if (fields instanceof String || typeof fields === "string") {
-//         fields = [fields];
-//       }
-//       for (var j = 0; j < fields.length; j++) {
-//         var field = fields[j];
-//         if (matchValue(kg.value, field, kg.regex)) {
-//           matched = true;
-//           break;
-//         }
-//       }
-//     }
-//     if (matched) {
-//       var newGroup = addGroupIfNotAlreadyPresent(
-//         kg.group ? kg.group : kg.value,
-//         catalogGroup
-//       );
-//       if (kg.children && isDefined(newGroup)) {
-//         // recurse to see if it fits into any of the children
-//         catalogGroup = findGroup(newGroup, kg.children, record);
-//         if (!isDefined(catalogGroup)) {
-//           //console.log("No match in children for record "+record.title+"::"+record.subject+"::"+record.title+", will assign to "+newGroup.name);
-//           catalogGroup = newGroup;
-//         }
-//       } else if (isDefined(newGroup)) {
-//         catalogGroup = newGroup;
-//       }
-//       return catalogGroup;
-//     }
-//   }
-// }
-
-// function matchValue(value: string, recordValue: string, regex?: boolean) {
-//   if (isDefined(regex) && regex) {
-//     // regular expression so parse it and check string against it
-//     var regExp = new RegExp(value);
-//     return regExp.test(recordValue);
-//   } else {
-//     return value === recordValue;
-//   }
-// }
-
-// function addGroupIfNotAlreadyPresent(name: string, catalogGroup) {
-//   var item = catalogGroup.findFirstItemByName(name);
-//   if (!isDefined(item)) {
-//     item = new CatalogGroup(catalogGroup.terria);
-//     item.name = name;
-//     catalogGroup.items.push(item);
-//   }
-//   return item;
-// }
