@@ -1,4 +1,3 @@
-import { convertCatalog, convertShare } from "catalog-converter";
 import i18next from "i18next";
 import { action, computed, observable, runInAction, toJS, when } from "mobx";
 import { createTransformer } from "mobx-utils";
@@ -27,6 +26,7 @@ import JsonValue, {
   isJsonNumber,
   isJsonObject,
   isJsonString,
+  JsonArray,
   JsonObject
 } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
@@ -171,6 +171,9 @@ interface ConfigParameters {
    */
   disableMyLocation?: boolean;
   disableSplitter?: boolean;
+
+  disablePedestrianMode?: boolean;
+
   experimentalFeatures?: boolean;
   magdaReferenceHeaders?: MagdaReferenceHeaders;
   locationSearchBoundingBox?: number[];
@@ -325,6 +328,7 @@ export default class Terria {
     displayOneBrand: 0, // index of which brandBarElements to show for mobile header
     disableMyLocation: undefined,
     disableSplitter: undefined,
+    disablePedestrianMode: false,
     experimentalFeatures: undefined,
     magdaReferenceHeaders: undefined,
     locationSearchBoundingBox: undefined,
@@ -556,18 +560,21 @@ export default class Terria {
     // look for v7 catalogs -> push v7-v8 conversion to initSources
     if (Array.isArray(config?.v7initializationUrls)) {
       this.initSources.push(
-        ...config.v7initializationUrls
-          .filter((v7initUrl: any) => isJsonString(v7initUrl))
+        ...(config.v7initializationUrls as JsonArray)
+          .filter(isJsonString)
           .map(async (v7initUrl: string) => {
-            const catalog = await loadJson5(v7initUrl);
-            const convert = convertCatalog(catalog);
+            const [{ convertCatalog }, catalog] = await Promise.all([
+              import("catalog-converter"),
+              loadJson5(v7initUrl)
+            ]);
+            const convert = convertCatalog(catalog, { generateIds: false });
             console.log(
               `WARNING: ${v7initUrl} is a v7 catalog - it has been upgraded to v8\nMessages:\n`
             );
             convert.messages.forEach(message =>
               console.log(`- ${message.path.join(".")}: ${message.message}`)
             );
-            return { data: convert.result as JsonObject };
+            return { data: (convert.result as JsonObject | null) || {} };
           })
       );
     }
@@ -582,28 +589,24 @@ export default class Terria {
     const launchUrlForAnalytics =
       options.applicationUrl?.href || getUriWithoutPath(baseUri);
     return loadJson5(options.configUrl, options.configUrlHeaders)
-      .then((config: any) => {
-        return runInAction(() => {
-          // If it's a magda config, we only load magda config and parameters should never be a property on the direct
-          // config aspect (it would be under the `terria-config` aspect)
-          if (config.aspects) {
-            return this.loadMagdaConfig(
-              options.configUrl,
-              config,
-              baseUri
-            ).then(() => {
-              Internationalization.initLanguage(
-                this.configParameters.languageConfiguration,
-                options.i18nOptions
-              );
-            });
-          }
-
+      .then(async (config: any) => {
+        // If it's a magda config, we only load magda config and parameters should never be a property on the direct
+        // config aspect (it would be under the `terria-config` aspect)
+        let languageConfiguration: LanguageConfiguration | undefined;
+        if (config.aspects) {
+          await this.loadMagdaConfig(options.configUrl, config, baseUri);
+          languageConfiguration = this.configParameters.languageConfiguration;
+        }
+        runInAction(() => {
           // If it's a regular config.json, continue on with parsing remaining init sources
           if (config.parameters) {
             this.updateParameters(config.parameters);
+            languageConfiguration = config.parameters.languageConfiguration;
+          }
+
+          if (!options.i18nOptions?.skipInit) {
             Internationalization.initLanguage(
-              config.parameters.languageConfiguration,
+              languageConfiguration,
               options.i18nOptions
             );
           }
@@ -1358,19 +1361,22 @@ function interpretHash(
 
       if (isDefined(shareProps) && shareProps !== {}) {
         // Convert shareProps to v8 if neccessary
-        const result = convertShare(shareProps);
+        return import("catalog-converter").then(
+          action(({ convertShare }) => {
+            const result = convertShare(shareProps);
+            // Show warning messages if converted
+            if (result.converted) {
+              terria.notification.raiseEvent({
+                title: i18next.t("share.convertNotificationTitle"),
+                message: shareConvertNotification(result.messages)
+              } as Notification);
+            }
 
-        // Show warning messages if converted
-        if (result.converted) {
-          terria.notification.raiseEvent({
-            title: i18next.t("share.convertNotificationTitle"),
-            message: shareConvertNotification(result.messages)
-          } as Notification);
-        }
-
-        if (result.result !== null) {
-          interpretStartData(terria, result.result);
-        }
+            if (result.result !== null) {
+              interpretStartData(terria, result.result);
+            }
+          })
+        );
       }
     });
   });

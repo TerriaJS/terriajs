@@ -469,7 +469,7 @@ function parseValues(properties) {
   // JSON.parse property values that look like arrays or objects
   const result = {};
   for (const key in properties) {
-    if (properties.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(properties, key)) {
       let val = properties[key];
       if (
         val &&
@@ -495,7 +495,7 @@ function parseValues(properties) {
 function applyFormatsInPlace(properties, formats) {
   // Optionally format each property. Updates properties in place, returning nothing.
   for (const key in formats) {
-    if (properties.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(properties, key)) {
       // Default type if not provided is number.
       if (
         !defined(formats[key].type) ||
@@ -534,7 +534,7 @@ function replaceBadKeyCharacters(properties) {
   }
   const result = {};
   for (const key in properties) {
-    if (properties.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(properties, key)) {
       const cleanKey = key.replace(/[.#]/g, "_");
       result[cleanKey] = replaceBadKeyCharacters(properties[key]);
     }
@@ -556,7 +556,7 @@ function areAllPropertiesConstant(properties) {
     return properties.isConstant;
   }
   for (const key in properties) {
-    if (properties.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(properties, key)) {
       result =
         result &&
         defined(properties[key]) &&
@@ -730,7 +730,7 @@ function describeFromProperties(
   }
   if (typeof properties === "object") {
     for (const key in properties) {
-      if (properties.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(properties, key)) {
         if (simpleStyleIdentifiers.indexOf(key) !== -1) {
           continue;
         }
